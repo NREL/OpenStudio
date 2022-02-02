@@ -145,13 +145,13 @@ namespace model {
     }
 
     ModelObject ShadingControl_Impl::clone(Model model) const {
-      ShadingControl scClone = ResourceObject_Impl::clone(model).cast<ShadingControl>();
+      auto scClone = ResourceObject_Impl::clone(model).cast<ShadingControl>();
 
       if (model != this->model()) {
         scClone.removeAllSubSurfaces();
       }
 
-      return scClone;
+      return std::move(scClone);
     }
 
     std::string ShadingControl_Impl::shadingType() const {

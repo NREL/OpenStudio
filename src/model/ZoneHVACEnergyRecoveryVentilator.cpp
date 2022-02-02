@@ -110,7 +110,7 @@ namespace model {
         cloneObject.setController(controllerClone);
       }
 
-      return cloneObject;
+      return std::move(cloneObject);
     }
 
     std::vector<ModelObject> ZoneHVACEnergyRecoveryVentilator_Impl::children() const {

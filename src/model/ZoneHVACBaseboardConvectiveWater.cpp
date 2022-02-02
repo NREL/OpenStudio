@@ -70,7 +70,7 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACBaseboardConvectiveWater_Impl::clone(Model model) const {
-      ZoneHVACBaseboardConvectiveWater baseboardConvWaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACBaseboardConvectiveWater>();
+      auto baseboardConvWaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACBaseboardConvectiveWater>();
 
       auto t_heatingCoil = heatingCoil();
       StraightComponent heatingCoilClone = t_heatingCoil.clone(model).cast<StraightComponent>();
@@ -83,7 +83,7 @@ namespace model {
         }
       }
 
-      return baseboardConvWaterClone;
+      return std::move(baseboardConvWaterClone);
     }
 
     std::vector<IdfObject> ZoneHVACBaseboardConvectiveWater_Impl::remove() {

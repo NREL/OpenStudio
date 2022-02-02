@@ -68,7 +68,7 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACUnitHeater_Impl::clone(Model model) const {
-      ZoneHVACUnitHeater unitHeaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACUnitHeater>();
+      auto unitHeaterClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACUnitHeater>();
 
       HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
@@ -87,7 +87,7 @@ namespace model {
         }
       }
 
-      return unitHeaterClone;
+      return std::move(unitHeaterClone);
     }
 
     std::vector<IdfObject> ZoneHVACUnitHeater_Impl::remove() {

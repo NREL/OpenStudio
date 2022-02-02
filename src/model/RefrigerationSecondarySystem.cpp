@@ -118,7 +118,7 @@ namespace model {
     }
 
     ModelObject RefrigerationSecondarySystem_Impl::clone(Model model) const {
-      RefrigerationSecondarySystem modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSecondarySystem>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSecondarySystem>();
 
       if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
         ModelObjectList caseAndWalkinListClone = caseAndWalkinList->clone(model).cast<ModelObjectList>();
@@ -128,7 +128,7 @@ namespace model {
       modelObjectClone.resetDistributionPipingZone();
       modelObjectClone.resetReceiverSeparatorZone();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<IddObjectType> RefrigerationSecondarySystem_Impl::allowableChildTypes() const {

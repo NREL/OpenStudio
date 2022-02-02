@@ -271,7 +271,7 @@ namespace model {
       t_clone.setString(OS_AirTerminal_DualDuct_VAVFields::ColdAirInletNode, "");
       t_clone.setString(OS_AirTerminal_DualDuct_VAVFields::AirOutletNode, "");
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     bool AirTerminalDualDuctVAV_Impl::isRemovable() const {

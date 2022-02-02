@@ -207,7 +207,7 @@ namespace model {
     }
 
     ModelObject WaterToAirComponent_Impl::clone(Model model) const {
-      WaterToAirComponent mo = HVACComponent_Impl::clone(model).cast<WaterToAirComponent>();
+      auto mo = HVACComponent_Impl::clone(model).cast<WaterToAirComponent>();
 
       mo.setString(mo.airInletPort(), "");
       mo.setString(mo.airOutletPort(), "");
@@ -215,7 +215,7 @@ namespace model {
       mo.setString(mo.waterInletPort(), "");
       mo.setString(mo.waterOutletPort(), "");
 
-      return mo;
+      return std::move(mo);
     }
 
     bool WaterToAirComponent_Impl::addToSplitter(Splitter& splitter) {

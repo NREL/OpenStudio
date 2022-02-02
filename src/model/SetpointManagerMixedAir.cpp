@@ -120,11 +120,11 @@ namespace model {
     }
 
     ModelObject SetpointManagerMixedAir_Impl::clone(Model model) const {
-      SetpointManagerMixedAir clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerMixedAir>();
+      auto clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerMixedAir>();
       clonedObject.getImpl<detail::SetpointManagerMixedAir_Impl>()->resetReferenceSetpointNode();
       clonedObject.getImpl<detail::SetpointManagerMixedAir_Impl>()->resetFanInletNode();
       clonedObject.getImpl<detail::SetpointManagerMixedAir_Impl>()->resetFanOutletNode();
-      return clonedObject;
+      return std::move(clonedObject);
     }
 
     std::string SetpointManagerMixedAir_Impl::controlVariable() const {

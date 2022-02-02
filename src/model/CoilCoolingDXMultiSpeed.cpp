@@ -289,7 +289,7 @@ namespace model {
         auto stageClone = stage.clone(model).cast<CoilCoolingDXMultiSpeedStageData>();
         t_clone.addStage(stageClone);
       }
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<ModelObject> CoilCoolingDXMultiSpeed_Impl::children() const {

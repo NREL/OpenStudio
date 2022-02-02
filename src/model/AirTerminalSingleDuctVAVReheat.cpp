@@ -243,7 +243,7 @@ namespace model {
     }
 
     ModelObject AirTerminalSingleDuctVAVReheat_Impl::clone(Model model) const {
-      AirTerminalSingleDuctVAVReheat modelObjectClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctVAVReheat>();
+      auto modelObjectClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctVAVReheat>();
 
       HVACComponent coil = this->reheatCoil();
 
@@ -251,7 +251,7 @@ namespace model {
 
       modelObjectClone.setReheatCoil(coilClone);
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     boost::optional<double> AirTerminalSingleDuctVAVReheat_Impl::maximumAirFlowRate() const {

@@ -242,7 +242,7 @@ namespace model {
         coefficientsClone.setSurface(clone);
       }
 
-      return clone;
+      return std::move(clone);
     }
 
   }  // namespace detail

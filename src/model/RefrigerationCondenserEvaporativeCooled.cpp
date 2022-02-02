@@ -108,11 +108,11 @@ namespace model {
     }
 
     ModelObject RefrigerationCondenserEvaporativeCooled_Impl::clone(Model model) const {
-      RefrigerationCondenserEvaporativeCooled modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCondenserEvaporativeCooled>();
 
       //modelObjectClone.resetAirInletNode();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<ScheduleTypeKey> RefrigerationCondenserEvaporativeCooled_Impl::getScheduleTypeKeys(const Schedule& schedule) const {

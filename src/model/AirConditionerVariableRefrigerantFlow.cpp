@@ -1634,7 +1634,7 @@ namespace model {
     }
 
     ModelObject AirConditionerVariableRefrigerantFlow_Impl::clone(Model model) const {
-      AirConditionerVariableRefrigerantFlow airConditionerClone = StraightComponent_Impl::clone(model).cast<AirConditionerVariableRefrigerantFlow>();
+      auto airConditionerClone = StraightComponent_Impl::clone(model).cast<AirConditionerVariableRefrigerantFlow>();
 
       ModelObjectList modelObjectList(model);
       airConditionerClone.getImpl<detail::AirConditionerVariableRefrigerantFlow_Impl>()->setVRFModelObjectList(modelObjectList);
@@ -1769,7 +1769,7 @@ namespace model {
         airConditionerClone.setHeatRecoveryHeatingEnergyModifierCurve(clone);
       }
 
-      return airConditionerClone;
+      return std::move(airConditionerClone);
     }
 
     std::vector<openstudio::IdfObject> AirConditionerVariableRefrigerantFlow_Impl::remove() {

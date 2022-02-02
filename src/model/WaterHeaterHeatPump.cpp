@@ -465,7 +465,7 @@ namespace model {
         newWaterHeater.setFan(mo);
       }
 
-      return newWaterHeater;
+      return std::move(newWaterHeater);
     }
 
     std::vector<IdfObject> WaterHeaterHeatPump_Impl::remove() {

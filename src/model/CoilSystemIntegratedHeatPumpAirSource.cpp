@@ -185,7 +185,7 @@ namespace model {
       HVACComponent shdwhWaterHeatingCoilClone = this->shdwhWaterHeatingCoil().clone(model).cast<HVACComponent>();
       newCoilSystem.setSHDWHWaterHeatingCoil(shdwhWaterHeatingCoilClone);
 
-      return newCoilSystem;
+      return std::move(newCoilSystem);
     }
 
     boost::optional<HVACComponent> CoilSystemIntegratedHeatPumpAirSource_Impl::containingHVACComponent() const {

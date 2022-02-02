@@ -144,7 +144,7 @@ namespace model {
     }
 
     ModelObject RefrigerationTranscriticalSystem_Impl::clone(Model model) const {
-      RefrigerationTranscriticalSystem modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationTranscriticalSystem>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationTranscriticalSystem>();
 
       if (boost::optional<ModelObjectList> mediumTemperatureCaseAndWalkinList = this->mediumTemperatureRefrigeratedCaseAndWalkInList()) {
         ModelObjectList caseAndWalkinListClone = mediumTemperatureCaseAndWalkinList->clone(model).cast<ModelObjectList>();
@@ -176,7 +176,7 @@ namespace model {
       modelObjectClone.resetMediumTemperatureSuctionPipingZone();
       modelObjectClone.resetLowTemperatureSuctionPipingZone();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     template <class T>

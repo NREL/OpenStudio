@@ -267,7 +267,7 @@ namespace model {
       t_clone.setString(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::RecirculatedAirInletNode, "");
       t_clone.setString(OS_AirTerminal_DualDuct_VAV_OutdoorAirFields::AirOutletNode, "");
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     bool AirTerminalDualDuctVAVOutdoorAir_Impl::isRemovable() const {

@@ -132,8 +132,8 @@ namespace model {
     }
 
     ModelObject RefrigerationAirChiller_Impl::clone(Model model) const {
-      RefrigerationAirChiller airChillerClone = ZoneHVACComponent_Impl::clone(model).cast<RefrigerationAirChiller>();
-      return airChillerClone;
+      auto airChillerClone = ZoneHVACComponent_Impl::clone(model).cast<RefrigerationAirChiller>();
+      return std::move(airChillerClone);
     }
 
     std::vector<IdfObject> RefrigerationAirChiller_Impl::remove() {

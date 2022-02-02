@@ -197,7 +197,7 @@ namespace model {
     }
 
     ModelObject RefrigerationSystem_Impl::clone(Model model) const {
-      RefrigerationSystem modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSystem>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSystem>();
 
       if (boost::optional<ModelObject> condenser = this->optionalRefrigerationCondenser()) {
         ModelObject condenserClone = condenser->clone(model);
@@ -236,7 +236,7 @@ namespace model {
 
       modelObjectClone.resetSuctionPipingZone();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     template <class T>

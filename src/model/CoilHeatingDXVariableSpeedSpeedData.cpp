@@ -182,7 +182,7 @@ namespace model {
     ModelObject CoilHeatingDXVariableSpeedSpeedData_Impl::clone(Model model) const {
       auto t_clone = ParentObject_Impl::clone(model).cast<CoilHeatingDXVariableSpeedSpeedData>();
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<ModelObject> CoilHeatingDXVariableSpeedSpeedData_Impl::children() const {

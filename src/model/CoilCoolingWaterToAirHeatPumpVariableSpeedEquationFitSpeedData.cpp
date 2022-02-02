@@ -309,7 +309,7 @@ namespace model {
     ModelObject CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::clone(Model model) const {
       auto t_clone = ParentObject_Impl::clone(model).cast<CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData>();
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<ModelObject> CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl::children() const {

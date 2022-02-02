@@ -120,7 +120,7 @@ namespace model {
     // This will clone the GeneratorMicroTurbine as well as the GeneratorMicroTurbineHeatRecovery if there is one
     // and will return a reference to the GeneratorMicroTurbine
     ModelObject GeneratorMicroTurbine_Impl::clone(Model model) const {
-      GeneratorMicroTurbine newCHP = ModelObject_Impl::clone(model).cast<GeneratorMicroTurbine>();
+      auto newCHP = ModelObject_Impl::clone(model).cast<GeneratorMicroTurbine>();
 
       // If there's a GeneratorMicroTurbineHeatRecovery, clone it as well
       if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = generatorMicroTurbineHeatRecovery()) {
@@ -130,7 +130,7 @@ namespace model {
         newCHP.getImpl<detail::GeneratorMicroTurbine_Impl>()->setGeneratorMicroTurbineHeatRecovery(mchpHRClone);
       }
 
-      return newCHP;
+      return std::move(newCHP);
     }
 
     std::vector<IdfObject> GeneratorMicroTurbine_Impl::remove() {

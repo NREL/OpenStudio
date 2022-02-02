@@ -109,13 +109,13 @@ namespace model {
 
     ModelObject CoolingTowerVariableSpeed_Impl::clone(Model model) const {
       // StraightComponent_Impl will clone the CT and reset the inlet/outlet ports for us
-      CoolingTowerVariableSpeed newTower = StraightComponent_Impl::clone(model).cast<CoolingTowerVariableSpeed>();
+      auto newTower = StraightComponent_Impl::clone(model).cast<CoolingTowerVariableSpeed>();
 
       if (boost::optional<ModelObject> mo = modelCoefficient()) {
         newTower.setModelCoefficient(mo->clone(model));
       }
 
-      return newTower;
+      return std::move(newTower);
     }
 
     std::vector<IddObjectType> CoolingTowerVariableSpeed_Impl::allowableChildTypes() const {

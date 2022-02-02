@@ -82,7 +82,7 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACLowTempRadiantConstFlow_Impl::clone(Model model) const {
-      ZoneHVACLowTempRadiantConstFlow LowTempRadiantConstFlowClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACLowTempRadiantConstFlow>();
+      auto LowTempRadiantConstFlowClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACLowTempRadiantConstFlow>();
 
       auto t_coolingCoil = coolingCoil();
       HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
@@ -107,7 +107,7 @@ namespace model {
         }
       }
 
-      return LowTempRadiantConstFlowClone;
+      return std::move(LowTempRadiantConstFlowClone);
     }
 
     std::vector<IdfObject> ZoneHVACLowTempRadiantConstFlow_Impl::remove() {

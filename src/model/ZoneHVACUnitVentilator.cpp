@@ -140,7 +140,7 @@ namespace model {
         }
       }
 
-      return objectClone;
+      return std::move(objectClone);
     }
 
     std::vector<IdfObject> ZoneHVACUnitVentilator_Impl::remove() {

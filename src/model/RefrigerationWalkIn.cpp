@@ -159,7 +159,7 @@ namespace model {
     }
 
     ModelObject RefrigerationWalkIn_Impl::clone(Model model) const {
-      RefrigerationWalkIn modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationWalkIn>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationWalkIn>();
 
       if (boost::optional<RefrigerationDefrostCycleParameters> walkinDefrostCycleParameters = this->optionalWalkinDefrostCycleParameters()) {
         modelObjectClone.getImpl<RefrigerationWalkIn_Impl>()->setWalkinDefrostCycleParameters(
@@ -174,7 +174,7 @@ namespace model {
         modelObjectClone.addZoneBoundary(zoneBoundaryClone);
       }
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     bool RefrigerationWalkIn_Impl::addZoneBoundary(const RefrigerationWalkInZoneBoundary& refrigerationWalkInZoneBoundary) {

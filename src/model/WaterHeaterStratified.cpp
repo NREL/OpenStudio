@@ -156,7 +156,7 @@ namespace model {
 
       auto sizingClone = waterHeaterSizing().clone(model).cast<WaterHeaterSizing>();
       sizingClone.getImpl<WaterHeaterSizing_Impl>()->setWaterHeater(whClone);
-      return whClone;
+      return std::move(whClone);
     }
 
     std::vector<ScheduleTypeKey> WaterHeaterStratified_Impl::getScheduleTypeKeys(const Schedule& schedule) const {

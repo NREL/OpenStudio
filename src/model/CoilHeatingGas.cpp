@@ -483,9 +483,9 @@ namespace model {
     }
 
     ModelObject CoilHeatingGas_Impl::clone(Model model) const {
-      CoilHeatingGas newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingGas>();
+      auto newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingGas>();
 
-      return newCoil;
+      return std::move(newCoil);
     }
 
     bool CoilHeatingGas_Impl::addToNode(Node& node) {

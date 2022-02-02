@@ -276,7 +276,7 @@ namespace model {
     ModelObject ThermalStorageIceDetailed_Impl::clone(Model model) const {
       auto newMo = StraightComponent_Impl::clone(model).cast<ThermalStorageIceDetailed>();
 
-      return newMo;
+      return std::move(newMo);
     }
 
     std::vector<ModelObject> ThermalStorageIceDetailed_Impl::children() const {

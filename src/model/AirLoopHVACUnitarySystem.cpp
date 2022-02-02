@@ -126,7 +126,7 @@ namespace model {
 
     ModelObject AirLoopHVACUnitarySystem_Impl::clone(Model model) const {
       // Mimic what StraightComponent_Impl::clone would do (we inherit ZoneHVACComponent here...)
-      AirLoopHVACUnitarySystem modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitarySystem>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<AirLoopHVACUnitarySystem>();
       modelObjectClone.setString(modelObjectClone.inletPort(), "");
       modelObjectClone.setString(modelObjectClone.outletPort(), "");
 
@@ -146,7 +146,7 @@ namespace model {
         modelObjectClone.setDesignSpecificationMultispeedObject(designSpec->clone(model).cast<UnitarySystemPerformanceMultispeed>());
       }
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<ModelObject> AirLoopHVACUnitarySystem_Impl::children() const {

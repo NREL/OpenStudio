@@ -133,7 +133,7 @@ namespace model {
         t_clone.getImpl<detail::CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl>()->setSpeedDataList(speedDataListClone);
       }
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<IdfObject> CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl::remove() {

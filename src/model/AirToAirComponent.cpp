@@ -445,14 +445,14 @@ namespace model {
     }
 
     ModelObject AirToAirComponent_Impl::clone(Model model) const {
-      AirToAirComponent mo = HVACComponent_Impl::clone(model).cast<AirToAirComponent>();
+      auto mo = HVACComponent_Impl::clone(model).cast<AirToAirComponent>();
 
       mo.setString(mo.primaryAirInletPort(), "");
       mo.setString(mo.primaryAirOutletPort(), "");
       mo.setString(mo.secondaryAirInletPort(), "");
       mo.setString(mo.secondaryAirOutletPort(), "");
 
-      return mo;
+      return std::move(mo);
     }
 
   }  // namespace detail

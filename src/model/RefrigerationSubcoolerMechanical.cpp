@@ -78,11 +78,11 @@ namespace model {
     }
 
     ModelObject RefrigerationSubcoolerMechanical_Impl::clone(Model model) const {
-      RefrigerationSubcoolerMechanical modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSubcoolerMechanical>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationSubcoolerMechanical>();
 
       modelObjectClone.resetCapacityProvidingSystem();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     boost::optional<RefrigerationSystem> RefrigerationSubcoolerMechanical_Impl::capacityProvidingSystem() const {

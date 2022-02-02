@@ -445,7 +445,7 @@ namespace model {
         t_clone.getImpl<detail::CoilCoolingDXVariableSpeed_Impl>()->setSpeedDataList(speedDataListClone);
       }
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<ModelObject> CoilCoolingDXVariableSpeed_Impl::children() const {

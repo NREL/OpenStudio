@@ -252,7 +252,7 @@ namespace model {
         newCoil.getImpl<detail::CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl>()->setSpeedDataList(speedDataListClone);
       }
 
-      return newCoil;
+      return std::move(newCoil);
     }
 
     std::vector<ModelObject> CoilHeatingWaterToAirHeatPumpVariableSpeedEquationFit_Impl::children() const {

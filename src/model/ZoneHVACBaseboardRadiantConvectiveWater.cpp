@@ -178,7 +178,7 @@ namespace model {
         }
       }
 
-      return baseboardRadConvWaterClone;
+      return std::move(baseboardRadConvWaterClone);
     }
 
     std::vector<IdfObject> ZoneHVACBaseboardRadiantConvectiveWater_Impl::remove() {

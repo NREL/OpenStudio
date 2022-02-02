@@ -83,9 +83,9 @@ namespace model {
     }
 
     ModelObject RefrigerationCompressor_Impl::clone(Model model) const {
-      RefrigerationCompressor modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCompressor>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCompressor>();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<IdfObject> RefrigerationCompressor_Impl::remove() {

@@ -69,7 +69,7 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACPackagedTerminalAirConditioner_Impl::clone(Model model) const {
-      ZoneHVACPackagedTerminalAirConditioner ptacClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACPackagedTerminalAirConditioner>();
+      auto ptacClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACPackagedTerminalAirConditioner>();
 
       HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
@@ -98,7 +98,7 @@ namespace model {
         }
       }
 
-      return ptacClone;
+      return std::move(ptacClone);
     }
 
     std::vector<IdfObject> ZoneHVACPackagedTerminalAirConditioner_Impl::remove() {

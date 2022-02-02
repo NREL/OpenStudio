@@ -442,14 +442,14 @@ namespace model {
     }
 
     ModelObject ControllerOutdoorAir_Impl::clone(Model model) const {
-      ControllerOutdoorAir oaControllerClone = ParentObject_Impl::clone(model).cast<ControllerOutdoorAir>();
+      auto oaControllerClone = ParentObject_Impl::clone(model).cast<ControllerOutdoorAir>();
 
       ControllerMechanicalVentilation mechVentControllerClone =
         controllerMechanicalVentilation().clone(model).cast<ControllerMechanicalVentilation>();
 
       oaControllerClone.setControllerMechanicalVentilation(mechVentControllerClone);
 
-      return oaControllerClone;
+      return std::move(oaControllerClone);
     }
 
     boost::optional<Schedule> ControllerOutdoorAir_Impl::minimumOutdoorAirSchedule() const {

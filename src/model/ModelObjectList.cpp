@@ -84,7 +84,7 @@ namespace model {
     }
 
     ModelObject ModelObjectList_Impl::clone(Model model) const {
-      ModelObjectList modelObjectListClone = ModelObject_Impl::clone(model).cast<ModelObjectList>();
+      auto modelObjectListClone = ModelObject_Impl::clone(model).cast<ModelObjectList>();
 
       std::vector<ModelObject> modelObjects = this->modelObjects();
 
@@ -96,7 +96,7 @@ namespace model {
         }
       }
 
-      return modelObjectListClone;
+      return std::move(modelObjectListClone);
     }
 
     std::vector<ModelObject> ModelObjectList_Impl::modelObjects() const {

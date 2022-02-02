@@ -500,9 +500,9 @@ namespace model {
     }
 
     ModelObject CoilHeatingDXSingleSpeed_Impl::clone(Model model) const {
-      CoilHeatingDXSingleSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingDXSingleSpeed>();
+      auto newCoil = StraightComponent_Impl::clone(model).cast<CoilHeatingDXSingleSpeed>();
 
-      return newCoil;
+      return std::move(newCoil);
     }
 
     boost::optional<HVACComponent> CoilHeatingDXSingleSpeed_Impl::containingHVACComponent() const {

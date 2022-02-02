@@ -477,7 +477,7 @@ namespace model {
     ModelObject CoilPerformanceDXCooling_Impl::clone(Model model) const {
       auto newObject = ModelObject_Impl::clone(model).cast<CoilPerformanceDXCooling>();
 
-      return newObject;
+      return std::move(newObject);
     }
 
     boost::optional<double> CoilPerformanceDXCooling_Impl::autosizedGrossRatedTotalCoolingCapacity() const {

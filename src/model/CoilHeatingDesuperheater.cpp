@@ -110,11 +110,11 @@ namespace model {
     }
 
     ModelObject CoilHeatingDesuperheater_Impl::clone(Model model) const {
-      CoilHeatingDesuperheater modelObjectClone = StraightComponent_Impl::clone(model).cast<CoilHeatingDesuperheater>();
+      auto modelObjectClone = StraightComponent_Impl::clone(model).cast<CoilHeatingDesuperheater>();
 
       modelObjectClone.resetHeatingSource();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     bool CoilHeatingDesuperheater_Impl::addToNode(Node& node) {

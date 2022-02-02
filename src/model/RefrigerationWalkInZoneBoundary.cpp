@@ -91,11 +91,11 @@ namespace model {
     }
 
     ModelObject RefrigerationWalkInZoneBoundary_Impl::clone(Model model) const {
-      RefrigerationWalkInZoneBoundary modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationWalkInZoneBoundary>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationWalkInZoneBoundary>();
 
       modelObjectClone.resetThermalZone();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     boost::optional<ThermalZone> RefrigerationWalkInZoneBoundary_Impl::thermalZone() const {

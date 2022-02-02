@@ -435,7 +435,7 @@ namespace model {
     ModelObject CoilWaterHeatingAirToWaterHeatPump_Impl::clone(Model model) const {
       auto newCoil = ModelObject_Impl::clone(model).cast<CoilWaterHeatingAirToWaterHeatPump>();
 
-      return newCoil;
+      return std::move(newCoil);
     }
 
     std::vector<ModelObject> CoilWaterHeatingAirToWaterHeatPump_Impl::children() const {

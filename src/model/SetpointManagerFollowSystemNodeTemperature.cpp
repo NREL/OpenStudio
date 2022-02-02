@@ -76,9 +76,9 @@ namespace model {
     }
 
     ModelObject SetpointManagerFollowSystemNodeTemperature_Impl::clone(Model model) const {
-      SetpointManagerFollowSystemNodeTemperature clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerFollowSystemNodeTemperature>();
+      auto clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerFollowSystemNodeTemperature>();
       clonedObject.resetReferenceNode();
-      return clonedObject;
+      return std::move(clonedObject);
     }
 
     std::string SetpointManagerFollowSystemNodeTemperature_Impl::controlVariable() const {

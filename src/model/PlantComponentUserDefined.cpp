@@ -84,7 +84,7 @@ namespace model {
 
     ModelObject PlantComponentUserDefined_Impl::clone(Model model) const {
 
-      PlantComponentUserDefined newPlantComponentUserDefined = ModelObject_Impl::clone(model).cast<PlantComponentUserDefined>();
+      auto newPlantComponentUserDefined = ModelObject_Impl::clone(model).cast<PlantComponentUserDefined>();
       //designVolumeFlowRateActuator
       if (boost::optional<EnergyManagementSystemActuator> object = designVolumeFlowRateActuator()) {
         EnergyManagementSystemActuator objectClone = object.get().clone(model).cast<EnergyManagementSystemActuator>();
@@ -188,7 +188,7 @@ namespace model {
         //ThermalZone objectClone = object.get().clone(model).cast<ThermalZone>();
         newPlantComponentUserDefined.setAmbientZone(object.get());
       }
-      return newPlantComponentUserDefined;
+      return std::move(newPlantComponentUserDefined);
     }
 
     std::vector<IddObjectType> PlantComponentUserDefined_Impl::allowableChildTypes() const {

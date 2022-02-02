@@ -283,7 +283,7 @@ namespace model {
     ModelObject CoilHeatingDXMultiSpeedStageData_Impl::clone(Model model) const {
       auto t_clone = ModelObject_Impl::clone(model).cast<CoilHeatingDXMultiSpeedStageData>();
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     std::vector<IdfObject> CoilHeatingDXMultiSpeedStageData_Impl::remove() {

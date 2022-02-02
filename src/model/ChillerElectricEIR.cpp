@@ -586,9 +586,9 @@ namespace model {
     }
 
     ModelObject ChillerElectricEIR_Impl::clone(Model model) const {
-      ChillerElectricEIR chiller = WaterToWaterComponent_Impl::clone(model).cast<ChillerElectricEIR>();
+      auto chiller = WaterToWaterComponent_Impl::clone(model).cast<ChillerElectricEIR>();
 
-      return chiller;
+      return std::move(chiller);
     }
 
     bool ChillerElectricEIR_Impl::setBasinHeaterSchedule(Schedule& schedule) {

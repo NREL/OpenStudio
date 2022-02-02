@@ -513,7 +513,7 @@ namespace model {
     ModelObject ChillerAbsorptionIndirect_Impl::clone(Model model) const {
       auto newMo = WaterToWaterComponent_Impl::clone(model).cast<ChillerAbsorptionIndirect>();
 
-      return newMo;
+      return std::move(newMo);
     }
 
     std::vector<ModelObject> ChillerAbsorptionIndirect_Impl::children() const {

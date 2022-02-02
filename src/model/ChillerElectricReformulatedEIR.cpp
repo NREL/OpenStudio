@@ -534,9 +534,9 @@ namespace model {
     }
 
     ModelObject ChillerElectricReformulatedEIR_Impl::clone(Model model) const {
-      ChillerElectricReformulatedEIR chiller = WaterToWaterComponent_Impl::clone(model).cast<ChillerElectricReformulatedEIR>();
+      auto chiller = WaterToWaterComponent_Impl::clone(model).cast<ChillerElectricReformulatedEIR>();
 
-      return chiller;
+      return std::move(chiller);
     }
 
     std::vector<ModelObject> ChillerElectricReformulatedEIR_Impl::children() const {

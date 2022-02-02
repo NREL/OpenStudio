@@ -75,9 +75,9 @@ namespace model {
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     ModelObject CoilCoolingDXTwoSpeed_Impl::clone(Model model) const {
-      CoilCoolingDXTwoSpeed newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoSpeed>();
+      auto newCoil = StraightComponent_Impl::clone(model).cast<CoilCoolingDXTwoSpeed>();
 
-      return newCoil;
+      return std::move(newCoil);
     }
 
     std::vector<IddObjectType> CoilCoolingDXTwoSpeed_Impl::allowableChildTypes() const {

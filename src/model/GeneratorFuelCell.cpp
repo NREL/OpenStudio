@@ -107,7 +107,7 @@ namespace model {
     // This will clone the GeneratorFuelCell as well as the Accessories if there are any
     // and will return a reference to the GeneratorFuelCell
     ModelObject GeneratorFuelCell_Impl::clone(Model model) const {
-      GeneratorFuelCell newFC = ModelObject_Impl::clone(model).cast<GeneratorFuelCell>();
+      auto newFC = ModelObject_Impl::clone(model).cast<GeneratorFuelCell>();
 
       // If there's a GeneratorFuelCellPowerModule, clone it as well
       if (boost::optional<GeneratorFuelCellPowerModule> pm = powerModule()) {
@@ -174,7 +174,7 @@ namespace model {
         newFC.getImpl<detail::GeneratorFuelCell_Impl>()->setFuelSupply(fsClone);
       }
 
-      return newFC;
+      return std::move(newFC);
     }
 
     // Return allowable child types

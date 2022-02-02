@@ -145,9 +145,9 @@ namespace model {
     }
 
     ModelObject SetpointManager_Impl::clone(Model model) const {
-      SetpointManager clonedObject = HVACComponent_Impl::clone(model).cast<SetpointManager>();
+      auto clonedObject = HVACComponent_Impl::clone(model).cast<SetpointManager>();
       clonedObject.getImpl<detail::SetpointManager_Impl>()->resetSetpointNode();
-      return clonedObject;
+      return std::move(clonedObject);
     }
 
     boost::optional<Loop> SetpointManager_Impl::loop() const {

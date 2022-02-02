@@ -67,7 +67,7 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACPackagedTerminalHeatPump_Impl::clone(Model model) const {
-      ZoneHVACPackagedTerminalHeatPump pthpClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACPackagedTerminalHeatPump>();
+      auto pthpClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACPackagedTerminalHeatPump>();
 
       //Schedule scheduleClone = this->availabilitySchedule().clone(model).cast<Schedule>();
 
@@ -104,7 +104,7 @@ namespace model {
         }
       }
 
-      return pthpClone;
+      return std::move(pthpClone);
     }
 
     const std::vector<std::string>& ZoneHVACPackagedTerminalHeatPump_Impl::outputVariableNames() const {

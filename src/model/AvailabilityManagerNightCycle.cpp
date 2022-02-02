@@ -108,7 +108,7 @@ namespace model {
     }
 
     ModelObject AvailabilityManagerNightCycle_Impl::clone(Model model) const {
-      AvailabilityManagerNightCycle avmClone = ModelObject_Impl::clone(model).cast<AvailabilityManagerNightCycle>();
+      auto avmClone = ModelObject_Impl::clone(model).cast<AvailabilityManagerNightCycle>();
 
       // Now recreate the lists
       // Control Zone List
@@ -139,7 +139,7 @@ namespace model {
         OS_AvailabilityManager_NightCycleFields::HeatingZoneFansOnlyZoneorZoneListName, heatingZoneFansOnlyThermalZoneList.handle());
       OS_ASSERT(ok);
 
-      return avmClone;
+      return std::move(avmClone);
     }
 
     std::vector<IdfObject> AvailabilityManagerNightCycle_Impl::remove() {

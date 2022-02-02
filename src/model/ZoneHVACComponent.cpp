@@ -88,7 +88,7 @@ namespace model {
         clone.setString(clone.outletPort(), "");
       }
 
-      return clone;
+      return std::move(clone);
     }
 
     boost::optional<ThermalZone> ZoneHVACComponent_Impl::thermalZone() const {

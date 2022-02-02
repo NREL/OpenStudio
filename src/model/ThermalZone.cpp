@@ -2159,7 +2159,7 @@ namespace model {
     }
 
     ModelObject ThermalZone_Impl::clone(Model model) const {
-      ThermalZone tz = HVACComponent_Impl::clone(model).cast<ThermalZone>();
+      auto tz = HVACComponent_Impl::clone(model).cast<ThermalZone>();
       // We need this because "connect" is first going to try to disconnect from anything
       // currently attached.  At this point tz is left pointing (through a connection) to the old zone air node,
       // (because of ModelObject::clone behavior) so connecting to the new node will remove the connection joining
@@ -2208,7 +2208,7 @@ namespace model {
         afnzoneClone.setThermalZone(tz);
       }
 
-      return tz;
+      return std::move(tz);
     }
 
     boost::optional<AirLoopHVACSupplyPlenum> ThermalZone_Impl::airLoopHVACSupplyPlenum() const {

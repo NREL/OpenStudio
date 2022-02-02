@@ -83,11 +83,11 @@ namespace model {
     }
 
     ModelObject RefrigerationGasCoolerAirCooled_Impl::clone(Model model) const {
-      RefrigerationGasCoolerAirCooled modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationGasCoolerAirCooled>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationGasCoolerAirCooled>();
 
       // modelObjectClone.resetAirInletNode();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<IddObjectType> RefrigerationGasCoolerAirCooled_Impl::allowableChildTypes() const {

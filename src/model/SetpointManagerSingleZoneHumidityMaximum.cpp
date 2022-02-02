@@ -89,9 +89,9 @@ namespace model {
     }
 
     ModelObject SetpointManagerSingleZoneHumidityMaximum_Impl::clone(Model model) const {
-      SetpointManagerSingleZoneHumidityMaximum clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSingleZoneHumidityMaximum>();
+      auto clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSingleZoneHumidityMaximum>();
       clonedObject.resetControlZone();
-      return clonedObject;
+      return std::move(clonedObject);
     }
 
     std::string SetpointManagerSingleZoneHumidityMaximum_Impl::controlVariable() const {

@@ -111,12 +111,12 @@ namespace model {
     }
 
     ModelObject GeneratorPhotovoltaic_Impl::clone(Model model) const {
-      GeneratorPhotovoltaic result = ModelObject_Impl::clone(model).cast<GeneratorPhotovoltaic>();
+      auto result = ModelObject_Impl::clone(model).cast<GeneratorPhotovoltaic>();
       PhotovoltaicPerformance newPerformance = this->photovoltaicPerformance().clone(model).cast<PhotovoltaicPerformance>();
       result.setPointer(OS_Generator_PhotovoltaicFields::ModulePerformanceName, newPerformance.handle());
 
       result.resetSurface();
-      return result;
+      return std::move(result);
     }
 
     std::string GeneratorPhotovoltaic_Impl::generatorObjectType() const {

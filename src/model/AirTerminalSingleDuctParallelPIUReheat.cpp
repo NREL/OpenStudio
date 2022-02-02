@@ -385,7 +385,7 @@ namespace model {
     }
 
     ModelObject AirTerminalSingleDuctParallelPIUReheat_Impl::clone(Model model) const {
-      AirTerminalSingleDuctParallelPIUReheat modelObjectClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctParallelPIUReheat>();
+      auto modelObjectClone = StraightComponent_Impl::clone(model).cast<AirTerminalSingleDuctParallelPIUReheat>();
 
       modelObjectClone.setString(modelObjectClone.secondaryAirInletPort(), "");
 
@@ -405,7 +405,7 @@ namespace model {
 
       modelObjectClone.setFan(fanClone);
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     bool AirTerminalSingleDuctParallelPIUReheat_Impl::addToNode(Node& node) {

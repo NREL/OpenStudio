@@ -110,7 +110,7 @@ namespace model {
       avmClone.resetControlledZone();
       avmClone.resetZoneVentilationObject();
 
-      return avmClone;
+      return std::move(avmClone);
     }
 
     boost::optional<ThermalZone> AvailabilityManagerHybridVentilation_Impl::controlledZone() const {

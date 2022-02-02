@@ -206,7 +206,7 @@ namespace model {
     }
 
     ModelObject WaterToWaterComponent_Impl::clone(Model model) const {
-      WaterToWaterComponent mo = HVACComponent_Impl::clone(model).cast<WaterToWaterComponent>();
+      auto mo = HVACComponent_Impl::clone(model).cast<WaterToWaterComponent>();
 
       mo.setString(mo.supplyInletPort(), "");
       mo.setString(mo.supplyOutletPort(), "");
@@ -215,7 +215,7 @@ namespace model {
       mo.setString(mo.getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryInletPort(), "");
       mo.setString(mo.getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryOutletPort(), "");
 
-      return mo;
+      return std::move(mo);
     }
 
     boost::optional<PlantLoop> WaterToWaterComponent_Impl::plantLoop() const {

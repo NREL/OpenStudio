@@ -72,13 +72,13 @@ namespace model {
 
     ModelObject SolarCollectorIntegralCollectorStorage_Impl::clone(Model model) const {
 
-      SolarCollectorIntegralCollectorStorage result = StraightComponent_Impl::clone(model).cast<SolarCollectorIntegralCollectorStorage>();
+      auto result = StraightComponent_Impl::clone(model).cast<SolarCollectorIntegralCollectorStorage>();
       result.setSolarCollectorPerformance(this->solarCollectorPerformance());
 
       // do not want to point to any surface after cloning
       result.resetSurface();
 
-      return result;
+      return std::move(result);
     }
 
     std::vector<IdfObject> SolarCollectorIntegralCollectorStorage_Impl::remove() {

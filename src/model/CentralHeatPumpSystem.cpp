@@ -115,7 +115,7 @@ namespace model {
     ModelObject CentralHeatPumpSystem_Impl::clone(Model model) const {
 
       // Call the WaterToWater clone method, for a clean one, and that will reset the connections to loops
-      CentralHeatPumpSystem newCentralHP = WaterToWaterComponent_Impl::clone(model).cast<CentralHeatPumpSystem>();
+      auto newCentralHP = WaterToWaterComponent_Impl::clone(model).cast<CentralHeatPumpSystem>();
 
       // In the CentralHeatPumpSystem Implementation, the actual important object is the chillerHeaterModuleList
       // Create a new (blank) ModelObjectList, and set it
@@ -136,7 +136,7 @@ namespace model {
         newCentralHP.addModule(centralHPModClone);
       }
 
-      return newCentralHP;
+      return std::move(newCentralHP);
     }
 
     // CoolingLoop

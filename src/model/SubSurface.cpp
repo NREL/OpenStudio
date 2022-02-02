@@ -171,7 +171,7 @@ namespace model {
         clone.addShadingControl(shadingConrolClone);
       }
 
-      return clone;
+      return std::move(clone);
     }
 
     const std::vector<std::string>& SubSurface_Impl::outputVariableNames() const {

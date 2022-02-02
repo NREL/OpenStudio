@@ -111,7 +111,7 @@ namespace model {
         newCoilSystem.setHeatExchanger(mo);
       }
 
-      return newCoilSystem;
+      return std::move(newCoilSystem);
     }
 
     boost::optional<HVACComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::containingHVACComponent() const {

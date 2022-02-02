@@ -417,7 +417,7 @@ namespace model {
         }
       }
 
-      return newCoil;
+      return std::move(newCoil);
     }
 
     std::vector<IddObjectType> CoilCoolingDXTwoStageWithHumidityControlMode_Impl::allowableChildTypes() const {

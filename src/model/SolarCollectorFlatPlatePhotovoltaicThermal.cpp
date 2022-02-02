@@ -75,7 +75,7 @@ namespace model {
 
     ModelObject SolarCollectorFlatPlatePhotovoltaicThermal_Impl::clone(Model model) const {
 
-      SolarCollectorFlatPlatePhotovoltaicThermal result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
+      auto result = StraightComponent_Impl::clone(model).cast<SolarCollectorFlatPlatePhotovoltaicThermal>();
       SolarCollectorPerformancePhotovoltaicThermalSimple newPerformance =
         this->solarCollectorPerformance().clone(model).cast<SolarCollectorPerformancePhotovoltaicThermalSimple>();
       result.setPointer(OS_SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName, newPerformance.handle());
@@ -89,7 +89,7 @@ namespace model {
       // do not want to point to any surface after cloning
       result.resetSurface();
 
-      return result;
+      return std::move(result);
     }
 
     std::vector<IdfObject> SolarCollectorFlatPlatePhotovoltaicThermal_Impl::remove() {

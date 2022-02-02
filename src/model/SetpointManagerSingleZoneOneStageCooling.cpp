@@ -89,9 +89,9 @@ namespace model {
     }
 
     ModelObject SetpointManagerSingleZoneOneStageCooling_Impl::clone(Model model) const {
-      SetpointManagerSingleZoneOneStageCooling clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSingleZoneOneStageCooling>();
+      auto clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSingleZoneOneStageCooling>();
       clonedObject.resetControlZone();
-      return clonedObject;
+      return std::move(clonedObject);
     }
 
     std::string SetpointManagerSingleZoneOneStageCooling_Impl::controlVariable() const {

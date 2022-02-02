@@ -206,7 +206,7 @@ namespace model {
       t_clone.setString(OS_AirTerminal_DualDuct_ConstantVolumeFields::ColdAirInletNode, "");
       t_clone.setString(OS_AirTerminal_DualDuct_ConstantVolumeFields::AirOutletNode, "");
 
-      return t_clone;
+      return std::move(t_clone);
     }
 
     bool AirTerminalDualDuctConstantVolume_Impl::isRemovable() const {

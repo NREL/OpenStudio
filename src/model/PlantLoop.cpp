@@ -170,7 +170,7 @@ namespace model {
     }
 
     ModelObject PlantLoop_Impl::clone(Model model) const {
-      PlantLoop plantLoopClone = Loop_Impl::clone(model).cast<PlantLoop>();
+      auto plantLoopClone = Loop_Impl::clone(model).cast<PlantLoop>();
 
       plantLoopClone.setString(supplyInletPort(), "");
       plantLoopClone.setString(supplyOutletPort(), "");
@@ -484,7 +484,7 @@ namespace model {
         }
       }
 
-      return plantLoopClone;
+      return std::move(plantLoopClone);
     }
 
     unsigned PlantLoop_Impl::supplyInletPort() const {

@@ -130,7 +130,7 @@ namespace model {
     }
 
     ModelObject RefrigerationCase_Impl::clone(Model model) const {
-      RefrigerationCase modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCase>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<RefrigerationCase>();
 
       if (boost::optional<RefrigerationDefrostCycleParameters> caseDefrostCycleParameters = this->optionalCaseDefrostCycleParameters()) {
         modelObjectClone.getImpl<RefrigerationCase_Impl>()->setCaseDefrostCycleParameters(
@@ -139,7 +139,7 @@ namespace model {
 
       modelObjectClone.resetThermalZone();
 
-      return modelObjectClone;
+      return std::move(modelObjectClone);
     }
 
     std::vector<IdfObject> RefrigerationCase_Impl::remove() {

@@ -91,7 +91,7 @@ namespace model {
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     ModelObject AirLoopHVACUnitaryHeatPumpAirToAir_Impl::clone(Model model) const {
-      AirLoopHVACUnitaryHeatPumpAirToAir newUnitary = StraightComponent_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
+      auto newUnitary = StraightComponent_Impl::clone(model).cast<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
       HVACComponent newFan = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
@@ -109,7 +109,7 @@ namespace model {
 
       newUnitary.setSupplementalHeatingCoil(newSupHeatingCoil);
 
-      return newUnitary;
+      return std::move(newUnitary);
     }
 
     const std::vector<std::string>& AirLoopHVACUnitaryHeatPumpAirToAir_Impl::outputVariableNames() const {

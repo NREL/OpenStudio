@@ -90,7 +90,7 @@ namespace model {
    * By using the "children" method and listing the chillerHeaterModulesPerformanceComponent there ModelObject_Impl::clone will automatically do
    * the right thing -> NO IT DOESN'T */
     ModelObject CentralHeatPumpSystemModule_Impl::clone(Model model) const {
-      CentralHeatPumpSystemModule newCentralHPMod = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
+      auto newCentralHPMod = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
 
       // If not using "children", then expliclity do it:
       bool ok = true;
@@ -113,7 +113,7 @@ namespace model {
       // This better have worked
       OS_ASSERT(ok);
 
-      return newCentralHPMod;
+      return std::move(newCentralHPMod);
     }
 
     // Returns allowable child types: ChillerHeaterPerformanceElectricEIR
