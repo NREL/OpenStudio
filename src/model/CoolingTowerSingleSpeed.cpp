@@ -975,73 +975,35 @@ namespace model {
     OS_ASSERT(getImpl<detail::CoolingTowerSingleSpeed_Impl>());
 
     autosizeDesignWaterFlowRate();
-
     autosizeDesignAirFlowRate();
-
     autosizeFanPoweratDesignAirFlowRate();
-
     autosizeFanPoweratDesignAirFlowRate();
-
     autosizeUFactorTimesAreaValueatDesignAirFlowRate();
-
     autosizeAirFlowRateinFreeConvectionRegime();
-
     autosizeUFactorTimesAreaValueatFreeConvectionAirFlowRate();
-
     setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
-
-    setNominalCapacity(0.0);
-
     setFreeConvectionCapacity(0.0);
-
     setBasinHeaterCapacity(0.0);
-
-    setBasinHeaterSetpointTemperature(0.0);
-
-    setString(OS_CoolingTower_SingleSpeedFields::BasinHeaterOperatingScheduleName, "");
-
+    setBasinHeaterSetpointTemperature(2.0);
     setEvaporationLossMode("LossFactor");
-
     setEvaporationLossFactor(0.2);
-
     setDriftLossPercent(0.008);
-
     setBlowdownCalculationMode("ConcentrationRatio");
-
     setBlowdownConcentrationRatio(3.0);
-
-    setString(OS_CoolingTower_SingleSpeedFields::BlowdownMakeupWaterUsageScheduleName, "");
-
-    setString(OS_CoolingTower_SingleSpeedFields::OutdoorAirInletNodeName, "");
-
     setCapacityControl("FanCycling");
-
     setNumberofCells(1);
-
     setCellControl("MinimalCell");
-
     setCellMinimumWaterFlowRateFraction(0.33);
-
     setCellMaximumWaterFlowRateFraction(2.5);
-
     setSizingFactor(1.0);
-
     setFreeConvectionAirFlowRateSizingFactor(0.1);
-
     setFreeConvectionUFactorTimesAreaValueSizingFactor(0.1);
-
     setHeatRejectionCapacityAndNominalCapacitySizingRatio(1.25);
-
     setFreeConvectionNominalCapacitySizingFactor(0.1);
-
     setDesignInletAirDryBulbTemperature(35.0);
-
     setDesignInletAirWetBulbTemperature(25.6);
-
     autosizeDesignApproachTemperature();
-
     autosizeDesignRangeTemperature();
-
     setEndUseSubcategory("General");
   }
 
