@@ -795,50 +795,56 @@ TEST_F(ModelFixture, Ensure_Name_Unicity_SpaceAndSpaceGroupNames) {
 
 TEST_F(ModelFixture, Issue_4372) {
 
-  openstudio::path modelPath = resourcesPath() / "model" / toPath("bar_hosp_unmatched_floor.osm");
+  // Open OffsetTests
+  // INtersect surfaces
+  // Match Surfaces
+  // Check the internal walls are paired
+  // Surface 4 Space 101 with SPace 102 surface 12
+  // Surface 2 Space 102 with
+
+  openstudio::path modelPath = resourcesPath() / "model" / toPath("offset_tests.osm");
   ASSERT_TRUE(openstudio::filesystem::exists(modelPath));
-  //boost::optional<Model> model = Model::load(path);
 
   openstudio::osversion::VersionTranslator vt;
   boost::optional<openstudio::model::Model> model = vt.loadModel(modelPath);
-
   ASSERT_TRUE(model);
 
-  int numobj = model->numObjects();
   std::vector<Space> spaces = model->getModelObjects<Space>();
-  std::vector<Surface> surfacesBefore = model->getModelObjects<Surface>();
-
-  double totalAreaBefore = 0;
-  for (const auto& surface : surfacesBefore) {
-    auto name = surface.nameString();
-    auto type = surface.surfaceType();
-    auto area = surface.grossArea();
-    auto condition = surface.outsideBoundaryCondition();
-
-    //if (type == "Wall" && condition == "Outdoors") {
-      totalAreaBefore += area;
-    //}
-  }
-
   intersectSurfaces(spaces);
-  //matchSurfaces(spaces);
+
+  matchSurfaces(spaces);
   std::vector<Surface> surfacesAfter = model->getModelObjects<Surface>();
+  for (auto surface : surfacesAfter) {
 
-  modelPath = resourcesPath() / "model" / toPath("bar_hosp_after_floor.osm");
-  model->save(modelPath, true);
+    std::string name = surface.name().value();
+    OptionalSurface otherSurface;
+    if (name == "Surface 4") {
+      otherSurface = surface.adjacentSurface();
+      ASSERT_TRUE(otherSurface);
+      ASSERT_EQ(otherSurface->name().value(), "Surface 8");
+    } else if (name == "Surface 10") {
+      otherSurface = surface.adjacentSurface();
+      ASSERT_TRUE(otherSurface);
+      ASSERT_EQ(otherSurface->name().value(), "Surface 14");
+    } else if (name == "Surface 16") {
+      otherSurface = surface.adjacentSurface();
+      ASSERT_TRUE(otherSurface);
+      ASSERT_EQ(otherSurface->name().value(), "Surface 20");
+    } else if (name == "Surface 22") {
+      otherSurface = surface.adjacentSurface();
+      ASSERT_TRUE(otherSurface);
+      ASSERT_EQ(otherSurface->name().value(), "Surface 26");
+    } else if (name == "Surface 28") {
+      otherSurface = surface.adjacentSurface();
+      ASSERT_TRUE(otherSurface);
+      ASSERT_EQ(otherSurface->name().value(), "Surface 32");
+    }
 
-  double totalAreaAfter = 0;
-  for (const auto& surface : surfacesAfter) {
-    auto name = surface.nameString();
-    auto type = surface.surfaceType();
-    auto area = surface.grossArea();
-    auto condition  = surface.outsideBoundaryCondition();
-
-    //if (type == "Wall" && condition == "Outdoors") {
-      totalAreaAfter += area;
-    //}
+    if (otherSurface) LOG(Info, "Surface " << surface.name().value() << " is paired with " << otherSurface->name().value());
   }
-  ASSERT_NEAR(totalAreaBefore, totalAreaAfter, 1);
+
+  modelPath = resourcesPath() / "model" / toPath("offset_tests_matched.osm");
+  model->save(modelPath, true);
 }
 
 

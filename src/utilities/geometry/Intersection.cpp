@@ -105,7 +105,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
         for (unsigned j = 0; j < polygon.outer().size(); j++) {
           Point3d p1(polygon.outer()[j].x(), polygon.outer()[j].y(), 0);
           // Two points are within tolerance set the result to the original input point
-          if (getDistance(point3d, p1) <= 0.05) {
+          if (getDistance(point3d, p1) <= amount) {
             boostPolygon.outer()[i].x(polygon.outer()[j].x());
             boostPolygon.outer()[i].y(polygon.outer()[j].y());
             break;
