@@ -846,3 +846,5 @@ TEST_F(ModelFixture, Issue_4372) {
   modelPath = resourcesPath() / "model" / toPath("offset_tests_matched.osm");
   model->save(modelPath, true);
 }
+
+
