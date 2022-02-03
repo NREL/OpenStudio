@@ -1791,7 +1791,7 @@ namespace sdd {
     }
 
     m_shadingConstructionMap.insert(std::make_pair(key, construction));
-    return construction;
+    return std::move(construction);
   }
 
   model::Schedule ReverseTranslator::shadingSchedule(openstudio::model::Model& model, double trans) {

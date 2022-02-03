@@ -3969,14 +3969,14 @@ namespace energyplus {
     if (construction.optionalCast<model::Construction>()) {
       model::Construction reversed = construction.cast<model::Construction>().reverseConstruction();
       m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed));
-      return reversed;
+      return std::move(reversed);
     }
 
     if (construction.optionalCast<model::ConstructionWithInternalSource>()) {
       model::ConstructionWithInternalSource reversed =
         construction.cast<model::ConstructionWithInternalSource>().reverseConstructionWithInternalSource();
       m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed));
-      return reversed;
+      return std::move(reversed);
     }
 
     // DLM: this is not right, should make reverseConstruction a virtual method on LayeredConstruction so it will work for ConstructionWithInternalSource, etc
@@ -3990,7 +3990,7 @@ namespace energyplus {
     reversed.setLayers(layers);
     m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed));
 
-    return reversed;
+    return std::move(reversed);
   }
 
   void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model& model) {

@@ -323,7 +323,7 @@ namespace model {
 
     airLoopHVAC.addBranchForHVACComponent(terminal);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType4(Model& model) {
@@ -390,7 +390,7 @@ namespace model {
     Node node1 = supplyFan.outletModelObject()->cast<Node>();
     setpointMSZR.addToNode(node1);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType5(Model& model) {
@@ -484,7 +484,7 @@ namespace model {
 
     hotWaterPlant.addDemandBranchForComponent(waterReheatCoil);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType6(Model& model) {
@@ -525,7 +525,7 @@ namespace model {
     AirTerminalSingleDuctParallelPIUReheat terminal(model, _alwaysOnSchedule, piuFan, reheatCoil);
     airLoopHVAC.addBranchForHVACComponent(terminal);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType7(Model& model) {
@@ -751,7 +751,7 @@ namespace model {
 
     spm.addToNode(condenserSystemSupplyOutletNode);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType8(Model& model) {
@@ -827,7 +827,7 @@ namespace model {
     AirTerminalSingleDuctParallelPIUReheat terminal(model, _alwaysOnSchedule, piuFan, reheatCoil);
     airLoopHVAC.addBranchForHVACComponent(terminal);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType9(Model& model) {
@@ -888,7 +888,7 @@ namespace model {
 
     airLoopHVAC.addBranchForHVACComponent(terminal);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSystemType10(Model& model) {
@@ -949,7 +949,7 @@ namespace model {
 
     airLoopHVAC.addBranchForHVACComponent(terminal);
 
-    return airLoopHVAC;
+    return std::move(airLoopHVAC);
   }
 
   Loop addSHWLoop(Model& model) {
@@ -1138,7 +1138,7 @@ namespace model {
  *
  */
 
-    return shwPlant;
+    return std::move(shwPlant);
   }
 
 }  // namespace model
