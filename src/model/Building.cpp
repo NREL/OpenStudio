@@ -72,6 +72,7 @@
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 #include "../utilities/geometry/Intersection.hpp"
 
 #include <boost/optional.hpp>
@@ -100,35 +101,13 @@ namespace model {
     }
 
     std::vector<ModelObject> Building_Impl::children() const {
-      std::vector<ModelObject> result;
-
-      // meters
-      OutputMeterVector meters = this->meters();
-      result.insert(result.end(), meters.begin(), meters.end());
-
-      // building stories
-      BuildingStoryVector stories = this->buildingStories();
-      result.insert(result.end(), stories.begin(), stories.end());
-
-      // exterior shading groups
-      ShadingSurfaceGroupVector shadingSurfaceGroups = this->shadingSurfaceGroups();
-      result.insert(result.end(), shadingSurfaceGroups.begin(), shadingSurfaceGroups.end());
-
-      // thermal zones
-      ThermalZoneVector thermalZones = this->thermalZones();
-      result.insert(result.end(), thermalZones.begin(), thermalZones.end());
-
-      // spaces
-      SpaceVector spaces = this->spaces();
-      result.insert(result.end(), spaces.begin(), spaces.end());
-
       // TODO: JM 2019-05-13: handle HVAC (#2449)
       // AirLoopHVACs should be considered de facto part of the building
       // PlantLoops may merit more attention:
       // if a PlantLoop doesn't serve an AirLoopHVAC or a ThermalZone, should it be considered part of the Building?
       // eg: a PlantLoop serving only a LoadProfile:Plant?
 
-      return result;
+      return concat<ModelObject>(this->meters(), this->buildingStories(), this->shadingSurfaceGroups(), this->thermalZones(), this->spaces());
     }
 
     // TODO: this is far from perfect, currently this is just trying to address a known issue #3524
@@ -141,36 +120,30 @@ namespace model {
 
       // Spaces
       for (auto& s : this->spaces()) {
-        tmp = s.remove();
-        result.insert(result.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(result, s.remove());
       }
 
       // thermal zones
       for (auto& z : this->thermalZones()) {
-        tmp = z.remove();
-        result.insert(result.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(result, z.remove());
       }
 
       // exterior shading groups
       for (auto& sg : this->shadingSurfaceGroups()) {
-        tmp = sg.remove();
-        result.insert(result.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(result, sg.remove());
       }
 
       // building stories
       for (auto& bs : this->buildingStories()) {
-        tmp = bs.remove();
-        result.insert(result.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(result, bs.remove());
       }
 
       // meters
       for (auto& m : this->meters()) {
-        tmp = m.remove();
-        result.insert(result.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(result, m.remove());
       }
 
-      tmp = ParentObject_Impl::remove();
-      result.insert(result.end(), tmp.begin(), tmp.end());
+      openstudio::detail::concat_helper(result, ParentObject_Impl::remove());
 
       return result;
     }

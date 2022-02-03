@@ -120,6 +120,8 @@
 #include <utilities/idd/OS_ThermalZone_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include "../utilities/core/ContainersMove.hpp"
+
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Point3d.hpp"
@@ -159,21 +161,19 @@ namespace model {
       std::vector<ModelObject> result;
 
       // Sizing Zone object
-      SizingZone sizingZone = this->sizingZone();
-      result.push_back(sizingZone);
+      result.emplace_back(this->sizingZone());
 
       // DLM: temporarily add supplyZoneMixing as children so we can see them in IG
       // remove once we have gridview for these
-      auto mixings = this->supplyZoneMixing();
-      result.insert(result.end(), mixings.begin(), mixings.end());
+      openstudio::detail::concat_helper(result, this->supplyZoneMixing());
 
       boost::optional<AirflowNetworkZone> afnz = airflowNetworkZone();
       if (afnz) {
-        result.push_back(afnz.get());
+        result.emplace_back(afnz.get());
       }
 
       if (boost::optional<ZoneHVACEquipmentList> z_eq = this->zoneHVACEquipmentList()) {
-        result.push_back(z_eq.get());
+        result.emplace_back(z_eq.get());
       }
 
       return result;
@@ -189,7 +189,7 @@ namespace model {
 
     std::vector<IddObjectType> ThermalZone_Impl::allowableChildTypes() const {
       // DLM: this does not seem to agree with implementation of children()
-      return std::vector<IddObjectType>{
+      return {
         IddObjectType::OS_ThermostatSetpoint_DualSetpoint,
         IddObjectType::OS_ZoneControl_Thermostat_StagedDualSetpoint,
         IddObjectType::OS_ZoneHVAC_EquipmentList,
@@ -1841,24 +1841,13 @@ namespace model {
     }
 
     SizingZone ThermalZone_Impl::sizingZone() const {
-      boost::optional<SizingZone> sizingZone;
 
-      std::vector<SizingZone> sizingObjects;
+      std::vector<SizingZone> sizingObjects = getObject<ModelObject>().getModelObjectSources<SizingZone>(SizingZone::iddObjectType());
 
-      //sizingObjects = model().getConcreteModelObjects<SizingZone>();
-
-      sizingObjects = getObject<ModelObject>().getModelObjectSources<SizingZone>(SizingZone::iddObjectType());
-
-      for (const auto& sizingObject : sizingObjects) {
-        if (sizingObject.thermalZone().handle() == this->handle()) {
-          sizingZone = sizingObject;
-        }
-      }
-
-      if (sizingZone) {
-        return sizingZone.get();
-      } else {
+      if (sizingObjects.empty()) {
         LOG_AND_THROW("ThermalZone missing Sizing:Zone object");
+      } else {
+        return sizingObjects[0];
       }
     }
 

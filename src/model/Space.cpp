@@ -128,6 +128,8 @@
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/geometry/Polygon3d.hpp"
 
+#include "../utilities/core/ContainersMove.hpp"
+
 #include "../utilities/core/Assert.hpp"
 
 #undef BOOST_UBLAS_TYPE_CHECK
@@ -176,109 +178,32 @@ namespace model {
     }
 
     std::vector<ModelObject> Space_Impl::children() const {
-      std::vector<ModelObject> result;
-
-      // shading groups
-      ShadingSurfaceGroupVector shadingSurfaceGroups = this->shadingSurfaceGroups();
-      result.insert(result.end(), shadingSurfaceGroups.begin(), shadingSurfaceGroups.end());
-
-      // interior surface partition groups
-      InteriorPartitionSurfaceGroupVector interiorPartitionSurfaceGroups = this->interiorPartitionSurfaceGroups();
-      result.insert(result.end(), interiorPartitionSurfaceGroups.begin(), interiorPartitionSurfaceGroups.end());
-
-      // surfaces
-      SurfaceVector surfaces = this->surfaces();
-      result.insert(result.end(), surfaces.begin(), surfaces.end());
-
-      // internal mass
-      InternalMassVector internalMass = this->internalMass();
-      result.insert(result.end(), internalMass.begin(), internalMass.end());
-
-      // lights
-      LightsVector lights = this->lights();
-      result.insert(result.end(), lights.begin(), lights.end());
-
-      // luminaires
-      LuminaireVector luminaires = this->luminaires();
-      result.insert(result.end(), luminaires.begin(), luminaires.end());
-
-      // people
-      PeopleVector people = this->people();
-      result.insert(result.end(), people.begin(), people.end());
-
-      // electric equipment
-      ElectricEquipmentVector electricEquipment = this->electricEquipment();
-      result.insert(result.end(), electricEquipment.begin(), electricEquipment.end());
-
-      // IT electric equipment
-      ElectricEquipmentITEAirCooledVector electricEquipmentITEAirCooled = this->electricEquipmentITEAirCooled();
-      result.insert(result.end(), electricEquipmentITEAirCooled.begin(), electricEquipmentITEAirCooled.end());
-
-      // gas equipment
-      GasEquipmentVector gasEquipment = this->gasEquipment();
-      result.insert(result.end(), gasEquipment.begin(), gasEquipment.end());
-
-      // hot water equipment
-      HotWaterEquipmentVector hotWaterEquipment = this->hotWaterEquipment();
-      result.insert(result.end(), hotWaterEquipment.begin(), hotWaterEquipment.end());
-
-      // steam equipment
-      SteamEquipmentVector steamEquipment = this->steamEquipment();
-      result.insert(result.end(), steamEquipment.begin(), steamEquipment.end());
-
-      // other equipment
-      OtherEquipmentVector otherEquipment = this->otherEquipment();
-      result.insert(result.end(), otherEquipment.begin(), otherEquipment.end());
-
-      // water use equipment
-      WaterUseEquipmentVector waterUseEquipment = this->waterUseEquipment();
-      result.insert(result.end(), waterUseEquipment.begin(), waterUseEquipment.end());
-
-      // daylighting controls
-      DaylightingControlVector daylightingControls = this->daylightingControls();
-      result.insert(result.end(), daylightingControls.begin(), daylightingControls.end());
-
-      //  illuminance map
-      IlluminanceMapVector illuminanceMaps = this->illuminanceMaps();
-      result.insert(result.end(), illuminanceMaps.begin(), illuminanceMaps.end());
-
-      // glare sensor
-      GlareSensorVector glareSensors = this->glareSensors();
-      result.insert(result.end(), glareSensors.begin(), glareSensors.end());
-
-      // SpaceInfiltration_DesignFlowRate
-      SpaceInfiltrationDesignFlowRateVector spaceInfiltrationDesignFlowRates = this->spaceInfiltrationDesignFlowRates();
-      result.insert(result.end(), spaceInfiltrationDesignFlowRates.begin(), spaceInfiltrationDesignFlowRates.end());
-
-      // SpaceInfiltration_EffectiveLeakageArea
-      SpaceInfiltrationEffectiveLeakageAreaVector spaceInfiltrationEffectiveLeakageAreas = this->spaceInfiltrationEffectiveLeakageAreas();
-      result.insert(result.end(), spaceInfiltrationEffectiveLeakageAreas.begin(), spaceInfiltrationEffectiveLeakageAreas.end());
-
-      // SpaceInfiltration_FlowCoefficient
-      SpaceInfiltrationFlowCoefficientVector spaceInfiltrationFlowCoefficients = this->spaceInfiltrationFlowCoefficients();
-      result.insert(result.end(), spaceInfiltrationFlowCoefficients.begin(), spaceInfiltrationFlowCoefficients.end());
-
-      return result;
+      return concat<ModelObject>(this->shadingSurfaceGroups(), this->interiorPartitionSurfaceGroups(), this->surfaces(), this->internalMass(),
+                                 this->lights(), this->luminaires(), this->people(), this->electricEquipment(), this->electricEquipmentITEAirCooled(),
+                                 this->gasEquipment(), this->hotWaterEquipment(), this->steamEquipment(), this->otherEquipment(),
+                                 this->waterUseEquipment(), this->daylightingControls(), this->illuminanceMaps(), this->glareSensors(),
+                                 this->spaceInfiltrationDesignFlowRates(), this->spaceInfiltrationEffectiveLeakageAreas(),
+                                 this->spaceInfiltrationFlowCoefficients());
     }
 
     std::vector<IddObjectType> Space_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_ShadingSurfaceGroup);
-      result.push_back(IddObjectType::OS_InteriorPartitionSurfaceGroup);
-      result.push_back(IddObjectType::OS_Surface);
-      result.push_back(IddObjectType::OS_Lights);
-      result.push_back(IddObjectType::OS_Luminaire);
-      result.push_back(IddObjectType::OS_People);
-      result.push_back(IddObjectType::OS_ElectricEquipment);
-      result.push_back(IddObjectType::OS_ElectricEquipment_ITE_AirCooled);
-      result.push_back(IddObjectType::OS_GasEquipment);
-      result.push_back(IddObjectType::OS_HotWaterEquipment);
-      result.push_back(IddObjectType::OS_Daylighting_Control);
-      result.push_back(IddObjectType::OS_IlluminanceMap);
-      result.push_back(IddObjectType::OS_SpaceInfiltration_DesignFlowRate);
-      result.push_back(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea);
-      result.push_back(IddObjectType::OS_SpaceInfiltration_FlowCoefficient);
-      return result;
+      return {
+        IddObjectType::OS_ShadingSurfaceGroup,
+        IddObjectType::OS_InteriorPartitionSurfaceGroup,
+        IddObjectType::OS_Surface,
+        IddObjectType::OS_Lights,
+        IddObjectType::OS_Luminaire,
+        IddObjectType::OS_People,
+        IddObjectType::OS_ElectricEquipment,
+        IddObjectType::OS_ElectricEquipment_ITE_AirCooled,
+        IddObjectType::OS_GasEquipment,
+        IddObjectType::OS_HotWaterEquipment,
+        IddObjectType::OS_Daylighting_Control,
+        IddObjectType::OS_IlluminanceMap,
+        IddObjectType::OS_SpaceInfiltration_DesignFlowRate,
+        IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea,
+        IddObjectType::OS_SpaceInfiltration_FlowCoefficient,
+      };
     }
 
     const std::vector<std::string>& Space_Impl::outputVariableNames() const {
@@ -2274,17 +2199,16 @@ namespace model {
             boost::optional<SurfaceIntersection> intersection = surface.computeIntersection(otherSurface);
             if (intersection) {
               std::vector<Surface> newSurfaces1 = intersection->newSurfaces1();
-              newSurfaces.insert(newSurfaces.end(), newSurfaces1.begin(), newSurfaces1.end());
-
               std::vector<Surface> newSurfaces2 = intersection->newSurfaces2();
-              newOtherSurfaces.insert(newOtherSurfaces.end(), newSurfaces2.begin(), newSurfaces2.end());
 
               // surfaces involved in this intersection are ineligible to be re-intersected with other surfaces in this intersection
               std::vector<Surface> ineligibleSurfaces;
+              ineligibleSurfaces.reserve(newSurfaces1.size() + 1);
               ineligibleSurfaces.push_back(surface);
               ineligibleSurfaces.insert(ineligibleSurfaces.end(), newSurfaces1.begin(), newSurfaces1.end());
 
               std::vector<Surface> ineligibleOtherSurfaces;
+              ineligibleOtherSurfaces.reserve(newSurfaces2.size() + 1);
               ineligibleOtherSurfaces.push_back(otherSurface);
               ineligibleOtherSurfaces.insert(ineligibleOtherSurfaces.end(), newSurfaces2.begin(), newSurfaces2.end());
               for (Surface& ineligibleSurface : ineligibleSurfaces) {
@@ -2293,6 +2217,12 @@ namespace model {
                   completedIntersections.insert(ineligibleIntersectionKey);
                 }
               }
+
+              newSurfaces.reserve(newSurfaces.size() + newSurfaces1.size());
+              newSurfaces.insert(newSurfaces.end(), std::make_move_iterator(newSurfaces1.begin()), std::make_move_iterator(newSurfaces1.end()));
+              newOtherSurfaces.reserve(newOtherSurfaces.size() + newSurfaces2.size());
+              newOtherSurfaces.insert(newOtherSurfaces.end(), std::make_move_iterator(newSurfaces2.begin()),
+                                      std::make_move_iterator(newSurfaces2.end()));
             }
           }
         }
@@ -2310,18 +2240,19 @@ namespace model {
 
     std::vector<Surface> Space_Impl::findSurfaces(boost::optional<double> minDegreesFromNorth, boost::optional<double> maxDegreesFromNorth,
                                                   boost::optional<double> minDegreesTilt, boost::optional<double> maxDegreesTilt, double tol) {
-      std::vector<Surface> result;
-      std::vector<PlanarSurface> planarSurfaces;
 
-      for (const Surface& surface : this->surfaces()) {
-        planarSurfaces.push_back(surface);
-      }
+      std::vector<PlanarSurface> planarSurfaces;
+      auto thisSurfaces = this->surfaces();
+      planarSurfaces.reserve(thisSurfaces.size());
+      planarSurfaces.insert(planarSurfaces.end(), std::make_move_iterator(thisSurfaces.begin()), std::make_move_iterator(thisSurfaces.end()));
 
       planarSurfaces =
         PlanarSurface::findPlanarSurfaces(planarSurfaces, minDegreesFromNorth, maxDegreesFromNorth, minDegreesTilt, maxDegreesTilt, tol);
 
+      std::vector<Surface> result;
+      result.reserve(planarSurfaces.size());
       for (const PlanarSurface& planarSurface : planarSurfaces) {
-        result.push_back(planarSurface.cast<Surface>());
+        result.emplace_back(planarSurface.cast<Surface>());
       }
 
       return result;

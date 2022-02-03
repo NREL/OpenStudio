@@ -41,6 +41,7 @@
 #include "../utilities/idf/Workspace_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 
 #include <deque>
 
@@ -81,9 +82,9 @@ namespace model {
       // drop the ResourceObject instances, if they are used by other objects
       // This is probably the unique situation where you want to get children minus ResourceObjects
       auto subTree = getRecursiveChildren(getObject<ParentObject>(), true, false);
-
+      result.reserve(subTree.size());
       for (const ModelObject& object : subTree) {
-        result.push_back(object.idfObject());
+        result.emplace_back(object.idfObject());
       }
 
       bool ok = model().removeObjects(getHandles<ModelObject>(subTree));
@@ -116,7 +117,7 @@ namespace model {
     OS_ASSERT(getImpl<detail::ParentObject_Impl>());
   }
 
-  ParentObject::ParentObject(std::shared_ptr<detail::ParentObject_Impl> p) : ModelObject(std::move(p)) {}
+  ParentObject::ParentObject(std::shared_ptr<detail::ParentObject_Impl> impl) : ModelObject(std::move(impl)) {}
 
   /// return any children objects in the hierarchy
   ModelObjectVector ParentObject::children() const {
@@ -132,14 +133,12 @@ namespace model {
                                                 bool includeUsedResources) {
     std::set<Handle> resultSet;
     std::pair<HandleSet::const_iterator, bool> insertResult;
-    std::vector<ModelObject> result;
     resultSet.insert(object.handle());
+    std::vector<ModelObject> result;
     result.push_back(object);
 
     if (includeLifeCycleCostsAndAdditionalProperties) {
-      for (const LifeCycleCost& lifeCycleCost : object.lifeCycleCosts()) {
-        result.push_back(lifeCycleCost);
-      }
+      openstudio::detail::concat_helper(result, object.lifeCycleCosts());
       if (object.hasAdditionalProperties()) {
         result.push_back(object.additionalProperties());
       }
@@ -166,11 +165,9 @@ namespace model {
           result.push_back(child);
 
           if (includeLifeCycleCostsAndAdditionalProperties) {
-            for (const LifeCycleCost& lifeCycleCost : child.lifeCycleCosts()) {
-              result.push_back(lifeCycleCost);
-            }
+            openstudio::detail::concat_helper(result, child.lifeCycleCosts());
             if (child.hasAdditionalProperties()) {
-              result.push_back(child.additionalProperties());
+              result.emplace_back(child.additionalProperties());
             }
           }
 

@@ -58,8 +58,9 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
-#include "../utilities/core/Optional.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 #include "../utilities/core/Compare.hpp"
+#include "../utilities/core/Optional.hpp"
 #include "../utilities/sql/SqlFile.hpp"
 
 #include <algorithm>
@@ -97,32 +98,17 @@ namespace model {
 
     std::vector<ModelObject> Facility_Impl::children() const {
       std::vector<ModelObject> result;
-
-      OutputMeterVector meters = this->meters();
-      result.insert(result.end(), meters.begin(), meters.end());
-
       // building
       OptionalBuilding building = this->building();
       if (building) {
         result.push_back(*building);
       }
 
-      ExteriorLightsVector exteriorLights = this->exteriorLights();
-      result.insert(result.end(), exteriorLights.begin(), exteriorLights.end());
-
-      ExteriorFuelEquipmentVector exteriorFuelEquipments = this->exteriorFuelEquipments();
-      result.insert(result.end(), exteriorFuelEquipments.begin(), exteriorFuelEquipments.end());
-
-      ExteriorWaterEquipmentVector exteriorWaterEquipments = this->exteriorWaterEquipments();
-      result.insert(result.end(), exteriorWaterEquipments.begin(), exteriorWaterEquipments.end());
-
-      return result;
+      return concat<ModelObject>(result, this->meters(), this->exteriorLights(), this->exteriorFuelEquipments(), this->exteriorWaterEquipments());
     }
 
     std::vector<IddObjectType> Facility_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_Building);
-      return result;
+      return {IddObjectType::OS_Building};
     }
 
     const std::vector<std::string>& Facility_Impl::outputVariableNames() const {

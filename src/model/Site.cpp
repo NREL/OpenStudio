@@ -75,6 +75,7 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 
 #include <algorithm>
 
@@ -154,26 +155,24 @@ namespace model {
       }
 
       // sizing periods
-      SizingPeriodVector sizingPeriods = model().getModelObjects<SizingPeriod>();
-      result.insert(result.end(), sizingPeriods.begin(), sizingPeriods.end());
+      openstudio::detail::concat_helper(result, model().getModelObjects<SizingPeriod>());
 
       // lighting design days
-      LightingDesignDayVector lightingDesignDays = model().getConcreteModelObjects<LightingDesignDay>();
-      result.insert(result.end(), lightingDesignDays.begin(), lightingDesignDays.end());
+      openstudio::detail::concat_helper(result, model().getModelObjects<LightingDesignDay>());
 
       // some SkyTemperatures are children (those that do not explicitly point to something else)
       SkyTemperatureVector skyTemperatures = model().getConcreteModelObjects<SkyTemperature>();
       auto siteAsParent = getObject<ParentObject>();
-      for (const SkyTemperature& st : skyTemperatures) {
+      for (SkyTemperature& st : skyTemperatures) {
         OptionalParentObject opo = st.parent();
         if (opo && (opo.get() == siteAsParent)) {
-          result.push_back(st.cast<ModelObject>());
+          // result.emplace_back(st.cast<ModelObject>());
+          result.emplace_back(std::move(st));
         }
       }
 
       // shading surface groups
-      std::vector<ShadingSurfaceGroup> shadingSurfaceGroups = this->shadingSurfaceGroups();
-      result.insert(result.end(), shadingSurfaceGroups.begin(), shadingSurfaceGroups.end());
+      openstudio::detail::concat_helper(result, this->shadingSurfaceGroups());
 
       return result;
     }

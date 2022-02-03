@@ -54,6 +54,7 @@
 #include "OutputVariable_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 #include "../utilities/sql/SqlFileEnums.hpp"
 #include "../utilities/sql/SqlFileTimeSeriesQuery.hpp"
 #include "../utilities/sql/SqlFile.hpp"
@@ -97,8 +98,7 @@ namespace model {
       std::vector<IdfObject> removedCosts;
       std::vector<LifeCycleCost> lifeCycleCosts = this->lifeCycleCosts();
       for (LifeCycleCost& lifeCycleCost : lifeCycleCosts) {
-        std::vector<IdfObject> tmp = lifeCycleCost.remove();
-        removedCosts.insert(removedCosts.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(removedCosts, lifeCycleCost.remove());
       }
       return removedCosts;
     }
@@ -136,7 +136,7 @@ namespace model {
       std::vector<std::string> variableNames = this->outputVariableNames();
       OptionalString name = this->name();
 
-      for (const OutputVariable& variable : this->model().getConcreteModelObjects<OutputVariable>()) {
+      for (OutputVariable& variable : this->model().getConcreteModelObjects<OutputVariable>()) {
         std::string keyValue = variable.keyValue();
         std::string variableName = variable.variableName();
 
@@ -151,7 +151,7 @@ namespace model {
         }
 
         if (std::find(variableNames.begin(), variableNames.end(), variableName) != variableNames.end()) {
-          variables.push_back(variable);
+          variables.emplace_back(std::move(variable));
         }
       }
       return variables;
@@ -606,13 +606,7 @@ namespace model {
     /// remove the object from the model, also removes any cost objects associated with this object
     /// return std::vector<IdfObject> containing any removed object(s)
     std::vector<IdfObject> ModelObject_Impl::remove() {
-      std::vector<IdfObject> result;
-      std::vector<IdfObject> removedCosts = this->removeLifeCycleCosts();
-      std::vector<IdfObject> removedProperties = this->removeAdditionalProperties();
-      result = WorkspaceObject_Impl::remove();
-      result.insert(result.end(), removedCosts.begin(), removedCosts.end());
-      result.insert(result.end(), removedProperties.begin(), removedProperties.end());
-      return result;
+      return concat<IdfObject>(this->removeLifeCycleCosts(), this->removeAdditionalProperties(), WorkspaceObject_Impl::remove());
     }
 
     Component ModelObject_Impl::createComponent() const {
@@ -738,18 +732,14 @@ namespace model {
       AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
       for (AdditionalProperties& candidate : candidates) {
         std::vector<IdfObject> tmp = candidate.remove();
-        removed.insert(removed.end(), tmp.begin(), tmp.end());
+        openstudio::detail::concat_helper(removed, std::move(tmp));
       }
       return removed;
     }
 
     bool ModelObject_Impl::hasAdditionalProperties() const {
-      bool result = false;
       AdditionalPropertiesVector candidates = getObject<ModelObject>().getModelObjectSources<AdditionalProperties>();
-      if (!candidates.empty()) {
-        result = true;
-      }
-      return result;
+      return !candidates.empty();
     }
 
   }  // namespace detail

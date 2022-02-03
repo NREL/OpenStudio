@@ -19,6 +19,7 @@ set(core_src
   core/CommandLine.cpp
   core/Compare.hpp
   core/Compare.cpp
+  core/ContainersMove.hpp
   core/Containers.hpp
   core/Containers.cpp
   core/Deprecated.hpp
@@ -432,9 +433,7 @@ target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR}/src)
 
 if(BUILD_TESTING)
-  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib)
-  add_dependencies(${target_name}_tests openstudio_model_resources)
-  add_dependencies(${target_name}_tests openstudio_energyplus_resources)
+  CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib openstudio_model_resources openstudio_energyplus_resources CONAN_PKG::fmt)
 endif()
 
 if(BUILD_BENCHMARK)

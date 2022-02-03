@@ -27,76 +27,68 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_CORE_CONTAINERS_HPP
-#define UTILITIES_CORE_CONTAINERS_HPP
-
-#include "../UtilitiesAPI.hpp"
-#include "Compare.hpp"
-
-#include <boost/optional.hpp>
-
-#include <vector>
-#include <set>
-#include <string>
+#ifndef UTILITIES_CORE_CONTAINERSMOVE_HPP
+#define UTILITIES_CORE_CONTAINERSMOVE_HPP
 
 #include <iterator>     // for make_move_iterator
 #include <type_traits>  // for declval, conditional, decay_t, enable_if_t
+#include <vector>       // for vector
 
 namespace openstudio {
 
-using BoolVector = std::vector<bool>;
-using UnsignedVector = std::vector<unsigned int>;
-using IntVector = std::vector<int>;
-using DoubleVector = std::vector<double>;
-using StringVector = std::vector<std::string>;
+namespace detail {
 
-using UnsignedSet = std::set<unsigned int>;
-using IntSet = std::set<int>;
-using DoubleSet = std::set<double>;
-using StringSet = std::set<std::string>;
+  // Define a helper test whether every predicate in a pack in true
+  template <typename... Conds>
+  struct and_ : std::true_type
+  {
+  };
 
-/** Set of strings with case-insensitive comparison. */
-using IStringSet = std::set<std::string, IstringCompare>;
+  template <typename Cond, typename... Conds>
+  struct and_<Cond, Conds...> : std::conditional<Cond::value, and_<Conds...>, std::false_type>::type
+  {
+  };
 
-using StringPair = std::pair<std::string, std::string>;
+  // Check that 1) it's a container, and 2) it contains elements that are convertible to ElementType
+  template <typename ElementType, typename Container, typename T = std::decay_t<decltype(*begin(std::declval<Container>()))>>
+  using VectorConvertible = std::enable_if_t<std::is_convertible_v<T, ElementType>>;
 
-UTILITIES_API std::vector<std::string> eraseEmptyElements(const std::vector<std::string>& sv);
+  // Same, but for a parameter pack
+  template <typename ElementType, typename... Vectors>
+  using AllVectorsConvertible = and_<VectorConvertible<ElementType, Vectors>...>;
 
-/** Helper function to cast a whole vector of objects. \relates IdfObject */
-template <typename T, typename U>
-std::vector<T> castVector(const std::vector<U>& objects) {
-  std::vector<T> result;
-  result.reserve(objects.size());
-  for (auto& object : objects) {
-    result.emplace_back(object.template cast<T>());
+  // Helper: when lvalue is passed
+  template <class Container1, class Container2>
+  void concat_helper(Container1& lhs, Container2& rhs) {
+    lhs.insert(lhs.end(), rhs.begin(), rhs.end());
   }
-  return result;
-}
 
-/** Returns a subset of original cast to a new type, only keeping those objects for which the
- *  optionalCast is successful. \relates IdfObject */
-template <typename T, typename U>
-std::vector<T> subsetCastVector(const std::vector<U>& original) {
-  std::vector<T> result;
-  for (const auto& elem : original) {
-    boost::optional<T> oCastObject = elem.template optionalCast<T>();
-    if (oCastObject) {
-      result.push_back(*oCastObject);
-    }
+  // Helper: when rvalue is passed
+  template <class Container1, class Container2>
+  void concat_helper(Container1& lhs, Container2&& rhs) {
+    lhs.insert(lhs.end(), std::make_move_iterator(rhs.begin()), std::make_move_iterator(rhs.end()));
   }
-  return result;
-}
+}  // namespace detail
 
-template <typename T, typename U>
-std::vector<std::vector<T>> castArray(const std::vector<std::vector<U>>& original) {
-  std::vector<std::vector<T>> result;
-  for (const auto& elem : original) {
-    typename std::vector<T> subVector = castVector<T>(elem);
-    result.push_back(subVector);
-  }
+// This will concatenate any number of containers (Vectors are the primary target) into a single vector
+// It has move-semantics in mind, for efficiency
+// Usage: in this example
+// * spaces is taken as an lvalue so elements are **copied** spaces is left intact
+// * surfaces is taken as an xvalue so elements are **moved**, surfaces is left in an undefined state and shouldn't be used anymore
+// * getSubSurfaces is a prvalue so it's **moved**
+//   ```c++
+//   std::vector<Space> spaces = getSpaces();
+//   std::vector<Surface> surfaces = getSurfaces();
+//   std::vector<ModelObject> mos = concat(spaces, std::move(surfaces), getSubSurfaces());
+//   ```
+template <typename RT, typename... Containers, typename = detail::AllVectorsConvertible<RT, Containers...>>
+std::vector<RT> concat(Containers&&... containers) {
+  std::size_t s = (containers.size() + ...);
+  std::vector<RT> result;
+  result.reserve(s);
+  (detail::concat_helper(result, std::forward<Containers>(containers)), ...);
   return result;
 }
 
 }  // namespace openstudio
-
-#endif  // UTILITIES_CORE_CONTAINERS_HPP
+#endif  // UTILITIES_CORE_CONTAINERSMOVE_HPP

@@ -135,10 +135,11 @@ namespace model {
     std::vector<T> getModelObjectSources() const {
       std::vector<T> result;
       std::vector<WorkspaceObject> wos = sources();
+      result.reserve(wos.size());
       for (const WorkspaceObject& wo : wos) {
         boost::optional<T> oSource = wo.optionalCast<T>();
         if (oSource) {
-          result.push_back(*oSource);
+          result.emplace_back(*oSource);
         }
       }
       return result;
@@ -155,9 +156,10 @@ namespace model {
     std::vector<T> getModelObjectSources(IddObjectType iddObjectType) const {
       std::vector<T> result;
       std::vector<WorkspaceObject> wos = getSources(iddObjectType);
+      result.reserve(wos.size());
       for (const WorkspaceObject& wo : wos) {
         // assume iddObjectType is valid for T
-        result.push_back(wo.cast<T>());
+        result.emplace_back(wo.cast<T>());
       }
       return result;
     }
@@ -179,10 +181,11 @@ namespace model {
     std::vector<T> getModelObjectTargets() const {
       std::vector<T> result;
       std::vector<WorkspaceObject> wos = targets();
+      result.reserve(wos.size());
       for (const WorkspaceObject& wo : wos) {
         boost::optional<T> oTarget = wo.optionalCast<T>();
         if (oTarget) {
-          result.push_back(*oTarget);
+          result.emplace_back(*oTarget);
         }
       }
       return result;
