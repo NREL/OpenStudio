@@ -350,7 +350,7 @@ namespace model {
     if (it != materialList.end()) {
       return it->second;
     } else {
-      for (int i = 0; i < allMaterials.size(); i++) {
+      for (size_t i = 0; i < allMaterials.size(); i++) {
         if (allMaterials[i].materialName == materialName) {
           // Create Material and Add to _materials
           int newMatIndex = createMaterial(materials, allMaterials[i]);
@@ -376,7 +376,7 @@ namespace model {
   // Now: Instead of creating materials for all the objects in Model
   // we're adding them to the all materials collection and create them only if required
   // while processing the surface i.e, in MAIN LOOP
-  void buildMaterials(const Model& model, std::vector<GLTF::Material>& materials, std::map<std::string, int>& materialList,
+  void buildMaterials(const Model& model, std::map<std::string, int>& materialList,
                       std::vector<MaterialData>& allMaterials) {
     std::string materialName;
 
@@ -389,7 +389,7 @@ namespace model {
       return color_.get();
     };
 
-    auto getOrCreateMaterial = [&getOrCreateRenderingColor, &materials, &allMaterials, &materialList](auto& object) {
+    auto getOrCreateMaterial = [&getOrCreateRenderingColor, &allMaterials, &materialList](auto& object) {
       std::string materialName = getObjectGLTFMaterialName(object);
       if (materialList.find(materialName) != materialList.end()) {
         LOG_FREE(Debug, "GltfForwardTranslator", "buildMaterials, Key " << materialName << " found in materialList");
@@ -773,7 +773,7 @@ namespace model {
 
     // Start Region CREATE MATERIALS
     // add model specific materials
-    buildMaterials(model, materials, materialList, allMaterials);
+    buildMaterials(model, materialList, allMaterials);
     // End Region CREATE MATERIALS
 
     TransformationVector transformStack{Transformation{}};
