@@ -1518,7 +1518,13 @@ namespace model {
     buildingStory.setNominalFloortoFloorHeight(3);
 
     // create spaces from floor print
-
+    // GG 10/26/21 - Change the spac egeneration to use fromFloorPrint instead of using Clone
+    // don't know the underlying workins of Clone but each time this method was called in a different
+    // session the order and type of surfaces was different, sometimes a surface was a roof and other
+    // times a wall. To test for deterministic gbxml export I need to be sure that the model used is
+    // idemntical every single time it this method is run. If these chanegs are aproblem I can refactor
+    // so both Clone and fromFloorProint could be used
+    //
     //            y (=North)
     //  Site      ▲
     //  Shading   │                  building height = 3m
