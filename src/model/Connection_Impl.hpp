@@ -60,11 +60,11 @@ namespace model {
 
       boost::optional<unsigned> targetObjectPort() const;
 
-      bool setSourceObject(ModelObject object);
+      bool setSourceObject(const ModelObject& object);
 
       bool setSourceObjectPort(unsigned port);
 
-      bool setTargetObject(ModelObject object);
+      bool setTargetObject(const ModelObject& object);
 
       bool setTargetObjectPort(unsigned port);
 

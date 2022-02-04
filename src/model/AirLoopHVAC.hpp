@@ -218,7 +218,7 @@ namespace model {
     /** Returns all of the components on the outdoor air system including the mixer itself.
    *  If type is given then the results will be limited to the given IddObjectType.
    */
-    std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+    std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
     /** Returns the AirLoopHVACOutdoorAirSystem object associated with the air loop.
    * A freshly constructed AirLoopHVAC object will not have an outdoor air system

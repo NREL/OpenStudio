@@ -102,9 +102,9 @@ namespace model {
 
       boost::optional<Node> returnAirNode() const;
 
-      std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+      std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const;
 
-      virtual std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) override;
+      virtual std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) const override;
 
       boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
@@ -173,7 +173,7 @@ namespace model {
 
       bool multiAddBranchForZone(ThermalZone& thermalZone, HVACComponent& airTerminal);
 
-      bool addBranchForZone(openstudio::model::ThermalZone& thermalZone);
+      bool addBranchForZone(ThermalZone& thermalZone);
 
       bool addBranchForZone(ThermalZone& thermalZone, HVACComponent& airTerminal);
 

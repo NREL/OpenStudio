@@ -246,7 +246,7 @@ namespace model {
       return idfObjects;
     }
 
-    std::vector<ModelObject> AirLoopHVAC_Impl::components(openstudio::IddObjectType type) {
+    std::vector<ModelObject> AirLoopHVAC_Impl::components(openstudio::IddObjectType type) const {
       std::vector<ModelObject> result;
 
       result = Loop_Impl::components(type);
@@ -900,7 +900,7 @@ namespace model {
       return {demandComps.begin(), end};
     }
 
-    std::vector<ModelObject> AirLoopHVAC_Impl::oaComponents(openstudio::IddObjectType /*type*/) {
+    std::vector<ModelObject> AirLoopHVAC_Impl::oaComponents(openstudio::IddObjectType /*type*/) const {
       if (airLoopHVACOutdoorAirSystem()) {
         return airLoopHVACOutdoorAirSystem()->components();
       } else {
@@ -2126,7 +2126,7 @@ namespace model {
     return getImpl<detail::AirLoopHVAC_Impl>()->clone(model);
   }
 
-  std::vector<ModelObject> AirLoopHVAC::oaComponents(openstudio::IddObjectType type) {
+  std::vector<ModelObject> AirLoopHVAC::oaComponents(openstudio::IddObjectType type) const {
     return getImpl<detail::AirLoopHVAC_Impl>()->oaComponents(type);
   }
 
