@@ -63,6 +63,7 @@ namespace model {
   class OutputControlFiles;
   class OutputTableSummaryReports;
   class PerformancePrecisionTradeoffs;
+  class Version;
 
   namespace detail {
     class Model_Impl;
@@ -241,7 +242,7 @@ namespace model {
       if (wo) {
         std::shared_ptr<typename T::ImplType> p = wo->getImpl<typename T::ImplType>();
         if (p) {
-          result = T(p);
+          result = T(std::move(p));
         }
       }
       return result;
@@ -259,12 +260,14 @@ namespace model {
    *  eg: getUniqueModelObject<YearDescription>() */
     template <typename T>
     T getUniqueModelObject() {
-      std::vector<WorkspaceObject> objects = this->allObjects();
+      // NOTE: all UniqueModelObjects are Concrete. Call getObjectsByType to avoid returning a huge vector
+      std::vector<WorkspaceObject> objects = this->getObjectsByType(T::iddObjectType());
+      // std::vector<WorkspaceObject> objects = this->allObjects();
       std::shared_ptr<typename T::ImplType> p;
       for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         p = it->getImpl<typename T::ImplType>();
         if (p) {
-          return T(p);
+          return T(std::move(p));
         }
       }
       return T(*this);  // make a new T
@@ -279,11 +282,13 @@ namespace model {
     template <typename T>
     boost::optional<T> getOptionalUniqueModelObject() const {
       boost::optional<T> result;
-      std::vector<WorkspaceObject> objects = this->allObjects();
+      // NOTE: all UniqueModelObjects are Concrete. Call getObjectsByType to avoid returning a huge vector
+      std::vector<WorkspaceObject> objects = this->getObjectsByType(T::iddObjectType());
+      // std::vector<WorkspaceObject> objects = this->allObjects();
       for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
         if (p) {
-          result = T(p);
+          result = T(std::move(p));
           break;
         }
       }
@@ -305,7 +310,7 @@ namespace model {
       for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
         if (p) {
-          result.push_back(T(p));
+          result.push_back(T(std::move(p)));
         }
       }
       return result;
@@ -318,10 +323,13 @@ namespace model {
     std::vector<T> getConcreteModelObjects() const {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->getObjectsByType(T::iddObjectType());
+      result.reserve(objects.size());
       for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
         if (p) {
-          result.push_back(T(p));
+          // emplace_back(std::move(p)) did not work, calling a protected constructor...
+          // the std::allocator for vector can forward to free functions...
+          result.push_back(T(std::move(p)));
         }
       }
       return result;
@@ -343,7 +351,7 @@ namespace model {
       for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
         if (p) {
-          result.push_back(T(p));
+          result.push_back(T(std::move(p)));
         }
       }
       return result;
@@ -379,6 +387,7 @@ namespace model {
     std::vector<T> getModelObjectsByName(const std::string& name, bool exactMatch = true) const {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->getObjectsByName(name, exactMatch);
+      result.reserve(objects.size());
       for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
         if (p) {
@@ -395,7 +404,7 @@ namespace model {
       if (object) {
         std::shared_ptr<typename T::ImplType> p = object->getImpl<typename T::ImplType>();
         if (p) {
-          result = T(p);
+          result = T(std::move(p));
         }
       }
       return result;
@@ -405,6 +414,7 @@ namespace model {
     std::vector<T> getConcreteModelObjectsByName(const std::string& name) const {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->getObjectsByTypeAndName(T::iddObjectType(), name);
+      result.reserve(objects.size());
       for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
         std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
         if (p) {
@@ -548,6 +558,9 @@ namespace model {
 
   template <>
   MODEL_API WeatherFile Model::getUniqueModelObject<WeatherFile>();
+
+  template <>
+  MODEL_API Version Model::getUniqueModelObject<Version>();
 
 }  // namespace model
 }  // namespace openstudio

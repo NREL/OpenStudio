@@ -328,6 +328,7 @@ namespace model {
       using NewConstructorFunction = std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(Model_Impl*, const IdfObject&, bool)>;
       using NewConstructorMap = std::map<IddObjectType, NewConstructorFunction>;
 
+      // TODO: do we really need a macro and a **static** ModelObjectCreator
       // The purpose of ModelObjectCreator is to support static initialization of two large maps.
       // One is a map from IddObjectType to a function that creates a new ModelObject instance,
       // The other is a map from IddObjectType to a function that creates a copy of an existing

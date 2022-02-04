@@ -2546,6 +2546,14 @@ namespace model {
     }
   }
 
+  template <>
+  Version Model::getUniqueModelObject<Version>() {
+    if (boost::optional<WorkspaceObject> wo_ = this->versionObject()) {
+      return wo_->cast<Version>();
+    }
+    return Version(*this);  // make a new T
+  }
+
   std::shared_ptr<openstudio::detail::WorkspaceObject_Impl> detail::Model_Impl::ModelObjectCreator::getNew(Model_Impl* model, const IdfObject& obj,
                                                                                                            bool keepHandle) const {
     auto typeToCreate = obj.iddObject().type();
