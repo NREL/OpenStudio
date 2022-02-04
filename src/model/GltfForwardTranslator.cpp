@@ -873,7 +873,7 @@ namespace model {
       // BPS:having a separate input file for the GLTF is old now everything resides
       // in the main GLTF file only..as a binary buffer data.
       auto padding = indicesBuffer.size() % 4;
-      for (int i = 0; i < padding; i++) {
+      for (unsigned int i = 0; i < padding; i++) {
         indicesBuffer.push_back(0x00);  // padding bytes
       }
 
@@ -911,7 +911,7 @@ namespace model {
     std::vector<GLTF::Node> nodesNew;
     std::vector<int> nodesTemp;
     nodesTemp.resize(nodes.size() - 1);
-    for (int i = 1; i < nodes.size(); i++) {
+    for (unsigned int i = 1; i < nodes.size(); i++) {
       int j = i - 1;
       nodesTemp[j] = i;
     }
