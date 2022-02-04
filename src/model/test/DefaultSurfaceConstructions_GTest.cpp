@@ -85,7 +85,8 @@ TEST_F(ModelFixture, DefaultSurfaceConstructions_Clone) {
       numMaterials += construction.resources().size();
     }
   }
-  EXPECT_EQ(exampleModel.getConcreteModelObjects<DefaultSurfaceConstructions>().size(), model.getConcreteModelObjects<DefaultSurfaceConstructions>().size());
+  EXPECT_EQ(exampleModel.getConcreteModelObjects<DefaultSurfaceConstructions>().size(),
+            model.getConcreteModelObjects<DefaultSurfaceConstructions>().size());
   EXPECT_EQ(numConstructions, model.getModelObjects<ConstructionBase>().size());
   EXPECT_LE(model.getModelObjects<Material>().size(), numMaterials);  // some materials are reused
 

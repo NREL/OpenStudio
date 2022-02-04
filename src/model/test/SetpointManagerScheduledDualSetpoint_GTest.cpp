@@ -83,7 +83,8 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_addToNode) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerScheduledDualSetpoint> setpointManagerScheduledDualSetpoints = m.getConcreteModelObjects<SetpointManagerScheduledDualSetpoint>();
+  std::vector<SetpointManagerScheduledDualSetpoint> setpointManagerScheduledDualSetpoints =
+    m.getConcreteModelObjects<SetpointManagerScheduledDualSetpoint>();
   EXPECT_EQ(3, setpointManagerScheduledDualSetpoints.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode());
@@ -112,7 +113,8 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_remove) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerScheduledDualSetpoint> setpointManagerScheduledDualSetpoints = m.getConcreteModelObjects<SetpointManagerScheduledDualSetpoint>();
+  std::vector<SetpointManagerScheduledDualSetpoint> setpointManagerScheduledDualSetpoints =
+    m.getConcreteModelObjects<SetpointManagerScheduledDualSetpoint>();
   EXPECT_EQ(1, setpointManagerScheduledDualSetpoints.size());
 
   spm.remove();

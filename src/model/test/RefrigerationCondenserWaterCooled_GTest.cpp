@@ -329,7 +329,8 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_Remove) {
   RefrigerationCondenserWaterCooled testObject = RefrigerationCondenserWaterCooled(model);
   ScheduleCompact schedule(model);
 
-  std::vector<RefrigerationCondenserWaterCooled> refrigerationWaterCooledCondensers = model.getConcreteModelObjects<RefrigerationCondenserWaterCooled>();
+  std::vector<RefrigerationCondenserWaterCooled> refrigerationWaterCooledCondensers =
+    model.getConcreteModelObjects<RefrigerationCondenserWaterCooled>();
   EXPECT_EQ(1, refrigerationWaterCooledCondensers.size());
 
   std::vector<Schedule> refrigerationSchedules = model.getModelObjects<Schedule>();

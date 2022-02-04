@@ -4024,7 +4024,8 @@ namespace sdd {
             ventSysEquip = trmlUnit;
             airLoopHVAC->addBranchForZone(thermalZone, trmlUnit->cast<model::StraightComponent>());
             pugi::xml_node inducedAirZnRefElement = trmlUnitElement.child("InducedAirZnRef");
-            if (boost::optional<model::ThermalZone> tz = model.getConcreteModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().as_string())) {
+            if (boost::optional<model::ThermalZone> tz =
+                  model.getConcreteModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().as_string())) {
               if (tz->isPlenum()) {
                 if (boost::optional<model::AirTerminalSingleDuctSeriesPIUReheat> piu =
                       trmlUnit->optionalCast<model::AirTerminalSingleDuctSeriesPIUReheat>()) {

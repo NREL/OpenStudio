@@ -1952,7 +1952,8 @@ namespace sdd {
           if ((openstudio::istringEqual(typeElement.text().as_string(), "SECONDARYSUPPLY")
                || openstudio::istringEqual(typeElement.text().as_string(), "PRIMARYSUPPLY"))
               && openstudio::istringEqual(nameElement.text().as_string(), fluidSegmentName)) {
-            if (boost::optional<model::PlantLoop> loop = model.getConcreteModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string())) {
+            if (boost::optional<model::PlantLoop> loop =
+                  model.getConcreteModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string())) {
               return loop;
             } else {
               if (boost::optional<model::ModelObject> mo = translateFluidSys(fluidSysElement, model)) {

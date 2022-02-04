@@ -954,15 +954,19 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
 
     std::vector<openstudio::model::ThermalZone> zones = model.getConcreteModelObjects<openstudio::model::ThermalZone>();
     ASSERT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<openstudio::model::ThermalZone>().size());
-    boost::optional<openstudio::model::ThermalZone> _zone1 = model.getConcreteModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
+    boost::optional<openstudio::model::ThermalZone> _zone1 =
+      model.getConcreteModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
     ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::ThermalZone> _zone2 = model.getConcreteModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
+    boost::optional<openstudio::model::ThermalZone> _zone2 =
+      model.getConcreteModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
     ASSERT_TRUE(_zone2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<openstudio::model::Space>().size());
-    boost::optional<openstudio::model::Space> _space1 = model.getConcreteModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
+    boost::optional<openstudio::model::Space> _space1 =
+      model.getConcreteModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
     ASSERT_TRUE(_space1);
-    boost::optional<openstudio::model::Space> _space2 = model.getConcreteModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
+    boost::optional<openstudio::model::Space> _space2 =
+      model.getConcreteModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
     ASSERT_TRUE(_space2);
 
     ASSERT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<openstudio::model::SpaceType>().size());
@@ -999,21 +1003,27 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
 
     std::vector<openstudio::model::ThermalZone> zones = model.getConcreteModelObjects<openstudio::model::ThermalZone>();
     ASSERT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<openstudio::model::ThermalZone>().size());
-    boost::optional<openstudio::model::ThermalZone> _zone1 = model.getConcreteModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
+    boost::optional<openstudio::model::ThermalZone> _zone1 =
+      model.getConcreteModelObjectByName<openstudio::model::ThermalZone>(_i_zone1->nameString());
     ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::ThermalZone> _zone2 = model.getConcreteModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
+    boost::optional<openstudio::model::ThermalZone> _zone2 =
+      model.getConcreteModelObjectByName<openstudio::model::ThermalZone>(_i_zone2->nameString());
     ASSERT_TRUE(_zone2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<openstudio::model::Space>().size());
-    boost::optional<openstudio::model::Space> _space1 = model.getConcreteModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
+    boost::optional<openstudio::model::Space> _space1 =
+      model.getConcreteModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
     ASSERT_TRUE(_space1);
-    boost::optional<openstudio::model::Space> _space2 = model.getConcreteModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
+    boost::optional<openstudio::model::Space> _space2 =
+      model.getConcreteModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
     ASSERT_TRUE(_space2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<openstudio::model::SpaceType>().size());
-    boost::optional<openstudio::model::SpaceType> _spaceType1 = model.getConcreteModelObjectByName<openstudio::model::SpaceType>(_i_zoneList1->nameString());
+    boost::optional<openstudio::model::SpaceType> _spaceType1 =
+      model.getConcreteModelObjectByName<openstudio::model::SpaceType>(_i_zoneList1->nameString());
     ASSERT_TRUE(_spaceType1);
-    boost::optional<openstudio::model::SpaceType> _spaceType2 = model.getConcreteModelObjectByName<openstudio::model::SpaceType>(_i_zoneList2->nameString());
+    boost::optional<openstudio::model::SpaceType> _spaceType2 =
+      model.getConcreteModelObjectByName<openstudio::model::SpaceType>(_i_zoneList2->nameString());
     ASSERT_TRUE(_spaceType2);
 
     ASSERT_TRUE(_space1->thermalZone());
