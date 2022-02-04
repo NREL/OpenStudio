@@ -316,7 +316,7 @@ namespace model {
           scheduleBase.ensureNoLeapDays();
         }
 
-        for (ScheduleRule& scheduleRule : model.getModelObjects<ScheduleRule>()) {
+        for (ScheduleRule& scheduleRule : model.getConcreteModelObjects<ScheduleRule>()) {
           scheduleRule.ensureNoLeapDays();
         }
 

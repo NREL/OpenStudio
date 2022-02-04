@@ -112,8 +112,8 @@ TEST_F(gbXMLFixture, ReverseTranslator_ZNETH) {
 
   // add test to see that surfaces that reference two spaces get "surface" boundary condition
   // e.g. surface named "su-76" should have "Surface" string for OutsideBoundaryCondition
-  //OptionalSurface osurf = model->getModelObjectByName<Surface>("su-76"); // su-76 is the id
-  OptionalSurface osurf = model->getModelObjectByName<Surface>("B-101-201-I-F-76");  // B-101-201-I-F-76 is the name
+  //OptionalSurface osurf = model->getConcreteModelObjectByName<Surface>("su-76"); // su-76 is the id
+  OptionalSurface osurf = model->getConcreteModelObjectByName<Surface>("B-101-201-I-F-76");  // B-101-201-I-F-76 is the name
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Surface", osurf->outsideBoundaryCondition());
 
@@ -139,7 +139,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_Constructions) {
 
   model->save(resourcesPath() / openstudio::toPath("gbxml/TestCube.osm"), true);
 
-  auto osurf = model->getModelObjectByName<Surface>("T-1-5-I-F-6 Reversed");
+  auto osurf = model->getConcreteModelObjectByName<Surface>("T-1-5-I-F-6 Reversed");
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Surface", osurf->outsideBoundaryCondition());
 
@@ -148,13 +148,13 @@ TEST_F(gbXMLFixture, ReverseTranslator_Constructions) {
   EXPECT_EQ("Floor: Floor 1", oconstruct->name().get());
 
   int count = 0;
-  for (auto& srf : model->getModelObjects<Surface>()) {
+  for (auto& srf : model->getConcreteModelObjects<Surface>()) {
     if (srf.outsideBoundaryCondition() != "Surface") {
       continue;
     }
     if (srf.name().get().find("Reversed") == std::string::npos) {
       auto other_name = srf.name().get() + " Reversed";
-      auto other_surf = model->getModelObjectByName<Surface>(other_name);
+      auto other_surf = model->getConcreteModelObjectByName<Surface>(other_name);
       ASSERT_TRUE(other_surf);
 
       // the construction will be assigned to one of these surfaces, the other surface will have an empty construction
@@ -188,7 +188,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_SubSurfaceConstructions) {
 
   model->save(resourcesPath() / openstudio::toPath("gbxml/seb.osm"), true);
 
-  auto osurf = model->getModelObjectByName<SubSurface>("Sub_Surface_8");
+  auto osurf = model->getConcreteModelObjectByName<SubSurface>("Sub_Surface_8");
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Outdoors", osurf->outsideBoundaryCondition());
 
@@ -200,7 +200,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_SubSurfaceConstructions) {
   EXPECT_EQ("3\'0\" x 3\'0\" Double pane  Alum Construction", ofield.get());
 
   int count = 0;
-  for (auto& srf : model->getModelObjects<SubSurface>()) {
+  for (auto& srf : model->getConcreteModelObjects<SubSurface>()) {
     auto oc = srf.construction();
     ASSERT_TRUE(oc);
     ofield = srf.getString(OS_SubSurfaceFields::ConstructionName);
@@ -220,41 +220,41 @@ TEST_F(gbXMLFixture, ReverseTranslator_UndergroundWalls) {
   ASSERT_TRUE(model);
 
   // Check all the surfaces that are supposed to be underground
-  OptionalSurface osurf = model->getModelObjectByName<Surface>("S-3-U-W-12");
+  OptionalSurface osurf = model->getConcreteModelObjectByName<Surface>("S-3-U-W-12");
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("S-2-U-W-8");
+  osurf = model->getConcreteModelObjectByName<Surface>("S-2-U-W-8");
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("E-2-U-W-7");
+  osurf = model->getConcreteModelObjectByName<Surface>("E-2-U-W-7");
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("E-1-U-W-1");
+  osurf = model->getConcreteModelObjectByName<Surface>("E-1-U-W-1");
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("N-1-U-W-2");
+  osurf = model->getConcreteModelObjectByName<Surface>("N-1-U-W-2");
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("N-4-U-W-18");
+  osurf = model->getConcreteModelObjectByName<Surface>("N-4-U-W-18");
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("W-4-U-W-17");
+  osurf = model->getConcreteModelObjectByName<Surface>("W-4-U-W-17");
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
-  osurf = model->getModelObjectByName<Surface>("W-3-U-W-13");
+  osurf = model->getConcreteModelObjectByName<Surface>("W-3-U-W-13");
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Ground", osurf->outsideBoundaryCondition());
 
   // Count the underground surfaces
   int count = 0;
-  for (auto& surf : model->getModelObjects<Surface>()) {
+  for (auto& surf : model->getConcreteModelObjects<Surface>()) {
     if (surf.outsideBoundaryCondition() == "Ground") {
       count += 1;
     }
@@ -324,29 +324,29 @@ TEST_F(gbXMLFixture, ReverseTranslator_AlternateUnits) {
   boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
   ASSERT_TRUE(model);
 
-  auto surfs = model->getModelObjects<Surface>();
+  auto surfs = model->getConcreteModelObjects<Surface>();
 
-  OptionalSurface osurf = model->getModelObjectByName<Surface>("T-1-5-I-F-6");
+  OptionalSurface osurf = model->getConcreteModelObjectByName<Surface>("T-1-5-I-F-6");
   ASSERT_TRUE(osurf);
   auto points = osurf->vertices();
   ASSERT_EQ(4, points.size());
   EXPECT_EQ(0.9144, points[1].y());
 
-  //auto omat = model->getModelObjectByName<StandardOpaqueMaterial>("Concrete: 100 [mm]");
+  //auto omat = model->getConcreteModelObjectByName<StandardOpaqueMaterial>("Concrete: 100 [mm]");
   //ASSERT_TRUE(omat);
   //EXPECT_NEAR(0.07407407, omat->thermalResistance(), 1.0e-8);
   //EXPECT_NEAR(1570.0, omat->density(), 1.0e-8);
   //EXPECT_NEAR(1.35, omat->conductivity(), 1.0e-8);
   //EXPECT_NEAR(0.1, omat->thickness(), 1.0e-8);
   //EXPECT_NEAR(840.0, omat->specificHeat(), 1.0e-8);
-  //omat = model->getModelObjectByName<StandardOpaqueMaterial>("RockWool: 50 [mm]");
+  //omat = model->getConcreteModelObjectByName<StandardOpaqueMaterial>("RockWool: 50 [mm]");
   //ASSERT_TRUE(omat);
   //EXPECT_NEAR(1.470588, omat->thermalResistance(), 1.0e-8);
   //EXPECT_NEAR(200.0, omat->density(), 1.0e-8);
   //EXPECT_NEAR(0.034, omat->conductivity(), 1.0e-8);
   //EXPECT_NEAR(0.05, omat->thickness(), 1.0e-8);
   //EXPECT_NEAR(710.0, omat->specificHeat(), 1.0e-8);
-  //omat = model->getModelObjectByName<StandardOpaqueMaterial>("Concrete: 150 [mm]");
+  //omat = model->getConcreteModelObjectByName<StandardOpaqueMaterial>("Concrete: 150 [mm]");
   //ASSERT_TRUE(omat);
   //EXPECT_NEAR(0.1111111, omat->thermalResistance(), 1.0e-8);
   //EXPECT_NEAR(1570.0, omat->density(), 1.0e-8);
@@ -499,7 +499,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_3951_Surface) {
 
   // Check all the surfaces that are supposed to be floors and ceilings
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-slabongrade-space-1");
+    auto _surf = _model->getConcreteModelObjectByName<Surface>("storey-1-slabongrade-space-1");
     ASSERT_TRUE(_surf);
     EXPECT_EQ("Floor", _surf->surfaceType());
     auto _space = _surf->space();
@@ -508,7 +508,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_3951_Surface) {
   }
 
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-ceiling-space-1");
+    auto _surf = _model->getConcreteModelObjectByName<Surface>("storey-1-ceiling-space-1");
     ASSERT_TRUE(_surf);
     EXPECT_EQ("RoofCeiling", _surf->surfaceType());
     auto _space = _surf->space();
@@ -535,7 +535,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling) {
   // Might as well retest #3951 while we're at it
   // Check all the surfaces for their surfaceTypes and boundary conditions
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-slabongrade-space-1");
+    auto _surf = _model->getConcreteModelObjectByName<Surface>("storey-1-slabongrade-space-1");
     ASSERT_TRUE(_surf);
     EXPECT_EQ("Floor", _surf->surfaceType());
     auto _space = _surf->space();
@@ -546,7 +546,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling) {
   }
 
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-roof-space-1");
+    auto _surf = _model->getConcreteModelObjectByName<Surface>("storey-1-roof-space-1");
     ASSERT_TRUE(_surf);
     EXPECT_EQ("RoofCeiling", _surf->surfaceType());
     auto _space = _surf->space();
@@ -557,7 +557,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling) {
   }
 
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-1-space-1");
+    auto _surf = _model->getConcreteModelObjectByName<Surface>("storey-1-exterior-wall-1-space-1");
     ASSERT_TRUE(_surf);
     EXPECT_EQ("Wall", _surf->surfaceType());
     auto _space = _surf->space();
@@ -568,7 +568,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling) {
   }
 
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-2-space-1");
+    auto _surf = _model->getConcreteModelObjectByName<Surface>("storey-1-exterior-wall-2-space-1");
     ASSERT_TRUE(_surf);
     EXPECT_EQ("Wall", _surf->surfaceType());
     auto _space = _surf->space();
@@ -579,7 +579,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling) {
   }
 
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-diagonal-1-space-1");
+    auto _surf = _model->getConcreteModelObjectByName<Surface>("storey-1-exterior-wall-diagonal-1-space-1");
     ASSERT_TRUE(_surf);
     EXPECT_EQ("Wall", _surf->surfaceType());
     auto _space = _surf->space();
@@ -590,7 +590,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_3997_WindowScaling) {
   }
 
   {
-    auto _surf = _model->getModelObjectByName<Surface>("storey-1-exterior-wall-diagonal-2-space-1");
+    auto _surf = _model->getConcreteModelObjectByName<Surface>("storey-1-exterior-wall-diagonal-2-space-1");
     ASSERT_TRUE(_surf);
     EXPECT_EQ("Wall", _surf->surfaceType());
     auto _space = _surf->space();

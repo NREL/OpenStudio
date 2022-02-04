@@ -443,6 +443,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doass = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doass = model.getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   ASSERT_EQ(1u, doass.size());
 } */

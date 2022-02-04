@@ -345,10 +345,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS_explicit) {
     EXPECT_TRUE(reverseTranslator.warnings().empty());
 
     std::vector<openstudio::model::EnergyManagementSystemSensor> emsSensors =
-      model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>();
-    ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>().size());
+      model.getConcreteModelObjects<openstudio::model::EnergyManagementSystemSensor>();
+    ASSERT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<openstudio::model::EnergyManagementSystemSensor>().size());
 
-    openstudio::model::EnergyManagementSystemSensor emsSensor1 = model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>()[0];
+    openstudio::model::EnergyManagementSystemSensor emsSensor1 = model.getConcreteModelObjects<openstudio::model::EnergyManagementSystemSensor>()[0];
     EXPECT_EQ(_i_emsSensor->nameString(), emsSensor1.nameString());
     EXPECT_EQ("OATdb_Sensor", emsSensor1.nameString());
     boost::optional<openstudio::model::OutputVariable> _outvar = emsSensor1.outputVariable();
@@ -1831,9 +1831,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensorDelete_EMS) {
   std::string key = toString(avm.handle());
   EXPECT_EQ(key, sensor.keyName());
   // 1 sensor in the model
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<EnergyManagementSystemSensor>().size());
   // 1 avm in the model
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
@@ -1847,7 +1847,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensorDelete_EMS) {
 
   avm.remove();
   // 0 avm in the model
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
   //sensor still has keyName as avm UUID string (will not FT though eventually)
   EXPECT_EQ(key, sensor.keyName());
 
@@ -1867,12 +1867,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
   auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
-  std::vector<Lights> lights = model.getModelObjects<Lights>();
-  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
-  std::vector<Space> spaces = model.getModelObjects<Space>();
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
-  boost::optional<Space> space4 = model.getModelObjectByName<Space>("Space 4");
+  std::vector<Lights> lights = model.getConcreteModelObjects<Lights>();
+  std::vector<ElectricEquipment> electricEquipment = model.getConcreteModelObjects<ElectricEquipment>();
+  std::vector<Space> spaces = model.getConcreteModelObjects<Space>();
+  std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
+  std::vector<ThermalZone> thermalZone = model.getConcreteModelObjects<ThermalZone>();
+  boost::optional<Space> space4 = model.getConcreteModelObjectByName<Space>("Space 4");
   //this will create 1 zone in a zonelist
 
   //This is the EDD file for the spaceload actuators for this model so far
@@ -1925,12 +1925,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
   auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
-  std::vector<Lights> lights = model.getModelObjects<Lights>();
-  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
-  std::vector<Space> spaces = model.getModelObjects<Space>();
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
-  boost::optional<Space> space4 = model.getModelObjectByName<Space>("Space 4");
+  std::vector<Lights> lights = model.getConcreteModelObjects<Lights>();
+  std::vector<ElectricEquipment> electricEquipment = model.getConcreteModelObjects<ElectricEquipment>();
+  std::vector<Space> spaces = model.getConcreteModelObjects<Space>();
+  std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
+  std::vector<ThermalZone> thermalZone = model.getConcreteModelObjects<ThermalZone>();
+  boost::optional<Space> space4 = model.getConcreteModelObjectByName<Space>("Space 4");
   //this will create 1 zone in a zonelist
 
   //This is the EDD file for the spaceload actuators for this model so far
@@ -2009,11 +2009,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API_EMS) {
   auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
-  std::vector<Lights> lights = model.getModelObjects<Lights>();
-  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
-  std::vector<Space> spaces = model.getModelObjects<Space>();
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
+  std::vector<Lights> lights = model.getConcreteModelObjects<Lights>();
+  std::vector<ElectricEquipment> electricEquipment = model.getConcreteModelObjects<ElectricEquipment>();
+  std::vector<Space> spaces = model.getConcreteModelObjects<Space>();
+  std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
+  std::vector<ThermalZone> thermalZone = model.getConcreteModelObjects<ThermalZone>();
 
   auto thermalZone2 = thermalZone[0].clone(model).cast<ThermalZone>();
   auto thermalZone3 = thermalZone[0].clone(model).cast<ThermalZone>();
@@ -2091,11 +2091,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API2_EMS) {
   auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
-  std::vector<Lights> lights = model.getModelObjects<Lights>();
-  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
-  std::vector<Space> spaces = model.getModelObjects<Space>();
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
+  std::vector<Lights> lights = model.getConcreteModelObjects<Lights>();
+  std::vector<ElectricEquipment> electricEquipment = model.getConcreteModelObjects<ElectricEquipment>();
+  std::vector<Space> spaces = model.getConcreteModelObjects<Space>();
+  std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
+  std::vector<ThermalZone> thermalZone = model.getConcreteModelObjects<ThermalZone>();
 
   auto thermalZone2 = thermalZone[0].clone(model).cast<ThermalZone>();
   auto thermalZone3 = thermalZone[0].clone(model).cast<ThermalZone>();
@@ -2173,11 +2173,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   auto oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
   oems.setActuatorAvailabilityDictionaryReporting("Verbose");
 
-  std::vector<Lights> lights = model.getModelObjects<Lights>();
-  std::vector<ElectricEquipment> electricEquipment = model.getModelObjects<ElectricEquipment>();
-  std::vector<Space> spaces = model.getModelObjects<Space>();
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  std::vector<ThermalZone> thermalZone = model.getModelObjects<ThermalZone>();
+  std::vector<Lights> lights = model.getConcreteModelObjects<Lights>();
+  std::vector<ElectricEquipment> electricEquipment = model.getConcreteModelObjects<ElectricEquipment>();
+  std::vector<Space> spaces = model.getConcreteModelObjects<Space>();
+  std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
+  std::vector<ThermalZone> thermalZone = model.getConcreteModelObjects<ThermalZone>();
 
   auto thermalZone2 = thermalZone[0].clone(model).cast<ThermalZone>();
   auto thermalZone3 = thermalZone[0].clone(model).cast<ThermalZone>();
@@ -2301,13 +2301,13 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
 
-  EXPECT_EQ(2u, model.getModelObjects<EnergyManagementSystemGlobalVariable>().size());
-  EXPECT_EQ(1u, model.getModelObjects<EnergyManagementSystemProgramCallingManager>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<EnergyManagementSystemGlobalVariable>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<EnergyManagementSystemProgramCallingManager>().size());
 
   /**
    * Test the EMS Program
    * */
-  std::vector<EnergyManagementSystemProgram> emsProgs = model.getModelObjects<EnergyManagementSystemProgram>();
+  std::vector<EnergyManagementSystemProgram> emsProgs = model.getConcreteModelObjects<EnergyManagementSystemProgram>();
   ASSERT_EQ(1u, emsProgs.size());
   EnergyManagementSystemProgram emsProg = emsProgs[0];
   EXPECT_EQ(12u, emsProg.lines().size());
@@ -2344,7 +2344,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
   /**
    * Test the subroutine
    * */
-  std::vector<EnergyManagementSystemSubroutine> emsSubs = model.getModelObjects<EnergyManagementSystemSubroutine>();
+  std::vector<EnergyManagementSystemSubroutine> emsSubs = model.getConcreteModelObjects<EnergyManagementSystemSubroutine>();
   ASSERT_EQ(1u, emsSubs.size());
   EnergyManagementSystemSubroutine emsSub = emsSubs[0];
   EXPECT_EQ(2u, emsSub.lines().size());

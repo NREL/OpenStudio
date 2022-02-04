@@ -64,7 +64,7 @@ TEST_F(ModelFixture, ModelPartitionMaterial_AirWallMaterial_Constructors) {
   Model model;
   AirWallMaterial airWallMaterial(model);
   EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  AirWallMaterialVector airWallMaterials = model.getModelObjects<AirWallMaterial>();
+  AirWallMaterialVector airWallMaterials = model.getConcreteModelObjects<AirWallMaterial>();
   ASSERT_EQ(static_cast<unsigned>(1), airWallMaterials.size());
   EXPECT_TRUE(airWallMaterial == airWallMaterials[0]);
   EXPECT_TRUE(airWallMaterial.iddObject().type() == IddObjectType::OS_Material_AirWall);
@@ -72,7 +72,7 @@ TEST_F(ModelFixture, ModelPartitionMaterial_AirWallMaterial_Constructors) {
   // construct by clone
   auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  airWallMaterials = modelClone.getModelObjects<AirWallMaterial>();
+  airWallMaterials = modelClone.getConcreteModelObjects<AirWallMaterial>();
   ASSERT_EQ(static_cast<unsigned>(1), airWallMaterials.size());
   airWallMaterial = airWallMaterials[0];
   EXPECT_FALSE(airWallMaterial.model() == model);
@@ -84,7 +84,7 @@ TEST_F(ModelFixture, ModelPartitionMaterial_InfraredTransparentMaterial_Construc
   Model model;
   InfraredTransparentMaterial infraredTransparentMaterial(model);
   EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  InfraredTransparentMaterialVector infraredTransparentMaterials = model.getModelObjects<InfraredTransparentMaterial>();
+  InfraredTransparentMaterialVector infraredTransparentMaterials = model.getConcreteModelObjects<InfraredTransparentMaterial>();
   ASSERT_EQ(static_cast<unsigned>(1), infraredTransparentMaterials.size());
   EXPECT_TRUE(infraredTransparentMaterial == infraredTransparentMaterials[0]);
   EXPECT_TRUE(infraredTransparentMaterial.iddObject().type() == IddObjectType::OS_Material_InfraredTransparent);
@@ -92,7 +92,7 @@ TEST_F(ModelFixture, ModelPartitionMaterial_InfraredTransparentMaterial_Construc
   // construct by clone
   auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  infraredTransparentMaterials = modelClone.getModelObjects<InfraredTransparentMaterial>();
+  infraredTransparentMaterials = modelClone.getConcreteModelObjects<InfraredTransparentMaterial>();
   ASSERT_EQ(static_cast<unsigned>(1), infraredTransparentMaterials.size());
   infraredTransparentMaterial = infraredTransparentMaterials[0];
   EXPECT_FALSE(infraredTransparentMaterial.model() == model);

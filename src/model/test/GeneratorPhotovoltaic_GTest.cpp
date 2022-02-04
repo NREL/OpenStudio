@@ -269,7 +269,7 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_ElectricLoadCenterDistribution) {
   GeneratorPhotovoltaic panel = GeneratorPhotovoltaic::simple(model);
 
   //should be 0 default ELCD attached to panel
-  std::vector<ElectricLoadCenterDistribution> elcd = model.getModelObjects<ElectricLoadCenterDistribution>();
+  std::vector<ElectricLoadCenterDistribution> elcd = model.getConcreteModelObjects<ElectricLoadCenterDistribution>();
   EXPECT_EQ(0u, elcd.size());
   EXPECT_FALSE(panel.electricLoadCenterDistribution());
   //Add a ELCD
@@ -278,7 +278,7 @@ TEST_F(ModelFixture, GeneratorPhotovoltaic_ElectricLoadCenterDistribution) {
   EXPECT_EQ(elcd1.handle(), panel.electricLoadCenterDistribution().get().handle());
   //Add another ELCD
   ElectricLoadCenterDistribution elcd2(model);
-  EXPECT_EQ(2, model.getModelObjects<ElectricLoadCenterDistribution>().size());
+  EXPECT_EQ(2, model.getConcreteModelObjects<ElectricLoadCenterDistribution>().size());
   //Add the panel to it which should remove the existing one attached to panel
   EXPECT_TRUE(elcd2.addGenerator(panel));
   EXPECT_EQ(0, elcd1.generators().size());

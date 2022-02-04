@@ -60,12 +60,12 @@ TEST_F(ModelFixture, RefrigerationAirChiller_Remove) {
   Schedule s = m.alwaysOnDiscreteSchedule();
   RefrigerationAirChiller testObject = RefrigerationAirChiller(m, s);
 
-  std::vector<RefrigerationAirChiller> refrigerationAirChillers = m.getModelObjects<RefrigerationAirChiller>();
+  std::vector<RefrigerationAirChiller> refrigerationAirChillers = m.getConcreteModelObjects<RefrigerationAirChiller>();
   EXPECT_EQ(1, refrigerationAirChillers.size());
 
   testObject.remove();
 
-  refrigerationAirChillers = m.getModelObjects<RefrigerationAirChiller>();
+  refrigerationAirChillers = m.getConcreteModelObjects<RefrigerationAirChiller>();
   EXPECT_EQ(0, refrigerationAirChillers.size());
 }
 

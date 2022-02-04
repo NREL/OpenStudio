@@ -81,7 +81,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_GlassDoorToSubSurface) {
 
   ReverseTranslator rt;
   Model model = rt.translateWorkspace(ws);
-  SubSurfaceVector subSurfaces = model.getModelObjects<SubSurface>();
+  SubSurfaceVector subSurfaces = model.getConcreteModelObjects<SubSurface>();
   ASSERT_EQ(1u, subSurfaces.size());
   EXPECT_EQ("GlassDoor", subSurfaces[0].subSurfaceType());
 }

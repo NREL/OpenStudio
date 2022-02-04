@@ -147,7 +147,7 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirPretreat_addToNode) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(3, _setpointManagers.size());
-  std::vector<SetpointManagerOutdoorAirPretreat> setpointManagerOutdoorAirPretreats = m.getModelObjects<SetpointManagerOutdoorAirPretreat>();
+  std::vector<SetpointManagerOutdoorAirPretreat> setpointManagerOutdoorAirPretreats = m.getConcreteModelObjects<SetpointManagerOutdoorAirPretreat>();
   EXPECT_EQ(5, setpointManagerOutdoorAirPretreats.size());
 
   EXPECT_EQ(testObject, spm_3.setpointNode());
@@ -157,7 +157,7 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirPretreat_addToNode) {
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_3) == _setpointManagers.end());
   EXPECT_EQ(3, _setpointManagers.size());
-  setpointManagerOutdoorAirPretreats = m.getModelObjects<SetpointManagerOutdoorAirPretreat>();
+  setpointManagerOutdoorAirPretreats = m.getConcreteModelObjects<SetpointManagerOutdoorAirPretreat>();
   EXPECT_EQ(4, setpointManagerOutdoorAirPretreats.size());
 }
 
@@ -173,14 +173,14 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirPretreat_remove) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerOutdoorAirPretreat> setpointManagerOutdoorAirPretreats = m.getModelObjects<SetpointManagerOutdoorAirPretreat>();
+  std::vector<SetpointManagerOutdoorAirPretreat> setpointManagerOutdoorAirPretreats = m.getConcreteModelObjects<SetpointManagerOutdoorAirPretreat>();
   EXPECT_EQ(1, setpointManagerOutdoorAirPretreats.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerOutdoorAirPretreats = m.getModelObjects<SetpointManagerOutdoorAirPretreat>();
+  setpointManagerOutdoorAirPretreats = m.getConcreteModelObjects<SetpointManagerOutdoorAirPretreat>();
   EXPECT_EQ(0, setpointManagerOutdoorAirPretreats.size());
 }
 

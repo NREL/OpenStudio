@@ -104,7 +104,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_InteriorPartitionSurface) {
   space2->setThermalZone(zone);
   space1->matchSurfaces(*space2);
 
-  EXPECT_EQ(12u, model.getModelObjects<Surface>().size());
+  EXPECT_EQ(12u, model.getConcreteModelObjects<Surface>().size());
 
   unsigned n = 0;
   for (Surface surface : space1->surfaces()) {

@@ -61,12 +61,12 @@ TEST_F(ModelFixture, RefrigerationCondenserEvaporativeCooled_Remove) {
   RefrigerationCondenserEvaporativeCooled testObject = RefrigerationCondenserEvaporativeCooled(model);
 
   std::vector<RefrigerationCondenserEvaporativeCooled> refrigerationEvaporativeCooledCondensers =
-    model.getModelObjects<RefrigerationCondenserEvaporativeCooled>();
+    model.getConcreteModelObjects<RefrigerationCondenserEvaporativeCooled>();
   EXPECT_EQ(1, refrigerationEvaporativeCooledCondensers.size());
 
   testObject.remove();
 
-  refrigerationEvaporativeCooledCondensers = model.getModelObjects<RefrigerationCondenserEvaporativeCooled>();
+  refrigerationEvaporativeCooledCondensers = model.getConcreteModelObjects<RefrigerationCondenserEvaporativeCooled>();
   EXPECT_EQ(0, refrigerationEvaporativeCooledCondensers.size());
 }
 

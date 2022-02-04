@@ -157,12 +157,12 @@ TEST_F(ModelFixture, RefrigerationCondenserCascade_Remove) {
   Model model;
   RefrigerationCondenserCascade testObject = RefrigerationCondenserCascade(model);
 
-  std::vector<RefrigerationCondenserCascade> refrigerationCascadeCondensers = model.getModelObjects<RefrigerationCondenserCascade>();
+  std::vector<RefrigerationCondenserCascade> refrigerationCascadeCondensers = model.getConcreteModelObjects<RefrigerationCondenserCascade>();
   EXPECT_EQ(1, refrigerationCascadeCondensers.size());
 
   testObject.remove();
 
-  refrigerationCascadeCondensers = model.getModelObjects<RefrigerationCondenserCascade>();
+  refrigerationCascadeCondensers = model.getConcreteModelObjects<RefrigerationCondenserCascade>();
   EXPECT_EQ(0, refrigerationCascadeCondensers.size());
 }
 

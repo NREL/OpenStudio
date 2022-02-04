@@ -67,7 +67,7 @@ namespace energyplus {
     bool nodeFound = false;
 
     if (boost::optional<std::string> setpointNodeName = workspaceObject.getString(SetpointManager_ScheduledFields::SetpointNodeorNodeListName)) {
-      boost::optional<Node> setpointNode = m_model.getModelObjectByName<Node>(setpointNodeName.get());
+      boost::optional<Node> setpointNode = m_model.getConcreteModelObjectByName<Node>(setpointNodeName.get());
 
       if (setpointNode) {
         nodeFound = true;
@@ -92,7 +92,7 @@ namespace energyplus {
       // Setpoint Node
       s = workspaceObject.getString(SetpointManager_ScheduledFields::SetpointNodeorNodeListName);
       if (s) {
-        boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
+        boost::optional<Node> node = m_model.getConcreteModelObjectByName<Node>(s.get());
 
         if (node) {
           mo.addToNode(node.get());

@@ -71,10 +71,10 @@ void removeSubSurfaces(Surface& surface) {
 }
 
 void removeSubSurfaces(Model& model) {
-  for (auto& s : model.getModelObjects<SubSurface>()) {
+  for (auto& s : model.getConcreteModelObjects<SubSurface>()) {
     s.remove();
   }
-  EXPECT_EQ(0, model.getModelObjects<SubSurface>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<SubSurface>().size());
 }
 
 /* HAS TO WAIT UNTIL WE GET A GOOD OSM EXAMPLE
@@ -91,7 +91,7 @@ TEST_F(ModelFixture, SubSurface_In_File)
   model.setSqlFile(sqlFile);
   ASSERT_TRUE(model.sqlFile());
 
-  SubSurfaceVector subSurfaces = model.getModelObjects<SubSurface>();
+  SubSurfaceVector subSurfaces = model.getConcreteModelObjects<SubSurface>();
   EXPECT_TRUE(subSurfaces.size() > 0);
 
   for (const SubSurface& subSurface : subSurfaces){
@@ -801,7 +801,7 @@ TEST_F(ModelFixture, SkylightPattern_SingleSurface2) {
 void checkExpectedSkylightRatios(const Model& model, double /*expectedRoofArea*/, double expectedSkylightRatio, double tol) {
   double totalGrossRoofArea = 0.0;
   double totalSkylightArea = 0.0;
-  for (const auto& surface : model.getModelObjects<Surface>()) {
+  for (const auto& surface : model.getConcreteModelObjects<Surface>()) {
     boost::optional<Space> space = surface.space();
     ASSERT_TRUE(space);
     double multiplier = space->multiplier();
@@ -1008,28 +1008,28 @@ TEST_F(ModelFixture, SkylightPattern_PerimCore_Rotated) {
   removeSubSurfaces(model);
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
   pattern = generateSkylightPattern(spaces, 90, 0.05, 1, 1);
-  skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
+  skylights = applySkylightPattern(pattern, model.getConcreteModelObjects<Space>(), boost::none);
   checkExpectedSkylightRatios(model, 600.0, 0.05, 0.005);
 
   // 3% square
   removeSubSurfaces(model);
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
   pattern = generateSkylightPattern(spaces, 45, 0.03, 1, 1);
-  skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
+  skylights = applySkylightPattern(pattern, model.getConcreteModelObjects<Space>(), boost::none);
   checkExpectedSkylightRatios(model, 600.0, 0.03, 0.006);  // BUMP this up a bit
 
   // 5% rectangle
   removeSubSurfaces(model);
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
   pattern = generateSkylightPattern(spaces, 135, 0.05, 1, 1);
-  skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
+  skylights = applySkylightPattern(pattern, model.getConcreteModelObjects<Space>(), boost::none);
   checkExpectedSkylightRatios(model, 600.0, 0.05, 0.005);
 
   // 3% rectangle
   removeSubSurfaces(model);
   checkExpectedSkylightRatios(model, 600.0, 0.0, 0.0);
   pattern = generateSkylightPattern(spaces, 180, 0.03, 1, 1);
-  skylights = applySkylightPattern(pattern, model.getModelObjects<Space>(), boost::none);
+  skylights = applySkylightPattern(pattern, model.getConcreteModelObjects<Space>(), boost::none);
   checkExpectedSkylightRatios(model, 600.0, 0.03, 0.005);
 }
 

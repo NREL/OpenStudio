@@ -104,7 +104,7 @@ Model createModelWithSimpleAirLoop() {
   Model m = openstudio::model::exampleModel();
 
   // Remove the existing loop
-  AirLoopHVAC example_loop = m.getModelObjects<AirLoopHVAC>()[0];
+  AirLoopHVAC example_loop = m.getConcreteModelObjects<AirLoopHVAC>()[0];
   example_loop.remove();
 
   AirLoopHVAC a(m);
@@ -131,7 +131,7 @@ Model createModelWithSimpleAirLoop() {
   a.addBranchForHVACComponent(terminal);
 
   // Get the single thermal Zone in the model
-  ThermalZone z = m.getModelObjects<ThermalZone>()[0];
+  ThermalZone z = m.getConcreteModelObjects<ThermalZone>()[0];
 
   a.addBranchForZone(z);
   auto outlet_node = a.supplyOutletNode();

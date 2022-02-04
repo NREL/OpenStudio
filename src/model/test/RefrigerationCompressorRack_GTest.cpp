@@ -262,24 +262,24 @@ TEST_F(ModelFixture, RefrigerationCompressorRack_Remove) {
   auto size = model.modelObjects().size();
   RefrigerationCompressorRack rack(model);
 
-  std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = model.getModelObjects<RefrigerationCompressorRack>();
+  std::vector<RefrigerationCompressorRack> refrigerationCompressorRacks = model.getConcreteModelObjects<RefrigerationCompressorRack>();
   EXPECT_EQ(1, refrigerationCompressorRacks.size());
 
-  std::vector<ModelObjectList> refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
+  std::vector<ModelObjectList> refrigerationModelObjectLists = model.getConcreteModelObjects<ModelObjectList>();
   EXPECT_EQ(1, refrigerationModelObjectLists.size());
 
-  std::vector<CurveQuadratic> refrigerationCurveQuadratics = model.getModelObjects<CurveQuadratic>();
+  std::vector<CurveQuadratic> refrigerationCurveQuadratics = model.getConcreteModelObjects<CurveQuadratic>();
   EXPECT_EQ(1, refrigerationCurveQuadratics.size());
 
   EXPECT_FALSE(rack.remove().empty());
 
-  refrigerationCompressorRacks = model.getModelObjects<RefrigerationCompressorRack>();
+  refrigerationCompressorRacks = model.getConcreteModelObjects<RefrigerationCompressorRack>();
   EXPECT_EQ(0, refrigerationCompressorRacks.size());
 
-  refrigerationModelObjectLists = model.getModelObjects<ModelObjectList>();
+  refrigerationModelObjectLists = model.getConcreteModelObjects<ModelObjectList>();
   EXPECT_EQ(0, refrigerationModelObjectLists.size());
 
-  refrigerationCurveQuadratics = model.getModelObjects<CurveQuadratic>();
+  refrigerationCurveQuadratics = model.getConcreteModelObjects<CurveQuadratic>();
   EXPECT_EQ(0, refrigerationCurveQuadratics.size());
 
   EXPECT_EQ(size, model.modelObjects().size());

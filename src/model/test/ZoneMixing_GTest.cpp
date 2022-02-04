@@ -189,9 +189,9 @@ TEST_F(ModelFixture, ZoneMixing_ZoneRemove) {
     ZoneMixing mixing(zone1);
     mixing.setSourceZone(zone2);
 
-    EXPECT_EQ(1u, model.getModelObjects<ZoneMixing>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ZoneMixing>().size());
     zone1.remove();
-    EXPECT_EQ(0u, model.getModelObjects<ZoneMixing>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ZoneMixing>().size());
   }
   {
     Model model;
@@ -200,8 +200,8 @@ TEST_F(ModelFixture, ZoneMixing_ZoneRemove) {
     ZoneMixing mixing(zone1);
     mixing.setSourceZone(zone2);
 
-    EXPECT_EQ(1u, model.getModelObjects<ZoneMixing>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<ZoneMixing>().size());
     zone2.remove();
-    EXPECT_EQ(0u, model.getModelObjects<ZoneMixing>().size());
+    EXPECT_EQ(0u, model.getConcreteModelObjects<ZoneMixing>().size());
   }
 }

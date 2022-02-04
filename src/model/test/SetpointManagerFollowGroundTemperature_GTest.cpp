@@ -82,7 +82,7 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_addToNode) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(3, _setpointManagers.size());
   std::vector<SetpointManagerFollowGroundTemperature> SetpointManagerFollowGroundTemperatures =
-    m.getModelObjects<SetpointManagerFollowGroundTemperature>();
+    m.getConcreteModelObjects<SetpointManagerFollowGroundTemperature>();
   EXPECT_EQ(5, SetpointManagerFollowGroundTemperatures.size());
 
   EXPECT_EQ(testObject, spm_3.setpointNode());
@@ -92,7 +92,7 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_addToNode) {
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_3) == _setpointManagers.end());
   EXPECT_EQ(3, _setpointManagers.size());
-  SetpointManagerFollowGroundTemperatures = m.getModelObjects<SetpointManagerFollowGroundTemperature>();
+  SetpointManagerFollowGroundTemperatures = m.getConcreteModelObjects<SetpointManagerFollowGroundTemperature>();
   EXPECT_EQ(4, SetpointManagerFollowGroundTemperatures.size());
 }
 
@@ -109,14 +109,14 @@ TEST_F(ModelFixture, SetpointManagerFollowGroundTemperature_remove) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerFollowGroundTemperature> SetpointManagerFollowGroundTemperatures =
-    m.getModelObjects<SetpointManagerFollowGroundTemperature>();
+    m.getConcreteModelObjects<SetpointManagerFollowGroundTemperature>();
   EXPECT_EQ(1, SetpointManagerFollowGroundTemperatures.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  SetpointManagerFollowGroundTemperatures = m.getModelObjects<SetpointManagerFollowGroundTemperature>();
+  SetpointManagerFollowGroundTemperatures = m.getConcreteModelObjects<SetpointManagerFollowGroundTemperature>();
   EXPECT_EQ(0, SetpointManagerFollowGroundTemperatures.size());
 }
 

@@ -58,12 +58,12 @@ TEST_F(ModelFixture, RefrigerationWalkInZoneBoundary_Remove) {
   Model model;
   RefrigerationWalkInZoneBoundary testObject = RefrigerationWalkInZoneBoundary(model);
 
-  std::vector<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundaries = model.getModelObjects<RefrigerationWalkInZoneBoundary>();
+  std::vector<RefrigerationWalkInZoneBoundary> refrigerationWalkInZoneBoundaries = model.getConcreteModelObjects<RefrigerationWalkInZoneBoundary>();
   EXPECT_EQ(1, refrigerationWalkInZoneBoundaries.size());
 
   testObject.remove();
 
-  refrigerationWalkInZoneBoundaries = model.getModelObjects<RefrigerationWalkInZoneBoundary>();
+  refrigerationWalkInZoneBoundaries = model.getConcreteModelObjects<RefrigerationWalkInZoneBoundary>();
   EXPECT_EQ(0, refrigerationWalkInZoneBoundaries.size());
 }
 

@@ -59,7 +59,7 @@ namespace openstudio {
 namespace gbxml {
 
   openstudio::model::ScheduleTypeLimits getScheduleTypeLimits(const std::string& type, openstudio::model::Model& model) {
-    boost::optional<openstudio::model::ScheduleTypeLimits> result = model.getModelObjectByName<openstudio::model::ScheduleTypeLimits>(type);
+    boost::optional<openstudio::model::ScheduleTypeLimits> result = model.getConcreteModelObjectByName<openstudio::model::ScheduleTypeLimits>(type);
 
     if (result) {
       return *result;

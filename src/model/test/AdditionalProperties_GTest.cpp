@@ -79,12 +79,12 @@ TEST_F(ModelFixture, AdditionalProperties_AdditionalProperties) {
   // create an additional properties object to use
   AdditionalProperties props = material.additionalProperties();
   EXPECT_EQ(2, model.modelObjects().size());
-  EXPECT_EQ(1, model.getModelObjects<AdditionalProperties>().size());
+  EXPECT_EQ(1, model.getConcreteModelObjects<AdditionalProperties>().size());
 
   // return, instead of create, additional properies when it already exists
   AdditionalProperties props2 = material.additionalProperties();
   EXPECT_EQ(2, model.modelObjects().size());
-  EXPECT_EQ(1, model.getModelObjects<AdditionalProperties>().size());
+  EXPECT_EQ(1, model.getConcreteModelObjects<AdditionalProperties>().size());
   EXPECT_EQ(props, props2);
 }
 

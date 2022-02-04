@@ -55,9 +55,9 @@ TEST_F(ModelFixture, GlareSensor_Clone) {
   EXPECT_EQ(space.handle(), control.space()->handle());
   EXPECT_EQ(1u, space.glareSensors().size());
 
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<GlareSensor>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<GlareSensor>().size());
   ModelObject object = control.clone(model);
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<GlareSensor>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<GlareSensor>().size());
 
   ASSERT_TRUE(object.optionalCast<GlareSensor>());
   EXPECT_EQ(space.handle(), control.space()->handle());

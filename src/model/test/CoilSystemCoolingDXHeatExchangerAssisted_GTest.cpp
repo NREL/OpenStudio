@@ -202,18 +202,18 @@ TEST_F(ModelFixture, CoilSystemCoolingDXHeatExchangerAssisted_clone) {
   // ASSERT_TRUE(coilSystem.airLoopHVAC());
   // EXPECT_EQ(coilSystem.airLoopHVAC()->handle(), a.handle());
 
-  EXPECT_EQ(1u, m.getModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>().size());
-  EXPECT_EQ(1u, m.getModelObjects<CoilCoolingDXSingleSpeed>().size());
-  EXPECT_EQ(1u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilCoolingDXSingleSpeed>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
 
   // TODO: should these work?
   // EXPECT_TRUE(hx.airLoopHVAC());
 
   auto coilSystem2 = coilSystem.clone(m).cast<CoilSystemCoolingDXHeatExchangerAssisted>();
 
-  EXPECT_EQ(2u, m.getModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>().size());
-  EXPECT_EQ(2u, m.getModelObjects<CoilCoolingDXSingleSpeed>().size());
-  EXPECT_EQ(2u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CoilSystemCoolingDXHeatExchangerAssisted>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CoilCoolingDXSingleSpeed>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
 
   // Cannot be directly on airLoopHVAC right now
   // EXPECT_TRUE(coilSystem.airLoopHVAC());

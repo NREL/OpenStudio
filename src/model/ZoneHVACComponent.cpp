@@ -107,8 +107,8 @@ namespace model {
     //  auto m = model();
     //  auto h = handle();
 
-    //  auto connections = subsetCastVector<Connection>(m.getModelObjects<Connection>());
-    //  auto plenums = subsetCastVector<AirLoopHVACReturnPlenum>(m.getModelObjects<AirLoopHVACReturnPlenum>());
+    //  auto connections = subsetCastVector<Connection>(m.getConcreteModelObjects<Connection>());
+    //  auto plenums = subsetCastVector<AirLoopHVACReturnPlenum>(m.getConcreteModelObjects<AirLoopHVACReturnPlenum>());
     //  for ( auto & c : connections ) {
     //    auto target = c.targetObject();
     //    if ( target && ( target->handle() == h ) ) {

@@ -176,7 +176,7 @@ TEST_F(ModelFixture, EMSSensorOutVar) {
   // model.save(toPath("./EMS_sensortest.osm"), true);
 
   outvar1.remove();
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<EnergyManagementSystemSensor>().size());
 }
 
 TEST_F(ModelFixture, EMSSensorDelete) {
@@ -195,14 +195,14 @@ TEST_F(ModelFixture, EMSSensorDelete) {
   std::string key = toString(avm.handle());
   EXPECT_EQ(key, sensor.keyName());
   // 1 sensor in the model
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<EnergyManagementSystemSensor>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<EnergyManagementSystemSensor>().size());
   // 1 avm in the model
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
   // model.save(toPath("./EMS_sensor_delete_test.osm"), true);
 
   avm.remove();
   // 0 avm in the model
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<AvailabilityManagerHighTemperatureTurnOff>().size());
   //sensor still has keyName as avm UUID string (will not FT though eventually)
   EXPECT_EQ(key, sensor.keyName());
 }

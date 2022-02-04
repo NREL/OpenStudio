@@ -368,7 +368,7 @@ namespace sdd {
       }
     }
 
-    boost::optional<model::Space> space = buildingStory.model().getModelObjectByName<model::Space>(spaceName);
+    boost::optional<model::Space> space = buildingStory.model().getConcreteModelObjectByName<model::Space>(spaceName);
     if (!space) {
       LOG(Error, "Could not retrieve Space named '" << spaceName << "'.");
       return boost::none;
@@ -384,7 +384,7 @@ namespace sdd {
       thermalZoneName = escapeName(thermalZoneElement.text().as_string());
     }
 
-    boost::optional<model::ThermalZone> thermalZone = space->model().getModelObjectByName<model::ThermalZone>(thermalZoneName);
+    boost::optional<model::ThermalZone> thermalZone = space->model().getConcreteModelObjectByName<model::ThermalZone>(thermalZoneName);
     if (thermalZone) {
       space->setThermalZone(*thermalZone);
     } else {
@@ -594,7 +594,7 @@ namespace sdd {
           openstudio::model::ScheduleRuleset activitySchedule(model, totalHeatRateSI);
           activitySchedule.setName(name + " People Activity Level");
 
-          //boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getModelObjectByName<model::ScheduleTypeLimits>("Activity Level");
+          //boost::optional<model::ScheduleTypeLimits> scheduleTypeLimits = model.getConcreteModelObjectByName<model::ScheduleTypeLimits>("Activity Level");
           //if (!scheduleTypeLimits){
           //  scheduleTypeLimits = model::ScheduleTypeLimits(model);
           //  scheduleTypeLimits->setName("Activity Level");
@@ -1458,7 +1458,7 @@ namespace sdd {
     pugi::xml_node adjacentSpaceElement = element.child("AdjacentSpcRef");
     if (adjacentSpaceElement) {
       std::string adjacentSpaceName = escapeName(adjacentSpaceElement.text().as_string());
-      boost::optional<model::Space> otherSpace = space.model().getModelObjectByName<model::Space>(adjacentSpaceName);
+      boost::optional<model::Space> otherSpace = space.model().getConcreteModelObjectByName<model::Space>(adjacentSpaceName);
 
       if (!otherSpace) {
         LOG(Error, "Cannot retrieve adjacent Space '" << adjacentSpaceName << "' for Surface named '" << name << "'");

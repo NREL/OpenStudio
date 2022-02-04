@@ -158,7 +158,7 @@ namespace model {
       openstudio::detail::concat_helper(result, model().getModelObjects<SizingPeriod>());
 
       // lighting design days
-      openstudio::detail::concat_helper(result, model().getModelObjects<LightingDesignDay>());
+      openstudio::detail::concat_helper(result, model().getConcreteModelObjects<LightingDesignDay>());
 
       // some SkyTemperatures are children (those that do not explicitly point to something else)
       SkyTemperatureVector skyTemperatures = model().getConcreteModelObjects<SkyTemperature>();

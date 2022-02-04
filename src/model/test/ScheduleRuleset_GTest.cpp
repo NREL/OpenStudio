@@ -76,17 +76,17 @@ TEST_F(ModelFixture, ScheduleRuleset) {
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
 
   // one default schedule created
-  EXPECT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   // test schedules for copying
   ScheduleDay originalSummerDesign(model);
   ScheduleDay originalWeekend(model);
-  EXPECT_EQ(3u, model.getModelObjects<ScheduleDay>().size());
+  EXPECT_EQ(3u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   // setting summer design day makes a copy
   EXPECT_TRUE(schedule.setSummerDesignDaySchedule(originalSummerDesign));
   EXPECT_NE(originalSummerDesign.handle(), schedule.summerDesignDaySchedule().handle());
-  EXPECT_EQ(4u, model.getModelObjects<ScheduleDay>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   // test dates
   openstudio::Date jan1 = yd.makeDate(openstudio::MonthOfYear::Jan, 1);

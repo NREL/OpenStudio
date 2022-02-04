@@ -120,7 +120,7 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider) {
 
   EXPECT_EQ(1u, outModel->getConcreteModelObjects<WindowPropertyFrameAndDivider>().size());
 
-  boost::optional<SubSurface> testSubSurface = outModel->getModelObjectByName<SubSurface>("Offset");
+  boost::optional<SubSurface> testSubSurface = outModel->getConcreteModelObjectByName<SubSurface>("Offset");
   ASSERT_TRUE(testSubSurface);
   EXPECT_TRUE(testSubSurface->windowPropertyFrameAndDivider());
   vertices = testSubSurface->vertices();
@@ -129,7 +129,7 @@ TEST_F(EnergyPlusFixture, WindowPropertyFrameAndDivider) {
   EXPECT_DOUBLE_EQ(1.0, vertices[0].y());
   EXPECT_DOUBLE_EQ(1.0, vertices[0].z());
 
-  testSubSurface = outModel->getModelObjectByName<SubSurface>("No Offset");
+  testSubSurface = outModel->getConcreteModelObjectByName<SubSurface>("No Offset");
   ASSERT_TRUE(testSubSurface);
   EXPECT_FALSE(testSubSurface->windowPropertyFrameAndDivider());
   vertices = testSubSurface->vertices();

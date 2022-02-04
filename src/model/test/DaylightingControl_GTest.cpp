@@ -66,9 +66,9 @@ TEST_F(ModelFixture, DaylightingControl_Clone) {
   EXPECT_EQ(space.handle(), control.space()->handle());
   EXPECT_EQ(1u, space.daylightingControls().size());
 
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<DaylightingControl>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<DaylightingControl>().size());
   ModelObject object = control.clone(model);
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<DaylightingControl>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<DaylightingControl>().size());
 
   ASSERT_TRUE(object.optionalCast<DaylightingControl>());
   EXPECT_EQ(space.handle(), control.space()->handle());

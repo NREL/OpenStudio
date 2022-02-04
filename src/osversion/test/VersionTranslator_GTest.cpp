@@ -407,7 +407,7 @@ TEST_F(OSVersionFixture,VersionTranslator_0_7_4_NameRefsTranslated) {
   EXPECT_EQ(VersionString("0.7.3"),translator.originalVersion());
 
   // Confirm that expected pointers are still there
-  model::ConstructionVector constructions = model.getModelObjects<model::Construction>();
+  model::ConstructionVector constructions = model.getConcreteModelObjects<model::Construction>();
   EXPECT_FALSE(constructions.empty());
   for (const model::Construction construction : constructions) {
     ASSERT_FALSE(construction.layers().empty());

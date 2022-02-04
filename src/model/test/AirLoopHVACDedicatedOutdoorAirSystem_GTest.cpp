@@ -224,7 +224,7 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Clone) {
 
 TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove) {
   Model model;
-  std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doaSystems = model.getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   EXPECT_EQ(0u, doaSystems.size());
 
   ControllerOutdoorAir controller(model);
@@ -238,18 +238,18 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove) {
   AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
   doaSystem.addAirLoops(airLoopHVACs);
 
-  doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  doaSystems = model.getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   EXPECT_EQ(1u, doaSystems.size());
 
   EXPECT_FALSE(doaSystem.remove().empty());
-  doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  doaSystems = model.getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   EXPECT_EQ(0u, doaSystems.size());
   EXPECT_FALSE(oaSystem.airLoopHVACDedicatedOutdoorAirSystem());
 }
 
 TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove2) {
   Model model;
-  std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  std::vector<AirLoopHVACDedicatedOutdoorAirSystem> doaSystems = model.getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   EXPECT_EQ(0u, doaSystems.size());
 
   ControllerOutdoorAir controller(model);
@@ -263,11 +263,11 @@ TEST_F(ModelFixture, AirLoopHVACDedicatedOutdoorAirSystem_Remove2) {
   AirLoopHVACDedicatedOutdoorAirSystem doaSystem(oaSystem);
   doaSystem.addAirLoops(airLoopHVACs);
 
-  doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  doaSystems = model.getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   EXPECT_EQ(1u, doaSystems.size());
 
   EXPECT_FALSE(doaSystem.remove().empty());
-  doaSystems = model.getModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
+  doaSystems = model.getConcreteModelObjects<AirLoopHVACDedicatedOutdoorAirSystem>();
   EXPECT_EQ(0u, doaSystems.size());
   EXPECT_FALSE(oaSystem.airLoopHVACDedicatedOutdoorAirSystem());
 }

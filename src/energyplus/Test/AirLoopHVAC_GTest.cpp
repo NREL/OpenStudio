@@ -88,7 +88,7 @@ Model createModelWithDummyAirLoop() {
   Model m = openstudio::model::exampleModel();
 
   // Remove the existing loop
-  AirLoopHVAC example_loop = m.getModelObjects<AirLoopHVAC>()[0];
+  AirLoopHVAC example_loop = m.getConcreteModelObjects<AirLoopHVAC>()[0];
   example_loop.remove();
 
   AirLoopHVAC a(m);
@@ -111,7 +111,7 @@ Model createModelWithDummyAirLoop() {
   AirTerminalSingleDuctSeriesPIUReheat piu(m, piu_fan, reheatC);
 
   // Get the single thermal Zone in the model
-  ThermalZone z = m.getModelObjects<ThermalZone>()[0];
+  ThermalZone z = m.getConcreteModelObjects<ThermalZone>()[0];
 
   a.addBranchForZone(z, piu);
 
@@ -212,7 +212,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Nig
   Model m = createModelWithDummyAirLoop();
 
   // Add new AVMs
-  AirLoopHVAC a = m.getModelObjects<AirLoopHVAC>()[0];
+  AirLoopHVAC a = m.getConcreteModelObjects<AirLoopHVAC>()[0];
   // This triggers creation of an AVM:NightCycle
   a.setNightCycleControlType("CycleOnAny");
 
@@ -238,7 +238,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Sch
   Model m = createModelWithDummyAirLoop();
 
   // Add new AVMs
-  AirLoopHVAC a = m.getModelObjects<AirLoopHVAC>()[0];
+  AirLoopHVAC a = m.getConcreteModelObjects<AirLoopHVAC>()[0];
 
   AvailabilityManagerScheduledOn avm_schOn(m);
   a.addAvailabilityManager(avm_schOn);
@@ -265,7 +265,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVAC_AvailabilityManagers_Nig
   Model m = createModelWithDummyAirLoop();
 
   // Add new AVMs
-  AirLoopHVAC a = m.getModelObjects<AirLoopHVAC>()[0];
+  AirLoopHVAC a = m.getConcreteModelObjects<AirLoopHVAC>()[0];
   // This triggers creation of an AVM:NightCycle
   a.setNightCycleControlType("CycleOnAny");
 

@@ -83,18 +83,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantComponentUserDefined) {
   Model m = openstudio::model::exampleModel();
 
   // Remove the existing airLoop
-  AirLoopHVAC example_loop = m.getModelObjects<AirLoopHVAC>()[0];
+  AirLoopHVAC example_loop = m.getConcreteModelObjects<AirLoopHVAC>()[0];
   example_loop.remove();
 
   // Add a System type 1 (PTAC) will create a PlantLoop for us
-  openstudio::model::addSystemType1(m, m.getModelObjects<ThermalZone>());
+  openstudio::model::addSystemType1(m, m.getConcreteModelObjects<ThermalZone>());
 
-  PlantLoop p = m.getModelObjects<PlantLoop>()[0];
+  PlantLoop p = m.getConcreteModelObjects<PlantLoop>()[0];
   p.setName("Plant Loop");
-  PumpVariableSpeed pump = m.getModelObjects<PumpVariableSpeed>()[0];
+  PumpVariableSpeed pump = m.getConcreteModelObjects<PumpVariableSpeed>()[0];
   pump.setName("Plant Loop Supply Pump");
 
-  ThermalZone tz = m.getModelObjects<ThermalZone>()[0];
+  ThermalZone tz = m.getConcreteModelObjects<ThermalZone>()[0];
 
   PlantComponentUserDefined pcud(m);
   pcud.setName("best plant component");

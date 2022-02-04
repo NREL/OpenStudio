@@ -152,8 +152,8 @@ TEST_F(ModelFixture, Alpha1)
   EXPECT_NEAR(*buildingFloorArea, floorArea, 0.01);
 
   // should be 5 lights to start with
-  EXPECT_EQ(static_cast<size_t>(5), model.getModelObjects<Lights>().size());
-  for (const Lights& light : model.getModelObjects<Lights>()){
+  EXPECT_EQ(static_cast<size_t>(5), model.getConcreteModelObjects<Lights>().size());
+  for (const Lights& light : model.getConcreteModelObjects<Lights>()){
 
     OptionalString name = light.name();
     ASSERT_TRUE(name);
@@ -175,7 +175,7 @@ TEST_F(ModelFixture, Alpha1)
   }
 
   // check number of compact schedules
-  unsigned numCompactSchedules = model.getModelObjects<ScheduleCompact>().size();
+  unsigned numCompactSchedules = model.getConcreteModelObjects<ScheduleCompact>().size();
   EXPECT_TRUE(numCompactSchedules > 0);
 
   // Add Lights schedule to a temporary mnodel.
@@ -269,10 +269,10 @@ TEST_F(ModelFixture, Alpha1)
   }
 
   // should be 5 lights at the end, plenum does not get lights
-  EXPECT_EQ(static_cast<size_t>(5), model.getModelObjects<Lights>().size());
+  EXPECT_EQ(static_cast<size_t>(5), model.getConcreteModelObjects<Lights>().size());
 
   // number of compact schedules should have increased by only one (duplicate schedules were merged)
-  EXPECT_EQ(numCompactSchedules + 1, model.getModelObjects<ScheduleCompact>().size());
+  EXPECT_EQ(numCompactSchedules + 1, model.getConcreteModelObjects<ScheduleCompact>().size());
 
   // write the osm file
   // serialize

@@ -250,8 +250,8 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Loads) {
 
   Model m = model::exampleModel();
 
-  ASSERT_EQ(1U, m.getModelObjects<SpaceType>().size());
-  SpaceType spaceType = m.getModelObjects<SpaceType>()[0];
+  ASSERT_EQ(1U, m.getConcreteModelObjects<SpaceType>().size());
+  SpaceType spaceType = m.getConcreteModelObjects<SpaceType>()[0];
 
   ASSERT_EQ(1U, m.getConcreteModelObjects<ThermalZone>().size());
   ThermalZone thermalZone = m.getConcreteModelObjects<ThermalZone>()[0];
@@ -468,8 +468,8 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Geometry) {
 
   Model m = model::exampleModel();
 
-  ASSERT_EQ(1U, m.getModelObjects<SpaceType>().size());
-  SpaceType spaceType = m.getModelObjects<SpaceType>()[0];
+  ASSERT_EQ(1U, m.getConcreteModelObjects<SpaceType>().size());
+  SpaceType spaceType = m.getConcreteModelObjects<SpaceType>()[0];
 
   ASSERT_EQ(1U, m.getConcreteModelObjects<ThermalZone>().size());
   ThermalZone thermalZone = m.getConcreteModelObjects<ThermalZone>()[0];

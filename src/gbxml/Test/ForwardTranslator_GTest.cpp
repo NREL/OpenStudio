@@ -91,7 +91,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_AdiabaticSurface) {
   std::string surfname("Adiabatic_Surface");
 
   // Find a surface, make it adiabatic
-  for (auto& surf : model.getModelObjects<Surface>()) {
+  for (auto& surf : model.getConcreteModelObjects<Surface>()) {
     if (surf.outsideBoundaryCondition() == "Outdoors") {
       surf.setOutsideBoundaryCondition("Adiabatic");
       surf.setSunExposure("NoSun");
@@ -115,7 +115,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_AdiabaticSurface) {
 
   ASSERT_TRUE(model2);
 
-  auto osurf = model2->getModelObjectByName<Surface>(surfname);
+  auto osurf = model2->getConcreteModelObjectByName<Surface>(surfname);
   ASSERT_TRUE(osurf);
   EXPECT_EQ("Adiabatic", osurf->outsideBoundaryCondition());
   EXPECT_EQ("NoSun", osurf->sunExposure());
@@ -186,7 +186,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_ConstructionLayers) {
 
   ASSERT_TRUE(model2);
   //std::cout << *model2 << '\n';
-  auto osurf = model2->getModelObjectByName<Surface>(surfname);
+  auto osurf = model2->getConcreteModelObjectByName<Surface>(surfname);
   ASSERT_TRUE(osurf);
   auto ocons = osurf->construction();
   ASSERT_TRUE(ocons);
@@ -274,16 +274,16 @@ TEST_F(gbXMLFixture, ForwardTranslator_NoFacility) {
 
   ASSERT_TRUE(model2);
   //std::cout << *model2 << '\n';
-  auto osurf = model2->getModelObjectByName<Surface>(surfname);
+  auto osurf = model2->getConcreteModelObjectByName<Surface>(surfname);
   ASSERT_TRUE(osurf);
-  auto ospace = model2->getModelObjectByName<Space>(space.nameString());
+  auto ospace = model2->getConcreteModelObjectByName<Space>(space.nameString());
   ASSERT_TRUE(ospace);
-  auto ozone = model2->getModelObjectByName<ThermalZone>(zone.nameString());  // Dragostea Din Tei!
+  auto ozone = model2->getConcreteModelObjectByName<ThermalZone>(zone.nameString());  // Dragostea Din Tei!
   ASSERT_TRUE(ozone);
 
   // This really tests a RT feature, but doesn't really matter. When diffing original & rountripped, I noticed a diff in Material:
   // the roundtripped model has Roughness missing
-  auto omat = model2->getModelObjectByName<StandardOpaqueMaterial>("Material4");
+  auto omat = model2->getConcreteModelObjectByName<StandardOpaqueMaterial>("Material4");
   ASSERT_TRUE(omat);
   EXPECT_EQ("MediumSmooth", omat->roughness());
 

@@ -227,11 +227,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneVentilationWindandStackOpenArea)
 
   Schedule alwaysOnDiscreteSchedule = m.alwaysOnDiscreteSchedule();
 
-  ASSERT_EQ(1u, m.getModelObjects<ThermalZone>().size());
-  ThermalZone zone = m.getModelObjects<ThermalZone>()[0];
+  ASSERT_EQ(1u, m.getConcreteModelObjects<ThermalZone>().size());
+  ThermalZone zone = m.getConcreteModelObjects<ThermalZone>()[0];
 
-  ASSERT_EQ(1u, m.getModelObjects<ZoneVentilationWindandStackOpenArea>().size());
-  ZoneVentilationWindandStackOpenArea zv = m.getModelObjects<ZoneVentilationWindandStackOpenArea>()[0];
+  ASSERT_EQ(1u, m.getConcreteModelObjects<ZoneVentilationWindandStackOpenArea>().size());
+  ZoneVentilationWindandStackOpenArea zv = m.getConcreteModelObjects<ZoneVentilationWindandStackOpenArea>()[0];
 
   EXPECT_EQ("My ZoneVentilationWindAndStackOpenArea", zv.name().get());
   EXPECT_EQ(10.5, zv.openingArea());

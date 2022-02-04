@@ -3521,7 +3521,7 @@ namespace sdd {
     // Name
     pugi::xml_node nameElement = thermalZoneElement.child("Name");
     std::string name = nameElement.text().as_string();
-    optionalThermalZone = model.getModelObjectByName<model::ThermalZone>(name);
+    optionalThermalZone = model.getConcreteModelObjectByName<model::ThermalZone>(name);
 
     if (!optionalThermalZone) {
       return result;
@@ -4015,7 +4015,7 @@ namespace sdd {
     }
 
     if (translateVentSys) {
-      airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(ventSysRefElement.text().as_string());
+      airLoopHVAC = model.getConcreteModelObjectByName<model::AirLoopHVAC>(ventSysRefElement.text().as_string());
 
       if (airLoopHVAC && !thermalZone.airLoopHVAC()) {
         pugi::xml_node trmlUnitElement = findTrmlUnitElementForZone(nameElement);
@@ -4024,7 +4024,7 @@ namespace sdd {
             ventSysEquip = trmlUnit;
             airLoopHVAC->addBranchForZone(thermalZone, trmlUnit->cast<model::StraightComponent>());
             pugi::xml_node inducedAirZnRefElement = trmlUnitElement.child("InducedAirZnRef");
-            if (boost::optional<model::ThermalZone> tz = model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().as_string())) {
+            if (boost::optional<model::ThermalZone> tz = model.getConcreteModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().as_string())) {
               if (tz->isPlenum()) {
                 if (boost::optional<model::AirTerminalSingleDuctSeriesPIUReheat> piu =
                       trmlUnit->optionalCast<model::AirTerminalSingleDuctSeriesPIUReheat>()) {
@@ -4090,7 +4090,7 @@ namespace sdd {
           }
         }
       } else {
-        airLoopHVAC = model.getModelObjectByName<model::AirLoopHVAC>(sysInfo.SysRefElement.text().as_string());
+        airLoopHVAC = model.getConcreteModelObjectByName<model::AirLoopHVAC>(sysInfo.SysRefElement.text().as_string());
 
         if (airLoopHVAC && !thermalZone.airLoopHVAC()) {
           pugi::xml_node trmlUnitElement = findTrmlUnitElementForZone(nameElement);
@@ -4100,7 +4100,7 @@ namespace sdd {
               airLoopHVAC->addBranchForZone(thermalZone, trmlUnit->cast<model::StraightComponent>());
               pugi::xml_node inducedAirZnRefElement = trmlUnitElement.child("InducedAirZnRef");
               if (boost::optional<model::ThermalZone> tz =
-                    model.getModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().as_string())) {
+                    model.getConcreteModelObjectByName<model::ThermalZone>(inducedAirZnRefElement.text().as_string())) {
                 if (tz->isPlenum()) {
                   if (boost::optional<model::AirTerminalSingleDuctSeriesPIUReheat> piu =
                         trmlUnit->optionalCast<model::AirTerminalSingleDuctSeriesPIUReheat>()) {
@@ -4297,14 +4297,14 @@ namespace sdd {
     if (airLoopHVAC) {
       pugi::xml_node rtnPlenumZnRefElement = thermalZoneElement.child("RetPlenumZnRef");
       boost::optional<model::ThermalZone> returnPlenumZone;
-      returnPlenumZone = model.getModelObjectByName<model::ThermalZone>(rtnPlenumZnRefElement.text().as_string());
+      returnPlenumZone = model.getConcreteModelObjectByName<model::ThermalZone>(rtnPlenumZnRefElement.text().as_string());
       if (returnPlenumZone) {
         thermalZone.setReturnPlenum(returnPlenumZone.get());
       }
 
       pugi::xml_node supPlenumZnRefElement = thermalZoneElement.child("SupPlenumZnRef");
       boost::optional<model::ThermalZone> supplyPlenumZone;
-      supplyPlenumZone = model.getModelObjectByName<model::ThermalZone>(supPlenumZnRefElement.text().as_string());
+      supplyPlenumZone = model.getConcreteModelObjectByName<model::ThermalZone>(supPlenumZnRefElement.text().as_string());
       if (supplyPlenumZone) {
         thermalZone.setSupplyPlenum(supplyPlenumZone.get());
       }
@@ -4738,7 +4738,7 @@ namespace sdd {
     pugi::xml_node nameElement = fluidSysElement.child("Name");
     std::string plantName = nameElement.text().as_string();
 
-    if (boost::optional<model::PlantLoop> plant = model.getModelObjectByName<model::PlantLoop>(plantName)) {
+    if (boost::optional<model::PlantLoop> plant = model.getConcreteModelObjectByName<model::PlantLoop>(plantName)) {
       return plant.get();
     }
 
@@ -5657,7 +5657,7 @@ namespace sdd {
 
       boost::optional<model::CurveCubic> pwr_fPLRCrv;
       pugi::xml_node pwr_fPLRCrvRefElement = pumpElement.child("Pwr_fPLRCrvRef");
-      pwr_fPLRCrv = model.getModelObjectByName<model::CurveCubic>(pwr_fPLRCrvRefElement.text().as_string());
+      pwr_fPLRCrv = model.getConcreteModelObjectByName<model::CurveCubic>(pwr_fPLRCrvRefElement.text().as_string());
 
       if (pwr_fPLRCrv) {
         double c1 = pwr_fPLRCrv->coefficient1Constant();
@@ -5874,7 +5874,7 @@ namespace sdd {
 
       boost::optional<model::CurveCubic> vsdFanPwrRatio_fQRatio;
       pugi::xml_node vsdFanPwrRatio_fQRatioElement = htRejElement.child("VSDFanPwrRatio_fQRatio");
-      vsdFanPwrRatio_fQRatio = model.getModelObjectByName<model::CurveCubic>(vsdFanPwrRatio_fQRatioElement.text().as_string());
+      vsdFanPwrRatio_fQRatio = model.getConcreteModelObjectByName<model::CurveCubic>(vsdFanPwrRatio_fQRatioElement.text().as_string());
 
       if (vsdFanPwrRatio_fQRatio) {
         tower.setFanPowerRatioFunctionofAirFlowRateRatioCurve(vsdFanPwrRatio_fQRatio.get());
@@ -6088,7 +6088,7 @@ namespace sdd {
     if (istringEqual("Zone", storLctnSim)) {
       tes.setAmbientTemperatureIndicator("Zone");
       std::string storZnRef = tesElement.child("StorZnRef").text().as_string();
-      if (auto tz = model.getModelObjectByName<model::ThermalZone>(storZnRef)) {
+      if (auto tz = model.getConcreteModelObjectByName<model::ThermalZone>(storZnRef)) {
         tes.setAmbientTemperatureThermalZone(tz.get());
       }
     } else {
@@ -6312,7 +6312,7 @@ namespace sdd {
       // Cap_fTempCrvRef
       boost::optional<model::CurveBiquadratic> cap_fTempCrv;
       pugi::xml_node cap_fTempCrvElement = chillerElement.child("Cap_fTempCrvRef");
-      cap_fTempCrv = model.getModelObjectByName<model::CurveBiquadratic>(cap_fTempCrvElement.text().as_string());
+      cap_fTempCrv = model.getConcreteModelObjectByName<model::CurveBiquadratic>(cap_fTempCrvElement.text().as_string());
       if (!cap_fTempCrv) {
         LOG(Error, "Coil: " << name << " Broken Cap_fTempCrv");
 
@@ -6332,7 +6332,7 @@ namespace sdd {
       // EIR_fTempCrvRef
       boost::optional<model::CurveBiquadratic> eir_fTempCrv;
       pugi::xml_node eir_fTempCrvElement = chillerElement.child("EIR_fTempCrvRef");
-      eir_fTempCrv = model.getModelObjectByName<model::CurveBiquadratic>(eir_fTempCrvElement.text().as_string());
+      eir_fTempCrv = model.getConcreteModelObjectByName<model::CurveBiquadratic>(eir_fTempCrvElement.text().as_string());
       if (!eir_fTempCrv) {
         LOG(Error, "Coil: " << name << "Broken EIR_fTempCrvRef");
 
@@ -6352,7 +6352,7 @@ namespace sdd {
       // EIR_fPLRCrvRef
       boost::optional<model::CurveQuadratic> eir_fPLRCrv;
       pugi::xml_node eir_fPLRCrvElement = chillerElement.child("EIR_fPLRCrvRef");
-      eir_fPLRCrv = model.getModelObjectByName<model::CurveQuadratic>(eir_fPLRCrvElement.text().as_string());
+      eir_fPLRCrv = model.getConcreteModelObjectByName<model::CurveQuadratic>(eir_fPLRCrvElement.text().as_string());
       if (!eir_fPLRCrv) {
         LOG(Error, "Coil: " << name << "Broken EIR_fPLRCrvRef");
 
@@ -6493,7 +6493,7 @@ namespace sdd {
 
       // Might have to relocate after zones are available
       std::string cprsrZnRef = element.child("CprsrZnRef").text().as_string();
-      if (auto zone = model.getModelObjectByName<model::ThermalZone>(cprsrZnRef)) {
+      if (auto zone = model.getConcreteModelObjectByName<model::ThermalZone>(cprsrZnRef)) {
         heatPump.addToThermalZone(zone.get());
       }
 
@@ -6537,7 +6537,7 @@ namespace sdd {
       }
 
       std::string storZnRef = element.child("StorZnRef").text().as_string();
-      if (auto zone = model.getModelObjectByName<model::ThermalZone>(storZnRef)) {
+      if (auto zone = model.getConcreteModelObjectByName<model::ThermalZone>(storZnRef)) {
         waterHeater.setAmbientTemperatureThermalZone(zone.get());
       }
 
@@ -6833,7 +6833,7 @@ namespace sdd {
       // HIR_fPLRCrvRef
 
       pugi::xml_node hirfPLRCrvRefElement = element.child("HIR_fPLRCrvRef");
-      boost::optional<model::CurveCubic> hirfPLRCrv = model.getModelObjectByName<model::CurveCubic>(hirfPLRCrvRefElement.text().as_string());
+      boost::optional<model::CurveCubic> hirfPLRCrv = model.getConcreteModelObjectByName<model::CurveCubic>(hirfPLRCrvRefElement.text().as_string());
       if (hirfPLRCrv) {
         waterHeaterMixed.setPartLoadFactorCurve(hirfPLRCrv.get());
       }
@@ -7505,7 +7505,7 @@ namespace sdd {
 
         {
           auto value = element.child("VRFSysRef").text().as_string();
-          auto vrfSys = model.getModelObjectByName<model::AirConditionerVariableRefrigerantFlow>(value);
+          auto vrfSys = model.getConcreteModelObjectByName<model::AirConditionerVariableRefrigerantFlow>(value);
           if (vrfSys) {
             vrfSys->addTerminal(vrfTerminal);
           } else {

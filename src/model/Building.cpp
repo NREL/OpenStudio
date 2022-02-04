@@ -161,7 +161,7 @@ namespace model {
           otherBuilding->remove();
         }
 
-        //auto buildings = t_model.getModelObjects<Building>();
+        //auto buildings = t_model.getConcreteModelObjects<Building>();
         //if( ! buildings.empty() ) {
         //  // If Destination model already has a building then first remove it
         //  buildings.front().remove();

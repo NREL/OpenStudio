@@ -82,7 +82,7 @@ TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_addToNode) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(3, _setpointManagers.size());
   std::vector<SetpointManagerFollowSystemNodeTemperature> SetpointManagerFollowSystemNodeTemperatures =
-    m.getModelObjects<SetpointManagerFollowSystemNodeTemperature>();
+    m.getConcreteModelObjects<SetpointManagerFollowSystemNodeTemperature>();
   EXPECT_EQ(5, SetpointManagerFollowSystemNodeTemperatures.size());
 
   EXPECT_EQ(testObject, spm_3.setpointNode());
@@ -92,7 +92,7 @@ TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_addToNode) {
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_3) == _setpointManagers.end());
   EXPECT_EQ(3, _setpointManagers.size());
-  SetpointManagerFollowSystemNodeTemperatures = m.getModelObjects<SetpointManagerFollowSystemNodeTemperature>();
+  SetpointManagerFollowSystemNodeTemperatures = m.getConcreteModelObjects<SetpointManagerFollowSystemNodeTemperature>();
   EXPECT_EQ(4, SetpointManagerFollowSystemNodeTemperatures.size());
 }
 
@@ -109,14 +109,14 @@ TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_remove) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerFollowSystemNodeTemperature> SetpointManagerFollowSystemNodeTemperatures =
-    m.getModelObjects<SetpointManagerFollowSystemNodeTemperature>();
+    m.getConcreteModelObjects<SetpointManagerFollowSystemNodeTemperature>();
   EXPECT_EQ(1, SetpointManagerFollowSystemNodeTemperatures.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  SetpointManagerFollowSystemNodeTemperatures = m.getModelObjects<SetpointManagerFollowSystemNodeTemperature>();
+  SetpointManagerFollowSystemNodeTemperatures = m.getConcreteModelObjects<SetpointManagerFollowSystemNodeTemperature>();
   EXPECT_EQ(0, SetpointManagerFollowSystemNodeTemperatures.size());
 }
 

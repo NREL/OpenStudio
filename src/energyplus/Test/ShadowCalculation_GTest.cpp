@@ -367,11 +367,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
 
     EXPECT_EQ(3u, m.getConcreteModelObjects<ThermalZone>().size());
 
-    boost::optional<openstudio::model::ThermalZone> _z1 = m.getModelObjectByName<openstudio::model::ThermalZone>("Zone1");
+    boost::optional<openstudio::model::ThermalZone> _z1 = m.getConcreteModelObjectByName<openstudio::model::ThermalZone>("Zone1");
     ASSERT_TRUE(_z1);
-    boost::optional<openstudio::model::ThermalZone> _z2 = m.getModelObjectByName<openstudio::model::ThermalZone>("Zone2");
+    boost::optional<openstudio::model::ThermalZone> _z2 = m.getConcreteModelObjectByName<openstudio::model::ThermalZone>("Zone2");
     ASSERT_TRUE(_z2);
-    boost::optional<openstudio::model::ThermalZone> _z3 = m.getModelObjectByName<openstudio::model::ThermalZone>("Zone3");
+    boost::optional<openstudio::model::ThermalZone> _z3 = m.getConcreteModelObjectByName<openstudio::model::ThermalZone>("Zone3");
     ASSERT_TRUE(_z3);
 
     {

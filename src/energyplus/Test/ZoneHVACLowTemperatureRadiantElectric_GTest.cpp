@@ -71,7 +71,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fractio
   Model model = model::exampleModel();
 
   //loop through all zones and add a radiant system to each one
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
+  for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
 
     //make an electric radiant unit
     ScheduleConstant availabilitySched(model);
@@ -102,7 +102,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fractio
   ConstructionWithInternalSource construction(layers);
 
   //set building's default ceiling construction to internal source construction
-  DefaultConstructionSet defConSet = model.getModelObjects<DefaultConstructionSet>()[0];
+  DefaultConstructionSet defConSet = model.getConcreteModelObjects<DefaultConstructionSet>()[0];
   defConSet.defaultExteriorSurfaceConstructions()->setRoofCeilingConstruction(construction);
 
   //translate the model to EnergyPlus
@@ -110,7 +110,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fractio
   Workspace workspace = trans.translateModel(model);
 
   //loop through all zones and check the flow fraction for each surface in the surface group.  it should be 0.25
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
+  for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
 
     //get the radiant zone equipment
     for (ModelObject equipment : thermalZone.equipment()) {

@@ -118,9 +118,9 @@ TEST_F(ModelFixture, Space_Clone) {
   SubSurface subSurface(points, model);
   subSurface.setParent(surface);
 
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<Space>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<Surface>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<SubSurface>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<SubSurface>().size());
 
   EXPECT_FALSE(space.parent());
   ASSERT_TRUE(surface.parent());
@@ -136,9 +136,9 @@ TEST_F(ModelFixture, Space_Clone) {
   ASSERT_TRUE(spaceClone.name());
   EXPECT_EQ("Space 2", spaceClone.name().get());
 
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Space>().size());
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Surface>().size());
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<SubSurface>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<SubSurface>().size());
 
   ASSERT_EQ(static_cast<unsigned>(1), spaceClone.surfaces().size());
   EXPECT_NE(surface.handle(), spaceClone.surfaces()[0].handle());
@@ -558,7 +558,7 @@ TEST_F(ModelFixture, Space_hardApplySpaceType_false) {
   EXPECT_EQ(0u, space.spaceType()->lights().size());
 
   // existing light is still attached to space type, new clone is attached to space
-  EXPECT_EQ(2u, model.getModelObjects<Lights>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<Lights>().size());
   EXPECT_FALSE(lights.space());
   ASSERT_TRUE(lights.spaceType());
   EXPECT_EQ(spaceType.handle(), lights.spaceType()->handle());
@@ -748,7 +748,7 @@ TEST_F(ModelFixture, Space_SurfaceMatch_LargeTest) {
     }
   }
 
-  SpaceVector spaces = model.getModelObjects<Space>();
+  SpaceVector spaces = model.getConcreteModelObjects<Space>();
   matchSurfaces(spaces);
 
   // openstudio::path outpath = resourcesPath() / toPath("model/Space_SurfaceMatch_LargeTest.osm");
@@ -2509,8 +2509,8 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
 #  pragma endregion
 #endif
 
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Space>().size());
-  EXPECT_EQ(static_cast<unsigned>(16), model.getModelObjects<Surface>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(static_cast<unsigned>(16), model.getConcreteModelObjects<Surface>().size());
 
   EXPECT_TRUE(space.setTransformation(Transformation::translation(Vector3d(-34.6329065993854, 2.80342559613037, -9.61339169237201))
                                       * Transformation::rotation(Vector3d(0, 0, 1), -openstudio::degToRad(24.5))));
@@ -2526,7 +2526,7 @@ TEST_F(ModelFixture, RemoveSpikesAndOverlaps_TZ46_TZ47) {
   EXPECT_DOUBLE_EQ(-6.095999804928, space2.zOrigin());
   EXPECT_DOUBLE_EQ(24.5, space2.directionofRelativeNorth());
 
-  SpaceVector spaces = model.getModelObjects<Space>();
+  SpaceVector spaces = model.getConcreteModelObjects<Space>();
   SpaceVector blacklist;
 
   int nSurfaces = 0;
@@ -2739,7 +2739,7 @@ TEST_F(ModelFixture, Perimeter) {
   std::vector<std::string> spaceNames;
   std::vector<Surface> surfaces;
 
-  for (const auto& space : model->getModelObjects<Space>()) {
+  for (const auto& space : model->getConcreteModelObjects<Space>()) {
     std::string spacename = space.name().value();
     Transformation spaceTransformation = space.transformation();
     for (const auto& surface : space.surfaces()) {
@@ -2790,7 +2790,7 @@ TEST_F(ModelFixture, ExposedPerimeter) {
 
   // Iterate over spaces, get their surfaces and transform to model coordinates,
   // find the surfaces with downward facing normal at elevation of 0
-  for (const auto& space : model->getModelObjects<Space>()) {
+  for (const auto& space : model->getConcreteModelObjects<Space>()) {
     Transformation spaceTransformation = space.transformation();
     std::string spacename = space.name().value();
     for (const auto& surface : space.surfaces()) {
@@ -2908,7 +2908,7 @@ TEST_F(ModelFixture, DISABLED_Issue_1322) {
   model::OptionalModel model = translator.loadModel(modelPath);
   EXPECT_TRUE(model);
 
-  SpaceVector spaces = model->getModelObjects<Space>();
+  SpaceVector spaces = model->getConcreteModelObjects<Space>();
 
   intersectSurfaces(spaces);
   matchSurfaces(spaces);

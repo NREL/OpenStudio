@@ -307,7 +307,7 @@ TEST_F(ModelFixture, Surface_Area_In_File)
   model.setSqlFile(sqlFile);
   ASSERT_TRUE(model.sqlFile());
 
-  SurfaceVector surfaces = model.getModelObjects<Surface>();
+  SurfaceVector surfaces = model.getConcreteModelObjects<Surface>();
   EXPECT_TRUE(surfaces.size() > 0);
 
   for (const Surface& surface : surfaces){
@@ -396,7 +396,7 @@ TEST_F(ModelFixture, Surface_BuildingComponentLibraryRoofConstruction)
   Component roofComponent = componentTranslator.component().get();
 
   // replace roof construction in model
-  SurfaceVector surfaces = model.getModelObjects<Surface>();
+  SurfaceVector surfaces = model.getConcreteModelObjects<Surface>();
   OptionalComponentData ocd = model.insertComponent(roofComponent);
   ASSERT_TRUE(ocd);
   OptionalConstructionBase ocb = ocd->primaryComponentObject().optionalCast<ConstructionBase>();
@@ -1344,7 +1344,7 @@ TEST_F(ModelFixture, Surface_Initializer2) {
   model.addObject(idfObject);
   EXPECT_TRUE(watcher.objectAdded());
 
-  std::vector<Surface> surfaces = model.getModelObjects<Surface>();
+  std::vector<Surface> surfaces = model.getConcreteModelObjects<Surface>();
   ASSERT_EQ(1u, surfaces.size());
 
   Surface surface = surfaces[0];
@@ -3041,14 +3041,14 @@ TEST_F(ModelFixture, Surface_Intersect_Model22_Bug) {
   EXPECT_EQ("SunExposed", surface3.sunExposure());
   EXPECT_EQ("WindExposed", surface4.windExposure());
 
-  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<Surface>().size());
   EXPECT_FALSE(surface1.intersect(surface2));
   EXPECT_FALSE(surface1.intersect(surface3));
   EXPECT_FALSE(surface1.intersect(surface4));
   EXPECT_FALSE(surface2.intersect(surface3));
   EXPECT_FALSE(surface2.intersect(surface4));
   EXPECT_FALSE(surface3.intersect(surface4));
-  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<Surface>().size());
 }
 
 TEST_F(ModelFixture, Surface_Intersect_Model131_Bug1) {
@@ -3108,7 +3108,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug1) {
 
   EXPECT_NEAR(surface1.grossArea() + surface2.grossArea(), surface3.grossArea(), 0.01);
 
-  EXPECT_EQ(3u, model.getModelObjects<Surface>().size());
+  EXPECT_EQ(3u, model.getConcreteModelObjects<Surface>().size());
   boost::optional<SurfaceIntersection> intersect;
   intersect = surface1.computeIntersection(surface2);
   EXPECT_FALSE(intersect);
@@ -3123,7 +3123,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug1) {
   ASSERT_TRUE(intersect);
   EXPECT_EQ(0u, intersect->newSurfaces1().size());
   EXPECT_EQ(0u, intersect->newSurfaces2().size());
-  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<Surface>().size());
 
   space1.matchSurfaces(space3);
   space2.matchSurfaces(space3);
@@ -3190,7 +3190,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2) {
 
   EXPECT_NEAR(surface1.grossArea() + surface2.grossArea(), surface3.grossArea(), 0.01);
 
-  EXPECT_EQ(3u, model.getModelObjects<Surface>().size());
+  EXPECT_EQ(3u, model.getConcreteModelObjects<Surface>().size());
   boost::optional<SurfaceIntersection> intersect;
   intersect = surface1.computeIntersection(surface2);
   EXPECT_FALSE(intersect);
@@ -3210,7 +3210,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug2) {
   ASSERT_TRUE(intersect);
   EXPECT_EQ(0u, intersect->newSurfaces1().size());
   EXPECT_EQ(0u, intersect->newSurfaces2().size());
-  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<Surface>().size());
 
   space1.matchSurfaces(space3);
   space2.matchSurfaces(space3);
@@ -3280,7 +3280,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug3) {
 
   EXPECT_NEAR(surface1.grossArea() + surface2.grossArea(), surface3.grossArea(), 0.01);
 
-  EXPECT_EQ(3u, model.getModelObjects<Surface>().size());
+  EXPECT_EQ(3u, model.getConcreteModelObjects<Surface>().size());
   boost::optional<SurfaceIntersection> intersect;
   intersect = surface3.computeIntersection(surface1);
   ASSERT_TRUE(intersect);
@@ -3293,7 +3293,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug3) {
   ASSERT_TRUE(intersect);
   EXPECT_EQ(0u, intersect->newSurfaces1().size());
   EXPECT_EQ(0u, intersect->newSurfaces2().size());
-  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<Surface>().size());
 
   space1.matchSurfaces(space3);
   space2.matchSurfaces(space3);
@@ -3360,7 +3360,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug4) {
 
   EXPECT_NEAR(surface1.grossArea() + surface2.grossArea(), surface3.grossArea(), 0.01);
 
-  EXPECT_EQ(3u, model.getModelObjects<Surface>().size());
+  EXPECT_EQ(3u, model.getConcreteModelObjects<Surface>().size());
   boost::optional<SurfaceIntersection> intersect;
   intersect = surface3.computeIntersection(surface2);
   ASSERT_TRUE(intersect);
@@ -3373,7 +3373,7 @@ TEST_F(ModelFixture, Surface_Intersect_Model131_Bug4) {
   ASSERT_TRUE(intersect);
   EXPECT_EQ(0u, intersect->newSurfaces1().size());
   EXPECT_EQ(0u, intersect->newSurfaces2().size());
-  EXPECT_EQ(4u, model.getModelObjects<Surface>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<Surface>().size());
 
   space1.matchSurfaces(space3);
   space2.matchSurfaces(space3);

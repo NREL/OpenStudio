@@ -60,9 +60,9 @@ TEST_F(ModelFixture, IlluminanceMap_Clone) {
   EXPECT_EQ(space.handle(), map.space()->handle());
   EXPECT_EQ(1u, space.illuminanceMaps().size());
 
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<IlluminanceMap>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<IlluminanceMap>().size());
   ModelObject object = map.clone(model);
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<IlluminanceMap>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<IlluminanceMap>().size());
 
   ASSERT_TRUE(object.optionalCast<IlluminanceMap>());
   EXPECT_EQ(space.handle(), map.space()->handle());

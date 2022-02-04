@@ -311,7 +311,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PhotovoltaicPerformanceSandia) {
   EXPECT_TRUE(reverseTranslator.errors().empty());
   EXPECT_TRUE(reverseTranslator.warnings().empty());
 
-  auto sandiaPerfs = model.getModelObjects<openstudio::model::PhotovoltaicPerformanceSandia>();
+  auto sandiaPerfs = model.getConcreteModelObjects<openstudio::model::PhotovoltaicPerformanceSandia>();
   ASSERT_EQ(1u, sandiaPerfs.size());
   PhotovoltaicPerformanceSandia sandiaPerf = sandiaPerfs[0];
 

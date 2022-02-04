@@ -73,7 +73,7 @@ TEST_F(SDDFixture, ForwardTranslator_exampleModel) {
   Construction doorConstruction(model);
   doorConstruction.setLayers(doorLayers);
 
-  for (SubSurface subSurface : model.getModelObjects<SubSurface>()) {
+  for (SubSurface subSurface : model.getConcreteModelObjects<SubSurface>()) {
     if ((subSurface.subSurfaceType() == "FixedWindow") || (subSurface.subSurfaceType() == "OperableWindow")) {
       subSurface.setConstruction(windowConstruction);
     } else if ((subSurface.subSurfaceType() == "Door") || (subSurface.subSurfaceType() == "OverheadDoor")) {

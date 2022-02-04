@@ -384,11 +384,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls) {
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  EXPECT_EQ(1u, model.getModelObjects<Surface>().size());
-  EXPECT_EQ(1u, model.getModelObjects<SubSurface>().size());
-  EXPECT_EQ(1u, model.getModelObjects<ScheduleConstant>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<Surface>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<SubSurface>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleConstant>().size());
 
-  std::vector<ShadingControl> shadingControls = model.getModelObjects<ShadingControl>();
+  std::vector<ShadingControl> shadingControls = model.getConcreteModelObjects<ShadingControl>();
   ASSERT_EQ(1u, shadingControls.size());
   ShadingControl shadingControl = shadingControls[0];
   EXPECT_EQ("InteriorDaylightRedirectionDevice",
@@ -404,7 +404,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls) {
   EXPECT_FALSE(shadingControl.slatAngleSchedule());
   EXPECT_TRUE(shadingControl.isTypeofSlatAngleControlforBlindsDefaulted());
 
-  std::vector<SubSurface> subSurfaces = model.getModelObjects<SubSurface>();
+  std::vector<SubSurface> subSurfaces = model.getConcreteModelObjects<SubSurface>();
   ASSERT_EQ(1u, subSurfaces.size());
   SubSurface subSurface = subSurfaces[0];
   EXPECT_EQ("Sub Surface 1", subSurface.name().get());

@@ -105,7 +105,7 @@ TEST_F(ModelFixture, Construction_Layers) {
   // construct by clone
   auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(4), modelClone.objects().size());
-  ConstructionVector constructions = modelClone.getModelObjects<Construction>();
+  ConstructionVector constructions = modelClone.getConcreteModelObjects<Construction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   construction = constructions[0];
   EXPECT_FALSE(construction.model() == model);
@@ -190,7 +190,7 @@ TEST_F(ModelFixture, CFactorUndergroundWallConstruction) {
   Model model;
   CFactorUndergroundWallConstruction construction(model);
   EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  CFactorUndergroundWallConstructionVector constructions = model.getModelObjects<CFactorUndergroundWallConstruction>();
+  CFactorUndergroundWallConstructionVector constructions = model.getConcreteModelObjects<CFactorUndergroundWallConstruction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   EXPECT_TRUE(construction == constructions[0]);
   EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_CfactorUndergroundWall);
@@ -198,7 +198,7 @@ TEST_F(ModelFixture, CFactorUndergroundWallConstruction) {
   // construct by clone
   auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  constructions = modelClone.getModelObjects<CFactorUndergroundWallConstruction>();
+  constructions = modelClone.getConcreteModelObjects<CFactorUndergroundWallConstruction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   construction = constructions[0];
   EXPECT_FALSE(construction.model() == model);
@@ -210,7 +210,7 @@ TEST_F(ModelFixture, FFactorGroundFloorConstruction) {
   Model model;
   FFactorGroundFloorConstruction construction(model);
   EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  FFactorGroundFloorConstructionVector constructions = model.getModelObjects<FFactorGroundFloorConstruction>();
+  FFactorGroundFloorConstructionVector constructions = model.getConcreteModelObjects<FFactorGroundFloorConstruction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   EXPECT_TRUE(construction == constructions[0]);
   EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_FfactorGroundFloor);
@@ -218,7 +218,7 @@ TEST_F(ModelFixture, FFactorGroundFloorConstruction) {
   // construct by clone
   auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  constructions = modelClone.getModelObjects<FFactorGroundFloorConstruction>();
+  constructions = modelClone.getConcreteModelObjects<FFactorGroundFloorConstruction>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   construction = constructions[0];
   EXPECT_FALSE(construction.model() == model);
@@ -230,7 +230,7 @@ TEST_F(ModelFixture, WindowDataFile) {
   Model model;
   WindowDataFile construction(model);
   EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
-  WindowDataFileVector constructions = model.getModelObjects<WindowDataFile>();
+  WindowDataFileVector constructions = model.getConcreteModelObjects<WindowDataFile>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   EXPECT_TRUE(construction == constructions[0]);
   EXPECT_TRUE(construction.iddObject().type() == IddObjectType::OS_Construction_WindowDataFile);
@@ -238,7 +238,7 @@ TEST_F(ModelFixture, WindowDataFile) {
   // construct by clone
   auto modelClone = model.clone().cast<Model>();
   EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
-  constructions = modelClone.getModelObjects<WindowDataFile>();
+  constructions = modelClone.getConcreteModelObjects<WindowDataFile>();
   ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   construction = constructions[0];
   EXPECT_FALSE(construction.model() == model);
@@ -321,8 +321,8 @@ TEST_F(ModelFixture, Construction_AddObjects) {
   Model model;
   model.addObjects(idfFile.objects());
   EXPECT_EQ(model.numObjects(), idfFile.numObjects());
-  ASSERT_EQ(1u, model.getModelObjects<Construction>().size());
-  Construction construction = model.getModelObjects<Construction>()[0];
+  ASSERT_EQ(1u, model.getConcreteModelObjects<Construction>().size());
+  Construction construction = model.getConcreteModelObjects<Construction>()[0];
   ASSERT_EQ(8u, construction.numFields());
   for (int i = 3; i < 8; ++i) {
     EXPECT_FALSE(construction.isEmpty(i)) << "Index " << i << " is empty for:" << '\n' << construction;
@@ -370,7 +370,7 @@ TEST_F(ModelFixture, Construction_Clone) {
   auto clone2 = construction.clone(model).cast<Construction>();
   EXPECT_EQ(static_cast<unsigned>(3), model.getModelObjects<Material>().size());
 
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<Construction>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<Construction>().size());
 
   // Make sure materials are still hooked up
   ASSERT_EQ(static_cast<unsigned>(3), clone2.cast<Construction>().layers().size());
@@ -379,7 +379,7 @@ TEST_F(ModelFixture, Construction_Clone) {
   auto clone3 = construction.clone(model).cast<Construction>();
   EXPECT_EQ(static_cast<unsigned>(3), model.getModelObjects<Material>().size());
 
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<Construction>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<Construction>().size());
 
   // Make sure materials are still hooked up
   ASSERT_EQ(static_cast<unsigned>(3), clone3.cast<Construction>().layers().size());
@@ -400,7 +400,7 @@ TEST_F(ModelFixture, DuplicateMaterialName) {
 TEST_F(ModelFixture, Construction_SetUFactor) {
   Model model = exampleModel();
 
-  OptionalConstruction tempC = model.getModelObjectByName<Construction>("Exterior Wall");
+  OptionalConstruction tempC = model.getConcreteModelObjectByName<Construction>("Exterior Wall");
   ASSERT_TRUE(tempC);
   Construction construction(*tempC);
   OptionalOpaqueMaterial tempM = construction.insulation();
@@ -826,13 +826,13 @@ TEST_F(ModelFixture, Construction_StandardsInformationConstruction) {
   Model model;
 
   Construction construction(model);
-  EXPECT_EQ(0, model.getModelObjects<StandardsInformationConstruction>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<StandardsInformationConstruction>().size());
 
   StandardsInformationConstruction tmp = construction.standardsInformation();
-  EXPECT_EQ(1u, model.getModelObjects<StandardsInformationConstruction>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<StandardsInformationConstruction>().size());
 
   StandardsInformationConstruction info = construction.standardsInformation();
-  EXPECT_EQ(1u, model.getModelObjects<StandardsInformationConstruction>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<StandardsInformationConstruction>().size());
   EXPECT_EQ(toString(info.handle()), toString(tmp.handle()));
   EXPECT_EQ(toString(construction.handle()), toString(info.construction().handle()));
 
@@ -853,7 +853,7 @@ TEST_F(ModelFixture, Construction_StandardsInformationConstruction) {
   // EXPECT_FALSE(info.suggestedConstructionStandardSources().empty());
 
   construction.remove();
-  EXPECT_EQ(0, model.getModelObjects<StandardsInformationConstruction>().size());
+  EXPECT_EQ(0, model.getConcreteModelObjects<StandardsInformationConstruction>().size());
 }
 
 TEST_F(ModelFixture, Construction_NumLayers) {

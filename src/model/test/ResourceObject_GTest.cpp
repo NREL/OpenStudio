@@ -107,9 +107,9 @@ TEST_F(ModelFixture, ResourceObject_Clone) {
   EXPECT_FALSE(newConstruction == construction);
   EXPECT_TRUE(newConstruction.model() == construction.model());
   // child cloned
-  EXPECT_EQ(2u, original.getModelObjects<StandardsInformationConstruction>().size()) << original;
+  EXPECT_EQ(2u, original.getConcreteModelObjects<StandardsInformationConstruction>().size()) << original;
   EXPECT_FALSE(newConstruction.standardsInformation() == construction.standardsInformation());
-  EXPECT_EQ(2u, original.getModelObjects<StandardsInformationConstruction>().size()) << original;
+  EXPECT_EQ(2u, original.getConcreteModelObjects<StandardsInformationConstruction>().size()) << original;
   // resource not cloned
   EXPECT_EQ(1u, newConstruction.numLayers());
   EXPECT_TRUE(newConstruction.layers() == construction.layers());

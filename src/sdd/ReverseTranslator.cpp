@@ -660,7 +660,7 @@ namespace sdd {
     // Give the nodes better names
     // We do this here because the loops need to be completely assembled
     // with their supply AND demand sides.  ie. After zones are attached.
-    std::vector<model::PlantLoop> plantLoops = result->getModelObjects<model::PlantLoop>();
+    std::vector<model::PlantLoop> plantLoops = result->getConcreteModelObjects<model::PlantLoop>();
 
     for (auto plantLoop = plantLoops.begin(); plantLoop != plantLoops.end(); ++plantLoop) {
       std::string plantName = plantLoop->name().get();
@@ -711,7 +711,7 @@ namespace sdd {
       }
     }
 
-    std::vector<model::AirLoopHVAC> airSystems = result->getModelObjects<model::AirLoopHVAC>();
+    std::vector<model::AirLoopHVAC> airSystems = result->getConcreteModelObjects<model::AirLoopHVAC>();
 
     for (auto airSystem = airSystems.begin(); airSystem != airSystems.end(); ++airSystem) {
       std::string systemName = airSystem->name().get();
@@ -961,7 +961,7 @@ namespace sdd {
     meter.setReportingFrequency("Hourly");
 
     {
-      auto fanZoneExhausts = result->getModelObjects<model::FanZoneExhaust>();
+      auto fanZoneExhausts = result->getConcreteModelObjects<model::FanZoneExhaust>();
       std::vector<std::string> subCategories(fanZoneExhausts.size());
       std::transform(fanZoneExhausts.begin(), fanZoneExhausts.end(), subCategories.begin(),
                      [](const model::FanZoneExhaust& fan) { return fan.endUseSubcategory(); });
@@ -1082,7 +1082,7 @@ namespace sdd {
       model::OutputVariable var("Zone Air Temperature", *result);
       var.setReportingFrequency(interval);
 
-      std::vector<model::ThermalZone> zones = result->getModelObjects<model::ThermalZone>();
+      std::vector<model::ThermalZone> zones = result->getConcreteModelObjects<model::ThermalZone>();
       for (auto it = zones.begin(); it != zones.end(); ++it) {
         if (boost::optional<model::ModelObject> returnAirNode = it->returnAirModelObject()) {
           var = model::OutputVariable("System Node Temperature", *result);
@@ -1231,19 +1231,19 @@ namespace sdd {
 
       // Really need some abstraction so this sillyness isn't required
       {
-        auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalAirConditioner>();
+        auto zonehvac = result->getConcreteModelObjects<model::ZoneHVACPackagedTerminalAirConditioner>();
         for (const auto& comp : zonehvac) {
           createOutputForZoneHVAC(comp);
         }
       }
       {
-        auto zonehvac = result->getModelObjects<model::ZoneHVACPackagedTerminalHeatPump>();
+        auto zonehvac = result->getConcreteModelObjects<model::ZoneHVACPackagedTerminalHeatPump>();
         for (const auto& comp : zonehvac) {
           createOutputForZoneHVAC(comp);
         }
       }
       {
-        auto zonehvac = result->getModelObjects<model::ZoneHVACWaterToAirHeatPump>();
+        auto zonehvac = result->getConcreteModelObjects<model::ZoneHVACWaterToAirHeatPump>();
         for (const auto& comp : zonehvac) {
           createOutputForZoneHVAC(comp);
 
@@ -1273,13 +1273,13 @@ namespace sdd {
         }
       }
       {
-        auto zonehvac = result->getModelObjects<model::ZoneHVACFourPipeFanCoil>();
+        auto zonehvac = result->getConcreteModelObjects<model::ZoneHVACFourPipeFanCoil>();
         for (const auto& comp : zonehvac) {
           createOutputForZoneHVAC(comp);
         }
       }
       {
-        auto zonehvac = result->getModelObjects<model::ZoneHVACBaseboardConvectiveElectric>();
+        auto zonehvac = result->getConcreteModelObjects<model::ZoneHVACBaseboardConvectiveElectric>();
         for (const auto& comp : zonehvac) {
           var = model::OutputVariable("Baseboard Electricity Rate", *result);
           var.setReportingFrequency(interval);
@@ -1341,7 +1341,7 @@ namespace sdd {
       var = model::OutputVariable("Air System Outdoor Air Economizer Status", *result);
       var.setReportingFrequency(interval);
 
-      auto hxs = result->getModelObjects<model::HeatExchangerAirToAirSensibleAndLatent>();
+      auto hxs = result->getConcreteModelObjects<model::HeatExchangerAirToAirSensibleAndLatent>();
       for (auto& hx : hxs) {
         var = model::OutputVariable("Heat Exchanger Sensible Heating Rate", *result);
         var.setReportingFrequency(interval);
@@ -1401,7 +1401,7 @@ namespace sdd {
         }
       }
 
-      std::vector<model::AirLoopHVAC> airloops = result->getModelObjects<model::AirLoopHVAC>();
+      std::vector<model::AirLoopHVAC> airloops = result->getConcreteModelObjects<model::AirLoopHVAC>();
       for (auto& airloop : airloops) {
         var = model::OutputVariable("System Node Temperature", *result);
         var.setReportingFrequency(interval);
@@ -1524,7 +1524,7 @@ namespace sdd {
       var = model::OutputVariable("Plant Supply Side Outlet Temperature", *result);
       var.setReportingFrequency(interval);
 
-      std::vector<model::PlantLoop> plants = result->getModelObjects<model::PlantLoop>();
+      std::vector<model::PlantLoop> plants = result->getConcreteModelObjects<model::PlantLoop>();
       for (auto& plant : plants) {
         var = model::OutputVariable("System Node Mass Flow Rate", *result);
         var.setReportingFrequency(interval);
@@ -1922,7 +1922,7 @@ namespace sdd {
     auto fluidSysElement = fluidSegmentElement.parent();
     auto fluidSysNameElement = fluidSysElement.child("Name");
 
-    return model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string());
+    return model.getConcreteModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string());
   }
 
   boost::optional<model::PlantLoop> ReverseTranslator::serviceHotWaterLoopForSupplySegment(const pugi::xml_node& fluidSegInRefElement,
@@ -1952,7 +1952,7 @@ namespace sdd {
           if ((openstudio::istringEqual(typeElement.text().as_string(), "SECONDARYSUPPLY")
                || openstudio::istringEqual(typeElement.text().as_string(), "PRIMARYSUPPLY"))
               && openstudio::istringEqual(nameElement.text().as_string(), fluidSegmentName)) {
-            if (boost::optional<model::PlantLoop> loop = model.getModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string())) {
+            if (boost::optional<model::PlantLoop> loop = model.getConcreteModelObjectByName<model::PlantLoop>(fluidSysNameElement.text().as_string())) {
               return loop;
             } else {
               if (boost::optional<model::ModelObject> mo = translateFluidSys(fluidSysElement, model)) {

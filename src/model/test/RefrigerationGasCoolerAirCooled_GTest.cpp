@@ -60,19 +60,19 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_Remove) {
   Model model;
   RefrigerationGasCoolerAirCooled testObject = RefrigerationGasCoolerAirCooled(model);
 
-  std::vector<RefrigerationGasCoolerAirCooled> refrigerationAirCooledGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  std::vector<RefrigerationGasCoolerAirCooled> refrigerationAirCooledGasCoolers = model.getConcreteModelObjects<RefrigerationGasCoolerAirCooled>();
   EXPECT_EQ(1, refrigerationAirCooledGasCoolers.size());
 
-  std::vector<CurveLinear> ratedTotalHeatRejectionRateCurve = model.getModelObjects<CurveLinear>();
+  std::vector<CurveLinear> ratedTotalHeatRejectionRateCurve = model.getConcreteModelObjects<CurveLinear>();
   EXPECT_EQ(1, ratedTotalHeatRejectionRateCurve.size());
 
   testObject.remove();
 
-  refrigerationAirCooledGasCoolers = model.getModelObjects<RefrigerationGasCoolerAirCooled>();
+  refrigerationAirCooledGasCoolers = model.getConcreteModelObjects<RefrigerationGasCoolerAirCooled>();
   EXPECT_EQ(0, refrigerationAirCooledGasCoolers.size());
 
   // Curve was used only by this object, so should have been removed
-  ratedTotalHeatRejectionRateCurve = model.getModelObjects<CurveLinear>();
+  ratedTotalHeatRejectionRateCurve = model.getConcreteModelObjects<CurveLinear>();
   EXPECT_EQ(0, ratedTotalHeatRejectionRateCurve.size());
 }
 
@@ -115,7 +115,7 @@ TEST_F(ModelFixture, RefrigerationGasCoolerAirCooled_CloneModelWithDefaultData) 
 
   auto testObjectClone = testObject.clone(model).cast<RefrigerationGasCoolerAirCooled>();
 
-  std::vector<CurveLinear> refrigerationGasCoolerCurves = model.getModelObjects<CurveLinear>();
+  std::vector<CurveLinear> refrigerationGasCoolerCurves = model.getConcreteModelObjects<CurveLinear>();
   for (auto it = refrigerationGasCoolerCurves.begin(); it != refrigerationGasCoolerCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }

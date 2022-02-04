@@ -90,8 +90,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_WindowConstruction) {
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(workspace);
 
-  ASSERT_EQ(1u, model.getModelObjects<Construction>().size());
-  Construction mConstruction = model.getModelObjects<Construction>()[0];
+  ASSERT_EQ(1u, model.getConcreteModelObjects<Construction>().size());
+  Construction mConstruction = model.getConcreteModelObjects<Construction>()[0];
   EXPECT_EQ(3u, mConstruction.layers().size());
   EXPECT_EQ(2u, model.getModelObjects<FenestrationMaterial>().size());
 }

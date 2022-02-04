@@ -56,12 +56,12 @@ TEST_F(ModelFixture, RefrigerationCompressor_Remove) {
   Model model;
   RefrigerationCompressor testObject = RefrigerationCompressor(model);
 
-  std::vector<RefrigerationCompressor> refrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
+  std::vector<RefrigerationCompressor> refrigerationCompressors = model.getConcreteModelObjects<RefrigerationCompressor>();
   EXPECT_EQ(1, refrigerationCompressors.size());
 
   testObject.remove();
 
-  refrigerationCompressors = model.getModelObjects<RefrigerationCompressor>();
+  refrigerationCompressors = model.getConcreteModelObjects<RefrigerationCompressor>();
   EXPECT_EQ(0, refrigerationCompressors.size());
 }
 
@@ -72,7 +72,7 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithDefaultData) {
 
   auto testObjectClone = testObject.clone(model).cast<RefrigerationCompressor>();
 
-  std::vector<CurveBicubic> refrigerationCompressorCurves = model.getModelObjects<CurveBicubic>();
+  std::vector<CurveBicubic> refrigerationCompressorCurves = model.getConcreteModelObjects<CurveBicubic>();
   for (auto it = refrigerationCompressorCurves.begin(); it != refrigerationCompressorCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
@@ -199,15 +199,15 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneTwoModelsWithDefaultData) {
 
   Model model2;
 
-  std::vector<CurveBicubic> refrigerationCompressorCurves2 = model2.getModelObjects<CurveBicubic>();
+  std::vector<CurveBicubic> refrigerationCompressorCurves2 = model2.getConcreteModelObjects<CurveBicubic>();
   EXPECT_EQ(0, refrigerationCompressorCurves2.size());
 
   auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationCompressor>();
 
-  std::vector<CurveBicubic> refrigerationCompressorCurves = model.getModelObjects<CurveBicubic>();
+  std::vector<CurveBicubic> refrigerationCompressorCurves = model.getConcreteModelObjects<CurveBicubic>();
   EXPECT_EQ(2, refrigerationCompressorCurves.size());
 
-  refrigerationCompressorCurves2 = model2.getModelObjects<CurveBicubic>();
+  refrigerationCompressorCurves2 = model2.getConcreteModelObjects<CurveBicubic>();
   EXPECT_EQ(2, refrigerationCompressorCurves2.size());
 
   for (auto it = refrigerationCompressorCurves.begin(); it != refrigerationCompressorCurves.end(); ++it) {

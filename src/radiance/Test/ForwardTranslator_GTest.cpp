@@ -258,7 +258,7 @@ TEST(Radiance, ForwardTranslator_ExampleModelWithShadingControl) {
 TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps) {
   Model model = exampleModel();
 
-  for (IlluminanceMap illuminanceMap : model.getModelObjects<IlluminanceMap>()) {
+  for (IlluminanceMap illuminanceMap : model.getConcreteModelObjects<IlluminanceMap>()) {
     illuminanceMap.remove();
   }
 
@@ -277,7 +277,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps) {
 TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls) {
   Model model = exampleModel();
 
-  for (DaylightingControl daylightingControl : model.getModelObjects<DaylightingControl>()) {
+  for (DaylightingControl daylightingControl : model.getConcreteModelObjects<DaylightingControl>()) {
     daylightingControl.remove();
   }
 
@@ -296,7 +296,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls) {
 TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors) {
   Model model = exampleModel();
 
-  for (GlareSensor glareSensor : model.getModelObjects<GlareSensor>()) {
+  for (GlareSensor glareSensor : model.getConcreteModelObjects<GlareSensor>()) {
     glareSensor.remove();
   }
 
@@ -315,7 +315,7 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors) {
 TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks) {
   Model model = exampleModel();
 
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
+  for (ThermalZone thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
     thermalZone.resetSecondaryDaylightingControl();
     thermalZone.resetPrimaryDaylightingControl();
     thermalZone.resetIlluminanceMap();

@@ -76,7 +76,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageCooling_addToNode) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerSingleZoneOneStageCooling> SetpointManagerSingleZoneOneStageCoolings =
-    m.getModelObjects<SetpointManagerSingleZoneOneStageCooling>();
+    m.getConcreteModelObjects<SetpointManagerSingleZoneOneStageCooling>();
   EXPECT_EQ(3, SetpointManagerSingleZoneOneStageCoolings.size());
 
   EXPECT_EQ(testObject, spm_1.setpointNode());
@@ -86,7 +86,7 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageCooling_addToNode) {
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());
   EXPECT_EQ(1, _setpointManagers.size());
-  SetpointManagerSingleZoneOneStageCoolings = m.getModelObjects<SetpointManagerSingleZoneOneStageCooling>();
+  SetpointManagerSingleZoneOneStageCoolings = m.getConcreteModelObjects<SetpointManagerSingleZoneOneStageCooling>();
   EXPECT_EQ(2, SetpointManagerSingleZoneOneStageCoolings.size());
 }
 
@@ -103,14 +103,14 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneOneStageCooling_remove) {
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
   std::vector<SetpointManagerSingleZoneOneStageCooling> SetpointManagerSingleZoneOneStageCoolings =
-    m.getModelObjects<SetpointManagerSingleZoneOneStageCooling>();
+    m.getConcreteModelObjects<SetpointManagerSingleZoneOneStageCooling>();
   EXPECT_EQ(1, SetpointManagerSingleZoneOneStageCoolings.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  SetpointManagerSingleZoneOneStageCoolings = m.getModelObjects<SetpointManagerSingleZoneOneStageCooling>();
+  SetpointManagerSingleZoneOneStageCoolings = m.getConcreteModelObjects<SetpointManagerSingleZoneOneStageCooling>();
   EXPECT_EQ(0, SetpointManagerSingleZoneOneStageCoolings.size());
 }
 

@@ -287,8 +287,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243) {
   ScheduleDay defaultDaySchedule = scheduleRuleset.defaultDaySchedule();
   defaultDaySchedule.setName("Default Day Schedule");
 
-  ASSERT_EQ(1u, model.getModelObjects<ScheduleRuleset>().size());
-  ASSERT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ScheduleRuleset>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   ScheduleRule rule(scheduleRuleset);
   rule.setName("All Days Rule");
@@ -305,8 +305,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243) {
   rule.setStartDate(Date(1, 1));
   rule.setEndDate(Date(12, 31));
 
-  ASSERT_EQ(1u, model.getModelObjects<ScheduleRule>().size());
-  ASSERT_EQ(2u, model.getModelObjects<ScheduleDay>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ScheduleRule>().size());
+  ASSERT_EQ(2u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
@@ -352,8 +352,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_2) {
   ScheduleDay defaultDaySchedule = scheduleRuleset.defaultDaySchedule();
   defaultDaySchedule.setName("Default Day Schedule");
 
-  ASSERT_EQ(1u, model.getModelObjects<ScheduleRuleset>().size());
-  ASSERT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ScheduleRuleset>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   ScheduleRule rule(scheduleRuleset);
   rule.setName("All Days Except Mon and Wed Rule");
@@ -368,8 +368,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_2) {
   rule.setApplyFriday(true);
   rule.setApplySaturday(true);
 
-  ASSERT_EQ(1u, model.getModelObjects<ScheduleRule>().size());
-  ASSERT_EQ(2u, model.getModelObjects<ScheduleDay>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ScheduleRule>().size());
+  ASSERT_EQ(2u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
@@ -439,8 +439,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_3) {
   ScheduleDay defaultDaySchedule = scheduleRuleset.defaultDaySchedule();
   defaultDaySchedule.setName("Default Day Schedule");
 
-  ASSERT_EQ(1u, model.getModelObjects<ScheduleRuleset>().size());
-  ASSERT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ScheduleRuleset>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   ScheduleRule rule(scheduleRuleset);
   rule.setName("1/3 - 12/29 Days Except Mon and Wed Rule");
@@ -457,8 +457,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleWeek_Bug243_3) {
   rule.setStartDate(Date(1, 3));
   rule.setEndDate(Date(12, 29));
 
-  ASSERT_EQ(1u, model.getModelObjects<ScheduleRule>().size());
-  ASSERT_EQ(2u, model.getModelObjects<ScheduleDay>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<ScheduleRule>().size());
+  ASSERT_EQ(2u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
@@ -702,7 +702,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetSimple
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<ScheduleRuleset> scheduleRulesets = model.getModelObjects<ScheduleRuleset>();
+  std::vector<ScheduleRuleset> scheduleRulesets = model.getConcreteModelObjects<ScheduleRuleset>();
   ASSERT_EQ(1u, scheduleRulesets.size());
   ScheduleRuleset scheduleRuleset = scheduleRulesets[0];
   EXPECT_EQ("occupants schedule", scheduleRuleset.nameString());
@@ -715,7 +715,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetSimple
   EXPECT_EQ("Schedule Day 9", scheduleRuleset.customDay1Schedule().nameString());
   EXPECT_EQ("Schedule Day 10", scheduleRuleset.customDay2Schedule().nameString());
 
-  std::vector<ScheduleRule> scheduleRules = model.getModelObjects<ScheduleRule>();
+  std::vector<ScheduleRule> scheduleRules = model.getConcreteModelObjects<ScheduleRule>();
   ASSERT_EQ(1u, scheduleRules.size());
   ScheduleRule scheduleRule = scheduleRules[0];
   EXPECT_EQ(scheduleRule.scheduleRuleset().handle(), scheduleRuleset.handle());
@@ -739,7 +739,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetSimple
   EXPECT_EQ(12, scheduleRule.endDate().get().monthOfYear().value());
   EXPECT_EQ(31, scheduleRule.endDate().get().dayOfMonth());
 
-  std::vector<ScheduleDay> scheduleDays = model.getModelObjects<ScheduleDay>();
+  std::vector<ScheduleDay> scheduleDays = model.getConcreteModelObjects<ScheduleDay>();
   // 1: "occupants schedule allday1"
   // 1: "Schedule Day 5" (orphaned?)
   // 1: "Schedule Day 1" (created by ScheduleRuleset ctor)
@@ -747,10 +747,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetSimple
   // 5: clones of "Schedule Day 5" (created by set methods for holiday, design day, custom day schedule setters)
   ASSERT_EQ(9u, scheduleDays.size());
 
-  std::vector<ScheduleYear> scheduleYears = model.getModelObjects<ScheduleYear>();
+  std::vector<ScheduleYear> scheduleYears = model.getConcreteModelObjects<ScheduleYear>();
   ASSERT_EQ(0u, scheduleYears.size());
 
-  std::vector<ScheduleWeek> scheduleWeeks = model.getModelObjects<ScheduleWeek>();
+  std::vector<ScheduleWeek> scheduleWeeks = model.getConcreteModelObjects<ScheduleWeek>();
   ASSERT_EQ(1u, scheduleWeeks.size());  // RT of Schedule:Week:Daily called from ReverseTranslator.cpp directly
 }
 
@@ -865,7 +865,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetComple
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<ScheduleRuleset> scheduleRulesets = model.getModelObjects<ScheduleRuleset>();
+  std::vector<ScheduleRuleset> scheduleRulesets = model.getConcreteModelObjects<ScheduleRuleset>();
   ASSERT_EQ(1u, scheduleRulesets.size());
   ScheduleRuleset scheduleRuleset = scheduleRulesets[0];
   EXPECT_EQ("occupants schedule", scheduleRuleset.nameString());
@@ -878,10 +878,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetComple
   EXPECT_EQ("occupants schedule allday1 4", scheduleRuleset.customDay1Schedule().nameString());
   EXPECT_EQ("occupants schedule allday2 4", scheduleRuleset.customDay2Schedule().nameString());
 
-  std::vector<ScheduleRule> scheduleRules = model.getModelObjects<ScheduleRule>();
+  std::vector<ScheduleRule> scheduleRules = model.getConcreteModelObjects<ScheduleRule>();
   ASSERT_EQ(3u, scheduleRules.size());
 
-  boost::optional<ScheduleRule> optscheduleRule1 = model.getModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan1-Jan27");
+  boost::optional<ScheduleRule> optscheduleRule1 = model.getConcreteModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan1-Jan27");
   ASSERT_TRUE(optscheduleRule1);
   ScheduleRule scheduleRule1 = optscheduleRule1.get();
   EXPECT_EQ(scheduleRule1.scheduleRuleset().handle(), scheduleRuleset.handle());
@@ -905,7 +905,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetComple
   EXPECT_EQ(1, scheduleRule1.endDate().get().monthOfYear().value());
   EXPECT_EQ(27, scheduleRule1.endDate().get().dayOfMonth());
 
-  boost::optional<ScheduleRule> optscheduleRule2 = model.getModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan28-Feb3");
+  boost::optional<ScheduleRule> optscheduleRule2 = model.getConcreteModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan28-Feb3");
   ASSERT_TRUE(optscheduleRule2);
   ScheduleRule scheduleRule2 = optscheduleRule2.get();
   EXPECT_EQ(scheduleRule2.scheduleRuleset().handle(), scheduleRuleset.handle());
@@ -929,7 +929,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetComple
   EXPECT_EQ(2, scheduleRule2.endDate().get().monthOfYear().value());
   EXPECT_EQ(3, scheduleRule2.endDate().get().dayOfMonth());
 
-  boost::optional<ScheduleRule> optscheduleRule3 = model.getModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan28-Feb3 1");
+  boost::optional<ScheduleRule> optscheduleRule3 = model.getConcreteModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan28-Feb3 1");
   ASSERT_TRUE(optscheduleRule3);
   ScheduleRule scheduleRule3 = optscheduleRule3.get();
   EXPECT_EQ(scheduleRule3.scheduleRuleset().handle(), scheduleRuleset.handle());
@@ -953,7 +953,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetComple
   EXPECT_EQ(2, scheduleRule3.endDate().get().monthOfYear().value());
   EXPECT_EQ(3, scheduleRule3.endDate().get().dayOfMonth());
 
-  std::vector<ScheduleDay> scheduleDays = model.getModelObjects<ScheduleDay>();
+  std::vector<ScheduleDay> scheduleDays = model.getConcreteModelObjects<ScheduleDay>();
   // 1: "occupants schedule allday1"
   // 1: "occupants schedule allday2"
   // 1: "Schedule Day 1" (created by ScheduleRuleset ctor)
@@ -962,10 +962,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetComple
   // 5: clones of "Schedule Day 5" (created by set methods for holiday, design day, custom day schedule setters)
   ASSERT_EQ(11u, scheduleDays.size());  // 3 from the idf, 1 from ScheduleRuleset ctor, and 5 cloned
 
-  std::vector<ScheduleYear> scheduleYears = model.getModelObjects<ScheduleYear>();
+  std::vector<ScheduleYear> scheduleYears = model.getConcreteModelObjects<ScheduleYear>();
   ASSERT_EQ(0u, scheduleYears.size());
 
-  std::vector<ScheduleWeek> scheduleWeeks = model.getModelObjects<ScheduleWeek>();
+  std::vector<ScheduleWeek> scheduleWeeks = model.getConcreteModelObjects<ScheduleWeek>();
   ASSERT_EQ(2u, scheduleWeeks.size());  // RT of Schedule:Week:Daily called from ReverseTranslator.cpp directly
 }
 
@@ -1080,21 +1080,21 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToYearComplex) 
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<ScheduleYear> scheduleYears = model.getModelObjects<ScheduleYear>();
+  std::vector<ScheduleYear> scheduleYears = model.getConcreteModelObjects<ScheduleYear>();
   ASSERT_EQ(1u, scheduleYears.size());
   ScheduleYear scheduleYear = scheduleYears[0];
   EXPECT_EQ(2u, scheduleYear.scheduleWeeks().size());
   EXPECT_EQ(2u, scheduleYear.dates().size());
 
-  std::vector<ScheduleDay> scheduleDays = model.getModelObjects<ScheduleDay>();
+  std::vector<ScheduleDay> scheduleDays = model.getConcreteModelObjects<ScheduleDay>();
   // 1: "occupants schedule allday1"
   // 1: "occupants schedule allday2"
   ASSERT_EQ(2u, scheduleDays.size());
 
-  std::vector<ScheduleRuleset> scheduleRulesets = model.getModelObjects<ScheduleRuleset>();
+  std::vector<ScheduleRuleset> scheduleRulesets = model.getConcreteModelObjects<ScheduleRuleset>();
   ASSERT_EQ(0u, scheduleRulesets.size());
 
-  std::vector<ScheduleWeek> scheduleWeeks = model.getModelObjects<ScheduleWeek>();
+  std::vector<ScheduleWeek> scheduleWeeks = model.getConcreteModelObjects<ScheduleWeek>();
   ASSERT_EQ(2u, scheduleWeeks.size());  // RT of Schedule:Week:Daily called from ReverseTranslator.cpp directly
 }
 
@@ -1221,7 +1221,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekCompactToRulesetComp
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
   Model model = trans.translateWorkspace(workspace);
 
-  std::vector<ScheduleRuleset> scheduleRulesets = model.getModelObjects<ScheduleRuleset>();
+  std::vector<ScheduleRuleset> scheduleRulesets = model.getConcreteModelObjects<ScheduleRuleset>();
   ASSERT_EQ(1u, scheduleRulesets.size());
   ScheduleRuleset scheduleRuleset = scheduleRulesets[0];
   EXPECT_EQ("occupants schedule", scheduleRuleset.nameString());
@@ -1234,10 +1234,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekCompactToRulesetComp
   EXPECT_EQ("occupants schedule allday1 4", scheduleRuleset.customDay1Schedule().nameString());
   EXPECT_EQ("occupants schedule allday2 4", scheduleRuleset.customDay2Schedule().nameString());
 
-  std::vector<ScheduleRule> scheduleRules = model.getModelObjects<ScheduleRule>();
+  std::vector<ScheduleRule> scheduleRules = model.getConcreteModelObjects<ScheduleRule>();
   ASSERT_EQ(3u, scheduleRules.size());
 
-  boost::optional<ScheduleRule> optscheduleRule1 = model.getModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan1-Jan27");
+  boost::optional<ScheduleRule> optscheduleRule1 = model.getConcreteModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan1-Jan27");
   ASSERT_TRUE(optscheduleRule1);
   ScheduleRule scheduleRule1 = optscheduleRule1.get();
   EXPECT_EQ(scheduleRule1.scheduleRuleset().handle(), scheduleRuleset.handle());
@@ -1261,7 +1261,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekCompactToRulesetComp
   EXPECT_EQ(1, scheduleRule1.endDate().get().monthOfYear().value());
   EXPECT_EQ(27, scheduleRule1.endDate().get().dayOfMonth());
 
-  boost::optional<ScheduleRule> optscheduleRule2 = model.getModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan28-Feb3");
+  boost::optional<ScheduleRule> optscheduleRule2 = model.getConcreteModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan28-Feb3");
   ASSERT_TRUE(optscheduleRule2);
   ScheduleRule scheduleRule2 = optscheduleRule2.get();
   EXPECT_EQ(scheduleRule2.scheduleRuleset().handle(), scheduleRuleset.handle());
@@ -1285,7 +1285,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekCompactToRulesetComp
   EXPECT_EQ(2, scheduleRule2.endDate().get().monthOfYear().value());
   EXPECT_EQ(3, scheduleRule2.endDate().get().dayOfMonth());
 
-  boost::optional<ScheduleRule> optscheduleRule3 = model.getModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan28-Feb3 1");
+  boost::optional<ScheduleRule> optscheduleRule3 = model.getConcreteModelObjectByName<ScheduleRule>("occupants schedule Week Rule - Jan28-Feb3 1");
   ASSERT_TRUE(optscheduleRule3);
   ScheduleRule scheduleRule3 = optscheduleRule3.get();
   EXPECT_EQ(scheduleRule3.scheduleRuleset().handle(), scheduleRuleset.handle());
@@ -1309,7 +1309,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekCompactToRulesetComp
   EXPECT_EQ(2, scheduleRule3.endDate().get().monthOfYear().value());
   EXPECT_EQ(3, scheduleRule3.endDate().get().dayOfMonth());
 
-  std::vector<ScheduleDay> scheduleDays = model.getModelObjects<ScheduleDay>();
+  std::vector<ScheduleDay> scheduleDays = model.getConcreteModelObjects<ScheduleDay>();
   // 1: "occupants schedule allday1"
   // 1: "occupants schedule allday2"
   // 1: "Schedule Day 1" (created by ScheduleRuleset ctor)
@@ -1318,9 +1318,9 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekCompactToRulesetComp
   // 5: clones of "Schedule Day 5" (created by set methods for holiday, design day, custom day schedule setters)
   ASSERT_EQ(11u, scheduleDays.size());  // 3 from the idf, 1 from ScheduleRuleset ctor, and 5 cloned
 
-  std::vector<ScheduleYear> scheduleYears = model.getModelObjects<ScheduleYear>();
+  std::vector<ScheduleYear> scheduleYears = model.getConcreteModelObjects<ScheduleYear>();
   ASSERT_EQ(0u, scheduleYears.size());
 
-  std::vector<ScheduleWeek> scheduleWeeks = model.getModelObjects<ScheduleWeek>();
+  std::vector<ScheduleWeek> scheduleWeeks = model.getConcreteModelObjects<ScheduleWeek>();
   ASSERT_EQ(0u, scheduleWeeks.size());
 }

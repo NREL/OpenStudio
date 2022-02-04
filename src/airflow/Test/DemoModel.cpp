@@ -147,7 +147,7 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
 
   // find thermostat
   boost::optional<openstudio::model::ThermostatSetpointDualSetpoint> thermostat;
-  for (openstudio::model::ThermostatSetpointDualSetpoint t : model.getModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>()) {
+  for (openstudio::model::ThermostatSetpointDualSetpoint t : model.getConcreteModelObjects<openstudio::model::ThermostatSetpointDualSetpoint>()) {
     thermostat = t;
     break;
   }
@@ -192,7 +192,7 @@ boost::optional<openstudio::model::Model> buildDemoModel2012(openstudio::model::
   airLoop.addBranchForZone(office2Zone);
 
   boost::optional<openstudio::model::SetpointManagerSingleZoneReheat> setpointManager;
-  for (openstudio::model::SetpointManagerSingleZoneReheat t : model.getModelObjects<openstudio::model::SetpointManagerSingleZoneReheat>()) {
+  for (openstudio::model::SetpointManagerSingleZoneReheat t : model.getConcreteModelObjects<openstudio::model::SetpointManagerSingleZoneReheat>()) {
     setpointManager = t;
     break;
   }

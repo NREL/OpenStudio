@@ -129,9 +129,9 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_clone) {
   PlantLoop p(m);
   EXPECT_TRUE(p.addDemandBranchForComponent(cc));
 
-  EXPECT_EQ(1u, m.getModelObjects<CoilSystemCoolingWaterHeatExchangerAssisted>().size());
-  EXPECT_EQ(1u, m.getModelObjects<CoilCoolingWater>().size());
-  EXPECT_EQ(1u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilSystemCoolingWaterHeatExchangerAssisted>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilCoolingWater>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
 
   ASSERT_TRUE(coilSystem.airLoopHVAC());
   EXPECT_EQ(coilSystem.airLoopHVAC()->handle(), a.handle());
@@ -145,9 +145,9 @@ TEST_F(ModelFixture, CoilSystemCoolingWaterHeatExchangerAssisted_clone) {
 
   auto coilSystem2 = coilSystem.clone(m).cast<CoilSystemCoolingWaterHeatExchangerAssisted>();
 
-  EXPECT_EQ(2u, m.getModelObjects<CoilSystemCoolingWaterHeatExchangerAssisted>().size());
-  EXPECT_EQ(2u, m.getModelObjects<CoilCoolingWater>().size());
-  EXPECT_EQ(2u, m.getModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CoilSystemCoolingWaterHeatExchangerAssisted>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CoilCoolingWater>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<HeatExchangerAirToAirSensibleAndLatent>().size());
 
   EXPECT_TRUE(coilSystem.airLoopHVAC());
   EXPECT_TRUE(coilSystem.inletModelObject());

@@ -91,7 +91,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceTubular) {
   DaylightingDeviceTubular tubular(dome, diffuser, construction, 1, 2, 3);
   EXPECT_TRUE(dome.daylightingDeviceTubular());
   EXPECT_TRUE(diffuser.daylightingDeviceTubular());
-  EXPECT_EQ(1u, model.getModelObjects<DaylightingDeviceTubular>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<DaylightingDeviceTubular>().size());
 
   ThermalZone thermalZone1(model);
   ThermalZone thermalZone2(model);

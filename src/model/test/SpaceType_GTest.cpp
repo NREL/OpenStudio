@@ -277,18 +277,18 @@ TEST_F(ModelFixture, SpaceType_Clone) {
   librarySpaceType.clone(library);
   EXPECT_EQ(8u, library.modelObjects().size());  // SpaceType * 2, PeopleDefinition, People * 2, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
 
-  EXPECT_EQ(2u, library.getModelObjects<SpaceType>().size());
-  EXPECT_EQ(2u, library.getModelObjects<People>().size());
+  EXPECT_EQ(2u, library.getConcreteModelObjects<SpaceType>().size());
+  EXPECT_EQ(2u, library.getConcreteModelObjects<People>().size());
 
   // The referenced ResourceObject instances are not duplicated
-  EXPECT_EQ(1u, library.getModelObjects<PeopleDefinition>().size());
-  EXPECT_EQ(1u, library.getModelObjects<ScheduleRuleset>().size());
+  EXPECT_EQ(1u, library.getConcreteModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(1u, library.getConcreteModelObjects<ScheduleRuleset>().size());
 
   // Clone into a different model
   librarySpaceType.clone(model);
   EXPECT_EQ(6u, model.modelObjects().size());
 
-  auto modelSpaceTypes = model.getModelObjects<SpaceType>();
+  auto modelSpaceTypes = model.getConcreteModelObjects<SpaceType>();
   ASSERT_EQ(1u, modelSpaceTypes.size());
 
   // SpaceType gets a new handle
@@ -298,12 +298,12 @@ TEST_F(ModelFixture, SpaceType_Clone) {
   librarySpaceType.clone(model);
   EXPECT_EQ(8u, model.modelObjects().size());
 
-  EXPECT_EQ(2u, model.getModelObjects<SpaceType>().size());
-  EXPECT_EQ(2u, model.getModelObjects<People>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<SpaceType>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<People>().size());
 
   // The referenced ResourceObject instances are not duplicated
-  EXPECT_EQ(1u, model.getModelObjects<PeopleDefinition>().size());
-  EXPECT_EQ(1u, model.getModelObjects<ScheduleRuleset>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleRuleset>().size());
 }
 
 TEST_F(ModelFixture, SpaceType_Name_Clone) {

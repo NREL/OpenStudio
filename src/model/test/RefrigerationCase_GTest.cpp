@@ -531,12 +531,12 @@ TEST_F(ModelFixture, RefrigerationCase_Remove) {
   ScheduleCompact cds(model);
   RefrigerationCase testRefrigerationCase = RefrigerationCase(model, cds);
 
-  std::vector<RefrigerationCase> testAllRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  std::vector<RefrigerationCase> testAllRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(1, testAllRefrigerationCases.size());
 
   testRefrigerationCase.remove();
 
-  testAllRefrigerationCases = model.getModelObjects<RefrigerationCase>();
+  testAllRefrigerationCases = model.getConcreteModelObjects<RefrigerationCase>();
   EXPECT_EQ(0, testAllRefrigerationCases.size());
 }
 
@@ -644,15 +644,15 @@ TEST_F(ModelFixture, RefrigerationCase_CloneTwoModelsWithDefaultData) {
 
   Model model2;
 
-  std::vector<CurveCubic> refrigerationCaseCurves2 = model2.getModelObjects<CurveCubic>();
+  std::vector<CurveCubic> refrigerationCaseCurves2 = model2.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(0, refrigerationCaseCurves2.size());
 
   auto testObjectClone2 = testObject.clone(model2).cast<RefrigerationCase>();
 
-  std::vector<CurveCubic> refrigerationCaseCurves = model.getModelObjects<CurveCubic>();
+  std::vector<CurveCubic> refrigerationCaseCurves = model.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(1, refrigerationCaseCurves.size());
 
-  refrigerationCaseCurves2 = model2.getModelObjects<CurveCubic>();
+  refrigerationCaseCurves2 = model2.getConcreteModelObjects<CurveCubic>();
   EXPECT_EQ(1, refrigerationCaseCurves2.size());
 
   for (auto it = refrigerationCaseCurves.begin(); it != refrigerationCaseCurves.end(); ++it) {

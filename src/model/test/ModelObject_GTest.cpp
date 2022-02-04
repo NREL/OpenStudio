@@ -114,7 +114,7 @@ TEST_F(ModelFixture, ModelObject_Clone_DifferentModel) {
               == newSurface.construction().get().cast<LayeredConstruction>().layers());
 
   // Change the data in the resource's child
-  StandardsInformationConstructionVector stdsInfos = newModel.getModelObjects<StandardsInformationConstruction>();
+  StandardsInformationConstructionVector stdsInfos = newModel.getConcreteModelObjects<StandardsInformationConstruction>();
   EXPECT_EQ(1u, stdsInfos.size());
   stdsInfos[0].setIntendedSurfaceType(StandardsInformationConstruction::intendedSurfaceTypeValues()[0]);
 

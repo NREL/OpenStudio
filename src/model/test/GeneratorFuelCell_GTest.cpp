@@ -136,7 +136,7 @@ TEST_F(ModelFixture, FuelCell2) {
   EXPECT_EQ(inverter, fuelcell.inverter());
   EXPECT_EQ(fuelSupply, fuelcell.fuelSupply());
   //should be 0 default ELCD attached to FC
-  std::vector<ElectricLoadCenterDistribution> elcd = model.getModelObjects<ElectricLoadCenterDistribution>();
+  std::vector<ElectricLoadCenterDistribution> elcd = model.getConcreteModelObjects<ElectricLoadCenterDistribution>();
   EXPECT_EQ(0u, elcd.size());
   EXPECT_FALSE(fuelcell.electricLoadCenterDistribution());
   //Add a ELCD
@@ -145,7 +145,7 @@ TEST_F(ModelFixture, FuelCell2) {
   EXPECT_EQ(elcd1.handle(), fuelcell.electricLoadCenterDistribution().get().handle());
   //Add another ELCD
   ElectricLoadCenterDistribution elcd2(model);
-  EXPECT_EQ(2, model.getModelObjects<ElectricLoadCenterDistribution>().size());
+  EXPECT_EQ(2, model.getConcreteModelObjects<ElectricLoadCenterDistribution>().size());
   //Add the FC to it which should remove the existing one attached to FC
   EXPECT_TRUE(elcd2.addGenerator(fuelcell));
   EXPECT_EQ(0, elcd1.generators().size());

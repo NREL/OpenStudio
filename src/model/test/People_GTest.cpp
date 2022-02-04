@@ -123,13 +123,13 @@ TEST_F(ModelFixture, People_Remove) {
   People person(definition);
 
   EXPECT_EQ(2u, model.numObjects());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<People>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<People>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<PeopleDefinition>().size());
   std::vector<IdfObject> removed = person.remove();
   ASSERT_EQ(static_cast<unsigned>(1), removed.size());
   EXPECT_EQ(IddObjectType::OS_People, removed[0].iddObject().type().value());
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<People>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<People>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<PeopleDefinition>().size());
   EXPECT_EQ(1u, model.numObjects());
 }
 
@@ -141,13 +141,13 @@ TEST_F(ModelFixture, People_Remove2) {
   People person2(definition);
 
   EXPECT_EQ(3u, model.numObjects());
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<People>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<People>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<PeopleDefinition>().size());
   std::vector<IdfObject> removed = person1.remove();
   ASSERT_EQ(static_cast<unsigned>(1), removed.size());
   EXPECT_EQ(IddObjectType::OS_People, removed[0].iddObject().type().value());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<People>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<People>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<PeopleDefinition>().size());
   EXPECT_EQ(2u, model.numObjects());
 }
 
@@ -158,14 +158,14 @@ TEST_F(ModelFixture, People_RemoveDefinition) {
   People person(definition);
 
   EXPECT_EQ(2u, model.numObjects());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<People>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<People>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<PeopleDefinition>().size());
   std::vector<IdfObject> removed = definition.remove();
   ASSERT_EQ(static_cast<unsigned>(2), removed.size());
   EXPECT_EQ(IddObjectType::OS_People_Definition, removed[0].iddObject().type().value());
   EXPECT_EQ(IddObjectType::OS_People, removed[1].iddObject().type().value());
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<People>().size());
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<People>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<PeopleDefinition>().size());
   EXPECT_EQ(0u, model.numObjects());
 }
 
@@ -177,15 +177,15 @@ TEST_F(ModelFixture, People_RemoveDefinition2) {
   People person2(definition);
 
   EXPECT_EQ(3u, model.numObjects());
-  EXPECT_EQ(static_cast<unsigned>(2), model.getModelObjects<People>().size());
-  EXPECT_EQ(static_cast<unsigned>(1), model.getModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(2), model.getConcreteModelObjects<People>().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.getConcreteModelObjects<PeopleDefinition>().size());
   std::vector<IdfObject> removed = definition.remove();
   ASSERT_EQ(static_cast<unsigned>(3), removed.size());
   EXPECT_EQ(IddObjectType::OS_People_Definition, removed[0].iddObject().type().value());
   EXPECT_EQ(IddObjectType::OS_People, removed[1].iddObject().type().value());
   EXPECT_EQ(IddObjectType::OS_People, removed[2].iddObject().type().value());
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<People>().size());
-  EXPECT_EQ(static_cast<unsigned>(0), model.getModelObjects<PeopleDefinition>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<People>().size());
+  EXPECT_EQ(static_cast<unsigned>(0), model.getConcreteModelObjects<PeopleDefinition>().size());
   EXPECT_EQ(0u, model.numObjects());
 }
 
@@ -221,11 +221,11 @@ TEST_F(ModelFixture, People_Clone) {
   people.clone(library);
   EXPECT_EQ(6u, library.modelObjects().size());  // PeopleDefinition, People * 2, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
 
-  auto allPeople = library.getModelObjects<People>();
+  auto allPeople = library.getConcreteModelObjects<People>();
   EXPECT_EQ(2u, allPeople.size());
 
   // Note the PeopleDefinition is shared because it is a ResourceObject
-  auto allPeopleDefinitions = library.getModelObjects<PeopleDefinition>();
+  auto allPeopleDefinitions = library.getConcreteModelObjects<PeopleDefinition>();
   EXPECT_EQ(1u, allPeopleDefinitions.size());
 
   // Clone into a different Model
@@ -237,10 +237,10 @@ TEST_F(ModelFixture, People_Clone) {
   people.clone(model);
   EXPECT_EQ(6u, model.modelObjects().size());  // PeopleDefinition, People * 2, ScheduleRuleset, ScheduleDay, ScheduleTypeLimits
 
-  allPeople = model.getModelObjects<People>();
+  allPeople = model.getConcreteModelObjects<People>();
   EXPECT_EQ(2u, allPeople.size());
 
   // Note the PeopleDefinition is shared because it is a ResourceObject
-  allPeopleDefinitions = model.getModelObjects<PeopleDefinition>();
+  allPeopleDefinitions = model.getConcreteModelObjects<PeopleDefinition>();
   EXPECT_EQ(1u, allPeopleDefinitions.size());
 }

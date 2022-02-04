@@ -809,9 +809,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_HardSchedu
   Surface surface2(points, model);
   surface2.setSpace(space2);
 
-  EXPECT_EQ(4u, model.getModelObjects<Lights>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<Lights>().size());
 
-  for (const Lights& light : model.getModelObjects<Lights>()) {
+  for (const Lights& light : model.getConcreteModelObjects<Lights>()) {
     EXPECT_TRUE(light.schedule());
   }
 
@@ -906,9 +906,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_InheritSch
   Surface surface2(points, model);
   surface2.setSpace(space2);
 
-  EXPECT_EQ(4u, model.getModelObjects<Lights>().size());
+  EXPECT_EQ(4u, model.getConcreteModelObjects<Lights>().size());
 
-  for (const Lights& light : model.getModelObjects<Lights>()) {
+  for (const Lights& light : model.getConcreteModelObjects<Lights>()) {
     EXPECT_TRUE(light.schedule());
   }
 

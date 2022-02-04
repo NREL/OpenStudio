@@ -74,7 +74,7 @@ namespace model {
     ThermalZone PortList_Impl::thermalZone() const {
       boost::optional<ThermalZone> result;
 
-      //std::vector<ThermalZone> thermalZones = model().getModelObjects<ThermalZone>();
+      //std::vector<ThermalZone> thermalZones = model().getConcreteModelObjects<ThermalZone>();
 
       //for( std::vector<ThermalZone>::iterator it = thermalZones.begin();
       //     it != thermalZones.end();

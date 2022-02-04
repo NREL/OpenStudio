@@ -103,12 +103,12 @@ TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_Remove) {
   RefrigerationSubcoolerLiquidSuction testObject = RefrigerationSubcoolerLiquidSuction(model);
 
   std::vector<RefrigerationSubcoolerLiquidSuction> refrigerationLiquidSuctionSubcoolers =
-    model.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
+    model.getConcreteModelObjects<RefrigerationSubcoolerLiquidSuction>();
   EXPECT_EQ(1, refrigerationLiquidSuctionSubcoolers.size());
 
   testObject.remove();
 
-  refrigerationLiquidSuctionSubcoolers = model.getModelObjects<RefrigerationSubcoolerLiquidSuction>();
+  refrigerationLiquidSuctionSubcoolers = model.getConcreteModelObjects<RefrigerationSubcoolerLiquidSuction>();
   EXPECT_EQ(0, refrigerationLiquidSuctionSubcoolers.size());
 }
 

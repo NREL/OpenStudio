@@ -67,18 +67,18 @@ TEST_F(ModelFixture, CoilHeatingDesuperheater_Remove) {
   RefrigerationCondenserAirCooled condenser = RefrigerationCondenserAirCooled(model);
   testObject.setHeatingSource(condenser);
 
-  std::vector<CoilHeatingDesuperheater> coilHeatingDesuperheaters = model.getModelObjects<CoilHeatingDesuperheater>();
+  std::vector<CoilHeatingDesuperheater> coilHeatingDesuperheaters = model.getConcreteModelObjects<CoilHeatingDesuperheater>();
   EXPECT_EQ(1, coilHeatingDesuperheaters.size());
 
-  std::vector<RefrigerationCondenserAirCooled> refrigerationCondensers = model.getModelObjects<RefrigerationCondenserAirCooled>();
+  std::vector<RefrigerationCondenserAirCooled> refrigerationCondensers = model.getConcreteModelObjects<RefrigerationCondenserAirCooled>();
   EXPECT_EQ(1, refrigerationCondensers.size());
 
   testObject.remove();
 
-  coilHeatingDesuperheaters = model.getModelObjects<CoilHeatingDesuperheater>();
+  coilHeatingDesuperheaters = model.getConcreteModelObjects<CoilHeatingDesuperheater>();
   EXPECT_EQ(0, coilHeatingDesuperheaters.size());
 
-  refrigerationCondensers = model.getModelObjects<RefrigerationCondenserAirCooled>();
+  refrigerationCondensers = model.getConcreteModelObjects<RefrigerationCondenserAirCooled>();
   EXPECT_EQ(1, refrigerationCondensers.size());
 }
 

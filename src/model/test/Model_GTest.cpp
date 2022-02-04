@@ -242,7 +242,7 @@ TEST_F(ModelFixture, UniqueModelObjects) {
 
   EXPECT_EQ(modelObjectHandles.size(), uniqueModelObjectHandles.size());
 
-  std::vector<AirLoopHVAC> modelObjects = model.getModelObjects<AirLoopHVAC>();
+  std::vector<AirLoopHVAC> modelObjects = model.getConcreteModelObjects<AirLoopHVAC>();
 
   EXPECT_EQ(modelObjectHandles.size(), modelObjects.size());
 
@@ -429,12 +429,12 @@ TEST_F(ExampleModelFixture, ExampleModel) {
   boost::optional<Building> building = model.getOptionalUniqueModelObject<Building>();
   ASSERT_TRUE(building);
 
-  std::vector<ThermalZone> thermalZones = model.getModelObjects<ThermalZone>();
-  std::vector<BuildingStory> buildingStories = model.getModelObjects<BuildingStory>();
-  std::vector<SpaceType> spaceTypes = model.getModelObjects<SpaceType>();
-  std::vector<DefaultConstructionSet> defaultConstructionSets = model.getModelObjects<DefaultConstructionSet>();
-  std::vector<DefaultScheduleSet> defaultScheduleSets = model.getModelObjects<DefaultScheduleSet>();
-  std::vector<Space> spaces = model.getModelObjects<Space>();
+  std::vector<ThermalZone> thermalZones = model.getConcreteModelObjects<ThermalZone>();
+  std::vector<BuildingStory> buildingStories = model.getConcreteModelObjects<BuildingStory>();
+  std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
+  std::vector<DefaultConstructionSet> defaultConstructionSets = model.getConcreteModelObjects<DefaultConstructionSet>();
+  std::vector<DefaultScheduleSet> defaultScheduleSets = model.getConcreteModelObjects<DefaultScheduleSet>();
+  std::vector<Space> spaces = model.getConcreteModelObjects<Space>();
 
   EXPECT_EQ(400, building->floorArea());
   EXPECT_FALSE(building->conditionedFloorArea());
@@ -477,7 +477,7 @@ TEST_F(ExampleModelFixture, ExampleModel_StagedLoad) {
   model = Model();
   WorkspaceObjectVector added = model.addObjects(idf.objects());
   // check that links between objects were kept
-  ThermalZoneVector zones = model.getModelObjects<ThermalZone>();
+  ThermalZoneVector zones = model.getConcreteModelObjects<ThermalZone>();
   ASSERT_FALSE(zones.empty());
   EXPECT_FALSE(zones[0].spaces().empty());
 }
@@ -721,7 +721,7 @@ TEST_F(ModelFixture, MatchSurfaces) {
   EXPECT_EQ("Outdoors", surface28.outsideBoundaryCondition());
 
   //match surfaces
-  std::vector<Space> spaces = model.getModelObjects<Space>();
+  std::vector<Space> spaces = model.getConcreteModelObjects<Space>();
   matchSurfaces(spaces);
 
   //both walls should now be matched

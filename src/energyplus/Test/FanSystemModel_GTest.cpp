@@ -373,7 +373,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
     EXPECT_TRUE(reverseTranslator.errors().empty());
     EXPECT_TRUE(reverseTranslator.warnings().empty());
 
-    std::vector<openstudio::model::FanSystemModel> fans = model.getModelObjects<openstudio::model::FanSystemModel>();
+    std::vector<openstudio::model::FanSystemModel> fans = model.getConcreteModelObjects<openstudio::model::FanSystemModel>();
     ASSERT_EQ(static_cast<unsigned>(1), fans.size());
     FanSystemModel fan = fans[0];
 
@@ -423,7 +423,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
     EXPECT_EQ(0, reverseTranslator.errors().size());
     EXPECT_EQ(1, reverseTranslator.warnings().size());
 
-    std::vector<openstudio::model::FanSystemModel> fans = model.getModelObjects<openstudio::model::FanSystemModel>();
+    std::vector<openstudio::model::FanSystemModel> fans = model.getConcreteModelObjects<openstudio::model::FanSystemModel>();
     ASSERT_EQ(static_cast<unsigned>(1), fans.size());
     FanSystemModel fan = fans[0];
 
@@ -440,7 +440,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
     EXPECT_EQ(1, reverseTranslator.errors().size());
     EXPECT_TRUE(reverseTranslator.warnings().empty());
 
-    std::vector<openstudio::model::FanSystemModel> fans = model.getModelObjects<openstudio::model::FanSystemModel>();
+    std::vector<openstudio::model::FanSystemModel> fans = model.getConcreteModelObjects<openstudio::model::FanSystemModel>();
     ASSERT_EQ(static_cast<unsigned>(1), fans.size());
     FanSystemModel fan = fans[0];
 

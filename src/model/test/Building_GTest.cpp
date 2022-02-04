@@ -351,15 +351,15 @@ TEST_F(ModelFixture, Building_Clone) {
     EXPECT_TRUE(modelBuilding.handle().isNull());
     EXPECT_NE(modelBuilding, clone);
 
-    EXPECT_EQ(1u, model.getModelObjects<Building>().size());
-    EXPECT_EQ(2u, model.getModelObjects<Space>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<Building>().size());
+    EXPECT_EQ(2u, model.getConcreteModelObjects<Space>().size());
 
-    auto zones = model.getModelObjects<ThermalZone>();
+    auto zones = model.getConcreteModelObjects<ThermalZone>();
 
     ASSERT_EQ(1u, zones.size());
     EXPECT_EQ(2u, zones.front().spaces().size());
 
-    auto stories = model.getModelObjects<BuildingStory>();
+    auto stories = model.getConcreteModelObjects<BuildingStory>();
     ASSERT_EQ(1u, stories.size());
     ASSERT_EQ(2u, stories.front().spaces().size());
   }
@@ -383,25 +383,25 @@ TEST_F(ModelFixture, Building_Clone) {
     space1.setThermalZone(zone);
     space2.setThermalZone(zone);
 
-    EXPECT_EQ(1u, library.getModelObjects<Building>().size());
-    EXPECT_EQ(2u, library.getModelObjects<Space>().size());
-    EXPECT_EQ(1u, library.getModelObjects<ThermalZone>().size());
-    EXPECT_EQ(1u, library.getModelObjects<BuildingStory>().size());
+    EXPECT_EQ(1u, library.getConcreteModelObjects<Building>().size());
+    EXPECT_EQ(2u, library.getConcreteModelObjects<Space>().size());
+    EXPECT_EQ(1u, library.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(1u, library.getConcreteModelObjects<BuildingStory>().size());
     EXPECT_EQ(2u, zone.spaces().size());
 
     auto modelBuilding = libraryBuilding.clone(model).cast<Building>();
 
     EXPECT_NE(libraryBuilding, modelBuilding);
 
-    EXPECT_EQ(1u, model.getModelObjects<Building>().size());
-    EXPECT_EQ(2u, model.getModelObjects<Space>().size());
+    EXPECT_EQ(1u, model.getConcreteModelObjects<Building>().size());
+    EXPECT_EQ(2u, model.getConcreteModelObjects<Space>().size());
 
-    auto zones = model.getModelObjects<ThermalZone>();
+    auto zones = model.getConcreteModelObjects<ThermalZone>();
 
     ASSERT_EQ(1u, zones.size());
     EXPECT_EQ(2u, zones.front().spaces().size());
 
-    auto stories = model.getModelObjects<BuildingStory>();
+    auto stories = model.getConcreteModelObjects<BuildingStory>();
     ASSERT_EQ(1u, stories.size());
     ASSERT_EQ(2u, stories.front().spaces().size());
   }
@@ -471,35 +471,35 @@ TEST_F(ModelFixture, Building_remove) {
   // 4 basic AirLoopHVAC nodes (supply/demand inlet/outlet Nodes)
   // One AirLoopHVAC branch node before and one after ThermalZones
   // 1 Zone Air Node
-  EXPECT_EQ(7, m.getModelObjects<Node>().size());
+  EXPECT_EQ(7, m.getConcreteModelObjects<Node>().size());
   // Zone Inlet Port List, Zone Return Air Port List, Zone Air Exhaust Port List
-  EXPECT_EQ(3, m.getModelObjects<PortList>().size());
-  EXPECT_EQ(1, m.getModelObjects<ThermalZone>().size());
+  EXPECT_EQ(3, m.getConcreteModelObjects<PortList>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<ThermalZone>().size());
 
   m.getUniqueModelObject<Building>().remove();
   // 4 basic airLoopHVAC Nodes plus the Drop node between demand splitter and mixer
-  EXPECT_EQ(5, m.getModelObjects<Node>().size());
+  EXPECT_EQ(5, m.getConcreteModelObjects<Node>().size());
   // Zone Inlet Port List, Zone Return Air Port List, Zone Air Exhaust Port List
-  EXPECT_EQ(0, m.getModelObjects<PortList>().size());
-  EXPECT_EQ(0, m.getModelObjects<ThermalZone>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<PortList>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<ThermalZone>().size());
 
   // TODO: JM 2019-05-13 Once HVAC is handled (#2449), we should adjust this portion.
   // For now this tests that at least we don't end up with bad connections
-  ASSERT_EQ(1, m.getModelObjects<AirLoopHVAC>().size());
-  EXPECT_NO_THROW(m.getModelObjects<AirLoopHVAC>()[0].components());
+  ASSERT_EQ(1, m.getConcreteModelObjects<AirLoopHVAC>().size());
+  EXPECT_NO_THROW(m.getConcreteModelObjects<AirLoopHVAC>()[0].components());
 }
 
 TEST_F(ModelFixture, Building_remove_exampleModel) {
 
   Model m = exampleModel();
 
-  EXPECT_NE(0, m.getModelObjects<Space>().size());
-  EXPECT_NE(0, m.getModelObjects<ThermalZone>().size());
-  EXPECT_NE(0, m.getModelObjects<ShadingSurfaceGroup>().size());
-  EXPECT_NE(0, m.getModelObjects<BuildingStory>().size());
+  EXPECT_NE(0, m.getConcreteModelObjects<Space>().size());
+  EXPECT_NE(0, m.getConcreteModelObjects<ThermalZone>().size());
+  EXPECT_NE(0, m.getConcreteModelObjects<ShadingSurfaceGroup>().size());
+  EXPECT_NE(0, m.getConcreteModelObjects<BuildingStory>().size());
 
   // Creates three meters, but facility-level ones only
-  unsigned ori_meters = m.getModelObjects<OutputMeter>().size();
+  unsigned ori_meters = m.getConcreteModelObjects<OutputMeter>().size();
   // Add one Building level one
   OutputMeter meter(m);
   meter.setName("Electricity:Building");
@@ -507,19 +507,19 @@ TEST_F(ModelFixture, Building_remove_exampleModel) {
 
   EXPECT_NO_THROW(m.getUniqueModelObject<Building>().remove());
 
-  EXPECT_EQ(0, m.getModelObjects<Space>().size());
-  EXPECT_EQ(0, m.getModelObjects<ThermalZone>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<Space>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<ThermalZone>().size());
 
   // There is one Site Shading group that should be left untouched
   // The other two are Space and Building level, so should be removed
-  EXPECT_EQ(1, m.getModelObjects<ShadingSurfaceGroup>().size());
-  EXPECT_EQ(0, m.getModelObjects<BuildingStory>().size());
-  EXPECT_EQ(ori_meters, m.getModelObjects<OutputMeter>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<ShadingSurfaceGroup>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<BuildingStory>().size());
+  EXPECT_EQ(ori_meters, m.getConcreteModelObjects<OutputMeter>().size());
 
   // TODO: JM 2019-05-13 Once HVAC is handled (#2449), we should adjust this portion.
   // For now this tests that at least we don't end up with bad connections
-  ASSERT_EQ(1, m.getModelObjects<AirLoopHVAC>().size());
-  EXPECT_NO_THROW(m.getModelObjects<AirLoopHVAC>()[0].components());
+  ASSERT_EQ(1, m.getConcreteModelObjects<AirLoopHVAC>().size());
+  EXPECT_NO_THROW(m.getConcreteModelObjects<AirLoopHVAC>()[0].components());
 }
 
 TEST_F(ModelFixture, Building_getDefaultSchedule) {

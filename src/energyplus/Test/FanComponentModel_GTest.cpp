@@ -572,7 +572,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanComponentModel) {
     EXPECT_TRUE(reverseTranslator.errors().empty());
     EXPECT_TRUE(reverseTranslator.warnings().empty());
 
-    std::vector<openstudio::model::FanComponentModel> fans = model.getModelObjects<openstudio::model::FanComponentModel>();
+    std::vector<openstudio::model::FanComponentModel> fans = model.getConcreteModelObjects<openstudio::model::FanComponentModel>();
     ASSERT_EQ(static_cast<unsigned>(1), fans.size());
     FanComponentModel fan = fans[0];
 

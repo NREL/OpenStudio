@@ -77,7 +77,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingDeviceLightWell) {
   EXPECT_FALSE(window.daylightingDeviceLightWell());
   DaylightingDeviceLightWell lightWell(window, 1, 2, 3, 0.5);
   EXPECT_TRUE(window.daylightingDeviceLightWell());
-  EXPECT_EQ(1u, model.getModelObjects<DaylightingDeviceLightWell>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<DaylightingDeviceLightWell>().size());
 
   ForwardTranslator ft;
   Workspace w = ft.translateModel(model);

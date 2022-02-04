@@ -88,7 +88,7 @@ TEST_F(ModelFixture, SetpointManagerMixedAir_addToNode) {
 
   std::vector<SetpointManager> _setpointManagers = node.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerMixedAir> setpointManagerMixedAirs = m.getModelObjects<SetpointManagerMixedAir>();
+  std::vector<SetpointManagerMixedAir> setpointManagerMixedAirs = m.getConcreteModelObjects<SetpointManagerMixedAir>();
   EXPECT_EQ(3, setpointManagerMixedAirs.size());
 
   EXPECT_EQ(node, spm_1.setpointNode());
@@ -98,7 +98,7 @@ TEST_F(ModelFixture, SetpointManagerMixedAir_addToNode) {
   _setpointManagers = node.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());
   EXPECT_EQ(1, _setpointManagers.size());
-  setpointManagerMixedAirs = m.getModelObjects<SetpointManagerMixedAir>();
+  setpointManagerMixedAirs = m.getConcreteModelObjects<SetpointManagerMixedAir>();
   EXPECT_EQ(2, setpointManagerMixedAirs.size());
 }
 
@@ -162,14 +162,14 @@ TEST_F(ModelFixture, SetpointManagerMixedAir_remove) {
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerMixedAir> setpointManagerMixedAirs = m.getModelObjects<SetpointManagerMixedAir>();
+  std::vector<SetpointManagerMixedAir> setpointManagerMixedAirs = m.getConcreteModelObjects<SetpointManagerMixedAir>();
   EXPECT_EQ(1, setpointManagerMixedAirs.size());
 
   spm.remove();
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(0, _setpointManagers.size());
-  setpointManagerMixedAirs = m.getModelObjects<SetpointManagerMixedAir>();
+  setpointManagerMixedAirs = m.getConcreteModelObjects<SetpointManagerMixedAir>();
   EXPECT_EQ(0, setpointManagerMixedAirs.size());
 }
 

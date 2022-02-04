@@ -114,7 +114,7 @@ TEST_F(ModelFixture, MapOfAllOutputVariables) {
   }
 
   // add all variables to map, allow only one variable per variable name in this application
-  for (auto& outputVariable : model.getModelObjects<OutputVariable>()) {
+  for (auto& outputVariable : model.getConcreteModelObjects<OutputVariable>()) {
     if (outputVariableMap[outputVariable.variableName()]) {
       // already have output variable for this name, then remove this object
       outputVariable.remove();

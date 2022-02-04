@@ -61,9 +61,9 @@ TEST_F(ModelFixture, RenderingColor2) {
   Model model;
   model.addObject(IdfObject(IddObjectType::OS_Rendering_Color));
 
-  ASSERT_EQ(1u, model.getModelObjects<RenderingColor>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<RenderingColor>().size());
 
-  RenderingColor color = model.getModelObjects<RenderingColor>()[0];
+  RenderingColor color = model.getConcreteModelObjects<RenderingColor>()[0];
   EXPECT_GE(color.renderingRedValue(), 0);
   EXPECT_LE(color.renderingRedValue(), 255);
   EXPECT_GE(color.renderingGreenValue(), 0);
@@ -85,9 +85,9 @@ TEST_F(ModelFixture, RenderingColor3) {
   Model model;
   model.addObject(idfObject);
 
-  ASSERT_EQ(1u, model.getModelObjects<RenderingColor>().size());
+  ASSERT_EQ(1u, model.getConcreteModelObjects<RenderingColor>().size());
 
-  RenderingColor color = model.getModelObjects<RenderingColor>()[0];
+  RenderingColor color = model.getConcreteModelObjects<RenderingColor>()[0];
   EXPECT_EQ(42, color.renderingRedValue());
   EXPECT_EQ(42, color.renderingGreenValue());
   EXPECT_EQ(42, color.renderingBlueValue());
@@ -174,7 +174,7 @@ TEST_F(ModelFixture, RenderingColor_Initializer2) {
   model.addObject(idfObject);
   EXPECT_TRUE(watcher.objectAdded());
 
-  std::vector<RenderingColor> colors = model.getModelObjects<RenderingColor>();
+  std::vector<RenderingColor> colors = model.getConcreteModelObjects<RenderingColor>();
   ASSERT_EQ(1u, colors.size());
 
   RenderingColor color = colors[0];
