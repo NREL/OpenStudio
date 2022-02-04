@@ -245,14 +245,17 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    for (const model::Material& material : m_materials) {
+    std::vector<model::Material> materials(m_materials.begin(), m_materials.end());
+    std::sort(materials.begin(), materials.end(), WorkspaceObjectNameLess());
+
+    for (const model::Material& material : materials) {
       translateLayer(material, gbXMLElement);
 
       if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
-    for (const model::Material& material : m_materials) {
+    for (const model::Material& material : materials) {
       translateMaterial(material, gbXMLElement);
 
       if (m_progressBar) {
@@ -468,16 +471,26 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    for (const model::Surface& surface : surfaces) {
-      translateSurface(surface, result);
+    std::vector<model::Space> spaces = model.getConcreteModelObjects<model::Space>();
+    std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+    for (const model::Space& space : spaces) {
+      std::vector<model::Surface> spaceSurfaces = space.surfaces();
+      std::sort(spaceSurfaces.begin(), spaceSurfaces.end(), WorkspaceObjectNameLess());
 
-      if (m_progressBar) {
-        m_progressBar->setValue(m_progressBar->value() + 1);
+      for (const model::Surface& surface : spaceSurfaces) {
+        std::string name = surface.name().value();
+        translateSurface(surface, result);
+
+        if (m_progressBar) {
+          m_progressBar->setValue(m_progressBar->value() + 1);
+        }
       }
     }
 
     // translate shading surfaces
     std::vector<model::ShadingSurface> shadingSurfaces = model.getConcreteModelObjects<model::ShadingSurface>();
+    std::sort(shadingSurfaces.begin(), shadingSurfaces.end(), WorkspaceObjectNameLess());
+
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Shading Surfaces"));
       m_progressBar->setMinimum(0);
@@ -560,6 +573,8 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
+    std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+
     for (const model::Space& space : spaces) {
       translateSpace(space, result);
 
@@ -577,6 +592,7 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
+    std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
     for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups) {
       translateShadingSurfaceGroup(shadingSurfaceGroup, result);
 
