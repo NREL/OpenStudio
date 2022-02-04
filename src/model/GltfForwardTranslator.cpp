@@ -376,8 +376,7 @@ namespace model {
   // Now: Instead of creating materials for all the objects in Model
   // we're adding them to the all materials collection and create them only if required
   // while processing the surface i.e, in MAIN LOOP
-  void buildMaterials(const Model& model, std::map<std::string, int>& materialList,
-                      std::vector<MaterialData>& allMaterials) {
+  void buildMaterials(const Model& model, std::map<std::string, int>& materialList, std::vector<MaterialData>& allMaterials) {
     std::string materialName;
 
     auto getOrCreateRenderingColor = [&model](auto& object) {
