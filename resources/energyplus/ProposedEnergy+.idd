@@ -44605,6 +44605,7 @@ CoolingTower:SingleSpeed,
        \type choice
        \key ConcentrationRatio
        \key ScheduledRate
+       \default ConcentrationRatio
   N21, \field Blowdown Concentration Ratio
        \type real
        \minimum 2.0
@@ -44921,6 +44922,7 @@ CoolingTower:TwoSpeed,
        \type choice
        \key ConcentrationRatio
        \key ScheduledRate
+       \default ConcentrationRatio
   N29, \field Blowdown Concentration Ratio
        \type real
        \minimum 2.0
@@ -45232,10 +45234,11 @@ CoolingTower:VariableSpeed:Merkel,
        \default 0.008
        \note Rate of drift loss as a percentage of circulating condenser water flow rate
        \note Typical values are between 0.002 and 0.2% The default value is 0.008%
-  A11 , \field Blowdown Calculation Mode
+  A11 ,\field Blowdown Calculation Mode
        \type choice
        \key ConcentrationRatio
        \key ScheduledRate
+       \default ConcentrationRatio
   N25, \field Blowdown Concentration Ratio
        \type real
        \minimum 2.0
@@ -45445,6 +45448,7 @@ CoolingTower:VariableSpeed,
        \type choice
        \key ConcentrationRatio
        \key ScheduledRate
+       \default ConcentrationRatio
   N13, \field Blowdown Concentration Ratio
        \type real
        \minimum 2.0

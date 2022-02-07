@@ -14135,6 +14135,7 @@ OS:CoolingTower:SingleSpeed,
        \type choice
        \key ConcentrationRatio
        \key ScheduledRate
+       \default ConcentrationRatio
   N13, \field Blowdown Concentration Ratio
        \type real
        \minimum 2.0
@@ -14451,6 +14452,7 @@ OS:CoolingTower:TwoSpeed,
        \type choice
        \key ConcentrationRatio
        \key ScheduledRate
+       \default ConcentrationRatio
   N25, \field Blowdown Concentration Ratio
        \type real
        \minimum 2.0
@@ -14663,6 +14665,7 @@ OS:CoolingTower:VariableSpeed,
        \type choice
        \key ConcentrationRatio
        \key ScheduledRate
+       \default ConcentrationRatio
   N13, \field Blowdown Concentration Ratio
        \type real
        \minimum 2.0
