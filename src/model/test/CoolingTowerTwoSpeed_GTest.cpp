@@ -130,7 +130,8 @@ TEST_F(ModelFixture, CoolingTowerTwoSpeed_constructor) {
 
   EXPECT_FALSE(coolingTowerTwoSpeed.basinHeaterOperatingSchedule());
 
-  EXPECT_FALSE(coolingTowerTwoSpeed.evaporationLossMode());
+  ASSERT_TRUE(coolingTowerTwoSpeed.evaporationLossMode());
+  EXPECT_EQ("", coolingTowerTwoSpeed.evaporationLossMode().get());
 
   EXPECT_EQ(0.2, coolingTowerTwoSpeed.evaporationLossFactor());
   EXPECT_TRUE(coolingTowerTwoSpeed.isEvaporationLossFactorDefaulted());
