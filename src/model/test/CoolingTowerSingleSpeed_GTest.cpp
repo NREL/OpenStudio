@@ -36,6 +36,7 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../Schedule.hpp"
 
 using namespace openstudio::model;
 
@@ -58,7 +59,7 @@ TEST_F(ModelFixture, CoolingTowerSingleSpeed_CoolingTowerSingleSpeed) {
 
   CoolingTowerSingleSpeed coolingTowerSingleSpeed(m);
 
-  EXPECT_FALSE(coolinTowerSingleSpeed.designWaterFlowRate());
+  EXPECT_FALSE(coolingTowerSingleSpeed.designWaterFlowRate());
   EXPECT_TRUE(coolingTowerSingleSpeed.isDesignWaterFlowRateAutosized());
 
   EXPECT_FALSE(coolingTowerSingleSpeed.designAirFlowRate());
@@ -71,7 +72,7 @@ TEST_F(ModelFixture, CoolingTowerSingleSpeed_CoolingTowerSingleSpeed) {
   EXPECT_TRUE(coolingTowerSingleSpeed.isUFactorTimesAreaValueatDesignAirFlowRateAutosized());
 
   EXPECT_FALSE(coolingTowerSingleSpeed.airFlowRateinFreeConvectionRegime());
-  EXPECT_FALSE(coolingTowerSingleSpeed.isAirFlowRateinFreeConvectioRegimeDefaulted());
+  EXPECT_FALSE(coolingTowerSingleSpeed.isAirFlowRateinFreeConvectionRegimeDefaulted());
   EXPECT_TRUE(coolingTowerSingleSpeed.isAirFlowRateinFreeConvectionRegimeAutosized());
 
   EXPECT_FALSE(coolingTowerSingleSpeed.uFactorTimesAreaValueatFreeConvectionAirFlowRate());
@@ -140,7 +141,7 @@ TEST_F(ModelFixture, CoolingTowerSingleSpeed_CoolingTowerSingleSpeed) {
   EXPECT_EQ(25.6, coolingTowerSingleSpeed.designInletAirWetBulbTemperature());
 
   EXPECT_FALSE(coolingTowerSingleSpeed.designApproachTemperature());
-  EXPECT_TRUE(cooling.isDesignApproachTemperatureAutosized());
+  EXPECT_TRUE(coolingTowerSingleSpeed.isDesignApproachTemperatureAutosized());
 
   EXPECT_FALSE(coolingTowerSingleSpeed.designRangeTemperature());
   EXPECT_TRUE(coolingTowerSingleSpeed.isDesignRangeTemperatureAutosized());

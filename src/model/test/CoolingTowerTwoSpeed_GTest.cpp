@@ -36,6 +36,7 @@
 #include "../Node.hpp"
 #include "../Node_Impl.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../Schedule.hpp"
 
 using namespace openstudio::model;
 
@@ -70,7 +71,7 @@ TEST_F(ModelFixture, CoolingTowerTwoSpeed_constructor) {
   EXPECT_FALSE(coolingTowerTwoSpeed.lowFanSpeedAirFlowRate());
   EXPECT_TRUE(coolingTowerTwoSpeed.isLowFanSpeedAirFlowRateAutosized());
 
-  EXPECT_FALSE(0.5, coolingTowerTwoSpeed.lowFanSpeedAirFlowRateSizingFactor());
+  EXPECT_EQ(0.5, coolingTowerTwoSpeed.lowFanSpeedAirFlowRateSizingFactor());
   EXPECT_TRUE(coolingTowerTwoSpeed.isLowFanSpeedAirFlowRateSizingFactorDefaulted());
 
   EXPECT_FALSE(coolingTowerTwoSpeed.lowFanSpeedFanPower());
@@ -83,7 +84,7 @@ TEST_F(ModelFixture, CoolingTowerTwoSpeed_constructor) {
   EXPECT_TRUE(coolingTowerTwoSpeed.isLowFanSpeedUFactorTimesAreaValueAutosized());
 
   EXPECT_EQ(0.6, coolingTowerTwoSpeed.lowFanSpeedUFactorTimesAreaSizingFactor());
-  EXPECT_TRUE(cooling.isLowFanSpeedUFactorTimesAreaSizingFactorDefaulted());
+  EXPECT_TRUE(coolingTowerTwoSpeed.isLowFanSpeedUFactorTimesAreaSizingFactorDefaulted());
 
   ASSERT_TRUE(coolingTowerTwoSpeed.freeConvectionRegimeAirFlowRate());
   EXPECT_EQ(0.0, coolingTowerTwoSpeed.freeConvectionRegimeAirFlowRate().get());
