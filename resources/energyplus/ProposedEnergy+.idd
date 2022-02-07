@@ -44586,6 +44586,7 @@ CoolingTower:SingleSpeed,
        \type choice
        \key LossFactor
        \key SaturatedExit
+       \default SaturatedExit
   N19, \field Evaporation Loss Factor
        \type real
        \units percent/K
@@ -44901,6 +44902,7 @@ CoolingTower:TwoSpeed,
        \type choice
        \key LossFactor
        \key SaturatedExit
+       \default SaturatedExit
   N27, \field Evaporation Loss Factor
        \type real
        \units percent/K
@@ -45215,6 +45217,7 @@ CoolingTower:VariableSpeed:Merkel,
        \type choice
        \key LossFactor
        \key SaturatedExit
+       \default SaturatedExit
   N23, \field Evaporation Loss Factor
        \type real
        \units percent/K
@@ -45424,6 +45427,7 @@ CoolingTower:VariableSpeed,
        \type choice
        \key LossFactor
        \key SaturatedExit
+       \default SaturatedExit
   N11, \field Evaporation Loss Factor
        \type real
        \units percent/K
