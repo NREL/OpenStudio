@@ -52,76 +52,76 @@ TEST_F(ModelFixture, CoolingTowerVariableSpeed_constructor) {
     ::testing::ExitedWithCode(0), "");
 
   Model m;
-  
+
   CoolingTowerVariableSpeed coolingTowerVariableSpeed(m);
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.modelType());
   EXPECT_EQ("CoolToolsCrossFlow", coolingTowerVariableSpeed.modelType().get());
-  
+
   EXPECT_FALSE(coolingTowerVariableSpeed.modelCoefficient());
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.designInletAirWetBulbTemperature());
   EXPECT_EQ(25.5556, coolingTowerVariableSpeed.designInletAirWetBulbTemperature().get());
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.designApproachTemperature());
   EXPECT_EQ(3.8889, coolingTowerVariableSpeed.designApproachTemperature().get());
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.designRangeTemperature());
   EXPECT_EQ(5.5556, coolingTowerVariableSpeed.designRangeTemperature().get());
-  
+
   EXPECT_FALSE(coolingTowerVariableSpeed.designWaterFlowRate());
   EXPECT_TRUE(coolingTowerVariableSpeed.isDesignWaterFlowRateAutosized());
-  
+
   EXPECT_FALSE(coolingTowerVariableSpeed.designAirFlowRate());
   EXPECT_TRUE(coolingTowerVariableSpeed.isDesignAirFlowRateAutosized());
-  
+
   EXPECT_FALSE(coolingTowerVariableSpeed.designFanPower());
   EXPECT_TRUE(coolingTowerVariableSpeed.isDesignFanPowerAutosized());
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.minimumAirFlowRateRatio());
   EXPECT_EQ(0.2, coolingTowerVariableSpeed.minimumAirFlowRateRatio().get());
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.fractionofTowerCapacityinFreeConvectionRegime());
   EXPECT_EQ(0.125, coolingTowerVariableSpeed.fractionofTowerCapacityinFreeConvectionRegime().get());
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.basinHeaterCapacity());
   EXPECT_EQ(0.0, coolingTowerVariableSpeed.basinHeaterCapacity().get());
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.basinHeaterSetpointTemperature());
   EXPECT_EQ(2.0, coolingTowerVariableSpeed.basinHeaterSetpointTemperature().get());
-  
+
   EXPECT_FALSE(coolingTowerVariableSpeed.basinHeaterOperatingSchedule());
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.evaporationLossMode());
   EXPECT_EQ("SaturatedExit", coolingTowerVariableSpeed.evaporationLossMode().get());
-  
+
   EXPECT_EQ(0.2, coolingTowerVariableSpeed.evaporationLossFactor());
   EXPECT_TRUE(coolingTowerVariableSpeed.isEvaporationLossFactorDefaulted());
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.driftLossPercent());
   EXPECT_EQ(0.008, coolingTowerVariableSpeed.driftLossPercent().get());
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.blowdownCalculationMode());
   EXPECT_EQ("ConcentrationRatio", coolingTowerVariableSpeed.blowdownCalculationMode().get());
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.blowdownConcentrationRatio());
   EXPECT_EQ(3.0, coolingTowerVariableSpeed.blowdownConcentrationRatio().get());
-  
+
   EXPECT_FALSE(coolingTowerVariableSpeed.blowdownMakeupWaterUsageSchedule());
-  
+
   EXPECT_FALSE(coolingTowerVariableSpeed.numberofCells());
-  
+
   EXPECT_FALSE(coolingTowerVariableSpeed.cellControl());
-  
+
   EXPECT_FALSE(coolingTowerVariableSpeed.cellMinimumWaterFlowRateFraction());
-  
+
   EXPECT_FALSE(coolingTowerVariableSpeed.cellMaximumWaterFlowRateFraction());
-  
+
   ASSERT_TRUE(coolingTowerVariableSpeed.sizingFactor());
   EXPECT_EQ(1.0, coolingTowerVariableSpeed.sizingFactor().get());
-  
+
   EXPECT_EQ("General", coolingTowerVariableSpeed.endUseSubcategory());
-  
+
   EXPECT_TRUE(coolingTowerVariableSpeed.fanPowerRatioFunctionofAirFlowRateRatioCurve());
 }
 

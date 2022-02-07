@@ -55,96 +55,96 @@ TEST_F(ModelFixture, CoolingTowerSingleSpeed_CoolingTowerSingleSpeed) {
     ::testing::ExitedWithCode(0), "");
 
   Model m;
-  
+
   CoolingTowerSingleSpeed coolingTowerSingleSpeed(m);
 
   EXPECT_FALSE(coolinTowerSingleSpeed.designWaterFlowRate());
   EXPECT_TRUE(coolingTowerSingleSpeed.isDesignWaterFlowRateAutosized());
-  
+
   EXPECT_FALSE(coolingTowerSingleSpeed.designAirFlowRate());
   EXPECT_TRUE(coolingTowerSingleSpeed.isDesignAirFlowRateAutosized());
-  
+
   EXPECT_FALSE(coolingTowerSingleSpeed.fanPoweratDesignAirFlowRate());
   EXPECT_TRUE(coolingTowerSingleSpeed.isFanPoweratDesignAirFlowRateAutosized());
-  
+
   EXPECT_FALSE(coolingTowerSingleSpeed.uFactorTimesAreaValueatDesignAirFlowRate());
   EXPECT_TRUE(coolingTowerSingleSpeed.isUFactorTimesAreaValueatDesignAirFlowRateAutosized());
-  
+
   EXPECT_FALSE(coolingTowerSingleSpeed.airFlowRateinFreeConvectionRegime());
   EXPECT_FALSE(coolingTowerSingleSpeed.isAirFlowRateinFreeConvectioRegimeDefaulted());
   EXPECT_TRUE(coolingTowerSingleSpeed.isAirFlowRateinFreeConvectionRegimeAutosized());
-  
+
   EXPECT_FALSE(coolingTowerSingleSpeed.uFactorTimesAreaValueatFreeConvectionAirFlowRate());
   EXPECT_FALSE(coolingTowerSingleSpeed.isUFactorTimesAreaValueatFreeConvectionAirFlowRateDefaulted());
   EXPECT_TRUE(coolingTowerSingleSpeed.isUFactorTimesAreaValueatFreeConvectionAirFlowRateAutosized());
-  
+
   EXPECT_EQ("UFactorTimesAreaAndDesignWaterFlowRate", coolingTowerSingleSpeed.performanceInputMethod());
   EXPECT_TRUE(coolingTowerSingleSpeed.isPerformanceInputMethodDefaulted());
-  
+
   EXPECT_FALSE(coolingTowerSingleSpeed.nominalCapacity());
-  
+
   EXPECT_FALSE(coolingTowerSingleSpeed.freeConvectionCapacity());
-  
+
   EXPECT_EQ(0.0, coolingTowerSingleSpeed.basinHeaterCapacity());
   EXPECT_TRUE(coolingTowerSingleSpeed.isBasinHeaterCapacityDefaulted());
-  
+
   EXPECT_EQ(2.0, coolingTowerSingleSpeed.basinHeaterSetpointTemperature());
   EXPECT_TRUE(coolingTowerSingleSpeed.isBasinHeaterSetpointTemperatureDefaulted());
-  
+
   EXPECT_FALSE(coolingTowerSingleSpeed.basinHeaterOperatingSchedule());
-  
+
   ASSERT_TRUE(coolingTowerSingleSpeed.evaporationLossMode());
   EXPECT_EQ("LossFactor", coolingTowerSingleSpeed.evaporationLossMode().get());
-  
+
   EXPECT_EQ(0.2, coolingTowerSingleSpeed.evaporationLossFactor());
   EXPECT_TRUE(coolingTowerSingleSpeed.isEvaporationLossFactorDefaulted());
-  
+
   EXPECT_EQ(0.008, coolingTowerSingleSpeed.driftLossPercent());
   EXPECT_TRUE(coolingTowerSingleSpeed.isDriftLossPercentDefaulted());
-  
+
   ASSERT_TRUE(coolingTowerSingleSpeed.blowdownCalculationMode());
   EXPECT_EQ("ConcentrationRatio", coolingTowerSingleSpeed.blowdownCalculationMode().get());
-  
+
   EXPECT_EQ(3.0, coolingTowerSingleSpeed.blowdownConcentrationRatio());
   EXPECT_TRUE(coolingTowerSingleSpeed.isBlowdownConcentrationRatioDefaulted());
-  
+
   EXPECT_FALSE(coolingTowerSingleSpeed.blowdownMakeupWaterUsageSchedule());
-  
+
   EXPECT_EQ("FanCycling", coolingTowerSingleSpeed.capacityControl());
   EXPECT_TRUE(coolingTowerSingleSpeed.isCapacityControlDefaulted());
-  
+
   EXPECT_EQ(1, coolingTowerSingleSpeed.numberofCells());
   EXPECT_TRUE(coolingTowerSingleSpeed.isNumberofCellsDefaulted());
-  
+
   EXPECT_EQ("MinimalCell", coolingTowerSingleSpeed.cellControl());
   EXPECT_TRUE(coolingTowerSingleSpeed.isCellControlDefaulted());
-  
+
   EXPECT_EQ(0.33, coolingTowerSingleSpeed.cellMinimumWaterFlowRateFraction());
   EXPECT_TRUE(coolingTowerSingleSpeed.isCellMinimumWaterFlowRateFractionDefaulted());
-  
+
   EXPECT_EQ(2.5, coolingTowerSingleSpeed.cellMaximumWaterFlowRateFraction());
   EXPECT_TRUE(coolingTowerSingleSpeed.isCellMaximumWaterFlowRateFractionDefaulted());
-  
+
   EXPECT_EQ(1.0, coolingTowerSingleSpeed.sizingFactor());
   EXPECT_TRUE(coolingTowerSingleSpeed.isSizingFactorDefaulted());
-  
+
   EXPECT_EQ(0.1, coolingTowerSingleSpeed.freeConvectionAirFlowRateSizingFactor());
   EXPECT_EQ(0.1, coolingTowerSingleSpeed.freeConvectionUFactorTimesAreaValueSizingFactor());
-  
+
   EXPECT_EQ(1.25, coolingTowerSingleSpeed.heatRejectionCapacityAndNominalCapacitySizingRatio());
-  
+
   EXPECT_EQ(0.1, coolingTowerSingleSpeed.freeConvectionNominalCapacitySizingFactor());
-  
+
   EXPECT_EQ(35.0, coolingTowerSingleSpeed.designInletAirDryBulbTemperature());
-  
+
   EXPECT_EQ(25.6, coolingTowerSingleSpeed.designInletAirWetBulbTemperature());
-  
+
   EXPECT_FALSE(coolingTowerSingleSpeed.designApproachTemperature());
   EXPECT_TRUE(cooling.isDesignApproachTemperatureAutosized());
-  
+
   EXPECT_FALSE(coolingTowerSingleSpeed.designRangeTemperature());
   EXPECT_TRUE(coolingTowerSingleSpeed.isDesignRangeTemperatureAutosized());
-  
+
   EXPECT_EQ("General", coolingTowerSingleSpeed.endUseSubcategory());
 }
 

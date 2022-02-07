@@ -52,122 +52,122 @@ TEST_F(ModelFixture, CoolingTowerTwoSpeed_constructor) {
     ::testing::ExitedWithCode(0), "");
 
   Model m;
-  
+
   CoolingTowerTwoSpeed coolingTowerTwoSpeed(m);
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.designWaterFlowRate());
   EXPECT_TRUE(coolingTowerTwoSpeed.isDesignWaterFlowRateAutosized());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.highFanSpeedAirFlowRate());
   EXPECT_TRUE(coolingTowerTwoSpeed.isHighFanSpeedAirFlowRateAutosized());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.highFanSpeedFanPower());
   EXPECT_TRUE(coolingTowerTwoSpeed.isHighFanSpeedFanPowerAutosized());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.highFanSpeedUFactorTimesAreaValue());
   EXPECT_TRUE(coolingTowerTwoSpeed.isHighFanSpeedUFactorTimesAreaValueAutosized());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.lowFanSpeedAirFlowRate());
   EXPECT_TRUE(coolingTowerTwoSpeed.isLowFanSpeedAirFlowRateAutosized());
-  
+
   EXPECT_FALSE(0.5, coolingTowerTwoSpeed.lowFanSpeedAirFlowRateSizingFactor());
   EXPECT_TRUE(coolingTowerTwoSpeed.isLowFanSpeedAirFlowRateSizingFactorDefaulted());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.lowFanSpeedFanPower());
   EXPECT_TRUE(coolingTowerTwoSpeed.isLowFanSpeedFanPowerAutosized());
-  
+
   EXPECT_EQ(0.16, coolingTowerTwoSpeed.lowFanSpeedFanPowerSizingFactor());
   EXPECT_TRUE(coolingTowerTwoSpeed.isLowFanSpeedFanPowerSizingFactorDefaulted());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.lowFanSpeedUFactorTimesAreaValue());
   EXPECT_TRUE(coolingTowerTwoSpeed.isLowFanSpeedUFactorTimesAreaValueAutosized());
-  
+
   EXPECT_EQ(0.6, coolingTowerTwoSpeed.lowFanSpeedUFactorTimesAreaSizingFactor());
   EXPECT_TRUE(cooling.isLowFanSpeedUFactorTimesAreaSizingFactorDefaulted());
-  
+
   ASSERT_TRUE(coolingTowerTwoSpeed.freeConvectionRegimeAirFlowRate());
   EXPECT_EQ(0.0, coolingTowerTwoSpeed.freeConvectionRegimeAirFlowRate().get());
   EXPECT_TRUE(coolingTowerTwoSpeed.isFreeConvectionRegimeAirFlowRateDefaulted());
   EXPECT_FALSE(coolingTowerTwoSpeed.isFreeConvectionRegimeAirFlowRateAutosized());
-  
+
   EXPECT_EQ(0.1, coolingTowerTwoSpeed.freeConvectionRegimeAirFlowRateSizingFactor());
   EXPECT_TRUE(coolingTowerTwoSpeed.isFreeConvectionRegimeAirFlowRateSizingFactorDefaulted());
-  
+
   ASSERT_TRUE(coolingTowerTwoSpeed.freeConvectionRegimeUFactorTimesAreaValue());
   EXPECT_EQ(0.0, coolingTowerTwoSpeed.freeConvectionRegimeUFactorTimesAreaValue().get());
   EXPECT_TRUE(coolingTowerTwoSpeed.isFreeConvectionRegimeUFactorTimesAreaValueDefaulted());
   EXPECT_FALSE(coolingTowerTwoSpeed.isFreeConvectionRegimeUFactorTimesAreaValueAutosized());
-  
+
   EXPECT_EQ(0.1, coolingTowerTwoSpeed.freeConvectionUFactorTimesAreaValueSizingFactor());
   EXPECT_TRUE(coolingTowerTwoSpeed.isFreeConvectionUFactorTimesAreaValueSizingFactorDefaulted());
-  
+
   EXPECT_EQ("UFactorTimesAreaAndDesignWaterFlowRate", coolingTowerTwoSpeed.performanceInputMethod());
   EXPECT_TRUE(coolingTowerTwoSpeed.isPerformanceInputMethodDefaulted());
-  
+
   EXPECT_EQ(1.25, coolingTowerTwoSpeed.heatRejectionCapacityandNominalCapacitySizingRatio());
   EXPECT_TRUE(coolingTowerTwoSpeed.isHeatRejectionCapacityandNominalCapacitySizingRatioDefaulted());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.highSpeedNominalCapacity());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.lowSpeedNominalCapacity());
   EXPECT_FALSE(coolingTowerTwoSpeed.isLowSpeedNominalCapacityAutosized());
-  
+
   EXPECT_EQ(0.5, coolingTowerTwoSpeed.lowSpeedNominalCapacitySizingFactor());
   EXPECT_TRUE(coolingTowerTwoSpeed.isLowSpeedNominalCapacitySizingFactorDefaulted());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.freeConvectionNominalCapacity());
   EXPECT_FALSE(coolingTowerTwoSpeed.isFreeConvectionNominalCapacityAutosized());
-  
+
   EXPECT_EQ(0.1, coolingTowerTwoSpeed.freeConvectionNominalCapacitySizingFactor());
   EXPECT_TRUE(coolingTowerTwoSpeed.isFreeConvectionNominalCapacitySizingFactorDefaulted());
-  
+
   EXPECT_EQ(0.0, coolingTowerTwoSpeed.basinHeaterCapacity());
   EXPECT_TRUE(coolingTowerTwoSpeed.isBasinHeaterCapacityDefaulted());
-  
+
   EXPECT_EQ(2.0, coolingTowerTwoSpeed.basinHeaterSetpointTemperature());
   EXPECT_TRUE(coolingTowerTwoSpeed.isBasinHeaterSetpointTemperatureDefaulted());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.basinHeaterOperatingSchedule());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.evaporationLossMode());
-  
+
   EXPECT_EQ(0.2, coolingTowerTwoSpeed.evaporationLossFactor());
   EXPECT_TRUE(coolingTowerTwoSpeed.isEvaporationLossFactorDefaulted());
-  
+
   EXPECT_EQ(0.008, coolingTowerTwoSpeed.driftLossPercent());
   EXPECT_TRUE(coolingTowerTwoSpeed.isDriftLossPercentDefaulted());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.blowdownCalculationMode());
-  
+
   EXPECT_EQ(3.0, coolingTowerTwoSpeed.blowdownConcentrationRatio());
   EXPECT_TRUE(coolingTowerTwoSpeed.isBlowdownConcentrationRatioDefaulted());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.blowdownMakeupWaterUsageSchedule());
-  
+
   EXPECT_EQ(1, coolingTowerTwoSpeed.numberofCells());
   EXPECT_TRUE(coolingTowerTwoSpeed.isNumberofCellsDefaulted());
-  
+
   EXPECT_EQ("MinimalCell", coolingTowerTwoSpeed.cellControl());
   EXPECT_TRUE(coolingTowerTwoSpeed.isCellControlDefaulted());
-  
+
   EXPECT_EQ(0.33, coolingTowerTwoSpeed.cellMinimumWaterFlowRateFraction());
   EXPECT_TRUE(coolingTowerTwoSpeed.isCellMinimumWaterFlowRateFractionDefaulted());
-  
+
   EXPECT_EQ(2.5, coolingTowerTwoSpeed.cellMaximumWaterFlowRateFraction());
   EXPECT_TRUE(coolingTowerTwoSpeed.isCellMaximumWaterFlowRateFractionDefaulted());
-  
+
   EXPECT_EQ(1.0, coolingTowerTwoSpeed.sizingFactor());
-  
+
   EXPECT_EQ(35.0, coolingTowerTwoSpeed.designInletAirDryBulbTemperature());
-  
+
   EXPECT_EQ(25.6, coolingTowerTwoSpeed.designInletAirWetBulbTemperature());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.designApproachTemperature());
   EXPECT_TRUE(coolingTowerTwoSpeed.isDesignApproachTemperatureAutosized());
-  
+
   EXPECT_FALSE(coolingTowerTwoSpeed.designRangeTemperature());
   EXPECT_TRUE(coolingTowerTwoSpeed.isDesignRangeTemperatureAutosized());
-  
+
   EXPECT_EQ("General", coolingTowerTwoSpeed.endUseSubcategory());
 }
 
