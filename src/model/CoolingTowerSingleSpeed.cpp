@@ -935,7 +935,7 @@ namespace model {
     }
 
     boost::optional<double> CoolingTowerSingleSpeed_Impl::designRangeTemperature() const {
-      return value = getDouble(OS_CoolingTower_SingleSpeedFields::DesignRangeTemperature, true);
+      return getDouble(OS_CoolingTower_SingleSpeedFields::DesignRangeTemperature, true);
     }
 
     bool CoolingTowerSingleSpeed_Impl::isDesignRangeTemperatureAutosized() const {
