@@ -1004,9 +1004,7 @@ namespace model {
     }
 
     boost::optional<double> CoolingTowerTwoSpeed_Impl::designApproachTemperature() const {
-      auto value = getDouble(OS_CoolingTower_TwoSpeedFields::DesignApproachTemperature, true);
-      OS_ASSERT(value);
-      return value.get();
+      return getDouble(OS_CoolingTower_TwoSpeedFields::DesignApproachTemperature, true);
     }
 
     bool CoolingTowerTwoSpeed_Impl::isDesignApproachTemperatureAutosized() const {
@@ -1027,9 +1025,7 @@ namespace model {
     }
 
     boost::optional<double> CoolingTowerTwoSpeed_Impl::designRangeTemperature() const {
-      auto value = getDouble(OS_CoolingTower_TwoSpeedFields::DesignRangeTemperature, true);
-      OS_ASSERT(value);
-      return value.get();
+      return getDouble(OS_CoolingTower_TwoSpeedFields::DesignRangeTemperature, true);
     }
 
     bool CoolingTowerTwoSpeed_Impl::isDesignRangeTemperatureAutosized() const {
@@ -1841,7 +1837,7 @@ namespace model {
   }
 
   double CoolingTowerTwoSpeed::designInletAirDryBulbTemperature() const {
-    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->designInletAirWetBulbTemperature();
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->designInletAirDryBulbTemperature();
   }
 
   bool CoolingTowerTwoSpeed::setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature) {
