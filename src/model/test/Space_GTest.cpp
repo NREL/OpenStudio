@@ -1716,6 +1716,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   std::vector<Point3d> vertices;
 
   // bottom floor
+  BuildingStory bottomStory(m);
 
   // bottom core
   vertices.clear();
@@ -1726,6 +1727,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   boost::optional<Space> bottomCore = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomCore);
   bottomCore->setZOrigin(0);
+  bottomCore->setBuildingStory(bottomStory);
 
   // bottom top
   vertices.clear();
@@ -1736,6 +1738,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   boost::optional<Space> bottomTop = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomTop);
   bottomTop->setZOrigin(0);
+  bottomTop->setBuildingStory(bottomStory);
 
   // bottom right
   vertices.clear();
@@ -1746,6 +1749,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   boost::optional<Space> bottomRight = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomRight);
   bottomRight->setZOrigin(0);
+  bottomRight->setBuildingStory(bottomStory);
 
   // bottom bottom
   vertices.clear();
@@ -1756,6 +1760,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   boost::optional<Space> bottomBottom = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomBottom);
   bottomBottom->setZOrigin(0);
+  bottomBottom->setBuildingStory(bottomStory);
 
   // bottom left
   vertices.clear();
@@ -1766,8 +1771,10 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   boost::optional<Space> bottomLeft = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(bottomLeft);
   bottomLeft->setZOrigin(0);
+  bottomLeft->setBuildingStory(bottomStory);
 
   // top floor
+  BuildingStory topStory(m);
 
   // top core
   vertices.clear();
@@ -1778,6 +1785,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   boost::optional<Space> topCore = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topCore);
   topCore->setZOrigin(3);
+  topCore->setBuildingStory(topStory);
 
   // top top
   vertices.clear();
@@ -1788,6 +1796,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   boost::optional<Space> topTop = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topTop);
   topTop->setZOrigin(3);
+  topTop->setBuildingStory(topStory);
 
   // top right
   vertices.clear();
@@ -1798,6 +1807,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   boost::optional<Space> topRight = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topRight);
   topRight->setZOrigin(3);
+  topRight->setBuildingStory(topStory);
 
   // top bottom
   vertices.clear();
@@ -1808,6 +1818,7 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   boost::optional<Space> topBottom = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topBottom);
   topBottom->setZOrigin(3);
+  topBottom->setBuildingStory(topStory);
 
   // top left
   vertices.clear();
@@ -1818,13 +1829,19 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   boost::optional<Space> topLeft = Space::fromFloorPrint(vertices, 3, m);
   ASSERT_TRUE(topLeft);
   topLeft->setZOrigin(3);
+  topLeft->setBuildingStory(topStory);
 
   // create thermal zones
   std::vector<Space> spaces = m.getConcreteModelObjects<Space>();
+  //std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+
   for (auto& space : spaces) {
     ThermalZone z(m);
     space.setThermalZone(z);
   }
+
+  //openstudio::path outpath1 = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate2_before_intersect.osm");
+  //m.save(outpath1, true);
 
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
@@ -1838,6 +1855,8 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   int numRoofSurfaces = 0;
 
   std::vector<Surface> surfaces = m.getConcreteModelObjects<Surface>();
+  //std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
+
   for (auto& surface : surfaces) {
     if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
       if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {

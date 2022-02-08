@@ -92,6 +92,11 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
   // cppcheck-suppress constStatement
   std::vector<BoostPolygon> solution;
   if (result.size() == 0) {
+    // There's no result so return the original polygon
+    solution.push_back(polygon);
+    return solution;
+  } else if (result.size() == 1 && result[0].outer().size() == polygon.outer().size()) {
+    // Number of vertices didn't change so no spikes were removed
     solution.push_back(polygon);
     return solution;
   } else {

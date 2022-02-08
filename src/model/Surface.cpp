@@ -1139,10 +1139,7 @@ namespace model {
 
       std::vector<std::vector<Point3d>> newPolygons1 = intersection->newPolygons1();
       std::vector<std::vector<Point3d>> newPolygons2 = intersection->newPolygons2();
-      // Reverse this so we can pass it to circularEqual (it isn't used after this)
-      // circularEqual will confirm that these two surfaces will succesfully match
-      std::reverse(otherBuildingVertices.begin(), otherBuildingVertices.end());
-      if (newPolygons1.empty() && newPolygons2.empty() && circularEqual(buildingVertices, otherBuildingVertices, tol)) {
+      if (newPolygons1.empty() && newPolygons2.empty()) {
         // both surfaces intersect perfectly, no-op
 
       } else {
