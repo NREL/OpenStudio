@@ -160,6 +160,8 @@ namespace model {
 
     boost::optional<std::string> evaporationLossMode() const;
 
+    bool isEvaporationLossModeDefaulted() const;
+
     bool setEvaporationLossMode(std::string evaporationLossMode);
 
     void resetEvaporationLossMode();
@@ -179,6 +181,8 @@ namespace model {
     void resetDriftLossPercent();
 
     boost::optional<std::string> blowdownCalculationMode() const;
+
+    bool isBlowdownCalculationModeDefaulted() const;
 
     bool setBlowdownCalculationMode(std::string blowdownCalculationMode);
 
@@ -203,6 +207,8 @@ namespace model {
     void resetNumberofCells();
 
     boost::optional<std::string> cellControl() const;
+
+    bool isCellControlDefaulted() const;
 
     bool setCellControl(std::string cellControl);
 

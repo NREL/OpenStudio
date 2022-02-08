@@ -408,6 +408,10 @@ namespace model {
       return getString(OS_CoolingTower_TwoSpeedFields::EvaporationLossMode, true);
     }
 
+    bool CoolingTowerTwoSpeed_Impl::isEvaporationLossModeDefaulted() const {
+      return isEmpty(OS_CoolingTower_TwoSpeedFields::EvaporationLossMode);
+    }
+
     double CoolingTowerTwoSpeed_Impl::evaporationLossFactor() const {
       boost::optional<double> value = getDouble(OS_CoolingTower_TwoSpeedFields::EvaporationLossFactor, true);
       OS_ASSERT(value);
@@ -430,6 +434,10 @@ namespace model {
 
     boost::optional<std::string> CoolingTowerTwoSpeed_Impl::blowdownCalculationMode() const {
       return getString(OS_CoolingTower_TwoSpeedFields::BlowdownCalculationMode, true);
+    }
+
+    bool CoolingTowerTwoSpeed_Impl::isBlowdownCalculationModeDefaulted() const {
+      return isEmpty(OS_CoolingTower_TwoSpeedFields::BlowdownCalculationMode);
     }
 
     double CoolingTowerTwoSpeed_Impl::blowdownConcentrationRatio() const {
@@ -1442,6 +1450,10 @@ namespace model {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->evaporationLossMode();
   }
 
+  bool CoolingTowerTwoSpeed::isEvaporationLossModeDefaulted() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isEvaporationLossModeDefaulted();
+  }
+
   double CoolingTowerTwoSpeed::evaporationLossFactor() const {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->evaporationLossFactor();
   }
@@ -1460,6 +1472,10 @@ namespace model {
 
   boost::optional<std::string> CoolingTowerTwoSpeed::blowdownCalculationMode() const {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->blowdownCalculationMode();
+  }
+
+  bool CoolingTowerTwoSpeed::isBlowdownCalculationModeDefaulted() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isBlowdownCalculationModeDefaulted();
   }
 
   double CoolingTowerTwoSpeed::blowdownConcentrationRatio() const {

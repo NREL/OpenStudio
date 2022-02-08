@@ -177,6 +177,8 @@ namespace model {
 
       boost::optional<std::string> evaporationLossMode() const;
 
+      bool isEvaporationLossModeDefaulted() const;
+
       double evaporationLossFactor() const;
 
       bool isEvaporationLossFactorDefaulted() const;
@@ -186,6 +188,8 @@ namespace model {
       bool isDriftLossPercentDefaulted() const;
 
       boost::optional<std::string> blowdownCalculationMode() const;
+
+      bool isBlowdownCalculationModeDefaulted() const;
 
       double blowdownConcentrationRatio() const;
 

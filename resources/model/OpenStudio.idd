@@ -14152,7 +14152,7 @@ OS:CoolingTower:SingleSpeed,
        \note of water in the tower basin to purge scale or other contaminants to reduce their
        \note concentration in order to maintain an acceptable level of water quality.
        \note Schedule values should reflect water usage in m3/s.
-  A10 , \field Outdoor Air Inlet Node Name
+  A10 ,\field Outdoor Air Inlet Node Name
        \type object-list
        \object-list ConnectionNames
   A11, \field Capacity Control
@@ -14661,7 +14661,7 @@ OS:CoolingTower:VariableSpeed,
        \units percent
        \note Rate of drift loss as a percentage of circulating condenser water flow rate
        \note Typical values are between 0.002 and 0.2% The default value is 0.008%
-  A10 , \field Blowdown Calculation Mode
+  A10 ,\field Blowdown Calculation Mode
        \type choice
        \key ConcentrationRatio
        \key ScheduledRate
@@ -14694,6 +14694,7 @@ OS:CoolingTower:VariableSpeed,
        \type Choice
        \key MinimalCell
        \key MaximalCell
+       \default MinimalCell
   N15, \field Cell Minimum  Water Flow Rate Fraction
        \type real
        \minimum> 0.0

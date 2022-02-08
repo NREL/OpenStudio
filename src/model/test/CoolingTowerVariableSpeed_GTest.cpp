@@ -95,6 +95,7 @@ TEST_F(ModelFixture, CoolingTowerVariableSpeed_constructor) {
 
   ASSERT_TRUE(coolingTowerVariableSpeed.evaporationLossMode());
   EXPECT_EQ("SaturatedExit", coolingTowerVariableSpeed.evaporationLossMode().get());
+  EXPECT_FALSE(coolingTowerVariableSpeed.isEvaporationLossModeDefaulted());
 
   EXPECT_EQ(0.2, coolingTowerVariableSpeed.evaporationLossFactor());
   EXPECT_TRUE(coolingTowerVariableSpeed.isEvaporationLossFactorDefaulted());
@@ -104,6 +105,7 @@ TEST_F(ModelFixture, CoolingTowerVariableSpeed_constructor) {
 
   ASSERT_TRUE(coolingTowerVariableSpeed.blowdownCalculationMode());
   EXPECT_EQ("ConcentrationRatio", coolingTowerVariableSpeed.blowdownCalculationMode().get());
+  EXPECT_FALSE(coolingTowerVariableSpeed.isBlowdownCalculationModeDefaulted());
 
   ASSERT_TRUE(coolingTowerVariableSpeed.blowdownConcentrationRatio());
   EXPECT_EQ(3.0, coolingTowerVariableSpeed.blowdownConcentrationRatio().get());
@@ -112,7 +114,9 @@ TEST_F(ModelFixture, CoolingTowerVariableSpeed_constructor) {
 
   EXPECT_FALSE(coolingTowerVariableSpeed.numberofCells());
 
-  EXPECT_FALSE(coolingTowerVariableSpeed.cellControl());
+  ASSERT_TRUE(coolingTowerVariableSpeed.cellControl());
+  EXPECT_EQ("MinimalCell", coolingTowerVariableSpeed.cellControl().get());
+  EXPECT_TRUE(coolingTowerVariableSpeed.isCellControlDefaulted());
 
   EXPECT_FALSE(coolingTowerVariableSpeed.cellMinimumWaterFlowRateFraction());
 
