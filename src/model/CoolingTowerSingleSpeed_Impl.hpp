@@ -137,7 +137,7 @@ namespace model {
 
       boost::optional<std::string> blowdownCalculationMode() const;
 
-      bool isBlowdownConcentrationModeDefaulted() const;
+      bool isBlowdownCalculationModeDefaulted() const;
 
       double blowdownConcentrationRatio() const;
 
