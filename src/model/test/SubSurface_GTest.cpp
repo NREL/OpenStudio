@@ -1453,9 +1453,11 @@ TEST_F(ModelFixture, Issue_4361_Multi_Subsurfaces_Non_Overlapping) {
   subSurface2.setSurface(surface);
   subSurface2.setSubSurfaceType("FixedWindow");
 
+  // Surface area is 8, sub-surface areas are 2 therefore we should expect a WWR of 0.25
   double windowWallRatio = surface.windowToWallRatio();
   EXPECT_NEAR(windowWallRatio, 0.25, 0.01);
 
+  // Set frame and divider on both sub-surfaces
   WindowPropertyFrameAndDivider frame1(model);
   frame1.setFrameWidth(0.030);
   subSurface1.setWindowPropertyFrameAndDivider(frame1);
@@ -1464,6 +1466,7 @@ TEST_F(ModelFixture, Issue_4361_Multi_Subsurfaces_Non_Overlapping) {
   frame2.setFrameWidth(0.030);
   subSurface2.setWindowPropertyFrameAndDivider(frame2);
 
+  // Surface area is still 8, sub-surface areas are 1.06x1.06x2 = 2.2472 so we should expect a WWR of 0.2809 (2.2472 / 8)
   windowWallRatio = surface.windowToWallRatio();
   EXPECT_NEAR(windowWallRatio, 0.281, 0.01);
 }
@@ -1510,9 +1513,11 @@ TEST_F(ModelFixture, Issue_4361_Multi_Subsurfaces_Overlapping) {
   subSurface2.setSurface(surface);
   subSurface2.setSubSurfaceType("FixedWindow");
 
+  // Surface area is 8, sub surface areas are 2 therefore we should expect a WWR of 0.25
   double windowWallRatio = surface.windowToWallRatio();
   EXPECT_NEAR(windowWallRatio, 0.25, 0.01);
 
+  // Set a frame and divider on both sub-surfaces
   WindowPropertyFrameAndDivider frame1(model);
   frame1.setFrameWidth(0.030);
   subSurface1.setWindowPropertyFrameAndDivider(frame1);
@@ -1521,6 +1526,8 @@ TEST_F(ModelFixture, Issue_4361_Multi_Subsurfaces_Overlapping) {
   frame2.setFrameWidth(0.030);
   subSurface2.setWindowPropertyFrameAndDivider(frame2);
 
+  // When the frame and dividers are added the surfaces will overlap to form a single
+  // sub-surface which is 2.07 x 1.06 = 2.1942 which gives a WWR of 0.274 (2.1942 / 8)
   windowWallRatio = surface.windowToWallRatio();
-  EXPECT_NEAR(windowWallRatio, 0.2654, 0.01);
+  EXPECT_NEAR(windowWallRatio, 0.2742, 0.01);
 }
