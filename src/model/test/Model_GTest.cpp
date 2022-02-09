@@ -813,7 +813,7 @@ TEST_F(ModelFixture, Issue_4372) {
   intersectSurfaces(spaces);
 
   matchSurfaces(spaces);
-  std::vector<Surface> surfacesAfter = model->getModelObjects<Surface>();
+  std::vector<Surface> surfacesAfter = model->getConcreteModelObjects<Surface>();
   for (const auto& surface : surfacesAfter) {
 
     std::string name = surface.name().value();
