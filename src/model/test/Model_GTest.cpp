@@ -809,7 +809,7 @@ TEST_F(ModelFixture, Issue_4372) {
   boost::optional<openstudio::model::Model> model = vt.loadModel(modelPath);
   ASSERT_TRUE(model);
 
-  std::vector<Space> spaces = model->getModelObjects<Space>();
+  std::vector<Space> spaces = model->getConcreteModelObjects<Space>();
   intersectSurfaces(spaces);
 
   matchSurfaces(spaces);
