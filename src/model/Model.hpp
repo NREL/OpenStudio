@@ -263,9 +263,8 @@ namespace model {
       // NOTE: all UniqueModelObjects are Concrete. Call getObjectsByType to avoid returning a huge vector
       std::vector<WorkspaceObject> objects = this->getObjectsByType(T::iddObjectType());
       // std::vector<WorkspaceObject> objects = this->allObjects();
-      std::shared_ptr<typename T::ImplType> p;
-      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        p = it->getImpl<typename T::ImplType>();
+      for (const auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
           return T(std::move(p));
         }
@@ -285,8 +284,8 @@ namespace model {
       // NOTE: all UniqueModelObjects are Concrete. Call getObjectsByType to avoid returning a huge vector
       std::vector<WorkspaceObject> objects = this->getObjectsByType(T::iddObjectType());
       // std::vector<WorkspaceObject> objects = this->allObjects();
-      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      for (const auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
           result = T(std::move(p));
           break;
@@ -307,8 +306,8 @@ namespace model {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->objects(sorted);
       result.reserve(objects.size());
-      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      for (const auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
           result.push_back(T(std::move(p)));
         }
@@ -324,8 +323,8 @@ namespace model {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->getObjectsByType(T::iddObjectType());
       result.reserve(objects.size());
-      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      for (const auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
           // emplace_back(std::move(p)) did not work, calling a protected constructor...
           // the std::allocator for vector can forward to free functions...
@@ -348,8 +347,8 @@ namespace model {
       std::vector<T> result;
       result.reserve(handles.size());
       std::vector<WorkspaceObject> objects = this->getObjects(handles);
-      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      for (const auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
           result.push_back(T(std::move(p)));
         }
@@ -388,8 +387,8 @@ namespace model {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->getObjectsByName(name, exactMatch);
       result.reserve(objects.size());
-      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      for (auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
           result.push_back(T(p));
         }
@@ -415,8 +414,8 @@ namespace model {
       std::vector<T> result;
       std::vector<WorkspaceObject> objects = this->getObjectsByTypeAndName(T::iddObjectType(), name);
       result.reserve(objects.size());
-      for (auto it = objects.begin(), itend = objects.end(); it < itend; ++it) {
-        std::shared_ptr<typename T::ImplType> p = it->getImpl<typename T::ImplType>();
+      for (auto& wo : objects) {
+        std::shared_ptr<typename T::ImplType> p = wo.getImpl<typename T::ImplType>();
         if (p) {
           result.push_back(T(p));
         }
