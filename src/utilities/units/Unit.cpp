@@ -497,12 +497,14 @@ namespace detail {
   }
 
   std::vector<Unit_Impl::UnitElement>::iterator Unit_Impl::findBaseUnit(const std::string& baseUnit) {
-    auto result = std::find_if(m_units.begin(), m_units.end(), std::bind(firstOfPairEqual<std::string, int>, std::placeholders::_1, baseUnit));
+    auto result = std::find_if(m_units.begin(), m_units.end(),
+                               [&baseUnit](const auto& unitElement) { return firstOfPairEqual<std::string, int>(unitElement, baseUnit); });
     return result;
   }
 
   std::vector<Unit_Impl::UnitElement>::const_iterator Unit_Impl::findBaseUnit(const std::string& baseUnit) const {
-    auto result = std::find_if(m_units.begin(), m_units.end(), std::bind(firstOfPairEqual<std::string, int>, std::placeholders::_1, baseUnit));
+    auto result = std::find_if(m_units.cbegin(), m_units.cend(),
+                               [&baseUnit](const auto& unitElement) { return firstOfPairEqual<std::string, int>(unitElement, baseUnit); });
     return result;
   }
 

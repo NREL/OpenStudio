@@ -2547,7 +2547,7 @@ namespace detail {
       } else {
         std::string envName = envId.name().get();
         // check validity of name
-        auto it = std::find_if(envNames.begin(), envNames.end(), std::bind(istringEqual, envName, std::placeholders::_1));
+        auto it = std::find_if(envNames.cbegin(), envNames.cend(), [&envName](const auto& e) { return istringEqual(envName, e); });
         if (it != envNames.end()) {
           keepers.push_back(*it);
         }
@@ -3529,7 +3529,7 @@ namespace detail {
         if (envName && rf) {
           kvAvail = availableKeyValues(*envName, rf->valueDescription(), *tsName);
           for (const std::string& kv : keyValueNames) {
-            auto it = std::find_if(kvAvail.begin(), kvAvail.end(), std::bind(istringEqual, kv, std::placeholders::_1));
+            auto it = std::find_if(kvAvail.cbegin(), kvAvail.cend(), [&kv](const auto& k) { return istringEqual(kv, k); });
             if (it != kvAvail.end()) {
               keepers.insert(*it);
             }
@@ -3539,7 +3539,7 @@ namespace detail {
           for (const ReportingFrequency& rf : rfSet) {
             kvAvail = availableKeyValues(*envName, rf.valueDescription(), *tsName);
             for (const std::string& kv : keyValueNames) {
-              auto it = std::find_if(kvAvail.begin(), kvAvail.end(), std::bind(istringEqual, kv, std::placeholders::_1));
+              auto it = std::find_if(kvAvail.cbegin(), kvAvail.cend(), [&kv](const auto& k) { return istringEqual(kv, k); });
               if (it != kvAvail.end()) {
                 keepers.insert(*it);
               }
@@ -3550,7 +3550,7 @@ namespace detail {
           for (const std::string& envName : envNames) {
             kvAvail = availableKeyValues(envName, rf->valueDescription(), *tsName);
             for (const std::string& kv : keyValueNames) {
-              auto it = std::find_if(kvAvail.begin(), kvAvail.end(), std::bind(istringEqual, kv, std::placeholders::_1));
+              auto it = std::find_if(kvAvail.cbegin(), kvAvail.cend(), [&kv](const auto& k) { return istringEqual(kv, k); });
               if (it != kvAvail.end()) {
                 keepers.insert(*it);
               }
@@ -3563,7 +3563,7 @@ namespace detail {
             for (const ReportingFrequency& rf : rfSet) {
               kvAvail = availableKeyValues(envName, rf.valueDescription(), *tsName);
               for (const std::string& kv : keyValueNames) {
-                auto it = std::find_if(kvAvail.begin(), kvAvail.end(), std::bind(istringEqual, kv, std::placeholders::_1));
+                auto it = std::find_if(kvAvail.cbegin(), kvAvail.cend(), [&kv](const auto& k) { return istringEqual(kv, k); });
                 if (it != kvAvail.end()) {
                   keepers.insert(*it);
                   if (keepers.size() == keyValueNames.size()) {

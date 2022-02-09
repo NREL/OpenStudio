@@ -192,7 +192,9 @@ void IdfFile::insertObjectByIddObjectType(const IdfObject& object) {
 }
 
 bool IdfFile::removeObject(const IdfObject& object) {
-  auto it = std::find_if(m_objects.begin(), m_objects.end(), std::bind(handleEquals<IdfObject, Handle>, std::placeholders::_1, object.handle()));
+  auto it =
+    std::find_if(m_objects.begin(), m_objects.end(), [h = object.handle()](const IdfObject& obj) { return handleEquals<IdfObject, Handle>(obj, h); });
+
   if (it != m_objects.end()) {
     IdfObjectVector::size_type index(it - m_objects.begin());
     if (it->iddObject().isVersionObject()
@@ -779,7 +781,7 @@ IdfObjectVector IdfFile::m_objectsWithConflictingNames(const std::string& name, 
         continue;
       }
       for (const std::string& ref : candidates[j].iddObject().references()) {
-        if (std::find_if(refs.begin(), refs.end(), std::bind(openstudio::istringEqual, std::placeholders::_1, ref)) != refs.end()) {
+        if (std::find_if(refs.begin(), refs.end(), [&ref](const auto& r) { return openstudio::istringEqual(r, ref); }) != refs.end()) {
           hasConflict[i] = true;
           hasConflict[j] = true;
           break;

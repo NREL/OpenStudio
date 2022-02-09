@@ -42,6 +42,7 @@
 #include "../core/StringHelpers.hpp"
 
 #include <boost/lexical_cast.hpp>
+#include <memory>
 
 using namespace std;
 using openstudio::istringEqual;  // used for all name comparisons
@@ -56,8 +57,8 @@ namespace detail {
     : m_strictnessLevel(level),
       m_iddFileAndFactoryWrapper(iddFileType),
       m_fastNaming(false),
-      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(
-        new WorkspaceObjectOrder_Impl(HandleVector(), std::bind(&Workspace_Impl::getObject, this, std::placeholders::_1)))) {
+      m_workspaceObjectOrder(std::make_shared<WorkspaceObjectOrder_Impl>(
+        HandleVector(), [this](const Handle& handle) -> boost::optional<WorkspaceObject> { return getObject(handle); })) {
     m_workspaceObjectMap.reserve(1 << 15);
     m_idfReferencesMap.reserve(1 << 15);
   }
@@ -67,8 +68,8 @@ namespace detail {
       m_header(idfFile.header()),
       m_iddFileAndFactoryWrapper(idfFile.iddFileAndFactoryWrapper()),
       m_fastNaming(false),
-      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(
-        new WorkspaceObjectOrder_Impl(HandleVector(), std::bind(&Workspace_Impl::getObject, this, std::placeholders::_1)))) {
+      m_workspaceObjectOrder(std::make_shared<WorkspaceObjectOrder_Impl>(
+        HandleVector(), [this](const Handle& handle) -> boost::optional<WorkspaceObject> { return getObject(handle); })) {
     m_workspaceObjectMap.reserve(1 << 15);
     m_idfReferencesMap.reserve(1 << 15);
   }
@@ -78,8 +79,8 @@ namespace detail {
       m_header(other.m_header),
       m_iddFileAndFactoryWrapper(other.m_iddFileAndFactoryWrapper),
       m_fastNaming(other.fastNaming()),
-      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(
-        new WorkspaceObjectOrder_Impl(std::bind(&Workspace_Impl::getObject, this, std::placeholders::_1)))) {
+      m_workspaceObjectOrder(std::make_shared<WorkspaceObjectOrder_Impl>(
+        HandleVector(), [this](const Handle& handle) -> boost::optional<WorkspaceObject> { return getObject(handle); })) {
     // m_workspaceObjectOrder
     OptionalIddObjectTypeVector iddOrderVector = other.order().iddOrder();
     if (iddOrderVector) {
@@ -98,8 +99,8 @@ namespace detail {
       m_header(),  // subset of original data--discard header
       m_iddFileAndFactoryWrapper(other.m_iddFileAndFactoryWrapper),
       m_fastNaming(other.fastNaming()),
-      m_workspaceObjectOrder(std::shared_ptr<WorkspaceObjectOrder_Impl>(
-        new WorkspaceObjectOrder_Impl(hs, std::bind(&Workspace_Impl::getObject, this, std::placeholders::_1)))) {
+      m_workspaceObjectOrder(std::make_shared<WorkspaceObjectOrder_Impl>(
+        HandleVector(), [this](const Handle& handle) -> boost::optional<WorkspaceObject> { return getObject(handle); })) {
     // m_workspaceObjectOrder
     OptionalIddObjectTypeVector iddOrderVector = other.order().iddOrder();
     if (iddOrderVector) {
@@ -1495,7 +1496,8 @@ namespace detail {
             OptionalIddField sourceIddField = (*objIt).iddObject().getField(index);
             OS_ASSERT(sourceIddField);
             StringVector sourceFieldRefs = sourceIddField->properties().references;
-            if (std::find_if(sourceFieldRefs.begin(), sourceFieldRefs.end(), std::bind(istringEqual, std::placeholders::_1, referenceName))
+            if (std::find_if(sourceFieldRefs.cbegin(), sourceFieldRefs.cend(),
+                             [&referenceName](const auto& s) { return istringEqual(s, referenceName); })
                 != sourceFieldRefs.end()) {
               found = true;
               break;

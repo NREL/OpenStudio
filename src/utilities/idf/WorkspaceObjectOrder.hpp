@@ -143,12 +143,6 @@ namespace detail {
 
     // returns empty vector if can't convert all.
     WorkspaceObjectVector getObjects(const std::vector<Handle>& handles) const;
-
-    // ETH@20100409 boost::bind seems to need non-overloaded functions
-    // These are (ugly) wrappers to accommodate.
-    bool less_Handle(const Handle& left, const Handle& right) const;
-    bool less_WorkspaceObject(const WorkspaceObject& left, const WorkspaceObject& right) const;
-    virtual bool less_IddObjectType(IddObjectType left, IddObjectType right) const;
   };
 
   using WorkspaceObjectOrder_ImplPtr = std::shared_ptr<WorkspaceObjectOrder_Impl>;

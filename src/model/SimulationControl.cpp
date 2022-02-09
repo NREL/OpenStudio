@@ -501,7 +501,8 @@ namespace model {
         for (const RunPeriod& runPeriod : runPeriods) {
           if (runPeriod.isAnnual() && !runPeriod.isRepeated()) {
             std::string rpName = runPeriod.name().get();
-            auto it = std::find_if(environmentPeriods.begin(), environmentPeriods.end(), std::bind(istringEqual, rpName, std::placeholders::_1));
+            auto it = std::find_if(environmentPeriods.begin(), environmentPeriods.end(),
+                                   [&rpName](const auto& envName) { return istringEqual(rpName, envName); });
             if (it != environmentPeriods.end()) {
               result.push_back(*it);
             }
@@ -514,7 +515,9 @@ namespace model {
             OptionalString os = oWeatherFile->environmentName();
             if (os) {
               std::string candidate = *os;
-              auto it = std::find_if(environmentPeriods.begin(), environmentPeriods.end(), std::bind(istringEqual, candidate, std::placeholders::_1));
+              auto it = std::find_if(environmentPeriods.begin(), environmentPeriods.end(),
+                                     [&candidate](const auto& envName) { return istringEqual(candidate, envName); });
+
               if (it != environmentPeriods.end()) {
                 result.push_back(*it);
               }

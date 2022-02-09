@@ -81,7 +81,8 @@ namespace model {
 
   bool FuelSupplyConstituent::isValid(const std::string& constituentName) {
     std::vector<std::string> validConstituentNames = constituentNameValues();
-    return std::find_if(validConstituentNames.begin(), validConstituentNames.end(), std::bind(istringEqual, constituentName, std::placeholders::_1))
+    return std::find_if(validConstituentNames.begin(), validConstituentNames.end(),
+                        [&constituentName](const auto& s) { return istringEqual(s, constituentName); })
            != validConstituentNames.end();
   }
 

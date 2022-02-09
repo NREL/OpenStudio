@@ -483,8 +483,7 @@ UTILITIES_API std::string objectName(const IdfObject& obj);
 
 template <typename T>
 std::vector<T> sortByObjectName(std::vector<T> objects) {
-  std::sort(objects.begin(), objects.end(),
-            std::bind(&istringLess, std::bind(&objectName, std::placeholders::_1), std::bind(&objectName, std::placeholders::_1)));
+  std::sort(objects.begin(), objects.end(), [](const T& lhs, const T& rhs) { return istringLess(lhs.objectName(), rhs.objectName()); });
   return objects;
 }
 

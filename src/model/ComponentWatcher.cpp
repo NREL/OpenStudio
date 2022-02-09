@@ -135,15 +135,15 @@ namespace model {
 
       // if removedObject is a componentObject, remove from the vector and refresh
       // component contents
-      auto it = std::find_if(m_componentObjects.begin(), m_componentObjects.end(),
-                             std::bind(handleEquals<ModelObject, Handle>, std::placeholders::_1, handleOfRemovedObject));
+      auto it = std::find_if(m_componentObjects.begin(), m_componentObjects.end(), [&handleOfRemovedObject](const ModelObject& mo) {
+        return handleEquals<ModelObject, Handle>(mo, handleOfRemovedObject);
+      });
       if (it != m_componentObjects.end()) {
         OS_ASSERT(it != m_componentObjects.begin());
         m_componentObjects.erase(it);
         mf_refreshComponentContents(false);
         return;
       }
-      return;
     }
 
     void ComponentWatcher_Impl::objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& /*type*/,

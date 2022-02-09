@@ -955,25 +955,25 @@ TEST_F(ModelFixture, Surface_IddAssumptions) {
   StringVector keys = Surface::validOutsideBoundaryConditionValues();
 
   EXPECT_EQ(15u, keys.size());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "Adiabatic", std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "Surface", std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "Outdoors", std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "Foundation", std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "Ground", std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundFCfactorMethod", std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "OtherSideCoefficients", std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "OtherSideConditionsModel", std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundSlabPreprocessorAverage", std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundSlabPreprocessorCore", std::placeholders::_1)) == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundSlabPreprocessorPerimeter", std::placeholders::_1))
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "Adiabatic"); }) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "Surface"); }) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "Outdoors"); }) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "Foundation"); }) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "Ground"); }) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "GroundFCfactorMethod"); }) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "OtherSideCoefficients"); }) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "OtherSideConditionsModel"); }) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "GroundSlabPreprocessorAverage"); }) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "GroundSlabPreprocessorCore"); }) == keys.end());
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "GroundSlabPreprocessorPerimeter"); })
                == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundBasementPreprocessorAverageWall", std::placeholders::_1))
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "GroundBasementPreprocessorAverageWall"); })
                == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundBasementPreprocessorAverageFloor", std::placeholders::_1))
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "GroundBasementPreprocessorAverageFloor"); })
                == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundBasementPreprocessorUpperWall", std::placeholders::_1))
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "GroundBasementPreprocessorUpperWall"); })
                == keys.end());
-  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), std::bind(istringEqual, "GroundBasementPreprocessorLowerWall", std::placeholders::_1))
+  EXPECT_FALSE(std::find_if(keys.begin(), keys.end(), [](const auto& s) { return istringEqual(s, "GroundBasementPreprocessorLowerWall"); })
                == keys.end());
 }
 

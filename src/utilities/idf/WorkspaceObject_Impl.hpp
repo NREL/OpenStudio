@@ -101,13 +101,13 @@ namespace detail {
   template <class T>
   typename T::pointer_set::iterator getIteratorAtFieldIndex(typename T::pointer_set& pointerSet, unsigned fieldIndex) {
     return std::find_if(pointerSet.begin(), pointerSet.end(),
-                        std::bind(fieldIndexEqualTo<typename T::pointer_type>, std::placeholders::_1, fieldIndex));
+                        [fieldIndex](const auto& ptr_type) { return fieldIndexEqualTo<typename T::pointer_type>(ptr_type, fieldIndex); });
   }
 
   template <class T>
   typename T::pointer_set::const_iterator getConstIteratorAtFieldIndex(const typename T::pointer_set& pointerSet, unsigned fieldIndex) {
     return std::find_if(pointerSet.begin(), pointerSet.end(),
-                        std::bind(fieldIndexEqualTo<typename T::pointer_type>, std::placeholders::_1, fieldIndex));
+                        [fieldIndex](const auto& ptr_type) { return fieldIndexEqualTo<typename T::pointer_type>(ptr_type, fieldIndex); });
   }
 
   class UTILITIES_API WorkspaceObject_Impl : public IdfObject_Impl
