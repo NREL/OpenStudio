@@ -1327,7 +1327,7 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement) {
+  void ForwardTranslator::translateId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement) {
 
     std::string id = modelObject.name().get();
     if (modelObject.gbXMLId()) {
@@ -1336,7 +1336,7 @@ namespace gbxml {
     parentElement.append_attribute("id") = escapeName(id).c_str();
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateName(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement) {
+  void ForwardTranslator::translateName(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement) {
 
     std::string name = modelObject.name().get();
     if (modelObject.displayName()) {
@@ -1345,17 +1345,20 @@ namespace gbxml {
     parentElement.append_child("Name").text() = name.c_str();
   }
 
-  boost::optional<pugi::xml_node> ForwardTranslator::translateCADObjectId(const openstudio::model::ModelObject& modelObject,
-                                                                          pugi::xml_node& parentElement) {
+  void ForwardTranslator::translateCADObjectId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement) {
 
-    boost::optional<std::string> cadObjectId = modelObject.cadObjectId();
-    if (cadObjectId) {
-      auto cadObjectIdElement = parentElement.append_child("CADObjectId");
-      cadObjectIdElement.text() = (*cadObjectId).c_str();
-      if (additionalProperties.hasFeature("programIdRef")) {
-        boost::optional<std::string> programIdRef = additionalProperties.getFeatureAsString("programIdRef");
-        if (programIdRef) {
-          cadObjectIdElement.append_attribute("programIdRef") = (*programIdRef).c_str();
+    if (modelObject.hasAdditionalProperties()) {
+      model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
+      boost::optional<std::string> cadObjectId = modelObject.cadObjectId();
+      if (cadObjectId) {
+        auto cadObjectIdElement = parentElement.append_child("CADObjectId");
+        cadObjectIdElement.text() = (*cadObjectId).c_str();
+        result = cadObjectIdElement;
+        if (additionalProperties.hasFeature("programIdRef")) {
+          boost::optional<std::string> programIdRef = additionalProperties.getFeatureAsString("programIdRef");
+          if (programIdRef) {
+            cadObjectIdElement.append_attribute("programIdRef") = (*programIdRef).c_str();
+          }
         }
       }
     }

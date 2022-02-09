@@ -115,13 +115,13 @@ namespace gbxml {
     boost::optional<pugi::xml_node> translateConstructionBase(const openstudio::model::ConstructionBase& constructionBase, pugi::xml_node& parent);
 
     /** Set id as the model object name, otherwise use the gbXMLId additional property if it exists. */
-    boost::optional<pugi::xml_node> translateId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
+    void translateId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
 
     /** Set the Name as the model object name, otherwise use the displayName additional property if it exists. */
-    boost::optional<pugi::xml_node> translateName(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
+    void translateName(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
 
     /** Set the CADObjectId as the CADObjectId additional property if it exists. */
-    boost::optional<pugi::xml_node> translateCADObjectId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
+    void translateCADObjectId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
 
     std::map<openstudio::Handle, pugi::xml_node> m_translatedObjects;
 

@@ -1020,16 +1020,14 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateId(const pugi::xml_node& element,
-                                                                                 openstudio::model::ModelObject& modelObject) {
+  void ReverseTranslator::translateId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject) {
     std::string id = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(id, modelObject));
     modelObject.setName(id);
     modelObject.setGBXMLId(id);
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateName(const pugi::xml_node& element,
-                                                                                   openstudio::model::ModelObject& modelObject) {
+  void ReverseTranslator::translateName(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject) {
 
     auto name = element.child("Name").text();
     if (!name.empty()) {
@@ -1037,8 +1035,7 @@ namespace gbxml {
     }
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCADObjectId(const pugi::xml_node& element,
-                                                                                          openstudio::model::ModelObject& modelObject) {
+  void ReverseTranslator::translateCADObjectId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject) {
 
     auto cadObjectId = element.text();
     if (!cadObjectId.empty()) {

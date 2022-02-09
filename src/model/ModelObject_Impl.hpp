@@ -154,15 +154,15 @@ namespace model {
 
       boost::optional<std::string> cadObjectId() const;
 
-      bool setCADObjectId(std::string cadObjectId);
+      bool setCADObjectId(const std::string& cadObjectId);
 
       boost::optional<std::string> gbXMLId() const;
 
-      bool setGBXMLId(std::string gbXMLId);
+      bool setGBXMLId(const std::string& gbXMLId);
 
       boost::optional<std::string> displayName() const;
 
-      bool setDisplayName(std::string displayName);
+      bool setDisplayName(const std::string& displayName);
 
       //@}
       /** @name Setters */
