@@ -46,6 +46,7 @@
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 
 #include "../utilities/idd/IddEnums.hpp"
@@ -759,8 +760,7 @@ namespace model {
       for (ResourceObject& resource : resources) {
         // test for initialized first in case earlier .remove() got this one already
         if ((resource.initialized()) && (resource.nonResourceObjectUseCount(true) == 0)) {
-          IdfObjectVector thisCallRemoved = resource.remove();
-          removedObjects.insert(removedObjects.end(), thisCallRemoved.begin(), thisCallRemoved.end());
+          openstudio::detail::concat_helper(removedObjects, resource.remove());
         }
       }
       return removedObjects;
@@ -773,8 +773,7 @@ namespace model {
         if (resource) {
           // test for initialized first in case earlier .remove() got this one already
           if ((resource->initialized()) && (resource->directUseCount(true) == 0)) {
-            IdfObjectVector thisCallRemoved = resource->remove();
-            removedObjects.insert(removedObjects.end(), thisCallRemoved.begin(), thisCallRemoved.end());
+            openstudio::detail::concat_helper(removedObjects, resource->remove());
           }
         }
       }

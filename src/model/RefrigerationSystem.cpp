@@ -68,6 +68,7 @@
 #include "../utilities/units/Unit.hpp"
 
 #include "../utilities/core/Assert.hpp"
+#include "../utilities/core/ContainersMove.hpp"
 
 namespace openstudio {
 namespace model {
@@ -147,51 +148,41 @@ namespace model {
       std::vector<IdfObject> result;
 
       if (boost::optional<ModelObject> condenser = this->optionalRefrigerationCondenser()) {
-        std::vector<IdfObject> removedCondenser = condenser->remove();
-        result.insert(result.end(), removedCondenser.begin(), removedCondenser.end());
+        openstudio::detail::concat_helper(result, condenser->remove());
       }
 
       if (boost::optional<ModelObjectList> caseAndWalkinList = this->refrigeratedCaseAndWalkInList()) {
-        std::vector<IdfObject> removedCasesAndWalkins = caseAndWalkinList->remove();
-        result.insert(result.end(), removedCasesAndWalkins.begin(), removedCasesAndWalkins.end());
+        openstudio::detail::concat_helper(result, caseAndWalkinList->remove());
       }
 
       if (boost::optional<ModelObjectList> transferLoadList = this->refrigerationTransferLoadList()) {
-        std::vector<IdfObject> removedTransferLoads = transferLoadList->remove();
-        result.insert(result.end(), removedTransferLoads.begin(), removedTransferLoads.end());
+        openstudio::detail::concat_helper(result, transferLoadList->remove());
       }
 
       // We're clearing the compressor/HighStage compressor list objects first. otherwise a compressor on the high stage list will call
       // RefrgerationCompressor_Impl::system which will try to locate the compressorList which was deleted first
       for (auto& c : compressors()) {
-        std::vector<IdfObject> removedCompressor = c.remove();
-        result.insert(result.end(), removedCompressor.begin(), removedCompressor.end());
+        openstudio::detail::concat_helper(result, c.remove());
       }
       for (auto& c : highStageCompressors()) {
-        std::vector<IdfObject> removedCompressor = c.remove();
-        result.insert(result.end(), removedCompressor.begin(), removedCompressor.end());
+        openstudio::detail::concat_helper(result, c.remove());
       }
       if (boost::optional<ModelObjectList> compressorList = this->compressorList()) {
-        std::vector<IdfObject> removedCompressors = compressorList->remove();
-        result.insert(result.end(), removedCompressors.begin(), removedCompressors.end());
+        openstudio::detail::concat_helper(result, compressorList->remove());
       }
       if (boost::optional<ModelObjectList> highStageCompressorList = this->highStageCompressorList()) {
-        std::vector<IdfObject> removedHighStageCompressors = highStageCompressorList->remove();
-        result.insert(result.end(), removedHighStageCompressors.begin(), removedHighStageCompressors.end());
+        openstudio::detail::concat_helper(result, highStageCompressorList->remove());
       }
 
       if (boost::optional<RefrigerationSubcoolerMechanical> mechSubcooler = this->mechanicalSubcooler()) {
-        std::vector<IdfObject> removedMechSubcooler = mechSubcooler->remove();
-        result.insert(result.end(), removedMechSubcooler.begin(), removedMechSubcooler.end());
+        openstudio::detail::concat_helper(result, mechSubcooler->remove());
       }
 
       if (boost::optional<RefrigerationSubcoolerLiquidSuction> liqSuctionSubcooler = this->liquidSuctionHeatExchangerSubcooler()) {
-        std::vector<IdfObject> removedLiqSuctionSubcooler = liqSuctionSubcooler->remove();
-        result.insert(result.end(), removedLiqSuctionSubcooler.begin(), removedLiqSuctionSubcooler.end());
+        openstudio::detail::concat_helper(result, liqSuctionSubcooler->remove());
       }
 
-      std::vector<IdfObject> removedRefrigerationSystem = ModelObject_Impl::remove();
-      result.insert(result.end(), removedRefrigerationSystem.begin(), removedRefrigerationSystem.end());
+      openstudio::detail::concat_helper(result, ModelObject_Impl::remove());
 
       return result;
     }
