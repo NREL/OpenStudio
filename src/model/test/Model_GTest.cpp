@@ -821,7 +821,7 @@ TEST_F(ModelFixture, Issue_4372) {
     if (name == "Surface 4") {
       otherSurface = surface.adjacentSurface();
       ASSERT_TRUE(otherSurface);
-      ASSERT_EQ(otherSurface->name().value(), "Surface 8");
+      EXPECT_EQ(otherSurface->nameString(), "Surface 8");
     } else if (name == "Surface 10") {
       otherSurface = surface.adjacentSurface();
       ASSERT_TRUE(otherSurface);
