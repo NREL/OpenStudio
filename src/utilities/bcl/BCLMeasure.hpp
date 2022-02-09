@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -254,6 +254,9 @@ class UTILITIES_API BCLMeasure
   bool operator==(const BCLMeasure& other) const;
 
   bool operator!=(const BCLMeasure& other) const;
+
+  /// Less than
+  bool operator<(const BCLMeasure& other) const;
 
   /// Save the measure.xml back to the directory
   bool save() const;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,7 +39,6 @@ namespace model {
   class Schedule;
   class Curve;
   class CoilHeatingDXMultiSpeedStageData;
-  class ModelObjectList;
 
   namespace detail {
 
@@ -164,21 +163,19 @@ namespace model {
       /** @name Other */
       //@{
 
-      bool setStageDataList(const boost::optional<ModelObjectList>& modelObjectList);
-
-      void resetStageDataList();
-
-      boost::optional<ModelObjectList> stageDataList() const;
-
+      // Extensible: Stages
       std::vector<CoilHeatingDXMultiSpeedStageData> stages() const;
+      unsigned numberOfStages() const;
+      boost::optional<unsigned> stageIndex(const CoilHeatingDXMultiSpeedStageData& stage) const;
 
+      // Note: a CoilHeatingDXMultiSpeedStageData can be used only by one CoilHeatingDXMultiSpeed
       bool addStage(const CoilHeatingDXMultiSpeedStageData& stage);
-
-      void removeStage(const CoilHeatingDXMultiSpeedStageData& stage);
-
+      bool addStage(const CoilHeatingDXMultiSpeedStageData& stage, unsigned index);
+      bool setStageIndex(const CoilHeatingDXMultiSpeedStageData& stage, unsigned index);
+      bool setStages(const std::vector<CoilHeatingDXMultiSpeedStageData>& stages);
       void removeAllStages();
-
-      std::vector<IdfObject> remove() override;
+      bool removeStage(const CoilHeatingDXMultiSpeedStageData& stage);
+      bool removeStage(unsigned index);
 
       AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
@@ -189,9 +186,8 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.CoilHeatingDXMultiSpeed");
 
-      // Optional getters for use by methods like children() so can remove() if the constructor fails.
-      // There are other ways for the public versions of these getters to fail--perhaps all required
-      // objects should be returned as boost::optionals
+      boost::optional<Connection> optionalAirInletNode() const;
+      boost::optional<Connection> optionalAirOutletNode() const;
     };
 
   }  // namespace detail

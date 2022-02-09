@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1518,7 +1518,13 @@ namespace model {
     buildingStory.setNominalFloortoFloorHeight(3);
 
     // create spaces from floor print
-
+    // GG 10/26/21 - Change the spac egeneration to use fromFloorPrint instead of using Clone
+    // don't know the underlying workins of Clone but each time this method was called in a different
+    // session the order and type of surfaces was different, sometimes a surface was a roof and other
+    // times a wall. To test for deterministic gbxml export I need to be sure that the model used is
+    // idemntical every single time it this method is run. If these chanegs are aproblem I can refactor
+    // so both Clone and fromFloorProint could be used
+    //
     //            y (=North)
     //  Site      ▲
     //  Shading   │                  building height = 3m
@@ -2612,6 +2618,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(AirflowNetworkReferenceCrackConditions);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimpleOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimulationControl);
+    REGISTER_CONSTRUCTOR(AirflowNetworkSpecifiedFlowRate);
     REGISTER_CONSTRUCTOR(AirflowNetworkSurface);
     REGISTER_CONSTRUCTOR(AirflowNetworkZone);
     REGISTER_CONSTRUCTOR(AirflowNetworkZoneExhaustFan);
@@ -3138,6 +3145,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkReferenceCrackConditions);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimpleOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimulationControl);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkSpecifiedFlowRate);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSurface);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZone);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZoneExhaustFan);

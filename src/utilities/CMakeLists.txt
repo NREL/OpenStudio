@@ -399,6 +399,7 @@ set(${target_name}_swig_src
 set(${target_name}_depends
   CONAN_PKG::sqlite3
   CONAN_PKG::jsoncpp
+  CONAN_PKG::minizip
   CONAN_PKG::zlib
   CONAN_PKG::fmt
   CONAN_PKG::pugixml
@@ -440,6 +441,7 @@ if(BUILD_BENCHMARK)
 
   set(core_benchmark_src
     core/test/Checksum_Benchmark.cpp
+    core/test/Zip_Benchmark.cpp
   )
   set(${target_name}_benchmark_src
     ${core_benchmark_src}

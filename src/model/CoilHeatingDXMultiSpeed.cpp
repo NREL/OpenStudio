@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -27,17 +27,14 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "CoilHeatingDXMultiSpeed.hpp"
 #include "CoilHeatingDXMultiSpeed_Impl.hpp"
-
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
-#include "Model.hpp"
-#include "Model_Impl.hpp"
-#include "ModelObjectList.hpp"
-#include "ModelObjectList_Impl.hpp"
 #include "CoilHeatingDXMultiSpeedStageData.hpp"
 #include "CoilHeatingDXMultiSpeedStageData_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
@@ -46,10 +43,9 @@
 #include "ScheduleTypeRegistry.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
-
 #include <utilities/idd/IddFactory.hxx>
-#include <utilities/idd/OS_Coil_Heating_DX_MultiSpeed_FieldEnums.hxx>
 
+#include <utilities/idd/OS_Coil_Heating_DX_MultiSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
@@ -109,14 +105,6 @@ namespace model {
         result.push_back(ScheduleTypeKey("CoilHeatingDXMultiSpeed", "Availability"));
       }
       return result;
-    }
-
-    unsigned CoilHeatingDXMultiSpeed_Impl::inletPort() const {
-      return OS_Coil_Heating_DX_MultiSpeedFields::AirInletNodeName;
-    }
-
-    unsigned CoilHeatingDXMultiSpeed_Impl::outletPort() const {
-      return OS_Coil_Heating_DX_MultiSpeedFields::AirOutletNodeName;
     }
 
     boost::optional<Schedule> CoilHeatingDXMultiSpeed_Impl::availabilitySchedule() const {
@@ -322,25 +310,26 @@ namespace model {
       return result;
     }
 
+    unsigned CoilHeatingDXMultiSpeed_Impl::inletPort() const {
+      return OS_Coil_Heating_DX_MultiSpeedFields::AirInletNodeName;
+    }
+
+    unsigned CoilHeatingDXMultiSpeed_Impl::outletPort() const {
+      return OS_Coil_Heating_DX_MultiSpeedFields::AirOutletNodeName;
+    }
+
     ModelObject CoilHeatingDXMultiSpeed_Impl::clone(Model model) const {
       auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingDXMultiSpeed>();
 
-      if (auto stageDataList = this->stageDataList()) {
-        auto stageDataListClone = stageDataList->clone(model).cast<ModelObjectList>();
-        t_clone.getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setStageDataList(stageDataListClone);
+      for (const auto& stage : stages()) {
+        auto stageClone = stage.clone(model).cast<CoilHeatingDXMultiSpeedStageData>();
+        t_clone.addStage(stageClone);
       }
-
       return t_clone;
     }
 
     std::vector<ModelObject> CoilHeatingDXMultiSpeed_Impl::children() const {
-      std::vector<ModelObject> children;
-
-      if (auto const _stageDataList = stageDataList()) {
-        for (const auto& mo : _stageDataList->modelObjects()) {
-          children.push_back(mo);
-        }
-      }
+      std::vector<ModelObject> children = subsetCastVector<ModelObject>(stages());
 
       if (auto const curve = defrostEnergyInputRatioFunctionofTemperatureCurve()) {
         children.push_back(curve.get());
@@ -353,51 +342,128 @@ namespace model {
       return children;
     }
 
-    boost::optional<ModelObjectList> CoilHeatingDXMultiSpeed_Impl::stageDataList() const {
-      return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Coil_Heating_DX_MultiSpeedFields::StageDataList);
-    }
-
-    bool CoilHeatingDXMultiSpeed_Impl::addStage(const CoilHeatingDXMultiSpeedStageData& stage) {
-      auto modelObjectList = stageDataList();
-      if (modelObjectList) {
-        modelObjectList->addModelObject(stage);
-      }
-      return false;
-    }
-
-    void CoilHeatingDXMultiSpeed_Impl::removeStage(const CoilHeatingDXMultiSpeedStageData& stage) {
-      auto modelObjectList = stageDataList();
-      if (modelObjectList) {
-        modelObjectList->removeModelObject(stage);
-      }
-    }
-
-    void CoilHeatingDXMultiSpeed_Impl::removeAllStages() {
-      auto modelObjectList = stageDataList();
-      if (modelObjectList) {
-        auto const modelObjects = modelObjectList->modelObjects();
-
-        for (const auto& elem : modelObjects) {
-          auto const modelObject = elem.optionalCast<CoilHeatingDXMultiSpeedStageData>();
-          if (modelObject) {
-            modelObjectList->removeModelObject(elem);
-          }
-        }
-      }
+    unsigned CoilHeatingDXMultiSpeed_Impl::numberOfStages() const {
+      return numExtensibleGroups();
     }
 
     std::vector<CoilHeatingDXMultiSpeedStageData> CoilHeatingDXMultiSpeed_Impl::stages() const {
       std::vector<CoilHeatingDXMultiSpeedStageData> result;
-      auto const modelObjectList = stageDataList();
-      if (modelObjectList) {
-        auto const modelObjects = modelObjectList->modelObjects();
-
-        for (const auto& elem : modelObjects) {
-          auto const modelObject = elem.optionalCast<CoilHeatingDXMultiSpeedStageData>();
-          if (modelObject) {
-            result.push_back(modelObject.get());
+      for (const auto& group : extensibleGroups()) {
+        if (auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Heating_DX_MultiSpeedExtensibleFields::Stage)) {
+          if (auto stage = target->optionalCast<CoilHeatingDXMultiSpeedStageData>()) {
+            result.push_back(stage.get());
           }
         }
+      }
+      return result;
+    }
+
+    boost::optional<unsigned> CoilHeatingDXMultiSpeed_Impl::stageIndex(const CoilHeatingDXMultiSpeedStageData& stage) const {
+
+      boost::optional<unsigned> result;
+
+      auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
+      auto h = openstudio::toString(stage.handle());
+      auto it = std::find_if(egs.begin(), egs.end(), [&](const WorkspaceExtensibleGroup& eg) {
+        return (eg.getField(OS_Coil_Heating_DX_MultiSpeedExtensibleFields::Stage).get() == h);
+      });
+
+      // If found, we compute the index by using std::distance between the start of vector and the iterator returned by std::find_if
+      if (it != egs.end()) {
+        result = std::distance(egs.begin(), it) + 1;
+      }
+
+      return result;
+    }
+
+    bool CoilHeatingDXMultiSpeed_Impl::addStage(const CoilHeatingDXMultiSpeedStageData& stage) {
+      if (auto _c = stage.parentCoil()) {
+        if (this->handle() == _c->handle()) {
+          return true;  // already the case
+        } else {
+          LOG(Error, "For " << briefDescription() << " cannot add " << stage.briefDescription()
+                            << " since this Stage is already in use by another coil ('" << _c->nameString() << "').");
+          return false;
+        }
+      }
+      auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      if (group.empty()) {
+        LOG(Error, "You have reached the maximum number of stages (=" << numberOfStages() << "), occurred for " << briefDescription() << ".");
+        return false;
+      }
+      bool result = group.setPointer(OS_Coil_Heating_DX_MultiSpeedExtensibleFields::Stage, stage.handle());
+      if (!result) {
+        // Something went wrong, so erase the new extensible group
+        getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
+      }
+      return result;
+    }
+
+    bool CoilHeatingDXMultiSpeed_Impl::setStageIndex(const CoilHeatingDXMultiSpeedStageData& stage, unsigned index) {
+      boost::optional<unsigned> idx = stageIndex(stage);
+      if (!idx) {
+        LOG(Warn, "For " << briefDescription() << " cannot set the index of stage " << stage.briefDescription() << " since it is not part of it.");
+        return false;
+      }
+
+      // TODO: we could just set via string instead of doing a ton of typechecking below...
+
+      std::vector<CoilHeatingDXMultiSpeedStageData> stageVector = stages();
+
+      if (index > stageVector.size()) {
+        LOG(Warn, "Requested a stage index of " << index << " to be assigned to " << stage.briefDescription() << ", but " << briefDescription()
+                                                << " only has " << stageVector.size() << " stages, resetting to that.");
+        index = stageVector.size();
+      } else if (index < 1) {
+        LOG(Warn, "Requested a stage index of " << index << " < 1 to be assigned to " << stage.briefDescription() << ", resetting to 1");
+        index = 1;
+      }
+
+      stageVector.erase(stageVector.begin() + idx.get() - 1);  // stageIndex is 1-indexed, and vector is 0-indexed
+
+      stageVector.insert(stageVector.begin() + (index - 1), stage);
+
+      return setStages(stageVector);
+    }
+
+    bool CoilHeatingDXMultiSpeed_Impl::addStage(const CoilHeatingDXMultiSpeedStageData& stage, unsigned index) {
+      bool ok = addStage(stage);
+      if (!ok) {
+        return false;
+      }
+      ok = setStageIndex(stage, index);
+      return ok;
+    }
+
+    bool CoilHeatingDXMultiSpeed_Impl::setStages(const std::vector<CoilHeatingDXMultiSpeedStageData>& stages) {
+      // Clear the extensible groups, and redo them
+      bool ok = true;
+      clearExtensibleGroups();
+      for (const CoilHeatingDXMultiSpeedStageData& s : stages) {
+        ok &= addStage(s);
+      }
+      return ok;
+    }
+
+    void CoilHeatingDXMultiSpeed_Impl::removeAllStages() {
+      clearExtensibleGroups();
+    }
+
+    bool CoilHeatingDXMultiSpeed_Impl::removeStage(const CoilHeatingDXMultiSpeedStageData& stage) {
+      boost::optional<unsigned> idx = stageIndex(stage);
+      if (!idx) {
+        LOG(Warn, "For " << briefDescription() << " cannot remove stage " << stage.briefDescription() << " since it is not part of it.");
+        return false;
+      }
+
+      return removeStage(idx.get());
+    }
+
+    bool CoilHeatingDXMultiSpeed_Impl::removeStage(unsigned index) {
+      bool result = false;
+      if ((index > 0) && (index <= numberOfStages())) {
+        getObject<ModelObject>().eraseExtensibleGroup(index - 1);
+        result = true;
       }
       return result;
     }
@@ -417,34 +483,8 @@ namespace model {
       return boost::none;
     }
 
-    bool CoilHeatingDXMultiSpeed_Impl::addToNode(Node& node) {
+    bool CoilHeatingDXMultiSpeed_Impl::addToNode(Node& /*node*/) {
       return false;
-    }
-
-    bool CoilHeatingDXMultiSpeed_Impl::setStageDataList(const boost::optional<ModelObjectList>& modelObjectList) {
-      bool result(false);
-      if (modelObjectList) {
-        result = setPointer(OS_Coil_Heating_DX_MultiSpeedFields::StageDataList, modelObjectList.get().handle());
-      } else {
-        resetStageDataList();
-        result = true;
-      }
-      return result;
-    }
-
-    void CoilHeatingDXMultiSpeed_Impl::resetStageDataList() {
-      bool result = setString(OS_Coil_Heating_DX_MultiSpeedFields::StageDataList, "");
-      OS_ASSERT(result);
-    }
-
-    std::vector<IdfObject> CoilHeatingDXMultiSpeed_Impl::remove() {
-      auto _stageDataList = stageDataList();
-      auto result = StraightComponent_Impl::remove();
-      if ((!result.empty()) && _stageDataList) {
-        _stageDataList->remove();
-      }
-
-      return result;
     }
 
     AirflowNetworkEquivalentDuct CoilHeatingDXMultiSpeed_Impl::getAirflowNetworkEquivalentDuct(double length, double diameter) {
@@ -498,7 +538,8 @@ namespace model {
     auto always_on = model.alwaysOnDiscreteSchedule();
     ok = setAvailabilitySchedule(always_on);
     OS_ASSERT(ok);
-    setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-8.0);
+    ok = setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-8.0);
+    OS_ASSERT(ok);
     ok = setCrankcaseHeaterCapacity(0.0);
     OS_ASSERT(ok);
     ok = setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(10.0);
@@ -512,15 +553,11 @@ namespace model {
     ok = setDefrostTimePeriodFraction(0.058333);
     OS_ASSERT(ok);
     autosizeResistiveDefrostHeaterCapacity();
-    setApplyPartLoadFractiontoSpeedsGreaterthan1(false);
+    ok = setApplyPartLoadFractiontoSpeedsGreaterthan1(false);
+    OS_ASSERT(ok);
     ok = setFuelType("NaturalGas");
     OS_ASSERT(ok);
     ok = setRegionnumberforCalculatingHSPF(4);
-    OS_ASSERT(ok);
-
-    auto stageDataList = ModelObjectList(model);
-    stageDataList.setName(this->name().get() + " Stage Data List");
-    ok = getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setStageDataList(stageDataList);
     OS_ASSERT(ok);
   }
 
@@ -678,6 +715,14 @@ namespace model {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setRegionnumberforCalculatingHSPF(regionnumberforCalculatingHSPF);
   }
 
+  unsigned CoilHeatingDXMultiSpeed::numberOfStages() const {
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->numberOfStages();
+  }
+
+  boost::optional<unsigned> CoilHeatingDXMultiSpeed::stageIndex(const CoilHeatingDXMultiSpeedStageData& stage) const {
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->stageIndex(stage);
+  }
+
   std::vector<CoilHeatingDXMultiSpeedStageData> CoilHeatingDXMultiSpeed::stages() const {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->stages();
   }
@@ -686,12 +731,28 @@ namespace model {
     return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->addStage(stage);
   }
 
-  void CoilHeatingDXMultiSpeed::removeStage(const CoilHeatingDXMultiSpeedStageData& stage) {
-    getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeStage(stage);
+  bool CoilHeatingDXMultiSpeed::addStage(const CoilHeatingDXMultiSpeedStageData& stage, unsigned index) {
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->addStage(stage, index);
+  }
+
+  bool CoilHeatingDXMultiSpeed::setStageIndex(const CoilHeatingDXMultiSpeedStageData& stage, unsigned index) {
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setStageIndex(stage, index);
+  }
+
+  bool CoilHeatingDXMultiSpeed::setStages(const std::vector<CoilHeatingDXMultiSpeedStageData>& stages) {
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->setStages(stages);
   }
 
   void CoilHeatingDXMultiSpeed::removeAllStages() {
     getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeAllStages();
+  }
+
+  bool CoilHeatingDXMultiSpeed::removeStage(const CoilHeatingDXMultiSpeedStageData& stage) {
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeStage(stage);
+  }
+
+  bool CoilHeatingDXMultiSpeed::removeStage(unsigned index) {
+    return getImpl<detail::CoilHeatingDXMultiSpeed_Impl>()->removeStage(index);
   }
 
   AirflowNetworkEquivalentDuct CoilHeatingDXMultiSpeed::getAirflowNetworkEquivalentDuct(double length, double diameter) {

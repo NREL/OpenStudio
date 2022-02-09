@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -72,6 +72,8 @@
 #include "AirflowNetworkEffectiveLeakageArea_Impl.hpp"
 #include "AirflowNetworkHorizontalOpening.hpp"
 #include "AirflowNetworkHorizontalOpening_Impl.hpp"
+#include "AirflowNetworkSpecifiedFlowRate.hpp"
+#include "AirflowNetworkSpecifiedFlowRate_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -82,6 +84,8 @@
 
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Intersection.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/core/Assert.hpp"
 
 using boost::to_upper_copy;
@@ -1595,6 +1599,68 @@ namespace model {
   void SubSurface::resetShadingControl() {
     removeAllShadingControls();
   }
+
+  std::vector<Point3d> SubSurface::roughOpeningVertices() const {
+    if (auto frameAndDivider = windowPropertyFrameAndDivider()) {
+      double fw = frameAndDivider->frameWidth();
+      // Get a transform to change the points to x/y
+      Transformation faceTransform = Transformation::alignFace(this->vertices());
+      std::vector<Point3d> faceVertices = faceTransform.inverse() * this->vertices();
+      // Offset the points by the framewidth
+      boost::optional<std::vector<Point3d>> offset = openstudio::buffer(faceVertices, fw, 0.01);
+      if (!offset) {
+        // If offset failed it is because the points are in the wrong order
+        // If it fails again then something went awry with boost::buffer
+        faceVertices = openstudio::reverse(faceVertices);
+        offset = openstudio::buffer(faceVertices, fw, 0.01);
+        if (!offset) {
+          return this->vertices();
+        }
+      }
+
+      std::vector<Point3d> roughOpeningVertices = faceTransform * offset.get();
+      return roughOpeningVertices;
+    }
+
+    return this->vertices();
+  }
+
+  double SubSurface::roughOpeningArea() const {
+    if (boost::optional<double> area = openstudio::getArea(roughOpeningVertices())) {
+      return area.get();
+    }
+
+    return grossArea();
+  }
+
+  double SubSurface::frameArea() const {
+    double roughOpeningArea = this->roughOpeningArea();
+    return roughOpeningArea - grossArea();
+  }
+
+  double SubSurface::dividerArea() const {
+    double divArea = 0;
+    if (auto frameAndDivider = windowPropertyFrameAndDivider()) {
+      double dividerWidth = frameAndDivider->dividerWidth();
+      if (dividerWidth == 0) return divArea;
+
+      Transformation faceTransform = Transformation::alignFace(this->vertices());
+      std::vector<Point3d> faceVertices = faceTransform.inverse() * this->vertices();
+      BoundingBox bb;
+      bb.addPoints(faceVertices);
+
+      double numHorizDividers = frameAndDivider->numberOfHorizontalDividers();
+      if (numHorizDividers != 0 && bb.maxX().has_value() && bb.minX().has_value()) {
+        divArea += numHorizDividers * dividerWidth * (*bb.maxX() - *bb.minX());
+      }
+      double numVertDividers = frameAndDivider->numberOfVerticalDividers();
+      if (numVertDividers != 0 && bb.maxY().has_value() && bb.minY().has_value()) {
+        divArea += numVertDividers * dividerWidth * (*bb.maxY() - *bb.minY());
+      }
+    }
+    return divArea;
+  }
+
   /// @endcond
 
   std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d>>& pattern, const std::vector<Space>& spaces,
@@ -1656,6 +1722,10 @@ namespace model {
   }
 
   AirflowNetworkSurface SubSurface::getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage) {
+    return getImpl<detail::SubSurface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
+  }
+
+  AirflowNetworkSurface SubSurface::getAirflowNetworkSurface(const AirflowNetworkSpecifiedFlowRate& surfaceAirflowLeakage) {
     return getImpl<detail::SubSurface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
   }
 

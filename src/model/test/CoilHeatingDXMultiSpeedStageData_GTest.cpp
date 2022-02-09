@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -28,22 +28,79 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
+
 #include "ModelFixture.hpp"
+
 #include "../CoilHeatingDXMultiSpeedStageData.hpp"
 #include "../CoilHeatingDXMultiSpeedStageData_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilHeatingDXMultiSpeedStageData) {
+TEST_F(ModelFixture, CoilHeatingDXMultiSpeedStageData_CoilHeatingDXMultiSpeedStageData) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
   ASSERT_EXIT(
     {
-      Model m;
-      CoilHeatingDXMultiSpeedStageData coil(m);
+      // create a model to use
+      Model model;
+
+      // create a coil cooling dx curve fit speed object to use
+      CoilHeatingDXMultiSpeedStageData speed(model);
 
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+}
+
+TEST_F(ModelFixture, CoilHeatingDXMultiSpeedStageData_Unicity) {
+  Model model;
+
+  CoilHeatingDXMultiSpeedStageData stage(model);
+  EXPECT_FALSE(stage.parentCoil());
+
+  CoilHeatingDXMultiSpeed dx1(model);
+  EXPECT_TRUE(dx1.addStage(stage));
+  ASSERT_TRUE(stage.parentCoil());
+  EXPECT_EQ(dx1, stage.parentCoil().get());
+
+  // StageData is already used, so refuse
+  CoilHeatingDXMultiSpeed dx2(model);
+  EXPECT_FALSE(dx2.addStage(stage));
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilHeatingDXMultiSpeedStageData>().size());
+
+  EXPECT_EQ(1u, dx1.numExtensibleGroups());
+  EXPECT_EQ(1u, dx1.numberOfStages());
+  EXPECT_EQ(1u, dx1.stages().size());
+  EXPECT_EQ(0u, dx2.numExtensibleGroups());
+  EXPECT_EQ(0u, dx2.numberOfStages());
+  EXPECT_EQ(0u, dx2.stages().size());
+}
+
+TEST_F(ModelFixture, CoilHeatingDXMultiSpeedStageData_remove) {
+  // If we remove a stage, we would like any CoilHeatingDXMultiSpeed that use it to have their extensible groups adjusted
+  Model model;
+
+  CoilHeatingDXMultiSpeedStageData stage1(model);
+  CoilHeatingDXMultiSpeedStageData stage2(model);
+
+  CoilHeatingDXMultiSpeed dx1(model);
+  EXPECT_TRUE(dx1.addStage(stage1));
+  EXPECT_TRUE(dx1.addStage(stage2));
+
+  EXPECT_EQ(2u, dx1.numExtensibleGroups());
+  EXPECT_EQ(2u, dx1.numberOfStages());
+  EXPECT_EQ(2u, dx1.stages().size());
+
+  EXPECT_EQ(2u, model.getConcreteModelObjects<CoilHeatingDXMultiSpeedStageData>().size());
+
+  stage1.remove();
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilHeatingDXMultiSpeedStageData>().size());
+
+  EXPECT_EQ(1u, dx1.numExtensibleGroups());
+  EXPECT_EQ(1u, dx1.numberOfStages());
+  EXPECT_EQ(1u, dx1.stages().size());
+
+  EXPECT_EQ(stage2, dx1.stages()[0]);
 }

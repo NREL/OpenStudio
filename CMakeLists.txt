@@ -15,7 +15,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.3.0)
+project(OpenStudio VERSION 3.3.1)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -156,7 +156,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-#set(PROJECT_VERSION_PRERELEASE "rc3")
+set(PROJECT_VERSION_PRERELEASE "alpha")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -541,7 +541,15 @@ endif()
 # If Linux, check LSB_RELEASE globally so we can use it after
 # But also infer the new E+ package names (starting at 9.4.0)
 if(APPLE)
-  set(ENERGYPLUS_SYSTEM_VERSION "-macOS10.15")
+
+  set(ENERGYPLUS_SYSTEM_VERSION "")
+
+  find_program(UNAME uname)
+  execute_process(COMMAND ${UNAME} -m
+    OUTPUT_VARIABLE ARCH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
 elseif(UNIX)
   # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
   find_program(LSB_RELEASE lsb_release)
@@ -571,8 +579,13 @@ endif()
 
 if(UNIX)
   if(APPLE)
-    set(ENERGYPLUS_EXPECTED_HASH e330eb7b658cb0987d4fee27cf956659)
-    set(ENERGYPLUS_PLATFORM "Darwin${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
+    if (ARCH MATCHES "arm64")
+      set(ENERGYPLUS_EXPECTED_HASH 104a0c77e4e60a457e295f9d7591d7ad)
+      set(ENERGYPLUS_PLATFORM "Darwin-macOS11.2-arm64")
+    else()
+      set(ENERGYPLUS_EXPECTED_HASH e330eb7b658cb0987d4fee27cf956659)
+      set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
+    endif()
   elseif(EXISTS "/etc/redhat-release")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
     set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
@@ -753,20 +766,41 @@ include(FetchRubyMinGW.cmake)
 FetchRubyMinGW()
 
 if(BUILD_CLI)
-  # CI will build and upload openstudio gems to s3 at https://github.com/NREL/OpenStudio-gems
+  # CI will build and upload openstudio gems to s3 at https://github.com/NREL/openstudio-gems
   # need to  update the MD5sum for each platform and url below
+
+  set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-resources.s3.amazonaws.com/dependencies")
+
+  # To use the package produced by a PR to https://github.com/NREL/openstudio-gems
+  set(USE_OPENSTUDIO_GEMS_PR FALSE)
+  if (USE_OPENSTUDIO_GEMS_PR)
+    set(OPENSTUDIO_GEMS_BASEURL "http://openstudio-sdk-dependencies.s3.amazonaws.com/openstudio-gems")
+    set(OPENSTUDIO_GEMS_PR_NUMBER "PR-51")
+  endif()
+
   if(UNIX)
      if(APPLE)
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-darwin.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c1031e9266ff084886422168ffef684d")
+       if (ARCH MATCHES arm64)
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220106-darwin_arm64.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "95dfe2860340966607ecda384a374d86")
+       else()
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220106-darwin.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4f68b906e40cb34146da13e8d3e07910")
+       endif()
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "aa3b44b2efd3a6fed580a2a696b7286b")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220106-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c5f7a580ec3fa753ca012dbd9e6cc589")
+       if (USE_OPENSTUDIO_GEMS_PR)
+         set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
+       endif()
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20211103-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "be012aaad33a089aca27dc99d306468d")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220106-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "ce80035dcc1cb74b0048c6aba22d6c2c")
+    if (USE_OPENSTUDIO_GEMS_PR)
+      set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
+    endif()
   endif()
 
   set(OPENSTUDIO_GEMS_ZIP_LOCAL_PATH "${PROJECT_BINARY_DIR}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
@@ -777,15 +811,36 @@ if(BUILD_CLI)
     file(MD5 "${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}" OPENSTUDIO_GEMS_ZIP_MD5)
   endif()
 
+  # If you do not have the right tar.gz: download, and remove extracted dir
   if(NOT OPENSTUDIO_GEMS_ZIP_MD5 STREQUAL OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5)
-    message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_ZIP_FILENAME}")
-    file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
+    message(STATUS "Downloading OpenStudio Gems: ${OPENSTUDIO_GEMS_BASEURL}/${OPENSTUDIO_GEMS_ZIP_FILENAME}")
+    file(
+      DOWNLOAD "${OPENSTUDIO_GEMS_BASEURL}/${OPENSTUDIO_GEMS_ZIP_FILENAME}"
       ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH}
       INACTIVITY_TIMEOUT 300 # 5 minute timeout
       SHOW_PROGRESS
       EXPECTED_MD5 ${OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5})
 
     file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
+  endif()
+
+  # If the extracted dir has a version.txt, it must match, otherwise remove it
+  if(EXISTS "${OPENSTUDIO_GEMS_DIR}/version.txt")
+    file(READ ${OPENSTUDIO_GEMS_DIR}/version.txt EXTRACTED_TAR_GZ_NAME)
+    string(STRIP ${EXTRACTED_TAR_GZ_NAME} EXTRACTED_TAR_GZ_NAME)
+    if(NOT EXTRACTED_TAR_GZ_NAME STREQUAL OPENSTUDIO_GEMS_ZIP_FILENAME)
+      message("Extracted gem dir ${OPENSTUDIO_GEMS_DIR} has the wrong version, removing it")
+      file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
+    endif()
+  else()
+    # Until the openstudio-gems package from my PR-51 goes onto develop, assume you want to remove it to avoid leaving it in place when you switch back to develop
+    if(EXISTS "${OPENSTUDIO_GEMS_DIR}" AND NOT USE_OPENSTUDIO_GEMS_PR)
+      file(REMOVE_RECURSE "${OPENSTUDIO_GEMS_DIR}")
+    endif()
+  endif()
+
+  # If you do not have the extracted dir, then extract the tar.gz
+  if(NOT EXISTS "${OPENSTUDIO_GEMS_DIR}")
     execute_process(COMMAND ${CMAKE_COMMAND} -E tar xfz ${OPENSTUDIO_GEMS_ZIP_LOCAL_PATH} WORKING_DIRECTORY "${PROJECT_BINARY_DIR}")
 
     file(REMOVE_RECURSE "${PROJECT_BINARY_DIR}/src/cli/embedded_files")
@@ -1270,9 +1325,15 @@ install(DIRECTORY "${ENERGYPLUS_DIR}/pyenergyplus" DESTINATION ./EnergyPlus/ COM
 
 if(APPLE)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libgcc_s.1.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/Python" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  if (ARCH MATCHES arm64)
+    install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.9.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+    install(PROGRAMS "${ENERGYPLUS_DIR}/libgcc_s.1.1.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+    # TODO: quadmath / intl?
+  else()
+    install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+    install(PROGRAMS "${ENERGYPLUS_DIR}/libgcc_s.1.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  endif()
+  #install(PROGRAMS "${ENERGYPLUS_DIR}/Python" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/libpython*")
   foreach(python_lib IN LISTS ENERGYPLUS_PYTHON_LIBS)
     install(PROGRAMS "${python_lib}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
@@ -1323,7 +1384,9 @@ if(BUILD_PAT AND APPLE)
   install(PROGRAMS ${ENERGYPLUS_LIB_FILES} DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
   install(PROGRAMS "${EXPAND_OBJECTS}" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
-  install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  if (NOT ARCH MATCHES arm64)
+    install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/EnergyPlus/ COMPONENT PAT)
+  endif()
   install(DIRECTORY "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}/usr/local/radiance/" DESTINATION ./ParametricAnalysisTool.app/Contents/Resources/Radiance/ COMPONENT PAT USE_SOURCE_PERMISSIONS)
 endif()
 

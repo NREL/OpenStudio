@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -137,10 +137,10 @@ namespace model {
     : AirflowNetworkComponent(AirflowNetworkHorizontalOpening::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::AirflowNetworkHorizontalOpening_Impl>());
 
-    // TODO: Appropriately handle the following required object-list fields.
-    //OS_ASSERT(setHandle());
-    OS_ASSERT(setAirMassFlowCoefficientWhenOpeningisClosed(massFlowCoefficientWhenOpeningisClosed));
-    OS_ASSERT(setDischargeCoefficient(dischargeCoefficient));
+    bool ok = setAirMassFlowCoefficientWhenOpeningisClosed(massFlowCoefficientWhenOpeningisClosed);
+    OS_ASSERT(ok);
+    ok = setDischargeCoefficient(dischargeCoefficient);
+    OS_ASSERT(ok);
   }
 
   AirflowNetworkHorizontalOpening::AirflowNetworkHorizontalOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed,
