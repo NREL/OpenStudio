@@ -1345,7 +1345,9 @@ namespace gbxml {
     parentElement.append_child("Name").text() = name.c_str();
   }
 
-  void ForwardTranslator::translateCADObjectId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement) {
+  boost::optional<pugi::xml_node> ForwardTranslator::translateCADObjectId(const openstudio::model::ModelObject& modelObject,
+                                                                          pugi::xml_node& parentElement) {
+    boost::optional<pugi::xml_node> result;
 
     if (modelObject.hasAdditionalProperties()) {
       model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
@@ -1362,6 +1364,7 @@ namespace gbxml {
         }
       }
     }
+    return result;
   }
 
 }  // namespace gbxml

@@ -121,7 +121,7 @@ namespace gbxml {
     void translateName(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
 
     /** Set the CADObjectId as the CADObjectId additional property if it exists. */
-    void translateCADObjectId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
+    boost::optional<pugi::xml_node> translateCADObjectId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement);
 
     std::map<openstudio::Handle, pugi::xml_node> m_translatedObjects;
 
