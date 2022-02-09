@@ -1025,40 +1025,31 @@ namespace gbxml {
     std::string id = element.attribute("id").value();
     m_idToObjectMap.insert(std::make_pair(id, modelObject));
     modelObject.setName(id);
-
-    model::AdditionalProperties result = modelObject.additionalProperties();
-    result.setFeature("gbXMLId", id);
-
-    return result;
+    modelObject.setGBXMLId(id);
   }
 
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateName(const pugi::xml_node& element,
                                                                                    openstudio::model::ModelObject& modelObject) {
-    model::AdditionalProperties result = modelObject.additionalProperties();
 
     auto name = element.child("Name").text();
     if (!name.empty()) {
-      result.setFeature("displayName", name.as_string());
+      modelObject.setDisplayName(name.as_string());
     }
-
-    return result;
   }
 
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCADObjectId(const pugi::xml_node& element,
                                                                                           openstudio::model::ModelObject& modelObject) {
-    model::AdditionalProperties result = modelObject.additionalProperties();
 
     auto cadObjectId = element.text();
     if (!cadObjectId.empty()) {
-      result.setFeature("CADObjectId", cadObjectId.as_string());
+      modelObject.setCADObjectId(cadObjectId.as_string());
 
       auto programIdRef = element.attribute("programIdRef");
       if (programIdRef) {
+        model::AdditionalProperties result = modelObject.additionalProperties();
         result.setFeature("programIdRef", programIdRef.value());
       }
     }
-
-    return result;
   }
 
 }  // namespace gbxml

@@ -763,7 +763,7 @@ namespace model {
       return result;
     }
 
-    bool ModelObject_Impl::setCADObjectId(std::string cadObjectId) {
+    bool ModelObject_Impl::setCADObjectId(const std::string& cadObjectId) {
       return this->additionalProperties().setFeature("CADObjectId", cadObjectId);
     }
 
@@ -778,7 +778,7 @@ namespace model {
       return result;
     }
 
-    bool ModelObject_Impl::setGBXMLId(std::string gbXMLId) {
+    bool ModelObject_Impl::setGBXMLId(const std::string& gbXMLId) {
       return this->additionalProperties().setFeature("gbXMLId", gbXMLId);
     }
 
@@ -793,7 +793,7 @@ namespace model {
       return result;
     }
 
-    bool ModelObject_Impl::setDisplayName(std::string displayName) {
+    bool ModelObject_Impl::setDisplayName(const std::string& displayName) {
       return this->additionalProperties().setFeature("displayName", displayName);
     }
 
@@ -900,7 +900,7 @@ namespace model {
     return getImpl<detail::ModelObject_Impl>()->cadObjectId();
   }
 
-  bool ModelObject::setCADObjectId(std::string cadObjectId) {
+  bool ModelObject::setCADObjectId(const std::string& cadObjectId) {
     return getImpl<detail::ModelObject_Impl>()->setCADObjectId(cadObjectId);
   }
 
@@ -908,7 +908,7 @@ namespace model {
     return getImpl<detail::ModelObject_Impl>()->gbXMLId();
   }
 
-  bool ModelObject::setGBXMLId(std::string gbXMLId) {
+  bool ModelObject::setGBXMLId(const std::string& gbXMLId) {
     return getImpl<detail::ModelObject_Impl>()->setGBXMLId(gbXMLId);
   }
 
@@ -916,7 +916,7 @@ namespace model {
     return getImpl<detail::ModelObject_Impl>()->displayName();
   }
 
-  bool ModelObject::setDisplayName(std::string displayName) {
+  bool ModelObject::setDisplayName(const std::string& displayName) {
     return getImpl<detail::ModelObject_Impl>()->setDisplayName(displayName);
   }
 

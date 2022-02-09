@@ -1328,61 +1328,37 @@ namespace gbxml {
   }
 
   boost::optional<pugi::xml_node> ForwardTranslator::translateId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement) {
-    boost::optional<pugi::xml_node> result;
 
-    std::string id;
-    id = modelObject.name().get();
-    if (modelObject.hasAdditionalProperties()) {
-      model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
-      if (additionalProperties.hasFeature("gbXMLId")) {
-        id = additionalProperties.getFeatureAsString("gbXMLId").get();
-      }
+    std::string id = modelObject.name().get();
+    if (modelObject.gbXMLId()) {
+      id = modelObject.gbXMLId().get();
     }
-    auto idElement = parentElement;
-    idElement.append_attribute("id") = escapeName(id).c_str();
-    result = idElement;
-    return result;
+    parentElement.append_attribute("id") = escapeName(id).c_str();
   }
 
   boost::optional<pugi::xml_node> ForwardTranslator::translateName(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement) {
-    boost::optional<pugi::xml_node> result;
 
-    std::string name;
-    name = modelObject.name().get();
-    if (modelObject.hasAdditionalProperties()) {
-      model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
-      if (additionalProperties.hasFeature("displayName")) {
-        name = additionalProperties.getFeatureAsString("displayName").get();
-      }
+    std::string name = modelObject.name().get();
+    if (modelObject.displayName()) {
+      name = modelObject.displayName().get();
     }
-    auto nameElement = parentElement.append_child("Name");
-    nameElement.text() = name.c_str();
-    result = nameElement;
-    return result;
+    parentElement.append_child("Name").text() = name.c_str();
   }
 
   boost::optional<pugi::xml_node> ForwardTranslator::translateCADObjectId(const openstudio::model::ModelObject& modelObject,
                                                                           pugi::xml_node& parentElement) {
-    boost::optional<pugi::xml_node> result;
 
-    if (modelObject.hasAdditionalProperties()) {
-      model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
-      if (additionalProperties.hasFeature("CADObjectId")) {
-        boost::optional<std::string> cadObjectId = additionalProperties.getFeatureAsString("CADObjectId");
-        if (cadObjectId) {
-          auto cadObjectIdElement = parentElement.append_child("CADObjectId");
-          cadObjectIdElement.text() = (*cadObjectId).c_str();
-          result = cadObjectIdElement;
-          if (additionalProperties.hasFeature("programIdRef")) {
-            boost::optional<std::string> programIdRef = additionalProperties.getFeatureAsString("programIdRef");
-            if (programIdRef) {
-              cadObjectIdElement.append_attribute("programIdRef") = (*programIdRef).c_str();
-            }
-          }
+    boost::optional<std::string> cadObjectId = modelObject.cadObjectId();
+    if (cadObjectId) {
+      auto cadObjectIdElement = parentElement.append_child("CADObjectId");
+      cadObjectIdElement.text() = (*cadObjectId).c_str();
+      if (additionalProperties.hasFeature("programIdRef")) {
+        boost::optional<std::string> programIdRef = additionalProperties.getFeatureAsString("programIdRef");
+        if (programIdRef) {
+          cadObjectIdElement.append_attribute("programIdRef") = (*programIdRef).c_str();
         }
       }
     }
-    return result;
   }
 
 }  // namespace gbxml

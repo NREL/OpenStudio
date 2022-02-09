@@ -795,7 +795,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_Schedules_Complex) {
 
 TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
   // Test for #4457 - Support gbXML translation where user-input <Name> is different from the id
-  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016.xml");
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard_Single_Family_Residential_2016.xml");
 
   openstudio::gbxml::ReverseTranslator reverseTranslator;
   openstudio::gbxml::ForwardTranslator forwardTranslator;
@@ -803,7 +803,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
   boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
   ASSERT_TRUE(model);
 
-  model->save(resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016.osm"), true);
+  model->save(resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard_Single_Family_Residential_2016.osm"), true);
 
   {
     auto _obj = model->getModelObjectByName<Building>("aim0013");
@@ -942,7 +942,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
     EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("gbXMLId").get(), _obj->gbXMLId().get());
   }
 
-  openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard Single Family Residential 2016_2.xml");
+  openstudio::path outputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard_Single_Family_Residential_2016_2.xml");
   bool test = forwardTranslator.modelToGbXML(*model, outputPath);
   EXPECT_TRUE(test);
 }
