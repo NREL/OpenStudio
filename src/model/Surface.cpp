@@ -1481,7 +1481,7 @@ namespace model {
       }
 
       Point3dVectorVector subSurfaces;
-     
+
       // Get the flattened sub surface vertices for windows
       for (const SubSurface& subSurface : this->subSurfaces()) {
         if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
@@ -1518,8 +1518,7 @@ namespace model {
       }
 
       return area;
-
-     }
+    }
 
     double Surface_Impl::skylightToRoofRatio() const {
       double result = 0.0;
