@@ -809,19 +809,19 @@ TEST_F(ModelFixture, Issue_4372) {
   boost::optional<openstudio::model::Model> model = vt.loadModel(modelPath);
   ASSERT_TRUE(model);
 
-  std::vector<Space> spaces = model->getModelObjects<Space>();
+  std::vector<Space> spaces = model->getConcreteModelObjects<Space>();
   intersectSurfaces(spaces);
 
   matchSurfaces(spaces);
   std::vector<Surface> surfacesAfter = model->getModelObjects<Surface>();
-  for (auto surface : surfacesAfter) {
+  for (const auto& surface : surfacesAfter) {
 
     std::string name = surface.name().value();
     OptionalSurface otherSurface;
     if (name == "Surface 4") {
       otherSurface = surface.adjacentSurface();
       ASSERT_TRUE(otherSurface);
-      ASSERT_EQ(otherSurface->name().value(), "Surface 8");
+      EXPECT_EQ(otherSurface->nameString(), "Surface 8");
     } else if (name == "Surface 10") {
       otherSurface = surface.adjacentSurface();
       ASSERT_TRUE(otherSurface);
@@ -840,7 +840,9 @@ TEST_F(ModelFixture, Issue_4372) {
       ASSERT_EQ(otherSurface->name().value(), "Surface 32");
     }
 
-    if (otherSurface) LOG(Info, "Surface " << surface.name().value() << " is paired with " << otherSurface->name().value());
+    // if (otherSurface) {
+    //   LOG(Info, "Surface " << surface.name().value() << " is paired with " << otherSurface->name().value());
+    // }
   }
 
   modelPath = resourcesPath() / "model" / toPath("offset_tests_matched.osm");
