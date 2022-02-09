@@ -814,7 +814,7 @@ TEST_F(ModelFixture, Issue_4372) {
 
   matchSurfaces(spaces);
   std::vector<Surface> surfacesAfter = model->getModelObjects<Surface>();
-  for (auto surface : surfacesAfter) {
+  for (const auto& surface : surfacesAfter) {
 
     std::string name = surface.name().value();
     OptionalSurface otherSurface;
