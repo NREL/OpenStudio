@@ -840,7 +840,9 @@ TEST_F(ModelFixture, Issue_4372) {
       ASSERT_EQ(otherSurface->name().value(), "Surface 32");
     }
 
-    if (otherSurface) LOG(Info, "Surface " << surface.name().value() << " is paired with " << otherSurface->name().value());
+    // if (otherSurface) {
+    //   LOG(Info, "Surface " << surface.name().value() << " is paired with " << otherSurface->name().value());
+    // }
   }
 
   modelPath = resourcesPath() / "model" / toPath("offset_tests_matched.osm");
