@@ -1500,9 +1500,12 @@ namespace model {
       double area = 0;
       // No overlappingsurfaces so we can add up the surface areas including multipliers
       if (finalSurfaces.size() == subSurfaces.size()) {
-        for (const SubSurface& subSurface : this->subSurfaces()) {
+        for (const auto& subSurface : this->subSurfaces()) {
           if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
             auto roughOpening = surfaceToXY * subSurface.roughOpeningVertices();
+            if (!openstudio::polygonInPolygon(roughOpening, surfaceVertices, tol)) {
+              roughOpening = surfaceToXY * subSurface.vertices();
+            }
             area += openstudio::getArea(roughOpening).value() * subSurface.multiplier();
           }
         }
