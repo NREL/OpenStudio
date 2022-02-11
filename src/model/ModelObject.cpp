@@ -606,7 +606,11 @@ namespace model {
     /// remove the object from the model, also removes any cost objects associated with this object
     /// return std::vector<IdfObject> containing any removed object(s)
     std::vector<IdfObject> ModelObject_Impl::remove() {
-      return concat<IdfObject>(this->removeLifeCycleCosts(), this->removeAdditionalProperties(), WorkspaceObject_Impl::remove());
+      // We need to **guarantee** that WorkspaceObject_Impl::remove() is called last. C++ does not guarantee the order in which function parameters
+      // are evaluated, so I can't pass the three remove to concat<IdfObject>(Args&&...) (on GCC it was calling Workspace_Impl::remove first)
+      auto result = concat<IdfObject>(this->removeLifeCycleCosts(), this->removeAdditionalProperties());
+      openstudio::detail::concat_helper(result, WorkspaceObject_Impl::remove());
+      return result;
     }
 
     Component ModelObject_Impl::createComponent() const {
