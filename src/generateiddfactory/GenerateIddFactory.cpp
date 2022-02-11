@@ -768,8 +768,8 @@ void completeOutFiles(const IddFileFactoryDataVector& iddFiles, GenerateIddFacto
                                   << "}" << '\n';
 
   // Implementation for IddObjectType and IddFileType
-  writeBuildStringVec(outFiles.iddFactoryCxx.tempFile, "IddObjectType", objtypes, false);
-  writeBuildStringVec(outFiles.iddFactoryCxx.tempFile, "IddFileType", filetypes, false);
+  writeMembers(outFiles.iddFactoryCxx.tempFile, "IddObjectType", objtypes, false);
+  writeMembers(outFiles.iddFactoryCxx.tempFile, "IddFileType", filetypes, false);
 
   // close out file
   outFiles.iddFactoryCxx.tempFile << '\n' << "} // openstudio" << '\n';

@@ -58,23 +58,23 @@ struct UTILITIES_API IddFileType : public ::EnumBase<IddFileType>
  public:
   enum domain : int;
 
-  IddFileType() : EnumBase<IddFileType>(0) {}
-  IddFileType(const std::string& t_name) : EnumBase<IddFileType>(t_name) {}
-  IddFileType(int t_value) : EnumBase<IddFileType>(t_value) {}
+  constexpr IddFileType() : EnumBase<IddFileType>(0) {}
+  constexpr IddFileType(const std::string_view t_name) : EnumBase<IddFileType>(t_name) {}
+  constexpr IddFileType(int t_value) : EnumBase<IddFileType>(t_value) {}
 
-  static std::string enumName() {
+  constexpr static std::string_view enumName() {
     return "IddFileType";
   }
 
-  domain value() const {
+  constexpr domain value() const {
     return static_cast<domain>(EnumBase<IddFileType>::value());
   }
 
  private:
   friend class EnumBase<IddFileType>;
-  using PT = std::pair<std::string, int>;
-  using VecType = std::vector<PT>;
-  static VecType buildStringVec(bool isd);
+
+  static constexpr openstudio::span<EnumField> getFields();
+  static constexpr openstudio::span<int> getDomainValues();
 };
 
 inline std::ostream& operator<<(std::ostream& os, const IddFileType& e) {
@@ -114,23 +114,23 @@ struct UTILITIES_API IddObjectType : public ::EnumBase<IddObjectType>
  public:
   enum domain : int;
 
-  IddObjectType() : EnumBase<IddObjectType>(0) {}
-  IddObjectType(const std::string& t_name) : EnumBase<IddObjectType>(t_name) {}
-  IddObjectType(int t_value) : EnumBase<IddObjectType>(t_value) {}
+  constexpr IddObjectType() : EnumBase<IddObjectType>(0) {}
+  constexpr IddObjectType(const std::string_view t_name) : EnumBase<IddObjectType>(t_name) {}
+  constexpr IddObjectType(int t_value) : EnumBase<IddObjectType>(t_value) {}
 
-  static std::string enumName() {
+  static constexpr std::string_view enumName() {
     return "IddObjectType";
   }
 
-  domain value() const {
+  constexpr domain value() const {
     return static_cast<domain>(EnumBase<IddObjectType>::value());
   }
 
  private:
   friend class EnumBase<IddObjectType>;
-  using PT = std::pair<std::string, int>;
-  using VecType = std::vector<PT>;
-  static VecType buildStringVec(bool isd);
+
+  static constexpr openstudio::span<EnumField> getFields();
+  static constexpr openstudio::span<int> getDomainValues();
 };
 
 inline std::ostream& operator<<(std::ostream& os, const IddObjectType& e) {

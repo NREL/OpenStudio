@@ -27,63 +27,35 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_CORE_ASCIISTRINGS_HPP
-#define UTILITIES_CORE_ASCIISTRINGS_HPP
+#ifndef UTILITIES_CORE_SPAN_HPP
+#define UTILITIES_CORE_SPAN_HPP
 
-#include <string>
-#include <string_view>
+#include <array>
 
 namespace openstudio {
+template <typename T>
+struct span
+{
+  template <std::size_t Size>
+  constexpr explicit span(const std::array<T, Size>& input) : begin_{input.data()}, end_{std::next(input.data(), Size)} {}
 
-constexpr char charToLower(const char c) {
-  return (c >= 'A' && c <= 'Z') ? c + ('a' - 'A') : c;
-}
+  constexpr span() : begin_{nullptr}, end_{nullptr} {}
 
-constexpr bool ascii_istringEqual(std::string_view lhs, std::string_view rhs) {
-  // std::equal is constexpr only in C++20
-  //return lhs.size() == rhs.size() &&
-  //       std::equal(lhs.begin(), lhs.end(), rhs.begin(),
-  //                  [](auto c1, auto c2) {
-  //                      return charToLower(c1) == charToLower(c2);
-  //                  });
-  if (lhs.size() != rhs.size()) {
-    return false;
+  constexpr const T* begin() const {
+    return begin_;
   }
-  for (size_t i = 0; i < lhs.size(); ++i) {
-    if (charToLower(lhs[i]) != charToLower(rhs[i])) {
-      return false;
-    }
+
+  constexpr const T* end() const {
+    return end_;
   }
-  return true;
-}
 
-inline std::string ascii_to_lower_copy(std::string_view input) {
-  std::string result{input};
-  constexpr auto to_lower_diff = 'a' - 'A';
-  for (auto& c : result) {
-    if (c >= 'A' && c <= 'Z') {
-      c += to_lower_diff;
-    }
+  constexpr std::size_t size() const {
+    return static_cast<std::size_t>(std::distance(begin_, end_));
   }
-  return result;
-}
 
-constexpr std::string_view ascii_trim_left(std::string_view s) {
-  return s.substr(std::min(s.find_first_not_of(" \f\n\r\t\v"), s.size()));
-}
-
-constexpr std::string_view ascii_trim_right(std::string_view s) {
-  return s.substr(0, std::min(s.find_last_not_of(" \f\n\r\t\v") + 1, s.size()));
-}
-
-constexpr std::string_view ascii_trim(std::string_view s) {
-  return ascii_trim_left(ascii_trim_right(s));
-}
-
-inline void ascii_trim(std::string& str) {
-  str = std::string(ascii_trim(std::string_view(str)));
-}
-
+  const T* begin_;
+  const T* end_;
+};
 }  // namespace openstudio
 
-#endif
+#endif  // UTILITIES_CORE_SPAN_HPP
