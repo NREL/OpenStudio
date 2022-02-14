@@ -33,6 +33,10 @@
 
 #include "../WaterHeaterMixed.hpp"
 #include "../WaterHeaterMixed_Impl.hpp"
+#include "../PlantLoop.hpp"
+#include "../PlantLoop_Impl.hpp"
+#include "../PipeAdiabatic.hpp"
+#include "../PipeAdiabatic_Impl.hpp"
 
 #include "../ScheduleConstant.hpp"
 
@@ -86,4 +90,25 @@ TEST_F(ModelFixture, WaterHeaterMixed_NewFields) {
 
   EXPECT_TRUE(wh.setEndUseSubcategory("SomethingElse"));
   EXPECT_EQ("SomethingElse", wh.endUseSubcategory());
+}
+
+TEST_F(ModelFixture, WaterHeaterMixed_TwoPlantLoops) {
+  Model m;
+  
+  WaterHeaterMixed wh(m);
+  
+  PlantLoop p1(m);
+  PlantLoop p2(m);
+  
+  // plant loop #1
+  EXPECT_TRUE(wh.addToNode(p1.supplyInletNode()));
+  
+  // plant loop #2
+  PipeAdiabatic bypass_pipe(m);
+  p2.addSupplyBranchForComponent(bypass_pipe);
+  EXPECT_TRUE(wh.addToSecondaryNode(bypass_pipe.supplyInletNode()));
+  bypass_pipe.remove();
+  
+  EXPECT_EQ(1u, p1.supplyComponents().size());
+  EXPECT_EQ(1u, p2.supplyComponents().size());
 }
