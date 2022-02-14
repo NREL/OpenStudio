@@ -205,6 +205,36 @@ namespace model {
       }
     }
 
+    bool WaterToWaterComponent_Impl::addToSecondaryNode(Node& node) {
+      auto thisModelObject = getObject<ModelObject>();
+      auto t_plantLoop = node.plantLoop();
+      
+      boost::optional<unsigned> componentInletPort;
+      boost::optional<unsigned> componentOutletPort;
+      
+      boost::optional<HVACComponent> systemStartComponent;
+      boost::optional<HVACComponent> systemEndComponent;
+      
+      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) return false;
+      
+      if (t_plantLoop) {
+        if (t_plantLoop->supplyComponent(node.handle())) {
+
+          systemStartComponent = t_plantLoop->supplyInletNode();
+          systemEndComponent = t_plantLoop->supplyOutletNode();
+          componentInletPort = supplyInletPort();
+          componentOutletPort = supplyOutletPort();
+        }
+      }
+
+      if (systemStartComponent && systemEndComponent && componentOutletPort && componentInletPort) {
+        return HVACComponent_Impl::addToNode(node, systemStartComponent.get(), systemEndComponent.get(), componentInletPort.get(),
+                                             componentOutletPort.get());
+      } else {
+        return false;
+      }
+    }
+
     ModelObject WaterToWaterComponent_Impl::clone(Model model) const {
       WaterToWaterComponent mo = HVACComponent_Impl::clone(model).cast<WaterToWaterComponent>();
 

@@ -80,6 +80,8 @@ namespace model {
 
     virtual bool addToNode(Node& node);
 
+    virtual bool addToSecondaryNode(Node& node);
+
     virtual std::vector<openstudio::IdfObject> remove();
 
     virtual ModelObject clone(Model model) const;

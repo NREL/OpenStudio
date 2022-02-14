@@ -79,6 +79,8 @@ namespace model {
 
       virtual bool addToNode(Node& node) override;
 
+      virtual bool addToSecondaryNode(Node& node) override;
+
       virtual std::vector<openstudio::IdfObject> remove() override;
 
       virtual ModelObject clone(Model model) const override;
