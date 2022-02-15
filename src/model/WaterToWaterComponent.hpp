@@ -80,8 +80,6 @@ namespace model {
 
     virtual bool addToNode(Node& node);
 
-    virtual bool addToSecondaryNode(Node& node);
-
     virtual std::vector<openstudio::IdfObject> remove();
 
     virtual ModelObject clone(Model model) const;
@@ -125,6 +123,9 @@ namespace model {
 
     /** Returns the optional ModelObject connected to the tertiary outlet. **/
     boost::optional<ModelObject> tertiaryOutletModelObject() const;
+
+    /** TODO **/
+    virtual bool addToSecondaryNode(Node& node);
 
     void disconnect();
 

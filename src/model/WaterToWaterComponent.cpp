@@ -518,6 +518,10 @@ namespace model {
     return getImpl<detail::WaterToWaterComponent_Impl>()->tertiaryOutletModelObject();
   }
 
+  bool WaterToWaterComponent::addToSecondaryNode(Node& node) {
+    return getImpl<detail::WaterToWaterComponent_Impl>()->addToSecondaryNode(node);
+  }
+
 }  // namespace model
 
 }  // namespace openstudio

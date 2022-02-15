@@ -79,8 +79,6 @@ namespace model {
 
       virtual bool addToNode(Node& node) override;
 
-      virtual bool addToSecondaryNode(Node& node) override;
-
       virtual std::vector<openstudio::IdfObject> remove() override;
 
       virtual ModelObject clone(Model model) const override;
@@ -120,6 +118,12 @@ namespace model {
       boost::optional<ModelObject> tertiaryInletModelObject() const;
 
       boost::optional<ModelObject> tertiaryOutletModelObject() const;
+
+      /*
+  * TODO
+  */
+
+      virtual bool addToSecondaryNode(Node& node);
 
      protected:
       friend class Model_Impl;
