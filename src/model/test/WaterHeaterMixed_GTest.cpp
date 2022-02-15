@@ -37,6 +37,8 @@
 #include "../PlantLoop_Impl.hpp"
 #include "../PipeAdiabatic.hpp"
 #include "../PipeAdiabatic_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
 
 #include "../ScheduleConstant.hpp"
 
@@ -103,12 +105,18 @@ TEST_F(ModelFixture, WaterHeaterMixed_TwoPlantLoops) {
   // plant loop #1
   EXPECT_TRUE(wh.addToNode(p1.supplyInletNode()));
 
+  EXPECT_EQ(1u, p1.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
+  EXPECT_EQ(0u, p2.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
+
   // plant loop #2
   PipeAdiabatic bypass_pipe(m);
   p2.addSupplyBranchForComponent(bypass_pipe);
-  EXPECT_TRUE(wh.addToSecondaryNode(bypass_pipe.supplyInletNode()));
+  ASSERT_TRUE(bypass_pipe.inletModelObject()->optionalCast<Node>());
+  EXPECT_TRUE(wh.addToSecondaryNode(bypass_pipe.inletModelObject()->cast<Node>()));
   bypass_pipe.remove();
 
-  EXPECT_EQ(1u, p1.supplyComponents().size());
-  EXPECT_EQ(1u, p2.supplyComponents().size());
+  /* EXPECT_TRUE(wh.addToSecondaryNode(p2.supplyInletNode())); */
+
+  EXPECT_EQ(1u, p1.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
+  EXPECT_EQ(1u, p2.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
 }
