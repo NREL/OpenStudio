@@ -37,6 +37,8 @@ namespace openstudio {
 namespace model {
 
   class Surface;
+  class SubSurface;
+  class PlanarSurface;
   class Schedule;
   class SurfacePropertySurroundingSurfaces;
   // class OutdoorAirNode;
@@ -55,6 +57,7 @@ namespace model {
     //@{
 
     explicit SurfacePropertyLocalEnvironment(const Surface& surface);
+    explicit SurfacePropertyLocalEnvironment(const SubSurface& surface);
 
     virtual ~SurfacePropertyLocalEnvironment() {}
 
@@ -65,7 +68,9 @@ namespace model {
     /** @name Getters */
     //@{
 
-    Surface exteriorSurface() const;
+    PlanarSurface exteriorSurface() const;
+    boost::optional<Surface> exteriorSurfaceAsSurface() const;
+    boost::optional<SubSurface> exteriorSurfaceAsSubSurface() const;
 
     boost::optional<Schedule> externalShadingFractionSchedule() const;
 
@@ -77,7 +82,9 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setExteriorSurface(const Surface& surface);
+    // Note that unicity is enforced: if the surface to point to already has a SurfacePropertyLocalEnvironment object attached, it will be removed
+    // first
+    bool setExteriorSurface(const PlanarSurface& surface);
 
     bool setExternalShadingFractionSchedule(Schedule& schedule);
     void resetExternalShadingFractionSchedule();

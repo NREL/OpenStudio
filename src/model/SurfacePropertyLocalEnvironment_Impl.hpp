@@ -36,7 +36,9 @@
 namespace openstudio {
 namespace model {
 
+  class PlanarSurface;
   class Surface;
+  class SubSurface;
   class Schedule;
   class SurfacePropertySurroundingSurfaces;
   // class OutdoorAirNode;
@@ -72,7 +74,9 @@ namespace model {
       /** @name Getters */
       //@{
 
-      Surface exteriorSurface() const;
+      PlanarSurface exteriorSurface() const;
+      boost::optional<Surface> exteriorSurfaceAsSurface() const;
+      boost::optional<SubSurface> exteriorSurfaceAsSubSurface() const;
 
       boost::optional<Schedule> externalShadingFractionSchedule() const;
 
@@ -84,7 +88,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setExteriorSurface(const Surface& surface);
+      bool setExteriorSurface(const PlanarSurface& surface);
 
       bool setExternalShadingFractionSchedule(Schedule& schedule);
       void resetExternalShadingFractionSchedule();
@@ -104,7 +108,7 @@ namespace model {
      private:
       REGISTER_LOGGER("openstudio.model.SurfacePropertyLocalEnvironment");
 
-      boost::optional<Surface> optionalExteriorSurface() const;
+      boost::optional<PlanarSurface> optionalExteriorSurface() const;
     };
 
   }  // namespace detail

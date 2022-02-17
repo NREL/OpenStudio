@@ -30,8 +30,12 @@
 #include "SurfacePropertyLocalEnvironment.hpp"
 #include "SurfacePropertyLocalEnvironment_Impl.hpp"
 
+#include "PlanarSurface.hpp"
+#include "PlanarSurface_Impl.hpp"
 #include "Surface.hpp"
 #include "Surface_Impl.hpp"
+#include "SubSurface.hpp"
+#include "SubSurface_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Model.hpp"
@@ -90,16 +94,27 @@ namespace model {
       return result;
     }
 
-    boost::optional<Surface> SurfacePropertyLocalEnvironment_Impl::optionalExteriorSurface() const {
-      return getObject<ModelObject>().getModelObjectTarget<Surface>(OS_SurfaceProperty_LocalEnvironmentFields::ExteriorSurfaceName);
+    boost::optional<PlanarSurface> SurfacePropertyLocalEnvironment_Impl::optionalExteriorSurface() const {
+      if (auto mo_ = getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_SurfaceProperty_LocalEnvironmentFields::ExteriorSurfaceName)) {
+        return mo_->cast<PlanarSurface>();
+      }
+      return boost::none;
     }
 
-    Surface SurfacePropertyLocalEnvironment_Impl::exteriorSurface() const {
-      boost::optional<Surface> value = optionalExteriorSurface();
+    PlanarSurface SurfacePropertyLocalEnvironment_Impl::exteriorSurface() const {
+      boost::optional<PlanarSurface> value = optionalExteriorSurface();
       if (!value) {
         LOG_AND_THROW(briefDescription() << " does not have an Exterior Surface attached.");
       }
       return value.get();
+    }
+
+    boost::optional<Surface> SurfacePropertyLocalEnvironment_Impl::exteriorSurfaceAsSurface() const {
+      return getObject<ModelObject>().getModelObjectTarget<Surface>(OS_SurfaceProperty_LocalEnvironmentFields::ExteriorSurfaceName);
+    }
+
+    boost::optional<SubSurface> SurfacePropertyLocalEnvironment_Impl::exteriorSurfaceAsSubSurface() const {
+      return getObject<ModelObject>().getModelObjectTarget<SubSurface>(OS_SurfaceProperty_LocalEnvironmentFields::ExteriorSurfaceName);
     }
 
     boost::optional<Schedule> SurfacePropertyLocalEnvironment_Impl::externalShadingFractionSchedule() const {
@@ -111,9 +126,25 @@ namespace model {
         OS_SurfaceProperty_LocalEnvironmentFields::SurroundingSurfacesObjectName);
     }
 
-    bool SurfacePropertyLocalEnvironment_Impl::setExteriorSurface(const Surface& surface) {
-      bool result = setPointer(OS_SurfaceProperty_LocalEnvironmentFields::ExteriorSurfaceName, surface.handle());
-      return result;
+    bool SurfacePropertyLocalEnvironment_Impl::setExteriorSurface(const PlanarSurface& surface) {
+
+      boost::optional<SurfacePropertyLocalEnvironment> currentLocalEnv;
+      if (auto s_ = surface.optionalCast<Surface>()) {
+        currentLocalEnv = s_->surfacePropertyLocalEnvironment();
+      } else if (auto s_ = surface.optionalCast<SubSurface>()) {
+        currentLocalEnv = s_->surfacePropertyLocalEnvironment();
+      } else {
+        LOG(Error,
+            "SurfacePropertyLocalEnvironment currently only accepts Surface and SubSurface, object isn't accepted: " << surface.briefDescription());
+        return false;
+      }
+      if (currentLocalEnv) {
+        if (currentLocalEnv->handle() == this->handle()) {
+          return true;
+        }
+        currentLocalEnv->remove();
+      }
+      return setPointer(OS_SurfaceProperty_LocalEnvironmentFields::ExteriorSurfaceName, surface.handle());
     }
 
     bool SurfacePropertyLocalEnvironment_Impl::setExternalShadingFractionSchedule(Schedule& schedule) {
@@ -169,12 +200,31 @@ namespace model {
     }
   }
 
+  SurfacePropertyLocalEnvironment::SurfacePropertyLocalEnvironment(const SubSurface& subSurface)
+    : ModelObject(SurfacePropertyLocalEnvironment::iddObjectType(), subSurface.model()) {
+    OS_ASSERT(getImpl<detail::SurfacePropertyLocalEnvironment_Impl>());
+
+    bool ok = setExteriorSurface(subSurface);
+    if (!ok) {
+      this->remove();
+      LOG_AND_THROW("Cannot create a SurfacePropertyLocalEnvironment pointing to " << subSurface.briefDescription());
+    }
+  }
+
   IddObjectType SurfacePropertyLocalEnvironment::iddObjectType() {
     return {IddObjectType::OS_SurfaceProperty_LocalEnvironment};
   }
 
-  Surface SurfacePropertyLocalEnvironment::exteriorSurface() const {
+  PlanarSurface SurfacePropertyLocalEnvironment::exteriorSurface() const {
     return getImpl<detail::SurfacePropertyLocalEnvironment_Impl>()->exteriorSurface();
+  }
+
+  boost::optional<Surface> SurfacePropertyLocalEnvironment::exteriorSurfaceAsSurface() const {
+    return getImpl<ImplType>()->exteriorSurfaceAsSurface();
+  }
+
+  boost::optional<SubSurface> SurfacePropertyLocalEnvironment::exteriorSurfaceAsSubSurface() const {
+    return getImpl<ImplType>()->exteriorSurfaceAsSubSurface();
   }
 
   boost::optional<Schedule> SurfacePropertyLocalEnvironment::externalShadingFractionSchedule() const {
@@ -185,7 +235,7 @@ namespace model {
     return getImpl<detail::SurfacePropertyLocalEnvironment_Impl>()->surfacePropertySurroundingSurfaces();
   }
 
-  bool SurfacePropertyLocalEnvironment::setExteriorSurface(const Surface& surface) {
+  bool SurfacePropertyLocalEnvironment::setExteriorSurface(const PlanarSurface& surface) {
     return getImpl<detail::SurfacePropertyLocalEnvironment_Impl>()->setExteriorSurface(surface);
   }
 
