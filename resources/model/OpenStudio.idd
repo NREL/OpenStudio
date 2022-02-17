@@ -6503,6 +6503,49 @@ OS:ZoneProperty:UserViewFactors:BySurfaceName,
        \type real
        \maximum 1.0
 
+SurfaceProperty:SurroundingSurfaces,
+       \min-fields 8
+       \memo This object defines a list of surrounding surfaces for an exterior surface.
+       \extensible:3 -- duplicate last set of surrounding surface properties (the last three fields), remembering to remove ; from "inner" fields.
+   A1, \field Name
+       \required-field
+       \type alpha
+       \reference SurroundingSurfacesNames
+   N1, \field Sky View Factor
+       \minimum 0.0
+       \maximum 1.0
+       \default 0.5
+       \note optional
+   A2, \field Sky Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values are real numbers, -100.0 to 100.0, units C
+       \note optional
+   N2, \field Ground View Factor
+       \minimum 0.0
+       \maximum 1.0
+       \default 0.5
+       \note optional
+   A3, \field Ground Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values are real numbers, -100.0 to 100.0, units C
+       \note optional
+   A4, \field Surrounding Surface 1 Name
+       \begin-extensible
+       \required-field
+       \type alpha
+   N3, \field Surrounding Surface 1 View Factor
+       \required-field
+       \minimum 0.0
+       \maximum 1.0
+       \default 0.0
+   A5, \field Surrounding Surface 1 Temperature Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values are real numbers, -100.0 to 100.0, units C
+
 \group OpenStudio Space Loads
 
 OS:InternalMass,
