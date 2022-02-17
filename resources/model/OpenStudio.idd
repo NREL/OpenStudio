@@ -6522,7 +6522,6 @@ OS:SurfaceProperty:SurroundingSurfaces,
        \minimum 0.0
        \maximum 1.0
        \autocalculatable
-       \default autocalculate
    A3, \field Sky Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
@@ -6532,7 +6531,6 @@ OS:SurfaceProperty:SurroundingSurfaces,
        \minimum 0.0
        \maximum 1.0
        \autocalculatable
-       \default autocalculate
        \note optional
    A4, \field Ground Temperature Schedule Name
        \type object-list
