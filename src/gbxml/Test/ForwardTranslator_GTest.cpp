@@ -34,12 +34,14 @@
 #include "../ReverseTranslator.hpp"
 #include "../../model/Surface.hpp"
 #include "../../model/Surface_Impl.hpp"
+#include "../../model/SubSurface.hpp"
 #include "../../model/Construction.hpp"
 #include "../../model/Construction_Impl.hpp"
 #include "../../model/Facility.hpp"
 #include "../../model/Facility_Impl.hpp"
 #include "../../model/Building.hpp"
 #include "../../model/Building_Impl.hpp"
+#include "../../model/BuildingStory.hpp"
 #include "../../model/MasslessOpaqueMaterial.hpp"
 #include "../../model/MasslessOpaqueMaterial_Impl.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
@@ -406,4 +408,111 @@ TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
       }
     }
   }
+  
+Model testModel() {
+  Model model;
+
+  Building building = model.getUniqueModelObject<Building>();
+  BuildingStory buildingStory(model);
+  buildingStory.setNominalZCoordinate(0);
+  buildingStory.setNominalFloortoFloorHeight(3);
+
+  ThermalZone thermalZone(model);
+
+  std::vector<Point3d> floorPrint;
+  floorPrint.push_back(Point3d(0, 0, 0));
+  floorPrint.push_back(Point3d(0, 10, 0));
+  floorPrint.push_back(Point3d(10, 10, 0));
+  floorPrint.push_back(Point3d(10, 0, 0));
+
+  // make spaces
+  boost::optional<Space> space1 = Space::fromFloorPrint(floorPrint, 3, model);
+  OS_ASSERT(space1);
+  space1->setThermalZone(thermalZone);
+  space1->setBuildingStory(buildingStory);
+
+  boost::optional<Space> space2 = Space::fromFloorPrint(floorPrint, 3, model);
+  OS_ASSERT(space2);
+  space2->setXOrigin(10);
+  space2->setThermalZone(thermalZone);
+  space2->setBuildingStory(buildingStory);
+
+  boost::optional<Space> space3 = Space::fromFloorPrint(floorPrint, 3, model);
+  OS_ASSERT(space3);
+  space3->setYOrigin(10);
+  space3->setThermalZone(thermalZone);
+  space3->setBuildingStory(buildingStory);
+
+  boost::optional<Space> space4 = Space::fromFloorPrint(floorPrint, 3, model);
+  OS_ASSERT(space4);
+  space4->setXOrigin(10);
+  space4->setYOrigin(10);
+  space4->setThermalZone(thermalZone);
+  space4->setBuildingStory(buildingStory);
+
+  // add a door to south wall of space1
+  std::vector<Point3d> doorPoints;
+  doorPoints.push_back(Point3d(2, 0, 2));
+  doorPoints.push_back(Point3d(2, 0, 0));
+  doorPoints.push_back(Point3d(4, 0, 0));
+  doorPoints.push_back(Point3d(4, 0, 2));
+
+  // find south wall
+  std::vector<Surface> searchResults;
+
+  searchResults = space1->findSurfaces(180.0, 180.0, 90.0, 90.0);
+  OS_ASSERT(searchResults.size() >= 1);
+
+  // add door
+  SubSurface door(doorPoints, model);
+  door.setSurface(searchResults[0]);
+
+  // add a window to east wall of space2
+  std::vector<Point3d> windowPoints;
+  windowPoints.push_back(Point3d(10, 2, 2));
+  windowPoints.push_back(Point3d(10, 2, 1));
+  windowPoints.push_back(Point3d(10, 8, 1));
+  windowPoints.push_back(Point3d(10, 8, 2));
+
+  // find east wall
+  searchResults = space2->findSurfaces(90.0, 90.0, 90.0, 90.0);
+  OS_ASSERT(searchResults.size() >= 1);
+
+  // add window
+  SubSurface window(windowPoints, model);
+  window.setSurface(searchResults[0]);
+
+  // match surfaces
+  std::vector<Space> spaces = model.getConcreteModelObjects<Space>();
+  matchSurfaces(spaces);
+
+  return model;
+}
+
+// Create two gbxml models from two identical osm models should produce
+// gbxml models with surfaces in the same order. issue 4438
+TEST_F(gbXMLFixture, ForwardTranslator_4438_Deterministic) {
+  Model model1 = testModel();
+
+  path p1 = resourcesPath() / openstudio::toPath("gbxml/exampleModel1.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test1 = forwardTranslator.modelToGbXML(model1, p1);
+
+  EXPECT_TRUE(test1);
+
+  path ps1 = resourcesPath() / openstudio::toPath("gbxml/exampleModel1.osm");
+  model1.save(ps1, true);
+
+  Model model2 = testModel();
+
+  path p2 = resourcesPath() / openstudio::toPath("gbxml/exampleModel2.xml");
+
+  //ForwardTranslator forwardTranslator;
+  bool test2 = forwardTranslator.modelToGbXML(model2, p2);
+
+  EXPECT_TRUE(test2);
+
+  path ps2 = resourcesPath() / openstudio::toPath("gbxml/exampleModel2.osm");
+  model1.save(ps2, true);
 }
