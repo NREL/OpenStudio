@@ -2194,6 +2194,7 @@ set(${target_name}_test_src
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyOtherSideCoefficients_GTest.cpp
   test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
+  test/SurfacePropertySurroundingSurfaces_GTest.cpp
   test/SwimmingPoolIndoor_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
