@@ -6540,8 +6540,8 @@ OS:SurfaceProperty:SurroundingSurfaces,
    A5, \field Surrounding Surface 1 Name
        \begin-extensible
        \required-field
-       \type object-list
-       \object-list AllHeatTranSurfNames
+       \type alpha
+       \note This is the name of the surrounding surface, NOT an actual surface in your model
    N3, \field Surrounding Surface 1 View Factor
        \required-field
        \minimum 0.0
