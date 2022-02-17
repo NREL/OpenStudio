@@ -30,7 +30,9 @@
 #include "ModelFixture.hpp"
 
 #include "../SurfacePropertyLocalEnvironment.hpp"
+#include "../SurfacePropertyLocalEnvironment_Impl.hpp"
 #include "../Surface.hpp"
+#include "../SubSurface.hpp"
 #include "../Schedule.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../SurfacePropertySurroundingSurfaces.hpp"
@@ -69,6 +71,10 @@ TEST_F(ModelFixture, SurfacePropertyLocalEnvironment_GettersSetters) {
 
   EXPECT_TRUE(surfacePropertyLocalEnvironment.setExteriorSurface(surface2));
   EXPECT_EQ(surface2, surfacePropertyLocalEnvironment.exteriorSurface());
+  ASSERT_TRUE(surfacePropertyLocalEnvironment.exteriorSurfaceAsSurface());
+  EXPECT_EQ(surface2, surfacePropertyLocalEnvironment.exteriorSurfaceAsSurface().get());
+  EXPECT_FALSE(surfacePropertyLocalEnvironment.exteriorSurfaceAsSubSurface());
+
   ASSERT_TRUE(surface2.surfacePropertyLocalEnvironment());
   EXPECT_EQ(surfacePropertyLocalEnvironment, surface2.surfacePropertyLocalEnvironment().get());
 
@@ -97,6 +103,26 @@ TEST_F(ModelFixture, SurfacePropertyLocalEnvironment_GettersSetters) {
   EXPECT_FALSE(surfacePropertyLocalEnvironment.surfacePropertySurroundingSurfaces());
 
   // It should also accept a SubSurface
+  SubSurface subSurface(points2, m);
+  EXPECT_TRUE(surface2.surfacePropertyLocalEnvironment());
+  EXPECT_FALSE(subSurface.surfacePropertyLocalEnvironment());
+
+  EXPECT_TRUE(surfacePropertyLocalEnvironment.setExteriorSurface(subSurface));
+
+  EXPECT_EQ(subSurface, surfacePropertyLocalEnvironment.exteriorSurface());
+  ASSERT_TRUE(surfacePropertyLocalEnvironment.exteriorSurfaceAsSubSurface());
+  EXPECT_EQ(subSurface, surfacePropertyLocalEnvironment.exteriorSurfaceAsSubSurface().get());
+  EXPECT_FALSE(surfacePropertyLocalEnvironment.exteriorSurfaceAsSurface());
+
+  EXPECT_FALSE(surface2.surfacePropertyLocalEnvironment());
+  ASSERT_TRUE(subSurface.surfacePropertyLocalEnvironment());
+  EXPECT_EQ(surfacePropertyLocalEnvironment, subSurface.surfacePropertyLocalEnvironment().get());
+
+  // Try to create a **second** LocalEnv for the **same** object: it should delete the initial one, to enforce unicity
+  EXPECT_EQ(1, m.getConcreteModelObjects<SurfacePropertyLocalEnvironment>().size());
+  SurfacePropertyLocalEnvironment surfacePropertyLocalEnvironment2(subSurface);
+  EXPECT_EQ(1, m.getConcreteModelObjects<SurfacePropertyLocalEnvironment>().size());
+  EXPECT_EQ(surfacePropertyLocalEnvironment2, m.getConcreteModelObjects<SurfacePropertyLocalEnvironment>()[0]);
 
   // Outdoor Air Node Name: Optional Object
   // boost::optional<OutdoorAirNode> obj(m);
