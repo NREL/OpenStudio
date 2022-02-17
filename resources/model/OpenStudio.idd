@@ -6552,6 +6552,31 @@ OS:SurfaceProperty:SurroundingSurfaces,
        \object-list ScheduleNames
        \note Schedule values are real numbers, -100.0 to 100.0, units C
 
+SurfaceProperty:LocalEnvironment,
+       \min-fields 3
+       \memo This object defines the local environment properties of an exterior surface.
+       \memo One or more environment properties have to be defined and linked to the exterior surface.
+   A1, \field Name
+       \required-field
+       \type alpha
+       \reference SurfaceLocalEnvironmentNames
+   A2, \field Exterior Surface Name
+       \type object-list
+       \object-list SurfaceNames
+       \note Enter the name of an exterior surface object
+   A3, \field External Shading Fraction Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Enter the name of a Schedule object
+   A4, \field Surrounding Surfaces Object Name
+       \type object-list
+       \object-list SurroundingSurfacesNames
+       \note Enter the name of a SurfaceProperty:SurroundingSurfaces object
+   A5; \field Outdoor Air Node Name
+       \type object-list
+       \object-list OutdoorAirNodeNames
+       \note Enter the name of an OutdoorAir:Node object
+
 \group OpenStudio Space Loads
 
 OS:InternalMass,
