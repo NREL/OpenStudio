@@ -41,6 +41,7 @@
 #include "../../model/SurfacePropertyOtherSideCoefficients.hpp"
 #include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../../model/SurfacePropertyConvectionCoefficients.hpp"
+#include "../../model/SurfacePropertyLocalEnvironment.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -127,6 +128,10 @@ namespace energyplus {
     // * makes the order of these objects in the IDF deterministic
     if (boost::optional<SurfacePropertyConvectionCoefficients> _sCoefs = modelObject.surfacePropertyConvectionCoefficients()) {
       translateAndMapModelObject(_sCoefs.get());
+    }
+
+    if (boost::optional<SurfacePropertyLocalEnvironment> localEnv_ = modelObject.surfacePropertyLocalEnvironment()) {
+      translateAndMapModelObject(localEnv_.get());
     }
 
     boost::optional<double> viewFactortoGround = modelObject.viewFactortoGround();
