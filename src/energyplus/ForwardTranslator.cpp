@@ -2824,6 +2824,11 @@ namespace energyplus {
         retVal = translateSurfacePropertyConvectionCoefficientsMultipleSurface(obj);
         break;
       }
+      case openstudio::IddObjectType::OS_SurfaceProperty_LocalEnvironment: {
+        model::SurfacePropertyLocalEnvironment obj = modelObject.cast<SurfacePropertyLocalEnvironment>();
+        retVal = translateSurfacePropertyLocalEnvironment(obj);
+        break;
+      }
       case openstudio::IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter: {
         model::SurfacePropertyExposedFoundationPerimeter obj = modelObject.cast<SurfacePropertyExposedFoundationPerimeter>();
         retVal = translateSurfacePropertyExposedFoundationPerimeter(obj);
@@ -2837,6 +2842,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel: {
         model::SurfacePropertyOtherSideConditionsModel obj = modelObject.cast<SurfacePropertyOtherSideConditionsModel>();
         retVal = translateSurfacePropertyOtherSideConditionsModel(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_SurfaceProperty_SurroundingSurfaces: {
+        model::SurfacePropertySurroundingSurfaces obj = modelObject.cast<SurfacePropertySurroundingSurfaces>();
+        retVal = translateSurfacePropertySurroundingSurfaces(obj);
         break;
       }
       case openstudio::IddObjectType::OS_SubSurface: {
