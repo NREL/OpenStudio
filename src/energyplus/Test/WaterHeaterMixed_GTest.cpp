@@ -122,7 +122,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_TwoPlantLoops) {
   WaterHeaterMixed wh(m);
 
   PlantLoop p1(m);
-  p1.setName("Plant Loop 1");
 
   EXPECT_TRUE(wh.addToNode(p1.supplyInletNode()));
 
@@ -144,17 +143,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_TwoPlantLoops) {
   }
 
   PlantLoop p2(m);
-  p2.setName("Plant Loop 2");
 
   // try 1
-  /*   PipeAdiabatic bypass_pipe(m);
+  PipeAdiabatic bypass_pipe(m);
   p2.addSupplyBranchForComponent(bypass_pipe);
   ASSERT_TRUE(bypass_pipe.inletModelObject()->optionalCast<Node>());
   EXPECT_TRUE(wh.addToSecondaryNode(bypass_pipe.inletModelObject()->cast<Node>()));
-  bypass_pipe.remove(); */
+  bypass_pipe.remove();
 
   // try 2
-  EXPECT_TRUE(wh.addToSecondaryNode(p2.supplyInletNode()));
+  //EXPECT_TRUE(wh.addToSecondaryNode(p2.supplyInletNode()));
 
   Workspace w = ft.translateModel(m);
 
@@ -164,8 +162,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_TwoPlantLoops) {
   ASSERT_EQ(1u, idfWHMixeds.size());
   WorkspaceObject idfWHMixed(idfWHMixeds[0]);
 
-  EXPECT_EQ(p1.supplyInletNode().nameString(), idfWHMixed.getString(WaterHeater_MixedFields::UseSideInletNodeName, false).get());
-  EXPECT_EQ(useSideOutletNodeName, idfWHMixed.getString(WaterHeater_MixedFields::UseSideOutletNodeName, false).get());  // doesn't change
-  EXPECT_EQ(p2.supplyInletNode().nameString(), idfWHMixed.getString(WaterHeater_MixedFields::SourceSideInletNodeName, false).get());
+  EXPECT_EQ(p1.supplyInletNode().nameString(), idfWHMixed.getString(WaterHeater_MixedFields::UseSideInletNodeName, false).get());  // doesn't change
+  EXPECT_EQ(useSideOutletNodeName, idfWHMixed.getString(WaterHeater_MixedFields::UseSideOutletNodeName, false).get());             // doesn't change
+  EXPECT_NE(p2.supplyInletNode().nameString(), idfWHMixed.getString(WaterHeater_MixedFields::SourceSideInletNodeName, false).get());  // EQ if "try 2"
   EXPECT_NE("", idfWHMixed.getString(WaterHeater_MixedFields::SourceSideOutletNodeName, false).get());
 }
