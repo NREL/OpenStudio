@@ -41,6 +41,7 @@ namespace model {
   class CurveCubic;
   class ThermalZone;
   class WaterHeaterSizing;
+  class Node;
 
   namespace detail {
 
