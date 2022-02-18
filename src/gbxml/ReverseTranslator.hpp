@@ -122,6 +122,8 @@ namespace gbxml {
     boost::optional<openstudio::model::ModelObject> translateWindowType(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateMaterial(const pugi::xml_node& element, openstudio::model::Model& model);
 
+    void validateSpaceSurfaces(openstudio::model::Model& model);
+
     StringStreamLogSink m_logSink;
 
     ProgressBar* m_progressBar;
