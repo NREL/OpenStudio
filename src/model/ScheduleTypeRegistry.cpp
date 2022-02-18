@@ -398,6 +398,7 @@ namespace model {
       {"SurfacePropertySurroundingSurfaces", "Sky Temperature", "skyTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble()},
       {"SurfacePropertySurroundingSurfaces", "Ground Temperature", "groundTemperatureSchedule", true, "Temperature", OptionalDouble(),
        OptionalDouble()},
+      {"SurfacePropertyLocalEnvironment", "External Shading Fraction", "externalShadingFractionSchedule", true, "", 0.0, 1.0},
       {"SwimmingPoolIndoor", "Activity Factor", "activityFactorSchedule", true, "", 0.0, OptionalDouble()},  // can exceed 1.0, for wave pools for eg
       {"SwimmingPoolIndoor", "Make-up Water Supply", "makeupWaterSupplySchedule", true, "Temperature", OptionalDouble(), OptionalDouble()},
       {"SwimmingPoolIndoor", "Cover", "coverSchedule", true, "", 0.0, 1.0},

@@ -196,6 +196,7 @@ MODELOBJECT_TEMPLATES(InteriorPartitionSurface);
 MODELOBJECT_TEMPLATES(SurfaceControlMovableInsulation);
 MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideCoefficients);
 MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideConditionsModel);
+MODELOBJECT_TEMPLATES(SurfacePropertyLocalEnvironment);
 MODELOBJECT_TEMPLATES(SurroundingSurfaceGroup); // helper for extensible fields for SurfacePropertySurroundingSurfaces
 MODELOBJECT_TEMPLATES(SurfacePropertySurroundingSurfaces);
 MODELOBJECT_TEMPLATES(SurfacePropertyConvectionCoefficients);
@@ -252,6 +253,7 @@ SWIG_MODELOBJECT(InteriorPartitionSurface, 1);
 SWIG_MODELOBJECT(SurfaceControlMovableInsulation, 1);
 SWIG_MODELOBJECT(SurfacePropertyOtherSideCoefficients, 1);
 SWIG_MODELOBJECT(SurfacePropertyOtherSideConditionsModel, 1);
+SWIG_MODELOBJECT(SurfacePropertyLocalEnvironment, 1);
 SWIG_MODELOBJECT(SurfacePropertySurroundingSurfaces, 1);
 SWIG_MODELOBJECT(SurfacePropertyConvectionCoefficients, 1);
 SWIG_MODELOBJECT(People, 1);

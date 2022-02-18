@@ -1502,6 +1502,9 @@ set(${target_name}_src
   SurfacePropertyExposedFoundationPerimeter.cpp
   SurfacePropertyExposedFoundationPerimeter.hpp
   SurfacePropertyExposedFoundationPerimeter_Impl.hpp
+  SurfacePropertyLocalEnvironment.cpp
+  SurfacePropertyLocalEnvironment.hpp
+  SurfacePropertyLocalEnvironment_Impl.hpp
   SurfacePropertyOtherSideCoefficients.cpp
   SurfacePropertyOtherSideCoefficients.hpp
   SurfacePropertyOtherSideCoefficients_Impl.hpp
