@@ -6503,6 +6503,84 @@ OS:ZoneProperty:UserViewFactors:BySurfaceName,
        \type real
        \maximum 1.0
 
+OS:SurfaceProperty:SurroundingSurfaces,
+       \min-fields 9
+       \memo This object defines a list of surrounding surfaces for an exterior surface.
+       \memo The sum of all defined view factors should not exceed 1.0.
+       \memo If only sky view is defined in this object, the ground view factor to this surface will be 1.0 subtracted with the ground view factor and all other defined surface view factors.
+       \memo If only ground view is defined in this object, the sky view factor to this surface will be 1.0 subtracted with the sky view factor and all other defined surface view factors.
+       \memo If neither of the sky and ground view factors are explicitly declared here, the sum of the sky and ground view factor would be 1.0 subtracted with all other defined surface view factors and the proportion will be set as the same with the global setting
+       \extensible:3
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \type alpha
+       \reference SurroundingSurfacesNames
+   N1, \field Sky View Factor
+       \minimum 0.0
+       \maximum 1.0
+       \autocalculatable
+   A3, \field Sky Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values are real numbers, -100.0 to 100.0, units C
+       \note If the field is left blank the global sky temperature is be used
+   N2, \field Ground View Factor
+       \minimum 0.0
+       \maximum 1.0
+       \autocalculatable
+       \note optional
+   A4, \field Ground Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values are real numbers, -100.0 to 100.0, units C
+       \note If the field is left blank the global ground temperature is used
+   A5, \field Surrounding Surface 1 Name
+       \begin-extensible
+       \required-field
+       \type alpha
+       \note This is the name of the surrounding surface, NOT an actual surface in your model
+   N3, \field Surrounding Surface 1 View Factor
+       \required-field
+       \minimum 0.0
+       \maximum 1.0
+   A6; \field Surrounding Surface 1 Temperature Schedule Name
+       \required-field
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values are real numbers, -100.0 to 100.0, units C
+
+OS:SurfaceProperty:LocalEnvironment,
+       \min-fields 4
+       \memo This object defines the local environment properties of an exterior surface.
+       \memo One or more environment properties have to be defined and linked to the exterior surface.
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \type alpha
+       \reference SurfaceLocalEnvironmentNames
+   A3, \field Exterior Surface Name
+       \required-field
+       \type object-list
+       \object-list AllHeatTranSurfNames
+       \note Enter the name of an exterior surface object
+   A4, \field External Shading Fraction Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Enter the name of a Schedule object
+   A5, \field Surrounding Surfaces Object Name
+       \type object-list
+       \object-list SurroundingSurfacesNames
+       \note Enter the name of a SurfaceProperty:SurroundingSurfaces object
+   A6; \field Outdoor Air Node Name
+       \type object-list
+       \object-list OutdoorAirNodeNames
+       \note Enter the name of an OutdoorAir:Node object
+
 \group OpenStudio Space Loads
 
 OS:InternalMass,
