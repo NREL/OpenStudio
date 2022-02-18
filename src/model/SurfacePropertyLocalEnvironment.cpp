@@ -142,6 +142,9 @@ namespace model {
         if (currentLocalEnv->handle() == this->handle()) {
           return true;
         }
+        LOG(Warn, "Surface " << surface.nameString()
+                             << " already has a SurfacePropertyLocalEnvironment attached, and it will be **removed**. Please check your inputs.");
+
         currentLocalEnv->remove();
       }
       return setPointer(OS_SurfaceProperty_LocalEnvironmentFields::ExteriorSurfaceName, surface.handle());
@@ -188,10 +191,6 @@ namespace model {
   SurfacePropertyLocalEnvironment::SurfacePropertyLocalEnvironment(const Surface& surface)
     : ModelObject(SurfacePropertyLocalEnvironment::iddObjectType(), surface.model()) {
     OS_ASSERT(getImpl<detail::SurfacePropertyLocalEnvironment_Impl>());
-
-    if (surface.surfacePropertyLocalEnvironment()) {
-      LOG(Warn, "Surface " << surface.nameString() << " already has a SurfacePropertyLocalEnvironment attached. Please check your inputs.");
-    }
 
     bool ok = setExteriorSurface(surface);
     if (!ok) {
