@@ -1351,8 +1351,7 @@ namespace gbxml {
 
     if (modelObject.hasAdditionalProperties()) {
       model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
-      boost::optional<std::string> cadObjectId = modelObject.cadObjectId();
-      if (cadObjectId) {
+      if (boost::optional<std::string> cadObjectId = modelObject.cadObjectId()) {
         auto cadObjectIdElement = parentElement.append_child("CADObjectId");
         cadObjectIdElement.text() = (*cadObjectId).c_str();
         result = cadObjectIdElement;
