@@ -3046,6 +3046,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(SurfacePropertyExposedFoundationPerimeter);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
+    REGISTER_CONSTRUCTOR(SurfacePropertySurroundingSurfaces);
     REGISTER_CONSTRUCTOR(SwimmingPoolIndoor);
     REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
     REGISTER_CONSTRUCTOR(TemperingValve);
@@ -3573,6 +3574,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyExposedFoundationPerimeter);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertySurroundingSurfaces);
     REGISTER_COPYCONSTRUCTORS(SwimmingPoolIndoor);
     REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);
     REGISTER_COPYCONSTRUCTORS(TemperingValve);

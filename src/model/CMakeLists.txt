@@ -1508,6 +1508,9 @@ set(${target_name}_src
   SurfacePropertyOtherSideConditionsModel.cpp
   SurfacePropertyOtherSideConditionsModel.hpp
   SurfacePropertyOtherSideConditionsModel_Impl.hpp
+  SurfacePropertySurroundingSurfaces.cpp
+  SurfacePropertySurroundingSurfaces.hpp
+  SurfacePropertySurroundingSurfaces_Impl.hpp
   SwimmingPoolIndoor.cpp
   SwimmingPoolIndoor.hpp
   SwimmingPoolIndoor_Impl.hpp
