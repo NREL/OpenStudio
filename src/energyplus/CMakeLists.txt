@@ -570,6 +570,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmInside.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmOutside.cpp
   ReverseTranslator/ReverseTranslateSurfacePropertyExposedFoundationPerimeter.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertyLocalEnvironment.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertySurroundingSurfaces.cpp
   ReverseTranslator/ReverseTranslateSwimmingPoolIndoor.cpp
   ReverseTranslator/ReverseTranslateThermostatSetpointDualSetpoint.cpp
   ReverseTranslator/ReverseTranslateTimestep.cpp
