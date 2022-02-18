@@ -110,3 +110,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_Condition) {
     EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_Mixed).size());
   }
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_TwoPlantLoops) {
+  ForwardTranslator ft;
+  Model m;
+
+  WaterHeaterMixed wh(m);
+
+  PlantLoop p1(m);
+  PlantLoop p2(m);
+
+  EXPECT_TRUE(wh.addToNode(p1.supplyInletNode()));
+
+  // try 1
+  PipeAdiabatic bypass_pipe(m);
+  p2.addSupplyBranchForComponent(bypass_pipe);
+  ASSERT_TRUE(bypass_pipe.inletModelObject()->optionalCast<Node>());
+  EXPECT_TRUE(wh.addToSecondaryNode(bypass_pipe.inletModelObject()->cast<Node>()));
+  bypass_pipe.remove();
+
+  // try 2
+  // EXPECT_TRUE(wh.addToSecondaryNode(p2.supplyInletNode()));
+
+  Workspace w = ft.translateModel(m);
+  EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_Mixed).size());
+  EXPECT_EQ(2u, w.getObjectsByType(IddObjectType::PlantLoop).size());
+}

@@ -109,13 +109,15 @@ TEST_F(ModelFixture, WaterHeaterMixed_TwoPlantLoops) {
   EXPECT_EQ(0u, p2.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
 
   // plant loop #2
-  PipeAdiabatic bypass_pipe(m);
+  // try 1
+  /*   PipeAdiabatic bypass_pipe(m);
   p2.addSupplyBranchForComponent(bypass_pipe);
   ASSERT_TRUE(bypass_pipe.inletModelObject()->optionalCast<Node>());
   EXPECT_TRUE(wh.addToSecondaryNode(bypass_pipe.inletModelObject()->cast<Node>()));
-  bypass_pipe.remove();
+  bypass_pipe.remove(); */
 
-  /* EXPECT_TRUE(wh.addToSecondaryNode(p2.supplyInletNode())); */
+  // try 2
+  EXPECT_TRUE(wh.addToSecondaryNode(p2.supplyInletNode()));
 
   EXPECT_EQ(1u, p1.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
   EXPECT_EQ(1u, p2.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
