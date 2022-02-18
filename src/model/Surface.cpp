@@ -55,6 +55,8 @@
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 #include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
+#include "SurfacePropertyLocalEnvironment.hpp"
+#include "SurfacePropertyLocalEnvironment_Impl.hpp"
 #include "AirflowNetworkSurface.hpp"
 #include "AirflowNetworkSurface_Impl.hpp"
 #include "AirflowNetworkDetailedOpening.hpp"
@@ -168,6 +170,8 @@ namespace model {
         auto coefficientsClone = coefficients->clone(model).cast<SurfacePropertyConvectionCoefficients>();
         coefficientsClone.setSurface(newParentAsModelObject);
       }
+
+      // TODO: do we clone the SurfacePropertyLocalEnvironment?
 
       auto foundation = adjacentFoundation();
       if (foundation) {
@@ -942,6 +946,26 @@ namespace model {
         return spccs.at(0);
       } else {
         LOG(Error, "More than one SurfacePropertyConvectionCoefficients points to this Surface");
+        return boost::none;
+      }
+    }
+
+    boost::optional<SurfacePropertyLocalEnvironment> Surface_Impl::surfacePropertyLocalEnvironment() const {
+
+      std::vector<SurfacePropertyLocalEnvironment> result;
+      for (auto& localEnv : model().getConcreteModelObjects<SurfacePropertyLocalEnvironment>()) {
+        if (auto surface_ = localEnv.exteriorSurfaceAsSurface()) {
+          if (surface_->handle() == handle()) {
+            result.push_back(localEnv);
+          }
+        }
+      }
+      if (result.empty()) {
+        return boost::none;
+      } else if (result.size() == 1) {
+        return result.at(0);
+      } else {
+        LOG(Error, "More than one SurfacePropertyLocalEnvironment points to this Surface");
         return boost::none;
       }
     }
@@ -2277,6 +2301,10 @@ namespace model {
 
   boost::optional<SurfacePropertyConvectionCoefficients> Surface::surfacePropertyConvectionCoefficients() const {
     return getImpl<detail::Surface_Impl>()->surfacePropertyConvectionCoefficients();
+  }
+
+  boost::optional<SurfacePropertyLocalEnvironment> Surface::surfacePropertyLocalEnvironment() const {
+    return getImpl<detail::Surface_Impl>()->surfacePropertyLocalEnvironment();
   }
 
   boost::optional<SurfacePropertyOtherSideCoefficients> Surface::surfacePropertyOtherSideCoefficients() const {

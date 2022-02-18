@@ -49,7 +49,8 @@ namespace model {
   class WindowPropertyFrameAndDivider;
   class SurfacePropertyOtherSideCoefficients;
   class SurfacePropertyOtherSideConditionsModel;
-  class SurfacePropertyConfectionCoefficients;
+  class SurfacePropertyConvectionCoefficients;
+  class SurfacePropertyLocalEnvironment;
 
   namespace detail {
 
@@ -225,6 +226,8 @@ namespace model {
 
       /** Returns the surface property convection coefficients */
       boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+
+      boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;
 
       /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
       boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
