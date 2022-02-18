@@ -68,6 +68,7 @@
 #include "../utilities/units/UnitFactory.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -337,6 +338,79 @@ namespace gbxml {
     return model;
   }
 
+  // A 'quick and dirty' method to find and correct surfaces that have incorrect orientations
+  // Checks the surface against the space bounding box
+  // If the surface is at or near the upper bound of the bounding box it should be a Roof/Ceiling
+  // If the surface is at or near the lower bound of the bounding box it should be a Floor
+  // Works only for spaces with 3D shapes that are prisms in the sense that they have only two
+  // levels where there are horizontal surfaces.
+  void ReverseTranslator::validateSpaceSurfaces(openstudio::model::Model& model) {
+
+    double tol = 0.001;
+
+    const auto& spaces = model.getConcreteModelObjects<openstudio::model::Space>();
+    for (auto& space : spaces) {
+      std::string spaceName = space.name().value();
+
+      const auto& bounds = space.boundingBox();
+      auto surfaces = space.surfaces();
+      for (auto& surface : surfaces) {
+        std::string surfType = surface.surfaceType();
+        std::string surfName = surface.name().value();
+
+        // Look for Roof or Floor surfaces that have adjacent surface (if there's no adjacwent surface
+        // then the spaces cannot be in the wrong order and the orientation would have already been fixed)
+        boost::optional<openstudio::model::Surface> adjacentSurf = surface.adjacentSurface();
+        if ((surfType == "RoofCeiling" || surfType == "Floor") && adjacentSurf) {
+          auto vertices = surface.vertices();
+
+          if (std::abs(vertices[0].z() - bounds.maxZ().value()) > tol && std::abs(vertices[0].z() - bounds.minZ().value()) > tol) {
+
+            // Log this because we cant do a face orientation check because the space
+            // isnt a prism (it has > 2 levels of horizontal surfaces)
+            LOG(Warn, "Skipping surface " << surfName << " of type " << surfType << " because it is not a prism");
+            continue;
+          }
+
+          if (std::abs(vertices[0].z() - bounds.maxZ().value()) <= tol) {
+
+            // Surface is at the top of the space bounding box so it should be a roof/ceiling
+            // and the normal should be up (z should be > 0)
+            auto surfType = surface.surfaceType();
+            if (surfType != "RoofCeiling") {
+              // Log changing surface type
+              LOG(Warn, "Changing surface type from " << surfType << " to RoofCeiling. Surface vertices elevation is above the space.");
+              surface.setSurfaceType("RoofCeiling");
+            }
+            const auto& normal = surface.outwardNormal();
+            if (normal.z() < 0) {
+              // Log reversing surface
+              LOG(Warn, "Reversing surface orientation because surface is a RoofCeiling but the surface is oriented down.");
+              std::reverse(vertices.begin(), vertices.end());
+              surface.setVertices(vertices);
+            }
+          } else if (std::abs(vertices[0].z() - bounds.minZ().value()) <= tol) {
+
+            // Surface is at the bottom of the space's bounding box and so should be a floor
+            // and the normal shuld be down (z < 0)
+            auto surfType = surface.surfaceType();
+            if (surfType != "Floor") {
+              // Log changing surface type
+              surface.setSurfaceType("Floor");
+            }
+            const auto& normal = surface.outwardNormal();
+            if (normal.z() > 0) {
+              // Log reversing surface
+              LOG(Warn, "Reversing surface orientation because surface is a Floor but the surface is oriented up.");
+              std::reverse(vertices.begin(), vertices.end());
+              surface.setVertices(vertices);
+            }
+          }
+        }
+      }
+    }
+  }
+
   boost::optional<model::ModelObject> ReverseTranslator::translateCampus(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
 
@@ -366,6 +440,7 @@ namespace gbxml {
       }
     }
 
+    validateSpaceSurfaces(model);
     return facility;
   }
 
