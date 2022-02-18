@@ -119,6 +119,7 @@ set(model_resources_src
   model/floorplan_school.osm
   model/7-7_Windows_Complete.osm
   model/15023_Model12.osm
+  model/offset_tests.osm
 )
 
 
