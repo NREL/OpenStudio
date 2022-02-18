@@ -53,7 +53,7 @@
 
 #include "../../model/Model.hpp"
 #include "utilities/core/Compare.hpp"
-
+#include "utilities/geometry/BoundingBox.hpp"
 #include <resources.hxx>
 
 #include <sstream>
@@ -340,6 +340,74 @@ TEST_F(gbXMLFixture, ForwardTranslator_exampleModel_State) {
 
   EXPECT_EQ(gbXML_str1.length(), gbXML_str2.length());
   EXPECT_GT(gbXML_str1.length(), 50000);
+}
+
+// Opens a model with known issues(TropicBird). In this model some surfaces
+// are oriented incorrectly, this test verifies that the surfaces have been corrected.
+// One example is surface T-00-316-I-F-32 that has  a z value of 121.035
+// The two related spaces are 00 Plenum (with a z range of 119.635 - 120.535) and
+// 316 LivingKitchen (121.033 - 126.835). So LivingKitchen is above 00 Plenum so the surface
+// should be a floor for the LivingKitchen and a ceiling for 00 Plenum,
+// The polyloop in the file is clockwise so the normal is pointing down, this orientation
+// is applcable to 00 Plenum because it is the first space in the list but the surface
+// is a ceiling for this space and so the orientation should be anti-clickwise.
+// Thats the problem in a nutshell anyway!
+// If the fix worked then when we check the orientation of all the surfaces we should not
+// find any errors
+TEST_F(gbXMLFixture, ForwardTranslator_Issue_4375) {
+
+  // Load the file with known issues
+  path p = resourcesPath() / openstudio::toPath("gbxml/TropicBird.xml");
+  ASSERT_TRUE(openstudio::filesystem::exists(p));
+  ReverseTranslator reverseTranslator;
+  boost::optional<Model> model2 = reverseTranslator.loadModel(p);
+
+  ASSERT_TRUE(model2);
+
+  // Chck the surfaces
+  const auto& spaces = model2->getConcreteModelObjects<Space>();
+  for (const auto& space : spaces) {
+    std::string spaceName = space.name().value();
+
+    const auto& bounds = space.boundingBox();
+    const auto& surfaces = space.surfaces();
+    for (auto& surface : surfaces) {
+      std::string surfType = surface.surfaceType();
+      std::string surfName = surface.name().value();
+
+      double tol = 0.01;
+      boost::optional<openstudio::model::Surface> adjacentSurf = surface.adjacentSurface();
+      if ((surfType == "RoofCeiling" || surfType == "Floor") && adjacentSurf) {
+        const auto& vertices = surface.vertices();
+
+        if (std::abs(vertices[0].z() - bounds.maxZ().value()) > tol && std::abs(vertices[0].z() - bounds.minZ().value()) > tol) {
+
+          // Log this because we cant do a face orientation check because the space
+          // isnt a prism (it has > 2 levels of horizontal surfaces)
+          continue;
+        }
+
+        if (std::abs(vertices[0].z() - bounds.maxZ().value()) <= tol) {
+
+          // Surface is at the top of the space bounding box so it should be a roof/ceiling
+          // and the normal should be up (z should be > 0)
+          auto surfType = surface.surfaceType();
+          ASSERT_EQ(surfType, "RoofCeiling");
+          auto normal = surface.outwardNormal();
+          ASSERT_TRUE(normal.z() > 0);
+
+        } else if (std::abs(vertices[0].z() - bounds.minZ().value()) <= tol) {
+
+          // Surface is at the bottom of the space's bounding box and so should be a floor
+          // and the normal shuld be down (z < 0)
+          auto surfType = surface.surfaceType();
+          ASSERT_EQ(surfType, "Floor");
+          auto normal = surface.outwardNormal();
+          ASSERT_TRUE(normal.z() < 0);
+        }
+      }
+    }
+  }
 }
 
 Model testModel() {

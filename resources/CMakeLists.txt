@@ -271,6 +271,8 @@ SET(gbxml_resources_src
   gbxml/3951_Geometry_bug.xml
   gbxml/3997_WindowScaling_bug.xml
   gbxml/TestSchedules.xml
+  gbxml/TropicBird_BEM_4_2018.xml
+  gbxml/TropicBird.xml
 )
 
 # update the resources
