@@ -432,9 +432,11 @@ namespace model {
   class SurfaceControlMovableInsulation;
   class SurfacePropertyConvectionCoefficients;
   class SurfacePropertyConvectionCoefficientsMultipleSurface;
+  class SurfacePropertyLocalEnvironment;
   class SurfacePropertyExposedFoundationPerimeter;
   class SurfacePropertyOtherSideCoefficients;
   class SurfacePropertyOtherSideConditionsModel;
+  class SurfacePropertySurroundingSurfaces;
   class SwimmingPoolIndoor;
   class TableMultiVariableLookup;
   class TemperingValve;
@@ -1391,6 +1393,10 @@ namespace energyplus {
     boost::optional<IdfObject> translateSurfacePropertyOtherSideCoefficients(model::SurfacePropertyOtherSideCoefficients& modelObject);
 
     boost::optional<IdfObject> translateSurfacePropertyOtherSideConditionsModel(model::SurfacePropertyOtherSideConditionsModel& modelObject);
+
+    boost::optional<IdfObject> translateSurfacePropertyLocalEnvironment(model::SurfacePropertyLocalEnvironment& modelObject);
+
+    boost::optional<IdfObject> translateSurfacePropertySurroundingSurfaces(model::SurfacePropertySurroundingSurfaces& modelObject);
 
     boost::optional<IdfObject> translateSwimmingPoolIndoor(model::SwimmingPoolIndoor& modelObject);
 

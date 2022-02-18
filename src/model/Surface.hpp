@@ -49,6 +49,7 @@ namespace model {
   class SurfacePropertyOtherSideCoefficients;
   class SurfacePropertyOtherSideConditionsModel;
   class SurfacePropertyConvectionCoefficients;
+  class SurfacePropertyLocalEnvironment;
   class AirflowNetworkSurface;
   class AirflowNetworkDetailedOpening;
   class AirflowNetworkSimpleOpening;
@@ -180,6 +181,9 @@ namespace model {
 
     /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
     boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+
+    /** Returns the SurfacePropertyLocalEnvironment, if it exists. */
+    boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;
 
     /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
     boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
