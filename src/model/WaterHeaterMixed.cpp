@@ -45,6 +45,10 @@
 #include "ThermalZone_Impl.hpp"
 #include "WaterHeaterSizing.hpp"
 #include "WaterHeaterSizing_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterHeater_Mixed_FieldEnums.hxx>
@@ -1216,6 +1220,34 @@ namespace model {
       }
     }
 
+    bool WaterHeaterMixed_Impl::addToSecondaryNode(Node& node) {
+      auto thisModelObject = getObject<ModelObject>();
+      auto t_plantLoop = node.plantLoop();
+
+      boost::optional<unsigned> componentInletPort = demandInletPort();
+      boost::optional<unsigned> componentOutletPort = demandOutletPort();
+
+      boost::optional<HVACComponent> systemStartComponent;
+      boost::optional<HVACComponent> systemEndComponent;
+
+      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) return false;
+
+      if (t_plantLoop) {
+        if (t_plantLoop->supplyComponent(node.handle())) {
+
+          systemStartComponent = t_plantLoop->supplyInletNode();
+          systemEndComponent = t_plantLoop->supplyOutletNode();
+        }
+      }
+
+      if (systemStartComponent && systemEndComponent && componentOutletPort && componentInletPort) {
+        return HVACComponent_Impl::addToNode(node, systemStartComponent.get(), systemEndComponent.get(), componentInletPort.get(),
+                                             componentOutletPort.get());
+      } else {
+        return false;
+      }
+    }
+
   }  // namespace detail
 
   WaterHeaterMixed::WaterHeaterMixed(const Model& model) : WaterToWaterComponent(WaterHeaterMixed::iddObjectType(), model) {
@@ -1828,6 +1860,10 @@ namespace model {
 
   WaterHeaterSizing WaterHeaterMixed::waterHeaterSizing() const {
     return getImpl<detail::WaterHeaterMixed_Impl>()->waterHeaterSizing();
+  }
+
+  bool WaterHeaterMixed::addToSecondaryNode(Node& node) {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->addToSecondaryNode(node);
   }
 
 }  // namespace model

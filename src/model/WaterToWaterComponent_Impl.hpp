@@ -119,12 +119,6 @@ namespace model {
 
       boost::optional<ModelObject> tertiaryOutletModelObject() const;
 
-      /*
-  * TODO
-  */
-
-      virtual bool addToSecondaryNode(Node& node);
-
      protected:
       friend class Model_Impl;
 

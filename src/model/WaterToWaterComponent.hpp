@@ -124,9 +124,6 @@ namespace model {
     /** Returns the optional ModelObject connected to the tertiary outlet. **/
     boost::optional<ModelObject> tertiaryOutletModelObject() const;
 
-    /** TODO **/
-    virtual bool addToSecondaryNode(Node& node);
-
     void disconnect();
 
    protected:

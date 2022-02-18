@@ -364,6 +364,8 @@ namespace model {
 
     WaterHeaterSizing waterHeaterSizing() const;
 
+    bool addToSecondaryNode(Node& node);
+
     //@}
    protected:
     /// @cond
