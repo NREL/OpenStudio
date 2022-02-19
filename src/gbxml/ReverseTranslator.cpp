@@ -447,12 +447,8 @@ namespace gbxml {
   boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, building));
-    building.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    building.setName(escapeName(id, name));
+    translateId(element, building);
+    translateName(element, building);
 
     auto storyElements = element.children("BuildingStorey");
     if (m_progressBar) {
@@ -494,12 +490,8 @@ namespace gbxml {
   boost::optional<model::ModelObject> ReverseTranslator::translateBuildingStory(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::BuildingStory story(model);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, story));
-    story.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    story.setName(escapeName(id, name));
+    translateId(element, story);
+    translateName(element, story);
 
     // DLM: we need to better support separate name from id in this translator
 
@@ -511,14 +503,8 @@ namespace gbxml {
   boost::optional<model::ModelObject> ReverseTranslator::translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::ThermalZone zone(model);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, zone));
-    zone.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    zone.setName(escapeName(id, name));
-
-    // DLM: we need to better support separate name from id in this translator
+    translateId(element, zone);
+    translateName(element, zone);
 
     // DLM: todo, translate setpoints
 
@@ -536,12 +522,8 @@ namespace gbxml {
   boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::Space space(model);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, space));
-    space.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    space.setName(escapeName(id, name));
+    translateId(element, space);
+    translateName(element, space);
 
     //DLM: we should be using a map of id to model object to get this, not relying on name
     std::string storyId = element.attribute("buildingStoreyIdRef").value();
@@ -568,7 +550,11 @@ namespace gbxml {
       // DLM: may want to revisit this
       // create a new thermal zone if none assigned
       openstudio::model::ThermalZone thermalZone(model);
-      thermalZone.setName(escapeName(id, name) + " ThermalZone");
+      std::string id = element.attribute("id").value();
+      std::string name = element.child("Name").text().as_string();
+      thermalZone.setName(id + " ThermalZone");
+      thermalZone.additionalProperties().setFeature("gbXMLId", id + " Thermal Zone");
+      thermalZone.additionalProperties().setFeature("displayName", name + " Thermal Zone");
       space.setThermalZone(thermalZone);
     }
 
@@ -643,12 +629,8 @@ namespace gbxml {
 
       openstudio::model::ShadingSurface shadingSurface(vertices, model);
 
-      std::string shadingSurfaceId = element.attribute("id").value();
-      m_idToObjectMap.insert(std::make_pair(shadingSurfaceId, shadingSurface));
-      shadingSurface.additionalProperties().setFeature("gbXMLId", shadingSurfaceId);
-
-      std::string shadingSurfaceName = element.child("Name").text().as_string();
-      shadingSurface.setName(escapeName(shadingSurfaceId, shadingSurfaceName));
+      translateId(element, shadingSurface);
+      translateName(element, shadingSurface);
 
       openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
@@ -692,12 +674,8 @@ namespace gbxml {
 
       openstudio::model::Surface surface(vertices, model);
 
-      std::string surfaceId = element.attribute("id").value();
-      m_idToObjectMap.insert(std::make_pair(surfaceId, surface));
-      surface.additionalProperties().setFeature("gbXMLId", surfaceId);
-
-      std::string surfaceName = element.child("Name").text().as_string();
-      surface.setName(escapeName(surfaceId, surfaceName));
+      translateId(element, surface);
+      translateName(element, surface);
 
       std::string exposedToSun = element.attribute("exposedToSun").value();
 
@@ -1055,12 +1033,8 @@ namespace gbxml {
     openstudio::model::SubSurface subSurface(vertices, model);
     subSurface.setSurface(surface);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, subSurface));
-    subSurface.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    subSurface.setName(escapeName(id, name));
+    translateId(element, subSurface);
+    translateName(element, subSurface);
 
     result = subSurface;
 
@@ -1121,21 +1095,33 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCADObjectId(const pugi::xml_node& element,
-                                                                                          openstudio::model::ModelObject& modelObject) {
-    model::AdditionalProperties result = modelObject.additionalProperties();
+  void ReverseTranslator::translateId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject) {
+    std::string id = element.attribute("id").value();
+    m_idToObjectMap.insert(std::make_pair(id, modelObject));
+    modelObject.setName(id);
+    modelObject.setGBXMLId(id);
+  }
+
+  void ReverseTranslator::translateName(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject) {
+
+    auto name = element.child("Name").text();
+    if (!name.empty()) {
+      modelObject.setDisplayName(name.as_string());
+    }
+  }
+
+  void ReverseTranslator::translateCADObjectId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject) {
 
     auto cadObjectId = element.text();
     if (!cadObjectId.empty()) {
-      result.setFeature("CADObjectId", cadObjectId.as_string());
+      modelObject.setCADObjectId(cadObjectId.as_string());
 
       auto programIdRef = element.attribute("programIdRef");
       if (programIdRef) {
+        model::AdditionalProperties result = modelObject.additionalProperties();
         result.setFeature("programIdRef", programIdRef.value());
       }
     }
-
-    return result;
   }
 
 }  // namespace gbxml

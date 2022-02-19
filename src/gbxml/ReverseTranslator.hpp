@@ -98,7 +98,15 @@ namespace gbxml {
     boost::optional<openstudio::model::ModelObject> translateSpace(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSurface(const pugi::xml_node& element, openstudio::model::Model& model);
     boost::optional<openstudio::model::ModelObject> translateSubSurface(const pugi::xml_node& element, openstudio::model::Surface& surface);
-    boost::optional<openstudio::model::ModelObject> translateCADObjectId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject);
+
+    /** Set the model object Name and gbXMLId additional property as the id. */
+    void translateId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject);
+
+    /** Set the model object displayName additional property as the Name. */
+    void translateName(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject);
+
+    /** Set the model object CADObjectId additional property as the CADObjectId. */
+    void translateCADObjectId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject);
 
     // In MapSchedules.cpp
     boost::optional<openstudio::model::ModelObject> translateScheduleDay(const pugi::xml_node& element, openstudio::model::Model& model);
