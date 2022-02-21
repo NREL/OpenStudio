@@ -660,6 +660,20 @@ namespace energyplus {
 
       if (allComponents.size() > 2u) {
         populateBranch(_equipmentBranch, allComponents, plantLoop, true);
+
+        // boost::optional<WaterToWaterComponent> plantLoop.waterHeaterOnSecondaryNode();
+        // boost::optional<WaterToWaterComponent> plantLoop.sourceSideNodeWaterHeater();
+/*         for (component in allComponents) {
+          if (auto waterHeaterMixed = modelObject.optionalCast<WaterHeaterMixed>()) {
+            if (waterHeaterMixed->demandInletModelObject() && waterHeaterMixed->demandOutletModelObject()) {
+              inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
+              outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
+              if (inletNode in allComponents && outletNode in allComponents) {
+                populateBranch(_equipmentBranch, allComponents, plantLoop, false);
+              }
+            }
+          }
+        } */
       } else {
         IdfObject pipe(IddObjectType::Pipe_Adiabatic);
         pipe.setName(plantLoop.name().get() + " Supply Branch " + istring + " Pipe");
