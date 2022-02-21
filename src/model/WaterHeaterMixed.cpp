@@ -1247,6 +1247,7 @@ namespace model {
 
     bool WaterHeaterMixed_Impl::removeFromSourceSidePlantLoop() {
       if (auto plant = sourceSidePlantLoop()) {
+        m_sourceSidePlantLoop = boost::none;
         return HVACComponent_Impl::removeFromLoop(plant->supplyInletNode(), plant->supplyOutletNode(), demandInletPort(), demandOutletPort());
       }
 
