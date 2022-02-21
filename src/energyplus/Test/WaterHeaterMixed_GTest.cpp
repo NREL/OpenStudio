@@ -144,7 +144,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_TwoPlantLoops) {
 
   PlantLoop p2(m);
 
-  // try 1
   PipeAdiabatic bypass_pipe(m);
   p2.addSupplyBranchForComponent(bypass_pipe);
   ASSERT_TRUE(bypass_pipe.inletModelObject()->optionalCast<Node>());
@@ -161,6 +160,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_TwoPlantLoops) {
 
   EXPECT_EQ(p1.supplyInletNode().nameString(), idfWHMixed.getString(WaterHeater_MixedFields::UseSideInletNodeName, false).get());  // doesn't change
   EXPECT_EQ(useSideOutletNodeName, idfWHMixed.getString(WaterHeater_MixedFields::UseSideOutletNodeName, false).get());             // doesn't change
-  EXPECT_NE(p2.supplyInletNode().nameString(), idfWHMixed.getString(WaterHeater_MixedFields::SourceSideInletNodeName, false).get());  // EQ if "try 2"
+  EXPECT_NE(p2.supplyInletNode().nameString(), idfWHMixed.getString(WaterHeater_MixedFields::SourceSideInletNodeName, false).get());
   EXPECT_NE("", idfWHMixed.getString(WaterHeater_MixedFields::SourceSideOutletNodeName, false).get());
 }
