@@ -42,6 +42,7 @@ namespace model {
   class ThermalZone;
   class WaterHeaterSizing;
   class Node;
+  class PlantLoop;
 
   namespace detail {
 
@@ -365,7 +366,15 @@ namespace model {
 
     WaterHeaterSizing waterHeaterSizing() const;
 
-    bool addToSecondaryNode(Node& node);
+    boost::optional<PlantLoop> sourceSidePlantLoop() const;
+
+    bool removeFromSourceSidePlantLoop();
+
+    bool addToSourceSideNode(Node& node);
+
+    boost::optional<ModelObject> sourceSideInletModelObject() const;
+
+    boost::optional<ModelObject> sourceSideOutletModelObject() const;
 
     //@}
    protected:

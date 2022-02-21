@@ -1220,7 +1220,40 @@ namespace model {
       }
     }
 
-    bool WaterHeaterMixed_Impl::addToSecondaryNode(Node& node) {
+    boost::optional<PlantLoop> WaterHeaterMixed_Impl::sourceSidePlantLoop() const {
+      if (m_sourceSidePlantLoop) {
+        return m_sourceSidePlantLoop;
+      } else {
+        boost::optional<HVACComponent> sourceSideOutletHVACComponent;
+
+        if (auto t_sourceSideOutletModelObject = sourceSideOutletModelObject()) {
+          sourceSideOutletHVACComponent = t_sourceSideOutletModelObject->optionalCast<HVACComponent>();
+        }
+
+        if (sourceSideOutletHVACComponent) {
+          auto plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
+
+          for (const auto& plantLoop : plantLoops) {
+            if (!plantLoop.supplyComponents(plantLoop.supplyInletNode(), sourceSideOutletHVACComponent.get()).empty()) {
+              m_sourceSidePlantLoop = plantLoop;
+              return plantLoop;
+            }
+          }
+        }
+      }
+
+      return boost::none;
+    }
+
+    bool WaterHeaterMixed_Impl::removeFromSourceSidePlantLoop() {
+      if (auto plant = sourceSidePlantLoop()) {
+        return HVACComponent_Impl::removeFromLoop(plant->supplyInletNode(), plant->supplyOutletNode(), demandInletPort(), demandOutletPort());
+      }
+
+      return false;
+    }
+
+    bool WaterHeaterMixed_Impl::addToSourceSideNode(Node& node) {
       auto thisModelObject = getObject<ModelObject>();
       auto t_plantLoop = node.plantLoop();
 
@@ -1237,6 +1270,8 @@ namespace model {
 
           systemStartComponent = t_plantLoop->supplyInletNode();
           systemEndComponent = t_plantLoop->supplyOutletNode();
+
+          removeFromSourceSidePlantLoop();
         }
       }
 
@@ -1246,6 +1281,14 @@ namespace model {
       } else {
         return false;
       }
+    }
+
+    boost::optional<ModelObject> WaterHeaterMixed_Impl::sourceSideInletModelObject() const {
+      return connectedObject(demandInletPort());
+    }
+
+    boost::optional<ModelObject> WaterHeaterMixed_Impl::sourceSideOutletModelObject() const {
+      return connectedObject(demandOutletPort());
     }
 
   }  // namespace detail
@@ -1862,8 +1905,24 @@ namespace model {
     return getImpl<detail::WaterHeaterMixed_Impl>()->waterHeaterSizing();
   }
 
-  bool WaterHeaterMixed::addToSecondaryNode(Node& node) {
-    return getImpl<detail::WaterHeaterMixed_Impl>()->addToSecondaryNode(node);
+  boost::optional<PlantLoop> WaterHeaterMixed::sourceSidePlantLoop() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->sourceSidePlantLoop();
+  }
+
+  bool WaterHeaterMixed::removeFromSourceSidePlantLoop() {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->removeFromSourceSidePlantLoop();
+  }
+
+  bool WaterHeaterMixed::addToSourceSideNode(Node& node) {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->addToSourceSideNode(node);
+  }
+
+  boost::optional<ModelObject> WaterHeaterMixed::sourceSideInletModelObject() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->sourceSideInletModelObject();
+  }
+
+  boost::optional<ModelObject> WaterHeaterMixed::sourceSideOutletModelObject() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->sourceSideOutletModelObject();
   }
 
 }  // namespace model
