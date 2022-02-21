@@ -117,16 +117,17 @@ TEST_F(ModelFixture, WaterHeaterMixed_TwoPlantLoops) {
   std::string useSideOutletNodeName = wh.supplyOutletModelObject()->cast<Node>().nameString();
   EXPECT_NE("", useSideOutletNodeName);
 
+  EXPECT_FALSE(wh.sourceSidePlantLoop());
+
   // plant loop #2
-  // try 1
   PipeAdiabatic bypass_pipe(m);
   p2.addSupplyBranchForComponent(bypass_pipe);
   ASSERT_TRUE(bypass_pipe.inletModelObject()->optionalCast<Node>());
-  EXPECT_TRUE(wh.addToSecondaryNode(bypass_pipe.inletModelObject()->cast<Node>()));
+  EXPECT_TRUE(wh.addToSourceSideNode(bypass_pipe.inletModelObject()->cast<Node>()));
   bypass_pipe.remove();
 
-  // try 2
-  //EXPECT_TRUE(wh.addToSecondaryNode(p2.supplyInletNode()));
+  ASSERT_TRUE(wh.sourceSidePlantLoop());
+  EXPECT_EQ(wh.sourceSidePlantLoop()->handle(), p2.handle());
 
   EXPECT_EQ(1u, p1.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
   EXPECT_EQ(1u, p2.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
@@ -140,4 +141,7 @@ TEST_F(ModelFixture, WaterHeaterMixed_TwoPlantLoops) {
   EXPECT_EQ(useSideOutletNodeName, wh.supplyOutletModelObject()->cast<Node>().nameString());             // doesn't change
   EXPECT_NE(p2.supplyInletNode().nameString(), wh.demandInletModelObject()->cast<Node>().nameString());
   EXPECT_NE("", wh.demandOutletModelObject()->cast<Node>().nameString());
+
+  EXPECT_TRUE(wh.removeFromSourceSidePlantLoop());
+  EXPECT_FALSE(wh.sourceSidePlantLoop());
 }
