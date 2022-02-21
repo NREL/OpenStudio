@@ -353,6 +353,15 @@ namespace energyplus {
           } else if (isSupplyBranch) {
             inletNode = waterToWaterComponent->supplyInletModelObject()->optionalCast<Node>();
             outletNode = waterToWaterComponent->supplyOutletModelObject()->optionalCast<Node>();
+
+            if (auto water_heater_mixed = modelObject.optionalCast<WaterHeaterMixed>()) {
+              if (boost::optional<PlantLoop> sourceSidePlantLoop = water_heater_mixed->sourceSidePlantLoop()) {
+                if (loop.handle() == sourceSidePlantLoop->handle()) {
+                  inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
+                  outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
+                }
+              }
+            }
           } else {
             if (auto tertiaryInletModelObject = waterToWaterComponent->tertiaryInletModelObject()) {
               if (auto tertiaryInletNode = tertiaryInletModelObject->optionalCast<Node>()) {
@@ -660,20 +669,6 @@ namespace energyplus {
 
       if (allComponents.size() > 2u) {
         populateBranch(_equipmentBranch, allComponents, plantLoop, true);
-
-        // boost::optional<WaterToWaterComponent> plantLoop.waterHeaterOnSecondaryNode();
-        // boost::optional<WaterToWaterComponent> plantLoop.sourceSideNodeWaterHeater();
-/*         for (component in allComponents) {
-          if (auto waterHeaterMixed = modelObject.optionalCast<WaterHeaterMixed>()) {
-            if (waterHeaterMixed->demandInletModelObject() && waterHeaterMixed->demandOutletModelObject()) {
-              inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
-              outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
-              if (inletNode in allComponents && outletNode in allComponents) {
-                populateBranch(_equipmentBranch, allComponents, plantLoop, false);
-              }
-            }
-          }
-        } */
       } else {
         IdfObject pipe(IddObjectType::Pipe_Adiabatic);
         pipe.setName(plantLoop.name().get() + " Supply Branch " + istring + " Pipe");
