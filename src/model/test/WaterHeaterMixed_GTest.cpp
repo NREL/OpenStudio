@@ -120,6 +120,8 @@ TEST_F(ModelFixture, WaterHeaterMixed_TwoPlantLoops) {
 
   ASSERT_TRUE(wh.plantLoop());
   EXPECT_EQ(wh.plantLoop()->handle(), p1.handle());
+  ASSERT_TRUE(wh.useSidePlantLoop());
+  EXPECT_EQ(wh.useSidePlantLoop()->handle(), p1.handle());
   EXPECT_FALSE(wh.sourceSidePlantLoop());
 
   // plant loop #2
@@ -133,6 +135,8 @@ TEST_F(ModelFixture, WaterHeaterMixed_TwoPlantLoops) {
 
   ASSERT_TRUE(wh.plantLoop());
   EXPECT_EQ(wh.plantLoop()->handle(), p1.handle());
+  ASSERT_TRUE(wh.useSidePlantLoop());
+  EXPECT_EQ(wh.useSidePlantLoop()->handle(), p1.handle());
   ASSERT_TRUE(wh.sourceSidePlantLoop());
   EXPECT_NE(wh.plantLoop()->handle(), wh.sourceSidePlantLoop()->handle());
   EXPECT_EQ(wh.sourceSidePlantLoop()->handle(), p2.handle());

@@ -81,6 +81,8 @@ namespace model {
 
       virtual ModelObject clone(Model model) const override;
 
+      virtual boost::optional<PlantLoop> plantLoop() const override;
+
       //@}
       /** @name Getters */
       //@{
@@ -409,6 +411,8 @@ namespace model {
       WaterHeaterSizing waterHeaterSizing() const;
 
       boost::optional<PlantLoop> sourceSidePlantLoop() const;
+
+      boost::optional<PlantLoop> useSidePlantLoop() const;
 
       bool removeFromSourceSidePlantLoop();
 

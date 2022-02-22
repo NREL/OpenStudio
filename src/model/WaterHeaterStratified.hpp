@@ -401,6 +401,8 @@ namespace model {
 
     boost::optional<PlantLoop> sourceSidePlantLoop() const;
 
+    boost::optional<PlantLoop> useSidePlantLoop() const;
+
     bool removeFromSourceSidePlantLoop();
 
     bool addToSourceSideNode(Node& node);

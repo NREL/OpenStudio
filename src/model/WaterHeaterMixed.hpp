@@ -78,6 +78,8 @@ namespace model {
 
     static std::vector<std::string> sourceSideFlowControlModeValues();
 
+    boost::optional<PlantLoop> plantLoop() const;
+
     /** @name Getters */
     //@{
 
@@ -367,6 +369,8 @@ namespace model {
     WaterHeaterSizing waterHeaterSizing() const;
 
     boost::optional<PlantLoop> sourceSidePlantLoop() const;
+
+    boost::optional<PlantLoop> useSidePlantLoop() const;
 
     bool removeFromSourceSidePlantLoop();
 

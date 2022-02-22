@@ -1245,6 +1245,10 @@ namespace model {
       return boost::none;
     }
 
+    boost::optional<PlantLoop> WaterHeaterMixed_Impl::useSidePlantLoop() const {
+      return plantLoop();
+    }
+
     bool WaterHeaterMixed_Impl::removeFromSourceSidePlantLoop() {
       if (auto plant = sourceSidePlantLoop()) {
         m_sourceSidePlantLoop = boost::none;
@@ -1290,6 +1294,47 @@ namespace model {
 
     boost::optional<ModelObject> WaterHeaterMixed_Impl::sourceSideOutletModelObject() const {
       return connectedObject(demandOutletPort());
+    }
+
+    boost::optional<PlantLoop> WaterHeaterMixed_Impl::plantLoop() const {
+      if (m_plantLoop) {
+        return m_plantLoop;
+      } else {
+        // Note: checking for supply side only isn't sufficient for CentralHeatPumpSystem
+        // because it is on the supply side of two plant loops: the heating and the cooling plant loop
+        // We rely on tertiaryPlantLoop() method which checks for actual node connections
+        boost::optional<PlantLoop> tertiaryPlantLoop = this->tertiaryPlantLoop();
+        boost::optional<PlantLoop> sourceSidePlantLoop = this->sourceSidePlantLoop();
+
+        std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
+
+        for (const auto& elem : plantLoops) {
+          OptionalPlantLoop plantLoop = elem.optionalCast<PlantLoop>();
+          if (plantLoop) {
+            // Check that the component is on the supply side of the PlantLoop
+            if (plantLoop->supplyComponent(this->handle())) {
+              // Skip the tertiary one
+              if (tertiaryPlantLoop) {
+                if (plantLoop->handle() == tertiaryPlantLoop->handle()) {
+                  continue;
+                }
+              }
+              // Skip the sourceSide one
+              if (sourceSidePlantLoop) {
+                if (plantLoop->handle() == sourceSidePlantLoop->handle()) {
+                  continue;
+                }
+              }
+
+              m_plantLoop = plantLoop;
+
+              return plantLoop;
+            }
+          }
+        }
+      }
+
+      return boost::none;
     }
 
   }  // namespace detail
@@ -1910,6 +1955,10 @@ namespace model {
     return getImpl<detail::WaterHeaterMixed_Impl>()->sourceSidePlantLoop();
   }
 
+  boost::optional<PlantLoop> WaterHeaterMixed::useSidePlantLoop() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->useSidePlantLoop();
+  }
+
   bool WaterHeaterMixed::removeFromSourceSidePlantLoop() {
     return getImpl<detail::WaterHeaterMixed_Impl>()->removeFromSourceSidePlantLoop();
   }
@@ -1924,6 +1973,10 @@ namespace model {
 
   boost::optional<ModelObject> WaterHeaterMixed::sourceSideOutletModelObject() const {
     return getImpl<detail::WaterHeaterMixed_Impl>()->sourceSideOutletModelObject();
+  }
+
+  boost::optional<PlantLoop> WaterHeaterMixed::plantLoop() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->plantLoop();
   }
 
 }  // namespace model
