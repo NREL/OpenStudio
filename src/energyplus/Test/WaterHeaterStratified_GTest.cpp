@@ -160,8 +160,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterStratified_TwoPlantLoops) 
   ASSERT_EQ(1u, idfWHStratifieds.size());
   WorkspaceObject idfWHStratified(idfWHStratifieds[0]);
 
-  EXPECT_EQ(p1.supplyInletNode().nameString(), idfWHStratified.getString(WaterHeater_StratifiedFields::UseSideInletNodeName, false).get());  // doesn't change
-  EXPECT_EQ(useSideOutletNodeName, idfWHStratified.getString(WaterHeater_StratifiedFields::UseSideOutletNodeName, false).get());             // doesn't change
+  EXPECT_EQ(p1.supplyInletNode().nameString(),
+            idfWHStratified.getString(WaterHeater_StratifiedFields::UseSideInletNodeName, false).get());                          // doesn't change
+  EXPECT_EQ(useSideOutletNodeName, idfWHStratified.getString(WaterHeater_StratifiedFields::UseSideOutletNodeName, false).get());  // doesn't change
   EXPECT_NE(p2.supplyInletNode().nameString(), idfWHStratified.getString(WaterHeater_StratifiedFields::SourceSideInletNodeName, false).get());
   EXPECT_NE("", idfWHStratified.getString(WaterHeater_StratifiedFields::SourceSideOutletNodeName, false).get());
 }
