@@ -103,7 +103,8 @@ TEST_F(ModelFixture, WaterHeaterMixed_TwoPlantLoops) {
   PlantLoop p2(m);
 
   // plant loop #1
-  EXPECT_TRUE(wh.addToNode(p1.supplyInletNode()));
+  auto node1 = p1.supplyInletNode();
+  EXPECT_TRUE(wh.addToNode(node1));
 
   EXPECT_EQ(1u, p1.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
   EXPECT_EQ(0u, p2.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
@@ -126,8 +127,8 @@ TEST_F(ModelFixture, WaterHeaterMixed_TwoPlantLoops) {
   p2.addSupplyBranchForComponent(bypass_pipe);
   ASSERT_TRUE(bypass_pipe.inletModelObject());
   ASSERT_TRUE(bypass_pipe.inletModelObject()->optionalCast<Node>());
-  auto node = bypass_pipe.inletModelObject()->cast<Node>();
-  EXPECT_TRUE(wh.addToSourceSideNode(node));
+  auto node2 = bypass_pipe.inletModelObject()->cast<Node>();
+  EXPECT_TRUE(wh.addToSourceSideNode(node2));
   bypass_pipe.remove();
 
   ASSERT_TRUE(wh.plantLoop());

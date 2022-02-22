@@ -123,7 +123,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterStratified_TwoPlantLoops) 
 
   PlantLoop p1(m);
 
-  EXPECT_TRUE(wh.addToNode(p1.supplyInletNode()));
+  auto node1 = p1.supplyInletNode();
+  EXPECT_TRUE(wh.addToNode(node1));
 
   std::string useSideOutletNodeName;
   {
@@ -148,8 +149,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterStratified_TwoPlantLoops) 
   p2.addSupplyBranchForComponent(bypass_pipe);
   ASSERT_TRUE(bypass_pipe.inletModelObject());
   ASSERT_TRUE(bypass_pipe.inletModelObject()->optionalCast<Node>());
-  auto node = bypass_pipe.inletModelObject()->cast<Node>();
-  EXPECT_TRUE(wh.addToSourceSideNode(node));
+  auto node2 = bypass_pipe.inletModelObject()->cast<Node>();
+  EXPECT_TRUE(wh.addToSourceSideNode(node2));
   bypass_pipe.remove();
 
   Workspace w = ft.translateModel(m);
