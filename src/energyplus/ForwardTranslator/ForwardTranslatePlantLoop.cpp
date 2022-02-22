@@ -354,8 +354,19 @@ namespace energyplus {
             inletNode = waterToWaterComponent->supplyInletModelObject()->optionalCast<Node>();
             outletNode = waterToWaterComponent->supplyOutletModelObject()->optionalCast<Node>();
 
+            // WaterHeater:Mixed with Source Side nodes on supply branch
             if (auto water_heater_mixed = modelObject.optionalCast<WaterHeaterMixed>()) {
               if (boost::optional<PlantLoop> sourceSidePlantLoop = water_heater_mixed->sourceSidePlantLoop()) {
+                if (loop.handle() == sourceSidePlantLoop->handle()) {
+                  inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
+                  outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
+                }
+              }
+            }
+
+            // WaterHeater:Stratified with Source Side nodes on supply branch
+            if (auto water_heater_stratified = modelObject.optionalCast<WaterHeaterStratified>()) {
+              if (boost::optional<PlantLoop> sourceSidePlantLoop = water_heater_stratified->sourceSidePlantLoop()) {
                 if (loop.handle() == sourceSidePlantLoop->handle()) {
                   inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
                   outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();

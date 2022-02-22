@@ -146,8 +146,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_TwoPlantLoops) {
 
   PipeAdiabatic bypass_pipe(m);
   p2.addSupplyBranchForComponent(bypass_pipe);
+  ASSERT_TRUE(bypass_pipe.inletModelObject());
   ASSERT_TRUE(bypass_pipe.inletModelObject()->optionalCast<Node>());
-  EXPECT_TRUE(wh.addToSourceSideNode(bypass_pipe.inletModelObject()->cast<Node>()));
+  auto node = bypass_pipe.inletModelObject()->cast<Node>();
+  EXPECT_TRUE(wh.addToSourceSideNode(node));
   bypass_pipe.remove();
 
   Workspace w = ft.translateModel(m);

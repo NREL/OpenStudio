@@ -40,6 +40,10 @@
 
 #include "../../model/PlantLoop.hpp"
 #include "../../model/PlantLoop_Impl.hpp"
+#include "../../model/PipeAdiabatic.hpp"
+#include "../../model/PipeAdiabatic_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
@@ -109,4 +113,55 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterStratified_Condition) {
     Workspace w = ft.translateModel(m);
     EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::WaterHeater_Stratified).size());
   }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterStratified_TwoPlantLoops) {
+  ForwardTranslator ft;
+  Model m;
+
+  WaterHeaterStratified wh(m);
+
+  PlantLoop p1(m);
+
+  EXPECT_TRUE(wh.addToNode(p1.supplyInletNode()));
+
+  std::string useSideOutletNodeName;
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::PlantLoop).size());
+
+    std::vector<WorkspaceObject> idfWHStratifieds(w.getObjectsByType(IddObjectType::WaterHeater_Stratified));
+    ASSERT_EQ(1u, idfWHStratifieds.size());
+    WorkspaceObject idfWHStratified(idfWHStratifieds[0]);
+
+    EXPECT_EQ(p1.supplyInletNode().nameString(), idfWHStratified.getString(WaterHeater_StratifiedFields::UseSideInletNodeName, false).get());
+    useSideOutletNodeName = idfWHStratified.getString(WaterHeater_StratifiedFields::UseSideOutletNodeName, false).get();
+    EXPECT_NE("", useSideOutletNodeName);
+    EXPECT_EQ("", idfWHStratified.getString(WaterHeater_StratifiedFields::SourceSideInletNodeName, false).get());
+    EXPECT_EQ("", idfWHStratified.getString(WaterHeater_StratifiedFields::SourceSideOutletNodeName, false).get());
+  }
+
+  PlantLoop p2(m);
+
+  PipeAdiabatic bypass_pipe(m);
+  p2.addSupplyBranchForComponent(bypass_pipe);
+  ASSERT_TRUE(bypass_pipe.inletModelObject());
+  ASSERT_TRUE(bypass_pipe.inletModelObject()->optionalCast<Node>());
+  auto node = bypass_pipe.inletModelObject()->cast<Node>();
+  EXPECT_TRUE(wh.addToSourceSideNode(node));
+  bypass_pipe.remove();
+
+  Workspace w = ft.translateModel(m);
+
+  EXPECT_EQ(2u, w.getObjectsByType(IddObjectType::PlantLoop).size());
+
+  std::vector<WorkspaceObject> idfWHStratifieds(w.getObjectsByType(IddObjectType::WaterHeater_Stratified));
+  ASSERT_EQ(1u, idfWHStratifieds.size());
+  WorkspaceObject idfWHStratified(idfWHStratifieds[0]);
+
+  EXPECT_EQ(p1.supplyInletNode().nameString(), idfWHStratified.getString(WaterHeater_StratifiedFields::UseSideInletNodeName, false).get());  // doesn't change
+  EXPECT_EQ(useSideOutletNodeName, idfWHStratified.getString(WaterHeater_StratifiedFields::UseSideOutletNodeName, false).get());             // doesn't change
+  EXPECT_NE(p2.supplyInletNode().nameString(), idfWHStratified.getString(WaterHeater_StratifiedFields::SourceSideInletNodeName, false).get());
+  EXPECT_NE("", idfWHStratified.getString(WaterHeater_StratifiedFields::SourceSideOutletNodeName, false).get());
 }

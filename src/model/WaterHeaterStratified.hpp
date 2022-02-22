@@ -40,6 +40,8 @@ namespace model {
   class Schedule;
   class ThermalZone;
   class WaterHeaterSizing;
+  class Node;
+  class PlantLoop;
 
   namespace detail {
 
@@ -396,6 +398,16 @@ namespace model {
     boost::optional<double> autosizedSourceSideDesignFlowRate() const;
 
     WaterHeaterSizing waterHeaterSizing() const;
+
+    boost::optional<PlantLoop> sourceSidePlantLoop() const;
+
+    bool removeFromSourceSidePlantLoop();
+
+    bool addToSourceSideNode(Node& node);
+
+    boost::optional<ModelObject> sourceSideInletModelObject() const;
+
+    boost::optional<ModelObject> sourceSideOutletModelObject() const;
 
     //@}
    protected:

@@ -39,6 +39,8 @@ namespace model {
   class Schedule;
   class ThermalZone;
   class WaterHeaterSizing;
+  class Node;
+  class PlantLoop;
 
   namespace detail {
 
@@ -406,8 +408,22 @@ namespace model {
 
       WaterHeaterSizing waterHeaterSizing() const;
 
+      boost::optional<PlantLoop> sourceSidePlantLoop() const;
+
+      bool removeFromSourceSidePlantLoop();
+
+      bool addToSourceSideNode(Node& node);
+
+      boost::optional<ModelObject> sourceSideInletModelObject() const;
+
+      boost::optional<ModelObject> sourceSideOutletModelObject() const;
+
       //@}
      protected:
+      friend class Model_Impl;
+
+      mutable boost::optional<PlantLoop> m_sourceSidePlantLoop;
+
      private:
       REGISTER_LOGGER("openstudio.model.WaterHeaterStratified");
 
