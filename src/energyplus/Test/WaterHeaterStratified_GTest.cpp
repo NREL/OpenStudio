@@ -115,7 +115,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterStratified_Condition) {
   }
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterStratified_TwoPlantLoops) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterStratified_PlantLoopConnections) {
   ForwardTranslator ft;
   Model m;
 

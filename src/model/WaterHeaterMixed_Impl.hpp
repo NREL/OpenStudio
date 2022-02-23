@@ -97,6 +97,8 @@ namespace model {
 
       virtual bool removeFromSecondaryPlantLoop() override;
 
+      virtual bool addToNode(Node& node) override;
+
       //@}
       /** @name Getters */
       //@{

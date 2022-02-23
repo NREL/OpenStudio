@@ -1279,6 +1279,28 @@ namespace model {
       return false;
     }
 
+    bool WaterHeaterStratified_Impl::addToNode(Node& node) {
+      boost::optional<PlantLoop> t_plantLoop = node.plantLoop();
+
+      if (t_plantLoop) {
+        if (t_plantLoop->supplyComponent(node.handle())) {
+          // If these is already a use side Plant Loop
+          boost::optional<PlantLoop> useSidePlant = this->useSidePlantLoop();
+          if (useSidePlant) {
+            // And it's not the same as the node's loop
+            if (t_plantLoop.get() != useSidePlant.get()) {
+              // Then try to add it to the source side one
+              LOG(Warn, "Calling addToSecondaryNode to connect it to the source side loop for " << briefDescription());
+              return this->addToSourceSideNode(node);
+            }
+          }
+        }
+      }
+
+      // All other cases, call the base class implementation
+      return WaterToWaterComponent_Impl::addToNode(node);
+    }
+
     bool WaterHeaterStratified_Impl::addToSourceSideNode(Node& node) {
       auto thisModelObject = getObject<ModelObject>();
       auto t_plantLoop = node.plantLoop();
