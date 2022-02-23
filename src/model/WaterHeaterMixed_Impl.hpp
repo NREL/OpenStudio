@@ -393,8 +393,6 @@ namespace model {
 
       //@}
      protected:
-      friend class Model_Impl;
-
      private:
       REGISTER_LOGGER("openstudio.model.WaterHeaterMixed");
 

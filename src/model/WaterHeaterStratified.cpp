@@ -189,22 +189,6 @@ namespace model {
       return result;
     }
 
-    unsigned WaterHeaterStratified_Impl::supplyInletPort() const {
-      return OS_WaterHeater_StratifiedFields::UseSideInletNodeName;
-    }
-
-    unsigned WaterHeaterStratified_Impl::supplyOutletPort() const {
-      return OS_WaterHeater_StratifiedFields::UseSideOutletNodeName;
-    }
-
-    unsigned WaterHeaterStratified_Impl::demandInletPort() const {
-      return OS_WaterHeater_StratifiedFields::SourceSideInletNodeName;
-    }
-
-    unsigned WaterHeaterStratified_Impl::demandOutletPort() const {
-      return OS_WaterHeater_StratifiedFields::SourceSideOutletNodeName;
-    }
-
     std::string WaterHeaterStratified_Impl::endUseSubcategory() const {
       boost::optional<std::string> value = getString(OS_WaterHeater_StratifiedFields::EndUseSubcategory, true);
       OS_ASSERT(value);
@@ -1197,22 +1181,47 @@ namespace model {
       }
     }
 
-    boost::optional<PlantLoop> WaterHeaterStratified_Impl::sourceSidePlantLoop() const {
-      if (m_sourceSidePlantLoop) {
-        return m_sourceSidePlantLoop;
+    // Loop connections
+
+    unsigned WaterHeaterStratified_Impl::supplyInletPort() const {
+      return OS_WaterHeater_StratifiedFields::UseSideInletNodeName;
+    }
+
+    unsigned WaterHeaterStratified_Impl::supplyOutletPort() const {
+      return OS_WaterHeater_StratifiedFields::UseSideOutletNodeName;
+    }
+
+    unsigned WaterHeaterStratified_Impl::demandInletPort() const {
+      return OS_WaterHeater_StratifiedFields::SourceSideInletNodeName;
+    }
+
+    unsigned WaterHeaterStratified_Impl::demandOutletPort() const {
+      return OS_WaterHeater_StratifiedFields::SourceSideOutletNodeName;
+    }
+
+    boost::optional<PlantLoop> WaterHeaterStratified_Impl::plantLoop() const {
+      if (m_plantLoop) {
+        return m_plantLoop;
       } else {
-        boost::optional<HVACComponent> sourceSideOutletHVACComponent;
+        // Note: checking for supply side only isn't sufficient for this object, as it can be on the supply of two plant loops
+        // Here we only want to return the Use Side one, so we need to filter out the source Side one
+        boost::optional<PlantLoop> sourceSidePlantLoop = this->sourceSidePlantLoop();
 
-        if (auto t_sourceSideOutletModelObject = sourceSideOutletModelObject()) {
-          sourceSideOutletHVACComponent = t_sourceSideOutletModelObject->optionalCast<HVACComponent>();
-        }
+        std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
 
-        if (sourceSideOutletHVACComponent) {
-          auto plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
+        for (const auto& elem : plantLoops) {
+          OptionalPlantLoop plantLoop = elem.optionalCast<PlantLoop>();
+          if (plantLoop) {
+            // Check that the component is on the supply side of the PlantLoop
+            if (plantLoop->supplyComponent(this->handle())) {
+              // Skip the sourceSide one
+              if (sourceSidePlantLoop) {
+                if (plantLoop->handle() == sourceSidePlantLoop->handle()) {
+                  continue;
+                }
+              }
+              m_plantLoop = plantLoop;
 
-          for (const auto& plantLoop : plantLoops) {
-            if (!plantLoop.supplyComponents(plantLoop.supplyInletNode(), sourceSideOutletHVACComponent.get()).empty()) {
-              m_sourceSidePlantLoop = plantLoop;
               return plantLoop;
             }
           }
@@ -1222,14 +1231,49 @@ namespace model {
       return boost::none;
     }
 
-    boost::optional<PlantLoop> WaterHeaterStratified_Impl::useSidePlantLoop() const {
-      return plantLoop();
+    boost::optional<PlantLoop> WaterHeaterStratified_Impl::secondaryPlantLoop() const {
+      if (m_secondaryPlantLoop) {
+        return m_secondaryPlantLoop;
+      } else {
+
+        // Regular case, it's on the demand side: use the base class implementation
+        m_secondaryPlantLoop = WaterToWaterComponent_Impl::secondaryPlantLoop();
+        if (m_secondaryPlantLoop) {
+          return m_secondaryPlantLoop;
+        }
+
+        // Less common case: it's also on the supply side (like for the PlantLoop one)
+        // so we explicitly ensure this is connected to the **Source** Side Nodes
+        if (auto sourceSideOutletModelObject_ = sourceSideOutletModelObject()) {
+          if (auto sourceSideOutletHVACComponent_ = sourceSideOutletModelObject_->optionalCast<HVACComponent>()) {
+            auto plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
+
+            for (const auto& plantLoop : plantLoops) {
+              if (!plantLoop.supplyComponents(plantLoop.supplyInletNode(), sourceSideOutletHVACComponent_.get()).empty()) {
+                m_secondaryPlantLoop = plantLoop;
+                return plantLoop;
+              }
+            }
+          }
+        }
+      }
+
+      return boost::none;
     }
 
-    bool WaterHeaterStratified_Impl::removeFromSourceSidePlantLoop() {
-      if (auto plant = sourceSidePlantLoop()) {
-        m_sourceSidePlantLoop = boost::none;
-        return HVACComponent_Impl::removeFromLoop(plant->supplyInletNode(), plant->supplyOutletNode(), demandInletPort(), demandOutletPort());
+    bool WaterHeaterStratified_Impl::removeFromSecondaryPlantLoop() {
+
+      if (auto plant_ = secondaryPlantLoop()) {
+        m_secondaryPlantLoop = boost::none;
+
+        auto outletNode = sourceSideOutletModelObject()->cast<HVACComponent>();
+
+        auto supplyNode = plant_->supplyInletNode();
+        if (!plant_->supplyComponents(supplyNode, outletNode).empty()) {
+          return HVACComponent_Impl::removeFromLoop(supplyNode, plant_->supplyOutletNode(), demandInletPort(), demandOutletPort());
+        } else {
+          return HVACComponent_Impl::removeFromLoop(plant_->demandInletNode(), plant_->demandOutletNode(), demandInletPort(), demandOutletPort());
+        }
       }
 
       return false;
@@ -1245,7 +1289,9 @@ namespace model {
       boost::optional<HVACComponent> systemStartComponent;
       boost::optional<HVACComponent> systemEndComponent;
 
-      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) return false;
+      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) {
+        return false;
+      }
 
       if (t_plantLoop) {
         if (t_plantLoop->supplyComponent(node.handle())) {
@@ -1254,64 +1300,50 @@ namespace model {
           systemEndComponent = t_plantLoop->supplyOutletNode();
 
           removeFromSourceSidePlantLoop();
+        } else if (t_plantLoop->demandComponent(node.handle())) {
+          systemStartComponent = t_plantLoop->demandInletNode();
+          systemEndComponent = t_plantLoop->demandOutletNode();
+
+          removeFromSourceSidePlantLoop();
         }
       }
 
       if (systemStartComponent && systemEndComponent && componentOutletPort && componentInletPort) {
         return HVACComponent_Impl::addToNode(node, systemStartComponent.get(), systemEndComponent.get(), componentInletPort.get(),
                                              componentOutletPort.get());
-      } else {
-        return false;
       }
+
+      return false;
+    }
+
+    // Name aliases
+
+    boost::optional<PlantLoop> WaterHeaterStratified_Impl::sourceSidePlantLoop() const {
+      return secondaryPlantLoop();
+    }
+
+    boost::optional<PlantLoop> WaterHeaterStratified_Impl::useSidePlantLoop() const {
+      return plantLoop();
+    }
+
+    bool WaterHeaterStratified_Impl::removeFromSourceSidePlantLoop() {
+      return removeFromSecondaryPlantLoop();
+    }
+
+    boost::optional<ModelObject> WaterHeaterStratified_Impl::useSideInletModelObject() const {
+      return supplyInletModelObject();
+    }
+
+    boost::optional<ModelObject> WaterHeaterStratified_Impl::useSideOutletModelObject() const {
+      return supplyOutletModelObject();
     }
 
     boost::optional<ModelObject> WaterHeaterStratified_Impl::sourceSideInletModelObject() const {
-      return connectedObject(demandInletPort());
+      return demandInletModelObject();
     }
 
     boost::optional<ModelObject> WaterHeaterStratified_Impl::sourceSideOutletModelObject() const {
-      return connectedObject(demandOutletPort());
-    }
-
-    boost::optional<PlantLoop> WaterHeaterStratified_Impl::plantLoop() const {
-      if (m_plantLoop) {
-        return m_plantLoop;
-      } else {
-        // Note: checking for supply side only isn't sufficient for CentralHeatPumpSystem
-        // because it is on the supply side of two plant loops: the heating and the cooling plant loop
-        // We rely on tertiaryPlantLoop() method which checks for actual node connections
-        boost::optional<PlantLoop> tertiaryPlantLoop = this->tertiaryPlantLoop();
-        boost::optional<PlantLoop> sourceSidePlantLoop = this->sourceSidePlantLoop();
-
-        std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
-
-        for (const auto& elem : plantLoops) {
-          OptionalPlantLoop plantLoop = elem.optionalCast<PlantLoop>();
-          if (plantLoop) {
-            // Check that the component is on the supply side of the PlantLoop
-            if (plantLoop->supplyComponent(this->handle())) {
-              // Skip the tertiary one
-              if (tertiaryPlantLoop) {
-                if (plantLoop->handle() == tertiaryPlantLoop->handle()) {
-                  continue;
-                }
-              }
-              // Skip the sourceSide one
-              if (sourceSidePlantLoop) {
-                if (plantLoop->handle() == sourceSidePlantLoop->handle()) {
-                  continue;
-                }
-              }
-
-              m_plantLoop = plantLoop;
-
-              return plantLoop;
-            }
-          }
-        }
-      }
-
-      return boost::none;
+      return demandOutletModelObject();
     }
 
   }  // namespace detail
@@ -2058,6 +2090,12 @@ namespace model {
     return getImpl<detail::WaterHeaterStratified_Impl>()->waterHeaterSizing();
   }
 
+  // Helper
+  bool WaterHeaterStratified::addToSourceSideNode(Node& node) {
+    return getImpl<detail::WaterHeaterStratified_Impl>()->addToSourceSideNode(node);
+  }
+
+  // Name aliases
   boost::optional<PlantLoop> WaterHeaterStratified::sourceSidePlantLoop() const {
     return getImpl<detail::WaterHeaterStratified_Impl>()->sourceSidePlantLoop();
   }
@@ -2070,8 +2108,12 @@ namespace model {
     return getImpl<detail::WaterHeaterStratified_Impl>()->removeFromSourceSidePlantLoop();
   }
 
-  bool WaterHeaterStratified::addToSourceSideNode(Node& node) {
-    return getImpl<detail::WaterHeaterStratified_Impl>()->addToSourceSideNode(node);
+  boost::optional<ModelObject> WaterHeaterStratified::useSideInletModelObject() const {
+    return getImpl<detail::WaterHeaterStratified_Impl>()->useSideInletModelObject();
+  }
+
+  boost::optional<ModelObject> WaterHeaterStratified::useSideOutletModelObject() const {
+    return getImpl<detail::WaterHeaterStratified_Impl>()->useSideOutletModelObject();
   }
 
   boost::optional<ModelObject> WaterHeaterStratified::sourceSideInletModelObject() const {

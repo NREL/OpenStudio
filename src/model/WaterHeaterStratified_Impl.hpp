@@ -69,19 +69,31 @@ namespace model {
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      // Correspond to the Use Side Nodes
       virtual unsigned supplyInletPort() const override;
-
       virtual unsigned supplyOutletPort() const override;
 
+      // Correspond to the Source Side Nodes
       virtual unsigned demandInletPort() const override;
-
       virtual unsigned demandOutletPort() const override;
+
+      virtual void autosize() override;
+
+      virtual void applySizingValues() override;
+
+      boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
       virtual std::vector<ModelObject> children() const override;
 
       virtual ModelObject clone(Model model) const override;
 
+      // We have to override to avoid returning the source side plant loop if it is also on the supply side of this one
       virtual boost::optional<PlantLoop> plantLoop() const override;
+
+      // Override to return the PlantLoop connected to the Source Side Inlet/Outlet Nodes whether that is on the demand or supply side
+      virtual boost::optional<PlantLoop> secondaryPlantLoop() const override;
+
+      virtual bool removeFromSecondaryPlantLoop() override;
 
       //@}
       /** @name Getters */
@@ -234,10 +246,6 @@ namespace model {
       boost::optional<double> autosizedUseSideDesignFlowRate() const;
 
       boost::optional<double> autosizedSourceSideDesignFlowRate() const;
-
-      virtual void autosize() override;
-
-      virtual void applySizingValues() override;
 
       //@}
       /** @name Setters */
@@ -406,28 +414,21 @@ namespace model {
       /** @name Other */
       //@{
 
-      boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
-
       WaterHeaterSizing waterHeaterSizing() const;
-
-      boost::optional<PlantLoop> sourceSidePlantLoop() const;
-
-      boost::optional<PlantLoop> useSidePlantLoop() const;
-
-      bool removeFromSourceSidePlantLoop();
 
       bool addToSourceSideNode(Node& node);
 
+      // Name aliases
+      boost::optional<ModelObject> useSideInletModelObject() const;
+      boost::optional<ModelObject> useSideOutletModelObject() const;
       boost::optional<ModelObject> sourceSideInletModelObject() const;
-
       boost::optional<ModelObject> sourceSideOutletModelObject() const;
+      boost::optional<PlantLoop> sourceSidePlantLoop() const;
+      boost::optional<PlantLoop> useSidePlantLoop() const;
+      bool removeFromSourceSidePlantLoop();
 
       //@}
      protected:
-      friend class Model_Impl;
-
-      mutable boost::optional<PlantLoop> m_sourceSidePlantLoop;
-
      private:
       REGISTER_LOGGER("openstudio.model.WaterHeaterStratified");
 
