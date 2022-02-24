@@ -99,6 +99,12 @@ namespace energyplus {
       idfObject.setString(openstudio::Schedule_FileFields::MinutesperItem, modelObject.minutesperItem().get());
     }
 
+    if (modelObject.adjustScheduleforDaylightSavings() {
+      idfObject.setString(openstudio::Schedule_FileFields::AdjustScheduleforDaylightSavings, "Yes");
+    } else {
+      idfObject.setString(openstudio::Schedule_FileFields::AdjustScheduleforDaylightSavings, "No");
+    }
+
     m_idfObjects.push_back(idfObject);
     return idfObject;
   }

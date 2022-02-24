@@ -95,6 +95,13 @@ namespace energyplus {
       scheduleFile.setMinutesperItem(oi.get());
     }
 
+    OptionalString os = workspaceObject.getString(Schedule_FileFields::AdjustScheduleforDaylightSavings);
+    if (os) {
+      if (openstudio::istringEqual("Yes", os.get())) {
+        scheduleFile.setAdjustScheduleforDaylightSavings(true);
+      }
+    }
+
     return scheduleFile;
   }
 
