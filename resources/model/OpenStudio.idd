@@ -1,4 +1,4 @@
-!IDD_Version 3.3.1
+!IDD_Version 3.4.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -4862,7 +4862,7 @@ OS:Schedule:File,
        \key Yes
        \key No
        \default No
-  N4;  \field Minutes per Item
+  N4,  \field Minutes per Item
        \type choice
        \default 60
        \key 1
@@ -4877,6 +4877,13 @@ OS:Schedule:File,
        \key 20
        \key 30
        \key 60
+  A7 ; \field Adjust Schedule for Daylight Savings
+       \note "No" means do not include Daylight Savings Time in the schedule, instead, use the schedule directly from the Schedule:File csv (default)
+       \note "Yes" means include Daylight Savings Time to the schedule
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
 
 \group OpenStudio Geometry
 
