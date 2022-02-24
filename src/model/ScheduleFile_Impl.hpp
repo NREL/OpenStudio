@@ -103,7 +103,7 @@ namespace model {
       bool isMinutesperItemDefaulted() const;
 
       bool adjustScheduleforDaylightSavings() const;
-      
+
       bool isAdjustScheduleforDaylightSavingsDefaulted() const;
 
       virtual openstudio::TimeSeries timeSeries() const override;
@@ -135,7 +135,7 @@ namespace model {
       void resetMinutesperItem();
 
       bool setAdjustScheduleforDaylightSavings(bool adjustScheduleforDaylightSavings);
-      
+
       void resetAdjustScheduleforDaylightSavings();
 
       virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) override;

@@ -96,7 +96,7 @@ namespace model {
     bool isMinutesperItemDefaulted() const;
 
     bool adjustScheduleforDaylightSavings() const;
-    
+
     bool isAdjustScheduleforDaylightSavingsDefaulted() const;
 
     /* FIXME! openstudio::TimeSeries timeSeries(unsigned columnIndex) const;*/
@@ -132,7 +132,7 @@ namespace model {
     void resetMinutesperItem();
 
     bool setAdjustScheduleforDaylightSavings(bool adjustScheduleforDaylightSavings);
-    
+
     void resetAdjustScheduleforDaylightSavings();
 
     /* FIXME! unsigned addTimeSeries(const openstudio::TimeSeries& timeSeries); */

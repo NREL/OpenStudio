@@ -321,7 +321,7 @@ TEST_F(ModelFixture, ScheduleFile) {
   EXPECT_TRUE(schedule3.interpolatetoTimestep());
   EXPECT_FALSE(schedule3.isInterpolatetoTimestepDefaulted());
   schedule3.resetInterpolatetoTimestep();
-  EXPECT_TRUE(schedule3.isInterpolatetoTimestepDefaulted());  
+  EXPECT_TRUE(schedule3.isInterpolatetoTimestepDefaulted());
 
   // The API is kinda broken on this one, but preserving it...
   EXPECT_TRUE(schedule3.isMinutesperItemDefaulted());
