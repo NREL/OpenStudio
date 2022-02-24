@@ -221,3 +221,64 @@ TEST_F(ModelFixture, WaterHeaterMixed_PlantLoopConnections_addToNodeOverride) {
   EXPECT_TRUE(wh.removeFromSourceSidePlantLoop());
   EXPECT_FALSE(wh.sourceSidePlantLoop());
 }
+
+TEST_F(ModelFixture, WaterHeaterMixed_PlantLoopConnections_addToNodeOverride_addSupplyBranch) {
+
+  // Since addSupplyBranchForComponent calls addToNode, we should be able to call it twice in a row with two supply side nodes,
+  // and connect it to the Use Side PlantLoop first and Source Side PlantLoop second
+  Model m;
+
+  WaterHeaterMixed wh(m);
+
+  PlantLoop p1(m);
+  PlantLoop p2(m);
+
+  // plant loop #1
+  EXPECT_TRUE(p1.addSupplyBranchForComponent(wh));
+
+  EXPECT_EQ(1, p1.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
+  EXPECT_EQ(0, p2.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
+
+  ASSERT_TRUE(wh.supplyInletModelObject());
+  ASSERT_TRUE(wh.supplyOutletModelObject());
+  EXPECT_FALSE(wh.demandInletModelObject());
+  EXPECT_FALSE(wh.demandOutletModelObject());
+
+  std::string useSideOutletNodeName = wh.supplyOutletModelObject()->cast<Node>().nameString();
+  EXPECT_NE("", useSideOutletNodeName);
+
+  ASSERT_TRUE(wh.plantLoop());
+  EXPECT_EQ(wh.plantLoop()->handle(), p1.handle());
+  ASSERT_TRUE(wh.useSidePlantLoop());
+  EXPECT_EQ(wh.useSidePlantLoop()->handle(), p1.handle());
+  EXPECT_FALSE(wh.sourceSidePlantLoop());
+
+  // plant loop #2
+  EXPECT_TRUE(p2.addSupplyBranchForComponent(wh));
+
+  ASSERT_TRUE(wh.plantLoop());
+  EXPECT_EQ(wh.plantLoop()->handle(), p1.handle());
+  ASSERT_TRUE(wh.useSidePlantLoop());
+  EXPECT_EQ(wh.useSidePlantLoop()->handle(), p1.handle());
+
+  ASSERT_TRUE(wh.secondaryPlantLoop());
+  EXPECT_NE(wh.plantLoop()->handle(), wh.secondaryPlantLoop()->handle());
+  EXPECT_EQ(wh.secondaryPlantLoop()->handle(), p2.handle());
+  ASSERT_TRUE(wh.sourceSidePlantLoop());
+  EXPECT_NE(wh.plantLoop()->handle(), wh.sourceSidePlantLoop()->handle());
+  EXPECT_EQ(wh.sourceSidePlantLoop()->handle(), p2.handle());
+
+  EXPECT_EQ(1, p1.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
+  EXPECT_EQ(1, p2.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
+
+  ASSERT_TRUE(wh.supplyInletModelObject());
+  ASSERT_TRUE(wh.supplyOutletModelObject());
+  ASSERT_TRUE(wh.demandInletModelObject());
+  ASSERT_TRUE(wh.demandOutletModelObject());
+
+  EXPECT_EQ(useSideOutletNodeName, wh.supplyOutletModelObject()->cast<Node>().nameString());  // doesn't change
+  EXPECT_NE("", wh.demandOutletModelObject()->cast<Node>().nameString());
+
+  EXPECT_TRUE(wh.removeFromSourceSidePlantLoop());
+  EXPECT_FALSE(wh.sourceSidePlantLoop());
+}
