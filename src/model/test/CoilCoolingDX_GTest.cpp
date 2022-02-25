@@ -372,3 +372,29 @@ TEST_F(ModelFixture, CoilCoolingDX_cloneParent) {
   EXPECT_EQ(dx, unitary.coolingCoil().get());
   EXPECT_NE(dx, unitaryClone.coolingCoil().get());
 }
+
+TEST_F(ModelFixture, CoilCoolingDX_cloneOtherModel) {
+  Model model;
+
+  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+  CoilCoolingDX dx(model, performance);
+
+  EXPECT_EQ(performance, dx.performanceObject());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+
+  Model model2;
+  auto dxClone = dx.clone(model2).cast<CoilCoolingDX>();
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<CoilCoolingDX>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
+  EXPECT_EQ(1u, model2.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
+
+  EXPECT_EQ(performance, dx.performanceObject());
+  EXPECT_NE(performance, dxClone.performanceObject());
+}
