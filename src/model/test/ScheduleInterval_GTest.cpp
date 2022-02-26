@@ -336,13 +336,13 @@ TEST_F(ModelFixture, ScheduleFile) {
   ASSERT_TRUE(schedule3.minutesperItem());
   EXPECT_EQ("60", schedule3.minutesperItem().get());
 
-  EXPECT_TRUE(schedule3.isAdjustScheduleforDaylightSavings());
+  EXPECT_TRUE(schedule3.isAdjustScheduleforDaylightSavingsDefaulted());
   EXPECT_TRUE(schedule3.adjustScheduleforDaylightSavings());
   EXPECT_TRUE(schedule3.setAdjustScheduleforDaylightSavings(false));
   EXPECT_FALSE(schedule3.adjustScheduleforDaylightSavings());
-  EXPECT_FALSE(schedule3.isAdjustScheduleforDaylightSavings());
+  EXPECT_FALSE(schedule3.isAdjustScheduleforDaylightSavingsDefaulted());
   schedule3.resetAdjustScheduleforDaylightSavings();
-  EXPECT_TRUE(schedule3.isAdjustScheduleforDaylightSavings());
+  EXPECT_TRUE(schedule3.isAdjustScheduleforDaylightSavingsDefaulted());
 
   // shouldn't create a new object
   boost::optional<ExternalFile> externalfile2 = ExternalFile::getExternalFile(model, openstudio::toString(p));
