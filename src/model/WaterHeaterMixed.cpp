@@ -45,6 +45,10 @@
 #include "ThermalZone_Impl.hpp"
 #include "WaterHeaterSizing.hpp"
 #include "WaterHeaterSizing_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "PlantLoop_Impl.hpp"
+#include "Node.hpp"
+#include "Node_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_WaterHeater_Mixed_FieldEnums.hxx>
@@ -1023,22 +1027,6 @@ namespace model {
       return true;
     }
 
-    unsigned WaterHeaterMixed_Impl::supplyInletPort() const {
-      return OS_WaterHeater_MixedFields::UseSideInletNodeName;
-    }
-
-    unsigned WaterHeaterMixed_Impl::supplyOutletPort() const {
-      return OS_WaterHeater_MixedFields::UseSideOutletNodeName;
-    }
-
-    unsigned WaterHeaterMixed_Impl::demandInletPort() const {
-      return OS_WaterHeater_MixedFields::SourceSideInletNodeName;
-    }
-
-    unsigned WaterHeaterMixed_Impl::demandOutletPort() const {
-      return OS_WaterHeater_MixedFields::SourceSideOutletNodeName;
-    }
-
     boost::optional<ZoneHVACComponent> WaterHeaterMixed_Impl::containingZoneHVACComponent() const {
       auto hpwhs = model().getConcreteModelObjects<model::WaterHeaterHeatPump>();
       auto t_Handle = handle();
@@ -1214,6 +1202,193 @@ namespace model {
       } else {
         LOG_AND_THROW(briefDescription() << " missing WaterHeater:Sizing object.");
       }
+    }
+
+    // Loop connections
+
+    unsigned WaterHeaterMixed_Impl::supplyInletPort() const {
+      return OS_WaterHeater_MixedFields::UseSideInletNodeName;
+    }
+
+    unsigned WaterHeaterMixed_Impl::supplyOutletPort() const {
+      return OS_WaterHeater_MixedFields::UseSideOutletNodeName;
+    }
+
+    unsigned WaterHeaterMixed_Impl::demandInletPort() const {
+      return OS_WaterHeater_MixedFields::SourceSideInletNodeName;
+    }
+
+    unsigned WaterHeaterMixed_Impl::demandOutletPort() const {
+      return OS_WaterHeater_MixedFields::SourceSideOutletNodeName;
+    }
+
+    boost::optional<PlantLoop> WaterHeaterMixed_Impl::plantLoop() const {
+      if (m_plantLoop) {
+        return m_plantLoop;
+      } else {
+        // Note: checking for supply side only isn't sufficient for this object, as it can be on the supply of two plant loops
+        // Here we only want to return the Use Side one, so we need to filter out the source Side one
+        boost::optional<PlantLoop> sourceSidePlantLoop = this->sourceSidePlantLoop();
+
+        std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
+
+        for (const auto& elem : plantLoops) {
+          OptionalPlantLoop plantLoop = elem.optionalCast<PlantLoop>();
+          if (plantLoop) {
+            // Check that the component is on the supply side of the PlantLoop
+            if (plantLoop->supplyComponent(this->handle())) {
+              // Skip the sourceSide one
+              if (sourceSidePlantLoop) {
+                if (plantLoop->handle() == sourceSidePlantLoop->handle()) {
+                  continue;
+                }
+              }
+              m_plantLoop = plantLoop;
+
+              return plantLoop;
+            }
+          }
+        }
+      }
+
+      return boost::none;
+    }
+
+    boost::optional<PlantLoop> WaterHeaterMixed_Impl::secondaryPlantLoop() const {
+      if (m_secondaryPlantLoop) {
+        return m_secondaryPlantLoop;
+      } else {
+
+        // Regular case, it's on the demand side: use the base class implementation
+        m_secondaryPlantLoop = WaterToWaterComponent_Impl::secondaryPlantLoop();
+        if (m_secondaryPlantLoop) {
+          return m_secondaryPlantLoop;
+        }
+
+        // Less common case: it's also on the supply side (like for the PlantLoop one)
+        // so we explicitly ensure this is connected to the **Source** Side Nodes
+        if (auto sourceSideOutletModelObject_ = sourceSideOutletModelObject()) {
+          if (auto sourceSideOutletHVACComponent_ = sourceSideOutletModelObject_->optionalCast<HVACComponent>()) {
+            auto plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
+
+            for (const auto& plantLoop : plantLoops) {
+              if (!plantLoop.supplyComponents(plantLoop.supplyInletNode(), sourceSideOutletHVACComponent_.get()).empty()) {
+                m_secondaryPlantLoop = plantLoop;
+                return plantLoop;
+              }
+            }
+          }
+        }
+      }
+
+      return boost::none;
+    }
+
+    bool WaterHeaterMixed_Impl::removeFromSecondaryPlantLoop() {
+
+      if (auto plant_ = secondaryPlantLoop()) {
+        m_secondaryPlantLoop = boost::none;
+
+        auto outletNode = sourceSideOutletModelObject()->cast<HVACComponent>();
+
+        auto supplyNode = plant_->supplyInletNode();
+        if (!plant_->supplyComponents(supplyNode, outletNode).empty()) {
+          return HVACComponent_Impl::removeFromLoop(supplyNode, plant_->supplyOutletNode(), demandInletPort(), demandOutletPort());
+        } else {
+          return HVACComponent_Impl::removeFromLoop(plant_->demandInletNode(), plant_->demandOutletNode(), demandInletPort(), demandOutletPort());
+        }
+      }
+
+      return false;
+    }
+
+    bool WaterHeaterMixed_Impl::addToNode(Node& node) {
+      boost::optional<PlantLoop> t_plantLoop = node.plantLoop();
+
+      if (t_plantLoop) {
+        if (t_plantLoop->supplyComponent(node.handle())) {
+          // If these is already a use side Plant Loop
+          boost::optional<PlantLoop> useSidePlant = this->useSidePlantLoop();
+          if (useSidePlant) {
+            // And it's not the same as the node's loop
+            if (t_plantLoop.get() != useSidePlant.get()) {
+              // Then try to add it to the source side one
+              LOG(Warn, "Calling addToSecondaryNode to connect it to the source side loop for " << briefDescription());
+              return this->addToSourceSideNode(node);
+            }
+          }
+        }
+      }
+
+      // All other cases, call the base class implementation
+      return WaterToWaterComponent_Impl::addToNode(node);
+    }
+
+    bool WaterHeaterMixed_Impl::addToSourceSideNode(Node& node) {
+      auto thisModelObject = getObject<ModelObject>();
+      auto t_plantLoop = node.plantLoop();
+
+      boost::optional<unsigned> componentInletPort = demandInletPort();
+      boost::optional<unsigned> componentOutletPort = demandOutletPort();
+
+      boost::optional<HVACComponent> systemStartComponent;
+      boost::optional<HVACComponent> systemEndComponent;
+
+      if (node.getImpl<Node_Impl>()->isConnected(thisModelObject)) {
+        return false;
+      }
+
+      if (t_plantLoop) {
+        if (t_plantLoop->supplyComponent(node.handle())) {
+
+          systemStartComponent = t_plantLoop->supplyInletNode();
+          systemEndComponent = t_plantLoop->supplyOutletNode();
+
+          removeFromSourceSidePlantLoop();
+        } else if (t_plantLoop->demandComponent(node.handle())) {
+          systemStartComponent = t_plantLoop->demandInletNode();
+          systemEndComponent = t_plantLoop->demandOutletNode();
+
+          removeFromSourceSidePlantLoop();
+        }
+      }
+
+      if (systemStartComponent && systemEndComponent && componentOutletPort && componentInletPort) {
+        return HVACComponent_Impl::addToNode(node, systemStartComponent.get(), systemEndComponent.get(), componentInletPort.get(),
+                                             componentOutletPort.get());
+      }
+
+      return false;
+    }
+
+    // Name aliases
+
+    boost::optional<PlantLoop> WaterHeaterMixed_Impl::sourceSidePlantLoop() const {
+      return secondaryPlantLoop();
+    }
+
+    boost::optional<PlantLoop> WaterHeaterMixed_Impl::useSidePlantLoop() const {
+      return plantLoop();
+    }
+
+    bool WaterHeaterMixed_Impl::removeFromSourceSidePlantLoop() {
+      return removeFromSecondaryPlantLoop();
+    }
+
+    boost::optional<ModelObject> WaterHeaterMixed_Impl::useSideInletModelObject() const {
+      return supplyInletModelObject();
+    }
+
+    boost::optional<ModelObject> WaterHeaterMixed_Impl::useSideOutletModelObject() const {
+      return supplyOutletModelObject();
+    }
+
+    boost::optional<ModelObject> WaterHeaterMixed_Impl::sourceSideInletModelObject() const {
+      return demandInletModelObject();
+    }
+
+    boost::optional<ModelObject> WaterHeaterMixed_Impl::sourceSideOutletModelObject() const {
+      return demandOutletModelObject();
     }
 
   }  // namespace detail
@@ -1828,6 +2003,40 @@ namespace model {
 
   WaterHeaterSizing WaterHeaterMixed::waterHeaterSizing() const {
     return getImpl<detail::WaterHeaterMixed_Impl>()->waterHeaterSizing();
+  }
+
+  // Helper
+  bool WaterHeaterMixed::addToSourceSideNode(Node& node) {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->addToSourceSideNode(node);
+  }
+
+  // Name aliases
+  boost::optional<PlantLoop> WaterHeaterMixed::sourceSidePlantLoop() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->sourceSidePlantLoop();
+  }
+
+  boost::optional<PlantLoop> WaterHeaterMixed::useSidePlantLoop() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->useSidePlantLoop();
+  }
+
+  bool WaterHeaterMixed::removeFromSourceSidePlantLoop() {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->removeFromSourceSidePlantLoop();
+  }
+
+  boost::optional<ModelObject> WaterHeaterMixed::useSideInletModelObject() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->useSideInletModelObject();
+  }
+
+  boost::optional<ModelObject> WaterHeaterMixed::useSideOutletModelObject() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->useSideOutletModelObject();
+  }
+
+  boost::optional<ModelObject> WaterHeaterMixed::sourceSideInletModelObject() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->sourceSideInletModelObject();
+  }
+
+  boost::optional<ModelObject> WaterHeaterMixed::sourceSideOutletModelObject() const {
+    return getImpl<detail::WaterHeaterMixed_Impl>()->sourceSideOutletModelObject();
   }
 
 }  // namespace model
