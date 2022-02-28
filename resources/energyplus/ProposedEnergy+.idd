@@ -61604,7 +61604,6 @@ PythonPlugin:SearchPaths,
        \note in order to let EnergyPlus find external files in special locations.
        \note If this is enabled, and that variable is set, the value of the variable
        \note will be added to the Python search path.
-       \required-field
        \type choice
        \key Yes
        \key No
