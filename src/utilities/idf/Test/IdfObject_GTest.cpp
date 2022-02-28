@@ -680,12 +680,15 @@ TEST_F(IdfFixture, IdfObject_ScheduleFileWithUrl) {
                       1, !- Column Number \n\
                       0, !- Rows to Skip at Top \n\
                       8760, !- Number of Hours of Data \n\
-                      Comma; !- Column Separator";
+                      Comma, !- Column Separator \n\
+                      No, !- Interpolate to Timestep \n\
+                      , !- Minutes per Item \n\
+                      Yes; !- Adjust Schedule for Daylight Savings";
 
   // make an idf object
   OptionalIdfObject object = IdfObject::load(text);
   ASSERT_TRUE(object);
-  ASSERT_EQ(static_cast<unsigned>(7), object->numFields());
+  ASSERT_EQ(static_cast<unsigned>(10), object->numFields());
 
   ASSERT_TRUE(object->getString(0));
   EXPECT_EQ("Web Schedule", object->getString(0).get());
@@ -698,6 +701,12 @@ TEST_F(IdfFixture, IdfObject_ScheduleFileWithUrl) {
 
   ASSERT_TRUE(object->getString(6));
   EXPECT_EQ("Comma", object->getString(6).get());
+
+  ASSERT_TRUE(object->getString(7));
+  EXPECT_EQ("No", object->getString(7).get());
+
+  ASSERT_TRUE(object->getString(9));
+  EXPECT_EQ("Yes", object->getString(9).get());
 }
 
 TEST_F(IdfFixture, DoubleDisplayedAsString) {
