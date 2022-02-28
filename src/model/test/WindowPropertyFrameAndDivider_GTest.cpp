@@ -64,7 +64,7 @@ TEST_F(ModelFixture, WindowPropertyFrameAndDivider) {
 
   subSurface.resetWindowPropertyFrameAndDivider();
   EXPECT_FALSE(subSurface.windowPropertyFrameAndDivider());
-  
+
   EXPECT_EQ("CurtainWall", frameAndDivider.nfrcProductTypeforAssemblyCalculations());
   EXPECT_TRUE(frameAndDivider.isNFRCProductTypeforAssemblyCalculationsDefaulted());
   EXPECT_TRUE(frameAndDivider.setNFRCProductTypeforAssemblyCalculations("CasementDouble"));

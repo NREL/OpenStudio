@@ -156,7 +156,8 @@ namespace energyplus {
     //}
 
     //if (!modelObject.isNFRCProductTypeforAssemblyCalculationsDefaulted()){
-    idfObject.setString(WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations, modelObject.nfrcProductTypeforAssemblyCalculations());
+    idfObject.setString(WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations,
+                        modelObject.nfrcProductTypeforAssemblyCalculations());
     //}
 
     return idfObject;

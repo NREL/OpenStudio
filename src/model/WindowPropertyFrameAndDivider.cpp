@@ -583,7 +583,8 @@ namespace model {
     }
 
     bool WindowPropertyFrameAndDivider_Impl::setNFRCProductTypeforAssemblyCalculations(std::string nfrcProductTypeforAssemblyCalculations) {
-      bool result = setString(OS_WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations, nfrcProductTypeforAssemblyCalculations);
+      bool result =
+        setString(OS_WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations, nfrcProductTypeforAssemblyCalculations);
       return result;
     }
 
@@ -591,7 +592,6 @@ namespace model {
       bool result = setString(OS_WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations, "");
       OS_ASSERT(result);
     }
-
 
   }  // namespace detail
 
