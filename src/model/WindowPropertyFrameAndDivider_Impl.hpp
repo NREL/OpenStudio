@@ -163,6 +163,10 @@ namespace model {
 
       bool isInsideRevealSolarAbsorptanceDefaulted() const;
 
+      std::string nfrcProductTypeforAssemblyCalculations() const;
+      
+      bool isNFRCProductTypeforAssemblyCalculationsDefaulted() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -266,6 +270,10 @@ namespace model {
       bool setInsideRevealSolarAbsorptance(double insideRevealSolarAbsorptance);
 
       void resetInsideRevealSolarAbsorptance();
+
+      bool setNFRCProductTypeforAssemblyCalculations();
+      
+      void resetNFRCProductTypeforAssemblyCalculations();
 
       //@}
       /** @name Other */

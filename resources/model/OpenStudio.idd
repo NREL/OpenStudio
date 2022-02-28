@@ -5659,9 +5659,9 @@ OS:ShadingControl,
        \note When that field is set to Group the entire list is controlled simultaneously.
 
 OS:WindowProperty:FrameAndDivider,
-         \memo Specifies the dimensions of a window frame, dividers, and reveal surfaces.
-         \memo Referenced by the sub surface objects for exterior windows and glass doors
-         \min-fields 20
+       \memo Specifies the dimensions of a window frame, dividers, and reveal surfaces.
+       \memo Referenced by the sub surface objects for exterior windows and glass doors
+       \min-fields 27
   A1 , \field Handle
        \type handle
        \required-field
@@ -5830,11 +5830,37 @@ OS:WindowProperty:FrameAndDivider,
        \minimum 0.0
        \maximum 2.0
        \default 0.0
-  N24; \field Inside Reveal Solar Absorptance
+  N24, \field Inside Reveal Solar Absorptance
        \type real
        \minimum 0.0
        \maximum 1.0
        \default 0.0
+  A4;  \field NFRC Product Type for Assembly Calculations
+       \type choice
+       \key CasementDouble
+       \key CasementSingle
+       \key DualAction
+       \key Fixed
+       \key Garage
+       \key Greenhouse
+       \key HingedEscape
+       \key HorizontalSlider
+       \key Jal
+       \key Pivoted
+       \key ProjectingSingle
+       \key ProjectingDual
+       \key DoorSidelite
+       \key Skylight
+       \key SlidingPatioDoor
+       \key CurtainWall
+       \key SpandrelPanel
+       \key SideHingedDoor
+       \key DoorTransom
+       \key TropicalAwning
+       \key TubularDaylightingDevice
+       \key VerticalSlider
+       \default CurtainWall
+       \note Used when computing the assembly u-factor, SHGC and visible transmittance for reporting only
 
 \group OpenStudio Advanced Construction, Surface, Zone Concepts
 
