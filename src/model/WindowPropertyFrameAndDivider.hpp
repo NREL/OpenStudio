@@ -269,7 +269,7 @@ namespace model {
 
     void resetInsideRevealSolarAbsorptance();
 
-    bool setNFRCProductTypeforAssemblyCalculations();
+    bool setNFRCProductTypeforAssemblyCalculations(std::string nfrcProductTypeforAssemblyCalculations);
 
     void resetNFRCProductTypeforAssemblyCalculations();
 
