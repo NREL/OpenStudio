@@ -3100,12 +3100,10 @@ OS:WindowMaterial:SimpleGlazingSystem,
        \reference GlazingMaterialNames
   N1, \field U-Factor
        \note Enter U-Factor including film coefficients
-       \note Note that the effective upper limit for U-factor is 5.8 W/m2-K
        \type real
        \required-field
        \units W/m2-K
        \minimum> 0
-       \maximum 7
   N2, \field Solar Heat Gain Coefficient
        \note SHGC at Normal Incidence
        \type real
@@ -5921,6 +5919,7 @@ OS:SurfaceProperty:ConvectionCoefficients,
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
       \key ASTMC1340
+      \key BlockenWindard
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
@@ -5984,6 +5983,7 @@ OS:SurfaceProperty:ConvectionCoefficients,
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
       \key ASTMC1340
+      \key BlockenWindard
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
