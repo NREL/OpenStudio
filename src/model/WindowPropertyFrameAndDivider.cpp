@@ -582,7 +582,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool WindowPropertyFrameAndDivider_Impl::setNFRCProductTypeforAssemblyCalculations(std::string nfrcProductTypeforAssemblyCalculations) {
+    bool WindowPropertyFrameAndDivider_Impl::setNFRCProductTypeforAssemblyCalculations(const std::string& nfrcProductTypeforAssemblyCalculations) {
       bool result =
         setString(OS_WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations, nfrcProductTypeforAssemblyCalculations);
       return result;
@@ -1021,7 +1021,7 @@ namespace model {
     getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetInsideRevealSolarAbsorptance();
   }
 
-  bool WindowPropertyFrameAndDivider::setNFRCProductTypeforAssemblyCalculations(std::string nfrcProductTypeforAssemblyCalculations) {
+  bool WindowPropertyFrameAndDivider::setNFRCProductTypeforAssemblyCalculations(const std::string& nfrcProductTypeforAssemblyCalculations) {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setNFRCProductTypeforAssemblyCalculations(nfrcProductTypeforAssemblyCalculations);
   }
 
