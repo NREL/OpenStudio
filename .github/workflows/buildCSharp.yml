@@ -183,7 +183,7 @@ jobs:
             ./build/Products/
 
 
-  Merge_WindowsPackages:
+  Test_Windows:
     name: "Merge x86 and x64 nuget packages for windows"
     runs-on: windows-latest
     timeout-minutes: 20
@@ -259,3 +259,49 @@ jobs:
           dotnet test OpenStudio.Tests.csproj /p:Platform=x64
           dotnet clean
           dotnet test OpenStudio.Tests.csproj /p:Platform=x86
+
+  Test_Mac_ubuntu:
+    name: "Test x64 nuget packages for macos and ubuntu"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
+      fail-fast: false
+      matrix:
+        name: [Ubuntu, macOS]
+        include:
+        - name: Ubuntu
+          os: ubuntu-18.04
+        - name: macOS
+          os: macos-10.15
+    timeout-minutes: 20
+    needs: build-csharp
+
+    steps:
+      - name: "Checkout Master Branch"
+        uses: actions/checkout@v2
+      
+      - name: Download nuget
+        uses: actions/download-artifact@v2
+        with:
+          name: CSharp_${{ matrix.name }}
+
+      - name: unzip artifacts
+        run: |
+          unzip CSharp_${{ matrix.name }}.zip ./nuget
+          unzip ./nuget/CSharp_${{ matrix.name }}.zip ./nuget
+
+          mv ./nuget/build/Products/csharp/Release/*.nupkg ./nuget/
+          ls -R
+          
+      - name: Tests
+        run: |
+          cd csharp/examples/OpenStudio.Tests/
+          dotnet remove package OpenStudio 
+          dotnet restore OpenStudio.Tests.csproj
+          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../nuget"
+
+          dotnet clean
+          dotnet test OpenStudio.Tests.csproj -f NET5
+
+        
+          
