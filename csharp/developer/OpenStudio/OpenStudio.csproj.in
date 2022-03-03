@@ -60,20 +60,24 @@ openstudiolib.dll
  -->
 
   <Target Name="IncludeReferencedLibInPackage" DependsOnTargets="BuildOnlySettings;ResolveReferences">
+    <!-- for Windows -->
     <ItemGroup Condition="'$(OS)' == 'Windows_NT'">
-       <!-- for Windows -->
       <TfmSpecificPackageFile Include="../Products/Release/openstudio*csharp.dll" PackagePath="lib/$(TargetFramework)" />
       <TfmSpecificPackageFile Include="../Products/Release/openstudiolib.dll" PackagePath="lib/$(TargetFramework)" />
     </ItemGroup>
+
     <!-- for Linux -->
     <ItemGroup Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' ">
-      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.so" PackagePath="runtimes/linux/lib/$(TargetFramework)" />
-      <TfmSpecificPackageFile Include="../Products/*openstudiolib.so" PackagePath="runtimes/linux/lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.so" PackagePath="runtimes/linux-x64/native" />
+      <TfmSpecificPackageFile Include="../Products/*openstudiolib.so" PackagePath="runtimes/linux-x64/native" />
+      <TfmSpecificPackageFile Include="../Products/OpenStudio-linux-x64.targets" PackagePath="build/OpenStudio.targets" />
     </ItemGroup>
+
     <!-- for Mac  -->
     <ItemGroup Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' ">
-      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.dylib" PackagePath="runtimes/osx/lib/$(TargetFramework)" />
-      <TfmSpecificPackageFile Include="../Products/*openstudiolib.dylib" PackagePath="runtimes/osx/lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.dylib" PackagePath="runtimes/osx-x64/native" />
+      <TfmSpecificPackageFile Include="../Products/*openstudiolib.dylib" PackagePath="runtimes/osx-x64/native" />
+      <TfmSpecificPackageFile Include="../Products/OpenStudio-osx-x64.targets" PackagePath="build/OpenStudio.targets" />
     </ItemGroup>
   </Target>
   

@@ -136,7 +136,15 @@ jobs:
           echo "Testing for both Net5 and Net45"
           dotnet test OpenStudio.Tests.csproj /p:Platform=x86
 
-
+      - name: build and refactor nuget for Mac and Linux
+        if: runner.os != 'Windows'
+        run: |
+          # cd ./build/csharp_wrapper/OpenStudio.csproj
+          cp ./csharp/*.targets ./build/Products
+          ls ./build/Products
+          rm ./build/Products/csharp/Release/*.nupkg
+          dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/
+          
 
       - name: Tests dotnet 5 on Mac and Linux
         if: runner.os != 'Windows'
