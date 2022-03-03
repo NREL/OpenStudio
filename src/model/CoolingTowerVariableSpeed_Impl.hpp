@@ -111,6 +111,8 @@ namespace model {
 
       boost::optional<std::string> evaporationLossMode() const;
 
+      bool isEvaporationLossModeDefaulted() const;
+
       double evaporationLossFactor() const;
 
       bool isEvaporationLossFactorDefaulted() const;
@@ -119,6 +121,8 @@ namespace model {
 
       boost::optional<std::string> blowdownCalculationMode() const;
 
+      bool isBlowdownCalculationModeDefaulted() const;
+
       boost::optional<double> blowdownConcentrationRatio() const;
 
       boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
@@ -126,6 +130,8 @@ namespace model {
       boost::optional<int> numberofCells() const;
 
       boost::optional<std::string> cellControl() const;
+
+      bool isCellControlDefaulted() const;
 
       boost::optional<double> cellMinimumWaterFlowRateFraction() const;
 
