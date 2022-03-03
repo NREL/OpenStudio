@@ -67,13 +67,13 @@ openstudiolib.dll
     </ItemGroup>
     <!-- for Linux -->
     <ItemGroup Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' ">
-      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.so" PackagePath="lib/$(TargetFramework)" />
-      <TfmSpecificPackageFile Include="../Products/*openstudiolib.so" PackagePath="lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.so" PackagePath="runtimes/linux/lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="../Products/*openstudiolib.so" PackagePath="runtimes/linux/lib/$(TargetFramework)" />
     </ItemGroup>
     <!-- for Mac  -->
     <ItemGroup Condition=" '$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' ">
-      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.dylib" PackagePath="lib/$(TargetFramework)" />
-      <TfmSpecificPackageFile Include="../Products/*openstudiolib.dylib" PackagePath="lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="../Products/*openstudio*csharp.dylib" PackagePath="runtimes/osx/lib/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="../Products/*openstudiolib.dylib" PackagePath="runtimes/osx/lib/$(TargetFramework)" />
     </ItemGroup>
   </Target>
   
