@@ -18,8 +18,6 @@
 
 
     <!-- NuGet metadata properties -->
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    
     <Product>OpenStudio</Product>
     <Version>${CSHARP_ASSEMBLY_VERSION}</Version>
     <Copyright>Copyright (c) 2008-2020, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.</Copyright>
