@@ -1502,12 +1502,18 @@ set(${target_name}_src
   SurfacePropertyExposedFoundationPerimeter.cpp
   SurfacePropertyExposedFoundationPerimeter.hpp
   SurfacePropertyExposedFoundationPerimeter_Impl.hpp
+  SurfacePropertyLocalEnvironment.cpp
+  SurfacePropertyLocalEnvironment.hpp
+  SurfacePropertyLocalEnvironment_Impl.hpp
   SurfacePropertyOtherSideCoefficients.cpp
   SurfacePropertyOtherSideCoefficients.hpp
   SurfacePropertyOtherSideCoefficients_Impl.hpp
   SurfacePropertyOtherSideConditionsModel.cpp
   SurfacePropertyOtherSideConditionsModel.hpp
   SurfacePropertyOtherSideConditionsModel_Impl.hpp
+  SurfacePropertySurroundingSurfaces.cpp
+  SurfacePropertySurroundingSurfaces.hpp
+  SurfacePropertySurroundingSurfaces_Impl.hpp
   SwimmingPoolIndoor.cpp
   SwimmingPoolIndoor.hpp
   SwimmingPoolIndoor_Impl.hpp
@@ -2186,8 +2192,10 @@ set(${target_name}_test_src
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  test/SurfacePropertyLocalEnvironment_GTest.cpp
   test/SurfacePropertyOtherSideCoefficients_GTest.cpp
   test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
+  test/SurfacePropertySurroundingSurfaces_GTest.cpp
   test/SwimmingPoolIndoor_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
