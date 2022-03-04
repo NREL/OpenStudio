@@ -301,9 +301,7 @@ jobs:
 
       - name: unzip artifacts
         run: |
-          unzip CSharp_${{ matrix.name }}.zip ./nuget
-          unzip ./nuget/CSharp_${{ matrix.name }}.zip ./nuget
-
+          unzip CSharp_${{ matrix.name }}.zip -d ./nuget
           mv ./nuget/build/Products/csharp/Release/*.nupkg ./nuget/
           ls -R
           
