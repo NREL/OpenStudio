@@ -252,8 +252,10 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_CoolingTower_SingleSpeedFields::BasinHeaterOperatingScheduleName);
     }
 
-    boost::optional<std::string> CoolingTowerSingleSpeed_Impl::evaporationLossMode() const {
-      return getString(OS_CoolingTower_SingleSpeedFields::EvaporationLossMode, true);
+    std::string CoolingTowerSingleSpeed_Impl::evaporationLossMode() const {
+      boost::optional<std::string> value = getString(OS_CoolingTower_SingleSpeedFields::EvaporationLossMode, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool CoolingTowerSingleSpeed_Impl::isEvaporationLossModeDefaulted() const {
@@ -280,8 +282,10 @@ namespace model {
       return isEmpty(OS_CoolingTower_SingleSpeedFields::DriftLossPercent);
     }
 
-    boost::optional<std::string> CoolingTowerSingleSpeed_Impl::blowdownCalculationMode() const {
-      return getString(OS_CoolingTower_SingleSpeedFields::BlowdownCalculationMode, true);
+    std::string CoolingTowerSingleSpeed_Impl::blowdownCalculationMode() const {
+      boost::optional<std::string> value = getString(OS_CoolingTower_SingleSpeedFields::BlowdownCalculationMode, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool CoolingTowerSingleSpeed_Impl::isBlowdownCalculationModeDefaulted() const {
@@ -1126,7 +1130,7 @@ namespace model {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->basinHeaterOperatingSchedule();
   }
 
-  boost::optional<std::string> CoolingTowerSingleSpeed::evaporationLossMode() const {
+  std::string CoolingTowerSingleSpeed::evaporationLossMode() const {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->evaporationLossMode();
   }
 
@@ -1150,7 +1154,7 @@ namespace model {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->isDriftLossPercentDefaulted();
   }
 
-  boost::optional<std::string> CoolingTowerSingleSpeed::blowdownCalculationMode() const {
+  std::string CoolingTowerSingleSpeed::blowdownCalculationMode() const {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->blowdownCalculationMode();
   }
 
