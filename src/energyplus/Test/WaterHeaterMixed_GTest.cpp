@@ -254,10 +254,26 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
 
   WaterHeaterMixed wh(m);
   PlantLoop p(m);
-
-  double invalidEffValue = -0.5;
+  EXPECT_TRUE(p.addSupplyBranchForComponent(wh));
 
   {
+    double validEffValue = 0.5;
+
+    EXPECT_TRUE(wh.setHeaterThermalEfficiency(validEffValue));
+    EXPECT_EQ(validEffValue, wh.heaterThermalEfficiency());
+
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idf_whs(w.getObjectsByType(IddObjectType::WaterHeater_Mixed));
+    EXPECT_EQ(1u, idf_whs.size());
+    WorkspaceObject idf_wh(idf_whs[0]);
+
+    EXPECT_EQ(validEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
+  }
+
+  {
+    double invalidEffValue = -0.5;
+
     EXPECT_TRUE(wh.setHeaterThermalEfficiency(invalidEffValue));
     EXPECT_EQ(invalidEffValue, wh.heaterThermalEfficiency());
 
