@@ -130,8 +130,7 @@ TEST_F(ModelFixture, CoolingTowerTwoSpeed_constructor) {
 
   EXPECT_FALSE(coolingTowerTwoSpeed.basinHeaterOperatingSchedule());
 
-  ASSERT_TRUE(coolingTowerTwoSpeed.evaporationLossMode());
-  EXPECT_EQ("SaturatedExit", coolingTowerTwoSpeed.evaporationLossMode().get());
+  EXPECT_EQ("SaturatedExit", coolingTowerTwoSpeed.evaporationLossMode());
   EXPECT_TRUE(coolingTowerTwoSpeed.isEvaporationLossModeDefaulted());
 
   EXPECT_EQ(0.2, coolingTowerTwoSpeed.evaporationLossFactor());
@@ -140,8 +139,7 @@ TEST_F(ModelFixture, CoolingTowerTwoSpeed_constructor) {
   EXPECT_EQ(0.008, coolingTowerTwoSpeed.driftLossPercent());
   EXPECT_TRUE(coolingTowerTwoSpeed.isDriftLossPercentDefaulted());
 
-  ASSERT_TRUE(coolingTowerTwoSpeed.blowdownCalculationMode());
-  EXPECT_EQ("ConcentrationRatio", coolingTowerTwoSpeed.blowdownCalculationMode().get());
+  EXPECT_EQ("ConcentrationRatio", coolingTowerTwoSpeed.blowdownCalculationMode());
   EXPECT_TRUE(coolingTowerTwoSpeed.isBlowdownCalculationModeDefaulted());
 
   EXPECT_EQ(3.0, coolingTowerTwoSpeed.blowdownConcentrationRatio());
