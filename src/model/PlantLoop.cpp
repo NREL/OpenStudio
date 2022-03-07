@@ -1416,6 +1416,10 @@ namespace model {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_PlantLoopFields::FluidType);
   }
 
+  std::vector<std::string> PlantLoop::validFluidTypeValues() {
+    return fluidTypeValues();
+  }
+
   int PlantLoop::glycolConcentration() const {
     return getImpl<detail::PlantLoop_Impl>()->glycolConcentration();
   }
@@ -1494,6 +1498,10 @@ namespace model {
 
   std::vector<std::string> PlantLoop::loadDistributionSchemeValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_PlantLoopFields::LoadDistributionScheme);
+  }
+
+  std::vector<std::string> PlantLoop::validLoadDistributionSchemeValues() {
+    return loadDistributionSchemeValues();
   }
 
   bool PlantLoop::setPlantEquipmentOperationHeatingLoadSchedule(Schedule& schedule) {

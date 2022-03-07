@@ -72,7 +72,11 @@ namespace model {
 
     static std::vector<std::string> loadDistributionSchemeValues();
 
+    static std::vector<std::string> validLoadDistributionSchemeValues();
+
     static std::vector<std::string> fluidTypeValues();
+
+    static std::vect<std::string> validFluidTypeValues();
 
     static std::vector<std::string> commonPipeSimulationValues();
 
