@@ -789,7 +789,6 @@ namespace model {
 
     bool PlantLoop_Impl::setMaximumLoopTemperature(double value) {
       return setDouble(OS_PlantLoopFields::MaximumLoopTemperature, value);
-      ;
     }
 
     double PlantLoop_Impl::minimumLoopTemperature() {
@@ -798,7 +797,6 @@ namespace model {
 
     bool PlantLoop_Impl::setMinimumLoopTemperature(double value) {
       return setDouble(OS_PlantLoopFields::MinimumLoopTemperature, value);
-      ;
     }
 
     boost::optional<double> PlantLoop_Impl::maximumLoopFlowRate() {
@@ -807,7 +805,6 @@ namespace model {
 
     bool PlantLoop_Impl::setMaximumLoopFlowRate(double value) {
       return setDouble(OS_PlantLoopFields::MaximumLoopFlowRate, value);
-      ;
     }
 
     bool PlantLoop_Impl::isMaximumLoopFlowRateAutosized() {
@@ -820,7 +817,8 @@ namespace model {
     }
 
     void PlantLoop_Impl::autosizeMaximumLoopFlowRate() {
-      setString(OS_PlantLoopFields::MaximumLoopFlowRate, "Autosize");
+      bool result = setString(OS_PlantLoopFields::MaximumLoopFlowRate, "Autosize");
+      OS_ASSERT(result);
     }
 
     boost::optional<double> PlantLoop_Impl::minimumLoopFlowRate() {
@@ -829,7 +827,6 @@ namespace model {
 
     bool PlantLoop_Impl::setMinimumLoopFlowRate(double value) {
       return setDouble(OS_PlantLoopFields::MinimumLoopFlowRate, value);
-      ;
     }
 
     bool PlantLoop_Impl::isMinimumLoopFlowRateAutosized() {
@@ -842,7 +839,8 @@ namespace model {
     }
 
     void PlantLoop_Impl::autosizeMinimumLoopFlowRate() {
-      setString(OS_PlantLoopFields::MinimumLoopFlowRate, "Autosize");
+      bool result = setString(OS_PlantLoopFields::MinimumLoopFlowRate, "Autosize");
+      OS_ASSERT(result);
     }
 
     boost::optional<double> PlantLoop_Impl::plantLoopVolume() {
@@ -851,7 +849,6 @@ namespace model {
 
     bool PlantLoop_Impl::setPlantLoopVolume(double value) {
       return setDouble(OS_PlantLoopFields::PlantLoopVolume, value);
-      ;
     }
 
     bool PlantLoop_Impl::isPlantLoopVolumeAutocalculated() {
@@ -864,7 +861,8 @@ namespace model {
     }
 
     void PlantLoop_Impl::autocalculatePlantLoopVolume() {
-      setString(OS_PlantLoopFields::PlantLoopVolume, "Autocalculate");
+      bool result = setString(OS_PlantLoopFields::PlantLoopVolume, "Autocalculate");
+      OS_ASSERT(result);
     }
 
     std::string PlantLoop_Impl::fluidType() {
@@ -881,7 +879,6 @@ namespace model {
 
     bool PlantLoop_Impl::setGlycolConcentration(int glycolConcentration) {
       return setInt(OS_PlantLoopFields::GlycolConcentration, glycolConcentration);
-      ;
     }
 
     Node PlantLoop_Impl::loopTemperatureSetpointNode() {
@@ -929,8 +926,10 @@ namespace model {
       }
     }
 
-    boost::optional<std::string> PlantLoop_Impl::commonPipeSimulation() const {
-      return getString(OS_PlantLoopFields::CommonPipeSimulation);
+    std::string PlantLoop_Impl::commonPipeSimulation() const {
+      boost::optional<std::string> value = getString(OS_PlantLoopFields::CommonPipeSimulation, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool PlantLoop_Impl::setCommonPipeSimulation(const std::string& value) {
@@ -938,7 +937,8 @@ namespace model {
     }
 
     void PlantLoop_Impl::resetCommonPipeSimulation() {
-      setString(OS_PlantLoopFields::CommonPipeSimulation, "");
+      bool result = setString(OS_PlantLoopFields::CommonPipeSimulation, "");
+      OS_ASSERT(result);
     }
 
     boost::optional<PlantEquipmentOperationHeatingLoad> PlantLoop_Impl::plantEquipmentOperationHeatingLoad() const {
@@ -1013,7 +1013,8 @@ namespace model {
     }
 
     void PlantLoop_Impl::resetPlantEquipmentOperationHeatingLoadSchedule() {
-      setString(OS_PlantLoopFields::PlantEquipmentOperationHeatingLoadSchedule, "");
+      bool result = setString(OS_PlantLoopFields::PlantEquipmentOperationHeatingLoadSchedule, "");
+      OS_ASSERT(result);
     }
 
     boost::optional<Schedule> PlantLoop_Impl::plantEquipmentOperationHeatingLoadSchedule() const {
@@ -1031,7 +1032,8 @@ namespace model {
     }
 
     void PlantLoop_Impl::resetPlantEquipmentOperationCoolingLoadSchedule() {
-      setString(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule, "");
+      bool result = setString(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule, "");
+      OS_ASSERT(result);
     }
 
     bool PlantLoop_Impl::setPrimaryPlantEquipmentOperationSchemeSchedule(Schedule& schedule) {
@@ -1041,7 +1043,8 @@ namespace model {
     }
 
     void PlantLoop_Impl::resetPrimaryPlantEquipmentOperationSchemeSchedule() {
-      setString(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule, "");
+      bool result = setString(OS_PlantLoopFields::PlantEquipmentOperationCoolingLoadSchedule, "");
+      OS_ASSERT(result);
     }
 
     boost::optional<Schedule> PlantLoop_Impl::primaryPlantEquipmentOperationSchemeSchedule() const {
@@ -1059,7 +1062,8 @@ namespace model {
     }
 
     void PlantLoop_Impl::resetComponentSetpointOperationSchemeSchedule() {
-      setString(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule, "");
+      bool result = setString(OS_PlantLoopFields::ComponentSetpointOperationSchemeSchedule, "");
+      OS_ASSERT(result);
     }
 
     boost::optional<double> PlantLoop_Impl::autosizedMaximumLoopFlowRate() const {
@@ -1328,6 +1332,14 @@ namespace model {
     return result;
   }
 
+  std::vector<std::string> PlantLoop::commonPipeSimulationValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_PlantLoopFields::CommonPipeSimulation);
+  }
+
+  std::vector<std::string> PlantLoop::validCommonPipeSimulationValues() {
+    return commonPipeSimulationValues();
+  }
+
   double PlantLoop::maximumLoopTemperature() {
     return getImpl<detail::PlantLoop_Impl>()->maximumLoopTemperature();
   }
@@ -1424,7 +1436,7 @@ namespace model {
     return getImpl<detail::PlantLoop_Impl>()->sizingPlant();
   }
 
-  boost::optional<std::string> PlantLoop::commonPipeSimulation() const {
+  std::string PlantLoop::commonPipeSimulation() const {
     return getImpl<detail::PlantLoop_Impl>()->commonPipeSimulation();
   }
 

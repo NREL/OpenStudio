@@ -74,6 +74,10 @@ namespace model {
 
     static std::vector<std::string> fluidTypeValues();
 
+    static std::vector<std::string> commonPipeSimulationValues();
+
+    static std::vector<std::string> validCommonPipeSimulationValues();
+
     /** Prior to OS 1.11.0 the options where
       Optimal, Sequential, and Uniform.
       E+ changed the available options to.
@@ -138,7 +142,7 @@ namespace model {
 
     void autocalculatePlantLoopVolume();
 
-    boost::optional<std::string> commonPipeSimulation() const;
+    std::string commonPipeSimulation() const;
 
     bool setCommonPipeSimulation(const std::string& value);
 
