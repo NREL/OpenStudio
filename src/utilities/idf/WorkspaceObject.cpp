@@ -413,8 +413,8 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::setString(unsigned index, const std::string& value) {
-    //bool result = setString(index, value, true);
-    bool result = setString(index, value, false);
+    bool result = setString(index, value, true);
+    //bool result = setString(index, value, false);
     if (result) {
       this->emitChangeSignals();
     }
