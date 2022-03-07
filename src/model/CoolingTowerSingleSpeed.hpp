@@ -131,7 +131,7 @@ namespace model {
     double driftLossPercent() const;
 
     bool isDriftLossPercentDefaulted() const;
-    
+
     std::string blowdownCalculationMode() const;
 
     bool isBlowdownCalculationModeDefaulted() const;
