@@ -427,8 +427,7 @@ namespace detail {
   }
 
   bool IdfObject_Impl::setString(unsigned index, const std::string& value) {
-    //bool result = IdfObject_Impl::setString(index, value, true);
-    bool result = IdfObject_Impl::setString(index, value, false);
+    bool result = IdfObject_Impl::setString(index, value, true);
     if (result) {
       this->emitChangeSignals();
     }
@@ -436,6 +435,7 @@ namespace detail {
   }
 
   bool IdfObject_Impl::setString(unsigned index, const std::string& _value, bool checkValidity) {
+    checkValidity = false;
     std::string value = encodeString(_value);
 
     if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex().get())) {
