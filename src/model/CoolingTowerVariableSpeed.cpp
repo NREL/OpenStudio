@@ -237,7 +237,7 @@ namespace model {
     }
 
     std::string CoolingTowerVariableSpeed_Impl::evaporationLossMode() const {
-      boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::EvaporationLossMode, true);
+      boost::optional<std::string> value = getString(OS_CoolingTower_VariableSpeedFields::EvaporationLossMode, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -261,7 +261,7 @@ namespace model {
     }
 
     std::string CoolingTowerVariableSpeed_Impl::blowdownCalculationMode() const {
-      boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::BlowdownCalculationMode, true);
+      boost::optional<std::string> value = getString(OS_CoolingTower_VariableSpeedFields::BlowdownCalculationMode, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -282,8 +282,8 @@ namespace model {
       return getInt(OS_CoolingTower_VariableSpeedFields::NumberofCells, true);
     }
 
-    boost::optional<std::string> CoolingTowerVariableSpeed_Impl::cellControl() const {
-      boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::CellControl, true);
+    std::string CoolingTowerVariableSpeed_Impl::cellControl() const {
+      boost::optional<std::string> value = getString(OS_CoolingTower_VariableSpeedFields::CellControl, true);
       OS_ASSERT(value);
       return value.get();
     }

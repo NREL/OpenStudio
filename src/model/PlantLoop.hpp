@@ -76,7 +76,7 @@ namespace model {
 
     static std::vector<std::string> fluidTypeValues();
 
-    static std::vect<std::string> validFluidTypeValues();
+    static std::vector<std::string> validFluidTypeValues();
 
     static std::vector<std::string> commonPipeSimulationValues();
 

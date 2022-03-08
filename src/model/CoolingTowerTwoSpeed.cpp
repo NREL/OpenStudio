@@ -434,7 +434,7 @@ namespace model {
       return isEmpty(OS_CoolingTower_TwoSpeedFields::DriftLossPercent);
     }
 
-    boost::optional<std::string> CoolingTowerTwoSpeed_Impl::blowdownCalculationMode() const {
+    std::string CoolingTowerTwoSpeed_Impl::blowdownCalculationMode() const {
       boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::BlowdownCalculationMode, true);
       OS_ASSERT(value);
       return value.get();
