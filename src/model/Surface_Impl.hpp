@@ -49,6 +49,7 @@ namespace model {
   class SurfacePropertyOtherSideCoefficients;
   class SurfacePropertyOtherSideConditionsModel;
   class SurfacePropertyConfectionCoefficients;
+  class SurfacePropertyLocalEnvironment;
   class FoundationKiva;
 
   namespace detail {
@@ -205,6 +206,8 @@ namespace model {
       boost::optional<SurfaceControlMovableInsulation> surfaceControlMovableInsulation() const;
 
       boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+
+      boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;
 
       boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
 

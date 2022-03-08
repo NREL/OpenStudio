@@ -240,6 +240,10 @@ namespace model {
       return getString(OS_CoolingTower_VariableSpeedFields::EvaporationLossMode, true);
     }
 
+    bool CoolingTowerVariableSpeed_Impl::isEvaporationLossModeDefaulted() const {
+      return isEmpty(OS_CoolingTower_VariableSpeedFields::EvaporationLossMode);
+    }
+
     double CoolingTowerVariableSpeed_Impl::evaporationLossFactor() const {
       boost::optional<double> value = getDouble(OS_CoolingTower_VariableSpeedFields::EvaporationLossFactor, true);
       OS_ASSERT(value);
@@ -258,6 +262,10 @@ namespace model {
       return getString(OS_CoolingTower_VariableSpeedFields::BlowdownCalculationMode, true);
     }
 
+    bool CoolingTowerVariableSpeed_Impl::isBlowdownCalculationModeDefaulted() const {
+      return isEmpty(OS_CoolingTower_VariableSpeedFields::BlowdownCalculationMode);
+    }
+
     boost::optional<double> CoolingTowerVariableSpeed_Impl::blowdownConcentrationRatio() const {
       return getDouble(OS_CoolingTower_VariableSpeedFields::BlowdownConcentrationRatio, true);
     }
@@ -272,6 +280,10 @@ namespace model {
 
     boost::optional<std::string> CoolingTowerVariableSpeed_Impl::cellControl() const {
       return getString(OS_CoolingTower_VariableSpeedFields::CellControl, true);
+    }
+
+    bool CoolingTowerVariableSpeed_Impl::isCellControlDefaulted() const {
+      return isEmpty(OS_CoolingTower_VariableSpeedFields::CellControl);
     }
 
     boost::optional<double> CoolingTowerVariableSpeed_Impl::cellMinimumWaterFlowRateFraction() const {
@@ -857,6 +869,10 @@ namespace model {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->evaporationLossMode();
   }
 
+  bool CoolingTowerVariableSpeed::isEvaporationLossModeDefaulted() const {
+    return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->isEvaporationLossModeDefaulted();
+  }
+
   double CoolingTowerVariableSpeed::evaporationLossFactor() const {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->evaporationLossFactor();
   }
@@ -873,6 +889,10 @@ namespace model {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->blowdownCalculationMode();
   }
 
+  bool CoolingTowerVariableSpeed::isBlowdownCalculationModeDefaulted() const {
+    return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->isBlowdownCalculationModeDefaulted();
+  }
+
   boost::optional<double> CoolingTowerVariableSpeed::blowdownConcentrationRatio() const {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->blowdownConcentrationRatio();
   }
@@ -887,6 +907,10 @@ namespace model {
 
   boost::optional<std::string> CoolingTowerVariableSpeed::cellControl() const {
     return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->cellControl();
+  }
+
+  bool CoolingTowerVariableSpeed::isCellControlDefaulted() const {
+    return getImpl<detail::CoolingTowerVariableSpeed_Impl>()->isCellControlDefaulted();
   }
 
   boost::optional<double> CoolingTowerVariableSpeed::cellMinimumWaterFlowRateFraction() const {

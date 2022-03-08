@@ -218,6 +218,18 @@ namespace model {
     /** Removes all additional properties that refer to this object. Returns removed objects. */
     std::vector<IdfObject> removeAdditionalProperties();
 
+    boost::optional<std::string> cadObjectId() const;
+
+    bool setCADObjectId(const std::string& cadObjectId);
+
+    boost::optional<std::string> gbXMLId() const;
+
+    bool setGBXMLId(const std::string& gbXMLId);
+
+    boost::optional<std::string> displayName() const;
+
+    bool setDisplayName(const std::string& displayName);
+
     //@}
     /** @name Setters */
     //@{

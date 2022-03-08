@@ -9649,7 +9649,7 @@ SurfaceProperty:LocalEnvironment,
        \reference SurfaceLocalEnvironmentNames
    A2, \field Exterior Surface Name
        \type object-list
-       \object-list SurfaceNames
+       \object-list AllHeatTranSurfNames
        \note Enter the name of an exterior surface object
    A3, \field External Shading Fraction Schedule Name
        \type object-list
@@ -9692,7 +9692,6 @@ SurfaceProperty:SurroundingSurfaces,
    N1, \field Sky View Factor
        \minimum 0.0
        \maximum 1.0
-       \default 0.5
        \note optional
    A2, \field Sky Temperature Schedule Name
        \type object-list
@@ -9702,7 +9701,6 @@ SurfaceProperty:SurroundingSurfaces,
    N2, \field Ground View Factor
        \minimum 0.0
        \maximum 1.0
-       \default 0.5
        \note optional
    A3, \field Ground Temperature Schedule Name
        \type object-list
@@ -44586,6 +44584,7 @@ CoolingTower:SingleSpeed,
        \type choice
        \key LossFactor
        \key SaturatedExit
+       \default SaturatedExit
   N19, \field Evaporation Loss Factor
        \type real
        \units percent/K
@@ -44604,6 +44603,7 @@ CoolingTower:SingleSpeed,
        \type choice
        \key ConcentrationRatio
        \key ScheduledRate
+       \default ConcentrationRatio
   N21, \field Blowdown Concentration Ratio
        \type real
        \minimum 2.0
@@ -44901,6 +44901,7 @@ CoolingTower:TwoSpeed,
        \type choice
        \key LossFactor
        \key SaturatedExit
+       \default SaturatedExit
   N27, \field Evaporation Loss Factor
        \type real
        \units percent/K
@@ -44919,6 +44920,7 @@ CoolingTower:TwoSpeed,
        \type choice
        \key ConcentrationRatio
        \key ScheduledRate
+       \default ConcentrationRatio
   N29, \field Blowdown Concentration Ratio
        \type real
        \minimum 2.0
@@ -45215,6 +45217,7 @@ CoolingTower:VariableSpeed:Merkel,
        \type choice
        \key LossFactor
        \key SaturatedExit
+       \default SaturatedExit
   N23, \field Evaporation Loss Factor
        \type real
        \units percent/K
@@ -45229,10 +45232,11 @@ CoolingTower:VariableSpeed:Merkel,
        \default 0.008
        \note Rate of drift loss as a percentage of circulating condenser water flow rate
        \note Typical values are between 0.002 and 0.2% The default value is 0.008%
-  A11 , \field Blowdown Calculation Mode
+  A11 ,\field Blowdown Calculation Mode
        \type choice
        \key ConcentrationRatio
        \key ScheduledRate
+       \default ConcentrationRatio
   N25, \field Blowdown Concentration Ratio
        \type real
        \minimum 2.0
@@ -45424,6 +45428,7 @@ CoolingTower:VariableSpeed,
        \type choice
        \key LossFactor
        \key SaturatedExit
+       \default SaturatedExit
   N11, \field Evaporation Loss Factor
        \type real
        \units percent/K
@@ -45441,6 +45446,7 @@ CoolingTower:VariableSpeed,
        \type choice
        \key ConcentrationRatio
        \key ScheduledRate
+       \default ConcentrationRatio
   N13, \field Blowdown Concentration Ratio
        \type real
        \minimum 2.0
