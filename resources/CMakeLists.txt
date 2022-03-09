@@ -66,6 +66,21 @@ set(utilities_resources_src
   utilities/Geometry/surface_match_floorplan.json
   utilities/Geometry/threejs.json
   utilities/Geometry/window_floorplan.json
+  utilities/Geometry/minimal_GLTF_File.gltf
+  utilities/Geometry/7-7_Windows_Complete.gltf
+  utilities/Geometry/15023_Model12.gltf
+  utilities/Geometry/exampleModel.gltf
+  utilities/Geometry/floorplan_school.gltf
+  utilities/Geometry/open_to_below.gltf
+  utilities/Geometry/RefBldgFullServiceRestaurantNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgHospitalNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgLargeHotelNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgLargeOfficeNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgOutPatientNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgSecondarySchoolNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgSmallHotelNew2004_Chicago.gltf
+  utilities/Geometry/Space_SurfaceMatch_LargeTest.gltf
+  utilities/Geometry/split_level.gltf
   utilities/Idf/CommentTest.idf
   utilities/Idf/DosLineEndingTest.idf
   utilities/Idf/UnixLineEndingTest.idf
@@ -119,6 +134,18 @@ set(model_resources_src
   model/floorplan_school.osm
   model/7-7_Windows_Complete.osm
   model/15023_Model12.osm
+  model/RefBldgFullServiceRestaurantNew2004_Chicago.osm
+  model/RefBldgHospitalNew2004_Chicago.osm
+  model/RefBldgLargeHotelNew2004_Chicago.osm
+  model/RefBldgLargeOfficeNew2004_Chicago.osm
+  model/RefBldgOutPatientNew2004_Chicago.osm
+  model/RefBldgSecondarySchoolNew2004_Chicago.osm
+  model/RefBldgSmallHotelNew2004_Chicago.osm
+  model/Space_SurfaceMatch_LargeTest.osm
+  model/split_level.osm
+  model/open_to_below.osm
+  model/TwoStoryOffice_Trane.osm
+  model/story_multipliers.osm
   model/offset_tests.osm
 )
 
