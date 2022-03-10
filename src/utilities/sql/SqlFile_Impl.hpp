@@ -148,33 +148,33 @@ namespace detail {
 
     /// TODO
     boost::optional<double> assemblyUFactorByWindow(const std::string& windowName) const;
-    
+
     boost::optional<double> assemblyUFactorTotalorAverage() const;
-    
+
     boost::optional<double> assemblyUFactorNorthTotalorAverage() const;
-    
+
     boost::optional<double> assemblyUFactorNonNorthTotalorAverage() const;
-    
+
     boost::optional<double> assemblyUFactorShadedState() const;
 
     boost::optional<double> assemblySHGCByWindow() const;
-    
+
     boost::optional<double> assemblySHGCTotalorAverage() const;
-    
+
     boost::optional<double> assemblySHGCNorthTotalorAverage() const;
-    
+
     boost::optional<double> assemblySHGCNonNorthTotalorAverage() const;
-    
+
     boost::optional<double> assemblySHGCShadedState() const;
 
     boost::optional<double> assemblyVisibleTransmittanceByWindow() const;
-    
+
     boost::optional<double> assemblyVisibleTransmittanceTotalorAverage() const;
-    
+
     boost::optional<double> assemblyVisibleTransmittanceNorthTotalorAverage() const;
-    
+
     boost::optional<double> assemblyVisibleTransmittanceNonNorthTotalorAverage() const;
-    
+
     boost::optional<double> assemblyVisibleTransmittanceShadedState() const;
 
     /// Returns the total energy cost over the analysis period in dollars according to the discounting convention.
