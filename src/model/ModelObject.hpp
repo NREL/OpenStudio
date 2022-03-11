@@ -258,7 +258,7 @@ namespace model {
     boost::optional<double> getAutosizedValue(std::string valueName, std::string unitString) const;
 
     /** Gets the fenestration value from the sql file **/
-    boost::optional<double> getFenestrationValue(std::string valueName) const;
+    boost::optional<double> getFenestrationValue(std::string columnName) const;
 
     /** Return the names of the available ems actuators.
   */

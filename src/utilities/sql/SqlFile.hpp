@@ -111,6 +111,15 @@ class UTILITIES_API SqlFile
   // Check if the SqlFile contains 'Year' field for DaylightMapHourlyReports (added Year in 9.2.0)
   bool hasIlluminanceMapYear() const;
 
+  // return an Assembly U-Factor value for matching rowName
+  boost::optional<double> assemblyUFactor(const std::string& rowName) const;
+  
+  // return an Assembly SHGC value for matching rowName
+  boost::optional<double> assemblySHGC(const std::string& rowName) const;
+  
+  // return an Assembly Visible Transmittance value for matching rowName
+  boost::optional<double> assemblyVisibleTransmittance(const std::string& rowName) const;
+
   /// close the file
   bool close();
 

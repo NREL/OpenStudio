@@ -1431,6 +1431,18 @@ namespace model {
     return getImpl<detail::SubSurface_Impl>()->isNumberofVerticesAutocalculated();
   }
 
+  boost::optional<double> SubSurface::assemblyUFactor() const {
+    return getImpl<detail::SubSurface_Impl>()->assemblyUFactor();
+  }
+
+  boost::optional<double> SubSurface::assemblySHGC() const {
+    return getImpl<detail::SubSurface_Impl>()->assemblySHGC();
+  }
+
+  boost::optional<double> SubSurface::assemblyVisibleTransmittance() const {
+    return getImpl<detail::SubSurface_Impl>()->assemblyVisibleTransmittance();
+  }
+
   bool SubSurface::setSubSurfaceType(const std::string& subSurfaceType) {
     return getImpl<detail::SubSurface_Impl>()->setSubSurfaceType(subSurfaceType);
   }

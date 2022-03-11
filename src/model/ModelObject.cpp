@@ -377,12 +377,12 @@ namespace model {
     }
 
     /** Gets the fenestration value from the sql file **/
-    boost::optional<double> ModelObject_Impl::getFenestrationValue(std::string valueName) const {
+    boost::optional<double> ModelObject_Impl::getFenestrationValue(std::string columnName) const {
       boost::optional<double> result;
 
       // Get the object name
       if (!name()) {
-        LOG(Warn, "This object does not have a name, cannot retrieve the fenestration value '" + valueName + "'.");
+        LOG(Warn, "This object does not have a name, cannot retrieve the fenestration value '" + columnName + "'.");
         return result;
       }
 
@@ -393,28 +393,28 @@ namespace model {
 
       // Check that the model has a sql file
       if (!model().sqlFile()) {
-        LOG(Warn, "This model has no sql file, cannot retrieve the autosized value '" + valueName + "'.");
+        LOG(Warn, "This model has no sql file, cannot retrieve the fenestration value '" + columnName + "'.");
         return result;
       }
 
-      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings
-                                    WHERE ReportName='EnvelopeSummary'
-                                    AND ReportForString='Entire Facility'
-                                    AND TableName='Exterior Fenestration'
-                                    AND RowName=?
-                                    AND ColumnName=?)";
+      std::string s = R"(SELECT Value FROM TabularDataWithStrings
+                            WHERE ReportName='EnvelopeSummary'
+                            AND ReportForString='Entire Facility'
+                            AND TableName='Exterior Fenestration'
+                            AND RowName=?
+                            AND ColumnName=?)";
 
-      boost::optional<double> d = model().sqlFile().get().execAndReturnFirstDouble(s, rowName, valueName);
+      boost::optional<double> d = model().sqlFile().get().execAndReturnFirstDouble(s, rowName, columnName);
 
       if (!d) {
-        const s = R"(SELECT Value FROM TabularDataWithStrings
-                          WHERE ReportName='EnvelopeSummary'
-                          AND ReportForString='Entire Facility'
-                          AND TableName='Interior Fenestration'
-                          AND RowName=?
-                          AND ColumnName=?)";
+        std::string s = R"(SELECT Value FROM TabularDataWithStrings
+                              WHERE ReportName='EnvelopeSummary'
+                              AND ReportForString='Entire Facility'
+                              AND TableName='Interior Fenestration'
+                              AND RowName=?
+                              AND ColumnName=?)";
 
-        d = model().sqlFile().get().execAndReturnFirstDouble(s, rowName, valueName);
+        d = model().sqlFile().get().execAndReturnFirstDouble(s, rowName, columnName);
       }
 
       return d;
@@ -984,6 +984,11 @@ namespace model {
   /** Gets the autosized component value from the sql file **/
   boost::optional<double> ModelObject::getAutosizedValue(std::string valueName, std::string units) const {
     return getImpl<detail::ModelObject_Impl>()->getAutosizedValue(valueName, units);
+  }
+
+  /** Gets the fenestration value from the sql file **/
+  boost::optional<double> ModelObject::getFenestrationValue(std::string columnName) const {
+    return getImpl<detail::ModelObject_Impl>()->getFenestrationValue(columnName);
   }
 
   std::vector<EMSActuatorNames> ModelObject::emsActuatorNames() const {

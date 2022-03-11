@@ -1385,4 +1385,28 @@ bool SqlFile::hasIlluminanceMapYear() const {
   return true;
 }
 
+boost::optional<double> SqlFile::assemblyUFactor(const std::string& rowName) const {
+  boost::optional<double> result;
+  if (m_impl) {
+    result = m_impl->assemblyUFactor(rowName);
+  }
+  return result;
+}
+
+boost::optional<double> SqlFile::assemblySHGC(const std::string& rowName) const {
+  boost::optional<double> result;
+  if (m_impl) {
+    result = m_impl->assemblySHGC(rowName);
+  }
+  return result;
+}
+
+boost::optional<double> SqlFile::assemblyVisibleTransmittance(const std::string& rowName) const {
+  boost::optional<double> result;
+  if (m_impl) {
+    result = m_impl->assemblyVisibleTransmittance(rowName);
+  }
+  return result;
+}
+
 }  // namespace openstudio

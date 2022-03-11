@@ -809,9 +809,17 @@ TEST_F(SqlFileFixture, 4298_YearField) {
 TEST_F(SqlFileFixture, 4403_FenestrationAssembly) {
   // Test for #4403 - Add Sql helper methods to retrieve U-factors, SHGC, or VT for glazing systems
 
-  // This one has fenestration that includes frames
-  // TODO: must include WindowProperty:FrameAndDivider so that NFRC Product Type is defined
+  // This one has fenestration that includes WindowProperty:FrameAndDivider
   openstudio::path path = resourcesPath() / toPath("energyplus/FrameAndDivider/eplusout.sql");
   sqlFile = openstudio::SqlFile(path);
   ASSERT_TRUE(sqlFile.connectionOpen());
+
+  ASSERT_TRUE(sqlFile.assemblyUFactor("Story 1 Core Space Exterior Wall Window"));
+  EXPECT_EQ(2.546, sqlFile.assemblyUFactor("Story 1 Core Space Exterior Wall Window").get());
+
+  ASSERT_TRUE(sqlFile.assemblySHGC("Story 1 Core Space Exterior Wall Window"));
+  EXPECT_EQ(0.350, sqlFile.assemblySHGC("Story 1 Core Space Exterior Wall Window").get());
+
+  ASSERT_TRUE(sqlFile.assemblyVisibleTransmittance("Story 1 Core Space Exterior Wall Window"));
+  EXPECT_EQ(0.440, sqlFile.assemblyVisibleTransmittance("Story 1 Core Space Exterior Wall Window").get());
 }
