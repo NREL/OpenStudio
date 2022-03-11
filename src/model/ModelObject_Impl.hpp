@@ -205,7 +205,6 @@ namespace model {
       /** Gets the fenestration value from the sql file **/
       boost::optional<double> getFenestrationValue(std::string valueName) const;
 
-
      protected:
       ModelObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 

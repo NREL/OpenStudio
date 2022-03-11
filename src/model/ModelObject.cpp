@@ -385,7 +385,7 @@ namespace model {
         LOG(Warn, "This object does not have a name, cannot retrieve the fenestration value '" + valueName + "'.");
         return result;
       }
-      
+
       // Get the object name and transform to the way it is recorded
       // in the sql file
       std::string rowName = name().get();

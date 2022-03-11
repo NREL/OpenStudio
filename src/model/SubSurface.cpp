@@ -602,14 +602,14 @@ namespace model {
       return result;
     }
 
-    boost::optional<double> SubSurface_Impl::assemblyUFactor(() const {
+    boost::optional<double> SubSurface_Impl::assemblyUFactor() const {
       return getFenestrationValue("Assembly U-Factor");
     }
-    
+
     boost::optional<double> SubSurface_Impl::assemblySHGC() const {
       return getFenestrationValue("Assembly SHGC");
     }
-    
+
     boost::optional<double> SubSurface_Impl::assemblyVisibleTransmittance() const {
       return getFenestrationValue("Assembly Visible Transmittance");
     }

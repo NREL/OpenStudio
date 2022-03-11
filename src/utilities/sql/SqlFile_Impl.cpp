@@ -907,9 +907,6 @@ namespace detail {
     return execAndReturnFirstDouble(s, reportName, rowName, columnName);
   }
 
-  /// fenestration assembly
-  // TODO
-
   /// hours simulated
   boost::optional<double> SqlFile_Impl::hoursSimulated() const {
     const std::string& s = R"(SELECT Value FROM TabularDataWithStrings

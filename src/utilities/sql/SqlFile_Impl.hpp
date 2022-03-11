@@ -146,25 +146,6 @@ namespace detail {
                                                     const openstudio::EndUseCategoryType& t_categoryType,
                                                     const openstudio::MonthOfYear& t_monthOfYear) const;
 
-    /// TODO
-    /*     boost::optional<double> assemblyUFactorTotalorAverage() const;
-
-    boost::optional<double> assemblyUFactorNorthTotalorAverage() const;
-
-    boost::optional<double> assemblyUFactorNonNorthTotalorAverage() const;
-
-    boost::optional<double> assemblySHGCTotalorAverage() const;
-
-    boost::optional<double> assemblySHGCNorthTotalorAverage() const;
-
-    boost::optional<double> assemblySHGCNonNorthTotalorAverage() const;
-
-    boost::optional<double> assemblyVisibleTransmittanceTotalorAverage() const;
-
-    boost::optional<double> assemblyVisibleTransmittanceNorthTotalorAverage() const;
-
-    boost::optional<double> assemblyVisibleTransmittanceNonNorthTotalorAverage() const; */
-
     /// Returns the total energy cost over the analysis period in dollars according to the discounting convention.
     /// Requires EnergyPlus simulation output and LifeCycleCost_Parameters input object to calculate.
     boost::optional<double> economicsEnergyCost() const;
