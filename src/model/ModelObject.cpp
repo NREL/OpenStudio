@@ -376,6 +376,50 @@ namespace model {
       return result;
     }
 
+    /** Gets the fenestration value from the sql file **/
+    boost::optional<double> ModelObject_Impl::getFenestrationValue(std::string valueName) const {
+      boost::optional<double> result;
+
+      // Get the object name
+      if (!name()) {
+        LOG(Warn, "This object does not have a name, cannot retrieve the fenestration value '" + valueName + "'.");
+        return result;
+      }
+      
+      // Get the object name and transform to the way it is recorded
+      // in the sql file
+      std::string rowName = name().get();
+      boost::to_upper(rowName);
+
+      // Check that the model has a sql file
+      if (!model().sqlFile()) {
+        LOG(Warn, "This model has no sql file, cannot retrieve the autosized value '" + valueName + "'.");
+        return result;
+      }
+
+      const std::string& s = R"(SELECT Value FROM TabularDataWithStrings
+                                    WHERE ReportName='EnvelopeSummary'
+                                    AND ReportForString='Entire Facility'
+                                    AND TableName='Exterior Fenestration'
+                                    AND RowName=?
+                                    AND ColumnName=?)";
+
+      boost::optional<double> d = model().sqlFile().get().execAndReturnFirstDouble(s, rowName, valueName);
+
+      if (!d) {
+        const s = R"(SELECT Value FROM TabularDataWithStrings
+                          WHERE ReportName='EnvelopeSummary'
+                          AND ReportForString='Entire Facility'
+                          AND TableName='Interior Fenestration'
+                          AND RowName=?
+                          AND ColumnName=?)";
+
+        d = model().sqlFile().get().execAndReturnFirstDouble(s, rowName, valueName);
+      }
+
+      return d;
+    }
+
     //void ModelObject_Impl::connect(unsigned outletPort, ModelObject target, unsigned inletPort)
     //{
     //  OptionalConnection connection = getOutletConnection(outletPort);

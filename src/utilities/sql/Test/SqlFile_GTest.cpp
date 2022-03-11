@@ -806,7 +806,7 @@ TEST_F(SqlFileFixture, 4298_YearField) {
   EXPECT_EQ(0, reportingFreqs->size());
 }
 
-TEST_F(SqlFileFixture, 4403_FenestrationAssembly) {
+/* TEST_F(SqlFileFixture, 4403_FenestrationAssembly) {
   // Test for #4403 - Add Sql helper methods to retrieve U-factors, SHGC, or VT for glazing systems
 
   // This one has fenestration that includes frames
@@ -817,4 +817,4 @@ TEST_F(SqlFileFixture, 4403_FenestrationAssembly) {
 
   boost::optional<double> d = sqlFile->assemblyUFactorByWindow("Win-1");
   ASSERT_TRUE(d);
-}
+} */

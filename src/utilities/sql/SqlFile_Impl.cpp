@@ -908,31 +908,7 @@ namespace detail {
   }
 
   /// fenestration assembly
-  boost::optional<double> SqlFile_Impl::assemblyUFactorByWindow(const std::string& windowName) const {
-    std::string rowName = boost::to_upper_copy(windowName);
-
-    const std::string& s = R"(SELECT Value FROM TabularDataWithStrings
-                                  WHERE ReportName='EnvelopeSummary'
-                                  AND ReportForString='Entire Facility'
-                                  AND TableName='Exterior Fenestration'
-                                  AND RowName=?
-                                  AND ColumnName='Assembly U-Factor')";
-
-    boost::optional<double> d = execAndReturnFirstDouble(s, rowName);
-
-    if (!d) {
-      const s = R"(SELECT Value FROM TabularDataWithStrings
-                        WHERE ReportName='EnvelopeSummary'
-                        AND ReportForString='Entire Facility'
-                        AND TableName='Interior Fenestration'
-                        AND RowName=?
-                        AND ColumnName='Assembly U-Factor')";
-
-      d = execAndReturnFirstDouble(s, rowName);
-    }
-
-    return d;
-  }
+  // TODO
 
   /// hours simulated
   boost::optional<double> SqlFile_Impl::hoursSimulated() const {

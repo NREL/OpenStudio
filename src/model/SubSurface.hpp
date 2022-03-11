@@ -118,6 +118,12 @@ namespace model {
 
     bool isNumberofVerticesAutocalculated() const;
 
+    boost::optional<double> assemblyUFactor(() const;
+    
+    boost::optional<double> assemblySHGC() const;
+    
+    boost::optional<double> assemblyVisibleTransmittance() const;
+
     //@}
     /** @name Setters */
     //@{
