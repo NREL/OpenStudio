@@ -521,3 +521,18 @@ TEST_F(ModelFixture, PlantLoop_AvailabilityManagers) {
  *
  */
 }
+
+TEST_F(ModelFixture, PlantLoop_CommonPipeSimulation) {
+  Model m;
+  PlantLoop plant(m);
+
+  EXPECT_EQ("", plant.commonPipeSimulation());
+  EXPECT_TRUE(plant.isCommonPipeSimulationDefaulted());
+
+  EXPECT_TRUE(plant.setCommonPipeSimulation("CommonPipe"));
+  EXPECT_FALSE(plant.isCommonPipeSimulationDefaulted());
+  EXPECT_EQ("CommonPipe", plant.commonPipeSimulation());
+
+  plant.resetCommonPipeSimulation();
+  EXPECT_TRUE(plant.isCommonPipeSimulationDefaulted());
+}

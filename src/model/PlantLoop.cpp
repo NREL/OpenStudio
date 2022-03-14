@@ -932,6 +932,10 @@ namespace model {
       return value.get();
     }
 
+    bool PlantLoop_Impl::isCommonPipeSimulationDefaulted() const {
+      return isEmpty(OS_PlantLoopFields::CommonPipeSimulation);
+    }
+
     bool PlantLoop_Impl::setCommonPipeSimulation(const std::string& value) {
       return setString(OS_PlantLoopFields::CommonPipeSimulation, value);
     }
@@ -1442,6 +1446,10 @@ namespace model {
 
   std::string PlantLoop::commonPipeSimulation() const {
     return getImpl<detail::PlantLoop_Impl>()->commonPipeSimulation();
+  }
+
+  bool PlantLoop::isCommonPipeSimulationDefaulted() const {
+    return getImpl<detail::PlantLoop_Impl>()->isCommonPipeSimulationDefaulted();
   }
 
   bool PlantLoop::setCommonPipeSimulation(const std::string& value) {

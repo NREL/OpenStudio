@@ -127,6 +127,8 @@ namespace model {
 
       std::string commonPipeSimulation() const;
 
+      bool isCommonPipeSimulationDefaulted() const;
+
       bool setCommonPipeSimulation(const std::string& value);
 
       void resetCommonPipeSimulation();
