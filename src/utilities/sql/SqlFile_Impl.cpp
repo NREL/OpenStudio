@@ -511,7 +511,7 @@ namespace detail {
     return getFenestrationValue(subSurfaceName, "Assembly Visible Transmittance");
   }
 
-  boost::optional<double> SqlFile_Impl::getFenestrationValue(const std::string& subSurfaceName, const std::string columnName) const {
+  boost::optional<double> SqlFile_Impl::getFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const {
     boost::optional<double> result;
 
     // Get the object name and transform to the way it is recorded
