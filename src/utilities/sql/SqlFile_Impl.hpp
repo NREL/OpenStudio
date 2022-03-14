@@ -757,10 +757,10 @@ namespace detail {
 
     // return an Assembly U-Factor value for matching rowName
     boost::optional<double> assemblyUFactor(const std::string& rowName) const;
-    
+
     // return an Assembly SHGC value for matching rowName
     boost::optional<double> assemblySHGC(const std::string& rowName) const;
-    
+
     // return an Assembly Visible Transmittance value for matching rowName
     boost::optional<double> assemblyVisibleTransmittance(const std::string& rowName) const;
 
