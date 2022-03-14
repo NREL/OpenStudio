@@ -499,81 +499,33 @@ namespace detail {
     return m_hasIlluminanceMapYear;
   }
 
-  boost::optional<double> SqlFile_Impl::assemblyUFactor(const std::string& rowName) const {
-    boost::optional<double> result;
-
-    // Get the object name and transform to the way it is recorded
-    // in the sql file
-    std::string queryRowName = boost::to_upper_copy(rowName);
-
-    std::string s = R"(SELECT Value FROM TabularDataWithStrings
-                          WHERE ReportName='EnvelopeSummary'
-                          AND ReportForString='Entire Facility'
-                          AND TableName='Exterior Fenestration'
-                          AND RowName=?
-                          AND ColumnName='Assembly U-Factor')";
-
-    boost::optional<double> d = execAndReturnFirstDouble(s, queryRowName);
-
-    if (!d) {
-      std::string s = R"(SELECT Value FROM TabularDataWithStrings
-                            WHERE ReportName='EnvelopeSummary'
-                            AND ReportForString='Entire Facility'
-                            AND TableName='Interior Fenestration'
-                            AND RowName=?
-                            AND ColumnName='Assembly U-Factor')";
-
-      d = execAndReturnFirstDouble(s, queryRowName);
-    }
-
-    return d;
+  boost::optional<double> SqlFile_Impl::assemblyUFactor(const std::string& subSurfaceName) const {
+    return getFenestrationValue(subSurfaceName, "Assembly U-Factor");
   }
 
-  boost::optional<double> SqlFile_Impl::assemblySHGC(const std::string& rowName) const {
-    boost::optional<double> result;
-
-    // Get the object name and transform to the way it is recorded
-    // in the sql file
-    std::string queryRowName = boost::to_upper_copy(rowName);
-
-    std::string s = R"(SELECT Value FROM TabularDataWithStrings
-                          WHERE ReportName='EnvelopeSummary'
-                          AND ReportForString='Entire Facility'
-                          AND TableName='Exterior Fenestration'
-                          AND RowName=?
-                          AND ColumnName='Assembly SHGC')";
-
-    boost::optional<double> d = execAndReturnFirstDouble(s, queryRowName);
-
-    if (!d) {
-      std::string s = R"(SELECT Value FROM TabularDataWithStrings
-                            WHERE ReportName='EnvelopeSummary'
-                            AND ReportForString='Entire Facility'
-                            AND TableName='Interior Fenestration'
-                            AND RowName=?
-                            AND ColumnName='Assembly SHGC')";
-
-      d = execAndReturnFirstDouble(s, queryRowName);
-    }
-
-    return d;
+  boost::optional<double> SqlFile_Impl::assemblySHGC(const std::string& subSurfaceName) const {
+    return getFenestrationValue(subSurfaceName, "Assembly SHGC");
   }
 
-  boost::optional<double> SqlFile_Impl::assemblyVisibleTransmittance(const std::string& rowName) const {
+  boost::optional<double> SqlFile_Impl::assemblyVisibleTransmittance(const std::string& subSurfaceName) const {
+    return getFenestrationValue(subSurfaceName, "Assembly Visible Transmittance");
+  }
+
+  boost::optional<double> SqlFile_Impl::getFenestrationValue(const std::string& subSurfaceName, const std::string columnName) const {
     boost::optional<double> result;
 
     // Get the object name and transform to the way it is recorded
     // in the sql file
-    std::string queryRowName = boost::to_upper_copy(rowName);
+    std::string queryRowName = boost::to_upper_copy(subSurfaceName);
 
     std::string s = R"(SELECT Value FROM TabularDataWithStrings
                           WHERE ReportName='EnvelopeSummary'
                           AND ReportForString='Entire Facility'
                           AND TableName='Exterior Fenestration'
                           AND RowName=?
-                          AND ColumnName='Assembly Visible Transmittance')";
+                          AND ColumnName=?)";
 
-    boost::optional<double> d = execAndReturnFirstDouble(s, queryRowName);
+    boost::optional<double> d = execAndReturnFirstDouble(s, queryRowName, columnName);
 
     if (!d) {
       std::string s = R"(SELECT Value FROM TabularDataWithStrings
@@ -581,9 +533,9 @@ namespace detail {
                             AND ReportForString='Entire Facility'
                             AND TableName='Interior Fenestration'
                             AND RowName=?
-                            AND ColumnName='Assembly Visible Transmittance')";
+                            AND ColumnName=?)";
 
-      d = execAndReturnFirstDouble(s, queryRowName);
+      d = execAndReturnFirstDouble(s, queryRowName, columnName);
     }
 
     return d;

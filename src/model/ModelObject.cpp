@@ -376,50 +376,6 @@ namespace model {
       return result;
     }
 
-    /** Gets the fenestration value from the sql file **/
-    boost::optional<double> ModelObject_Impl::getFenestrationValue(std::string columnName) const {
-      boost::optional<double> result;
-
-      // Get the object name
-      if (!name()) {
-        LOG(Warn, "This object does not have a name, cannot retrieve the fenestration value '" + columnName + "'.");
-        return result;
-      }
-
-      // Get the object name and transform to the way it is recorded
-      // in the sql file
-      std::string rowName = name().get();
-      boost::to_upper(rowName);
-
-      // Check that the model has a sql file
-      if (!model().sqlFile()) {
-        LOG(Warn, "This model has no sql file, cannot retrieve the fenestration value '" + columnName + "'.");
-        return result;
-      }
-
-      std::string s = R"(SELECT Value FROM TabularDataWithStrings
-                            WHERE ReportName='EnvelopeSummary'
-                            AND ReportForString='Entire Facility'
-                            AND TableName='Exterior Fenestration'
-                            AND RowName=?
-                            AND ColumnName=?)";
-
-      boost::optional<double> d = model().sqlFile().get().execAndReturnFirstDouble(s, rowName, columnName);
-
-      if (!d) {
-        std::string s = R"(SELECT Value FROM TabularDataWithStrings
-                              WHERE ReportName='EnvelopeSummary'
-                              AND ReportForString='Entire Facility'
-                              AND TableName='Interior Fenestration'
-                              AND RowName=?
-                              AND ColumnName=?)";
-
-        d = model().sqlFile().get().execAndReturnFirstDouble(s, rowName, columnName);
-      }
-
-      return d;
-    }
-
     //void ModelObject_Impl::connect(unsigned outletPort, ModelObject target, unsigned inletPort)
     //{
     //  OptionalConnection connection = getOutletConnection(outletPort);
@@ -984,11 +940,6 @@ namespace model {
   /** Gets the autosized component value from the sql file **/
   boost::optional<double> ModelObject::getAutosizedValue(std::string valueName, std::string units) const {
     return getImpl<detail::ModelObject_Impl>()->getAutosizedValue(valueName, units);
-  }
-
-  /** Gets the fenestration value from the sql file **/
-  boost::optional<double> ModelObject::getFenestrationValue(std::string columnName) const {
-    return getImpl<detail::ModelObject_Impl>()->getFenestrationValue(columnName);
   }
 
   std::vector<EMSActuatorNames> ModelObject::emsActuatorNames() const {

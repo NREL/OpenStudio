@@ -307,6 +307,13 @@ namespace model {
 
       boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
+      //@}
+      /** @name Queries */
+      //@{
+
+      /** Gets the fenestration value from the sql file **/
+      boost::optional<double> getFenestrationValue(std::string columnName) const;
+
      protected:
      private:
       friend class openstudio::model::SubSurface;

@@ -289,6 +289,13 @@ namespace model {
 
     // DLM: todo add methods to create light shelves by projection factor
 
+    //@}
+    /** @name Queries */
+    //@{
+
+    /** Gets the fenestration value from the sql file **/
+    boost::optional<double> getFenestrationValue(std::string columnName) const;
+
    protected:
     /// @cond
     typedef detail::SubSurface_Impl ImplType;
