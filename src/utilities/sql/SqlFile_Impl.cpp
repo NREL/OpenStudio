@@ -525,20 +525,9 @@ namespace detail {
                           AND RowName=?
                           AND ColumnName=?)";
 
-    boost::optional<double> d = execAndReturnFirstDouble(s, queryRowName, columnName);
+    result = execAndReturnFirstDouble(s, queryRowName, columnName);
 
-    if (!d) {
-      std::string s = R"(SELECT Value FROM TabularDataWithStrings
-                            WHERE ReportName='EnvelopeSummary'
-                            AND ReportForString='Entire Facility'
-                            AND TableName='Interior Fenestration'
-                            AND RowName=?
-                            AND ColumnName=?)";
-
-      d = execAndReturnFirstDouble(s, queryRowName, columnName);
-    }
-
-    return d;
+    return result;
   }
 
   bool SqlFile_Impl::isValidConnection() {
