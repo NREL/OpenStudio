@@ -1344,19 +1344,19 @@ namespace model {
     }
 
     boost::optional<double> SubSurface_Impl::assemblyUFactor() const {
-      return getFenestrationValue("Assembly U-Factor");
+      return getExteriorFenestrationValue("Assembly U-Factor");
     }
 
     boost::optional<double> SubSurface_Impl::assemblySHGC() const {
-      return getFenestrationValue("Assembly SHGC");
+      return getExteriorFenestrationValue("Assembly SHGC");
     }
 
     boost::optional<double> SubSurface_Impl::assemblyVisibleTransmittance() const {
-      return getFenestrationValue("Assembly Visible Transmittance");
+      return getExteriorFenestrationValue("Assembly Visible Transmittance");
     }
 
     /** Gets the fenestration value from the sql file **/
-    boost::optional<double> SubSurface_Impl::getFenestrationValue(std::string columnName) const {
+    boost::optional<double> SubSurface_Impl::getExteriorFenestrationValue(std::string columnName) const {
       boost::optional<double> result;
 
       // Get the object name

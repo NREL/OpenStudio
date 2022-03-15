@@ -500,18 +500,18 @@ namespace detail {
   }
 
   boost::optional<double> SqlFile_Impl::assemblyUFactor(const std::string& subSurfaceName) const {
-    return getFenestrationValue(subSurfaceName, "Assembly U-Factor");
+    return getExteriorFenestrationValue(subSurfaceName, "Assembly U-Factor");
   }
 
   boost::optional<double> SqlFile_Impl::assemblySHGC(const std::string& subSurfaceName) const {
-    return getFenestrationValue(subSurfaceName, "Assembly SHGC");
+    return getExteriorFenestrationValue(subSurfaceName, "Assembly SHGC");
   }
 
   boost::optional<double> SqlFile_Impl::assemblyVisibleTransmittance(const std::string& subSurfaceName) const {
-    return getFenestrationValue(subSurfaceName, "Assembly Visible Transmittance");
+    return getExteriorFenestrationValue(subSurfaceName, "Assembly Visible Transmittance");
   }
 
-  boost::optional<double> SqlFile_Impl::getFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const {
+  boost::optional<double> SqlFile_Impl::getExteriorFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const {
     boost::optional<double> result;
 
     // Get the object name and transform to the way it is recorded

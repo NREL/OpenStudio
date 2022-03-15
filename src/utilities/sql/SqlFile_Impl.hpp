@@ -756,7 +756,7 @@ namespace detail {
     bool hasIlluminanceMapYear() const;
 
     //  return a fenestration value for matching subSurfaceName (RowName) and columnName
-    boost::optional<double> getFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const;
+    boost::optional<double> getExteriorFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const;
 
     // return an Assembly U-Factor value for matching subSurfaceName (RowName)
     boost::optional<double> assemblyUFactor(const std::string& subSurfaceName) const;

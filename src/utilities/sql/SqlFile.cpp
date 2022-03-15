@@ -1385,10 +1385,10 @@ bool SqlFile::hasIlluminanceMapYear() const {
   return true;
 }
 
-boost::optional<double> SqlFile::getFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const {
+boost::optional<double> SqlFile::getExteriorFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const {
   boost::optional<double> result;
   if (m_impl) {
-    result = m_impl->getFenestrationValue(subSurfaceName, columnName);
+    result = m_impl->getExteriorFenestrationValue(subSurfaceName, columnName);
   }
   return result;
 }

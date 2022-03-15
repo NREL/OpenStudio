@@ -294,7 +294,7 @@ namespace model {
     //@{
 
     /** Gets the fenestration value from the sql file **/
-    boost::optional<double> getFenestrationValue(std::string columnName) const;
+    boost::optional<double> getExteriorFenestrationValue(std::string columnName) const;
 
    protected:
     /// @cond
