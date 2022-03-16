@@ -252,11 +252,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
   ForwardTranslator ft;
   Model m;
 
-  WaterHeaterMixed wh(m);
-  PlantLoop p(m);
-  EXPECT_TRUE(p.addSupplyBranchForComponent(wh));
-
+  // business as usual
   {
+    WaterHeaterMixed wh(m);
+    PlantLoop p(m);
+    EXPECT_TRUE(p.addSupplyBranchForComponent(wh));
+
     double validEffValue = 0.5;
 
     EXPECT_TRUE(wh.setHeaterThermalEfficiency(validEffValue));
@@ -271,11 +272,36 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
     EXPECT_EQ(validEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
   }
 
+  // set bad value after placing water heater on plant loop
   {
+    WaterHeaterMixed wh(m);
+    PlantLoop p(m);
+    EXPECT_TRUE(p.addSupplyBranchForComponent(wh));
+
     double invalidEffValue = -0.5;
 
     EXPECT_TRUE(wh.setHeaterThermalEfficiency(invalidEffValue));
     EXPECT_EQ(invalidEffValue, wh.heaterThermalEfficiency());
+
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idf_whs(w.getObjectsByType(IddObjectType::WaterHeater_Mixed));
+    EXPECT_EQ(1u, idf_whs.size());
+    WorkspaceObject idf_wh(idf_whs[0]);
+
+    EXPECT_EQ(invalidEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
+  }
+
+  // set bad value before placing water heater on plant loop
+  {
+    double invalidEffValue = -0.5;
+
+    WaterHeaterMixed wh(m);
+    EXPECT_TRUE(wh.setHeaterThermalEfficiency(invalidEffValue));
+    EXPECT_EQ(invalidEffValue, wh.heaterThermalEfficiency());
+
+    PlantLoop p(m);
+    EXPECT_TRUE(p.addSupplyBranchForComponent(wh));
 
     Workspace w = ft.translateModel(m);
 
