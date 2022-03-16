@@ -1818,7 +1818,7 @@ namespace model {
 
   /** Gets the fenestration value from the sql file **/
   boost::optional<double> SubSurface::getExteriorFenestrationValue(std::string columnName) const {
-    return getImpl<detail::SubSurface_Impl>()->getFenestrationValue(columnName);
+    return getImpl<detail::SubSurface_Impl>()->getExteriorFenestrationValue(columnName);
   }
 
 }  // namespace model
