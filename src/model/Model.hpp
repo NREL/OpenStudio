@@ -201,9 +201,6 @@ namespace model {
     /** Get the space type name used for plenums. */
     std::string plenumSpaceTypeName() const;
 
-    void setCheckValidity(bool checkValidity);
-    bool m_checkValidity;
-
     //@}
     /** @name Setters */
     //@{

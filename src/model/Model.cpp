@@ -1040,7 +1040,6 @@ namespace model {
 
   Model::Model() : Workspace(std::shared_ptr<detail::Model_Impl>(new detail::Model_Impl())) {
     this->addVersionObject();
-    m_checkValidity = true;
   }
 
   Model::Model(const openstudio::IdfFile& idfFile) : Workspace(std::shared_ptr<detail::Model_Impl>(new detail::Model_Impl(idfFile))) {
@@ -1250,10 +1249,6 @@ namespace model {
 
   std::string Model::plenumSpaceTypeName() const {
     return getImpl<detail::Model_Impl>()->plenumSpaceTypeName();
-  }
-
-  void Model::setCheckValidity(bool checkValidity) {
-    m_checkValidity = checkValidity;
   }
 
   openstudio::WorkflowJSON Model::workflowJSON() const {
