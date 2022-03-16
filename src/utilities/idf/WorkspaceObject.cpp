@@ -456,10 +456,10 @@ namespace detail {
       if (checkValidity) {
         if (!fieldDataIsValid(index, level).empty()) {
           // rollback
-          // IdfObject_Impl::setString(index, *oldValue, false);
+          IdfObject_Impl::setString(index, *oldValue, false);
 
           // remove the diffs
-          // m_diffs.resize(diffSize);
+          m_diffs.resize(diffSize);
 
           return false;
         }
