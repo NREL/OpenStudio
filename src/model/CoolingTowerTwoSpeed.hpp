@@ -167,7 +167,7 @@ namespace model {
 
     boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
-    boost::optional<std::string> evaporationLossMode() const;
+    std::string evaporationLossMode() const;
 
     bool isEvaporationLossModeDefaulted() const;
 
@@ -179,7 +179,7 @@ namespace model {
 
     bool isDriftLossPercentDefaulted() const;
 
-    boost::optional<std::string> blowdownCalculationMode() const;
+    std::string blowdownCalculationMode() const;
 
     bool isBlowdownCalculationModeDefaulted() const;
 

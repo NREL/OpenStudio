@@ -158,7 +158,7 @@ namespace model {
 
     void resetBasinHeaterOperatingSchedule();
 
-    boost::optional<std::string> evaporationLossMode() const;
+    std::string evaporationLossMode() const;
 
     bool isEvaporationLossModeDefaulted() const;
 
@@ -180,7 +180,7 @@ namespace model {
 
     void resetDriftLossPercent();
 
-    boost::optional<std::string> blowdownCalculationMode() const;
+    std::string blowdownCalculationMode() const;
 
     bool isBlowdownCalculationModeDefaulted() const;
 
@@ -206,7 +206,7 @@ namespace model {
 
     void resetNumberofCells();
 
-    boost::optional<std::string> cellControl() const;
+    std::string cellControl() const;
 
     bool isCellControlDefaulted() const;
 

@@ -72,7 +72,15 @@ namespace model {
 
     static std::vector<std::string> loadDistributionSchemeValues();
 
+    static std::vector<std::string> validLoadDistributionSchemeValues();
+
     static std::vector<std::string> fluidTypeValues();
+
+    static std::vector<std::string> validFluidTypeValues();
+
+    static std::vector<std::string> commonPipeSimulationValues();
+
+    static std::vector<std::string> validCommonPipeSimulationValues();
 
     /** Prior to OS 1.11.0 the options where
       Optimal, Sequential, and Uniform.
@@ -138,7 +146,9 @@ namespace model {
 
     void autocalculatePlantLoopVolume();
 
-    boost::optional<std::string> commonPipeSimulation() const;
+    std::string commonPipeSimulation() const;
+
+    bool isCommonPipeSimulationDefaulted() const;
 
     bool setCommonPipeSimulation(const std::string& value);
 
