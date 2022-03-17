@@ -328,8 +328,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
 
     WaterHeaterMixed wh(m);
     EXPECT_TRUE(wh.setSetpointTemperatureSchedule(sch));
+    EXPECT_TRUE(wh.setpointTemperatureSchedule());
     EXPECT_TRUE(wh.setHeaterThermalEfficiency(invalidEffValue));
     EXPECT_EQ(invalidEffValue, wh.heaterThermalEfficiency());
-    EXPECT_TRUE(wh.setSetpointTemperatureSchedule(sch));  // returns false after having set an invalid value
+    EXPECT_TRUE(wh.setSetpointTemperatureSchedule(sch));          // returns false after having set an invalid value
+    EXPECT_FALSE(wh.setpointTemperatureSchedule());               // clears this out
+    EXPECT_TRUE(wh.setHeaterThermalEfficiency(invalidEffValue));  // still returns true
   }
 }
