@@ -506,6 +506,7 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::setPointer(unsigned index, const Handle& targetHandle, bool checkValidity) {
+    checkValidity = false;
     if (m_handle.isNull()) {
       return false;
     }

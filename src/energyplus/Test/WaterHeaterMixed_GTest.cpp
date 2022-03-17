@@ -314,9 +314,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
 
     WorkspaceObjectVector idf_whs(w.getObjectsByType(IddObjectType::WaterHeater_Mixed));
     EXPECT_EQ(1u, idf_whs.size());
-    // WorkspaceObject idf_wh(idf_whs[0]);
+    WorkspaceObject idf_wh(idf_whs[0]);
 
-    // EXPECT_EQ(invalidEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
+    EXPECT_EQ(invalidEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
   }
 
   // figured out the issue here
@@ -331,8 +331,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
     EXPECT_TRUE(wh.setpointTemperatureSchedule());
     EXPECT_TRUE(wh.setHeaterThermalEfficiency(invalidEffValue));
     EXPECT_EQ(invalidEffValue, wh.heaterThermalEfficiency());
+    EXPECT_TRUE(wh.setpointTemperatureSchedule());                // still there
     EXPECT_TRUE(wh.setSetpointTemperatureSchedule(sch));          // returns false after having set an invalid value
-    EXPECT_FALSE(wh.setpointTemperatureSchedule());               // clears this out
+    EXPECT_TRUE(wh.setpointTemperatureSchedule());                // clears this out
     EXPECT_TRUE(wh.setHeaterThermalEfficiency(invalidEffValue));  // still returns true
   }
 }
