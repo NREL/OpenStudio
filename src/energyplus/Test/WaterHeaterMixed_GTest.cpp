@@ -311,4 +311,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
 
     EXPECT_EQ(invalidEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
   }
+
+  // figured out the issue here
+  {
+    double invalidEffValue = -0.5;
+    ScheduleConstant sch(m);
+
+    WaterHeaterMixed wh(m);
+    EXPECT_TRUE(wh.setSetpointTemperatureSchedule(sch));
+    EXPECT_TRUE(wh.setHeaterThermalEfficiency(invalidEffValue));
+    EXPECT_EQ(invalidEffValue, wh.heaterThermalEfficiency());
+    EXPECT_TRUE(wh.setSetpointTemperatureSchedule(sch));  // returns false after having set an invalid value
+  }
 }
