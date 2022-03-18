@@ -30,7 +30,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # Add NREL remote and place it first in line, since we vendored dependencies to NREL's repo, they will be picked first
   # TJC 2021-04-27 bintray.com is decommissioned as of 2021-05-01. See commercialbuildings as replacement below.
   conan_add_remote(NAME nrel INDEX 0
-     URL https://conan.commercialbuildings.dev/artifactory/api/conan/openstudio)
+     URL https://conan.openstudio.net/artifactory/api/conan/openstudio)
 
   conan_add_remote(NAME bincrafters
     URL https://bincrafters.jfrog.io/artifactory/api/conan/public-conan)
