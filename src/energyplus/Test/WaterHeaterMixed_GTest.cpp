@@ -253,7 +253,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_PlantLoopConnections
 TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
   ForwardTranslator ft;
 
-  // business as usual, strictness level draft
+  // business as usual, strictness level draft (default behavior)
   {
     Model m;
     EXPECT_EQ(m.strictnessLevel(), StrictnessLevel::Draft);
@@ -302,7 +302,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
     EXPECT_EQ(validEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
   }
 
-  // set bad value after placing water heater on plant loop, strictness level draft
+  // set bad value after placing water heater on plant loop, strictness level draft (default behavior)
   {
     Model m;
     EXPECT_EQ(m.strictnessLevel(), StrictnessLevel::Draft);
@@ -351,7 +351,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
     EXPECT_EQ(invalidEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
   }
 
-  // set bad value before placing water heater on plant loop, strictness level draft
+  // set bad value before placing water heater on plant loop, strictness level draft (default behavior)
   {
     Model m;
     EXPECT_EQ(m.strictnessLevel(), StrictnessLevel::Draft);
@@ -400,7 +400,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
     EXPECT_EQ(invalidEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
   }
 
-  // check pointers, strictness level draft
+  // check pointers, strictness level draft (default behavior)
   {
     Model m;
     EXPECT_EQ(m.strictnessLevel(), StrictnessLevel::Draft);
