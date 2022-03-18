@@ -1625,7 +1625,7 @@ namespace detail {
     this->progressValue.nano_emit(i);
     this->progressCaption.nano_emit("Checking Validity");
 
-    // StrictnessLevel::None
+    // StrictnessLevel::Minimal
     // DataErrorType::NoIdd
     // \todo Only way there can be no IddFile is if IddFileType is set to UserCustom
 
@@ -1669,7 +1669,7 @@ namespace detail {
       }
 
       // StrictnessLevel::Draft
-      if (level > StrictnessLevel::None) {
+      if (level > StrictnessLevel::Minimal) {
         // DataErrorType::NoIdd
         // object-level
         if (iddFileType() == IddFileType::UserCustom) {
@@ -1687,7 +1687,7 @@ namespace detail {
     }
 
     // StrictnessLevel::Draft
-    if (level > StrictnessLevel::None) {
+    if (level > StrictnessLevel::Minimal) {
       // Check Name Conflicts
       //worst case, EVERY name is the same, EVERY object has a conflicting reference list.... this in O(n^3)
       //however, that is so unlikely its not even funny

@@ -305,7 +305,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS) {
 TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS_explicit) {
   ReverseTranslator reverseTranslator;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_zone1 = w.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(_i_zone1);
   EXPECT_TRUE(_i_zone1->setName("Zone1"));

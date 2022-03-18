@@ -287,7 +287,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
 
   ReverseTranslator reverseTranslator;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_fan = w.addObject(IdfObject(IddObjectType::Fan_SystemModel));
   ASSERT_TRUE(_i_fan);
   _i_fan->setName("Zone1FanCoilFan");

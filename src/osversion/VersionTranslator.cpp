@@ -455,7 +455,7 @@ namespace osversion {
     // validity checking
     Workspace finalWorkspace(finalModel);
     model::Model tempModel(finalWorkspace);  // None-level strictness!
-    OS_ASSERT(tempModel.strictnessLevel() == StrictnessLevel::None);
+    OS_ASSERT(tempModel.strictnessLevel() == StrictnessLevel::Minimal);
     std::vector<std::shared_ptr<InterobjectIssueInformation>> issueInfo = fixInterobjectIssuesStage1(tempModel, m_originalVersion);
     if (!tempModel.isValid(StrictnessLevel::Draft)) {
       LOG(Error, "Model with Version " << openStudioVersion() << " IDD is not valid to draft "
@@ -947,7 +947,7 @@ namespace osversion {
 
   std::vector<std::shared_ptr<VersionTranslator::InterobjectIssueInformation>>
     VersionTranslator::fixInterobjectIssuesStage1(model::Model& model, const VersionString& startVersion) {
-    OS_ASSERT(model.strictnessLevel() == StrictnessLevel::None);
+    OS_ASSERT(model.strictnessLevel() == StrictnessLevel::Minimal);
     std::vector<std::shared_ptr<InterobjectIssueInformation>> result;
 
     if (startVersion < VersionString("0.8.4")) {

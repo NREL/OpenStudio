@@ -1671,7 +1671,7 @@ namespace detail {
   std::vector<DataError> IdfObject_Impl::fieldDataIsValid(unsigned index, const StrictnessLevel& level) const {
     DataErrorVector result;
 
-    // StrictnessLevel::None
+    // StrictnessLevel::Minimal
 
     // DataErrorType::NoIdd
     // field-level
@@ -1682,7 +1682,7 @@ namespace detail {
     }
 
     // StrictnessLevel::Draft
-    if (level > StrictnessLevel::None) {
+    if (level > StrictnessLevel::Minimal) {
 
       // DataErrorType::DataType
       // DataErrorType::NumericBound

@@ -107,7 +107,7 @@ TEST_F(EnergyPlusFixture, DISABLED_ReverseTranslator_RunPeriodControlSpecialDays
 
   ReverseTranslator rt;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   // Not there, Model shouldn't have it either
   {

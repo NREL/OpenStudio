@@ -678,7 +678,7 @@ namespace energyplus {
       this->createStandardOutputRequests();
     }
 
-    Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+    Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
     OptionalWorkspaceObject vo = workspace.versionObject();
     OS_ASSERT(vo);
     workspace.removeObject(vo->handle());

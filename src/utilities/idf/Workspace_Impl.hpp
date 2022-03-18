@@ -77,7 +77,7 @@ namespace detail {
      *  as pointers (\object-list type). Inherits IddFile from idfFile. Aims for StrictnessLevel.
      *  Either sets StrictnessLevel lower if can't get to level, or removes all objects depending
      *  on boolean. */
-    Workspace_Impl(const IdfFile& idfFile, StrictnessLevel level = StrictnessLevel::None);
+    Workspace_Impl(const IdfFile& idfFile, StrictnessLevel level = StrictnessLevel::Minimal);
 
     /** Copy constructor makes unconnected copy of all data. Assigning new handles to the new objects
      *  is optional. */

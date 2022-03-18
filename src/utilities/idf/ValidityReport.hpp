@@ -62,7 +62,7 @@ class UTILITIES_API ValidityReport
   /** @name Inspection */
   //@{
 
-  /** The strictness level of the report. StrictnessLevel::None is for opening files,
+  /** The strictness level of the report. StrictnessLevel::Minimal is for opening files,
    *  StricnessLevel::Draft is for active modeling, and StrictnessLevel::Final is for models
    *  ready to simulate. */
   StrictnessLevel level() const;

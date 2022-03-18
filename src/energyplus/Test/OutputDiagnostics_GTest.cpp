@@ -92,7 +92,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDiagnostics) {
 
   ReverseTranslator rt;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_outputDiagnostics = w.addObject(IdfObject(IddObjectType::Output_Diagnostics));
   ASSERT_TRUE(_i_outputDiagnostics);
 

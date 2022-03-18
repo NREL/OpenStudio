@@ -253,9 +253,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_PlantLoopConnections
 TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
   ForwardTranslator ft;
 
-  // business as usual
+  // business as usual, strictness level draft
   {
     Model m;
+    EXPECT_EQ(m.strictnessLevel(), StrictnessLevel::Draft);
 
     WaterHeaterMixed wh(m);
     PlantLoop p(m);
@@ -275,9 +276,62 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
     EXPECT_EQ(validEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
   }
 
-  // set bad value after placing water heater on plant loop
+  // business as usual, strictness level none
   {
     Model m;
+    StrictnessLevel strictnessLevel(StrictnessLevel::None);
+    m.setStrictnessLevel(strictnessLevel);
+    EXPECT_TRUE(m.strictnessLevel() < StrictnessLevel::Minimal);
+    EXPECT_TRUE(m.strictnessLevel() < StrictnessLevel::Draft);
+
+    WaterHeaterMixed wh(m);
+    PlantLoop p(m);
+    EXPECT_TRUE(p.addSupplyBranchForComponent(wh));
+
+    double validEffValue = 0.5;
+
+    EXPECT_TRUE(wh.setHeaterThermalEfficiency(validEffValue));
+    EXPECT_EQ(validEffValue, wh.heaterThermalEfficiency());
+
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idf_whs(w.getObjectsByType(IddObjectType::WaterHeater_Mixed));
+    EXPECT_EQ(1u, idf_whs.size());
+    WorkspaceObject idf_wh(idf_whs[0]);
+
+    EXPECT_EQ(validEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
+  }
+
+  // set bad value after placing water heater on plant loop, strictness level draft
+  {
+    Model m;
+    EXPECT_EQ(m.strictnessLevel(), StrictnessLevel::Draft);
+
+    WaterHeaterMixed wh(m);
+    PlantLoop p(m);
+    EXPECT_TRUE(p.addSupplyBranchForComponent(wh));
+
+    double invalidEffValue = -0.5;
+
+    EXPECT_FALSE(wh.setHeaterThermalEfficiency(invalidEffValue));
+    EXPECT_NE(invalidEffValue, wh.heaterThermalEfficiency());
+
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idf_whs(w.getObjectsByType(IddObjectType::WaterHeater_Mixed));
+    EXPECT_EQ(1u, idf_whs.size());
+    WorkspaceObject idf_wh(idf_whs[0]);
+
+    EXPECT_NE(invalidEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
+  }
+
+  // set bad value after placing water heater on plant loop, strictness level none
+  {
+    Model m;
+    StrictnessLevel strictnessLevel(StrictnessLevel::None);
+    m.setStrictnessLevel(strictnessLevel);
+    EXPECT_TRUE(m.strictnessLevel() < StrictnessLevel::Minimal);
+    EXPECT_TRUE(m.strictnessLevel() < StrictnessLevel::Draft);
 
     WaterHeaterMixed wh(m);
     PlantLoop p(m);
@@ -297,9 +351,36 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
     EXPECT_EQ(invalidEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
   }
 
-  // set bad value before placing water heater on plant loop
+  // set bad value before placing water heater on plant loop, strictness level draft
   {
     Model m;
+    EXPECT_EQ(m.strictnessLevel(), StrictnessLevel::Draft);
+
+    double invalidEffValue = -0.5;
+
+    WaterHeaterMixed wh(m);
+    EXPECT_FALSE(wh.setHeaterThermalEfficiency(invalidEffValue));
+    EXPECT_NE(invalidEffValue, wh.heaterThermalEfficiency());
+
+    PlantLoop p(m);
+    EXPECT_TRUE(p.addSupplyBranchForComponent(wh));
+
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idf_whs(w.getObjectsByType(IddObjectType::WaterHeater_Mixed));
+    EXPECT_EQ(1u, idf_whs.size());
+    WorkspaceObject idf_wh(idf_whs[0]);
+
+    EXPECT_NE(invalidEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
+  }
+
+  // set bad value before placing water heater on plant loop, strictness level none
+  {
+    Model m;
+    StrictnessLevel strictnessLevel(StrictnessLevel::None);
+    m.setStrictnessLevel(strictnessLevel);
+    EXPECT_TRUE(m.strictnessLevel() < StrictnessLevel::Minimal);
+    EXPECT_TRUE(m.strictnessLevel() < StrictnessLevel::Draft);
 
     double invalidEffValue = -0.5;
 
@@ -319,9 +400,32 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
     EXPECT_EQ(invalidEffValue, idf_wh.getDouble(WaterHeater_MixedFields::HeaterThermalEfficiency, false).get());
   }
 
-  // figured out the issue here
+  // check pointers, strictness level draft
   {
     Model m;
+    EXPECT_EQ(m.strictnessLevel(), StrictnessLevel::Draft);
+
+    double invalidEffValue = -0.5;
+    ScheduleConstant sch(m);
+
+    WaterHeaterMixed wh(m);
+    EXPECT_TRUE(wh.setSetpointTemperatureSchedule(sch));
+    EXPECT_TRUE(wh.setpointTemperatureSchedule());
+    EXPECT_FALSE(wh.setHeaterThermalEfficiency(invalidEffValue));
+    EXPECT_NE(invalidEffValue, wh.heaterThermalEfficiency());
+    EXPECT_TRUE(wh.setpointTemperatureSchedule());
+    EXPECT_TRUE(wh.setSetpointTemperatureSchedule(sch));
+    EXPECT_TRUE(wh.setpointTemperatureSchedule());
+    EXPECT_FALSE(wh.setHeaterThermalEfficiency(invalidEffValue));
+  }
+
+  // check pointers, strictness level none
+  {
+    Model m;
+    StrictnessLevel strictnessLevel(StrictnessLevel::None);
+    m.setStrictnessLevel(strictnessLevel);
+    EXPECT_TRUE(m.strictnessLevel() < StrictnessLevel::Minimal);
+    EXPECT_TRUE(m.strictnessLevel() < StrictnessLevel::Draft);
 
     double invalidEffValue = -0.5;
     ScheduleConstant sch(m);
@@ -331,9 +435,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
     EXPECT_TRUE(wh.setpointTemperatureSchedule());
     EXPECT_TRUE(wh.setHeaterThermalEfficiency(invalidEffValue));
     EXPECT_EQ(invalidEffValue, wh.heaterThermalEfficiency());
-    EXPECT_TRUE(wh.setpointTemperatureSchedule());                // still there
-    EXPECT_TRUE(wh.setSetpointTemperatureSchedule(sch));          // returns false after having set an invalid value
-    EXPECT_TRUE(wh.setpointTemperatureSchedule());                // clears this out
-    EXPECT_TRUE(wh.setHeaterThermalEfficiency(invalidEffValue));  // still returns true
+    EXPECT_TRUE(wh.setpointTemperatureSchedule());
+    EXPECT_TRUE(wh.setSetpointTemperatureSchedule(sch));
+    EXPECT_TRUE(wh.setpointTemperatureSchedule());
+    EXPECT_TRUE(wh.setHeaterThermalEfficiency(invalidEffValue));
   }
 }

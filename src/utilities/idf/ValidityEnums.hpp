@@ -39,7 +39,8 @@ namespace openstudio {
 /** \class StrictnessLevel
  *  \brief Specifies the desired amount of validity.
  *
- *  \li None - (Almost) anything goes.
+ *  \li None - Anything goes.
+ *  \li Minimal - (Almost) anything goes.
  *  \li Draft - Non-null data is valid.
  *  \li Final - Required and unique data has correct cardinality.
  *
@@ -47,12 +48,14 @@ namespace openstudio {
  *  \code
 OPENSTUDIO_ENUM(StrictnessLevel,
   ((None))
+  ((Minimal))
   ((Draft))
   ((Final))
 );
  *  \endcode */
 OPENSTUDIO_ENUM(StrictnessLevel,
   ((None))
+  ((Minimal))
   ((Draft))
   ((Final))
 );
@@ -83,6 +86,8 @@ OPENSTUDIO_ENUM(Scope,
  *  at the lower levels as well.)
  *
  *  Strictness::None
+ *
+ *  Strictness::Minimal
  *
  *  \li NoIdd (field-level, collection-level) - The input data definition is missing or empty.
  *  \li NotInitialized - Data is not ready for use or has been removed from the collection.

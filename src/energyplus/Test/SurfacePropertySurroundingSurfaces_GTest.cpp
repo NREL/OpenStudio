@@ -205,7 +205,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SurfacePropertySurroundingSurfaces) 
 
   ReverseTranslator rt;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   auto wo_zone = w.addObject(IdfObject(IddObjectType::Zone)).get();
   wo_zone.setName("Thermal Zone 1");
