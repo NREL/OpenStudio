@@ -115,7 +115,7 @@ TEST_F(IdfFixture, ObjectHasURL) {
   EXPECT_EQ(IddObjectType::Schedule_File, urls[0].iddObject().type().value());
 }
 
-TEST_F(IdfFixture, ObjectGettersAndSetters_StrictnessNone) {
+TEST_F(IdfFixture, ObjectGettersAndSetters_StrictnessMinimal) {
   Workspace workspace(epIdfFile, StrictnessLevel::Minimal);
   workspace.setStrictnessLevel(StrictnessLevel::Minimal);
 
@@ -965,12 +965,14 @@ NotAWindow, \n\
   // keeps bad object
   IdfFile idfFile = IdfFile::load(original, IddFileType::EnergyPlus).get();
   EXPECT_EQ(static_cast<unsigned>(3), idfFile.objects().size());
+  EXPECT_TRUE(idfFile.isValid(StrictnessLevel::None));
   EXPECT_TRUE(idfFile.isValid(StrictnessLevel::Minimal));
   EXPECT_FALSE(idfFile.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(idfFile.isValid(StrictnessLevel::Final));
 
   Workspace workspace(idfFile, StrictnessLevel::Minimal);
   EXPECT_EQ(static_cast<unsigned>(3), workspace.objects().size());
+  EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Minimal));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Final));
@@ -991,6 +993,40 @@ NotAWindow, \n\
     EXPECT_TRUE(isAWindow.setString(i - 1, notAWindow.getString(i).get()));
   }
   /// \todo add idfFile.swap method
+}
+
+// bad fields
+TEST_F(IdfFixture, Workspace_FieldsNotInIdd) {
+
+  // bad object names, NotAWindow is not a class
+  std::stringstream original;
+  original << "Wall:Adiabatic, \n\
+  ,                        !- Name \n\
+  ,                        !- Construction Name \n\
+  ,                        !- Zone Name \n\
+  ,                        !- Space Name \n\
+  270,                     !- Azimuth Angle {deg} \n\
+  90,                      !- Tilt Angle {deg} \n\
+  0,                       !- Starting X Coordinate {m} \n\
+  20,                      !- Starting Y Coordinate {m} \n\
+  0,                       !- Starting Z Coordinate {m} \n\
+  20,                      !- Length {m} \n\
+  4;                       !- Height {m}";
+
+  // keeps bad object
+  IdfFile idfFile = IdfFile::load(original, IddFileType::EnergyPlus).get();
+  EXPECT_EQ(static_cast<unsigned>(1), idfFile.objects().size());
+  EXPECT_TRUE(idfFile.isValid(StrictnessLevel::None));
+  EXPECT_FALSE(idfFile.isValid(StrictnessLevel::Minimal));
+  EXPECT_FALSE(idfFile.isValid(StrictnessLevel::Draft));
+  EXPECT_FALSE(idfFile.isValid(StrictnessLevel::Final));
+
+  Workspace workspace(idfFile, StrictnessLevel::Minimal);
+  EXPECT_EQ(static_cast<unsigned>(1), workspace.objects().size());
+  EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
+  EXPECT_FALSE(workspace.isValid(StrictnessLevel::Minimal));
+  EXPECT_FALSE(workspace.isValid(StrictnessLevel::Draft));
+  EXPECT_FALSE(workspace.isValid(StrictnessLevel::Final));
 }
 
 TEST_F(IdfFixture, HospitalBaseline) {
