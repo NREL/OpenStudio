@@ -424,6 +424,7 @@ namespace detail {
   bool WorkspaceObject_Impl::setString(unsigned index, const std::string& value, bool checkValidity) {
     StrictnessLevel level = m_workspace->strictnessLevel();
 
+    // StrictnessLevel::None
     if (level < StrictnessLevel::Minimal) {
       checkValidity = false;
     }
@@ -512,6 +513,7 @@ namespace detail {
   bool WorkspaceObject_Impl::setPointer(unsigned index, const Handle& targetHandle, bool checkValidity) {
     StrictnessLevel level = m_workspace->strictnessLevel();
 
+    // StrictnessLevel::None
     if (level < StrictnessLevel::Minimal) {
       checkValidity = false;
     }

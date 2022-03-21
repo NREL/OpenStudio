@@ -435,7 +435,6 @@ namespace detail {
   }
 
   bool IdfObject_Impl::setString(unsigned index, const std::string& _value, bool checkValidity) {
-    // checkValidity = false;
     std::string value = encodeString(_value);
 
     if (m_iddObject.hasNameField() && (index == m_iddObject.nameFieldIndex().get())) {

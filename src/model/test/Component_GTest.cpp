@@ -290,28 +290,6 @@ TEST_F(ModelFixture, ComponentWatcher_BadComponentDataFromWorkspace) {
   EXPECT_EQ(0u, model.numObjects());
 }
 
-TEST_F(ModelFixture, ComponentWatcher_BadComponentDataFromWorkspace_StrictnessLevelNone) {
-  Workspace ws(StrictnessLevel::None, IddFileType::OpenStudio);
-  OptionalWorkspaceObject owo = ws.addObject(IdfObject(IddObjectType::OS_ComponentData));
-  ASSERT_TRUE(owo);
-  // make component data ok except points to non-existent object
-  WorkspaceObject cd = *owo;
-  OptionalString oName = cd.name();  // should have been set by constructor
-  ASSERT_TRUE(oName);
-  EXPECT_FALSE(oName->empty());
-  cd.setString(OS_ComponentDataFields::UUID, toString(createUUID()));
-  cd.setString(OS_ComponentDataFields::VersionUUID, toString(createUUID()));
-  StringVector values;
-  values.push_back("My Material");
-  IdfExtensibleGroup eg = cd.pushExtensibleGroup(values);
-  EXPECT_FALSE(eg.empty());  // Can register a bad pointer.
-
-  EXPECT_EQ(1u, ws.numObjects());
-  Model model(ws);
-  // expect ComponentWatcher creation to not kick out ComponentData
-  EXPECT_EQ(1u, model.numObjects());
-}
-
 TEST_F(ModelFixture, ComponentWatcher_InComponent) {
   // create Component. ComponentWatcher should work here too (since Component is Model)
   Model model;
