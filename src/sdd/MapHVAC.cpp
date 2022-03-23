@@ -6606,6 +6606,19 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       pump.setRatedPumpHead(totHd.get());
     }
 
+    // FlowMinSim
+    const auto flowMinSimElement = pumpElement.child("FlowMinSim");
+    if(flowMinSimElement) {
+      const auto flowMinSim = unitToUnit(flowMinSimElement.text().as_double(), "gal/min", "m^3/s").get();
+      pump.setMinimumFlowRate(flowMinSim);
+    }
+
+    // FlowMinRat
+    const auto flowMinRatElement = pumpElement.child("FlowMinRat");
+    if(flowMinRatElement) {
+      pump.setDesignMinimumFlowRateFraction(flowMinRatElement.text().as_double());
+    }
+
     if( autosize() )
     {
       if( ! totHd ) {
