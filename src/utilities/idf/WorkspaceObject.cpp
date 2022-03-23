@@ -422,16 +422,10 @@ namespace detail {
 
   // Pre-condition:  Object valid at Workspace's strictness level.
   bool WorkspaceObject_Impl::setString(unsigned index, const std::string& value, bool checkValidity) {
-    StrictnessLevel level = m_workspace->strictnessLevel();
-
-    // StrictnessLevel::None
-    if (level < StrictnessLevel::Minimal) {
-      checkValidity = false;
-    }
-
     if (m_handle.isNull()) {
       return false;
     }
+    StrictnessLevel level = m_workspace->strictnessLevel();
 
     if (canBeSource(index)) {
       // pointer field
@@ -458,7 +452,7 @@ namespace detail {
       if (!result) {
         return false;
       }
-      if (checkValidity) {
+      if (checkValidity && level > StrictnessLevel::None) {
         if (!fieldDataIsValid(index, level).empty()) {
           // rollback
           IdfObject_Impl::setString(index, *oldValue, false);
@@ -511,19 +505,14 @@ namespace detail {
   }
 
   bool WorkspaceObject_Impl::setPointer(unsigned index, const Handle& targetHandle, bool checkValidity) {
-    StrictnessLevel level = m_workspace->strictnessLevel();
-
-    // StrictnessLevel::None
-    if (level < StrictnessLevel::Minimal) {
-      checkValidity = false;
-    }
-
     if (m_handle.isNull()) {
       return false;
     }
 
     // essential hurdles
     if (canBeSource(index) && (targetHandle.isNull() || m_workspace->isMember(targetHandle))) {
+
+      StrictnessLevel level = m_workspace->strictnessLevel();
 
       // field NullAndRequired
       if (checkValidity && (level > StrictnessLevel::Draft) && targetHandle.isNull() && iddObject().isRequiredField(index)) {
@@ -545,7 +534,7 @@ namespace detail {
       }
       OptionalUnsigned n;
       if (index >= numFields()) {
-        if (checkValidity) {
+        if (checkValidity && level > StrictnessLevel::None) {
           checkValid = true;
         }
         n = numFields();
