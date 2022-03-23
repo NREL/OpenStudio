@@ -84,15 +84,20 @@ namespace energyplus {
       scheduleFile.setColumnSeparator(*os);
     }
 
-    OptionalString os = workspaceObject.getString(Schedule_FileFields::InterpolatetoTimestep);
-    if (os) {
-      if (openstudio::istringEqual("Yes", os.get())) {
+    if (OptionalString os = workspaceObject.getString(Schedule_FileFields::InterpolatetoTimestep)) {
+      if (openstudio::istringEqual("Yes", *os)) {
         scheduleFile.setInterpolatetoTimestep(true);
       }
     }
 
     if (OptionalInt oi = workspaceObject.getInt(Schedule_FileFields::MinutesperItem)) {
-      scheduleFile.setMinutesperItem(oi.get());
+      scheduleFile.setMinutesperItem(*oi);
+    }
+
+    if (OptionalString os = workspaceObject.getString(Schedule_FileFields::AdjustScheduleforDaylightSavings)) {
+      if (openstudio::istringEqual("Yes", *os)) {
+        scheduleFile.setAdjustScheduleforDaylightSavings(true);
+      }
     }
 
     return scheduleFile;

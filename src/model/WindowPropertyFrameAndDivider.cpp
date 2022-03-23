@@ -312,6 +312,16 @@ namespace model {
       return isEmpty(OS_WindowProperty_FrameAndDividerFields::InsideRevealSolarAbsorptance);
     }
 
+    std::string WindowPropertyFrameAndDivider_Impl::nfrcProductTypeforAssemblyCalculations() const {
+      boost::optional<std::string> value = getString(OS_WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool WindowPropertyFrameAndDivider_Impl::isNFRCProductTypeforAssemblyCalculationsDefaulted() const {
+      return isEmpty(OS_WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations);
+    }
+
     bool WindowPropertyFrameAndDivider_Impl::setFrameWidth(double frameWidth) {
       bool result = setDouble(OS_WindowProperty_FrameAndDividerFields::FrameWidth, frameWidth);
       return result;
@@ -572,6 +582,17 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool WindowPropertyFrameAndDivider_Impl::setNFRCProductTypeforAssemblyCalculations(const std::string& nfrcProductTypeforAssemblyCalculations) {
+      bool result =
+        setString(OS_WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations, nfrcProductTypeforAssemblyCalculations);
+      return result;
+    }
+
+    void WindowPropertyFrameAndDivider_Impl::resetNFRCProductTypeforAssemblyCalculations() {
+      bool result = setString(OS_WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations, "");
+      OS_ASSERT(result);
+    }
+
   }  // namespace detail
 
   WindowPropertyFrameAndDivider::WindowPropertyFrameAndDivider(const Model& model)
@@ -788,6 +809,14 @@ namespace model {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isInsideRevealSolarAbsorptanceDefaulted();
   }
 
+  std::string WindowPropertyFrameAndDivider::nfrcProductTypeforAssemblyCalculations() const {
+    return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->nfrcProductTypeforAssemblyCalculations();
+  }
+
+  bool WindowPropertyFrameAndDivider::isNFRCProductTypeforAssemblyCalculationsDefaulted() const {
+    return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isNFRCProductTypeforAssemblyCalculationsDefaulted();
+  }
+
   bool WindowPropertyFrameAndDivider::setFrameWidth(double frameWidth) {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setFrameWidth(frameWidth);
   }
@@ -990,6 +1019,14 @@ namespace model {
 
   void WindowPropertyFrameAndDivider::resetInsideRevealSolarAbsorptance() {
     getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetInsideRevealSolarAbsorptance();
+  }
+
+  bool WindowPropertyFrameAndDivider::setNFRCProductTypeforAssemblyCalculations(const std::string& nfrcProductTypeforAssemblyCalculations) {
+    return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setNFRCProductTypeforAssemblyCalculations(nfrcProductTypeforAssemblyCalculations);
+  }
+
+  void WindowPropertyFrameAndDivider::resetNFRCProductTypeforAssemblyCalculations() {
+    getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetNFRCProductTypeforAssemblyCalculations();
   }
 
   /// @cond

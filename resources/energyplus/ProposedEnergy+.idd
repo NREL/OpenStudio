@@ -1,4 +1,4 @@
-!IDD_Version 9.6.0
+!IDD_Version 22.1.0
 !IDD_BUILD TBD
 ! **************************************************************************
 ! This file is the Input Data Dictionary (IDD) for EnergyPlus.
@@ -404,7 +404,7 @@ Version,
       \format singleLine
       \min-fields 1
   A1 ; \field Version Identifier
-      \default 9.6
+      \default 22.1
 
 SimulationControl,
       \unique-object
@@ -2834,7 +2834,7 @@ Schedule:File:Shading,
        \retaincase
 
 Schedule:File,
- \min-fields 5
+       \min-fields 10
        \memo A Schedule:File points to a text computer file that has 8760-8784 hours of data.
        \url-object
   A1 , \field Name
@@ -2877,11 +2877,18 @@ Schedule:File,
        \key Yes
        \key No
        \default No
-  N4 ; \field Minutes per Item
+  N4 , \field Minutes per Item
        \note Must be evenly divisible into 60
        \type integer
        \minimum 1
        \maximum 60
+  A6 ; \field Adjust Schedule for Daylight Savings
+       \note "No" means do not include Daylight Savings Time in the schedule, instead, use the schedule directly from the Schedule:File csv (default)
+       \note "Yes" means include Daylight Savings Time to the schedule
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
 
 \group Surface Construction Elements
 
@@ -3144,10 +3151,8 @@ WindowMaterial:SimpleGlazingSystem,
   N1 , \field U-Factor
        \required-field
        \note Enter U-Factor including film coefficients
-       \note Note that the effective upper limit for U-factor is 5.8 W/m2-K
        \units W/m2-K
        \minimum> 0
-       \maximum  7
   N2 , \field Solar Heat Gain Coefficient
        \required-field
        \note SHGC at Normal Incidence
@@ -7347,7 +7352,7 @@ WindowProperty:FrameAndDivider,
          \memo Specifies the dimensions of a window frame, dividers, and inside reveal surfaces.
          \memo Referenced by the surface objects for exterior windows and glass doors
          \memo (ref: FenestrationSurface:Detailed, Window, and GlazedDoor).
-      \min-fields 20
+         \min-fields 26
     A1 , \field Name
          \required-field
          \type alpha
@@ -7506,11 +7511,37 @@ WindowProperty:FrameAndDivider,
          \minimum 0.0
          \maximum 2.0
          \default 0.0
-    N23; \field Inside Reveal Solar Absorptance
+    N23, \field Inside Reveal Solar Absorptance
          \type real
          \minimum 0.0
          \maximum 1.0
          \default 0.0
+    A3;  \field NFRC Product Type for Assembly Calculations
+         \type choice
+         \key CasementDouble
+         \key CasementSingle
+         \key DualAction
+         \key Fixed
+         \key Garage
+         \key Greenhouse
+         \key HingedEscape
+         \key HorizontalSlider
+         \key Jal
+         \key Pivoted
+         \key ProjectingSingle
+         \key ProjectingDual
+         \key DoorSidelite
+         \key Skylight
+         \key SlidingPatioDoor
+         \key CurtainWall
+         \key SpandrelPanel
+         \key SideHingedDoor
+         \key DoorTransom
+         \key TropicalAwning
+         \key TubularDaylightingDevice
+         \key VerticalSlider
+         \default CurtainWall
+         \note Used when computing the assembly u-factor, SHGC and visible transmittance for reporting only
 
 WindowProperty:AirflowControl,
     \memo Used to control forced airflow through a gap between glass layers
@@ -9253,6 +9284,7 @@ SurfaceProperty:ConvectionCoefficients,
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
       \key ASTMC1340
+      \key BlockenWindard
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
@@ -9316,6 +9348,7 @@ SurfaceProperty:ConvectionCoefficients,
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
       \key ASTMC1340
+      \key BlockenWindard
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
@@ -28275,6 +28308,64 @@ ZoneHVAC:AirDistributionUnit,
        \type object-list
        \object-list DesignSpecificationAirTerminalSizingName
 
+ZoneHVAC:ExhaustControl,
+       \memo Defines a controlled exhaust flow from a zone which finally feeds into 
+       \memo one of AirLoopHVAC:ZoneMixer's inlets, which are part of an AirLoopHVAC:ExhaustSystem.
+  A1 , \field Name
+       \required-field
+  A2 , \field Availability Schedule Name
+       \note Availability schedule name for this exhaust system. Schedule value > 0 means it is available.
+       \note If this field is blank, the exhaust system is always available. If the attached 
+       \note AirLoopHVAC:ExhaustSystem is off, then the flow will be zero.
+       \type object-list
+       \object-list ScheduleNames
+  A3 , \field Zone Name
+       \required-field
+       \note Zone the exhaust inlet node is part of
+       \type object-list
+       \object-list ZoneNames
+  A4 , \field Inlet Node Name
+       \note Inlet node name for the exhaust. Must be a zone exhaust node.
+       \required-field
+       \type node
+  A5 , \field Outlet Node Name
+       \note Outlet node name for the exhaust
+       \required-field
+       \type node
+  N1 , \field Design Exhaust Flow Rate
+       \autosizable
+       \units m3/s
+       \minimum> 0
+       \default autosize
+  A6 , \field Flow Control Type
+       \note Control type of the zone exhaust flow
+       \type choice
+       \key Scheduled
+       \key FollowSupply
+       \default Scheduled
+  A7 , \field Exhaust Flow Fraction Schedule Name
+       \note Schedule name of the exhaust flow fraction. Used only with Scheduled control type.
+       \note If this field is blank, the flow fraction is always 1.0.
+       \type object-list
+       \object-list ScheduleNames
+  A8 , \field Supply Node or NodeList Name
+       \note Used only with FollowSupply control type.
+       \type node
+  A9,  \field Minimum Zone Temperature Limit Schedule Name
+       \note Schedule name of the Minimum Zone Temperature Limit in degree Celsius
+       \note If this field is blank, there is no limit.
+       \type object-list
+       \object-list ScheduleNames
+  A10, \field Minimum Exhaust Flow Fraction Schedule Name
+       \note Schedule name of the minimum exhaust flow fraction.
+       \note Applied when the zone temperature falls below the Minimum Zone Temperature Limit.
+       \type object-list
+       \object-list ScheduleNames
+  A11; \field Balanced Exhaust Fraction Schedule Name
+       \note Schedule name of the Balanced Exhaust Fraction.
+       \type object-list
+       \object-list ScheduleNames
+
 \group Zone HVAC Equipment Connections
 
 !*****************ZONE EQUIPMENT SPECIFICATION*********************
@@ -39775,6 +39866,29 @@ AirLoopHVAC:ReturnPath,
        \required-field
        \type object-list
        \object-list ReturnPathComponentNames
+
+AirLoopHVAC:ExhaustSystem,
+       \memo Defines a general exhaust system with a central exhaust fan drawing from one or more
+       \memo ZoneHVAC:ExhaustControl outlet nodes via an AirLoopHVAC:ZoneMixer.
+       \min-fields 4
+  A1 , \field Name
+       \required-field
+       \note Name of the exhaust system
+  A2 , \field Zone Mixer Name
+       \required-field
+       \type object-list
+       \note The name of the exhaust system AirLoopHVAC:ZoneMixer
+       \object-list ZoneMixers
+  A3 , \field Fan Object Type
+       \required-field
+       \type choice
+       \key Fan:SystemModel
+       \key Fan:ComponentModel
+  A4 ; \field Fan Name
+       \required-field
+       \type object-list
+       \object-list FansSystemModel
+       \object-list FansComponentModel
 
 AirLoopHVAC:DedicatedOutdoorAirSystem,
        \extensible:1 Just duplicate last field and comments (changing numbering, please)
@@ -52094,6 +52208,70 @@ SetpointManager:ReturnTemperature:HotWater,
        \type object-list
        \object-list ScheduleNames
 
+SetpointManager:SystemNodeReset:Temperature,
+        \memo This Setpoint Manager is used to place a temperature setpoint on a system node according to the reference (e.g., return) temperature using a reset rule.
+        \memo The temperature setpoint is obtained by retrieving the temperature of the user specified reference system node.
+   A1 , \field Name
+        \required-field
+   A2 , \field Control Variable
+        \required-field
+        \type choice
+        \key Temperature
+        \key MaximumTemperature
+        \key MinimumTemperature
+   N1 , \field Setpoint at Low Reference Temperature
+        \units C
+        \required-field
+   N2 , \field Setpoint at High Reference Temperature
+        \units C
+        \required-field
+   N3 , \field Low Reference Temperature
+        \units C
+        \required-field
+   N4 , \field High Reference Temperature
+        \units C
+        \required-field
+   A3 , \field Reference Node Name
+        \note The name of an HVAC system node that gets referenced.
+        \required-field
+        \type node
+   A4 ; \field Setpoint Node or NodeList Name
+        \note Node(s) at which temperature will be set
+        \required-field
+        \type node
+
+SetpointManager:SystemNodeReset:Humidity,
+        \memo This Setpoint Manager is used to place a humidity ratio setpoint on a system node according to the reference (e.g., return) humidity ratio using a reset rule.
+        \memo The humidity ratio setpoint is obtained by retrieving the humidity ratio of the user specified reference system node.
+   A1 , \field Name
+        \required-field
+   A2 , \field Control Variable
+        \required-field
+        \type choice
+        \key HumidityRatio
+        \key MaximumHumidityRatio
+        \key MinimumHumidityRatio
+   N1 , \field Setpoint at Low Reference Humidity Ratio
+        \units kgWater/kgDryAir
+        \required-field
+   N2 , \field Setpoint at High Reference Humidity Ratio
+        \units kgWater/kgDryAir
+        \required-field
+   N3 , \field Low Reference Humidity Ratio
+        \units kgWater/kgDryAir
+        \required-field
+   N4 , \field High Reference Humidity Ratio
+        \units kgWater/kgDryAir
+        \required-field
+   A3 , \field Reference Node Name
+        \note The name of an HVAC system node that gets referenced.
+        \required-field
+        \type node
+   A4 ; \field Setpoint Node or NodeList Name
+        \note Node(s) at which humidity ratio will be set
+        \required-field
+        \type node
+
 \group Refrigeration
 
 Refrigeration:Case,
@@ -56729,8 +56907,11 @@ WaterUse:Well,
 
 WaterUse:RainCollector,
        \memo Used for harvesting rainwater falling on building surfaces. The rainwater is sent to a
-       \memo WaterUse:Storage object. In order to use this object it is necessary to also include
-       \memo a Site:Precipitation object to describe the rates of rainfall.
+       \memo WaterUse:Storage object. In versions up till Version 9.6, it is necessary to also include
+       \memo a Site:Precipitation object to describe the rates of rainfall, in order to use this object.
+       \memo In later versions, if the Site:Precipitation is not present, precipitation depth in the weather input
+       \memo .epw will be used instead. When this is the case, please make sure the precipitation in the
+       \memo .epw is accurate.
        \extensible:1 - repeat last field
        \min-fields 7
   A1 , \field Name
@@ -61426,7 +61607,16 @@ PythonPlugin:SearchPaths,
        \key Yes
        \key No
        \default Yes
-   A4; \field Search Path 1
+   A4, \field Add epin Environment Variable to Search Path
+       \note The "epin" environment variable is set by some EnergyPlus interfaces
+       \note in order to let EnergyPlus find external files in special locations.
+       \note If this is enabled, and that variable is set, the value of the variable
+       \note will be added to the Python search path.
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
+   A5; \field Search Path 1
        \type alpha
        \begin-extensible
        \retaincase
@@ -61463,7 +61653,6 @@ PythonPlugin:Instance,
 PythonPlugin:Variables,
         \memo This object defines name identifiers for custom Python Plugin variable data that should be shared
         \memo among all running Python Plugins.
-        \unique-object
         \min-fields 2
         \extensible:1
    A1,  \field Name

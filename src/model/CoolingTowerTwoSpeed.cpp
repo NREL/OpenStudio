@@ -404,8 +404,10 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_CoolingTower_TwoSpeedFields::BasinHeaterOperatingScheduleName);
     }
 
-    boost::optional<std::string> CoolingTowerTwoSpeed_Impl::evaporationLossMode() const {
-      return getString(OS_CoolingTower_TwoSpeedFields::EvaporationLossMode, true);
+    std::string CoolingTowerTwoSpeed_Impl::evaporationLossMode() const {
+      boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::EvaporationLossMode, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool CoolingTowerTwoSpeed_Impl::isEvaporationLossModeDefaulted() const {
@@ -432,8 +434,10 @@ namespace model {
       return isEmpty(OS_CoolingTower_TwoSpeedFields::DriftLossPercent);
     }
 
-    boost::optional<std::string> CoolingTowerTwoSpeed_Impl::blowdownCalculationMode() const {
-      return getString(OS_CoolingTower_TwoSpeedFields::BlowdownCalculationMode, true);
+    std::string CoolingTowerTwoSpeed_Impl::blowdownCalculationMode() const {
+      boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::BlowdownCalculationMode, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool CoolingTowerTwoSpeed_Impl::isBlowdownCalculationModeDefaulted() const {
@@ -1446,7 +1450,7 @@ namespace model {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->basinHeaterOperatingSchedule();
   }
 
-  boost::optional<std::string> CoolingTowerTwoSpeed::evaporationLossMode() const {
+  std::string CoolingTowerTwoSpeed::evaporationLossMode() const {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->evaporationLossMode();
   }
 
@@ -1470,7 +1474,7 @@ namespace model {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isDriftLossPercentDefaulted();
   }
 
-  boost::optional<std::string> CoolingTowerTwoSpeed::blowdownCalculationMode() const {
+  std::string CoolingTowerTwoSpeed::blowdownCalculationMode() const {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->blowdownCalculationMode();
   }
 

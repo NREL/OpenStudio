@@ -2800,7 +2800,7 @@ namespace detail {
         // in 8.1 this is 'EnergyPlus-Windows-32 8.1.0.008, YMD=2014.11.08 22:49'
         // in 8.2 this is 'EnergyPlus, Version 8.2.0-8397c2e30b, YMD=2015.01.09 08:37'
         // radiance script is writing 'EnergyPlus, VERSION 8.2, (OpenStudio) YMD=2015.1.9 08:35:36'
-        boost::regex version_regex("\\d\\.\\d[\\.\\d]*");
+        boost::regex version_regex("\\d{1,}\\.\\d[\\.\\d]*");
         std::string version_line = columnText(sqlite3_column_text(sqlStmtPtr, 0));
         boost::smatch version_match;
 

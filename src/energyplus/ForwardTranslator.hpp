@@ -503,7 +503,7 @@ namespace energyplus {
 
   ENERGYPLUS_API std::ostream& operator<<(std::ostream& out, const openstudio::energyplus::ForwardTranslatorOptionKeyMethod& opt);
 
-#define ENERGYPLUS_VERSION "9.6"
+#define ENERGYPLUS_VERSION "22.1"
 
   class ENERGYPLUS_API ForwardTranslator
   {
