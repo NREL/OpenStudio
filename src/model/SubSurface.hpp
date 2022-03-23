@@ -118,6 +118,12 @@ namespace model {
 
     bool isNumberofVerticesAutocalculated() const;
 
+    boost::optional<double> assemblyUFactor() const;
+
+    boost::optional<double> assemblySHGC() const;
+
+    boost::optional<double> assemblyVisibleTransmittance() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -282,6 +288,13 @@ namespace model {
     double dividerArea() const;
 
     // DLM: todo add methods to create light shelves by projection factor
+
+    //@}
+    /** @name Queries */
+    //@{
+
+    /** Gets the fenestration value from the sql file **/
+    boost::optional<double> getExteriorFenestrationValue(std::string columnName) const;
 
    protected:
     /// @cond

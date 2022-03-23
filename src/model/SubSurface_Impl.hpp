@@ -166,6 +166,14 @@ namespace model {
 
       bool isNumberofVerticesAutocalculated() const;
 
+      // Assembly methods
+
+      boost::optional<double> assemblyUFactor() const;
+
+      boost::optional<double> assemblySHGC() const;
+
+      boost::optional<double> assemblyVisibleTransmittance() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -298,6 +306,13 @@ namespace model {
       AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkComponent& surfaceAirflowLeakage);
 
       boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
+
+      //@}
+      /** @name Queries */
+      //@{
+
+      /** Gets the fenestration value from the sql file **/
+      boost::optional<double> getExteriorFenestrationValue(std::string columnName) const;
 
      protected:
      private:

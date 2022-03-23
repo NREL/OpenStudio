@@ -499,6 +499,37 @@ namespace detail {
     return m_hasIlluminanceMapYear;
   }
 
+  boost::optional<double> SqlFile_Impl::assemblyUFactor(const std::string& subSurfaceName) const {
+    return getExteriorFenestrationValue(subSurfaceName, "Assembly U-Factor");
+  }
+
+  boost::optional<double> SqlFile_Impl::assemblySHGC(const std::string& subSurfaceName) const {
+    return getExteriorFenestrationValue(subSurfaceName, "Assembly SHGC");
+  }
+
+  boost::optional<double> SqlFile_Impl::assemblyVisibleTransmittance(const std::string& subSurfaceName) const {
+    return getExteriorFenestrationValue(subSurfaceName, "Assembly Visible Transmittance");
+  }
+
+  boost::optional<double> SqlFile_Impl::getExteriorFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const {
+    boost::optional<double> result;
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string queryRowName = boost::to_upper_copy(subSurfaceName);
+
+    std::string s = R"(SELECT Value FROM TabularDataWithStrings
+                          WHERE ReportName='EnvelopeSummary'
+                          AND ReportForString='Entire Facility'
+                          AND TableName='Exterior Fenestration'
+                          AND RowName=?
+                          AND ColumnName=?)";
+
+    result = execAndReturnFirstDouble(s, queryRowName, columnName);
+
+    return result;
+  }
+
   bool SqlFile_Impl::isValidConnection() {
     std::string energyPlusVersion = this->energyPlusVersion();
     if (energyPlusVersion.empty()) {

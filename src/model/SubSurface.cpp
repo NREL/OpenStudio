@@ -1343,6 +1343,51 @@ namespace model {
       return boost::none;
     }
 
+    boost::optional<double> SubSurface_Impl::assemblyUFactor() const {
+      return getExteriorFenestrationValue("Assembly U-Factor");
+    }
+
+    boost::optional<double> SubSurface_Impl::assemblySHGC() const {
+      return getExteriorFenestrationValue("Assembly SHGC");
+    }
+
+    boost::optional<double> SubSurface_Impl::assemblyVisibleTransmittance() const {
+      return getExteriorFenestrationValue("Assembly Visible Transmittance");
+    }
+
+    /** Gets the fenestration value from the sql file **/
+    boost::optional<double> SubSurface_Impl::getExteriorFenestrationValue(std::string columnName) const {
+      boost::optional<double> result;
+
+      // Get the object name
+      if (!name()) {
+        LOG(Warn, "This object does not have a name, cannot retrieve the fenestration value '" + columnName + "'.");
+        return result;
+      }
+
+      // Get the object name and transform to the way it is recorded
+      // in the sql file
+      std::string rowName = name().get();
+      boost::to_upper(rowName);
+
+      // Check that the model has a sql file
+      if (!model().sqlFile()) {
+        LOG(Warn, "This model has no sql file, cannot retrieve the fenestration value '" + columnName + "'.");
+        return result;
+      }
+
+      std::string s = R"(SELECT Value FROM TabularDataWithStrings
+                            WHERE ReportName='EnvelopeSummary'
+                            AND ReportForString='Entire Facility'
+                            AND TableName='Exterior Fenestration'
+                            AND RowName=?
+                            AND ColumnName=?)";
+
+      result = model().sqlFile().get().execAndReturnFirstDouble(s, rowName, columnName);
+
+      return result;
+    }
+
   }  // namespace detail
 
   SubSurface::SubSurface(const std::vector<Point3d>& vertices, const Model& model) : PlanarSurface(SubSurface::iddObjectType(), vertices, model) {
@@ -1757,6 +1802,23 @@ namespace model {
 
   boost::optional<AirflowNetworkSurface> SubSurface::airflowNetworkSurface() const {
     return getImpl<detail::SubSurface_Impl>()->airflowNetworkSurface();
+  }
+
+  boost::optional<double> SubSurface::assemblyUFactor() const {
+    return getImpl<detail::SubSurface_Impl>()->assemblyUFactor();
+  }
+
+  boost::optional<double> SubSurface::assemblySHGC() const {
+    return getImpl<detail::SubSurface_Impl>()->assemblySHGC();
+  }
+
+  boost::optional<double> SubSurface::assemblyVisibleTransmittance() const {
+    return getImpl<detail::SubSurface_Impl>()->assemblyVisibleTransmittance();
+  }
+
+  /** Gets the fenestration value from the sql file **/
+  boost::optional<double> SubSurface::getExteriorFenestrationValue(std::string columnName) const {
+    return getImpl<detail::SubSurface_Impl>()->getExteriorFenestrationValue(columnName);
   }
 
 }  // namespace model

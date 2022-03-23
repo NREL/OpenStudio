@@ -245,6 +245,7 @@ set(energyplus_resources_src
   energyplus/ZoneBoundaryCondition/Bug_486_zone_bdr_test.idf
   energyplus/SmallOffice/SmallOffice.idf
   energyplus/AllFuelTypes/in.idf
+  energyplus/FrameAndDivider/in.idf
 )
 
 # update the resources
@@ -256,6 +257,7 @@ RUN_ENERGYPLUS("in.idf" "energyplus/Daylighting_Office" "USA_CO_Golden-NREL.7246
 RUN_ENERGYPLUS("in.idf" "energyplus/Daylighting_School" "USA_CO_Golden-NREL.724666_TMY3.epw")
 RUN_ENERGYPLUS("in.idf" "energyplus/Office_With_Many_HVAC_Types" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
 RUN_ENERGYPLUS("in.idf" "energyplus/AllFuelTypes" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
+RUN_ENERGYPLUS("in.idf" "energyplus/FrameAndDivider" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
 
 # add target
 add_custom_target(openstudio_energyplus_resources
