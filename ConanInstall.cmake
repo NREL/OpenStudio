@@ -23,7 +23,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   include(${CMAKE_BINARY_DIR}/conan.cmake)
 
-  conan_check(VERSION 1.28.0 REQUIRED)
+  conan_check(VERSION 1.43.0 REQUIRED)
 
   message(STATUS "openstudio: RUNNING CONAN")
 
@@ -32,8 +32,14 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   #  conan_add_remote(NAME nrel INDEX 0
   #   URL https://api.bintray.com/conan/commercialbuilding/nrel)
 
-  conan_add_remote(NAME commercialbuildings 
-     URL https://conan.commercialbuildings.dev/artifactory/api/conan/openstudio)
+  #  conan_add_remote(NAME commercialbuildings 
+  #     URL https://conan.commercialbuildings.dev/artifactory/api/conan/openstudio)
+
+  conan_add_remote(NAME nrel INDEX 0
+  URL https://conan.openstudio.net/artifactory/api/conan/openstudio)
+
+  conan_add_remote(NAME bincrafters
+    URL https://bincrafters.jfrog.io/artifactory/api/conan/public-conan)
 
   # Enable revisions in conan: check if they are already enabled, if not do it and warn user
   execute_process(
