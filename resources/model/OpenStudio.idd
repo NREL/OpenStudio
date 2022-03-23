@@ -1,4 +1,4 @@
-!IDD_Version 3.3.1
+!IDD_Version 3.4.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -3100,12 +3100,10 @@ OS:WindowMaterial:SimpleGlazingSystem,
        \reference GlazingMaterialNames
   N1, \field U-Factor
        \note Enter U-Factor including film coefficients
-       \note Note that the effective upper limit for U-factor is 5.8 W/m2-K
        \type real
        \required-field
        \units W/m2-K
        \minimum> 0
-       \maximum 7
   N2, \field Solar Heat Gain Coefficient
        \note SHGC at Normal Incidence
        \type real
@@ -4862,7 +4860,7 @@ OS:Schedule:File,
        \key Yes
        \key No
        \default No
-  N4;  \field Minutes per Item
+  N4,  \field Minutes per Item
        \type choice
        \default 60
        \key 1
@@ -4877,6 +4875,13 @@ OS:Schedule:File,
        \key 20
        \key 30
        \key 60
+  A7 ; \field Adjust Schedule for Daylight Savings
+       \note "No" means do not include Daylight Savings Time in the schedule, instead, use the schedule directly from the Schedule:File csv (default)
+       \note "Yes" means include Daylight Savings Time to the schedule
+       \type choice
+       \key Yes
+       \key No
+       \default Yes
 
 \group OpenStudio Geometry
 
@@ -5652,9 +5657,9 @@ OS:ShadingControl,
        \note When that field is set to Group the entire list is controlled simultaneously.
 
 OS:WindowProperty:FrameAndDivider,
-         \memo Specifies the dimensions of a window frame, dividers, and reveal surfaces.
-         \memo Referenced by the sub surface objects for exterior windows and glass doors
-         \min-fields 20
+       \memo Specifies the dimensions of a window frame, dividers, and reveal surfaces.
+       \memo Referenced by the sub surface objects for exterior windows and glass doors
+       \min-fields 27
   A1 , \field Handle
        \type handle
        \required-field
@@ -5823,11 +5828,37 @@ OS:WindowProperty:FrameAndDivider,
        \minimum 0.0
        \maximum 2.0
        \default 0.0
-  N24; \field Inside Reveal Solar Absorptance
+  N24, \field Inside Reveal Solar Absorptance
        \type real
        \minimum 0.0
        \maximum 1.0
        \default 0.0
+  A4;  \field NFRC Product Type for Assembly Calculations
+       \type choice
+       \key CasementDouble
+       \key CasementSingle
+       \key DualAction
+       \key Fixed
+       \key Garage
+       \key Greenhouse
+       \key HingedEscape
+       \key HorizontalSlider
+       \key Jal
+       \key Pivoted
+       \key ProjectingSingle
+       \key ProjectingDual
+       \key DoorSidelite
+       \key Skylight
+       \key SlidingPatioDoor
+       \key CurtainWall
+       \key SpandrelPanel
+       \key SideHingedDoor
+       \key DoorTransom
+       \key TropicalAwning
+       \key TubularDaylightingDevice
+       \key VerticalSlider
+       \default CurtainWall
+       \note Used when computing the assembly u-factor, SHGC and visible transmittance for reporting only
 
 \group OpenStudio Advanced Construction, Surface, Zone Concepts
 
@@ -5888,6 +5919,7 @@ OS:SurfaceProperty:ConvectionCoefficients,
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
       \key ASTMC1340
+      \key BlockenWindard
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls
@@ -5951,6 +5983,7 @@ OS:SurfaceProperty:ConvectionCoefficients,
       \key AdaptiveConvectionAlgorithm
       \key ASHRAEVerticalWall
       \key ASTMC1340
+      \key BlockenWindard
       \key WaltonUnstableHorizontalOrTilt
       \key WaltonStableHorizontalOrTilt
       \key FisherPedersenCeilingDiffuserWalls

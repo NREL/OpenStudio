@@ -145,7 +145,7 @@ namespace osversion {
     m_updateMethods[VersionString("3.2.0")] = &VersionTranslator::update_3_1_0_to_3_2_0;
     m_updateMethods[VersionString("3.2.1")] = &VersionTranslator::update_3_2_0_to_3_2_1;
     m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
-    m_updateMethods[VersionString("3.3.1")] = &VersionTranslator::update_3_3_0_to_3_3_1;
+    m_updateMethods[VersionString("3.4.0")] = &VersionTranslator::update_3_3_0_to_3_4_0;
     //m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
@@ -303,7 +303,7 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.2.0"));
     m_startVersions.push_back(VersionString("3.2.1"));
     m_startVersions.push_back(VersionString("3.3.0"));
-    //m_startVersions.push_back(VersionString("3.3.1"));
+    //m_startVersions.push_back(VersionString("3.4.0"));
   }
 
   boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, ProgressBar* progressBar) {
@@ -6826,12 +6826,12 @@ namespace osversion {
 
   }  // end update_3_2_1_to_3_3_0
 
-  std::string VersionTranslator::update_3_3_0_to_3_3_1(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_3_1) {
+  std::string VersionTranslator::update_3_3_0_to_3_4_0(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_4_0) {
     std::stringstream ss;
     boost::optional<std::string> value;
 
     ss << idf_3_3_0.header() << '\n' << '\n';
-    IdfFile targetIdf(idd_3_3_1.iddFile());
+    IdfFile targetIdf(idd_3_4_0.iddFile());
     ss << targetIdf.versionObject().get();
 
     for (const IdfObject& object : idf_3_3_0.objects()) {
@@ -6842,7 +6842,7 @@ namespace osversion {
         // Stage Data List becomes extensible list (Stage 1, Stage 2, etc.)
         // ModelObjectList gets removed
 
-        auto iddObject = idd_3_3_1.getObject(iddname);
+        auto iddObject = idd_3_4_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < 18; ++i) {
@@ -6867,7 +6867,7 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
       } else if (iddname == "OS:Coil:Heating:DX:MultiSpeed:StageData") {
-        auto iddObject = idd_3_3_1.getObject(iddname);
+        auto iddObject = idd_3_4_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         // Inserted name at pos 1
@@ -6908,7 +6908,7 @@ namespace osversion {
 
     return ss.str();
 
-  }  // end update_3_3_0_to_3_3_1
+  }  // end update_3_3_0_to_3_4_0
 
 }  // namespace osversion
 }  // namespace openstudio

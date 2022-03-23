@@ -95,8 +95,7 @@ TEST_F(ModelFixture, CoolingTowerSingleSpeed_CoolingTowerSingleSpeed) {
 
   EXPECT_FALSE(coolingTowerSingleSpeed.basinHeaterOperatingSchedule());
 
-  ASSERT_TRUE(coolingTowerSingleSpeed.evaporationLossMode());
-  EXPECT_EQ("LossFactor", coolingTowerSingleSpeed.evaporationLossMode().get());
+  EXPECT_EQ("LossFactor", coolingTowerSingleSpeed.evaporationLossMode());
   EXPECT_FALSE(coolingTowerSingleSpeed.isEvaporationLossModeDefaulted());
 
   EXPECT_EQ(0.2, coolingTowerSingleSpeed.evaporationLossFactor());
@@ -105,8 +104,7 @@ TEST_F(ModelFixture, CoolingTowerSingleSpeed_CoolingTowerSingleSpeed) {
   EXPECT_EQ(0.008, coolingTowerSingleSpeed.driftLossPercent());
   EXPECT_FALSE(coolingTowerSingleSpeed.isDriftLossPercentDefaulted());
 
-  ASSERT_TRUE(coolingTowerSingleSpeed.blowdownCalculationMode());
-  EXPECT_EQ("ConcentrationRatio", coolingTowerSingleSpeed.blowdownCalculationMode().get());
+  EXPECT_EQ("ConcentrationRatio", coolingTowerSingleSpeed.blowdownCalculationMode());
   EXPECT_FALSE(coolingTowerSingleSpeed.isBlowdownCalculationModeDefaulted());
 
   EXPECT_EQ(3.0, coolingTowerSingleSpeed.blowdownConcentrationRatio());

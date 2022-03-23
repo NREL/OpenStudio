@@ -54,6 +54,9 @@
 #include "../Model_Impl.hpp"
 #include "../ThermalZone.hpp"
 
+#include "../../energyplus/ReverseTranslator.hpp"
+#include "../../utilities/sql/SqlFile.hpp"
+
 #include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/geometry/Point3d.hpp"
 #include "../../utilities/geometry/Vector3d.hpp"
@@ -1530,4 +1533,35 @@ TEST_F(ModelFixture, Issue_4361_Multi_Subsurfaces_Overlapping) {
   // sub-surface which is 2.07 x 1.06 = 2.1942 which gives a WWR of 0.274 (2.1942 / 8)
   windowWallRatio = surface.windowToWallRatio();
   EXPECT_NEAR(windowWallRatio, 0.2742, 0.01);
+}
+
+TEST_F(ModelFixture, 4403_FenestrationAssembly) {
+  // Test for #4403 - Add Sql helper methods to retrieve U-factors, SHGC, or VT for glazing systems
+
+  // This one has fenestration that includes WindowProperty:FrameAndDivider
+  openstudio::path idfPath = resourcesPath() / toPath("energyplus/FrameAndDivider/in.idf");
+  energyplus::ReverseTranslator reverseTranslator;
+  ASSERT_NO_THROW(reverseTranslator.loadModel(idfPath));
+  OptionalModel _model = reverseTranslator.loadModel(idfPath);
+  ASSERT_TRUE(_model);
+  Model model = _model.get();
+
+  openstudio::path sqlPath = resourcesPath() / toPath("energyplus/FrameAndDivider/eplusout.sql");
+  openstudio::SqlFile sqlFile = openstudio::SqlFile(sqlPath);
+  ASSERT_TRUE(sqlFile.connectionOpen());
+
+  model.setSqlFile(sqlFile);
+  ASSERT_TRUE(model.sqlFile());
+
+  OptionalSubSurface subSurface = model.getModelObjectByName<SubSurface>("Story 1 Core Space Exterior Wall Window");
+  ASSERT_TRUE(subSurface);
+
+  ASSERT_TRUE(subSurface->assemblyUFactor());
+  EXPECT_EQ(2.546, subSurface->assemblyUFactor().get());
+
+  ASSERT_TRUE(subSurface->assemblySHGC());
+  EXPECT_EQ(0.350, subSurface->assemblySHGC().get());
+
+  ASSERT_TRUE(subSurface->assemblyVisibleTransmittance());
+  EXPECT_EQ(0.440, subSurface->assemblyVisibleTransmittance().get());
 }

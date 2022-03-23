@@ -177,6 +177,11 @@ namespace energyplus {
       result.setInsideRevealSolarAbsorptance(*d);
     }
 
+    s = workspaceObject.getString(WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations);
+    if (s) {
+      result.setNFRCProductTypeforAssemblyCalculations(*s);
+    }
+
     return result;
   }
 

@@ -155,6 +155,11 @@ namespace energyplus {
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::InsideRevealSolarAbsorptance, modelObject.insideRevealSolarAbsorptance());
     //}
 
+    //if (!modelObject.isNFRCProductTypeforAssemblyCalculationsDefaulted()){
+    idfObject.setString(WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations,
+                        modelObject.nfrcProductTypeforAssemblyCalculations());
+    //}
+
     return idfObject;
   }
 
