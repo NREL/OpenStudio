@@ -1691,6 +1691,13 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
         oaController.resetEconomizerMinimumLimitDryBulbTemperature();
       }
 
+      // EconoHiEnthLockout
+      const auto econoHiEnthLockoutElement = airSystemOACtrlElement.child("EconoHiEnthLockout");
+      if( econoHiEnthLockoutElement ) {
+        const auto econoHiEnthLockout = unitToUnit(econoHiEnthLockoutElement.text().as_double(),"Btu/lbm","J/kg").get();
+        oaController.setEconomizerMaximumLimitEnthalpy(econoHiEnthLockout);
+      }
+
       // TODO Remove this in the future, but for now play it safe and use legacy OpenStudio default.
       if( openstudio::istringEqual(airSystemTypeElement.text().as_string(), "SZVAVAC") ||
           openstudio::istringEqual(airSystemTypeElement.text().as_string(), "SZVAVHP") ) {
