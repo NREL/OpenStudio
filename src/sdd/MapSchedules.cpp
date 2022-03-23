@@ -325,9 +325,9 @@ namespace sdd {
       schedule.setRowstoSkipatTop(rowstoSkipatTop.text().as_int());
     }
 
-    const auto colSeperator = element.child("ColSeperator");
-    if (colSeperator) {
-      schedule.setColumnSeparator(colSeperator.text().as_string());
+    const auto colSeparator = element.child("ColSeparator");
+    if (colSeparator) {
+      schedule.setColumnSeparator(colSeparator.text().as_string());
     }
 
     const auto interpToTimestep = element.child("InterpToTimestep");
