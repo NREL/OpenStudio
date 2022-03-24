@@ -6635,14 +6635,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
         pump.setRatedFlowRate(flowCap.get());
       }
 
-      if(flowCap && (! equal(flowCap.get(),0.0))) {
-        auto _flowMin = lexicalCastToDouble(pumpElement.child("FlowMinSim"));
-        if( _flowMin ) {
-          auto flowMin = unitToUnit(_flowMin.get(), "gal/min", "m^3/s").get();
-          pump.setDesignMinimumFlowRateFraction(flowMin / flowCap.get());
-        }
-      }
-
       if( pwr ) {
         if( equal(pwr.get(),0.0) ) {
           LOG(Warn,pump.name().get() << " has 0 pwr specified.");
