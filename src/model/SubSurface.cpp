@@ -1816,10 +1816,5 @@ namespace model {
     return getImpl<detail::SubSurface_Impl>()->assemblyVisibleTransmittance();
   }
 
-  /** Gets the fenestration value from the sql file **/
-  boost::optional<double> SubSurface::getExteriorFenestrationValue(std::string columnName) const {
-    return getImpl<detail::SubSurface_Impl>()->getExteriorFenestrationValue(columnName);
-  }
-
 }  // namespace model
 }  // namespace openstudio
