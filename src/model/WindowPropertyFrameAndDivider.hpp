@@ -103,11 +103,11 @@ namespace model {
 
     bool isDividerWidthDefaulted() const;
 
-    double numberOfHorizontalDividers() const;
+    int numberOfHorizontalDividers() const;
 
     bool isNumberOfHorizontalDividersDefaulted() const;
 
-    double numberOfVerticalDividers() const;
+    int numberOfVerticalDividers() const;
 
     bool isNumberOfVerticalDividersDefaulted() const;
 
@@ -211,11 +211,11 @@ namespace model {
 
     void resetDividerWidth();
 
-    bool setNumberOfHorizontalDividers(double numberOfHorizontalDividers);
+    bool setNumberOfHorizontalDividers(int numberOfHorizontalDividers);
 
     void resetNumberOfHorizontalDividers();
 
-    bool setNumberOfVerticalDividers(double numberOfVerticalDividers);
+    bool setNumberOfVerticalDividers(int numberOfVerticalDividers);
 
     void resetNumberOfVerticalDividers();
 

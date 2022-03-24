@@ -96,11 +96,11 @@ namespace energyplus {
     //}
 
     //if (!modelObject.isNumberOfHorizontalDividersDefaulted()){
-    idfObject.setDouble(WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, modelObject.numberOfHorizontalDividers());
+    idfObject.setInt(WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, modelObject.numberOfHorizontalDividers());
     //}
 
     //if (!modelObject.isNumberOfVerticalDividersDefaulted()){
-    idfObject.setDouble(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, modelObject.numberOfVerticalDividers());
+    idfObject.setInt(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, modelObject.numberOfVerticalDividers());
     //}
 
     //if (!modelObject.isDividerOutsideProjectionDefaulted()){
