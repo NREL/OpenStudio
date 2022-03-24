@@ -6551,10 +6551,26 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
     pwr = _pwr.get() * 1000.0;
   }
 
+  // OperCtrl
+  std::optional<std::string> pumpControlType;
+  const auto operCtrlElement = pumpElement.child("OperCtrl");
+  if (operCtrlElement) {
+    const auto operCtrl = operCtrlElement.text().as_string();
+    if (openstudio::istringEqual(operCtrl, "OnDemand")) {
+      pumpControlType = "Intermittent";
+    } else if (openstudio::istringEqual(operCtrl, "StandBy")) {
+      pumpControlType = "Continuous";
+    }
+  }
+
   pugi::xml_node spdCtrlElement = pumpElement.child("SpdCtrl");
   if( openstudio::istringEqual(spdCtrlElement.text().as_string(), "constantspeed") ) {
     model::PumpConstantSpeed pump(model);
     pump.setName(pumpName);
+
+    if (pumpControlType) {
+      pump.setPumpControlType(pumpControlType.value());
+    }
 
     if( mtrEff ) {
       pump.setMotorEfficiency(mtrEff.get());
@@ -6597,6 +6613,10 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
   } else {
     model::PumpVariableSpeed pump(model);
     pump.setName(pumpName);
+
+    if (pumpControlType) {
+      pump.setPumpControlType(pumpControlType.value());
+    }
 
     if( mtrEff ) {
       pump.setMotorEfficiency(mtrEff.get());
