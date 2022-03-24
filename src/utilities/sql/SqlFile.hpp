@@ -121,7 +121,7 @@ class UTILITIES_API SqlFile
   boost::optional<double> assemblySHGC(const std::string& subSurfaceName) const;
 
   // return an Assembly Visible Transmittance value for matching subSurfaceName (RowName)
-  boost::optional<double> assemblyVisibleTransmittance(const std::string& rowName) const;
+  boost::optional<double> assemblyVisibleTransmittance(const std::string& subSurfaceName) const;
 
   /// close the file
   bool close();
