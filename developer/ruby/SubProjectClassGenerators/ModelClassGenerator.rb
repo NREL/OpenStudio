@@ -1454,7 +1454,7 @@ class ModelClassGenerator < SubProjectClassGenerator
     result << "  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)\n"
     result << "  // " << className << " #{instanceName} = m.getUniqueModelObject<" << className << ">();\n\n"
 
-    @nonextensibleFields.each { |field|
+    @nonextensibleFields.each_with_index { |field, i|
       next if field.isHandle?
 
       if field.isName?
@@ -1536,21 +1536,45 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " " << cat << "\n"
 
           if isNumber
-            good_val = 10
             min_bound = field.iddField.properties.minBoundValue
             max_bound = field.iddField.properties.maxBoundValue
+            # The whole shenanigans with `i` here is to avoid setting every
+            # field to the same numeric value, which wouldn't catch mistakes
+            # such as setting the wrong field (due to copy paste for eg)
+            if field.isInteger?
+              offset = 1
+            else
+              offset = 0.1
+            end
+
             if (min_bound.is_initialized && max_bound.is_initialized)
-              good_val = (min_bound.get + max_bound.get) / 2
+              max = max_bound.get
+              min = min_bound.get
+              # Break it up in 2 + i segments, take the position of the start
+              # of the last segment
+              seg_len = (max - min) / (i+2)
+              good_val = (max - seg_len)
               bad_val = min_bound.get - 10
             elsif (min_bound.is_initialized)
-              good_val = min_bound.get + 0.1
+              good_val = (min_bound.get + offset * (i + 1))
               bad_val = min_bound.get - 10
             elsif (max_bound.is_initialized)
-              good_val = max_bound.get - 0.1
+              good_val = (max_bound.get - offset * (i + i))
               bad_val = max_bound.get + 10
             else
-              good_val = 3
+              good_val = offset * (i + 1)
               bad_val = nil
+            end
+            if field.isInteger?
+              good_val = good_val.to_i
+              if !bad_val.nil?
+                bad_val = bad_val.to_i
+              end
+            else
+              good_val = good_val.to_f.round(3)
+              if !bad_val.nil?
+                bad_val = bad_val.to_f.round(3)
+              end
             end
           elsif field.isChoice?
             good_val = "\"#{field.choices[0].name}\""
@@ -1630,7 +1654,6 @@ class ModelClassGenerator < SubProjectClassGenerator
         if need_closing
           result << closing
         end
-
 
       end
 
