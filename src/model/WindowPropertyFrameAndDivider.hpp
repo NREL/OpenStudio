@@ -75,7 +75,9 @@ namespace model {
 
     bool isFrameInsideProjectionDefaulted() const;
 
-    boost::optional<double> frameConductance() const;
+    double frameConductance() const;
+
+    bool isFrameConductanceDefaulted() const;
 
     double ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() const;
 

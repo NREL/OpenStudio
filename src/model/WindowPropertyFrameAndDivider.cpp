@@ -96,8 +96,14 @@ namespace model {
       return isEmpty(OS_WindowProperty_FrameAndDividerFields::FrameInsideProjection);
     }
 
-    boost::optional<double> WindowPropertyFrameAndDivider_Impl::frameConductance() const {
-      return getDouble(OS_WindowProperty_FrameAndDividerFields::FrameConductance, true);
+    double WindowPropertyFrameAndDivider_Impl::frameConductance() const {
+      boost::optional<double> value = getDouble(OS_WindowProperty_FrameAndDividerFields::FrameConductance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool WindowPropertyFrameAndDivider_Impl::isFrameConductanceDefaulted() const {
+      return isEmpty(OS_WindowProperty_FrameAndDividerFields::FrameConductance);
     }
 
     double WindowPropertyFrameAndDivider_Impl::ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() const {
@@ -637,8 +643,12 @@ namespace model {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isFrameInsideProjectionDefaulted();
   }
 
-  boost::optional<double> WindowPropertyFrameAndDivider::frameConductance() const {
+  double WindowPropertyFrameAndDivider::frameConductance() const {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->frameConductance();
+  }
+
+  bool WindowPropertyFrameAndDivider::isFrameConductanceDefaulted() const {
+    return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isFrameConductanceDefaulted();
   }
 
   double WindowPropertyFrameAndDivider::ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() const {
