@@ -5695,6 +5695,7 @@ OS:WindowProperty:FrameAndDivider,
        \units W/m2-K
        \type real
        \minimum 0.0
+       \default 0.0
        \note Effective conductance of frame
        \note Excludes air films
        \note Obtained from WINDOW 5 or other 2-D calculation
