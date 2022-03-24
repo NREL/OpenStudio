@@ -155,6 +155,10 @@ class ModelObjectField
     return (not @iddField.properties.stringDefault.empty?)
   end
 
+  def defaultValue
+    return @iddField.properties.stringDefault.get
+  end
+
   def canAutosize?
     return @iddField.properties.autosizable
   end
@@ -1482,9 +1486,20 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         if field.isBooleanChoice?
           result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " Boolean\n"
+          if field.hasDefault?
+            result << "  // Default value from IDD\n"
+            result << "  EXPECT_TRUE(#{instanceName}." << field.isDefaultName << "());\n"
+            if field.defaultValue == 'Yes'
+              result << "  EXPECT_TRUE(#{instanceName}." << field.getterName << "());\n";
+            else
+              result << "  EXPECT_FALSE(#{instanceName}." << field.getterName << "());\n";
+            end
+          end
+
           result << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(true));\n";
           if field.optionalGetter?
             result << "  EXPECT_TRUE(#{instanceName}." << field.getterName << "().get());\n"
+            result << "  EXPECT_FALSE(#{instanceName}." << field.isDefaultName << "());\n"
           else
             result << "  EXPECT_TRUE(#{instanceName}." << field.getterName << "());\n"
           end
@@ -1520,26 +1535,6 @@ class ModelClassGenerator < SubProjectClassGenerator
 
           result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " " << cat << "\n"
 
-          # Comment
-          if field.canAutosize?
-
-            result << "  #{instanceName}." << field.autosizeName << "();\n"
-            result << "  EXPECT_TRUE(#{instanceName}." << field.isAutosizeName << "());\n"
-
-            prefix = "  "
-            closing = "  EXPECT_FALSE(#{instanceName}.#{field.isAutosizeName}());\n"
-
-            need_closing = true
-          elsif field.canAutocalculate?
-
-            result << "  #{instanceName}." << field.autocalculateName << "();\n"
-            result << "  EXPECT_TRUE(#{instanceName}." << field.isAutocalculateName << "());\n"
-
-            closing = "  EXPECT_FALSE(#{instanceName}.#{field.isAutocalculateName}());\n"
-            need_closing = true
-          end
-
-
           if isNumber
             good_val = 10
             min_bound = field.iddField.properties.minBoundValue
@@ -1562,16 +1557,55 @@ class ModelClassGenerator < SubProjectClassGenerator
             bad_val = "\"BADENUM\""
           end
 
+          if field.hasDefault?
+            result << "  // Default value from IDD\n"
+            result << "  EXPECT_TRUE(#{instanceName}." << field.isDefaultName << "());\n"
+            if isNumber
+              if field.optionalGetter?
+                # Not sure if it's worth checking if optionalGetter?... if it
+                # has a default, the getter shouldn't be optional really
+                result << "  EXPECT_EQ(#{field.defaultValue}, #{instanceName}." << field.getterName << "()"
+                result << (field.optionalGetter? ? ".get()" : "") << ");\n"
+              end
+            else
+              result << "  EXPECT_EQ(\"#{field.defaultValue}\", #{instanceName}." << field.getterName << "()"
+              result << (field.optionalGetter? ? ".get()" : "") << ");\n"
+            end
+          end
+
+          if field.canAutosize?
+            result << "  // Autosize\n"
+            result << "  #{instanceName}." << field.autosizeName << "();\n"
+            result << "  EXPECT_TRUE(#{instanceName}." << field.isAutosizeName << "());\n"
+
+            prefix = "  "
+            closing = "  EXPECT_FALSE(#{instanceName}.#{field.isAutosizeName}());\n"
+
+            need_closing = true
+          elsif field.canAutocalculate?
+            result << "  // Autocalculate\n"
+            result << "  #{instanceName}." << field.autocalculateName << "();\n"
+            result << "  EXPECT_TRUE(#{instanceName}." << field.isAutocalculateName << "());\n"
+
+            closing = "  EXPECT_FALSE(#{instanceName}.#{field.isAutocalculateName}());\n"
+            need_closing = true
+          end
+
+          if field.hasDefault? or field.canAutosize? or field.canAutocalculate?
+            result << "  // Set\n"
+          end
+
           result << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(#{good_val}));\n";
 
           if field.optionalGetter?
-
             result << "  ASSERT_TRUE(#{instanceName}." << field.getterName << "());\n"
             result << "  EXPECT_EQ(#{good_val}, #{instanceName}." << field.getterName << "().get());\n"
-
           else
             result << "  EXPECT_EQ(#{good_val}, #{instanceName}." << field.getterName << "());\n"
+          end
 
+          if field.hasDefault?
+            result << "  EXPECT_FALSE(#{instanceName}." << field.isDefaultName << "());\n"
           end
 
           if !bad_val.nil?
@@ -1579,14 +1613,17 @@ class ModelClassGenerator < SubProjectClassGenerator
             result << "  EXPECT_FALSE(#{instanceName}." << field.setterName << "(#{bad_val}));\n";
 
             if field.optionalGetter?
-
               result << "  ASSERT_TRUE(#{instanceName}." << field.getterName << "());\n"
               result << "  EXPECT_EQ(#{good_val}, #{instanceName}." << field.getterName << "().get());\n"
-
             else
               result << "  EXPECT_EQ(#{good_val}, #{instanceName}." << field.getterName << "());\n"
-
             end
+          end
+
+          if field.hasDefault?
+            result << "  // Reset\n";
+            result << "  #{instanceName}." << field.resetName << "();\n"
+            result << "  EXPECT_TRUE(#{instanceName}." << field.isDefaultName << "());\n"
           end
         end
 
@@ -1599,6 +1636,9 @@ class ModelClassGenerator < SubProjectClassGenerator
 
       result << "\n"
     }
+
+    result << "}\n"
+
     return result
   end
 
