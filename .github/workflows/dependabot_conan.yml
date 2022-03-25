@@ -27,6 +27,7 @@ jobs:
       working-directory: ./developer/conan
       run: |
         conan remote add nrel https://conan.openstudio.net/artifactory/api/conan/openstudio
+        conan config set general.revisions_enabled=True
         # This returns 1 if update was needed
         python dependabot_conan.py
 
