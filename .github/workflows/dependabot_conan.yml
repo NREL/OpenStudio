@@ -46,6 +46,7 @@ jobs:
       with:
         branch: dependabot/conan
         committer: 'Conan Dependabot <conan-dependabot@users.noreply.github.com>'
+        delete-branch: true
         title: "[bot] New upstream conan recipes"
         body: |
          Automatic run of `[dependabot_conan.py](developer/conan/dependabot_conan.py)`
