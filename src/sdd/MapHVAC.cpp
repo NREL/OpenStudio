@@ -1694,7 +1694,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       // EconoHiEnthLockout
       const auto econoHiEnthLockoutElement = airSystemOACtrlElement.child("EconoHiEnthLockout");
       if( econoHiEnthLockoutElement ) {
-        const auto econoHiEnthLockout = unitToUnit(econoHiEnthLockoutElement.text().as_double(),"Btu/lbm","J/kg").get();
+        // manual unit conversion Btu/lb -> J/kg
+        const auto econoHiEnthLockout = econoHiEnthLockoutElement.text().as_double() * 2326.0;
         oaController.setEconomizerMaximumLimitEnthalpy(econoHiEnthLockout);
       }
 
