@@ -6690,10 +6690,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translatePump
       pump.setCoefficient4ofthePartLoadPerformanceCurve(c4);
     }
 
-    // TODO Figure out a way to set a more realistic minimum
-    LOG(Warn,pump.name().get() << " ignores minimum flow specification from SDD, defaulting to 0.");
-    pump.setMinimumFlowRate(0.0);
-
     result = pump;
   }
 
