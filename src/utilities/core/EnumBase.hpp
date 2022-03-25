@@ -32,7 +32,6 @@
 
 #include "ASCIIStrings.hpp"
 #include "Span.hpp"
-#include "StaticInitializer.hpp"
 
 #include <stdexcept>
 
@@ -47,7 +46,7 @@ struct EnumField
 
 /** Base class for OPENSTUDIO_ENUMs. Comparison operators use the underlying (integer) value. */
 template <typename Enum>
-class EnumBase : public ::StaticInitializer<Enum>
+class EnumBase
 {
  public:
   /** Default constructor. EnumBase default constructor never actually called;
