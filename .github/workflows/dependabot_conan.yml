@@ -1,0 +1,43 @@
+name: "Conan Dependabot"
+on:
+#  schedule:
+#    # Every week on Thursdays
+#    - cron: '23 10 * * 4'
+  push:
+    branches: [ bump_deps, dependabot_conan ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+
+    - name: Find outdated conan packages
+      shell: bash
+      working-directory: ./developer/conan
+      run: |
+        pip install -r requirements.txt
+        # This returns 1 if update was needed
+        python dependabot_conan.py
+
+    - name: Commit results
+      if: failure()
+      shell: bash
+      run: |
+        set -x
+        git config user.name 'Conan Dependabot'
+        git config user.email 'conan-dependabot@users.noreply.github.com'
+        git commit -am "Automated checkin - update conan recipes"
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v4
+      if: failure()
+      with:
+        title: "[bot] New upstream conan recipes"
+        body: |
+         Automatic run of `[dependabot_conan.py](developer/conan/dependabot_conan.py)`
+          which is done periodically to be made aware of upstream recipe updates
