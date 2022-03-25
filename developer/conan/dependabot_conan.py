@@ -46,7 +46,7 @@ def parse_conanfile(filepath: Path) -> List[dict]:
 
 
 def lookup_remote_names() -> dict:
-    cci = None
+    conancenter = None
     nrel = None
     r = subprocess.check_output(shlex.split("conan remote list"))
     for line in r.decode().splitlines():
@@ -56,19 +56,19 @@ def lookup_remote_names() -> dict:
         if "conan.openstudio.net" in url:
             nrel = remote
         if "center.conan.io" in url:
-            cci = remote
+            conancenter = remote
 
-    if cci is None:
+    if conancenter is None:
         raise ValueError("Could not find a remote name for center.conan.io")
     if nrel is None:
         raise ValueError(
             "Could not find a remote name for conan.openstudio.net"
         )
 
-    return {"cci": cci, "nrel": nrel}
+    return {"conancenter": conancenter, "nrel": nrel}
 
 
-def lookup_last_v(package: str, remote: Optional[str] = "cci") -> str:
+def lookup_last_v(package: str, remote: Optional[str] = "conancenter") -> str:
     """
     Search conan center remote for the latest version of a package
     I'm deliberately returning a str and not a Strict/LooseVersion
@@ -78,7 +78,8 @@ def lookup_last_v(package: str, remote: Optional[str] = "cci") -> str:
         shlex.split(f"conan search -r {remote} {package} --raw")
     )
     known_versions = [x.split("/")[1] for x in r.decode().splitlines()]
-    known_versions = [x for x in known_versions if "cci" not in x]
+    # Filter out the cci.DATE stuff
+    known_versions = [x for x in known_versions if "cci." not in x]
 
     if package == "openssl":
         if PIN_OPENSSL_VERSION is not None:
@@ -93,7 +94,7 @@ def lookup_last_v(package: str, remote: Optional[str] = "cci") -> str:
 
 
 def lookup_all_revs_for_version(
-    package: str, version: str, remote: Optional[str] = "cci"
+    package: str, version: str, remote: Optional[str] = "conancenter"
 ) -> str:
     r = subprocess.check_output(
         shlex.split(
@@ -115,7 +116,7 @@ def find_update_for_package(
     package: str,
     current_version: str,
     current_rev: str,
-    remote: Optional[str] = "cci",
+    remote: Optional[str] = "conancenter",
 ) -> Tuple[str, str]:
 
     last_v_str = lookup_last_v(package=package, remote=remote)
@@ -194,8 +195,15 @@ if __name__ == "__main__":
         cur_v_str = m["version"]
         cur_rev = m["rev"]
 
+        remote = remote_names["conancenter"]
+        if p == "openstudio_ruby":
+            remote = remote_names["nrel"]
+
         ret = find_update_for_package(
-            package=p, current_version=cur_v_str, current_rev=cur_rev
+            package=p,
+            current_version=cur_v_str,
+            current_rev=cur_rev,
+            remote=remote,
         )
         if ret is not None:
             last_v_str, last_rev = ret
