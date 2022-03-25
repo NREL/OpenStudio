@@ -109,7 +109,7 @@ namespace energyplus {
       result.setNumberOfHorizontalDividers(*i);
     }
 
-    i = workspaceObject.getDouble(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers);
+    i = workspaceObject.getInt(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers);
     if (i) {
       result.setNumberOfVerticalDividers(*i);
     }
