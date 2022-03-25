@@ -16,11 +16,17 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Find outdated conan packages
+    - name: Install dependencies
       shell: bash
       working-directory: ./developer/conan
       run: |
         pip install -r requirements.txt
+
+    - name: Find outdated conan packages
+      shell: bash
+      working-directory: ./developer/conan
+      run: |
+        conan remote add nrel https://conan.openstudio.net/artifactory/api/conan/openstudio
         # This returns 1 if update was needed
         python dependabot_conan.py
 
