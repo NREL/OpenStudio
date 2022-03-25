@@ -1,13 +1,11 @@
 import re
 import shlex
 import subprocess
-
-# StrictVersion would work for except openssl which has 1.1.1m for eg
-from distutils.version import LooseVersion, StrictVersion
 from pathlib import Path
 from typing import List, Optional, Tuple
 
 from dateutil import parser
+from packaging import version
 from rich import print
 
 RE_CONAN = re.compile(
@@ -82,13 +80,14 @@ def lookup_last_v(package: str, remote: Optional[str] = "conancenter") -> str:
     known_versions = [x for x in known_versions if "cci." not in x]
 
     if package == "openssl":
-        if PIN_OPENSSL_VERSION is not None:
-            known_versions = [
-                x for x in known_versions if PIN_OPENSSL_VERSION in x
-            ]
-        known_versions.sort(key=LooseVersion)
-    else:
-        known_versions.sort(key=StrictVersion)
+        known_versions = [x for x in known_versions if "1.1.1" in x]
+
+    # Filter prereleases
+    known_versions = list(
+        filter(lambda v: not version.parse(v).is_prerelease, known_versions)
+    )
+
+    known_versions.sort(key=lambda v: version.parse(v))
 
     return known_versions[-1]
 
@@ -120,12 +119,8 @@ def find_update_for_package(
 ) -> Tuple[str, str]:
 
     last_v_str = lookup_last_v(package=package, remote=remote)
-    if package == "openssl":
-        cur_v = LooseVersion(current_version)
-        last_v = LooseVersion(last_v_str)
-    else:
-        cur_v = StrictVersion(current_version)
-        last_v = StrictVersion(last_v_str)
+    cur_v = version.parse(current_version)
+    last_v = version.parse(last_v_str)
 
     revs_info = lookup_all_revs_for_version(
         package=package, version=last_v_str, remote=remote
