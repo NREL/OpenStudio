@@ -80,7 +80,8 @@ def lookup_last_v(package: str, remote: Optional[str] = "conancenter") -> str:
     known_versions = [x for x in known_versions if "cci." not in x]
 
     if package == "openssl":
-        known_versions = [x for x in known_versions if "1.1.1" in x]
+        known_versions = [x for x in known_versions
+                          if PIN_OPENSSL_VERSION in x]
 
     # Filter prereleases
     known_versions = list(
