@@ -66,9 +66,9 @@ namespace energyplus {
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameInsideProjection, modelObject.frameInsideProjection());
     //}
 
-    if (modelObject.frameConductance()) {
-      idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameConductance, modelObject.frameConductance().get());
-    }
+    //if (!modelObject.isFrameConductanceDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameConductance, modelObject.frameConductance());
+    //}
 
     //if (!modelObject.isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::RatioofFrameEdgeGlassConductancetoCenterOfGlassConductance,
@@ -96,11 +96,11 @@ namespace energyplus {
     //}
 
     //if (!modelObject.isNumberOfHorizontalDividersDefaulted()){
-    idfObject.setDouble(WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, modelObject.numberOfHorizontalDividers());
+    idfObject.setInt(WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, modelObject.numberOfHorizontalDividers());
     //}
 
     //if (!modelObject.isNumberOfVerticalDividersDefaulted()){
-    idfObject.setDouble(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, modelObject.numberOfVerticalDividers());
+    idfObject.setInt(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, modelObject.numberOfVerticalDividers());
     //}
 
     //if (!modelObject.isDividerOutsideProjectionDefaulted()){

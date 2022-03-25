@@ -104,14 +104,14 @@ namespace energyplus {
       result.setDividerWidth(*d);
     }
 
-    d = workspaceObject.getDouble(WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers);
-    if (d) {
-      result.setNumberOfHorizontalDividers(*d);
+    boost::optional<int> i = workspaceObject.getInt(WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers);
+    if (i) {
+      result.setNumberOfHorizontalDividers(*i);
     }
 
-    d = workspaceObject.getDouble(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers);
-    if (d) {
-      result.setNumberOfVerticalDividers(*d);
+    i = workspaceObject.getInt(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers);
+    if (i) {
+      result.setNumberOfVerticalDividers(*i);
     }
 
     d = workspaceObject.getDouble(WindowProperty_FrameAndDividerFields::DividerOutsideProjection);
