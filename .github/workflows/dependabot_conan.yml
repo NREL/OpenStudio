@@ -44,6 +44,8 @@ jobs:
       uses: peter-evans/create-pull-request@v4
       if: failure()
       with:
+        branch: dependabot/conan
+        committer: 'Conan Dependabot <conan-dependabot@users.noreply.github.com>'
         title: "[bot] New upstream conan recipes"
         body: |
          Automatic run of `[dependabot_conan.py](developer/conan/dependabot_conan.py)`
