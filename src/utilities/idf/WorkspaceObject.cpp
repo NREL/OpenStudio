@@ -362,7 +362,8 @@ namespace detail {
       return boost::none;
     }
 
-    if (checkValidity && (level > StrictnessLevel::Minimal)) {
+    //if (checkValidity && (level > StrictnessLevel::Minimal)) {  // if None or Minimal, we'd get duplicate names
+    if (checkValidity) {
 
       // do not set if would violate field NullAndRequired
       if ((level >= StrictnessLevel::Draft) && newName.empty() && iddObject().isRequiredField(*index)) {
