@@ -155,6 +155,10 @@ class ModelObjectField
     return (not @iddField.properties.stringDefault.empty?)
   end
 
+  def defaultValue
+    return @iddField.properties.stringDefault.get
+  end
+
   def canAutosize?
     return @iddField.properties.autosizable
   end
@@ -1450,7 +1454,7 @@ class ModelClassGenerator < SubProjectClassGenerator
     result << "  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)\n"
     result << "  // " << className << " #{instanceName} = m.getUniqueModelObject<" << className << ">();\n\n"
 
-    @nonextensibleFields.each { |field|
+    @nonextensibleFields.each_with_index { |field, i|
       next if field.isHandle?
 
       if field.isName?
@@ -1482,9 +1486,20 @@ class ModelClassGenerator < SubProjectClassGenerator
 
         if field.isBooleanChoice?
           result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " Boolean\n"
+          if field.hasDefault?
+            result << "  // Default value from IDD\n"
+            result << "  EXPECT_TRUE(#{instanceName}." << field.isDefaultName << "());\n"
+            if field.defaultValue == 'Yes'
+              result << "  EXPECT_TRUE(#{instanceName}." << field.getterName << "());\n";
+            else
+              result << "  EXPECT_FALSE(#{instanceName}." << field.getterName << "());\n";
+            end
+          end
+
           result << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(true));\n";
           if field.optionalGetter?
             result << "  EXPECT_TRUE(#{instanceName}." << field.getterName << "().get());\n"
+            result << "  EXPECT_FALSE(#{instanceName}." << field.isDefaultName << "());\n"
           else
             result << "  EXPECT_TRUE(#{instanceName}." << field.getterName << "());\n"
           end
@@ -1520,9 +1535,70 @@ class ModelClassGenerator < SubProjectClassGenerator
 
           result << "  // " << field.name << ": " << (field.isRequired? ? "Required" : "Optional") << " " << cat << "\n"
 
-          # Comment
-          if field.canAutosize?
+          if isNumber
+            min_bound = field.iddField.properties.minBoundValue
+            max_bound = field.iddField.properties.maxBoundValue
+            # The whole shenanigans with `i` here is to avoid setting every
+            # field to the same numeric value, which wouldn't catch mistakes
+            # such as setting the wrong field (due to copy paste for eg)
+            if field.isInteger?
+              offset = 1
+            else
+              offset = 0.1
+            end
 
+            if (min_bound.is_initialized && max_bound.is_initialized)
+              max = max_bound.get
+              min = min_bound.get
+              # Break it up in 2 + i segments, take the position of the start
+              # of the last segment
+              seg_len = (max - min) / (i+2)
+              good_val = (max - seg_len)
+              bad_val = min_bound.get - 10
+            elsif (min_bound.is_initialized)
+              good_val = (min_bound.get + offset * (i + 1))
+              bad_val = min_bound.get - 10
+            elsif (max_bound.is_initialized)
+              good_val = (max_bound.get - offset * (i + i))
+              bad_val = max_bound.get + 10
+            else
+              good_val = offset * (i + 1)
+              bad_val = nil
+            end
+            if field.isInteger?
+              good_val = good_val.to_i
+              if !bad_val.nil?
+                bad_val = bad_val.to_i
+              end
+            else
+              good_val = good_val.to_f.round(3)
+              if !bad_val.nil?
+                bad_val = bad_val.to_f.round(3)
+              end
+            end
+          elsif field.isChoice?
+            good_val = "\"#{field.choices[0].name}\""
+            bad_val = "\"BADENUM\""
+          end
+
+          if field.hasDefault?
+            result << "  // Default value from IDD\n"
+            result << "  EXPECT_TRUE(#{instanceName}." << field.isDefaultName << "());\n"
+            if isNumber
+              if field.optionalGetter?
+                # Not sure if it's worth checking if optionalGetter?... if it
+                # has a default, the getter shouldn't be optional really
+                result << "  EXPECT_EQ(#{field.defaultValue}, #{instanceName}." << field.getterName << "()"
+                result << (field.optionalGetter? ? ".get()" : "") << ");\n"
+              end
+            else
+              result << "  EXPECT_EQ(\"#{field.defaultValue}\", #{instanceName}." << field.getterName << "()"
+              result << (field.optionalGetter? ? ".get()" : "") << ");\n"
+            end
+          end
+
+          if field.canAutosize?
+            result << "  // Autosize\n"
             result << "  #{instanceName}." << field.autosizeName << "();\n"
             result << "  EXPECT_TRUE(#{instanceName}." << field.isAutosizeName << "());\n"
 
@@ -1531,7 +1607,7 @@ class ModelClassGenerator < SubProjectClassGenerator
 
             need_closing = true
           elsif field.canAutocalculate?
-
+            result << "  // Autocalculate\n"
             result << "  #{instanceName}." << field.autocalculateName << "();\n"
             result << "  EXPECT_TRUE(#{instanceName}." << field.isAutocalculateName << "());\n"
 
@@ -1539,39 +1615,21 @@ class ModelClassGenerator < SubProjectClassGenerator
             need_closing = true
           end
 
-
-          if isNumber
-            good_val = 10
-            min_bound = field.iddField.properties.minBoundValue
-            max_bound = field.iddField.properties.maxBoundValue
-            if (min_bound.is_initialized && max_bound.is_initialized)
-              good_val = (min_bound.get + max_bound.get) / 2
-              bad_val = min_bound.get - 10
-            elsif (min_bound.is_initialized)
-              good_val = min_bound.get + 0.1
-              bad_val = min_bound.get - 10
-            elsif (max_bound.is_initialized)
-              good_val = max_bound.get - 0.1
-              bad_val = max_bound.get + 10
-            else
-              good_val = 3
-              bad_val = nil
-            end
-          elsif field.isChoice?
-            good_val = "\"#{field.choices[0].name}\""
-            bad_val = "\"BADENUM\""
+          if field.hasDefault? or field.canAutosize? or field.canAutocalculate?
+            result << "  // Set\n"
           end
 
           result << "  EXPECT_TRUE(#{instanceName}." << field.setterName << "(#{good_val}));\n";
 
           if field.optionalGetter?
-
             result << "  ASSERT_TRUE(#{instanceName}." << field.getterName << "());\n"
             result << "  EXPECT_EQ(#{good_val}, #{instanceName}." << field.getterName << "().get());\n"
-
           else
             result << "  EXPECT_EQ(#{good_val}, #{instanceName}." << field.getterName << "());\n"
+          end
 
+          if field.hasDefault?
+            result << "  EXPECT_FALSE(#{instanceName}." << field.isDefaultName << "());\n"
           end
 
           if !bad_val.nil?
@@ -1579,14 +1637,17 @@ class ModelClassGenerator < SubProjectClassGenerator
             result << "  EXPECT_FALSE(#{instanceName}." << field.setterName << "(#{bad_val}));\n";
 
             if field.optionalGetter?
-
               result << "  ASSERT_TRUE(#{instanceName}." << field.getterName << "());\n"
               result << "  EXPECT_EQ(#{good_val}, #{instanceName}." << field.getterName << "().get());\n"
-
             else
               result << "  EXPECT_EQ(#{good_val}, #{instanceName}." << field.getterName << "());\n"
-
             end
+          end
+
+          if field.hasDefault?
+            result << "  // Reset\n";
+            result << "  #{instanceName}." << field.resetName << "();\n"
+            result << "  EXPECT_TRUE(#{instanceName}." << field.isDefaultName << "());\n"
           end
         end
 
@@ -1594,11 +1655,13 @@ class ModelClassGenerator < SubProjectClassGenerator
           result << closing
         end
 
-
       end
 
       result << "\n"
     }
+
+    result << "}\n"
+
     return result
   end
 

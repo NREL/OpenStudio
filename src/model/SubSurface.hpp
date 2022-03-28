@@ -293,9 +293,6 @@ namespace model {
     /** @name Queries */
     //@{
 
-    /** Gets the fenestration value from the sql file **/
-    boost::optional<double> getExteriorFenestrationValue(std::string columnName) const;
-
    protected:
     /// @cond
     typedef detail::SubSurface_Impl ImplType;

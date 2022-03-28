@@ -96,8 +96,14 @@ namespace model {
       return isEmpty(OS_WindowProperty_FrameAndDividerFields::FrameInsideProjection);
     }
 
-    boost::optional<double> WindowPropertyFrameAndDivider_Impl::frameConductance() const {
-      return getDouble(OS_WindowProperty_FrameAndDividerFields::FrameConductance, true);
+    double WindowPropertyFrameAndDivider_Impl::frameConductance() const {
+      boost::optional<double> value = getDouble(OS_WindowProperty_FrameAndDividerFields::FrameConductance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool WindowPropertyFrameAndDivider_Impl::isFrameConductanceDefaulted() const {
+      return isEmpty(OS_WindowProperty_FrameAndDividerFields::FrameConductance);
     }
 
     double WindowPropertyFrameAndDivider_Impl::ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() const {
@@ -161,8 +167,8 @@ namespace model {
       return isEmpty(OS_WindowProperty_FrameAndDividerFields::DividerWidth);
     }
 
-    double WindowPropertyFrameAndDivider_Impl::numberOfHorizontalDividers() const {
-      boost::optional<double> value = getDouble(OS_WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, true);
+    int WindowPropertyFrameAndDivider_Impl::numberOfHorizontalDividers() const {
+      boost::optional<int> value = getInt(OS_WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -171,8 +177,8 @@ namespace model {
       return isEmpty(OS_WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers);
     }
 
-    double WindowPropertyFrameAndDivider_Impl::numberOfVerticalDividers() const {
-      boost::optional<double> value = getDouble(OS_WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, true);
+    int WindowPropertyFrameAndDivider_Impl::numberOfVerticalDividers() const {
+      boost::optional<int> value = getInt(OS_WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -430,8 +436,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool WindowPropertyFrameAndDivider_Impl::setNumberOfHorizontalDividers(double numberOfHorizontalDividers) {
-      bool result = setDouble(OS_WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, numberOfHorizontalDividers);
+    bool WindowPropertyFrameAndDivider_Impl::setNumberOfHorizontalDividers(int numberOfHorizontalDividers) {
+      bool result = setInt(OS_WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, numberOfHorizontalDividers);
       return result;
     }
 
@@ -440,8 +446,8 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool WindowPropertyFrameAndDivider_Impl::setNumberOfVerticalDividers(double numberOfVerticalDividers) {
-      bool result = setDouble(OS_WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, numberOfVerticalDividers);
+    bool WindowPropertyFrameAndDivider_Impl::setNumberOfVerticalDividers(int numberOfVerticalDividers) {
+      bool result = setInt(OS_WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, numberOfVerticalDividers);
       return result;
     }
 
@@ -637,8 +643,12 @@ namespace model {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isFrameInsideProjectionDefaulted();
   }
 
-  boost::optional<double> WindowPropertyFrameAndDivider::frameConductance() const {
+  double WindowPropertyFrameAndDivider::frameConductance() const {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->frameConductance();
+  }
+
+  bool WindowPropertyFrameAndDivider::isFrameConductanceDefaulted() const {
+    return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isFrameConductanceDefaulted();
   }
 
   double WindowPropertyFrameAndDivider::ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() const {
@@ -689,7 +699,7 @@ namespace model {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isDividerWidthDefaulted();
   }
 
-  double WindowPropertyFrameAndDivider::numberOfHorizontalDividers() const {
+  int WindowPropertyFrameAndDivider::numberOfHorizontalDividers() const {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->numberOfHorizontalDividers();
   }
 
@@ -697,7 +707,7 @@ namespace model {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->isNumberOfHorizontalDividersDefaulted();
   }
 
-  double WindowPropertyFrameAndDivider::numberOfVerticalDividers() const {
+  int WindowPropertyFrameAndDivider::numberOfVerticalDividers() const {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->numberOfVerticalDividers();
   }
 
@@ -899,7 +909,7 @@ namespace model {
     getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetDividerWidth();
   }
 
-  bool WindowPropertyFrameAndDivider::setNumberOfHorizontalDividers(double numberOfHorizontalDividers) {
+  bool WindowPropertyFrameAndDivider::setNumberOfHorizontalDividers(int numberOfHorizontalDividers) {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setNumberOfHorizontalDividers(numberOfHorizontalDividers);
   }
 
@@ -907,7 +917,7 @@ namespace model {
     getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->resetNumberOfHorizontalDividers();
   }
 
-  bool WindowPropertyFrameAndDivider::setNumberOfVerticalDividers(double numberOfVerticalDividers) {
+  bool WindowPropertyFrameAndDivider::setNumberOfVerticalDividers(int numberOfVerticalDividers) {
     return getImpl<detail::WindowPropertyFrameAndDivider_Impl>()->setNumberOfVerticalDividers(numberOfVerticalDividers);
   }
 
