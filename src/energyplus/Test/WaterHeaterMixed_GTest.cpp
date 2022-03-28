@@ -271,6 +271,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
       EXPECT_EQ(effValue, wh.heaterThermalEfficiency());
 
       ForwardTranslator ft;
+      ASSERT_NO_THROW(ft.translateModel(m));
       Workspace w = ft.translateModel(m);
 
       WorkspaceObjectVector idf_whs(w.getObjectsByType(IddObjectType::WaterHeater_Mixed));
@@ -301,6 +302,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
       }
 
       ForwardTranslator ft;
+      ASSERT_NO_THROW(ft.translateModel(m));
       Workspace w = ft.translateModel(m);
 
       WorkspaceObjectVector idf_whs(w.getObjectsByType(IddObjectType::WaterHeater_Mixed));
