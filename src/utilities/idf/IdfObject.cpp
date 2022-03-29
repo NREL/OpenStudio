@@ -1671,13 +1671,15 @@ namespace detail {
     DataErrorVector result;
 
     // StrictnessLevel::Minimal
+    if (level > StrictnessLevel::None) {
 
-    // DataErrorType::NoIdd
-    // field-level
-    if (!m_iddObject.getField(index)) {
-      result.push_back(DataError(index, getObject<IdfObject>(), DataErrorType(DataErrorType::NoIdd)));
-      // no other checks will work
-      return result;
+      // DataErrorType::NoIdd
+      // field-level
+      if (!m_iddObject.getField(index)) {
+        result.push_back(DataError(index, getObject<IdfObject>(), DataErrorType(DataErrorType::NoIdd)));
+        // no other checks will work
+        return result;
+      }
     }
 
     // StrictnessLevel::Draft

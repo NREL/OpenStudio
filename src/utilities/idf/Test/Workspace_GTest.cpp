@@ -1010,23 +1010,25 @@ TEST_F(IdfFixture, Workspace_FieldsNotInIdd) {
   0,                       !- Starting X Coordinate {m} \n\
   20,                      !- Starting Y Coordinate {m} \n\
   0,                       !- Starting Z Coordinate {m} \n\
-  20,                      !- Length {m} \n\
-  4;                       !- Height {m}";
+  20;                      !- Length {m}";
 
   // keeps bad object
   IdfFile idfFile = IdfFile::load(original, IddFileType::EnergyPlus).get();
   EXPECT_EQ(static_cast<unsigned>(1), idfFile.objects().size());
   EXPECT_TRUE(idfFile.isValid(StrictnessLevel::None));
-  EXPECT_FALSE(idfFile.isValid(StrictnessLevel::Minimal));
+  EXPECT_TRUE(idfFile.isValid(StrictnessLevel::Minimal));
   EXPECT_FALSE(idfFile.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(idfFile.isValid(StrictnessLevel::Final));
 
   Workspace workspace(idfFile, StrictnessLevel::Minimal);
   EXPECT_EQ(static_cast<unsigned>(1), workspace.objects().size());
-  EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
-  EXPECT_FALSE(workspace.isValid(StrictnessLevel::Minimal));
-  EXPECT_FALSE(workspace.isValid(StrictnessLevel::Draft));
-  EXPECT_FALSE(workspace.isValid(StrictnessLevel::Final));
+  WorkspaceObject wo = workspace.objects()[0];
+  EXPECT_FALSE(wo.setString(10, "4"));
+
+  Workspace workspace2(idfFile, StrictnessLevel::None);
+  EXPECT_EQ(static_cast<unsigned>(1), workspace2.objects().size());
+  WorkspaceObject wo2 = workspace2.objects()[0];
+  EXPECT_TRUE(wo2.setString(10, "4"));
 }
 
 TEST_F(IdfFixture, HospitalBaseline) {
