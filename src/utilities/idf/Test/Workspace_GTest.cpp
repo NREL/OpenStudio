@@ -996,21 +996,22 @@ NotAWindow, \n\
 }
 
 // bad fields
-TEST_F(IdfFixture, Workspace_FieldsNotInIdd) {
+TEST_F(IdfFixture, Workspace_NoneVsMinimal) {
 
-  // bad object names, NotAWindow is not a class
   std::stringstream original;
-  original << "Wall:Adiabatic, \n\
-  ,                        !- Name \n\
-  ,                        !- Construction Name \n\
-  ,                        !- Zone Name \n\
-  ,                        !- Space Name \n\
-  270,                     !- Azimuth Angle {deg} \n\
-  90,                      !- Tilt Angle {deg} \n\
-  0,                       !- Starting X Coordinate {m} \n\
-  20,                      !- Starting Y Coordinate {m} \n\
-  0,                       !- Starting Z Coordinate {m} \n\
-  20;                      !- Length {m}";
+  original << "WaterHeater:Mixed, \n\
+  water heater,                           !- Name \n\
+  0.136274824222915,                      !- Tank Volume {m3} \n\
+  ,                                       !- Setpoint Temperature Schedule Name \n\
+  2,                                      !- Deadband Temperature Difference {deltaC} \n\
+  99,                                     !- Maximum Temperature Limit {C} \n\
+  Cycle,                                  !- Heater Control Type \n\
+  5500.06477392209,                       !- Heater Maximum Capacity {W} \n\
+  0,                                      !- Heater Minimum Capacity {W} \n\
+  0,                                      !- Heater Ignition Minimum Flow Rate {m3/s} \n\
+  0,                                      !- Heater Ignition Delay {s} \n\
+  Electricity,                            !- Heater Fuel Type \n\
+  -0.5,                                   !- Heater Thermal Efficiency";
 
   // keeps bad object
   IdfFile idfFile = IdfFile::load(original, IddFileType::EnergyPlus).get();
@@ -1020,15 +1021,15 @@ TEST_F(IdfFixture, Workspace_FieldsNotInIdd) {
   EXPECT_FALSE(idfFile.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(idfFile.isValid(StrictnessLevel::Final));
 
-  Workspace workspace(idfFile, StrictnessLevel::Minimal);
-  EXPECT_EQ(static_cast<unsigned>(1), workspace.objects().size());
-  WorkspaceObject wo = workspace.objects()[0];
-  EXPECT_FALSE(wo.setString(10, "4"));
+  Workspace ws1(idfFile, StrictnessLevel::None);
+  EXPECT_EQ(static_cast<unsigned>(1), ws1.objects().size());
+  WorkspaceObject wso1 = ws1.objects()[0];
+  EXPECT_TRUE(wso1.setPointer(2, "WH Setpoint Temp"));
 
-  Workspace workspace2(idfFile, StrictnessLevel::None);
-  EXPECT_EQ(static_cast<unsigned>(1), workspace2.objects().size());
-  WorkspaceObject wo2 = workspace2.objects()[0];
-  EXPECT_TRUE(wo2.setString(10, "4"));
+  Workspace ws2(idfFile, StrictnessLevel::Minimal);
+  EXPECT_EQ(static_cast<unsigned>(1), ws2.objects().size());
+  WorkspaceObject wso2 = ws2.objects()[0];
+  EXPECT_FALSE(wso2.setPointer(2, "WH Setpoint Temp"));
 }
 
 TEST_F(IdfFixture, HospitalBaseline) {
