@@ -1229,12 +1229,13 @@ namespace detail {
 
   void WorkspaceObject_Impl::populateValidityReport(ValidityReport& report, bool checkNames) const {
     // StrictnessLevel::Minimal
-
-    // DataErrorType::NotInitialized
-    // object-level
-    if (!initialized()) {
-      report.insertError(DataError(getObject<WorkspaceObject>(), DataErrorType(DataErrorType::NotInitialized)));
-      return;
+    if (report.level() > StrictnessLevel::None) {
+      // DataErrorType::NotInitialized
+      // object-level
+      if (!initialized()) {
+        report.insertError(DataError(getObject<WorkspaceObject>(), DataErrorType(DataErrorType::NotInitialized)));
+        return;
+      }
     }
 
     // NOW INHERIT FROM IDFOBJECT

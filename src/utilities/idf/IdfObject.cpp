@@ -1648,10 +1648,12 @@ namespace detail {
 
   void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool checkNames) const {
     // field-level errors
-    for (unsigned index = 0; index < m_fields.size(); ++index) {
-      DataErrorVector fieldErrors = fieldDataIsValid(index, report.level());
-      for (const DataError& error : fieldErrors) {
-        report.insertError(error);
+    if (report.level() > StrictnessLevel::None) {
+      for (unsigned index = 0; index < m_fields.size(); ++index) {
+        DataErrorVector fieldErrors = fieldDataIsValid(index, report.level());
+        for (const DataError& error : fieldErrors) {
+          report.insertError(error);
+        }
       }
     }
 
