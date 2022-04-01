@@ -99,7 +99,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     "pugixml/1.12.1#5a39f82651eba3e7d6197903a3202e21"
     "jsoncpp/1.9.5#536d080aa154e5853332339bf576747c"
     "minizip/1.2.11#6c5afba2e0aef90b007855f7ac27111d" # This depends on zlib/1.2.11, and basically patches it
-    "zlib/1.2.11#4b38406da00104befece594b529fd155" # Also needed, so we can find zlib.h and co (+ pinning exactly is good)
+    "zlib/1.2.12#82202701ea360c0863f1db5008067122" # Also needed, so we can find zlib.h and co (+ pinning exactly is good)
     "fmt/8.1.1#b3e969f8561a85087bd0365c09bbf4fb"
     "sqlite3/3.38.1#c7348c448cd1d9b52f9ca90b2b936c1d"
     "cpprestsdk/2.10.18#003f5d46fb101c1d3bba72cf0ab781a2"
