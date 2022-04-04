@@ -34,8 +34,8 @@
 
 #include "../core/Enum.hpp"
 #include "../core/Logger.hpp"
-#include "../core/Optional.hpp"
 
+#include <optional>
 #include <variant>
 
 namespace openstudio {
