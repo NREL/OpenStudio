@@ -218,7 +218,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
 
   ReverseTranslator rt;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   // Not there, Model shouldn't have it either
   Model m = rt.translateWorkspace(w);

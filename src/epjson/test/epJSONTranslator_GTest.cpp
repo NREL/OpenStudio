@@ -416,7 +416,7 @@ TEST_F(epJSONFixture, canTranslateWorkspaceToJSON) {
 TEST_F(epJSONFixture, CustomCases) {
 
   // Test for #4264, part 1
-  openstudio::Workspace w(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace w(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::WorkspaceObject response_factor =
     w.addObject(openstudio::IdfObject(openstudio::IddObjectType::GroundHeatExchanger_ResponseFactors)).get();
@@ -445,7 +445,7 @@ TEST_F(epJSONFixture, CustomCases) {
 TEST_F(epJSONFixture, Autosize_case_sensitiveness) {
 
   // Test for #4264, part 2
-  openstudio::Workspace w(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace w(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::WorkspaceObject wo = w.addObject(openstudio::IdfObject(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed)).get();
 

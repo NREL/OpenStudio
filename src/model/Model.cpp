@@ -1250,6 +1250,7 @@ namespace model {
   std::string Model::plenumSpaceTypeName() const {
     return getImpl<detail::Model_Impl>()->plenumSpaceTypeName();
   }
+
   openstudio::WorkflowJSON Model::workflowJSON() const {
     return getImpl<detail::Model_Impl>()->workflowJSON();
   }

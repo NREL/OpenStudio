@@ -63,7 +63,7 @@ namespace energyplus {
     m_model = Model();
     m_model.setFastNaming(true);
 
-    m_workspace = Workspace(StrictnessLevel(StrictnessLevel::None), IddFileType(IddFileType::EnergyPlus));
+    m_workspace = Workspace(StrictnessLevel(StrictnessLevel::Minimal), IddFileType(IddFileType::EnergyPlus));
 
     m_workspaceToModelMap.clear();
 
@@ -119,7 +119,7 @@ namespace energyplus {
         progressBar->setWindowTitle(toString("Creating EnergyPlus Workspace"));
       }
 
-      Workspace workspace(StrictnessLevel::None, IddFileType(IddFileType::EnergyPlus));
+      Workspace workspace(StrictnessLevel::Minimal, IddFileType(IddFileType::EnergyPlus));
 
       if (progressBar) {
         workspace.connectProgressBar(*progressBar);

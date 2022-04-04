@@ -1070,7 +1070,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LoadDistributionScheme) {
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneControlThermostat) {
   ReverseTranslator rt;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   OptionalWorkspaceObject _i_zone = w.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(_i_zone);

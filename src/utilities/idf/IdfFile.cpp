@@ -258,7 +258,7 @@ bool IdfFile::isValid(StrictnessLevel level) const {
 ValidityReport IdfFile::validityReport(StrictnessLevel level) const {
   ValidityReport report(level);
 
-  // StrictnessLevel::None
+  // StrictnessLevel::Minimal
   // DataErrorType::NoIdd
   // \todo Only way there can be no IddFile is if IddFileType is set to UserCustom
 
@@ -273,7 +273,7 @@ ValidityReport IdfFile::validityReport(StrictnessLevel level) const {
     }
 
     // StrictnessLevel::Draft
-    if (level > StrictnessLevel::None) {
+    if (level > StrictnessLevel::Minimal) {
       // DataErrorType::NoIdd
       // object-level
       if (!m_iddFileAndFactoryWrapper.isInFile(object.iddObject().type())) {

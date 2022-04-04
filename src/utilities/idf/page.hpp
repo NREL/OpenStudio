@@ -103,7 +103,7 @@ namespace openstudio {
  *
  * Both IdfFile and Workspace contain member functions for helping users modify their data so it
  * complies with the underlying IDD. \link IdfFile IdfFiles\endlink only maintain their data to
- * StrictnessLevel::None; users can set the StrictnessLevel of their \link Workspace
+ * StrictnessLevel::Minimal; users can set the StrictnessLevel of their \link Workspace
  * Workspaces\endlink. IdfFile does provide a method for generating \link ValidityReport
  * ValidityReports\endlink for higher levels of strictness. Most work should be done in Workspace,
  * whose default StrictnessLevel is Draft. IDF should typically be brought up to

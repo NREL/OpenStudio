@@ -61,7 +61,7 @@ TEST_F(IdfFixture, ValidityReport_WithCustomIdd) {
   boost::optional<IddFile> iddFile = IddFile::load(ss);
   ASSERT_TRUE(iddFile);
 
-  Workspace workspace2(*iddFile, StrictnessLevel::None);
+  Workspace workspace2(*iddFile, StrictnessLevel::Minimal);
   EXPECT_EQ(IddFileType::UserCustom, workspace2.iddFileType().value());
   workspace2.addObjects(workspace.toIdfFile().objects());
   EXPECT_EQ(workspace.objects().size(), workspace2.objects().size());
