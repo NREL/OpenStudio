@@ -96,11 +96,11 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     ${CONAN_READLINE}
     ${CONAN_QT}
     ${CONAN_RUBY}
-    "openssl/1.1.1n#15565f1dcde351c64837550a2305577c" # force every package to align on the same as our conan-openstudio-ruby
+    "openssl/1.1.1n#e4c3f950ad6dc8fdc569b32d4e0bbd9a" # force every package to align on the same as our conan-openstudio-ruby
     "boost/1.78.0#277bce646044c183375481df48f9ba26"
     "pugixml/1.12.1#5a39f82651eba3e7d6197903a3202e21"
     "jsoncpp/1.9.5#536d080aa154e5853332339bf576747c"
-    "minizip/1.2.11#6c5afba2e0aef90b007855f7ac27111d" # This depends on zlib/1.2.11, and basically patches it
+    "minizip/1.2.12#c7ca0f1bcce5559c3e0d04c4f7c4a4ca" # This depends on zlib/1.2.11, and basically patches it
     "zlib/1.2.12#82202701ea360c0863f1db5008067122" # Also needed, so we can find zlib.h and co (+ pinning exactly is good)
     "fmt/8.1.1#b3e969f8561a85087bd0365c09bbf4fb"
     "sqlite3/3.38.1#c7348c448cd1d9b52f9ca90b2b936c1d"
