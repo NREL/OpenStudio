@@ -316,7 +316,6 @@ TEST_F(ModelFixture, AirLoopHVAC_removeBranchForZone) {
 
   EXPECT_EQ(unsigned(5), airLoopHVAC.demandComponents().size());
 
-  EXPECT_NE(thermalZone, spm.controlZone().get());
   EXPECT_FALSE(spm.controlZone());
 }
 
