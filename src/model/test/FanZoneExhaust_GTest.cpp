@@ -68,7 +68,7 @@ TEST_F(ModelFixture, FanZoneExhaust_AddToAndRemoveFromThermalZone) {
   EXPECT_TRUE(testObject.addToThermalZone(thermalZone));
   boost::optional<ThermalZone> testThermalZone = testObject.thermalZone();
   ASSERT_TRUE(testThermalZone);
-  EXPECT_EQ(*(testThermalZone), testObject.thermalZone());
+  EXPECT_EQ(*(testThermalZone), testObject.thermalZone().get());
   EXPECT_EQ(1u, thermalZone.equipment().size());
 
   // Check inlet and outlet nodes

@@ -145,10 +145,10 @@ void checkWorkflowStepResult(const WorkflowStep& step, const boost::optional<BCL
   EXPECT_EQ(StepResult::Success, workflowStepResult.stepResult().get().value());
 
   ASSERT_TRUE(workflowStepResult.stepInitialCondition());
-  EXPECT_EQ(stepName + " Initial Condition", workflowStepResult.stepInitialCondition());
+  EXPECT_EQ(stepName + " Initial Condition", workflowStepResult.stepInitialCondition().get());
 
   ASSERT_TRUE(workflowStepResult.stepFinalCondition());
-  EXPECT_EQ(stepName + " Final Condition", workflowStepResult.stepFinalCondition());
+  EXPECT_EQ(stepName + " Final Condition", workflowStepResult.stepFinalCondition().get());
 
   ASSERT_EQ(3u, workflowStepResult.stepErrors().size());
   EXPECT_EQ(stepName + " Error 1", workflowStepResult.stepErrors()[0]);
@@ -189,12 +189,10 @@ void checkWorkflowStepResult(const WorkflowStep& step, const boost::optional<BCL
 class WorkflowJSONListener
 {
  public:
-  WorkflowJSONListener() : dirty(false) {}
-
   void makeDirty() {
     dirty = true;
   }
-  bool dirty;
+  bool dirty = false;
 };
 
 TEST(Filetypes, QtGUI_WorkflowJSON_Load) {

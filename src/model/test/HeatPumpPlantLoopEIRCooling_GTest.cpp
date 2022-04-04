@@ -111,7 +111,7 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_GettersSetters) {
   EXPECT_EQ(1.0, hp.loadSideReferenceFlowRate().get());
   EXPECT_FALSE(hp.isLoadSideReferenceFlowRateAutosized());
   ASSERT_TRUE(hp.sourceSideReferenceFlowRate());
-  EXPECT_EQ(2.0, hp.sourceSideReferenceFlowRate());
+  EXPECT_EQ(2.0, hp.sourceSideReferenceFlowRate().get());
   EXPECT_FALSE(hp.isSourceSideReferenceFlowRateAutosized());
   ASSERT_TRUE(hp.referenceCapacity());
   EXPECT_EQ(3.0, hp.referenceCapacity().get());
@@ -209,12 +209,12 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_CondenserType) {
 
   // Test the convenience functions provided for clarity
   EXPECT_EQ(hp.plantLoop().get(), hp.loadSideWaterLoop().get());
-  EXPECT_EQ(hp.supplyInletModelObject()->cast<Node>(), hp.loadSideWaterInletNode());
-  EXPECT_EQ(hp.supplyOutletModelObject()->cast<Node>(), hp.loadSideWaterOutletNode());
+  EXPECT_EQ(hp.supplyInletModelObject()->cast<Node>(), hp.loadSideWaterInletNode().get());
+  EXPECT_EQ(hp.supplyOutletModelObject()->cast<Node>(), hp.loadSideWaterOutletNode().get());
 
   EXPECT_EQ(hp.secondaryPlantLoop().get(), hp.sourceSideWaterLoop().get());
-  EXPECT_EQ(hp.demandInletModelObject()->cast<Node>(), hp.sourceSideWaterInletNode());
-  EXPECT_EQ(hp.demandOutletModelObject()->cast<Node>(), hp.sourceSideWaterOutletNode());
+  EXPECT_EQ(hp.demandInletModelObject()->cast<Node>(), hp.sourceSideWaterInletNode().get());
+  EXPECT_EQ(hp.demandOutletModelObject()->cast<Node>(), hp.sourceSideWaterOutletNode().get());
 
   // Disconnect from the secondary plant Loop
   EXPECT_TRUE(hp.removeFromSecondaryPlantLoop());
@@ -225,8 +225,8 @@ TEST_F(ModelFixture, HeatPumpPlantLoopEIRCooling_CondenserType) {
 
   // Test convenience functions again
   EXPECT_EQ(hp.plantLoop().get(), hp.loadSideWaterLoop().get());
-  EXPECT_EQ(hp.supplyInletModelObject()->cast<Node>(), hp.loadSideWaterInletNode());
-  EXPECT_EQ(hp.supplyOutletModelObject()->cast<Node>(), hp.loadSideWaterOutletNode());
+  EXPECT_EQ(hp.supplyInletModelObject()->cast<Node>(), hp.loadSideWaterInletNode().get());
+  EXPECT_EQ(hp.supplyOutletModelObject()->cast<Node>(), hp.loadSideWaterOutletNode().get());
 
   EXPECT_FALSE(hp.secondaryPlantLoop());
   EXPECT_FALSE(hp.sourceSideWaterLoop());

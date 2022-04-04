@@ -99,10 +99,10 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_RatedEffectiveTotalHeatRe
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
-  EXPECT_EQ(58000.0, refrigerationCondenserWaterCooled.ratedEffectiveTotalHeatRejectionRate());
+  EXPECT_EQ(58000.0, refrigerationCondenserWaterCooled.ratedEffectiveTotalHeatRejectionRate().get());
 
   EXPECT_TRUE(refrigerationCondenserWaterCooled.setRatedEffectiveTotalHeatRejectionRate(12.0));
-  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.ratedEffectiveTotalHeatRejectionRate());
+  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.ratedEffectiveTotalHeatRejectionRate().get());
 
   EXPECT_TRUE(refrigerationCondenserWaterCooled.setRatedEffectiveTotalHeatRejectionRate(1.0));
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setRatedEffectiveTotalHeatRejectionRate(0.0));
@@ -212,10 +212,10 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_WaterDesignFlowRate) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
-  EXPECT_EQ(0.0025, refrigerationCondenserWaterCooled.waterDesignFlowRate());
+  EXPECT_EQ(0.0025, refrigerationCondenserWaterCooled.waterDesignFlowRate().get());
 
   EXPECT_TRUE(refrigerationCondenserWaterCooled.setWaterDesignFlowRate(12.0));
-  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.waterDesignFlowRate());
+  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.waterDesignFlowRate().get());
 
   EXPECT_TRUE(refrigerationCondenserWaterCooled.setWaterDesignFlowRate(1.0));
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setWaterDesignFlowRate(0.0));
@@ -226,10 +226,10 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_WaterMaximumFlowRate) {
   Model m;
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
-  EXPECT_EQ(0.003, refrigerationCondenserWaterCooled.waterMaximumFlowRate());
+  EXPECT_EQ(0.003, refrigerationCondenserWaterCooled.waterMaximumFlowRate().get());
 
   EXPECT_TRUE(refrigerationCondenserWaterCooled.setWaterMaximumFlowRate(12.0));
-  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.waterMaximumFlowRate());
+  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.waterMaximumFlowRate().get());
 
   EXPECT_TRUE(refrigerationCondenserWaterCooled.setWaterMaximumFlowRate(1.0));
   EXPECT_FALSE(refrigerationCondenserWaterCooled.setWaterMaximumFlowRate(0.0));
@@ -296,10 +296,10 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CondenserRefrigerantOpera
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
   refrigerationCondenserWaterCooled.setCondenserRefrigerantOperatingChargeInventory(12.0);
-  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.condenserRefrigerantOperatingChargeInventory());
+  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.condenserRefrigerantOperatingChargeInventory().get());
 
   refrigerationCondenserWaterCooled.setCondenserRefrigerantOperatingChargeInventory(-12.0);
-  EXPECT_EQ(-12.0, refrigerationCondenserWaterCooled.condenserRefrigerantOperatingChargeInventory());
+  EXPECT_EQ(-12.0, refrigerationCondenserWaterCooled.condenserRefrigerantOperatingChargeInventory().get());
 }
 
 TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CondensateReceiverRefrigerantInventory) {
@@ -307,10 +307,10 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CondensateReceiverRefrige
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
   refrigerationCondenserWaterCooled.setCondensateReceiverRefrigerantInventory(12.0);
-  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.condensateReceiverRefrigerantInventory());
+  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.condensateReceiverRefrigerantInventory().get());
 
   refrigerationCondenserWaterCooled.setCondensateReceiverRefrigerantInventory(-12.0);
-  EXPECT_EQ(-12.0, refrigerationCondenserWaterCooled.condensateReceiverRefrigerantInventory());
+  EXPECT_EQ(-12.0, refrigerationCondenserWaterCooled.condensateReceiverRefrigerantInventory().get());
 }
 
 TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CondensatePipingRefrigerantInventory) {
@@ -318,10 +318,10 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CondensatePipingRefrigera
   RefrigerationCondenserWaterCooled refrigerationCondenserWaterCooled = RefrigerationCondenserWaterCooled(m);
 
   refrigerationCondenserWaterCooled.setCondensatePipingRefrigerantInventory(12.0);
-  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.condensatePipingRefrigerantInventory());
+  EXPECT_EQ(12.0, refrigerationCondenserWaterCooled.condensatePipingRefrigerantInventory().get());
 
   refrigerationCondenserWaterCooled.setCondensatePipingRefrigerantInventory(-12.0);
-  EXPECT_EQ(-12.0, refrigerationCondenserWaterCooled.condensatePipingRefrigerantInventory());
+  EXPECT_EQ(-12.0, refrigerationCondenserWaterCooled.condensatePipingRefrigerantInventory().get());
 }
 
 TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_Remove) {
@@ -356,13 +356,13 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneOneModelWithDefaultD
 
   EXPECT_NE(refrigerationCondenserWaterCooledClone.handle(), refrigerationCondenserWaterCooled.handle());
 
-  EXPECT_EQ(58000.0, refrigerationCondenserWaterCooledClone.ratedEffectiveTotalHeatRejectionRate());
+  EXPECT_EQ(58000.0, refrigerationCondenserWaterCooledClone.ratedEffectiveTotalHeatRejectionRate().get());
   EXPECT_EQ(29.4, refrigerationCondenserWaterCooledClone.ratedCondensingTemperature());
   EXPECT_EQ(0.0, refrigerationCondenserWaterCooledClone.ratedSubcoolingTemperatureDifference());
   EXPECT_EQ(10.0, refrigerationCondenserWaterCooledClone.ratedWaterInletTemperature());
   EXPECT_EQ("ConstantFlow", refrigerationCondenserWaterCooledClone.waterCooledLoopFlowType());
-  EXPECT_EQ(0.0025, refrigerationCondenserWaterCooledClone.waterDesignFlowRate());
-  EXPECT_EQ(0.003, refrigerationCondenserWaterCooledClone.waterMaximumFlowRate());
+  EXPECT_EQ(0.0025, refrigerationCondenserWaterCooledClone.waterDesignFlowRate().get());
+  EXPECT_EQ(0.003, refrigerationCondenserWaterCooledClone.waterMaximumFlowRate().get());
   EXPECT_EQ(55.0, refrigerationCondenserWaterCooledClone.waterMaximumWaterOutletTemperature());
   EXPECT_EQ(10.0, refrigerationCondenserWaterCooledClone.waterMinimumWaterInletTemperature());
 }
@@ -386,13 +386,13 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneOneModelWithCustomDa
 
   EXPECT_NE(refrigerationCondenserWaterCooledClone.handle(), refrigerationCondenserWaterCooled.handle());
 
-  EXPECT_EQ(52000.0, refrigerationCondenserWaterCooledClone.ratedEffectiveTotalHeatRejectionRate());
+  EXPECT_EQ(52000.0, refrigerationCondenserWaterCooledClone.ratedEffectiveTotalHeatRejectionRate().get());
   EXPECT_EQ(25.0, refrigerationCondenserWaterCooledClone.ratedCondensingTemperature());
   EXPECT_EQ(3.0, refrigerationCondenserWaterCooledClone.ratedSubcoolingTemperatureDifference());
   EXPECT_EQ(11.0, refrigerationCondenserWaterCooledClone.ratedWaterInletTemperature());
   EXPECT_EQ("VariableFlow", refrigerationCondenserWaterCooledClone.waterCooledLoopFlowType());
-  EXPECT_EQ(0.005, refrigerationCondenserWaterCooledClone.waterDesignFlowRate());
-  EXPECT_EQ(0.005, refrigerationCondenserWaterCooledClone.waterMaximumFlowRate());
+  EXPECT_EQ(0.005, refrigerationCondenserWaterCooledClone.waterDesignFlowRate().get());
+  EXPECT_EQ(0.005, refrigerationCondenserWaterCooledClone.waterMaximumFlowRate().get());
   EXPECT_EQ(50.0, refrigerationCondenserWaterCooledClone.waterMaximumWaterOutletTemperature());
   EXPECT_EQ(15.0, refrigerationCondenserWaterCooledClone.waterMinimumWaterInletTemperature());
 }
@@ -411,13 +411,13 @@ TEST_F(ModelFixture, RefrigerationCondenserWaterCooled_CloneTwoModelsWithDefault
   EXPECT_NE(refrigerationCondenserWaterCooledClone2.handle(), refrigerationCondenserWaterCooled.handle());
   EXPECT_NE(refrigerationCondenserWaterCooledClone2.handle(), refrigerationCondenserWaterCooledClone.handle());
 
-  EXPECT_EQ(58000.0, refrigerationCondenserWaterCooledClone2.ratedEffectiveTotalHeatRejectionRate());
+  EXPECT_EQ(58000.0, refrigerationCondenserWaterCooledClone2.ratedEffectiveTotalHeatRejectionRate().get());
   EXPECT_EQ(29.4, refrigerationCondenserWaterCooledClone2.ratedCondensingTemperature());
   EXPECT_EQ(0.0, refrigerationCondenserWaterCooledClone2.ratedSubcoolingTemperatureDifference());
   EXPECT_EQ(10.0, refrigerationCondenserWaterCooledClone2.ratedWaterInletTemperature());
   EXPECT_EQ("ConstantFlow", refrigerationCondenserWaterCooledClone2.waterCooledLoopFlowType());
-  EXPECT_EQ(0.0025, refrigerationCondenserWaterCooledClone2.waterDesignFlowRate());
-  EXPECT_EQ(0.003, refrigerationCondenserWaterCooledClone2.waterMaximumFlowRate());
+  EXPECT_EQ(0.0025, refrigerationCondenserWaterCooledClone2.waterDesignFlowRate().get());
+  EXPECT_EQ(0.003, refrigerationCondenserWaterCooledClone2.waterMaximumFlowRate().get());
   EXPECT_EQ(55.0, refrigerationCondenserWaterCooledClone2.waterMaximumWaterOutletTemperature());
   EXPECT_EQ(10.0, refrigerationCondenserWaterCooledClone2.waterMinimumWaterInletTemperature());
 }

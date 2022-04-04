@@ -134,19 +134,19 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
 
   // Front Side Slat Beam Visible Reflectance:  Double
   // Check Idd default: 0.5
-  EXPECT_EQ(0.5, blind.frontSideSlatBeamVisibleReflectance());
+  EXPECT_EQ(0.5, blind.frontSideSlatBeamVisibleReflectance().get());
   EXPECT_TRUE(blind.setFrontSideSlatBeamVisibleReflectance(0.145));
-  EXPECT_EQ(0.145, blind.frontSideSlatBeamVisibleReflectance());
+  EXPECT_EQ(0.145, blind.frontSideSlatBeamVisibleReflectance().get());
   blind.resetFrontSideSlatBeamVisibleReflectance();
-  EXPECT_EQ(0.5, blind.frontSideSlatBeamVisibleReflectance());
+  EXPECT_EQ(0.5, blind.frontSideSlatBeamVisibleReflectance().get());
 
   // Back Side Slat Beam Visible Reflectance:  Double
   // Check Idd default: 0.5
-  EXPECT_EQ(0.5, blind.backSideSlatBeamVisibleReflectance());
+  EXPECT_EQ(0.5, blind.backSideSlatBeamVisibleReflectance().get());
   EXPECT_TRUE(blind.setBackSideSlatBeamVisibleReflectance(0.185));
-  EXPECT_EQ(0.185, blind.backSideSlatBeamVisibleReflectance());
+  EXPECT_EQ(0.185, blind.backSideSlatBeamVisibleReflectance().get());
   blind.resetBackSideSlatBeamVisibleReflectance();
-  EXPECT_EQ(0.5, blind.backSideSlatBeamVisibleReflectance());
+  EXPECT_EQ(0.5, blind.backSideSlatBeamVisibleReflectance().get());
 
   // Slat Diffuse Visible Transmittance:  Double
   // Check Idd default: 0.0
@@ -158,19 +158,19 @@ TEST_F(ModelFixture, Blind_GettersSetters) {
 
   // Front Side Slat Diffuse Visible Reflectance:  Double
   // Check Idd default: 0.5
-  EXPECT_EQ(0.5, blind.frontSideSlatDiffuseVisibleReflectance());
+  EXPECT_EQ(0.5, blind.frontSideSlatDiffuseVisibleReflectance().get());
   EXPECT_TRUE(blind.setFrontSideSlatDiffuseVisibleReflectance(0.055));
-  EXPECT_EQ(0.055, blind.frontSideSlatDiffuseVisibleReflectance());
+  EXPECT_EQ(0.055, blind.frontSideSlatDiffuseVisibleReflectance().get());
   blind.resetFrontSideSlatDiffuseVisibleReflectance();
-  EXPECT_EQ(0.5, blind.frontSideSlatDiffuseVisibleReflectance());
+  EXPECT_EQ(0.5, blind.frontSideSlatDiffuseVisibleReflectance().get());
 
   // Back Side Slat Diffuse Visible Reflectance:  Double
   // Check Idd default: 0.5
-  EXPECT_EQ(0.5, blind.backSideSlatDiffuseVisibleReflectance());
+  EXPECT_EQ(0.5, blind.backSideSlatDiffuseVisibleReflectance().get());
   EXPECT_TRUE(blind.setBackSideSlatDiffuseVisibleReflectance(0.085));
-  EXPECT_EQ(0.085, blind.backSideSlatDiffuseVisibleReflectance());
+  EXPECT_EQ(0.085, blind.backSideSlatDiffuseVisibleReflectance().get());
   blind.resetBackSideSlatDiffuseVisibleReflectance();
-  EXPECT_EQ(0.5, blind.backSideSlatDiffuseVisibleReflectance());
+  EXPECT_EQ(0.5, blind.backSideSlatDiffuseVisibleReflectance().get());
 
   // Slat Infrared Hemispherical Transmittance:  Double
   // Check Idd default: 0.0
