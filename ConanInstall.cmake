@@ -5,14 +5,14 @@
 
 if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
-  set(CMAKE_CONAN_EXPECTED_HASH 52a255a933397fdce3d0937f9c737e98)
-  set(CMAKE_CONAN_VERSION "0.17.0")
+  set(CMAKE_CONAN_EXPECTED_HASH
+      396e16d0f5eabdc6a14afddbcfff62a54a7ee75c6da23f32f7a31bc85db23484)
+  set(CMAKE_CONAN_VERSION "0.18.0")
 
   if(EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-    file(MD5 "${CMAKE_BINARY_DIR}/conan.cmake" CMAKE_CONAN_HASH)
-  endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake"
-     OR NOT "${CMAKE_CONAN_HASH}" MATCHES "${CMAKE_CONAN_EXPECTED_HASH}")
+    file(SHA256 "${CMAKE_BINARY_DIR}/conan.cmake" CMAKE_CONAN_HASH)
+  elseif(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake"
+         OR NOT "${CMAKE_CONAN_HASH}" MATCHES "${CMAKE_CONAN_EXPECTED_HASH}")
     # Put it in CMAKE_BINARY_DIR so we don't end up with two when building OpenStudioApplication
     message(
       STATUS
@@ -20,8 +20,10 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     )
     file(
       DOWNLOAD
-      "https://github.com/conan-io/cmake-conan/raw/${CMAKE_CONAN_VERSION}/conan.cmake"
-      "${CMAKE_BINARY_DIR}/conan.cmake")
+      "https://raw.githubusercontent.com/conan-io/cmake-conan/${CMAKE_CONAN_VERSION}/conan.cmake"
+      "${CMAKE_BINARY_DIR}/conan.cmake"
+      EXPECTED_HASH SHA256=${CMAKE_CONAN_EXPECTED_HASH}
+      TLS_VERIFY ON)
   else()
     message(STATUS "openstudio: using existing conan.cmake")
   endif()
