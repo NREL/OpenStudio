@@ -511,7 +511,7 @@ TEST(Filetypes, WorkflowJSON_Full) {
     EXPECT_TRUE(workflow.checkForUpdates());
     ASSERT_TRUE(workflow.oswPath());
     EXPECT_EQ(p, workflow.oswPath().get());
-    EXPECT_EQ("../../", toString(workflow.rootDir()));
+    EXPECT_EQ("../..", toString(workflow.rootDir()));
     EXPECT_EQ(toString(resourcesPath()), toString(workflow.absoluteRootDir()));
 
     ASSERT_TRUE(workflow.seedFile());
@@ -603,7 +603,7 @@ TEST(Filetypes, WorkflowJSON_Full) {
     //EXPECT_FALSE(workflow.checkForUpdates());
     ASSERT_TRUE(workflow.oswPath());
     EXPECT_EQ(p2, workflow.oswPath().get());
-    EXPECT_EQ("../../", toString(workflow.rootDir()));
+    EXPECT_EQ("../..", toString(workflow.rootDir()));
     EXPECT_EQ(toString(resourcesPath()), toString(workflow.absoluteRootDir()));
     ASSERT_TRUE(workflow.seedFile());
     EXPECT_EQ("1_9_0/example.osm", workflow.seedFile().get());

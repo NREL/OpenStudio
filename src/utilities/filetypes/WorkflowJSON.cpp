@@ -377,7 +377,7 @@ namespace detail {
   openstudio::path WorkflowJSON_Impl::rootDir() const {
     Json::Value defaultValue(".");
     Json::Value root = m_value.get("root", defaultValue);
-    return toPath(root.asString());
+    return toPath(root.asString()).remove_trailing_separator();
   }
 
   openstudio::path WorkflowJSON_Impl::absoluteRootDir() const {
@@ -391,7 +391,7 @@ namespace detail {
   openstudio::path WorkflowJSON_Impl::runDir() const {
     Json::Value defaultValue("./run");
     Json::Value runDirectory = m_value.get("run_directory", defaultValue);
-    return toPath(runDirectory.asString());
+    return toPath(runDirectory.asString()).remove_trailing_separator();
   }
 
   openstudio::path WorkflowJSON_Impl::absoluteRunDir() const {
@@ -511,7 +511,7 @@ namespace detail {
 
     Json::ArrayIndex n = paths.size();
     for (Json::ArrayIndex i = 0; i < n; ++i) {
-      result.push_back(toPath(paths[i].asString()));
+      result.push_back(toPath(paths[i].asString()).remove_trailing_separator());
     }
 
     return result;
