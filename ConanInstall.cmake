@@ -82,12 +82,12 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
     set(CONAN_RUBY
-        "openstudio_ruby/2.7.2@jmarrec/testing#c9e68f012e0c7914b9b3b1af8e1a2926"
+        "openstudio_ruby/2.7.2@jmarrec/testing#3c3fad827c605f2f352f3e5d85105d6b"
     ) # TODO: pending https://github.com/NREL/conan-openstudio-ruby/pull/39
   endif()
 
   if(BUILD_BENCHMARK)
-    set(CONAN_BENCHMARK "benchmark/1.6.0#abc2853305ae1834eb47ccb84a715c81")
+    set(CONAN_BENCHMARK "benchmark/1.6.1#94c40ebf065e3b20cab6a4f1b03a65fe")
   endif()
 
   # This will create the conanbuildinfo.cmake in the current binary dir, not the cmake_binary_dir
