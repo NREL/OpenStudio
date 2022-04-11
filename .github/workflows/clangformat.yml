@@ -8,7 +8,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Run clang-format against C++ files touched by the PR
       shell: bash
@@ -20,7 +20,7 @@ jobs:
 
     - name: Upload clang-format patch as artifact
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
           name: OpenStudio-${{ github.sha }}-clang_format.patch
           path: clang_format.patch
