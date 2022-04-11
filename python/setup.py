@@ -44,7 +44,7 @@ try:
             #  has an unsupported platform tag 'linux_x86_64'"
             plat = plat.lower().replace('linux', 'manylinux1')
             plat = plat.lower().replace('darwin_x86_64', 'macosx_10_6_intel')
-            if plat[:3] == 'mac':
+            if plat[:3] == 'mac' and not 'arm64' in plat:
                 # We don't use a fat binary ('intel' = both i386 and x86_64)
                 # but we set the platform to old one in the hope that it'll
                 # work for all
