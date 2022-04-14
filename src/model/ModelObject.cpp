@@ -597,7 +597,40 @@ namespace model {
       }
 
       // Not the same model. Resource handling is more complicated.
-      result = model.addAndInsertObjects(toAdd, castArray<WorkspaceObject>(getRecursiveResourceSubTrees(getObject<ModelObject>(), true)));
+
+      std::vector<std::vector<ModelObject>> array = getRecursiveResourceSubTrees(getObject<ModelObject>(), true);
+      std::size_t total_size = 0;
+      for (const auto& sub : array) {
+        total_size += sub.size();  // I wish there was a transform_accumulate
+      }
+      std::vector<ModelObject> flat_vec_unique;
+      result.reserve(total_size);
+      std::stringstream ss;
+      ss << "getRecursiveResourceSubTrees= [\n";
+      for (const auto& sub : array) {
+        ss << "    [";
+        for (const ModelObject& mo : sub) {
+          ss << mo.nameString() << ", ";
+          if (std::find(flat_vec_unique.begin(), flat_vec_unique.end(), mo) == flat_vec_unique.end()) {
+            std::cout << "Adding " << mo.nameString() << '\n';
+            for (auto& moo : flat_vec_unique) {
+              std::cout << moo.nameString() << ", ";
+            }
+            flat_vec_unique.push_back(mo);
+          }
+        }
+        ss << "],\n";
+      }
+      ss << "]\n";
+      std::cout << ss.str();
+
+      std::cout << "\nflat_vec_unique=[";
+      for (auto& mo : flat_vec_unique) {
+        std::cout << mo.nameString() << ", ";
+      }
+      std::cout << "]\n" << std::endl;
+
+      result = model.addAndInsertObjects(toAdd, castVector<WorkspaceObject>(flat_vec_unique));
       // Operation should work.
       OS_ASSERT(result.size() > 0u);
       return result[0].cast<ModelObject>();
