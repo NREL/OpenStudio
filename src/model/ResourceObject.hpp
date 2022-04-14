@@ -124,6 +124,8 @@ namespace model {
  *  by setting the optional second argument to true.*/
   MODEL_API std::vector<std::vector<ModelObject>> getRecursiveResourceSubTrees(const ModelObject& object, bool includeComponentCostLineItems = false);
 
+  MODEL_API std::vector<ModelObject> getRecursiveResourceSubTreesFlatUnique(const ModelObject& object, bool includeComponentCostLineItems = false);
+
 }  // namespace model
 }  // namespace openstudio
 

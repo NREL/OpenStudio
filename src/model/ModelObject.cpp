@@ -630,7 +630,14 @@ namespace model {
       }
       std::cout << "]\n" << std::endl;
 
-      result = model.addAndInsertObjects(toAdd, castVector<WorkspaceObject>(flat_vec_unique));
+      auto vv = getRecursiveResourceSubTreesFlatUnique(getObject<ModelObject>(), true);
+      std::cout << "\ngetRecursiveResourceSubTreesFlatUnique=[";
+      for (auto& mo : vv) {
+        std::cout << mo.nameString() << ", ";
+      }
+      std::cout << "]\n" << std::endl;
+
+      result = model.addAndInsertObjects(toAdd, castVector<WorkspaceObject>(vv));
       // Operation should work.
       OS_ASSERT(result.size() > 0u);
       return result[0].cast<ModelObject>();

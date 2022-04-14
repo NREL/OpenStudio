@@ -32,6 +32,9 @@
 
 #include "../utilities/core/Assert.hpp"
 
+#include <fmt/format.h>
+#include <fmt/ranges.h>
+
 namespace openstudio {
 namespace model {
 
@@ -165,6 +168,42 @@ namespace model {
           std::vector<ModelObject> subTree = getRecursiveChildren(resource, includeComponentCostLineItems);
           objectQueue.insert(objectQueue.end(), subTree.begin(), subTree.end());
           result.push_back(subTree);
+        }
+      }
+    }
+
+    return result;
+  }
+
+  std::vector<ModelObject> getRecursiveResourceSubTreesFlatUnique(const ModelObject& object, bool includeComponentCostLineItems) {
+    std::set<Handle> resultSet;
+    std::vector<ModelObject> result;
+
+    std::deque<ModelObject> objectQueue;
+    objectQueue.push_back(object);
+
+    while (objectQueue.size() > 0) {
+      ModelObject currentObject(objectQueue[0]);
+      objectQueue.pop_front();
+      for (const ResourceObject& resource : currentObject.resources()) {
+        auto insertResult = resultSet.insert(resource.handle());
+        if (insertResult.second) {
+          fmt::print("Inserting resource {}\n", resource.nameString());
+          result.push_back(resource);
+          std::vector<ModelObject> subTree = getRecursiveChildren(resource, includeComponentCostLineItems);
+
+          objectQueue.insert(objectQueue.end(), subTree.begin(), subTree.end());
+          for (auto& mo : subTree) {
+            auto insertResult = resultSet.insert(mo.handle());
+            if (insertResult.second) {
+              fmt::print("  Inserting Child {}\n", mo.nameString());
+              result.push_back(mo);
+            } else {
+              fmt::print("  NOT Inserting Child {}\n", mo.nameString());
+            }
+          }
+        } else {
+          fmt::print("NOT Inserting resource {}\n", resource.nameString());
         }
       }
     }
