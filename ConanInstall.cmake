@@ -6,17 +6,25 @@
 
 if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
-  set(CMAKE_CONAN_EXPECTED_HASH 52a255a933397fdce3d0937f9c737e98)
-  set(CMAKE_CONAN_VERSION "0.17.0")
+  set(CMAKE_CONAN_EXPECTED_HASH
+      5cdb3042632da3efff558924eecefd580a0e786863a857ca097c3d1d43df5dcd)
+  set(CMAKE_CONAN_VERSION "0.18.1")
 
   if(EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-    file(MD5 "${CMAKE_BINARY_DIR}/conan.cmake" CMAKE_CONAN_HASH)
-  endif()
-  if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake" OR NOT "${CMAKE_CONAN_HASH}" MATCHES "${CMAKE_CONAN_EXPECTED_HASH}")
+    file(SHA256 "${CMAKE_BINARY_DIR}/conan.cmake" CMAKE_CONAN_HASH)
+  elseif(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake"
+         OR NOT "${CMAKE_CONAN_HASH}" MATCHES "${CMAKE_CONAN_EXPECTED_HASH}")
     # Put it in CMAKE_BINARY_DIR so we don't end up with two when building OpenStudioApplication
-    message(STATUS "openstudio: Downloading conan.cmake ${CMAKE_CONAN_VERSION} from https://github.com/conan-io/cmake-conan")
-    file(DOWNLOAD "https://github.com/conan-io/cmake-conan/raw/${CMAKE_CONAN_VERSION}/conan.cmake"
-       "${CMAKE_BINARY_DIR}/conan.cmake")
+    message(
+      STATUS
+        "openstudio: Downloading conan.cmake ${CMAKE_CONAN_VERSION} from https://github.com/conan-io/cmake-conan"
+    )
+    file(
+      DOWNLOAD
+      "https://raw.githubusercontent.com/conan-io/cmake-conan/${CMAKE_CONAN_VERSION}/conan.cmake"
+      "${CMAKE_BINARY_DIR}/conan.cmake"
+      EXPECTED_HASH SHA256=${CMAKE_CONAN_EXPECTED_HASH}
+      TLS_VERIFY ON)
   else()
     message(STATUS "openstudio: using existing conan.cmake")
   endif()
@@ -91,7 +99,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     "websocketpp/0.8.2#6d77b9b8a2368fa5fd5377af0c0ca211"
     "geographiclib/1.50.1#b1a7966385dead17ec170b25a99cf71b"
     "swig/4.0.2#bfafb16cd2bea6af3b8003163abcbd09"
-	"tinygltf/2.5.0#c8b2aca9505e86312bb42aa0e1c639ec"
+    "tinygltf/2.5.0#c8b2aca9505e86312bb42aa0e1c639ec"
     ${CONAN_GTEST}
     ${CONAN_BENCHMARK}
     # Override to avoid dependency mismatches
