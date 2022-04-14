@@ -60,7 +60,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   list(APPEND CONAN_BUILD "missing")
 
   if (BUILD_TESTING)
-    set(CONAN_GTEST "gtest/1.10.0#ef88ba8e54f5ffad7d706062d0731a40")
+    set(CONAN_GTEST "gtest/1.10.0#2210002307b82e555f7bec6c9ec6c839")
   else()
     set(CONAN_GTEST "")
   endif()
