@@ -44,11 +44,14 @@ try:
             #  has an unsupported platform tag 'linux_x86_64'"
             plat = plat.lower().replace('linux', 'manylinux1')
             plat = plat.lower().replace('darwin_x86_64', 'macosx_10_6_intel')
-            if plat[:3] == 'mac' and not 'arm64' in plat:
-                # We don't use a fat binary ('intel' = both i386 and x86_64)
-                # but we set the platform to old one in the hope that it'll
-                # work for all
-                plat = 'macosx_10_9_x86_64'
+            if plat[:3] == 'mac':
+                if 'arm64' in plat:
+                    plat = 'macosx_11_0_arm64'
+                else:
+                    # We don't use a fat binary ('intel' = both i386 and x86_64)
+                    # but we set the platform to old one in the hope that it'll
+                    # work for all
+                    plat = 'macosx_10_9_x86_64'
             return python, abi, plat
 except ImportError:
     bdist_wheel = None
