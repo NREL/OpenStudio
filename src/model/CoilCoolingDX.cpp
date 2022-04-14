@@ -133,7 +133,7 @@ namespace model {
       std::vector<ModelObject> result;
 
       // This is a ResourceObject, so it shouldn't really be a child except for OS App / IG
-      result.push_back(performanceObject());
+      // result.push_back(performanceObject());
 
       std::vector<AirflowNetworkEquivalentDuct> myAFNItems =
         getObject<ModelObject>().getModelObjectSources<AirflowNetworkEquivalentDuct>(AirflowNetworkEquivalentDuct::iddObjectType());
