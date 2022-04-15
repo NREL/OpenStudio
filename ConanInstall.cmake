@@ -75,12 +75,17 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
     if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
-      set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/centos#43b0caf69454551e9fbebb57bd05e8ea")
+      set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/centos#20183b472101c6ee5f5280ac1ef0c79e")
       # Build ALL dependencies to avoid problems with the way too old CentOS GLIBC
       if(DEFINED CONAN_FIRST_TIME_BUILD_ALL)
         if(CONAN_FIRST_TIME_BUILD_ALL)
           message("FIRST TIME: FORCE BUILDING ALL CONAN PACKAGES")
-          set(CONAN_BUILD "all")
+          # TODO: Try to avoid rebuilding everything...?
+          #set(CONAN_BUILD "all") # This works, but it's gonna be sloooowww
+          # Maybe this?
+          set(CONAN_BUILD "all !openstudio_ruby")
+          # Or this: build only the ones that are problematic?
+          # list(APPEND CONAN_BUILD "swig")
           # Force switch it off for the next time
           set(CONAN_FIRST_TIME_BUILD_ALL OFF  CACHE BOOL OFF FORCE)
         endif()
