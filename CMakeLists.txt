@@ -217,6 +217,43 @@ else()
   set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID}")
 endif()
 
+# If Linux, check LSB_RELEASE globally so we can use it after
+# But also infer the new E+ package names (starting at 9.4.0)
+if(APPLE)
+
+  set(ENERGYPLUS_SYSTEM_VERSION "")
+
+  find_program(UNAME uname)
+  execute_process(COMMAND ${UNAME} -m
+    OUTPUT_VARIABLE ARCH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+elseif(UNIX)
+  # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
+  find_program(LSB_RELEASE lsb_release)
+  # -rs outputs only 16.04, or 18.04
+  execute_process(COMMAND ${LSB_RELEASE} -rs
+    OUTPUT_VARIABLE LSB_RELEASE_VERSION_SHORT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  # -is outputs "Ubuntu" or "Fedora"
+  execute_process(COMMAND ${LSB_RELEASE} -is
+    OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  # eg: `-Ubuntu18.04`
+  set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
+
+  message(STATUS "LSB_RELEASE_ID_SHORT=${LSB_RELEASE_ID_SHORT}, LSB_RELEASE_VERSION_SHORT=${LSB_RELEASE_VERSION_SHORT}")
+
+elseif(MSVC)
+  # no-op
+  set(ENERGYPLUS_SYSTEM_VERSION "")
+endif()
+
 ###############################################################################
 
 ###############################################################################
@@ -538,42 +575,7 @@ endif()
 ###############################################################################
 # Dependencies
 
-# If Linux, check LSB_RELEASE globally so we can use it after
-# But also infer the new E+ package names (starting at 9.4.0)
-if(APPLE)
 
-  set(ENERGYPLUS_SYSTEM_VERSION "")
-
-  find_program(UNAME uname)
-  execute_process(COMMAND ${UNAME} -m
-    OUTPUT_VARIABLE ARCH
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-
-elseif(UNIX)
-  # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
-  find_program(LSB_RELEASE lsb_release)
-  # -rs outputs only 16.04, or 18.04
-  execute_process(COMMAND ${LSB_RELEASE} -rs
-    OUTPUT_VARIABLE LSB_RELEASE_VERSION_SHORT
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-
-  # -is outputs "Ubuntu" or "Fedora"
-  execute_process(COMMAND ${LSB_RELEASE} -is
-    OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-
-  # eg: `-Ubuntu18.04`
-  set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
-
-  message(STATUS "LSB_RELEASE_ID_SHORT=${LSB_RELEASE_ID_SHORT}, LSB_RELEASE_VERSION_SHORT=${LSB_RELEASE_VERSION_SHORT}")
-
-elseif(MSVC)
-  # no-op
-  set(ENERGYPLUS_SYSTEM_VERSION "")
-endif()
 
 # EnergyPlus
 
@@ -586,10 +588,10 @@ if(UNIX)
       set(ENERGYPLUS_EXPECTED_HASH a8b7727f57273d6e80c5763b1c73945d)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
     endif()
-  elseif(EXISTS "/etc/redhat-release")
+  elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
-    set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
+    set(ENERGYPLUS_EXPECTED_HASH b39f88c94e33b462cd1939df13b241d2)
+    set(ENERGYPLUS_PLATFORM "Centos7-x86_64")
   else()
     if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
       set(ENERGYPLUS_EXPECTED_HASH 70dde5907e3e7f6aeee45bdff5145bc2)
@@ -606,7 +608,7 @@ if(UNIX)
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
     message(STATUS "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz") # TODO: Temp: custom build on my fork
 
-    if(EXISTS "/etc/redhat-release")
+    if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
            INACTIVITY_TIMEOUT 300 # 5-min timeout
            SHOW_PROGRESS
@@ -710,7 +712,7 @@ if(UNIX)
   endif()
   if(NOT EXISTS "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
   message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
-  if(EXISTS "/etc/redhat-release")
+  if(EXISTS "/etc/redhat-release" OR LSB_RELEASE_ID_SHORT MATCHES "CentOS")
     message("http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
   else()
@@ -1301,6 +1303,11 @@ if(WIN32)
   set(CPACK_IFW_TARGET_DIRECTORY "C:/${CPACK_PACKAGE_INSTALL_DIRECTORY}")
   set(CPACK_BINARY_IFW ON CACHE BOOL "Enable to build IFW packages")
   set(CPACK_BINARY_NSIS OFF CACHE BOOL "Enable to build NSIS packages")
+endif()
+
+if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
+  set(CPACK_RPM_SPEC_MORE_DEFINE "%define __python python3")
+  set(CPACK_RPM_PACKAGE_REQUIRES "libicu")
 endif()
 
 message(STATUS "Installer name is set to '${CPACK_PACKAGE_FILE_NAME}'")

@@ -74,8 +74,12 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   endif()
 
   if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
-    # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/stable#c32f3c58530990684fdd9510bef676a3")
+    if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
+      set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/centos#43b0caf69454551e9fbebb57bd05e8ea")
+    else()
+      # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
+      set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/stable#c32f3c58530990684fdd9510bef676a3")
+    endif()
   endif()
 
   if(BUILD_BENCHMARK)
@@ -91,8 +95,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     "boost/1.73.0#4129a76c9b83c300fc103e36d1908792"
     "pugixml/1.10#64b3ebc897bb9d9854c8a2443bf112a8"
     "jsoncpp/1.9.3#073a6d3cb40911d7c8027bddb6ae7dbf"
-    "minizip/1.2.11#0658b664480f2a0755b88502743d5d0d" # This depends on zlib/1.2.11, and basically patches it
-    "zlib/1.2.11#683857dbd5377d65f26795d4023858f9"    # Also needed, so we can find zlib.h and co (+ pinning exactly is good)
+    "minizip/1.2.12" # This depends on zlib/1.2.12, and basically patches it
+    "zlib/1.2.12"    # Also needed, so we can find zlib.h and co (+ pinning exactly is good)
     "fmt/7.0.1#0580b1492b1dddb43b1768e68f25c43c"
     "sqlite3/3.32.3#914492672c458f8be511e3800c14c717"
     "cpprestsdk/2.10.16#d097ff9a8719d9d0ed34293c2ebd90ed"
@@ -108,6 +112,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
     OPTIONS ${CONAN_OPTIONS}
     BUILD ${CONAN_BUILD}
+    PROFILE default
     # Passes `-u, --update`    to conan install: Check updates exist from upstream remotes
     # That and build=outdated should ensure we track the right
     # Now that we pin dependencies, there is no point looking upstream really, so we'll save valuable configuration time by not doing it
