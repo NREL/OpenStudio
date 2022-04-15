@@ -77,7 +77,15 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
       set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/centos#43b0caf69454551e9fbebb57bd05e8ea")
       # Build ALL dependencies to avoid problems with the way too old CentOS GLIBC
-      set(CONAN_BUILD "all")
+      if(DEFINED CONAN_FIRST_TIME_BUILD_ALL)
+        if(CONAN_FIRST_TIME_BUILD_ALL)
+          message("FIRST TIME: FORCE BUILDING ALL CONAN PACKAGES")
+          set(CONAN_BUILD "all")
+          # Force switch it off for the next time
+          set(CONAN_FIRST_TIME_BUILD_ALL OFF  CACHE BOOL OFF FORCE)
+        endif()
+      endif()
+      message("CONAN_BUILD=${CONAN_BUILD}")
       set(CONAN_FORCE_PROFILE "PROFILE default")  # This may not be needed on a clean build, but this is to force libcxx=libstdc++ and not libstdc++11
     else()
       # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
