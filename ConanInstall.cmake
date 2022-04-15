@@ -81,9 +81,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
         if(CONAN_FIRST_TIME_BUILD_ALL)
           message("FIRST TIME: FORCE BUILDING ALL CONAN PACKAGES")
           # TODO: Try to avoid rebuilding everything...?
-          #set(CONAN_BUILD "all") # This works, but it's gonna be sloooowww
-          # Maybe this?
-          set(CONAN_BUILD "all !openstudio_ruby")
+          set(CONAN_BUILD "all") # This works, but it's gonna be sloooowww
+          # Maybe this? Doesn't work, cmake-conan finds "all" and just goes with it
+          # set(CONAN_BUILD "all" "!openstudio_ruby")
           # Or this: build only the ones that are problematic?
           # list(APPEND CONAN_BUILD "swig")
           # Force switch it off for the next time
@@ -91,7 +91,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
         endif()
       endif()
       message("CONAN_BUILD=${CONAN_BUILD}")
-      set(CONAN_FORCE_PROFILE "PROFILE default")  # This may not be needed on a clean build, but this is to force libcxx=libstdc++ and not libstdc++11
+      #set(CONAN_FORCE_PROFILE "PROFILE default")  # This may not be needed on a clean build, but this is to force libcxx=libstdc++ and not libstdc++11
     else()
       # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
       set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/stable#c32f3c58530990684fdd9510bef676a3")
@@ -127,8 +127,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     #"libyaml/0.2.5#9e234874df88c3ba7249f6d1368fceaf"
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
     OPTIONS ${CONAN_OPTIONS}
-    BUILD ${CONAN_BUILD}
     ${CONAN_FORCE_PROFILE}
+    BUILD ${CONAN_BUILD}
     # Passes `-u, --update`    to conan install: Check updates exist from upstream remotes
     # That and build=outdated should ensure we track the right
     # Now that we pin dependencies, there is no point looking upstream really, so we'll save valuable configuration time by not doing it
