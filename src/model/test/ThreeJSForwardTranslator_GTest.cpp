@@ -42,13 +42,182 @@
 #include "../SubSurface_Impl.hpp"
 #include "../ConstructionAirBoundary.hpp"
 #include "../Construction.hpp"
-
+#include "../../osversion/VersionTranslator.hpp"
 #include "../../utilities/geometry/ThreeJS.hpp"
 
 #include <algorithm>
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture, ThreeJSForwardTranslator_ChengDu_9_Simple_Baseline) {
+  ThreeJSForwardTranslator ft;
+  openstudio::path out;
+
+  osversion::VersionTranslator translator;
+  openstudio::path modelpath = resourcesPath() / toPath("model/220128-ChengDu-Simple_9_Baseline.osm");
+  model::OptionalModel model = translator.loadModel(modelpath);
+  ThreeScene scene = ft.modelToThreeJS(model.get(), true);
+  EXPECT_EQ(0, ft.errors().size());
+  EXPECT_EQ(0, ft.warnings().size());
+  for (const auto& error : ft.errors()) {
+    EXPECT_TRUE(false) << "Error:" << error.logMessage();
+  }
+  for (const auto& warn : ft.warnings()) {
+    EXPECT_TRUE(false) << "Warning:" << warn.logMessage();
+  }
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  out = resourcesPath() / toPath("model/M220128-ChengDu-Simple_9_Baseline.json");
+  openstudio::filesystem::ofstream file1(out);
+  ASSERT_TRUE(file1.is_open());
+  file1 << json;
+  file1.close();
+}
+
+TEST_F(ModelFixture, ThreeJSForwardTranslator_7_7_Windows_Complete) {
+  ThreeJSForwardTranslator ft;
+  openstudio::path out;
+
+  osversion::VersionTranslator translator;
+  openstudio::path modelpath = resourcesPath() / toPath("model/7-7_Windows_Complete.osm");
+  model::OptionalModel model = translator.loadModel(modelpath);
+  ThreeScene scene = ft.modelToThreeJS(model.get(), true);
+  EXPECT_EQ(0, ft.errors().size());
+  EXPECT_EQ(0, ft.warnings().size());
+  for (const auto& error : ft.errors()) {
+    EXPECT_TRUE(false) << "Error:" << error.logMessage();
+  }
+  for (const auto& warn : ft.warnings()) {
+    EXPECT_TRUE(false) << "Warning:" << warn.logMessage();
+  }
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  out = resourcesPath() / toPath("model/M7-7_Windows_Complete.json");
+  openstudio::filesystem::ofstream file1(out);
+  ASSERT_TRUE(file1.is_open());
+  file1 << json;
+  file1.close();
+}
+
+TEST_F(ModelFixture, ThreeJSForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
+  ThreeJSForwardTranslator ft;
+  openstudio::path out;
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/Sample_DOE-RefBldgOutPatientNew2004_Chicago.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  ThreeScene scene = ft.modelToThreeJS(model.get(), true);
+  EXPECT_EQ(0, ft.errors().size());
+  EXPECT_EQ(0, ft.warnings().size());
+  for (const auto& error : ft.errors()) {
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+  for (const auto& warning : ft.warnings()) {
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+  out = resourcesPath() / toPath("model/MSample_DOE-RefBldgOutPatientNew2004_Chicago.json");
+  openstudio::filesystem::ofstream file1(out);
+  ASSERT_TRUE(file1.is_open());
+  file1 << json;
+  file1.close();
+}
+
+TEST_F(ModelFixture, ThreeJSForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago) {
+  ThreeJSForwardTranslator ft;
+  openstudio::path out;
+
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  // triangulated, for display
+  ThreeScene scene = ft.modelToThreeJS(model.get(), true);
+  // Ensure we get no errors or warnings, generally speaking.
+  EXPECT_EQ(0, ft.errors().size());
+  EXPECT_EQ(0, ft.warnings().size());
+
+  for (const auto& error : ft.errors()) {
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : ft.warnings()) {
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  out = resourcesPath() / toPath("model/MSample_DOE-RefBldgSecondarySchoolNew2004_Chicago.json");
+  openstudio::filesystem::ofstream file1(out);
+  ASSERT_TRUE(file1.is_open());
+  file1 << json;
+  file1.close();
+}
+
+TEST_F(ModelFixture, ThreeJSForwardTranslator_RefBldgLargeOfficeNew2004_Chicago) {
+  ThreeJSForwardTranslator ft;
+  openstudio::path out;
+
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgLargeOfficeNew2004_Chicago.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  // triangulated, for display
+  ThreeScene scene = ft.modelToThreeJS(model.get(), true);
+  // Ensure we get no errors or warnings, generally speaking.
+  EXPECT_EQ(0, ft.errors().size());
+  EXPECT_EQ(0, ft.warnings().size());
+
+  for (const auto& error : ft.errors()) {
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : ft.warnings()) {
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  out = resourcesPath() / toPath("model/MRefBldgLargeOfficeNew2004_Chicago.json");
+  openstudio::filesystem::ofstream file1(out);
+  ASSERT_TRUE(file1.is_open());
+  file1 << json;
+  file1.close();
+}
+
+TEST_F(ModelFixture, ThreeJSForwardTranslator_RefBldgFullServiceRestaurantNew2004_Chicago) {
+  ThreeJSForwardTranslator ft;
+  openstudio::path out;
+
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgFullServiceRestaurantNew2004_Chicago.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  // triangulated, for display
+  ThreeScene scene = ft.modelToThreeJS(model.get(), true);
+  // Ensure we get no errors or warnings, generally speaking.
+  EXPECT_EQ(0, ft.errors().size());
+  EXPECT_EQ(0, ft.warnings().size());
+
+  for (const auto& error : ft.errors()) {
+    EXPECT_TRUE(false) << "Error: " << error.logMessage();
+  }
+
+  for (const auto& warning : ft.warnings()) {
+    EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
+  }
+
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  out = resourcesPath() / toPath("model/MRefBldgFullServiceRestaurantNew2004_Chicago.json");
+  openstudio::filesystem::ofstream file1(out);
+  ASSERT_TRUE(file1.is_open());
+  file1 << json;
+  file1.close();
+}
 
 TEST_F(ModelFixture, ThreeJSForwardTranslator_ExampleModel) {
 

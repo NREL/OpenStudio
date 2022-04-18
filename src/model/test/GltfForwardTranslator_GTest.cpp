@@ -45,6 +45,39 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
+TEST_F(ModelFixture, GltfForwardTranslator_chengDu) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/220128-ChengDu-Simple_9_Baseline.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/220128-ChengDu-Simple_9_Baseline.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), output);
+  ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_ASHRAECourthouse) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/ASHRAECourthouse.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/ASHRAECourthouse.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), output);
+  ASSERT_TRUE(result);
+}
+//
+//TEST_F(ModelFixture, GltfForwardTranslator_OneRoom) {
+//  GltfForwardTranslator ft;
+//  openstudio::path output;
+//  output = resourcesPath() / toPath("utilities/Geometry/OneRoom.gltf");
+//  osversion::VersionTranslator translator;
+//  openstudio::path modelPath = resourcesPath() / toPath("model/one room.osm");
+//  model::OptionalModel model = translator.loadModel(modelPath);
+//  bool result = ft.modelToGLTF(model.get(), output);
+//  ASSERT_TRUE(result);
+//}
+
 // Validation report
 // /Format: glTF 2.0
 // Stats:
@@ -78,9 +111,9 @@ TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
-  output = resourcesPath() / toPath("utilities/Geometry/RefBldgSecondarySchoolNew2004_Chicago.gltf");
+  output = resourcesPath() / toPath("utilities/Geometry/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.gltf");
   osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgSecondarySchoolNew2004_Chicago.osm");
+  openstudio::path modelPath = resourcesPath() / toPath("model/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
   bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
@@ -99,9 +132,9 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
-  output = resourcesPath() / toPath("utilities/Geometry/RefBldgHospitalNew2004_Chicago.gltf");
+  output = resourcesPath() / toPath("utilities/Geometry/Sample_DOE-RefBldgHospitalNew2004_Chicago.gltf");
   osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgHospitalNew2004_Chicago.osm");
+  openstudio::path modelPath = resourcesPath() / toPath("model/Sample_DOE-RefBldgHospitalNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
   bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
@@ -123,9 +156,9 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
-  output = resourcesPath() / toPath("utilities/Geometry/RefBldgOutPatientNew2004_Chicago.gltf");
+  output = resourcesPath() / toPath("utilities/Geometry/Sample_DOE-RefBldgOutPatientNew2004_Chicago.gltf");
   osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgOutPatientNew2004_Chicago.osm");
+  openstudio::path modelPath = resourcesPath() / toPath("model/Sample_DOE-RefBldgOutPatientNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
   bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
@@ -144,9 +177,9 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSmallHotelNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
-  output = resourcesPath() / toPath("utilities/Geometry/RefBldgSmallHotelNew2004_Chicago.gltf");
+  output = resourcesPath() / toPath("utilities/Geometry/Sample_DOE-RefBldgSmallHotelNew2004_Chicago.gltf");
   osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgSmallHotelNew2004_Chicago.osm");
+  openstudio::path modelPath = resourcesPath() / toPath("model/Sample_DOE-RefBldgSmallHotelNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
   bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
