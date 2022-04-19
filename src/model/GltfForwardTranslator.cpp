@@ -1704,20 +1704,16 @@ namespace model {
     return result;
   }
 
-  int idk = 0;
   //
   // param : planarSurface
   // returns : UserData object
   GltfUserData GetUserData(const PlanarSurface& planarSurface) {
-    std::map<std::string, tinygltf::Value> userDataObject;
     std::string emptyString = "";
+    // Make sure to get the empty entries if one of the elements is not there
+    // so the UserData node look consistent across all surface nodes
     GltfUserData glTFUserData;
 
     std::string name = planarSurface.nameString();
-    std::ofstream outfile;
-    outfile.open("testabctest2.txt", std::ios_base::app);  // append instead of overwrite
-    outfile << idk << " : " << name << " \n ";
-    idk++;
     boost::optional<Surface> surface = planarSurface.optionalCast<Surface>();
     boost::optional<ShadingSurface> shadingSurface = planarSurface.optionalCast<ShadingSurface>();
     boost::optional<InteriorPartitionSurface> interiorPartitionSurface = planarSurface.optionalCast<InteriorPartitionSurface>();
@@ -1725,12 +1721,6 @@ namespace model {
     boost::optional<PlanarSurfaceGroup> planarSurfaceGroup = planarSurface.planarSurfaceGroup();
     boost::optional<Space> space = planarSurface.space();
     boost::optional<ConstructionBase> construction = planarSurface.construction();
-
-    // TODO: Remove after testing
-    if (name.find("Sub Surface 112") != std::string::npos) {
-      std::string name1 = "This";
-    }
-    // TODO: Remove after testing
 
     glTFUserData.setHandle(toglTFUUID(toString(planarSurface.handle())));
     glTFUserData.setName(name);
@@ -1749,21 +1739,9 @@ namespace model {
       if (adjacentSurface) {
         glTFUserData.setOutsideBoundaryConditionObjectName(adjacentSurface->nameString());
         glTFUserData.setOutsideBoundaryConditionObjectHandle(toglTFUUID(toString(adjacentSurface->handle())));
-      } else {
-        // Here we'll create empty entries for adjacent Surfaces then...
-        tinygltf::Value outsideBoundaryConditionObjectNameExtraNodeValue(emptyString);
-        userDataObject.insert({"outsideBoundaryConditionObjectName", outsideBoundaryConditionObjectNameExtraNodeValue});
-        tinygltf::Value outsideBoundaryConditionObjectHandleExtraNodeValue(emptyString);
-        userDataObject.insert({"outsideBoundaryConditionObjectHandle", outsideBoundaryConditionObjectHandleExtraNodeValue});
       }
       // set boundary conditions before calling getBoundaryMaterialName
       glTFUserData.setBoundaryMaterialName(getBoundaryMaterialName(surface));
-    } else {
-      // if not surface then at least set name and handle
-      tinygltf::Value surfaceNameExtraNodeValue(emptyString);
-      userDataObject.insert({"surfaceName", surfaceNameExtraNodeValue});
-      tinygltf::Value surfaceHandleExtraNodeValue(emptyString);
-      userDataObject.insert({"surfaceHandle", surfaceHandleExtraNodeValue});
     }
 
     if (shadingSurface) {
@@ -1783,12 +1761,6 @@ namespace model {
       glTFUserData.setOutsideBoundaryConditionObjectName(emptyString);
       glTFUserData.setOutsideBoundaryConditionObjectHandle(emptyString);
       glTFUserData.setBoundaryMaterialName(emptyString);
-    } else {
-      // if not shading then at least set name and handle
-      tinygltf::Value shadingHandleExtraNodeValue(emptyString);
-      userDataObject.insert({"shadingHandle", shadingHandleExtraNodeValue});
-      tinygltf::Value shadingNameExtraNodeValue(emptyString);
-      userDataObject.insert({"shadingName", shadingNameExtraNodeValue});
     }
 
     if (interiorPartitionSurface) {
@@ -1817,18 +1789,6 @@ namespace model {
         glTFUserData.setWindExposure(parentSurface->windExposure());
         glTFUserData.setSurfaceName(parentSurface->nameString());
         glTFUserData.setSurfaceHandle(toglTFUUID(toString(parentSurface->handle())));
-      } else {
-        // Here we'll create empty entries for parent Surface then...
-        tinygltf::Value outsideBoundaryCondition(emptyString);
-        userDataObject.insert({"outsideBoundaryCondition", outsideBoundaryCondition});
-        tinygltf::Value sunExposure(emptyString);
-        userDataObject.insert({"sunExposure", sunExposure});
-        tinygltf::Value windExposure(emptyString);
-        userDataObject.insert({"windExposure", windExposure});
-        tinygltf::Value surfaceName(emptyString);
-        userDataObject.insert({"surfaceName", surfaceName});
-        tinygltf::Value surfaceHandle(emptyString);
-        userDataObject.insert({"surfaceHandle", surfaceHandle});
       }
 
       boost::optional<SubSurface> adjacentSubSurface = subSurface->adjacentSubSurface();
@@ -1836,24 +1796,9 @@ namespace model {
         glTFUserData.setOutsideBoundaryConditionObjectName(adjacentSubSurface->nameString());
         glTFUserData.setOutsideBoundaryConditionObjectHandle(toglTFUUID(toString(adjacentSubSurface->handle())));
         glTFUserData.setBoundaryMaterialName("Boundary_Surface");
-      } else {
-        // Here we'll create empty entries for adjacent Sub Surfaces then...
-        tinygltf::Value outsideBoundaryConditionObjectName(emptyString);
-        userDataObject.insert({"outsideBoundaryConditionObjectName", outsideBoundaryConditionObjectName});
-        tinygltf::Value outsideBoundaryConditionObjectHandle(emptyString);
-        userDataObject.insert({"outsideBoundaryConditionObjectHandle", outsideBoundaryConditionObjectHandle});
-        tinygltf::Value boundaryMaterialName("Boundary_Surface");
-        userDataObject.insert({"boundaryMaterialName", boundaryMaterialName});
       }
       // set boundary conditions before calling getBoundaryMaterialName
-      // TODO : Failing for 7 by 7 while creating for Sub Surface 112
       glTFUserData.setBoundaryMaterialName(getBoundaryMaterialName(glTFUserData));
-    } else {
-      // if not sub surface then at least set handle and name
-      tinygltf::Value subSurfaceHandleExtraNodeValue(emptyString);
-      userDataObject.insert({"subSurfaceHandle", subSurfaceHandleExtraNodeValue});
-      tinygltf::Value subSurfaceNameExtraNodeValue(emptyString);
-      userDataObject.insert({"subSurfaceName", subSurfaceNameExtraNodeValue});
     }
 
     if (construction) {
@@ -1865,17 +1810,8 @@ namespace model {
       } else {
         glTFUserData.setConstructionMaterialName(getObjectGLTFMaterialName(*construction));
       }
-    } else {
-      // Here we'll create empty entries for construction then...
-      tinygltf::Value constructionSetHandleExtraNodeValue(emptyString);
-      userDataObject.insert({"constructionSetHandle", constructionSetHandleExtraNodeValue});
-      tinygltf::Value constructionName(emptyString);
-      userDataObject.insert({"constructionName", constructionName});
-      tinygltf::Value constructionMaterialName(emptyString);
-      userDataObject.insert({"constructionMaterialName", constructionMaterialName});
     }
-    // TODO: Make sure to get the empty entries if one of the elements is not there
-    // to make the UserData node look consistent across all surface nodes
+
     if (space) {
       glTFUserData.setSpaceHandle(toglTFUUID(toString(space->handle())));
       glTFUserData.setSpaceName(space->nameString());
@@ -1907,23 +1843,6 @@ namespace model {
         glTFUserData.setAirLoopHVACNames(airLoopHVACNamesObject);
         glTFUserData.setAirLoopHVACHandles(airLoopHVACHandlesObject);
         glTFUserData.setAirLoopHVACMaterialNames(airLoopHVACMaterialNamesObject);
-      } else {
-        // Here we'll create empty entries for thermal Zone then...
-        tinygltf::Value thermalZoneHandleExtraNodeValue(emptyString);
-        userDataObject.insert({"thermalZoneHandle", thermalZoneHandleExtraNodeValue});
-        tinygltf::Value thermalZoneName(emptyString);
-        userDataObject.insert({"thermalZoneName", thermalZoneName});
-        tinygltf::Value ThermalZoneMaterialName(emptyString);
-        userDataObject.insert({"thermalZoneMaterialName", ThermalZoneMaterialName});
-        std::map<std::string, tinygltf::Value> airLoopHVACHandlesObject;
-        std::map<std::string, tinygltf::Value> airLoopHVACNamesObject;
-        std::map<std::string, tinygltf::Value> airLoopHVACMaterialNamesObject;
-        tinygltf::Value alhhObj(airLoopHVACHandlesObject);
-        userDataObject.insert({"airLoopHVACHandles", alhhObj});
-        tinygltf::Value alhnObj(airLoopHVACNamesObject);
-        userDataObject.insert({"airLoopHVACNames", alhnObj});
-        tinygltf::Value alhmnObj(airLoopHVACMaterialNamesObject);
-        userDataObject.insert({"airLoopHVACMaterialNames", alhmnObj});
       }
 
       boost::optional<SpaceType> spaceType = space->spaceType();
@@ -1931,14 +1850,6 @@ namespace model {
         glTFUserData.setSpaceTypeHandle(toglTFUUID(toString(spaceType->handle())));
         glTFUserData.setSpaceTypeName(spaceType->nameString());
         glTFUserData.setSpaceTypeMaterialName(getObjectGLTFMaterialName(*spaceType));
-      } else {
-        // Here we'll create empty entries for space Type then...
-        tinygltf::Value spaceTypeHandleExtraNodeValue(emptyString);
-        userDataObject.insert({"spaceTypeHandle", spaceTypeHandleExtraNodeValue});
-        tinygltf::Value spaceTypeName(emptyString);
-        userDataObject.insert({"spaceTypeName", spaceTypeName});
-        tinygltf::Value spaceTypeMaterialName(emptyString);
-        userDataObject.insert({"spaceTypeMaterialName", spaceTypeMaterialName});
       }
 
       boost::optional<BuildingStory> buildingStory = space->buildingStory();
@@ -1946,14 +1857,6 @@ namespace model {
         glTFUserData.setBuildingStoryHandle(toglTFUUID(toString(buildingStory->handle())));
         glTFUserData.setBuildingStoryName(buildingStory->nameString());
         glTFUserData.setBuildingStoryMaterialName(getObjectGLTFMaterialName(*buildingStory));
-      } else {
-        // Here we'll create empty entries for building story then...
-        tinygltf::Value buildingStoryHandleExtraNodeValue(emptyString);
-        userDataObject.insert({"buildingStoryHandle", buildingStoryHandleExtraNodeValue});
-        tinygltf::Value buildingStoryName(emptyString);
-        userDataObject.insert({"buildingStoryName", buildingStoryName});
-        tinygltf::Value buildingStoryMaterialName(emptyString);
-        userDataObject.insert({"buildingStoryMaterialName", buildingStoryMaterialName});
       }
 
       boost::optional<BuildingUnit> buildingUnit = space->buildingUnit();
@@ -1961,51 +1864,7 @@ namespace model {
         glTFUserData.setBuildingUnitHandle(toglTFUUID(toString(buildingUnit->handle())));
         glTFUserData.setBuildingUnitName(buildingUnit->nameString());
         glTFUserData.setBuildingUnitMaterialName(getObjectGLTFMaterialName(*buildingUnit));
-      } else {
-        // Here we'll create empty entries for building unit then...
-        tinygltf::Value buildingUnitHandleExtraNodeValue(emptyString);
-        userDataObject.insert({"buildingUnitHandle", buildingUnitHandleExtraNodeValue});
-        tinygltf::Value buildingUnitName(emptyString);
-        userDataObject.insert({"buildingUnitName", buildingUnitName});
-        tinygltf::Value buildingUnitMaterialName(emptyString);
-        userDataObject.insert({"buildingUnitMaterialName", buildingUnitMaterialName});
       }
-    } else {
-      // Here we'll create empty entries for Space then...
-      tinygltf::Value spaceHandleExtraNodeValue(emptyString);
-      userDataObject.insert({"spaceHandle", spaceHandleExtraNodeValue});
-      tinygltf::Value spaceName(emptyString);
-      userDataObject.insert({"spaceName", spaceName});
-      tinygltf::Value thermalZoneHandleExtraNodeValue(emptyString);
-      userDataObject.insert({"thermalZoneHandle", thermalZoneHandleExtraNodeValue});
-      tinygltf::Value thermalZoneName(emptyString);
-      userDataObject.insert({"thermalZoneName", thermalZoneName});
-      tinygltf::Value ThermalZoneMaterialName(emptyString);
-      userDataObject.insert({"thermalZoneMaterialName", ThermalZoneMaterialName});
-      // TODO create empty colection
-      tinygltf::Value alhnObj(0);
-      userDataObject.insert({"airLoopHVACNames", alhnObj});
-      // TODO create empty collection
-      tinygltf::Value alhmnObj(0);
-      userDataObject.insert({"airLoopHVACMaterialNames", alhmnObj});
-      tinygltf::Value spaceTypeHandleExtraNodeValue(emptyString);
-      userDataObject.insert({"spaceTypeHandle", spaceTypeHandleExtraNodeValue});
-      tinygltf::Value spaceTypeName(emptyString);
-      userDataObject.insert({"spaceTypeName", spaceTypeName});
-      tinygltf::Value spaceTypeMaterialName(emptyString);
-      userDataObject.insert({"spaceTypeMaterialName", spaceTypeMaterialName});
-      tinygltf::Value buildingStoryHandleExtraNodeValue(emptyString);
-      userDataObject.insert({"buildingStoryHandle", buildingStoryHandleExtraNodeValue});
-      tinygltf::Value buildingStoryName(emptyString);
-      userDataObject.insert({"buildingStoryName", buildingStoryName});
-      tinygltf::Value buildingStoryMaterialName(emptyString);
-      userDataObject.insert({"buildingStoryMaterialName", buildingStoryMaterialName});
-      tinygltf::Value buildingUnitHandleExtraNodeValue(emptyString);
-      userDataObject.insert({"buildingUnitHandle", buildingUnitHandleExtraNodeValue});
-      tinygltf::Value buildingUnitName(emptyString);
-      userDataObject.insert({"buildingUnitName", buildingUnitName});
-      tinygltf::Value buildingUnitMaterialName(emptyString);
-      userDataObject.insert({"buildingUnitMaterialName", buildingUnitMaterialName});
     }
     return glTFUserData;
   }
@@ -2045,12 +1904,6 @@ namespace model {
     tinygltf::Value udObj(glTFUserData.userDataObject);
     // tie up the final object as extras
     node.extras = udObj;
-
-    // TODO: Remove after testing
-    auto userDataObjectSize = glTFUserData.userDataObject.size();
-    if (userDataObjectSize != 37) {
-      auto error = "Yes";
-    }
   }
 
   void getglTFMetaData(const Model& model, GLTF::Scene& scene, std::function<void(double)>& updatePercentage,
@@ -2233,30 +2086,6 @@ namespace model {
       node.mesh = meshes.size();
 
       // EXTRAS
-      // TODO: Remove after testing
-      //int(byte)
-      tinygltf::Value ve1(0x00);  // output : extras : 0
-      //const char[7] as r-Value
-      std::string&& spaceName = "Space X";
-      tinygltf::Value ve2(spaceName);
-      //int
-      tinygltf::Value ve3(8);
-      //bool
-      tinygltf::Value ve4(false);
-      //real
-      tinygltf::Value ve5(99.08);
-      std::map<std::string, tinygltf::Value> obj;
-      obj.insert({"Extra property - int(byte)", ve1});
-      obj.insert({"Extra property - const char[7]", ve2});
-      obj.insert({"Extra property - int ", ve3});
-      obj.insert({"Extra Property - bool", ve4});
-      obj.insert({"Extra Property - real", ve5});
-      // Extra Property as a child node
-      tinygltf::Value ve6(obj);
-      obj.insert({"Child Node as Extra Property", ve6});
-      tinygltf::Value ve(obj);
-      // tie up the final object as extras
-      // node.extras = ve;
 
       // TODO: Based on flag add UserData to nodes..
       // Initializes all userdata attributes as per the planar Surface
@@ -2314,10 +2143,8 @@ namespace model {
       thisPrimitive.material = materialIndex;
       thisPrimitive.mode = TINYGLTF_MODE_TRIANGLES;
 
-      //// TODO: Based on a flag add UserData to nodes..
-      //addUserData(planarSurface, node, buildingTransformation, vertices);
-
-      //// Addition of UserData as Extras to the node
+      // TODO: Based on a flag override UserData attribute
+      // Addition of UserData as Extras to the node
       tieUpglTFUserDataAsExtraNode(glTFUserData, planarSurface, node, buildingTransformation, vertices);
 
       n += 1;
