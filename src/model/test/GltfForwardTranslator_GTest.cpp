@@ -121,7 +121,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_LoadTest_ExampleModel) {
   ASSERT_TRUE(isExported);
   inputPath = outputPath;
   // Load glTF
-  bool isLoaded = ft.loadGLTF(inputPath); 
+  bool isLoaded = ft.loadGLTF(inputPath);
   ASSERT_TRUE(isLoaded);
 }
 

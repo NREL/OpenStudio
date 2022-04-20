@@ -428,7 +428,6 @@ namespace model {
       spaceTypeCount = 0;
       constructionSetCount = 0;
       airLoopCount = 0;
-
     }
 
     std::map<std::string, tinygltf::Value> metaData;
@@ -2244,7 +2243,7 @@ namespace model {
   GltfMetaData glTFMetaData;
   void getglTFMetaData(const Model& model, GLTF::Scene& scene, std::function<void(double)>& updatePercentage,
                        std::vector<PlanarSurface>::size_type& N, double& n) {
-    
+
     std::vector<PlanarSurface> planarSurfaces = model.getModelObjects<PlanarSurface>();
     std::vector<PlanarSurfaceGroup> planarSurfaceGroups = model.getModelObjects<PlanarSurfaceGroup>();
     std::vector<BuildingStory> buildingStories = model.getConcreteModelObjects<BuildingStory>();
@@ -2827,7 +2826,7 @@ namespace model {
       LOG(Error, "Failed to parse glTF");
     } else {
       // GltfMetaData glTFMetaData;
-      glTFMetaData = GltfMetaData(); // reinitialize instance 
+      glTFMetaData = GltfMetaData();  // reinitialize instance
       glTFMetaData.metaData = gltf_Model.scenes[0].extras.Get<std::map<std::string, tinygltf::Value>>();
       // auto aaextra = gltf_Model.scenes[0].extras_json_string;
 
@@ -2880,7 +2879,7 @@ namespace model {
       auto _spaceTypeCount = glTFMetaData.getSpaceTypeCount();
       auto _constructionSetCount = glTFMetaData.getConstructionSetCount();
       auto _airLoopHVACCount = glTFMetaData.getAirLoopCount();
-      // testing 
+      // testing
     }
     return ret;
   }
