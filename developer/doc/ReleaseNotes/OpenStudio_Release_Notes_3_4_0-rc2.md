@@ -64,53 +64,56 @@ As of OpenStudio SDK 3.2.0, Python bindings are officially supported and distrib
 Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for further instructions on how to install. Users can also visit the test channel at https://test.pypi.org/project/openstudio/ to install development bindings.
 
 ## New Features, Major Fixes and API-breaking changes
-* [#4560](https://github.com/NREL/OpenStudio/pull/4560),[#4540](https://github.com/NREL/OpenStudio/pull/4540)  Update EnergyPlus to v22.1.0
-* [#4550](https://github.com/NREL/OpenStudio/pull/4550) Addresses #4403, add Sql helper methods to retrieve U-factors, SHGC, or VT for glazing systems
-* [#4456](https://github.com/NREL/OpenStudio/pull/4493) Fix #4456 - Improve performance of OpenStudio::UnzipFile::extractAllFiles
-* [#4424](https://github.com/NREL/OpenStudio/pull/4424) Fixes #4361 OpenStudio API-reported surface "netArea" (when dealing with Frame & Divider objects) 
-* [#4502](https://github.com/NREL/OpenStudio/pull/4502) #4496 - Add gems cbor and msgpack and allow using a package from an openstudio-gems PR 
-* [#4497](https://github.com/NREL/OpenStudio/pull/4497) Addresses #4495, ElectricLoadCenterDistribution FT has incomplete charge/discharge logic
-* [#4494](https://github.com/NREL/OpenStudio/pull/4494) Addresses #4483, OS:Coil:Heating:DX:MultiSpeed:StageData has no Name field 
-* [#4499](https://github.com/NREL/OpenStudio/pull/4499) Addresses #4410, wrap AirflowNetwork:MultiZone:SpecifiedFlowRate 
-* [#4510](https://github.com/NREL/OpenStudio/pull/4510) Addresses #4509, bad nodes created for AirLoopHVAC:UnitarySystem with only cooling coil and supplemental heating coil 
-* [#4508](https://github.com/NREL/OpenStudio/pull/4508) Addresses #4469, method to Translate ScheduleYear/ScheduleWeek to ScheduleRuleset
-* [#4525](https://github.com/NREL/OpenStudio/pull/4525) Fixes #4387 gltf changes as per PR [4520](https://github.com/NREL/OpenStudio/pull/4520) comments/suggestions  
-* [#4485](https://github.com/NREL/OpenStudio/pull/4485) Fixes #4438 gbXML export order is not reproducible 
-* [#4444](https://github.com/NREL/OpenStudio/pull/4444) Fixes #4375 GBXML Import reverses floors/ceilings normals and surface types 
-* [#4527](https://github.com/NREL/OpenStudio/pull/4527) Fixes #4372 intersection issue found using create bar 
-* [#4535](https://github.com/NREL/OpenStudio/pull/4535) Fixes #4533 - Wrap SurfaceProperty:LocalEnvironment and SurfaceProperty:SurroundingSurfaces
-* [#4513](https://github.com/NREL/OpenStudio/pull/4513) Addresses #4457, support gbXML translation where user-input <Name> is different from the id
-* [#4534](https://github.com/NREL/OpenStudio/pull/4534) Addresses #4311, add water heaters to supply side of different loops
-* [#4528](https://github.com/NREL/OpenStudio/pull/4528) Cooling tower fixes and tests
-* [#4520](https://github.com/NREL/OpenStudio/pull/4520) Adds exports functionality to a use web standard glTF to replace deprecated three.js JSON format
-* [#4548](https://github.com/NREL/OpenStudio/pull/4548) Addresses #4531, breaking changes
-- CoolingTower:*Speed
-  - `evaporationLossMode` (`boost::optional<std::string>` to `std::string`)
-  - `blowdownCalculationMode` (`boost::optional<std::string>` to `std::string`)
-  - `cellControl` for CoolingTower:VariableSpeed
-- PlantLoop
-  - `commonPipeSimulation`  (`boost::optional<std::string> to `std::string`)
-  - `isCommonPipeSimulationDefaulted`
-* [#4505](https://github.com/NREL/OpenStudio/pull/4505) Addresses #4477, improve handling of invalid values passed to SDK by adding optional switch for turning off idd validity checking.
+
+* [#4560](https://github.com/NREL/OpenStudio/pull/4560), [#4540](https://github.com/NREL/OpenStudio/pull/4540) - Update to EnergyPlus [v22.1.0](https://github.com/NREL/EnergyPlus/releases/tag/v22.1.0)
+* [#4550](https://github.com/NREL/OpenStudio/pull/4550) - Addresses #4403, add Sql helper methods to retrieve assembly U-factor, SHGC, and Visible Transmittance values for glazing systems
+* [#4456](https://github.com/NREL/OpenStudio/pull/4493) - Fix #4456 - Improve performance of OpenStudio::UnzipFile::extractAllFiles
+* [#4424](https://github.com/NREL/OpenStudio/pull/4424) - Fixes #4361 OpenStudio API-reported surface "netArea" (when dealing with Frame & Divider objects)
+* [#4502](https://github.com/NREL/OpenStudio/pull/4502) - #4496 - Add gems cbor and msgpack and allow using a package from an openstudio-gems PR
+* [#4497](https://github.com/NREL/OpenStudio/pull/4497) - Addresses #4495, ElectricLoadCenterDistribution FT has incomplete charge/discharge logic
+* [#4494](https://github.com/NREL/OpenStudio/pull/4494) - Addresses #4483, OS:Coil:Heating:DX:MultiSpeed:StageData has no Name field
+* [#4499](https://github.com/NREL/OpenStudio/pull/4499) - Addresses #4410, wrap AirflowNetwork:MultiZone:SpecifiedFlowRate
+* [#4510](https://github.com/NREL/OpenStudio/pull/4510) - Addresses #4509, bad nodes created for AirLoopHVAC:UnitarySystem with only cooling coil and supplemental heating coil
+* [#4508](https://github.com/NREL/OpenStudio/pull/4508) - Addresses #4469, method to reverse translate the EnergyPlus ScheduleYear object to the OpenStudio ScheduleRuleset object
+* [#4525](https://github.com/NREL/OpenStudio/pull/4525) - Fixes #4387 gltf changes as per PR [4520](https://github.com/NREL/OpenStudio/pull/4520) comments/suggestions
+* [#4485](https://github.com/NREL/OpenStudio/pull/4485) - Fixes #4438 gbXML export order is not reproducible
+* [#4444](https://github.com/NREL/OpenStudio/pull/4444) - Fixes #4375 gbXML Import reverses floors/ceilings normals and surface types
+* [#4527](https://github.com/NREL/OpenStudio/pull/4527) - Fixes #4372 intersection issue found using create bar
+* [#4535](https://github.com/NREL/OpenStudio/pull/4535) - Fixes #4533 - Wrap SurfaceProperty:LocalEnvironment and SurfaceProperty:SurroundingSurfaces
+* [#4513](https://github.com/NREL/OpenStudio/pull/4513) - Addresses #4457, support gbXML reverse translation where user-input `<Name>` is different from the ID
+* [#4534](https://github.com/NREL/OpenStudio/pull/4534) - Addresses #4311, add water heaters (mixed or stratified) to the supply side of different plant loops using source/use side connections (e.g., to configure a heat recovery chiller)
+* [#4528](https://github.com/NREL/OpenStudio/pull/4528) - Cooling tower fixes (ctor for SingleSpeed, and missing IDD defaults) and model tests
+* [#4520](https://github.com/NREL/OpenStudio/pull/4520) - Adds exports functionality to a use web standard glTF to replace deprecated three.js JSON format
+* [#4548](https://github.com/NREL/OpenStudio/pull/4548) - Addresses #4531, breaking changes for some model getters:
+    * CoolingTower:*Speed
+        * `evaporationLossMode` (`boost::optional<std::string>` to `std::string`)
+        * `blowdownCalculationMode` (`boost::optional<std::string>` to `std::string`)
+        * `cellControl` for CoolingTower:VariableSpeed
+    * PlantLoop
+        * `commonPipeSimulation` (`boost::optional<std::string>` to `std::string`)
+        * add new methods: `isCommonPipeSimulationDefaulted`, `commonPipeSimulationValues`, and `validCommonPipeSimulationValues`
+* [#4505](https://github.com/NREL/OpenStudio/pull/4505) Addresses #4477, improve handling of invalid values passed to SDK by adding optional switch for turning off IDD validity checking
 * [#4504](https://github.com/NREL/OpenStudio/pull/4504) Fix #2941 - Add option to show workflow run stdout + style + timings
 
 ## Minor changes and bug fixes
-* [#4487](https://github.com/NREL/OpenStudio/pull/4487) Add operator< for BCLComponent and BCLMeasure
-* [#4482](https://github.com/NREL/OpenStudio/pull/4482) Fix #4481 - add missing `\ip-units W` to the OpenStudio.idd
-* [#4491](https://github.com/NREL/OpenStudio/pull/4491) Fix #4490 - Expose RoofGeometry helpers to Swig bindings
-* [#4498](https://github.com/NREL/OpenStudio/pull/4498) Bump to 3.3.1 and add default VT
-* [#4474](https://github.com/NREL/OpenStudio/pull/4474) Better string representation of Matrix and Transformation in the bindings
-* [#4475](https://github.com/NREL/OpenStudio/pull/4475) Add a method on the FT to get known ft options 
-* [#4512](https://github.com/NREL/OpenStudio/pull/4512) Update copyrights 2022
-* [#4537](https://github.com/NREL/OpenStudio/pull/4537) Review PR #4534 (for issue #4311) - Proposed changes
-* [#4553](https://github.com/NREL/OpenStudio/pull/4553) HotFix #4550 - Remove getExteriorFenestrationValue from public API
-* [#4555](https://github.com/NREL/OpenStudio/pull/4555) Adjustments to WindowPropertyFrameAndDivider and new model gtest
-* [#4562](https://github.com/NREL/OpenStudio/pull/4562) Update idfs to V22.1.0 by @jmarrec in 
-* [#4564](https://github.com/NREL/OpenStudio/pull/4564) update openstudio gems for standards 0.2.16 
-* [#4518](https://github.com/NREL/OpenStudio/pull/4518) Bump openstudio-gems, conan-openstudio-ruby and add support for Apple M1
-* [#4558](https://github.com/NREL/OpenStudio/pull/4558) Update macOS M1 (arm64) dependencies
+
+* [#4487](https://github.com/NREL/OpenStudio/pull/4487) - Add operator< for BCLComponent and BCLMeasure
+* [#4482](https://github.com/NREL/OpenStudio/pull/4482) - Fix #4481 - add missing `\ip-units W` to the OpenStudio.idd
+* [#4491](https://github.com/NREL/OpenStudio/pull/4491) - Fix #4490 - Expose RoofGeometry helpers to Swig bindings
+* [#4498](https://github.com/NREL/OpenStudio/pull/4498) - Bump to 3.3.1 and add default VT
+* [#4474](https://github.com/NREL/OpenStudio/pull/4474) - Better string representation of Matrix and Transformation in the bindings
+* [#4475](https://github.com/NREL/OpenStudio/pull/4475) - Add a method on the FT to get known ft options
+* [#4512](https://github.com/NREL/OpenStudio/pull/4512) - Update copyrights 2022
+* [#4537](https://github.com/NREL/OpenStudio/pull/4537) - Review PR #4534 (for issue #4311) - Proposed changes
+* [#4553](https://github.com/NREL/OpenStudio/pull/4553) - HotFix #4550 - Remove getExteriorFenestrationValue from public API
+* [#4555](https://github.com/NREL/OpenStudio/pull/4555) - Adjustments to WindowPropertyFrameAndDivider and new model gtest
+* [#4562](https://github.com/NREL/OpenStudio/pull/4562) - Update idfs to V22.1.0
+* [#4564](https://github.com/NREL/OpenStudio/pull/4564) - update openstudio gems for standards 0.2.16
+* [#4518](https://github.com/NREL/OpenStudio/pull/4518) - Bump openstudio-gems, conan-openstudio-ruby and add support for Apple M1
+* [#4558](https://github.com/NREL/OpenStudio/pull/4558) - Update macOS M1 (arm64) dependencies
 
 **Developer changes**:
+
 * [OpenStudio-benchmarks](https://github.com/NREL/OpenStudio-benchmarks) - Added additional performance benchmark tests to improve SDK performance. 
 
 
