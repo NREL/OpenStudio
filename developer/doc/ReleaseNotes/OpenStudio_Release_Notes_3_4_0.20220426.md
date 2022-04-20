@@ -132,16 +132,17 @@ Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for furthe
 * [1272](https://github.com/NREL/openstudio-standards/pull/1272) Add guard clause in the efficiency lookup in case coil has no capacity 
 * [1276](https://github.com/NREL/openstudio-standards/pull/1276) Updated college building occupancy schedules 
 * [1281](https://github.com/NREL/openstudio-standards/pull/1281) Correct design outdoor air requirements for some building types, which fixes issue #933
-* [1284](https://github.com/NREL/openstudio-standards/pull/1284) Fix #1284 (low U-value constructions) by removing insulation for low U-value constructions #1284
-* [1278](https://github.com/NREL/openstudio-standards/pull/1278) Fix issue #1278 by adding lab fumehood exhaust fan #1287
-* [1288](https://github.com/NREL/openstudio-standards/pull/1288) Expose occupancy hours for radiant slab controls #1288
-* [1291](https://github.com/NREL/openstudio-standards/pull/1291) Fix issue #1226 by also removing AirLoopHVACDedicatedOutdoorAirSystem objects when removing all HVAC systems #1291
-* [1292](https://github.com/NREL/openstudio-standards/pull/1292) Fix issue #1100 by adding support for propane heating systems #1292
-* [1293](https://github.com/NREL/openstudio-standards/pull/1293) Fix issue #1221 by coordinating inputs to hot water boilers #1293
-* [1294](https://github.com/NREL/openstudio-standards/pull/1294) Fix issue #170 by explicitly setting the standards construction type for exterior doors #1294
-* [1295](https://github.com/NREL/openstudio-standards/pull/1295) Fix issue #1295 by using longstanding ruby syntax #1296
-* [1304](https://github.com/NREL/openstudio-standards/pull/1304) Fix issue #1119 (duplicate constant day schedules) by using a tolerance instead of value check for constant day schedules #1304
-* [1305](https://github.com/NREL/openstudio-standards/pull/1305) Enable and fix testing for college and courthouse prototypes #1302 #1305
+* [1284](https://github.com/NREL/openstudio-standards/pull/1284) Fix #1284 (low U-value constructions) by removing insulation for low U-value constructions
+* [1278](https://github.com/NREL/openstudio-standards/pull/1278) Fix issue #1278 by adding lab fumehood exhaust fan
+* [1288](https://github.com/NREL/openstudio-standards/pull/1288) Expose occupancy hours for radiant slab controls
+* [1291](https://github.com/NREL/openstudio-standards/pull/1291) Fix issue #1226 by also removing AirLoopHVACDedicatedOutdoorAirSystem objects when removing all HVAC systems
+* [1292](https://github.com/NREL/openstudio-standards/pull/1292) Fix issue #1100 by adding support for propane heating systems
+* [1293](https://github.com/NREL/openstudio-standards/pull/1293) Fix issue #1221 by coordinating inputs to hot water boilers
+* [1294](https://github.com/NREL/openstudio-standards/pull/1294) Fix issue #170 by explicitly setting the standards construction type for exterior doors
+* [1295](https://github.com/NREL/openstudio-standards/pull/1295) Fix issue #1295 by using longstanding ruby syntax
+* [1304](https://github.com/NREL/openstudio-standards/pull/1304) Fix issue #1119 (duplicate constant day schedules) by using a tolerance instead of value check for constant day schedules
+* [1305](https://github.com/NREL/openstudio-standards/pull/1305) Enable and fix testing for college and courthouse prototypes #1302
+* [1306](https://github.com/NREL/openstudio-standards/pull/1307) Fix issue #1306 by setting the correct arguments when adding psz-ac systems to avoid an empty hot water loop
 
 
 ### OpenStudio Server v3.4.0
