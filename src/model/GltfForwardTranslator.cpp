@@ -176,6 +176,67 @@ namespace model {
       tinygltf::Value extraNodeValue(value);
       minZ = make_tuple(key, extraNodeValue);
     }
+
+    // Getters
+    double getlookAtR() const {
+      tinygltf::Value v(std::get<1>(lookAtR));
+      double valueD = v.Get<double>();
+      return valueD;
+    }
+
+    double getlookAtX() const {
+      tinygltf::Value v(std::get<1>(lookAtX));
+      double valueD = v.Get<double>();
+      return valueD;
+    }
+
+    double getlookAtY() const {
+      tinygltf::Value v(std::get<1>(lookAtY));
+      double valueD = v.Get<double>();
+      return valueD;
+    }
+
+    double getlookAtZ() const {
+      tinygltf::Value v(std::get<1>(lookAtZ));
+      double valueD = v.Get<double>();
+      return valueD;
+    }
+
+    double getmaxX() const {
+      tinygltf::Value v(std::get<1>(maxX));
+      double valueD = v.Get<double>();
+      return valueD;
+    }
+
+    double getmaxY() const {
+      tinygltf::Value v(std::get<1>(maxY));
+      double valueD = v.Get<double>();
+      return valueD;
+    }
+
+    double getmaxZ() const {
+      tinygltf::Value v(std::get<1>(maxZ));
+      double valueD = v.Get<double>();
+      return valueD;
+    }
+
+    double getminX() const {
+      tinygltf::Value v(std::get<1>(minX));
+      double valueD = v.Get<double>();
+      return valueD;
+    }
+
+    double getminY() const {
+      tinygltf::Value v(std::get<1>(minY));
+      double valueD = v.Get<double>();
+      return valueD;
+    }
+
+    double getminZ() const {
+      tinygltf::Value v(std::get<1>(minZ));
+      double valueD = v.Get<double>();
+      return valueD;
+    }
   };
 
   class GltfModelObjectMetadata
@@ -234,6 +295,48 @@ namespace model {
       multiplier = make_tuple(key, extraNodeValue);
     }
 
+    //
+
+    void setColor(tinygltf::Value value) {
+      std::string key = "color";
+      color = make_tuple(key, value);
+    }
+
+    void setHandle(tinygltf::Value value) {
+      std::string key = "handle";
+      handle = make_tuple(key, value);
+    }
+
+    void setIddObjectType(tinygltf::Value value) {
+      std::string key = "iddObjectType";
+      iddObjectType = make_tuple(key, value);
+    }
+
+    void setName(tinygltf::Value value) {
+      std::string key = "name";
+      name = make_tuple(key, value);
+    }
+
+    void setMultiplier(tinygltf::Value value) {
+      std::string key = "multiplier";
+      multiplier = make_tuple(key, value);
+    }
+
+    void setOpen_to_below(tinygltf::Value value) {
+      std::string key = "open_to_below";
+      open_to_below = make_tuple(key, value);
+    }
+
+    void setNominal_z_coordinate(tinygltf::Value value) {
+      std::string key = "nominal_z_coordinate";
+      nominal_z_coordinate = make_tuple(key, value);
+    }
+
+    void setNominal_floorCeiling_Height(tinygltf::Value value) {
+      std::string key = "nominal_floorCeiling_Height";
+      nominal_floorCeiling_Height = make_tuple(key, value);
+    }
+
     std::map<std::string, tinygltf::Value> modelObjectMap;
     void InitializeModelObjectMap() {
       /*   tinygltf::Value extraNodeValue(toString(""));
@@ -273,6 +376,14 @@ namespace model {
       }*/
     }
 
+    // getters
+
+    std::string getIddObjectType() const {
+      tinygltf::Value v(std::get<1>(iddObjectType));
+      std::string strVal = v.Get<std::string>().c_str();
+      return strVal;
+    }
+
    private:
     // string
     std::tuple<std::string, tinygltf::Value> color;
@@ -303,10 +414,116 @@ namespace model {
   };
 
   // MetaData as glTF Extras
-  struct GltfMetaData
+  class GltfMetaData
   {
    public:
+    GltfMetaData() {
+      resetModelObjectMetaDataCount();
+    }
+
+    void resetModelObjectMetaDataCount() {
+      storyCount = 0;
+      thermalZoneCount = 0;
+      spaceCount = 0;
+      spaceTypeCount = 0;
+      constructionSetCount = 0;
+      airLoopCount = 0;
+
+    }
+
     std::map<std::string, tinygltf::Value> metaData;
+
+    double getBoundingBoxlookAtR() {
+      return glTFBoundingBox.getlookAtR();
+    }
+
+    double getBoundingBoxlookAtX() {
+      return glTFBoundingBox.getlookAtX();
+    }
+
+    double getBoundingBoxlookAtY() {
+      return glTFBoundingBox.getlookAtY();
+    }
+
+    double getBoundingBoxlookAtZ() {
+      return glTFBoundingBox.getlookAtZ();
+    }
+
+    double getBoundingBoxmaxX() {
+      return glTFBoundingBox.getmaxX();
+    }
+
+    double getBoundingBoxmaxY() {
+      return glTFBoundingBox.getmaxY();
+    }
+
+    double getBoundingBoxmaxZ() {
+      return glTFBoundingBox.getmaxZ();
+    }
+
+    double getBoundingBoxminZ() {
+      return glTFBoundingBox.getminZ();
+    }
+
+    double getBoundingBoxminX() {
+      return glTFBoundingBox.getminX();
+    }
+
+    double getBoundingBoxminY() {
+      return glTFBoundingBox.getminY();
+    }
+
+    std::vector<GltfModelObjectMetadata> getModelObjectMetaDataCollection() {
+      return glTFModelObjectMetadataVector;
+    }
+
+    void setBoundingBox(tinygltf::Value value) {
+      auto boundingBoxObj = value.Get<std::map<std::string, tinygltf::Value>>();
+      for (auto const& x : boundingBoxObj) {
+        std::string key = x.first;
+        if (key == "lookAtR") {
+          tinygltf::Value v(x.second);
+          double vv = v.Get<double>();
+          glTFBoundingBox.setlookAtR(vv);
+        } else if (key == "lookAtX") {
+          tinygltf::Value v(x.second);
+          double vv = v.Get<double>();
+          glTFBoundingBox.setlookAtX(vv);
+        } else if (key == "lookAtY") {
+          tinygltf::Value v(x.second);
+          double vv = v.Get<double>();
+          glTFBoundingBox.setlookAtY(vv);
+        } else if (key == "lookAtZ") {
+          tinygltf::Value v(x.second);
+          double vv = v.Get<double>();
+          glTFBoundingBox.setlookAtZ(vv);
+        } else if (key == "maxX") {
+          tinygltf::Value v(x.second);
+          double vv = v.Get<double>();
+          glTFBoundingBox.setmaxX(vv);
+        } else if (key == "maxY") {
+          tinygltf::Value v(x.second);
+          double vv = v.Get<double>();
+          glTFBoundingBox.setmaxY(vv);
+        } else if (key == "maxZ") {
+          tinygltf::Value v(x.second);
+          double vv = v.Get<double>();
+          glTFBoundingBox.setmaxZ(vv);
+        } else if (key == "minX") {
+          tinygltf::Value v(x.second);
+          double vv = v.Get<double>();
+          glTFBoundingBox.setminX(vv);
+        } else if (key == "minY") {
+          tinygltf::Value v(x.second);
+          double vv = v.Get<double>();
+          glTFBoundingBox.setminY(vv);
+        } else if (key == "minZ") {
+          tinygltf::Value v(x.second);
+          double vv = v.Get<double>();
+          glTFBoundingBox.setminZ(vv);
+        }
+      }
+    }
 
     void setBoundingBox(const std::vector<PlanarSurfaceGroup>& planarSurfaceGroups, std::function<void(double)> updatePercentage, double& n,
                         std::vector<PlanarSurface>::size_type& N) {
@@ -417,6 +634,12 @@ namespace model {
       northAxis = make_tuple(key, northAxisExtraNodeValue);
     }
 
+    void setNorthAxis(double value) {
+      std::string key = "northAxis";
+      tinygltf::Value northAxisExtraNodeValue(value);
+      northAxis = make_tuple(key, northAxisExtraNodeValue);
+    }
+
     void setModelObjectMetaDataForStories(const std::vector<BuildingStory>& buildingStories, std::function<void(double)> updatePercentage, double& n,
                                           std::vector<PlanarSurface>::size_type& N) {
       for (const auto& buildingStory : buildingStories) {
@@ -441,6 +664,7 @@ namespace model {
           // DLM: how to translate this?
         }
 
+        storyCount++;
         glTFModelObjectMetadataVector.push_back(modelObjectMetadataglTF);
 
         for (const auto& space : buildingStory.spaces()) {
@@ -453,6 +677,7 @@ namespace model {
           // TBD: open_to_below is always false for Space ?
           modelObjectMetadataglTF.setOpen_to_below(false);
 
+          spaceCount++;
           glTFModelObjectMetadataVector.push_back(modelObjectMetadataglTF);
         }
 
@@ -496,6 +721,7 @@ namespace model {
 
         modelObjectMetadataglTF.setMultiplier(thermalZone.multiplier());
 
+        thermalZoneCount++;
         glTFModelObjectMetadataVector.push_back(modelObjectMetadataglTF);
 
         n += 1;
@@ -516,6 +742,7 @@ namespace model {
         // TBD: how to calculate open_to_below for thermal Zone ??
         modelObjectMetadataglTF.setOpen_to_below(false);
 
+        spaceTypeCount++;
         glTFModelObjectMetadataVector.push_back(modelObjectMetadataglTF);
 
         n += 1;
@@ -536,6 +763,7 @@ namespace model {
         // TBD: how to calcualte open_to_below for defaultConstructionSet or remove this node ?
         modelObjectMetadataglTF.setOpen_to_below(false);
 
+        constructionSetCount++;
         glTFModelObjectMetadataVector.push_back(modelObjectMetadataglTF);
 
         n += 1;
@@ -555,6 +783,7 @@ namespace model {
         //TBD:
         modelObjectMetadataglTF.setOpen_to_below(false);
 
+        airLoopCount++;
         glTFModelObjectMetadataVector.push_back(modelObjectMetadataglTF);
 
         n += 1;
@@ -579,6 +808,105 @@ namespace model {
       metaData.insert({std::get<0>(northAxis), std::get<1>(northAxis)});
     }
 
+    void setModelObjectMetaData(tinygltf::Value value) {
+      // glTFModelObjectMetadataVector = value.Get<std::vector<GltfModelObjectMetadata>>();
+      // auto aaa = value.Get<std::vector<GltfModelObjectMetadata>>();
+
+      auto modelObjectMetatDataVector = value.Get<tinygltf::Value::Object>();
+      int countKey = 0;
+      for (auto const& x : modelObjectMetatDataVector) {
+        GltfModelObjectMetadata gltfModelObjectMetadata;
+        auto key = x.first;
+        tinygltf::Value v(x.second);
+        auto modelObjectMetaData1 = v.Get<tinygltf::Value::Object>();
+        for (auto const& y : modelObjectMetaData1) {
+          auto key1 = y.first;
+          tinygltf::Value v1(y.second);
+          if (key1 == "color") {
+            gltfModelObjectMetadata.setColor(y.second);
+          } else if (key1 == "handle") {
+            gltfModelObjectMetadata.setHandle(y.second);
+          } else if (key1 == "iddObjectType") {
+            gltfModelObjectMetadata.setIddObjectType(y.second);
+          } else if (key1 == "name") {
+            gltfModelObjectMetadata.setName(y.second);
+          } else if (key1 == "multiplier") {
+            gltfModelObjectMetadata.setMultiplier(y.second);
+          } else if (key1 == "open_to_below") {
+            gltfModelObjectMetadata.setOpen_to_below(y.second);
+          } else if (key1 == "nominal_z_coordinate") {
+            gltfModelObjectMetadata.setNominal_z_coordinate(y.second);
+          } else if (key1 == "nominal_floorCeiling_Height") {
+            gltfModelObjectMetadata.setNominal_floorCeiling_Height(y.second);
+          }
+        }
+        std::string iddObjectTypeStr = gltfModelObjectMetadata.getIddObjectType();
+        if (iddObjectTypeStr == "OS:BuildingStory") {
+          storyCount++;
+        } else if (iddObjectTypeStr == "OS:Space") {
+          spaceCount++;
+        } else if (iddObjectTypeStr == "OS:ThermalZone") {
+          thermalZoneCount++;
+        } else if (iddObjectTypeStr == "OS:SpaceType") {
+          spaceTypeCount++;
+        } else if (iddObjectTypeStr == "OS:DefaultConstructionSet") {
+          constructionSetCount++;
+        } else if (iddObjectTypeStr.compare("OS:AirLoopHVAC") == 0) {
+          airLoopCount++;
+        }
+        glTFModelObjectMetadataVector.push_back(gltfModelObjectMetadata);
+        countKey++;
+      }
+    }
+
+    std::string getGenerator() const {
+      tinygltf::Value v(std::get<1>(generator));
+      std::string generatorStr = v.Get<std::string>().c_str();
+      return generatorStr;
+    }
+
+    std::string getType() const {
+      tinygltf::Value v(std::get<1>(type));
+      std::string typeStr = v.Get<std::string>().c_str();
+      return typeStr;
+    }
+
+    std::string getVersion() const {
+      tinygltf::Value v(std::get<1>(version));
+      std::string versionStr = v.Get<std::string>().c_str();
+      return versionStr;
+    }
+
+    double getNorthAxis() const {
+      tinygltf::Value v(std::get<1>(northAxis));
+      double northAxisd = v.Get<double>();
+      return northAxisd;
+    }
+
+    int getStoryCount() {
+      return storyCount;
+    }
+
+    int getThermalZoneCount() {
+      return thermalZoneCount;
+    }
+
+    int getSpaceCount() {
+      return spaceCount;
+    }
+
+    int getSpaceTypeCount() {
+      return spaceTypeCount;
+    }
+
+    int getConstructionSetCount() {
+      return constructionSetCount;
+    }
+
+    int getAirLoopCount() {
+      return airLoopCount;
+    }
+
    private:
     std::vector<GltfModelObjectMetadata> glTFModelObjectMetadataVector;
     GltfBoundingBox glTFBoundingBox;
@@ -590,6 +918,13 @@ namespace model {
     std::tuple<std::string, tinygltf::Value> version;
     // double
     std::tuple<std::string, tinygltf::Value> northAxis;
+
+    int storyCount;
+    int thermalZoneCount;
+    int spaceCount;
+    int spaceTypeCount;
+    int constructionSetCount;
+    int airLoopCount;
 
     /*
     boost::optional<double> m_belowFloorPlenumHeight;
@@ -1906,9 +2241,10 @@ namespace model {
     node.extras = udObj;
   }
 
+  GltfMetaData glTFMetaData;
   void getglTFMetaData(const Model& model, GLTF::Scene& scene, std::function<void(double)>& updatePercentage,
                        std::vector<PlanarSurface>::size_type& N, double& n) {
-    GltfMetaData glTFMetaData;
+    
     std::vector<PlanarSurface> planarSurfaces = model.getModelObjects<PlanarSurface>();
     std::vector<PlanarSurfaceGroup> planarSurfaceGroups = model.getModelObjects<PlanarSurfaceGroup>();
     std::vector<BuildingStory> buildingStories = model.getConcreteModelObjects<BuildingStory>();
@@ -2226,7 +2562,7 @@ namespace model {
     // Save it to a file
 
     // Uncomment this to use extras_as_string [std::string] instead of extras [tinygltf::Value]
-    // loader.SetStoreOriginalJSONForExtrasAndExtensions(true);
+    loader.SetStoreOriginalJSONForExtrasAndExtensions(true);
     bool ret = loader.WriteGltfSceneToFile(&gltfModel, toString(outputPath),
                                            true,    // embedImages
                                            true,    // embedBuffers
@@ -2471,6 +2807,87 @@ namespace model {
     }
     return ret;
   }
+
+  bool GltfForwardTranslator::loadGLTF(const path& inputPath) {
+    GLTF::TinyGLTF loader;
+    GLTF::Model gltf_Model;
+    std::string err;
+    std::string warning;
+    std::string fileName = toString(inputPath);
+    bool ret = loader.LoadASCIIFromFile(&gltf_Model, &err, &warning, fileName);
+    if (err.size() != 0) {
+      LOG(Error, "Error loading GLTF " << err);
+      //ret = false;
+    }
+    if (!warning.empty()) {
+      LOG(Warn, "Error loading GLTF " << warning);
+    }
+
+    if (!ret) {
+      LOG(Error, "Failed to parse glTF");
+    } else {
+      // GltfMetaData glTFMetaData;
+      glTFMetaData = GltfMetaData(); // reinitialize instance 
+      glTFMetaData.metaData = gltf_Model.scenes[0].extras.Get<std::map<std::string, tinygltf::Value>>();
+      // auto aaextra = gltf_Model.scenes[0].extras_json_string;
+
+      for (auto const& x : glTFMetaData.metaData) {
+        std::string key = x.first;
+        if (key == "generator") {
+          tinygltf::Value v(x.second);
+          auto vv = v.Get<std::string>().c_str();
+          glTFMetaData.setGenerator(vv);
+        } else if (key == "type") {
+          tinygltf::Value v(x.second);
+          auto vv = v.Get<std::string>().c_str();
+          glTFMetaData.setType(vv);
+        } else if (key == "northAxis") {
+          tinygltf::Value v(x.second);
+          double vv = v.Get<double>();
+          glTFMetaData.setNorthAxis(vv);
+        } else if (key == "version") {
+          tinygltf::Value v(x.second);
+          auto vv = v.Get<std::string>().c_str();
+          glTFMetaData.setVersion(vv);
+        } else if (key == "boundingbox") {
+          tinygltf::Value v(x.second);
+          glTFMetaData.setBoundingBox(v);
+        } else if (key == "modelObjectMetaData") {
+          tinygltf::Value v(x.second);
+          glTFMetaData.setModelObjectMetaData(v);
+        }
+      }
+      // testing
+      auto _gen = glTFMetaData.getGenerator();
+      auto _nA = glTFMetaData.getNorthAxis();
+      auto _ty = glTFMetaData.getType();
+      auto _ver = glTFMetaData.getVersion();
+      auto _lookAtR = glTFMetaData.getBoundingBoxlookAtR();
+      auto _lookAtX = glTFMetaData.getBoundingBoxlookAtX();
+      auto _lookAtY = glTFMetaData.getBoundingBoxlookAtY();
+      auto _lookAtZ = glTFMetaData.getBoundingBoxlookAtZ();
+      auto _maxX = glTFMetaData.getBoundingBoxmaxX();
+      auto _maxY = glTFMetaData.getBoundingBoxmaxY();
+      auto _maxZ = glTFMetaData.getBoundingBoxmaxZ();
+      auto _minX = glTFMetaData.getBoundingBoxminX();
+      auto _minY = glTFMetaData.getBoundingBoxminY();
+      auto _minZ = glTFMetaData.getBoundingBoxminZ();
+      auto _modelObjectMetaDataCollection = glTFMetaData.getModelObjectMetaDataCollection();
+      auto _sizemomdc = _modelObjectMetaDataCollection.size();
+      auto _storyCount = glTFMetaData.getStoryCount();
+      auto _thermalZOneCount = glTFMetaData.getThermalZoneCount();
+      auto _spaeCount = glTFMetaData.getSpaceCount();
+      auto _spaceTypeCount = glTFMetaData.getSpaceTypeCount();
+      auto _constructionSetCount = glTFMetaData.getConstructionSetCount();
+      auto _airLoopHVACCount = glTFMetaData.getAirLoopCount();
+      // testing 
+    }
+    return ret;
+  }
+
+  /*GltfMetaData GltfForwardTranslator::getMetaData() {
+    return glTFMetaData;
+  }*/
 
   GltfForwardTranslator::GltfForwardTranslator() {
     m_logSink.setLogLevel(Warn);

@@ -45,6 +45,16 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 4 materials
+// 1068 meshes
+// 1069 nodes
+// 1068 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_chengDu) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -56,6 +66,16 @@ TEST_F(ModelFixture, GltfForwardTranslator_chengDu) {
   ASSERT_TRUE(result);
 }
 
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 5 materials
+// 750 meshes
+// 751 nodes
+// 750 primitives
+// 0 textures
+// Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_ASHRAECourthouse) {
   GltfForwardTranslator ft;
   openstudio::path output;
@@ -66,20 +86,9 @@ TEST_F(ModelFixture, GltfForwardTranslator_ASHRAECourthouse) {
   bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
-//
-//TEST_F(ModelFixture, GltfForwardTranslator_OneRoom) {
-//  GltfForwardTranslator ft;
-//  openstudio::path output;
-//  output = resourcesPath() / toPath("utilities/Geometry/OneRoom.gltf");
-//  osversion::VersionTranslator translator;
-//  openstudio::path modelPath = resourcesPath() / toPath("model/one room.osm");
-//  model::OptionalModel model = translator.loadModel(modelPath);
-//  bool result = ft.modelToGLTF(model.get(), output);
-//  ASSERT_TRUE(result);
-//}
 
 // Validation report
-// /Format: glTF 2.0
+// Format: glTF 2.0
 // Stats:
 // 0 animations
 // 9 materials
@@ -96,6 +105,24 @@ TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
   model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
   bool result = ft.modelToGLTF(model, output);
   ASSERT_TRUE(result);
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_LoadTest_ExampleModel) {
+  GltfForwardTranslator ft;
+  openstudio::path outputPath;
+  openstudio::path inputPath;
+  openstudio::path inputNonEmbededPath;
+  outputPath = resourcesPath() / toPath("utilities/Geometry/exampleModel.gltf");
+  // Create OSM
+  Model model = exampleModel();
+  model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
+  // Generate glTF
+  bool isExported = ft.modelToGLTF(model, outputPath);
+  ASSERT_TRUE(isExported);
+  inputPath = outputPath;
+  // Load glTF
+  bool isLoaded = ft.loadGLTF(inputPath); 
+  ASSERT_TRUE(isLoaded);
 }
 
 // Validation report
