@@ -40,7 +40,7 @@ namespace openstudio {
 //class GltfMetaDta;
 namespace model {
 
-  class MODEL_API GltfMetaDataWrapper 
+  class MODEL_API GltfMetaDataWrapper
   {
    public:
     GltfMetaDataWrapper();
@@ -69,7 +69,6 @@ namespace model {
     void spaceTypeCountIncrement();
     void constructionSetCountIncrement();
     void airLoopCountIncrement();
-
 
     int getStoryCount() const;
     int getThermalZoneCount() const;

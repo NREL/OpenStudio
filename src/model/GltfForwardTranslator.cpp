@@ -3424,9 +3424,9 @@ namespace model {
       }
     }
   }
- 
+
   // <summary>
-  // initializes the glTFUserData from the extras attribute attached to the 
+  // initializes the glTFUserData from the extras attribute attached to the
   // </summary>
   // param : node
   // param : glTFUserDataWrapper
@@ -3512,7 +3512,7 @@ namespace model {
       // USERDATA INITIALIZATION FROM EACH NODE's EXTRAS
       glTFUserDataVector.clear();
       for (int i = 1; i < gltf_Model.nodes.size(); i++) {
-        GltfUserData glTFUserData; // reinitialize glTFUserData instance
+        GltfUserData glTFUserData;  // reinitialize glTFUserData instance
         glTFUserData.initializeFromNodeExtras(gltf_Model.nodes[i]);
         glTFUserDataVector.push_back(glTFUserData);
 

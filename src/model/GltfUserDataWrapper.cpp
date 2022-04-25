@@ -332,9 +332,6 @@ namespace model {
     airLoopHVACMaterialNames = value;
   }
 
-
-
-
   std::string GltfUserDataWrapper::getHandle() const {
     return std::get<1>(handle);
   }

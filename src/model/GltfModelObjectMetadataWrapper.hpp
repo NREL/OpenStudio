@@ -88,7 +88,6 @@ namespace model {
     std::tuple<std::string, int> multiplier;
   };
 
-
 }  // namespace model
 }  // namespace openstudio
 

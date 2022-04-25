@@ -108,7 +108,6 @@ namespace model {
     int m_constructionSetCount;
     int m_airLoopCount;*/
 
-
   void resetModelObjectMetaDataCount() {
     /*m_storyCount = 0;
     m_thermalZoneCount = 0;
@@ -173,7 +172,6 @@ namespace model {
   std::vector<GltfModelObjectMetadataWrapper> getModelObjectMetaDataCollection() {
     return glTFModelObjectMetadataWrapperVector;
   }
-
 
   void GltfMetaDataWrapper::setBuildingStoryNames(const std::vector<std::string>& storyNames) {
     buildingStoryNames = storyNames;

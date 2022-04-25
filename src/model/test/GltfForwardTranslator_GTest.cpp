@@ -45,7 +45,6 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
 // Validation report
 // Format: glTF 2.0
 // Stats:

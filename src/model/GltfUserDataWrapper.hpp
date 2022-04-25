@@ -85,7 +85,7 @@ namespace model {
     void setAirLoopHVACHandles(const std::vector<std::string>& airLoopHvacHandles);
     void setAirLoopHVACNames(const std::vector<std::string>& airLoopHvacNames);
     void setAirLoopHVACMaterialNames(const std::vector<std::string>& airLoopHvacMaterialNames);
-    
+
     std::string getHandle() const;
     std::string getName() const;
     std::string getSurfaceType() const;
@@ -183,7 +183,6 @@ namespace model {
     std::vector<std::string> airLoopHVACHandles;
     std::vector<std::string> airLoopHVACMaterialNames;
   };
-
 
 }  // namespace model
 }  // namespace openstudio
