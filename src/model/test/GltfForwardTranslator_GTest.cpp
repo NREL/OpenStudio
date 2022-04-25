@@ -45,22 +45,98 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
+
 // Validation report
 // Format: glTF 2.0
 // Stats:
 // 0 animations
-// 4 materials
-// 1068 meshes
-// 1069 nodes
-// 1068 primitives
+// 9 materials
+// 30 meshes
+// 31 nodes
+// 30 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_chengDu) {
+TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
+  GltfForwardTranslator ft;
+  openstudio::path outputPath;
+  openstudio::path inputPath;
+  openstudio::path inputNonEmbededPath;
+  outputPath = resourcesPath() / toPath("utilities/Geometry/exampleModel.gltf");
+  // Create OSM
+  Model model = exampleModel();
+  model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
+  // Generate glTF
+  bool isExported = ft.modelToGLTF(model, outputPath);
+  ASSERT_TRUE(isExported);
+  inputPath = outputPath;
+  // Load glTF
+  bool isLoaded = ft.loadGLTF(inputPath);
+  ASSERT_TRUE(isLoaded);
+  GltfMetaDataWrapper glTFMetaData = ft.getMetaData();
+
+  ASSERT_TRUE("OpenStudio" == glTFMetaData.getGenerator());
+  ASSERT_EQ(glTFMetaData.getNorthAxis(), -0.00);
+  ASSERT_TRUE("Object" == glTFMetaData.getType());
+  ASSERT_TRUE("4.3" == glTFMetaData.getVersion());
+
+  GltfBoundingBoxWrapper glTFBoundingBox = glTFMetaData.getglTFBoundingBoxWrapper();
+  // TODO: add delta during assertion
+  ASSERT_DOUBLE_EQ(glTFBoundingBox.getlookAtR(), 20.615528128088304);
+  ASSERT_EQ(glTFBoundingBox.getlookAtX(), 0.0);
+  ASSERT_EQ(glTFBoundingBox.getlookAtY(), 0.0);
+  ASSERT_EQ(glTFBoundingBox.getlookAtZ(), 0.0);
+  ASSERT_EQ(glTFBoundingBox.getmaxX(), 20.55);
+  ASSERT_EQ(glTFBoundingBox.getmaxY(), 20);
+  ASSERT_EQ(glTFBoundingBox.getmaxZ(), 20);
+  ASSERT_EQ(glTFBoundingBox.getminX(), -30);
+  ASSERT_EQ(glTFBoundingBox.getminY(), -1);
+  ASSERT_EQ(glTFBoundingBox.getminZ(), 0.0);
+
+  auto buildingStoreys = glTFMetaData.getBuildingStoryNames();
+  ASSERT_EQ(1, buildingStoreys.size());
+  ASSERT_TRUE("Building Story 1" == buildingStoreys.front());
+
+  auto _modelObjectMetaDataCollection = glTFMetaData.getglTFModelObjectMetadataWrapper();
+  ASSERT_EQ(9, _modelObjectMetaDataCollection.size());
+  // TODO: Assert few of the attributes from one of the modelObjectMetaData Collection
+  GltfModelObjectMetadataWrapper glTFModelObjectMetadata = _modelObjectMetaDataCollection.front();
+  std::string name0 = _modelObjectMetaDataCollection[0].getName();
+  std::string name1 = _modelObjectMetaDataCollection[1].getName();
+  ASSERT_FALSE(name0 == name1);
+  /* std::string name2 = _modelObjectMetaDataCollection[2].getName();
+  std::string name3 = _modelObjectMetaDataCollection[3].getName();
+  std::string name4 = _modelObjectMetaDataCollection[4].getName();
+  std::string name5 = _modelObjectMetaDataCollection[5].getName();
+  std::string name6 = _modelObjectMetaDataCollection[6].getName();
+  std::string name7 = _modelObjectMetaDataCollection[7].getName();
+  std::string name8 = _modelObjectMetaDataCollection[8].getName();*/
+
+  ASSERT_EQ(glTFMetaData.getStoryCount(), 1);
+  ASSERT_EQ(glTFMetaData.getThermalZoneCount(), 1);
+  ASSERT_EQ(glTFMetaData.getSpaceCount(), 4);
+  ASSERT_EQ(glTFMetaData.getSpaceTypeCount(), 1);
+  ASSERT_EQ(glTFMetaData.getConstructionSetCount(), 1);
+  ASSERT_EQ(glTFMetaData.getAirLoopCount(), 1);
+
+  std::vector<GltfUserDataWrapper> glTFUserDataVector = ft.getUserDataCollection();
+  ASSERT_EQ(glTFUserDataVector.size(), 30);
+  GltfUserDataWrapper glTFUserData = ft.getUserDataBySurfaceName("Surface 1");
+  ASSERT_TRUE(glTFUserData.getSurfaceType() == "Floor");
+  ASSERT_TRUE(glTFUserData.getConstructionMaterialName() == "Construction_Slab");
+  ASSERT_TRUE(glTFUserData.getThermalZoneName() == "Thermal Zone 1");
+  ASSERT_TRUE(glTFUserData.getSunExposure() == "NoSun");
+  ASSERT_TRUE(glTFUserData.getWindExposure() == "NoWind");
+  ASSERT_TRUE(glTFUserData.getIlluminanceSetpoint() == 0.0);
+  ASSERT_TRUE(glTFUserData.getOutsideBoundaryCondition() == "Ground");
+  ASSERT_TRUE(glTFUserData.getBoundaryMaterialName() == "Boundary_Ground");
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_ParkUnder_Retail_Office_C2) {
   GltfForwardTranslator ft;
   openstudio::path output;
-  output = resourcesPath() / toPath("utilities/Geometry/220128-ChengDu-Simple_9_Baseline.gltf");
+  output = resourcesPath() / toPath("utilities/Geometry/ParkUnder_Retail_Office_C2.gltf");
   osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/220128-ChengDu-Simple_9_Baseline.osm");
+  openstudio::path modelPath = resourcesPath() / toPath("model/ParkUnder_Retail_Office_C2.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
   bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
@@ -85,44 +161,6 @@ TEST_F(ModelFixture, GltfForwardTranslator_ASHRAECourthouse) {
   model::OptionalModel model = translator.loadModel(modelPath);
   bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
-}
-
-// Validation report
-// Format: glTF 2.0
-// Stats:
-// 0 animations
-// 9 materials
-// 30 meshes
-// 31 nodes
-// 30 primitives
-// 0 textures
-// Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
-  GltfForwardTranslator ft;
-  openstudio::path output;
-  output = resourcesPath() / toPath("utilities/Geometry/exampleModel.gltf");
-  Model model = exampleModel();
-  model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
-  bool result = ft.modelToGLTF(model, output);
-  ASSERT_TRUE(result);
-}
-
-TEST_F(ModelFixture, GltfForwardTranslator_LoadTest_ExampleModel) {
-  GltfForwardTranslator ft;
-  openstudio::path outputPath;
-  openstudio::path inputPath;
-  openstudio::path inputNonEmbededPath;
-  outputPath = resourcesPath() / toPath("utilities/Geometry/exampleModel.gltf");
-  // Create OSM
-  Model model = exampleModel();
-  model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
-  // Generate glTF
-  bool isExported = ft.modelToGLTF(model, outputPath);
-  ASSERT_TRUE(isExported);
-  inputPath = outputPath;
-  // Load glTF
-  bool isLoaded = ft.loadGLTF(inputPath);
-  ASSERT_TRUE(isLoaded);
 }
 
 // Validation report

@@ -807,10 +807,39 @@ namespace model {
       metaData.insert({std::get<0>(northAxis), std::get<1>(northAxis)});
     }
 
-    void setModelObjectMetaData(tinygltf::Value value) {
-      // glTFModelObjectMetadataVector = value.Get<std::vector<GltfModelObjectMetadata>>();
-      // auto aaa = value.Get<std::vector<GltfModelObjectMetadata>>();
+    void initializeFromSceneExtras(tinygltf::Scene scene) {
+      metaData = scene.extras.Get<std::map<std::string, tinygltf::Value>>();
+      // auto aaextra = gltf_Model.scenes[0].extras_json_string;
 
+      for (auto const& x : metaData) {
+        std::string key = x.first;
+        if (key == "generator") {
+          tinygltf::Value v(x.second);
+          auto vv = v.Get<std::string>().c_str();
+          setGenerator(vv);
+        } else if (key == "type") {
+          tinygltf::Value v(x.second);
+          auto vv = v.Get<std::string>().c_str();
+          setType(vv);
+        } else if (key == "northAxis") {
+          tinygltf::Value v(x.second);
+          double vv = v.Get<double>();
+          setNorthAxis(vv);
+        } else if (key == "version") {
+          tinygltf::Value v(x.second);
+          auto vv = v.Get<std::string>().c_str();
+          setVersion(vv);
+        } else if (key == "boundingbox") {
+          tinygltf::Value v(x.second);
+          setBoundingBox(v);
+        } else if (key == "modelObjectMetaData") {
+          tinygltf::Value v(x.second);
+          setModelObjectMetaData(v);
+        }
+      }
+    }
+
+    void setModelObjectMetaData(tinygltf::Value value) {
       auto modelObjectMetatDataVector = value.Get<tinygltf::Value::Object>();
       int countKey = 0;
       for (auto const& x : modelObjectMetatDataVector) {
@@ -924,11 +953,6 @@ namespace model {
     int spaceTypeCount;
     int constructionSetCount;
     int airLoopCount;
-
-    /*
-    boost::optional<double> m_belowFloorPlenumHeight;
-    boost::optional<double> m_floorToCeilingHeight;
-    boost::optional<double> m_aboveCeilingPlenumHeight;*/
   };
 
   // UserData as glTF Extras
@@ -940,301 +964,469 @@ namespace model {
       initializeAttributesWithDefaults();
     }
     // m_handle;
+    std::string handlekey = "handle";
     void setHandle(std::string value) {
-      std::string key = "handle";
       tinygltf::Value extraNodeValue(value);
-      handle = make_tuple(key, extraNodeValue);
+      handle = make_tuple(handlekey, extraNodeValue);
+    }
+
+    void setHandle(tinygltf::Value value) {
+      handle = make_tuple(handlekey, value);
     }
 
     // m_name;
+    std::string namekey = "name";
     void setName(std::string value) {
-      std::string key = "name";
       tinygltf::Value extraNodeValue(value);
-      name = make_tuple(key, extraNodeValue);
+      name = make_tuple(namekey, extraNodeValue);
     }
 
-    // m_type;
-    // TODO:?
+    void setName(tinygltf::Value value) {
+      name = make_tuple(namekey, value);
+    }
 
     // m_surfaceType;
+    std::string surfaceTypekey = "surfaceType";
     void setSurfaceType(std::string value) {
-      std::string key = "surfaceType";
       tinygltf::Value extraNodeValue(value);
-      surfaceType = make_tuple(key, extraNodeValue);
+      surfaceType = make_tuple(surfaceTypekey, extraNodeValue);
+    }
+
+    void setSurfaceType(tinygltf::Value value) {
+      surfaceType = make_tuple(surfaceTypekey, value);
     }
 
     // m_surfaceTypeMaterialName;
+    std::string surfaceTypeMaterailNamekey = "surfaceTypeMaterailName";
     void setSurfaceTypeMaterailName(std::string value) {
-      std::string key = "surfaceTypeMaterailName";
       tinygltf::Value extraNodeValue(value);
-      surfaceTypeMaterailName = make_tuple(key, extraNodeValue);
+      surfaceTypeMaterailName = make_tuple(surfaceTypeMaterailNamekey, extraNodeValue);
+    }
+
+    void setSurfaceTypeMaterailName(tinygltf::Value value) {
+      surfaceTypeMaterailName = make_tuple(surfaceTypeMaterailNamekey, value);
     }
 
     // m_constructionName;
+    std::string constructionNamekey = "constructionName";
     void setConstructionName(std::string value) {
-      std::string key = "constructionName";
       tinygltf::Value extraNodeValue(value);
-      constructionName = make_tuple(key, extraNodeValue);
+      constructionName = make_tuple(constructionNamekey, extraNodeValue);
+    }
+
+    void setConstructionName(tinygltf::Value value) {
+      constructionName = make_tuple(constructionNamekey, value);
     }
 
     // m_constructionHandle;
+    std::string constructionHandlekey = "constructionHandle";
     void setConstructionHandle(std::string value) {
-      std::string key = "constructionHandle";
       tinygltf::Value extraNodeValue(value);
-      constructionHandle = make_tuple(key, extraNodeValue);
+      constructionHandle = make_tuple(constructionHandlekey, extraNodeValue);
+    }
+
+    void setConstructionHandle(tinygltf::Value value) {
+      constructionHandle = make_tuple(constructionHandlekey, value);
     }
 
     // m_constructionMaterialName;
+    std::string constructionMaterialNamekey = "constructionMaterialName";
     void setConstructionMaterialName(std::string value) {
-      std::string key = "constructionMaterialName";
       tinygltf::Value extraNodeValue(value);
-      constructionMaterialName = make_tuple(key, extraNodeValue);
+      constructionMaterialName = make_tuple(constructionMaterialNamekey, extraNodeValue);
+    }
+
+    void setConstructionMaterialName(tinygltf::Value value) {
+      constructionMaterialName = make_tuple(constructionMaterialNamekey, value);
     }
 
     // m_surfaceName;
+    std::string surfaceNamekey = "surfaceName";
     void setSurfaceName(std::string value) {
-      std::string key = "surfaceName";
       tinygltf::Value extraNodeValue(value);
-      surfaceName = make_tuple(key, extraNodeValue);
+      surfaceName = make_tuple(surfaceNamekey, extraNodeValue);
+    }
+
+    void setSurfaceName(tinygltf::Value value) {
+      surfaceName = make_tuple(surfaceNamekey, value);
     }
 
     // m_surfaceHandle;
+    std::string surfaceHandlekey = "surfaceHandle";
     void setSurfaceHandle(std::string value) {
-      std::string key = "surfaceHandle";
       tinygltf::Value extraNodeValue(value);
-      surfaceHandle = make_tuple(key, extraNodeValue);
+      surfaceHandle = make_tuple(surfaceHandlekey, extraNodeValue);
+    }
+
+    void setSurfaceHandle(tinygltf::Value value) {
+      surfaceHandle = make_tuple(surfaceHandlekey, value);
     }
 
     // m_subSurfaceName;
+    std::string subSurfaceNamekey = "subSurfaceName";
     void setSubSurfaceName(std::string value) {
-      std::string key = "subSurfaceName";
       tinygltf::Value extraNodeValue(value);
-      subSurfaceName = make_tuple(key, extraNodeValue);
+      subSurfaceName = make_tuple(subSurfaceNamekey, extraNodeValue);
+    }
+
+    void setSubSurfaceName(tinygltf::Value value) {
+      subSurfaceName = make_tuple(subSurfaceNamekey, value);
     }
 
     // m_subSurfaceHandle;
+    std::string subSurfaceHandlekey = "subSurfaceHandle";
     void setSubSurfaceHandle(std::string value) {
-      std::string key = "subSurfaceHandle";
       tinygltf::Value extraNodeValue(value);
-      subSurfaceHandle = make_tuple(key, extraNodeValue);
+      subSurfaceHandle = make_tuple(subSurfaceHandlekey, extraNodeValue);
+    }
+
+    void setSubSurfaceHandle(tinygltf::Value value) {
+      subSurfaceHandle = make_tuple(subSurfaceHandlekey, value);
     }
 
     // m_spaceName;
+    std::string spaceNamekey = "spaceName";
     void setSpaceName(std::string value) {
-      std::string key = "spaceName";
       tinygltf::Value extraNodeValue(value);
-      spaceName = make_tuple(key, extraNodeValue);
+      spaceName = make_tuple(spaceNamekey, extraNodeValue);
+    }
+
+    void setSpaceName(tinygltf::Value value) {
+      spaceName = make_tuple(spaceNamekey, value);
     }
 
     // m_spaceHandle;
+    std::string spaceHandlekey = "spaceHandle";
     void setSpaceHandle(std::string value) {
-      std::string key = "spaceHandle";
       tinygltf::Value extraNodeValue(value);
-      spaceHandle = make_tuple(key, extraNodeValue);
+      spaceHandle = make_tuple(spaceHandlekey, extraNodeValue);
+    }
+
+    void setSpaceHandle(tinygltf::Value value) {
+      spaceHandle = make_tuple(spaceHandlekey, value);
     }
 
     // m_shadingName
+    std::string shadingNamekey = "shadingName";
     void setShadingName(std::string value) {
-      std::string key = "shadingName";
       tinygltf::Value extraNodeValue(value);
-      shadingName = make_tuple(key, extraNodeValue);
+      shadingName = make_tuple(shadingNamekey, extraNodeValue);
+    }
+
+    void setShadingName(tinygltf::Value value) {
+      shadingName = make_tuple(shadingNamekey, value);
     }
 
     // m_shadingHandle;
+    std::string shadingHandlekey = "shadingHandle";
     void setShadingHandle(std::string value) {
-      std::string key = "shadingHandle";
       tinygltf::Value extraNodeValue(value);
-      shadingHandle = make_tuple(key, extraNodeValue);
+      shadingHandle = make_tuple(shadingHandlekey, extraNodeValue);
+    }
+
+    void setShadingHandle(tinygltf::Value value) {
+      shadingHandle = make_tuple(shadingHandlekey, value);
     }
 
     // m_thermalZoneName;
+    std::string thermalZoneNamekey = "thermalZoneName";
     void setThermalZoneName(std::string value) {
-      std::string key = "thermalZoneName";
       tinygltf::Value extraNodeValue(value);
-      thermalZoneName = make_tuple(key, extraNodeValue);
+      thermalZoneName = make_tuple(thermalZoneNamekey, extraNodeValue);
+    }
+
+    void setThermalZoneName(tinygltf::Value value) {
+      thermalZoneName = make_tuple(thermalZoneNamekey, value);
     }
 
     // m_thermalZoneHandle;
+    std::string thermalZoneHandlekey = "thermalZoneHandle";
     void setThermalZoneHandle(std::string value) {
-      std::string key = "thermalZoneHandle";
       tinygltf::Value extraNodeValue(value);
-      thermalZoneHandle = make_tuple(key, extraNodeValue);
+      thermalZoneHandle = make_tuple(thermalZoneHandlekey, extraNodeValue);
+    }
+
+    void setThermalZoneHandle(tinygltf::Value value) {
+      thermalZoneHandle = make_tuple(thermalZoneHandlekey, value);
     }
 
     // m_thermalZoneMaterialName;
+    std::string thermalZoneMaterialNamekey = "thermalZoneMaterialName";
     void setThermalZoneMaterialName(std::string value) {
-      std::string key = "thermalZoneMaterialName";
       tinygltf::Value extraNodeValue(value);
-      thermalZoneMaterialName = make_tuple(key, extraNodeValue);
+      thermalZoneMaterialName = make_tuple(thermalZoneMaterialNamekey, extraNodeValue);
+    }
+
+    void setThermalZoneMaterialName(tinygltf::Value value) {
+      thermalZoneMaterialName = make_tuple(thermalZoneMaterialNamekey, value);
     }
 
     // m_spaceTypeName;
+    std::string spaceTypeNamekey = "spaceTypeName";
     void setSpaceTypeName(std::string value) {
-      std::string key = "spaceTypeName";
       tinygltf::Value extraNodeValue(value);
-      spaceTypeName = make_tuple(key, extraNodeValue);
+      spaceTypeName = make_tuple(spaceTypeNamekey, extraNodeValue);
+    }
+
+    void setSpaceTypeName(tinygltf::Value value) {
+      spaceTypeName = make_tuple(spaceTypeNamekey, value);
     }
 
     // m_spaceTypeHandle;
+    std::string spaceTypeHandlekey = "spaceTypeHandle";
     void setSpaceTypeHandle(std::string value) {
-      std::string key = "spaceTypeHandle";
       tinygltf::Value extraNodeValue(value);
-      spaceTypeHandle = make_tuple(key, extraNodeValue);
+      spaceTypeHandle = make_tuple(spaceTypeHandlekey, extraNodeValue);
+    }
+
+    void setSpaceTypeHandle(tinygltf::Value value) {
+      spaceTypeHandle = make_tuple(spaceTypeHandlekey, value);
     }
 
     // m_spaceTypeMaterialName;
+    std::string spaceTypeMaterialNamekey = "spaceTypeMaterialName";
     void setSpaceTypeMaterialName(std::string value) {
-      std::string key = "spaceTypeMaterialName";
       tinygltf::Value extraNodeValue(value);
-      spaceTypeMaterialName = make_tuple(key, extraNodeValue);
+      spaceTypeMaterialName = make_tuple(spaceTypeMaterialNamekey, extraNodeValue);
+    }
+
+    void setSpaceTypeMaterialName(tinygltf::Value value) {
+      spaceTypeMaterialName = make_tuple(spaceTypeMaterialNamekey, value);
     }
 
     // m_buildingStoryName;
+    std::string buildingStoryNamekey = "buildingStoryName";
     void setBuildingStoryName(std::string value) {
-      std::string key = "buildingStoryName";
       tinygltf::Value extraNodeValue(value);
-      buildingStoryName = make_tuple(key, extraNodeValue);
+      buildingStoryName = make_tuple(buildingStoryNamekey, extraNodeValue);
+    }
+
+    void setBuildingStoryName(tinygltf::Value value) {
+      buildingStoryName = make_tuple(buildingStoryNamekey, value);
     }
 
     // m_buildingStoryHandle;
+    std::string buildingStoryHandlekey = "buildingStoryHandle";
     void setBuildingStoryHandle(std::string value) {
-      std::string key = "buildingStoryHandle";
       tinygltf::Value extraNodeValue(value);
-      buildingStoryHandle = make_tuple(key, extraNodeValue);
+      buildingStoryHandle = make_tuple(buildingStoryHandlekey, extraNodeValue);
+    }
+
+    void setBuildingStoryHandle(tinygltf::Value value) {
+      buildingStoryHandle = make_tuple(buildingStoryHandlekey, value);
     }
 
     // m_buildingStoryMaterialName;
+    std::string buildingStoryMaterialNamekey = "buildingStoryMaterialName";
     void setBuildingStoryMaterialName(std::string value) {
-      std::string key = "buildingStoryMaterialName";
       tinygltf::Value extraNodeValue(value);
-      buildingStoryMaterialName = make_tuple(key, extraNodeValue);
+      buildingStoryMaterialName = make_tuple(buildingStoryMaterialNamekey, extraNodeValue);
+    }
+
+    void setBuildingStoryMaterialName(tinygltf::Value value) {
+      buildingStoryMaterialName = make_tuple(buildingStoryMaterialNamekey, value);
     }
 
     // m_buildingUnitName;
+    std::string buildingUnitNamekey = "buildingUnitName";
     void setBuildingUnitName(std::string value) {
-      std::string key = "buildingUnitName";
       tinygltf::Value extraNodeValue(value);
-      buildingUnitName = make_tuple(key, extraNodeValue);
+      buildingUnitName = make_tuple(buildingUnitNamekey, extraNodeValue);
+    }
+
+    void setBuildingUnitName(tinygltf::Value value) {
+      buildingUnitName = make_tuple(buildingUnitNamekey, value);
     }
 
     // m_buildingUnitHandle;
+    std::string buildingUnitHandlekey = "buildingUnitHandle";
     void setBuildingUnitHandle(std::string value) {
-      std::string key = "buildingUnitHandle";
       tinygltf::Value extraNodeValue(value);
-      buildingUnitHandle = make_tuple(key, extraNodeValue);
+      buildingUnitHandle = make_tuple(buildingUnitHandlekey, extraNodeValue);
+    }
+
+    void setBuildingUnitHandle(tinygltf::Value value) {
+      buildingUnitHandle = make_tuple(buildingUnitHandlekey, value);
     }
 
     // m_buildingUnitMaterialName;
+    std::string buildingUnitMaterialNamekey = "buildingUnitMaterialName";
     void setBuildingUnitMaterialName(std::string value) {
-      std::string key = "buildingUnitMaterialName";
       tinygltf::Value extraNodeValue(value);
-      buildingUnitMaterialName = make_tuple(key, extraNodeValue);
+      buildingUnitMaterialName = make_tuple(buildingUnitMaterialNamekey, extraNodeValue);
+    }
+
+    void setBuildingUnitMaterialName(tinygltf::Value value) {
+      buildingUnitMaterialName = make_tuple(buildingUnitMaterialNamekey, value);
     }
 
     // m_constructionSetName;
+    std::string constructionSetNamekey = "constructionSetName";
     void setConstructionSetName(std::string value) {
-      std::string key = "constructionSetName";
       tinygltf::Value extraNodeValue(value);
-      constructionSetName = make_tuple(key, extraNodeValue);
+      constructionSetName = make_tuple(constructionSetNamekey, extraNodeValue);
+    }
+
+    void setConstructionSetName(tinygltf::Value value) {
+      constructionSetName = make_tuple(constructionSetNamekey, value);
     }
 
     // m_constructionSetHandle;
+    std::string constructionSetHandlekey = "constructionSetHandle";
     void setConstructionSetHandle(std::string value) {
-      std::string key = "constructionSetHandle";
       tinygltf::Value extraNodeValue(value);
-      constructionSetHandle = make_tuple(key, extraNodeValue);
+      constructionSetHandle = make_tuple(constructionSetHandlekey, extraNodeValue);
+    }
+
+    void setConstructionSetHandle(tinygltf::Value value) {
+      constructionSetHandle = make_tuple(constructionSetHandlekey, value);
     }
 
     // m_constructionSetMaterialName;
+    std::string constructionSetMaterialNamekey = "constructionSetMaterialName";
     void setConstructionSetMaterialName(std::string value) {
-      std::string key = "constructionSetMaterialName";
       tinygltf::Value extraNodeValue(value);
-      constructionSetMaterialName = make_tuple(key, extraNodeValue);
+      constructionSetMaterialName = make_tuple(constructionSetMaterialNamekey, extraNodeValue);
+    }
+
+    void setConstructionSetMaterialName(tinygltf::Value value) {
+      constructionSetMaterialName = make_tuple(constructionSetMaterialNamekey, value);
     }
 
     // m_outsideBoundaryCondition;
+    std::string outsideBoundaryConditionkey = "outsideBoundaryCondition";
     void setOutsideBoundaryCondition(std::string value) {
-      std::string key = "outsideBoundaryCondition";
       tinygltf::Value extraNodeValue(value);
-      outsideBoundaryCondition = make_tuple(key, extraNodeValue);
+      outsideBoundaryCondition = make_tuple(outsideBoundaryConditionkey, extraNodeValue);
+    }
+
+    void setOutsideBoundaryCondition(tinygltf::Value value) {
+      outsideBoundaryCondition = make_tuple(outsideBoundaryConditionkey, value);
     }
 
     // m_outsideBoundaryConditionObjectName;
+    std::string outsideBoundaryConditionObjectNamekey = "outsideBoundaryConditionObjectName";
     void setOutsideBoundaryConditionObjectName(std::string value) {
-      std::string key = "outsideBoundaryConditionObjectName";
       tinygltf::Value extraNodeValue(value);
-      outsideBoundaryConditionObjectName = make_tuple(key, extraNodeValue);
+      outsideBoundaryConditionObjectName = make_tuple(outsideBoundaryConditionObjectNamekey, extraNodeValue);
+    }
+
+    void setOutsideBoundaryConditionObjectName(tinygltf::Value value) {
+      outsideBoundaryConditionObjectName = make_tuple(outsideBoundaryConditionObjectNamekey, value);
     }
 
     // m_outsideBoundaryConditionObjectHandle;
+    std::string outsideBoundaryConditionObjectHandlekey = "outsideBoundaryConditionObjectHandle";
     void setOutsideBoundaryConditionObjectHandle(std::string value) {
-      std::string key = "outsideBoundaryConditionObjectHandle";
       tinygltf::Value extraNodeValue(value);
-      outsideBoundaryConditionObjectHandle = make_tuple(key, extraNodeValue);
+      outsideBoundaryConditionObjectHandle = make_tuple(outsideBoundaryConditionObjectHandlekey, extraNodeValue);
+    }
+
+    void setOutsideBoundaryConditionObjectHandle(tinygltf::Value value) {
+      outsideBoundaryConditionObjectHandle = make_tuple(outsideBoundaryConditionObjectHandlekey, value);
     }
 
     // m_boundaryMaterialName;
+    std::string boundaryMaterialNamekey = "boundaryMaterialName";
     void setBoundaryMaterialName(std::string value) {
-      std::string key = "boundaryMaterialName";
       tinygltf::Value extraNodeValue(value);
-      boundaryMaterialName = make_tuple(key, extraNodeValue);
+      boundaryMaterialName = make_tuple(boundaryMaterialNamekey, extraNodeValue);
+    }
+
+    void setBoundaryMaterialName(tinygltf::Value value) {
+      boundaryMaterialName = make_tuple(boundaryMaterialNamekey, value);
     }
 
     // bool m_coincidentWithOutsideObject;
+    std::string coincidentWithOutsideObjectkey = "coincidentWithOutsideObject";
     void setCoincidentWithOutsideObject(bool value) {
-      std::string key = "coincidentWithOutsideObject";
       tinygltf::Value extraNodeValue(value);
-      coincidentWithOutsideObject = make_tuple(key, extraNodeValue);
+      coincidentWithOutsideObject = make_tuple(coincidentWithOutsideObjectkey, extraNodeValue);
+    }
+
+    void setCoincidentWithOutsideObject(tinygltf::Value value) {
+      coincidentWithOutsideObject = make_tuple(coincidentWithOutsideObjectkey, value);
     }
 
     // m_sunExposure;
+    std::string sunExposurekey = "sunExposure";
     void setSunExposure(std::string value) {
-      std::string key = "sunExposure";
       tinygltf::Value extraNodeValue(value);
-      sunExposure = make_tuple(key, extraNodeValue);
+      sunExposure = make_tuple(sunExposurekey, extraNodeValue);
+    }
+
+    void setSunExposure(tinygltf::Value value) {
+      sunExposure = make_tuple(sunExposurekey, value);
     }
 
     // m_windExposure;
+    std::string windExposurekey = "windExposure";
     void setWindExposure(std::string value) {
-      std::string key = "windExposure";
       tinygltf::Value extraNodeValue(value);
-      windExposure = make_tuple(key, extraNodeValue);
+      windExposure = make_tuple(windExposurekey, extraNodeValue);
+    }
+
+    void setWindExposure(tinygltf::Value value) {
+      windExposure = make_tuple(windExposurekey, value);
     }
 
     // double m_illuminanceSetpoint;
+    std::string illuminanceSetpointkey = "illuminanceSetpoint";
     void setIlluminanceSetpoint(double value) {
-      std::string key = "illuminanceSetpoint";
       tinygltf::Value extraNodeValue(value);
-      illuminanceSetpoint = make_tuple(key, extraNodeValue);
+      illuminanceSetpoint = make_tuple(illuminanceSetpointkey, extraNodeValue);
+    }
+
+    void setIlluminanceSetpoint(tinygltf::Value value) {
+      illuminanceSetpoint = make_tuple(illuminanceSetpointkey, value);
     }
 
     // bool m_airWall;
+    std::string airWallkey = "airWall";
     void setAirWall(bool value) {
-      std::string key = "airWall";
       tinygltf::Value extraNodeValue(value);
-      airWall = make_tuple(key, extraNodeValue);
+      airWall = make_tuple(airWallkey, extraNodeValue);
     }
 
+    void setAirWall(tinygltf::Value value) {
+      airWall = make_tuple(airWallkey, value);
+    }
+
+    // vector airLoopHVACNames
+    std::string airLoopHVACNameskey = "airLoopHVACNames";
     void setAirLoopHVACNames(std::map<std::string, tinygltf::Value> value) {
-      std::string key = "airLoopHVACNames";
       tinygltf::Value extraNodeValue(value);
-      airLoopHVACNames = make_tuple(key, extraNodeValue);
+      airLoopHVACNames = make_tuple(airLoopHVACNameskey, extraNodeValue);
     }
 
+    void setAirLoopHVACNames(tinygltf::Value value) {
+      airLoopHVACNames = make_tuple(airLoopHVACNameskey, value);
+    }
+
+    // vector airLoopHVACHandles
+    std::string airLoopHVACHandleskey = "airLoopHVACHandles";
     void setAirLoopHVACHandles(std::map<std::string, tinygltf::Value> value) {
-      std::string key = "airLoopHVACHandles";
       tinygltf::Value extraNodeValue(value);
-      airLoopHVACHandles = make_tuple(key, extraNodeValue);
+      airLoopHVACHandles = make_tuple(airLoopHVACHandleskey, extraNodeValue);
     }
 
+    void setAirLoopHVACHandles(tinygltf::Value value) {
+      airLoopHVACHandles = make_tuple(airLoopHVACHandleskey, value);
+    }
+
+    // vector airLoopHVACMaterialNames
+    std::string airLoopHVACMaterialNameskey = "airLoopHVACMaterialNames";
     void setAirLoopHVACMaterialNames(std::map<std::string, tinygltf::Value> value) {
-      std::string key = "airLoopHVACMaterialNames";
       tinygltf::Value extraNodeValue(value);
-      airLoopHVACMaterialNames = make_tuple(key, extraNodeValue);
+      airLoopHVACMaterialNames = make_tuple(airLoopHVACMaterialNameskey, extraNodeValue);
+    }
+
+    void setAirLoopHVACMaterialNames(tinygltf::Value value) {
+      airLoopHVACMaterialNames = make_tuple(airLoopHVACMaterialNameskey, value);
     }
 
     std::map<std::string, tinygltf::Value> userDataObject;
-    void InitializeUserDataObject() {
+    void initializeUserDataObject() {
       userDataObject.insert({std::get<0>(handle), std::get<1>(handle)});
       userDataObject.insert({std::get<0>(name), std::get<1>(name)});
       userDataObject.insert({std::get<0>(coincidentWithOutsideObject), std::get<1>(coincidentWithOutsideObject)});
@@ -1282,29 +1474,261 @@ namespace model {
       userDataObject.insert({std::get<0>(airLoopHVACMaterialNames), std::get<1>(airLoopHVACMaterialNames)});
     }
 
-    std::string outsideBoundaryConditionObjectHandleValue() {
-      tinygltf::Value v(std::get<1>(outsideBoundaryConditionObjectHandle));  //.string_value_;
-      // retrieving string value from the tinygltf::Value
-      std::string a = v.Get<std::string>().c_str();
-      return a;
+    void initializeFromNodeExtras(tinygltf::Node node) {
+      userDataObject = node.extras.Get<std::map<std::string, tinygltf::Value>>();
+      initializeFromExtras();
     }
 
-    std::string getOutsideBoundaryConditionValue() const {
+    std::string getHandle() const {
+      tinygltf::Value v(std::get<1>(handle));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getName() const {
+      tinygltf::Value v(std::get<1>(name));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getSurfaceType() const {
+      tinygltf::Value v(std::get<1>(surfaceType));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getSurfaceTypeMaterailName() const {
+      tinygltf::Value v(std::get<1>(surfaceTypeMaterailName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getConstructionName() const {
+      tinygltf::Value v(std::get<1>(constructionName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getConstructionHandle() const {
+      tinygltf::Value v(std::get<1>(constructionHandle));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getConstructionMaterialName() const {
+      tinygltf::Value v(std::get<1>(constructionMaterialName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getSurfaceName() const {
+      tinygltf::Value v(std::get<1>(surfaceName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getSurfaceHandle() const {
+      tinygltf::Value v(std::get<1>(surfaceHandle));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getSubSurfaceName() const {
+      tinygltf::Value v(std::get<1>(subSurfaceName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getSubSurfaceHandle() const {
+      tinygltf::Value v(std::get<1>(subSurfaceHandle));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getSpaceName() const {
+      tinygltf::Value v(std::get<1>(spaceName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getSpaceHandle() const {
+      tinygltf::Value v(std::get<1>(spaceHandle));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getShadingName() const {
+      tinygltf::Value v(std::get<1>(shadingName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getShadingHandle() const {
+      tinygltf::Value v(std::get<1>(shadingHandle));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getThermalZoneName() const {
+      tinygltf::Value v(std::get<1>(thermalZoneName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getThermalZoneHandle() const {
+      tinygltf::Value v(std::get<1>(thermalZoneHandle));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getThermalZoneMaterialName() const {
+      tinygltf::Value v(std::get<1>(thermalZoneMaterialName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getSpaceTypeName() const {
+      tinygltf::Value v(std::get<1>(spaceTypeName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getSpaceTypeHandle() const {
+      tinygltf::Value v(std::get<1>(spaceTypeHandle));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getSpaceTypeMaterialName() const {
+      tinygltf::Value v(std::get<1>(spaceTypeMaterialName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getBuildingStoryName() const {
+      tinygltf::Value v(std::get<1>(buildingStoryName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getBuildingStoryHandle() const {
+      tinygltf::Value v(std::get<1>(buildingStoryHandle));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getBuildingStoryMaterialName() const {
+      tinygltf::Value v(std::get<1>(buildingStoryMaterialName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getBuildingUnitName() const {
+      tinygltf::Value v(std::get<1>(buildingUnitName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getBuildingUnitHandle() const {
+      tinygltf::Value v(std::get<1>(buildingUnitHandle));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getBuildingUnitMaterialName() const {
+      tinygltf::Value v(std::get<1>(buildingUnitMaterialName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getConstructionSetName() const {
+      tinygltf::Value v(std::get<1>(constructionSetName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getConstructionSetHandle() const {
+      tinygltf::Value v(std::get<1>(constructionSetHandle));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getConstructionSetMaterialName() const {
+      tinygltf::Value v(std::get<1>(constructionSetMaterialName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getOutsideBoundaryCondition() const {
       tinygltf::Value v(std::get<1>(outsideBoundaryCondition));
-      std::string a = v.Get<std::string>().c_str();
-      return a;
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
     }
 
-    std::string getSunExposureValue() const {
+    std::string getOutsideBoundaryConditionObjectName() const {
+      tinygltf::Value v(std::get<1>(outsideBoundaryConditionObjectName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getOutsideBoundaryConditionObjectHandle() const {
+      tinygltf::Value v(std::get<1>(outsideBoundaryConditionObjectHandle));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    std::string getBoundaryMaterialName() const {
+      tinygltf::Value v(std::get<1>(boundaryMaterialName));
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    bool getCoincidentWithOutsideObject() const {
+      tinygltf::Value v(std::get<1>(coincidentWithOutsideObject));
+      bool boolVal = v.Get<bool>();
+      return boolVal;
+    }
+
+    std::string getSunExposure() const {
       tinygltf::Value v(std::get<1>(sunExposure));
-      std::string a = v.Get<std::string>().c_str();
-      return a;
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
     }
 
-    std::string getWindExposureValue() const {
+    std::string getWindExposure() const {
       tinygltf::Value v(std::get<1>(windExposure));
-      std::string a = v.Get<std::string>().c_str();
-      return a;
+      std::string stringVal = v.Get<std::string>().c_str();
+      return stringVal;
+    }
+
+    double getIlluminanceSetpoint() const {
+      tinygltf::Value v(std::get<1>(illuminanceSetpoint));
+      double doubleVal = v.Get<double>();
+      return doubleVal;
+    }
+
+    bool getAirWall() const {
+      tinygltf::Value v(std::get<1>(airWall));
+      bool boolVal = v.Get<bool>();
+      return boolVal;
+    }
+
+    std::vector<std::string> getAirLoopHVACNames() {
+      std::vector<std::string> loopHvacNames;
+      tinygltf::Value v(std::get<1>(airLoopHVACNames));
+      auto collection = v.Get<std::map<std::string, tinygltf::Value>>();
+      for (auto const& x : collection) {
+        tinygltf::Value item(x.second);
+        std::string loopName = item.Get<std::string>().c_str();
+        loopHvacNames.push_back(loopName);
+      }
+      return loopHvacNames;
+    }
+
+    std::map<std::string, std::string> userDataPairs;
+    std::map<std::string, std::string> getUserDataPairs() {
+      userDataPairs.insert({handlekey, getHandle()});
+      return userDataPairs;
     }
 
    private:
@@ -1398,6 +1822,54 @@ namespace model {
       setAirLoopHVACHandles(airLoopHVACHandlesObject);
       setAirLoopHVACNames(airLoopHVACNamesObject);
       setAirLoopHVACMaterialNames(airLoopHVACMaterialNamesObject);
+    }
+
+    void initializeFromExtras() {
+      setHandle(userDataObject[handlekey]);
+      setName(userDataObject[namekey]);
+      setSurfaceType(userDataObject[surfaceTypekey]);
+      setSurfaceTypeMaterailName(userDataObject[surfaceTypeMaterailNamekey]);
+      setConstructionName(userDataObject[constructionNamekey]);
+      setConstructionHandle(userDataObject[constructionHandlekey]);
+      setConstructionMaterialName(userDataObject[constructionMaterialNamekey]);
+      setSurfaceName(userDataObject[surfaceNamekey]);
+      setSurfaceHandle(userDataObject[surfaceHandlekey]);
+      setSubSurfaceName(userDataObject[subSurfaceNamekey]);
+      setSubSurfaceHandle(userDataObject[subSurfaceHandlekey]);
+      setSpaceName(userDataObject[spaceNamekey]);
+      setSpaceHandle(userDataObject[spaceHandlekey]);
+      setShadingName(userDataObject[shadingNamekey]);
+      setShadingHandle(userDataObject[shadingHandlekey]);
+      setThermalZoneName(userDataObject[thermalZoneNamekey]);
+      setThermalZoneHandle(userDataObject[thermalZoneHandlekey]);
+      setThermalZoneMaterialName(userDataObject[thermalZoneMaterialNamekey]);
+      setSpaceTypeName(userDataObject[spaceTypeNamekey]);
+      setSpaceTypeHandle(userDataObject[spaceTypeHandlekey]);
+      setSpaceTypeMaterialName(userDataObject[spaceTypeMaterialNamekey]);
+      setBuildingStoryName(userDataObject[buildingStoryNamekey]);
+      setBuildingStoryHandle(userDataObject[buildingStoryHandlekey]);
+      setBuildingStoryMaterialName(userDataObject[buildingStoryMaterialNamekey]);
+      setBuildingUnitName(userDataObject[buildingUnitNamekey]);
+      setBuildingUnitHandle(userDataObject[buildingUnitHandlekey]);
+      setBuildingUnitMaterialName(userDataObject[buildingUnitMaterialNamekey]);
+      setConstructionSetName(userDataObject[constructionSetNamekey]);
+      setConstructionSetHandle(userDataObject[constructionSetHandlekey]);
+      setConstructionSetMaterialName(userDataObject[constructionSetMaterialNamekey]);
+      setOutsideBoundaryCondition(userDataObject[outsideBoundaryConditionkey]);
+      setOutsideBoundaryConditionObjectName(userDataObject[outsideBoundaryConditionObjectNamekey]);
+      setOutsideBoundaryConditionObjectHandle(userDataObject[outsideBoundaryConditionObjectHandlekey]);
+      setBoundaryMaterialName(userDataObject[boundaryMaterialNamekey]);
+      // bool
+      setCoincidentWithOutsideObject(userDataObject[coincidentWithOutsideObjectkey]);
+      setSunExposure(userDataObject[sunExposurekey]);
+      setWindExposure(userDataObject[windExposurekey]);
+      setIlluminanceSetpoint(userDataObject[illuminanceSetpointkey]);
+      // bool
+      setAirWall(userDataObject[airWallkey]);
+      // vector string
+      setAirLoopHVACNames(userDataObject[airLoopHVACNameskey]);
+      setAirLoopHVACHandles(userDataObject[airLoopHVACHandleskey]);
+      setAirLoopHVACMaterialNames(userDataObject[airLoopHVACMaterialNameskey]);
     }
   };
 
@@ -2022,18 +2494,18 @@ namespace model {
 
   std::string getBoundaryMaterialName(const GltfUserData& glTFUserData) {
     std::string result;
-    if (glTFUserData.getOutsideBoundaryConditionValue() == "Outdoors") {
-      if ((glTFUserData.getSunExposureValue() == "SunExposed") && (glTFUserData.getWindExposureValue() == "WindExposed")) {
+    if (glTFUserData.getOutsideBoundaryCondition() == "Outdoors") {
+      if ((glTFUserData.getSunExposure() == "SunExposed") && (glTFUserData.getWindExposure() == "WindExposed")) {
         result = "Boundary_Outdoors_SunWind";
-      } else if (glTFUserData.getSunExposureValue() == "SunExposed") {
+      } else if (glTFUserData.getSunExposure() == "SunExposed") {
         result = "Boundary_Outdoors_Sun";
-      } else if (glTFUserData.getWindExposureValue() == "WindExposed") {
+      } else if (glTFUserData.getWindExposure() == "WindExposed") {
         result = "Boundary_Outdoors_Wind";
       } else {
         result = "Boundary_Outdoors";
       }
     } else {
-      result = "Boundary_" + glTFUserData.getOutsideBoundaryConditionValue();
+      result = "Boundary_" + glTFUserData.getOutsideBoundaryCondition();
     }
     return result;
   }
@@ -2213,9 +2685,9 @@ namespace model {
                                     const Transformation& buildingTransformation, const Point3dVector& vertices) {
     // check if the adjacent surface is truly adjacent
     // this controls display only, not energy model
-    if (!glTFUserData.outsideBoundaryConditionObjectHandleValue().empty()) {
+    if (!glTFUserData.getOutsideBoundaryConditionObjectHandle().empty()) {
 
-      UUID adjacentHandle = toUUID(fromglTFUUID(glTFUserData.outsideBoundaryConditionObjectHandleValue()));
+      UUID adjacentHandle = toUUID(fromglTFUUID(glTFUserData.getOutsideBoundaryConditionObjectHandle()));
       boost::optional<PlanarSurface> adjacentPlanarSurface = planarSurface.model().getModelObject<PlanarSurface>(adjacentHandle);
       OS_ASSERT(adjacentPlanarSurface);
 
@@ -2233,14 +2705,16 @@ namespace model {
     }
 
     // Initialize UserDataObject Collection with userData private members
-    glTFUserData.InitializeUserDataObject();
+    glTFUserData.initializeUserDataObject();
 
     tinygltf::Value udObj(glTFUserData.userDataObject);
     // tie up the final object as extras
     node.extras = udObj;
   }
 
+  std::vector<GltfUserData> glTFUserDataVector;
   GltfMetaData glTFMetaData;
+  GltfMetaDataWrapper glTFMetaDataWrapper;
   void getglTFMetaData(const Model& model, GLTF::Scene& scene, std::function<void(double)>& updatePercentage,
                        std::vector<PlanarSurface>::size_type& N, double& n) {
 
@@ -2807,6 +3281,216 @@ namespace model {
     return ret;
   }
 
+  GltfBoundingBoxWrapper glTFBoundingBoxWrapper;
+  std::vector<GltfUserDataWrapper> glTFUserDataWrapperVector;
+
+  void initializeBoundingBoxWrapper(tinygltf::Value value) {
+    glTFBoundingBoxWrapper = GltfBoundingBoxWrapper();
+    for (auto const& x : value.Get<std::map<std::string, tinygltf::Value>>()) {
+      std::string key = x.first;
+      if (key == "lookAtR") {
+        tinygltf::Value v(x.second);
+        double vv = v.Get<double>();
+        glTFBoundingBoxWrapper.setlookAtR(vv);
+      } else if (key == "lookAtX") {
+        tinygltf::Value v(x.second);
+        double vv = v.Get<double>();
+        glTFBoundingBoxWrapper.setlookAtX(vv);
+      } else if (key == "lookAtY") {
+        tinygltf::Value v(x.second);
+        double vv = v.Get<double>();
+        glTFBoundingBoxWrapper.setlookAtY(vv);
+      } else if (key == "lookAtZ") {
+        tinygltf::Value v(x.second);
+        double vv = v.Get<double>();
+        glTFBoundingBoxWrapper.setlookAtZ(vv);
+      } else if (key == "maxX") {
+        tinygltf::Value v(x.second);
+        double vv = v.Get<double>();
+        glTFBoundingBoxWrapper.setmaxX(vv);
+      } else if (key == "maxY") {
+        tinygltf::Value v(x.second);
+        double vv = v.Get<double>();
+        glTFBoundingBoxWrapper.setmaxY(vv);
+      } else if (key == "maxZ") {
+        tinygltf::Value v(x.second);
+        double vv = v.Get<double>();
+        glTFBoundingBoxWrapper.setmaxZ(vv);
+      } else if (key == "minX") {
+        tinygltf::Value v(x.second);
+        double vv = v.Get<double>();
+        glTFBoundingBoxWrapper.setminX(vv);
+      } else if (key == "minY") {
+        tinygltf::Value v(x.second);
+        double vv = v.Get<double>();
+        glTFBoundingBoxWrapper.setminY(vv);
+      } else if (key == "minZ") {
+        tinygltf::Value v(x.second);
+        double vv = v.Get<double>();
+        glTFBoundingBoxWrapper.setminZ(vv);
+      }
+    }
+  }
+
+  void setModelObjectMetaDataWrapper(tinygltf::Value value) {
+    auto modelObjectMetatDataVector = value.Get<tinygltf::Value::Object>();
+    int countKey = 0;
+    for (auto const& x : modelObjectMetatDataVector) {
+      GltfModelObjectMetadataWrapper gltfModelObjectMetadata;
+      auto key = x.first;
+      tinygltf::Value v(x.second);
+      auto modelObjectMetaData1 = v.Get<tinygltf::Value::Object>();
+      for (auto const& y : modelObjectMetaData1) {
+        auto key1 = y.first;
+        tinygltf::Value v1(y.second);
+        if (key1 == "color") {
+          std::string colorStr = y.second.Get<std::string>().c_str();
+          gltfModelObjectMetadata.setColor(colorStr);
+        } else if (key1 == "handle") {
+          std::string handleStr = y.second.Get<std::string>().c_str();
+          gltfModelObjectMetadata.setHandle(handleStr);
+        } else if (key1 == "iddObjectType") {
+          std::string iddObjectTypeStr = y.second.Get<std::string>().c_str();
+          gltfModelObjectMetadata.setIddObjectType(iddObjectTypeStr);
+        } else if (key1 == "name") {
+          std::string nameStr = y.second.Get<std::string>().c_str();
+          gltfModelObjectMetadata.setName(nameStr);
+        } else if (key1 == "multiplier") {
+          int multiplierVal = y.second.Get<int>();
+          gltfModelObjectMetadata.setMultiplier(multiplierVal);
+        } else if (key1 == "open_to_below") {
+          bool openToBelow = y.second.Get<bool>();
+          gltfModelObjectMetadata.setOpen_to_below(openToBelow);
+        } else if (key1 == "nominal_z_coordinate") {
+          double z = y.second.Get<double>();
+          gltfModelObjectMetadata.setNominal_z_coordinate(z);
+        } else if (key1 == "nominal_floorCeiling_Height") {
+          double h = y.second.Get<double>();
+          gltfModelObjectMetadata.setNominal_floorCeiling_Height(h);
+        }
+      }
+      std::string iddObjectTypeStr = gltfModelObjectMetadata.getIddObjectType();
+      if (iddObjectTypeStr == "OS:BuildingStory") {
+        glTFMetaDataWrapper.storyCountIncrement();
+      } else if (iddObjectTypeStr == "OS:Space") {
+        glTFMetaDataWrapper.spaceCountIncrement();
+      } else if (iddObjectTypeStr == "OS:ThermalZone") {
+        glTFMetaDataWrapper.thermalZoneCountIncrement();
+      } else if (iddObjectTypeStr == "OS:SpaceType") {
+        glTFMetaDataWrapper.spaceTypeCountIncrement();
+      } else if (iddObjectTypeStr == "OS:DefaultConstructionSet") {
+        glTFMetaDataWrapper.constructionSetCountIncrement();
+      } else if (iddObjectTypeStr.compare("OS:AirLoopHVAC") == 0) {
+        glTFMetaDataWrapper.airLoopCountIncrement();
+      }
+      glTFMetaDataWrapper.addModelObjectMetadata(gltfModelObjectMetadata);
+      countKey++;
+    }
+  }
+
+  void initializeFromSceneExtras(const tinygltf::Scene& scene) {
+    glTFMetaDataWrapper = GltfMetaDataWrapper();
+    for (auto const& x : scene.extras.Get<std::map<std::string, tinygltf::Value>>()) {
+      std::string key = x.first;
+      if (key == "generator") {
+        tinygltf::Value v(x.second);
+        auto vv = v.Get<std::string>().c_str();
+        glTFMetaDataWrapper.setGenerator(vv);
+      } else if (key == "type") {
+        tinygltf::Value v(x.second);
+        auto vv = v.Get<std::string>().c_str();
+        glTFMetaDataWrapper.setType(vv);
+      } else if (key == "northAxis") {
+        tinygltf::Value v(x.second);
+        double vv = v.Get<double>();
+        glTFMetaDataWrapper.setNorthAxis(vv);
+      } else if (key == "version") {
+        tinygltf::Value v(x.second);
+        auto vv = v.Get<std::string>().c_str();
+        glTFMetaDataWrapper.setVersion(vv);
+      } else if (key == "boundingbox") {
+        tinygltf::Value v(x.second);
+        initializeBoundingBoxWrapper(v);
+        glTFMetaDataWrapper.setglTFBoundingBoxWrapper(glTFBoundingBoxWrapper);
+      } else if (key == "modelObjectMetaData") {
+        tinygltf::Value v(x.second);
+        setModelObjectMetaDataWrapper(v);
+      } else if (key == "buildingStoryNames") {
+        std::vector<std::string> storyNames;
+        for (const auto& n : x.second.Get<std::map<std::string, tinygltf::Value>>()) {
+          storyNames.push_back(n.second.Get<std::string>().c_str());
+        }
+        glTFMetaDataWrapper.setBuildingStoryNames(storyNames);
+      }
+    }
+  }
+ 
+  // <summary>
+  // initializes the glTFUserData from the extras attribute attached to the 
+  // </summary>
+  // param : node
+  // param : glTFUserDataWrapper
+  void initializeFromNodeExtras(const tinygltf::Node& node, GltfUserDataWrapper& glTFUserDataWrapper) {
+    std::map<std::string, tinygltf::Value> userDataObject = node.extras.Get<std::map<std::string, tinygltf::Value>>();
+    glTFUserDataWrapper.setHandle(userDataObject["handle"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setName(userDataObject["name"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setSurfaceType(userDataObject["surfaceType"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setSurfaceTypeMaterailName(userDataObject["surfaceTypeMaterailName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setConstructionName(userDataObject["constructionName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setConstructionHandle(userDataObject["constructionHandle"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setConstructionMaterialName(userDataObject["constructionMaterialName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setSurfaceName(userDataObject["surfaceName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setSurfaceHandle(userDataObject["surfaceHandle"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setSubSurfaceName(userDataObject["subSurfaceName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setSubSurfaceHandle(userDataObject["subSurfaceHandle"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setSpaceName(userDataObject["spaceName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setSpaceHandle(userDataObject["spaceHandle"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setShadingName(userDataObject["shadingName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setShadingHandle(userDataObject["shadingHandle"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setThermalZoneName(userDataObject["thermalZoneName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setThermalZoneHandle(userDataObject["thermalZoneHandle"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setThermalZoneMaterialName(userDataObject["thermalZoneMaterialName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setSpaceTypeName(userDataObject["spaceTypeName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setSpaceTypeHandle(userDataObject["spaceTypeHandle"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setSpaceTypeMaterialName(userDataObject["spaceTypeMaterialName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setBuildingStoryName(userDataObject["buildingStoryName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setBuildingStoryHandle(userDataObject["buildingStoryHandle"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setBuildingStoryMaterialName(userDataObject["buildingStoryMaterialName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setBuildingUnitName(userDataObject["buildingUnitName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setBuildingUnitHandle(userDataObject["buildingUnitHandle"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setBuildingUnitMaterialName(userDataObject["buildingUnitMaterialName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setConstructionSetName(userDataObject["constructionSetName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setConstructionSetHandle(userDataObject["constructionSetHandle"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setConstructionSetMaterialName(userDataObject["constructionSetMaterialName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setOutsideBoundaryCondition(userDataObject["outsideBoundaryCondition"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setOutsideBoundaryConditionObjectName(userDataObject["outsideBoundaryConditionObjectName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setOutsideBoundaryConditionObjectHandle(userDataObject["outsideBoundaryConditionObjectHandle"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setBoundaryMaterialName(userDataObject["boundaryMaterialName"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setCoincidentWithOutsideObject(userDataObject["coincidentWithOutsideObject"].Get<double>());
+    glTFUserDataWrapper.setSunExposure(userDataObject["sunExposure"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setWindExposure(userDataObject["windExposure"].Get<std::string>().c_str());
+    glTFUserDataWrapper.setIlluminanceSetpoint(userDataObject["illuminanceSetpoint"].Get<double>());
+    glTFUserDataWrapper.setAirWall(userDataObject["airWall"].Get<bool>());
+    //vector string
+    std::vector<std::string> names;
+    for (const auto n : userDataObject["airLoopHVACNames"].Get<std::map<std::string, tinygltf::Value>>()) {
+      names.push_back(n.second.Get<std::string>().c_str());
+    }
+    glTFUserDataWrapper.setAirLoopHVACNames(names);
+
+    std::vector<std::string> handles;
+    for (const auto h : userDataObject["airLoopHVACHandles"].Get<std::map<std::string, tinygltf::Value>>()) {
+      handles.push_back(h.second.Get<std::string>().c_str());
+    }
+    glTFUserDataWrapper.setAirLoopHVACHandles(handles);
+
+    std::vector<std::string> materialNames;
+    for (const auto mn : userDataObject["airLoopHVACMaterialNames"].Get<std::map<std::string, tinygltf::Value>>()) {
+      materialNames.push_back(mn.second.Get<std::string>().c_str());
+    }
+    glTFUserDataWrapper.setAirLoopHVACMaterialNames(materialNames);
+  }
+
   bool GltfForwardTranslator::loadGLTF(const path& inputPath) {
     GLTF::TinyGLTF loader;
     GLTF::Model gltf_Model;
@@ -2825,68 +3509,49 @@ namespace model {
     if (!ret) {
       LOG(Error, "Failed to parse glTF");
     } else {
-      // GltfMetaData glTFMetaData;
-      glTFMetaData = GltfMetaData();  // reinitialize instance
-      glTFMetaData.metaData = gltf_Model.scenes[0].extras.Get<std::map<std::string, tinygltf::Value>>();
-      // auto aaextra = gltf_Model.scenes[0].extras_json_string;
+      // USERDATA INITIALIZATION FROM EACH NODE's EXTRAS
+      glTFUserDataVector.clear();
+      for (int i = 1; i < gltf_Model.nodes.size(); i++) {
+        GltfUserData glTFUserData; // reinitialize glTFUserData instance
+        glTFUserData.initializeFromNodeExtras(gltf_Model.nodes[i]);
+        glTFUserDataVector.push_back(glTFUserData);
 
-      for (auto const& x : glTFMetaData.metaData) {
-        std::string key = x.first;
-        if (key == "generator") {
-          tinygltf::Value v(x.second);
-          auto vv = v.Get<std::string>().c_str();
-          glTFMetaData.setGenerator(vv);
-        } else if (key == "type") {
-          tinygltf::Value v(x.second);
-          auto vv = v.Get<std::string>().c_str();
-          glTFMetaData.setType(vv);
-        } else if (key == "northAxis") {
-          tinygltf::Value v(x.second);
-          double vv = v.Get<double>();
-          glTFMetaData.setNorthAxis(vv);
-        } else if (key == "version") {
-          tinygltf::Value v(x.second);
-          auto vv = v.Get<std::string>().c_str();
-          glTFMetaData.setVersion(vv);
-        } else if (key == "boundingbox") {
-          tinygltf::Value v(x.second);
-          glTFMetaData.setBoundingBox(v);
-        } else if (key == "modelObjectMetaData") {
-          tinygltf::Value v(x.second);
-          glTFMetaData.setModelObjectMetaData(v);
-        }
+        GltfUserDataWrapper glTFUserDataWrapper;
+        initializeFromNodeExtras(gltf_Model.nodes[i], glTFUserDataWrapper);
+        glTFUserDataWrapperVector.push_back(glTFUserDataWrapper);
       }
-      // testing
-      auto _gen = glTFMetaData.getGenerator();
-      auto _nA = glTFMetaData.getNorthAxis();
-      auto _ty = glTFMetaData.getType();
-      auto _ver = glTFMetaData.getVersion();
-      auto _lookAtR = glTFMetaData.getBoundingBoxlookAtR();
-      auto _lookAtX = glTFMetaData.getBoundingBoxlookAtX();
-      auto _lookAtY = glTFMetaData.getBoundingBoxlookAtY();
-      auto _lookAtZ = glTFMetaData.getBoundingBoxlookAtZ();
-      auto _maxX = glTFMetaData.getBoundingBoxmaxX();
-      auto _maxY = glTFMetaData.getBoundingBoxmaxY();
-      auto _maxZ = glTFMetaData.getBoundingBoxmaxZ();
-      auto _minX = glTFMetaData.getBoundingBoxminX();
-      auto _minY = glTFMetaData.getBoundingBoxminY();
-      auto _minZ = glTFMetaData.getBoundingBoxminZ();
-      auto _modelObjectMetaDataCollection = glTFMetaData.getModelObjectMetaDataCollection();
-      auto _sizemomdc = _modelObjectMetaDataCollection.size();
-      auto _storyCount = glTFMetaData.getStoryCount();
-      auto _thermalZOneCount = glTFMetaData.getThermalZoneCount();
-      auto _spaeCount = glTFMetaData.getSpaceCount();
-      auto _spaceTypeCount = glTFMetaData.getSpaceTypeCount();
-      auto _constructionSetCount = glTFMetaData.getConstructionSetCount();
-      auto _airLoopHVACCount = glTFMetaData.getAirLoopCount();
-      // testing
+
+      // METADATA INITIALIZATION FROM SCENE's EXTRAS
+      glTFMetaData = GltfMetaData();
+      glTFMetaData.initializeFromSceneExtras(gltf_Model.scenes[0]);
+      glTFMetaDataWrapper = GltfMetaDataWrapper();  // reinitialize glTFMetaData instance
+      initializeFromSceneExtras(gltf_Model.scenes[0]);
     }
     return ret;
   }
 
-  /*GltfMetaData GltfForwardTranslator::getMetaData() {
-    return glTFMetaData;
-  }*/
+  std::vector<GltfUserDataWrapper> GltfForwardTranslator::getUserDataCollection() {
+    return glTFUserDataWrapperVector;
+  }
+
+  GltfUserDataWrapper GltfForwardTranslator::getUserDataBySurfaceName(const std::string& surfaceName) {
+    GltfUserDataWrapper userdata;
+    // TOOD: Implement find in userdata collection
+    std::vector<GltfUserDataWrapper>::iterator it;
+    it = std::find_if(glTFUserDataWrapperVector.begin(), glTFUserDataWrapperVector.end(),
+                      [&](GltfUserDataWrapper const& obj) { return obj.getName() == surfaceName; });
+    if (it != glTFUserDataWrapperVector.end()) {
+      // found it->getName() | it->getHandle()
+      userdata = *it;
+    } else {
+      // "Item not Found"
+    }
+    return userdata;
+  }
+
+  GltfMetaDataWrapper GltfForwardTranslator::getMetaData() {
+    return glTFMetaDataWrapper;
+  }
 
   GltfForwardTranslator::GltfForwardTranslator() {
     m_logSink.setLogLevel(Warn);

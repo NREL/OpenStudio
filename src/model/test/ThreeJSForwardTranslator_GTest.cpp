@@ -50,12 +50,12 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ThreeJSForwardTranslator_ChengDu_9_Simple_Baseline) {
+TEST_F(ModelFixture, ThreeJSForwardTranslator_ParkUnder_Retail_Office_C2) {
   ThreeJSForwardTranslator ft;
   openstudio::path out;
 
   osversion::VersionTranslator translator;
-  openstudio::path modelpath = resourcesPath() / toPath("model/220128-ChengDu-Simple_9_Baseline.osm");
+  openstudio::path modelpath = resourcesPath() / toPath("model/ParkUnder_Retail_Office_C2.osm");
   model::OptionalModel model = translator.loadModel(modelpath);
   ThreeScene scene = ft.modelToThreeJS(model.get(), true);
   EXPECT_EQ(0, ft.errors().size());
@@ -69,7 +69,7 @@ TEST_F(ModelFixture, ThreeJSForwardTranslator_ChengDu_9_Simple_Baseline) {
   std::string json = scene.toJSON();
   EXPECT_TRUE(ThreeScene::load(json));
 
-  out = resourcesPath() / toPath("model/M220128-ChengDu-Simple_9_Baseline.json");
+  out = resourcesPath() / toPath("model/MParkUnder_Retail_Office_C2.json");
   openstudio::filesystem::ofstream file1(out);
   ASSERT_TRUE(file1.is_open());
   file1 << json;

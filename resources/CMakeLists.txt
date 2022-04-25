@@ -79,7 +79,7 @@ set(utilities_resources_src
   utilities/Geometry/Sample_DOE-RefBldgOutPatientNew2004_Chicago.gltf
   utilities/Geometry/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.gltf
   utilities/Geometry/Sample_DOE-RefBldgSmallHotelNew2004_Chicago.gltf
-  utilities/Geometry/220128-ChengDu-Simple_9_Baseline.gltf
+  utilities/Geometry/ParkUnder_Retail_Office_C2.gltf
   utilities/Geometry/ASHRAECourthouse.gltf
   utilities/Geometry/Space_SurfaceMatch_LargeTest.gltf
   utilities/Geometry/split_level.gltf
@@ -150,7 +150,7 @@ set(model_resources_src
   model/TwoStoryOffice_Trane.osm
   model/story_multipliers.osm
   model/offset_tests.osm
-  model/220128-ChengDu-Simple_9_Baseline.osm
+  model/ParkUnder_Retail_Office_C2.osm
   model/ASHRAECourthouse.osm
 )
 
