@@ -956,8 +956,8 @@ TEST_F(gbXMLFixture, ReverseTranslator_Absorptance) {
   boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
   ASSERT_TRUE(model);
 
-  auto _material1 = model->getModelObjectByName<Material>("mat-247");
-  ASSERT_TRUE(_material1);
+  auto _material = model->getModelObjectByName<Material>("mat-247");
+  ASSERT_TRUE(_material);
   EXPECT_EQ(0.3, _material->thermalAbsorptance());
   EXPECT_EQ(0.7, _material->solarAbsorptance());
   EXPECT_EQ(0.7, _material->visibleAbsorptance());
