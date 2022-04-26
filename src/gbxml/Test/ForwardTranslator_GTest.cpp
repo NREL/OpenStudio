@@ -906,3 +906,48 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
     }
   }
 }
+
+TEST_F(gbXMLFixture, ForwardTranslator_exposedToSun) {
+  // Test for #4559 - OpenStudio exported gbXML 'exposedToSun' attribute not written
+  Model model = exampleModel();
+
+  // Write out the XML
+  path p = resourcesPath() / openstudio::toPath("gbxml/exampleModel.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test = forwardTranslator.modelToGbXML(model, p);
+
+  EXPECT_TRUE(test);
+
+  ASSERT_TRUE(openstudio::filesystem::exists(p));
+
+  openstudio::filesystem::ifstream file(p, std::ios_base::binary);
+  ASSERT_TRUE(file.is_open());
+  pugi::xml_document doc;
+  auto load_result = doc.load(file);
+  file.close();
+  ASSERT_TRUE(load_result) << "'" << p << "' Failed to load:\n"
+                           << "Error description: " << load_result.description() << "\n"
+                           << "Error offset: " << load_result.offset;
+
+  std::string exposedToSun;
+  std::string expectedExposedToSun;
+
+  pugi::xpath_node surfaceXPath1 = doc.select_node("//Surface[@id='Surface_1']");
+  ASSERT_TRUE(surfaceXPath1);
+  pugi::xml_node surfaceNode1 = surfaceXPath1.node();
+  EXPECT_EQ(1u, std::count_if(surfaceNode1.attributes_begin(), surfaceNode1.attributes_end(),
+                              [](const auto& att) { return openstudio::istringEqual(att.name(), "exposedToSun"); }));
+  exposedToSun = surfaceNode1.attribute("exposedToSun").value();
+  expectedExposedToSun = "false";
+  EXPECT_EQ(expectedExposedToSun, exposedToSun);
+
+  pugi::xpath_node surfaceXPath2 = doc.select_node("//Surface[@id='Surface_2']");
+  ASSERT_TRUE(surfaceXPath2);
+  pugi::xml_node surfaceNode2 = surfaceXPath2.node();
+  EXPECT_EQ(1u, std::count_if(surfaceNode2.attributes_begin(), surfaceNode2.attributes_end(),
+                              [](const auto& att) { return openstudio::istringEqual(att.name(), "exposedToSun"); }));
+  exposedToSun = surfaceNode2.attribute("exposedToSun").value();
+  expectedExposedToSun = "true";
+  EXPECT_EQ(expectedExposedToSun, exposedToSun);
+}
