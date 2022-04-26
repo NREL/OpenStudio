@@ -946,3 +946,19 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
   bool test = forwardTranslator.modelToGbXML(*model, outputPath);
   EXPECT_TRUE(test);
 }
+
+TEST_F(gbXMLFixture, ReverseTranslator_Absorptance) {
+  // Test for #4570 - Enhance gbXML reverse translation to bring over more data from gbXML
+  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard_Single_Family_Residential_2016.xml");
+
+  openstudio::gbxml::ReverseTranslator reverseTranslator;
+
+  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+  ASSERT_TRUE(model);
+  
+  auto _material1 = model->getModelObjectByName<Material>("mat-247");
+  ASSERT_TRUE(_material1);
+  EXPECT_EQ(0.3, _material->thermalAbsorptance());
+  EXPECT_EQ(0.7, _material->solarAbsorptance());
+  EXPECT_EQ(0.7, _material->visibleAbsorptance());
+}
