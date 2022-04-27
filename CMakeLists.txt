@@ -1309,8 +1309,8 @@ endif()
 
 if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
   set(CPACK_RPM_SPEC_MORE_DEFINE "%define __python python3")
-  # wish, tcsh and perl for radiance
-  set(CPACK_RPM_PACKAGE_REQUIRES "libicu libicu-devel tk tcsh perl wish")
+  # tk (wish), tcsh and perl for radiance
+  set(CPACK_RPM_PACKAGE_REQUIRES "libicu libicu-devel tk tcsh perl")
 endif()
 
 message(STATUS "Installer name is set to '${CPACK_PACKAGE_FILE_NAME}'")
