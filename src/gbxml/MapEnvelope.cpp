@@ -170,6 +170,31 @@ namespace gbxml {
     auto specificHeatElement = element.child("SpecificHeat");
     auto roughnessElement = element.child("Roughness");
 
+    boost::optional<double> extir;
+    boost::optional<double> intir;
+    boost::optional<double> extsolar;
+    boost::optional<double> intsolar;
+    boost::optional<double> extvisible;
+    boost::optional<double> intvisible;
+
+    for (auto& absorptanceEl : element.children("Absorptance")) {
+      if (istringEqual("Fraction", absorptanceEl.attribute("unit").value())) {
+        if (istringEqual("ExtIR", absorptanceEl.attribute("type").value())) {
+          extir = absorptanceEl.text().as_double();
+        } else if (istringEqual("IntIR", absorptanceEl.attribute("type").value())) {
+          intir = absorptanceEl.text().as_double();
+        } else if (istringEqual("ExtSolar", absorptanceEl.attribute("type").value())) {
+          extsolar = absorptanceEl.text().as_double();
+        } else if (istringEqual("IntSolar", absorptanceEl.attribute("type").value())) {
+          intsolar = absorptanceEl.text().as_double();
+        } else if (istringEqual("ExtVisible", absorptanceEl.attribute("type").value())) {
+          extvisible = absorptanceEl.text().as_double();
+        } else if (istringEqual("IntVisible", absorptanceEl.attribute("type").value())) {
+          intvisible = absorptanceEl.text().as_double();
+        }
+      }
+    }
+
     if (!(densityElement.empty() || conductivityElement.empty() || thicknessElement.empty() || specificHeatElement.empty())) {
 
       double density = densityElement.text().as_double();
@@ -194,8 +219,29 @@ namespace gbxml {
       material.setSpecificHeat(specificHeat);
       material.setRoughness(roughness);
 
-    } else if (!rvalueElement.empty())  //Material no mass that has only R-value
-    {
+      if (extir && intir) {
+        material.setThermalAbsorptance((*extir + *intir) / 2.0);  // average of the two?
+      } else if (extir) {
+        material.setThermalAbsorptance(*extir);
+      } else if (intir) {
+        material.setThermalAbsorptance(*intir);
+      }
+      if (extir && intir) {
+        material.setSolarAbsorptance((*extsolar + *intsolar) / 2.0);  // average of the two?
+      } else if (extir) {
+        material.setSolarAbsorptance(*extsolar);
+      } else if (intir) {
+        material.setSolarAbsorptance(*intsolar);
+      }
+      if (extir && intir) {
+        material.setVisibleAbsorptance((*extvisible + *intvisible) / 2.0);  // average of the two?
+      } else if (extir) {
+        material.setVisibleAbsorptance(*extvisible);
+      } else if (intir) {
+        material.setVisibleAbsorptance(*intvisible);
+      }
+    } else if (!rvalueElement.empty()) { //Material no mass that has only R-value
+
       // Krishnan, this constructor should only be used for unique objects like Building and Site
       //openstudio::model::MasslessOpaqueMaterial material = model.getUniqueModelObject<openstudio::model::MasslessOpaqueMaterial>();
 
@@ -211,7 +257,6 @@ namespace gbxml {
       translateName(element, material);
 
       material.setThermalResistance(rvalue);
-
     } else {
 
       // make a stub material
