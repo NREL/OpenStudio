@@ -823,6 +823,14 @@ namespace gbxml {
       }
     }
 
+    // exposedToSun
+    std::string exposedToSun = surface.sunExposure();
+    if (istringEqual("NoSun", exposedToSun)) {
+      result.append_attribute("exposedToSun") = "false";
+    } else if (istringEqual("SunExposed", exposedToSun)) {
+      result.append_attribute("exposedToSun") = "true";
+    }
+
     // this space
     Transformation transformation;
     boost::optional<model::Space> space = surface.space();
