@@ -1239,10 +1239,13 @@ set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH}) # This one includes
 # set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
 
 # Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
+# CMAKE_PROJECT_HOMEPAGE_URL
 set(CPACK_DEBIAN_PACKAGE_NAME "openstudio-${OpenStudio_VERSION}")
+set(CPACK_RPM_PACKAGE_NAME "openstudio-${OpenStudio_VERSION}")
 # CPACK_DEBIAN_PACKAGE_DESCRIPTION defaults to this one too. dpkg-deb -I xxx.deb will show this description
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenStudio is a cross-platform collection of software tools to support whole building energy modeling using EnergyPlus and advanced daylight analysis using Radiance")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://www.openstudio.net")
+set(CPACK_RPM_PACKAGE_URL "https://www.openstudio.net")
 
 # The actual .deb file name on disk
 set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}")
@@ -1256,9 +1259,10 @@ elseif(UNIX)
   set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}")
   set(CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/)
   # These two will set the .deb install path correctly
-  if(NOT LSB_RELEASE_ID_SHORT MATCHES "CentOS")
-    set(CPACK_SET_DESTDIR ON)
-    set(CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/)
+  set(CPACK_SET_DESTDIR ON)
+  set(CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/)
+  if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
+    set(CPACK_RPM_PACKAGE_RELOCATABLE OFF)
   endif()
 
   # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio,
@@ -1281,7 +1285,8 @@ elseif(UNIX)
     execute_process(COMMAND chmod 755 "${POSTRM_FILE}")
 
     set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CPACK_DEBIAN_BIN_PACKAGE_CONTROL_EXTRA};${POSTINST_FILE};${POSTRM_FILE}")
-
+    set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE "${POSTINST_FILE}")
+    set(CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE "${POSTRM_FILE}")
   endif()
 
   # TODO: for now since Mac and Windows installers aren't doing it for core, not doing it for Unix either.
