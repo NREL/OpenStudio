@@ -240,7 +240,7 @@ namespace gbxml {
       } else if (intir) {
         material.setVisibleAbsorptance(*intvisible);
       }
-    } else if (!rvalueElement.empty()) { //Material no mass that has only R-value
+    } else if (!rvalueElement.empty()) {  //Material no mass that has only R-value
 
       // Krishnan, this constructor should only be used for unique objects like Building and Site
       //openstudio::model::MasslessOpaqueMaterial material = model.getUniqueModelObject<openstudio::model::MasslessOpaqueMaterial>();
