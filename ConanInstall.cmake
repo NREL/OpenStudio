@@ -75,6 +75,10 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
     if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
+
+     conan_add_remote(NAME openstudio-centos INDEX 0
+      URL https://conan.openstudio.net/artifactory/api/conan/openstudio-centos)
+
       set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/centos#20183b472101c6ee5f5280ac1ef0c79e")
       # Build ALL dependencies to avoid problems with the way too old CentOS GLIBC
       if(DEFINED CONAN_FIRST_TIME_BUILD_ALL)
@@ -91,7 +95,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
         endif()
       endif()
       message("CONAN_BUILD=${CONAN_BUILD}")
-      #set(CONAN_FORCE_PROFILE "PROFILE default")  # This may not be needed on a clean build, but this is to force libcxx=libstdc++ and not libstdc++11
+      # Pass `-D_GLIBCXX_USE_CXX11_ABI=0` to make sure it detects libstdc++ and not libstdc++1
+      add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
     else()
       # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
       set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/stable#c32f3c58530990684fdd9510bef676a3")
@@ -127,7 +132,6 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     #"libyaml/0.2.5#9e234874df88c3ba7249f6d1368fceaf"
     BASIC_SETUP CMAKE_TARGETS NO_OUTPUT_DIRS
     OPTIONS ${CONAN_OPTIONS}
-    ${CONAN_FORCE_PROFILE}
     BUILD ${CONAN_BUILD}
     # Passes `-u, --update`    to conan install: Check updates exist from upstream remotes
     # That and build=outdated should ensure we track the right

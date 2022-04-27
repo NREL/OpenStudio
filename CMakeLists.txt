@@ -1256,8 +1256,10 @@ elseif(UNIX)
   set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${LSB_RELEASE_ID_SHORT}-${LSB_RELEASE_VERSION_SHORT}")
   set(CPACK_IFW_TARGET_DIRECTORY /usr/local/openstudio-${OpenStudio_VERSION}/)
   # These two will set the .deb install path correctly
-  set(CPACK_SET_DESTDIR ON)
-  set(CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/)
+  if(NOT LSB_RELEASE_ID_SHORT MATCHES "CentOS")
+    set(CPACK_SET_DESTDIR ON)
+    set(CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/)
+  endif()
 
   # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio,
   # UNLESS it's from the OpenStudioApplication
