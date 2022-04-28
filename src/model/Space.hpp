@@ -112,6 +112,10 @@ namespace model {
 
     void resetPartofTotalFloorArea();
 
+    bool setVolume(double volume);
+
+    void resetVolume();
+
     //@}
     /** @name Other */
 

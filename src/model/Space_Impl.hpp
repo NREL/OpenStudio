@@ -162,6 +162,10 @@ namespace model {
 
       void resetPartofTotalFloorArea();
 
+      bool setVolume(double volume);
+
+      void resetVolume();
+
       //@}
 
       /// Returns the space type for this space.

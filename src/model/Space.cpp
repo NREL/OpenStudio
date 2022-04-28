@@ -496,6 +496,17 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool Space_Impl::setVolume(double volume) {
+      bool result = setDouble(OS_SpaceFields::Volume, volume);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void Space_Impl::resetVolume() {
+      bool result = setString(OS_SpaceFields::Volume, "");
+      OS_ASSERT(result);
+    }
+
     boost::optional<SpaceType> Space_Impl::spaceType() const {
       boost::optional<SpaceType> result = getObject<ModelObject>().getModelObjectTarget<SpaceType>(OS_SpaceFields::SpaceTypeName);
       if (!result) {
@@ -886,6 +897,10 @@ namespace model {
     }
 
     double Space_Impl::volume() const {
+      if (!isEmpty(OS_SpaceFields::Volume)) {
+        return getDouble(OS_SpaceFields::Volume, true);
+      }
+
       double result = 0;
 
       // TODO: need a better method
@@ -2861,6 +2876,14 @@ namespace model {
 
   void Space::resetPartofTotalFloorArea() {
     getImpl<detail::Space_Impl>()->resetPartofTotalFloorArea();
+  }
+
+  bool Space::setVolume(double volume) {
+    return getImpl<detail::Space_Impl>()->setVolume(volume);
+  }
+
+  void Space::resetVolume() {
+    getImpl<detail::Space_Impl>()->resetVolume();
   }
 
   boost::optional<SpaceType> Space::spaceType() const {
