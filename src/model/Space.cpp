@@ -897,8 +897,9 @@ namespace model {
     }
 
     double Space_Impl::volume() const {
-      if (!isEmpty(OS_SpaceFields::Volume)) {
-        return getDouble(OS_SpaceFields::Volume, true);
+      boost::optional<double> value = getDouble(OS_SpaceFields::Volume, true);
+      if (value) {
+        return value.get();
       }
 
       double result = 0;
