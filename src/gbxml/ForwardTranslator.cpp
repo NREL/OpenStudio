@@ -84,8 +84,6 @@
 
 #include <pugixml.hpp>
 
-#include <xercesc/util/XMLString.hpp>
-
 #include <regex>
 
 namespace openstudio {
