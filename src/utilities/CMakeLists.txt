@@ -6,6 +6,7 @@ include(idd/CMakeLists.txt)
 include(idf/CMakeLists.txt)
 include(sql/CMakeLists.txt)
 include(units/CMakeLists.txt)
+include(xml/CMakelists.txt)
 
 CONFIGURE_FILE_WITH_CHECKSUM("core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx")
 
@@ -220,6 +221,7 @@ source_group(filetypes FILES ${filetypes_src})
 source_group(idd FILES ${idd_src})
 source_group(idf FILES ${idf_src})
 source_group(sql FILES ${sql_src})
+source_group(xml FILES ${xml_src})
 source_group(geometry FILES ${geometry_src})
 source_group(math FILES ${math_src})
 source_group(plot FILES ${plot_src})
@@ -249,6 +251,7 @@ set(${target_name}_src
   ${idd_src}
   ${idf_src}
   ${sql_src}
+  ${xml_src}
   ${geometry_src}
   ${math_src}
   ${plot_src}
@@ -261,6 +264,7 @@ set(${target_name}_test_src
   ${idd_test_src}
   ${idf_test_src}
   ${sql_test_src}
+  ${xml_test_src}
 
   core/test/CoreFixture.hpp
   core/test/CoreFixture.cpp
@@ -408,6 +412,7 @@ set(${target_name}_depends
   CONAN_PKG::openssl
   CONAN_PKG::geographiclib
   CONAN_PKG::tinygltf
+  CONAN_PKG::xerces-c
 )
 
 if(WIN32)

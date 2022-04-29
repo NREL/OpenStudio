@@ -24,7 +24,6 @@ set(${target_name}_swig_src
 
 set(${target_name}_depends
   ${openstudio_energyplus_depends}
-  CONAN_PKG::xerces-c
 )
 set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
 
