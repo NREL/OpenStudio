@@ -3511,7 +3511,7 @@ namespace model {
     } else {
       // USERDATA INITIALIZATION FROM EACH NODE's EXTRAS
       glTFUserDataVector.clear();
-      for (int i = 1; i < gltf_Model.nodes.size(); i++) {
+      for (unsigned int i = 1; i < gltf_Model.nodes.size(); i++) {
         GltfUserData glTFUserData;  // reinitialize glTFUserData instance
         glTFUserData.initializeFromNodeExtras(gltf_Model.nodes[i]);
         glTFUserDataVector.push_back(glTFUserData);
