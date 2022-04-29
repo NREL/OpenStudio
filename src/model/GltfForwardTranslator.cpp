@@ -793,7 +793,7 @@ namespace model {
     void InitializeModelObject() {
       int modelObjectKeyCount = 0;
       std::map<std::string, tinygltf::Value> modelObj1;
-      for each (GltfModelObjectMetadata modelObjectglTFMetaData in glTFModelObjectMetadataVector) {
+      for (GltfModelObjectMetadata modelObjectglTFMetaData : glTFModelObjectMetadataVector) {
         modelObjectglTFMetaData.InitializeModelObjectMap();
         tinygltf::Value alhObj(modelObjectglTFMetaData.modelObjectMap);
         modelObj1.insert({std::to_string(modelObjectKeyCount), alhObj});
@@ -3473,19 +3473,19 @@ namespace model {
     glTFUserDataWrapper.setAirWall(userDataObject["airWall"].Get<bool>());
     //vector string
     std::vector<std::string> names;
-    for (const auto n : userDataObject["airLoopHVACNames"].Get<std::map<std::string, tinygltf::Value>>()) {
+    for (const auto& n : userDataObject["airLoopHVACNames"].Get<std::map<std::string, tinygltf::Value>>()) {
       names.push_back(n.second.Get<std::string>().c_str());
     }
     glTFUserDataWrapper.setAirLoopHVACNames(names);
 
     std::vector<std::string> handles;
-    for (const auto h : userDataObject["airLoopHVACHandles"].Get<std::map<std::string, tinygltf::Value>>()) {
+    for (const auto& h : userDataObject["airLoopHVACHandles"].Get<std::map<std::string, tinygltf::Value>>()) {
       handles.push_back(h.second.Get<std::string>().c_str());
     }
     glTFUserDataWrapper.setAirLoopHVACHandles(handles);
 
     std::vector<std::string> materialNames;
-    for (const auto mn : userDataObject["airLoopHVACMaterialNames"].Get<std::map<std::string, tinygltf::Value>>()) {
+    for (const auto& mn : userDataObject["airLoopHVACMaterialNames"].Get<std::map<std::string, tinygltf::Value>>()) {
       materialNames.push_back(mn.second.Get<std::string>().c_str());
     }
     glTFUserDataWrapper.setAirLoopHVACMaterialNames(materialNames);
