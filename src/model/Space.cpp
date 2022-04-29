@@ -932,6 +932,10 @@ namespace model {
       return result;
     }
 
+    bool Space_Impl::isVolumeAutocalculated() const {
+      return isEmpty(OS_SpaceFields::Volume);
+    }
+
     double Space_Impl::numberOfPeople() const {
       double result = 0.0;
       double area = floorArea();
@@ -3089,6 +3093,10 @@ namespace model {
 
   double Space::volume() const {
     return getImpl<detail::Space_Impl>()->volume();
+  }
+
+  bool Space::isVolumeAutocalculated() const {
+    return getImpl<detail::Space_Impl>()->isVolumeAutocalculated();
   }
 
   double Space::numberOfPeople() const {

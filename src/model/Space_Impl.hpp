@@ -323,6 +323,8 @@ namespace model {
 
       double volume() const;
 
+      bool isVolumeAutocalculated() const;
+
       double numberOfPeople() const;
 
       bool setNumberOfPeople(double numberOfPeople);

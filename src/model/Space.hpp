@@ -284,6 +284,8 @@ namespace model {
     /// Does not include space multiplier in calculation.
     double volume() const;
 
+    bool isVolumeAutocalculated() const;
+
     /** Returns the number of people in the space (people). */
     /// Does not include space multiplier in calculation.
     /// Does include people multiplier in calculation.
