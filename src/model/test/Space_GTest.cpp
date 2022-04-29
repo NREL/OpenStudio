@@ -2849,6 +2849,7 @@ TEST_F(ModelFixture, Space_setVolume) {
   Space space = *ospace;
 
   // check dimensions
+  EXPECT_TRUE(space.isVolumeAutocalculated());
   EXPECT_DOUBLE_EQ(100.0, space.floorArea());
   EXPECT_DOUBLE_EQ(360.0, space.volume());
   EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
@@ -2856,6 +2857,7 @@ TEST_F(ModelFixture, Space_setVolume) {
 
   // set volume
   EXPECT_TRUE(space.setVolume(365.0));
+  EXPECT_FALSE(space.isVolumeAutocalculated());
   EXPECT_DOUBLE_EQ(100.0, space.floorArea());
   EXPECT_DOUBLE_EQ(365.0, space.volume());
   EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
@@ -2863,6 +2865,7 @@ TEST_F(ModelFixture, Space_setVolume) {
 
   // reset volume
   space.resetVolume();
+  EXPECT_TRUE(space.isVolumeAutocalculated());
   EXPECT_DOUBLE_EQ(100.0, space.floorArea());
   EXPECT_DOUBLE_EQ(360.0, space.volume());
   EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
