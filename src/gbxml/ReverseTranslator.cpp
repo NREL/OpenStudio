@@ -584,6 +584,12 @@ namespace gbxml {
       break;  // TODO: import multiple CADObjectIds
     }
 
+    // import Volume
+    auto volume = element.child("Volume").text();
+    if (!volume.empty()) {
+      space.setVolume(volume.as_double());
+    }
+
     return space;
   }
 
