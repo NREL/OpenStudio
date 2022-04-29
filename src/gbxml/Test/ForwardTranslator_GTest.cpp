@@ -957,9 +957,9 @@ TEST_F(gbXMLFixture, ForwardTranslator_spaceVolume) {
   {
     Model model = exampleModel();
 
-    auto ospace = model2->getModelObjectByName<Space>("Space 4");
-    ASSERT_TRUE(ospace);
-    EXPECT_EQ(300.0, ospace->volume());
+    auto ospace1 = model.getModelObjectByName<Space>("Space 1");
+    ASSERT_TRUE(ospace1);
+    EXPECT_EQ(300.0, ospace1->volume());
 
     // Write out the XML
     path p = resourcesPath() / openstudio::toPath("gbxml/exampleModel.xml");
@@ -980,31 +980,36 @@ TEST_F(gbXMLFixture, ForwardTranslator_spaceVolume) {
                              << "Error description: " << load_result.description() << "\n"
                              << "Error offset: " << load_result.offset;
 
-    pugi::xpath_node spaceXPath1 = doc.select_node("//Space[@id='Space_4']");
+    pugi::xpath_node spaceXPath1 = doc.select_node("//Space[@id='Space_1']");
     ASSERT_TRUE(spaceXPath1);
     pugi::xml_node spaceNode1 = spaceXPath1.node();
     double volume = spaceNode1.child("Volume").text().as_double();
     EXPECT_EQ(300.0, volume);
 
-    // Read the XML back in and check the surface
+    // Read the XML back in and check the space
     ReverseTranslator reverseTranslator;
     boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 
     ASSERT_TRUE(model2);
 
-    auto ospace = model2->getModelObjectByName<Space>("Space_4");
-    ASSERT_TRUE(ospace);
-    EXPECT_EQ(300.0, ospace->volume());
-    EXPECT_FALSE(ospace->isVolumeAutocalculated());
+    auto ospace2 = model2->getModelObjectByName<Space>("Space_1");
+    ASSERT_TRUE(ospace2);
+    EXPECT_EQ(300.0, ospace2->volume());
+    EXPECT_FALSE(ospace2->isVolumeAutocalculated());
+
+    auto ospace3 = model2->getModelObjectByName<Space>("Shading_Surface_Group_1");
+    ASSERT_TRUE(ospace3);
+    EXPECT_EQ(0.0, ospace3->volume());
+    EXPECT_TRUE(ospace3->isVolumeAutocalculated());
   }
 
   {
     Model model = exampleModel();
 
-    auto ospace = model2->getModelObjectByName<Space>("Space 4");
-    ASSERT_TRUE(ospace);
-    EXPECT_TRUE(ospace->setVolume(305.0));
-    EXPECT_EQ(305.0, ospace->volume());
+    auto ospace1 = model.getModelObjectByName<Space>("Space 1");
+    ASSERT_TRUE(ospace1);
+    EXPECT_TRUE(ospace1->setVolume(305.0));
+    EXPECT_EQ(305.0, ospace1->volume());
 
     // Write out the XML
     path p = resourcesPath() / openstudio::toPath("gbxml/exampleModel.xml");
@@ -1025,21 +1030,21 @@ TEST_F(gbXMLFixture, ForwardTranslator_spaceVolume) {
                              << "Error description: " << load_result.description() << "\n"
                              << "Error offset: " << load_result.offset;
 
-    pugi::xpath_node spaceXPath1 = doc.select_node("//Space[@id='Space_4']");
+    pugi::xpath_node spaceXPath1 = doc.select_node("//Space[@id='Space_1']");
     ASSERT_TRUE(spaceXPath1);
     pugi::xml_node spaceNode1 = spaceXPath1.node();
     double volume = spaceNode1.child("Volume").text().as_double();
     EXPECT_EQ(305.0, volume);
 
-    // Read the XML back in and check the surface
+    // Read the XML back in and check the space
     ReverseTranslator reverseTranslator;
     boost::optional<Model> model2 = reverseTranslator.loadModel(p);
 
     ASSERT_TRUE(model2);
 
-    auto ospace = model2->getModelObjectByName<Space>("Space_4");
-    ASSERT_TRUE(ospace);
-    EXPECT_EQ(305.0, ospace->volume());
-    EXPECT_FALSE(ospace->isVolumeAutocalculated());
+    auto ospace2 = model2->getModelObjectByName<Space>("Space_1");
+    ASSERT_TRUE(ospace2);
+    EXPECT_EQ(305.0, ospace2->volume());
+    EXPECT_FALSE(ospace2->isVolumeAutocalculated());
   }
 }
