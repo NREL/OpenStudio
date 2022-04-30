@@ -38,7 +38,9 @@
 
 namespace openstudio {
 
-void validate() {}
+void validate() {
+  xercesc::XercesDOMParser parser;
+}
 
 Validator::Validator(const openstudio::path& xmlPath, const std::vector<openstudio::path>& xsdPaths) {
 
