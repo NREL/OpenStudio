@@ -240,6 +240,7 @@ namespace model {
       {"Boundary_Outdoors_Wind", 9, 159, 162, 1, true},
       {"Boundary_Outdoors_SunWind", 68, 119, 161, 1, true},
       {"Boundary_Ground", 204, 183, 122, 1, true},
+      {"Boundary_Foundation", 117, 30, 122, 1, true},
       {"Boundary_Groundfcfactormethod", 153, 122, 30, 1, true},
       {"Boundary_Groundslabpreprocessoraverage", 255, 191, 0, 1, true},
       {"Boundary_Groundslabpreprocessorcore", 255, 182, 50, 1, true},
