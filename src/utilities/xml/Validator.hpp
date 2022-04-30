@@ -63,11 +63,11 @@ class UTILITIES_API Validator
   //@{
 
   openstudio::path xmlPath() const;
-  
+
   std::vector<openstudio::path> xsdPaths() const;
 
   std::vector<std::string> errors() const;
-  
+
   std::vector<std::string> warnings() const;
 
   bool isValid() const;
@@ -86,7 +86,7 @@ class UTILITIES_API Validator
 
  private:
   REGISTER_LOGGER("openstudio.xml.Validator");
-  
+
   openstudio::path m_xmlPath;
   std::vector<openstudio::path> m_xsdPaths;
   std::vector<std::string> m_errors;
