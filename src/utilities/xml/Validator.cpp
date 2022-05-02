@@ -36,40 +36,41 @@
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
 
+#include <xercesc/framework/MemBufInputSource.hpp>
+
 namespace openstudio {
 
-void validate() {
-  xercesc::XercesDOMParser parser;
-}
+class WStr
+{
+ private:
+  XMLCh* wStr;
 
-Validator::Validator(const openstudio::path& xmlPath, const std::vector<openstudio::path>& xsdPaths) {
+ public:
+  WStr(const char* str) {
+    wStr = xercesc::XMLString::transcode(str);
+  }
+  /* 
+    ~WStr() {
+      xercesc::XMLString::release(&amp;wStr);
+    } */
 
-  m_xmlPath = xmlPath;
-  m_xsdPaths = xsdPaths;
+  operator const XMLCh*() const {
+    return wStr;
+  }
+};
 
-  if (!openstudio::filesystem::exists(xmlPath)) {
-    LOG_AND_THROW("'" << toString(xmlPath) << "' does not exist");
-  } else if (!openstudio::filesystem::is_regular_file(xmlPath)) {
-    LOG_AND_THROW("'" << toString(xmlPath) << "' cannot be opened for reading XML data");
+Validator::Validator(const openstudio::path& xsdPath) : m_xsdPath(openstudio::filesystem::system_complete(xsdPath)) {
+  if (!openstudio::filesystem::exists(xsdPath)) {
+    LOG_AND_THROW("'" << toString(xsdPath) << "' does not exist");
+  } else if (!openstudio::filesystem::is_regular_file(xsdPath)) {
+    LOG_AND_THROW("'" << toString(xsdPath) << "' cannot be opened for reading XSD data");
   }
 
-  for (auto& xsdPath : xsdPaths) {
-    if (!openstudio::filesystem::exists(xsdPath)) {
-      LOG_AND_THROW("'" << toString(xsdPath) << "' does not exist");
-    } else if (!openstudio::filesystem::is_regular_file(xsdPath)) {
-      LOG_AND_THROW("'" << toString(xsdPath) << "' cannot be opened for reading XSD data");
-    }
-  }
-
-  validate();
+  // create the parser here?
 }
 
-openstudio::path Validator::xmlPath() const {
-  return m_xmlPath;
-}
-
-std::vector<openstudio::path> Validator::xsdPaths() const {
-  return m_xsdPaths;
+openstudio::path Validator::xsdPath() const {
+  return m_xsdPath;
 }
 
 std::vector<std::string> Validator::errors() const {
@@ -84,19 +85,37 @@ bool Validator::isValid() const {
   return (m_errors.size() == 0u);
 }
 
-void Validator::addXSDPath(const openstudio::path& xsdPath) {
-  if (!openstudio::filesystem::exists(xsdPath)) {
-    LOG_AND_THROW("'" << toString(xsdPath) << "' does not exist");
-  } else if (!openstudio::filesystem::is_regular_file(xsdPath)) {
-    LOG_AND_THROW("'" << toString(xsdPath) << "' cannot be opened for reading XSD data");
+bool Validator::validate(const openstudio::path& xmlPath) const {
+  if (!openstudio::filesystem::exists(xmlPath)) {
+    LOG_AND_THROW("'" << toString(xmlPath) << "' does not exist");
+  } else if (!openstudio::filesystem::is_regular_file(xmlPath)) {
+    LOG_AND_THROW("'" << toString(xmlPath) << "' cannot be opened for reading XML data");
   }
 
-  m_xsdPaths.push_back(xsdPath);
+  xercesc::XercesDOMParser parser;
 
-  m_errors.clear();
-  m_warnings.clear();
+  /*   char *str = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<xs:schema xmlns:xs=\"http://www.w3.org/2001/XMLSchema\" elementFormDefault=\"qualified\" attributeFormDefault=\"unqualified\"> \r\n </xs:schema>";
+  std::string strContent = str;
+  xercesc::MemBufInputSource pMemBufIS((XMLByte*)strContent.c_str(), strContent.size(), "xsd");
+  if (parser.loadGrammar(pMemBufIS, xercesc::Grammar::SchemaGrammarType) == NULL) {
+    LOG_AND_THROW("Could not load.");
+  } */
 
-  validate();
+  /*   std::string xsdFile = "";
+  xercesc::MemBufInputSource inMemorySchemaSource(reinterpret_cast<const XMLByte*>(xsdFile.c_str()), xsdFile.size (), "/schema.xsd");
+  xercesc::Grammar* grammar = parser.loadGrammar(inMemorySchemaSource, xercesc::Grammar::SchemaGrammarType, true); */
+
+  // Let's preparse the schema grammar (.xsd) and cache it.
+  xercesc::Grammar* grammar = parser.loadGrammar(m_xsdPath, xercesc::Grammar::SchemaGrammarType, true);
+
+  // Enable schema processing.
+  parser.setDoSchema(true);
+  parser.setDoNamespaces(true);
+
+  // Enable grammar caching
+  parser.cacheGrammarFromParse(true);
+
+  parser.parse(toString(xmlPath));
 }
 
 }  // namespace openstudio

@@ -49,7 +49,7 @@ class UTILITIES_API Validator
   //@{
 
   /// Constructor for a new validator
-  explicit Validator(const openstudio::path& xmlPath, const std::vector<openstudio::path>& xsdPaths);
+  explicit Validator(const openstudio::path& xsdPath);
 
   //@}
   /** @name Destructor */
@@ -62,9 +62,7 @@ class UTILITIES_API Validator
   /** @name Getters */
   //@{
 
-  openstudio::path xmlPath() const;
-
-  std::vector<openstudio::path> xsdPaths() const;
+  openstudio::path xsdPath() const;
 
   std::vector<std::string> errors() const;
 
@@ -76,7 +74,7 @@ class UTILITIES_API Validator
   /** @name Setters */
   //@{
 
-  void addXSDPath(const openstudio::path& xsdPath);
+  bool validate(const openstudio::path& xmlPath) const;
 
   //@}
   /** @name Operators */
@@ -87,8 +85,7 @@ class UTILITIES_API Validator
  private:
   REGISTER_LOGGER("openstudio.xml.Validator");
 
-  openstudio::path m_xmlPath;
-  std::vector<openstudio::path> m_xsdPaths;
+  openstudio::path m_xsdPath;
   std::vector<std::string> m_errors;
   std::vector<std::string> m_warnings;
 };
