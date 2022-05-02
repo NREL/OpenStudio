@@ -4,5 +4,7 @@ set(xml_src
 )
 
 set(xml_test_src
+  xml/Test/ValidatorFixture.hpp
+  xml/Test/ValidatorFixture.cpp
   xml/Test/Validator_GTest.cpp
 )

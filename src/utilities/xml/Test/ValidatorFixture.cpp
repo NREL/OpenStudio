@@ -27,18 +27,13 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <gtest/gtest.h>
-
 #include "ValidatorFixture.hpp"
 
-#include <algorithm>
-#include <iostream>
-#include <boost/regex.hpp>
-#include <resources.hxx>
-#include <stdexcept>
+#include "../../core/ApplicationPathHelpers.hpp"
 
-using namespace std;
-using namespace boost;
-using namespace openstudio;
+using openstudio::Logger;
+using openstudio::toPath;
+using openstudio::FileLogSink;
 
-TEST_F(ValidatorFixture, SchemaValidator_Test) {}
+// define static storage
+boost::optional<openstudio::FileLogSink> ValidatorFixture::logFile;

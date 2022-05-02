@@ -27,18 +27,29 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#ifndef UTILITIES_XML_TEST_VALIDATORFIXTURE_HPP
+#define UTILITIES_XML_TEST_VALIDATORFIXTURE_HPP
+
 #include <gtest/gtest.h>
 
-#include "ValidatorFixture.hpp"
-
-#include <algorithm>
-#include <iostream>
-#include <boost/regex.hpp>
 #include <resources.hxx>
-#include <stdexcept>
 
-using namespace std;
-using namespace boost;
-using namespace openstudio;
+#include "../../core/Logger.hpp"
+#include "../../core/FileLogSink.hpp"
 
-TEST_F(ValidatorFixture, SchemaValidator_Test) {}
+class ValidatorFixture : public ::testing::Test
+{
+ protected:
+
+
+  // set up logging
+  REGISTER_LOGGER("BCLFixture");
+
+ public:
+
+  static boost::optional<openstudio::FileLogSink> logFile;
+
+
+};
+
+#endif  // UTILITIES_XML_TEST_VALIDATORFIXTURE_HPP
