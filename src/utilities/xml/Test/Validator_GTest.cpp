@@ -41,4 +41,21 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-TEST_F(ValidatorFixture, SchemaValidator_Test) {}
+TEST_F(ValidatorFixture, GBXML_ValidateResources) {
+  Validator validator(xsdPath);
+  EXPECT_NE("", validator.xsdPath());
+
+  openstudio::path xmlFile;
+
+  xmlFile = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard_Single_Family_Residential_2016.xml");
+  EXPECT_TRUE(validator.validate(xmlFile));
+
+  xmlFile = resourcesPath() / openstudio::toPath("gbxml/TestSchedules.xml");
+  //EXPECT_TRUE(validator.validate(xmlFile));
+
+  xmlFile = resourcesPath() / openstudio::toPath("gbxml/ZNETH.xml");
+  EXPECT_TRUE(validator.validate(xmlFile));
+
+  xmlFile = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/eplusout.sql");
+  EXPECT_FALSE(validator.validate(xmlFile));
+}

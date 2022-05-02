@@ -35,5 +35,21 @@ using openstudio::Logger;
 using openstudio::toPath;
 using openstudio::FileLogSink;
 
+void ValidatorFixture::SetUp() {}
+
+void ValidatorFixture::TearDown() {}
+
+void ValidatorFixture::SetUpTestSuite() {
+  logFile = FileLogSink(toPath("./ValidatorFixture.log"));
+  logFile->setLogLevel(Debug);
+
+  xsdPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
+}
+
+void ValidatorFixture::TearDownTestSuite() {
+  logFile->disable();
+}
+
 // define static storage
+openstudio::path ValidatorFixture::xsdPath;
 boost::optional<openstudio::FileLogSink> ValidatorFixture::logFile;

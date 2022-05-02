@@ -34,22 +34,31 @@
 
 #include <resources.hxx>
 
+#include "../Validator.hpp"
 #include "../../core/Logger.hpp"
 #include "../../core/FileLogSink.hpp"
 
 class ValidatorFixture : public ::testing::Test
 {
  protected:
+  // initialize for each test
+  virtual void SetUp() override;
 
+  // tear down after for each test
+  virtual void TearDown() override;
+
+  // initialize static members
+  static void SetUpTestSuite();
+
+  // tear down static members
+  static void TearDownTestSuite();
 
   // set up logging
   REGISTER_LOGGER("BCLFixture");
 
  public:
-
+  static openstudio::path xsdPath;
   static boost::optional<openstudio::FileLogSink> logFile;
-
-
 };
 
 #endif  // UTILITIES_XML_TEST_VALIDATORFIXTURE_HPP
