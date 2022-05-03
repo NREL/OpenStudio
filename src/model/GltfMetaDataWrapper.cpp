@@ -29,57 +29,12 @@
 
 #include "GltfMetaDataWrapper.hpp"
 
-#include "RenderingColor.hpp"
-#include "ConstructionBase.hpp"
-#include "ConstructionBase_Impl.hpp"
-#include "ConstructionAirBoundary.hpp"
-#include "ConstructionAirBoundary_Impl.hpp"
-#include "AirLoopHVAC.hpp"
-#include "AirLoopHVAC_Impl.hpp"
-#include "ThermalZone.hpp"
-#include "ThermalZone_Impl.hpp"
-#include "SpaceType.hpp"
-#include "SpaceType_Impl.hpp"
-#include "Building.hpp"
-#include "Building_Impl.hpp"
-#include "BuildingStory.hpp"
-#include "BuildingStory_Impl.hpp"
-#include "BuildingUnit.hpp"
-#include "BuildingUnit_Impl.hpp"
-#include "Surface.hpp"
-#include "Surface_Impl.hpp"
-#include "SubSurface.hpp"
-#include "SubSurface_Impl.hpp"
-#include "ShadingSurface.hpp"
-#include "ShadingSurface_Impl.hpp"
-#include "InteriorPartitionSurface.hpp"
-#include "InteriorPartitionSurface_Impl.hpp"
-#include "PlanarSurfaceGroup.hpp"
-#include "PlanarSurfaceGroup_Impl.hpp"
-#include "Space.hpp"
-#include "Space_Impl.hpp"
-#include "DefaultConstructionSet.hpp"
-#include "DefaultConstructionSet_Impl.hpp"
-#include "ShadingSurfaceGroup.hpp"
-#include "InteriorPartitionSurfaceGroup.hpp"
-
-#include "../utilities/core/Assert.hpp"
-#include "../utilities/core/Compare.hpp"
-#include "../utilities/geometry/Point3d.hpp"
-#include "../utilities/geometry/Plane.hpp"
-#include "../utilities/geometry/BoundingBox.hpp"
-#include "../utilities/geometry/Transformation.hpp"
-#include "../utilities/geometry/Geometry.hpp"
-#include "../utilities/geometry/Polygon3d.hpp"
-
 #include <tiny_gltf.h>
 
 #include <algorithm>
 #include <cmath>
 #include <iterator>
 #include <numeric>
-#include <stack>
-#include <limits.h>
 #include <tuple>
 
 namespace openstudio {
@@ -101,20 +56,8 @@ namespace model {
   int spaceTypeCount;
   int constructionSetCount;
   int airLoopCount;
-  /* int m_storyCount;
-    int m_thermalZoneCount;
-    int m_spaceCount;
-    int m_spaceTypeCount;
-    int m_constructionSetCount;
-    int m_airLoopCount;*/
 
   void resetModelObjectMetaDataCount() {
-    /*m_storyCount = 0;
-    m_thermalZoneCount = 0;
-    m_spaceCount = 0;
-    m_spaceTypeCount = 0;
-    m_constructionSetCount = 0;
-    m_airLoopCount = 0;*/
     storyCount = 0;
     thermalZoneCount = 0;
     spaceCount = 0;

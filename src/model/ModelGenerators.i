@@ -39,12 +39,16 @@
   #include <model/ThreeJSForwardTranslator.hpp>
   #include <model/ThreeJSReverseTranslator.hpp>
   #include <model/GltfForwardTranslator.hpp>
+  #include <model/GltfMetaDataWrapper.hpp>
+  #include <model/GltfUserDataWrapper.hpp>
   #include <model/ModelMerger.hpp>
 %}
 %include <model/FloorplanJSForwardTranslator.hpp>
 %include <model/ThreeJSForwardTranslator.hpp>
 %include <model/ThreeJSReverseTranslator.hpp>
 %include <model/GltfForwardTranslator.hpp>
+%include <model/GltfMetaDataWrapper.hpp>
+%include <model/GltfUserDataWrapper.hpp>
 %include <model/ModelMerger.hpp>
 
 
