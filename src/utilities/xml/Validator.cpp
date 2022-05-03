@@ -38,6 +38,31 @@
 
 namespace openstudio {
 
+class ParserErrorHandler : public xercesc::ErrorHandler
+{
+ private:
+  void reportParseException(const xercesc::SAXParseException& ex) {
+    char* msg = xercesc::XMLString::transcode(ex.getMessage());
+    fprintf(stderr, "at line %llu column %llu, %s\n", ex.getLineNumber(), ex.getColumnNumber(), msg);
+    xercesc::XMLString::release(&msg);
+  }
+
+ public:
+  void warning(const xercesc::SAXParseException& ex) {
+    reportParseException(ex);
+  }
+
+  void error(const xercesc::SAXParseException& ex) {
+    reportParseException(ex);
+  }
+
+  void fatalError(const xercesc::SAXParseException& ex) {
+    reportParseException(ex);
+  }
+
+  void resetErrors() {}
+};
+
 Validator::Validator(const openstudio::path& xsdPath) : m_xsdPath(openstudio::filesystem::system_complete(xsdPath)) {
   if (!openstudio::filesystem::exists(xsdPath)) {
     LOG_AND_THROW("'" << toString(xsdPath) << "' does not exist");
@@ -93,12 +118,13 @@ bool Validator::validate(const openstudio::path& xmlPath) const {
   parser.setValidationConstraintFatal(true);
   parser.setValidationSchemaFullChecking(true);
 
-  //ParserErrorHandler errorHandler;
-  //parser.setErrorHandler(&errorHandler);
+  ParserErrorHandler errorHandler;
+  parser.setErrorHandler(&errorHandler);
 
   // Enable grammar caching
   parser.cacheGrammarFromParse(true);
 
+  // Let's parse the XML document. The parser will cache any grammars encountered.
   parser.parse(toString(openstudio::filesystem::system_complete(xmlPath)).c_str());
 
   unsigned int errorCount = parser.getErrorCount();
