@@ -51,7 +51,7 @@ TEST_F(ValidatorFixture, GBXML_ValidateResources) {
   EXPECT_TRUE(validator.validate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/TestSchedules.xml");
-  //EXPECT_TRUE(validator.validate(xmlFile));
+  EXPECT_FALSE(validator.validate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/ZNETH.xml");
   EXPECT_TRUE(validator.validate(xmlFile));

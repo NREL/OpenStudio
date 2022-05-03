@@ -32,6 +32,8 @@
 
 #include "../UtilitiesAPI.hpp"
 
+#include <xercesc/parsers/XercesDOMParser.hpp>
+
 #include "../core/Path.hpp"
 #include "../core/Logger.hpp"
 #include "../core/Optional.hpp"

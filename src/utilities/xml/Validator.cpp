@@ -72,28 +72,38 @@ bool Validator::isValid() const {
 
 bool Validator::validate(const openstudio::path& xmlPath) const {
   if (!openstudio::filesystem::exists(xmlPath)) {
-    //LOG_AND_THROW("'" << toString(xmlPath) << "' does not exist");
+    LOG(Error, "'" << toString(xmlPath) << "' does not exist");
+    return false;
   } else if (!openstudio::filesystem::is_regular_file(xmlPath)) {
-    //LOG_AND_THROW("'" << toString(xmlPath) << "' XML cannot be opened");
+    LOG(Error, "'" << toString(xmlPath) << "' XML cannot be opened");
+    return false;
   }
 
   xercesc::XercesDOMParser parser;
 
   // Let's preparse the schema grammar (.xsd) and cache it.
   if (parser.loadGrammar(toString(m_xsdPath).c_str(), xercesc::Grammar::SchemaGrammarType) == NULL) {
-    LOG_AND_THROW("'" << toString(m_xsdPath) << "' XSD cannot be loaded");
+    LOG(Error, "'" << toString(m_xsdPath) << "' XSD cannot be loaded");
+    return false;
   }
 
   // Enable schema processing.
   parser.setDoSchema(true);
   parser.setDoNamespaces(true);
+  parser.setValidationConstraintFatal(true);
+  parser.setValidationSchemaFullChecking(true);
+
+  //ParserErrorHandler errorHandler;
+  //parser.setErrorHandler(&errorHandler);
 
   // Enable grammar caching
   parser.cacheGrammarFromParse(true);
 
   parser.parse(toString(openstudio::filesystem::system_complete(xmlPath)).c_str());
 
-  if (parser.getErrorCount() > 0) {
+  unsigned int errorCount = parser.getErrorCount();
+  if (errorCount > 0) {
+    LOG(Error, "'" << toString(xmlPath) << "' has " << errorCount << " error(s)");
     return false;
   }
 
