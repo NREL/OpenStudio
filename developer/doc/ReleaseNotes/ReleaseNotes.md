@@ -1,6 +1,6 @@
 # OpenStudio Version 3.4.0
 
-_Release Notes_ -  _04/27/2022_
+_Release Notes_ -  _05/03/2022_
 
 These release notes describe version 3.4.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
