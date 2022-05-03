@@ -3530,7 +3530,7 @@ namespace model {
     return ret;
   }
 
-  std::vector<GltfUserDataWrapper> GltfForwardTranslator::getUserDataCollection() {
+  GltfUserDataWrapperVector GltfForwardTranslator::getUserDataCollection() {
     return glTFUserDataWrapperVector;
   }
 

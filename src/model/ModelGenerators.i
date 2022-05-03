@@ -56,6 +56,9 @@
 %include <model/ModelMerger.hpp>
 
 
+// create an instantiation of the vector classes
+%template(GltfUserDataWrapperVector) std::vector<openstudio::model::GltfUserDataWrapper>;
+%template(GltfModelObjectMetadataWrapperVector) std::vector<openstudio::model::GltfModelObjectMetadataWrapper>;
 
 #if defined SWIGCSHARP
 

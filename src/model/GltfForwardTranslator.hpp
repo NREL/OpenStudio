@@ -81,6 +81,9 @@ namespace model {
     StringStreamLogSink m_logSink;
   };
 
+  // vector of GltfUserDataWrapper
+  typedef std::vector<GltfUserDataWrapper> GltfUserDataWrapperVector;
+
 }  // namespace model
 }  // namespace openstudio
 

@@ -221,7 +221,7 @@ namespace model {
     glTFModelObjectMetadataWrapperVector.push_back(gbmw);
   }
 
-  std::vector<GltfModelObjectMetadataWrapper> GltfMetaDataWrapper::getglTFModelObjectMetadataWrapper() {
+  GltfModelObjectMetadataWrapperVector GltfMetaDataWrapper::getglTFModelObjectMetadataWrapper() {
     return glTFModelObjectMetadataWrapperVector;
   }
 
