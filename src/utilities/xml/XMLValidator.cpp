@@ -38,7 +38,8 @@
 
 namespace openstudio {
 
-class ParserErrorHandler : public xercesc::ErrorHandler {
+class ParserErrorHandler : public xercesc::ErrorHandler
+{
  private:
   void reportParseException(const xercesc::SAXParseException& ex) {
     char* msg = xercesc::XMLString::transcode(ex.getMessage());

@@ -43,7 +43,7 @@ using namespace openstudio;
 
 TEST_F(XMLValidatorFixture, Strings) {
   XMLValidator xmlValidator(xsdString);
-/*   ASSERT_TRUE(xmlValidator.xsdString());
+  /*   ASSERT_TRUE(xmlValidator.xsdString());
 
   std::string xmlString;
 
