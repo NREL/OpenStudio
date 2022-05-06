@@ -27,18 +27,18 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_XML_TEST_VALIDATORFIXTURE_HPP
-#define UTILITIES_XML_TEST_VALIDATORFIXTURE_HPP
+#ifndef UTILITIES_XML_TEST_XMLVALIDATORFIXTURE_HPP
+#define UTILITIES_XML_TEST_XMLVALIDATORFIXTURE_HPP
 
 #include <gtest/gtest.h>
 
 #include <resources.hxx>
 
-#include "../Validator.hpp"
+#include "../XMLValidator.hpp"
 #include "../../core/Logger.hpp"
 #include "../../core/FileLogSink.hpp"
 
-class ValidatorFixture : public ::testing::Test
+class XMLValidatorFixture : public ::testing::Test
 {
  protected:
   // initialize for each test
@@ -58,6 +58,7 @@ class ValidatorFixture : public ::testing::Test
 
  public:
   static openstudio::path xsdPath;
+  static std::string xsdString;
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 

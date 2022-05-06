@@ -27,19 +27,18 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "Validator.hpp"
+#include "XMLValidator.hpp"
 
 #include <xercesc/util/XMLString.hpp>
-#include <xercesc/parsers/XercesDOMParser.hpp>
 #include <xercesc/framework/LocalFileInputSource.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
 #include <xercesc/sax/SAXParseException.hpp>
 #include <xercesc/validators/common/Grammar.hpp>
+#include <xercesc/framework/MemBufInputSource.hpp>
 
 namespace openstudio {
 
-class ParserErrorHandler : public xercesc::ErrorHandler
-{
+class ParserErrorHandler : public xercesc::ErrorHandler {
  private:
   void reportParseException(const xercesc::SAXParseException& ex) {
     char* msg = xercesc::XMLString::transcode(ex.getMessage());
@@ -63,7 +62,7 @@ class ParserErrorHandler : public xercesc::ErrorHandler
   void resetErrors() {}
 };
 
-Validator::Validator(const openstudio::path& xsdPath) : m_xsdPath(openstudio::filesystem::system_complete(xsdPath)) {
+XMLValidator::XMLValidator(const openstudio::path& xsdPath) : m_xsdPath(openstudio::filesystem::system_complete(xsdPath)) {
   if (!openstudio::filesystem::exists(xsdPath)) {
     LOG_AND_THROW("'" << toString(xsdPath) << "' does not exist");
   } else if (!openstudio::filesystem::is_regular_file(xsdPath)) {
@@ -72,30 +71,48 @@ Validator::Validator(const openstudio::path& xsdPath) : m_xsdPath(openstudio::fi
 
   xercesc::XMLPlatformUtils::Initialize();
 
-  // create the parser here?
+  // Let's preparse the schema grammar (.xsd) and cache it.
+  if (m_parser.loadGrammar(toString(m_xsdPath.get()).c_str(), xercesc::Grammar::SchemaGrammarType) == NULL) {
+    LOG_AND_THROW("'" << toString(m_xsdPath.get()) << "' XSD cannot be loaded");
+  }
+
+  setParser();
 }
 
-Validator::Validator(const std::string& xsdString) : m_xsdString(xsdString) {
-  // create the parser here?
+XMLValidator::XMLValidator(const std::string& xsdString) : m_xsdString(xsdString) {
+  xercesc::XMLPlatformUtils::Initialize();
+
+  xercesc::MemBufInputSource _xsdString(reinterpret_cast<const XMLByte*>(m_xsdString.get().c_str()), m_xsdString.get().size(), "xsd");
+
+  // Let's preparse the schema grammar (.xsd) and cache it.
+  if (m_parser.loadGrammar(_xsdString, xercesc::Grammar::SchemaGrammarType) == NULL) {
+    LOG_AND_THROW("xmlString XSD cannot be loaded");
+  }
+
+  setParser();
 }
 
-openstudio::path Validator::xsdPath() const {
+boost::optional<openstudio::path> XMLValidator::xsdPath() const {
   return m_xsdPath;
 }
 
-std::vector<std::string> Validator::errors() const {
+boost::optional<std::string> XMLValidator::xsdString() const {
+  return m_xsdString;
+}
+
+std::vector<std::string> XMLValidator::errors() const {
   return m_errors;
 }
 
-std::vector<std::string> Validator::warnings() const {
+std::vector<std::string> XMLValidator::warnings() const {
   return m_warnings;
 }
 
-bool Validator::isValid() const {
+bool XMLValidator::isValid() const {
   return (m_errors.size() == 0u);
 }
 
-bool Validator::validate(const openstudio::path& xmlPath) const {
+bool XMLValidator::validate(const openstudio::path& xmlPath) {
   if (!openstudio::filesystem::exists(xmlPath)) {
     LOG(Error, "'" << toString(xmlPath) << "' does not exist");
     return false;
@@ -104,30 +121,10 @@ bool Validator::validate(const openstudio::path& xmlPath) const {
     return false;
   }
 
-  xercesc::XercesDOMParser parser;
-
-  // Let's preparse the schema grammar (.xsd) and cache it.
-  if (parser.loadGrammar(toString(m_xsdPath).c_str(), xercesc::Grammar::SchemaGrammarType) == NULL) {
-    LOG(Error, "'" << toString(m_xsdPath) << "' XSD cannot be loaded");
-    return false;
-  }
-
-  // Enable schema processing.
-  parser.setDoSchema(true);
-  parser.setDoNamespaces(true);
-  parser.setValidationConstraintFatal(true);
-  parser.setValidationSchemaFullChecking(true);
-
-  ParserErrorHandler errorHandler;
-  parser.setErrorHandler(&errorHandler);
-
-  // Enable grammar caching
-  parser.cacheGrammarFromParse(true);
-
   // Let's parse the XML document. The parser will cache any grammars encountered.
-  parser.parse(toString(openstudio::filesystem::system_complete(xmlPath)).c_str());
+  m_parser.parse(toString(openstudio::filesystem::system_complete(xmlPath)).c_str());
 
-  unsigned int errorCount = parser.getErrorCount();
+  unsigned int errorCount = m_parser.getErrorCount();
   if (errorCount > 0) {
     LOG(Error, "'" << toString(xmlPath) << "' has " << errorCount << " error(s)");
     return false;
@@ -136,8 +133,34 @@ bool Validator::validate(const openstudio::path& xmlPath) const {
   return true;
 }
 
-bool Validator::validate(const std::string& xmlString) const {
+bool XMLValidator::validate(const std::string& xmlString) {
+  xercesc::MemBufInputSource _xmlString(reinterpret_cast<const XMLByte*>(xmlString.c_str()), xmlString.size(), "xml");
+
+  // Let's parse the XML document. The parser will cache any grammars encountered.
+  m_parser.parse(_xmlString);
+
+  unsigned int errorCount = m_parser.getErrorCount();
+  if (errorCount > 0) {
+    LOG(Error, "xmlString has " << errorCount << " error(s)");
+    return false;
+  }
+
   return true;
+}
+
+void XMLValidator::setParser() {
+  // Enable schema processing.
+  m_parser.setDoSchema(true);
+  m_parser.setDoNamespaces(true);
+  m_parser.setValidationConstraintFatal(true);
+  m_parser.setValidationSchemaFullChecking(true);
+  m_parser.setValidationScheme(xercesc::XercesDOMParser::Val_Always);
+
+  ParserErrorHandler errorHandler;
+  m_parser.setErrorHandler(&errorHandler);
+
+  // Enable grammar caching
+  m_parser.cacheGrammarFromParse(true);
 }
 
 }  // namespace openstudio

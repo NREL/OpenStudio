@@ -27,7 +27,7 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "ValidatorFixture.hpp"
+#include "XMLValidatorFixture.hpp"
 
 #include "../../core/ApplicationPathHelpers.hpp"
 
@@ -35,21 +35,23 @@ using openstudio::Logger;
 using openstudio::toPath;
 using openstudio::FileLogSink;
 
-void ValidatorFixture::SetUp() {}
+void XMLValidatorFixture::SetUp() {}
 
-void ValidatorFixture::TearDown() {}
+void XMLValidatorFixture::TearDown() {}
 
-void ValidatorFixture::SetUpTestSuite() {
-  logFile = FileLogSink(toPath("./ValidatorFixture.log"));
+void XMLValidatorFixture::SetUpTestSuite() {
+  logFile = FileLogSink(toPath("./XMLValidatorFixture.log"));
   logFile->setLogLevel(Debug);
 
   xsdPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
+  xsdString = "";
 }
 
-void ValidatorFixture::TearDownTestSuite() {
+void XMLValidatorFixture::TearDownTestSuite() {
   logFile->disable();
 }
 
 // define static storage
-openstudio::path ValidatorFixture::xsdPath;
-boost::optional<openstudio::FileLogSink> ValidatorFixture::logFile;
+openstudio::path XMLValidatorFixture::xsdPath;
+std::string XMLValidatorFixture::xsdString;
+boost::optional<openstudio::FileLogSink> XMLValidatorFixture::logFile;

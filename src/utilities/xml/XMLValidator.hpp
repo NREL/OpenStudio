@@ -27,10 +27,12 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_XML_VALIDATOR_HPP
-#define UTILITIES_XML_VALIDATOR_HPP
+#ifndef UTILITIES_XML_XMLVALIDATOR_HPP
+#define UTILITIES_XML_XMLVALIDATOR_HPP
 
 #include "../UtilitiesAPI.hpp"
+
+#include <xercesc/parsers/XercesDOMParser.hpp>
 
 #include "../core/Path.hpp"
 #include "../core/Logger.hpp"
@@ -42,29 +44,31 @@
 
 namespace openstudio {
 
-class UTILITIES_API Validator
+class UTILITIES_API XMLValidator
 {
  public:
   /** @name Constructors */
   //@{
 
   /// Constructor for a new validator
-  explicit Validator(const openstudio::path& xsdPath);
+  explicit XMLValidator(const openstudio::path& xsdPath);
 
-  explicit Validator(const std::string& xsdString);
+  explicit XMLValidator(const std::string& xsdString);
 
   //@}
   /** @name Destructor */
   //@{
 
   /// Virtual destructor
-  virtual ~Validator() {}
+  virtual ~XMLValidator() {}
 
   //@}
   /** @name Getters */
   //@{
 
-  openstudio::path xsdPath() const;
+  boost::optional<openstudio::path> xsdPath() const;
+
+  boost::optional<std::string> xsdString() const;
 
   std::vector<std::string> errors() const;
 
@@ -76,9 +80,9 @@ class UTILITIES_API Validator
   /** @name Setters */
   //@{
 
-  bool validate(const openstudio::path& xmlPath) const;
+  bool validate(const openstudio::path& xmlPath);
 
-  bool validate(const std::string& xmlString) const;
+  bool validate(const std::string& xmlString);
 
   //@}
   /** @name Operators */
@@ -86,17 +90,21 @@ class UTILITIES_API Validator
 
   //@}
 
- private:
-  REGISTER_LOGGER("openstudio.xml.Validator");
+ protected:
+  void setParser();
 
-  std::string m_xsdString;
-  openstudio::path m_xsdPath;
+ private:
+  REGISTER_LOGGER("openstudio.XMLValidator");
+
+  xercesc::XercesDOMParser m_parser;
+  boost::optional<openstudio::path> m_xsdPath;
+  boost::optional<std::string> m_xsdString;
   std::vector<std::string> m_errors;
   std::vector<std::string> m_warnings;
 };
 
-/// optional Validator
-typedef boost::optional<Validator> OptionalValidator;
+/// optional XMLValidator
+typedef boost::optional<XMLValidator> OptionalXMLValidator;
 
 }  // namespace openstudio
 

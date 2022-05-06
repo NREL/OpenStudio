@@ -1,10 +1,10 @@
 set(xml_src
-  xml/Validator.hpp
-  xml/Validator.cpp
+  xml/XMLValidator.hpp
+  xml/XMLValidator.cpp
 )
 
 set(xml_test_src
-  xml/Test/ValidatorFixture.hpp
-  xml/Test/ValidatorFixture.cpp
-  xml/Test/Validator_GTest.cpp
+  xml/Test/XMLValidatorFixture.hpp
+  xml/Test/XMLValidatorFixture.cpp
+  xml/Test/XMLValidator_GTest.cpp
 )

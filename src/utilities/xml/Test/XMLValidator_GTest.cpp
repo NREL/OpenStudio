@@ -29,7 +29,7 @@
 
 #include <gtest/gtest.h>
 
-#include "ValidatorFixture.hpp"
+#include "XMLValidatorFixture.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -41,21 +41,67 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-TEST_F(ValidatorFixture, GBXML_ValidateResources) {
-  Validator validator(xsdPath);
-  EXPECT_NE("", validator.xsdPath());
+TEST_F(XMLValidatorFixture, Strings) {
+  XMLValidator xmlValidator(xsdString);
+/*   ASSERT_TRUE(xmlValidator.xsdString());
+
+  std::string xmlString;
+
+  xmlString = "";
+  EXPECT_FALSE(xmlValidator.validate(xmlString)); */
+}
+
+TEST_F(XMLValidatorFixture, NonXMLFile) {
+  XMLValidator xmlValidator(xsdPath);
+  ASSERT_TRUE(xmlValidator.xsdPath());
+  EXPECT_NE("", xmlValidator.xsdPath().get());
 
   openstudio::path xmlFile;
 
+  xmlFile = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/eplusout.sql");
+  EXPECT_FALSE(xmlValidator.validate(xmlFile));
+}
+
+TEST_F(XMLValidatorFixture, GBXML_ValidateResources) {
+  XMLValidator xmlValidator(xsdPath);
+  ASSERT_TRUE(xmlValidator.xsdPath());
+  EXPECT_NE("", xmlValidator.xsdPath().get());
+
+  openstudio::path xmlFile;
+
+  xmlFile = resourcesPath() / openstudio::toPath("gbxml/3951_Geometry_bug.xml");
+  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+
+  xmlFile = resourcesPath() / openstudio::toPath("gbxml/3997_WindowScaling_bug.xml");
+  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard_Single_Family_Residential_2016.xml");
-  EXPECT_TRUE(validator.validate(xmlFile));
+  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+
+  xmlFile = resourcesPath() / openstudio::toPath("gbxml/seb.xml");
+  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+
+  xmlFile = resourcesPath() / openstudio::toPath("gbxml/simpleBox_vasari.xml");
+  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+
+  xmlFile = resourcesPath() / openstudio::toPath("gbxml/TestCube.xml");
+  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+
+  xmlFile = resourcesPath() / openstudio::toPath("gbxml/TestCubeAlternateUnits.xml");
+  EXPECT_TRUE(xmlValidator.validate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/TestSchedules.xml");
-  EXPECT_FALSE(validator.validate(xmlFile));
+  EXPECT_FALSE(xmlValidator.validate(xmlFile));
+
+  xmlFile = resourcesPath() / openstudio::toPath("gbxml/TropicBird.xml");
+  EXPECT_FALSE(xmlValidator.validate(xmlFile));
+
+  xmlFile = resourcesPath() / openstudio::toPath("gbxml/TropicBird_BEM_4_2018.xml");
+  EXPECT_FALSE(xmlValidator.validate(xmlFile));
+
+  xmlFile = resourcesPath() / openstudio::toPath("gbxml/TwoStoryOffice_Trane.xml");
+  EXPECT_FALSE(xmlValidator.validate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/ZNETH.xml");
-  EXPECT_TRUE(validator.validate(xmlFile));
-
-  xmlFile = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/eplusout.sql");
-  EXPECT_FALSE(validator.validate(xmlFile));
+  EXPECT_TRUE(xmlValidator.validate(xmlFile));
 }
