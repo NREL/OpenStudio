@@ -28,6 +28,8 @@ target_link_libraries(
  CONAN_PKG::cpprestsdk
  CONAN_PKG::openssl
  CONAN_PKG::pugixml
+ CONAN_PKG::libxml2
+ CONAN_PKG::libxslt
 )
 
 target_compile_definitions(openstudiolib INTERFACE "-DSHARED_OS_LIBS")
