@@ -37,7 +37,7 @@ XMLValidator::XMLValidator(const openstudio::path& xsdPath) : m_xsdPath(openstud
   } else if (!openstudio::filesystem::is_regular_file(xsdPath)) {
     LOG_AND_THROW("'" << toString(xsdPath) << "' XSD cannot be opened");
   }
-  
+
   // TODO
 
   setParser();
