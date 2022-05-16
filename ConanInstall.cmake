@@ -90,8 +90,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     "openssl/1.1.0l#7f3fa5cfcfba31fffa344c71a9795176" # ruby 2.5.5 won't work with 1.1.1x, so use 1.1.0l here to try to force every package to align on the same as ruby
     "boost/1.73.0#4129a76c9b83c300fc103e36d1908792"
     "pugixml/1.10#64b3ebc897bb9d9854c8a2443bf112a8"
-    "libxml2/2.9.13"
-    "libxslt/1.1.34"
+    "libxml2/2.9.14#e4a897e00f0ef02bf28e5b5f58969d72"
+    # "libxslt/1.1.34#9085031f5b9b2bb328ad615cd1bf1282"
     "jsoncpp/1.9.3#073a6d3cb40911d7c8027bddb6ae7dbf"
     "minizip/1.2.11#0658b664480f2a0755b88502743d5d0d" # This depends on zlib/1.2.11, and basically patches it
     "zlib/1.2.11#683857dbd5377d65f26795d4023858f9"    # Also needed, so we can find zlib.h and co (+ pinning exactly is good)
