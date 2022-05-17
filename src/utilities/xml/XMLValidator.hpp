@@ -78,7 +78,7 @@ class UTILITIES_API XMLValidator
   /** @name Setters */
   //@{
 
-  bool validate(const openstudio::path& xmlPath);
+  bool xsdValidate(const openstudio::path& xmlPath);
 
   bool validate(const std::string& xmlString);
 

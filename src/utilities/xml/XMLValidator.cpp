@@ -29,6 +29,12 @@
 
 #include "XMLValidator.hpp"
 
+#include <libxml/xmlversion.h>
+#include <libxml/xmlreader.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+#include <libxml/schematron.h>
+
 namespace openstudio {
 
 XMLValidator::XMLValidator(const openstudio::path& xsdPath) : m_xsdPath(openstudio::filesystem::system_complete(xsdPath)) {
@@ -66,10 +72,10 @@ std::vector<std::string> XMLValidator::warnings() const {
 }
 
 bool XMLValidator::isValid() const {
-  return (m_errors.size() == 0u);
+  return m_errors.empty();
 }
 
-bool XMLValidator::validate(const openstudio::path& xmlPath) {
+bool XMLValidator::xsdValidate(const openstudio::path& xmlPath) {
   if (!openstudio::filesystem::exists(xmlPath)) {
     LOG(Error, "'" << toString(xmlPath) << "' does not exist");
     return false;
@@ -78,7 +84,46 @@ bool XMLValidator::validate(const openstudio::path& xmlPath) {
     return false;
   }
 
-  // TODO
+  auto schema_filename_str = openstudio::toString(m_xsdPath.value());
+  const auto* schema_filename = schema_filename_str.c_str();
+  xmlSchema* schema = nullptr;
+  xmlDoc* doc = nullptr;
+
+  xmlSchemaParserCtxt* parser_ctxt = nullptr;
+  parser_ctxt = xmlSchemaNewParserCtxt(schema_filename);
+  if (parser_ctxt == nullptr) {
+    //throw std::runtime_error("Memory error reading schema in xmlSchematronNewParserCtxt");
+  }
+
+  schema = xmlSchemaParse(parser_ctxt);
+  xmlSchemaFreeParserCtxt(parser_ctxt);
+
+  // Start on the document to validate side
+  auto filename_str = openstudio::toString(xmlPath);
+  const auto* filename = filename_str.c_str();
+
+  doc = xmlReadFile(filename, nullptr, 0);
+
+  xmlSchemaValidCtxt* ctxt = nullptr;
+  ctxt = xmlSchemaNewValidCtxt(schema);
+  if (ctxt == nullptr) {
+    //throw std::runtime_error("Memory error reading schema in xmlSchematronNewValidCtxt");
+  }
+
+  int ret = xmlSchemaValidateDoc(ctxt, doc);
+  if (ret == 0) {
+    //fmt::print(stderr, "{} validates\n", filename);
+  } else if (ret > 0) {
+    //fmt::print(stderr, "{} fails to validate\n", filename);
+  } else {
+    //fmt::print(stderr, "{} validation generated an internal error, ret = {}\n", filename, ret);
+  }
+  xmlSchemaFreeValidCtxt(ctxt);
+
+  xmlSchemaFree(schema);
+
+  xmlFreeDoc(doc);     // free document
+  xmlCleanupParser();  // Free globals
 
   return true;
 }

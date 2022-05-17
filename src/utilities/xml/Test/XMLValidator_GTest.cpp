@@ -59,7 +59,7 @@ TEST_F(XMLValidatorFixture, NonXMLFile) {
   openstudio::path xmlFile;
 
   xmlFile = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/eplusout.sql");
-  EXPECT_FALSE(xmlValidator.validate(xmlFile));
+  EXPECT_FALSE(xmlValidator.xsdValidate(xmlFile));
 }
 
 TEST_F(XMLValidatorFixture, GBXML_ValidateResources) {
@@ -70,38 +70,38 @@ TEST_F(XMLValidatorFixture, GBXML_ValidateResources) {
   openstudio::path xmlFile;
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/3951_Geometry_bug.xml");
-  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/3997_WindowScaling_bug.xml");
-  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard_Single_Family_Residential_2016.xml");
-  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/seb.xml");
-  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/simpleBox_vasari.xml");
-  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/TestCube.xml");
-  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/TestCubeAlternateUnits.xml");
-  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/TestSchedules.xml");
-  EXPECT_FALSE(xmlValidator.validate(xmlFile));
+  EXPECT_FALSE(xmlValidator.xsdValidate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/TropicBird.xml");
-  EXPECT_FALSE(xmlValidator.validate(xmlFile));
+  EXPECT_FALSE(xmlValidator.xsdValidate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/TropicBird_BEM_4_2018.xml");
-  EXPECT_FALSE(xmlValidator.validate(xmlFile));
+  EXPECT_FALSE(xmlValidator.xsdValidate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/TwoStoryOffice_Trane.xml");
-  EXPECT_FALSE(xmlValidator.validate(xmlFile));
+  EXPECT_FALSE(xmlValidator.xsdValidate(xmlFile));
 
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/ZNETH.xml");
-  EXPECT_TRUE(xmlValidator.validate(xmlFile));
+  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
 }
