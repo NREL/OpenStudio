@@ -78,14 +78,7 @@ bool XMLValidator::validate(const openstudio::path& xmlPath) {
     return false;
   }
 
-  // Let's parse the XML document. The parser will cache any grammars encountered.
-  m_parser.parse(toString(openstudio::filesystem::system_complete(xmlPath)).c_str());
-
-  unsigned int errorCount = m_parser.getErrorCount();
-  if (errorCount > 0) {
-    LOG(Error, "'" << toString(xmlPath) << "' has " << errorCount << " error(s)");
-    return false;
-  }
+  // TODO
 
   return true;
 }
