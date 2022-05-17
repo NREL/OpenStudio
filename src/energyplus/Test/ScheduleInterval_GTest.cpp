@@ -1569,7 +1569,7 @@ TEST_F(EnergyPlusFixture, DISABLED_ForwardTranslator_ScheduleVariableInterval_Da
   bool until24Found = false;
   bool nextValueShouldBeLast = false;
   bool hitNextValueShouldBeLast = false;
-  unsigned numUntils = 0;
+  [[maybe_unused]] unsigned numUntils = 0;
 
   for (unsigned i = 0; i < N; ++i) {
     boost::optional<std::string> field = objects[0].getString(i, true, false);
