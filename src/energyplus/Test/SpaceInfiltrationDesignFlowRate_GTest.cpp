@@ -242,7 +242,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate_Spac
       }
     }
 
-    EXPECT_EQ(0.687, totalInfiltration);
+    EXPECT_DOUBLE_EQ(0.687, totalInfiltration);
   }
 
   // When including Space translation (new E+ 9.6.0)
