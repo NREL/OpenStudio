@@ -114,6 +114,8 @@ namespace model {
 
     bool setVolume(double volume);
 
+    void autocalculateVolume();
+
     void resetVolume();
 
     //@}
@@ -283,6 +285,8 @@ namespace model {
     /// Returns the volume (m^3).
     /// Does not include space multiplier in calculation.
     double volume() const;
+
+    bool isVolumeDefaulted() const;
 
     bool isVolumeAutocalculated() const;
 

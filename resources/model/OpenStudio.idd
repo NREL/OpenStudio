@@ -5304,6 +5304,8 @@ OS:Space,
   N5; \field Volume
        \type real
        \units m3
+       \autocalculatable
+       \default autocalculate
 
 OS:Surface,
        \extensible:3

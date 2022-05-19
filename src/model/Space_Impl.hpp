@@ -164,6 +164,8 @@ namespace model {
 
       bool setVolume(double volume);
 
+      void autocalculateVolume();
+
       void resetVolume();
 
       //@}
@@ -322,6 +324,8 @@ namespace model {
       double exteriorWallArea() const;
 
       double volume() const;
+
+      bool isVolumeDefaulted() const;
 
       bool isVolumeAutocalculated() const;
 
