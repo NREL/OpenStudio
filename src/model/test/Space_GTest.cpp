@@ -2796,6 +2796,7 @@ TEST_F(ModelFixture, Space_setVolume) {
 
   // check dimensions
   EXPECT_TRUE(space.isVolumeAutocalculated());
+  EXPECT_TRUE(space.isVolumeDefaulted());
   EXPECT_DOUBLE_EQ(100.0, space.floorArea());
   EXPECT_DOUBLE_EQ(360.0, space.volume());
   EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
@@ -2804,6 +2805,7 @@ TEST_F(ModelFixture, Space_setVolume) {
   // set volume
   EXPECT_TRUE(space.setVolume(365.0));
   EXPECT_FALSE(space.isVolumeAutocalculated());
+  EXPECT_FALSE(space.isVolumeDefaulted());
   EXPECT_DOUBLE_EQ(100.0, space.floorArea());
   EXPECT_DOUBLE_EQ(365.0, space.volume());
   EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
@@ -2812,6 +2814,19 @@ TEST_F(ModelFixture, Space_setVolume) {
   // reset volume
   space.resetVolume();
   EXPECT_TRUE(space.isVolumeAutocalculated());
+  EXPECT_TRUE(space.isVolumeDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // autocalculate volume
+  EXPECT_TRUE(space.setVolume(370.0));
+  EXPECT_FALSE(space.isVolumeAutocalculated());
+  EXPECT_FALSE(space.isVolumeDefaulted());
+  space.autocalculateVolume();
+  EXPECT_TRUE(space.isVolumeAutocalculated());
+  EXPECT_FALSE(space.isVolumeDefaulted());
   EXPECT_DOUBLE_EQ(100.0, space.floorArea());
   EXPECT_DOUBLE_EQ(360.0, space.volume());
   EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
