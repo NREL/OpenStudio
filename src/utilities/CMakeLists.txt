@@ -309,6 +309,7 @@ set(${target_name}_test_src
   geometry/Test/ThreeJS_GTest.cpp
   geometry/Test/FloorplanJS_GTest.cpp
   geometry/Test/Transformation_GTest.cpp
+  geometry/Test/Polyhedron_GTest.cpp
 
   math/test/FloatCompare_GTest.cpp
   math/test/Permutation_GTest.cpp
