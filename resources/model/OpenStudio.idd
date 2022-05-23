@@ -1,4 +1,4 @@
-!IDD_Version 3.4.0
+!IDD_Version 3.4.1
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.3.1
+       \default 3.4.1
   A3; \field Prerelease Identifier
        \type alpha
 
@@ -5298,9 +5298,14 @@ OS:Space,
   A9, \field Design Specification Outdoor Air Object Name
        \type object-list
        \object-list DesignSpecificationOutdoorAirNames
-  A10; \field Building Unit Name
+  A10, \field Building Unit Name
        \type object-list
        \object-list BuildingUnitNames
+  N5; \field Volume
+       \type real
+       \units m3
+       \autocalculatable
+       \default autocalculate
 
 OS:Surface,
        \extensible:3

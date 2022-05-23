@@ -5,7 +5,7 @@
 ! =============================================================================
 
 !  Version,
-!    9.3;                    !- Version Identifier
+!    22.1;                    !- Version Identifier
 
   FluidProperties:Name,
     R744,                    !- Fluid Name

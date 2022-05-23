@@ -46,7 +46,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 // Validation report
-// /Format: glTF 2.0
+// Format: glTF 2.0
 // Stats:
 // 0 animations
 // 9 materials
@@ -57,11 +57,108 @@ using namespace openstudio::model;
 // Extensions: None
 TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
   GltfForwardTranslator ft;
-  openstudio::path output;
-  output = resourcesPath() / toPath("utilities/Geometry/exampleModel.gltf");
+  openstudio::path outputPath;
+  openstudio::path inputPath;
+  openstudio::path inputNonEmbededPath;
+  outputPath = resourcesPath() / toPath("utilities/Geometry/exampleModel.gltf");
+  // Create OSM
   Model model = exampleModel();
   model.save(resourcesPath() / toPath("model/exampleModel.osm"), true);
-  bool result = ft.modelToGLTF(model, output);
+  // Generate glTF
+  bool isExported = ft.modelToGLTF(model, outputPath);
+  ASSERT_TRUE(isExported);
+  inputPath = outputPath;
+  // Load glTF
+  bool isLoaded = ft.loadGLTF(inputPath);
+  ASSERT_TRUE(isLoaded);
+  GltfMetaDataWrapper glTFMetaData = ft.getMetaData();
+
+  ASSERT_TRUE("OpenStudio" == glTFMetaData.getGenerator());
+  ASSERT_EQ(glTFMetaData.getNorthAxis(), -0.00);
+  ASSERT_TRUE("Object" == glTFMetaData.getType());
+  ASSERT_TRUE("4.3" == glTFMetaData.getVersion());
+
+  GltfBoundingBoxWrapper glTFBoundingBox = glTFMetaData.getglTFBoundingBoxWrapper();
+  // TODO: add delta during assertion
+  ASSERT_DOUBLE_EQ(glTFBoundingBox.getlookAtR(), 20.615528128088304);
+  ASSERT_EQ(glTFBoundingBox.getlookAtX(), 0.0);
+  ASSERT_EQ(glTFBoundingBox.getlookAtY(), 0.0);
+  ASSERT_EQ(glTFBoundingBox.getlookAtZ(), 0.0);
+  ASSERT_EQ(glTFBoundingBox.getmaxX(), 20.55);
+  ASSERT_EQ(glTFBoundingBox.getmaxY(), 20);
+  ASSERT_EQ(glTFBoundingBox.getmaxZ(), 20);
+  ASSERT_EQ(glTFBoundingBox.getminX(), -30);
+  ASSERT_EQ(glTFBoundingBox.getminY(), -1);
+  ASSERT_EQ(glTFBoundingBox.getminZ(), 0.0);
+
+  auto buildingStoreys = glTFMetaData.getBuildingStoryNames();
+  ASSERT_EQ(1, buildingStoreys.size());
+  ASSERT_TRUE("Building Story 1" == buildingStoreys.front());
+
+  auto _modelObjectMetaDataCollection = glTFMetaData.getglTFModelObjectMetadataWrapper();
+  ASSERT_EQ(9, _modelObjectMetaDataCollection.size());
+  // TODO: Assert few of the attributes from one of the modelObjectMetaData Collection
+  GltfModelObjectMetadataWrapper glTFModelObjectMetadata = _modelObjectMetaDataCollection.front();
+  std::string name0 = _modelObjectMetaDataCollection[0].getName();
+  std::string name1 = _modelObjectMetaDataCollection[1].getName();
+  ASSERT_FALSE(name0 == name1);
+  /* std::string name2 = _modelObjectMetaDataCollection[2].getName();
+  std::string name3 = _modelObjectMetaDataCollection[3].getName();
+  std::string name4 = _modelObjectMetaDataCollection[4].getName();
+  std::string name5 = _modelObjectMetaDataCollection[5].getName();
+  std::string name6 = _modelObjectMetaDataCollection[6].getName();
+  std::string name7 = _modelObjectMetaDataCollection[7].getName();
+  std::string name8 = _modelObjectMetaDataCollection[8].getName();*/
+
+  ASSERT_EQ(glTFMetaData.getStoryCount(), 1);
+  ASSERT_EQ(glTFMetaData.getThermalZoneCount(), 1);
+  ASSERT_EQ(glTFMetaData.getSpaceCount(), 4);
+  ASSERT_EQ(glTFMetaData.getSpaceTypeCount(), 1);
+  ASSERT_EQ(glTFMetaData.getConstructionSetCount(), 1);
+  ASSERT_EQ(glTFMetaData.getAirLoopCount(), 1);
+
+  std::vector<GltfUserDataWrapper> glTFUserDataVector = ft.getUserDataCollection();
+  ASSERT_EQ(glTFUserDataVector.size(), 30);
+  GltfUserDataWrapper glTFUserData = ft.getUserDataBySurfaceName("Surface 1");
+  ASSERT_TRUE(glTFUserData.getSurfaceType() == "Floor");
+  ASSERT_TRUE(glTFUserData.getConstructionMaterialName() == "Construction_Slab");
+  ASSERT_TRUE(glTFUserData.getThermalZoneName() == "Thermal Zone 1");
+  ASSERT_TRUE(glTFUserData.getSunExposure() == "NoSun");
+  ASSERT_TRUE(glTFUserData.getWindExposure() == "NoWind");
+  ASSERT_TRUE(glTFUserData.getIlluminanceSetpoint() == 0.0);
+  ASSERT_TRUE(glTFUserData.getOutsideBoundaryCondition() == "Ground");
+  ASSERT_TRUE(glTFUserData.getBoundaryMaterialName() == "Boundary_Ground");
+}
+
+TEST_F(ModelFixture, GltfForwardTranslator_ParkUnder_Retail_Office_C2) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/ParkUnder_Retail_Office_C2.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/ParkUnder_Retail_Office_C2.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), output);
+  ASSERT_TRUE(result);
+}
+
+// Validation report
+// Format: glTF 2.0
+// Stats:
+// 0 animations
+// 5 materials
+// 750 meshes
+// 751 nodes
+// 750 primitives
+// 0 textures
+// Extensions: None
+TEST_F(ModelFixture, GltfForwardTranslator_ASHRAECourthouse) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  output = resourcesPath() / toPath("utilities/Geometry/ASHRAECourthouse.gltf");
+  osversion::VersionTranslator translator;
+  openstudio::path modelPath = resourcesPath() / toPath("model/ASHRAECourthouse.osm");
+  model::OptionalModel model = translator.loadModel(modelPath);
+  bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
 }
 
@@ -78,9 +175,9 @@ TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
-  output = resourcesPath() / toPath("utilities/Geometry/RefBldgSecondarySchoolNew2004_Chicago.gltf");
+  output = resourcesPath() / toPath("utilities/Geometry/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.gltf");
   osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgSecondarySchoolNew2004_Chicago.osm");
+  openstudio::path modelPath = resourcesPath() / toPath("model/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
   bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
@@ -99,9 +196,9 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
-  output = resourcesPath() / toPath("utilities/Geometry/RefBldgHospitalNew2004_Chicago.gltf");
+  output = resourcesPath() / toPath("utilities/Geometry/Sample_DOE-RefBldgHospitalNew2004_Chicago.gltf");
   osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgHospitalNew2004_Chicago.osm");
+  openstudio::path modelPath = resourcesPath() / toPath("model/Sample_DOE-RefBldgHospitalNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
   bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
@@ -123,9 +220,9 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
-  output = resourcesPath() / toPath("utilities/Geometry/RefBldgOutPatientNew2004_Chicago.gltf");
+  output = resourcesPath() / toPath("utilities/Geometry/Sample_DOE-RefBldgOutPatientNew2004_Chicago.gltf");
   osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgOutPatientNew2004_Chicago.osm");
+  openstudio::path modelPath = resourcesPath() / toPath("model/Sample_DOE-RefBldgOutPatientNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
   bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);
@@ -144,9 +241,9 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
 TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSmallHotelNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
-  output = resourcesPath() / toPath("utilities/Geometry/RefBldgSmallHotelNew2004_Chicago.gltf");
+  output = resourcesPath() / toPath("utilities/Geometry/Sample_DOE-RefBldgSmallHotelNew2004_Chicago.gltf");
   osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("model/RefBldgSmallHotelNew2004_Chicago.osm");
+  openstudio::path modelPath = resourcesPath() / toPath("model/Sample_DOE-RefBldgSmallHotelNew2004_Chicago.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
   bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);

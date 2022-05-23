@@ -109,7 +109,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ElectricLoadCenterStorageLiIonNMCBat
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ElectricLoadCenterStorageLiIonNMCBattery) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   // electric load center storage li ion nmc battery
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::ElectricLoadCenter_Storage_LiIonNMCBattery);

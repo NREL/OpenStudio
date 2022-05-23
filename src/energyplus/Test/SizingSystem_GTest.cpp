@@ -108,7 +108,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SizingSystem) {
 }
 
 TEST_F(EnergyPlusFixture, DISABLED_ReverseTranslator_SizingSystem) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   // air loop hvac
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::AirLoopHVAC);

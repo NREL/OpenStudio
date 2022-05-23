@@ -120,7 +120,7 @@ namespace energyplus {
     m_excludeSQliteOutputReport = false;
     m_excludeHTMLOutputReport = false;
     m_excludeVariableDictionary = false;
-    m_excludeSpaceTranslation = true;
+    m_excludeSpaceTranslation = false;  // At 3.4.1, this was changed to false.
   }
 
   Workspace ForwardTranslator::translateModel(const Model& model, ProgressBar* progressBar) {
@@ -678,7 +678,7 @@ namespace energyplus {
       this->createStandardOutputRequests();
     }
 
-    Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+    Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
     OptionalWorkspaceObject vo = workspace.versionObject();
     OS_ASSERT(vo);
     workspace.removeObject(vo->handle());

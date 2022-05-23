@@ -115,7 +115,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_CurveQuadLinear) {
 
   ReverseTranslator reverseTranslator;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_curve = w.addObject(IdfObject(IddObjectType::Curve_QuadLinear));
   ASSERT_TRUE(_i_curve);
   _i_curve->setName("Curve Quad Linear");

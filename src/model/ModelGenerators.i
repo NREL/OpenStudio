@@ -38,16 +38,27 @@
   #include <model/FloorplanJSForwardTranslator.hpp>
   #include <model/ThreeJSForwardTranslator.hpp>
   #include <model/ThreeJSReverseTranslator.hpp>
+  #include <model/GltfBoundingBoxWrapper.hpp>
+  #include <model/GltfModelObjectMetadataWrapper.hpp>
+  #include <model/GltfMetaDataWrapper.hpp>
+  #include <model/GltfUserDataWrapper.hpp>
   #include <model/GltfForwardTranslator.hpp>
   #include <model/ModelMerger.hpp>
 %}
 %include <model/FloorplanJSForwardTranslator.hpp>
 %include <model/ThreeJSForwardTranslator.hpp>
 %include <model/ThreeJSReverseTranslator.hpp>
+%include <model/GltfBoundingBoxWrapper.hpp>
+%include <model/GltfModelObjectMetadataWrapper.hpp>
+%include <model/GltfMetaDataWrapper.hpp>
+%include <model/GltfUserDataWrapper.hpp>
 %include <model/GltfForwardTranslator.hpp>
 %include <model/ModelMerger.hpp>
 
 
+// create an instantiation of the vector classes
+%template(GltfUserDataWrapperVector) std::vector<openstudio::model::GltfUserDataWrapper>;
+%template(GltfModelObjectMetadataWrapperVector) std::vector<openstudio::model::GltfModelObjectMetadataWrapper>;
 
 #if defined SWIGCSHARP
 

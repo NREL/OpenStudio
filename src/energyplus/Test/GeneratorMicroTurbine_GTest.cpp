@@ -230,7 +230,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorGeneratorMicroTurbine_ELCD_Orphan) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_GeneratorMicroTurbine) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   // electric load center distribution
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::ElectricLoadCenter_Distribution);

@@ -413,7 +413,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACDedicatedOutdoorAirSystem
 }
 
 /* TEST_F(EnergyPlusFixture, ReverseTranslator_AirLoopHVACDedicatedOutdoorAirSystem) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idf_controller(openstudio::IddObjectType::Controller_OutdoorAir);
   idf_controller.setString(Controller_OutdoorAirFields::Name, "Controller Outdoor Air 1");
