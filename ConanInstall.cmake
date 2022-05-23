@@ -82,7 +82,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
     set(CONAN_RUBY
-        "openstudio_ruby/2.7.2@jmarrec/testing#3c3fad827c605f2f352f3e5d85105d6b"
+        "openstudio_ruby/2.7.2@jmarrec/testing#3f5d64f69135b5426c2b07ff8bb0c5a0"
     ) # TODO: pending https://github.com/NREL/conan-openstudio-ruby/pull/39
   endif()
 
@@ -96,16 +96,16 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     ${CONAN_READLINE}
     ${CONAN_QT}
     ${CONAN_RUBY}
-    "openssl/1.1.1n#e4c3f950ad6dc8fdc569b32d4e0bbd9a" # force every package to align on the same as our conan-openstudio-ruby
-    "boost/1.78.0#277bce646044c183375481df48f9ba26"
+    "openssl/1.1.1o#213dbdeb846a4b40b4dec36cf2e673d7" # force every package to align on the same as our conan-openstudio-ruby
+    "boost/1.79.0#f664bfe40e2245fa9baf1c742591d582"
     "pugixml/1.12.1#5a39f82651eba3e7d6197903a3202e21"
     "jsoncpp/1.9.5#536d080aa154e5853332339bf576747c"
-    "minizip/1.2.12#c7ca0f1bcce5559c3e0d04c4f7c4a4ca" # This depends on zlib/1.2.11, and basically patches it
-    "zlib/1.2.12#82202701ea360c0863f1db5008067122" # Also needed, so we can find zlib.h and co (+ pinning exactly is good)
+    "minizip/1.2.12#0b5296887a2558500d0323c6c94c8d02" # This depends on zlib/1.2.11, and basically patches it
+    "zlib/1.2.12#3b9e037ae1c615d045a06c67d88491ae" # Also needed, so we can find zlib.h and co (+ pinning exactly is good)
     "fmt/8.1.1#b3e969f8561a85087bd0365c09bbf4fb"
-    "sqlite3/3.38.1#c7348c448cd1d9b52f9ca90b2b936c1d"
-    "cpprestsdk/2.10.18#003f5d46fb101c1d3bba72cf0ab781a2"
-    "websocketpp/0.8.2#2ec4cd9d431005dd52ee012df204c362"
+    "sqlite3/3.38.5#68f3bf289cde01176e39355869c39ac0"
+    "cpprestsdk/2.10.18#df2f6ac88e47cadd9c9e8e0971e00d89"
+    "websocketpp/0.8.2#3fd704c4c5388d9c08b11af86f79f616"
     "geographiclib/1.52#76536a9315a003ef3511919310b2fe37"
     "swig/4.0.2#9fcccb1e39eed9acd53a4363d8129be5"
     "tinygltf/2.5.0#c8b2aca9505e86312bb42aa0e1c639ec"
