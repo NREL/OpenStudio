@@ -848,4 +848,21 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
   return true;
 }
 
+bool isAlmostEqual3dPt(const Point3d& lhs, const Point3d& rhs, double tol) {
+  // TODO: this is what E+ does... I think I would prefer just calling getDistance...
+  return ((std::abs(lhs.x() - rhs.x()) < tol) && (std::abs(lhs.y() - rhs.y()) < tol) && (std::abs(lhs.z() - rhs.z()) < tol));
+  // return getDistance(lhs, rhs) < tol;
+}
+
+bool isPointOnLineBetweenPoints(const Point3d& start, const Point3d& end, const Point3d& test, double tol) {
+  // The tolerance has to be low enough. Take for eg a plenum that has an edge that's 30meters long, you risk adding point from the floor to
+  // the roof, cf E+ #7383
+  // compute the shortest distance from the point to the line first to avoid false positive
+  double distance = getDistancePointToLineSegment(test, {start, end});
+  if (distance < tol) {  // getDistancePointToLineSegment always positive, it's calculated as norml_L2
+    return (std::abs((getDistance(start, end) - (getDistance(start, test) + getDistance(test, end)))) < tol);
+  }
+  return false;
+}
+
 }  // namespace openstudio
