@@ -218,14 +218,14 @@ std::vector<Surface3dEdge> edgesInBoth(const std::vector<Surface3dEdge>& edges1,
   return inBoth;
 }
 
-VolumeEnclosedReturnType Polyhedron::isVolumeEnclosed() const {
+VolumeEnclosedReturnType Polyhedron::isEnclosedVolume() const {
 
   VolumeEnclosedReturnType result;
 
   std::vector<Surface3dEdge> edgeNot2orig = edgesNotTwoForEnclosedVolumeTest(*this);
   // if all edges had two counts then it is fully enclosed
   if (edgeNot2orig.empty()) {
-    result.isVolumeEnclosed = true;
+    result.isEnclosedVolume = true;
     return result;
   } else {  // if the count is three or greater it is likely that a vertex that is colinear was counted on the faces on one edge and not
             // on the "other side" of the edge Go through all the points looking for the number that are colinear and see if that is
@@ -234,19 +234,19 @@ VolumeEnclosedReturnType Polyhedron::isVolumeEnclosed() const {
       updateZonePolygonsForMissingColinearPoints();  // this is done after initial test since it is computationally intensive.
     std::vector<Surface3dEdge> edgeNot2again = edgesNotTwoForEnclosedVolumeTest(updatedZonePoly);
     if (edgeNot2again.empty()) {
-      result.isVolumeEnclosed = true;
+      result.isEnclosedVolume = true;
       return result;
     }
     // only return a list of those edges that appear in both the original edge and the revised edges:
     // this eliminates added edges that will confuse users (edges that were caught by the updateZonePolygonsForMissingColinearPoints routine)
-    result.isVolumeEnclosed = false;
+    result.isEnclosedVolume = false;
     result.edgesNot2 = edgesInBoth(edgeNot2orig, edgeNot2again);
     return result;
   }
 }
 
 // boost::optional<double> Polyhedron::calculatedVolume() const {
-//   auto [isVolEnclosed, edgesNot2] = isVolumeEnclosed();
+//   auto [isVolEnclosed, edgesNot2] = isEnclosedVolume();
 //   if (isVolEnclosed) {
 //     return calcPolyhedronVolume();
 //   }

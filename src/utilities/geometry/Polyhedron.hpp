@@ -91,7 +91,7 @@ class VolumeEnclosedReturnType
  public:
   VolumeEnclosedReturnType() = default;
 
-  bool isVolumeEnclosed = false;
+  bool isEnclosedVolume = false;
   Surface3dEdgeVector edgesNot2;
 };
 
@@ -104,7 +104,7 @@ UTILITIES_API class Polyhedron
 
   // test if the volume described by the polyhedron if full enclosed (would not leak)
   // This is done by checking that every edge is used exactly TWICE.
-  VolumeEnclosedReturnType isVolumeEnclosed() const;
+  VolumeEnclosedReturnType isEnclosedVolume() const;
 
   // Maybe unused
   std::vector<Point3d> uniqueVertices() const;

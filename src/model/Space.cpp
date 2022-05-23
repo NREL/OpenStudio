@@ -896,7 +896,7 @@ namespace model {
 
     bool Space_Impl::isEnclosedVolume() const {
       auto volumePoly = this->polyhedron();
-      auto [isVolEnclosed, edgesNot2] = volumePoly.isVolumeEnclosed();
+      auto [isVolEnclosed, edgesNot2] = volumePoly.isEnclosedVolume();
       if (!isVolEnclosed) {
         LOG(Warn, briefDescription() << " is not enclosed, there are " << edgesNot2.size() << " edges that aren't used exactly twice");
         for (const Surface3dEdge& edge : edgesNot2) {
@@ -910,7 +910,7 @@ namespace model {
 
       auto volumePoly = this->polyhedron();
 
-      auto [isVolEnclosed, edgesNot2] = volumePoly.isVolumeEnclosed();
+      auto [isVolEnclosed, edgesNot2] = volumePoly.isEnclosedVolume();
       if (isVolEnclosed) {
         return volumePoly.calcPolyhedronVolume();
       }

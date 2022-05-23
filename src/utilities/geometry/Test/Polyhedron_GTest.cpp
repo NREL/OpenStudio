@@ -91,8 +91,8 @@ TEST_F(GeometryFixture, Polyhedron_Enclosed) {
 
   // Now do it in one go
 
-  auto r = zonePoly.isVolumeEnclosed();
-  EXPECT_TRUE(r.isVolumeEnclosed);
+  auto r = zonePoly.isEnclosedVolume();
+  EXPECT_TRUE(r.isEnclosedVolume);
   EXPECT_TRUE(r.edgesNot2.empty());
 
   double volume = 30.0 * 10.0 * 0.3;
@@ -135,8 +135,8 @@ TEST_F(GeometryFixture, Polyhedron_Titled_Roof) {
 
   Polyhedron zonePoly({south1, south2, north, east, west, roof, floor});
 
-  auto r = zonePoly.isVolumeEnclosed();
-  EXPECT_TRUE(r.isVolumeEnclosed);
+  auto r = zonePoly.isEnclosedVolume();
+  EXPECT_TRUE(r.isEnclosedVolume);
   EXPECT_TRUE(r.edgesNot2.empty());
 
   double volume = 30.0 * 10.0 * 0.3 + 30.0 * 10.0 * 10.0 / 2.0;
