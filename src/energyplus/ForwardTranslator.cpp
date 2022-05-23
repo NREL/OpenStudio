@@ -380,7 +380,8 @@ namespace energyplus {
       // SpaceInfiltrationEffectiveLeakageAreas and SpaceInfiltrationFlowCoefficients don't need it, they are always absolute
       for (auto& infil : model.getConcreteModelObjects<SpaceInfiltrationDesignFlowRate>()) {
         // technically we only need to hardsize if the space it's assigned to is part of a thermalzone with more than one space
-        if (infil.space() && !openstudio::istringEqual("Flow/Space", infil.designFlowRateCalculationMethod()) && infil.space()->thermalZone().spaces().size() > 1) {
+        if (infil.space() && !openstudio::istringEqual("Flow/Space", infil.designFlowRateCalculationMethod())
+            && infil.space()->thermalZone().spaces().size() > 1) {
           infil.hardSize();  // translates to Flow/Zone
         }
       }
