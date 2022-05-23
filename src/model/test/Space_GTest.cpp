@@ -3004,6 +3004,8 @@ TEST_F(ModelFixture, Space_Polyhedron_Volume) {
   floor.setName("FLOOR");
   floor.setSpace(s);
 
+  EXPECT_TRUE(s.isEnclosedVolume());
+
   double volume = 30.0 * 10.0 * 0.3 + 30.0 * 10.0 * 10.0 / 2.0;
   EXPECT_EQ(volume, s.volume());
 }

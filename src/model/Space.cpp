@@ -127,6 +127,7 @@
 #include "../utilities/geometry/EulerAngles.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/geometry/Polygon3d.hpp"
+#include "../utilities/geometry/Polyhedron.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -885,7 +886,38 @@ namespace model {
       return result;
     }
 
+    Polyhedron Space_Impl::polyhedron() const {
+      std::vector<Surface3d> surface3ds;
+      for (auto& surface : surfaces()) {
+        surface3ds.emplace_back(surface.vertices(), surface.nameString());
+      }
+      return {surface3ds};
+    }
+
+    bool Space_Impl::isEnclosedVolume() const {
+      auto volumePoly = this->polyhedron();
+      auto [isVolEnclosed, edgesNot2] = volumePoly.isVolumeEnclosed();
+      if (!isVolEnclosed) {
+        LOG(Warn, briefDescription() << " is not enclosed, there are " << edgesNot2.size() << " edges that aren't used exactly twice");
+        for (const Surface3dEdge& edge : edgesNot2) {
+          LOG(Debug, edge);
+        }
+      }
+      return isVolEnclosed;
+    }
+
     double Space_Impl::volume() const {
+
+      auto volumePoly = this->polyhedron();
+
+      auto [isVolEnclosed, edgesNot2] = volumePoly.isVolumeEnclosed();
+      if (isVolEnclosed) {
+        return volumePoly.calcPolyhedronVolume();
+      }
+
+      LOG(Warn, briefDescription() << " is not enclosed, there are " << edgesNot2.size()
+                                   << " edges that aren't used exactly twice. Volume calculation will be potentially inaccurate");
+
       double result = 0;
 
       // TODO: need a better method
@@ -3278,6 +3310,14 @@ namespace model {
 
   double Space::exposedPerimeter(const Polygon3d& buildingPerimeter) const {
     return getImpl<detail::Space_Impl>()->exposedPerimeter(buildingPerimeter);
+  }
+
+  Polyhedron Space::polyhedron() const {
+    return getImpl<detail::Space_Impl>()->polyhedron();
+  }
+
+  bool Space::isEnclosedVolume() const {
+    return getImpl<detail::Space_Impl>()->isEnclosedVolume();
   }
 
   /// @cond
