@@ -2782,6 +2782,57 @@ TEST_F(ModelFixture, ExposedPerimeter) {
   }
 }
 
+TEST_F(ModelFixture, Space_setVolume) {
+  // create from floor print
+  Model model;
+  Point3dVector floorPrint;
+  floorPrint.push_back(Point3d(0, 10, 0));
+  floorPrint.push_back(Point3d(10, 10, 0));
+  floorPrint.push_back(Point3d(10, 0, 0));
+  floorPrint.push_back(Point3d(0, 0, 0));
+  boost::optional<Space> ospace = Space::fromFloorPrint(floorPrint, 3.6, model);
+  ASSERT_TRUE(ospace);
+  Space space = *ospace;
+
+  // check dimensions
+  EXPECT_TRUE(space.isVolumeAutocalculated());
+  EXPECT_TRUE(space.isVolumeDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // set volume
+  EXPECT_TRUE(space.setVolume(365.0));
+  EXPECT_FALSE(space.isVolumeAutocalculated());
+  EXPECT_FALSE(space.isVolumeDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(365.0, space.volume());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // reset volume
+  space.resetVolume();
+  EXPECT_TRUE(space.isVolumeAutocalculated());
+  EXPECT_TRUE(space.isVolumeDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // autocalculate volume
+  EXPECT_TRUE(space.setVolume(370.0));
+  EXPECT_FALSE(space.isVolumeAutocalculated());
+  EXPECT_FALSE(space.isVolumeDefaulted());
+  space.autocalculateVolume();
+  EXPECT_TRUE(space.isVolumeAutocalculated());
+  EXPECT_FALSE(space.isVolumeDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+}
+
 /*****************************************************************************************************************************************************
 *                                                           D I S A B L E D    T E S T S                                                            *
 *****************************************************************************************************************************************************/

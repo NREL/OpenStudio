@@ -166,6 +166,12 @@ namespace model {
 
       void resetPartofTotalFloorArea();
 
+      bool setVolume(double volume);
+
+      void autocalculateVolume();
+
+      void resetVolume();
+
       //@}
 
       /// Returns the space type for this space.
@@ -322,6 +328,10 @@ namespace model {
       double exteriorWallArea() const;
 
       double volume() const;
+
+      bool isVolumeDefaulted() const;
+
+      bool isVolumeAutocalculated() const;
 
       double numberOfPeople() const;
 
