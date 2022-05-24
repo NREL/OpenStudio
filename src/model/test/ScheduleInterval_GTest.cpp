@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -73,7 +73,7 @@ TEST_F(ModelFixture, Schedule_FixedInterval) {
   EXPECT_EQ(timeSeries2.firstReportDateTime(), timeSeries3.firstReportDateTime());
   ASSERT_TRUE(timeSeries2.intervalLength());
   ASSERT_TRUE(timeSeries3.intervalLength());
-  EXPECT_EQ(timeSeries2.intervalLength(), timeSeries3.intervalLength());
+  EXPECT_EQ(timeSeries2.intervalLength().get(), timeSeries3.intervalLength().get());
   EXPECT_EQ(timeSeries2.values().size(), timeSeries3.values().size());
 
   boost::optional<ScheduleInterval> newSchedule = ScheduleInterval::fromTimeSeries(timeSeries3, model);
@@ -84,7 +84,7 @@ TEST_F(ModelFixture, Schedule_FixedInterval) {
   EXPECT_EQ(timeSeries2.firstReportDateTime(), timeSeries4.firstReportDateTime());
   ASSERT_TRUE(timeSeries2.intervalLength());
   ASSERT_TRUE(timeSeries4.intervalLength());
-  EXPECT_EQ(timeSeries2.intervalLength(), timeSeries4.intervalLength());
+  EXPECT_EQ(timeSeries2.intervalLength().get(), timeSeries4.intervalLength().get());
   EXPECT_EQ(timeSeries2.values().size(), timeSeries4.values().size());
 }
 
@@ -315,6 +315,14 @@ TEST_F(ModelFixture, ScheduleFile) {
   //EXPECT_EQ("Tab", externalfile.columnSeparator().get());
   //EXPECT_EQ("Comma", externalfile.columnSeparator().get());
 
+  EXPECT_TRUE(schedule3.isInterpolatetoTimestepDefaulted());
+  EXPECT_FALSE(schedule3.interpolatetoTimestep());
+  EXPECT_TRUE(schedule3.setInterpolatetoTimestep(true));
+  EXPECT_TRUE(schedule3.interpolatetoTimestep());
+  EXPECT_FALSE(schedule3.isInterpolatetoTimestepDefaulted());
+  schedule3.resetInterpolatetoTimestep();
+  EXPECT_TRUE(schedule3.isInterpolatetoTimestepDefaulted());
+
   // The API is kinda broken on this one, but preserving it...
   EXPECT_TRUE(schedule3.isMinutesperItemDefaulted());
   ASSERT_TRUE(schedule3.minutesperItem());
@@ -327,6 +335,14 @@ TEST_F(ModelFixture, ScheduleFile) {
   EXPECT_TRUE(schedule3.isMinutesperItemDefaulted());
   ASSERT_TRUE(schedule3.minutesperItem());
   EXPECT_EQ("60", schedule3.minutesperItem().get());
+
+  EXPECT_TRUE(schedule3.isAdjustScheduleforDaylightSavingsDefaulted());
+  EXPECT_TRUE(schedule3.adjustScheduleforDaylightSavings());
+  EXPECT_TRUE(schedule3.setAdjustScheduleforDaylightSavings(false));
+  EXPECT_FALSE(schedule3.adjustScheduleforDaylightSavings());
+  EXPECT_FALSE(schedule3.isAdjustScheduleforDaylightSavingsDefaulted());
+  schedule3.resetAdjustScheduleforDaylightSavings();
+  EXPECT_TRUE(schedule3.isAdjustScheduleforDaylightSavingsDefaulted());
 
   // shouldn't create a new object
   boost::optional<ExternalFile> externalfile2 = ExternalFile::getExternalFile(model, openstudio::toString(p));

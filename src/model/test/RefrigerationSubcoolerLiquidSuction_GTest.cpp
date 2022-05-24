@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -63,39 +63,39 @@ TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_LiquidSuctionDesignSubc
   Model m;
   RefrigerationSubcoolerLiquidSuction refrigerationSubcoolerLiquidSuction = RefrigerationSubcoolerLiquidSuction(m);
 
-  EXPECT_EQ(6.0, refrigerationSubcoolerLiquidSuction.liquidSuctionDesignSubcoolingTemperatureDifference());  // Brian's value
+  EXPECT_EQ(6.0, refrigerationSubcoolerLiquidSuction.liquidSuctionDesignSubcoolingTemperatureDifference().get());  // Brian's value
 
   refrigerationSubcoolerLiquidSuction.setLiquidSuctionDesignSubcoolingTemperatureDifference(15.0);
-  EXPECT_EQ(15.0, refrigerationSubcoolerLiquidSuction.liquidSuctionDesignSubcoolingTemperatureDifference());
+  EXPECT_EQ(15.0, refrigerationSubcoolerLiquidSuction.liquidSuctionDesignSubcoolingTemperatureDifference().get());
 
   refrigerationSubcoolerLiquidSuction.setLiquidSuctionDesignSubcoolingTemperatureDifference(-15.0);
-  EXPECT_EQ(-15.0, refrigerationSubcoolerLiquidSuction.liquidSuctionDesignSubcoolingTemperatureDifference());
+  EXPECT_EQ(-15.0, refrigerationSubcoolerLiquidSuction.liquidSuctionDesignSubcoolingTemperatureDifference().get());
 }
 
 TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_DesignLiquidInletTemperature) {
   Model m;
   RefrigerationSubcoolerLiquidSuction refrigerationSubcoolerLiquidSuction = RefrigerationSubcoolerLiquidSuction(m);
 
-  EXPECT_EQ(16.0, refrigerationSubcoolerLiquidSuction.designLiquidInletTemperature());  // Brian's value
+  EXPECT_EQ(16.0, refrigerationSubcoolerLiquidSuction.designLiquidInletTemperature().get());  // Brian's value
 
   refrigerationSubcoolerLiquidSuction.setDesignLiquidInletTemperature(15.0);
-  EXPECT_EQ(15.0, refrigerationSubcoolerLiquidSuction.designLiquidInletTemperature());
+  EXPECT_EQ(15.0, refrigerationSubcoolerLiquidSuction.designLiquidInletTemperature().get());
 
   refrigerationSubcoolerLiquidSuction.setDesignLiquidInletTemperature(-15.0);
-  EXPECT_EQ(-15.0, refrigerationSubcoolerLiquidSuction.designLiquidInletTemperature());
+  EXPECT_EQ(-15.0, refrigerationSubcoolerLiquidSuction.designLiquidInletTemperature().get());
 }
 
 TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_DesignVaporInletTemperature) {
   Model m;
   RefrigerationSubcoolerLiquidSuction refrigerationSubcoolerLiquidSuction = RefrigerationSubcoolerLiquidSuction(m);
 
-  EXPECT_EQ(0.0, refrigerationSubcoolerLiquidSuction.designVaporInletTemperature());  // Brian's value
+  EXPECT_EQ(0.0, refrigerationSubcoolerLiquidSuction.designVaporInletTemperature().get());  // Brian's value
 
   refrigerationSubcoolerLiquidSuction.setDesignVaporInletTemperature(15.0);
-  EXPECT_EQ(15.0, refrigerationSubcoolerLiquidSuction.designVaporInletTemperature());
+  EXPECT_EQ(15.0, refrigerationSubcoolerLiquidSuction.designVaporInletTemperature().get());
 
   refrigerationSubcoolerLiquidSuction.setDesignVaporInletTemperature(-15.0);
-  EXPECT_EQ(-15.0, refrigerationSubcoolerLiquidSuction.designVaporInletTemperature());
+  EXPECT_EQ(-15.0, refrigerationSubcoolerLiquidSuction.designVaporInletTemperature().get());
 }
 
 TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_Remove) {
@@ -122,9 +122,9 @@ TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_CloneOneModelWithDefaul
 
   EXPECT_NE(refrigerationSubcoolerLiquidSuctionClone.handle(), refrigerationSubcoolerLiquidSuction.handle());
 
-  EXPECT_EQ(6.0, refrigerationSubcoolerLiquidSuctionClone.liquidSuctionDesignSubcoolingTemperatureDifference());
-  EXPECT_EQ(16.0, refrigerationSubcoolerLiquidSuctionClone.designLiquidInletTemperature());
-  EXPECT_EQ(0.0, refrigerationSubcoolerLiquidSuctionClone.designVaporInletTemperature());
+  EXPECT_EQ(6.0, refrigerationSubcoolerLiquidSuctionClone.liquidSuctionDesignSubcoolingTemperatureDifference().get());
+  EXPECT_EQ(16.0, refrigerationSubcoolerLiquidSuctionClone.designLiquidInletTemperature().get());
+  EXPECT_EQ(0.0, refrigerationSubcoolerLiquidSuctionClone.designVaporInletTemperature().get());
 }
 
 TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_CloneOneModelWithCustomData) {
@@ -140,7 +140,7 @@ TEST_F(ModelFixture, RefrigerationSubcoolerLiquidSuction_CloneOneModelWithCustom
 
   EXPECT_NE(refrigerationSubcoolerLiquidSuctionClone.handle(), refrigerationSubcoolerLiquidSuction.handle());
 
-  EXPECT_EQ(10.0, refrigerationSubcoolerLiquidSuctionClone.liquidSuctionDesignSubcoolingTemperatureDifference());
-  EXPECT_EQ(20.0, refrigerationSubcoolerLiquidSuctionClone.designLiquidInletTemperature());
-  EXPECT_EQ(10.0, refrigerationSubcoolerLiquidSuctionClone.designVaporInletTemperature());
+  EXPECT_EQ(10.0, refrigerationSubcoolerLiquidSuctionClone.liquidSuctionDesignSubcoolingTemperatureDifference().get());
+  EXPECT_EQ(20.0, refrigerationSubcoolerLiquidSuctionClone.designLiquidInletTemperature().get());
+  EXPECT_EQ(10.0, refrigerationSubcoolerLiquidSuctionClone.designVaporInletTemperature().get());
 }

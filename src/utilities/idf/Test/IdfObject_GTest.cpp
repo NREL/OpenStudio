@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -213,7 +213,7 @@ TEST_F(IdfFixture, IdfObject_CommentGettersAndSetters) {
     ss.str("");
     EXPECT_TRUE(object.setFieldComment(i, str));
     ss << "! " << str;
-    EXPECT_EQ(ss.str(), object.fieldComment(i));
+    EXPECT_EQ(ss.str(), object.fieldComment(i).get());
   }
 
   // field comment setter returns false, does not crash for invalid indices
@@ -680,12 +680,15 @@ TEST_F(IdfFixture, IdfObject_ScheduleFileWithUrl) {
                       1, !- Column Number \n\
                       0, !- Rows to Skip at Top \n\
                       8760, !- Number of Hours of Data \n\
-                      Comma; !- Column Separator";
+                      Comma, !- Column Separator \n\
+                      No, !- Interpolate to Timestep \n\
+                      , !- Minutes per Item \n\
+                      Yes; !- Adjust Schedule for Daylight Savings";
 
   // make an idf object
   OptionalIdfObject object = IdfObject::load(text);
   ASSERT_TRUE(object);
-  ASSERT_EQ(static_cast<unsigned>(7), object->numFields());
+  ASSERT_EQ(static_cast<unsigned>(10), object->numFields());
 
   ASSERT_TRUE(object->getString(0));
   EXPECT_EQ("Web Schedule", object->getString(0).get());
@@ -698,6 +701,12 @@ TEST_F(IdfFixture, IdfObject_ScheduleFileWithUrl) {
 
   ASSERT_TRUE(object->getString(6));
   EXPECT_EQ("Comma", object->getString(6).get());
+
+  ASSERT_TRUE(object->getString(7));
+  EXPECT_EQ("No", object->getString(7).get());
+
+  ASSERT_TRUE(object->getString(9));
+  EXPECT_EQ("Yes", object->getString(9).get());
 }
 
 TEST_F(IdfFixture, DoubleDisplayedAsString) {

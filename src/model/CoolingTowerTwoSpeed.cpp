@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -404,8 +404,14 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_CoolingTower_TwoSpeedFields::BasinHeaterOperatingScheduleName);
     }
 
-    boost::optional<std::string> CoolingTowerTwoSpeed_Impl::evaporationLossMode() const {
-      return getString(OS_CoolingTower_TwoSpeedFields::EvaporationLossMode, true);
+    std::string CoolingTowerTwoSpeed_Impl::evaporationLossMode() const {
+      boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::EvaporationLossMode, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoolingTowerTwoSpeed_Impl::isEvaporationLossModeDefaulted() const {
+      return isEmpty(OS_CoolingTower_TwoSpeedFields::EvaporationLossMode);
     }
 
     double CoolingTowerTwoSpeed_Impl::evaporationLossFactor() const {
@@ -428,8 +434,14 @@ namespace model {
       return isEmpty(OS_CoolingTower_TwoSpeedFields::DriftLossPercent);
     }
 
-    boost::optional<std::string> CoolingTowerTwoSpeed_Impl::blowdownCalculationMode() const {
-      return getString(OS_CoolingTower_TwoSpeedFields::BlowdownCalculationMode, true);
+    std::string CoolingTowerTwoSpeed_Impl::blowdownCalculationMode() const {
+      boost::optional<std::string> value = getString(OS_CoolingTower_TwoSpeedFields::BlowdownCalculationMode, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoolingTowerTwoSpeed_Impl::isBlowdownCalculationModeDefaulted() const {
+      return isEmpty(OS_CoolingTower_TwoSpeedFields::BlowdownCalculationMode);
     }
 
     double CoolingTowerTwoSpeed_Impl::blowdownConcentrationRatio() const {
@@ -1004,9 +1016,7 @@ namespace model {
     }
 
     boost::optional<double> CoolingTowerTwoSpeed_Impl::designApproachTemperature() const {
-      auto value = getDouble(OS_CoolingTower_TwoSpeedFields::DesignApproachTemperature, true);
-      OS_ASSERT(value);
-      return value.get();
+      return getDouble(OS_CoolingTower_TwoSpeedFields::DesignApproachTemperature, true);
     }
 
     bool CoolingTowerTwoSpeed_Impl::isDesignApproachTemperatureAutosized() const {
@@ -1027,9 +1037,7 @@ namespace model {
     }
 
     boost::optional<double> CoolingTowerTwoSpeed_Impl::designRangeTemperature() const {
-      auto value = getDouble(OS_CoolingTower_TwoSpeedFields::DesignRangeTemperature, true);
-      OS_ASSERT(value);
-      return value.get();
+      return getDouble(OS_CoolingTower_TwoSpeedFields::DesignRangeTemperature, true);
     }
 
     bool CoolingTowerTwoSpeed_Impl::isDesignRangeTemperatureAutosized() const {
@@ -1442,8 +1450,12 @@ namespace model {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->basinHeaterOperatingSchedule();
   }
 
-  boost::optional<std::string> CoolingTowerTwoSpeed::evaporationLossMode() const {
+  std::string CoolingTowerTwoSpeed::evaporationLossMode() const {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->evaporationLossMode();
+  }
+
+  bool CoolingTowerTwoSpeed::isEvaporationLossModeDefaulted() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isEvaporationLossModeDefaulted();
   }
 
   double CoolingTowerTwoSpeed::evaporationLossFactor() const {
@@ -1462,8 +1474,12 @@ namespace model {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isDriftLossPercentDefaulted();
   }
 
-  boost::optional<std::string> CoolingTowerTwoSpeed::blowdownCalculationMode() const {
+  std::string CoolingTowerTwoSpeed::blowdownCalculationMode() const {
     return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->blowdownCalculationMode();
+  }
+
+  bool CoolingTowerTwoSpeed::isBlowdownCalculationModeDefaulted() const {
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->isBlowdownCalculationModeDefaulted();
   }
 
   double CoolingTowerTwoSpeed::blowdownConcentrationRatio() const {
@@ -1841,7 +1857,7 @@ namespace model {
   }
 
   double CoolingTowerTwoSpeed::designInletAirDryBulbTemperature() const {
-    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->designInletAirWetBulbTemperature();
+    return getImpl<detail::CoolingTowerTwoSpeed_Impl>()->designInletAirDryBulbTemperature();
   }
 
   bool CoolingTowerTwoSpeed::setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature) {

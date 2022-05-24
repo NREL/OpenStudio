@@ -34,6 +34,16 @@ set(${target_name}_src
   ThreeJSForwardTranslator.cpp
   ThreeJSReverseTranslator.hpp
   ThreeJSReverseTranslator.cpp
+  GltfForwardTranslator.hpp
+  GltfForwardTranslator.cpp
+  GltfBoundingBoxWrapper.hpp
+  GltfBoundingBoxWrapper.cpp
+  GltfModelObjectMetadataWrapper.hpp
+  GltfModelObjectMetadataWrapper.cpp
+  GltfUserDataWrapper.hpp
+  GltfUserDataWrapper.cpp
+  GltfMetaDataWrapper.hpp
+  GltfMetaDataWrapper.cpp
   ModelMerger.hpp
   ModelMerger.cpp
 
@@ -1502,12 +1512,18 @@ set(${target_name}_src
   SurfacePropertyExposedFoundationPerimeter.cpp
   SurfacePropertyExposedFoundationPerimeter.hpp
   SurfacePropertyExposedFoundationPerimeter_Impl.hpp
+  SurfacePropertyLocalEnvironment.cpp
+  SurfacePropertyLocalEnvironment.hpp
+  SurfacePropertyLocalEnvironment_Impl.hpp
   SurfacePropertyOtherSideCoefficients.cpp
   SurfacePropertyOtherSideCoefficients.hpp
   SurfacePropertyOtherSideCoefficients_Impl.hpp
   SurfacePropertyOtherSideConditionsModel.cpp
   SurfacePropertyOtherSideConditionsModel.hpp
   SurfacePropertyOtherSideConditionsModel_Impl.hpp
+  SurfacePropertySurroundingSurfaces.cpp
+  SurfacePropertySurroundingSurfaces.hpp
+  SurfacePropertySurroundingSurfaces_Impl.hpp
   SwimmingPoolIndoor.cpp
   SwimmingPoolIndoor.hpp
   SwimmingPoolIndoor_Impl.hpp
@@ -2186,8 +2202,10 @@ set(${target_name}_test_src
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  test/SurfacePropertyLocalEnvironment_GTest.cpp
   test/SurfacePropertyOtherSideCoefficients_GTest.cpp
   test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
+  test/SurfacePropertySurroundingSurfaces_GTest.cpp
   test/SwimmingPoolIndoor_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
@@ -2196,6 +2214,7 @@ set(${target_name}_test_src
   test/TemperingValve_GTest.cpp
   test/ThreeJSForwardTranslator_GTest.cpp
   test/ThreeJSReverseTranslator_GTest.cpp
+  test/GltfForwardTranslator_GTest.cpp
   test/UnitarySystemPerformanceMultispeed_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp

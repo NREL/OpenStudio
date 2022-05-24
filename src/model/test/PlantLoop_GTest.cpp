@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -520,4 +520,19 @@ TEST_F(ModelFixture, PlantLoop_AvailabilityManagers) {
  *  ASSERT_EQ(6u, m2.getModelObjects<AvailabilityManager>().size());
  *
  */
+}
+
+TEST_F(ModelFixture, PlantLoop_CommonPipeSimulation) {
+  Model m;
+  PlantLoop plant(m);
+
+  EXPECT_EQ("None", plant.commonPipeSimulation());
+  EXPECT_TRUE(plant.isCommonPipeSimulationDefaulted());
+
+  EXPECT_TRUE(plant.setCommonPipeSimulation("CommonPipe"));
+  EXPECT_FALSE(plant.isCommonPipeSimulationDefaulted());
+  EXPECT_EQ("CommonPipe", plant.commonPipeSimulation());
+
+  plant.resetCommonPipeSimulation();
+  EXPECT_TRUE(plant.isCommonPipeSimulationDefaulted());
 }

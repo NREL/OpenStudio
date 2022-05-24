@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -93,11 +93,12 @@ TEST_F(ModelFixture, CoilCoolingDXTwoStageWithHumidityControlMode_CloneCoilPerf)
   EXPECT_EQ(4u, m2.getModelObjects<CoilPerformanceDXCooling>().size());
 
   // Name comparison (can't do handle, not the same model, and actual clone)
-  ASSERT_EQ(coil.normalModeStage1CoilPerformance().get().name(), coilClone2.normalModeStage1CoilPerformance().get().name());
-  ASSERT_EQ(coil.normalModeStage1Plus2CoilPerformance().get().name(), coilClone2.normalModeStage1Plus2CoilPerformance().get().name());
-  ASSERT_EQ(coil.dehumidificationMode1Stage1CoilPerformance().get().name(), coilClone2.dehumidificationMode1Stage1CoilPerformance().get().name());
-  ASSERT_EQ(coil.dehumidificationMode1Stage1Plus2CoilPerformance().get().name(),
-            coilClone2.dehumidificationMode1Stage1Plus2CoilPerformance().get().name());
+  ASSERT_EQ(coil.normalModeStage1CoilPerformance().get().nameString(), coilClone2.normalModeStage1CoilPerformance().get().nameString());
+  ASSERT_EQ(coil.normalModeStage1Plus2CoilPerformance().get().nameString(), coilClone2.normalModeStage1Plus2CoilPerformance().get().nameString());
+  ASSERT_EQ(coil.dehumidificationMode1Stage1CoilPerformance().get().nameString(),
+            coilClone2.dehumidificationMode1Stage1CoilPerformance().get().nameString());
+  ASSERT_EQ(coil.dehumidificationMode1Stage1Plus2CoilPerformance().get().nameString(),
+            coilClone2.dehumidificationMode1Stage1Plus2CoilPerformance().get().nameString());
 }
 
 TEST_F(ModelFixture, CoilCoolingDXTwoStageWithHumidityControlMode_MinOATCompressor) {

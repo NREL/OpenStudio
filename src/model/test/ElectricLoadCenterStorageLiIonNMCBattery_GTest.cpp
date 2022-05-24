@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -162,7 +162,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_Clone) {
     EXPECT_EQ(0.6, batteryClone.radiativeFraction());
     // should the clone retain the thermalZone or clear it? StorageConverter for eg would keep it, so leaving it as well
     EXPECT_TRUE(batteryClone.thermalZone());
-    EXPECT_EQ(z, batteryClone.thermalZone());
+    EXPECT_EQ(z, batteryClone.thermalZone().get());
   }
 
   {

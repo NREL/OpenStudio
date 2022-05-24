@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -79,7 +79,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExteriorLights) {
   EXPECT_EQ("AstronomicalClock", idf_extEq.getString(Exterior_LightsFields::ControlOption).get());
 
   // Schedule Name
-  ASSERT_EQ(schedule.name(), idf_extEq.getString(Exterior_LightsFields::ScheduleName).get());
+  ASSERT_EQ(schedule.nameString(), idf_extEq.getString(Exterior_LightsFields::ScheduleName).get());
 
   // Design Level
   EXPECT_DOUBLE_EQ(2303.3, idf_extEq.getDouble(Exterior_LightsFields::DesignLevel).get());

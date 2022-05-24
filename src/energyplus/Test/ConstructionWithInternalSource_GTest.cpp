@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -100,7 +100,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ConstructionWithInternalSource) {
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ConstructionWithInternalSource) {
 
-  Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfMaterial(openstudio::IddObjectType::Material);
   idfMaterial.setString(0, "Material 1");  // Name

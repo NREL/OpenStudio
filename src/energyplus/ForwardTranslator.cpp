@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -120,7 +120,7 @@ namespace energyplus {
     m_excludeSQliteOutputReport = false;
     m_excludeHTMLOutputReport = false;
     m_excludeVariableDictionary = false;
-    m_excludeSpaceTranslation = true;
+    m_excludeSpaceTranslation = false;  // At 3.4.1, this was changed to false.
   }
 
   Workspace ForwardTranslator::translateModel(const Model& model, ProgressBar* progressBar) {
@@ -678,7 +678,7 @@ namespace energyplus {
       this->createStandardOutputRequests();
     }
 
-    Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+    Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
     OptionalWorkspaceObject vo = workspace.versionObject();
     OS_ASSERT(vo);
     workspace.removeObject(vo->handle());
@@ -2824,6 +2824,11 @@ namespace energyplus {
         retVal = translateSurfacePropertyConvectionCoefficientsMultipleSurface(obj);
         break;
       }
+      case openstudio::IddObjectType::OS_SurfaceProperty_LocalEnvironment: {
+        model::SurfacePropertyLocalEnvironment obj = modelObject.cast<SurfacePropertyLocalEnvironment>();
+        retVal = translateSurfacePropertyLocalEnvironment(obj);
+        break;
+      }
       case openstudio::IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter: {
         model::SurfacePropertyExposedFoundationPerimeter obj = modelObject.cast<SurfacePropertyExposedFoundationPerimeter>();
         retVal = translateSurfacePropertyExposedFoundationPerimeter(obj);
@@ -2837,6 +2842,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel: {
         model::SurfacePropertyOtherSideConditionsModel obj = modelObject.cast<SurfacePropertyOtherSideConditionsModel>();
         retVal = translateSurfacePropertyOtherSideConditionsModel(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_SurfaceProperty_SurroundingSurfaces: {
+        model::SurfacePropertySurroundingSurfaces obj = modelObject.cast<SurfacePropertySurroundingSurfaces>();
+        retVal = translateSurfacePropertySurroundingSurfaces(obj);
         break;
       }
       case openstudio::IddObjectType::OS_SubSurface: {

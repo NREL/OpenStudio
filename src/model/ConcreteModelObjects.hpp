@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -477,8 +477,10 @@
 #include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficientsMultipleSurface.hpp"
 #include "SurfacePropertyExposedFoundationPerimeter.hpp"
+#include "SurfacePropertyLocalEnvironment.hpp"
 #include "SurfacePropertyOtherSideCoefficients.hpp"
 #include "SurfacePropertyOtherSideConditionsModel.hpp"
+#include "SurfacePropertySurroundingSurfaces.hpp"
 #include "SwimmingPoolIndoor.hpp"
 #include "TableMultiVariableLookup.hpp"
 #include "TemperingValve.hpp"
@@ -996,8 +998,10 @@
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
 #include "SurfacePropertyConvectionCoefficientsMultipleSurface_Impl.hpp"
 #include "SurfacePropertyExposedFoundationPerimeter_Impl.hpp"
+#include "SurfacePropertyLocalEnvironment_Impl.hpp"
 #include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
+#include "SurfacePropertySurroundingSurfaces_Impl.hpp"
 #include "SwimmingPoolIndoor_Impl.hpp"
 #include "TableMultiVariableLookup_Impl.hpp"
 #include "TemperingValve_Impl.hpp"

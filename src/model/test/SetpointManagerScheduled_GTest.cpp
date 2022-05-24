@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -90,9 +90,9 @@ TEST_F(ModelFixture, SetpointManagerScheduled_addToNode) {
   std::vector<SetpointManagerScheduled> setpointManagerScheduleds = m.getModelObjects<SetpointManagerScheduled>();
   EXPECT_EQ(5, setpointManagerScheduleds.size());
 
-  EXPECT_EQ(testObject, spm_3.setpointNode());
+  EXPECT_EQ(testObject, spm_3.setpointNode().get());
   EXPECT_TRUE(spm_4.addToNode(testObject));
-  EXPECT_EQ(testObject, spm_4.setpointNode());
+  EXPECT_EQ(testObject, spm_4.setpointNode().get());
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_3) == _setpointManagers.end());

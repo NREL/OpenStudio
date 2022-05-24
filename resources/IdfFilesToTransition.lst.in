@@ -1,4 +1,5 @@
 ${PROJECT_SOURCE_DIR}/resources/energyplus/5ZoneAirCooled/in.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/AllFuelTypes/in.idf
 ${PROJECT_SOURCE_DIR}/resources/energyplus/BestestEx/in.idf
 ${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_roof_1/Large Office TSD_Nonresidential_3A_Roof_Attic and Other.idf
 ${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_roof_2/CEC Title 24-2008_Nonresidential_9_Roof_Insulation Entirely Above Deck.idf
@@ -13,6 +14,7 @@ ${PROJECT_SOURCE_DIR}/resources/energyplus/Components/idf_designday_5/Annual_Hea
 ${PROJECT_SOURCE_DIR}/resources/energyplus/Daylighting_Office/in.idf
 ${PROJECT_SOURCE_DIR}/resources/energyplus/Daylighting_School/in.idf
 ${PROJECT_SOURCE_DIR}/resources/energyplus/HospitalBaseline/in.idf
+${PROJECT_SOURCE_DIR}/resources/energyplus/FrameAndDivider/in.idf
 ${PROJECT_SOURCE_DIR}/resources/energyplus/Office_With_Many_HVAC_Types/in.idf
 ${PROJECT_SOURCE_DIR}/resources/energyplus/RefLargeOffice/RefBldgLargeOfficeNew2004_Chicago.idf
 ${PROJECT_SOURCE_DIR}/resources/energyplus/SimpleSurfaces/SimpleSurfaces_Reference.idf

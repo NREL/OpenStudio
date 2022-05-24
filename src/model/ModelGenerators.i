@@ -18,6 +18,9 @@
 // ignore specific overload of ThreeJSForwardTranslator::modelToThreeJS to avoid dealing with std::function<void(double)>updatePercentage
 %ignore openstudio::model::ThreeJSForwardTranslator::modelToThreeJS(const Model& model, bool triangulateSurfaces, std::function<void(double)> updatePercentage);
 
+// ignore specific overload of GltfForwardTranslator::modelToGLTF to avoid dealing with std::function<void(double)>updatePercentage
+%ignore openstudio::model::GltfForwardTranslator::modelToGLTF(const Model& model, std::function<void(double)> updatePercentage, const path& outputPath); 
+
 // All base classes for PV, Generators, inverters and Electrical Storage
 %{
   #include <model/PhotovoltaicPerformance.hpp>
@@ -35,14 +38,27 @@
   #include <model/FloorplanJSForwardTranslator.hpp>
   #include <model/ThreeJSForwardTranslator.hpp>
   #include <model/ThreeJSReverseTranslator.hpp>
+  #include <model/GltfBoundingBoxWrapper.hpp>
+  #include <model/GltfModelObjectMetadataWrapper.hpp>
+  #include <model/GltfMetaDataWrapper.hpp>
+  #include <model/GltfUserDataWrapper.hpp>
+  #include <model/GltfForwardTranslator.hpp>
   #include <model/ModelMerger.hpp>
 %}
 %include <model/FloorplanJSForwardTranslator.hpp>
 %include <model/ThreeJSForwardTranslator.hpp>
 %include <model/ThreeJSReverseTranslator.hpp>
+%include <model/GltfBoundingBoxWrapper.hpp>
+%include <model/GltfModelObjectMetadataWrapper.hpp>
+%include <model/GltfMetaDataWrapper.hpp>
+%include <model/GltfUserDataWrapper.hpp>
+%include <model/GltfForwardTranslator.hpp>
 %include <model/ModelMerger.hpp>
 
 
+// create an instantiation of the vector classes
+%template(GltfUserDataWrapperVector) std::vector<openstudio::model::GltfUserDataWrapper>;
+%template(GltfModelObjectMetadataWrapperVector) std::vector<openstudio::model::GltfModelObjectMetadataWrapper>;
 
 #if defined SWIGCSHARP
 

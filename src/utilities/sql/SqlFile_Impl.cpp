@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -497,6 +497,37 @@ namespace detail {
 
   bool SqlFile_Impl::hasIlluminanceMapYear() const {
     return m_hasIlluminanceMapYear;
+  }
+
+  boost::optional<double> SqlFile_Impl::assemblyUFactor(const std::string& subSurfaceName) const {
+    return getExteriorFenestrationValue(subSurfaceName, "Assembly U-Factor");
+  }
+
+  boost::optional<double> SqlFile_Impl::assemblySHGC(const std::string& subSurfaceName) const {
+    return getExteriorFenestrationValue(subSurfaceName, "Assembly SHGC");
+  }
+
+  boost::optional<double> SqlFile_Impl::assemblyVisibleTransmittance(const std::string& subSurfaceName) const {
+    return getExteriorFenestrationValue(subSurfaceName, "Assembly Visible Transmittance");
+  }
+
+  boost::optional<double> SqlFile_Impl::getExteriorFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const {
+    boost::optional<double> result;
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string queryRowName = boost::to_upper_copy(subSurfaceName);
+
+    std::string s = R"(SELECT Value FROM TabularDataWithStrings
+                          WHERE ReportName='EnvelopeSummary'
+                          AND ReportForString='Entire Facility'
+                          AND TableName='Exterior Fenestration'
+                          AND RowName=?
+                          AND ColumnName=?)";
+
+    result = execAndReturnFirstDouble(s, queryRowName, columnName);
+
+    return result;
   }
 
   bool SqlFile_Impl::isValidConnection() {
@@ -2800,7 +2831,7 @@ namespace detail {
         // in 8.1 this is 'EnergyPlus-Windows-32 8.1.0.008, YMD=2014.11.08 22:49'
         // in 8.2 this is 'EnergyPlus, Version 8.2.0-8397c2e30b, YMD=2015.01.09 08:37'
         // radiance script is writing 'EnergyPlus, VERSION 8.2, (OpenStudio) YMD=2015.1.9 08:35:36'
-        boost::regex version_regex("\\d\\.\\d[\\.\\d]*");
+        boost::regex version_regex("\\d{1,}\\.\\d[\\.\\d]*");
         std::string version_line = columnText(sqlite3_column_text(sqlStmtPtr, 0));
         boost::smatch version_match;
 

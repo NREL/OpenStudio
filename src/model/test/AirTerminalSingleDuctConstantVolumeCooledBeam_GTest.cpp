@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,10 +57,10 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeCooledBeam_Test_Construc
 
   // Test cloning the Cooled Beam
   AirTerminalSingleDuctConstantVolumeCooledBeam cloneBeam = cooledBeam.clone(model).cast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>();
-  ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate(), cloneBeam.supplyAirVolumetricFlowRate());
+  ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate().get(), cloneBeam.supplyAirVolumetricFlowRate().get());
   Model model2;
   AirTerminalSingleDuctConstantVolumeCooledBeam cloneBeam2 = cooledBeam.clone(model2).cast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>();
-  ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate(), cloneBeam2.supplyAirVolumetricFlowRate());
+  ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate().get(), cloneBeam2.supplyAirVolumetricFlowRate().get());
 
   // test set and get availibility schedule
   ScheduleConstant schedule1(model);

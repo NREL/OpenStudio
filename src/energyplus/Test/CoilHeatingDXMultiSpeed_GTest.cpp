@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -156,14 +156,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDXMultiSpeed_Basic) {
       EXPECT_TRUE(
         openstudio::istringEqual("Autosize", eg.getString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedGrossRatedHeatingCapacity).get()));
     } else {
-      EXPECT_EQ(stage.grossRatedHeatingCapacity(), eg.getDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedGrossRatedHeatingCapacity).get());
+      EXPECT_EQ(stage.grossRatedHeatingCapacity().get(),
+                eg.getDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedGrossRatedHeatingCapacity).get());
     }
 
     EXPECT_EQ(stage.grossRatedHeatingCOP(), eg.getDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedGrossRatedHeatingCOP).get());
     if (stage.isRatedAirFlowRateAutosized()) {
       EXPECT_TRUE(openstudio::istringEqual("Autosize", eg.getString(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedAirFlowRate).get()));
     } else {
-      EXPECT_EQ(stage.ratedAirFlowRate(), eg.getDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedAirFlowRate).get());
+      EXPECT_EQ(stage.ratedAirFlowRate().get(), eg.getDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedAirFlowRate).get());
     }
 
     EXPECT_EQ(stage.ratedSupplyAirFanPowerPerVolumeFlowRate(),

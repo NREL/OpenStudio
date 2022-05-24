@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -109,7 +109,7 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_SetGetField
   EXPECT_EQ(100.0, coil.ratedEvaporatorAirFlowRate().get());
   EXPECT_FALSE(coil.isRatedEvaporatorAirFlowRateAutocalculated());
   ASSERT_TRUE(coil.ratedCondenserWaterFlowRate());
-  EXPECT_EQ(200.0, coil.ratedCondenserWaterFlowRate());
+  EXPECT_EQ(200.0, coil.ratedCondenserWaterFlowRate().get());
   EXPECT_FALSE(coil.isRatedCondenserWaterFlowRateAutocalculated());
   EXPECT_EQ("No", coil.evaporatorFanPowerIncludedinRatedCOP());
   EXPECT_EQ("Yes", coil.condenserPumpPowerIncludedinRatedCOP());

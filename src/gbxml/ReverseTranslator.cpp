@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -68,6 +68,7 @@
 #include "../utilities/units/UnitFactory.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -337,6 +338,79 @@ namespace gbxml {
     return model;
   }
 
+  // A 'quick and dirty' method to find and correct surfaces that have incorrect orientations
+  // Checks the surface against the space bounding box
+  // If the surface is at or near the upper bound of the bounding box it should be a Roof/Ceiling
+  // If the surface is at or near the lower bound of the bounding box it should be a Floor
+  // Works only for spaces with 3D shapes that are prisms in the sense that they have only two
+  // levels where there are horizontal surfaces.
+  void ReverseTranslator::validateSpaceSurfaces(openstudio::model::Model& model) {
+
+    double tol = 0.001;
+
+    const auto& spaces = model.getConcreteModelObjects<openstudio::model::Space>();
+    for (auto& space : spaces) {
+      std::string spaceName = space.name().value();
+
+      const auto& bounds = space.boundingBox();
+      auto surfaces = space.surfaces();
+      for (auto& surface : surfaces) {
+        std::string surfType = surface.surfaceType();
+        std::string surfName = surface.name().value();
+
+        // Look for Roof or Floor surfaces that have adjacent surface (if there's no adjacwent surface
+        // then the spaces cannot be in the wrong order and the orientation would have already been fixed)
+        boost::optional<openstudio::model::Surface> adjacentSurf = surface.adjacentSurface();
+        if ((surfType == "RoofCeiling" || surfType == "Floor") && adjacentSurf) {
+          auto vertices = surface.vertices();
+
+          if (std::abs(vertices[0].z() - bounds.maxZ().value()) > tol && std::abs(vertices[0].z() - bounds.minZ().value()) > tol) {
+
+            // Log this because we cant do a face orientation check because the space
+            // isnt a prism (it has > 2 levels of horizontal surfaces)
+            LOG(Warn, "Skipping surface " << surfName << " of type " << surfType << " because it is not a prism");
+            continue;
+          }
+
+          if (std::abs(vertices[0].z() - bounds.maxZ().value()) <= tol) {
+
+            // Surface is at the top of the space bounding box so it should be a roof/ceiling
+            // and the normal should be up (z should be > 0)
+            auto surfType = surface.surfaceType();
+            if (surfType != "RoofCeiling") {
+              // Log changing surface type
+              LOG(Warn, "Changing surface type from " << surfType << " to RoofCeiling. Surface vertices elevation is above the space.");
+              surface.setSurfaceType("RoofCeiling");
+            }
+            const auto& normal = surface.outwardNormal();
+            if (normal.z() < 0) {
+              // Log reversing surface
+              LOG(Warn, "Reversing surface orientation because surface is a RoofCeiling but the surface is oriented down.");
+              std::reverse(vertices.begin(), vertices.end());
+              surface.setVertices(vertices);
+            }
+          } else if (std::abs(vertices[0].z() - bounds.minZ().value()) <= tol) {
+
+            // Surface is at the bottom of the space's bounding box and so should be a floor
+            // and the normal shuld be down (z < 0)
+            auto surfType = surface.surfaceType();
+            if (surfType != "Floor") {
+              // Log changing surface type
+              surface.setSurfaceType("Floor");
+            }
+            const auto& normal = surface.outwardNormal();
+            if (normal.z() > 0) {
+              // Log reversing surface
+              LOG(Warn, "Reversing surface orientation because surface is a Floor but the surface is oriented up.");
+              std::reverse(vertices.begin(), vertices.end());
+              surface.setVertices(vertices);
+            }
+          }
+        }
+      }
+    }
+  }
+
   boost::optional<model::ModelObject> ReverseTranslator::translateCampus(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
 
@@ -366,18 +440,15 @@ namespace gbxml {
       }
     }
 
+    validateSpaceSurfaces(model);
     return facility;
   }
 
   boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, building));
-    building.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    building.setName(escapeName(id, name));
+    translateId(element, building);
+    translateName(element, building);
 
     auto storyElements = element.children("BuildingStorey");
     if (m_progressBar) {
@@ -419,12 +490,8 @@ namespace gbxml {
   boost::optional<model::ModelObject> ReverseTranslator::translateBuildingStory(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::BuildingStory story(model);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, story));
-    story.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    story.setName(escapeName(id, name));
+    translateId(element, story);
+    translateName(element, story);
 
     // DLM: we need to better support separate name from id in this translator
 
@@ -436,14 +503,8 @@ namespace gbxml {
   boost::optional<model::ModelObject> ReverseTranslator::translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::ThermalZone zone(model);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, zone));
-    zone.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    zone.setName(escapeName(id, name));
-
-    // DLM: we need to better support separate name from id in this translator
+    translateId(element, zone);
+    translateName(element, zone);
 
     // DLM: todo, translate setpoints
 
@@ -461,12 +522,8 @@ namespace gbxml {
   boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::Space space(model);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, space));
-    space.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    space.setName(escapeName(id, name));
+    translateId(element, space);
+    translateName(element, space);
 
     //DLM: we should be using a map of id to model object to get this, not relying on name
     std::string storyId = element.attribute("buildingStoreyIdRef").value();
@@ -493,7 +550,11 @@ namespace gbxml {
       // DLM: may want to revisit this
       // create a new thermal zone if none assigned
       openstudio::model::ThermalZone thermalZone(model);
-      thermalZone.setName(escapeName(id, name) + " ThermalZone");
+      std::string id = element.attribute("id").value();
+      std::string name = element.child("Name").text().as_string();
+      thermalZone.setName(id + " ThermalZone");
+      thermalZone.additionalProperties().setFeature("gbXMLId", id + " Thermal Zone");
+      thermalZone.additionalProperties().setFeature("displayName", name + " Thermal Zone");
       space.setThermalZone(thermalZone);
     }
 
@@ -568,12 +629,8 @@ namespace gbxml {
 
       openstudio::model::ShadingSurface shadingSurface(vertices, model);
 
-      std::string shadingSurfaceId = element.attribute("id").value();
-      m_idToObjectMap.insert(std::make_pair(shadingSurfaceId, shadingSurface));
-      shadingSurface.additionalProperties().setFeature("gbXMLId", shadingSurfaceId);
-
-      std::string shadingSurfaceName = element.child("Name").text().as_string();
-      shadingSurface.setName(escapeName(shadingSurfaceId, shadingSurfaceName));
+      translateId(element, shadingSurface);
+      translateName(element, shadingSurface);
 
       openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
@@ -617,12 +674,8 @@ namespace gbxml {
 
       openstudio::model::Surface surface(vertices, model);
 
-      std::string surfaceId = element.attribute("id").value();
-      m_idToObjectMap.insert(std::make_pair(surfaceId, surface));
-      surface.additionalProperties().setFeature("gbXMLId", surfaceId);
-
-      std::string surfaceName = element.child("Name").text().as_string();
-      surface.setName(escapeName(surfaceId, surfaceName));
+      translateId(element, surface);
+      translateName(element, surface);
 
       std::string exposedToSun = element.attribute("exposedToSun").value();
 
@@ -980,12 +1033,8 @@ namespace gbxml {
     openstudio::model::SubSurface subSurface(vertices, model);
     subSurface.setSurface(surface);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, subSurface));
-    subSurface.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    subSurface.setName(escapeName(id, name));
+    translateId(element, subSurface);
+    translateName(element, subSurface);
 
     result = subSurface;
 
@@ -1046,21 +1095,33 @@ namespace gbxml {
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCADObjectId(const pugi::xml_node& element,
-                                                                                          openstudio::model::ModelObject& modelObject) {
-    model::AdditionalProperties result = modelObject.additionalProperties();
+  void ReverseTranslator::translateId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject) {
+    std::string id = element.attribute("id").value();
+    m_idToObjectMap.insert(std::make_pair(id, modelObject));
+    modelObject.setName(id);
+    modelObject.setGBXMLId(id);
+  }
+
+  void ReverseTranslator::translateName(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject) {
+
+    auto name = element.child("Name").text();
+    if (!name.empty()) {
+      modelObject.setDisplayName(name.as_string());
+    }
+  }
+
+  void ReverseTranslator::translateCADObjectId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject) {
 
     auto cadObjectId = element.text();
     if (!cadObjectId.empty()) {
-      result.setFeature("CADObjectId", cadObjectId.as_string());
+      modelObject.setCADObjectId(cadObjectId.as_string());
 
       auto programIdRef = element.attribute("programIdRef");
       if (programIdRef) {
+        model::AdditionalProperties result = modelObject.additionalProperties();
         result.setFeature("programIdRef", programIdRef.value());
       }
     }
-
-    return result;
   }
 
 }  // namespace gbxml

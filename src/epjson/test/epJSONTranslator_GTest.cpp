@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -416,7 +416,7 @@ TEST_F(epJSONFixture, canTranslateWorkspaceToJSON) {
 TEST_F(epJSONFixture, CustomCases) {
 
   // Test for #4264, part 1
-  openstudio::Workspace w(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace w(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::WorkspaceObject response_factor =
     w.addObject(openstudio::IdfObject(openstudio::IddObjectType::GroundHeatExchanger_ResponseFactors)).get();
@@ -445,7 +445,7 @@ TEST_F(epJSONFixture, CustomCases) {
 TEST_F(epJSONFixture, Autosize_case_sensitiveness) {
 
   // Test for #4264, part 2
-  openstudio::Workspace w(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace w(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::WorkspaceObject wo = w.addObject(openstudio::IdfObject(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed)).get();
 

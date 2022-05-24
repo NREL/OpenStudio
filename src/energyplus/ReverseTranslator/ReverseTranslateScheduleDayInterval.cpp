@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -72,10 +72,10 @@ namespace energyplus {
       }
     }
 
-    s = workspaceObject.getString(OS_Schedule_DayFields::InterpolatetoTimestep, true);
+    s = workspaceObject.getString(Schedule_Day_IntervalFields::InterpolatetoTimestep);
     if (s) {
-      if (openstudio::istringEqual(*s, "Yes")) {
-        scheduleDay.setInterpolatetoTimestep(true);
+      if (openstudio::istringEqual(*s, "No")) {
+        scheduleDay.setInterpolatetoTimestep(false);
       } else if (openstudio::istringEqual(*s, "Linear")) {
         scheduleDay.setInterpolatetoTimestep(true);
       } else if (openstudio::istringEqual(*s, "Average")) {

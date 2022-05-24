@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,7 +53,7 @@ TEST_F(ModelFixture, CoilHeatingGas) {
   EXPECT_EQ(coilHeatingGas.gasBurnerEfficiency(), 0.6);
 
   coilHeatingGas.setNominalCapacity(1535.0);
-  EXPECT_EQ(coilHeatingGas.nominalCapacity(), 1535.0);
+  EXPECT_EQ(coilHeatingGas.nominalCapacity().get(), 1535.0);
 
   coilHeatingGas.setParasiticElectricLoad(48.0);
   EXPECT_EQ(coilHeatingGas.parasiticElectricLoad(), 48.0);

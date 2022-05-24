@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1383,6 +1383,38 @@ bool SqlFile::hasIlluminanceMapYear() const {
   }
 
   return true;
+}
+
+boost::optional<double> SqlFile::getExteriorFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const {
+  boost::optional<double> result;
+  if (m_impl) {
+    result = m_impl->getExteriorFenestrationValue(subSurfaceName, columnName);
+  }
+  return result;
+}
+
+boost::optional<double> SqlFile::assemblyUFactor(const std::string& subSurfaceName) const {
+  boost::optional<double> result;
+  if (m_impl) {
+    result = m_impl->assemblyUFactor(subSurfaceName);
+  }
+  return result;
+}
+
+boost::optional<double> SqlFile::assemblySHGC(const std::string& subSurfaceName) const {
+  boost::optional<double> result;
+  if (m_impl) {
+    result = m_impl->assemblySHGC(subSurfaceName);
+  }
+  return result;
+}
+
+boost::optional<double> SqlFile::assemblyVisibleTransmittance(const std::string& subSurfaceName) const {
+  boost::optional<double> result;
+  if (m_impl) {
+    result = m_impl->assemblyVisibleTransmittance(subSurfaceName);
+  }
+  return result;
 }
 
 }  // namespace openstudio

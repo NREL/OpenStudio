@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -82,7 +82,7 @@ TEST_F(ModelFixture, FuelCellWaterSupply) {
   ASSERT_FALSE(watersupply.waterTemperatureReferenceNode());
   Node node(model);
   ASSERT_TRUE(watersupply.setWaterTemperatureReferenceNode(node));
-  EXPECT_EQ(node, watersupply.waterTemperatureReferenceNode());
+  EXPECT_EQ(node, watersupply.waterTemperatureReferenceNode().get());
   watersupply.resetWaterTemperatureReferenceNode();
   ASSERT_FALSE(watersupply.waterTemperatureReferenceNode());
 }
@@ -96,7 +96,7 @@ TEST_F(ModelFixture, FuelCellWaterSupply2) {
   GeneratorFuelCellWaterSupply watersupply(model, curveQuadratic, curveCubic, schedule);
   EXPECT_EQ(curveQuadratic, watersupply.reformerWaterFlowRateFunctionofFuelRateCurve());
   EXPECT_EQ(curveCubic, watersupply.reformerWaterPumpPowerFunctionofFuelRateCurve());
-  EXPECT_EQ(schedule.optionalCast<Schedule>(), watersupply.waterTemperatureSchedule());
+  EXPECT_EQ(schedule, watersupply.waterTemperatureSchedule().get());
   EXPECT_EQ("TemperatureFromSchedule", watersupply.waterTemperatureModelingMode());
 }
 
@@ -109,7 +109,7 @@ TEST_F(ModelFixture, FuelCellWaterSupply3) {
   GeneratorFuelCellWaterSupply watersupply(model, curveQuadratic, curveCubic, node, "TemperatureFromAirNode");
   EXPECT_EQ(curveQuadratic, watersupply.reformerWaterFlowRateFunctionofFuelRateCurve());
   EXPECT_EQ(curveCubic, watersupply.reformerWaterPumpPowerFunctionofFuelRateCurve());
-  EXPECT_EQ(node, watersupply.waterTemperatureReferenceNode());
+  EXPECT_EQ(node, watersupply.waterTemperatureReferenceNode().get());
   EXPECT_EQ("TemperatureFromAirNode", watersupply.waterTemperatureModelingMode());
   ASSERT_FALSE(watersupply.waterTemperatureSchedule());
 }
@@ -124,7 +124,7 @@ TEST_F(ModelFixture, FuelCellWaterSupply4) {
   EXPECT_EQ("MainsWaterTemperature", watersupply.waterTemperatureModelingMode());
   ASSERT_FALSE(watersupply.waterTemperatureSchedule());
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
-  EXPECT_EQ(9.69, model.getUniqueModelObject<SiteWaterMainsTemperature>().annualAverageOutdoorAirTemperature());
+  EXPECT_EQ(9.69, model.getUniqueModelObject<SiteWaterMainsTemperature>().annualAverageOutdoorAirTemperature().get());
 }
 
 TEST_F(ModelFixture, FuelCellWaterSupply5) {
@@ -139,6 +139,6 @@ TEST_F(ModelFixture, FuelCellWaterSupply5) {
   EXPECT_EQ("MainsWaterTemperature", watersupply.waterTemperatureModelingMode());
   ASSERT_FALSE(watersupply.waterTemperatureSchedule());
   EXPECT_TRUE(model.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
-  EXPECT_EQ(10.0, model.getUniqueModelObject<SiteWaterMainsTemperature>().annualAverageOutdoorAirTemperature());
-  EXPECT_EQ(11.0, model.getUniqueModelObject<SiteWaterMainsTemperature>().maximumDifferenceInMonthlyAverageOutdoorAirTemperatures());
+  EXPECT_EQ(10.0, model.getUniqueModelObject<SiteWaterMainsTemperature>().annualAverageOutdoorAirTemperature().get());
+  EXPECT_EQ(11.0, model.getUniqueModelObject<SiteWaterMainsTemperature>().maximumDifferenceInMonthlyAverageOutdoorAirTemperatures().get());
 }

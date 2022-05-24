@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -395,6 +395,10 @@ namespace model {
        OptionalDouble(), OptionalDouble()},
       {"SurfacePropertyConvectionCoefficientsMultipleSurface", "Convection Coefficient 2", "convectionCoefficient2Schedule", true, "",
        OptionalDouble(), OptionalDouble()},
+      {"SurfacePropertySurroundingSurfaces", "Sky Temperature", "skyTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble()},
+      {"SurfacePropertySurroundingSurfaces", "Ground Temperature", "groundTemperatureSchedule", true, "Temperature", OptionalDouble(),
+       OptionalDouble()},
+      {"SurfacePropertyLocalEnvironment", "External Shading Fraction", "externalShadingFractionSchedule", true, "", 0.0, 1.0},
       {"SwimmingPoolIndoor", "Activity Factor", "activityFactorSchedule", true, "", 0.0, OptionalDouble()},  // can exceed 1.0, for wave pools for eg
       {"SwimmingPoolIndoor", "Make-up Water Supply", "makeupWaterSupplySchedule", true, "Temperature", OptionalDouble(), OptionalDouble()},
       {"SwimmingPoolIndoor", "Cover", "coverSchedule", true, "", 0.0, 1.0},

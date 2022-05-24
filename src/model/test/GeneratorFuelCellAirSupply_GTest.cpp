@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -101,17 +101,17 @@ TEST_F(ModelFixture, FuelCellAirSupply2) {
 
   Node airInletNode(model);
   GeneratorFuelCellAirSupply airSupply(model, airInletNode);
-  EXPECT_EQ(airInletNode, airSupply.airInletNode());
+  EXPECT_EQ(airInletNode, airSupply.airInletNode().get());
   airSupply.resetAirInletNode();
   ASSERT_FALSE(airSupply.airInletNode());
   ASSERT_TRUE(airSupply.setAirInletNode(airInletNode));
-  EXPECT_EQ(airInletNode, airSupply.airInletNode());
+  EXPECT_EQ(airInletNode, airSupply.airInletNode().get());
   CurveQuadratic curveQ1(model);
   ASSERT_TRUE(airSupply.setAirRateFunctionofElectricPowerCurve(curveQ1));
-  EXPECT_EQ(curveQ1, airSupply.airRateFunctionofElectricPowerCurve());
+  EXPECT_EQ(curveQ1, airSupply.airRateFunctionofElectricPowerCurve().get());
   CurveQuadratic curveQ2(model);
   ASSERT_TRUE(airSupply.setAirRateFunctionofFuelRateCurve(curveQ2));
-  EXPECT_EQ(curveQ2, airSupply.airRateFunctionofFuelRateCurve());
+  EXPECT_EQ(curveQ2, airSupply.airRateFunctionofFuelRateCurve().get());
   CurveCubic blowerCurve(model);
   ASSERT_TRUE(airSupply.setBlowerPowerCurve(blowerCurve));
   airSupply.resetBlowerPowerCurve();

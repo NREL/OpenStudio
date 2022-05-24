@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -118,7 +118,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
   ASSERT_EQ(1u, idfPerformances.size());
   WorkspaceObject idfPerformance(idfPerformances[0]);
 
-  EXPECT_EQ(woCoilCoolingDXCurveFitPerformance, idfPerformance);
+  EXPECT_EQ(woCoilCoolingDXCurveFitPerformance.get(), idfPerformance);
 
   boost::optional<WorkspaceObject> woBaseOperatingMode(idfPerformance.getTarget(Coil_Cooling_DX_CurveFit_PerformanceFields::BaseOperatingMode));
   EXPECT_TRUE(woBaseOperatingMode);
@@ -136,5 +136,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
   ASSERT_EQ(1u, idfOperatingModes.size());
   WorkspaceObject idfOperatingMode(idfOperatingModes[0]);
 
-  EXPECT_EQ(woBaseOperatingMode, idfOperatingMode);
+  EXPECT_EQ(woBaseOperatingMode.get(), idfOperatingMode);
 }

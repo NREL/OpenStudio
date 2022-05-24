@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -61,7 +61,7 @@ TEST_F(IdfFixture, ValidityReport_WithCustomIdd) {
   boost::optional<IddFile> iddFile = IddFile::load(ss);
   ASSERT_TRUE(iddFile);
 
-  Workspace workspace2(*iddFile, StrictnessLevel::None);
+  Workspace workspace2(*iddFile, StrictnessLevel::Minimal);
   EXPECT_EQ(IddFileType::UserCustom, workspace2.iddFileType().value());
   workspace2.addObjects(workspace.toIdfFile().objects());
   EXPECT_EQ(workspace.objects().size(), workspace2.objects().size());

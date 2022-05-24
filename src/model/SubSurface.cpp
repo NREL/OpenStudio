@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,12 +54,14 @@
 #include "DaylightingDeviceLightWell_Impl.hpp"
 #include "WindowPropertyFrameAndDivider.hpp"
 #include "WindowPropertyFrameAndDivider_Impl.hpp"
-#include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
 #include "SurfacePropertyOtherSideConditionsModel.hpp"
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
+#include "SurfacePropertyLocalEnvironment.hpp"
+#include "SurfacePropertyLocalEnvironment_Impl.hpp"
 #include "AirflowNetworkSurface.hpp"
 #include "AirflowNetworkSurface_Impl.hpp"
 #include "AirflowNetworkDetailedOpening.hpp"
@@ -894,6 +896,26 @@ namespace model {
       }
     }
 
+    boost::optional<SurfacePropertyLocalEnvironment> SubSurface_Impl::surfacePropertyLocalEnvironment() const {
+
+      std::vector<SurfacePropertyLocalEnvironment> result;
+      for (auto& localEnv : model().getConcreteModelObjects<SurfacePropertyLocalEnvironment>()) {
+        if (auto subSurface_ = localEnv.exteriorSurfaceAsSubSurface()) {
+          if (subSurface_->handle() == handle()) {
+            result.push_back(localEnv);
+          }
+        }
+      }
+      if (result.empty()) {
+        return boost::none;
+      } else if (result.size() == 1) {
+        return result.at(0);
+      } else {
+        LOG(Error, "More than one SurfacePropertyLocalEnvironment points to this SubSurface");
+        return boost::none;
+      }
+    }
+
     boost::optional<SurfacePropertyOtherSideCoefficients> SubSurface_Impl::surfacePropertyOtherSideCoefficients() const {
       return getObject<SubSurface>().getModelObjectTarget<SurfacePropertyOtherSideCoefficients>(OS_SubSurfaceFields::OutsideBoundaryConditionObject);
     }
@@ -1321,6 +1343,51 @@ namespace model {
       return boost::none;
     }
 
+    boost::optional<double> SubSurface_Impl::assemblyUFactor() const {
+      return getExteriorFenestrationValue("Assembly U-Factor");
+    }
+
+    boost::optional<double> SubSurface_Impl::assemblySHGC() const {
+      return getExteriorFenestrationValue("Assembly SHGC");
+    }
+
+    boost::optional<double> SubSurface_Impl::assemblyVisibleTransmittance() const {
+      return getExteriorFenestrationValue("Assembly Visible Transmittance");
+    }
+
+    /** Gets the fenestration value from the sql file **/
+    boost::optional<double> SubSurface_Impl::getExteriorFenestrationValue(std::string columnName) const {
+      boost::optional<double> result;
+
+      // Get the object name
+      if (!name()) {
+        LOG(Warn, "This object does not have a name, cannot retrieve the fenestration value '" + columnName + "'.");
+        return result;
+      }
+
+      // Get the object name and transform to the way it is recorded
+      // in the sql file
+      std::string rowName = name().get();
+      boost::to_upper(rowName);
+
+      // Check that the model has a sql file
+      if (!model().sqlFile()) {
+        LOG(Warn, "This model has no sql file, cannot retrieve the fenestration value '" + columnName + "'.");
+        return result;
+      }
+
+      std::string s = R"(SELECT Value FROM TabularDataWithStrings
+                            WHERE ReportName='EnvelopeSummary'
+                            AND ReportForString='Entire Facility'
+                            AND TableName='Exterior Fenestration'
+                            AND RowName=?
+                            AND ColumnName=?)";
+
+      result = model().sqlFile().get().execAndReturnFirstDouble(s, rowName, columnName);
+
+      return result;
+    }
+
   }  // namespace detail
 
   SubSurface::SubSurface(const std::vector<Point3d>& vertices, const Model& model) : PlanarSurface(SubSurface::iddObjectType(), vertices, model) {
@@ -1491,6 +1558,10 @@ namespace model {
 
   boost::optional<SurfacePropertyConvectionCoefficients> SubSurface::surfacePropertyConvectionCoefficients() const {
     return getImpl<detail::SubSurface_Impl>()->surfacePropertyConvectionCoefficients();
+  }
+
+  boost::optional<SurfacePropertyLocalEnvironment> SubSurface::surfacePropertyLocalEnvironment() const {
+    return getImpl<detail::SubSurface_Impl>()->surfacePropertyLocalEnvironment();
   }
 
   boost::optional<SurfacePropertyOtherSideCoefficients> SubSurface::surfacePropertyOtherSideCoefficients() const {
@@ -1731,6 +1802,18 @@ namespace model {
 
   boost::optional<AirflowNetworkSurface> SubSurface::airflowNetworkSurface() const {
     return getImpl<detail::SubSurface_Impl>()->airflowNetworkSurface();
+  }
+
+  boost::optional<double> SubSurface::assemblyUFactor() const {
+    return getImpl<detail::SubSurface_Impl>()->assemblyUFactor();
+  }
+
+  boost::optional<double> SubSurface::assemblySHGC() const {
+    return getImpl<detail::SubSurface_Impl>()->assemblySHGC();
+  }
+
+  boost::optional<double> SubSurface::assemblyVisibleTransmittance() const {
+    return getImpl<detail::SubSurface_Impl>()->assemblyVisibleTransmittance();
   }
 
 }  // namespace model

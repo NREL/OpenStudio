@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -348,6 +348,10 @@ namespace energyplus {
     boost::optional<model::ModelObject> translateSurfaceConvectionAlgorithmOutside(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateSurfacePropertyExposedFoundationPerimeter(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateSurfacePropertyLocalEnvironment(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateSurfacePropertySurroundingSurfaces(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateSwimmingPoolIndoor(const WorkspaceObject& workspaceObject);
 

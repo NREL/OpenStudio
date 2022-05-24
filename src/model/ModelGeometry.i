@@ -164,6 +164,15 @@ class ExteriorLoadInstance;
   }
 };
 
+%extend openstudio::model::SurroundingSurfaceGroup {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 UNIQUEMODELOBJECT_TEMPLATES(Site);
 UNIQUEMODELOBJECT_TEMPLATES(Facility);
 UNIQUEMODELOBJECT_TEMPLATES(Building);
@@ -187,6 +196,9 @@ MODELOBJECT_TEMPLATES(InteriorPartitionSurface);
 MODELOBJECT_TEMPLATES(SurfaceControlMovableInsulation);
 MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideCoefficients);
 MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideConditionsModel);
+MODELOBJECT_TEMPLATES(SurfacePropertyLocalEnvironment);
+MODELOBJECT_TEMPLATES(SurroundingSurfaceGroup); // helper for extensible fields for SurfacePropertySurroundingSurfaces
+MODELOBJECT_TEMPLATES(SurfacePropertySurroundingSurfaces);
 MODELOBJECT_TEMPLATES(SurfacePropertyConvectionCoefficients);
 MODELOBJECT_TEMPLATES(People);
 MODELOBJECT_TEMPLATES(Luminaire);
@@ -241,6 +253,8 @@ SWIG_MODELOBJECT(InteriorPartitionSurface, 1);
 SWIG_MODELOBJECT(SurfaceControlMovableInsulation, 1);
 SWIG_MODELOBJECT(SurfacePropertyOtherSideCoefficients, 1);
 SWIG_MODELOBJECT(SurfacePropertyOtherSideConditionsModel, 1);
+SWIG_MODELOBJECT(SurfacePropertyLocalEnvironment, 1);
+SWIG_MODELOBJECT(SurfacePropertySurroundingSurfaces, 1);
 SWIG_MODELOBJECT(SurfacePropertyConvectionCoefficients, 1);
 SWIG_MODELOBJECT(People, 1);
 SWIG_MODELOBJECT(Luminaire, 1);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -69,12 +69,12 @@ TEST_F(ModelFixture, CoilCoolingWaterToAirHeatPumpEquationFit_Check_Clone) {
 
   // Clone into the same model
   CoilCoolingWaterToAirHeatPumpEquationFit cloneCoil = coil.clone(model).cast<model::CoilCoolingWaterToAirHeatPumpEquationFit>();
-  ASSERT_EQ(coil.ratedAirFlowRate(), cloneCoil.ratedAirFlowRate());
+  ASSERT_EQ(coil.ratedAirFlowRate().get(), cloneCoil.ratedAirFlowRate().get());
 
   // Clone into another model
   Model model2;
   CoilCoolingWaterToAirHeatPumpEquationFit cloneCoil2 = coil.clone(model2).cast<model::CoilCoolingWaterToAirHeatPumpEquationFit>();
-  ASSERT_EQ(coil.ratedAirFlowRate(), cloneCoil2.ratedAirFlowRate());
+  ASSERT_EQ(coil.ratedAirFlowRate().get(), cloneCoil2.ratedAirFlowRate().get());
 }
 
 // Test add and remove from air and water nodes

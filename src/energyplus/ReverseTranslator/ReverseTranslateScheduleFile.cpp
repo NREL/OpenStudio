@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -84,15 +84,20 @@ namespace energyplus {
       scheduleFile.setColumnSeparator(*os);
     }
 
-    OptionalString os = workspaceObject.getString(Schedule_FileFields::InterpolatetoTimestep);
-    if (os) {
-      if (openstudio::istringEqual("Yes", os.get())) {
+    if (OptionalString os = workspaceObject.getString(Schedule_FileFields::InterpolatetoTimestep)) {
+      if (openstudio::istringEqual("Yes", *os)) {
         scheduleFile.setInterpolatetoTimestep(true);
       }
     }
 
     if (OptionalInt oi = workspaceObject.getInt(Schedule_FileFields::MinutesperItem)) {
-      scheduleFile.setMinutesperItem(oi.get());
+      scheduleFile.setMinutesperItem(*oi);
+    }
+
+    if (OptionalString os = workspaceObject.getString(Schedule_FileFields::AdjustScheduleforDaylightSavings)) {
+      if (openstudio::istringEqual("Yes", *os)) {
+        scheduleFile.setAdjustScheduleforDaylightSavings(true);
+      }
     }
 
     return scheduleFile;

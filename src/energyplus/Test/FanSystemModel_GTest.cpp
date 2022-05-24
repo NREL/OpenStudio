@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -254,9 +254,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel_AirLoopHVAC) {
   ASSERT_EQ(1u, idf_fans.size());
   WorkspaceObject idf_fan(idf_fans[0]);
 
-  EXPECT_EQ(idf_fan.getString(Fan_SystemModelFields::AirInletNodeName).get(), fan.inletModelObject().get().name());
+  EXPECT_EQ(idf_fan.getString(Fan_SystemModelFields::AirInletNodeName).get(), fan.inletModelObject().get().nameString());
 
-  EXPECT_EQ(idf_fan.getString(Fan_SystemModelFields::AirOutletNodeName).get(), fan.outletModelObject().get().name());
+  EXPECT_EQ(idf_fan.getString(Fan_SystemModelFields::AirOutletNodeName).get(), fan.outletModelObject().get().nameString());
 
   // Go from AirLoopHVAC to BranchList to Branch
   WorkspaceObjectVector idf_airloops(w.getObjectsByType(IddObjectType::AirLoopHVAC));
@@ -276,7 +276,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanSystemModel_AirLoopHVAC) {
   WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
   EXPECT_EQ("Fan:SystemModel", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
-  EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), fan.name());
+  EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), fan.nameString());
 
   EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(), fan.inletModelObject().get().nameString());
 
@@ -287,7 +287,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
 
   ReverseTranslator reverseTranslator;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_fan = w.addObject(IdfObject(IddObjectType::Fan_SystemModel));
   ASSERT_TRUE(_i_fan);
   _i_fan->setName("Zone1FanCoilFan");
@@ -405,11 +405,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FanSystemModel) {
     std::vector<FanSystemModelSpeed> speeds = fan.speeds();
     EXPECT_EQ(3, speeds.size());
     EXPECT_EQ(0.33, speeds[0].flowFraction());
-    EXPECT_EQ(0.12, speeds[0].electricPowerFraction());
+    EXPECT_EQ(0.12, speeds[0].electricPowerFraction().get());
     EXPECT_EQ(0.66, speeds[1].flowFraction());
-    EXPECT_EQ(0.51, speeds[1].electricPowerFraction());
+    EXPECT_EQ(0.51, speeds[1].electricPowerFraction().get());
     EXPECT_EQ(1.00, speeds[2].flowFraction());
-    EXPECT_EQ(1.00, speeds[2].electricPowerFraction());
+    EXPECT_EQ(1.00, speeds[2].electricPowerFraction().get());
   }
 
   WorkspaceExtensibleGroup invalid_eg = _i_fan->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();

@@ -108,7 +108,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SizingSystem) {
 }
 
 TEST_F(EnergyPlusFixture, DISABLED_ReverseTranslator_SizingSystem) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   // air loop hvac
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::AirLoopHVAC);
@@ -173,7 +173,7 @@ TEST_F(EnergyPlusFixture, DISABLED_ReverseTranslator_SizingSystem) {
   EXPECT_TRUE(sizingSystem.isDesignOutdoorAirFlowRateDefaulted());
   EXPECT_TRUE(sizingSystem.isDesignOutdoorAirFlowRateAutosized());
   ASSERT_TRUE(sizingSystem.centralHeatingMaximumSystemAirFlowRatio());
-  EXPECT_EQ(0.3, sizingSystem.centralHeatingMaximumSystemAirFlowRatio());
+  EXPECT_EQ(0.3, sizingSystem.centralHeatingMaximumSystemAirFlowRatio().get());
   EXPECT_FALSE(sizingSystem.isCentralHeatingMaximumSystemAirFlowRatioDefaulted());
   EXPECT_FALSE(sizingSystem.isCentralHeatingMaximumSystemAirFlowRatioAutosized());
   EXPECT_EQ(7.0, sizingSystem.preheatDesignTemperature());

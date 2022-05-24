@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -122,7 +122,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fractio
         EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
         EXPECT_EQ(2.0, testRad.heatingThrottlingRange());
         for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()) {
-          EXPECT_EQ(0.25, extGrp.getDouble(1, false));
+          EXPECT_EQ(0.25, extGrp.getDouble(1, false).get());
         }
       }
     }

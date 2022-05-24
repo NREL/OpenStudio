@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -125,10 +125,10 @@ TEST_F(ModelFixture, RefrigerationCondenserCascade_CondenserRefrigerantOperating
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
   refrigerationCondenserCascade.setCondenserRefrigerantOperatingChargeInventory(10.0);
-  EXPECT_EQ(10.0, refrigerationCondenserCascade.condenserRefrigerantOperatingChargeInventory());
+  EXPECT_EQ(10.0, refrigerationCondenserCascade.condenserRefrigerantOperatingChargeInventory().get());
 
   refrigerationCondenserCascade.setCondenserRefrigerantOperatingChargeInventory(-10.0);
-  EXPECT_EQ(-10.0, refrigerationCondenserCascade.condenserRefrigerantOperatingChargeInventory());
+  EXPECT_EQ(-10.0, refrigerationCondenserCascade.condenserRefrigerantOperatingChargeInventory().get());
 }
 
 TEST_F(ModelFixture, RefrigerationCondenserCascade_CondensateReceiverRefrigerantInventory) {
@@ -136,10 +136,10 @@ TEST_F(ModelFixture, RefrigerationCondenserCascade_CondensateReceiverRefrigerant
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
   refrigerationCondenserCascade.setCondensateReceiverRefrigerantInventory(10.0);
-  EXPECT_EQ(10.0, refrigerationCondenserCascade.condensateReceiverRefrigerantInventory());
+  EXPECT_EQ(10.0, refrigerationCondenserCascade.condensateReceiverRefrigerantInventory().get());
 
   refrigerationCondenserCascade.setCondensateReceiverRefrigerantInventory(-10.0);
-  EXPECT_EQ(-10.0, refrigerationCondenserCascade.condensateReceiverRefrigerantInventory());
+  EXPECT_EQ(-10.0, refrigerationCondenserCascade.condensateReceiverRefrigerantInventory().get());
 }
 
 TEST_F(ModelFixture, RefrigerationCondenserCascade_CondensatePipingRefrigerantInventory) {
@@ -147,10 +147,10 @@ TEST_F(ModelFixture, RefrigerationCondenserCascade_CondensatePipingRefrigerantIn
   RefrigerationCondenserCascade refrigerationCondenserCascade = RefrigerationCondenserCascade(m);
 
   refrigerationCondenserCascade.setCondensatePipingRefrigerantInventory(10.0);
-  EXPECT_EQ(10.0, refrigerationCondenserCascade.condensatePipingRefrigerantInventory());
+  EXPECT_EQ(10.0, refrigerationCondenserCascade.condensatePipingRefrigerantInventory().get());
 
   refrigerationCondenserCascade.setCondensatePipingRefrigerantInventory(-10.0);
-  EXPECT_EQ(-10.0, refrigerationCondenserCascade.condensatePipingRefrigerantInventory());
+  EXPECT_EQ(-10.0, refrigerationCondenserCascade.condensatePipingRefrigerantInventory().get());
 }
 
 TEST_F(ModelFixture, RefrigerationCondenserCascade_Remove) {

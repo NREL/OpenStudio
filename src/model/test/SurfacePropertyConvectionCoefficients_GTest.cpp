@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -68,7 +68,7 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_FALSE(subsurface2);
   ASSERT_FALSE(internalmass2);
   ASSERT_EQ(*surface2, surface);
-  ASSERT_EQ(surface2->surfacePropertyConvectionCoefficients(), cc);
+  ASSERT_EQ(surface2->surfacePropertyConvectionCoefficients().get(), cc);
 
   SubSurface subSurface(vertices, model);
   ASSERT_TRUE(cc.setSurface(subSurface));
@@ -81,7 +81,7 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_TRUE(subsurface2);
   ASSERT_FALSE(internalmass2);
   ASSERT_EQ(*subsurface2, subSurface);
-  ASSERT_EQ(subsurface2->surfacePropertyConvectionCoefficients(), cc);
+  ASSERT_EQ(subsurface2->surfacePropertyConvectionCoefficients().get(), cc);
 
   InternalMassDefinition internalMassDefn(model);
   InternalMass internalMass(internalMassDefn);
@@ -95,7 +95,7 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_FALSE(subsurface2);
   ASSERT_TRUE(internalmass2);
   ASSERT_EQ(*internalmass2, internalMass);
-  ASSERT_EQ(internalmass2->surfacePropertyConvectionCoefficients(), cc);
+  ASSERT_EQ(internalmass2->surfacePropertyConvectionCoefficients().get(), cc);
 
   std::vector<std::string> locationValues1(cc.convectionCoefficient1LocationValues());
   ASSERT_EQ(locationValues1.size(), 2);
@@ -103,7 +103,7 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_NE(std::find(locationValues1.begin(), locationValues1.end(), "Inside"), locationValues1.end()) << "'Inside' not in list'";
 
   std::vector<std::string> typeValues1(cc.convectionCoefficient1TypeValues());
-  ASSERT_EQ(typeValues1.size(), 44);
+  ASSERT_EQ(typeValues1.size(), 45);
   ASSERT_NE(std::find(typeValues1.begin(), typeValues1.end(), "Value"), typeValues1.end()) << "'Value' not in list";
   ASSERT_NE(std::find(typeValues1.begin(), typeValues1.end(), "ASHRAEVerticalWall"), typeValues1.end()) << "'ASHRAEVerticalWall' not in list";
   ASSERT_NE(std::find(typeValues1.begin(), typeValues1.end(), "BeausoleilMorrisonMixedStableFloor"), typeValues1.end())
@@ -154,6 +154,10 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   convType = cc.convectionCoefficient1Type();
   ASSERT_TRUE(convType);
   ASSERT_EQ(*convType, "Value");
+  ASSERT_TRUE(cc.setConvectionCoefficient1Type("BlockenWindard"));
+  convType = cc.convectionCoefficient1Type();
+  ASSERT_TRUE(convType);
+  ASSERT_EQ(*convType, "BlockenWindard");
   cc.resetConvectionCoefficient1Type();
   convType = cc.convectionCoefficient1Type();
   ASSERT_FALSE(convType);
@@ -168,6 +172,10 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   convType = cc.convectionCoefficient2Type();
   ASSERT_TRUE(convType);
   ASSERT_EQ(*convType, "Value");
+  ASSERT_TRUE(cc.setConvectionCoefficient2Type("BlockenWindard"));
+  convType = cc.convectionCoefficient2Type();
+  ASSERT_TRUE(convType);
+  ASSERT_EQ(*convType, "BlockenWindard");
   cc.resetConvectionCoefficient2Type();
   convType = cc.convectionCoefficient2Type();
   ASSERT_FALSE(convType);

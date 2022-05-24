@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -169,11 +169,11 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_equipmentLevel) {
   EXPECT_EQ(0, definition.wattsperUnit().get());
   EXPECT_FALSE(definition.wattsperZoneFloorArea());
   ASSERT_TRUE(definition.setWattsperUnit(50.0));
-  ASSERT_EQ(50.0, definition.wattsperUnit());
+  ASSERT_EQ(50.0, definition.wattsperUnit().get());
 
   //change input method to watts/area, see if watts/area is assigned.
   ASSERT_TRUE(definition.setDesignPowerInputCalculationMethod("Watts/Area", electricEquipmentITEAirCooled.floorArea()));
-  EXPECT_EQ(0.5, definition.wattsperZoneFloorArea());
+  EXPECT_EQ(0.5, definition.wattsperZoneFloorArea().get());
 
   //model.save(toPath("./ITE3.osm"), true);
 }

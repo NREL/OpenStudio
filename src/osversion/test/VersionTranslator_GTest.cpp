@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1251,7 +1251,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   ASSERT_EQ(1u, sss.size());
   WorkspaceObject ss = sss[0];
 
-  EXPECT_EQ(0.5, ss.getDouble(6));
+  EXPECT_EQ(0.5, ss.getDouble(6).get());
   EXPECT_EQ(4u, ss.numExtensibleGroups());
   auto eg = ss.extensibleGroups()[3];
   EXPECT_EQ(1, eg.getInt(0, false).get());
@@ -1804,13 +1804,13 @@ TEST_F(OSVersionFixture, update_3_2_1_to_3_3_0_DesignDay) {
   EXPECT_EQ("", dd.getString(18).get());         // Enthalpy at Maximum Dry-Bulb
 }
 
-TEST_F(OSVersionFixture, update_3_3_0_to_3_3_1_CoilHeatingDXMultiSpeed) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_3_1/test_vt_CoilHeatingDXMultiSpeed.osm");
+TEST_F(OSVersionFixture, update_3_3_0_to_3_4_0_CoilHeatingDXMultiSpeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_4_0/test_vt_CoilHeatingDXMultiSpeed.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_1/test_vt_CoilHeatingDXMultiSpeed_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_0/test_vt_CoilHeatingDXMultiSpeed_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed");

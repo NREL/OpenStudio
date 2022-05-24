@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -109,7 +109,9 @@ namespace model {
 
       boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
-      boost::optional<std::string> evaporationLossMode() const;
+      std::string evaporationLossMode() const;
+
+      bool isEvaporationLossModeDefaulted() const;
 
       double evaporationLossFactor() const;
 
@@ -117,7 +119,9 @@ namespace model {
 
       boost::optional<double> driftLossPercent() const;
 
-      boost::optional<std::string> blowdownCalculationMode() const;
+      std::string blowdownCalculationMode() const;
+
+      bool isBlowdownCalculationModeDefaulted() const;
 
       boost::optional<double> blowdownConcentrationRatio() const;
 
@@ -125,7 +129,9 @@ namespace model {
 
       boost::optional<int> numberofCells() const;
 
-      boost::optional<std::string> cellControl() const;
+      std::string cellControl() const;
+
+      bool isCellControlDefaulted() const;
 
       boost::optional<double> cellMinimumWaterFlowRateFraction() const;
 

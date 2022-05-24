@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -199,7 +199,7 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_GetOrCreateScheduleTypeLimits) {
 
         EXPECT_EQ(limits.handle(), limits2.handle());
 
-        EXPECT_EQ(ScheduleTypeLimits::units(scheduleType.unitType, false), ScheduleTypeLimits::units(limits.unitType(), false));
+        EXPECT_EQ(ScheduleTypeLimits::units(scheduleType.unitType, false).get(), ScheduleTypeLimits::units(limits.unitType(), false).get());
 
         EXPECT_TRUE(isCompatible(scheduleType, limits));
       }

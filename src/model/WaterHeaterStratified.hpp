@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,6 +40,8 @@ namespace model {
   class Schedule;
   class ThermalZone;
   class WaterHeaterSizing;
+  class Node;
+  class PlantLoop;
 
   namespace detail {
 
@@ -396,6 +398,29 @@ namespace model {
     boost::optional<double> autosizedSourceSideDesignFlowRate() const;
 
     WaterHeaterSizing waterHeaterSizing() const;
+
+    // A helper method to specifically connect the tank on its Source Side, regardless of whether it is on the demand or supply side (without
+    // disconnecting the Use Side, in case it's a supply node given)
+    bool addToSourceSideNode(Node& node);
+
+    // This is a more conveniently named method to return the PlantLoop connected to the Use Side Inlet/Outlet Nodes,
+    // which is necessarilly on the supply side. It does exactly the same as the overriden secondaryPlantLoop() method
+    boost::optional<PlantLoop> useSidePlantLoop() const;
+
+    // This is a more conveniently named helper to return the PlantLoop connected to the Source Side Inlet/Outlet Nodes,
+    // whether that is on the demand or supply side. It does exactly the same as the overriden plantLoop() method
+    boost::optional<PlantLoop> sourceSidePlantLoop() const;
+
+    // Convenience name for removeFromSecondaryPlantLoop()
+    bool removeFromSourceSidePlantLoop();
+
+    boost::optional<ModelObject> useSideInletModelObject() const;
+
+    boost::optional<ModelObject> useSideOutletModelObject() const;
+
+    boost::optional<ModelObject> sourceSideInletModelObject() const;
+
+    boost::optional<ModelObject> sourceSideOutletModelObject() const;
 
     //@}
    protected:

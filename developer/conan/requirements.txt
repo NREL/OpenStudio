@@ -1,0 +1,4 @@
+conan
+packaging
+python-dateutil
+rich

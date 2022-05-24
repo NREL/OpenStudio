@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -180,11 +180,11 @@ TEST_F(ModelFixture, PlantComponentUserDefined_programs) {
   EnergyManagementSystemProgramCallingManager initPCM(m);
   EnergyManagementSystemProgramCallingManager simPCM(m);
   EXPECT_TRUE(b1.setMainModelProgramCallingManager(mainPCM));
-  EXPECT_EQ(mainPCM, b1.mainModelProgramCallingManager());
+  EXPECT_EQ(mainPCM, b1.mainModelProgramCallingManager().get());
   EXPECT_TRUE(b1.setPlantInitializationProgramCallingManager(initPCM));
-  EXPECT_EQ(initPCM, b1.plantInitializationProgramCallingManager());
+  EXPECT_EQ(initPCM, b1.plantInitializationProgramCallingManager().get());
   EXPECT_TRUE(b1.setPlantSimulationProgramCallingManager(simPCM));
-  EXPECT_EQ(simPCM, b1.plantSimulationProgramCallingManager());
+  EXPECT_EQ(simPCM, b1.plantSimulationProgramCallingManager().get());
   b1.resetMainModelProgramCallingManager();
   b1.resetPlantInitializationProgramCallingManager();
   b1.resetPlantSimulationProgramCallingManager();
@@ -201,7 +201,7 @@ TEST_F(ModelFixture, PlantComponentUserDefined_zone) {
   PlantComponentUserDefined b1(m);
 
   EXPECT_TRUE(b1.setAmbientZone(tz));
-  EXPECT_EQ(tz, b1.ambientZone());
+  EXPECT_EQ(tz, b1.ambientZone().get());
   b1.resetAmbientZone();
   EXPECT_FALSE(b1.ambientZone());
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -496,6 +496,22 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool Space_Impl::setVolume(double volume) {
+      bool result = setDouble(OS_SpaceFields::Volume, volume);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void Space_Impl::autocalculateVolume() {
+      bool result = setString(OS_SpaceFields::Volume, "Autocalculate");
+      OS_ASSERT(result);
+    }
+
+    void Space_Impl::resetVolume() {
+      bool result = setString(OS_SpaceFields::Volume, "");
+      OS_ASSERT(result);
+    }
+
     boost::optional<SpaceType> Space_Impl::spaceType() const {
       boost::optional<SpaceType> result = getObject<ModelObject>().getModelObjectTarget<SpaceType>(OS_SpaceFields::SpaceTypeName);
       if (!result) {
@@ -886,6 +902,11 @@ namespace model {
     }
 
     double Space_Impl::volume() const {
+      boost::optional<double> value = getDouble(OS_SpaceFields::Volume, true);
+      if (value) {
+        return value.get();
+      }
+
       double result = 0;
 
       // TODO: need a better method
@@ -913,6 +934,19 @@ namespace model {
         result = (roofHeight - floorHeight) * this->floorArea();
       }
 
+      return result;
+    }
+
+    bool Space_Impl::isVolumeDefaulted() const {
+      return isEmpty(OS_SpaceFields::Volume);
+    }
+
+    bool Space_Impl::isVolumeAutocalculated() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_SpaceFields::Volume, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
+      }
       return result;
     }
 
@@ -2863,6 +2897,18 @@ namespace model {
     getImpl<detail::Space_Impl>()->resetPartofTotalFloorArea();
   }
 
+  bool Space::setVolume(double volume) {
+    return getImpl<detail::Space_Impl>()->setVolume(volume);
+  }
+
+  void Space::autocalculateVolume() {
+    getImpl<detail::Space_Impl>()->autocalculateVolume();
+  }
+
+  void Space::resetVolume() {
+    getImpl<detail::Space_Impl>()->resetVolume();
+  }
+
   boost::optional<SpaceType> Space::spaceType() const {
     return getImpl<detail::Space_Impl>()->spaceType();
   }
@@ -3065,6 +3111,14 @@ namespace model {
 
   double Space::volume() const {
     return getImpl<detail::Space_Impl>()->volume();
+  }
+
+  bool Space::isVolumeDefaulted() const {
+    return getImpl<detail::Space_Impl>()->isVolumeDefaulted();
+  }
+
+  bool Space::isVolumeAutocalculated() const {
+    return getImpl<detail::Space_Impl>()->isVolumeAutocalculated();
   }
 
   double Space::numberOfPeople() const {

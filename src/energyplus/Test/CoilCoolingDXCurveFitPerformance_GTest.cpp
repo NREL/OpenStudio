@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -86,7 +86,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitPerformance) {
   ASSERT_EQ(1u, idfOperatingModes.size());
   WorkspaceObject idfOperatingMode(idfOperatingModes[0]);
 
-  EXPECT_EQ(woBaseOperatingMode, idfOperatingMode);
+  EXPECT_EQ(woBaseOperatingMode.get(), idfOperatingMode);
 
   EXPECT_EQ(0.0, idfPerformance.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacity, false).get());
   EXPECT_EQ(

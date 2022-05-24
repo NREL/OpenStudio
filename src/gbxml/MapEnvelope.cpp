@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -64,11 +64,9 @@ namespace gbxml {
     //openstudio::model::Construction construction = model.getUniqueModelObject<openstudio::model::Construction>();
 
     openstudio::model::Construction construction(model);
-    std::string constructionId = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(constructionId, construction));
 
-    std::string constructionName = element.child("Name").text().as_string();
-    construction.setName(escapeName(constructionId, constructionName));
+    translateId(element, construction);
+    translateName(element, construction);
 
     // auto layerIdList = element.children("LayerId");
     // Construction::LayerId (layerIdList) -> Layer (layerElements), Layer::MaterialId -> Material
@@ -118,12 +116,9 @@ namespace gbxml {
   boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWindowType(const pugi::xml_node& element,
                                                                                          openstudio::model::Model& model) {
     openstudio::model::Construction construction(model);
-    std::string windowTypeId = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(windowTypeId, construction));
-    construction.additionalProperties().setFeature("gbXMLId", windowTypeId);
 
-    std::string windowTypeName = element.child("Name").text().as_string();
-    construction.setName(escapeName(windowTypeId, windowTypeName));
+    translateId(element, construction);
+    translateName(element, construction);
 
     boost::optional<double> uValue;
     boost::optional<double> shgc;
@@ -190,12 +185,8 @@ namespace gbxml {
       openstudio::model::StandardOpaqueMaterial material(model);
       result = material;
 
-      std::string id = element.attribute("id").value();
-      m_idToObjectMap.insert(std::make_pair(id, material));
-      material.additionalProperties().setFeature("gbXMLId", id);
-
-      std::string name = element.child("Name").text().as_string();
-      material.setName(escapeName(id, name));
+      translateId(element, material);
+      translateName(element, material);
 
       material.setDensity(density);
       material.setThermalConductivity(conductivity);
@@ -216,12 +207,8 @@ namespace gbxml {
       openstudio::model::MasslessOpaqueMaterial material(model);
       result = material;
 
-      std::string id = element.attribute("id").value();
-      m_idToObjectMap.insert(std::make_pair(id, material));
-      material.additionalProperties().setFeature("gbXMLId", id);
-
-      std::string name = element.child("Name").text().as_string();
-      material.setName(escapeName(id, name));
+      translateId(element, material);
+      translateName(element, material);
 
       material.setThermalResistance(rvalue);
 
@@ -231,14 +218,8 @@ namespace gbxml {
       openstudio::model::MasslessOpaqueMaterial material(model);
       result = material;
 
-      std::string id = element.attribute("id").value();
-      m_idToObjectMap.insert(std::make_pair(id, material));
-      material.additionalProperties().setFeature("gbXMLId", id);
-
-      std::string name = element.child("Name").text().as_string();
-      material.setName(escapeName(id, name));
-
-      LOG(Warn, "Creating stub material '" << name << "'");
+      translateId(element, material);
+      translateName(element, material);
 
       material.setThermalResistance(.001);
     }
@@ -260,14 +241,8 @@ namespace gbxml {
       m_translatedObjects[constructionBase.handle()] = *result;
     }
 
-    std::string name = constructionBase.name().get();
-
-    // id
-    result->append_attribute("id") = escapeName(name).c_str();
-
-    // name
-    auto nameElement = result->append_child("Name");
-    nameElement.text() = name.c_str();
+    translateId(constructionBase, *result);
+    translateName(constructionBase, *result);
 
     if (isOpaque) {
       if (constructionBase.optionalCast<model::LayeredConstruction>()) {
@@ -351,14 +326,8 @@ namespace gbxml {
   boost::optional<pugi::xml_node> ForwardTranslator::translateMaterial(const openstudio::model::Material& material, pugi::xml_node& root) {
     auto result = root.append_child("Material");
 
-    std::string name = material.name().get();
-
-    // id
-    result.append_attribute("id") = escapeName(name).c_str();
-
-    // name
-    auto nameElement = result.append_child("Name");
-    nameElement.text() = name.c_str();
+    translateId(material, result);
+    translateName(material, result);
 
     boost::optional<double> thermalReflectance;
     boost::optional<double> solarReflectance;

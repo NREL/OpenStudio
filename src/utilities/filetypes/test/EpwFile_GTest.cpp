@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -795,9 +795,8 @@ TEST(Filetypes, EpwFile_DataPoint) {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CT_New.Haven-Tweed.AP.725045_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    std::vector<EpwDataPoint> data = epwFile.data();
-    for (EpwDataPoint dataPoint : data) {
-      EXPECT_NE(dataPoint.windSpeed(), boost::none);
+    for (const EpwDataPoint& dataPoint : epwFile.data()) {
+      EXPECT_TRUE(dataPoint.windSpeed());
       //EXPECT_NO_THROW(dataPoint.windSpeed().get());
     }
   } catch (...) {

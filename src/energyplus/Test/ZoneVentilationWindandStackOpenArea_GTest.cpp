@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -129,10 +129,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea)
     EXPECT_EQ(idf_zone.nameString(), idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::ZoneName).get());
     EXPECT_EQ(openingAreaSch.nameString(), idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName).get());
     EXPECT_EQ(zv.openingArea(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningArea).get());
-    EXPECT_EQ(zv.openingEffectiveness(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness).get());
+    EXPECT_EQ(zv.openingEffectiveness().get(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness).get());
     EXPECT_EQ(zv.effectiveAngle(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::EffectiveAngle).get());
     EXPECT_EQ(zv.heightDifference(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::HeightDifference).get());
-    EXPECT_EQ(zv.dischargeCoefficientforOpening(),
+    EXPECT_EQ(zv.dischargeCoefficientforOpening().get(),
               idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening).get());
 
     EXPECT_EQ(zv.minimumIndoorTemperature(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperature).get());

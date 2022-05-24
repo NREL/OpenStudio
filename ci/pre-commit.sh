@@ -8,8 +8,8 @@ old_stash=$(git rev-parse -q --verify refs/stash)
 git stash push --quiet --keep-index --include-untracked --message "os_pre_commit"
 new_stash=$(git rev-parse -q --verify refs/stash)
 
-# Run clang format
-./ci/clang-format.sh HEAD develop
+# Run clang format on changed files, comparing to origin/develop
+./ci/clang-format.sh HEAD origin/develop
 RESULT=$?
 [ -f clang_format.patch ] && rm -f clang_format.patch
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -168,12 +168,12 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_Clone) {
 
   //clone into the same model
   GroundHeatExchangerVertical testObjectClone = testObject.clone(m).cast<GroundHeatExchangerVertical>();
-  EXPECT_EQ(3.14, testObjectClone.designFlowRate());
+  EXPECT_EQ(3.14, testObjectClone.designFlowRate().get());
 
   //clone into another model
   Model m2;
   GroundHeatExchangerVertical testObjectClone2 = testObject.clone(m2).cast<GroundHeatExchangerVertical>();
-  EXPECT_EQ(3.14, testObjectClone2.designFlowRate());
+  EXPECT_EQ(3.14, testObjectClone2.designFlowRate().get());
 
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());

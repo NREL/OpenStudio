@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -78,7 +78,7 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor) {
 
   EXPECT_EQ("OATdb_Sensor", OATdbSensor.nameString());
   EXPECT_EQ(siteOutdoorAirDrybulbTemperature.handle(), OATdbSensor.outputVariable().get().handle());
-  EXPECT_EQ(siteOutdoorAirDrybulbTemperature, OATdbSensor.outputVariable());
+  EXPECT_EQ(siteOutdoorAirDrybulbTemperature, OATdbSensor.outputVariable().get());
   EXPECT_EQ("", OATdbSensor.keyName());
 
   // add zone Temperature
@@ -93,7 +93,7 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor) {
 
   EXPECT_EQ("Zone_Sensor", zoneSensor.nameString());
   EXPECT_EQ(zoneTemperature.handle(), zoneSensor.outputVariable().get().handle());
-  EXPECT_EQ(zoneTemperature, zoneSensor.outputVariable());
+  EXPECT_EQ(zoneTemperature, zoneSensor.outputVariable().get());
   EXPECT_EQ(zone1.nameString(), zoneSensor.keyName());
 
   // add Zone Lights Electricity Rate to both zones
@@ -121,7 +121,7 @@ TEST_F(ModelFixture, EMSSensor_EMSSensor) {
 
   EXPECT_EQ("meter_sensor", meter_sensor.nameString());
   EXPECT_EQ(meter.handle(), meter_sensor.outputMeter().get().handle());
-  EXPECT_EQ(meter, meter_sensor.outputMeter());
+  EXPECT_EQ(meter, meter_sensor.outputMeter().get());
   EXPECT_EQ("", meter_sensor.keyName());
 
   ASSERT_TRUE(OATdbSensor.outputVariable());

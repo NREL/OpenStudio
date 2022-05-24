@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -170,7 +170,7 @@ TEST_F(ModelFixture, PumpConstantSpeed_GettersSetters) {
   // Skin Loss Radiative Fraction:  Double
   // No Default
   EXPECT_TRUE(pump.setSkinLossRadiativeFraction(0.5));
-  EXPECT_EQ(0.5, pump.skinLossRadiativeFraction());
+  EXPECT_EQ(0.5, pump.skinLossRadiativeFraction().get());
 
   // Design Power Sizing Method:  String
   // Default to PowerPerFlowPerPressure in Ctor

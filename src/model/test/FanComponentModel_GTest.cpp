@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -167,21 +167,21 @@ TEST_F(ModelFixture, FanComponentModel_GettersSetters) {
   fanComponentModel.autosizeMaximumFlowRate();
   EXPECT_TRUE(fanComponentModel.isMaximumFlowRateAutosized());
   EXPECT_TRUE(fanComponentModel.setMaximumFlowRate(0.35));
-  EXPECT_EQ(0.35, fanComponentModel.maximumFlowRate());
+  EXPECT_EQ(0.35, fanComponentModel.maximumFlowRate().get());
   EXPECT_FALSE(fanComponentModel.isMaximumFlowRateAutosized());
   // Bad Value
   EXPECT_FALSE(fanComponentModel.setMaximumFlowRate(-10.0));
-  EXPECT_EQ(0.35, fanComponentModel.maximumFlowRate());
+  EXPECT_EQ(0.35, fanComponentModel.maximumFlowRate().get());
 
   // Minimum Flow Rate: Required Double, Autosizable
   fanComponentModel.autosizeMinimumFlowRate();
   EXPECT_TRUE(fanComponentModel.isMinimumFlowRateAutosized());
   EXPECT_TRUE(fanComponentModel.setMinimumFlowRate(0.11));
-  EXPECT_EQ(0.11, fanComponentModel.minimumFlowRate());
+  EXPECT_EQ(0.11, fanComponentModel.minimumFlowRate().get());
   EXPECT_FALSE(fanComponentModel.isMinimumFlowRateAutosized());
   // Bad Value
   EXPECT_FALSE(fanComponentModel.setMinimumFlowRate(-10.0));
-  EXPECT_EQ(0.11, fanComponentModel.minimumFlowRate());
+  EXPECT_EQ(0.11, fanComponentModel.minimumFlowRate().get());
 
   // Fan Sizing Factor: Required Double
   EXPECT_TRUE(fanComponentModel.setFanSizingFactor(1.1));

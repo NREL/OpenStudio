@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -305,7 +305,8 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   // SqlResults ep_930 = {194906985.51, 27596.57, 426.75, 324.25, 782.28, 3262855.66, 191615000.0};
   // SqlResults ep_940 = {191927299.41, 27898.69, 407.55, 361.09, 776.63, 3322855.45, 188575000.0};
   // SqlResults ep_950 = {191927299.41, 27898.69, 407.55, 361.09, 776.63, 3322855.45, 188575000.0};
-  SqlResults ep_960 = {191927297.14, 27898.69, 407.55, 361.09, 776.63, 3322853.18, 188575000.0};
+  // SqlResults ep_960 = {191927297.14, 27898.69, 407.55, 361.09, 776.63, 3322853.18, 188575000.0};
+  SqlResults ep_2210 = {191927297.14, 27898.69, 407.55, 361.09, 776.63, 3322853.18, 188575000.0};
 
   // To update, cd build/resources, then in Ruby
   /* ```ruby
@@ -340,15 +341,15 @@ TEST_F(SqlFileFixture, AnnualTotalCosts) {
   // =========== Check that within our development based on the current E+ version we do not make the results vary (at all)  =================
 
   // Total annual costs for all fuel types
-  EXPECT_NEAR(ep_960.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.03);
+  EXPECT_NEAR(ep_2210.annualTotalUtilityCost, sqlFile2.annualTotalUtilityCost().get(), 0.03);
 
   // Costs by fuel type
-  EXPECT_DOUBLE_EQ(ep_960.annualTotalCost_Electricity, sqlFile2.annualTotalCost(FuelType::Electricity).get());
-  EXPECT_DOUBLE_EQ(ep_960.annualTotalCost_Gas, sqlFile2.annualTotalCost(FuelType::Gas).get());
-  EXPECT_DOUBLE_EQ(ep_960.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get());
-  EXPECT_DOUBLE_EQ(ep_960.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get());
-  EXPECT_NEAR(ep_960.annualTotalCost_Water, sqlFile2.annualTotalCost(FuelType::Water).get(), 0.03);
-  EXPECT_DOUBLE_EQ(ep_960.annualTotalCost_FuelOil_1, sqlFile2.annualTotalCost(FuelType::FuelOil_1).get());
+  EXPECT_DOUBLE_EQ(ep_2210.annualTotalCost_Electricity, sqlFile2.annualTotalCost(FuelType::Electricity).get());
+  EXPECT_DOUBLE_EQ(ep_2210.annualTotalCost_Gas, sqlFile2.annualTotalCost(FuelType::Gas).get());
+  EXPECT_DOUBLE_EQ(ep_2210.annualTotalCost_DistrictCooling, sqlFile2.annualTotalCost(FuelType::DistrictCooling).get());
+  EXPECT_DOUBLE_EQ(ep_2210.annualTotalCost_DistrictHeating, sqlFile2.annualTotalCost(FuelType::DistrictHeating).get());
+  EXPECT_NEAR(ep_2210.annualTotalCost_Water, sqlFile2.annualTotalCost(FuelType::Water).get(), 0.03);
+  EXPECT_DOUBLE_EQ(ep_2210.annualTotalCost_FuelOil_1, sqlFile2.annualTotalCost(FuelType::FuelOil_1).get());
 
   // These have a relatively high tolerance and shouldn't fail, and they depend on the above values divided by square footage which shouldn't vary
   // So it's fine to keep it as is
@@ -385,7 +386,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   VersionString actual(sqlFile->energyPlusVersion());
   EXPECT_EQ(expected.major(), actual.major());
   EXPECT_EQ(expected.minor(), actual.minor());
-  EXPECT_EQ(expected.patch(), actual.patch());
+  EXPECT_EQ(expected.patch().get(), actual.patch().get());
 
   // Check if the SqlFile has the 'Year' field
   if (expected >= VersionString(9, 0)) {
@@ -591,6 +592,7 @@ TEST_F(SqlFileFixture, Regressions) {
   regressionTestSqlFile("1ZoneEvapCooler-V9-4-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V9-5-0.sql", 43.28, 20, 20);
   regressionTestSqlFile("1ZoneEvapCooler-V9-6-0.sql", 43.28, 20, 20);
+  regressionTestSqlFile("1ZoneEvapCooler-V22-1-0.sql", 43.28, 20, 20);
 }
 
 TEST_F(SqlFileFixture, SqlFile_LeapYear) {
@@ -802,4 +804,22 @@ TEST_F(SqlFileFixture, 4298_YearField) {
   auto reportingFreqs = sqlFile.execAndReturnVectorOfString("SELECT ReportingFrequency FROM ReportDataDictionary");
   ASSERT_TRUE(reportingFreqs);
   EXPECT_EQ(0, reportingFreqs->size());
+}
+
+TEST_F(SqlFileFixture, 4403_FenestrationAssembly) {
+  // Test for #4403 - Add Sql helper methods to retrieve U-factors, SHGC, or VT for glazing systems
+
+  // This one has fenestration that includes WindowProperty:FrameAndDivider
+  openstudio::path path = resourcesPath() / toPath("energyplus/FrameAndDivider/eplusout.sql");
+  sqlFile = openstudio::SqlFile(path);
+  ASSERT_TRUE(sqlFile.connectionOpen());
+
+  ASSERT_TRUE(sqlFile.assemblyUFactor("Story 1 Core Space Exterior Wall Window"));
+  EXPECT_EQ(2.546, sqlFile.assemblyUFactor("Story 1 Core Space Exterior Wall Window").get());
+
+  ASSERT_TRUE(sqlFile.assemblySHGC("Story 1 Core Space Exterior Wall Window"));
+  EXPECT_EQ(0.350, sqlFile.assemblySHGC("Story 1 Core Space Exterior Wall Window").get());
+
+  ASSERT_TRUE(sqlFile.assemblyVisibleTransmittance("Story 1 Core Space Exterior Wall Window"));
+  EXPECT_EQ(0.440, sqlFile.assemblyVisibleTransmittance("Story 1 Core Space Exterior Wall Window").get());
 }

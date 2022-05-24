@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -128,7 +128,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PhotovoltaicPerformanceSandia) {
   WorkspaceExtensibleGroup w_eg_gen = idf_genlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
   EXPECT_EQ("Generator:Photovoltaic", w_eg_gen.getString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorObjectType).get());
-  ASSERT_EQ(w_eg_gen.getString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorName).get(), panel.name());
+  ASSERT_EQ(w_eg_gen.getString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorName).get(), panel.nameString());
 
   // Get the Panel
   ASSERT_EQ(1u, w.getObjectsByType(IddObjectType::Generator_Photovoltaic).size());
@@ -205,7 +205,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PhotovoltaicPerformanceSandia) {
 
   ReverseTranslator reverseTranslator;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_perf = w.addObject(IdfObject(IddObjectType::PhotovoltaicPerformance_Sandia));
   ASSERT_TRUE(_i_perf);
   _i_perf->setName("Aleo S16 165 [2007 (E)]");

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -111,14 +111,14 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic) {
   EXPECT_TRUE(scheduleCooling.setValue(0.9));
   EXPECT_TRUE(z.setSequentialCoolingFractionSchedule(b2, scheduleCooling));
   ASSERT_TRUE(z.sequentialCoolingFraction(b2));
-  EXPECT_EQ(0.9, z.sequentialCoolingFraction(b2));
+  EXPECT_EQ(0.9, z.sequentialCoolingFraction(b2).get());
   ASSERT_TRUE(z.sequentialCoolingFractionSchedule(b2));
 
   ScheduleConstant scheduleHeating(m);
   EXPECT_TRUE(scheduleHeating.setValue(0.33));
   EXPECT_TRUE(z.setSequentialHeatingFractionSchedule(b2, scheduleHeating));
   ASSERT_TRUE(z.sequentialHeatingFraction(b2));
-  EXPECT_EQ(0.33, z.sequentialHeatingFraction(b2));
+  EXPECT_EQ(0.33, z.sequentialHeatingFraction(b2).get());
   ASSERT_TRUE(z.sequentialHeatingFractionSchedule(b2));
 
   // Setting a priority to zero should reset the corresponding Sequential Fraction

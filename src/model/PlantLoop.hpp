@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -72,7 +72,15 @@ namespace model {
 
     static std::vector<std::string> loadDistributionSchemeValues();
 
+    static std::vector<std::string> validLoadDistributionSchemeValues();
+
     static std::vector<std::string> fluidTypeValues();
+
+    static std::vector<std::string> validFluidTypeValues();
+
+    static std::vector<std::string> commonPipeSimulationValues();
+
+    static std::vector<std::string> validCommonPipeSimulationValues();
 
     /** Prior to OS 1.11.0 the options where
       Optimal, Sequential, and Uniform.
@@ -138,7 +146,9 @@ namespace model {
 
     void autocalculatePlantLoopVolume();
 
-    boost::optional<std::string> commonPipeSimulation() const;
+    std::string commonPipeSimulation() const;
+
+    bool isCommonPipeSimulationDefaulted() const;
 
     bool setCommonPipeSimulation(const std::string& value);
 

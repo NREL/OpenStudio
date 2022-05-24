@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -111,6 +111,12 @@ namespace model {
     bool setPartofTotalFloorArea(bool partofTotalFloorArea);
 
     void resetPartofTotalFloorArea();
+
+    bool setVolume(double volume);
+
+    void autocalculateVolume();
+
+    void resetVolume();
 
     //@}
     /** @name Other */
@@ -279,6 +285,10 @@ namespace model {
     /// Returns the volume (m^3).
     /// Does not include space multiplier in calculation.
     double volume() const;
+
+    bool isVolumeDefaulted() const;
+
+    bool isVolumeAutocalculated() const;
 
     /** Returns the number of people in the space (people). */
     /// Does not include space multiplier in calculation.

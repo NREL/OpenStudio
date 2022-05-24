@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -110,6 +110,18 @@ class UTILITIES_API SqlFile
 
   // Check if the SqlFile contains 'Year' field for DaylightMapHourlyReports (added Year in 9.2.0)
   bool hasIlluminanceMapYear() const;
+
+  //  return a fenestration value for matching subSurfaceName (RowName) and columnName
+  boost::optional<double> getExteriorFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const;
+
+  // return an Assembly U-Factor value for matching subSurfaceName (RowName)
+  boost::optional<double> assemblyUFactor(const std::string& subSurfaceName) const;
+
+  // return an Assembly SHGC value for matching subSurfaceName (RowName)
+  boost::optional<double> assemblySHGC(const std::string& subSurfaceName) const;
+
+  // return an Assembly Visible Transmittance value for matching subSurfaceName (RowName)
+  boost::optional<double> assemblyVisibleTransmittance(const std::string& subSurfaceName) const;
 
   /// close the file
   bool close();

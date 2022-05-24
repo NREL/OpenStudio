@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -258,7 +258,7 @@ bool IdfFile::isValid(StrictnessLevel level) const {
 ValidityReport IdfFile::validityReport(StrictnessLevel level) const {
   ValidityReport report(level);
 
-  // StrictnessLevel::None
+  // StrictnessLevel::Minimal
   // DataErrorType::NoIdd
   // \todo Only way there can be no IddFile is if IddFileType is set to UserCustom
 
@@ -273,7 +273,7 @@ ValidityReport IdfFile::validityReport(StrictnessLevel level) const {
     }
 
     // StrictnessLevel::Draft
-    if (level > StrictnessLevel::None) {
+    if (level > StrictnessLevel::Minimal) {
       // DataErrorType::NoIdd
       // object-level
       if (!m_iddFileAndFactoryWrapper.isInFile(object.iddObject().type())) {
