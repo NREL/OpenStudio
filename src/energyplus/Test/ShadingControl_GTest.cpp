@@ -257,7 +257,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadingControls) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ShadingControls) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idf_zone(openstudio::IddObjectType::Zone);
   idf_zone.setName("Thermal Zone 1");

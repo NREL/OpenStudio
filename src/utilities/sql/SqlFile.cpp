@@ -1399,4 +1399,36 @@ bool SqlFile::hasIlluminanceMapYear() const {
   return true;
 }
 
+boost::optional<double> SqlFile::getExteriorFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const {
+  boost::optional<double> result;
+  if (m_impl) {
+    result = m_impl->getExteriorFenestrationValue(subSurfaceName, columnName);
+  }
+  return result;
+}
+
+boost::optional<double> SqlFile::assemblyUFactor(const std::string& subSurfaceName) const {
+  boost::optional<double> result;
+  if (m_impl) {
+    result = m_impl->assemblyUFactor(subSurfaceName);
+  }
+  return result;
+}
+
+boost::optional<double> SqlFile::assemblySHGC(const std::string& subSurfaceName) const {
+  boost::optional<double> result;
+  if (m_impl) {
+    result = m_impl->assemblySHGC(subSurfaceName);
+  }
+  return result;
+}
+
+boost::optional<double> SqlFile::assemblyVisibleTransmittance(const std::string& subSurfaceName) const {
+  boost::optional<double> result;
+  if (m_impl) {
+    result = m_impl->assemblyVisibleTransmittance(subSurfaceName);
+  }
+  return result;
+}
+
 }  // namespace openstudio

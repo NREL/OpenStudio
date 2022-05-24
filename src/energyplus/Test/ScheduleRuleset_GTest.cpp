@@ -628,7 +628,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpecialDays) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetSimple) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject0(openstudio::IddObjectType::ScheduleTypeLimits);
   idfObject0.setString(0, "Fractional");
@@ -755,7 +755,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetSimple
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetComplex) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject0(openstudio::IddObjectType::ScheduleTypeLimits);
   idfObject0.setString(0, "Fractional");
@@ -970,7 +970,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToRulesetComple
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToYearComplex) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject0(openstudio::IddObjectType::ScheduleTypeLimits);
   idfObject0.setString(0, "Fractional");
@@ -1099,7 +1099,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekDailyToYearComplex) 
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleYearWeekCompactToRulesetComplex) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject0(openstudio::IddObjectType::ScheduleTypeLimits);
   idfObject0.setString(0, "Fractional");

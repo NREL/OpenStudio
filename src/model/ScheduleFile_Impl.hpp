@@ -102,6 +102,10 @@ namespace model {
 
       bool isMinutesperItemDefaulted() const;
 
+      bool adjustScheduleforDaylightSavings() const;
+
+      bool isAdjustScheduleforDaylightSavingsDefaulted() const;
+
       virtual openstudio::TimeSeries timeSeries() const override;
 
       /* FIXME! openstudio::TimeSeries timeSeries(unsigned columnIndex) const; */
@@ -129,6 +133,10 @@ namespace model {
       bool setMinutesperItem(int minutesperItem);
 
       void resetMinutesperItem();
+
+      bool setAdjustScheduleforDaylightSavings(bool adjustScheduleforDaylightSavings);
+
+      void resetAdjustScheduleforDaylightSavings();
 
       virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) override;
 

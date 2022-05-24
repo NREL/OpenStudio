@@ -117,6 +117,12 @@ namespace model {
 
     void resetPartofTotalFloorArea();
 
+    bool setVolume(double volume);
+
+    void autocalculateVolume();
+
+    void resetVolume();
+
     //@}
     /** @name Other */
 
@@ -284,6 +290,10 @@ namespace model {
     /// Returns the volume (m^3).
     /// Does not include space multiplier in calculation.
     double volume() const;
+
+    bool isVolumeDefaulted() const;
+
+    bool isVolumeAutocalculated() const;
 
     /** Returns the number of people in the space (people). */
     /// Does not include space multiplier in calculation.

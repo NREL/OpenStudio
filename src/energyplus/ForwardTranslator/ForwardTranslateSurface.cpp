@@ -45,6 +45,7 @@
 #include "../../model/SurfacePropertyOtherSideCoefficients.hpp"
 #include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../../model/SurfacePropertyConvectionCoefficients.hpp"
+#include "../../model/SurfacePropertyLocalEnvironment.hpp"
 #include "../../model/PlanarSurface.hpp"
 #include "../../model/FoundationKiva.hpp"
 #include "../../model/FoundationKiva_Impl.hpp"
@@ -209,6 +210,10 @@ namespace energyplus {
 
     if (boost::optional<SurfacePropertyConvectionCoefficients> _sCoefs = modelObject.surfacePropertyConvectionCoefficients()) {
       translateAndMapModelObject(_sCoefs.get());
+    }
+
+    if (boost::optional<SurfacePropertyLocalEnvironment> localEnv_ = modelObject.surfacePropertyLocalEnvironment()) {
+      translateAndMapModelObject(localEnv_.get());
     }
 
     if (boost::optional<SurfacePropertyExposedFoundationPerimeter> _sProps = modelObject.surfacePropertyExposedFoundationPerimeter()) {

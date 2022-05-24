@@ -144,7 +144,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignDay) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_DesignDay) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::SizingPeriod_DesignDay);
   idfObject.setString(SizingPeriod_DesignDayFields::Name, "Design Day");

@@ -206,7 +206,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PhotovoltaicPerformanceSandia) {
 
   ReverseTranslator reverseTranslator;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_perf = w.addObject(IdfObject(IddObjectType::PhotovoltaicPerformance_Sandia));
   ASSERT_TRUE(_i_perf);
   _i_perf->setName("Aleo S16 165 [2007 (E)]");

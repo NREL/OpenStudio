@@ -375,8 +375,10 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyExposedFoundationPerimeter.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyLocalEnvironment.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideConditionsModel.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertySurroundingSurfaces.cpp
   ForwardTranslator/ForwardTranslateSwimmingPoolIndoor.cpp
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp
   ForwardTranslator/ForwardTranslateTemperingValve.cpp
@@ -568,6 +570,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmInside.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmOutside.cpp
   ReverseTranslator/ReverseTranslateSurfacePropertyExposedFoundationPerimeter.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertyLocalEnvironment.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertySurroundingSurfaces.cpp
   ReverseTranslator/ReverseTranslateSwimmingPoolIndoor.cpp
   ReverseTranslator/ReverseTranslateThermostatSetpointDualSetpoint.cpp
   ReverseTranslator/ReverseTranslateTimestep.cpp
@@ -728,6 +732,8 @@ set(${target_name}_test_src
   Test/Surface_GTest.cpp
   Test/SurfaceControlMovableInsulation_GTest.cpp
   Test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  Test/SurfacePropertyLocalEnvironment_GTest.cpp
+  Test/SurfacePropertySurroundingSurfaces_GTest.cpp
   Test/SwimmingPoolIndoor_GTest.cpp
   Test/TableMultiVariableLookup_GTest.cpp
   Test/ThermalStorageChilledWaterStratified_GTest.cpp

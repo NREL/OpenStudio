@@ -189,9 +189,9 @@ TEST_F(IdfFixture, WorkspaceObject_Lights) {
   EXPECT_EQ(*lightsScheduleName, *scheduleName);
 }
 
-TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_None) {
+TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Minimal) {
 
-  Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   EXPECT_TRUE(workspace.isValid());
 
   OptionalWorkspaceObject w = workspace.addObject(IdfObject(IddObjectType::Lights));
@@ -218,7 +218,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_None) {
   EXPECT_TRUE(light->setDouble(LightsFields::LightingLevel, 0));
   EXPECT_TRUE(light->setDouble(LightsFields::LightingLevel, 1));
 
-  EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
+  EXPECT_TRUE(workspace.isValid(StrictnessLevel::Minimal));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Final));
 }
@@ -253,7 +253,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Draft) {
   EXPECT_TRUE(light->setDouble(LightsFields::LightingLevel, 0));
   EXPECT_TRUE(light->setDouble(LightsFields::LightingLevel, 1));
 
-  EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
+  EXPECT_TRUE(workspace.isValid(StrictnessLevel::Minimal));
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Final));
 }
@@ -265,7 +265,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Draft) {
 // immediately prior to simulation.
 
 TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
-  Workspace scratch(StrictnessLevel::None, IddFileType::EnergyPlus);  // Strictness level None
+  Workspace scratch(StrictnessLevel::Minimal, IddFileType::EnergyPlus);  // Strictness level None
 
   std::stringstream text;
   text << "ZoneHVAC:HighTemperatureRadiant," << '\n'
@@ -374,7 +374,7 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
 TEST_F(IdfFixture, WorkspaceObject_ClearGroups) {
   // always works in None or Draft strictness
   Workspace ws(epIdfFile);
-  EXPECT_TRUE(ws.strictnessLevel() == StrictnessLevel::None);
+  EXPECT_TRUE(ws.strictnessLevel() == StrictnessLevel::Minimal);
   WorkspaceObjectVector surfaces = ws.getObjectsByType(IddObjectType::BuildingSurface_Detailed);
   ASSERT_TRUE(!surfaces.empty());
   unsigned n = surfaces[0].numFields();

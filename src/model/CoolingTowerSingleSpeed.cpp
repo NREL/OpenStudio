@@ -253,8 +253,14 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_CoolingTower_SingleSpeedFields::BasinHeaterOperatingScheduleName);
     }
 
-    boost::optional<std::string> CoolingTowerSingleSpeed_Impl::evaporationLossMode() const {
-      return getString(OS_CoolingTower_SingleSpeedFields::EvaporationLossMode, true);
+    std::string CoolingTowerSingleSpeed_Impl::evaporationLossMode() const {
+      boost::optional<std::string> value = getString(OS_CoolingTower_SingleSpeedFields::EvaporationLossMode, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoolingTowerSingleSpeed_Impl::isEvaporationLossModeDefaulted() const {
+      return isEmpty(OS_CoolingTower_SingleSpeedFields::EvaporationLossMode);
     }
 
     double CoolingTowerSingleSpeed_Impl::evaporationLossFactor() const {
@@ -277,8 +283,14 @@ namespace model {
       return isEmpty(OS_CoolingTower_SingleSpeedFields::DriftLossPercent);
     }
 
-    boost::optional<std::string> CoolingTowerSingleSpeed_Impl::blowdownCalculationMode() const {
-      return getString(OS_CoolingTower_SingleSpeedFields::BlowdownCalculationMode, true);
+    std::string CoolingTowerSingleSpeed_Impl::blowdownCalculationMode() const {
+      boost::optional<std::string> value = getString(OS_CoolingTower_SingleSpeedFields::BlowdownCalculationMode, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool CoolingTowerSingleSpeed_Impl::isBlowdownCalculationModeDefaulted() const {
+      return isEmpty(OS_CoolingTower_SingleSpeedFields::BlowdownCalculationMode);
     }
 
     double CoolingTowerSingleSpeed_Impl::blowdownConcentrationRatio() const {
@@ -915,9 +927,7 @@ namespace model {
     }
 
     boost::optional<double> CoolingTowerSingleSpeed_Impl::designApproachTemperature() const {
-      auto value = getDouble(OS_CoolingTower_SingleSpeedFields::DesignApproachTemperature, true);
-      OS_ASSERT(value);
-      return value.get();
+      return getDouble(OS_CoolingTower_SingleSpeedFields::DesignApproachTemperature, true);
     }
 
     bool CoolingTowerSingleSpeed_Impl::isDesignApproachTemperatureAutosized() const {
@@ -938,9 +948,7 @@ namespace model {
     }
 
     boost::optional<double> CoolingTowerSingleSpeed_Impl::designRangeTemperature() const {
-      auto value = getDouble(OS_CoolingTower_SingleSpeedFields::DesignRangeTemperature, true);
-      OS_ASSERT(value);
-      return value.get();
+      return getDouble(OS_CoolingTower_SingleSpeedFields::DesignRangeTemperature, true);
     }
 
     bool CoolingTowerSingleSpeed_Impl::isDesignRangeTemperatureAutosized() const {
@@ -976,73 +984,34 @@ namespace model {
     OS_ASSERT(getImpl<detail::CoolingTowerSingleSpeed_Impl>());
 
     autosizeDesignWaterFlowRate();
-
     autosizeDesignAirFlowRate();
-
     autosizeFanPoweratDesignAirFlowRate();
-
-    autosizeFanPoweratDesignAirFlowRate();
-
     autosizeUFactorTimesAreaValueatDesignAirFlowRate();
-
     autosizeAirFlowRateinFreeConvectionRegime();
-
     autosizeUFactorTimesAreaValueatFreeConvectionAirFlowRate();
-
     setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
-
-    setNominalCapacity(0.0);
-
     setFreeConvectionCapacity(0.0);
-
     setBasinHeaterCapacity(0.0);
-
-    setBasinHeaterSetpointTemperature(0.0);
-
-    setString(OS_CoolingTower_SingleSpeedFields::BasinHeaterOperatingScheduleName, "");
-
+    setBasinHeaterSetpointTemperature(2.0);
     setEvaporationLossMode("LossFactor");
-
     setEvaporationLossFactor(0.2);
-
     setDriftLossPercent(0.008);
-
     setBlowdownCalculationMode("ConcentrationRatio");
-
     setBlowdownConcentrationRatio(3.0);
-
-    setString(OS_CoolingTower_SingleSpeedFields::BlowdownMakeupWaterUsageScheduleName, "");
-
-    setString(OS_CoolingTower_SingleSpeedFields::OutdoorAirInletNodeName, "");
-
     setCapacityControl("FanCycling");
-
     setNumberofCells(1);
-
     setCellControl("MinimalCell");
-
     setCellMinimumWaterFlowRateFraction(0.33);
-
     setCellMaximumWaterFlowRateFraction(2.5);
-
     setSizingFactor(1.0);
-
     setFreeConvectionAirFlowRateSizingFactor(0.1);
-
     setFreeConvectionUFactorTimesAreaValueSizingFactor(0.1);
-
     setHeatRejectionCapacityAndNominalCapacitySizingRatio(1.25);
-
     setFreeConvectionNominalCapacitySizingFactor(0.1);
-
     setDesignInletAirDryBulbTemperature(35.0);
-
     setDesignInletAirWetBulbTemperature(25.6);
-
     autosizeDesignApproachTemperature();
-
     autosizeDesignRangeTemperature();
-
     setEndUseSubcategory("General");
   }
 
@@ -1162,8 +1131,12 @@ namespace model {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->basinHeaterOperatingSchedule();
   }
 
-  boost::optional<std::string> CoolingTowerSingleSpeed::evaporationLossMode() const {
+  std::string CoolingTowerSingleSpeed::evaporationLossMode() const {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->evaporationLossMode();
+  }
+
+  bool CoolingTowerSingleSpeed::isEvaporationLossModeDefaulted() const {
+    return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->isEvaporationLossModeDefaulted();
   }
 
   double CoolingTowerSingleSpeed::evaporationLossFactor() const {
@@ -1182,8 +1155,12 @@ namespace model {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->isDriftLossPercentDefaulted();
   }
 
-  boost::optional<std::string> CoolingTowerSingleSpeed::blowdownCalculationMode() const {
+  std::string CoolingTowerSingleSpeed::blowdownCalculationMode() const {
     return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->blowdownCalculationMode();
+  }
+
+  bool CoolingTowerSingleSpeed::isBlowdownCalculationModeDefaulted() const {
+    return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->isBlowdownCalculationModeDefaulted();
   }
 
   double CoolingTowerSingleSpeed::blowdownConcentrationRatio() const {
@@ -1490,7 +1467,7 @@ namespace model {
   }
 
   double CoolingTowerSingleSpeed::designInletAirDryBulbTemperature() const {
-    return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->designInletAirWetBulbTemperature();
+    return getImpl<detail::CoolingTowerSingleSpeed_Impl>()->designInletAirDryBulbTemperature();
   }
 
   bool CoolingTowerSingleSpeed::setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature) {

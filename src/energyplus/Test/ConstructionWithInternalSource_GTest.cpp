@@ -100,7 +100,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ConstructionWithInternalSource) {
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ConstructionWithInternalSource) {
 
-  Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfMaterial(openstudio::IddObjectType::Material);
   idfMaterial.setString(0, "Material 1");  // Name

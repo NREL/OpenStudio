@@ -360,7 +360,8 @@ namespace detail {
       return boost::none;
     }
 
-    if (checkValidity && (level > StrictnessLevel::None)) {
+    //if (checkValidity && (level > StrictnessLevel::Minimal)) {  // if None or Minimal, we'd get duplicate names
+    if (checkValidity) {
 
       // do not set if would violate field NullAndRequired
       if ((level >= StrictnessLevel::Draft) && newName.empty() && iddObject().isRequiredField(*index)) {
@@ -450,7 +451,7 @@ namespace detail {
       if (!result) {
         return false;
       }
-      if (checkValidity) {
+      if (checkValidity && level > StrictnessLevel::None) {
         if (!fieldDataIsValid(index, level).empty()) {
           // rollback
           IdfObject_Impl::setString(index, *oldValue, false);
@@ -518,7 +519,7 @@ namespace detail {
       }
 
       // field PointerType
-      if (checkValidity && (level > StrictnessLevel::None) && (!targetHandle.isNull())
+      if (checkValidity && (level > StrictnessLevel::Minimal) && (!targetHandle.isNull())
           && (!m_workspace->canBeTarget(targetHandle, iddObject().objectLists(index)))) {
         return false;
       }
@@ -526,13 +527,13 @@ namespace detail {
       // record diffs at start
       unsigned diffSize = m_diffs.size();
       bool checkValid = false;  // check validity at object level?
-      if (checkValidity && (level > StrictnessLevel::None) && (m_workspace->iddFileType() == IddFileType::OpenStudio)) {
+      if (checkValidity && (level > StrictnessLevel::Minimal) && (m_workspace->iddFileType() == IddFileType::OpenStudio)) {
         // there may be model-level checks on this field
         checkValid = true;
       }
       OptionalUnsigned n;
       if (index >= numFields()) {
-        if (checkValidity) {
+        if (checkValidity && level > StrictnessLevel::None) {
           checkValid = true;
         }
         n = numFields();
@@ -653,7 +654,7 @@ namespace detail {
         return false;
       }
       // field PointerType
-      if (checkValidity && (level > StrictnessLevel::None) && (!targetHandle.isNull())
+      if (checkValidity && (level > StrictnessLevel::Minimal) && (!targetHandle.isNull())
           && (!m_workspace->canBeTarget(targetHandle, iddObject().objectLists(index)))) {
         return false;
       }
@@ -1226,20 +1227,21 @@ namespace detail {
   // QUERY HELPERS
 
   void WorkspaceObject_Impl::populateValidityReport(ValidityReport& report, bool checkNames) const {
-    // StrictnessLevel::None
-
-    // DataErrorType::NotInitialized
-    // object-level
-    if (!initialized()) {
-      report.insertError(DataError(getObject<WorkspaceObject>(), DataErrorType(DataErrorType::NotInitialized)));
-      return;
+    // StrictnessLevel::Minimal
+    if (report.level() > StrictnessLevel::None) {
+      // DataErrorType::NotInitialized
+      // object-level
+      if (!initialized()) {
+        report.insertError(DataError(getObject<WorkspaceObject>(), DataErrorType(DataErrorType::NotInitialized)));
+        return;
+      }
     }
 
     // NOW INHERIT FROM IDFOBJECT
     IdfObject_Impl::populateValidityReport(report, checkNames);
 
     // StrictnessLevel::Draft
-    if (report.level() > StrictnessLevel::None) {
+    if (report.level() > StrictnessLevel::Minimal) {
       // DataErrorType::NameConflict
       // object-level
       if (checkNames && !uniquelyIdentifiableByName()) {

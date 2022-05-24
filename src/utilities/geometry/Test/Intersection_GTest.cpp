@@ -2399,8 +2399,8 @@ TEST_F(GeometryFixture, Issue_3982) {
   ASSERT_EQ(3, intersection2->polygon1().size());
   ASSERT_EQ(3, intersection2->polygon2().size());
   ASSERT_EQ(5, intersection2->newPolygons1().size());
-  ASSERT_EQ(3, intersection2->newPolygons1()[0].size());
-  ASSERT_EQ(4, intersection2->newPolygons1()[1].size());
+  ASSERT_EQ(4, intersection2->newPolygons1()[0].size());
+  ASSERT_EQ(3, intersection2->newPolygons1()[1].size());
   ASSERT_EQ(3, intersection2->newPolygons1()[2].size());
   ASSERT_EQ(3, intersection2->newPolygons1()[3].size());
   ASSERT_EQ(4, intersection2->newPolygons1()[4].size());

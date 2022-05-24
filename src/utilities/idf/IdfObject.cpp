@@ -1649,10 +1649,12 @@ namespace detail {
 
   void IdfObject_Impl::populateValidityReport(ValidityReport& report, bool /*checkNames*/) const {
     // field-level errors
-    for (unsigned index = 0; index < m_fields.size(); ++index) {
-      DataErrorVector fieldErrors = fieldDataIsValid(index, report.level());
-      for (const DataError& error : fieldErrors) {
-        report.insertError(error);
+    if (report.level() > StrictnessLevel::None) {
+      for (unsigned index = 0; index < m_fields.size(); ++index) {
+        DataErrorVector fieldErrors = fieldDataIsValid(index, report.level());
+        for (const DataError& error : fieldErrors) {
+          report.insertError(error);
+        }
       }
     }
 
@@ -1671,18 +1673,20 @@ namespace detail {
   std::vector<DataError> IdfObject_Impl::fieldDataIsValid(unsigned index, const StrictnessLevel& level) const {
     DataErrorVector result;
 
-    // StrictnessLevel::None
+    // StrictnessLevel::Minimal
+    if (level > StrictnessLevel::None) {
 
-    // DataErrorType::NoIdd
-    // field-level
-    if (!m_iddObject.getField(index)) {
-      result.push_back(DataError(index, getObject<IdfObject>(), DataErrorType(DataErrorType::NoIdd)));
-      // no other checks will work
-      return result;
+      // DataErrorType::NoIdd
+      // field-level
+      if (!m_iddObject.getField(index)) {
+        result.push_back(DataError(index, getObject<IdfObject>(), DataErrorType(DataErrorType::NoIdd)));
+        // no other checks will work
+        return result;
+      }
     }
 
     // StrictnessLevel::Draft
-    if (level > StrictnessLevel::None) {
+    if (level > StrictnessLevel::Minimal) {
 
       // DataErrorType::DataType
       // DataErrorType::NumericBound

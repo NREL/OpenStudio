@@ -55,6 +55,8 @@
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 #include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
+#include "SurfacePropertyLocalEnvironment.hpp"
+#include "SurfacePropertyLocalEnvironment_Impl.hpp"
 #include "AirflowNetworkSurface.hpp"
 #include "AirflowNetworkSurface_Impl.hpp"
 #include "AirflowNetworkDetailedOpening.hpp"
@@ -166,6 +168,8 @@ namespace model {
         auto coefficientsClone = coefficients->clone(model).cast<SurfacePropertyConvectionCoefficients>();
         coefficientsClone.setSurface(newParentAsModelObject);
       }
+
+      // TODO: do we clone the SurfacePropertyLocalEnvironment?
 
       auto foundation = adjacentFoundation();
       if (foundation) {
@@ -940,6 +944,26 @@ namespace model {
       }
     }
 
+    boost::optional<SurfacePropertyLocalEnvironment> Surface_Impl::surfacePropertyLocalEnvironment() const {
+
+      std::vector<SurfacePropertyLocalEnvironment> result;
+      for (auto& localEnv : model().getConcreteModelObjects<SurfacePropertyLocalEnvironment>()) {
+        if (auto surface_ = localEnv.exteriorSurfaceAsSurface()) {
+          if (surface_->handle() == handle()) {
+            result.push_back(localEnv);
+          }
+        }
+      }
+      if (result.empty()) {
+        return boost::none;
+      } else if (result.size() == 1) {
+        return result.at(0);
+      } else {
+        LOG(Error, "More than one SurfacePropertyLocalEnvironment points to this Surface");
+        return boost::none;
+      }
+    }
+
     boost::optional<SurfacePropertyOtherSideCoefficients> Surface_Impl::surfacePropertyOtherSideCoefficients() const {
       return getObject<Surface>().getModelObjectTarget<SurfacePropertyOtherSideCoefficients>(OS_SurfaceFields::OutsideBoundaryConditionObject);
     }
@@ -1452,77 +1476,64 @@ namespace model {
     // 2 - Add all the subsurface rough openings together (so overlap areas don't count twice)
     double Surface_Impl::totalAreaOfSubSurfaces() const {
       double tol = 0.01;
-      // iterate over all sub surfaces
-      // make a map of sub surface/roughOpening vertices (flattened)
-      // iterate over map
-      // check each subsurface for overlap with parent and not overlap with sibling
-      // if either fails, replace roughOpening vertices with original vertices
-      // Add up all the openign areas
 
-      // Records the rough opening of each sub surface
-      std::map<SubSurface, Point3dVector> roughOpenings;
-      // Get the flattened parent surface vertices
-      Transformation parentToXY = Transformation::alignFace(this->vertices()).inverse();
-      std::vector<Point3d> parentVertices = parentToXY * this->vertices();
-      // Make sure the parent surface is oriented clockwise
-      auto norm = openstudio::getOutwardNormal(parentVertices);
+      // There must be a simpler way - after all we are only intersetced in areas
+      // 1 - Get the surface polygon flattened
+      // 2 - Get all the sub-surface polygons with frame offset applied
+      // 3 - STart with first poly
+      // 4 - Does it overlap any other polys? (A & B)
+      // 5 - Y: Get the combined area of the two polygons, remove polygon A & B from the list insert polygon C
+      //     N: Remove polygon A form the list add to finished polygon list
+      // 6 When no more overlaps are detected we are finished. Get the total area of all the polygons
+
+      // Simple case - no sub-surfaces
+      if (this->subSurfaces().size() == 0) return 0;
+
+      // Flattened surface vertices
+      Transformation surfaceToXY = Transformation::alignFace(this->vertices()).inverse();
+      std::vector<Point3d> surfaceVertices = surfaceToXY * this->vertices();
+      // Make sure the surface surface is oriented clockwise
+      auto norm = openstudio::getOutwardNormal(surfaceVertices);
       if (norm && norm->z() > 0) {
-        std::reverse(parentVertices.begin(), parentVertices.end());
+        std::reverse(surfaceVertices.begin(), surfaceVertices.end());
       }
+
+      Point3dVectorVector subSurfaces;
 
       // Get the flattened sub surface vertices for windows
       for (const SubSurface& subSurface : this->subSurfaces()) {
         if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
-          auto opening = parentToXY * subSurface.roughOpeningVertices();
-          auto norm = openstudio::getOutwardNormal(opening);
+          auto roughOpening = surfaceToXY * subSurface.roughOpeningVertices();
+          auto norm = openstudio::getOutwardNormal(roughOpening);
           if (norm && norm->z() > 0) {
-            std::reverse(opening.begin(), opening.end());
+            std::reverse(roughOpening.begin(), roughOpening.end());
           }
-          roughOpenings[subSurface] = opening;
+          subSurfaces.push_back(roughOpening);
         }
       }
 
-      // Check each rough opening against the parent surface, if any vertices are outside
-      // the parent surface then revert back to the original vertices
-      for (const auto& opening : roughOpenings) {
-        const SubSurface& subSurface = opening.first;
-        std::vector<Point3d> flattenedVertices = opening.second;
+      // Add all the subsurfaces togther
+      auto finalSurfaces = openstudio::joinAll(subSurfaces, tol);
 
-        if (!openstudio::polygonInPolygon(flattenedVertices, parentVertices, tol)) {
-          // One or more vertices not within the parent surface so replace with the original vertices
-          auto vertices = parentToXY * subSurface.vertices();
-          auto norm = openstudio::getOutwardNormal(vertices);
-          if (norm && norm->z() > 0) {
-            std::reverse(vertices.begin(), vertices.end());
-          }
-          roughOpenings[subSurface] = vertices;
-        }
-      }
-
-      // Check subsurfaces for overlaps
-      // (if I knew how I'd order themn left to right in x then we could test adjacent ones only)
-      for (const auto& opening1 : roughOpenings) {
-        for (const auto& opening2 : roughOpenings) {
-          if (opening1 == opening2) {
-            continue;
-          }
-
-          if (auto result = openstudio::intersect(opening1.second, opening2.second, tol)) {
-            //There's an overlap so swap out the overlapped vertices for the original
-            auto vertices = parentToXY * opening1.first.vertices();
-            auto norm = openstudio::getOutwardNormal(vertices);
-            if (norm && norm->z() > 0) {
-              std::reverse(vertices.begin(), vertices.end());
+      double area = 0;
+      // No overlappingsurfaces so we can add up the surface areas including multipliers
+      if (finalSurfaces.size() == subSurfaces.size()) {
+        for (const auto& subSurface : this->subSurfaces()) {
+          if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
+            auto roughOpening = surfaceToXY * subSurface.roughOpeningVertices();
+            if (!openstudio::polygonInPolygon(roughOpening, surfaceVertices, tol)) {
+              roughOpening = surfaceToXY * subSurface.vertices();
             }
-            roughOpenings[opening1.first] = vertices;
+            area += openstudio::getArea(roughOpening).value() * subSurface.multiplier();
           }
         }
+
+        return area;
       }
 
-      // Accumulate the areas
-      double area = std::accumulate(roughOpenings.cbegin(), roughOpenings.cend(), 0.0, [](double sum, auto& roughOpening) {
-        return sum + openstudio::getArea(roughOpening.second).value() * roughOpening.first.multiplier();
-      });
+      for (const auto& subSurface : subSurfaces) {
+        area += openstudio::getArea(subSurface).value();
+      }
 
       return area;
     }
@@ -2280,6 +2291,10 @@ namespace model {
 
   boost::optional<SurfacePropertyConvectionCoefficients> Surface::surfacePropertyConvectionCoefficients() const {
     return getImpl<detail::Surface_Impl>()->surfacePropertyConvectionCoefficients();
+  }
+
+  boost::optional<SurfacePropertyLocalEnvironment> Surface::surfacePropertyLocalEnvironment() const {
+    return getImpl<detail::Surface_Impl>()->surfacePropertyLocalEnvironment();
   }
 
   boost::optional<SurfacePropertyOtherSideCoefficients> Surface::surfacePropertyOtherSideCoefficients() const {

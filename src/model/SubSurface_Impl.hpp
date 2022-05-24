@@ -49,7 +49,8 @@ namespace model {
   class WindowPropertyFrameAndDivider;
   class SurfacePropertyOtherSideCoefficients;
   class SurfacePropertyOtherSideConditionsModel;
-  class SurfacePropertyConfectionCoefficients;
+  class SurfacePropertyConvectionCoefficients;
+  class SurfacePropertyLocalEnvironment;
 
   namespace detail {
 
@@ -165,6 +166,14 @@ namespace model {
 
       bool isNumberofVerticesAutocalculated() const;
 
+      // Assembly methods
+
+      boost::optional<double> assemblyUFactor() const;
+
+      boost::optional<double> assemblySHGC() const;
+
+      boost::optional<double> assemblyVisibleTransmittance() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -225,6 +234,8 @@ namespace model {
 
       /** Returns the surface property convection coefficients */
       boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+
+      boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;
 
       /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
       boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
@@ -295,6 +306,13 @@ namespace model {
       AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkComponent& surfaceAirflowLeakage);
 
       boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
+
+      //@}
+      /** @name Queries */
+      //@{
+
+      /** Gets the fenestration value from the sql file **/
+      boost::optional<double> getExteriorFenestrationValue(std::string columnName) const;
 
      protected:
      private:

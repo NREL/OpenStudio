@@ -221,7 +221,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SimpleRelativeTest) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_Building) {
-  Workspace inWorkspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace inWorkspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   inWorkspace.addObject(IdfObject(IddObjectType::Building));
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
@@ -229,7 +229,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_Building) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_Zone) {
-  Workspace inWorkspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace inWorkspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject zoneObject = inWorkspace.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(zoneObject);
   OptionalWorkspaceObject lightsObject = inWorkspace.addObject(IdfObject(IddObjectType::Lights));
@@ -253,7 +253,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_Zone) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateScheduleCompact) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::Schedule_Compact);
   idfObject.setString(1, "Fraction");
@@ -307,7 +307,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateScheduleCompact) {
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateMasselessOpaqueMaterial) {
   // Initialize the workspace
-  openstudio::Workspace ws(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace ws(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   // Create the Material:NoMaxx idfObject
   IdfObject idfObject(openstudio::IddObjectType::Material_NoMass);
@@ -335,7 +335,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateMasselessOpaqueMaterial
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateStandardOpaqueMaterial) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::Material);
   idfObject.setString(0, "Test Material");  // Name
@@ -391,7 +391,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateConstruction) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateSite) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::Site_Location);
   idfObject.setString(Site_LocationFields::Name, "Test Site");
@@ -517,7 +517,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OtherEquipment) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::Foundation_Kiva_Settings);
   idfObject.setDouble(Foundation_Kiva_SettingsFields::SoilConductivity, 1.731);
@@ -559,7 +559,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputTableSummaryReports) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::Output_Table_SummaryReports);
   IdfExtensibleGroup group1 = idfObject.pushExtensibleGroup();
@@ -587,7 +587,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputTableSummaryReports) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::Material);
   idfObject1.setString(0, "Material 1");  // Name
@@ -704,7 +704,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleFile) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::PerformancePrecisionTradeoffs);
   idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
@@ -731,7 +731,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idf_zone(openstudio::IddObjectType::Zone);
   idf_zone.setName("Thermal Zone 1");
@@ -838,7 +838,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName_SameSurface) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idf_zone(openstudio::IddObjectType::Zone);
   idf_zone.setName("Thermal Zone 1");
@@ -917,7 +917,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
   ReverseTranslator reverseTranslator;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_zone1 = w.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(_i_zone1);
   EXPECT_TRUE(_i_zone1->setName("Zone1"));
@@ -1042,7 +1042,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::WindowMaterial_Glazing);
   idfObject.setName("CLEAR 6MM");
@@ -1063,7 +1063,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_MaterialPropertyGlazingSpectralData) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_GlazingSpectralData);
 
@@ -1078,7 +1078,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_MaterialPropertyGlazingSpectralData)
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing_2) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::WindowMaterial_Glazing);
   idfObject1.setName("CLEAR 8MM");
@@ -1112,7 +1112,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing_2) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject3(openstudio::IddObjectType::Daylighting_ReferencePoint);
   idfObject3.setName("Reference Point 1");
@@ -1150,7 +1150,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_SurfaceControlMovableInsulation) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   // surface
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::BuildingSurface_Detailed);
@@ -1237,7 +1237,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SurfaceControlMovableInsulation) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDX) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject totalCoolingCapacityModifierFunctionofTemperatureCurveName(openstudio::IddObjectType::Curve_Biquadratic);
   totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Name,

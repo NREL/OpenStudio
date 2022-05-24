@@ -108,7 +108,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_GeneratorWindTurbine) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_GeneratorWindTurbine) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   // electric load center distribution
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::ElectricLoadCenter_Distribution);

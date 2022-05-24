@@ -125,7 +125,9 @@ namespace model {
 
       void autocalculatePlantLoopVolume();
 
-      boost::optional<std::string> commonPipeSimulation() const;
+      std::string commonPipeSimulation() const;
+
+      bool isCommonPipeSimulationDefaulted() const;
 
       bool setCommonPipeSimulation(const std::string& value);
 

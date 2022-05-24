@@ -153,8 +153,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.2.0")] = &VersionTranslator::update_3_1_0_to_3_2_0;
     m_updateMethods[VersionString("3.2.1")] = &VersionTranslator::update_3_2_0_to_3_2_1;
     m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
-    m_updateMethods[VersionString("3.3.1")] = &VersionTranslator::update_3_3_0_to_3_3_1;
-    //m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.4.0")] = &VersionTranslator::update_3_3_0_to_3_4_0;
+    m_updateMethods[VersionString("3.4.1")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -190,8 +190,8 @@ namespace osversion {
       VersionString("2.5.2"),  VersionString("2.6.0"),  VersionString("2.6.1"),  VersionString("2.6.2"),  VersionString("2.7.0"),
       VersionString("2.7.1"),  VersionString("2.7.2"),  VersionString("2.8.0"),  VersionString("2.8.1"),  VersionString("2.9.0"),
       VersionString("2.9.1"),  VersionString("3.0.0"),  VersionString("3.0.1"),  VersionString("3.1.0"),  VersionString("3.2.0"),
-      VersionString("3.2.1"),  VersionString("3.3.0"),
-      //VersionString("3.3.1"),
+      VersionString("3.2.1"),  VersionString("3.3.0"),  VersionString("3.4.0"),
+      //VersionString("3.4.1"),
     };
   }
 
@@ -336,7 +336,7 @@ namespace osversion {
     // validity checking
     Workspace finalWorkspace(finalModel);
     model::Model tempModel(finalWorkspace);  // None-level strictness!
-    OS_ASSERT(tempModel.strictnessLevel() == StrictnessLevel::None);
+    OS_ASSERT(tempModel.strictnessLevel() == StrictnessLevel::Minimal);
     std::vector<std::shared_ptr<InterobjectIssueInformation>> issueInfo = fixInterobjectIssuesStage1(tempModel, m_originalVersion);
     if (!tempModel.isValid(StrictnessLevel::Draft)) {
       LOG(Error, "Model with Version " << openStudioVersion() << " IDD is not valid to draft "
@@ -828,7 +828,7 @@ namespace osversion {
 
   std::vector<std::shared_ptr<VersionTranslator::InterobjectIssueInformation>>
     VersionTranslator::fixInterobjectIssuesStage1(model::Model& model, const VersionString& startVersion) {
-    OS_ASSERT(model.strictnessLevel() == StrictnessLevel::None);
+    OS_ASSERT(model.strictnessLevel() == StrictnessLevel::Minimal);
     std::vector<std::shared_ptr<InterobjectIssueInformation>> result;
 
     if (startVersion < VersionString("0.8.4")) {
@@ -6702,12 +6702,12 @@ namespace osversion {
 
   }  // end update_3_2_1_to_3_3_0
 
-  std::string VersionTranslator::update_3_3_0_to_3_3_1(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_3_1) {
+  std::string VersionTranslator::update_3_3_0_to_3_4_0(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_4_0) {
     std::stringstream ss;
     boost::optional<std::string> value;
 
     ss << idf_3_3_0.header() << '\n' << '\n';
-    IdfFile targetIdf(idd_3_3_1.iddFile());
+    IdfFile targetIdf(idd_3_4_0.iddFile());
     ss << targetIdf.versionObject().get();
 
     for (IdfObject& object : idf_3_3_0.objects()) {
@@ -6718,7 +6718,7 @@ namespace osversion {
         // Stage Data List becomes extensible list (Stage 1, Stage 2, etc.)
         // ModelObjectList gets removed
 
-        auto iddObject = idd_3_3_1.getObject(iddname);
+        auto iddObject = idd_3_4_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < 18; ++i) {
@@ -6743,7 +6743,7 @@ namespace osversion {
         ss << newObject;
         m_refactored.emplace_back(std::move(object), std::move(newObject));
       } else if (iddname == "OS:Coil:Heating:DX:MultiSpeed:StageData") {
-        auto iddObject = idd_3_3_1.getObject(iddname);
+        auto iddObject = idd_3_4_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         // Inserted name at pos 1
@@ -6784,7 +6784,11 @@ namespace osversion {
 
     return ss.str();
 
-  }  // end update_3_3_0_to_3_3_1
+  }  // end update_3_3_0_to_3_4_0
+
+  /*   std::string VersionTranslator::update_3_4_0_to_3_4_1(const IdfFile& idf_3_4_0, const IddFileAndFactoryWrapper& idd_3_4_1) {
+
+  }  // end update_3_4_0_to_3_4_1 */
 
 }  // namespace osversion
 }  // namespace openstudio

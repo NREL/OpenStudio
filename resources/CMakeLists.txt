@@ -66,6 +66,23 @@ set(utilities_resources_src
   utilities/Geometry/surface_match_floorplan.json
   utilities/Geometry/threejs.json
   utilities/Geometry/window_floorplan.json
+  utilities/Geometry/minimal_GLTF_File.gltf
+  utilities/Geometry/7-7_Windows_Complete.gltf
+  utilities/Geometry/15023_Model12.gltf
+  utilities/Geometry/exampleModel.gltf
+  utilities/Geometry/floorplan_school.gltf
+  utilities/Geometry/open_to_below.gltf
+  utilities/Geometry/RefBldgFullServiceRestaurantNew2004_Chicago.gltf
+  utilities/Geometry/Sample_DOE-RefBldgHospitalNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgLargeHotelNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgLargeOfficeNew2004_Chicago.gltf
+  utilities/Geometry/Sample_DOE-RefBldgOutPatientNew2004_Chicago.gltf
+  utilities/Geometry/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.gltf
+  utilities/Geometry/Sample_DOE-RefBldgSmallHotelNew2004_Chicago.gltf
+  utilities/Geometry/ParkUnder_Retail_Office_C2.gltf
+  utilities/Geometry/ASHRAECourthouse.gltf
+  utilities/Geometry/Space_SurfaceMatch_LargeTest.gltf
+  utilities/Geometry/split_level.gltf
   utilities/Idf/CommentTest.idf
   utilities/Idf/DosLineEndingTest.idf
   utilities/Idf/UnixLineEndingTest.idf
@@ -92,6 +109,7 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V9-4-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-5-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-6-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V22-1-0.sql
   utilities/Zip/test1.zip
 )
 
@@ -119,6 +137,21 @@ set(model_resources_src
   model/floorplan_school.osm
   model/7-7_Windows_Complete.osm
   model/15023_Model12.osm
+  model/RefBldgFullServiceRestaurantNew2004_Chicago.osm
+  model/Sample_DOE-RefBldgHospitalNew2004_Chicago.osm
+  model/RefBldgLargeHotelNew2004_Chicago.osm
+  model/RefBldgLargeOfficeNew2004_Chicago.osm
+  model/Sample_DOE-RefBldgOutPatientNew2004_Chicago.osm
+  model/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.osm
+  model/Sample_DOE-RefBldgSmallHotelNew2004_Chicago.osm
+  model/Space_SurfaceMatch_LargeTest.osm
+  model/split_level.osm
+  model/open_to_below.osm
+  model/TwoStoryOffice_Trane.osm
+  model/story_multipliers.osm
+  model/offset_tests.osm
+  model/ParkUnder_Retail_Office_C2.osm
+  model/ASHRAECourthouse.osm
 )
 
 
@@ -216,6 +249,7 @@ set(energyplus_resources_src
   energyplus/ZoneBoundaryCondition/Bug_486_zone_bdr_test.idf
   energyplus/SmallOffice/SmallOffice.idf
   energyplus/AllFuelTypes/in.idf
+  energyplus/FrameAndDivider/in.idf
 )
 
 # update the resources
@@ -227,6 +261,7 @@ RUN_ENERGYPLUS("in.idf" "energyplus/Daylighting_Office" "USA_CO_Golden-NREL.7246
 RUN_ENERGYPLUS("in.idf" "energyplus/Daylighting_School" "USA_CO_Golden-NREL.724666_TMY3.epw")
 RUN_ENERGYPLUS("in.idf" "energyplus/Office_With_Many_HVAC_Types" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
 RUN_ENERGYPLUS("in.idf" "energyplus/AllFuelTypes" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
+RUN_ENERGYPLUS("in.idf" "energyplus/FrameAndDivider" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
 
 # add target
 add_custom_target(openstudio_energyplus_resources
@@ -271,6 +306,9 @@ SET(gbxml_resources_src
   gbxml/3951_Geometry_bug.xml
   gbxml/3997_WindowScaling_bug.xml
   gbxml/TestSchedules.xml
+  gbxml/gbXMLStandard_Single_Family_Residential_2016.xml
+  gbxml/TropicBird_BEM_4_2018.xml
+  gbxml/TropicBird.xml
 )
 
 # update the resources

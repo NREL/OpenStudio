@@ -48,6 +48,7 @@ namespace model {
   class SurfacePropertyOtherSideCoefficients;
   class SurfacePropertyOtherSideConditionsModel;
   class SurfacePropertyConvectionCoefficients;
+  class SurfacePropertyLocalEnvironment;
   class AirflowNetworkSurface;
   class AirflowNetworkDetailedOpening;
   class AirflowNetworkSimpleOpening;
@@ -122,6 +123,12 @@ namespace model {
 
     bool isNumberofVerticesAutocalculated() const;
 
+    boost::optional<double> assemblyUFactor() const;
+
+    boost::optional<double> assemblySHGC() const;
+
+    boost::optional<double> assemblyVisibleTransmittance() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -193,6 +200,9 @@ namespace model {
 
     /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
     boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+
+    /** Returns the SurfacePropertyLocalEnvironment, if it exists. */
+    boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;
 
     /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
     boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
@@ -283,6 +293,10 @@ namespace model {
     double dividerArea() const;
 
     // DLM: todo add methods to create light shelves by projection factor
+
+    //@}
+    /** @name Queries */
+    //@{
 
    protected:
     /// @cond

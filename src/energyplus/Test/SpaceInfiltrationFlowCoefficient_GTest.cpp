@@ -150,7 +150,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SpaceInfiltrationFlowCoefficient) {
 
   ReverseTranslator rt;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   OptionalWorkspaceObject _i_infiltration = w.addObject(IdfObject(IddObjectType::ZoneInfiltration_FlowCoefficient));
   ASSERT_TRUE(_i_infiltration);

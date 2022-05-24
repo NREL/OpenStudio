@@ -96,7 +96,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDebuggingData) {
 
   ReverseTranslator rt;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   // Not there, Model shouldn't have it either
   {
