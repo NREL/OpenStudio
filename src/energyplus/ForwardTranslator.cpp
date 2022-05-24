@@ -513,6 +513,7 @@ namespace energyplus {
               clone.addSubSurface(subSurface);
               // Try insert
               auto [it, success] = zoneHandleToShadingControlVectorMap.insert({zoneHandle, std::vector<ShadingControl>()});
+              OS_ASSERT(success);
               OS_ASSERT(it != zoneHandleToShadingControlVectorMap.end());
               it->second.push_back(clone);
               clone.additionalProperties().setFeature("Shading Control Sequence Number", static_cast<int>(it->second.size()));
