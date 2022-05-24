@@ -96,7 +96,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     ${CONAN_READLINE}
     ${CONAN_QT}
     ${CONAN_RUBY}
-    "openssl/1.1.1o#213dbdeb846a4b40b4dec36cf2e673d7" # force every package to align on the same as our conan-openstudio-ruby
+    "openssl/1.1.1o#44b0ae506a068519a2113d7d73577a3e" # force every package to align on the same as our conan-openstudio-ruby
     "boost/1.79.0#f664bfe40e2245fa9baf1c742591d582"
     "pugixml/1.12.1#5a39f82651eba3e7d6197903a3202e21"
     "jsoncpp/1.9.5#536d080aa154e5853332339bf576747c"
