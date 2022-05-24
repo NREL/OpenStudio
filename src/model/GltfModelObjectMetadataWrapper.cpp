@@ -29,12 +29,6 @@
 
 #include "GltfModelObjectMetadataWrapper.hpp"
 
-#include <tiny_gltf.h>
-
-#include <algorithm>
-#include <cmath>
-#include <iterator>
-#include <numeric>
 #include <tuple>
 
 namespace openstudio {
@@ -42,42 +36,42 @@ namespace model {
 
   void GltfModelObjectMetadataWrapper::setColor(const std::string& value) {
     std::string key = "color";
-    color = make_tuple(key, value);
+    color = std::make_tuple(key, value);
   }
 
   void GltfModelObjectMetadataWrapper::setHandle(const std::string& value) {
     std::string key = "handle";
-    handle = make_tuple(key, value);
+    handle = std::make_tuple(key, value);
   }
 
   void GltfModelObjectMetadataWrapper::setIddObjectType(const std::string& value) {
     std::string key = "iddObjectType";
-    iddObjectType = make_tuple(key, value);
+    iddObjectType = std::make_tuple(key, value);
   }
 
   void GltfModelObjectMetadataWrapper::setName(const std::string& value) {
     std::string key = "name";
-    name = make_tuple(key, value);
+    name = std::make_tuple(key, value);
   }
 
   void GltfModelObjectMetadataWrapper::setOpen_to_below(const bool& value) {
     std::string key = "open_to_below";
-    open_to_below = make_tuple(key, value);
+    open_to_below = std::make_tuple(key, value);
   }
 
   void GltfModelObjectMetadataWrapper::setNominal_z_coordinate(const double& value) {
     std::string key = "nominal_z_coordinate";
-    nominal_z_coordinate = make_tuple(key, value);
+    nominal_z_coordinate = std::make_tuple(key, value);
   }
 
   void GltfModelObjectMetadataWrapper::setNominal_floorCeiling_Height(const double& value) {
     std::string key = "nominal_floorCeiling_Height";
-    nominal_floorCeiling_Height = make_tuple(key, value);
+    nominal_floorCeiling_Height = std::make_tuple(key, value);
   }
 
   void GltfModelObjectMetadataWrapper::setMultiplier(const int& value) {
     std::string key = "multiplier";
-    multiplier = make_tuple(key, value);
+    multiplier = std::make_tuple(key, value);
   }
 
   // getters
@@ -112,31 +106,5 @@ namespace model {
   int GltfModelObjectMetadataWrapper::getMultiplier() const {
     return std::get<1>(multiplier);
   }
-
-  GltfModelObjectMetadataWrapper::GltfModelObjectMetadataWrapper() {
-    m_logSink.setLogLevel(Warn);
-    m_logSink.setThreadId(std::this_thread::get_id());
-  }
-
-  std::vector<LogMessage> GltfModelObjectMetadataWrapper::warnings() const {
-    std::vector<LogMessage> result;
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
-    return result;
-  }
-
-  std::vector<LogMessage> GltfModelObjectMetadataWrapper::errors() const {
-    std::vector<LogMessage> result;
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
-    return result;
-  }
-
 }  // namespace model
 }  // namespace openstudio
