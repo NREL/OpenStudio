@@ -926,7 +926,7 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
   }
 
   {
-    auto _obj = model->getConcreteModelObjectByName<Material>("mat-247");
+    auto _obj = model->getModelObjectByName<Material>("mat-247");
     ASSERT_TRUE(_obj);
     EXPECT_FALSE(_obj->additionalProperties().hasFeature("CADObjectId"));
     ASSERT_FALSE(_obj->additionalProperties().getFeatureAsString("CADObjectId"));
