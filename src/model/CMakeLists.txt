@@ -1167,6 +1167,9 @@ set(${target_name}_src
   PumpVariableSpeed.hpp
   PumpVariableSpeed_Impl.hpp
   PumpVariableSpeed.cpp
+  PythonPluginInstance.hpp
+  PythonPluginInstance_Impl.hpp
+  PythonPluginInstance.cpp
   RadianceParameters.hpp
   RadianceParameters_Impl.hpp
   RadianceParameters.cpp
