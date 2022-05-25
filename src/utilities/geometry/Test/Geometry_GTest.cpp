@@ -45,9 +45,9 @@ using namespace openstudio;
 std::vector<Point3d> makeRectangleUp(double xmin, double ymin, double width, double height);
 std::vector<Point3d> makeRectangleDown(double xmin, double ymin, double width, double height);
 
-TEST_F(GeometryFixture, Newall_Vector) {
+TEST_F(GeometryFixture, Newell_Vector) {
   Point3dVector points;
-  OptionalVector3d newall;
+  OptionalVector3d newell;
   OptionalVector3d normal;
 
   // triangle with unit area
@@ -57,12 +57,12 @@ TEST_F(GeometryFixture, Newall_Vector) {
     {1, 0, 0},
   };
 
-  newall = getNewallVector(points);
-  ASSERT_TRUE(newall);
-  EXPECT_EQ(0, newall->x());
-  EXPECT_EQ(0, newall->y());
-  EXPECT_EQ(2, newall->z());
-  EXPECT_EQ(2, newall->length());
+  newell = getNewellVector(points);
+  ASSERT_TRUE(newell);
+  EXPECT_EQ(0, newell->x());
+  EXPECT_EQ(0, newell->y());
+  EXPECT_EQ(2, newell->z());
+  EXPECT_EQ(2, newell->length());
 
   normal = getOutwardNormal(points);
   ASSERT_TRUE(normal);
@@ -79,12 +79,12 @@ TEST_F(GeometryFixture, Newall_Vector) {
     {1, 1, 0},
   };
 
-  newall = getNewallVector(points);
-  ASSERT_TRUE(newall);
-  EXPECT_EQ(0, newall->x());
-  EXPECT_EQ(0, newall->y());
-  EXPECT_EQ(2, newall->z());
-  EXPECT_EQ(2, newall->length());
+  newell = getNewellVector(points);
+  ASSERT_TRUE(newell);
+  EXPECT_EQ(0, newell->x());
+  EXPECT_EQ(0, newell->y());
+  EXPECT_EQ(2, newell->z());
+  EXPECT_EQ(2, newell->length());
 
   normal = getOutwardNormal(points);
   ASSERT_TRUE(normal);
@@ -98,12 +98,12 @@ TEST_F(GeometryFixture, Newall_Vector) {
     {0, 0, 2}, {0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {2, 0, 0}, {3, 0, 0}, {3, 0, 1}, {3, 0, 2}, {2, 0, 2}, {2, 0, 1}, {1, 0, 1}, {1, 0, 2},
   };
 
-  newall = getNewallVector(points);
-  ASSERT_TRUE(newall);
-  EXPECT_EQ(0, newall->x());
-  EXPECT_EQ(-10, newall->y());
-  EXPECT_EQ(0, newall->z());
-  EXPECT_EQ(10, newall->length());
+  newell = getNewellVector(points);
+  ASSERT_TRUE(newell);
+  EXPECT_EQ(0, newell->x());
+  EXPECT_EQ(-10, newell->y());
+  EXPECT_EQ(0, newell->z());
+  EXPECT_EQ(10, newell->length());
 
   normal = getOutwardNormal(points);
   ASSERT_TRUE(normal);
@@ -117,12 +117,12 @@ TEST_F(GeometryFixture, Newall_Vector) {
     {0, 0, 2}, {0, 0, 0}, {3, 0, 0}, {3, 0, 2}, {2, 0, 2}, {2, 0, 1}, {1, 0, 1}, {1, 0, 2},
   };
 
-  newall = getNewallVector(points);
-  ASSERT_TRUE(newall);
-  EXPECT_EQ(0, newall->x());
-  EXPECT_EQ(-10, newall->y());
-  EXPECT_EQ(0, newall->z());
-  EXPECT_EQ(10, newall->length());
+  newell = getNewellVector(points);
+  ASSERT_TRUE(newell);
+  EXPECT_EQ(0, newell->x());
+  EXPECT_EQ(-10, newell->y());
+  EXPECT_EQ(0, newell->z());
+  EXPECT_EQ(10, newell->length());
 
   normal = getOutwardNormal(points);
   ASSERT_TRUE(normal);

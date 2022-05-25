@@ -75,8 +75,8 @@ void Polygon3d::addHole(const Point3dVector& hole) {
   m_innerPaths.emplace_back(hole);
 }
 
-Vector3d Polygon3d::newallVector() {
-  if (OptionalVector3d v = openstudio::getNewallVector(m_outerPath)) {
+Vector3d Polygon3d::newellVector() {
+  if (OptionalVector3d v = openstudio::getNewellVector(m_outerPath)) {
     return v.get();
   }
 

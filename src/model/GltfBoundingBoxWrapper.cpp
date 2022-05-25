@@ -29,57 +29,6 @@
 
 #include "GltfBoundingBoxWrapper.hpp"
 
-#include "RenderingColor.hpp"
-#include "ConstructionBase.hpp"
-#include "ConstructionBase_Impl.hpp"
-#include "ConstructionAirBoundary.hpp"
-#include "ConstructionAirBoundary_Impl.hpp"
-#include "AirLoopHVAC.hpp"
-#include "AirLoopHVAC_Impl.hpp"
-#include "ThermalZone.hpp"
-#include "ThermalZone_Impl.hpp"
-#include "SpaceType.hpp"
-#include "SpaceType_Impl.hpp"
-#include "Building.hpp"
-#include "Building_Impl.hpp"
-#include "BuildingStory.hpp"
-#include "BuildingStory_Impl.hpp"
-#include "BuildingUnit.hpp"
-#include "BuildingUnit_Impl.hpp"
-#include "Surface.hpp"
-#include "Surface_Impl.hpp"
-#include "SubSurface.hpp"
-#include "SubSurface_Impl.hpp"
-#include "ShadingSurface.hpp"
-#include "ShadingSurface_Impl.hpp"
-#include "InteriorPartitionSurface.hpp"
-#include "InteriorPartitionSurface_Impl.hpp"
-#include "PlanarSurfaceGroup.hpp"
-#include "PlanarSurfaceGroup_Impl.hpp"
-#include "Space.hpp"
-#include "Space_Impl.hpp"
-#include "DefaultConstructionSet.hpp"
-#include "DefaultConstructionSet_Impl.hpp"
-#include "ShadingSurfaceGroup.hpp"
-#include "InteriorPartitionSurfaceGroup.hpp"
-
-#include "../utilities/core/Assert.hpp"
-#include "../utilities/core/Compare.hpp"
-#include "../utilities/geometry/Point3d.hpp"
-#include "../utilities/geometry/Plane.hpp"
-#include "../utilities/geometry/BoundingBox.hpp"
-#include "../utilities/geometry/Transformation.hpp"
-#include "../utilities/geometry/Geometry.hpp"
-#include "../utilities/geometry/Polygon3d.hpp"
-
-#include <tiny_gltf.h>
-
-#include <algorithm>
-#include <cmath>
-#include <iterator>
-#include <numeric>
-#include <stack>
-#include <limits.h>
 #include <tuple>
 
 namespace openstudio {
@@ -87,52 +36,52 @@ namespace model {
 
   void GltfBoundingBoxWrapper::setlookAtR(double value) {
     std::string key = "lookAtR";
-    lookAtR = make_tuple(key, value);
+    lookAtR = std::make_tuple(key, value);
   }
 
   void GltfBoundingBoxWrapper::setlookAtX(double value) {
     std::string key = "lookAtX";
-    lookAtX = make_tuple(key, value);
+    lookAtX = std::make_tuple(key, value);
   }
 
   void GltfBoundingBoxWrapper::setlookAtY(double value) {
     std::string key = "lookAtY";
-    lookAtY = make_tuple(key, value);
+    lookAtY = std::make_tuple(key, value);
   }
 
   void GltfBoundingBoxWrapper::setlookAtZ(double value) {
     std::string key = "lookAtZ";
-    lookAtZ = make_tuple(key, value);
+    lookAtZ = std::make_tuple(key, value);
   }
 
   void GltfBoundingBoxWrapper::setmaxX(double value) {
     std::string key = "maxX";
-    maxX = make_tuple(key, value);
+    maxX = std::make_tuple(key, value);
   }
 
   void GltfBoundingBoxWrapper::setmaxY(double value) {
     std::string key = "maxY";
-    maxY = make_tuple(key, value);
+    maxY = std::make_tuple(key, value);
   }
 
   void GltfBoundingBoxWrapper::setmaxZ(double value) {
     std::string key = "maxZ";
-    maxZ = make_tuple(key, value);
+    maxZ = std::make_tuple(key, value);
   }
 
   void GltfBoundingBoxWrapper::setminX(double value) {
     std::string key = "minX";
-    minX = make_tuple(key, value);
+    minX = std::make_tuple(key, value);
   }
 
   void GltfBoundingBoxWrapper::setminY(double value) {
     std::string key = "minY";
-    minY = make_tuple(key, value);
+    minY = std::make_tuple(key, value);
   }
 
   void GltfBoundingBoxWrapper::setminZ(double value) {
     std::string key = "minZ";
-    minZ = make_tuple(key, value);
+    minZ = std::make_tuple(key, value);
   }
 
   // Getters
@@ -174,31 +123,6 @@ namespace model {
 
   double GltfBoundingBoxWrapper::getminZ() const {
     return std::get<1>(minZ);
-  }
-
-  GltfBoundingBoxWrapper::GltfBoundingBoxWrapper() {
-    m_logSink.setLogLevel(Warn);
-    m_logSink.setThreadId(std::this_thread::get_id());
-  }
-
-  std::vector<LogMessage> GltfBoundingBoxWrapper::warnings() const {
-    std::vector<LogMessage> result;
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
-    return result;
-  }
-
-  std::vector<LogMessage> GltfBoundingBoxWrapper::errors() const {
-    std::vector<LogMessage> result;
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
-    return result;
   }
 
 }  // namespace model
