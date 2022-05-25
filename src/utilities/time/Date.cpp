@@ -394,7 +394,7 @@ bool Date::isLeapYear() const {
 
 /// day of the week
 DayOfWeek Date::dayOfWeek() const {
-  return {m_impl.day_of_week()};
+  return DayOfWeek(m_impl.day_of_week());
 };
 
 // initFromYearMonthDay
