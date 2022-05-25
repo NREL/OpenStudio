@@ -34895,6 +34895,37 @@ OS:EnergyManagementSystem:ConstructionIndexVariable,
        \object-list ConstructionNames
        \required-field
 
+\group Python Plugin System
+
+OS:PythonPlugin:Instance,
+       \memo A single plugin to be executed during the simulation, which can contain multiple calling points
+       \memo for the same class instance by overriding multiple calling point methods.
+       \min-fields 5
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ProgramNames
+       \note This is the name used to represent this plugin in traditional EMS fields
+  A3,  \field Run During Warmup Days
+       \note required-field disabled as it has a default
+       \note If this field is enabled, the plugin will be executed during warmup days, otherwise it
+       \note will only be executed once warmup is completed and the actual run period begins
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A4,  \field External File Name
+       \type object-list
+       \object-list ExternalFileNames
+  A5;  \field Plugin Class Name
+       \required-field
+       \type alpha
+       \note This is the name of the class to be executed as a plugin during a simulation
+       \note The class must inherit the EnergyPlusPlugin base class
+
 \group AirflowNetwork
 
 OS:AirflowNetworkSimulationControl,
