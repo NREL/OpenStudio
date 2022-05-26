@@ -68,6 +68,8 @@ namespace energyplus {
       filePath = system_complete(filePath);
     }
 
+    // TODO: just write the base filename without extension
+    // TODO: path needs to be FT'd to PythonPlugin:SearchPaths? (i.e., the "files" folder)
     idfObject.setString(openstudio::PythonPlugin_InstanceFields::PythonModuleName, toString(filePath));
 
     idfObject.setString(openstudio::PythonPlugin_InstanceFields::PluginClassName, modelObject.pluginClassName());

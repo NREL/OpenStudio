@@ -70,31 +70,31 @@ TEST_F(ModelFixture, PythonPluginInstance) {
   EXPECT_TRUE(exists(externalfile->filePath()));
   EXPECT_NE(p, externalfile->filePath());
 
-  PythonPluginInstance pythonPluginInstance(*externalfile, "ZN_1_wall_south_Window_1_Control");
+  PythonPluginInstance plugin(*externalfile, "ZN_1_wall_south_Window_1_Control");
   EXPECT_EQ(1u, model.getConcreteModelObjects<PythonPluginInstance>().size());
   EXPECT_EQ(1u, externalfile->pythonPluginInstances().size());
-  EXPECT_EQ(externalfile->handle(), pythonPluginInstance.externalFile().handle());
-  EXPECT_FALSE(pythonPluginInstance.runDuringWarmupDays());
-  EXPECT_TRUE(pythonPluginInstance.isRunDuringWarmupDaysDefaulted());
-  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", pythonPluginInstance.pluginClassName());
-  pythonPluginInstance.setRunDuringWarmupDays(true);
-  EXPECT_TRUE(pythonPluginInstance.runDuringWarmupDays());
-  EXPECT_FALSE(pythonPluginInstance.isRunDuringWarmupDaysDefaulted());
-  pythonPluginInstance.resetRunDuringWarmupDays();
-  EXPECT_FALSE(pythonPluginInstance.runDuringWarmupDays());
-  EXPECT_TRUE(pythonPluginInstance.isRunDuringWarmupDaysDefaulted());
-  EXPECT_TRUE(pythonPluginInstance.setPluginClassName("Test"));
-  EXPECT_EQ("Test", pythonPluginInstance.pluginClassName());
+  EXPECT_EQ(externalfile->handle(), plugin.externalFile().handle());
+  EXPECT_FALSE(plugin.runDuringWarmupDays());
+  EXPECT_TRUE(plugin.isRunDuringWarmupDaysDefaulted());
+  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", plugin.pluginClassName());
+  plugin.setRunDuringWarmupDays(true);
+  EXPECT_TRUE(plugin.runDuringWarmupDays());
+  EXPECT_FALSE(plugin.isRunDuringWarmupDaysDefaulted());
+  plugin.resetRunDuringWarmupDays();
+  EXPECT_FALSE(plugin.runDuringWarmupDays());
+  EXPECT_TRUE(plugin.isRunDuringWarmupDaysDefaulted());
+  EXPECT_TRUE(plugin.setPluginClassName("Test"));
+  EXPECT_EQ("Test", plugin.pluginClassName());
 
-  PythonPluginInstance pythonPluginInstance2(*externalfile, "ZN_1_wall_south_Window_1_Control");
+  PythonPluginInstance plugin2(*externalfile, "ZN_1_wall_south_Window_1_Control");
   EXPECT_EQ(2u, model.getConcreteModelObjects<PythonPluginInstance>().size());
   EXPECT_EQ(2u, externalfile->pythonPluginInstances().size());
-  EXPECT_EQ(externalfile->handle(), pythonPluginInstance2.externalFile().handle());
+  EXPECT_EQ(externalfile->handle(), plugin2.externalFile().handle());
 
-  pythonPluginInstance.remove();
+  plugin.remove();
   EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
-  EXPECT_EQ(2u, model.getConcreteModelObjects<PythonPluginInstance>().size());
-  EXPECT_EQ(2u, externalfile->pythonPluginInstances().size());
+  EXPECT_EQ(1u, model.getConcreteModelObjects<PythonPluginInstance>().size());
+  EXPECT_EQ(1u, externalfile->pythonPluginInstances().size());
 
   path filePath = externalfile->filePath();
   EXPECT_TRUE(exists(p));

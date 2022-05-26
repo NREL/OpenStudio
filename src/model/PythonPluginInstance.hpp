@@ -52,7 +52,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit PythonPluginInstance(const ExternalFile& externalfile, const std::string& pluginClassName);
+    PythonPluginInstance(const ExternalFile& externalfile, const std::string& pluginClassName);
 
     virtual ~PythonPluginInstance() {}
 

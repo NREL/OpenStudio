@@ -91,7 +91,7 @@ namespace model {
     //bool isValid();
 
     std::vector<ScheduleFile> scheduleFiles() const;
-    
+
     std::vector<PythonPluginInstance> pythonPluginInstances() const;
 
     //@}

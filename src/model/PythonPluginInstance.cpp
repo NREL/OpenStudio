@@ -133,7 +133,7 @@ namespace model {
   }
 
   IddObjectType PythonPluginInstance::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Schedule_File);
+    return IddObjectType(IddObjectType::OS_PythonPlugin_Instance);
   }
 
   ExternalFile PythonPluginInstance::externalFile() const {
