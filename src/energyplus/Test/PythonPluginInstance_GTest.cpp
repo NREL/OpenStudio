@@ -34,10 +34,16 @@
 #include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
+#include "../../model/ExternalFile.hpp"
+#include "../../model/ExternalFile_Impl.hpp"
 #include "../../model/PythonPluginInstance.hpp"
 #include "../../model/PythonPluginInstance_Impl.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
+#include <utilities/idd/PythonPlugin_Instance_FieldEnums.hxx>
+
+#include <resources.hxx>
 
 #include <boost/regex.hpp>
 
@@ -48,5 +54,25 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
+  Model model;
 
+  path p = resourcesPath() / toPath("model/PythonPluginThermochromicWindow.py");
+
+  boost::optional<ExternalFile> externalfile = ExternalFile::getExternalFile(model, openstudio::toString(p));
+
+  PythonPluginInstance pythonPluginInstance(*externalfile, "ZN_1_wall_south_Window_1_Control");
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  EXPECT_EQ(0u, ft.errors().size());
+
+  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::PythonPlugin_Instance);
+  ASSERT_EQ(1u, objects.size());
+  WorkspaceObject wo(objects[0]);
+
+  ASSERT_EQ(pythonPluginInstance.name().get(), wo.getString(PythonPlugin_InstanceFields::Name, false).get());
+  EXPECT_EQ("No", wo.getString(PythonPlugin_InstanceFields::RunDuringWarmupDays, false).get());
+  EXPECT_NE("", wo.getString(PythonPlugin_InstanceFields::PythonModuleName, false).get());
+  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", wo.getString(PythonPlugin_InstanceFields::PluginClassName, false).get());
 }

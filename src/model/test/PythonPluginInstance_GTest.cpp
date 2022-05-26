@@ -41,5 +41,70 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(ModelFixture, PythonPluginInstance) {
+  Model model;
+  EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<PythonPluginInstance>().size());
 
+  path p = resourcesPath() / toPath("model/PythonPluginThermochromicWindow.py");
+  EXPECT_TRUE(exists(p));
+
+  path expectedDestDir;
+  std::vector<path> absoluteFilePaths = model.workflowJSON().absoluteFilePaths();
+  if (absoluteFilePaths.empty()) {
+    expectedDestDir = model.workflowJSON().absoluteRootDir();
+  } else {
+    expectedDestDir = absoluteFilePaths[0];
+  }
+
+  if (exists(expectedDestDir)) {
+    removeDirectory(expectedDestDir);
+  }
+  ASSERT_FALSE(exists(expectedDestDir));
+
+  boost::optional<ExternalFile> externalfile = ExternalFile::getExternalFile(model, openstudio::toString(p));
+  ASSERT_TRUE(externalfile);
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0u, externalfile->pythonPluginInstances().size());
+  EXPECT_EQ(openstudio::toString(p.filename()), externalfile->fileName());
+  EXPECT_TRUE(equivalent(expectedDestDir / externalfile->fileName(), externalfile->filePath()));
+  EXPECT_TRUE(exists(externalfile->filePath()));
+  EXPECT_NE(p, externalfile->filePath());
+
+  PythonPluginInstance pythonPluginInstance(*externalfile, "ZN_1_wall_south_Window_1_Control");
+  EXPECT_EQ(1u, model.getConcreteModelObjects<PythonPluginInstance>().size());
+  EXPECT_EQ(1u, externalfile->pythonPluginInstances().size());
+  EXPECT_EQ(externalfile->handle(), pythonPluginInstance.externalFile().handle());
+  EXPECT_FALSE(pythonPluginInstance.runDuringWarmupDays());
+  EXPECT_TRUE(pythonPluginInstance.isRunDuringWarmupDaysDefaulted());
+  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", pythonPluginInstance.pluginClassName());
+  pythonPluginInstance.setRunDuringWarmupDays(true);
+  EXPECT_TRUE(pythonPluginInstance.runDuringWarmupDays());
+  EXPECT_FALSE(pythonPluginInstance.isRunDuringWarmupDaysDefaulted());
+  pythonPluginInstance.resetRunDuringWarmupDays();
+  EXPECT_FALSE(pythonPluginInstance.runDuringWarmupDays());
+  EXPECT_TRUE(pythonPluginInstance.isRunDuringWarmupDaysDefaulted());
+  EXPECT_TRUE(pythonPluginInstance.setPluginClassName("Test"));
+  EXPECT_EQ("Test", pythonPluginInstance.pluginClassName());
+
+  PythonPluginInstance pythonPluginInstance2(*externalfile, "ZN_1_wall_south_Window_1_Control");
+  EXPECT_EQ(2u, model.getConcreteModelObjects<PythonPluginInstance>().size());
+  EXPECT_EQ(2u, externalfile->pythonPluginInstances().size());
+  EXPECT_EQ(externalfile->handle(), pythonPluginInstance2.externalFile().handle());
+
+  pythonPluginInstance.remove();
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(2u, model.getConcreteModelObjects<PythonPluginInstance>().size());
+  EXPECT_EQ(2u, externalfile->pythonPluginInstances().size());
+
+  path filePath = externalfile->filePath();
+  EXPECT_TRUE(exists(p));
+  EXPECT_TRUE(exists(filePath));
+
+  externalfile->remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0u, model.getConcreteModelObjects<PythonPluginInstance>().size());
+  EXPECT_EQ(0u, externalfile->pythonPluginInstances().size());
+
+  EXPECT_TRUE(exists(p));
+  EXPECT_FALSE(exists(filePath));
 }
