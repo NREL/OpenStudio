@@ -623,6 +623,30 @@ namespace energyplus {
     translateConstructions(model);
     translateSchedules(model);
 
+    // Translate Python Plugin Search Paths
+    std::vector<PythonPluginInstance> pythonPluginInstances = model.getConcreteModelObjects<PythonPluginInstance>();
+    if (pythonPluginInstances.size() > 0) {
+      // Create a new IddObjectType::PythonPlugin_SearchPaths
+      IdfObject idfObject(IddObjectType::PythonPlugin_SearchPaths);
+      m_idfObjects.push_back(idfObject);
+      idfObject.setName("Python Plugin Search Paths");
+      for (PythonPluginInstance pythonPluginInstance : pythonPluginInstances) {
+        IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+
+        path filePath = pythonPluginInstance.externalFile().filePath();
+        if (!exists(filePath)) {
+          LOG(Warn, "Cannot find file \"" << filePath << "\"");
+        } else {
+          // make the path correct for this system
+          filePath = system_complete(filePath);
+        }
+
+        std::string strFilePath = toString(filePath);
+        std::string searchPath = strFilePath.substr(0, strFilePath.find_last_of("/\\"));
+        group.setString(0, searchPath);
+      }
+    }
+
     // Translate the Outdoor Air Node
     {
       auto node = model.outdoorAirNode();

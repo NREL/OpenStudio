@@ -60,17 +60,10 @@ namespace energyplus {
       idfObject.setString(openstudio::PythonPlugin_InstanceFields::RunDuringWarmupDays, "No");
     }
 
-    path filePath = modelObject.externalFile().filePath();
-    if (!exists(filePath)) {
-      LOG(Warn, "Cannot find file \"" << filePath << "\"");
-    } else {
-      // make the path correct for this system
-      filePath = system_complete(filePath);
-    }
-
-    // TODO: just write the base filename without extension
-    // TODO: path needs to be FT'd to PythonPlugin:SearchPaths? (i.e., the "files" folder)
-    idfObject.setString(openstudio::PythonPlugin_InstanceFields::PythonModuleName, toString(filePath));
+    std::string fileName = modelObject.externalFile().fileName();
+    int lastindex = fileName.find_last_of(".");
+    std::string fileNameWithoutExtension = fileName.substr(0, lastindex);
+    idfObject.setString(openstudio::PythonPlugin_InstanceFields::PythonModuleName, fileNameWithoutExtension);
 
     idfObject.setString(openstudio::PythonPlugin_InstanceFields::PluginClassName, modelObject.pluginClassName());
 

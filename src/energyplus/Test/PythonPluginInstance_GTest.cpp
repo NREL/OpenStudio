@@ -67,12 +67,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
 
   EXPECT_EQ(0u, ft.errors().size());
 
-  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::PythonPlugin_Instance);
-  ASSERT_EQ(1u, objects.size());
-  WorkspaceObject wo(objects[0]);
+  std::vector<WorkspaceObject> instanceObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_Instance);
+  ASSERT_EQ(1u, instanceObjects.size());
+  WorkspaceObject woInstance(instanceObjects[0]);
 
-  ASSERT_EQ(pythonPluginInstance.name().get(), wo.getString(PythonPlugin_InstanceFields::Name, false).get());
-  EXPECT_EQ("No", wo.getString(PythonPlugin_InstanceFields::RunDuringWarmupDays, false).get());
-  EXPECT_NE("", wo.getString(PythonPlugin_InstanceFields::PythonModuleName, false).get());
-  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", wo.getString(PythonPlugin_InstanceFields::PluginClassName, false).get());
+  ASSERT_EQ(pythonPluginInstance.name().get(), woInstance.getString(PythonPlugin_InstanceFields::Name, false).get());
+  EXPECT_EQ("No", woInstance.getString(PythonPlugin_InstanceFields::RunDuringWarmupDays, false).get());
+  EXPECT_EQ("PythonPluginThermochromicWindow", woInstance.getString(PythonPlugin_InstanceFields::PythonModuleName, false).get());
+  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", woInstance.getString(PythonPlugin_InstanceFields::PluginClassName, false).get());
+
+  std::vector<WorkspaceObject> searchPathObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
+  ASSERT_EQ(1u, searchPathObjects.size());
+  WorkspaceObject woSearchPaths(searchPathObjects[0]);
+  EXPECT_EQ(1u, woSearchPaths.numExtensibleGroups());
 }
