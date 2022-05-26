@@ -60,7 +60,22 @@ namespace model {
     PythonPluginInstance_Impl::PythonPluginInstance_Impl(const PythonPluginInstance_Impl& other, Model_Impl* model, bool keepHandle)
       : ResourceObject_Impl(other, model, keepHandle) {}
 
+    const std::vector<std::string>& PythonPluginInstance_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      if (result.empty()) {
+      }
+      return result;
+    }
 
+    IddObjectType PythonPluginInstance_Impl::iddObjectType() const {
+      return PythonPluginInstance::iddObjectType();
+    }
+
+    std::vector<ResourceObject> PythonPluginInstance_Impl::resources() const {
+      std::vector<ResourceObject> result;
+      result.push_back(externalFile());
+      return result;
+    }
 
     ExternalFile PythonPluginInstance_Impl::externalFile() const {
       auto value = getObject<ModelObject>().getModelObjectTarget<ExternalFile>(OS_PythonPlugin_InstanceFields::ExternalFileName);
@@ -68,26 +83,86 @@ namespace model {
       return value.get();
     }
 
+    bool PythonPluginInstance_Impl::runDuringWarmupDays() const {
+      boost::optional<std::string> value = getString(OS_PythonPlugin_InstanceFields::RunDuringWarmupDays, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
 
+    bool PythonPluginInstance_Impl::isRunDuringWarmupDaysDefaulted() const {
+      return isEmpty(OS_PythonPlugin_InstanceFields::RunDuringWarmupDays);
+    }
+
+    std::string PythonPluginInstance_Impl::pluginClassName() const {
+      boost::optional<std::string> value = getString(OS_PythonPlugin_InstanceFields::PluginClassName, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool PythonPluginInstance_Impl::setRunDuringWarmupDays(bool runDuringWarmupDays) {
+      bool result = false;
+      if (runDuringWarmupDays) {
+        result = setString(OS_PythonPlugin_InstanceFields::RunDuringWarmupDays, "Yes");
+      } else {
+        result = setString(OS_PythonPlugin_InstanceFields::RunDuringWarmupDays, "No");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void PythonPluginInstance_Impl::resetRunDuringWarmupDays() {
+      bool result = setString(OS_PythonPlugin_InstanceFields::RunDuringWarmupDays, "");
+      OS_ASSERT(result);
+    }
+
+    bool PythonPluginInstance_Impl::setPluginClassName(const std::string& pluginClassName) {
+      bool result = setString(OS_PythonPlugin_InstanceFields::PluginClassName, pluginClassName);
+      return result;
+    }
 
   }  // namespace detail
 
-  PythonPluginInstance::PythonPluginInstance(const ExternalFile& externalfile)
+  PythonPluginInstance::PythonPluginInstance(const ExternalFile& externalfile, const std::string& pluginClassName)
     : ResourceObject(PythonPluginInstance::iddObjectType(), externalfile.model()) {
     OS_ASSERT(getImpl<detail::PythonPluginInstance_Impl>());
     bool ok;
     ok = setPointer(OS_PythonPlugin_InstanceFields::ExternalFileName, externalfile.handle());
     OS_ASSERT(ok);
-
+    ok = setPluginClassName(pluginClassName);
+    OS_ASSERT(ok);
   }
 
-
+  IddObjectType PythonPluginInstance::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Schedule_File);
+  }
 
   ExternalFile PythonPluginInstance::externalFile() const {
     return getImpl<detail::PythonPluginInstance_Impl>()->externalFile();
   }
 
+  bool PythonPluginInstance::runDuringWarmupDays() const {
+    return getImpl<detail::PythonPluginInstance_Impl>()->runDuringWarmupDays();
+  }
 
+  bool PythonPluginInstance::isRunDuringWarmupDaysDefaulted() const {
+    return getImpl<detail::PythonPluginInstance_Impl>()->isRunDuringWarmupDaysDefaulted();
+  }
+
+  std::string PythonPluginInstance::pluginClassName() const {
+    return getImpl<detail::PythonPluginInstance_Impl>()->pluginClassName();
+  }
+
+  bool PythonPluginInstance::setRunDuringWarmupDays(bool runDuringWarmupDays) {
+    return getImpl<detail::PythonPluginInstance_Impl>()->setRunDuringWarmupDays(runDuringWarmupDays);
+  }
+
+  void PythonPluginInstance::resetRunDuringWarmupDays() {
+    getImpl<detail::PythonPluginInstance_Impl>()->resetRunDuringWarmupDays();
+  }
+
+  bool PythonPluginInstance::setPluginClassName(const std::string& pluginClassName) {
+    return getImpl<detail::PythonPluginInstance_Impl>()->setPluginClassName(pluginClassName);
+  }
 
   /// @cond
   PythonPluginInstance::PythonPluginInstance(std::shared_ptr<detail::PythonPluginInstance_Impl> impl) : ResourceObject(impl) {}

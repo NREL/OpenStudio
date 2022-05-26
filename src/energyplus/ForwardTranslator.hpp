@@ -337,6 +337,7 @@ namespace model {
   class PortList;
   class PumpConstantSpeed;
   class PumpVariableSpeed;
+  class PythonPluginInstance;
   class RefractionExtinctionGlazing;
   class RefrigerationAirChiller;
   class RefrigerationCase;
@@ -1195,6 +1196,8 @@ namespace energyplus {
     boost::optional<IdfObject> translatePumpConstantSpeed(model::PumpConstantSpeed& modelObject);
 
     boost::optional<IdfObject> translatePumpVariableSpeed(model::PumpVariableSpeed& modelObject);
+
+    boost::optional<IdfObject> translatePythonPluginInstance(model::PythonPluginInstance& modelObject);
 
     boost::optional<IdfObject> translateRefractionExtinctionGlazing(model::RefractionExtinctionGlazing& modelObject);
 

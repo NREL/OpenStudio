@@ -2113,6 +2113,7 @@ set(${target_name}_test_src
   test/Plenums_GTest.cpp
   test/PumpConstantSpeed_GTest.cpp
   test/PumpVariableSpeed_GTest.cpp
+  test/PythonPluginInstance_GTest.cpp
   test/RadianceParameters_GTest.cpp
   test/RefractionExtinctionGlazing_GTest.cpp
   test/RefrigerationAirChiller_GTest.cpp

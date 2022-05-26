@@ -281,6 +281,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslatePortList.cpp
   ForwardTranslator/ForwardTranslatePumpConstantSpeed.cpp
   ForwardTranslator/ForwardTranslatePumpVariableSpeed.cpp
+  ForwardTranslator/ForwardTranslatePythonPluginInstance.cpp
   ForwardTranslator/ForwardTranslateRefractionExtinctionGlazing.cpp
   ForwardTranslator/ForwardTranslateRefrigerationAirChiller.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
@@ -711,6 +712,7 @@ set(${target_name}_test_src
   Test/PerformancePrecisionTradeoffs_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp
+  Test/PythonPluginInstance_GTest.cpp
   Test/RunPeriod_GTest.cpp
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/RunPeriodControlSpecialDays_GTest.cpp

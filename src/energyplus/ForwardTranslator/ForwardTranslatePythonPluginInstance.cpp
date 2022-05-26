@@ -27,84 +27,55 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_PYTHONPLUGININSTANCE_HPP
-#define MODEL_PYTHONPLUGININSTANCE_HPP
+#include "../ForwardTranslator.hpp"
 
-#include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/PythonPluginInstance.hpp"
+#include "../../model/PythonPluginInstance_Impl.hpp"
+#include "../../model/ExternalFile.hpp"
+#include "../../model/ExternalFile_Impl.hpp"
+
+#include <utilities/idd/PythonPlugin_Instance_FieldEnums.hxx>
+
+#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
+
+using namespace openstudio::model;
+
+using namespace std;
 
 namespace openstudio {
 
-namespace model {
+namespace energyplus {
 
-  class ExternalFile;
+  boost::optional<IdfObject> ForwardTranslator::translatePythonPluginInstance(PythonPluginInstance& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::PythonPlugin_Instance);
 
-  namespace detail {
+    idfObject.setName(modelObject.name().get());
 
-    class PythonPluginInstance_Impl;
+    if (modelObject.runDuringWarmupDays()) {
+      idfObject.setString(openstudio::PythonPlugin_InstanceFields::RunDuringWarmupDays, "Yes");
+    } else {
+      idfObject.setString(openstudio::PythonPlugin_InstanceFields::RunDuringWarmupDays, "No");
+    }
 
-  }  // namespace detail
+    path filePath = modelObject.externalFile().filePath();
+    if (!exists(filePath)) {
+      LOG(Warn, "Cannot find file \"" << filePath << "\"");
+    } else {
+      // make the path correct for this system
+      filePath = system_complete(filePath);
+    }
 
-  /** PythonPluginInstance is a ResourceObject that wraps the OpenStudio IDD object 'OS:PythonPlugn:Instance'. */
-  class MODEL_API PythonPluginInstance : public ResourceObject
-  {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    idfObject.setString(openstudio::PythonPlugin_InstanceFields::PythonModuleName, toString(filePath));
 
-    explicit PythonPluginInstance(const ExternalFile& externalfile, const std::string& pluginClassName);
+    idfObject.setString(openstudio::PythonPlugin_InstanceFields::PluginClassName, modelObject.pluginClassName());
 
-    virtual ~PythonPluginInstance() {}
+    m_idfObjects.push_back(idfObject);
+    return idfObject;
+  }
 
-    //@}
+}  // namespace energyplus
 
-    static IddObjectType iddObjectType();
-
-    /** @name Getters */
-    //@{
-
-    ExternalFile externalFile() const;
-
-    bool runDuringWarmupDays() const;
-    bool isRunDuringWarmupDaysDefaulted() const;
-
-    std::string pluginClassName() const;
-
-    //@}
-    /** @name Setters */
-    //@{
-
-    bool setRunDuringWarmupDays(bool runDuringWarmupDays);
-    void resetRunDuringWarmupDays();
-
-    bool setPluginClassName(const std::string& pluginClassName);
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-    /// @cond
-    typedef detail::PythonPluginInstance_Impl ImplType;
-
-    explicit PythonPluginInstance(std::shared_ptr<detail::PythonPluginInstance_Impl> impl);
-
-    friend class Model;
-    friend class IdfObject;
-    friend class openstudio::detail::IdfObject_Impl;
-    /// @endcond
-   private:
-    REGISTER_LOGGER("openstudio.model.PythonPluginInstance");
-  };
-
-  /** \relates PythonPluginInstance*/
-  typedef boost::optional<PythonPluginInstance> OptionalPythonPluginInstance;
-
-  /** \relates PythonPluginInstance*/
-  typedef std::vector<PythonPluginInstance> PythonPluginInstanceVector;
-
-}  // namespace model
 }  // namespace openstudio
-
-#endif  // MODEL_PYTHONPLUGININSTANCE_HPP

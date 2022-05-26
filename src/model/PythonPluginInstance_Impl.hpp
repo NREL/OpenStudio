@@ -34,7 +34,6 @@
 #include "ResourceObject_Impl.hpp"
 
 namespace openstudio {
-
 namespace model {
 
   class ExternalFile;
@@ -60,7 +59,11 @@ namespace model {
       /** @name Virtual Methods */
       //@{
 
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
+
+      virtual std::vector<ResourceObject> resources() const override;
 
       //@}
       /** @name Getters */
@@ -68,13 +71,19 @@ namespace model {
 
       ExternalFile externalFile() const;
 
+      bool runDuringWarmupDays() const;
+      bool isRunDuringWarmupDaysDefaulted() const;
 
+      std::string pluginClassName() const;
 
       //@}
       /** @name Setters */
       //@{
 
+      bool setRunDuringWarmupDays(bool runDuringWarmupDays);
+      void resetRunDuringWarmupDays();
 
+      bool setPluginClassName(const std::string& pluginClassName);
 
       //@}
       /** @name Other */

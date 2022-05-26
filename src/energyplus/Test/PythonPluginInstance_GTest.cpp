@@ -27,84 +27,26 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_PYTHONPLUGININSTANCE_HPP
-#define MODEL_PYTHONPLUGININSTANCE_HPP
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
 
-#include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-namespace openstudio {
+#include "../../model/Model.hpp"
+#include "../../model/PythonPluginInstance.hpp"
+#include "../../model/PythonPluginInstance_Impl.hpp"
 
-namespace model {
+#include <utilities/idd/IddEnums.hxx>
 
-  class ExternalFile;
+#include <boost/regex.hpp>
 
-  namespace detail {
+#include <sstream>
 
-    class PythonPluginInstance_Impl;
+using namespace openstudio::energyplus;
+using namespace openstudio::model;
+using namespace openstudio;
 
-  }  // namespace detail
+TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
 
-  /** PythonPluginInstance is a ResourceObject that wraps the OpenStudio IDD object 'OS:PythonPlugn:Instance'. */
-  class MODEL_API PythonPluginInstance : public ResourceObject
-  {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
-
-    explicit PythonPluginInstance(const ExternalFile& externalfile, const std::string& pluginClassName);
-
-    virtual ~PythonPluginInstance() {}
-
-    //@}
-
-    static IddObjectType iddObjectType();
-
-    /** @name Getters */
-    //@{
-
-    ExternalFile externalFile() const;
-
-    bool runDuringWarmupDays() const;
-    bool isRunDuringWarmupDaysDefaulted() const;
-
-    std::string pluginClassName() const;
-
-    //@}
-    /** @name Setters */
-    //@{
-
-    bool setRunDuringWarmupDays(bool runDuringWarmupDays);
-    void resetRunDuringWarmupDays();
-
-    bool setPluginClassName(const std::string& pluginClassName);
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-    /// @cond
-    typedef detail::PythonPluginInstance_Impl ImplType;
-
-    explicit PythonPluginInstance(std::shared_ptr<detail::PythonPluginInstance_Impl> impl);
-
-    friend class Model;
-    friend class IdfObject;
-    friend class openstudio::detail::IdfObject_Impl;
-    /// @endcond
-   private:
-    REGISTER_LOGGER("openstudio.model.PythonPluginInstance");
-  };
-
-  /** \relates PythonPluginInstance*/
-  typedef boost::optional<PythonPluginInstance> OptionalPythonPluginInstance;
-
-  /** \relates PythonPluginInstance*/
-  typedef std::vector<PythonPluginInstance> PythonPluginInstanceVector;
-
-}  // namespace model
-}  // namespace openstudio
-
-#endif  // MODEL_PYTHONPLUGININSTANCE_HPP
+}
