@@ -949,16 +949,34 @@ TEST_F(gbXMLFixture, ReverseTranslator_IDs_Names) {
 
 TEST_F(gbXMLFixture, ReverseTranslator_Absorptance) {
   // Test for #4570 - Enhance gbXML reverse translation to bring over more data from gbXML
-  openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/seb.xml");
 
-  openstudio::gbxml::ReverseTranslator reverseTranslator;
+  {
+    openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/seb.xml");
 
-  boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
-  ASSERT_TRUE(model);
+    openstudio::gbxml::ReverseTranslator reverseTranslator;
 
-  auto _material = model->getModelObjectByName<StandardOpaqueMaterial>("Stuco");
-  ASSERT_TRUE(_material);
-  EXPECT_EQ(0.5, _material->thermalAbsorptance());
-  EXPECT_EQ(0.5, _material->solarAbsorptance());
-  EXPECT_EQ(0.5, _material->visibleAbsorptance());
+    boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+    ASSERT_TRUE(model);
+
+    auto _material = model->getModelObjectByName<StandardOpaqueMaterial>("Stuco");
+    ASSERT_TRUE(_material);
+    EXPECT_EQ(0.5, _material->thermalAbsorptance());
+    EXPECT_EQ(0.5, _material->solarAbsorptance());
+    EXPECT_EQ(0.5, _material->visibleAbsorptance());
+  }
+
+  {
+    openstudio::path inputPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard_Single_Family_Residential_2016.xml");
+
+    openstudio::gbxml::ReverseTranslator reverseTranslator;
+
+    boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
+    ASSERT_TRUE(model);
+
+    auto _material = model->getModelObjectByName<StandardOpaqueMaterial>("mat-247");
+    ASSERT_TRUE(_material);
+    EXPECT_EQ(0.3, _material->thermalAbsorptance());  // from the Construction
+    EXPECT_EQ(0.7, _material->solarAbsorptance());    // default
+    EXPECT_EQ(0.7, _material->visibleAbsorptance());  // default
+  }
 }
