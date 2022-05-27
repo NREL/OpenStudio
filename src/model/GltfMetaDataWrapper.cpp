@@ -29,17 +29,12 @@
 
 #include "GltfMetaDataWrapper.hpp"
 
-#include <tiny_gltf.h>
-
-#include <algorithm>
-#include <cmath>
-#include <iterator>
-#include <numeric>
 #include <tuple>
 
 namespace openstudio {
 namespace model {
 
+  // TODO: NO GLOBALS!!!
   std::vector<GltfModelObjectMetadataWrapper> glTFModelObjectMetadataWrapperVector;
   GltfBoundingBoxWrapper glTFBoundingBox;
   std::vector<std::string> buildingStoryNames;
@@ -68,8 +63,6 @@ namespace model {
 
   GltfMetaDataWrapper::GltfMetaDataWrapper() {
     resetModelObjectMetaDataCount();
-    m_logSink.setLogLevel(Warn);
-    m_logSink.setThreadId(std::this_thread::get_id());
   }
 
   double getBoundingBoxlookAtR() {
@@ -123,22 +116,22 @@ namespace model {
 
   void GltfMetaDataWrapper::setGenerator(const std::string& value) {
     std::string key = "generator";
-    generator = make_tuple(key, value);
+    generator = std::make_tuple(key, value);
   }
 
   void GltfMetaDataWrapper::setType(const std::string& value) {
     std::string key = "type";
-    type = make_tuple(key, value);
+    type = std::make_tuple(key, value);
   }
 
   void GltfMetaDataWrapper::setVersion(const std::string& value) {
     std::string key = "version";
-    version = make_tuple(key, value);
+    version = std::make_tuple(key, value);
   }
 
   void GltfMetaDataWrapper::setNorthAxis(const double& value) {
     std::string key = "northAxis";
-    northAxis = make_tuple(key, value);
+    northAxis = std::make_tuple(key, value);
   }
 
   std::vector<std::string> GltfMetaDataWrapper::getBuildingStoryNames() const {
@@ -209,6 +202,7 @@ namespace model {
     return airLoopCount;
   }
 
+  // TODO: what the what? setting and returning a single global?
   void GltfMetaDataWrapper::setglTFBoundingBoxWrapper(const GltfBoundingBoxWrapper& gbx) {
     glTFBoundingBox = gbx;
   }
@@ -223,26 +217,6 @@ namespace model {
 
   GltfModelObjectMetadataWrapperVector GltfMetaDataWrapper::getglTFModelObjectMetadataWrapper() {
     return glTFModelObjectMetadataWrapperVector;
-  }
-
-  std::vector<LogMessage> GltfMetaDataWrapper::warnings() const {
-    std::vector<LogMessage> result;
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
-    return result;
-  }
-
-  std::vector<LogMessage> GltfMetaDataWrapper::errors() const {
-    std::vector<LogMessage> result;
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
-    return result;
   }
 
 }  // namespace model
