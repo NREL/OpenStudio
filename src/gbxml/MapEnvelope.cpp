@@ -226,14 +226,14 @@ namespace gbxml {
       } else if (intir) {
         material.setThermalAbsorptance(*intir);
       }
-      if (extir && intir) {
+      if (extsolar && intsolar) {
         material.setSolarAbsorptance((*extsolar + *intsolar) / 2.0);  // average of the two?
       } else if (extir) {
         material.setSolarAbsorptance(*extsolar);
       } else if (intir) {
         material.setSolarAbsorptance(*intsolar);
       }
-      if (extir && intir) {
+      if (extvisible && intvisible) {
         material.setVisibleAbsorptance((*extvisible + *intvisible) / 2.0);  // average of the two?
       } else if (extir) {
         material.setVisibleAbsorptance(*extvisible);
