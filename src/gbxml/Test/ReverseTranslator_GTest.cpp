@@ -963,6 +963,12 @@ TEST_F(gbXMLFixture, ReverseTranslator_Absorptance) {
     EXPECT_EQ(0.5, _material->thermalAbsorptance());
     EXPECT_EQ(0.5, _material->solarAbsorptance());
     EXPECT_EQ(0.5, _material->visibleAbsorptance());
+
+    auto _material2 = model->getModelObjectByName<StandardOpaqueMaterial>("Expanded_Polystyrene_-_Extruded_-_1_in.");
+    ASSERT_TRUE(_material2);
+    EXPECT_EQ(0.9, _material2->thermalAbsorptance());
+    EXPECT_EQ(0.7, _material2->solarAbsorptance());
+    EXPECT_EQ(0.7, _material2->visibleAbsorptance());
   }
 
   {
@@ -973,10 +979,16 @@ TEST_F(gbXMLFixture, ReverseTranslator_Absorptance) {
     boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
     ASSERT_TRUE(model);
 
-    auto _material = model->getModelObjectByName<StandardOpaqueMaterial>("mat-247");
+    auto _material = model->getModelObjectByName<StandardOpaqueMaterial>("mat-247");  // outside layer
     ASSERT_TRUE(_material);
     EXPECT_EQ(0.3, _material->thermalAbsorptance());  // from the Construction
     EXPECT_EQ(0.7, _material->solarAbsorptance());    // default
     EXPECT_EQ(0.7, _material->visibleAbsorptance());  // default
+
+    auto _material2 = model->getModelObjectByName<StandardOpaqueMaterial>("mat-416");  // not outside layer
+    ASSERT_TRUE(_material2);
+    EXPECT_EQ(0.9, _material2->thermalAbsorptance());  // default
+    EXPECT_EQ(0.7, _material2->solarAbsorptance());    // default
+    EXPECT_EQ(0.7, _material2->visibleAbsorptance());  // default
   }
 }

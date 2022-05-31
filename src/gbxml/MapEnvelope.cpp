@@ -68,6 +68,22 @@ namespace gbxml {
     translateId(element, construction);
     translateName(element, construction);
 
+    boost::optional<double> extir;
+    boost::optional<double> extsolar;
+    boost::optional<double> extvisible;
+
+    for (auto& absorptanceEl : element.children("Absorptance")) {
+      if (istringEqual("Fraction", absorptanceEl.attribute("unit").value())) {
+        if (istringEqual("ExtIR", absorptanceEl.attribute("type").value())) {
+          extir = absorptanceEl.text().as_double();
+        } else if (istringEqual("ExtSolar", absorptanceEl.attribute("type").value())) {
+          extsolar = absorptanceEl.text().as_double();
+        } else if (istringEqual("ExtVisible", absorptanceEl.attribute("type").value())) {
+          extvisible = absorptanceEl.text().as_double();
+        }
+      }
+    }
+
     // auto layerIdList = element.children("LayerId");
     // Construction::LayerId (layerIdList) -> Layer (layerElements), Layer::MaterialId -> Material
     std::vector<openstudio::model::Material> materials;
@@ -100,7 +116,22 @@ namespace gbxml {
       bool test = false;
 
       if (materials[i].optionalCast<openstudio::model::OpaqueMaterial>()) {
-        test = construction.insertLayer(i, materials[i].cast<openstudio::model::OpaqueMaterial>());
+        openstudio::model::OpaqueMaterial opaqueMaterial = materials[i].cast<openstudio::model::OpaqueMaterial>();
+
+        // assumes first material is the outside layer
+        if (i == 0) {
+          if (extir) {
+            opaqueMaterial.setThermalAbsorptance(*extir);
+          }
+          if (extsolar) {
+            opaqueMaterial.setSolarAbsorptance(extsolar);
+          }
+          if (extvisible) {
+            opaqueMaterial.setVisibleAbsorptance(extvisible);
+          }
+        }
+
+        test = construction.insertLayer(i, opaqueMaterial);
       } else if (materials[i].optionalCast<openstudio::model::FenestrationMaterial>()) {
         test = construction.insertLayer(i, materials[i].cast<openstudio::model::FenestrationMaterial>());
       } else if (materials[i].optionalCast<openstudio::model::ModelPartitionMaterial>()) {
@@ -171,26 +202,17 @@ namespace gbxml {
     auto roughnessElement = element.child("Roughness");
 
     boost::optional<double> extir;
-    boost::optional<double> intir;
     boost::optional<double> extsolar;
-    boost::optional<double> intsolar;
     boost::optional<double> extvisible;
-    boost::optional<double> intvisible;
 
     for (auto& absorptanceEl : element.children("Absorptance")) {
       if (istringEqual("Fraction", absorptanceEl.attribute("unit").value())) {
         if (istringEqual("ExtIR", absorptanceEl.attribute("type").value())) {
           extir = absorptanceEl.text().as_double();
-        } else if (istringEqual("IntIR", absorptanceEl.attribute("type").value())) {
-          intir = absorptanceEl.text().as_double();
         } else if (istringEqual("ExtSolar", absorptanceEl.attribute("type").value())) {
           extsolar = absorptanceEl.text().as_double();
-        } else if (istringEqual("IntSolar", absorptanceEl.attribute("type").value())) {
-          intsolar = absorptanceEl.text().as_double();
         } else if (istringEqual("ExtVisible", absorptanceEl.attribute("type").value())) {
           extvisible = absorptanceEl.text().as_double();
-        } else if (istringEqual("IntVisible", absorptanceEl.attribute("type").value())) {
-          intvisible = absorptanceEl.text().as_double();
         }
       }
     }
@@ -218,27 +240,14 @@ namespace gbxml {
       material.setThickness(thickness);
       material.setSpecificHeat(specificHeat);
       material.setRoughness(roughness);
-
-      if (extir && intir) {
-        material.setThermalAbsorptance((*extir + *intir) / 2.0);  // average of the two?
-      } else if (extir) {
+      if (extir) {
         material.setThermalAbsorptance(*extir);
-      } else if (intir) {
-        material.setThermalAbsorptance(*intir);
       }
-      if (extsolar && intsolar) {
-        material.setSolarAbsorptance((*extsolar + *intsolar) / 2.0);  // average of the two?
-      } else if (extir) {
+      if (extsolar) {
         material.setSolarAbsorptance(*extsolar);
-      } else if (intir) {
-        material.setSolarAbsorptance(*intsolar);
       }
-      if (extvisible && intvisible) {
-        material.setVisibleAbsorptance((*extvisible + *intvisible) / 2.0);  // average of the two?
-      } else if (extir) {
+      if (extvisible) {
         material.setVisibleAbsorptance(*extvisible);
-      } else if (intir) {
-        material.setVisibleAbsorptance(*intvisible);
       }
     } else if (!rvalueElement.empty()) {  //Material no mass that has only R-value
 
