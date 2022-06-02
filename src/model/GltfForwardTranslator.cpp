@@ -425,6 +425,9 @@ namespace model {
     // We prepare a vector of Materials
     std::vector<GltfMaterialData> allMaterials = GltfMaterialData::buildMaterials(model);
 
+    // TODO: make it deterministic by sorting!
+    // std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
+
     for (const auto& planarSurface : planarSurfaces) {
       // Start Region MAIN LOOP
       //

@@ -223,7 +223,7 @@ namespace model {
       if (!color_) {
         color_ = RenderingColor(model);
         // TODO: Uh Oh, taking model as const but mutating objects by adding rendering colors to them...
-        // object.setRenderingColor(color_.get());
+        object.setRenderingColor(color_.get());
       }
       return color_.get();
     };
