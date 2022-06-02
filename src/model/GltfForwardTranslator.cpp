@@ -62,6 +62,8 @@
 #include "InteriorPartitionSurface_Impl.hpp"
 #include "PlanarSurfaceGroup.hpp"
 #include "PlanarSurfaceGroup_Impl.hpp"
+#include "PlanarSurface.hpp"
+#include "PlanarSurface_Impl.hpp"
 #include "Space.hpp"
 #include "Space_Impl.hpp"
 #include "DefaultConstructionSet.hpp"
@@ -85,12 +87,9 @@
 #include <tiny_gltf.h>
 
 #include <algorithm>
-#include <climits>
-#include <cmath>
 #include <iterator>
 #include <numeric>
-#include <stack>
-#include <tuple>
+#include <type_traits>
 
 namespace openstudio {
 namespace model {
@@ -148,6 +147,18 @@ namespace model {
     }
     allPoints.push_back(point3d);
     return (allPoints.size() - 1);
+  }
+
+  template <typename T>
+  std::vector<T> getObjectsAndSort(const Model& model) {
+    std::vector<T> objects;
+    if constexpr (std::is_same_v<T, PlanarSurface> || std::is_same_v<T, PlanarSurfaceGroup>) {
+      objects = model.getModelObjects<T>();
+    } else {
+      objects = model.getConcreteModelObjects<T>();
+    }
+    std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
+    return objects;
   }
 
   // Exports a gltf against a Model
@@ -226,14 +237,15 @@ namespace model {
     */
 
     // get number of things to translate
-    auto planarSurfaces = model.getModelObjects<PlanarSurface>();
-    auto planarSurfaceGroups = model.getModelObjects<PlanarSurfaceGroup>();
-    auto buildingStories = model.getConcreteModelObjects<BuildingStory>();
-    auto buildingUnits = model.getConcreteModelObjects<BuildingUnit>();
-    auto thermalZones = model.getConcreteModelObjects<ThermalZone>();
-    auto airLoopHVACs = model.getConcreteModelObjects<AirLoopHVAC>();
-    auto spaceTypes = model.getConcreteModelObjects<SpaceType>();
-    auto defaultConstructionSets = model.getConcreteModelObjects<DefaultConstructionSet>();
+    // make it deterministic by sorting!
+    auto planarSurfaces = getObjectsAndSort<PlanarSurface>(model);
+    auto planarSurfaceGroups = getObjectsAndSort<PlanarSurfaceGroup>(model);
+    auto buildingStories = getObjectsAndSort<BuildingStory>(model);
+    auto buildingUnits = getObjectsAndSort<BuildingUnit>(model);
+    auto thermalZones = getObjectsAndSort<ThermalZone>(model);
+    auto airLoopHVACs = getObjectsAndSort<AirLoopHVAC>(model);
+    auto spaceTypes = getObjectsAndSort<SpaceType>(model);
+    auto defaultConstructionSets = getObjectsAndSort<DefaultConstructionSet>(model);
     double n = 0;
 
     size_t N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size() + thermalZones.size()
