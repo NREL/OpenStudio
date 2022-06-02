@@ -336,7 +336,6 @@ namespace model {
     m_logSink.resetStringStream();
 
     bool triangulateSurfaces = true;  //we're always triangulating the surfaces to get the best possible output.
-    bool BufferInBase64 = false;      //no *.bin file is involed | everything is integrated in the mail output gltf file only.
 
     // TODO: cleanup
     tinygltf::Model gltfModel;
@@ -536,18 +535,17 @@ namespace model {
       return false;
     }
 
-    if (!BufferInBase64) {
-      // Having a separate input file for the GLTF is old now everything resides in the main GLTF file only... as a binary buffer data.
-      auto padding = indicesBuffer.size() % 4;
-      for (unsigned int i = 0; i < padding; i++) {
-        indicesBuffer.push_back(0x00);  // padding bytes
-      }
-
-      std::vector<unsigned char> allBuffer = indicesBuffer;  //std::move(_indicesBuffer);
-      allBuffer.insert(allBuffer.end(), coordinatesBuffer.begin(), coordinatesBuffer.end());
-
-      buffer.data = allBuffer;
+    // no *.bin file is involed | everything is integrated in the mail output gltf file only.
+    // Having a separate input file for the GLTF is old now everything resides in the main GLTF file only... as a binary buffer data.
+    auto padding = indicesBuffer.size() % 4;
+    for (unsigned int i = 0; i < padding; i++) {
+      indicesBuffer.push_back(0x00);  // padding bytes
     }
+
+    std::vector<unsigned char> allBuffer = indicesBuffer;  //std::move(_indicesBuffer);
+    allBuffer.insert(allBuffer.end(), coordinatesBuffer.begin(), coordinatesBuffer.end());
+
+    buffer.data = allBuffer;
 
     indicesBv.byteLength = indicesBuffer.size();
     indicesBv.byteOffset = 0;
