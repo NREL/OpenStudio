@@ -351,8 +351,11 @@ namespace model {
     tinygltf::Scene& scene = gltfModel.scenes.emplace_back();
     tinygltf::Buffer& buffer = gltfModel.buffers.emplace_back();
 
-    tinygltf::BufferView& indicesBv = gltfModel.bufferViews.emplace_back();
-    tinygltf::BufferView& coordinatesBv = gltfModel.bufferViews.emplace_back();
+    // Note: Can't emplace_back twice and store refs (before a reserve at least),
+    // because the first ref would be invalidated by the second emplace_back, so just resize and get refs after that
+    gltfModel.bufferViews.resize(2);
+    tinygltf::BufferView& indicesBv = gltfModel.bufferViews.front();
+    tinygltf::BufferView& coordinatesBv = gltfModel.bufferViews.back();
     std::vector<unsigned char> indicesBuffer;
     std::vector<unsigned char> coordinatesBuffer;
 
@@ -367,9 +370,12 @@ namespace model {
     // tied up in a Hierarchy using indices pointing one to other.
     scene.nodes = {0};
 
-    tinygltf::Node& topNode = nodes.emplace_back();
-    topNode.name = "Z_UP";
-    topNode.matrix = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
+    // I'm going to be emplacing back elements in nodes a bunch later, which is going to invalidate the references, so limit scope
+    {
+      tinygltf::Node& topNode = nodes.emplace_back();
+      topNode.name = "Z_UP";
+      topNode.matrix = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
+    }
 
     initBufferViews(indicesBv, coordinatesBv);
 
@@ -535,7 +541,9 @@ namespace model {
       return false;
     }
 
-    // no *.bin file is involed | everything is integrated in the mail output gltf file only.
+    // Write the buffer data
+    // TODO: why use a single buffer for two buffersView instead of one buffer for each?
+    // no *.bin file is involved | everything is integrated in the mail output gltf file only.
     // Having a separate input file for the GLTF is old now everything resides in the main GLTF file only... as a binary buffer data.
     auto padding = indicesBuffer.size() % 4;
     for (unsigned int i = 0; i < padding; i++) {
@@ -557,7 +565,7 @@ namespace model {
     // Other tie ups
 
     // Declare all nodes as a child of topNode
-    auto& topNodeChildren = topNode.children;
+    auto& topNodeChildren = nodes.front().children;
     topNodeChildren.resize(nodes.size() - 1);
     std::iota(topNodeChildren.begin(), topNodeChildren.end(), 1);
 
