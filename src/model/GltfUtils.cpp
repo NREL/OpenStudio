@@ -32,12 +32,197 @@
 
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/geometry/Point3d.hpp"
+#include "../utilities/geometry/Vector3d.hpp"
 
 #include <tiny_gltf.h>
+
+#include <limits>
+#include <type_traits>
+#include <vector>
 
 namespace openstudio {
 //class GltfMetaDta;
 namespace model {
+
+  // Get Bytes from a value
+  // typeparam name :"T"
+  // param : value
+  // returns : collection of bytes
+  template <typename T, typename std::enable_if<std::is_arithmetic<T>::value>::type* = nullptr>
+  std::vector<uint8_t> splitValueToBytes(T const& value) {
+    std::vector<uint8_t> bytes;
+    for (size_t i = 0; i < sizeof(value); ++i) {
+      uint8_t byte = value >> (i * 8);
+      bytes.insert(bytes.begin(), byte);
+    }
+    return bytes;
+  }
+
+  // Adds & Creates Face Indices buffers and Accessors
+  // This method infers the indicesbuffer and adds them to the glTF model accessor
+  // which expects two types of accessor input one from indicesbuffer and the second
+  // one form coordinates buffer. So here after appending the buffer content it is sending
+  // over the index so the containing node will be aware of which one to refer.
+  // A better overview here at https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/figures/gltfOverview-2.0.0b.png
+  // param : faceIndices
+  // param : _indicesBuffer
+  // param : _accessors
+  // returns : index of the Face Indices
+  int addIndices(const std::vector<size_t>& faceIndices, std::vector<unsigned char>& indicesBuffer, std::vector<tinygltf::Accessor>& accessors) {
+    auto [min, max] = std::minmax_element(std::cbegin(faceIndices), std::cend(faceIndices));
+
+    // This but seems to be just figuring out the best way to back the indices in
+    // depenbding on the range of numbers
+    int ct = TINYGLTF_COMPONENT_TYPE_BYTE;
+    auto size = 0;
+
+    if (*max <= static_cast<size_t>(std::pow(2, 8))) {
+      ct = TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE;
+      size = sizeof(std::byte);
+    } else if (*max <= static_cast<size_t>(std::pow(2, 16))) {
+      ct = TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT;
+      size = sizeof(short);
+    } else {
+      ct = TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT;
+      size = sizeof(int);
+    }
+    // the offset position needs to be a multiple of the size
+    // (this is from a warning we received in beta testing)
+    // so we inject some padding when needed
+    auto padding = indicesBuffer.size() % size;
+    for (size_t i = 0; i < padding; ++i) {
+      indicesBuffer.push_back(0x00);
+    }
+
+    // To avoid Accessor offset Validation Issue
+    auto _padding = indicesBuffer.size() % 4;
+    for (size_t i = 0; i < _padding; ++i) {
+      indicesBuffer.push_back(0x00);
+    }
+
+    tinygltf::Accessor indAccessor;
+    indAccessor.bufferView = 0;
+    indAccessor.componentType = ct;
+    indAccessor.byteOffset = indicesBuffer.size();
+    indAccessor.normalized = false;
+    indAccessor.type = TINYGLTF_TYPE_SCALAR;
+    indAccessor.count = faceIndices.size();
+    indAccessor.minValues = {static_cast<double>(*min)};
+    indAccessor.maxValues = {static_cast<double>(*max)};
+
+    std::vector<unsigned char> indicesBufferData;
+    for (const auto index : faceIndices) {
+      std::vector<unsigned char> arrayOfByte;
+      if (ct == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) {
+        arrayOfByte.push_back((unsigned char)index);
+      } else if (ct == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) {
+        arrayOfByte = splitValueToBytes(index);
+      } else {
+        arrayOfByte = splitValueToBytes(index);
+      }
+      indicesBufferData.insert(indicesBufferData.end(), arrayOfByte.begin(), arrayOfByte.end());
+    }
+
+    if (indicesBufferData.size() < 4) {
+      indicesBufferData.push_back(0x00);
+    }
+    indicesBuffer.insert(indicesBuffer.end(), indicesBufferData.begin(), indicesBufferData.end());
+
+    const auto thisIndex = accessors.size();
+    accessors.push_back(indAccessor);
+    return thisIndex;
+  }
+
+  // Creates Coordinates / Normal Buffers and Accessors.
+  // returns : index
+  int createBuffers(std::vector<float>& values, std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors) {
+    // Fixes ACCESSOR_TOTAL_OFFSET_ALIGNMENT
+    // Accessor's total byteOffset XXXX isn't a multiple of componentType length 4.
+    auto _padding = coordinatesBuffer.size() % 4;
+    for (size_t i = 0; i < _padding; ++i) {
+      coordinatesBuffer.push_back((unsigned)0);
+    }
+    int startingBufferPosition = coordinatesBuffer.size();
+    std::vector<float> min(3, std::numeric_limits<float>::max());
+    std::vector<float> max(3, std::numeric_limits<float>::lowest());
+    int i = 0;
+    for (const auto& value : values) {
+      min[i] = std::min(value, min[i]);
+      max[i] = std::max(value, max[i]);
+      ++i;
+      if (i > 2) {
+        i = 0;
+      }
+      std::vector<unsigned char> v;
+      const auto* ptr = reinterpret_cast<const unsigned char*>(&value);
+      for (size_t i = 0; i < sizeof(float); ++i) {
+        v.push_back(ptr[i]);
+      }
+      coordinatesBuffer.insert(coordinatesBuffer.end(), v.begin(), v.end());
+    }
+    // To Fix : offset 18 is not a multiple of Comonent Type lenght 4
+    auto padding = coordinatesBuffer.size() % 4;
+    for (size_t i = 0; i < padding; ++i) {
+      coordinatesBuffer.push_back((unsigned)0);
+    }
+    // convert min and max to double
+    std::vector<double> min_d;
+    std::vector<double> max_d;
+    for (const auto mn : min) {
+      min_d.push_back((double)mn);
+    }
+    for (const auto mx : max) {
+      max_d.push_back((double)mx);
+    }
+    tinygltf::Accessor coordAccessor;
+    coordAccessor.bufferView = 1;
+    coordAccessor.byteOffset = startingBufferPosition;
+    coordAccessor.componentType = TINYGLTF_COMPONENT_TYPE_FLOAT;
+    coordAccessor.normalized = false;
+    coordAccessor.count = values.size() / 3;
+    coordAccessor.type = TINYGLTF_TYPE_VEC3;
+    coordAccessor.minValues = min_d;
+    coordAccessor.maxValues = max_d;
+
+    auto ret = accessors.size();
+    accessors.push_back(coordAccessor);
+    return ret;
+  }
+
+  // Adds Coordinate Buffers for all vertices of the surface
+  // returns : index for the Coordinates Buffer
+  int addCoordinates(const Point3dVector& allVertices, std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors) {
+    std::vector<float> values(3 * allVertices.size());
+    size_t i = 0;
+    for (const auto& point : allVertices) {
+      values[i++] = static_cast<float>(point.x());
+      values[i++] = static_cast<float>(point.y());
+      values[i++] = static_cast<float>(point.z());
+    }
+    return createBuffers(values, coordinatesBuffer, accessors);
+  }
+
+  // Adds Normal Buffers for all normal Vectors
+  // returns : index for the Normals Buffer
+  int addNormals(const Vector3dVector& normalVectors, std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors) {
+    std::vector<float> values(3 * normalVectors.size());
+    size_t i = 0;
+    for (const auto& vec : normalVectors) {
+      values[i++] = static_cast<float>(vec.x());
+      values[i++] = static_cast<float>(vec.y());
+      values[i++] = static_cast<float>(vec.z());
+    }
+    return createBuffers(values, coordinatesBuffer, accessors);
+  }
+
+  ShapeComponentIds::ShapeComponentIds(const std::vector<size_t>& faceIndices, const Point3dVector& allVertices, const Vector3dVector& normalVectors,
+                                       std::vector<unsigned char>& indicesBuffer, std::vector<unsigned char>& coordinatesBuffer,
+                                       std::vector<tinygltf::Accessor>& accessors) {
+
+    indicesAccessorId = addIndices(faceIndices, indicesBuffer, accessors);
+    verticesAccessorId = addCoordinates(allVertices, coordinatesBuffer, accessors);
+    normalsAccessorId = addNormals(normalVectors, coordinatesBuffer, accessors);
+  }
 
   // Gets GLTF Material name on the basis of idd Object Type and Name
   // param : iddObjectType
@@ -76,8 +261,6 @@ namespace model {
     return getObjectGLTFMaterialName(object.iddObjectType().valueDescription(), object.nameString());
   }
 
-  // TODO: put it back once I avoid the circular dependency
-  /*
   // To export a Minimal GLTF file (Triangle with 3 Points) using generated raw data from Point3DVector
   bool createTriangleGLTFFromPoint3DVector(const path& outputPath) {
     tinygltf::Model m;
@@ -113,18 +296,14 @@ namespace model {
       {0, 1, 0},
     };
 
-    ShapeComponentIds shapeComponentIds{
-      addIndices(faceIndices, _indicesBuffer, m.accessors),          //IndicesAccessorId
-      addCoordinates(allVertices, _coordinatesBuffer, m.accessors),  //VerticesAccessorId
-      0                                                              //NormalsAccessorId
-    };
+    ShapeComponentIds shapeComponentIds(faceIndices, allVertices, {}, _indicesBuffer, _coordinatesBuffer, m.accessors);
 
     // Build the mesh primitive and add it to the mesh
     // The index of the accessor for the vertex indices
     tinygltf::Primitive& primitive = mesh.primitives.emplace_back();
     primitive.indices = 0;
     // The index of the accessor for positions
-    primitive.attributes["POSITION"] = shapeComponentIds.VerticesAccessorId;
+    primitive.attributes["POSITION"] = shapeComponentIds.verticesAccessorId;
     primitive.material = 0;
     primitive.mode = TINYGLTF_MODE_TRIANGLES;
 
@@ -270,47 +449,6 @@ namespace model {
                                          false);  // write binary
     return ret;
   }
-*/
-
-  /*
-
-     std::string getBoundaryMaterialName(boost::optional<Surface> surface) {
-    std::string result;
-    if (surface->outsideBoundaryCondition() == "Outdoors") {
-      if ((surface->sunExposure() == "SunExposed") && (surface->windExposure() == "WindExposed")) {
-        result = "Boundary_Outdoors_SunWind";
-      } else if (surface->sunExposure() == "SunExposed") {
-        result = "Boundary_Outdoors_Sun";
-      } else if (surface->windExposure() == "WindExposed") {
-        result = "Boundary_Outdoors_Wind";
-      } else {
-        result = "Boundary_Outdoors";
-      }
-    } else {
-      result = "Boundary_" + surface->outsideBoundaryCondition();
-    }
-    return result;
-  }
-
-  std::string getBoundaryMaterialName(const GltfUserData& glTFUserData) {
-    std::string result;
-    if (glTFUserData.getOutsideBoundaryCondition() == "Outdoors") {
-      if ((glTFUserData.getSunExposure() == "SunExposed") && (glTFUserData.getWindExposure() == "WindExposed")) {
-        result = "Boundary_Outdoors_SunWind";
-      } else if (glTFUserData.getSunExposure() == "SunExposed") {
-        result = "Boundary_Outdoors_Sun";
-      } else if (glTFUserData.getWindExposure() == "WindExposed") {
-        result = "Boundary_Outdoors_Wind";
-      } else {
-        result = "Boundary_Outdoors";
-      }
-    } else {
-      result = "Boundary_" + glTFUserData.getOutsideBoundaryCondition();
-    }
-    return result;
-  }
-
-*/
 
 }  // namespace model
 }  // namespace openstudio

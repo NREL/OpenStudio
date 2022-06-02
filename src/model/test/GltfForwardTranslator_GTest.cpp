@@ -33,6 +33,7 @@
 #include "../GltfMetaData.hpp"
 #include "../GltfUserData.hpp"
 #include "../GltfModelObjectMetaData.hpp"
+#include "../GltfUtils.hpp"
 #include "../Model.hpp"
 #include "../Space.hpp"
 #include "../Space_Impl.hpp"
@@ -421,20 +422,19 @@ TEST_F(ModelFixture, GltfForwardTranslator_LoadTest) {
 // 1 primitives
 // 0 textures
 // Extensions: None
-// TODO: re-enable
-// TEST_F(ModelFixture, GltfForwardTranslator_CreateTriangleGLTFTest) {
-//   GltfForwardTranslator ft;
-//   openstudio::path output;
-//   openstudio::path output_2;
-//   output = resourcesPath() / toPath("utilities/Geometry/triangle.gltf");
-//   // Passed Raw buffer data
-//   bool result = ft.createTriangleGLTF(output);
-//   ASSERT_TRUE(result);
-//   output_2 = resourcesPath() / toPath("utilities/Geometry/triangle_2.gltf");
-//   // Creates Raw buffer data from Point3dVector
-//   bool result_2 = ft.createTriangleGLTFFromPoint3DVector(output_2);
-//   ASSERT_TRUE(result_2);
-// }
+TEST_F(ModelFixture, GltfForwardTranslator_CreateTriangleGLTFTest) {
+  GltfForwardTranslator ft;
+  openstudio::path output;
+  openstudio::path output_2;
+  output = resourcesPath() / toPath("utilities/Geometry/triangle.gltf");
+  // Passed Raw buffer data
+  bool result = createTriangleGLTF(output);
+  ASSERT_TRUE(result);
+  output_2 = resourcesPath() / toPath("utilities/Geometry/triangle_2.gltf");
+  // Creates Raw buffer data from Point3dVector
+  bool result_2 = createTriangleGLTFFromPoint3DVector(output_2);
+  ASSERT_TRUE(result_2);
+}
 
 // Validation report
 // Format: glTF 2.0

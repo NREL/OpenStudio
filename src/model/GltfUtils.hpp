@@ -33,11 +33,14 @@
 #include "Model.hpp"
 
 namespace tinygltf {
-class Material;
+class Accessor;
 }
 
 namespace openstudio {
-//class GltfMetaDta;
+
+class Point3d;
+class Vector3d;
+
 namespace model {
 
   class ModelObject;
@@ -45,24 +48,21 @@ namespace model {
   // For Indices of Indices, Coordinates & Normal buffers against each Components
   struct ShapeComponentIds
   {
-    int IndicesAccessorId;
-    int VerticesAccessorId;
-    int NormalsAccessorId;
-  };
+    explicit ShapeComponentIds(const std::vector<size_t>& faceIndices, const std::vector<Point3d>& allVertices,
+                               const std::vector<Vector3d>& normalVectors, std::vector<unsigned char>& indicesBuffer,
+                               std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors);
 
-  // For raw values for GLTF Materials
-  struct MaterialData
-  {
-    std::string materialName;
-    int r;     // [0, 255]
-    int g;     // [0, 255]
-    int b;     // [0, 255]
-    double a;  // [0, 1]
-    bool isDoubleSided = false;
+    int indicesAccessorId;
+    int verticesAccessorId;
+    int normalsAccessorId;
 
-    // Creates a GLTF material on the basis of raw Material Values
-    // i.e, R, G, B, A & isDoubleSided
-    tinygltf::Material toGltf() const;
+   private:
+    // int addIndices(const std::vector<size_t>& faceIndices, std::vector<unsigned char>& indicesBuffer, std::vector<tinygltf::Accessor>& accessors);
+    // int addCoordinates(const std::vector<Point3d>& allVertices, std::vector<unsigned char>& coordinatesBuffer,
+    //                    std::vector<tinygltf::Accessor>& accessors);
+    // int addNormals(const std::vector<Vector3d>& normalVectors, std::vector<unsigned char>& coordinatesBuffer,
+    //                std::vector<tinygltf::Accessor>& accessors);
+    // int createBuffers(std::vector<float>& values, std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors);
   };
 
   // Gets GLTF Material name on the basis of idd Object Type and Name
@@ -72,10 +72,10 @@ namespace model {
   MODEL_API std::string getObjectGLTFMaterialName(const ModelObject& object);
 
   // Export a Minimal GLTF file (Triangle with 3 Points) using raw buffer data.
-  // MODEL_API bool createTriangleGLTF(const path& outputPath);
+  MODEL_API bool createTriangleGLTF(const path& outputPath);
 
   // Export a Minimal GLTF file (Triangle with 3 Points) using generated raw buffer data from Point3DVector
-  // MODEL_API bool createTriangleGLTFFromPoint3DVector(const path& outputPath);
+  MODEL_API bool createTriangleGLTFFromPoint3DVector(const path& outputPath);
 
 }  // namespace model
 }  // namespace openstudio
