@@ -372,14 +372,6 @@ namespace model {
     topNode.name = "Z_UP";
     topNode.matrix = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
 
-    std::vector<tinygltf::Node> nodesNew;
-    std::vector<int> nodesTemp;
-    nodesTemp.resize(nodes.size() - 1);
-    for (unsigned int i = 1; i < nodes.size(); i++) {
-      int j = i - 1;
-      nodesTemp[j] = i;
-    }
-
     initBufferViews(indicesBv, coordinatesBv);
 
     // End Region INIT
@@ -474,10 +466,12 @@ namespace model {
         materialIndex = std::distance(materials.cbegin(), it);
       } else {
         auto it2 = std::find_if(allMaterials.cbegin(), allMaterials.cend(), [&matName](const auto& mat) { return mat.materialName() == matName; });
-        if (it2 != allMaterials.cend()) {
+        if (it2 == allMaterials.cend()) {
           it2 = allMaterials.cbegin();  // This is always the "Undefined" material
         }
         materialIndex = materials.size();
+        // add to gltfModel
+        materials.emplace_back(it2->toGltf());
       }
 
       // get vertices of all sub surfaces
@@ -543,8 +537,7 @@ namespace model {
     }
 
     if (!BufferInBase64) {
-      // BPS:having a separate input file for the GLTF is old now everything resides
-      // in the main GLTF file only..as a binary buffer data.
+      // Having a separate input file for the GLTF is old now everything resides in the main GLTF file only... as a binary buffer data.
       auto padding = indicesBuffer.size() % 4;
       for (unsigned int i = 0; i < padding; i++) {
         indicesBuffer.push_back(0x00);  // padding bytes
@@ -646,7 +639,12 @@ namespace model {
 
       // USERDATA INITIALIZATION FROM EACH NODE's EXTRAS
       m_userDataCollection.clear();
+      bool isTopNode = true;
       for (const auto& node : gltf_Model.nodes) {
+        if (isTopNode) {
+          isTopNode = false;
+          continue;
+        }
         m_userDataCollection.emplace_back(node.extras);
       }
 

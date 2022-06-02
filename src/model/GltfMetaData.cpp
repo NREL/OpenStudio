@@ -73,7 +73,6 @@ namespace model {
 
     // Building Story Names
     auto buildingStories = model.getConcreteModelObjects<BuildingStory>();
-    setBuildingStoryNames(buildingStories);
     for (const auto& buildingStory : buildingStories) {
       m_glTFModelObjectMetaDataVector.emplace_back(buildingStory);
       m_buildingStoryNames.emplace_back(buildingStory.nameString());
