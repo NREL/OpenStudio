@@ -64,9 +64,6 @@ namespace model {
   // one form coordinates buffer. So here after appending the buffer content it is sending
   // over the index so the containing node will be aware of which one to refer.
   // A better overview here at https://github.com/KhronosGroup/glTF/blob/main/specification/2.0/figures/gltfOverview-2.0.0b.png
-  // param : faceIndices
-  // param : _indicesBuffer
-  // param : _accessors
   // returns : index of the Face Indices
   int addIndices(const std::vector<size_t>& faceIndices, std::vector<unsigned char>& indicesBuffer, std::vector<tinygltf::Accessor>& accessors) {
     auto [min, max] = std::minmax_element(std::cbegin(faceIndices), std::cend(faceIndices));

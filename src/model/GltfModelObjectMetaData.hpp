@@ -115,7 +115,7 @@ namespace model {
     bool m_opentoBelow = false;
     double m_nominalZCoordinate = 0.0;
     double m_nominalFloortoCeilingHeight = 0.0;
-    int m_multiplier = 1.0;
+    int m_multiplier = 0;
   };
 
 }  // namespace model

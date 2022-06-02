@@ -123,7 +123,7 @@ namespace model {
     m_iddObjectType = Space::iddObjectType().valueDescription();
     m_name = space.nameString();
 
-    // TODO: the original implementation doesn't use the space multiplier
+    // TODO: the original implementation doesn't use the space multiplier (well: it does come from the attached thermal Zone so...)
   }
 
   std::string GltfModelObjectMetaData::color() const {
