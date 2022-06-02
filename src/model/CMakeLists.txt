@@ -36,14 +36,18 @@ set(${target_name}_src
   ThreeJSReverseTranslator.cpp
   GltfForwardTranslator.hpp
   GltfForwardTranslator.cpp
-  GltfBoundingBoxWrapper.hpp
-  GltfBoundingBoxWrapper.cpp
-  GltfModelObjectMetadataWrapper.hpp
-  GltfModelObjectMetadataWrapper.cpp
-  GltfUserDataWrapper.hpp
-  GltfUserDataWrapper.cpp
-  GltfMetaDataWrapper.hpp
-  GltfMetaDataWrapper.cpp
+  GltfBoundingBox.hpp
+  GltfBoundingBox.cpp
+  GltfModelObjectMetaData.hpp
+  GltfModelObjectMetaData.cpp
+  GltfUserData.hpp
+  GltfUserData.cpp
+  GltfMetaData.hpp
+  GltfMetaData.cpp
+  GltfMaterialData.hpp
+  GltfMaterialData.cpp
+  GltfUtils.hpp
+  GltfUtils.cpp
   ModelMerger.hpp
   ModelMerger.cpp
 
