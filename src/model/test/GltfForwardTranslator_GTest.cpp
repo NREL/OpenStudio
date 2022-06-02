@@ -42,12 +42,412 @@
 #include "../SubSurface.hpp"
 #include "../SubSurface_Impl.hpp"
 #include "../ConstructionAirBoundary.hpp"
-#include "../../osversion/VersionTranslator.hpp"
 #include "../Construction.hpp"
+
+#include "../PlanarSurface.hpp"
+#include "../PlanarSurface_Impl.hpp"
+#include "../PlanarSurfaceGroup.hpp"
+#include "../PlanarSurfaceGroup_Impl.hpp"
+#include "../BuildingStory.hpp"
+#include "../BuildingStory_Impl.hpp"
+#include "../BuildingUnit.hpp"
+#include "../BuildingUnit_Impl.hpp"
+#include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
+#include "../SpaceType.hpp"
+#include "../SpaceType_Impl.hpp"
+#include "../DefaultConstructionSet.hpp"
+#include "../DefaultConstructionSet_Impl.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+
+#include "../../osversion/VersionTranslator.hpp"
+
+#include "../../utilities/core/Json.hpp"
+#include <OpenStudio.hxx>
+
+#include <json/json.h>
+
 #include <algorithm>
+#include <json/value.h>
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel_FullTest) {
+  GltfForwardTranslator ft;
+
+  Model m = exampleModel();
+  std::string s = ft.modelToGLTFString(m);
+
+  auto planarSurfaces = m.getModelObjects<PlanarSurface>();
+  auto nPlanarSurfaces = planarSurfaces.size();
+
+  // auto planarSurfaceGroups = m.getModelObjects<PlanarSurfaceGroup>();
+  // auto nPlanarSurfaceGroups = planarSurfaceGroups.size();
+
+  auto buildingStories = m.getConcreteModelObjects<BuildingStory>();
+  auto nBuildingStories = buildingStories.size();
+  EXPECT_EQ(1, nBuildingStories);
+
+  auto buildingUnits = m.getConcreteModelObjects<BuildingUnit>();
+  auto nBuildingUnits = buildingUnits.size();
+  EXPECT_EQ(0, nBuildingUnits);
+
+  auto thermalZones = m.getConcreteModelObjects<ThermalZone>();
+  auto nThermalZones = thermalZones.size();
+  EXPECT_EQ(1, nThermalZones);
+
+  auto airLoopHVACs = m.getConcreteModelObjects<AirLoopHVAC>();
+  auto nAirLoopHVACs = airLoopHVACs.size();
+  EXPECT_EQ(1, nAirLoopHVACs);
+
+  auto spaceTypes = m.getConcreteModelObjects<SpaceType>();
+  auto nSpaceTypes = spaceTypes.size();
+  EXPECT_EQ(1, nSpaceTypes);
+
+  auto defaultConstructionSets = m.getConcreteModelObjects<DefaultConstructionSet>();
+  auto nDefaultConstructionSets = defaultConstructionSets.size();
+  EXPECT_EQ(1, nDefaultConstructionSets);
+
+  auto spaces = m.getConcreteModelObjects<Space>();
+  auto nSpaces = spaces.size();
+  EXPECT_EQ(4, nSpaces);
+
+  auto nMetaDataSize = nBuildingStories + nBuildingUnits + nThermalZones + nAirLoopHVACs + nSpaceTypes + nDefaultConstructionSets + nSpaces;
+
+  Json::Reader reader;
+  Json::Value root;
+  bool parsingSuccessful = reader.parse(s, root);
+  ASSERT_TRUE(parsingSuccessful);
+
+  std::vector<std::pair<std::string, Json::ValueType>> allKeysAndTypes{
+    {"accessors", Json::arrayValue}, {"asset", Json::objectValue}, {"bufferViews", Json::arrayValue}, {"buffers", Json::arrayValue},
+    {"materials", Json::arrayValue}, {"meshes", Json::arrayValue}, {"nodes", Json::arrayValue},       {"scenes", Json::arrayValue},
+  };
+  for (const auto& [key, keyType] : allKeysAndTypes) {
+    assertKeyAndType(root, key, keyType);
+  }
+
+  {
+    // Accessors
+
+    // We except 3 accessors for each surfaces:
+    // * 1 SCALAR for indices
+    // * 1 VEC3 for Coordinates
+    // * 1 VEC3 for Normals
+    auto accessors = root.get("accessors", Json::arrayValue);
+    EXPECT_EQ(nPlanarSurfaces * 3, accessors.size());
+    EXPECT_EQ(nPlanarSurfaces, std::count_if(accessors.begin(), accessors.end(),
+                                             [](const auto& accessor) { return accessor.get("type", "").asString() == "SCALAR"; }));
+    EXPECT_EQ(nPlanarSurfaces * 2,
+              std::count_if(accessors.begin(), accessors.end(), [](const auto& accessor) { return accessor.get("type", "").asString() == "VEC3"; }));
+  }
+
+  {
+    // Asset
+    assertKeyAndType(root, "asset", Json::objectValue);
+    auto asset = root.get("asset", Json::objectValue);
+    assertKeyAndType(asset, "generator", Json::stringValue);
+    EXPECT_EQ("OpenStudio", asset.get("generator", Json::stringValue).asString());
+    assertKeyAndType(asset, "version", Json::stringValue);
+    EXPECT_EQ("2.0", asset.get("version", Json::stringValue).asString());
+  }
+
+  {
+    // BufferViews
+    auto bufferViews = root.get("bufferViews", Json::arrayValue);
+    {
+      // First one
+      auto bufferView = bufferViews[0];
+      assertKeyAndType(bufferView, "buffer", Json::intValue);
+      EXPECT_EQ(0, bufferView.get("buffer", -999).asInt());
+      assertKeyAndType(bufferView, "byteLength", Json::intValue);
+      EXPECT_EQ(268, bufferView.get("byteLength", -999).asInt());
+      assertKeyAndType(bufferView, "target", Json::intValue);
+      EXPECT_EQ(34963, bufferView.get("target", -999).asInt());
+
+      // Not needed for the first one
+      EXPECT_FALSE(checkKey(bufferView, "byteOffset"));
+      EXPECT_FALSE(checkKey(bufferView, "byteStride"));
+    }
+    {
+      // Second one
+      auto bufferView = bufferViews[1];
+      assertKeyAndType(bufferView, "buffer", Json::intValue);
+      EXPECT_EQ(0, bufferView.get("buffer", -999).asInt());
+      assertKeyAndType(bufferView, "byteLength", Json::intValue);
+      EXPECT_EQ(3072, bufferView.get("byteLength", -999).asInt());
+      assertKeyAndType(bufferView, "target", Json::intValue);
+      EXPECT_EQ(34962, bufferView.get("target", -999).asInt());
+
+      assertKeyAndType(bufferView, "byteOffset", Json::intValue);
+      EXPECT_EQ(268, bufferView.get("byteOffset", -999).asInt());
+      assertKeyAndType(bufferView, "byteStride", Json::intValue);
+      EXPECT_EQ(12, bufferView.get("byteStride", -999).asInt());
+    }
+  }
+
+  {
+    // Buffers: there's only one
+    assertKeyAndType(root, "buffers", Json::arrayValue);
+    auto buffers = root.get("buffers", Json::arrayValue);
+    ASSERT_EQ(1, buffers.size());
+    auto buffer = buffers[0];
+    ASSERT_TRUE(buffer.isObject());
+
+    assertKeyAndType(buffer, "byteLength", Json::intValue);
+    EXPECT_EQ(3340, buffer.get("byteLength", -999).asInt());
+
+    std::string startsWith = "data:application/octet-stream;base64,";
+    assertKeyAndType(buffer, "uri", Json::stringValue);
+    auto uri = buffer.get("uri", "").asString();
+    EXPECT_EQ(startsWith, uri.substr(0, startsWith.size()));
+  }
+
+  {
+    // Materials
+    auto materials = root.get("materials", Json::arrayValue);
+    EXPECT_EQ(9, materials.size());
+    // This is already sorted
+    std::vector<std::string> expectedMaterialNames{"BuildingShading", "Door", "Floor", "InteriorPartitionSurface", "RoofCeiling", "SiteShading",
+                                                   "SpaceShading",    "Wall", "Window"};
+    std::vector<std::string> foundMaterialNames;
+    std::vector<std::pair<std::string, Json::ValueType>> theKeysAndType{
+      {"doubleSided", Json::booleanValue},
+      {"emissiveFactor", Json::arrayValue},
+      {"name", Json::stringValue},
+      {"pbrMetallicRoughness", Json::objectValue},
+    };
+    for (auto& material : materials) {
+      for (const auto& [key, keyType] : theKeysAndType) {
+        assertKeyAndType(material, key, keyType);
+      }
+      foundMaterialNames.emplace_back(material.get("name", "").asString());
+    }
+    std::sort(foundMaterialNames.begin(), foundMaterialNames.end());
+    EXPECT_EQ(expectedMaterialNames, foundMaterialNames);
+  }
+
+  {
+    // Meshes: one per Surface
+    auto meshes = root.get("meshes", Json::arrayValue);
+    ASSERT_EQ(nPlanarSurfaces, meshes.size());
+
+    std::vector<std::pair<std::string, Json::ValueType>> primitiveKeysAndTypes{
+      {"attributes", Json::objectValue},
+      {"indices", Json::intValue},
+      {"material", Json::intValue},
+      {"mode", Json::intValue},
+    };
+
+    std::vector<std::string> foundMeshNames;
+    for (auto& mesh : meshes) {
+      assertKeyAndType(mesh, "name", Json::stringValue);
+      foundMeshNames.emplace_back(mesh.get("name", "").asString());
+
+      assertKeyAndType(mesh, "primitives", Json::arrayValue);
+      auto primitives = mesh.get("primitives", Json::arrayValue);
+      ASSERT_EQ(1, primitives.size());
+      auto primitive = primitives[0];
+      ASSERT_TRUE(primitive.isObject());
+      for (const auto& [key, keyType] : primitiveKeysAndTypes) {
+        assertKeyAndType(primitive, key, keyType);
+      }
+    }
+
+    std::vector<std::string> expectedMeshNames;
+    for (const auto& planarSurface : planarSurfaces) {
+      expectedMeshNames.emplace_back(planarSurface.nameString());
+    }
+
+    std::sort(expectedMeshNames.begin(), expectedMeshNames.end());
+    std::sort(foundMeshNames.begin(), foundMeshNames.end());
+    EXPECT_EQ(expectedMeshNames, foundMeshNames);
+  }
+
+  {
+
+    // Nodes: the first one is the topNode, and it has all the other ones as children
+    auto nodes = root.get("nodes", Json::arrayValue);
+    EXPECT_EQ(nPlanarSurfaces + 1, nodes.size());
+    std::vector<std::pair<std::string, Json::ValueType>> theKeysAndType{
+      {"matrix", Json::arrayValue},
+      {"name", Json::stringValue},
+    };
+    auto topNode = nodes[0];
+    for (const auto& [key, keyType] : theKeysAndType) {
+      assertKeyAndType(topNode, key, keyType);
+    }
+    EXPECT_EQ("Z_UP", topNode.get("name", "").asString());
+    assertKeyAndType(topNode, "children", Json::arrayValue);
+    auto children = topNode.get("children", Json::arrayValue);
+    ASSERT_EQ(30, children.size());
+    for (int i = 0; i < 30; ++i) {
+      EXPECT_EQ(i + 1, children[i].asInt());
+    }
+    EXPECT_FALSE(checkKey(topNode, "extras"));
+
+    std::vector<std::pair<std::string, Json::ValueType>> extrasKeysAndType{
+      // TODO: THESE SHOULD BE AS AN ARRAY OF OBJECTS
+      {"airLoopHVACHandles", Json::objectValue},
+      {"airLoopHVACMaterialNames", Json::objectValue},
+      {"airLoopHVACNames", Json::objectValue},
+      // Real
+      {"illuminanceSetpoint", Json::realValue},
+      // Booleans
+      {"airWall", Json::booleanValue},
+      {"coincidentWithOutsideObject", Json::booleanValue},
+      // Strings
+      {"boundaryMaterialName", Json::stringValue},
+      {"buildingStoryHandle", Json::stringValue},
+      {"buildingStoryMaterialName", Json::stringValue},
+      {"buildingStoryName", Json::stringValue},
+      {"buildingUnitHandle", Json::stringValue},
+      {"buildingUnitMaterialName", Json::stringValue},
+      {"buildingUnitName", Json::stringValue},
+      {"constructionHandle", Json::stringValue},
+      {"constructionMaterialName", Json::stringValue},
+      {"constructionName", Json::stringValue},
+      {"constructionSetHandle", Json::stringValue},
+      {"constructionSetMaterialName", Json::stringValue},
+      {"constructionSetName", Json::stringValue},
+      {"handle", Json::stringValue},
+      {"name", Json::stringValue},
+      {"outsideBoundaryCondition", Json::stringValue},
+      {"outsideBoundaryConditionObjectHandle", Json::stringValue},
+      {"outsideBoundaryConditionObjectName", Json::stringValue},
+      {"shadingHandle", Json::stringValue},
+      {"shadingName", Json::stringValue},
+      {"spaceHandle", Json::stringValue},
+      {"spaceName", Json::stringValue},
+      {"spaceTypeHandle", Json::stringValue},
+      {"spaceTypeMaterialName", Json::stringValue},
+      {"spaceTypeName", Json::stringValue},
+      {"subSurfaceHandle", Json::stringValue},
+      {"subSurfaceName", Json::stringValue},
+      {"sunExposure", Json::stringValue},
+      {"surfaceHandle", Json::stringValue},
+      {"surfaceName", Json::stringValue},
+      {"surfaceType", Json::stringValue},
+      {"surfaceTypeMaterialName", Json::stringValue},
+      {"thermalZoneHandle", Json::stringValue},
+      {"thermalZoneMaterialName", Json::stringValue},
+      {"thermalZoneName", Json::stringValue},
+      {"windExposure", Json::stringValue},
+    };
+    bool isTopNode = true;
+    for (auto& node : nodes) {
+      if (isTopNode) {
+        isTopNode = false;
+        continue;
+      }
+
+      assertKeyAndType(node, "extras", Json::objectValue);
+      auto extras = node.get("extras", Json::objectValue);
+      for (const auto& [key, keyType] : extrasKeysAndType) {
+        if (keyType != Json::objectValue) {
+          assertKeyAndType(extras, key, keyType);
+        } else {
+          checkKey(extras, key);
+          EXPECT_TRUE(checkType(extras, key, Json::objectValue) || checkType(extras, key, Json::nullValue));
+        }
+      }
+    }
+
+    // TODO: should probably at least spot check one of the node's extras
+    // TODO: There's an (existing) mistake with respect to materials... The node extras define materials that aren't actually in the "material" key
+  }
+
+  {
+    // Scenes: there's only one
+    auto scenes = root.get("scenes", Json::arrayValue);
+    ASSERT_EQ(1, scenes.size());
+    auto scene = scenes[0];
+    ASSERT_TRUE(scene.isObject());
+
+    // "nodes" : [0]
+    assertKeyAndType(scene, "nodes", Json::arrayValue);
+    auto nodes = scene.get("nodes", Json::arrayValue);
+    ASSERT_EQ(1, nodes.size());
+    ASSERT_EQ(0, nodes[0].asInt());
+
+    // extras: that's the main dish
+    assertKeyAndType(scene, "extras", Json::objectValue);
+    auto extras = scene.get("extras", Json::objectValue);
+    std::vector<std::string> allExtrasKeys{"boundingbox", "buildingStoryNames", "generator", "modelObjectMetaData", "northAxis", "type", "version"};
+    for (const auto& key : allExtrasKeys) {
+      assertKey(extras, key);
+    }
+    // Strings
+    assertKeyAndType(extras, "generator", Json::stringValue);
+    EXPECT_EQ("OpenStudio", extras.get("generator", Json::stringValue).asString());
+    assertKeyAndType(extras, "type", Json::stringValue);
+    EXPECT_EQ("Object", extras.get("type", Json::stringValue).asString());
+    assertKeyAndType(extras, "version", Json::stringValue);
+    EXPECT_EQ(openStudioVersion(), extras.get("version", Json::stringValue).asString());
+
+    // North Axis: float
+    assertKeyAndType(extras, "northAxis", Json::realValue);
+    EXPECT_DOUBLE_EQ(0.0, extras.get("northAxis", -999).asDouble());
+
+    {
+      assertKeyAndType(extras, "boundingbox", Json::objectValue);
+      auto boundingbox = extras.get("boundingbox", Json::objectValue);
+      std::vector<std::string> boundingBoxKeys{"lookAtR", "lookAtX", "lookAtY", "lookAtZ", "maxX", "maxY", "maxZ", "minX", "minY", "minZ"};
+      for (const auto& key : boundingBoxKeys) {
+        assertKeyAndType(boundingbox, key, Json::realValue);
+      }
+
+      EXPECT_DOUBLE_EQ(20.615528128088304, boundingbox.get("lookAtR", -999).asDouble());
+      EXPECT_DOUBLE_EQ(0.0, boundingbox.get("lookAtX", -999).asDouble());
+      EXPECT_DOUBLE_EQ(0.0, boundingbox.get("lookAtY", -999).asDouble());
+      EXPECT_DOUBLE_EQ(0.0, boundingbox.get("lookAtZ", -999).asDouble());
+      EXPECT_DOUBLE_EQ(20.55, boundingbox.get("maxX", -999).asDouble());
+      EXPECT_DOUBLE_EQ(20.0, boundingbox.get("maxY", -999).asDouble());
+      EXPECT_DOUBLE_EQ(20.0, boundingbox.get("maxZ", -999).asDouble());
+      EXPECT_DOUBLE_EQ(-30.0, boundingbox.get("minX", -999).asDouble());
+      EXPECT_DOUBLE_EQ(-1.0, boundingbox.get("minY", -999).asDouble());
+      EXPECT_DOUBLE_EQ(0.0, boundingbox.get("minZ", -999).asDouble());
+    }
+    {
+      // TODO: this should be an array!!!
+      assertKeyAndType(extras, "buildingStoryNames", Json::objectValue);
+      auto buildingStoryNames = extras.get("buildingStoryNames", Json::objectValue);
+      assertKeyAndType(buildingStoryNames, "0", Json::stringValue);
+      EXPECT_EQ("Building Story 1", buildingStoryNames.get("0", Json::stringValue).asString());
+    }
+
+    {
+      // TODO: this should be an array!!!
+      assertKeyAndType(extras, "modelObjectMetaData", Json::objectValue);
+      auto modelObjectMetaData = extras.get("modelObjectMetaData", Json::objectValue);
+
+      std::vector<std::pair<std::string, Json::ValueType>> theKeysAndType{
+        {"color", Json::stringValue},
+        {"handle", Json::stringValue},
+        {"iddObjectType", Json::stringValue},
+        {"multiplier", Json::intValue},
+        {"name", Json::stringValue},
+        {"nominal_floorCeiling_Height", Json::realValue},
+        {"nominal_z_coordinate", Json::realValue},
+        {"open_to_below", Json::booleanValue},
+      };
+
+      for (size_t i = 0; i < nMetaDataSize; ++i) {
+        assertKeyAndType(modelObjectMetaData, std::to_string(i), Json::objectValue);
+        auto theMetaData = modelObjectMetaData.get(std::to_string(i), Json::objectValue);
+        for (const auto& [key, keyType] : theKeysAndType) {
+          assertKeyAndType(theMetaData, key, keyType);
+        }
+      }
+
+      // TODO: Should at least spot check one
+    }
+  }
+}
 
 // Validation report
 // Format: glTF 2.0
