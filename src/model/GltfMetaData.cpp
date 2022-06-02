@@ -48,6 +48,8 @@
 #include "Space.hpp"
 #include "Space_Impl.hpp"
 
+#include <OpenStudio.hxx>
+
 #include <tiny_gltf.h>
 
 #include <map>
@@ -65,7 +67,7 @@ namespace model {
     // type  | ??
     setType("Object");
     // Version
-    setVersion("4.3");
+    setVersion(openStudioVersion());
     // North Axis
     setNorthAxis(model);
 

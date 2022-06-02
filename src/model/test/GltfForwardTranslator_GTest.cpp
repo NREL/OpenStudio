@@ -63,7 +63,6 @@ TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
   GltfForwardTranslator ft;
   openstudio::path outputPath;
   openstudio::path inputPath;
-  openstudio::path inputNonEmbededPath;
   outputPath = resourcesPath() / toPath("utilities/Geometry/exampleModel.gltf");
   // Create OSM
   Model model = exampleModel();
@@ -77,10 +76,10 @@ TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
   ASSERT_TRUE(isLoaded);
   GltfMetaData glTFMetaData = ft.getMetaData();
 
-  ASSERT_TRUE("OpenStudio" == glTFMetaData.generator());
-  ASSERT_EQ(glTFMetaData.northAxis(), -0.00);
-  ASSERT_TRUE("Object" == glTFMetaData.type());
-  ASSERT_TRUE("4.3" == glTFMetaData.version());
+  EXPECT_EQ("OpenStudio", glTFMetaData.generator());
+  EXPECT_DOUBLE_EQ(0.0, glTFMetaData.northAxis());
+  EXPECT_EQ("Object", glTFMetaData.type());
+  EXPECT_EQ(openStudioVersion(), glTFMetaData.version());
 
   GltfBoundingBox glTFBoundingBox = glTFMetaData.glTFBoundingBox();
   // TODO: add delta during assertion
