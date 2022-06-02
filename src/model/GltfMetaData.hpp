@@ -62,8 +62,6 @@ namespace model {
 
     GltfBoundingBox glTFBoundingBox() const;
     void setGlTFBoundingBox(const GltfBoundingBox& glTFBoundingBox);
-    // Convenience function. TODO: keep?
-    void setBoundingBox(const std::vector<PlanarSurfaceGroup>& planarSurfaceGroups);
 
     std::vector<std::string> buildingStoryNames() const;
     void setBuildingStoryNames(const std::vector<std::string>& buildingStoryNames);
@@ -84,9 +82,6 @@ namespace model {
     void setNorthAxis(const Model& model);
 
     // Counting
-    // TODO: remove
-    void resetModelObjectMetaDataCount();
-
     // TODO: Remove setters
     int thermalZoneCount() const;
     void setThermalZoneCount(int thermalZoneCount);

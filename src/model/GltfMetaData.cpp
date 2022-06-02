@@ -110,17 +110,6 @@ namespace model {
     }
   }
 
-  // TODO: delete
-  void GltfMetaData::resetModelObjectMetaDataCount() {
-    m_buildingStoryCount = 0;
-    m_thermalZoneCount = 0;
-    m_spaceCount = 0;
-    m_spaceTypeCount = 0;
-    m_constructionSetCount = 0;
-    m_airLoopCount = 0;
-    m_buildingUnitCount = 0;
-  }
-
   std::vector<GltfModelObjectMetaData> GltfMetaData::glTFModelObjectMetaDataVector() const {
     return m_glTFModelObjectMetaDataVector;
   }
@@ -149,10 +138,6 @@ namespace model {
       m_buildingStoryNames.emplace_back(buildingStory.nameString());
       ++m_buildingStoryCount;
     }
-  }
-
-  void GltfMetaData::setBoundingBox(const std::vector<PlanarSurfaceGroup>& planarSurfaceGroups) {
-    m_glTFBoundingBox = GltfBoundingBox(planarSurfaceGroups);
   }
 
   std::string GltfMetaData::generator() const {
@@ -233,50 +218,6 @@ namespace model {
   void GltfMetaData::setBuildingStoryCount(int buildingStoryCount) {
     m_buildingStoryCount = buildingStoryCount;
   };
-
-  //double GltfMetaData::getBoundingBoxlookAtR() const {
-  //return m_glTFBoundingBox.lookAtR();
-  //}
-
-  //double GltfMetaData::getBoundingBoxlookAtX() const {
-  //return m_glTFBoundingBox.lookAtX();
-  //}
-
-  //double GltfMetaData::getBoundingBoxlookAtY() const {
-  //return m_glTFBoundingBox.lookAtY();
-  //}
-
-  //double GltfMetaData::getBoundingBoxlookAtZ() const {
-  //return m_glTFBoundingBox.lookAtZ();
-  //}
-
-  //double GltfMetaData::getBoundingBoxmaxX() const {
-  //return m_glTFBoundingBox.maxX();
-  //}
-
-  //double GltfMetaData::getBoundingBoxmaxY() const {
-  //return m_glTFBoundingBox.maxY();
-  //}
-
-  //double GltfMetaData::getBoundingBoxmaxZ() const {
-  //return m_glTFBoundingBox.maxZ();
-  //}
-
-  //double GltfMetaData::getBoundingBoxminZ() const {
-  //return m_glTFBoundingBox.minZ();
-  //}
-
-  //double GltfMetaData::getBoundingBoxminX() const {
-  //return m_glTFBoundingBox.minX();
-  //}
-
-  //double GltfMetaData::getBoundingBoxminY() const {
-  //return m_glTFBoundingBox.minY();
-  //}
-
-  // void setBoundingBox(const tinygltf::Value& value) {
-  //   m_glTFBoundingBox = GltfBoundingBox(value.Get<std::map<std::string, tinygltf::Value>>());
-  // }
 
   std::map<std::string, tinygltf::Value> GltfMetaData::toExtras() const {
 
