@@ -43,6 +43,10 @@ namespace model {
   class GltfForwardTranslator;
 
   // TODO: rename to GltfPlanarSurfaceData!
+  /** GltfUserData is an Interface class between a PlanarSurface and an glTF Node's `extras`.
+   *
+   *  It stores attributes such as surfaceType, its construction, the Space and SpaceType and ThermalZone it belongs to, etc.
+   **/
   class MODEL_API GltfUserData
   {
    public:
@@ -247,4 +251,3 @@ namespace model {
 }  // namespace openstudio
 
 #endif  // MODEL_GLTFUSERDATA_HPP
-

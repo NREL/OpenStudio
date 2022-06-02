@@ -45,6 +45,7 @@ namespace model {
   class RenderingColor;
   class GltfForwardTranslator;
 
+  /** GltfMaterialData is an Interface class between a RenderingColor and a tinygltf::Material **/
   class MODEL_API GltfMaterialData
   {
    public:
@@ -92,4 +93,3 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 #endif  // MODEL_GLTFMATERIALDATA_HPP
-

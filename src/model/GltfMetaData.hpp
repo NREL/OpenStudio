@@ -49,6 +49,7 @@ namespace model {
   class PlanarSurfaceGroup;
   class BuildingStory;
 
+  /** GltfMetadata is an Interface between an OpenStudio Model and a glTF Scene's `extras` **/
   class MODEL_API GltfMetaData
   {
    public:
@@ -132,4 +133,3 @@ namespace model {
 }  // namespace openstudio
 
 #endif  //MODEL_GLTFMETADATA_HPP
-

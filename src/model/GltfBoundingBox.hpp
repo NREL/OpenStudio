@@ -43,6 +43,7 @@ namespace model {
   class PlanarSurfaceGroup;
   class GltfMetaData;
 
+  /** GltfBoundingBox is an Interface between the PlanarSurfaceGroups of a Model and a glTF Scene's extras to set the boundingbox **/
   class MODEL_API GltfBoundingBox
   {
    public:
@@ -102,4 +103,3 @@ namespace model {
 }  // namespace openstudio
 
 #endif  //MODEL_GLTFBOUNDINGBOX_HPP
-

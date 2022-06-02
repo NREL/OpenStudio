@@ -51,6 +51,11 @@ namespace model {
 
   class GltfMetaData;
 
+  /** GltfModelObjectMetaData is an Interface class between select ModelObjects and glTF values
+   *
+   *  It is capable of storing attributes such as name, iddObjectType, color, handle from ModelObjects:
+   *  ThermalZone, SpaceType, AirLoopHVAC, BuildingStory, BuildingUnit, DefaultConstructionSet
+   **/
   class MODEL_API GltfModelObjectMetaData
   {
    public:
