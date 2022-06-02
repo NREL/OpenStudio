@@ -38,11 +38,16 @@
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
 
+namespace tinygltf {
+class Model;
+}
+
 namespace openstudio {
 namespace model {
 
   class GltfMetaData;
   class GltfUserData;
+  class GltfModel;
 
   /* GltfForwardTranslator converts an OpenStudio Model to GLTF format. There are two variations of the GLTF format,
     *   a triangulated one which is suitable for rendering with GLTF and non-triangulated one that preserves all vertices in a
@@ -59,6 +64,8 @@ namespace model {
     bool modelToGLTF(const Model& model, const path& outputPath);
     bool modelToGLTF(const Model& model, std::function<void(double)> updatePercentage, const path& outputpath);
 
+    std::string modelToGLTFString(const Model& model);
+
     //load minimal gltf
     bool loadGLTF(const path& inputPath, const path& inputNonEmbededpath);
     bool loadGLTF(const path& inputPath);
@@ -74,7 +81,8 @@ namespace model {
     std::vector<LogMessage> errors() const;
 
    private:
-    // tinygltf::Model gltf_Model;
+    boost::optional<tinygltf::Model> toGltfModel(const Model& model, std::function<void(double)> updatePercentage);
+
     REGISTER_LOGGER("openstudio.model.GltfForwardTranslator");
 
     StringStreamLogSink m_logSink;

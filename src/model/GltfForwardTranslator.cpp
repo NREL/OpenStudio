@@ -161,17 +161,8 @@ namespace model {
     return objects;
   }
 
-  // Exports a gltf against a Model
-  // returns : exports a GLTF file against a Model
-  bool GltfForwardTranslator::modelToGLTF(const Model& model, const path& outputPath) {
-    return modelToGLTF(
-      model, [](double percentage) {}, outputPath);
-  }
-
-  // MAIN PIPELINE TO TRANSLATE OPENSTUDIO MODEL -> GLTF MODEL
-  bool GltfForwardTranslator::modelToGLTF(const Model& model, std::function<void(double)> updatePercentage, const path& outputPath) {
-    m_logSink.setThreadId(std::this_thread::get_id());
-    m_logSink.resetStringStream();
+  boost::optional<tinygltf::Model> GltfForwardTranslator::toGltfModel(const Model& model, std::function<void(double)> updatePercentage) {
+    // MAIN PIPELINE TO TRANSLATE OPENSTUDIO MODEL -> GLTF MODEL
 
     bool triangulateSurfaces = true;  //we're always triangulating the surfaces to get the best possible output.
 
@@ -376,7 +367,7 @@ namespace model {
     // Start Region BUILD SCENE | ELEMENT
 
     if (coordinatesBuffer.empty()) {
-      return false;
+      return boost::none;
     }
 
     // Write the buffer data
@@ -410,17 +401,61 @@ namespace model {
     // SCENE EXTRAS | this will be having all the metadata
     scene.extras = tinygltf::Value(GltfMetaData(model).toExtras());
 
+    return gltfModel;
+  }
+
+  std::string GltfForwardTranslator::modelToGLTFString(const Model& model) {
+    boost::optional<tinygltf::Model> gltfModel_ = toGltfModel(model, [](double percentage) {});
+    if (!gltfModel_) {
+      LOG(Error, "Failed to prepare GLTF model");
+      return "";
+    }
+
+    auto gltfModel = gltfModel_.get();
+
     // Save it to a file
+    // glTF Parser/Serialier context
+    tinygltf::TinyGLTF ctx;
+    // Uncomment this to use extras_as_string [std::string] instead of extras [tinygltf::Value]
+    ctx.SetStoreOriginalJSONForExtrasAndExtensions(true);
+
+    std::stringstream ss;
+    bool ret = ctx.WriteGltfSceneToStream(&gltfModel, ss,
+                                          true,    // pretty print
+                                          false);  // write binary
+    if (!ret) {
+      LOG(Error, "Writing GLTF failed");
+    }
+    return ss.str();
+  }
+
+  // Exports a gltf against a Model
+  // returns : exports a GLTF file against a Model
+  bool GltfForwardTranslator::modelToGLTF(const Model& model, const path& outputPath) {
+    return modelToGLTF(
+      model, [](double percentage) {}, outputPath);
+  }
+
+  bool GltfForwardTranslator::modelToGLTF(const Model& model, std::function<void(double)> updatePercentage, const path& outputPath) {
+
+    boost::optional<tinygltf::Model> gltfModel_ = toGltfModel(model, [](double percentage) {});
+    if (!gltfModel_) {
+      LOG(Error, "Failed to prepare GLTF model");
+      return "";
+    }
+
+    // Save it to a file
+    auto gltfModel = gltfModel_.get();
 
     // glTF Parser/Serialier context
-    tinygltf::TinyGLTF loader;
+    tinygltf::TinyGLTF ctx;
     // Uncomment this to use extras_as_string [std::string] instead of extras [tinygltf::Value]
-    loader.SetStoreOriginalJSONForExtrasAndExtensions(true);
-    bool ret = loader.WriteGltfSceneToFile(&gltfModel, toString(outputPath),
-                                           true,    // embedImages
-                                           true,    // embedBuffers
-                                           true,    // pretty print
-                                           false);  // write binary
+    ctx.SetStoreOriginalJSONForExtrasAndExtensions(true);
+    bool ret = ctx.WriteGltfSceneToFile(&gltfModel, toString(outputPath),
+                                        true,    // embedImages
+                                        true,    // embedBuffers
+                                        true,    // pretty print
+                                        false);  // write binary
 
     updatePercentage(100.0);
 
