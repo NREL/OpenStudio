@@ -920,7 +920,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_TwoStoryOffice_Trane) {
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/TwoStoryOffice_Trane.gltf");
   osversion::VersionTranslator translator;
-  openstudio::path modelPath = resourcesPath() / toPath("gbxml/TwoStoryOffice_Trane.osm");
+  openstudio::path modelPath = resourcesPath() / toPath("model/TwoStoryOffice_Trane.osm");
   model::OptionalModel model = translator.loadModel(modelPath);
   /*bool result = ft.modelToGLTF(model.get(), output);
   ASSERT_TRUE(result);*/
