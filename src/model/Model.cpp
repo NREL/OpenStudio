@@ -1324,343 +1324,343 @@ namespace model {
       boost::optional<EnvironmentalImpactFactors> environmentalImpactFactors = model().environmentalImpactFactors();
       boost::optional<ExternalInterface> externalInterface = model().externalInterface();
 
-      IdfObjectVector idfObjects;
+      WorkspaceObjectVector workspaceObjects;
       for (const WorkspaceObject& componentObject : component.objects()) {
-        if (componentObject.iddObject().type() == IddObjectType::Building) {
+        if (componentObject.optionalCast<Building>()) {
           if (building) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               building->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Foundation_Kiva_Settings) {
+        } else if (componentObject.optionalCast<Foundation_Kiva_Settings>()) {
           if (foundationKivaSettings) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               foundationKivaSettings->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::OutputControl_Files) {
+        } else if (componentObject.optionalCast<OutputControl_Files>()) {
           if (outputControlFiles) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputControlFiles->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::OutputControl_ReportingTolerances) {
+        } else if (componentObject.optionalCast<OutputControl_ReportingTolerances>()) {
           if (outputControlReportingTolerances) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputControlReportingTolerances->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Output_Diagnostics) {
+        } else if (componentObject.optionalCast<Output_Diagnostics>()) {
           if (outputDiagnostics) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputDiagnostics->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Output_DebuggingData) {
+        } else if (componentObject.optionalCast<Output_DebuggingData>()) {
           if (outputDebuggingData) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputDebuggingData->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Output_JSON) {
+        } else if (componentObject.optionalCast<Output_JSON>()) {
           if (outputJSON) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputJSON->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Output_EnergyManagementSystem) {
+        } else if (componentObject.optionalCast<Output_EnergyManagementSystem>()) {
           if (outputEnergyManagementSystem) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputEnergyManagementSystem->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Output_Table_SummaryReports) {
+        } else if (componentObject.optionalCast<Output_Table_SummaryReports>()) {
           if (outputTableSummaryReports) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputTableSummaryReports->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::PerformancePrecisionTradeoffs) {
+        } else if (componentObject.optionalCast<PerformancePrecisionTradeoffs>()) {
           if (performancePrecisionTradeoffs) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               performancePrecisionTradeoffs->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::LifeCycleCost_Parameters) {
+        } else if (componentObject.optionalCast<LifeCycleCost_Parameters>()) {
           if (lifeCycleCostParameters) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               lifeCycleCostParameters->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Sizing_Parameters) {
+        } else if (componentObject.optionalCast<Sizing_Parameters>()) {
           if (sizingParameters) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               sizingParameters->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::RadianceParameters) {
-          if (sizingParameters) {
+        } else if (componentObject.optionalCast<RadianceParameters>()) {
+          if (radianceParameters) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
-              sizingParameters->setString(i, componentObject.getString(i).get());
+              radianceParameters->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::RunPeriod) {
+        } else if (componentObject.optionalCast<RunPeriod>()) {
           if (runPeriod) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               runPeriod->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::RunPeriodControl_DaylightSavingTime) {
+        } else if (componentObject.optionalCast<RunPeriodControl_DaylightSavingTime>()) {
           if (runPeriodControlDaylightSavingTime) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               runPeriodControlDaylightSavingTime->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::YearDescription) {
+        } else if (componentObject.optionalCast<YearDescription>()) {
           if (yearDescription) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               yearDescription->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Site) {
+        } else if (componentObject.optionalCast<Site>()) {
           if (site) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               site->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Site_GroundReflectance) {
+        } else if (componentObject.optionalCast<Site_GroundReflectance>()) {
           if (siteGroundReflectance) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteGroundReflectance->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Site_WaterMainsTemperature) {
+        } else if (componentObject.optionalCast<Site_WaterMainsTemperature>()) {
           if (siteWaterMainsTemperature) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteWaterMainsTemperature->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Site_GroundTemperature_BuildingSurface) {
+        } else if (componentObject.optionalCast<Site_GroundTemperature_BuildingSurface>()) {
           if (siteGroundTemperatureBuildingSurface) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteGroundTemperatureBuildingSurface->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Site_GroundTemperature_FCfactorMethod) {
+        } else if (componentObject.optionalCast<Site_GroundTemperature_FCfactorMethod>()) {
           if (siteGroundTemperatureFCfactorMethod) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteGroundTemperatureFCfactorMethod->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Site_GroundTemperature_Deep) {
+        } else if (componentObject.optionalCast<Site_GroundTemperature_Deep>()) {
           if (siteGroundTemperatureDeep) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteGroundTemperatureDeep->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Site_GroundTemperature_Shallow) {
+        } else if (componentObject.optionalCast<Site_GroundTemperature_Shallow>()) {
           if (siteGroundTemperatureShallow) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteGroundTemperatureShallow->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Facility) {
+        } else if (componentObject.optionalCast<Facility>()) {
           if (facility) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               facility->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::WeatherFile) {
+        } else if (componentObject.optionalCast<WeatherFile>()) {
           if (weatherFile) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               weatherFile->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Version) {
+        } else if (componentObject.optionalCast<Version>()) {
           if (version) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               version->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::SimulationControl) {
+        } else if (componentObject.optionalCast<SimulationControl>()) {
           if (simulationControl) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               simulationControl->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::LightingSimulationControl) {
+        } else if (componentObject.optionalCast<LightingSimulationControl>()) {
           if (lightingSimulationControl) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               lightingSimulationControl->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::AirflowNetworkSimulationControl) {
+        } else if (componentObject.optionalCast<AirflowNetworkSimulationControl>()) {
           if (airflowNetworkSimulationControl) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               airflowNetworkSimulationControl->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::SurfaceConvectionAlgorithm_Inside) {
+        } else if (componentObject.optionalCast<SurfaceConvectionAlgorithm_Inside>()) {
           if (insideSurfaceConvectionAlgorithm) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               insideSurfaceConvectionAlgorithm->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::SurfaceConvectionAlgorithm_Outside) {
+        } else if (componentObject.optionalCast<SurfaceConvectionAlgorithm_Outside>()) {
           if (outsideSurfaceConvectionAlgorithm) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outsideSurfaceConvectionAlgorithm->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::HeatBalanceAlgorithm) {
+        } else if (componentObject.optionalCast<HeatBalanceAlgorithm>()) {
           if (heatBalanceAlgorithm) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               heatBalanceAlgorithm->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::ZoneAirHeatBalanceAlgorithm) {
+        } else if (componentObject.optionalCast<ZoneAirHeatBalanceAlgorithm>()) {
           if (zoneAirHeatBalanceAlgorithm) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               zoneAirHeatBalanceAlgorithm->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::ZoneAirMassFlowConservation) {
+        } else if (componentObject.optionalCast<ZoneAirMassFlowConservation>()) {
           if (zoneAirMassFlowConservation) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               zoneAirMassFlowConservation->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::ZoneCapacitanceMultiplier_ResearchSpecial) {
+        } else if (componentObject.optionalCast<ZoneCapacitanceMultiplier_ResearchSpecial>()) {
           if (zoneCapacitanceMultiplierResearchSpecial) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               zoneCapacitanceMultiplierResearchSpecial->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::ConvergenceLimits) {
+        } else if (componentObject.optionalCast<ConvergenceLimits>()) {
           if (convergenceLimits) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               convergenceLimits->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::ShadowCalculation) {
+        } else if (componentObject.optionalCast<ShadowCalculation>()) {
           if (shadowCalculation) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               shadowCalculation->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::Timestep) {
+        } else if (componentObject.optionalCast<Timestep>()) {
           if (timestep) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               timestep->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::ClimateZones) {
+        } else if (componentObject.optionalCast<ClimateZones>()) {
           if (climateZones) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               climateZones->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::EnvironmentalImpactFactors) {
+        } else if (componentObject.optionalCast<EnvironmentalImpactFactors>()) {
           if (environmentalImpactFactors) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               environmentalImpactFactors->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::ExternalInterface) {
+        } else if (componentObject.optionalCast<ExternalInterface>()) {
           if (externalInterface) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               externalInterface->setString(i, componentObject.getString(i).get());
             }
           } else {
-            idfObjects.push_back(componentObject);
+            workspaceObjects.push_back(componentObject);
           }
         } else {
           // not a unique model object
-          idfObjects.push_back(componentObject);
+          workspaceObjects.push_back(componentObject);
         }
       }
 
-      WorkspaceObjectVector resultingObjects = model().addObjects(idfObjects);
+      WorkspaceObjectVector resultingObjects = model().addObjects(workspaceObjects);
       if (resultingObjects.empty()) {
         return boost::none;
       }

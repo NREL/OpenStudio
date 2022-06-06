@@ -492,8 +492,8 @@ namespace model {
       mutable boost::optional<OutsideSurfaceConvectionAlgorithm> m_cachedOutsideSurfaceConvectionAlgorithm;
       mutable boost::optional<HeatBalanceAlgorithm> m_cachedHeatBalanceAlgorithm;
       mutable boost::optional<ZoneAirHeatBalanceAlgorithm> m_cachedZoneAirHeatBalanceAlgorithm;
-      mutable boost::optional<ZoneAirMassFlowConservation> m_cachedZoneAirMassFlorConservation;
-      mutable boost::optional<ZoneCapacitanceMultiplierResearchSpecial> m_cachedZoneCapacitanceMultiplerResearchSpecial;
+      mutable boost::optional<ZoneAirMassFlowConservation> m_cachedZoneAirMassFlowConservation;
+      mutable boost::optional<ZoneCapacitanceMultiplierResearchSpecial> m_cachedZoneCapacitanceMultiplierResearchSpecial;
       mutable boost::optional<ConvergenceLimits> m_cachedConvergenceLimits;
       mutable boost::optional<ShadowCalculation> m_cachedShadowCalculation;
       mutable boost::optional<Timestep> m_cachedTimestep;
