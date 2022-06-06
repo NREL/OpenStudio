@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,6 +34,8 @@
 #include "ConstructionBase_Impl.hpp"
 #include "ConstructionAirBoundary.hpp"
 #include "ConstructionAirBoundary_Impl.hpp"
+#include "AirLoopHVAC.hpp"
+#include "AirLoopHVAC_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "SpaceType.hpp"
@@ -145,6 +147,15 @@ namespace model {
         buildingUnit.setRenderingColor(*color);
       }
       std::string name = getObjectThreeMaterialName(buildingUnit);
+      addThreeMaterial(materials, materialMap,
+                       makeThreeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1,
+                                         ThreeSide::DoubleSide));
+    }
+
+    // make air loop HVAC materials
+    for (auto& airLoopHVAC : model.getConcreteModelObjects<AirLoopHVAC>()) {
+      std::string name = getObjectThreeMaterialName(airLoopHVAC);
+      boost::optional<RenderingColor> color = RenderingColor(model);
       addThreeMaterial(materials, materialMap,
                        makeThreeMaterial(name, toThreeColor(color->renderingRedValue(), color->renderingBlueValue(), color->renderingGreenValue()), 1,
                                          ThreeSide::DoubleSide));
@@ -284,6 +295,11 @@ namespace model {
       if (thermalZone) {
         userData.setThermalZoneName(thermalZone->nameString());
         userData.setThermalZoneMaterialName(getObjectThreeMaterialName(*thermalZone));
+        std::vector<AirLoopHVAC> airLoopHVACs = thermalZone->airLoopHVACs();
+        for (const auto& airLoopHVAC : airLoopHVACs) {
+          userData.addAirLoopHVACName(airLoopHVAC.nameString());
+          userData.addAirLoopHVACMaterialName(getObjectThreeMaterialName(airLoopHVAC));
+        }
       }
 
       boost::optional<SpaceType> spaceType = space->spaceType();
@@ -471,11 +487,12 @@ namespace model {
     std::vector<BuildingStory> buildingStories = model.getConcreteModelObjects<BuildingStory>();
     std::vector<BuildingUnit> buildingUnits = model.getConcreteModelObjects<BuildingUnit>();
     std::vector<ThermalZone> thermalZones = model.getConcreteModelObjects<ThermalZone>();
+    std::vector<AirLoopHVAC> airLoopHVACs = model.getConcreteModelObjects<AirLoopHVAC>();
     std::vector<SpaceType> spaceTypes = model.getConcreteModelObjects<SpaceType>();
     std::vector<DefaultConstructionSet> defaultConstructionSets = model.getConcreteModelObjects<DefaultConstructionSet>();
     double n = 0;
     std::vector<PlanarSurface>::size_type N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size()
-                                              + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + 1;
+                                              + thermalZones.size() + spaceTypes.size() + defaultConstructionSets.size() + airLoopHVACs.size() + 1;
 
     // loop over all surfaces
     for (const auto& planarSurface : planarSurfaces) {
@@ -607,6 +624,15 @@ namespace model {
       ThreeModelObjectMetadata setMetaData(defaultConstructionSet.iddObjectType().valueDescription(), toString(defaultConstructionSet.handle()),
                                            defaultConstructionSet.nameString());
       modelObjectMetadata.push_back(setMetaData);
+
+      n += 1;
+      updatePercentage(100.0 * n / N);
+    }
+
+    for (const auto& airLoopHVAC : airLoopHVACs) {
+      ThreeModelObjectMetadata airLoopMetaData(airLoopHVAC.iddObjectType().valueDescription(), toString(airLoopHVAC.handle()),
+                                               airLoopHVAC.nameString());
+      modelObjectMetadata.push_back(airLoopMetaData);
 
       n += 1;
       updatePercentage(100.0 * n / N);

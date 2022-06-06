@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -157,6 +157,16 @@ namespace model {
       return isEmpty(OS_Schedule_FileFields::MinutesperItem);
     }
 
+    bool ScheduleFile_Impl::adjustScheduleforDaylightSavings() const {
+      boost::optional<std::string> value = getString(OS_Schedule_FileFields::AdjustScheduleforDaylightSavings, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
+    bool ScheduleFile_Impl::isAdjustScheduleforDaylightSavingsDefaulted() const {
+      return isEmpty(OS_Schedule_FileFields::AdjustScheduleforDaylightSavings);
+    }
+
     bool ScheduleFile_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
       bool result = setPointer(OS_Schedule_FileFields::ScheduleTypeLimitsName, scheduleTypeLimits.handle());
       return result;
@@ -219,6 +229,22 @@ namespace model {
 
     void ScheduleFile_Impl::resetMinutesperItem() {
       bool result = setString(OS_Schedule_FileFields::MinutesperItem, "");
+      OS_ASSERT(result);
+    }
+
+    bool ScheduleFile_Impl::setAdjustScheduleforDaylightSavings(bool adjustScheduleforDaylightSavings) {
+      bool result = false;
+      if (adjustScheduleforDaylightSavings) {
+        result = setString(OS_Schedule_FileFields::AdjustScheduleforDaylightSavings, "Yes");
+      } else {
+        result = setString(OS_Schedule_FileFields::AdjustScheduleforDaylightSavings, "No");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ScheduleFile_Impl::resetAdjustScheduleforDaylightSavings() {
+      bool result = setString(OS_Schedule_FileFields::AdjustScheduleforDaylightSavings, "");
       OS_ASSERT(result);
     }
 
@@ -442,6 +468,14 @@ namespace model {
     return getImpl<detail::ScheduleFile_Impl>()->isMinutesperItemDefaulted();
   }
 
+  bool ScheduleFile::adjustScheduleforDaylightSavings() const {
+    return getImpl<detail::ScheduleFile_Impl>()->adjustScheduleforDaylightSavings();
+  }
+
+  bool ScheduleFile::isAdjustScheduleforDaylightSavingsDefaulted() const {
+    return getImpl<detail::ScheduleFile_Impl>()->isAdjustScheduleforDaylightSavingsDefaulted();
+  }
+
   boost::optional<CSVFile> ScheduleFile::csvFile() const {
     return getImpl<detail::ScheduleFile_Impl>()->csvFile();
   }
@@ -509,6 +543,14 @@ unsigned ScheduleFile::addTimeSeries(const openstudio::TimeSeries& timeSeries) {
 
   void ScheduleFile::resetMinutesperItem() {
     getImpl<detail::ScheduleFile_Impl>()->resetMinutesperItem();
+  }
+
+  bool ScheduleFile::setAdjustScheduleforDaylightSavings(bool adjustScheduleforDaylightSavings) {
+    return getImpl<detail::ScheduleFile_Impl>()->setAdjustScheduleforDaylightSavings(adjustScheduleforDaylightSavings);
+  }
+
+  void ScheduleFile::resetAdjustScheduleforDaylightSavings() {
+    getImpl<detail::ScheduleFile_Impl>()->resetAdjustScheduleforDaylightSavings();
   }
 
   /// @cond

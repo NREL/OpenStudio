@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -409,4 +409,25 @@ TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_DesignSpecificationOutdoor
   DesignSpecificationOutdoorAir oa = DesignSpecificationOutdoorAir(m);
 
   AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(m, s);
+}
+
+TEST_F(ModelFixture, AirTerminalSingleDuctVAVNoReheat_MinimumAirFlowTurndownSchedule) {
+  Model m;
+  Schedule s = m.alwaysOnDiscreteSchedule();
+
+  AirTerminalSingleDuctVAVNoReheat testObject = AirTerminalSingleDuctVAVNoReheat(m, s);
+
+  ScheduleCompact alwaysOnSchedule(m);
+  alwaysOnSchedule.setName("ALWAYS_ON");
+  alwaysOnSchedule.setString(3, "Through: 12/31");
+  alwaysOnSchedule.setString(4, "For: AllDays");
+  alwaysOnSchedule.setString(5, "Until: 24:00");
+  alwaysOnSchedule.setString(6, "1");
+
+  EXPECT_FALSE(testObject.minimumAirFlowTurndownSchedule());
+  EXPECT_TRUE(testObject.setMinimumAirFlowTurndownSchedule(alwaysOnSchedule));
+  EXPECT_TRUE(testObject.minimumAirFlowTurndownSchedule());
+  EXPECT_EQ(alwaysOnSchedule, testObject.minimumAirFlowTurndownSchedule().get());
+  testObject.resetMinimumAirFlowTurndownSchedule();
+  EXPECT_FALSE(testObject.minimumAirFlowTurndownSchedule());
 }

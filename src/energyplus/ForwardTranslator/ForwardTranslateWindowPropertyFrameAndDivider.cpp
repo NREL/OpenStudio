@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -66,9 +66,9 @@ namespace energyplus {
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameInsideProjection, modelObject.frameInsideProjection());
     //}
 
-    if (modelObject.frameConductance()) {
-      idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameConductance, modelObject.frameConductance().get());
-    }
+    //if (!modelObject.isFrameConductanceDefaulted()){
+    idfObject.setDouble(WindowProperty_FrameAndDividerFields::FrameConductance, modelObject.frameConductance());
+    //}
 
     //if (!modelObject.isRatioOfFrameEdgeGlassConductanceToCenterOfGlassConductanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::RatioofFrameEdgeGlassConductancetoCenterOfGlassConductance,
@@ -96,11 +96,11 @@ namespace energyplus {
     //}
 
     //if (!modelObject.isNumberOfHorizontalDividersDefaulted()){
-    idfObject.setDouble(WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, modelObject.numberOfHorizontalDividers());
+    idfObject.setInt(WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers, modelObject.numberOfHorizontalDividers());
     //}
 
     //if (!modelObject.isNumberOfVerticalDividersDefaulted()){
-    idfObject.setDouble(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, modelObject.numberOfVerticalDividers());
+    idfObject.setInt(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers, modelObject.numberOfVerticalDividers());
     //}
 
     //if (!modelObject.isDividerOutsideProjectionDefaulted()){
@@ -153,6 +153,11 @@ namespace energyplus {
 
     //if (!modelObject.isInsideRevealSolarAbsorptanceDefaulted()){
     idfObject.setDouble(WindowProperty_FrameAndDividerFields::InsideRevealSolarAbsorptance, modelObject.insideRevealSolarAbsorptance());
+    //}
+
+    //if (!modelObject.isNFRCProductTypeforAssemblyCalculationsDefaulted()){
+    idfObject.setString(WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations,
+                        modelObject.nfrcProductTypeforAssemblyCalculations());
     //}
 
     return idfObject;

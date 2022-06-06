@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -919,20 +919,19 @@ void FloorplanJS::makeGeometries(const Json::Value& story, const Json::Value& sp
       Transformation t = Transformation::alignFace(wallVertices);
       //Transformation r = t.rotationMatrix();
       Transformation tInv = t.inverse();
-      faceVertices = reverse(tInv * wallVertices);
-
+      wallVertices = reverse(tInv * wallVertices);
       // get vertices of all sub surfaces
-      Point3dVectorVector faceSubVertices;
+      Point3dVectorVector wallSubVertices;
       for (const auto& finalWindowVertices : allFinalWindowVertices) {
-        faceSubVertices.push_back(reverse(tInv * finalWindowVertices));
+        wallSubVertices.push_back(reverse(tInv * finalWindowVertices));
       }
       for (const auto& finalDoorVertices : allFinalDoorVertices) {
-        faceSubVertices.push_back(reverse(tInv * finalDoorVertices));
+        wallSubVertices.push_back(reverse(tInv * finalDoorVertices));
       }
 
-      Point3dVectorVector finalFaceVertices = computeTriangulation(faceVertices, faceSubVertices, tol);
-      for (const auto& finalFaceVerts : finalFaceVertices) {
-        Point3dVector finalVerts = t * finalFaceVerts;
+      Point3dVectorVector finalWallVertices = computeTriangulation(wallVertices, wallSubVertices, tol);
+      for (const auto& finalWallVerts : finalWallVertices) {
+        Point3dVector finalVerts = t * finalWallVerts;
         allFinalWallVertices.push_back(reverse(finalVerts));
       }
     }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,7 +62,7 @@ class UTILITIES_API ValidityReport
   /** @name Inspection */
   //@{
 
-  /** The strictness level of the report. StrictnessLevel::None is for opening files,
+  /** The strictness level of the report. StrictnessLevel::Minimal is for opening files,
    *  StricnessLevel::Draft is for active modeling, and StrictnessLevel::Final is for models
    *  ready to simulate. */
   StrictnessLevel level() const;

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -388,7 +388,7 @@ namespace measure {
 
   void OSRunner::createProgressBar(const std::string& text) const {}
 
-  void OSRunner::updateProgress(const double& value) const {}
+  void OSRunner::updateProgress(double value) const {}
 
   void OSRunner::destroyProgressBar() const {}
 
@@ -603,6 +603,20 @@ namespace measure {
     registerError(ss.str());
     LOG_AND_THROW(ss.str());
     return false;
+  }
+
+  boost::optional<bool> OSRunner::getOptionalBoolArgumentValue(const std::string& argument_name,
+                                                               const std::map<std::string, OSArgument>& user_arguments) {
+    auto it = user_arguments.find(argument_name);
+    if (it != user_arguments.end()) {
+      if (it->second.hasValue()) {
+        return it->second.valueAsBool();
+      } else if (it->second.hasDefaultValue()) {
+        return it->second.defaultValueAsBool();
+      }
+    }
+
+    return boost::none;
   }
 
   double OSRunner::getDoubleArgumentValue(const std::string& argument_name, const std::map<std::string, OSArgument>& user_arguments) {

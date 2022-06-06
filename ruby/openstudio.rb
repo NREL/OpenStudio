@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -33,20 +33,24 @@ if /mswin/.match(RUBY_PLATFORM) or /mingw/.match(RUBY_PLATFORM)
 
   if defined?(RubyInstaller::Runtime)
 
-    cur_location = File.dirname(__FILE__)  
-  
+    cur_location = File.dirname(__FILE__)
+
     build_type = File.basename(cur_location)
 
     if build_type == "Debug" or build_type == "Release" or build_type == "RelWithDebugInfo" or build_type == "RelMinSize"
       # in build dir execution
-      relative_dll_path = File.join(File.dirname(File.dirname(cur_location)), build_type)  
+      relative_dll_path = File.join(File.dirname(File.dirname(cur_location)), build_type)
       RubyInstaller::Runtime.add_dll_directory(relative_dll_path)
-    else 
+    else
       # install dir execution
-      RubyInstaller::Runtime.add_dll_directory(File.join(File.dirname(cur_location), "lib"))
+      ['bin', 'lib'].each do |p|
+        if File.exists?(File.join(File.dirname(cur_location), p))
+          RubyInstaller::Runtime.add_dll_directory(File.join(File.dirname(cur_location), p))
+        end
+      end
     end
   end
-else  
+else
   # Do something here for Mac OSX environments
   ENV['PATH'] = "#{File.dirname(__FILE__)}:#{original_path}"
 end

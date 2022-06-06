@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -161,8 +161,8 @@ TEST_F(ModelFixture, CoilHeatingWater_controller) {
   ScheduleCompact s(m);
   CoilHeatingWater coil(m, s);
 
-  ControllerWaterCoil controller(m);
-  controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(coil);
+  PlantLoop p(m);
 
-  EXPECT_TRUE(coil.controllerWaterCoil());
+  EXPECT_TRUE(p.addDemandBranchForComponent(coil));
+  ASSERT_TRUE(coil.controllerWaterCoil());
 }

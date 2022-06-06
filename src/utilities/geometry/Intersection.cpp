@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -70,10 +70,11 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
 
   //const double buffer_distance = 1.0;
   //const int points_per_circle = 36;
-  const double amount = 0.005;
+  const double offsetBy = 0.005;
+  const double tol = offsetBy;
 
-  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(amount);
-  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-amount);
+  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> expand(offsetBy);
+  boost::geometry::strategy::buffer::distance_symmetric<coordinate_type> shrink(-offsetBy);
   boost::geometry::strategy::buffer::join_miter join_strategy;
   boost::geometry::strategy::buffer::end_flat end_strategy;
   boost::geometry::strategy::buffer::side_straight side_strategy;
@@ -87,11 +88,16 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
   BoostMultiPolygon result;
   boost::geometry::buffer(polygon, resultShrink, shrink, side_strategy, join_strategy, end_strategy, point_strategy);
   boost::geometry::buffer(resultShrink, resultExpand, expand, side_strategy, join_strategy, end_strategy, point_strategy);
-  boost::geometry::simplify(resultExpand, result, amount);
+  boost::geometry::simplify(resultExpand, result, offsetBy);
 
   // cppcheck-suppress constStatement
   std::vector<BoostPolygon> solution;
   if (result.size() == 0) {
+    // There's no result so return the original polygon
+    solution.push_back(polygon);
+    return solution;
+  } else if (result.size() == 1 && result[0].outer().size() == polygon.outer().size()) {
+    // Number of vertices didn't change so no spikes were removed
     solution.push_back(polygon);
     return solution;
   } else {
@@ -105,7 +111,7 @@ std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
         for (unsigned j = 0; j < polygon.outer().size(); j++) {
           Point3d p1(polygon.outer()[j].x(), polygon.outer()[j].y(), 0);
           // Two points are within tolerance set the result to the original input point
-          if (getDistance(point3d, p1) <= 0.05) {
+          if (getDistance(point3d, p1) <= tol) {
             boostPolygon.outer()[i].x(polygon.outer()[j].x());
             boostPolygon.outer()[i].y(polygon.outer()[j].y());
             break;
@@ -503,6 +509,37 @@ std::vector<Point3d> removeSpikes(const std::vector<Point3d>& polygon, double to
   std::vector<Point3d> result = verticesFromBoostPolygon(boostResult, allPoints, tol);
 
   return result;
+}
+
+bool polygonInPolygon(std::vector<Point3d>& points, const std::vector<Point3d>& polygon, double tol) {
+
+  // convert vertices to boost rings
+  std::vector<Point3d> allPoints;
+
+  boost::optional<BoostRing> boostPolygon = nonIntersectingBoostRingFromVertices(polygon, allPoints, tol);
+  if (!boostPolygon) {
+    return false;
+  }
+
+  if (points.size() == 0) {
+    return false;
+  }
+
+  for (const Point3d& point : points) {
+    if (abs(point.z()) > tol) {
+      return false;
+    }
+  }
+
+  for (const Point3d& point : points) {
+    boost::tuple<double, double> p = boostPointFromPoint3d(point, allPoints, tol);
+    BoostPoint boostPoint(p.get<0>(), p.get<1>());
+    double distance = boost::geometry::distance(boostPoint, *boostPolygon);
+    if (distance >= 0.0001) {
+      return false;
+    }
+  }
+  return true;
 }
 
 bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, double tol) {

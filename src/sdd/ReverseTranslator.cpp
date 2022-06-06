@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1977,7 +1977,7 @@ namespace sdd {
 
   //TODO probably should be in OS proper
   //helper method to do unit conversions;
-  boost::optional<double> ReverseTranslator::unitToUnit(const double& val, const std::string& fstUnitString, const std::string& secUnitString) {
+  boost::optional<double> ReverseTranslator::unitToUnit(double val, const std::string& fstUnitString, const std::string& secUnitString) {
     //create the units from the strings
     boost::optional<Unit> fstUnit = UnitFactory::instance().createUnit(fstUnitString);
     boost::optional<Unit> secUnit = UnitFactory::instance().createUnit(secUnitString);

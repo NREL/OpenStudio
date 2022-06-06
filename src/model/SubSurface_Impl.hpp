@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,10 +44,13 @@ namespace model {
   class ShadingControl;
   class ShadingSurfaceGroup;
   class DaylightingDeviceShelf;
+  class DaylightingDeviceTubular;
+  class DaylightingDeviceLightWell;
   class WindowPropertyFrameAndDivider;
   class SurfacePropertyOtherSideCoefficients;
   class SurfacePropertyOtherSideConditionsModel;
-  class SurfacePropertyConfectionCoefficients;
+  class SurfacePropertyConvectionCoefficients;
+  class SurfacePropertyLocalEnvironment;
 
   namespace detail {
 
@@ -163,11 +166,19 @@ namespace model {
 
       bool isNumberofVerticesAutocalculated() const;
 
+      // Assembly methods
+
+      boost::optional<double> assemblyUFactor() const;
+
+      boost::optional<double> assemblySHGC() const;
+
+      boost::optional<double> assemblyVisibleTransmittance() const;
+
       //@}
       /** @name Setters */
       //@{
 
-      bool setSubSurfaceType(std::string subSurfaceType);
+      bool setSubSurfaceType(const std::string& subSurfaceType);
 
       void resetSubSurfaceType();
 
@@ -224,6 +235,8 @@ namespace model {
       /** Returns the surface property convection coefficients */
       boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
+      boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;
+
       /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
       boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
 
@@ -271,9 +284,35 @@ namespace model {
      * operable window, or glass door. Will return existing daylighting light shelf if there already is one. */
       boost::optional<DaylightingDeviceShelf> addDaylightingDeviceShelf() const;
 
+      /** Returns true if this sub surface allows the addition of a daylighting light tubular dome. */
+      bool allowDaylightingDeviceTubularDome() const;
+
+      /** Returns true if this sub surface allows the addition of a daylighting light tubular diffuser. */
+      bool allowDaylightingDeviceTubularDiffuser() const;
+
+      /** Get the daylighting light tubular associated with this sub surface if there is one. */
+      boost::optional<DaylightingDeviceTubular> daylightingDeviceTubular() const;
+
+      /** Returns true if this sub surface allows the addition of a daylighting light light well. */
+      bool allowDaylightingDeviceLightWell() const;
+
+      /** Get the daylighting light light well associated with this sub surface if there is one. */
+      boost::optional<DaylightingDeviceLightWell> daylightingDeviceLightWell() const;
+
+      /** Add a daylighting light light well associated with this sub surface.  Only succeeds if this is a fixed window,
+     * operable window, or glass door. Will return existing daylighting light light well if there already is one. */
+      boost::optional<DaylightingDeviceLightWell> addDaylightingDeviceLightWell() const;
+
       AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkComponent& surfaceAirflowLeakage);
 
       boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
+
+      //@}
+      /** @name Queries */
+      //@{
+
+      /** Gets the fenestration value from the sql file **/
+      boost::optional<double> getExteriorFenestrationValue(std::string columnName) const;
 
      protected:
      private:

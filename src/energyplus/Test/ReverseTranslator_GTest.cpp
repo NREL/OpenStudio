@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -221,7 +221,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SimpleRelativeTest) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_Building) {
-  Workspace inWorkspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace inWorkspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   inWorkspace.addObject(IdfObject(IddObjectType::Building));
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(inWorkspace);
@@ -229,12 +229,12 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_Building) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_Zone) {
-  Workspace inWorkspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace inWorkspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject zoneObject = inWorkspace.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(zoneObject);
   OptionalWorkspaceObject lightsObject = inWorkspace.addObject(IdfObject(IddObjectType::Lights));
   ASSERT_TRUE(lightsObject);
-  EXPECT_TRUE(lightsObject->setPointer(openstudio::LightsFields::ZoneorZoneListName, zoneObject->handle()));
+  EXPECT_TRUE(lightsObject->setPointer(openstudio::LightsFields::ZoneorZoneListorSpaceorSpaceListName, zoneObject->handle()));
 
   ReverseTranslator reverseTranslator;
   ASSERT_NO_THROW(reverseTranslator.translateWorkspace(inWorkspace));
@@ -253,7 +253,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_Zone) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateScheduleCompact) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::Schedule_Compact);
   idfObject.setString(1, "Fraction");
@@ -307,7 +307,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateScheduleCompact) {
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateMasselessOpaqueMaterial) {
   // Initialize the workspace
-  openstudio::Workspace ws(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace ws(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   // Create the Material:NoMaxx idfObject
   IdfObject idfObject(openstudio::IddObjectType::Material_NoMass);
@@ -335,7 +335,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateMasselessOpaqueMaterial
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateStandardOpaqueMaterial) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::Material);
   idfObject.setString(0, "Test Material");  // Name
@@ -391,7 +391,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateConstruction) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateSite) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::Site_Location);
   idfObject.setString(Site_LocationFields::Name, "Test Site");
@@ -457,7 +457,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_ZoneBoundaryCondition) {
   ASSERT_TRUE(osurf_b);
   OptionalSpace ospace_b = osurf_b->space();
   ASSERT_TRUE(ospace_b);
-  EXPECT_EQ("8B02A8", ospace_b->name().get());
+  EXPECT_EQ("8B02A8 Space", ospace_b->name().get());
   // confirm that surf_b has surf_a  as outside boundary object
   ASSERT_TRUE(osurf_b->adjacentSurface());
   EXPECT_EQ(osurf_a->handle(), osurf_b->adjacentSurface()->handle());
@@ -517,7 +517,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OtherEquipment) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::Foundation_Kiva_Settings);
   idfObject.setDouble(Foundation_Kiva_SettingsFields::SoilConductivity, 1.731);
@@ -559,7 +559,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKivaSettings) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputTableSummaryReports) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::Output_Table_SummaryReports);
   IdfExtensibleGroup group1 = idfObject.pushExtensibleGroup();
@@ -587,7 +587,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputTableSummaryReports) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_FoundationKiva) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::Material);
   idfObject1.setString(0, "Material 1");  // Name
@@ -704,10 +704,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ScheduleFile) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::PerformancePrecisionTradeoffs);
   idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
+  idfObject.setString(PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, "Yes");
 
   openstudio::WorkspaceObject epPerformancePrecisionTradeoffs = workspace.addObject(idfObject).get();
 
@@ -725,15 +726,23 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_PerformancePrecisionTradeoffs) {
   EXPECT_TRUE(performancePrecisionTradeoffs.isOverrideModeDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxZoneTempDiffDefaulted());
   EXPECT_TRUE(performancePrecisionTradeoffs.isMaxAllowedDelTempDefaulted());
+  EXPECT_FALSE(performancePrecisionTradeoffs.isUseRepresentativeSurfacesforCalculationsDefaulted());
+  EXPECT_TRUE(performancePrecisionTradeoffs.useRepresentativeSurfacesforCalculations());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idf_zone(openstudio::IddObjectType::Zone);
   idf_zone.setName("Thermal Zone 1");
 
   openstudio::WorkspaceObject epZone = workspace.addObject(idf_zone).get();
+
+  openstudio::IdfObject idf_space(openstudio::IddObjectType::Space);
+  idf_space.setName("Space 1");
+  idf_space.setString(1, "Thermal Zone 1");  // Zone Name
+
+  openstudio::WorkspaceObject epSpace = workspace.addObject(idf_space).get();
 
   openstudio::IdfObject idf_surface(openstudio::IddObjectType::BuildingSurface_Detailed);
   {
@@ -798,7 +807,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   openstudio::WorkspaceObject epBuildingSurfaceDetailed2 = workspace.addObject(idf_surface2).get();
 
   openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
-  idf_zoneProp.setString(0, "Thermal Zone 1");  // Zone or ZoneList Name
+  idf_zoneProp.setString(0, "Thermal Zone 1");  // Zone or ZoneList or Space or SpaceList Name
   idf_zoneProp.setString(1, "Surface 1");       // From Surface 1
   idf_zoneProp.setString(2, "Surface 2");       // To Surface 2
   idf_zoneProp.setDouble(3, 0.25);              // View Factor 1
@@ -829,12 +838,18 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurfaceName_SameSurface) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idf_zone(openstudio::IddObjectType::Zone);
   idf_zone.setName("Thermal Zone 1");
 
   openstudio::WorkspaceObject epZone = workspace.addObject(idf_zone).get();
+
+  openstudio::IdfObject idf_space(openstudio::IddObjectType::Space);
+  idf_space.setName("Space 1");
+  idf_space.setString(1, "Thermal Zone 1");  // Zone Name
+
+  openstudio::WorkspaceObject epSpace = workspace.addObject(idf_space).get();
 
   openstudio::IdfObject idf_surface(openstudio::IddObjectType::BuildingSurface_Detailed);
   {
@@ -868,7 +883,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
   openstudio::WorkspaceObject epBuildingSurfaceDetailed = workspace.addObject(idf_surface).get();
 
   openstudio::IdfObject idf_zoneProp(openstudio::IddObjectType::ZoneProperty_UserViewFactors_BySurfaceName);
-  idf_zoneProp.setString(0, "Thermal Zone 1");  // Zone or ZoneList Name
+  idf_zoneProp.setString(0, "Thermal Zone 1");  // Zone or ZoneList or Space or SpaceList Name
   idf_zoneProp.setString(1, "Surface 1");       // From Surface 1
   idf_zoneProp.setString(2, "Surface 1");       // To Surface 1
   idf_zoneProp.setDouble(3, 0.25);              // View Factor 1
@@ -902,7 +917,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZonePropertyUserViewFactorsBySurface
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
   ReverseTranslator reverseTranslator;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_zone1 = w.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(_i_zone1);
   EXPECT_TRUE(_i_zone1->setName("Zone1"));
@@ -945,10 +960,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
     ASSERT_TRUE(_zone2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
-    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString());
-    ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString());
-    ASSERT_TRUE(_zone2);
+    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
+    ASSERT_TRUE(_space1);
+    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
+    ASSERT_TRUE(_space2);
 
     ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::SpaceType>().size());
     openstudio::model::SpaceType spaceType1 = model.getModelObjects<openstudio::model::SpaceType>()[0];
@@ -980,7 +995,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
     EXPECT_TRUE(reverseTranslator.errors().empty());
     // This time we should have gotten one warning that the SpaceType is overriden
     EXPECT_EQ(1u, reverseTranslator.warnings().size());
-    EXPECT_EQ("Overriding previously assigned SpaceType for Space 'Zone2'", reverseTranslator.warnings()[0].logMessage());
+    EXPECT_EQ("Overriding previously assigned SpaceType for Space 'Zone2 Space'", reverseTranslator.warnings()[0].logMessage());
 
     std::vector<openstudio::model::ThermalZone> zones = model.getModelObjects<openstudio::model::ThermalZone>();
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::ThermalZone>().size());
@@ -990,10 +1005,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
     ASSERT_TRUE(_zone2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::Space>().size());
-    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString());
-    ASSERT_TRUE(_zone1);
-    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString());
-    ASSERT_TRUE(_zone2);
+    boost::optional<openstudio::model::Space> _space1 = model.getModelObjectByName<openstudio::model::Space>(_i_zone1->nameString() + " Space");
+    ASSERT_TRUE(_space1);
+    boost::optional<openstudio::model::Space> _space2 = model.getModelObjectByName<openstudio::model::Space>(_i_zone2->nameString() + " Space");
+    ASSERT_TRUE(_space2);
 
     ASSERT_EQ(static_cast<unsigned>(2), model.getModelObjects<openstudio::model::SpaceType>().size());
     boost::optional<openstudio::model::SpaceType> _spaceType1 = model.getModelObjectByName<openstudio::model::SpaceType>(_i_zoneList1->nameString());
@@ -1017,7 +1032,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::WindowMaterial_Glazing);
   idfObject.setName("CLEAR 6MM");
@@ -1038,7 +1053,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_MaterialPropertyGlazingSpectralData) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_GlazingSpectralData);
 
@@ -1053,7 +1068,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_MaterialPropertyGlazingSpectralData)
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing_2) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::WindowMaterial_Glazing);
   idfObject1.setName("CLEAR 8MM");
@@ -1087,7 +1102,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_WindowMaterialGlazing_2) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject idfObject3(openstudio::IddObjectType::Daylighting_ReferencePoint);
   idfObject3.setName("Reference Point 1");
@@ -1110,8 +1125,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
 
   openstudio::WorkspaceObject epZone = workspace.addObject(idfObject2).get();
 
-  EXPECT_TRUE(epDaylightingControls.setPointer(Daylighting_ControlsFields::ZoneName, epZone.handle()));
-  EXPECT_TRUE(epDaylightingReferencePoint1.setPointer(Daylighting_ReferencePointFields::ZoneName, epZone.handle()));
+  EXPECT_TRUE(epDaylightingControls.setPointer(Daylighting_ControlsFields::ZoneorSpaceName, epZone.handle()));
+  EXPECT_TRUE(epDaylightingReferencePoint1.setPointer(Daylighting_ReferencePointFields::ZoneorSpaceName, epZone.handle()));
 
   ReverseTranslator trans;
   ASSERT_NO_THROW(trans.translateWorkspace(workspace));
@@ -1125,7 +1140,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_DaylightingControl_3216) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_SurfaceControlMovableInsulation) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   // surface
   openstudio::IdfObject idfObject1(openstudio::IddObjectType::BuildingSurface_Detailed);
@@ -1212,7 +1227,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SurfaceControlMovableInsulation) {
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_CoilCoolingDX) {
-  openstudio::Workspace workspace(openstudio::StrictnessLevel::None, openstudio::IddFileType::EnergyPlus);
+  openstudio::Workspace workspace(openstudio::StrictnessLevel::Minimal, openstudio::IddFileType::EnergyPlus);
 
   openstudio::IdfObject totalCoolingCapacityModifierFunctionofTemperatureCurveName(openstudio::IddObjectType::Curve_Biquadratic);
   totalCoolingCapacityModifierFunctionofTemperatureCurveName.setString(Curve_BiquadraticFields::Name,

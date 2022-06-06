@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,4 +46,12 @@ TEST_F(ModelFixture, ControllerMechanicalVentilation) {
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+}
+
+TEST_F(ModelFixture, ControllerMechanicalVentilation_SystemOutdoorAirMethod) {
+
+  Model m;
+  ControllerMechanicalVentilation c(m);
+  EXPECT_TRUE(c.isSystemOutdoorAirMethodDefaulted());
+  EXPECT_EQ("Standard62.1VentilationRateProcedure", c.systemOutdoorAirMethod());
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,7 +37,13 @@ namespace openstudio {
 namespace detail {
 
   RunOptions_Impl::RunOptions_Impl()
-    : m_debug(false), m_fast(false), m_preserveRunDir(false), m_skipExpandObjects(false), m_skipEnergyPlusPreprocess(false), m_cleanup(true) {}
+    : m_debug(false),
+      m_epjson(false),
+      m_fast(false),
+      m_preserveRunDir(false),
+      m_skipExpandObjects(false),
+      m_skipEnergyPlusPreprocess(false),
+      m_cleanup(true) {}
 
   RunOptions_Impl::~RunOptions_Impl() {}
 
@@ -50,6 +56,10 @@ namespace detail {
 
     if (m_debug) {
       value["debug"] = m_debug;
+    }
+
+    if (m_epjson) {
+      value["epjson"] = m_epjson;
     }
 
     if (m_fast) {
@@ -87,6 +97,19 @@ namespace detail {
       value["output_adapter"] = outputAdapter;
     }
 
+    if (!m_forwardTranslateOptions.empty()) {
+      Json::Value options;
+      Json::CharReaderBuilder rbuilder;
+      std::istringstream ss(m_forwardTranslateOptions);
+      std::string formattedErrors;
+      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &options, &formattedErrors);
+      if (parsingSuccessful) {
+        value["ft_options"] = options;
+      } else {
+        LOG(Warn, "Couldn't parse forwardTranslateOptions's options='" << m_forwardTranslateOptions << "'. Error: '" << formattedErrors << "'.");
+      }
+    }
+
     // Write to string
     Json::StreamWriterBuilder wbuilder;
     // mimic the old StyledWriter behavior:
@@ -108,6 +131,21 @@ namespace detail {
 
   void RunOptions_Impl::resetDebug() {
     m_debug = false;
+    onUpdate();
+  }
+
+  bool RunOptions_Impl::epjson() const {
+    return m_epjson;
+  }
+
+  bool RunOptions_Impl::setEpjson(bool epjson) {
+    m_epjson = epjson;
+    onUpdate();
+    return true;
+  }
+
+  void RunOptions_Impl::resetEpjson() {
+    m_epjson = false;
     onUpdate();
   }
 
@@ -201,6 +239,21 @@ namespace detail {
     onUpdate();
   }
 
+  std::string RunOptions_Impl::forwardTranslateOptions() const {
+    return m_forwardTranslateOptions;
+  }
+
+  bool RunOptions_Impl::setForwardTranslateOptions(const std::string& options) {
+    m_forwardTranslateOptions = options;
+    onUpdate();
+    return true;
+  }
+
+  void RunOptions_Impl::resetForwardTranslateOptions() {
+    m_forwardTranslateOptions.clear();
+    onUpdate();
+  }
+
 }  // namespace detail
 
 CustomOutputAdapter::CustomOutputAdapter(const std::string& customFileName, const std::string& className, const std::string& options)
@@ -240,6 +293,10 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
 
   result = RunOptions();
 
+  if (value.isMember("epjson") && value["epjson"].isBool()) {
+    result->setEpjson(value["epjson"].asBool());
+  }
+
   if (value.isMember("debug") && value["debug"].isBool()) {
     result->setDebug(value["debug"].asBool());
   }
@@ -277,6 +334,26 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
     }
   }
 
+  if (value.isMember("ft_options")) {
+    Json::Value options = value["ft_options"];
+
+    // Do some filtering to avoid passing bogus values to workflow-gem, and checking that it's correctly a boolean
+    Json::Value cleaned_options;
+    for (auto& known_opt : {"runcontrolspecialdays", "ip_tabular_output", "no_lifecyclecosts", "no_sqlite_output", "no_html_output",
+                            "no_variable_dictionary", "no_space_translation"}) {
+      if (options.isMember(known_opt) && options[known_opt].isBool()) {
+        cleaned_options[known_opt] = options[known_opt].asBool();
+      }
+    }
+
+    Json::StreamWriterBuilder wbuilder;
+    // mimic the old StyledWriter behavior:
+    wbuilder["indentation"] = "   ";
+    std::string optionString = Json::writeString(wbuilder, cleaned_options);
+
+    result->setForwardTranslateOptions(optionString);
+  }
+
   return result;
 }
 
@@ -294,6 +371,18 @@ bool RunOptions::setDebug(bool debug) {
 
 void RunOptions::resetDebug() {
   getImpl<detail::RunOptions_Impl>()->resetDebug();
+}
+
+bool RunOptions::epjson() const {
+  return getImpl<detail::RunOptions_Impl>()->epjson();
+}
+
+bool RunOptions::setEpjson(bool epjson) {
+  return getImpl<detail::RunOptions_Impl>()->setEpjson(epjson);
+}
+
+void RunOptions::resetEpjson() {
+  getImpl<detail::RunOptions_Impl>()->resetEpjson();
 }
 
 bool RunOptions::fast() const {
@@ -365,6 +454,18 @@ bool RunOptions::setCustomOutputAdapter(const CustomOutputAdapter& adapter) {
 
 void RunOptions::resetCustomOutputAdapter() {
   getImpl<detail::RunOptions_Impl>()->resetCustomOutputAdapter();
+}
+
+std::string RunOptions::forwardTranslateOptions() const {
+  return getImpl<detail::RunOptions_Impl>()->forwardTranslateOptions();
+}
+
+bool RunOptions::setForwardTranslateOptions(const std::string& options) {
+  return getImpl<detail::RunOptions_Impl>()->setForwardTranslateOptions(options);
+}
+
+void RunOptions::resetForwardTranslateOptions() {
+  getImpl<detail::RunOptions_Impl>()->resetForwardTranslateOptions();
 }
 
 std::ostream& operator<<(std::ostream& os, const RunOptions& runOptions) {

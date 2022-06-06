@@ -33,7 +33,7 @@
 ! WeatherFileName=USA_CO_Boulder_TMY2.epw
 ! End SimMetaData
 
-  Version,9.5;
+  Version,22.1;
 
   Timestep,6;
 
@@ -880,6 +880,7 @@
     Floor,                   !- Surface Type
     Unheated 8in Exterior Slab w/ Carpet,  !- Construction Name
     Classroom,               !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -896,6 +897,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Classroom,               !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Classroom Partition 1,   !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -912,6 +914,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Classroom,               !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Classroom Partition 2,   !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -928,6 +931,7 @@
     Wall,                    !- Surface Type
     Mass R-7.6 ci Exterior Wall,  !- Construction Name
     Classroom,               !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1004,6 +1008,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Classroom,               !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Classroom Hallway Wall,  !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1020,6 +1025,7 @@
     Roof,                    !- Surface Type
     IEAD R-15 ci Roof,       !- Construction Name
     Classroom,               !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1036,6 +1042,7 @@
     Wall,                    !- Surface Type
     Mass R-7.6 ci Exterior Wall,  !- Construction Name
     Classroom,               !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1066,6 +1073,7 @@
     Classroom Internal Mass, !- Name
     InteriorFurnishings,     !- Construction Name
     Classroom,               !- Zone or ZoneList Name
+    ,                        !- Space or SpaceList Name
     167.2255;                !- Surface Area {m2}
 
   ZoneInfiltration:DesignFlowRate,
@@ -1099,12 +1107,12 @@
 
   People,
     Classroom People,        !- Name
-    Classroom,               !- Zone or ZoneList Name
+    Classroom,               !- Zone or ZoneList or Space or SpaceList Name
     BLDG_OCC_SCH,            !- Number of People Schedule Name
     People,                  !- Number of People Calculation Method
     29.2645,                 !- Number of People
-    ,                        !- People per Zone Floor Area {person/m2}
-    ,                        !- Zone Floor Area per Person {m2/person}
+    ,                        !- People per Floor Area {person/m2}
+    ,                        !- Floor Area per Person {m2/person}
     0.3000,                  !- Fraction Radiant
     AUTOCALCULATE,           !- Sensible Heat Fraction
     ACTIVITY_SCH,            !- Activity Level Schedule Name
@@ -1136,7 +1144,7 @@
 
   Lights,
     Classroom_Lights,        !- Name
-    Classroom,               !- Zone or ZoneList Name
+    Classroom,               !- Zone or ZoneList or Space or SpaceList Name
     BLDG_LIGHT_SCH,          !- Schedule Name
     LightingLevel,           !- Design Level Calculation Method
     782.6152,                !- Lighting Level {W}
@@ -1166,7 +1174,7 @@
 
   ElectricEquipment,
     Classroom_PlugMisc_Equip,!- Name
-    Classroom,               !- Zone or ZoneList Name
+    Classroom,               !- Zone or ZoneList or Space or SpaceList Name
     BLDG_EQUIP_SCH,          !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
     449.8365,                !- Design Level {W}
@@ -1421,8 +1429,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     PSZ-AC:1_OA,             !- Name
     PSZ-AC:1_OA_Controllers, !- Controller List Name
-    PSZ-AC:1_OA_Equipment,   !- Outdoor Air Equipment List Name
-    PSZ-AC:1 Availability Manager List;  !- Availability Manager List Name
+    PSZ-AC:1_OA_Equipment;   !- Outdoor Air Equipment List Name
 
   OutdoorAir:NodeList,
     PSZ-AC:1_OANode List;    !- Node or NodeList Name 1
@@ -2378,6 +2385,7 @@
     Wall,                    !- Surface Type
     LIGHT_SHELF_CONSTRUCTION,!- Construction Name
     Classroom,               !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Lightshelf_interior-geom,!- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2429,7 +2437,7 @@
 
   Daylighting:Controls,
     Classroom_DaylCtrl,      !- Name
-    Classroom,               !- Zone Name
+    Classroom,               !- Zone or Space Name
     SplitFlux,               !- Daylighting Method
     ,                        !- Availability Schedule Name
     ContinuousOff,           !- Lighting Control Type
@@ -2442,22 +2450,22 @@
     20,                      !- Maximum Allowable Discomfort Glare Index
     ,                        !- DElight Gridding Resolution {m2}
     Classroom_DaylRefPt1,    !- Daylighting Reference Point 1 Name
-    0.5,                     !- Fraction of Zone Controlled by Reference Point 1
+    0.5,                     !- Fraction of Lights Controlled by Reference Point 1
     400,                     !- Illuminance Setpoint at Reference Point 1 {lux}
     Classroom_DaylRefPt2,    !- Daylighting Reference Point 2 Name
-    0.5,                     !- Fraction of Zone Controlled by Reference Point 2
+    0.5,                     !- Fraction of Lights Controlled by Reference Point 2
     400;                     !- Illuminance Setpoint at Reference Point 2 {lux}
 
   Daylighting:ReferencePoint,
     Classroom_DaylRefPt1,    !- Name
-    Classroom,               !- Zone Name
+    Classroom,               !- Zone or Space Name
     4.572,                   !- X-Coordinate of Reference Point {m}
     2.286,                   !- Y-Coordinate of Reference Point {m}
     0.762;                   !- Z-Coordinate of Reference Point {m}
 
   Daylighting:ReferencePoint,
     Classroom_DaylRefPt2,    !- Name
-    Classroom,               !- Zone Name
+    Classroom,               !- Zone or Space Name
     4.572,                   !- X-Coordinate of Reference Point {m}
     6.858,                   !- Y-Coordinate of Reference Point {m}
     0.762;                   !- Z-Coordinate of Reference Point {m}

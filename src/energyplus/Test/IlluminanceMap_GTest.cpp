@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -61,9 +61,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_IlluminanceMap_NoZone) {
   illuminanceMap.setSpace(space);
 
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap).size());
+    EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap).size());
+  }
+
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap).size());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_IlluminanceMap) {
@@ -77,10 +87,23 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_IlluminanceMap) {
   EXPECT_TRUE(thermalZone.setIlluminanceMap(illuminanceMap));
 
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap).size());
+    EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap).size());
 
-  // automatically added
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
+    // automatically added
+    EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
+  }
+
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Output_IlluminanceMap).size());
+
+    // automatically added
+    EXPECT_EQ(1, workspace.getObjectsByType(IddObjectType::Daylighting_Controls).size());
+  }
 }

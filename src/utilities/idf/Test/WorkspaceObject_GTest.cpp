@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -138,13 +138,13 @@ TEST_F(IdfFixture, WorkspaceObject_Lights) {
   OptionalWorkspaceObject light = workspace.getObjectByTypeAndName(IddObjectType::Lights, "SPACE1-1 Lights 1");
   ASSERT_TRUE(light);
 
-  OptionalString lightsZoneName = light->getString(LightsFields::ZoneorZoneListName);
+  OptionalString lightsZoneName = light->getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
   ASSERT_TRUE(lightsZoneName);
 
   OptionalString lightsScheduleName = light->getString(LightsFields::ScheduleName);
   ASSERT_TRUE(lightsScheduleName);
 
-  OptionalWorkspaceObject zone = light->getTarget(LightsFields::ZoneorZoneListName);
+  OptionalWorkspaceObject zone = light->getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
   ASSERT_TRUE(zone);
 
   OptionalString zoneName = zone->getString(ZoneFields::Name);
@@ -166,7 +166,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights) {
   ASSERT_TRUE(zoneName);
   EXPECT_EQ("New Zone Name", *zoneName);
 
-  lightsZoneName = light->getString(LightsFields::ZoneorZoneListName);
+  lightsZoneName = light->getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
   ASSERT_TRUE(lightsZoneName);
   EXPECT_EQ(*lightsZoneName, *zoneName);
 
@@ -175,7 +175,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights) {
   ASSERT_TRUE(zoneName);
   EXPECT_EQ("Zone 1", *zoneName);
 
-  lightsZoneName = light->getString(LightsFields::ZoneorZoneListName);
+  lightsZoneName = light->getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
   ASSERT_TRUE(lightsZoneName);
   EXPECT_EQ(*lightsZoneName, *zoneName);
 
@@ -189,9 +189,9 @@ TEST_F(IdfFixture, WorkspaceObject_Lights) {
   EXPECT_EQ(*lightsScheduleName, *scheduleName);
 }
 
-TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_None) {
+TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Minimal) {
 
-  Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   EXPECT_TRUE(workspace.isValid());
 
   OptionalWorkspaceObject w = workspace.addObject(IdfObject(IddObjectType::Lights));
@@ -204,8 +204,8 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_None) {
   EXPECT_TRUE(light->setString(LightsFields::Name, ""));
   EXPECT_TRUE(light->setDouble(LightsFields::Name, 0));
 
-  EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListName, ""));
-  EXPECT_TRUE(light->setPointer(LightsFields::ZoneorZoneListName, Handle()));
+  EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, ""));
+  EXPECT_TRUE(light->setPointer(LightsFields::ZoneorZoneListorSpaceorSpaceListName, Handle()));
 
   EXPECT_TRUE(light->setString(LightsFields::ScheduleName, ""));
   EXPECT_TRUE(light->setPointer(LightsFields::ScheduleName, Handle()));
@@ -218,7 +218,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_None) {
   EXPECT_TRUE(light->setDouble(LightsFields::LightingLevel, 0));
   EXPECT_TRUE(light->setDouble(LightsFields::LightingLevel, 1));
 
-  EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
+  EXPECT_TRUE(workspace.isValid(StrictnessLevel::Minimal));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Final));
 }
@@ -238,8 +238,8 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Draft) {
   EXPECT_FALSE(light->setString(LightsFields::Name, ""));
   EXPECT_TRUE(light->setDouble(LightsFields::Name, 0));
 
-  EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListName, ""));         // PointerType error
-  EXPECT_TRUE(light->setPointer(LightsFields::ZoneorZoneListName, Handle()));  // PointerType error
+  EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, ""));         // PointerType error
+  EXPECT_TRUE(light->setPointer(LightsFields::ZoneorZoneListorSpaceorSpaceListName, Handle()));  // PointerType error
 
   EXPECT_TRUE(light->setString(LightsFields::ScheduleName, ""));         // PointerType error
   EXPECT_TRUE(light->setPointer(LightsFields::ScheduleName, Handle()));  // PointerType error
@@ -253,7 +253,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Draft) {
   EXPECT_TRUE(light->setDouble(LightsFields::LightingLevel, 0));
   EXPECT_TRUE(light->setDouble(LightsFields::LightingLevel, 1));
 
-  EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
+  EXPECT_TRUE(workspace.isValid(StrictnessLevel::Minimal));
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Final));
 }
@@ -265,7 +265,7 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Draft) {
 // immediately prior to simulation.
 
 TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
-  Workspace scratch(StrictnessLevel::None, IddFileType::EnergyPlus);  // Strictness level None
+  Workspace scratch(StrictnessLevel::Minimal, IddFileType::EnergyPlus);  // Strictness level None
 
   std::stringstream text;
   text << "ZoneHVAC:HighTemperatureRadiant," << '\n'
@@ -374,7 +374,7 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
 TEST_F(IdfFixture, WorkspaceObject_ClearGroups) {
   // always works in None or Draft strictness
   Workspace ws(epIdfFile);
-  EXPECT_TRUE(ws.strictnessLevel() == StrictnessLevel::None);
+  EXPECT_TRUE(ws.strictnessLevel() == StrictnessLevel::Minimal);
   WorkspaceObjectVector surfaces = ws.getObjectsByType(IddObjectType::BuildingSurface_Detailed);
   ASSERT_TRUE(surfaces.size() > 0);
   unsigned n = surfaces[0].numFields();

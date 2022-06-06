@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -114,6 +114,12 @@ namespace model {
 
       void resetMinimumAirFlowFractionSchedule();
 
+      boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
+
+      bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+
+      void resetMinimumAirFlowTurndownSchedule();
+
       boost::optional<double> maximumHotWaterOrSteamFlowRate();
 
       bool setMaximumHotWaterOrSteamFlowRate(double value);
@@ -191,9 +197,11 @@ namespace model {
 
       boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
       boost::optional<ModelObject> minimumAirFlowFractionScheduleAsModelObject() const;
+      boost::optional<ModelObject> minimumAirFlowTurndownScheduleAsModelObject() const;
 
       bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
       bool setMinimumAirFlowFractionScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     };
 
   }  // namespace detail

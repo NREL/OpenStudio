@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -87,6 +87,8 @@ namespace model {
 
       boost::optional<double> autosizedMaximumDamperAirFlowRate() const;
 
+      boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -104,6 +106,10 @@ namespace model {
       bool setDesignSpecificationOutdoorAirObject(const boost::optional<DesignSpecificationOutdoorAir>& designSpecificationOutdoorAir);
 
       void resetDesignSpecificationOutdoorAirObject();
+
+      bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+
+      void resetMinimumAirFlowTurndownSchedule();
 
       //@}
       /** @name Other */
@@ -135,6 +141,10 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.AirTerminalDualDuctVAV");
+
+      boost::optional<ModelObject> minimumAirFlowTurndownScheduleAsModelObject() const;
+
+      bool setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     };
 
   }  // namespace detail

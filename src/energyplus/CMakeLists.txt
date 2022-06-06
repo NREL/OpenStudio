@@ -132,6 +132,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCurveTriquadratic.cpp
   ForwardTranslator/ForwardTranslateDaylightingControl.cpp
   ForwardTranslator/ForwardTranslateDaylightingDeviceShelf.cpp
+  ForwardTranslator/ForwardTranslateDaylightingDeviceTubular.cpp
+  ForwardTranslator/ForwardTranslateDaylightingDeviceLightWell.cpp
   ForwardTranslator/ForwardTranslateDaylightRedirectionDevice.cpp
   ForwardTranslator/ForwardTranslateDesignDay.cpp
   ForwardTranslator/ForwardTranslateDesignSpecificationOutdoorAir.cpp
@@ -219,6 +221,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateHeatExchangerFluidToFluid.cpp
   ForwardTranslator/ForwardTranslateHeatPumpWaterToWaterEquationFitCooling.cpp
   ForwardTranslator/ForwardTranslateHeatPumpWaterToWaterEquationFitHeating.cpp
+  ForwardTranslator/ForwardTranslateHeatPumpPlantLoopEIRCooling.cpp
+  ForwardTranslator/ForwardTranslateHeatPumpPlantLoopEIRHeating.cpp
   ForwardTranslator/ForwardTranslateHotWaterEquipment.cpp
   ForwardTranslator/ForwardTranslateHumidifierSteamElectric.cpp
   ForwardTranslator/ForwardTranslateHumidifierSteamGas.cpp
@@ -371,8 +375,10 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyConvectionCoefficientsMultipleSurface.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyExposedFoundationPerimeter.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyLocalEnvironment.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideConditionsModel.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertySurroundingSurfaces.cpp
   ForwardTranslator/ForwardTranslateSwimmingPoolIndoor.cpp
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp
   ForwardTranslator/ForwardTranslateTemperingValve.cpp
@@ -564,6 +570,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmInside.cpp
   ReverseTranslator/ReverseTranslateSurfaceConvectionAlgorithmOutside.cpp
   ReverseTranslator/ReverseTranslateSurfacePropertyExposedFoundationPerimeter.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertyLocalEnvironment.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertySurroundingSurfaces.cpp
   ReverseTranslator/ReverseTranslateSwimmingPoolIndoor.cpp
   ReverseTranslator/ReverseTranslateThermostatSetpointDualSetpoint.cpp
   ReverseTranslator/ReverseTranslateTimestep.cpp
@@ -605,9 +613,14 @@ set(${target_name}_test_src
   Test/AirLoopHVACUnitarySystem_GTest.cpp
   Test/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_GTest.cpp
   Test/AirTerminalDualDuctConstantVolume_GTest.cpp
+  Test/AirTerminalDualDuctVAV_GTest.cpp
   Test/AirTerminalDualDuctVAVOutdoorAir_GTest.cpp
   Test/AirTerminalSingleDuctConstantVolumeFourPipeBeam_GTest.cpp
   Test/AirTerminalSingleDuctInletSideMixer_GTest.cpp
+  Test/AirTerminalSingleDuctVAVNoReheat_GTest.cpp
+  Test/AirTerminalSingleDuctVAVReheat_GTest.cpp
+  Test/AirTerminalSingleDuctVAVHeatAndCoolNoReheat_GTest.cpp
+  Test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
   Test/AirWallMaterial_GTest.cpp
 
   Test/AirLoopHVAC_GTest.cpp
@@ -628,7 +641,6 @@ set(${target_name}_test_src
 
   Test/CentralHeatPumpSystem_GTest.cpp
 
-  Test/CoilHeatingGas_GTest.cpp
   Test/CoilCoolingDX_GTest.cpp
   Test/CoilCoolingDXCurveFitPerformance_GTest.cpp
   Test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp
@@ -638,6 +650,8 @@ set(${target_name}_test_src
   Test/CoilCoolingDXTwoSpeed_GTest.cpp
   Test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   Test/CoilCoolingDXVariableSpeed_GTest.cpp
+  Test/CoilHeatingDXMultiSpeed_GTest.cpp
+  Test/CoilHeatingGas_GTest.cpp
   Test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
   Test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_GTest.cpp
   Test/CoilWaterHeatingDesuperheater_GTest.cpp
@@ -648,6 +662,9 @@ set(${target_name}_test_src
   Test/CurveQuintLinear_GTest.cpp
   Test/DaylightingControl_GTest.cpp
   Test/DaylightingDeviceShelf_GTest.cpp
+  Test/DaylightingDeviceTubular_GTest.cpp
+  Test/DaylightingDeviceLightWell_GTest.cpp
+  Test/DesignDay_GTest.cpp
   Test/DesignSpecificationOutdoorAir_GTest.cpp
   Test/ElectricEquipment_GTest.cpp
   Test/ElectricEquipmentITEAirCooled_GTest.cpp
@@ -671,6 +688,7 @@ set(${target_name}_test_src
   Test/HeatExchangerDesiccantBalancedFlow_GTest.cpp
   Test/HeatExchangerDesiccantBalancedFlowPerformanceDataType1_GTest.cpp
   Test/HeatPumpWaterToWaterEquationFit_GTest.cpp
+  Test/HeatPumpPlantLoopEIR_GTest.cpp
   Test/HotWaterEquipment_GTest.cpp
   Test/IlluminanceMap_GTest.cpp
   Test/InteriorPartitionSurface_GTest.cpp
@@ -703,6 +721,7 @@ set(${target_name}_test_src
   Test/ShadingSurface_GTest.cpp
   Test/ShadowCalculation_GTest.cpp
   Test/SimulationControl_GTest.cpp
+  Test/SizingSystem_GTest.cpp
   Test/SizingZone_GTest.cpp
   Test/Space_GTest.cpp
   Test/SpaceInfiltrationDesignFlowRate_GTest.cpp
@@ -713,6 +732,8 @@ set(${target_name}_test_src
   Test/Surface_GTest.cpp
   Test/SurfaceControlMovableInsulation_GTest.cpp
   Test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  Test/SurfacePropertyLocalEnvironment_GTest.cpp
+  Test/SurfacePropertySurroundingSurfaces_GTest.cpp
   Test/SwimmingPoolIndoor_GTest.cpp
   Test/TableMultiVariableLookup_GTest.cpp
   Test/ThermalStorageChilledWaterStratified_GTest.cpp
@@ -730,6 +751,7 @@ set(${target_name}_test_src
   Test/ZoneHVACPackagedTerminalAirConditioner_GTest.cpp
   Test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   Test/ZoneHVACTerminalUnitVariableRefrigerantFlow_GTest.cpp
+  Test/ZoneHVACUnitHeater_GTest.cpp
   Test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   Test/ZoneVentilationWindandStackOpenArea_GTest.cpp
 )

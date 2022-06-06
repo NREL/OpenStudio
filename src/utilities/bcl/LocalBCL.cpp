@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,10 +42,6 @@ namespace openstudio {
 
 LocalBCL::LocalBCL(const path& libraryPath)
   : m_libraryPath(libraryPath.lexically_normal()), m_dbName("components.sql"), m_dbVersion("1.3"), m_connectionOpen(false) {
-  //TODO: QT-Separation-Move
-  //Make sure a QApplication exists
-  //openstudio::Application::instance().application(false);
-
   //Check for BCL directory
   if (!openstudio::filesystem::is_directory(m_libraryPath) || !openstudio::filesystem::exists(m_libraryPath)) {
     openstudio::filesystem::create_directory(m_libraryPath);
@@ -289,10 +285,11 @@ bool LocalBCL::initializeLocalDb() {
     return false;
   }
 
+  // BCL auth keys are deprecated, so pre-populating it with 32-chars will prevent prompts for it
   std::vector<std::pair<std::string, std::string>> vals = {
     {"dbVersion", m_dbVersion},
-    {"prodAuthKey", ""},
-    {"devAuthKey", ""},
+    {"prodAuthKey", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"},
+    {"devAuthKey", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"},
   };
 
   bool errorsFound = false;

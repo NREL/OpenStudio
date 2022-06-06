@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,6 +36,8 @@
 #include "../filetypes/EpwFile.hpp"
 #include "../core/Containers.hpp"
 #include "../core/Assert.hpp"
+#include "../core/ASCIIStrings.hpp"
+#include "../core/StringHelpers.hpp"
 
 #include <sqlite3.h>
 
@@ -52,11 +54,19 @@ namespace openstudio {
 namespace detail {
 
   std::string columnText(const unsigned char* column) {
+    if (column == nullptr) {
+      return std::string();
+    }
     return std::string(reinterpret_cast<const char*>(column));
   }
 
   SqlFile_Impl::SqlFile_Impl(const openstudio::path& path, const bool createIndexes)
-    : m_path(path), m_connectionOpen(false), m_supportedVersion(false), m_hasYear(true), m_hasIlluminanceMapYear(true) {
+    : m_path(path),
+      m_connectionOpen(false),
+      m_supportedVersion(false),
+      m_hasYear(true),
+      m_hasIlluminanceMapYear(true),
+      m_illuminanceMapHasOnly2RefPts(false) {
     if (openstudio::filesystem::exists(m_path)) {
       m_path = openstudio::filesystem::canonical(m_path);
     }
@@ -74,6 +84,7 @@ namespace detail {
     std::string fileName = m_sqliteFilename;
     m_hasYear = true;
     m_hasIlluminanceMapYear = true;
+    m_illuminanceMapHasOnly2RefPts = false;
 
     bool initschema = false;
 
@@ -488,6 +499,37 @@ namespace detail {
     return m_hasIlluminanceMapYear;
   }
 
+  boost::optional<double> SqlFile_Impl::assemblyUFactor(const std::string& subSurfaceName) const {
+    return getExteriorFenestrationValue(subSurfaceName, "Assembly U-Factor");
+  }
+
+  boost::optional<double> SqlFile_Impl::assemblySHGC(const std::string& subSurfaceName) const {
+    return getExteriorFenestrationValue(subSurfaceName, "Assembly SHGC");
+  }
+
+  boost::optional<double> SqlFile_Impl::assemblyVisibleTransmittance(const std::string& subSurfaceName) const {
+    return getExteriorFenestrationValue(subSurfaceName, "Assembly Visible Transmittance");
+  }
+
+  boost::optional<double> SqlFile_Impl::getExteriorFenestrationValue(const std::string& subSurfaceName, const std::string& columnName) const {
+    boost::optional<double> result;
+
+    // Get the object name and transform to the way it is recorded
+    // in the sql file
+    std::string queryRowName = boost::to_upper_copy(subSurfaceName);
+
+    std::string s = R"(SELECT Value FROM TabularDataWithStrings
+                          WHERE ReportName='EnvelopeSummary'
+                          AND ReportForString='Entire Facility'
+                          AND TableName='Exterior Fenestration'
+                          AND RowName=?
+                          AND ColumnName=?)";
+
+    result = execAndReturnFirstDouble(s, queryRowName, columnName);
+
+    return result;
+  }
+
   bool SqlFile_Impl::isValidConnection() {
     std::string energyPlusVersion = this->energyPlusVersion();
     if (energyPlusVersion.empty()) {
@@ -507,6 +549,8 @@ namespace detail {
     // m_hasYear & m_hasIlluminanceMapYear are both default initialized to true
     if (version < VersionString(9, 2)) {
       m_hasIlluminanceMapYear = false;
+    } else if (version < VersionString(9, 6)) {
+      m_illuminanceMapHasOnly2RefPts = true;
     }
 
     if (version < VersionString(8, 9)) {
@@ -2787,7 +2831,7 @@ namespace detail {
         // in 8.1 this is 'EnergyPlus-Windows-32 8.1.0.008, YMD=2014.11.08 22:49'
         // in 8.2 this is 'EnergyPlus, Version 8.2.0-8397c2e30b, YMD=2015.01.09 08:37'
         // radiance script is writing 'EnergyPlus, VERSION 8.2, (OpenStudio) YMD=2015.1.9 08:35:36'
-        boost::regex version_regex("\\d\\.\\d[\\.\\d]*");
+        boost::regex version_regex("\\d{1,}\\.\\d[\\.\\d]*");
         std::string version_line = columnText(sqlite3_column_text(sqlStmtPtr, 0));
         boost::smatch version_match;
 
@@ -2844,7 +2888,7 @@ namespace detail {
   }
 
   /// reference point for map - form RefPtn=(x:y:illuminance)
-  boost::optional<std::string> SqlFile_Impl::illuminanceMapRefPt(const std::string& name, const int& ptNum) const {
+  boost::optional<std::string> SqlFile_Impl::illuminanceMapRefPt(const std::string& name, int ptNum) const {
     boost::optional<std::string> refPt;
     boost::optional<int> mapIndex = illuminanceMapIndex(name);
 
@@ -2856,17 +2900,48 @@ namespace detail {
     return refPt;
   }
 
-  boost::optional<std::string> SqlFile_Impl::illuminanceMapRefPt(const int& mapIndex, const int& ptNum) const {
-    boost::optional<std::string> refPt;
-    std::stringstream s;
-    s << "select ReferencePt" << ptNum << " from daylightmaps where MapNumber=" << mapIndex;
+  boost::optional<std::string> SqlFile_Impl::illuminanceMapRefPt(int mapIndex, int ptNum) const {
+    if (ptNum <= 0) {
+      LOG(Error, "illuminanceMapRefPt: ptNum must be > 0 (1-indexed)");
+      return boost::none;
+    }
 
+    boost::optional<std::string> refPt;
     sqlite3_stmt* sqlStmtPtr;
 
-    int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
-    code = sqlite3_step(sqlStmtPtr);
+    if (m_illuminanceMapHasOnly2RefPts) {
+      std::stringstream s;
+      s << "SELECT ReferencePt" << ptNum << " FROM DaylightMaps WHERE MapNumber=" << mapIndex;
 
-    if (code == SQLITE_ROW) refPt = columnText(sqlite3_column_text(sqlStmtPtr, 0));
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
+      code = sqlite3_step(sqlStmtPtr);
+
+      if (code == SQLITE_ROW) {
+        refPt = columnText(sqlite3_column_text(sqlStmtPtr, 0));
+      }
+
+    } else {
+
+      std::stringstream s;
+      s << "SELECT ReferencePts FROM DaylightMaps WHERE MapNumber=" << mapIndex;
+
+      int code = sqlite3_prepare_v2(m_db, s.str().c_str(), -1, &sqlStmtPtr, nullptr);
+      code = sqlite3_step(sqlStmtPtr);
+
+      if (code == SQLITE_ROW) {
+        std::string refPts = columnText(sqlite3_column_text(sqlStmtPtr, 0));
+        auto refPtsVec = openstudio::splitString(refPts, ',');
+
+        // Annoying that the parameters aren't unsigned here... Anyway, I **know** ptNum is > 0 since I tested for it above
+        if (static_cast<size_t>(ptNum) > refPtsVec.size()) {
+          LOG(Error, "illuminanceMapRefPt: ptNum=" << ptNum << " is greater than the number of reference points: " << refPtsVec.size());
+        } else {
+          std::string refPtTrim = refPtsVec[ptNum - 1];
+          openstudio::ascii_trim(refPtTrim);
+          refPt = refPtTrim;
+        }
+      }
+    }
 
     /// must finalize to prevent memory leaks
     sqlite3_finalize(sqlStmtPtr);
@@ -2888,10 +2963,11 @@ namespace detail {
   }
 
   /// minimum value of map
-  boost::optional<double> SqlFile_Impl::illuminanceMapMinValue(const int& mapIndex) const {
+  boost::optional<double> SqlFile_Impl::illuminanceMapMinValue(int mapIndex) const {
     boost::optional<double> minValue;
     std::stringstream s;
-    s << "select min(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = r.HourlyReportIndex "
+    s << "select min(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = "
+         "r.HourlyReportIndex "
          "where r.MapNumber="
       << mapIndex;
 
@@ -2922,10 +2998,11 @@ namespace detail {
   }
 
   /// maximum value of map
-  boost::optional<double> SqlFile_Impl::illuminanceMapMaxValue(const int& mapIndex) const {
+  boost::optional<double> SqlFile_Impl::illuminanceMapMaxValue(int mapIndex) const {
     boost::optional<double> maxValue;
     std::stringstream s;
-    s << "select max(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = r.HourlyReportIndex "
+    s << "select max(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = "
+         "r.HourlyReportIndex "
          "where r.MapNumber="
       << mapIndex;
 
@@ -2952,9 +3029,10 @@ namespace detail {
   }
 
   /// minimum and maximum of map
-  void SqlFile_Impl::illuminanceMapMaxValue(const int& mapIndex, double& minValue, double& maxValue) const {
+  void SqlFile_Impl::illuminanceMapMaxValue(int mapIndex, double& minValue, double& maxValue) const {
     std::stringstream s;
-    s << "select min(d.Illuminance), max(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex = "
+    s << "select min(d.Illuminance), max(d.Illuminance) from daylightmaphourlydata d inner join daylightmaphourlyreports r on d.HourlyReportIndex "
+         "= "
          "r.HourlyReportIndex where r.MapNumber="
       << mapIndex;
 
@@ -2985,7 +3063,7 @@ namespace detail {
   }
 
   /// get all zone names for specified illuminance map
-  std::vector<std::string> SqlFile_Impl::illuminanceMapZoneNames(const int& mapIndex) const {
+  std::vector<std::string> SqlFile_Impl::illuminanceMapZoneNames(int mapIndex) const {
     std::vector<std::string> names;
 
     if (auto _vec = execAndReturnVectorOfString("SELECT ZoneName FROM Zones WHERE ZoneIndex in (SELECT Zone from DaylightMaps WHERE MapNumber = ?",
@@ -2998,7 +3076,7 @@ namespace detail {
   }
 
   /// x position (m) of the illuminance map
-  Vector SqlFile_Impl::illuminanceMapX(const int& hourlyReportIndex) const {
+  Vector SqlFile_Impl::illuminanceMapX(int hourlyReportIndex) const {
     std::vector<double> xv;
     if (auto _vec = execAndReturnVectorOfDouble("SELECT X FROM DaylightMapHourlyData WHERE HourlyReportIndex = ? GROUP BY X",
                                                 // Bind Args
@@ -3034,7 +3112,7 @@ namespace detail {
   }
 
   /// y position (m) of the illuminance map
-  Vector SqlFile_Impl::illuminanceMapY(const int& hourlyReportIndex) const {
+  Vector SqlFile_Impl::illuminanceMapY(int hourlyReportIndex) const {
     std::vector<double> yv;
 
     if (auto _vec = execAndReturnVectorOfDouble("SELECT Y FROM DaylightMapHourlyData WHERE HourlyReportIndex = ? GROUP BY Y",
@@ -3082,7 +3160,7 @@ namespace detail {
     return reportIndices;
   }
 
-  std::vector<int> SqlFile_Impl::illuminanceMapHourlyReportIndices(const int& mapIndex) const {
+  std::vector<int> SqlFile_Impl::illuminanceMapHourlyReportIndices(int mapIndex) const {
     std::vector<int> result;
 
     if (auto _vec = execAndReturnVectorOfInt("SELECT HourlyReportIndex FROM DaylightMapHourlyReports WHERE MapNumber=?",
@@ -3106,7 +3184,7 @@ namespace detail {
     return reportIndicesDates;
   }
 
-  std::vector<std::pair<int, DateTime>> SqlFile_Impl::illuminanceMapHourlyReportIndicesDates(const int& mapIndex) const {
+  std::vector<std::pair<int, DateTime>> SqlFile_Impl::illuminanceMapHourlyReportIndicesDates(int mapIndex) const {
     std::vector<std::pair<int, DateTime>> reportIndicesDates;
     std::stringstream s;
     s << "select HourlyReportIndex, ";
@@ -3147,7 +3225,7 @@ namespace detail {
     return reportIndicesDates;
   }
 
-  boost::optional<DateTime> SqlFile_Impl::illuminanceMapDate(const int& hourlyReportIndex) const {
+  boost::optional<DateTime> SqlFile_Impl::illuminanceMapDate(int hourlyReportIndex) const {
     boost::optional<unsigned> year;
     unsigned month = 0, dayOfMonth = 0, hour = 0;
     std::stringstream s;
@@ -3186,7 +3264,7 @@ namespace detail {
     return DateTime(date, Time(0, hour, 0, 0));
   }
 
-  boost::optional<int> SqlFile_Impl::illuminanceMapHourlyReportIndex(const int& mapIndex, const DateTime& dateTime) const {
+  boost::optional<int> SqlFile_Impl::illuminanceMapHourlyReportIndex(int mapIndex, const DateTime& dateTime) const {
     // E+ doesn't have a Year for this table
     // int year = dateTime.date().year();
     int monthOfYear = dateTime.date().monthOfYear().value();
@@ -3250,8 +3328,7 @@ namespace detail {
     return illuminanceMap(*timeIndex);
   }
 
-  void SqlFile_Impl::illuminanceMap(const int& hourlyReportIndex, std::vector<double>& x, std::vector<double>& y,
-                                    std::vector<double>& illuminance) const {
+  void SqlFile_Impl::illuminanceMap(int hourlyReportIndex, std::vector<double>& x, std::vector<double>& y, std::vector<double>& illuminance) const {
     double xVal(0.0), yVal(0.0), yValPrevious(0.0), illuminanceVal(0.0);
     bool yValChanged = false;
 
@@ -3314,7 +3391,7 @@ namespace detail {
 
   /// value (lux) of the illuminance map at hourlyReportIndex
   /// value(i,j) is the illuminance at x(i), y(j)
-  Matrix SqlFile_Impl::illuminanceMap(const int& hourlyReportIndex) const {
+  Matrix SqlFile_Impl::illuminanceMap(int hourlyReportIndex) const {
 
     /// loop over all points
     Vector x = SqlFile_Impl::illuminanceMapX(hourlyReportIndex);

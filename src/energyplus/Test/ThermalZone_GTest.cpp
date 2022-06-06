@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -107,12 +107,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_SameSp
   EXPECT_EQ(1, space1.lightingPowerPerFloorArea());
   EXPECT_EQ(1, space2.lightingPowerPerFloorArea());
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Building_SameSpaceType) {
@@ -150,12 +167,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Buildi
   EXPECT_EQ(1, space1.lightingPowerPerFloorArea());
   EXPECT_EQ(1, space2.lightingPowerPerFloorArea());
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_TwoZone_TwoSpaces_SameSpaceType) {
@@ -192,12 +226,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_TwoZone_TwoSpaces_SameSp
   EXPECT_EQ(1, space1.lightingPowerPerFloorArea());
   EXPECT_EQ(1, space2.lightingPowerPerFloorArea());
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_TwoZone_TwoSpaces_Building_SameSpaceType) {
@@ -236,12 +287,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_TwoZone_TwoSpaces_Buildi
   EXPECT_EQ(1, space1.lightingPowerPerFloorArea());
   EXPECT_EQ(1, space2.lightingPowerPerFloorArea());
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_DifferentSpaceType) {
@@ -280,12 +348,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Differ
   EXPECT_EQ(1, space1.lightingPowerPerFloorArea());
   EXPECT_EQ(2, space2.lightingPowerPerFloorArea());
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Building_DifferentSpaceType) {
@@ -330,12 +415,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Buildi
   EXPECT_EQ(1, space1.lightingPowerPerFloorArea());
   EXPECT_EQ(2, space2.lightingPowerPerFloorArea());
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Building_DifferentSpaceType_2) {
@@ -376,12 +478,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_TwoSpaces_Buildi
   EXPECT_EQ(1, space1.lightingPowerPerFloorArea());
   EXPECT_EQ(2, space2.lightingPowerPerFloorArea());
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Building_DifferentSpaceType) {
@@ -414,12 +533,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Buildin
   EXPECT_EQ(1, space.floorArea());
   EXPECT_EQ(2, space.lightingPowerPerFloorArea());
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Building_SameSpaceType) {
@@ -449,12 +585,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Buildin
   EXPECT_EQ(1, space.floorArea());
   EXPECT_EQ(1, space.lightingPowerPerFloorArea());
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Building) {
@@ -483,12 +636,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_OneZone_OneSpace_Buildin
   EXPECT_EQ(1, space.floorArea());
   EXPECT_EQ(1, space.lightingPowerPerFloorArea());
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_3Zone_2Spaces) {
@@ -542,12 +712,29 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_3Zone_2Spaces) {
   EXPECT_EQ(1, space3.floorArea());
   EXPECT_EQ(3, space3.lightingPowerPerFloorArea());
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::Space).size());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_HardSchedules) {
@@ -616,15 +803,36 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_HardSchedu
     EXPECT_TRUE(light.schedule());
   }
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  for (const WorkspaceObject& workspaceObject : workspace.getObjectsByType(IddObjectType::Lights)) {
-    EXPECT_TRUE(workspaceObject.getTarget(LightsFields::ScheduleName));
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+
+    for (const WorkspaceObject& workspaceObject : workspace.getObjectsByType(IddObjectType::Lights)) {
+      EXPECT_TRUE(workspaceObject.getTarget(LightsFields::ScheduleName));
+    }
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
+
+    for (const WorkspaceObject& workspaceObject : workspace.getObjectsByType(IddObjectType::Lights)) {
+      EXPECT_TRUE(workspaceObject.getTarget(LightsFields::ScheduleName));
+    }
   }
 }
 
@@ -691,15 +899,36 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_1Zone_2Spaces_InheritSch
     EXPECT_TRUE(light.schedule());
   }
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
-  EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Lights).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  for (const WorkspaceObject& workspaceObject : workspace.getObjectsByType(IddObjectType::Lights)) {
-    EXPECT_TRUE(workspaceObject.getTarget(LightsFields::ScheduleName)) << workspaceObject;
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Space).size());
+
+    for (const WorkspaceObject& workspaceObject : workspace.getObjectsByType(IddObjectType::Lights)) {
+      EXPECT_TRUE(workspaceObject.getTarget(LightsFields::ScheduleName)) << workspaceObject;
+    }
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(4u, workspace.getObjectsByType(IddObjectType::Lights).size());
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Space).size());
+
+    for (const WorkspaceObject& workspaceObject : workspace.getObjectsByType(IddObjectType::Lights)) {
+      EXPECT_TRUE(workspaceObject.getTarget(LightsFields::ScheduleName)) << workspaceObject;
+    }
   }
 }
 
@@ -735,29 +964,48 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalZone_Daylighting) {
   ASSERT_TRUE(d_sec.isIlluminanceSetpointDefaulted());
   z.setSecondaryDaylightingControl(d_sec);
 
-  ForwardTranslator ft;
-  Workspace w = ft.translateModel(m);
+  ForwardTranslator forwardTranslator;
 
-  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Daylighting_Controls);
-  ASSERT_EQ(1u, idfObjs.size());
-  WorkspaceObject idf_d(idfObjs[0]);
+  // KSB: This function will be used to run translation tests in both,
+  // "historical" and current space translation modes. I don't expect
+  // to see differences in how daylighting controls are translated,
+  // however this assumption should be vetted.
+  const auto translateAndAssert = [&]() {
+    Workspace workspace = forwardTranslator.translateModel(m);
 
-  // Should have two extensible groups
-  boost::optional<double> sp;
+    WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::Daylighting_Controls);
+    ASSERT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_d(idfObjs[0]);
 
-  ASSERT_EQ(2u, idf_d.extensibleGroups().size());
+    // Should have two extensible groups
+    boost::optional<double> sp;
 
-  // Check that there is a value for primary, and that it's right
-  WorkspaceExtensibleGroup w_eg = idf_d.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
-  sp = w_eg.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
-  ASSERT_TRUE(sp);
-  ASSERT_EQ(d_pri.illuminanceSetpoint(), sp.get());
+    ASSERT_EQ(2u, idf_d.extensibleGroups().size());
 
-  // same for secondary
-  w_eg = idf_d.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
-  sp = w_eg.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
-  ASSERT_TRUE(sp);
-  ASSERT_EQ(d_sec.illuminanceSetpoint(), sp.get());
+    // Check that there is a value for primary, and that it's right
+    WorkspaceExtensibleGroup w_eg = idf_d.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    sp = w_eg.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
+    ASSERT_TRUE(sp);
+    ASSERT_EQ(d_pri.illuminanceSetpoint(), sp.get());
+
+    // same for secondary
+    w_eg = idf_d.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
+    sp = w_eg.getDouble(Daylighting_ControlsExtensibleFields::IlluminanceSetpointatReferencePoint);
+    ASSERT_TRUE(sp);
+    ASSERT_EQ(d_sec.illuminanceSetpoint(), sp.get());
+  };
+
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    translateAndAssert();
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    translateAndAssert();
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_LoadDistributionScheme) {
@@ -789,22 +1037,40 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_LoadDistributionScheme) {
   // The field we're actually testing. Set it to the non-default value (which is "SequentialLoad")
   zone.setLoadDistributionScheme("UniformLoad");
 
-  ForwardTranslator trans;
-  Workspace workspace = trans.translateModel(model);
+  ForwardTranslator forwardTranslator;
 
-  // We verify that we end up with the right field in the IDF
-  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::ZoneHVAC_EquipmentList);
-  EXPECT_EQ(1u, idfObjs.size());
-  WorkspaceObject idf_eqlist(idfObjs[0]);
+  // KSB: Again, we expect no difference between translating
+  // using the "historical" method and the current space translation method,
+  // however this function is used to check both
+  const auto translateAndAssert = [&]() {
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  EXPECT_EQ("UniformLoad", idf_eqlist.getString(ZoneHVAC_EquipmentListFields::LoadDistributionScheme).get());
+    // We verify that we end up with the right field in the IDF
+    EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::ZoneHVAC_EquipmentList);
+    EXPECT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_eqlist(idfObjs[0]);
+
+    EXPECT_EQ("UniformLoad", idf_eqlist.getString(ZoneHVAC_EquipmentListFields::LoadDistributionScheme).get());
+  };
+
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    translateAndAssert();
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    translateAndAssert();
+  }
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneControlThermostat) {
   ReverseTranslator rt;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   OptionalWorkspaceObject _i_zone = w.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(_i_zone);

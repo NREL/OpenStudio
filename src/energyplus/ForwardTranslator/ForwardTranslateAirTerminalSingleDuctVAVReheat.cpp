@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -169,8 +169,8 @@ namespace energyplus {
     if (minAirFlowFractionSchedule) {
       boost::optional<IdfObject> _minAirFlowFractionSchedule = translateAndMapModelObject(minAirFlowFractionSchedule.get());
 
-      if (_minAirFlowFractionSchedule && _minAirFlowFractionSchedule->name()) {
-        idfObject.setString(AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowFractionScheduleName, _minAirFlowFractionSchedule->name().get());
+      if (_minAirFlowFractionSchedule) {
+        idfObject.setString(AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowFractionScheduleName, _minAirFlowFractionSchedule->nameString());
       }
     }
 
@@ -240,6 +240,13 @@ namespace energyplus {
             }
           }
         }
+      }
+    }
+
+    // MinimumAirFlowTurndownScheduleName
+    if (boost::optional<Schedule> minAirFlowTurndownSchedule = modelObject.minimumAirFlowTurndownSchedule()) {
+      if (boost::optional<IdfObject> _minAirFlowTurndownSchedule = translateAndMapModelObject(minAirFlowTurndownSchedule.get())) {
+        idfObject.setString(AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowTurndownScheduleName, _minAirFlowTurndownSchedule->nameString());
       }
     }
 

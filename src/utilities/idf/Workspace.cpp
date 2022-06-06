@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1625,69 +1625,71 @@ namespace detail {
     this->progressValue.nano_emit(i);
     this->progressCaption.nano_emit("Checking Validity");
 
-    // StrictnessLevel::None
-    // DataErrorType::NoIdd
-    // \todo Only way there can be no IddFile is if IddFileType is set to UserCustom
-
     // Accumulate information about names for later name checking
     map<string, pair<bool, std::shared_ptr<WorkspaceObject_Impl>>> mapOfNames;
     map<string, list<std::shared_ptr<WorkspaceObject_Impl>>> objectsRepeatNames;
 
-    // by-object items
-    for (const WorkspaceObjectMap::value_type& p : m_workspaceObjectMap) {
+    // StrictnessLevel::Minimal
+    if (level > StrictnessLevel::None) {
+      // DataErrorType::NoIdd
+      // \todo Only way there can be no IddFile is if IddFileType is set to UserCustom
 
-      //find all objects with the same name
+      // by-object items
+      for (const WorkspaceObjectMap::value_type& p : m_workspaceObjectMap) {
 
-      OptionalString oName = p.second->name();
-      if (oName) {
-        auto itr = mapOfNames.find(*oName);
-        if (itr != mapOfNames.end()) {
+        //find all objects with the same name
 
-          if (!itr->second.first) {
-            itr->second.first = true;
-            list<std::shared_ptr<WorkspaceObject_Impl>> l;
-            l.push_front(itr->second.second);
-            l.push_front(p.second);
-            objectsRepeatNames[itr->first] = l;
+        OptionalString oName = p.second->name();
+        if (oName) {
+          auto itr = mapOfNames.find(*oName);
+          if (itr != mapOfNames.end()) {
+
+            if (!itr->second.first) {
+              itr->second.first = true;
+              list<std::shared_ptr<WorkspaceObject_Impl>> l;
+              l.push_front(itr->second.second);
+              l.push_front(p.second);
+              objectsRepeatNames[itr->first] = l;
+            } else {
+
+              auto j = objectsRepeatNames.find(itr->first);
+              OS_ASSERT(j != objectsRepeatNames.end());
+              j->second.push_front(p.second);
+            }
           } else {
-
-            auto j = objectsRepeatNames.find(itr->first);
-            OS_ASSERT(j != objectsRepeatNames.end());
-            j->second.push_front(p.second);
-          }
-        } else {
-          mapOfNames[*oName] = pair<bool, std::shared_ptr<WorkspaceObject_Impl>>(false, p.second);
-        }
-      }
-
-      // object-level report
-      ValidityReport objectReport = p.second->validityReport(level, false);
-      OptionalDataError oError = objectReport.nextError();
-      while (oError) {
-        report.insertError(*oError);
-        oError = objectReport.nextError();
-      }
-
-      // StrictnessLevel::Draft
-      if (level > StrictnessLevel::None) {
-        // DataErrorType::NoIdd
-        // object-level
-        if (iddFileType() == IddFileType::UserCustom) {
-          if (!m_iddFileAndFactoryWrapper.isInFile(p.second->iddObject().name())) {
-            report.insertError(DataError(WorkspaceObject(p.second), DataErrorType(DataErrorType::NoIdd)));
-          }
-        } else {
-          if (!m_iddFileAndFactoryWrapper.isInFile(p.second->iddObject().type())) {
-            report.insertError(DataError(WorkspaceObject(p.second), DataErrorType(DataErrorType::NoIdd)));
+            mapOfNames[*oName] = pair<bool, std::shared_ptr<WorkspaceObject_Impl>>(false, p.second);
           }
         }
-      }  // StrictnessLevel::Draft
 
-      this->progressValue.nano_emit(++i);
+        // object-level report
+        ValidityReport objectReport = p.second->validityReport(level, false);
+        OptionalDataError oError = objectReport.nextError();
+        while (oError) {
+          report.insertError(*oError);
+          oError = objectReport.nextError();
+        }
+
+        // StrictnessLevel::Draft
+        if (level > StrictnessLevel::Minimal) {
+          // DataErrorType::NoIdd
+          // object-level
+          if (iddFileType() == IddFileType::UserCustom) {
+            if (!m_iddFileAndFactoryWrapper.isInFile(p.second->iddObject().name())) {
+              report.insertError(DataError(WorkspaceObject(p.second), DataErrorType(DataErrorType::NoIdd)));
+            }
+          } else {
+            if (!m_iddFileAndFactoryWrapper.isInFile(p.second->iddObject().type())) {
+              report.insertError(DataError(WorkspaceObject(p.second), DataErrorType(DataErrorType::NoIdd)));
+            }
+          }
+        }  // StrictnessLevel::Draft
+
+        this->progressValue.nano_emit(++i);
+      }
     }
 
     // StrictnessLevel::Draft
-    if (level > StrictnessLevel::None) {
+    if (level > StrictnessLevel::Minimal) {
       // Check Name Conflicts
       //worst case, EVERY name is the same, EVERY object has a conflicting reference list.... this in O(n^3)
       //however, that is so unlikely its not even funny

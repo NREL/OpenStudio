@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -562,6 +562,24 @@ namespace model {
 
   /** \relates ThermalZone*/
   typedef std::vector<ThermalZone> ThermalZoneVector;
+
+  /** This class implements a transition zone, for DaylightingDeviceTubular */
+  class MODEL_API TransitionZone
+  {
+   public:
+    TransitionZone(const ThermalZone& zone, double length);
+
+    ThermalZone thermalZone() const;
+    double length() const;
+
+   private:
+    ThermalZone m_zone;
+    double m_length;
+    REGISTER_LOGGER("openstudio.model.TransitionZone");
+  };
+
+  // Overload operator<<
+  MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::TransitionZone& transitionZone);
 
 }  // namespace model
 }  // namespace openstudio

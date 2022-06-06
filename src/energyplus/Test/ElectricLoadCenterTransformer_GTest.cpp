@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,9 +41,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/OutputMeter.hpp"
 #include "../../model/OutputMeter_Impl.hpp"
-
 #include "../../model/ThermalZone.hpp"
-
+#include "../../model/Space.hpp"
 #include "../../model/ElectricLoadCenterTransformer.hpp"
 #include "../../model/ElectricLoadCenterTransformer_Impl.hpp"
 #include "../../model/ElectricLoadCenterDistribution.hpp"
@@ -130,6 +129,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorElectricLoadCenterTransformer2) {
   Building building = model.getUniqueModelObject<Building>();
 
   ThermalZone zone1(model);
+  Space space(model);
+  space.setThermalZone(zone1);
 
   //add schedule
   Schedule s = model.alwaysOffDiscreteSchedule();

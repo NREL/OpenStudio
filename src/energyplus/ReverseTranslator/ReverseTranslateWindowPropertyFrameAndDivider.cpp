@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -104,14 +104,14 @@ namespace energyplus {
       result.setDividerWidth(*d);
     }
 
-    d = workspaceObject.getDouble(WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers);
-    if (d) {
-      result.setNumberOfHorizontalDividers(*d);
+    boost::optional<int> i = workspaceObject.getInt(WindowProperty_FrameAndDividerFields::NumberofHorizontalDividers);
+    if (i) {
+      result.setNumberOfHorizontalDividers(*i);
     }
 
-    d = workspaceObject.getDouble(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers);
-    if (d) {
-      result.setNumberOfVerticalDividers(*d);
+    i = workspaceObject.getInt(WindowProperty_FrameAndDividerFields::NumberofVerticalDividers);
+    if (i) {
+      result.setNumberOfVerticalDividers(*i);
     }
 
     d = workspaceObject.getDouble(WindowProperty_FrameAndDividerFields::DividerOutsideProjection);
@@ -175,6 +175,11 @@ namespace energyplus {
     d = workspaceObject.getDouble(WindowProperty_FrameAndDividerFields::InsideRevealSolarAbsorptance);
     if (d) {
       result.setInsideRevealSolarAbsorptance(*d);
+    }
+
+    s = workspaceObject.getString(WindowProperty_FrameAndDividerFields::NFRCProductTypeforAssemblyCalculations);
+    if (s) {
+      result.setNFRCProductTypeforAssemblyCalculations(*s);
     }
 
     return result;

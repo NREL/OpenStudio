@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -69,7 +69,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_HeatPumpWaterToWaterEquationFit) {
   EXPECT_TRUE(plant_loop_cup_htg.addDemandBranchForComponent(wwhp_htg));
   EXPECT_TRUE(plant_loop_wwhp_htg.addSupplyBranchForComponent(wwhp_htg));
 
-  // #3837: These two reference each other, and we want to avoid a recusion problem (each FT function calling each other)
+  // #3837: These two reference each other, and we want to avoid a recursion problem (each FT function calling each other)
   EXPECT_TRUE(wwhp_clg.setCompanionHeatingHeatPump(wwhp_htg));
   EXPECT_TRUE(wwhp_htg.setCompanionCoolingHeatPump(wwhp_clg));
 

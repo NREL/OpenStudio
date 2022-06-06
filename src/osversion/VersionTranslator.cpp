@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -59,6 +59,7 @@
 #include "../utilities/units/QuantityConverter.hpp"
 #include <utilities/idd/OS_ComponentData_FieldEnums.hxx>
 #include "../utilities/math/FloatCompare.hpp"
+#include "../utilities/core/UUID.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -143,8 +144,9 @@ namespace osversion {
     m_updateMethods[VersionString("3.1.0")] = &VersionTranslator::update_3_0_1_to_3_1_0;
     m_updateMethods[VersionString("3.2.0")] = &VersionTranslator::update_3_1_0_to_3_2_0;
     m_updateMethods[VersionString("3.2.1")] = &VersionTranslator::update_3_2_0_to_3_2_1;
-    m_updateMethods[VersionString("3.2.2")] = &VersionTranslator::update_3_2_1_to_3_2_2;
-    //m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
+    m_updateMethods[VersionString("3.4.0")] = &VersionTranslator::update_3_3_0_to_3_4_0;
+    m_updateMethods[VersionString("3.4.1")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -300,6 +302,9 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.1.0"));
     m_startVersions.push_back(VersionString("3.2.0"));
     m_startVersions.push_back(VersionString("3.2.1"));
+    m_startVersions.push_back(VersionString("3.3.0"));
+    m_startVersions.push_back(VersionString("3.4.0"));
+    //m_startVersions.push_back(VersionString("3.4.1"));
   }
 
   boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, ProgressBar* progressBar) {
@@ -451,7 +456,7 @@ namespace osversion {
     // validity checking
     Workspace finalWorkspace(finalModel);
     model::Model tempModel(finalWorkspace);  // None-level strictness!
-    OS_ASSERT(tempModel.strictnessLevel() == StrictnessLevel::None);
+    OS_ASSERT(tempModel.strictnessLevel() == StrictnessLevel::Minimal);
     std::vector<std::shared_ptr<InterobjectIssueInformation>> issueInfo = fixInterobjectIssuesStage1(tempModel, m_originalVersion);
     if (!tempModel.isValid(StrictnessLevel::Draft)) {
       LOG(Error, "Model with Version " << openStudioVersion() << " IDD is not valid to draft "
@@ -492,6 +497,12 @@ namespace osversion {
     if (boost::optional<VersionString> candidate = IdfFile::loadVersionOnly(is)) {
       currentVersion = *candidate;
     }
+
+    // we didn't bump Version Identifier in 3.3.0's idd OS:Version object, so the following is necessary
+    if (currentVersion == VersionString("3.2.2")) {
+      currentVersion = VersionString("3.3.0");
+    }
+
     m_originalVersion = currentVersion;  // save for user
     is.seekg(std::ios_base::beg);        // prep to re-read file
 
@@ -937,7 +948,7 @@ namespace osversion {
 
   std::vector<std::shared_ptr<VersionTranslator::InterobjectIssueInformation>>
     VersionTranslator::fixInterobjectIssuesStage1(model::Model& model, const VersionString& startVersion) {
-    OS_ASSERT(model.strictnessLevel() == StrictnessLevel::None);
+    OS_ASSERT(model.strictnessLevel() == StrictnessLevel::Minimal);
     std::vector<std::shared_ptr<InterobjectIssueInformation>> result;
 
     if (startVersion < VersionString("0.8.4")) {
@@ -6670,12 +6681,12 @@ namespace osversion {
 
   }  // end update_3_2_0_to_3_2_1
 
-  std::string VersionTranslator::update_3_2_1_to_3_2_2(const IdfFile& idf_3_2_1, const IddFileAndFactoryWrapper& idd_3_2_2) {
+  std::string VersionTranslator::update_3_2_1_to_3_3_0(const IdfFile& idf_3_2_1, const IddFileAndFactoryWrapper& idd_3_3_0) {
     std::stringstream ss;
     boost::optional<std::string> value;
 
     ss << idf_3_2_1.header() << '\n' << '\n';
-    IdfFile targetIdf(idd_3_2_2.iddFile());
+    IdfFile targetIdf(idd_3_3_0.iddFile());
     ss << targetIdf.versionObject().get();
 
     for (const IdfObject& object : idf_3_2_1.objects()) {
@@ -6683,12 +6694,12 @@ namespace osversion {
 
       if (iddname == "OS:AirTerminal:SingleDuct:InletSideMixer") {
 
-        // Fields that have been added from 3.2.1 to 3.2.2:
+        // Fields that have been added from 3.2.1 to 3.3.0:
         // ------------------------------------------------
         // * Control For Outdoor Air * 5
         // * Per Person Ventilation Rate Mode * 6
 
-        auto iddObject = idd_3_2_2.getObject(iddname);
+        auto iddObject = idd_3_3_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
@@ -6704,6 +6715,108 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if (iddname == "OS:GroundHeatExchanger:Vertical") {
+
+        // Removed 1 fields at position 11 (0-indexed)
+        // * Design Flow Rate  = 11
+        // I moved it to the field 4, previously maximumFlowRate. I'm discarding the previous Design Flow Rate version as that's what the comments in
+        // GroundHeatExchangerVertical.hpp were saying (maximumFlowRate was used instead of designFlowRate which was unused...)
+
+        auto iddObject = idd_3_3_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 11) {
+              newObject.setString(i, value.get());
+            } else if (i == 11) {
+              // No-op
+            } else {
+              newObject.setString(i - 1, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if ((iddname == "OS:Controller:MechanicalVentilation") || (iddname == "OS:Sizing:System")) {
+
+        // OS:Controller:MechanicalVentilation, Field 4: VentilationRateProcedure -> Standard62.1VentilationRateProcedure
+        // OS:Sizing:System, Field 20: VentilationRateProcedure -> Standard62.1VentilationRateProcedure
+        unsigned int changedIndex = 4;
+        if (iddname == "OS:Sizing:System") {
+          changedIndex = 20;
+        }
+        value = object.getString(changedIndex, false, true);
+        if (value && openstudio::istringEqual(value.get(), "VentilationRateProcedure")) {
+
+          auto iddObject = idd_3_3_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            if ((value = object.getString(i))) {
+              if (i == changedIndex) {
+                // System Outdoor Air Method
+                newObject.setString(i, "Standard62.1VentilationRateProcedure");
+              } else {
+                newObject.setString(i, value.get());
+              }
+            }
+          }
+
+          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          ss << newObject;
+
+        } else {
+          // Nothing to do since there's no rename to perform
+          ss << object;
+        }
+
+      } else if (iddname == "OS:SizingPeriod:DesignDay") {
+
+        auto iddObject = idd_3_3_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        std::string humidityIndicatingType;
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 4) {
+              newObject.setString(i, value.get());
+            } else if (i == 4) {
+              humidityIndicatingType = object.getString(15).get();  // Humidity Indicating Type
+              if (istringEqual(humidityIndicatingType, "WetBulb") || istringEqual(humidityIndicatingType, "DewPoint")
+                  || istringEqual(humidityIndicatingType, "WetBulbProfileMultiplierSchedule")
+                  || istringEqual(humidityIndicatingType, "WetBulbProfileDifferenceSchedule")
+                  || istringEqual(humidityIndicatingType, "WetBulbProfileDefaultMultipliers")) {
+                newObject.setString(16, value.get());  // Wetbulb or DewPoint at Maximum Dry-Bulb
+              } else if (istringEqual(humidityIndicatingType, "HumidityRatio")) {
+                newObject.setString(17, value.get());  // Humidity Ratio at Maximum Dry-Bulb
+              } else if (istringEqual(humidityIndicatingType, "Enthalpy")) {
+                newObject.setString(18, value.get());  // Enthalpy at Maximum Dry-Bulb
+              }
+            } else if (i == 9 || i == 10 || i == 14) {
+              if (value.get() == "0") {
+                newObject.setString(i - 1, "No");
+              } else if (value.get() == "1") {
+                newObject.setString(i - 1, "Yes");
+              }
+            } else if (i < 15) {
+              newObject.setString(i - 1, value.get());
+            } else if (i == 15) {
+              newObject.setString(i - 1, humidityIndicatingType);
+            } else if (i == 16) {
+              newObject.setString(i - 1, value.get());
+            } else if (i < 25) {
+              newObject.setString(i + 2, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
         // No-op
       } else {
         ss << object;
@@ -6712,7 +6825,95 @@ namespace osversion {
 
     return ss.str();
 
-  }  // end update_3_2_1_to_3_2_2
+  }  // end update_3_2_1_to_3_3_0
+
+  std::string VersionTranslator::update_3_3_0_to_3_4_0(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_4_0) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
+
+    ss << idf_3_3_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_4_0.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_3_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:Coil:Heating:DX:MultiSpeed") {
+
+        // Stage Data List becomes extensible list (Stage 1, Stage 2, etc.)
+        // ModelObjectList gets removed
+
+        auto iddObject = idd_3_4_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < 18; ++i) {
+          if ((value = object.getString(i))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
+        // Before: There was a single modelObjectList, which extensible groups were the StageDatas
+        // Now: We move these directly onto extensible groups
+        std::string stageDataList = object.getString(18).get();  // Stage Data List: handle of the ModelObjectList
+        if (boost::optional<IdfObject> modelObjectList = idf_3_3_0.getObject(openstudio::toUUID(stageDataList))) {
+          m_untranslated.push_back(modelObjectList.get());  // original OS:ModelObjectList
+          for (const IdfExtensibleGroup& eg : modelObjectList->extensibleGroups()) {
+            std::string stageDataListHandleStr = eg.getString(0).get();
+            if (!stageDataListHandleStr.empty()) {
+              IdfExtensibleGroup new_eg = newObject.pushExtensibleGroup({stageDataListHandleStr});  // new OS:Coil:Heating:DX:MultiSpeed:StageData
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+      } else if (iddname == "OS:Coil:Heating:DX:MultiSpeed:StageData") {
+        auto iddObject = idd_3_4_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        // Inserted name at pos 1
+        newObject.setString(1, "Coil Heating DX Multi Speed Stage Data");
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 1) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:ModelObjectList") {
+
+        bool isOnCoil = false;
+        std::vector<IdfObject> coils = idf_3_3_0.getObjectsByType(idf_3_3_0.iddFile().getObject("OS:Coil:Heating:DX:MultiSpeed").get());
+        for (auto& coil : coils) {
+          if (object.getString(0).get() == coil.getString(18).get()) {  // Handle == Stage Data List
+            isOnCoil = true;
+          }
+        }
+
+        if (!isOnCoil) {
+          ss << object;
+        }
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_3_0_to_3_4_0
+
+  /*   std::string VersionTranslator::update_3_4_0_to_3_4_1(const IdfFile& idf_3_4_0, const IddFileAndFactoryWrapper& idd_3_4_1) {
+
+  }  // end update_3_4_0_to_3_4_1 */
 
 }  // namespace osversion
 }  // namespace openstudio

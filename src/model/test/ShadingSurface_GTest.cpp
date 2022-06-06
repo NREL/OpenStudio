@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,4 +53,20 @@ TEST_F(ModelFixture, ShadingSurface) {
 
   ShadingSurface shadingSurface(points, model);
   EXPECT_FALSE(shadingSurface.shadingSurfaceGroup());
+}
+
+TEST_F(ModelFixture, ShadingSurface_isXXXAutocalculated_4399) {
+  // Test for #4399
+  Model m;
+  std::vector<Point3d> points{
+    Point3d{0, 1, 0},
+    Point3d{0, 0, 0},
+    Point3d{1, 0, 0},
+    Point3d{1, 1, 0},
+  };
+
+  ShadingSurface shadingSurface(points, m);
+
+  shadingSurface.autocalculateNumberofVertices();
+  EXPECT_TRUE(shadingSurface.isNumberofVerticesAutocalculated());
 }

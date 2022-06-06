@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -55,6 +55,8 @@
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
 #include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
+#include "SurfacePropertyLocalEnvironment.hpp"
+#include "SurfacePropertyLocalEnvironment_Impl.hpp"
 #include "AirflowNetworkSurface.hpp"
 #include "AirflowNetworkSurface_Impl.hpp"
 #include "AirflowNetworkDetailedOpening.hpp"
@@ -67,6 +69,8 @@
 #include "AirflowNetworkEffectiveLeakageArea_Impl.hpp"
 #include "AirflowNetworkHorizontalOpening.hpp"
 #include "AirflowNetworkHorizontalOpening_Impl.hpp"
+#include "AirflowNetworkSpecifiedFlowRate.hpp"
+#include "AirflowNetworkSpecifiedFlowRate_Impl.hpp"
 #include "FoundationKiva.hpp"
 #include "FoundationKiva_Impl.hpp"
 #include "FoundationKivaSettings.hpp"
@@ -85,6 +89,8 @@
 #include "../utilities/core/Assert.hpp"
 
 #include "../utilities/sql/SqlFile.hpp"
+
+#include <numeric>  // std::accumulate
 
 using boost::to_upper_copy;
 
@@ -164,6 +170,8 @@ namespace model {
         auto coefficientsClone = coefficients->clone(model).cast<SurfacePropertyConvectionCoefficients>();
         coefficientsClone.setSurface(newParentAsModelObject);
       }
+
+      // TODO: do we clone the SurfacePropertyLocalEnvironment?
 
       auto foundation = adjacentFoundation();
       if (foundation) {
@@ -387,7 +395,7 @@ namespace model {
       bool result = false;
       boost::optional<std::string> value = getString(OS_SurfaceFields::ViewFactortoGround, true);
       if (value) {
-        result = openstudio::istringEqual(value.get(), "canAutocalculate");
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
       }
       return result;
     }
@@ -404,7 +412,7 @@ namespace model {
       bool result = false;
       boost::optional<std::string> value = getString(OS_SurfaceFields::NumberofVertices, true);
       if (value) {
-        result = openstudio::istringEqual(value.get(), "canAutocalculate");
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
       }
       return result;
     }
@@ -942,6 +950,26 @@ namespace model {
       }
     }
 
+    boost::optional<SurfacePropertyLocalEnvironment> Surface_Impl::surfacePropertyLocalEnvironment() const {
+
+      std::vector<SurfacePropertyLocalEnvironment> result;
+      for (auto& localEnv : model().getConcreteModelObjects<SurfacePropertyLocalEnvironment>()) {
+        if (auto surface_ = localEnv.exteriorSurfaceAsSurface()) {
+          if (surface_->handle() == handle()) {
+            result.push_back(localEnv);
+          }
+        }
+      }
+      if (result.empty()) {
+        return boost::none;
+      } else if (result.size() == 1) {
+        return result.at(0);
+      } else {
+        LOG(Error, "More than one SurfacePropertyLocalEnvironment points to this Surface");
+        return boost::none;
+      }
+    }
+
     boost::optional<SurfacePropertyOtherSideCoefficients> Surface_Impl::surfacePropertyOtherSideCoefficients() const {
       return getObject<Surface>().getModelObjectTarget<SurfacePropertyOtherSideCoefficients>(OS_SurfaceFields::OutsideBoundaryConditionObject);
     }
@@ -1440,16 +1468,80 @@ namespace model {
         return result;
       }
 
-      double windowArea = 0.0;
+      double roughOpeningArea = totalAreaOfSubSurfaces();
+      double wwr = roughOpeningArea / grossArea;
+
+      return wwr;
+    }
+
+    // Calculates and returns the toital area of the subsurfaces
+    // If any subsurface extends outside the parent surface or overlaps an adjacent subsurface
+    // then that subsurface's vertices rather than rough opening vertices are used to calculate the area
+    // NOTE: I'm starting to think a better way to do this would be to use polygon booleans
+    // 1 - Intersect the subsurface rough opening with the parent surface to get the area inside the parent surface
+    // 2 - Add all the subsurface rough openings together (so overlap areas don't count twice)
+    double Surface_Impl::totalAreaOfSubSurfaces() const {
+      double tol = 0.01;
+
+      // There must be a simpler way - after all we are only intersetced in areas
+      // 1 - Get the surface polygon flattened
+      // 2 - Get all the sub-surface polygons with frame offset applied
+      // 3 - STart with first poly
+      // 4 - Does it overlap any other polys? (A & B)
+      // 5 - Y: Get the combined area of the two polygons, remove polygon A & B from the list insert polygon C
+      //     N: Remove polygon A form the list add to finished polygon list
+      // 6 When no more overlaps are detected we are finished. Get the total area of all the polygons
+
+      // Simple case - no sub-surfaces
+      if (this->subSurfaces().size() == 0) return 0;
+
+      // Flattened surface vertices
+      Transformation surfaceToXY = Transformation::alignFace(this->vertices()).inverse();
+      std::vector<Point3d> surfaceVertices = surfaceToXY * this->vertices();
+      // Make sure the surface surface is oriented clockwise
+      auto norm = openstudio::getOutwardNormal(surfaceVertices);
+      if (norm && norm->z() > 0) {
+        std::reverse(surfaceVertices.begin(), surfaceVertices.end());
+      }
+
+      Point3dVectorVector subSurfaces;
+
+      // Get the flattened sub surface vertices for windows
       for (const SubSurface& subSurface : this->subSurfaces()) {
         if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
-          windowArea += subSurface.multiplier() * subSurface.netArea();
+          auto roughOpening = surfaceToXY * subSurface.roughOpeningVertices();
+          auto norm = openstudio::getOutwardNormal(roughOpening);
+          if (norm && norm->z() > 0) {
+            std::reverse(roughOpening.begin(), roughOpening.end());
+          }
+          subSurfaces.push_back(roughOpening);
         }
       }
 
-      double wwr = windowArea / grossArea;
+      // Add all the subsurfaces togther
+      auto finalSurfaces = openstudio::joinAll(subSurfaces, tol);
 
-      return wwr;
+      double area = 0;
+      // No overlappingsurfaces so we can add up the surface areas including multipliers
+      if (finalSurfaces.size() == subSurfaces.size()) {
+        for (const auto& subSurface : this->subSurfaces()) {
+          if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
+            auto roughOpening = surfaceToXY * subSurface.roughOpeningVertices();
+            if (!openstudio::polygonInPolygon(roughOpening, surfaceVertices, tol)) {
+              roughOpening = surfaceToXY * subSurface.vertices();
+            }
+            area += openstudio::getArea(roughOpening).value() * subSurface.multiplier();
+          }
+        }
+
+        return area;
+      }
+
+      for (const auto& subSurface : subSurfaces) {
+        area += openstudio::getArea(subSurface).value();
+      }
+
+      return area;
     }
 
     double Surface_Impl::skylightToRoofRatio() const {
@@ -1761,9 +1853,10 @@ namespace model {
 
         std::vector<Point3dVector> tmpFaces;
         unsigned numIntersects = 0;
-        for (const Point3dVector& face : newFaces) {
+        for (const Point3dVector& newFace : newFaces) {
           // each mask should intersect one and only one newFace
-          boost::optional<IntersectionResult> intersection = openstudio::intersect(faceVertices, mask, tol);
+          boost::optional<IntersectionResult> intersection = openstudio::intersect(newFace, mask, tol);
+
           if (intersection) {
             numIntersects += 1;
             tmpFaces.push_back(intersection->polygon1());
@@ -1771,7 +1864,7 @@ namespace model {
               tmpFaces.push_back(tmpFace);
             }
           } else {
-            tmpFaces.push_back(face);
+            tmpFaces.push_back(newFace);
           }
         }
 
@@ -1787,7 +1880,7 @@ namespace model {
       // sort new faces in descending order by area
       std::sort(newFaces.begin(), newFaces.end(), PolygonAreaGreater());
 
-      // loop over all new faces
+      // loop over all new faces to create new Surfaces
       bool changedThis = false;
       unsigned numReparented = 0;
       Model model = this->model();
@@ -1795,9 +1888,11 @@ namespace model {
 
         boost::optional<Surface> surface;
         if (!changedThis) {
+          // Re-use the original surface
           changedThis = true;
           surface = getObject<Surface>();
         } else {
+          // Create new surfaces
           boost::optional<ModelObject> object = this->clone(model);
           OS_ASSERT(object);
           surface = object->optionalCast<Surface>();
@@ -2208,6 +2303,10 @@ namespace model {
     return getImpl<detail::Surface_Impl>()->surfacePropertyConvectionCoefficients();
   }
 
+  boost::optional<SurfacePropertyLocalEnvironment> Surface::surfacePropertyLocalEnvironment() const {
+    return getImpl<detail::Surface_Impl>()->surfacePropertyLocalEnvironment();
+  }
+
   boost::optional<SurfacePropertyOtherSideCoefficients> Surface::surfacePropertyOtherSideCoefficients() const {
     return getImpl<detail::Surface_Impl>()->surfacePropertyOtherSideCoefficients();
   }
@@ -2404,6 +2503,10 @@ namespace model {
   }
 
   AirflowNetworkSurface Surface::getAirflowNetworkSurface(const AirflowNetworkHorizontalOpening& surfaceAirflowLeakage) {
+    return getImpl<detail::Surface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
+  }
+
+  AirflowNetworkSurface Surface::getAirflowNetworkSurface(const AirflowNetworkSpecifiedFlowRate& surfaceAirflowLeakage) {
     return getImpl<detail::Surface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
   }
 

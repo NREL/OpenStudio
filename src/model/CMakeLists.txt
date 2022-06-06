@@ -34,6 +34,16 @@ set(${target_name}_src
   ThreeJSForwardTranslator.cpp
   ThreeJSReverseTranslator.hpp
   ThreeJSReverseTranslator.cpp
+  GltfForwardTranslator.hpp
+  GltfForwardTranslator.cpp
+  GltfBoundingBoxWrapper.hpp
+  GltfBoundingBoxWrapper.cpp
+  GltfModelObjectMetadataWrapper.hpp
+  GltfModelObjectMetadataWrapper.cpp
+  GltfUserDataWrapper.hpp
+  GltfUserDataWrapper.cpp
+  GltfMetaDataWrapper.hpp
+  GltfMetaDataWrapper.cpp
   ModelMerger.hpp
   ModelMerger.cpp
 
@@ -107,6 +117,9 @@ set(${target_name}_src
   AirflowNetworkSimulationControl.hpp
   AirflowNetworkSimulationControl_Impl.hpp
   AirflowNetworkSimulationControl.cpp
+  AirflowNetworkSpecifiedFlowRate.hpp
+  AirflowNetworkSpecifiedFlowRate_Impl.hpp
+  AirflowNetworkSpecifiedFlowRate.cpp
   AirflowNetworkSurface.hpp
   AirflowNetworkSurface_Impl.hpp
   AirflowNetworkSurface.cpp
@@ -564,6 +577,12 @@ set(${target_name}_src
   DaylightingDeviceShelf.hpp
   DaylightingDeviceShelf_Impl.hpp
   DaylightingDeviceShelf.cpp
+  DaylightingDeviceTubular.hpp
+  DaylightingDeviceTubular_Impl.hpp
+  DaylightingDeviceTubular.cpp
+  DaylightingDeviceLightWell.hpp
+  DaylightingDeviceLightWell_Impl.hpp
+  DaylightingDeviceLightWell.cpp
   DaylightRedirectionDevice.hpp
   DaylightRedirectionDevice_Impl.hpp
   DaylightRedirectionDevice.cpp
@@ -879,6 +898,12 @@ set(${target_name}_src
   HeatPumpWaterToWaterEquationFitHeating.hpp
   HeatPumpWaterToWaterEquationFitHeating_Impl.hpp
   HeatPumpWaterToWaterEquationFitHeating.cpp
+  HeatPumpPlantLoopEIRCooling.hpp
+  HeatPumpPlantLoopEIRCooling_Impl.hpp
+  HeatPumpPlantLoopEIRCooling.cpp
+  HeatPumpPlantLoopEIRHeating.hpp
+  HeatPumpPlantLoopEIRHeating_Impl.hpp
+  HeatPumpPlantLoopEIRHeating.cpp
   HeatExchangerAirToAirSensibleAndLatent.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent.cpp
@@ -1487,12 +1512,18 @@ set(${target_name}_src
   SurfacePropertyExposedFoundationPerimeter.cpp
   SurfacePropertyExposedFoundationPerimeter.hpp
   SurfacePropertyExposedFoundationPerimeter_Impl.hpp
+  SurfacePropertyLocalEnvironment.cpp
+  SurfacePropertyLocalEnvironment.hpp
+  SurfacePropertyLocalEnvironment_Impl.hpp
   SurfacePropertyOtherSideCoefficients.cpp
   SurfacePropertyOtherSideCoefficients.hpp
   SurfacePropertyOtherSideCoefficients_Impl.hpp
   SurfacePropertyOtherSideConditionsModel.cpp
   SurfacePropertyOtherSideConditionsModel.hpp
   SurfacePropertyOtherSideConditionsModel_Impl.hpp
+  SurfacePropertySurroundingSurfaces.cpp
+  SurfacePropertySurroundingSurfaces.hpp
+  SurfacePropertySurroundingSurfaces_Impl.hpp
   SwimmingPoolIndoor.cpp
   SwimmingPoolIndoor.hpp
   SwimmingPoolIndoor_Impl.hpp
@@ -1779,6 +1810,7 @@ set(${target_name}_test_src
   test/AirflowNetworkOccupantVentilationControl_GTest.cpp
   test/AirflowNetworkSimpleOpening_GTest.cpp
   test/AirflowNetworkSimulationControl_GTest.cpp
+  test/AirflowNetworkSpecifiedFlowRate_GTest.cpp
   test/AirflowNetworkSurface_GTest.cpp
   test/AirflowNetworkZone_GTest.cpp
   test/AirGap_GTest.cpp
@@ -1912,14 +1944,19 @@ set(${target_name}_test_src
   test/CurveQuadLinear_GTest.cpp
   # n == 5
   test/CurveQuintLinear_GTest.cpp
+  # n == ?
+  test/CurveFunctionalPressureDrop_GTest.cpp
 
   test/DaylightingControl_GTest.cpp
   test/DaylightingDeviceShelf_GTest.cpp
+  test/DaylightingDeviceTubular_GTest.cpp
+  test/DaylightingDeviceLightWell_GTest.cpp
   test/DaylightRedirectionDevice_GTest.cpp
   test/DefaultConstructionSet_GTest.cpp
   test/DefaultScheduleSet_GTest.cpp
   test/DefaultSubSurfaceConstructions_GTest.cpp
   test/DefaultSurfaceConstructions_GTest.cpp
+  test/DesignDay_GTest.cpp
   test/DesignSpecificationOutdoorAir_GTest.cpp
   test/DesignSpecificationZoneAirDistribution_GTest.cpp
   test/DistrictCooling_GTest.cpp
@@ -2009,6 +2046,8 @@ set(${target_name}_test_src
   test/HeatExchangerFluidToFluid_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitHeating_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitCooling_GTest.cpp
+  test/HeatPumpPlantLoopEIRHeating_GTest.cpp
+  test/HeatPumpPlantLoopEIRCooling_GTest.cpp
   test/HumidifierSteamElectric_GTest.cpp
   test/HumidifierSteamGas_GTest.cpp
   test/IlluminanceMap_GTest.cpp
@@ -2163,8 +2202,10 @@ set(${target_name}_test_src
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  test/SurfacePropertyLocalEnvironment_GTest.cpp
   test/SurfacePropertyOtherSideCoefficients_GTest.cpp
   test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
+  test/SurfacePropertySurroundingSurfaces_GTest.cpp
   test/SwimmingPoolIndoor_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
@@ -2173,6 +2214,7 @@ set(${target_name}_test_src
   test/TemperingValve_GTest.cpp
   test/ThreeJSForwardTranslator_GTest.cpp
   test/ThreeJSReverseTranslator_GTest.cpp
+  test/GltfForwardTranslator_GTest.cpp
   test/UnitarySystemPerformanceMultispeed_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -189,7 +189,7 @@ namespace measure {
 
     /** Updates the progress bar to value (between 0 and 100). Base class implementation does
    *  nothing. */
-    virtual void updateProgress(const double& value) const;
+    virtual void updateProgress(double value) const;
 
     /** Destroys the progress bar. Base class implementation does nothing. */
     virtual void destroyProgressBar() const;
@@ -210,6 +210,10 @@ namespace measure {
     /** Call this method to retrieve the value of an OSArgument of type boolean that is either
    *  required or has a default. */
     bool getBoolArgumentValue(const std::string& argument_name, const std::map<std::string, OSArgument>& user_arguments);
+
+    /** Call this method to retrieve the value of an OSArgument of type boolean that is optional
+   *  (not required and does not have a default). */
+    boost::optional<bool> getOptionalBoolArgumentValue(const std::string& argument_name, const std::map<std::string, OSArgument>& user_arguments);
 
     /** Call this method to retrieve the value of an OSArgument of type double that is either
    *  required or has a default. */

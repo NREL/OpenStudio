@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -218,7 +218,7 @@ namespace gbxml {
       OS_ASSERT(yd.calendarYear().get() == std::stoi(endDateParts.at(0)));
       openstudio::Date endDate = yd.makeDate(std::stoi(endDateParts.at(1)), std::stoi(endDateParts.at(2)));
 
-      std::string weekScheduleId = element.child("WeekScheduleId").attribute("weekScheduleIdRef").value();
+      std::string weekScheduleId = scheduleYearElement.child("WeekScheduleId").attribute("weekScheduleIdRef").value();
 
       // this can be made more efficient using QXPath in QXmlPatterns later
       for (auto& scheduleWeekElement : root.children("WeekSchedule")) {

@@ -54,9 +54,10 @@ BINDING = Kernel::binding()
 module Kernel
   # ":" is our root path to the embedded file system
   # make sure it is in the ruby load path
-  if ENV['RUBYLIB']
-    ENV['RUBYLIB'].split(File::PATH_SEPARATOR).each {|lib| $LOAD_PATH.unshift(lib)}
-  end
+  # TJC remove RUBYLIB env and use --include or -I via cli args instead
+  #if ENV['RUBYLIB']
+  #  ENV['RUBYLIB'].split(File::PATH_SEPARATOR).each {|lib| $LOAD_PATH.unshift(lib)}
+  #end
   $LOAD_PATH << ':'
   $LOAD_PATH << ':/ruby/2.7.0'
   $LOAD_PATH << ':/ruby/2.7.0/x86_64-darwin16'
@@ -81,7 +82,9 @@ module Kernel
     'sqlite3/sqlite3_native' => 'init_sqlite3_native',\
     'jaro_winkler_ext' => 'init_jaro_winkler_ext',\
     'pycall.so' => 'init_pycall',\
-    'pycall.dll' => 'init_pycall'
+    'pycall.dll' => 'init_pycall',\
+    'msgpack/msgpack' => 'init_msgpack'
+    #'cbor/cbor' => 'init_cbor',\
   }
 
   def require_embedded_extension path
@@ -371,7 +374,7 @@ class IO
     alias :original_read :read
     alias :original_open :open
   end
-  
+
   # NOTES ruby2.7+ now issues warning: "Using the last argument as keyword parameters is deprecated"
   # https://www.ruby-lang.org/en/news/2019/12/12/separation-of-positional-and-keyword-arguments-in-ruby-3-0/
   # Fix by capturing keywords in options hsah

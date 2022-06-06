@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -752,6 +752,51 @@ namespace model {
       return result;
     }
 
+    boost::optional<std::string> ModelObject_Impl::cadObjectId() const {
+      boost::optional<std::string> result;
+      if (hasAdditionalProperties()) {
+        AdditionalProperties additionalProperties = this->additionalProperties();
+        if (additionalProperties.hasFeature("CADObjectId")) {
+          result = additionalProperties.getFeatureAsString("CADObjectId");
+        }
+      }
+      return result;
+    }
+
+    bool ModelObject_Impl::setCADObjectId(const std::string& cadObjectId) {
+      return this->additionalProperties().setFeature("CADObjectId", cadObjectId);
+    }
+
+    boost::optional<std::string> ModelObject_Impl::gbXMLId() const {
+      boost::optional<std::string> result;
+      if (hasAdditionalProperties()) {
+        AdditionalProperties additionalProperties = this->additionalProperties();
+        if (additionalProperties.hasFeature("gbXMLId")) {
+          result = additionalProperties.getFeatureAsString("gbXMLId");
+        }
+      }
+      return result;
+    }
+
+    bool ModelObject_Impl::setGBXMLId(const std::string& gbXMLId) {
+      return this->additionalProperties().setFeature("gbXMLId", gbXMLId);
+    }
+
+    boost::optional<std::string> ModelObject_Impl::displayName() const {
+      boost::optional<std::string> result;
+      if (hasAdditionalProperties()) {
+        AdditionalProperties additionalProperties = this->additionalProperties();
+        if (additionalProperties.hasFeature("displayName")) {
+          result = additionalProperties.getFeatureAsString("displayName");
+        }
+      }
+      return result;
+    }
+
+    bool ModelObject_Impl::setDisplayName(const std::string& displayName) {
+      return this->additionalProperties().setFeature("displayName", displayName);
+    }
+
   }  // namespace detail
 
   bool ModelObject::operator<(const ModelObject& right) const {
@@ -849,6 +894,30 @@ namespace model {
 
   std::vector<IdfObject> ModelObject::removeAdditionalProperties() {
     return getImpl<detail::ModelObject_Impl>()->removeAdditionalProperties();
+  }
+
+  boost::optional<std::string> ModelObject::cadObjectId() const {
+    return getImpl<detail::ModelObject_Impl>()->cadObjectId();
+  }
+
+  bool ModelObject::setCADObjectId(const std::string& cadObjectId) {
+    return getImpl<detail::ModelObject_Impl>()->setCADObjectId(cadObjectId);
+  }
+
+  boost::optional<std::string> ModelObject::gbXMLId() const {
+    return getImpl<detail::ModelObject_Impl>()->gbXMLId();
+  }
+
+  bool ModelObject::setGBXMLId(const std::string& gbXMLId) {
+    return getImpl<detail::ModelObject_Impl>()->setGBXMLId(gbXMLId);
+  }
+
+  boost::optional<std::string> ModelObject::displayName() const {
+    return getImpl<detail::ModelObject_Impl>()->displayName();
+  }
+
+  bool ModelObject::setDisplayName(const std::string& displayName) {
+    return getImpl<detail::ModelObject_Impl>()->setDisplayName(displayName);
   }
 
   ModelObject::ModelObject(IddObjectType type, const Model& model, bool fastName)

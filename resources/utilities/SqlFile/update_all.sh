@@ -2,11 +2,13 @@
 
 # Add your OAUTH token here (public access only)
 token=
-curl_token="-H \"Authorization: token $token\""
+if [ ! -z $token ]; then
+  curl_token="-H \"Authorization: token $token\""
+fi;
 
 # All versions you want to run
-# declare -a all_versions=("8.5.0" "8.6.0" "8.7.0" "8.8.0" "8.9.0" "9.0.1" "9.1.0" "9.2.0" "9.3.0", "9.4.0")
-declare -a all_versions=("9.5.0-IOFreeze")
+# declare -a all_versions=("8.5.0" "8.6.0" "8.7.0" "8.8.0" "8.9.0" "9.0.1" "9.1.0" "9.2.0" "9.3.0", "9.4.0", "9.5.0", "9.6.0", "22.1.0")
+declare -a all_versions=("22.1.0")
 
 # DO NOT RERUN IF SQL ALREADY THERE
 rerun_if_already_there=false
@@ -55,11 +57,17 @@ for ep_version in "${all_versions[@]}"; do
 
     # Prefer using the tar.gz (doesn't require install via sh, which needs sudo generally speaking, and more importantly needs manual input)
     # Starting 8.8.0, tar.gz is available.
-    echo "curl https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("tar.gz")) | .browser_download_url'"
-    tar_gz_link=$(curl -H "Authorization: token $token" https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("tar.gz")) | .browser_download_url')
+    release_json=$(curl -sL $curl_token https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version)
+    ubuntu_version=$(lsb_release -rs)
+    tar_gz_link=$(echo $release_json  | jq -r '.assets | .[] | select(.name | contains('\"Ubuntu$ubuntu_version\"')) | select(.name | contains("tar.gz")) | .browser_download_url')
+    # If not found, fall back on the generic 'Linux' installer rather than the (eg: 20.04) specific one
     if [ -z "$tar_gz_link" ]; then
-      echo "curl https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("sh")) | .browser_download_url'"
-      sh_link=$(curl -H "Authorization: token $token" https://api.github.com/repos/NREL/EnergyPlus/releases/tags/v$ep_version | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("sh")) | .browser_download_url')
+      tar_gz_link=$(echo $release_json  | jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("tar.gz")) | .browser_download_url')
+    fi;
+
+    # If not found, fall back on the .sh installer
+    if [ -z "$tar_gz_link" ]; then
+      sh_link=$(echo $release_json| jq -r '.assets | .[] | select(.name | contains("Linux")) | select(.name | contains("sh")) | .browser_download_url')
       # sh_name=${sh_link##*/}
       echo $sh_link
       sh_name=$(basename -- $sh_link)

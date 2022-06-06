@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -117,7 +117,7 @@ class UTILITIES_API Workspace
    *  If the Workspace so constructed is not valid at the specified StrictnessLevel, all of the
    *  newly created objects are removed, and the constructor returns an empty Workspace with
    *  StrictnessLevel None. Problems may be diagnosed by calling idfFile.validityReport(level). */
-  Workspace(const IdfFile& idfFile, StrictnessLevel level = StrictnessLevel::None);
+  Workspace(const IdfFile& idfFile, StrictnessLevel level = StrictnessLevel::Minimal);
 
   /** Copy constructor, shares data with other Workspace. */
   Workspace(const Workspace& other);

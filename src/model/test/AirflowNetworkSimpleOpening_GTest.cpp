@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,8 +44,12 @@ TEST_F(ModelFixture, AirflowNetwork_SimpleOpening) {
   AirflowNetworkSimpleOpening simple1(model, 1.0, 0.5, 0.5, 0.5);
 
   EXPECT_EQ(1, simple0.airMassFlowCoefficientWhenOpeningisClosed());
+  EXPECT_EQ(0.5, simple0.minimumDensityDifferenceforTwoWayFlow());
+  EXPECT_EQ(0.5, simple0.dischargeCoefficient());
   EXPECT_EQ(0.65, simple0.airMassFlowExponentWhenOpeningisClosed());
 
   EXPECT_EQ(1, simple1.airMassFlowCoefficientWhenOpeningisClosed());
+  EXPECT_EQ(0.5, simple1.minimumDensityDifferenceforTwoWayFlow());
+  EXPECT_EQ(0.5, simple1.dischargeCoefficient());
   EXPECT_EQ(0.5, simple1.airMassFlowExponentWhenOpeningisClosed());
 }

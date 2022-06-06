@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,4 +52,20 @@ TEST_F(ModelFixture, InteriorPartitionSurface) {
 
   InteriorPartitionSurface interiorPartitionSurface(points, model);
   EXPECT_FALSE(interiorPartitionSurface.interiorPartitionSurfaceGroup());
+}
+
+TEST_F(ModelFixture, InteriorPartitionSurface_isXXXAutocalculated_4399) {
+  // Test for #4399
+  Model m;
+  std::vector<Point3d> points{
+    Point3d{0, 1, 0},
+    Point3d{0, 0, 0},
+    Point3d{1, 0, 0},
+    Point3d{1, 1, 0},
+  };
+
+  InteriorPartitionSurface interiorPartitionSurface(points, m);
+
+  interiorPartitionSurface.autocalculateNumberofVertices();
+  EXPECT_TRUE(interiorPartitionSurface.isNumberofVerticesAutocalculated());
 }

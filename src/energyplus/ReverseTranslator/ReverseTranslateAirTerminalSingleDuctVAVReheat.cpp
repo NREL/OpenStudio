@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -195,6 +195,17 @@ namespace energyplus {
       value = workspaceObject.getDouble(AirTerminal_SingleDuct_VAV_ReheatFields::MaximumReheatAirTemperature);
       if (value) {
         airTerminal->setMaximumReheatAirTemperature(value.get());
+      }
+
+      // MinimumAirFlowTurndownScheduleName
+      _schedule = workspaceObject.getTarget(AirTerminal_SingleDuct_VAV_ReheatFields::MinimumAirFlowTurndownScheduleName);
+      if (_schedule) {
+        boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(_schedule.get());
+        if (mo) {
+          if (boost::optional<Schedule> schedule = mo->optionalCast<Schedule>()) {
+            airTerminal->setMinimumAirFlowTurndownSchedule(schedule.get());
+          }
+        }
       }
 
       return airTerminal.get();

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -1616,6 +1616,7 @@ namespace model {
   std::string Model::plenumSpaceTypeName() const {
     return getImpl<detail::Model_Impl>()->plenumSpaceTypeName();
   }
+
   openstudio::WorkflowJSON Model::workflowJSON() const {
     return getImpl<detail::Model_Impl>()->workflowJSON();
   }
@@ -1797,7 +1798,7 @@ namespace model {
     DesignDay designDay1(model);
     designDay1.setMaximumDryBulbTemperature(-20.6);
     designDay1.setDailyDryBulbTemperatureRange(0.0);
-    designDay1.setHumidityIndicatingConditionsAtMaximumDryBulb(-20.6);
+    designDay1.setWetBulbOrDewPointAtMaximumDryBulb(-20.6);
     designDay1.setBarometricPressure(99063.0);
     designDay1.setWindSpeed(4.9);
     designDay1.setWindDirection(270);
@@ -1808,12 +1809,12 @@ namespace model {
     designDay1.setMonth(1);
     designDay1.setDayType("WinterDesignDay");
     designDay1.setDaylightSavingTimeIndicator(false);
-    designDay1.setHumidityIndicatingType("WetBulb");
+    designDay1.setHumidityConditionType("WetBulb");
 
     DesignDay designDay2(model);
     designDay2.setMaximumDryBulbTemperature(33.2);
     designDay2.setDailyDryBulbTemperatureRange(10.7);
-    designDay2.setHumidityIndicatingConditionsAtMaximumDryBulb(23.8);
+    designDay2.setWetBulbOrDewPointAtMaximumDryBulb(23.8);
     designDay2.setBarometricPressure(99063.0);
     designDay2.setWindSpeed(5.3);
     designDay2.setWindDirection(230);
@@ -1824,7 +1825,7 @@ namespace model {
     designDay2.setMonth(7);
     designDay2.setDayType("SummerDesignDay");
     designDay2.setDaylightSavingTimeIndicator(false);
-    designDay2.setHumidityIndicatingType("WetBulb");
+    designDay2.setHumidityConditionType("WetBulb");
 
     // add schedules
     addExampleSchedules(model);
@@ -1884,6 +1885,30 @@ namespace model {
     buildingStory.setNominalFloortoFloorHeight(3);
 
     // create spaces from floor print
+    // GG 10/26/21 - Change the spac egeneration to use fromFloorPrint instead of using Clone
+    // don't know the underlying workins of Clone but each time this method was called in a different
+    // session the order and type of surfaces was different, sometimes a surface was a roof and other
+    // times a wall. To test for deterministic gbxml export I need to be sure that the model used is
+    // idemntical every single time it this method is run. If these chanegs are aproblem I can refactor
+    // so both Clone and fromFloorProint could be used
+    //
+    //            y (=North)
+    //  Site      ▲
+    //  Shading   │                  building height = 3m
+    //   ║      20├────────┬────────┐
+    //   ║        │        │        │
+    //   ║        │        │        │
+    //   ║        │ Space 3│ Space 4│
+    //   ║        │        │        │
+    //   ║      10├────────┼────────┤
+    //   ║        │        │        │
+    //   ║        │        │        ├
+    //   ║        │ Space 1│ Space 2│◄─── window + space shading
+    //   ║        │        │        ├
+    //   ║        └──┬─┬───┴────────┴──────► x
+    //           0    ▲    10       20
+    //                └─ door+building shading
+
     std::vector<Point3d> floorPrint;
     floorPrint.push_back(Point3d(0, 0, 0));
     floorPrint.push_back(Point3d(0, 10, 0));
@@ -3077,6 +3102,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(AirflowNetworkReferenceCrackConditions);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimpleOpening);
     REGISTER_CONSTRUCTOR(AirflowNetworkSimulationControl);
+    REGISTER_CONSTRUCTOR(AirflowNetworkSpecifiedFlowRate);
     REGISTER_CONSTRUCTOR(AirflowNetworkSurface);
     REGISTER_CONSTRUCTOR(AirflowNetworkZone);
     REGISTER_CONSTRUCTOR(AirflowNetworkZoneExhaustFan);
@@ -3225,6 +3251,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(CurveTriquadratic);
     REGISTER_CONSTRUCTOR(DaylightingControl);
     REGISTER_CONSTRUCTOR(DaylightingDeviceShelf);
+    REGISTER_CONSTRUCTOR(DaylightingDeviceTubular);
+    REGISTER_CONSTRUCTOR(DaylightingDeviceLightWell);
     REGISTER_CONSTRUCTOR(DaylightRedirectionDevice);
     REGISTER_CONSTRUCTOR(DefaultConstructionSet);
     REGISTER_CONSTRUCTOR(DefaultScheduleSet);
@@ -3327,6 +3355,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(HeatExchangerFluidToFluid);
     REGISTER_CONSTRUCTOR(HeatPumpWaterToWaterEquationFitCooling);
     REGISTER_CONSTRUCTOR(HeatPumpWaterToWaterEquationFitHeating);
+    REGISTER_CONSTRUCTOR(HeatPumpPlantLoopEIRCooling);
+    REGISTER_CONSTRUCTOR(HeatPumpPlantLoopEIRHeating);
     REGISTER_CONSTRUCTOR(HotWaterEquipment);
     REGISTER_CONSTRUCTOR(HotWaterEquipmentDefinition);
     REGISTER_CONSTRUCTOR(HumidifierSteamElectric);
@@ -3498,8 +3528,10 @@ namespace model {
     REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyConvectionCoefficientsMultipleSurface);
     REGISTER_CONSTRUCTOR(SurfacePropertyExposedFoundationPerimeter);
+    REGISTER_CONSTRUCTOR(SurfacePropertyLocalEnvironment);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
+    REGISTER_CONSTRUCTOR(SurfacePropertySurroundingSurfaces);
     REGISTER_CONSTRUCTOR(SwimmingPoolIndoor);
     REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
     REGISTER_CONSTRUCTOR(TemperingValve);
@@ -3599,6 +3631,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkReferenceCrackConditions);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimpleOpening);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSimulationControl);
+    REGISTER_COPYCONSTRUCTORS(AirflowNetworkSpecifiedFlowRate);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkSurface);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZone);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkZoneExhaustFan);
@@ -3747,6 +3780,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CurveTriquadratic);
     REGISTER_COPYCONSTRUCTORS(DaylightingControl);
     REGISTER_COPYCONSTRUCTORS(DaylightingDeviceShelf);
+    REGISTER_COPYCONSTRUCTORS(DaylightingDeviceTubular);
+    REGISTER_COPYCONSTRUCTORS(DaylightingDeviceLightWell);
     REGISTER_COPYCONSTRUCTORS(DaylightRedirectionDevice);
     REGISTER_COPYCONSTRUCTORS(DefaultConstructionSet);
     REGISTER_COPYCONSTRUCTORS(DefaultScheduleSet);
@@ -3849,6 +3884,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(HeatExchangerFluidToFluid);
     REGISTER_COPYCONSTRUCTORS(HeatPumpWaterToWaterEquationFitCooling);
     REGISTER_COPYCONSTRUCTORS(HeatPumpWaterToWaterEquationFitHeating);
+    REGISTER_COPYCONSTRUCTORS(HeatPumpPlantLoopEIRCooling);
+    REGISTER_COPYCONSTRUCTORS(HeatPumpPlantLoopEIRHeating);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipment);
     REGISTER_COPYCONSTRUCTORS(HotWaterEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(HumidifierSteamElectric);
@@ -4020,8 +4057,10 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyConvectionCoefficientsMultipleSurface);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyExposedFoundationPerimeter);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyLocalEnvironment);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertySurroundingSurfaces);
     REGISTER_COPYCONSTRUCTORS(SwimmingPoolIndoor);
     REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);
     REGISTER_COPYCONSTRUCTORS(TemperingValve);

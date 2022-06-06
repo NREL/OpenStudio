@@ -1,4 +1,4 @@
-  Version,9.5;
+  Version,22.1;
 
   Timestep,4;
 
@@ -226,6 +226,7 @@
     Floor,                   !- Surface Type
     000_ExtSlabCarpet_4in_ClimateZone 1-8,  !- Construction Name
     Story 1 Core Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -242,6 +243,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 Core Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 4,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -258,6 +260,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 Core Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 10,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -274,6 +277,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 Core Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 16,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -290,6 +294,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 Core Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 22,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -306,6 +311,7 @@
     Ceiling,                 !- Surface Type
     000_Interior Ceiling,    !- Construction Name
     Story 1 Core Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 55,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -533,6 +539,7 @@
     Floor,                   !- Surface Type
     000_ExtSlabCarpet_4in_ClimateZone 1-8,  !- Construction Name
     Story 1 East Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -549,6 +556,7 @@
     Wall,                    !- Surface Type
     ASHRAE_189.1-2009_ExtWall_SteelFrame_ClimateZone 4-8,  !- Construction Name
     Story 1 East Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -580,6 +588,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 East Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 23,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -596,6 +605,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 East Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 28,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -612,6 +622,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 East Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 9,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -628,6 +639,7 @@
     Ceiling,                 !- Surface Type
     000_Interior Ceiling,    !- Construction Name
     Story 1 East Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 43,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -770,6 +782,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 North Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 27,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -786,6 +799,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 North Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 3,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -802,6 +816,7 @@
     Ceiling,                 !- Surface Type
     000_Interior Ceiling,    !- Construction Name
     Story 1 North Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 37,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -818,6 +833,7 @@
     Floor,                   !- Surface Type
     000_ExtSlabCarpet_4in_ClimateZone 1-8,  !- Construction Name
     Story 1 North Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -834,6 +850,7 @@
     Wall,                    !- Surface Type
     ASHRAE_189.1-2009_ExtWall_SteelFrame_ClimateZone 4-8,  !- Construction Name
     Story 1 North Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -865,6 +882,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 North Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 17,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1007,6 +1025,7 @@
     Floor,                   !- Surface Type
     000_ExtSlabCarpet_4in_ClimateZone 1-8,  !- Construction Name
     Story 1 South Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1023,6 +1042,7 @@
     Wall,                    !- Surface Type
     ASHRAE_189.1-2009_ExtWall_SteelFrame_ClimateZone 4-8,  !- Construction Name
     Story 1 South Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1054,6 +1074,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 South Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 5,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1070,6 +1091,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 South Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 29,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1086,6 +1108,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 South Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 15,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1102,6 +1125,7 @@
     Ceiling,                 !- Surface Type
     000_Interior Ceiling,    !- Construction Name
     Story 1 South Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 49,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1244,6 +1268,7 @@
     Floor,                   !- Surface Type
     000_ExtSlabCarpet_4in_ClimateZone 1-8,  !- Construction Name
     Story 1 West Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1260,6 +1285,7 @@
     Wall,                    !- Surface Type
     ASHRAE_189.1-2009_ExtWall_SteelFrame_ClimateZone 4-8,  !- Construction Name
     Story 1 West Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1291,6 +1317,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 West Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 11,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1307,6 +1334,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 West Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 26,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1323,6 +1351,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 1 West Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 21,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1339,6 +1368,7 @@
     Ceiling,                 !- Surface Type
     000_Interior Ceiling,    !- Construction Name
     Story 1 West Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 31,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1481,6 +1511,7 @@
     Floor,                   !- Surface Type
     000_Interior Floor,      !- Construction Name
     Story 2 Core Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 30,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1497,6 +1528,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 Core Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 34,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1513,6 +1545,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 Core Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 40,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1529,6 +1562,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 Core Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 46,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1545,6 +1579,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 Core Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 52,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1561,6 +1596,7 @@
     Roof,                    !- Surface Type
     ASHRAE_189.1-2009_ExtRoof_IEAD_ClimateZone 2-5,  !- Construction Name
     Story 2 Core Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1703,6 +1739,7 @@
     Floor,                   !- Surface Type
     000_Interior Floor,      !- Construction Name
     Story 2 East Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 18,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1719,6 +1756,7 @@
     Wall,                    !- Surface Type
     ASHRAE_189.1-2009_ExtWall_SteelFrame_ClimateZone 4-8,  !- Construction Name
     Story 2 East Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1750,6 +1788,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 East Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 53,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1766,6 +1805,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 East Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 58,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1782,6 +1822,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 East Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 39,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1798,6 +1839,7 @@
     Roof,                    !- Surface Type
     ASHRAE_189.1-2009_ExtRoof_IEAD_ClimateZone 2-5,  !- Construction Name
     Story 2 East Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1940,6 +1982,7 @@
     Floor,                   !- Surface Type
     000_Interior Floor,      !- Construction Name
     Story 2 North Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 12,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1956,6 +1999,7 @@
     Wall,                    !- Surface Type
     ASHRAE_189.1-2009_ExtWall_SteelFrame_ClimateZone 4-8,  !- Construction Name
     Story 2 North Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1987,6 +2031,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 North Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 47,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2003,6 +2048,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 North Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 57,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2019,6 +2065,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 North Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 33,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2035,6 +2082,7 @@
     Roof,                    !- Surface Type
     ASHRAE_189.1-2009_ExtRoof_IEAD_ClimateZone 2-5,  !- Construction Name
     Story 2 North Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -2177,6 +2225,7 @@
     Floor,                   !- Surface Type
     000_Interior Floor,      !- Construction Name
     Story 2 South Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 24,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2193,6 +2242,7 @@
     Wall,                    !- Surface Type
     ASHRAE_189.1-2009_ExtWall_SteelFrame_ClimateZone 4-8,  !- Construction Name
     Story 2 South Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -2224,6 +2274,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 South Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 35,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2240,6 +2291,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 South Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 59,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2256,6 +2308,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 South Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 45,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2272,6 +2325,7 @@
     Roof,                    !- Surface Type
     ASHRAE_189.1-2009_ExtRoof_IEAD_ClimateZone 2-5,  !- Construction Name
     Story 2 South Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -2414,6 +2468,7 @@
     Floor,                   !- Surface Type
     000_Interior Floor,      !- Construction Name
     Story 2 West Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 6,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2430,6 +2485,7 @@
     Wall,                    !- Surface Type
     ASHRAE_189.1-2009_ExtWall_SteelFrame_ClimateZone 4-8,  !- Construction Name
     Story 2 West Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -2461,6 +2517,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 West Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 41,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2477,6 +2534,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 West Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 56,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2493,6 +2551,7 @@
     Wall,                    !- Surface Type
     000_Interior Wall,       !- Construction Name
     Story 2 West Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 51,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2509,6 +2568,7 @@
     Roof,                    !- Surface Type
     ASHRAE_189.1-2009_ExtRoof_IEAD_ClimateZone 2-5,  !- Construction Name
     Story 2 West Perimeter Thermal Zone,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3186,7 +3246,9 @@
     0,                       !- Rows to Skip at Top
     ,                        !- Number of Hours of Data
     Comma,                   !- Column Separator
-    Yes;                     !- Interpolate to Timestep
+    Yes,                     !- Interpolate to Timestep
+    60,                      !- Minutes per Item
+    Yes;                     !- Adjust Schedule for Daylight Savings
 
   Schedule:Constant,Always Off Discrete,,0;
 
@@ -3290,8 +3352,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 1,  !- Name
     Air Loop HVAC Outdoor Air System 1 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 1 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 1 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 1 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 1 Controller List,  !- Name
@@ -3617,8 +3678,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 2,  !- Name
     Air Loop HVAC Outdoor Air System 2 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 2 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 2 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 2 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 2 Controller List,  !- Name
@@ -3944,8 +4004,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 3,  !- Name
     Air Loop HVAC Outdoor Air System 3 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 3 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 3 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 3 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 3 Controller List,  !- Name
@@ -4271,8 +4330,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 4,  !- Name
     Air Loop HVAC Outdoor Air System 4 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 4 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 4 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 4 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 4 Controller List,  !- Name
@@ -4598,8 +4656,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 5,  !- Name
     Air Loop HVAC Outdoor Air System 5 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 5 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 5 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 5 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 5 Controller List,  !- Name
@@ -4925,8 +4982,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 6,  !- Name
     Air Loop HVAC Outdoor Air System 6 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 6 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 6 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 6 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 6 Controller List,  !- Name
@@ -5252,8 +5308,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 7,  !- Name
     Air Loop HVAC Outdoor Air System 7 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 7 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 7 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 7 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 7 Controller List,  !- Name
@@ -5579,8 +5634,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 8,  !- Name
     Air Loop HVAC Outdoor Air System 8 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 8 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 8 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 8 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 8 Controller List,  !- Name
@@ -5906,8 +5960,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 9,  !- Name
     Air Loop HVAC Outdoor Air System 9 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 9 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 9 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 9 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 9 Controller List,  !- Name
@@ -6233,8 +6286,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 10,  !- Name
     Air Loop HVAC Outdoor Air System 10 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 10 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 10 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 10 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 10 Controller List,  !- Name
@@ -6535,7 +6587,7 @@
 
   Lights,
     Baseline Model Lights,   !- Name
-    Baseline Model Space Type,  !- Zone or ZoneList Name
+    Baseline Model Space Type,  !- Zone or ZoneList or Space or SpaceList Name
     Baseline Model People Lights and Equipment Schedule,  !- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Lighting Level {W}
@@ -6549,19 +6601,19 @@
 
   People,
     Baseline Model People,   !- Name
-    Baseline Model Space Type,  !- Zone or ZoneList Name
+    Baseline Model Space Type,  !- Zone or ZoneList or Space or SpaceList Name
     Baseline Model People Lights and Equipment Schedule,  !- Number of People Schedule Name
     People/Area,             !- Number of People Calculation Method
     ,                        !- Number of People
-    0.0538195520835486,      !- People per Zone Floor Area {person/m2}
-    ,                        !- Zone Floor Area per Person {m2/person}
+    0.0538195520835486,      !- People per Floor Area {person/m2}
+    ,                        !- Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
     ,                        !- Sensible Heat Fraction
     Baseline Model People Activity Schedule;  !- Activity Level Schedule Name
 
   ElectricEquipment,
     Baseline Model Electric Equipment,  !- Name
-    Baseline Model Space Type,  !- Zone or ZoneList Name
+    Baseline Model Space Type,  !- Zone or ZoneList or Space or SpaceList Name
     Baseline Model People Lights and Equipment Schedule,  !- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Design Level {W}

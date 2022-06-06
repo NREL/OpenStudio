@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -63,7 +63,7 @@ namespace energyplus {
     m_model = Model();
     m_model.setFastNaming(true);
 
-    m_workspace = Workspace(StrictnessLevel(StrictnessLevel::None), IddFileType(IddFileType::EnergyPlus));
+    m_workspace = Workspace(StrictnessLevel(StrictnessLevel::Minimal), IddFileType(IddFileType::EnergyPlus));
 
     m_workspaceToModelMap.clear();
 
@@ -119,7 +119,7 @@ namespace energyplus {
         progressBar->setWindowTitle(toString("Creating EnergyPlus Workspace"));
       }
 
-      Workspace workspace(StrictnessLevel::None, IddFileType(IddFileType::EnergyPlus));
+      Workspace workspace(StrictnessLevel::Minimal, IddFileType(IddFileType::EnergyPlus));
 
       if (progressBar) {
         workspace.connectProgressBar(*progressBar);
@@ -855,7 +855,7 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::Sizing_System: {
-        //modelObject = translateSizingSystem(workspaceObject );
+        //modelObject = translateSizingSystem(workspaceObject);
         break;
       }
       case openstudio::IddObjectType::Sizing_Zone: {
@@ -880,6 +880,14 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::SurfaceProperty_ExposedFoundationPerimeter: {
         modelObject = translateSurfacePropertyExposedFoundationPerimeter(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SurfaceProperty_LocalEnvironment: {
+        modelObject = translateSurfacePropertyLocalEnvironment(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SurfaceProperty_SurroundingSurfaces: {
+        modelObject = translateSurfacePropertySurroundingSurfaces(workspaceObject);
         break;
       }
         //case openstudio::IddObjectType::SwimmingPool_Indoor :

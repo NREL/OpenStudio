@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -642,25 +642,25 @@ TEST_F(IdfFixture, IdfObject_GroupPushingAndPopping) {
 
   // MINFIELDS INCLUDES AN EXTENSIBLE GROUP, BUT EXTENSIBLE GROUPS STILL INITIALIZED AS EMPTY
   object = IdfObject(IddObjectType::BuildingSurface_Detailed);
-  EXPECT_EQ(static_cast<unsigned>(10), object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(11), object.numFields());
   // push empty strings
   EXPECT_FALSE(object.pushExtensibleGroup().empty());
-  EXPECT_EQ(static_cast<unsigned>(13), object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(14), object.numFields());
   // push non-empty strings (correct number)
   StringVector values;
   values.push_back("2.1");
   values.push_back("100.0");
   values.push_back("0.0");
   EXPECT_FALSE(object.pushExtensibleGroup(values).empty());
-  EXPECT_EQ(static_cast<unsigned>(16), object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(17), object.numFields());
   // try to push incorrect number of non-empty strings
   values.pop_back();
   EXPECT_TRUE(object.pushExtensibleGroup(values).empty());
-  EXPECT_EQ(static_cast<unsigned>(16), object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(17), object.numFields());
   // pop until false
   StringVector result;
   result.push_back("Fake entry.");
-  unsigned n = 16;
+  unsigned n = 17;
   while (!result.empty()) {
     result = object.popExtensibleGroup();
     if (!result.empty()) {
@@ -668,7 +668,7 @@ TEST_F(IdfFixture, IdfObject_GroupPushingAndPopping) {
     }
     EXPECT_EQ(n, object.numFields());
   }
-  EXPECT_EQ(static_cast<unsigned>(10), object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(11), object.numFields());
 }
 
 TEST_F(IdfFixture, IdfObject_ScheduleFileWithUrl) {
@@ -680,12 +680,15 @@ TEST_F(IdfFixture, IdfObject_ScheduleFileWithUrl) {
                       1, !- Column Number \n\
                       0, !- Rows to Skip at Top \n\
                       8760, !- Number of Hours of Data \n\
-                      Comma; !- Column Separator";
+                      Comma, !- Column Separator \n\
+                      No, !- Interpolate to Timestep \n\
+                      , !- Minutes per Item \n\
+                      Yes; !- Adjust Schedule for Daylight Savings";
 
   // make an idf object
   OptionalIdfObject object = IdfObject::load(text);
   ASSERT_TRUE(object);
-  ASSERT_EQ(static_cast<unsigned>(7), object->numFields());
+  ASSERT_EQ(static_cast<unsigned>(10), object->numFields());
 
   ASSERT_TRUE(object->getString(0));
   EXPECT_EQ("Web Schedule", object->getString(0).get());
@@ -698,6 +701,12 @@ TEST_F(IdfFixture, IdfObject_ScheduleFileWithUrl) {
 
   ASSERT_TRUE(object->getString(6));
   EXPECT_EQ("Comma", object->getString(6).get());
+
+  ASSERT_TRUE(object->getString(7));
+  EXPECT_EQ("No", object->getString(7).get());
+
+  ASSERT_TRUE(object->getString(9));
+  EXPECT_EQ("Yes", object->getString(9).get());
 }
 
 TEST_F(IdfFixture, DoubleDisplayedAsString) {

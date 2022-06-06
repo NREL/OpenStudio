@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,6 +41,7 @@
 #include "../../model/SurfacePropertyOtherSideCoefficients.hpp"
 #include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../../model/SurfacePropertyConvectionCoefficients.hpp"
+#include "../../model/SurfacePropertyLocalEnvironment.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -127,6 +128,10 @@ namespace energyplus {
     // * makes the order of these objects in the IDF deterministic
     if (boost::optional<SurfacePropertyConvectionCoefficients> _sCoefs = modelObject.surfacePropertyConvectionCoefficients()) {
       translateAndMapModelObject(_sCoefs.get());
+    }
+
+    if (boost::optional<SurfacePropertyLocalEnvironment> localEnv_ = modelObject.surfacePropertyLocalEnvironment()) {
+      translateAndMapModelObject(localEnv_.get());
     }
 
     boost::optional<double> viewFactortoGround = modelObject.viewFactortoGround();

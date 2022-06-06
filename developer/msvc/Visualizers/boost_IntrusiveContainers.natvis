@@ -114,6 +114,8 @@
 
 <!-- boost >= 1.58 -->
 <Type Name="boost::intrusive::list&lt;*,boost::intrusive::member_hook&lt;*,*,*&gt;,*&gt;" Priority="Medium">
+    <!-- boost >= 1.72 -->
+    <AlternativeType Name="boost::intrusive::list&lt;*,boost::intrusive::member_hook&lt;*,*,*&gt;&gt;" />
     <DisplayString>{{ size={data_.root_plus_size_.size_} }}</DisplayString>
     <Expand>
         <LinkedListItems Condition="data_.root_plus_size_.m_header.next_!=data_.root_plus_size_.m_header.next_->next_">
@@ -125,7 +127,10 @@
     </Expand>
 </Type>
 
+<!-- boost >= 1.58 -->
 <Type Name="boost::intrusive::slist&lt;*,boost::intrusive::member_hook&lt;*,*,*&gt;,*&gt;" Priority="Medium">
+    <!-- boost >= 1.72 -->
+    <AlternativeType Name="boost::intrusive::slist&lt;*,boost::intrusive::member_hook&lt;*,*,*&gt;&gt;" />
     <DisplayString>{{ size={data_.root_plus_size_.size_} }}</DisplayString>
     <Expand>
         <LinkedListItems Condition="data_.root_plus_size_.header_holder_.next_!=data_.root_plus_size_.header_holder_.next_->next_">
@@ -147,12 +152,12 @@
 </Type>
 
 <!-- boost 1.55 >= -->
-<Type Name="boost::intrusive::list_iterator&lt;boost::intrusive::mhtraits&lt;*,boost::intrusive::list_member_hook&lt;*,*,*&gt;,*&gt;,*&gt;">
-    <AlternativeType Name="boost::intrusive::slist_iterator&lt;boost::intrusive::mhtraits&lt;*,boost::intrusive::slist_member_hook&lt;*,*,*&gt;,*&gt;,*&gt;" />
-    <SmartPointer Usage="Minimal">&amp;(*($T1*)(((char*)members_.nodeptr_) - (size_t)($T5)))</SmartPointer>
-    <DisplayString>{*($T1*)(((char*)members_.nodeptr_) - (size_t)($T5))}</DisplayString>
+<Type Name="boost::intrusive::list_iterator&lt;boost::intrusive::mhtraits&lt;*,boost::intrusive::list_member_hook&lt;&gt;,*&gt;,*&gt;">
+    <AlternativeType Name="boost::intrusive::slist_iterator&lt;boost::intrusive::mhtraits&lt;*,boost::intrusive::slist_member_hook&lt;&gt;,*&gt;,*&gt;" />
+    <SmartPointer Usage="Minimal">&amp;(*($T1*)(((char*)members_.nodeptr_) - (size_t)($T2)))</SmartPointer>
+    <DisplayString>{*($T1*)(((char*)members_.nodeptr_) - (size_t)($T2))}</DisplayString>
     <Expand>
-        <Item Name="[ptr]">*($T1*)(((char*)members_.nodeptr_) - (size_t)($T5))</Item>
+        <Item Name="[ptr]">*($T1*)(((char*)members_.nodeptr_) - (size_t)($T2))</Item>
     </Expand>
 </Type>
 <!-- boost::intrusive::set -->
@@ -185,6 +190,8 @@
 
 <!-- boost 1.58 >= -->
 <Type Name="boost::intrusive::rbtree_impl&lt;boost::intrusive::bhtraits&lt;*&gt;,*&gt;" Priority="Medium">
+    <!-- boost 1.72 >= -->
+    <AlternativeType Name="boost::intrusive::bstree_impl&lt;boost::intrusive::bhtraits&lt;*&gt;,*&gt;" />
     <DisplayString>{{ size={size_} }}</DisplayString>
     <Expand>
         <TreeItems>
@@ -201,6 +208,8 @@
    behavior and show the index in the name column and the key-value pair in the value column.
    Return error for boost::set and fallback to previous visualizer -->
 <Type Name="boost::intrusive::rbtree_impl&lt;boost::intrusive::bhtraits&lt;*&gt;,*&gt;" ExcludeView="ShowElementsByIndex" Priority="MediumHigh">
+    <!-- boost 1.72 >= -->
+    <AlternativeType Name="boost::intrusive::bstree_impl&lt;boost::intrusive::bhtraits&lt;*&gt;,*&gt;" />
     <DisplayString>{{ size={size_} }}</DisplayString>
     <Expand>
         <TreeItems>
@@ -283,6 +292,8 @@
 
 <!-- boost 1.58 >= -->
 <Type Name="boost::intrusive::set&lt;*,boost::intrusive::constant_time_size&lt;0&gt;,*&gt;" Priority="MediumHigh">
+    <!-- boost 1.72 >= -->
+    <AlternativeType Name="boost::intrusive::set&lt;*,boost::intrusive::constant_time_size&lt;0&gt;&gt;" />
     <DisplayString Condition="holder.root.parent_ == 0">{{ empty }}</DisplayString>
     <DisplayString>{{ non-empty }}</DisplayString>
     <Expand>
@@ -361,6 +372,19 @@
     </Expand>
 </Type>
 
+<!-- boost 1.72 >= -->
+<Type Name="boost::intrusive::bstree_impl&lt;boost::intrusive::mhtraits&lt;*,boost::intrusive::set_member_hook&lt;&gt;,*&gt;,*&gt;">
+    <DisplayString>{{ size={size_} }}</DisplayString>
+    <Expand>
+        <TreeItems>
+            <HeadPointer>holder.root.parent_</HeadPointer>
+            <LeftPointer>left_</LeftPointer>
+            <RightPointer>right_</RightPointer>
+            <ValueNode>*($T1 *)((char*)this - (size_t)($T2))</ValueNode>
+        </TreeItems>
+    </Expand>
+</Type>
+
 
 <!-- default member hook with constant size disabled -->
 <!-- boost <= 1.54 -->
@@ -393,6 +417,8 @@
 
 <!-- boost 1.58 >= -->
 <Type Name="boost::intrusive::set&lt;*,boost::intrusive::member_hook&lt;*,*,*&gt;,boost::intrusive::constant_time_size&lt;0&gt;,*&gt;" Priority="MediumHigh">
+    <!-- boost 1.72 >= -->
+    <AlternativeType Name="boost::intrusive::set&lt;*,boost::intrusive::member_hook&lt;*,*,*&gt;,boost::intrusive::constant_time_size&lt;0&gt;&gt;" />
     <DisplayString Condition="holder.root.parent_ == 0">{{ empty }}</DisplayString>
     <DisplayString>{{ non-empty }}</DisplayString>
     <Expand>
@@ -408,7 +434,7 @@
 <!-- iterator for set with member hook -->
 <!-- boost <= 1.54 -->
 <Type Name="boost::intrusive::tree_iterator&lt;boost::intrusive::rbtree_impl&lt;boost::intrusive::setopt&lt;boost::intrusive::detail::member_hook_traits&lt;*,boost::intrusive::set_member_hook&lt;*&gt;,*&gt;,*&gt; &gt;,*&gt;">
-    <SmartPointer Usage="Minimal">*($T1*)(((char*)members_.nodeptr_) - (size_t)($T3))</SmartPointer>
+    <SmartPointer Usage="Minimal">($T1*)(((char*)members_.nodeptr_) - (size_t)($T3))</SmartPointer>
     <Expand>
         <Item Name="[ptr]">*($T1*)(((char*)members_.nodeptr_) - (size_t)($T3))</Item>
     </Expand>
@@ -416,9 +442,17 @@
 
 <!-- boost 1.55 >= -->
 <Type Name="boost::intrusive::tree_iterator&lt;boost::intrusive::mhtraits&lt;*,boost::intrusive::set_member_hook&lt;*&gt;,*&gt;,*&gt;">
-    <SmartPointer Usage="Minimal">*($T1*)(((char*)members_.nodeptr_) - (size_t)($T3))</SmartPointer>
+    <SmartPointer Usage="Minimal">($T1*)(((char*)members_.nodeptr_) - (size_t)($T3))</SmartPointer>
     <Expand>
         <Item Name="[ptr]">*($T1*)(((char*)members_.nodeptr_) - (size_t)($T3))</Item>
+    </Expand>
+</Type>
+
+<!-- boost 1.72 >= -->
+<Type Name="boost::intrusive::tree_iterator&lt;boost::intrusive::mhtraits&lt;*,boost::intrusive::set_member_hook&lt;&gt;,*&gt;,*&gt;">
+    <SmartPointer Usage="Minimal">($T1*)(((char*)members_.nodeptr_) - (size_t)($T2))</SmartPointer>
+    <Expand>
+        <Item Name="[ptr]">*($T1*)(((char*)members_.nodeptr_) - (size_t)($T2))</Item>
     </Expand>
 </Type>
 

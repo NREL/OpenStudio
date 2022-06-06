@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -68,20 +68,13 @@ namespace energyplus {
 
     idfObject.setString(GasEquipmentFields::Name, modelObject.name().get());
 
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      boost::optional<ThermalZone> thermalZone = space->thermalZone();
-      if (thermalZone) {
-        idfObject.setString(GasEquipmentFields::ZoneorZoneListName, thermalZone->name().get());
-      }
-    } else if (spaceType) {
-      idfObject.setString(GasEquipmentFields::ZoneorZoneListName, spaceType->name().get());
-    }
+    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
+    idfObject.setString(GasEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
-    boost::optional<Schedule> schedule = modelObject.schedule();
-    if (schedule) {
-      idfObject.setString(GasEquipmentFields::ScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(GasEquipmentFields::ScheduleName, idf_schedule_->nameString());
     }
 
     idfObject.setString(GasEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());

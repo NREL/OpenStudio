@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -565,22 +565,6 @@ namespace model {
     : ParentObject(CoilCoolingDXMultiSpeedStageData::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>());
 
-    autosizeGrossRatedTotalCoolingCapacity();
-    autosizeGrossRatedSensibleHeatRatio();
-    setGrossRatedCoolingCOP(3.0);
-    autosizeRatedAirFlowRate();
-    autosizeRatedEvaporativeCondenserPumpPowerConsumption();
-    setNominalTimeforCondensateRemovaltoBegin(0.0);
-    setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(0.0);
-    setMaximumCyclingRate(0.0);
-    setLatentCapacityTimeConstant(0.0);
-    setRatedWasteHeatFractionofPowerInput(0.0);
-    setEvaporativeCondenserEffectiveness(0.9);
-    autosizeEvaporativeCondenserAirFlowRate();
-    autosizeRatedEvaporativeCondenserPumpPowerConsumption();
-    setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
-    setRatedWasteHeatFractionofPowerInput(0.5);
-
     CurveBiquadratic coolingCapacityFunctionofTemperature(model);
     coolingCapacityFunctionofTemperature.setCoefficient1Constant(0.766956);
     coolingCapacityFunctionofTemperature.setCoefficient2x(0.0107756);
@@ -592,7 +576,6 @@ namespace model {
     coolingCapacityFunctionofTemperature.setMaximumValueofx(22.0);
     coolingCapacityFunctionofTemperature.setMinimumValueofy(13.0);
     coolingCapacityFunctionofTemperature.setMaximumValueofy(46.0);
-    setTotalCoolingCapacityFunctionofTemperatureCurve(coolingCapacityFunctionofTemperature);
 
     CurveQuadratic coolingCapacityFuncionofFlowFraction(model);
     coolingCapacityFuncionofFlowFraction.setCoefficient1Constant(0.8);
@@ -600,7 +583,6 @@ namespace model {
     coolingCapacityFuncionofFlowFraction.setCoefficient3xPOW2(0.0);
     coolingCapacityFuncionofFlowFraction.setMinimumValueofx(0.5);
     coolingCapacityFuncionofFlowFraction.setMaximumValueofx(1.5);
-    setTotalCoolingCapacityFunctionofFlowFractionCurve(coolingCapacityFuncionofFlowFraction);
 
     CurveBiquadratic energyInputRatioFunctionofTemperature(model);
     energyInputRatioFunctionofTemperature.setCoefficient1Constant(0.297145);
@@ -613,7 +595,6 @@ namespace model {
     energyInputRatioFunctionofTemperature.setMaximumValueofx(22.0);
     energyInputRatioFunctionofTemperature.setMinimumValueofy(13.0);
     energyInputRatioFunctionofTemperature.setMaximumValueofy(46.0);
-    setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperature);
 
     CurveQuadratic energyInputRatioFunctionofFlowFraction(model);
     energyInputRatioFunctionofFlowFraction.setCoefficient1Constant(1.156);
@@ -621,7 +602,6 @@ namespace model {
     energyInputRatioFunctionofFlowFraction.setCoefficient3xPOW2(0.0256);
     energyInputRatioFunctionofFlowFraction.setMinimumValueofx(0.5);
     energyInputRatioFunctionofFlowFraction.setMaximumValueofx(1.5);
-    setEnergyInputRatioFunctionofFlowFractionCurve(energyInputRatioFunctionofFlowFraction);
 
     CurveQuadratic partLoadFractionCorrelation(model);
     partLoadFractionCorrelation.setCoefficient1Constant(0.75);
@@ -629,7 +609,6 @@ namespace model {
     partLoadFractionCorrelation.setCoefficient3xPOW2(0.0);
     partLoadFractionCorrelation.setMinimumValueofx(0.0);
     partLoadFractionCorrelation.setMaximumValueofx(1.0);
-    setPartLoadFractionCorrelationCurve(partLoadFractionCorrelation);
 
     CurveBiquadratic wasteHeatFunctionofTemperature(model);
     wasteHeatFunctionofTemperature.setCoefficient1Constant(1);
@@ -642,7 +621,42 @@ namespace model {
     wasteHeatFunctionofTemperature.setMaximumValueofx(0.0);
     wasteHeatFunctionofTemperature.setMinimumValueofy(0.0);
     wasteHeatFunctionofTemperature.setMaximumValueofy(0.0);
-    setWasteHeatFunctionofTemperatureCurve(wasteHeatFunctionofTemperature);
+
+    bool ok = true;
+    autosizeGrossRatedTotalCoolingCapacity();
+    autosizeGrossRatedSensibleHeatRatio();
+    ok = setGrossRatedCoolingCOP(3.0);
+    OS_ASSERT(ok);
+    autosizeRatedAirFlowRate();
+    autosizeRatedEvaporativeCondenserPumpPowerConsumption();
+    ok = setNominalTimeforCondensateRemovaltoBegin(0.0);
+    OS_ASSERT(ok);
+    ok = setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(0.0);
+    OS_ASSERT(ok);
+    ok = setMaximumCyclingRate(0.0);
+    OS_ASSERT(ok);
+    ok = setLatentCapacityTimeConstant(0.0);
+    OS_ASSERT(ok);
+    ok = setRatedWasteHeatFractionofPowerInput(0.5);
+    OS_ASSERT(ok);
+    ok = setEvaporativeCondenserEffectiveness(0.9);
+    OS_ASSERT(ok);
+    autosizeEvaporativeCondenserAirFlowRate();
+    autosizeRatedEvaporativeCondenserPumpPowerConsumption();
+    ok = setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
+    OS_ASSERT(ok);
+    ok = setTotalCoolingCapacityFunctionofTemperatureCurve(coolingCapacityFunctionofTemperature);
+    OS_ASSERT(ok);
+    ok = setTotalCoolingCapacityFunctionofFlowFractionCurve(coolingCapacityFuncionofFlowFraction);
+    OS_ASSERT(ok);
+    ok = setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperature);
+    OS_ASSERT(ok);
+    ok = setEnergyInputRatioFunctionofFlowFractionCurve(energyInputRatioFunctionofFlowFraction);
+    OS_ASSERT(ok);
+    ok = setPartLoadFractionCorrelationCurve(partLoadFractionCorrelation);
+    OS_ASSERT(ok);
+    ok = setWasteHeatFunctionofTemperatureCurve(wasteHeatFunctionofTemperature);
+    OS_ASSERT(ok);
   }
 
   CoilCoolingDXMultiSpeedStageData::CoilCoolingDXMultiSpeedStageData(const Model& model, Curve& coolingCapacityFunctionofTemperature,
@@ -653,27 +667,41 @@ namespace model {
     : ParentObject(CoilCoolingDXMultiSpeedStageData::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>());
 
+    bool ok = true;
     autosizeGrossRatedTotalCoolingCapacity();
     autosizeGrossRatedSensibleHeatRatio();
-    setGrossRatedCoolingCOP(3.0);
+    ok = setGrossRatedCoolingCOP(3.0);
+    OS_ASSERT(ok);
     autosizeRatedAirFlowRate();
     autosizeRatedEvaporativeCondenserPumpPowerConsumption();
-    setTotalCoolingCapacityFunctionofTemperatureCurve(coolingCapacityFunctionofTemperature);
-    setTotalCoolingCapacityFunctionofFlowFractionCurve(coolingCapacityFuncionofFlowFraction);
-    setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperature);
-    setEnergyInputRatioFunctionofFlowFractionCurve(energyInputRatioFunctionofFlowFraction);
-    setWasteHeatFunctionofTemperatureCurve(wasteHeatFunctionofTemperature);
-    setPartLoadFractionCorrelationCurve(partLoadFractionCorrelation);
-    setNominalTimeforCondensateRemovaltoBegin(0.0);
-    setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(0.0);
-    setMaximumCyclingRate(0.0);
-    setLatentCapacityTimeConstant(0.0);
-    setRatedWasteHeatFractionofPowerInput(0.0);
-    setEvaporativeCondenserEffectiveness(0.9);
+    ok = setNominalTimeforCondensateRemovaltoBegin(0.0);
+    OS_ASSERT(ok);
+    ok = setRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity(0.0);
+    OS_ASSERT(ok);
+    ok = setMaximumCyclingRate(0.0);
+    OS_ASSERT(ok);
+    ok = setLatentCapacityTimeConstant(0.0);
+    OS_ASSERT(ok);
+    ok = setRatedWasteHeatFractionofPowerInput(0.5);
+    OS_ASSERT(ok);
+    ok = setEvaporativeCondenserEffectiveness(0.9);
+    OS_ASSERT(ok);
     autosizeEvaporativeCondenserAirFlowRate();
     autosizeRatedEvaporativeCondenserPumpPowerConsumption();
-    setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
-    setRatedWasteHeatFractionofPowerInput(0.5);
+    ok = setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
+    OS_ASSERT(ok);
+    ok = setTotalCoolingCapacityFunctionofTemperatureCurve(coolingCapacityFunctionofTemperature);
+    OS_ASSERT(ok);
+    ok = setTotalCoolingCapacityFunctionofFlowFractionCurve(coolingCapacityFuncionofFlowFraction);
+    OS_ASSERT(ok);
+    ok = setEnergyInputRatioFunctionofTemperatureCurve(energyInputRatioFunctionofTemperature);
+    OS_ASSERT(ok);
+    ok = setEnergyInputRatioFunctionofFlowFractionCurve(energyInputRatioFunctionofFlowFraction);
+    OS_ASSERT(ok);
+    ok = setPartLoadFractionCorrelationCurve(partLoadFractionCorrelation);
+    OS_ASSERT(ok);
+    ok = setWasteHeatFunctionofTemperatureCurve(wasteHeatFunctionofTemperature);
+    OS_ASSERT(ok);
   }
 
   IddObjectType CoilCoolingDXMultiSpeedStageData::iddObjectType() {

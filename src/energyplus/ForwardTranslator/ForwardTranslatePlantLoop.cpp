@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -353,6 +353,26 @@ namespace energyplus {
           } else if (isSupplyBranch) {
             inletNode = waterToWaterComponent->supplyInletModelObject()->optionalCast<Node>();
             outletNode = waterToWaterComponent->supplyOutletModelObject()->optionalCast<Node>();
+
+            // WaterHeater:Mixed with Source Side nodes on supply branch
+            if (auto water_heater_mixed = modelObject.optionalCast<WaterHeaterMixed>()) {
+              if (boost::optional<PlantLoop> sourceSidePlantLoop = water_heater_mixed->sourceSidePlantLoop()) {
+                if (loop.handle() == sourceSidePlantLoop->handle()) {
+                  inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
+                  outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
+                }
+              }
+            }
+
+            // WaterHeater:Stratified with Source Side nodes on supply branch
+            if (auto water_heater_stratified = modelObject.optionalCast<WaterHeaterStratified>()) {
+              if (boost::optional<PlantLoop> sourceSidePlantLoop = water_heater_stratified->sourceSidePlantLoop()) {
+                if (loop.handle() == sourceSidePlantLoop->handle()) {
+                  inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
+                  outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
+                }
+              }
+            }
           } else {
             if (auto tertiaryInletModelObject = waterToWaterComponent->tertiaryInletModelObject()) {
               if (auto tertiaryInletNode = tertiaryInletModelObject->optionalCast<Node>()) {

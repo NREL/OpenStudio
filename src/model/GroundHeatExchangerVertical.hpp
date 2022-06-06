@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -82,8 +82,7 @@ namespace model {
     /** @name Getters */
     //@{
 
-    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Design Flow Rate" **/
-    boost::optional<double> maximumFlowRate() const;
+    boost::optional<double> designFlowRate() const;
 
     boost::optional<int> numberofBoreHoles() const;
 
@@ -96,9 +95,6 @@ namespace model {
     boost::optional<double> groundThermalHeatCapacity() const;
 
     boost::optional<double> groundTemperature() const;
-
-    /** In EnergyPlus 8.3.0 and above this property is not used. **/
-    boost::optional<double> designFlowRate() const;
 
     boost::optional<double> groutThermalConductivity() const;
 
@@ -121,9 +117,7 @@ namespace model {
 
     //@{
 
-    bool setMaximumFlowRate(double maximumFlowRate);
-
-    void resetMaximumFlowRate();
+    bool setDesignFlowRate(double designFlowRate);
 
     bool setNumberofBoreHoles(int numberofBoreHoles);
 
@@ -148,10 +142,6 @@ namespace model {
     bool setGroundTemperature(double groundTemperature);
 
     void resetGroundTemperature();
-
-    bool setDesignFlowRate(double designFlowRate);
-
-    void resetDesignFlowRate();
 
     bool setGroutThermalConductivity(double groutThermalConductivity);
 

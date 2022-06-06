@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -64,6 +64,8 @@
 #include "../../model/HeatExchangerFluidToFluid.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitCooling.hpp"
 #include "../../model/HeatPumpWaterToWaterEquationFitHeating.hpp"
+#include "../../model/HeatPumpPlantLoopEIRCooling.hpp"
+#include "../../model/HeatPumpPlantLoopEIRHeating.hpp"
 #include "../../model/PlantComponentTemperatureSource.hpp"
 #include "../../model/PlantComponentUserDefined.hpp"
 #include "../../model/SolarCollectorFlatPlatePhotovoltaicThermal.hpp"
@@ -540,6 +542,92 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_Both_
   EXPECT_EQ("Dual", w_eg.getString(PlantEquipmentOperation_ComponentSetpointExtensibleFields::OperationType).get());
 }
 
+TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_HeatPumpPlantLoopEIR) {
+  Model m;
+
+  PlantLoop plant_loop_cup_clg(m);
+  PlantLoop plant_loop_cup_htg(m);
+  PlantLoop plant_loop_plhp_clg(m);
+  PlantLoop plant_loop_plhp_htg(m);
+
+  HeatPumpPlantLoopEIRCooling plhp_clg(m);
+  HeatPumpPlantLoopEIRHeating plhp_htg(m);
+  EXPECT_TRUE(plhp_clg.setCompanionHeatingHeatPump(plhp_htg));
+  EXPECT_TRUE(plhp_htg.setCompanionCoolingHeatPump(plhp_clg));
+
+  EXPECT_TRUE(plant_loop_cup_clg.addDemandBranchForComponent(plhp_clg));
+  EXPECT_TRUE(plant_loop_plhp_clg.addSupplyBranchForComponent(plhp_clg));
+  EXPECT_TRUE(plant_loop_cup_htg.addDemandBranchForComponent(plhp_htg));
+  EXPECT_TRUE(plant_loop_plhp_htg.addSupplyBranchForComponent(plhp_htg));
+
+  openstudio::energyplus::ForwardTranslator ft;
+  Workspace w = ft.translateModel(m);
+
+  {
+    boost::optional<WorkspaceObject> _wo;
+    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, plant_loop_plhp_htg.name().get());
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_use_loop = _wo.get();
+    WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+
+    // Should have created a Heating Load one only
+    ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    ASSERT_EQ("PlantEquipmentOperation:HeatingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+
+    // Get the Operation Scheme
+    _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_op_scheme = _wo.get();
+
+    // Get the Plant Equipment List of this HeatingLoad scheme
+    // There should only be one Load Range
+    ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+    // Load range 1
+    w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    _wo = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_peq_list = _wo.get();
+
+    // Should have one equipment on it: HeatPumpPlantLoopEIRHeating
+    ASSERT_EQ(1u, idf_peq_list.extensibleGroups().size());
+    IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
+    ASSERT_EQ(plhp_htg.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+  }
+
+  {
+    boost::optional<WorkspaceObject> _wo;
+    _wo = w.getObjectByTypeAndName(IddObjectType::PlantLoop, plant_loop_plhp_clg.name().get());
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_use_loop = _wo.get();
+    WorkspaceObject idf_plant_op = idf_use_loop.getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+
+    // Should have created a Cooling Load one only
+    ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+    WorkspaceExtensibleGroup w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    ASSERT_EQ("PlantEquipmentOperation:CoolingLoad", w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+
+    // Get the Operation Scheme
+    _wo = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_op_scheme = _wo.get();
+
+    // Get the Plant Equipment List of this CoolingLoad scheme
+    // There should only be one Load Range
+    ASSERT_EQ(1u, idf_op_scheme.extensibleGroups().size());
+    // Load range 1
+    w_eg = idf_op_scheme.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+    _wo = w_eg.getTarget(PlantEquipmentOperation_CoolingLoadExtensibleFields::RangeEquipmentListName);
+    ASSERT_TRUE(_wo.is_initialized());
+    WorkspaceObject idf_peq_list = _wo.get();
+
+    // Should have one equipment on it: HeatPumpPlantLoopEIRCooling
+    ASSERT_EQ(1u, idf_peq_list.extensibleGroups().size());
+    IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
+    ASSERT_EQ(plhp_clg.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+  }
+}
+
 TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_componentType) {
 
   Model m;
@@ -666,6 +754,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PlantEquipmentOperationSchemes_compo
 
   {
     HeatPumpWaterToWaterEquationFitCooling obj(m);
+    EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    HeatPumpPlantLoopEIRHeating obj(m);
+    EXPECT_EQ(ComponentType::HEATING, openstudio::energyplus::componentType(obj));
+  }
+
+  {
+    HeatPumpPlantLoopEIRCooling obj(m);
     EXPECT_EQ(ComponentType::COOLING, openstudio::energyplus::componentType(obj));
   }
 

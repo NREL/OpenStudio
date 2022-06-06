@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -91,6 +91,9 @@ namespace model {
       if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::AvailabilitySchedule) != e) {
         result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVHeatAndCoolReheat", "Availability Schedule"));
       }
+      if (std::find(b, e, OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MinimumAirFlowTurndownScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("AirTerminalSingleDuctVAVHeatAndCoolReheat", "Minimum Air Flow Turndown"));
+      }
       return result;
     }
 
@@ -154,6 +157,20 @@ namespace model {
       boost::optional<double> value = getDouble(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MaximumReheatAirTemperature, true);
       OS_ASSERT(value);
       return value.get();
+    }
+
+    boost::optional<Schedule> AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::minimumAirFlowTurndownSchedule() const {
+      return this->getObject<AirTerminalSingleDuctVAVHeatAndCoolReheat>().getModelObjectTarget<Schedule>(
+        OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MinimumAirFlowTurndownScheduleName);
+    }
+
+    boost::optional<ModelObject> AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::minimumAirFlowTurndownScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = minimumAirFlowTurndownSchedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
     }
 
     bool AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -223,6 +240,33 @@ namespace model {
     bool AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::setMaximumReheatAirTemperature(double maximumReheatAirTemperature) {
       bool result = setDouble(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MaximumReheatAirTemperature, maximumReheatAirTemperature);
       return result;
+    }
+
+    bool AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::setMinimumAirFlowTurndownSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MinimumAirFlowTurndownScheduleName,
+                                "AirTerminalSingleDuctVAVReheat", "Minimum Air Flow Turndown", schedule);
+      return result;
+    }
+
+    void AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::resetMinimumAirFlowTurndownSchedule() {
+      bool result = setString(OS_AirTerminal_SingleDuct_VAV_HeatAndCool_ReheatFields::MinimumAirFlowTurndownScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::setMinimumAirFlowTurndownScheduleAsModelObject(
+      const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setMinimumAirFlowTurndownSchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetMinimumAirFlowTurndownSchedule();
+      }
+      return true;
     }
 
     boost::optional<HVACComponent> AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl::optionalReheatCoil() const {
@@ -443,6 +487,10 @@ namespace model {
     return getImpl<detail::AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl>()->maximumReheatAirTemperature();
   }
 
+  boost::optional<Schedule> AirTerminalSingleDuctVAVHeatAndCoolReheat::minimumAirFlowTurndownSchedule() const {
+    return getImpl<detail::AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl>()->minimumAirFlowTurndownSchedule();
+  }
+
   bool AirTerminalSingleDuctVAVHeatAndCoolReheat::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl>()->setAvailabilitySchedule(schedule);
   }
@@ -485,6 +533,14 @@ namespace model {
 
   bool AirTerminalSingleDuctVAVHeatAndCoolReheat::setMaximumReheatAirTemperature(double maximumReheatAirTemperature) {
     return getImpl<detail::AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl>()->setMaximumReheatAirTemperature(maximumReheatAirTemperature);
+  }
+
+  bool AirTerminalSingleDuctVAVHeatAndCoolReheat::setMinimumAirFlowTurndownSchedule(Schedule& schedule) {
+    return getImpl<detail::AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl>()->setMinimumAirFlowTurndownSchedule(schedule);
+  }
+
+  void AirTerminalSingleDuctVAVHeatAndCoolReheat::resetMinimumAirFlowTurndownSchedule() {
+    getImpl<detail::AirTerminalSingleDuctVAVHeatAndCoolReheat_Impl>()->resetMinimumAirFlowTurndownSchedule();
   }
 
   /// @cond

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -320,13 +320,17 @@ namespace model {
         if (success && (!t_containingZoneHVACComponent)) {
           if (auto t_waterInletModelObject = waterInletModelObject()) {
             if (auto oldController = controllerWaterCoil()) {
-              oldController->remove();
+              if (!openstudio::istringEqual(oldController->action().get(), "Reverse")) {
+                LOG(Warn,
+                    briefDescription()
+                      << " has an existing ControllerWaterCoil with action set to something else than 'Reverse'. Make sure this is what you want");
+              }
+            } else {
+              Model t_model = model();
+              ControllerWaterCoil controller(t_model);
+              controller.getImpl<ControllerWaterCoil_Impl>()->setWaterCoil(getObject<HVACComponent>());
+              controller.setAction("Reverse");
             }
-
-            Model t_model = model();
-            ControllerWaterCoil controller(t_model);
-            controller.getImpl<detail::ControllerWaterCoil_Impl>()->setWaterCoil(getObject<HVACComponent>());
-            controller.setAction("Reverse");
           }
         }
       }

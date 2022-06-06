@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -110,6 +110,10 @@ class UTILITIES_API BCLMeasure
 
   /// Suggested values for the second level taxonomy tag
   static std::vector<std::string> suggestedSecondLevelTaxonomyTerms(const std::string& firstLevelTaxonomyTerm);
+
+  static bool isIgnoredFileName(const std::string& fileName);
+
+  static bool isApprovedFile(const openstudio::path& absoluteFilePath, const openstudio::path& measureDir);
 
   //@}
   /** @name Destructor */
@@ -251,6 +255,9 @@ class UTILITIES_API BCLMeasure
 
   bool operator!=(const BCLMeasure& other) const;
 
+  /// Less than
+  bool operator<(const BCLMeasure& other) const;
+
   /// Save the measure.xml back to the directory
   bool save() const;
 
@@ -284,9 +291,6 @@ class UTILITIES_API BCLMeasure
   REGISTER_LOGGER("utilities.bcl.BCLMeasure");
 
   static void createDirectory(const openstudio::path& dir);
-
-  // based on function in PathHelpers.hpp but checks if file is in this measure
-  bool copyDirectory(const path& source, const path& destination) const;
 
   std::string computeXMLChecksum() const;
 

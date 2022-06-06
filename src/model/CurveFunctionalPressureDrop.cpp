@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -84,7 +84,7 @@ namespace model {
                     << "for this curve type.");
     }
 
-    double CurveFunctionalPressureDrop_Impl::evaluate(const std::vector<double>& independentVariables) const {
+    double CurveFunctionalPressureDrop_Impl::evaluate(const std::vector<double>& /*independentVariables*/) const {
       LOG_AND_THROW("CurveFunctionalPressureDrop must be evaluated by EnergyPlus, in the context of "
                     << "plant pressure simulations. Therefore, numVariables and evaluate are not applicable "
                     << "for this curve type.");
@@ -114,7 +114,6 @@ namespace model {
 
     bool CurveFunctionalPressureDrop_Impl::setDiameter(double diameter) {
       bool result = setDouble(OS_Curve_Functional_PressureDropFields::Diameter, diameter);
-      OS_ASSERT(result);
       return result;
     }
 
@@ -125,7 +124,6 @@ namespace model {
       } else {
         result = setString(OS_Curve_Functional_PressureDropFields::MinorLossCoefficient, "");
       }
-      OS_ASSERT(result);
       return result;
     }
 
@@ -141,7 +139,6 @@ namespace model {
       } else {
         result = setString(OS_Curve_Functional_PressureDropFields::Length, "");
       }
-      OS_ASSERT(result);
       return result;
     }
 
@@ -157,7 +154,6 @@ namespace model {
       } else {
         result = setString(OS_Curve_Functional_PressureDropFields::Roughness, "");
       }
-      OS_ASSERT(result);
       return result;
     }
 
@@ -173,7 +169,6 @@ namespace model {
       } else {
         result = setString(OS_Curve_Functional_PressureDropFields::FixedFrictionFactor, "");
       }
-      OS_ASSERT(result);
       return result;
     }
 

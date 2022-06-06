@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -245,14 +245,17 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    for (const model::Material& material : m_materials) {
+    std::vector<model::Material> materials(m_materials.begin(), m_materials.end());
+    std::sort(materials.begin(), materials.end(), WorkspaceObjectNameLess());
+
+    for (const model::Material& material : materials) {
       translateLayer(material, gbXMLElement);
 
       if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
       }
     }
-    for (const model::Material& material : m_materials) {
+    for (const model::Material& material : materials) {
       translateMaterial(material, gbXMLElement);
 
       if (m_progressBar) {
@@ -468,16 +471,26 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    for (const model::Surface& surface : surfaces) {
-      translateSurface(surface, result);
+    std::vector<model::Space> spaces = model.getConcreteModelObjects<model::Space>();
+    std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+    for (const model::Space& space : spaces) {
+      std::vector<model::Surface> spaceSurfaces = space.surfaces();
+      std::sort(spaceSurfaces.begin(), spaceSurfaces.end(), WorkspaceObjectNameLess());
 
-      if (m_progressBar) {
-        m_progressBar->setValue(m_progressBar->value() + 1);
+      for (const model::Surface& surface : spaceSurfaces) {
+        std::string name = surface.name().value();
+        translateSurface(surface, result);
+
+        if (m_progressBar) {
+          m_progressBar->setValue(m_progressBar->value() + 1);
+        }
       }
     }
 
     // translate shading surfaces
     std::vector<model::ShadingSurface> shadingSurfaces = model.getConcreteModelObjects<model::ShadingSurface>();
+    std::sort(shadingSurfaces.begin(), shadingSurfaces.end(), WorkspaceObjectNameLess());
+
     if (m_progressBar) {
       m_progressBar->setWindowTitle(toString("Translating Shading Surfaces"));
       m_progressBar->setMinimum(0);
@@ -560,6 +573,8 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
+    std::sort(spaces.begin(), spaces.end(), WorkspaceObjectNameLess());
+
     for (const model::Space& space : spaces) {
       translateSpace(space, result);
 
@@ -577,6 +592,7 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
+    std::sort(shadingSurfaceGroups.begin(), shadingSurfaceGroups.end(), WorkspaceObjectNameLess());
     for (const model::ShadingSurfaceGroup& shadingSurfaceGroup : shadingSurfaceGroups) {
       translateShadingSurfaceGroup(shadingSurfaceGroup, result);
 
@@ -609,9 +625,8 @@ namespace gbxml {
     auto result = parent.append_child("Space");
     m_translatedObjects[space.handle()] = result;
 
-    // id
-    std::string name = space.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
+    translateId(space, result);
+    translateName(space, result);
 
     // space type
     //boost::optional<model::SpaceType> spaceType = space.spaceType();
@@ -634,10 +649,6 @@ namespace gbxml {
       std::string storyName = story->name().get();
       result.append_attribute("buildingStoreyIdRef") = escapeName(storyName).c_str();
     }
-
-    // name
-    auto nameElement = result.append_child("Name");
-    nameElement.text() = name.c_str();
 
     // append floor area
     double area = space.floorArea();
@@ -702,13 +713,8 @@ namespace gbxml {
     auto result = parent.append_child("Space");
     m_translatedObjects[shadingSurfaceGroup.handle()] = result;
 
-    // id
-    std::string name = shadingSurfaceGroup.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
-
-    // name
-    auto nameElement = result.append_child("Name");
-    nameElement.text() = name.c_str();
+    translateId(shadingSurfaceGroup, result);
+    translateName(shadingSurfaceGroup, result);
 
     return result;
   }
@@ -739,13 +745,8 @@ namespace gbxml {
     auto result = parent.append_child("BuildingStorey");
     m_translatedObjects[story.handle()] = result;
 
-    // id
-    std::string name = story.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
-
-    // name
-    auto nameElement = result.append_child("Name");
-    nameElement.text() = name.c_str();
+    translateId(story, result);
+    translateName(story, result);
 
     // append level
     auto levelElement = result.append_child("Level");
@@ -763,9 +764,8 @@ namespace gbxml {
     auto result = parent.append_child("Surface");
     m_translatedObjects[surface.handle()] = result;
 
-    // id
-    std::string name = surface.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
+    translateId(surface, result);
+    translateName(surface, result);
 
     // DLM: currently unhandled
     //FreestandingColumn
@@ -979,9 +979,8 @@ namespace gbxml {
     auto result = parent.append_child("Opening");
     m_translatedObjects[subSurface.handle()] = result;
 
-    // id
-    std::string name = subSurface.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
+    translateId(subSurface, result);
+    translateName(subSurface, result);
 
     // construction
     boost::optional<model::ConstructionBase> construction = subSurface.construction();
@@ -1133,9 +1132,8 @@ namespace gbxml {
     auto result = parent.append_child("Surface");
     m_translatedObjects[shadingSurface.handle()] = result;
 
-    // id
-    std::string name = shadingSurface.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
+    translateId(shadingSurface, result);
+    translateName(shadingSurface, result);
 
     result.append_attribute("surfaceType") = "Shade";
 
@@ -1276,13 +1274,8 @@ namespace gbxml {
     auto result = parent.append_child("Zone");
     m_translatedObjects[thermalZone.handle()] = result;
 
-    // id
-    std::string name = thermalZone.name().get();
-    result.append_attribute("id") = escapeName(name).c_str();
-
-    // name
-    auto nameElement = result.append_child("Name");
-    nameElement.text() = name.c_str();
+    translateId(thermalZone, result);
+    translateName(thermalZone, result);
 
     // heating setpoint
     boost::optional<double> designHeatT;
@@ -1334,22 +1327,38 @@ namespace gbxml {
     return result;
   }
 
+  void ForwardTranslator::translateId(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement) {
+
+    std::string id = modelObject.name().get();
+    if (modelObject.gbXMLId()) {
+      id = modelObject.gbXMLId().get();
+    }
+    parentElement.append_attribute("id") = escapeName(id).c_str();
+  }
+
+  void ForwardTranslator::translateName(const openstudio::model::ModelObject& modelObject, pugi::xml_node& parentElement) {
+
+    std::string name = modelObject.name().get();
+    if (modelObject.displayName()) {
+      name = modelObject.displayName().get();
+    }
+    parentElement.append_child("Name").text() = name.c_str();
+  }
+
   boost::optional<pugi::xml_node> ForwardTranslator::translateCADObjectId(const openstudio::model::ModelObject& modelObject,
                                                                           pugi::xml_node& parentElement) {
     boost::optional<pugi::xml_node> result;
 
     if (modelObject.hasAdditionalProperties()) {
       model::AdditionalProperties additionalProperties = modelObject.additionalProperties();
-      if (additionalProperties.hasFeature("CADObjectId")) {
-        boost::optional<std::string> cadObjectId = additionalProperties.getFeatureAsString("CADObjectId");
-        if (cadObjectId) {
-          if (additionalProperties.hasFeature("programIdRef")) {
-            boost::optional<std::string> programIdRef = additionalProperties.getFeatureAsString("programIdRef");
-            if (programIdRef) {
-              auto cadObjectIdElement = parentElement.append_child("CADObjectId");
-              cadObjectIdElement.append_attribute("programIdRef") = (*programIdRef).c_str();
-              result = cadObjectIdElement;
-            }
+      if (boost::optional<std::string> cadObjectId = modelObject.cadObjectId()) {
+        auto cadObjectIdElement = parentElement.append_child("CADObjectId");
+        cadObjectIdElement.text() = (*cadObjectId).c_str();
+        result = cadObjectIdElement;
+        if (additionalProperties.hasFeature("programIdRef")) {
+          boost::optional<std::string> programIdRef = additionalProperties.getFeatureAsString("programIdRef");
+          if (programIdRef) {
+            cadObjectIdElement.append_attribute("programIdRef") = (*programIdRef).c_str();
           }
         }
       }

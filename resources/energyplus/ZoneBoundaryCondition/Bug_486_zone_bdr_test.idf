@@ -1,6 +1,6 @@
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,9.5;
+  Version,22.1;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -573,6 +573,7 @@
     Floor,                   !- Surface Type
     Exterior Floor,          !- Construction Name
     CD775B,                  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -589,6 +590,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     CD775B,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -605,6 +607,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     CD775B,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -621,6 +624,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     CD775B,                  !- Zone Name
+    ,                        !- Space Name
     Zone,                    !- Outside Boundary Condition
     8B02A8,                  !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -637,6 +641,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     CD775B,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -653,6 +658,7 @@
     Roof,                    !- Surface Type
     Exterior Roof,           !- Construction Name
     CD775B,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -678,6 +684,7 @@
     Floor,                   !- Surface Type
     Exterior Floor,          !- Construction Name
     8B02A8,                  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -694,6 +701,7 @@
     Roof,                    !- Surface Type
     Exterior Roof,           !- Construction Name
     8B02A8,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -710,6 +718,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     8B02A8,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -726,6 +735,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     8B02A8,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -742,6 +752,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     8B02A8,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure

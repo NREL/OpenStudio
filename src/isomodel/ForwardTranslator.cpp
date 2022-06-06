@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -638,7 +638,7 @@ namespace isomodel {
       }
 
       std::vector<std::vector<double>> occupancy_schedules_ave(7, std::vector<double>(24, 0));
-      int nscheds = 0;
+      [[maybe_unused]] int nscheds = 0;
       double space_area_total = 0.0;
 
       // get an area weighted average over all the space types.
@@ -2295,4 +2295,4 @@ namespace isomodel {
 }  // namespace isomodel
 // isomodel
 }  // namespace openstudio
-// openstudio
+   // openstudio

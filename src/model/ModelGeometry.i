@@ -29,6 +29,12 @@
   %ignore openstudio::model::Space::thermalZone;
   %ignore openstudio::model::Space::setThermalZone;
   %ignore openstudio::model::Space::waterUseEquipment;
+
+  %ignore openstudio::model::DaylightingDeviceTubular::transitionZones;
+  %ignore openstudio::model::DaylightingDeviceTubular::addTransitionZone;
+  %ignore openstudio::model::DaylightingDeviceTubular::addTransitionZones;
+
+
   // Ignore this ctor, use of zone.getZonePropertyUserViewFactorsBySurfaceName is preferred anyways (so I won't even reimplement it using partial classes)
   %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
   %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::thermalZone;
@@ -83,6 +89,7 @@ class Schedule;
 class DefaultScheduleType;
 class DefaultScheduleSet;
 class ThermalZone;
+class TransitionZone;
 class BuildingStory;
 class BuildingUnit;
 class ShadingSurfaceGroup;
@@ -157,6 +164,15 @@ class ExteriorLoadInstance;
   }
 };
 
+%extend openstudio::model::SurroundingSurfaceGroup {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 UNIQUEMODELOBJECT_TEMPLATES(Site);
 UNIQUEMODELOBJECT_TEMPLATES(Facility);
 UNIQUEMODELOBJECT_TEMPLATES(Building);
@@ -180,6 +196,9 @@ MODELOBJECT_TEMPLATES(InteriorPartitionSurface);
 MODELOBJECT_TEMPLATES(SurfaceControlMovableInsulation);
 MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideCoefficients);
 MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideConditionsModel);
+MODELOBJECT_TEMPLATES(SurfacePropertyLocalEnvironment);
+MODELOBJECT_TEMPLATES(SurroundingSurfaceGroup); // helper for extensible fields for SurfacePropertySurroundingSurfaces
+MODELOBJECT_TEMPLATES(SurfacePropertySurroundingSurfaces);
 MODELOBJECT_TEMPLATES(SurfacePropertyConvectionCoefficients);
 MODELOBJECT_TEMPLATES(People);
 MODELOBJECT_TEMPLATES(Luminaire);
@@ -197,6 +216,8 @@ MODELOBJECT_TEMPLATES(DaylightingControl);
 MODELOBJECT_TEMPLATES(GlareSensor);
 MODELOBJECT_TEMPLATES(IlluminanceMap);
 MODELOBJECT_TEMPLATES(DaylightingDeviceShelf);
+MODELOBJECT_TEMPLATES(DaylightingDeviceTubular);
+MODELOBJECT_TEMPLATES(DaylightingDeviceLightWell);
 MODELOBJECT_TEMPLATES(SpaceType);
 MODELOBJECT_TEMPLATES(LightingSimulationZone);
 MODELOBJECT_TEMPLATES(CustomBlock);
@@ -232,6 +253,8 @@ SWIG_MODELOBJECT(InteriorPartitionSurface, 1);
 SWIG_MODELOBJECT(SurfaceControlMovableInsulation, 1);
 SWIG_MODELOBJECT(SurfacePropertyOtherSideCoefficients, 1);
 SWIG_MODELOBJECT(SurfacePropertyOtherSideConditionsModel, 1);
+SWIG_MODELOBJECT(SurfacePropertyLocalEnvironment, 1);
+SWIG_MODELOBJECT(SurfacePropertySurroundingSurfaces, 1);
 SWIG_MODELOBJECT(SurfacePropertyConvectionCoefficients, 1);
 SWIG_MODELOBJECT(People, 1);
 SWIG_MODELOBJECT(Luminaire, 1);
@@ -249,6 +272,8 @@ SWIG_MODELOBJECT(DaylightingControl, 1);
 SWIG_MODELOBJECT(GlareSensor, 1);
 SWIG_MODELOBJECT(IlluminanceMap, 1);
 SWIG_MODELOBJECT(DaylightingDeviceShelf, 1);
+SWIG_MODELOBJECT(DaylightingDeviceTubular, 1);
+SWIG_MODELOBJECT(DaylightingDeviceLightWell, 1);
 SWIG_MODELOBJECT(SpaceType, 1);
 SWIG_MODELOBJECT(LightingSimulationZone, 1);
 SWIG_MODELOBJECT(FoundationKiva, 1);

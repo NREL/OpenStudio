@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -98,6 +98,8 @@ namespace model {
 
       virtual void applySizingValues() override;
 
+      boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -126,6 +128,10 @@ namespace model {
 
       bool setMaximumReheatAirTemperature(double maximumReheatAirTemperature);
 
+      bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
+
+      void resetMinimumAirFlowTurndownSchedule();
+
       //@}
       /** @name Other */
       //@{
@@ -150,6 +156,10 @@ namespace model {
       REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVHeatAndCoolReheat");
 
       boost::optional<HVACComponent> optionalReheatCoil() const;
+
+      boost::optional<ModelObject> minimumAirFlowTurndownScheduleAsModelObject() const;
+
+      bool setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     };
 
   }  // namespace detail

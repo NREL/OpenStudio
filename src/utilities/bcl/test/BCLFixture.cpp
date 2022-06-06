@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,6 +30,7 @@
 #include "BCLFixture.hpp"
 
 #include "../LocalBCL.hpp"
+#include "../../core/ApplicationPathHelpers.hpp"
 
 using openstudio::LocalBCL;
 using openstudio::Logger;
@@ -66,6 +67,11 @@ void BCLFixture::SetUp() {
   } else {
     devAuthKey = bcl.devAuthKey();
   }*/
+
+  openstudio::path testDir = openstudio::filesystem::system_complete(openstudio::getApplicationBuildDirectory() / toPath("Testing"));
+  if (!openstudio::filesystem::exists(testDir)) {
+    openstudio::filesystem::create_directories(testDir);
+  }
 }
 
 void BCLFixture::TearDown() {
@@ -80,7 +86,8 @@ void BCLFixture::TearDown() {
 void BCLFixture::SetUpTestSuite() {
   // set up logging
   logFile = FileLogSink(toPath("./BCLFixture.log"));
-  logFile->setLogLevel(Info);
+  logFile->setLogLevel(Debug);
+  Logger::instance().standardOutLogger().disable();
 }
 
 void BCLFixture::TearDownTestSuite() {

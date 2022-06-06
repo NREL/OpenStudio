@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -77,6 +77,17 @@ namespace energyplus {
 
     if (OptionalDouble optD = workspaceObject.getDouble(PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp)) {
       performancePrecisionTradeoffs.setMaxAllowedDelTemp(optD.get());
+    }
+
+    optS = workspaceObject.getString(PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations);
+    if (optS) {
+      std::string temp = *optS;
+      boost::to_lower(temp);
+      if (temp == "no") {
+        performancePrecisionTradeoffs.setUseRepresentativeSurfacesforCalculations(false);
+      } else {
+        performancePrecisionTradeoffs.setUseRepresentativeSurfacesforCalculations(true);
+      }
     }
 
     return performancePrecisionTradeoffs;

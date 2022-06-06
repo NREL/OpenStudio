@@ -39,6 +39,7 @@
 
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
@@ -152,8 +153,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ShadowCalculation) {
 
   // TEST for the Shading Zone Groups
   ThermalZone z1(m);
+  Space s1(m);
+  s1.setThermalZone(z1);
   ThermalZone z2(m);
+  Space s2(m);
+  s2.setThermalZone(z2);
   ThermalZone z3(m);
+  Space s3(m);
+  s3.setThermalZone(z3);
+
   EXPECT_TRUE(sc.addShadingZoneGroup({z1, z2}));
   EXPECT_TRUE(sc.addShadingZoneGroup({z3}));
   EXPECT_EQ(2u, sc.numberofShadingZoneGroups());
@@ -210,7 +218,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ShadowCalculation) {
 
   ReverseTranslator rt;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   // Not there, Model shouldn't have it either
   Model m = rt.translateWorkspace(w);

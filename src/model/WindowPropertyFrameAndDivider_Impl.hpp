@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -77,7 +77,9 @@ namespace model {
 
       bool isFrameInsideProjectionDefaulted() const;
 
-      boost::optional<double> frameConductance() const;
+      double frameConductance() const;
+
+      bool isFrameConductanceDefaulted() const;
 
       double ratioOfFrameEdgeGlassConductanceToCenterOfGlassConductance() const;
 
@@ -103,11 +105,11 @@ namespace model {
 
       bool isDividerWidthDefaulted() const;
 
-      double numberOfHorizontalDividers() const;
+      int numberOfHorizontalDividers() const;
 
       bool isNumberOfHorizontalDividersDefaulted() const;
 
-      double numberOfVerticalDividers() const;
+      int numberOfVerticalDividers() const;
 
       bool isNumberOfVerticalDividersDefaulted() const;
 
@@ -163,6 +165,10 @@ namespace model {
 
       bool isInsideRevealSolarAbsorptanceDefaulted() const;
 
+      std::string nfrcProductTypeforAssemblyCalculations() const;
+
+      bool isNFRCProductTypeforAssemblyCalculationsDefaulted() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -207,11 +213,11 @@ namespace model {
 
       void resetDividerWidth();
 
-      bool setNumberOfHorizontalDividers(double numberOfHorizontalDividers);
+      bool setNumberOfHorizontalDividers(int numberOfHorizontalDividers);
 
       void resetNumberOfHorizontalDividers();
 
-      bool setNumberOfVerticalDividers(double numberOfVerticalDividers);
+      bool setNumberOfVerticalDividers(int numberOfVerticalDividers);
 
       void resetNumberOfVerticalDividers();
 
@@ -266,6 +272,10 @@ namespace model {
       bool setInsideRevealSolarAbsorptance(double insideRevealSolarAbsorptance);
 
       void resetInsideRevealSolarAbsorptance();
+
+      bool setNFRCProductTypeforAssemblyCalculations(const std::string& nfrcProductTypeforAssemblyCalculations);
+
+      void resetNFRCProductTypeforAssemblyCalculations();
 
       //@}
       /** @name Other */

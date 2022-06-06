@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,14 +48,20 @@
 #include "Construction_Impl.hpp"
 #include "DaylightingDeviceShelf.hpp"
 #include "DaylightingDeviceShelf_Impl.hpp"
+#include "DaylightingDeviceTubular.hpp"
+#include "DaylightingDeviceTubular_Impl.hpp"
+#include "DaylightingDeviceLightWell.hpp"
+#include "DaylightingDeviceLightWell_Impl.hpp"
 #include "WindowPropertyFrameAndDivider.hpp"
 #include "WindowPropertyFrameAndDivider_Impl.hpp"
-#include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients.hpp"
 #include "SurfacePropertyOtherSideCoefficients_Impl.hpp"
 #include "SurfacePropertyOtherSideConditionsModel.hpp"
 #include "SurfacePropertyOtherSideConditionsModel_Impl.hpp"
+#include "SurfacePropertyConvectionCoefficients.hpp"
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
+#include "SurfacePropertyLocalEnvironment.hpp"
+#include "SurfacePropertyLocalEnvironment_Impl.hpp"
 #include "AirflowNetworkSurface.hpp"
 #include "AirflowNetworkSurface_Impl.hpp"
 #include "AirflowNetworkDetailedOpening.hpp"
@@ -68,6 +74,8 @@
 #include "AirflowNetworkEffectiveLeakageArea_Impl.hpp"
 #include "AirflowNetworkHorizontalOpening.hpp"
 #include "AirflowNetworkHorizontalOpening_Impl.hpp"
+#include "AirflowNetworkSpecifiedFlowRate.hpp"
+#include "AirflowNetworkSpecifiedFlowRate_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 
@@ -78,6 +86,8 @@
 
 #include "../utilities/geometry/Geometry.hpp"
 #include "../utilities/geometry/Transformation.hpp"
+#include "../utilities/geometry/Intersection.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/core/Assert.hpp"
 
 using boost::to_upper_copy;
@@ -119,6 +129,14 @@ namespace model {
       boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf = this->daylightingDeviceShelf();
       if (daylightingDeviceShelf) {
         result.push_back(*daylightingDeviceShelf);
+      }
+      boost::optional<DaylightingDeviceTubular> daylightingDeviceTubular = this->daylightingDeviceTubular();
+      if (daylightingDeviceTubular) {
+        result.push_back(*daylightingDeviceTubular);
+      }
+      boost::optional<DaylightingDeviceLightWell> daylightingDeviceLightWell = this->daylightingDeviceLightWell();
+      if (daylightingDeviceLightWell) {
+        result.push_back(*daylightingDeviceLightWell);
       }
       std::vector<AirflowNetworkSurface> myAFNItems =
         getObject<ModelObject>().getModelObjectSources<AirflowNetworkSurface>(AirflowNetworkSurface::iddObjectType());
@@ -502,7 +520,7 @@ namespace model {
       bool result = false;
       boost::optional<std::string> value = getString(OS_SubSurfaceFields::ViewFactortoGround, true);
       if (value) {
-        result = openstudio::istringEqual(value.get(), "canAutocalculate");
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
       }
       return result;
     }
@@ -579,32 +597,63 @@ namespace model {
       bool result = false;
       boost::optional<std::string> value = getString(OS_SubSurfaceFields::NumberofVertices, true);
       if (value) {
-        result = openstudio::istringEqual(value.get(), "canAutocalculate");
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
       }
       return result;
     }
 
-    bool SubSurface_Impl::setSubSurfaceType(std::string subSurfaceType) {
+    bool SubSurface_Impl::setSubSurfaceType(const std::string& subSurfaceType) {
       bool result = setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
       if (result) {
 
-        if (!allowShadingControl()) {
+        if (!allowShadingControl() && (numberofShadingControls() > 0)) {
+          LOG(Warn, briefDescription() << " new subSurfaceType='" << subSurfaceType
+                                       << "' is incompatible with Shading Controls. Removing this SubSurface from the Shading Controls.");
           this->removeAllShadingControls();
         }
 
-        if (!allowWindowPropertyFrameAndDivider()) {
+        if (!allowWindowPropertyFrameAndDivider() && windowPropertyFrameAndDivider()) {
+          LOG(Warn, briefDescription() << " new subSurfaceType=" << subSurfaceType
+                                       << "' is incompatible with the Window Property Frame and Divider. Resetting the Frame and Divider object.");
           this->resetWindowPropertyFrameAndDivider();
         }
 
         if (!allowDaylightingDeviceShelf()) {
-          boost::optional<DaylightingDeviceShelf> shelf = this->daylightingDeviceShelf();
-          if (shelf) {
+          if (boost::optional<DaylightingDeviceShelf> shelf = this->daylightingDeviceShelf()) {
+            LOG(Warn, briefDescription() << " new subSurfaceType='" << subSurfaceType
+                                         << "' is incompatible with Daylighting Device Shelf. Removing the Shelf object.");
             shelf->remove();
           }
         }
 
-        boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface();
-        if (adjacentSubSurface) {
+        if (!allowDaylightingDeviceTubularDome()) {
+          if (boost::optional<DaylightingDeviceTubular> tubular = this->daylightingDeviceTubular()) {
+            if (tubular->subSurfaceDome().handle() == this->handle()) {
+              LOG(Warn,
+                  briefDescription() << " cannot be used as a dome subsurface on a Daylighting Device Tubular object. Removing the Tubular object.");
+              tubular->remove();
+            }
+          }
+        }
+
+        if (!allowDaylightingDeviceTubularDiffuser()) {
+          if (boost::optional<DaylightingDeviceTubular> tubular = this->daylightingDeviceTubular()) {
+            if (tubular->subSurfaceDiffuser().handle() == this->handle()) {
+              LOG(Warn, briefDescription()
+                          << " cannot be used as a diffuser subsurface on a Daylighting Device Tubular object. Removing the Tubular object.");
+              tubular->remove();
+            }
+          }
+        }
+
+        if (!allowDaylightingDeviceLightWell()) {
+          if (boost::optional<DaylightingDeviceLightWell> lightwell = this->daylightingDeviceLightWell()) {
+            LOG(Warn, briefDescription() << " cannot be used as a subsurface on a Daylighting Device Light Well object. Removing the Well object.");
+            lightwell->remove();
+          }
+        }
+
+        if (boost::optional<SubSurface> adjacentSubSurface = this->adjacentSubSurface()) {
           adjacentSubSurface->setString(OS_SubSurfaceFields::SubSurfaceType, subSurfaceType);
           adjacentSubSurface->removeAllShadingControls();
         }
@@ -843,6 +892,26 @@ namespace model {
         return spccs.at(0);
       } else {
         LOG(Error, "More than one SurfacePropertyConvectionCoefficients points to this SubSurface");
+        return boost::none;
+      }
+    }
+
+    boost::optional<SurfacePropertyLocalEnvironment> SubSurface_Impl::surfacePropertyLocalEnvironment() const {
+
+      std::vector<SurfacePropertyLocalEnvironment> result;
+      for (auto& localEnv : model().getConcreteModelObjects<SurfacePropertyLocalEnvironment>()) {
+        if (auto subSurface_ = localEnv.exteriorSurfaceAsSubSurface()) {
+          if (subSurface_->handle() == handle()) {
+            result.push_back(localEnv);
+          }
+        }
+      }
+      if (result.empty()) {
+        return boost::none;
+      } else if (result.size() == 1) {
+        return result.at(0);
+      } else {
+        LOG(Error, "More than one SurfacePropertyLocalEnvironment points to this SubSurface");
         return boost::none;
       }
     }
@@ -1118,6 +1187,82 @@ namespace model {
       return result;
     }
 
+    bool SubSurface_Impl::allowDaylightingDeviceTubularDome() const {
+      bool result = false;
+
+      std::string subSurfaceType = this->subSurfaceType();
+      if (istringEqual(subSurfaceType, "TubularDaylightDome")) {
+        result = true;
+      }
+
+      return result;
+    }
+
+    bool SubSurface_Impl::allowDaylightingDeviceTubularDiffuser() const {
+      bool result = false;
+
+      std::string subSurfaceType = this->subSurfaceType();
+      if (istringEqual(subSurfaceType, "TubularDaylightDiffuser")) {
+        result = true;
+      }
+
+      return result;
+    }
+
+    boost::optional<DaylightingDeviceTubular> SubSurface_Impl::daylightingDeviceTubular() const {
+      boost::optional<DaylightingDeviceTubular> result;
+
+      std::vector<DaylightingDeviceTubular> tubulars =
+        getObject<ModelObject>().getModelObjectSources<DaylightingDeviceTubular>(DaylightingDeviceTubular::iddObjectType());
+      if (tubulars.size() == 1) {
+        result = tubulars[0];
+      } else if (tubulars.size() > 1) {
+        result = tubulars[0];
+      }
+      return result;
+    }
+
+    bool SubSurface_Impl::allowDaylightingDeviceLightWell() const {
+      bool result = false;
+
+      std::string subSurfaceType = this->subSurfaceType();
+      if (istringEqual(subSurfaceType, "FixedWindow") || istringEqual(subSurfaceType, "OperableWindow")
+          || istringEqual(subSurfaceType, "GlassDoor")) {
+        result = true;
+      }
+
+      return result;
+    }
+
+    boost::optional<DaylightingDeviceLightWell> SubSurface_Impl::daylightingDeviceLightWell() const {
+      boost::optional<DaylightingDeviceLightWell> result;
+
+      std::vector<DaylightingDeviceLightWell> lightwells =
+        getObject<ModelObject>().getModelObjectSources<DaylightingDeviceLightWell>(DaylightingDeviceLightWell::iddObjectType());
+      if (lightwells.size() == 1) {
+        result = lightwells[0];
+      } else if (lightwells.size() > 1) {
+        result = lightwells[0];
+      }
+      return result;
+    }
+
+    boost::optional<DaylightingDeviceLightWell> SubSurface_Impl::addDaylightingDeviceLightWell() const {
+      boost::optional<DaylightingDeviceLightWell> result = this->daylightingDeviceLightWell();
+      if (result) {
+        return result;
+      }
+
+      if (allowDaylightingDeviceLightWell()) {
+        try {
+          result = DaylightingDeviceLightWell(getObject<SubSurface>());
+        } catch (const std::exception&) {
+        }
+      }
+
+      return result;
+    }
+
     boost::optional<ModelObject> SubSurface_Impl::surfaceAsModelObject() const {
       OptionalModelObject result;
       OptionalSurface intermediate = surface();
@@ -1198,6 +1343,51 @@ namespace model {
       return boost::none;
     }
 
+    boost::optional<double> SubSurface_Impl::assemblyUFactor() const {
+      return getExteriorFenestrationValue("Assembly U-Factor");
+    }
+
+    boost::optional<double> SubSurface_Impl::assemblySHGC() const {
+      return getExteriorFenestrationValue("Assembly SHGC");
+    }
+
+    boost::optional<double> SubSurface_Impl::assemblyVisibleTransmittance() const {
+      return getExteriorFenestrationValue("Assembly Visible Transmittance");
+    }
+
+    /** Gets the fenestration value from the sql file **/
+    boost::optional<double> SubSurface_Impl::getExteriorFenestrationValue(std::string columnName) const {
+      boost::optional<double> result;
+
+      // Get the object name
+      if (!name()) {
+        LOG(Warn, "This object does not have a name, cannot retrieve the fenestration value '" + columnName + "'.");
+        return result;
+      }
+
+      // Get the object name and transform to the way it is recorded
+      // in the sql file
+      std::string rowName = name().get();
+      boost::to_upper(rowName);
+
+      // Check that the model has a sql file
+      if (!model().sqlFile()) {
+        LOG(Warn, "This model has no sql file, cannot retrieve the fenestration value '" + columnName + "'.");
+        return result;
+      }
+
+      std::string s = R"(SELECT Value FROM TabularDataWithStrings
+                            WHERE ReportName='EnvelopeSummary'
+                            AND ReportForString='Entire Facility'
+                            AND TableName='Exterior Fenestration'
+                            AND RowName=?
+                            AND ColumnName=?)";
+
+      result = model().sqlFile().get().execAndReturnFirstDouble(s, rowName, columnName);
+
+      return result;
+    }
+
   }  // namespace detail
 
   SubSurface::SubSurface(const std::vector<Point3d>& vertices, const Model& model) : PlanarSurface(SubSurface::iddObjectType(), vertices, model) {
@@ -1274,7 +1464,7 @@ namespace model {
     return getImpl<detail::SubSurface_Impl>()->isNumberofVerticesAutocalculated();
   }
 
-  bool SubSurface::setSubSurfaceType(std::string subSurfaceType) {
+  bool SubSurface::setSubSurfaceType(const std::string& subSurfaceType) {
     return getImpl<detail::SubSurface_Impl>()->setSubSurfaceType(subSurfaceType);
   }
 
@@ -1370,6 +1560,10 @@ namespace model {
     return getImpl<detail::SubSurface_Impl>()->surfacePropertyConvectionCoefficients();
   }
 
+  boost::optional<SurfacePropertyLocalEnvironment> SubSurface::surfacePropertyLocalEnvironment() const {
+    return getImpl<detail::SubSurface_Impl>()->surfacePropertyLocalEnvironment();
+  }
+
   boost::optional<SurfacePropertyOtherSideCoefficients> SubSurface::surfacePropertyOtherSideCoefficients() const {
     return getImpl<detail::SubSurface_Impl>()->surfacePropertyOtherSideCoefficients();
   }
@@ -1426,6 +1620,30 @@ namespace model {
     return getImpl<detail::SubSurface_Impl>()->addDaylightingDeviceShelf();
   }
 
+  bool SubSurface::allowDaylightingDeviceTubularDome() const {
+    return getImpl<detail::SubSurface_Impl>()->allowDaylightingDeviceTubularDome();
+  }
+
+  bool SubSurface::allowDaylightingDeviceTubularDiffuser() const {
+    return getImpl<detail::SubSurface_Impl>()->allowDaylightingDeviceTubularDiffuser();
+  }
+
+  boost::optional<DaylightingDeviceTubular> SubSurface::daylightingDeviceTubular() const {
+    return getImpl<detail::SubSurface_Impl>()->daylightingDeviceTubular();
+  }
+
+  bool SubSurface::allowDaylightingDeviceLightWell() const {
+    return getImpl<detail::SubSurface_Impl>()->allowDaylightingDeviceLightWell();
+  }
+
+  boost::optional<DaylightingDeviceLightWell> SubSurface::daylightingDeviceLightWell() const {
+    return getImpl<detail::SubSurface_Impl>()->daylightingDeviceLightWell();
+  }
+
+  boost::optional<DaylightingDeviceLightWell> SubSurface::addDaylightingDeviceLightWell() const {
+    return getImpl<detail::SubSurface_Impl>()->addDaylightingDeviceLightWell();
+  }
+
   /// @cond
   SubSurface::SubSurface(std::shared_ptr<detail::SubSurface_Impl> impl) : PlanarSurface(std::move(impl)) {}
 
@@ -1452,6 +1670,68 @@ namespace model {
   void SubSurface::resetShadingControl() {
     removeAllShadingControls();
   }
+
+  std::vector<Point3d> SubSurface::roughOpeningVertices() const {
+    if (auto frameAndDivider = windowPropertyFrameAndDivider()) {
+      double fw = frameAndDivider->frameWidth();
+      // Get a transform to change the points to x/y
+      Transformation faceTransform = Transformation::alignFace(this->vertices());
+      std::vector<Point3d> faceVertices = faceTransform.inverse() * this->vertices();
+      // Offset the points by the framewidth
+      boost::optional<std::vector<Point3d>> offset = openstudio::buffer(faceVertices, fw, 0.01);
+      if (!offset) {
+        // If offset failed it is because the points are in the wrong order
+        // If it fails again then something went awry with boost::buffer
+        faceVertices = openstudio::reverse(faceVertices);
+        offset = openstudio::buffer(faceVertices, fw, 0.01);
+        if (!offset) {
+          return this->vertices();
+        }
+      }
+
+      std::vector<Point3d> roughOpeningVertices = faceTransform * offset.get();
+      return roughOpeningVertices;
+    }
+
+    return this->vertices();
+  }
+
+  double SubSurface::roughOpeningArea() const {
+    if (boost::optional<double> area = openstudio::getArea(roughOpeningVertices())) {
+      return area.get();
+    }
+
+    return grossArea();
+  }
+
+  double SubSurface::frameArea() const {
+    double roughOpeningArea = this->roughOpeningArea();
+    return roughOpeningArea - grossArea();
+  }
+
+  double SubSurface::dividerArea() const {
+    double divArea = 0;
+    if (auto frameAndDivider = windowPropertyFrameAndDivider()) {
+      double dividerWidth = frameAndDivider->dividerWidth();
+      if (dividerWidth == 0) return divArea;
+
+      Transformation faceTransform = Transformation::alignFace(this->vertices());
+      std::vector<Point3d> faceVertices = faceTransform.inverse() * this->vertices();
+      BoundingBox bb;
+      bb.addPoints(faceVertices);
+
+      double numHorizDividers = frameAndDivider->numberOfHorizontalDividers();
+      if (numHorizDividers != 0 && bb.maxX().has_value() && bb.minX().has_value()) {
+        divArea += numHorizDividers * dividerWidth * (*bb.maxX() - *bb.minX());
+      }
+      double numVertDividers = frameAndDivider->numberOfVerticalDividers();
+      if (numVertDividers != 0 && bb.maxY().has_value() && bb.minY().has_value()) {
+        divArea += numVertDividers * dividerWidth * (*bb.maxY() - *bb.minY());
+      }
+    }
+    return divArea;
+  }
+
   /// @endcond
 
   std::vector<SubSurface> applySkylightPattern(const std::vector<std::vector<Point3d>>& pattern, const std::vector<Space>& spaces,
@@ -1516,8 +1796,24 @@ namespace model {
     return getImpl<detail::SubSurface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
   }
 
+  AirflowNetworkSurface SubSurface::getAirflowNetworkSurface(const AirflowNetworkSpecifiedFlowRate& surfaceAirflowLeakage) {
+    return getImpl<detail::SubSurface_Impl>()->getAirflowNetworkSurface(surfaceAirflowLeakage);
+  }
+
   boost::optional<AirflowNetworkSurface> SubSurface::airflowNetworkSurface() const {
     return getImpl<detail::SubSurface_Impl>()->airflowNetworkSurface();
+  }
+
+  boost::optional<double> SubSurface::assemblyUFactor() const {
+    return getImpl<detail::SubSurface_Impl>()->assemblyUFactor();
+  }
+
+  boost::optional<double> SubSurface::assemblySHGC() const {
+    return getImpl<detail::SubSurface_Impl>()->assemblySHGC();
+  }
+
+  boost::optional<double> SubSurface::assemblyVisibleTransmittance() const {
+    return getImpl<detail::SubSurface_Impl>()->assemblyVisibleTransmittance();
   }
 
 }  // namespace model

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,15 +50,13 @@
 
 using namespace openstudio::model;
 
-using namespace std;
-
 namespace openstudio {
 
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateElectricEquipment(ElectricEquipment& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::ElectricEquipment);
-    m_idfObjects.push_back(idfObject);
+
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ElectricEquipment, modelObject);
 
     for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
       translateAndMapModelObject(lifeCycleCost);
@@ -66,22 +64,13 @@ namespace energyplus {
 
     ElectricEquipmentDefinition definition = modelObject.electricEquipmentDefinition();
 
-    idfObject.setString(ElectricEquipmentFields::Name, modelObject.name().get());
+    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
+    idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
-    boost::optional<Space> space = modelObject.space();
-    boost::optional<SpaceType> spaceType = modelObject.spaceType();
-    if (space) {
-      boost::optional<ThermalZone> thermalZone = space->thermalZone();
-      if (thermalZone) {
-        idfObject.setString(ElectricEquipmentFields::ZoneorZoneListName, thermalZone->name().get());
-      }
-    } else if (spaceType) {
-      idfObject.setString(ElectricEquipmentFields::ZoneorZoneListName, spaceType->name().get());
-    }
-
-    boost::optional<Schedule> schedule = modelObject.schedule();
-    if (schedule) {
-      idfObject.setString(ElectricEquipmentFields::ScheduleName, schedule->name().get());
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(ElectricEquipmentFields::ScheduleName, idf_schedule_->nameString());
     }
 
     idfObject.setString(ElectricEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());

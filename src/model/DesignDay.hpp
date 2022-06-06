@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "SizingPeriod.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -55,11 +56,15 @@ namespace model {
 
     static std::vector<std::string> validDayTypeValues();
 
-    static std::vector<std::string> validHumidityIndicatingTypeValues();
+    OS_DEPRECATED static std::vector<std::string> validHumidityIndicatingTypeValues();
+
+    static std::vector<std::string> validHumidityConditionTypeValues();
 
     static std::vector<std::string> validDryBulbTemperatureRangeModifierTypeValues();
 
     static std::vector<std::string> validSolarModelIndicatorValues();
+
+    static std::vector<std::string> validBeginEnvironmentResetModeValues();
 
     //@}
     /** @name Getters */
@@ -73,9 +78,9 @@ namespace model {
 
     bool isDailyDryBulbTemperatureRangeDefaulted() const;
 
-    double humidityIndicatingConditionsAtMaximumDryBulb() const;
+    OS_DEPRECATED double humidityIndicatingConditionsAtMaximumDryBulb() const;
 
-    bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
+    OS_DEPRECATED bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
 
     double barometricPressure() const;
 
@@ -117,17 +122,31 @@ namespace model {
 
     bool isDaylightSavingTimeIndicatorDefaulted() const;
 
-    std::string humidityIndicatingType() const;
+    OS_DEPRECATED std::string humidityIndicatingType() const;
 
-    bool isHumidityIndicatingTypeDefaulted() const;
+    std::string humidityConditionType() const;
 
-    boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
+    OS_DEPRECATED bool isHumidityIndicatingTypeDefaulted() const;
+
+    bool isHumidityConditionTypeDefaulted() const;
+
+    OS_DEPRECATED boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
+
+    boost::optional<ScheduleDay> humidityConditionDaySchedule() const;
+
+    boost::optional<double> wetBulbOrDewPointAtMaximumDryBulb() const;
+
+    boost::optional<double> humidityRatioAtMaximumDryBulb() const;
+
+    boost::optional<double> enthalpyAtMaximumDryBulb() const;
 
     std::string dryBulbTemperatureRangeModifierType() const;
 
     bool isDryBulbTemperatureRangeModifierTypeDefaulted() const;
 
-    boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
+    OS_DEPRECATED boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
+
+    boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierDaySchedule() const;
 
     std::string solarModelIndicator() const;
 
@@ -137,15 +156,29 @@ namespace model {
 
     boost::optional<ScheduleDay> diffuseSolarDaySchedule() const;
 
-    double ashraeTaub() const;
+    OS_DEPRECATED double ashraeTaub() const;
 
-    bool isAshraeTaubDefaulted() const;
+    double ashraeClearSkyOpticalDepthForBeamIrradiance() const;
 
-    double ashraeTaud() const;
+    OS_DEPRECATED bool isAshraeTaubDefaulted() const;
 
-    bool isAshraeTaudDefaulted() const;
+    bool isAshraeClearSkyOpticalDepthForBeamIrradianceDefaulted() const;
+
+    OS_DEPRECATED double ashraeTaud() const;
+
+    double ashraeClearSkyOpticalDepthForDiffuseIrradiance() const;
+
+    OS_DEPRECATED bool isAshraeTaudDefaulted() const;
+
+    bool isAshraeClearSkyOpticalDepthForDiffuseIrradianceDefaulted() const;
 
     boost::optional<double> dailyWetBulbTemperatureRange() const;
+
+    boost::optional<int> maximumNumberWarmupDays() const;
+
+    std::string beginEnvironmentResetMode() const;
+
+    bool isBeginEnvironmentResetModeDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -158,10 +191,6 @@ namespace model {
     bool setDailyDryBulbTemperatureRange(double dailyDryBulbTemperatureRange);
 
     void resetDailyDryBulbTemperatureRange();
-
-    bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
-
-    void resetHumidityIndicatingConditionsAtMaximumDryBulb();
 
     bool setBarometricPressure(double barometricPressure);
 
@@ -203,16 +232,40 @@ namespace model {
 
     void resetDaylightSavingTimeIndicator();
 
-    bool setHumidityIndicatingType(const std::string& humidityIndicatingType);
+    OS_DEPRECATED bool setHumidityIndicatingType(const std::string& humidityIndicatingType);
 
-    void resetHumidityIndicatingType();
+    bool setHumidityConditionType(const std::string& humidityConditionType);
+
+    OS_DEPRECATED void resetHumidityIndicatingType();
+
+    void resetHumidityConditionType();
 
     /** Sets the humidity indicating day schedule. The appropriate ScheduleTypeLimits varies
    *  depending on the humidity indicating type. Please see the EnergyPlus input-output reference
    *  for details before using this feature. */
-    bool setHumidityIndicatingDaySchedule(const ScheduleDay& schedule);
+    OS_DEPRECATED bool setHumidityIndicatingDaySchedule(const ScheduleDay& schedule);
 
-    void resetHumidityIndicatingDaySchedule();
+    bool setHumidityConditionDaySchedule(const ScheduleDay& schedule);
+
+    OS_DEPRECATED void resetHumidityIndicatingDaySchedule();
+
+    void resetHumidityConditionDaySchedule();
+
+    OS_DEPRECATED bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
+
+    OS_DEPRECATED void resetHumidityIndicatingConditionsAtMaximumDryBulb();
+
+    bool setWetBulbOrDewPointAtMaximumDryBulb(double wetBulbOrDewPointAtMaximumDryBulb);
+
+    void resetWetBulbOrDewPointAtMaximumDryBulb();
+
+    bool setHumidityRatioAtMaximumDryBulb(double humidityRatioAtMaximumDryBulb);
+
+    void resetHumidityRatioAtMaximumDryBulb();
+
+    bool setEnthalpyAtMaximumDryBulb(double enthalpyAtMaximumDryBulb);
+
+    void resetEnthalpyAtMaximumDryBulb();
 
     bool setDryBulbTemperatureRangeModifierType(const std::string& dryBulbTemperatureRangeModifierType);
 
@@ -221,9 +274,13 @@ namespace model {
     /** Sets the dry bulb temperature range modifier day schedule. The appropriate
    *  ScheduleTypeLimits varies depending on the dry bulb temperature range modifier type. Please
    *  see the EnergyPlus input-output reference for details before using this feature. */
-    bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule);
+    OS_DEPRECATED bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay& schedule);
 
-    void resetDryBulbTemperatureRangeModifierSchedule();
+    bool setDryBulbTemperatureRangeModifierDaySchedule(const ScheduleDay& schedule);
+
+    OS_DEPRECATED void resetDryBulbTemperatureRangeModifierSchedule();
+
+    void resetDryBulbTemperatureRangeModifierDaySchedule();
 
     bool setSolarModelIndicator(const std::string& solarModelIndicator);
 
@@ -237,17 +294,33 @@ namespace model {
 
     void resetDiffuseSolarDaySchedule();
 
-    bool setAshraeTaub(double ashraeTaub);
+    OS_DEPRECATED bool setAshraeTaub(double ashraeTaub);
 
-    void resetAshraeTaub();
+    bool setAshraeClearSkyOpticalDepthForBeamIrradiance(double ashraeClearSkyOpticalDepthForBeamIrradiance);
 
-    bool setAshraeTaud(double ashraeTaud);
+    OS_DEPRECATED void resetAshraeTaub();
 
-    void resetAshraeTaud();
+    void resetAshraeClearSkyOpticalDepthForBeamIrradiance();
+
+    OS_DEPRECATED bool setAshraeTaud(double ashraeTaud);
+
+    bool setAshraeClearSkyOpticalDepthForDiffuseIrradiance(double ashraeClearSkyOpticalDepthForDiffuseIrradiance);
+
+    OS_DEPRECATED void resetAshraeTaud();
+
+    void resetAshraeClearSkyOpticalDepthForDiffuseIrradiance();
 
     bool setDailyWetBulbTemperatureRange(double dailyWetBulbTemperatureRange);
 
     void resetDailyWetBulbTemperatureRange();
+
+    bool setMaximumNumberWarmupDays(int maximumNumberWarmupDays);
+
+    void resetMaximumNumberWarmupDays();
+
+    bool setBeginEnvironmentResetMode(const std::string& beginEnvironmentResetMode);
+
+    void resetBeginEnvironmentResetMode();
 
     //@}
 

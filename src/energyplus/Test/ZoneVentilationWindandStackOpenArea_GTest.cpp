@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,6 +39,7 @@
 #include "../../model/ZoneVentilationWindandStackOpenArea_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/ScheduleConstant.hpp"
 
@@ -67,6 +68,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea)
   }
 
   ThermalZone z(m);
+  Space s(m);
+  s.setThermalZone(z);
   EXPECT_TRUE(zv.addToThermalZone(z));
 
   EXPECT_TRUE(zv.setOpeningArea(10.0));

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -218,6 +218,7 @@ namespace model {
             auto t_coolingCoil = coolingCoil();
             if (auto waterInletModelObject = t_coolingCoil.waterInletModelObject()) {
 
+              // TODO: why aren't we setting the water coil in this case? @kbenne thoughts please
               if (auto coilCoolingWater = t_coolingCoil.optionalCast<CoilCoolingWater>()) {
                 if (auto oldController = coilCoolingWater->controllerWaterCoil()) {
                   oldController->remove();

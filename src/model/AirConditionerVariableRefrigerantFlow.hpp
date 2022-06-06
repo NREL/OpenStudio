@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -89,10 +89,12 @@ namespace model {
     OS_DEPRECATED double ratedCoolingCOP() const;
     OS_DEPRECATED bool setRatedCoolingCOP(double ratedCoolingCOP);
 
+    /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Minimum Condenser Inlet Node Temperature in Cooling Mode" **/
     double minimumOutdoorTemperatureinCoolingMode() const;
 
     bool setMinimumOutdoorTemperatureinCoolingMode(double minimumOutdoorTemperatureinCoolingMode);
 
+    /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Maximum Condenser Inlet Node Temperature in Cooling Mode" **/
     double maximumOutdoorTemperatureinCoolingMode() const;
 
     bool setMaximumOutdoorTemperatureinCoolingMode(double maximumOutdoorTemperatureinCoolingMode);
@@ -176,10 +178,12 @@ namespace model {
 
     bool setRatedHeatingCOP(double ratedHeatingCOP);
 
+    /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Minimum Condenser Inlet Node Temperature in Heating Mode" **/
     double minimumOutdoorTemperatureinHeatingMode() const;
 
     bool setMinimumOutdoorTemperatureinHeatingMode(double minimumOutdoorTemperatureinHeatingMode);
 
+    /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Maximum Condenser Inlet Node Temperature in Heating Mode" **/
     double maximumOutdoorTemperatureinHeatingMode() const;
 
     bool setMaximumOutdoorTemperatureinHeatingMode(double maximumOutdoorTemperatureinHeatingMode);
@@ -407,10 +411,12 @@ namespace model {
 
     bool setFuelType(std::string fuelType);
 
+    /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Minimum Condenser Inlet Node Temperature in Heat Recovery Mode" **/
     double minimumOutdoorTemperatureinHeatRecoveryMode() const;
 
     bool setMinimumOutdoorTemperatureinHeatRecoveryMode(double minimumOutdoorTemperatureinHeatRecoveryMode);
 
+    /** In EnergyPlus 9.6.0 and above this property maps to the EnergyPlus field "Maximum Condenser Inlet Node Temperature in Heat Recovery Mode" **/
     double maximumOutdoorTemperatureinHeatRecoveryMode() const;
 
     bool setMaximumOutdoorTemperatureinHeatRecoveryMode(double maximumOutdoorTemperatureinHeatRecoveryMode);

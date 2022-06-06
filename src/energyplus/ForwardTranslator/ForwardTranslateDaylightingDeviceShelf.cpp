@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2021, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -70,7 +70,9 @@ namespace energyplus {
 
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::DaylightingDevice_Shelf, modelObject);
 
-    idfObject.setString(DaylightingDevice_ShelfFields::WindowName, window.name().get());
+    if (boost::optional<IdfObject> w = translateAndMapModelObject(window)) {
+      idfObject.setString(DaylightingDevice_ShelfFields::WindowName, w->name().get());
+    }
 
     // inside shelf is converted to a surface
     if (insideShelf) {
