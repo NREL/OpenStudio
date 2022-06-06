@@ -983,15 +983,31 @@ namespace model {
       boost::optional<ConvergenceLimits> convergenceLimits = model().convergenceLimits();
       boost::optional<ShadowCalculation> shadowCalculation = model().shadowCalculation();
 
+      IdfObjectVector idfObjects;
       for (const WorkspaceObject& componentObject : component.objects()) {
-        if (componentObject.iddObject().type() == IddObjectType::Building && building) {
-          LOG(Error, "Building");
-        } else if (componentObject.iddObject().type() == IddObjectType::Site_WaterMainsTemperature && siteWaterMainsTemperature) {
-          siteWaterMainsTemperature.get().remove();
+        if (componentObject.iddObject().type() == IddObjectType::Building) {
+          if (building) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              building->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Site_WaterMainsTemperature) {
+          if (siteWaterMainsTemperature) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              siteWaterMainsTemperature->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else {
+          // not a unique model object
+          idfObjects.push_back(componentObject);
         }
       }
 
-      WorkspaceObjectVector resultingObjects = model().addObjects(component.objects());
+      WorkspaceObjectVector resultingObjects = model().addObjects(idfObjects);
       if (resultingObjects.empty()) {
         return boost::none;
       }
