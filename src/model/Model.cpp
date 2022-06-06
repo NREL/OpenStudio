@@ -1334,7 +1334,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Foundation_Kiva_Settings>()) {
+        } else if (componentObject.optionalCast<FoundationKivaSettings>()) {
           if (foundationKivaSettings) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               foundationKivaSettings->setString(i, componentObject.getString(i).get());
@@ -1342,7 +1342,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<OutputControl_Files>()) {
+        } else if (componentObject.optionalCast<OutputControlFiles>()) {
           if (outputControlFiles) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputControlFiles->setString(i, componentObject.getString(i).get());
@@ -1350,7 +1350,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<OutputControl_ReportingTolerances>()) {
+        } else if (componentObject.optionalCast<OutputControlReportingTolerances>()) {
           if (outputControlReportingTolerances) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputControlReportingTolerances->setString(i, componentObject.getString(i).get());
@@ -1358,7 +1358,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Output_Diagnostics>()) {
+        } else if (componentObject.optionalCast<OutputDiagnostics>()) {
           if (outputDiagnostics) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputDiagnostics->setString(i, componentObject.getString(i).get());
@@ -1366,7 +1366,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Output_DebuggingData>()) {
+        } else if (componentObject.optionalCast<OutputDebuggingData>()) {
           if (outputDebuggingData) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputDebuggingData->setString(i, componentObject.getString(i).get());
@@ -1374,7 +1374,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Output_JSON>()) {
+        } else if (componentObject.optionalCast<OutputJSON>()) {
           if (outputJSON) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputJSON->setString(i, componentObject.getString(i).get());
@@ -1382,7 +1382,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Output_EnergyManagementSystem>()) {
+        } else if (componentObject.optionalCast<OutputEnergyManagementSystem>()) {
           if (outputEnergyManagementSystem) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputEnergyManagementSystem->setString(i, componentObject.getString(i).get());
@@ -1390,7 +1390,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Output_Table_SummaryReports>()) {
+        } else if (componentObject.optionalCast<OutputTableSummaryReports>()) {
           if (outputTableSummaryReports) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outputTableSummaryReports->setString(i, componentObject.getString(i).get());
@@ -1406,7 +1406,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<LifeCycleCost_Parameters>()) {
+        } else if (componentObject.optionalCast<LifeCycleCostParameters>()) {
           if (lifeCycleCostParameters) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               lifeCycleCostParameters->setString(i, componentObject.getString(i).get());
@@ -1414,7 +1414,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Sizing_Parameters>()) {
+        } else if (componentObject.optionalCast<SizingParameters>()) {
           if (sizingParameters) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               sizingParameters->setString(i, componentObject.getString(i).get());
@@ -1438,7 +1438,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<RunPeriodControl_DaylightSavingTime>()) {
+        } else if (componentObject.optionalCast<RunPeriodControlDaylightSavingTime>()) {
           if (runPeriodControlDaylightSavingTime) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               runPeriodControlDaylightSavingTime->setString(i, componentObject.getString(i).get());
@@ -1462,7 +1462,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Site_GroundReflectance>()) {
+        } else if (componentObject.optionalCast<SiteGroundReflectance>()) {
           if (siteGroundReflectance) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteGroundReflectance->setString(i, componentObject.getString(i).get());
@@ -1470,7 +1470,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Site_WaterMainsTemperature>()) {
+        } else if (componentObject.optionalCast<SiteWaterMainsTemperature>()) {
           if (siteWaterMainsTemperature) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteWaterMainsTemperature->setString(i, componentObject.getString(i).get());
@@ -1478,7 +1478,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Site_GroundTemperature_BuildingSurface>()) {
+        } else if (componentObject.optionalCast<SiteGroundTemperatureBuildingSurface>()) {
           if (siteGroundTemperatureBuildingSurface) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteGroundTemperatureBuildingSurface->setString(i, componentObject.getString(i).get());
@@ -1486,7 +1486,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Site_GroundTemperature_FCfactorMethod>()) {
+        } else if (componentObject.optionalCast<SiteGroundTemperatureFCfactorMethod>()) {
           if (siteGroundTemperatureFCfactorMethod) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteGroundTemperatureFCfactorMethod->setString(i, componentObject.getString(i).get());
@@ -1494,7 +1494,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Site_GroundTemperature_Deep>()) {
+        } else if (componentObject.optionalCast<SiteGroundTemperatureDeep>()) {
           if (siteGroundTemperatureDeep) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteGroundTemperatureDeep->setString(i, componentObject.getString(i).get());
@@ -1502,7 +1502,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<Site_GroundTemperature_Shallow>()) {
+        } else if (componentObject.optionalCast<SiteGroundTemperatureShallow>()) {
           if (siteGroundTemperatureShallow) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteGroundTemperatureShallow->setString(i, componentObject.getString(i).get());
@@ -1558,7 +1558,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<SurfaceConvectionAlgorithm_Inside>()) {
+        } else if (componentObject.optionalCast<SurfaceConvectionAlgorithmInside>()) {
           if (insideSurfaceConvectionAlgorithm) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               insideSurfaceConvectionAlgorithm->setString(i, componentObject.getString(i).get());
@@ -1566,7 +1566,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<SurfaceConvectionAlgorithm_Outside>()) {
+        } else if (componentObject.optionalCast<SurfaceConvectionAlgorithmOutside>()) {
           if (outsideSurfaceConvectionAlgorithm) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outsideSurfaceConvectionAlgorithm->setString(i, componentObject.getString(i).get());
@@ -1598,7 +1598,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<ZoneCapacitanceMultiplier_ResearchSpecial>()) {
+        } else if (componentObject.optionalCast<ZoneCapacitanceMultiplierResearchSpecial>()) {
           if (zoneCapacitanceMultiplierResearchSpecial) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               zoneCapacitanceMultiplierResearchSpecial->setString(i, componentObject.getString(i).get());
