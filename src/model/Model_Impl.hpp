@@ -227,7 +227,7 @@ namespace model {
 
       /** Get the RunPeriodControlDaylightSavingTime object if there is one, this implementation uses a cached reference to the RunPeriodControlDaylightSavingTime
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>(). */
-      boost::optional<RunPeriod> runPeriodControlDaylightSavingTime() const;
+      boost::optional<RunPeriodControlDaylightSavingTime> runPeriodControlDaylightSavingTime() const;
 
       /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
@@ -251,11 +251,11 @@ namespace model {
 
       /** Get the SiteGroundTemperatureFCfactorMethod object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureFCfactorMethod
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>(). */
-      boost::optional<SiteGroundTemperatureFCfactorMethod> siteGroundTemperatureFCfactorMethod() con
+      boost::optional<SiteGroundTemperatureFCfactorMethod> siteGroundTemperatureFCfactorMethod() const;
 
-        /** Get the SiteGroundTemperatureDeep object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureDeep
+      /** Get the SiteGroundTemperatureDeep object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureDeep
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureDeep>(). */
-        boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep() const;
+      boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep() const;
 
       /** Get the SiteGroundTemperatureShallow object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureShallow
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureShallow>(). */
@@ -487,7 +487,7 @@ namespace model {
       mutable boost::optional<Version> m_cachedVersion;
       mutable boost::optional<SimulationControl> m_cachedSimulationControl;
       mutable boost::optional<LightingSimulationControl> m_cachedLightingSimulationControl;
-      mutable boost::optional<AiflowNetworkSimulationControl> m_cachedAirflowNetworkSimulationControl;
+      mutable boost::optional<AirflowNetworkSimulationControl> m_cachedAirflowNetworkSimulationControl;
       mutable boost::optional<InsideSurfaceConvectionAlgorithm> m_cachedInsideSurfaceConvectionAlgorithm;
       mutable boost::optional<OutsideSurfaceConvectionAlgorithm> m_cachedOutsideSurfaceConvectionAlgorithm;
       mutable boost::optional<HeatBalanceAlgorithm> m_cachedHeatBalanceAlgorithm;
@@ -498,7 +498,7 @@ namespace model {
       mutable boost::optional<ShadowCalculation> m_cachedShadowCalculation;
       mutable boost::optional<Timestep> m_cachedTimestep;
       mutable boost::optional<ClimateZones> m_cachedClimateZones;
-      mutable boost::optional<EnvironmentImpactFactors> m_cachedEnvironmentImpactFactors;
+      mutable boost::optional<EnvironmentalImpactFactors> m_cachedEnvironmentalImpactFactors;
       mutable boost::optional<ExternalInterface> m_cachedExternalInterface;
 
       // private slots:
@@ -542,7 +542,7 @@ namespace model {
       void clearCachedShadowCalculation(const Handle& handle);
       void clearCachedTimestep(const Handle& handle);
       void clearCachedClimateZones(const Handle& handle);
-      void clearCachedEnvironmentImpactFactors(const Handle& handle);
+      void clearCachedEnvironmentalImpactFactors(const Handle& handle);
       void clearCachedExternalInterface(const Handle& handle);
 
       typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(

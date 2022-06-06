@@ -554,7 +554,7 @@ namespace model {
       return m_cachedSiteGroundTemperatureBuildingSurface;
     }
 
-    boost::optional<SiteGroundTemperatureFCfactorMethod> Model_Impl::siteGroundTemperaturefCfactorMethod() const {
+    boost::optional<SiteGroundTemperatureFCfactorMethod> Model_Impl::siteGroundTemperatureFCfactorMethod() const {
       if (m_cachedSiteGroundTemperatureFCfactorMethod) {
         return m_cachedSiteGroundTemperatureFCfactorMethod;
       }
@@ -871,21 +871,21 @@ namespace model {
       return m_cachedClimateZones;
     }
 
-    boost::optional<EnvironmentImpactFactors> Model_Impl::environmentalImpactFactors() const {
-      if (m_cachedEnvironmentImpactFactors) {
-        return m_cachedEnvironmentImpactFactors;
+    boost::optional<EnvironmentalImpactFactors> Model_Impl::environmentalImpactFactors() const {
+      if (m_cachedEnvironmentalImpactFactors) {
+        return m_cachedEnvironmentalImpactFactors;
       }
 
-      boost::optional<EnvironmentImpactFactors> result = this->model().getOptionalUniqueModelObject<EnvironmentImpactFactors>();
+      boost::optional<EnvironmentalImpactFactors> result = this->model().getOptionalUniqueModelObject<EnvironmentalImpactFactors>();
       if (result) {
-        m_cachedEnvironmentImpactFactors = result;
+        m_cachedEnvironmentalImpactFactors = result;
         result->getImpl<EnvironmentalImpactFactors_Impl>()
           .get()
           ->EnvironmentalImpactFactors_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedEnvironmentalImpactFactors>(
             const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
-      return m_cachedEnvironmentImpactFactors;
+      return m_cachedEnvironmentalImpactFactors;
     }
 
     boost::optional<ExternalInterface> Model_Impl::externalInterface() const {
@@ -1638,7 +1638,7 @@ namespace model {
           } else {
             idfObjects.push_back(componentObject);
           }
-        } else if (componentObject.iddObject().type() == IddObjectType::EnvironmentImpactFactors) {
+        } else if (componentObject.iddObject().type() == IddObjectType::EnvironmentalImpactFactors) {
           if (environmentalImpactFactors) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               environmentalImpactFactors->setString(i, componentObject.getString(i).get());
@@ -2037,7 +2037,7 @@ namespace model {
     }
 
     void Model_Impl::clearCachedEnvironmentalImpactFactors(const Handle&) {
-      m_cachedEnvironmentImpactFactors.reset();
+      m_cachedEnvironmentalImpactFactors.reset();
     }
 
     void Model_Impl::clearCachedExternalInterface(const Handle&) {
@@ -2349,7 +2349,7 @@ namespace model {
     return getImpl<detail::Model_Impl>()->climateZones();
   }
 
-  boost::optional<EnvironmentImpactFactors> Model::environmentalImpactFactors() const {
+  boost::optional<EnvironmentalImpactFactors> Model::environmentalImpactFactors() const {
     return getImpl<detail::Model_Impl>()->environmentalImpactFactors();
   }
 
@@ -4047,11 +4047,11 @@ namespace model {
   }
 
   template <>
-  EnvironmentImpactFactors Model::getUniqueModelObject<EnvironmentImpactFactors>() {
-    if (boost::optional<EnvironmentImpactFactors> _b = environmentalImpactFactors()) {
+  EnvironmentalImpactFactors Model::getUniqueModelObject<EnvironmentalImpactFactors>() {
+    if (boost::optional<EnvironmentalImpactFactors> _b = environmentalImpactFactors()) {
       return _b.get();
     } else {
-      return EnvironmentImpactFactors(*this);
+      return EnvironmentalImpactFactors(*this);
     }
   }
 

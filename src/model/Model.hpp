@@ -204,7 +204,7 @@ namespace model {
 
     /** Get the RunPeriodControlDaylightSavingTime object if there is one, this implementation uses a cached reference to the RunPeriodControlDaylightSavingTime
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>(). */
-    boost::optional<RunPeriod> runPeriodControlDaylightSavingTime() const;
+    boost::optional<RunPeriodControlDaylightSavingTime> runPeriodControlDaylightSavingTime() const;
 
     /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
@@ -228,11 +228,11 @@ namespace model {
 
     /** Get the SiteGroundTemperatureFCfactorMethod object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureFCfactorMethod
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>(). */
-    boost::optional<SiteGroundTemperatureFCfactorMethod> siteGroundTemperatureFCfactorMethod() con
+    boost::optional<SiteGroundTemperatureFCfactorMethod> siteGroundTemperatureFCfactorMethod() const;
 
-      /** Get the SiteGroundTemperatureDeep object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureDeep
+    /** Get the SiteGroundTemperatureDeep object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureDeep
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureDeep>(). */
-      boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep() const;
+    boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep() const;
 
     /** Get the SiteGroundTemperatureShallow object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureShallow
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureShallow>(). */
