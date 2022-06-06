@@ -52,25 +52,44 @@ namespace model {
   class Building;
   class FoundationKivaSettings;
   class OutputControlFiles;
+  class OutputControlReportingTolerances;
+  class OutputDiagnostics;
+  class OutputDebuggingData;
+  class OutputJSON;
+  class OutputEnergyManagementSystem;
   class OutputTableSummaryReports;
   class PerformancePrecisionTradeoffs;
   class LifeCycleCostParameters;
+  class SizingParameters;
+  class RadianceParameters;
   class RunPeriod;
+  class RunPeriodControlDaylightSavingTime;
   class YearDescription;
   class Site;
+  class SiteGroundReflectance;
   class SiteWaterMainsTemperature;
   class SiteGroundTemperatureBuildingSurface;
+  class SiteGroundTemperatureFCfactorMethod;
   class SiteGroundTemperatureDeep;
+  class SiteGroundTemperatureShallow;
   class Facility;
   class WeatherFile;
   class Version;
   class SimulationControl;
+  class LightingSimulationControl;
+  class AirflowNetworkSimulationControl;
   class InsideSurfaceConvectionAlgorithm;
   class OutsideSurfaceConvectionAlgorithm;
   class HeatBalanceAlgorithm;
   class ZoneAirHeatBalanceAlgorithm;
+  class ZoneAirMassFlowConservation;
+  class ZoneCapacitanceMultiplierResearchSpecial;
   class ConvergenceLimits;
   class ShadowCalculation;
+  class Timestep;
+  class ClimateZones;
+  class EnvironmentalImpactFactors;
+  class ExternalInterface;
   class Component;
   class ComponentData;
   class Schedule;
@@ -139,6 +158,26 @@ namespace model {
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlFiles>(). */
     boost::optional<OutputControlFiles> outputControlFiles() const;
 
+    /** Get the OutputControlReportingTolerances object if there is one, this implementation uses a cached reference to the OutputControlReportingTolerances
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlReportingTolerances>(). */
+    boost::optional<OutputControlReportingTolerances> outputControlReportingTolerances() const;
+
+    /** Get the OutputDiagnostics object if there is one, this implementation uses a cached reference to the OutputDiagnostics
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputDiagnostics>(). */
+    boost::optional<OutputDiagnostics> outputDiagnostics() const;
+
+    /** Get the OutputDebuggingData object if there is one, this implementation uses a cached reference to the OutputDebuggingData
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputDebuggingData>(). */
+    boost::optional<OutputDebuggingData> outputDebuggingData() const;
+
+    /** Get the OutputJSON object if there is one, this implementation uses a cached reference to the OutputJSON
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputJSON>(). */
+    boost::optional<OutputJSON> outputJSON() const;
+
+    /** Get the OutputEnergyManagementSystem object if there is one, this implementation uses a cached reference to the OutputEnergyManagementSystem
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlFiles>(). */
+    boost::optional<OutputEnergyManagementSystem> outputEnergyManagementSystem() const;
+
     /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputTableSummaryReports>(). */
     boost::optional<OutputTableSummaryReports> outputTableSummaryReports() const;
@@ -151,9 +190,21 @@ namespace model {
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
     boost::optional<LifeCycleCostParameters> lifeCycleCostParameters() const;
 
+    /** Get the SizingParameters object if there is one, this implementation uses a cached reference to the SizingParameters
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<SizingParameters>(). */
+    boost::optional<SizingParameters> sizingParameters() const;
+
+    /** Get the RadianceParameters object if there is one, this implementation uses a cached reference to the RadianceParameters
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<RadianceParameters>(). */
+    boost::optional<RadianceParameters> radianceParameters() const;
+
     /** Get the RunPeriod object if there is one, this implementation uses a cached reference to the RunPeriod
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<RunPeriod>(). */
     boost::optional<RunPeriod> runPeriod() const;
+
+    /** Get the RunPeriodControlDaylightSavingTime object if there is one, this implementation uses a cached reference to the RunPeriodControlDaylightSavingTime
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>(). */
+    boost::optional<RunPeriod> runPeriodControlDaylightSavingTime() const;
 
     /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
@@ -163,6 +214,10 @@ namespace model {
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<Site>(). */
     boost::optional<Site> site() const;
 
+    /** Get the SiteGroundReflectance object if there is one, this implementation uses a cached reference to the SiteGroundReflectance
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundReflectance>(). */
+    boost::optional<SiteGroundReflectance> siteGroundReflectance() const;
+
     /** Get the SiteWaterMainsTemperature object if there is one, this implementation uses a cached reference to the SiteWaterMainsTemperature
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteWaterMainsTemperature>(). */
     boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature() const;
@@ -171,9 +226,17 @@ namespace model {
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>(). */
     boost::optional<SiteGroundTemperatureBuildingSurface> siteGroundTemperatureBuildingSurface() const;
 
-    /** Get the SiteGroundTemperatureDeep object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureDeep
+    /** Get the SiteGroundTemperatureFCfactorMethod object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureFCfactorMethod
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>(). */
+    boost::optional<SiteGroundTemperatureFCfactorMethod> siteGroundTemperatureFCfactorMethod() con
+
+      /** Get the SiteGroundTemperatureDeep object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureDeep
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureDeep>(). */
-    boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep() const;
+      boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep() const;
+
+    /** Get the SiteGroundTemperatureShallow object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureShallow
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureShallow>(). */
+    boost::optional<SiteGroundTemperatureShallow> siteGroundTemperatureShallow() const;
 
     /** Get the Facility object if there is one, this implementation uses a cached reference to the Facility
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<Facility>(). */
@@ -191,6 +254,14 @@ namespace model {
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<SimulationControl>(). */
     boost::optional<SimulationControl> simulationControl() const;
 
+    /** Get the LightingSimulationControl object if there is one, this implementation uses a cached reference to the LightingSimulationControl
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<LightingSimulationControl>(). */
+    boost::optional<LightingSimulationControl> lightingSimulationControl() const;
+
+    /** Get the AirflowNetworkSimulationControl object if there is one, this implementation uses a cached reference to the AirflowNetworkSimulationControl
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<AirflowNetworkSimulationControl>(). */
+    boost::optional<AirflowNetworkSimulationControl> airflowNetworkSimulationControl() const;
+
     /** Get the InsideSurfaceConvectionAlgorithm object if there is one, this implementation uses a cached reference to the InsideSurfaceConvectionAlgorithm
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<InsideSurfaceConvectionAlgorithm>(). */
     boost::optional<InsideSurfaceConvectionAlgorithm> insideSurfaceConvectionAlgorithm() const;
@@ -207,6 +278,14 @@ namespace model {
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>(). */
     boost::optional<ZoneAirHeatBalanceAlgorithm> zoneAirHeatBalanceAlgorithm() const;
 
+    /** Get the ZoneAirMassFlowConservation object if there is one, this implementation uses a cached reference to the ZoneAirMassFlowConservation
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<ZoneAirMassFlowConservation>(). */
+    boost::optional<ZoneAirMassFlowConservation> zoneAirMassFlowConservation() const;
+
+    /** Get the ZoneCapacitanceMultiplierResearchSpecial object if there is one, this implementation uses a cached reference to the ZoneCapacitanceMultiplierResearchSpecial
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>(). */
+    boost::optional<ZoneCapacitanceMultiplierResearchSpecial> zoneCapacitanceMultiplierResearchSpecial() const;
+
     /** Get the ConvergenceLimits object if there is one, this implementation uses a cached reference to the ConvergenceLimits
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<ConvergenceLimits>(). */
     boost::optional<ConvergenceLimits> convergenceLimits() const;
@@ -214,6 +293,22 @@ namespace model {
     /** Get the ShadowCalculation object if there is one, this implementation uses a cached reference to the ShadowCalculation
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<ShadowCalculation>(). */
     boost::optional<ShadowCalculation> shadowCalculation() const;
+
+    /** Get the Timestep object if there is one, this implementation uses a cached reference to the Timestep
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<Timestep>(). */
+    boost::optional<Timestep> timestep() const;
+
+    /** Get the ClimateZones object if there is one, this implementation uses a cached reference to the ClimateZones
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<ClimateZones>(). */
+    boost::optional<ClimateZones> climateZones() const;
+
+    /** Get the EnvironmentalImpactFactors object if there is one, this implementation uses a cached reference to the EnvironmentalImpactFactors
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<EnvironmentalImpactFactors>(). */
+    boost::optional<EnvironmentalImpactFactors> environmentalImpactFactors() const;
+
+    /** Get the ExternalInterface object if there is one, this implementation uses a cached reference to the ExternalInterface
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<ExternalInterface>(). */
+    boost::optional<ExternalInterface> externalInterface() const;
 
     /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
     // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
@@ -592,6 +687,21 @@ namespace model {
   MODEL_API OutputControlFiles Model::getUniqueModelObject<OutputControlFiles>();
 
   template <>
+  MODEL_API OutputControlReportingTolerances Model::getUniqueModelObject<OutputControlReportingTolerances>();
+
+  template <>
+  MODEL_API OutputDiagnostics Model::getUniqueModelObject<OutputDiagnostics>();
+
+  template <>
+  MODEL_API OutputDebuggingData Model::getUniqueModelObject<OutputDebuggingData>();
+
+  template <>
+  MODEL_API OutputJSON Model::getUniqueModelObject<OutputJSON>();
+
+  template <>
+  MODEL_API OutputEnergyManagementSystem Model::getUniqueModelObject<OutputEnergyManagementSystem>();
+
+  template <>
   MODEL_API OutputTableSummaryReports Model::getUniqueModelObject<OutputTableSummaryReports>();
 
   template <>
@@ -601,7 +711,16 @@ namespace model {
   MODEL_API LifeCycleCostParameters Model::getUniqueModelObject<LifeCycleCostParameters>();
 
   template <>
+  MODEL_API SizingParameters Model::getUniqueModelObject<SizingParameters>();
+
+  template <>
+  MODEL_API RadianceParameters Model::getUniqueModelObject<RadianceParameters>();
+
+  template <>
   MODEL_API RunPeriod Model::getUniqueModelObject<RunPeriod>();
+
+  template <>
+  MODEL_API RunPeriodControlDaylightSavingTime Model::getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
 
   template <>
   MODEL_API YearDescription Model::getUniqueModelObject<YearDescription>();
@@ -610,13 +729,22 @@ namespace model {
   MODEL_API Site Model::getUniqueModelObject<Site>();
 
   template <>
+  MODEL_API SiteGroundReflectance Model::getUniqueModelObject<SiteGroundReflectance>();
+
+  template <>
   MODEL_API SiteWaterMainsTemperature Model::getUniqueModelObject<SiteWaterMainsTemperature>();
 
   template <>
   MODEL_API SiteGroundTemperatureBuildingSurface Model::getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
 
   template <>
+  MODEL_API SiteGroundTemperatureFCfactorMethod Model::getUniqueModelObject<SiteGroundTemperatureFCfactorMethod>();
+
+  template <>
   MODEL_API SiteGroundTemperatureDeep Model::getUniqueModelObject<SiteGroundTemperatureDeep>();
+
+  template <>
+  MODEL_API SiteGroundTemperatureShallow Model::getUniqueModelObject<SiteGroundTemperatureShallow>();
 
   template <>
   MODEL_API Facility Model::getUniqueModelObject<Facility>();
@@ -631,6 +759,12 @@ namespace model {
   MODEL_API SimulationControl Model::getUniqueModelObject<SimulationControl>();
 
   template <>
+  MODEL_API LightingSimulationControl Model::getUniqueModelObject<LightingSimulationControl>();
+
+  template <>
+  MODEL_API AirflowNetworkSimulationControl Model::getUniqueModelObject<AirflowNetworkSimulationControl>();
+
+  template <>
   MODEL_API InsideSurfaceConvectionAlgorithm Model::getUniqueModelObject<InsideSurfaceConvectionAlgorithm>();
 
   template <>
@@ -643,10 +777,28 @@ namespace model {
   MODEL_API ZoneAirHeatBalanceAlgorithm Model::getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
 
   template <>
+  MODEL_API ZoneAirMassFlowConservation Model::getUniqueModelObject<ZoneAirMassFlowConservation>();
+
+  template <>
+  MODEL_API ZoneCapacitanceMultiplierResearchSpecial Model::getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
+
+  template <>
   MODEL_API ConvergenceLimits Model::getUniqueModelObject<ConvergenceLimits>();
 
   template <>
   MODEL_API ShadowCalculation Model::getUniqueModelObject<ShadowCalculation>();
+
+  template <>
+  MODEL_API Timestep Model::getUniqueModelObject<Timestep>();
+
+  template <>
+  MODEL_API ClimateZones Model::getUniqueModelObject<ClimateZones>();
+
+  template <>
+  MODEL_API EnvironmentalImpactFactors Model::getUniqueModelObject<EnvironmentalImpactFactors>();
+
+  template <>
+  MODEL_API ExternalInterface Model::getUniqueModelObject<ExternalInterface>();
 
 }  // namespace model
 }  // namespace openstudio

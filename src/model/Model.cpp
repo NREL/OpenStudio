@@ -269,6 +269,89 @@ namespace model {
       return m_cachedOutputControlFiles;
     }
 
+    boost::optional<OutputControlReportingTolerances> Model_Impl::outputControlReportingTolerances() const {
+      if (m_cachedOutputControlReportingTolerances) {
+        return m_cachedOutputControlReportingTolerances;
+      }
+
+      boost::optional<OutputControlReportingTolerances> result = this->model().getOptionalUniqueModelObject<OutputControlReportingTolerances>();
+      if (result) {
+        m_cachedOutputControlReportingTolerances = result;
+        result->getImpl<OutputControlReportingTolerances_Impl>()
+          .get()
+          ->OutputControlReportingTolerances_Impl::onRemoveFromWorkspace
+          .connect<Model_Impl, &Model_Impl::clearCachedOutputControlReportingTolerances>(const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedOutputControlReportingTolerances;
+    }
+
+    boost::optional<OutputDiagnostics> Model_Impl::outputDiagnostics() const {
+      if (m_cachedOutputDiagnostics) {
+        return m_cachedOutputDiagnostics;
+      }
+
+      boost::optional<OutputDiagnostics> result = this->model().getOptionalUniqueModelObject<OutputDiagnostics>();
+      if (result) {
+        m_cachedOutputDiagnostics = result;
+        result->getImpl<OutputDiagnostics_Impl>()
+          .get()
+          ->OutputDiagnostics_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputDiagnostics>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedOutputDiagnostics;
+    }
+
+    boost::optional<OutputDebuggingData> Model_Impl::outputDebuggingData() const {
+      if (m_cachedOutputDebuggingData) {
+        return m_cachedOutputDebuggingData;
+      }
+
+      boost::optional<OutputDebuggingData> result = this->model().getOptionalUniqueModelObject<OutputDebuggingData>();
+      if (result) {
+        m_cachedOutputDebuggingData = result;
+        result->getImpl<OutputDebuggingData_Impl>()
+          .get()
+          ->OutputDebuggingData_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputDebuggingData>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedOutputDebuggingData;
+    }
+
+    boost::optional<OutputJSON> Model_Impl::outputJSON() const {
+      if (m_cachedOutputJSON) {
+        return m_cachedOutputJSON;
+      }
+
+      boost::optional<OutputJSON> result = this->model().getOptionalUniqueModelObject<OutputJSON>();
+      if (result) {
+        m_cachedOutputJSON = result;
+        result->getImpl<OutputJSON_Impl>().get()->OutputJSON_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputJSON>(
+          const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedOutputJSON;
+    }
+
+    boost::optional<OutputEnergyManagementSystem> Model_Impl::outputEnergyManagementSystem() const {
+      if (m_cachedOutputEnergyManagementSystem) {
+        return m_cachedOutputEnergyManagementSystem;
+      }
+
+      boost::optional<OutputEnergyManagementSystem> result = this->model().getOptionalUniqueModelObject<OutputEnergyManagementSystem>();
+      if (result) {
+        m_cachedOutputEnergyManagementSystem = result;
+        result->getImpl<OutputEnergyManagementSystem_Impl>()
+          .get()
+          ->OutputEnergyManagementSystem_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputEnergyManagementSystem>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedOutputEnergyManagementSystem;
+    }
+
     boost::optional<OutputTableSummaryReports> Model_Impl::outputTableSummaryReports() const {
       if (m_cachedOutputTableSummaryReports) {
         return m_cachedOutputTableSummaryReports;
@@ -320,6 +403,40 @@ namespace model {
       return m_cachedLifeCycleCostParameters;
     }
 
+    boost::optional<SizingParameters> Model_Impl::sizingParameters() const {
+      if (m_cachedSizingParameters) {
+        return m_cachedSizingParameters;
+      }
+
+      boost::optional<SizingParameters> result = this->model().getOptionalUniqueModelObject<SizingParameters>();
+      if (result) {
+        m_cachedSizingParameters = result;
+        result->getImpl<SizingParameters_Impl>()
+          .get()
+          ->SizingParameters_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSizingParameters>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedSizingParameters;
+    }
+
+    boost::optional<RadianceParameters> Model_Impl::radianceParameters() const {
+      if (m_cachedRadianceParameters) {
+        return m_cachedRadianceParameters;
+      }
+
+      boost::optional<RadianceParameters> result = this->model().getOptionalUniqueModelObject<RadianceParameters>();
+      if (result) {
+        m_cachedRadianceParameters = result;
+        result->getImpl<RadianceParameters_Impl>()
+          .get()
+          ->RadianceParameters_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedRadianceParameters>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedRadianceParameters;
+    }
+
     boost::optional<RunPeriod> Model_Impl::runPeriod() const {
       if (m_cachedRunPeriod) {
         return m_cachedRunPeriod;
@@ -333,6 +450,23 @@ namespace model {
       }
 
       return m_cachedRunPeriod;
+    }
+
+    boost::optional<RunPeriodControlDaylightSavingTime> Model_Impl::runPeriodControlDaylightSavingTime() const {
+      if (m_cachedRunPeriodControlDaylightSavingTime) {
+        return m_cachedRunPeriodControlDaylightSavingTime;
+      }
+
+      boost::optional<RunPeriodControlDaylightSavingTime> result = this->model().getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+      if (result) {
+        m_cachedRunPeriodControlDaylightSavingTime = result;
+        result->getImpl<RunPeriodControlDaylightSavingTime_Impl>()
+          .get()
+          ->RunPeriodControlDaylightSavingTime_Impl::onRemoveFromWorkspace
+          .connect<Model_Impl, &Model_Impl::clearCachedRunPeriodControlDaylightSavingTime>(const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedRunPeriodControlDaylightSavingTime;
     }
 
     boost::optional<YearDescription> Model_Impl::yearDescription() const {
@@ -365,6 +499,23 @@ namespace model {
       }
 
       return m_cachedSite;
+    }
+
+    boost::optional<SiteGroundReflectance> Model_Impl::siteGroundReflectance() const {
+      if (m_cachedSiteGroundReflectance) {
+        return m_cachedSiteGroundReflectance;
+      }
+
+      boost::optional<SiteGroundReflectance> result = this->model().getOptionalUniqueModelObject<SiteGroundReflectance>();
+      if (result) {
+        m_cachedSiteGroundReflectance = result;
+        result->getImpl<SiteGroundReflectance_Impl>()
+          .get()
+          ->SiteGroundReflectance_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSiteGroundReflectance>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedSiteGroundReflectance;
     }
 
     boost::optional<SiteWaterMainsTemperature> Model_Impl::siteWaterMainsTemperature() const {
@@ -403,6 +554,23 @@ namespace model {
       return m_cachedSiteGroundTemperatureBuildingSurface;
     }
 
+    boost::optional<SiteGroundTemperatureFCfactorMethod> Model_Impl::siteGroundTemperaturefCfactorMethod() const {
+      if (m_cachedSiteGroundTemperatureFCfactorMethod) {
+        return m_cachedSiteGroundTemperatureFCfactorMethod;
+      }
+
+      boost::optional<SiteGroundTemperatureFCfactorMethod> result = this->model().getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>();
+      if (result) {
+        m_cachedSiteGroundTemperatureFCfactorMethod = result;
+        result->getImpl<SiteGroundTemperatureFCfactorMethod_Impl>()
+          .get()
+          ->SiteGroundTemperatureFCfactorMethod_Impl::onRemoveFromWorkspace
+          .connect<Model_Impl, &Model_Impl::clearCachedSiteGroundTemperatureFCfactorMethod>(const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedSiteGroundTemperatureFCfactorMethod;
+    }
+
     boost::optional<SiteGroundTemperatureDeep> Model_Impl::siteGroundTemperatureDeep() const {
       if (m_cachedSiteGroundTemperatureDeep) {
         return m_cachedSiteGroundTemperatureDeep;
@@ -418,6 +586,23 @@ namespace model {
       }
 
       return m_cachedSiteGroundTemperatureDeep;
+    }
+
+    boost::optional<SiteGroundTemperatureShallow> Model_Impl::siteGroundTemperatureShallow() const {
+      if (m_cachedSiteGroundTemperatureShallow) {
+        return m_cachedSiteGroundTemperatureShallow;
+      }
+
+      boost::optional<SiteGroundTemperatureShallow> result = this->model().getOptionalUniqueModelObject<SiteGroundTemperatureShallow>();
+      if (result) {
+        m_cachedSiteGroundTemperatureShallow = result;
+        result->getImpl<SiteGroundTemperatureShallow_Impl>()
+          .get()
+          ->SiteGroundTemperatureShallow_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedSiteGroundTemperatureShallow>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedSiteGroundTemperatureShallow;
     }
 
     boost::optional<Facility> Model_Impl::facility() const {
@@ -480,6 +665,40 @@ namespace model {
       }
 
       return m_cachedSimulationControl;
+    }
+
+    boost::optional<LightingSimulationControl> Model_Impl::lightingSimulationControl() const {
+      if (m_cachedLightingSimulationControl) {
+        return m_cachedLightingSimulationControl;
+      }
+
+      boost::optional<LightingSimulationControl> result = this->model().getOptionalUniqueModelObject<LightingSimulationControl>();
+      if (result) {
+        m_cachedLightingSimulationControl = result;
+        result->getImpl<LightingSimulationControl_Impl>()
+          .get()
+          ->LightingSimulationControl_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedLightingSimulationControl>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedLightingSimulationControl;
+    }
+
+    boost::optional<AirflowNetworkSimulationControl> Model_Impl::airflowNetworkSimulationControl() const {
+      if (m_cachedAirflowNetworkSimulationControl) {
+        return m_cachedAirflowNetworkSimulationControl;
+      }
+
+      boost::optional<AirflowNetworkSimulationControl> result = this->model().getOptionalUniqueModelObject<AirflowNetworkSimulationControl>();
+      if (result) {
+        m_cachedAirflowNetworkSimulationControl = result;
+        result->getImpl<AirflowNetworkSimulationControl_Impl>()
+          .get()
+          ->AirflowNetworkSimulationControl_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedAirflowNetworkSimulationControl>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedAirflowNetworkSimulationControl;
     }
 
     boost::optional<InsideSurfaceConvectionAlgorithm> Model_Impl::insideSurfaceConvectionAlgorithm() const {
@@ -550,6 +769,42 @@ namespace model {
       return m_cachedZoneAirHeatBalanceAlgorithm;
     }
 
+    boost::optional<ZoneAirMassFlowConservation> Model_Impl::zoneAirMassFlowConservation() const {
+      if (m_cachedZoneAirMassFlowConservation) {
+        return m_cachedZoneAirMassFlowConservation;
+      }
+
+      boost::optional<ZoneAirMassFlowConservation> result = this->model().getOptionalUniqueModelObject<ZoneAirMassFlowConservation>();
+      if (result) {
+        m_cachedZoneAirMassFlowConservation = result;
+        result->getImpl<ZoneAirMassFlowConservation_Impl>()
+          .get()
+          ->ZoneAirMassFlowConservation_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedZoneAirMassFlowConservation>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedZoneAirMassFlowConservation;
+    }
+
+    boost::optional<ZoneCapacitanceMultiplierResearchSpecial> Model_Impl::zoneCapacitanceMultiplierResearchSpecial() const {
+      if (m_cachedZoneCapacitanceMultiplierResearchSpecial) {
+        return m_cachedZoneCapacitanceMultiplierResearchSpecial;
+      }
+
+      boost::optional<ZoneCapacitanceMultiplierResearchSpecial> result =
+        this->model().getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
+      if (result) {
+        m_cachedZoneCapacitanceMultiplierResearchSpecial = result;
+        result->getImpl<ZoneCapacitanceMultiplierResearchSpecial_Impl>()
+          .get()
+          ->ZoneCapacitanceMultiplierResearchSpecial_Impl::onRemoveFromWorkspace
+          .connect<Model_Impl, &Model_Impl::clearCachedZoneCapacitanceMultiplierResearchSpecial>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedZoneCapacitanceMultiplierResearchSpecial;
+    }
+
     boost::optional<ConvergenceLimits> Model_Impl::convergenceLimits() const {
       if (m_cachedConvergenceLimits) {
         return m_cachedConvergenceLimits;
@@ -582,6 +837,72 @@ namespace model {
       }
 
       return m_cachedShadowCalculation;
+    }
+
+    boost::optional<Timestep> Model_Impl::timestep() const {
+      if (m_cachedTimestep) {
+        return m_cachedTimestep;
+      }
+
+      boost::optional<Timestep> result = this->model().getOptionalUniqueModelObject<Timestep>();
+      if (result) {
+        m_cachedTimestep = result;
+        result->getImpl<Timestep_Impl>().get()->Timestep_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedTimestep>(
+          const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedTimestep;
+    }
+
+    boost::optional<ClimateZones> Model_Impl::climateZones() const {
+      if (m_cachedClimateZones) {
+        return m_cachedClimateZones;
+      }
+
+      boost::optional<ClimateZones> result = this->model().getOptionalUniqueModelObject<ClimateZones>();
+      if (result) {
+        m_cachedClimateZones = result;
+        result->getImpl<ClimateZones_Impl>()
+          .get()
+          ->ClimateZones_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedClimateZones>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedClimateZones;
+    }
+
+    boost::optional<EnvironmentImpactFactors> Model_Impl::environmentalImpactFactors() const {
+      if (m_cachedEnvironmentImpactFactors) {
+        return m_cachedEnvironmentImpactFactors;
+      }
+
+      boost::optional<EnvironmentImpactFactors> result = this->model().getOptionalUniqueModelObject<EnvironmentImpactFactors>();
+      if (result) {
+        m_cachedEnvironmentImpactFactors = result;
+        result->getImpl<EnvironmentalImpactFactors_Impl>()
+          .get()
+          ->EnvironmentalImpactFactors_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedEnvironmentalImpactFactors>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedEnvironmentImpactFactors;
+    }
+
+    boost::optional<ExternalInterface> Model_Impl::externalInterface() const {
+      if (m_cachedExternalInterface) {
+        return m_cachedExternalInterface;
+      }
+
+      boost::optional<ExternalInterface> result = this->model().getOptionalUniqueModelObject<ExternalInterface>();
+      if (result) {
+        m_cachedExternalInterface = result;
+        result->getImpl<ExternalInterface_Impl>()
+          .get()
+          ->ExternalInterface_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedExternalInterface>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedExternalInterface;
     }
 
     boost::optional<int> Model_Impl::calendarYear() const {
@@ -963,25 +1284,44 @@ namespace model {
       boost::optional<Building> building = model().building();
       boost::optional<FoundationKivaSettings> foundationKivaSettings = model().foundationKivaSettings();
       boost::optional<OutputControlFiles> outputControlFiles = model().outputControlFiles();
+      //boost::optional<OutputControlReportingTolerances> outputControlReportingTolerances = model().outputControlReportingTolerances();
+      //boost::optional<OutputDiagnostics> outputDiagnostics = model().outputDiagnostics();
+      //boost::optional<OutputDebuggingData> outputDebuggingData = model().outputDebuggingData();
+      //boost::optional<OutputJSON> outputJSON = model().outputJSON();
+      //boost::optional<OutputEnergyManagementSystem> outputEnergyManagementSystem = model().outputEnergyManagementSystem();
       boost::optional<OutputTableSummaryReports> outputTableSummaryReports = model().outputTableSummaryReports();
       boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs = model().performancePrecisionTradeoffs();
       boost::optional<LifeCycleCostParameters> lifeCycleCostParameters = model().lifeCycleCostParameters();
+      //boost::optional<SizingParameters> sizingParameters = model().sizingParameters();
+      //boost::optional<RadianceParameters> radianceParameters = model().radianceParameters();
       boost::optional<RunPeriod> runPeriod = model().runPeriod();
+      //boost::optional<RunPeriodControlDaylightSavingTime> runPeriodControlDaylightSavingTime = model().runPeriodControlDaylightSavingTime();
       boost::optional<YearDescription> yearDescription = model().yearDescription();
       boost::optional<Site> site = model().site();
+      //boost::optional<SiteGroundReflectance> siteGroundReflectance = model().siteGroundReflectance();
       boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature = model().siteWaterMainsTemperature();
       boost::optional<SiteGroundTemperatureBuildingSurface> siteGroundTemperatureBuildingSurface = model().siteGroundTemperatureBuildingSurface();
+      //boost::optional<SiteGroundTemperatureFCfactorMethod> siteGroundTemperatureFCfactorMethod = model().siteGroundTemperatureFCfactorMethod();
       boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep = model().siteGroundTemperatureDeep();
+      //boost::optional<SiteGroundTemperatureShallow> siteGroundTemperatureShallow = model().siteGroundTemperatureShallow();
       boost::optional<Facility> facility = model().facility();
       boost::optional<WeatherFile> weatherFile = model().weatherFile();
       boost::optional<Version> version = model().version();
       boost::optional<SimulationControl> simulationControl = model().simulationControl();
+      //boost::optional<LightingSimulationControl> lightingSimulationControl = model().lightingSimulationControl();
+      //boost::optional<AirflowNetworkSimulationControl> airflowNetworkSimulationControl = model().airflowNetworkSimulationControl();
       boost::optional<InsideSurfaceConvectionAlgorithm> insideSurfaceConvectionAlgorithm = model().insideSurfaceConvectionAlgorithm();
       boost::optional<OutsideSurfaceConvectionAlgorithm> outsideSurfaceConvectionAlgorithm = model().outsideSurfaceConvectionAlgorithm();
       boost::optional<HeatBalanceAlgorithm> heatBalanceAlgorithm = model().heatBalanceAlgorithm();
       boost::optional<ZoneAirHeatBalanceAlgorithm> zoneAirHeatBalanceAlgorithm = model().zoneAirHeatBalanceAlgorithm();
+      //boost::optional<ZoneAirMassFlowConservation> zoneAirMassFlowConservation = model().zoneAirMassFlowConservation();
+      //boost::optional<ZoneCapacitanceMultiplierResearchSpecial> zoneCapacitanceMultiplierResearchSpecial = model().zoneCapacitanceMultiplierResearchSpecial();
       boost::optional<ConvergenceLimits> convergenceLimits = model().convergenceLimits();
       boost::optional<ShadowCalculation> shadowCalculation = model().shadowCalculation();
+      //boost::optional<Timestep> timestep = model().timestep();
+      //boost::optional<ClimateZones> climateZones = model().climateZones();
+      //boost::optional<EnvironmentalImpactFactors> environmentalImpactFactors = model().environmentalImpactFactors();
+      //boost::optional<ExternalInterface> externalInterface = model().externalInterface();
 
       IdfObjectVector idfObjects;
       for (const WorkspaceObject& componentObject : component.objects()) {
@@ -993,10 +1333,322 @@ namespace model {
           } else {
             idfObjects.push_back(componentObject);
           }
+        } else if (componentObject.iddObject().type() == IddObjectType::Foundation_Kiva_Settings) {
+          if (foundationKivaSettings) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              foundationKivaSettings->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::OutputControl_Files) {
+          if (outputControlFiles) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              outputControlFiles->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::OutputControl_ReportingTolerances) {
+          if (outputControlReportingTolerances) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              outputControlReportingTolerances->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Output_Diagnostics) {
+          if (outputDiagnostics) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              outputDiagnostics->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Output_DebuggingData) {
+          if (outputDebuggingData) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              outputDebuggingData->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Output_JSON) {
+          if (outputJSON) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              outputJSON->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Output_EnergyManagementSystem) {
+          if (outputEnergyManagementSystem) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              outputEnergyManagementSystem->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Output_Table_SummaryReports) {
+          if (outputTableSummaryReports) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              outputTableSummaryReports->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::PerformancePrecisionTradeoffs) {
+          if (performancePrecisionTradeoffs) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              performancePrecisionTradeoffs->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::LifeCycleCost_Parameters) {
+          if (lifeCycleCostParameters) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              lifeCycleCostParameters->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Sizing_Parameters) {
+          if (sizingParameters) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              sizingParameters->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::RadianceParameters) {
+          if (sizingParameters) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              sizingParameters->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::RunPeriod) {
+          if (runPeriod) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              runPeriod->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::RunPeriodControl_DaylightSavingTime) {
+          if (runPeriodControlDaylightSavingTime) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              runPeriodControlDaylightSavingTime->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::YearDescription) {
+          if (yearDescription) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              yearDescription->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Site) {
+          if (site) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              site->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Site_GroundReflectance) {
+          if (siteGroundReflectance) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              siteGroundReflectance->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
         } else if (componentObject.iddObject().type() == IddObjectType::Site_WaterMainsTemperature) {
           if (siteWaterMainsTemperature) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               siteWaterMainsTemperature->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Site_GroundTemperature_BuildingSurface) {
+          if (siteGroundTemperatureBuildingSurface) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              siteGroundTemperatureBuildingSurface->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Site_GroundTemperature_FCfactorMethod) {
+          if (siteGroundTemperatureFCfactorMethod) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              siteGroundTemperatureFCfactorMethod->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Site_GroundTemperature_Deep) {
+          if (siteGroundTemperatureDeep) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              siteGroundTemperatureDeep->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Site_GroundTemperature_Shallow) {
+          if (siteGroundTemperatureShallow) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              siteGroundTemperatureShallow->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Facility) {
+          if (facility) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              facility->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::WeatherFile) {
+          if (weatherFile) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              weatherFile->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Version) {
+          if (version) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              version->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::SimulationControl) {
+          if (simulationControl) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              simulationControl->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::LightingSimulationControl) {
+          if (lightingSimulationControl) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              lightingSimulationControl->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::AirflowNetworkSimulationControl) {
+          if (airflowNetworkSimulationControl) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              airflowNetworkSimulationControl->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::SurfaceConvectionAlgorithm_Inside) {
+          if (insideSurfaceConvectionAlgorithm) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              insideSurfaceConvectionAlgorithm->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::SurfaceConvectionAlgorithm_Outside) {
+          if (outsideSurfaceConvectionAlgorithm) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              outsideSurfaceConvectionAlgorithm->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::HeatBalanceAlgorithm) {
+          if (heatBalanceAlgorithm) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              heatBalanceAlgorithm->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::ZoneAirHeatBalanceAlgorithm) {
+          if (zoneAirHeatBalanceAlgorithm) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              zoneAirHeatBalanceAlgorithm->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::ZoneAirMassFlowConservation) {
+          if (zoneAirMassFlowConservation) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              zoneAirMassFlowConservation->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::ZoneCapacitanceMultiplier_ResearchSpecial) {
+          if (zoneCapacitanceMultiplierResearchSpecial) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              zoneCapacitanceMultiplierResearchSpecial->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::ConvergenceLimits) {
+          if (convergenceLimits) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              convergenceLimits->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::ShadowCalculation) {
+          if (shadowCalculation) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              shadowCalculation->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::Timestep) {
+          if (timestep) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              timestep->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::ClimateZones) {
+          if (climateZones) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              climateZones->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::EnvironmentImpactFactors) {
+          if (environmentalImpactFactors) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              environmentalImpactFactors->setString(i, componentObject.getString(i).get());
+            }
+          } else {
+            idfObjects.push_back(componentObject);
+          }
+        } else if (componentObject.iddObject().type() == IddObjectType::ExternalInterface) {
+          if (externalInterface) {
+            for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
+              externalInterface->setString(i, componentObject.getString(i).get());
             }
           } else {
             idfObjects.push_back(componentObject);
@@ -1187,25 +1839,44 @@ namespace model {
       clearCachedBuilding(dummy);
       clearCachedFoundationKivaSettings(dummy);
       clearCachedOutputControlFiles(dummy);
+      clearCachedOutputControlReportingTolerances(dummy);
+      clearCachedOutputDiagnostics(dummy);
+      clearCachedOutputDebuggingData(dummy);
+      clearCachedOutputJSON(dummy);
+      clearCachedOutputEnergyManagementSystem(dummy);
       clearCachedOutputTableSummaryReports(dummy);
       clearCachedPerformancePrecisionTradeoffs(dummy);
       clearCachedLifeCycleCostParameters(dummy);
+      clearCachedSizingParameters(dummy);
+      clearCachedRadianceParameters(dummy);
       clearCachedRunPeriod(dummy);
+      clearCachedRunPeriodControlDaylightSavingTime(dummy);
       clearCachedYearDescription(dummy);
       clearCachedSite(dummy);
+      clearCachedSiteGroundReflectance(dummy);
       clearCachedSiteWaterMainsTemperature(dummy);
       clearCachedSiteGroundTemperatureBuildingSurface(dummy);
+      clearCachedSiteGroundTemperatureFCfactorMethod(dummy);
       clearCachedSiteGroundTemperatureDeep(dummy);
+      clearCachedSiteGroundTemperatureShallow(dummy);
       clearCachedFacility(dummy);
       clearCachedWeatherFile(dummy);
       clearCachedVersion(dummy);
       clearCachedSimulationControl(dummy);
+      clearCachedLightingSimulationControl(dummy);
+      clearCachedAirflowNetworkSimulationControl(dummy);
       clearCachedInsideSurfaceConvectionAlgorithm(dummy);
       clearCachedOutsideSurfaceConvectionAlgorithm(dummy);
       clearCachedHeatBalanceAlgorithm(dummy);
       clearCachedZoneAirHeatBalanceAlgorithm(dummy);
+      clearCachedZoneAirMassFlowConservation(dummy);
+      clearCachedZoneCapacitanceMultiplierResearchSpecial(dummy);
       clearCachedConvergenceLimits(dummy);
       clearCachedShadowCalculation(dummy);
+      clearCachedTimestep(dummy);
+      clearCachedClimateZones(dummy);
+      clearCachedEnvironmentalImpactFactors(dummy);
+      clearCachedExternalInterface(dummy);
     }
 
     void Model_Impl::clearCachedBuilding(const Handle&) {
@@ -1220,6 +1891,26 @@ namespace model {
       m_cachedOutputControlFiles.reset();
     }
 
+    void Model_Impl::clearCachedOutputControlReportingTolerances(const Handle&) {
+      m_cachedOutputControlReportingTolerances.reset();
+    }
+
+    void Model_Impl::clearCachedOutputDiagnostics(const Handle&) {
+      m_cachedOutputDiagnostics.reset();
+    }
+
+    void Model_Impl::clearCachedOutputDebuggingData(const Handle&) {
+      m_cachedOutputDebuggingData.reset();
+    }
+
+    void Model_Impl::clearCachedOutputJSON(const Handle&) {
+      m_cachedOutputJSON.reset();
+    }
+
+    void Model_Impl::clearCachedOutputEnergyManagementSystem(const Handle&) {
+      m_cachedOutputEnergyManagementSystem.reset();
+    }
+
     void Model_Impl::clearCachedOutputTableSummaryReports(const Handle&) {
       m_cachedOutputTableSummaryReports.reset();
     }
@@ -1232,8 +1923,20 @@ namespace model {
       m_cachedLifeCycleCostParameters.reset();
     }
 
+    void Model_Impl::clearCachedSizingParameters(const Handle&) {
+      m_cachedSizingParameters.reset();
+    }
+
+    void Model_Impl::clearCachedRadianceParameters(const Handle&) {
+      m_cachedRadianceParameters.reset();
+    }
+
     void Model_Impl::clearCachedRunPeriod(const Handle& handle) {
       m_cachedRunPeriod.reset();
+    }
+
+    void Model_Impl::clearCachedRunPeriodControlDaylightSavingTime(const Handle&) {
+      m_cachedRunPeriodControlDaylightSavingTime.reset();
     }
 
     void Model_Impl::clearCachedYearDescription(const Handle& handle) {
@@ -1244,6 +1947,10 @@ namespace model {
       m_cachedSite.reset();
     }
 
+    void Model_Impl::clearCachedSiteGroundReflectance(const Handle&) {
+      m_cachedSiteGroundReflectance.reset();
+    }
+
     void Model_Impl::clearCachedSiteWaterMainsTemperature(const Handle& handle) {
       m_cachedSiteWaterMainsTemperature.reset();
     }
@@ -1252,8 +1959,16 @@ namespace model {
       m_cachedSiteGroundTemperatureBuildingSurface.reset();
     }
 
+    void Model_Impl::clearCachedSiteGroundTemperatureFCfactorMethod(const Handle&) {
+      m_cachedSiteGroundTemperatureFCfactorMethod.reset();
+    }
+
     void Model_Impl::clearCachedSiteGroundTemperatureDeep(const Handle& handle) {
       m_cachedSiteGroundTemperatureDeep.reset();
+    }
+
+    void Model_Impl::clearCachedSiteGroundTemperatureShallow(const Handle&) {
+      m_cachedSiteGroundTemperatureShallow.reset();
     }
 
     void Model_Impl::clearCachedFacility(const Handle& handle) {
@@ -1272,6 +1987,14 @@ namespace model {
       m_cachedSimulationControl.reset();
     }
 
+    void Model_Impl::clearCachedLightingSimulationControl(const Handle&) {
+      m_cachedLightingSimulationControl.reset();
+    }
+
+    void Model_Impl::clearCachedAirflowNetworkSimulationControl(const Handle&) {
+      m_cachedAirflowNetworkSimulationControl.reset();
+    }
+
     void Model_Impl::clearCachedInsideSurfaceConvectionAlgorithm(const Handle& handle) {
       m_cachedInsideSurfaceConvectionAlgorithm.reset();
     }
@@ -1288,12 +2011,36 @@ namespace model {
       m_cachedZoneAirHeatBalanceAlgorithm.reset();
     }
 
+    void Model_Impl::clearCachedZoneAirMassFlowConservation(const Handle&) {
+      m_cachedZoneAirMassFlowConservation.reset();
+    }
+
+    void Model_Impl::clearCachedZoneCapacitanceMultiplierResearchSpecial(const Handle&) {
+      m_cachedZoneCapacitanceMultiplierResearchSpecial.reset();
+    }
+
     void Model_Impl::clearCachedConvergenceLimits(const Handle& handle) {
       m_cachedConvergenceLimits.reset();
     }
 
     void Model_Impl::clearCachedShadowCalculation(const Handle& handle) {
       m_cachedShadowCalculation.reset();
+    }
+
+    void Model_Impl::clearCachedTimestep(const Handle&) {
+      m_cachedTimestep.reset();
+    }
+
+    void Model_Impl::clearCachedClimateZones(const Handle&) {
+      m_cachedClimateZones.reset();
+    }
+
+    void Model_Impl::clearCachedEnvironmentalImpactFactors(const Handle&) {
+      m_cachedEnvironmentImpactFactors.reset();
+    }
+
+    void Model_Impl::clearCachedExternalInterface(const Handle&) {
+      m_cachedExternalInterface.reset();
     }
 
     void Model_Impl::autosize() {
@@ -1457,6 +2204,26 @@ namespace model {
     return getImpl<detail::Model_Impl>()->outputControlFiles();
   }
 
+  boost::optional<OutputControlReportingTolerances> Model::outputControlReportingTolerances() const {
+    return getImpl<detail::Model_Impl>()->outputControlReportingTolerances();
+  }
+
+  boost::optional<OutputDiagnostics> Model::outputDiagnostics() const {
+    return getImpl<detail::Model_Impl>()->outputDiagnostics();
+  }
+
+  boost::optional<OutputDebuggingData> Model::outputDebuggingData() const {
+    return getImpl<detail::Model_Impl>()->outputDebuggingData();
+  }
+
+  boost::optional<OutputJSON> Model::outputJSON() const {
+    return getImpl<detail::Model_Impl>()->outputJSON();
+  }
+
+  boost::optional<OutputEnergyManagementSystem> Model::outputEnergyManagementSystem() const {
+    return getImpl<detail::Model_Impl>()->outputEnergyManagementSystem();
+  }
+
   boost::optional<OutputTableSummaryReports> Model::outputTableSummaryReports() const {
     return getImpl<detail::Model_Impl>()->outputTableSummaryReports();
   }
@@ -1469,8 +2236,20 @@ namespace model {
     return getImpl<detail::Model_Impl>()->lifeCycleCostParameters();
   }
 
+  boost::optional<SizingParameters> Model::sizingParameters() const {
+    return getImpl<detail::Model_Impl>()->sizingParameters();
+  }
+
+  boost::optional<RadianceParameters> Model::radianceParameters() const {
+    return getImpl<detail::Model_Impl>()->radianceParameters();
+  }
+
   boost::optional<RunPeriod> Model::runPeriod() const {
     return getImpl<detail::Model_Impl>()->runPeriod();
+  }
+
+  boost::optional<RunPeriodControlDaylightSavingTime> Model::runPeriodControlDaylightSavingTime() const {
+    return getImpl<detail::Model_Impl>()->runPeriodControlDaylightSavingTime();
   }
 
   boost::optional<YearDescription> Model::yearDescription() const {
@@ -1481,6 +2260,10 @@ namespace model {
     return getImpl<detail::Model_Impl>()->site();
   }
 
+  boost::optional<SiteGroundReflectance> Model::siteGroundReflectance() const {
+    return getImpl<detail::Model_Impl>()->siteGroundReflectance();
+  }
+
   boost::optional<SiteWaterMainsTemperature> Model::siteWaterMainsTemperature() const {
     return getImpl<detail::Model_Impl>()->siteWaterMainsTemperature();
   }
@@ -1489,8 +2272,16 @@ namespace model {
     return getImpl<detail::Model_Impl>()->siteGroundTemperatureBuildingSurface();
   }
 
+  boost::optional<SiteGroundTemperatureFCfactorMethod> Model::siteGroundTemperatureFCfactorMethod() const {
+    return getImpl<detail::Model_Impl>()->siteGroundTemperatureFCfactorMethod();
+  }
+
   boost::optional<SiteGroundTemperatureDeep> Model::siteGroundTemperatureDeep() const {
     return getImpl<detail::Model_Impl>()->siteGroundTemperatureDeep();
+  }
+
+  boost::optional<SiteGroundTemperatureShallow> Model::siteGroundTemperatureShallow() const {
+    return getImpl<detail::Model_Impl>()->siteGroundTemperatureShallow();
   }
 
   boost::optional<Facility> Model::facility() const {
@@ -1509,6 +2300,14 @@ namespace model {
     return getImpl<detail::Model_Impl>()->simulationControl();
   }
 
+  boost::optional<LightingSimulationControl> Model::lightingSimulationControl() const {
+    return getImpl<detail::Model_Impl>()->lightingSimulationControl();
+  }
+
+  boost::optional<AirflowNetworkSimulationControl> Model::airflowNetworkSimulationControl() const {
+    return getImpl<detail::Model_Impl>()->airflowNetworkSimulationControl();
+  }
+
   boost::optional<InsideSurfaceConvectionAlgorithm> Model::insideSurfaceConvectionAlgorithm() const {
     return getImpl<detail::Model_Impl>()->insideSurfaceConvectionAlgorithm();
   }
@@ -1525,12 +2324,36 @@ namespace model {
     return getImpl<detail::Model_Impl>()->zoneAirHeatBalanceAlgorithm();
   }
 
+  boost::optional<ZoneAirMassFlowConservation> Model::zoneAirMassFlowConservation() const {
+    return getImpl<detail::Model_Impl>()->zoneAirMassFlowConservation();
+  }
+
+  boost::optional<ZoneCapacitanceMultiplierResearchSpecial> Model::zoneCapacitanceMultiplierResearchSpecial() const {
+    return getImpl<detail::Model_Impl>()->zoneCapacitanceMultiplierResearchSpecial();
+  }
+
   boost::optional<ConvergenceLimits> Model::convergenceLimits() const {
     return getImpl<detail::Model_Impl>()->convergenceLimits();
   }
 
   boost::optional<ShadowCalculation> Model::shadowCalculation() const {
     return getImpl<detail::Model_Impl>()->shadowCalculation();
+  }
+
+  boost::optional<Timestep> Model::timestep() const {
+    return getImpl<detail::Model_Impl>()->timestep();
+  }
+
+  boost::optional<ClimateZones> Model::climateZones() const {
+    return getImpl<detail::Model_Impl>()->climateZones();
+  }
+
+  boost::optional<EnvironmentImpactFactors> Model::environmentalImpactFactors() const {
+    return getImpl<detail::Model_Impl>()->environmentalImpactFactors();
+  }
+
+  boost::optional<ExternalInterface> Model::externalInterface() const {
+    return getImpl<detail::Model_Impl>()->externalInterface();
   }
 
   boost::optional<int> Model::calendarYear() const {
@@ -2899,6 +3722,51 @@ namespace model {
   }
 
   template <>
+  OutputControlReportingTolerances Model::getUniqueModelObject<OutputControlReportingTolerances>() {
+    if (boost::optional<OutputControlReportingTolerances> _b = outputControlReportingTolerances()) {
+      return _b.get();
+    } else {
+      return OutputControlReportingTolerances(*this);
+    }
+  }
+
+  template <>
+  OutputDiagnostics Model::getUniqueModelObject<OutputDiagnostics>() {
+    if (boost::optional<OutputDiagnostics> _b = outputDiagnostics()) {
+      return _b.get();
+    } else {
+      return OutputDiagnostics(*this);
+    }
+  }
+
+  template <>
+  OutputDebuggingData Model::getUniqueModelObject<OutputDebuggingData>() {
+    if (boost::optional<OutputDebuggingData> _b = outputDebuggingData()) {
+      return _b.get();
+    } else {
+      return OutputDebuggingData(*this);
+    }
+  }
+
+  template <>
+  OutputJSON Model::getUniqueModelObject<OutputJSON>() {
+    if (boost::optional<OutputJSON> _b = outputJSON()) {
+      return _b.get();
+    } else {
+      return OutputJSON(*this);
+    }
+  }
+
+  template <>
+  OutputEnergyManagementSystem Model::getUniqueModelObject<OutputEnergyManagementSystem>() {
+    if (boost::optional<OutputEnergyManagementSystem> _b = outputEnergyManagementSystem()) {
+      return _b.get();
+    } else {
+      return OutputEnergyManagementSystem(*this);
+    }
+  }
+
+  template <>
   OutputTableSummaryReports Model::getUniqueModelObject<OutputTableSummaryReports>() {
     if (boost::optional<OutputTableSummaryReports> _b = outputTableSummaryReports()) {
       return _b.get();
@@ -2926,11 +3794,38 @@ namespace model {
   }
 
   template <>
+  SizingParameters Model::getUniqueModelObject<SizingParameters>() {
+    if (boost::optional<SizingParameters> _b = sizingParameters()) {
+      return _b.get();
+    } else {
+      return SizingParameters(*this);
+    }
+  }
+
+  template <>
+  RadianceParameters Model::getUniqueModelObject<RadianceParameters>() {
+    if (boost::optional<RadianceParameters> _b = radianceParameters()) {
+      return _b.get();
+    } else {
+      return RadianceParameters(*this);
+    }
+  }
+
+  template <>
   RunPeriod Model::getUniqueModelObject<RunPeriod>() {
     if (boost::optional<RunPeriod> _r = runPeriod()) {
       return _r.get();
     } else {
       return RunPeriod(*this);
+    }
+  }
+
+  template <>
+  RunPeriodControlDaylightSavingTime Model::getUniqueModelObject<RunPeriodControlDaylightSavingTime>() {
+    if (boost::optional<RunPeriodControlDaylightSavingTime> _b = runPeriodControlDaylightSavingTime()) {
+      return _b.get();
+    } else {
+      return RunPeriodControlDaylightSavingTime(*this);
     }
   }
 
@@ -2953,6 +3848,15 @@ namespace model {
   }
 
   template <>
+  SiteGroundReflectance Model::getUniqueModelObject<SiteGroundReflectance>() {
+    if (boost::optional<SiteGroundReflectance> _b = siteGroundReflectance()) {
+      return _b.get();
+    } else {
+      return SiteGroundReflectance(*this);
+    }
+  }
+
+  template <>
   SiteWaterMainsTemperature Model::getUniqueModelObject<SiteWaterMainsTemperature>() {
     if (boost::optional<SiteWaterMainsTemperature> _swmt = siteWaterMainsTemperature()) {
       return _swmt.get();
@@ -2971,11 +3875,29 @@ namespace model {
   }
 
   template <>
+  SiteGroundTemperatureFCfactorMethod Model::getUniqueModelObject<SiteGroundTemperatureFCfactorMethod>() {
+    if (boost::optional<SiteGroundTemperatureFCfactorMethod> _b = siteGroundTemperatureFCfactorMethod()) {
+      return _b.get();
+    } else {
+      return SiteGroundTemperatureFCfactorMethod(*this);
+    }
+  }
+
+  template <>
   SiteGroundTemperatureDeep Model::getUniqueModelObject<SiteGroundTemperatureDeep>() {
     if (boost::optional<SiteGroundTemperatureDeep> _sgtd = siteGroundTemperatureDeep()) {
       return _sgtd.get();
     } else {
       return SiteGroundTemperatureDeep(*this);
+    }
+  }
+
+  template <>
+  SiteGroundTemperatureShallow Model::getUniqueModelObject<SiteGroundTemperatureShallow>() {
+    if (boost::optional<SiteGroundTemperatureShallow> _b = siteGroundTemperatureShallow()) {
+      return _b.get();
+    } else {
+      return SiteGroundTemperatureShallow(*this);
     }
   }
 
@@ -3016,6 +3938,24 @@ namespace model {
   }
 
   template <>
+  LightingSimulationControl Model::getUniqueModelObject<LightingSimulationControl>() {
+    if (boost::optional<LightingSimulationControl> _b = lightingSimulationControl()) {
+      return _b.get();
+    } else {
+      return LightingSimulationControl(*this);
+    }
+  }
+
+  template <>
+  AirflowNetworkSimulationControl Model::getUniqueModelObject<AirflowNetworkSimulationControl>() {
+    if (boost::optional<AirflowNetworkSimulationControl> _b = airflowNetworkSimulationControl()) {
+      return _b.get();
+    } else {
+      return AirflowNetworkSimulationControl(*this);
+    }
+  }
+
+  template <>
   InsideSurfaceConvectionAlgorithm Model::getUniqueModelObject<InsideSurfaceConvectionAlgorithm>() {
     if (boost::optional<InsideSurfaceConvectionAlgorithm> _isca = insideSurfaceConvectionAlgorithm()) {
       return _isca.get();
@@ -3052,6 +3992,24 @@ namespace model {
   }
 
   template <>
+  ZoneAirMassFlowConservation Model::getUniqueModelObject<ZoneAirMassFlowConservation>() {
+    if (boost::optional<ZoneAirMassFlowConservation> _b = zoneAirMassFlowConservation()) {
+      return _b.get();
+    } else {
+      return ZoneAirMassFlowConservation(*this);
+    }
+  }
+
+  template <>
+  ZoneCapacitanceMultiplierResearchSpecial Model::getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>() {
+    if (boost::optional<ZoneCapacitanceMultiplierResearchSpecial> _b = zoneCapacitanceMultiplierResearchSpecial()) {
+      return _b.get();
+    } else {
+      return ZoneCapacitanceMultiplierResearchSpecial(*this);
+    }
+  }
+
+  template <>
   ConvergenceLimits Model::getUniqueModelObject<ConvergenceLimits>() {
     if (boost::optional<ConvergenceLimits> _cl = convergenceLimits()) {
       return _cl.get();
@@ -3066,6 +4024,42 @@ namespace model {
       return _sc.get();
     } else {
       return ShadowCalculation(*this);
+    }
+  }
+
+  template <>
+  Timestep Model::getUniqueModelObject<Timestep>() {
+    if (boost::optional<Timestep> _b = timestep()) {
+      return _b.get();
+    } else {
+      return Timestep(*this);
+    }
+  }
+
+  template <>
+  ClimateZones Model::getUniqueModelObject<ClimateZones>() {
+    if (boost::optional<ClimateZone> _b = climateZones()) {
+      return _b.get();
+    } else {
+      return ClimateZones(*this);
+    }
+  }
+
+  template <>
+  EnvironmentImpactFactors Model::getUniqueModelObject<EnvironmentImpactFactors>() {
+    if (boost::optional<EnvironmentImpactFactors> _b = environmentalImpactFactors()) {
+      return _b.get();
+    } else {
+      return EnvironmentImpactFactors(*this);
+    }
+  }
+
+  template <>
+  ExternalInterface Model::getUniqueModelObject<ExternalInterface>() {
+    if (boost::optional<ExternalInterface> _b = externalInterface()) {
+      return _b.get();
+    } else {
+      return ExternalInterface(*this);
     }
   }
 
