@@ -1558,7 +1558,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<SurfaceConvectionAlgorithmInside>()) {
+        } else if (componentObject.optionalCast<InsideSurfaceConvectionAlgorithm>()) {
           if (insideSurfaceConvectionAlgorithm) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               insideSurfaceConvectionAlgorithm->setString(i, componentObject.getString(i).get());
@@ -1566,7 +1566,7 @@ namespace model {
           } else {
             workspaceObjects.push_back(componentObject);
           }
-        } else if (componentObject.optionalCast<SurfaceConvectionAlgorithmOutside>()) {
+        } else if (componentObject.optionalCast<OutsideSurfaceConvectionAlgorithm>()) {
           if (outsideSurfaceConvectionAlgorithm) {
             for (unsigned i = 1, n = componentObject.numFields(); i < n; ++i) {
               outsideSurfaceConvectionAlgorithm->setString(i, componentObject.getString(i).get());
@@ -1664,8 +1664,9 @@ namespace model {
       if (resultingObjects.empty()) {
         return boost::none;
       }
-      OS_ASSERT(resultingObjects.size() == component.numObjects());
+      OS_ASSERT(resultingObjects.size() <= component.numObjects());  // we may not be adding unique object(s) to the workspace
       for (const WorkspaceObject& wo : resultingObjects) {
+        LOG(Warn, wo.nameString());
         OptionalComponentData ocd = wo.optionalCast<ComponentData>();
         if (ocd) {
           ComponentData componentDataObject = *ocd;
@@ -4039,7 +4040,7 @@ namespace model {
 
   template <>
   ClimateZones Model::getUniqueModelObject<ClimateZones>() {
-    if (boost::optional<ClimateZone> _b = climateZones()) {
+    if (boost::optional<ClimateZones> _b = climateZones()) {
       return _b.get();
     } else {
       return ClimateZones(*this);
