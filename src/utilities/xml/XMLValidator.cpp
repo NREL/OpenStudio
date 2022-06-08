@@ -86,8 +86,6 @@ bool XMLValidator::xsdValidate(const openstudio::path& xmlPath) {
 
   auto schema_filename_str = openstudio::toString(m_xsdPath.value());
   const auto* schema_filename = schema_filename_str.c_str();
-  xmlSchema* schema = nullptr;
-  xmlDoc* doc = nullptr;
 
   xmlSchemaParserCtxt* parser_ctxt = nullptr;
   parser_ctxt = xmlSchemaNewParserCtxt(schema_filename);
@@ -95,6 +93,7 @@ bool XMLValidator::xsdValidate(const openstudio::path& xmlPath) {
     //throw std::runtime_error("Memory error reading schema in xmlSchematronNewParserCtxt");
   }
 
+  xmlSchema* schema = nullptr;
   schema = xmlSchemaParse(parser_ctxt);
   xmlSchemaFreeParserCtxt(parser_ctxt);
 
@@ -102,7 +101,9 @@ bool XMLValidator::xsdValidate(const openstudio::path& xmlPath) {
   auto filename_str = openstudio::toString(xmlPath);
   const auto* filename = filename_str.c_str();
 
-  doc = xmlReadFile(filename, nullptr, 0);
+  xmlDoc* doc = nullptr;
+  //doc = xmlReadFile(filename, nullptr, 0);
+  doc = xmlParseFile(filename);
 
   xmlSchemaValidCtxt* ctxt = nullptr;
   ctxt = xmlSchemaNewValidCtxt(schema);
@@ -111,19 +112,20 @@ bool XMLValidator::xsdValidate(const openstudio::path& xmlPath) {
   }
 
   int ret = xmlSchemaValidateDoc(ctxt, doc);
-  if (ret == 0) {
+  //xmlTextReaderSchemaValidateCtxt(doc, ctxt, 0);
+  
+  //if (ret == 0) {
     //fmt::print(stderr, "{} validates\n", filename);
-  } else if (ret > 0) {
+  //} else if (ret > 0) {
     //fmt::print(stderr, "{} fails to validate\n", filename);
-  } else {
+  //} else {
     //fmt::print(stderr, "{} validation generated an internal error, ret = {}\n", filename, ret);
-  }
+  //}
   xmlSchemaFreeValidCtxt(ctxt);
-
   xmlSchemaFree(schema);
 
   xmlFreeDoc(doc);     // free document
-  xmlCleanupParser();  // Free globals
+  xmlCleanupParser();  // free globals
 
   return true;
 }
