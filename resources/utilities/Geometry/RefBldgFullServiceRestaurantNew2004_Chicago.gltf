@@ -5,10 +5,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -51,10 +51,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -98,10 +98,10 @@
       "componentType": 5121,
       "count": 24,
       "max": [
-        7
+        7.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -145,10 +145,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -192,10 +192,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -239,10 +239,10 @@
       "componentType": 5121,
       "count": 24,
       "max": [
-        7
+        7.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -286,10 +286,10 @@
       "componentType": 5121,
       "count": 24,
       "max": [
-        7
+        7.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -333,10 +333,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -380,10 +380,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -427,10 +427,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -474,10 +474,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -521,10 +521,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -568,10 +568,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -615,10 +615,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -662,10 +662,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -709,10 +709,10 @@
       "componentType": 5121,
       "count": 3,
       "max": [
-        2
+        2.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -756,10 +756,10 @@
       "componentType": 5121,
       "count": 3,
       "max": [
-        2
+        2.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -803,10 +803,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -850,10 +850,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -897,10 +897,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -944,10 +944,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -1427,54 +1427,626 @@
       "name": "Z_UP"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Attic Non-res Floor",
+        "constructionName": "Attic Non-res Floor",
+        "constructionSetHandle": "666fcc5f-fe89-4960-b240-0605c4daa763",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "bbd4879d-910e-4f1e-b808-6b2dffb4100a",
+        "illuminanceSetpoint": 0.0,
+        "name": "Dining_Ceiling",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "24ddb1dc-4822-4042-96aa-b2f9b181ebf9",
+        "outsideBoundaryConditionObjectName": "attic-floor-dining",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "4fa38de4-f2ea-404c-8d59-0f32dd98f0e0",
+        "spaceName": "Dining",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "bbd4879d-910e-4f1e-b808-6b2dffb4100a",
+        "surfaceName": "Dining_Ceiling",
+        "surfaceType": "RoofCeiling",
+        "surfaceTypeMaterailName": "RoofCeiling",
+        "thermalZoneHandle": "fb01bed7-9316-43e9-9f2a-e228c01a2cc1",
+        "thermalZoneMaterialName": "ThermalZone_Dining Thermal Zone",
+        "thermalZoneName": "Dining Thermal Zone",
+        "windExposure": "NoWind"
+      },
       "mesh": 0,
       "name": "Dining_Ceiling"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Ground",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_ext-slab",
+        "constructionName": "ext-slab",
+        "constructionSetHandle": "c8bbf7c7-8e10-4ac2-b818-48ae47859781",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "bb08b46f-05ba-4719-91a9-da631dd3f3a6",
+        "illuminanceSetpoint": 0.0,
+        "name": "Dining_Floor",
+        "outsideBoundaryCondition": "Ground",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "4fa38de4-f2ea-404c-8d59-0f32dd98f0e0",
+        "spaceName": "Dining",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "bb08b46f-05ba-4719-91a9-da631dd3f3a6",
+        "surfaceName": "Dining_Floor",
+        "surfaceType": "Floor",
+        "surfaceTypeMaterailName": "Floor",
+        "thermalZoneHandle": "fb01bed7-9316-43e9-9f2a-e228c01a2cc1",
+        "thermalZoneMaterialName": "ThermalZone_Dining Thermal Zone",
+        "thermalZoneName": "Dining Thermal Zone",
+        "windExposure": "NoWind"
+      },
       "mesh": 1,
       "name": "Dining_Floor"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Steel Frame Non-res Ext Wall",
+        "constructionName": "Steel Frame Non-res Ext Wall",
+        "constructionSetHandle": "e91e97bc-e93f-4106-a257-5127436751ea",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "0d9cc5b6-e52c-4f93-8aca-db45ab1048e0",
+        "illuminanceSetpoint": 0.0,
+        "name": "Dining_Wall_East",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "4fa38de4-f2ea-404c-8d59-0f32dd98f0e0",
+        "spaceName": "Dining",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "0d9cc5b6-e52c-4f93-8aca-db45ab1048e0",
+        "surfaceName": "Dining_Wall_East",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "fb01bed7-9316-43e9-9f2a-e228c01a2cc1",
+        "thermalZoneMaterialName": "ThermalZone_Dining Thermal Zone",
+        "thermalZoneName": "Dining Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "mesh": 2,
       "name": "Dining_Wall_East"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_int-walls",
+        "constructionName": "int-walls",
+        "constructionSetHandle": "37262f65-5e37-4af3-bd07-21493ec7b206",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "af72964f-f6fe-4ef8-8ff1-bc4243f2d73f",
+        "illuminanceSetpoint": 0.0,
+        "name": "Dining_Wall_North",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "a7d9cfdd-40f4-4e28-b36a-b406aebb00d9",
+        "outsideBoundaryConditionObjectName": "Dining_Wall_North-PPAutoCreateOther",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "4fa38de4-f2ea-404c-8d59-0f32dd98f0e0",
+        "spaceName": "Dining",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "af72964f-f6fe-4ef8-8ff1-bc4243f2d73f",
+        "surfaceName": "Dining_Wall_North",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "fb01bed7-9316-43e9-9f2a-e228c01a2cc1",
+        "thermalZoneMaterialName": "ThermalZone_Dining Thermal Zone",
+        "thermalZoneName": "Dining Thermal Zone",
+        "windExposure": "NoWind"
+      },
       "mesh": 3,
       "name": "Dining_Wall_North"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_int-walls",
+        "constructionName": "int-walls",
+        "constructionSetHandle": "37262f65-5e37-4af3-bd07-21493ec7b206",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "a7d9cfdd-40f4-4e28-b36a-b406aebb00d9",
+        "illuminanceSetpoint": 0.0,
+        "name": "Dining_Wall_North-PPAutoCreateOther",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "af72964f-f6fe-4ef8-8ff1-bc4243f2d73f",
+        "outsideBoundaryConditionObjectName": "Dining_Wall_North",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "30f26d55-62f3-405c-96af-4fe4c88b10cf",
+        "spaceName": "Kitchen",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "a7d9cfdd-40f4-4e28-b36a-b406aebb00d9",
+        "surfaceName": "Dining_Wall_North-PPAutoCreateOther",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "ee6d1bea-80be-4d6e-b2b5-b395ac3fc316",
+        "thermalZoneMaterialName": "ThermalZone_Kitchen Thermal Zone",
+        "thermalZoneName": "Kitchen Thermal Zone",
+        "windExposure": "NoWind"
+      },
       "mesh": 4,
       "name": "Dining_Wall_North-PPAutoCreateOther"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Steel Frame Non-res Ext Wall",
+        "constructionName": "Steel Frame Non-res Ext Wall",
+        "constructionSetHandle": "e91e97bc-e93f-4106-a257-5127436751ea",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "1df35574-378b-40db-a90e-d189655abd64",
+        "illuminanceSetpoint": 0.0,
+        "name": "Dining_Wall_South",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "4fa38de4-f2ea-404c-8d59-0f32dd98f0e0",
+        "spaceName": "Dining",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "1df35574-378b-40db-a90e-d189655abd64",
+        "surfaceName": "Dining_Wall_South",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "fb01bed7-9316-43e9-9f2a-e228c01a2cc1",
+        "thermalZoneMaterialName": "ThermalZone_Dining Thermal Zone",
+        "thermalZoneName": "Dining Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "mesh": 5,
       "name": "Dining_Wall_South"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Steel Frame Non-res Ext Wall",
+        "constructionName": "Steel Frame Non-res Ext Wall",
+        "constructionSetHandle": "e91e97bc-e93f-4106-a257-5127436751ea",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "f565aabd-a83f-4771-9dc3-ea4529df866a",
+        "illuminanceSetpoint": 0.0,
+        "name": "Dining_Wall_West",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "4fa38de4-f2ea-404c-8d59-0f32dd98f0e0",
+        "spaceName": "Dining",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "f565aabd-a83f-4771-9dc3-ea4529df866a",
+        "surfaceName": "Dining_Wall_West",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "fb01bed7-9316-43e9-9f2a-e228c01a2cc1",
+        "thermalZoneMaterialName": "ThermalZone_Dining Thermal Zone",
+        "thermalZoneName": "Dining Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "mesh": 6,
       "name": "Dining_Wall_West"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Attic Non-res Floor",
+        "constructionName": "Attic Non-res Floor",
+        "constructionSetHandle": "666fcc5f-fe89-4960-b240-0605c4daa763",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "6fd4b34d-f742-4d78-9838-493628aa02a6",
+        "illuminanceSetpoint": 0.0,
+        "name": "Kitchen_Ceiling",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "811a2030-9b23-4f1a-a9cc-7e44439fb26c",
+        "outsideBoundaryConditionObjectName": "attic-floor-kitchen",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "30f26d55-62f3-405c-96af-4fe4c88b10cf",
+        "spaceName": "Kitchen",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "6fd4b34d-f742-4d78-9838-493628aa02a6",
+        "surfaceName": "Kitchen_Ceiling",
+        "surfaceType": "RoofCeiling",
+        "surfaceTypeMaterailName": "RoofCeiling",
+        "thermalZoneHandle": "ee6d1bea-80be-4d6e-b2b5-b395ac3fc316",
+        "thermalZoneMaterialName": "ThermalZone_Kitchen Thermal Zone",
+        "thermalZoneName": "Kitchen Thermal Zone",
+        "windExposure": "NoWind"
+      },
       "mesh": 7,
       "name": "Kitchen_Ceiling"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Ground",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_ext-slab",
+        "constructionName": "ext-slab",
+        "constructionSetHandle": "c8bbf7c7-8e10-4ac2-b818-48ae47859781",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "e29da1a9-ec66-49ce-bee0-82de09bcc239",
+        "illuminanceSetpoint": 0.0,
+        "name": "Kitchen_Floor",
+        "outsideBoundaryCondition": "Ground",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "30f26d55-62f3-405c-96af-4fe4c88b10cf",
+        "spaceName": "Kitchen",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "e29da1a9-ec66-49ce-bee0-82de09bcc239",
+        "surfaceName": "Kitchen_Floor",
+        "surfaceType": "Floor",
+        "surfaceTypeMaterailName": "Floor",
+        "thermalZoneHandle": "ee6d1bea-80be-4d6e-b2b5-b395ac3fc316",
+        "thermalZoneMaterialName": "ThermalZone_Kitchen Thermal Zone",
+        "thermalZoneName": "Kitchen Thermal Zone",
+        "windExposure": "NoWind"
+      },
       "mesh": 8,
       "name": "Kitchen_Floor"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Steel Frame Non-res Ext Wall",
+        "constructionName": "Steel Frame Non-res Ext Wall",
+        "constructionSetHandle": "e91e97bc-e93f-4106-a257-5127436751ea",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "ffdaec8f-08ad-4766-9d5b-01334d765805",
+        "illuminanceSetpoint": 0.0,
+        "name": "Kitchen_Wall_East",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "30f26d55-62f3-405c-96af-4fe4c88b10cf",
+        "spaceName": "Kitchen",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "ffdaec8f-08ad-4766-9d5b-01334d765805",
+        "surfaceName": "Kitchen_Wall_East",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "ee6d1bea-80be-4d6e-b2b5-b395ac3fc316",
+        "thermalZoneMaterialName": "ThermalZone_Kitchen Thermal Zone",
+        "thermalZoneName": "Kitchen Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "mesh": 9,
       "name": "Kitchen_Wall_East"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Steel Frame Non-res Ext Wall",
+        "constructionName": "Steel Frame Non-res Ext Wall",
+        "constructionSetHandle": "e91e97bc-e93f-4106-a257-5127436751ea",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "9f01289c-f61d-46f0-b9ac-345dda3bc9c3",
+        "illuminanceSetpoint": 0.0,
+        "name": "Kitchen_Wall_North",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "30f26d55-62f3-405c-96af-4fe4c88b10cf",
+        "spaceName": "Kitchen",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "9f01289c-f61d-46f0-b9ac-345dda3bc9c3",
+        "surfaceName": "Kitchen_Wall_North",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "ee6d1bea-80be-4d6e-b2b5-b395ac3fc316",
+        "thermalZoneMaterialName": "ThermalZone_Kitchen Thermal Zone",
+        "thermalZoneName": "Kitchen Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "mesh": 10,
       "name": "Kitchen_Wall_North"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Steel Frame Non-res Ext Wall",
+        "constructionName": "Steel Frame Non-res Ext Wall",
+        "constructionSetHandle": "e91e97bc-e93f-4106-a257-5127436751ea",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "f78e54fa-26fb-4ef3-9728-d8d90def164c",
+        "illuminanceSetpoint": 0.0,
+        "name": "Kitchen_Wall_West",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "30f26d55-62f3-405c-96af-4fe4c88b10cf",
+        "spaceName": "Kitchen",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "f78e54fa-26fb-4ef3-9728-d8d90def164c",
+        "surfaceName": "Kitchen_Wall_West",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "ee6d1bea-80be-4d6e-b2b5-b395ac3fc316",
+        "thermalZoneMaterialName": "ThermalZone_Kitchen Thermal Zone",
+        "thermalZoneName": "Kitchen Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "mesh": 11,
       "name": "Kitchen_Wall_West"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Attic Non-res Floor",
+        "constructionName": "Attic Non-res Floor",
+        "constructionSetHandle": "666fcc5f-fe89-4960-b240-0605c4daa763",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "24ddb1dc-4822-4042-96aa-b2f9b181ebf9",
+        "illuminanceSetpoint": 0.0,
+        "name": "attic-floor-dining",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "bbd4879d-910e-4f1e-b808-6b2dffb4100a",
+        "outsideBoundaryConditionObjectName": "Dining_Ceiling",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "a578ffd9-fc15-42b8-8bd5-d0d11105eee5",
+        "spaceName": "attic",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "24ddb1dc-4822-4042-96aa-b2f9b181ebf9",
+        "surfaceName": "attic-floor-dining",
+        "surfaceType": "Floor",
+        "surfaceTypeMaterailName": "Floor",
+        "thermalZoneHandle": "e603a94c-38fc-43ba-a60e-ad68249c16e7",
+        "thermalZoneMaterialName": "ThermalZone_attic Thermal Zone",
+        "thermalZoneName": "attic Thermal Zone",
+        "windExposure": "NoWind"
+      },
       "matrix": [
         1.0,
         0.0,
@@ -1497,6 +2069,50 @@
       "name": "attic-floor-dining"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Attic Non-res Floor",
+        "constructionName": "Attic Non-res Floor",
+        "constructionSetHandle": "666fcc5f-fe89-4960-b240-0605c4daa763",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "811a2030-9b23-4f1a-a9cc-7e44439fb26c",
+        "illuminanceSetpoint": 0.0,
+        "name": "attic-floor-kitchen",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "6fd4b34d-f742-4d78-9838-493628aa02a6",
+        "outsideBoundaryConditionObjectName": "Kitchen_Ceiling",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "a578ffd9-fc15-42b8-8bd5-d0d11105eee5",
+        "spaceName": "attic",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "811a2030-9b23-4f1a-a9cc-7e44439fb26c",
+        "surfaceName": "attic-floor-kitchen",
+        "surfaceType": "Floor",
+        "surfaceTypeMaterailName": "Floor",
+        "thermalZoneHandle": "e603a94c-38fc-43ba-a60e-ad68249c16e7",
+        "thermalZoneMaterialName": "ThermalZone_attic Thermal Zone",
+        "thermalZoneName": "attic Thermal Zone",
+        "windExposure": "NoWind"
+      },
       "matrix": [
         1.0,
         0.0,
@@ -1519,6 +2135,50 @@
       "name": "attic-floor-kitchen"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Attic Non-res Roof",
+        "constructionName": "Attic Non-res Roof",
+        "constructionSetHandle": "44208e34-9226-46f8-bec5-5c17d8c7c2ed",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "632fc13e-ba69-4d16-a1d7-6d65cc1f0089",
+        "illuminanceSetpoint": 0.0,
+        "name": "east-roof",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "a578ffd9-fc15-42b8-8bd5-d0d11105eee5",
+        "spaceName": "attic",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "632fc13e-ba69-4d16-a1d7-6d65cc1f0089",
+        "surfaceName": "east-roof",
+        "surfaceType": "RoofCeiling",
+        "surfaceTypeMaterailName": "RoofCeiling",
+        "thermalZoneHandle": "e603a94c-38fc-43ba-a60e-ad68249c16e7",
+        "thermalZoneMaterialName": "ThermalZone_attic Thermal Zone",
+        "thermalZoneName": "attic Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "matrix": [
         1.0,
         0.0,
@@ -1541,6 +2201,50 @@
       "name": "east-roof"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Attic Non-res Roof",
+        "constructionName": "Attic Non-res Roof",
+        "constructionSetHandle": "44208e34-9226-46f8-bec5-5c17d8c7c2ed",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "23a80865-06d2-48ee-a368-6288381a8a70",
+        "illuminanceSetpoint": 0.0,
+        "name": "north-roof",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "a578ffd9-fc15-42b8-8bd5-d0d11105eee5",
+        "spaceName": "attic",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "23a80865-06d2-48ee-a368-6288381a8a70",
+        "surfaceName": "north-roof",
+        "surfaceType": "RoofCeiling",
+        "surfaceTypeMaterailName": "RoofCeiling",
+        "thermalZoneHandle": "e603a94c-38fc-43ba-a60e-ad68249c16e7",
+        "thermalZoneMaterialName": "ThermalZone_attic Thermal Zone",
+        "thermalZoneName": "attic Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "matrix": [
         1.0,
         0.0,
@@ -1563,6 +2267,50 @@
       "name": "north-roof"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Attic Non-res Roof",
+        "constructionName": "Attic Non-res Roof",
+        "constructionSetHandle": "44208e34-9226-46f8-bec5-5c17d8c7c2ed",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "339d0ad1-0201-4de6-8756-d5becc91cb3a",
+        "illuminanceSetpoint": 0.0,
+        "name": "south-roof",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "a578ffd9-fc15-42b8-8bd5-d0d11105eee5",
+        "spaceName": "attic",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "339d0ad1-0201-4de6-8756-d5becc91cb3a",
+        "surfaceName": "south-roof",
+        "surfaceType": "RoofCeiling",
+        "surfaceTypeMaterailName": "RoofCeiling",
+        "thermalZoneHandle": "e603a94c-38fc-43ba-a60e-ad68249c16e7",
+        "thermalZoneMaterialName": "ThermalZone_attic Thermal Zone",
+        "thermalZoneName": "attic Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "matrix": [
         1.0,
         0.0,
@@ -1585,6 +2333,50 @@
       "name": "south-roof"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Attic Non-res Roof",
+        "constructionName": "Attic Non-res Roof",
+        "constructionSetHandle": "44208e34-9226-46f8-bec5-5c17d8c7c2ed",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "0efab7a5-185b-4cb1-99a1-1addbca83559",
+        "illuminanceSetpoint": 0.0,
+        "name": "west-roof",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "a578ffd9-fc15-42b8-8bd5-d0d11105eee5",
+        "spaceName": "attic",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "0efab7a5-185b-4cb1-99a1-1addbca83559",
+        "surfaceName": "west-roof",
+        "surfaceType": "RoofCeiling",
+        "surfaceTypeMaterailName": "RoofCeiling",
+        "thermalZoneHandle": "e603a94c-38fc-43ba-a60e-ad68249c16e7",
+        "thermalZoneMaterialName": "ThermalZone_attic Thermal Zone",
+        "thermalZoneName": "attic Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "matrix": [
         1.0,
         0.0,
@@ -1607,20 +2399,203 @@
       "name": "west-roof"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Window Non-res Fixed",
+        "constructionName": "Window Non-res Fixed",
+        "constructionSetHandle": "ef25a5c6-f524-4e58-b299-054bfcd94902",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "41d6b295-e658-47f5-8563-d77e79b7064d",
+        "illuminanceSetpoint": 0.0,
+        "name": "Dining_Wall_East_Window",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "4fa38de4-f2ea-404c-8d59-0f32dd98f0e0",
+        "spaceName": "Dining",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "41d6b295-e658-47f5-8563-d77e79b7064d",
+        "subSurfaceName": "Dining_Wall_East_Window",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "0d9cc5b6-e52c-4f93-8aca-db45ab1048e0",
+        "surfaceName": "Dining_Wall_East",
+        "surfaceType": "FixedWindow",
+        "surfaceTypeMaterailName": "Window",
+        "thermalZoneHandle": "fb01bed7-9316-43e9-9f2a-e228c01a2cc1",
+        "thermalZoneMaterialName": "ThermalZone_Dining Thermal Zone",
+        "thermalZoneName": "Dining Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "mesh": 18,
       "name": "Dining_Wall_East_Window"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Window Non-res Fixed",
+        "constructionName": "Window Non-res Fixed",
+        "constructionSetHandle": "ef25a5c6-f524-4e58-b299-054bfcd94902",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "2bd2837a-032a-4dd6-880f-b12c323817ae",
+        "illuminanceSetpoint": 0.0,
+        "name": "Dining_Wall_South_Window",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "4fa38de4-f2ea-404c-8d59-0f32dd98f0e0",
+        "spaceName": "Dining",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "2bd2837a-032a-4dd6-880f-b12c323817ae",
+        "subSurfaceName": "Dining_Wall_South_Window",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "1df35574-378b-40db-a90e-d189655abd64",
+        "surfaceName": "Dining_Wall_South",
+        "surfaceType": "FixedWindow",
+        "surfaceTypeMaterailName": "Window",
+        "thermalZoneHandle": "fb01bed7-9316-43e9-9f2a-e228c01a2cc1",
+        "thermalZoneMaterialName": "ThermalZone_Dining Thermal Zone",
+        "thermalZoneName": "Dining Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "mesh": 19,
       "name": "Dining_Wall_South_Window"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "",
+        "buildingStoryMaterialName": "",
+        "buildingStoryName": "",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "Construction_Window Non-res Fixed",
+        "constructionName": "Window Non-res Fixed",
+        "constructionSetHandle": "ef25a5c6-f524-4e58-b299-054bfcd94902",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "fdb87f6c-3f08-417c-aecc-c046f7e3206b",
+        "illuminanceSetpoint": 0.0,
+        "name": "Dining_Wall_West_Window",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "4fa38de4-f2ea-404c-8d59-0f32dd98f0e0",
+        "spaceName": "Dining",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "fdb87f6c-3f08-417c-aecc-c046f7e3206b",
+        "subSurfaceName": "Dining_Wall_West_Window",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "f565aabd-a83f-4771-9dc3-ea4529df866a",
+        "surfaceName": "Dining_Wall_West",
+        "surfaceType": "FixedWindow",
+        "surfaceTypeMaterailName": "Window",
+        "thermalZoneHandle": "fb01bed7-9316-43e9-9f2a-e228c01a2cc1",
+        "thermalZoneMaterialName": "ThermalZone_Dining Thermal Zone",
+        "thermalZoneName": "Dining Thermal Zone",
+        "windExposure": "WindExposed"
+      },
       "mesh": 20,
       "name": "Dining_Wall_West_Window"
     }
   ],
   "scenes": [
     {
+      "extras": {
+        "boundingbox": {
+          "lookAtR": 16.34619034653029,
+          "lookAtX": 0.0,
+          "lookAtY": 0.0,
+          "lookAtZ": 0.0,
+          "maxX": 22.6087,
+          "maxY": 22.6087,
+          "maxZ": 6.818,
+          "minX": 0.0,
+          "minY": 0.0,
+          "minZ": 0.0
+        },
+        "buildingStoryNames": null,
+        "generator": "OpenStudio",
+        "modelObjectMetaData": {
+          "0": {
+            "color": "#C0C0C0",
+            "handle": "{ee6d1bea-80be-4d6e-b2b5-b395ac3fc316}",
+            "iddObjectType": "OS:ThermalZone",
+            "multiplier": 1,
+            "name": "Kitchen Thermal Zone",
+            "nominal_floorCeiling_Height": 0.0,
+            "nominal_z_coordinate": 0.0,
+            "open_to_below": false
+          },
+          "1": {
+            "color": "#007FFF",
+            "handle": "{fb01bed7-9316-43e9-9f2a-e228c01a2cc1}",
+            "iddObjectType": "OS:ThermalZone",
+            "multiplier": 1,
+            "name": "Dining Thermal Zone",
+            "nominal_floorCeiling_Height": 0.0,
+            "nominal_z_coordinate": 0.0,
+            "open_to_below": false
+          },
+          "2": {
+            "color": "#EEAAE8",
+            "handle": "{e603a94c-38fc-43ba-a60e-ad68249c16e7}",
+            "iddObjectType": "OS:ThermalZone",
+            "multiplier": 1,
+            "name": "attic Thermal Zone",
+            "nominal_floorCeiling_Height": 0.0,
+            "nominal_z_coordinate": 0.0,
+            "open_to_below": false
+          }
+        },
+        "northAxis": -0.0,
+        "type": "Object",
+        "version": "4.3"
+      },
       "nodes": [
         0
       ]

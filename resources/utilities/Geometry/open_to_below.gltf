@@ -5,10 +5,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -51,10 +51,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -98,10 +98,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -145,10 +145,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -192,10 +192,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -239,10 +239,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -286,10 +286,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -333,10 +333,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -380,10 +380,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -427,10 +427,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -474,10 +474,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -521,10 +521,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -568,10 +568,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -615,10 +615,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -662,10 +662,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -709,10 +709,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -756,10 +756,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -803,10 +803,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -850,10 +850,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -897,10 +897,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -944,10 +944,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -991,10 +991,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -1038,10 +1038,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -1085,10 +1085,10 @@
       "componentType": 5121,
       "count": 6,
       "max": [
-        3
+        3.0
       ],
       "min": [
-        0
+        0.0
       ],
       "type": "SCALAR"
     },
@@ -1594,104 +1594,1244 @@
       "name": "Z_UP"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Ground",
+        "buildingStoryHandle": "897590d8-d8ed-4fa7-8e48-0063296fd56e",
+        "buildingStoryMaterialName": "BuildingStory_Story 1",
+        "buildingStoryName": "Story 1",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "a93956ac-1433-46dd-aea8-dfb7368447dc",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 0",
+        "outsideBoundaryCondition": "Ground",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "d9a1fb2e-3a03-400c-a5db-f8ca3e538f0e",
+        "spaceName": "Open 1",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "a93956ac-1433-46dd-aea8-dfb7368447dc",
+        "surfaceName": "Face 0",
+        "surfaceType": "Floor",
+        "surfaceTypeMaterailName": "Floor",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "NoWind"
+      },
       "mesh": 0,
       "name": "Face 0"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "897590d8-d8ed-4fa7-8e48-0063296fd56e",
+        "buildingStoryMaterialName": "BuildingStory_Story 1",
+        "buildingStoryName": "Story 1",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "AirWall",
+        "constructionName": "AirWall",
+        "constructionSetHandle": "ae5f8557-cb9d-42a5-a79d-f45b1c0a99fd",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "18890b46-686a-4334-aacd-432e7c21917e",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 1",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "2ebc0309-826f-4b59-852a-bf2e432b63f2",
+        "outsideBoundaryConditionObjectName": "Face 12",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "d9a1fb2e-3a03-400c-a5db-f8ca3e538f0e",
+        "spaceName": "Open 1",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "18890b46-686a-4334-aacd-432e7c21917e",
+        "surfaceName": "Face 1",
+        "surfaceType": "RoofCeiling",
+        "surfaceTypeMaterailName": "RoofCeiling",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "NoWind"
+      },
       "mesh": 1,
       "name": "Face 1"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "897590d8-d8ed-4fa7-8e48-0063296fd56e",
+        "buildingStoryMaterialName": "BuildingStory_Story 1",
+        "buildingStoryName": "Story 1",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "846874ea-224e-4e89-92ba-8f66a8c65dfb",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 10",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "8c2e37b3-1a10-4eca-bd56-60ac29a92ee9",
+        "outsideBoundaryConditionObjectName": "Face 2",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "86b3f521-4986-4861-a35b-eecd6e64a386",
+        "spaceName": "Closed 1",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "846874ea-224e-4e89-92ba-8f66a8c65dfb",
+        "surfaceName": "Face 10",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "NoWind"
+      },
       "mesh": 2,
       "name": "Face 10"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "897590d8-d8ed-4fa7-8e48-0063296fd56e",
+        "buildingStoryMaterialName": "BuildingStory_Story 1",
+        "buildingStoryName": "Story 1",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "8e928b9d-8829-463b-accd-e7abe39a6616",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 11",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "86b3f521-4986-4861-a35b-eecd6e64a386",
+        "spaceName": "Closed 1",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "8e928b9d-8829-463b-accd-e7abe39a6616",
+        "surfaceName": "Face 11",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 3,
       "name": "Face 11"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "343f4175-27e1-42ea-af61-0429908816c1",
+        "buildingStoryMaterialName": "BuildingStory_Story 2",
+        "buildingStoryName": "Story 2",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "AirWall",
+        "constructionName": "AirWall",
+        "constructionSetHandle": "ae5f8557-cb9d-42a5-a79d-f45b1c0a99fd",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "2ebc0309-826f-4b59-852a-bf2e432b63f2",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 12",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "18890b46-686a-4334-aacd-432e7c21917e",
+        "outsideBoundaryConditionObjectName": "Face 1",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "bdadc22a-9123-48c6-92ed-aa757d5e44ae",
+        "spaceName": "Open 2",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "2ebc0309-826f-4b59-852a-bf2e432b63f2",
+        "surfaceName": "Face 12",
+        "surfaceType": "Floor",
+        "surfaceTypeMaterailName": "Floor",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "NoWind"
+      },
       "mesh": 4,
       "name": "Face 12"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "343f4175-27e1-42ea-af61-0429908816c1",
+        "buildingStoryMaterialName": "BuildingStory_Story 2",
+        "buildingStoryName": "Story 2",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "2dd445c9-6b29-4ed8-b7ea-e9b50a3e9101",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 13",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "bdadc22a-9123-48c6-92ed-aa757d5e44ae",
+        "spaceName": "Open 2",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "2dd445c9-6b29-4ed8-b7ea-e9b50a3e9101",
+        "surfaceName": "Face 13",
+        "surfaceType": "RoofCeiling",
+        "surfaceTypeMaterailName": "RoofCeiling",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 5,
       "name": "Face 13"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "343f4175-27e1-42ea-af61-0429908816c1",
+        "buildingStoryMaterialName": "BuildingStory_Story 2",
+        "buildingStoryName": "Story 2",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "d6ba83c9-488d-41ce-8325-42383997b93b",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 14",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "bb7538fa-f60f-4bba-b84d-618ff89eb345",
+        "outsideBoundaryConditionObjectName": "Face 22",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "bdadc22a-9123-48c6-92ed-aa757d5e44ae",
+        "spaceName": "Open 2",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "d6ba83c9-488d-41ce-8325-42383997b93b",
+        "surfaceName": "Face 14",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "NoWind"
+      },
       "mesh": 6,
       "name": "Face 14"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "343f4175-27e1-42ea-af61-0429908816c1",
+        "buildingStoryMaterialName": "BuildingStory_Story 2",
+        "buildingStoryName": "Story 2",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "ff30ecee-31fa-4cf1-a043-a0b1a82eb1b2",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 15",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "bdadc22a-9123-48c6-92ed-aa757d5e44ae",
+        "spaceName": "Open 2",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "ff30ecee-31fa-4cf1-a043-a0b1a82eb1b2",
+        "surfaceName": "Face 15",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 7,
       "name": "Face 15"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "343f4175-27e1-42ea-af61-0429908816c1",
+        "buildingStoryMaterialName": "BuildingStory_Story 2",
+        "buildingStoryName": "Story 2",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "bd1a4335-611b-448b-9485-1a1d703ee239",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 16",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "bdadc22a-9123-48c6-92ed-aa757d5e44ae",
+        "spaceName": "Open 2",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "bd1a4335-611b-448b-9485-1a1d703ee239",
+        "surfaceName": "Face 16",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 8,
       "name": "Face 16"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "343f4175-27e1-42ea-af61-0429908816c1",
+        "buildingStoryMaterialName": "BuildingStory_Story 2",
+        "buildingStoryName": "Story 2",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "9abba690-314e-4812-b8c7-fc56894d9889",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 17",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "bdadc22a-9123-48c6-92ed-aa757d5e44ae",
+        "spaceName": "Open 2",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "9abba690-314e-4812-b8c7-fc56894d9889",
+        "surfaceName": "Face 17",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 9,
       "name": "Face 17"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "343f4175-27e1-42ea-af61-0429908816c1",
+        "buildingStoryMaterialName": "BuildingStory_Story 2",
+        "buildingStoryName": "Story 2",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "b55d431c-61b2-4736-8337-b9b433c1d390",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 18",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "847a1d46-544d-4b73-8032-66b85b8b40c4",
+        "outsideBoundaryConditionObjectName": "Face 7",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "a0027c49-cb20-4af7-bc51-b451c28a9562",
+        "spaceName": "Closed 2",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "b55d431c-61b2-4736-8337-b9b433c1d390",
+        "surfaceName": "Face 18",
+        "surfaceType": "Floor",
+        "surfaceTypeMaterailName": "Floor",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "NoWind"
+      },
       "mesh": 10,
       "name": "Face 18"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "343f4175-27e1-42ea-af61-0429908816c1",
+        "buildingStoryMaterialName": "BuildingStory_Story 2",
+        "buildingStoryName": "Story 2",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "594c8fa1-6965-444d-be46-cc9d7ec3d124",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 19",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "a0027c49-cb20-4af7-bc51-b451c28a9562",
+        "spaceName": "Closed 2",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "594c8fa1-6965-444d-be46-cc9d7ec3d124",
+        "surfaceName": "Face 19",
+        "surfaceType": "RoofCeiling",
+        "surfaceTypeMaterailName": "RoofCeiling",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 11,
       "name": "Face 19"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "897590d8-d8ed-4fa7-8e48-0063296fd56e",
+        "buildingStoryMaterialName": "BuildingStory_Story 1",
+        "buildingStoryName": "Story 1",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "8c2e37b3-1a10-4eca-bd56-60ac29a92ee9",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 2",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "846874ea-224e-4e89-92ba-8f66a8c65dfb",
+        "outsideBoundaryConditionObjectName": "Face 10",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "d9a1fb2e-3a03-400c-a5db-f8ca3e538f0e",
+        "spaceName": "Open 1",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "8c2e37b3-1a10-4eca-bd56-60ac29a92ee9",
+        "surfaceName": "Face 2",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "NoWind"
+      },
       "mesh": 12,
       "name": "Face 2"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "343f4175-27e1-42ea-af61-0429908816c1",
+        "buildingStoryMaterialName": "BuildingStory_Story 2",
+        "buildingStoryName": "Story 2",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "7206b39a-2401-4614-84de-870b87bef296",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 20",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "a0027c49-cb20-4af7-bc51-b451c28a9562",
+        "spaceName": "Closed 2",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "7206b39a-2401-4614-84de-870b87bef296",
+        "surfaceName": "Face 20",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 13,
       "name": "Face 20"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "343f4175-27e1-42ea-af61-0429908816c1",
+        "buildingStoryMaterialName": "BuildingStory_Story 2",
+        "buildingStoryName": "Story 2",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "ebc7ecab-89d0-415e-9c0b-a2b0205d34d8",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 21",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "a0027c49-cb20-4af7-bc51-b451c28a9562",
+        "spaceName": "Closed 2",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "ebc7ecab-89d0-415e-9c0b-a2b0205d34d8",
+        "surfaceName": "Face 21",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 14,
       "name": "Face 21"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "343f4175-27e1-42ea-af61-0429908816c1",
+        "buildingStoryMaterialName": "BuildingStory_Story 2",
+        "buildingStoryName": "Story 2",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "bb7538fa-f60f-4bba-b84d-618ff89eb345",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 22",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "d6ba83c9-488d-41ce-8325-42383997b93b",
+        "outsideBoundaryConditionObjectName": "Face 14",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "a0027c49-cb20-4af7-bc51-b451c28a9562",
+        "spaceName": "Closed 2",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "bb7538fa-f60f-4bba-b84d-618ff89eb345",
+        "surfaceName": "Face 22",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "NoWind"
+      },
       "mesh": 15,
       "name": "Face 22"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "343f4175-27e1-42ea-af61-0429908816c1",
+        "buildingStoryMaterialName": "BuildingStory_Story 2",
+        "buildingStoryName": "Story 2",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "028f934b-09ce-4e61-902d-76049d5fd3a5",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 23",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "a0027c49-cb20-4af7-bc51-b451c28a9562",
+        "spaceName": "Closed 2",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "028f934b-09ce-4e61-902d-76049d5fd3a5",
+        "surfaceName": "Face 23",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 16,
       "name": "Face 23"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "897590d8-d8ed-4fa7-8e48-0063296fd56e",
+        "buildingStoryMaterialName": "BuildingStory_Story 1",
+        "buildingStoryName": "Story 1",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "659e19fa-dd3a-4a0f-a9ed-7b49cfb2121b",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 3",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "d9a1fb2e-3a03-400c-a5db-f8ca3e538f0e",
+        "spaceName": "Open 1",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "659e19fa-dd3a-4a0f-a9ed-7b49cfb2121b",
+        "surfaceName": "Face 3",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 17,
       "name": "Face 3"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "897590d8-d8ed-4fa7-8e48-0063296fd56e",
+        "buildingStoryMaterialName": "BuildingStory_Story 1",
+        "buildingStoryName": "Story 1",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "ea85c5c9-5a89-47e9-884a-d04559a36170",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 4",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "d9a1fb2e-3a03-400c-a5db-f8ca3e538f0e",
+        "spaceName": "Open 1",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "ea85c5c9-5a89-47e9-884a-d04559a36170",
+        "surfaceName": "Face 4",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 18,
       "name": "Face 4"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "897590d8-d8ed-4fa7-8e48-0063296fd56e",
+        "buildingStoryMaterialName": "BuildingStory_Story 1",
+        "buildingStoryName": "Story 1",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "9b9b38bd-c57f-476a-84c0-dcfb8137eb40",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 5",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "d9a1fb2e-3a03-400c-a5db-f8ca3e538f0e",
+        "spaceName": "Open 1",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "9b9b38bd-c57f-476a-84c0-dcfb8137eb40",
+        "surfaceName": "Face 5",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 19,
       "name": "Face 5"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Ground",
+        "buildingStoryHandle": "897590d8-d8ed-4fa7-8e48-0063296fd56e",
+        "buildingStoryMaterialName": "BuildingStory_Story 1",
+        "buildingStoryName": "Story 1",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "cd4cd882-497b-4105-8e7e-ff66971f2274",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 6",
+        "outsideBoundaryCondition": "Ground",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "86b3f521-4986-4861-a35b-eecd6e64a386",
+        "spaceName": "Closed 1",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "cd4cd882-497b-4105-8e7e-ff66971f2274",
+        "surfaceName": "Face 6",
+        "surfaceType": "Floor",
+        "surfaceTypeMaterailName": "Floor",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "NoWind"
+      },
       "mesh": 20,
       "name": "Face 6"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Surface",
+        "buildingStoryHandle": "897590d8-d8ed-4fa7-8e48-0063296fd56e",
+        "buildingStoryMaterialName": "BuildingStory_Story 1",
+        "buildingStoryName": "Story 1",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": true,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "847a1d46-544d-4b73-8032-66b85b8b40c4",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 7",
+        "outsideBoundaryCondition": "Surface",
+        "outsideBoundaryConditionObjectHandle": "b55d431c-61b2-4736-8337-b9b433c1d390",
+        "outsideBoundaryConditionObjectName": "Face 18",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "86b3f521-4986-4861-a35b-eecd6e64a386",
+        "spaceName": "Closed 1",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "NoSun",
+        "surfaceHandle": "847a1d46-544d-4b73-8032-66b85b8b40c4",
+        "surfaceName": "Face 7",
+        "surfaceType": "RoofCeiling",
+        "surfaceTypeMaterailName": "RoofCeiling",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "NoWind"
+      },
       "mesh": 21,
       "name": "Face 7"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "897590d8-d8ed-4fa7-8e48-0063296fd56e",
+        "buildingStoryMaterialName": "BuildingStory_Story 1",
+        "buildingStoryName": "Story 1",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "fae5db8c-2278-42fa-a5ae-41a95b9f2b5d",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 8",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "86b3f521-4986-4861-a35b-eecd6e64a386",
+        "spaceName": "Closed 1",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "fae5db8c-2278-42fa-a5ae-41a95b9f2b5d",
+        "surfaceName": "Face 8",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 22,
       "name": "Face 8"
     },
     {
+      "extras": {
+        "airLoopHVACHandles": null,
+        "airLoopHVACMaterialNames": null,
+        "airLoopHVACNames": null,
+        "airWall": false,
+        "boundaryMaterialName": "Boundary_Outdoors_SunWind",
+        "buildingStoryHandle": "897590d8-d8ed-4fa7-8e48-0063296fd56e",
+        "buildingStoryMaterialName": "BuildingStory_Story 1",
+        "buildingStoryName": "Story 1",
+        "buildingUnitHandle": "",
+        "buildingUnitMaterialName": "",
+        "buildingUnitName": "",
+        "coincidentWithOutsideObject": false,
+        "constructionHandle": "",
+        "constructionMaterialName": "",
+        "constructionName": "",
+        "constructionSetHandle": "",
+        "constructionSetMaterialName": "",
+        "constructionSetName": "",
+        "handle": "85eb5c7c-112e-4671-be1a-be288e306772",
+        "illuminanceSetpoint": 0.0,
+        "name": "Face 9",
+        "outsideBoundaryCondition": "Outdoors",
+        "outsideBoundaryConditionObjectHandle": "",
+        "outsideBoundaryConditionObjectName": "",
+        "shadingHandle": "",
+        "shadingName": "",
+        "spaceHandle": "86b3f521-4986-4861-a35b-eecd6e64a386",
+        "spaceName": "Closed 1",
+        "spaceTypeHandle": "",
+        "spaceTypeMaterialName": "",
+        "spaceTypeName": "",
+        "subSurfaceHandle": "",
+        "subSurfaceName": "",
+        "sunExposure": "SunExposed",
+        "surfaceHandle": "85eb5c7c-112e-4671-be1a-be288e306772",
+        "surfaceName": "Face 9",
+        "surfaceType": "Wall",
+        "surfaceTypeMaterailName": "Wall",
+        "thermalZoneHandle": "",
+        "thermalZoneMaterialName": "",
+        "thermalZoneName": "",
+        "windExposure": "WindExposed"
+      },
       "mesh": 23,
       "name": "Face 9"
     }
   ],
   "scenes": [
     {
+      "extras": {
+        "boundingbox": {
+          "lookAtR": 29.817869115012225,
+          "lookAtX": 0.0,
+          "lookAtY": 0.0,
+          "lookAtZ": 0.0,
+          "maxX": 6.096,
+          "maxY": 22.86,
+          "maxZ": 4.8768,
+          "minX": -54.864,
+          "minY": -7.62,
+          "minZ": 0.0
+        },
+        "buildingStoryNames": {
+          "0": "Story 1",
+          "1": "Story 2"
+        },
+        "generator": "OpenStudio",
+        "modelObjectMetaData": {
+          "0": {
+            "color": "#F08080",
+            "handle": "{897590d8-d8ed-4fa7-8e48-0063296fd56e}",
+            "iddObjectType": "OS:BuildingStory",
+            "multiplier": 0,
+            "name": "Story 1",
+            "nominal_floorCeiling_Height": 2.4384,
+            "nominal_z_coordinate": 0.0,
+            "open_to_below": false
+          },
+          "1": {
+            "color": "",
+            "handle": "{d9a1fb2e-3a03-400c-a5db-f8ca3e538f0e}",
+            "iddObjectType": "OS:Space",
+            "multiplier": 0,
+            "name": "Open 1",
+            "nominal_floorCeiling_Height": 0.0,
+            "nominal_z_coordinate": 0.0,
+            "open_to_below": false
+          },
+          "2": {
+            "color": "",
+            "handle": "{86b3f521-4986-4861-a35b-eecd6e64a386}",
+            "iddObjectType": "OS:Space",
+            "multiplier": 0,
+            "name": "Closed 1",
+            "nominal_floorCeiling_Height": 0.0,
+            "nominal_z_coordinate": 0.0,
+            "open_to_below": false
+          },
+          "3": {
+            "color": "#7FD4FF",
+            "handle": "{343f4175-27e1-42ea-af61-0429908816c1}",
+            "iddObjectType": "OS:BuildingStory",
+            "multiplier": 0,
+            "name": "Story 2",
+            "nominal_floorCeiling_Height": 2.4384,
+            "nominal_z_coordinate": 2.4384,
+            "open_to_below": false
+          },
+          "4": {
+            "color": "",
+            "handle": "{a0027c49-cb20-4af7-bc51-b451c28a9562}",
+            "iddObjectType": "OS:Space",
+            "multiplier": 0,
+            "name": "Closed 2",
+            "nominal_floorCeiling_Height": 0.0,
+            "nominal_z_coordinate": 0.0,
+            "open_to_below": false
+          },
+          "5": {
+            "color": "",
+            "handle": "{bdadc22a-9123-48c6-92ed-aa757d5e44ae}",
+            "iddObjectType": "OS:Space",
+            "multiplier": 0,
+            "name": "Open 2",
+            "nominal_floorCeiling_Height": 0.0,
+            "nominal_z_coordinate": 0.0,
+            "open_to_below": false
+          }
+        },
+        "northAxis": 0.0,
+        "type": "Object",
+        "version": "4.3"
+      },
       "nodes": [
         0
       ]

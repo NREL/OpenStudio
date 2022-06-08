@@ -120,7 +120,7 @@ namespace energyplus {
     m_excludeSQliteOutputReport = false;
     m_excludeHTMLOutputReport = false;
     m_excludeVariableDictionary = false;
-    m_excludeSpaceTranslation = true;
+    m_excludeSpaceTranslation = false;  // At 3.4.1, this was changed to false.
   }
 
   Workspace ForwardTranslator::translateModel(const Model& model, ProgressBar* progressBar) {
@@ -379,9 +379,12 @@ namespace energyplus {
       // That includes the Space ones too.
       // SpaceInfiltrationEffectiveLeakageAreas and SpaceInfiltrationFlowCoefficients don't need it, they are always absolute
       for (auto& infil : model.getConcreteModelObjects<SpaceInfiltrationDesignFlowRate>()) {
-        // TODO: technically we only need to do that if the space it's assigned to is part of a thermalzone with more than one space
-        // Same reason as above: not doing it for now
-        infil.hardSize();
+        // technically we only need to hardsize if the space it's assigned to is part of a thermalzone with more than one space
+        if (!openstudio::istringEqual("Flow/Space", infil.designFlowRateCalculationMethod())) {
+          if (infil.space() && infil.space()->thermalZone() && infil.space()->thermalZone()->spaces().size() > 1) {
+            infil.hardSize();  // translates to Flow/Zone
+          }
+        }
       }
     }
 
