@@ -113,13 +113,13 @@ bool XMLValidator::xsdValidate(const openstudio::path& xmlPath) {
 
   int ret = xmlSchemaValidateDoc(ctxt, doc);
   //xmlTextReaderSchemaValidateCtxt(doc, ctxt, 0);
-  
+
   //if (ret == 0) {
-    //fmt::print(stderr, "{} validates\n", filename);
+  //fmt::print(stderr, "{} validates\n", filename);
   //} else if (ret > 0) {
-    //fmt::print(stderr, "{} fails to validate\n", filename);
+  //fmt::print(stderr, "{} fails to validate\n", filename);
   //} else {
-    //fmt::print(stderr, "{} validation generated an internal error, ret = {}\n", filename, ret);
+  //fmt::print(stderr, "{} validation generated an internal error, ret = {}\n", filename, ret);
   //}
   xmlSchemaFreeValidCtxt(ctxt);
   xmlSchemaFree(schema);
