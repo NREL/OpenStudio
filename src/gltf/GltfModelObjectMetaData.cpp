@@ -29,14 +29,14 @@
 
 #include "GltfModelObjectMetaData.hpp"
 
-#include "AirLoopHVAC.hpp"
-#include "BuildingUnit.hpp"
-#include "SpaceType.hpp"
-#include "BuildingStory.hpp"
-#include "ThermalZone.hpp"
-#include "DefaultConstructionSet.hpp"
-#include "Space.hpp"
-#include "RenderingColor.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/BuildingUnit.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/Space.hpp"
+#include "../model/RenderingColor.hpp"
 
 #include "utilities/core/UUID.hpp"
 
@@ -46,38 +46,38 @@
 #include <map>
 
 namespace openstudio {
-namespace model {
+namespace gltf {
 
   GltfModelObjectMetaData::GltfModelObjectMetaData() = default;
 
-  GltfModelObjectMetaData::GltfModelObjectMetaData(const AirLoopHVAC& airLoopHVAC) {
+  GltfModelObjectMetaData::GltfModelObjectMetaData(const model::AirLoopHVAC& airLoopHVAC) {
     m_handle = openstudio::removeBraces(airLoopHVAC.handle());
-    m_iddObjectType = AirLoopHVAC::iddObjectType().valueDescription();
+    m_iddObjectType = model::AirLoopHVAC::iddObjectType().valueDescription();
     m_name = airLoopHVAC.nameString();
   }
 
-  GltfModelObjectMetaData::GltfModelObjectMetaData(const BuildingUnit& buildingUnit) {
+  GltfModelObjectMetaData::GltfModelObjectMetaData(const model::BuildingUnit& buildingUnit) {
     if (buildingUnit.renderingColor()) {
       m_color = buildingUnit.renderingColor()->colorString();
     }
 
     m_handle = openstudio::removeBraces(buildingUnit.handle());
-    m_iddObjectType = BuildingUnit::iddObjectType().valueDescription();
+    m_iddObjectType = model::BuildingUnit::iddObjectType().valueDescription();
     m_name = buildingUnit.nameString();
   }
 
-  GltfModelObjectMetaData::GltfModelObjectMetaData(const SpaceType& spaceType) {
+  GltfModelObjectMetaData::GltfModelObjectMetaData(const model::SpaceType& spaceType) {
     if (spaceType.renderingColor()) {
       m_color = spaceType.renderingColor()->colorString();
     }
     m_handle = openstudio::removeBraces(spaceType.handle());
-    m_iddObjectType = SpaceType::iddObjectType().valueDescription();
+    m_iddObjectType = model::SpaceType::iddObjectType().valueDescription();
     m_name = spaceType.nameString();
   }
 
-  GltfModelObjectMetaData::GltfModelObjectMetaData(const BuildingStory& buildingStory) {
+  GltfModelObjectMetaData::GltfModelObjectMetaData(const model::BuildingStory& buildingStory) {
     m_handle = openstudio::removeBraces(buildingStory.handle());
-    m_iddObjectType = BuildingStory::iddObjectType().valueDescription();
+    m_iddObjectType = model::BuildingStory::iddObjectType().valueDescription();
     m_name = buildingStory.nameString();
 
     if (buildingStory.renderingColor()) {
@@ -99,12 +99,12 @@ namespace model {
     }
   }
 
-  GltfModelObjectMetaData::GltfModelObjectMetaData(const ThermalZone& thermalZone) {
+  GltfModelObjectMetaData::GltfModelObjectMetaData(const model::ThermalZone& thermalZone) {
     if (thermalZone.renderingColor()) {
       m_color = thermalZone.renderingColor()->colorString();
     }
     m_handle = openstudio::removeBraces(thermalZone.handle());
-    m_iddObjectType = ThermalZone::iddObjectType().valueDescription();
+    m_iddObjectType = model::ThermalZone::iddObjectType().valueDescription();
     m_name = thermalZone.nameString();
 
     // TODO: How to calculate this ?
@@ -112,15 +112,15 @@ namespace model {
 
     m_multiplier = thermalZone.multiplier();
   }
-  GltfModelObjectMetaData::GltfModelObjectMetaData(const DefaultConstructionSet& defaultConstructionSet) {
+  GltfModelObjectMetaData::GltfModelObjectMetaData(const model::DefaultConstructionSet& defaultConstructionSet) {
     m_handle = openstudio::removeBraces(defaultConstructionSet.handle());
-    m_iddObjectType = DefaultConstructionSet::iddObjectType().valueDescription();
+    m_iddObjectType = model::DefaultConstructionSet::iddObjectType().valueDescription();
     m_name = defaultConstructionSet.nameString();
   }
 
-  GltfModelObjectMetaData::GltfModelObjectMetaData(const Space& space) {
+  GltfModelObjectMetaData::GltfModelObjectMetaData(const model::Space& space) {
     m_handle = openstudio::removeBraces(space.handle());
-    m_iddObjectType = Space::iddObjectType().valueDescription();
+    m_iddObjectType = model::Space::iddObjectType().valueDescription();
     m_name = space.nameString();
 
     // TODO: the original implementation doesn't use the space multiplier (well: it does come from the attached thermal Zone so...)
@@ -286,5 +286,5 @@ namespace model {
     }
   }
 
-}  // namespace model
+}  // namespace gltf
 }  // namespace openstudio

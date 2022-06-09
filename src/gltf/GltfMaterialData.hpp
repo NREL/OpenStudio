@@ -26,34 +26,45 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
-#ifndef MODEL_GLTFMATERIALDATA_HPP
-#define MODEL_GLTFMATERIALDATA_HPP
+#ifndef GLTF_GLTFMATERIALDATA_HPP
+#define GLTF_GLTFMATERIALDATA_HPP
 
-#include "ModelAPI.hpp"
-#include "Model.hpp"
+#include "GltfAPI.hpp"
 
 #include <array>
 #include <string_view>
+#include <vector>
 
 namespace tinygltf {
 class Material;
 }
 
 namespace openstudio {
-namespace model {
 
+namespace model {
+  class Model;
   class RenderingColor;
+}  // namespace model
+
+namespace gltf {
+
   class GltfForwardTranslator;
 
   /** GltfMaterialData is an Interface class between a RenderingColor and a tinygltf::Material **/
-  class MODEL_API GltfMaterialData
+  class GLTF_API GltfMaterialData
   {
    public:
+    /** @name Interface with Model and ModelObjects */
+    //@{
+
     // Standard constructor
     constexpr GltfMaterialData(std::string_view materialName, int r, int g, int b, double a, bool isDoubleSided = false)
       : m_materialName(materialName), m_r(r), m_g(g), m_b(b), m_a(a), m_isDoubleSided(isDoubleSided){};
 
-    GltfMaterialData(std::string_view materialName, const RenderingColor& color, bool isDoubleSided = false);
+    static std::vector<GltfMaterialData> buildMaterials(const model::Model& model);
+    //@}
+
+    GltfMaterialData(std::string_view materialName, const model::RenderingColor& color, bool isDoubleSided = false);
 
     std::string materialName() const;
     void setMaterialName(const std::string& materialName);
@@ -73,8 +84,6 @@ namespace model {
     bool isDoubleSided() const;
     void setIsDoubleSided(bool isDoubleSided);
 
-    static std::vector<GltfMaterialData> buildMaterials(const Model& model);
-
    protected:
     // Creates a GLTF material on the basis of raw Material Values
     // i.e, R, G, B, A & isDoubleSided
@@ -90,6 +99,8 @@ namespace model {
     bool m_isDoubleSided = false;
   };
 
-}  // namespace model
+  using GltfMaterialDataVector = std::vector<GltfMaterialData>;
+
+}  // namespace gltf
 }  // namespace openstudio
-#endif  // MODEL_GLTFMATERIALDATA_HPP
+#endif  // GLTF_GLTFMATERIALDATA_HPP

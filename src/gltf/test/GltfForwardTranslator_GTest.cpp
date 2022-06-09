@@ -28,44 +28,48 @@
 ***********************************************************************************************************************/
 
 #include <gtest/gtest.h>
-#include "ModelFixture.hpp"
+#include "GltfFixture.hpp"
+
 #include "../GltfForwardTranslator.hpp"
 #include "../GltfMetaData.hpp"
 #include "../GltfUserData.hpp"
 #include "../GltfModelObjectMetaData.hpp"
 #include "../GltfUtils.hpp"
-#include "../Model.hpp"
-#include "../Space.hpp"
-#include "../Space_Impl.hpp"
-#include "../Surface.hpp"
-#include "../Surface_Impl.hpp"
-#include "../SubSurface.hpp"
-#include "../SubSurface_Impl.hpp"
-#include "../ConstructionAirBoundary.hpp"
-#include "../Construction.hpp"
 
-#include "../PlanarSurface.hpp"
-#include "../PlanarSurface_Impl.hpp"
-#include "../PlanarSurfaceGroup.hpp"
-#include "../PlanarSurfaceGroup_Impl.hpp"
-#include "../BuildingStory.hpp"
-#include "../BuildingStory_Impl.hpp"
-#include "../BuildingUnit.hpp"
-#include "../BuildingUnit_Impl.hpp"
-#include "../ThermalZone.hpp"
-#include "../ThermalZone_Impl.hpp"
-#include "../AirLoopHVAC.hpp"
-#include "../AirLoopHVAC_Impl.hpp"
-#include "../SpaceType.hpp"
-#include "../SpaceType_Impl.hpp"
-#include "../DefaultConstructionSet.hpp"
-#include "../DefaultConstructionSet_Impl.hpp"
-#include "../Space.hpp"
-#include "../Space_Impl.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
+#include "../../model/Surface.hpp"
+#include "../../model/Surface_Impl.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+#include "../../model/ConstructionAirBoundary.hpp"
+#include "../../model/Construction.hpp"
+
+#include "../../model/PlanarSurface.hpp"
+#include "../../model/PlanarSurface_Impl.hpp"
+#include "../../model/PlanarSurfaceGroup.hpp"
+#include "../../model/PlanarSurfaceGroup_Impl.hpp"
+#include "../../model/BuildingStory.hpp"
+#include "../../model/BuildingStory_Impl.hpp"
+#include "../../model/BuildingUnit.hpp"
+#include "../../model/BuildingUnit_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVAC_Impl.hpp"
+#include "../../model/SpaceType.hpp"
+#include "../../model/SpaceType_Impl.hpp"
+#include "../../model/DefaultConstructionSet.hpp"
+#include "../../model/DefaultConstructionSet_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 
 #include "../../osversion/VersionTranslator.hpp"
 
 #include "../../utilities/core/Json.hpp"
+
+#include <resources.hxx>
 #include <OpenStudio.hxx>
 
 #include <json/json.h>
@@ -73,10 +77,11 @@
 #include <algorithm>
 #include <json/value.h>
 
-using namespace openstudio;
+using namespace openstudio::gltf;
 using namespace openstudio::model;
+using namespace openstudio;
 
-TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel_FullTest) {
+TEST_F(GltfFixture, GltfForwardTranslator_ExampleModel_FullTest) {
   GltfForwardTranslator ft;
 
   Model m = exampleModel();
@@ -459,7 +464,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel_FullTest) {
 // 30 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
+TEST_F(GltfFixture, GltfForwardTranslator_ExampleModel) {
   GltfForwardTranslator ft;
   openstudio::path outputPath;
   openstudio::path inputPath;
@@ -534,7 +539,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_ExampleModel) {
   ASSERT_TRUE(glTFUserData->boundaryMaterialName() == "Boundary_Ground");
 }
 
-TEST_F(ModelFixture, GltfForwardTranslator_ParkUnder_Retail_Office_C2) {
+TEST_F(GltfFixture, GltfForwardTranslator_ParkUnder_Retail_Office_C2) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/ParkUnder_Retail_Office_C2.gltf");
@@ -555,7 +560,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_ParkUnder_Retail_Office_C2) {
 // 750 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_ASHRAECourthouse) {
+TEST_F(GltfFixture, GltfForwardTranslator_ASHRAECourthouse) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/ASHRAECourthouse.gltf");
@@ -576,7 +581,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_ASHRAECourthouse) {
 // 481 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago) {
+TEST_F(GltfFixture, GltfForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.gltf");
@@ -597,7 +602,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSecondarySchoolNew2004_Chicago
 // 443 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
+TEST_F(GltfFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/Sample_DOE-RefBldgHospitalNew2004_Chicago.gltf");
@@ -621,7 +626,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgHospitalNew2004_Chicago) {
 // starting from :
 // ACCESSOR_TOTAL_OFFSET_ALIGNMENT	Accessor's total byteOffset 7162 isn't a multiple of componentType length 4.
 // /accessors/1
-TEST_F(ModelFixture, GltfForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
+TEST_F(GltfFixture, GltfForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/Sample_DOE-RefBldgOutPatientNew2004_Chicago.gltf");
@@ -642,7 +647,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgOutPatientNew2004_Chicago) {
 // 589 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSmallHotelNew2004_Chicago) {
+TEST_F(GltfFixture, GltfForwardTranslator_RefBldgSmallHotelNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/Sample_DOE-RefBldgSmallHotelNew2004_Chicago.gltf");
@@ -663,7 +668,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgSmallHotelNew2004_Chicago) {
 // 21 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_RefBldgFullServiceRestaurantNew2004_Chicago) {
+TEST_F(GltfFixture, GltfForwardTranslator_RefBldgFullServiceRestaurantNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/RefBldgFullServiceRestaurantNew2004_Chicago.gltf");
@@ -684,7 +689,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgFullServiceRestaurantNew2004_C
 // 208 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeHotelNew2004_Chicago) {
+TEST_F(GltfFixture, GltfForwardTranslator_RefBldgLargeHotelNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/RefBldgLargeHotelNew2004_Chicago.gltf");
@@ -705,7 +710,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeHotelNew2004_Chicago) {
 // 142 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeOfficeNew2004_Chicago) {
+TEST_F(GltfFixture, GltfForwardTranslator_RefBldgLargeOfficeNew2004_Chicago) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/RefBldgLargeOfficeNew2004_Chicago.gltf");
@@ -726,7 +731,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_RefBldgLargeOfficeNew2004_Chicago) {
 // 80 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_Space_SurfaceMatch_LargeTest) {
+TEST_F(GltfFixture, GltfForwardTranslator_Space_SurfaceMatch_LargeTest) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/Space_SurfaceMatch_LargeTest.gltf");
@@ -747,7 +752,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_Space_SurfaceMatch_LargeTest) {
 // 1515 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_15023_Model12) {
+TEST_F(GltfFixture, GltfForwardTranslator_15023_Model12) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/15023_Model12.gltf");
@@ -768,7 +773,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_15023_Model12) {
 // 21 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_split_level) {
+TEST_F(GltfFixture, GltfForwardTranslator_split_level) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/split_level.gltf");
@@ -789,7 +794,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_split_level) {
 // 24 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_open_to_below) {
+TEST_F(GltfFixture, GltfForwardTranslator_open_to_below) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/open_to_below.gltf");
@@ -801,7 +806,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_open_to_below) {
 }
 
 // Load Test with and without bin file
-TEST_F(ModelFixture, GltfForwardTranslator_LoadTest) {
+TEST_F(GltfFixture, GltfForwardTranslator_LoadTest) {
   GltfForwardTranslator ft;
   openstudio::path inputPath;
   openstudio::path inputNonEmbededPath;
@@ -821,7 +826,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_LoadTest) {
 // 1 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_CreateTriangleGLTFTest) {
+TEST_F(GltfFixture, GltfForwardTranslator_CreateTriangleGLTFTest) {
   GltfForwardTranslator ft;
   openstudio::path output;
   openstudio::path output_2;
@@ -845,7 +850,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_CreateTriangleGLTFTest) {
 // 3915 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_7_7_Windows_Complete) {
+TEST_F(GltfFixture, GltfForwardTranslator_7_7_Windows_Complete) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/7-7_Windows_Complete.gltf");
@@ -858,7 +863,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_7_7_Windows_Complete) {
 
 // VersionTranslator.cpp@590 : Unable to retrieve OpenStudio Version 3.2.2 IDD from the IddFactory."
 // thrown in the test body.
-TEST_F(ModelFixture, GltfForwardTranslator_story_multipliers) {
+TEST_F(GltfFixture, GltfForwardTranslator_story_multipliers) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/story_multipliers.gltf");
@@ -870,7 +875,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_story_multipliers) {
 }
 
 //  Assertion failed: this->is_initialized() | Optional.hpp 1212
-TEST_F(ModelFixture, GltfForwardTranslator_story_space_heights) {
+TEST_F(GltfFixture, GltfForwardTranslator_story_space_heights) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/story_space_heights.gltf");
@@ -891,7 +896,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_story_space_heights) {
 // 227 primitives
 // 0 textures
 // Extensions: None
-TEST_F(ModelFixture, GltfForwardTranslator_floorplan_school) {
+TEST_F(GltfFixture, GltfForwardTranslator_floorplan_school) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/floorplan_school.gltf");
@@ -903,7 +908,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_floorplan_school) {
 }
 
 // Assertion failed: this->is_initialized() | Optional.hpp 1212
-TEST_F(ModelFixture, GltfForwardTranslator_two_stories_pre_intersect) {
+TEST_F(GltfFixture, GltfForwardTranslator_two_stories_pre_intersect) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/two_stories_pre_intersect.gltf");
@@ -915,7 +920,7 @@ TEST_F(ModelFixture, GltfForwardTranslator_two_stories_pre_intersect) {
 }
 
 // Assertion failed: this->is_initialized() | Optinoal.hpp 1212
-TEST_F(ModelFixture, GltfForwardTranslator_TwoStoryOffice_Trane) {
+TEST_F(GltfFixture, GltfForwardTranslator_TwoStoryOffice_Trane) {
   GltfForwardTranslator ft;
   openstudio::path output;
   output = resourcesPath() / toPath("utilities/Geometry/TwoStoryOffice_Trane.gltf");

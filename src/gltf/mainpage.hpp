@@ -1,5 +1,5 @@
 namespace openstudio {
-namespace model {
+namespace gltf {
 
   /** \mainpage OpenStudio Gltf
  *
@@ -60,5 +60,5 @@ namespace model {
  * It dispatches to its supporting classes which are able to the do the same thing.
  **/
 
-}  // namespace model
+}  // namespace gltf
 }  // namespace openstudio

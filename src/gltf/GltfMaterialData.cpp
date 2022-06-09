@@ -30,21 +30,23 @@
 #include "GltfMaterialData.hpp"
 #include "GltfUtils.hpp"
 
-#include "RenderingColor.hpp"
-#include "ConstructionBase.hpp"
-#include "ConstructionBase_Impl.hpp"
-#include "ConstructionAirBoundary.hpp"
-#include "ConstructionAirBoundary_Impl.hpp"
-#include "BuildingStory.hpp"
-#include "BuildingStory_Impl.hpp"
-#include "BuildingUnit.hpp"
-#include "BuildingUnit_Impl.hpp"
-#include "ThermalZone.hpp"
-#include "ThermalZone_Impl.hpp"
-#include "AirLoopHVAC.hpp"
-#include "AirLoopHVAC_Impl.hpp"
-#include "SpaceType.hpp"
-#include "SpaceType_Impl.hpp"
+#include "../model/Model.hpp"
+
+#include "../model/RenderingColor.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/ConstructionAirBoundary.hpp"
+#include "../model/ConstructionAirBoundary_Impl.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/BuildingUnit.hpp"
+#include "../model/BuildingUnit_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
 
 #include <tiny_gltf.h>
 
@@ -53,9 +55,9 @@
 #include <string_view>
 
 namespace openstudio {
-namespace model {
+namespace gltf {
 
-  GltfMaterialData::GltfMaterialData(std::string_view materialName, const RenderingColor& color, bool isDoubleSided)
+  GltfMaterialData::GltfMaterialData(std::string_view materialName, const model::RenderingColor& color, bool isDoubleSided)
     : m_materialName(materialName),
       m_r(color.renderingRedValue()),
       m_g(color.renderingGreenValue()),
@@ -211,7 +213,7 @@ namespace model {
   }};
 
   // Static
-  std::vector<GltfMaterialData> GltfMaterialData::buildMaterials(const Model& model) {
+  std::vector<GltfMaterialData> GltfMaterialData::buildMaterials(const model::Model& model) {
 
     // We start by putting all standard materials: NOTE: "Undefined" will always be the first one
     std::vector<GltfMaterialData> allMaterials(standardGltfMaterialDatas.begin(), standardGltfMaterialDatas.end());
@@ -219,16 +221,16 @@ namespace model {
     std::set<std::string> allMaterialNamesSet;
 
     auto getOrCreateRenderingColor = [&model](auto& object) {
-      boost::optional<RenderingColor> color_ = object.renderingColor();
+      auto color_ = object.renderingColor();
       if (!color_) {
-        color_ = RenderingColor(model);
+        color_ = model::RenderingColor(model);
         // TODO: Uh Oh, taking model as const but mutating objects by adding rendering colors to them...
         object.setRenderingColor(color_.get());
       }
       return color_.get();
     };
 
-    auto getOrCreateMaterial = [&allMaterials, &allMaterialNamesSet](auto& object, const RenderingColor& color) {
+    auto getOrCreateMaterial = [&allMaterials, &allMaterialNamesSet](auto& object, const model::RenderingColor& color) {
       std::string materialName = getObjectGLTFMaterialName(object);
       auto [it, hasInserted] = allMaterialNamesSet.insert(materialName);
       if (hasInserted) {
@@ -243,40 +245,40 @@ namespace model {
     };
 
     // make construction materials
-    for (auto& construction : model.getModelObjects<ConstructionBase>()) {
+    for (auto& construction : model.getModelObjects<model::ConstructionBase>()) {
       // If it's ConstructionAirBoundary, we'll later use the standard material "AirWall"
-      if (!construction.optionalCast<ConstructionAirBoundary>()) {
+      if (!construction.optionalCast<model::ConstructionAirBoundary>()) {
         getOrCreateMaterial(construction, getOrCreateRenderingColor(construction));
       }
     }
 
     // make thermal zone materials
-    for (auto& thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
+    for (auto& thermalZone : model.getConcreteModelObjects<model::ThermalZone>()) {
       getOrCreateMaterial(thermalZone, getOrCreateRenderingColor(thermalZone));
     }
 
     // make space type materials
-    for (auto& spaceType : model.getConcreteModelObjects<SpaceType>()) {
+    for (auto& spaceType : model.getConcreteModelObjects<model::SpaceType>()) {
       getOrCreateMaterial(spaceType, getOrCreateRenderingColor(spaceType));
     }
 
     // make building story materials
-    for (auto& buildingStory : model.getConcreteModelObjects<BuildingStory>()) {
+    for (auto& buildingStory : model.getConcreteModelObjects<model::BuildingStory>()) {
       getOrCreateMaterial(buildingStory, getOrCreateRenderingColor(buildingStory));
     }
 
     // make building unit materials
-    for (auto& buildingUnit : model.getConcreteModelObjects<BuildingUnit>()) {
+    for (auto& buildingUnit : model.getConcreteModelObjects<model::BuildingUnit>()) {
       getOrCreateMaterial(buildingUnit, getOrCreateRenderingColor(buildingUnit));
     }
 
     // make air loop HVAC materials (AirLoopHVAC doesn't have a renderingColor() method)
-    for (auto& airLoopHVAC : model.getConcreteModelObjects<AirLoopHVAC>()) {
-      getOrCreateMaterial(airLoopHVAC, RenderingColor(model));
+    for (auto& airLoopHVAC : model.getConcreteModelObjects<model::AirLoopHVAC>()) {
+      getOrCreateMaterial(airLoopHVAC, model::RenderingColor(model));
     }
 
     return allMaterials;
   }
 
-}  // namespace model
+}  // namespace gltf
 }  // namespace openstudio

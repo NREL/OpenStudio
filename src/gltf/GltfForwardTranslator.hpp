@@ -26,15 +26,15 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
-#ifndef MODEL_GLTFFORWARDTRANSLATOR_HPP
-#define MODEL_GLTFFORWARDTRANSLATOR_HPP
+#ifndef GLTF_GLTFFORWARDTRANSLATOR_HPP
+#define GLTF_GLTFFORWARDTRANSLATOR_HPP
 
-#include "ModelAPI.hpp"
-#include "Model.hpp"
+#include "GltfAPI.hpp"
 
 #include "GltfMetaData.hpp"
 #include "GltfUserData.hpp"
 
+#include "../utilities/core/Path.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
 
@@ -44,10 +44,10 @@ class Model;
 
 namespace openstudio {
 namespace model {
+  class Model;
+}
 
-  class GltfMetaData;
-  class GltfUserData;
-  class GltfModel;
+namespace gltf {
 
   /* GltfForwardTranslator converts an OpenStudio Model to GLTF format. There are two variations of the GLTF format,
     *   a triangulated one which is suitable for rendering with GLTF and non-triangulated one that preserves all vertices in a
@@ -55,16 +55,16 @@ namespace model {
     *
     *   The FloorplanJS in the Utilities/Geometry project converts a FloorspaceJS JSON file to GLTF format, code should be shared between these two classes as much as possible.
     */
-  class MODEL_API GltfForwardTranslator
+  class GLTF_API GltfForwardTranslator
   {
    public:
     GltfForwardTranslator();
 
     //  Convert an OpenStudio Model to Gltf format
-    bool modelToGLTF(const Model& model, const path& outputPath);
-    bool modelToGLTF(const Model& model, std::function<void(double)> updatePercentage, const path& outputpath);
+    bool modelToGLTF(const model::Model& model, const path& outputPath);
+    bool modelToGLTF(const model::Model& model, std::function<void(double)> updatePercentage, const path& outputpath);
 
-    std::string modelToGLTFString(const Model& model);
+    std::string modelToGLTFString(const model::Model& model);
 
     //load minimal gltf
     bool loadGLTF(const path& inputPath, const path& inputNonEmbededpath);
@@ -81,9 +81,9 @@ namespace model {
     std::vector<LogMessage> errors() const;
 
    private:
-    boost::optional<tinygltf::Model> toGltfModel(const Model& model, std::function<void(double)> updatePercentage);
+    boost::optional<tinygltf::Model> toGltfModel(const model::Model& model, std::function<void(double)> updatePercentage);
 
-    REGISTER_LOGGER("openstudio.model.GltfForwardTranslator");
+    REGISTER_LOGGER("openstudio.gltf.GltfForwardTranslator");
 
     StringStreamLogSink m_logSink;
 
@@ -94,7 +94,7 @@ namespace model {
     // std::vector<GltfMaterialData> allMaterials;
   };
 
-}  // namespace model
+}  // namespace gltf
 }  // namespace openstudio
 
-#endif  //MODEL_GLTFFORWARDTRANSLATOR_HPP
+#endif  // GLTF_GLTFFORWARDTRANSLATOR_HPP

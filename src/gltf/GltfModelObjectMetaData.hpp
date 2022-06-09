@@ -26,11 +26,10 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
-#ifndef MODEL_GLTFMODELOBJECTMETADATA_HPP
-#define MODEL_GLTFMODELOBJECTMETADATA_HPP
+#ifndef GLTF_GLTFMODELOBJECTMETADATA_HPP
+#define GLTF_GLTFMODELOBJECTMETADATA_HPP
 
-#include "ModelAPI.hpp"
-#include "Model.hpp"
+#include "GltfAPI.hpp"
 
 #include "../utilities/core/Logger.hpp"
 
@@ -48,6 +47,9 @@ namespace model {
   class ThermalZone;
   class DefaultConstructionSet;
   class Space;
+}  // namespace model
+
+namespace gltf {
 
   class GltfMetaData;
 
@@ -56,20 +58,22 @@ namespace model {
    *  It is capable of storing attributes such as name, iddObjectType, color, handle from ModelObjects:
    *  ThermalZone, SpaceType, AirLoopHVAC, BuildingStory, BuildingUnit, DefaultConstructionSet
    **/
-  class MODEL_API GltfModelObjectMetaData
+  class GLTF_API GltfModelObjectMetaData
   {
    public:
     // Default constructor
     GltfModelObjectMetaData();
 
-    // Interface with ModelObjects
-    explicit GltfModelObjectMetaData(const AirLoopHVAC& airLoopHVAC);
-    explicit GltfModelObjectMetaData(const BuildingUnit& buildingUnit);
-    explicit GltfModelObjectMetaData(const SpaceType& spaceType);
-    explicit GltfModelObjectMetaData(const BuildingStory& buildingStory);
-    explicit GltfModelObjectMetaData(const ThermalZone& thermalZone);
-    explicit GltfModelObjectMetaData(const DefaultConstructionSet& defaultConstructionSet);
-    explicit GltfModelObjectMetaData(const Space& space);
+    /** @name Interface with ModelObjects */
+    //@{
+    explicit GltfModelObjectMetaData(const model::AirLoopHVAC& airLoopHVAC);
+    explicit GltfModelObjectMetaData(const model::BuildingUnit& buildingUnit);
+    explicit GltfModelObjectMetaData(const model::SpaceType& spaceType);
+    explicit GltfModelObjectMetaData(const model::BuildingStory& buildingStory);
+    explicit GltfModelObjectMetaData(const model::ThermalZone& thermalZone);
+    explicit GltfModelObjectMetaData(const model::DefaultConstructionSet& defaultConstructionSet);
+    explicit GltfModelObjectMetaData(const model::Space& space);
+    //@}
 
     std::string color() const;
     void setColor(const std::string& color);
@@ -106,7 +110,7 @@ namespace model {
     friend class GltfMetaData;
 
    private:
-    REGISTER_LOGGER("openstudio.model.GltfModelObjectMetaData");
+    REGISTER_LOGGER("openstudio.gltf.GltfModelObjectMetaData");
 
     std::string m_color;
     std::string m_handle;
@@ -118,7 +122,9 @@ namespace model {
     int m_multiplier = 0;
   };
 
-}  // namespace model
+  using GltfModelObjectMetaDataVector = std::vector<GltfModelObjectMetaData>;
+
+}  // namespace gltf
 }  // namespace openstudio
 
-#endif  //MODEL_GLTFMODELOBJECTMETADATA_HPP
+#endif  // GLTF_GLTFMODELOBJECTMETADATA_HPP

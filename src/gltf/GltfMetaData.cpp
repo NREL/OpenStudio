@@ -28,25 +28,28 @@
 ***********************************************************************************************************************/
 
 #include "GltfMetaData.hpp"
-#include "Building.hpp"
-#include "Building_Impl.hpp"
 
-#include "PlanarSurface.hpp"
-#include "PlanarSurfaceGroup.hpp"
-#include "BuildingStory.hpp"
-#include "BuildingStory_Impl.hpp"
-#include "BuildingUnit.hpp"
-#include "BuildingUnit_Impl.hpp"
-#include "ThermalZone.hpp"
-#include "ThermalZone_Impl.hpp"
-#include "AirLoopHVAC.hpp"
-#include "AirLoopHVAC_Impl.hpp"
-#include "SpaceType.hpp"
-#include "SpaceType_Impl.hpp"
-#include "DefaultConstructionSet.hpp"
-#include "DefaultConstructionSet_Impl.hpp"
-#include "Space.hpp"
-#include "Space_Impl.hpp"
+#include "../model/Model.hpp"
+
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+
+#include "../model/PlanarSurface.hpp"
+#include "../model/PlanarSurfaceGroup.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/BuildingUnit.hpp"
+#include "../model/BuildingUnit_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -56,11 +59,11 @@
 #include <string>
 
 namespace openstudio {
-namespace model {
+namespace gltf {
 
   GltfMetaData::GltfMetaData() = default;
 
-  GltfMetaData::GltfMetaData(const Model& model) {
+  GltfMetaData::GltfMetaData(const model::Model& model) {
 
     // Generator
     setGenerator("OpenStudio");
@@ -71,10 +74,10 @@ namespace model {
     // North Axis
     setNorthAxis(model);
 
-    m_glTFBoundingBox = GltfBoundingBox(model.getModelObjects<PlanarSurfaceGroup>());
+    m_glTFBoundingBox = GltfBoundingBox(model.getModelObjects<model::PlanarSurfaceGroup>());
 
     // Building Story Names
-    auto buildingStories = model.getConcreteModelObjects<BuildingStory>();
+    auto buildingStories = model.getConcreteModelObjects<model::BuildingStory>();
     for (const auto& buildingStory : buildingStories) {
       m_glTFModelObjectMetaDataVector.emplace_back(buildingStory);
       m_buildingStoryNames.emplace_back(buildingStory.nameString());
@@ -86,27 +89,27 @@ namespace model {
       }
     }
 
-    for (const auto& buildingUnit : model.getConcreteModelObjects<BuildingUnit>()) {
+    for (const auto& buildingUnit : model.getConcreteModelObjects<model::BuildingUnit>()) {
       m_glTFModelObjectMetaDataVector.emplace_back(buildingUnit);
       ++m_buildingUnitCount;
     }
 
-    for (const auto& thermalZone : model.getConcreteModelObjects<ThermalZone>()) {
+    for (const auto& thermalZone : model.getConcreteModelObjects<model::ThermalZone>()) {
       m_glTFModelObjectMetaDataVector.emplace_back(thermalZone);
       ++m_thermalZoneCount;
     }
 
-    for (const auto& buildingUnit : model.getConcreteModelObjects<SpaceType>()) {
+    for (const auto& buildingUnit : model.getConcreteModelObjects<model::SpaceType>()) {
       m_glTFModelObjectMetaDataVector.emplace_back(buildingUnit);
       ++m_spaceTypeCount;
     }
 
-    for (const auto& buildingUnit : model.getConcreteModelObjects<DefaultConstructionSet>()) {
+    for (const auto& buildingUnit : model.getConcreteModelObjects<model::DefaultConstructionSet>()) {
       m_glTFModelObjectMetaDataVector.emplace_back(buildingUnit);
       ++m_constructionSetCount;
     }
 
-    for (const auto& buildingUnit : model.getConcreteModelObjects<AirLoopHVAC>()) {
+    for (const auto& buildingUnit : model.getConcreteModelObjects<model::AirLoopHVAC>()) {
       m_glTFModelObjectMetaDataVector.emplace_back(buildingUnit);
       ++m_airLoopCount;
     }
@@ -133,7 +136,7 @@ namespace model {
     m_buildingStoryNames = buildingStoryNames;
   };
 
-  void GltfMetaData::setBuildingStoryNames(const std::vector<BuildingStory>& buildingStories) {
+  void GltfMetaData::setBuildingStoryNames(const std::vector<model::BuildingStory>& buildingStories) {
     m_buildingStoryNames.clear();
     m_buildingStoryCount = 0;
     for (const auto& buildingStory : buildingStories) {
@@ -170,13 +173,11 @@ namespace model {
     m_northAxis = northAxis;
   };
 
-  void GltfMetaData::setNorthAxis(const Model& model) {
-    double northAxisValue = 0.0;
-    boost::optional<Building> building = model.getOptionalUniqueModelObject<Building>();
-    if (building) {
-      northAxisValue = -building->northAxis();
+  void GltfMetaData::setNorthAxis(const model::Model& model) {
+    m_northAxis = 0.0;
+    if (auto building_ = model.getOptionalUniqueModelObject<model::Building>()) {
+      m_northAxis = -building_->northAxis();
     }
-    m_northAxis = northAxisValue;
   }
 
   int GltfMetaData::thermalZoneCount() const {
@@ -416,5 +417,5 @@ namespace model {
     // }
   }
 
-}  // namespace model
+}  // namespace gltf
 }  // namespace openstudio

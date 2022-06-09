@@ -26,11 +26,16 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
-#ifndef MODEL_GLTFUSERDATA_HPP
-#define MODEL_GLTFUSERDATA_HPP
+#ifndef GLTF_GLTFUSERDATA_HPP
+#define GLTF_GLTFUSERDATA_HPP
 
-#include "ModelAPI.hpp"
-#include "Model.hpp"
+#include "GltfAPI.hpp"
+
+#include "../utilities/core/Logger.hpp"
+
+#include <map>
+#include <string>
+#include <vector>
 
 namespace tinygltf {
 class Value;
@@ -40,6 +45,9 @@ namespace openstudio {
 namespace model {
 
   class PlanarSurface;
+}
+
+namespace gltf {
   class GltfForwardTranslator;
 
   // TODO: rename to GltfPlanarSurfaceData!
@@ -47,11 +55,11 @@ namespace model {
    *
    *  It stores attributes such as surfaceType, its construction, the Space and SpaceType and ThermalZone it belongs to, etc.
    **/
-  class MODEL_API GltfUserData
+  class GLTF_API GltfUserData
   {
    public:
     GltfUserData();  // Default constructor (TODO: remove?)
-    GltfUserData(const PlanarSurface& planarSurface);
+    GltfUserData(const model::PlanarSurface& planarSurface);
 
     /** @name Getters & Setters */
     //@{
@@ -199,7 +207,7 @@ namespace model {
     friend class GltfForwardTranslator;
 
    private:
-    REGISTER_LOGGER("openstudio.model.GltfUserData");
+    REGISTER_LOGGER("openstudio.gltf.GltfUserData");
 
     std::string m_handle;
     std::string m_name;
@@ -247,7 +255,7 @@ namespace model {
 
   using GltfUserDataVector = std::vector<GltfUserData>;
 
-}  // namespace model
+}  // namespace gltf
 }  // namespace openstudio
 
-#endif  // MODEL_GLTFUSERDATA_HPP
+#endif  // GLTF_GLTFUSERDATA_HPP

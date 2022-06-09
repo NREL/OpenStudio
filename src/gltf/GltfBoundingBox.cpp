@@ -28,7 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "GltfBoundingBox.hpp"
-#include "PlanarSurfaceGroup.hpp"
+#include "../model/PlanarSurfaceGroup.hpp"
 
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/geometry/Point3d.hpp"
@@ -41,11 +41,11 @@
 #include <string>
 
 namespace openstudio {
-namespace model {
+namespace gltf {
 
   GltfBoundingBox::GltfBoundingBox() = default;
 
-  GltfBoundingBox::GltfBoundingBox(const std::vector<PlanarSurfaceGroup>& planarSurfaceGroups) {
+  GltfBoundingBox::GltfBoundingBox(const std::vector<model::PlanarSurfaceGroup>& planarSurfaceGroups) {
 
     // Bounding Box
     std::map<std::string, tinygltf::Value> boundingBoxObject;
@@ -234,5 +234,5 @@ namespace model {
     }
   }
 
-}  // namespace model
+}  // namespace gltf
 }  // namespace openstudio

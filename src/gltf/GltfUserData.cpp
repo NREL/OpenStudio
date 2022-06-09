@@ -31,30 +31,32 @@
 #include "GltfUserData.hpp"
 #include "GltfUtils.hpp"
 
-#include "PlanarSurface.hpp"
+#include "../model/Model.hpp"
 
-#include "PlanarSurfaceGroup.hpp"
-#include "Surface.hpp"
-#include "Surface_Impl.hpp"
-#include "SubSurface.hpp"
-#include "SubSurface_Impl.hpp"
-#include "ShadingSurface.hpp"
-#include "ShadingSurface_Impl.hpp"
-#include "InteriorPartitionSurface.hpp"
-#include "InteriorPartitionSurface_Impl.hpp"
-#include "DefaultConstructionSet.hpp"
-#include "ShadingSurfaceGroup.hpp"
-#include "InteriorPartitionSurfaceGroup.hpp"
-#include "ConstructionBase.hpp"
-#include "ConstructionAirBoundary.hpp"
-#include "ConstructionAirBoundary_Impl.hpp"
-#include "Construction.hpp"
-#include "Space.hpp"
-#include "ThermalZone.hpp"
-#include "AirLoopHVAC.hpp"
-#include "SpaceType.hpp"
-#include "BuildingStory.hpp"
-#include "BuildingUnit.hpp"
+#include "../model/PlanarSurface.hpp"
+
+#include "../model/PlanarSurfaceGroup.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
+#include "../model/InteriorPartitionSurface.hpp"
+#include "../model/InteriorPartitionSurface_Impl.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/InteriorPartitionSurfaceGroup.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionAirBoundary.hpp"
+#include "../model/ConstructionAirBoundary_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Space.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingUnit.hpp"
 
 #include "../utilities/core/UUID.hpp"
 #include "../utilities/geometry/Transformation.hpp"
@@ -66,7 +68,7 @@
 #include <map>
 
 namespace openstudio {
-namespace model {
+namespace gltf {
 
   GltfUserData::GltfUserData() = default;
 
@@ -105,13 +107,13 @@ namespace model {
     return result;
   }
 
-  GltfUserData::GltfUserData(const PlanarSurface& planarSurface) {
+  GltfUserData::GltfUserData(const model::PlanarSurface& planarSurface) {
     std::string name = planarSurface.nameString();
 
     m_handle = openstudio::removeBraces(planarSurface.handle());
     m_name = planarSurface.nameString();
 
-    if (auto surface = planarSurface.optionalCast<Surface>()) {
+    if (auto surface = planarSurface.optionalCast<model::Surface>()) {
       m_surfaceName = surface->nameString();
       m_surfaceHandle = openstudio::removeBraces(surface->handle());
       m_surfaceType = surface->surfaceType();
@@ -119,12 +121,12 @@ namespace model {
       m_windExposure = surface->windExposure();
       m_outsideBoundaryCondition = surface->outsideBoundaryCondition();
 
-      boost::optional<Surface> adjacentSurface = surface->adjacentSurface();
+      boost::optional<model::Surface> adjacentSurface = surface->adjacentSurface();
       if (adjacentSurface) {
         m_outsideBoundaryConditionObjectName = adjacentSurface->nameString();
         m_outsideBoundaryConditionObjectHandle = openstudio::removeBraces(adjacentSurface->handle());
       }
-    } else if (auto shadingSurface = planarSurface.optionalCast<ShadingSurface>()) {
+    } else if (auto shadingSurface = planarSurface.optionalCast<model::ShadingSurface>()) {
 
       m_shadingHandle = openstudio::removeBraces(shadingSurface->handle());
       m_shadingName = shadingSurface->nameString();
@@ -140,7 +142,7 @@ namespace model {
       // m_outsideBoundaryCondition.clear();
       // m_outsideBoundaryConditionObjectName.clear();
       // m_outsideBoundaryConditionObjectHandle.clear();
-    } else if (auto interiorPartitionSurface = planarSurface.optionalCast<InteriorPartitionSurface>()) {
+    } else if (auto interiorPartitionSurface = planarSurface.optionalCast<model::InteriorPartitionSurface>()) {
       m_surfaceType = "InteriorPartitionSurface";
       m_sunExposure = "NoSun";
       m_windExposure = "NoWind";
@@ -149,12 +151,12 @@ namespace model {
       // m_outsideBoundaryConditionObjectHandle.clear();
     }
 
-    else if (auto subSurface = planarSurface.optionalCast<SubSurface>()) {
+    else if (auto subSurface = planarSurface.optionalCast<model::SubSurface>()) {
       m_subSurfaceHandle = openstudio::removeBraces(subSurface->handle());
       m_subSurfaceName = subSurface->nameString();
       m_surfaceType = subSurface->subSurfaceType();
 
-      boost::optional<Surface> parentSurface = subSurface->surface();
+      boost::optional<model::Surface> parentSurface = subSurface->surface();
       if (parentSurface) {
         m_outsideBoundaryCondition = parentSurface->outsideBoundaryCondition();
         m_sunExposure = parentSurface->sunExposure();
@@ -163,21 +165,21 @@ namespace model {
         m_surfaceHandle = openstudio::removeBraces(parentSurface->handle());
       }
 
-      boost::optional<SubSurface> adjacentSubSurface = subSurface->adjacentSubSurface();
+      boost::optional<model::SubSurface> adjacentSubSurface = subSurface->adjacentSubSurface();
       if (adjacentSubSurface) {
         m_outsideBoundaryConditionObjectName = adjacentSubSurface->nameString();
         m_outsideBoundaryConditionObjectHandle = openstudio::removeBraces(adjacentSubSurface->handle());
       }
     }
 
-    if (boost::optional<ConstructionBase> construction = planarSurface.construction()) {
+    if (boost::optional<model::ConstructionBase> construction = planarSurface.construction()) {
 
       m_constructionSetHandle = openstudio::removeBraces(construction->handle());
       m_constructionName = construction->nameString();
       // If this is a ConstructionAirBoundary, then set to the standard material "AirWall"
-      if (construction->optionalCast<ConstructionAirBoundary>()) {
+      if (construction->optionalCast<model::ConstructionAirBoundary>()) {
         m_constructionMaterialName = "AirWall";
-      } else if (construction->iddObjectType() == Construction::iddObjectType()) {
+      } else if (construction->iddObjectType() == model::Construction::iddObjectType()) {
         m_constructionMaterialName = "Construction_" + construction->nameString();
       } else {
         OS_ASSERT(false);  // Shouldn't happen
@@ -192,7 +194,7 @@ namespace model {
         m_thermalZoneHandle = openstudio::removeBraces(thermalZone->handle());
         m_thermalZoneName = thermalZone->nameString();
         m_thermalZoneMaterialName = "ThermalZone_" + thermalZone->nameString();
-        std::vector<AirLoopHVAC> airLoopHVACs = thermalZone->airLoopHVACs();
+        std::vector<model::AirLoopHVAC> airLoopHVACs = thermalZone->airLoopHVACs();
         int count = 0;
         for (const auto& airLoopHVAC : thermalZone->airLoopHVACs()) {
           m_airLoopHVACHandles.emplace_back(openstudio::removeBraces(airLoopHVAC.handle()));
@@ -230,14 +232,14 @@ namespace model {
     if (!m_outsideBoundaryConditionObjectHandle.empty()) {
 
       Transformation buildingTransformation;
-      if (boost::optional<PlanarSurfaceGroup> planarSurfaceGroup_ = planarSurface.planarSurfaceGroup()) {
+      if (boost::optional<model::PlanarSurfaceGroup> planarSurfaceGroup_ = planarSurface.planarSurfaceGroup()) {
         buildingTransformation = planarSurfaceGroup_->buildingTransformation();
       }
       // get the vertices
       Point3dVector vertices = planarSurface.vertices();
 
       auto adjacentHandle = toUUID(m_outsideBoundaryConditionObjectHandle);
-      auto adjacentPlanarSurface = planarSurface.model().getModelObject<PlanarSurface>(adjacentHandle);
+      auto adjacentPlanarSurface = planarSurface.model().getModelObject<model::PlanarSurface>(adjacentHandle);
       OS_ASSERT(adjacentPlanarSurface);
 
       Transformation otherBuildingTransformation;
@@ -1090,5 +1092,5 @@ namespace model {
     }
   }
 
-}  // namespace model
+}  // namespace gltf
 }  // namespace openstudio

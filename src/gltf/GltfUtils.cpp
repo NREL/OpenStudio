@@ -28,7 +28,8 @@
 ***********************************************************************************************************************/
 
 #include "GltfUtils.hpp"
-#include "ModelObject.hpp"
+
+#include "../model/ModelObject.hpp"
 
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/geometry/Point3d.hpp"
@@ -41,8 +42,8 @@
 #include <vector>
 
 namespace openstudio {
-//class GltfMetaDta;
-namespace model {
+
+namespace gltf {
 
   // Get Bytes from a value
   // typeparam name :"T"
@@ -254,7 +255,7 @@ namespace model {
   // Gets GLTF Material Name on the basis of Model Object
   // param : object
   // returns : name of GLTF material Name
-  std::string getObjectGLTFMaterialName(const ModelObject& object) {
+  std::string getObjectGLTFMaterialName(const model::ModelObject& object) {
     return getObjectGLTFMaterialName(object.iddObjectType().valueDescription(), object.nameString());
   }
 
@@ -447,5 +448,5 @@ namespace model {
     return ret;
   }
 
-}  // namespace model
+}  // namespace gltf
 }  // namespace openstudio

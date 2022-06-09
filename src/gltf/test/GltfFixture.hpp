@@ -26,64 +26,36 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
-#ifndef GLTF_GLTFUTILS_HPP
-#define GLTF_GLTFUTILS_HPP
 
-#include "GltfAPI.hpp"
+#ifndef GLTF_TEST_GLTFFIXTURE_HPP
+#define GLTF_TEST_GLTFFIXTURE_HPP
 
-#include "../utilities/core/Path.hpp"
+#include <gtest/gtest.h>
 
-#include <string>
-#include <vector>
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
 
-namespace tinygltf {
-class Accessor;
-}
+#include <boost/optional.hpp>
 
-namespace openstudio {
+class GltfFixture : public ::testing::Test
+{
+ protected:
+  /// initialize for each test
+  virtual void SetUp() override;
 
-class Point3d;
-class Vector3d;
+  /// tear down after each test
+  virtual void TearDown() override;
 
-namespace model {
-  class ModelObject;
-}
+  /// initialize static members
+  static void SetUpTestSuite();
 
-namespace gltf {
+  /// tear down static members
+  static void TearDownTestSuite();
 
-  // For Indices of Indices, Coordinates & Normal buffers against each Components
-  struct ShapeComponentIds
-  {
-    explicit ShapeComponentIds(const std::vector<size_t>& faceIndices, const std::vector<Point3d>& allVertices,
-                               const std::vector<Vector3d>& normalVectors, std::vector<unsigned char>& indicesBuffer,
-                               std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors);
+  REGISTER_LOGGER("GltfFixture");
 
-    int indicesAccessorId;
-    int verticesAccessorId;
-    int normalsAccessorId;
+  // static variables
+  static boost::optional<openstudio::FileLogSink> logFile;
+};
 
-   private:
-    // int addIndices(const std::vector<size_t>& faceIndices, std::vector<unsigned char>& indicesBuffer, std::vector<tinygltf::Accessor>& accessors);
-    // int addCoordinates(const std::vector<Point3d>& allVertices, std::vector<unsigned char>& coordinatesBuffer,
-    //                    std::vector<tinygltf::Accessor>& accessors);
-    // int addNormals(const std::vector<Vector3d>& normalVectors, std::vector<unsigned char>& coordinatesBuffer,
-    //                std::vector<tinygltf::Accessor>& accessors);
-    // int createBuffers(std::vector<float>& values, std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors);
-  };
-
-  // Gets GLTF Material name on the basis of idd Object Type and Name
-  GLTF_API std::string getObjectGLTFMaterialName(const std::string& iddObjectType, const std::string& name);
-
-  // Gets GLTF Material Name on the basis of Model Object
-  GLTF_API std::string getObjectGLTFMaterialName(const model::ModelObject& object);
-
-  // Export a Minimal GLTF file (Triangle with 3 Points) using raw buffer data.
-  GLTF_API bool createTriangleGLTF(const path& outputPath);
-
-  // Export a Minimal GLTF file (Triangle with 3 Points) using generated raw buffer data from Point3DVector
-  GLTF_API bool createTriangleGLTFFromPoint3DVector(const path& outputPath);
-
-}  // namespace gltf
-}  // namespace openstudio
-
-#endif  // GLTF_GLTFUTILS_HPP
+#endif  // GLTF_TEST_GLTFFIXTURE_HPP

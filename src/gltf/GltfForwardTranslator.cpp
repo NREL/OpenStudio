@@ -35,41 +35,43 @@
 #include "GltfBoundingBox.hpp"
 #include "GltfMaterialData.hpp"
 
-#include "RenderingColor.hpp"
-#include "ConstructionBase.hpp"
-#include "ConstructionBase_Impl.hpp"
-#include "ConstructionAirBoundary.hpp"
-#include "ConstructionAirBoundary_Impl.hpp"
-#include "AirLoopHVAC.hpp"
-#include "AirLoopHVAC_Impl.hpp"
-#include "ThermalZone.hpp"
-#include "ThermalZone_Impl.hpp"
-#include "SpaceType.hpp"
-#include "SpaceType_Impl.hpp"
-#include "Building.hpp"
-#include "Building_Impl.hpp"
-#include "BuildingStory.hpp"
-#include "BuildingStory_Impl.hpp"
-#include "BuildingUnit.hpp"
-#include "BuildingUnit_Impl.hpp"
-#include "Surface.hpp"
-#include "Surface_Impl.hpp"
-#include "SubSurface.hpp"
-#include "SubSurface_Impl.hpp"
-#include "ShadingSurface.hpp"
-#include "ShadingSurface_Impl.hpp"
-#include "InteriorPartitionSurface.hpp"
-#include "InteriorPartitionSurface_Impl.hpp"
-#include "PlanarSurfaceGroup.hpp"
-#include "PlanarSurfaceGroup_Impl.hpp"
-#include "PlanarSurface.hpp"
-#include "PlanarSurface_Impl.hpp"
-#include "Space.hpp"
-#include "Space_Impl.hpp"
-#include "DefaultConstructionSet.hpp"
-#include "DefaultConstructionSet_Impl.hpp"
-#include "ShadingSurfaceGroup.hpp"
-#include "InteriorPartitionSurfaceGroup.hpp"
+#include "../model/Model.hpp"
+
+#include "../model/RenderingColor.hpp"
+#include "../model/ConstructionBase.hpp"
+#include "../model/ConstructionBase_Impl.hpp"
+#include "../model/ConstructionAirBoundary.hpp"
+#include "../model/ConstructionAirBoundary_Impl.hpp"
+#include "../model/AirLoopHVAC.hpp"
+#include "../model/AirLoopHVAC_Impl.hpp"
+#include "../model/ThermalZone.hpp"
+#include "../model/ThermalZone_Impl.hpp"
+#include "../model/SpaceType.hpp"
+#include "../model/SpaceType_Impl.hpp"
+#include "../model/Building.hpp"
+#include "../model/Building_Impl.hpp"
+#include "../model/BuildingStory.hpp"
+#include "../model/BuildingStory_Impl.hpp"
+#include "../model/BuildingUnit.hpp"
+#include "../model/BuildingUnit_Impl.hpp"
+#include "../model/Surface.hpp"
+#include "../model/Surface_Impl.hpp"
+#include "../model/SubSurface.hpp"
+#include "../model/SubSurface_Impl.hpp"
+#include "../model/ShadingSurface.hpp"
+#include "../model/ShadingSurface_Impl.hpp"
+#include "../model/InteriorPartitionSurface.hpp"
+#include "../model/InteriorPartitionSurface_Impl.hpp"
+#include "../model/PlanarSurfaceGroup.hpp"
+#include "../model/PlanarSurfaceGroup_Impl.hpp"
+#include "../model/PlanarSurface.hpp"
+#include "../model/PlanarSurface_Impl.hpp"
+#include "../model/Space.hpp"
+#include "../model/Space_Impl.hpp"
+#include "../model/DefaultConstructionSet.hpp"
+#include "../model/DefaultConstructionSet_Impl.hpp"
+#include "../model/ShadingSurfaceGroup.hpp"
+#include "../model/InteriorPartitionSurfaceGroup.hpp"
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Compare.hpp"
@@ -92,7 +94,7 @@
 #include <type_traits>
 
 namespace openstudio {
-namespace model {
+namespace gltf {
 
   GltfForwardTranslator::GltfForwardTranslator() {
     m_logSink.setLogLevel(Warn);
@@ -150,9 +152,9 @@ namespace model {
   }
 
   template <typename T>
-  std::vector<T> getObjectsAndSort(const Model& model) {
+  std::vector<T> getObjectsAndSort(const model::Model& model) {
     std::vector<T> objects;
-    if constexpr (std::is_same_v<T, PlanarSurface> || std::is_same_v<T, PlanarSurfaceGroup>) {
+    if constexpr (std::is_same_v<T, model::PlanarSurface> || std::is_same_v<T, model::PlanarSurfaceGroup>) {
       objects = model.getModelObjects<T>();
     } else {
       objects = model.getConcreteModelObjects<T>();
@@ -161,7 +163,7 @@ namespace model {
     return objects;
   }
 
-  boost::optional<tinygltf::Model> GltfForwardTranslator::toGltfModel(const Model& model, std::function<void(double)> updatePercentage) {
+  boost::optional<tinygltf::Model> GltfForwardTranslator::toGltfModel(const model::Model& model, std::function<void(double)> updatePercentage) {
     // MAIN PIPELINE TO TRANSLATE OPENSTUDIO MODEL -> GLTF MODEL
 
     bool triangulateSurfaces = true;  //we're always triangulating the surfaces to get the best possible output.
@@ -229,14 +231,14 @@ namespace model {
 
     // get number of things to translate
     // make it deterministic by sorting!
-    auto planarSurfaces = getObjectsAndSort<PlanarSurface>(model);
-    auto planarSurfaceGroups = getObjectsAndSort<PlanarSurfaceGroup>(model);
-    auto buildingStories = getObjectsAndSort<BuildingStory>(model);
-    auto buildingUnits = getObjectsAndSort<BuildingUnit>(model);
-    auto thermalZones = getObjectsAndSort<ThermalZone>(model);
-    auto airLoopHVACs = getObjectsAndSort<AirLoopHVAC>(model);
-    auto spaceTypes = getObjectsAndSort<SpaceType>(model);
-    auto defaultConstructionSets = getObjectsAndSort<DefaultConstructionSet>(model);
+    auto planarSurfaces = getObjectsAndSort<model::PlanarSurface>(model);
+    auto planarSurfaceGroups = getObjectsAndSort<model::PlanarSurfaceGroup>(model);
+    auto buildingStories = getObjectsAndSort<model::BuildingStory>(model);
+    auto buildingUnits = getObjectsAndSort<model::BuildingUnit>(model);
+    auto thermalZones = getObjectsAndSort<model::ThermalZone>(model);
+    auto airLoopHVACs = getObjectsAndSort<model::AirLoopHVAC>(model);
+    auto spaceTypes = getObjectsAndSort<model::SpaceType>(model);
+    auto defaultConstructionSets = getObjectsAndSort<model::DefaultConstructionSet>(model);
     double n = 0;
 
     size_t N = planarSurfaces.size() + planarSurfaceGroups.size() + buildingStories.size() + buildingUnits.size() + thermalZones.size()
@@ -269,7 +271,7 @@ namespace model {
 
       // Now the geometry
       Transformation buildingTransformation;
-      if (boost::optional<PlanarSurfaceGroup> planarSurfaceGroup_ = planarSurface.planarSurfaceGroup()) {
+      if (boost::optional<model::PlanarSurfaceGroup> planarSurfaceGroup_ = planarSurface.planarSurfaceGroup()) {
         buildingTransformation = planarSurfaceGroup_->buildingTransformation();
       }
       // get the vertices
@@ -314,8 +316,8 @@ namespace model {
 
       // get vertices of all sub surfaces
       Point3dVectorVector faceSubVertices;
-      if (boost::optional<Surface> surface = planarSurface.optionalCast<Surface>()) {
-        for (const auto& subSurface : surface->subSurfaces()) {
+      if (auto surface_ = planarSurface.optionalCast<model::Surface>()) {
+        for (const auto& subSurface : surface_->subSurfaces()) {
           faceSubVertices.push_back(reverse(tInv * subSurface.vertices()));
         }
       }
@@ -404,7 +406,7 @@ namespace model {
     return gltfModel;
   }
 
-  std::string GltfForwardTranslator::modelToGLTFString(const Model& model) {
+  std::string GltfForwardTranslator::modelToGLTFString(const model::Model& model) {
     boost::optional<tinygltf::Model> gltfModel_ = toGltfModel(model, [](double percentage) {});
     if (!gltfModel_) {
       LOG(Error, "Failed to prepare GLTF model");
@@ -431,12 +433,12 @@ namespace model {
 
   // Exports a gltf against a Model
   // returns : exports a GLTF file against a Model
-  bool GltfForwardTranslator::modelToGLTF(const Model& model, const path& outputPath) {
+  bool GltfForwardTranslator::modelToGLTF(const model::Model& model, const path& outputPath) {
     return modelToGLTF(
       model, [](double percentage) {}, outputPath);
   }
 
-  bool GltfForwardTranslator::modelToGLTF(const Model& model, std::function<void(double)> updatePercentage, const path& outputPath) {
+  bool GltfForwardTranslator::modelToGLTF(const model::Model& model, std::function<void(double)> updatePercentage, const path& outputPath) {
 
     boost::optional<tinygltf::Model> gltfModel_ = toGltfModel(model, [](double percentage) {});
     if (!gltfModel_) {
@@ -557,5 +559,5 @@ namespace model {
     return m_gltfMetaData;
   }
 
-}  // namespace model
+}  // namespace gltf
 }  // namespace openstudio

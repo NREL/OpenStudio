@@ -26,11 +26,10 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
-#ifndef MODEL_GLTFMETADATA_HPP
-#define MODEL_GLTFMETADATA_HPP
+#ifndef GLTF_GLTFMETADATA_HPP
+#define GLTF_GLTFMETADATA_HPP
 
-#include "ModelAPI.hpp"
-#include "Model.hpp"
+#include "GltfAPI.hpp"
 
 #include "GltfModelObjectMetaData.hpp"
 #include "GltfBoundingBox.hpp"
@@ -43,19 +42,21 @@ class Value;
 
 namespace openstudio {
 namespace model {
-
-  class GltfMetaData;
-
+  class Model;
   class PlanarSurfaceGroup;
   class BuildingStory;
 
+}  // namespace model
+
+namespace gltf {
+
   /** GltfMetadata is an Interface between an OpenStudio Model and a glTF Scene's `extras` **/
-  class MODEL_API GltfMetaData
+  class GLTF_API GltfMetaData
   {
    public:
     GltfMetaData();  // default ctor
     // Interface with the Model
-    GltfMetaData(const Model& model);
+    GltfMetaData(const model::Model& model);
 
     std::vector<GltfModelObjectMetaData> glTFModelObjectMetaDataVector() const;
     void setGlTFModelObjectMetaDataVector(const std::vector<GltfModelObjectMetaData>& glTFModelObjectMetaDataVector);
@@ -66,7 +67,7 @@ namespace model {
     std::vector<std::string> buildingStoryNames() const;
     void setBuildingStoryNames(const std::vector<std::string>& buildingStoryNames);
     // Convenience function. TODO: keep?
-    void setBuildingStoryNames(const std::vector<BuildingStory>& buildingStories);
+    void setBuildingStoryNames(const std::vector<model::BuildingStory>& buildingStories);
 
     std::string generator() const;
     void setGenerator(const std::string& generator);
@@ -79,7 +80,7 @@ namespace model {
 
     double northAxis() const;
     void setNorthAxis(double northAxis);
-    void setNorthAxis(const Model& model);
+    void setNorthAxis(const model::Model& model);
 
     // Counting
     // TODO: Remove setters
@@ -107,7 +108,7 @@ namespace model {
     friend class GltfForwardTranslator;
 
    private:
-    REGISTER_LOGGER("openstudio.model.GltfMetaData");
+    REGISTER_LOGGER("openstudio.gltf.GltfMetaData");
 
     std::vector<GltfModelObjectMetaData> m_glTFModelObjectMetaDataVector;
     GltfBoundingBox m_glTFBoundingBox;
@@ -124,7 +125,7 @@ namespace model {
     int m_airLoopCount = 0;
     int m_buildingUnitCount = 0;
   };
-}  // namespace model
+}  // namespace gltf
 }  // namespace openstudio
 
-#endif  //MODEL_GLTFMETADATA_HPP
+#endif  //GLTF_GLTFMETADATA_HPP
