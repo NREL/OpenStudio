@@ -501,14 +501,17 @@ TEST_F(ModelFixture, Component_DuplicateUniqueModelObjects) {
   }
 
   {
-    // insert component with SiteWaterMainsTemperature object into model with SiteWaterMainsTemperature object
+    // insert component with SiteWaterMainsTemperature object into model with SiteWaterMainsTemperature object, check merged fields
     Model model;
     SiteWaterMainsTemperature siteWaterMainsTemperature1 = model.getUniqueModelObject<SiteWaterMainsTemperature>();
     ASSERT_EQ(1u, model.numObjects());
+    EXPECT_EQ("CorrelationFromWeatherFile", siteWaterMainsTemperature1.calculationMethod());
 
     Model model2;
     SiteWaterMainsTemperature siteWaterMainsTemperature2 = model2.getUniqueModelObject<SiteWaterMainsTemperature>();
     ASSERT_EQ(1u, model2.numObjects());
+    EXPECT_TRUE(siteWaterMainsTemperature2.setCalculationMethod("Schedule"));
+    EXPECT_EQ("Schedule", siteWaterMainsTemperature2.calculationMethod());
 
     // create component
     Component siteWaterMainsTemperature2Component = siteWaterMainsTemperature2.createComponent();
@@ -529,6 +532,7 @@ TEST_F(ModelFixture, Component_DuplicateUniqueModelObjects) {
     EXPECT_EQ(2u, model.numObjects());
     EXPECT_NE(siteWaterMainsTemperature1.handle(), model.getUniqueModelObject<SiteWaterMainsTemperature>().handle());  // removed
     EXPECT_NE(siteWaterMainsTemperature2.handle(), model.getUniqueModelObject<SiteWaterMainsTemperature>().handle());  // cloned
+    EXPECT_EQ("Schedule", model.getUniqueModelObject<SiteWaterMainsTemperature>().calculationMethod());
   }
 
   {
@@ -546,6 +550,10 @@ TEST_F(ModelFixture, Component_DuplicateUniqueModelObjects) {
 
     // create component
     Component building2Component = building2.createComponent();
+    EXPECT_EQ(1u, building2Component.componentData().numComponentObjects());
+    EXPECT_EQ(1u, model2.numObjects());
+
+    // insert component
     OptionalComponentData ocd = model.insertComponent(building2Component);
     ASSERT_TRUE(ocd);
     EXPECT_NE(building2Component.componentData().handle(), ocd->handle());
