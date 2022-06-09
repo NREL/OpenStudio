@@ -51,26 +51,6 @@ namespace model {
 
 namespace gltf {
 
-  // For Indices of Indices, Coordinates & Normal buffers against each Components
-  struct ShapeComponentIds
-  {
-    explicit ShapeComponentIds(const std::vector<size_t>& faceIndices, const std::vector<Point3d>& allVertices,
-                               const std::vector<Vector3d>& normalVectors, std::vector<unsigned char>& indicesBuffer,
-                               std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors);
-
-    int indicesAccessorId;
-    int verticesAccessorId;
-    int normalsAccessorId;
-
-   private:
-    // int addIndices(const std::vector<size_t>& faceIndices, std::vector<unsigned char>& indicesBuffer, std::vector<tinygltf::Accessor>& accessors);
-    // int addCoordinates(const std::vector<Point3d>& allVertices, std::vector<unsigned char>& coordinatesBuffer,
-    //                    std::vector<tinygltf::Accessor>& accessors);
-    // int addNormals(const std::vector<Vector3d>& normalVectors, std::vector<unsigned char>& coordinatesBuffer,
-    //                std::vector<tinygltf::Accessor>& accessors);
-    // int createBuffers(std::vector<float>& values, std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors);
-  };
-
   // Gets GLTF Material name on the basis of idd Object Type and Name
   GLTF_API std::string getObjectGLTFMaterialName(const std::string& iddObjectType, const std::string& name);
 
@@ -82,6 +62,28 @@ namespace gltf {
 
   // Export a Minimal GLTF file (Triangle with 3 Points) using generated raw buffer data from Point3DVector
   GLTF_API bool createTriangleGLTFFromPoint3DVector(const path& outputPath);
+
+  namespace detail {
+    // For Indices of Indices, Coordinates & Normal buffers against each Components
+    struct ShapeComponentIds
+    {
+      explicit ShapeComponentIds(const std::vector<size_t>& faceIndices, const std::vector<Point3d>& allVertices,
+                                 const std::vector<Vector3d>& normalVectors, std::vector<unsigned char>& indicesBuffer,
+                                 std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors);
+
+      int indicesAccessorId;
+      int verticesAccessorId;
+      int normalsAccessorId;
+
+     private:
+      // int addIndices(const std::vector<size_t>& faceIndices, std::vector<unsigned char>& indicesBuffer, std::vector<tinygltf::Accessor>& accessors);
+      // int addCoordinates(const std::vector<Point3d>& allVertices, std::vector<unsigned char>& coordinatesBuffer,
+      //                    std::vector<tinygltf::Accessor>& accessors);
+      // int addNormals(const std::vector<Vector3d>& normalVectors, std::vector<unsigned char>& coordinatesBuffer,
+      //                std::vector<tinygltf::Accessor>& accessors);
+      // int createBuffers(std::vector<float>& values, std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors);
+    };
+  }  // namespace detail
 
 }  // namespace gltf
 }  // namespace openstudio

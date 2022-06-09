@@ -349,7 +349,7 @@ namespace gltf {
       Vector3d outwardNormal = planarSurface.outwardNormal();
       Vector3dVector normalVectors(allVertices.size(), outwardNormal);
 
-      ShapeComponentIds shapeComponentIds(faceIndices, allVertices, normalVectors, indicesBuffer, coordinatesBuffer, accessors);
+      detail::ShapeComponentIds shapeComponentIds(faceIndices, allVertices, normalVectors, indicesBuffer, coordinatesBuffer, accessors);
 
       tinygltf::Primitive& thisPrimitive = targetMesh.primitives.emplace_back();
       thisPrimitive.attributes["NORMAL"] = shapeComponentIds.normalsAccessorId;
