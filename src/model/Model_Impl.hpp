@@ -34,12 +34,44 @@
 #include "Building.hpp"
 #include "FoundationKivaSettings.hpp"
 #include "OutputControlFiles.hpp"
+#include "OutputControlReportingTolerances.hpp"
+#include "OutputDiagnostics.hpp"
+#include "OutputDebuggingData.hpp"
+#include "OutputJSON.hpp"
+#include "OutputEnergyManagementSystem.hpp"
 #include "OutputTableSummaryReports.hpp"
-#include "LifeCycleCostParameters.hpp"
-#include "RunPeriod.hpp"
-#include "YearDescription.hpp"
-#include "WeatherFile.hpp"
 #include "PerformancePrecisionTradeoffs.hpp"
+#include "LifeCycleCostParameters.hpp"
+#include "SizingParameters.hpp"
+#include "RadianceParameters.hpp"
+#include "RunPeriod.hpp"
+#include "RunPeriodControlDaylightSavingTime.hpp"
+#include "YearDescription.hpp"
+#include "Site.hpp"
+#include "SiteGroundReflectance.hpp"
+#include "SiteWaterMainsTemperature.hpp"
+#include "SiteGroundTemperatureBuildingSurface.hpp"
+#include "SiteGroundTemperatureFCfactorMethod.hpp"
+#include "SiteGroundTemperatureDeep.hpp"
+#include "SiteGroundTemperatureShallow.hpp"
+#include "Facility.hpp"
+#include "WeatherFile.hpp"
+#include "Version.hpp"
+#include "SimulationControl.hpp"
+#include "LightingSimulationControl.hpp"
+#include "AirflowNetworkSimulationControl.hpp"
+#include "InsideSurfaceConvectionAlgorithm.hpp"
+#include "OutsideSurfaceConvectionAlgorithm.hpp"
+#include "HeatBalanceAlgorithm.hpp"
+#include "ZoneAirHeatBalanceAlgorithm.hpp"
+#include "ZoneAirMassFlowConservation.hpp"
+#include "ZoneCapacitanceMultiplierResearchSpecial.hpp"
+#include "ConvergenceLimits.hpp"
+#include "ShadowCalculation.hpp"
+#include "Timestep.hpp"
+#include "ClimateZones.hpp"
+#include "EnvironmentalImpactFactors.hpp"
+#include "ExternalInterface.hpp"
 
 #include "../nano/nano_signal_slot.hpp"  // Signal-Slot replacement
 
@@ -149,6 +181,26 @@ namespace model {
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlFiles>(). */
       boost::optional<OutputControlFiles> outputControlFiles() const;
 
+      /** Get the OutputControlReportingTolerances object if there is one, this implementation uses a cached reference to the OutputControlReportingTolerances
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlReportingTolerances>(). */
+      boost::optional<OutputControlReportingTolerances> outputControlReportingTolerances() const;
+
+      /** Get the OutputDiagnostics object if there is one, this implementation uses a cached reference to the OutputDiagnostics
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputDiagnostics>(). */
+      boost::optional<OutputDiagnostics> outputDiagnostics() const;
+
+      /** Get the OutputDebuggingData object if there is one, this implementation uses a cached reference to the OutputDebuggingData
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputDebuggingData>(). */
+      boost::optional<OutputDebuggingData> outputDebuggingData() const;
+
+      /** Get the OutputJSON object if there is one, this implementation uses a cached reference to the OutputJSON
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputJSON>(). */
+      boost::optional<OutputJSON> outputJSON() const;
+
+      /** Get the OutputEnergyManagementSystem object if there is one, this implementation uses a cached reference to the OutputEnergyManagementSystem
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlFiles>(). */
+      boost::optional<OutputEnergyManagementSystem> outputEnergyManagementSystem() const;
+
       /** Get the OutputTableSummaryReports object if there is one, this implementation uses a cached reference to the OutputTableSummaryReports
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputTableSummaryReports>(). */
       boost::optional<OutputTableSummaryReports> outputTableSummaryReports() const;
@@ -161,13 +213,125 @@ namespace model {
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<LifeCycleCostParameters>(). */
       boost::optional<LifeCycleCostParameters> lifeCycleCostParameters() const;
 
+      /** Get the SizingParameters object if there is one, this implementation uses a cached reference to the SizingParameters
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<SizingParameters>(). */
+      boost::optional<SizingParameters> sizingParameters() const;
+
+      /** Get the RadianceParameters object if there is one, this implementation uses a cached reference to the RadianceParameters
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<RadianceParameters>(). */
+      boost::optional<RadianceParameters> radianceParameters() const;
+
       /** Get the RunPeriod object if there is one, this implementation uses a cached reference to the RunPeriod
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<RunPeriod>(). */
       boost::optional<RunPeriod> runPeriod() const;
 
+      /** Get the RunPeriodControlDaylightSavingTime object if there is one, this implementation uses a cached reference to the RunPeriodControlDaylightSavingTime
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>(). */
+      boost::optional<RunPeriodControlDaylightSavingTime> runPeriodControlDaylightSavingTime() const;
+
       /** Get the YearDescription object if there is one, this implementation uses a cached reference to the YearDescription
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<YearDescription>(). */
       boost::optional<YearDescription> yearDescription() const;
+
+      /** Get the Site object if there is one, this implementation uses a cached reference to the Site
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<Site>(). */
+      boost::optional<Site> site() const;
+
+      /** Get the SiteGroundReflectance object if there is one, this implementation uses a cached reference to the SiteGroundReflectance
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundReflectance>(). */
+      boost::optional<SiteGroundReflectance> siteGroundReflectance() const;
+
+      /** Get the SiteWaterMainsTemperature object if there is one, this implementation uses a cached reference to the SiteWaterMainsTemperature
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteWaterMainsTemperature>(). */
+      boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature() const;
+
+      /** Get the SiteGroundTemperatureBuildingSurface object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureBuildingSurface
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>(). */
+      boost::optional<SiteGroundTemperatureBuildingSurface> siteGroundTemperatureBuildingSurface() const;
+
+      /** Get the SiteGroundTemperatureFCfactorMethod object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureFCfactorMethod
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>(). */
+      boost::optional<SiteGroundTemperatureFCfactorMethod> siteGroundTemperatureFCfactorMethod() const;
+
+      /** Get the SiteGroundTemperatureDeep object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureDeep
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureDeep>(). */
+      boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep() const;
+
+      /** Get the SiteGroundTemperatureShallow object if there is one, this implementation uses a cached reference to the SiteGroundTemperatureShallow
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<SiteGroundTemperatureShallow>(). */
+      boost::optional<SiteGroundTemperatureShallow> siteGroundTemperatureShallow() const;
+
+      /** Get the Facility object if there is one, this implementation uses a cached reference to the Facility
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<Facility>(). */
+      boost::optional<Facility> facility() const;
+
+      /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */
+      boost::optional<WeatherFile> weatherFile() const;
+
+      /** Get the Version object if there is one, this implementation uses a cached reference to the Version
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<Version>(). */
+      boost::optional<Version> version() const;
+
+      /** Get the SimulationControl object if there is one, this implementation uses a cached reference to the SimulationControl
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<SimulationControl>(). */
+      boost::optional<SimulationControl> simulationControl() const;
+
+      /** Get the LightingSimulationControl object if there is one, this implementation uses a cached reference to the LightingSimulationControl
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<LightingSimulationControl>(). */
+      boost::optional<LightingSimulationControl> lightingSimulationControl() const;
+
+      /** Get the AirflowNetworkSimulationControl object if there is one, this implementation uses a cached reference to the AirflowNetworkSimulationControl
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<AirflowNetworkSimulationControl>(). */
+      boost::optional<AirflowNetworkSimulationControl> airflowNetworkSimulationControl() const;
+
+      /** Get the InsideSurfaceConvectionAlgorithm object if there is one, this implementation uses a cached reference to the InsideSurfaceConvectionAlgorithm
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<InsideSurfaceConvectionAlgorithm>(). */
+      boost::optional<InsideSurfaceConvectionAlgorithm> insideSurfaceConvectionAlgorithm() const;
+
+      /** Get the OutsideSurfaceConvectionAlgorithm object if there is one, this implementation uses a cached reference to the OutsideSurfaceConvectionAlgorithm
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutsideSurfaceConvectionAlgorithm>(). */
+      boost::optional<OutsideSurfaceConvectionAlgorithm> outsideSurfaceConvectionAlgorithm() const;
+
+      /** Get the HeatBalanceAlgorithm object if there is one, this implementation uses a cached reference to the HeatBalanceAlgorithm
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<HeatBalanceAlgorithm>(). */
+      boost::optional<HeatBalanceAlgorithm> heatBalanceAlgorithm() const;
+
+      /** Get the ZoneAirHeatBalanceAlgorithm object if there is one, this implementation uses a cached reference to the ZoneAirHeatBalanceAlgorithm
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>(). */
+      boost::optional<ZoneAirHeatBalanceAlgorithm> zoneAirHeatBalanceAlgorithm() const;
+
+      /** Get the ZoneAirMassFlowConservation object if there is one, this implementation uses a cached reference to the ZoneAirMassFlowConservation
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<ZoneAirMassFlowConservation>(). */
+      boost::optional<ZoneAirMassFlowConservation> zoneAirMassFlowConservation() const;
+
+      /** Get the ZoneCapacitanceMultiplierResearchSpecial object if there is one, this implementation uses a cached reference to the ZoneCapacitanceMultiplierResearchSpecial
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>(). */
+      boost::optional<ZoneCapacitanceMultiplierResearchSpecial> zoneCapacitanceMultiplierResearchSpecial() const;
+
+      /** Get the ConvergenceLimits object if there is one, this implementation uses a cached reference to the ConvergenceLimits
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<ConvergenceLimits>(). */
+      boost::optional<ConvergenceLimits> convergenceLimits() const;
+
+      /** Get the ShadowCalculation object if there is one, this implementation uses a cached reference to the ShadowCalculation
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<ShadowCalculation>(). */
+      boost::optional<ShadowCalculation> shadowCalculation() const;
+
+      /** Get the Timestep object if there is one, this implementation uses a cached reference to the Timestep
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<Timestep>(). */
+      boost::optional<Timestep> timestep() const;
+
+      /** Get the ClimateZones object if there is one, this implementation uses a cached reference to the ClimateZones
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<ClimateZones>(). */
+      boost::optional<ClimateZones> climateZones() const;
+
+      /** Get the EnvironmentalImpactFactors object if there is one, this implementation uses a cached reference to the EnvironmentalImpactFactors
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<EnvironmentalImpactFactors>(). */
+      boost::optional<EnvironmentalImpactFactors> environmentalImpactFactors() const;
+
+      /** Get the ExternalInterface object if there is one, this implementation uses a cached reference to the ExternalInterface
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<ExternalInterface>(). */
+      boost::optional<ExternalInterface> externalInterface() const;
 
       /** Get or create the YearDescription object if there is one, then call method from YearDescription. */
       // DLM: this is due to issues exporting the model::YearDescription object because of name conflict with utilities::YearDescription.
@@ -187,10 +351,6 @@ namespace model {
       openstudio::Date makeDate(unsigned monthOfYear, unsigned dayOfMonth);
       openstudio::Date makeDate(openstudio::NthDayOfWeekInMonth n, openstudio::DayOfWeek dayOfWeek, openstudio::MonthOfYear monthOfYear);
       openstudio::Date makeDate(unsigned dayOfYear);
-
-      /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
-     *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */
-      boost::optional<WeatherFile> weatherFile() const;
 
       Schedule alwaysOnDiscreteSchedule() const;
 
@@ -302,24 +462,88 @@ namespace model {
       mutable boost::optional<Building> m_cachedBuilding;
       mutable boost::optional<FoundationKivaSettings> m_cachedFoundationKivaSettings;
       mutable boost::optional<OutputControlFiles> m_cachedOutputControlFiles;
+      mutable boost::optional<OutputControlReportingTolerances> m_cachedOutputControlReportingTolerances;
+      mutable boost::optional<OutputDiagnostics> m_cachedOutputDiagnostics;
+      mutable boost::optional<OutputDebuggingData> m_cachedOutputDebuggingData;
+      mutable boost::optional<OutputJSON> m_cachedOutputJSON;
+      mutable boost::optional<OutputEnergyManagementSystem> m_cachedOutputEnergyManagementSystem;
       mutable boost::optional<OutputTableSummaryReports> m_cachedOutputTableSummaryReports;
-      mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
       mutable boost::optional<PerformancePrecisionTradeoffs> m_cachedPerformancePrecisionTradeoffs;
+      mutable boost::optional<LifeCycleCostParameters> m_cachedLifeCycleCostParameters;
+      mutable boost::optional<SizingParameters> m_cachedSizingParameters;
+      mutable boost::optional<RadianceParameters> m_cachedRadianceParameters;
       mutable boost::optional<RunPeriod> m_cachedRunPeriod;
+      mutable boost::optional<RunPeriodControlDaylightSavingTime> m_cachedRunPeriodControlDaylightSavingTime;
       mutable boost::optional<YearDescription> m_cachedYearDescription;
+      mutable boost::optional<Site> m_cachedSite;
+      mutable boost::optional<SiteGroundReflectance> m_cachedSiteGroundReflectance;
+      mutable boost::optional<SiteWaterMainsTemperature> m_cachedSiteWaterMainsTemperature;
+      mutable boost::optional<SiteGroundTemperatureBuildingSurface> m_cachedSiteGroundTemperatureBuildingSurface;
+      mutable boost::optional<SiteGroundTemperatureFCfactorMethod> m_cachedSiteGroundTemperatureFCfactorMethod;
+      mutable boost::optional<SiteGroundTemperatureDeep> m_cachedSiteGroundTemperatureDeep;
+      mutable boost::optional<SiteGroundTemperatureShallow> m_cachedSiteGroundTemperatureShallow;
+      mutable boost::optional<Facility> m_cachedFacility;
       mutable boost::optional<WeatherFile> m_cachedWeatherFile;
+      mutable boost::optional<Version> m_cachedVersion;
+      mutable boost::optional<SimulationControl> m_cachedSimulationControl;
+      mutable boost::optional<LightingSimulationControl> m_cachedLightingSimulationControl;
+      mutable boost::optional<AirflowNetworkSimulationControl> m_cachedAirflowNetworkSimulationControl;
+      mutable boost::optional<InsideSurfaceConvectionAlgorithm> m_cachedInsideSurfaceConvectionAlgorithm;
+      mutable boost::optional<OutsideSurfaceConvectionAlgorithm> m_cachedOutsideSurfaceConvectionAlgorithm;
+      mutable boost::optional<HeatBalanceAlgorithm> m_cachedHeatBalanceAlgorithm;
+      mutable boost::optional<ZoneAirHeatBalanceAlgorithm> m_cachedZoneAirHeatBalanceAlgorithm;
+      mutable boost::optional<ZoneAirMassFlowConservation> m_cachedZoneAirMassFlowConservation;
+      mutable boost::optional<ZoneCapacitanceMultiplierResearchSpecial> m_cachedZoneCapacitanceMultiplierResearchSpecial;
+      mutable boost::optional<ConvergenceLimits> m_cachedConvergenceLimits;
+      mutable boost::optional<ShadowCalculation> m_cachedShadowCalculation;
+      mutable boost::optional<Timestep> m_cachedTimestep;
+      mutable boost::optional<ClimateZones> m_cachedClimateZones;
+      mutable boost::optional<EnvironmentalImpactFactors> m_cachedEnvironmentalImpactFactors;
+      mutable boost::optional<ExternalInterface> m_cachedExternalInterface;
 
       // private slots:
       void clearCachedData();
       void clearCachedBuilding(const Handle& handle);
       void clearCachedFoundationKivaSettings(const Handle& handle);
       void clearCachedOutputControlFiles(const Handle& handle);
+      void clearCachedOutputControlReportingTolerances(const Handle& handle);
+      void clearCachedOutputDiagnostics(const Handle& handle);
+      void clearCachedOutputDebuggingData(const Handle& handle);
+      void clearCachedOutputJSON(const Handle& handle);
+      void clearCachedOutputEnergyManagementSystem(const Handle& handle);
       void clearCachedOutputTableSummaryReports(const Handle& handle);
-      void clearCachedLifeCycleCostParameters(const Handle& handle);
       void clearCachedPerformancePrecisionTradeoffs(const Handle& handle);
+      void clearCachedLifeCycleCostParameters(const Handle& handle);
+      void clearCachedSizingParameters(const Handle& handle);
+      void clearCachedRadianceParameters(const Handle& handle);
       void clearCachedRunPeriod(const Handle& handle);
+      void clearCachedRunPeriodControlDaylightSavingTime(const Handle& handle);
       void clearCachedYearDescription(const Handle& handle);
+      void clearCachedSite(const Handle& handle);
+      void clearCachedSiteGroundReflectance(const Handle& handle);
+      void clearCachedSiteWaterMainsTemperature(const Handle& handle);
+      void clearCachedSiteGroundTemperatureBuildingSurface(const Handle& handle);
+      void clearCachedSiteGroundTemperatureFCfactorMethod(const Handle& handle);
+      void clearCachedSiteGroundTemperatureDeep(const Handle& handle);
+      void clearCachedSiteGroundTemperatureShallow(const Handle& handle);
+      void clearCachedFacility(const Handle& handle);
       void clearCachedWeatherFile(const Handle& handle);
+      void clearCachedVersion(const Handle& handle);
+      void clearCachedSimulationControl(const Handle& handle);
+      void clearCachedLightingSimulationControl(const Handle& handle);
+      void clearCachedAirflowNetworkSimulationControl(const Handle& handle);
+      void clearCachedInsideSurfaceConvectionAlgorithm(const Handle& handle);
+      void clearCachedOutsideSurfaceConvectionAlgorithm(const Handle& handle);
+      void clearCachedHeatBalanceAlgorithm(const Handle& handle);
+      void clearCachedZoneAirHeatBalanceAlgorithm(const Handle& handle);
+      void clearCachedZoneAirMassFlowConservation(const Handle& handle);
+      void clearCachedZoneCapacitanceMultiplierResearchSpecial(const Handle& handle);
+      void clearCachedConvergenceLimits(const Handle& handle);
+      void clearCachedShadowCalculation(const Handle& handle);
+      void clearCachedTimestep(const Handle& handle);
+      void clearCachedClimateZones(const Handle& handle);
+      void clearCachedEnvironmentalImpactFactors(const Handle& handle);
+      void clearCachedExternalInterface(const Handle& handle);
 
       typedef std::function<std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>(
         Model_Impl*, const std::shared_ptr<openstudio::detail::WorkspaceObject_Impl>&, bool)>
