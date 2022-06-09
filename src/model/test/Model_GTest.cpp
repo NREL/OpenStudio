@@ -852,7 +852,7 @@ TEST_F(ModelFixture, Issue_4372) {
 TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   Model m;
   EXPECT_EQ(0u, m.getModelObjects<ModelObject>().size());
-  
+
   EXPECT_FALSE(m.building());
   EXPECT_EQ(0u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -864,7 +864,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.foundationKivaSettings());
   EXPECT_EQ(2u, m.getModelObjects<ModelObject>().size());
-  
+
   EXPECT_FALSE(m.outputControlFiles());
   EXPECT_EQ(2u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -876,7 +876,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.outputControlReportingTolerances());
   EXPECT_EQ(4u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.outputDiagnostics());
   EXPECT_EQ(4u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -888,7 +888,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.outputDebuggingData());
   EXPECT_EQ(6u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.outputJSON());
   EXPECT_EQ(6u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -900,7 +900,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.outputEnergyManagementSystem());
   EXPECT_EQ(8u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.outputTableSummaryReports());
   EXPECT_EQ(8u, m.getModelObjects<ModelObject>().size());
   m.getBuildi8ng();
@@ -912,7 +912,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.performancePrecisionTradeoffs());
   EXPECT_EQ(10u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.lifeCycleCostParameters());
   EXPECT_EQ(10u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -924,7 +924,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.sizingParameters());
   EXPECT_EQ(12u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.radianceParameters());
   EXPECT_EQ(12u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -936,7 +936,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.runPeriod());
   EXPECT_EQ(14u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.runPeriodControlDaylightSavingTime());
   EXPECT_EQ(14u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -948,7 +948,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.yearDescription());
   EXPECT_EQ(16u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.site());
   EXPECT_EQ(16u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -960,7 +960,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.siteGroundReflectance());
   EXPECT_EQ(18u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.siteWaterMainsTemperature());
   EXPECT_EQ(18u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -972,7 +972,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.siteGroundTemperatureBuildingSurface());
   EXPECT_EQ(20u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.siteGroundTemperatureFCfactorMethod());
   EXPECT_EQ(20u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -984,7 +984,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.siteGroundTemperatureDeep());
   EXPECT_EQ(22u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.siteGroundTemperatureShallow());
   EXPECT_EQ(22u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -996,7 +996,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.facility());
   EXPECT_EQ(24u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.weatherFile());
   EXPECT_EQ(24u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -1008,7 +1008,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.version());
   EXPECT_EQ(26u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.simulationControl());
   EXPECT_EQ(26u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -1020,7 +1020,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.lightingSimulationControl());
   EXPECT_EQ(28u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.airflowNetworkSimulationControl());
   EXPECT_EQ(28u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -1032,7 +1032,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.insideSurfaceConvectionAlgorithm());
   EXPECT_EQ(31u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.outsideSurfaceConvectionAlgorithm());
   EXPECT_EQ(31u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -1044,7 +1044,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.heatBalanceAlgorithm());
   EXPECT_EQ(33u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.zoneAirHeatBalanceAlgorithm());
   EXPECT_EQ(33u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -1056,7 +1056,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.zoneAirMassFlowConservation());
   EXPECT_EQ(35u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.zoneCapacitanceMultiplierResearchSpecial());
   EXPECT_EQ(35u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -1068,7 +1068,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.convergenceLimits());
   EXPECT_EQ(37u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.shadowCalculation());
   EXPECT_EQ(37u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -1080,7 +1080,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.timestep());
   EXPECT_EQ(39u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.climateZones());
   EXPECT_EQ(39u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
@@ -1092,7 +1092,7 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   m.getBuilding();
   EXPECT_TRUE(m.environmentalImpactFactors());
   EXPECT_EQ(41u, m.getModelObjects<ModelObject>().size());
-    
+
   EXPECT_FALSE(m.externalInterface());
   EXPECT_EQ(41u, m.getModelObjects<ModelObject>().size());
   m.getBuilding();
