@@ -34,20 +34,6 @@ set(${target_name}_src
   ThreeJSForwardTranslator.cpp
   ThreeJSReverseTranslator.hpp
   ThreeJSReverseTranslator.cpp
-  GltfForwardTranslator.hpp
-  GltfForwardTranslator.cpp
-  GltfBoundingBox.hpp
-  GltfBoundingBox.cpp
-  GltfModelObjectMetaData.hpp
-  GltfModelObjectMetaData.cpp
-  GltfUserData.hpp
-  GltfUserData.cpp
-  GltfMetaData.hpp
-  GltfMetaData.cpp
-  GltfMaterialData.hpp
-  GltfMaterialData.cpp
-  GltfUtils.hpp
-  GltfUtils.cpp
   ModelMerger.hpp
   ModelMerger.cpp
 
@@ -2218,7 +2204,6 @@ set(${target_name}_test_src
   test/TemperingValve_GTest.cpp
   test/ThreeJSForwardTranslator_GTest.cpp
   test/ThreeJSReverseTranslator_GTest.cpp
-  test/GltfForwardTranslator_GTest.cpp
   test/UnitarySystemPerformanceMultispeed_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
