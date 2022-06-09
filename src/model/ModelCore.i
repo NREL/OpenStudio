@@ -27,12 +27,13 @@
 
   // ignore simulation objects for now, add back in with partial classes in ModelSimulation.i (TODO)
   %ignore openstudio::model::Model::foundationKivaSettings;
-  %ignore openstudio::model::Model::outputControlFiles;
   %ignore openstudio::model::Model::outputTableSummaryReports;
-  %ignore openstudio::model::Model::performancePrecisionTradeoffs;
   %ignore openstudio::model::Model::runPeriod;
+  %ignore openstudio::model::Model::weatherFile;
   %ignore openstudio::model::Model::yearDescription;
-  %ignore openstudio::model::Model::weatherFile;  
+  %ignore openstudio::model::Model::performancePrecisionTradeoffs;
+
+  %ignore openstudio::model::Model::outputControlFiles;
 
   // ignore geometry objects for now, add back in with partial classes in ModelGeometry.i
   %ignore openstudio::model::Model::building;
