@@ -28,20 +28,50 @@
   // ignore simulation objects for now, add back in with partial classes in ModelSimulation.i (TODO)
   %ignore openstudio::model::Model::foundationKivaSettings;
   %ignore openstudio::model::Model::outputControlFiles;
+  %ignore openstudio::model::Model::outputControlReportingTolerances;
+  %ignore openstudio::model::Model::outputDiagnostics;
+  %ignore openstudio::model::Model::outputDebuggingData;
+  %ignore openstudio::model::Model::outputJSON;
   %ignore openstudio::model::Model::outputTableSummaryReports;
   %ignore openstudio::model::Model::performancePrecisionTradeoffs;
+  %ignore openstudio::model::Model::sizingParameters;
   %ignore openstudio::model::Model::runPeriod;
+  %ignore openstudio::model::Model::runPeriodControlDaylightSavingTime;
   %ignore openstudio::model::Model::yearDescription;
-  %ignore openstudio::model::Model::weatherFile;  
+  %ignore openstudio::model::Model::site;
+  %ignore openstudio::model::Model::siteGroundReflectance;
+  %ignore openstudio::model::Model::siteWaterMainsTemperature;
+  %ignore openstudio::model::Model::siteGroundTemperatureBuildingSurface;
+  %ignore openstudio::model::Model::siteGroundTemperatureFCfactorMethod;
+  %ignore openstudio::model::Model::siteGroundTemperatureDeep;
+  %ignore openstudio::model::Model::siteGroundTemperatureShallow;
+  %ignore openstudio::model::Model::weatherFile;
+  %ignore openstudio::model::Model::simulationControl;
+  %ignore openstudio::model::Model::lightingSimulationControl;
+  %ignore openstudio::model::Model::insideSurfaceConvectionAlgorithm;
+  %ignore openstudio::model::Model::outsideSurfaceConvectionAlgorithm;
+  %ignore openstudio::model::Model::heatBalanceAlgorithm;
+  %ignore openstudio::model::Model::zoneAirHeatBalanceAlgorithm;
+  %ignore openstudio::model::Model::zoneAirMassFlowConservation;
+  %ignore openstudio::model::Model::zoneCapacitanceMultiplierResearchSpecial;
+  %ignore openstudio::model::Model::convergenceLimits;
+  %ignore openstudio::model::Model::shadowCalculation;
+  %ignore openstudio::model::Model::timestep;
+  %ignore openstudio::model::Model::climateZones;
+  %ignore openstudio::model::Model::environmentalImpactFactors;
+  %ignore openstudio::model::Model::shadowCalculation;
 
   // ignore geometry objects for now, add back in with partial classes in ModelGeometry.i
   %ignore openstudio::model::Model::building;
   %ignore openstudio::model::Model::plenumSpaceType;
+  %ignore openstudio::model::Model::site;
+  %ignore openstudio::model::Model::facility;
 
   // Ignore hvac objects for now, add back in with partial classes in ModelHVAC.i
   %ignore openstudio::model::Model::outdoorAirNode;
 
-
+  // Ignore hvac objects for now, add back in with partial classes in ModelAirflow.i
+  %ignore openstudio::model::Model::airflowNetworkSimulationControl;
 
   // EnergyManagementSystemActuator: depends on Space (ModelGeometry.i),
   %ignore openstudio::model::EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject,
