@@ -269,10 +269,6 @@ namespace model {
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */
       boost::optional<WeatherFile> weatherFile() const;
 
-      /** Get the Version object if there is one, this implementation uses a cached reference to the Version
-     *  object which can be significantly faster than calling getOptionalUniqueModelObject<Version>(). */
-      boost::optional<Version> version() const;
-
       /** Get the SimulationControl object if there is one, this implementation uses a cached reference to the SimulationControl
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<SimulationControl>(). */
       boost::optional<SimulationControl> simulationControl() const;
@@ -528,7 +524,6 @@ namespace model {
       void clearCachedSiteGroundTemperatureShallow(const Handle& handle);
       void clearCachedFacility(const Handle& handle);
       void clearCachedWeatherFile(const Handle& handle);
-      void clearCachedVersion(const Handle& handle);
       void clearCachedSimulationControl(const Handle& handle);
       void clearCachedLightingSimulationControl(const Handle& handle);
       void clearCachedAirflowNetworkSimulationControl(const Handle& handle);

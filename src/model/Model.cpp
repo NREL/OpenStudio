@@ -635,21 +635,6 @@ namespace model {
       return m_cachedWeatherFile;
     }
 
-    boost::optional<Version> Model_Impl::version() const {
-      if (m_cachedVersion) {
-        return m_cachedVersion;
-      }
-
-      boost::optional<Version> result = this->model().getOptionalUniqueModelObject<Version>();
-      if (result) {
-        m_cachedVersion = result;
-        result->getImpl<Version_Impl>().get()->Version_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedVersion>(
-          const_cast<openstudio::model::detail::Model_Impl*>(this));
-      }
-
-      return m_cachedVersion;
-    }
-
     boost::optional<SimulationControl> Model_Impl::simulationControl() const {
       if (m_cachedSimulationControl) {
         return m_cachedSimulationControl;
@@ -1496,7 +1481,6 @@ namespace model {
       clearCachedSiteGroundTemperatureShallow(dummy);
       clearCachedFacility(dummy);
       clearCachedWeatherFile(dummy);
-      clearCachedVersion(dummy);
       clearCachedSimulationControl(dummy);
       clearCachedLightingSimulationControl(dummy);
       clearCachedAirflowNetworkSimulationControl(dummy);
@@ -1612,10 +1596,6 @@ namespace model {
 
     void Model_Impl::clearCachedWeatherFile(const Handle& handle) {
       m_cachedWeatherFile.reset();
-    }
-
-    void Model_Impl::clearCachedVersion(const Handle& handle) {
-      m_cachedVersion.reset();
     }
 
     void Model_Impl::clearCachedSimulationControl(const Handle& handle) {
@@ -1925,10 +1905,6 @@ namespace model {
 
   boost::optional<WeatherFile> Model::weatherFile() const {
     return getImpl<detail::Model_Impl>()->weatherFile();
-  }
-
-  boost::optional<Version> Model::version() const {
-    return getImpl<detail::Model_Impl>()->version();
   }
 
   boost::optional<SimulationControl> Model::simulationControl() const {
@@ -3551,15 +3527,6 @@ namespace model {
       return _w.get();
     } else {
       return WeatherFile(*this);
-    }
-  }
-
-  template <>
-  Version Model::getUniqueModelObject<Version>() {
-    if (boost::optional<Version> _v = version()) {
-      return _v.get();
-    } else {
-      return Version(*this);
     }
   }
 

@@ -74,7 +74,6 @@ namespace model {
   class SiteGroundTemperatureShallow;
   class Facility;
   class WeatherFile;
-  class Version;
   class SimulationControl;
   class LightingSimulationControl;
   class AirflowNetworkSimulationControl;
@@ -245,10 +244,6 @@ namespace model {
     /** Get the WeatherFile object if there is one, this implementation uses a cached reference to the WeatherFile
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<WeatherFile>(). */
     boost::optional<WeatherFile> weatherFile() const;
-
-    /** Get the Version object if there is one, this implementation uses a cached reference to the Version
-   *  object which can be significantly faster than calling getOptionalUniqueModelObject<Version>(). */
-    boost::optional<Version> version() const;
 
     /** Get the SimulationControl object if there is one, this implementation uses a cached reference to the SimulationControl
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<SimulationControl>(). */
@@ -751,9 +746,6 @@ namespace model {
 
   template <>
   MODEL_API WeatherFile Model::getUniqueModelObject<WeatherFile>();
-
-  template <>
-  MODEL_API Version Model::getUniqueModelObject<Version>();
 
   template <>
   MODEL_API SimulationControl Model::getUniqueModelObject<SimulationControl>();
