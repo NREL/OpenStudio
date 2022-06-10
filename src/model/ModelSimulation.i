@@ -90,12 +90,12 @@ UNIQUEMODELOBJECT_TEMPLATES(ZoneAirHeatBalanceAlgorithm);
 UNIQUEMODELOBJECT_TEMPLATES(ZoneAirMassFlowConservation);
 UNIQUEMODELOBJECT_TEMPLATES(ZoneCapacitanceMultiplierResearchSpecial);
 MODELOBJECT_TEMPLATES(SkyTemperature);
-MODELOBJECT_TEMPLATES(SiteGroundReflectance);
-MODELOBJECT_TEMPLATES(SiteGroundTemperatureBuildingSurface);
-MODELOBJECT_TEMPLATES(SiteGroundTemperatureDeep);
-MODELOBJECT_TEMPLATES(SiteGroundTemperatureShallow);
-MODELOBJECT_TEMPLATES(SiteGroundTemperatureFCfactorMethod);
-MODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
+UNIQUEMODELOBJECT_TEMPLATES(SiteGroundReflectance);
+UNIQUEMODELOBJECT_TEMPLATES(SiteGroundTemperatureBuildingSurface);
+UNIQUEMODELOBJECT_TEMPLATES(SiteGroundTemperatureDeep);
+UNIQUEMODELOBJECT_TEMPLATES(SiteGroundTemperatureShallow);
+UNIQUEMODELOBJECT_TEMPLATES(SiteGroundTemperatureFCfactorMethod);
+UNIQUEMODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
 #ifndef SWIGCSHARP
   // Ignored for Csharp, use Model::setCalendarYear etc
   UNIQUEMODELOBJECT_TEMPLATES(YearDescription);
