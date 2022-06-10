@@ -742,6 +742,19 @@ namespace model {
           return candidate;
         }
       }
+
+      // Start by deleting existing Unique ModelObject, without touching children/resources by calling WorkspaceObject::remove
+      for (const WorkspaceObject& componentObject : component.objects()) {
+        auto compIddObject = componentObject.iddObject();
+        if (compIddObject.properties().unique) {
+          // Remove any existing objects (there should really be only one)
+          for (WorkspaceObject& wo : model().getObjectsByType(compIddObject)) {
+            LOG(Info, "Removing existing UniqueModelObject in the target model: " << wo.briefDescription());
+            wo.remove();
+          }
+        }
+      }
+
       WorkspaceObjectVector resultingObjects = model().addObjects(component.objects());
       if (resultingObjects.empty()) {
         return boost::none;
