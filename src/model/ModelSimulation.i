@@ -270,9 +270,10 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
           return model.weatherFile();
         }
 
-        boost::optional<YearDescription> yearDescription(const openstudio::model::Model& model) {
-          return model.yearDescription();
-        }
+        // This is Ignored above
+        // boost::optional<YearDescription> yearDescription(const openstudio::model::Model& model) {
+        //  return model.yearDescription();
+        // }
 
         boost::optional<ZoneAirContaminantBalance> zoneAirContaminantBalance(const openstudio::model::Model& model) {
           return model.zoneAirContaminantBalance();
@@ -420,9 +421,10 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
         return OpenStudio.OpenStudioModelSimulation.weatherFile(this);
       }
 
-      public OptionalYearDescription yearDescription() {
-        return OpenStudio.OpenStudioModelSimulation.yearDescription(this);
-      }
+      // This is ignored above
+      // public OptionalYearDescription yearDescription() {
+      //   return OpenStudio.OpenStudioModelSimulation.yearDescription(this);
+      // }
 
       public OptionalZoneAirContaminantBalance zoneAirContaminantBalance() {
         return OpenStudio.OpenStudioModelSimulation.zoneAirContaminantBalance(this);
