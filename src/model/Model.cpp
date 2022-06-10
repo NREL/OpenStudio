@@ -737,6 +737,23 @@ namespace model {
       return m_cachedHeatBalanceAlgorithm;
     }
 
+    boost::optional<ZoneAirContaminantBalance> Model_Impl::zoneAirContaminantBalance() const {
+      if (m_cachedZoneAirContaminantBalance) {
+        return m_cachedZoneAirContaminantBalance;
+      }
+
+      boost::optional<ZoneAirContaminantBalance> result = this->model().getOptionalUniqueModelObject<ZoneAirContaminantBalance>();
+      if (result) {
+        m_cachedZoneAirContaminantBalance = result;
+        result->getImpl<ZoneAirContaminantBalance_Impl>()
+          .get()
+          ->ZoneAirContaminantBalance_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedZoneAirContaminantBalance>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedZoneAirContaminantBalance;
+    }
+
     boost::optional<ZoneAirHeatBalanceAlgorithm> Model_Impl::zoneAirHeatBalanceAlgorithm() const {
       if (m_cachedZoneAirHeatBalanceAlgorithm) {
         return m_cachedZoneAirHeatBalanceAlgorithm;
@@ -1487,6 +1504,7 @@ namespace model {
       clearCachedInsideSurfaceConvectionAlgorithm(dummy);
       clearCachedOutsideSurfaceConvectionAlgorithm(dummy);
       clearCachedHeatBalanceAlgorithm(dummy);
+      clearCachedZoneAirContaminantBalance(dummy);
       clearCachedZoneAirHeatBalanceAlgorithm(dummy);
       clearCachedZoneAirMassFlowConservation(dummy);
       clearCachedZoneCapacitanceMultiplierResearchSpecial(dummy);
@@ -1620,6 +1638,10 @@ namespace model {
 
     void Model_Impl::clearCachedHeatBalanceAlgorithm(const Handle& handle) {
       m_cachedHeatBalanceAlgorithm.reset();
+    }
+
+    void Model_Impl::clearCachedZoneAirContaminantBalance(const Handle& handle) {
+      m_cachedZoneAirContaminantBalance.reset();
     }
 
     void Model_Impl::clearCachedZoneAirHeatBalanceAlgorithm(const Handle& handle) {
@@ -1929,6 +1951,10 @@ namespace model {
 
   boost::optional<HeatBalanceAlgorithm> Model::heatBalanceAlgorithm() const {
     return getImpl<detail::Model_Impl>()->heatBalanceAlgorithm();
+  }
+
+  boost::optional<ZoneAirContaminantBalance> Model::zoneAirContaminantBalance() const {
+    return getImpl<detail::Model_Impl>()->zoneAirContaminantBalance();
   }
 
   boost::optional<ZoneAirHeatBalanceAlgorithm> Model::zoneAirHeatBalanceAlgorithm() const {
@@ -3581,6 +3607,15 @@ namespace model {
       return _hba.get();
     } else {
       return HeatBalanceAlgorithm(*this);
+    }
+  }
+
+  template <>
+  ZoneAirContaminantBalance Model::getUniqueModelObject<ZoneAirContaminantBalance>() {
+    if (boost::optional<ZoneAirContaminantBalance> _zahba = zoneAirContaminantBalance()) {
+      return _zahba.get();
+    } else {
+      return ZoneAirContaminantBalance(*this);
     }
   }
 

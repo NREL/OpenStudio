@@ -63,6 +63,7 @@
 #include "InsideSurfaceConvectionAlgorithm.hpp"
 #include "OutsideSurfaceConvectionAlgorithm.hpp"
 #include "HeatBalanceAlgorithm.hpp"
+#include "ZoneAirContaminantBalance.hpp"
 #include "ZoneAirHeatBalanceAlgorithm.hpp"
 #include "ZoneAirMassFlowConservation.hpp"
 #include "ZoneCapacitanceMultiplierResearchSpecial.hpp"
@@ -293,6 +294,10 @@ namespace model {
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<HeatBalanceAlgorithm>(). */
       boost::optional<HeatBalanceAlgorithm> heatBalanceAlgorithm() const;
 
+      /** Get the ZoneAirContaminantBalance object if there is one, this implementation uses a cached reference to the ZoneAirContaminantBalance
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<ZoneAirContaminantBalance>(). */
+      boost::optional<ZoneAirContaminantBalance> zoneAirContaminantBalance() const;
+
       /** Get the ZoneAirHeatBalanceAlgorithm object if there is one, this implementation uses a cached reference to the ZoneAirHeatBalanceAlgorithm
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>(). */
       boost::optional<ZoneAirHeatBalanceAlgorithm> zoneAirHeatBalanceAlgorithm() const;
@@ -487,6 +492,7 @@ namespace model {
       mutable boost::optional<InsideSurfaceConvectionAlgorithm> m_cachedInsideSurfaceConvectionAlgorithm;
       mutable boost::optional<OutsideSurfaceConvectionAlgorithm> m_cachedOutsideSurfaceConvectionAlgorithm;
       mutable boost::optional<HeatBalanceAlgorithm> m_cachedHeatBalanceAlgorithm;
+      mutable boost::optional<ZoneAirContaminantBalance> m_cachedZoneAirContaminantBalance;
       mutable boost::optional<ZoneAirHeatBalanceAlgorithm> m_cachedZoneAirHeatBalanceAlgorithm;
       mutable boost::optional<ZoneAirMassFlowConservation> m_cachedZoneAirMassFlowConservation;
       mutable boost::optional<ZoneCapacitanceMultiplierResearchSpecial> m_cachedZoneCapacitanceMultiplierResearchSpecial;
@@ -530,6 +536,7 @@ namespace model {
       void clearCachedInsideSurfaceConvectionAlgorithm(const Handle& handle);
       void clearCachedOutsideSurfaceConvectionAlgorithm(const Handle& handle);
       void clearCachedHeatBalanceAlgorithm(const Handle& handle);
+      void clearCachedZoneAirContaminantBalance(const Handle& handle);
       void clearCachedZoneAirHeatBalanceAlgorithm(const Handle& handle);
       void clearCachedZoneAirMassFlowConservation(const Handle& handle);
       void clearCachedZoneCapacitanceMultiplierResearchSpecial(const Handle& handle);

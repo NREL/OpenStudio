@@ -80,6 +80,7 @@ namespace model {
   class InsideSurfaceConvectionAlgorithm;
   class OutsideSurfaceConvectionAlgorithm;
   class HeatBalanceAlgorithm;
+  class ZoneAirContaminantBalance;
   class ZoneAirHeatBalanceAlgorithm;
   class ZoneAirMassFlowConservation;
   class ZoneCapacitanceMultiplierResearchSpecial;
@@ -268,6 +269,10 @@ namespace model {
     /** Get the HeatBalanceAlgorithm object if there is one, this implementation uses a cached reference to the HeatBalanceAlgorithm
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<HeatBalanceAlgorithm>(). */
     boost::optional<HeatBalanceAlgorithm> heatBalanceAlgorithm() const;
+
+    /** Get the ZoneAirContaminantBalance object if there is one, this implementation uses a cached reference to the ZoneAirContaminantBalance
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<ZoneAirContaminantBalance>(). */
+    boost::optional<ZoneAirContaminantBalance> zoneAirContaminantBalance() const;
 
     /** Get the ZoneAirHeatBalanceAlgorithm object if there is one, this implementation uses a cached reference to the ZoneAirHeatBalanceAlgorithm
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>(). */
@@ -764,6 +769,9 @@ namespace model {
 
   template <>
   MODEL_API HeatBalanceAlgorithm Model::getUniqueModelObject<HeatBalanceAlgorithm>();
+
+  template <>
+  MODEL_API ZoneAirContaminantBalance Model::getUniqueModelObject<ZoneAirContaminantBalance>();
 
   template <>
   MODEL_API ZoneAirHeatBalanceAlgorithm Model::getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();

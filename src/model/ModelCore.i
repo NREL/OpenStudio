@@ -55,6 +55,7 @@
   %ignore openstudio::model::Model::timestep;
   %ignore openstudio::model::Model::weatherFile;
   %ignore openstudio::model::Model::yearDescription;
+  %ignore openstudio::model::Model::zoneAirContaminantBalance;
   %ignore openstudio::model::Model::zoneAirHeatBalanceAlgorithm;
   %ignore openstudio::model::Model::zoneAirMassFlowConservation;
   %ignore openstudio::model::Model::zoneCapacitanceMultiplierResearchSpecial;
