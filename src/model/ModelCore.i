@@ -25,7 +25,8 @@
   // Ignore AccessPolicyStore which is used by GUIs only
   %ignore openstudio::model::AccessPolicyStore;
 
-  // ignore simulation objects for now, add back in with partial classes in ModelSimulation.i (TODO)
+  // ignore simulation objects for now, add back in with partial classes in ModelSimulation.i
+  %ignore openstudio::model::Model::runPeriod; // Special case, it behaves like a Unique ModelObject
   %ignore openstudio::model::Model::climateZones;
   %ignore openstudio::model::Model::convergenceLimits;
   %ignore openstudio::model::Model::environmentalImpactFactors;
@@ -41,7 +42,6 @@
   %ignore openstudio::model::Model::outputTableSummaryReports;
   %ignore openstudio::model::Model::outsideSurfaceConvectionAlgorithm;
   %ignore openstudio::model::Model::performancePrecisionTradeoffs;
-  %ignore openstudio::model::Model::runPeriod;
   %ignore openstudio::model::Model::runPeriodControlDaylightSavingTime;
   %ignore openstudio::model::Model::shadowCalculation;
   %ignore openstudio::model::Model::simulationControl;
@@ -62,8 +62,8 @@
   // ignore geometry objects for now, add back in with partial classes in ModelGeometry.i
   %ignore openstudio::model::Model::building;
   %ignore openstudio::model::Model::facility;
-  %ignore openstudio::model::Model::plenumSpaceType;
   %ignore openstudio::model::Model::site;
+  %ignore openstudio::model::Model::plenumSpaceType;
 
   // Ignore hvac objects for now, add back in with partial classes in ModelHVAC.i
   %ignore openstudio::model::Model::outdoorAirNode;

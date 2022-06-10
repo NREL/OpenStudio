@@ -156,14 +156,146 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
   %inline {
     namespace openstudio {
       namespace model {
-        boost::optional<OutputControlFiles> outputControlFiles(const openstudio::model::Model& model){
+        // Special case (it behaves like a UniqueModelObject while it actually isn't)
+        boost::optional<RunPeriod> runPeriod(const openstudio::model::Model& model) {
+          return model.runPeriod();
+        }
+
+
+        boost::optional<ClimateZones> climateZones(const openstudio::model::Model& model) {
+          return model.climateZones();
+        }
+
+        boost::optional<ConvergenceLimits> convergenceLimits(const openstudio::model::Model& model) {
+          return model.convergenceLimits();
+        }
+
+        boost::optional<EnvironmentalImpactFactors> environmentalImpactFactors(const openstudio::model::Model& model) {
+          return model.environmentalImpactFactors();
+        }
+
+        boost::optional<FoundationKivaSettings> foundationKivaSettings(const openstudio::model::Model& model) {
+          return model.foundationKivaSettings();
+        }
+
+        boost::optional<HeatBalanceAlgorithm> heatBalanceAlgorithm(const openstudio::model::Model& model) {
+          return model.heatBalanceAlgorithm();
+        }
+
+        boost::optional<InsideSurfaceConvectionAlgorithm> insideSurfaceConvectionAlgorithm(const openstudio::model::Model& model) {
+          return model.insideSurfaceConvectionAlgorithm();
+        }
+
+        boost::optional<LightingSimulationControl> lightingSimulationControl(const openstudio::model::Model& model) {
+          return model.lightingSimulationControl();
+        }
+
+        boost::optional<OutputControlFiles> outputControlFiles(const openstudio::model::Model& model) {
           return model.outputControlFiles();
         }
+
+        boost::optional<OutputControlReportingTolerances> outputControlReportingTolerances(const openstudio::model::Model& model) {
+          return model.outputControlReportingTolerances();
+        }
+
+        boost::optional<OutputDebuggingData> outputDebuggingData(const openstudio::model::Model& model) {
+          return model.outputDebuggingData();
+        }
+
+        boost::optional<OutputDiagnostics> outputDiagnostics(const openstudio::model::Model& model) {
+          return model.outputDiagnostics();
+        }
+
+        boost::optional<OutputJSON> outputJSON(const openstudio::model::Model& model) {
+          return model.outputJSON();
+        }
+
+        boost::optional<OutputTableSummaryReports> outputTableSummaryReports(const openstudio::model::Model& model) {
+          return model.outputTableSummaryReports();
+        }
+
+        boost::optional<OutsideSurfaceConvectionAlgorithm> outsideSurfaceConvectionAlgorithm(const openstudio::model::Model& model) {
+          return model.outsideSurfaceConvectionAlgorithm();
+        }
+
+        boost::optional<PerformancePrecisionTradeoffs> performancePrecisionTradeoffs(const openstudio::model::Model& model) {
+          return model.performancePrecisionTradeoffs();
+        }
+
+        boost::optional<RunPeriodControlDaylightSavingTime> runPeriodControlDaylightSavingTime(const openstudio::model::Model& model) {
+          return model.runPeriodControlDaylightSavingTime();
+        }
+
+        boost::optional<ShadowCalculation> shadowCalculation(const openstudio::model::Model& model) {
+          return model.shadowCalculation();
+        }
+
+        boost::optional<SimulationControl> simulationControl(const openstudio::model::Model& model) {
+          return model.simulationControl();
+        }
+
+        boost::optional<SiteGroundReflectance> siteGroundReflectance(const openstudio::model::Model& model) {
+          return model.siteGroundReflectance();
+        }
+
+        boost::optional<SiteGroundTemperatureBuildingSurface> siteGroundTemperatureBuildingSurface(const openstudio::model::Model& model) {
+          return model.siteGroundTemperatureBuildingSurface();
+        }
+
+        boost::optional<SiteGroundTemperatureDeep> siteGroundTemperatureDeep(const openstudio::model::Model& model) {
+          return model.siteGroundTemperatureDeep();
+        }
+
+        boost::optional<SiteGroundTemperatureFCfactorMethod> siteGroundTemperatureFCfactorMethod(const openstudio::model::Model& model) {
+          return model.siteGroundTemperatureFCfactorMethod();
+        }
+
+        boost::optional<SiteGroundTemperatureShallow> siteGroundTemperatureShallow(const openstudio::model::Model& model) {
+          return model.siteGroundTemperatureShallow();
+        }
+
+        boost::optional<SiteWaterMainsTemperature> siteWaterMainsTemperature(const openstudio::model::Model& model) {
+          return model.siteWaterMainsTemperature();
+        }
+
+        boost::optional<SizingParameters> sizingParameters(const openstudio::model::Model& model) {
+          return model.sizingParameters();
+        }
+
+        boost::optional<Timestep> timestep(const openstudio::model::Model& model) {
+          return model.timestep();
+        }
+
+        boost::optional<WeatherFile> weatherFile(const openstudio::model::Model& model) {
+          return model.weatherFile();
+        }
+
+        boost::optional<YearDescription> yearDescription(const openstudio::model::Model& model) {
+          return model.yearDescription();
+        }
+
+        boost::optional<ZoneAirContaminantBalance> zoneAirContaminantBalance(const openstudio::model::Model& model) {
+          return model.zoneAirContaminantBalance();
+        }
+
+        boost::optional<ZoneAirHeatBalanceAlgorithm> zoneAirHeatBalanceAlgorithm(const openstudio::model::Model& model) {
+          return model.zoneAirHeatBalanceAlgorithm();
+        }
+
+        boost::optional<ZoneAirMassFlowConservation> zoneAirMassFlowConservation(const openstudio::model::Model& model) {
+          return model.zoneAirMassFlowConservation();
+        }
+
+        boost::optional<ZoneCapacitanceMultiplierResearchSpecial> zoneCapacitanceMultiplierResearchSpecial(const openstudio::model::Model& model) {
+          return model.zoneCapacitanceMultiplierResearchSpecial();
+        }
+
       }
     }
-  }
+  } // %inline
 
-#endif
+#endif // defined SWIGCSHARP
+
 
 #if defined(SWIGCSHARP)
   //%pragma(csharp) imclassimports=%{
@@ -173,12 +305,143 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
     using System.Runtime.InteropServices;
 
     public partial class Model : Workspace {
-      public OptionalOutputControlFiles outputControlFiles()
-      {
+
+      // Special case (it behaves like a UniqueModelObject while it actually isn't)
+      public OptionalRunPeriod runPeriod() {
+        return OpenStudio.OpenStudioModelSimulation.runPeriod(this);
+      }
+
+
+      public OptionalClimateZones climateZones() {
+        return OpenStudio.OpenStudioModelSimulation.climateZones(this);
+      }
+
+      public OptionalConvergenceLimits convergenceLimits() {
+        return OpenStudio.OpenStudioModelSimulation.convergenceLimits(this);
+      }
+
+      public OptionalEnvironmentalImpactFactors environmentalImpactFactors() {
+        return OpenStudio.OpenStudioModelSimulation.environmentalImpactFactors(this);
+      }
+
+      public OptionalFoundationKivaSettings foundationKivaSettings() {
+        return OpenStudio.OpenStudioModelSimulation.foundationKivaSettings(this);
+      }
+
+      public OptionalHeatBalanceAlgorithm heatBalanceAlgorithm() {
+        return OpenStudio.OpenStudioModelSimulation.heatBalanceAlgorithm(this);
+      }
+
+      public OptionalInsideSurfaceConvectionAlgorithm insideSurfaceConvectionAlgorithm() {
+        return OpenStudio.OpenStudioModelSimulation.insideSurfaceConvectionAlgorithm(this);
+      }
+
+      public OptionalLightingSimulationControl lightingSimulationControl() {
+        return OpenStudio.OpenStudioModelSimulation.lightingSimulationControl(this);
+      }
+
+      public OptionalOutputControlFiles outputControlFiles() {
         return OpenStudio.OpenStudioModelSimulation.outputControlFiles(this);
       }
-    }
-  %}
-#endif
+
+      public OptionalOutputControlReportingTolerances outputControlReportingTolerances() {
+        return OpenStudio.OpenStudioModelSimulation.outputControlReportingTolerances(this);
+      }
+
+      public OptionalOutputDebuggingData outputDebuggingData() {
+        return OpenStudio.OpenStudioModelSimulation.outputDebuggingData(this);
+      }
+
+      public OptionalOutputDiagnostics outputDiagnostics() {
+        return OpenStudio.OpenStudioModelSimulation.outputDiagnostics(this);
+      }
+
+      public OptionalOutputJSON outputJSON() {
+        return OpenStudio.OpenStudioModelSimulation.outputJSON(this);
+      }
+
+      public OptionalOutputTableSummaryReports outputTableSummaryReports() {
+        return OpenStudio.OpenStudioModelSimulation.outputTableSummaryReports(this);
+      }
+
+      public OptionalOutsideSurfaceConvectionAlgorithm outsideSurfaceConvectionAlgorithm() {
+        return OpenStudio.OpenStudioModelSimulation.outsideSurfaceConvectionAlgorithm(this);
+      }
+
+      public OptionalPerformancePrecisionTradeoffs performancePrecisionTradeoffs() {
+        return OpenStudio.OpenStudioModelSimulation.performancePrecisionTradeoffs(this);
+      }
+
+      public OptionalRunPeriodControlDaylightSavingTime runPeriodControlDaylightSavingTime() {
+        return OpenStudio.OpenStudioModelSimulation.runPeriodControlDaylightSavingTime(this);
+      }
+
+      public OptionalShadowCalculation shadowCalculation() {
+        return OpenStudio.OpenStudioModelSimulation.shadowCalculation(this);
+      }
+
+      public OptionalSimulationControl simulationControl() {
+        return OpenStudio.OpenStudioModelSimulation.simulationControl(this);
+      }
+
+      public OptionalSiteGroundReflectance siteGroundReflectance() {
+        return OpenStudio.OpenStudioModelSimulation.siteGroundReflectance(this);
+      }
+
+      public OptionalSiteGroundTemperatureBuildingSurface siteGroundTemperatureBuildingSurface() {
+        return OpenStudio.OpenStudioModelSimulation.siteGroundTemperatureBuildingSurface(this);
+      }
+
+      public OptionalSiteGroundTemperatureDeep siteGroundTemperatureDeep() {
+        return OpenStudio.OpenStudioModelSimulation.siteGroundTemperatureDeep(this);
+      }
+
+      public OptionalSiteGroundTemperatureFCfactorMethod siteGroundTemperatureFCfactorMethod() {
+        return OpenStudio.OpenStudioModelSimulation.siteGroundTemperatureFCfactorMethod(this);
+      }
+
+      public OptionalSiteGroundTemperatureShallow siteGroundTemperatureShallow() {
+        return OpenStudio.OpenStudioModelSimulation.siteGroundTemperatureShallow(this);
+      }
+
+      public OptionalSiteWaterMainsTemperature siteWaterMainsTemperature() {
+        return OpenStudio.OpenStudioModelSimulation.siteWaterMainsTemperature(this);
+      }
+
+      public OptionalSizingParameters sizingParameters() {
+        return OpenStudio.OpenStudioModelSimulation.sizingParameters(this);
+      }
+
+      public OptionalTimestep timestep() {
+        return OpenStudio.OpenStudioModelSimulation.timestep(this);
+      }
+
+      public OptionalWeatherFile weatherFile() {
+        return OpenStudio.OpenStudioModelSimulation.weatherFile(this);
+      }
+
+      public OptionalYearDescription yearDescription() {
+        return OpenStudio.OpenStudioModelSimulation.yearDescription(this);
+      }
+
+      public OptionalZoneAirContaminantBalance zoneAirContaminantBalance() {
+        return OpenStudio.OpenStudioModelSimulation.zoneAirContaminantBalance(this);
+      }
+
+      public OptionalZoneAirHeatBalanceAlgorithm zoneAirHeatBalanceAlgorithm() {
+        return OpenStudio.OpenStudioModelSimulation.zoneAirHeatBalanceAlgorithm(this);
+      }
+
+      public OptionalZoneAirMassFlowConservation zoneAirMassFlowConservation() {
+        return OpenStudio.OpenStudioModelSimulation.zoneAirMassFlowConservation(this);
+      }
+
+      public OptionalZoneCapacitanceMultiplierResearchSpecial zoneCapacitanceMultiplierResearchSpecial() {
+        return OpenStudio.OpenStudioModelSimulation.zoneCapacitanceMultiplierResearchSpecial(this);
+      }
+
+    } // partial class Model
+  %} // pragma
+#endif // defined(SWIGCSHARP)
 
 #endif // MODEL_GEOMETRY_I
