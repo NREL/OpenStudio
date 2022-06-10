@@ -1018,10 +1018,10 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   EXPECT_TRUE(m.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
   EXPECT_EQ(i++, m.getModelObjects<ModelObject>().size());
 
-  EXPECT_FALSE(m.getOptionalUniqueModelObject<YearDescription>());
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<model::YearDescription>());
   EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
-  YearDescription yearDescription = m.getUniqueModelObject<YearDescription>();
-  EXPECT_TRUE(m.getOptionalUniqueModelObject<YearDescription>());
+  auto yearDescription = m.getUniqueModelObject<model::YearDescription>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<model::YearDescription>());
   EXPECT_EQ(i++, m.getModelObjects<ModelObject>().size());
 
   EXPECT_FALSE(m.getOptionalUniqueModelObject<Site>());
