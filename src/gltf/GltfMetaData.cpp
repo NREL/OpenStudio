@@ -260,7 +260,7 @@ namespace gltf {
         for (const auto& vv : val.Get<std::map<std::string, tinygltf::Value>>()) {
           if (vv.second.IsObject()) {
             // Constructs in place via GltfModelObjectMetaData(const tinygltf::Value&) ctor
-            m_glTFModelObjectMetaDataVector.emplace_back(vv.second);
+            m_glTFModelObjectMetaDataVector.emplace_back(GltfModelObjectMetaData(vv.second));
 
             std::string iddObjectTypeStr = m_glTFModelObjectMetaDataVector.back().iddObjectType();
             if (iddObjectTypeStr == "OS:BuildingStory") {

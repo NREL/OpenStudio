@@ -526,7 +526,7 @@ namespace gltf {
           isTopNode = false;
           continue;
         }
-        m_userDataCollection.emplace_back(node.extras);
+        m_userDataCollection.emplace_back(GltfUserData(node.extras));
       }
 
       // METADATA INITIALIZATION FROM SCENE's EXTRAS

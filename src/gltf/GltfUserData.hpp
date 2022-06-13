@@ -198,10 +198,10 @@ namespace gltf {
 
     //@}
 
-    // TODO: I wanted this to be protected, but running into an issue with std::vector emplace_back...
+   protected:
+    // Interace with an existing GLTF file
     GltfUserData(const tinygltf::Value& userDataObj);
 
-   protected:
     // TODO: change to return a tinygltf::Node instead
     std::map<std::string, tinygltf::Value> toExtras() const;
     friend class GltfForwardTranslator;

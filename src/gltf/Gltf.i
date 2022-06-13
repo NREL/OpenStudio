@@ -25,9 +25,6 @@
 // ignore specific overload of GltfForwardTranslator::modelToGLTF to avoid dealing with std::function<void(double)>updatePercentage
 %ignore openstudio::gltf::GltfForwardTranslator::modelToGLTF(const model::Model& model, std::function<void(double)> updatePercentage, const path& outputPath);
 
-// Ignore the tinygtlf stuff that is public
-%ignore openstudio::gltf::GltfModelObjectMetaData(const tinygltf::Value& gltfObjectMetaDataObj);
-
 %{
   #include <utilities/core/Path.hpp>
   #include <gltf/GltfBoundingBox.hpp>
@@ -41,7 +38,6 @@
   using namespace openstudio;
 %}
 
-
 %include <gltf/GltfBoundingBox.hpp>
 //%include <gltf/GltfMaterialData.hpp>
 %include <gltf/GltfModelObjectMetaData.hpp>
@@ -54,7 +50,7 @@
 %template(GltfModelObjectMetaDataVector) std::vector<openstudio::gltf::GltfModelObjectMetaData>;
 // %template(GltfMaterialDataVector) std::vector<openstudio::gltf::GltfMaterialDataVector>;
 
-
+%template(OptionalGltfUserData) boost::optional<openstudio::gltf::GltfUserData>;
 
 #if defined SWIGRUBY
   // This isn't super clean and there might be a better way with typemaps in SWIG rather than using a String in between,

@@ -99,11 +99,10 @@ namespace gltf {
     int multiplier() const;
     void setMultiplier(int multiplier);
 
-    // TODO: I wanted this to be protected, but running into an issue with std::vector emplace_back...
+   protected:
     // Interace with an existing GLTF file
     explicit GltfModelObjectMetaData(const tinygltf::Value& modelObjectMetaDataObj);
 
-   protected:
     // Export to tinygltf
     std::map<std::string, tinygltf::Value> toExtras() const;
 
