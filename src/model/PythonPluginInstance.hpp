@@ -45,7 +45,7 @@ namespace model {
 
   }  // namespace detail
 
-  /** PythonPluginInstance is a ResourceObject that wraps the OpenStudio IDD object 'OS:PythonPlugn:Instance'. */
+  /** PythonPluginInstance is a ResourceObject that wraps the OpenStudio IDD object 'OS:PythonPlugin:Instance'. */
   class MODEL_API PythonPluginInstance : public ResourceObject
   {
    public:
