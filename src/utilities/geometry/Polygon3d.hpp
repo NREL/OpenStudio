@@ -66,8 +66,8 @@ class UTILITIES_API Polygon3d
   // Adds an inner path to the polygon
   void addHole(const Point3dVector& hole);
 
-  // Calculates the Newall Vector for the polygon
-  Vector3d newallVector();
+  // Calculates the Newell Vector for the polygon
+  Vector3d newellVector();
 
   // Calculates the outward normal of the polygon
   Vector3d outwardNormal();
