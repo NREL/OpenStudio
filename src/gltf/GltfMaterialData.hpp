@@ -36,7 +36,7 @@
 #include <vector>
 
 namespace tinygltf {
-class Material;
+struct Material;
 }
 
 namespace openstudio {
