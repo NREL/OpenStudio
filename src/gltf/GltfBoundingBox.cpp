@@ -48,7 +48,6 @@ namespace gltf {
   GltfBoundingBox::GltfBoundingBox(const std::vector<model::PlanarSurfaceGroup>& planarSurfaceGroups) {
 
     // Bounding Box
-    std::map<std::string, tinygltf::Value> boundingBoxObject;
     BoundingBox boundingBox;
     boundingBox.addPoint(Point3d(0, 0, 0));
     boundingBox.addPoint(Point3d(1, 1, 1));

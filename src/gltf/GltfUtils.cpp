@@ -114,8 +114,8 @@ namespace gltf {
         std::vector<unsigned char> arrayOfByte;
         if (ct == TINYGLTF_COMPONENT_TYPE_UNSIGNED_BYTE) {
           arrayOfByte.push_back((unsigned char)index);
-        } else if (ct == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) {
-          arrayOfByte = splitValueToBytes(index);
+          // } else if (ct == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) {
+          //  arrayOfByte = splitValueToBytes(index);
         } else {
           arrayOfByte = splitValueToBytes(index);
         }
@@ -153,15 +153,17 @@ namespace gltf {
           i = 0;
         }
         std::vector<unsigned char> v;
+        // TODO: ideally we should revisit this...
+        // cppcheck-suppress invalidPointerCast
         const auto* ptr = reinterpret_cast<const unsigned char*>(&value);
-        for (size_t i = 0; i < sizeof(float); ++i) {
-          v.push_back(ptr[i]);
+        for (size_t j = 0; j < sizeof(float); ++j) {
+          v.push_back(ptr[j]);
         }
         coordinatesBuffer.insert(coordinatesBuffer.end(), v.begin(), v.end());
       }
-      // To Fix : offset 18 is not a multiple of Comonent Type lenght 4
+      // To Fix : offset 18 is not a multiple of Component Type length 4
       auto padding = coordinatesBuffer.size() % 4;
-      for (size_t i = 0; i < padding; ++i) {
+      for (size_t j = 0; j < padding; ++j) {
         coordinatesBuffer.push_back((unsigned)0);
       }
       // convert min and max to double
