@@ -52,6 +52,10 @@
 #include "../SimulationControl_Impl.hpp"
 #include "../Version.hpp"
 #include "../Version_Impl.hpp"
+#include "../SiteWaterMainsTemperature.hpp"
+#include "../SiteWaterMainsTemperature_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
@@ -462,4 +466,107 @@ TEST_F(ModelFixture, Component_Purge_NonResourceObject) {
   EXPECT_EQ(1u, m.numObjects());
   EXPECT_EQ(1u, m.getConcreteModelObjects<DesignDay>().size());
   EXPECT_EQ(0u, m.getConcreteModelObjects<ComponentData>().size());
+}
+
+TEST_F(ModelFixture, Component_DuplicateUniqueModelObjects) {
+  // Test for #2610 - insertComponent can create duplicate unique model objects
+
+  {
+    // insert component with SiteWaterMainsTemperature object into model
+    Model model;
+    ASSERT_EQ(0u, model.numObjects());
+
+    Model model2;
+    SiteWaterMainsTemperature siteWaterMainsTemperature2 = model2.getUniqueModelObject<SiteWaterMainsTemperature>();
+    ASSERT_EQ(1u, model2.numObjects());
+
+    // create component
+    Component siteWaterMainsTemperature2Component = siteWaterMainsTemperature2.createComponent();
+    EXPECT_EQ(1u, siteWaterMainsTemperature2Component.componentData().numComponentObjects());
+    EXPECT_EQ(1u, model2.numObjects());
+
+    // insert component
+    OptionalComponentData ocd = model.insertComponent(siteWaterMainsTemperature2Component);
+    ASSERT_TRUE(ocd);
+    EXPECT_NE(siteWaterMainsTemperature2Component.componentData().handle(), ocd->handle());
+    EXPECT_EQ(1u, ocd->numComponentObjects());
+    ASSERT_TRUE(ocd->primaryComponentObject().optionalCast<SiteWaterMainsTemperature>());
+
+    // check model
+    EXPECT_EQ(1u, model.getModelObjects<SiteWaterMainsTemperature>().size());
+    ASSERT_EQ(1u, model.getModelObjects<ComponentData>().size());
+    EXPECT_EQ(ocd->handle(), model.getModelObjects<ComponentData>()[0].handle());
+    EXPECT_EQ(2u, model.numObjects());
+    EXPECT_NE(siteWaterMainsTemperature2.handle(), model.getUniqueModelObject<SiteWaterMainsTemperature>().handle());  // cloned
+  }
+
+  {
+    // insert component with SiteWaterMainsTemperature object into model with SiteWaterMainsTemperature object, check merged fields
+    Model model;
+    SiteWaterMainsTemperature siteWaterMainsTemperature1 = model.getUniqueModelObject<SiteWaterMainsTemperature>();
+    ASSERT_EQ(1u, model.numObjects());
+    EXPECT_EQ("CorrelationFromWeatherFile", siteWaterMainsTemperature1.calculationMethod());
+
+    Model model2;
+    SiteWaterMainsTemperature siteWaterMainsTemperature2 = model2.getUniqueModelObject<SiteWaterMainsTemperature>();
+    ASSERT_EQ(1u, model2.numObjects());
+    EXPECT_TRUE(siteWaterMainsTemperature2.setCalculationMethod("Schedule"));
+    EXPECT_EQ("Schedule", siteWaterMainsTemperature2.calculationMethod());
+
+    // create component
+    Component siteWaterMainsTemperature2Component = siteWaterMainsTemperature2.createComponent();
+    EXPECT_EQ(1u, siteWaterMainsTemperature2Component.componentData().numComponentObjects());
+    EXPECT_EQ(1u, model2.numObjects());
+
+    // insert component
+    OptionalComponentData ocd = model.insertComponent(siteWaterMainsTemperature2Component);
+    ASSERT_TRUE(ocd);
+    EXPECT_NE(siteWaterMainsTemperature2Component.componentData().handle(), ocd->handle());
+    EXPECT_EQ(1u, ocd->numComponentObjects());
+    ASSERT_TRUE(ocd->primaryComponentObject().optionalCast<SiteWaterMainsTemperature>());
+
+    // check model
+    EXPECT_EQ(1u, model.getModelObjects<SiteWaterMainsTemperature>().size());
+    ASSERT_EQ(1u, model.getModelObjects<ComponentData>().size());
+    EXPECT_EQ(ocd->handle(), model.getModelObjects<ComponentData>()[0].handle());
+    EXPECT_EQ(2u, model.numObjects());
+    EXPECT_NE(siteWaterMainsTemperature1.handle(), model.getUniqueModelObject<SiteWaterMainsTemperature>().handle());  // removed
+    EXPECT_NE(siteWaterMainsTemperature2.handle(), model.getUniqueModelObject<SiteWaterMainsTemperature>().handle());  // cloned
+    EXPECT_EQ("Schedule", model.getUniqueModelObject<SiteWaterMainsTemperature>().calculationMethod());
+  }
+
+  {
+    // insert component with Building object into model with Building object, check merged fields
+    Model model;
+    Building building1 = model.getUniqueModelObject<Building>();
+    ASSERT_EQ(1u, model.numObjects());
+    EXPECT_EQ(0, building1.northAxis());
+
+    Model model2;
+    Building building2 = model2.getUniqueModelObject<Building>();
+    ASSERT_EQ(1u, model2.numObjects());
+    EXPECT_TRUE(building2.setNorthAxis(65));
+    EXPECT_EQ(65, building2.northAxis());
+
+    // create component
+    Component building2Component = building2.createComponent();
+    EXPECT_EQ(1u, building2Component.componentData().numComponentObjects());
+    EXPECT_EQ(1u, model2.numObjects());
+
+    // insert component
+    OptionalComponentData ocd = model.insertComponent(building2Component);
+    ASSERT_TRUE(ocd);
+    EXPECT_NE(building2Component.componentData().handle(), ocd->handle());
+    EXPECT_EQ(1u, ocd->numComponentObjects());
+    ASSERT_TRUE(ocd->primaryComponentObject().optionalCast<Building>());
+
+    // check model
+    EXPECT_EQ(1u, model.getModelObjects<Building>().size());
+    ASSERT_EQ(1u, model.getModelObjects<ComponentData>().size());
+    EXPECT_EQ(ocd->handle(), model.getModelObjects<ComponentData>()[0].handle());
+    EXPECT_EQ(2u, model.numObjects());
+    EXPECT_NE(building1.handle(), model.getUniqueModelObject<Building>().handle());  // removed
+    EXPECT_NE(building2.handle(), model.getUniqueModelObject<Building>().handle());  // cloned
+    EXPECT_EQ(65, model.getUniqueModelObject<Building>().northAxis());
+  }
 }
