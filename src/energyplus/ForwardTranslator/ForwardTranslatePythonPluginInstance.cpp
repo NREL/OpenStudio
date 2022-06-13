@@ -35,6 +35,8 @@
 #include "../../model/ExternalFile.hpp"
 #include "../../model/ExternalFile_Impl.hpp"
 
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
 #include <utilities/idd/PythonPlugin_Instance_FieldEnums.hxx>
 
 #include "../../utilities/idd/IddEnums.hpp"
@@ -61,7 +63,15 @@ namespace energyplus {
       idfObject.setString(openstudio::PythonPlugin_InstanceFields::RunDuringWarmupDays, "No");
     }
 
-    std::string pythonModuleName = modelObject.externalFile().filePath().stem();
+    path filePath = modelObject.externalFile().filePath();
+    if (!exists(filePath)) {
+      LOG(Warn, "Cannot find file \"" << filePath << "\"");
+    } else {
+      // make the path correct for this system
+      filePath = system_complete(filePath);
+    }
+
+    std::string pythonModuleName = toString(filePath.stem());
     idfObject.setString(openstudio::PythonPlugin_InstanceFields::PythonModuleName, pythonModuleName);
 
     idfObject.setString(openstudio::PythonPlugin_InstanceFields::PluginClassName, modelObject.pluginClassName());
@@ -76,16 +86,7 @@ namespace energyplus {
     }
 
     IdfExtensibleGroup group = m_pythonPluginSearchPaths->pushExtensibleGroup();
-
-    path filePath = modelObject.externalFile().filePath();
-    if (!exists(filePath)) {
-      LOG(Warn, "Cannot find file \"" << filePath << "\"");
-    } else {
-      // make the path correct for this system
-      filePath = system_complete(filePath);
-    }
-
-    std::string searchPath = filePath.parent_path();
+    std::string searchPath = toString(filePath.parent_path());
     group.setString(0, searchPath);
 
     return idfObject;

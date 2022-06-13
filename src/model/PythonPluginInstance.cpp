@@ -72,7 +72,7 @@ namespace model {
     }
 
     std::vector<ResourceObject> PythonPluginInstance_Impl::resources() const {
-      return {externalFile())};
+      return {externalFile()};
     }
 
     ExternalFile PythonPluginInstance_Impl::externalFile() const {
