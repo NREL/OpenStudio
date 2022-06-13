@@ -63,12 +63,13 @@
 #if defined SWIGPYTHON
 
   // Let's use monkey-patching via unbound functions
-  // Edit: not even needed here
   %pythoncode %{
 # Manually added: Lazy-load the json module (python std lib) and return a dict via modelToGLTFString
-def toJSON(*args) -> dict:
+def _modelToGLTFJSON(self, *args) -> dict:
     import json
-    return json.loads(toJSONString(*args))
+    return json.loads(self.modelToGLTFString(*args))
+
+GltfForwardTranslator.modelToGLTFJSON = _modelToGLTFJSON
   %}
 #endif
 
