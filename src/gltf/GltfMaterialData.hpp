@@ -105,6 +105,9 @@ namespace gltf {
     bool m_isDoubleSided = false;
   };
 
+  /** \relates GltfMaterialData */
+  GLTF_API std::ostream& operator<<(std::ostream& out, const GltfMaterialData& gltfMaterialData);
+
   using GltfMaterialDataVector = std::vector<GltfMaterialData>;
 
 }  // namespace gltf

@@ -53,6 +53,7 @@
 #include <map>
 #include <string>
 #include <string_view>
+#include <iostream>
 
 namespace openstudio {
 namespace gltf {
@@ -240,7 +241,7 @@ namespace gltf {
         // createMaterial(materials, color, materialName, true);
         allMaterials.emplace_back(materialName, color, true);
       } else {
-        LOG_FREE(Debug, "GltfForwardTranslator", "buildMaterials, Key " << materialName << " found in materialList");
+        LOG_FREE(Debug, "GltfForwardTranslator", "buildMaterials, Key " << materialName << " found in materialList: " << *it);
       }
     };
 
@@ -278,6 +279,16 @@ namespace gltf {
     }
 
     return allMaterials;
+  }
+
+  std::ostream& operator<<(std::ostream& out, const GltfMaterialData& gltfMaterialData) {
+    out << "GltfMaterialData(r=" << gltfMaterialData.r() << ", g=" << gltfMaterialData.g() << ", b=" << gltfMaterialData.b()
+        << ", a=" << gltfMaterialData.a();
+    if (gltfMaterialData.isDoubleSided()) {
+      out << ", Double Sided";
+    }
+    out << ")";
+    return out;
   }
 
 }  // namespace gltf
