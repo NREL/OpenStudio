@@ -123,7 +123,14 @@ namespace model {
   PythonPluginInstance::PythonPluginInstance(const ExternalFile& externalfile, const std::string& pluginClassName)
     : ResourceObject(PythonPluginInstance::iddObjectType(), externalfile.model()) {
     OS_ASSERT(getImpl<detail::PythonPluginInstance_Impl>());
-    bool ok;
+
+    path filePath = externalfile.filePath();
+    bool ok = (toString(filePath.extension()) == ".py");
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s external file to " << externalfile.briefDescription() << ".");
+    }
+
     ok = setPointer(OS_PythonPlugin_InstanceFields::ExternalFileName, externalfile.handle());
     OS_ASSERT(ok);
     ok = setPluginClassName(pluginClassName);

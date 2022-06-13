@@ -108,3 +108,15 @@ TEST_F(ModelFixture, PythonPluginInstance) {
   EXPECT_TRUE(exists(p));
   EXPECT_FALSE(exists(filePath));
 }
+
+TEST_F(ModelFixture, PythonPluginInstance_NotPYFile) {
+  Model model;
+
+  path p = resourcesPath() / toPath("model/7-7_Windows_Complete.osm");
+  EXPECT_TRUE(exists(p));
+
+  boost::optional<ExternalFile> externalfile = ExternalFile::getExternalFile(model, openstudio::toString(p));
+  ASSERT_TRUE(externalfile);
+
+  ASSERT_THROW(PythonPluginInstance plugin(*externalfile, "ZN_1_wall_south_Window_1_Control"), openstudio::Exception);
+}
