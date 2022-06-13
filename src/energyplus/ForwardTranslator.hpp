@@ -1615,6 +1615,8 @@ namespace energyplus {
 
     boost::optional<IdfObject> m_anyNumberScheduleTypeLimits;
 
+    boost::optional<IdfObject> m_pythonPluginSearchPaths;
+
     StringStreamLogSink m_logSink;
 
     ProgressBar* m_progressBar;

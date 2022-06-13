@@ -61,6 +61,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   boost::optional<ExternalFile> externalfile = ExternalFile::getExternalFile(model, openstudio::toString(p));
 
   PythonPluginInstance pythonPluginInstance(*externalfile, "ZN_1_wall_south_Window_1_Control");
+  PythonPluginInstance pythonPluginInstance2(*externalfile, "ZN_1_wall_south_Window_1_Control");
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
@@ -79,5 +80,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   std::vector<WorkspaceObject> searchPathObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
   ASSERT_EQ(1u, searchPathObjects.size());
   WorkspaceObject woSearchPaths(searchPathObjects[0]);
-  EXPECT_EQ(1u, woSearchPaths.numExtensibleGroups());
+  EXPECT_EQ(2u, woSearchPaths.numExtensibleGroups());
 }

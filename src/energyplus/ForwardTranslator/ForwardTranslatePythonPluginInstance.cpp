@@ -51,6 +51,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translatePythonPluginInstance(PythonPluginInstance& modelObject) {
     IdfObject idfObject(openstudio::IddObjectType::PythonPlugin_Instance);
+    m_idfObjects.push_back(idfObject);
 
     idfObject.setName(modelObject.name().get());
 
@@ -60,14 +61,33 @@ namespace energyplus {
       idfObject.setString(openstudio::PythonPlugin_InstanceFields::RunDuringWarmupDays, "No");
     }
 
-    std::string fileName = modelObject.externalFile().fileName();
-    int lastindex = fileName.find_last_of(".");
-    std::string fileNameWithoutExtension = fileName.substr(0, lastindex);
-    idfObject.setString(openstudio::PythonPlugin_InstanceFields::PythonModuleName, fileNameWithoutExtension);
+    std::string pythonModuleName = modelObject.externalFile().filePath().stem();
+    idfObject.setString(openstudio::PythonPlugin_InstanceFields::PythonModuleName, pythonModuleName);
 
     idfObject.setString(openstudio::PythonPlugin_InstanceFields::PluginClassName, modelObject.pluginClassName());
 
-    m_idfObjects.push_back(idfObject);
+    // Translate Python Plugin Search Paths
+    if (!m_pythonPluginSearchPaths) {
+      // Create a new IddObjectType::PythonPlugin_SearchPaths
+      IdfObject pythonPluginSearchPaths(IddObjectType::PythonPlugin_SearchPaths);
+      pythonPluginSearchPaths.setName("Python Plugin Search Paths");
+      m_idfObjects.push_back(pythonPluginSearchPaths);
+      m_pythonPluginSearchPaths = boost::optional<IdfObject>(pythonPluginSearchPaths);
+    }
+
+    IdfExtensibleGroup group = m_pythonPluginSearchPaths->pushExtensibleGroup();
+
+    path filePath = modelObject.externalFile().filePath();
+    if (!exists(filePath)) {
+      LOG(Warn, "Cannot find file \"" << filePath << "\"");
+    } else {
+      // make the path correct for this system
+      filePath = system_complete(filePath);
+    }
+
+    std::string searchPath = filePath.parent_path();
+    group.setString(0, searchPath);
+
     return idfObject;
   }
 
