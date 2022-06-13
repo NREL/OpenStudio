@@ -50,14 +50,14 @@ namespace gltf {
 
   class GltfForwardTranslator;
 
-  /** GltfMaterialData is an Interface class between a RenderingColor and a tinygltf::Material **/
+  /** GltfMaterialData is an Interface class between a `RenderingColor` and a `tinygltf::Material` **/
   class GLTF_API GltfMaterialData
   {
    public:
     /** @name Interface with Model and ModelObjects */
     //@{
 
-    // Standard constructor
+    /** Standard constructor */
     constexpr GltfMaterialData(std::string_view materialName, int r, int g, int b, double a, bool isDoubleSided = false)
       : m_materialName(materialName), m_r(r), m_g(g), m_b(b), m_a(a), m_isDoubleSided(isDoubleSided){};
 
@@ -66,6 +66,8 @@ namespace gltf {
 
     GltfMaterialData(std::string_view materialName, const model::RenderingColor& color, bool isDoubleSided = false);
 
+    /** @name Getters and Setters */
+    //@{
     std::string materialName() const;
     void setMaterialName(const std::string& materialName);
 
@@ -85,10 +87,14 @@ namespace gltf {
     void setIsDoubleSided(bool isDoubleSided);
 
    protected:
-    // Creates a GLTF material on the basis of raw Material Values
-    // i.e, R, G, B, A & isDoubleSided
+    /** @name Protected */
+    //@{
+
+    /** Creates a GLTF material on the basis of raw Material Values, i.e, R, G, B, A & isDoubleSided */
     tinygltf::Material toGltf() const;
     friend class GltfForwardTranslator;
+
+    //@}
 
    private:
     std::string_view m_materialName;

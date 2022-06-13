@@ -61,7 +61,7 @@ namespace gltf {
   class GLTF_API GltfModelObjectMetaData
   {
    public:
-    // Default constructor
+    /** Default constructor **/
     GltfModelObjectMetaData();
 
     /** @name Interface with ModelObjects */
@@ -74,6 +74,9 @@ namespace gltf {
     explicit GltfModelObjectMetaData(const model::DefaultConstructionSet& defaultConstructionSet);
     explicit GltfModelObjectMetaData(const model::Space& space);
     //@}
+
+    /** @name Getters and Setters */
+    //@{
 
     std::string color() const;
     void setColor(const std::string& color);
@@ -99,12 +102,19 @@ namespace gltf {
     int multiplier() const;
     void setMultiplier(int multiplier);
 
+    //@}
+
    protected:
-    // Interace with an existing GLTF file
+    /** @name Protected */
+    //@{
+
+    /** Interface with an existing GLTF file **/
     explicit GltfModelObjectMetaData(const tinygltf::Value& modelObjectMetaDataObj);
 
-    // Export to tinygltf
+    /** Export to tinygltf **/
     std::map<std::string, tinygltf::Value> toExtras() const;
+
+    //@}
 
     friend class GltfMetaData;
 

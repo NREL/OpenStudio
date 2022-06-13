@@ -59,7 +59,11 @@ namespace gltf {
   {
    public:
     GltfUserData();  // Default constructor (TODO: remove?)
+
+    /** @name Interface with Model and ModelObjects */
+    //@{
     GltfUserData(const model::PlanarSurface& planarSurface);
+    //@}
 
     /** @name Getters & Setters */
     //@{
@@ -199,11 +203,14 @@ namespace gltf {
     //@}
 
    protected:
-    // Interace with an existing GLTF file
+    /** @name Protected */
+    //@{
+    /** Interface with an existing GLTF file */
     GltfUserData(const tinygltf::Value& userDataObj);
 
     // TODO: change to return a tinygltf::Node instead
     std::map<std::string, tinygltf::Value> toExtras() const;
+    //@}
     friend class GltfForwardTranslator;
 
    private:

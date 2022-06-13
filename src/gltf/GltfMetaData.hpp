@@ -55,8 +55,15 @@ namespace gltf {
   {
    public:
     GltfMetaData();  // default ctor
-    // Interface with the Model
+
+    /** @name Interface with Model */
+    //@{
+    /** Interface with the Model **/
     GltfMetaData(const model::Model& model);
+    //@}
+
+    /** @name Getters and Setters */
+    //@{
 
     std::vector<GltfModelObjectMetaData> glTFModelObjectMetaDataVector() const;
     void setGlTFModelObjectMetaDataVector(const std::vector<GltfModelObjectMetaData>& glTFModelObjectMetaDataVector);
@@ -102,9 +109,15 @@ namespace gltf {
     int buildingStoryCount() const;
     void setBuildingStoryCount(int buildingStoryCount);
 
+    //@}
+
    protected:
+    /** @name Protected */
+    //@{
     std::map<std::string, tinygltf::Value> toExtras() const;
     GltfMetaData(const tinygltf::Value& metaDataObj);
+
+    //@}
     friend class GltfForwardTranslator;
 
    private:
