@@ -1299,9 +1299,8 @@ namespace model {
       if (resultingObjects.empty()) {
         return boost::none;
       }
-      OS_ASSERT(resultingObjects.size() <= component.numObjects());  // we may not be adding unique object(s) to the workspace
+      OS_ASSERT(resultingObjects.size() == component.numObjects());
       for (const WorkspaceObject& wo : resultingObjects) {
-        LOG(Warn, wo.nameString());
         OptionalComponentData ocd = wo.optionalCast<ComponentData>();
         if (ocd) {
           ComponentData componentDataObject = *ocd;
