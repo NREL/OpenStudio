@@ -506,11 +506,11 @@ namespace gltf {
     std::string fileName = toString(inputPath);
     bool ret = loader.LoadASCIIFromFile(&gltf_Model, &err, &warning, fileName);
     if (!err.empty()) {
-      LOG(Error, "Error loading GLTF " << err);
+      LOG(Error, "Error loading GLTF: " << err);
       //ret = false;
     }
     if (!warning.empty()) {
-      LOG(Warn, "Error loading GLTF " << warning);
+      LOG(Warn, "Warning loading GLTF: " << warning);
     }
 
     if (!ret) {
