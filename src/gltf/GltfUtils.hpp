@@ -37,7 +37,7 @@
 #include <vector>
 
 namespace tinygltf {
-class Accessor;
+struct Accessor;
 }
 
 namespace openstudio {
