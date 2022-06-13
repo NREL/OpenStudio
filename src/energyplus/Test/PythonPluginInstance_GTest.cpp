@@ -69,7 +69,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   EXPECT_EQ(0u, ft.errors().size());
 
   std::vector<WorkspaceObject> instanceObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_Instance);
-  ASSERT_EQ(1u, instanceObjects.size());
+  ASSERT_EQ(2u, instanceObjects.size());
   WorkspaceObject woInstance(instanceObjects[0]);
 
   ASSERT_EQ(pythonPluginInstance.name().get(), woInstance.getString(PythonPlugin_InstanceFields::Name, false).get());
@@ -80,5 +80,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   std::vector<WorkspaceObject> searchPathObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
   ASSERT_EQ(1u, searchPathObjects.size());
   WorkspaceObject woSearchPaths(searchPathObjects[0]);
-  EXPECT_EQ(2u, woSearchPaths.numExtensibleGroups());
+  EXPECT_EQ(1u, woSearchPaths.numExtensibleGroups());
 }

@@ -85,9 +85,18 @@ namespace energyplus {
       m_pythonPluginSearchPaths = boost::optional<IdfObject>(pythonPluginSearchPaths);
     }
 
-    IdfExtensibleGroup group = m_pythonPluginSearchPaths->pushExtensibleGroup();
     std::string searchPath = toString(filePath.parent_path());
-    group.setString(0, searchPath);
+    bool newSearchPath = true;
+    for (IdfExtensibleGroup& eg : m_pythonPluginSearchPaths->extensibleGroups()) {
+      if (searchPath == eg.getString(0)) {
+        newSearchPath = false;
+      }
+    }
+
+    if (newSearchPath) {
+      IdfExtensibleGroup group = m_pythonPluginSearchPaths->pushExtensibleGroup();
+      group.setString(0, searchPath);
+    }
 
     return idfObject;
   }
