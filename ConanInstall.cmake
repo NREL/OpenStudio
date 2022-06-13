@@ -81,9 +81,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    set(CONAN_RUBY
-        "openstudio_ruby/2.7.2@jmarrec/testing#98444b7bc8d391ea1521d7f79d4d4926"
-    ) # TODO: pending https://github.com/NREL/conan-openstudio-ruby/pull/39
+    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#98444b7bc8d391ea1521d7f79d4d4926")
   endif()
 
   if(BUILD_BENCHMARK)
@@ -100,10 +98,10 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     "boost/1.79.0#f664bfe40e2245fa9baf1c742591d582"
     "pugixml/1.12.1#5a39f82651eba3e7d6197903a3202e21"
     "jsoncpp/1.9.5#536d080aa154e5853332339bf576747c"
-    "minizip/1.2.12#0b5296887a2558500d0323c6c94c8d02" # This depends on zlib/1.2.11, and basically patches it
+    "minizip/1.2.12#0b5296887a2558500d0323c6c94c8d02" # This depends on zlib, and basically patches it
     "zlib/1.2.12#3b9e037ae1c615d045a06c67d88491ae" # Also needed, so we can find zlib.h and co (+ pinning exactly is good)
     "fmt/8.1.1#b3e969f8561a85087bd0365c09bbf4fb"
-    "sqlite3/3.38.5#68f3bf289cde01176e39355869c39ac0"
+    "sqlite3/3.38.5#010911927ce1889b5cf824f45e7cd3d2"
     "cpprestsdk/2.10.18#df2f6ac88e47cadd9c9e8e0971e00d89"
     "websocketpp/0.8.2#3fd704c4c5388d9c08b11af86f79f616"
     "geographiclib/1.52#76536a9315a003ef3511919310b2fe37"

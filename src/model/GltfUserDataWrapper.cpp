@@ -413,31 +413,5 @@ namespace model {
   std::vector<std::string> GltfUserDataWrapper::getAirLoopHVACMaterialNames() const {
     return airLoopHVACMaterialNames;
   }
-
-  GltfUserDataWrapper::GltfUserDataWrapper() {
-    m_logSink.setLogLevel(Warn);
-    m_logSink.setThreadId(std::this_thread::get_id());
-  }
-
-  std::vector<LogMessage> GltfUserDataWrapper::warnings() const {
-    std::vector<LogMessage> result;
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() == Warn) {
-        result.push_back(logMessage);
-      }
-    }
-    return result;
-  }
-
-  std::vector<LogMessage> GltfUserDataWrapper::errors() const {
-    std::vector<LogMessage> result;
-    for (LogMessage logMessage : m_logSink.logMessages()) {
-      if (logMessage.logLevel() > Warn) {
-        result.push_back(logMessage);
-      }
-    }
-    return result;
-  }
-
 }  // namespace model
 }  // namespace openstudio

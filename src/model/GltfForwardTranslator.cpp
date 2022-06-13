@@ -89,6 +89,7 @@
 namespace openstudio {
 namespace model {
 
+  // TODO: pick one in your usage.
   namespace GLTF = tinygltf;
 
   // For raw values for GLTF Materials
@@ -2826,10 +2827,10 @@ namespace model {
     std::vector<MaterialData> allMaterials = getAllMaterials();
 
     /*
-    
-    This comprises of the other nodes that GLTF provides 
+
+    This comprises of the other nodes that GLTF provides
     for further addition of complex details, textures, lights, etc.
-    
+
     std::vector<GLTF::Scene> scenes;
     std::vector<GLTF::Buffer> buffers;
     std::vector<GLTF::Animation> animations;

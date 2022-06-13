@@ -52,16 +52,16 @@ double radToDeg(double radians) {
 /// compute area from surface as Point3dVector
 boost::optional<double> getArea(const Point3dVector& points) {
   boost::optional<double> result;
-  OptionalVector3d newall = getNewallVector(points);
-  if (newall) {
-    result = newall->length() / 2.0;
+  OptionalVector3d newell = getNewellVector(points);
+  if (newell) {
+    result = newell->length() / 2.0;
   }
   return result;
 }
 
-// compute Newall vector from Point3dVector, direction is same as outward normal
+// compute Newell vector from Point3dVector, direction is same as outward normal
 // magnitude is twice the area
-OptionalVector3d getNewallVector(const Point3dVector& points) {
+OptionalVector3d getNewellVector(const Point3dVector& points) {
   OptionalVector3d result;
   size_t N = points.size();
   if (N >= 3) {
@@ -78,7 +78,7 @@ OptionalVector3d getNewallVector(const Point3dVector& points) {
 
 // compute outward normal from Point3dVector
 OptionalVector3d getOutwardNormal(const Point3dVector& points) {
-  OptionalVector3d result = getNewallVector(points);
+  OptionalVector3d result = getNewellVector(points);
   if (result) {
     if (!result->normalize()) {
       result.reset();
