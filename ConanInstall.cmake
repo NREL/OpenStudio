@@ -102,7 +102,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   if(CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
     set(CONAN_CMAKE_MULTI ON)
     if (NOT CONAN_CONFIGURATION_TYPES)
-      set(CONAN_CONFIGURATION_TYPES "Release;Debug" CACHE)
+      # Cache it, and let user change it (if they want to pull RelWithDebInfo for eg)
+      set(CONAN_CONFIGURATION_TYPES "Release;Debug" CACHE STRING "List of configurations for which you want to fetch conan packages")
+      mark_as_advanced(CONAN_CONFIGURATION_TYPES)
     endif()
     message(STATUS "Conan: Using cmake_multi generator")
     set(CONAN_GENERATOR "cmake_multi")
@@ -110,7 +112,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     message(STATUS "Conan: Using cmake generator")
     set(CONAN_CMAKE_MULTI OFF)
     set(CONAN_GENERATOR "cmake")
+    set(CONAN_CONFIGURATION_TYPES ${CMAKE_BUILD_TYPE})
   endif()
+
 
   message(STATUS "Conan: conan_cmake_configure")
   # This will create the conanfile.txt
@@ -140,30 +144,27 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     GENERATORS ${CONAN_GENERATOR}
   )
 
-  if(CONAN_CMAKE_MULTI)
-    foreach(TYPE ${CONAN_CONFIGURATION_TYPES})
-      conan_cmake_autodetect(settings BUILD_TYPE ${TYPE})
-      message(STATUS "Conan: Autodetected settings for build type ${TYPE}: ${settings}")
-      conan_cmake_install(PATH_OR_REFERENCE .
-        BUILD ${CONAN_BUILD}
-        OPTIONS ${CONAN_OPTIONS}
-        SETTINGS ${settings}
-        ${CONAN_FORCE_SETTINGS_BUILD}
-        ${CONAN_UPDATE}
-      )
+  foreach(build_type ${CONAN_CONFIGURATION_TYPES})
+    conan_cmake_autodetect(settings BUILD_TYPE ${build_type})
+    message(STATUS "Conan: Autodetected settings for build type ${build_type}: ${settings}")
+
+    # Avoid polluting with cppstd which prevents downloading some existing binary packages (like boost)
+    # Former deprecated conan_cmake_run was NOT adding compiler.cppstd
+    foreach(ARG ${settings})
+      if(${ARG} MATCHES "compiler.cppstd=(.*)")
+        message("Removing ${ARG}")
+        list(REMOVE_ITEM settings ${ARG})
+      endif()
     endforeach()
-  else()
-      conan_cmake_autodetect(settings)
-      message(STATUS "Conan: Autodetected settings: ${settings}")
-      conan_cmake_install(PATH_OR_REFERENCE .
-        BUILD ${CONAN_BUILD}
-        OPTIONS ${CONAN_OPTIONS}
-        SETTINGS ${settings}
-        ${CONAN_FORCE_SETTINGS_BUILD}
-        # SETTINGS_BUILD arch=x86_64
-        ${CONAN_UPDATE}
-      )
-  endif()
+
+    conan_cmake_install(PATH_OR_REFERENCE .
+      BUILD ${CONAN_BUILD}
+      OPTIONS ${CONAN_OPTIONS}
+      SETTINGS ${settings}
+      ${CONAN_FORCE_SETTINGS_BUILD}
+      ${CONAN_UPDATE}
+    )
+  endforeach()
 
   # Loads the conanbuildinfo.cmake / conanbuildinfo_multi.cmake
   conan_load_buildinfo()
