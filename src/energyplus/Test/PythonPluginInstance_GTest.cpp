@@ -60,8 +60,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
 
   boost::optional<ExternalFile> externalfile = ExternalFile::getExternalFile(model, openstudio::toString(p));
 
-  PythonPluginInstance pythonPluginInstance(*externalfile, "ZN_1_wall_south_Window_1_Control");
+  PythonPluginInstance pythonPluginInstance1(*externalfile, "ZN_1_wall_south_Window_1_Control");
   PythonPluginInstance pythonPluginInstance2(*externalfile, "ZN_1_wall_south_Window_1_Control");
+  pythonPluginInstance2.setRunDuringWarmupDays(true);
+  PythonPluginInstance pythonPluginInstance3(*externalfile, "ZN_1_wall_north_Window_1_Control");  // doesn't exist
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
@@ -69,13 +71,27 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   EXPECT_EQ(0u, ft.errors().size());
 
   std::vector<WorkspaceObject> instanceObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_Instance);
-  ASSERT_EQ(2u, instanceObjects.size());
-  WorkspaceObject woInstance(instanceObjects[0]);
+  ASSERT_EQ(3u, instanceObjects.size());
+  std::sort(instanceObjects.begin(), instanceObjects.end(), IdfObjectNameLess());
+  WorkspaceObject woInstance1(instanceObjects[0]);
+  WorkspaceObject woInstance2(instanceObjects[1]);
+  WorkspaceObject woInstance3(instanceObjects[2]);
 
-  ASSERT_EQ(pythonPluginInstance.name().get(), woInstance.getString(PythonPlugin_InstanceFields::Name, false).get());
-  EXPECT_EQ("No", woInstance.getString(PythonPlugin_InstanceFields::RunDuringWarmupDays, false).get());
-  EXPECT_EQ("PythonPluginThermochromicWindow", woInstance.getString(PythonPlugin_InstanceFields::PythonModuleName, false).get());
-  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", woInstance.getString(PythonPlugin_InstanceFields::PluginClassName, false).get());
+  ASSERT_EQ(pythonPluginInstance1.name().get(), woInstance1.getString(PythonPlugin_InstanceFields::Name, false).get());
+  EXPECT_EQ("No", woInstance1.getString(PythonPlugin_InstanceFields::RunDuringWarmupDays, false).get());
+  EXPECT_EQ("PythonPluginThermochromicWindow", woInstance1.getString(PythonPlugin_InstanceFields::PythonModuleName, false).get());
+  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", woInstance1.getString(PythonPlugin_InstanceFields::PluginClassName, false).get());
+
+  ASSERT_EQ(pythonPluginInstance2.name().get(), woInstance2.getString(PythonPlugin_InstanceFields::Name, false).get());
+  EXPECT_EQ("Yes", woInstance2.getString(PythonPlugin_InstanceFields::RunDuringWarmupDays, false).get());
+  EXPECT_EQ("PythonPluginThermochromicWindow", woInstance2.getString(PythonPlugin_InstanceFields::PythonModuleName, false).get());
+  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", woInstance2.getString(PythonPlugin_InstanceFields::PluginClassName, false).get());
+
+  // FIXME: don't translate this one since the class doesn't exist
+  ASSERT_EQ(pythonPluginInstance3.name().get(), woInstance3.getString(PythonPlugin_InstanceFields::Name, false).get());
+  EXPECT_EQ("No", woInstance3.getString(PythonPlugin_InstanceFields::RunDuringWarmupDays, false).get());
+  EXPECT_EQ("PythonPluginThermochromicWindow", woInstance3.getString(PythonPlugin_InstanceFields::PythonModuleName, false).get());
+  EXPECT_EQ("ZN_1_wall_north_Window_1_Control", woInstance3.getString(PythonPlugin_InstanceFields::PluginClassName, false).get());
 
   std::vector<WorkspaceObject> searchPathObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
   ASSERT_EQ(1u, searchPathObjects.size());

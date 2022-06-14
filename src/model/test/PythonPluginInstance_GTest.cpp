@@ -120,3 +120,26 @@ TEST_F(ModelFixture, PythonPluginInstance_NotPYFile) {
 
   ASSERT_THROW(PythonPluginInstance plugin(*externalfile, "ZN_1_wall_south_Window_1_Control"), openstudio::Exception);
 }
+
+TEST_F(ModelFixture, PythonPluginInstance_BadClassName) {
+  Model model;
+
+  path p = resourcesPath() / toPath("model/PythonPluginThermochromicWindow.py");
+  EXPECT_TRUE(exists(p));
+
+  boost::optional<ExternalFile> externalfile = ExternalFile::getExternalFile(model, openstudio::toString(p));
+  ASSERT_TRUE(externalfile);
+
+  // ctor
+  {
+    PythonPluginInstance plugin(*externalfile, "ZN_1_wall_east_Window_1_Control");
+    // TODO: check warning
+  }
+
+  // setter
+  {
+    PythonPluginInstance plugin(*externalfile, "ZN_1_wall_south_Window_1_Control");
+    EXPECT_TRUE(plugin.setPluginClassName("ZN_1_wall_west_Window_1_Control"));
+    // TODO: check warning
+  }
+}
