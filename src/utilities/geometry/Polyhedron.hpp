@@ -44,7 +44,7 @@ namespace model {
 }  // namespace model
 
 // A thin wrapper to improve reporting, by attaching a name to the vertices
-UTILITIES_API class Surface3d
+class UTILITIES_API Surface3d
 {
  public:
   Surface3d() = default;
@@ -53,7 +53,7 @@ UTILITIES_API class Surface3d
   std::string name;
 };
 
-UTILITIES_API class Surface3dEdge
+class UTILITIES_API Surface3dEdge
 {
  public:
   Surface3dEdge(Point3d start, Point3d end, Surface3d firstSurface, size_t firstSurfNum);
@@ -95,7 +95,7 @@ class VolumeEnclosedReturnType
   Surface3dEdgeVector edgesNot2;
 };
 
-UTILITIES_API class Polyhedron
+class UTILITIES_API Polyhedron
 {
  public:
   Polyhedron() = default;  // Default ctor, for swig
