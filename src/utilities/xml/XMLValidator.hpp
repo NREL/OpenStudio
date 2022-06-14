@@ -49,9 +49,7 @@ class UTILITIES_API XMLValidator
   //@{
 
   /// Constructor for a new validator
-  explicit XMLValidator(const openstudio::path& xsdPath);
-
-  explicit XMLValidator(const std::string& xsdString);
+  explicit XMLValidator(const openstudio::path& schemaPath, const openstudio::path& xmlPath);
 
   //@}
   /** @name Destructor */
@@ -64,9 +62,9 @@ class UTILITIES_API XMLValidator
   /** @name Getters */
   //@{
 
-  boost::optional<openstudio::path> xsdPath() const;
+  openstudio::path schemaPath() const;
 
-  boost::optional<std::string> xsdString() const;
+  openstudio::path xmlPath() const;
 
   std::vector<std::string> errors() const;
 
@@ -74,13 +72,11 @@ class UTILITIES_API XMLValidator
 
   bool isValid() const;
 
+  bool validate() const;
+
   //@}
   /** @name Setters */
   //@{
-
-  bool xsdValidate(const openstudio::path& xmlPath);
-
-  bool validate(const std::string& xmlString);
 
   //@}
   /** @name Operators */
@@ -88,14 +84,17 @@ class UTILITIES_API XMLValidator
 
   //@}
 
- protected:
-  void setParser();
-
  private:
   REGISTER_LOGGER("openstudio.XMLValidator");
 
+  bool xsdValidate() const;
+  bool schematronValidate() const;
+  void setParser();
+
+  openstudio::path m_schemaPath;
+  openstudio::path m_xmlPath;
   boost::optional<openstudio::path> m_xsdPath;
-  boost::optional<std::string> m_xsdString;
+  boost::optional<openstudio::path> m_schematronPath;
   std::vector<std::string> m_errors;
   std::vector<std::string> m_warnings;
 };

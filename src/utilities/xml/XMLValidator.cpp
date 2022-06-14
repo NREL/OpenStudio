@@ -37,30 +37,38 @@
 
 namespace openstudio {
 
-XMLValidator::XMLValidator(const openstudio::path& xsdPath) : m_xsdPath(openstudio::filesystem::system_complete(xsdPath)) {
-  if (!openstudio::filesystem::exists(xsdPath)) {
-    LOG_AND_THROW("'" << toString(xsdPath) << "' does not exist");
-  } else if (!openstudio::filesystem::is_regular_file(xsdPath)) {
-    LOG_AND_THROW("'" << toString(xsdPath) << "' XSD cannot be opened");
+XMLValidator::XMLValidator(const openstudio::path& schemaPath, const openstudio::path& xmlPath)
+  : m_schemaPath(openstudio::filesystem::system_complete(schemaPath)), m_xmlPath(openstudio::filesystem::system_complete(xmlPath)) {
+
+  if (!openstudio::filesystem::exists(schemaPath)) {
+    LOG_AND_THROW("'" << toString(schemaPath) << "' does not exist");
+  } else if (!openstudio::filesystem::is_regular_file(schemaPath)) {
+    LOG_AND_THROW("'" << toString(schemaPath) << "' cannot be opened");
   }
 
-  // TODO
+  if (!openstudio::filesystem::exists(xmlPath)) {
+    LOG_AND_THROW("'" << toString(xmlPath) << "' does not exist");
+  } else if (!openstudio::filesystem::is_regular_file(xmlPath)) {
+    LOG_AND_THROW("'" << toString(xmlPath) << "' cannot be opened");
+  }
+
+  if (schemaPath.extension() == ".xsd") {
+    m_xsdPath = schemaPath;
+  } else if (schemaPath.extension() == ".xml") {
+    m_schematronPath = schemaPath;
+  } else {
+    LOG_AND_THROW("Schema path extension '" << toString(schemaPath.extension()) << "' not supported.");
+  }
 
   setParser();
 }
 
-XMLValidator::XMLValidator(const std::string& xsdString) : m_xsdString(xsdString) {
-  // TODO
-
-  setParser();
+openstudio::path XMLValidator::schemaPath() const {
+  return m_schemaPath;
 }
 
-boost::optional<openstudio::path> XMLValidator::xsdPath() const {
-  return m_xsdPath;
-}
-
-boost::optional<std::string> XMLValidator::xsdString() const {
-  return m_xsdString;
+openstudio::path XMLValidator::xmlPath() const {
+  return m_xmlPath;
 }
 
 std::vector<std::string> XMLValidator::errors() const {
@@ -75,16 +83,21 @@ bool XMLValidator::isValid() const {
   return m_errors.empty();
 }
 
-bool XMLValidator::xsdValidate(const openstudio::path& xmlPath) {
-  if (!openstudio::filesystem::exists(xmlPath)) {
-    LOG(Error, "'" << toString(xmlPath) << "' does not exist");
-    return false;
-  } else if (!openstudio::filesystem::is_regular_file(xmlPath)) {
-    LOG(Error, "'" << toString(xmlPath) << "' XML cannot be opened");
-    return false;
+bool XMLValidator::validate() const {
+
+  bool ok;
+  if (m_xsdPath) {
+    ok = xsdValidate();
+  } else if (m_schematronPath) {
+    ok = schematronValidate();
   }
 
-  auto schema_filename_str = openstudio::toString(m_xsdPath.value());
+  return ok;
+}
+
+bool XMLValidator::xsdValidate() const {
+
+  auto schema_filename_str = toString(m_xsdPath.value());
   const auto* schema_filename = schema_filename_str.c_str();
 
   xmlSchemaParserCtxt* parser_ctxt = nullptr;
@@ -98,7 +111,7 @@ bool XMLValidator::xsdValidate(const openstudio::path& xmlPath) {
   xmlSchemaFreeParserCtxt(parser_ctxt);
 
   // Start on the document to validate side
-  auto filename_str = openstudio::toString(xmlPath);
+  auto filename_str = toString(m_xmlPath);
   const auto* filename = filename_str.c_str();
 
   xmlDoc* doc = nullptr;
@@ -130,8 +143,10 @@ bool XMLValidator::xsdValidate(const openstudio::path& xmlPath) {
   return true;
 }
 
-bool XMLValidator::validate(const std::string& xmlString) {
-  // TODO
+bool XMLValidator::schematronValidate() const {
+
+  auto schema_filename_str = toString(m_schematronPath.value());
+  const auto* schema_filename = schema_filename_str.c_str();
 
   return true;
 }

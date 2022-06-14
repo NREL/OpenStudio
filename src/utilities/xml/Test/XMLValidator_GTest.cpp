@@ -41,14 +41,14 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-TEST_F(XMLValidatorFixture, Strings) {
+/* TEST_F(XMLValidatorFixture, Strings) {
   XMLValidator xmlValidator(xsdString);
-  /*   ASSERT_TRUE(xmlValidator.xsdString());
+  ASSERT_TRUE(xmlValidator.xsdString());
 
   std::string xmlString;
 
   xmlString = "";
-  EXPECT_FALSE(xmlValidator.validate(xmlString)); */
+  EXPECT_FALSE(xmlValidator.validate(xmlString));
 }
 
 TEST_F(XMLValidatorFixture, NonXMLFile) {
@@ -59,18 +59,21 @@ TEST_F(XMLValidatorFixture, NonXMLFile) {
   openstudio::path xmlFile;
 
   xmlFile = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/eplusout.sql");
-  //EXPECT_FALSE(xmlValidator.xsdValidate(xmlFile));
-}
+  EXPECT_FALSE(xmlValidator.xsdValidate(xmlFile));
+} */
 
 TEST_F(XMLValidatorFixture, GBXML_ValidateResources) {
-  XMLValidator xmlValidator(xsdPath);
-  ASSERT_TRUE(xmlValidator.xsdPath());
-  EXPECT_NE("", xmlValidator.xsdPath().get());
 
-  openstudio::path xmlFile;
+  openstudio::path xmlPath;
 
-  xmlFile = resourcesPath() / openstudio::toPath("gbxml/3951_Geometry_bug.xml");
-  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
+  xmlPath = resourcesPath() / openstudio::toPath("gbxml/3951_Geometry_bug.xml");
+  XMLValidator xmlValidator(xsdPath, xmlPath);
+  EXPECT_NE("", xmlValidator.schemaPath());
+  EXPECT_NE("", xmlValidator.xmlPath());
+  EXPECT_TRUE(xmlValidator.validate());
+  EXPECT_TRUE(xmlValidator.isValid());
+  EXPECT_EQ(0u, xmlValidator.warnings().size());
+  EXPECT_EQ(0u, xmlValidator.errors().size());
 
   /*   xmlFile = resourcesPath() / openstudio::toPath("gbxml/3997_WindowScaling_bug.xml");
   EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
