@@ -90,6 +90,33 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate) {
   EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour));
 }
 
+TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate_SpaceTranslation) {
+  Model model;
+
+  ThermalZone zone(model);
+
+  Space space(model);
+  space.setThermalZone(zone);
+
+  SpaceInfiltrationDesignFlowRate infiltration(model);
+  infiltration.setAirChangesperHour(0.1);
+  infiltration.setSpace(space);
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(model);
+
+  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::ZoneInfiltration_DesignFlowRate);
+  ASSERT_EQ(1u, objects.size());
+
+  ASSERT_TRUE(objects[0].getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod));
+  EXPECT_EQ("AirChanges/Hour", objects[0].getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
+  EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate));
+  EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowperZoneFloorArea));
+  EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea));
+  ASSERT_TRUE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour));
+  EXPECT_EQ(0.1, objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour).get());
+}
+
 TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate_SpaceTypes) {
 
   Model m;
