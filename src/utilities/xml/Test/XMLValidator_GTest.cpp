@@ -67,15 +67,22 @@ TEST_F(XMLValidatorFixture, GBXML_ValidateResources) {
   openstudio::path xmlPath;
 
   xmlPath = resourcesPath() / openstudio::toPath("gbxml/3951_Geometry_bug.xml");
-  XMLValidator xmlValidator(xsdPath, xmlPath);
+  XMLValidator xmlValidator(xsdPath);
+
   EXPECT_NE("", xmlValidator.schemaPath());
-  EXPECT_NE("", xmlValidator.xmlPath());
-  EXPECT_TRUE(xmlValidator.validate());
-  EXPECT_TRUE(xmlValidator.isValid());
-  EXPECT_EQ(0u, xmlValidator.warnings().size());
-  EXPECT_EQ(0u, xmlValidator.errors().size());
-  for (const auto& logMessage : xmlValidator.errors()) {
-    EXPECT_TRUE(false) << logMessage.logMessage();
+  EXPECT_FALSE(xmlValidator.xmlPath());
+
+  for (int i = 0; i < 2; ++i) {
+
+    EXPECT_FALSE(xmlValidator.validate(xmlPath)) << "Failed at iteration " << i + 1;
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_FALSE(xmlValidator.isValid());
+    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(8u, xmlValidator.errors().size());
+    // for (const auto& logMessage : xmlValidator.errors()) {
+    //   EXPECT_TRUE(false) << logMessage.logMessage();
+    // }
   }
 
   /*   xmlFile = resourcesPath() / openstudio::toPath("gbxml/3997_WindowScaling_bug.xml");
@@ -116,28 +123,69 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_XSLT) {
   openstudio::path xmlPath = resourcesPath() / openstudio::toPath("utilities/xml/hpxml_with_error.xml");
   openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/HPXMLvalidator.xslt");
 
-  XMLValidator xmlValidator(schematronPath, xmlPath);
-  EXPECT_FALSE(xmlValidator.validate());
+  XMLValidator xmlValidator(schematronPath);
+  EXPECT_FALSE(xmlValidator.xmlPath());
 
-  ASSERT_TRUE(xmlValidator.fullValidationReport());
-  EXPECT_NE("", xmlValidator.fullValidationReport().get());
-  EXPECT_EQ(0, xmlValidator.warnings().size());
+  for (int i = 0; i < 2; ++i) {
+    EXPECT_FALSE(xmlValidator.validate(xmlPath)) << "Failed at iteration " << i + 1;
 
-  auto errors = xmlValidator.errors();
-  ASSERT_EQ(1, errors.size());
-  EXPECT_EQ(LogLevel::Error, errors[0].logLevel());
-  EXPECT_EQ("xsltValidate: Expected EventType to be 'audit' or 'proposed workscope' or 'approved workscope' or "
-            "'construction-period testing/daily test out' or 'job completion testing/final inspection' or "
-            "'quality assurance/monitoring' or 'preconstruction'",
-            errors[0].logMessage());
+    ASSERT_TRUE(xmlValidator.fullValidationReport());
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+
+    EXPECT_NE("", xmlValidator.fullValidationReport().get());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+
+    auto errors = xmlValidator.errors();
+    ASSERT_EQ(1, errors.size());
+    EXPECT_EQ(LogLevel::Error, errors[0].logLevel());
+    EXPECT_EQ("xsltValidate: Expected EventType to be 'audit' or 'proposed workscope' or 'approved workscope' or "
+              "'construction-period testing/daily test out' or 'job completion testing/final inspection' or "
+              "'quality assurance/monitoring' or 'preconstruction'",
+              errors[0].logMessage());
+  }
 }
 
 TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_Schematron) {
   openstudio::path xmlPath = resourcesPath() / openstudio::toPath("utilities/xml/hpxml_with_error.xml");
   openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/HPXMLvalidator.xml");
 
-  XMLValidator xmlValidator(schematronPath, xmlPath);
-  EXPECT_FALSE(xmlValidator.validate());
+  XMLValidator xmlValidator(schematronPath);
+  EXPECT_FALSE(xmlValidator.xmlPath());
+
+  for (int i = 0; i < 2; ++i) {
+    EXPECT_FALSE(xmlValidator.validate(xmlPath)) << "Failed at iteration " << i + 1;
+
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+
+    ASSERT_TRUE(xmlValidator.fullValidationReport());
+    EXPECT_NE("", xmlValidator.fullValidationReport().get());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+
+    auto errors = xmlValidator.errors();
+    ASSERT_EQ(1, errors.size()) << "Failed at iteration " << i + 1;
+    EXPECT_EQ(LogLevel::Error, errors[0].logLevel());
+    EXPECT_EQ("xsltValidate: Expected EventType to be 'audit' or 'proposed workscope' or 'approved workscope' or "
+              "'construction-period testing/daily test out' or 'job completion testing/final inspection' or "
+              "'quality assurance/monitoring' or 'preconstruction'",
+              errors[0].logMessage());
+  }
+}
+
+TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_Schematron_TODO) {
+
+  // TODO: this is a temporary test that uses the transformed XLST from above. This one works... So it means I have an issue cleaning up the
+  // state/globals before we can reuse
+  openstudio::path xmlPath = resourcesPath() / openstudio::toPath("utilities/xml/hpxml_with_error.xml");
+  openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/HPXMLvalidator_stylesheet.xslt");
+
+  XMLValidator xmlValidator(schematronPath);
+  EXPECT_FALSE(xmlValidator.xmlPath());
+
+  EXPECT_FALSE(xmlValidator.validate(xmlPath));
+  ASSERT_TRUE(xmlValidator.xmlPath());
+  EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
 
   ASSERT_TRUE(xmlValidator.fullValidationReport());
   EXPECT_NE("", xmlValidator.fullValidationReport().get());
