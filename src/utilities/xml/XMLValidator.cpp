@@ -322,7 +322,7 @@ bool XMLValidator::xsltValidate() const {
 
 boost::optional<std::string> XMLValidator::fullValidationReport() const {
 
-  if (m_validatorType == XMLValidatorType::Schematron) {
+  if ((m_validatorType == XMLValidatorType::Schematron) || (m_validatorType == XMLValidatorType::XSLTSchematron)) {
     return m_fullValidationReport;
   }
 
