@@ -43,7 +43,7 @@ namespace detail {
     return oss.str();
   }
 
-  void callback_structured_error(void* errorCollectorVoidPtr, xmlError* error) {
+  void callback_messages_structured_error(void* errorCollectorVoidPtr, xmlError* error) {
     // This shouldn't happen, but better be safe than sorry
     if (!error) {
       return;

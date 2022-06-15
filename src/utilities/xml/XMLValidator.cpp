@@ -138,9 +138,6 @@ bool XMLValidator::xsdValidate() const {
   // set parser errors
   detail::ErrorCollector schemaParserErrorCollector;
   xmlSchemaSetParserErrors(parser_ctxt, detail::callback_messages_error, detail::callback_messages_warning, &schemaParserErrorCollector);
-  for (auto& logMessage : schemaParserErrorCollector.logMessages) {
-    LOG(logMessage.logLevel(), "xsdValidate.schemaParserError: " + logMessage.logMessage())
-  }
 
   // schema parser
   xmlSchema* schema = xmlSchemaParse(parser_ctxt);
@@ -149,9 +146,10 @@ bool XMLValidator::xsdValidate() const {
   // set valid errors
   detail::ErrorCollector schemaValidErrorCollector;
   xmlSchemaSetValidErrors(ctxt, detail::callback_messages_error, detail::callback_messages_warning, &schemaValidErrorCollector);
-  for (auto& logMessage : schemaValidErrorCollector.logMessages) {
-    LOG(logMessage.logLevel(), "xsdValidate.schemaValidError: " + logMessage.logMessage())
-  }
+
+  detail::ErrorCollector parseFileErrorCollector;
+  xmlSetStructuredErrorFunc(&parseFileErrorCollector, detail::callback_messages_structured_error);
+  xmlSetGenericErrorFunc(&parseFileErrorCollector, detail::callback_messages_error);
 
   // xml doc ptr
   xmlDoc* doc = xmlParseFile(xml_filename);
@@ -167,6 +165,18 @@ bool XMLValidator::xsdValidate() const {
     result = true;
   } else {
     result = true;
+  }
+
+  for (auto& logMessage : schemaValidErrorCollector.logMessages) {
+    LOG(logMessage.logLevel(), "xsdValidate.schemaValidError: " + logMessage.logMessage())
+  }
+
+  for (auto& logMessage : schemaParserErrorCollector.logMessages) {
+    LOG(logMessage.logLevel(), "xsdValidate.schemaParserError: " + logMessage.logMessage())
+  }
+
+  for (auto& logMessage : parseFileErrorCollector.logMessages) {
+    LOG(logMessage.logLevel(), "xsdValidate.parseFileError: " + logMessage.logMessage())
   }
 
   // free
@@ -296,6 +306,15 @@ bool XMLValidator::xsltValidate() const {
   xmlCleanupParser();
 
   return true;
+}
+
+boost::optional<std::string> XMLValidator::fullValidationReport() const {
+
+  if (m_validatorType == XMLValidatorType::Schematron) {
+    return m_fullValidationReport;
+  }
+
+  return boost::none;
 }
 
 }  // namespace openstudio

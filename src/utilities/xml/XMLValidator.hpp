@@ -75,6 +75,8 @@ class UTILITIES_API XMLValidator
 
   bool validate() const;
 
+  // Only applicable for Schematron
+  boost::optional<std::string> fullValidationReport() const;
   //@}
   /** @name Setters */
   //@{
