@@ -113,6 +113,7 @@ set(utilities_resources_src
 
   utilities/xml/hpxml_with_error.xml
   utilities/xml/HPXMLvalidator.xslt
+  utilities/xml/HPXMLvalidator.xml
 
   utilities/Zip/test1.zip
 )

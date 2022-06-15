@@ -131,3 +131,23 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_XSLT) {
             "'quality assurance/monitoring' or 'preconstruction'",
             errors[0].logMessage());
 }
+
+TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_Schematron) {
+  openstudio::path xmlPath = resourcesPath() / openstudio::toPath("utilities/xml/hpxml_with_error.xml");
+  openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/HPXMLvalidator.xml");
+
+  XMLValidator xmlValidator(schematronPath, xmlPath);
+  EXPECT_FALSE(xmlValidator.validate());
+
+  ASSERT_TRUE(xmlValidator.fullValidationReport());
+  EXPECT_NE("", xmlValidator.fullValidationReport().get());
+  EXPECT_EQ(0, xmlValidator.warnings().size());
+
+  auto errors = xmlValidator.errors();
+  ASSERT_EQ(1, errors.size());
+  EXPECT_EQ(LogLevel::Error, errors[0].logLevel());
+  EXPECT_EQ("xsltValidate: Expected EventType to be 'audit' or 'proposed workscope' or 'approved workscope' or "
+            "'construction-period testing/daily test out' or 'job completion testing/final inspection' or "
+            "'quality assurance/monitoring' or 'preconstruction'",
+            errors[0].logMessage());
+}

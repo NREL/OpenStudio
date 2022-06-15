@@ -30,6 +30,7 @@
 #include "XMLValidator.hpp"
 #include "XMLErrors.hpp"
 #include "XMLUtils.hpp"
+#include "utilities/core/Filesystem.hpp"
 
 #include <libxml/xmlversion.h>
 #include <libxml/xmlreader.h>
@@ -44,12 +45,88 @@
 #include <libxml/xpath.h>
 #include <libxml/xpathInternals.h>  // BAD_CAST
 
+#include <src/utilities/embedded_files.hxx>
+
 #include <fmt/format.h>
 
 #include <algorithm>
 #include <iterator>
 
 namespace openstudio {
+
+xmlDoc* applyEmbeddedXSLT(const std::string& embedded_path, xmlDoc* curdoc, const char** params) {
+
+  std::string xlstString = ::openstudio::embedded_files::getFileAsString(embedded_path);
+  xmlDoc* xlstDoc = xmlParseDoc(detail::xml_string(xlstString));
+  xsltStylesheet* style = xsltParseStylesheetDoc(xlstDoc);
+  xmlDoc* res = xsltApplyStylesheet(style, curdoc, params);
+
+  xsltFreeStylesheet(style);
+  // xmlFreeDoc(xlstDoc); // This is already freed via xlstFreeStyleSheet because we used xsltParseStylesheetDoc
+  xmlFreeDoc(curdoc);
+  return res;
+}
+
+xmlDoc* applyEmbeddedXSLTWithImports(const openstudio::path& curDir, xmlDoc* curdoc, const char** params) {
+
+  // Extract the two files we need
+  ::openstudio::embedded_files::extractFile(":/xml/resources/iso_svrl_for_xslt1.xsl", openstudio::toString(curDir));
+  ::openstudio::embedded_files::extractFile(":/xml/resources/iso_schematron_skeleton.xsl", openstudio::toString(curDir));
+
+  auto schematron_filename_str = openstudio::toString(curDir / "iso_svrl_for_xslt1.xsl");
+  xsltStylesheet* style = xsltParseStylesheetFile(detail::xml_string(schematron_filename_str));
+
+  xmlDoc* res = xsltApplyStylesheet(style, curdoc, params);
+
+  xsltFreeStylesheet(style);
+  xmlFreeDoc(curdoc);
+
+  openstudio::filesystem::remove(curDir / "iso_svrl_for_xslt1.xsl");
+  openstudio::filesystem::remove(curDir / "iso_schematron_skeleton.xsl");
+
+  return res;
+}
+
+openstudio::path schematronToXslt(const openstudio::path& schemaPath) {
+
+  auto filename_str = openstudio::toString(schemaPath);
+  const auto* filename = filename_str.c_str();
+  xmlDoc* schematronXmlDoc = xmlParseFile(filename);
+
+  // Extract?b
+
+  const char* params[16 + 1];
+  int nbparams = 0;
+  params[nbparams] = nullptr;
+  xmlSubstituteEntitiesDefault(1);
+  xmlLoadExtDtdDefaultValue = 1;
+
+  // include
+  xmlDoc* withIncludes = applyEmbeddedXSLT(":/xml/resources/iso_dsdl_include.xsl", schematronXmlDoc, params);
+
+  // expand
+  xmlDoc* withExpand = applyEmbeddedXSLT(":/xml/resources/iso_dsdl_include.xsl", withIncludes, params);
+
+  // compile: this one uses an xsl:import ... not sure how to merge them...
+  // xmlDoc* compiled = applyEmbeddedXSLT(":/xml/resources/iso_svrl_for_xslt1.xsl", withExpand, params);
+  xmlDoc* compiled = applyEmbeddedXSLTWithImports(schemaPath.parent_path(), withExpand, params);
+
+  openstudio::path xsltPath = schemaPath.parent_path() / openstudio::toPath(openstudio::toString(schemaPath.stem()) + "_stylesheet.xslt");
+  // xsltPath.replace_extension(".xslt");
+
+  auto save_filename_str = openstudio::toString(xsltPath);
+  const auto* save_filename = filename_str.c_str();
+  const int result = xmlSaveFormatFileEnc(save_filename, compiled, "UTF-8", true);
+  if (result == -1) {
+    // xmlSaveFormatFileEnc returns the number of bytes written or -1 if it failed
+    LOG_FREE_AND_THROW("schematronToXslt", "Writing to file failed");
+  }
+
+  xmlFreeDoc(compiled);
+  xmlCleanupParser();
+
+  return xsltPath;
+}
 
 XMLValidator::XMLValidator(const openstudio::path& schemaPath, const openstudio::path& xmlPath)
   : m_schemaPath(openstudio::filesystem::system_complete(schemaPath)), m_xmlPath(openstudio::filesystem::system_complete(xmlPath)) {
@@ -78,14 +155,15 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath, const openstudio:
     LOG(Info, "Treating schema as a XLST StyleSheet that derives from a Schematron");
   } else if ((schemaPath.extension() == ".xml") || (schemaPath.extension() == ".sct")) {
     m_validatorType = XMLValidatorType::Schematron;
-    LOG(Info, "Treating schema as a Schematron");
-    LOG_AND_THROW("Opening a Schematron document isn't supported as the moment. Use python's lxml to extract your Schematron to an XSLT Stylesheet. "
-                  "```\n"
-                  "from lxml.isoschematron import Schematron;\n"
-                  "s = Schematron(file='schematron.sct', store_xslt=True)\n"
-                  "with open('schematron.xslt', 'w') as f:\n"
-                  "    f.write(str(s._validator_xslt))\n"
-                  "```");
+    LOG(Info, "Treating schema as a Schematron, converting to an XSLT StyleSheet");
+    m_schemaPath = schematronToXslt(m_schemaPath);
+    // LOG_AND_THROW("Opening a Schematron document isn't supported as the moment. Use python's lxml to extract your Schematron to an XSLT Stylesheet. "
+    //               "```\n"
+    //               "from lxml.isoschematron import Schematron;\n"
+    //               "s = Schematron(file='schematron.sct', store_xslt=True)\n"
+    //               "with open('schematron.xslt', 'w') as f:\n"
+    //               "    f.write(str(s._validator_xslt))\n"
+    //               "```");
   } else {
     LOG_AND_THROW("Schema path extension '" << toString(schemaPath.extension()) << "' not supported.");
   }
