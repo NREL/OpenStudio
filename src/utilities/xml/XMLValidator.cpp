@@ -73,9 +73,19 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath, const openstudio:
   if (schemaPath.extension() == ".xsd") {
     m_validatorType = XMLValidatorType::XSD;
     LOG(Info, "Treating schema as a regular XSD");
+  } else if (schemaPath.extension() == ".xslt") {
+    m_validatorType = XMLValidatorType::XSLTSchematron;
+    LOG(Info, "Treating schema as a XLST StyleSheet that derives from a Schematron");
   } else if ((schemaPath.extension() == ".xml") || (schemaPath.extension() == ".sct")) {
-    LOG(Info, "Treating schema as a Schematron");
     m_validatorType = XMLValidatorType::Schematron;
+    LOG(Info, "Treating schema as a Schematron");
+    LOG_AND_THROW("Opening a Schematron document isn't supported as the moment. Use python's lxml to extract your Schematron to an XSLT Stylesheet. "
+                  "```\n"
+                  "from lxml.isoschematron import Schematron;\n"
+                  "s = Schematron(file='schematron.sct', store_xslt=True)\n"
+                  "with open('schematron.xslt', 'w') as f:\n"
+                  "    f.write(str(s._validator_xslt))\n"
+                  "```");
   } else {
     LOG_AND_THROW("Schema path extension '" << toString(schemaPath.extension()) << "' not supported.");
   }
@@ -117,9 +127,11 @@ bool XMLValidator::validate() const {
 
   if (m_validatorType == XMLValidatorType::XSD) {
     return xsdValidate();
-  } else {  // if (m_validatorType == XMLValidatorType::Schematron)
+  } else if (m_validatorType == XMLValidatorType::XSLTSchematron) {
     return xsltValidate();
   }
+
+  return false;
 }
 
 bool XMLValidator::xsdValidate() const {

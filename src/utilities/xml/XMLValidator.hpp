@@ -47,6 +47,7 @@ namespace openstudio {
 enum class XMLValidatorType
 {
   XSD,
+  XSLTSchematron,
   Schematron
 };
 
@@ -98,6 +99,7 @@ class UTILITIES_API XMLValidator
 
   bool xsdValidate() const;
 
+  // TODO: should we provide a facility to convert from schematron to XLST? or let user deal with that
   bool xsltValidate() const;
   mutable std::string m_fullValidationReport;
 };
