@@ -128,8 +128,7 @@ openstudio::path schematronToXslt(const openstudio::path& schemaPath) {
   return xsltPath;
 }
 
-XMLValidator::XMLValidator(const openstudio::path& schemaPath, const openstudio::path& xmlPath)
-  : m_schemaPath(openstudio::filesystem::system_complete(schemaPath)), m_xmlPath(openstudio::filesystem::system_complete(xmlPath)) {
+XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(openstudio::filesystem::system_complete(schemaPath)), m_xmlPath() {
 
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.XMLValidator"));
@@ -139,12 +138,6 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath, const openstudio:
     LOG_AND_THROW("Schema '" << toString(schemaPath) << "' does not exist");
   } else if (!openstudio::filesystem::is_regular_file(schemaPath)) {
     LOG_AND_THROW("Schema '" << toString(schemaPath) << "' cannot be opened");
-  }
-
-  if (!openstudio::filesystem::exists(xmlPath)) {
-    LOG_AND_THROW("XML File '" << toString(xmlPath) << "' does not exist");
-  } else if (!openstudio::filesystem::is_regular_file(xmlPath)) {
-    LOG_AND_THROW("XML File '" << toString(xmlPath) << "' cannot be opened");
   }
 
   if (schemaPath.extension() == ".xsd") {
@@ -173,7 +166,7 @@ openstudio::path XMLValidator::schemaPath() const {
   return m_schemaPath;
 }
 
-openstudio::path XMLValidator::xmlPath() const {
+boost::optional<openstudio::path> XMLValidator::xmlPath() const {
   return m_xmlPath;
 }
 
@@ -201,7 +194,29 @@ bool XMLValidator::isValid() const {
   return errors().empty();
 }
 
-bool XMLValidator::validate() const {
+void XMLValidator::reset() {
+
+  m_logSink.setThreadId(std::this_thread::get_id());
+
+  m_logSink.resetStringStream();
+
+  m_xmlPath = boost::none;
+
+  m_fullValidationReport.clear();
+}
+
+bool XMLValidator::validate(const openstudio::path& xmlPath) {
+
+  reset();
+
+  auto t_xmlPath = openstudio::filesystem::system_complete(xmlPath);
+
+  if (!openstudio::filesystem::exists(t_xmlPath)) {
+    LOG_AND_THROW("XML File '" << toString(t_xmlPath) << "' does not exist");
+  } else if (!openstudio::filesystem::is_regular_file(t_xmlPath)) {
+    LOG_AND_THROW("XML File '" << toString(t_xmlPath) << "' cannot be opened");
+  }
+  m_xmlPath = t_xmlPath;
 
   if (m_validatorType == XMLValidatorType::XSD) {
     return xsdValidate();
@@ -219,7 +234,7 @@ bool XMLValidator::xsdValidate() const {
   const auto* schema_filename = schema_filename_str.c_str();
 
   // xml path
-  auto xml_filename_str = toString(m_xmlPath);
+  auto xml_filename_str = toString(m_xmlPath.get());
   const auto* xml_filename = xml_filename_str.c_str();
 
   // schema parser ptr
@@ -248,10 +263,10 @@ bool XMLValidator::xsdValidate() const {
   int ret = xmlSchemaValidateDoc(ctxt, doc);
   bool result = false;
   if (ret > 0) {
-    LOG(Fatal, "Valid instance " << toString(m_xmlPath) << " failed to validate against " << toString(m_schemaPath));
+    LOG(Fatal, "Valid instance " << toString(m_xmlPath.get()) << " failed to validate against " << toString(m_schemaPath));
     result = false;
   } else if (ret < 0) {
-    LOG(Fatal, "Valid instance " << toString(m_xmlPath) << " got internal error validating against " << toString(m_schemaPath));
+    LOG(Fatal, "Valid instance " << toString(m_xmlPath.get()) << " got internal error validating against " << toString(m_schemaPath));
     result = true;
   } else {
     result = true;
@@ -366,17 +381,16 @@ bool XMLValidator::xsltValidate() const {
   xmlLoadExtDtdDefaultValue = 1;
 
   auto schematron_filename_str = openstudio::toString(m_schemaPath);
-  const auto* schematron_filename = schematron_filename_str.c_str();
-  xsltStylesheet* style = xsltParseStylesheetFile((const xmlChar*)schematron_filename);
+  xsltStylesheet* style = xsltParseStylesheetFile(detail::xml_string(schematron_filename_str));
 
-  auto filename_str = openstudio::toString(m_xmlPath);
+  auto filename_str = openstudio::toString(m_xmlPath.get());
   const auto* filename = filename_str.c_str();
   xmlDoc* doc = xmlParseFile(filename);
   xmlDoc* res = xsltApplyStylesheet(style, doc, params);
 
   // Dump result of xlstApply
   m_fullValidationReport = dumpXSLTApplyResultToString(res, style);
-  fmt::print("\n====== Full Validation Report =====\n\n{}", m_fullValidationReport);
+  // fmt::print("\n====== Full Validation Report =====\n\n{}", m_fullValidationReport);
   // xsltSaveResultToFile(stdout, res, style);
 
   auto m_errors = processXSLTApplyResult(res);

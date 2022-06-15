@@ -58,7 +58,7 @@ class UTILITIES_API XMLValidator
   //@{
 
   /// Constructor for a new validator
-  explicit XMLValidator(const openstudio::path& schemaPath, const openstudio::path& xmlPath);
+  explicit XMLValidator(const openstudio::path& schemaPath);
 
   //@}
   /** @name Getters */
@@ -66,18 +66,20 @@ class UTILITIES_API XMLValidator
 
   openstudio::path schemaPath() const;
 
-  openstudio::path xmlPath() const;
+  bool validate(const openstudio::path& xmlPath);
+
+  // Below functions are related to the last call to validate
+
+  bool isValid() const;
+  boost::optional<openstudio::path> xmlPath() const;
 
   std::vector<LogMessage> errors() const;
 
   std::vector<LogMessage> warnings() const;
 
-  bool isValid() const;
-
-  bool validate() const;
-
-  // Only applicable for Schematron
+  /** Only applicable for Schematron validation **/
   boost::optional<std::string> fullValidationReport() const;
+
   //@}
   /** @name Setters */
   //@{
@@ -93,7 +95,7 @@ class UTILITIES_API XMLValidator
   REGISTER_LOGGER("openstudio.XMLValidator");
   StringStreamLogSink m_logSink;
   openstudio::path m_schemaPath;
-  openstudio::path m_xmlPath;
+  boost::optional<openstudio::path> m_xmlPath;
 
   XMLValidatorType m_validatorType;
 
@@ -102,10 +104,13 @@ class UTILITIES_API XMLValidator
   // TODO: should we provide a facility to convert from schematron to XLST? or let user deal with that
   bool xsltValidate() const;
   mutable std::string m_fullValidationReport;
+
+  // reset the state of the XMLValidator between translations
+  void reset();
 };
 
 /// optional XMLValidator
-typedef boost::optional<XMLValidator> OptionalXMLValidator;
+using OptionalXMLValidator = boost::optional<XMLValidator>;
 
 }  // namespace openstudio
 
