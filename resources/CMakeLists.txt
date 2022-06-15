@@ -110,6 +110,10 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V9-5-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-6-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V22-1-0.sql
+
+  utilities/xml/hpxml_with_error.xml
+  utilities/xml/HPXMLvalidator.xslt
+
   utilities/Zip/test1.zip
 )
 
@@ -384,5 +388,6 @@ add_custom_target(openstudio_airflow_resources
 
 CREATE_SRC_GROUPS("${airflow_resources_src}")
 
-install(DIRECTORY "Examples" DESTINATION . COMPONENT "CLI")
+########################################################
 
+install(DIRECTORY "Examples" DESTINATION . COMPONENT "CLI")

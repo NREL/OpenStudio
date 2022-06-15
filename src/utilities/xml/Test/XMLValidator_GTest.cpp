@@ -111,3 +111,21 @@ TEST_F(XMLValidatorFixture, GBXML_ValidateResources) {
   xmlFile = resourcesPath() / openstudio::toPath("gbxml/ZNETH.xml");
   EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile)); */
 }
+
+TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_XSLT) {
+  openstudio::path xmlPath = resourcesPath() / openstudio::toPath("utilities/xml/hpxml_with_error.xml");
+  openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/HPXMLvalidator.xslt");
+
+  XMLValidator xmlValidator(schematronPath, xmlPath);
+
+  ASSERT_TRUE(xmlValidator.fullValidationReport());
+  EXPECT_NE("", xmlValidator.fullValidationReport().get());
+  EXPECT_EQ(0, xmlValidator.warnings().size());
+
+  auto errors = xmlValidator.errors();
+  ASSERT_EQ(1, errors.size());
+  EXPECT_EQ(LogLevel::Error, errors[0].logLevel());
+  EXPECT_EQ("Expected EventType to be 'audit' or 'proposed workscope' or 'approved workscope' or 'construction-period testing/daily test out' or "
+            "'job completion testing/final inspection' or 'quality assurance/monitoring' or 'preconstruction'",
+            errors[0].logMessage());
+}
