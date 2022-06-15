@@ -304,7 +304,7 @@ bool XMLValidator::xsltValidate() const {
   auto m_errors = processXSLTApplyResult(res);
   for (const auto& error : m_errors) {
     // m_logMessages.emplace_back(LogLevel::Error, "processXSLTApplyResult", error);
-    LOG(Error, "processXSLTApplyResult: " << error);
+    LOG(Error, "xsltValidate: " << error);
   }
 
   /* dump the resulting document */
@@ -317,7 +317,7 @@ bool XMLValidator::xsltValidate() const {
   xsltCleanupGlobals();
   xmlCleanupParser();
 
-  return true;
+  return m_errors.empty();
 }
 
 boost::optional<std::string> XMLValidator::fullValidationReport() const {
