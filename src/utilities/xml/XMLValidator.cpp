@@ -95,50 +95,52 @@ bool XMLValidator::validate() const {
   return ok;
 }
 
+void err(void* ctx, const char* msg) {
+  // TODO
+}
+
+void warn(void* ctx, const char* msg) {
+  // TODO
+}
+
 bool XMLValidator::xsdValidate() const {
 
+  // schema path
   auto schema_filename_str = toString(m_xsdPath.value());
   const auto* schema_filename = schema_filename_str.c_str();
 
-  xmlSchemaParserCtxt* parser_ctxt = nullptr;
-  parser_ctxt = xmlSchemaNewParserCtxt(schema_filename);
-  if (parser_ctxt == nullptr) {
-    //throw std::runtime_error("Memory error reading schema in xmlSchematronNewParserCtxt");
-  }
+  // xml path
+  auto xml_filename_str = toString(m_xmlPath);
+  const auto* xml_filename = xml_filename_str.c_str();
 
-  xmlSchema* schema = nullptr;
-  schema = xmlSchemaParse(parser_ctxt);
-  xmlSchemaFreeParserCtxt(parser_ctxt);
+  // schema parser ptr
+  xmlSchemaParserCtxtPtr parser_ctxt = xmlSchemaNewParserCtxt(schema_filename);
 
-  // Start on the document to validate side
-  auto filename_str = toString(m_xmlPath);
-  const auto* filename = filename_str.c_str();
+  // set parser errors
+  // https://stackoverflow.com/questions/11901206/libxml2-suppress-the-debug-output-on-console
+  // https://cpp.hotexamples.com/examples/-/-/xmlSchemaNewMemParserCtxt/cpp-xmlschemanewmemparserctxt-function-examples.html
+  xmlSchemaSetParserErrors(parser_ctxt, (xmlSchemaValidityErrorFunc)err, (xmlSchemaValidityWarningFunc)warn, NULL);
 
-  xmlDoc* doc = nullptr;
-  //doc = xmlReadFile(filename, nullptr, 0);
-  doc = xmlParseFile(filename);
+  // schema parser
+  xmlSchemaPtr schema = xmlSchemaParse(parser_ctxt);
+  xmlSchemaValidCtxtPtr ctxt = xmlSchemaNewValidCtxt(schema);
 
-  xmlSchemaValidCtxt* ctxt = nullptr;
-  ctxt = xmlSchemaNewValidCtxt(schema);
-  if (ctxt == nullptr) {
-    //throw std::runtime_error("Memory error reading schema in xmlSchematronNewValidCtxt");
-  }
+  // set valid errors
+  xmlSchemaSetValidErrors(ctxt, (xmlSchemaValidityErrorFunc)err, (xmlSchemaValidityWarningFunc)warn, NULL);
 
+  // xml doc ptr
+  xmlDocPtr doc = xmlParseFile(xml_filename);
+
+  // validate doc
   int ret = xmlSchemaValidateDoc(ctxt, doc);
-  //xmlTextReaderSchemaValidateCtxt(doc, ctxt, 0);
 
-  //if (ret == 0) {
-  //fmt::print(stderr, "{} validates\n", filename);
-  //} else if (ret > 0) {
-  //fmt::print(stderr, "{} fails to validate\n", filename);
-  //} else {
-  //fmt::print(stderr, "{} validation generated an internal error, ret = {}\n", filename, ret);
-  //}
+  // free
+  xmlSchemaFreeParserCtxt(parser_ctxt);
   xmlSchemaFreeValidCtxt(ctxt);
   xmlSchemaFree(schema);
 
-  xmlFreeDoc(doc);     // free document
-  xmlCleanupParser();  // free globals
+  xmlFreeDoc(doc);
+  xmlCleanupParser();
 
   return true;
 }
