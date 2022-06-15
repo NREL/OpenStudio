@@ -28,6 +28,8 @@
 ***********************************************************************************************************************/
 
 #include "XMLValidator.hpp"
+#include "XMLErrors.hpp"
+#include "XMLUtils.hpp"
 
 #include <libxml/xmlversion.h>
 #include <libxml/xmlreader.h>
@@ -35,32 +37,41 @@
 #include <libxml/tree.h>
 #include <libxml/schematron.h>
 
+#include <fmt/format.h>
+
+#include <algorithm>
+#include <iterator>
+
 namespace openstudio {
 
 XMLValidator::XMLValidator(const openstudio::path& schemaPath, const openstudio::path& xmlPath)
   : m_schemaPath(openstudio::filesystem::system_complete(schemaPath)), m_xmlPath(openstudio::filesystem::system_complete(xmlPath)) {
 
+  m_logSink.setLogLevel(Warn);
+  m_logSink.setChannelRegex(boost::regex("openstudio\\.XMLValidator"));
+  m_logSink.setThreadId(std::this_thread::get_id());
+
   if (!openstudio::filesystem::exists(schemaPath)) {
-    LOG_AND_THROW("'" << toString(schemaPath) << "' does not exist");
+    LOG_AND_THROW("Schema '" << toString(schemaPath) << "' does not exist");
   } else if (!openstudio::filesystem::is_regular_file(schemaPath)) {
-    LOG_AND_THROW("'" << toString(schemaPath) << "' cannot be opened");
+    LOG_AND_THROW("Schema '" << toString(schemaPath) << "' cannot be opened");
   }
 
   if (!openstudio::filesystem::exists(xmlPath)) {
-    LOG_AND_THROW("'" << toString(xmlPath) << "' does not exist");
+    LOG_AND_THROW("XML File '" << toString(xmlPath) << "' does not exist");
   } else if (!openstudio::filesystem::is_regular_file(xmlPath)) {
-    LOG_AND_THROW("'" << toString(xmlPath) << "' cannot be opened");
+    LOG_AND_THROW("XML File '" << toString(xmlPath) << "' cannot be opened");
   }
 
   if (schemaPath.extension() == ".xsd") {
-    m_xsdPath = schemaPath;
-  } else if (schemaPath.extension() == ".xml") {
-    m_schematronPath = schemaPath;
+    m_validatorType = XMLValidatorType::XSD;
+    LOG(Info, "Treating schema as a regular XSD");
+  } else if ((schemaPath.extension() == ".xml") || (schemaPath.extension() == ".sct")) {
+    LOG(Info, "Treating schema as a Schematron");
+    m_validatorType = XMLValidatorType::Schematron;
   } else {
     LOG_AND_THROW("Schema path extension '" << toString(schemaPath.extension()) << "' not supported.");
   }
-
-  setParser();
 }
 
 openstudio::path XMLValidator::schemaPath() const {
@@ -71,42 +82,43 @@ openstudio::path XMLValidator::xmlPath() const {
   return m_xmlPath;
 }
 
-std::vector<std::string> XMLValidator::errors() const {
-  return m_errors;
+std::vector<LogMessage> XMLValidator::errors() const {
+  auto logMessages = m_logSink.logMessages();
+
+  std::vector<LogMessage> result;
+  std::copy_if(logMessages.cbegin(), logMessages.cend(), std::back_inserter(result),
+               [](const auto& logMessage) { return logMessage.logLevel() > LogLevel::Warn; });
+
+  return result;
 }
 
-std::vector<std::string> XMLValidator::warnings() const {
-  return m_warnings;
+std::vector<LogMessage> XMLValidator::warnings() const {
+  auto logMessages = m_logSink.logMessages();
+
+  std::vector<LogMessage> result;
+  std::copy_if(logMessages.cbegin(), logMessages.cend(), std::back_inserter(result),
+               [](const auto& logMessage) { return logMessage.logLevel() == LogLevel::Warn; });
+
+  return result;
 }
 
 bool XMLValidator::isValid() const {
-  return m_errors.empty();
+  return errors().empty();
 }
 
 bool XMLValidator::validate() const {
 
-  bool ok;
-  if (m_xsdPath) {
-    ok = xsdValidate();
-  } else if (m_schematronPath) {
-    ok = schematronValidate();
+  if (m_validatorType == XMLValidatorType::XSD) {
+    return xsdValidate();
+  } else {  // if (m_validatorType == XMLValidatorType::Schematron)
+    return xsltValidate();
   }
-
-  return ok;
-}
-
-void err(void* ctx, const char* msg) {
-  // TODO
-}
-
-void warn(void* ctx, const char* msg) {
-  // TODO
 }
 
 bool XMLValidator::xsdValidate() const {
 
   // schema path
-  auto schema_filename_str = toString(m_xsdPath.value());
+  auto schema_filename_str = toString(m_schemaPath);
   const auto* schema_filename = schema_filename_str.c_str();
 
   // xml path
@@ -114,25 +126,41 @@ bool XMLValidator::xsdValidate() const {
   const auto* xml_filename = xml_filename_str.c_str();
 
   // schema parser ptr
-  xmlSchemaParserCtxtPtr parser_ctxt = xmlSchemaNewParserCtxt(schema_filename);
+  xmlSchemaParserCtxt* parser_ctxt = xmlSchemaNewParserCtxt(schema_filename);
 
   // set parser errors
-  // https://stackoverflow.com/questions/11901206/libxml2-suppress-the-debug-output-on-console
-  // https://cpp.hotexamples.com/examples/-/-/xmlSchemaNewMemParserCtxt/cpp-xmlschemanewmemparserctxt-function-examples.html
-  xmlSchemaSetParserErrors(parser_ctxt, (xmlSchemaValidityErrorFunc)err, (xmlSchemaValidityWarningFunc)warn, NULL);
+  detail::ErrorCollector schemaParserErrorCollector;
+  xmlSchemaSetParserErrors(parser_ctxt, detail::callback_messages_error, detail::callback_messages_warning, &schemaParserErrorCollector);
+  for (auto& logMessage : schemaParserErrorCollector.logMessages) {
+    LOG(logMessage.logLevel(), "xsdValidate.schemaParserError: " + logMessage.logMessage())
+  }
 
   // schema parser
-  xmlSchemaPtr schema = xmlSchemaParse(parser_ctxt);
-  xmlSchemaValidCtxtPtr ctxt = xmlSchemaNewValidCtxt(schema);
+  xmlSchema* schema = xmlSchemaParse(parser_ctxt);
+  xmlSchemaValidCtxt* ctxt = xmlSchemaNewValidCtxt(schema);
 
   // set valid errors
-  xmlSchemaSetValidErrors(ctxt, (xmlSchemaValidityErrorFunc)err, (xmlSchemaValidityWarningFunc)warn, NULL);
+  detail::ErrorCollector schemaValidErrorCollector;
+  xmlSchemaSetValidErrors(ctxt, detail::callback_messages_error, detail::callback_messages_warning, &schemaValidErrorCollector);
+  for (auto& logMessage : schemaValidErrorCollector.logMessages) {
+    LOG(logMessage.logLevel(), "xsdValidate.schemaValidError: " + logMessage.logMessage())
+  }
 
   // xml doc ptr
-  xmlDocPtr doc = xmlParseFile(xml_filename);
+  xmlDoc* doc = xmlParseFile(xml_filename);
 
   // validate doc
   int ret = xmlSchemaValidateDoc(ctxt, doc);
+  bool result = false;
+  if (ret > 0) {
+    LOG(Fatal, "Valid instance " << toString(m_xmlPath) << " failed to validate against " << toString(m_schemaPath));
+    result = false;
+  } else if (ret < 0) {
+    LOG(Fatal, "Valid instance " << toString(m_xmlPath) << " got internal error validating against " << toString(m_schemaPath));
+    result = true;
+  } else {
+    result = true;
+  }
 
   // free
   xmlSchemaFreeParserCtxt(parser_ctxt);
@@ -142,7 +170,7 @@ bool XMLValidator::xsdValidate() const {
   xmlFreeDoc(doc);
   xmlCleanupParser();
 
-  return true;
+  return result;
 }
 
 bool XMLValidator::schematronValidate() const {
@@ -151,10 +179,6 @@ bool XMLValidator::schematronValidate() const {
   const auto* schema_filename = schema_filename_str.c_str();
 
   return true;
-}
-
-void XMLValidator::setParser() {
-  // TODO
 }
 
 }  // namespace openstudio

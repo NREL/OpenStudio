@@ -27,82 +27,33 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_XML_XMLVALIDATOR_HPP
-#define UTILITIES_XML_XMLVALIDATOR_HPP
+#ifndef UTILITIES_XML_XMLERRORS_HPP
+#define UTILITIES_XML_XMLERRORS_HPP
 
-#include "../UtilitiesAPI.hpp"
-
-#include "../core/Path.hpp"
-#include "../core/Logger.hpp"
 #include "../core/LogMessage.hpp"
-#include "../core/Optional.hpp"
-#include "../core/StringStreamLogSink.hpp"
+#include <vector>
 
-#include <boost/optional.hpp>
-
-#include <string>
+typedef struct _xmlError xmlError;
 
 namespace openstudio {
 
-enum class XMLValidatorType
-{
-  XSD,
-  Schematron
-};
+namespace detail {
 
-class UTILITIES_API XMLValidator
-{
- public:
-  /** @name Constructors */
-  //@{
+  struct ErrorCollector
+  {
+    std::vector<LogMessage> logMessages;
+  };
 
-  /// Constructor for a new validator
-  explicit XMLValidator(const openstudio::path& schemaPath, const openstudio::path& xmlPath);
+  // Some callback function to collect messages into the ErrorCollector structure
+  // Pass the pointer to the ErrorCollector instnace as libxml2's void* ctx argument (the first arg)
+  // Could have passed XMLValidator directly, but I don't want to have to expose public functions nor friend these free functions
+  void callback_messages_structured_error(void* errorCollectorVoidPtr, xmlError* error);
 
-  //@}
-  /** @name Getters */
-  //@{
+  void callback_messages_warning(void* errorCollectorVoidPtr, const char* fmt, ...);
+  void callback_messages_error(void* errorCollectorVoidPtr, const char* fmt, ...);
 
-  openstudio::path schemaPath() const;
-
-  openstudio::path xmlPath() const;
-
-  std::vector<LogMessage> errors() const;
-
-  std::vector<LogMessage> warnings() const;
-
-  bool isValid() const;
-
-  bool validate() const;
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  //@}
-  /** @name Operators */
-  //@{
-
-  //@}
-
- private:
-  // TODO: I'm not sure we need that complexity... perhaps just use std::vector<LogMessage> m_logMessages;
-  REGISTER_LOGGER("openstudio.XMLValidator");
-  StringStreamLogSink m_logSink;
-  openstudio::path m_schemaPath;
-  openstudio::path m_xmlPath;
-
-  XMLValidatorType m_validatorType;
-
-  bool xsdValidate() const;
-
-  bool xsltValidate() const;
-  mutable std::string m_fullValidationReport;
-};
-
-/// optional XMLValidator
-typedef boost::optional<XMLValidator> OptionalXMLValidator;
+}  // namespace detail
 
 }  // namespace openstudio
 
-#endif  // UTILITIES_XML_VALIDATOR_HPP
+#endif  // UTILITIES_XML_XMLERRORS_HPP

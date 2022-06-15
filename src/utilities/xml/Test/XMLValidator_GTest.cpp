@@ -74,6 +74,9 @@ TEST_F(XMLValidatorFixture, GBXML_ValidateResources) {
   EXPECT_TRUE(xmlValidator.isValid());
   EXPECT_EQ(0u, xmlValidator.warnings().size());
   EXPECT_EQ(0u, xmlValidator.errors().size());
+  for (const auto& logMessage : xmlValidator.errors()) {
+    EXPECT_TRUE(false) << logMessage.logMessage();
+  }
 
   /*   xmlFile = resourcesPath() / openstudio::toPath("gbxml/3997_WindowScaling_bug.xml");
   EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
