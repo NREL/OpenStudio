@@ -43,7 +43,7 @@ extern "C" {
   void Init_openstudioosversion(void);
   void Init_openstudioutilitiesdata(void);
   void Init_openstudioutilitiessql(void);
-  void Init_openstudiogbxml(void); 
+  void Init_openstudiogbxml(void);
   void Init_openstudiomodelgenerators(void);
   void Init_openstudioradiance(void);
   void Init_openstudioutilitiestime(void);
@@ -67,6 +67,7 @@ extern "C" {
   void Init_openstudiomodel(void);
   void Init_openstudiomodelresources(void);
   void Init_openstudioutilitiesidf(void);
+  void Init_openstudioutilitiesxml(void);
 
   ////void Init_openstudiomodeleditor(void); # happens separately in openstudio.so only, for SketchUp plug-in
 }
@@ -109,6 +110,9 @@ void init_openstudio_internal_basic()
   Init_openstudioutilitiesfiletypes();
   rb_provide("openstudioutilitiesfiletypes");
   rb_provide("openstudioutilitiesfiletypes.so");
+  Init_openstudioutilitiesxml();
+  rb_provide("openstudioutilitiesxml");
+  rb_provide("openstudioutilitiesxml.so");
   Init_openstudioutilities();
   rb_provide("openstudioutilities");
   rb_provide("openstudioutilities.so");
