@@ -300,7 +300,7 @@ namespace gltf {
       targetMesh.name = planarSurfaceName;
 
       auto matName = glTFUserData.surfaceTypeMaterialName();
-      int materialIndex = 0;
+      size_t materialIndex = 0;
       auto it = std::find_if(materials.cbegin(), materials.cend(), [&matName](const auto& mat) { return mat.name == matName; });
       if (it != materials.cend()) {
         materialIndex = std::distance(materials.cbegin(), it);
@@ -355,7 +355,7 @@ namespace gltf {
       thisPrimitive.attributes["NORMAL"] = shapeComponentIds.normalsAccessorId;
       thisPrimitive.attributes["POSITION"] = shapeComponentIds.verticesAccessorId;
       thisPrimitive.indices = shapeComponentIds.indicesAccessorId;
-      thisPrimitive.material = materialIndex;
+      thisPrimitive.material = static_cast<int>(materialIndex);
       thisPrimitive.mode = TINYGLTF_MODE_TRIANGLES;
 
       // TODO: Based on a flag override UserData attribute
