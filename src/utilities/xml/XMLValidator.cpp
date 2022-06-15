@@ -37,6 +37,13 @@
 #include <libxml/tree.h>
 #include <libxml/schematron.h>
 
+#include <libxslt/xslt.h>
+#include <libxslt/xsltInternals.h>
+#include <libxslt/transform.h>
+#include <libxslt/xsltutils.h>
+#include <libxml/xpath.h>
+#include <libxml/xpathInternals.h>  // BAD_CAST
+
 #include <fmt/format.h>
 
 #include <algorithm>
@@ -173,10 +180,120 @@ bool XMLValidator::xsdValidate() const {
   return result;
 }
 
-bool XMLValidator::schematronValidate() const {
+std::vector<std::string> processXSLTApplyResult(xmlDoc* res) {
 
-  auto schema_filename_str = toString(m_schematronPath.value());
-  const auto* schema_filename = schema_filename_str.c_str();
+  xmlXPathContext* xpathCtx = nullptr;
+  xmlXPathObject* xpathObj = nullptr;
+
+  const char* xpathExpr = "//svrl:failed-assert";
+  /* Create xpath evaluation context */
+  xpathCtx = xmlXPathNewContext(res);
+  if (xpathCtx == nullptr) {
+    throw std::runtime_error("Error: unable to create new XPath context");
+  }
+
+  // namesapce
+  // xmlns:svrl="http://purl.oclc.org/dsdl/svrl"
+  if (xmlXPathRegisterNs(xpathCtx, BAD_CAST "svrl", BAD_CAST "http://purl.oclc.org/dsdl/svrl") != 0) {
+    throw std::runtime_error("Error: unable to register NS svrl with prefix");
+  }
+
+  /* Evaluate xpath expression */
+  xpathObj = xmlXPathEvalExpression((const xmlChar*)xpathExpr, xpathCtx);
+  if (xpathObj == nullptr) {
+    xmlXPathFreeContext(xpathCtx);
+    throw std::runtime_error(fmt::format("Error: unable to evaluate xpath expression '{}'\n", xpathExpr));
+  }
+
+  std::vector<std::string> result;
+
+  if (xmlXPathNodeSetIsEmpty(xpathObj->nodesetval)) {
+    fmt::print("No errors\n");
+    return {};
+  } else {
+
+    xmlNodeSet* nodeset = xpathObj->nodesetval;
+    for (int i = 0; i < nodeset->nodeNr; i++) {
+      xmlNode* error_node = nodeset->nodeTab[i];
+      error_node = error_node->xmlChildrenNode;
+      detail::xmlchar_helper error_message(xmlNodeListGetString(res, error_node->xmlChildrenNode, 1));
+
+      result.emplace_back(error_message.get());
+      // while (error_node != nullptr) {
+      //   if ((xmlStrcmp(error_node->name, (const xmlChar*)"text") == 0)) {
+      //     keyword = xmlNodeListGetString(doc, error_node->xmlChildrenNode, 1);
+      //     printf("text: %s\n", keyword);
+      //   }
+
+      //   error_node = error_node->next;
+      // }
+    }
+  }
+
+  /* Cleanup of XPath data */
+  xmlXPathFreeObject(xpathObj);
+  xmlXPathFreeContext(xpathCtx);
+
+  return result;
+}
+
+std::string dumpXSLTApplyResultToString(xmlDoc* res, xsltStylesheet* style) {
+
+  xmlChar* xml_string = nullptr;
+  int xml_string_length = 0;
+
+  std::string result;
+
+  if (xsltSaveResultToString(&xml_string, &xml_string_length, res, style) == 0) {
+
+    detail::xmlchar_helper helper(xml_string);
+    if (xml_string_length > 0) {
+      result.assign(helper.get(), detail::checked_size_t_cast(xml_string_length));
+    }
+  }
+
+  // std::string result((char*)xml_string);
+  // xmlFree(xml_string);
+  return result;
+}
+
+bool XMLValidator::xsltValidate() const {
+
+  const char* params[16 + 1];
+  int nbparams = 0;
+  params[nbparams] = nullptr;
+  xmlSubstituteEntitiesDefault(1);
+  xmlLoadExtDtdDefaultValue = 1;
+
+  auto schematron_filename_str = openstudio::toString(m_schemaPath);
+  const auto* schematron_filename = schematron_filename_str.c_str();
+  xsltStylesheet* style = xsltParseStylesheetFile((const xmlChar*)schematron_filename);
+
+  auto filename_str = openstudio::toString(m_xmlPath);
+  const auto* filename = filename_str.c_str();
+  xmlDoc* doc = xmlParseFile(filename);
+  xmlDoc* res = xsltApplyStylesheet(style, doc, params);
+
+  // Dump result of xlstApply
+  m_fullValidationReport = dumpXSLTApplyResultToString(res, style);
+  fmt::print("\n====== Full Validation Report =====\n\n{}", m_fullValidationReport);
+  // xsltSaveResultToFile(stdout, res, style);
+
+  auto m_errors = processXSLTApplyResult(res);
+  for (const auto& error : m_errors) {
+    // m_logMessages.emplace_back(LogLevel::Error, "processXSLTApplyResult", error);
+    LOG(Error, "processXSLTApplyResult: " << error);
+  }
+
+  /* dump the resulting document */
+  // xmlDocDump(stdout, res);
+
+  xsltFreeStylesheet(style);
+  xmlFreeDoc(res);
+  xmlFreeDoc(doc);
+
+  xsltCleanupGlobals();
+  xmlCleanupParser();
 
   return true;
 }
