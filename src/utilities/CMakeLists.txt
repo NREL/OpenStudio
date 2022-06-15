@@ -397,6 +397,7 @@ set(${target_name}_swig_src
   units/Quantity.i
   units/QuantityFactory.i
   units/QuantityConverter.i
+  xml/XMLValidator.i
 )
 
 
@@ -498,5 +499,6 @@ MAKE_SWIG_TARGET(OpenStudioUtilitiesSql utilitiessql "${CMAKE_CURRENT_SOURCE_DIR
 MAKE_SWIG_TARGET(OpenStudioUtilitiesTime utilitiestime "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesTime.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesSql)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesUnits utilitiesunits "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesUnits.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesTime)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesFileTypes utilitiesfiletypes "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesFileTypes.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesUnits)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesXML utilitiesxml "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesXML.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesCore)
 
 MAKE_SWIG_TARGET(OpenStudioUtilities utilities "${CMAKE_CURRENT_SOURCE_DIR}/Utilities.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesFileTypes)
