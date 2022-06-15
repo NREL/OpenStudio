@@ -30,6 +30,8 @@
 #include "XMLValidator.hpp"
 #include "XMLErrors.hpp"
 #include "XMLUtils.hpp"
+#include "XMLInitializer.hpp"
+
 #include "utilities/core/Filesystem.hpp"
 
 #include <libxml/xmlversion.h>
@@ -89,11 +91,18 @@ xmlDoc* applyEmbeddedXSLTWithImports(const openstudio::path& curDir, xmlDoc* cur
 
 openstudio::path schematronToXslt(const openstudio::path& schemaPath) {
 
+  // This replicates what happens when you do:
+  // from lxml.isoschematron import Schematron;
+  // s = Schematron(file='schematron.sct', store_xslt=True)
+  // with open('schematron.xslt', 'w') as f:
+  //     f.write(str(s._validator_xslt))
+
   auto filename_str = openstudio::toString(schemaPath);
   const auto* filename = filename_str.c_str();
   xmlDoc* schematronXmlDoc = xmlParseFile(filename);
 
-  constexpr bool saveIntermediates = true;
+  // For debugging
+  constexpr bool saveIntermediates = false;
 
   auto saveXmlDocToFile = [](const openstudio::path& outputPath, xmlDoc* doc) {
     auto save_filename_str = openstudio::toString(outputPath);
@@ -134,13 +143,18 @@ openstudio::path schematronToXslt(const openstudio::path& schemaPath) {
   saveXmlDocToFile(xsltPath, compiled);
 
   xmlFreeDoc(compiled);
-  xmlCleanupParser();
-  // xsltCleanupGlobals();
 
   return xsltPath;
 }
 
-XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(openstudio::filesystem::system_complete(schemaPath)), m_xmlPath() {
+detail::XMLInitializer& XMLValidator::xmlInitializerInstance() {
+  static detail::XMLInitializer xmlInitializer;
+  return xmlInitializer;
+}
+
+XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(openstudio::filesystem::system_complete(schemaPath)) {
+
+  xmlInitializerInstance();
 
   m_logSink.setLogLevel(Warn);
   m_logSink.setChannelRegex(boost::regex("openstudio\\.XMLValidator"));
@@ -162,13 +176,7 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(op
     m_validatorType = XMLValidatorType::Schematron;
     LOG(Info, "Treating schema as a Schematron, converting to an XSLT StyleSheet");
     m_schemaPath = schematronToXslt(m_schemaPath);
-    // LOG_AND_THROW("Opening a Schematron document isn't supported as the moment. Use python's lxml to extract your Schematron to an XSLT Stylesheet. "
-    //               "```\n"
-    //               "from lxml.isoschematron import Schematron;\n"
-    //               "s = Schematron(file='schematron.sct', store_xslt=True)\n"
-    //               "with open('schematron.xslt', 'w') as f:\n"
-    //               "    f.write(str(s._validator_xslt))\n"
-    //               "```");
+
   } else {
     LOG_AND_THROW("Schema path extension '" << toString(schemaPath.extension()) << "' not supported.");
   }
@@ -302,7 +310,6 @@ bool XMLValidator::xsdValidate() const {
   xmlSchemaFree(schema);
 
   xmlFreeDoc(doc);
-  xmlCleanupParser();
 
   return result;
 }
@@ -379,8 +386,6 @@ std::string dumpXSLTApplyResultToString(xmlDoc* res, xsltStylesheet* style) {
     }
   }
 
-  // std::string result((char*)xml_string);
-  // xmlFree(xml_string);
   return result;
 }
 
@@ -417,9 +422,6 @@ bool XMLValidator::xsltValidate() const {
   xsltFreeStylesheet(style);
   xmlFreeDoc(res);
   xmlFreeDoc(doc);
-
-  xsltCleanupGlobals();
-  xmlCleanupParser();
 
   return m_errors.empty();
 }

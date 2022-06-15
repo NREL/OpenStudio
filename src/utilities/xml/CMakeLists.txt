@@ -4,6 +4,8 @@ set(xml_src
   xml/XMLErrors.hpp
   xml/XMLErrors.cpp
   xml/XMLUtils.hpp
+  xml/XMLInitializer.hpp
+  xml/XMLInitializer.cpp
 )
 
 set(xml_test_src

@@ -27,99 +27,19 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_XML_XMLVALIDATOR_HPP
-#define UTILITIES_XML_XMLVALIDATOR_HPP
+#ifndef UTILITIES_XML_XMLINITIALIZER_HPP
+#define UTILITIES_XML_XMLINITIALIZER_HPP
 
-#include "../UtilitiesAPI.hpp"
+#include <atomic>
 
-#include "../core/Path.hpp"
-#include "../core/Logger.hpp"
-#include "../core/LogMessage.hpp"
-#include "../core/Optional.hpp"
-#include "../core/StringStreamLogSink.hpp"
+namespace openstudio::detail {
 
-#include <boost/optional.hpp>
-
-#include <string>
-
-namespace openstudio {
-
-enum class XMLValidatorType
-{
-  XSD,
-  XSLTSchematron,
-  Schematron
-};
-
-namespace detail {
-  struct XMLInitializer;
-}
-
-class UTILITIES_API XMLValidator
+struct XMLInitializer
 {
  public:
-  /** @name Constructors */
-  //@{
-
-  /// Constructor for a new validator
-  explicit XMLValidator(const openstudio::path& schemaPath);
-
-  //@}
-  /** @name Getters */
-  //@{
-
-  openstudio::path schemaPath() const;
-
-  bool validate(const openstudio::path& xmlPath);
-
-  // Below functions are related to the last call to validate
-
-  bool isValid() const;
-  boost::optional<openstudio::path> xmlPath() const;
-
-  std::vector<LogMessage> errors() const;
-
-  std::vector<LogMessage> warnings() const;
-
-  /** Only applicable for Schematron validation **/
-  boost::optional<std::string> fullValidationReport() const;
-
-  //@}
-  /** @name Setters */
-  //@{
-
-  //@}
-  /** @name Operators */
-  //@{
-
-  //@}
-
- private:
-  // TODO: I'm not sure we need that complexity... perhaps just use std::vector<LogMessage> m_logMessages;
-  REGISTER_LOGGER("openstudio.XMLValidator");
-  StringStreamLogSink m_logSink;
-  openstudio::path m_schemaPath;
-  boost::optional<openstudio::path> m_xmlPath;
-
-  XMLValidatorType m_validatorType;
-
-  bool xsdValidate() const;
-
-  // TODO: should we provide a facility to convert from schematron to XLST? or let user deal with that
-  bool xsltValidate() const;
-  mutable std::string m_fullValidationReport;
-
-  // reset the state of the XMLValidator between translations
-  void reset();
-
-  // A static Initializer, as a Meyers Singleton, to know when we need to init/cleanup the libxml2 & libxslt libs
-  // This lazily does the initialization, and clean up will be done completey at the end of the program
-  static detail::XMLInitializer& xmlInitializerInstance();
+  XMLInitializer();
+  ~XMLInitializer();
 };
 
-/// optional XMLValidator
-using OptionalXMLValidator = boost::optional<XMLValidator>;
-
-}  // namespace openstudio
-
-#endif  // UTILITIES_XML_VALIDATOR_HPP
+}  // namespace openstudio::detail
+#endif  // UTILITIES_XML_XMLINITIALIZER_HPP
