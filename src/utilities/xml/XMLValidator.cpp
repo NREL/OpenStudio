@@ -93,7 +93,19 @@ openstudio::path schematronToXslt(const openstudio::path& schemaPath) {
   const auto* filename = filename_str.c_str();
   xmlDoc* schematronXmlDoc = xmlParseFile(filename);
 
-  // Extract?b
+  constexpr bool saveIntermediates = true;
+
+  auto saveXmlDocToFile = [](const openstudio::path& outputPath, xmlDoc* doc) {
+    auto save_filename_str = openstudio::toString(outputPath);
+    const auto* save_filename = save_filename_str.c_str();
+    const int result = xmlSaveFormatFileEnc(save_filename, doc, "UTF-8", 1);  // 1 means format=true
+    if (result == -1) {
+      // xmlSaveFormatFileEnc returns the number of bytes written or -1 if it failed
+      LOG_FREE_AND_THROW("schematronToXslt", "Writing to file failed for " << openstudio::toString(outputPath));
+    }
+  };
+
+  // Extract
 
   const char* params[16 + 1];
   int nbparams = 0;
@@ -103,9 +115,15 @@ openstudio::path schematronToXslt(const openstudio::path& schemaPath) {
 
   // include
   xmlDoc* withIncludes = applyEmbeddedXSLT(":/xml/resources/iso_dsdl_include.xsl", schematronXmlDoc, params);
+  if constexpr (saveIntermediates) {
+    saveXmlDocToFile(schemaPath.parent_path() / "1_withIncludes.xslt", withIncludes);
+  }
 
   // expand
   xmlDoc* withExpand = applyEmbeddedXSLT(":/xml/resources/iso_dsdl_include.xsl", withIncludes, params);
+  if constexpr (saveIntermediates) {
+    saveXmlDocToFile(schemaPath.parent_path() / "2_withExpand.xslt", withIncludes);
+  }
 
   // compile: this one uses an xsl:import ... not sure how to merge them...
   // xmlDoc* compiled = applyEmbeddedXSLT(":/xml/resources/iso_svrl_for_xslt1.xsl", withExpand, params);
@@ -113,17 +131,11 @@ openstudio::path schematronToXslt(const openstudio::path& schemaPath) {
 
   openstudio::path xsltPath = schemaPath.parent_path() / openstudio::toPath(openstudio::toString(schemaPath.stem()) + "_stylesheet.xslt");
   // xsltPath.replace_extension(".xslt");
-
-  auto save_filename_str = openstudio::toString(xsltPath);
-  const auto* save_filename = filename_str.c_str();
-  const int result = xmlSaveFormatFileEnc(save_filename, compiled, "UTF-8", true);
-  if (result == -1) {
-    // xmlSaveFormatFileEnc returns the number of bytes written or -1 if it failed
-    LOG_FREE_AND_THROW("schematronToXslt", "Writing to file failed");
-  }
+  saveXmlDocToFile(xsltPath, compiled);
 
   xmlFreeDoc(compiled);
   xmlCleanupParser();
+  // xsltCleanupGlobals();
 
   return xsltPath;
 }
