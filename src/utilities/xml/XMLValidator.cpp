@@ -232,7 +232,7 @@ bool XMLValidator::validate(const openstudio::path& xmlPath) {
 
   if (m_validatorType == XMLValidatorType::XSD) {
     return xsdValidate();
-  } else if (m_validatorType == XMLValidatorType::XSLTSchematron) {
+  } else if ((m_validatorType == XMLValidatorType::XSLTSchematron) || (m_validatorType == XMLValidatorType::Schematron)) {
     return xsltValidate();
   }
 
