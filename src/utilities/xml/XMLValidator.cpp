@@ -71,7 +71,7 @@ xmlDoc* applyEmbeddedXSLTWithImports(const openstudio::path& curDir, xmlDoc* cur
 
   // Extract the two files we need
   ::openstudio::embedded_files::extractFile(":/xml/resources/iso_svrl_for_xslt1.xsl", openstudio::toString(curDir));
-  ::openstudio::embedded_files::extractFile(":/xml/resources/iso_schematron_skeleton.xsl", openstudio::toString(curDir));
+  ::openstudio::embedded_files::extractFile(":/xml/resources/iso_schematron_skeleton_for_xslt1.xsl", openstudio::toString(curDir));
 
   auto schematron_filename_str = openstudio::toString(curDir / "iso_svrl_for_xslt1.xsl");
   xsltStylesheet* style = xsltParseStylesheetFile(detail::xml_string(schematron_filename_str));
@@ -82,7 +82,7 @@ xmlDoc* applyEmbeddedXSLTWithImports(const openstudio::path& curDir, xmlDoc* cur
   xmlFreeDoc(curdoc);
 
   openstudio::filesystem::remove(curDir / "iso_svrl_for_xslt1.xsl");
-  openstudio::filesystem::remove(curDir / "iso_schematron_skeleton.xsl");
+  openstudio::filesystem::remove(curDir / "iso_schematron_skeleton_for_xslt1.xsl");
 
   return res;
 }
