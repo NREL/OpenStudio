@@ -162,7 +162,10 @@ namespace embedded_files {
   inline void extractFile(const std::string &t_filename, const std::string &t_location)
   {
     const auto &fs = files();
-
+    const auto f = fs.find(t_filename);
+    if (f == fs.end()){
+      throw std::runtime_error("Embedded file not found '" + t_filename + "'");
+    }
 
     const auto create_dirs = [](const std::string &t_path) {
       const auto paths = [](const std::string &t_paths) {
@@ -200,13 +203,17 @@ namespace embedded_files {
       }
     };
 
-    auto f = fs.at(t_filename);
-    const auto fullpath = t_location + '/' + t_filename;
+    std::string filenameonly = t_filename;
+    size_t i = t_filename.rfind('/', t_filename.length());
+    if (i != std::string::npos) {
+      filenameonly = t_filename.substr(i+1, t_filename.length() - i);
+    }
+    const auto fullpath = t_location + '/' + filenameonly;
     create_dirs(std::string(std::begin(fullpath), std::begin(fullpath) + fullpath.rfind('/')));
     std::ofstream ofs(fullpath);
 
     std::vector<uint8_t> inflated_data;
-    if( inf(f,inflated_data) != Z_OK ) {
+    if( inf(f->second,inflated_data) != Z_OK ) {
       throw std::runtime_error("Embedded file failed to inflate '" + t_filename + "'");
     }
 
