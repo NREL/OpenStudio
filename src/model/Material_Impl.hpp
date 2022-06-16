@@ -98,6 +98,15 @@ namespace model {
       // resets the material property moisture penetration depth settings
       void resetMaterialPropertyMoisturePenetrationDepthSettings();
 
+      // if material property phase change already exists, do nothing and return nil; creates the material property phase change if it does not already exist and return it;
+      boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange();
+
+      // returns the material property phase change if set
+      boost::optional<MaterialPropertyPhaseChange> materialPropertyPhaseChange() const;
+
+      // resets the material property phase change
+      void resetMaterialPropertyPhaseChange();
+
       //@}
 
      private:

@@ -35,12 +35,15 @@
 
 #include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
+#include "MaterialPropertyPhaseChange.hpp"
+#include "MaterialPropertyPhaseChange_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
   class StandardsInformationMaterial;
   class MaterialPropertyMoisturePenetrationDepthSettings;
+  class MaterialPropertyPhaseChange;
 
   namespace detail {
     class Material_Impl;
@@ -92,8 +95,17 @@ namespace model {
     // returns the material property moisture penetration depth settings if set
     boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
 
-    // resets the material property moisture penetration depth settings
-    void resetMaterialPropertyMoisturePenetrationDepthSettings();
+    // resets the material property phase change
+    void resetMaterialPropertyPhaseChange();
+
+    // if material property phase change already exists, do nothing and return nil; creates the material property phase change if it does not already exist and return it
+    boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyMoisturePenetrationDepthSettings();
+
+    // returns the material property phase change if set
+    boost::optional<MaterialPropertyPhaseChange> materialPropertyPhaseChange() const;
+
+    // resets the material property phase change
+    void resetMaterialPropertyPhaseChange();
 
     //@}
    protected:

@@ -36,6 +36,8 @@
 #include "Model_Impl.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
+#include "MaterialPropertyPhaseChange.hpp"
+#include "MaterialPropertyPhaseChange_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -56,6 +58,10 @@ namespace model {
       std::vector<ModelObject> results(castVector<ModelObject>(getObject<Material>().getModelObjectSources<StandardsInformationMaterial>()));
 
       if (boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> empd = this->materialPropertyMoisturePenetrationDepthSettings()) {
+        results.push_back(empd.get());
+      }
+
+      if (boost::optional<MaterialPropertyPhaseChange> empd = this->materialPropertyPhaseChange()) {
         results.push_back(empd.get());
       }
 
@@ -131,6 +137,40 @@ namespace model {
       }
     }
 
+    boost::optional<MaterialPropertyPhaseChange> Material_Impl::createMaterialPropertyPhaseChange() {
+      Material thisMaterial = getObject<Material>();
+      std::vector<MaterialPropertyPhaseChange> phaseChanges =
+        thisMaterial.getModelObjectSources<MaterialPropertyPhaseChange>(
+          MaterialPropertyPhaseChange::iddObjectType());
+      if (!phaseChanges.empty()) {
+        return boost::none;
+      }
+
+      MaterialPropertyPhaseChange phaseChange();
+      return phaseChange;
+    }
+
+    boost::optional<MaterialPropertyPhaseChange> Material_Impl::materialPropertyPhaseChange() const {
+      std::vector<MaterialPropertyPhaseChange> phaseChanges =
+        getObject<ModelObject>().getModelObjectSources<MaterialPropertyPhaseChange>(
+          MaterialPropertyPhaseChange::iddObjectType());
+      if (phaseChanges.empty()) {
+        // no error
+      } else if (phaseChanges.size() == 1) {
+        return phaseChanges[0];
+      } else {
+        // error
+      }
+      return boost::none;
+    }
+
+    void Material_Impl::resetMaterialPropertyPhaseChange() {
+      boost::optional<MaterialPropertyPhaseChange> phaseChange = this->materialPropertyPhaseChange();
+      if (phaseChange) {
+        phaseChange->remove();
+      }
+    }
+
   }  // namespace detail
 
   Material::Material(IddObjectType type, const Model& model) : ResourceObject(type, model) {
@@ -177,6 +217,19 @@ namespace model {
 
   void Material::resetMaterialPropertyMoisturePenetrationDepthSettings() {
     getImpl<detail::Material_Impl>()->resetMaterialPropertyMoisturePenetrationDepthSettings();
+  }
+
+  boost::optional<MaterialPropertyPhaseChange>
+    Material::createMaterialPropertyPhaseChange() {
+    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChange();
+  }
+
+  boost::optional<MaterialPropertyPhaseChange> Material::materialPropertyPhaseChange() const {
+    return getImpl<detail::Material_Impl>()->materialPropertyPhaseChange();
+  }
+
+  void Material::resetMaterialPropertyPhaseChange() {
+    getImpl<detail::Material_Impl>()->resetMaterialPropertyPhaseChange();
   }
 
   /// @cond
