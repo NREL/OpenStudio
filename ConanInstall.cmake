@@ -88,8 +88,37 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     set(CONAN_BENCHMARK "benchmark/1.6.1#94c40ebf065e3b20cab6a4f1b03a65fe")
   endif()
 
-  # This will create the conanbuildinfo.cmake in the current binary dir, not the cmake_binary_dir
-  conan_cmake_run(
+  # msys2/cci.latest is not supported on win32. We don't expect to run it on something else than an x86_64 anyways
+  if(CMAKE_SIZEOF_VOID_P EQUAL 4) # 32 bit
+    set(CONAN_FORCE_SETTINGS_BUILD SETTINGS_BUILD arch=x86_64)
+    message(AUTHOR_WARNING "Forcing --settings:build arch=x86_64")
+    if(NOT WIN32)
+      message(AUTHOR_WARNING "You are trying to build on x86 on a non-windows, this is completely untested and unsupported")
+    endif()
+  endif()
+
+  set(CONAN_UPDATE "UPDATE")
+
+  if(CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_BUILD_TYPE)
+    set(CONAN_CMAKE_MULTI ON)
+    if (NOT CONAN_CONFIGURATION_TYPES)
+      # Cache it, and let user change it (if they want to pull RelWithDebInfo for eg)
+      set(CONAN_CONFIGURATION_TYPES "Release;Debug" CACHE STRING "List of configurations for which you want to fetch conan packages")
+      mark_as_advanced(CONAN_CONFIGURATION_TYPES)
+    endif()
+    message(STATUS "Conan: Using cmake_multi generator")
+    set(CONAN_GENERATOR "cmake_multi")
+  else()
+    message(STATUS "Conan: Using cmake generator")
+    set(CONAN_CMAKE_MULTI OFF)
+    set(CONAN_GENERATOR "cmake")
+    set(CONAN_CONFIGURATION_TYPES ${CMAKE_BUILD_TYPE})
+  endif()
+
+
+  message(STATUS "Conan: conan_cmake_configure")
+  # This will create the conanfile.txt
+  conan_cmake_configure(
     REQUIRES
     ${CONAN_READLINE}
     ${CONAN_QT}
@@ -112,17 +141,35 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     # Override to avoid dependency mismatches
     #"bzip2/1.0.8#d4a5c7144832d75fc3f349c5346160b0"
     #"libyaml/0.2.5#9e234874df88c3ba7249f6d1368fceaf"
-    BASIC_SETUP
-    CMAKE_TARGETS
-    NO_OUTPUT_DIRS
-    OPTIONS
-    ${CONAN_OPTIONS}
-    BUILD
-    ${CONAN_BUILD}
-    # Passes `-u, --update`    to conan install: Check updates exist from upstream remotes
-    # That and build=outdated should ensure we track the right
-    # Now that we pin dependencies, there is no point looking upstream really, so we'll save valuable configuration time by not doing it
-    UPDATE)
+    GENERATORS ${CONAN_GENERATOR}
+  )
+
+  foreach(build_type ${CONAN_CONFIGURATION_TYPES})
+    conan_cmake_autodetect(settings BUILD_TYPE ${build_type})
+    message(STATUS "Conan: Autodetected settings for build type ${build_type}: ${settings}")
+
+    # Avoid polluting with cppstd which prevents downloading some existing binary packages (like boost)
+    # Former deprecated conan_cmake_run was NOT adding compiler.cppstd
+    foreach(ARG ${settings})
+      if(${ARG} MATCHES "compiler.cppstd=(.*)")
+        message("Removing ${ARG}")
+        list(REMOVE_ITEM settings ${ARG})
+      endif()
+    endforeach()
+
+    conan_cmake_install(PATH_OR_REFERENCE .
+      BUILD ${CONAN_BUILD}
+      OPTIONS ${CONAN_OPTIONS}
+      SETTINGS ${settings}
+      ${CONAN_FORCE_SETTINGS_BUILD}
+      ${CONAN_UPDATE}
+    )
+  endforeach()
+
+  # Loads the conanbuildinfo.cmake / conanbuildinfo_multi.cmake
+  conan_load_buildinfo()
+  # conan_basic_setup in the conanbuildinfo.cmake. TARGETS => set cmake targets, NO_OUTPUT_DIRS => Don't modify the BIN / LIB folders etc
+  conan_basic_setup(TARGETS NO_OUTPUT_DIRS)
 
   set(CONAN_OPENSTUDIO_ALREADY_RUN TRUE)
 
