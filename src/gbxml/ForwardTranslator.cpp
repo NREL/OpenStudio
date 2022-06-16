@@ -77,8 +77,10 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/core/StringHelpers.hpp"
+#include "../utilities/xml/XMLValidator.hpp"
 
 #include <OpenStudio.hxx>
+#include <resources.hxx>
 
 #include <boost/math/constants/constants.hpp>
 
@@ -112,6 +114,15 @@ namespace gbxml {
     if (file.is_open()) {
       doc.save(file, "  ");
       file.close();
+      
+      // validate the gbxml after forward translation
+      openstudio::path schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
+      XMLValidator xmlValidator(schemaPath);
+      xmlValidator.validate(path);
+      if (!xmlValidator.isValid()) {
+        LOG(Warn, "XML File '" << toString(path) << "' did not validate against '" << toString(schemaPath) << "'" );
+      }
+
       return result;
     }
 
