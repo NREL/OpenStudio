@@ -2161,6 +2161,16 @@ namespace energyplus {
         retVal = translateMaterialPropertyMoisturePenetrationDepthSettings(empd);
         break;
       }
+      case openstudio::IddObjectType::OS_MaterialProperty_PhaseChange: {
+        model::MaterialPropertyPhaseChange phaseChange = modelObject.cast<MaterialPropertyPhaseChange>();
+        retVal = translateMaterialPropertyPhaseChange(phaseChange);
+        break;
+      }
+      case openstudio::IddObjectType::OS_MaterialProperty_PhaseChangeHysteresis: {
+        model::MaterialPropertyPhaseChangeHysteresis phaseChangeHysteresis = modelObject.cast<MaterialPropertyPhaseChangeHysteresis>();
+        retVal = translateMaterialPropertyPhaseChangeHysteresis(phaseChangeHysteresis);
+        break;
+      }
       case openstudio::IddObjectType::OS_Material_RoofVegetation: {
         model::RoofVegetation material = modelObject.cast<RoofVegetation>();
         retVal = translateRoofVegetation(material);
@@ -3496,6 +3506,8 @@ namespace energyplus {
     std::vector<IddObjectType> iddObjectTypes;
     iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_GlazingSpectralData);
     iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings);
+    iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_PhaseChange);
+    iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_PhaseChangeHysteresis);
     iddObjectTypes.push_back(IddObjectType::OS_Material);
     iddObjectTypes.push_back(IddObjectType::OS_Material_AirGap);
     iddObjectTypes.push_back(IddObjectType::OS_Material_AirWall);

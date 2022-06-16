@@ -239,6 +239,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateLuminaire.cpp
   ForwardTranslator/ForwardTranslateMaterialPropertyGlazingSpectralData.cpp
   ForwardTranslator/ForwardTranslateMaterialPropertyMoisturePenetrationDepthSettings.cpp
+  ForwardTranslator/ForwardTranslateMaterialPropertyPhaseChange.cpp
+  ForwardTranslator/ForwardTranslateMaterialPropertyPhaseChangeHysteresis.cpp
   ForwardTranslator/ForwardTranslateMasslessOpaqueMaterial.cpp
   ForwardTranslator/ForwardTranslateMeterCustom.cpp
   ForwardTranslator/ForwardTranslateMeterCustomDecrement.cpp
