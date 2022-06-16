@@ -98,6 +98,8 @@ MODELOBJECT_TEMPLATES(DefaultScheduleSet);
 MODELOBJECT_TEMPLATES(SpectralDataField); // Helper class defined in MaterialPropertyGlazingSpectralData
 MODELOBJECT_TEMPLATES(MaterialPropertyGlazingSpectralData);
 MODELOBJECT_TEMPLATES(MaterialPropertyMoisturePenetrationDepthSettings);
+MODELOBJECT_TEMPLATES(MaterialPropertyPhaseChange);
+MODELOBJECT_TEMPLATES(MaterialPropertyPhaseChangeHysteresis);
 MODELOBJECT_TEMPLATES(Material);
 MODELOBJECT_TEMPLATES(FenestrationMaterial);
 MODELOBJECT_TEMPLATES(GasLayer);
@@ -192,6 +194,8 @@ SWIG_MODELOBJECT(ScheduleConstant, 1);
 SWIG_MODELOBJECT(DefaultScheduleSet, 1);
 SWIG_MODELOBJECT(MaterialPropertyGlazingSpectralData, 1);
 SWIG_MODELOBJECT(MaterialPropertyMoisturePenetrationDepthSettings, 1);
+SWIG_MODELOBJECT(MaterialPropertyPhaseChange, 1);
+SWIG_MODELOBJECT(MaterialPropertyPhaseChangeHysteresis, 1);
 SWIG_MODELOBJECT(Material, 0);
 SWIG_MODELOBJECT(FenestrationMaterial, 0);
 SWIG_MODELOBJECT(GasLayer, 0);

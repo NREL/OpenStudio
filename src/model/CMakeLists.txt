@@ -1011,6 +1011,12 @@ set(${target_name}_src
   MaterialPropertyMoisturePenetrationDepthSettings.hpp
   MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp
   MaterialPropertyMoisturePenetrationDepthSettings.cpp
+  MaterialPropertyPhaseChange.hpp
+  MaterialPropertyPhaseChange_Impl.hpp
+  MaterialPropertyPhaseChange.cpp
+  MaterialPropertyPhaseChangeHysteresis.hpp
+  MaterialPropertyPhaseChangeHysteresis_Impl.hpp
+  MaterialPropertyPhaseChangeHysteresis.cpp
   MeterCustom.hpp
   MeterCustom_Impl.hpp
   MeterCustom.cpp
@@ -2067,6 +2073,8 @@ set(${target_name}_test_src
   test/Material_GTest.cpp
   test/MaterialPropertyGlazingSpectralData_GTest.cpp
   test/MaterialPropertyMoisturePenetrationDepthSettings_GTest.cpp
+  test/MaterialPropertyPhaseChange_GTest.cpp
+  test/MaterialPropertyPhaseChangeHysteresis_GTest.cpp
   test/MeterCustom_GTest.cpp
   test/MeterCustomDecrement_GTest.cpp
   test/ModelFixture.cpp
