@@ -50,7 +50,7 @@ namespace model {
 
       ColorRGB color = RenderingColor::randomColor();
 
-      bool test = true;
+      [[maybe_unused]] bool test = true;
       if (!getInt(OS_Rendering_ColorFields::RenderingRedValue, true)) {
         test = setRenderingRedValue(color.red(), false);
         OS_ASSERT(test);
