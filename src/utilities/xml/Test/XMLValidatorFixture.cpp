@@ -43,8 +43,7 @@ void XMLValidatorFixture::SetUpTestSuite() {
   logFile = FileLogSink(toPath("./XMLValidatorFixture.log"));
   logFile->setLogLevel(Debug);
 
-  xsdPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
-  xsdString = "";
+  schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
 }
 
 void XMLValidatorFixture::TearDownTestSuite() {
@@ -52,6 +51,5 @@ void XMLValidatorFixture::TearDownTestSuite() {
 }
 
 // define static storage
-openstudio::path XMLValidatorFixture::xsdPath;
-std::string XMLValidatorFixture::xsdString;
+openstudio::path XMLValidatorFixture::schemaPath;
 boost::optional<openstudio::FileLogSink> XMLValidatorFixture::logFile;

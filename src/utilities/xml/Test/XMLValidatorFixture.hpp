@@ -57,8 +57,7 @@ class XMLValidatorFixture : public ::testing::Test
   REGISTER_LOGGER("XMLValidatorFixture");
 
  public:
-  static openstudio::path xsdPath;
-  static std::string xsdString;
+  static openstudio::path schemaPath;
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 

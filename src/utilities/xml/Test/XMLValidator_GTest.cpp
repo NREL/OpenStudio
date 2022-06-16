@@ -42,12 +42,12 @@ using namespace boost;
 using namespace openstudio;
 
 TEST_F(XMLValidatorFixture, XMLValidator_isValid) {
-  XMLValidator xmlValidator(xsdPath);
+  XMLValidator xmlValidator(schemaPath);
   EXPECT_FALSE(xmlValidator.isValid());
 }
 
 TEST_F(XMLValidatorFixture, XMLValidator_NonXMLFile) {
-  XMLValidator xmlValidator(xsdPath);
+  XMLValidator xmlValidator(schemaPath);
   EXPECT_NE("", xmlValidator.schemaPath());
   EXPECT_FALSE(xmlValidator.xmlPath());
 
@@ -63,7 +63,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_NonXMLFile) {
 }
 
 TEST_F(XMLValidatorFixture, XMLValidator_GBXML_XSD) {
-  XMLValidator xmlValidator(xsdPath);
+  XMLValidator xmlValidator(schemaPath);
   EXPECT_NE("", xmlValidator.schemaPath());
   EXPECT_FALSE(xmlValidator.xmlPath());
 
