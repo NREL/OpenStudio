@@ -41,82 +41,189 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-/* TEST_F(XMLValidatorFixture, Strings) {
-  XMLValidator xmlValidator(xsdString);
-  ASSERT_TRUE(xmlValidator.xsdString());
-
-  std::string xmlString;
-
-  xmlString = "";
-  EXPECT_FALSE(xmlValidator.validate(xmlString));
+TEST_F(XMLValidatorFixture, XMLValidator_isValid) {
+  XMLValidator xmlValidator(xsdPath);
+  EXPECT_FALSE(xmlValidator.isValid());
 }
 
-TEST_F(XMLValidatorFixture, NonXMLFile) {
+TEST_F(XMLValidatorFixture, XMLValidator_NonXMLFile) {
   XMLValidator xmlValidator(xsdPath);
-  ASSERT_TRUE(xmlValidator.xsdPath());
-  EXPECT_NE("", xmlValidator.xsdPath().get());
-
-  openstudio::path xmlFile;
-
-  xmlFile = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/eplusout.sql");
-  EXPECT_FALSE(xmlValidator.xsdValidate(xmlFile));
-} */
-
-TEST_F(XMLValidatorFixture, GBXML_ValidateResources) {
-
-  openstudio::path xmlPath;
-
-  xmlPath = resourcesPath() / openstudio::toPath("gbxml/3951_Geometry_bug.xml");
-  XMLValidator xmlValidator(xsdPath);
-
   EXPECT_NE("", xmlValidator.schemaPath());
   EXPECT_FALSE(xmlValidator.xmlPath());
 
-  for (int i = 0; i < 2; ++i) {
+  StringStreamLogSink sink;
+  sink.setLogLevel(Error);
 
-    EXPECT_FALSE(xmlValidator.validate(xmlPath)) << "Failed at iteration " << i + 1;
+  openstudio::path xmlPath;
+
+  xmlPath = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/eplusout.sql");
+  EXPECT_THROW(xmlValidator.validate(xmlPath), openstudio::Exception);
+  ASSERT_EQ(1u, sink.logMessages().size());
+  EXPECT_EQ("XML path extension '.sql' not supported.", sink.logMessages()[0].logMessage());
+}
+
+TEST_F(XMLValidatorFixture, XMLValidator_GBXML_XSD) {
+  XMLValidator xmlValidator(xsdPath);
+  EXPECT_NE("", xmlValidator.schemaPath());
+  EXPECT_FALSE(xmlValidator.xmlPath());
+
+  openstudio::path xmlPath;
+
+  {
+    xmlPath = resourcesPath() / openstudio::toPath("gbxml/3951_Geometry_bug.xml");
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0u, xmlValidator.warnings().size());
     EXPECT_EQ(8u, xmlValidator.errors().size());
-    // for (const auto& logMessage : xmlValidator.errors()) {
-    //   EXPECT_TRUE(false) << logMessage.logMessage();
-    // }
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
   }
 
-  /*   xmlFile = resourcesPath() / openstudio::toPath("gbxml/3997_WindowScaling_bug.xml");
-  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
+  {
+    xmlPath = resourcesPath() / openstudio::toPath("gbxml/3997_WindowScaling_bug.xml");
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_FALSE(xmlValidator.isValid());
+    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(15u, xmlValidator.errors().size());
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
+  }
 
-  xmlFile = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard_Single_Family_Residential_2016.xml");
-  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
+  {
+    xmlPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard_Single_Family_Residential_2016.xml");
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_FALSE(xmlValidator.isValid());
+    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(1210u, xmlValidator.errors().size());
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
+  }
 
-  xmlFile = resourcesPath() / openstudio::toPath("gbxml/seb.xml");
-  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
+  {
+    xmlPath = resourcesPath() / openstudio::toPath("gbxml/seb.xml");
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_FALSE(xmlValidator.isValid());
+    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(17u, xmlValidator.errors().size());
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
+  }
 
-  xmlFile = resourcesPath() / openstudio::toPath("gbxml/simpleBox_vasari.xml");
-  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
+  {
+    xmlPath = resourcesPath() / openstudio::toPath("gbxml/simpleBox_vasari.xml");
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_FALSE(xmlValidator.isValid());
+    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(28u, xmlValidator.errors().size());
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
+  }
 
-  xmlFile = resourcesPath() / openstudio::toPath("gbxml/TestCube.xml");
-  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
+  {
+    xmlPath = resourcesPath() / openstudio::toPath("gbxml/TestCube.xml");
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_FALSE(xmlValidator.isValid());
+    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(9u, xmlValidator.errors().size());
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
+  }
 
-  xmlFile = resourcesPath() / openstudio::toPath("gbxml/TestCubeAlternateUnits.xml");
-  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile));
+  {
+    xmlPath = resourcesPath() / openstudio::toPath("gbxml/TestCubeAlternateUnits.xml");
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_FALSE(xmlValidator.isValid());
+    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(9u, xmlValidator.errors().size());
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
+  }
 
-  xmlFile = resourcesPath() / openstudio::toPath("gbxml/TestSchedules.xml");
-  EXPECT_FALSE(xmlValidator.xsdValidate(xmlFile));
+  {
+    xmlPath = resourcesPath() / openstudio::toPath("gbxml/TestSchedules.xml");
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_FALSE(xmlValidator.isValid());
+    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(17u, xmlValidator.errors().size());
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
+  }
 
-  xmlFile = resourcesPath() / openstudio::toPath("gbxml/TropicBird.xml");
-  EXPECT_FALSE(xmlValidator.xsdValidate(xmlFile));
+  {
+    xmlPath = resourcesPath() / openstudio::toPath("gbxml/TropicBird.xml");
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_FALSE(xmlValidator.isValid());
+    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(111u, xmlValidator.errors().size());
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
+  }
 
-  xmlFile = resourcesPath() / openstudio::toPath("gbxml/TropicBird_BEM_4_2018.xml");
-  EXPECT_FALSE(xmlValidator.xsdValidate(xmlFile));
+  {
+    xmlPath = resourcesPath() / openstudio::toPath("gbxml/TropicBird_BEM_4_2018.xml");
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_FALSE(xmlValidator.isValid());
+    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(2u, xmlValidator.errors().size());
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
+  }
 
-  xmlFile = resourcesPath() / openstudio::toPath("gbxml/TwoStoryOffice_Trane.xml");
-  EXPECT_FALSE(xmlValidator.xsdValidate(xmlFile));
+  {
+    xmlPath = resourcesPath() / openstudio::toPath("gbxml/TwoStoryOffice_Trane.xml");
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_FALSE(xmlValidator.isValid());
+    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(237u, xmlValidator.errors().size());
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
+  }
 
-  xmlFile = resourcesPath() / openstudio::toPath("gbxml/ZNETH.xml");
-  EXPECT_TRUE(xmlValidator.xsdValidate(xmlFile)); */
+  {
+    xmlPath = resourcesPath() / openstudio::toPath("gbxml/ZNETH.xml");
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_FALSE(xmlValidator.isValid());
+    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(205u, xmlValidator.errors().size());
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
+  }
 }
 
 TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_XSLT) {

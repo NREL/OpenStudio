@@ -180,7 +180,6 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(op
     m_validatorType = XMLValidatorType::Schematron;
     LOG(Info, "Treating schema as a Schematron, converting to an XSLT StyleSheet");
     m_schemaPath = schematronToXslt(m_schemaPath);
-
   } else {
     LOG_AND_THROW("Schema path extension '" << toString(schemaPath.extension()) << "' not supported.");
   }
@@ -233,14 +232,18 @@ bool XMLValidator::validate(const openstudio::path& xmlPath) {
 
   reset();
 
-  auto t_xmlPath = openstudio::filesystem::system_complete(xmlPath);
-
-  if (!openstudio::filesystem::exists(t_xmlPath)) {
-    LOG_AND_THROW("XML File '" << toString(t_xmlPath) << "' does not exist");
-  } else if (!openstudio::filesystem::is_regular_file(t_xmlPath)) {
-    LOG_AND_THROW("XML File '" << toString(t_xmlPath) << "' cannot be opened");
+  if (!openstudio::filesystem::exists(xmlPath)) {
+    LOG_AND_THROW("XML File '" << toString(xmlPath) << "' does not exist");
+  } else if (!openstudio::filesystem::is_regular_file(xmlPath)) {
+    LOG_AND_THROW("XML File '" << toString(xmlPath) << "' cannot be opened");
   }
-  m_xmlPath = t_xmlPath;
+
+  if (xmlPath.extension() == ".xml") {
+    auto t_xmlPath = openstudio::filesystem::system_complete(xmlPath);
+    m_xmlPath = t_xmlPath;
+  } else {
+    LOG_AND_THROW("XML path extension '" << toString(xmlPath.extension()) << "' not supported.");
+  }
 
   if (m_validatorType == XMLValidatorType::XSD) {
     return xsdValidate();
@@ -291,7 +294,7 @@ bool XMLValidator::xsdValidate() const {
     result = false;
   } else if (ret < 0) {
     LOG(Fatal, "Valid instance " << toString(m_xmlPath.get()) << " got internal error validating against " << toString(m_schemaPath));
-    result = true;
+    result = false;
   } else {
     result = true;
   }
