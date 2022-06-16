@@ -48,7 +48,7 @@ class UTILITIES_API Surface3d
 {
  public:
   Surface3d() = default;
-  Surface3d(std::vector<Point3d> vertices, std::string name = "None");
+  Surface3d(std::vector<Point3d> t_vertices, std::string t_name = "None");
   std::vector<Point3d> vertices;
   std::string name;
 };
