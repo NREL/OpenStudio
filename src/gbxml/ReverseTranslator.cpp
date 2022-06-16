@@ -116,7 +116,7 @@ namespace gbxml {
       XMLValidator xmlValidator(schemaPath);
       xmlValidator.validate(path);
       if (!xmlValidator.isValid()) {
-        LOG(Warn, "XML File '" << toString(path) << "' did not validate against '" << toString(schemaPath) << "'" );
+        LOG(Warn, "XML File '" << toString(path) << "' did not validate against '" << toString(schemaPath) << "'");
       }
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);

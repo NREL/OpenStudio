@@ -114,13 +114,13 @@ namespace gbxml {
     if (file.is_open()) {
       doc.save(file, "  ");
       file.close();
-      
+
       // validate the gbxml after forward translation
       openstudio::path schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
       XMLValidator xmlValidator(schemaPath);
       xmlValidator.validate(path);
       if (!xmlValidator.isValid()) {
-        LOG(Warn, "XML File '" << toString(path) << "' did not validate against '" << toString(schemaPath) << "'" );
+        LOG(Warn, "XML File '" << toString(path) << "' did not validate against '" << toString(schemaPath) << "'");
       }
 
       return result;
