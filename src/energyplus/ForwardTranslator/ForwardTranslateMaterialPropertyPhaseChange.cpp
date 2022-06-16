@@ -45,15 +45,12 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject>
-    ForwardTranslator::translateMaterialPropertyPhaseChange(MaterialPropertyPhaseChange& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyPhaseChange(MaterialPropertyPhaseChange& modelObject) {
     IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_PhaseChange);
 
     m_idfObjects.push_back(idfObject);
 
     idfObject.setString(MaterialProperty_PhaseChangeFields::Name, modelObject.materialName());
-
-
 
     return boost::optional<IdfObject>(idfObject);
   }

@@ -67,6 +67,4 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_MaterialPropertyPhase
 
   // new material does not have material property moisture penetration depth settings yet
   EXPECT_TRUE(!material.materialPropertyPhaseChangeHysteresis());
-
-
 }

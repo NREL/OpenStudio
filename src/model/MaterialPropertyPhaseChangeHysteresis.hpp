@@ -65,13 +65,9 @@ namespace model {
 
     std::string materialName() const;
 
-
-
     //@}
     /** @name Setters */
     //@{
-
-
 
     //@}
     /** @name Other */

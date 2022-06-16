@@ -49,11 +49,9 @@ namespace model {
 
       MaterialPropertyPhaseChange_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      MaterialPropertyPhaseChange_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
-                                                            bool keepHandle);
+      MaterialPropertyPhaseChange_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      MaterialPropertyPhaseChange_Impl(const MaterialPropertyPhaseChange_Impl& other, Model_Impl* model,
-                                                            bool keepHandle);
+      MaterialPropertyPhaseChange_Impl(const MaterialPropertyPhaseChange_Impl& other, Model_Impl* model, bool keepHandle);
 
       virtual ~MaterialPropertyPhaseChange_Impl() {}
 
@@ -71,13 +69,9 @@ namespace model {
 
       std::string materialName() const;
 
-
-
       //@}
       /** @name Setters */
       //@{
-
-
 
       //@}
       /** @name Other */

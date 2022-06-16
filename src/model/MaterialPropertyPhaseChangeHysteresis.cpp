@@ -46,20 +46,20 @@ namespace model {
 
   namespace detail {
 
-    MaterialPropertyPhaseChangeHysteresis_Impl::MaterialPropertyPhaseChangeHysteresis_Impl(const IdfObject& idfObject,
-                                                                                                                 Model_Impl* model, bool keepHandle)
+    MaterialPropertyPhaseChangeHysteresis_Impl::MaterialPropertyPhaseChangeHysteresis_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                           bool keepHandle)
       : ModelObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == MaterialPropertyPhaseChangeHysteresis::iddObjectType());
     }
 
-    MaterialPropertyPhaseChangeHysteresis_Impl::MaterialPropertyPhaseChangeHysteresis_Impl(
-      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+    MaterialPropertyPhaseChangeHysteresis_Impl::MaterialPropertyPhaseChangeHysteresis_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                           Model_Impl* model, bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == MaterialPropertyPhaseChangeHysteresis::iddObjectType());
     }
 
-    MaterialPropertyPhaseChangeHysteresis_Impl::MaterialPropertyPhaseChangeHysteresis_Impl(
-      const MaterialPropertyPhaseChangeHysteresis_Impl& other, Model_Impl* model, bool keepHandle)
+    MaterialPropertyPhaseChangeHysteresis_Impl::MaterialPropertyPhaseChangeHysteresis_Impl(const MaterialPropertyPhaseChangeHysteresis_Impl& other,
+                                                                                           Model_Impl* model, bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& MaterialPropertyPhaseChangeHysteresis_Impl::outputVariableNames() const {
@@ -78,8 +78,6 @@ namespace model {
       return material.get().name().get();
     }
 
-
-
   }  // namespace detail
 
   MaterialPropertyPhaseChangeHysteresis::MaterialPropertyPhaseChangeHysteresis(Material& material)
@@ -95,7 +93,6 @@ namespace model {
 
     ok = setPointer(OS_MaterialProperty_PhaseChangeHysteresisFields::MaterialName, material.handle());
     OS_ASSERT(ok);
-
   }
 
   IddObjectType MaterialPropertyPhaseChangeHysteresis::iddObjectType() {
@@ -105,8 +102,6 @@ namespace model {
   std::string MaterialPropertyPhaseChangeHysteresis::materialName() const {
     return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->materialName();
   }
-
-
 
   /// @cond
   MaterialPropertyPhaseChangeHysteresis::MaterialPropertyPhaseChangeHysteresis(

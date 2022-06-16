@@ -46,20 +46,19 @@ namespace model {
 
   namespace detail {
 
-    MaterialPropertyPhaseChange_Impl::MaterialPropertyPhaseChange_Impl(const IdfObject& idfObject,
-                                                                                                                 Model_Impl* model, bool keepHandle)
+    MaterialPropertyPhaseChange_Impl::MaterialPropertyPhaseChange_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
       : ModelObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == MaterialPropertyPhaseChange::iddObjectType());
     }
 
-    MaterialPropertyPhaseChange_Impl::MaterialPropertyPhaseChange_Impl(
-      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+    MaterialPropertyPhaseChange_Impl::MaterialPropertyPhaseChange_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == MaterialPropertyPhaseChange::iddObjectType());
     }
 
-    MaterialPropertyPhaseChange_Impl::MaterialPropertyPhaseChange_Impl(
-      const MaterialPropertyPhaseChange_Impl& other, Model_Impl* model, bool keepHandle)
+    MaterialPropertyPhaseChange_Impl::MaterialPropertyPhaseChange_Impl(const MaterialPropertyPhaseChange_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& MaterialPropertyPhaseChange_Impl::outputVariableNames() const {
@@ -78,8 +77,6 @@ namespace model {
       return material.get().name().get();
     }
 
-
-
   }  // namespace detail
 
   MaterialPropertyPhaseChange::MaterialPropertyPhaseChange(Material& material)
@@ -95,8 +92,6 @@ namespace model {
 
     ok = setPointer(OS_MaterialProperty_PhaseChangeFields::MaterialName, material.handle());
     OS_ASSERT(ok);
-
-
   }
 
   IddObjectType MaterialPropertyPhaseChange::iddObjectType() {
@@ -107,11 +102,8 @@ namespace model {
     return getImpl<detail::MaterialPropertyPhaseChange_Impl>()->materialName();
   }
 
-
-
   /// @cond
-  MaterialPropertyPhaseChange::MaterialPropertyPhaseChange(
-    std::shared_ptr<detail::MaterialPropertyPhaseChange_Impl> impl)
+  MaterialPropertyPhaseChange::MaterialPropertyPhaseChange(std::shared_ptr<detail::MaterialPropertyPhaseChange_Impl> impl)
     : ModelObject(std::move(impl)) {}
   /// @endcond
 
