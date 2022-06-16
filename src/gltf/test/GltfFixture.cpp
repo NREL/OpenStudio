@@ -26,56 +26,31 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
-#ifndef MODEL_GLTFMODELOBJECTMETADATAWRAPPER_HPP
-#define MODEL_GLTFMODELOBJECTMETADATAWRAPPER_HPP
 
-#include "ModelAPI.hpp"
-#include "Model.hpp"
+#include "GltfFixture.hpp"
 
-namespace openstudio {
-//class GltfMetaDta;
-namespace model {
+#include <utilities/idd/IddFactory.hxx>
+#include "../../utilities/core/Compare.hpp"
 
-  class MODEL_API GltfModelObjectMetadataWrapper
-  {
-   public:
-    void setColor(const std::string& value);
-    void setHandle(const std::string& value);
-    void setIddObjectType(const std::string& value);
-    void setName(const std::string& value);
-    void setOpen_to_below(const bool& value);
-    void setNominal_z_coordinate(const double& value);
-    void setNominal_floorCeiling_Height(const double& value);
-    void setMultiplier(const int& value);
+#include <resources.hxx>
+#include <OpenStudio.hxx>
 
-    std::string getColor() const;
-    std::string getHandle() const;
-    std::string getIddObjectType() const;
-    std::string getName() const;
-    bool getOpen_to_below() const;
-    double getNominal_z_coordinate() const;
-    double getNominal_floorCeiling_Height() const;
-    int getMultiplier() const;
+using namespace openstudio;
 
-   private:
-    // string
-    std::tuple<std::string, std::string> color;
-    std::tuple<std::string, std::string> handle;
-    std::tuple<std::string, std::string> iddObjectType;
-    std::tuple<std::string, std::string> name;
+void GltfFixture::SetUp() {}
 
-    // bool
-    std::tuple<std::string, bool> open_to_below;
+void GltfFixture::TearDown() {}
 
-    // double
-    std::tuple<std::string, double> nominal_z_coordinate;
-    std::tuple<std::string, double> nominal_floorCeiling_Height;
+void GltfFixture::SetUpTestSuite() {
+  // set up logging
+  logFile = FileLogSink(toPath("./GltfFixture.log"));
+  logFile->setLogLevel(Debug);
+  Logger::instance().standardOutLogger().disable();
+}
 
-    // int
-    std::tuple<std::string, int> multiplier;
-  };
+void GltfFixture::TearDownTestSuite() {
+  logFile->disable();
+}
 
-}  // namespace model
-}  // namespace openstudio
-
-#endif  //MODEL_GLTFMODELOBJECTMETADATAWRAPPER_HPP
+// static variables
+boost::optional<openstudio::FileLogSink> GltfFixture::logFile;

@@ -1007,6 +1007,7 @@ set(project_directories
   epjson
   radiance
   gbxml
+  gltf
   airflow
   isomodel
   osversion
