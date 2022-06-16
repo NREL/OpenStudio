@@ -45,6 +45,24 @@ namespace model {
 
   }  // namespace detail
 
+  /** This class implements a temperature enthalpy */
+  class MODEL_API TemperatureEnthalpy
+  {
+   public:
+    ViewFactor(double temperature, double enthalpy);
+
+    double temperature() const;
+    double enthalpy() const;
+
+   private:
+    double m_temperature;
+    double m_enthalpy;
+    REGISTER_LOGGER("openstudio.model.TemperatureEnthalpy");
+  };
+
+  // Overload operator<<
+  MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::TemperatureEnthalpy& temperatureEnthalpy);
+
   /** MaterialPropertyPhaseChange is a ModelObject that wraps the OpenStudio IDD object 'OS:MaterialProperty:PhaseChange'. */
   class MODEL_API MaterialPropertyPhaseChange : public ModelObject
   {
@@ -65,9 +83,35 @@ namespace model {
 
     std::string materialName() const;
 
+    double temperatureCoefficientforThermalConductivity() const;
+
+    bool isTemperatureCoefficientforThermalConductivityDefaulted() const;
+
+    std::vector<TemperatureEnthalpy> temperatureEnthalpys() const;
+
+    unsigned int numberofTemperatureEnthalpys() const;
+
+    boost::optional<unsigned> temperatureEnthalpyIndex(const TemperatureEnthalpy& temperatureEnthalpy) const;
+
+    boost::optional<TemperatureEnthalpy> getTemperatureEnthalpy(unsigned groupIndex) const;
+
     //@}
     /** @name Setters */
     //@{
+
+    bool setTemperatureCoefficientforThermalConductivity(double temperatureCoefficientforThermalConductivity);
+
+    void resetTemperatureCoefficientforThermalConductivity();
+
+    bool addTemperatureEnthalpy(const TemperatureEnthalpy& temperatureEnthalpy);
+
+    bool addTemperatureEnthalpy(double temperature, double enthalpy);
+
+    bool addTemperatureEnthalpys(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
+
+    bool removeTemperatureEnthalpy(unsigned groupIndex);
+
+    void removeAllTemperatureEnthalpys();
 
     //@}
     /** @name Other */

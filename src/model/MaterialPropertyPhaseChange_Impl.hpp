@@ -37,6 +37,8 @@
 namespace openstudio {
 namespace model {
 
+  class TemperatureEnthalpy;
+
   namespace detail {
 
     /** MaterialPropertyPhaseChange_Impl is a ModelObject_Impl that is the implementation class for MaterialPropertyPhaseChange.*/
@@ -69,9 +71,35 @@ namespace model {
 
       std::string materialName() const;
 
+      double temperatureCoefficientforThermalConductivity() const;
+
+      bool isTemperatureCoefficientforThermalConductivityDefaulted() const;
+
+      std::vector<TemperatureEnthalpy> temperatureEnthalpys() const;
+
+      unsigned int numberofTemperatureEnthalpys() const;
+
+      boost::optional<unsigned> temperatureEnthalpyIndex(const TemperatureEnthalpy& temperatureEnthalpy) const;
+
+      boost::optional<TemperatureEnthalpy> getTemperatureEnthalpy(unsigned groupIndex) const;
+
       //@}
       /** @name Setters */
       //@{
+
+      bool setTemperatureCoefficientforThermalConductivity(double temperatureCoefficientforThermalConductivity);
+
+      void resetTemperatureCoefficientforThermalConductivity();
+
+      bool addTemperatureEnthalpy(const TemperatureEnthalpy& temperatureEnthalpy);
+
+      bool addTemperatureEnthalpy(double temperature, double enthalpy);
+
+      bool addTemperatureEnthalpys(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
+
+      bool removeTemperatureEnthalpy(unsigned groupIndex);
+
+      void removeAllTemperatureEnthalpys();
 
       //@}
       /** @name Other */

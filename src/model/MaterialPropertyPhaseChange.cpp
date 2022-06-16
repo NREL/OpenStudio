@@ -44,6 +44,21 @@
 namespace openstudio {
 namespace model {
 
+  TemperatureEnthalpy::TemperatureEnthalpy(double temperature, double enthalpy) : m_temperature(temperature), m_enthalpy(enthalpy) {}
+
+  double TemperatureEnthalpy::temperature() const {
+    return m_temperature;
+  }
+
+  double TemperatureEnthalpy::enthalpy() const {
+    return m_enthalpy;
+  }
+
+  std::ostream& operator<<(std::ostream& out, const openstudio::model::TemperatureEnthalpy& temperatureEnthalpy) {
+    out << "temperature=" << temperatureEnthalpy.temperature() << ", enthalpy=" << temperatureEnthalpy.enthalpy();
+    return out;
+  }
+
   namespace detail {
 
     MaterialPropertyPhaseChange_Impl::MaterialPropertyPhaseChange_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
@@ -77,6 +92,32 @@ namespace model {
       return material.get().name().get();
     }
 
+    double MaterialPropertyPhaseChange_Impl::temperatureCoefficientforThermalConductivity() const {}
+
+    bool MaterialPropertyPhaseChange_Impl::isTemperatureCoefficientforThermalConductivityDefaulted() const {}
+
+    std::vector<TemperatureEnthalpy> MaterialPropertyPhaseChange_Impl::temperatureEnthalpys() const {}
+
+    unsigned int MaterialPropertyPhaseChange_Impl::numberofTemperatureEnthalpys() const {}
+
+    boost::optional<unsigned> MaterialPropertyPhaseChange_Impl::temperatureEnthalpyIndex(const TemperatureEnthalpy& temperatureEnthalpy) const {}
+
+    boost::optional<TemperatureEnthalpy> MaterialPropertyPhaseChange_Impl::getTemperatureEnthalpy(unsigned groupIndex) const {}
+
+    bool MaterialPropertyPhaseChange_Impl::setTemperatureCoefficientforThermalConductivity(double temperatureCoefficientforThermalConductivity) {}
+
+    void MaterialPropertyPhaseChange_Impl::resetTemperatureCoefficientforThermalConductivity() {}
+
+    bool MaterialPropertyPhaseChange_Impl::addTemperatureEnthalpy(const TemperatureEnthalpy& temperatureEnthalpy) {}
+
+    bool MaterialPropertyPhaseChange_Impl::addTemperatureEnthalpy(double temperature, double enthalpy) {}
+
+    bool MaterialPropertyPhaseChange_Impl::addTemperatureEnthalpys(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys) {}
+
+    bool MaterialPropertyPhaseChange_Impl::removeTemperatureEnthalpy(unsigned groupIndex) {}
+
+    void MaterialPropertyPhaseChange_Impl::removeAllTemperatureEnthalpys() {}
+
   }  // namespace detail
 
   MaterialPropertyPhaseChange::MaterialPropertyPhaseChange(Material& material)
@@ -101,6 +142,32 @@ namespace model {
   std::string MaterialPropertyPhaseChange::materialName() const {
     return getImpl<detail::MaterialPropertyPhaseChange_Impl>()->materialName();
   }
+
+  double MaterialPropertyPhaseChange::temperatureCoefficientforThermalConductivity() const {}
+
+  bool MaterialPropertyPhaseChange::isTemperatureCoefficientforThermalConductivityDefaulted() const {}
+
+  std::vector<TemperatureEnthalpy> MaterialPropertyPhaseChange::temperatureEnthalpys() const {}
+
+  unsigned int MaterialPropertyPhaseChange::numberofTemperatureEnthalpys() const {}
+
+  boost::optional<unsigned> MaterialPropertyPhaseChange::temperatureEnthalpyIndex(const TemperatureEnthalpy& temperatureEnthalpy) const {}
+
+  boost::optional<TemperatureEnthalpy> MaterialPropertyPhaseChange::getTemperatureEnthalpy(unsigned groupIndex) const {}
+
+  bool MaterialPropertyPhaseChange::setTemperatureCoefficientforThermalConductivity(double temperatureCoefficientforThermalConductivity) {}
+
+  void MaterialPropertyPhaseChange::resetTemperatureCoefficientforThermalConductivity() {}
+
+  bool MaterialPropertyPhaseChange::addTemperatureEnthalpy(const TemperatureEnthalpy& temperatureEnthalpy) {}
+
+  bool MaterialPropertyPhaseChange::addTemperatureEnthalpy(double temperature, double enthalpy) {}
+
+  bool MaterialPropertyPhaseChange::addTemperatureEnthalpys(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys) {}
+
+  bool MaterialPropertyPhaseChange::removeTemperatureEnthalpy(unsigned groupIndex) {}
+
+  void MaterialPropertyPhaseChange::removeAllTemperatureEnthalpys() {}
 
   /// @cond
   MaterialPropertyPhaseChange::MaterialPropertyPhaseChange(std::shared_ptr<detail::MaterialPropertyPhaseChange_Impl> impl)
