@@ -116,27 +116,31 @@ openstudio::path schematronToXslt(const openstudio::path& schemaPath) {
 
   // Extract
 
-  const char* params[16 + 1];
-  int nbparams = 0;
-  params[nbparams] = nullptr;
+  // If we wanted to pass params, it's in this form where i=name and i+1 is the value, and it's null-terminated
+  // constexpr int nbpairs = 1;
+  // constexpr int nbparams = 2 * nbpairs;
+  // const char * params[nbparams+1]:
+  // params[0] = "name";
+  // params[1] = "value";
+  // params[nbparams] = nullptr;
   xmlSubstituteEntitiesDefault(1);
   xmlLoadExtDtdDefaultValue = 1;
 
   // include
-  xmlDoc* withIncludes = applyEmbeddedXSLT(":/xml/resources/iso_dsdl_include.xsl", schematronXmlDoc, params);
+  xmlDoc* withIncludes = applyEmbeddedXSLT(":/xml/resources/iso_dsdl_include.xsl", schematronXmlDoc, nullptr);
   if constexpr (saveIntermediates) {
     saveXmlDocToFile(schemaPath.parent_path() / "1_withIncludes.xslt", withIncludes);
   }
 
   // expand
-  xmlDoc* withExpand = applyEmbeddedXSLT(":/xml/resources/iso_dsdl_include.xsl", withIncludes, params);
+  xmlDoc* withExpand = applyEmbeddedXSLT(":/xml/resources/iso_dsdl_include.xsl", withIncludes, nullptr);
   if constexpr (saveIntermediates) {
     saveXmlDocToFile(schemaPath.parent_path() / "2_withExpand.xslt", withIncludes);
   }
 
   // compile: this one uses an xsl:import ... not sure how to merge them...
-  // xmlDoc* compiled = applyEmbeddedXSLT(":/xml/resources/iso_svrl_for_xslt1.xsl", withExpand, params);
-  xmlDoc* compiled = applyEmbeddedXSLTWithImports(schemaPath.parent_path(), withExpand, params);
+  // xmlDoc* compiled = applyEmbeddedXSLT(":/xml/resources/iso_svrl_for_xslt1.xsl", withExpand, nullptr);
+  xmlDoc* compiled = applyEmbeddedXSLTWithImports(schemaPath.parent_path(), withExpand, nullptr);
 
   openstudio::path xsltPath = schemaPath.parent_path() / openstudio::toPath(openstudio::toString(schemaPath.stem()) + "_stylesheet.xslt");
   // xsltPath.replace_extension(".xslt");
@@ -391,9 +395,6 @@ std::string dumpXSLTApplyResultToString(xmlDoc* res, xsltStylesheet* style) {
 
 bool XMLValidator::xsltValidate() const {
 
-  const char* params[16 + 1];
-  int nbparams = 0;
-  params[nbparams] = nullptr;
   xmlSubstituteEntitiesDefault(1);
   xmlLoadExtDtdDefaultValue = 1;
 
@@ -403,7 +404,7 @@ bool XMLValidator::xsltValidate() const {
   auto filename_str = openstudio::toString(m_xmlPath.get());
   const auto* filename = filename_str.c_str();
   xmlDoc* doc = xmlParseFile(filename);
-  xmlDoc* res = xsltApplyStylesheet(style, doc, params);
+  xmlDoc* res = xsltApplyStylesheet(style, doc, nullptr);
 
   // Dump result of xlstApply
   m_fullValidationReport = dumpXSLTApplyResultToString(res, style);
