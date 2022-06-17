@@ -3263,7 +3263,7 @@ OS:MaterialProperty:PhaseChange,
   A1,  \field Handle
        \type handle
        \required-field
-  A2,  \field Name
+  A2,  \field Material Name
        \required-field
        \type object-list
        \object-list MaterialNames
@@ -3296,7 +3296,7 @@ OS:MaterialProperty:PhaseChangeHysteresis,
   A1,  \field Handle
        \type handle
        \required-field
-  A2,  \field Name
+  A2,  \field Material Name
        \required-field
        \type object-list
        \object-list MaterialNames
