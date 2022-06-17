@@ -73,6 +73,7 @@
 
 #include "utilities/core/Compare.hpp"
 #include "utilities/geometry/BoundingBox.hpp"
+#include "utilities/xml/XMLValidator.hpp"
 #include <resources.hxx>
 
 #include <sstream>
@@ -905,4 +906,22 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
       EXPECT_EQ("I0225mminsulationboard", _obj->gbXMLId().get());
     }
   }
+}
+
+TEST_F(gbXMLFixture, ForwardTranslator_exampleModelValid) {
+  Model model = exampleModel();
+
+  path p = resourcesPath() / openstudio::toPath("gbxml/exampleModel.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test = forwardTranslator.modelToGbXML(model, p);
+
+  EXPECT_TRUE(test);
+
+  path schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
+  XMLValidator xmlValidator(schemaPath);
+  EXPECT_TRUE(xmlValidator.validate(p));
+  EXPECT_TRUE(xmlValidator.isValid());
+  EXPECT_EQ(0u, xmlValidator.warnings().size());
+  EXPECT_EQ(0u, xmlValidator.errors().size());
 }

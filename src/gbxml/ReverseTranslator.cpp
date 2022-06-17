@@ -115,9 +115,6 @@ namespace gbxml {
       openstudio::path schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
       XMLValidator xmlValidator(schemaPath);
       xmlValidator.validate(path);
-      if (!xmlValidator.isValid()) {
-        LOG(Warn, "XML File '" << toString(path) << "' did not validate against '" << toString(schemaPath) << "'");
-      }
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {
