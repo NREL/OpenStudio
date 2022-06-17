@@ -37,6 +37,8 @@
 #include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
 #include "MaterialPropertyPhaseChange.hpp"
 #include "MaterialPropertyPhaseChange_Impl.hpp"
+#include "MaterialPropertyPhaseChangeHysteresis.hpp"
+#include "MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -44,6 +46,7 @@ namespace model {
   class StandardsInformationMaterial;
   class MaterialPropertyMoisturePenetrationDepthSettings;
   class MaterialPropertyPhaseChange;
+  class MaterialPropertyPhaseChangeHysteresis;
 
   namespace detail {
     class Material_Impl;
@@ -95,17 +98,26 @@ namespace model {
     // returns the material property moisture penetration depth settings if set
     boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
 
-    // resets the material property phase change
-    void resetMaterialPropertyPhaseChange();
+    // resets the material property moisture penetration depth settings
+    void resetMaterialPropertyMoisturePenetrationDepthSettings();
 
     // if material property phase change already exists, do nothing and return nil; creates the material property phase change if it does not already exist and return it
-    boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyMoisturePenetrationDepthSettings();
+    boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange();
 
     // returns the material property phase change if set
     boost::optional<MaterialPropertyPhaseChange> materialPropertyPhaseChange() const;
 
     // resets the material property phase change
     void resetMaterialPropertyPhaseChange();
+
+    // if material property phase change hysteresis already exists, do nothing and return nil; creates the material property phase change hysteresis if it does not already exist and return it
+    boost::optional<MaterialPropertyPhaseChangeHysteresis> createMaterialPropertyPhaseChangeHysteresis();
+
+    // returns the material property phase change hysteresis if set
+    boost::optional<MaterialPropertyPhaseChangeHysteresis> materialPropertyPhaseChangeHysteresis() const;
+
+    // resets the material property phase change hysteresis
+    void resetMaterialPropertyPhaseChangeHysteresis();
 
     //@}
    protected:

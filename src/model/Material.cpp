@@ -38,6 +38,8 @@
 #include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
 #include "MaterialPropertyPhaseChange.hpp"
 #include "MaterialPropertyPhaseChange_Impl.hpp"
+#include "MaterialPropertyPhaseChangeHysteresis.hpp"
+#include "MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -61,8 +63,12 @@ namespace model {
         results.push_back(empd.get());
       }
 
-      if (boost::optional<MaterialPropertyPhaseChange> empd = this->materialPropertyPhaseChange()) {
-        results.push_back(empd.get());
+      if (boost::optional<MaterialPropertyPhaseChange> phaseChange = this->materialPropertyPhaseChange()) {
+        results.push_back(phaseChange.get());
+      }
+
+      if (boost::optional<MaterialPropertyPhaseChangeHysteresis> phaseChangeHysteresis = this->materialPropertyPhaseChangeHysteresis()) {
+        results.push_back(phaseChangeHysteresis.get());
       }
 
       return results;
@@ -140,8 +146,7 @@ namespace model {
     boost::optional<MaterialPropertyPhaseChange> Material_Impl::createMaterialPropertyPhaseChange() {
       Material thisMaterial = getObject<Material>();
       std::vector<MaterialPropertyPhaseChange> phaseChanges =
-        thisMaterial.getModelObjectSources<MaterialPropertyPhaseChange>(
-          MaterialPropertyPhaseChange::iddObjectType());
+        thisMaterial.getModelObjectSources<MaterialPropertyPhaseChange>(MaterialPropertyPhaseChange::iddObjectType());
       if (!phaseChanges.empty()) {
         return boost::none;
       }
@@ -152,8 +157,7 @@ namespace model {
 
     boost::optional<MaterialPropertyPhaseChange> Material_Impl::materialPropertyPhaseChange() const {
       std::vector<MaterialPropertyPhaseChange> phaseChanges =
-        getObject<ModelObject>().getModelObjectSources<MaterialPropertyPhaseChange>(
-          MaterialPropertyPhaseChange::iddObjectType());
+        getObject<ModelObject>().getModelObjectSources<MaterialPropertyPhaseChange>(MaterialPropertyPhaseChange::iddObjectType());
       if (phaseChanges.empty()) {
         // no error
       } else if (phaseChanges.size() == 1) {
@@ -168,6 +172,38 @@ namespace model {
       boost::optional<MaterialPropertyPhaseChange> phaseChange = this->materialPropertyPhaseChange();
       if (phaseChange) {
         phaseChange->remove();
+      }
+    }
+
+    boost::optional<MaterialPropertyPhaseChangeHysteresis> Material_Impl::createMaterialPropertyPhaseChangeHysteresis() {
+      Material thisMaterial = getObject<Material>();
+      std::vector<MaterialPropertyPhaseChange> phaseChangeHysteresiss =
+        thisMaterial.getModelObjectSources<MaterialPropertyPhaseChangeHysteresis>(MaterialPropertyPhaseChangeHysteresis::iddObjectType());
+      if (!phaseChangeHysteresiss.empty()) {
+        return boost::none;
+      }
+
+      MaterialPropertyPhaseChange phaseChangeHysteresis();
+      return phaseChangeHysteresis;
+    }
+
+    boost::optional<MaterialPropertyPhaseChangeHysteresis> Material_Impl::materialPropertyPhaseChangeHysteresis() const {
+      std::vector<MaterialPropertyPhaseChangeHysteresis> phaseChangeHysteresiss =
+        getObject<ModelObject>().getModelObjectSources<MaterialPropertyPhaseChangeHysteresis>(MaterialPropertyPhaseChangeHysteresis::iddObjectType());
+      if (phaseChangeHysteresiss.empty()) {
+        // no error
+      } else if (phaseChangeHysteresiss.size() == 1) {
+        return phaseChangeHysteresiss[0];
+      } else {
+        // error
+      }
+      return boost::none;
+    }
+
+    void Material_Impl::resetMaterialPropertyPhaseChangeHysteresis() {
+      boost::optional<MaterialPropertyPhaseChangeHysteresis> phaseChangeHysteresis = this->materialPropertyPhaseChangeHysteresis();
+      if (phaseChangeHysteresis) {
+        phaseChangeHysteresis->remove();
       }
     }
 
@@ -219,8 +255,7 @@ namespace model {
     getImpl<detail::Material_Impl>()->resetMaterialPropertyMoisturePenetrationDepthSettings();
   }
 
-  boost::optional<MaterialPropertyPhaseChange>
-    Material::createMaterialPropertyPhaseChange() {
+  boost::optional<MaterialPropertyPhaseChange> Material::createMaterialPropertyPhaseChange() {
     return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChange();
   }
 
@@ -230,6 +265,18 @@ namespace model {
 
   void Material::resetMaterialPropertyPhaseChange() {
     getImpl<detail::Material_Impl>()->resetMaterialPropertyPhaseChange();
+  }
+
+  boost::optional<MaterialPropertyPhaseChangeHysteresis> Material::createMaterialPropertyPhaseChangeHysteresis() {
+    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChangeHysteresis();
+  }
+
+  boost::optional<MaterialPropertyPhaseChangeHysteresis> Material::materialPropertyPhaseChangeHysteresis() const {
+    return getImpl<detail::Material_Impl>()->materialPropertyPhaseChangeHysteresis();
+  }
+
+  void Material::resetMaterialPropertyPhaseChangeHysteresis() {
+    getImpl<detail::Material_Impl>()->resetMaterialPropertyPhaseChangeHysteresis();
   }
 
   /// @cond

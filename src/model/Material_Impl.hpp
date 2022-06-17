@@ -107,6 +107,15 @@ namespace model {
       // resets the material property phase change
       void resetMaterialPropertyPhaseChange();
 
+      // if material property phase change hysteresis already exists, do nothing and return nil; creates the material property phase change hysteresis if it does not already exist and return it;
+      boost::optional<MaterialPropertyPhaseChangeHysteresis> createMaterialPropertyPhaseChangeHysteresis();
+
+      // returns the material property phase change hysteresis if set
+      boost::optional<MaterialPropertyPhaseChangeHysteresis> materialPropertyPhaseChangeHysteresis() const;
+
+      // resets the material property phase change hysteresis
+      void resetMaterialPropertyPhaseChangeHysteresis();
+
       //@}
 
      private:

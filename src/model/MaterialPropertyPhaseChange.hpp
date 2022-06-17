@@ -49,7 +49,7 @@ namespace model {
   class MODEL_API TemperatureEnthalpy
   {
    public:
-    ViewFactor(double temperature, double enthalpy);
+    TemperatureEnthalpy(double temperature, double enthalpy);
 
     double temperature() const;
     double enthalpy() const;
