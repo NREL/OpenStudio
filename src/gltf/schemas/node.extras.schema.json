@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "node.extras.schema.json",
+  "title": "Node Extras",
+  "description": "OpenStudio-specific Node extra data",
+  "gltf_sectionDescription": "This places some OpenStudio Model specific data on the GLTF Nodes, such as information about the AirLoopHVAC, Construction, Building Story, Space Type etc.",
+  "type": "object",
+  "properties": {
+    "airLoopHVACHandles": {
+      "description": "**TODO: This should be an Array of AirLoopHVACInfo objects**",
+      "type": "object",
+      "properties": {
+        "0": {
+          "type": "string"
+        },
+        "1": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "airLoopHVACMaterialNames": {
+      "description": "**TODO: This should be an Array of AirLoopHVACInfo objects**",
+      "type": "object",
+      "properties": {
+        "0": {
+          "type": "string"
+        },
+        "1": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "airLoopHVACNames": {
+      "description": "**TODO: This should be an Array of AirLoopHVACInfo objects**",
+      "type": "object",
+      "properties": {
+        "0": {
+          "type": "string"
+        },
+        "1": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "airWall": {
+      "type": "boolean"
+    },
+    "boundaryMaterialName": {
+      "type": "string"
+    },
+    "buildingStoryHandle": {
+      "type": "string"
+    },
+    "buildingStoryMaterialName": {
+      "type": "string"
+    },
+    "buildingStoryName": {
+      "type": "string"
+    },
+    "buildingUnitHandle": {
+      "type": "string"
+    },
+    "buildingUnitMaterialName": {
+      "type": "string"
+    },
+    "buildingUnitName": {
+      "type": "string"
+    },
+    "coincidentWithOutsideObject": {
+      "type": "boolean"
+    },
+    "constructionHandle": {
+      "type": "string"
+    },
+    "constructionMaterialName": {
+      "type": "string"
+    },
+    "constructionName": {
+      "type": "string"
+    },
+    "constructionSetHandle": {
+      "type": "string"
+    },
+    "constructionSetMaterialName": {
+      "type": "string"
+    },
+    "constructionSetName": {
+      "type": "string"
+    },
+    "handle": {
+      "type": "string"
+    },
+    "illuminanceSetpoint": {
+      "type": "number"
+    },
+    "name": {
+      "type": "string"
+    },
+    "outsideBoundaryCondition": {
+      "type": "string"
+    },
+    "outsideBoundaryConditionObjectHandle": {
+      "type": "string"
+    },
+    "outsideBoundaryConditionObjectName": {
+      "type": "string"
+    },
+    "shadingHandle": {
+      "type": "string"
+    },
+    "shadingName": {
+      "type": "string"
+    },
+    "spaceHandle": {
+      "type": "string"
+    },
+    "spaceName": {
+      "type": "string"
+    },
+    "spaceTypeHandle": {
+      "type": "string"
+    },
+    "spaceTypeMaterialName": {
+      "type": "string"
+    },
+    "spaceTypeName": {
+      "type": "string"
+    },
+    "subSurfaceHandle": {
+      "type": "string"
+    },
+    "subSurfaceName": {
+      "type": "string"
+    },
+    "sunExposure": {
+      "type": "string"
+    },
+    "surfaceHandle": {
+      "type": "string"
+    },
+    "surfaceName": {
+      "type": "string"
+    },
+    "surfaceType": {
+      "type": "string"
+    },
+    "surfaceTypeMaterialName": {
+      "type": "string"
+    },
+    "thermalZoneHandle": {
+      "type": "string"
+    },
+    "thermalZoneMaterialName": {
+      "type": "string"
+    },
+    "thermalZoneName": {
+      "type": "string"
+    },
+    "windExposure": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "airLoopHVACHandles",
+    "airLoopHVACMaterialNames",
+    "airLoopHVACNames",
+    "airWall",
+    "boundaryMaterialName",
+    "buildingStoryHandle",
+    "buildingStoryMaterialName",
+    "buildingStoryName",
+    "buildingUnitHandle",
+    "buildingUnitMaterialName",
+    "buildingUnitName",
+    "coincidentWithOutsideObject",
+    "constructionHandle",
+    "constructionMaterialName",
+    "constructionName",
+    "constructionSetHandle",
+    "constructionSetMaterialName",
+    "constructionSetName",
+    "handle",
+    "illuminanceSetpoint",
+    "name",
+    "outsideBoundaryCondition",
+    "outsideBoundaryConditionObjectHandle",
+    "outsideBoundaryConditionObjectName",
+    "shadingHandle",
+    "shadingName",
+    "spaceHandle",
+    "spaceName",
+    "spaceTypeHandle",
+    "spaceTypeMaterialName",
+    "spaceTypeName",
+    "subSurfaceHandle",
+    "subSurfaceName",
+    "sunExposure",
+    "surfaceHandle",
+    "surfaceName",
+    "surfaceType",
+    "surfaceTypeMaterialName",
+    "thermalZoneHandle",
+    "thermalZoneMaterialName",
+    "thermalZoneName",
+    "windExposure"
+  ]
+}

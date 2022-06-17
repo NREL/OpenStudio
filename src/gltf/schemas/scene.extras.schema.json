@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "scene.extras.schema.json",
+  "title": "Scene Extras",
+  "description": "OpenStudio-specific Scene extra data",
+  "gltf_sectionDescription": "This places some OpenStudio Model specific data on the GLTF Scene, such as the BoundingBox, Some ModelObjectMetadata, the OpenStudio Version used, etc",
+  "type": "object",
+  "properties": {
+    "boundingbox": {
+      "type": "object",
+      "description": "The Model's bounding box",
+      "properties": {
+        "lookAtR": {
+          "type": "number"
+        },
+        "lookAtX": {
+          "type": "number"
+        },
+        "lookAtY": {
+          "type": "number"
+        },
+        "lookAtZ": {
+          "type": "number"
+        },
+        "maxX": {
+          "type": "number"
+        },
+        "maxY": {
+          "type": "number"
+        },
+        "maxZ": {
+          "type": "number"
+        },
+        "minX": {
+          "type": "number"
+        },
+        "minY": {
+          "type": "number"
+        },
+        "minZ": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "lookAtR",
+        "lookAtX",
+        "lookAtY",
+        "lookAtZ",
+        "maxX",
+        "maxY",
+        "maxZ",
+        "minX",
+        "minY",
+        "minZ"
+      ]
+    },
+    "buildingStoryNames": {
+      "type": "object",
+      "description": "The Names of the Building Story. **TODO: This should be an Array**",
+      "properties": {
+        "0": {
+          "type": "string"
+        },
+        "1": {
+          "type": "string"
+        }
+      },
+      "required": []
+    },
+    "generator": {
+      "type": "string",
+      "examples": ["OpenStudio"]
+    },
+    "modelObjectMetaData": {
+      "type": "object",
+      "description": "Stores information about some ModelObjects attributes such as name, iddObjectType, color, handle from ModelObjects: ThermalZone, SpaceType, AirLoopHVAC, BuildingStory, BuildingUnit, DefaultConstructionSet. **TODO: This should be an Array**",
+      "properties": {
+        "0": {
+          "type": "object",
+          "properties": {
+            "color": {
+              "type": "string"
+            },
+            "handle": {
+              "type": "string"
+            },
+            "iddObjectType": {
+              "type": "string"
+            },
+            "multiplier": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "nominal_floorCeiling_Height": {
+              "type": "number"
+            },
+            "nominal_z_coordinate": {
+              "type": "number"
+            },
+            "open_to_below": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "color",
+            "handle",
+            "iddObjectType",
+            "multiplier",
+            "name",
+            "nominal_floorCeiling_Height",
+            "nominal_z_coordinate",
+            "open_to_below"
+          ]
+        },
+        "1": {
+          "type": "object",
+          "properties": {
+            "color": {
+              "type": "string"
+            },
+            "handle": {
+              "type": "string"
+            },
+            "iddObjectType": {
+              "type": "string"
+            },
+            "multiplier": {
+              "type": "integer"
+            },
+            "name": {
+              "type": "string"
+            },
+            "nominal_floorCeiling_Height": {
+              "type": "number"
+            },
+            "nominal_z_coordinate": {
+              "type": "number"
+            },
+            "open_to_below": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "color",
+            "handle",
+            "iddObjectType",
+            "multiplier",
+            "name",
+            "nominal_floorCeiling_Height",
+            "nominal_z_coordinate",
+            "open_to_below"
+          ]
+        }
+      },
+      "required": []
+    },
+    "northAxis": {
+      "type": "number",
+      "title": "The Building North Axis"
+    },
+    "type": {
+      "type": "string",
+      "default": "Object"
+    },
+    "version": {
+      "type": "string",
+      "title": "The OpenStudio version used to generate the GLTF file",
+      "examples": ["3.4.0"]
+    }
+  },
+  "required": [
+    "boundingbox",
+    "buildingStoryNames",
+    "generator",
+    "modelObjectMetaData",
+    "northAxis",
+    "type",
+    "version"
+  ]
+}
+}
