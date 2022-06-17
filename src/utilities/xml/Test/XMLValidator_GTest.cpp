@@ -43,23 +43,35 @@ using namespace openstudio;
 
 TEST_F(XMLValidatorFixture, XMLValidator_isValid) {
   XMLValidator xmlValidator(schemaPath);
+
   EXPECT_FALSE(xmlValidator.isValid());
+  ASSERT_EQ(1u, xmlValidator.warnings().size());
+  ASSERT_EQ(0u, xmlValidator.errors().size());
+  EXPECT_TRUE(xmlValidator.warnings()[0].logMessage().find("Nothing has yet been validated against") != std::string::npos);
 }
 
-TEST_F(XMLValidatorFixture, XMLValidator_NonXMLFile) {
-  XMLValidator xmlValidator(schemaPath);
-  EXPECT_NE("", xmlValidator.schemaPath());
-  EXPECT_FALSE(xmlValidator.xmlPath());
+TEST_F(XMLValidatorFixture, XMLValidator_NonSchemaPath) {
+  openstudio::path nonSchemaPath = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/eplusout.sql");
 
   StringStreamLogSink sink;
   sink.setLogLevel(Error);
 
-  openstudio::path xmlPath;
-
-  xmlPath = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/eplusout.sql");
-  EXPECT_THROW(xmlValidator.validate(xmlPath), openstudio::Exception);
+  EXPECT_THROW(XMLValidator xmlValidator(nonSchemaPath), openstudio::Exception);
   ASSERT_EQ(1u, sink.logMessages().size());
-  EXPECT_EQ("XML path extension '.sql' not supported.", sink.logMessages()[0].logMessage());
+  EXPECT_EQ("Schema path extension '.sql' not supported", sink.logMessages()[0].logMessage());
+}
+
+TEST_F(XMLValidatorFixture, XMLValidator_NonXMLPath) {
+  XMLValidator xmlValidator(schemaPath);
+  EXPECT_NE("", xmlValidator.schemaPath());
+  EXPECT_FALSE(xmlValidator.xmlPath());
+
+  openstudio::path nonXMLPath = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/eplusout.sql");
+  EXPECT_THROW(xmlValidator.validate(nonXMLPath), openstudio::Exception);
+  ASSERT_EQ(0u, xmlValidator.warnings().size());
+  ASSERT_EQ(1u, xmlValidator.errors().size());
+  EXPECT_EQ("XML path extension '.sql' not supported", xmlValidator.errors()[0].logMessage());
+  EXPECT_FALSE(xmlValidator.xmlPath());
 }
 
 TEST_F(XMLValidatorFixture, XMLValidator_GBXML_XSD) {
@@ -193,10 +205,11 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXML_XSD) {
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0u, xmlValidator.warnings().size());
-    EXPECT_EQ(2u, xmlValidator.errors().size());
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
+    std::vector<LogMessage> errors = xmlValidator.errors();
+    EXPECT_EQ(2u, errors.size());
+    //std::sort(errors.begin(), errors.end());
+    EXPECT_TRUE(errors[0].logMessage().find("got internal error validating against") != std::string::npos);
+    EXPECT_TRUE(errors[1].logMessage().find("XML fatal error") != std::string::npos);
   }
 
   {
