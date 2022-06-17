@@ -151,7 +151,7 @@ namespace model {
         return boost::none;
       }
 
-      MaterialPropertyPhaseChange phaseChange();
+      MaterialPropertyPhaseChange phaseChange(thisMaterial);
       return phaseChange;
     }
 
@@ -177,13 +177,13 @@ namespace model {
 
     boost::optional<MaterialPropertyPhaseChangeHysteresis> Material_Impl::createMaterialPropertyPhaseChangeHysteresis() {
       Material thisMaterial = getObject<Material>();
-      std::vector<MaterialPropertyPhaseChange> phaseChangeHysteresiss =
+      std::vector<MaterialPropertyPhaseChangeHysteresis> phaseChangeHysteresiss =
         thisMaterial.getModelObjectSources<MaterialPropertyPhaseChangeHysteresis>(MaterialPropertyPhaseChangeHysteresis::iddObjectType());
       if (!phaseChangeHysteresiss.empty()) {
         return boost::none;
       }
 
-      MaterialPropertyPhaseChange phaseChangeHysteresis();
+      MaterialPropertyPhaseChangeHysteresis phaseChangeHysteresis(thisMaterial);
       return phaseChangeHysteresis;
     }
 

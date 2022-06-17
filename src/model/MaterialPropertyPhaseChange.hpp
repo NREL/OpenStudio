@@ -91,10 +91,6 @@ namespace model {
 
     unsigned int numberofTemperatureEnthalpys() const;
 
-    boost::optional<unsigned> temperatureEnthalpyIndex(const TemperatureEnthalpy& temperatureEnthalpy) const;
-
-    boost::optional<TemperatureEnthalpy> getTemperatureEnthalpy(unsigned groupIndex) const;
-
     //@}
     /** @name Setters */
     //@{
@@ -109,7 +105,7 @@ namespace model {
 
     bool addTemperatureEnthalpys(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
 
-    bool removeTemperatureEnthalpy(unsigned groupIndex);
+    void removeTemperatureEnthalpy(unsigned groupIndex);
 
     void removeAllTemperatureEnthalpys();
 
