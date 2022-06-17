@@ -181,7 +181,7 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(op
     LOG(Info, "Treating schema as a Schematron, converting to an XSLT StyleSheet");
     m_schemaPath = schematronToXslt(m_schemaPath);
   } else {
-    LOG_AND_THROW("Schema path extension '" << toString(schemaPath.extension()) << "' not supported.");
+    LOG_AND_THROW("Schema path extension '" << toString(schemaPath.extension()) << "' not supported");
   }
 }
 
@@ -214,6 +214,10 @@ std::vector<LogMessage> XMLValidator::warnings() const {
 }
 
 bool XMLValidator::isValid() const {
+  if (!m_xmlPath) {
+    LOG(Warn, "Nothing has yet been validated against '" << toString(m_schemaPath) << "'");
+    return false;
+  }
   return errors().empty();
 }
 
@@ -242,7 +246,7 @@ bool XMLValidator::validate(const openstudio::path& xmlPath) {
     auto t_xmlPath = openstudio::filesystem::system_complete(xmlPath);
     m_xmlPath = t_xmlPath;
   } else {
-    LOG_AND_THROW("XML path extension '" << toString(xmlPath.extension()) << "' not supported.");
+    LOG_AND_THROW("XML path extension '" << toString(xmlPath.extension()) << "' not supported");
   }
 
   if (m_validatorType == XMLValidatorType::XSD) {
