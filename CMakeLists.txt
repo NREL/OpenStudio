@@ -349,6 +349,10 @@ endif()
 
 if(WIN32)
   add_definitions(-DNOMINMAX)
+  # Set the BOOST_USE_WINAPI_VERSION to Windows10
+  add_compile_definitions(BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_VERSION_WIN10)
+  # This will also align _WIN32_WINNT and WINVER
+  add_compile_definitions(BOOST_USE_WINDOWS_H)
 endif()
 
 if(MSVC AND NOT NINJA)
