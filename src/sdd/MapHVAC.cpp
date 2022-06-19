@@ -8282,6 +8282,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
       coil.setCondenserPumpHeatIncludedinRatedHeatingCapacityandRatedCOP(true);
     }
 
+    auto evapAirTempType = element.child("EvapAirTempType");
+    if (evapAirTempType) {
+      coil.setEvaporatorAirTemperatureTypeforCurveObjects(evapAirTempType.text().as_string());
+    }
+
     auto cndsrPumpHtFracToWtr = lexicalCastToDouble(element.child("CndsrPumpHtFracToWtr"));
     if (cndsrPumpHtFracToWtr) {
       coil.setFractionofCondenserPumpHeattoWater(cndsrPumpHtFracToWtr.get());
