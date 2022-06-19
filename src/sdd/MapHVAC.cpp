@@ -8000,13 +8000,19 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
 
   auto fluidSysElement = element.parent();
   auto fluidSysType = fluidSysElement.child("Type").text().as_string();
+  const std::string name = element.child("Name").text().as_string();
+
+  model::ScheduleRuleset ambientTempSchedule(model);
+  ambientTempSchedule.setName(name + " Ambient Temperature");
+  model::ScheduleDay scheduleDay = ambientTempSchedule.defaultDaySchedule();
+  scheduleDay.addValue(Time(1.0),20.0);
+
 
   std::string typeSim = element.child("TypeSim").text().as_string();
   if( istringEqual(typeSim,"HeatPumpSplit") ) {
     // Create objects and set defaults
     model::WaterHeaterHeatPump heatPump(model);
-    std::string hpName = element.child("Name").text().as_string();
-    heatPump.setName(hpName);
+    heatPump.setName(name);
     heatPump.setDeadBandTemperatureDifference(0.01);
     heatPump.autosizeCondenserWaterFlowRate();
     heatPump.setFanPlacement("DrawThrough");
@@ -8016,7 +8022,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     heatPump.setMaximumInletAirTemperatureforCompressorOperation(94.0);
 
     auto waterHeater = heatPump.tank().cast<model::WaterHeaterMixed>();
-    waterHeater.setName(hpName + " Storage Tank");
+    waterHeater.setName(name + " Storage Tank");
     waterHeater.setDeadbandTemperatureDifference(0.01);
     waterHeater.setHeaterControlType("Cycle");
     waterHeater.setHeaterMaximumCapacity(0.0);
@@ -8031,7 +8037,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     waterHeater.setOnCycleParasiticHeatFractiontoTank(0.8);
 
     auto coil = heatPump.dXCoil().cast<model::CoilWaterHeatingAirToWaterHeatPump>();
-    coil.setName(hpName + " Heating Coil");
+    coil.setName(name + " Heating Coil");
     coil.setRatedEvaporatorInletAirDryBulbTemperature(19.7);
     coil.setRatedEvaporatorInletAirWetBulbTemperature(13.5);
     coil.setRatedCondenserInletWaterTemperature(57.5);
@@ -8043,7 +8049,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     coil.setEvaporatorAirTemperatureTypeforCurveObjects("DryBulbTemperature");
 
     auto fan = heatPump.fan().cast<model::FanOnOff>();
-    fan.setName(hpName + " Fan");
+    fan.setName(name + " Fan");
     fan.setFanEfficiency(0.5);
     fan.setMotorEfficiency(0.85);
     fan.setMotorInAirstreamFraction(1.0);
@@ -8154,8 +8160,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     std::string storZn = element.child("StorZn").text().as_string();
     if( istringEqual(storZn,"Zone") ) {
       waterHeater.setAmbientTemperatureIndicator("ThermalZone");
-    } else {
+    } else if (istringEqual(storZn, "Outdoors")) {
       waterHeater.setAmbientTemperatureIndicator("Outdoors");
+    } else {
+      waterHeater.setAmbientTemperatureIndicator("Schedule");
+      waterHeater.setAmbientTemperatureSchedule(ambientTempSchedule);
     }
 
     std::string storZnRef = element.child("StorZnRef").text().as_string();
@@ -8389,25 +8398,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
   } else {
     model::WaterHeaterMixed waterHeaterMixed(model);
 
-    // Name
-
-    pugi::xml_node nameElement = element.child("Name");
-    std::string name = nameElement.text().as_string();
     waterHeaterMixed.setName(name);
 
     // Ambient water temperature indicator
-
     waterHeaterMixed.setAmbientTemperatureIndicator("Schedule");
-
-    model::ScheduleRuleset scheduleRuleset = model::ScheduleRuleset(model);
-
-    scheduleRuleset.setName(name + " Ambient Temperature");
-
-    model::ScheduleDay scheduleDay = scheduleRuleset.defaultDaySchedule();
-
-    scheduleDay.addValue(Time(1.0),20.0);
-
-    waterHeaterMixed.setAmbientTemperatureSchedule(scheduleRuleset);
+    waterHeaterMixed.setAmbientTemperatureSchedule(ambientTempSchedule);
 
     // StorCap
 
