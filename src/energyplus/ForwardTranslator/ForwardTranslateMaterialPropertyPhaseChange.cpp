@@ -52,6 +52,18 @@ namespace energyplus {
 
     idfObject.setString(MaterialProperty_PhaseChangeFields::Name, modelObject.materialName());
 
+    idfObject.setDouble(MaterialProperty_PhaseChangeFields::TemperatureCoefficientforThermalConductivity,
+                        modelObject.temperatureCoefficientforThermalConductivity());
+
+    std::vector<TemperatureEnthalpy> temperatureEnthalpys = modelObject.temperatureEnthalpys();
+    if (!temperatureEnthalpys.empty()) {
+      for (const TemperatureEnthalpy& temperatureEnthalpy : temperatureEnthalpys) {
+        auto eg = idfObject.pushExtensibleGroup();
+        eg.setDouble(MaterialProperty_PhaseChangeExtensibleFields::Temperature, temperatureEnthalpy.temperature());
+        eg.setDouble(MaterialProperty_PhaseChangeExtensibleFields::Enthalpy, temperatureEnthalpy.enthalpy());
+      }
+    }
+
     return boost::optional<IdfObject>(idfObject);
   }
 
