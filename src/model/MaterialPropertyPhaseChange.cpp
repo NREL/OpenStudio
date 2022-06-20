@@ -215,6 +215,34 @@ namespace model {
 
     ok = setPointer(OS_MaterialProperty_PhaseChangeFields::MaterialName, material.handle());
     OS_ASSERT(ok);
+
+    // These from CondFD1ZonePurchAirAutoSizeWithPCM.idf. They should be modified by user!
+    ok = addTemperatureEnthalpy(-20, 0.1);
+    OS_ASSERT(ok);
+    ok = addTemperatureEnthalpy(22, 18260);
+    OS_ASSERT(ok);
+    ok = addTemperatureEnthalpy(22.1, 32000);
+    OS_ASSERT(ok);
+    ok = addTemperatureEnthalpy(60, 71000);
+    OS_ASSERT(ok);
+  }
+
+  MaterialPropertyPhaseChange::MaterialPropertyPhaseChange(Material& material, const std::vector<TemperatureEnthalpy>& temperatureEnthalpys)
+    : ModelObject(MaterialPropertyPhaseChange::iddObjectType(), material.model()) {
+    OS_ASSERT(getImpl<detail::MaterialPropertyPhaseChange_Impl>());
+
+    if (material.materialPropertyPhaseChange()) {
+      LOG_AND_THROW("Material '" << material.nameString() << "' already has an associated MaterialPropertyPhaseChange object");
+    }
+
+    bool ok = true;
+    OS_ASSERT(ok);
+
+    ok = setPointer(OS_MaterialProperty_PhaseChangeFields::MaterialName, material.handle());
+    OS_ASSERT(ok);
+
+    ok = addTemperatureEnthalpys(temperatureEnthalpys);
+    OS_ASSERT(ok);
   }
 
   IddObjectType MaterialPropertyPhaseChange::iddObjectType() {

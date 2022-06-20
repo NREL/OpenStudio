@@ -50,6 +50,11 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyPhaseChange(MaterialPropertyPhaseChange& modelObject) {
     IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_PhaseChange);
 
+    if (modelObject.temperatureEnthalpys().size() < 3) {
+      LOG(Warn, modelObject.briefDescription() << " cannot be translated as it has less than 3 temperature-enthalpy pairs.");
+      return boost::none;
+    }
+
     m_idfObjects.push_back(idfObject);
 
     idfObject.setString(MaterialProperty_PhaseChangeFields::Name, modelObject.materialName());

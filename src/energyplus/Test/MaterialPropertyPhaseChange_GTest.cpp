@@ -62,7 +62,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyPhaseChange) {
   phaseChange.setTemperatureCoefficientforThermalConductivity(15);
 
   Workspace workspace = ft.translateModel(model);
-  
+
   WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::MaterialProperty_PhaseChange);
   ASSERT_EQ(1u, idfObjs.size());
 
@@ -70,4 +70,23 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyPhaseChange) {
 
   EXPECT_EQ("Material 1", idf_matProp.getString(MaterialProperty_PhaseChangeFields::Name).get());
   EXPECT_EQ(15, idf_matProp.getDouble(MaterialProperty_PhaseChangeFields::TemperatureCoefficientforThermalConductivity).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyPhaseChange_TemperatureEnthalpyPairs) {
+
+  ForwardTranslator ft;
+
+  Model model;
+  StandardOpaqueMaterial material(model);
+  std::vector<TemperatureEnthalpy> temperatureEnthalpys;
+  TemperatureEnthalpy temperatureEnthalpy1(-20, 0.1);
+  temperatureEnthalpys.push_back(temperatureEnthalpy1);
+  TemperatureEnthalpy temperatureEnthalpy2(22, 18260);
+  temperatureEnthalpys.push_back(temperatureEnthalpy2);
+  boost::optional<MaterialPropertyPhaseChange> optphaseChange = material.createMaterialPropertyPhaseChange(temperatureEnthalpys);
+
+  Workspace workspace = ft.translateModel(model);
+
+  WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::MaterialProperty_PhaseChange);
+  ASSERT_EQ(0u, idfObjs.size());
 }

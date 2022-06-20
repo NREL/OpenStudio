@@ -155,6 +155,19 @@ namespace model {
       return phaseChange;
     }
 
+    boost::optional<MaterialPropertyPhaseChange>
+      Material_Impl::createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys) {
+      Material thisMaterial = getObject<Material>();
+      std::vector<MaterialPropertyPhaseChange> phaseChanges =
+        thisMaterial.getModelObjectSources<MaterialPropertyPhaseChange>(MaterialPropertyPhaseChange::iddObjectType());
+      if (!phaseChanges.empty()) {
+        return boost::none;
+      }
+
+      MaterialPropertyPhaseChange phaseChange(thisMaterial, temperatureEnthalpys);
+      return phaseChange;
+    }
+
     boost::optional<MaterialPropertyPhaseChange> Material_Impl::materialPropertyPhaseChange() const {
       std::vector<MaterialPropertyPhaseChange> phaseChanges =
         getObject<ModelObject>().getModelObjectSources<MaterialPropertyPhaseChange>(MaterialPropertyPhaseChange::iddObjectType());
@@ -257,6 +270,11 @@ namespace model {
 
   boost::optional<MaterialPropertyPhaseChange> Material::createMaterialPropertyPhaseChange() {
     return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChange();
+  }
+
+  boost::optional<MaterialPropertyPhaseChange>
+    Material::createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys) {
+    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChange(temperatureEnthalpys);
   }
 
   boost::optional<MaterialPropertyPhaseChange> Material::materialPropertyPhaseChange() const {

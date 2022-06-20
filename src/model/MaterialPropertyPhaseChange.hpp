@@ -72,6 +72,8 @@ namespace model {
 
     explicit MaterialPropertyPhaseChange(Material& material);
 
+    explicit MaterialPropertyPhaseChange(Material& material, const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
+
     virtual ~MaterialPropertyPhaseChange() {}
 
     //@}

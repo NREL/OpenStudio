@@ -54,6 +54,4 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyPhaseChangeHysteresi
   ForwardTranslator ft;
 
   Model model;
-
-
 }

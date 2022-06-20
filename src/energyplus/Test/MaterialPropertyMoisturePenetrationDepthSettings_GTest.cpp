@@ -61,12 +61,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyMoisturePenetrationD
     material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);  // drywall
 
   Workspace workspace = ft.translateModel(model);
-  
+
   WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::MaterialProperty_MoisturePenetrationDepth_Settings);
   ASSERT_EQ(1u, idfObjs.size());
 
   WorkspaceObject idf_matProp(idfObjs[0]);
-  
+
   EXPECT_EQ("Material 1", idf_matProp.getString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::Name).get());
   EXPECT_EQ(8.9, idf_matProp.getDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::WaterVaporDiffusionResistanceFactor).get());
   EXPECT_EQ(0.0069, idf_matProp.getDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficienta).get());
@@ -76,6 +76,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyMoisturePenetrationD
   EXPECT_EQ("Autocalculate", idf_matProp.getString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::SurfaceLayerPenetrationDepth).get());
   EXPECT_EQ("Autocalculate", idf_matProp.getString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::DeepLayerPenetrationDepth).get());
   EXPECT_EQ(0.005, idf_matProp.getDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerThickness).get());
-  EXPECT_EQ(140, idf_matProp.getDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerWaterVaporDiffusionResistanceFactor).get());
-  
+  EXPECT_EQ(140,
+            idf_matProp.getDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerWaterVaporDiffusionResistanceFactor).get());
 }

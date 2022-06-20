@@ -95,8 +95,8 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChange_SetGetFields) {
 
   // check that the properties were set properly
   EXPECT_EQ(0, phaseChange.temperatureCoefficientforThermalConductivity());
-  EXPECT_EQ(0, phaseChange.temperatureEnthalpys().size());
-  EXPECT_EQ(0, phaseChange.numberofTemperatureEnthalpys());
+  EXPECT_EQ(4, phaseChange.temperatureEnthalpys().size());
+  EXPECT_EQ(4, phaseChange.numberofTemperatureEnthalpys());
 
   // now override the defaults with explicit values
   phaseChange.setTemperatureCoefficientforThermalConductivity(1);
@@ -155,5 +155,21 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChange_TemperatureEnthalpy) {
   temperatureEnthalpysToAdd.push_back(temperatureEnthalpy2);
   ASSERT_TRUE(phaseChange.addTemperatureEnthalpys(temperatureEnthalpysToAdd));
   EXPECT_EQ(3, phaseChange.numberofTemperatureEnthalpys());
+  EXPECT_EQ(3, phaseChange.temperatureEnthalpys().size());
+}
+
+TEST_F(ModelFixture, MaterialPropertyPhaseChange_AlternateCtor) {
+  Model model;
+  StandardOpaqueMaterial material(model);
+  std::vector<TemperatureEnthalpy> temperatureEnthalpys;
+  TemperatureEnthalpy temperatureEnthalpy1(-20, 0.1);
+  temperatureEnthalpys.push_back(temperatureEnthalpy1);
+  TemperatureEnthalpy temperatureEnthalpy2(22, 18260);
+  temperatureEnthalpys.push_back(temperatureEnthalpy2);
+  TemperatureEnthalpy temperatureEnthalpy3(22.1, 32000);
+  temperatureEnthalpys.push_back(temperatureEnthalpy3);
+
+  boost::optional<MaterialPropertyPhaseChange> optphaseChange = material.createMaterialPropertyPhaseChange(temperatureEnthalpys);
+  auto phaseChange = optphaseChange.get();
   EXPECT_EQ(3, phaseChange.temperatureEnthalpys().size());
 }

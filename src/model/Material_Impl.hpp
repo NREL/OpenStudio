@@ -100,6 +100,7 @@ namespace model {
 
       // if material property phase change already exists, do nothing and return nil; creates the material property phase change if it does not already exist and return it;
       boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange();
+      boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
 
       // returns the material property phase change if set
       boost::optional<MaterialPropertyPhaseChange> materialPropertyPhaseChange() const;
