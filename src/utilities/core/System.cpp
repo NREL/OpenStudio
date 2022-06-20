@@ -37,11 +37,6 @@ namespace openstudio {
 
 #if (defined(_WIN32) || defined(_WIN64))
 
-#  ifdef _WIN32_WINNT
-#    undef _WIN32_WINNT
-#  endif
-#  define _WIN32_WINNT 0x0500  // Windows 2000 (?)
-
 #  include <windows.h>
 
 /// return the amount of time that the system has been idle
