@@ -93,7 +93,7 @@ namespace model {
     }
 
     double MaterialPropertyPhaseChange_Impl::temperatureCoefficientforThermalConductivity() const {
-      boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeFields::TemperatureCoefficientforThermalConductivity);
+      boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeFields::TemperatureCoefficientforThermalConductivity, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -142,7 +142,7 @@ namespace model {
       bool result;
 
       unsigned int num = numberofTemperatureEnthalpys();
-      // Max number of custom blocks is 10
+      // Max number of temperature-enthalpys is 16
       if (num >= 16) {
         LOG(Warn, briefDescription() << " already has 16 temperature-enthalpys which is the limit");
         result = false;
