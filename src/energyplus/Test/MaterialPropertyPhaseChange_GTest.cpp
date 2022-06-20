@@ -27,48 +27,47 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
+
 #include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/MaterialPropertyPhaseChange.hpp"
 #include "../../model/MaterialPropertyPhaseChange_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
 
-#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
 
 #include <utilities/idd/MaterialProperty_PhaseChange_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
-using namespace std;
+TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyPhaseChange) {
 
-namespace openstudio {
+  ForwardTranslator ft;
 
-namespace energyplus {
+  Model model;
+  StandardOpaqueMaterial material(model);
+  boost::optional<MaterialPropertyPhaseChange> optphaseChange = material.createMaterialPropertyPhaseChange();
+  auto phaseChange = optphaseChange.get();
+  phaseChange.setTemperatureCoefficientforThermalConductivity(15);
 
-  boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyPhaseChange(MaterialPropertyPhaseChange& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_PhaseChange);
+  Workspace workspace = ft.translateModel(model);
+  
+  WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::MaterialProperty_PhaseChange);
+  ASSERT_EQ(1u, idfObjs.size());
 
-    m_idfObjects.push_back(idfObject);
+  WorkspaceObject idf_matProp(idfObjs[0]);
 
-    idfObject.setString(MaterialProperty_PhaseChangeFields::Name, modelObject.materialName());
-
-    idfObject.setDouble(MaterialProperty_PhaseChangeFields::TemperatureCoefficientforThermalConductivity,
-                        modelObject.temperatureCoefficientforThermalConductivity());
-
-    std::vector<TemperatureEnthalpy> temperatureEnthalpys = modelObject.temperatureEnthalpys();
-    if (!temperatureEnthalpys.empty()) {
-      for (const TemperatureEnthalpy& temperatureEnthalpy : temperatureEnthalpys) {
-        auto eg = idfObject.pushExtensibleGroup();
-        eg.setDouble(MaterialProperty_PhaseChangeExtensibleFields::Temperature, temperatureEnthalpy.temperature());
-        eg.setDouble(MaterialProperty_PhaseChangeExtensibleFields::Enthalpy, temperatureEnthalpy.enthalpy());
-      }
-    }
-
-    return boost::optional<IdfObject>(idfObject);
-  }
-
-}  // namespace energyplus
-
-}  // namespace openstudio
+  EXPECT_EQ("Material 1", idf_matProp.getString(MaterialProperty_PhaseChangeFields::Name).get());
+  EXPECT_EQ(15, idf_matProp.getDouble(MaterialProperty_PhaseChangeFields::TemperatureCoefficientforThermalConductivity).get());
+}

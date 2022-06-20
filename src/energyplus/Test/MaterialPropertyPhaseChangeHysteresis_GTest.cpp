@@ -27,48 +27,33 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
+
 #include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/MaterialPropertyPhaseChange.hpp"
-#include "../../model/MaterialPropertyPhaseChange_Impl.hpp"
+#include "../../model/MaterialPropertyPhaseChangeHysteresis.hpp"
+#include "../../model/MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
 
-#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
 
-#include <utilities/idd/MaterialProperty_PhaseChange_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/MaterialProperty_PhaseChangeHysteresis_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
-using namespace std;
+TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyPhaseChangeHysteresis) {
 
-namespace openstudio {
+  ForwardTranslator ft;
 
-namespace energyplus {
+  Model model;
 
-  boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyPhaseChange(MaterialPropertyPhaseChange& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_PhaseChange);
 
-    m_idfObjects.push_back(idfObject);
-
-    idfObject.setString(MaterialProperty_PhaseChangeFields::Name, modelObject.materialName());
-
-    idfObject.setDouble(MaterialProperty_PhaseChangeFields::TemperatureCoefficientforThermalConductivity,
-                        modelObject.temperatureCoefficientforThermalConductivity());
-
-    std::vector<TemperatureEnthalpy> temperatureEnthalpys = modelObject.temperatureEnthalpys();
-    if (!temperatureEnthalpys.empty()) {
-      for (const TemperatureEnthalpy& temperatureEnthalpy : temperatureEnthalpys) {
-        auto eg = idfObject.pushExtensibleGroup();
-        eg.setDouble(MaterialProperty_PhaseChangeExtensibleFields::Temperature, temperatureEnthalpy.temperature());
-        eg.setDouble(MaterialProperty_PhaseChangeExtensibleFields::Enthalpy, temperatureEnthalpy.enthalpy());
-      }
-    }
-
-    return boost::optional<IdfObject>(idfObject);
-  }
-
-}  // namespace energyplus
-
-}  // namespace openstudio
+}
