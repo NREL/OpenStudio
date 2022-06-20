@@ -352,7 +352,9 @@ if(WIN32)
   # Set the BOOST_USE_WINAPI_VERSION to Windows10
   add_compile_definitions(BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_VERSION_WIN7)
   # This will also align _WIN32_WINNT and WINVER
-  add_compile_definitions(BOOST_USE_WINDOWS_H)
+  # add_compile_definitions(BOOST_USE_WINDOWS_H) # Getting a confict with `typedef GUID UUID` from windows.h
+  add_compile_definitions(BOOST_WINAPI_DEFINE_VERSION_MACROS)
+  add_compile_definitions(WIN32_LEAN_AND_MEAN) # That excludes stuff that's not used too often, including the GUID stuff
 endif()
 
 if(MSVC AND NOT NINJA)
