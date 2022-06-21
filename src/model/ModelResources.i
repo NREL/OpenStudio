@@ -86,6 +86,16 @@ class HeatExchangerDesiccantBalancedFlow;
   }
 };
 
+// extend classes
+%extend openstudio::model::TemperatureEnthalpy {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 MODELOBJECT_TEMPLATES(ScheduleType)
 MODELOBJECT_TEMPLATES(ScheduleInterval);
 MODELOBJECT_TEMPLATES(ScheduleFixedInterval);
@@ -98,6 +108,7 @@ MODELOBJECT_TEMPLATES(DefaultScheduleSet);
 MODELOBJECT_TEMPLATES(SpectralDataField); // Helper class defined in MaterialPropertyGlazingSpectralData
 MODELOBJECT_TEMPLATES(MaterialPropertyGlazingSpectralData);
 MODELOBJECT_TEMPLATES(MaterialPropertyMoisturePenetrationDepthSettings);
+MODELOBJECT_TEMPLATES(TemperatureEnthalpy); // Helper class defined in MaterialPropertyPhaseChange
 MODELOBJECT_TEMPLATES(MaterialPropertyPhaseChange);
 MODELOBJECT_TEMPLATES(MaterialPropertyPhaseChangeHysteresis);
 MODELOBJECT_TEMPLATES(Material);
@@ -157,7 +168,7 @@ MODELOBJECT_TEMPLATES(CurveRectangularHyperbola1);
 MODELOBJECT_TEMPLATES(CurveRectangularHyperbola2);
 MODELOBJECT_TEMPLATES(CurveSigmoid);
 MODELOBJECT_TEMPLATES(CurveTriquadratic);
-MODELOBJECT_TEMPLATES(TableMultiVariableLookupPoint);
+MODELOBJECT_TEMPLATES(TableMultiVariableLookupPoint);  // Helper class defined in TableMultiVariableLookup
 MODELOBJECT_TEMPLATES(TableMultiVariableLookup);
 MODELOBJECT_TEMPLATES(SpaceLoadDefinition);
 MODELOBJECT_TEMPLATES(PeopleDefinition);
