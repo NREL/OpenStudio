@@ -130,8 +130,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SizingZone) {
     boost::optional<WorkspaceObject> _i_dszad = idf_sz.getTarget(Sizing_ZoneFields::DesignSpecificationZoneAirDistributionObjectName);
     ASSERT_TRUE(_i_dszad);
     EXPECT_EQ(0.8, _i_dszad->getDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinCoolingMode).get());
-    EXPECT_EQ(0.7, _i_dszad->getDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode));
-    EXPECT_EQ(0.6, _i_dszad->getDouble(DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction));
-    EXPECT_EQ(0.5, _i_dszad->getDouble(DesignSpecification_ZoneAirDistributionFields::MinimumZoneVentilationEfficiency));
+    EXPECT_EQ(0.7, _i_dszad->getDouble(DesignSpecification_ZoneAirDistributionFields::ZoneAirDistributionEffectivenessinHeatingMode).get());
+    EXPECT_EQ(0.6, _i_dszad->getDouble(DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction).get());
+    EXPECT_EQ(0.5, _i_dszad->getDouble(DesignSpecification_ZoneAirDistributionFields::MinimumZoneVentilationEfficiency).get());
   }
 }

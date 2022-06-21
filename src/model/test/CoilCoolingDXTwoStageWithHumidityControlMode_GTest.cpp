@@ -93,11 +93,12 @@ TEST_F(ModelFixture, CoilCoolingDXTwoStageWithHumidityControlMode_CloneCoilPerf)
   EXPECT_EQ(4u, m2.getModelObjects<CoilPerformanceDXCooling>().size());
 
   // Name comparison (can't do handle, not the same model, and actual clone)
-  ASSERT_EQ(coil.normalModeStage1CoilPerformance().get().name(), coilClone2.normalModeStage1CoilPerformance().get().name());
-  ASSERT_EQ(coil.normalModeStage1Plus2CoilPerformance().get().name(), coilClone2.normalModeStage1Plus2CoilPerformance().get().name());
-  ASSERT_EQ(coil.dehumidificationMode1Stage1CoilPerformance().get().name(), coilClone2.dehumidificationMode1Stage1CoilPerformance().get().name());
-  ASSERT_EQ(coil.dehumidificationMode1Stage1Plus2CoilPerformance().get().name(),
-            coilClone2.dehumidificationMode1Stage1Plus2CoilPerformance().get().name());
+  ASSERT_EQ(coil.normalModeStage1CoilPerformance().get().nameString(), coilClone2.normalModeStage1CoilPerformance().get().nameString());
+  ASSERT_EQ(coil.normalModeStage1Plus2CoilPerformance().get().nameString(), coilClone2.normalModeStage1Plus2CoilPerformance().get().nameString());
+  ASSERT_EQ(coil.dehumidificationMode1Stage1CoilPerformance().get().nameString(),
+            coilClone2.dehumidificationMode1Stage1CoilPerformance().get().nameString());
+  ASSERT_EQ(coil.dehumidificationMode1Stage1Plus2CoilPerformance().get().nameString(),
+            coilClone2.dehumidificationMode1Stage1Plus2CoilPerformance().get().nameString());
 }
 
 TEST_F(ModelFixture, CoilCoolingDXTwoStageWithHumidityControlMode_MinOATCompressor) {

@@ -32,7 +32,8 @@
 #include <stdexcept>
 #include <iostream>
 
-extern "C" {
+extern "C"
+{
   void Init_openstudioairflow(void);
   void Init_openstudiomodelcore(void);
   void Init_openstudiomodelsimulation(void);
@@ -44,6 +45,7 @@ extern "C" {
   void Init_openstudioutilitiesdata(void);
   void Init_openstudioutilitiessql(void);
   void Init_openstudiogbxml(void);
+  void Init_openstudiogltf(void);
   void Init_openstudiomodelgenerators(void);
   void Init_openstudioradiance(void);
   void Init_openstudioutilitiestime(void);
@@ -72,8 +74,7 @@ extern "C" {
   ////void Init_openstudiomodeleditor(void); # happens separately in openstudio.so only, for SketchUp plug-in
 }
 
-void init_openstudio_internal_basic()
-{
+void init_openstudio_internal_basic() {
   rb_provide("openstudio");
   rb_provide("openstudio.so");
 
@@ -118,8 +119,7 @@ void init_openstudio_internal_basic()
   rb_provide("openstudioutilities.so");
 }
 
-void init_openstudio_internal_extended()
-{
+void init_openstudio_internal_extended() {
   Init_openstudiomodel();
   rb_provide("openstudiomodel");
   rb_provide("openstudiomodel.so");
@@ -160,7 +160,6 @@ void init_openstudio_internal_extended()
   rb_provide("openstudiomodelgenerators");
   rb_provide("openstudiomodelgenerators.so");
 
-
   Init_openstudioenergyplus();
   rb_provide("openstudioenergyplus");
   rb_provide("openstudioenergyplus.so");
@@ -173,6 +172,9 @@ void init_openstudio_internal_extended()
   Init_openstudiogbxml();
   rb_provide("openstudiogbxml");
   rb_provide("openstudiogbxml.so");
+  Init_openstudiogltf();
+  rb_provide("openstudiogltf");
+  rb_provide("openstudiogltf.so");
   Init_openstudioairflow();
   rb_provide("openstudioairflow");
   rb_provide("openstudioairflow.so");
@@ -188,7 +190,6 @@ void init_openstudio_internal_extended()
   Init_openstudiosdd();
   rb_provide("openstudiosdd");
   rb_provide("openstudiosdd.so");
-
 
   //Init_openstudiomodeleditor(); # happens separately in openstudio.so only, for SketchUp plug-in
   //rb_provide("openstudiomodeleditor");
@@ -368,7 +369,6 @@ end # module OpenStudio
   evalString(ruby_typedef_script);
 }
 
-
 void init_openstudio_internal() {
   init_openstudio_internal_basic();
   init_openstudio_internal_extended();
@@ -376,40 +376,33 @@ void init_openstudio_internal() {
 
 class RubyException : public std::runtime_error
 {
-  public:
+ public:
+  RubyException(const std::string& msg, const std::string& location) : std::runtime_error(msg), m_location(location) {}
 
-    RubyException(const std::string& msg, const std::string& location)
-      : std::runtime_error(msg), m_location(location)
-    {}
+  virtual ~RubyException() throw() {}
 
-    virtual ~RubyException() throw() {}
+  std::string location() const {
+    return m_location;
+  }
 
-    std::string location() const {return m_location;}
-
-  private:
-
-    std::string m_location;
-
+ private:
+  std::string m_location;
 };
 
-static VALUE evaluateSimpleImpl(VALUE arg)
-{
+static VALUE evaluateSimpleImpl(VALUE arg) {
   return rb_eval_string(StringValuePtr(arg));
 }
 
-void evalString(const std::string &t_str)
-{
+void evalString(const std::string& t_str) {
 
   VALUE val = rb_str_new2(t_str.c_str());
   int error;
 
-  rb_protect(evaluateSimpleImpl,val,&error);
+  rb_protect(evaluateSimpleImpl, val, &error);
 
-
-  if (error != 0)
-  {
+  if (error != 0) {
     VALUE errval = rb_eval_string("$!.to_s");
-    char *str = StringValuePtr(errval);
+    char* str = StringValuePtr(errval);
     std::string err(str);
 
     VALUE locval = rb_eval_string("$@.to_s");
@@ -419,6 +412,4 @@ void evalString(const std::string &t_str)
     throw RubyException(err, loc);
   }
 }
-
-
 

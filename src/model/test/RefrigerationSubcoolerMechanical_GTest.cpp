@@ -78,13 +78,13 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_OutletControlTemperature) 
   Model m;
   RefrigerationSubcoolerMechanical refrigerationSubcoolerMechanical = RefrigerationSubcoolerMechanical(m);
 
-  EXPECT_EQ(10.0, refrigerationSubcoolerMechanical.outletControlTemperature());  // Brian's value
+  EXPECT_EQ(10.0, refrigerationSubcoolerMechanical.outletControlTemperature().get());  // Brian's value
 
   refrigerationSubcoolerMechanical.setOutletControlTemperature(15.0);
-  EXPECT_EQ(15.0, refrigerationSubcoolerMechanical.outletControlTemperature());
+  EXPECT_EQ(15.0, refrigerationSubcoolerMechanical.outletControlTemperature().get());
 
   refrigerationSubcoolerMechanical.setOutletControlTemperature(-15.0);
-  EXPECT_EQ(-15.0, refrigerationSubcoolerMechanical.outletControlTemperature());
+  EXPECT_EQ(-15.0, refrigerationSubcoolerMechanical.outletControlTemperature().get());
 }
 
 TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_Remove) {
@@ -129,7 +129,7 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneOneModelWithDefaultDa
   EXPECT_NE(refrigerationSubcoolerMechanicalClone.handle(), refrigerationSubcoolerMechanical.handle());
 
   EXPECT_FALSE(refrigerationSubcoolerMechanicalClone.capacityProvidingSystem());
-  EXPECT_EQ(10.0, refrigerationSubcoolerMechanical.outletControlTemperature());
+  EXPECT_EQ(10.0, refrigerationSubcoolerMechanical.outletControlTemperature().get());
 }
 
 TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneOneModelWithCustomData) {
@@ -146,7 +146,7 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneOneModelWithCustomDat
   EXPECT_NE(refrigerationSubcoolerMechanicalClone.handle(), refrigerationSubcoolerMechanical.handle());
 
   EXPECT_FALSE(refrigerationSubcoolerMechanicalClone.capacityProvidingSystem());
-  EXPECT_EQ(15.0, refrigerationSubcoolerMechanicalClone.outletControlTemperature());
+  EXPECT_EQ(15.0, refrigerationSubcoolerMechanicalClone.outletControlTemperature().get());
 }
 
 TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneTwoModelWithDefaultData) {
@@ -176,5 +176,5 @@ TEST_F(ModelFixture, RefrigerationSubcoolerMechanical_CloneTwoModelWithDefaultDa
 
   EXPECT_FALSE(refrigerationSubcoolerMechanicalClone.capacityProvidingSystem());
   EXPECT_FALSE(refrigerationSubcoolerMechanicalClone2.capacityProvidingSystem());
-  EXPECT_EQ(10.0, refrigerationSubcoolerMechanicalClone2.outletControlTemperature());
+  EXPECT_EQ(10.0, refrigerationSubcoolerMechanicalClone2.outletControlTemperature().get());
 }
