@@ -110,10 +110,12 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V9-5-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-6-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V22-1-0.sql
-
   utilities/xml/hpxml_with_error.xml
-  utilities/xml/HPXMLvalidator.xslt
-  utilities/xml/HPXMLvalidator.xml
+  utilities/xml/schema/HPXML.xsd
+  utilities/xml/schema/HPXMLBaseElements.xsd
+  utilities/xml/schema/HPXMLDataTypes.xsd
+  utilities/xml/schema/HPXMLvalidator.xslt
+  utilities/xml/schema/HPXMLvalidator.xml
 
   utilities/Zip/test1.zip
 )
