@@ -26,54 +26,36 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
-#ifndef MODEL_GLTFBOUNDINGBOXWRAPPER_HPP
-#define MODEL_GLTFBOUNDINGBOXWRAPPER_HPP
 
-#include "ModelAPI.hpp"
-#include "Model.hpp"
+#ifndef GLTF_TEST_GLTFFIXTURE_HPP
+#define GLTF_TEST_GLTFFIXTURE_HPP
 
-namespace openstudio {
-//class GltfMetaDta;
-namespace model {
+#include <gtest/gtest.h>
 
-  class MODEL_API GltfBoundingBoxWrapper
-  {
-   public:
-    void setlookAtR(double value);
-    void setlookAtX(double value);
-    void setlookAtY(double value);
-    void setlookAtZ(double value);
-    void setmaxX(double value);
-    void setmaxY(double value);
-    void setmaxZ(double value);
-    void setminX(double value);
-    void setminY(double value);
-    void setminZ(double value);
+#include "../../utilities/core/Logger.hpp"
+#include "../../utilities/core/FileLogSink.hpp"
 
-    double getlookAtR() const;
-    double getlookAtX() const;
-    double getlookAtY() const;
-    double getlookAtZ() const;
-    double getmaxX() const;
-    double getmaxY() const;
-    double getmaxZ() const;
-    double getminX() const;
-    double getminY() const;
-    double getminZ() const;
+#include <boost/optional.hpp>
 
-   private:
-    std::tuple<std::string, double> lookAtR;
-    std::tuple<std::string, double> lookAtX;
-    std::tuple<std::string, double> lookAtY;
-    std::tuple<std::string, double> lookAtZ;
-    std::tuple<std::string, double> maxX;
-    std::tuple<std::string, double> maxY;
-    std::tuple<std::string, double> maxZ;
-    std::tuple<std::string, double> minX;
-    std::tuple<std::string, double> minY;
-    std::tuple<std::string, double> minZ;
-  };
-}  // namespace model
-}  // namespace openstudio
+class GltfFixture : public ::testing::Test
+{
+ protected:
+  /// initialize for each test
+  virtual void SetUp() override;
 
-#endif  //MODEL_GLTFBOUNDINGBOXWRAPPER_HPP
+  /// tear down after each test
+  virtual void TearDown() override;
+
+  /// initialize static members
+  static void SetUpTestSuite();
+
+  /// tear down static members
+  static void TearDownTestSuite();
+
+  REGISTER_LOGGER("GltfFixture");
+
+  // static variables
+  static boost::optional<openstudio::FileLogSink> logFile;
+};
+
+#endif  // GLTF_TEST_GLTFFIXTURE_HPP

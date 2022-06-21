@@ -19,7 +19,7 @@ static void BM_Unzip(benchmark::State& state) {
   openstudio::path outpath = prepareOutDir("Current");
 
   openstudio::UnzipFile uf(p);
-  uf.setChunksize(state.range(0));
+  uf.setChunksize(static_cast<unsigned long>(state.range(0)));
 
   // Code inside this loop is measured repeatedly
   for (auto _ : state) {

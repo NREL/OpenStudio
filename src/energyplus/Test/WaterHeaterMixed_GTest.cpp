@@ -268,7 +268,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
       double effValue = 0.5;
 
       EXPECT_TRUE(wh.setHeaterThermalEfficiency(effValue));
-      EXPECT_EQ(effValue, wh.heaterThermalEfficiency());
+      EXPECT_EQ(effValue, wh.heaterThermalEfficiency().get());
 
       ForwardTranslator ft;
       ASSERT_NO_THROW(ft.translateModel(m));
@@ -295,10 +295,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
 
       if (strictnessLevel > StrictnessLevel::Minimal) {
         EXPECT_FALSE(wh.setHeaterThermalEfficiency(effValue));
-        EXPECT_NE(effValue, wh.heaterThermalEfficiency());
+        EXPECT_NE(effValue, wh.heaterThermalEfficiency().get());
       } else {
         EXPECT_TRUE(wh.setHeaterThermalEfficiency(effValue));
-        EXPECT_EQ(effValue, wh.heaterThermalEfficiency());
+        EXPECT_EQ(effValue, wh.heaterThermalEfficiency().get());
       }
 
       ForwardTranslator ft;
@@ -337,9 +337,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorWaterHeaterMixed_InvalidValue) {
       EXPECT_TRUE(wh.setpointTemperatureSchedule());  // able to set pointer
 
       if (strictnessLevel > StrictnessLevel::Minimal) {
-        EXPECT_NE(effValue, wh.heaterThermalEfficiency());
+        EXPECT_NE(effValue, wh.heaterThermalEfficiency().get());
       } else {
-        EXPECT_EQ(effValue, wh.heaterThermalEfficiency());  // still has invalid value
+        EXPECT_EQ(effValue, wh.heaterThermalEfficiency().get());  // still has invalid value
       }
     }
   }

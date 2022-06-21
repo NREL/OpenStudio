@@ -6,6 +6,7 @@ if __package__ or "." in __name__:
     from . import openstudioenergyplus as energyplus
     from . import openstudioepjson as epjson
     from . import openstudiogbxml as gbxml
+    from . import openstudiogltf as gltf
     from . import openstudioisomodel as isomodel
     from . import openstudiomeasure as measure
 
@@ -46,6 +47,7 @@ else:
     import openstudioenergyplus as energyplus
     import openstudioepjson as epjson
     import openstudiogbxml as gbxml
+    import openstudiogltf as gltf
     import openstudioisomodel as isomodel
     import openstudiomeasure as measure
 

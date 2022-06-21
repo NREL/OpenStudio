@@ -160,13 +160,13 @@ TEST_F(ModelFixture, ThermalZone_AddToNode_SPM) {
   EXPECT_TRUE(thermalZone.addToNode(inletNode));
 
   EXPECT_TRUE(spm.controlZone());
-  EXPECT_EQ(thermalZone, spm.controlZone());
+  EXPECT_EQ(thermalZone, spm.controlZone().get());
 
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, singleDuctTerminal));
 
   EXPECT_TRUE(spm.controlZone());
-  EXPECT_EQ(thermalZone, spm.controlZone());
-  EXPECT_NE(thermalZone2, spm.controlZone());
+  EXPECT_EQ(thermalZone, spm.controlZone().get());
+  EXPECT_NE(thermalZone2, spm.controlZone().get());
 }
 
 TEST_F(ModelFixture, ThermalZone_sizingZone) {
