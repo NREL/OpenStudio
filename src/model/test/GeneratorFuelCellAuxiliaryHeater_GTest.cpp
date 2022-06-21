@@ -56,7 +56,7 @@ TEST_F(ModelFixture, FuelCellAuxilliaryHeater) {
   ASSERT_FALSE(auxHeater.zonetoReceiveSkinLosses());
   ThermalZone zone(model);
   ASSERT_TRUE(auxHeater.setZonetoReceiveSkinLosses(zone));
-  EXPECT_EQ(zone, auxHeater.zonetoReceiveSkinLosses());
+  EXPECT_EQ(zone, auxHeater.zonetoReceiveSkinLosses().get());
   EXPECT_EQ("SurroundingZone", auxHeater.skinLossDestination());
   auxHeater.resetZonetoReceiveSkinLosses();
   ASSERT_FALSE(auxHeater.zonetoReceiveSkinLosses());

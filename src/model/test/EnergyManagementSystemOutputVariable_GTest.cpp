@@ -140,7 +140,7 @@ TEST_F(ModelFixture, EMSOutputVariable_EMSOutputVariable) {
   bool setprogram = outvar.setEMSProgramOrSubroutineName(program);
   EXPECT_EQ(true, setprogram);
   EXPECT_EQ("program_1", outvar.emsProgramOrSubroutineName());
-  EXPECT_EQ(program, outvar.emsProgram());
+  EXPECT_EQ(program, outvar.emsProgram().get());
 
   // add output variable actuator
   EnergyManagementSystemOutputVariable outvar_act(model, fanActuator);

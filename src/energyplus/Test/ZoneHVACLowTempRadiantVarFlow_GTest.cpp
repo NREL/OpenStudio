@@ -145,7 +145,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantVarFlow_Set_Flow_Fractions) {
         EXPECT_TRUE(testRad.isTemperatureControlTypeDefaulted());
         EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
         for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()) {
-          EXPECT_EQ(0.25, extGrp.getDouble(1, false));
+          EXPECT_EQ(0.25, extGrp.getDouble(1, false).get());
         }
       }
     }

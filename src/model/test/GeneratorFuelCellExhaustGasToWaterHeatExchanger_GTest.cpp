@@ -57,31 +57,31 @@ TEST_F(ModelFixture, FuelCellExhaustGasToWaterHeatExchanger) {
   ASSERT_FALSE(exhaustHX.exhaustOutletAirNode());
   //check calculation methods
   ASSERT_TRUE(exhaustHX.setHeatExchangerCalculationMethod("EmpiricalUAeff"));
-  EXPECT_EQ(1.0, exhaustHX.method2Parameterhxs0());
-  EXPECT_EQ(0.0, exhaustHX.method2Parameterhxs1());
-  EXPECT_EQ(0.0, exhaustHX.method2Parameterhxs2());
-  EXPECT_EQ(0.0, exhaustHX.method2Parameterhxs3());
-  EXPECT_EQ(0.0, exhaustHX.method2Parameterhxs4());
+  EXPECT_EQ(1.0, exhaustHX.method2Parameterhxs0().get());
+  EXPECT_EQ(0.0, exhaustHX.method2Parameterhxs1().get());
+  EXPECT_EQ(0.0, exhaustHX.method2Parameterhxs2().get());
+  EXPECT_EQ(0.0, exhaustHX.method2Parameterhxs3().get());
+  EXPECT_EQ(0.0, exhaustHX.method2Parameterhxs4().get());
   ASSERT_TRUE(exhaustHX.setHeatExchangerCalculationMethod("FundementalUAeff"));
-  EXPECT_EQ(0.0, exhaustHX.method3FAdjustmentFactor());
-  EXPECT_EQ(1.0, exhaustHX.method3GasArea());
-  EXPECT_EQ(1.0, exhaustHX.method3h0GasCoefficient());
-  EXPECT_EQ(1.0, exhaustHX.method3h0WaterCoefficient());
-  EXPECT_EQ(1.0, exhaustHX.method3mCoefficient());
-  EXPECT_EQ(1.0, exhaustHX.method3nCoefficient());
-  EXPECT_EQ(1.0, exhaustHX.method3NdotGasRefCoefficient());
-  EXPECT_EQ(1.0, exhaustHX.method3NdotWaterrefCoefficient());
-  EXPECT_EQ(1.0, exhaustHX.method3WaterArea());
+  EXPECT_EQ(0.0, exhaustHX.method3FAdjustmentFactor().get());
+  EXPECT_EQ(1.0, exhaustHX.method3GasArea().get());
+  EXPECT_EQ(1.0, exhaustHX.method3h0GasCoefficient().get());
+  EXPECT_EQ(1.0, exhaustHX.method3h0WaterCoefficient().get());
+  EXPECT_EQ(1.0, exhaustHX.method3mCoefficient().get());
+  EXPECT_EQ(1.0, exhaustHX.method3nCoefficient().get());
+  EXPECT_EQ(1.0, exhaustHX.method3NdotGasRefCoefficient().get());
+  EXPECT_EQ(1.0, exhaustHX.method3NdotWaterrefCoefficient().get());
+  EXPECT_EQ(1.0, exhaustHX.method3WaterArea().get());
   ASSERT_TRUE(exhaustHX.setHeatExchangerCalculationMethod("Condensing"));
-  EXPECT_EQ(35.0, exhaustHX.method4CondensationThreshold());
-  EXPECT_EQ(1.0, exhaustHX.method4hxl1Coefficient());
-  EXPECT_EQ(1.0, exhaustHX.method4hxl2Coefficient());
+  EXPECT_EQ(35.0, exhaustHX.method4CondensationThreshold().get());
+  EXPECT_EQ(1.0, exhaustHX.method4hxl1Coefficient().get());
+  EXPECT_EQ(1.0, exhaustHX.method4hxl2Coefficient().get());
   //check bad method
   ASSERT_FALSE(exhaustHX.setHeatExchangerCalculationMethod("MadeUp"));
   //check reset method
   exhaustHX.resetHeatExchangerCalculationMethod();
   EXPECT_EQ("FixedEffectiveness", exhaustHX.heatExchangerCalculationMethod());
-  EXPECT_EQ(1.0, exhaustHX.method1HeatExchangerEffectiveness());
+  EXPECT_EQ(1.0, exhaustHX.method1HeatExchangerEffectiveness().get());
   //check reset method1 params
   exhaustHX.resetMethod1HeatExchangerEffectiveness();
   ASSERT_FALSE(exhaustHX.method1HeatExchangerEffectiveness());
@@ -131,9 +131,9 @@ TEST_F(ModelFixture, FuelCellExhaustGasToWaterHeatExchanger2) {
   GeneratorFuelCellExhaustGasToWaterHeatExchanger exhaustHX(model, airNode);
   EXPECT_EQ(0.0004, exhaustHX.heatRecoveryWaterMaximumFlowRate());
   EXPECT_EQ("FixedEffectiveness", exhaustHX.heatExchangerCalculationMethod());
-  EXPECT_EQ(1.0, exhaustHX.method1HeatExchangerEffectiveness());
+  EXPECT_EQ(1.0, exhaustHX.method1HeatExchangerEffectiveness().get());
   ASSERT_TRUE(exhaustHX.exhaustOutletAirNode());
-  EXPECT_EQ(airNode, exhaustHX.exhaustOutletAirNode());
+  EXPECT_EQ(airNode, exhaustHX.exhaustOutletAirNode().get());
   exhaustHX.resetExhaustOutletAirNode();
   ASSERT_FALSE(exhaustHX.exhaustOutletAirNode());
 }
