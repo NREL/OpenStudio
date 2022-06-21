@@ -68,7 +68,7 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_FALSE(subsurface2);
   ASSERT_FALSE(internalmass2);
   ASSERT_EQ(*surface2, surface);
-  ASSERT_EQ(surface2->surfacePropertyConvectionCoefficients(), cc);
+  ASSERT_EQ(surface2->surfacePropertyConvectionCoefficients().get(), cc);
 
   SubSurface subSurface(vertices, model);
   ASSERT_TRUE(cc.setSurface(subSurface));
@@ -81,7 +81,7 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_TRUE(subsurface2);
   ASSERT_FALSE(internalmass2);
   ASSERT_EQ(*subsurface2, subSurface);
-  ASSERT_EQ(subsurface2->surfacePropertyConvectionCoefficients(), cc);
+  ASSERT_EQ(subsurface2->surfacePropertyConvectionCoefficients().get(), cc);
 
   InternalMassDefinition internalMassDefn(model);
   InternalMass internalMass(internalMassDefn);
@@ -95,7 +95,7 @@ TEST_F(ModelFixture, SurfacePropertyConvectionCoefficients) {
   ASSERT_FALSE(subsurface2);
   ASSERT_TRUE(internalmass2);
   ASSERT_EQ(*internalmass2, internalMass);
-  ASSERT_EQ(internalmass2->surfacePropertyConvectionCoefficients(), cc);
+  ASSERT_EQ(internalmass2->surfacePropertyConvectionCoefficients().get(), cc);
 
   std::vector<std::string> locationValues1(cc.convectionCoefficient1LocationValues());
   ASSERT_EQ(locationValues1.size(), 2);

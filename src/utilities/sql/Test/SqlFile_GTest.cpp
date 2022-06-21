@@ -386,7 +386,7 @@ void regressionTestSqlFile(const std::string& name, double netSiteEnergy, double
   VersionString actual(sqlFile->energyPlusVersion());
   EXPECT_EQ(expected.major(), actual.major());
   EXPECT_EQ(expected.minor(), actual.minor());
-  EXPECT_EQ(expected.patch(), actual.patch());
+  EXPECT_EQ(expected.patch().get(), actual.patch().get());
 
   // Check if the SqlFile has the 'Year' field
   if (expected >= VersionString(9, 0)) {

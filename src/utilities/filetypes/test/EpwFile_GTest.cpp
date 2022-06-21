@@ -795,9 +795,8 @@ TEST(Filetypes, EpwFile_DataPoint) {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CT_New.Haven-Tweed.AP.725045_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    std::vector<EpwDataPoint> data = epwFile.data();
-    for (EpwDataPoint dataPoint : data) {
-      EXPECT_NE(dataPoint.windSpeed(), boost::none);
+    for (const EpwDataPoint& dataPoint : epwFile.data()) {
+      EXPECT_TRUE(dataPoint.windSpeed());
       //EXPECT_NO_THROW(dataPoint.windSpeed().get());
     }
   } catch (...) {

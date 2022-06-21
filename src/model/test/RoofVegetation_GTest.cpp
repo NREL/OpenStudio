@@ -145,27 +145,27 @@ TEST_F(ModelFixture, RoofVegetation_GettersSetters) {
 
   // Thermal Absorptance:  Double
   // Check Idd default: .9
-  EXPECT_EQ(.9, roofVegetation.thermalAbsorptance());
+  EXPECT_EQ(.9, roofVegetation.thermalAbsorptance().get());
   EXPECT_TRUE(roofVegetation.setThermalAbsorptance(0.85));
-  EXPECT_EQ(0.85, roofVegetation.thermalAbsorptance());
+  EXPECT_EQ(0.85, roofVegetation.thermalAbsorptance().get());
   roofVegetation.resetThermalAbsorptance();
-  EXPECT_EQ(.9, roofVegetation.thermalAbsorptance());
+  EXPECT_EQ(.9, roofVegetation.thermalAbsorptance().get());
 
   // Solar Absorptance:  Double
   // Check Idd default: .70
-  EXPECT_EQ(.70, roofVegetation.solarAbsorptance());
+  EXPECT_EQ(.70, roofVegetation.solarAbsorptance().get());
   EXPECT_TRUE(roofVegetation.setSolarAbsorptance(0.55));
-  EXPECT_EQ(0.55, roofVegetation.solarAbsorptance());
+  EXPECT_EQ(0.55, roofVegetation.solarAbsorptance().get());
   roofVegetation.resetSolarAbsorptance();
-  EXPECT_EQ(.70, roofVegetation.solarAbsorptance());
+  EXPECT_EQ(.70, roofVegetation.solarAbsorptance().get());
 
   // Visible Absorptance:  Double
   // Check Idd default: .75
-  EXPECT_EQ(.75, roofVegetation.visibleAbsorptance());
+  EXPECT_EQ(.75, roofVegetation.visibleAbsorptance().get());
   EXPECT_TRUE(roofVegetation.setVisibleAbsorptance(0.63));
-  EXPECT_EQ(0.63, roofVegetation.visibleAbsorptance());
+  EXPECT_EQ(0.63, roofVegetation.visibleAbsorptance().get());
   roofVegetation.resetVisibleAbsorptance();
-  EXPECT_EQ(.75, roofVegetation.visibleAbsorptance());
+  EXPECT_EQ(.75, roofVegetation.visibleAbsorptance().get());
 
   // Saturation Volumetric Moisture Content of the Soil Layer:  Double
   // Check Idd default: 0.3

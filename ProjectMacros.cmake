@@ -546,6 +546,7 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
       OpenStudioAirflow
       OpenStudioEnergyPlus
       OpenStudioGBXML
+      OpenStudioGltf
       OpenStudioISOModel
       OpenStudioRadiance
       OpenStudioSDD

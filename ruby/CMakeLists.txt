@@ -100,6 +100,7 @@ else()
     openstudio_sdd
     openstudio_isomodel
     openstudio_gbxml
+    openstudio_gltf
     openstudio_radiance
   )
 endif()

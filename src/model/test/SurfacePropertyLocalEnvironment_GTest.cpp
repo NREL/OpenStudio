@@ -97,7 +97,7 @@ TEST_F(ModelFixture, SurfacePropertyLocalEnvironment_GettersSetters) {
   EXPECT_EQ(sp, surfacePropertyLocalEnvironment.surfacePropertySurroundingSurfaces().get());
 
   ASSERT_TRUE(sp.surfacePropertyLocalEnvironment());
-  EXPECT_EQ(surfacePropertyLocalEnvironment, sp.surfacePropertyLocalEnvironment());
+  EXPECT_EQ(surfacePropertyLocalEnvironment, sp.surfacePropertyLocalEnvironment().get());
 
   surfacePropertyLocalEnvironment.resetSurfacePropertySurroundingSurfaces();
   EXPECT_FALSE(surfacePropertyLocalEnvironment.surfacePropertySurroundingSurfaces());

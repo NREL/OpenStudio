@@ -26,85 +26,90 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
+#ifndef GLTF_GLTFMATERIALDATA_HPP
+#define GLTF_GLTFMATERIALDATA_HPP
 
-#include "GltfModelObjectMetadataWrapper.hpp"
+#include "GltfAPI.hpp"
 
-#include <tuple>
+#include <array>
+#include <string_view>
+#include <vector>
+
+namespace tinygltf {
+struct Material;
+}
 
 namespace openstudio {
+
 namespace model {
-
-  void GltfModelObjectMetadataWrapper::setColor(const std::string& value) {
-    std::string key = "color";
-    color = std::make_tuple(key, value);
-  }
-
-  void GltfModelObjectMetadataWrapper::setHandle(const std::string& value) {
-    std::string key = "handle";
-    handle = std::make_tuple(key, value);
-  }
-
-  void GltfModelObjectMetadataWrapper::setIddObjectType(const std::string& value) {
-    std::string key = "iddObjectType";
-    iddObjectType = std::make_tuple(key, value);
-  }
-
-  void GltfModelObjectMetadataWrapper::setName(const std::string& value) {
-    std::string key = "name";
-    name = std::make_tuple(key, value);
-  }
-
-  void GltfModelObjectMetadataWrapper::setOpen_to_below(const bool& value) {
-    std::string key = "open_to_below";
-    open_to_below = std::make_tuple(key, value);
-  }
-
-  void GltfModelObjectMetadataWrapper::setNominal_z_coordinate(const double& value) {
-    std::string key = "nominal_z_coordinate";
-    nominal_z_coordinate = std::make_tuple(key, value);
-  }
-
-  void GltfModelObjectMetadataWrapper::setNominal_floorCeiling_Height(const double& value) {
-    std::string key = "nominal_floorCeiling_Height";
-    nominal_floorCeiling_Height = std::make_tuple(key, value);
-  }
-
-  void GltfModelObjectMetadataWrapper::setMultiplier(const int& value) {
-    std::string key = "multiplier";
-    multiplier = std::make_tuple(key, value);
-  }
-
-  // getters
-  std::string GltfModelObjectMetadataWrapper::getColor() const {
-    return std::get<1>(color);
-  }
-
-  std::string GltfModelObjectMetadataWrapper::getHandle() const {
-    return std::get<1>(handle);
-  }
-
-  std::string GltfModelObjectMetadataWrapper::getIddObjectType() const {
-    return std::get<1>(iddObjectType);
-  }
-
-  std::string GltfModelObjectMetadataWrapper::getName() const {
-    return std::get<1>(name);
-  }
-
-  bool GltfModelObjectMetadataWrapper::getOpen_to_below() const {
-    return std::get<1>(open_to_below);
-  }
-
-  double GltfModelObjectMetadataWrapper::getNominal_z_coordinate() const {
-    return std::get<1>(nominal_z_coordinate);
-  }
-
-  double GltfModelObjectMetadataWrapper::getNominal_floorCeiling_Height() const {
-    return std::get<1>(nominal_floorCeiling_Height);
-  }
-
-  int GltfModelObjectMetadataWrapper::getMultiplier() const {
-    return std::get<1>(multiplier);
-  }
+  class Model;
+  class RenderingColor;
 }  // namespace model
+
+namespace gltf {
+
+  class GltfForwardTranslator;
+
+  /** GltfMaterialData is an Interface class between a `RenderingColor` and a `tinygltf::Material` **/
+  class GLTF_API GltfMaterialData
+  {
+   public:
+    /** @name Interface with Model and ModelObjects */
+    //@{
+
+    /** Standard constructor */
+    constexpr GltfMaterialData(std::string_view materialName, int r, int g, int b, double a, bool isDoubleSided = false)
+      : m_materialName(materialName), m_r(r), m_g(g), m_b(b), m_a(a), m_isDoubleSided(isDoubleSided){};
+
+    static std::vector<GltfMaterialData> buildMaterials(const model::Model& model);
+    //@}
+
+    GltfMaterialData(std::string_view materialName, const model::RenderingColor& color, bool isDoubleSided = false);
+
+    /** @name Getters and Setters */
+    //@{
+    std::string materialName() const;
+    void setMaterialName(const std::string& materialName);
+
+    int r() const;
+    void setR(int r);
+
+    int g() const;
+    void setG(int g);
+
+    int b() const;
+    void setB(int b);
+
+    double a() const;
+    void setA(double a);
+
+    bool isDoubleSided() const;
+    void setIsDoubleSided(bool isDoubleSided);
+
+   protected:
+    /** @name Protected */
+    //@{
+
+    /** Creates a GLTF material on the basis of raw Material Values, i.e, R, G, B, A & isDoubleSided */
+    tinygltf::Material toGltf() const;
+    friend class GltfForwardTranslator;
+
+    //@}
+
+   private:
+    std::string_view m_materialName;
+    int m_r;     // [0, 255]
+    int m_g;     // [0, 255]
+    int m_b;     // [0, 255]
+    double m_a;  // [0, 1]     -> TODO: make that 0, 255 (int) like RenderingColor does
+    bool m_isDoubleSided = false;
+  };
+
+  /** \relates GltfMaterialData */
+  GLTF_API std::ostream& operator<<(std::ostream& out, const GltfMaterialData& gltfMaterialData);
+
+  using GltfMaterialDataVector = std::vector<GltfMaterialData>;
+
+}  // namespace gltf
 }  // namespace openstudio
+#endif  // GLTF_GLTFMATERIALDATA_HPP

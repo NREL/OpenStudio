@@ -86,7 +86,7 @@ TEST_F(ModelFixture, ZoneHVACUnitHeater_addToThermalZone) {
   ThermalZone thermalZone(model);
   EXPECT_TRUE(zoneHVACUnitHeater.addToThermalZone(thermalZone));
   boost::optional<ThermalZone> testThermalZone = zoneHVACUnitHeater.thermalZone();
-  EXPECT_EQ(*(testThermalZone), zoneHVACUnitHeater.thermalZone());
+  EXPECT_EQ(*(testThermalZone), zoneHVACUnitHeater.thermalZone().get());
 
   // Check inlet and outlet nodes
   EXPECT_TRUE(zoneHVACUnitHeater.inletNode());
