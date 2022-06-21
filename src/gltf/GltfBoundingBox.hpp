@@ -26,104 +26,85 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
+#ifndef GLTF_GLTFBOUNDINGBOX_HPP
+#define GLTF_GLTFBOUNDINGBOX_HPP
 
-#include "GltfBoundingBoxWrapper.hpp"
+#include "GltfAPI.hpp"
 
-#include <tuple>
+#include "../utilities/core/Logger.hpp"
+
+#include <vector>
+
+namespace tinygltf {
+class Value;
+}
 
 namespace openstudio {
 namespace model {
-
-  void GltfBoundingBoxWrapper::setlookAtR(double value) {
-    std::string key = "lookAtR";
-    lookAtR = std::make_tuple(key, value);
-  }
-
-  void GltfBoundingBoxWrapper::setlookAtX(double value) {
-    std::string key = "lookAtX";
-    lookAtX = std::make_tuple(key, value);
-  }
-
-  void GltfBoundingBoxWrapper::setlookAtY(double value) {
-    std::string key = "lookAtY";
-    lookAtY = std::make_tuple(key, value);
-  }
-
-  void GltfBoundingBoxWrapper::setlookAtZ(double value) {
-    std::string key = "lookAtZ";
-    lookAtZ = std::make_tuple(key, value);
-  }
-
-  void GltfBoundingBoxWrapper::setmaxX(double value) {
-    std::string key = "maxX";
-    maxX = std::make_tuple(key, value);
-  }
-
-  void GltfBoundingBoxWrapper::setmaxY(double value) {
-    std::string key = "maxY";
-    maxY = std::make_tuple(key, value);
-  }
-
-  void GltfBoundingBoxWrapper::setmaxZ(double value) {
-    std::string key = "maxZ";
-    maxZ = std::make_tuple(key, value);
-  }
-
-  void GltfBoundingBoxWrapper::setminX(double value) {
-    std::string key = "minX";
-    minX = std::make_tuple(key, value);
-  }
-
-  void GltfBoundingBoxWrapper::setminY(double value) {
-    std::string key = "minY";
-    minY = std::make_tuple(key, value);
-  }
-
-  void GltfBoundingBoxWrapper::setminZ(double value) {
-    std::string key = "minZ";
-    minZ = std::make_tuple(key, value);
-  }
-
-  // Getters
-  double GltfBoundingBoxWrapper::getlookAtR() const {
-    return std::get<1>(lookAtR);
-  }
-
-  double GltfBoundingBoxWrapper::getlookAtX() const {
-    return std::get<1>(lookAtX);
-  }
-
-  double GltfBoundingBoxWrapper::getlookAtY() const {
-    return std::get<1>(lookAtY);
-  }
-
-  double GltfBoundingBoxWrapper::getlookAtZ() const {
-    return std::get<1>(lookAtZ);
-  }
-
-  double GltfBoundingBoxWrapper::getmaxX() const {
-    return std::get<1>(maxX);
-  }
-
-  double GltfBoundingBoxWrapper::getmaxY() const {
-    return std::get<1>(maxY);
-  }
-
-  double GltfBoundingBoxWrapper::getmaxZ() const {
-    return std::get<1>(maxZ);
-  }
-
-  double GltfBoundingBoxWrapper::getminX() const {
-    return std::get<1>(minX);
-  }
-
-  double GltfBoundingBoxWrapper::getminY() const {
-    return std::get<1>(minY);
-  }
-
-  double GltfBoundingBoxWrapper::getminZ() const {
-    return std::get<1>(minZ);
-  }
-
+  class PlanarSurfaceGroup;
 }  // namespace model
+
+namespace gltf {
+
+  class GltfMetaData;
+
+  /** GltfBoundingBox is an Interface between the PlanarSurfaceGroups of a Model and a glTF Scene's extras to set the boundingbox **/
+  class GLTF_API GltfBoundingBox
+  {
+   public:
+    GltfBoundingBox();
+    GltfBoundingBox(const std::vector<model::PlanarSurfaceGroup>& planarSurfaceGroups);
+
+    double lookAtR() const;
+    void setLookAtR(double lookAtR);
+
+    double lookAtX() const;
+    void setLookAtX(double lookAtX);
+
+    double lookAtY() const;
+    void setLookAtY(double lookAtY);
+
+    double lookAtZ() const;
+    void setLookAtZ(double lookAtZ);
+
+    double maxX() const;
+    void setMaxX(double maxX);
+
+    double maxY() const;
+    void setMaxY(double maxY);
+
+    double maxZ() const;
+    void setMaxZ(double maxZ);
+
+    double minX() const;
+    void setMinX(double minX);
+
+    double minY() const;
+    void setMinY(double minY);
+
+    double minZ() const;
+    void setMinZ(double minZ);
+
+   protected:
+    std::map<std::string, tinygltf::Value> toExtras() const;
+    GltfBoundingBox(const tinygltf::Value& boundingBoxObj);
+    friend class GltfMetaData;
+
+   private:
+    REGISTER_LOGGER("openstudio.gltf.GltfBoundingBox");
+
+    double m_lookAtR = 0.0;
+    double m_lookAtX = 0.0;
+    double m_lookAtY = 0.0;
+    double m_lookAtZ = 0.0;
+    double m_maxX = 0.0;
+    double m_maxY = 0.0;
+    double m_maxZ = 0.0;
+    double m_minX = 0.0;
+    double m_minY = 0.0;
+    double m_minZ = 0.0;
+  };
+}  // namespace gltf
 }  // namespace openstudio
+
+#endif  //GLTF_GLTFBOUNDINGBOX_HPP
