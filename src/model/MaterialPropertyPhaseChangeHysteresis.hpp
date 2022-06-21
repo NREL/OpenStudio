@@ -65,9 +65,59 @@ namespace model {
 
     std::string materialName() const;
 
+    double latentHeatduringtheEntirePhaseChangeProcess() const;
+
+    double liquidStateThermalConductivity() const;
+
+    double liquidStateDensity() const;
+
+    double liquidStateSpecificHeat() const;
+
+    double highTemperatureDifferenceofMeltingCurve() const;
+
+    double peakMeltingTemperature() const;
+
+    double lowTemperatureDifferenceofMeltingCurve() const;
+
+    double solidStateThermalConductivity() const;
+
+    double solidStateDensity() const;
+
+    double solidStateSpecificHeat() const;
+
+    double highTemperatureDifferenceofFreezingCurve() const;
+
+    double peakFreezingTemperature() const;
+
+    double lowTemperatureDifferenceofFreezingCurve() const;
+
     //@}
     /** @name Setters */
     //@{
+
+    bool setLatentHeatduringtheEntirePhaseChangeProcess(double latentHeatduringtheEntirePhaseChangeProcess);
+
+    bool setLiquidStateThermalConductivity(double liquidStateThermalConductivity);
+
+    bool setLiquidStateDensity(double liquidStateDensity);
+
+    bool setLiquidStateSpecificHeat(double liquidStateSpecificHeat);
+
+    bool setHighTemperatureDifferenceofMeltingCurve(double highTemperatureDifferenceofMeltingCurve);
+
+    bool setPeakMeltingTemperature(double peakMeltingTemperature);
+
+    bool setLowTemperatureDifferenceofMeltingCurve(double lowTemperatureDifferenceofMeltingCurve);
+
+    bool setSolidStateThermalConductivity(double solidStateThermalConductivity);
+
+    bool setSolidStateDensity(double solidStateDensity);
+
+    bool setSolidStateSpecificHeat(double solidStateSpecificHeat);
+
+    bool setHighTemperatureDifferenceofFreezingCurve(double highTemperatureDifferenceofFreezingCurve);
+
+    bool setPeakFreezingTemperature(double peakFreezingTemperature);
 
     //@}
     /** @name Other */

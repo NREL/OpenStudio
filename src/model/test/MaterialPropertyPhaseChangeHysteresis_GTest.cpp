@@ -68,3 +68,9 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_MaterialPropertyPhase
   // new material does not have material property moisture penetration depth settings yet
   EXPECT_TRUE(!material.materialPropertyPhaseChangeHysteresis());
 }
+
+// test setting and getting
+TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_SetGetFields) {
+  Model model;
+  StandardOpaqueMaterial material(model);
+}
