@@ -162,7 +162,7 @@ TEST_F(ModelFixture, ElectricLoadCenterStorageLiIonNMCBattery_Clone) {
     EXPECT_EQ(0.6, batteryClone.radiativeFraction());
     // should the clone retain the thermalZone or clear it? StorageConverter for eg would keep it, so leaving it as well
     EXPECT_TRUE(batteryClone.thermalZone());
-    EXPECT_EQ(z, batteryClone.thermalZone());
+    EXPECT_EQ(z, batteryClone.thermalZone().get());
   }
 
   {

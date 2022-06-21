@@ -86,7 +86,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitPerformance) {
   ASSERT_EQ(1u, idfOperatingModes.size());
   WorkspaceObject idfOperatingMode(idfOperatingModes[0]);
 
-  EXPECT_EQ(woBaseOperatingMode, idfOperatingMode);
+  EXPECT_EQ(woBaseOperatingMode.get(), idfOperatingMode);
 
   EXPECT_EQ(0.0, idfPerformance.getDouble(Coil_Cooling_DX_CurveFit_PerformanceFields::CrankcaseHeaterCapacity, false).get());
   EXPECT_EQ(
