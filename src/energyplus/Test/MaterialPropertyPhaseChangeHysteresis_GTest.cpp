@@ -36,6 +36,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/MaterialPropertyPhaseChangeHysteresis.hpp"
 #include "../../model/MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
 
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
@@ -54,4 +56,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyPhaseChangeHysteresi
   ForwardTranslator ft;
 
   Model model;
+  StandardOpaqueMaterial material(model);
 }

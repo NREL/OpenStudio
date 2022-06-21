@@ -52,6 +52,37 @@ namespace energyplus {
 
     idfObject.setString(MaterialProperty_PhaseChangeHysteresisFields::Name, modelObject.materialName());
 
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LatentHeatduringtheEntirePhaseChangeProcess,
+                        modelObject.latentHeatduringtheEntirePhaseChangeProcess());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LiquidStateThermalConductivity, modelObject.liquidStateThermalConductivity());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LiquidStateDensity, modelObject.liquidStateDensity());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LiquidStateSpecificHeat, modelObject.liquidStateSpecificHeat());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::HighTemperatureDifferenceofMeltingCurve,
+                        modelObject.highTemperatureDifferenceofMeltingCurve());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::PeakMeltingTemperature, modelObject.peakMeltingTemperature());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofMeltingCurve,
+                        modelObject.lowTemperatureDifferenceofMeltingCurve());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::SolidStateThermalConductivity, modelObject.solidStateThermalConductivity());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::SolidStateDensity, modelObject.solidStateDensity());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::SolidStateSpecificHeat, modelObject.solidStateSpecificHeat());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::HighTemperatureDifferenceofFreezingCurve,
+                        modelObject.highTemperatureDifferenceofFreezingCurve());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::PeakFreezingTemperature, modelObject.peakFreezingTemperature());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofFreezingCurve,
+                        modelObject.lowTemperatureDifferenceofFreezingCurve());
+
     return boost::optional<IdfObject>(idfObject);
   }
 
