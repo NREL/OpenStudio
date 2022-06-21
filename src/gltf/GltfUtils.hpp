@@ -26,59 +26,66 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
-#ifndef MODEL_GLTFMETADATAWRAPPER_HPP
-#define MODEL_GLTFMETADATAWRAPPER_HPP
+#ifndef GLTF_GLTFUTILS_HPP
+#define GLTF_GLTFUTILS_HPP
 
-#include "ModelAPI.hpp"
-#include "Model.hpp"
-#include "GltfBoundingBoxWrapper.hpp"
-#include "GltfModelObjectMetadataWrapper.hpp"
+#include "GltfAPI.hpp"
+
+#include "../utilities/core/Path.hpp"
+
+#include <string>
+#include <vector>
+
+namespace tinygltf {
+struct Accessor;
+}
 
 namespace openstudio {
-//class GltfMetaDta;
+
+class Point3d;
+class Vector3d;
+
 namespace model {
+  class ModelObject;
+}
 
-  class MODEL_API GltfMetaDataWrapper
-  {
-   public:
-    GltfMetaDataWrapper();
+namespace gltf {
 
-    void setBuildingStoryNames(const std::vector<std::string>& storyNames);
-    void setGenerator(const std::string& value);
-    void setType(const std::string& value);
-    void setVersion(const std::string& value);
-    void setNorthAxis(const double& value);
+  // Gets GLTF Material name on the basis of idd Object Type and Name
+  GLTF_API std::string getObjectGLTFMaterialName(const std::string& iddObjectType, const std::string& name);
 
-    void setglTFBoundingBoxWrapper(const GltfBoundingBoxWrapper& gbx);
-    void addModelObjectMetadata(GltfModelObjectMetadataWrapper& gmow);
+  // Gets GLTF Material Name on the basis of Model Object
+  GLTF_API std::string getObjectGLTFMaterialName(const model::ModelObject& object);
 
-    std::vector<std::string> getBuildingStoryNames() const;
-    std::string getGenerator() const;
-    std::string getType() const;
-    std::string getVersion() const;
-    double getNorthAxis() const;
+  // Export a Minimal GLTF file (Triangle with 3 Points) using raw buffer data.
+  GLTF_API bool createTriangleGLTF(const path& outputPath);
 
-    GltfBoundingBoxWrapper getglTFBoundingBoxWrapper();
-    std::vector<GltfModelObjectMetadataWrapper> getglTFModelObjectMetadataWrapper();
+  // Export a Minimal GLTF file (Triangle with 3 Points) using generated raw buffer data from Point3DVector
+  GLTF_API bool createTriangleGLTFFromPoint3DVector(const path& outputPath);
 
-    void storyCountIncrement();
-    void thermalZoneCountIncrement();
-    void spaceCountIncrement();
-    void spaceTypeCountIncrement();
-    void constructionSetCountIncrement();
-    void airLoopCountIncrement();
+  namespace detail {
+    // For Indices of Indices, Coordinates & Normal buffers against each Components
+    struct ShapeComponentIds
+    {
+      explicit ShapeComponentIds(const std::vector<size_t>& faceIndices, const std::vector<Point3d>& allVertices,
+                                 const std::vector<Vector3d>& normalVectors, std::vector<unsigned char>& indicesBuffer,
+                                 std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors);
 
-    int getStoryCount() const;
-    int getThermalZoneCount() const;
-    int getSpaceCount() const;
-    int getSpaceTypeCount() const;
-    int getConstructionSetCount() const;
-    int getAirLoopCount() const;
-  };
+      int indicesAccessorId;
+      int verticesAccessorId;
+      int normalsAccessorId;
 
-  // vector of GltfModelObjectMetadataWrapper
-  typedef std::vector<GltfModelObjectMetadataWrapper> GltfModelObjectMetadataWrapperVector;
-}  // namespace model
+     private:
+      // int addIndices(const std::vector<size_t>& faceIndices, std::vector<unsigned char>& indicesBuffer, std::vector<tinygltf::Accessor>& accessors);
+      // int addCoordinates(const std::vector<Point3d>& allVertices, std::vector<unsigned char>& coordinatesBuffer,
+      //                    std::vector<tinygltf::Accessor>& accessors);
+      // int addNormals(const std::vector<Vector3d>& normalVectors, std::vector<unsigned char>& coordinatesBuffer,
+      //                std::vector<tinygltf::Accessor>& accessors);
+      // int createBuffers(std::vector<float>& values, std::vector<unsigned char>& coordinatesBuffer, std::vector<tinygltf::Accessor>& accessors);
+    };
+  }  // namespace detail
+
+}  // namespace gltf
 }  // namespace openstudio
 
-#endif  //MODEL_GLTFMETADATAWRAPPER_HPP
+#endif  // GLTF_GLTFUTILS_HPP
