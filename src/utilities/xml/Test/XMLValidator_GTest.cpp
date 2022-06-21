@@ -74,7 +74,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_NonXMLPath) {
   EXPECT_FALSE(xmlValidator.xmlPath());
 }
 
-TEST_F(XMLValidatorFixture, XMLValidator_GBXML_XSD) {
+TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
   XMLValidator xmlValidator(schemaPath);
   EXPECT_NE("", xmlValidator.schemaPath());
   EXPECT_FALSE(xmlValidator.xmlPath());
@@ -239,9 +239,22 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXML_XSD) {
   }
 }
 
+TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_XSD) {
+  openstudio::path xmlPath = resourcesPath() / openstudio::toPath("utilities/xml/base.xml");
+  openstudio::path xsdPath = resourcesPath() / openstudio::toPath("utilities/xml/schema/HPXML.xsd");
+
+  XMLValidator xmlValidator(xsdPath);
+  EXPECT_FALSE(xmlValidator.xmlPath());
+
+  EXPECT_FALSE(xmlValidator.validate(xmlPath));
+  EXPECT_FALSE(xmlValidator.isValid());
+  EXPECT_EQ(0u, xmlValidator.warnings().size());
+  EXPECT_EQ(2u, xmlValidator.errors().size());
+}
+
 TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_XSLT) {
   openstudio::path xmlPath = resourcesPath() / openstudio::toPath("utilities/xml/hpxml_with_error.xml");
-  openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/HPXMLvalidator.xslt");
+  openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/schema/HPXMLvalidator.xslt");
 
   XMLValidator xmlValidator(schematronPath);
   EXPECT_FALSE(xmlValidator.xmlPath());
@@ -268,7 +281,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_XSLT) {
 
 TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_Schematron) {
   openstudio::path xmlPath = resourcesPath() / openstudio::toPath("utilities/xml/hpxml_with_error.xml");
-  openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/HPXMLvalidator.xml");
+  openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/schema/HPXMLvalidator.xml");
 
   XMLValidator xmlValidator(schematronPath);
   EXPECT_FALSE(xmlValidator.xmlPath());
@@ -298,7 +311,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_Schematron_TODO) {
   // TODO: this is a temporary test that uses the transformed XLST from above. This one works... So it means I have an issue cleaning up the
   // state/globals before we can reuse
   openstudio::path xmlPath = resourcesPath() / openstudio::toPath("utilities/xml/hpxml_with_error.xml");
-  openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/HPXMLvalidator_stylesheet.xslt");
+  openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/schema/HPXMLvalidator_stylesheet.xslt");
 
   XMLValidator xmlValidator(schematronPath);
   EXPECT_FALSE(xmlValidator.xmlPath());
