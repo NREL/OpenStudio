@@ -45,8 +45,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_isValid) {
   XMLValidator xmlValidator(schemaPath);
 
   EXPECT_FALSE(xmlValidator.isValid());
-  ASSERT_EQ(1u, xmlValidator.warnings().size());
-  ASSERT_EQ(0u, xmlValidator.errors().size());
+  ASSERT_EQ(1, xmlValidator.warnings().size());
+  ASSERT_EQ(0, xmlValidator.errors().size());
   EXPECT_TRUE(xmlValidator.warnings()[0].logMessage().find("Nothing has yet been validated against") != std::string::npos);
 }
 
@@ -57,7 +57,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_NonSchemaPath) {
   sink.setLogLevel(Error);
 
   EXPECT_THROW(XMLValidator xmlValidator(nonSchemaPath), openstudio::Exception);
-  ASSERT_EQ(1u, sink.logMessages().size());
+  ASSERT_EQ(1, sink.logMessages().size());
   EXPECT_EQ("Schema path extension '.sql' not supported", sink.logMessages()[0].logMessage());
 }
 
@@ -68,8 +68,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_NonXMLPath) {
 
   openstudio::path nonXMLPath = resourcesPath() / openstudio::toPath("energyplus/5ZoneAirCooled/eplusout.sql");
   EXPECT_THROW(xmlValidator.validate(nonXMLPath), openstudio::Exception);
-  ASSERT_EQ(0u, xmlValidator.warnings().size());
-  ASSERT_EQ(1u, xmlValidator.errors().size());
+  ASSERT_EQ(0, xmlValidator.warnings().size());
+  ASSERT_EQ(1, xmlValidator.errors().size());
   EXPECT_EQ("XML path extension '.sql' not supported", xmlValidator.errors()[0].logMessage());
   EXPECT_FALSE(xmlValidator.xmlPath());
 }
@@ -87,8 +87,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0u, xmlValidator.warnings().size());
-    EXPECT_EQ(8u, xmlValidator.errors().size());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+    EXPECT_EQ(8, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -100,8 +100,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0u, xmlValidator.warnings().size());
-    EXPECT_EQ(15u, xmlValidator.errors().size());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+    EXPECT_EQ(15, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -113,8 +113,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0u, xmlValidator.warnings().size());
-    EXPECT_EQ(1210u, xmlValidator.errors().size());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+    EXPECT_EQ(1210, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -126,8 +126,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0u, xmlValidator.warnings().size());
-    EXPECT_EQ(17u, xmlValidator.errors().size());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+    EXPECT_EQ(17, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -139,8 +139,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0u, xmlValidator.warnings().size());
-    EXPECT_EQ(28u, xmlValidator.errors().size());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+    EXPECT_EQ(28, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -152,8 +152,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0u, xmlValidator.warnings().size());
-    EXPECT_EQ(9u, xmlValidator.errors().size());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+    EXPECT_EQ(9, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -165,8 +165,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0u, xmlValidator.warnings().size());
-    EXPECT_EQ(9u, xmlValidator.errors().size());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+    EXPECT_EQ(9, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -178,8 +178,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0u, xmlValidator.warnings().size());
-    EXPECT_EQ(17u, xmlValidator.errors().size());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+    EXPECT_EQ(17, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -191,8 +191,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0u, xmlValidator.warnings().size());
-    EXPECT_EQ(111u, xmlValidator.errors().size());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+    EXPECT_EQ(111, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -204,9 +204,9 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0u, xmlValidator.warnings().size());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
     std::vector<LogMessage> errors = xmlValidator.errors();
-    EXPECT_EQ(2u, errors.size());
+    EXPECT_EQ(2, errors.size());
     //std::sort(errors.begin(), errors.end());
     EXPECT_TRUE(errors[0].logMessage().find("got internal error validating against") != std::string::npos);
     EXPECT_TRUE(errors[1].logMessage().find("XML fatal error") != std::string::npos);
@@ -218,8 +218,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0u, xmlValidator.warnings().size());
-    EXPECT_EQ(237u, xmlValidator.errors().size());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+    EXPECT_EQ(237, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -231,8 +231,8 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0u, xmlValidator.warnings().size());
-    EXPECT_EQ(205u, xmlValidator.errors().size());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+    EXPECT_EQ(205, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -246,10 +246,22 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_XSD) {
   XMLValidator xmlValidator(xsdPath);
   EXPECT_FALSE(xmlValidator.xmlPath());
 
-  EXPECT_FALSE(xmlValidator.validate(xmlPath));
-  EXPECT_FALSE(xmlValidator.isValid());
-  EXPECT_EQ(0u, xmlValidator.warnings().size());
-  EXPECT_EQ(2u, xmlValidator.errors().size());
+  for (int i = 0; i < 2; ++i) {
+    EXPECT_FALSE(xmlValidator.validate(xmlPath)) << "Failed at iteration " << i + 1;
+    EXPECT_FALSE(xmlValidator.isValid());
+
+    ASSERT_TRUE(xmlValidator.xmlPath());
+    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+    EXPECT_EQ(0, xmlValidator.warnings().size());
+
+    auto errors = xmlValidator.errors();
+    ASSERT_EQ(1, errors.size());
+
+    EXPECT_EQ(LogLevel::Error, errors[0].logLevel());
+    EXPECT_EQ("xsdValidate.parseFileError: XML error 17.1835: Element '{http://hpxmlonline.com/2019/10}"
+              "AssemblyEffectiveRValue': [facet 'minExclusive'] The value '0' must be greater than '0'.",
+              errors[0].logMessage());
+  }
 }
 
 TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_XSLT) {
@@ -261,6 +273,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_XSLT) {
 
   for (int i = 0; i < 2; ++i) {
     EXPECT_FALSE(xmlValidator.validate(xmlPath)) << "Failed at iteration " << i + 1;
+    EXPECT_FALSE(xmlValidator.isValid());
 
     ASSERT_TRUE(xmlValidator.fullValidationReport());
     ASSERT_TRUE(xmlValidator.xmlPath());
@@ -288,6 +301,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_Schematron) {
 
   for (int i = 0; i < 2; ++i) {
     EXPECT_FALSE(xmlValidator.validate(xmlPath)) << "Failed at iteration " << i + 1;
+    EXPECT_FALSE(xmlValidator.isValid());
 
     ASSERT_TRUE(xmlValidator.xmlPath());
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
@@ -317,6 +331,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_Schematron_TODO) {
   EXPECT_FALSE(xmlValidator.xmlPath());
 
   EXPECT_FALSE(xmlValidator.validate(xmlPath));
+  EXPECT_FALSE(xmlValidator.isValid());
   ASSERT_TRUE(xmlValidator.xmlPath());
   EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
 

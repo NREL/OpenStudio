@@ -920,8 +920,16 @@ TEST_F(gbXMLFixture, ForwardTranslator_exampleModelValid) {
 
   path schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
   XMLValidator xmlValidator(schemaPath);
+
   EXPECT_TRUE(xmlValidator.validate(p));
   EXPECT_TRUE(xmlValidator.isValid());
-  EXPECT_EQ(0u, xmlValidator.warnings().size());
-  EXPECT_EQ(0u, xmlValidator.errors().size());
+  EXPECT_EQ(0, xmlValidator.warnings().size());
+
+  auto errors = xmlValidator.errors();
+  EXPECT_EQ(0, errors.size());
+
+  // TEMP
+  EXPECT_EQ("", errors[0].logMessage());
+  EXPECT_EQ("", errors[1].logMessage());
+  EXPECT_EQ("", errors[2].logMessage());
 }

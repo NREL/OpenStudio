@@ -198,7 +198,7 @@ std::vector<LogMessage> XMLValidator::errors() const {
 
   std::vector<LogMessage> result;
   std::copy_if(logMessages.cbegin(), logMessages.cend(), std::back_inserter(result),
-               [](const auto& logMessage) { return logMessage.logLevel() > LogLevel::Warn; });
+               [](const auto& logMessage) { return logMessage.logLevel() == LogLevel::Error; });
 
   return result;
 }
@@ -294,7 +294,7 @@ bool XMLValidator::xsdValidate() const {
   int ret = xmlSchemaValidateDoc(ctxt, doc);
   bool result = false;
   if (ret > 0) {
-    LOG(Fatal, "Valid instance " << toString(m_xmlPath.get()) << " failed to validate against " << toString(m_schemaPath));
+    // LOG(Fatal, "Valid instance " << toString(m_xmlPath.get()) << " failed to validate against " << toString(m_schemaPath));
     result = false;
   } else if (ret < 0) {
     LOG(Fatal, "Valid instance " << toString(m_xmlPath.get()) << " got internal error validating against " << toString(m_schemaPath));
@@ -304,15 +304,15 @@ bool XMLValidator::xsdValidate() const {
   }
 
   for (auto& logMessage : schemaValidErrorCollector.logMessages) {
-    LOG(logMessage.logLevel(), "xsdValidate.schemaValidError: " + logMessage.logMessage())
+    LOG(logMessage.logLevel(), "xsdValidate.schemaValidError: " << logMessage.logMessage())
   }
 
   for (auto& logMessage : schemaParserErrorCollector.logMessages) {
-    LOG(logMessage.logLevel(), "xsdValidate.schemaParserError: " + logMessage.logMessage())
+    LOG(logMessage.logLevel(), "xsdValidate.schemaParserError: " << logMessage.logMessage())
   }
 
   for (auto& logMessage : parseFileErrorCollector.logMessages) {
-    LOG(logMessage.logLevel(), "xsdValidate.parseFileError: " + logMessage.logMessage())
+    LOG(logMessage.logLevel(), "xsdValidate.parseFileError: " << logMessage.logMessage())
   }
 
   // free
