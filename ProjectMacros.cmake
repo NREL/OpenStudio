@@ -3,28 +3,16 @@ include(CMakeParseArguments)
 
 # Add google tests macro
 macro(ADD_GOOGLE_TESTS executable)
-  if(MSVC)
-    # QT-Separation-Move
-    file(TO_NATIVE_PATH "${QT_INSTALL_DIR}/bin/" QT_BIN_PATH) # DLM:
-    file(TO_NATIVE_PATH "${OPENSSL_ROOT_DIR}/bin/" OPENSSL_BIN_PATH)
-    string(REGEX REPLACE "([^\\]);" "\\1\\\\;" CURRENT_ENV "$ENV{PATH}")
-    set(NEWPATH "${QT_BIN_PATH};${OPENSSL_BIN_PATH};${CURRENT_ENV}")
-  else()
-    set(NEWPATH $ENV{PATH})
-  endif()
-
   foreach(source ${ARGN})
-    if(NOT "${source}" MATCHES "/moc_.*cxx")
-      string(REGEX MATCH .*cpp source "${source}")
-      if(source)
-        file(READ "${source}" contents)
-        string(REGEX MATCHALL "TEST_?F?\\(([A-Za-z_0-9 ,]+)\\)" found_tests ${contents})
-        foreach(hit ${found_tests})
-          string(REGEX REPLACE ".*\\(([A-Za-z_0-9]+)[, ]*([A-Za-z_0-9]+)\\).*" "\\1.\\2" test_name ${hit})
-          add_test(${test_name} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${executable}" --gtest_filter=${test_name})
-          set_tests_properties(${test_name} PROPERTIES TIMEOUT 660 ENVIRONMENT "PATH=${NEWPATH}")
-        endforeach()
-      endif()
+    string(REGEX MATCH .*cpp source "${source}")
+    if(source)
+      file(READ "${source}" contents)
+      string(REGEX MATCHALL "TEST_?F?\\(([A-Za-z_0-9 ,]+)\\)" found_tests ${contents})
+      foreach(hit ${found_tests})
+        string(REGEX REPLACE ".*\\(([A-Za-z_0-9]+)[, ]*([A-Za-z_0-9]+)\\).*" "\\1.\\2" test_name ${hit})
+        add_test(${test_name} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${executable}" --gtest_filter=${test_name})
+        set_tests_properties(${test_name} PROPERTIES TIMEOUT 660)
+      endforeach()
     endif()
   endforeach()
 endmacro()
@@ -123,7 +111,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
   endforeach()
 
   set(Prereq_Dirs
-      "${QT_LIBRARY_DIR}" # QT-Separation-Move
       "${PROJECT_BINARY_DIR}/Products/"
       "${PROJECT_BINARY_DIR}/Products/Release"
       "${PROJECT_BINARY_DIR}/Products/Debug"
@@ -306,10 +293,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
     target_link_libraries(${swig_target} ${${PARENT_TARGET}_depends})
     target_include_directories(${swig_target} SYSTEM PRIVATE ${RUBY_INCLUDE_DIRS})
     add_dependencies(${swig_target} ${PARENT_TARGET})
-
-    # QT-Separation-Move
-    target_include_directories(${swig_target} PUBLIC ${QT_INCLUDES})
-    target_compile_definitions(${swig_target} PUBLIC ${QT_DEFS})
 
     execute_process(COMMAND \"${CMAKE_COMMAND}\" -E copy \"\${resolved_item_var}\" \"\${CMAKE_INSTALL_PREFIX}/Ruby/openstudio/\")
 
@@ -942,12 +925,6 @@ macro(MAKE_SWIG_TARGET NAME SIMPLENAME KEY_I_FILE I_FILES PARENT_TARGET PARENT_S
             endforeach()
           endif()
         endforeach()
-        if(APPLE)
-          # QT-Separation-Move
-          file(COPY \"${QT_LIBRARY_DIR}/QtGui.framework/Resources/qt_menu.nib\"
-            DESTINATION \"\${CMAKE_INSTALL_PREFIX}/${V8_TYPE}/openstudio/Resources/\"
-          )
-        endif()
       ")
     else()
       install(TARGETS ${swig_target} DESTINATION "lib/openstudio-${OpenStudio_VERSION}/${V8_TYPE}")
