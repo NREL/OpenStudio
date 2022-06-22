@@ -78,6 +78,7 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChange_MaterialPropertyPhaseChange) {
 
   // check to make sure the temperature coefficient for thermal conductivity field is defaulted as expected
   auto phaseChange = optphaseChange.get();
+  EXPECT_EQ(material.nameString(), phaseChange.materialName());
   EXPECT_TRUE(phaseChange.isTemperatureCoefficientforThermalConductivityDefaulted());
 
   // check that creating the material property phase change when they already exists does nothing and returns nil

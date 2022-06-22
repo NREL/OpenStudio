@@ -57,4 +57,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyPhaseChangeHysteresi
 
   Model model;
   StandardOpaqueMaterial material(model);
+  boost::optional<MaterialPropertyPhaseChange> optphaseChangeHysteresis = material.createMaterialPropertyPhaseChangeHysteresis();
+  auto phaseChangeHysteresis = optphaseChangeHysteresis.get();
+  phaseChangeHysteresis.setLiquidStateDensity(123);
+
+  Workspace workspace = ft.translateModel(model);
+
+  WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::MaterialProperty_PhaseChangeHysteresis);
+  ASSERT_EQ(1u, idfObjs.size());
+
+  WorkspaceObject idf_matProp(idfObjs[0]);
+
+  EXPECT_EQ("Material 1", idf_matProp.getString(MaterialProperty_PhaseChangeHysteresisFields::Name).get());
+  EXPECT_EQ(123, idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::LiquidStateDensity).get());
 }
