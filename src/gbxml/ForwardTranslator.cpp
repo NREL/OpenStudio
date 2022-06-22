@@ -36,6 +36,8 @@
 #include "../model/Material_Impl.hpp"
 #include "../model/ConstructionBase.hpp"
 #include "../model/ConstructionBase_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Construction_Impl.hpp"
 #include "../model/Facility.hpp"
 #include "../model/Facility_Impl.hpp"
 #include "../model/Building.hpp"
@@ -54,6 +56,8 @@
 #include "../model/SubSurface_Impl.hpp"
 #include "../model/ShadingSurface.hpp"
 #include "../model/ShadingSurface_Impl.hpp"
+#include "../model/StandardOpaqueMaterial.hpp"
+#include "../model/StandardOpaqueMaterial_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
@@ -827,7 +831,7 @@ namespace gbxml {
       if (construction->isOpaque()) {
         result.append_attribute("constructionIdRef") = escapeName(constructionName).c_str();
       } else {
-        result.append_attribute("constructionIdRef") = escapeName(constructionName).c_str();
+        result.append_attribute("constructionIdRef") = escapeName(constructionName).c_str();  // FIXME: windowTypeIdRef?
       }
     }
 
@@ -1154,6 +1158,16 @@ namespace gbxml {
       } else {
         result.append_attribute("windowTypeIdRef") = escapeName(constructionName).c_str();
       }
+      // no construction
+    } else {
+      // FIXME
+      /*       model::StandardOpaqueMaterial layer(shadingSurface.model());
+      model::OpaqueMaterialVector layers;
+      layers.push_back(layer);
+      /* model::Construction testConstr(shadingSurface.model()); */
+      model::Construction testConstr(layers);
+      result.append_attribute("constructionIdRef") = escapeName(testConstr.name().get()).c_str();
+      * /
     }
 
     // this space
