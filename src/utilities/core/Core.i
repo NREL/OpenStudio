@@ -56,7 +56,6 @@
 %include <utilities/core/StringHelpers.hpp>
 %include <utilities/core/Singleton.i>
 %include <utilities/core/Logger.i>
-%include <utilities/core/UpdateManager.i>
 %include <utilities/core/UUID.i>
 %include <utilities/core/Checksum.i>
 %include <utilities/core/Optional.hpp>
