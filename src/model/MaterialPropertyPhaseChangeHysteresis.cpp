@@ -233,6 +233,13 @@ namespace model {
       return result;
     }
 
+    bool MaterialPropertyPhaseChangeHysteresis_Impl::setLowTemperatureDifferenceofFreezingCurve(double lowTemperatureDifferenceofFreezingCurve) {
+      bool result =
+        setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofFreezingCurve, lowTemperatureDifferenceofFreezingCurve);
+      OS_ASSERT(result);
+      return result;
+    }
+
   }  // namespace detail
 
   MaterialPropertyPhaseChangeHysteresis::MaterialPropertyPhaseChangeHysteresis(Material& material)
@@ -249,7 +256,54 @@ namespace model {
     ok = setPointer(OS_MaterialProperty_PhaseChangeHysteresisFields::MaterialName, material.handle());
     OS_ASSERT(ok);
 
-    // 1ZoneUncontrolledWithHysteresisPCM.idf?
+    // These from 1ZoneUncontrolledWithHysteresisPCM.idf for C5 - 4 IN HW CONCRETE.
+    // They should be modified by user!
+    ok = setLatentHeatduringtheEntirePhaseChangeProcess(10000);
+    OS_ASSERT(ok);
+    ok = setLiquidStateThermalConductivity(1.5);
+    OS_ASSERT(ok);
+    ok = setLiquidStateDensity(2200);
+    OS_ASSERT(ok);
+    ok = setLiquidStateSpecificHeat(2000);
+    OS_ASSERT(ok);
+    ok = setHighTemperatureDifferenceofMeltingCurve(1);
+    OS_ASSERT(ok);
+    ok = setPeakMeltingTemperature(23);
+    OS_ASSERT(ok);
+    ok = setLowTemperatureDifferenceofMeltingCurve(1);
+    OS_ASSERT(ok);
+    ok = setSolidStateThermalConductivity(1.8);
+    OS_ASSERT(ok);
+    ok = setSolidStateDensity(2300);
+    OS_ASSERT(ok);
+    ok = setSolidStateSpecificHeat(2000);
+    OS_ASSERT(ok);
+    ok = setHighTemperatureDifferenceofFreezingCurve(1);
+    OS_ASSERT(ok);
+    ok = setPeakFreezingTemperature(20);
+    OS_ASSERT(ok);
+    ok = setLowTemperatureDifferenceofFreezingCurve(1);
+    OS_ASSERT(ok);
+  }
+
+  MaterialPropertyPhaseChangeHysteresis::MaterialPropertyPhaseChangeHysteresis(
+    Material& material, double latentHeatduringtheEntirePhaseChangeProcess, double liquidStateThermalConductivity, double liquidStateDensity,
+    double liquidStateSpecificHeat, double highTemperatureDifferenceofMeltingCurve, double peakMeltingTemperature,
+    double lowTemperatureDifferenceofMeltingCurve, double solidStateThermalConductivity, double solidStateDensity, double solidStateSpecificHeat,
+    double highTemperatureDifferenceofFreezingCurve, double peakFreezingTemperature, double lowTemperatureDifferenceofFreezingCurve)
+    : ModelObject(MaterialPropertyPhaseChangeHysteresis::iddObjectType(), material.model()) {
+    OS_ASSERT(getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>());
+
+    if (material.materialPropertyPhaseChangeHysteresis()) {
+      LOG_AND_THROW("Material '" << material.nameString() << "' already has an associated MaterialPropertyPhaseChangeHysteresis object");
+    }
+
+    bool ok = true;
+    OS_ASSERT(ok);
+
+    ok = setPointer(OS_MaterialProperty_PhaseChangeHysteresisFields::MaterialName, material.handle());
+    OS_ASSERT(ok);
+
     ok = setLatentHeatduringtheEntirePhaseChangeProcess(latentHeatduringtheEntirePhaseChangeProcess);
     OS_ASSERT(ok);
     ok = setLiquidStateThermalConductivity(liquidStateThermalConductivity);
@@ -387,6 +441,11 @@ namespace model {
 
   bool MaterialPropertyPhaseChangeHysteresis::setPeakFreezingTemperature(double peakFreezingTemperature) {
     return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setPeakFreezingTemperature(peakFreezingTemperature);
+  }
+
+  bool MaterialPropertyPhaseChangeHysteresis::setLowTemperatureDifferenceofFreezingCurve(double lowTemperatureDifferenceofFreezingCurve) {
+    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setLowTemperatureDifferenceofFreezingCurve(
+      lowTemperatureDifferenceofFreezingCurve);
   }
 
   /// @cond

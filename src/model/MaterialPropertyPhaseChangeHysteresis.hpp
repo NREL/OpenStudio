@@ -54,6 +54,14 @@ namespace model {
 
     explicit MaterialPropertyPhaseChangeHysteresis(Material& material);
 
+    explicit MaterialPropertyPhaseChangeHysteresis(Material& material, double latentHeatduringtheEntirePhaseChangeProcess,
+                                                   double liquidStateThermalConductivity, double liquidStateDensity, double liquidStateSpecificHeat,
+                                                   double highTemperatureDifferenceofMeltingCurve, double peakMeltingTemperature,
+                                                   double lowTemperatureDifferenceofMeltingCurve, double solidStateThermalConductivity,
+                                                   double solidStateDensity, double solidStateSpecificHeat,
+                                                   double highTemperatureDifferenceofFreezingCurve, double peakFreezingTemperature,
+                                                   double lowTemperatureDifferenceofFreezingCurve);
+
     virtual ~MaterialPropertyPhaseChangeHysteresis() {}
 
     //@}
@@ -118,6 +126,8 @@ namespace model {
     bool setHighTemperatureDifferenceofFreezingCurve(double highTemperatureDifferenceofFreezingCurve);
 
     bool setPeakFreezingTemperature(double peakFreezingTemperature);
+
+    bool setLowTemperatureDifferenceofFreezingCurve(double lowTemperatureDifferenceofFreezingCurve);
 
     //@}
     /** @name Other */

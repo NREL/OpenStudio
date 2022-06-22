@@ -216,7 +216,8 @@ namespace model {
     ok = setPointer(OS_MaterialProperty_PhaseChangeFields::MaterialName, material.handle());
     OS_ASSERT(ok);
 
-    // These from CondFD1ZonePurchAirAutoSizeWithPCM.idf. They should be modified by user!
+    // These from CondFD1ZonePurchAirAutoSizeWithPCM.idf for E1 - 3 / 4 IN PLASTER OR GYP BOARD.
+    // They should be modified by user!
     ok = addTemperatureEnthalpy(-20, 0.1);
     OS_ASSERT(ok);
     ok = addTemperatureEnthalpy(22, 18260);
