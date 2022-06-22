@@ -80,7 +80,7 @@ TEST_F(ModelFixture, FuelCell) {
   // check default Airsupply
   GeneratorFuelCellAirSupply fAS = fuelcell.airSupply();
   EXPECT_EQ("AirRatiobyStoics", fAS.airSupplyRateCalculationMode());
-  EXPECT_EQ(1.0, fAS.stoichiometricRatio());
+  EXPECT_EQ(1.0, fAS.stoichiometricRatio().get());
   EXPECT_EQ("NoRecovery", fAS.airIntakeHeatRecoveryMode());
   EXPECT_EQ("AmbientAir", fAS.airSupplyConstituentMode());
 

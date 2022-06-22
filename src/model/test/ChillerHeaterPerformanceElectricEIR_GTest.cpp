@@ -80,7 +80,7 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_SettersGetters) {
   // Return type: bool
   ASSERT_TRUE(ch_heater.setReferenceCoolingModeEvaporatorCapacity(12345.6));
   ASSERT_TRUE(ch_heater.referenceCoolingModeEvaporatorCapacity());
-  ASSERT_EQ(12345.6, ch_heater.referenceCoolingModeEvaporatorCapacity());
+  ASSERT_EQ(12345.6, ch_heater.referenceCoolingModeEvaporatorCapacity().get());
 
   // Return type: void
   ch_heater.autosizeReferenceCoolingModeEvaporatorCapacity();
@@ -143,7 +143,7 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_SettersGetters) {
   // Return type: bool
   ASSERT_TRUE(ch_heater.setDesignChilledWaterFlowRate(0.000365));
   EXPECT_TRUE(ch_heater.designChilledWaterFlowRate());
-  ASSERT_EQ(0.000365, ch_heater.designChilledWaterFlowRate());
+  ASSERT_EQ(0.000365, ch_heater.designChilledWaterFlowRate().get());
 
   // Return type: void
   ch_heater.resetDesignChilledWaterFlowRate();
@@ -154,7 +154,7 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_SettersGetters) {
   // Return type: bool
   ASSERT_TRUE(ch_heater.setDesignCondenserWaterFlowRate(0.00037));
   EXPECT_TRUE(ch_heater.designCondenserWaterFlowRate());
-  ASSERT_EQ(0.00037, ch_heater.designCondenserWaterFlowRate());
+  ASSERT_EQ(0.00037, ch_heater.designCondenserWaterFlowRate().get());
 
   // Return type: void
   ch_heater.resetDesignCondenserWaterFlowRate();
@@ -255,7 +255,7 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_CloneWithoutModule) {
   auto ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
   ASSERT_EQ(1u, model2.getConcreteModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   Curve c2 = ch_heaterClone2.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
-  ASSERT_EQ(c.name(), c2.name());
+  ASSERT_EQ(c.nameString(), c2.nameString());
 }
 
 TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_CloneWithModule) {
@@ -283,7 +283,7 @@ TEST_F(ModelFixture, ChillerHeaterPerformanceElectricEIR_CloneWithModule) {
   auto ch_heaterClone2 = ch_heater.clone(model2).cast<ChillerHeaterPerformanceElectricEIR>();
   ASSERT_EQ(1u, model2.getConcreteModelObjects<ChillerHeaterPerformanceElectricEIR>().size());
   Curve c2 = ch_heaterClone2.coolingModeCoolingCapacityFunctionOfTemperatureCurve();
-  ASSERT_EQ(c.name(), c2.name());
+  ASSERT_EQ(c.nameString(), c2.nameString());
   // Check that it didn't clone the parent Module...Should be zero
   ASSERT_EQ(0u, model2.getConcreteModelObjects<CentralHeatPumpSystemModule>().size());
 }

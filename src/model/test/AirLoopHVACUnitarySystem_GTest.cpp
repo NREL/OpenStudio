@@ -163,10 +163,10 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithDefaultData) {
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.ancilliaryOffCycleElectricPower());
   // EXPECT_DOUBLE_EQ(80.0, testObjectClone.maximumTemperatureforHeatRecovery());
 
-  EXPECT_NE(testObject.supplyFan(), testObjectClone.supplyFan());
-  EXPECT_NE(testObject.coolingCoil(), testObjectClone.coolingCoil());
-  EXPECT_NE(testObject.heatingCoil(), testObjectClone.heatingCoil());
-  EXPECT_NE(testObject.supplementalHeatingCoil(), testObjectClone.supplementalHeatingCoil());
+  EXPECT_NE(testObject.supplyFan().get(), testObjectClone.supplyFan().get());
+  EXPECT_NE(testObject.coolingCoil().get(), testObjectClone.coolingCoil().get());
+  EXPECT_NE(testObject.heatingCoil().get(), testObjectClone.heatingCoil().get());
+  EXPECT_NE(testObject.supplementalHeatingCoil().get(), testObjectClone.supplementalHeatingCoil().get());
 
   std::vector<AirLoopHVACUnitarySystem> unitarySystem = m.getConcreteModelObjects<AirLoopHVACUnitarySystem>();
   EXPECT_EQ(2, unitarySystem.size());
@@ -247,10 +247,10 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData) {
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ancilliaryOffCycleElectricPower());
   // EXPECT_DOUBLE_EQ(100.0, testObjectClone.maximumTemperatureforHeatRecovery());
 
-  EXPECT_NE(testObject.supplyFan(), testObjectClone.supplyFan());
-  EXPECT_NE(testObject.coolingCoil(), testObjectClone.coolingCoil());
-  EXPECT_NE(testObject.heatingCoil(), testObjectClone.heatingCoil());
-  EXPECT_NE(testObject.supplementalHeatingCoil(), testObjectClone.supplementalHeatingCoil());
+  EXPECT_NE(testObject.supplyFan().get(), testObjectClone.supplyFan().get());
+  EXPECT_NE(testObject.coolingCoil().get(), testObjectClone.coolingCoil().get());
+  EXPECT_NE(testObject.heatingCoil().get(), testObjectClone.heatingCoil().get());
+  EXPECT_NE(testObject.supplementalHeatingCoil().get(), testObjectClone.supplementalHeatingCoil().get());
 
   std::vector<AirLoopHVACUnitarySystem> unitarySystem = m.getConcreteModelObjects<AirLoopHVACUnitarySystem>();
   EXPECT_EQ(2, unitarySystem.size());
@@ -281,10 +281,10 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneTwoModelsWithCustomData) {
 
   auto testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
 
-  EXPECT_NE(testObject.supplyFan(), testObjectClone.supplyFan());
-  EXPECT_NE(testObject.coolingCoil(), testObjectClone.coolingCoil());
-  EXPECT_NE(testObject.heatingCoil(), testObjectClone.heatingCoil());
-  EXPECT_NE(testObject.supplementalHeatingCoil(), testObjectClone.supplementalHeatingCoil());
+  EXPECT_NE(testObject.supplyFan().get(), testObjectClone.supplyFan().get());
+  EXPECT_NE(testObject.coolingCoil().get(), testObjectClone.coolingCoil().get());
+  EXPECT_NE(testObject.heatingCoil().get(), testObjectClone.heatingCoil().get());
+  EXPECT_NE(testObject.supplementalHeatingCoil().get(), testObjectClone.supplementalHeatingCoil().get());
 
   std::vector<AirLoopHVACUnitarySystem> unitarySystem = m.getConcreteModelObjects<AirLoopHVACUnitarySystem>();
   EXPECT_EQ(2, unitarySystem.size());
@@ -609,8 +609,8 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_cloneAirLoopHVAC_Nodes) {
   EXPECT_TRUE(unitaryClone.outletNode());
   EXPECT_TRUE(unitary.inletNode());
   EXPECT_TRUE(unitary.outletNode());
-  EXPECT_NE(unitary.inletNode(), unitaryClone.inletNode());
-  EXPECT_NE(unitary.outletNode(), unitaryClone.outletNode());
+  EXPECT_NE(unitary.inletNode().get(), unitaryClone.inletNode().get());
+  EXPECT_NE(unitary.outletNode().get(), unitaryClone.outletNode().get());
 
   ASSERT_EQ(1u, aClone.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem).size());
   EXPECT_EQ(unitaryClone, aClone.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem)[0]);

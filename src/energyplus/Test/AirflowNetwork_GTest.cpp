@@ -169,7 +169,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkFanLinkage) {
 
   ASSERT_EQ(1u, links.size());
 
-  EXPECT_EQ(std::string("Airflow Network Distribution Linkage 1"), links[0].getString(0));
+  EXPECT_EQ(std::string("Airflow Network Distribution Linkage 1"), links[0].getString(0).get());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkEquivalentDuct) {
@@ -199,7 +199,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkEquivalentDuct) {
   ASSERT_TRUE(opt);
   EXPECT_EQ(IddObjectType::OS_Coil_Heating_Gas, val);
   ASSERT_TRUE(eqd.coilObjectType());
-  EXPECT_EQ(std::string("Coil:Heating:Fuel"), eqd.coilObjectType());
+  EXPECT_EQ(std::string("Coil:Heating:Fuel"), eqd.coilObjectType().get());
 
   AirflowNetworkDistributionNode node0 = coolingCoils[0].inletModelObject().get().cast<Node>().getAirflowNetworkDistributionNode();
   AirflowNetworkDistributionNode node1 = coolingCoils[0].outletModelObject().get().cast<Node>().getAirflowNetworkDistributionNode();
@@ -221,7 +221,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirflowNetworkEquivalentDuct) {
 
   ASSERT_EQ(1u, links.size());
 
-  EXPECT_EQ(std::string("Airflow Network Distribution Linkage 1"), links[0].getString(0));
+  EXPECT_EQ(std::string("Airflow Network Distribution Linkage 1"), links[0].getString(0).get());
 
   // workspace.save(toPath("./AirflowNetworkLinkage.idf"), true);
 }

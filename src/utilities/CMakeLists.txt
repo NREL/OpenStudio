@@ -408,7 +408,6 @@ set(${target_name}_depends
   CONAN_PKG::cpprestsdk
   CONAN_PKG::openssl
   CONAN_PKG::geographiclib
-  CONAN_PKG::tinygltf
 )
 
 if(WIN32)

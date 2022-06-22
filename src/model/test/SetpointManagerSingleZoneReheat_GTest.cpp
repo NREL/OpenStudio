@@ -78,9 +78,9 @@ TEST_F(ModelFixture, SetpointManagerSingleZoneReheat_addToNode) {
   std::vector<SetpointManagerSingleZoneReheat> setpointManagerSingleZoneReheats = m.getConcreteModelObjects<SetpointManagerSingleZoneReheat>();
   EXPECT_EQ(3, setpointManagerSingleZoneReheats.size());
 
-  EXPECT_EQ(testObject, spm_1.setpointNode());
+  EXPECT_EQ(testObject, spm_1.setpointNode().get());
   EXPECT_TRUE(spm_2.addToNode(testObject));
-  EXPECT_EQ(testObject, spm_2.setpointNode());
+  EXPECT_EQ(testObject, spm_2.setpointNode().get());
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());

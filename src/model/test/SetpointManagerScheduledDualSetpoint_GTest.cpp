@@ -87,9 +87,9 @@ TEST_F(ModelFixture, SetpointManagerScheduledDualSetpoint_addToNode) {
     m.getConcreteModelObjects<SetpointManagerScheduledDualSetpoint>();
   EXPECT_EQ(3, setpointManagerScheduledDualSetpoints.size());
 
-  EXPECT_EQ(testObject, spm_1.setpointNode());
+  EXPECT_EQ(testObject, spm_1.setpointNode().get());
   EXPECT_TRUE(spm_2.addToNode(testObject));
-  EXPECT_EQ(testObject, spm_2.setpointNode());
+  EXPECT_EQ(testObject, spm_2.setpointNode().get());
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());

@@ -168,12 +168,12 @@ TEST_F(ModelFixture, GroundHeatExchangerVertical_Clone) {
 
   //clone into the same model
   auto testObjectClone = testObject.clone(m).cast<GroundHeatExchangerVertical>();
-  EXPECT_EQ(3.14, testObjectClone.designFlowRate());
+  EXPECT_EQ(3.14, testObjectClone.designFlowRate().get());
 
   //clone into another model
   Model m2;
   auto testObjectClone2 = testObject.clone(m2).cast<GroundHeatExchangerVertical>();
-  EXPECT_EQ(3.14, testObjectClone2.designFlowRate());
+  EXPECT_EQ(3.14, testObjectClone2.designFlowRate().get());
 
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone2.handle(), testObjectClone.handle());

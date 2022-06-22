@@ -91,7 +91,7 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitImportToSchedule2) {
 
   ScheduleTypeLimits stl(model);
   EXPECT_TRUE(schedule.setScheduleTypeLimits(stl));
-  EXPECT_EQ(stl, schedule.scheduleTypeLimits());
+  EXPECT_EQ(stl, schedule.scheduleTypeLimits().get());
   EXPECT_TRUE(schedule.resetScheduleTypeLimits());
   boost::optional<ScheduleTypeLimits> stl2 = schedule.scheduleTypeLimits();
   EXPECT_TRUE(!stl2.is_initialized());

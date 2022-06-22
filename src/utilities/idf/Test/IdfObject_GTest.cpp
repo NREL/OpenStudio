@@ -215,7 +215,7 @@ TEST_F(IdfFixture, IdfObject_CommentGettersAndSetters) {
     ss.str("");
     EXPECT_TRUE(object.setFieldComment(i, str));
     ss << "! " << str;
-    EXPECT_EQ(ss.str(), object.fieldComment(i));
+    EXPECT_EQ(ss.str(), object.fieldComment(i).get());
   }
 
   // field comment setter returns false, does not crash for invalid indices

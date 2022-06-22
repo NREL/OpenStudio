@@ -52,15 +52,20 @@ TEST_F(ModelFixture, AirTerminalSingleDuctConstantVolumeCooledBeam_Test_Construc
   CoilCoolingCooledBeam coilCoolingCooledBeam(model);
   AirTerminalSingleDuctConstantVolumeCooledBeam cooledBeam(model, schedule, coilCoolingCooledBeam);
 
+  cooledBeam.setSupplyAirVolumetricFlowRate(1.5);
+  ASSERT_TRUE(cooledBeam.supplyAirVolumetricFlowRate());
+
   // Test constructor
   EXPECT_EQ(openstudio::IddObjectType::OS_AirTerminal_SingleDuct_ConstantVolume_CooledBeam, cooledBeam.iddObjectType().value());
 
   // Test cloning the Cooled Beam
   auto cloneBeam = cooledBeam.clone(model).cast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>();
-  ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate(), cloneBeam.supplyAirVolumetricFlowRate());
+  ASSERT_TRUE(cloneBeam.supplyAirVolumetricFlowRate());
+  ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate().get(), cloneBeam.supplyAirVolumetricFlowRate().get());
   Model model2;
   auto cloneBeam2 = cooledBeam.clone(model2).cast<model::AirTerminalSingleDuctConstantVolumeCooledBeam>();
-  ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate(), cloneBeam2.supplyAirVolumetricFlowRate());
+  ASSERT_TRUE(cloneBeam2.supplyAirVolumetricFlowRate());
+  ASSERT_EQ(cooledBeam.supplyAirVolumetricFlowRate().get(), cloneBeam2.supplyAirVolumetricFlowRate().get());
 
   // test set and get availibility schedule
   ScheduleConstant schedule1(model);

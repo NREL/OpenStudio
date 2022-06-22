@@ -183,13 +183,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
   ASSERT_TRUE(idf_zone1);
   EXPECT_EQ(idf_zone1->iddObject().type(), IddObjectType::Zone);
   EXPECT_EQ(thermalZone.nameString(), idf_zone1->name().get());
-  EXPECT_EQ(idf_zone1, idf_zone);
+  EXPECT_EQ(idf_zone1.get(), idf_zone);
 
   boost::optional<WorkspaceObject> idf_zone2(idf_space2.getTarget(SpaceFields::ZoneName));
   ASSERT_TRUE(idf_zone2);
   EXPECT_EQ(idf_zone2->iddObject().type(), IddObjectType::Zone);
   EXPECT_EQ(thermalZone.nameString(), idf_zone2->name().get());
-  EXPECT_EQ(idf_zone2, idf_zone);
+  EXPECT_EQ(idf_zone2.get(), idf_zone);
 
   double space1_floorArea = idf_space1.getDouble(SpaceFields::FloorArea, false).get();
   double space2_floorArea = idf_space2.getDouble(SpaceFields::FloorArea, false).get();

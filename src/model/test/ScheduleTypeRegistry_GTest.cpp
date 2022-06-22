@@ -199,7 +199,7 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_GetOrCreateScheduleTypeLimits) {
 
         EXPECT_EQ(limits.handle(), limits2.handle());
 
-        EXPECT_EQ(ScheduleTypeLimits::units(scheduleType.unitType, false), ScheduleTypeLimits::units(limits.unitType(), false));
+        EXPECT_EQ(ScheduleTypeLimits::units(scheduleType.unitType, false).get(), ScheduleTypeLimits::units(limits.unitType(), false).get());
 
         EXPECT_TRUE(isCompatible(scheduleType, limits));
       }

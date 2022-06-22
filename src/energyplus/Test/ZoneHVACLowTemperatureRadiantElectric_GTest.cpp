@@ -122,7 +122,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTemperatureRadiantElectric_Set_Flow_Fractio
         EXPECT_TRUE(testRad.isSetpointControlTypeDefaulted());
         EXPECT_EQ(2.0, testRad.heatingThrottlingRange());
         for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()) {
-          EXPECT_EQ(0.25, extGrp.getDouble(1, false));
+          EXPECT_EQ(0.25, extGrp.getDouble(1, false).get());
         }
       }
     }

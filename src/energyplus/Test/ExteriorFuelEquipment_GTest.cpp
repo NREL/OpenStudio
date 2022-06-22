@@ -79,7 +79,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExteriorFuelEquipment) {
   EXPECT_EQ("NaturalGas", idf_extEq.getString(Exterior_FuelEquipmentFields::FuelUseType).get());
 
   // Schedule Name
-  ASSERT_EQ(sch.name(), idf_extEq.getString(Exterior_FuelEquipmentFields::ScheduleName).get());
+  ASSERT_EQ(sch.nameString(), idf_extEq.getString(Exterior_FuelEquipmentFields::ScheduleName).get());
 
   // Design Level
   EXPECT_DOUBLE_EQ(2303.3, idf_extEq.getDouble(Exterior_FuelEquipmentFields::DesignLevel).get());

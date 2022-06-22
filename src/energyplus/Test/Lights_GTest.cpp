@@ -149,7 +149,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Space) {
     WorkspaceObject spaceObject = workspace.getObjectsByType(IddObjectType::Space)[0];
 
     ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
-    EXPECT_EQ(spaceObject, lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+    EXPECT_EQ(spaceObject, lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName).get());
   }
 }
 

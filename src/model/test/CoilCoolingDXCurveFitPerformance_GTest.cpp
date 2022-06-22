@@ -204,16 +204,16 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_clone) {
   EXPECT_EQ(performance, dx.performanceObject());
   EXPECT_EQ(baseOperatingMode, performance.baseOperatingMode());
   ASSERT_TRUE(performance.alternativeOperatingMode1());
-  EXPECT_EQ(alternativeOperatingMode1, performance.alternativeOperatingMode1());
+  EXPECT_EQ(alternativeOperatingMode1, performance.alternativeOperatingMode1().get());
   EXPECT_FALSE(performance.alternativeOperatingMode2());
 
   EXPECT_TRUE(performance.setAlternativeOperatingMode2(alternativeOperatingMode2));
   EXPECT_EQ(performance, dx.performanceObject());
   EXPECT_EQ(baseOperatingMode, performance.baseOperatingMode());
   ASSERT_TRUE(performance.alternativeOperatingMode1());
-  EXPECT_EQ(alternativeOperatingMode1, performance.alternativeOperatingMode1());
+  EXPECT_EQ(alternativeOperatingMode1, performance.alternativeOperatingMode1().get());
   ASSERT_TRUE(performance.alternativeOperatingMode2());
-  EXPECT_EQ(alternativeOperatingMode2, performance.alternativeOperatingMode2());
+  EXPECT_EQ(alternativeOperatingMode2, performance.alternativeOperatingMode2().get());
 
   EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
   EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
@@ -222,11 +222,11 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_clone) {
   auto performanceClone = performance.clone(model).cast<CoilCoolingDXCurveFitPerformance>();
   EXPECT_EQ(performance, dx.performanceObject());
   EXPECT_EQ(baseOperatingMode, performance.baseOperatingMode());
-  EXPECT_EQ(alternativeOperatingMode1, performance.alternativeOperatingMode1());
-  EXPECT_EQ(alternativeOperatingMode2, performance.alternativeOperatingMode2());
+  EXPECT_EQ(alternativeOperatingMode1, performance.alternativeOperatingMode1().get());
+  EXPECT_EQ(alternativeOperatingMode2, performance.alternativeOperatingMode2().get());
   EXPECT_EQ(baseOperatingMode, performanceClone.baseOperatingMode());
-  EXPECT_EQ(alternativeOperatingMode1, performanceClone.alternativeOperatingMode1());
-  EXPECT_EQ(alternativeOperatingMode2, performanceClone.alternativeOperatingMode2());
+  EXPECT_EQ(alternativeOperatingMode1, performanceClone.alternativeOperatingMode1().get());
+  EXPECT_EQ(alternativeOperatingMode2, performanceClone.alternativeOperatingMode2().get());
   EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
   EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
   EXPECT_EQ(3u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());
@@ -245,8 +245,8 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitPerformance_clone) {
   rmed = performance.remove();
   EXPECT_EQ(1u, rmed.size());
   EXPECT_EQ(baseOperatingMode, performanceClone.baseOperatingMode());
-  EXPECT_EQ(alternativeOperatingMode1, performanceClone.alternativeOperatingMode1());
-  EXPECT_EQ(alternativeOperatingMode2, performanceClone.alternativeOperatingMode2());
+  EXPECT_EQ(alternativeOperatingMode1, performanceClone.alternativeOperatingMode1().get());
+  EXPECT_EQ(alternativeOperatingMode2, performanceClone.alternativeOperatingMode2().get());
   EXPECT_EQ(1u, model.getConcreteModelObjects<CoilCoolingDX>().size());
   EXPECT_EQ(2u, model.getConcreteModelObjects<CoilCoolingDXCurveFitPerformance>().size());
   EXPECT_EQ(4u, model.getConcreteModelObjects<CoilCoolingDXCurveFitOperatingMode>().size());

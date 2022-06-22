@@ -1251,7 +1251,7 @@ TEST_F(OSVersionFixture, update_3_0_1_to_3_1_0_ShadingControl_and_SubSurfaces) {
   ASSERT_EQ(1u, sss.size());
   WorkspaceObject ss = sss[0];
 
-  EXPECT_EQ(0.5, ss.getDouble(6));
+  EXPECT_EQ(0.5, ss.getDouble(6).get());
   EXPECT_EQ(4u, ss.numExtensibleGroups());
   auto eg = ss.extensibleGroups()[3];
   EXPECT_EQ(1, eg.getInt(0, false).get());

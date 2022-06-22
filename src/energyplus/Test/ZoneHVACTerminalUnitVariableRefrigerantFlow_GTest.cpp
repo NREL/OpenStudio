@@ -467,7 +467,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
       auto w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
       EXPECT_EQ("AirLoopHVAC:OutdoorAirSystem", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
-      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), outdoorAirSystem.name());
+      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), outdoorAirSystem.nameString());
 
       auto idf_oa_ = w_eg2.getTarget(BranchExtensibleFields::ComponentName);
       ASSERT_TRUE(idf_oa_);
@@ -517,7 +517,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
       auto w_eg2 = idf_branch.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
 
       EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
-      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), vrf.name());
+      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), vrf.nameString());
 
       EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(), vrf.inletNode().get().nameString());
 
@@ -604,7 +604,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
       auto w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
       EXPECT_EQ("AirLoopHVAC:OutdoorAirSystem", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
-      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), outdoorAirSystem.name());
+      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), outdoorAirSystem.nameString());
 
       auto idf_oa_ = w_eg2.getTarget(BranchExtensibleFields::ComponentName);
       ASSERT_TRUE(idf_oa_);
@@ -652,7 +652,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorZoneHVACTerminalUnitVariableRefrigera
       auto w_eg2 = idf_branch.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
 
       EXPECT_EQ("ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
-      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), vrf.name());
+      EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), vrf.nameString());
 
       EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(), vrf.inletNode().get().nameString());
 

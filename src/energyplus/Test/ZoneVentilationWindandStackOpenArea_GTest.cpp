@@ -129,10 +129,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea)
     EXPECT_EQ(idf_zone.nameString(), idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::ZoneName).get());
     EXPECT_EQ(openingAreaSch.nameString(), idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName).get());
     EXPECT_EQ(zv.openingArea(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningArea).get());
-    EXPECT_EQ(zv.openingEffectiveness(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness).get());
+    EXPECT_EQ(zv.openingEffectiveness().get(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness).get());
     EXPECT_EQ(zv.effectiveAngle(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::EffectiveAngle).get());
     EXPECT_EQ(zv.heightDifference(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::HeightDifference).get());
-    EXPECT_EQ(zv.dischargeCoefficientforOpening(),
+    EXPECT_EQ(zv.dischargeCoefficientforOpening().get(),
               idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening).get());
 
     EXPECT_EQ(zv.minimumIndoorTemperature(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperature).get());

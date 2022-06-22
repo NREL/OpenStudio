@@ -1230,7 +1230,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Site_ClimateZones_4166
   EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<ClimateZones>());
 
   EXPECT_EQ(0.0, building.northAxis());
-  EXPECT_EQ(2.5, building.nominalFloortoFloorHeight());
+  EXPECT_EQ(2.5, building.nominalFloortoFloorHeight().get());
 
   ASSERT_TRUE(newModel_->getOptionalUniqueModelObject<Building>());
   EXPECT_EQ(-30.0, newModel_->getOptionalUniqueModelObject<Building>()->northAxis());
@@ -1250,7 +1250,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Site_ClimateZones_4166
   ASSERT_TRUE(model.getOptionalUniqueModelObject<Building>());
   EXPECT_EQ(-30.0, model.getOptionalUniqueModelObject<Building>()->northAxis());
   ASSERT_TRUE(model.getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
-  EXPECT_EQ(2.5, model.getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
+  EXPECT_EQ(2.5, model.getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight().get());
 
   // New Model isn't touched anyways...
   ASSERT_TRUE(newModel_->getOptionalUniqueModelObject<Building>());

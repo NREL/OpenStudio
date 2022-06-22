@@ -156,7 +156,7 @@ TEST_F(EnergyPlusFixture, ZoneHVACLowTempRadiantConstFlow_Set_Flow_Fractions) {
         EXPECT_TRUE(testRad.isRunningMeanOutdoorDryBulbTemperatureWeightingFactorDefaulted());
         EXPECT_TRUE(testRad.isFractionofMotorInefficienciestoFluidStreamDefaulted());
         for (IdfExtensibleGroup extGrp : testRad.extensibleGroups()) {
-          EXPECT_EQ(0.25, extGrp.getDouble(1, false));
+          EXPECT_EQ(0.25, extGrp.getDouble(1, false).get());
         }
       }
     }

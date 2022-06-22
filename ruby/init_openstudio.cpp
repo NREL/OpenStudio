@@ -45,6 +45,7 @@ extern "C"
   void Init_openstudioutilitiesdata(void);
   void Init_openstudioutilitiessql(void);
   void Init_openstudiogbxml(void);
+  void Init_openstudiogltf(void);
   void Init_openstudiomodelgenerators(void);
   void Init_openstudioradiance(void);
   void Init_openstudioutilitiestime(void);
@@ -167,6 +168,9 @@ void init_openstudio_internal_extended() {
   Init_openstudiogbxml();
   rb_provide("openstudiogbxml");
   rb_provide("openstudiogbxml.so");
+  Init_openstudiogltf();
+  rb_provide("openstudiogltf");
+  rb_provide("openstudiogltf.so");
   Init_openstudioairflow();
   rb_provide("openstudioairflow");
   rb_provide("openstudioairflow.so");

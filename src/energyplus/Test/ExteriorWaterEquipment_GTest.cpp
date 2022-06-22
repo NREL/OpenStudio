@@ -78,7 +78,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExteriorWaterEquipment) {
   EXPECT_EQ("Water", idf_extEq.getString(Exterior_WaterEquipmentFields::FuelUseType).get());
 
   // Schedule Name
-  ASSERT_EQ(sch.name(), idf_extEq.getString(Exterior_WaterEquipmentFields::ScheduleName).get());
+  ASSERT_EQ(sch.nameString(), idf_extEq.getString(Exterior_WaterEquipmentFields::ScheduleName).get());
 
   // Design Level
   EXPECT_DOUBLE_EQ(2303.3, idf_extEq.getDouble(Exterior_WaterEquipmentFields::DesignLevel).get());

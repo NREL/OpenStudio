@@ -329,9 +329,9 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateMasselessOpaqueMaterial
 
   EXPECT_EQ("Rough", mat.roughness());
   EXPECT_EQ(3.05, mat.thermalResistance());
-  EXPECT_EQ(0.85, mat.thermalAbsorptance());
-  EXPECT_EQ(0.6, mat.solarAbsorptance());
-  EXPECT_EQ(0.6, mat.visibleAbsorptance());
+  EXPECT_EQ(0.85, mat.thermalAbsorptance().get());
+  EXPECT_EQ(0.6, mat.solarAbsorptance().get());
+  EXPECT_EQ(0.6, mat.visibleAbsorptance().get());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorTest_TranslateStandardOpaqueMaterial) {
@@ -1032,11 +1032,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneList) {
     EXPECT_EQ(_zone2.get(), _space2->thermalZone().get());
 
     ASSERT_TRUE(_space1->spaceType());
-    EXPECT_EQ(_spaceType1, _space1->spaceType().get());
+    EXPECT_EQ(_spaceType1.get(), _space1->spaceType().get());
 
     // Space2 is in two zoneList, but it'll keep the last ZoneList that referenced it
     ASSERT_TRUE(_space2->spaceType());
-    EXPECT_EQ(_spaceType2, _space2->spaceType().get())
+    EXPECT_EQ(_spaceType2.get(), _space2->spaceType().get())
       << "Expected space2 to have a SpaceType '" << _spaceType2->nameString() << "', but it has '" << _space2->spaceType()->nameString() << "'";
   }
 }

@@ -109,7 +109,7 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_SetGetField
   EXPECT_EQ(100.0, coil.ratedEvaporatorAirFlowRate().get());
   EXPECT_FALSE(coil.isRatedEvaporatorAirFlowRateAutocalculated());
   ASSERT_TRUE(coil.ratedCondenserWaterFlowRate());
-  EXPECT_EQ(200.0, coil.ratedCondenserWaterFlowRate());
+  EXPECT_EQ(200.0, coil.ratedCondenserWaterFlowRate().get());
   EXPECT_FALSE(coil.isRatedCondenserWaterFlowRateAutocalculated());
   EXPECT_EQ("No", coil.evaporatorFanPowerIncludedinRatedCOP());
   EXPECT_EQ("Yes", coil.condenserPumpPowerIncludedinRatedCOP());

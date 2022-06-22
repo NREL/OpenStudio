@@ -86,9 +86,9 @@ TEST_F(ModelFixture, SetpointManagerFollowOutdoorAirTemperature_addToNode) {
     m.getConcreteModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
   EXPECT_EQ(5, setpointManagerFollowOutdoorAirTemperatures.size());
 
-  EXPECT_EQ(testObject, spm_3.setpointNode());
+  EXPECT_EQ(testObject, spm_3.setpointNode().get());
   EXPECT_TRUE(spm_4.addToNode(testObject));
-  EXPECT_EQ(testObject, spm_4.setpointNode());
+  EXPECT_EQ(testObject, spm_4.setpointNode().get());
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_3) == _setpointManagers.end());
