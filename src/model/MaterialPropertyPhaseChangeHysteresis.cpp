@@ -81,79 +81,79 @@ namespace model {
     double latentHeatduringtheEntirePhaseChangeProcess() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LatentHeatduringtheEntirePhaseChangeProcess);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     double liquidStateThermalConductivity() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LiquidStateThermalConductivity);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     double liquidStateDensity() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LiquidStateDensity);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     double liquidStateSpecificHeat() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LiquidStateSpecificHeat);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     double highTemperatureDifferenceofMeltingCurve() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::HighTemperatureDifferenceofMeltingCurve);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     double peakMeltingTemperature() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::PeakMeltingTemperature);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     double lowTemperatureDifferenceofMeltingCurve() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofMeltingCurve);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     double solidStateThermalConductivity() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::SolidStateThermalConductivity);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     double solidStateDensity() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::SolidStateDensity);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     double solidStateSpecificHeat() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::SolidStateSpecificHeat);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     double highTemperatureDifferenceofFreezingCurve() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::HighTemperatureDifferenceofFreezingCurve);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     double peakFreezingTemperature() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::PeakFreezingTemperature);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     double lowTemperatureDifferenceofFreezingCurve() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofFreezingCurve);
       OS_ASSERT(value);
-      return value.get
+      return value.get();
     }
 
     bool setLatentHeatduringtheEntirePhaseChangeProcess(double latentHeatduringtheEntirePhaseChangeProcess) {
