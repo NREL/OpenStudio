@@ -95,11 +95,6 @@ namespace model {
   class Schedule;
   class Node;
   class SpaceType;
-  class FoundationKivaSettings;
-  class OutputControlFiles;
-  class OutputTableSummaryReports;
-  class PerformancePrecisionTradeoffs;
-  class Version;
 
   namespace detail {
     class Model_Impl;
