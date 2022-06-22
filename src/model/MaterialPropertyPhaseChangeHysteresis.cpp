@@ -78,155 +78,156 @@ namespace model {
       return material.get().name().get();
     }
 
-    double latentHeatduringtheEntirePhaseChangeProcess() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::latentHeatduringtheEntirePhaseChangeProcess() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LatentHeatduringtheEntirePhaseChangeProcess);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double liquidStateThermalConductivity() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::liquidStateThermalConductivity() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LiquidStateThermalConductivity);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double liquidStateDensity() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::liquidStateDensity() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LiquidStateDensity);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double liquidStateSpecificHeat() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::liquidStateSpecificHeat() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LiquidStateSpecificHeat);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double highTemperatureDifferenceofMeltingCurve() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::highTemperatureDifferenceofMeltingCurve() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::HighTemperatureDifferenceofMeltingCurve);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double peakMeltingTemperature() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::peakMeltingTemperature() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::PeakMeltingTemperature);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double lowTemperatureDifferenceofMeltingCurve() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::lowTemperatureDifferenceofMeltingCurve() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofMeltingCurve);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double solidStateThermalConductivity() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::solidStateThermalConductivity() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::SolidStateThermalConductivity);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double solidStateDensity() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::solidStateDensity() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::SolidStateDensity);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double solidStateSpecificHeat() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::solidStateSpecificHeat() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::SolidStateSpecificHeat);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double highTemperatureDifferenceofFreezingCurve() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::highTemperatureDifferenceofFreezingCurve() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::HighTemperatureDifferenceofFreezingCurve);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double peakFreezingTemperature() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::peakFreezingTemperature() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::PeakFreezingTemperature);
       OS_ASSERT(value);
       return value.get();
     }
 
-    double lowTemperatureDifferenceofFreezingCurve() const {
+    double MaterialPropertyPhaseChangeHysteresis_Impl::lowTemperatureDifferenceofFreezingCurve() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofFreezingCurve);
       OS_ASSERT(value);
       return value.get();
     }
 
-    bool setLatentHeatduringtheEntirePhaseChangeProcess(double latentHeatduringtheEntirePhaseChangeProcess) {
+    bool
+      MaterialPropertyPhaseChangeHysteresis_Impl::setLatentHeatduringtheEntirePhaseChangeProcess(double latentHeatduringtheEntirePhaseChangeProcess) {
       bool result = setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LatentHeatduringtheEntirePhaseChangeProcess,
                               latentHeatduringtheEntirePhaseChangeProcess);
       OS_ASSERT(result);
       return result;
     }
 
-    bool setLiquidStateThermalConductivity(double liquidStateThermalConductivity) {
+    bool MaterialPropertyPhaseChangeHysteresis_Impl::setLiquidStateThermalConductivity(double liquidStateThermalConductivity) {
       bool result = setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LiquidStateThermalConductivity, liquidStateThermalConductivity);
       OS_ASSERT(result);
       return result;
     }
 
-    bool setLiquidStateDensity(double liquidStateDensity) {
+    bool MaterialPropertyPhaseChangeHysteresis_Impl::setLiquidStateDensity(double liquidStateDensity) {
       bool result = setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LiquidStateDensity, liquidStateDensity);
       OS_ASSERT(result);
       return result;
     }
 
-    bool setLiquidStateSpecificHeat(double liquidStateSpecificHeat) {
+    bool MaterialPropertyPhaseChangeHysteresis_Impl::setLiquidStateSpecificHeat(double liquidStateSpecificHeat) {
       bool result = setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LiquidStateSpecificHeat, liquidStateSpecificHeat);
       OS_ASSERT(result);
       return result;
     }
 
-    bool setHighTemperatureDifferenceofMeltingCurve(double highTemperatureDifferenceofMeltingCurve) {
+    bool MaterialPropertyPhaseChangeHysteresis_Impl::setHighTemperatureDifferenceofMeltingCurve(double highTemperatureDifferenceofMeltingCurve) {
       bool result =
         setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::HighTemperatureDifferenceofMeltingCurve, highTemperatureDifferenceofMeltingCurve);
       OS_ASSERT(result);
       return result;
     }
 
-    bool setPeakMeltingTemperature(double peakMeltingTemperature) {
+    bool MaterialPropertyPhaseChangeHysteresis_Impl::setPeakMeltingTemperature(double peakMeltingTemperature) {
       bool result = setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::PeakMeltingTemperature, peakMeltingTemperature);
       OS_ASSERT(result);
       return result;
     }
 
-    bool setLowTemperatureDifferenceofMeltingCurve(double lowTemperatureDifferenceofMeltingCurve) {
+    bool MaterialPropertyPhaseChangeHysteresis_Impl::setLowTemperatureDifferenceofMeltingCurve(double lowTemperatureDifferenceofMeltingCurve) {
       bool result =
         setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofMeltingCurve, lowTemperatureDifferenceofMeltingCurve);
       OS_ASSERT(result);
       return result;
     }
 
-    bool setSolidStateThermalConductivity(double solidStateThermalConductivity) {
+    bool MaterialPropertyPhaseChangeHysteresis_Impl::setSolidStateThermalConductivity(double solidStateThermalConductivity) {
       bool result = setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::SolidStateThermalConductivity, solidStateThermalConductivity);
       OS_ASSERT(result);
       return result;
     }
 
-    bool setSolidStateDensity(double solidStateDensity) {
+    bool MaterialPropertyPhaseChangeHysteresis_Impl::setSolidStateDensity(double solidStateDensity) {
       bool result = setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::SolidStateDensity, solidStateDensity);
       OS_ASSERT(result);
       return result;
     }
 
-    bool setSolidStateSpecificHeat(double solidStateSpecificHeat) {
+    bool MaterialPropertyPhaseChangeHysteresis_Impl::setSolidStateSpecificHeat(double solidStateSpecificHeat) {
       bool result = setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::SolidStateSpecificHeat, solidStateSpecificHeat);
       OS_ASSERT(result);
       return result;
     }
 
-    bool setHighTemperatureDifferenceofFreezingCurve(double highTemperatureDifferenceofFreezingCurve) {
+    bool MaterialPropertyPhaseChangeHysteresis_Impl::setHighTemperatureDifferenceofFreezingCurve(double highTemperatureDifferenceofFreezingCurve) {
       bool result = setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::HighTemperatureDifferenceofFreezingCurve,
                               highTemperatureDifferenceofFreezingCurve);
       OS_ASSERT(result);
       return result;
     }
 
-    bool setPeakFreezingTemperature(double peakFreezingTemperature) {
+    bool MaterialPropertyPhaseChangeHysteresis_Impl::setPeakFreezingTemperature(double peakFreezingTemperature) {
       bool result = setDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::PeakFreezingTemperature, peakFreezingTemperature);
       OS_ASSERT(result);
       return result;
