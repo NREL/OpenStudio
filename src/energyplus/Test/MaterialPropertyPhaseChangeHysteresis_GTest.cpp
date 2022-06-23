@@ -57,7 +57,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyPhaseChangeHysteresi
 
   Model model;
   StandardOpaqueMaterial material(model);
-  boost::optional<MaterialPropertyPhaseChange> optphaseChangeHysteresis = material.createMaterialPropertyPhaseChangeHysteresis();
+  boost::optional<MaterialPropertyPhaseChangeHysteresis> optphaseChangeHysteresis = material.createMaterialPropertyPhaseChangeHysteresis();
   auto phaseChangeHysteresis = optphaseChangeHysteresis.get();
   phaseChangeHysteresis.setLiquidStateDensity(123);
 

@@ -45,7 +45,7 @@ namespace model {
 
   }  // namespace detail
 
-  /** MaterialPropertyPhaseChangeHysteresis is a ModelObject that wraps the OpenStudio IDD object 'OS:MaterialProperty:MoisturePenetrationDepth:Settings'. */
+  /** MaterialPropertyPhaseChangeHysteresis is a ModelObject that wraps the OpenStudio IDD object 'OS:MaterialProperty:PhaseChangeHysteresis'. */
   class MODEL_API MaterialPropertyPhaseChangeHysteresis : public ModelObject
   {
    public:

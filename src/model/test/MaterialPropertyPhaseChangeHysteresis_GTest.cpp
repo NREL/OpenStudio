@@ -79,7 +79,7 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_MaterialPropertyPhase
   // check to make sure the liquid state density is as expected
   auto phaseChangeHysteresis = optphaseChangeHysteresis.get();
   EXPECT_EQ(material.nameString(), phaseChangeHysteresis.materialName());
-  EXPECT_TRUE(2200, phaseChangeHysteresis.liquidStateDensity());
+  EXPECT_EQ(2200, phaseChangeHysteresis.liquidStateDensity());
 
   // check that creating the material property phase change hysteresis when they already exists does nothing and returns nil
   boost::optional<MaterialPropertyPhaseChangeHysteresis> optphaseChangeHysteresis2 = material.createMaterialPropertyPhaseChangeHysteresis();
@@ -122,7 +122,7 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_SetGetFields) {
   phaseChangeHysteresis.setSolidStateSpecificHeat(1750);
   phaseChangeHysteresis.setHighTemperatureDifferenceofFreezingCurve(1.3);
   phaseChangeHysteresis.setPeakFreezingTemperature(22);
-  phaseChangeHysteresis.setLowTemperatureDifferenceofFreezingCurve(-2);
+  phaseChangeHysteresis.setLowTemperatureDifferenceofFreezingCurve(2);
 
   EXPECT_EQ(10500, phaseChangeHysteresis.latentHeatduringtheEntirePhaseChangeProcess());
   EXPECT_EQ(1.6, phaseChangeHysteresis.liquidStateThermalConductivity());
@@ -136,7 +136,7 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_SetGetFields) {
   EXPECT_EQ(1750, phaseChangeHysteresis.solidStateSpecificHeat());
   EXPECT_EQ(1.3, phaseChangeHysteresis.highTemperatureDifferenceofFreezingCurve());
   EXPECT_EQ(22, phaseChangeHysteresis.peakFreezingTemperature());
-  EXPECT_EQ(-2, phaseChangeHysteresis.lowTemperatureDifferenceofFreezingCurve());
+  EXPECT_EQ(2, phaseChangeHysteresis.lowTemperatureDifferenceofFreezingCurve());
 }
 
 TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_AlternateCtor) {
@@ -152,11 +152,11 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_AlternateCtor) {
   double solidStateThermalConductivity = 1.8;
   double solidStateDensity = 2300;
   double solidStateSpecificHeat = 2000;
-  double highTemperatureDifferenceofFreezingCurve1;
+  double highTemperatureDifferenceofFreezingCurve = 1;
   double peakFreezingTemperature = 20;
   double lowTemperatureDifferenceofFreezingCurve = 1;
 
-  boost::optional<MaterialPropertyPhaseChange> optphaseChangeHysteresis = material.createMaterialPropertyPhaseChangeHysteresis(
+  boost::optional<MaterialPropertyPhaseChangeHysteresis> optphaseChangeHysteresis = material.createMaterialPropertyPhaseChangeHysteresis(
     latentHeatduringtheEntirePhaseChangeProcess, liquidStateThermalConductivity, liquidStateDensity, liquidStateSpecificHeat,
     highTemperatureDifferenceofMeltingCurve, peakMeltingTemperature, lowTemperatureDifferenceofMeltingCurve, solidStateThermalConductivity,
     solidStateDensity, solidStateSpecificHeat, highTemperatureDifferenceofFreezingCurve, peakFreezingTemperature,

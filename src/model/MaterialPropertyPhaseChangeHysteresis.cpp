@@ -391,60 +391,59 @@ namespace model {
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setLatentHeatduringtheEntirePhaseChangeProcess(double latentHeatduringtheEntirePhaseChangeProcess) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setLatentHeatduringtheEntirePhaseChangeProcess(
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setLatentHeatduringtheEntirePhaseChangeProcess(
       latentHeatduringtheEntirePhaseChangeProcess);
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setLiquidStateThermalConductivity(double liquidStateThermalConductivity) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setLiquidStateThermalConductivity(
-      liquidStateThermalConductivity);
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setLiquidStateThermalConductivity(liquidStateThermalConductivity);
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setLiquidStateDensity(double liquidStateDensity) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setLiquidStateDensity(liquidStateDensity);
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setLiquidStateDensity(liquidStateDensity);
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setLiquidStateSpecificHeat(double liquidStateSpecificHeat) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setLiquidStateSpecificHeat(liquidStateSpecificHeat);
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setLiquidStateSpecificHeat(liquidStateSpecificHeat);
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setHighTemperatureDifferenceofMeltingCurve(double highTemperatureDifferenceofMeltingCurve) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setHighTemperatureDifferenceofMeltingCurve(
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setHighTemperatureDifferenceofMeltingCurve(
       highTemperatureDifferenceofMeltingCurve);
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setPeakMeltingTemperature(double peakMeltingTemperature) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setPeakMeltingTemperature(peakMeltingTemperature);
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setPeakMeltingTemperature(peakMeltingTemperature);
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setLowTemperatureDifferenceofMeltingCurve(double lowTemperatureDifferenceofMeltingCurve) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setLowTemperatureDifferenceofMeltingCurve(
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setLowTemperatureDifferenceofMeltingCurve(
       lowTemperatureDifferenceofMeltingCurve);
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setSolidStateThermalConductivity(double solidStateThermalConductivity) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setSolidStateThermalConductivity(solidStateThermalConductivity);
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setSolidStateThermalConductivity(solidStateThermalConductivity);
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setSolidStateDensity(double solidStateDensity) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setSolidStateDensity(solidStateDensity);
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setSolidStateDensity(solidStateDensity);
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setSolidStateSpecificHeat(double solidStateSpecificHeat) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setSolidStateSpecificHeat(solidStateSpecificHeat);
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setSolidStateSpecificHeat(solidStateSpecificHeat);
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setHighTemperatureDifferenceofFreezingCurve(double highTemperatureDifferenceofFreezingCurve) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setHighTemperatureDifferenceofFreezingCurve(
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setHighTemperatureDifferenceofFreezingCurve(
       highTemperatureDifferenceofFreezingCurve);
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setPeakFreezingTemperature(double peakFreezingTemperature) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setPeakFreezingTemperature(peakFreezingTemperature);
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setPeakFreezingTemperature(peakFreezingTemperature);
   }
 
   bool MaterialPropertyPhaseChangeHysteresis::setLowTemperatureDifferenceofFreezingCurve(double lowTemperatureDifferenceofFreezingCurve) {
-    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->setLowTemperatureDifferenceofFreezingCurve(
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->setLowTemperatureDifferenceofFreezingCurve(
       lowTemperatureDifferenceofFreezingCurve);
   }
 

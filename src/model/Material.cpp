@@ -309,6 +309,18 @@ namespace model {
     return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChangeHysteresis();
   }
 
+  boost::optional<MaterialPropertyPhaseChangeHysteresis> Material::createMaterialPropertyPhaseChangeHysteresis(
+    double latentHeatduringtheEntirePhaseChangeProcess, double liquidStateThermalConductivity, double liquidStateDensity,
+    double liquidStateSpecificHeat, double highTemperatureDifferenceofMeltingCurve, double peakMeltingTemperature,
+    double lowTemperatureDifferenceofMeltingCurve, double solidStateThermalConductivity, double solidStateDensity, double solidStateSpecificHeat,
+    double highTemperatureDifferenceofFreezingCurve, double peakFreezingTemperature, double lowTemperatureDifferenceofFreezingCurve) {
+    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChangeHysteresis(
+      latentHeatduringtheEntirePhaseChangeProcess, liquidStateThermalConductivity, liquidStateDensity, liquidStateSpecificHeat,
+      highTemperatureDifferenceofMeltingCurve, peakMeltingTemperature, lowTemperatureDifferenceofMeltingCurve, solidStateThermalConductivity,
+      solidStateDensity, solidStateSpecificHeat, highTemperatureDifferenceofFreezingCurve, peakFreezingTemperature,
+      lowTemperatureDifferenceofFreezingCurve);
+  }
+
   boost::optional<MaterialPropertyPhaseChangeHysteresis> Material::materialPropertyPhaseChangeHysteresis() const {
     return getImpl<detail::Material_Impl>()->materialPropertyPhaseChangeHysteresis();
   }
