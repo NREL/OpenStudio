@@ -78,14 +78,14 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#ae043c41b4bec82e98ca765ce8b32a11")
+    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/stable#ae043c41b4bec82e98ca765ce8b32a11")
   endif()
 
   if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
     # Use this specific remote where I uploaded the centos-build packages
     # The os is still Linux, the compiler is still GCC. But the GLIBC used is **way older**
-    conan_add_remote(NAME openstudio-centos INDEX 0
-      URL https://conan.openstudio.net/artifactory/api/conan/openstudio-centos)
+    #conan_add_remote(NAME openstudio-centos INDEX 0
+    #  URL https://conan.openstudio.net/artifactory/api/conan/openstudio-centos)
 
     # Pass `-D_GLIBCXX_USE_CXX11_ABI=0` to make sure it detects libstdc++ and not libstdc++1
     add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
