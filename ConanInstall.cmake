@@ -81,7 +81,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#67909e2daba4cea4b26e6bce5aaa4fe4")
+    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#ae043c41b4bec82e98ca765ce8b32a11")
   endif()
 
   if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
