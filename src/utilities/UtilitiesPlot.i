@@ -35,7 +35,6 @@
 
   #include <utilities/idf/IdfObject.hpp>
   #include <utilities/idf/WorkspaceObject.hpp>
-  #include <utilities/core/UpdateManager.hpp>
 %}
 
 
