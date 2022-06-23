@@ -92,9 +92,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   endif()
 
   # Build ALL dependencies to avoid problems with the way too old CentOS GLIBC
-  # Ubuntu 20.04 has GLIBC 2.31
-  # Ubuntu 18.04 has GLIBC 2.27
-  # Centos7 has GLIBC 2.17
+  # Please read: `developer/conan/binary_incompatility_glibc.md`
   if(DEFINED CONAN_FIRST_TIME_BUILD_ALL)
     if(CONAN_FIRST_TIME_BUILD_ALL)
       message("FIRST TIME: FORCE BUILDING ALL CONAN PACKAGES")
