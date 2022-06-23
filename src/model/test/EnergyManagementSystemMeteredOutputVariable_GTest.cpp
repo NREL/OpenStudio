@@ -76,12 +76,12 @@ TEST_F(ModelFixture, EMSMeteredOutputVariable) {
   EXPECT_EQ("ZoneTimestep", meteredoutvar.updateFrequency());
   meteredoutvar.setEMSProgramOrSubroutineName(program_1);
   EXPECT_EQ(program_1.name().get(), meteredoutvar.emsProgramOrSubroutineName());
-  EXPECT_EQ(program_1, meteredoutvar.emsProgram());
+  EXPECT_EQ(program_1, meteredoutvar.emsProgram().get());
   meteredoutvar.resetEMSProgramOrSubroutineName();
   EXPECT_EQ("", meteredoutvar.emsProgramOrSubroutineName());
   meteredoutvar.setEMSProgramOrSubroutineName(subroutine_1);
   EXPECT_EQ(subroutine_1.name().get(), meteredoutvar.emsProgramOrSubroutineName());
-  EXPECT_EQ(subroutine_1, meteredoutvar.emsSubroutine());
+  EXPECT_EQ(subroutine_1, meteredoutvar.emsSubroutine().get());
   meteredoutvar.setResourceType("NaturalGas");
   EXPECT_EQ("NaturalGas", meteredoutvar.resourceType());
   meteredoutvar.setGroupType("HVAC");

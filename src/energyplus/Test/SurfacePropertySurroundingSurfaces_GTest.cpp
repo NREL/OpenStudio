@@ -146,14 +146,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertySurroundingSurfaces) 
       auto& group = groups[idf_eg.groupIndex()];
 
       EXPECT_EQ(group.surroundingSurfaceName(), idf_eg.getString(SurfaceProperty_SurroundingSurfacesExtensibleFields::SurroundingSurfaceName).get());
-      EXPECT_EQ(group.viewFactor(), idf_eg.getDouble(SurfaceProperty_SurroundingSurfacesExtensibleFields::SurroundingSurfaceViewFactor));
+      EXPECT_EQ(group.viewFactor(), idf_eg.getDouble(SurfaceProperty_SurroundingSurfacesExtensibleFields::SurroundingSurfaceViewFactor).get());
       EXPECT_EQ(group.temperatureSchedule().nameString(),
                 idf_eg.getString(SurfaceProperty_SurroundingSurfacesExtensibleFields::SurroundingSurfaceTemperatureScheduleName).get());
     }
   }
 
   EXPECT_TRUE(sp.setSkyViewFactor(0.06));
-  EXPECT_EQ(0.06, sp.skyViewFactor());
+  EXPECT_EQ(0.06, sp.skyViewFactor().get());
 
   ScheduleConstant skyTempSch(m);
   skyTempSch.setName("Sky Temperature Schedule");
@@ -161,7 +161,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertySurroundingSurfaces) 
   EXPECT_EQ(skyTempSch, sp.skyTemperatureSchedule().get());
 
   EXPECT_TRUE(sp.setGroundViewFactor(0.07));
-  EXPECT_EQ(0.07, sp.groundViewFactor());
+  EXPECT_EQ(0.07, sp.groundViewFactor().get());
 
   ScheduleConstant groundTempSch(m);
   groundTempSch.setName("Ground Temperature Schedule");
@@ -194,7 +194,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertySurroundingSurfaces) 
       auto& group = groups[idf_eg.groupIndex()];
 
       EXPECT_EQ(group.surroundingSurfaceName(), idf_eg.getString(SurfaceProperty_SurroundingSurfacesExtensibleFields::SurroundingSurfaceName).get());
-      EXPECT_EQ(group.viewFactor(), idf_eg.getDouble(SurfaceProperty_SurroundingSurfacesExtensibleFields::SurroundingSurfaceViewFactor));
+      EXPECT_EQ(group.viewFactor(), idf_eg.getDouble(SurfaceProperty_SurroundingSurfacesExtensibleFields::SurroundingSurfaceViewFactor).get());
       EXPECT_EQ(group.temperatureSchedule().nameString(),
                 idf_eg.getString(SurfaceProperty_SurroundingSurfacesExtensibleFields::SurroundingSurfaceTemperatureScheduleName).get());
     }
@@ -299,12 +299,12 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SurfacePropertySurroundingSurfaces) 
   auto& sp = sps[0];
 
   ASSERT_TRUE(sp.skyViewFactor());
-  EXPECT_EQ(0.5, sp.skyViewFactor());
+  EXPECT_EQ(0.5, sp.skyViewFactor().get());
   ASSERT_TRUE(sp.skyTemperatureSchedule());
   EXPECT_EQ("skyTempSch", sp.skyTemperatureSchedule()->nameString());
 
   ASSERT_TRUE(sp.groundViewFactor());
-  EXPECT_EQ(0.2, sp.groundViewFactor());
+  EXPECT_EQ(0.2, sp.groundViewFactor().get());
   ASSERT_TRUE(sp.groundTemperatureSchedule());
   EXPECT_EQ("groundTempSch", sp.groundTemperatureSchedule()->nameString());
 

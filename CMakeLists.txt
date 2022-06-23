@@ -15,7 +15,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.4.0)
+project(OpenStudio VERSION 3.4.1)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -386,6 +386,12 @@ endif()
 
 if(WIN32)
   add_definitions(-DNOMINMAX)
+  # Set the BOOST_USE_WINAPI_VERSION to Windows10
+  add_compile_definitions(BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_VERSION_WIN7)
+  # This will also align _WIN32_WINNT and WINVER
+  # add_compile_definitions(BOOST_USE_WINDOWS_H) # Getting a confict with `typedef GUID UUID` from windows.h
+  add_compile_definitions(BOOST_WINAPI_DEFINE_VERSION_MACROS)
+  add_compile_definitions(WIN32_LEAN_AND_MEAN) # That excludes stuff that's not used too often, including the GUID stuff
 endif()
 
 if(MSVC AND NOT NINJA)
@@ -783,23 +789,23 @@ if(BUILD_CLI)
   if(UNIX)
      if(APPLE)
        if (ARCH MATCHES arm64)
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220404-darwin_arm64.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "bd8e06fa6a0ca5d0a06fe99fc8e02977")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220420-darwin_arm64.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "abc2798729434f8835f824300a5fd420")
        else()
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220404-darwin.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "4e6b8e1522bde55f9ac697ed4406a811")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220419-darwin.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "cbf547ad374fbe938349834a1fdcfbf1")
        endif()
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220404-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "cba45bd93759f82f6c133959ad61b426")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220419-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e0a5ea1e96b9ee5d34152dd1a34dfa99")
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
        endif()
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220404-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0ff3c02309f8953145d3dce22dde594e")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220420-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "7eb94b4b1cbd1bdf0d4afa22415e3f70")
     if (USE_OPENSTUDIO_GEMS_PR)
       set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
     endif()
@@ -1009,6 +1015,7 @@ set(project_directories
   epjson
   radiance
   gbxml
+  gltf
   airflow
   isomodel
   osversion
@@ -1213,7 +1220,7 @@ else()
 endif()
 
 # Install additional Documents, such as release notes
-install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_3_0.20211105.pdf" DESTINATION .)
+install(FILES "${PROJECT_SOURCE_DIR}/developer/doc/ReleaseNotes/OpenStudio_Release_Notes_3_4_0_20220503.pdf" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//LICENSE.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//CHANGELOG.md" DESTINATION .)
 install(FILES "${PROJECT_SOURCE_DIR}//copyright.txt" DESTINATION .)
@@ -1350,6 +1357,7 @@ if(APPLE)
   else()
     install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
     install(PROGRAMS "${ENERGYPLUS_DIR}/libgcc_s.1.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+    install(PROGRAMS "${ENERGYPLUS_DIR}/libintl.8.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   endif()
   #install(PROGRAMS "${ENERGYPLUS_DIR}/Python" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/libpython*")
@@ -1369,9 +1377,9 @@ elseif(WIN32)
   foreach(ucrt_file IN LISTS ENERGYPLUS_UCRT_FILES)
     install(PROGRAMS "${ucrt_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   endforeach()
-  file(GLOB ENERGYPLUS_VCCOMP_FILES "${ENERGYPLUS_DIR}/vccomp*.dll")
-  foreach(vccomp_file IN LISTS ENERGYPLUS_VCCOMP_FILES)
-    install(PROGRAMS "${vccomp_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+  file(GLOB ENERGYPLUS_VCOMP_FILES "${ENERGYPLUS_DIR}/vcomp*.dll")
+  foreach(vcomp_file IN LISTS ENERGYPLUS_VCOMP_FILES)
+    install(PROGRAMS "${vcomp_file}" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   endforeach()
   file(GLOB ENERGYPLUS_MSAPI_FILES "${ENERGYPLUS_DIR}/api-ms*.dll")
   foreach(msapi_file IN LISTS ENERGYPLUS_MSAPI_FILES)

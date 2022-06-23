@@ -128,7 +128,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PhotovoltaicPerformanceSandia) {
   WorkspaceExtensibleGroup w_eg_gen = idf_genlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
   EXPECT_EQ("Generator:Photovoltaic", w_eg_gen.getString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorObjectType).get());
-  ASSERT_EQ(w_eg_gen.getString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorName).get(), panel.name());
+  ASSERT_EQ(w_eg_gen.getString(ElectricLoadCenter_GeneratorsExtensibleFields::GeneratorName).get(), panel.nameString());
 
   // Get the Panel
   ASSERT_EQ(1u, w.getObjectsByType(IddObjectType::Generator_Photovoltaic).size());

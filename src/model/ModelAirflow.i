@@ -122,6 +122,11 @@ SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
         //    afz->remove();
         //  }
         //}
+
+        boost::optional<AirflowNetworkSimulationControl> airflowNetworkSimulationControl(const openstudio::model::Model& model) {
+          return model.airflowNetworkSimulationControl();
+        }
+
       }
     }
   }
@@ -146,6 +151,13 @@ SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
       //  return OpenStudio.OpenStudioModelAirflow.getOptionalAirflowNetworkZone(this);
       //}
     }
+
+    public partial class Model : Workspace {
+      public OptionalAirflowNetworkSimulationControl airflowNetworkSimulationControl() {
+        return OpenStudio.OpenStudioModelAirflow.airflowNetworkSimulationControl(this);
+      }
+    } // partial class Model
+
   %}
 #endif
 

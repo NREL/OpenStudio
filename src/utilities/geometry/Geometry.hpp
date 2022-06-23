@@ -63,9 +63,9 @@ UTILITIES_API constexpr double normalizeAngle0to360(double angleDegrees) {
 /// compute area from surface as Point3dVector
 UTILITIES_API boost::optional<double> getArea(const std::vector<Point3d>& points);
 
-/// compute Newall vector from surface as Point3dVector, direction is same as outward normal
+/// compute Newell vector from surface as Point3dVector, direction is same as outward normal
 /// magnitude is twice the area
-UTILITIES_API boost::optional<Vector3d> getNewallVector(const std::vector<Point3d>& points);
+UTILITIES_API boost::optional<Vector3d> getNewellVector(const std::vector<Point3d>& points);
 
 /// compute outward normal from surface as Point3dVector
 UTILITIES_API boost::optional<Vector3d> getOutwardNormal(const std::vector<Point3d>& points);

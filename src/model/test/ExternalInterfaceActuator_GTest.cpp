@@ -86,7 +86,7 @@ TEST_F(ModelFixture, ExternalInterfaceActuator) {
 
   EXPECT_FALSE(fanActuator.optionalInitialValue());
   fanActuator.setOptionalInitialValue(1);
-  EXPECT_EQ(1.0, fanActuator.optionalInitialValue());
+  EXPECT_EQ(1.0, fanActuator.optionalInitialValue().get());
   fanActuator.resetOptionalInitialValue();
   EXPECT_FALSE(fanActuator.optionalInitialValue());
 
