@@ -159,7 +159,7 @@ namespace embedded_files {
     return std::string(inflated_data.begin(),inflated_data.end());
   }
 
-  inline void extractFile(const std::string &t_filename, const std::string &t_location)
+  inline void extractFile(const std::string &t_filename, const std::string &t_location, bool quiet=false)
   {
     const auto &fs = files();
     const auto f = fs.find(t_filename);
@@ -218,7 +218,9 @@ namespace embedded_files {
     }
 
     ofs.write(reinterpret_cast<const char *>(inflated_data.data()), inflated_data.size());
-    std::cout << "***** Extracted " << t_filename << " to: " << fullpath << " *****\n";
+    if (!quiet) {
+      std::cout << "***** Extracted " << t_filename << " to: " << fullpath << " *****\n";
+    }
   }
 
 }
