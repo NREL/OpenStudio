@@ -66,8 +66,6 @@ set(core_src
   core/StringStreamLogSink.cpp
   core/System.hpp
   core/System.cpp
-  core/UpdateManager.hpp
-  core/UpdateManager.cpp
   core/UUID.hpp
   core/UUID.cpp
   core/UnzipFile.hpp
@@ -289,7 +287,6 @@ set(${target_name}_test_src
   core/test/SharedFromThis_GTest.cpp
   core/test/System_GTest.cpp
   core/test/String_GTest.cpp
-  core/test/UpdateManager_GTest.cpp
   core/test/UUID_GTest.cpp
   core/test/Zip_GTest.cpp
 
@@ -373,7 +370,6 @@ set(${target_name}_swig_src
   core/Path.i
   core/Singleton.i
   core/System.i
-  core/UpdateManager.i
   core/UUID.i
   core/UnzipFile.i
   core/ZipFile.i

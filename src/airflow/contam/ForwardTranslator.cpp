@@ -62,9 +62,9 @@
 
 #include <airflow/embedded_files.hxx>
 
-#include <thread>
-
 #include <algorithm>
+#include <cmath>
+#include <thread>
 
 namespace openstudio {
 namespace contam {
@@ -224,7 +224,7 @@ namespace contam {
     return m_returnSupplyRatio;
   }
   void ForwardTranslator::setReturnSupplyRatio(double returnSupplyRatio) {
-    m_returnSupplyRatio = fabs(returnSupplyRatio);
+    m_returnSupplyRatio = std::fabs(returnSupplyRatio);
   }
 
   bool ForwardTranslator::ratioOverride() const {

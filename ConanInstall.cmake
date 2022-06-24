@@ -40,12 +40,9 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     NAME nrel INDEX 0 URL
     https://conan.openstudio.net/artifactory/api/conan/openstudio)
 
-  conan_add_remote(
-    NAME bincrafters URL
-    https://bincrafters.jfrog.io/artifactory/api/conan/public-conan)
-
-  #conan_add_remote(NAME jmarrec
-  #  URL https://api.bintray.com/conan/jmarrec/testing)
+  # conan_add_remote(
+  #   NAME bincrafters URL
+  #   https://bincrafters.jfrog.io/artifactory/api/conan/public-conan)
 
   # Enable revisions in conan: check if they are already enabled, if not do it and warn user
   execute_process(
@@ -81,8 +78,38 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
     # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#98444b7bc8d391ea1521d7f79d4d4926")
+    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/stable#ae043c41b4bec82e98ca765ce8b32a11")
   endif()
+
+  if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
+    # Use this specific remote where I uploaded the centos-build packages
+    # The os is still Linux, the compiler is still GCC. But the GLIBC used is **way older**
+    #conan_add_remote(NAME openstudio-centos INDEX 0
+    #  URL https://conan.openstudio.net/artifactory/api/conan/openstudio-centos)
+
+    # Pass `-D_GLIBCXX_USE_CXX11_ABI=0` to make sure it detects libstdc++ and not libstdc++1
+    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+  endif()
+
+  # Build ALL dependencies to avoid problems with the way too old CentOS GLIBC
+  # Please read: `developer/conan/binary_incompatility_glibc.md`
+  if(DEFINED CONAN_FIRST_TIME_BUILD_ALL)
+    if(CONAN_FIRST_TIME_BUILD_ALL)
+      message("FIRST TIME: FORCE BUILDING ALL CONAN PACKAGES")
+      # TODO: Try to avoid rebuilding everything...?
+      set(CONAN_BUILD "all") # This works, but it's gonna be sloooowww
+      # if(LSB_RELEASE_ID_SHORT MATCHES "Ubuntu" AND LSB_RELEASE_VERSION_SHORT MATCHES "18.04")
+      #   # build only the ones that are problematic
+      #   # boost: undefined reference to statx
+      #   list(APPEND CONAN_BUILD "boost")
+      #   # This isn't enough for Ubuntu 18.04, I also get another issue: undefined reference to fnctl64 (fnctl -> fnclt64 happened in GLIBC 2.28) when linking libopenstudio.lib
+      #   # but I do not know which package it's coming from
+      # endif()
+      # Force switch it off for the next time
+      set(CONAN_FIRST_TIME_BUILD_ALL OFF  CACHE BOOL OFF FORCE)
+    endif()
+  endif()
+  message("CONAN_BUILD=${CONAN_BUILD}")
 
   if(BUILD_BENCHMARK)
     set(CONAN_BENCHMARK "benchmark/1.6.1#94c40ebf065e3b20cab6a4f1b03a65fe")

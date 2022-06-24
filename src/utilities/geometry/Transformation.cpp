@@ -40,7 +40,7 @@
 
 #include <algorithm>
 
-#include <math.h>
+#include <cmath>
 
 using boost::numeric::ublas::identity_matrix;
 using std::min;
@@ -158,7 +158,7 @@ Transformation Transformation::alignZPrime(const Vector3d& zPrime) {
   Vector3d negXAxis(-1, 0, 0);
 
   // check if face normal is up or down
-  if (fabs(zp.dot(zAxis)) < 0.99) {
+  if (std::fabs(zp.dot(zAxis)) < 0.99) {
     // not facing up or down, set yPrime along zAxis
     yp = zAxis - (zp.dot(zAxis) * zp);
     if (!yp.normalize()) {

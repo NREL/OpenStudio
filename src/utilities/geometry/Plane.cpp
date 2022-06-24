@@ -37,6 +37,7 @@
 
 #include "../core/Assert.hpp"
 
+#include <cmath>
 #include <iomanip>
 
 namespace openstudio {
@@ -45,7 +46,7 @@ Plane::Plane(const Plane& other) : m_a(other.a()), m_b(other.b()), m_c(other.c()
   // test that normal has length 1
   double length = m_a * m_a + m_b * m_b + m_c * m_c;
   double tol = 0.0001;
-  OS_ASSERT(fabs(1.0 - length) < tol);
+  OS_ASSERT(std::fabs(1.0 - length) < tol);
 }
 
 Plane::Plane(const Point3d& point, const Vector3d& outwardNormal) {
@@ -243,7 +244,7 @@ Plane::Plane(const std::vector<Point3d>& points) : m_a(0.0), m_b(0.0), m_c(0.0),
     // test that normal has length 1
     double length = m_a * m_a + m_b * m_b + m_c * m_c;
     tol = 0.0001;
-    OS_ASSERT(fabs(1.0 - length) <= tol);
+    OS_ASSERT(std::fabs(1.0 - length) <= tol);
   }
 }
 
@@ -251,7 +252,7 @@ Plane::Plane(double a, double b, double c, double d) : m_a(a), m_b(b), m_c(c), m
   // test that normal has length 1
   double length = m_a * m_a + m_b * m_b + m_c * m_c;
   double tol = 0.0001;
-  OS_ASSERT(fabs(1.0 - length) <= tol);
+  OS_ASSERT(std::fabs(1.0 - length) <= tol);
 }
 
 Plane::~Plane() {}
@@ -263,7 +264,7 @@ Vector3d Plane::outwardNormal() const {
 bool Plane::parallel(const Plane& other, double tol) const {
   // dot product of outward normals should be 1 or negative 1
   double thisDot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
-  bool result = (fabs(thisDot) >= 1.0 - tol);
+  bool result = (std::fabs(thisDot) >= 1.0 - tol);
   return result;
 }
 
@@ -272,7 +273,7 @@ bool Plane::parallel(const Plane& other, double tol) const {
 bool Plane::equal(const Plane& other, double tol) const {
   double thisDot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
   double dist = m_d - other.d();
-  bool result = (thisDot >= 1 - tol) && (fabs(dist) <= tol);
+  bool result = (thisDot >= 1 - tol) && (std::fabs(dist) <= tol);
   return result;
 }
 
@@ -281,7 +282,7 @@ bool Plane::equal(const Plane& other, double tol) const {
 bool Plane::reverseEqual(const Plane& other, double tol) const {
   double thisDot = (m_a * other.a() + m_b * other.b() + m_c * other.c());
   double dist = m_d + other.d();
-  bool result = (thisDot <= -1 + tol) && (fabs(dist) <= tol);
+  bool result = (thisDot <= -1 + tol) && (std::fabs(dist) <= tol);
   return result;
 }
 
