@@ -663,9 +663,9 @@ TEST_F(ModelFixture, ChillerElectricEIR_ElectricInputToCoolingOutputRatioFunctio
   model::Model model;
   model::ChillerElectricEIR chiller(model);
 
-  CurveQuadratic curveQuadratic(model);
+  model::CurveQuadratic curveQuadratic(model);
   EXPECT_TRUE(chiller.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveQuadratic));
 
-  CurveCubic curveCubic(model);
+  model::CurveCubic curveCubic(model);
   EXPECT_TRUE(chiller.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveCubic));
 }

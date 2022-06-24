@@ -38,6 +38,7 @@ namespace model {
   class ChillerElectricEIR;
   class CurveBiquadratic;
   class CurveQuadratic;
+  /* class Curve; */
   class Schedule;
   class Node;
 
@@ -132,6 +133,8 @@ namespace model {
       CurveBiquadratic electricInputToCoolingOutputRatioFunctionOfTemperature() const;
 
       CurveQuadratic electricInputToCoolingOutputRatioFunctionOfPLR() const;
+
+      /* Curve electricInputToCoolingOutputRatioFunctionOfPLR() const; */
 
       double minimumPartLoadRatio() const;
 
@@ -236,6 +239,8 @@ namespace model {
       bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic&);
 
       bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic&);
+
+      /* bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve&); */
 
       bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
 
