@@ -313,6 +313,9 @@ bool XMLValidator::xsdValidate() const {
     result = true;
   }
 
+  m_logMessages.reserve(m_logMessages.size() + schemaValidErrorCollector.logMessages.size() + schemaParserErrorCollector.logMessages.size()
+                        + parseFileErrorCollector.logMessages.size());
+
   for (auto& logMessage : schemaValidErrorCollector.logMessages) {
     logAndStore(logMessage.logLevel(), "xsdValidate.schemaValidError: " + logMessage.logMessage());
   }
@@ -450,6 +453,10 @@ boost::optional<std::string> XMLValidator::fullValidationReport() const {
   }
 
   return boost::none;
+}
+
+std::vector<LogMessage> XMLValidator::logMessages() const {
+  return m_logMessages;
 }
 
 }  // namespace openstudio

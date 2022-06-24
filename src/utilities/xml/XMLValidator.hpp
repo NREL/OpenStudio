@@ -86,6 +86,9 @@ class UTILITIES_API XMLValidator
 
   std::vector<LogMessage> warnings() const;
 
+  // Returns all log messages
+  std::vector<LogMessage> logMessages() const;
+
   /** Only applicable for Schematron validation **/
   boost::optional<std::string> fullValidationReport() const;
 
