@@ -36,6 +36,7 @@
 #include "../ChillerElectricEIR.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveQuadratic.hpp"
+#include "../CurveCubic.hpp"
 #include "../Mixer.hpp"
 #include "../Mixer_Impl.hpp"
 #include "../Splitter.hpp"
@@ -656,4 +657,15 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride) 
 
   ASSERT_TRUE(chiller.heatRecoveryLoop());
   EXPECT_EQ(hrLoop, chiller.heatRecoveryLoop().get());
+}
+
+TEST_F(ModelFixture, ChillerElectricEIR_ElectricInputToCoolingOutputRatioFunctionOfPLR) {
+  model::Model model;
+  model::ChillerElectricEIR chiller(model);
+
+  CurveQuadratic curveQuadratic(model);
+  EXPECT_TRUE(chiller.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveQuadratic));
+
+  CurveCubic curveCubic(model);
+  EXPECT_TRUE(chiller.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveCubic));
 }
