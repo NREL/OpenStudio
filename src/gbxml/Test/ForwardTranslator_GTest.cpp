@@ -927,9 +927,4 @@ TEST_F(gbXMLFixture, ForwardTranslator_exampleModelValid) {
 
   auto errors = xmlValidator.errors();
   EXPECT_EQ(0, errors.size());
-
-  // TEMP
-  EXPECT_EQ("", errors[0].logMessage());
-  EXPECT_EQ("", errors[1].logMessage());
-  EXPECT_EQ("", errors[2].logMessage());
 }
