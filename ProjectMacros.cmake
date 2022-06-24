@@ -1,22 +1,6 @@
 include(CMakeParseArguments)
 
 
-# Add google tests macro
-macro(ADD_GOOGLE_TESTS executable)
-  foreach(source ${ARGN})
-    string(REGEX MATCH .*cpp source "${source}")
-    if(source)
-      file(READ "${source}" contents)
-      string(REGEX MATCHALL "TEST_?F?\\(([A-Za-z_0-9 ,]+)\\)" found_tests ${contents})
-      foreach(hit ${found_tests})
-        string(REGEX REPLACE ".*\\(([A-Za-z_0-9]+)[, ]*([A-Za-z_0-9]+)\\).*" "\\1.\\2" test_name ${hit})
-        add_test(${test_name} "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${executable}" --gtest_filter=${test_name})
-        set_tests_properties(${test_name} PROPERTIES TIMEOUT 660)
-      endforeach()
-    endif()
-  endforeach()
-endmacro()
-
 # Create source groups automatically based on file path
 macro(CREATE_SRC_GROUPS SRC)
   foreach(F ${SRC})
@@ -48,7 +32,11 @@ macro(CREATE_TEST_TARGETS BASE_NAME SRC DEPENDENCIES)
       ${ALL_DEPENDENCIES}
     )
 
-    ADD_GOOGLE_TESTS(${BASE_NAME}_tests ${SRC})
+    # Tell cmake to discover tests by calling test_exe --gtest_list_tests
+    gtest_discover_tests(${BASE_NAME}_tests
+      PROPERTIES TIMEOUT 660
+    )
+
     if(TARGET "${BASE_NAME}_resources")
       add_dependencies("${BASE_NAME}_tests" "${BASE_NAME}_resources")
     endif()
