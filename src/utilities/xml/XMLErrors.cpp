@@ -2,6 +2,7 @@
 
 #include <libxml/xmlerror.h>
 #include "../core/LogMessage.hpp"
+#include "../core/ASCIIStrings.hpp"
 
 #include <cstdarg>  // For va_list
 #include <cstdio>   // std::vsnprintf
@@ -18,10 +19,15 @@ namespace detail {
     // representation as it doesn't seem to be worth it in practice, the error
     // message is usually clear enough, while these numbers can be used for
     // automatic classification of messages.
-    oss << "XML " << levelName << " " << error.domain << "." << error.code << ": " << error.message;
+
+    // Message is '\n' terminated, so remove that
+    std::string message(error.message);
+    ascii_trim(message);
+
+    oss << "XML " << levelName << " " << error.domain << "." << error.code << ": " << message;
 
     if (error.file) {
-      oss << " at " << error.file;
+      oss << "\n    at " << error.file;
       if (error.line > 0) {
         oss << ":" << error.line;
 

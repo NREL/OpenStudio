@@ -61,7 +61,12 @@ class UTILITIES_API XMLValidator
   /** @name Constructors */
   //@{
 
-  /// Constructor for a new validator
+  /** Constructor for a new validator
+   *
+   * The schemaPath extension is used to determine the type of validation to perform:
+   * - `*.xsd` => XSD
+   * - `*.xml` or `*.sct` => Schematron (convert to XSLT then validate)
+   * - `*.xslt` => Schematron that is already transformed to an XSLT stylesheet */
   explicit XMLValidator(const openstudio::path& schemaPath);
 
   //@}
@@ -95,9 +100,15 @@ class UTILITIES_API XMLValidator
   //@}
 
  private:
-  // TODO: I'm not sure we need that complexity... perhaps just use std::vector<LogMessage> m_logMessages;
   REGISTER_LOGGER("openstudio.XMLValidator");
-  StringStreamLogSink m_logSink;
+
+  // Instead of using a useless log sink (it's not like we'll trigger warnings/errors coming from model/ or whatnot)
+  // We just store the log messages directly
+  mutable std::vector<LogMessage> m_logMessages;
+
+  // LOG the message (to console) and store it in m_logMessages
+  void logAndStore(LogLevel logLevel, const std::string& logMessage) const;
+
   openstudio::path m_schemaPath;
   boost::optional<openstudio::path> m_xmlPath;
 
@@ -105,7 +116,6 @@ class UTILITIES_API XMLValidator
 
   bool xsdValidate() const;
 
-  // TODO: should we provide a facility to convert from schematron to XLST? or let user deal with that
   bool xsltValidate() const;
   mutable std::string m_fullValidationReport;
 

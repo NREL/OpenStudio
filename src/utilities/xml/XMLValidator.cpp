@@ -161,28 +161,30 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(op
 
   xmlInitializerInstance();
 
-  m_logSink.setLogLevel(Warn);
-  m_logSink.setChannelRegex(boost::regex("openstudio\\.XMLValidator"));
-  m_logSink.setThreadId(std::this_thread::get_id());
-
   if (!openstudio::filesystem::exists(schemaPath)) {
-    LOG_AND_THROW("Schema '" << toString(schemaPath) << "' does not exist");
+    std::string logMessage = "Schema '" + toString(schemaPath) + "' does not exist";
+    m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
+    LOG_AND_THROW(logMessage);
   } else if (!openstudio::filesystem::is_regular_file(schemaPath)) {
-    LOG_AND_THROW("Schema '" << toString(schemaPath) << "' cannot be opened");
+    std::string logMessage = "Schema '" + toString(schemaPath) + "' cannot be opened";
+    m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
+    LOG_AND_THROW(logMessage);
   }
 
   if (schemaPath.extension() == ".xsd") {
     m_validatorType = XMLValidatorType::XSD;
-    LOG(Info, "Treating schema as a regular XSD");
+    logAndStore(Info, "Treating schema as a regular XSD");
   } else if (schemaPath.extension() == ".xslt") {
     m_validatorType = XMLValidatorType::XSLTSchematron;
-    LOG(Info, "Treating schema as a XLST StyleSheet that derives from a Schematron");
+    logAndStore(Info, "Treating schema as a XLST StyleSheet that derives from a Schematron");
   } else if ((schemaPath.extension() == ".xml") || (schemaPath.extension() == ".sct")) {
     m_validatorType = XMLValidatorType::Schematron;
-    LOG(Info, "Treating schema as a Schematron, converting to an XSLT StyleSheet");
+    logAndStore(Info, "Treating schema as a Schematron, converting to an XSLT StyleSheet");
     m_schemaPath = schematronToXslt(m_schemaPath);
   } else {
-    LOG_AND_THROW("Schema path extension '" << toString(schemaPath.extension()) << "' not supported");
+    std::string logMessage = "Schema path extension '" + toString(schemaPath.extension()) + "' not supported";
+    m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
+    LOG_AND_THROW(logMessage);
   }
 }
 
@@ -194,21 +196,24 @@ boost::optional<openstudio::path> XMLValidator::xmlPath() const {
   return m_xmlPath;
 }
 
+void XMLValidator::logAndStore(LogLevel logLevel, const std::string& logMessage) const {
+  m_logMessages.emplace_back(logLevel, "openstudio.XMLValidator", logMessage);
+  LOG(logLevel, logMessage);
+}
+
 std::vector<LogMessage> XMLValidator::errors() const {
-  auto logMessages = m_logSink.logMessages();
 
   std::vector<LogMessage> result;
-  std::copy_if(logMessages.cbegin(), logMessages.cend(), std::back_inserter(result),
-               [](const auto& logMessage) { return logMessage.logLevel() == LogLevel::Error; });
+  std::copy_if(m_logMessages.cbegin(), m_logMessages.cend(), std::back_inserter(result),
+               [](const auto& logMessage) { return logMessage.logLevel() > LogLevel::Warn; });
 
   return result;
 }
 
 std::vector<LogMessage> XMLValidator::warnings() const {
-  auto logMessages = m_logSink.logMessages();
 
   std::vector<LogMessage> result;
-  std::copy_if(logMessages.cbegin(), logMessages.cend(), std::back_inserter(result),
+  std::copy_if(m_logMessages.cbegin(), m_logMessages.cend(), std::back_inserter(result),
                [](const auto& logMessage) { return logMessage.logLevel() == LogLevel::Warn; });
 
   return result;
@@ -216,7 +221,7 @@ std::vector<LogMessage> XMLValidator::warnings() const {
 
 bool XMLValidator::isValid() const {
   if (!m_xmlPath) {
-    LOG(Warn, "Nothing has yet been validated against '" << toString(m_schemaPath) << "'");
+    logAndStore(Warn, "Nothing has yet been validated against '" + toString(m_schemaPath) + "'");
     return false;
   }
   return errors().empty();
@@ -224,11 +229,9 @@ bool XMLValidator::isValid() const {
 
 void XMLValidator::reset() {
 
-  m_logSink.setThreadId(std::this_thread::get_id());
+  m_logMessages.clear(),
 
-  m_logSink.resetStringStream();
-
-  m_xmlPath = boost::none;
+    m_xmlPath = boost::none;
 
   m_fullValidationReport.clear();
 }
@@ -238,16 +241,22 @@ bool XMLValidator::validate(const openstudio::path& xmlPath) {
   reset();
 
   if (!openstudio::filesystem::exists(xmlPath)) {
-    LOG_AND_THROW("XML File '" << toString(xmlPath) << "' does not exist");
+    std::string logMessage = "XML File '" + toString(xmlPath) + "' does not exist";
+    m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
+    LOG_AND_THROW(logMessage);
   } else if (!openstudio::filesystem::is_regular_file(xmlPath)) {
-    LOG_AND_THROW("XML File '" << toString(xmlPath) << "' cannot be opened");
+    std::string logMessage = "XML File '" + toString(xmlPath) + "' cannot be opened";
+    m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
+    LOG_AND_THROW(logMessage);
   }
 
   if (xmlPath.extension() == ".xml") {
     auto t_xmlPath = openstudio::filesystem::system_complete(xmlPath);
     m_xmlPath = t_xmlPath;
   } else {
-    LOG_AND_THROW("XML path extension '" << toString(xmlPath.extension()) << "' not supported");
+    std::string logMessage = "XML path extension '" + toString(xmlPath.extension()) + "' not supported";
+    m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
+    LOG_AND_THROW(logMessage);
   }
 
   if (m_validatorType == XMLValidatorType::XSD) {
@@ -298,22 +307,22 @@ bool XMLValidator::xsdValidate() const {
     // LOG(Fatal, "Valid instance " << toString(m_xmlPath.get()) << " failed to validate against " << toString(m_schemaPath));
     result = false;
   } else if (ret < 0) {
-    LOG(Fatal, "Valid instance " << toString(m_xmlPath.get()) << " got internal error validating against " << toString(m_schemaPath));
+    logAndStore(Fatal, "Valid instance " + toString(m_xmlPath.get()) + " got internal error validating against " + toString(m_schemaPath));
     result = false;
   } else {
     result = true;
   }
 
   for (auto& logMessage : schemaValidErrorCollector.logMessages) {
-    LOG(logMessage.logLevel(), "xsdValidate.schemaValidError: " << logMessage.logMessage())
+    logAndStore(logMessage.logLevel(), "xsdValidate.schemaValidError: " + logMessage.logMessage());
   }
 
   for (auto& logMessage : schemaParserErrorCollector.logMessages) {
-    LOG(logMessage.logLevel(), "xsdValidate.schemaParserError: " << logMessage.logMessage())
+    logAndStore(logMessage.logLevel(), "xsdValidate.schemaParserError: " + logMessage.logMessage());
   }
 
   for (auto& logMessage : parseFileErrorCollector.logMessages) {
-    LOG(logMessage.logLevel(), "xsdValidate.parseFileError: " << logMessage.logMessage())
+    logAndStore(logMessage.logLevel(), "xsdValidate.parseFileError: " + logMessage.logMessage());
   }
 
   // free
@@ -419,10 +428,9 @@ bool XMLValidator::xsltValidate() const {
   // fmt::print("\n====== Full Validation Report =====\n\n{}", m_fullValidationReport);
   // xsltSaveResultToFile(stdout, res, style);
 
-  auto m_errors = processXSLTApplyResult(res);
-  for (const auto& error : m_errors) {
-    // m_logMessages.emplace_back(LogLevel::Error, "processXSLTApplyResult", error);
-    LOG(Error, "xsltValidate: " << error);
+  std::vector<std::string> errors = processXSLTApplyResult(res);
+  for (const auto& error : errors) {
+    logAndStore(Error, "xsltValidate: " + error);
   }
 
   /* dump the resulting document */
@@ -432,7 +440,7 @@ bool XMLValidator::xsltValidate() const {
   xmlFreeDoc(res);
   xmlFreeDoc(doc);
 
-  return m_errors.empty();
+  return errors.empty();
 }
 
 boost::optional<std::string> XMLValidator::fullValidationReport() const {

@@ -88,7 +88,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(8, xmlValidator.errors().size());
+    EXPECT_EQ(7, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -101,7 +101,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(15, xmlValidator.errors().size());
+    EXPECT_EQ(14, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -114,7 +114,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(1210, xmlValidator.errors().size());
+    EXPECT_EQ(1209, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -127,7 +127,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(17, xmlValidator.errors().size());
+    EXPECT_EQ(16, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -140,7 +140,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(28, xmlValidator.errors().size());
+    EXPECT_EQ(27, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -153,7 +153,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(9, xmlValidator.errors().size());
+    EXPECT_EQ(8, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -166,7 +166,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(9, xmlValidator.errors().size());
+    EXPECT_EQ(8, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -179,7 +179,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(17, xmlValidator.errors().size());
+    EXPECT_EQ(16, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -192,7 +192,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(111, xmlValidator.errors().size());
+    EXPECT_EQ(110, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -219,7 +219,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(237, xmlValidator.errors().size());
+    EXPECT_EQ(236, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -232,7 +232,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(205, xmlValidator.errors().size());
+    EXPECT_EQ(204, xmlValidator.errors().size());
     for (const auto& logMessage : xmlValidator.errors()) {
       EXPECT_NE("", logMessage.logMessage());
     }
@@ -259,7 +259,9 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_XSD) {
 
     EXPECT_EQ(LogLevel::Error, errors[0].logLevel());
     EXPECT_EQ("xsdValidate.parseFileError: XML error 17.1835: Element '{http://hpxmlonline.com/2019/10}"
-              "AssemblyEffectiveRValue': [facet 'minExclusive'] The value '0' must be greater than '0'.",
+              "AssemblyEffectiveRValue': [facet 'minExclusive'] The value '0.0' must be greater than '0'.\n"
+              "    at "
+                + toString(xmlPath) + ":117 while processing \"0.0\"",
               errors[0].logMessage());
   }
 }
