@@ -41,6 +41,13 @@
 
 class XMLValidatorFixture : public ::testing::Test
 {
+ public:
+  // initialize static members
+  static void SetUpTestSuite();
+
+  // tear down static members
+  static void TearDownTestSuite();
+
  protected:
   // initialize for each test
   virtual void SetUp() override;
@@ -48,18 +55,26 @@ class XMLValidatorFixture : public ::testing::Test
   // tear down after for each test
   virtual void TearDown() override;
 
-  // initialize static members
-  static void SetUpTestSuite();
-
-  // tear down static members
-  static void TearDownTestSuite();
-
   // set up logging
   REGISTER_LOGGER("XMLValidatorFixture");
 
  public:
   static openstudio::path schemaPath;
   static boost::optional<openstudio::FileLogSink> logFile;
+};
+
+// filename, isValid, number of e
+struct GbXMLTestInfo
+{
+  std::string filename{};
+  int n_warnings = 0;
+  int n_errors = 0;
+};
+
+class GbXMLValidatorParametrizedFixture
+  : public XMLValidatorFixture
+  , public ::testing::WithParamInterface<std::tuple<std::string, int, int>>
+{
 };
 
 #endif  // UTILITIES_XML_TEST_VALIDATORFIXTURE_HPP

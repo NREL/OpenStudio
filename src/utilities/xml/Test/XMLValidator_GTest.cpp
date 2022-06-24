@@ -74,174 +74,6 @@ TEST_F(XMLValidatorFixture, XMLValidator_NonXMLPath) {
   EXPECT_FALSE(xmlValidator.xmlPath());
 }
 
-TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
-  XMLValidator xmlValidator(schemaPath);
-  EXPECT_NE("", xmlValidator.schemaPath());
-  EXPECT_FALSE(xmlValidator.xmlPath());
-
-  openstudio::path xmlPath;
-
-  {
-    xmlPath = resourcesPath() / openstudio::toPath("gbxml/3951_Geometry_bug.xml");
-    EXPECT_FALSE(xmlValidator.validate(xmlPath));
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-    EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(7, xmlValidator.errors().size());
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
-  }
-
-  {
-    xmlPath = resourcesPath() / openstudio::toPath("gbxml/3997_WindowScaling_bug.xml");
-    EXPECT_FALSE(xmlValidator.validate(xmlPath));
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-    EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(14, xmlValidator.errors().size());
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
-  }
-
-  {
-    xmlPath = resourcesPath() / openstudio::toPath("gbxml/gbXMLStandard_Single_Family_Residential_2016.xml");
-    EXPECT_FALSE(xmlValidator.validate(xmlPath));
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-    EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(1209, xmlValidator.errors().size());
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
-  }
-
-  {
-    xmlPath = resourcesPath() / openstudio::toPath("gbxml/seb.xml");
-    EXPECT_FALSE(xmlValidator.validate(xmlPath));
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-    EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(16, xmlValidator.errors().size());
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
-  }
-
-  {
-    xmlPath = resourcesPath() / openstudio::toPath("gbxml/simpleBox_vasari.xml");
-    EXPECT_FALSE(xmlValidator.validate(xmlPath));
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-    EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(27, xmlValidator.errors().size());
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
-  }
-
-  {
-    xmlPath = resourcesPath() / openstudio::toPath("gbxml/TestCube.xml");
-    EXPECT_FALSE(xmlValidator.validate(xmlPath));
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-    EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(8, xmlValidator.errors().size());
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
-  }
-
-  {
-    xmlPath = resourcesPath() / openstudio::toPath("gbxml/TestCubeAlternateUnits.xml");
-    EXPECT_FALSE(xmlValidator.validate(xmlPath));
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-    EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(8, xmlValidator.errors().size());
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
-  }
-
-  {
-    xmlPath = resourcesPath() / openstudio::toPath("gbxml/TestSchedules.xml");
-    EXPECT_FALSE(xmlValidator.validate(xmlPath));
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-    EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(16, xmlValidator.errors().size());
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
-  }
-
-  {
-    xmlPath = resourcesPath() / openstudio::toPath("gbxml/TropicBird.xml");
-    EXPECT_FALSE(xmlValidator.validate(xmlPath));
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-    EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(110, xmlValidator.errors().size());
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
-  }
-
-  {
-    xmlPath = resourcesPath() / openstudio::toPath("gbxml/TropicBird_BEM_4_2018.xml");
-    EXPECT_FALSE(xmlValidator.validate(xmlPath));
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-    EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
-    std::vector<LogMessage> errors = xmlValidator.errors();
-    EXPECT_EQ(110, errors.size());
-    //std::sort(errors.begin(), errors.end());
-    EXPECT_TRUE(errors[0].logMessage().find("got internal error validating against") == std::string::npos);
-    EXPECT_TRUE(errors[1].logMessage().find("XML fatal error") == std::string::npos);
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
-  }
-
-  {
-    xmlPath = resourcesPath() / openstudio::toPath("gbxml/TwoStoryOffice_Trane.xml");
-    EXPECT_FALSE(xmlValidator.validate(xmlPath));
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-    EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(236, xmlValidator.errors().size());
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
-  }
-
-  {
-    xmlPath = resourcesPath() / openstudio::toPath("gbxml/ZNETH.xml");
-    EXPECT_FALSE(xmlValidator.validate(xmlPath));
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-    EXPECT_FALSE(xmlValidator.isValid());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
-    EXPECT_EQ(204, xmlValidator.errors().size());
-    for (const auto& logMessage : xmlValidator.errors()) {
-      EXPECT_NE("", logMessage.logMessage());
-    }
-  }
-}
-
 TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_XSD) {
   openstudio::path xmlPath = resourcesPath() / openstudio::toPath("utilities/xml/base.xml");
   openstudio::path xsdPath = resourcesPath() / openstudio::toPath("utilities/xml/schema/HPXML.xsd");
@@ -352,3 +184,42 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_Schematron_TODO) {
             "'quality assurance/monitoring' or 'preconstruction'",
             errors[0].logMessage());
 }
+
+TEST_P(GbXMLValidatorParametrizedFixture, XMLValidator_GBXMLvalidator_XSD) {
+  auto& [filename, n_warnings, n_errors] = GetParam();
+
+  XMLValidator xmlValidator(schemaPath);
+  openstudio::path xmlPath = resourcesPath() / openstudio::toPath(filename);
+
+  if (n_errors > 0) {
+    EXPECT_FALSE(xmlValidator.validate(xmlPath));
+    EXPECT_FALSE(xmlValidator.isValid());
+  } else {
+    EXPECT_TRUE(xmlValidator.validate(xmlPath));
+    EXPECT_TRUE(xmlValidator.isValid());
+  }
+
+  ASSERT_TRUE(xmlValidator.xmlPath());
+  EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+
+  EXPECT_EQ(n_warnings, xmlValidator.warnings().size());
+  EXPECT_EQ(n_errors, xmlValidator.errors().size());
+  for (const auto& logMessage : xmlValidator.errors()) {
+    EXPECT_NE("", logMessage.logMessage());
+  }
+}
+
+INSTANTIATE_TEST_SUITE_P(XMLValidatorFixture, GbXMLValidatorParametrizedFixture,
+                         ::testing::Values(std::make_tuple("gbxml/3951_Geometry_bug.xml", 0, 7),
+                                           std::make_tuple("gbxml/3997_WindowScaling_bug.xml", 0, 14),
+                                           std::make_tuple("gbxml/gbXMLStandard_Single_Family_Residential_2016.xml", 0, 1209),
+                                           std::make_tuple("gbxml/seb.xml", 0, 16), std::make_tuple("gbxml/simpleBox_vasari.xml", 0, 27),
+                                           std::make_tuple("gbxml/TestCube.xml", 0, 8), std::make_tuple("gbxml/TestCubeAlternateUnits.xml", 0, 8),
+                                           std::make_tuple("gbxml/TestSchedules.xml", 0, 16), std::make_tuple("gbxml/TropicBird.xml", 0, 110),
+                                           std::make_tuple("gbxml/TwoStoryOffice_Trane.xml", 0, 236), std::make_tuple("gbxml/ZNETH.xml", 0, 204)),
+                         [](const testing::TestParamInfo<GbXMLValidatorParametrizedFixture::ParamType>& info) {
+                           auto filename = std::get<0>(info.param);
+                           std::replace_if(
+                             filename.begin(), filename.end(), [](char c) { return !std::isalnum(c); }, '_');
+                           return filename;
+                         });
