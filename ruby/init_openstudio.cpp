@@ -412,4 +412,3 @@ void evalString(const std::string& t_str) {
     throw RubyException(err, loc);
   }
 }
-
