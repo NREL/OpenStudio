@@ -91,9 +91,12 @@
 #include <pugixml.hpp>
 
 #include <regex>
+#include <string_view>
 
 namespace openstudio {
 namespace gbxml {
+
+  static constexpr std::string_view shadingSurfaceWithoutConstructionName = "Shading_Surface_Without_Construction";
 
   ForwardTranslator::ForwardTranslator() {
     m_logSink.setLogLevel(Warn);
@@ -205,6 +208,7 @@ namespace gbxml {
     // Clear the map & set
     m_translatedObjects.clear();
     m_materials.clear();
+    m_placeholderShadingSurfaceConstructionAlreadyCreated = false;
 
     auto gbXMLElement = document.append_child("gbXML");
     gbXMLElement.append_attribute("xmlns") = "http://www.gbxml.org/schema";
@@ -1158,16 +1162,21 @@ namespace gbxml {
       } else {
         result.append_attribute("windowTypeIdRef") = escapeName(constructionName).c_str();
       }
-      // no construction
     } else {
-      // FIXME
-      /*       model::StandardOpaqueMaterial layer(shadingSurface.model());
-      model::OpaqueMaterialVector layers;
-      layers.push_back(layer);
-      /* model::Construction testConstr(shadingSurface.model()); */
-      model::Construction testConstr(layers);
-      result.append_attribute("constructionIdRef") = escapeName(testConstr.name().get()).c_str();
-      * /
+      // no construction is relevant here, but we don't want to fail validation
+      std::string name{shadingSurfaceWithoutConstructionName};
+
+      result.append_attribute("constructionIdRef") = name.c_str();
+
+      if (!m_placeholderShadingSurfaceConstructionAlreadyCreated) {
+        // parent is Facility, and its parent is the gbXML element
+        auto gbXMLElement = parent.parent();
+        auto node = gbXMLElement.append_child("Construction");
+        node.append_attribute("id") = name.c_str();
+        node.append_child("Name").text() = name.c_str();
+        // Switch bool off
+        m_placeholderShadingSurfaceConstructionAlreadyCreated = true;
+      }
     }
 
     // this space
