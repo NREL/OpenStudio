@@ -32,11 +32,12 @@
 
 #include <gtest/gtest.h>
 
-#include <resources.hxx>
-
 #include "../XMLValidator.hpp"
 #include "../../core/Logger.hpp"
 #include "../../core/FileLogSink.hpp"
+
+#include <boost/optional.hpp>
+#include <resources.hxx>
 
 class XMLValidatorFixture : public ::testing::Test
 {
