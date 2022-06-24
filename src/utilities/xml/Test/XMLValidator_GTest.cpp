@@ -206,10 +206,13 @@ TEST_F(XMLValidatorFixture, XMLValidator_GBXMLvalidator_XSD) {
     EXPECT_FALSE(xmlValidator.isValid());
     EXPECT_EQ(0, xmlValidator.warnings().size());
     std::vector<LogMessage> errors = xmlValidator.errors();
-    EXPECT_EQ(2, errors.size());
+    EXPECT_EQ(110, errors.size());
     //std::sort(errors.begin(), errors.end());
-    EXPECT_TRUE(errors[0].logMessage().find("got internal error validating against") != std::string::npos);
-    EXPECT_TRUE(errors[1].logMessage().find("XML fatal error") != std::string::npos);
+    EXPECT_TRUE(errors[0].logMessage().find("got internal error validating against") == std::string::npos);
+    EXPECT_TRUE(errors[1].logMessage().find("XML fatal error") == std::string::npos);
+    for (const auto& logMessage : xmlValidator.errors()) {
+      EXPECT_NE("", logMessage.logMessage());
+    }
   }
 
   {
