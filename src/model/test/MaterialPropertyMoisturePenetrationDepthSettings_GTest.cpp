@@ -206,3 +206,11 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_MaterialNa
   auto empd2 = optempd2.get();
   EXPECT_EQ("Material 2", empd2.materialName());
 }
+
+TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_CtorThrow) {
+  Model model;
+  StandardOpaqueMaterial material(model);
+  
+  EXPECT_NO_THROW(MaterialPropertyMoisturePenetrationDepthSettings(material));
+  EXPECT_THROW(MaterialPropertyMoisturePenetrationDepthSettings(material), openstudio::Exception);
+}

@@ -174,3 +174,11 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChange_AlternateCtor) {
   auto phaseChange = optphaseChange.get();
   EXPECT_EQ(3, phaseChange.temperatureEnthalpys().size());
 }
+
+TEST_F(ModelFixture, MaterialPropertyPhaseChange_CtorThrow) {
+  Model model;
+  StandardOpaqueMaterial material(model);
+
+  EXPECT_NO_THROW(MaterialPropertyPhaseChange(material));
+  EXPECT_THROW(MaterialPropertyPhaseChange(material), openstudio::Exception);
+}

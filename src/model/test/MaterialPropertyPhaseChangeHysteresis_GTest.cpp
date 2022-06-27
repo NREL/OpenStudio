@@ -164,3 +164,11 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_AlternateCtor) {
   auto phaseChangeHysteresis = optphaseChangeHysteresis.get();
   EXPECT_EQ(material.nameString(), phaseChangeHysteresis.materialName());
 }
+
+TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_CtorThrow) {
+  Model model;
+  StandardOpaqueMaterial material(model);
+
+  EXPECT_NO_THROW(MaterialPropertyPhaseChangeHysteresis(material));
+  EXPECT_THROW(MaterialPropertyPhaseChangeHysteresis(material), openstudio::Exception);
+}
