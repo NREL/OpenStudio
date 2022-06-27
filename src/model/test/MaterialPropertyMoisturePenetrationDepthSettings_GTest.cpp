@@ -211,8 +211,9 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_CtorThrow)
   Model model;
   StandardOpaqueMaterial material(model);
 
-  EXPECT_NO_THROW(MaterialPropertyMoisturePenetrationDepthSettings empd(material));
+  EXPECT_NO_THROW(MaterialPropertyMoisturePenetrationDepthSettings empd(material, 8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140));
   EXPECT_TRUE(material.materialPropertyMoisturePenetrationDepthSettings());
-  EXPECT_THROW(MaterialPropertyMoisturePenetrationDepthSettings empd(material), openstudio::Exception);
+  EXPECT_THROW(MaterialPropertyMoisturePenetrationDepthSettings empd(material, 8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140),
+               openstudio::Exception);
   EXPECT_TRUE(material.materialPropertyMoisturePenetrationDepthSettings());
 }
