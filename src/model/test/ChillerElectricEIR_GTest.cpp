@@ -660,12 +660,35 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride) 
 }
 
 TEST_F(ModelFixture, ChillerElectricEIR_ElectricInputToCoolingOutputRatioFunctionOfPLR) {
+  // Test for #4611 - Allow non-Quadratic curves for the EIR-f-PLR for the Chiller:Electric:EIR object
+
   model::Model model;
-  model::ChillerElectricEIR chiller(model);
 
-  model::CurveQuadratic curveQuadratic(model);
-  EXPECT_TRUE(chiller.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveQuadratic));
+  // test ctor 1
+  {
+    model::ChillerElectricEIR chiller(model);
+    ASSERT_TRUE(chiller.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveQuadratic>());
+  }
 
-  model::CurveCubic curveCubic(model);
-  EXPECT_TRUE(chiller.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveCubic));
-}
+  // test ctor 2
+  {
+    CurveBiquadratic ccFofT(model);
+    CurveBiquadratic eirToCorfOfT(model);
+    CurveQuadratic eirToCorfOfPlr(model);
+    model::ChillerElectricEIR chiller2(model, ccFofT, eirToCorfOfT, eirToCorfOfPlr);
+  }
+
+  // test new setter/getter
+  {
+    model::ChillerElectricEIR chiller3(model);
+
+    // setter maintains backward compatibility
+    model::CurveQuadratic curveQuadratic(model);
+    EXPECT_TRUE(chiller3.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveQuadratic));
+    ASSERT_TRUE(chiller3.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveQuadratic>());
+
+    // setter can now handle cubic curves
+    model::CurveCubic curveCubic(model);
+    EXPECT_TRUE(chiller3.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveCubic));
+    ASSERT_TRUE(chiller3.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveCubic>());
+  }
