@@ -336,6 +336,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneReheat.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerWarmest.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerWarmestTemperatureFlow.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerSystemNodeResetHumidity.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerSystemNodeResetTemperature.cpp
   ForwardTranslator/ForwardTranslateShade.cpp
   ForwardTranslator/ForwardTranslateShadowCalculation.cpp
   ForwardTranslator/ForwardTranslateShadingControl.cpp
