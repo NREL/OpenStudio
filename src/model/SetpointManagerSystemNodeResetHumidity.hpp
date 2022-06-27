@@ -30,15 +30,13 @@
 #ifndef MODEL_SETPOINTMANAGERSYSTEMNODERESETHUMIDITY_HPP
 #define MODEL_SETPOINTMANAGERSYSTEMNODERESETHUMIDITY_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "SetpointManager.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
-  class Node;
   class Node;
 
   namespace detail {
@@ -67,8 +65,6 @@ namespace model {
     /** @name Getters */
     //@{
 
-    std::string controlVariable() const;
-
     double setpointatLowReferenceHumidityRatio() const;
 
     double setpointatHighReferenceHumidityRatio() const;
@@ -77,17 +73,11 @@ namespace model {
 
     double highReferenceHumidityRatio() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Node.
     boost::optional<Node> referenceNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Node.
-    boost::optional<Node> setpointNodeorNodeList() const;
 
     //@}
     /** @name Setters */
     //@{
-
-    bool setControlVariable(const std::string& controlVariable);
 
     bool setSetpointatLowReferenceHumidityRatio(double setpointatLowReferenceHumidityRatio);
 
@@ -97,15 +87,9 @@ namespace model {
 
     bool setHighReferenceHumidityRatio(double highReferenceHumidityRatio);
 
-    // TODO: Check argument type. From object lists, some candidates are: Node.
     bool setReferenceNode(const Node& node);
 
     void resetReferenceNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Node.
-    bool setSetpointNodeorNodeList(const Node& node);
-
-    void resetSetpointNodeorNodeList();
 
     //@}
     /** @name Other */

@@ -30,14 +30,12 @@
 #ifndef MODEL_SETPOINTMANAGERSYSTEMNODERESETHUMIDITY_IMPL_HPP
 #define MODEL_SETPOINTMANAGERSYSTEMNODERESETHUMIDITY_IMPL_HPP
 
-#include <model/ModelAPI.hpp>
+#include "ModelAPI.hpp"
 #include "SetpointManager_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
-  class Node;
   class Node;
 
   namespace detail {
@@ -65,11 +63,23 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual bool isAllowedOnPlantLoop() const override;
+
+      virtual ModelObject clone(Model model) const override;
+
+      virtual std::string controlVariable() const override;
+
+      virtual bool setControlVariable(const std::string& controlVariable) override;
+
+      virtual boost::optional<Node> setpointNode() const override;
+
+      virtual bool setSetpointNode(const Node& node) override;
+
+      virtual void resetSetpointNode() override;
+
       //@}
       /** @name Getters */
       //@{
-
-      std::string controlVariable() const;
 
       double setpointatLowReferenceHumidityRatio() const;
 
@@ -79,17 +89,11 @@ namespace model {
 
       double highReferenceHumidityRatio() const;
 
-      // TODO: Check return type. From object lists, some candidates are: Node.
       boost::optional<Node> referenceNode() const;
-
-      // TODO: Check return type. From object lists, some candidates are: Node.
-      boost::optional<Node> setpointNodeorNodeList() const;
 
       //@}
       /** @name Setters */
       //@{
-
-      bool setControlVariable(const std::string& controlVariable);
 
       bool setSetpointatLowReferenceHumidityRatio(double setpointatLowReferenceHumidityRatio);
 
@@ -99,15 +103,8 @@ namespace model {
 
       bool setHighReferenceHumidityRatio(double highReferenceHumidityRatio);
 
-      // TODO: Check argument type. From object lists, some candidates are: Node.
       bool setReferenceNode(const Node& node);
-
       void resetReferenceNode();
-
-      // TODO: Check argument type. From object lists, some candidates are: Node.
-      bool setSetpointNodeorNodeList(const Node& node);
-
-      void resetSetpointNodeorNodeList();
 
       //@}
       /** @name Other */
