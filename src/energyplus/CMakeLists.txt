@@ -719,6 +719,8 @@ set(${target_name}_test_src
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp
   Test/SetpointManagerFollowGroundTemperature_GTest.cpp
+  Test/SetpointManagerSystemNodeResetHumidity_GTest.cpp
+  Test/SetpointManagerSystemNodeResetTemperature_GTest.cpp
   Test/ShadingControl_GTest.cpp
   Test/ShadingSurface_GTest.cpp
   Test/ShadowCalculation_GTest.cpp
