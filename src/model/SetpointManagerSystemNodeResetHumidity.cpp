@@ -30,17 +30,14 @@
 #include "SetpointManagerSystemNodeResetHumidity.hpp"
 #include "SetpointManagerSystemNodeResetHumidity_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include "Node.hpp"
-#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_SetpointManager_SystemNodeReset_Humidity_FieldEnums.hxx>
-
-#include "../utilities/units/Unit.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -74,6 +71,17 @@ namespace model {
 
     IddObjectType SetpointManagerSystemNodeResetHumidity_Impl::iddObjectType() const {
       return SetpointManagerSystemNodeResetHumidity::iddObjectType();
+    }
+
+    /** This SPM is **NOT** allowed on a PlantLoop */
+    bool SetpointManagerSystemNodeResetHumidity_Impl::isAllowedOnPlantLoop() const {
+      return false;
+    }
+
+    ModelObject SetpointManagerSystemNodeResetHumidity_Impl::clone(Model model) const {
+      auto clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSystemNodeResetHumidity>();
+      clonedObject.resetReferenceNode();
+      return clonedObject;
     }
 
     std::string SetpointManagerSystemNodeResetHumidity_Impl::controlVariable() const {
@@ -110,7 +118,7 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_SystemNodeReset_HumidityFields::ReferenceNodeName);
     }
 
-    boost::optional<Node> SetpointManagerSystemNodeResetHumidity_Impl::setpointNodeorNodeList() const {
+    boost::optional<Node> SetpointManagerSystemNodeResetHumidity_Impl::setpointNode() const {
       return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_SystemNodeReset_HumidityFields::SetpointNodeorNodeListName);
     }
 
@@ -146,6 +154,10 @@ namespace model {
     }
 
     bool SetpointManagerSystemNodeResetHumidity_Impl::setReferenceNode(const Node& node) {
+      if (node.plantLoop()) {
+        LOG(Error, "Cannot set the Reference node to a node that is on a PlantLoop, occurred for " << briefDescription());
+        return false;
+      }
       bool result = setPointer(OS_SetpointManager_SystemNodeReset_HumidityFields::ReferenceNodeName, node.handle());
       return result;
     }
@@ -155,12 +167,12 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool SetpointManagerSystemNodeResetHumidity_Impl::setSetpointNodeorNodeList(const Node& node) {
+    bool SetpointManagerSystemNodeResetHumidity_Impl::setSetpointNode(const Node& node) {
       bool result = setPointer(OS_SetpointManager_SystemNodeReset_HumidityFields::SetpointNodeorNodeListName, node.handle());
       return result;
     }
 
-    void SetpointManagerSystemNodeResetHumidity_Impl::resetSetpointNodeorNodeList() {
+    void SetpointManagerSystemNodeResetHumidity_Impl::resetSetpointNode() {
       bool result = setString(OS_SetpointManager_SystemNodeReset_HumidityFields::SetpointNodeorNodeListName, "");
       OS_ASSERT(result);
     }
@@ -171,14 +183,13 @@ namespace model {
     : SetpointManager(SetpointManagerSystemNodeResetHumidity::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::SetpointManagerSystemNodeResetHumidity_Impl>());
 
-    // TODO: Appropriately handle the following required object-list fields.
-    bool ok = true;
-    // ok = setControlVariable();
+    // From E+ 5ZoneSystemNodeReset.idf (22.1.0)
+    bool ok = setControlVariable("MaximumHumidityRatio");
     OS_ASSERT(ok);
-    // setSetpointatLowReferenceHumidityRatio();
-    // setSetpointatHighReferenceHumidityRatio();
-    // setLowReferenceHumidityRatio();
-    // setHighReferenceHumidityRatio();
+    setSetpointatLowReferenceHumidityRatio(0.00924);
+    setSetpointatHighReferenceHumidityRatio(0.00600);
+    setLowReferenceHumidityRatio(0.00850);
+    setHighReferenceHumidityRatio(0.01000);
   }
 
   IddObjectType SetpointManagerSystemNodeResetHumidity::iddObjectType() {
@@ -188,10 +199,6 @@ namespace model {
   std::vector<std::string> SetpointManagerSystemNodeResetHumidity::controlVariableValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                           OS_SetpointManager_SystemNodeReset_HumidityFields::ControlVariable);
-  }
-
-  std::string SetpointManagerSystemNodeResetHumidity::controlVariable() const {
-    return getImpl<detail::SetpointManagerSystemNodeResetHumidity_Impl>()->controlVariable();
   }
 
   double SetpointManagerSystemNodeResetHumidity::setpointatLowReferenceHumidityRatio() const {
@@ -212,14 +219,6 @@ namespace model {
 
   boost::optional<Node> SetpointManagerSystemNodeResetHumidity::referenceNode() const {
     return getImpl<detail::SetpointManagerSystemNodeResetHumidity_Impl>()->referenceNode();
-  }
-
-  boost::optional<Node> SetpointManagerSystemNodeResetHumidity::setpointNodeorNodeList() const {
-    return getImpl<detail::SetpointManagerSystemNodeResetHumidity_Impl>()->setpointNodeorNodeList();
-  }
-
-  bool SetpointManagerSystemNodeResetHumidity::setControlVariable(const std::string& controlVariable) {
-    return getImpl<detail::SetpointManagerSystemNodeResetHumidity_Impl>()->setControlVariable(controlVariable);
   }
 
   bool SetpointManagerSystemNodeResetHumidity::setSetpointatLowReferenceHumidityRatio(double setpointatLowReferenceHumidityRatio) {
@@ -246,14 +245,6 @@ namespace model {
 
   void SetpointManagerSystemNodeResetHumidity::resetReferenceNode() {
     getImpl<detail::SetpointManagerSystemNodeResetHumidity_Impl>()->resetReferenceNode();
-  }
-
-  bool SetpointManagerSystemNodeResetHumidity::setSetpointNodeorNodeList(const Node& node) {
-    return getImpl<detail::SetpointManagerSystemNodeResetHumidity_Impl>()->setSetpointNodeorNodeList(node);
-  }
-
-  void SetpointManagerSystemNodeResetHumidity::resetSetpointNodeorNodeList() {
-    getImpl<detail::SetpointManagerSystemNodeResetHumidity_Impl>()->resetSetpointNodeorNodeList();
   }
 
   /// @cond
