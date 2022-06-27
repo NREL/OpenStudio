@@ -153,6 +153,8 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     "openssl/1.1.1o#213dbdeb846a4b40b4dec36cf2e673d7" # force every package to align on the same as our conan-openstudio-ruby
     "boost/1.79.0#f664bfe40e2245fa9baf1c742591d582"
     "pugixml/1.12.1#5a39f82651eba3e7d6197903a3202e21"
+    "libxml2/2.9.14#fc433aeebfe525657d73334c61f96944"
+    "libxslt/1.1.34#9085031f5b9b2bb328ad615cd1bf1282"
     "jsoncpp/1.9.5#536d080aa154e5853332339bf576747c"
     "minizip/1.2.12#0b5296887a2558500d0323c6c94c8d02" # This depends on zlib, and basically patches it
     "zlib/1.2.12#3b9e037ae1c615d045a06c67d88491ae" # Also needed, so we can find zlib.h and co (+ pinning exactly is good)
