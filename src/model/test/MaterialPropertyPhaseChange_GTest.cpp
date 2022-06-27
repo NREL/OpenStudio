@@ -179,7 +179,7 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChange_CtorThrow) {
   Model model;
   StandardOpaqueMaterial material(model);
 
-  EXPECT_NO_THROW(MaterialPropertyPhaseChange(material));
+  EXPECT_NO_THROW(MaterialPropertyPhaseChange phaseChange(material));
   EXPECT_TRUE(material.materialPropertyPhaseChange());
   EXPECT_THROW(MaterialPropertyPhaseChange phaseChange(material), openstudio::Exception);
   EXPECT_TRUE(material.materialPropertyPhaseChange());
