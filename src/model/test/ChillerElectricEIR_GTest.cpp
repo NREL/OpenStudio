@@ -672,9 +672,9 @@ TEST_F(ModelFixture, ChillerElectricEIR_ElectricInputToCoolingOutputRatioFunctio
 
   // test ctor 2
   {
-    CurveBiquadratic ccFofT(model);
-    CurveBiquadratic eirToCorfOfT(model);
-    CurveQuadratic eirToCorfOfPlr(model);
+    model::CurveBiquadratic ccFofT(model);
+    model::CurveBiquadratic eirToCorfOfT(model);
+    model::CurveQuadratic eirToCorfOfPlr(model);
     model::ChillerElectricEIR chiller2(model, ccFofT, eirToCorfOfT, eirToCorfOfPlr);
   }
 
@@ -692,3 +692,4 @@ TEST_F(ModelFixture, ChillerElectricEIR_ElectricInputToCoolingOutputRatioFunctio
     EXPECT_TRUE(chiller3.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveCubic));
     ASSERT_TRUE(chiller3.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveCubic>());
   }
+}
