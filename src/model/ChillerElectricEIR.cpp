@@ -34,8 +34,8 @@
 #include "CurveBiquadratic_Impl.hpp"
 #include "CurveQuadratic.hpp"
 #include "CurveQuadratic_Impl.hpp"
-/* #include "Curve.hpp"
-#include "Curve_Impl.hpp" */
+#include "Curve.hpp"
+#include "Curve_Impl.hpp"
 #include "Schedule.hpp"
 #include "Schedule_Impl.hpp"
 #include "Node.hpp"
@@ -176,15 +176,10 @@ namespace model {
       return wo.optionalCast<CurveBiquadratic>().get();
     }
 
-    CurveQuadratic ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctionOfPLR() const {
-      WorkspaceObject wo = getTarget(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName).get();
-      return wo.optionalCast<CurveQuadratic>().get();
-    }
-
-/*     Curve ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctionOfPLR() const {
+    Curve ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctionOfPLR() const {
       WorkspaceObject wo = getTarget(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName).get();
       return wo.optionalCast<Curve>().get();
-    } */
+    }
 
     double ChillerElectricEIR_Impl::minimumPartLoadRatio() const {
       boost::optional<double> value = getDouble(OS_Chiller_Electric_EIRFields::MinimumPartLoadRatio, true);
@@ -422,19 +417,12 @@ namespace model {
       return this->setPointer(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName, curve.handle());
     }
 
-    bool ChillerElectricEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic& curve) {
+    bool ChillerElectricEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve& curve) {
       if (model() != curve.model()) {
         return false;
       }
       return this->setPointer(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName, curve.handle());
     }
-
-/*     bool ChillerElectricEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve& curve) {
-      if (model() != curve.model()) {
-        return false;
-      }
-      return this->setPointer(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName, curve.handle());
-    } */
 
     bool ChillerElectricEIR_Impl::setMinimumPartLoadRatio(double minimumPartLoadRatio) {
       return setDouble(OS_Chiller_Electric_EIRFields::MinimumPartLoadRatio, minimumPartLoadRatio);
@@ -831,9 +819,7 @@ namespace model {
   }  // namespace detail
 
   ChillerElectricEIR::ChillerElectricEIR(const Model& model, const CurveBiquadratic& CCFofT, const CurveBiquadratic& EItoCORFofT,
-                                         const CurveQuadratic& EItoCORFofPLR)
-/*   ChillerElectricEIR::ChillerElectricEIR(const Model& model, const CurveBiquadratic& CCFofT, const CurveBiquadratic& EItoCORFofT,
-                                         const Curve& EItoCORFofPLR) */
+                                         const Curve& EItoCORFofPLR)
     : WaterToWaterComponent(ChillerElectricEIR::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ChillerElectricEIR_Impl>());
 
@@ -983,13 +969,9 @@ namespace model {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setElectricInputToCoolingOutputRatioFunctionOfTemperature(curve);
   }
 
-  bool ChillerElectricEIR::setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic& curve) {
+  bool ChillerElectricEIR::setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve& curve) {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setElectricInputToCoolingOutputRatioFunctionOfPLR(curve);
   }
-
-/*   bool ChillerElectricEIR::setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve& curve) {
-    return getImpl<detail::ChillerElectricEIR_Impl>()->setElectricInputToCoolingOutputRatioFunctionOfPLR(curve);
-  } */
 
   CurveBiquadratic ChillerElectricEIR::coolingCapacityFunctionOfTemperature() const {
     return getImpl<detail::ChillerElectricEIR_Impl>()->coolingCapacityFunctionOfTemperature();
@@ -999,13 +981,9 @@ namespace model {
     return getImpl<detail::ChillerElectricEIR_Impl>()->electricInputToCoolingOutputRatioFunctionOfTemperature();
   }
 
-  CurveQuadratic ChillerElectricEIR::electricInputToCoolingOutputRatioFunctionOfPLR() const {
+  Curve ChillerElectricEIR::electricInputToCoolingOutputRatioFunctionOfPLR() const {
     return getImpl<detail::ChillerElectricEIR_Impl>()->electricInputToCoolingOutputRatioFunctionOfPLR();
   }
-
-/*   Curve ChillerElectricEIR::electricInputToCoolingOutputRatioFunctionOfPLR() const {
-    return getImpl<detail::ChillerElectricEIR_Impl>()->electricInputToCoolingOutputRatioFunctionOfPLR();
-  } */
 
   double ChillerElectricEIR::minimumPartLoadRatio() const {
     return getImpl<detail::ChillerElectricEIR_Impl>()->minimumPartLoadRatio();

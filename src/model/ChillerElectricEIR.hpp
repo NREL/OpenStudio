@@ -37,9 +37,8 @@ namespace openstudio {
 
 namespace model {
 
-  class CurveQuadratic;
   class CurveBiquadratic;
-  /* class Curve; */
+  class Curve;
   class Schedule;
   class Node;
 
@@ -61,11 +60,7 @@ namespace model {
    *\param EItoCORFofT Electric Input to Cooling Output Ratio as a Function of Temp
    *\param EItoCORFofPLR Electric Input to Cooling Output Ratio as a Function of Partial Load Ratio
    */
-    explicit ChillerElectricEIR(const Model& model, const CurveBiquadratic& CCFofT, const CurveBiquadratic& EItoCORFofT,
-                                const CurveQuadratic& EItoCORFofPLR);
-
-/*     explicit ChillerElectricEIR(const Model& model, const CurveBiquadratic& CCFofT, const CurveBiquadratic& EItoCORFofT,
-                                const Curve& EItoCORFofPLR); */
+    explicit ChillerElectricEIR(const Model& model, const CurveBiquadratic& CCFofT, const CurveBiquadratic& EItoCORFofT, const Curve& EItoCORFofPLR);
 
     explicit ChillerElectricEIR(const Model& model);
 
@@ -108,9 +103,7 @@ namespace model {
 
     CurveBiquadratic electricInputToCoolingOutputRatioFunctionOfTemperature() const;
 
-    CurveQuadratic electricInputToCoolingOutputRatioFunctionOfPLR() const;
-
-    /* Curve electricInputToCoolingOutputRatioFunctionOfPLR() const; */
+    Curve electricInputToCoolingOutputRatioFunctionOfPLR() const;
 
     double minimumPartLoadRatio() const;
 
@@ -214,9 +207,7 @@ namespace model {
 
     bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic&);
 
-    bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const CurveQuadratic&);
-
-    /* bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve&); */
+    bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve&);
 
     bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
 
