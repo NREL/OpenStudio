@@ -32,12 +32,9 @@
 
 #include "../../model/SetpointManagerSystemNodeResetHumidity.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
 
 #include <utilities/idd/SetpointManager_SystemNodeReset_Humidity_FieldEnums.hxx>
-// #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -48,24 +45,15 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translateSetpointManagerSystemNodeResetHumidity(model::SetpointManagerSystemNodeResetHumidity& modelObject) {
-    boost::optional<IdfObject> result;
+
+    // Translation is triggered via the setpointNode already, so no need to check
+    if (!modelObject.referenceNode()) {
+      LOG(Error, modelObject.briefDescription() << " does not have a Reference Node attached, it will be not be translated.");
+      return boost::none;
+    }
 
     // Instantiate an IdfObject of the class to store the values,
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SystemNodeReset_Humidity, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject( openstudio::IddObjectType::SetpointManager_SystemNodeReset_Humidity );
-    // m_idfObjects.push_back(idfObject);
-
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
-
-    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-    // But in some cases, you'll want to handle failure without pushing to the map
-    // Name
-    if (boost::optional<std::string> moName = modelObject.name()) {
-      idfObject.setName(*moName);
-    }
 
     // Control Variable: Required String
     std::string controlVariable = modelObject.controlVariable();
@@ -88,19 +76,16 @@ namespace energyplus {
     idfObject.setDouble(SetpointManager_SystemNodeReset_HumidityFields::HighReferenceHumidityRatio, highReferenceHumidityRatio);
 
     // Reference Node Name: Required Node
-    Node referenceNodeName = modelObject.referenceNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(referenceNodeName)) {
-      idfObject.setString(SetpointManager_SystemNodeReset_HumidityFields::ReferenceNodeName, _owo->nameString());
+    if (auto node = modelObject.referenceNode()) {
+      idfObject.setString(SetpointManager_SystemNodeReset_HumidityFields::ReferenceNodeName, node->nameString());
     }
 
     // Setpoint Node or NodeList Name: Required Node
-    Node setpointNodeorNodeListName = modelObject.setpointNodeorNodeListName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(setpointNodeorNodeListName)) {
-      idfObject.setString(SetpointManager_SystemNodeReset_HumidityFields::SetpointNodeorNodeListName, _owo->nameString());
+    if (auto node = modelObject.setpointNode()) {
+      idfObject.setString(SetpointManager_SystemNodeReset_HumidityFields::SetpointNodeorNodeListName, node->nameString());
     }
 
-    result = IdfObject;
-    return result;
+    return idfObject;
   }  // End of translate function
 
 }  // end namespace energyplus
