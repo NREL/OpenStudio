@@ -39,6 +39,8 @@
 #include "../../model/CurveBiquadratic_Impl.hpp"
 #include "../../model/CurveQuadratic.hpp"
 #include "../../model/CurveQuadratic_Impl.hpp"
+#include "../../model/Curve.hpp"
+#include "../../model/Curve_Impl.hpp"
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/Chiller_Electric_EIR_FieldEnums.hxx>
@@ -236,7 +238,7 @@ namespace energyplus {
 
     // ElectricInputtoCoolingOutputRatioFunctionofPartLoadRatioCurveName
 
-    CurveQuadratic quadcurve = modelObject.electricInputToCoolingOutputRatioFunctionOfPLR();
+    Curve quadcurve = modelObject.electricInputToCoolingOutputRatioFunctionOfPLR();
 
     _curve = translateAndMapModelObject(quadcurve);
 
