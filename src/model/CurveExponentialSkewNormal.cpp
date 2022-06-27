@@ -90,9 +90,9 @@ namespace model {
       double z1 = (x - coefficient1C1()) / coefficient2C2();
       double z2 = (coefficient4C4() * x * exp(coefficient3C3() * x) - coefficient1C1()) / coefficient2C2();
       double z3 = -coefficient1C1() / coefficient2C2();
-      double numerator = 1.0 + (z2 / abs(z2)) * boost::math::erf<double>(abs(z2) / sqrt(2.0));
+      double numerator = 1.0 + (z2 / std::abs(z2)) * boost::math::erf<double>(std::abs(z2) / sqrt(2.0));
       numerator *= exp(-0.5 * pow(z1, 2));
-      double denominator = 1.0 + (z3 / abs(z3)) * boost::math::erf<double>(abs(z3) / sqrt(2.0));
+      double denominator = 1.0 + (z3 / std::abs(z3)) * boost::math::erf<double>(std::abs(z3) / sqrt(2.0));
       denominator *= exp(-0.5 * pow(z3, 2));
       double result = numerator / denominator;
 

@@ -43,7 +43,6 @@
   class QNetworkAccessManager;
   namespace openstudio{
     class RemoteBCL;
-    class UpdateManager;
     class PathWatcher;
   }
 %}
@@ -55,7 +54,6 @@
 %ignore QNetworkAccessManager;
 %ignore openstudio::PathWatcher;
 %ignore openstudio::RemoteBCL;
-%ignore openstudio::UpdateManager;
 
 // no default constructors
 %ignore std::vector<openstudio::IdfObject>::vector(size_type);
