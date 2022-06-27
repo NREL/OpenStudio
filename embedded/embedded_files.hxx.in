@@ -15,18 +15,15 @@
 #include <memory>
 #include <vector>
 
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/fstream.hpp>
+#include <filesystem>
 
 #include <stdio.h>
 #include <assert.h>
 #include <zlib.h>
 
-#if defined(MSDOS) || defined(OS2) || defined(WIN32) || defined(__CYGWIN__)
+#if defined(MSDOS) || defined(OS2) || defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
 #  include <fcntl.h>
 #  include <io.h>
-#  include <locale>
-#  include <codecvt>
 #  define SET_BINARY_MODE(file) setmode(fileno(file), O_BINARY)
 #else
 #  define SET_BINARY_MODE(file)
@@ -37,8 +34,6 @@
 using EmbeddedFile = std::pair<size_t, const uint8_t*>;
 
 @BEGIN_NAMESPACE@
-
-namespace fs = boost::filesystem;
 
 /* Decompress from file source to file dest until stream ends or EOF.
    inf() returns Z_OK on success, Z_MEM_ERROR if memory could not be
@@ -164,7 +159,7 @@ namespace embedded_files {
     return std::string(inflated_data.begin(), inflated_data.end());
   }
 
-  inline void extractFile(const std::string& t_filename, const fs::path& t_location, bool quiet = false) {
+  inline void extractFile(const std::string& t_filename, const std::string& t_location, bool quiet = false) {
     const auto& fs = files();
     const auto f = fs.find(t_filename);
     if (f == fs.end()) {
@@ -177,31 +172,20 @@ namespace embedded_files {
       filenameonly = t_filename.substr(i + 1, t_filename.length() - i);
     }
 
-    fs::path createdFile = t_location / fs::path{filenameonly};
-    fs::create_directories(t_location);
 
-    fs::ofstream ofs(createdFile);
+    std::filesystem::path createdFile = t_location / std::filesystem::path{filenameonly};
+    std::filesystem::create_directories(t_location);
+
+    std::ofstream ofs(createdFile);
 
     std::vector<uint8_t> inflated_data;
     if (inf(f->second, inflated_data) != Z_OK) {
       throw std::runtime_error("Embedded file failed to inflate '" + t_filename + "'");
     }
 
-    /** path to UTF-8 encoding. */
-    auto toString = [](const fs::path& p) -> std::string {
-#if (defined(_WIN32) || defined(_WIN64))
-      std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>, wchar_t> converter;
-      std::string s = converter.to_bytes(p.generic_wstring());
-      return s;
-#endif
-
-      // cppcheck-suppress duplicateBreak
-      return p.generic_string();
-    };
-
     ofs.write(reinterpret_cast<const char*>(inflated_data.data()), inflated_data.size());
     if (!quiet) {
-      std::cout << "***** Extracted " << t_filename << " to: " << toString(createdFile) << " *****\n";
+      std::cout << "***** Extracted " << t_filename << " to: " << createdFile.generic_string()  << " *****\n";
     }
   }
 
