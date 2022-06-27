@@ -366,7 +366,6 @@ std::vector<std::string> processXSLTApplyResult(xmlDoc* res) {
   std::vector<std::string> result;
 
   if (xmlXPathNodeSetIsEmpty(xpathObj->nodesetval)) {
-    fmt::print("No errors\n");
     return {};
   } else {
 
