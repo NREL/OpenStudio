@@ -470,6 +470,7 @@ set(ALL_TESTING_TARGETS "") # global list
 if(BUILD_TESTING)
   enable_testing()
   include(CTest)
+  include(GoogleTest)
 endif()
 
 ###############################################################################
