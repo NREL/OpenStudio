@@ -31,7 +31,6 @@
 
 #include "../../model/SetpointManagerSystemNodeResetTemperature.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 
@@ -45,16 +44,32 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<ModelObject> ReverseTranslator::translateSetpointManagerSystemNodeResetTemperature(const WorkspaceObject& workspaceObject) {
-    boost::optional<ModelObject> result;
 
-    // Instantiate an object of the class to store the values,
-    // but we don't return it until we know it's ok
-    // TODO: check constructor, it might need other objects
+    boost::optional<Node> setpointNode;
+    if (boost::optional<std::string> setpointNodeName =
+          workspaceObject.getString(SetpointManager_SystemNodeReset_TemperatureFields::SetpointNodeorNodeListName)) {
+      setpointNode = m_model.getModelObjectByName<Node>(setpointNodeName.get());
+    }
+
+    if (!setpointNode) {
+      LOG(Error, workspaceObject.briefDescription() << " is not attached to a Setpoint Node in the model");
+
+      return boost::none;
+    }
+
+    boost::optional<Node> referenceNode;
+    if (boost::optional<std::string> referenceNodeName =
+          workspaceObject.getString(SetpointManager_SystemNodeReset_TemperatureFields::ReferenceNodeName)) {
+      referenceNode = m_model.getModelObjectByName<Node>(referenceNodeName.get());
+    }
+
+    if (!referenceNode) {
+      LOG(Error, workspaceObject.briefDescription() << " is not attached to a Reference Node in the model");
+
+      return boost::none;
+    }
+
     openstudio::model::SetpointManagerSystemNodeResetTemperature modelObject(m_model);
-
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
 
     // Name
     if (boost::optional<std::string> _name = workspaceObject.name()) {
@@ -66,8 +81,7 @@ namespace energyplus {
           workspaceObject.getString(SetpointManager_SystemNodeReset_TemperatureFields::ControlVariable)) {
       modelObject.setControlVariable(_controlVariable.get());
     } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Control Variable'");
-      return result;
+      LOG(Warn, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Control Variable'");
     }
 
     // Setpoint at Low Reference Temperature: Required Double
@@ -75,8 +89,7 @@ namespace energyplus {
           workspaceObject.getDouble(SetpointManager_SystemNodeReset_TemperatureFields::SetpointatLowReferenceTemperature)) {
       modelObject.setSetpointatLowReferenceTemperature(_setpointatLowReferenceTemperature.get());
     } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Setpoint at Low Reference Temperature'");
-      return result;
+      LOG(Warn, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Setpoint at Low Reference Temperature'");
     }
 
     // Setpoint at High Reference Temperature: Required Double
@@ -84,8 +97,7 @@ namespace energyplus {
           workspaceObject.getDouble(SetpointManager_SystemNodeReset_TemperatureFields::SetpointatHighReferenceTemperature)) {
       modelObject.setSetpointatHighReferenceTemperature(_setpointatHighReferenceTemperature.get());
     } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Setpoint at High Reference Temperature'");
-      return result;
+      LOG(Warn, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Setpoint at High Reference Temperature'");
     }
 
     // Low Reference Temperature: Required Double
@@ -93,8 +105,7 @@ namespace energyplus {
           workspaceObject.getDouble(SetpointManager_SystemNodeReset_TemperatureFields::LowReferenceTemperature)) {
       modelObject.setLowReferenceTemperature(_lowReferenceTemperature.get());
     } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Low Reference Temperature'");
-      return result;
+      LOG(Warn, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Low Reference Temperature'");
     }
 
     // High Reference Temperature: Required Double
@@ -102,46 +113,16 @@ namespace energyplus {
           workspaceObject.getDouble(SetpointManager_SystemNodeReset_TemperatureFields::HighReferenceTemperature)) {
       modelObject.setHighReferenceTemperature(_highReferenceTemperature.get());
     } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'High Reference Temperature'");
-      return result;
+      LOG(Warn, "For " << workspaceObject.briefDescription() << ", cannot find required property 'High Reference Temperature'");
     }
 
     // Reference Node Name: Required Node
-    if ((_wo = workspaceObject.getTarget(SetpointManager_SystemNodeReset_TemperatureFields::ReferenceNodeName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _referenceNodeName = _mo->optionalCast<Node>()) {
-          modelObject.setReferenceNodeName(_referenceNodeName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Reference Node Name'");
-        }
-      } else {
-        LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Reference Node Name'");
-        return result;
-      }
-    } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Reference Node Name'");
-      return result;
-    }
+    modelObject.setReferenceNode(referenceNode.get());
+
     // Setpoint Node or NodeList Name: Required Node
-    if ((_wo = workspaceObject.getTarget(SetpointManager_SystemNodeReset_TemperatureFields::SetpointNodeorNodeListName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _setpointNodeorNodeListName = _mo->optionalCast<Node>()) {
-          modelObject.setSetpointNodeorNodeListName(_setpointNodeorNodeListName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Setpoint Node or NodeList Name'");
-        }
-      } else {
-        LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Setpoint Node or NodeList Name'");
-        return result;
-      }
-    } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Setpoint Node or NodeList Name'");
-      return result;
-    }
-    result = modelObject;
-    return result;
+    modelObject.addToNode(setpointNode.get());
+
+    return modelObject;
   }  // End of translate function
 
 }  // end namespace energyplus

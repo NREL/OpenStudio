@@ -554,6 +554,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSetpointManagerMixedAir.cpp
   ReverseTranslator/ReverseTranslateSetpointManagerScheduled.cpp
   ReverseTranslator/ReverseTranslateSetpointManagerSingleZoneReheat.cpp
+  ReverseTranslator/ReverseTranslateSetpointManagerSystemNodeResetHumidity.cpp
+  ReverseTranslator/ReverseTranslateSetpointManagerSystemNodeResetTemperature.cpp
   ReverseTranslator/ReverseTranslateShadingBuildingDetailed.cpp
   ReverseTranslator/ReverseTranslateShadingSiteDetailed.cpp
   ReverseTranslator/ReverseTranslateShadingZoneDetailed.cpp
