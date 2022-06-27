@@ -157,34 +157,6 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_Schematron) {
   }
 }
 
-TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_Schematron_TODO) {
-
-  // TODO: this is a temporary test that uses the transformed XLST from above. This one works... So it means I have an issue cleaning up the
-  // state/globals before we can reuse
-  openstudio::path xmlPath = resourcesPath() / openstudio::toPath("utilities/xml/hpxml_with_error.xml");
-  openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/schema/HPXMLvalidator_stylesheet.xslt");
-
-  XMLValidator xmlValidator(schematronPath);
-  EXPECT_FALSE(xmlValidator.xmlPath());
-
-  EXPECT_FALSE(xmlValidator.validate(xmlPath));
-  EXPECT_FALSE(xmlValidator.isValid());
-  ASSERT_TRUE(xmlValidator.xmlPath());
-  EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
-
-  ASSERT_TRUE(xmlValidator.fullValidationReport());
-  EXPECT_NE("", xmlValidator.fullValidationReport().get());
-  EXPECT_EQ(0, xmlValidator.warnings().size());
-
-  auto errors = xmlValidator.errors();
-  ASSERT_EQ(1, errors.size());
-  EXPECT_EQ(LogLevel::Error, errors[0].logLevel());
-  EXPECT_EQ("xsltValidate: Expected EventType to be 'audit' or 'proposed workscope' or 'approved workscope' or "
-            "'construction-period testing/daily test out' or 'job completion testing/final inspection' or "
-            "'quality assurance/monitoring' or 'preconstruction'",
-            errors[0].logMessage());
-}
-
 TEST_P(GbXMLValidatorParametrizedFixture, XMLValidator_GBXMLvalidator_XSD) {
   auto& [filename, n_warnings, n_errors] = GetParam();
 
