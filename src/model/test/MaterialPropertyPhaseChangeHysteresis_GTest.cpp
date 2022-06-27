@@ -169,6 +169,8 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_CtorThrow) {
   Model model;
   StandardOpaqueMaterial material(model);
 
-  EXPECT_NO_THROW(MaterialPropertyPhaseChangeHysteresis(material));
-  EXPECT_THROW(MaterialPropertyPhaseChangeHysteresis(material), openstudio::Exception);
+  EXPECT_NO_THROW(MaterialPropertyPhaseChangeHysteresis phaseChangeHysteresis(material));
+  EXPECT_TRUE(material.materialPropertyPhaseChangeHysteresis());
+  EXPECT_THROW(MaterialPropertyPhaseChangeHysteresis phaseChangeHysteresis(material), openstudio::Exception);
+  EXPECT_TRUE(material.materialPropertyPhaseChangeHysteresis());
 }
