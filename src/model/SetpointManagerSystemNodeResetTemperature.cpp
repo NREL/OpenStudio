@@ -30,11 +30,10 @@
 #include "SetpointManagerSystemNodeResetTemperature.hpp"
 #include "SetpointManagerSystemNodeResetTemperature_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "Node.hpp"
 #include "Node_Impl.hpp"
-#include "Node.hpp"
-#include "Node_Impl.hpp"
+#include "PlantLoop.hpp"
+#include "Model.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -76,6 +75,17 @@ namespace model {
       return SetpointManagerSystemNodeResetTemperature::iddObjectType();
     }
 
+    /** This SPM **IS** allowed on a PlantLoop */
+    bool SetpointManagerSystemNodeResetTemperature_Impl::isAllowedOnPlantLoop() const {
+      return true;
+    }
+
+    ModelObject SetpointManagerSystemNodeResetTemperature_Impl::clone(Model model) const {
+      auto clonedObject = SetpointManager_Impl::clone(model).cast<SetpointManagerSystemNodeResetTemperature>();
+      clonedObject.resetReferenceNode();
+      return clonedObject;
+    }
+
     std::string SetpointManagerSystemNodeResetTemperature_Impl::controlVariable() const {
       boost::optional<std::string> value = getString(OS_SetpointManager_SystemNodeReset_TemperatureFields::ControlVariable, true);
       OS_ASSERT(value);
@@ -110,7 +120,7 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_SystemNodeReset_TemperatureFields::ReferenceNodeName);
     }
 
-    boost::optional<Node> SetpointManagerSystemNodeResetTemperature_Impl::setpointNodeorNodeList() const {
+    boost::optional<Node> SetpointManagerSystemNodeResetTemperature_Impl::setpointNode() const {
       return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_SystemNodeReset_TemperatureFields::SetpointNodeorNodeListName);
     }
 
@@ -155,12 +165,12 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool SetpointManagerSystemNodeResetTemperature_Impl::setSetpointNodeorNodeList(const Node& node) {
+    bool SetpointManagerSystemNodeResetTemperature_Impl::setSetpointNode(const Node& node) {
       bool result = setPointer(OS_SetpointManager_SystemNodeReset_TemperatureFields::SetpointNodeorNodeListName, node.handle());
       return result;
     }
 
-    void SetpointManagerSystemNodeResetTemperature_Impl::resetSetpointNodeorNodeList() {
+    void SetpointManagerSystemNodeResetTemperature_Impl::resetSetpointNode() {
       bool result = setString(OS_SetpointManager_SystemNodeReset_TemperatureFields::SetpointNodeorNodeListName, "");
       OS_ASSERT(result);
     }
@@ -171,14 +181,13 @@ namespace model {
     : SetpointManager(SetpointManagerSystemNodeResetTemperature::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::SetpointManagerSystemNodeResetTemperature_Impl>());
 
-    // TODO: Appropriately handle the following required object-list fields.
-    bool ok = true;
-    // ok = setControlVariable();
+    // From E+ 5ZoneSystemNodeReset.idf (22.1.0)
+    bool ok = setControlVariable("Temperature");
     OS_ASSERT(ok);
-    // setSetpointatLowReferenceTemperature();
-    // setSetpointatHighReferenceTemperature();
-    // setLowReferenceTemperature();
-    // setHighReferenceTemperature();
+    setSetpointatLowReferenceTemperature(16.7);
+    setSetpointatHighReferenceTemperature(12.8);
+    setLowReferenceTemperature(20.0);
+    setHighReferenceTemperature(23.3);
   }
 
   IddObjectType SetpointManagerSystemNodeResetTemperature::iddObjectType() {
@@ -188,10 +197,6 @@ namespace model {
   std::vector<std::string> SetpointManagerSystemNodeResetTemperature::controlVariableValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                           OS_SetpointManager_SystemNodeReset_TemperatureFields::ControlVariable);
-  }
-
-  std::string SetpointManagerSystemNodeResetTemperature::controlVariable() const {
-    return getImpl<detail::SetpointManagerSystemNodeResetTemperature_Impl>()->controlVariable();
   }
 
   double SetpointManagerSystemNodeResetTemperature::setpointatLowReferenceTemperature() const {
@@ -212,14 +217,6 @@ namespace model {
 
   boost::optional<Node> SetpointManagerSystemNodeResetTemperature::referenceNode() const {
     return getImpl<detail::SetpointManagerSystemNodeResetTemperature_Impl>()->referenceNode();
-  }
-
-  boost::optional<Node> SetpointManagerSystemNodeResetTemperature::setpointNodeorNodeList() const {
-    return getImpl<detail::SetpointManagerSystemNodeResetTemperature_Impl>()->setpointNodeorNodeList();
-  }
-
-  bool SetpointManagerSystemNodeResetTemperature::setControlVariable(const std::string& controlVariable) {
-    return getImpl<detail::SetpointManagerSystemNodeResetTemperature_Impl>()->setControlVariable(controlVariable);
   }
 
   bool SetpointManagerSystemNodeResetTemperature::setSetpointatLowReferenceTemperature(double setpointatLowReferenceTemperature) {
@@ -245,14 +242,6 @@ namespace model {
 
   void SetpointManagerSystemNodeResetTemperature::resetReferenceNode() {
     getImpl<detail::SetpointManagerSystemNodeResetTemperature_Impl>()->resetReferenceNode();
-  }
-
-  bool SetpointManagerSystemNodeResetTemperature::setSetpointNodeorNodeList(const Node& node) {
-    return getImpl<detail::SetpointManagerSystemNodeResetTemperature_Impl>()->setSetpointNodeorNodeList(node);
-  }
-
-  void SetpointManagerSystemNodeResetTemperature::resetSetpointNodeorNodeList() {
-    getImpl<detail::SetpointManagerSystemNodeResetTemperature_Impl>()->resetSetpointNodeorNodeList();
   }
 
   /// @cond
