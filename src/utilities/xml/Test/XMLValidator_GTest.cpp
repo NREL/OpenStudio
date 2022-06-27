@@ -30,6 +30,8 @@
 #include <gtest/gtest.h>
 
 #include "XMLValidatorFixture.hpp"
+#include "utilities/core/Filesystem.hpp"
+#include "utilities/core/PathHelpers.hpp"
 
 #include <algorithm>
 #include <iostream>
@@ -58,7 +60,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_NonSchemaPath) {
 
   EXPECT_THROW(XMLValidator xmlValidator(nonSchemaPath), openstudio::Exception);
   ASSERT_EQ(1, sink.logMessages().size());
-  EXPECT_EQ("Schema path extension '.sql' not supported", sink.logMessages()[0].logMessage());
+  EXPECT_EQ("Schema path extension '.sql' not supported.", sink.logMessages()[0].logMessage());
 }
 
 TEST_F(XMLValidatorFixture, XMLValidator_NonXMLPath) {
@@ -70,7 +72,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_NonXMLPath) {
   EXPECT_THROW(xmlValidator.validate(nonXMLPath), openstudio::Exception);
   ASSERT_EQ(0, xmlValidator.warnings().size());
   ASSERT_EQ(1, xmlValidator.errors().size());
-  EXPECT_EQ("XML path extension '.sql' not supported", xmlValidator.errors()[0].logMessage());
+  EXPECT_EQ("XML path extension '.sql' not supported.", xmlValidator.errors()[0].logMessage());
   EXPECT_FALSE(xmlValidator.xmlPath());
 }
 
@@ -155,6 +157,21 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_Schematron) {
               "'quality assurance/monitoring' or 'preconstruction'",
               errors[0].logMessage());
   }
+}
+
+TEST_F(XMLValidatorFixture, XMLValidator_schematronToXslt) {
+  openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/schema/HPXMLvalidator.xml");
+
+  openstudio::path outDir = resourcesPath() / openstudio::toPath("utilities/xml/schema/schematronToXslt");
+  if (openstudio::filesystem::is_directory(outDir)) {
+    openstudio::removeDirectory(outDir);
+  }
+
+  openstudio::path expectedPath = outDir / openstudio::toPath("HPXMLvalidator_stylesheet.xslt");
+  openstudio::path savedPath = XMLValidator::schematronToXslt(schematronPath, outDir);
+  EXPECT_EQ(expectedPath, savedPath);
+
+  EXPECT_TRUE(openstudio::filesystem::is_regular_file(expectedPath));
 }
 
 TEST_P(GbXMLValidatorParametrizedFixture, XMLValidator_GBXMLvalidator_XSD) {

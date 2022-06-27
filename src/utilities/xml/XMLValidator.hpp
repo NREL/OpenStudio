@@ -93,12 +93,11 @@ class UTILITIES_API XMLValidator
   boost::optional<std::string> fullValidationReport() const;
 
   //@}
-  /** @name Setters */
+  /** @name Other */
   //@{
 
-  //@}
-  /** @name Operators */
-  //@{
+  /** Static helper to convert a Schematron file to an XSLT StyleSheet */
+  static openstudio::path schematronToXslt(const openstudio::path& schemaPath, const openstudio::path& outputDir);
 
   //@}
 

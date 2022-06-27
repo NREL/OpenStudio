@@ -33,6 +33,7 @@
 #include "XMLInitializer.hpp"
 
 #include "utilities/core/Filesystem.hpp"
+#include "utilities/core/FilesystemHelpers.hpp"
 
 #include <libxml/xmlversion.h>
 #include <libxml/xmlreader.h>
@@ -69,14 +70,15 @@ xmlDoc* applyEmbeddedXSLT(const std::string& embedded_path, xmlDoc* curdoc, cons
   return res;
 }
 
-xmlDoc* applyEmbeddedXSLTWithImports(const openstudio::path& curDir, xmlDoc* curdoc, const char** params) {
+xmlDoc* applyEmbeddedXSLTWithImports(xmlDoc* curdoc, const openstudio::path& outputDir, const char** params) {
 
   // Extract the two files we need
   bool quiet = true;
-  ::openstudio::embedded_files::extractFile(":/xml/resources/iso_svrl_for_xslt1.xsl", openstudio::toString(curDir), quiet);
-  ::openstudio::embedded_files::extractFile(":/xml/resources/iso_schematron_skeleton_for_xslt1.xsl", openstudio::toString(curDir), quiet);
 
-  auto schematron_filename_str = openstudio::toString(curDir / "iso_svrl_for_xslt1.xsl");
+  ::openstudio::embedded_files::extractFile(":/xml/resources/iso_svrl_for_xslt1.xsl", openstudio::toString(outputDir), quiet);
+  ::openstudio::embedded_files::extractFile(":/xml/resources/iso_schematron_skeleton_for_xslt1.xsl", openstudio::toString(outputDir), quiet);
+
+  auto schematron_filename_str = openstudio::toString(outputDir / "iso_svrl_for_xslt1.xsl");
   xsltStylesheet* style = xsltParseStylesheetFile(detail::xml_string(schematron_filename_str));
 
   xmlDoc* res = xsltApplyStylesheet(style, curdoc, params);
@@ -84,13 +86,13 @@ xmlDoc* applyEmbeddedXSLTWithImports(const openstudio::path& curDir, xmlDoc* cur
   xsltFreeStylesheet(style);
   xmlFreeDoc(curdoc);
 
-  openstudio::filesystem::remove(curDir / "iso_svrl_for_xslt1.xsl");
-  openstudio::filesystem::remove(curDir / "iso_schematron_skeleton_for_xslt1.xsl");
-
   return res;
 }
 
-openstudio::path schematronToXslt(const openstudio::path& schemaPath) {
+openstudio::path XMLValidator::schematronToXslt(const openstudio::path& schemaPath, const openstudio::path& outputDir) {
+
+  // We need to potentially initialize the libxml2/libxslt stylesheets since this is a static function
+  xmlInitializerInstance();
 
   // This replicates what happens when you do:
   // from lxml.isoschematron import Schematron;
@@ -105,13 +107,19 @@ openstudio::path schematronToXslt(const openstudio::path& schemaPath) {
   // For debugging
   constexpr bool saveIntermediates = false;
 
+  if (!openstudio::filesystem::exists(outputDir)) {
+    openstudio::filesystem::create_directories(outputDir);
+  } else if (!openstudio::filesystem::is_directory(outputDir)) {
+    LOG_AND_THROW("Path '" << toString(outputDir) << "' already exists but is not a directory.");
+  }
+
   auto saveXmlDocToFile = [](const openstudio::path& outputPath, xmlDoc* doc) {
     auto save_filename_str = openstudio::toString(outputPath);
     const auto* save_filename = save_filename_str.c_str();
     const int result = xmlSaveFormatFileEnc(save_filename, doc, "UTF-8", 1);  // 1 means format=true
     if (result == -1) {
       // xmlSaveFormatFileEnc returns the number of bytes written or -1 if it failed
-      LOG_FREE_AND_THROW("schematronToXslt", "Writing to file failed for " << openstudio::toString(outputPath));
+      LOG_AND_THROW("Writing to file failed for " << openstudio::toString(outputPath));
     }
   };
 
@@ -130,24 +138,32 @@ openstudio::path schematronToXslt(const openstudio::path& schemaPath) {
   // include
   xmlDoc* withIncludes = applyEmbeddedXSLT(":/xml/resources/iso_dsdl_include.xsl", schematronXmlDoc, nullptr);
   if constexpr (saveIntermediates) {
-    saveXmlDocToFile(schemaPath.parent_path() / "1_withIncludes.xslt", withIncludes);
+    saveXmlDocToFile(outputDir / "1_withIncludes.xslt", withIncludes);
   }
 
   // expand
   xmlDoc* withExpand = applyEmbeddedXSLT(":/xml/resources/iso_dsdl_include.xsl", withIncludes, nullptr);
   if constexpr (saveIntermediates) {
-    saveXmlDocToFile(schemaPath.parent_path() / "2_withExpand.xslt", withIncludes);
+    saveXmlDocToFile(outputDir / "2_withExpand.xslt", withIncludes);
   }
 
   // compile: this one uses an xsl:import ... not sure how to merge them...
   // xmlDoc* compiled = applyEmbeddedXSLT(":/xml/resources/iso_svrl_for_xslt1.xsl", withExpand, nullptr);
-  xmlDoc* compiled = applyEmbeddedXSLTWithImports(schemaPath.parent_path(), withExpand, nullptr);
+  xmlDoc* compiled = applyEmbeddedXSLTWithImports(withExpand, outputDir, nullptr);
 
-  openstudio::path xsltPath = schemaPath.parent_path() / openstudio::toPath(openstudio::toString(schemaPath.stem()) + "_stylesheet.xslt");
+  openstudio::path xsltPath = outputDir / openstudio::toPath(openstudio::toString(schemaPath.stem()) + "_stylesheet.xslt");
+
+  if (openstudio::filesystem::is_regular_file(xsltPath)) {
+    if (!openstudio::filesystem::remove(xsltPath)) {
+      LOG_AND_THROW("Cannot remove existing file '" << toString(xsltPath) << "'.");
+    }
+  }
+
   // xsltPath.replace_extension(".xslt");
   saveXmlDocToFile(xsltPath, compiled);
 
   xmlFreeDoc(compiled);
+  LOG(Info, "Saved transformed XSLT Stylesheet at '" << toString(xsltPath) << "'.");
 
   return xsltPath;
 }
@@ -162,11 +178,11 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(op
   xmlInitializerInstance();
 
   if (!openstudio::filesystem::exists(schemaPath)) {
-    std::string logMessage = "Schema '" + toString(schemaPath) + "' does not exist";
+    std::string logMessage = fmt::format("Schema '{}' does not exist", toString(schemaPath));
     m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
     LOG_AND_THROW(logMessage);
   } else if (!openstudio::filesystem::is_regular_file(schemaPath)) {
-    std::string logMessage = "Schema '" + toString(schemaPath) + "' cannot be opened";
+    std::string logMessage = fmt::format("Schema '{}' cannot be opened", toString(schemaPath));
     m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
     LOG_AND_THROW(logMessage);
   }
@@ -176,17 +192,36 @@ XMLValidator::XMLValidator(const openstudio::path& schemaPath) : m_schemaPath(op
     logAndStore(Info, "Treating schema as a regular XSD");
   } else if (schemaPath.extension() == ".xslt") {
     m_validatorType = XMLValidatorType::XSLTSchematron;
-    logAndStore(Info, "Treating schema as a XLST StyleSheet that derives from a Schematron");
+    logAndStore(Info, "Treating schema as a XLST StyleSheet that derives from a Schematron.");
   } else if ((schemaPath.extension() == ".xml") || (schemaPath.extension() == ".sct")) {
     m_validatorType = XMLValidatorType::Schematron;
-    logAndStore(Info, "Treating schema as a Schematron, converting to an XSLT StyleSheet");
-    m_schemaPath = schematronToXslt(m_schemaPath);
+    logAndStore(Info, "Treating schema as a Schematron, converting to an XSLT StyleSheet.");
+    // Let's use a temporary directory for this, so we avoid having two instances trying to write to the same file and we avoid issues where the
+    // directory is write protected.
+    const auto tmpDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
+    if (tmpDir.empty()) {
+      LOG_AND_THROW(fmt::format("Failed to create a temporary directory for extracting the stylesheets need to transform the Schematron '{}'",
+                                toString(schemaPath)));
+    }
+    m_schemaPath = schematronToXslt(m_schemaPath, tmpDir);
+    logAndStore(Info, fmt::format("Transformed Schematron to an XSLT Stylesheet and saved it at {}.", toString(m_schemaPath)));
   } else {
-    std::string logMessage = "Schema path extension '" + toString(schemaPath.extension()) + "' not supported";
+    std::string logMessage = fmt::format("Schema path extension '{}' not supported.", toString(schemaPath.extension()));
     m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
     LOG_AND_THROW(logMessage);
   }
 }
+
+// XMLValidator::~XMLValidator() {
+//   if (m_tempDir.empty()) {
+//     try {
+//       const auto count = openstudio::filesystem::remove_all(m_tempDir);
+//       LOG(Debug, "XMLValidator", "Removed temporary directory with " << count << " files");
+//     } catch (const std::exception& e) {
+//       LOG(Warn, "Error removing temporary directory at '" << toString(m_tempDir) << "', Description: " << e.what());
+//     }
+//   }
+// }
 
 openstudio::path XMLValidator::schemaPath() const {
   return m_schemaPath;
@@ -221,7 +256,7 @@ std::vector<LogMessage> XMLValidator::warnings() const {
 
 bool XMLValidator::isValid() const {
   if (!m_xmlPath) {
-    logAndStore(Warn, "Nothing has yet been validated against '" + toString(m_schemaPath) + "'");
+    logAndStore(Warn, fmt::format("Nothing has yet been validated against '{}'", toString(m_schemaPath)));
     return false;
   }
   return errors().empty();
@@ -241,11 +276,11 @@ bool XMLValidator::validate(const openstudio::path& xmlPath) {
   reset();
 
   if (!openstudio::filesystem::exists(xmlPath)) {
-    std::string logMessage = "XML File '" + toString(xmlPath) + "' does not exist";
+    std::string logMessage = fmt::format("XML File '{}' does not exist.", toString(xmlPath));
     m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
     LOG_AND_THROW(logMessage);
   } else if (!openstudio::filesystem::is_regular_file(xmlPath)) {
-    std::string logMessage = "XML File '" + toString(xmlPath) + "' cannot be opened";
+    std::string logMessage = fmt::format("XML File '{}' cannot be opened.", toString(xmlPath));
     m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
     LOG_AND_THROW(logMessage);
   }
@@ -254,7 +289,7 @@ bool XMLValidator::validate(const openstudio::path& xmlPath) {
     auto t_xmlPath = openstudio::filesystem::system_complete(xmlPath);
     m_xmlPath = t_xmlPath;
   } else {
-    std::string logMessage = "XML path extension '" + toString(xmlPath.extension()) + "' not supported";
+    std::string logMessage = fmt::format("XML path extension '{}' not supported.", toString(xmlPath.extension()));
     m_logMessages.emplace_back(Fatal, "openstudio.XMLValidator", logMessage);
     LOG_AND_THROW(logMessage);
   }
@@ -307,7 +342,8 @@ bool XMLValidator::xsdValidate() const {
     // LOG(Fatal, "Valid instance " << toString(m_xmlPath.get()) << " failed to validate against " << toString(m_schemaPath));
     result = false;
   } else if (ret < 0) {
-    logAndStore(Fatal, "Valid instance " + toString(m_xmlPath.get()) + " got internal error validating against " + toString(m_schemaPath));
+    logAndStore(Fatal,
+                fmt::format("Valid instance '{}' got internal error validating against '{}'", toString(m_xmlPath.get()), toString(m_schemaPath)));
     result = false;
   } else {
     result = true;
