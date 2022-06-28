@@ -8160,7 +8160,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     std::string storZn = element.child("StorZn").text().as_string();
     if( istringEqual(storZn,"Zone") ) {
       waterHeater.setAmbientTemperatureIndicator("ThermalZone");
-    } else if (istringEqual(storZn, "Outdoors")) {
+    } else if (istringEqual(storZn, "Outdoor")) {
       waterHeater.setAmbientTemperatureIndicator("Outdoors");
     } else {
       waterHeater.setAmbientTemperatureIndicator("Schedule");
