@@ -115,11 +115,12 @@ namespace model {
 
     bool PythonPluginInstance_Impl::setPluginClassName(const std::string& pluginClassName) {
       path filePath = externalFile().filePath();
+      filePath = system_complete(filePath);
       bool foundPluginClassName = false;
-      std::ifstream ifs(system_complete(filePath));
+      std::ifstream ifs(toSystemFilename(filePath));
       std::string line;
       while (std::getline(ifs, line)) {
-        if (line.find("class " << pluginClassName) != std::string::npos) {
+        if (line.find("class " + pluginClassName) != std::string::npos) {
           foundPluginClassName = true;
           break;
         }
