@@ -763,7 +763,7 @@ namespace measure {
       return false;
     }
 
-    double minValue = std::numeric_limits<double>::min();
+    double minValue = std::numeric_limits<double>::lowest();
     if (hasDomain() && (m_domainType == OSDomainType::Interval)) {
       std::vector<double> domain = domainAsDouble();
       if (domain.size() == 2) {
@@ -789,7 +789,7 @@ namespace measure {
       return false;
     }
 
-    int minValue = std::numeric_limits<int>::min();
+    int minValue = std::numeric_limits<int>::lowest();
     if (hasDomain() && (m_domainType == OSDomainType::Interval)) {
       std::vector<int> domain = domainAsInteger();
       if (domain.size() == 2) {

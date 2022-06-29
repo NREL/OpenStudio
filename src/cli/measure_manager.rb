@@ -474,7 +474,7 @@ class MeasureManager
           min, max = argument.domainAsDouble
           # I'm a bit wary of rounding issues... I think 1e308 instead of
           # Float::MAX (1.7976931348623157e+308) is fine for our applications...
-          if min > -1e308 # Float::MIN (technically Float::MIN is 2.2250738585072014e-308)
+          if min > -1e308 # -Float::MAX
             arg[:min_value] = min
           end
           if max < 1e308 # Float::MAX

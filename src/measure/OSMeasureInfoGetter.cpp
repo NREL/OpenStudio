@@ -165,7 +165,7 @@ namespace measure {
           auto domain = argument.domainAsInteger();
           auto& low = domain.front();
           auto& high = domain.back();
-          if (low > std::numeric_limits<int>::min()) {
+          if (low > std::numeric_limits<int>::lowest()) {
             minValue = std::to_string(low);
           }
           if (high < std::numeric_limits<int>::max()) {
@@ -175,7 +175,7 @@ namespace measure {
           auto domain = argument.domainAsDouble();
           auto& low = domain.front();
           auto& high = domain.back();
-          if (low > std::numeric_limits<double>::min()) {
+          if (low > std::numeric_limits<double>::lowest()) {
             minValue = std::to_string(low);
           }
           if (high < std::numeric_limits<double>::max()) {
