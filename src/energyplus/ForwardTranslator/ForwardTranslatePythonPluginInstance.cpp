@@ -53,16 +53,6 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translatePythonPluginInstance(PythonPluginInstance& modelObject) {
     IdfObject idfObject(openstudio::IddObjectType::PythonPlugin_Instance);
-    m_idfObjects.push_back(idfObject);
-
-    idfObject.setName(modelObject.name().get());
-
-    // Run During Warmup Days
-    if (modelObject.runDuringWarmupDays()) {
-      idfObject.setString(openstudio::PythonPlugin_InstanceFields::RunDuringWarmupDays, "Yes");
-    } else {
-      idfObject.setString(openstudio::PythonPlugin_InstanceFields::RunDuringWarmupDays, "No");
-    }
 
     path filePath = modelObject.externalFile().filePath();
     if (!exists(filePath)) {
@@ -72,11 +62,7 @@ namespace energyplus {
       filePath = system_complete(filePath);
     }
 
-    // Python Module Name
-    std::string pythonModuleName = toString(filePath.stem());
-    idfObject.setString(openstudio::PythonPlugin_InstanceFields::PythonModuleName, pythonModuleName);
-
-    // Python Class Name
+    // If the plugin class name can't be found in the referenced external file, then it shouldn't be translated
     std::string pluginClassName = modelObject.pluginClassName();
     bool foundPluginClassName = false;
     std::ifstream ifs(toSystemFilename(filePath));
@@ -88,10 +74,26 @@ namespace energyplus {
     }
 
     if (!foundPluginClassName) {
-      LOG(Error, "Could not find plugin class name '" << pluginClassName << "' in referenced external file.");
+      LOG(Warn, "PythonPluginInstance " << modelObject.name().get() << " does not have plugin class name '" << pluginClassName
+                                        << "' contained in referenced external file");
       return boost::none;
     }
 
+    // Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PythonPluginInstance, modelObject);
+
+    // Run During Warmup Days
+    if (modelObject.runDuringWarmupDays()) {
+      idfObject.setString(openstudio::PythonPlugin_InstanceFields::RunDuringWarmupDays, "Yes");
+    } else {
+      idfObject.setString(openstudio::PythonPlugin_InstanceFields::RunDuringWarmupDays, "No");
+    }
+
+    // Python Module Name
+    std::string pythonModuleName = toString(filePath.stem());
+    idfObject.setString(openstudio::PythonPlugin_InstanceFields::PythonModuleName, pythonModuleName);
+
+    // Python Class Name
     idfObject.setString(openstudio::PythonPlugin_InstanceFields::PluginClassName, pluginClassName);
 
     // Translate Python Plugin Search Paths

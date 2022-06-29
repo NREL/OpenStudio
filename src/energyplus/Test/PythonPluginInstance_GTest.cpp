@@ -68,8 +68,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
-  EXPECT_EQ(1u, ft.errors().size());
-  EXPECT_EQ("Could not find plugin class name 'ZN_1_wall_north_Window_1_Control' in referenced external file.", ft.errors()[0].logMessage());
+  std::string errors;
+  for (const auto& error : ft.errors()) {
+    errors += error.logMessage() + "\n";
+  }
+  EXPECT_EQ(0u, ft.errors().size()) << errors;
+
+  std::string warnings;
+  for (const auto& warning : ft.warnings()) {
+    warnings += warning.logMessage() + "\n";
+  }
+  EXPECT_EQ(1u, ft.warnings().size()) << warnings;
 
   std::vector<WorkspaceObject> instanceObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_Instance);
   ASSERT_EQ(2u, instanceObjects.size());
