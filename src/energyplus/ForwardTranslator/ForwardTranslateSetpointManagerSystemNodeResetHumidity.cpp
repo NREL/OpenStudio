@@ -52,7 +52,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    // Instantiate an IdfObject of the class to store the values,
+    // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SystemNodeReset_Humidity, modelObject);
 
     // Control Variable: Required String
@@ -75,15 +75,11 @@ namespace energyplus {
     double highReferenceHumidityRatio = modelObject.highReferenceHumidityRatio();
     idfObject.setDouble(SetpointManager_SystemNodeReset_HumidityFields::HighReferenceHumidityRatio, highReferenceHumidityRatio);
 
-    // Reference Node Name: Required Node
-    if (auto node = modelObject.referenceNode()) {
-      idfObject.setString(SetpointManager_SystemNodeReset_HumidityFields::ReferenceNodeName, node->nameString());
-    }
+    // Reference Node Name: Required Node (but we checked it above)
+    idfObject.setString(SetpointManager_SystemNodeReset_HumidityFields::ReferenceNodeName, modelObject.referenceNode()->nameString());
 
-    // Setpoint Node or NodeList Name: Required Node
-    if (auto node = modelObject.setpointNode()) {
-      idfObject.setString(SetpointManager_SystemNodeReset_HumidityFields::SetpointNodeorNodeListName, node->nameString());
-    }
+    // Setpoint Node or NodeList Name: Required Node (but we know it exists)
+    idfObject.setString(SetpointManager_SystemNodeReset_HumidityFields::SetpointNodeorNodeListName, modelObject.setpointNode()->nameString());
 
     return idfObject;
   }  // End of translate function
