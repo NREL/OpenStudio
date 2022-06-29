@@ -86,7 +86,7 @@ class MeasureManager
     @measures = {} # measure_dir => BCLMeasure
     @measure_info = {} # measure_dir => {osm_path => RubyUserScriptInfo}
 
-    eval(OpenStudio::Ruleset::infoExtractorRubyFunction)
+    eval(OpenStudio::Measure::infoExtractorRubyFunction)
   end
 
   def force_encoding(object, encoding = 'utf-8')
@@ -342,7 +342,7 @@ class MeasureManager
 
           rescue => e
             # update error in info
-            info = OpenStudio::Ruleset::RubyUserScriptInfo.new(e.message)
+            info = OpenStudio::Measure::OSMeasureInfo.new(e.message)
             info.update(result)
           end
 
@@ -358,7 +358,7 @@ class MeasureManager
     return result
   end
 
-  # returns OpenStudio::Ruleset::RubyUserScriptInfo
+  # returns OpenStudio::Measure::OSMeasureInfo
   def get_measure_info(measure_dir, measure, osm_path, model, workspace)
 
     result = nil
@@ -379,9 +379,9 @@ class MeasureManager
       # might need some timeouts or additional protection
       print_message("Loading measure info for '#{measure_dir}', '#{osm_path}'")
       begin
-        result = OpenStudio::Ruleset.getInfo(measure, model, workspace)
+        result = OpenStudio::Measure.getInfo(measure, model, workspace)
       rescue Exception => e
-        result = OpenStudio::Ruleset::RubyUserScriptInfo.new(e.message)
+        result = OpenStudio::Measure::OSMeasureInfo.new(e.message)
       end
 
       @measure_info[measure_dir] = {} if @measure_info[measure_dir].nil?
