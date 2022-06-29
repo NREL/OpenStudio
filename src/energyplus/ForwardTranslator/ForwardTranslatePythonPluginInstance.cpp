@@ -79,7 +79,7 @@ namespace energyplus {
     }
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PythonPluginInstance, modelObject);
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PythonPlugin_Instance, modelObject);
 
     // Run During Warmup Days
     if (modelObject.runDuringWarmupDays()) {
