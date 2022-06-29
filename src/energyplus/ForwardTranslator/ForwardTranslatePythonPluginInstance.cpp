@@ -52,7 +52,6 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translatePythonPluginInstance(PythonPluginInstance& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::PythonPlugin_Instance);
 
     path filePath = modelObject.externalFile().filePath();
     if (!exists(filePath)) {
