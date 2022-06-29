@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://hpxmlonline.com/2019/10" targetNamespace="http://hpxmlonline.com/2019/10" elementFormDefault="qualified" version="4.0">
+    <xs:include schemaLocation="HPXMLBaseElements.xsd"/>
+
+
+    <xs:element name="HPXML">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="XMLTransactionHeaderInformation"/>
+                <xs:element ref="SoftwareInfo"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="Contractor" nillable="true" type="Contractor"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="Customer" nillable="true" type="Customer"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="Building" nillable="true" type="Building"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="Project" nillable="true" type="Project"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="Utility" nillable="true" type="Utility"/>
+                <xs:element maxOccurs="unbounded" minOccurs="0" name="Consumption" nillable="true" type="Consumption"/>
+            </xs:sequence>
+            <xs:attribute name="schemaVersion" type="schemaVersionType" use="required"/>
+            <xs:attribute name="dataSource" type="DataSource"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

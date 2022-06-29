@@ -27,40 +27,33 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef UTILITIES_XML_XMLERRORS_HPP
+#define UTILITIES_XML_XMLERRORS_HPP
 
-#include "../UpdateManager.hpp"
-#include "../System.hpp"
-#include <OpenStudio.hxx>
+#include "../core/LogMessage.hpp"
+#include <vector>
 
-#include <sstream>
-#include <time.h>
+typedef struct _xmlError xmlError;
 
 namespace openstudio {
 
-TEST(UpdateManager, QtGUI_GeneralTest) {
-  UpdateManager manager("GTest");
-  EXPECT_EQ("GTest", manager.appName());
-  auto result = manager.waitForFinished();
-  ASSERT_TRUE(result);
-  EXPECT_TRUE(manager.finished());
-  EXPECT_FALSE(manager.error());
-}
+namespace detail {
 
-// cppcheck-suppress syntaxError
-TEST(UpdateManager, QtGUI_ExpandedTest) {
-  std::string url("https://www.openstudio.net/updateGTest.html?app=GTest&version=0.0.0");
-  UpdateManager manager("GTest", url);
-  EXPECT_EQ("GTest", manager.appName());
-  auto result = manager.waitForFinished();
-  ASSERT_TRUE(result);
-  EXPECT_TRUE(manager.finished());
-  EXPECT_FALSE(manager.error());
-  EXPECT_TRUE(manager.newMajorRelease());
-  EXPECT_FALSE(manager.newMinorRelease());
-  EXPECT_FALSE(manager.newPatchRelease());
-  EXPECT_EQ("99.99.99.99", manager.mostRecentVersion());
-  EXPECT_EQ("https://www.openstudio.net/downloads/99", manager.mostRecentDownloadUrl());
-  ASSERT_EQ(2u, manager.updateMessages().size());
-}
+  struct ErrorCollector
+  {
+    std::vector<LogMessage> logMessages;
+  };
+
+  // Some callback function to collect messages into the ErrorCollector structure
+  // Pass the pointer to the ErrorCollector instnace as libxml2's void* ctx argument (the first arg)
+  // Could have passed XMLValidator directly, but I don't want to have to expose public functions nor friend these free functions
+  void callback_messages_structured_error(void* errorCollectorVoidPtr, xmlError* error);
+
+  void callback_messages_warning(void* errorCollectorVoidPtr, const char* fmt, ...);
+  void callback_messages_error(void* errorCollectorVoidPtr, const char* fmt, ...);
+
+}  // namespace detail
+
 }  // namespace openstudio
+
+#endif  // UTILITIES_XML_XMLERRORS_HPP

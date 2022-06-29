@@ -337,6 +337,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneReheat.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerWarmest.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerWarmestTemperatureFlow.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerSystemNodeResetHumidity.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerSystemNodeResetTemperature.cpp
   ForwardTranslator/ForwardTranslateShade.cpp
   ForwardTranslator/ForwardTranslateShadowCalculation.cpp
   ForwardTranslator/ForwardTranslateShadingControl.cpp
@@ -553,6 +555,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSetpointManagerMixedAir.cpp
   ReverseTranslator/ReverseTranslateSetpointManagerScheduled.cpp
   ReverseTranslator/ReverseTranslateSetpointManagerSingleZoneReheat.cpp
+  ReverseTranslator/ReverseTranslateSetpointManagerSystemNodeResetHumidity.cpp
+  ReverseTranslator/ReverseTranslateSetpointManagerSystemNodeResetTemperature.cpp
   ReverseTranslator/ReverseTranslateShadingBuildingDetailed.cpp
   ReverseTranslator/ReverseTranslateShadingSiteDetailed.cpp
   ReverseTranslator/ReverseTranslateShadingZoneDetailed.cpp
@@ -719,6 +723,8 @@ set(${target_name}_test_src
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp
   Test/SetpointManagerFollowGroundTemperature_GTest.cpp
+  Test/SetpointManagerSystemNodeResetHumidity_GTest.cpp
+  Test/SetpointManagerSystemNodeResetTemperature_GTest.cpp
   Test/ShadingControl_GTest.cpp
   Test/ShadingSurface_GTest.cpp
   Test/ShadowCalculation_GTest.cpp
