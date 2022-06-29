@@ -114,6 +114,21 @@ namespace model {
     }
 
     bool PythonPluginInstance_Impl::setPluginClassName(const std::string& pluginClassName) {
+      path filePath = externalFile().filePath();
+      bool foundPluginClassName = false;
+      std::ifstream ifs(system_complete(filePath));
+      std::string line;
+      while (std::getline(ifs, line)) {
+        if (line.find("class " << pluginClassName) != std::string::npos) {
+          foundPluginClassName = true;
+          break;
+        }
+      }
+
+      if (!foundPluginClassName) {
+        LOG(Warn, "Could not find plugin class name '" << pluginClassName << "' in referenced external file.");
+      }
+
       bool result = setString(OS_PythonPlugin_InstanceFields::PluginClassName, pluginClassName);
       return result;
     }

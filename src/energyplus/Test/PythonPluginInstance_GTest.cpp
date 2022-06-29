@@ -68,14 +68,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
 
-  EXPECT_EQ(0u, ft.errors().size());
+  EXPECT_EQ(1u, ft.errors().size());
+  EXPECT_EQ("Could not find plugin class name 'ZN_1_wall_north_Window_1_Control' in referenced external file.", ft.errors()[0].logMessage());
 
   std::vector<WorkspaceObject> instanceObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_Instance);
-  ASSERT_EQ(3u, instanceObjects.size());
+  ASSERT_EQ(2u, instanceObjects.size());
   std::sort(instanceObjects.begin(), instanceObjects.end(), IdfObjectNameLess());
   WorkspaceObject woInstance1(instanceObjects[0]);
   WorkspaceObject woInstance2(instanceObjects[1]);
-  WorkspaceObject woInstance3(instanceObjects[2]);
 
   ASSERT_EQ(pythonPluginInstance1.name().get(), woInstance1.getString(PythonPlugin_InstanceFields::Name, false).get());
   EXPECT_EQ("No", woInstance1.getString(PythonPlugin_InstanceFields::RunDuringWarmupDays, false).get());
@@ -86,12 +86,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   EXPECT_EQ("Yes", woInstance2.getString(PythonPlugin_InstanceFields::RunDuringWarmupDays, false).get());
   EXPECT_EQ("PythonPluginThermochromicWindow", woInstance2.getString(PythonPlugin_InstanceFields::PythonModuleName, false).get());
   EXPECT_EQ("ZN_1_wall_south_Window_1_Control", woInstance2.getString(PythonPlugin_InstanceFields::PluginClassName, false).get());
-
-  // FIXME: don't translate this one since the class doesn't exist
-  ASSERT_EQ(pythonPluginInstance3.name().get(), woInstance3.getString(PythonPlugin_InstanceFields::Name, false).get());
-  EXPECT_EQ("No", woInstance3.getString(PythonPlugin_InstanceFields::RunDuringWarmupDays, false).get());
-  EXPECT_EQ("PythonPluginThermochromicWindow", woInstance3.getString(PythonPlugin_InstanceFields::PythonModuleName, false).get());
-  EXPECT_EQ("ZN_1_wall_north_Window_1_Control", woInstance3.getString(PythonPlugin_InstanceFields::PluginClassName, false).get());
 
   std::vector<WorkspaceObject> searchPathObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
   ASSERT_EQ(1u, searchPathObjects.size());
