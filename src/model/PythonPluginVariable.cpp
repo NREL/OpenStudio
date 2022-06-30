@@ -35,6 +35,8 @@
 #include "PythonPluginOutputVariable.hpp"
 #include "PythonPluginOutputVariable_Impl.hpp"
 
+#include "Model.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_PythonPlugin_Variable_FieldEnums.hxx>
 
@@ -75,6 +77,38 @@ namespace model {
 
     std::vector<PythonPluginOutputVariable> PythonPluginVariable_Impl::pythonPluginOutputVariables() const {
       return getObject<ModelObject>().getModelObjectSources<PythonPluginOutputVariable>(PythonPluginOutputVariable::iddObjectType());
+    }
+
+    ModelObject PythonPluginVariable_Impl::clone(Model model) const {
+      auto newVar = ModelObject_Impl::clone(model).cast<PythonPluginVariable>();
+
+      for (const auto& child : pythonPluginTrendVariables()) {
+        child.clone(model).cast<PythonPluginTrendVariable>().setPythonPluginVariable(newVar);
+      }
+
+      for (const auto& child : pythonPluginOutputVariables()) {
+        child.clone(model).cast<PythonPluginTrendVariable>().setPythonPluginVariable(newVar);
+      }
+
+      return newVar;
+    }
+
+    std::vector<IdfObject> PythonPluginVariable_Impl::remove() {
+      std::vector<IdfObject> result;
+      auto trends = pythonPluginTrendVariables();
+      auto outputs = pythonPluginOutputVariables();
+      result.reserve(trends.size() + outputs.size() + 1);
+
+      for (auto& child : trends) {
+        result.emplace_back(child.remove().front());
+      }
+
+      for (auto& child : outputs) {
+        result.emplace_back(child.remove().front());
+      }
+
+      result.emplace_back(ModelObject_Impl::remove().front());
+      return result;
     }
 
   }  // namespace detail

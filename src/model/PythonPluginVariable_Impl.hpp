@@ -56,6 +56,12 @@ namespace model {
 
       virtual ~PythonPluginVariable_Impl() = default;
 
+      /** Removes all PythonPluginTrendVariable and PythonPluginOutputVariable attached to it */
+      virtual std::vector<IdfObject> remove() override;
+
+      /** Also clones all PythonPluginTrendVariable and PythonPluginOutputVariable attached to it */
+      virtual ModelObject clone(Model model) const override;
+
       //@}
       /** @name Virtual Methods */
       //@{
