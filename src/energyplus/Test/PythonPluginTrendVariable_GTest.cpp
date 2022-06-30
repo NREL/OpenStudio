@@ -27,42 +27,51 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ForwardTranslator.hpp"
-#include "../../model/Model.hpp"
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
 
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
+
+#include "../../model/Model.hpp"
+#include "../../model/PythonPluginTrendVariable.hpp"
 #include "../../model/PythonPluginVariable.hpp"
 
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/PythonPlugin_Variables_FieldEnums.hxx>
-// #include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/PythonPlugin_TrendVariable_FieldEnums.hxx>
+
 #include <utilities/idd/IddEnums.hxx>
 
-#include <algorithm>
-
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
-constexpr static auto pythonVariablesName = "Python Plugin Variables";
+TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginTrendVariable) {
 
-namespace openstudio {
+  ForwardTranslator ft;
 
-namespace energyplus {
+  // Create a model
+  Model m;
 
-  boost::optional<IdfObject> ForwardTranslator::translatePythonPluginVariable(model::PythonPluginVariable& modelObject) {
+  PythonPluginVariable pyVar(m);
+  pyVar.setName("PythonPluginVariable1");
 
-    // Our objects are all translated to a single E+ PythonPlugin:Variables object which is extensible
+  PythonPluginTrendVariable pyTrendVar(pyVar);
+  pyTrendVar.setName("PythonPluginTrendVariable");
+  EXPECT_TRUE(pyTrendVar.setNumberofTimestepstobeLogged(10));
 
-    auto it = std::find_if(m_idfObjects.begin(), m_idfObjects.end(), [](auto& idfObject) { return idfObject.nameString() == pythonVariablesName; });
-    if (it == m_idfObjects.end()) {
-      auto& pluginVariables = m_idfObjects.emplace_back(openstudio::IddObjectType::PythonPlugin_Variables);
-      pluginVariables.setName(pythonVariablesName);
-      pluginVariables.pushExtensibleGroup({modelObject.nameString()});
-      return pluginVariables;
-    }
+  Workspace w = ft.translateModel(m);
+  EXPECT_EQ(1, w.getObjectsByType(IddObjectType::PythonPlugin_Variables).size());
+  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::PythonPlugin_TrendVariable);
+  ASSERT_EQ(1u, idfObjs.size());
+  auto idfObj = idfObjs.front();
 
-    it->pushExtensibleGroup({modelObject.nameString()});
-    return *it;
-  }  // End of translate function
-
-}  // end namespace energyplus
-}  // end namespace openstudio
+  EXPECT_EQ(pyTrendVar.nameString(), idfObj.getString(PythonPlugin_TrendVariableFields::Name).get());
+  EXPECT_EQ(pyVar.nameString(), idfObj.getString(PythonPlugin_TrendVariableFields::NameofaPythonPluginVariable).get());
+  EXPECT_EQ(10, idfObj.getInt(PythonPlugin_TrendVariableFields::NumberofTimestepstobeLogged).get());
+}

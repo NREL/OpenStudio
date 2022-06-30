@@ -27,42 +27,47 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ForwardTranslator.hpp"
-#include "../../model/Model.hpp"
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
 
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
+
+#include "../../model/Model.hpp"
 #include "../../model/PythonPluginVariable.hpp"
 
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/PythonPlugin_Variables_FieldEnums.hxx>
-// #include "../../utilities/idd/IddEnums.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 
-#include <algorithm>
-
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
-constexpr static auto pythonVariablesName = "Python Plugin Variables";
+TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginVariable) {
 
-namespace openstudio {
+  ForwardTranslator ft;
 
-namespace energyplus {
+  // Create a model
+  Model m;
 
-  boost::optional<IdfObject> ForwardTranslator::translatePythonPluginVariable(model::PythonPluginVariable& modelObject) {
+  PythonPluginVariable pyVar1(m);
+  pyVar1.setName("PythonPluginVariable1");
 
-    // Our objects are all translated to a single E+ PythonPlugin:Variables object which is extensible
+  PythonPluginVariable pyVar2(m);
+  pyVar1.setName("PythonPluginVariable2");
 
-    auto it = std::find_if(m_idfObjects.begin(), m_idfObjects.end(), [](auto& idfObject) { return idfObject.nameString() == pythonVariablesName; });
-    if (it == m_idfObjects.end()) {
-      auto& pluginVariables = m_idfObjects.emplace_back(openstudio::IddObjectType::PythonPlugin_Variables);
-      pluginVariables.setName(pythonVariablesName);
-      pluginVariables.pushExtensibleGroup({modelObject.nameString()});
-      return pluginVariables;
-    }
-
-    it->pushExtensibleGroup({modelObject.nameString()});
-    return *it;
-  }  // End of translate function
-
-}  // end namespace energyplus
-}  // end namespace openstudio
+  Workspace w = ft.translateModel(m);
+  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::PythonPlugin_Variables);
+  ASSERT_EQ(1u, idfObjs.size());
+  auto idfObj = idfObjs.front();
+  auto egs = idfObj.extensibleGroups();
+  ASSERT_EQ(2, egs.size());
+  EXPECT_EQ(pyVar1.nameString(), egs.front().getString(0).get());
+  EXPECT_EQ(pyVar2.nameString(), egs.back().getString(0).get());
+}

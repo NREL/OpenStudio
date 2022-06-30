@@ -720,6 +720,9 @@ set(${target_name}_test_src
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp
   Test/PythonPluginInstance_GTest.cpp
+  Test/PythonPluginVariable_GTest.cpp
+  Test/PythonPluginOutputVariable_GTest.cpp
+  Test/PythonPluginTrendVariable_GTest.cpp
   Test/RunPeriod_GTest.cpp
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/RunPeriodControlSpecialDays_GTest.cpp
