@@ -39,9 +39,14 @@
 #include "../../model/PythonPluginInstance.hpp"
 #include "../../model/PythonPluginInstance_Impl.hpp"
 
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/PythonPlugin_Instance_FieldEnums.hxx>
+#include <utilities/idd/PythonPlugin_SearchPaths_FieldEnums.hxx>
 
 #include <resources.hxx>
 
@@ -99,5 +104,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   std::vector<WorkspaceObject> searchPathObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
   ASSERT_EQ(1u, searchPathObjects.size());
   WorkspaceObject woSearchPaths(searchPathObjects[0]);
-  EXPECT_EQ(1u, woSearchPaths.numExtensibleGroups());
+  EXPECT_EQ("Python Plugin Search Paths", woSearchPaths.nameString());
+  EXPECT_EQ("Yes", woSearchPaths.getString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath).get());
+  EXPECT_EQ("Yes", woSearchPaths.getString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath).get());
+  EXPECT_EQ("Yes", woSearchPaths.getString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath).get());
+  ASSERT_EQ(1u, woSearchPaths.numExtensibleGroups());
+  EXPECT_EQ(openstudio::toString(externalfile->filePath().parent_path()),
+            woSearchPaths.extensibleGroups()[0].getString(PythonPlugin_SearchPathsExtensibleFields::SearchPath).get());
 }
