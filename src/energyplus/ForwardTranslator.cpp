@@ -2382,6 +2382,21 @@ namespace energyplus {
         retVal = translatePythonPluginInstance(obj);
         break;
       }
+      case openstudio::IddObjectType::OS_PythonPlugin_Variable: {
+        auto obj = modelObject.cast<PythonPluginVariable>();
+        retVal = translatePythonPluginVariable(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_TrendVariable: {
+        auto obj = modelObject.cast<PythonPluginTrendVariable>();
+        retVal = translatePythonPluginTrendVariable(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_OutputVariable: {
+        auto obj = modelObject.cast<PythonPluginOutputVariable>();
+        retVal = translatePythonPluginOutputVariable(obj);
+        break;
+      }
       case openstudio::IddObjectType::OS_RadianceParameters: {
         // no-op
         break;

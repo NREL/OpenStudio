@@ -282,6 +282,9 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslatePumpConstantSpeed.cpp
   ForwardTranslator/ForwardTranslatePumpVariableSpeed.cpp
   ForwardTranslator/ForwardTranslatePythonPluginInstance.cpp
+  ForwardTranslator/ForwardTranslatePythonPluginVariable.cpp
+  ForwardTranslator/ForwardTranslatePythonPluginTrendVariable.cpp
+  ForwardTranslator/ForwardTranslatePythonPluginOutputVariable.cpp
   ForwardTranslator/ForwardTranslateRefractionExtinctionGlazing.cpp
   ForwardTranslator/ForwardTranslateRefrigerationAirChiller.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
