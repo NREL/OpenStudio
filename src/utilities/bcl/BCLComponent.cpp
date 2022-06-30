@@ -31,7 +31,9 @@
 #include "../core/System.hpp"
 #include "../core/FilesystemHelpers.hpp"
 
+#include <boost/lexical_cast.hpp>
 #include <pugixml.hpp>
+
 #include <algorithm>
 
 namespace openstudio {

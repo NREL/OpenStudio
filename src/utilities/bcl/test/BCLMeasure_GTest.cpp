@@ -783,7 +783,9 @@ TEST_F(BCLFixture, 4156_TweakXML) {
   EXPECT_EQ(6, numFiles);
 
   size_t addedUntrackedFiles = 0;
-  for (const openstudio::path& relativeFilePath : {"root_file.rb", "untracked_subfolder/subfolder_file.rb", "tests/output/test_report.html"}) {
+  std::vector<fs::path> relativeFilePaths = {"root_file.rb", "untracked_subfolder/subfolder_file.rb", "tests/output/test_report.html"};
+
+  for (const openstudio::path& relativeFilePath : relativeFilePaths) {
     auto absoluteFilePath = srcDir / relativeFilePath;
     fs::create_directories(absoluteFilePath.parent_path());
     std::ofstream(absoluteFilePath.string()) << absoluteFilePath.string();

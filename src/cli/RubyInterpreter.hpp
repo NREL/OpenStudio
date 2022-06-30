@@ -38,11 +38,8 @@
 #include <typeinfo>
 #include <sstream>
 
-#include <ruby.h>
-#include <ruby/encoding.h>
 // SWIGRubyRuntime.hxx includes ruby.h which includes ruby/win32.h, which has some brain damaged notions of
 // what standard errno values should be.
-
 #ifdef _MSC_VER
 #  ifdef EWOULDBLOCK
 #    pragma push_macro("EWOULDBLOCK")
@@ -470,6 +467,12 @@
 #    define isnan_macro_found
 #  endif
 
+#  ifdef isinf
+#    pragma push_macro("isinf")
+#    undef isinf
+#    define isinf_macro_found
+#  endif
+
 #  ifdef finite
 #    pragma push_macro("finite")
 #    undef finite
@@ -680,6 +683,9 @@
 #    define Sleep_macro_found
 #  endif
 #endif
+
+#include <ruby.h>
+#include <ruby/encoding.h>
 
 #include <cli/SWIGRubyRuntime.hxx>
 
@@ -1329,6 +1335,11 @@ class RubyInterpreter
 #  ifdef isnan_macro_found
 #    pragma pop_macro("isnan")
 #    undef isnan_macro_found
+#  endif
+
+#  ifdef isinf_macro_found
+#    pragma pop_macro("isinf")
+#    undef isinf_macro_found
 #  endif
 
 #  ifdef finite_macro_found

@@ -40,6 +40,7 @@ if __package__ or "." in __name__:
     from .openstudioutilitiessql import *
     from .openstudioutilitiestime import *
     from .openstudioutilitiesunits import *
+    from .openstudioutilitiesxml import *
 
 else:
 
@@ -81,3 +82,4 @@ else:
     from openstudioutilitiessql import *
     from openstudioutilitiestime import *
     from openstudioutilitiesunits import *
+    from openstudioutilitiesxml import *

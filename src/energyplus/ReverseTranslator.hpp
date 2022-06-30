@@ -315,6 +315,10 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateSetpointManagerSingleZoneReheat(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateSetpointManagerSystemNodeResetHumidity(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateSetpointManagerSystemNodeResetTemperature(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateShadingBuildingDetailed(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateShadingSiteDetailed(const WorkspaceObject& workspaceObject);

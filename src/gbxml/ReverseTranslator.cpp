@@ -69,8 +69,10 @@
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
+#include "../utilities/xml/XMLValidator.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
+#include <resources.hxx>
 
 #include <thread>
 
@@ -108,6 +110,11 @@ namespace gbxml {
     boost::optional<openstudio::model::Model> result;
 
     if (openstudio::filesystem::exists(path)) {
+
+      // validate the gbxml prior to reverse translation
+      openstudio::path schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
+      XMLValidator xmlValidator(schemaPath);
+      xmlValidator.validate(path);
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {

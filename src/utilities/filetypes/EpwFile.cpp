@@ -36,6 +36,7 @@
 #include "../core/Assert.hpp"
 
 #include <fmt/format.h>
+#include <cmath>
 
 namespace openstudio {
 
@@ -161,7 +162,7 @@ static boost::optional<double> solveForWetBulb(double drybulb, double p, double 
     double delta = -f / fp;
     tstar += delta;
     // std::cout << i << " " << tstar << " " << delta / (273.15 + tstar) << '\n';
-    if (fabs(delta / (273.15 + tstar)) <= deltaLimit) {
+    if (std::fabs(delta / (273.15 + tstar)) <= deltaLimit) {
       return boost::optional<double>(tstar);
     }
   }
@@ -185,7 +186,7 @@ static boost::optional<double> solveForDewPoint(double drybulb, double pw, doubl
     double delta = -f / fp;
     tdew += delta;
     // std::cout << i << " " << tdew << " " << delta / (273.15 + tdew) << '\n';
-    if (fabs(delta / (273.15 + tdew)) <= deltaLimit) {
+    if (std::fabs(delta / (273.15 + tdew)) <= deltaLimit) {
       return boost::optional<double>(tdew);
     }
   }

@@ -4132,6 +4132,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneReheat);
     REGISTER_CONSTRUCTOR(SetpointManagerWarmest);
     REGISTER_CONSTRUCTOR(SetpointManagerWarmestTemperatureFlow);
+    REGISTER_CONSTRUCTOR(SetpointManagerSystemNodeResetHumidity);
+    REGISTER_CONSTRUCTOR(SetpointManagerSystemNodeResetTemperature);
     REGISTER_CONSTRUCTOR(Shade);
     REGISTER_CONSTRUCTOR(ShadingControl);
     REGISTER_CONSTRUCTOR(ShadingSurface);
@@ -4661,6 +4663,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneReheat);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmest);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmestTemperatureFlow);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSystemNodeResetHumidity);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSystemNodeResetTemperature);
     REGISTER_COPYCONSTRUCTORS(Shade);
     REGISTER_COPYCONSTRUCTORS(ShadingControl);
     REGISTER_COPYCONSTRUCTORS(ShadingSurface);

@@ -29,6 +29,8 @@
 
 #include "SimModel.hpp"
 
+#include <cmath>
+
 #if _DEBUG || (__GNUC__ && !NDEBUG)
 #  define DEBUG_ISO_MODEL_SIMULATION
 #endif
@@ -253,7 +255,7 @@ namespace isomodel {
   Vector abs(const Vector& v1) {
     Vector va = Vector(v1.size());
     for (size_t i = 0; i < v1.size(); i++) {
-      va[i] = ::fabs(v1[i]);
+      va[i] = std::fabs(v1[i]);
     }
     return va;
   }

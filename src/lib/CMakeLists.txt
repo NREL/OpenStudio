@@ -29,6 +29,8 @@ target_link_libraries(
  CONAN_PKG::cpprestsdk
  CONAN_PKG::openssl
  CONAN_PKG::pugixml
+ CONAN_PKG::libxml2
+ # CONAN_PKG::libxslt
  # CONAN_PKG::tinygltf  # TODO: needed?
 )
 

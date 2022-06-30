@@ -2658,6 +2658,16 @@ namespace energyplus {
         retVal = translateSetpointManagerWarmestTemperatureFlow(spm);
         break;
       }
+      case openstudio::IddObjectType::OS_SetpointManager_SystemNodeReset_Humidity: {
+        auto spm = modelObject.cast<SetpointManagerSystemNodeResetHumidity>();
+        retVal = translateSetpointManagerSystemNodeResetHumidity(spm);
+        break;
+      }
+      case openstudio::IddObjectType::OS_SetpointManager_SystemNodeReset_Temperature: {
+        auto spm = modelObject.cast<SetpointManagerSystemNodeResetTemperature>();
+        retVal = translateSetpointManagerSystemNodeResetTemperature(spm);
+        break;
+      }
       case openstudio::IddObjectType::OS_ShadingControl: {
         model::ShadingControl shadingControl = modelObject.cast<ShadingControl>();
         retVal = translateShadingControl(shadingControl);
