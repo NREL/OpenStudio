@@ -42,6 +42,10 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
+#include <algorithm>
+
+constexpr static auto pythonSearchPathsName = "Python Plugin Search Paths";
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -85,28 +89,36 @@ namespace energyplus {
     // Python Class Name
     idfObject.setString(openstudio::PythonPlugin_InstanceFields::PluginClassName, pluginClassName);
 
-    // Translate Python Plugin Search Paths
-    if (!m_pythonPluginSearchPaths) {
-      // Create a new IddObjectType::PythonPlugin_SearchPaths
-      m_pythonPluginSearchPaths = m_idfObjects.emplace_back(IddObjectType::PythonPlugin_SearchPaths);
-      m_pythonPluginSearchPaths->setName("Python Plugin Search Paths");
-      // These are IDD defaults
-      m_pythonPluginSearchPaths->setString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath, "Yes");
-      m_pythonPluginSearchPaths->setString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath, "Yes");
-      m_pythonPluginSearchPaths->setString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath, "Yes");
-    }
-
+    // PythonPlugin:SearchPaths
     std::string searchPath = toString(filePath.parent_path());
-    bool newSearchPath = true;
-    for (const IdfExtensibleGroup& eg : m_pythonPluginSearchPaths->extensibleGroups()) {
-      if (searchPath == eg.getString(0)) {
-        newSearchPath = false;
-        break;
-      }
-    }
 
-    if (newSearchPath) {
-      IdfExtensibleGroup group = m_pythonPluginSearchPaths->pushExtensibleGroup({searchPath});
+    auto it = std::find_if(m_idfObjects.begin(), m_idfObjects.end(), [](auto& idfObject) { return idfObject.nameString() == pythonSearchPathsName; });
+    if (it == m_idfObjects.end()) {
+      // First time: create it
+      auto& pythonPluginSearchPaths = m_idfObjects.emplace_back(IddObjectType::PythonPlugin_SearchPaths);
+
+      pythonPluginSearchPaths.setName(pythonSearchPathsName);
+      // These are IDD defaults
+      pythonPluginSearchPaths.setString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath, "Yes");
+      pythonPluginSearchPaths.setString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath, "Yes");
+      pythonPluginSearchPaths.setString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath, "Yes");
+
+      // Just push the searchPath to it
+      pythonPluginSearchPaths.pushExtensibleGroup({searchPath});
+    } else {
+
+      // Try to locate it before adding it
+      bool newSearchPath = true;
+      for (const IdfExtensibleGroup& eg : it->extensibleGroups()) {
+        if (searchPath == eg.getString(0)) {
+          newSearchPath = false;
+          break;
+        }
+      }
+
+      if (newSearchPath) {
+        it->pushExtensibleGroup({searchPath});
+      }
     }
 
     return idfObject;

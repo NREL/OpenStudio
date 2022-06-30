@@ -3929,8 +3929,6 @@ namespace energyplus {
 
     m_anyNumberScheduleTypeLimits.reset();
 
-    m_pythonPluginSearchPaths.reset();
-
     m_alwaysOnSchedule.reset();
 
     m_alwaysOffSchedule.reset();
