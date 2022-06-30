@@ -42,35 +42,16 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-#include <boost/regex.hpp>
-
 using namespace openstudio::model;
-
-using namespace std;
 
 namespace openstudio {
 
 namespace energyplus {
 
-  bool findPluginClassNameInFile(const openstudio::path& filePath, const std::string& pluginClassName) {
-    bool foundPluginClassName = false;
-
-    const boost::regex re("class\\s+" + pluginClassName + "\\s*");
-    openstudio::filesystem::ifstream ifs(filePath);
-    std::string line;
-    while (std::getline(ifs, line)) {
-      if (boost::regex_search(line, re)) {
-        foundPluginClassName = true;
-        break;
-      }
-    }
-    return foundPluginClassName;
-  }
-
   boost::optional<IdfObject> ForwardTranslator::translatePythonPluginInstance(PythonPluginInstance& modelObject) {
 
     path filePath = modelObject.externalFile().filePath();
-    if (!exists(filePath)) {
+    if (!openstudio::filesystem::exists(filePath)) {
       LOG(Warn, modelObject.briefDescription() << "will not be translated, cannot find the referenced file '" << filePath << "'");
       return boost::none;
     }
@@ -79,8 +60,9 @@ namespace energyplus {
     filePath = openstudio::filesystem::system_complete(filePath);
 
     // If the plugin class name can't be found in the referenced external file, then it shouldn't be translated
+    // We do it here and inside model, because between the time the user created the model object and now, the python file may have been modified
     std::string pluginClassName = modelObject.pluginClassName();
-    if (!findPluginClassNameInFile(filePath, pluginClassName)) {
+    if (!modelObject.findPluginClassNameInFile(pluginClassName)) {
       LOG(Warn, "PythonPluginInstance " << modelObject.name().get() << " does not have plugin class name '" << pluginClassName
                                         << "' contained in referenced external file");
       return boost::none;

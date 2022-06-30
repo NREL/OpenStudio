@@ -89,6 +89,10 @@ namespace model {
       /** @name Other */
       //@{
 
+      bool findPluginClassNameInFile(const std::string& pluginClassName) const;
+
+      std::vector<std::string> validPluginClassNamesInFile() const;
+
       //@}
      protected:
      private:

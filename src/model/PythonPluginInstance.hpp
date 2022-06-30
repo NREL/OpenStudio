@@ -83,10 +83,15 @@ namespace model {
     /** @name Other */
     //@{
 
+    /** Helper that will return whether the pluginClassName can be found in the linked file */
+    bool findPluginClassNameInFile(const std::string& pluginClassName) const;
+
+    std::vector<std::string> validPluginClassNamesInFile() const;
+
     //@}
    protected:
     /// @cond
-    typedef detail::PythonPluginInstance_Impl ImplType;
+    using ImplType = detail::PythonPluginInstance_Impl;
 
     explicit PythonPluginInstance(std::shared_ptr<detail::PythonPluginInstance_Impl> impl);
 
@@ -99,10 +104,10 @@ namespace model {
   };
 
   /** \relates PythonPluginInstance*/
-  typedef boost::optional<PythonPluginInstance> OptionalPythonPluginInstance;
+  using OptionalPythonPluginInstance = boost::optional<PythonPluginInstance>;
 
   /** \relates PythonPluginInstance*/
-  typedef std::vector<PythonPluginInstance> PythonPluginInstanceVector;
+  using PythonPluginInstanceVector = std::vector<PythonPluginInstance>;
 
 }  // namespace model
 }  // namespace openstudio

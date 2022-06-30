@@ -44,13 +44,13 @@
 #include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
+#include "../../utilities/core/PathHelpers.hpp"
+
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/PythonPlugin_Instance_FieldEnums.hxx>
 #include <utilities/idd/PythonPlugin_SearchPaths_FieldEnums.hxx>
 
 #include <resources.hxx>
-
-#include <boost/regex.hpp>
 
 #include <sstream>
 
@@ -61,14 +61,30 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   Model model;
 
-  path p = resourcesPath() / toPath("model/PythonPluginThermochromicWindow.py");
+  openstudio::path p = resourcesPath() / toPath("model/PythonPluginThermochromicWindow.py");
+  ASSERT_TRUE(exists(p));
+
+  // This is to avoid issues where if you change the original OpenStudio/resources/model/PythonPluginThermochromicWindow.py it will throw in
+  // getExternalFile because the file exists and it doesn't have the same content
+  path expectedDestDir;
+  std::vector<path> absoluteFilePaths = model.workflowJSON().absoluteFilePaths();
+  if (absoluteFilePaths.empty()) {
+    expectedDestDir = model.workflowJSON().absoluteRootDir();
+  } else {
+    expectedDestDir = absoluteFilePaths[0];
+  }
+
+  if (exists(expectedDestDir)) {
+    removeDirectory(expectedDestDir);
+  }
+  ASSERT_FALSE(exists(expectedDestDir));
 
   boost::optional<ExternalFile> externalfile = ExternalFile::getExternalFile(model, openstudio::toString(p));
+  ASSERT_TRUE(externalfile) << "Path doesn't exist: '" << p << "'";
 
   PythonPluginInstance pythonPluginInstance1(*externalfile, "ZN_1_wall_south_Window_1_Control");
   PythonPluginInstance pythonPluginInstance2(*externalfile, "ZN_1_wall_south_Window_1_Control");
   pythonPluginInstance2.setRunDuringWarmupDays(true);
-  PythonPluginInstance pythonPluginInstance3(*externalfile, "ZN_1_wall_north_Window_1_Control");  // doesn't exist
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
@@ -77,16 +93,16 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   for (const auto& error : ft.errors()) {
     errors += error.logMessage() + "\n";
   }
-  EXPECT_EQ(0u, ft.errors().size()) << errors;
+  EXPECT_EQ(0, ft.errors().size()) << errors;
 
   std::string warnings;
   for (const auto& warning : ft.warnings()) {
     warnings += warning.logMessage() + "\n";
   }
-  EXPECT_EQ(1u, ft.warnings().size()) << warnings;
+  EXPECT_EQ(0, ft.warnings().size()) << warnings;
 
   std::vector<WorkspaceObject> instanceObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_Instance);
-  ASSERT_EQ(2u, instanceObjects.size());
+  ASSERT_EQ(2, instanceObjects.size());
   std::sort(instanceObjects.begin(), instanceObjects.end(), IdfObjectNameLess());
   WorkspaceObject woInstance1(instanceObjects[0]);
   WorkspaceObject woInstance2(instanceObjects[1]);
@@ -102,13 +118,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   EXPECT_EQ("ZN_1_wall_south_Window_1_Control", woInstance2.getString(PythonPlugin_InstanceFields::PluginClassName, false).get());
 
   std::vector<WorkspaceObject> searchPathObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
-  ASSERT_EQ(1u, searchPathObjects.size());
+  ASSERT_EQ(1, searchPathObjects.size());
   WorkspaceObject woSearchPaths(searchPathObjects[0]);
   EXPECT_EQ("Python Plugin Search Paths", woSearchPaths.nameString());
   EXPECT_EQ("Yes", woSearchPaths.getString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath).get());
   EXPECT_EQ("Yes", woSearchPaths.getString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath).get());
   EXPECT_EQ("Yes", woSearchPaths.getString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath).get());
-  ASSERT_EQ(1u, woSearchPaths.numExtensibleGroups());
+  ASSERT_EQ(1, woSearchPaths.numExtensibleGroups());
   EXPECT_EQ(openstudio::toString(externalfile->filePath().parent_path()),
             woSearchPaths.extensibleGroups()[0].getString(PythonPlugin_SearchPathsExtensibleFields::SearchPath).get());
 }

@@ -42,6 +42,8 @@
 #include "../utilities/units/Unit.hpp"
 #include "../utilities/core/Assert.hpp"
 
+#include <boost/regex.hpp>
+
 namespace openstudio {
 namespace model {
 
@@ -114,23 +116,47 @@ namespace model {
     }
 
     bool PythonPluginInstance_Impl::setPluginClassName(const std::string& pluginClassName) {
-      path filePath = externalFile().filePath();
-      filePath = system_complete(filePath);
+      if (!findPluginClassNameInFile(pluginClassName)) {
+        LOG(Warn, "Could not find plugin class name '" << pluginClassName << "' in referenced external file.");
+        return false;
+      }
+
+      bool result = setString(OS_PythonPlugin_InstanceFields::PluginClassName, pluginClassName);
+      return result;
+    }
+
+    bool PythonPluginInstance_Impl::findPluginClassNameInFile(const std::string& pluginClassName) const {
       bool foundPluginClassName = false;
-      std::ifstream ifs(toSystemFilename(filePath));
+
+      const boost::regex re("^class\\s+" + pluginClassName + "\\s*\\(\\s*EnergyPlusPlugin");
+
+      auto filePath = openstudio::filesystem::system_complete(externalFile().filePath());
+      openstudio::filesystem::ifstream ifs(filePath);
       std::string line;
       while (std::getline(ifs, line)) {
-        if (line.find("class " + pluginClassName) != std::string::npos) {
+        if (boost::regex_search(line, re)) {
           foundPluginClassName = true;
           break;
         }
       }
+      return foundPluginClassName;
+    }
 
-      if (!foundPluginClassName) {
-        LOG(Warn, "Could not find plugin class name '" << pluginClassName << "' in referenced external file.");
+    std::vector<std::string> PythonPluginInstance_Impl::validPluginClassNamesInFile() const {
+      std::vector<std::string> result;
+
+      // Regexes are expensive, so static duration makes sense
+      static const boost::regex re(R"(^class\s+(\w+)\s*\(\s*EnergyPlusPlugin)");
+      boost::smatch matches;
+
+      auto filePath = openstudio::filesystem::system_complete(externalFile().filePath());
+      openstudio::filesystem::ifstream ifs(filePath);
+      std::string line;
+      while (std::getline(ifs, line)) {
+        if (boost::regex_search(line, matches, re)) {
+          result.emplace_back(matches[1].first, matches[1].second);
+        }
       }
-
-      bool result = setString(OS_PythonPlugin_InstanceFields::PluginClassName, pluginClassName);
       return result;
     }
 
@@ -140,21 +166,26 @@ namespace model {
     : ResourceObject(PythonPluginInstance::iddObjectType(), externalfile.model()) {
     OS_ASSERT(getImpl<detail::PythonPluginInstance_Impl>());
 
-    path filePath = externalfile.filePath();
+    auto filePath = externalfile.filePath();
     bool ok = (toString(filePath.extension()) == ".py");
     if (!ok) {
       remove();
-      LOG_AND_THROW("Unable to set " << briefDescription() << "'s external file to " << externalfile.briefDescription() << ".");
+      LOG_AND_THROW("External file must have a .py extension, got externalfile='" << filePath << "'.");
     }
 
     ok = setPointer(OS_PythonPlugin_InstanceFields::ExternalFileName, externalfile.handle());
     OS_ASSERT(ok);
+
+    // This must occur after setPointer externalfile
     ok = setPluginClassName(pluginClassName);
-    OS_ASSERT(ok);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Cannot find the Plugin Class Name '" << pluginClassName << "' in external file '" << filePath << "'.");
+    }
   }
 
   IddObjectType PythonPluginInstance::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_PythonPlugin_Instance);
+    return {IddObjectType::OS_PythonPlugin_Instance};
   }
 
   ExternalFile PythonPluginInstance::externalFile() const {
@@ -183,6 +214,14 @@ namespace model {
 
   bool PythonPluginInstance::setPluginClassName(const std::string& pluginClassName) {
     return getImpl<detail::PythonPluginInstance_Impl>()->setPluginClassName(pluginClassName);
+  }
+
+  bool PythonPluginInstance::findPluginClassNameInFile(const std::string& pluginClassName) const {
+    return getImpl<detail::PythonPluginInstance_Impl>()->findPluginClassNameInFile(pluginClassName);
+  }
+
+  std::vector<std::string> PythonPluginInstance::validPluginClassNamesInFile() const {
+    return getImpl<detail::PythonPluginInstance_Impl>()->validPluginClassNamesInFile();
   }
 
   /// @cond

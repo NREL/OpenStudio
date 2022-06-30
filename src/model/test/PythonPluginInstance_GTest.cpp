@@ -74,17 +74,16 @@ TEST_F(ModelFixture, PythonPluginInstance) {
   EXPECT_EQ(1u, model.getConcreteModelObjects<PythonPluginInstance>().size());
   EXPECT_EQ(1u, externalfile->pythonPluginInstances().size());
   EXPECT_EQ(externalfile->handle(), plugin.externalFile().handle());
+  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", plugin.pluginClassName());
+
   EXPECT_FALSE(plugin.runDuringWarmupDays());
   EXPECT_TRUE(plugin.isRunDuringWarmupDaysDefaulted());
-  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", plugin.pluginClassName());
   plugin.setRunDuringWarmupDays(true);
   EXPECT_TRUE(plugin.runDuringWarmupDays());
   EXPECT_FALSE(plugin.isRunDuringWarmupDaysDefaulted());
   plugin.resetRunDuringWarmupDays();
   EXPECT_FALSE(plugin.runDuringWarmupDays());
   EXPECT_TRUE(plugin.isRunDuringWarmupDaysDefaulted());
-  EXPECT_TRUE(plugin.setPluginClassName("Test"));
-  EXPECT_EQ("Test", plugin.pluginClassName());
 
   PythonPluginInstance plugin2(*externalfile, "ZN_1_wall_south_Window_1_Control");
   EXPECT_EQ(2u, model.getConcreteModelObjects<PythonPluginInstance>().size());
@@ -121,7 +120,7 @@ TEST_F(ModelFixture, PythonPluginInstance_NotPYFile) {
   ASSERT_THROW(PythonPluginInstance plugin(*externalfile, "ZN_1_wall_south_Window_1_Control"), openstudio::Exception);
 }
 
-TEST_F(ModelFixture, PythonPluginInstance_BadClassName) {
+TEST_F(ModelFixture, PythonPluginInstance_ClassNameValidation) {
   Model model;
 
   path p = resourcesPath() / toPath("model/PythonPluginThermochromicWindow.py");
@@ -131,15 +130,24 @@ TEST_F(ModelFixture, PythonPluginInstance_BadClassName) {
   ASSERT_TRUE(externalfile);
 
   // ctor
-  {
-    PythonPluginInstance plugin(*externalfile, "ZN_1_wall_east_Window_1_Control");
-    // TODO: check warning
-  }
+  EXPECT_ANY_THROW(PythonPluginInstance(*externalfile, "ZN_1_wall_east_Window_1_Control"));
 
-  // setter
-  {
-    PythonPluginInstance plugin(*externalfile, "ZN_1_wall_south_Window_1_Control");
-    EXPECT_TRUE(plugin.setPluginClassName("ZN_1_wall_west_Window_1_Control"));
-    // TODO: check warning
-  }
+  // Start with a valid one
+  PythonPluginInstance plugin(*externalfile, "ZN_1_wall_south_Window_1_Control");
+  // Then try to set an invalid one
+  EXPECT_FALSE(plugin.setPluginClassName("ZN_1_wall_west_Window_1_Control"));
+  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", plugin.pluginClassName());
+
+  // Try another valid one
+  EXPECT_TRUE(plugin.setPluginClassName("AnotherDummyEnergyPlusPluginClass"));
+  EXPECT_EQ("AnotherDummyEnergyPlusPluginClass", plugin.pluginClassName());
+
+  // Try with a support class that doesn't derive EnergyPlusPlugin
+  EXPECT_FALSE(plugin.setPluginClassName("MySupportClassThatDoesntDeriveEnergyPlusPlugin"));
+  EXPECT_EQ("AnotherDummyEnergyPlusPluginClass", plugin.pluginClassName());
+
+  auto validClassNames = plugin.validPluginClassNamesInFile();
+  ASSERT_EQ(2, validClassNames.size());
+  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", validClassNames[0]);
+  EXPECT_EQ("AnotherDummyEnergyPlusPluginClass", validClassNames[1]);
 }

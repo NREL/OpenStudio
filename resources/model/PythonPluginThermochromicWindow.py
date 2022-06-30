@@ -56,6 +56,10 @@
 from pyenergyplus.plugin import EnergyPlusPlugin
 
 
+class MySupportClassThatDoesntDeriveEnergyPlusPlugin:
+    pass
+
+
 class ZN_1_wall_south_Window_1_Control(EnergyPlusPlugin):
 
     def __init__(self):
@@ -185,3 +189,7 @@ class ZN_1_wall_south_Window_1_Control(EnergyPlusPlugin):
         else:
             # api not ready, return
             return 0
+
+
+class AnotherDummyEnergyPlusPluginClass(EnergyPlusPlugin):
+    pass
