@@ -4073,6 +4073,9 @@ namespace model {
     REGISTER_CONSTRUCTOR(PumpConstantSpeed);
     REGISTER_CONSTRUCTOR(PumpVariableSpeed);
     REGISTER_CONSTRUCTOR(PythonPluginInstance);
+    REGISTER_CONSTRUCTOR(PythonPluginVariable);
+    REGISTER_CONSTRUCTOR(PythonPluginTrendVariable);
+    REGISTER_CONSTRUCTOR(PythonPluginOutputVariable);
     REGISTER_CONSTRUCTOR(RadianceParameters);
     REGISTER_CONSTRUCTOR(RefractionExtinctionGlazing);
     REGISTER_CONSTRUCTOR(RefrigerationAirChiller);
@@ -4605,6 +4608,9 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(PumpConstantSpeed);
     REGISTER_COPYCONSTRUCTORS(PumpVariableSpeed);
     REGISTER_COPYCONSTRUCTORS(PythonPluginInstance);
+    REGISTER_COPYCONSTRUCTORS(PythonPluginVariable);
+    REGISTER_COPYCONSTRUCTORS(PythonPluginTrendVariable);
+    REGISTER_COPYCONSTRUCTORS(PythonPluginOutputVariable);
     REGISTER_COPYCONSTRUCTORS(RadianceParameters);
     REGISTER_COPYCONSTRUCTORS(RefractionExtinctionGlazing);
     REGISTER_COPYCONSTRUCTORS(RefrigerationAirChiller);

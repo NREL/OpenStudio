@@ -1160,6 +1160,15 @@ set(${target_name}_src
   PythonPluginInstance.hpp
   PythonPluginInstance_Impl.hpp
   PythonPluginInstance.cpp
+  PythonPluginVariable.hpp
+  PythonPluginVariable_Impl.hpp
+  PythonPluginVariable.cpp
+  PythonPluginTrendVariable.hpp
+  PythonPluginTrendVariable_Impl.hpp
+  PythonPluginTrendVariable.cpp
+  PythonPluginOutputVariable.hpp
+  PythonPluginOutputVariable_Impl.hpp
+  PythonPluginOutputVariable.cpp
   RadianceParameters.hpp
   RadianceParameters_Impl.hpp
   RadianceParameters.cpp
@@ -2110,6 +2119,9 @@ set(${target_name}_test_src
   test/PumpConstantSpeed_GTest.cpp
   test/PumpVariableSpeed_GTest.cpp
   test/PythonPluginInstance_GTest.cpp
+  test/PythonPluginVariable_GTest.cpp
+  test/PythonPluginTrendVariable_GTest.cpp
+  test/PythonPluginOutputVariable_GTest.cpp
   test/RadianceParameters_GTest.cpp
   test/RefractionExtinctionGlazing_GTest.cpp
   test/RefrigerationAirChiller_GTest.cpp
