@@ -35004,21 +35004,17 @@ OS:PythonPlugin:Instance,
        \note This is the name of the class to be executed as a plugin during a simulation
        \note The class must inherit the EnergyPlusPlugin base class
 
-OS:PythonPlugin:Variables,
-       \memo This object defines name identifiers for custom Python Plugin variable data that should be shared
+OS:PythonPlugin:Variable,
+       \memo This object defines custom Python Plugin variable data that should be shared
        \memo among all running Python Plugins.
+       \memo all PythonPlugin:Variable objects will be translated onto a single E+ PythonPlugin:Variables
        \min-fields 3
-       \extensible:1
   A1,  \field Handle
        \type handle
        \required-field
-  A2,  \field Name
-       \required-field
+  A2;  \field Name
        \type alpha
-       \note This object name is purely for reporting and diagnostics
-  A3;  \field Variable Name 1
-       \type alpha
-       \begin-extensible
+       \reference PythonPluginVariables
        \note This variable is used to identify and create a shared variable in EnergyPlus.
        \note This variable can then be used by all running Python Plugin instances.
 
@@ -35034,7 +35030,8 @@ OS:PythonPlugin:TrendVariable,
        \type alpha
   A3 , \field Name of a Python Plugin Variable
        \required-field
-       \type alpha
+       \type object-list
+       \object-list PythonPluginVariables
   N1 ; \field Number of Timesteps to be Logged
        \required-field
        \type integer
@@ -35051,8 +35048,8 @@ OS:PythonPlugin:OutputVariable,
        \type alpha
    A3, \field Python Plugin Variable Name
        \required-field
-       \type alpha
-       \note Must be listed in the PythonPlugin:Variables object
+       \type object-list
+       \object-list PythonPluginVariables
    A4, \field Type of Data in Variable
        \required-field
        \type choice
