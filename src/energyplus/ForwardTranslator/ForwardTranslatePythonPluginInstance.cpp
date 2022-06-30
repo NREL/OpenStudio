@@ -31,17 +31,18 @@
 
 #include "../../model/Model.hpp"
 #include "../../model/PythonPluginInstance.hpp"
-#include "../../model/PythonPluginInstance_Impl.hpp"
 #include "../../model/ExternalFile.hpp"
-#include "../../model/ExternalFile_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/PythonPlugin_Instance_FieldEnums.hxx>
+#include <utilities/idd/PythonPlugin_SearchPaths_FieldEnums.hxx>
 
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
+
+#include <boost/regex.hpp>
 
 using namespace openstudio::model;
 
@@ -51,28 +52,35 @@ namespace openstudio {
 
 namespace energyplus {
 
+  bool findPluginClassNameInFile(const openstudio::path& filePath, const std::string& pluginClassName) {
+    bool foundPluginClassName = false;
+
+    const boost::regex re("class\\s+" + pluginClassName + "\\s*");
+    openstudio::filesystem::ifstream ifs(filePath);
+    std::string line;
+    while (std::getline(ifs, line)) {
+      if (boost::regex_search(line, re)) {
+        foundPluginClassName = true;
+        break;
+      }
+    }
+    return foundPluginClassName;
+  }
+
   boost::optional<IdfObject> ForwardTranslator::translatePythonPluginInstance(PythonPluginInstance& modelObject) {
 
     path filePath = modelObject.externalFile().filePath();
     if (!exists(filePath)) {
-      LOG(Warn, "Cannot find file \"" << filePath << "\"");
-    } else {
-      // make the path correct for this system
-      filePath = system_complete(filePath);
+      LOG(Warn, modelObject.briefDescription() << "will not be translated, cannot find the referenced file '" << filePath << "'");
+      return boost::none;
     }
+
+    // make the path correct for this system
+    filePath = openstudio::filesystem::system_complete(filePath);
 
     // If the plugin class name can't be found in the referenced external file, then it shouldn't be translated
     std::string pluginClassName = modelObject.pluginClassName();
-    bool foundPluginClassName = false;
-    std::ifstream ifs(toSystemFilename(filePath));
-    std::string line;
-    while (std::getline(ifs, line)) {
-      if (line.find("class " + pluginClassName) != std::string::npos) {
-        foundPluginClassName = true;
-      }
-    }
-
-    if (!foundPluginClassName) {
+    if (!findPluginClassNameInFile(filePath, pluginClassName)) {
       LOG(Warn, "PythonPluginInstance " << modelObject.name().get() << " does not have plugin class name '" << pluginClassName
                                         << "' contained in referenced external file");
       return boost::none;
@@ -98,23 +106,25 @@ namespace energyplus {
     // Translate Python Plugin Search Paths
     if (!m_pythonPluginSearchPaths) {
       // Create a new IddObjectType::PythonPlugin_SearchPaths
-      IdfObject pythonPluginSearchPaths(IddObjectType::PythonPlugin_SearchPaths);
-      pythonPluginSearchPaths.setName("Python Plugin Search Paths");
-      m_idfObjects.push_back(pythonPluginSearchPaths);
-      m_pythonPluginSearchPaths = boost::optional<IdfObject>(pythonPluginSearchPaths);
+      m_pythonPluginSearchPaths = m_idfObjects.emplace_back(IddObjectType::PythonPlugin_SearchPaths);
+      m_pythonPluginSearchPaths->setName("Python Plugin Search Paths");
+      // These are IDD defaults
+      m_pythonPluginSearchPaths->setString(PythonPlugin_SearchPathsFields::AddCurrentWorkingDirectorytoSearchPath, "Yes");
+      m_pythonPluginSearchPaths->setString(PythonPlugin_SearchPathsFields::AddInputFileDirectorytoSearchPath, "Yes");
+      m_pythonPluginSearchPaths->setString(PythonPlugin_SearchPathsFields::AddepinEnvironmentVariabletoSearchPath, "Yes");
     }
 
     std::string searchPath = toString(filePath.parent_path());
     bool newSearchPath = true;
-    for (IdfExtensibleGroup& eg : m_pythonPluginSearchPaths->extensibleGroups()) {
+    for (const IdfExtensibleGroup& eg : m_pythonPluginSearchPaths->extensibleGroups()) {
       if (searchPath == eg.getString(0)) {
         newSearchPath = false;
+        break;
       }
     }
 
     if (newSearchPath) {
-      IdfExtensibleGroup group = m_pythonPluginSearchPaths->pushExtensibleGroup();
-      group.setString(0, searchPath);
+      IdfExtensibleGroup group = m_pythonPluginSearchPaths->pushExtensibleGroup({searchPath});
     }
 
     return idfObject;
