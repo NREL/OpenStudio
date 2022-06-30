@@ -44,6 +44,11 @@
 
 #include <boost/regex.hpp>
 
+#include <algorithm>
+#include <sstream>
+#include <string>
+#include <vector>
+
 namespace openstudio {
 namespace model {
 
@@ -117,7 +122,6 @@ namespace model {
 
     bool PythonPluginInstance_Impl::setPluginClassName(const std::string& pluginClassName) {
       if (!findPluginClassNameInFile(pluginClassName)) {
-        LOG(Warn, "Could not find plugin class name '" << pluginClassName << "' in referenced external file.");
         return false;
       }
 
@@ -126,20 +130,26 @@ namespace model {
     }
 
     bool PythonPluginInstance_Impl::findPluginClassNameInFile(const std::string& pluginClassName) const {
-      bool foundPluginClassName = false;
-
-      const boost::regex re("^class\\s+" + pluginClassName + "\\s*\\(\\s*EnergyPlusPlugin");
-
-      auto filePath = openstudio::filesystem::system_complete(externalFile().filePath());
-      openstudio::filesystem::ifstream ifs(filePath);
-      std::string line;
-      while (std::getline(ifs, line)) {
-        if (boost::regex_search(line, re)) {
-          foundPluginClassName = true;
-          break;
+      auto validClassNames = validPluginClassNamesInFile();
+      auto it = std::find(validClassNames.cbegin(), validClassNames.cend(), pluginClassName);
+      if (it == validClassNames.cend()) {
+        std::stringstream ss;
+        ss << "[";
+        bool firstTime = true;
+        for (const auto& className : validClassNames) {
+          if (firstTime) {
+            ss << className;
+            firstTime = false;
+          } else {
+            ss << ", " << className;
+          }
         }
+        ss << "]";
+        LOG(Warn, pluginClassName << " not found. validClassNames=" << ss.str());
+        return false;
       }
-      return foundPluginClassName;
+
+      return true;
     }
 
     std::vector<std::string> PythonPluginInstance_Impl::validPluginClassNamesInFile() const {
