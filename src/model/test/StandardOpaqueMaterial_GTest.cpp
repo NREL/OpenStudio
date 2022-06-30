@@ -92,36 +92,36 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_SetGetFields) {
   StandardOpaqueMaterial material(model);
 
   EXPECT_TRUE(material.setThermalConductivity(3));
-  EXPECT_EQ(3, material.thermalConductivity());
-  EXPECT_EQ(3 / 0.1, material.thermalConductance());
-  EXPECT_EQ(1.0 / 3, material.thermalResistivity());
-  EXPECT_EQ((1.0 / 3) * 0.1, material.thermalResistance());
-  EXPECT_EQ(3, material.conductivity());
+  EXPECT_EQ(3.0, material.thermalConductivity());
+  EXPECT_EQ(3.0 / 0.1, material.thermalConductance());
+  EXPECT_EQ(1.0 / 3.0, material.thermalResistivity());
+  EXPECT_EQ((1.0 / 3.0) * 0.1, material.thermalResistance());
+  EXPECT_EQ(3.0, material.conductivity());
   EXPECT_EQ(0.1, material.thickness());
 
   EXPECT_TRUE(material.setThermalConductance(4));
-  EXPECT_EQ(3, material.thermalConductivity());
-  EXPECT_EQ(3 / 0.1, material.thermalConductance());
-  EXPECT_EQ(1.0 / 3, material.thermalResistivity());
-  EXPECT_EQ((1.0 / 3) * (3 / 4), material.thermalResistance());
-  EXPECT_EQ(3, material.conductivity());
-  EXPECT_EQ(3 / 4, material.thickness());
+  EXPECT_EQ(3.0, material.thermalConductivity());
+  EXPECT_EQ(3.0 / 0.1, material.thermalConductance());
+  EXPECT_EQ(1.0 / 3.0, material.thermalResistivity());
+  EXPECT_EQ((1.0 / 3.0) * (3.0 / 4.0), material.thermalResistance());
+  EXPECT_EQ(3.0, material.conductivity());
+  EXPECT_EQ(3.0 / 4.0, material.thickness());
 
   EXPECT_TRUE(material.setThermalResistivity(5));
-  EXPECT_EQ(1.0 / 5, material.thermalConductivity());
-  EXPECT_EQ((1.0 / 5) / (3 / 4), material.thermalConductance());
+  EXPECT_EQ(1.0 / 5.0, material.thermalConductivity());
+  EXPECT_EQ((1.0 / 5.0) / (3.0 / 4.0), material.thermalConductance());
   EXPECT_EQ(1.0 / (1.0 / 5), material.thermalResistivity());
-  EXPECT_EQ((1.0 / (1.0 / 5)) * (3 / 4), material.thermaResistance());
-  EXPECT_EQ(1.0 / 5, material.conductivity());
-  EXPECT_EQ(3 / 4, material.thickness());
+  EXPECT_EQ((1.0 / (1.0 / 5)) * (3.0 / 4.0), material.thermalResistance());
+  EXPECT_EQ(1.0 / 5.0, material.conductivity());
+  EXPECT_EQ(3.0 / 4.0, material.thickness());
 
   EXPECT_TRUE(material.setThermalResistance(6));
-  EXPECT_EQ(1.0 / 5, material.thermalConductivity());
-  EXPECT_EQ((1.0 / 5) / (6 / (1.0 / (1.0 / 5))), material.thermalConductance());
-  EXPECT_EQ(1.0 / (1.0 / 5), material.thermalResistivity());
-  EXPECT_EQ((1.0 / (1.0 / 5)) * (3 / 4), material.thermaResistance());
-  EXPECT_EQ(1.0 / 5, material.conductivity());
-  EXPECT_EQ(6 / (1.0 / (1.0 / 5)), material.thickness());
+  EXPECT_EQ(1.0 / 5.0, material.thermalConductivity());
+  EXPECT_EQ((1.0 / 5.0) / (6.0 / (1.0 / (1.0 / 5.0))), material.thermalConductance());
+  EXPECT_EQ(1.0 / (1.0 / 5.0), material.thermalResistivity());
+  EXPECT_EQ((1.0 / (1.0 / 5.0)) * (3.0 / 4.0), material.thermalResistance());
+  EXPECT_EQ(1.0 / 5.0, material.conductivity());
+  EXPECT_EQ(6.0 / (1.0 / (1.0 / 5.0)), material.thickness());
 
   EXPECT_TRUE(material.setThermalAbsorptance(0.2));
   EXPECT_FALSE(material.isThermalAbsorptanceDefaulted());
@@ -192,7 +192,7 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_Clone) {
     Model model2;
     auto materialClone2 = material.clone(model2).cast<StandardOpaqueMaterial>();
     EXPECT_EQ(1u, model2.getConcreteModelObjects<StandardOpaqueMaterial>().size());
-    EXPECT_EQ(1.5, materialClone.thickness());
+    EXPECT_EQ(1.5, materialClone2.thickness());
   }
 }
 
@@ -201,7 +201,7 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_Remove) {
 
   StandardOpaqueMaterial material(model);
   auto size = model.modelObjects().size();
-  EXPECT_FALSE(material.remove().empt());
+  EXPECT_FALSE(material.remove().empty());
   EXPECT_EQ(size - 1, model.modelObjects().size());
   EXPECT_EQ(0u, model.getConcreteModelObjects<StandardOpaqueMaterial>().size());
 }
