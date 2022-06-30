@@ -41,9 +41,9 @@ using namespace openstudio::model;
 
 TEST_F(ModelFixture, StandardOpaqueMaterial_StandardOpaqueMaterial) {
   Model model;
-  
+
   StandardOpaqueMaterial material(model);
-  
+
   EXPECT_EQ(0.1, material.thermalConductivity());
   EXPECT_EQ(0.1 / 0.1, material.thermalConductance());
   EXPECT_EQ(1.0 / 0.1, material.thermalResistivity());
@@ -70,10 +70,10 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_StandardOpaqueMaterial) {
 
 TEST_F(ModelFixture, StandardOpaqueMaterial_Ctor) {
   Model model;
-  
+
   {
     StandardOpaqueMaterial material(model, "VerySmooth", 1, 2, 3, 900);
-    
+
     EXPECT_EQ(2, material.thermalConductivity());
     EXPECT_EQ(2 / 1, material.thermalConductance());
     EXPECT_EQ(1.0 / 2, material.thermalResistivity());
@@ -88,9 +88,9 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_Ctor) {
 
 TEST_F(ModelFixture, StandardOpaqueMaterial_SetGetFields) {
   Model model;
-  
+
   StandardOpaqueMaterial material(model);
-  
+
   EXPECT_TRUE(material.setThermalConductivity(3));
   EXPECT_EQ(3, material.thermalConductivity());
   EXPECT_EQ(3 / 0.1, material.thermalConductance());
@@ -106,7 +106,7 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_SetGetFields) {
   EXPECT_EQ((1.0 / 3) * (3 / 4), material.thermalResistance());
   EXPECT_EQ(3, material.conductivity());
   EXPECT_EQ(3 / 4, material.thickness());
-  
+
   EXPECT_TRUE(material.setThermalResistivity(5));
   EXPECT_EQ(1.0 / 5, material.thermalConductivity());
   EXPECT_EQ((1.0 / 5) / (3 / 4), material.thermalConductance());
@@ -114,7 +114,7 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_SetGetFields) {
   EXPECT_EQ((1.0 / (1.0 / 5)) * (3 / 4), material.thermaResistance());
   EXPECT_EQ(1.0 / 5, material.conductivity());
   EXPECT_EQ(3 / 4, material.thickness());
-  
+
   EXPECT_TRUE(material.setThermalResistance(6));
   EXPECT_EQ(1.0 / 5, material.thermalConductivity());
   EXPECT_EQ((1.0 / 5) / (6 / (1.0 / (1.0 / 5))), material.thermalConductance());
@@ -127,47 +127,47 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_SetGetFields) {
   EXPECT_FALSE(material.isThermalAbsorptanceDefaulted());
   EXPECT_EQ(0.2, material.thermalAbsorptance());
   EXPECT_EQ(0.8, material.thermalReflectance());
-  
+
   EXPECT_TRUE(material.setThermalReflectance(0.3));
   EXPECT_EQ(0.7, material.thermalAbsorptance());
   EXPECT_EQ(0.3, material.thermalReflectance());
-  
+
   EXPECT_TRUE(material.setSolarAbsorptance(0.4));
   EXPECT_FALSE(material.isSolarAbsorptanceDefaulted());
   EXPECT_EQ(0.4, material.solarAbsorptance());
-  EXPECT_EQ(0.6, material.solarReflectance());  
-  
+  EXPECT_EQ(0.6, material.solarReflectance());
+
   EXPECT_TRUE(material.setSolarReflectance(0.6));
   EXPECT_EQ(0.4, material.solarAbsorptance());
   EXPECT_EQ(0.6, material.solarReflectance());
-  
+
   EXPECT_TRUE(material.setVisibleAbsorptance(0.7));
   EXPECT_FALSE(material.isVisibleAbsorptanceDefaulted());
   EXPECT_EQ(0.7, material.visibleAbsorptance());
   EXPECT_EQ(0.3, material.visibleReflectance());
-  
+
   EXPECT_TRUE(material.setVisibleReflectance(0.8));
   EXPECT_EQ(0.2, material.visibleAbsorptance());
   EXPECT_EQ(0.8, material.visibleReflectance());
-  
+
   EXPECT_TRUE(material.setRoughness("Rough"));
   EXPECT_EQ("Rough", material.roughness());
-  
+
   EXPECT_TRUE(material.setThickness(4));
   EXPECT_EQ(4, material.thickness());
-  
+
   EXPECT_TRUE(material.setConductivity(5));
   EXPECT_EQ(5, material.conductivity());
-  
+
   EXPECT_TRUE(material.setDensity(6));
   EXPECT_EQ(6, material.density());
-  
+
   EXPECT_TRUE(material.setSpecificHeat(700));
   EXPECT_EQ(700, material.specificHeat());
-  
+
   material.resetThermalAbsorptance();
   EXPECT_TRUE(material.isThermalAbsorptanceDefaulted());
-  
+
   material.resetSolarAbsorptance();
   EXPECT_TRUE(material.isSolarAbsorptanceDefaulted());
 
@@ -177,11 +177,11 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_SetGetFields) {
 
 TEST_F(ModelFixture, StandardOpaqueMaterial_Clone) {
   Model model;
-  
+
   StandardOpaqueMaterial material(model);
   material.setThickness(1.5);
   EXPECT_EQ(1u, model.getConcreteModelObjects<StandardOpaqueMaterial>().size());
-  
+
   {
     auto materialClone = material.clone(model).cast<StandardOpaqueMaterial>();
     EXPECT_EQ(2u, model.getConcreteModelObjects<StandardOpaqueMaterial>().size());
@@ -192,13 +192,13 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_Clone) {
     Model model2;
     auto materialClone2 = material.clone(model2).cast<StandardOpaqueMaterial>();
     EXPECT_EQ(1u, model2.getConcreteModelObjects<StandardOpaqueMaterial>().size());
-    EXPECT_EQ(1.5, materialClone.thickness());    
+    EXPECT_EQ(1.5, materialClone.thickness());
   }
 }
 
 TEST_F(ModelFixture, StandardOpaqueMaterial_Remove) {
   Model model;
-  
+
   StandardOpaqueMaterial material(model);
   auto size = model.modelObjects().size();
   EXPECT_FALSE(material.remove().empt());
