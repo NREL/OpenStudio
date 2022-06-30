@@ -138,10 +138,10 @@ namespace model {
         bool firstTime = true;
         for (const auto& className : validClassNames) {
           if (firstTime) {
-            ss << className;
+            ss << "\"" << className << "\"";
             firstTime = false;
           } else {
-            ss << ", " << className;
+            ss << ", \"" << className << "\"";
           }
         }
         ss << "]";
