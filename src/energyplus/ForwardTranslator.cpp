@@ -3521,6 +3521,9 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Variable);
 
     result.push_back(IddObjectType::OS_PythonPlugin_Instance);
+    result.push_back(IddObjectType::OS_PythonPlugin_Variable);
+    result.push_back(IddObjectType::OS_PythonPlugin_TrendVariable);
+    result.push_back(IddObjectType::OS_PythonPlugin_OutputVariable);
     return result;
   }
 
