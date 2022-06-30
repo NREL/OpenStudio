@@ -87,7 +87,7 @@ namespace model {
       }
 
       for (const auto& child : pythonPluginOutputVariables()) {
-        child.clone(model).cast<PythonPluginTrendVariable>().setPythonPluginVariable(newVar);
+        child.clone(model).cast<PythonPluginOutputVariable>().setPythonPluginVariable(newVar);
       }
 
       return newVar;

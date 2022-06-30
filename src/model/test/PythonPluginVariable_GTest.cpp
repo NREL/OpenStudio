@@ -94,9 +94,9 @@ TEST_F(ModelFixture, PythonPluginVariable) {
   EXPECT_EQ(var, pyTrendVar.pythonPluginVariable());
   EXPECT_EQ(var, pyOutVar2.pythonPluginVariable());
   ASSERT_EQ(1, var.pythonPluginTrendVariables().size());
-  EXPECT_EQ(pyTrendVar, varClone.pythonPluginTrendVariables().front());
+  EXPECT_EQ(pyTrendVar, var.pythonPluginTrendVariables().front());
   ASSERT_EQ(1, var.pythonPluginOutputVariables().size());
-  EXPECT_EQ(pyOutVar2, varClone.pythonPluginOutputVariables().front());
+  EXPECT_EQ(pyOutVar2, var.pythonPluginOutputVariables().front());
 
   // remove
   varClone.remove();
@@ -105,9 +105,9 @@ TEST_F(ModelFixture, PythonPluginVariable) {
   EXPECT_EQ(1, m.getConcreteModelObjects<PythonPluginTrendVariable>().size());
   EXPECT_EQ(1, m.getConcreteModelObjects<PythonPluginOutputVariable>().size());
   ASSERT_EQ(1, var.pythonPluginTrendVariables().size());
-  EXPECT_EQ(pyTrendVar, varClone.pythonPluginTrendVariables().front());
+  EXPECT_EQ(pyTrendVar, var.pythonPluginTrendVariables().front());
   ASSERT_EQ(1, var.pythonPluginOutputVariables().size());
-  EXPECT_EQ(pyOutVar2, varClone.pythonPluginOutputVariables().front());
+  EXPECT_EQ(pyOutVar2, var.pythonPluginOutputVariables().front());
 
   // Clone other model
   Model m2;
@@ -115,9 +115,9 @@ TEST_F(ModelFixture, PythonPluginVariable) {
   EXPECT_EQ(1, m.getConcreteModelObjects<PythonPluginTrendVariable>().size());
   EXPECT_EQ(1, m.getConcreteModelObjects<PythonPluginOutputVariable>().size());
   ASSERT_EQ(1, var.pythonPluginTrendVariables().size());
-  EXPECT_EQ(pyTrendVar, varClone.pythonPluginTrendVariables().front());
+  EXPECT_EQ(pyTrendVar, var.pythonPluginTrendVariables().front());
   ASSERT_EQ(1, var.pythonPluginOutputVariables().size());
-  EXPECT_EQ(pyOutVar2, varClone.pythonPluginOutputVariables().front());
+  EXPECT_EQ(pyOutVar2, var.pythonPluginOutputVariables().front());
 
   EXPECT_EQ(1, m2.getConcreteModelObjects<PythonPluginVariable>().size());
   EXPECT_EQ(1, m2.getConcreteModelObjects<PythonPluginTrendVariable>().size());

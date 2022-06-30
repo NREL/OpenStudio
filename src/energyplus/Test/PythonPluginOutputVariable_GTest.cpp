@@ -79,7 +79,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginOutputVariable) {
 
   EXPECT_EQ(pyOutVar.nameString(), idfObj.nameString());
 
-  EXPECT_EQ("Python Plugin Variable 1", idfObj.getString(PythonPlugin_OutputVariableFields::PythonPluginVariableName).get());
+  EXPECT_EQ("PythonPluginVariable1", idfObj.getString(PythonPlugin_OutputVariableFields::PythonPluginVariableName).get());
   EXPECT_EQ("Metered", idfObj.getString(PythonPlugin_OutputVariableFields::TypeofDatainVariable).get());
   EXPECT_EQ("SystemTimestep", idfObj.getString(PythonPlugin_OutputVariableFields::UpdateFrequency).get());
   EXPECT_EQ("J", idfObj.getString(PythonPlugin_OutputVariableFields::Units).get());

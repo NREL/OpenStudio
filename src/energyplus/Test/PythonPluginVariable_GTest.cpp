@@ -68,6 +68,18 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginVariable) {
   auto idfObj = idfObjs.front();
   auto egs = idfObj.extensibleGroups();
   ASSERT_EQ(2, egs.size());
-  EXPECT_EQ(pyVar1.nameString(), egs.front().getString(0).get());
-  EXPECT_EQ(pyVar2.nameString(), egs.back().getString(0).get());
+  std::vector<std::string> writtenVarNames;
+  bool pyVar1Found = false;
+  bool pyVar2Found = false;
+
+  for (const auto& eg : egs) {
+    auto name = eg.getString(0).get();
+    if (name == pyVar1.nameString()) {
+      pyVar1Found = true;
+    } else if (name == pyVar2.nameString()) {
+      pyVar2Found = true;
+    }
+  }
+  EXPECT_TRUE(pyVar1Found);
+  EXPECT_TRUE(pyVar2Found);
 }
