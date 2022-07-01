@@ -1358,6 +1358,12 @@ set(${target_name}_src
   SetpointManagerWarmestTemperatureFlow.hpp
   SetpointManagerWarmestTemperatureFlow_Impl.hpp
   SetpointManagerWarmestTemperatureFlow.cpp
+  SetpointManagerSystemNodeResetHumidity.hpp
+  SetpointManagerSystemNodeResetHumidity_Impl.hpp
+  SetpointManagerSystemNodeResetHumidity.cpp
+  SetpointManagerSystemNodeResetTemperature.hpp
+  SetpointManagerSystemNodeResetTemperature_Impl.hpp
+  SetpointManagerSystemNodeResetTemperature.cpp
   Shade.hpp
   Shade_Impl.hpp
   Shade.cpp
@@ -2156,6 +2162,8 @@ set(${target_name}_test_src
   test/SetpointManagerSingleZoneHeating_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
   test/SetpointManagerWarmestTemperatureFlow_GTest.cpp
+  test/SetpointManagerSystemNodeResetHumidity_GTest.cpp
+  test/SetpointManagerSystemNodeResetTemperature_GTest.cpp
   test/ScheduleDay_GTest.cpp
   test/ScheduleInterval_GTest.cpp
   test/ScheduleRuleset_GTest.cpp

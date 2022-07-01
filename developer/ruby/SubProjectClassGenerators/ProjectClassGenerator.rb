@@ -198,19 +198,19 @@ class ProjectClassGenerator < SubProjectClassGenerator
     result = String.new
 
     result << "\n"
-    result << "  typedef detail::" << @className << "_Impl ImplType;\n"
+    result << "  using ImplType = detail::" << @className << "_Impl;\n\n"
     if @joinRecord
-      result << "  typedef JoinRecordColumns ColumnsType;\n\n"
+      result << "  using JoinRecordColumns = ColumnsType;\n\n"
     else
       if @baseClassName == "ObjectRecord"
-        result << "  typedef " << @className << "Columns ColumnsType;\n"
-        result << "  typedef " << @className << " ObjectRecordType;\n\n"
+        result << "  using ColumnsType = " << @className << "Columns;\n"
+        result << "  using ObjectRecordType = " << @className << ";\n\n"
       else
         result << "  // TODO: Check this typedef. The generator script assumes that the hierarchy is only two deep "
         result << "  // from ObjectRecord.\n"
-        result << "  typedef " << @baseClassName << "Columns ColumnsType;\n"
+        result << "  using ColumnsType = " << @baseClassName << "Columns;\n"
         result << "  // TODO: Check this typedef too.\n"
-        result << "  typedef " << @baseClassName << " ObjectRecordType;\n\n"
+        result << "  using ObjectRecordType = " << @baseClassName << ";\n\n"
       end
     end
 

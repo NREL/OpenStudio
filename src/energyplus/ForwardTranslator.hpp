@@ -384,6 +384,8 @@ namespace model {
   class SetpointManagerSingleZoneReheat;
   class SetpointManagerWarmest;
   class SetpointManagerWarmestTemperatureFlow;
+  class SetpointManagerSystemNodeResetHumidity;
+  class SetpointManagerSystemNodeResetTemperature;
   class ShadowCalculation;
   class Shade;
   class SimulationControl;
@@ -1313,6 +1315,10 @@ namespace energyplus {
     boost::optional<IdfObject> translateSetpointManagerWarmest(model::SetpointManagerWarmest& modelObject);
 
     boost::optional<IdfObject> translateSetpointManagerWarmestTemperatureFlow(model::SetpointManagerWarmestTemperatureFlow& modelObject);
+
+    boost::optional<IdfObject> translateSetpointManagerSystemNodeResetHumidity(model::SetpointManagerSystemNodeResetHumidity& modelObject);
+
+    boost::optional<IdfObject> translateSetpointManagerSystemNodeResetTemperature(model::SetpointManagerSystemNodeResetTemperature& modelObject);
 
     boost::optional<IdfObject> translateShade(model::Shade& modelObject);
 

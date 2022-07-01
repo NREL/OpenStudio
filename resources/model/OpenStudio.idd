@@ -24932,6 +24932,84 @@ OS:SetpointManager:SingleZone:Heating,
        \type object-list
        \object-list Node
 
+OS:SetpointManager:SystemNodeReset:Temperature,
+        \memo This Setpoint Manager is used to place a temperature setpoint on a system node according to the reference (e.g., return) temperature using a reset rule.
+        \memo The temperature setpoint is obtained by retrieving the temperature of the user specified reference system node.
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
+   A3 , \field Control Variable
+        \required-field
+        \type choice
+        \key Temperature
+        \key MaximumTemperature
+        \key MinimumTemperature
+   N1 , \field Setpoint at Low Reference Temperature
+        \type real
+        \units C
+        \required-field
+   N2 , \field Setpoint at High Reference Temperature
+        \type real
+        \units C
+        \required-field
+   N3 , \field Low Reference Temperature
+        \type real
+        \units C
+        \required-field
+   N4 , \field High Reference Temperature
+        \type real
+        \units C
+        \required-field
+   A4 , \field Reference Node Name
+        \note The name of an HVAC system node that gets referenced. This is a required field.
+        \type object-list
+        \object-list Node
+   A5 ; \field Setpoint Node or NodeList Name
+        \note Node(s) at which temperature will be set. This is a required field.
+        \type object-list
+        \object-list Node
+
+OS:SetpointManager:SystemNodeReset:Humidity,
+        \memo This Setpoint Manager is used to place a humidity ratio setpoint on a system node according to the reference (e.g., return) humidity ratio using a reset rule.
+        \memo The humidity ratio setpoint is obtained by retrieving the humidity ratio of the user specified reference system node.
+   A1 , \field Handle
+        \type handle
+        \required-field
+   A2 , \field Name
+        \required-field
+   A3 , \field Control Variable
+        \required-field
+        \type choice
+        \key HumidityRatio
+        \key MaximumHumidityRatio
+        \key MinimumHumidityRatio
+   N1 , \field Setpoint at Low Reference Humidity Ratio
+        \type real
+        \units kgWater/kgDryAir
+        \required-field
+   N2 , \field Setpoint at High Reference Humidity Ratio
+        \type real
+        \units kgWater/kgDryAir
+        \required-field
+   N3 , \field Low Reference Humidity Ratio
+        \type real
+        \units kgWater/kgDryAir
+        \required-field
+   N4 , \field High Reference Humidity Ratio
+        \type real
+        \units kgWater/kgDryAir
+        \required-field
+   A4 , \field Reference Node Name
+        \note The name of an HVAC system node that gets referenced. This is a required field.
+        \type object-list
+        \object-list Node
+   A5 ; \field Setpoint Node or NodeList Name
+        \note Node(s) at which humidity ratio will be set. This is a required field.
+        \type object-list
+        \object-list Node
+
 OS:Sizing:Plant,
   A1, \field Handle
        \type handle
