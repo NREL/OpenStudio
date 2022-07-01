@@ -233,7 +233,7 @@ void CompareTwoModels(Model& model, Model& baseline) {
     ASSERT_EQ(space.daylightingControls().size(), match->daylightingControls().size());
 
     // Check the control themselves. Because daylightingcontrol have different names
-    // Daylighting Control 1 - 1 (as in the floorspace model) vs Face nn) they cannot be 
+    // Daylighting Control 1 - 1 (as in the floorspace model) vs Face nn) they cannot be
     // compared 1:1, but we can compare them via the space. They should be a match
     // primary vs primary, secondary vs secondary.
     // No ths doe snot work because the order they are returned in the list isnt deterministic
@@ -1373,7 +1373,7 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_Site_ClimateZones_4
 
   // It should have overridden only the things that were actually not defaulted, so building name and north axis
   ASSERT_TRUE(model.getOptionalUniqueModelObject<Building>());
-  
+
   EXPECT_EQ(-30.0, model.getOptionalUniqueModelObject<Building>()->northAxis());
   ASSERT_TRUE(model.getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
   EXPECT_EQ(2.5, model.getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());

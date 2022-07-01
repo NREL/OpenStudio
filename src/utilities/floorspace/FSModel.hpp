@@ -52,7 +52,7 @@ class UTILITIES_API FSBase : FSDispatchable
  public:
   FSBase();
   FSBase(const Json::Value& root);
-  
+
   const std::string& name() const;
   const std::string& handle() const;
   const std::string& id() const;
@@ -115,7 +115,7 @@ class UTILITIES_API FSEdge : public FSGeometryBase
 
   std::vector<FSVertex> getVertices() const;
   const FSVertex& firstVertex() const;
-  const FSVertex& secondVertex() const ;
+  const FSVertex& secondVertex() const;
   const Vector3d& edgeVector() const;
   Point3d vertex(double alpha) const;
 
@@ -325,16 +325,15 @@ class UTILITIES_API FSWindowDefinition : public FSBase
   double finProjectionFactor() const;
 
  private:
-  std::string m_windowDefinitionMode;	// Single Window, Repeating Window, Window To Wall Ratio
+  std::string m_windowDefinitionMode;  // Single Window, Repeating Window, Window To Wall Ratio
   double m_wwr;
   double m_sillHeight;
   double m_windowSpacing;
   double m_height;
   double m_width;
-  std::string m_windowType;		// Fixed, Operable
+  std::string m_windowType;  // Fixed, Operable
   double m_overhangProjectionFactor;
   double m_finProjectionFactor;
-
 };
 
 // Represents something that fills an opening - door or window
@@ -366,7 +365,7 @@ class UTILITIES_API FSWindow : public FSFiller
   FSWindow(const Json::Value& root, const FSModel& model, FSStory& story);
   void Accept(FSVisitor& visitor) const;
 
-  boost::optional<FSWindowDefinition> windowDefinition()const;
+  boost::optional<FSWindowDefinition> windowDefinition() const;
 
  private:
   boost::optional<FSWindowDefinition> m_windowDefinition;
@@ -387,7 +386,7 @@ class UTILITIES_API FSDoorDefinition : public FSBase
  private:
   double m_height;
   double m_width;
-  std::string m_doorType;		// Door, Glass Door, Overhead Door
+  std::string m_doorType;  // Door, Glass Door, Overhead Door
 };
 
 class UTILITIES_API FSDoor : public FSFiller
@@ -399,8 +398,8 @@ class UTILITIES_API FSDoor : public FSFiller
   void Accept(FSVisitor& visitor) const;
   boost::optional<FSDoorDefinition> doorDefinition() const;
 
-  private:
-	boost::optional<FSDoorDefinition> m_doorDefinition;
+ private:
+  boost::optional<FSDoorDefinition> m_doorDefinition;
 };
 
 class UTILITIES_API FSShading : public FSBase
@@ -410,7 +409,7 @@ class UTILITIES_API FSShading : public FSBase
   FSShading(const Json::Value& root, const FSModel& model, FSStory& story);
 
   void Accept(FSVisitor& visitor) const;
-  
+
   boost::optional<FSFace> face() const;
 
  private:
@@ -485,7 +484,7 @@ class UTILITIES_API FSGround
   double m_azimuth_angle;
   double m_tilt_slope;
 };
-	
+
 class UTILITIES_API FSProject
 {
  public:
@@ -503,7 +502,7 @@ class UTILITIES_API FSProject
   FSGround m_ground;
 };
 
-  /** Plane defines an infinite plane in 3D space.  The equation of a plane is
+/** Plane defines an infinite plane in 3D space.  The equation of a plane is
    *  a*x + b*y + c*z = d, any point that satisfies this equation is on the plane.
    */
 class UTILITIES_API FSModel
@@ -544,7 +543,6 @@ class UTILITIES_API FSModel
   static void assertType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType);
 
  private:
-
   REGISTER_LOGGER("utilities.FSModel");
 
   FSProject m_project;
@@ -565,9 +563,6 @@ class UTILITIES_API FSModel
 /// ostream operator
 //UTILITIES_API std::ostream& operator<<(std::ostream& os, const Plane& plane);
 
-
-
 }  // namespace openstudio
 
-
-#endif 
+#endif

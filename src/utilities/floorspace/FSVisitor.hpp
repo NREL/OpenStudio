@@ -59,7 +59,7 @@ class UTILITIES_API FSVisitor
  public:
   virtual void Dispatch(const FSBuildingUnit& entity) = 0;
   virtual void Dispatch(const FSBuildingType& entity) = 0;
-  virtual void Dispatch(const FSConfig &entity) = 0;
+  virtual void Dispatch(const FSConfig& entity) = 0;
   virtual void Dispatch(const FSConstructionSet& entity) = 0;
   virtual void Dispatch(const FSDaylightingControl& entity) = 0;
   virtual void Dispatch(const FSDaylightingControlDefinition& entity) = 0;
@@ -85,4 +85,4 @@ class UTILITIES_API FSDispatchable
 };
 
 }  // namespace openstudio
-#endif 
+#endif

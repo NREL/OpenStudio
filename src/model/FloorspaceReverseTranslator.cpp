@@ -99,7 +99,7 @@ namespace model {
 
   // TODO: Creating surfaces for spaces and creatig shading surfaces for building shading have
   // a lot of code in common but there are significant differences also. At some point we
-  // shoud look into creating some common functions that calculate the vertices 
+  // shoud look into creating some common functions that calculate the vertices
 
   // A Visitor design pattern class. Each Dispatch method handles creation of OSM
   // concepts from the FloorspaceJS concepts
@@ -138,13 +138,13 @@ namespace model {
 
     // Creates a DefaultConstructionSet
     void Dispatch(const FSConstructionSet& fsEntity) {
-        DefaultConstructionSet constructionSet(m_model);
-        constructionSet.setName(fsEntity.name());
-        MapHandles(fsEntity, constructionSet);
+      DefaultConstructionSet constructionSet(m_model);
+      constructionSet.setName(fsEntity.name());
+      MapHandles(fsEntity, constructionSet);
     }
 
     // Creates a daylighting control
-    void Dispatch(const FSDaylightingControl& fsEntity)  {
+    void Dispatch(const FSDaylightingControl& fsEntity) {
       auto definition = fsEntity.definition();
       if (definition.has_value()) {
         DaylightingControl osDaylightingControl(m_model);
@@ -163,11 +163,11 @@ namespace model {
         MapHandles(fsEntity, osDaylightingControl);
       }
     }
-    void Dispatch(const FSDaylightingControlDefinition& entity)  {}
+    void Dispatch(const FSDaylightingControlDefinition& entity) {}
     // Door is processed when FSSpace is processed
-    void Dispatch(const FSDoor& entity)  {}
-    void Dispatch(const FSDoorDefinition& entity)  {}
-    void Dispatch(const FSGround& entity)  {}
+    void Dispatch(const FSDoor& entity) {}
+    void Dispatch(const FSDoorDefinition& entity) {}
+    void Dispatch(const FSGround& entity) {}
 
     void Dispatch(const FSModel& fsModel) {
       initializeModelObjects(m_model);
@@ -201,8 +201,8 @@ namespace model {
     }
 
     // There's no OS equivalent
-    void Dispatch(const FSProject& entity)  {}
-    
+    void Dispatch(const FSProject& entity) {}
+
     // Creates a building shading group and shading surfaces
     void Dispatch(const FSShading& entity) {
       if (m_currentFSStory.has_value()) {
@@ -308,15 +308,15 @@ namespace model {
       MapHandles(fsEntity, thermalZone);
     }
 
-    void Dispatch(const FSWindow& entity)  {}
-    void Dispatch(const FSWindowDefinition& entity)  {}
+    void Dispatch(const FSWindow& entity) {}
+    void Dispatch(const FSWindowDefinition& entity) {}
 
    private:
     Model& m_model;
     const FSModel& m_fsModel;
     boost::optional<BuildingStory> m_currentStory;
     boost::optional<FSStory> m_currentFSStory;
-    boost::optional<Space>m_currentSpace;
+    boost::optional<Space> m_currentSpace;
     double m_currentStoryZ;
     int m_nSurfaces;
     std::map<UUID, UUID> m_handleMapping;
@@ -336,7 +336,7 @@ namespace model {
         case SpaceTypeEnum::BELOWFLOOR:
           return BELOWFLOORPLENUMPOSTFIX;
         case SpaceTypeEnum::ABOVEFLOOR:
-            return "";
+          return "";
       }
 
       return "";
@@ -380,13 +380,11 @@ namespace model {
     }
 
     void createFloorShading(ShadingSurfaceGroup& osGroup, Point3dVector& faceVertices, double z) {
-      if (orientVerticesForFloor(faceVertices)) 
-          createShadingSurface(osGroup, faceVertices, z);
+      if (orientVerticesForFloor(faceVertices)) createShadingSurface(osGroup, faceVertices, z);
     }
 
     void createRoofShading(ShadingSurfaceGroup& osGroup, Point3dVector& faceVertices, double z) {
-      if (orientVerticesForRoof(faceVertices)) 
-          createShadingSurface(osGroup, faceVertices, z);
+      if (orientVerticesForRoof(faceVertices)) createShadingSurface(osGroup, faceVertices, z);
     }
 
     void createWallShading(ShadingSurfaceGroup& osGroup, const FSShading& fsShading, const FSEdgeReference& edgeRef, double minZ, double maxZ,
@@ -565,19 +563,17 @@ namespace model {
 
     // Creates "Floor" surface
     void createFloorSurface(Space& osSpace, Point3dVector& faceVertices, double minZ, bool openToBelow) {
-      if (orientVerticesForFloor(faceVertices))
-        createSurface(osSpace, faceVertices, minZ, "Floor", openToBelow);
+      if (orientVerticesForFloor(faceVertices)) createSurface(osSpace, faceVertices, minZ, "Floor", openToBelow);
     }
 
     // Creates a "RoofCeiling" surface
     void createRoofSurface(Space& osSpace, Point3dVector& faceVertices, double maxZ) {
-      if (orientVerticesForRoof(faceVertices))
-        createSurface(osSpace, faceVertices, maxZ, "RoofCeiling", false);
+      if (orientVerticesForRoof(faceVertices)) createSurface(osSpace, faceVertices, maxZ, "RoofCeiling", false);
     }
 
     // Creates a "Wall" surface and sub-surfaces
-    void createWallSurfaces(Space& osSpace, const FSSpace& fsSpace, const FSEdgeReference& edgeRef, 
-        double minZ, double maxZ, bool reversed, bool createSubsurfaces) {
+    void createWallSurfaces(Space& osSpace, const FSSpace& fsSpace, const FSEdgeReference& edgeRef, double minZ, double maxZ, bool reversed,
+                            bool createSubsurfaces) {
       Point3dVector wallVertices;
       const FSVertex& v1 = edgeRef.edge().firstVertex();
       const FSVertex& v2 = edgeRef.edge().secondVertex();
@@ -612,9 +608,9 @@ namespace model {
 
           // Create a window subsurface for every window that is on this edge
           for (const auto& window : m_currentFSStory->windows()) {
-              if (window.edge()->id() == edgeRef.edge().id()) {
-                createWindowSubsurface(window, surface, edgeRef, minZ, maxZ);
-              }
+            if (window.edge()->id() == edgeRef.edge().id()) {
+              createWindowSubsurface(window, surface, edgeRef, minZ, maxZ);
+            }
           }
 
           // Create a door subsurface for every window that is on this edge
@@ -648,9 +644,9 @@ namespace model {
         width = windowDefinition->width();
       } else if (windowDefinition->windowDefinitionMode() == "Window to Wall Ratio") {
         double length = edgeRef.edge().edgeVector().length();
-        width = length - 0.0508;    // Allow for 1" either end of the window
+        width = length - 0.0508;  // Allow for 1" either end of the window
         // Area of the wall * wwr gives area of the window divided by width of the window gives height of the window
-        height = (maxZ - minZ) * length * windowDefinition->wwr() / width; 
+        height = (maxZ - minZ) * length * windowDefinition->wwr() / width;
       } else if (windowDefinition->windowDefinitionMode() == "Repeating Windows") {
         height = windowDefinition->height();
         width = windowDefinition->width();
@@ -741,7 +737,6 @@ namespace model {
             ShadingSurface shadingSurfaceRight(leftShadingVertices, m_model);
             shadingSurfaceRight.setName("Face " + std::to_string(m_nSurfaces++));
             shadingSurfaceRight.setShadingSurfaceGroup(shadingGroup);
-
           }
         }
       }
@@ -847,7 +842,6 @@ namespace model {
       OS_ASSERT(result);
       return result.get();
     }
-
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////
@@ -859,7 +853,7 @@ namespace model {
     // Not entirely sure what his does but its in the threejs reverse translator so I should orobably add it here!
     m_logSink.setThreadId(std::this_thread::get_id());
     m_logSink.resetStringStream();
-    
+
     Model model;
     FloorspaceReverseTranslator_Impl visitor(model, fsModel);
     fsModel.Accept(visitor);
@@ -873,7 +867,7 @@ namespace model {
     return model;
   }
 
-   std::map<UUID, UUID> FloorspaceReverseTranslator::handleMapping() const {
+  std::map<UUID, UUID> FloorspaceReverseTranslator::handleMapping() const {
     return m_handleMapping;
   }
 
