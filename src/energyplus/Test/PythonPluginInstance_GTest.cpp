@@ -49,6 +49,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/PythonPlugin_Instance_FieldEnums.hxx>
 #include <utilities/idd/PythonPlugin_SearchPaths_FieldEnums.hxx>
+#include <utilities/idd/OS_PythonPlugin_Instance_FieldEnums.hxx>
 
 #include <resources.hxx>
 
@@ -83,8 +84,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   ASSERT_TRUE(externalfile) << "Path doesn't exist: '" << p << "'";
 
   PythonPluginInstance pythonPluginInstance1(*externalfile, "ZN_1_wall_south_Window_1_Control");
-  PythonPluginInstance pythonPluginInstance2(*externalfile, "ZN_1_wall_south_Window_1_Control");
+  pythonPluginInstance1.setName("PythonPlugin1");
+  PythonPluginInstance pythonPluginInstance2(*externalfile, "AnotherDummyEnergyPlusPluginClass");
+  pythonPluginInstance2.setName("PythonPlugin2");
+
   pythonPluginInstance2.setRunDuringWarmupDays(true);
+
+  // Mimic the case where a user originally had set a correct plugin class name, but then went and modified the python script: we still want to catch
+  // this during FT
+  PythonPluginInstance ppInstanceOriginallyOK(*externalfile, "ZN_1_wall_south_Window_1_Control");
+  ppInstanceOriginallyOK.setName("PythonPlugin_Outdated");
+  EXPECT_TRUE(ppInstanceOriginallyOK.setString(OS_PythonPlugin_InstanceFields::PluginClassName, "SomethingOutdated"));
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(model);
@@ -99,9 +109,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   for (const auto& warning : ft.warnings()) {
     warnings += warning.logMessage() + "\n";
   }
-  EXPECT_EQ(0, ft.warnings().size()) << warnings;
+  ASSERT_EQ(1, ft.warnings().size()) << warnings;
+  EXPECT_EQ("PythonPluginInstance PythonPlugin_Outdated does not have plugin class name 'SomethingOutdated' contained in referenced external file",
+            ft.warnings().front().logMessage());
 
   std::vector<WorkspaceObject> instanceObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_Instance);
+  // The ppInstanceOriginallyOK never got translated
   ASSERT_EQ(2, instanceObjects.size());
   std::sort(instanceObjects.begin(), instanceObjects.end(), IdfObjectNameLess());
   WorkspaceObject woInstance1(instanceObjects[0]);
@@ -115,7 +128,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginInstance) {
   ASSERT_EQ(pythonPluginInstance2.name().get(), woInstance2.getString(PythonPlugin_InstanceFields::Name, false).get());
   EXPECT_EQ("Yes", woInstance2.getString(PythonPlugin_InstanceFields::RunDuringWarmupDays, false).get());
   EXPECT_EQ("PythonPluginThermochromicWindow", woInstance2.getString(PythonPlugin_InstanceFields::PythonModuleName, false).get());
-  EXPECT_EQ("ZN_1_wall_south_Window_1_Control", woInstance2.getString(PythonPlugin_InstanceFields::PluginClassName, false).get());
+  EXPECT_EQ("AnotherDummyEnergyPlusPluginClass", woInstance2.getString(PythonPlugin_InstanceFields::PluginClassName, false).get());
 
   std::vector<WorkspaceObject> searchPathObjects = workspace.getObjectsByType(IddObjectType::PythonPlugin_SearchPaths);
   ASSERT_EQ(1, searchPathObjects.size());
