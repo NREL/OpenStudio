@@ -35013,6 +35013,7 @@ OS:PythonPlugin:Variable,
        \type handle
        \required-field
   A2;  \field Name
+       \required-field
        \type alpha
        \reference PythonPluginVariables
        \note This variable is used to identify and create a shared variable in EnergyPlus.
@@ -35028,6 +35029,7 @@ OS:PythonPlugin:TrendVariable,
   A2 , \field Name
        \required-field
        \type alpha
+       \reference PythonPluginVariables
   A3 , \field Name of a Python Plugin Variable
        \required-field
        \type object-list
@@ -35046,6 +35048,7 @@ OS:PythonPlugin:OutputVariable,
    A2, \field Name
        \required-field
        \type alpha
+       \reference PythonPluginVariables
    A3, \field Python Plugin Variable Name
        \required-field
        \type object-list
