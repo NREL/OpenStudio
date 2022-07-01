@@ -59,7 +59,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyPhaseChangeHysteresi
   StandardOpaqueMaterial material(model);
   boost::optional<MaterialPropertyPhaseChangeHysteresis> optphaseChangeHysteresis = material.createMaterialPropertyPhaseChangeHysteresis();
   auto phaseChangeHysteresis = optphaseChangeHysteresis.get();
-  phaseChangeHysteresis.setLiquidStateDensity(123);
+
+  phaseChangeHysteresis.setLatentHeatduringtheEntirePhaseChangeProcess(11000);
+  phaseChangeHysteresis.setLiquidStateThermalConductivity(2.5);
+  phaseChangeHysteresis.setLiquidStateDensity(2300.0);
+  phaseChangeHysteresis.setLiquidStateSpecificHeat(2100.0);
+  phaseChangeHysteresis.setHighTemperatureDifferenceofMeltingCurve(1.5);
+  phaseChangeHysteresis.setPeakMeltingTemperature(24.0);
+  phaseChangeHysteresis.setLowTemperatureDifferenceofMeltingCurve(1.1);
+  phaseChangeHysteresis.setSolidStateThermalConductivity(1.9);
+  phaseChangeHysteresis.setSolidStateDensity(2400.0);
+  phaseChangeHysteresis.setSolidStateSpecificHeat(2010.0);
+  phaseChangeHysteresis.setHighTemperatureDifferenceofFreezingCurve(1.2);
+  phaseChangeHysteresis.setPeakFreezingTemperature(21.0);
+  phaseChangeHysteresis.setLowTemperatureDifferenceofFreezingCurve(1.05);
 
   Workspace workspace = ft.translateModel(model);
 
@@ -68,6 +81,30 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyPhaseChangeHysteresi
 
   WorkspaceObject idf_matProp(idfObjs[0]);
 
-  EXPECT_EQ("Material 1", idf_matProp.getString(MaterialProperty_PhaseChangeHysteresisFields::Name).get());
-  EXPECT_EQ(123, idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::LiquidStateDensity).get());
+  EXPECT_EQ(material.nameString(), idf_matProp.getString(MaterialProperty_PhaseChangeHysteresisFields::Name).get());
+  EXPECT_EQ(phaseChangeHysteresis.latentHeatduringtheEntirePhaseChangeProcess(),
+            idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::LatentHeatduringtheEntirePhaseChangeProcess).get());
+  EXPECT_EQ(phaseChangeHysteresis.liquidStateThermalConductivity(),
+            idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::LiquidStateThermalConductivity).get());
+  EXPECT_EQ(phaseChangeHysteresis.liquidStateDensity(),
+            idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::LiquidStateDensity).get());
+  EXPECT_EQ(phaseChangeHysteresis.liquidStateSpecificHeat(),
+            idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::LiquidStateSpecificHeat).get());
+  EXPECT_EQ(phaseChangeHysteresis.highTemperatureDifferenceofMeltingCurve(),
+            idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::HighTemperatureDifferenceofMeltingCurve).get());
+  EXPECT_EQ(phaseChangeHysteresis.peakMeltingTemperature(),
+            idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::PeakMeltingTemperature).get());
+  EXPECT_EQ(phaseChangeHysteresis.lowTemperatureDifferenceofMeltingCurve(),
+            idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofMeltingCurve).get());
+  EXPECT_EQ(phaseChangeHysteresis.solidStateThermalConductivity(),
+            idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::SolidStateThermalConductivity).get());
+  EXPECT_EQ(phaseChangeHysteresis.solidStateDensity(), idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::SolidStateDensity).get());
+  EXPECT_EQ(phaseChangeHysteresis.solidStateSpecificHeat(),
+            idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::SolidStateSpecificHeat).get());
+  EXPECT_EQ(phaseChangeHysteresis.highTemperatureDifferenceofFreezingCurve(),
+            idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::HighTemperatureDifferenceofFreezingCurve).get());
+  EXPECT_EQ(phaseChangeHysteresis.peakFreezingTemperature(),
+            idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::PeakFreezingTemperature).get());
+  EXPECT_EQ(phaseChangeHysteresis.lowTemperatureDifferenceofFreezingCurve(),
+            idf_matProp.getDouble(MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofFreezingCurve).get());
 }
