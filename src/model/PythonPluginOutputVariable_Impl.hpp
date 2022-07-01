@@ -134,4 +134,3 @@ namespace model {
 }  // namespace openstudio
 
 #endif  // MODEL_PYTHONPLUGINOUTPUTVARIABLE_IMPL_HPP
-

@@ -104,4 +104,3 @@ namespace model {
 }  // namespace openstudio
 
 #endif  // MODEL_PYTHONPLUGINTRENDVARIABLE_HPP
-

@@ -134,4 +134,3 @@ namespace model {
 
 }  // namespace model
 }  // namespace openstudio
-
