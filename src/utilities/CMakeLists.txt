@@ -146,6 +146,12 @@ set(geometry_src
   ../polypartition/polypartition.cpp
 )
 
+set(floorspace_src
+  floorspace/FSModel.hpp
+  floorspace/FSModel.cpp
+  floorspace/FSVisitor.hpp
+)
+
 set(math_src
   math/FloatCompare.hpp
   math/Permutation.hpp
@@ -228,6 +234,7 @@ source_group(idf FILES ${idf_src})
 source_group(sql FILES ${sql_src})
 source_group(xml FILES ${xml_src})
 source_group(geometry FILES ${geometry_src})
+source_group(floorspace FILES ${floorspace_src})
 source_group(math FILES ${math_src})
 source_group(plot FILES ${plot_src})
 source_group(time FILES ${time_src})
@@ -258,6 +265,7 @@ set(${target_name}_src
   ${sql_src}
   ${xml_src}
   ${geometry_src}
+  ${floorspace_src}
   ${math_src}
   ${plot_src}
   ${time_src}
