@@ -27,99 +27,89 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_EXTERNALFILE_HPP
-#define MODEL_EXTERNALFILE_HPP
+#ifndef MODEL_PYTHONPLUGININSTANCE_HPP
+#define MODEL_PYTHONPLUGININSTANCE_HPP
 
 #include "ModelAPI.hpp"
 #include "ResourceObject.hpp"
-
-#include "../utilities/core/Path.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-  class ScheduleFile;
-  class PythonPluginInstance;
+  class ExternalFile;
 
   namespace detail {
 
-    class ExternalFile_Impl;
+    class PythonPluginInstance_Impl;
 
   }  // namespace detail
 
-  /** ExternalFile is a ResourceObject that wraps the OpenStudio IDD object 'OS:External:File'. */
-  class MODEL_API ExternalFile : public ResourceObject
+  /** PythonPluginInstance is a ResourceObject that wraps the OpenStudio IDD object 'OS:PythonPlugin:Instance'. */
+  class MODEL_API PythonPluginInstance : public ResourceObject
   {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ExternalFile() {}
+    PythonPluginInstance(const ExternalFile& externalfile, const std::string& pluginClassName);
+
+    virtual ~PythonPluginInstance() {}
 
     //@}
 
     static IddObjectType iddObjectType();
 
-    static std::vector<std::string> columnSeparatorValues();
-
-    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename);
-
     /** @name Getters */
     //@{
 
-    std::string fileName() const;
+    ExternalFile externalFile() const;
 
-    path filePath() const;
+    bool runDuringWarmupDays() const;
+    bool isRunDuringWarmupDaysDefaulted() const;
 
-    //boost::optional<std::string> columnSeparator() const;
-
-    //bool isColumnSeparatorDefaulted() const;
+    std::string pluginClassName() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    //bool setColumnSeparator(const std::string& columnSeparator);
+    bool setRunDuringWarmupDays(bool runDuringWarmupDays);
+    void resetRunDuringWarmupDays();
 
-    //void resetColumnSeparator();
+    bool setPluginClassName(const std::string& pluginClassName);
 
     //@}
     /** @name Other */
     //@{
 
-    //bool isValid();
+    /** Helper that will return whether the pluginClassName can be found in the linked file */
+    bool findPluginClassNameInFile(const std::string& pluginClassName) const;
 
-    std::vector<ScheduleFile> scheduleFiles() const;
-
-    std::vector<PythonPluginInstance> pythonPluginInstances() const;
+    std::vector<std::string> validPluginClassNamesInFile() const;
 
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalFile_Impl ImplType;
+    using ImplType = detail::PythonPluginInstance_Impl;
 
-    explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
+    explicit PythonPluginInstance(std::shared_ptr<detail::PythonPluginInstance_Impl> impl);
 
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
     /// @endcond
    private:
-    REGISTER_LOGGER("openstudio.model.ExternalFile");
-
-    ExternalFile(const Model& model, const std::string& filename);
-
-    bool setFileName(const std::string& fileName);
+    REGISTER_LOGGER("openstudio.model.PythonPluginInstance");
   };
 
-  /** \relates ExternalFile*/
-  typedef boost::optional<ExternalFile> OptionalExternalFile;
+  /** \relates PythonPluginInstance*/
+  using OptionalPythonPluginInstance = boost::optional<PythonPluginInstance>;
 
-  /** \relates ExternalFile*/
-  typedef std::vector<ExternalFile> ExternalFileVector;
+  /** \relates PythonPluginInstance*/
+  using PythonPluginInstanceVector = std::vector<PythonPluginInstance>;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_EXTERNALFILE_HPP
+#endif  // MODEL_PYTHONPLUGININSTANCE_HPP

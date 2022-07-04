@@ -27,99 +27,51 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_EXTERNALFILE_HPP
-#define MODEL_EXTERNALFILE_HPP
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
 
-#include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
+#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include "../utilities/core/Path.hpp"
+#include "../../model/Model.hpp"
+#include "../../model/PythonPluginTrendVariable.hpp"
+#include "../../model/PythonPluginVariable.hpp"
 
-namespace openstudio {
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
-namespace model {
+#include <utilities/idd/PythonPlugin_Variables_FieldEnums.hxx>
+#include <utilities/idd/PythonPlugin_TrendVariable_FieldEnums.hxx>
 
-  class ScheduleFile;
-  class PythonPluginInstance;
+#include <utilities/idd/IddEnums.hxx>
 
-  namespace detail {
+using namespace openstudio::energyplus;
+using namespace openstudio::model;
+using namespace openstudio;
 
-    class ExternalFile_Impl;
+TEST_F(EnergyPlusFixture, ForwardTranslator_PythonPluginTrendVariable) {
 
-  }  // namespace detail
+  ForwardTranslator ft;
 
-  /** ExternalFile is a ResourceObject that wraps the OpenStudio IDD object 'OS:External:File'. */
-  class MODEL_API ExternalFile : public ResourceObject
-  {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+  // Create a model
+  Model m;
 
-    virtual ~ExternalFile() {}
+  PythonPluginVariable pyVar(m);
+  pyVar.setName("PythonPluginVariable1");
 
-    //@}
+  PythonPluginTrendVariable pyTrendVar(pyVar);
+  pyTrendVar.setName("PythonPluginTrendVariable");
+  EXPECT_TRUE(pyTrendVar.setNumberofTimestepstobeLogged(10));
 
-    static IddObjectType iddObjectType();
+  Workspace w = ft.translateModel(m);
+  EXPECT_EQ(1, w.getObjectsByType(IddObjectType::PythonPlugin_Variables).size());
+  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::PythonPlugin_TrendVariable);
+  ASSERT_EQ(1u, idfObjs.size());
+  auto idfObj = idfObjs.front();
 
-    static std::vector<std::string> columnSeparatorValues();
-
-    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename);
-
-    /** @name Getters */
-    //@{
-
-    std::string fileName() const;
-
-    path filePath() const;
-
-    //boost::optional<std::string> columnSeparator() const;
-
-    //bool isColumnSeparatorDefaulted() const;
-
-    //@}
-    /** @name Setters */
-    //@{
-
-    //bool setColumnSeparator(const std::string& columnSeparator);
-
-    //void resetColumnSeparator();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //bool isValid();
-
-    std::vector<ScheduleFile> scheduleFiles() const;
-
-    std::vector<PythonPluginInstance> pythonPluginInstances() const;
-
-    //@}
-   protected:
-    /// @cond
-    typedef detail::ExternalFile_Impl ImplType;
-
-    explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
-
-    friend class Model;
-    friend class IdfObject;
-    friend class openstudio::detail::IdfObject_Impl;
-    /// @endcond
-   private:
-    REGISTER_LOGGER("openstudio.model.ExternalFile");
-
-    ExternalFile(const Model& model, const std::string& filename);
-
-    bool setFileName(const std::string& fileName);
-  };
-
-  /** \relates ExternalFile*/
-  typedef boost::optional<ExternalFile> OptionalExternalFile;
-
-  /** \relates ExternalFile*/
-  typedef std::vector<ExternalFile> ExternalFileVector;
-
-}  // namespace model
-}  // namespace openstudio
-
-#endif  // MODEL_EXTERNALFILE_HPP
+  EXPECT_EQ(pyTrendVar.nameString(), idfObj.getString(PythonPlugin_TrendVariableFields::Name).get());
+  EXPECT_EQ(pyVar.nameString(), idfObj.getString(PythonPlugin_TrendVariableFields::NameofaPythonPluginVariable).get());
+  EXPECT_EQ(10, idfObj.getInt(PythonPlugin_TrendVariableFields::NumberofTimestepstobeLogged).get());
+}
