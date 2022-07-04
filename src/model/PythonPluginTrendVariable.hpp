@@ -44,7 +44,9 @@ namespace model {
 
   }  // namespace detail
 
-  /** PythonPluginTrendVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:PythonPlugin:TrendVariable'. */
+  /** PythonPluginTrendVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:PythonPlugin:TrendVariable'.
+    * While this object is fully functional, it is not the recommended way to do trending:
+    * just use a storage variable (eg: a list) in the python script */
   class MODEL_API PythonPluginTrendVariable : public ModelObject
   {
    public:
