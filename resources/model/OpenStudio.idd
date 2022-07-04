@@ -34973,6 +34973,174 @@ OS:EnergyManagementSystem:ConstructionIndexVariable,
        \object-list ConstructionNames
        \required-field
 
+\group Python Plugin System
+
+OS:PythonPlugin:Instance,
+       \memo A single plugin to be executed during the simulation, which can contain multiple calling points
+       \memo for the same class instance by overriding multiple calling point methods.
+       \min-fields 5
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \type alpha
+       \reference ProgramNames
+       \note This is the name used to represent this plugin in traditional EMS fields
+  A3,  \field Run During Warmup Days
+       \note required-field disabled as it has a default
+       \note If this field is enabled, the plugin will be executed during warmup days, otherwise it
+       \note will only be executed once warmup is completed and the actual run period begins
+       \type choice
+       \key Yes
+       \key No
+       \default No
+  A4,  \field External File Name
+       \type object-list
+       \object-list ExternalFileNames
+  A5;  \field Plugin Class Name
+       \required-field
+       \type alpha
+       \note This is the name of the class to be executed as a plugin during a simulation
+       \note The class must inherit the EnergyPlusPlugin base class
+
+OS:PythonPlugin:Variable,
+       \memo This object defines custom Python Plugin variable data that should be shared
+       \memo among all running Python Plugins.
+       \memo all PythonPlugin:Variable objects will be translated onto a single E+ PythonPlugin:Variables
+       \min-fields 3
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2;  \field Name
+       \required-field
+       \type alpha
+       \reference PythonPluginVariables
+       \note This variable is used to identify and create a shared variable in EnergyPlus.
+       \note This variable can then be used by all running Python Plugin instances.
+
+OS:PythonPlugin:TrendVariable,
+       \memo This object sets up a Python plugin trend variable from an Python plugin variable
+       \memo A trend variable logs values across timesteps
+       \min-fields 4
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \type alpha
+       \reference PythonPluginVariables
+  A3 , \field Name of a Python Plugin Variable
+       \required-field
+       \type object-list
+       \object-list PythonPluginVariables
+  N1 ; \field Number of Timesteps to be Logged
+       \required-field
+       \type integer
+       \minimum 1
+
+OS:PythonPlugin:OutputVariable,
+       \memo This object sets up an EnergyPlus output variable from a Python Plugin variable
+       \min-fields 5
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \type alpha
+       \reference PythonPluginVariables
+   A3, \field Python Plugin Variable Name
+       \required-field
+       \type object-list
+       \object-list PythonPluginVariables
+   A4, \field Type of Data in Variable
+       \required-field
+       \type choice
+       \key Averaged
+       \key Summed
+       \key Metered
+       \note If Metered is selected, the variable is automatically set to a "Summed" type, and the
+       \note Resource Type, Group Type, and End-Use Subcategory fields on this object are required
+   A5, \field Update Frequency
+       \required-field
+       \type choice
+       \key ZoneTimestep
+       \key SystemTimestep
+   A6, \field Units
+       \note optional but will result in dimensionless units for blank
+       \note EnergyPlus units are standard SI units
+       \type alpha
+   A7, \field Resource Type
+       \note This field is optional for regular output variables with "Type of Data in Variable" set to
+       \note either Averaged or Summed. For Metered variables, this field is required.
+       \note Choose the type of fuel, water, electricity, pollution or heat rate that should be metered.
+       \type choice
+       \key Electricity
+       \key NaturalGas
+       \key Gasoline
+       \key Diesel
+       \key Coal
+       \key FuelOilNo1
+       \key FuelOilNo2
+       \key Propane
+       \key OtherFuel1
+       \key OtherFuel2
+       \key WaterUse
+       \key OnSiteWaterProduced
+       \key MainsWaterSupply
+       \key RainWaterCollected
+       \key WellWaterDrawn
+       \key CondensateWaterCollected
+       \key EnergyTransfer
+       \key Steam
+       \key DistrictCooling
+       \key DistrictHeating
+       \key ElectricityProducedOnSite
+       \key SolarWaterHeating
+       \key SolarAirHeating
+   A8, \field Group Type
+       \note This field is optional for regular output variables with "Type of Data in Variable" set to
+       \note either Averaged or Summed. For Metered variables, this field is required.
+       \note Choose a general classification, building (internal services), HVAC (air systems), or plant (hydronic systems), or system
+       \type choice
+       \key Building
+       \key HVAC
+       \key Plant
+       \key System
+   A9, \field End-Use Category
+       \note This field is optional for regular output variables with "Type of Data in Variable" set to
+       \note either Averaged or Summed. For Metered variables, this field is required.
+       \note Choose how the metered output should be classified for end-use category
+       \type choice
+       \key Heating
+       \key Cooling
+       \key InteriorLights
+       \key ExteriorLights
+       \key InteriorEquipment
+       \key ExteriorEquipment
+       \key Fans
+       \key Pumps
+       \key HeatRejection
+       \key Humidifier
+       \key HeatRecovery
+       \key WaterSystems
+       \key Refrigeration
+       \key OnSiteGeneration
+       \key HeatingCoils
+       \key CoolingCoils
+       \key Chillers
+       \key Boilers
+       \key Baseboard
+       \key HeatRecoveryForCooling
+       \key HeatRecoveryForHeating
+  A10; \field End-Use Subcategory
+       \note This field is always optional. For regular output variables with "Type of Data in Variable" set to
+       \note either Averaged or Summed, this field is completely ignored. For Metered variables, this field is
+       \note optional, but allows custom categorization of the end-uses in the ABUPS End Uses by Subcategory table.
+       \note Enter a user-defined subcategory for this metered output
+       \type alpha
+       \retaincase
+
 \group AirflowNetwork
 
 OS:AirflowNetworkSimulationControl,
