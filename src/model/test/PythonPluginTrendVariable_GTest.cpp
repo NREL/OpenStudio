@@ -27,99 +27,33 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_EXTERNALFILE_HPP
-#define MODEL_EXTERNALFILE_HPP
+#include "ModelFixture.hpp"
 
-#include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
+#include "../PythonPluginTrendVariable.hpp"
+#include "../PythonPluginVariable.hpp"
 
-#include "../utilities/core/Path.hpp"
+using namespace openstudio;
+using namespace openstudio::model;
 
-namespace openstudio {
+TEST_F(ModelFixture, PythonPluginTrendVariable_GettersSetters) {
+  Model m;
 
-namespace model {
+  PythonPluginVariable pyVar(m);
 
-  class ScheduleFile;
-  class PythonPluginInstance;
+  PythonPluginTrendVariable pythonPluginTrendVariable(pyVar);
+  EXPECT_EQ(pyVar, pythonPluginTrendVariable.pythonPluginVariable());
 
-  namespace detail {
+  pythonPluginTrendVariable.setName("My PythonPluginTrendVariable");
 
-    class ExternalFile_Impl;
+  // Name of a Python Plugin Variable: Required Object
+  PythonPluginVariable pyVar2(m);
+  EXPECT_TRUE(pythonPluginTrendVariable.setPythonPluginVariable(pyVar2));
+  EXPECT_EQ(pyVar2, pythonPluginTrendVariable.pythonPluginVariable());
 
-  }  // namespace detail
-
-  /** ExternalFile is a ResourceObject that wraps the OpenStudio IDD object 'OS:External:File'. */
-  class MODEL_API ExternalFile : public ResourceObject
-  {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
-
-    virtual ~ExternalFile() {}
-
-    //@}
-
-    static IddObjectType iddObjectType();
-
-    static std::vector<std::string> columnSeparatorValues();
-
-    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename);
-
-    /** @name Getters */
-    //@{
-
-    std::string fileName() const;
-
-    path filePath() const;
-
-    //boost::optional<std::string> columnSeparator() const;
-
-    //bool isColumnSeparatorDefaulted() const;
-
-    //@}
-    /** @name Setters */
-    //@{
-
-    //bool setColumnSeparator(const std::string& columnSeparator);
-
-    //void resetColumnSeparator();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //bool isValid();
-
-    std::vector<ScheduleFile> scheduleFiles() const;
-
-    std::vector<PythonPluginInstance> pythonPluginInstances() const;
-
-    //@}
-   protected:
-    /// @cond
-    typedef detail::ExternalFile_Impl ImplType;
-
-    explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
-
-    friend class Model;
-    friend class IdfObject;
-    friend class openstudio::detail::IdfObject_Impl;
-    /// @endcond
-   private:
-    REGISTER_LOGGER("openstudio.model.ExternalFile");
-
-    ExternalFile(const Model& model, const std::string& filename);
-
-    bool setFileName(const std::string& fileName);
-  };
-
-  /** \relates ExternalFile*/
-  typedef boost::optional<ExternalFile> OptionalExternalFile;
-
-  /** \relates ExternalFile*/
-  typedef std::vector<ExternalFile> ExternalFileVector;
-
-}  // namespace model
-}  // namespace openstudio
-
-#endif  // MODEL_EXTERNALFILE_HPP
+  // Number of Timesteps to be Logged: Required Integer
+  EXPECT_TRUE(pythonPluginTrendVariable.setNumberofTimestepstobeLogged(5));
+  EXPECT_EQ(5, pythonPluginTrendVariable.numberofTimestepstobeLogged());
+  // Bad Value
+  EXPECT_FALSE(pythonPluginTrendVariable.setNumberofTimestepstobeLogged(-9));
+  EXPECT_EQ(5, pythonPluginTrendVariable.numberofTimestepstobeLogged());
+}

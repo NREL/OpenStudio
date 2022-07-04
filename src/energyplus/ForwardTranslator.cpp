@@ -2387,6 +2387,26 @@ namespace energyplus {
         LOG(Warn, "OS_ProgramControl is not currently translated");
         break;
       }
+      case openstudio::IddObjectType::OS_PythonPlugin_Instance: {
+        model::PythonPluginInstance obj = modelObject.cast<PythonPluginInstance>();
+        retVal = translatePythonPluginInstance(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_Variable: {
+        auto obj = modelObject.cast<PythonPluginVariable>();
+        retVal = translatePythonPluginVariable(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_TrendVariable: {
+        auto obj = modelObject.cast<PythonPluginTrendVariable>();
+        retVal = translatePythonPluginTrendVariable(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_OutputVariable: {
+        auto obj = modelObject.cast<PythonPluginOutputVariable>();
+        retVal = translatePythonPluginOutputVariable(obj);
+        break;
+      }
       case openstudio::IddObjectType::OS_RadianceParameters: {
         // no-op
         break;
@@ -3509,6 +3529,11 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Actuator);
     result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Schedule);
     result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Variable);
+
+    result.push_back(IddObjectType::OS_PythonPlugin_Instance);
+    result.push_back(IddObjectType::OS_PythonPlugin_Variable);
+    result.push_back(IddObjectType::OS_PythonPlugin_TrendVariable);
+    result.push_back(IddObjectType::OS_PythonPlugin_OutputVariable);
     return result;
   }
 

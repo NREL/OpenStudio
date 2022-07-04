@@ -27,36 +27,33 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_EXTERNALFILE_IMPL_HPP
-#define MODEL_EXTERNALFILE_IMPL_HPP
+#ifndef MODEL_PYTHONPLUGINOUTPUTVARIABLE_IMPL_HPP
+#define MODEL_PYTHONPLUGINOUTPUTVARIABLE_IMPL_HPP
 
-#include "ModelAPI.hpp"
-#include "ResourceObject_Impl.hpp"
+#include <model/ModelAPI.hpp>
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
-
 namespace model {
 
-  class ExternalFile;
-  class ScheduleFile;
-  class PythonPluginInstance;
+  class PythonPluginVariable;
 
   namespace detail {
 
-    /** ExternalFile_Impl is a ResourceObject_Impl that is the implementation class for ExternalFile.*/
-    class MODEL_API ExternalFile_Impl : public ResourceObject_Impl
+    /** PythonPluginOutputVariable_Impl is a ModelObject_Impl that is the implementation class for PythonPluginOutputVariable.*/
+    class MODEL_API PythonPluginOutputVariable_Impl : public ModelObject_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      ExternalFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      PythonPluginOutputVariable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      ExternalFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      PythonPluginOutputVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      ExternalFile_Impl(const ExternalFile_Impl& other, Model_Impl* model, bool keepHandle);
+      PythonPluginOutputVariable_Impl(const PythonPluginOutputVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExternalFile_Impl();
+      virtual ~PythonPluginOutputVariable_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -66,48 +63,69 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
-      virtual ModelObject clone(Model model) const override;
-
-      virtual std::vector<IdfObject> remove() override;
-
       //@}
       /** @name Getters */
       //@{
 
-      std::string fileName() const;
+      PythonPluginVariable pythonPluginVariable() const;
 
-      path filePath() const;
+      std::string typeofDatainVariable() const;
 
-      //boost::optional<std::string> columnSeparator() const;
+      std::string updateFrequency() const;
 
-      //char columnSeparatorChar() const;
+      boost::optional<std::string> units() const;
 
-      //bool isColumnSeparatorDefaulted() const;
+      boost::optional<std::string> resourceType() const;
+
+      boost::optional<std::string> groupType() const;
+
+      boost::optional<std::string> endUseCategory() const;
+
+      boost::optional<std::string> endUseSubcategory() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      //bool setColumnSeparator(const std::string& columnSeparator);
+      bool setPythonPluginVariable(const PythonPluginVariable& pythonPluginVariable);
 
-      //void resetColumnSeparator();
+      bool setTypeofDatainVariable(const std::string& typeofDatainVariable);
+
+      bool setUpdateFrequency(const std::string& updateFrequency);
+
+      bool setUnits(const std::string& units);
+
+      void resetUnits();
+
+      bool setResourceType(const std::string& resourceType);
+
+      void resetResourceType();
+
+      bool setGroupType(const std::string& groupType);
+
+      void resetGroupType();
+
+      bool setEndUseCategory(const std::string& endUseCategory);
+
+      void resetEndUseCategory();
+
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
+
+      void resetEndUseSubcategory();
 
       //@}
       /** @name Other */
       //@{
-      //bool isValid();
-
-      std::vector<ScheduleFile> scheduleFiles() const;
-
-      std::vector<PythonPluginInstance> pythonPluginInstances() const;
 
       //@}
      protected:
-      bool setFileName(const std::string& fileName);
-      friend class openstudio::model::ExternalFile;
-
      private:
-      REGISTER_LOGGER("openstudio.model.ExternalFile");
+      REGISTER_LOGGER("openstudio.model.PythonPluginOutputVariable");
+
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<PythonPluginVariable> optionalPythonPluginVariable() const;
     };
 
   }  // namespace detail
@@ -115,4 +133,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_SCHEDULEFILE_IMPL_HPP
+#endif  // MODEL_PYTHONPLUGINOUTPUTVARIABLE_IMPL_HPP
