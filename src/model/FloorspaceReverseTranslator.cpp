@@ -380,11 +380,15 @@ namespace model {
     }
 
     void createFloorShading(ShadingSurfaceGroup& osGroup, Point3dVector& faceVertices, double z) {
-      if (orientVerticesForFloor(faceVertices)) createShadingSurface(osGroup, faceVertices, z);
+      if (orientVerticesForFloor(faceVertices)) {
+        createShadingSurface(osGroup, faceVertices, z);
+      }
     }
 
     void createRoofShading(ShadingSurfaceGroup& osGroup, Point3dVector& faceVertices, double z) {
-      if (orientVerticesForRoof(faceVertices)) createShadingSurface(osGroup, faceVertices, z);
+      if (orientVerticesForRoof(faceVertices)) {
+        createShadingSurface(osGroup, faceVertices, z);
+      }
     }
 
     void createWallShading(ShadingSurfaceGroup& osGroup, const FSShading& fsShading, const FSEdgeReference& edgeRef, double minZ, double maxZ,
@@ -397,10 +401,11 @@ namespace model {
       // Get the edge order (v1..v2 or v2..v1) and reverse if necessary to ensure
       // the wall surface is oriented correctly
       int edgeOrder = edgeRef.edgeOrder();
-      if (edgeOrder == 1 && reversed)
+      if (edgeOrder == 1 && reversed) {
         edgeOrder = 0;
-      else if (edgeOrder == 0 && reversed)
+      } else if (edgeOrder == 0 && reversed) {
         edgeOrder = 1;
+      }
 
       if (edgeOrder == 1) {
         wallVertices.push_back(Point3d(v2.x(), v2.y(), maxZ));
@@ -563,12 +568,16 @@ namespace model {
 
     // Creates "Floor" surface
     void createFloorSurface(Space& osSpace, Point3dVector& faceVertices, double minZ, bool openToBelow) {
-      if (orientVerticesForFloor(faceVertices)) createSurface(osSpace, faceVertices, minZ, "Floor", openToBelow);
+      if (orientVerticesForFloor(faceVertices)) {
+        createSurface(osSpace, faceVertices, minZ, "Floor", openToBelow);
+      }
     }
 
     // Creates a "RoofCeiling" surface
     void createRoofSurface(Space& osSpace, Point3dVector& faceVertices, double maxZ) {
-      if (orientVerticesForRoof(faceVertices)) createSurface(osSpace, faceVertices, maxZ, "RoofCeiling", false);
+      if (orientVerticesForRoof(faceVertices)) {
+        createSurface(osSpace, faceVertices, maxZ, "RoofCeiling", false);
+      }
     }
 
     // Creates a "Wall" surface and sub-surfaces
@@ -581,10 +590,11 @@ namespace model {
       // Get the edge order (v1..v2 or v2..v1) and reverse if necessary to ensure
       // the wall surface is oriented correctly
       int edgeOrder = edgeRef.edgeOrder();
-      if (edgeOrder == 1 && reversed)
+      if (edgeOrder == 1 && reversed) {
         edgeOrder = 0;
-      else if (edgeOrder == 0 && reversed)
+      } else if (edgeOrder == 0 && reversed) {
         edgeOrder = 1;
+      }
 
       if (edgeOrder == 1) {
         wallVertices.push_back(Point3d(v2.x(), v2.y(), maxZ));

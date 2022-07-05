@@ -214,21 +214,31 @@ void CompareTwoModels(Model& model, Model& baseline) {
     ASSERT_TRUE(match.has_value());
     // Check Space Type
     ASSERT_EQ(space.spaceType().has_value(), match->spaceType().has_value());
-    if (space.spaceType().has_value()) ASSERT_EQ(space.spaceType()->name(), match->spaceType()->name());
+    if (space.spaceType().has_value()) {
+      ASSERT_EQ(space.spaceType()->name(), match->spaceType()->name());
+    }
     // Check Default Construction Set
     ASSERT_EQ(space.defaultConstructionSet().has_value(), match->defaultConstructionSet().has_value());
-    if (space.defaultConstructionSet().has_value()) ASSERT_EQ(space.defaultConstructionSet()->name(), match->defaultConstructionSet()->name());
+    if (space.defaultConstructionSet().has_value()) {
+      ASSERT_EQ(space.defaultConstructionSet()->name(), match->defaultConstructionSet()->name());
+    }
     // Check Building Story
     ASSERT_EQ(space.buildingStory().has_value(), match->buildingStory().has_value());
-    if (space.buildingStory().has_value()) ASSERT_EQ(space.buildingStory()->name(), match->buildingStory()->name());
+    if (space.buildingStory().has_value()) {
+      ASSERT_EQ(space.buildingStory()->name(), match->buildingStory()->name());
+    }
     // Check Thermal Zone
     ASSERT_EQ(space.thermalZone().has_value(), match->thermalZone().has_value());
-    if (space.thermalZone().has_value()) ASSERT_EQ(space.thermalZone()->name(), match->thermalZone()->name());
+    if (space.thermalZone().has_value()) {
+      ASSERT_EQ(space.thermalZone()->name(), match->thermalZone()->name());
+    }
     // Check Building Unit
     ASSERT_EQ(space.buildingUnit().has_value(), match->buildingUnit().has_value());
     // Multiplier
     ASSERT_EQ(space.multiplier(), match->multiplier());
-    if (space.buildingUnit().has_value()) ASSERT_EQ(space.buildingUnit()->name(), match->buildingUnit()->name());
+    if (space.buildingUnit().has_value()) {
+      ASSERT_EQ(space.buildingUnit()->name(), match->buildingUnit()->name());
+    }
     // CHeck daylighting control
     ASSERT_EQ(space.daylightingControls().size(), match->daylightingControls().size());
 

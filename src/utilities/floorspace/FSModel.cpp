@@ -976,8 +976,9 @@ void FSFace::load(const Json::Value& root, const FSGeometry& geometry) {
   FSGeometryBase::load(root);
   const Json::Value& edgeIds = root.get("edge_ids", Json::arrayValue);
   const Json::Value& edgeOrders = root.get("edge_order", Json::arrayValue);
-  if (edgeIds.size() != edgeOrders.size())
+  if (edgeIds.size() != edgeOrders.size()) {
     throw openstudio::Exception(std::string("The number or edge orders does not equal the number of edge ids"));
+  }
 
   for (unsigned int i = 0; i < edgeIds.size(); i++) {
     boost::optional<FSEdge> edge = geometry.edge(edgeIds[i].asString()).value();
@@ -1018,10 +1019,11 @@ int FSEdgeReference::edgeOrder() const {
 }
 
 const FSVertex& FSEdgeReference::getNextVertex() {
-  if (m_edgeOrder == 1)
+  if (m_edgeOrder == 1) {
     return m_edge.firstVertex();
-  else
+  } else {
     return m_edge.secondVertex();
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -1215,10 +1217,11 @@ FSWindowDefinition::FSWindowDefinition(const Json::Value& root, const FSModel& m
     m_windowDefinitionMode = root.get("window_definition_mode", "Single Window").asString();
   }
   m_windowType = root.get("window_type", "Fixed").asString();
-  if (root.get("window_type", "Fixed").asString() == "Fixed")
+  if (root.get("window_type", "Fixed").asString() == "Fixed") {
     m_windowType = "FixedWindow";
-  else if (root.get("window_type", "Fixed").asString() == "Operable")
+  } else if (root.get("window_type", "Fixed").asString() == "Operable") {
     m_windowType = "OperableWindow";
+  }
   m_wwr = root.get("wwr", 0.5).asDouble();
   m_sillHeight = root.get("sill_height", 0).asDouble() * model.lengthToMeters();
   m_windowSpacing = root.get("window_spacing", 0).asDouble() * model.lengthToMeters();
