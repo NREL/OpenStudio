@@ -658,14 +658,12 @@ void FSSpace::simplifyFace(FSGeometry& geometry) {
           //  edge = FSEdge (*v1, *v2);
           //edgeRefs.emplace_back(FSEdgeReference(*edge, 1));
           FSEdge edge(*v1, *v2);
-          FSEdgeReference edgeRef(edge, 1);
-          edgeRefs.emplace_back(edgeRef);
+          edgeRefs.emplace_back(std::move(edge), 1);
         }
       }
 
       // Update the face
-      m_face->clearEdgeRefs();
-      m_face->setEdgeRefs(edgeRefs);
+      m_face->setEdgeRefs(std::move(edgeRefs));
     }
     // Get a list of windows and doors that were associated with the old edges
     // Remap these windows and doors to the new edges
@@ -870,18 +868,12 @@ std::vector<FSEdgeReference> FSFace::edgeRefs() {
   return m_edgeRefs;
 }
 
-void FSFace::clearEdgeRefs() {
-  m_edgeRefs.clear();
-}
-
 void FSFace::setEdgeRefs(std::vector<FSEdgeReference> edgeRefs) {
-  for (auto& edgeRef : edgeRefs) {
-    m_edgeRefs.push_back(edgeRef);
-  }
+  m_edgeRefs = std::move(edgeRefs);
 }
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSEdgeReference::FSEdgeReference(FSEdge& edge, int edgeOrder) : m_edge(edge), m_edgeOrder(edgeOrder) {}
+FSEdgeReference::FSEdgeReference(FSEdge edge, int edgeOrder) : m_edge(std::move(edge)), m_edgeOrder(edgeOrder) {}
 
 const FSEdge& FSEdgeReference::edge() const {
   return m_edge;

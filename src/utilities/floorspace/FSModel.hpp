@@ -128,7 +128,7 @@ class UTILITIES_API FSEdgeReference
 {
  public:
   FSEdgeReference() = default;
-  FSEdgeReference(FSEdge& edge, int order);
+  FSEdgeReference(FSEdge edge, int order);
   const FSEdge& edge() const;
   int edgeOrder() const;
   // Gets the next vertex as determined by the edge order
@@ -146,7 +146,6 @@ class UTILITIES_API FSFace : public FSGeometryBase
   FSFace(const Json::Value& root, const FSGeometry& geometry);
   void load(const Json::Value& root, const FSGeometry& geometry);
   std::vector<FSEdgeReference> edgeRefs();
-  void clearEdgeRefs();
   void setEdgeRefs(std::vector<FSEdgeReference> edgeRefs);
 
  private:
