@@ -36,8 +36,6 @@
 #include "../geometry/Geometry.hpp"
 #include "../geometry/Intersection.hpp"
 
-#include <iomanip>
-
 namespace openstudio {
 
 FSModel::FSModel(const std::string& json) {
@@ -730,9 +728,8 @@ boost::optional<FSEdge> FSGeometry::edge(const std::string& id) const {
 
 boost::optional<FSEdge> FSGeometry::edge(const FSVertex& v1, const FSVertex& v2) const {
   for (const auto& edge : m_edges) {
-    if (edge.firstVertex().id() == v1.id() && edge.secondVertex().id() == v2.id()) {
-      return edge;
-    } else if (edge.firstVertex().id() == v2.id() && edge.secondVertex().id() == v1.id()) {
+    if ((edge.firstVertex().id() == v1.id() && edge.secondVertex().id() == v2.id())
+        || (edge.firstVertex().id() == v2.id() && edge.secondVertex().id() == v1.id())) {
       return edge;
     }
   }
