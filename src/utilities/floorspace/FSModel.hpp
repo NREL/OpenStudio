@@ -50,7 +50,7 @@ class FSModel;
 class UTILITIES_API FSBase : FSDispatchable
 {
  public:
-  FSBase();
+  FSBase() = default;
   FSBase(const Json::Value& root);
 
   const std::string& name() const;
@@ -74,7 +74,7 @@ class UTILITIES_API FSBase : FSDispatchable
 class UTILITIES_API FSGeometryBase
 {
  public:
-  FSGeometryBase();
+  FSGeometryBase() = default;
   FSGeometryBase(const Json::Value& root);
   virtual void load(const Json::Value& root);
 
@@ -87,7 +87,7 @@ class UTILITIES_API FSGeometryBase
 class UTILITIES_API FSVertex : public FSGeometryBase
 {
  public:
-  FSVertex();
+  FSVertex() = default;
   FSVertex(const Json::Value& root, const FSModel& model);
   void load(const Json::Value& root, const FSModel& model);
 
@@ -99,8 +99,8 @@ class UTILITIES_API FSVertex : public FSGeometryBase
   void setXY(double x, double y);
 
  private:
-  double m_x;
-  double m_y;
+  double m_x = 0.0;
+  double m_y = 0.0;
 };
 
 class FSGeometry;
@@ -108,7 +108,7 @@ class FSGeometry;
 class UTILITIES_API FSEdge : public FSGeometryBase
 {
  public:
-  FSEdge();
+  FSEdge() = default;
   FSEdge(const Json::Value& root, const FSGeometry& geometry);
   FSEdge(FSVertex& v1, FSVertex& v2);
   void load(const Json::Value& root, const FSGeometry& geometry);
@@ -116,7 +116,7 @@ class UTILITIES_API FSEdge : public FSGeometryBase
   std::vector<FSVertex> getVertices() const;
   const FSVertex& firstVertex() const;
   const FSVertex& secondVertex() const;
-  const Vector3d& edgeVector() const;
+  Vector3d edgeVector() const;
   Point3d vertex(double alpha) const;
 
  private:
@@ -127,22 +127,22 @@ class UTILITIES_API FSEdge : public FSGeometryBase
 class UTILITIES_API FSEdgeReference
 {
  public:
-  FSEdgeReference();
+  FSEdgeReference() = default;
   FSEdgeReference(FSEdge& edge, int order);
   const FSEdge& edge() const;
   int edgeOrder() const;
   // Gets the next vertex as determined by the edge order
-  const FSVertex& getNextVertex();
+  const FSVertex& getNextVertex() const;
 
  private:
   FSEdge m_edge;
-  int m_edgeOrder;
+  int m_edgeOrder = 1;
 };
 
 class UTILITIES_API FSFace : public FSGeometryBase
 {
  public:
-  FSFace();
+  FSFace() = default;
   FSFace(const Json::Value& root, const FSGeometry& geometry);
   void load(const Json::Value& root, const FSGeometry& geometry);
   std::vector<FSEdgeReference> edgeRefs();
@@ -156,7 +156,7 @@ class UTILITIES_API FSFace : public FSGeometryBase
 class UTILITIES_API FSGeometry : public FSGeometryBase
 {
  public:
-  FSGeometry();
+  FSGeometry() = default;
   FSGeometry(const Json::Value& root, const FSModel& model);
   void load(const Json::Value& root, const FSModel& model);
 
@@ -182,7 +182,7 @@ class UTILITIES_API FSGeometry : public FSGeometryBase
 class UTILITIES_API FSAssignment : public FSBase
 {
  public:
-  FSAssignment();
+  FSAssignment() = default;
   FSAssignment(const Json::Value& root);
 
  private:
@@ -191,7 +191,7 @@ class UTILITIES_API FSAssignment : public FSBase
 class UTILITIES_API FSThermalZone : public FSAssignment
 {
  public:
-  FSThermalZone();
+  FSThermalZone() = default;
   FSThermalZone(const Json::Value& root);
 
   void Accept(FSVisitor& visitor) const;
@@ -200,7 +200,7 @@ class UTILITIES_API FSThermalZone : public FSAssignment
 class UTILITIES_API FSBuildingUnit : public FSAssignment
 {
  public:
-  FSBuildingUnit();
+  FSBuildingUnit() = default;
   FSBuildingUnit(const Json::Value& root);
 
   void Accept(FSVisitor& visitor) const;
@@ -209,7 +209,7 @@ class UTILITIES_API FSBuildingUnit : public FSAssignment
 class UTILITIES_API FSBuildingType : public FSAssignment
 {
  public:
-  FSBuildingType();
+  FSBuildingType() = default;
   FSBuildingType(const Json::Value& root);
 
   void Accept(FSVisitor& visitor) const;
@@ -218,7 +218,7 @@ class UTILITIES_API FSBuildingType : public FSAssignment
 class UTILITIES_API FSSpaceType : public FSAssignment
 {
  public:
-  FSSpaceType();
+  FSSpaceType() = default;
   FSSpaceType(const Json::Value& root);
 
   void Accept(FSVisitor& visitor) const;
@@ -227,7 +227,7 @@ class UTILITIES_API FSSpaceType : public FSAssignment
 class UTILITIES_API FSConstructionSet : public FSAssignment
 {
  public:
-  FSConstructionSet();
+  FSConstructionSet() = default;
   FSConstructionSet(const Json::Value& root);
 
   void Accept(FSVisitor& visitor) const;
@@ -239,7 +239,7 @@ class FSSpace;
 class UTILITIES_API FSDaylightingControlDefinition : public FSBase
 {
  public:
-  FSDaylightingControlDefinition();
+  FSDaylightingControlDefinition() = default;
   FSDaylightingControlDefinition(const Json::Value& root, const FSModel& model);
 
   void Accept(FSVisitor& visitor) const;
@@ -248,14 +248,14 @@ class UTILITIES_API FSDaylightingControlDefinition : public FSBase
   double height() const;
 
  private:
-  double m_illuminanceSetpoint;
-  double m_height;
+  double m_illuminanceSetpoint = 300.0;
+  double m_height = 0.0;
 };
 
 class UTILITIES_API FSDaylightingControl : public FSBase
 {
  public:
-  FSDaylightingControl();
+  FSDaylightingControl() = default;
   FSDaylightingControl(const Json::Value& root, const FSModel& model, FSStory& story);
 
   void Accept(FSVisitor& visitor) const;
@@ -272,7 +272,7 @@ class UTILITIES_API FSDaylightingControl : public FSBase
 class UTILITIES_API FSSpace : public FSBase
 {
  public:
-  FSSpace();
+  FSSpace() = default;
   FSSpace(const Json::Value& root, const FSModel& model, FSStory& story);
   void Accept(FSVisitor& visitor) const;
 
@@ -287,7 +287,7 @@ class UTILITIES_API FSSpace : public FSBase
   double aboveCeilingHeight() const;
   double offset() const;
   bool openToBelow() const;
-  const std::vector<FSDaylightingControl> daylightingControls() const;
+  std::vector<FSDaylightingControl> daylightingControls() const;
 
  private:
   boost::optional<FSThermalZone> m_thermalZone;
@@ -297,12 +297,12 @@ class UTILITIES_API FSSpace : public FSBase
   boost::optional<FSStory&> m_story;
   boost::optional<FSFace> m_face;
 
-  double m_belowFloorPlenumHeight;
-  double m_floorToCeilingHeight;
-  double m_aboveCeilingHeight;
-  double m_offset;
-  bool m_openToBelow;
-  int m_multiplier;
+  double m_belowFloorPlenumHeight = 0.0;
+  double m_floorToCeilingHeight = 0.0;
+  double m_aboveCeilingHeight = 0.0;
+  double m_offset = 0.0;
+  bool m_openToBelow = false;
+  int m_multiplier = 1;
   std::vector<FSDaylightingControl> m_daylightingControls;
   void simplifyFace(FSGeometry& geometry);
 };
@@ -310,7 +310,7 @@ class UTILITIES_API FSSpace : public FSBase
 class UTILITIES_API FSWindowDefinition : public FSBase
 {
  public:
-  FSWindowDefinition();
+  FSWindowDefinition() = default;
   FSWindowDefinition(const Json::Value& root, const FSModel& model);
   void Accept(FSVisitor& visitor) const;
 
@@ -326,22 +326,22 @@ class UTILITIES_API FSWindowDefinition : public FSBase
 
  private:
   std::string m_windowDefinitionMode;  // Single Window, Repeating Window, Window To Wall Ratio
-  double m_wwr;
-  double m_sillHeight;
-  double m_windowSpacing;
-  double m_height;
-  double m_width;
-  std::string m_windowType;  // Fixed, Operable
-  double m_overhangProjectionFactor;
-  double m_finProjectionFactor;
+  std::string m_windowType;            // Fixed, Operable
+  double m_wwr = 0.0;
+  double m_sillHeight = 0.0;
+  double m_windowSpacing = 0.0;
+  double m_height = 0.0;
+  double m_width = 0.0;
+  double m_overhangProjectionFactor = 0.0;
+  double m_finProjectionFactor = 0.0;
 };
 
 // Represents something that fills an opening - door or window
 class UTILITIES_API FSFiller : public FSBase
 {
  public:
-  FSFiller();
-  FSFiller(const Json::Value& root, const FSModel& model, FSStory& story);
+  FSFiller() = default;
+  FSFiller(const Json::Value& root, FSStory& story);
 
   boost::optional<FSEdge> edge() const;
   boost::optional<FSSpace> space() const;
@@ -354,14 +354,14 @@ class UTILITIES_API FSFiller : public FSBase
   boost::optional<FSSpace> m_space;
   // For repeating windows alphas is a list otherwise it is a single value
   // not quite sure th ebest way to handle this yet so have both properties
-  double m_alpha;
+  double m_alpha = 0.5;
   std::vector<double> m_alphas;
 };
 
 class UTILITIES_API FSWindow : public FSFiller
 {
  public:
-  FSWindow();
+  FSWindow() = default;
   FSWindow(const Json::Value& root, const FSModel& model, FSStory& story);
   void Accept(FSVisitor& visitor) const;
 
@@ -374,7 +374,7 @@ class UTILITIES_API FSWindow : public FSFiller
 class UTILITIES_API FSDoorDefinition : public FSBase
 {
  public:
-  FSDoorDefinition();
+  FSDoorDefinition() = default;
   FSDoorDefinition(const Json::Value& root, const FSModel& model);
 
   void Accept(FSVisitor& visitor) const;
@@ -384,15 +384,15 @@ class UTILITIES_API FSDoorDefinition : public FSBase
   const std::string& doorType() const;
 
  private:
-  double m_height;
-  double m_width;
+  double m_height = 2.0;
+  double m_width = 1.0;
   std::string m_doorType;  // Door, Glass Door, Overhead Door
 };
 
 class UTILITIES_API FSDoor : public FSFiller
 {
  public:
-  FSDoor();
+  FSDoor() = default;
   FSDoor(const Json::Value& root, const FSModel& model, FSStory& story);
 
   void Accept(FSVisitor& visitor) const;
@@ -405,8 +405,8 @@ class UTILITIES_API FSDoor : public FSFiller
 class UTILITIES_API FSShading : public FSBase
 {
  public:
-  FSShading();
-  FSShading(const Json::Value& root, const FSModel& model, FSStory& story);
+  FSShading() = default;
+  FSShading(const Json::Value& root, FSStory& story);
 
   void Accept(FSVisitor& visitor) const;
 
@@ -419,7 +419,7 @@ class UTILITIES_API FSShading : public FSBase
 class UTILITIES_API FSStory : public FSBase
 {
  public:
-  FSStory();
+  FSStory() = default;
   FSStory(const Json::Value& root, const FSModel& model);
   void Accept(FSVisitor& visitor) const;
 
@@ -437,13 +437,14 @@ class UTILITIES_API FSStory : public FSBase
   std::vector<FSShading> shadings() const;
 
  private:
-  bool m_image_visible;
-  double m_below_floor_plenum_height;
-  double m_floor_to_ceiling_height;
-  double m_above_ceiling_plenum_height;
-  double m_nominalZCoordinate;
+  bool m_image_visible = false;
+  int m_multiplier = 1;
 
-  int m_multiplier;
+  double m_below_floor_plenum_height = 0.0;
+  double m_floor_to_ceiling_height = 3.0;
+  double m_above_ceiling_plenum_height = 0.0;
+  double m_nominalZCoordinate = 0.0;
+
   FSGeometry m_geometry;
   std::vector<FSSpace> m_spaces;
   std::vector<FSWindow> m_windows;
@@ -454,62 +455,59 @@ class UTILITIES_API FSStory : public FSBase
 class UTILITIES_API FSConfig
 {
  public:
-  FSConfig();
+  FSConfig() = default;
   FSConfig(const Json::Value& root);
 
-  std::string units();
-  std::string language();
-  bool unitsEditable();
+  std::string units() const;
+  std::string language() const;
+  bool unitsEditable() const;
   double northAxis() const;
 
  private:
   std::string m_units;
-  bool m_unitsEditable;
+  bool m_unitsEditable = false;
   std::string m_language;
-  double m_north_axis;
+  double m_north_axis = 0.0;
 };
 
 class UTILITIES_API FSGround
 {
  public:
-  FSGround();
+  FSGround() = default;
   FSGround(const Json::Value& root, const FSModel& model);
 
-  double floorOffset();
-  double azimuthAngle();
-  double tiltSlope();
+  double floorOffset() const;
+  double azimuthAngle() const;
+  double tiltSlope() const;
 
  private:
-  double m_floor_offset;
-  double m_azimuth_angle;
-  double m_tilt_slope;
+  double m_floor_offset = 0.0;
+  double m_azimuth_angle = 0.0;
+  double m_tilt_slope = 0.0;
 };
 
 class UTILITIES_API FSProject
 {
  public:
-  FSProject();
+  FSProject() = default;
   FSProject(const Json::Value& root, const FSModel& model);
   void load(const Json::Value& root, const FSModel& model);
 
-  double northAxis();
+  double northAxis() const;
   FSConfig& config();
   FSGround& ground();
 
  private:
-  double m_north_axis;
+  double m_north_axis = 0.0;
   FSConfig m_config;
   FSGround m_ground;
 };
 
-/** Plane defines an infinite plane in 3D space.  The equation of a plane is
-   *  a*x + b*y + c*z = d, any point that satisfies this equation is on the plane.
-   */
 class UTILITIES_API FSModel
 {
  public:
   /// default constructor
-  FSModel();
+  FSModel() = default;
   FSModel(const std::string& json);
 
   void Accept(FSVisitor& visitor) const;
@@ -522,25 +520,20 @@ class UTILITIES_API FSModel
   std::vector<FSSpaceType> spaceTypes() const;
   std::vector<FSConstructionSet> constructionSets() const;
   std::vector<FSStory> stories() const;
-  const std::vector<FSDaylightingControlDefinition> daylightingControlDefinitions() const;
-  const std::vector<FSWindowDefinition> windowDefinitions() const;
-  const std::vector<FSDoorDefinition> doorDefinitions() const;
+  std::vector<FSDaylightingControlDefinition> daylightingControlDefinitions() const;
+  std::vector<FSWindowDefinition> windowDefinitions() const;
+  std::vector<FSDoorDefinition> doorDefinitions() const;
 
   boost::optional<FSThermalZone> thermalZone(const std::string& thermalZoneId) const;
   boost::optional<FSBuildingUnit> buildingUnit(const std::string& buildingUnitId) const;
   boost::optional<FSBuildingType> buildingType(const std::string& buildingTypeId) const;
   boost::optional<FSSpaceType> spaceType(const std::string& spacetypeId) const;
-  boost::optional<FSConstructionSet> constructionSet(const std::string& construtionSetId) const;
-  boost::optional<FSDaylightingControlDefinition> daylightingControlDefinition(const std::string& id) const;
-  boost::optional<FSWindowDefinition> windowDefinition(const std::string id) const;
-  boost::optional<FSDoorDefinition> doorDefinition(const std::string id) const;
+  boost::optional<FSConstructionSet> constructionSet(const std::string& constructionSetId) const;
+  boost::optional<FSDaylightingControlDefinition> daylightingControlDefinition(const std::string& daylightingControlDefinitionId) const;
+  boost::optional<FSWindowDefinition> windowDefinition(const std::string& windowDefinitionId) const;
+  boost::optional<FSDoorDefinition> doorDefinition(const std::string& doorDefinitionId) const;
   boost::optional<FSProject> project() const;
   double lengthToMeters() const;
-
-  static bool checkKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType);
-  static void assertKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType);
-  static void assertKey(const Json::Value& value, const std::string& key);
-  static void assertType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType);
 
  private:
   REGISTER_LOGGER("utilities.FSModel");
@@ -556,12 +549,9 @@ class UTILITIES_API FSModel
   std::vector<FSDoorDefinition> m_doorDefinitions;
   std::vector<FSStory> m_stories;
   Json::Value m_value;
-  double m_lengthToMeters;
+  double m_lengthToMeters = 1.0;
   void setUnits();
 };
-
-/// ostream operator
-//UTILITIES_API std::ostream& operator<<(std::ostream& os, const Plane& plane);
 
 }  // namespace openstudio
 

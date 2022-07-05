@@ -40,10 +40,6 @@
 
 namespace openstudio {
 
-FSModel::FSModel() {
-  m_lengthToMeters = 1;
-}
-
 FSModel::FSModel(const std::string& json) {
   load(json);
 }
@@ -76,48 +72,41 @@ void FSModel::load(const std::string& json) {
 
       // Load all the space assignment objects so that when the space is loaded
       // we can find the objects via their ids
-      const Json::Value& thermalZones = m_value.get("thermal_zones", Json::arrayValue);
-      for (Json::ArrayIndex t = 0; t < thermalZones.size(); t++) {
-        m_thermalZones.emplace_back(FSThermalZone(thermalZones[t]));
+      for (const auto& thermalZone : m_value.get("thermal_zones", Json::arrayValue)) {
+        m_thermalZones.emplace_back(thermalZone);
       }
 
-      const Json::Value& buildingUnits = m_value.get("building_units", Json::arrayValue);
-      for (Json::ArrayIndex b = 0; b < buildingUnits.size(); b++) {
-        m_buildingUnits.emplace_back(FSBuildingUnit(buildingUnits[b]));
+      for (const auto& buildingUnit : m_value.get("building_units", Json::arrayValue)) {
+        m_buildingUnits.emplace_back(buildingUnit);
       }
 
-      const Json::Value& buildingTypes = m_value.get("building+type", Json::arrayValue);
-      for (Json::ArrayIndex i = 0; i < buildingTypes.size(); i++) {
+      // TODO: not doing anything yet
+      for (const auto& buildingType : m_value.get("building_type", Json::arrayValue)) {
+        m_buildingTypes.emplace_back(buildingType);
       }
 
-      const Json::Value& spaceTypes = m_value.get("space_types", Json::arrayValue);
-      for (Json::ArrayIndex s = 0; s < spaceTypes.size(); s++) {
-        m_spaceTypes.emplace_back(FSSpaceType(spaceTypes[s]));
+      for (const auto& spaceType : m_value.get("space_types", Json::arrayValue)) {
+        m_spaceTypes.emplace_back(spaceType);
       }
 
-      const Json::Value& constructionSets = m_value.get("construction_sets", Json::arrayValue);
-      for (Json::ArrayIndex s = 0; s < constructionSets.size(); s++) {
-        m_constructionSets.emplace_back(FSConstructionSet(constructionSets[s]));
+      for (const auto& constructionSet : m_value.get("construction_sets", Json::arrayValue)) {
+        m_constructionSets.emplace_back(constructionSet);
       }
 
-      const Json::Value& daylightingControlDefinitions = m_value.get("daylighting_control_definitions", Json::arrayValue);
-      for (Json::ArrayIndex i = 0; i < daylightingControlDefinitions.size(); i++) {
-        m_daylightingControlDefinitions.emplace_back(FSDaylightingControlDefinition(daylightingControlDefinitions[i], *this));
+      for (const auto& daylightingControlDefinition : m_value.get("daylighting_control_definitions", Json::arrayValue)) {
+        m_daylightingControlDefinitions.emplace_back(daylightingControlDefinition, *this);
       }
 
-      const Json::Value& windowDefinitions = m_value.get("window_definitions", Json::arrayValue);
-      for (Json::ArrayIndex i = 0; i < windowDefinitions.size(); i++) {
-        m_windowDefinitions.emplace_back(FSWindowDefinition(windowDefinitions[i], *this));
+      for (const auto& windowDefinition : m_value.get("window_definitions", Json::arrayValue)) {
+        m_windowDefinitions.emplace_back(FSWindowDefinition(windowDefinition, *this));
       }
 
-      const Json::Value& doorDefinitions = m_value.get("door_definitions", Json::arrayValue);
-      for (Json::ArrayIndex i = 0; i < doorDefinitions.size(); i++) {
-        m_doorDefinitions.emplace_back(FSDoorDefinition(doorDefinitions[i], *this));
+      for (const auto& doorDefinition : m_value.get("door_definitions", Json::arrayValue)) {
+        m_doorDefinitions.emplace_back(doorDefinition, *this);
       }
 
-      const Json::Value& stories = m_value.get("stories", Json::arrayValue);
-      for (Json::ArrayIndex storyIdx = 0; storyIdx < stories.size(); ++storyIdx) {
-        m_stories.emplace_back(FSStory(stories[storyIdx], *this));
+      for (const auto& story : m_value.get("stories", Json::arrayValue)) {
+        m_stories.emplace_back(story, *this);
       }
     }
   }
@@ -125,7 +114,7 @@ void FSModel::load(const std::string& json) {
 
 boost::optional<FSThermalZone> FSModel::thermalZone(const std::string& thermalZoneId) const {
 
-  for (auto& zone : m_thermalZones) {
+  for (const auto& zone : m_thermalZones) {
     if (zone.id() == thermalZoneId) {
       return zone;
     }
@@ -136,7 +125,7 @@ boost::optional<FSThermalZone> FSModel::thermalZone(const std::string& thermalZo
 
 boost::optional<FSBuildingUnit> FSModel::buildingUnit(const std::string& buildingUnitId) const {
 
-  for (auto& unit : m_buildingUnits) {
+  for (const auto& unit : m_buildingUnits) {
     if (unit.id() == buildingUnitId) {
       return unit;
     }
@@ -147,7 +136,7 @@ boost::optional<FSBuildingUnit> FSModel::buildingUnit(const std::string& buildin
 
 boost::optional<FSBuildingType> FSModel::buildingType(const std::string& buildingTypeId) const {
 
-  for (auto& type : m_buildingTypes) {
+  for (const auto& type : m_buildingTypes) {
     if (type.id() == buildingTypeId) {
       return type;
     }
@@ -158,7 +147,7 @@ boost::optional<FSBuildingType> FSModel::buildingType(const std::string& buildin
 
 boost::optional<FSSpaceType> FSModel::spaceType(const std::string& spaceTypeId) const {
 
-  for (auto& spacetype : m_spaceTypes) {
+  for (const auto& spacetype : m_spaceTypes) {
     if (spacetype.id() == spaceTypeId) {
       return spacetype;
     }
@@ -168,7 +157,7 @@ boost::optional<FSSpaceType> FSModel::spaceType(const std::string& spaceTypeId) 
 }
 
 boost::optional<FSConstructionSet> FSModel::constructionSet(const std::string& constructionSetId) const {
-  for (auto& constructionSet : m_constructionSets) {
+  for (const auto& constructionSet : m_constructionSets) {
     if (constructionSet.id() == constructionSetId) {
       return constructionSet;
     }
@@ -177,9 +166,9 @@ boost::optional<FSConstructionSet> FSModel::constructionSet(const std::string& c
   return boost::none;
 }
 
-boost::optional<FSDaylightingControlDefinition> FSModel::daylightingControlDefinition(const std::string& id) const {
-  for (auto& definition : m_daylightingControlDefinitions) {
-    if (definition.id() == id) {
+boost::optional<FSDaylightingControlDefinition> FSModel::daylightingControlDefinition(const std::string& daylightingControlDefinitionId) const {
+  for (const auto& definition : m_daylightingControlDefinitions) {
+    if (definition.id() == daylightingControlDefinitionId) {
       return definition;
     }
   }
@@ -187,18 +176,18 @@ boost::optional<FSDaylightingControlDefinition> FSModel::daylightingControlDefin
   return boost::none;
 }
 
-boost::optional<FSWindowDefinition> FSModel::windowDefinition(const std::string id) const {
+boost::optional<FSWindowDefinition> FSModel::windowDefinition(const std::string& windowDefinitionId) const {
   for (const auto& definition : m_windowDefinitions) {
-    if (definition.id() == id) {
+    if (definition.id() == windowDefinitionId) {
       return definition;
     }
   }
   return boost::none;
 }
 
-boost::optional<FSDoorDefinition> FSModel::doorDefinition(const std::string id) const {
+boost::optional<FSDoorDefinition> FSModel::doorDefinition(const std::string& doorDefinitionId) const {
   for (const auto& definition : m_doorDefinitions) {
-    if (definition.id() == id) {
+    if (definition.id() == doorDefinitionId) {
       return definition;
     }
   }
@@ -240,15 +229,15 @@ std::vector<FSConstructionSet> FSModel::constructionSets() const {
   return m_constructionSets;
 }
 
-const std::vector<FSDaylightingControlDefinition> FSModel::daylightingControlDefinitions() const {
+std::vector<FSDaylightingControlDefinition> FSModel::daylightingControlDefinitions() const {
   return m_daylightingControlDefinitions;
 }
 
-const std::vector<FSWindowDefinition> FSModel::windowDefinitions() const {
+std::vector<FSWindowDefinition> FSModel::windowDefinitions() const {
   return m_windowDefinitions;
 }
 
-const std::vector<FSDoorDefinition> FSModel::doorDefinitions() const {
+std::vector<FSDoorDefinition> FSModel::doorDefinitions() const {
   return m_doorDefinitions;
 }
 
@@ -256,58 +245,11 @@ std::vector<FSStory> FSModel::stories() const {
   return m_stories;
 }
 
-bool FSModel::checkKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType) {
-  if (value.isMember(key)) {
-    if (value[key].isConvertibleTo(valueType)) {
-      if (value[key].isNull()) {
-        if (valueType == Json::nullValue) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-      // not null and is convertible
-      return true;
-    } else {
-      // not convertible to valueType
-      LOG_FREE(Warn, "JSON", "Key '" << key << "' exists but is not the correct type");
-    }
-  }
-  return false;
-}
-
-void FSModel::assertKeyAndType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType) {
-  assertKey(value, key);
-  assertType(value, key, valueType);
-}
-
-void FSModel::assertKey(const Json::Value& value, const std::string& key) {
-  if (!checkKey(value, key)) {
-    throw openstudio::Exception(std::string("Cannot find key '" + key + "'"));
-  }
-}
-
-// assert type is correct if key is present
-void FSModel::assertType(const Json::Value& value, const std::string& key, const Json::ValueType& valueType) {
-  if (!checkType(value, key, valueType)) {
-    throw openstudio::Exception(std::string("Key '" + key + "' is of wrong type"));
-  }
-}
-
 void FSModel::Accept(FSVisitor& visitor) const {
   visitor.Dispatch(*this);
 }
 
-//std::ostream& operator<<(std::ostream& os, const Plane& plane) {
-//  os << "[" << plane.a() << ", " << plane.b() << ", " << plane.c() << ", " << plane.d() << "]";
-//  return os;
-//}
-//
 ///////////////////////////////////////////////////////////////////////////////////
-
-FSProject::FSProject() {
-  m_north_axis = 0;
-}
 
 FSProject::FSProject(const Json::Value& root, const FSModel& model) {
   load(root, model);
@@ -330,7 +272,7 @@ void FSProject::load(const Json::Value& root, const FSModel& model) {
   }
 }
 
-double FSProject::northAxis() {
+double FSProject::northAxis() const {
   return m_north_axis;
 }
 
@@ -344,10 +286,6 @@ FSGround& FSProject::ground() {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSConfig::FSConfig() {
-  m_unitsEditable = false;
-}
-
 FSConfig::FSConfig(const Json::Value& root) {
   m_units = root.get("units", m_units).asString();
   m_unitsEditable = root.get("unitsEditable", m_unitsEditable).asBool();
@@ -357,15 +295,15 @@ FSConfig::FSConfig(const Json::Value& root) {
   }
 }
 
-std::string FSConfig::units() {
+std::string FSConfig::units() const {
   return m_units;
 }
 
-std::string FSConfig::language() {
+std::string FSConfig::language() const {
   return m_language;
 }
 
-bool FSConfig::unitsEditable() {
+bool FSConfig::unitsEditable() const {
   return m_unitsEditable;
 }
 
@@ -374,12 +312,6 @@ double FSConfig::northAxis() const {
 }
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSGround::FSGround() {
-  m_floor_offset = 0;
-  m_azimuth_angle = 0;
-  m_tilt_slope = 0;
-}
-
 FSGround::FSGround(const Json::Value& root, const FSModel& model) {
 
   m_floor_offset = root.get("floor_offset", 0).asDouble() * model.lengthToMeters();
@@ -387,30 +319,28 @@ FSGround::FSGround(const Json::Value& root, const FSModel& model) {
   m_tilt_slope = root.get("tilt_slope", 0).asDouble();
 }
 
-double FSGround::floorOffset() {
+double FSGround::floorOffset() const {
   return m_floor_offset;
 }
 
-double FSGround::azimuthAngle() {
+double FSGround::azimuthAngle() const {
   return m_azimuth_angle;
 }
 
-double FSGround::tiltSlope() {
+double FSGround::tiltSlope() const {
   return m_tilt_slope;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSBase::FSBase() {}
-
 FSBase::FSBase(const Json::Value& root) {
-  FSModel::assertKeyAndType(root, "name", Json::stringValue);
+  assertKeyAndType(root, "name", Json::stringValue);
   m_name = root.get("name", m_name).asString();
-  //FSModel::assertKeyAndType(root, "handle", Json::stringValue);
+  //assertKeyAndType(root, "handle", Json::stringValue);
   m_handle = root.get("handle", m_handle).asString();
-  FSModel::assertKeyAndType(root, "id", Json::stringValue);
+  assertKeyAndType(root, "id", Json::stringValue);
   m_id = root.get("id", m_id).asString();
-  //FSModel::assertKeyAndType(root, "color", Json::stringValue);
+  //assertKeyAndType(root, "color", Json::stringValue);
   m_color = root.get("color", "").asString();
 }
 
@@ -448,15 +378,6 @@ void FSBase::setColor(const std::string& color) {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSStory::FSStory() {
-
-  m_below_floor_plenum_height = 0;
-  m_floor_to_ceiling_height = 8;
-  m_above_ceiling_plenum_height = 0;
-  m_multiplier = 1;
-  m_image_visible = false;
-}
-
 FSStory::FSStory(const Json::Value& root, const FSModel& model) : FSBase(root) {
 
   m_below_floor_plenum_height = root.get("below_floor_plenum_height", 0).asDouble() * model.lengthToMeters();
@@ -473,32 +394,32 @@ FSStory::FSStory(const Json::Value& root, const FSModel& model) : FSBase(root) {
   m_geometry.load(geometry, model);
 
   const Json::Value& spaces = root.get("spaces", Json::arrayValue);
-  for (Json::ArrayIndex i = 0; i < spaces.size(); i++) {
-    FSSpace space = FSSpace(spaces[i], model, *this);
+  for (const auto& json_space : spaces) {
+    FSSpace space = FSSpace(json_space, model, *this);
     if (space.face().has_value()) {
       m_spaces.push_back(space);
     }
   }
 
   const Json::Value& windows = root.get("windows", Json::arrayValue);
-  for (Json::ArrayIndex i = 0; i < windows.size(); i++) {
-    FSWindow window = FSWindow(windows[i], model, *this);
+  for (const auto& json_window : windows) {
+    FSWindow window = FSWindow(json_window, model, *this);
     if (window.edge().has_value()) {
       m_windows.push_back(window);
     }
   }
 
   const Json::Value& doors = root.get("doors", Json::arrayValue);
-  for (Json::ArrayIndex i = 0; i < doors.size(); i++) {
-    FSDoor door = FSDoor(doors[i], model, *this);
+  for (const auto& json_door : doors) {
+    FSDoor door = FSDoor(json_door, model, *this);
     if (door.edge().has_value()) {
       m_doors.push_back(door);
     }
   }
 
   const Json::Value& shadings = root.get("shading", Json::arrayValue);
-  for (Json::ArrayIndex i = 0; i < shadings.size(); i++) {
-    FSShading shading = FSShading(shadings[i], model, *this);
+  for (const auto& json_shading : shadings) {
+    FSShading shading = FSShading(json_shading, *this);
     if (shading.face().has_value()) {
       m_shadings.push_back(shading);
     }
@@ -560,13 +481,9 @@ void FSStory::Accept(FSVisitor& visitor) const {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSAssignment::FSAssignment() {}
-
 FSAssignment::FSAssignment(const Json::Value& root) : FSBase(root) {}
 
 ///////////////////////////////////////////////////////////////////////////////////
-
-FSThermalZone::FSThermalZone() {}
 
 FSThermalZone::FSThermalZone(const Json::Value& root) : FSAssignment(root) {}
 
@@ -576,8 +493,6 @@ void FSThermalZone::Accept(FSVisitor& visitor) const {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSBuildingUnit::FSBuildingUnit() {}
-
 FSBuildingUnit::FSBuildingUnit(const Json::Value& root) : FSAssignment(root) {}
 
 void FSBuildingUnit::Accept(FSVisitor& visitor) const {
@@ -585,8 +500,6 @@ void FSBuildingUnit::Accept(FSVisitor& visitor) const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-
-FSBuildingType::FSBuildingType() {}
 
 FSBuildingType::FSBuildingType(const Json::Value& root) : FSAssignment(root) {}
 
@@ -596,8 +509,6 @@ void FSBuildingType::Accept(FSVisitor& visitor) const {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSSpaceType::FSSpaceType() {}
-
 FSSpaceType::FSSpaceType(const Json::Value& root) : FSAssignment(root) {}
 
 void FSSpaceType::Accept(FSVisitor& visitor) const {
@@ -605,8 +516,6 @@ void FSSpaceType::Accept(FSVisitor& visitor) const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-
-FSConstructionSet::FSConstructionSet() {}
 
 FSConstructionSet::FSConstructionSet(const Json::Value& root) : FSAssignment(root) {}
 
@@ -616,30 +525,17 @@ void FSConstructionSet::Accept(FSVisitor& visitor) const {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSSpace::FSSpace() {
-  m_belowFloorPlenumHeight = 0;
-  m_floorToCeilingHeight = 0;
-  m_aboveCeilingHeight = 0;
-  m_offset = 0;
-  m_multiplier = 1;
-  m_openToBelow = false;
-}
+FSSpace::FSSpace(const Json::Value& root, const FSModel& model, FSStory& story)
+  : FSBase(root), m_story(story), m_belowFloorPlenumHeight(story.gelowFloorPlenumHeight()) {
 
-FSSpace::FSSpace(const Json::Value& root, const FSModel& model, FSStory& story) : FSBase(root) {
-
-  std::string id = root.get("thermal_zone_id", "").asString();
-  m_thermalZone = model.thermalZone(id);
-  id = root.get("building_unit_id", "").asString();
-  m_buildingUnit = model.buildingUnit(id);
-  id = root.get("space_type_id", "").asString();
-  m_spaceType = model.spaceType(id);
-  id = root.get("construction_set_id", "").asString();
-  m_constructionSet = model.constructionSet(id);
-  m_story = story;
+  m_thermalZone = model.thermalZone(root.get("thermal_zone_id", "").asString());
+  m_buildingUnit = model.buildingUnit(root.get("building_unit_id", "").asString());
+  m_spaceType = model.spaceType(root.get("space_type_id", "").asString());
+  m_constructionSet = model.constructionSet(root.get("construction_set_id", "").asString());
 
   // Heights are optional, if not defined then the value is inherited from the story, if
   // defined then the value overrides the value from the story
-  m_belowFloorPlenumHeight = story.gelowFloorPlenumHeight();
+
   if (checkKeyAndType(root, "below_floor_plenum_height", Json::realValue)) {
     double defaultValue = m_belowFloorPlenumHeight / model.lengthToMeters();
     m_belowFloorPlenumHeight = root.get("below_floor_plenum_height", defaultValue).asDouble() * model.lengthToMeters();
@@ -662,14 +558,13 @@ FSSpace::FSSpace(const Json::Value& root, const FSModel& model, FSStory& story) 
   m_multiplier = std::max(root.get("multiplier", story.multiplier()).asInt(), 1);
 
   // Get the face. Note: a space must have a face for it to be added to the model
-  if (FSModel::checkKeyAndType(root, "face_id", Json::stringValue)) {
+  if (checkKeyAndType(root, "face_id", Json::stringValue)) {
     std::string face_id = root.get("face_id", "").asString();
     m_face = story.geometry().face(face_id);
   }
 
-  const Json::Value& daylightingControls = root.get("daylighting_controls", Json::arrayValue);
-  for (Json::ArrayIndex i = 0; i < daylightingControls.size(); i++) {
-    m_daylightingControls.emplace_back(FSDaylightingControl(daylightingControls[i], model, story));
+  for (const auto& daylightingControl : root.get("daylighting_controls", Json::arrayValue)) {
+    m_daylightingControls.emplace_back(daylightingControl, model, story);
   }
 
   simplifyFace(story.geometry());
@@ -723,7 +618,7 @@ bool FSSpace::openToBelow() const {
   return m_openToBelow;
 }
 
-const std::vector<FSDaylightingControl> FSSpace::daylightingControls() const {
+std::vector<FSDaylightingControl> FSSpace::daylightingControls() const {
   return m_daylightingControls;
 }
 
@@ -733,7 +628,7 @@ void FSSpace::Accept(FSVisitor& visitor) const {
 
 void FSSpace::simplifyFace(FSGeometry& geometry) {
   Point3dVector faceVertices;
-  for (auto edgeRef : m_face->edgeRefs()) {
+  for (const auto& edgeRef : m_face->edgeRefs()) {
     const FSVertex& vertex = edgeRef.getNextVertex();
     faceVertices.emplace_back(Point3d(vertex.x(), vertex.y(), 0));
   }
@@ -779,8 +674,6 @@ void FSSpace::simplifyFace(FSGeometry& geometry) {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSGeometry::FSGeometry() {}
-
 FSGeometry::FSGeometry(const Json::Value& root, const FSModel& model) {
   load(root, model);
 }
@@ -789,24 +682,24 @@ void FSGeometry::load(const Json::Value& root, const FSModel& model) {
   FSGeometryBase::load(root);
 
   const Json::Value& vertices = root.get("vertices", Json::arrayValue);
-  for (Json::ArrayIndex i = 0; i < vertices.size(); i++) {
-    m_vertices.emplace_back(FSVertex(vertices[i], model));
+  for (const auto& vertice : vertices) {
+    m_vertices.emplace_back(vertice, model);
   }
 
   const Json::Value& edges = root.get("edges", Json::arrayValue);
-  for (Json::ArrayIndex i = 0; i < edges.size(); i++) {
-    m_edges.emplace_back(FSEdge(edges[i], *this));
+  for (const auto& edge : edges) {
+    m_edges.emplace_back(edge, *this);
   }
 
   const Json::Value& faces = root.get("faces", Json::arrayValue);
-  for (Json::ArrayIndex i = 0; i < faces.size(); i++) {
-    m_faces.emplace_back(FSFace(faces[i], *this));
+  for (const auto& face : faces) {
+    m_faces.emplace_back(face, *this);
   }
 }
 
 boost::optional<FSVertex> FSGeometry::vertex(const std::string& id) const {
 
-  for (auto& vertex : m_vertices) {
+  for (const auto& vertex : m_vertices) {
     if (vertex.id() == id) {
       return vertex;
     }
@@ -817,7 +710,7 @@ boost::optional<FSVertex> FSGeometry::vertex(const std::string& id) const {
 
 boost::optional<FSVertex> FSGeometry::vertex(const Point3d& p) const {
   double tol = 0.01;
-  for (auto& vertex : m_vertices) {
+  for (const auto& vertex : m_vertices) {
     if (std::abs(vertex.x() - p.x()) < tol && std::abs(vertex.y() - p.y()) < tol) {
       return vertex;
     }
@@ -828,7 +721,7 @@ boost::optional<FSVertex> FSGeometry::vertex(const Point3d& p) const {
 
 boost::optional<FSEdge> FSGeometry::edge(const std::string& id) const {
 
-  for (auto& edge : m_edges) {
+  for (const auto& edge : m_edges) {
     if (edge.id() == id) {
       return edge;
     }
@@ -838,7 +731,7 @@ boost::optional<FSEdge> FSGeometry::edge(const std::string& id) const {
 }
 
 boost::optional<FSEdge> FSGeometry::edge(const FSVertex& v1, const FSVertex& v2) const {
-  for (auto& edge : m_edges) {
+  for (const auto& edge : m_edges) {
     if (edge.firstVertex().id() == v1.id() && edge.secondVertex().id() == v2.id()) {
       return edge;
     } else if (edge.firstVertex().id() == v2.id() && edge.secondVertex().id() == v1.id()) {
@@ -851,7 +744,7 @@ boost::optional<FSEdge> FSGeometry::edge(const FSVertex& v1, const FSVertex& v2)
 
 boost::optional<FSFace> FSGeometry::face(const std::string& id) const {
 
-  for (auto& face : m_faces) {
+  for (const auto& face : m_faces) {
     if (face.id() == id) {
       return face;
     }
@@ -861,10 +754,6 @@ boost::optional<FSFace> FSGeometry::face(const std::string& id) const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-
-FSGeometryBase::FSGeometryBase() {
-  m_id = "";
-}
 
 FSGeometryBase::FSGeometryBase(const Json::Value& root) {
   load(root);
@@ -879,11 +768,6 @@ const std::string& FSGeometryBase::id() const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-
-FSVertex::FSVertex() {
-  m_x = 0;
-  m_y = 0;
-}
 
 FSVertex::FSVertex(const Json::Value& root, const FSModel& model) {
   load(root, model);
@@ -919,8 +803,6 @@ void FSVertex::setXY(double x, double y) {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSEdge::FSEdge() {}
-
 FSEdge::FSEdge(const Json::Value& root, const FSGeometry& geometry) {
   load(root, geometry);
 }
@@ -934,8 +816,8 @@ void FSEdge::load(const Json::Value& root, const FSGeometry& geometry) {
 
   FSGeometryBase::load(root);
   const Json::Value& vertexIds = root.get("vertex_ids", Json::arrayValue);
-  for (Json::ArrayIndex i = 0; i < vertexIds.size(); i++) {
-    m_vertices.push_back(geometry.vertex(vertexIds[i].asString()).value());
+  for (const auto& vertexId : vertexIds) {
+    m_vertices.push_back(geometry.vertex(vertexId.asString()).value());
   }
 }
 
@@ -951,21 +833,19 @@ const FSVertex& FSEdge::secondVertex() const {
   return m_vertices[1];
 }
 
-const Vector3d& FSEdge::edgeVector() const {
-  Point3d p1(m_vertices[0].x(), m_vertices[0].y(), 0);
-  Point3d p2(m_vertices[1].x(), m_vertices[1].y(), 0);
-  return *new Vector3d(p2 - p1);
+Vector3d FSEdge::edgeVector() const {
+  Point3d pt1(m_vertices[0].x(), m_vertices[0].y(), 0);
+  Point3d pt2(m_vertices[1].x(), m_vertices[1].y(), 0);
+  return (pt2 - pt1);
 }
 
 Point3d FSEdge::vertex(double alpha) const {
   double x = (1.0 - alpha) * m_vertices[0].x() + alpha * m_vertices[1].x();
   double y = (1.0 - alpha) * m_vertices[0].y() + alpha * m_vertices[1].y();
-  return Point3d(x, y, 0);
+  return {x, y, 0};
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-
-FSFace::FSFace() {}
 
 FSFace::FSFace(const Json::Value& root, const FSGeometry& geometry) {
   load(root, geometry);
@@ -1001,14 +881,7 @@ void FSFace::setEdgeRefs(std::vector<FSEdgeReference> edgeRefs) {
 }
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSEdgeReference::FSEdgeReference() {
-  m_edgeOrder = 1;
-}
-
-FSEdgeReference::FSEdgeReference(FSEdge& edge, int edgeOrder) {
-  m_edge = edge;
-  m_edgeOrder = edgeOrder;
-}
+FSEdgeReference::FSEdgeReference(FSEdge& edge, int edgeOrder) : m_edge(edge), m_edgeOrder(edgeOrder) {}
 
 const FSEdge& FSEdgeReference::edge() const {
   return m_edge;
@@ -1018,7 +891,7 @@ int FSEdgeReference::edgeOrder() const {
   return m_edgeOrder;
 }
 
-const FSVertex& FSEdgeReference::getNextVertex() {
+const FSVertex& FSEdgeReference::getNextVertex() const {
   if (m_edgeOrder == 1) {
     return m_edge.firstVertex();
   } else {
@@ -1028,24 +901,19 @@ const FSVertex& FSEdgeReference::getNextVertex() {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSFiller::FSFiller() {
-  m_alpha = 0.5;
-}
+FSFiller::FSFiller(const Json::Value& root, FSStory& story) : FSBase(root) {
 
-FSFiller::FSFiller(const Json::Value& root, const FSModel& model, FSStory& story) : FSBase(root) {
-
-  m_alpha = 0.5;
   // Alhpa can be a single value or a list
   if (root.isMember("alpha") && root["alpha"].isConvertibleTo(Json::realValue)) {
     m_alphas.push_back(root.get("alpha", 0.5).asDouble());
   } else {
     Json::Value alphas = root.get("alpha", Json::arrayValue);
-    for (Json::ArrayIndex i = 0; i < alphas.size(); i++) {
-      m_alphas.push_back(alphas[i].asDouble());
+    for (const auto& alpha : alphas) {
+      m_alphas.push_back(alpha.asDouble());
     }
   }
 
-  if (FSModel::checkKeyAndType(root, "edge_id", Json::stringValue)) {
+  if (checkKeyAndType(root, "edge_id", Json::stringValue)) {
     std::string edge_id = root.get("edge_id", "").asString();
     m_edge = story.geometry().edge(edge_id).value();
 
@@ -1073,11 +941,9 @@ Point3d FSFiller::centerVertex(double alpha) {
 }
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSWindow::FSWindow() {}
+FSWindow::FSWindow(const Json::Value& root, const FSModel& model, FSStory& story) : FSFiller(root, story) {
 
-FSWindow::FSWindow(const Json::Value& root, const FSModel& model, FSStory& story) : FSFiller(root, model, story) {
-
-  if (FSModel::checkKeyAndType(root, "window_definition_id", Json::stringValue)) {
+  if (checkKeyAndType(root, "window_definition_id", Json::stringValue)) {
     std::string windowDefinitionId = root.get("window_definition_id", "").asString();
     m_windowDefinition = model.windowDefinition(windowDefinitionId);
   }
@@ -1093,11 +959,9 @@ void FSWindow::Accept(FSVisitor& visitor) const {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSDoor::FSDoor() {}
+FSDoor::FSDoor(const Json::Value& root, const FSModel& model, FSStory& story) : FSFiller(root, story) {
 
-FSDoor::FSDoor(const Json::Value& root, const FSModel& model, FSStory& story) : FSFiller(root, model, story) {
-
-  if (FSModel::checkKeyAndType(root, "door_definition_id", Json::stringValue)) {
+  if (checkKeyAndType(root, "door_definition_id", Json::stringValue)) {
     std::string doorDefinitionId = root.get("door_definition_id", "").asString();
     m_doorDefinition = model.doorDefinition(doorDefinitionId);
   }
@@ -1113,12 +977,10 @@ boost::optional<FSDoorDefinition> FSDoor::doorDefinition() const {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSShading::FSShading() {}
-
-FSShading::FSShading(const Json::Value& root, const FSModel& model, FSStory& story) : FSBase(root) {
+FSShading::FSShading(const Json::Value& root, FSStory& story) : FSBase(root) {
 
   // Get the face. Note: a shading must have a face for it to be added to the model
-  if (FSModel::checkKeyAndType(root, "face_id", Json::stringValue)) {
+  if (checkKeyAndType(root, "face_id", Json::stringValue)) {
     std::string face_id = root.get("face_id", "").asString();
     m_face = story.geometry().face(face_id);
   }
@@ -1134,17 +996,15 @@ void FSShading::Accept(FSVisitor& visitor) const {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSDaylightingControl::FSDaylightingControl() {}
-
 FSDaylightingControl::FSDaylightingControl(const Json::Value& root, const FSModel& model, FSStory& story) : FSBase(root) {
 
   std::string vertex_id = root.get("vertex_id", "").asString();
-  if (FSModel::checkKeyAndType(root, "vertex_id", Json::stringValue)) {
+  if (checkKeyAndType(root, "vertex_id", Json::stringValue)) {
     std::string vertex_id = root.get("vertex_id", "").asString();
     m_vertex = story.geometry().vertex(vertex_id);
   }
 
-  if (FSModel::checkKeyAndType(root, "daylighting_control_definition_id", Json::stringValue)) {
+  if (checkKeyAndType(root, "daylighting_control_definition_id", Json::stringValue)) {
     std::string control_id = root.get("daylighting_control_definition_id", "").asString();
     m_definition = model.daylightingControlDefinition(control_id);
   }
@@ -1173,11 +1033,6 @@ void FSDaylightingControl::Accept(FSVisitor& visitor) const {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSDaylightingControlDefinition::FSDaylightingControlDefinition() {
-  m_illuminanceSetpoint = 300;
-  m_height = 0;
-}
-
 FSDaylightingControlDefinition::FSDaylightingControlDefinition(const Json::Value& root, const FSModel& model) : FSBase(root) {
   m_illuminanceSetpoint = root.get("illuminance_Setpoint", 300).asDouble();
   m_height = root.get("height", 0).asDouble() * model.lengthToMeters();
@@ -1196,16 +1051,6 @@ void FSDaylightingControlDefinition::Accept(FSVisitor& visitor) const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-
-FSWindowDefinition::FSWindowDefinition() {
-  m_overhangProjectionFactor = 0;
-  m_finProjectionFactor = 0;
-  m_height = 0;
-  m_width = 0;
-  m_sillHeight = 0;
-  m_wwr = 0;
-  m_windowSpacing = 0;
-}
 
 FSWindowDefinition::FSWindowDefinition(const Json::Value& root, const FSModel& model) : FSBase(root) {
 
@@ -1272,11 +1117,6 @@ void FSWindowDefinition::Accept(FSVisitor& visitor) const {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////
-
-FSDoorDefinition::FSDoorDefinition() {
-  m_height = 2;
-  m_width = 1;
-}
 
 FSDoorDefinition::FSDoorDefinition(const Json::Value& root, const FSModel& model) : FSBase(root) {
   m_height = root.get("height", 2 / model.lengthToMeters()).asDouble() * model.lengthToMeters();
