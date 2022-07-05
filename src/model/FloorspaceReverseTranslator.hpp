@@ -65,12 +65,13 @@ namespace model {
 
    private:
     REGISTER_LOGGER("openstudio.model.FloorspaceReverseTranslator");
-
     StringStreamLogSink m_logSink;
-    void DoSurfaceMatchingAndIntersection(Model& model);
-    std::vector<BuildingStory> SortStoriesByElevationAndName(Model& model);
-    std::vector<Space> SortSpacesByAreaAndName(BuildingStory& story);
+
     std::map<UUID, UUID> m_handleMapping;
+
+    static void DoSurfaceMatchingAndIntersection(Model& model);
+    static std::vector<BuildingStory> SortStoriesByElevationAndName(Model& model);
+    static std::vector<Space> SortSpacesByAreaAndName(BuildingStory& story);
   };
 
 }  // namespace model

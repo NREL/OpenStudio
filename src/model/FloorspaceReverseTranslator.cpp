@@ -106,10 +106,7 @@ namespace model {
   class FloorspaceReverseTranslator_Impl : public FSVisitor
   {
    public:
-    FloorspaceReverseTranslator_Impl(Model& model, const FSModel& fsModel) : m_model(model), m_fsModel(fsModel) {
-      m_currentStoryZ = 0;
-      m_nSurfaces = 0;
-    }
+    FloorspaceReverseTranslator_Impl(Model& model, const FSModel& fsModel) : m_model(model), m_fsModel(fsModel) {}
 
     /// Mapping between handles referenced in Floorspace (keys) and handles of objects in returned model (values) for last translation
     /// This handle mapping can be used by the ModelMerger when merging returned model (new handles) with an existing model (existing handles)
@@ -154,10 +151,11 @@ namespace model {
         osDaylightingControl.setSpace(*m_currentSpace);
 
         if (m_currentSpace->thermalZone().has_value()) {
-          if (!m_currentSpace->thermalZone()->primaryDaylightingControl().has_value())
+          if (!m_currentSpace->thermalZone()->primaryDaylightingControl().has_value()) {
             m_currentSpace->thermalZone()->setPrimaryDaylightingControl(osDaylightingControl);
-          else if (!m_currentSpace->thermalZone()->secondaryDaylightingControl().has_value())
+          } else if (!m_currentSpace->thermalZone()->secondaryDaylightingControl().has_value()) {
             m_currentSpace->thermalZone()->setSecondaryDaylightingControl(osDaylightingControl);
+          }
         }
 
         MapHandles(fsEntity, osDaylightingControl);
@@ -312,13 +310,15 @@ namespace model {
     void Dispatch(const FSWindowDefinition& entity) {}
 
    private:
+    REGISTER_LOGGER("openstudio.model.FloorspaceReverseTranslator");
+
     Model& m_model;
-    const FSModel& m_fsModel;
+    const FSModel& m_fsModel;  // TODO: unused
     boost::optional<BuildingStory> m_currentStory;
     boost::optional<FSStory> m_currentFSStory;
     boost::optional<Space> m_currentSpace;
-    double m_currentStoryZ;
-    int m_nSurfaces;
+    double m_currentStoryZ = 0.0;
+    int m_nSurfaces = 0;
     std::map<UUID, UUID> m_handleMapping;
 
     // Maps the handle in the floorspace model (if defined) to the handle of the object created in the open studio model
@@ -329,7 +329,7 @@ namespace model {
       }
     }
 
-    const std::string getPlenumPostfix(SpaceTypeEnum spaceType) {
+    static std::string getPlenumPostfix(SpaceTypeEnum spaceType) {
       switch (spaceType) {
         case SpaceTypeEnum::ABOVECEILING:
           return ABOVECEILINGPLENUMPOSTFIX;
@@ -350,7 +350,7 @@ namespace model {
         osShadingGroup.setShadingSurfaceType("Building");
 
         Point3dVector faceVertices;
-        for (auto edgeRef : face->edgeRefs()) {
+        for (const auto& edgeRef : face->edgeRefs()) {
           const FSVertex& vertex = edgeRef.getNextVertex();
           faceVertices.emplace_back(Point3d(vertex.x(), vertex.y(), minZ));
         }
@@ -391,6 +391,7 @@ namespace model {
       }
     }
 
+    // TODO: fsShading unused
     void createWallShading(ShadingSurfaceGroup& osGroup, const FSShading& fsShading, const FSEdgeReference& edgeRef, double minZ, double maxZ,
                            bool reversed) {
 
@@ -461,10 +462,10 @@ namespace model {
           int multiplier = fsEntity.multiplier();
           // Assign the space to the zone and set the multiplier
           if (multiplier == 0) {
-            //LOG(Warn, "Muliplier for Space '" << fsEntity.getName() << "' is 0, setting to 1");
+            LOG(Warn, "Muliplier for Space '" << fsEntity.name() << "' is 0, setting to 1");
             multiplier = 1;
           } else if (multiplier > 1) {
-            //LOG(Warn, "Multiplier translation not yet implemented for Space '" << fsEntity.getName() << "', setting to 1");
+            LOG(Warn, "Multiplier translation not yet implemented for Space '" << fsEntity.name() << "', setting to 1");
             multiplier = 1;
           }
 
@@ -533,7 +534,7 @@ namespace model {
         // find window aligned to the edge, make sub-surface
         // find door aligned to the edge, make sub-surface
         Point3dVector faceVertices;
-        for (auto edgeRef : face->edgeRefs()) {
+        for (const auto& edgeRef : face->edgeRefs()) {
           const FSVertex& vertex = edgeRef.getNextVertex();
           faceVertices.emplace_back(Point3d(vertex.x(), vertex.y(), 0));
         }
@@ -581,6 +582,7 @@ namespace model {
     }
 
     // Creates a "Wall" surface and sub-surfaces
+    // TODO: fsSpace unused
     void createWallSurfaces(Space& osSpace, const FSSpace& fsSpace, const FSEdgeReference& edgeRef, double minZ, double maxZ, bool reversed,
                             bool createSubsurfaces) {
       Point3dVector wallVertices;
@@ -635,21 +637,25 @@ namespace model {
 
     // Creates one or more window subsurfaces along an edge
     void createWindowSubsurface(const FSWindow& window, Surface& osSurface, const FSEdgeReference& edgeRef, double minZ, double maxZ) {
-      auto& edge = edgeRef.edge();
-      auto& vertex1 = edge.firstVertex();
-      auto& vertex2 = edge.secondVertex();
+
+      auto windowDefinition = window.windowDefinition();
+      if (!windowDefinition.has_value()) {
+        return;
+      }
+
+      const auto& edge = edgeRef.edge();
+      const auto& vertex1 = edge.firstVertex();
+      const auto& vertex2 = edge.secondVertex();
       Vector3d edgeVector = edgeRef.edge().edgeVector();
 
       edgeVector.setLength(1.0);
       Vector3d upVector(0, 0, 1);
       Vector3d crossVector = upVector.cross(edgeVector);
 
-      auto windowDefinition = window.windowDefinition();
-      if (!windowDefinition.has_value()) return;
-
       double sillHeight = windowDefinition->sillHeight();
-      double height = 0, width = 0;
-      if (windowDefinition->windowDefinitionMode() == "Single Window") {
+      double height = 0.0;
+      double width = 0.0;
+      if ((windowDefinition->windowDefinitionMode() == "Single Window") || (windowDefinition->windowDefinitionMode() == "Repeating Windows")) {
         height = windowDefinition->height();
         width = windowDefinition->width();
       } else if (windowDefinition->windowDefinitionMode() == "Window to Wall Ratio") {
@@ -657,9 +663,6 @@ namespace model {
         width = length - 0.0508;  // Allow for 1" either end of the window
         // Area of the wall * wwr gives area of the window divided by width of the window gives height of the window
         height = (maxZ - minZ) * length * windowDefinition->wwr() / width;
-      } else if (windowDefinition->windowDefinitionMode() == "Repeating Windows") {
-        height = windowDefinition->height();
-        width = windowDefinition->width();
       }
 
       for (double alpha : window.alphas()) {
@@ -702,8 +705,7 @@ namespace model {
           shadingGroup.setShadedSubSurface(subSurface);
           shadingGroup.setShadingSurfaceType("Space");
 
-          double factor;
-          if ((factor = windowDefinition->overhangProjectionFactor()) > 0) {
+          if (double factor = windowDefinition->overhangProjectionFactor(); factor > 0) {
             Vector3d outVector = crossVector;
             outVector.setLength(factor * height);
             Point3d window3 = window1 + outVector;
@@ -720,7 +722,7 @@ namespace model {
             shadingSurface.setShadingSurfaceGroup(shadingGroup);
           }
 
-          if ((factor = windowDefinition->finProjectionFactor()) > 0) {
+          if (double factor = windowDefinition->finProjectionFactor(); factor > 0) {
             Vector3d outVector = crossVector;
             outVector.setLength(factor * height);
             Point3d window3 = window1 + outVector;
@@ -754,9 +756,9 @@ namespace model {
 
     // Creates a door subsurface along an edge
     void createDoorSubsurface(const FSDoor& door, Surface& osSurface, const FSEdgeReference& edgeRef, double minZ) {
-      auto& edge = edgeRef.edge();
-      auto& vertex1 = edge.firstVertex();
-      auto& vertex2 = edge.secondVertex();
+      const auto& edge = edgeRef.edge();
+      const auto& vertex1 = edge.firstVertex();
+      const auto& vertex2 = edge.secondVertex();
       Vector3d edgeVector = edgeRef.edge().edgeVector();
 
       edgeVector.setLength(1.0);
@@ -764,7 +766,9 @@ namespace model {
       Vector3d crossVector = upVector.cross(edgeVector);
 
       auto doorDefinition = door.doorDefinition();
-      if (!doorDefinition.has_value()) return;
+      if (!doorDefinition.has_value()) {
+        return;
+      }
 
       double height = doorDefinition->height();
       double width = doorDefinition->width();
@@ -796,10 +800,11 @@ namespace model {
         subSurface.setName("Face " + std::to_string(m_nSurfaces++));
         subSurface.setSurface(osSurface);
         std::string doorType = doorDefinition->doorType();
-        if (doorType == "Glass Door")
+        if (doorType == "Glass Door") {
           doorType = "GlassDoor";
-        else if (doorType == "Overhead Door")
+        } else if (doorType == "Overhead Door") {
           doorType = "OverheadDoor";
+        }
         subSurface.setSubSurfaceType(doorType);
       }
     }
@@ -814,11 +819,13 @@ namespace model {
       surface.setName("Face " + std::to_string(m_nSurfaces++));
       surface.setSpace(osSpace);
       surface.setSurfaceType(surfaceType);
-      if (openToBelow) surface.setConstruction(getAirWallConstruction(m_model));
+      if (openToBelow) {
+        surface.setConstruction(getAirWallConstruction(m_model));
+      }
     }
 
     // Ensures the points are oriented correctly for a floor surface, reurns false if the normal cant be calculated
-    bool orientVerticesForFloor(Point3dVector& points) {
+    static bool orientVerticesForFloor(Point3dVector& points) {
       boost::optional<Vector3d> outwardNormal = getOutwardNormal(points);
       if (!outwardNormal) {
         //LOG(Error, "Cannot compute outwardNormal for floorPrint.");
@@ -830,7 +837,7 @@ namespace model {
       return true;
     }
 
-    bool orientVerticesForRoof(Point3dVector& points) {
+    static bool orientVerticesForRoof(Point3dVector& points) {
       boost::optional<Vector3d> outwardNormal = getOutwardNormal(points);
       if (!outwardNormal) {
         //LOG(Error, "Cannot compute outwardNormal for floorPrint.");
@@ -842,7 +849,7 @@ namespace model {
       return true;
     }
 
-    ConstructionAirBoundary getAirWallConstruction(Model& model) {
+    static ConstructionAirBoundary getAirWallConstruction(Model& model) {
       boost::optional<ConstructionAirBoundary> result = model.getConcreteModelObjectByName<ConstructionAirBoundary>("AirWall");
       if (!result) {
         ConstructionAirBoundary airWall(model);
@@ -856,11 +863,15 @@ namespace model {
 
   ////////////////////////////////////////////////////////////////////////////////////////////
 
-  FloorspaceReverseTranslator::FloorspaceReverseTranslator() {}
+  FloorspaceReverseTranslator::FloorspaceReverseTranslator() {
+    m_logSink.setLogLevel(Warn);
+    m_logSink.setChannelRegex(boost::regex("openstudio\\.model\\.FloorspaceReverseTranslator"));
+    m_logSink.setThreadId(std::this_thread::get_id());
+  }
 
   boost::optional<Model> FloorspaceReverseTranslator::modelFromFloorspace(FSModel const& fsModel) {
 
-    // Not entirely sure what his does but its in the threejs reverse translator so I should orobably add it here!
+    // Reset the log sink before translation
     m_logSink.setThreadId(std::this_thread::get_id());
     m_logSink.resetStringStream();
 
@@ -983,7 +994,7 @@ namespace model {
   std::vector<LogMessage> FloorspaceReverseTranslator::warnings() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()) {
+    for (const LogMessage& logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() == Warn) {
         result.push_back(logMessage);
       }
@@ -995,7 +1006,7 @@ namespace model {
   std::vector<LogMessage> FloorspaceReverseTranslator::errors() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()) {
+    for (const LogMessage& logMessage : m_logSink.logMessages()) {
       if (logMessage.logLevel() > Warn) {
         result.push_back(logMessage);
       }
