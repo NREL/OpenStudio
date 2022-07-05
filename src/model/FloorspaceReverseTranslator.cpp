@@ -75,7 +75,7 @@
 #include "../utilities/geometry/BoundingBox.hpp"
 #include "../utilities/geometry/Transformation.hpp"
 #include "../utilities/geometry/Geometry.hpp"
-#include "../utilities/geometry/intersection.hpp"
+#include "../utilities/geometry/Intersection.hpp"
 #include "../utilities/floorspace/FSVisitor.hpp"
 
 #include <thread>

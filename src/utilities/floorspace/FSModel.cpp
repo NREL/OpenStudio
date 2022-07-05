@@ -31,10 +31,10 @@
 
 #include "../core/Assert.hpp"
 #include "../core/Json.hpp"
-#include "../geometry/point3d.hpp"
-#include "../geometry/vector3d.hpp"
+#include "../geometry/Point3d.hpp"
+#include "../geometry/Vector3d.hpp"
 #include "../geometry/Geometry.hpp"
-#include "../geometry/intersection.hpp"
+#include "../geometry/Intersection.hpp"
 
 #include <iomanip>
 
