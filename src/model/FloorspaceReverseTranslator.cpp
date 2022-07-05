@@ -28,6 +28,7 @@
 ***********************************************************************************************************************/
 
 #include "FloorspaceReverseTranslator.hpp"
+#include "FloorspaceReverseTranslator_Impl.hpp"
 
 #include "FileOperations.hpp"
 #include "RenderingColor.hpp"
@@ -89,34 +90,24 @@ namespace model {
   static constexpr auto PLENUMSPACETYPENAME("Plenum Space Type");  // DLM: needs to be coordinated with name in Model_Impl::plenumSpaceType()
   static constexpr auto PLENUMCOLOR("#C0C0C0");                    // DLM: needs to be coordinated with plenum colors in makeStandardThreeMaterials
 
-  // Defines the type of space
-  enum class SpaceTypeEnum
-  {
-    BELOWFLOOR,
-    ABOVEFLOOR,
-    ABOVECEILING
-  };
-
   // TODO: Creating surfaces for spaces and creatig shading surfaces for building shading have
   // a lot of code in common but there are significant differences also. At some point we
   // shoud look into creating some common functions that calculate the vertices
 
   // A Visitor design pattern class. Each Dispatch method handles creation of OSM
   // concepts from the FloorspaceJS concepts
-  class FloorspaceReverseTranslator_Impl : public FSVisitor
-  {
-   public:
-    FloorspaceReverseTranslator_Impl(Model& model, const FSModel& fsModel) : m_model(model), m_fsModel(fsModel) {}
+  namespace detail {
+    FloorspaceReverseTranslator_Impl::FloorspaceReverseTranslator_Impl(Model& model, const FSModel& fsModel) : m_model(model), m_fsModel(fsModel) {}
 
     /// Mapping between handles referenced in Floorspace (keys) and handles of objects in returned model (values) for last translation
     /// This handle mapping can be used by the ModelMerger when merging returned model (new handles) with an existing model (existing handles)
     /// Note that this mapping may not include all objects such as Site, Building, or other objects not specified in the ThreeScene
-    std::map<UUID, UUID> handleMapping() const {
+    std::map<UUID, UUID> FloorspaceReverseTranslator_Impl::handleMapping() const {
       return m_handleMapping;
     }
 
     // Creates a BuildingUnit
-    void Dispatch(const FSBuildingUnit& fsEntity) {
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSBuildingUnit& fsEntity) {
       BuildingUnit buildingUnit(m_model);
       buildingUnit.setName(fsEntity.name());
       boost::optional<RenderingColor> renderingColor = RenderingColor::fromColorString(fsEntity.color(), m_model);
@@ -126,22 +117,22 @@ namespace model {
       MapHandles(fsEntity, buildingUnit);
     }
 
-    void Dispatch(const FSBuildingType& entity) {
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSBuildingType& entity) {
       // TODO: building_type does not appear to go anywhere
     }
 
     // Config provides units but usints already factored in so no need to do anything here
-    void Dispatch(const FSConfig& entity) {}
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSConfig& entity) {}
 
     // Creates a DefaultConstructionSet
-    void Dispatch(const FSConstructionSet& fsEntity) {
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSConstructionSet& fsEntity) {
       DefaultConstructionSet constructionSet(m_model);
       constructionSet.setName(fsEntity.name());
       MapHandles(fsEntity, constructionSet);
     }
 
     // Creates a daylighting control
-    void Dispatch(const FSDaylightingControl& fsEntity) {
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSDaylightingControl& fsEntity) {
       auto definition = fsEntity.definition();
       if (definition.has_value()) {
         DaylightingControl osDaylightingControl(m_model);
@@ -161,13 +152,14 @@ namespace model {
         MapHandles(fsEntity, osDaylightingControl);
       }
     }
-    void Dispatch(const FSDaylightingControlDefinition& entity) {}
-    // Door is processed when FSSpace is processed
-    void Dispatch(const FSDoor& entity) {}
-    void Dispatch(const FSDoorDefinition& entity) {}
-    void Dispatch(const FSGround& entity) {}
 
-    void Dispatch(const FSModel& fsModel) {
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSDaylightingControlDefinition& entity) {}
+    // Door is processed when FSSpace is processed
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSDoor& entity) {}
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSDoorDefinition& entity) {}
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSGround& entity) {}
+
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSModel& fsModel) {
       initializeModelObjects(m_model);
       Building building = m_model.getUniqueModelObject<Building>();
       // set the model's north axis, opposite of the floorspace and threejs convention
@@ -199,10 +191,10 @@ namespace model {
     }
 
     // There's no OS equivalent
-    void Dispatch(const FSProject& entity) {}
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSProject& entity) {}
 
     // Creates a building shading group and shading surfaces
-    void Dispatch(const FSShading& entity) {
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSShading& entity) {
       if (m_currentFSStory.has_value()) {
 
         double minZ = m_currentStoryZ;
@@ -225,7 +217,7 @@ namespace model {
       }
     }
 
-    void Dispatch(const FSSpace& space) {
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSSpace& space) {
       // Minz and Maxz will define the height and elevation of the surfaces
       double minZ = m_currentStoryZ + space.offset();
       double maxZ = minZ + space.belowFloorPlenumHeight();
@@ -254,7 +246,7 @@ namespace model {
       }
     }
 
-    void Dispatch(const FSSpaceType& fsEntity) {
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSSpaceType& fsEntity) {
       SpaceType spaceType(m_model);
       spaceType.setName(fsEntity.name());
       boost::optional<RenderingColor> renderingColor = RenderingColor::fromColorString(fsEntity.color(), m_model);
@@ -266,7 +258,7 @@ namespace model {
     }
 
     // Creates a BuildingStory and its contents
-    void Dispatch(const FSStory& fsEntity) {
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSStory& fsEntity) {
       BuildingStory buildingStory(m_model);
       buildingStory.setName(fsEntity.name());
       buildingStory.setNominalZCoordinate(m_currentStoryZ);
@@ -295,7 +287,7 @@ namespace model {
       MapHandles(fsEntity, buildingStory);
     }
 
-    void Dispatch(const FSThermalZone& fsEntity) {
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSThermalZone& fsEntity) {
       ThermalZone thermalZone(m_model);
       thermalZone.setName(fsEntity.name());
       boost::optional<RenderingColor> renderingColor = RenderingColor::fromColorString(fsEntity.color(), m_model);
@@ -306,30 +298,18 @@ namespace model {
       MapHandles(fsEntity, thermalZone);
     }
 
-    void Dispatch(const FSWindow& entity) {}
-    void Dispatch(const FSWindowDefinition& entity) {}
-
-   private:
-    REGISTER_LOGGER("openstudio.model.FloorspaceReverseTranslator");
-
-    Model& m_model;
-    const FSModel& m_fsModel;  // TODO: unused
-    boost::optional<BuildingStory> m_currentStory;
-    boost::optional<FSStory> m_currentFSStory;
-    boost::optional<Space> m_currentSpace;
-    double m_currentStoryZ = 0.0;
-    int m_nSurfaces = 0;
-    std::map<UUID, UUID> m_handleMapping;
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSWindow& entity) {}
+    void FloorspaceReverseTranslator_Impl::Dispatch(const FSWindowDefinition& entity) {}
 
     // Maps the handle in the floorspace model (if defined) to the handle of the object created in the open studio model
-    void MapHandles(const FSBase& fsEntity, const ModelObject& modelObject) {
+    void FloorspaceReverseTranslator_Impl::MapHandles(const FSBase& fsEntity, const ModelObject& modelObject) {
       UUID handle = toUUID(fsEntity.handle());
       if (!handle.isNull()) {
         m_handleMapping[handle] = modelObject.handle();
       }
     }
 
-    static std::string getPlenumPostfix(SpaceTypeEnum spaceType) {
+    std::string FloorspaceReverseTranslator_Impl::getPlenumPostfix(SpaceTypeEnum spaceType) {
       switch (spaceType) {
         case SpaceTypeEnum::ABOVECEILING:
           return ABOVECEILINGPLENUMPOSTFIX;
@@ -342,7 +322,7 @@ namespace model {
       return "";
     }
 
-    void createShadingSurfaceGroup(const FSShading& fsEntity, double minZ, double maxZ, SpaceTypeEnum spaceType) {
+    void FloorspaceReverseTranslator_Impl::createShadingSurfaceGroup(const FSShading& fsEntity, double minZ, double maxZ, SpaceTypeEnum spaceType) {
       auto face = fsEntity.face();
       if (face.has_value()) {
         ShadingSurfaceGroup osShadingGroup(m_model);
@@ -379,21 +359,21 @@ namespace model {
       }
     }
 
-    void createFloorShading(ShadingSurfaceGroup& osGroup, Point3dVector& faceVertices, double z) {
+    void FloorspaceReverseTranslator_Impl::createFloorShading(ShadingSurfaceGroup& osGroup, Point3dVector& faceVertices, double z) {
       if (orientVerticesForFloor(faceVertices)) {
         createShadingSurface(osGroup, faceVertices, z);
       }
     }
 
-    void createRoofShading(ShadingSurfaceGroup& osGroup, Point3dVector& faceVertices, double z) {
+    void FloorspaceReverseTranslator_Impl::createRoofShading(ShadingSurfaceGroup& osGroup, Point3dVector& faceVertices, double z) {
       if (orientVerticesForRoof(faceVertices)) {
         createShadingSurface(osGroup, faceVertices, z);
       }
     }
 
     // TODO: fsShading unused
-    void createWallShading(ShadingSurfaceGroup& osGroup, const FSShading& fsShading, const FSEdgeReference& edgeRef, double minZ, double maxZ,
-                           bool reversed) {
+    void FloorspaceReverseTranslator_Impl::createWallShading(ShadingSurfaceGroup& osGroup, const FSShading& fsShading, const FSEdgeReference& edgeRef,
+                                                             double minZ, double maxZ, bool reversed) {
 
       Point3dVector wallVertices;
       const FSVertex& v1 = edgeRef.edge().firstVertex();
@@ -425,7 +405,7 @@ namespace model {
       surface.setShadingSurfaceGroup(osGroup);
     }
 
-    void createShadingSurface(ShadingSurfaceGroup& osGroup, Point3dVector& faceVertices, double z) {
+    void FloorspaceReverseTranslator_Impl::createShadingSurface(ShadingSurfaceGroup& osGroup, Point3dVector& faceVertices, double z) {
       Point3dVector vertices;
       for (const auto& vert : faceVertices) {
         vertices.emplace_back(Point3d(vert.x(), vert.y(), z));
@@ -437,7 +417,8 @@ namespace model {
     }
 
     // Creates a Space from an FSSpace
-    void createSpace(const FSSpace& fsEntity, double minZ, double maxZ, SpaceTypeEnum typeOfSpace, bool openToBelow) {
+    void FloorspaceReverseTranslator_Impl::createSpace(const FSSpace& fsEntity, double minZ, double maxZ, SpaceTypeEnum typeOfSpace,
+                                                       bool openToBelow) {
       Space osSpace(m_model);
       osSpace.setBuildingStory(*m_currentStory);
       osSpace.setName(fsEntity.name() + getPlenumPostfix(typeOfSpace));
@@ -522,7 +503,8 @@ namespace model {
       MapHandles(fsEntity, osSpace);
     }
 
-    void createSurfaces(Space& osSpace, const FSSpace& fsSpace, double minZ, double maxZ, SpaceTypeEnum typeOfSpace, bool openToBelow) {
+    void FloorspaceReverseTranslator_Impl::createSurfaces(Space& osSpace, const FSSpace& fsSpace, double minZ, double maxZ, SpaceTypeEnum typeOfSpace,
+                                                          bool openToBelow) {
       auto face = fsSpace.face();
       if (face.has_value()) {
         // Iterate over face edges to create the vector of Point3d
@@ -568,14 +550,14 @@ namespace model {
     }
 
     // Creates "Floor" surface
-    void createFloorSurface(Space& osSpace, Point3dVector& faceVertices, double minZ, bool openToBelow) {
+    void FloorspaceReverseTranslator_Impl::createFloorSurface(Space& osSpace, Point3dVector& faceVertices, double minZ, bool openToBelow) {
       if (orientVerticesForFloor(faceVertices)) {
         createSurface(osSpace, faceVertices, minZ, "Floor", openToBelow);
       }
     }
 
     // Creates a "RoofCeiling" surface
-    void createRoofSurface(Space& osSpace, Point3dVector& faceVertices, double maxZ) {
+    void FloorspaceReverseTranslator_Impl::createRoofSurface(Space& osSpace, Point3dVector& faceVertices, double maxZ) {
       if (orientVerticesForRoof(faceVertices)) {
         createSurface(osSpace, faceVertices, maxZ, "RoofCeiling", false);
       }
@@ -583,8 +565,8 @@ namespace model {
 
     // Creates a "Wall" surface and sub-surfaces
     // TODO: fsSpace unused
-    void createWallSurfaces(Space& osSpace, const FSSpace& fsSpace, const FSEdgeReference& edgeRef, double minZ, double maxZ, bool reversed,
-                            bool createSubsurfaces) {
+    void FloorspaceReverseTranslator_Impl::createWallSurfaces(Space& osSpace, const FSSpace& fsSpace, const FSEdgeReference& edgeRef, double minZ,
+                                                              double maxZ, bool reversed, bool createSubsurfaces) {
       Point3dVector wallVertices;
       const FSVertex& v1 = edgeRef.edge().firstVertex();
       const FSVertex& v2 = edgeRef.edge().secondVertex();
@@ -636,7 +618,8 @@ namespace model {
     }
 
     // Creates one or more window subsurfaces along an edge
-    void createWindowSubsurface(const FSWindow& window, Surface& osSurface, const FSEdgeReference& edgeRef, double minZ, double maxZ) {
+    void FloorspaceReverseTranslator_Impl::createWindowSubsurface(const FSWindow& window, Surface& osSurface, const FSEdgeReference& edgeRef,
+                                                                  double minZ, double maxZ) {
 
       auto windowDefinition = window.windowDefinition();
       if (!windowDefinition.has_value()) {
@@ -755,7 +738,7 @@ namespace model {
     }
 
     // Creates a door subsurface along an edge
-    void createDoorSubsurface(const FSDoor& door, Surface& osSurface, const FSEdgeReference& edgeRef, double minZ) {
+    void FloorspaceReverseTranslator_Impl::createDoorSubsurface(const FSDoor& door, Surface& osSurface, const FSEdgeReference& edgeRef, double minZ) {
       const auto& edge = edgeRef.edge();
       const auto& vertex1 = edge.firstVertex();
       const auto& vertex2 = edge.secondVertex();
@@ -809,7 +792,8 @@ namespace model {
       }
     }
 
-    void createSurface(Space& osSpace, Point3dVector& faceVertices, double z, const std::string& surfaceType, bool openToBelow) {
+    void FloorspaceReverseTranslator_Impl::createSurface(Space& osSpace, Point3dVector& faceVertices, double z, const std::string& surfaceType,
+                                                         bool openToBelow) {
       Point3dVector vertices;
       for (const auto& vert : faceVertices) {
         vertices.emplace_back(Point3d(vert.x(), vert.y(), z));
@@ -825,7 +809,7 @@ namespace model {
     }
 
     // Ensures the points are oriented correctly for a floor surface, reurns false if the normal cant be calculated
-    static bool orientVerticesForFloor(Point3dVector& points) {
+    bool FloorspaceReverseTranslator_Impl::orientVerticesForFloor(Point3dVector& points) {
       boost::optional<Vector3d> outwardNormal = getOutwardNormal(points);
       if (!outwardNormal) {
         //LOG(Error, "Cannot compute outwardNormal for floorPrint.");
@@ -837,7 +821,7 @@ namespace model {
       return true;
     }
 
-    static bool orientVerticesForRoof(Point3dVector& points) {
+    bool FloorspaceReverseTranslator_Impl::orientVerticesForRoof(Point3dVector& points) {
       boost::optional<Vector3d> outwardNormal = getOutwardNormal(points);
       if (!outwardNormal) {
         //LOG(Error, "Cannot compute outwardNormal for floorPrint.");
@@ -849,7 +833,7 @@ namespace model {
       return true;
     }
 
-    static ConstructionAirBoundary getAirWallConstruction(Model& model) {
+    ConstructionAirBoundary FloorspaceReverseTranslator_Impl::getAirWallConstruction(Model& model) {
       boost::optional<ConstructionAirBoundary> result = model.getConcreteModelObjectByName<ConstructionAirBoundary>("AirWall");
       if (!result) {
         ConstructionAirBoundary airWall(model);
@@ -859,7 +843,7 @@ namespace model {
       OS_ASSERT(result);
       return result.get();
     }
-  };
+  }  // namespace detail
 
   ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -876,7 +860,7 @@ namespace model {
     m_logSink.resetStringStream();
 
     Model model;
-    FloorspaceReverseTranslator_Impl visitor(model, fsModel);
+    detail::FloorspaceReverseTranslator_Impl visitor(model, fsModel);
     fsModel.Accept(visitor);
 
     // Do some intersections - the logic is lifted form the ThreeJS reverse translator
