@@ -424,7 +424,7 @@ FSStory::FSStory(const Json::Value& root, const FSModel& model) : FSBase(root) {
   }
 }
 
-double FSStory::gelowFloorPlenumHeight() const {
+double FSStory::getBelowFloorPlenumHeight() const {
   return m_below_floor_plenum_height;
 }
 
@@ -524,7 +524,7 @@ void FSConstructionSet::Accept(FSVisitor& visitor) const {
 ///////////////////////////////////////////////////////////////////////////////////
 
 FSSpace::FSSpace(const Json::Value& root, const FSModel& model, FSStory& story)
-  : FSBase(root), m_story(story), m_belowFloorPlenumHeight(story.gelowFloorPlenumHeight()) {
+  : FSBase(root), m_story(story), m_belowFloorPlenumHeight(story.getBelowFloorPlenumHeight()) {
 
   m_thermalZone = model.thermalZone(root.get("thermal_zone_id", "").asString());
   m_buildingUnit = model.buildingUnit(root.get("building_unit_id", "").asString());

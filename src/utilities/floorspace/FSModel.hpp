@@ -427,7 +427,7 @@ class UTILITIES_API FSStory : public FSBase
   FSStory(const Json::Value& root, const FSModel& model);
   void Accept(FSVisitor& visitor) const;
 
-  double gelowFloorPlenumHeight() const;
+  double getBelowFloorPlenumHeight() const;
   double floorToCeilingHeight() const;
   double aboveCeilingPlenumHeight() const;
   double floorToFloorHeight() const;

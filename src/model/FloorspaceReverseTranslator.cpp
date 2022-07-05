@@ -198,8 +198,8 @@ namespace model {
       if (m_currentFSStory.has_value()) {
 
         double minZ = m_currentStoryZ;
-        double maxZ = minZ + m_currentFSStory->gelowFloorPlenumHeight();
-        if (m_currentFSStory->gelowFloorPlenumHeight() > 0) {
+        double maxZ = minZ + m_currentFSStory->getBelowFloorPlenumHeight();
+        if (m_currentFSStory->getBelowFloorPlenumHeight() > 0) {
           createShadingSurfaceGroup(entity, minZ, maxZ, SpaceTypeEnum::BELOWFLOOR);
         }
 
