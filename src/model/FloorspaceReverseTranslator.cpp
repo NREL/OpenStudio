@@ -97,7 +97,7 @@ namespace model {
   // A Visitor design pattern class. Each Dispatch method handles creation of OSM
   // concepts from the FloorspaceJS concepts
   namespace detail {
-    FloorspaceReverseTranslator_Impl::FloorspaceReverseTranslator_Impl(Model& model, const FSModel& fsModel) : m_model(model), m_fsModel(fsModel) {}
+    FloorspaceReverseTranslator_Impl::FloorspaceReverseTranslator_Impl(Model& model) : m_model(model) {}
 
     /// Mapping between handles referenced in Floorspace (keys) and handles of objects in returned model (values) for last translation
     /// This handle mapping can be used by the ModelMerger when merging returned model (new handles) with an existing model (existing handles)
@@ -860,7 +860,7 @@ namespace model {
     m_logSink.resetStringStream();
 
     Model model;
-    detail::FloorspaceReverseTranslator_Impl visitor(model, fsModel);
+    detail::FloorspaceReverseTranslator_Impl visitor(model);
     fsModel.Accept(visitor);
 
     // Do some intersections - the logic is lifted form the ThreeJS reverse translator

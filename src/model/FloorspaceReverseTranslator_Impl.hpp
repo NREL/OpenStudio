@@ -89,7 +89,7 @@ namespace model {
     class FloorspaceReverseTranslator_Impl final : public FSVisitor
     {
      public:
-      FloorspaceReverseTranslator_Impl(Model& model, const FSModel& fsModel);
+      FloorspaceReverseTranslator_Impl(Model& model);
 
       /// Mapping between handles referenced in Floorspace (keys) and handles of objects in returned model (values) for last translation
       /// This handle mapping can be used by the ModelMerger when merging returned model (new handles) with an existing model (existing handles)
@@ -141,7 +141,6 @@ namespace model {
       REGISTER_LOGGER("openstudio.model.FloorspaceReverseTranslator");
 
       Model& m_model;
-      const FSModel& m_fsModel;  // TODO: unused
       boost::optional<BuildingStory> m_currentStory;
       boost::optional<FSStory> m_currentFSStory;
       boost::optional<Space> m_currentSpace;
