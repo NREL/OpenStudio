@@ -46,6 +46,11 @@ class Point3d;
 class Vector3d;
 class FSModel;
 
+#if (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#endif
+
 // Base class for all floorspace model items
 class UTILITIES_API FSBase : FSDispatchable
 {
@@ -551,6 +556,10 @@ class UTILITIES_API FSModel
   double m_lengthToMeters = 1.0;
   void setUnits();
 };
+
+#if (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
 
 }  // namespace openstudio
 

@@ -54,6 +54,11 @@ class FSThermalZone;
 class FSWindow;
 class FSWindowDefinition;
 
+#if (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
+#endif
+
 class UTILITIES_API FSVisitor
 {
  public:
@@ -83,6 +88,10 @@ class UTILITIES_API FSDispatchable
  public:
   virtual void Accept(FSVisitor& visitor) const = 0;
 };
+
+#if (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
 
 }  // namespace openstudio
 #endif
