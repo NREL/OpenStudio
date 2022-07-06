@@ -78,6 +78,13 @@ namespace model {
       return material.get().name().get();
     }
 
+    Material MaterialPropertyPhaseChangeHysteresis_Impl::material() const {
+      boost::optional<Material> material =
+        getObject<ModelObject>().getModelObjectTarget<Material>(OS_MaterialProperty_PhaseChangeHysteresisFields::MaterialName);
+      OS_ASSERT(material);
+      return material.get();
+    }
+
     double MaterialPropertyPhaseChangeHysteresis_Impl::latentHeatduringtheEntirePhaseChangeProcess() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeHysteresisFields::LatentHeatduringtheEntirePhaseChangeProcess);
       OS_ASSERT(value);
@@ -283,50 +290,6 @@ namespace model {
     ok = setPeakFreezingTemperature(20);
     OS_ASSERT(ok);
     ok = setLowTemperatureDifferenceofFreezingCurve(1);
-    OS_ASSERT(ok);
-  }
-
-  MaterialPropertyPhaseChangeHysteresis::MaterialPropertyPhaseChangeHysteresis(
-    Material& material, double latentHeatduringtheEntirePhaseChangeProcess, double liquidStateThermalConductivity, double liquidStateDensity,
-    double liquidStateSpecificHeat, double highTemperatureDifferenceofMeltingCurve, double peakMeltingTemperature,
-    double lowTemperatureDifferenceofMeltingCurve, double solidStateThermalConductivity, double solidStateDensity, double solidStateSpecificHeat,
-    double highTemperatureDifferenceofFreezingCurve, double peakFreezingTemperature, double lowTemperatureDifferenceofFreezingCurve)
-    : ModelObject(MaterialPropertyPhaseChangeHysteresis::iddObjectType(), material.model()) {
-    OS_ASSERT(getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>());
-
-    if (material.materialPropertyPhaseChangeHysteresis()) {
-      LOG_AND_THROW("Material '" << material.nameString() << "' already has an associated MaterialPropertyPhaseChangeHysteresis object");
-    }
-
-    bool ok = true;
-    OS_ASSERT(ok);
-
-    ok = setPointer(OS_MaterialProperty_PhaseChangeHysteresisFields::MaterialName, material.handle());
-    OS_ASSERT(ok);
-
-    ok = setLatentHeatduringtheEntirePhaseChangeProcess(latentHeatduringtheEntirePhaseChangeProcess);
-    OS_ASSERT(ok);
-    ok = setLiquidStateThermalConductivity(liquidStateThermalConductivity);
-    OS_ASSERT(ok);
-    ok = setLiquidStateDensity(liquidStateDensity);
-    OS_ASSERT(ok);
-    ok = setLiquidStateSpecificHeat(liquidStateSpecificHeat);
-    OS_ASSERT(ok);
-    ok = setHighTemperatureDifferenceofMeltingCurve(highTemperatureDifferenceofMeltingCurve);
-    OS_ASSERT(ok);
-    ok = setPeakMeltingTemperature(peakMeltingTemperature);
-    OS_ASSERT(ok);
-    ok = setLowTemperatureDifferenceofMeltingCurve(lowTemperatureDifferenceofMeltingCurve);
-    OS_ASSERT(ok);
-    ok = setSolidStateThermalConductivity(solidStateThermalConductivity);
-    OS_ASSERT(ok);
-    ok = setSolidStateDensity(solidStateDensity);
-    OS_ASSERT(ok);
-    ok = setSolidStateSpecificHeat(solidStateSpecificHeat);
-    OS_ASSERT(ok);
-    ok = setHighTemperatureDifferenceofFreezingCurve(highTemperatureDifferenceofFreezingCurve);
-    OS_ASSERT(ok);
-    ok = setPeakFreezingTemperature(peakFreezingTemperature);
     OS_ASSERT(ok);
   }
 

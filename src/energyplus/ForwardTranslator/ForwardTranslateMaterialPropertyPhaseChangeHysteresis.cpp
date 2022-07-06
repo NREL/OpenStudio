@@ -46,11 +46,9 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyPhaseChangeHysteresis(MaterialPropertyPhaseChangeHysteresis& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_PhaseChangeHysteresis);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::MaterialProperty_PhaseChangeHysteresis, modelObject);
 
-    m_idfObjects.push_back(idfObject);
-
-    idfObject.setString(MaterialProperty_PhaseChangeHysteresisFields::Name, modelObject.materialName());
+    idfObject.setString(MaterialProperty_PhaseChangeHysteresisFields::Name, modelObject.material().nameString());
 
     idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LatentHeatduringtheEntirePhaseChangeProcess,
                         modelObject.latentHeatduringtheEntirePhaseChangeProcess());
@@ -83,7 +81,7 @@ namespace energyplus {
     idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofFreezingCurve,
                         modelObject.lowTemperatureDifferenceofFreezingCurve());
 
-    return boost::optional<IdfObject>(idfObject);
+    return idfObject;
   }
 
 }  // namespace energyplus

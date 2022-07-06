@@ -37,6 +37,8 @@
 namespace openstudio {
 namespace model {
 
+  class Material;
+
   namespace detail {
 
     /** MaterialPropertyPhaseChangeHysteresis_Impl is a ModelObject_Impl that is the implementation class for MaterialPropertyPhaseChangeHysteresis.*/
@@ -68,6 +70,8 @@ namespace model {
       //@{
 
       std::string materialName() const;
+
+      Material material() const;
 
       double latentHeatduringtheEntirePhaseChangeProcess() const;
 

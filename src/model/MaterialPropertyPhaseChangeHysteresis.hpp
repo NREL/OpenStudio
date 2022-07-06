@@ -54,14 +54,6 @@ namespace model {
 
     explicit MaterialPropertyPhaseChangeHysteresis(Material& material);
 
-    explicit MaterialPropertyPhaseChangeHysteresis(Material& material, double latentHeatduringtheEntirePhaseChangeProcess,
-                                                   double liquidStateThermalConductivity, double liquidStateDensity, double liquidStateSpecificHeat,
-                                                   double highTemperatureDifferenceofMeltingCurve, double peakMeltingTemperature,
-                                                   double lowTemperatureDifferenceofMeltingCurve, double solidStateThermalConductivity,
-                                                   double solidStateDensity, double solidStateSpecificHeat,
-                                                   double highTemperatureDifferenceofFreezingCurve, double peakFreezingTemperature,
-                                                   double lowTemperatureDifferenceofFreezingCurve);
-
     virtual ~MaterialPropertyPhaseChangeHysteresis() {}
 
     //@}
@@ -72,6 +64,8 @@ namespace model {
     //@{
 
     std::string materialName() const;
+
+    Material material() const;
 
     double latentHeatduringtheEntirePhaseChangeProcess() const;
 

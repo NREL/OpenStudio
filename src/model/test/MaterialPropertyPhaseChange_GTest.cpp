@@ -44,20 +44,6 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, MaterialPropertyPhaseChange_MaterialPropertyPhaseChange) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT(
-    {
-      // create a model to use
-      Model model;
-
-      // create a material object to use
-      StandardOpaqueMaterial material(model);
-
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0), "");
-
   // create a model to use
   Model model;
 
@@ -66,7 +52,7 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChange_MaterialPropertyPhaseChange) {
   EXPECT_EQ(1, model.modelObjects().size());
 
   // new material does not have material property phase change yet
-  EXPECT_TRUE(!material.materialPropertyPhaseChange());
+  EXPECT_FALSE(material.materialPropertyPhaseChange());
 
   // create a material property phase change object to use
   boost::optional<MaterialPropertyPhaseChange> optphaseChange = material.createMaterialPropertyPhaseChange();
@@ -79,6 +65,7 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChange_MaterialPropertyPhaseChange) {
   // check to make sure the temperature coefficient for thermal conductivity field is defaulted as expected
   auto phaseChange = optphaseChange.get();
   EXPECT_EQ(material.nameString(), phaseChange.materialName());
+  EXPECT_EQ(material.handle(), phaseChange.material().handle());
   EXPECT_TRUE(phaseChange.isTemperatureCoefficientforThermalConductivityDefaulted());
 
   // check that creating the material property phase change when they already exists does nothing and returns nil
@@ -148,12 +135,9 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChange_TemperatureEnthalpy) {
   ASSERT_TRUE(phaseChange.addTemperatureEnthalpy(temperatureEnthalpy));
   EXPECT_EQ(1, phaseChange.numberofTemperatureEnthalpys());
 
-  // check buil-adding temperature enthalpys
-  std::vector<TemperatureEnthalpy> temperatureEnthalpysToAdd;
-  TemperatureEnthalpy temperatureEnthalpy1(3, 4);
-  temperatureEnthalpysToAdd.push_back(temperatureEnthalpy1);
-  TemperatureEnthalpy temperatureEnthalpy2(5, 6);
-  temperatureEnthalpysToAdd.push_back(temperatureEnthalpy2);
+  // check bulk-adding temperature enthalpys
+  // check bulk-adding temperature enthalpys
+  std::vector<TemperatureEnthalpy> temperatureEnthalpysToAdd{{3.0, 4.0}, {5.0, 6.0}};
   ASSERT_TRUE(phaseChange.addTemperatureEnthalpys(temperatureEnthalpysToAdd));
   EXPECT_EQ(3, phaseChange.numberofTemperatureEnthalpys());
   EXPECT_EQ(3, phaseChange.temperatureEnthalpys().size());

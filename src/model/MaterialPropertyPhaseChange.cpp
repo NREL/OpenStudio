@@ -92,6 +92,13 @@ namespace model {
       return material.get().name().get();
     }
 
+    Material MaterialPropertyPhaseChange_Impl::material() const {
+      boost::optional<Material> material =
+        getObject<ModelObject>().getModelObjectTarget<Material>(OS_MaterialProperty_PhaseChangeFields::MaterialName);
+      OS_ASSERT(material);
+      return material.get();
+    }
+
     double MaterialPropertyPhaseChange_Impl::temperatureCoefficientforThermalConductivity() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_PhaseChangeFields::TemperatureCoefficientforThermalConductivity, true);
       OS_ASSERT(value);

@@ -29,6 +29,12 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/RoofVegetation.hpp"
+#include "../../model/MaterialPropertyMoisturePenetrationDepthSettings.hpp"
+#include "../../model/MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
+#include "../../model/MaterialPropertyPhaseChange.hpp"
+#include "../../model/MaterialPropertyPhaseChange_Impl.hpp"
+#include "../../model/MaterialPropertyPhaseChangeHysteresis.hpp"
+#include "../../model/MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
 #include <utilities/idd/OS_Material_RoofVegetation_FieldEnums.hxx>
 
 #include <utilities/idd/Material_RoofVegetation_FieldEnums.hxx>
@@ -136,6 +142,21 @@ namespace energyplus {
     s = modelObject.getString(OS_Material_RoofVegetationFields::MoistureDiffusionCalculationMethod, false, true);
     if (s) {
       idfObject.setString(Material_RoofVegetationFields::MoistureDiffusionCalculationMethod, *s);
+    }
+
+    // Call the translation of these objects, which has two advantages:
+    // * will not translate them if they are orphaned (=not referencing a material), and,
+    // * makes the order of these objects in the IDF deterministic
+    if (boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> _empd = modelObject.materialPropertyMoisturePenetrationDepthSettings()) {
+      translateAndMapModelObject(_empd.get());
+    }
+
+    if (boost::optional<MaterialPropertyPhaseChange> _phaseChange = modelObject.materialPropertyPhaseChange()) {
+      translateAndMapModelObject(_phaseChange.get());
+    }
+
+    if (boost::optional<MaterialPropertyPhaseChangeHysteresis> _phaseChangeHysteresis = modelObject.materialPropertyPhaseChangeHysteresis()) {
+      translateAndMapModelObject(_phaseChangeHysteresis.get());
     }
 
     return boost::optional<IdfObject>(idfObject);

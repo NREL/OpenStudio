@@ -78,6 +78,13 @@ namespace model {
       return material.get().name().get();
     }
 
+    Material MaterialPropertyMoisturePenetrationDepthSettings_Impl::material() const {
+      boost::optional<Material> material =
+        getObject<ModelObject>().getModelObjectTarget<Material>(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MaterialName);
+      OS_ASSERT(material);
+      return material.get();
+    }
+
     double MaterialPropertyMoisturePenetrationDepthSettings_Impl::waterVaporDiffusionResistanceFactor() const {
       boost::optional<double> value = getDouble(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::WaterVaporDiffusionResistanceFactor);
       OS_ASSERT(value);

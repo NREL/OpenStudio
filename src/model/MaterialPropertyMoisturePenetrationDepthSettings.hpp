@@ -68,6 +68,8 @@ namespace model {
 
     std::string materialName() const;
 
+    Material material() const;
+
     double waterVaporDiffusionResistanceFactor() const;
 
     double moistureEquationCoefficientA() const;

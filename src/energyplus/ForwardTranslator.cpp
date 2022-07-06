@@ -3540,9 +3540,6 @@ namespace energyplus {
   void ForwardTranslator::translateConstructions(const model::Model& model) {
     std::vector<IddObjectType> iddObjectTypes;
     iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_GlazingSpectralData);
-    iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings);
-    iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_PhaseChange);
-    iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_PhaseChangeHysteresis);
     iddObjectTypes.push_back(IddObjectType::OS_Material);
     iddObjectTypes.push_back(IddObjectType::OS_Material_AirGap);
     iddObjectTypes.push_back(IddObjectType::OS_Material_AirWall);
@@ -3577,11 +3574,14 @@ namespace energyplus {
     iddObjectTypes.push_back(IddObjectType::OS_DefaultScheduleSet);
 
     // Translated by the object it references directly
-    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceControl_MovableInsulation);           // Surface Only
-    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);      // Surface, SubSurface,
-    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);   // Surface, SubSurface,
-    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter); // Surface Only
-    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);     // Surface, SubSurface, or InternalMass
+    //iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings); // Material Only
+    //iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_PhaseChange);                       // Material Only
+    //iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_PhaseChangeHysteresis);             // Material Only
+    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceControl_MovableInsulation);                   // Surface Only
+    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);              // Surface, SubSurface,
+    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);           // Surface, SubSurface,
+    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);         // Surface Only
+    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);             // Surface, SubSurface, or InternalMass
 
     for (const IddObjectType& iddObjectType : iddObjectTypes) {
 

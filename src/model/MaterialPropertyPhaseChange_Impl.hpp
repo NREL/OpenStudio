@@ -38,6 +38,7 @@ namespace openstudio {
 namespace model {
 
   class TemperatureEnthalpy;
+  class Material;
 
   namespace detail {
 
@@ -70,6 +71,8 @@ namespace model {
       //@{
 
       std::string materialName() const;
+
+      Material material() const;
 
       double temperatureCoefficientforThermalConductivity() const;
 

@@ -44,20 +44,6 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_MaterialPropertyPhaseChangeHysteresis) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT(
-    {
-      // create a model to use
-      Model model;
-
-      // create a material object to use
-      StandardOpaqueMaterial material(model);
-
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0), "");
-
   // create a model to use
   Model model;
 
@@ -66,7 +52,7 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_MaterialPropertyPhase
   EXPECT_EQ(1, model.modelObjects().size());
 
   // new material does not have material property moisture penetration depth settings yet
-  EXPECT_TRUE(!material.materialPropertyPhaseChangeHysteresis());
+  EXPECT_FALSE(material.materialPropertyPhaseChangeHysteresis());
 
   // create a material property phase change hysteresis object to use
   boost::optional<MaterialPropertyPhaseChangeHysteresis> optphaseChangeHysteresis = material.createMaterialPropertyPhaseChangeHysteresis();
@@ -79,6 +65,7 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_MaterialPropertyPhase
   // check to make sure the liquid state density is as expected
   auto phaseChangeHysteresis = optphaseChangeHysteresis.get();
   EXPECT_EQ(material.nameString(), phaseChangeHysteresis.materialName());
+  EXPECT_EQ(material.handle(), phaseChangeHysteresis.material().handle());
   EXPECT_EQ(2200, phaseChangeHysteresis.liquidStateDensity());
 
   // check that creating the material property phase change hysteresis when they already exists does nothing and returns nil
@@ -137,32 +124,6 @@ TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_SetGetFields) {
   EXPECT_EQ(1.3, phaseChangeHysteresis.highTemperatureDifferenceofFreezingCurve());
   EXPECT_EQ(22, phaseChangeHysteresis.peakFreezingTemperature());
   EXPECT_EQ(2, phaseChangeHysteresis.lowTemperatureDifferenceofFreezingCurve());
-}
-
-TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_AlternateCtor) {
-  Model model;
-  StandardOpaqueMaterial material(model);
-  double latentHeatduringtheEntirePhaseChangeProcess = 10000;
-  double liquidStateThermalConductivity = 1.5;
-  double liquidStateDensity = 2200;
-  double liquidStateSpecificHeat = 2000;
-  double highTemperatureDifferenceofMeltingCurve = 1;
-  double peakMeltingTemperature = 23;
-  double lowTemperatureDifferenceofMeltingCurve = 1;
-  double solidStateThermalConductivity = 1.8;
-  double solidStateDensity = 2300;
-  double solidStateSpecificHeat = 2000;
-  double highTemperatureDifferenceofFreezingCurve = 1;
-  double peakFreezingTemperature = 20;
-  double lowTemperatureDifferenceofFreezingCurve = 1;
-
-  boost::optional<MaterialPropertyPhaseChangeHysteresis> optphaseChangeHysteresis = material.createMaterialPropertyPhaseChangeHysteresis(
-    latentHeatduringtheEntirePhaseChangeProcess, liquidStateThermalConductivity, liquidStateDensity, liquidStateSpecificHeat,
-    highTemperatureDifferenceofMeltingCurve, peakMeltingTemperature, lowTemperatureDifferenceofMeltingCurve, solidStateThermalConductivity,
-    solidStateDensity, solidStateSpecificHeat, highTemperatureDifferenceofFreezingCurve, peakFreezingTemperature,
-    lowTemperatureDifferenceofFreezingCurve);
-  auto phaseChangeHysteresis = optphaseChangeHysteresis.get();
-  EXPECT_EQ(material.nameString(), phaseChangeHysteresis.materialName());
 }
 
 TEST_F(ModelFixture, MaterialPropertyPhaseChangeHysteresis_CtorThrow) {

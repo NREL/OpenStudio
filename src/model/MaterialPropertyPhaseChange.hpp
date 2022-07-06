@@ -85,6 +85,8 @@ namespace model {
 
     std::string materialName() const;
 
+    Material material() const;
+
     double temperatureCoefficientforThermalConductivity() const;
 
     bool isTemperatureCoefficientforThermalConductivityDefaulted() const;
