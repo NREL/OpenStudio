@@ -200,26 +200,6 @@ namespace model {
       return phaseChangeHysteresis;
     }
 
-    boost::optional<MaterialPropertyPhaseChangeHysteresis> Material_Impl::createMaterialPropertyPhaseChangeHysteresis(
-      double latentHeatduringtheEntirePhaseChangeProcess, double liquidStateThermalConductivity, double liquidStateDensity,
-      double liquidStateSpecificHeat, double highTemperatureDifferenceofMeltingCurve, double peakMeltingTemperature,
-      double lowTemperatureDifferenceofMeltingCurve, double solidStateThermalConductivity, double solidStateDensity, double solidStateSpecificHeat,
-      double highTemperatureDifferenceofFreezingCurve, double peakFreezingTemperature, double lowTemperatureDifferenceofFreezingCurve) {
-      Material thisMaterial = getObject<Material>();
-      std::vector<MaterialPropertyPhaseChangeHysteresis> phaseChangeHysteresiss =
-        thisMaterial.getModelObjectSources<MaterialPropertyPhaseChangeHysteresis>(MaterialPropertyPhaseChangeHysteresis::iddObjectType());
-      if (!phaseChangeHysteresiss.empty()) {
-        return boost::none;
-      }
-
-      MaterialPropertyPhaseChangeHysteresis phaseChangeHysteresis(
-        thisMaterial, latentHeatduringtheEntirePhaseChangeProcess, liquidStateThermalConductivity, liquidStateDensity, liquidStateSpecificHeat,
-        highTemperatureDifferenceofMeltingCurve, peakMeltingTemperature, lowTemperatureDifferenceofMeltingCurve, solidStateThermalConductivity,
-        solidStateDensity, solidStateSpecificHeat, highTemperatureDifferenceofFreezingCurve, peakFreezingTemperature,
-        lowTemperatureDifferenceofFreezingCurve);
-      return phaseChangeHysteresis;
-    }
-
     boost::optional<MaterialPropertyPhaseChangeHysteresis> Material_Impl::materialPropertyPhaseChangeHysteresis() const {
       std::vector<MaterialPropertyPhaseChangeHysteresis> phaseChangeHysteresiss =
         getObject<ModelObject>().getModelObjectSources<MaterialPropertyPhaseChangeHysteresis>(MaterialPropertyPhaseChangeHysteresis::iddObjectType());
@@ -307,18 +287,6 @@ namespace model {
 
   boost::optional<MaterialPropertyPhaseChangeHysteresis> Material::createMaterialPropertyPhaseChangeHysteresis() {
     return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChangeHysteresis();
-  }
-
-  boost::optional<MaterialPropertyPhaseChangeHysteresis> Material::createMaterialPropertyPhaseChangeHysteresis(
-    double latentHeatduringtheEntirePhaseChangeProcess, double liquidStateThermalConductivity, double liquidStateDensity,
-    double liquidStateSpecificHeat, double highTemperatureDifferenceofMeltingCurve, double peakMeltingTemperature,
-    double lowTemperatureDifferenceofMeltingCurve, double solidStateThermalConductivity, double solidStateDensity, double solidStateSpecificHeat,
-    double highTemperatureDifferenceofFreezingCurve, double peakFreezingTemperature, double lowTemperatureDifferenceofFreezingCurve) {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChangeHysteresis(
-      latentHeatduringtheEntirePhaseChangeProcess, liquidStateThermalConductivity, liquidStateDensity, liquidStateSpecificHeat,
-      highTemperatureDifferenceofMeltingCurve, peakMeltingTemperature, lowTemperatureDifferenceofMeltingCurve, solidStateThermalConductivity,
-      solidStateDensity, solidStateSpecificHeat, highTemperatureDifferenceofFreezingCurve, peakFreezingTemperature,
-      lowTemperatureDifferenceofFreezingCurve);
   }
 
   boost::optional<MaterialPropertyPhaseChangeHysteresis> Material::materialPropertyPhaseChangeHysteresis() const {

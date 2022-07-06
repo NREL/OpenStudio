@@ -108,14 +108,6 @@ namespace model {
       // resets the material property phase change
       void resetMaterialPropertyPhaseChange();
 
-      // if material property phase change hysteresis already exists, do nothing and return nil; creates the material property phase change hysteresis if it does not already exist and return it;
-      boost::optional<MaterialPropertyPhaseChangeHysteresis> createMaterialPropertyPhaseChangeHysteresis();
-      boost::optional<MaterialPropertyPhaseChangeHysteresis> createMaterialPropertyPhaseChangeHysteresis(
-        double latentHeatduringtheEntirePhaseChangeProcess, double liquidStateThermalConductivity, double liquidStateDensity,
-        double liquidStateSpecificHeat, double highTemperatureDifferenceofMeltingCurve, double peakMeltingTemperature,
-        double lowTemperatureDifferenceofMeltingCurve, double solidStateThermalConductivity, double solidStateDensity, double solidStateSpecificHeat,
-        double highTemperatureDifferenceofFreezingCurve, double peakFreezingTemperature, double lowTemperatureDifferenceofFreezingCurve);
-
       // returns the material property phase change hysteresis if set
       boost::optional<MaterialPropertyPhaseChangeHysteresis> materialPropertyPhaseChangeHysteresis() const;
 
