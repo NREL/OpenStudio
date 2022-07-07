@@ -57,7 +57,10 @@ namespace energyplus {
 
     IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::MaterialProperty_PhaseChange, modelObject);
 
-    idfObject.setString(MaterialProperty_PhaseChangeFields::Name, modelObject.material().nameString());
+    Material material = modelObject.material();
+    if (boost::optional<IdfObject> mat = translateAndMapModelObject(material)) {
+      idfObject.setString(MaterialProperty_PhaseChangeFields::Name, mat->name().get());
+    }
 
     idfObject.setDouble(MaterialProperty_PhaseChangeFields::TemperatureCoefficientforThermalConductivity,
                         modelObject.temperatureCoefficientforThermalConductivity());

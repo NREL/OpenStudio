@@ -51,7 +51,10 @@ namespace energyplus {
     ForwardTranslator::translateMaterialPropertyMoisturePenetrationDepthSettings(MaterialPropertyMoisturePenetrationDepthSettings& modelObject) {
     IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::MaterialProperty_MoisturePenetrationDepth_Settings, modelObject);
 
-    idfObject.setString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::Name, modelObject.material().nameString());
+    Material material = modelObject.material();
+    if (boost::optional<IdfObject> mat = translateAndMapModelObject(material)) {
+      idfObject.setString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::Name, mat->name().get());
+    }
 
     idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::WaterVaporDiffusionResistanceFactor,
                         modelObject.waterVaporDiffusionResistanceFactor());
