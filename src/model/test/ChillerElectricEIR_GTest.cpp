@@ -668,30 +668,40 @@ TEST_F(ModelFixture, ChillerElectricEIR_ElectricInputToCoolingOutputRatioFunctio
 
   // test ctor 1
   {
+    // ctor maintains backward compatibility
     model::ChillerElectricEIR chiller(model);
     ASSERT_TRUE(chiller.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveQuadratic>());
   }
 
   // test ctor 2
   {
+    // ctor maintains backward compatibility
     model::CurveBiquadratic ccFofT(model);
     model::CurveBiquadratic eirToCorfOfT(model);
     model::CurveQuadratic eirToCorfOfPlr(model);
     model::ChillerElectricEIR chiller2(model, ccFofT, eirToCorfOfT, eirToCorfOfPlr);
+    ASSERT_TRUE(chiller2.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveQuadratic>());
+
+    // ctor can now handle cubic curves
+    model::CurveBiquadratic ccFofT2(model);
+    model::CurveBiquadratic eirToCorfOfT2(model);
+    model::CurveCubic eirToCorfOfPlr2(model);
+    model::ChillerElectricEIR chiller3(model, ccFofT2, eirToCorfOfT2, eirToCorfOfPlr2);
+    ASSERT_TRUE(chiller3.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveCubic>());
   }
 
   // test new setter/getter
   {
-    model::ChillerElectricEIR chiller3(model);
+    model::ChillerElectricEIR chiller4(model);
 
     // setter maintains backward compatibility
     model::CurveQuadratic curveQuadratic(model);
-    EXPECT_TRUE(chiller3.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveQuadratic));
-    ASSERT_TRUE(chiller3.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveQuadratic>());
+    EXPECT_TRUE(chiller4.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveQuadratic));
+    ASSERT_TRUE(chiller4.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveQuadratic>());
 
     // setter can now handle cubic curves
     model::CurveCubic curveCubic(model);
-    EXPECT_TRUE(chiller3.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveCubic));
-    ASSERT_TRUE(chiller3.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveCubic>());
+    EXPECT_TRUE(chiller4.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveCubic));
+    ASSERT_TRUE(chiller4.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveCubic>());
   }
 }
