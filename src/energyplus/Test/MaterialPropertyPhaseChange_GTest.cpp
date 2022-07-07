@@ -112,6 +112,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyPhaseChange_NotEnoug
   WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::MaterialProperty_PhaseChange);
   ASSERT_EQ(0u, idfObjs.size());
   ASSERT_EQ(1, ft.warnings().size());
-  EXPECT_EQ("Object of type 'OS:MaterialProperty:PhaseChange' cannot be translated as it has less than 3 temperature-enthalpy pairs.",
+  EXPECT_EQ("Object of type 'OS:MaterialProperty:PhaseChange' cannot be translated as it has less than 4 temperature-enthalpy pairs.",
             ft.warnings().front().logMessage());
 }
