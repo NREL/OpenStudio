@@ -32,6 +32,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/MaterialPropertyPhaseChangeHysteresis.hpp"
 #include "../../model/MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
+#include "../../model/Material.hpp"
+#include "../../model/Material_Impl.hpp"
 
 #include <utilities/idd/MaterialProperty_PhaseChangeHysteresis_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"

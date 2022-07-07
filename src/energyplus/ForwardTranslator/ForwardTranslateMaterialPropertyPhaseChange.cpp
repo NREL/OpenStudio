@@ -32,6 +32,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/MaterialPropertyPhaseChange.hpp"
 #include "../../model/MaterialPropertyPhaseChange_Impl.hpp"
+#include "../../model/Material.hpp"
+#include "../../model/Material_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 

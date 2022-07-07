@@ -32,6 +32,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/MaterialPropertyMoisturePenetrationDepthSettings.hpp"
 #include "../../model/MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
+#include "../../model/Material.hpp"
+#include "../../model/Material_Impl.hpp"
 
 #include <utilities/idd/MaterialProperty_MoisturePenetrationDepth_Settings_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
