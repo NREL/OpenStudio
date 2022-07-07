@@ -27,36 +27,33 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_EXTERNALFILE_IMPL_HPP
-#define MODEL_EXTERNALFILE_IMPL_HPP
+#ifndef MODEL_SETPOINTMANAGERSYSTEMNODERESETHUMIDITY_IMPL_HPP
+#define MODEL_SETPOINTMANAGERSYSTEMNODERESETHUMIDITY_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ResourceObject_Impl.hpp"
+#include "SetpointManager_Impl.hpp"
 
 namespace openstudio {
-
 namespace model {
 
-  class ExternalFile;
-  class ScheduleFile;
-  class PythonPluginInstance;
+  class Node;
 
   namespace detail {
 
-    /** ExternalFile_Impl is a ResourceObject_Impl that is the implementation class for ExternalFile.*/
-    class MODEL_API ExternalFile_Impl : public ResourceObject_Impl
+    /** SetpointManagerSystemNodeResetHumidity_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerSystemNodeResetHumidity.*/
+    class MODEL_API SetpointManagerSystemNodeResetHumidity_Impl : public SetpointManager_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      ExternalFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      SetpointManagerSystemNodeResetHumidity_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      ExternalFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      SetpointManagerSystemNodeResetHumidity_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      ExternalFile_Impl(const ExternalFile_Impl& other, Model_Impl* model, bool keepHandle);
+      SetpointManagerSystemNodeResetHumidity_Impl(const SetpointManagerSystemNodeResetHumidity_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExternalFile_Impl();
+      virtual ~SetpointManagerSystemNodeResetHumidity_Impl() {}
 
       //@}
       /** @name Virtual Methods */
@@ -66,48 +63,57 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual bool isAllowedOnPlantLoop() const override;
+
       virtual ModelObject clone(Model model) const override;
 
-      virtual std::vector<IdfObject> remove() override;
+      virtual std::string controlVariable() const override;
+
+      virtual bool setControlVariable(const std::string& controlVariable) override;
+
+      virtual boost::optional<Node> setpointNode() const override;
+
+      virtual bool setSetpointNode(const Node& node) override;
+
+      virtual void resetSetpointNode() override;
 
       //@}
       /** @name Getters */
       //@{
 
-      std::string fileName() const;
+      double setpointatLowReferenceHumidityRatio() const;
 
-      path filePath() const;
+      double setpointatHighReferenceHumidityRatio() const;
 
-      //boost::optional<std::string> columnSeparator() const;
+      double lowReferenceHumidityRatio() const;
 
-      //char columnSeparatorChar() const;
+      double highReferenceHumidityRatio() const;
 
-      //bool isColumnSeparatorDefaulted() const;
+      boost::optional<Node> referenceNode() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      //bool setColumnSeparator(const std::string& columnSeparator);
+      bool setSetpointatLowReferenceHumidityRatio(double setpointatLowReferenceHumidityRatio);
 
-      //void resetColumnSeparator();
+      bool setSetpointatHighReferenceHumidityRatio(double setpointatHighReferenceHumidityRatio);
+
+      bool setLowReferenceHumidityRatio(double lowReferenceHumidityRatio);
+
+      bool setHighReferenceHumidityRatio(double highReferenceHumidityRatio);
+
+      bool setReferenceNode(const Node& node);
+      void resetReferenceNode();
 
       //@}
       /** @name Other */
       //@{
-      //bool isValid();
-
-      std::vector<ScheduleFile> scheduleFiles() const;
-
-      std::vector<PythonPluginInstance> pythonPluginInstances() const;
 
       //@}
      protected:
-      bool setFileName(const std::string& fileName);
-      friend class openstudio::model::ExternalFile;
-
      private:
-      REGISTER_LOGGER("openstudio.model.ExternalFile");
+      REGISTER_LOGGER("openstudio.model.SetpointManagerSystemNodeResetHumidity");
     };
 
   }  // namespace detail
@@ -115,4 +121,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_SCHEDULEFILE_IMPL_HPP
+#endif  // MODEL_SETPOINTMANAGERSYSTEMNODERESETHUMIDITY_IMPL_HPP

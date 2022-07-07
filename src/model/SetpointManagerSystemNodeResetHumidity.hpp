@@ -27,99 +27,97 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_EXTERNALFILE_HPP
-#define MODEL_EXTERNALFILE_HPP
+#ifndef MODEL_SETPOINTMANAGERSYSTEMNODERESETHUMIDITY_HPP
+#define MODEL_SETPOINTMANAGERSYSTEMNODERESETHUMIDITY_HPP
 
 #include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
-
-#include "../utilities/core/Path.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-  class ScheduleFile;
-  class PythonPluginInstance;
+  class Node;
 
   namespace detail {
 
-    class ExternalFile_Impl;
+    class SetpointManagerSystemNodeResetHumidity_Impl;
 
   }  // namespace detail
 
-  /** ExternalFile is a ResourceObject that wraps the OpenStudio IDD object 'OS:External:File'. */
-  class MODEL_API ExternalFile : public ResourceObject
+  /** SetpointManagerSystemNodeResetHumidity is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SystemNodeReset:Humidity'. */
+  class MODEL_API SetpointManagerSystemNodeResetHumidity : public SetpointManager
   {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ExternalFile() {}
+    explicit SetpointManagerSystemNodeResetHumidity(const Model& model);
+
+    virtual ~SetpointManagerSystemNodeResetHumidity() {}
 
     //@}
 
     static IddObjectType iddObjectType();
 
-    static std::vector<std::string> columnSeparatorValues();
-
-    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename);
+    static std::vector<std::string> controlVariableValues();
 
     /** @name Getters */
     //@{
 
-    std::string fileName() const;
+    double setpointatLowReferenceHumidityRatio() const;
 
-    path filePath() const;
+    double setpointatHighReferenceHumidityRatio() const;
 
-    //boost::optional<std::string> columnSeparator() const;
+    double lowReferenceHumidityRatio() const;
 
-    //bool isColumnSeparatorDefaulted() const;
+    double highReferenceHumidityRatio() const;
+
+    boost::optional<Node> referenceNode() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    //bool setColumnSeparator(const std::string& columnSeparator);
+    bool setSetpointatLowReferenceHumidityRatio(double setpointatLowReferenceHumidityRatio);
 
-    //void resetColumnSeparator();
+    bool setSetpointatHighReferenceHumidityRatio(double setpointatHighReferenceHumidityRatio);
+
+    bool setLowReferenceHumidityRatio(double lowReferenceHumidityRatio);
+
+    bool setHighReferenceHumidityRatio(double highReferenceHumidityRatio);
+
+    bool setReferenceNode(const Node& node);
+
+    void resetReferenceNode();
 
     //@}
     /** @name Other */
     //@{
 
-    //bool isValid();
-
-    std::vector<ScheduleFile> scheduleFiles() const;
-
-    std::vector<PythonPluginInstance> pythonPluginInstances() const;
-
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalFile_Impl ImplType;
+    using ImplType = detail::SetpointManagerSystemNodeResetHumidity_Impl;
 
-    explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
+    explicit SetpointManagerSystemNodeResetHumidity(std::shared_ptr<detail::SetpointManagerSystemNodeResetHumidity_Impl> impl);
 
+    friend class detail::SetpointManagerSystemNodeResetHumidity_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
     /// @endcond
    private:
-    REGISTER_LOGGER("openstudio.model.ExternalFile");
-
-    ExternalFile(const Model& model, const std::string& filename);
-
-    bool setFileName(const std::string& fileName);
+    REGISTER_LOGGER("openstudio.model.SetpointManagerSystemNodeResetHumidity");
   };
 
-  /** \relates ExternalFile*/
-  typedef boost::optional<ExternalFile> OptionalExternalFile;
+  /** \relates SetpointManagerSystemNodeResetHumidity*/
+  using OptionalSetpointManagerSystemNodeResetHumidity = boost::optional<SetpointManagerSystemNodeResetHumidity>;
 
-  /** \relates ExternalFile*/
-  typedef std::vector<ExternalFile> ExternalFileVector;
+  /** \relates SetpointManagerSystemNodeResetHumidity*/
+  using SetpointManagerSystemNodeResetHumidityVector = std::vector<SetpointManagerSystemNodeResetHumidity>;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_EXTERNALFILE_HPP
+#endif  // MODEL_SETPOINTMANAGERSYSTEMNODERESETHUMIDITY_HPP

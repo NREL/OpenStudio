@@ -1157,6 +1157,18 @@ set(${target_name}_src
   PumpVariableSpeed.hpp
   PumpVariableSpeed_Impl.hpp
   PumpVariableSpeed.cpp
+  PythonPluginInstance.hpp
+  PythonPluginInstance_Impl.hpp
+  PythonPluginInstance.cpp
+  PythonPluginVariable.hpp
+  PythonPluginVariable_Impl.hpp
+  PythonPluginVariable.cpp
+  PythonPluginTrendVariable.hpp
+  PythonPluginTrendVariable_Impl.hpp
+  PythonPluginTrendVariable.cpp
+  PythonPluginOutputVariable.hpp
+  PythonPluginOutputVariable_Impl.hpp
+  PythonPluginOutputVariable.cpp
   RadianceParameters.hpp
   RadianceParameters_Impl.hpp
   RadianceParameters.cpp
@@ -1352,6 +1364,12 @@ set(${target_name}_src
   SetpointManagerWarmestTemperatureFlow.hpp
   SetpointManagerWarmestTemperatureFlow_Impl.hpp
   SetpointManagerWarmestTemperatureFlow.cpp
+  SetpointManagerSystemNodeResetHumidity.hpp
+  SetpointManagerSystemNodeResetHumidity_Impl.hpp
+  SetpointManagerSystemNodeResetHumidity.cpp
+  SetpointManagerSystemNodeResetTemperature.hpp
+  SetpointManagerSystemNodeResetTemperature_Impl.hpp
+  SetpointManagerSystemNodeResetTemperature.cpp
   Shade.hpp
   Shade_Impl.hpp
   Shade.cpp
@@ -2100,6 +2118,10 @@ set(${target_name}_test_src
   test/Plenums_GTest.cpp
   test/PumpConstantSpeed_GTest.cpp
   test/PumpVariableSpeed_GTest.cpp
+  test/PythonPluginInstance_GTest.cpp
+  test/PythonPluginVariable_GTest.cpp
+  test/PythonPluginTrendVariable_GTest.cpp
+  test/PythonPluginOutputVariable_GTest.cpp
   test/RadianceParameters_GTest.cpp
   test/RefractionExtinctionGlazing_GTest.cpp
   test/RefrigerationAirChiller_GTest.cpp
@@ -2148,6 +2170,8 @@ set(${target_name}_test_src
   test/SetpointManagerSingleZoneHeating_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
   test/SetpointManagerWarmestTemperatureFlow_GTest.cpp
+  test/SetpointManagerSystemNodeResetHumidity_GTest.cpp
+  test/SetpointManagerSystemNodeResetTemperature_GTest.cpp
   test/ScheduleDay_GTest.cpp
   test/ScheduleInterval_GTest.cpp
   test/ScheduleRuleset_GTest.cpp

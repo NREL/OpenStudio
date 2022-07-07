@@ -27,99 +27,97 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_EXTERNALFILE_HPP
-#define MODEL_EXTERNALFILE_HPP
+#ifndef MODEL_SETPOINTMANAGERSYSTEMNODERESETTEMPERATURE_HPP
+#define MODEL_SETPOINTMANAGERSYSTEMNODERESETTEMPERATURE_HPP
 
 #include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
-
-#include "../utilities/core/Path.hpp"
+#include "SetpointManager.hpp"
 
 namespace openstudio {
 
 namespace model {
 
-  class ScheduleFile;
-  class PythonPluginInstance;
+  class Node;
 
   namespace detail {
 
-    class ExternalFile_Impl;
+    class SetpointManagerSystemNodeResetTemperature_Impl;
 
   }  // namespace detail
 
-  /** ExternalFile is a ResourceObject that wraps the OpenStudio IDD object 'OS:External:File'. */
-  class MODEL_API ExternalFile : public ResourceObject
+  /** SetpointManagerSystemNodeResetTemperature is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SystemNodeReset:Temperature'. */
+  class MODEL_API SetpointManagerSystemNodeResetTemperature : public SetpointManager
   {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ExternalFile() {}
+    explicit SetpointManagerSystemNodeResetTemperature(const Model& model);
+
+    virtual ~SetpointManagerSystemNodeResetTemperature() {}
 
     //@}
 
     static IddObjectType iddObjectType();
 
-    static std::vector<std::string> columnSeparatorValues();
-
-    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename);
+    static std::vector<std::string> controlVariableValues();
 
     /** @name Getters */
     //@{
 
-    std::string fileName() const;
+    double setpointatLowReferenceTemperature() const;
 
-    path filePath() const;
+    double setpointatHighReferenceTemperature() const;
 
-    //boost::optional<std::string> columnSeparator() const;
+    double lowReferenceTemperature() const;
 
-    //bool isColumnSeparatorDefaulted() const;
+    double highReferenceTemperature() const;
+
+    boost::optional<Node> referenceNode() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    //bool setColumnSeparator(const std::string& columnSeparator);
+    bool setSetpointatLowReferenceTemperature(double setpointatLowReferenceTemperature);
 
-    //void resetColumnSeparator();
+    bool setSetpointatHighReferenceTemperature(double setpointatHighReferenceTemperature);
+
+    bool setLowReferenceTemperature(double lowReferenceTemperature);
+
+    bool setHighReferenceTemperature(double highReferenceTemperature);
+
+    bool setReferenceNode(const Node& node);
+
+    void resetReferenceNode();
 
     //@}
     /** @name Other */
     //@{
 
-    //bool isValid();
-
-    std::vector<ScheduleFile> scheduleFiles() const;
-
-    std::vector<PythonPluginInstance> pythonPluginInstances() const;
-
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalFile_Impl ImplType;
+    using ImplType = detail::SetpointManagerSystemNodeResetTemperature_Impl;
 
-    explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
+    explicit SetpointManagerSystemNodeResetTemperature(std::shared_ptr<detail::SetpointManagerSystemNodeResetTemperature_Impl> impl);
 
+    friend class detail::SetpointManagerSystemNodeResetTemperature_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
     /// @endcond
    private:
-    REGISTER_LOGGER("openstudio.model.ExternalFile");
-
-    ExternalFile(const Model& model, const std::string& filename);
-
-    bool setFileName(const std::string& fileName);
+    REGISTER_LOGGER("openstudio.model.SetpointManagerSystemNodeResetTemperature");
   };
 
-  /** \relates ExternalFile*/
-  typedef boost::optional<ExternalFile> OptionalExternalFile;
+  /** \relates SetpointManagerSystemNodeResetTemperature*/
+  using OptionalSetpointManagerSystemNodeResetTemperature = boost::optional<SetpointManagerSystemNodeResetTemperature>;
 
-  /** \relates ExternalFile*/
-  typedef std::vector<ExternalFile> ExternalFileVector;
+  /** \relates SetpointManagerSystemNodeResetTemperature*/
+  using SetpointManagerSystemNodeResetTemperatureVector = std::vector<SetpointManagerSystemNodeResetTemperature>;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_EXTERNALFILE_HPP
+#endif  // MODEL_SETPOINTMANAGERSYSTEMNODERESETTEMPERATURE_HPP

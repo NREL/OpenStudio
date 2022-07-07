@@ -27,36 +27,33 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_EXTERNALFILE_IMPL_HPP
-#define MODEL_EXTERNALFILE_IMPL_HPP
+#ifndef MODEL_SETPOINTMANAGERSYSTEMNODERESETTEMPERATURE_IMPL_HPP
+#define MODEL_SETPOINTMANAGERSYSTEMNODERESETTEMPERATURE_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ResourceObject_Impl.hpp"
+#include "SetpointManager_Impl.hpp"
 
 namespace openstudio {
-
 namespace model {
 
-  class ExternalFile;
-  class ScheduleFile;
-  class PythonPluginInstance;
+  class Node;
 
   namespace detail {
 
-    /** ExternalFile_Impl is a ResourceObject_Impl that is the implementation class for ExternalFile.*/
-    class MODEL_API ExternalFile_Impl : public ResourceObject_Impl
+    /** SetpointManagerSystemNodeResetTemperature_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerSystemNodeResetTemperature.*/
+    class MODEL_API SetpointManagerSystemNodeResetTemperature_Impl : public SetpointManager_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      ExternalFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      SetpointManagerSystemNodeResetTemperature_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      ExternalFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      SetpointManagerSystemNodeResetTemperature_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      ExternalFile_Impl(const ExternalFile_Impl& other, Model_Impl* model, bool keepHandle);
+      SetpointManagerSystemNodeResetTemperature_Impl(const SetpointManagerSystemNodeResetTemperature_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ExternalFile_Impl();
+      virtual ~SetpointManagerSystemNodeResetTemperature_Impl() {}
 
       //@}
       /** @name Virtual Methods */
@@ -66,48 +63,58 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual bool isAllowedOnPlantLoop() const override;
+
       virtual ModelObject clone(Model model) const override;
 
-      virtual std::vector<IdfObject> remove() override;
+      virtual std::string controlVariable() const override;
+
+      virtual bool setControlVariable(const std::string& controlVariable) override;
+
+      virtual boost::optional<Node> setpointNode() const override;
+
+      virtual bool setSetpointNode(const Node& node) override;
+
+      virtual void resetSetpointNode() override;
 
       //@}
       /** @name Getters */
       //@{
 
-      std::string fileName() const;
+      double setpointatLowReferenceTemperature() const;
 
-      path filePath() const;
+      double setpointatHighReferenceTemperature() const;
 
-      //boost::optional<std::string> columnSeparator() const;
+      double lowReferenceTemperature() const;
 
-      //char columnSeparatorChar() const;
+      double highReferenceTemperature() const;
 
-      //bool isColumnSeparatorDefaulted() const;
+      boost::optional<Node> referenceNode() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      //bool setColumnSeparator(const std::string& columnSeparator);
+      bool setSetpointatLowReferenceTemperature(double setpointatLowReferenceTemperature);
 
-      //void resetColumnSeparator();
+      bool setSetpointatHighReferenceTemperature(double setpointatHighReferenceTemperature);
+
+      bool setLowReferenceTemperature(double lowReferenceTemperature);
+
+      bool setHighReferenceTemperature(double highReferenceTemperature);
+
+      bool setReferenceNode(const Node& node);
+
+      void resetReferenceNode();
 
       //@}
       /** @name Other */
       //@{
-      //bool isValid();
-
-      std::vector<ScheduleFile> scheduleFiles() const;
-
-      std::vector<PythonPluginInstance> pythonPluginInstances() const;
 
       //@}
      protected:
-      bool setFileName(const std::string& fileName);
-      friend class openstudio::model::ExternalFile;
-
      private:
-      REGISTER_LOGGER("openstudio.model.ExternalFile");
+      REGISTER_LOGGER("openstudio.model.SetpointManagerSystemNodeResetTemperature");
     };
 
   }  // namespace detail
@@ -115,4 +122,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_SCHEDULEFILE_IMPL_HPP
+#endif  // MODEL_SETPOINTMANAGERSYSTEMNODERESETTEMPERATURE_IMPL_HPP

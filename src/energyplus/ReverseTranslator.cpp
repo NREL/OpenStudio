@@ -810,6 +810,14 @@ namespace energyplus {
         //modelObject = translateSetpointManagerSingleZoneReheat(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::SetpointManager_SystemNodeReset_Humidity: {
+        //modelObject = translateSetpointManagerSystemNodeResetHumidity(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SetpointManager_SystemNodeReset_Temperature: {
+        //modelObject = translateSetpointManagerSystemNodeResetTemperature(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Shading_Building_Detailed: {
         modelObject = translateShadingBuildingDetailed(workspaceObject);
         break;

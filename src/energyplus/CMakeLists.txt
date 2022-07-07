@@ -281,6 +281,10 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslatePortList.cpp
   ForwardTranslator/ForwardTranslatePumpConstantSpeed.cpp
   ForwardTranslator/ForwardTranslatePumpVariableSpeed.cpp
+  ForwardTranslator/ForwardTranslatePythonPluginInstance.cpp
+  ForwardTranslator/ForwardTranslatePythonPluginVariable.cpp
+  ForwardTranslator/ForwardTranslatePythonPluginTrendVariable.cpp
+  ForwardTranslator/ForwardTranslatePythonPluginOutputVariable.cpp
   ForwardTranslator/ForwardTranslateRefractionExtinctionGlazing.cpp
   ForwardTranslator/ForwardTranslateRefrigerationAirChiller.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
@@ -336,6 +340,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSetpointManagerSingleZoneReheat.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerWarmest.cpp
   ForwardTranslator/ForwardTranslateSetpointManagerWarmestTemperatureFlow.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerSystemNodeResetHumidity.cpp
+  ForwardTranslator/ForwardTranslateSetpointManagerSystemNodeResetTemperature.cpp
   ForwardTranslator/ForwardTranslateShade.cpp
   ForwardTranslator/ForwardTranslateShadowCalculation.cpp
   ForwardTranslator/ForwardTranslateShadingControl.cpp
@@ -552,6 +558,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSetpointManagerMixedAir.cpp
   ReverseTranslator/ReverseTranslateSetpointManagerScheduled.cpp
   ReverseTranslator/ReverseTranslateSetpointManagerSingleZoneReheat.cpp
+  ReverseTranslator/ReverseTranslateSetpointManagerSystemNodeResetHumidity.cpp
+  ReverseTranslator/ReverseTranslateSetpointManagerSystemNodeResetTemperature.cpp
   ReverseTranslator/ReverseTranslateShadingBuildingDetailed.cpp
   ReverseTranslator/ReverseTranslateShadingSiteDetailed.cpp
   ReverseTranslator/ReverseTranslateShadingZoneDetailed.cpp
@@ -711,12 +719,18 @@ set(${target_name}_test_src
   Test/PerformancePrecisionTradeoffs_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp
+  Test/PythonPluginInstance_GTest.cpp
+  Test/PythonPluginVariable_GTest.cpp
+  Test/PythonPluginOutputVariable_GTest.cpp
+  Test/PythonPluginTrendVariable_GTest.cpp
   Test/RunPeriod_GTest.cpp
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/RunPeriodControlSpecialDays_GTest.cpp
   Test/ScheduleInterval_GTest.cpp
   Test/ScheduleRuleset_GTest.cpp
   Test/SetpointManagerFollowGroundTemperature_GTest.cpp
+  Test/SetpointManagerSystemNodeResetHumidity_GTest.cpp
+  Test/SetpointManagerSystemNodeResetTemperature_GTest.cpp
   Test/ShadingControl_GTest.cpp
   Test/ShadingSurface_GTest.cpp
   Test/ShadowCalculation_GTest.cpp

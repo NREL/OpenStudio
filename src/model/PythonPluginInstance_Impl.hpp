@@ -27,99 +27,81 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_EXTERNALFILE_HPP
-#define MODEL_EXTERNALFILE_HPP
+#ifndef MODEL_PYTHONPLUGININSTANCE_IMPL_HPP
+#define MODEL_PYTHONPLUGININSTANCE_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
-
-#include "../utilities/core/Path.hpp"
+#include "ResourceObject_Impl.hpp"
 
 namespace openstudio {
-
 namespace model {
 
-  class ScheduleFile;
-  class PythonPluginInstance;
+  class ExternalFile;
 
   namespace detail {
 
-    class ExternalFile_Impl;
+    /** PythonPluginInstance_Impl is a ResourceObject_Impl that is the implementation class for PythonPluginInstance.*/
+    class MODEL_API PythonPluginInstance_Impl : public ResourceObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
+
+      PythonPluginInstance_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+
+      PythonPluginInstance_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+
+      PythonPluginInstance_Impl(const PythonPluginInstance_Impl& other, Model_Impl* model, bool keepHandle);
+
+      virtual ~PythonPluginInstance_Impl() {}
+
+      //@}
+      /** @name Virtual Methods */
+      //@{
+
+      virtual const std::vector<std::string>& outputVariableNames() const override;
+
+      virtual IddObjectType iddObjectType() const override;
+
+      virtual std::vector<ResourceObject> resources() const override;
+
+      //@}
+      /** @name Getters */
+      //@{
+
+      ExternalFile externalFile() const;
+
+      bool runDuringWarmupDays() const;
+      bool isRunDuringWarmupDaysDefaulted() const;
+
+      std::string pluginClassName() const;
+
+      //@}
+      /** @name Setters */
+      //@{
+
+      bool setRunDuringWarmupDays(bool runDuringWarmupDays);
+      void resetRunDuringWarmupDays();
+
+      bool setPluginClassName(const std::string& pluginClassName);
+
+      //@}
+      /** @name Other */
+      //@{
+
+      bool findPluginClassNameInFile(const std::string& pluginClassName) const;
+
+      std::vector<std::string> validPluginClassNamesInFile() const;
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.PythonPluginInstance");
+    };
 
   }  // namespace detail
-
-  /** ExternalFile is a ResourceObject that wraps the OpenStudio IDD object 'OS:External:File'. */
-  class MODEL_API ExternalFile : public ResourceObject
-  {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
-
-    virtual ~ExternalFile() {}
-
-    //@}
-
-    static IddObjectType iddObjectType();
-
-    static std::vector<std::string> columnSeparatorValues();
-
-    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename);
-
-    /** @name Getters */
-    //@{
-
-    std::string fileName() const;
-
-    path filePath() const;
-
-    //boost::optional<std::string> columnSeparator() const;
-
-    //bool isColumnSeparatorDefaulted() const;
-
-    //@}
-    /** @name Setters */
-    //@{
-
-    //bool setColumnSeparator(const std::string& columnSeparator);
-
-    //void resetColumnSeparator();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //bool isValid();
-
-    std::vector<ScheduleFile> scheduleFiles() const;
-
-    std::vector<PythonPluginInstance> pythonPluginInstances() const;
-
-    //@}
-   protected:
-    /// @cond
-    typedef detail::ExternalFile_Impl ImplType;
-
-    explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
-
-    friend class Model;
-    friend class IdfObject;
-    friend class openstudio::detail::IdfObject_Impl;
-    /// @endcond
-   private:
-    REGISTER_LOGGER("openstudio.model.ExternalFile");
-
-    ExternalFile(const Model& model, const std::string& filename);
-
-    bool setFileName(const std::string& fileName);
-  };
-
-  /** \relates ExternalFile*/
-  typedef boost::optional<ExternalFile> OptionalExternalFile;
-
-  /** \relates ExternalFile*/
-  typedef std::vector<ExternalFile> ExternalFileVector;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_EXTERNALFILE_HPP
+#endif  // MODEL_PYTHONPLUGININSTANCE_IMPL_HPP
