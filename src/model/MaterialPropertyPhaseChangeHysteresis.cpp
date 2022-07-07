@@ -301,6 +301,10 @@ namespace model {
     return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->materialName();
   }
 
+  Material MaterialPropertyPhaseChangeHysteresis::material() const {
+    return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->material();
+  }
+
   double MaterialPropertyPhaseChangeHysteresis::latentHeatduringtheEntirePhaseChangeProcess() const {
     return getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>()->latentHeatduringtheEntirePhaseChangeProcess();
   }

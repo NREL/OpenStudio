@@ -261,6 +261,10 @@ namespace model {
     return getImpl<detail::MaterialPropertyPhaseChange_Impl>()->materialName();
   }
 
+  Material MaterialPropertyPhaseChange::material() const {
+    return getImpl<detail::MaterialPropertyPhaseChange_Impl>()->material();
+  }
+
   double MaterialPropertyPhaseChange::temperatureCoefficientforThermalConductivity() const {
     return getImpl<detail::MaterialPropertyPhaseChange_Impl>()->temperatureCoefficientforThermalConductivity();
   }

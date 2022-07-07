@@ -313,6 +313,10 @@ namespace model {
     return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->materialName();
   }
 
+  Material MaterialPropertyMoisturePenetrationDepthSettings::material() const {
+    return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->material();
+  }
+
   double MaterialPropertyMoisturePenetrationDepthSettings::waterVaporDiffusionResistanceFactor() const {
     return getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>()->waterVaporDiffusionResistanceFactor();
   }
