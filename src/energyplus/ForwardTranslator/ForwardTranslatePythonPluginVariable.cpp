@@ -27,99 +27,42 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_EXTERNALFILE_HPP
-#define MODEL_EXTERNALFILE_HPP
+#include "../ForwardTranslator.hpp"
+#include "../../model/Model.hpp"
 
-#include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
+#include "../../model/PythonPluginVariable.hpp"
 
-#include "../utilities/core/Path.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
+#include <utilities/idd/PythonPlugin_Variables_FieldEnums.hxx>
+// #include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/IddEnums.hxx>
+
+#include <algorithm>
+
+using namespace openstudio::model;
+
+constexpr static auto pythonVariablesName = "Python Plugin Variables";
 
 namespace openstudio {
 
-namespace model {
+namespace energyplus {
 
-  class ScheduleFile;
-  class PythonPluginInstance;
+  boost::optional<IdfObject> ForwardTranslator::translatePythonPluginVariable(model::PythonPluginVariable& modelObject) {
 
-  namespace detail {
+    // Our objects are all translated to a single E+ PythonPlugin:Variables object which is extensible
 
-    class ExternalFile_Impl;
+    auto it = std::find_if(m_idfObjects.begin(), m_idfObjects.end(), [](auto& idfObject) { return idfObject.nameString() == pythonVariablesName; });
+    if (it == m_idfObjects.end()) {
+      auto& pluginVariables = m_idfObjects.emplace_back(openstudio::IddObjectType::PythonPlugin_Variables);
+      pluginVariables.setName(pythonVariablesName);
+      pluginVariables.pushExtensibleGroup({modelObject.nameString()});
+      return pluginVariables;
+    }
 
-  }  // namespace detail
+    it->pushExtensibleGroup({modelObject.nameString()});
+    return *it;
+  }  // End of translate function
 
-  /** ExternalFile is a ResourceObject that wraps the OpenStudio IDD object 'OS:External:File'. */
-  class MODEL_API ExternalFile : public ResourceObject
-  {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
-
-    virtual ~ExternalFile() {}
-
-    //@}
-
-    static IddObjectType iddObjectType();
-
-    static std::vector<std::string> columnSeparatorValues();
-
-    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename);
-
-    /** @name Getters */
-    //@{
-
-    std::string fileName() const;
-
-    path filePath() const;
-
-    //boost::optional<std::string> columnSeparator() const;
-
-    //bool isColumnSeparatorDefaulted() const;
-
-    //@}
-    /** @name Setters */
-    //@{
-
-    //bool setColumnSeparator(const std::string& columnSeparator);
-
-    //void resetColumnSeparator();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //bool isValid();
-
-    std::vector<ScheduleFile> scheduleFiles() const;
-
-    std::vector<PythonPluginInstance> pythonPluginInstances() const;
-
-    //@}
-   protected:
-    /// @cond
-    typedef detail::ExternalFile_Impl ImplType;
-
-    explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
-
-    friend class Model;
-    friend class IdfObject;
-    friend class openstudio::detail::IdfObject_Impl;
-    /// @endcond
-   private:
-    REGISTER_LOGGER("openstudio.model.ExternalFile");
-
-    ExternalFile(const Model& model, const std::string& filename);
-
-    bool setFileName(const std::string& fileName);
-  };
-
-  /** \relates ExternalFile*/
-  typedef boost::optional<ExternalFile> OptionalExternalFile;
-
-  /** \relates ExternalFile*/
-  typedef std::vector<ExternalFile> ExternalFileVector;
-
-}  // namespace model
-}  // namespace openstudio
-
-#endif  // MODEL_EXTERNALFILE_HPP
+}  // end namespace energyplus
+}  // end namespace openstudio

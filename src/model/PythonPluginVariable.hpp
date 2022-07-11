@@ -27,99 +27,76 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_EXTERNALFILE_HPP
-#define MODEL_EXTERNALFILE_HPP
+#ifndef MODEL_PYTHONPLUGINVARIABLE_HPP
+#define MODEL_PYTHONPLUGINVARIABLE_HPP
 
-#include "ModelAPI.hpp"
-#include "ResourceObject.hpp"
-
-#include "../utilities/core/Path.hpp"
+#include <model/ModelAPI.hpp>
+#include "ModelObject.hpp"
 
 namespace openstudio {
-
 namespace model {
 
-  class ScheduleFile;
-  class PythonPluginInstance;
+  class PythonPluginTrendVariable;
+  class PythonPluginOutputVariable;
 
   namespace detail {
 
-    class ExternalFile_Impl;
+    class PythonPluginVariable_Impl;
 
   }  // namespace detail
 
-  /** ExternalFile is a ResourceObject that wraps the OpenStudio IDD object 'OS:External:File'. */
-  class MODEL_API ExternalFile : public ResourceObject
+  /** PythonPluginVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:PythonPlugin:Variable'. */
+  class MODEL_API PythonPluginVariable : public ModelObject
   {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~ExternalFile() {}
+    explicit PythonPluginVariable(const Model& model);
+
+    virtual ~PythonPluginVariable() = default;
 
     //@}
 
     static IddObjectType iddObjectType();
 
-    static std::vector<std::string> columnSeparatorValues();
-
-    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename);
-
     /** @name Getters */
     //@{
-
-    std::string fileName() const;
-
-    path filePath() const;
-
-    //boost::optional<std::string> columnSeparator() const;
-
-    //bool isColumnSeparatorDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    //bool setColumnSeparator(const std::string& columnSeparator);
-
-    //void resetColumnSeparator();
-
     //@}
     /** @name Other */
     //@{
 
-    //bool isValid();
-
-    std::vector<ScheduleFile> scheduleFiles() const;
-
-    std::vector<PythonPluginInstance> pythonPluginInstances() const;
+    std::vector<PythonPluginTrendVariable> pythonPluginTrendVariables() const;
+    std::vector<PythonPluginOutputVariable> pythonPluginOutputVariables() const;
 
     //@}
    protected:
     /// @cond
-    typedef detail::ExternalFile_Impl ImplType;
+    using ImplType = detail::PythonPluginVariable_Impl;
 
-    explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
+    explicit PythonPluginVariable(std::shared_ptr<detail::PythonPluginVariable_Impl> impl);
 
+    friend class detail::PythonPluginVariable_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
     /// @endcond
    private:
-    REGISTER_LOGGER("openstudio.model.ExternalFile");
-
-    ExternalFile(const Model& model, const std::string& filename);
-
-    bool setFileName(const std::string& fileName);
+    REGISTER_LOGGER("openstudio.model.PythonPluginVariable");
   };
 
-  /** \relates ExternalFile*/
-  typedef boost::optional<ExternalFile> OptionalExternalFile;
+  /** \relates PythonPluginVariable*/
+  using OptionalPythonPluginVariable = boost::optional<PythonPluginVariable>;
 
-  /** \relates ExternalFile*/
-  typedef std::vector<ExternalFile> ExternalFileVector;
+  /** \relates PythonPluginVariable*/
+  using PythonPluginVariableVector = std::vector<PythonPluginVariable>;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_EXTERNALFILE_HPP
+#endif  // MODEL_PYTHONPLUGINVARIABLE_HPP
