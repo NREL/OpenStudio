@@ -196,15 +196,16 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_SetGetFields) {
   EXPECT_TRUE(material.setThermalAbsorptance(thermalAbsorptance));
   EXPECT_FALSE(material.isThermalAbsorptanceDefaulted());
   EXPECT_EQ(thermalAbsorptance, material.thermalAbsorptance());
-  EXPECT_EQ(thermalReflectance, material.thermalReflectance());
+  ASSERT_TRUE(material.thermalReflectance());
+  EXPECT_EQ(thermalReflectance, material.thermalReflectance().get());
 
   thermalReflectance = 0.3;
-  thermalAbsorptance = 1.0
-                       - thermalReflectance
+  thermalAbsorptance = 1.0 - thermalReflectance;
 
-                         EXPECT_TRUE(material.setThermalReflectance(thermalReflectance));
+  EXPECT_TRUE(material.setThermalReflectance(thermalReflectance));
   EXPECT_EQ(thermalAbsorptance, material.thermalAbsorptance());
-  EXPECT_EQ(thermalReflectance, material.thermalReflectance());
+  ASSERT_TRUE(material.thermalReflectance());
+  EXPECT_EQ(thermalReflectance, material.thermalReflectance().get());
 
   solarAbsorptance = 0.4;
   solarReflectance = 1.0 - solarAbsorptance;
@@ -212,14 +213,16 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_SetGetFields) {
   EXPECT_TRUE(material.setSolarAbsorptance(solarAbsorptance));
   EXPECT_FALSE(material.isSolarAbsorptanceDefaulted());
   EXPECT_EQ(solarAbsorptance, material.solarAbsorptance());
-  EXPECT_EQ(solarReflectance, material.solarReflectance());
+  ASSERT_TRUE(material.solarReflectance());
+  EXPECT_EQ(solarReflectance, material.solarReflectance().get());
 
   solarReflectance = 0.6;
   solarAbsorptance = 1.0 - solarReflectance;
 
   EXPECT_TRUE(material.setSolarReflectance(solarReflectance));
   EXPECT_EQ(solarAbsorptance, material.solarAbsorptance());
-  EXPECT_EQ(solarReflectance, material.solarReflectance());
+  ASSERT_TRUE(material.solarReflectance());
+  EXPECT_EQ(solarReflectance, material.solarReflectance().get());
 
   visibleAbsorptance = 0.7;
   visibleReflectance = 1.0 - visibleAbsorptance;
@@ -227,14 +230,16 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_SetGetFields) {
   EXPECT_TRUE(material.setVisibleAbsorptance(visibleAbsorptance));
   EXPECT_FALSE(material.isVisibleAbsorptanceDefaulted());
   EXPECT_EQ(visibleAbsorptance, material.visibleAbsorptance());
-  EXPECT_EQ(visibleReflectance, material.visibleReflectance());
+  ASSERT_TRUE(material.visibleReflectance());
+  EXPECT_EQ(visibleReflectance, material.visibleReflectance().get());
 
   visibleReflectance = 0.8;
   visibleAbsorptance = 1.0 - visibleReflectance;
 
   EXPECT_TRUE(material.setVisibleReflectance(visibleReflectance));
   EXPECT_EQ(visibleAbsorptance, material.visibleAbsorptance());
-  EXPECT_EQ(visibleReflectance, material.visibleReflectance());
+  ASSERT_TRUE(material.visibleReflectance());
+  EXPECT_EQ(visibleReflectance, material.visibleReflectance().get());
 
   roughness = "Rough";
 
