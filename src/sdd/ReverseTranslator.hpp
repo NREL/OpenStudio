@@ -42,7 +42,7 @@
 #include "../model/AvailabilityManagerNightCycle.hpp"
 #include "../model/ConstructionBase.hpp"
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
-#include "../model/CoilWaterHeatingAirToWaterHeatPump.hpp"
+#include "../model/WaterHeaterMixed.hpp"
 #include "../model/FanOnOff.hpp"
 
 namespace pugi {
@@ -247,8 +247,7 @@ namespace sdd {
 
     // As CoilWaterHeatingAirToWaterHeatPump objects are translated, this is used to record
     // those that are used for space heating. Custom meters will be setup to do accounting.
-    std::vector<model::CoilWaterHeatingAirToWaterHeatPump> m_spaceHeatingAirToWaterHeatPumps;
-    std::vector<model::FanOnOff> m_spaceHeatingFans;
+    std::vector<model::WaterHeaterMixed> m_spaceHeatingWaterHeaters;
 
     REGISTER_LOGGER("openstudio.sdd.ReverseTranslator");
   };

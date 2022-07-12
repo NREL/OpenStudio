@@ -979,18 +979,15 @@ namespace sdd {
     meter.setInstallLocationType(InstallLocationType::Facility);
     meter.setReportingFrequency("Hourly");
 
-    if (! m_spaceHeatingAirToWaterHeatPumps.empty()) {
+    if (! m_spaceHeatingWaterHeaters.empty()) {
       // Custom meter that adds together the standard "Heating:Electricity",
       // plus the heat pump water heater energy that is used for space heating
       auto customSpaceHeatingMeter = model::MeterCustom(*result);
       customSpaceHeatingMeter.setName("Custom Space Heating Electricity");
       customSpaceHeatingMeter.setFuelType("Electricity");
       customSpaceHeatingMeter.addKeyVarGroup("", "Heating:Electricity");
-      for(const auto coil : m_spaceHeatingAirToWaterHeatPumps) {
-        customSpaceHeatingMeter.addKeyVarGroup(coil.nameString(), "Cooling Coil Water Heating Electricity Energy");
-      }
-      for(const auto fan : m_spaceHeatingFans) {
-        customSpaceHeatingMeter.addKeyVarGroup(fan.nameString(), "Fan Electricity Energy");
+      for(const auto coil : m_spaceHeatingWaterHeaters) {
+        customSpaceHeatingMeter.addKeyVarGroup(coil.nameString(), "Water Heater Electricity Energy");
       }
       meter = model::OutputMeter(*result);
       //meter.setFuelType(FuelType::Electricity);
@@ -1002,8 +999,8 @@ namespace sdd {
       auto customSpaceHeatingDecrement = model::MeterCustomDecrement(*result, "WaterSystems:Electricity");
       customSpaceHeatingDecrement.setName("Custom Water Systems Electricity");
       customSpaceHeatingDecrement.setFuelType("Electricity");
-      for(const auto coil : m_spaceHeatingAirToWaterHeatPumps) {
-        customSpaceHeatingDecrement.addKeyVarGroup(coil.nameString(), "Cooling Coil Water Heating Electricity Energy");
+      for(const auto coil : m_spaceHeatingWaterHeaters) {
+        customSpaceHeatingDecrement.addKeyVarGroup(coil.nameString(), "Water Heater Electricity Energy");
       }
       meter = model::OutputMeter(*result);
       //meter.setFuelType(FuelType::Electricity);
