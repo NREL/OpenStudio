@@ -199,7 +199,7 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_SetGetFields) {
   ASSERT_TRUE(material.thermalReflectance());
   EXPECT_EQ(thermalReflectance, material.thermalReflectance().get());
 
-  thermalReflectance = 0.3;
+  thermalReflectance = 0.31;
   thermalAbsorptance = 1.0 - thermalReflectance;
 
   EXPECT_TRUE(material.setThermalReflectance(thermalReflectance));
@@ -233,7 +233,7 @@ TEST_F(ModelFixture, StandardOpaqueMaterial_SetGetFields) {
   ASSERT_TRUE(material.visibleReflectance());
   EXPECT_EQ(visibleReflectance, material.visibleReflectance().get());
 
-  visibleReflectance = 0.8;
+  visibleReflectance = 0.81;
   visibleAbsorptance = 1.0 - visibleReflectance;
 
   EXPECT_TRUE(material.setVisibleReflectance(visibleReflectance));
