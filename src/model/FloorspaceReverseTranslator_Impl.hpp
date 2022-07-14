@@ -87,11 +87,6 @@ namespace model {
     // A Visitor design pattern class. Each Dispatch method handles creation of OSM
     // concepts from the FloorspaceJS concepts
 
-#if (defined(__GNUC__))
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
-#endif
-
     class FloorspaceReverseTranslator_Impl final : public FSVisitor
     {
      public:
@@ -196,9 +191,6 @@ namespace model {
       static ConstructionAirBoundary getAirWallConstruction(Model& model);
       static std::string getPlenumPostfix(SpaceTypeEnum spaceType);
     };
-#if (defined(__GNUC__))
-#  pragma GCC diagnostic pop
-#endif
 
   }  // namespace detail
 }  // namespace model

@@ -96,7 +96,7 @@ void FSModel::load(const std::string& json) {
       }
 
       for (const auto& windowDefinition : m_value.get("window_definitions", Json::arrayValue)) {
-        m_windowDefinitions.emplace_back(FSWindowDefinition(windowDefinition, *this));
+        m_windowDefinitions.emplace_back(windowDefinition, *this);
       }
 
       for (const auto& doorDefinition : m_value.get("door_definitions", Json::arrayValue)) {
