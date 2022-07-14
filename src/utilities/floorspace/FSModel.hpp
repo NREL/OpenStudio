@@ -87,7 +87,6 @@ class UTILITIES_API FSGeometryBase
 class UTILITIES_API FSVertex : public FSGeometryBase
 {
  public:
-  FSVertex() = default;
   FSVertex(const Json::Value& root, const FSModel& model);
   void load(const Json::Value& root, const FSModel& model);
 
@@ -108,7 +107,6 @@ class FSGeometry;
 class UTILITIES_API FSEdge : public FSGeometryBase
 {
  public:
-  FSEdge() = default;
   FSEdge(const Json::Value& root, const FSGeometry& geometry);
   FSEdge(FSVertex& v1, FSVertex& v2);
   void load(const Json::Value& root, const FSGeometry& geometry);
@@ -127,7 +125,6 @@ class UTILITIES_API FSEdge : public FSGeometryBase
 class UTILITIES_API FSEdgeReference
 {
  public:
-  FSEdgeReference() = default;
   FSEdgeReference(FSEdge edge, int order);
   const FSEdge& edge() const;
   int edgeOrder() const;
@@ -142,7 +139,6 @@ class UTILITIES_API FSEdgeReference
 class UTILITIES_API FSFace : public FSGeometryBase
 {
  public:
-  FSFace() = default;
   FSFace(const Json::Value& root, const FSGeometry& geometry);
   void load(const Json::Value& root, const FSGeometry& geometry);
   std::vector<FSEdgeReference> edgeRefs();
@@ -190,7 +186,6 @@ class UTILITIES_API FSAssignment : public FSBase
 class UTILITIES_API FSThermalZone : public FSAssignment
 {
  public:
-  FSThermalZone() = default;
   FSThermalZone(const Json::Value& root);
 
   void Accept(FSVisitor& visitor) const;
@@ -199,7 +194,6 @@ class UTILITIES_API FSThermalZone : public FSAssignment
 class UTILITIES_API FSBuildingUnit : public FSAssignment
 {
  public:
-  FSBuildingUnit() = default;
   FSBuildingUnit(const Json::Value& root);
 
   void Accept(FSVisitor& visitor) const;
@@ -208,7 +202,6 @@ class UTILITIES_API FSBuildingUnit : public FSAssignment
 class UTILITIES_API FSBuildingType : public FSAssignment
 {
  public:
-  FSBuildingType() = default;
   FSBuildingType(const Json::Value& root);
 
   void Accept(FSVisitor& visitor) const;
@@ -217,7 +210,6 @@ class UTILITIES_API FSBuildingType : public FSAssignment
 class UTILITIES_API FSSpaceType : public FSAssignment
 {
  public:
-  FSSpaceType() = default;
   FSSpaceType(const Json::Value& root);
 
   void Accept(FSVisitor& visitor) const;
@@ -226,7 +218,6 @@ class UTILITIES_API FSSpaceType : public FSAssignment
 class UTILITIES_API FSConstructionSet : public FSAssignment
 {
  public:
-  FSConstructionSet() = default;
   FSConstructionSet(const Json::Value& root);
 
   void Accept(FSVisitor& visitor) const;
@@ -238,7 +229,6 @@ class FSSpace;
 class UTILITIES_API FSDaylightingControlDefinition : public FSBase
 {
  public:
-  FSDaylightingControlDefinition() = default;
   FSDaylightingControlDefinition(const Json::Value& root, const FSModel& model);
 
   void Accept(FSVisitor& visitor) const;
@@ -254,7 +244,6 @@ class UTILITIES_API FSDaylightingControlDefinition : public FSBase
 class UTILITIES_API FSDaylightingControl : public FSBase
 {
  public:
-  FSDaylightingControl() = default;
   FSDaylightingControl(const Json::Value& root, const FSModel& model, FSStory& story);
 
   void Accept(FSVisitor& visitor) const;
@@ -271,7 +260,6 @@ class UTILITIES_API FSDaylightingControl : public FSBase
 class UTILITIES_API FSSpace : public FSBase
 {
  public:
-  FSSpace() = default;
   FSSpace(const Json::Value& root, const FSModel& model, FSStory& story);
   void Accept(FSVisitor& visitor) const;
 
@@ -309,7 +297,6 @@ class UTILITIES_API FSSpace : public FSBase
 class UTILITIES_API FSWindowDefinition : public FSBase
 {
  public:
-  FSWindowDefinition() = default;
   FSWindowDefinition(const Json::Value& root, const FSModel& model);
   void Accept(FSVisitor& visitor) const;
 
@@ -360,7 +347,6 @@ class UTILITIES_API FSFiller : public FSBase
 class UTILITIES_API FSWindow : public FSFiller
 {
  public:
-  FSWindow() = default;
   FSWindow(const Json::Value& root, const FSModel& model, FSStory& story);
   void Accept(FSVisitor& visitor) const;
 
@@ -373,7 +359,6 @@ class UTILITIES_API FSWindow : public FSFiller
 class UTILITIES_API FSDoorDefinition : public FSBase
 {
  public:
-  FSDoorDefinition() = default;
   FSDoorDefinition(const Json::Value& root, const FSModel& model);
 
   void Accept(FSVisitor& visitor) const;
@@ -391,7 +376,6 @@ class UTILITIES_API FSDoorDefinition : public FSBase
 class UTILITIES_API FSDoor : public FSFiller
 {
  public:
-  FSDoor() = default;
   FSDoor(const Json::Value& root, const FSModel& model, FSStory& story);
 
   void Accept(FSVisitor& visitor) const;
@@ -404,7 +388,6 @@ class UTILITIES_API FSDoor : public FSFiller
 class UTILITIES_API FSShading : public FSBase
 {
  public:
-  FSShading() = default;
   FSShading(const Json::Value& root, FSStory& story);
 
   void Accept(FSVisitor& visitor) const;
@@ -418,7 +401,6 @@ class UTILITIES_API FSShading : public FSBase
 class UTILITIES_API FSStory : public FSBase
 {
  public:
-  FSStory() = default;
   FSStory(const Json::Value& root, const FSModel& model);
   void Accept(FSVisitor& visitor) const;
 
