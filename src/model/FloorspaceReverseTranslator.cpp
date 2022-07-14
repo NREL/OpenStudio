@@ -88,7 +88,6 @@ namespace model {
   static constexpr auto BELOWFLOORPLENUMPOSTFIX(" Floor Plenum");
   static constexpr auto ABOVECEILINGPLENUMPOSTFIX(" Plenum");
   static constexpr auto PLENUMSPACETYPENAME("Plenum Space Type");  // DLM: needs to be coordinated with name in Model_Impl::plenumSpaceType()
-  static constexpr auto PLENUMCOLOR("#C0C0C0");                    // DLM: needs to be coordinated with plenum colors in makeStandardThreeMaterials
 
   // TODO: Creating surfaces for spaces and creatig shading surfaces for building shading have
   // a lot of code in common but there are significant differences also. At some point we
