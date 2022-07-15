@@ -125,7 +125,7 @@ class UTILITIES_API FSEdge : public FSGeometryBase
 class UTILITIES_API FSEdgeReference
 {
  public:
-  FSEdgeReference(FSEdge edge, int order);
+  FSEdgeReference(FSEdge edge, int edgeOrder);
   const FSEdge& edge() const;
   int edgeOrder() const;
   // Gets the next vertex as determined by the edge order
@@ -141,7 +141,7 @@ class UTILITIES_API FSFace : public FSGeometryBase
  public:
   FSFace(const Json::Value& root, const FSGeometry& geometry);
   void load(const Json::Value& root, const FSGeometry& geometry);
-  std::vector<FSEdgeReference> edgeRefs();
+  std::vector<FSEdgeReference> edgeRefs() const;
   void setEdgeRefs(std::vector<FSEdgeReference> edgeRefs);
 
  private:
@@ -188,7 +188,7 @@ class UTILITIES_API FSThermalZone : public FSAssignment
  public:
   FSThermalZone(const Json::Value& root);
 
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 };
 
 class UTILITIES_API FSBuildingUnit : public FSAssignment
@@ -196,7 +196,7 @@ class UTILITIES_API FSBuildingUnit : public FSAssignment
  public:
   FSBuildingUnit(const Json::Value& root);
 
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 };
 
 class UTILITIES_API FSBuildingType : public FSAssignment
@@ -204,7 +204,7 @@ class UTILITIES_API FSBuildingType : public FSAssignment
  public:
   FSBuildingType(const Json::Value& root);
 
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 };
 
 class UTILITIES_API FSSpaceType : public FSAssignment
@@ -212,7 +212,7 @@ class UTILITIES_API FSSpaceType : public FSAssignment
  public:
   FSSpaceType(const Json::Value& root);
 
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 };
 
 class UTILITIES_API FSConstructionSet : public FSAssignment
@@ -220,7 +220,7 @@ class UTILITIES_API FSConstructionSet : public FSAssignment
  public:
   FSConstructionSet(const Json::Value& root);
 
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 };
 
 class FSStory;
@@ -231,7 +231,7 @@ class UTILITIES_API FSDaylightingControlDefinition : public FSBase
  public:
   FSDaylightingControlDefinition(const Json::Value& root, const FSModel& model);
 
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 
   double illuminanceSetpoint() const;
   double height() const;
@@ -261,7 +261,7 @@ class UTILITIES_API FSSpace : public FSBase
 {
  public:
   FSSpace(const Json::Value& root, const FSModel& model, FSStory& story);
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 
   boost::optional<FSThermalZone> thermalZone() const;
   boost::optional<FSBuildingUnit> buildingUnit() const;
@@ -291,14 +291,14 @@ class UTILITIES_API FSSpace : public FSBase
   bool m_openToBelow = false;
   int m_multiplier = 1;
   std::vector<FSDaylightingControl> m_daylightingControls;
-  void simplifyFace(FSGeometry& geometry);
+  void simplifyFace(const FSGeometry& geometry);
 };
 
 class UTILITIES_API FSWindowDefinition : public FSBase
 {
  public:
   FSWindowDefinition(const Json::Value& root, const FSModel& model);
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 
   std::string windowDefinitionMode() const;
   double wwr() const;
@@ -348,7 +348,7 @@ class UTILITIES_API FSWindow : public FSFiller
 {
  public:
   FSWindow(const Json::Value& root, const FSModel& model, FSStory& story);
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 
   boost::optional<FSWindowDefinition> windowDefinition() const;
 
@@ -361,7 +361,7 @@ class UTILITIES_API FSDoorDefinition : public FSBase
  public:
   FSDoorDefinition(const Json::Value& root, const FSModel& model);
 
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 
   double height() const;
   double width() const;
@@ -378,7 +378,7 @@ class UTILITIES_API FSDoor : public FSFiller
  public:
   FSDoor(const Json::Value& root, const FSModel& model, FSStory& story);
 
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
   boost::optional<FSDoorDefinition> doorDefinition() const;
 
  private:
@@ -390,7 +390,7 @@ class UTILITIES_API FSShading : public FSBase
  public:
   FSShading(const Json::Value& root, FSStory& story);
 
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 
   boost::optional<FSFace> face() const;
 
@@ -402,7 +402,7 @@ class UTILITIES_API FSStory : public FSBase
 {
  public:
   FSStory(const Json::Value& root, const FSModel& model);
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 
   double getBelowFloorPlenumHeight() const;
   double floorToCeilingHeight() const;
@@ -508,7 +508,7 @@ class UTILITIES_API FSModel
   boost::optional<FSThermalZone> thermalZone(const std::string& thermalZoneId) const;
   boost::optional<FSBuildingUnit> buildingUnit(const std::string& buildingUnitId) const;
   boost::optional<FSBuildingType> buildingType(const std::string& buildingTypeId) const;
-  boost::optional<FSSpaceType> spaceType(const std::string& spacetypeId) const;
+  boost::optional<FSSpaceType> spaceType(const std::string& spaceTypeId) const;
   boost::optional<FSConstructionSet> constructionSet(const std::string& constructionSetId) const;
   boost::optional<FSDaylightingControlDefinition> daylightingControlDefinition(const std::string& daylightingControlDefinitionId) const;
   boost::optional<FSWindowDefinition> windowDefinition(const std::string& windowDefinitionId) const;

@@ -526,10 +526,21 @@ void FSConstructionSet::Accept(FSVisitor& visitor) const {
 FSSpace::FSSpace(const Json::Value& root, const FSModel& model, FSStory& story)
   : FSBase(root), m_story(story), m_belowFloorPlenumHeight(story.getBelowFloorPlenumHeight()) {
 
-  m_thermalZone = model.thermalZone(root.get("thermal_zone_id", "").asString());
-  m_buildingUnit = model.buildingUnit(root.get("building_unit_id", "").asString());
-  m_spaceType = model.spaceType(root.get("space_type_id", "").asString());
-  m_constructionSet = model.constructionSet(root.get("construction_set_id", "").asString());
+  if (checkKeyAndType(root, "thermal_zone_id", Json::stringValue)) {
+    m_thermalZone = model.thermalZone(root.get("thermal_zone_id", "").asString());
+  }
+
+  if (checkKeyAndType(root, "building_unit_id", Json::stringValue)) {
+    m_buildingUnit = model.buildingUnit(root.get("building_unit_id", "").asString());
+  }
+
+  if (checkKeyAndType(root, "space_type_id", Json::stringValue)) {
+    m_spaceType = model.spaceType(root.get("space_type_id", "").asString());
+  }
+
+  if (checkKeyAndType(root, "construction_set_id", Json::stringValue)) {
+    m_constructionSet = model.constructionSet(root.get("construction_set_id", "").asString());
+  }
 
   // Heights are optional, if not defined then the value is inherited from the story, if
   // defined then the value overrides the value from the story
@@ -624,7 +635,7 @@ void FSSpace::Accept(FSVisitor& visitor) const {
   visitor.Dispatch(*this);
 }
 
-void FSSpace::simplifyFace(FSGeometry& geometry) {
+void FSSpace::simplifyFace(const FSGeometry& geometry) {
   Point3dVector faceVertices;
   for (const auto& edgeRef : m_face->edgeRefs()) {
     const FSVertex& vertex = edgeRef.getNextVertex();
@@ -704,10 +715,10 @@ boost::optional<FSVertex> FSGeometry::vertex(const std::string& id) const {
   return boost::none;
 }
 
-boost::optional<FSVertex> FSGeometry::vertex(const Point3d& p) const {
+boost::optional<FSVertex> FSGeometry::vertex(const Point3d& point) const {
   double tol = 0.01;
   for (const auto& vertex : m_vertices) {
-    if (std::abs(vertex.x() - p.x()) < tol && std::abs(vertex.y() - p.y()) < tol) {
+    if (std::abs(vertex.x() - point.x()) < tol && std::abs(vertex.y() - point.y()) < tol) {
       return vertex;
     }
   }
@@ -861,7 +872,7 @@ void FSFace::load(const Json::Value& root, const FSGeometry& geometry) {
   }
 }
 
-std::vector<FSEdgeReference> FSFace::edgeRefs() {
+std::vector<FSEdgeReference> FSFace::edgeRefs() const {
   return m_edgeRefs;
 }
 
@@ -987,7 +998,6 @@ void FSShading::Accept(FSVisitor& visitor) const {
 
 FSDaylightingControl::FSDaylightingControl(const Json::Value& root, const FSModel& model, FSStory& story) : FSBase(root) {
 
-  std::string vertex_id = root.get("vertex_id", "").asString();
   if (checkKeyAndType(root, "vertex_id", Json::stringValue)) {
     std::string vertex_id = root.get("vertex_id", "").asString();
     m_vertex = story.geometry().vertex(vertex_id);
