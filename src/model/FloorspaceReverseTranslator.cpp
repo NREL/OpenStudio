@@ -284,6 +284,8 @@ namespace model {
       m_currentStoryZ += fsEntity.floorToFloorHeight();
 
       MapHandles(fsEntity, buildingStory);
+
+      m_currentStory = boost::none;
     }
 
     void FloorspaceReverseTranslator_Impl::Dispatch(const FSThermalZone& fsEntity) {
@@ -880,10 +882,11 @@ namespace model {
     std::vector<BuildingStory> stories = SortStoriesByElevationAndName(model);
 
     // map of story index to sorted spaces
-    std::map<unsigned, std::vector<Space>> sortedSpaces;
+    std::vector<std::vector<Space>> sortedSpaces;
+
     for (unsigned i = 0; i < stories.size(); ++i) {
       std::vector<Space> spaces = SortSpacesByAreaAndName(stories[i]);
-      sortedSpaces[i] = spaces;
+      sortedSpaces.push_back(spaces);
     }
 
     // Intersect between stories

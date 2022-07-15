@@ -453,7 +453,7 @@ bool FSStory::imageVisible() const {
   return m_image_visible;
 }
 
-FSGeometry& FSStory::geometry() {
+const FSGeometry& FSStory::geometry() {
   return m_geometry;
 }
 
@@ -524,7 +524,7 @@ void FSConstructionSet::Accept(FSVisitor& visitor) const {
 ///////////////////////////////////////////////////////////////////////////////////
 
 FSSpace::FSSpace(const Json::Value& root, const FSModel& model, FSStory& story)
-  : FSBase(root), m_story(story), m_belowFloorPlenumHeight(story.getBelowFloorPlenumHeight()) {
+  : FSBase(root), m_belowFloorPlenumHeight(story.getBelowFloorPlenumHeight()) {
 
   if (checkKeyAndType(root, "thermal_zone_id", Json::stringValue)) {
     m_thermalZone = model.thermalZone(root.get("thermal_zone_id", "").asString());
@@ -594,10 +594,6 @@ boost::optional<FSSpaceType> FSSpace::spaceType() const {
 boost::optional<FSConstructionSet> FSSpace::constructionSet() const {
   return m_constructionSet;
 }
-
-//boost::optional<FSStory&> FSSpace::getStory() const {
-//  return m_story;
-//}
 
 boost::optional<FSFace> FSSpace::face() const {
   return m_face;
