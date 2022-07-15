@@ -35,11 +35,13 @@
   #include <model/FloorplanJSForwardTranslator.hpp>
   #include <model/ThreeJSForwardTranslator.hpp>
   #include <model/ThreeJSReverseTranslator.hpp>
+  #include <model/FloorspaceReverseTranslator.hpp>
   #include <model/ModelMerger.hpp>
 %}
 %include <model/FloorplanJSForwardTranslator.hpp>
 %include <model/ThreeJSForwardTranslator.hpp>
 %include <model/ThreeJSReverseTranslator.hpp>
+%include <model/FloorspaceReverseTranslator.hpp>
 %include <model/ModelMerger.hpp>
 
 

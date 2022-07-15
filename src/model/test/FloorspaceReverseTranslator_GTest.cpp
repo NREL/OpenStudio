@@ -70,7 +70,6 @@
 #include "../../utilities/geometry/FloorplanJS.hpp"
 #include "../../utilities/geometry/Geometry.hpp"
 #include "../../utilities/units/QuantityConverter.hpp"
-#include "../../utilities/floorspace/FSModel.hpp"
 #include <boost/optional/optional_io.hpp>
 
 using namespace openstudio;
@@ -309,11 +308,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_SimpleTest) {
   ASSERT_TRUE(model);
   model->save(resourcesPath() / toPath("utilities/Geometry/floorspaceviathreejs.osm"), true);
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
-
   FloorspaceReverseTranslator frt;
-  boost::optional<Model> model1 = frt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model1 = frt.modelFromFloorspace(toString(p));
   ASSERT_TRUE(model1);
 
   model1->save(resourcesPath() / toPath("utilities/Geometry/floorspacedirect.osm"), true);
@@ -328,11 +324,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
-
   FloorspaceReverseTranslator rt;
-  boost::optional<Model> model = rt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = rt.modelFromFloorspace(toString(p));
   ASSERT_TRUE(model);
 
   model->save(resourcesPath() / toPath("model/FloorplanToThreeJSNonTriangulatedToModel.osm"), true);
@@ -345,11 +338,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_SurfaceMatch) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/surface_match_floorplan.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
-
   FloorspaceReverseTranslator frt;
-  boost::optional<Model> model = frt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = frt.modelFromFloorspace(toString(p));
   ASSERT_TRUE(model);
 
   model->save(resourcesPath() / toPath("model/surface_match_floorplan.osm"), true);
@@ -395,10 +385,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_Doors) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan_doors.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator frt;
-  boost::optional<Model> model = frt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = frt.modelFromFloorspace(toString(p));
   ASSERT_TRUE(model);
 
   model->save(resourcesPath() / toPath("model/floorplan_doors.osm"), true);
@@ -487,10 +475,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_Windows) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/window_floorplan.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator frt;
-  boost::optional<Model> model = frt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = frt.modelFromFloorspace(toString(p));
 
   model->save(resourcesPath() / toPath("model/floorplan_windows.osm"), true);
 
@@ -600,10 +586,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_SimAUD_Paper) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan-paper.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator rt;
-  boost::optional<Model> model = rt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = rt.modelFromFloorspace(toString(p));
 
   openstudio::path outpath = resourcesPath() / toPath("model/floorplan-paper.osm");
   model->save(outpath, true);
@@ -625,10 +609,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_Shading) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan_shading.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator frt;
-  boost::optional<Model> model = frt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = frt.modelFromFloorspace(toString(p));
 
   openstudio::path outpath = resourcesPath() / toPath("model/floorplan_shading.osm");
   model->save(outpath, true);
@@ -650,10 +632,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_SplitLevel) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/split_level.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator rt;
-  boost::optional<Model> model = rt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = rt.modelFromFloorspace(toString(p));
 
   openstudio::path outpath = resourcesPath() / toPath("model/split_level.osm");
   model->save(outpath, true);
@@ -748,10 +728,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_StorySpaceHeights) 
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/story_space_heights.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator rt;
-  boost::optional<Model> model = rt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = rt.modelFromFloorspace(toString(p));
 
   openstudio::path outpath = resourcesPath() / toPath("model/story_space_heights.osm");
   model->save(outpath, true);
@@ -913,10 +891,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_Colors) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan_colors.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator rt;
-  boost::optional<Model> model = rt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = rt.modelFromFloorspace(toString(p));
 
   openstudio::path outpath = resourcesPath() / toPath("model/floorplan_colors.osm");
   model->save(outpath, true);
@@ -982,10 +958,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_DifferingNumVertice
   boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
   ASSERT_TRUE(floorPlan);
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator rt;
-  boost::optional<Model> model = rt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = rt.modelFromFloorspace(toString(p));
 
   openstudio::path outpath = resourcesPath() / toPath("model/floorplan_differing_num_vertices.osm");
   model->save(outpath, true);
@@ -1061,10 +1035,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_School) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan_school.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator rt;
-  boost::optional<Model> model = rt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = rt.modelFromFloorspace(toString(p));
 
   auto handleMapping = rt.handleMapping();
   EXPECT_EQ(46, handleMapping.size());
@@ -1172,10 +1144,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_StoryMultipliers) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/story_multipliers.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator frt;
-  boost::optional<Model> model = frt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = frt.modelFromFloorspace(toString(p));
 
   openstudio::path outpath = resourcesPath() / toPath("model/story_multipliers.osm");
   model->save(outpath, true);
@@ -1198,10 +1168,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_StoryMultipliers2) 
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/story_multipliers2.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator frt;
-  boost::optional<Model> model = frt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = frt.modelFromFloorspace(toString(p));
 
   openstudio::path outpath = resourcesPath() / toPath("model/story_multipliers2.osm");
   model->save(outpath, true);
@@ -1224,10 +1192,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_OpenToBelow) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/open_to_below.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator rt;
-  boost::optional<Model> model = rt.modelFromFloorspace(fsModel);
+  boost::optional<Model> model = rt.modelFromFloorspace(toString(p));
 
   openstudio::path outpath = resourcesPath() / toPath("model/open_to_below.osm");
   model->save(outpath, true);
@@ -1356,10 +1322,8 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_Site_ClimateZones_4
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
   ASSERT_TRUE(exists(p));
 
-  FSModel fsModel;
-  fsModel.load(toString(p));
   FloorspaceReverseTranslator frt;
-  boost::optional<Model> newModel_ = frt.modelFromFloorspace(fsModel);
+  boost::optional<Model> newModel_ = frt.modelFromFloorspace(toString(p));
 
   EXPECT_TRUE(model.getOptionalUniqueModelObject<ClimateZones>());
   EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<ClimateZones>());

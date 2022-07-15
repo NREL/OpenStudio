@@ -854,11 +854,9 @@ namespace model {
     m_logSink.setThreadId(std::this_thread::get_id());
   }
 
-  boost::optional<Model> FloorspaceReverseTranslator::modelFromFloorspace(FSModel const& fsModel) {
-
-    // Reset the log sink before translation
-    m_logSink.setThreadId(std::this_thread::get_id());
-    m_logSink.resetStringStream();
+  boost::optional<Model> FloorspaceReverseTranslator::modelFromFloorspace(const std::string& jsonOrPath) {
+    FSModel fsModel;
+    fsModel.load(toString(jsonOrPath));
 
     Model model;
     detail::FloorspaceReverseTranslator_Impl visitor(model);
@@ -872,6 +870,25 @@ namespace model {
 
     return model;
   }
+
+  //boost::optional<Model> FloorspaceReverseTranslator::modelFromFloorspace(FSModel const& fsModel) {
+
+  //  // Reset the log sink before translation
+  //  m_logSink.setThreadId(std::this_thread::get_id());
+  //  m_logSink.resetStringStream();ll takes a
+
+  //  Model model;
+  //  detail::FloorspaceReverseTranslator_Impl visitor(model);
+  //  fsModel.Accept(visitor);
+
+  //  // Do some intersections - the logic is lifted form the ThreeJS reverse translator
+  //  DoSurfaceMatchingAndIntersection(model);
+
+  //  // Get the handle map
+  //  m_handleMapping = visitor.handleMapping();
+
+  //  return model;
+  //}
 
   std::map<UUID, UUID> FloorspaceReverseTranslator::handleMapping() const {
     return m_handleMapping;
