@@ -246,7 +246,7 @@ class UTILITIES_API FSDaylightingControl : public FSBase
  public:
   FSDaylightingControl(const Json::Value& root, const FSModel& model, FSStory& story);
 
-  void Accept(FSVisitor& visitor) const;
+  void Accept(FSVisitor& visitor) const override;
 
   boost::optional<FSVertex> vertex() const;
   const Point3d& point() const;
