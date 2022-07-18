@@ -410,7 +410,7 @@ class UTILITIES_API FSStory : public FSBase
   double nominalZCoordinate() const;
   int multiplier() const;
   bool imageVisible() const;
-  const FSGeometry& geometry();
+  const FSGeometry& geometry() const;
   std::vector<FSSpace> spaces() const;
   std::vector<FSWindow> windows() const;
   std::vector<FSDoor> doors() const;

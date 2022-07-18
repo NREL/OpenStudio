@@ -453,7 +453,7 @@ bool FSStory::imageVisible() const {
   return m_image_visible;
 }
 
-const FSGeometry& FSStory::geometry() {
+const FSGeometry& FSStory::geometry() const {
   return m_geometry;
 }
 
