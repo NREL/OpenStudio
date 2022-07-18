@@ -897,7 +897,7 @@ const FSVertex& FSEdgeReference::getNextVertex() const {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSFiller::FSFiller(const Json::Value& root, FSStory& story) : FSBase(root) {
+FSFiller::FSFiller(const Json::Value& root, const FSStory& story) : FSBase(root) {
 
   // Alhpa can be a single value or a list
   if (root.isMember("alpha") && root["alpha"].isConvertibleTo(Json::realValue)) {
@@ -973,7 +973,7 @@ boost::optional<FSDoorDefinition> FSDoor::doorDefinition() const {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSShading::FSShading(const Json::Value& root, FSStory& story) : FSBase(root) {
+FSShading::FSShading(const Json::Value& root, const FSStory& story) : FSBase(root) {
 
   // Get the face. Note: a shading must have a face for it to be added to the model
   if (checkKeyAndType(root, "face_id", Json::stringValue)) {
@@ -992,7 +992,7 @@ void FSShading::Accept(FSVisitor& visitor) const {
 
 ///////////////////////////////////////////////////////////////////////////////////
 
-FSDaylightingControl::FSDaylightingControl(const Json::Value& root, const FSModel& model, FSStory& story) : FSBase(root) {
+FSDaylightingControl::FSDaylightingControl(const Json::Value& root, const FSModel& model, const FSStory& story) : FSBase(root) {
 
   if (checkKeyAndType(root, "vertex_id", Json::stringValue)) {
     std::string vertex_id = root.get("vertex_id", "").asString();

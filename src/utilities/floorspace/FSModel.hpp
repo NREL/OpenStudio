@@ -244,7 +244,7 @@ class UTILITIES_API FSDaylightingControlDefinition : public FSBase
 class UTILITIES_API FSDaylightingControl : public FSBase
 {
  public:
-  explicit FSDaylightingControl(const Json::Value& root, const FSModel& model, FSStory& story);
+  explicit FSDaylightingControl(const Json::Value& root, const FSModel& model, const FSStory& story);
 
   void Accept(FSVisitor& visitor) const override;
 
@@ -326,7 +326,7 @@ class UTILITIES_API FSFiller : public FSBase
 {
  public:
   explicit FSFiller() = default;
-  explicit FSFiller(const Json::Value& root, FSStory& story);
+  explicit FSFiller(const Json::Value& root, const FSStory& story);
 
   boost::optional<FSEdge> edge() const;
   boost::optional<FSSpace> space() const;
@@ -387,7 +387,7 @@ class UTILITIES_API FSDoor : public FSFiller
 class UTILITIES_API FSShading : public FSBase
 {
  public:
-  explicit FSShading(const Json::Value& root, FSStory& story);
+  explicit FSShading(const Json::Value& root, const FSStory& story);
 
   void Accept(FSVisitor& visitor) const override;
 
