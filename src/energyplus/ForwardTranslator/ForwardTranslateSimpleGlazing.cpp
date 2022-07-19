@@ -66,21 +66,6 @@ namespace energyplus {
       idfObject.setDouble(WindowMaterial_SimpleGlazingSystemFields::VisibleTransmittance, *d);
     }
 
-    // Call the translation of these objects, which has two advantages:
-    // * will not translate them if they are orphaned (=not referencing a material), and,
-    // * makes the order of these objects in the IDF deterministic
-    if (boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> _empd = modelObject.materialPropertyMoisturePenetrationDepthSettings()) {
-      translateAndMapModelObject(_empd.get());
-    }
-
-    if (boost::optional<MaterialPropertyPhaseChange> _phaseChange = modelObject.materialPropertyPhaseChange()) {
-      translateAndMapModelObject(_phaseChange.get());
-    }
-
-    if (boost::optional<MaterialPropertyPhaseChangeHysteresis> _phaseChangeHysteresis = modelObject.materialPropertyPhaseChangeHysteresis()) {
-      translateAndMapModelObject(_phaseChangeHysteresis.get());
-    }
-
     return boost::optional<IdfObject>(idfObject);
   }
 

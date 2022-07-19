@@ -34,12 +34,6 @@
 
 #include "Model.hpp"
 #include "Model_Impl.hpp"
-#include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
-#include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
-#include "MaterialPropertyPhaseChange.hpp"
-#include "MaterialPropertyPhaseChange_Impl.hpp"
-#include "MaterialPropertyPhaseChangeHysteresis.hpp"
-#include "MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
 
 #include "../utilities/core/Assert.hpp"
 
@@ -58,18 +52,6 @@ namespace model {
 
     std::vector<ModelObject> Material_Impl::children() const {
       std::vector<ModelObject> results(castVector<ModelObject>(getObject<Material>().getModelObjectSources<StandardsInformationMaterial>()));
-
-      if (boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> empd = this->materialPropertyMoisturePenetrationDepthSettings()) {
-        results.push_back(empd.get());
-      }
-
-      if (boost::optional<MaterialPropertyPhaseChange> phaseChange = this->materialPropertyPhaseChange()) {
-        results.push_back(phaseChange.get());
-      }
-
-      if (boost::optional<MaterialPropertyPhaseChangeHysteresis> phaseChangeHysteresis = this->materialPropertyPhaseChangeHysteresis()) {
-        results.push_back(phaseChangeHysteresis.get());
-      }
 
       return results;
     }
@@ -104,122 +86,6 @@ namespace model {
       return StandardsInformationMaterial(getObject<Material>());
     }
 
-    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> Material_Impl::createMaterialPropertyMoisturePenetrationDepthSettings(
-      double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB,
-      double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness,
-      double coatingLayerWaterVaporDiffusionResistanceFactor) {
-      Material thisMaterial = getObject<Material>();
-      std::vector<MaterialPropertyMoisturePenetrationDepthSettings> empds =
-        thisMaterial.getModelObjectSources<MaterialPropertyMoisturePenetrationDepthSettings>(
-          MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType());
-      if (!empds.empty()) {
-        return boost::none;
-      }
-
-      MaterialPropertyMoisturePenetrationDepthSettings empd(thisMaterial, waterVaporDiffusionResistanceFactor, moistureEquationCoefficientA,
-                                                            moistureEquationCoefficientB, moistureEquationCoefficientC, moistureEquationCoefficientD,
-                                                            coatingLayerThickness, coatingLayerWaterVaporDiffusionResistanceFactor);
-      return empd;
-    }
-
-    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> Material_Impl::materialPropertyMoisturePenetrationDepthSettings() const {
-      std::vector<MaterialPropertyMoisturePenetrationDepthSettings> empds =
-        getObject<ModelObject>().getModelObjectSources<MaterialPropertyMoisturePenetrationDepthSettings>(
-          MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType());
-      if (empds.empty()) {
-        // no error
-      } else if (empds.size() == 1) {
-        return empds[0];
-      } else {
-        // error
-      }
-      return boost::none;
-    }
-
-    void Material_Impl::resetMaterialPropertyMoisturePenetrationDepthSettings() {
-      boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> empd = this->materialPropertyMoisturePenetrationDepthSettings();
-      if (empd) {
-        empd->remove();
-      }
-    }
-
-    boost::optional<MaterialPropertyPhaseChange> Material_Impl::createMaterialPropertyPhaseChange() {
-      Material thisMaterial = getObject<Material>();
-      std::vector<MaterialPropertyPhaseChange> phaseChanges =
-        thisMaterial.getModelObjectSources<MaterialPropertyPhaseChange>(MaterialPropertyPhaseChange::iddObjectType());
-      if (!phaseChanges.empty()) {
-        return boost::none;
-      }
-
-      MaterialPropertyPhaseChange phaseChange(thisMaterial);
-      return phaseChange;
-    }
-
-    boost::optional<MaterialPropertyPhaseChange>
-      Material_Impl::createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys) {
-      Material thisMaterial = getObject<Material>();
-      std::vector<MaterialPropertyPhaseChange> phaseChanges =
-        thisMaterial.getModelObjectSources<MaterialPropertyPhaseChange>(MaterialPropertyPhaseChange::iddObjectType());
-      if (!phaseChanges.empty()) {
-        return boost::none;
-      }
-
-      MaterialPropertyPhaseChange phaseChange(thisMaterial, temperatureEnthalpys);
-      return phaseChange;
-    }
-
-    boost::optional<MaterialPropertyPhaseChange> Material_Impl::materialPropertyPhaseChange() const {
-      std::vector<MaterialPropertyPhaseChange> phaseChanges =
-        getObject<ModelObject>().getModelObjectSources<MaterialPropertyPhaseChange>(MaterialPropertyPhaseChange::iddObjectType());
-      if (phaseChanges.empty()) {
-        // no error
-      } else if (phaseChanges.size() == 1) {
-        return phaseChanges[0];
-      } else {
-        // error
-      }
-      return boost::none;
-    }
-
-    void Material_Impl::resetMaterialPropertyPhaseChange() {
-      boost::optional<MaterialPropertyPhaseChange> phaseChange = this->materialPropertyPhaseChange();
-      if (phaseChange) {
-        phaseChange->remove();
-      }
-    }
-
-    boost::optional<MaterialPropertyPhaseChangeHysteresis> Material_Impl::createMaterialPropertyPhaseChangeHysteresis() {
-      Material thisMaterial = getObject<Material>();
-      std::vector<MaterialPropertyPhaseChangeHysteresis> phaseChangeHysteresiss =
-        thisMaterial.getModelObjectSources<MaterialPropertyPhaseChangeHysteresis>(MaterialPropertyPhaseChangeHysteresis::iddObjectType());
-      if (!phaseChangeHysteresiss.empty()) {
-        return boost::none;
-      }
-
-      MaterialPropertyPhaseChangeHysteresis phaseChangeHysteresis(thisMaterial);
-      return phaseChangeHysteresis;
-    }
-
-    boost::optional<MaterialPropertyPhaseChangeHysteresis> Material_Impl::materialPropertyPhaseChangeHysteresis() const {
-      std::vector<MaterialPropertyPhaseChangeHysteresis> phaseChangeHysteresiss =
-        getObject<ModelObject>().getModelObjectSources<MaterialPropertyPhaseChangeHysteresis>(MaterialPropertyPhaseChangeHysteresis::iddObjectType());
-      if (phaseChangeHysteresiss.empty()) {
-        // no error
-      } else if (phaseChangeHysteresiss.size() == 1) {
-        return phaseChangeHysteresiss[0];
-      } else {
-        // error
-      }
-      return boost::none;
-    }
-
-    void Material_Impl::resetMaterialPropertyPhaseChangeHysteresis() {
-      boost::optional<MaterialPropertyPhaseChangeHysteresis> phaseChangeHysteresis = this->materialPropertyPhaseChangeHysteresis();
-      if (phaseChangeHysteresis) {
-        phaseChangeHysteresis->remove();
-      }
-    }
-
   }  // namespace detail
 
   Material::Material(IddObjectType type, const Model& model) : ResourceObject(type, model) {
@@ -248,53 +114,6 @@ namespace model {
 
   StandardsInformationMaterial Material::standardsInformation() const {
     return getImpl<detail::Material_Impl>()->standardsInformation();
-  }
-
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings>
-    Material::createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA,
-                                                                     double moistureEquationCoefficientB, double moistureEquationCoefficientC,
-                                                                     double moistureEquationCoefficientD, double coatingLayerThickness,
-                                                                     double coatingLayerWaterVaporDiffusionResistanceFactor) {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyMoisturePenetrationDepthSettings(
-      waterVaporDiffusionResistanceFactor, moistureEquationCoefficientA, moistureEquationCoefficientB, moistureEquationCoefficientC,
-      moistureEquationCoefficientD, coatingLayerThickness, coatingLayerWaterVaporDiffusionResistanceFactor);
-  }
-
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> Material::materialPropertyMoisturePenetrationDepthSettings() const {
-    return getImpl<detail::Material_Impl>()->materialPropertyMoisturePenetrationDepthSettings();
-  }
-
-  void Material::resetMaterialPropertyMoisturePenetrationDepthSettings() {
-    getImpl<detail::Material_Impl>()->resetMaterialPropertyMoisturePenetrationDepthSettings();
-  }
-
-  boost::optional<MaterialPropertyPhaseChange> Material::createMaterialPropertyPhaseChange() {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChange();
-  }
-
-  boost::optional<MaterialPropertyPhaseChange>
-    Material::createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys) {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChange(temperatureEnthalpys);
-  }
-
-  boost::optional<MaterialPropertyPhaseChange> Material::materialPropertyPhaseChange() const {
-    return getImpl<detail::Material_Impl>()->materialPropertyPhaseChange();
-  }
-
-  void Material::resetMaterialPropertyPhaseChange() {
-    getImpl<detail::Material_Impl>()->resetMaterialPropertyPhaseChange();
-  }
-
-  boost::optional<MaterialPropertyPhaseChangeHysteresis> Material::createMaterialPropertyPhaseChangeHysteresis() {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChangeHysteresis();
-  }
-
-  boost::optional<MaterialPropertyPhaseChangeHysteresis> Material::materialPropertyPhaseChangeHysteresis() const {
-    return getImpl<detail::Material_Impl>()->materialPropertyPhaseChangeHysteresis();
-  }
-
-  void Material::resetMaterialPropertyPhaseChangeHysteresis() {
-    getImpl<detail::Material_Impl>()->resetMaterialPropertyPhaseChangeHysteresis();
   }
 
   /// @cond
