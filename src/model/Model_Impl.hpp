@@ -474,11 +474,11 @@ namespace model {
       mutable boost::optional<FoundationKivaSettings> m_cachedFoundationKivaSettings;
       mutable boost::optional<OutputControlFiles> m_cachedOutputControlFiles;
       mutable boost::optional<OutputControlReportingTolerances> m_cachedOutputControlReportingTolerances;
-      mutable boost::optional<OutputControlReportingTolerances> m_cachedOutputControlTableStyle;
+      mutable boost::optional<OutputControlTableStyle> m_cachedOutputControlTableStyle;
       mutable boost::optional<OutputDiagnostics> m_cachedOutputDiagnostics;
       mutable boost::optional<OutputDebuggingData> m_cachedOutputDebuggingData;
       mutable boost::optional<OutputJSON> m_cachedOutputJSON;
-      mutable boost::optional<OutputJSON> m_cachedOutputSQLite;
+      mutable boost::optional<OutputSQLite> m_cachedOutputSQLite;
       mutable boost::optional<OutputEnergyManagementSystem> m_cachedOutputEnergyManagementSystem;
       mutable boost::optional<OutputTableSummaryReports> m_cachedOutputTableSummaryReports;
       mutable boost::optional<PerformancePrecisionTradeoffs> m_cachedPerformancePrecisionTradeoffs;
