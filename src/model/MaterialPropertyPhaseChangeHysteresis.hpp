@@ -37,7 +37,8 @@
 namespace openstudio {
 namespace model {
 
-  class Material;
+  class StandardOpaqueMaterial;
+  class MasslessOpaqueMaterial;
 
   namespace detail {
 
@@ -52,7 +53,9 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit MaterialPropertyPhaseChangeHysteresis(Material& material);
+    explicit MaterialPropertyPhaseChangeHysteresis(StandardOpaqueMaterial& material);
+
+    explicit MaterialPropertyPhaseChangeHysteresis(MasslessOpaqueMaterial& material);
 
     virtual ~MaterialPropertyPhaseChangeHysteresis() {}
 

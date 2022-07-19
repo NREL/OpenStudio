@@ -30,6 +30,10 @@
 #include <vector>
 #include "Material.hpp"
 #include "Material_Impl.hpp"
+#include "StandardOpaqueMaterial.hpp"
+#include "StandardOpaqueMaterialMaterial_Impl.hpp"
+#include "MasslessOpaqueMaterial.hpp"
+#include "MasslessOpaqueMaterial_Impl.hpp"
 #include "MaterialPropertyPhaseChangeHysteresis.hpp"
 #include "MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
@@ -249,7 +253,51 @@ namespace model {
 
   }  // namespace detail
 
-  MaterialPropertyPhaseChangeHysteresis::MaterialPropertyPhaseChangeHysteresis(Material& material)
+  MaterialPropertyPhaseChangeHysteresis::MaterialPropertyPhaseChangeHysteresis(StandardOpaqueMaterial& material)
+    : ModelObject(MaterialPropertyPhaseChangeHysteresis::iddObjectType(), material.model()) {
+    OS_ASSERT(getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>());
+
+    if (material.materialPropertyPhaseChangeHysteresis()) {
+      LOG_AND_THROW("Material '" << material.nameString() << "' already has an associated MaterialPropertyPhaseChangeHysteresis object");
+    }
+
+    bool ok = true;
+    OS_ASSERT(ok);
+
+    ok = setPointer(OS_MaterialProperty_PhaseChangeHysteresisFields::MaterialName, material.handle());
+    OS_ASSERT(ok);
+
+    // These from 1ZoneUncontrolledWithHysteresisPCM.idf for C5 - 4 IN HW CONCRETE.
+    // They should be modified by user!
+    ok = setLatentHeatduringtheEntirePhaseChangeProcess(10000);
+    OS_ASSERT(ok);
+    ok = setLiquidStateThermalConductivity(1.5);
+    OS_ASSERT(ok);
+    ok = setLiquidStateDensity(2200);
+    OS_ASSERT(ok);
+    ok = setLiquidStateSpecificHeat(2000);
+    OS_ASSERT(ok);
+    ok = setHighTemperatureDifferenceofMeltingCurve(1);
+    OS_ASSERT(ok);
+    ok = setPeakMeltingTemperature(23);
+    OS_ASSERT(ok);
+    ok = setLowTemperatureDifferenceofMeltingCurve(1);
+    OS_ASSERT(ok);
+    ok = setSolidStateThermalConductivity(1.8);
+    OS_ASSERT(ok);
+    ok = setSolidStateDensity(2300);
+    OS_ASSERT(ok);
+    ok = setSolidStateSpecificHeat(2000);
+    OS_ASSERT(ok);
+    ok = setHighTemperatureDifferenceofFreezingCurve(1);
+    OS_ASSERT(ok);
+    ok = setPeakFreezingTemperature(20);
+    OS_ASSERT(ok);
+    ok = setLowTemperatureDifferenceofFreezingCurve(1);
+    OS_ASSERT(ok);
+  }
+
+  MaterialPropertyPhaseChangeHysteresis::MaterialPropertyPhaseChangeHysteresis(MasslessOpaqueMaterial& material)
     : ModelObject(MaterialPropertyPhaseChangeHysteresis::iddObjectType(), material.model()) {
     OS_ASSERT(getImpl<detail::MaterialPropertyPhaseChangeHysteresis_Impl>());
 

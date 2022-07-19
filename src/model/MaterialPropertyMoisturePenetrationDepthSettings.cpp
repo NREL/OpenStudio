@@ -30,6 +30,10 @@
 #include <vector>
 #include "Material.hpp"
 #include "Material_Impl.hpp"
+#include "StandardOpaqueMaterial.hpp"
+#include "StandardOpaqueMaterialMaterial_Impl.hpp"
+#include "MasslessOpaqueMaterial.hpp"
+#include "MasslessOpaqueMaterial_Impl.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
 #include "ModelExtensibleGroup.hpp"
@@ -264,8 +268,50 @@ namespace model {
   }  // namespace detail
 
   MaterialPropertyMoisturePenetrationDepthSettings::MaterialPropertyMoisturePenetrationDepthSettings(
-    Material& material, double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB,
-    double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness,
+    StandardOpaqueMaterial& material, double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA,
+    double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness,
+    double coatingLayerWaterVaporDiffusionResistanceFactor)
+    : ModelObject(MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType(), material.model()) {
+    OS_ASSERT(getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>());
+
+    if (material.materialPropertyMoisturePenetrationDepthSettings()) {
+      LOG_AND_THROW("Material '" << material.nameString() << "' already has an associated MaterialPropertyMoisturePenetrationDepthSettings object");
+    }
+
+    bool ok = true;
+    OS_ASSERT(ok);
+
+    ok = setPointer(OS_MaterialProperty_MoisturePenetrationDepth_SettingsFields::MaterialName, material.handle());
+    OS_ASSERT(ok);
+
+    ok = setWaterVaporDiffusionResistanceFactor(waterVaporDiffusionResistanceFactor);
+    OS_ASSERT(ok);
+
+    ok = setMoistureEquationCoefficientA(moistureEquationCoefficientA);
+    OS_ASSERT(ok);
+
+    ok = setMoistureEquationCoefficientB(moistureEquationCoefficientB);
+    OS_ASSERT(ok);
+
+    ok = setMoistureEquationCoefficientC(moistureEquationCoefficientC);
+    OS_ASSERT(ok);
+
+    ok = setMoistureEquationCoefficientD(moistureEquationCoefficientD);
+    OS_ASSERT(ok);
+
+    autocalculateSurfaceLayerPenetrationDepth();
+    autocalculateDeepLayerPenetrationDepth();
+
+    ok = setCoatingLayerThickness(coatingLayerThickness);
+    OS_ASSERT(ok);
+
+    ok = setCoatingLayerWaterVaporDiffusionResistanceFactor(coatingLayerWaterVaporDiffusionResistanceFactor);
+    OS_ASSERT(ok);
+  }
+
+  MaterialPropertyMoisturePenetrationDepthSettings::MaterialPropertyMoisturePenetrationDepthSettings(
+    MasslessOpaqueMaterial& material, double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA,
+    double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness,
     double coatingLayerWaterVaporDiffusionResistanceFactor)
     : ModelObject(MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType(), material.model()) {
     OS_ASSERT(getImpl<detail::MaterialPropertyMoisturePenetrationDepthSettings_Impl>());

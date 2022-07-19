@@ -37,7 +37,8 @@
 namespace openstudio {
 namespace model {
 
-  class Material;
+  class StandardOpaqueMaterial;
+  class MasslessOpaqueMaterial;
 
   namespace detail {
 
@@ -70,9 +71,13 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit MaterialPropertyPhaseChange(Material& material);
+    explicit MaterialPropertyPhaseChange(StandardOpaqueMaterial& material);
 
-    explicit MaterialPropertyPhaseChange(Material& material, const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
+    explicit MaterialPropertyPhaseChange(MasslessOpaqueMaterial& material);
+
+    explicit MaterialPropertyPhaseChange(StandardOpaqueMaterial& material, const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
+
+    explicit MaterialPropertyPhaseChange(MasslessOpaqueMaterial& material, const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
 
     virtual ~MaterialPropertyPhaseChange() {}
 
