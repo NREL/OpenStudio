@@ -37,6 +37,7 @@
 namespace openstudio {
 namespace model {
 
+  class Material;
   class StandardOpaqueMaterial;
   class MasslessOpaqueMaterial;
 
