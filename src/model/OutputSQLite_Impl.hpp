@@ -65,13 +65,9 @@ namespace model {
       /** @name Getters */
       //@{
 
-
-
       //@}
       /** @name Setters */
       //@{
-
-
 
       //@}
       /** @name Other */

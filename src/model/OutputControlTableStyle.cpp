@@ -47,14 +47,13 @@ namespace model {
       OS_ASSERT(idfObject.iddObject().type() == OutputControlTableStyle::iddObjectType());
     }
 
-    OutputControlTableStyle_Impl::OutputControlTableStyle_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                 Model_Impl* model, bool keepHandle)
+    OutputControlTableStyle_Impl::OutputControlTableStyle_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                               bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == OutputControlTableStyle::iddObjectType());
     }
 
-    OutputControlTableStyle_Impl::OutputControlTableStyle_Impl(const OutputControlTableStyle_Impl& other,
-                                                                                 Model_Impl* model, bool keepHandle)
+    OutputControlTableStyle_Impl::OutputControlTableStyle_Impl(const OutputControlTableStyle_Impl& other, Model_Impl* model, bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& OutputControlTableStyle_Impl::outputVariableNames() const {
@@ -66,21 +65,15 @@ namespace model {
       return OutputControlTableStyle::iddObjectType();
     }
 
-
-
   }  // namespace detail
 
   IddObjectType OutputControlTableStyle::iddObjectType() {
     return IddObjectType(IddObjectType::OS_OutputControl_Table_Style);
   }
 
-
-
   /// @cond
-  OutputControlTableStyle::OutputControlTableStyle(std::shared_ptr<detail::OutputControlTableStyle_Impl> impl)
-    : ModelObject(std::move(impl)) {}
-  OutputControlTableStyle::OutputControlTableStyle(Model& model)
-    : ModelObject(OutputControlTableStyle::iddObjectType(), model) {}
+  OutputControlTableStyle::OutputControlTableStyle(std::shared_ptr<detail::OutputControlTableStyle_Impl> impl) : ModelObject(std::move(impl)) {}
+  OutputControlTableStyle::OutputControlTableStyle(Model& model) : ModelObject(OutputControlTableStyle::iddObjectType(), model) {}
 
   /// @endcond
 

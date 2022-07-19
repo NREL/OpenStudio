@@ -296,8 +296,8 @@ namespace model {
         m_cachedOutputControlTableStyle = result;
         result->getImpl<OutputControlTableStyle_Impl>()
           .get()
-          ->OutputControlTableStyle_Impl::onRemoveFromWorkspace
-          .connect<Model_Impl, &Model_Impl::clearCachedOutputControlTableStyle>(const_cast<openstudio::model::detail::Model_Impl*>(this));
+          ->OutputControlTableStyle_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputControlTableStyle>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
       return m_cachedOutputControlTableStyle;
@@ -360,8 +360,10 @@ namespace model {
       boost::optional<OutputSQLite> result = this->model().getOptionalUniqueModelObject<OutputSQLite>();
       if (result) {
         m_cachedOutputSQLite = result;
-        result->getImpl<OutputSQLite_Impl>().get()->OutputSQLite_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputSQLite>(
-          const_cast<openstudio::model::detail::Model_Impl*>(this));
+        result->getImpl<OutputSQLite_Impl>()
+          .get()
+          ->OutputSQLite_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputSQLite>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
       }
 
       return m_cachedOutputSQLite;

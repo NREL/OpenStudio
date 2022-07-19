@@ -409,8 +409,7 @@ TEST_F(ModelFixture, OutputControlTableStyle_UniqueModelObject_Clone) {
   outputControlTableStyle.setComment("Custom Object");
 
   // clone it into the same model
-  OutputControlTableStyle outputControlTableStyleClone =
-    outputControlTableStyle.clone(model).cast<OutputControlTableStyle>();
+  OutputControlTableStyle outputControlTableStyleClone = outputControlTableStyle.clone(model).cast<OutputControlTableStyle>();
   // UniqueModelObject: should be the same as the original
   EXPECT_EQ(outputControlTableStyle, outputControlTableStyleClone);
   EXPECT_EQ("! Custom Object", outputControlTableStyleClone.comment());
@@ -418,8 +417,7 @@ TEST_F(ModelFixture, OutputControlTableStyle_UniqueModelObject_Clone) {
   // clone it into a different model
   Model model2;
   EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputControlTableStyle>());
-  OutputControlTableStyle outputControlTableStyleClone2 =
-    outputControlTableStyle.clone(model2).cast<OutputControlTableStyle>();
+  OutputControlTableStyle outputControlTableStyleClone2 = outputControlTableStyle.clone(model2).cast<OutputControlTableStyle>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputControlTableStyle>());
   EXPECT_EQ("! Custom Object", outputControlTableStyleClone2.comment());
 }

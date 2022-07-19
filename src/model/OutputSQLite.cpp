@@ -54,7 +54,8 @@ namespace model {
       OS_ASSERT(other.iddObject().type() == OutputSQLite::iddObjectType());
     }
 
-    OutputSQLite_Impl::OutputSQLite_Impl(const OutputSQLite_Impl& other, Model_Impl* model, bool keepHandle) : ModelObject_Impl(other, model, keepHandle) {}
+    OutputSQLite_Impl::OutputSQLite_Impl(const OutputSQLite_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& OutputSQLite_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
@@ -67,15 +68,11 @@ namespace model {
       return OutputSQLite::iddObjectType();
     }
 
-
-
   }  // namespace detail
 
   IddObjectType OutputSQLite::iddObjectType() {
     return IddObjectType(IddObjectType::OS_Output_SQLite);
   }
-
-
 
   /// @cond
   OutputSQLite::OutputSQLite(std::shared_ptr<detail::OutputSQLite_Impl> impl) : ModelObject(impl) {}

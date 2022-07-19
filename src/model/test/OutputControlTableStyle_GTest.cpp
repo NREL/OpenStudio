@@ -39,6 +39,4 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, OutputControlTableStyle_TolerancesGettersSetters) {
   Model model;
   OutputControlTableStyle outputControlTableStyle = model.getUniqueModelObject<OutputControlTableStyle>();
-
-
 }
