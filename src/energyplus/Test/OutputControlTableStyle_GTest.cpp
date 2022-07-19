@@ -58,8 +58,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlTableStyle) {
 
   // Get the unique object
   OutputControlTableStyle outputControlTableStyle = m.getUniqueModelObject<OutputControlTableStyle>();
-
-
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlTableStyle) {
@@ -74,6 +72,4 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlTableStyle) {
 
   OptionalWorkspaceObject _i_outputControlTableStyle = w.addObject(IdfObject(IddObjectType::OutputControl_Table_Style));
   ASSERT_TRUE(_i_outputControlTableStyle);
-
-
 }

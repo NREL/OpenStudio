@@ -58,8 +58,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlReportingTolerances) {
 
   // Get the unique object
   OutputControlReportingTolerances outputControlReportingTolerances = m.getUniqueModelObject<OutputControlReportingTolerances>();
-
-
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlReportingTolerances) {
@@ -74,5 +72,4 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlReportingTolerances) {
 
   OptionalWorkspaceObject _i_outputControlReportingTolerances = w.addObject(IdfObject(IddObjectType::OutputControl_ReportingTolerances));
   ASSERT_TRUE(_i_outputControlReportingTolerances);
-
 }

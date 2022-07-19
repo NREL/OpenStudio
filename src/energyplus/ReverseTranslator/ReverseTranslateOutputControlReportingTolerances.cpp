@@ -47,8 +47,6 @@ namespace energyplus {
     // This is a Unique ModelObject
     openstudio::model::OutputControlReportingTolerances modelObject = m_model.getUniqueModelObject<OutputControlReportingTolerances>();
 
-
-
     result = modelObject;
     return result;
 

@@ -53,8 +53,6 @@ namespace energyplus {
       idfObject.setName(*s);
     }
 
-
-
     return boost::optional<IdfObject>(idfObject);
   }
 

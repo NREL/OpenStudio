@@ -47,8 +47,6 @@ namespace energyplus {
     // This is a Unique ModelObject
     openstudio::model::OutputControlTableStyle modelObject = m_model.getUniqueModelObject<OutputControlTableStyle>();
 
-
-
     result = modelObject;
     return result;
 

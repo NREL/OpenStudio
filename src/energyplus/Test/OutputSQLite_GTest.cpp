@@ -58,8 +58,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputSQLite) {
 
   // Get the unique object
   OutputSQLite outputSQLite = m.getUniqueModelObject<OutputSQLite>();
-
-
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputSQLite) {
@@ -74,5 +72,4 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputSQLite) {
 
   OptionalWorkspaceObject _i_outputSQLite = w.addObject(IdfObject(IddObjectType::Output_SQLite));
   ASSERT_TRUE(_i_outputSQLite);
-
 }

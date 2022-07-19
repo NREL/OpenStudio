@@ -47,8 +47,6 @@ namespace energyplus {
     // This is a Unique ModelObject
     openstudio::model::OutputSQLite modelObject = m_model.getUniqueModelObject<OutputSQLite>();
 
-
-
     result = modelObject;
     return result;
 

@@ -47,8 +47,6 @@ namespace energyplus {
     IdfObject idfObject(openstudio::IddObjectType::Output_SQLite);
     m_idfObjects.push_back(idfObject);
 
-
-
     return idfObject;
   }  // End of translate function
 
