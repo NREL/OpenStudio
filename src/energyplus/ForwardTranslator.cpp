@@ -2289,6 +2289,11 @@ namespace energyplus {
         retVal = translateOutputControlReportingTolerances(outputControlReportingTolerances);
         break;
       }
+      case openstudio::IddObjectType::OS_OutputControl_Table_Style: {
+        model::OutputControlTableStyle outputControlTableStyle = modelObject.cast<OutputControlTableStyle>();
+        retVal = translateOutputControlTableStyle(outputControlTableStyle);
+        break;
+      }
       case openstudio::IddObjectType::OS_Output_DebuggingData: {
         auto mo = modelObject.cast<OutputDebuggingData>();
         retVal = translateOutputDebuggingData(mo);
@@ -2302,6 +2307,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Output_JSON: {
         auto mo = modelObject.cast<OutputJSON>();
         retVal = translateOutputJSON(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Output_SQLite: {
+        auto mo = modelObject.cast<OutputSQLite>();
+        retVal = translateOutputSQLite(mo);
         break;
       }
       case openstudio::IddObjectType::OS_Output_EnvironmentalImpactFactors: {
@@ -3278,9 +3288,11 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
     result.push_back(IddObjectType::OS_OutputControl_Files);
     result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
+    result.push_back(IddObjectType::OS_OutputControl_Table_Style);
     result.push_back(IddObjectType::OS_Output_DebuggingData);
     result.push_back(IddObjectType::OS_Output_Diagnostics);
     result.push_back(IddObjectType::OS_Output_JSON);
+    result.push_back(IddObjectType::OS_Output_SQLite);
 
     // Note: we just always translate Output:EnvironmentalImpactFactors, and in there (it exists), then trigger translatation of the two others
     result.push_back(IddObjectType::OS_Output_EnvironmentalImpactFactors);

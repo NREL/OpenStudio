@@ -39,4 +39,4 @@ TEST_F(ModelFixture, OutputSQLite_GettersSetters) {
 
   Model model;
   OutputSQLite outputSQLite = model.getUniqueModelObject<OutputSQLite>();
-}
+}  // End of Getter_Setters test
