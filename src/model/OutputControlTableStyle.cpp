@@ -32,6 +32,7 @@
 
 #include <utilities/idd/OS_OutputControl_Table_Style_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 #include "../utilities/units/Unit.hpp"
 
