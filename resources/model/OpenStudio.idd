@@ -34050,6 +34050,38 @@ OS:OutputControl:ReportingTolerances,
        \minimum 0
        \maximum 10
 
+OS:OutputControl:Table:Style,
+       \memo default style for the OutputControl:Table:Style is comma -- this works well for
+       \memo importing into spreadsheet programs such as Excel(tm) but not so well for word
+       \memo processing programs -- there tab may be a better choice. fixed puts spaces between
+       \memo the "columns". HTML produces tables in HTML. XML produces an XML file.
+       \memo note - if no OutputControl:Table:Style is included, the defaults are comma and None.
+       \unique-object
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Column Separator
+       \type choice
+       \key Comma
+       \key Tab
+       \key Fixed
+       \key HTML
+       \key XML
+       \key CommaAndHTML
+       \key CommaAndXML
+       \key TabAndHTML
+       \key XMLandHTML
+       \key All
+       \default Comma
+   A3; \field Unit Conversion
+       \type choice
+       \key None
+       \key JtoKWH
+       \key JtoMJ
+       \key JtoGJ
+       \key InchPound
+       \default None
+
 OS:Output:Meter,
        \memo each OS:Output:Meter command picks meters to be put onto the standard output file (.eso) and
        \memo meter file (.mtr). Not all meters are reported in every simulation. A list of
@@ -34474,6 +34506,28 @@ OS:Output:JSON,
        \key Yes
        \key No
        \required-field
+
+OS:Output:SQLite,
+       \memo Output from EnergyPlus can be written to an SQLite format file.
+       \unique-object
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Option Type
+       \type choice
+       \key Simple
+       \key SimpleAndTabular
+  A3;  \field Unit Conversion for Tabular Data
+       \type choice
+       \note Unit conversion option used when writing SQLite Tabular Data
+       \note This option applies to TabularData and TabularDatawithString in the SQLite file
+       \key UseOutputControlTableStyle
+       \key None
+       \key JtoKWH
+       \key JtoMJ
+       \key JtoGJ
+       \key InchPound
+       \default UseOutputControlTableStyle
 
 OS:Output:EnergyManagementSystem,
    \memo This object is used to control the output produced by the Energy Management System
