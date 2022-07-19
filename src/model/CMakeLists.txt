@@ -1031,12 +1031,18 @@ set(${target_name}_src
   OutputControlReportingTolerances.hpp
   OutputControlReportingTolerances_Impl.hpp
   OutputControlReportingTolerances.cpp
+  OutputControlTableStyle.hpp
+  OutputControlTableStyle_Impl.hpp
+  OutputControlTableStyle.cpp
   OutputDebuggingData.hpp
   OutputDebuggingData_Impl.hpp
   OutputDebuggingData.cpp
   OutputJSON.hpp
   OutputJSON_Impl.hpp
   OutputJSON.cpp
+  OutputSQLite.hpp
+  OutputSQLite_Impl.hpp
+  OutputSQLite.cpp
   OutputEnvironmentalImpactFactors.hpp
   OutputEnvironmentalImpactFactors_Impl.hpp
   OutputEnvironmentalImpactFactors.cpp
@@ -2089,8 +2095,10 @@ set(${target_name}_test_src
   test/OtherEquipment_GTest.cpp
   test/OutputControlFiles_GTest.cpp
   test/OutputControlReportingTolerances_GTest.cpp
+  test/OutputControlTableStyle_GTest.cpp
   test/OutputDebuggingData_GTest.cpp
   test/OutputJSON_GTest.cpp
+  test/OutputSQLite_GTest.cpp
   test/OutputEnvironmentalImpactFactors_GTest.cpp
   test/EnvironmentalImpactFactors_GTest.cpp
   test/FuelFactors_GTest.cpp

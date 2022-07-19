@@ -74,9 +74,11 @@ UNIQUEMODELOBJECT_TEMPLATES(HeatBalanceAlgorithm);
 UNIQUEMODELOBJECT_TEMPLATES(InsideSurfaceConvectionAlgorithm);
 UNIQUEMODELOBJECT_TEMPLATES(OutputControlFiles);
 UNIQUEMODELOBJECT_TEMPLATES(OutputControlReportingTolerances);
+UNIQUEMODELOBJECT_TEMPLATES(OutputControlTableStyle);
 UNIQUEMODELOBJECT_TEMPLATES(OutputDebuggingData);
 UNIQUEMODELOBJECT_TEMPLATES(OutputDiagnostics);
 UNIQUEMODELOBJECT_TEMPLATES(OutputJSON);
+UNIQUEMODELOBJECT_TEMPLATES(OutputSQLite);
 MODELOBJECT_TEMPLATES(OutputEnvironmentalImpactFactors);
 UNIQUEMODELOBJECT_TEMPLATES(EnvironmentalImpactFactors);
 MODELOBJECT_TEMPLATES(FuelFactors);
@@ -122,9 +124,11 @@ SWIG_UNIQUEMODELOBJECT(HeatBalanceAlgorithm);
 SWIG_UNIQUEMODELOBJECT(InsideSurfaceConvectionAlgorithm);
 SWIG_UNIQUEMODELOBJECT(OutputControlFiles);
 SWIG_UNIQUEMODELOBJECT(OutputControlReportingTolerances);
+SWIG_UNIQUEMODELOBJECT(OutputControlTableStyle);
 SWIG_UNIQUEMODELOBJECT(OutputDebuggingData);
 SWIG_UNIQUEMODELOBJECT(OutputDiagnostics);
 SWIG_UNIQUEMODELOBJECT(OutputJSON);
+SWIG_UNIQUEMODELOBJECT(OutputSQLite);
 SWIG_MODELOBJECT(OutputEnvironmentalImpactFactors, 1);
 SWIG_UNIQUEMODELOBJECT(EnvironmentalImpactFactors);
 SWIG_MODELOBJECT(FuelFactors, 1);
@@ -198,6 +202,10 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
           return model.outputControlReportingTolerances();
         }
 
+        boost::optional<OutputControlTableStyle> outputControlTableStyle(const openstudio::model::Model& model) {
+          return model.outputControlTableStyle();
+        }
+
         boost::optional<OutputDebuggingData> outputDebuggingData(const openstudio::model::Model& model) {
           return model.outputDebuggingData();
         }
@@ -208,6 +216,10 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
 
         boost::optional<OutputJSON> outputJSON(const openstudio::model::Model& model) {
           return model.outputJSON();
+        }
+
+        boost::optional<OutputSQLite> outputJSON(const openstudio::model::Model& model) {
+          return model.outputSQLite();
         }
 
         boost::optional<OutputTableSummaryReports> outputTableSummaryReports(const openstudio::model::Model& model) {
@@ -349,6 +361,10 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
         return OpenStudio.OpenStudioModelSimulation.outputControlReportingTolerances(this);
       }
 
+      public OptionalOutputControlTableStyle outputControlTableStyle() {
+        return OpenStudio.OpenStudioModelSimulation.outputControlTableStyle(this);
+      }
+
       public OptionalOutputDebuggingData outputDebuggingData() {
         return OpenStudio.OpenStudioModelSimulation.outputDebuggingData(this);
       }
@@ -359,6 +375,10 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
 
       public OptionalOutputJSON outputJSON() {
         return OpenStudio.OpenStudioModelSimulation.outputJSON(this);
+      }
+
+      public OptionalOutputSQLite outputSQLite() {
+        return OpenStudio.OpenStudioModelSimulation.outputSQLite(this);
       }
 
       public OptionalOutputTableSummaryReports outputTableSummaryReports() {
