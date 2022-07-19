@@ -31,7 +31,7 @@
 #include "Material.hpp"
 #include "Material_Impl.hpp"
 #include "StandardOpaqueMaterial.hpp"
-#include "StandardOpaqueMaterialMaterial_Impl.hpp"
+#include "StandardOpaqueMaterial_Impl.hpp"
 #include "MasslessOpaqueMaterial.hpp"
 #include "MasslessOpaqueMaterial_Impl.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
