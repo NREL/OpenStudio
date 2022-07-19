@@ -30,12 +30,6 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/InfraredTransparentMaterial.hpp"
-#include "../../model/MaterialPropertyMoisturePenetrationDepthSettings.hpp"
-#include "../../model/MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
-#include "../../model/MaterialPropertyPhaseChange.hpp"
-#include "../../model/MaterialPropertyPhaseChange_Impl.hpp"
-#include "../../model/MaterialPropertyPhaseChangeHysteresis.hpp"
-#include "../../model/MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
 
 #include <utilities/idd/Material_InfraredTransparent_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"

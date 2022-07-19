@@ -30,12 +30,6 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/GasMixture.hpp"
-#include "../../model/MaterialPropertyMoisturePenetrationDepthSettings.hpp"
-#include "../../model/MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
-#include "../../model/MaterialPropertyPhaseChange.hpp"
-#include "../../model/MaterialPropertyPhaseChange_Impl.hpp"
-#include "../../model/MaterialPropertyPhaseChangeHysteresis.hpp"
-#include "../../model/MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/WindowMaterial_GasMixture_FieldEnums.hxx>
