@@ -65,9 +65,17 @@ namespace model {
       /** @name Getters */
       //@{
 
+      std::string optionType() const;
+
+      std::string unitConversionforTabularData() const;
+
       //@}
       /** @name Setters */
       //@{
+
+      bool setOptionType(const std::string& optionType);
+
+      bool setUnitConversionforTabularData(const std::string& unitConversionforTabularData);
 
       //@}
       /** @name Other */

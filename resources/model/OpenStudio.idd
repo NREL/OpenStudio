@@ -34517,6 +34517,7 @@ OS:Output:SQLite,
        \type choice
        \key Simple
        \key SimpleAndTabular
+       \required-field
   A3;  \field Unit Conversion for Tabular Data
        \type choice
        \note Unit conversion option used when writing SQLite Tabular Data
@@ -34527,7 +34528,7 @@ OS:Output:SQLite,
        \key JtoMJ
        \key JtoGJ
        \key InchPound
-       \default UseOutputControlTableStyle
+       \required-field
 
 OS:Output:EnergyManagementSystem,
    \memo This object is used to control the output produced by the Energy Management System

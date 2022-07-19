@@ -65,10 +65,90 @@ namespace model {
       return OutputControlTableStyle::iddObjectType();
     }
 
+    std::string OutputControlTableStyle_Impl::columnSeparator() const {
+      boost::optional<std::string> value = getString(OS_OutputControl_Table_StyleFields::ColumnSeparator, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool OutputControlTableStyle_Impl::isColumnSeparatorDefaulted() const {
+      return isEmpty(OS_OutputControl_Table_StyleFields::ColumnSeparator);
+    }
+
+    std::string OutputControlTableStyle_Impl::unitConversion() const {
+      boost::optional<std::string> value = getString(OS_OutputControl_Table_StyleFields::UnitConversion, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool OutputControlTableStyle_Impl::isUnitConversionDefaulted() const {
+      return isEmpty(OS_OutputControl_Table_StyleFields::UnitConversion);
+    }
+
+    bool OutputControlTableStyle_Impl::setColumnSeparator(const std::string& columnSeparator) {
+      bool result = setString(OS_OutputControl_Table_StyleFields::ColumnSeparator, columnSeparator);
+      return result;
+    }
+
+    void OutputControlTableStyle_Impl::resetColumnSeparator() {
+      bool result = setString(OS_OutputControl_Table_StyleFields::ColumnSeparator, "");
+      OS_ASSERT(result);
+    }
+
+    bool OutputControlTableStyle_Impl::setUnitConversion(const std::string& unitConversion) {
+      bool result = setString(OS_OutputControl_Table_StyleFields::UnitConversion, unitConversion);
+      return result;
+    }
+
+    void OutputControlTableStyle_Impl::resetUnitConversion() {
+      bool result = setString(OS_OutputControl_Table_StyleFields::UnitConversion, "");
+      OS_ASSERT(result);
+    }
+
   }  // namespace detail
 
   IddObjectType OutputControlTableStyle::iddObjectType() {
     return IddObjectType(IddObjectType::OS_OutputControl_Table_Style);
+  }
+
+  std::vector<std::string> OutputControlTableStyle::columnSeparatorValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_OutputControl_Table_StyleFields::ColumnSeparator);
+  }
+
+  std::vector<std::string> OutputControlTableStyle::unitConversionValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_OutputControl_Table_StyleFields::UnitConversion);
+  }
+
+  std::string OutputControlTableStyle::columnSeparator() const {
+    return getImpl<detail::OutputControlTableStyle_Impl>()->columnSeparator();
+  }
+
+  bool OutputControlTableStyle::isColumnSeparatorDefaulted() const {
+    return getImpl<detail::OutputControlTableStyle_Impl>()->isColumnSeparatorDefaulted();
+  }
+
+  std::string OutputControlTableStyle::unitConversion() const {
+    return getImpl<detail::OutputControlTableStyle_Impl>()->unitConversion();
+  }
+
+  bool OutputControlTableStyle::isUnitConversionDefaulted() const {
+    return getImpl<detail::OutputControlTableStyle_Impl>()->isUnitConversionDefaulted();
+  }
+
+  bool OutputControlTableStyle::setColumnSeparator(const std::string& columnSeparator) {
+    return getImpl<detail::OutputControlTableStyle_Impl>()->setColumnSeparator(columnSeparator);
+  }
+
+  void OutputControlTableStyle::resetColumnSeparator() {
+    getImpl<detail::OutputControlTableStyle_Impl>()->resetColumnSeparator();
+  }
+
+  bool OutputControlTableStyle::setUnitConversion(const std::string& unitConversion) {
+    return getImpl<detail::OutputControlTableStyle_Impl>()->setUnitConversion(unitConversion);
+  }
+
+  void OutputControlTableStyle::resetUnitConversion() {
+    getImpl<detail::OutputControlTableStyle_Impl>()->resetUnitConversion();
   }
 
   /// @cond

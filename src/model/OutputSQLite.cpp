@@ -68,15 +68,64 @@ namespace model {
       return OutputSQLite::iddObjectType();
     }
 
+    std::string OutputSQLite_Impl::optionType() const {
+      boost::optional<std::string> value = getString(OS_Output_SQLiteFields::OptionType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string OutputSQLite_Impl::unitConversionforTabularData() const {
+      boost::optional<std::string> value = getString(OS_Output_SQLiteFields::UnitConversionforTabularData, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool OutputSQLite_Impl::setOptionType(const std::string& optionType) {
+      bool result = setString(OS_Output_SQLiteFields::OptionType, optionType);
+      return result;
+    }
+
+    bool OutputSQLite_Impl::setUnitConversionforTabularData(const std::string& unitConversionforTabularData) {
+      bool result = setString(OS_Output_SQLiteFields::UnitConversionforTabularData, unitConversionforTabularData);
+      return result;
+    }
+
   }  // namespace detail
 
   IddObjectType OutputSQLite::iddObjectType() {
     return IddObjectType(IddObjectType::OS_Output_SQLite);
   }
 
+  std::vector<std::string> OutputSQLite::optionTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Output_SQLiteFields::OptionType);
+  }
+
+  std::vector<std::string> OutputSQLite::unitConversionforTabularDataValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Output_SQLiteFields::UnitConversionforTabularData);
+  }
+
+  std::string OutputSQLite::optionType() const {
+    return getImpl<detail::OutputSQLite_Impl>()->optionType();
+  }
+
+  std::string OutputSQLite::unitConversionforTabularData() const {
+    return getImpl<detail::OutputSQLite_Impl>()->unitConversionforTabularData();
+  }
+
+  bool OutputSQLite::setOptionType(const std::string& optionType) {
+    return getImpl<detail::OutputSQLite_Impl>()->setOptionType(optionType);
+  }
+
+  bool OutputSQLite::setUnitConversionforTabularData(const std::string& unitConversionforTabularData) {
+    return getImpl<detail::OutputSQLite_Impl>()->setUnitConversionforTabularData(unitConversionforTabularData);
+  }
+
   /// @cond
   OutputSQLite::OutputSQLite(std::shared_ptr<detail::OutputSQLite_Impl> impl) : ModelObject(impl) {}
-  OutputSQLite::OutputSQLite(Model& model) : ModelObject(OutputSQLite::iddObjectType(), model) {}
+  OutputSQLite::OutputSQLite(Model& model) : ModelObject(OutputSQLite::iddObjectType(), model) {
+    setOptionType("SimpleAndTabular");
+    setUnitConversionforTabularData("UseOutputControlTableStyle");
+  }
 
   /// @endcond
 
