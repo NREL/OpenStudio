@@ -655,46 +655,46 @@ namespace model {
     double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB,
     double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness,
     double coatingLayerWaterVaporDiffusionResistanceFactor) {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyMoisturePenetrationDepthSettings(
+    return getImpl<detail::StandardOpaqueMaterial_Impl>()->createMaterialPropertyMoisturePenetrationDepthSettings(
       waterVaporDiffusionResistanceFactor, moistureEquationCoefficientA, moistureEquationCoefficientB, moistureEquationCoefficientC,
       moistureEquationCoefficientD, coatingLayerThickness, coatingLayerWaterVaporDiffusionResistanceFactor);
   }
 
   boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> StandardOpaqueMaterial::materialPropertyMoisturePenetrationDepthSettings() const {
-    return getImpl<detail::Material_Impl>()->materialPropertyMoisturePenetrationDepthSettings();
+    return getImpl<detail::StandardOpaqueMaterial_Impl>()->materialPropertyMoisturePenetrationDepthSettings();
   }
 
   void StandardOpaqueMaterial::resetMaterialPropertyMoisturePenetrationDepthSettings() {
-    getImpl<detail::Material_Impl>()->resetMaterialPropertyMoisturePenetrationDepthSettings();
+    getImpl<detail::StandardOpaqueMaterial_Impl>()->resetMaterialPropertyMoisturePenetrationDepthSettings();
   }
 
   boost::optional<MaterialPropertyPhaseChange> StandardOpaqueMaterial::createMaterialPropertyPhaseChange() {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChange();
+    return getImpl<detail::StandardOpaqueMaterial_Impl>()->createMaterialPropertyPhaseChange();
   }
 
   boost::optional<MaterialPropertyPhaseChange>
     StandardOpaqueMaterial::createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys) {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChange(temperatureEnthalpys);
+    return getImpl<detail::StandardOpaqueMaterial_Impl>()->createMaterialPropertyPhaseChange(temperatureEnthalpys);
   }
 
   boost::optional<MaterialPropertyPhaseChange> StandardOpaqueMaterial::materialPropertyPhaseChange() const {
-    return getImpl<detail::Material_Impl>()->materialPropertyPhaseChange();
+    return getImpl<detail::StandardOpaqueMaterial_Impl>()->materialPropertyPhaseChange();
   }
 
   void StandardOpaqueMaterial::resetMaterialPropertyPhaseChange() {
-    getImpl<detail::Material_Impl>()->resetMaterialPropertyPhaseChange();
+    getImpl<detail::StandardOpaqueMaterial_Impl>()->resetMaterialPropertyPhaseChange();
   }
 
   boost::optional<MaterialPropertyPhaseChangeHysteresis> StandardOpaqueMaterial::createMaterialPropertyPhaseChangeHysteresis() {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChangeHysteresis();
+    return getImpl<detail::StandardOpaqueMaterial_Impl>()->createMaterialPropertyPhaseChangeHysteresis();
   }
 
   boost::optional<MaterialPropertyPhaseChangeHysteresis> StandardOpaqueMaterial::materialPropertyPhaseChangeHysteresis() const {
-    return getImpl<detail::Material_Impl>()->materialPropertyPhaseChangeHysteresis();
+    return getImpl<detail::StandardOpaqueMaterial_Impl>()->materialPropertyPhaseChangeHysteresis();
   }
 
   void StandardOpaqueMaterial::resetMaterialPropertyPhaseChangeHysteresis() {
-    getImpl<detail::Material_Impl>()->resetMaterialPropertyPhaseChangeHysteresis();
+    getImpl<detail::StandardOpaqueMaterial_Impl>()->resetMaterialPropertyPhaseChangeHysteresis();
   }
 
   /// @cond

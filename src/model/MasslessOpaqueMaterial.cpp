@@ -495,46 +495,46 @@ namespace model {
     double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB,
     double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness,
     double coatingLayerWaterVaporDiffusionResistanceFactor) {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyMoisturePenetrationDepthSettings(
+    return getImpl<detail::MasslessOpaqueMaterial_Impl>()->createMaterialPropertyMoisturePenetrationDepthSettings(
       waterVaporDiffusionResistanceFactor, moistureEquationCoefficientA, moistureEquationCoefficientB, moistureEquationCoefficientC,
       moistureEquationCoefficientD, coatingLayerThickness, coatingLayerWaterVaporDiffusionResistanceFactor);
   }
 
   boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> MasslessOpaqueMaterial::materialPropertyMoisturePenetrationDepthSettings() const {
-    return getImpl<detail::Material_Impl>()->materialPropertyMoisturePenetrationDepthSettings();
+    return getImpl<detail::MasslessOpaqueMaterial_Impl>()->materialPropertyMoisturePenetrationDepthSettings();
   }
 
   void MasslessOpaqueMaterial::resetMaterialPropertyMoisturePenetrationDepthSettings() {
-    getImpl<detail::Material_Impl>()->resetMaterialPropertyMoisturePenetrationDepthSettings();
+    getImpl<detail::MasslessOpaqueMaterial_Impl>()->resetMaterialPropertyMoisturePenetrationDepthSettings();
   }
 
   boost::optional<MaterialPropertyPhaseChange> MasslessOpaqueMaterial::createMaterialPropertyPhaseChange() {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChange();
+    return getImpl<detail::MasslessOpaqueMaterial_Impl>()->createMaterialPropertyPhaseChange();
   }
 
   boost::optional<MaterialPropertyPhaseChange>
     MasslessOpaqueMaterial::createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys) {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChange(temperatureEnthalpys);
+    return getImpl<detail::MasslessOpaqueMaterial_Impl>()->createMaterialPropertyPhaseChange(temperatureEnthalpys);
   }
 
   boost::optional<MaterialPropertyPhaseChange> MasslessOpaqueMaterial::materialPropertyPhaseChange() const {
-    return getImpl<detail::Material_Impl>()->materialPropertyPhaseChange();
+    return getImpl<detail::MasslessOpaqueMaterial_Impl>()->materialPropertyPhaseChange();
   }
 
   void MasslessOpaqueMaterial::resetMaterialPropertyPhaseChange() {
-    getImpl<detail::Material_Impl>()->resetMaterialPropertyPhaseChange();
+    getImpl<detail::MasslessOpaqueMaterial_Impl>()->resetMaterialPropertyPhaseChange();
   }
 
   boost::optional<MaterialPropertyPhaseChangeHysteresis> MasslessOpaqueMaterial::createMaterialPropertyPhaseChangeHysteresis() {
-    return getImpl<detail::Material_Impl>()->createMaterialPropertyPhaseChangeHysteresis();
+    return getImpl<detail::MasslessOpaqueMaterial_Impl>()->createMaterialPropertyPhaseChangeHysteresis();
   }
 
   boost::optional<MaterialPropertyPhaseChangeHysteresis> MasslessOpaqueMaterial::materialPropertyPhaseChangeHysteresis() const {
-    return getImpl<detail::Material_Impl>()->materialPropertyPhaseChangeHysteresis();
+    return getImpl<detail::MasslessOpaqueMaterial_Impl>()->materialPropertyPhaseChangeHysteresis();
   }
 
   void MasslessOpaqueMaterial::resetMaterialPropertyPhaseChangeHysteresis() {
-    getImpl<detail::Material_Impl>()->resetMaterialPropertyPhaseChangeHysteresis();
+    getImpl<detail::MasslessOpaqueMaterial_Impl>()->resetMaterialPropertyPhaseChangeHysteresis();
   }
 
   /// @cond
