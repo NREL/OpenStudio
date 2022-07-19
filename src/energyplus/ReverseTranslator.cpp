@@ -717,9 +717,6 @@ namespace energyplus {
         modelObject = translateOutputMeterMeterFileOnly(workspaceObject);
         break;
       }
-      case openstudio::IddObjectType::Output_SQLite: {
-        break;  // no-op
-      }
       case openstudio::IddObjectType::Output_Table_Monthly: {
         break;  // no-op
       }
