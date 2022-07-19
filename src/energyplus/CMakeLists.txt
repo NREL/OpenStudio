@@ -527,8 +527,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateMeterCustomDecrement.cpp
   ReverseTranslator/ReverseTranslateOtherEquipment.cpp
   ReverseTranslator/ReverseTranslateOutputControlFiles.cpp
-  ReverseTranslator/ReverseTranslateOutputReportingTolerances.cpp
-  ReverseTranslator/ReverseTranslateOutputTableStyle.cpp
+  ReverseTranslator/ReverseTranslateOutputControlReportingTolerances.cpp
+  ReverseTranslator/ReverseTranslateOutputControlTableStyle.cpp
   ReverseTranslator/ReverseTranslateOutputDebuggingData.cpp
   ReverseTranslator/ReverseTranslateOutputDiagnostics.cpp
   ReverseTranslator/ReverseTranslateOutputEnergyManagementSystem.cpp
