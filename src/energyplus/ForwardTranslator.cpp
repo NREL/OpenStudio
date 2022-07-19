@@ -4363,6 +4363,7 @@ namespace energyplus {
 
   void ForwardTranslator::createStandardOutputRequests() {
     if (!m_excludeHTMLOutputReport) {
+      // FIXME: only do the following if no OutputControl:Table:Style already exists
       IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
       m_idfObjects.push_back(tableStyle);
       tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator, "HTML");
@@ -4379,6 +4380,7 @@ namespace energyplus {
     }
 
     if (!m_excludeSQliteOutputReport) {
+      // FIXME: only do the following if no Output:SQLite already exists
       IdfObject sqliteOutput(IddObjectType::Output_SQLite);
       sqliteOutput.setString(Output_SQLiteFields::OptionType, "SimpleAndTabular");
       m_idfObjects.push_back(sqliteOutput);
