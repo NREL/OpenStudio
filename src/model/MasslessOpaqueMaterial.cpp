@@ -83,7 +83,6 @@ namespace model {
       return results;
     }
 
-
     std::string MasslessOpaqueMaterial_Impl::roughness() const {
       boost::optional<std::string> value = getString(OS_Material_NoMassFields::Roughness, true);
       OS_ASSERT(value);
@@ -283,10 +282,11 @@ namespace model {
       return MasslessOpaqueMaterial::roughnessValues();
     }
 
-    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> MasslessOpaqueMaterial_Impl::createMaterialPropertyMoisturePenetrationDepthSettings(
-      double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB,
-      double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness,
-      double coatingLayerWaterVaporDiffusionResistanceFactor) {
+    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings>
+      MasslessOpaqueMaterial_Impl::createMaterialPropertyMoisturePenetrationDepthSettings(
+        double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB,
+        double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness,
+        double coatingLayerWaterVaporDiffusionResistanceFactor) {
       Material thisMaterial = getObject<Material>();
       std::vector<MaterialPropertyMoisturePenetrationDepthSettings> empds =
         thisMaterial.getModelObjectSources<MaterialPropertyMoisturePenetrationDepthSettings>(
@@ -301,7 +301,8 @@ namespace model {
       return empd;
     }
 
-    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> MasslessOpaqueMaterial_Impl::materialPropertyMoisturePenetrationDepthSettings() const {
+    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings>
+      MasslessOpaqueMaterial_Impl::materialPropertyMoisturePenetrationDepthSettings() const {
       std::vector<MaterialPropertyMoisturePenetrationDepthSettings> empds =
         getObject<ModelObject>().getModelObjectSources<MaterialPropertyMoisturePenetrationDepthSettings>(
           MaterialPropertyMoisturePenetrationDepthSettings::iddObjectType());
@@ -490,11 +491,10 @@ namespace model {
     getImpl<detail::MasslessOpaqueMaterial_Impl>()->resetVisibleAbsorptance();
   }
 
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings>
-    MasslessOpaqueMaterial::createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA,
-                                                                     double moistureEquationCoefficientB, double moistureEquationCoefficientC,
-                                                                     double moistureEquationCoefficientD, double coatingLayerThickness,
-                                                                     double coatingLayerWaterVaporDiffusionResistanceFactor) {
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> MasslessOpaqueMaterial::createMaterialPropertyMoisturePenetrationDepthSettings(
+    double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA, double moistureEquationCoefficientB,
+    double moistureEquationCoefficientC, double moistureEquationCoefficientD, double coatingLayerThickness,
+    double coatingLayerWaterVaporDiffusionResistanceFactor) {
     return getImpl<detail::Material_Impl>()->createMaterialPropertyMoisturePenetrationDepthSettings(
       waterVaporDiffusionResistanceFactor, moistureEquationCoefficientA, moistureEquationCoefficientB, moistureEquationCoefficientC,
       moistureEquationCoefficientD, coatingLayerThickness, coatingLayerWaterVaporDiffusionResistanceFactor);
