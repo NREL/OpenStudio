@@ -1357,3 +1357,20 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_Site_ClimateZones_4
   EXPECT_EQ(-30.0, newModel_->getOptionalUniqueModelObject<Building>()->northAxis());
   EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
 }
+
+TEST_F(ModelFixture, FloorspaceReverseTranslator_office_floorplan) {
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/office_floorplan.json");
+  ASSERT_TRUE(exists(p));
+
+  FloorspaceReverseTranslator rt;
+  boost::optional<Model> model = rt.modelFromFloorspace(toString(p));
+
+  auto spaces = model->getConcreteModelObjects<Space>();
+  int nSpaces = spaces.size();
+
+  auto surfaceGroups = model->getModelObjects<PlanarSurfaceGroup>();
+  int nSurfaceGroups = surfaceGroups.size();
+
+  auto surfaces = model->getConcreteModelObjects<Surface>();
+  int nSurfaces = surfaces.size();
+}

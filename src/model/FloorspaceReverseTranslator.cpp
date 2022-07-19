@@ -856,7 +856,7 @@ namespace model {
 
   boost::optional<Model> FloorspaceReverseTranslator::modelFromFloorspace(const std::string& jsonOrPath) {
     FSModel fsModel;
-    fsModel.load(toString(jsonOrPath));
+    fsModel.load(jsonOrPath);
 
     Model model;
     detail::FloorspaceReverseTranslator_Impl visitor(model);

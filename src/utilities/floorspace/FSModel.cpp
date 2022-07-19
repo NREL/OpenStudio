@@ -46,6 +46,7 @@ void FSModel::load(const std::string& json) {
   Json::CharReaderBuilder rbuilder;
   std::istringstream ss(json);
   std::string formattedErrors;
+  // Parse the json string, if this fails we will check to see if a path has been provided
   bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &m_value, &formattedErrors);
 
   if (!parsingSuccessful) {
@@ -59,53 +60,53 @@ void FSModel::load(const std::string& json) {
       formattedErrors.clear();
       parsingSuccessful = Json::parseFromStream(rbuilder, ifs, &m_value, &formattedErrors);
     }
+  }
 
-    if (parsingSuccessful) {
+  if (parsingSuccessful) {
 
-      Json::Value project = m_value.get("project", Json::objectValue);
-      m_project.load(project, *this);
+    Json::Value project = m_value.get("project", Json::objectValue);
+    m_project.load(project, *this);
 
-      // Establishes the unit conversion from the project's config property.
-      setUnits();
+    // Establishes the unit conversion from the project's config property.
+    setUnits();
 
-      // Load all the space assignment objects so that when the space is loaded
-      // we can find the objects via their ids
-      for (const auto& thermalZone : m_value.get("thermal_zones", Json::arrayValue)) {
-        m_thermalZones.emplace_back(thermalZone);
-      }
+    // Load all the space assignment objects so that when the space is loaded
+    // we can find the objects via their ids
+    for (const auto& thermalZone : m_value.get("thermal_zones", Json::arrayValue)) {
+      m_thermalZones.emplace_back(thermalZone);
+    }
 
-      for (const auto& buildingUnit : m_value.get("building_units", Json::arrayValue)) {
-        m_buildingUnits.emplace_back(buildingUnit);
-      }
+    for (const auto& buildingUnit : m_value.get("building_units", Json::arrayValue)) {
+      m_buildingUnits.emplace_back(buildingUnit);
+    }
 
-      // TODO: not doing anything yet
-      for (const auto& buildingType : m_value.get("building_type", Json::arrayValue)) {
-        m_buildingTypes.emplace_back(buildingType);
-      }
+    // TODO: not doing anything yet
+    for (const auto& buildingType : m_value.get("building_type", Json::arrayValue)) {
+      m_buildingTypes.emplace_back(buildingType);
+    }
 
-      for (const auto& spaceType : m_value.get("space_types", Json::arrayValue)) {
-        m_spaceTypes.emplace_back(spaceType);
-      }
+    for (const auto& spaceType : m_value.get("space_types", Json::arrayValue)) {
+      m_spaceTypes.emplace_back(spaceType);
+    }
 
-      for (const auto& constructionSet : m_value.get("construction_sets", Json::arrayValue)) {
-        m_constructionSets.emplace_back(constructionSet);
-      }
+    for (const auto& constructionSet : m_value.get("construction_sets", Json::arrayValue)) {
+      m_constructionSets.emplace_back(constructionSet);
+    }
 
-      for (const auto& daylightingControlDefinition : m_value.get("daylighting_control_definitions", Json::arrayValue)) {
-        m_daylightingControlDefinitions.emplace_back(daylightingControlDefinition, *this);
-      }
+    for (const auto& daylightingControlDefinition : m_value.get("daylighting_control_definitions", Json::arrayValue)) {
+      m_daylightingControlDefinitions.emplace_back(daylightingControlDefinition, *this);
+    }
 
-      for (const auto& windowDefinition : m_value.get("window_definitions", Json::arrayValue)) {
-        m_windowDefinitions.emplace_back(windowDefinition, *this);
-      }
+    for (const auto& windowDefinition : m_value.get("window_definitions", Json::arrayValue)) {
+      m_windowDefinitions.emplace_back(windowDefinition, *this);
+    }
 
-      for (const auto& doorDefinition : m_value.get("door_definitions", Json::arrayValue)) {
-        m_doorDefinitions.emplace_back(doorDefinition, *this);
-      }
+    for (const auto& doorDefinition : m_value.get("door_definitions", Json::arrayValue)) {
+      m_doorDefinitions.emplace_back(doorDefinition, *this);
+    }
 
-      for (const auto& story : m_value.get("stories", Json::arrayValue)) {
-        m_stories.emplace_back(story, *this);
-      }
+    for (const auto& story : m_value.get("stories", Json::arrayValue)) {
+      m_stories.emplace_back(story, *this);
     }
   }
 }
