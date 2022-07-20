@@ -47,6 +47,7 @@
 #include "../../model/Schedule.hpp"
 #include "../../model/PlantLoop.hpp"
 
+#include <utilities/idd/IddObject.hpp>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/ZoneHVAC_UnitHeater_FieldEnums.hxx>
 #include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
