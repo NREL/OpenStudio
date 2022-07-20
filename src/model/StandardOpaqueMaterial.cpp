@@ -29,7 +29,8 @@
 
 #include "StandardOpaqueMaterial.hpp"
 #include "StandardOpaqueMaterial_Impl.hpp"
-
+#include "StandardsInformationMaterial.hpp"
+#include "StandardsInformationMaterial_Impl.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
 #include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
 #include "MaterialPropertyPhaseChange.hpp"
