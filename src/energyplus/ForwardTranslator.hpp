@@ -1573,7 +1573,7 @@ namespace energyplus {
     // This should be used by the various translateUnitaryFoo methods.
     void fixSPMsForUnitarySystem(const model::HVACComponent& unitary, const std::string& fanInletNodeName, const std::string& FanOutletNodeName);
 
-    void createStandardOutputRequests();
+    void createStandardOutputRequests(const model::Model& model);
 
     std::string stripOS2(const std::string& s);
 
