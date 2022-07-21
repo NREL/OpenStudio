@@ -80,7 +80,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputSQLite) {
   Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   // Not there, Model shouldn't have it either
-  Model m = rt.translateWorkspace(w);
+  Model m;
+  m = rt.translateWorkspace(w);
   EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputSQLite>());
 
   OptionalWorkspaceObject _i_outputSQLite = w.addObject(IdfObject(IddObjectType::Output_SQLite));
@@ -89,7 +90,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputSQLite) {
   EXPECT_TRUE(_i_outputSQLite->setString(Output_SQLiteFields::OptionType, "Simple"));
   EXPECT_TRUE(_i_outputSQLite->setString(Output_SQLiteFields::UnitConversionforTabularData, "InchPound"));
 
-  Model m = rt.translateWorkspace(w);
+  m = rt.translateWorkspace(w);
 
   // Get the unique object
   OutputSQLite outputSQLite = m.getUniqueModelObject<OutputSQLite>();

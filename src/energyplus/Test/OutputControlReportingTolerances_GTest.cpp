@@ -80,7 +80,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlReportingTolerances) {
   Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   // Not there, Model shouldn't have it either
-  Model m = rt.translateWorkspace(w);
+  Model m;
+  m = rt.translateWorkspace(w);
   EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
 
   OptionalWorkspaceObject _i_outputControlReportingTolerances = w.addObject(IdfObject(IddObjectType::OutputControl_ReportingTolerances));
@@ -89,7 +90,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlReportingTolerances) {
   EXPECT_TRUE(_i_outputControlReportingTolerances->setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, 1.75));
   EXPECT_TRUE(_i_outputControlReportingTolerances->setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, 0.25));
 
-  Model m = rt.translateWorkspace(w);
+  m = rt.translateWorkspace(w);
 
   // Get the unique object
   OutputControlReportingTolerances outputControlReportingTolerances = m.getUniqueModelObject<OutputControlReportingTolerances>();

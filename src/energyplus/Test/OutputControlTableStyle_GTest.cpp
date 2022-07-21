@@ -80,19 +80,20 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlTableStyle) {
   Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   // Not there, Model shouldn't have it either
-  Model m = rt.translateWorkspace(w);
+  Model m;
+  m = rt.translateWorkspace(w);
   EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputControlTableStyle>());
 
   OptionalWorkspaceObject _i_outputControlTableStyle = w.addObject(IdfObject(IddObjectType::OutputControl_Table_Style));
   ASSERT_TRUE(_i_outputControlTableStyle);
 
-  EXPECT_TRUE(_i_outputControlTableStyle->setDouble(OutputControl_Table_StyleFields::ColumnSeparator, "XML"));
-  EXPECT_TRUE(_i_outputControlTableStyle->setDouble(OutputControl_Table_StyleFields::UnitConversion, "JtoMJ"));
+  EXPECT_TRUE(_i_outputControlTableStyle->setString(OutputControl_Table_StyleFields::ColumnSeparator, "XML"));
+  EXPECT_TRUE(_i_outputControlTableStyle->setString(OutputControl_Table_StyleFields::UnitConversion, "JtoMJ"));
 
-  Model m = rt.translateWorkspace(w);
+  m = rt.translateWorkspace(w);
 
   // Get the unique object
   OutputControlTableStyle outputControlTableStyle = m.getUniqueModelObject<OutputControlTableStyle>();
-  EXPECT_EQ(1.75, outputControlTableStyle.columnSeparator());
-  EXPECT_EQ(0.25, outputControlTableStyle.unitConversion());
+  EXPECT_EQ("XML", outputControlTableStyle.columnSeparator());
+  EXPECT_EQ("JtoMJ", outputControlTableStyle.unitConversion());
 }
