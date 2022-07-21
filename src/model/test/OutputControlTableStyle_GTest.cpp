@@ -39,4 +39,31 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, OutputControlTableStyle_TolerancesGettersSetters) {
   Model model;
   OutputControlTableStyle outputControlTableStyle = model.getUniqueModelObject<OutputControlTableStyle>();
+
+  EXPECT_EQ("Comma", outputControlTableStyle.columnSeparator());
+  EXPECT_TRUE(outputControlTableStyle.isColumnSeparatorDefaulted());
+  EXPECT_EQ("None", outputControlTableStyle.unitConversion());
+  EXPECT_TRUE(outputControlTableStyle.isUnitConversionDefaulted());
+
+  EXPECT_TRUE(outputControlTableStyle.setColumnSeparator("Tab"));
+  EXPECT_EQ("Tab", outputControlTableStyle.columnSeparator());
+  EXPECT_FALSE(outputControlTableStyle.isColumnSeparatorDefaulted());
+  EXPECT_TRUE(outputControlTableStyle.setUnitConversion("JtoKWH"));
+  EXPECT_EQ("JtoKWH", outputControlTableStyle.unitConversion());
+  EXPECT_FALSE(outputControlTableStyle.isUnitConversionDefaulted());
+
+  EXPECT_FALSE(outputControlTableStyle.setColumnSeparator("Invalid"));
+  EXPECT_FALSE(outputControlTableStyle.setUnitConversion("AnotherInvalid"));
+  EXPECT_EQ("Tab", outputControlTableStyle.columnSeparator());
+  EXPECT_FALSE(outputControlTableStyle.isColumnSeparatorDefaulted());
+  EXPECT_EQ("JtoKWH", outputControlTableStyle.unitConversion());
+  EXPECT_FALSE(outputControlTableStyle.isUnitConversionDefaulted());
+
+  outputControlTableStyle.resetColumnSeparator();
+  outputControlTableStyle.resetUnitConversion();
+
+  EXPECT_EQ("Comma", outputControlTableStyle.columnSeparator());
+  EXPECT_TRUE(outputControlTableStyle.isColumnSeparatorDefaulted());
+  EXPECT_EQ("None", outputControlTableStyle.unitConversion());
+  EXPECT_TRUE(outputControlTableStyle.isUnitConversionDefaulted());
 }
