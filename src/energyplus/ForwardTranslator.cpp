@@ -4375,7 +4375,8 @@ namespace energyplus {
 
   void ForwardTranslator::createStandardOutputRequests() {
     if (!m_excludeHTMLOutputReport) {
-      if (!(boost::optional<OutputControlTableStyle> _tableStyle = model.getOptionalUniqueModelObject<OutputControlTableStyle>())) {
+      boost::optional<OutputControlTableStyle> _tableStyle = model.getOptionalUniqueModelObject<OutputControlTableStyle>();
+      if (!_tableStyle) {
         IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
         m_idfObjects.push_back(tableStyle);
         tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator, "HTML");
@@ -4393,7 +4394,8 @@ namespace energyplus {
     }
 
     if (!m_excludeSQliteOutputReport) {
-      if (!(boost::optional<OutputSQLite> _sqliteOutput = model.getOptionalUniqueModelObject<OutputSQLite>())) {
+      boost::optional<OutputSQLite> _sqliteOutput = model.getOptionalUniqueModelObject<OutputSQLite>();
+      if (!_sqliteOutput) {
         IdfObject sqliteOutput(IddObjectType::Output_SQLite);
         sqliteOutput.setString(Output_SQLiteFields::OptionType, "SimpleAndTabular");
         m_idfObjects.push_back(sqliteOutput);
