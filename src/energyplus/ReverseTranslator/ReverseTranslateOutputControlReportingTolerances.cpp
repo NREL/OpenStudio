@@ -47,6 +47,16 @@ namespace energyplus {
     // This is a Unique ModelObject
     openstudio::model::OutputControlReportingTolerances modelObject = m_model.getUniqueModelObject<OutputControlReportingTolerances>();
 
+    if (boost::optional<double> _toleranceforTimeHeatingSetpointNotMet =
+          workspaceObject.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, true)) {
+      modelObject.setToleranceforTimeHeatingSetpointNotMet(_toleranceforTimeHeatingSetpointNotMet.get());
+    }
+
+    if (boost::optional<double> _toleranceforTimeCoolingSetpointNotMet =
+          workspaceObject.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, true)) {
+      modelObject.setToleranceforTimeCoolingSetpointNotMet(_toleranceforTimeCoolingSetpointNotMet.get());
+    }
+
     result = modelObject;
     return result;
 

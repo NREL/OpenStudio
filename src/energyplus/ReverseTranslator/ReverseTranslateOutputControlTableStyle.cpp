@@ -47,6 +47,14 @@ namespace energyplus {
     // This is a Unique ModelObject
     openstudio::model::OutputControlTableStyle modelObject = m_model.getUniqueModelObject<OutputControlTableStyle>();
 
+    if (boost::optional<std::string> _columnSeparator = workspaceObject.getString(OutputControl_Table_StyleFields::ColumnSeparator, true)) {
+      modelObject.setColumnSeparator(_columnSeparator.get());
+    }
+
+    if (boost::optional<std::string> _unitConversion = workspaceObject.getString(OutputControl_Table_StyleFields::UnitConversion, true)) {
+      modelObject.setUnitConversion(_unitConversion.get());
+    }
+
     result = modelObject;
     return result;
 

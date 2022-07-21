@@ -47,6 +47,15 @@ namespace energyplus {
     // This is a Unique ModelObject
     openstudio::model::OutputSQLite modelObject = m_model.getUniqueModelObject<OutputSQLite>();
 
+    if (boost::optional<std::string> _optionType = workspaceObject.getString(Output_SQLiteFields::OptionType, true)) {
+      modelObject.setOptionType(_optionType.get());
+    }
+
+    if (boost::optional<std::string> _unitConversionforTabularData =
+          workspaceObject.getString(Output_SQLiteFields::UnitConversionforTabularData, true)) {
+      modelObject.setUnitConversionforTabularData(_unitConversionforTabularData.get());
+    }
+
     result = modelObject;
     return result;
 
