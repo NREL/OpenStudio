@@ -682,7 +682,7 @@ namespace energyplus {
 
     if (fullModelTranslation) {
       // add output requests
-      this->createStandardOutputRequests();
+      this->createStandardOutputRequests(model);
     }
 
     Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
@@ -4377,7 +4377,7 @@ namespace energyplus {
     }
   }
 
-  void ForwardTranslator::createStandardOutputRequests() {
+  void ForwardTranslator::createStandardOutputRequests(const model::Model& model) {
     if (!m_excludeHTMLOutputReport) {
       boost::optional<model::OutputControlTableStyle> _tableStyle = model.getOptionalUniqueModelObject<model::OutputControlTableStyle>();
       if (!_tableStyle) {
