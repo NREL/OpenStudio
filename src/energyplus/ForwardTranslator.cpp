@@ -70,8 +70,8 @@
 #include "../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
 #include "../model/ElectricEquipmentITEAirCooled.hpp"
 #include "../model/ElectricEquipmentITEAirCooled_Impl.hpp"
-#include "../model/OutputControlTableStype.hpp"
-#include "../model/OutputControlTableStype_Impl.hpp"
+#include "../model/OutputControlTableStyle.hpp"
+#include "../model/OutputControlTableStyle_Impl.hpp"
 #include "../model/OutputSQLite.hpp"
 #include "../model/OutputSQLite_Impl.hpp"
 
