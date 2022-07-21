@@ -70,6 +70,10 @@
 #include "../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
 #include "../model/ElectricEquipmentITEAirCooled.hpp"
 #include "../model/ElectricEquipmentITEAirCooled_Impl.hpp"
+#include "../model/OutputControlTableStype.hpp"
+#include "../model/OutputControlTableStype_Impl.hpp"
+#include "../model/OutputSQLite.hpp"
+#include "../model/OutputSQLite_Impl.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
@@ -4375,7 +4379,7 @@ namespace energyplus {
 
   void ForwardTranslator::createStandardOutputRequests() {
     if (!m_excludeHTMLOutputReport) {
-      boost::optional<OutputControlTableStyle> _tableStyle = model.getOptionalUniqueModelObject<OutputControlTableStyle>();
+      boost::optional<model::OutputControlTableStyle> _tableStyle = model.getOptionalUniqueModelObject<model::OutputControlTableStyle>();
       if (!_tableStyle) {
         IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
         m_idfObjects.push_back(tableStyle);
@@ -4394,7 +4398,7 @@ namespace energyplus {
     }
 
     if (!m_excludeSQliteOutputReport) {
-      boost::optional<OutputSQLite> _sqliteOutput = model.getOptionalUniqueModelObject<OutputSQLite>();
+      boost::optional<model::OutputSQLite> _sqliteOutput = model.getOptionalUniqueModelObject<model::OutputSQLite>();
       if (!_sqliteOutput) {
         IdfObject sqliteOutput(IddObjectType::Output_SQLite);
         sqliteOutput.setString(Output_SQLiteFields::OptionType, "SimpleAndTabular");
