@@ -47,6 +47,12 @@ namespace energyplus {
     IdfObject idfObject(openstudio::IddObjectType::Output_SQLite);
     m_idfObjects.push_back(idfObject);
 
+    std::string optionType = modelObject.optionType();
+    idfObject.setString(Output_SQLiteFields::OptionType, optionType);
+
+    std::string unitConversionforTabularData = modelObject.unitConversionforTabularData();
+    idfObject.setString(Output_SQLiteFields::UnitConversionforTabularData, unitConversionforTabularData);
+
     return idfObject;
   }  // End of translate function
 

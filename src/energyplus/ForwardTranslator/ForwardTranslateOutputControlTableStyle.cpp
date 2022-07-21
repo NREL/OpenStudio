@@ -53,6 +53,12 @@ namespace energyplus {
       idfObject.setName(*s);
     }
 
+    std::string columnSeparator = modelObject.columnSeparator();
+    idfObject.setString(OutputControl_Table_StyleFields::ColumnSeparator, columnSeparator);
+
+    std::string unitConversion = modelObject.unitConversion();
+    idfObject.setString(OutputControl_Table_StyleFields::UnitConversion, unitConversion);
+
     return boost::optional<IdfObject>(idfObject);
   }
 
