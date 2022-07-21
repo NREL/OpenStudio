@@ -4375,12 +4375,13 @@ namespace energyplus {
 
   void ForwardTranslator::createStandardOutputRequests() {
     if (!m_excludeHTMLOutputReport) {
-      // FIXME: only do the following if no OutputControl:Table:Style already exists
-      IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
-      m_idfObjects.push_back(tableStyle);
-      tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator, "HTML");
-      if (m_ipTabularOutput) {
-        tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion, "InchPound");
+      if (!(boost::optional<OutputControlTableStyle> _tableStyle = model.getOptionalUniqueModelObject<OutputControlTableStyle>())) {
+        IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
+        m_idfObjects.push_back(tableStyle);
+        tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator, "HTML");
+        if (m_ipTabularOutput) {
+          tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion, "InchPound");
+        }
       }
     }
 
@@ -4392,10 +4393,11 @@ namespace energyplus {
     }
 
     if (!m_excludeSQliteOutputReport) {
-      // FIXME: only do the following if no Output:SQLite already exists
-      IdfObject sqliteOutput(IddObjectType::Output_SQLite);
-      sqliteOutput.setString(Output_SQLiteFields::OptionType, "SimpleAndTabular");
-      m_idfObjects.push_back(sqliteOutput);
+      if (!(boost::optional<OutputSQLite> _sqliteOutput = model.getOptionalUniqueModelObject<OutputSQLite>())) {
+        IdfObject sqliteOutput(IddObjectType::Output_SQLite);
+        sqliteOutput.setString(Output_SQLiteFields::OptionType, "SimpleAndTabular");
+        m_idfObjects.push_back(sqliteOutput);
+      }
     }
 
     // ensure at least one life cycle cost exists to prevent crash in E+ 8
