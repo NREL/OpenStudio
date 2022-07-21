@@ -58,6 +58,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlReportingTolerances) {
 
   // Get the unique object
   OutputControlReportingTolerances outputControlReportingTolerances = m.getUniqueModelObject<OutputControlReportingTolerances>();
+
+  EXPECT_TRUE(outputControlReportingTolerances.setToleranceforTimeHeatingSetpointNotMet(1.16));
+  EXPECT_TRUE(outputControlReportingTolerances.setToleranceforTimeCoolingSetpointNotMet(0.75));
+
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::OutputControl_ReportingTolerances);
+  ASSERT_EQ(1u, idfObjs.size());
+
+  WorkspaceObject idf_reportingtolerances(idfObjs[0]);
+
+  EXPECT_EQ(1.16, idf_reportingtolerances.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet).get());
+  EXPECT_EQ(0.75, idf_reportingtolerances.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet).get());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlReportingTolerances) {
@@ -72,4 +85,14 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlReportingTolerances) {
 
   OptionalWorkspaceObject _i_outputControlReportingTolerances = w.addObject(IdfObject(IddObjectType::OutputControl_ReportingTolerances));
   ASSERT_TRUE(_i_outputControlReportingTolerances);
+
+  EXPECT_TRUE(_i_outputControlReportingTolerances->setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, 1.75));
+  EXPECT_TRUE(_i_outputControlReportingTolerances->setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, 0.25));
+
+  Model m = rt.translateWorkspace(w);
+
+  // Get the unique object
+  OutputControlReportingTolerances outputControlReportingTolerances = m.getUniqueModelObject<OutputControlReportingTolerances>();
+  EXPECT_EQ(1.75, outputControlReportingTolerances.toleranceforTimeHeatingSetpointNotMet());
+  EXPECT_EQ(0.25, outputControlReportingTolerances.toleranceforTimeCoolingSetpointNotMet());
 }

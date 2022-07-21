@@ -58,6 +58,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlTableStyle) {
 
   // Get the unique object
   OutputControlTableStyle outputControlTableStyle = m.getUniqueModelObject<OutputControlTableStyle>();
+
+  EXPECT_TRUE(outputControlTableStyle.setColumnSeparator("Tab"));
+  EXPECT_TRUE(outputControlTableStyle.setUnitConversion("JtoKWH"));
+
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+  ASSERT_EQ(1u, idfObjs.size());
+
+  WorkspaceObject idf_tablestyle(idfObjs[0]);
+
+  EXPECT_EQ("Tab", idf_tablestyle.getString(OutputControl_Table_StyleFields::ColumnSeparator).get());
+  EXPECT_EQ("JtoKWH", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion).get());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlTableStyle) {
@@ -72,4 +85,14 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlTableStyle) {
 
   OptionalWorkspaceObject _i_outputControlTableStyle = w.addObject(IdfObject(IddObjectType::OutputControl_Table_Style));
   ASSERT_TRUE(_i_outputControlTableStyle);
+
+  EXPECT_TRUE(_i_outputControlTableStyle->setDouble(OutputControl_Table_StyleFields::ColumnSeparator, "XML"));
+  EXPECT_TRUE(_i_outputControlTableStyle->setDouble(OutputControl_Table_StyleFields::UnitConversion, "JtoMJ"));
+
+  Model m = rt.translateWorkspace(w);
+
+  // Get the unique object
+  OutputControlTableStyle outputControlTableStyle = m.getUniqueModelObject<OutputControlTableStyle>();
+  EXPECT_EQ(1.75, outputControlTableStyle.columnSeparator());
+  EXPECT_EQ(0.25, outputControlTableStyle.unitConversion());
 }

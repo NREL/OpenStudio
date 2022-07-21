@@ -58,6 +58,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputSQLite) {
 
   // Get the unique object
   OutputSQLite outputSQLite = m.getUniqueModelObject<OutputSQLite>();
+
+  EXPECT_TRUE(outputSQLite.setOptionType("Simple"));
+  EXPECT_TRUE(outputSQLite.setUnitConversionforTabularData("None"));
+
+  Workspace w = ft.translateModel(m);
+
+  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_SQLite);
+  ASSERT_EQ(1u, idfObjs.size());
+
+  WorkspaceObject idf_sqlite(idfObjs[0]);
+
+  EXPECT_EQ("Simple", idf_sqlite.getString(Output_SQLiteFields::OptionType).get());
+  EXPECT_EQ("None", idf_sqlite.getString(Output_SQLiteFields::UnitConversionforTabularData).get());
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputSQLite) {
@@ -72,4 +85,14 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputSQLite) {
 
   OptionalWorkspaceObject _i_outputSQLite = w.addObject(IdfObject(IddObjectType::Output_SQLite));
   ASSERT_TRUE(_i_outputSQLite);
+
+  EXPECT_TRUE(_i_outputSQLite->setString(Output_SQLiteFields::OptionType, "Simple"));
+  EXPECT_TRUE(_i_outputSQLite->setString(Output_SQLiteFields::UnitConversionforTabularData, "InchPound"));
+
+  Model m = rt.translateWorkspace(w);
+
+  // Get the unique object
+  OutputSQLite outputSQLite = m.getUniqueModelObject<OutputSQLite>();
+  EXPECT_EQ("Simple", outputSQLite.optionType());
+  EXPECT_EQ("InchPound", outputSQLite.unitConversionforTabularData());
 }
