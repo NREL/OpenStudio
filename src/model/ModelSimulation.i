@@ -218,7 +218,7 @@ SWIG_UNIQUEMODELOBJECT(PerformancePrecisionTradeoffs);
           return model.outputJSON();
         }
 
-        boost::optional<OutputSQLite> outputJSON(const openstudio::model::Model& model) {
+        boost::optional<OutputSQLite> outputSQLite(const openstudio::model::Model& model) {
           return model.outputSQLite();
         }
 
