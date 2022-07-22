@@ -38,6 +38,8 @@ namespace openstudio {
 namespace model {
 
   class Material;
+  class StandardOpaqueMaterial;
+  class MasslessOpaqueMaterial;
 
   namespace detail {
 
@@ -52,7 +54,12 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit MaterialPropertyMoisturePenetrationDepthSettings(Material& material, double waterVaporDiffusionResistanceFactor,
+    explicit MaterialPropertyMoisturePenetrationDepthSettings(StandardOpaqueMaterial& material, double waterVaporDiffusionResistanceFactor,
+                                                              double moistureEquationCoefficientA, double moistureEquationCoefficientB,
+                                                              double moistureEquationCoefficientC, double moistureEquationCoefficientD,
+                                                              double coatingLayerThickness, double coatingLayerWaterVaporDiffusionResistanceFactor);
+
+    explicit MaterialPropertyMoisturePenetrationDepthSettings(MasslessOpaqueMaterial& material, double waterVaporDiffusionResistanceFactor,
                                                               double moistureEquationCoefficientA, double moistureEquationCoefficientB,
                                                               double moistureEquationCoefficientC, double moistureEquationCoefficientD,
                                                               double coatingLayerThickness, double coatingLayerWaterVaporDiffusionResistanceFactor);
@@ -67,6 +74,8 @@ namespace model {
     //@{
 
     std::string materialName() const;
+
+    Material material() const;
 
     double waterVaporDiffusionResistanceFactor() const;
 
