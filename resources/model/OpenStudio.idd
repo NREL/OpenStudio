@@ -2066,6 +2066,7 @@ OS:Material,
        \type alpha
        \required-field
        \reference MaterialNames
+       \reference MaterialWithPropertyNames
   A3, \field Roughness
        \type choice
        \required-field
@@ -2166,6 +2167,7 @@ OS:Material:NoMass,
        \type alpha
        \required-field
        \reference MaterialNames
+       \reference MaterialWithPropertyNames
   A3, \field Roughness
        \type choice
        \required-field
@@ -3196,7 +3198,7 @@ OS:MaterialProperty:MoisturePenetrationDepth:Settings,
   A2,  \field Material Name
        \required-field
        \type object-list
-       \object-list MaterialNames
+       \object-list MaterialWithPropertyNames
        \note Material Name that the moisture properties will be added to.
        \note Additional material properties required to perform the EMPD model.
        \note Effective Mean Penetration Depth (EMPD)
@@ -3266,7 +3268,7 @@ OS:MaterialProperty:PhaseChange,
   A2,  \field Material Name
        \required-field
        \type object-list
-       \object-list MaterialNames
+       \object-list MaterialWithPropertyNames
        \note Regular Material Name to which the additional properties will be added.
        \note this the material name for the basic material properties.
   N1,  \field Temperature Coefficient for Thermal Conductivity
@@ -3299,7 +3301,7 @@ OS:MaterialProperty:PhaseChangeHysteresis,
   A2,  \field Material Name
        \required-field
        \type object-list
-       \object-list MaterialNames
+       \object-list MaterialWithPropertyNames
        \note Regular Material Name to which the additional properties will be added.
        \note this the material name for the basic material properties.
   N1,  \field Latent Heat during the Entire Phase Change Process
