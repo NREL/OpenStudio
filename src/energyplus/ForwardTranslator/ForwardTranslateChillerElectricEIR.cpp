@@ -35,10 +35,6 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ChillerElectricEIR_Impl.hpp"
-#include "../../model/CurveBiquadratic.hpp"
-#include "../../model/CurveBiquadratic_Impl.hpp"
-#include "../../model/CurveQuadratic.hpp"
-#include "../../model/CurveQuadratic_Impl.hpp"
 #include "../../model/Curve.hpp"
 #include "../../model/Curve_Impl.hpp"
 #include "../../utilities/core/Logger.hpp"
@@ -218,7 +214,7 @@ namespace energyplus {
 
     // CoolingCapacityFunctionofTemperatureCurveName
 
-    CurveBiquadratic curve = modelObject.coolingCapacityFunctionOfTemperature();
+    Curve curve = modelObject.coolingCapacityFunctionOfTemperature();
 
     boost::optional<IdfObject> _curve = translateAndMapModelObject(curve);
 
