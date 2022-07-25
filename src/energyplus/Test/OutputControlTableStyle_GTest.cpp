@@ -51,26 +51,68 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlTableStyle) {
 
-  ForwardTranslator ft;
+  // Not there, but workspace should have it
+  {
+    Model m;
+    ForwardTranslator ft;
+    Workspace w = ft.translateModel(m);
 
-  // Create a model
-  Model m;
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1u, idfObjs.size());
 
-  // Get the unique object
-  OutputControlTableStyle outputControlTableStyle = m.getUniqueModelObject<OutputControlTableStyle>();
+    WorkspaceObject idf_tablestyle = idfObjs[0];
 
-  EXPECT_TRUE(outputControlTableStyle.setColumnSeparator("Tab"));
-  EXPECT_TRUE(outputControlTableStyle.setUnitConversion("JtoKWH"));
+    EXPECT_EQ("HTML", idf_tablestyle.getString(OutputControl_Table_StyleFields::ColumnSeparator).get());
+    EXPECT_EQ("", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion).get());
+  }
 
-  Workspace w = ft.translateModel(m);
+  // Not there, m_ipTabularOutput = True
+  {
+    Model m;
+    ForwardTranslator ft;
+    ft.setIPTabularOutput(true);
+    Workspace w = ft.translateModel(m);
 
-  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
-  ASSERT_EQ(1u, idfObjs.size());
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1u, idfObjs.size());
 
-  WorkspaceObject idf_tablestyle(idfObjs[0]);
+    WorkspaceObject idf_tablestyle = idfObjs[0];
 
-  EXPECT_EQ("Tab", idf_tablestyle.getString(OutputControl_Table_StyleFields::ColumnSeparator).get());
-  EXPECT_EQ("JtoKWH", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion).get());
+    EXPECT_EQ("HTML", idf_tablestyle.getString(OutputControl_Table_StyleFields::ColumnSeparator).get());
+    EXPECT_EQ("InchPound", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion).get());
+  }
+
+  // Not there, m_excludeHTMLOutputReport = True
+  {
+    Model m;
+    ForwardTranslator ft;
+    ft.setExcludeHTMLOutputReport(true);
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(0u, idfObjs.size());
+  }
+
+  // It's already in the model
+  {
+    Model m;
+    ForwardTranslator ft;
+
+    OutputControlTableStyle outputControlTableStyle = m.getUniqueModelObject<OutputControlTableStyle>();
+
+    EXPECT_TRUE(outputControlTableStyle.setColumnSeparator("Tab"));
+    EXPECT_TRUE(outputControlTableStyle.setUnitConversion("JtoKWH"));
+
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1u, idfObjs.size());
+
+    WorkspaceObject idf_tablestyle(idfObjs[0]);
+
+    EXPECT_EQ("Tab", idf_tablestyle.getString(OutputControl_Table_StyleFields::ColumnSeparator).get());
+    EXPECT_EQ("JtoKWH", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion).get());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlTableStyle) {

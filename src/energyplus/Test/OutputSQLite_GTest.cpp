@@ -51,26 +51,51 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_OutputSQLite) {
 
-  ForwardTranslator ft;
+  // Not there, but workspace should have it
+  {
+    Model m;
+    ForwardTranslator ft;
+    Workspace w = ft.translateModel(m);
 
-  // Create a model
-  Model m;
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_SQLite);
+    ASSERT_EQ(1u, idfObjs.size());
 
-  // Get the unique object
-  OutputSQLite outputSQLite = m.getUniqueModelObject<OutputSQLite>();
+    WorkspaceObject idf_sqlite(idfObjs[0]);
 
-  EXPECT_TRUE(outputSQLite.setOptionType("Simple"));
-  EXPECT_TRUE(outputSQLite.setUnitConversionforTabularData("None"));
+    EXPECT_EQ("SimpleAndTabular", idf_sqlite.getString(Output_SQLiteFields::OptionType).get());
+    EXPECT_EQ("", idf_sqlite.getString(Output_SQLiteFields::UnitConversionforTabularData).get());
+  }
 
-  Workspace w = ft.translateModel(m);
+  // Not there, m_excludeSQliteOutputReport = True
+  {
+    Model m;
+    ForwardTranslator ft;
+    Workspace w = ft.translateModel(m);
 
-  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_SQLite);
-  ASSERT_EQ(1u, idfObjs.size());
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_SQLite);
+    ASSERT_EQ(0u, idfObjs.size());
+  }
 
-  WorkspaceObject idf_sqlite(idfObjs[0]);
+  // It's already in the model
+  {
+    Model m;
+    ForwardTranslator ft;
 
-  EXPECT_EQ("Simple", idf_sqlite.getString(Output_SQLiteFields::OptionType).get());
-  EXPECT_EQ("None", idf_sqlite.getString(Output_SQLiteFields::UnitConversionforTabularData).get());
+    OutputSQLite outputSQLite = m.getUniqueModelObject<OutputSQLite>();
+
+    EXPECT_TRUE(outputSQLite.setOptionType("Simple"));
+    EXPECT_TRUE(outputSQLite.setUnitConversionforTabularData("None"));
+
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_SQLite);
+    ASSERT_EQ(1u, idfObjs.size());
+
+    WorkspaceObject idf_sqlite(idfObjs[0]);
+
+    EXPECT_EQ("Simple", idf_sqlite.getString(Output_SQLiteFields::OptionType).get());
+    EXPECT_EQ("None", idf_sqlite.getString(Output_SQLiteFields::UnitConversionforTabularData).get());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputSQLite) {

@@ -51,49 +51,58 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlReportingTolerances) {
 
-  ForwardTranslator ft;
+  // Not there, and workspace should not have it
+  {
+    Model m;
+    ForwardTranslator ft;
+    Workspace w = ft.translateModel(m);
 
-  // Create a model
-  Model m;
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::OutputControl_ReportingTolerances);
+    ASSERT_EQ(0u, idfObjs.size());
+  }
 
-  // Get the unique object
-  OutputControlReportingTolerances outputControlReportingTolerances = m.getUniqueModelObject<OutputControlReportingTolerances>();
+  // It's there
+  {
+    Model m;
+    ForwardTranslator ft;
 
-  EXPECT_TRUE(outputControlReportingTolerances.setToleranceforTimeHeatingSetpointNotMet(1.16));
-  EXPECT_TRUE(outputControlReportingTolerances.setToleranceforTimeCoolingSetpointNotMet(0.75));
+    OutputControlReportingTolerances outputControlReportingTolerances = m.getUniqueModelObject<OutputControlReportingTolerances>();
 
-  Workspace w = ft.translateModel(m);
+    EXPECT_TRUE(outputControlReportingTolerances.setToleranceforTimeHeatingSetpointNotMet(1.16));
+    EXPECT_TRUE(outputControlReportingTolerances.setToleranceforTimeCoolingSetpointNotMet(0.75));
 
-  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::OutputControl_ReportingTolerances);
-  ASSERT_EQ(1u, idfObjs.size());
+    Workspace w = ft.translateModel(m);
 
-  WorkspaceObject idf_reportingtolerances(idfObjs[0]);
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::OutputControl_ReportingTolerances);
+    ASSERT_EQ(1u, idfObjs.size());
 
-  EXPECT_EQ(1.16, idf_reportingtolerances.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet).get());
-  EXPECT_EQ(0.75, idf_reportingtolerances.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet).get());
-}
+    WorkspaceObject idf_reportingtolerances(idfObjs[0]);
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlReportingTolerances) {
+    EXPECT_EQ(1.16, idf_reportingtolerances.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet).get());
+    EXPECT_EQ(0.75, idf_reportingtolerances.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet).get());
+  }
 
-  ReverseTranslator rt;
+  TEST_F(EnergyPlusFixture, ReverseTranslator_OutputControlReportingTolerances) {
 
-  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
+    ReverseTranslator rt;
 
-  // Not there, Model shouldn't have it either
-  Model m;
-  m = rt.translateWorkspace(w);
-  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
+    Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
-  OptionalWorkspaceObject _i_outputControlReportingTolerances = w.addObject(IdfObject(IddObjectType::OutputControl_ReportingTolerances));
-  ASSERT_TRUE(_i_outputControlReportingTolerances);
+    // Not there, Model shouldn't have it either
+    Model m;
+    m = rt.translateWorkspace(w);
+    EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
 
-  EXPECT_TRUE(_i_outputControlReportingTolerances->setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, 1.75));
-  EXPECT_TRUE(_i_outputControlReportingTolerances->setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, 0.25));
+    OptionalWorkspaceObject _i_outputControlReportingTolerances = w.addObject(IdfObject(IddObjectType::OutputControl_ReportingTolerances));
+    ASSERT_TRUE(_i_outputControlReportingTolerances);
 
-  m = rt.translateWorkspace(w);
+    EXPECT_TRUE(_i_outputControlReportingTolerances->setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, 1.75));
+    EXPECT_TRUE(_i_outputControlReportingTolerances->setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, 0.25));
 
-  // Get the unique object
-  OutputControlReportingTolerances outputControlReportingTolerances = m.getUniqueModelObject<OutputControlReportingTolerances>();
-  EXPECT_EQ(1.75, outputControlReportingTolerances.toleranceforTimeHeatingSetpointNotMet());
-  EXPECT_EQ(0.25, outputControlReportingTolerances.toleranceforTimeCoolingSetpointNotMet());
-}
+    m = rt.translateWorkspace(w);
+
+    // Get the unique object
+    OutputControlReportingTolerances outputControlReportingTolerances = m.getUniqueModelObject<OutputControlReportingTolerances>();
+    EXPECT_EQ(1.75, outputControlReportingTolerances.toleranceforTimeHeatingSetpointNotMet());
+    EXPECT_EQ(0.25, outputControlReportingTolerances.toleranceforTimeCoolingSetpointNotMet());
+  }
