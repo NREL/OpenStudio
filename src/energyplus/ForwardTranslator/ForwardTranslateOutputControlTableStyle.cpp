@@ -45,7 +45,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateOutputControlTableStyle(OutputControlTableStyle& modelObject) {
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::OutputControl_Table_Style);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::OutputControl_Table_Style, modelObject);
 
     idfObject.setString(OutputControl_Table_StyleFields::ColumnSeparator, modelObject.columnSeparator());
 

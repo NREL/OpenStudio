@@ -44,7 +44,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateOutputJSON(model::OutputJSON& modelObject) {
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_JSON);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_JSON, modelObject);
 
     // Option Type: Required String
     std::string optionType = modelObject.optionType();

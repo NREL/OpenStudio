@@ -44,7 +44,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateOutputControlFiles(OutputControlFiles& modelObject) {
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::OutputControl_Files);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::OutputControl_Files, modelObject);
 
     if (modelObject.outputCSV()) {
       idfObject.setString(OutputControl_FilesFields::OutputCSV, "Yes");

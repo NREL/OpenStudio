@@ -51,7 +51,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Diagnostics);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Diagnostics, modelObject);
 
     for (const std::string& key : modelObject.keys()) {
       IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();

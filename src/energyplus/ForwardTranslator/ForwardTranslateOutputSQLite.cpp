@@ -44,7 +44,7 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateOutputSQLite(model::OutputSQLite& modelObject) {
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_SQLite);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_SQLite, modelObject);
 
     idfObject.setString(Output_SQLiteFields::OptionType, modelObject.optionType());
 
