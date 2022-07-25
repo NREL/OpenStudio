@@ -2217,6 +2217,7 @@ set(${target_name}_test_src
   test/SpaceType_GTest.cpp
   test/Space_GTest.cpp
   test/StandardGlazing_GTest.cpp
+  test/StandardOpaqueMaterial_GTest.cpp
   test/SteamEquipment_GTest.cpp
   test/SubSurface_GTest.cpp
   test/Surface_GTest.cpp
