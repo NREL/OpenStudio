@@ -36,7 +36,6 @@ namespace openstudio {
 namespace model {
 
   class ChillerElectricEIR;
-  class CurveBiquadratic;
   class Curve;
   class Schedule;
   class Node;
@@ -127,9 +126,9 @@ namespace model {
 
       bool isReferenceCondenserFluidFlowRateAutosized() const;
 
-      CurveBiquadratic coolingCapacityFunctionOfTemperature() const;
+      Curve coolingCapacityFunctionOfTemperature() const;
 
-      CurveBiquadratic electricInputToCoolingOutputRatioFunctionOfTemperature() const;
+      Curve electricInputToCoolingOutputRatioFunctionOfTemperature() const;
 
       Curve electricInputToCoolingOutputRatioFunctionOfPLR() const;
 
@@ -231,9 +230,9 @@ namespace model {
 
       void autosizeReferenceCondenserFluidFlowRate();
 
-      bool setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic&);
+      bool setCoolingCapacityFunctionOfTemperature(const Curve&);
 
-      bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic&);
+      bool setElectricInputToCoolingOutputRatioFunctionOfTemperature(const Curve&);
 
       bool setElectricInputToCoolingOutputRatioFunctionOfPLR(const Curve&);
 

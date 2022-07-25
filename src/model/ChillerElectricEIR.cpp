@@ -166,14 +166,14 @@ namespace model {
       return result;
     }
 
-    CurveBiquadratic ChillerElectricEIR_Impl::coolingCapacityFunctionOfTemperature() const {
+    Curve ChillerElectricEIR_Impl::coolingCapacityFunctionOfTemperature() const {
       WorkspaceObject wo = getTarget(OS_Chiller_Electric_EIRFields::CoolingCapacityFunctionofTemperatureCurveName).get();
-      return wo.optionalCast<CurveBiquadratic>().get();
+      return wo.optionalCast<Curve>().get();
     }
 
-    CurveBiquadratic ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctionOfTemperature() const {
+    Curve ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctionOfTemperature() const {
       WorkspaceObject wo = getTarget(OS_Chiller_Electric_EIRFields::ElectricInputtoCoolingOutputRatioFunctionofTemperatureCurveName).get();
-      return wo.optionalCast<CurveBiquadratic>().get();
+      return wo.optionalCast<Curve>().get();
     }
 
     Curve ChillerElectricEIR_Impl::electricInputToCoolingOutputRatioFunctionOfPLR() const {
@@ -403,14 +403,14 @@ namespace model {
       return result;
     }
 
-    bool ChillerElectricEIR_Impl::setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic& curve) {
+    bool ChillerElectricEIR_Impl::setCoolingCapacityFunctionOfTemperature(const Curve& curve) {
       if (model() != curve.model()) {
         return false;
       }
       return this->setPointer(OS_Chiller_Electric_EIRFields::CoolingCapacityFunctionofTemperatureCurveName, curve.handle());
     }
 
-    bool ChillerElectricEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic& curve) {
+    bool ChillerElectricEIR_Impl::setElectricInputToCoolingOutputRatioFunctionOfTemperature(const Curve& curve) {
       if (model() != curve.model()) {
         return false;
       }
@@ -818,8 +818,7 @@ namespace model {
 
   }  // namespace detail
 
-  ChillerElectricEIR::ChillerElectricEIR(const Model& model, const CurveBiquadratic& CCFofT, const CurveBiquadratic& EItoCORFofT,
-                                         const Curve& EItoCORFofPLR)
+  ChillerElectricEIR::ChillerElectricEIR(const Model& model, const Curve& CCFofT, const Curve& EItoCORFofT, const Curve& EItoCORFofPLR)
     : WaterToWaterComponent(ChillerElectricEIR::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::ChillerElectricEIR_Impl>());
 
@@ -961,11 +960,11 @@ namespace model {
     return getImpl<detail::ChillerElectricEIR_Impl>()->isReferenceCondenserFluidFlowRateAutosized();
   }
 
-  bool ChillerElectricEIR::setCoolingCapacityFunctionOfTemperature(const CurveBiquadratic& curve) {
+  bool ChillerElectricEIR::setCoolingCapacityFunctionOfTemperature(const Curve& curve) {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setCoolingCapacityFunctionOfTemperature(curve);
   }
 
-  bool ChillerElectricEIR::setElectricInputToCoolingOutputRatioFunctionOfTemperature(const CurveBiquadratic& curve) {
+  bool ChillerElectricEIR::setElectricInputToCoolingOutputRatioFunctionOfTemperature(const Curve& curve) {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setElectricInputToCoolingOutputRatioFunctionOfTemperature(curve);
   }
 
@@ -973,11 +972,11 @@ namespace model {
     return getImpl<detail::ChillerElectricEIR_Impl>()->setElectricInputToCoolingOutputRatioFunctionOfPLR(curve);
   }
 
-  CurveBiquadratic ChillerElectricEIR::coolingCapacityFunctionOfTemperature() const {
+  Curve ChillerElectricEIR::coolingCapacityFunctionOfTemperature() const {
     return getImpl<detail::ChillerElectricEIR_Impl>()->coolingCapacityFunctionOfTemperature();
   }
 
-  CurveBiquadratic ChillerElectricEIR::electricInputToCoolingOutputRatioFunctionOfTemperature() const {
+  Curve ChillerElectricEIR::electricInputToCoolingOutputRatioFunctionOfTemperature() const {
     return getImpl<detail::ChillerElectricEIR_Impl>()->electricInputToCoolingOutputRatioFunctionOfTemperature();
   }
 
