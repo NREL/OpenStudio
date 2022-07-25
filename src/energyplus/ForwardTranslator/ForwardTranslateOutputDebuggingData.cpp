@@ -43,8 +43,8 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateOutputDebuggingData(model::OutputDebuggingData& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::Output_DebuggingData);
-    m_idfObjects.push_back(idfObject);
+
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_DebuggingData);
 
     // Report Debugging Data
     if (modelObject.reportDebuggingData()) {

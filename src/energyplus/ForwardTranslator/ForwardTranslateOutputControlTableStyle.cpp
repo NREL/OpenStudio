@@ -44,22 +44,14 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateOutputControlTableStyle(OutputControlTableStyle& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::OutputControl_Table_Style);
 
-    m_idfObjects.push_back(idfObject);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::OutputControl_Table_Style);
 
-    OptionalString s = modelObject.name();
-    if (s) {
-      idfObject.setName(*s);
-    }
+    idfObject.setString(OutputControl_Table_StyleFields::ColumnSeparator, modelObject.columnSeparator());
 
-    std::string columnSeparator = modelObject.columnSeparator();
-    idfObject.setString(OutputControl_Table_StyleFields::ColumnSeparator, columnSeparator);
+    idfObject.setString(OutputControl_Table_StyleFields::UnitConversion, modelObject.unitConversion());
 
-    std::string unitConversion = modelObject.unitConversion();
-    idfObject.setString(OutputControl_Table_StyleFields::UnitConversion, unitConversion);
-
-    return boost::optional<IdfObject>(idfObject);
+    return idfObject;
   }
 
 }  // namespace energyplus

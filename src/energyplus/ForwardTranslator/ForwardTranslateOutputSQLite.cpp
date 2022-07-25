@@ -44,14 +44,11 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateOutputSQLite(model::OutputSQLite& modelObject) {
 
-    IdfObject idfObject(openstudio::IddObjectType::Output_SQLite);
-    m_idfObjects.push_back(idfObject);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_SQLite);
 
-    std::string optionType = modelObject.optionType();
-    idfObject.setString(Output_SQLiteFields::OptionType, optionType);
+    idfObject.setString(Output_SQLiteFields::OptionType, modelObject.optionType());
 
-    std::string unitConversionforTabularData = modelObject.unitConversionforTabularData();
-    idfObject.setString(Output_SQLiteFields::UnitConversionforTabularData, unitConversionforTabularData);
+    idfObject.setString(Output_SQLiteFields::UnitConversionforTabularData, modelObject.unitConversionforTabularData());
 
     return idfObject;
   }  // End of translate function

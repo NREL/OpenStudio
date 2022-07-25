@@ -54,13 +54,8 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateOutputEnergyManagementSystem(OutputEnergyManagementSystem& modelObject) {
     boost::optional<std::string> s;
 
-    IdfObject idfObject(openstudio::IddObjectType::Output_EnergyManagementSystem);
-    m_idfObjects.push_back(idfObject);
-    //Name
-    s = modelObject.name();
-    if (s) {
-      idfObject.setName(*s);
-    }
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_EnergyManagementSystem);
+
     s = modelObject.actuatorAvailabilityDictionaryReporting();
     if (s) {
       idfObject.setString(Output_EnergyManagementSystemFields::ActuatorAvailabilityDictionaryReporting, s.get());

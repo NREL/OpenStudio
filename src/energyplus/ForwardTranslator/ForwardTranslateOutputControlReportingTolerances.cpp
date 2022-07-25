@@ -44,14 +44,8 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateOutputControlReportingTolerances(OutputControlReportingTolerances& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::OutputControl_ReportingTolerances);
 
-    m_idfObjects.push_back(idfObject);
-
-    OptionalString s = modelObject.name();
-    if (s) {
-      idfObject.setName(*s);
-    }
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::OutputControl_ReportingTolerances);
 
     boost::optional<double> value;
 
@@ -63,7 +57,7 @@ namespace energyplus {
       idfObject.setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, value.get());
     }
 
-    return boost::optional<IdfObject>(idfObject);
+    return idfObject;
   }
 
 }  // namespace energyplus

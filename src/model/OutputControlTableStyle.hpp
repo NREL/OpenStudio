@@ -65,11 +65,7 @@ namespace model {
 
     std::string columnSeparator() const;
 
-    bool isColumnSeparatorDefaulted() const;
-
     std::string unitConversion() const;
-
-    bool isUnitConversionDefaulted() const;
 
     //@}
     /** @name Setters */
@@ -77,11 +73,7 @@ namespace model {
 
     bool setColumnSeparator(const std::string& columnSeparator);
 
-    void resetColumnSeparator();
-
     bool setUnitConversion(const std::string& unitConversion);
-
-    void resetUnitConversion();
 
     //@}
     /** @name Other */

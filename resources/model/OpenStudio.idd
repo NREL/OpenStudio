@@ -34202,7 +34202,7 @@ OS:OutputControl:Table:Style,
        \key TabAndHTML
        \key XMLandHTML
        \key All
-       \default Comma
+       \required-field
    A3; \field Unit Conversion
        \type choice
        \key None
@@ -34210,7 +34210,7 @@ OS:OutputControl:Table:Style,
        \key JtoMJ
        \key JtoGJ
        \key InchPound
-       \default None
+       \required-field
 
 OS:Output:Meter,
        \memo each OS:Output:Meter command picks meters to be put onto the standard output file (.eso) and

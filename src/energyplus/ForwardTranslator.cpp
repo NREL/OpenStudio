@@ -4391,10 +4391,8 @@ namespace energyplus {
 
   void ForwardTranslator::createStandardOutputRequests(const model::Model& model) {
     if (!m_excludeHTMLOutputReport) {
-      boost::optional<model::OutputControlTableStyle> _tableStyle = model.getOptionalUniqueModelObject<model::OutputControlTableStyle>();
-      if (!_tableStyle) {
-        IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
-        m_idfObjects.push_back(tableStyle);
+      if (!model.getOptionalUniqueModelObject<model::OutputControlTableStyle>()) {
+        IdfObject& tableStyle = m_idfObjects.emplace_back(IddObjectType::OutputControl_Table_Style);
         tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator, "HTML");
         if (m_ipTabularOutput) {
           tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion, "InchPound");
@@ -4410,11 +4408,9 @@ namespace energyplus {
     }
 
     if (!m_excludeSQliteOutputReport) {
-      boost::optional<model::OutputSQLite> _sqliteOutput = model.getOptionalUniqueModelObject<model::OutputSQLite>();
-      if (!_sqliteOutput) {
-        IdfObject sqliteOutput(IddObjectType::Output_SQLite);
+      if (!model.getOptionalUniqueModelObject<model::OutputSQLite>()) {
+        IdfObject& sqliteOutput = m_idfObjects.emplace_back(IddObjectType::Output_SQLite);
         sqliteOutput.setString(Output_SQLiteFields::OptionType, "SimpleAndTabular");
-        m_idfObjects.push_back(sqliteOutput);
       }
     }
 
