@@ -27,74 +27,55 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#include <gtest/gtest.h>
+#include "EnergyPlusFixture.hpp"
+
 #include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/MasslessOpaqueMaterial.hpp"
-#include "../../model/MasslessOpaqueMaterial_Impl.hpp"
 #include "../../model/MaterialPropertyMoisturePenetrationDepthSettings.hpp"
 #include "../../model/MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
-#include "../../model/MaterialPropertyPhaseChange.hpp"
-#include "../../model/MaterialPropertyPhaseChange_Impl.hpp"
-#include "../../model/MaterialPropertyPhaseChangeHysteresis.hpp"
-#include "../../model/MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
+#include "../../model/StandardOpaqueMaterial.hpp"
+#include "../../model/StandardOpaqueMaterial_Impl.hpp"
 
-#include <utilities/idd/Material_NoMass_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
+
+#include <utilities/idd/MaterialProperty_MoisturePenetrationDepth_Settings_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+using namespace openstudio::energyplus;
 using namespace openstudio::model;
+using namespace openstudio;
 
-using namespace std;
+TEST_F(EnergyPlusFixture, ForwardTranslator_MaterialPropertyMoisturePenetrationDepthSettings) {
 
-namespace openstudio {
+  ForwardTranslator ft;
 
-namespace energyplus {
+  Model model;
+  StandardOpaqueMaterial material(model);
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd =
+    material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);  // drywall
 
-  boost::optional<IdfObject> ForwardTranslator::translateMasslessOpaqueMaterial(MasslessOpaqueMaterial& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::Material_NoMass);
+  Workspace workspace = ft.translateModel(model);
 
-    m_idfObjects.push_back(idfObject);
+  WorkspaceObjectVector idfObjs = workspace.getObjectsByType(IddObjectType::MaterialProperty_MoisturePenetrationDepth_Settings);
+  ASSERT_EQ(1u, idfObjs.size());
 
-    idfObject.setString(openstudio::Material_NoMassFields::Name, modelObject.name().get());
+  WorkspaceObject idf_matProp(idfObjs[0]);
 
-    idfObject.setString(openstudio::Material_NoMassFields::Roughness, modelObject.roughness());
-
-    idfObject.setDouble(openstudio::Material_NoMassFields::ThermalResistance, modelObject.thermalResistance());
-
-    OptionalDouble d = modelObject.thermalAbsorptance();
-    if (d) {
-      idfObject.setDouble(openstudio::Material_NoMassFields::ThermalAbsorptance, *d);
-    }
-
-    d = modelObject.solarAbsorptance();
-    if (d) {
-      idfObject.setDouble(openstudio::Material_NoMassFields::SolarAbsorptance, *d);
-    }
-
-    d = modelObject.visibleAbsorptance();
-    if (d) {
-      idfObject.setDouble(openstudio::Material_NoMassFields::VisibleAbsorptance, *d);
-    }
-
-    // Call the translation of these objects, which has two advantages:
-    // * will not translate them if they are orphaned (=not referencing a material), and,
-    // * makes the order of these objects in the IDF deterministic
-    if (boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> _empd = modelObject.materialPropertyMoisturePenetrationDepthSettings()) {
-      translateAndMapModelObject(_empd.get());
-    }
-
-    if (boost::optional<MaterialPropertyPhaseChange> _phaseChange = modelObject.materialPropertyPhaseChange()) {
-      translateAndMapModelObject(_phaseChange.get());
-    }
-
-    if (boost::optional<MaterialPropertyPhaseChangeHysteresis> _phaseChangeHysteresis = modelObject.materialPropertyPhaseChangeHysteresis()) {
-      translateAndMapModelObject(_phaseChangeHysteresis.get());
-    }
-
-    return boost::optional<IdfObject>(idfObject);
-  }
-
-}  // namespace energyplus
-
-}  // namespace openstudio
+  EXPECT_EQ("Material 1", idf_matProp.getString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::Name).get());
+  EXPECT_EQ(8.9, idf_matProp.getDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::WaterVaporDiffusionResistanceFactor).get());
+  EXPECT_EQ(0.0069, idf_matProp.getDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficienta).get());
+  EXPECT_EQ(0.9066, idf_matProp.getDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientb).get());
+  EXPECT_EQ(0.0404, idf_matProp.getDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientc).get());
+  EXPECT_EQ(22.1121, idf_matProp.getDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::MoistureEquationCoefficientd).get());
+  EXPECT_EQ("Autocalculate", idf_matProp.getString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::SurfaceLayerPenetrationDepth).get());
+  EXPECT_EQ("Autocalculate", idf_matProp.getString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::DeepLayerPenetrationDepth).get());
+  EXPECT_EQ(0.005, idf_matProp.getDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerThickness).get());
+  EXPECT_EQ(140,
+            idf_matProp.getDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerWaterVaporDiffusionResistanceFactor).get());
+}

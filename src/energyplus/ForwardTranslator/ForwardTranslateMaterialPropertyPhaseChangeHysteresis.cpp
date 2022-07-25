@@ -30,16 +30,12 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/MasslessOpaqueMaterial.hpp"
-#include "../../model/MasslessOpaqueMaterial_Impl.hpp"
-#include "../../model/MaterialPropertyMoisturePenetrationDepthSettings.hpp"
-#include "../../model/MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
-#include "../../model/MaterialPropertyPhaseChange.hpp"
-#include "../../model/MaterialPropertyPhaseChange_Impl.hpp"
 #include "../../model/MaterialPropertyPhaseChangeHysteresis.hpp"
 #include "../../model/MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
+#include "../../model/Material.hpp"
+#include "../../model/Material_Impl.hpp"
 
-#include <utilities/idd/Material_NoMass_FieldEnums.hxx>
+#include <utilities/idd/MaterialProperty_PhaseChangeHysteresis_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -51,48 +47,43 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateMasslessOpaqueMaterial(MasslessOpaqueMaterial& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::Material_NoMass);
+  boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyPhaseChangeHysteresis(MaterialPropertyPhaseChangeHysteresis& modelObject) {
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::MaterialProperty_PhaseChangeHysteresis, modelObject);
 
-    m_idfObjects.push_back(idfObject);
+    idfObject.setString(MaterialProperty_PhaseChangeHysteresisFields::Name, modelObject.material().nameString());
 
-    idfObject.setString(openstudio::Material_NoMassFields::Name, modelObject.name().get());
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LatentHeatduringtheEntirePhaseChangeProcess,
+                        modelObject.latentHeatduringtheEntirePhaseChangeProcess());
 
-    idfObject.setString(openstudio::Material_NoMassFields::Roughness, modelObject.roughness());
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LiquidStateThermalConductivity, modelObject.liquidStateThermalConductivity());
 
-    idfObject.setDouble(openstudio::Material_NoMassFields::ThermalResistance, modelObject.thermalResistance());
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LiquidStateDensity, modelObject.liquidStateDensity());
 
-    OptionalDouble d = modelObject.thermalAbsorptance();
-    if (d) {
-      idfObject.setDouble(openstudio::Material_NoMassFields::ThermalAbsorptance, *d);
-    }
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LiquidStateSpecificHeat, modelObject.liquidStateSpecificHeat());
 
-    d = modelObject.solarAbsorptance();
-    if (d) {
-      idfObject.setDouble(openstudio::Material_NoMassFields::SolarAbsorptance, *d);
-    }
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::HighTemperatureDifferenceofMeltingCurve,
+                        modelObject.highTemperatureDifferenceofMeltingCurve());
 
-    d = modelObject.visibleAbsorptance();
-    if (d) {
-      idfObject.setDouble(openstudio::Material_NoMassFields::VisibleAbsorptance, *d);
-    }
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::PeakMeltingTemperature, modelObject.peakMeltingTemperature());
 
-    // Call the translation of these objects, which has two advantages:
-    // * will not translate them if they are orphaned (=not referencing a material), and,
-    // * makes the order of these objects in the IDF deterministic
-    if (boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> _empd = modelObject.materialPropertyMoisturePenetrationDepthSettings()) {
-      translateAndMapModelObject(_empd.get());
-    }
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofMeltingCurve,
+                        modelObject.lowTemperatureDifferenceofMeltingCurve());
 
-    if (boost::optional<MaterialPropertyPhaseChange> _phaseChange = modelObject.materialPropertyPhaseChange()) {
-      translateAndMapModelObject(_phaseChange.get());
-    }
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::SolidStateThermalConductivity, modelObject.solidStateThermalConductivity());
 
-    if (boost::optional<MaterialPropertyPhaseChangeHysteresis> _phaseChangeHysteresis = modelObject.materialPropertyPhaseChangeHysteresis()) {
-      translateAndMapModelObject(_phaseChangeHysteresis.get());
-    }
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::SolidStateDensity, modelObject.solidStateDensity());
 
-    return boost::optional<IdfObject>(idfObject);
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::SolidStateSpecificHeat, modelObject.solidStateSpecificHeat());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::HighTemperatureDifferenceofFreezingCurve,
+                        modelObject.highTemperatureDifferenceofFreezingCurve());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::PeakFreezingTemperature, modelObject.peakFreezingTemperature());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeHysteresisFields::LowTemperatureDifferenceofFreezingCurve,
+                        modelObject.lowTemperatureDifferenceofFreezingCurve());
+
+    return idfObject;
   }
 
 }  // namespace energyplus

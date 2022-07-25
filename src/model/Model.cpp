@@ -4027,6 +4027,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(LuminaireDefinition);
     REGISTER_CONSTRUCTOR(MaterialPropertyGlazingSpectralData);
     REGISTER_CONSTRUCTOR(MaterialPropertyMoisturePenetrationDepthSettings);
+    REGISTER_CONSTRUCTOR(MaterialPropertyPhaseChange);
+    REGISTER_CONSTRUCTOR(MaterialPropertyPhaseChangeHysteresis);
     REGISTER_CONSTRUCTOR(MasslessOpaqueMaterial);
     REGISTER_CONSTRUCTOR(MeterCustom);
     REGISTER_CONSTRUCTOR(MeterCustomDecrement);
@@ -4562,6 +4564,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(LuminaireDefinition);
     REGISTER_COPYCONSTRUCTORS(MaterialPropertyGlazingSpectralData);
     REGISTER_COPYCONSTRUCTORS(MaterialPropertyMoisturePenetrationDepthSettings);
+    REGISTER_COPYCONSTRUCTORS(MaterialPropertyPhaseChange);
+    REGISTER_COPYCONSTRUCTORS(MaterialPropertyPhaseChangeHysteresis);
     REGISTER_COPYCONSTRUCTORS(MasslessOpaqueMaterial);
     REGISTER_COPYCONSTRUCTORS(MeterCustom);
     REGISTER_COPYCONSTRUCTORS(MeterCustomDecrement);

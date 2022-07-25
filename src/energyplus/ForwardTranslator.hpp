@@ -296,6 +296,8 @@ namespace model {
   class Luminaire;
   class MaterialPropertyGlazingSpectralData;
   class MaterialPropertyMoisturePenetrationDepthSettings;
+  class MaterialPropertyPhaseChange;
+  class MaterialPropertyPhaseChangeHysteresis;
   class MasslessOpaqueMaterial;
   class MeterCustom;
   class MeterCustomDecrement;
@@ -1113,6 +1115,10 @@ namespace energyplus {
 
     boost::optional<IdfObject>
       translateMaterialPropertyMoisturePenetrationDepthSettings(model::MaterialPropertyMoisturePenetrationDepthSettings& modelObject);
+
+    boost::optional<IdfObject> translateMaterialPropertyPhaseChange(model::MaterialPropertyPhaseChange& modelObject);
+
+    boost::optional<IdfObject> translateMaterialPropertyPhaseChangeHysteresis(model::MaterialPropertyPhaseChangeHysteresis& modelObject);
 
     boost::optional<IdfObject> translateMasslessOpaqueMaterial(model::MasslessOpaqueMaterial& modelObject);
 

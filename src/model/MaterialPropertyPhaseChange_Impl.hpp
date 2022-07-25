@@ -27,68 +27,87 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_MATERIAL_IMPL_HPP
-#define MODEL_MATERIAL_IMPL_HPP
+#ifndef MODEL_MATERIALPROPERTYPHASECHANGE_IMPL_HPP
+#define MODEL_MATERIALPROPERTYPHASECHANGE_IMPL_HPP
 
-#include "ResourceObject_Impl.hpp"
+#include <vector>
+#include "ModelAPI.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-  // forward declaration
+  class TemperatureEnthalpy;
   class Material;
-  class StandardsInformationMaterial;
 
   namespace detail {
 
-    class MODEL_API Material_Impl : public ResourceObject_Impl
+    /** MaterialPropertyPhaseChange_Impl is a ModelObject_Impl that is the implementation class for MaterialPropertyPhaseChange.*/
+    class MODEL_API MaterialPropertyPhaseChange_Impl : public ModelObject_Impl
     {
 
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      // Construct completely new object.
-      Material_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      MaterialPropertyPhaseChange_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      // Construct from existing workspace object (typically when Model is being constructed
-      // from Workspace).
-      Material_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      MaterialPropertyPhaseChange_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      // Clone copy constructor.
-      Material_Impl(const Material_Impl& other, Model_Impl* model, bool keepHandle);
+      MaterialPropertyPhaseChange_Impl(const MaterialPropertyPhaseChange_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~Material_Impl() {}
+      virtual ~MaterialPropertyPhaseChange_Impl() {}
+
+      //@}
+      /** @name Virtual Methods */
+      //@{
+
+      virtual const std::vector<std::string>& outputVariableNames() const override;
+
+      virtual IddObjectType iddObjectType() const override;
 
       //@}
       /** @name Getters */
       //@{
 
-      // return any children objects in the hierarchy
-      virtual std::vector<ModelObject> children() const override;
+      std::string materialName() const;
 
-      /** Get the thickness of the material. For some materials, 0.0 is always returned. */
-      virtual double thickness() const;
+      Material material() const;
 
-      virtual boost::optional<double> getVisibleTransmittance() const = 0;
+      double temperatureCoefficientforThermalConductivity() const;
 
-      virtual boost::optional<double> interiorVisibleAbsorptance() const;
+      bool isTemperatureCoefficientforThermalConductivityDefaulted() const;
 
-      virtual boost::optional<double> exteriorVisibleAbsorptance() const;
+      std::vector<TemperatureEnthalpy> temperatureEnthalpys() const;
 
-      StandardsInformationMaterial standardsInformation() const;
+      unsigned int numberofTemperatureEnthalpys() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      /** Set thickness to value (m). For some materials, false is always returned. */
-      virtual bool setThickness(double value);
+      bool setTemperatureCoefficientforThermalConductivity(double temperatureCoefficientforThermalConductivity);
+
+      void resetTemperatureCoefficientforThermalConductivity();
+
+      bool addTemperatureEnthalpy(const TemperatureEnthalpy& temperatureEnthalpy);
+
+      bool addTemperatureEnthalpy(double temperature, double enthalpy);
+
+      bool addTemperatureEnthalpys(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
+
+      bool removeTemperatureEnthalpy(unsigned groupIndex);
+
+      void removeAllTemperatureEnthalpys();
 
       //@}
+      /** @name Other */
+      //@{
 
+      //@}
+     protected:
      private:
-      REGISTER_LOGGER("openstudio.model.Material");
+      REGISTER_LOGGER("openstudio.model.MaterialPropertyPhaseChange");
     };
 
   }  // namespace detail
@@ -96,4 +115,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_MATERIAL_IMPL_HPP
+#endif  // MODEL_MATERIALPROPERTYPHASECHANGE_IMPL_HPP

@@ -30,16 +30,14 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
-#include "../../model/MasslessOpaqueMaterial.hpp"
-#include "../../model/MasslessOpaqueMaterial_Impl.hpp"
-#include "../../model/MaterialPropertyMoisturePenetrationDepthSettings.hpp"
-#include "../../model/MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
 #include "../../model/MaterialPropertyPhaseChange.hpp"
 #include "../../model/MaterialPropertyPhaseChange_Impl.hpp"
-#include "../../model/MaterialPropertyPhaseChangeHysteresis.hpp"
-#include "../../model/MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
+#include "../../model/Material.hpp"
+#include "../../model/Material_Impl.hpp"
 
-#include <utilities/idd/Material_NoMass_FieldEnums.hxx>
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
+#include <utilities/idd/MaterialProperty_PhaseChange_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
@@ -51,48 +49,29 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateMasslessOpaqueMaterial(MasslessOpaqueMaterial& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::Material_NoMass);
-
-    m_idfObjects.push_back(idfObject);
-
-    idfObject.setString(openstudio::Material_NoMassFields::Name, modelObject.name().get());
-
-    idfObject.setString(openstudio::Material_NoMassFields::Roughness, modelObject.roughness());
-
-    idfObject.setDouble(openstudio::Material_NoMassFields::ThermalResistance, modelObject.thermalResistance());
-
-    OptionalDouble d = modelObject.thermalAbsorptance();
-    if (d) {
-      idfObject.setDouble(openstudio::Material_NoMassFields::ThermalAbsorptance, *d);
+  boost::optional<IdfObject> ForwardTranslator::translateMaterialPropertyPhaseChange(MaterialPropertyPhaseChange& modelObject) {
+    if (modelObject.temperatureEnthalpys().size() < 4) {
+      LOG(Warn, modelObject.briefDescription() << " cannot be translated as it has less than 4 temperature-enthalpy pairs.");
+      return boost::none;
     }
 
-    d = modelObject.solarAbsorptance();
-    if (d) {
-      idfObject.setDouble(openstudio::Material_NoMassFields::SolarAbsorptance, *d);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::MaterialProperty_PhaseChange, modelObject);
+
+    idfObject.setString(MaterialProperty_PhaseChangeFields::Name, modelObject.material().nameString());
+
+    idfObject.setDouble(MaterialProperty_PhaseChangeFields::TemperatureCoefficientforThermalConductivity,
+                        modelObject.temperatureCoefficientforThermalConductivity());
+
+    std::vector<TemperatureEnthalpy> temperatureEnthalpys = modelObject.temperatureEnthalpys();
+    if (!temperatureEnthalpys.empty()) {
+      for (const TemperatureEnthalpy& temperatureEnthalpy : temperatureEnthalpys) {
+        auto eg = idfObject.pushExtensibleGroup();
+        eg.setDouble(MaterialProperty_PhaseChangeExtensibleFields::Temperature, temperatureEnthalpy.temperature());
+        eg.setDouble(MaterialProperty_PhaseChangeExtensibleFields::Enthalpy, temperatureEnthalpy.enthalpy());
+      }
     }
 
-    d = modelObject.visibleAbsorptance();
-    if (d) {
-      idfObject.setDouble(openstudio::Material_NoMassFields::VisibleAbsorptance, *d);
-    }
-
-    // Call the translation of these objects, which has two advantages:
-    // * will not translate them if they are orphaned (=not referencing a material), and,
-    // * makes the order of these objects in the IDF deterministic
-    if (boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> _empd = modelObject.materialPropertyMoisturePenetrationDepthSettings()) {
-      translateAndMapModelObject(_empd.get());
-    }
-
-    if (boost::optional<MaterialPropertyPhaseChange> _phaseChange = modelObject.materialPropertyPhaseChange()) {
-      translateAndMapModelObject(_phaseChange.get());
-    }
-
-    if (boost::optional<MaterialPropertyPhaseChangeHysteresis> _phaseChangeHysteresis = modelObject.materialPropertyPhaseChangeHysteresis()) {
-      translateAndMapModelObject(_phaseChangeHysteresis.get());
-    }
-
-    return boost::optional<IdfObject>(idfObject);
+    return idfObject;
   }
 
 }  // namespace energyplus
