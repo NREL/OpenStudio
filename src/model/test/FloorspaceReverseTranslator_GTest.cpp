@@ -88,7 +88,7 @@ void CompareTwoModels(Model& model, Model& baseline) {
   // Compare stories
   //   Match by name,compare properties
   //   Compare shading count
-  double tol = 0.001;   // Same tolerance as defaulyts for circularEqual
+  double tol = 0.001;  // Same tolerance as defaulyts for circularEqual
   auto thermalZones1 = model.getModelObjects<ThermalZone>();
   auto thermalZones2 = baseline.getModelObjects<ThermalZone>();
   EXPECT_EQ(thermalZones1.size(), thermalZones2.size());
