@@ -2066,6 +2066,7 @@ OS:Material,
        \type alpha
        \required-field
        \reference MaterialNames
+       \reference MaterialWithPropertyNames
   A3, \field Roughness
        \type choice
        \required-field
@@ -2081,7 +2082,6 @@ OS:Material,
        \units m
        \ip-units in
        \minimum> 0
-       \maximum 3
   N2, \field Conductivity
        \type real
        \required-field
@@ -2166,6 +2166,7 @@ OS:Material:NoMass,
        \type alpha
        \required-field
        \reference MaterialNames
+       \reference MaterialWithPropertyNames
   A3, \field Roughness
        \type choice
        \required-field
@@ -3196,7 +3197,7 @@ OS:MaterialProperty:MoisturePenetrationDepth:Settings,
   A2,  \field Material Name
        \required-field
        \type object-list
-       \object-list MaterialNames
+       \object-list MaterialWithPropertyNames
        \note Material Name that the moisture properties will be added to.
        \note Additional material properties required to perform the EMPD model.
        \note Effective Mean Penetration Depth (EMPD)
@@ -3251,6 +3252,135 @@ OS:MaterialProperty:MoisturePenetrationDepth:Settings,
        \note The coating's resistance to water vapor diffusion relative to the
        \note resistance to water vapor diffusion in stagnant air
        \note (see Water Vapor Diffusion Resistance Factor above).
+
+OS:MaterialProperty:PhaseChange,
+       \memo Additional properties for temperature dependent thermal conductivity
+       \memo and enthalpy for Phase Change Materials (PCM)
+       \memo HeatBalanceAlgorithm = CondFD(ConductionFiniteDifference) solution algorithm only.
+       \memo Constructions with this should use the detailed CondFD process.
+       \memo Has no effect with other HeatBalanceAlgorithm solution algorithms
+       \extensible:2
+       \max-fields 35
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Material Name
+       \required-field
+       \type object-list
+       \object-list MaterialWithPropertyNames
+       \note Regular Material Name to which the additional properties will be added.
+       \note this the material name for the basic material properties.
+  N1,  \field Temperature Coefficient for Thermal Conductivity
+       \note The base temperature is 20C.
+       \note This is the thermal conductivity change per degree excursion from 20C.
+       \note This variable conductivity function is overridden by the VariableThermalConductivity object, if present.
+       \units W/m-K2
+       \type real
+       \default 0.0
+  N2,  \field Temperature
+       \required-field
+       \note for Temperature-enthalpy function
+       \units C
+       \type real
+       \begin-extensible
+  N3;  \field Enthalpy
+       \required-field
+       \note for Temperature-enthalpy function corresponding to temperature 1
+       \units J/kg
+
+OS:MaterialProperty:PhaseChangeHysteresis,
+       \memo Additional properties for temperature dependent thermal conductivity
+       \memo and enthalpy for Phase Change Materials (PCM) with separate melting and freezing curves.
+       \memo HeatBalanceAlgorithm = CondFD (ConductionFiniteDifference) solution algorithm only.
+       \memo Constructions with this should use the detailed CondFD process.
+       \memo Has no effect with other HeatBalanceAlgorithm solution algorithms.
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Material Name
+       \required-field
+       \type object-list
+       \object-list MaterialWithPropertyNames
+       \note Regular Material Name to which the additional properties will be added.
+       \note this the material name for the basic material properties.
+  N1,  \field Latent Heat during the Entire Phase Change Process
+       \note The total latent heat absorbed or rejected during the transition from solid to liquid, or back
+       \required-field
+       \units J/kg
+       \type real
+       \minimum> 0
+  N2,  \field Liquid State Thermal Conductivity
+       \note The thermal conductivity used by this material when the material is fully liquid
+       \required-field
+       \units W/m-K
+       \type real
+       \minimum> 0
+  N3,  \field Liquid State Density
+       \note The density used by this material when the material is fully liquid
+       \required-field
+       \units kg/m3
+       \type real
+       \minimum> 0
+  N4,  \field Liquid State Specific Heat
+       \note The constant specific heat used for the fully melted (liquid) state
+       \required-field
+       \units J/kg-K
+       \type real
+       \minimum> 0
+  N5,  \field High Temperature Difference of Melting Curve
+       \note The total melting range of the material is the sum of low and high temperature difference of melting curve.
+       \required-field
+       \units deltaC
+       \type real
+       \minimum> 0
+  N6,  \field Peak Melting Temperature
+       \note The temperature at which the melting curve peaks
+       \required-field
+       \units C
+       \type real
+       \minimum> 0
+  N7,  \field Low Temperature Difference of Melting Curve
+       \note The total melting range of the material is the sum of low and high temperature difference of melting curve.
+       \required-field
+       \units deltaC
+       \type real
+       \minimum> 0
+  N8,  \field Solid State Thermal Conductivity
+       \note The thermal conductivity used by this material when the material is fully solid
+       \required-field
+       \units W/m-K
+       \type real
+       \minimum> 0
+  N9,  \field Solid State Density
+       \note The density used by this material when the material is fully solid
+       \required-field
+       \units kg/m3
+       \type real
+       \minimum> 0
+  N10, \field Solid State Specific Heat
+       \note The constant specific heat used for the fully frozen (crystallized) state
+       \required-field
+       \units J/kg-K
+       \type real
+       \minimum> 0
+  N11, \field High Temperature Difference of Freezing Curve
+       \note The total freezing range of the material is the sum of low and high temperature difference of freezing curve.
+       \required-field
+       \units deltaC
+       \type real
+       \minimum> 0
+  N12, \field Peak Freezing Temperature
+       \note The temperature at which the freezing curve peaks
+       \required-field
+       \units C
+       \type real
+       \minimum> 0
+  N13; \field Low Temperature Difference of Freezing Curve
+       \note The total freezing range of the material is the sum of low and high temperature difference of freezing curve.
+       \required-field
+       \units deltaC
+       \type real
+       \minimum> 0
 
 \group OpenStudio Constructions
 

@@ -239,6 +239,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateLuminaire.cpp
   ForwardTranslator/ForwardTranslateMaterialPropertyGlazingSpectralData.cpp
   ForwardTranslator/ForwardTranslateMaterialPropertyMoisturePenetrationDepthSettings.cpp
+  ForwardTranslator/ForwardTranslateMaterialPropertyPhaseChange.cpp
+  ForwardTranslator/ForwardTranslateMaterialPropertyPhaseChangeHysteresis.cpp
   ForwardTranslator/ForwardTranslateMasslessOpaqueMaterial.cpp
   ForwardTranslator/ForwardTranslateMeterCustom.cpp
   ForwardTranslator/ForwardTranslateMeterCustomDecrement.cpp
@@ -651,9 +653,7 @@ set(${target_name}_test_src
   Test/AvailabilityManagerNightCycle_GTest.cpp
   Test/AvailabilityManagerHybridVentilation_GTest.cpp
   Test/Building_GTest.cpp
-
   Test/CentralHeatPumpSystem_GTest.cpp
-
   Test/CoilCoolingDX_GTest.cpp
   Test/CoilCoolingDXCurveFitPerformance_GTest.cpp
   Test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp
@@ -685,6 +685,7 @@ set(${target_name}_test_src
   Test/ElectricLoadCenterStorageLiIonNMCBattery_GTest.cpp
   Test/ElectricLoadCenterTransformer_GTest.cpp
   Test/EMS_GTest.cpp
+  Test/EnvironmentalImpactFactors_GTest.cpp
   Test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   Test/ExteriorLights_GTest.cpp
   Test/ExteriorFuelEquipment_GTest.cpp
@@ -695,6 +696,7 @@ set(${target_name}_test_src
   Test/FanVariableVolume_GTest.cpp
   Test/FanSystemModel_GTest.cpp
   Test/FuelCell_GTest.cpp
+  Test/FuelFactors_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
   Test/GeneratorWindTurbine_GTest.cpp
@@ -710,6 +712,9 @@ set(${target_name}_test_src
   Test/LifeCycleCostParameters_GTest.cpp
   Test/Lights_GTest.cpp
   Test/Luminaire_GTest.cpp
+  Test/MaterialPropertyMoisturePenetrationDepthSettings_GTest.cpp
+  Test/MaterialPropertyPhaseChange_GTest.cpp
+  Test/MaterialPropertyPhaseChangeHysteresis_GTest.cpp
   Test/Meter_GTest.cpp
   Test/OutputControlFiles_GTest.cpp
   Test/OutputControlReportingTolerances_GTest.cpp
@@ -719,8 +724,6 @@ set(${target_name}_test_src
   Test/OutputJSON_GTest.cpp
   Test/OutputSQLite_GTest.cpp
   Test/OutputEnvironmentalImpactFactors_GTest.cpp
-  Test/EnvironmentalImpactFactors_GTest.cpp
-  Test/FuelFactors_GTest.cpp
   Test/OutputTableSummaryReports_GTest.cpp
   Test/People_GTest.cpp
   Test/PhotovoltaicPerformanceSandia_GTest.cpp

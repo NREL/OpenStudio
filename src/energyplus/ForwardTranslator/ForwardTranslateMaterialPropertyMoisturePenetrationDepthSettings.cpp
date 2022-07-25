@@ -32,6 +32,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/MaterialPropertyMoisturePenetrationDepthSettings.hpp"
 #include "../../model/MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
+#include "../../model/Material.hpp"
+#include "../../model/Material_Impl.hpp"
 
 #include <utilities/idd/MaterialProperty_MoisturePenetrationDepth_Settings_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -47,11 +49,9 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translateMaterialPropertyMoisturePenetrationDepthSettings(MaterialPropertyMoisturePenetrationDepthSettings& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::MaterialProperty_MoisturePenetrationDepth_Settings);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::MaterialProperty_MoisturePenetrationDepth_Settings, modelObject);
 
-    m_idfObjects.push_back(idfObject);
-
-    idfObject.setString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::Name, modelObject.materialName());
+    idfObject.setString(MaterialProperty_MoisturePenetrationDepth_SettingsFields::Name, modelObject.material().nameString());
 
     idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::WaterVaporDiffusionResistanceFactor,
                         modelObject.waterVaporDiffusionResistanceFactor());
@@ -87,7 +87,7 @@ namespace energyplus {
     idfObject.setDouble(MaterialProperty_MoisturePenetrationDepth_SettingsFields::CoatingLayerWaterVaporDiffusionResistanceFactor,
                         modelObject.coatingLayerWaterVaporDiffusionResistanceFactor());
 
-    return boost::optional<IdfObject>(idfObject);
+    return idfObject;
   }
 
 }  // namespace energyplus

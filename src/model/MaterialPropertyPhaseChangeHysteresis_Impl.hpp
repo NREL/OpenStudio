@@ -27,8 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_MATERIALPROPERTYMOISTUREPENETRATIONDEPTHSETTINGS_IMPL_HPP
-#define MODEL_MATERIALPROPERTYMOISTUREPENETRATIONDEPTHSETTINGS_IMPL_HPP
+#ifndef MODEL_MATERIALPROPERTYPHASECHANGEHYSTERESIS_IMPL_HPP
+#define MODEL_MATERIALPROPERTYPHASECHANGEHYSTERESIS_IMPL_HPP
 
 #include <vector>
 #include "ModelAPI.hpp"
@@ -41,23 +41,21 @@ namespace model {
 
   namespace detail {
 
-    /** MaterialPropertyMoisturePenetrationDepthSettings_Impl is a ModelObject_Impl that is the implementation class for MaterialPropertyMoisturePenetrationDepthSettings.*/
-    class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings_Impl : public ModelObject_Impl
+    /** MaterialPropertyPhaseChangeHysteresis_Impl is a ModelObject_Impl that is the implementation class for MaterialPropertyPhaseChangeHysteresis.*/
+    class MODEL_API MaterialPropertyPhaseChangeHysteresis_Impl : public ModelObject_Impl
     {
 
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      MaterialPropertyMoisturePenetrationDepthSettings_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      MaterialPropertyPhaseChangeHysteresis_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      MaterialPropertyMoisturePenetrationDepthSettings_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
-                                                            bool keepHandle);
+      MaterialPropertyPhaseChangeHysteresis_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      MaterialPropertyMoisturePenetrationDepthSettings_Impl(const MaterialPropertyMoisturePenetrationDepthSettings_Impl& other, Model_Impl* model,
-                                                            bool keepHandle);
+      MaterialPropertyPhaseChangeHysteresis_Impl(const MaterialPropertyPhaseChangeHysteresis_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~MaterialPropertyMoisturePenetrationDepthSettings_Impl() {}
+      virtual ~MaterialPropertyPhaseChangeHysteresis_Impl() {}
 
       //@}
       /** @name Virtual Methods */
@@ -75,58 +73,61 @@ namespace model {
 
       Material material() const;
 
-      double waterVaporDiffusionResistanceFactor() const;
+      double latentHeatduringtheEntirePhaseChangeProcess() const;
 
-      double moistureEquationCoefficientA() const;
+      double liquidStateThermalConductivity() const;
 
-      double moistureEquationCoefficientB() const;
+      double liquidStateDensity() const;
 
-      double moistureEquationCoefficientC() const;
+      double liquidStateSpecificHeat() const;
 
-      double moistureEquationCoefficientD() const;
+      double highTemperatureDifferenceofMeltingCurve() const;
 
-      std::vector<double> moistureEquationCoefficients() const;
+      double peakMeltingTemperature() const;
 
-      boost::optional<double> surfaceLayerPenetrationDepth();
+      double lowTemperatureDifferenceofMeltingCurve() const;
 
-      bool isSurfaceLayerPenetrationDepthAutocalculated();
+      double solidStateThermalConductivity() const;
 
-      boost::optional<double> deepLayerPenetrationDepth();
+      double solidStateDensity() const;
 
-      bool isDeepLayerPenetrationDepthAutocalculated();
+      double solidStateSpecificHeat() const;
 
-      double coatingLayerThickness() const;
+      double highTemperatureDifferenceofFreezingCurve() const;
 
-      double coatingLayerWaterVaporDiffusionResistanceFactor() const;
+      double peakFreezingTemperature() const;
+
+      double lowTemperatureDifferenceofFreezingCurve() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      bool setWaterVaporDiffusionResistanceFactor(double waterVaporDiffusionResistanceFactor);
+      bool setLatentHeatduringtheEntirePhaseChangeProcess(double latentHeatduringtheEntirePhaseChangeProcess);
 
-      bool setMoistureEquationCoefficientA(double moistureEquationCoefficientA);
+      bool setLiquidStateThermalConductivity(double liquidStateThermalConductivity);
 
-      bool setMoistureEquationCoefficientB(double moistureEquationCoefficientB);
+      bool setLiquidStateDensity(double liquidStateDensity);
 
-      bool setMoistureEquationCoefficientC(double moistureEquationCoefficientC);
+      bool setLiquidStateSpecificHeat(double liquidStateSpecificHeat);
 
-      bool setMoistureEquationCoefficientD(double moistureEquationCoefficientD);
+      bool setHighTemperatureDifferenceofMeltingCurve(double highTemperatureDifferenceofMeltingCurve);
 
-      bool setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB,
-                                           double moistureEquationCoefficientC, double moistureEquationCoefficientD);
+      bool setPeakMeltingTemperature(double peakMeltingTemperature);
 
-      bool setSurfaceLayerPenetrationDepth(double surfaceLayerPenetrationDepth);
+      bool setLowTemperatureDifferenceofMeltingCurve(double lowTemperatureDifferenceofMeltingCurve);
 
-      void autocalculateSurfaceLayerPenetrationDepth();
+      bool setSolidStateThermalConductivity(double solidStateThermalConductivity);
 
-      bool setDeepLayerPenetrationDepth(double deepLayerPenetrationDepth);
+      bool setSolidStateDensity(double solidStateDensity);
 
-      void autocalculateDeepLayerPenetrationDepth();
+      bool setSolidStateSpecificHeat(double solidStateSpecificHeat);
 
-      bool setCoatingLayerThickness(double coatingLayerThickness);
+      bool setHighTemperatureDifferenceofFreezingCurve(double highTemperatureDifferenceofFreezingCurve);
 
-      bool setCoatingLayerWaterVaporDiffusionResistanceFactor(double coatingLayerWaterVaporDiffusionResistanceFactor);
+      bool setPeakFreezingTemperature(double peakFreezingTemperature);
+
+      bool setLowTemperatureDifferenceofFreezingCurve(double lowTemperatureDifferenceofFreezingCurve);
 
       //@}
       /** @name Other */
@@ -135,7 +136,7 @@ namespace model {
       //@}
      protected:
      private:
-      REGISTER_LOGGER("openstudio.model.MaterialPropertyMoisturePenetrationDepthSettings");
+      REGISTER_LOGGER("openstudio.model.MaterialPropertyPhaseChangeHysteresis");
     };
 
   }  // namespace detail
@@ -143,4 +144,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_MATERIALPROPERTYMOISTUREPENETRATIONDEPTHSETTINGS_IMPL_HPP
+#endif  // MODEL_MATERIALPROPERTYPHASECHANGEHYSTERESIS_IMPL_HPP
