@@ -900,7 +900,7 @@ const FSVertex& FSEdgeReference::getNextVertex() const {
 
 FSFiller::FSFiller(const Json::Value& root, const FSStory& story) : FSBase(root) {
 
-  // Alhpa can be a single value or a list
+  // Alpha can be a single value or a list
   if (root.isMember("alpha") && root["alpha"].isConvertibleTo(Json::realValue)) {
     m_alphas.push_back(root.get("alpha", 0.5).asDouble());
   } else {
@@ -943,6 +943,14 @@ FSWindow::FSWindow(const Json::Value& root, const FSModel& model, FSStory& story
   if (checkKeyAndType(root, "window_definition_id", Json::stringValue)) {
     std::string windowDefinitionId = root.get("window_definition_id", "").asString();
     m_windowDefinition = model.windowDefinition(windowDefinitionId);
+    // If the window definition is window to wall ratios then the windows should be centered
+    // on the wall surface so make sure the alpha is 0.5 and then it will be so
+    if (m_windowDefinition.has_value()) {
+      if (m_windowDefinition->windowDefinitionMode() == "Window to Wall Ratio") {
+        m_alphas.clear();
+        m_alphas.push_back(0.5);
+      }
+    }
   }
 }
 

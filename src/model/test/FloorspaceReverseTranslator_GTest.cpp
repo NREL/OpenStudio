@@ -88,70 +88,70 @@ void CompareTwoModels(Model& model, Model& baseline) {
   // Compare stories
   //   Match by name,compare properties
   //   Compare shading count
-
+  double tol = 0.001;   // Same tolerance as defaulyts for circularEqual
   auto thermalZones1 = model.getModelObjects<ThermalZone>();
   auto thermalZones2 = baseline.getModelObjects<ThermalZone>();
-  ASSERT_EQ(thermalZones1.size(), thermalZones2.size());
+  EXPECT_EQ(thermalZones1.size(), thermalZones2.size());
 
   for (auto& thermalZone : thermalZones1) {
     auto match = baseline.getModelObjectByName<ThermalZone>(*thermalZone.name());
-    ASSERT_TRUE(match.has_value());
+    EXPECT_TRUE(match.has_value());
     // Multiplier
-    ASSERT_EQ(thermalZone.multiplier(), match->multiplier());
+    EXPECT_EQ(thermalZone.multiplier(), match->multiplier());
 
     // Compare primary and secondary daylighting
     // Note names don't matchm the floorspace translator is Daylighting Control 1 - 1
     // as in the original floorspace model but the threeJS rtranslatot is Face NN
     auto primaryDaylighting1 = thermalZone.primaryDaylightingControl();
     auto primaryDaylighting2 = match->primaryDaylightingControl();
-    ASSERT_EQ(primaryDaylighting1.has_value(), primaryDaylighting2.has_value());
+    EXPECT_EQ(primaryDaylighting1.has_value(), primaryDaylighting2.has_value());
     //if (primaryDaylighting1.has_value()) {
     //  ASSERT_EQ(*primaryDaylighting1->name(), *primaryDaylighting2->name());
     //}
     auto secondaryDaylighting1 = thermalZone.primaryDaylightingControl();
     auto secondaryDaylighting2 = match->primaryDaylightingControl();
-    ASSERT_EQ(secondaryDaylighting1.has_value(), secondaryDaylighting2.has_value());
+    EXPECT_EQ(secondaryDaylighting1.has_value(), secondaryDaylighting2.has_value());
     //if (secondaryDaylighting1.has_value()) {
     //  ASSERT_EQ(*secondaryDaylighting1->name(), *secondaryyDaylighting2->name());
     //}
     if (primaryDaylighting1.has_value()) {
-      ASSERT_EQ(primaryDaylighting1->illuminanceSetpoint(), primaryDaylighting2->illuminanceSetpoint());
-      ASSERT_EQ(primaryDaylighting1->position(), primaryDaylighting2->position());
+      EXPECT_EQ(primaryDaylighting1->illuminanceSetpoint(), primaryDaylighting2->illuminanceSetpoint());
+      EXPECT_EQ(primaryDaylighting1->position(), primaryDaylighting2->position());
     }
 
     if (secondaryDaylighting1.has_value()) {
-      ASSERT_EQ(secondaryDaylighting1->illuminanceSetpoint(), secondaryDaylighting2->illuminanceSetpoint());
-      ASSERT_EQ(secondaryDaylighting1->position(), secondaryDaylighting2->position());
+      EXPECT_EQ(secondaryDaylighting1->illuminanceSetpoint(), secondaryDaylighting2->illuminanceSetpoint());
+      EXPECT_EQ(secondaryDaylighting1->position(), secondaryDaylighting2->position());
     }
 
     auto groupRendering1 = thermalZone.renderingColor();
     auto groupRendering2 = match->renderingColor();
-    ASSERT_EQ(groupRendering1.has_value(), groupRendering2.has_value());
+    EXPECT_EQ(groupRendering1.has_value(), groupRendering2.has_value());
   }
 
   // Compare building units
   auto buildingUnits1 = model.getModelObjects<BuildingUnit>();
   auto buildingUnits2 = baseline.getModelObjects<BuildingUnit>();
-  ASSERT_EQ(buildingUnits1.size(), buildingUnits2.size());
+  EXPECT_EQ(buildingUnits1.size(), buildingUnits2.size());
   for (auto& buildingUnit : buildingUnits1) {
     auto match = baseline.getModelObjectByName<BuildingUnit>(*buildingUnit.name());
-    ASSERT_TRUE(match.has_value());
-    ASSERT_EQ(buildingUnit.renderingColor().has_value(), match->renderingColor().has_value());
+    EXPECT_TRUE(match.has_value());
+    EXPECT_EQ(buildingUnit.renderingColor().has_value(), match->renderingColor().has_value());
   }
 
   // Compare constructions
   auto constructions1 = model.getModelObjects<DefaultConstructionSet>();
   auto constructions2 = baseline.getModelObjects<DefaultConstructionSet>();
-  ASSERT_EQ(constructions1.size(), constructions2.size());
+  EXPECT_EQ(constructions1.size(), constructions2.size());
   for (auto& construction : constructions1) {
     auto match = baseline.getModelObjectByName<DefaultConstructionSet>(*construction.name());
-    ASSERT_TRUE(match.has_value());
+    EXPECT_TRUE(match.has_value());
   }
 
   // Compare daylighting
   auto daylightings1 = model.getModelObjects<DaylightingControl>();
   auto daylightings2 = baseline.getModelObjects<DaylightingControl>();
-  ASSERT_EQ(daylightings1.size(), daylightings2.size());
+  EXPECT_EQ(daylightings1.size(), daylightings2.size());
   for (auto& daylighting : daylightings1) {
     auto match = baseline.getModelObjectByName<DaylightingControl>(*daylighting.name());
     // Daylighting control names don't match:
@@ -162,15 +162,15 @@ void CompareTwoModels(Model& model, Model& baseline) {
   // Compare ShadingSurfaceGroup
   auto shadingGroup1 = model.getModelObjects<ShadingSurfaceGroup>();
   auto shadingGroup2 = baseline.getModelObjects<ShadingSurfaceGroup>();
-  ASSERT_EQ(shadingGroup1.size(), shadingGroup2.size());
+  EXPECT_EQ(shadingGroup1.size(), shadingGroup2.size());
   for (auto& shadingGroup : shadingGroup1) {
     // Shading Surface Group names only match for building shading
     if (shadingGroup.shadingSurfaceType() == "Building") {
       auto match = baseline.getModelObjectByName<ShadingSurfaceGroup>(*shadingGroup.name());
-      ASSERT_TRUE(match.has_value());
+      EXPECT_TRUE(match.has_value());
       std::string surfaceType = shadingGroup.shadingSurfaceType();
-      ASSERT_EQ(shadingGroup.shadingSurfaceType(), match->shadingSurfaceType());
-      ASSERT_EQ(shadingGroup.shadingSurfaces().size(), match->shadingSurfaces().size());
+      EXPECT_EQ(shadingGroup.shadingSurfaceType(), match->shadingSurfaceType());
+      EXPECT_EQ(shadingGroup.shadingSurfaces().size(), match->shadingSurfaces().size());
 
       // Match surfaces by vertices
       for (auto& shadingSurface : shadingGroup.shadingSurfaces()) {
@@ -181,7 +181,7 @@ void CompareTwoModels(Model& model, Model& baseline) {
             break;
           }
         }
-        ASSERT_TRUE(matched);
+        EXPECT_TRUE(matched);
       }
     }
   }
@@ -189,57 +189,57 @@ void CompareTwoModels(Model& model, Model& baseline) {
   // Compare stories
   auto stories1 = model.getConcreteModelObjects<BuildingStory>();
   auto stories2 = baseline.getConcreteModelObjects<BuildingStory>();
-  ASSERT_EQ(stories1.size(), stories2.size());
+  EXPECT_EQ(stories1.size(), stories2.size());
   for (auto& story : stories1) {
     OptionalBuildingStory match = baseline.getConcreteModelObjectByName<BuildingStory>(*story.name());
-    ASSERT_TRUE(match.has_value());
-    ASSERT_NEAR(*story.nominalZCoordinate(), *match->nominalZCoordinate(), 0.001);
-    ASSERT_NEAR(*story.nominalFloortoFloorHeight(), *match->nominalFloortoFloorHeight(), 0.001);
-    ASSERT_NEAR(*story.nominalFloortoCeilingHeight(), *match->nominalFloortoCeilingHeight(), 0.001);
-    ASSERT_EQ(story.defaultConstructionSet().has_value(), match->defaultConstructionSet().has_value());
+    EXPECT_TRUE(match.has_value());
+    EXPECT_NEAR(*story.nominalZCoordinate(), *match->nominalZCoordinate(), 0.001);
+    EXPECT_NEAR(*story.nominalFloortoFloorHeight(), *match->nominalFloortoFloorHeight(), 0.001);
+    EXPECT_NEAR(*story.nominalFloortoCeilingHeight(), *match->nominalFloortoCeilingHeight(), 0.001);
+    EXPECT_EQ(story.defaultConstructionSet().has_value(), match->defaultConstructionSet().has_value());
     if (story.defaultConstructionSet().has_value()) {
-      ASSERT_EQ(story.defaultConstructionSet()->name(), match->defaultConstructionSet()->name());
+      EXPECT_EQ(story.defaultConstructionSet()->name(), match->defaultConstructionSet()->name());
     }
   }
 
   // Compare spaces/surfaces and subsurfaces
   auto spaces1 = model.getConcreteModelObjects<Space>();
   auto spaces2 = baseline.getConcreteModelObjects<Space>();
-  ASSERT_EQ(spaces1.size(), spaces2.size());
+  EXPECT_EQ(spaces1.size(), spaces2.size());
   for (auto& space : spaces1) {
     std::string name = *space.name();
     //ASSERT_EQ(model.getConcreteModelObjectsByName<Space>(*space.name()).size(), 1);
     OptionalSpace match = baseline.getConcreteModelObjectByName<Space>(*space.name());
-    ASSERT_TRUE(match.has_value());
+    EXPECT_TRUE(match.has_value());
     // Check Space Type
-    ASSERT_EQ(space.spaceType().has_value(), match->spaceType().has_value());
+    EXPECT_EQ(space.spaceType().has_value(), match->spaceType().has_value());
     if (space.spaceType().has_value()) {
-      ASSERT_EQ(space.spaceType()->name(), match->spaceType()->name());
+      EXPECT_EQ(space.spaceType()->name(), match->spaceType()->name());
     }
     // Check Default Construction Set
-    ASSERT_EQ(space.defaultConstructionSet().has_value(), match->defaultConstructionSet().has_value());
+    EXPECT_EQ(space.defaultConstructionSet().has_value(), match->defaultConstructionSet().has_value());
     if (space.defaultConstructionSet().has_value()) {
-      ASSERT_EQ(space.defaultConstructionSet()->name(), match->defaultConstructionSet()->name());
+      EXPECT_EQ(space.defaultConstructionSet()->name(), match->defaultConstructionSet()->name());
     }
     // Check Building Story
-    ASSERT_EQ(space.buildingStory().has_value(), match->buildingStory().has_value());
+    EXPECT_EQ(space.buildingStory().has_value(), match->buildingStory().has_value());
     if (space.buildingStory().has_value()) {
-      ASSERT_EQ(space.buildingStory()->name(), match->buildingStory()->name());
+      EXPECT_EQ(space.buildingStory()->name(), match->buildingStory()->name());
     }
     // Check Thermal Zone
-    ASSERT_EQ(space.thermalZone().has_value(), match->thermalZone().has_value());
+    EXPECT_EQ(space.thermalZone().has_value(), match->thermalZone().has_value());
     if (space.thermalZone().has_value()) {
-      ASSERT_EQ(space.thermalZone()->name(), match->thermalZone()->name());
+      EXPECT_EQ(space.thermalZone()->name(), match->thermalZone()->name());
     }
     // Check Building Unit
-    ASSERT_EQ(space.buildingUnit().has_value(), match->buildingUnit().has_value());
+    EXPECT_EQ(space.buildingUnit().has_value(), match->buildingUnit().has_value());
     // Multiplier
-    ASSERT_EQ(space.multiplier(), match->multiplier());
+    EXPECT_EQ(space.multiplier(), match->multiplier());
     if (space.buildingUnit().has_value()) {
-      ASSERT_EQ(space.buildingUnit()->name(), match->buildingUnit()->name());
+      EXPECT_EQ(space.buildingUnit()->name(), match->buildingUnit()->name());
     }
     // CHeck daylighting control
-    ASSERT_EQ(space.daylightingControls().size(), match->daylightingControls().size());
+    EXPECT_EQ(space.daylightingControls().size(), match->daylightingControls().size());
 
     // Check the control themselves. Because daylightingcontrol have different names
     // Daylighting Control 1 - 1 (as in the floorspace model) vs Face nn) they cannot be
@@ -254,7 +254,7 @@ void CompareTwoModels(Model& model, Model& baseline) {
     //}
 
     // Check space surfaces and subsurfaces
-    ASSERT_EQ(space.surfaces().size(), match->surfaces().size());
+    EXPECT_EQ(space.surfaces().size(), match->surfaces().size());
 
     for (auto& surface1 : space.surfaces()) {
       std::string name1 = *surface1.name();
@@ -263,39 +263,71 @@ void CompareTwoModels(Model& model, Model& baseline) {
         if (surface1.surfaceType() != surface2.surfaceType()) continue;
         std::string name2 = *surface2.name();
         if (circularEqual(surface1.vertices(), surface2.vertices())) {
-          matchedSurface = true;
-          ASSERT_EQ(surface1.surfaceType(), surface2.surfaceType());
+          if (getDistance(surface1.vertices()[0], surface2.vertices()[0]) < tol) {
 
-          // Check the subsurfaces
-          ASSERT_EQ(surface1.subSurfaces().size(), surface2.subSurfaces().size());
+            matchedSurface = true;
+            EXPECT_EQ(surface1.surfaceType(), surface2.surfaceType());
 
-          bool matchedSubsurface = false;
-          for (auto& subSurface1 : surface1.subSurfaces()) {
-            for (auto& subSurface2 : surface2.subSurfaces()) {
-              if (circularEqual(subSurface1.vertices(), subSurface2.vertices())) {
-                matchedSubsurface = true;
-                break;
+            // Check the subsurfaces
+            EXPECT_EQ(surface1.subSurfaces().size(), surface2.subSurfaces().size());
+
+            bool matchedSubsurface = false;
+            for (auto& subSurface1 : surface1.subSurfaces()) {
+              for (auto& subSurface2 : surface2.subSurfaces()) {
+                if (circularEqual(subSurface1.vertices(), subSurface2.vertices())) {
+                  if (getDistance(subSurface1.vertices()[0], subSurface2.vertices()[0]) < tol) {
+
+                    matchedSubsurface = true;
+                    break;
+                  }
+                }
               }
+              EXPECT_TRUE(matchedSubsurface);
             }
-            ASSERT_TRUE(matchedSubsurface);
+            break;
           }
-          break;
         }
       }
-      ASSERT_TRUE(matchedSurface);
+      EXPECT_TRUE(matchedSurface);
     }
   }
 
   auto shading1 = model.getConcreteModelObjects<ShadingSurfaceGroup>();
   auto shading2 = baseline.getConcreteModelObjects<ShadingSurfaceGroup>();
-  ASSERT_EQ(shading1.size(), shading2.size());
+  EXPECT_EQ(shading1.size(), shading2.size());
 }
 
-TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_SimpleTest) {
+TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_Compare_SimpleTest) {
 
   ThreeJSReverseTranslator rt;
 
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/simple_test.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+  model->save(resourcesPath() / toPath("utilities/Geometry/floorspaceviathreejs.osm"), true);
+
+  FloorspaceReverseTranslator frt;
+  boost::optional<Model> model1 = frt.modelFromFloorspace(toString(p));
+  ASSERT_TRUE(model1);
+
+  model1->save(resourcesPath() / toPath("utilities/Geometry/floorspacedirect.osm"), true);
+
+  CompareTwoModels(*model1, *model);
+}
+
+TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_Compare_Office_Floorplan) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/office_floorplan.json");
   ASSERT_TRUE(exists(p));
 
   boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
