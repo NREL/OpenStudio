@@ -40,7 +40,7 @@ TEST_F(ModelFixture, OutputControlTableStyle_GettersSetters) {
   Model model;
   OutputControlTableStyle outputControlTableStyle = model.getUniqueModelObject<OutputControlTableStyle>();
 
-  EXPECT_EQ("Comma", outputControlTableStyle.columnSeparator());
+  EXPECT_EQ("HTML", outputControlTableStyle.columnSeparator());
   EXPECT_EQ("None", outputControlTableStyle.unitConversion());
 
   EXPECT_TRUE(outputControlTableStyle.setColumnSeparator("Tab"));
