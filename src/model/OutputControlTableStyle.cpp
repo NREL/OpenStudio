@@ -121,8 +121,10 @@ namespace model {
   /// @cond
   OutputControlTableStyle::OutputControlTableStyle(std::shared_ptr<detail::OutputControlTableStyle_Impl> impl) : ModelObject(std::move(impl)) {}
   OutputControlTableStyle::OutputControlTableStyle(Model& model) : ModelObject(OutputControlTableStyle::iddObjectType(), model) {
-    setColumnSeparator("HTML");
-    setUnitConversion("None");
+    bool ok = setColumnSeparator("HTML");
+    OS_ASSERT(ok);
+    ok = setUnitConversion("None");
+    OS_ASSERT(ok);
   }
 
   /// @endcond

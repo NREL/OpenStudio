@@ -123,8 +123,10 @@ namespace model {
   /// @cond
   OutputSQLite::OutputSQLite(std::shared_ptr<detail::OutputSQLite_Impl> impl) : ModelObject(impl) {}
   OutputSQLite::OutputSQLite(Model& model) : ModelObject(OutputSQLite::iddObjectType(), model) {
-    setOptionType("SimpleAndTabular");
-    setUnitConversionforTabularData("UseOutputControlTableStyle");
+    bool ok = setOptionType("SimpleAndTabular");
+    OS_ASSERT(ok);
+    ok = setUnitConversionforTabularData("UseOutputControlTableStyle");
+    OS_ASSERT(ok);
   }
 
   /// @endcond
