@@ -126,7 +126,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_RatedH
   ScheduleConstant temperatureSetpointSchedule(m);
   CoilWaterHeatingDesuperheater desuperheater(m, temperatureSetpointSchedule);
 
-  std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m), RefrigerationCondenserAirCooled(m)};
+  std::vector<ModelObject> testCoils = {CoilCoolingDXSingleSpeed(m), RefrigerationCondenserAirCooled(m)};
 
   ForwardTranslator forwardTranslator;
 
@@ -137,7 +137,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_RatedH
 
     Workspace workspace = forwardTranslator.translateModel(m);
 
-    EXPECT_EQ(1u, ft.errors().size());
+    EXPECT_EQ(1u, forwardTranslator.errors().size());
 
     WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::Coil_WaterHeating_Desuperheater));
     ASSERT_EQ(0u, idfObjs.size());
