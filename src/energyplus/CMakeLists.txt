@@ -249,12 +249,14 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutsideSurfaceConvectionAlgorithm.cpp
   ForwardTranslator/ForwardTranslateOutputControlFiles.cpp
   ForwardTranslator/ForwardTranslateOutputControlReportingTolerances.cpp
+  ForwardTranslator/ForwardTranslateOutputControlTableStyle.cpp
   ForwardTranslator/ForwardTranslateOutputMeter.cpp
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
   ForwardTranslator/ForwardTranslateOutputDebuggingData.cpp
   ForwardTranslator/ForwardTranslateOutputDiagnostics.cpp
   ForwardTranslator/ForwardTranslateOutputEnergyManagementSystem.cpp
   ForwardTranslator/ForwardTranslateOutputJSON.cpp
+  ForwardTranslator/ForwardTranslateOutputSQLite.cpp
   ForwardTranslator/ForwardTranslateOutputEnvironmentalImpactFactors.cpp
   ForwardTranslator/ForwardTranslateEnvironmentalImpactFactors.cpp
   ForwardTranslator/ForwardTranslateFuelFactors.cpp
@@ -527,10 +529,13 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateMeterCustomDecrement.cpp
   ReverseTranslator/ReverseTranslateOtherEquipment.cpp
   ReverseTranslator/ReverseTranslateOutputControlFiles.cpp
+  ReverseTranslator/ReverseTranslateOutputControlReportingTolerances.cpp
+  ReverseTranslator/ReverseTranslateOutputControlTableStyle.cpp
   ReverseTranslator/ReverseTranslateOutputDebuggingData.cpp
   ReverseTranslator/ReverseTranslateOutputDiagnostics.cpp
   ReverseTranslator/ReverseTranslateOutputEnergyManagementSystem.cpp
   ReverseTranslator/ReverseTranslateOutputJSON.cpp
+  ReverseTranslator/ReverseTranslateOutputSQLite.cpp
   ReverseTranslator/ReverseTranslateOutputEnvironmentalImpactFactors.cpp
   ReverseTranslator/ReverseTranslateEnvironmentalImpactFactors.cpp
   ReverseTranslator/ReverseTranslateFuelFactors.cpp
@@ -712,9 +717,12 @@ set(${target_name}_test_src
   Test/MaterialPropertyPhaseChangeHysteresis_GTest.cpp
   Test/Meter_GTest.cpp
   Test/OutputControlFiles_GTest.cpp
+  Test/OutputControlReportingTolerances_GTest.cpp
+  Test/OutputControlTableStyle_GTest.cpp
   Test/OutputDebuggingData_GTest.cpp
   Test/OutputDiagnostics_GTest.cpp
   Test/OutputJSON_GTest.cpp
+  Test/OutputSQLite_GTest.cpp
   Test/OutputEnvironmentalImpactFactors_GTest.cpp
   Test/OutputTableSummaryReports_GTest.cpp
   Test/People_GTest.cpp

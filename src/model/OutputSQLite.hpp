@@ -27,47 +27,82 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ForwardTranslator.hpp"
+#ifndef MODEL_OUTPUTSQLITE_HPP
+#define MODEL_OUTPUTSQLITE_HPP
 
-#include "../../model/Model.hpp"
-#include "../../model/OutputVariable.hpp"
-#include "../../model/OutputVariable_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
-
-#include <utilities/idd/Output_Variable_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
-#include <utilities/idd/IddEnums.hxx>
-
-using namespace openstudio::model;
-
-using namespace std;
+#include <model/ModelAPI.hpp>
+#include "ModelObject.hpp"
 
 namespace openstudio {
+namespace model {
 
-namespace energyplus {
+  namespace detail {
 
-  boost::optional<IdfObject> ForwardTranslator::translateOutputVariable(OutputVariable& modelObject) {
+    class OutputSQLite_Impl;
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Variable, modelObject);
+  }  // namespace detail
 
-    if (!modelObject.isKeyValueDefaulted()) {
-      idfObject.setString(Output_VariableFields::KeyValue, modelObject.keyValue());
-    }
+  /** OutputSQLite is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:SQLite'. */
+  class MODEL_API OutputSQLite : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-    idfObject.setString(Output_VariableFields::VariableName, modelObject.variableName());
+    virtual ~OutputSQLite() {}
 
-    if (!modelObject.isReportingFrequencyDefaulted()) {
-      idfObject.setString(Output_VariableFields::ReportingFrequency, modelObject.reportingFrequency());
-    }
+    //@}
 
-    if (modelObject.schedule()) {
-      idfObject.setString(Output_VariableFields::ScheduleName, modelObject.schedule()->name().get());
-    }
+    static IddObjectType iddObjectType();
 
-    return idfObject;
-  }
+    static std::vector<std::string> optionTypeValues();
 
-}  // namespace energyplus
+    static std::vector<std::string> unitConversionforTabularDataValues();
 
+    /** @name Getters */
+    //@{
+
+    std::string optionType() const;
+
+    std::string unitConversionforTabularData() const;
+
+    //@}
+    /** @name Setters */
+    //@{
+
+    bool setOptionType(const std::string& optionType);
+
+    bool setUnitConversionforTabularData(const std::string& unitConversionforTabularData);
+
+    //@}
+    /** @name Other */
+    //@{
+
+    //@}
+   protected:
+    /// @cond
+    typedef detail::OutputSQLite_Impl ImplType;
+
+    explicit OutputSQLite(std::shared_ptr<detail::OutputSQLite_Impl> impl);
+
+    friend class detail::OutputSQLite_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit OutputSQLite(Model& model);
+
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.OutputSQLite");
+  };
+
+  /** \relates OutputSQLite*/
+  typedef boost::optional<OutputSQLite> OptionalOutputSQLite;
+
+  /** \relates OutputSQLite*/
+  typedef std::vector<OutputSQLite> OutputSQLiteVector;
+
+}  // namespace model
 }  // namespace openstudio
+
+#endif  // MODEL_OUTPUTSQLITE_HPP

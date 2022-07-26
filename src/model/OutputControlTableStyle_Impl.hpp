@@ -27,47 +27,71 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ForwardTranslator.hpp"
+#ifndef MODEL_OUTPUTCONTROLTABLESTYLE_IMPL_HPP
+#define MODEL_OUTPUTCONTROLTABLESTYLE_IMPL_HPP
 
-#include "../../model/Model.hpp"
-#include "../../model/OutputVariable.hpp"
-#include "../../model/OutputVariable_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
-
-#include <utilities/idd/Output_Variable_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
-#include <utilities/idd/IddEnums.hxx>
-
-using namespace openstudio::model;
-
-using namespace std;
+#include "ModelAPI.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
+namespace model {
 
-namespace energyplus {
+  namespace detail {
 
-  boost::optional<IdfObject> ForwardTranslator::translateOutputVariable(OutputVariable& modelObject) {
+    /** OutputControlTableStyle_Impl is a ModelObject_Impl that is the implementation class for OutputControlTableStyle.*/
+    class MODEL_API OutputControlTableStyle_Impl : public ModelObject_Impl
+    {
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Variable, modelObject);
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    if (!modelObject.isKeyValueDefaulted()) {
-      idfObject.setString(Output_VariableFields::KeyValue, modelObject.keyValue());
-    }
+      OutputControlTableStyle_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    idfObject.setString(Output_VariableFields::VariableName, modelObject.variableName());
+      OutputControlTableStyle_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    if (!modelObject.isReportingFrequencyDefaulted()) {
-      idfObject.setString(Output_VariableFields::ReportingFrequency, modelObject.reportingFrequency());
-    }
+      OutputControlTableStyle_Impl(const OutputControlTableStyle_Impl& other, Model_Impl* model, bool keepHandle);
 
-    if (modelObject.schedule()) {
-      idfObject.setString(Output_VariableFields::ScheduleName, modelObject.schedule()->name().get());
-    }
+      virtual ~OutputControlTableStyle_Impl() {}
 
-    return idfObject;
-  }
+      //@}
 
-}  // namespace energyplus
+      /** @name Virtual Methods */
+      //@{
 
+      virtual const std::vector<std::string>& outputVariableNames() const override;
+
+      virtual IddObjectType iddObjectType() const override;
+
+      //@}
+      /** @name Getters */
+      //@{
+
+      std::string columnSeparator() const;
+
+      std::string unitConversion() const;
+
+      //@}
+      /** @name Setters */
+      //@{
+
+      bool setColumnSeparator(const std::string& columnSeparator);
+
+      bool setUnitConversion(const std::string& unitConversion);
+
+      //@}
+      /** @name Other */
+      //@{
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.OutputControlTableStyle");
+    };
+
+  }  // namespace detail
+
+}  // namespace model
 }  // namespace openstudio
+
+#endif  // MODEL_OUTPUTCONTROLTABLESTYLE_IMPL_HPP

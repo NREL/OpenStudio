@@ -27,47 +27,40 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include "../../model/Model.hpp"
-#include "../../model/OutputVariable.hpp"
-#include "../../model/OutputVariable_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
+#include "../../model/OutputControlReportingTolerances.hpp"
+#include "../../model/OutputControlReportingTolerances_Impl.hpp"
 
-#include <utilities/idd/Output_Variable_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/OutputControl_ReportingTolerances_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
-
-using namespace std;
 
 namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateOutputVariable(OutputVariable& modelObject) {
+  boost::optional<ModelObject> ReverseTranslator::translateOutputControlReportingTolerances(const WorkspaceObject& workspaceObject) {
+    boost::optional<ModelObject> result;
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Variable, modelObject);
+    // This is a Unique ModelObject
+    openstudio::model::OutputControlReportingTolerances modelObject = m_model.getUniqueModelObject<OutputControlReportingTolerances>();
 
-    if (!modelObject.isKeyValueDefaulted()) {
-      idfObject.setString(Output_VariableFields::KeyValue, modelObject.keyValue());
+    if (boost::optional<double> _toleranceforTimeHeatingSetpointNotMet =
+          workspaceObject.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, true)) {
+      modelObject.setToleranceforTimeHeatingSetpointNotMet(_toleranceforTimeHeatingSetpointNotMet.get());
     }
 
-    idfObject.setString(Output_VariableFields::VariableName, modelObject.variableName());
-
-    if (!modelObject.isReportingFrequencyDefaulted()) {
-      idfObject.setString(Output_VariableFields::ReportingFrequency, modelObject.reportingFrequency());
+    if (boost::optional<double> _toleranceforTimeCoolingSetpointNotMet =
+          workspaceObject.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, true)) {
+      modelObject.setToleranceforTimeCoolingSetpointNotMet(_toleranceforTimeCoolingSetpointNotMet.get());
     }
 
-    if (modelObject.schedule()) {
-      idfObject.setString(Output_VariableFields::ScheduleName, modelObject.schedule()->name().get());
-    }
+    result = modelObject;
+    return result;
 
-    return idfObject;
-  }
+  }  // End of translate function
 
-}  // namespace energyplus
-
-}  // namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

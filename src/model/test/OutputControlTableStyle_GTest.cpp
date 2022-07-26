@@ -27,47 +27,29 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ForwardTranslator.hpp"
+#include <gtest/gtest.h>
 
-#include "../../model/Model.hpp"
-#include "../../model/OutputVariable.hpp"
-#include "../../model/OutputVariable_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
+#include "ModelFixture.hpp"
+#include "../OutputControlTableStyle.hpp"
+#include "../OutputControlTableStyle_Impl.hpp"
 
-#include <utilities/idd/Output_Variable_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
-#include <utilities/idd/IddEnums.hxx>
-
+using namespace openstudio;
 using namespace openstudio::model;
 
-using namespace std;
+TEST_F(ModelFixture, OutputControlTableStyle_GettersSetters) {
+  Model model;
+  OutputControlTableStyle outputControlTableStyle = model.getUniqueModelObject<OutputControlTableStyle>();
 
-namespace openstudio {
+  EXPECT_EQ("HTML", outputControlTableStyle.columnSeparator());
+  EXPECT_EQ("None", outputControlTableStyle.unitConversion());
 
-namespace energyplus {
+  EXPECT_TRUE(outputControlTableStyle.setColumnSeparator("Tab"));
+  EXPECT_TRUE(outputControlTableStyle.setUnitConversion("JtoKWH"));
+  EXPECT_EQ("Tab", outputControlTableStyle.columnSeparator());
+  EXPECT_EQ("JtoKWH", outputControlTableStyle.unitConversion());
 
-  boost::optional<IdfObject> ForwardTranslator::translateOutputVariable(OutputVariable& modelObject) {
-
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Variable, modelObject);
-
-    if (!modelObject.isKeyValueDefaulted()) {
-      idfObject.setString(Output_VariableFields::KeyValue, modelObject.keyValue());
-    }
-
-    idfObject.setString(Output_VariableFields::VariableName, modelObject.variableName());
-
-    if (!modelObject.isReportingFrequencyDefaulted()) {
-      idfObject.setString(Output_VariableFields::ReportingFrequency, modelObject.reportingFrequency());
-    }
-
-    if (modelObject.schedule()) {
-      idfObject.setString(Output_VariableFields::ScheduleName, modelObject.schedule()->name().get());
-    }
-
-    return idfObject;
-  }
-
-}  // namespace energyplus
-
-}  // namespace openstudio
+  EXPECT_FALSE(outputControlTableStyle.setColumnSeparator("Invalid"));
+  EXPECT_FALSE(outputControlTableStyle.setUnitConversion("AnotherInvalid"));
+  EXPECT_EQ("Tab", outputControlTableStyle.columnSeparator());
+  EXPECT_EQ("JtoKWH", outputControlTableStyle.unitConversion());
+}

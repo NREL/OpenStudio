@@ -27,47 +27,83 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ForwardTranslator.hpp"
+#ifndef MODEL_OUTPUTCONTROLTABLESTYLE_HPP
+#define MODEL_OUTPUTCONTROLTABLESTYLE_HPP
 
-#include "../../model/Model.hpp"
-#include "../../model/OutputVariable.hpp"
-#include "../../model/OutputVariable_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
-
-#include <utilities/idd/Output_Variable_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
-#include <utilities/idd/IddEnums.hxx>
-
-using namespace openstudio::model;
-
-using namespace std;
+#include "ModelAPI.hpp"
+#include "ModelObject.hpp"
 
 namespace openstudio {
 
-namespace energyplus {
+namespace model {
 
-  boost::optional<IdfObject> ForwardTranslator::translateOutputVariable(OutputVariable& modelObject) {
+  namespace detail {
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Variable, modelObject);
+    class OutputControlTableStyle_Impl;
 
-    if (!modelObject.isKeyValueDefaulted()) {
-      idfObject.setString(Output_VariableFields::KeyValue, modelObject.keyValue());
-    }
+  }  // namespace detail
 
-    idfObject.setString(Output_VariableFields::VariableName, modelObject.variableName());
+  /** OutputControlTableStyle is a ModelObject that wraps the OpenStudio IDD object 'OS:OutputControl:Table:Style'. */
+  class MODEL_API OutputControlTableStyle : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-    if (!modelObject.isReportingFrequencyDefaulted()) {
-      idfObject.setString(Output_VariableFields::ReportingFrequency, modelObject.reportingFrequency());
-    }
+    virtual ~OutputControlTableStyle() {}
 
-    if (modelObject.schedule()) {
-      idfObject.setString(Output_VariableFields::ScheduleName, modelObject.schedule()->name().get());
-    }
+    //@}
 
-    return idfObject;
-  }
+    static IddObjectType iddObjectType();
 
-}  // namespace energyplus
+    static std::vector<std::string> columnSeparatorValues();
 
+    static std::vector<std::string> unitConversionValues();
+
+    /** @name Getters */
+    //@{
+
+    std::string columnSeparator() const;
+
+    std::string unitConversion() const;
+
+    //@}
+    /** @name Setters */
+    //@{
+
+    bool setColumnSeparator(const std::string& columnSeparator);
+
+    bool setUnitConversion(const std::string& unitConversion);
+
+    //@}
+    /** @name Other */
+    //@{
+
+    //@}
+   protected:
+    /// @cond
+    typedef detail::OutputControlTableStyle_Impl ImplType;
+
+    explicit OutputControlTableStyle(std::shared_ptr<detail::OutputControlTableStyle_Impl> impl);
+
+    friend class detail::OutputControlTableStyle_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit OutputControlTableStyle(Model& model);
+
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.OutputControlTableStyle");
+  };
+
+  /** \relates OutputControlTableStyle*/
+  typedef boost::optional<OutputControlTableStyle> OptionalOutputControlTableStyle;
+
+  /** \relates OutputControlTableStyle*/
+  typedef std::vector<OutputControlTableStyle> OutputControlTableStyleVector;
+
+}  // namespace model
 }  // namespace openstudio
+
+#endif  // MODEL_OUTPUTCONTROLTABLESTYLE_HPP

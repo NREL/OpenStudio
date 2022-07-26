@@ -54,14 +54,14 @@ namespace energyplus {
       return boost::none;
     }
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Output_Table_SummaryReports, modelObject);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Table_SummaryReports, modelObject);
 
     for (const std::string& summaryReport : summaryReports) {
       auto eg = idfObject.pushExtensibleGroup();
       eg.setString(Output_Table_SummaryReportsExtensibleFields::ReportName, summaryReport);
     }
 
-    return boost::optional<IdfObject>(idfObject);
+    return idfObject;
   }
 
 }  // namespace energyplus

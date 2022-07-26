@@ -27,47 +27,38 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include "../../model/Model.hpp"
-#include "../../model/OutputVariable.hpp"
-#include "../../model/OutputVariable_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
+#include "../../model/OutputControlTableStyle.hpp"
+#include "../../model/OutputControlTableStyle_Impl.hpp"
 
-#include <utilities/idd/Output_Variable_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/OutputControl_Table_Style_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
-
-using namespace std;
 
 namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateOutputVariable(OutputVariable& modelObject) {
+  boost::optional<ModelObject> ReverseTranslator::translateOutputControlTableStyle(const WorkspaceObject& workspaceObject) {
+    boost::optional<ModelObject> result;
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Variable, modelObject);
+    // This is a Unique ModelObject
+    openstudio::model::OutputControlTableStyle modelObject = m_model.getUniqueModelObject<OutputControlTableStyle>();
 
-    if (!modelObject.isKeyValueDefaulted()) {
-      idfObject.setString(Output_VariableFields::KeyValue, modelObject.keyValue());
+    if (boost::optional<std::string> _columnSeparator = workspaceObject.getString(OutputControl_Table_StyleFields::ColumnSeparator, true)) {
+      modelObject.setColumnSeparator(_columnSeparator.get());
     }
 
-    idfObject.setString(Output_VariableFields::VariableName, modelObject.variableName());
-
-    if (!modelObject.isReportingFrequencyDefaulted()) {
-      idfObject.setString(Output_VariableFields::ReportingFrequency, modelObject.reportingFrequency());
+    if (boost::optional<std::string> _unitConversion = workspaceObject.getString(OutputControl_Table_StyleFields::UnitConversion, true)) {
+      modelObject.setUnitConversion(_unitConversion.get());
     }
 
-    if (modelObject.schedule()) {
-      idfObject.setString(Output_VariableFields::ScheduleName, modelObject.schedule()->name().get());
-    }
+    result = modelObject;
+    return result;
 
-    return idfObject;
-  }
+  }  // End of translate function
 
-}  // namespace energyplus
-
-}  // namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

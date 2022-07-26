@@ -82,12 +82,16 @@
 #include "../OutputControlFiles_Impl.hpp"
 #include "../OutputControlReportingTolerances.hpp"
 #include "../OutputControlReportingTolerances_Impl.hpp"
+#include "../OutputControlTableStyle.hpp"
+#include "../OutputControlTableStyle_Impl.hpp"
 #include "../OutputDiagnostics.hpp"
 #include "../OutputDiagnostics_Impl.hpp"
 #include "../OutputDebuggingData.hpp"
 #include "../OutputDebuggingData_Impl.hpp"
 #include "../OutputJSON.hpp"
 #include "../OutputJSON_Impl.hpp"
+#include "../OutputSQLite.hpp"
+#include "../OutputSQLite_Impl.hpp"
 #include "../OutputEnergyManagementSystem.hpp"
 #include "../OutputEnergyManagementSystem_Impl.hpp"
 #include "../OutputTableSummaryReports.hpp"
@@ -952,6 +956,12 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
   EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
 
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputControlTableStyle>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputControlTableStyle = m.getUniqueModelObject<OutputControlTableStyle>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputControlTableStyle>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
   EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputDiagnostics>());
   EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
   auto outputDiagnostics = m.getUniqueModelObject<OutputDiagnostics>();
@@ -968,6 +978,12 @@ TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
   EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
   auto outputJSON = m.getUniqueModelObject<OutputJSON>();
   EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputJSON>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputSQLite>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputSQLite = m.getUniqueModelObject<OutputSQLite>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputSQLite>());
   EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
 
   EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputEnergyManagementSystem>());

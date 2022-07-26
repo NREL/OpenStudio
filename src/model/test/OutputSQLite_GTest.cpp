@@ -26,48 +26,30 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
+#include <gtest/gtest.h>
 
-#include "../ForwardTranslator.hpp"
+#include "ModelFixture.hpp"
+#include "../OutputSQLite.hpp"
+#include "../OutputSQLite_Impl.hpp"
 
-#include "../../model/Model.hpp"
-#include "../../model/OutputVariable.hpp"
-#include "../../model/OutputVariable_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
-
-#include <utilities/idd/Output_Variable_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
-#include <utilities/idd/IddEnums.hxx>
-
+using namespace openstudio;
 using namespace openstudio::model;
 
-using namespace std;
+TEST_F(ModelFixture, OutputSQLite_GettersSetters) {
 
-namespace openstudio {
+  Model model;
+  OutputSQLite outputSQLite = model.getUniqueModelObject<OutputSQLite>();
 
-namespace energyplus {
+  EXPECT_EQ("SimpleAndTabular", outputSQLite.optionType());
+  EXPECT_EQ("UseOutputControlTableStyle", outputSQLite.unitConversionforTabularData());
 
-  boost::optional<IdfObject> ForwardTranslator::translateOutputVariable(OutputVariable& modelObject) {
+  EXPECT_TRUE(outputSQLite.setOptionType("Simple"));
+  EXPECT_TRUE(outputSQLite.setUnitConversionforTabularData("None"));
+  EXPECT_EQ("Simple", outputSQLite.optionType());
+  EXPECT_EQ("None", outputSQLite.unitConversionforTabularData());
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Variable, modelObject);
-
-    if (!modelObject.isKeyValueDefaulted()) {
-      idfObject.setString(Output_VariableFields::KeyValue, modelObject.keyValue());
-    }
-
-    idfObject.setString(Output_VariableFields::VariableName, modelObject.variableName());
-
-    if (!modelObject.isReportingFrequencyDefaulted()) {
-      idfObject.setString(Output_VariableFields::ReportingFrequency, modelObject.reportingFrequency());
-    }
-
-    if (modelObject.schedule()) {
-      idfObject.setString(Output_VariableFields::ScheduleName, modelObject.schedule()->name().get());
-    }
-
-    return idfObject;
-  }
-
-}  // namespace energyplus
-
-}  // namespace openstudio
+  EXPECT_FALSE(outputSQLite.setOptionType("Invalid"));
+  EXPECT_FALSE(outputSQLite.setUnitConversionforTabularData("AnotherInvalid"));
+  EXPECT_EQ("Simple", outputSQLite.optionType());
+  EXPECT_EQ("None", outputSQLite.unitConversionforTabularData());
+}  // End of Getter_Setters test

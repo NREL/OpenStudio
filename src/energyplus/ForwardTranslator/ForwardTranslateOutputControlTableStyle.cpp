@@ -28,16 +28,12 @@
 ***********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
-
 #include "../../model/Model.hpp"
-#include "../../model/OutputVariable.hpp"
-#include "../../model/OutputVariable_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
-
-#include <utilities/idd/Output_Variable_FieldEnums.hxx>
+#include "../../model/OutputControlTableStyle.hpp"
+#include <utilities/idd/OutputControl_Table_Style_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 using namespace openstudio::model;
 
@@ -47,23 +43,13 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateOutputVariable(OutputVariable& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateOutputControlTableStyle(OutputControlTableStyle& modelObject) {
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Variable, modelObject);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::OutputControl_Table_Style, modelObject);
 
-    if (!modelObject.isKeyValueDefaulted()) {
-      idfObject.setString(Output_VariableFields::KeyValue, modelObject.keyValue());
-    }
+    idfObject.setString(OutputControl_Table_StyleFields::ColumnSeparator, modelObject.columnSeparator());
 
-    idfObject.setString(Output_VariableFields::VariableName, modelObject.variableName());
-
-    if (!modelObject.isReportingFrequencyDefaulted()) {
-      idfObject.setString(Output_VariableFields::ReportingFrequency, modelObject.reportingFrequency());
-    }
-
-    if (modelObject.schedule()) {
-      idfObject.setString(Output_VariableFields::ScheduleName, modelObject.schedule()->name().get());
-    }
+    idfObject.setString(OutputControl_Table_StyleFields::UnitConversion, modelObject.unitConversion());
 
     return idfObject;
   }

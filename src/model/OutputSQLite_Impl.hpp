@@ -27,47 +27,69 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ForwardTranslator.hpp"
+#ifndef MODEL_OUTPUTSQLITE_IMPL_HPP
+#define MODEL_OUTPUTSQLITE_IMPL_HPP
 
-#include "../../model/Model.hpp"
-#include "../../model/OutputVariable.hpp"
-#include "../../model/OutputVariable_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
-
-#include <utilities/idd/Output_Variable_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
-#include <utilities/idd/IddEnums.hxx>
-
-using namespace openstudio::model;
-
-using namespace std;
+#include <model/ModelAPI.hpp>
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
+namespace model {
 
-namespace energyplus {
+  namespace detail {
 
-  boost::optional<IdfObject> ForwardTranslator::translateOutputVariable(OutputVariable& modelObject) {
+    /** OutputSQLite_Impl is a ModelObject_Impl that is the implementation class for OutputSQLite.*/
+    class MODEL_API OutputSQLite_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Variable, modelObject);
+      OutputSQLite_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    if (!modelObject.isKeyValueDefaulted()) {
-      idfObject.setString(Output_VariableFields::KeyValue, modelObject.keyValue());
-    }
+      OutputSQLite_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    idfObject.setString(Output_VariableFields::VariableName, modelObject.variableName());
+      OutputSQLite_Impl(const OutputSQLite_Impl& other, Model_Impl* model, bool keepHandle);
 
-    if (!modelObject.isReportingFrequencyDefaulted()) {
-      idfObject.setString(Output_VariableFields::ReportingFrequency, modelObject.reportingFrequency());
-    }
+      virtual ~OutputSQLite_Impl() {}
 
-    if (modelObject.schedule()) {
-      idfObject.setString(Output_VariableFields::ScheduleName, modelObject.schedule()->name().get());
-    }
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    return idfObject;
-  }
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-}  // namespace energyplus
+      virtual IddObjectType iddObjectType() const override;
 
+      //@}
+      /** @name Getters */
+      //@{
+
+      std::string optionType() const;
+
+      std::string unitConversionforTabularData() const;
+
+      //@}
+      /** @name Setters */
+      //@{
+
+      bool setOptionType(const std::string& optionType);
+
+      bool setUnitConversionforTabularData(const std::string& unitConversionforTabularData);
+
+      //@}
+      /** @name Other */
+      //@{
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.OutputSQLite");
+    };
+
+  }  // namespace detail
+
+}  // namespace model
 }  // namespace openstudio
+
+#endif  // MODEL_OUTPUTSQLITE_IMPL_HPP
