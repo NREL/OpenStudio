@@ -62,8 +62,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlTableStyle) {
 
     WorkspaceObject idf_tablestyle = idfObjs[0];
 
-    EXPECT_EQ("HTML", idf_tablestyle.getString(OutputControl_Table_StyleFields::ColumnSeparator).get());
-    EXPECT_EQ("", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion).get());
+    EXPECT_EQ("HTML", idf_tablestyle.getString(OutputControl_Table_StyleFields::ColumnSeparator, false).get());
+    EXPECT_EQ("", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion, false).get());
   }
 
   // Not there, m_ipTabularOutput = True
@@ -78,8 +78,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlTableStyle) {
 
     WorkspaceObject idf_tablestyle = idfObjs[0];
 
-    EXPECT_EQ("HTML", idf_tablestyle.getString(OutputControl_Table_StyleFields::ColumnSeparator).get());
-    EXPECT_EQ("InchPound", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion).get());
+    EXPECT_EQ("HTML", idf_tablestyle.getString(OutputControl_Table_StyleFields::ColumnSeparator, false).get());
+    EXPECT_EQ("InchPound", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion, false).get());
   }
 
   // Not there, m_excludeHTMLOutputReport = True
@@ -110,8 +110,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlTableStyle) {
 
     WorkspaceObject idf_tablestyle(idfObjs[0]);
 
-    EXPECT_EQ("Tab", idf_tablestyle.getString(OutputControl_Table_StyleFields::ColumnSeparator).get());
-    EXPECT_EQ("JtoKWH", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion).get());
+    EXPECT_EQ("Tab", idf_tablestyle.getString(OutputControl_Table_StyleFields::ColumnSeparator, false).get());
+    EXPECT_EQ("JtoKWH", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion, false).get());
   }
 }
 

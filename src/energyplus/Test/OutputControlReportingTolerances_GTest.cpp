@@ -78,8 +78,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlReportingTolerances) {
 
     WorkspaceObject idf_reportingtolerances(idfObjs[0]);
 
-    EXPECT_EQ(1.16, idf_reportingtolerances.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet).get());
-    EXPECT_EQ(0.75, idf_reportingtolerances.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet).get());
+    EXPECT_EQ(1.16, idf_reportingtolerances.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, false).get());
+    EXPECT_EQ(0.75, idf_reportingtolerances.getDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, false).get());
   }
 }
 

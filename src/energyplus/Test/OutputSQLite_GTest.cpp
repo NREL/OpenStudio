@@ -62,14 +62,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputSQLite) {
 
     WorkspaceObject idf_sqlite(idfObjs[0]);
 
-    EXPECT_EQ("SimpleAndTabular", idf_sqlite.getString(Output_SQLiteFields::OptionType).get());
-    EXPECT_EQ("", idf_sqlite.getString(Output_SQLiteFields::UnitConversionforTabularData).get());
+    EXPECT_EQ("SimpleAndTabular", idf_sqlite.getString(Output_SQLiteFields::OptionType, false).get());
+    EXPECT_EQ("", idf_sqlite.getString(Output_SQLiteFields::UnitConversionforTabularData, false).get());
   }
 
   // Not there, m_excludeSQliteOutputReport = True
   {
     Model m;
     ForwardTranslator ft;
+    ft.setExcludeSQliteOutputReport(true);
     Workspace w = ft.translateModel(m);
 
     WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_SQLite);
@@ -93,8 +94,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputSQLite) {
 
     WorkspaceObject idf_sqlite(idfObjs[0]);
 
-    EXPECT_EQ("Simple", idf_sqlite.getString(Output_SQLiteFields::OptionType).get());
-    EXPECT_EQ("None", idf_sqlite.getString(Output_SQLiteFields::UnitConversionforTabularData).get());
+    EXPECT_EQ("Simple", idf_sqlite.getString(Output_SQLiteFields::OptionType, false).get());
+    EXPECT_EQ("None", idf_sqlite.getString(Output_SQLiteFields::UnitConversionforTabularData, false).get());
   }
 }
 
