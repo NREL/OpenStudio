@@ -56,8 +56,11 @@ namespace energyplus {
     boost::optional<std::string> s;
     boost::optional<double> d;
 
-    // Name
+    // We are going to check for valid rated heat reclaim recovery efficiency, based on heating source type, before we register the object
     IdfObject idfObject(openstudio::IddObjectType::Coil_WaterHeating_Desuperheater);
+
+    // Name
+    idfObject.setName(modelObject.nameString());
 
     // AvailabilityScheduleName
     boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule();
