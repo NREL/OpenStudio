@@ -57,7 +57,7 @@ namespace energyplus {
     boost::optional<double> d;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_WaterHeating_Desuperheater, modelObject);
+    IdfObject idfObject(openstudio::IddObjectType::Coil_WaterHeating_Desuperheater);
 
     // AvailabilityScheduleName
     boost::optional<Schedule> availabilitySchedule = modelObject.availabilitySchedule();
@@ -88,9 +88,9 @@ namespace energyplus {
     }
 
     // RatedHeatReclaimRecoveryEfficiency
-    d = modelObject.ratedHeatReclaimRecoveryEfficiency();
-    if (d) {
-      idfObject.setDouble(Coil_WaterHeating_DesuperheaterFields::RatedHeatReclaimRecoveryEfficiency, d.get());
+    boost::optional<double> ratedHeatReclaimRecoveryEfficiency = modelObject.ratedHeatReclaimRecoveryEfficiency();
+    if (ratedHeatReclaimRecoveryEfficiency) {
+      idfObject.setDouble(Coil_WaterHeating_DesuperheaterFields::RatedHeatReclaimRecoveryEfficiency, ratedHeatReclaimRecoveryEfficiency.get());
     }
 
     // RatedInletWaterTemperature
@@ -186,8 +186,33 @@ namespace energyplus {
           idfObject.setString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceObjectType, objectType);
           idfObject.setString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceName, objectName);
         }
+
+        if (ratedHeatReclaimRecoveryEfficiency) {
+          if ((_heatingSource->iddObject().type() == IddObjectType::Refrigeration_Condenser_AirCooled) ||
+             (_heatingSource->iddObject().type() == IddObjectType::Refrigeration_Condenser_EvaporativeCooled) ||
+             (_heatingSource->iddObject().type() == IddObjectType::Refrigeration_Condenser_WaterCooled)) {
+            if (ratedHeatReclaimRecoveryEfficiency.get() > 0.9) {
+              LOG(Error, modelObject.briefDescription() << ": Rated Heat Reclaim Recovery Efficiency must be"
+                                                        << " <= 0.9 when Heating Source Object Type = "
+                                                        << _heatingSource->iddObject().type()
+                                                        << ". It will not be translated.");
+              return boost::none;
+            }
+          } else {
+            if (ratedHeatReclaimRecoveryEfficiency.get() > 0.3) {
+              LOG(Error, modelObject.briefDescription() << ": Rated Heat Reclaim Recovery Efficiency must be"
+                                                        << " <= 0.3 when Heating Source Object Type = "
+                                                        << _heatingSource->iddObject().type()
+                                                        << ". It will not be translated.");
+              return boost::none;
+            }
+          }
+        }
       }
     }
+
+    // at this point, we can register the new object
+    m_idfObjects.push_back(idfObject);
 
     // WaterFlowRate
     d = modelObject.waterFlowRate();
