@@ -63,7 +63,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputSQLite) {
     WorkspaceObject idf_sqlite(idfObjs[0]);
 
     EXPECT_EQ("SimpleAndTabular", idf_sqlite.getString(Output_SQLiteFields::OptionType, false).get());
-    EXPECT_EQ("", idf_sqlite.getString(Output_SQLiteFields::UnitConversionforTabularData, false).get());
+    EXPECT_TRUE(idf_sqlite.isEmpty(Output_SQLiteFields::UnitConversionforTabularData));
   }
 
   // Not there, m_excludeSQliteOutputReport = True

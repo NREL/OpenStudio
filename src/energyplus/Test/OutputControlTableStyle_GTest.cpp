@@ -63,7 +63,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputControlTableStyle) {
     WorkspaceObject idf_tablestyle = idfObjs[0];
 
     EXPECT_EQ("HTML", idf_tablestyle.getString(OutputControl_Table_StyleFields::ColumnSeparator, false).get());
-    EXPECT_EQ("", idf_tablestyle.getString(OutputControl_Table_StyleFields::UnitConversion, false).get());
+    EXPECT_TRUE(idf_tablestyle.isEmpty(OutputControl_Table_StyleFields::UnitConversion));
   }
 
   // Not there, m_ipTabularOutput = True
