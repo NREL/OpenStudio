@@ -119,3 +119,27 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_NonDX)
     EXPECT_EQ(nodxCoil.nameString(), idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceName).get());
   }
 }
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_RatedHeatReclaimRecoveryEfficiency) {
+  Model m;
+
+  ScheduleConstant temperatureSetpointSchedule(m);
+  CoilWaterHeatingDesuperheater desuperheater(m, temperatureSetpointSchedule);
+
+  std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m), RefrigerationCondenserAirCooled(m)};
+
+  ForwardTranslator forwardTranslator;
+
+  for (const auto& coil : testCoils) {
+
+    desuperheater.setRatedHeatReclaimRecoveryEfficiency(0.95);
+    desuperheater.setHeatingSource(coil);
+
+    Workspace workspace = forwardTranslator.translateModel(m);
+
+    EXPECT_EQ(1u, ft.errors().size());
+
+    WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::Coil_WaterHeating_Desuperheater));
+    ASSERT_EQ(0u, idfObjs.size());
+  }
+}
