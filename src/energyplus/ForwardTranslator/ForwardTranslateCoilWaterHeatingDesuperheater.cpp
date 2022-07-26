@@ -188,22 +188,20 @@ namespace energyplus {
         }
 
         if (ratedHeatReclaimRecoveryEfficiency) {
-          if ((_heatingSource->iddObject().type() == IddObjectType::Refrigeration_Condenser_AirCooled) ||
-             (_heatingSource->iddObject().type() == IddObjectType::Refrigeration_Condenser_EvaporativeCooled) ||
-             (_heatingSource->iddObject().type() == IddObjectType::Refrigeration_Condenser_WaterCooled)) {
+          if ((_heatingSource->iddObject().type() == IddObjectType::Refrigeration_Condenser_AirCooled)
+              || (_heatingSource->iddObject().type() == IddObjectType::Refrigeration_Condenser_EvaporativeCooled)
+              || (_heatingSource->iddObject().type() == IddObjectType::Refrigeration_Condenser_WaterCooled)) {
             if (ratedHeatReclaimRecoveryEfficiency.get() > 0.9) {
-              LOG(Error, modelObject.briefDescription() << ": Rated Heat Reclaim Recovery Efficiency must be"
-                                                        << " <= 0.9 when Heating Source Object Type = "
-                                                        << _heatingSource->iddObject().type()
-                                                        << ". It will not be translated.");
+              LOG(Error, modelObject.briefDescription()
+                           << ": Rated Heat Reclaim Recovery Efficiency must be"
+                           << " <= 0.9 when Heating Source Object Type = " << _heatingSource->iddObject().type() << ". It will not be translated.");
               return boost::none;
             }
           } else {
             if (ratedHeatReclaimRecoveryEfficiency.get() > 0.3) {
-              LOG(Error, modelObject.briefDescription() << ": Rated Heat Reclaim Recovery Efficiency must be"
-                                                        << " <= 0.3 when Heating Source Object Type = "
-                                                        << _heatingSource->iddObject().type()
-                                                        << ". It will not be translated.");
+              LOG(Error, modelObject.briefDescription()
+                           << ": Rated Heat Reclaim Recovery Efficiency must be"
+                           << " <= 0.3 when Heating Source Object Type = " << _heatingSource->iddObject().type() << ". It will not be translated.");
               return boost::none;
             }
           }
