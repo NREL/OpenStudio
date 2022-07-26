@@ -53,7 +53,7 @@ TEST_F(ModelFixture, CoilHeatingGas) {
   EXPECT_EQ(coilHeatingGas.gasBurnerEfficiency(), 0.6);
 
   coilHeatingGas.setNominalCapacity(1535.0);
-  EXPECT_EQ(coilHeatingGas.nominalCapacity(), 1535.0);
+  EXPECT_EQ(coilHeatingGas.nominalCapacity().get(), 1535.0);
 
   coilHeatingGas.setParasiticElectricLoad(48.0);
   EXPECT_EQ(coilHeatingGas.parasiticElectricLoad(), 48.0);

@@ -35,9 +35,11 @@
 #include "FoundationKivaSettings.hpp"
 #include "OutputControlFiles.hpp"
 #include "OutputControlReportingTolerances.hpp"
+#include "OutputControlTableStyle.hpp"
 #include "OutputDiagnostics.hpp"
 #include "OutputDebuggingData.hpp"
 #include "OutputJSON.hpp"
+#include "OutputSQLite.hpp"
 #include "OutputEnergyManagementSystem.hpp"
 #include "OutputTableSummaryReports.hpp"
 #include "PerformancePrecisionTradeoffs.hpp"
@@ -186,6 +188,10 @@ namespace model {
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlReportingTolerances>(). */
       boost::optional<OutputControlReportingTolerances> outputControlReportingTolerances() const;
 
+      /** Get the OutputControlTableStyle object if there is one, this implementation uses a cached reference to the OutputControlTableStyle
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlTableStyle>(). */
+      boost::optional<OutputControlTableStyle> outputControlTableStyle() const;
+
       /** Get the OutputDiagnostics object if there is one, this implementation uses a cached reference to the OutputDiagnostics
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputDiagnostics>(). */
       boost::optional<OutputDiagnostics> outputDiagnostics() const;
@@ -197,6 +203,10 @@ namespace model {
       /** Get the OutputJSON object if there is one, this implementation uses a cached reference to the OutputJSON
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputJSON>(). */
       boost::optional<OutputJSON> outputJSON() const;
+
+      /** Get the OutputSQLite object if there is one, this implementation uses a cached reference to the OutputSQLite
+     *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputSQLite>(). */
+      boost::optional<OutputSQLite> outputSQLite() const;
 
       /** Get the OutputEnergyManagementSystem object if there is one, this implementation uses a cached reference to the OutputEnergyManagementSystem
      *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlFiles>(). */
@@ -464,9 +474,11 @@ namespace model {
       mutable boost::optional<FoundationKivaSettings> m_cachedFoundationKivaSettings;
       mutable boost::optional<OutputControlFiles> m_cachedOutputControlFiles;
       mutable boost::optional<OutputControlReportingTolerances> m_cachedOutputControlReportingTolerances;
+      mutable boost::optional<OutputControlTableStyle> m_cachedOutputControlTableStyle;
       mutable boost::optional<OutputDiagnostics> m_cachedOutputDiagnostics;
       mutable boost::optional<OutputDebuggingData> m_cachedOutputDebuggingData;
       mutable boost::optional<OutputJSON> m_cachedOutputJSON;
+      mutable boost::optional<OutputSQLite> m_cachedOutputSQLite;
       mutable boost::optional<OutputEnergyManagementSystem> m_cachedOutputEnergyManagementSystem;
       mutable boost::optional<OutputTableSummaryReports> m_cachedOutputTableSummaryReports;
       mutable boost::optional<PerformancePrecisionTradeoffs> m_cachedPerformancePrecisionTradeoffs;
@@ -509,9 +521,11 @@ namespace model {
       void clearCachedFoundationKivaSettings(const Handle& handle);
       void clearCachedOutputControlFiles(const Handle& handle);
       void clearCachedOutputControlReportingTolerances(const Handle& handle);
+      void clearCachedOutputControlTableStyle(const Handle& handle);
       void clearCachedOutputDiagnostics(const Handle& handle);
       void clearCachedOutputDebuggingData(const Handle& handle);
       void clearCachedOutputJSON(const Handle& handle);
+      void clearCachedOutputSQLite(const Handle& handle);
       void clearCachedOutputEnergyManagementSystem(const Handle& handle);
       void clearCachedOutputTableSummaryReports(const Handle& handle);
       void clearCachedPerformancePrecisionTradeoffs(const Handle& handle);

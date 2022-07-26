@@ -110,6 +110,13 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V9-5-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-6-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V22-1-0.sql
+  utilities/xml/base.xml
+  utilities/xml/hpxml_with_error.xml
+  utilities/xml/schema/HPXML.xsd
+  utilities/xml/schema/HPXMLBaseElements.xsd
+  utilities/xml/schema/HPXMLDataTypes.xsd
+  utilities/xml/schema/HPXMLvalidator.xslt
+  utilities/xml/schema/HPXMLvalidator.xml
   utilities/Zip/test1.zip
 )
 
@@ -132,7 +139,7 @@ set(ENERGYPLUS_OUTPUTS "")
 set(model_resources_src
   model/OpenStudio.idd
   model/schedulefile.csv
-
+  model/PythonPluginThermochromicWindow.py
   model/two_stories_pre_intersect.osm
   model/floorplan_school.osm
   model/7-7_Windows_Complete.osm
@@ -309,6 +316,7 @@ SET(gbxml_resources_src
   gbxml/gbXMLStandard_Single_Family_Residential_2016.xml
   gbxml/TropicBird_BEM_4_2018.xml
   gbxml/TropicBird.xml
+  gbxml/schema/GreenBuildingXML_Ver6.01.xsd
 )
 
 # update the resources
@@ -383,5 +391,6 @@ add_custom_target(openstudio_airflow_resources
 
 CREATE_SRC_GROUPS("${airflow_resources_src}")
 
-install(DIRECTORY "Examples" DESTINATION . COMPONENT "CLI")
+########################################################
 
+install(DIRECTORY "Examples" DESTINATION . COMPONENT "CLI")

@@ -286,6 +286,23 @@ namespace model {
       return m_cachedOutputControlReportingTolerances;
     }
 
+    boost::optional<OutputControlTableStyle> Model_Impl::outputControlTableStyle() const {
+      if (m_cachedOutputControlTableStyle) {
+        return m_cachedOutputControlTableStyle;
+      }
+
+      boost::optional<OutputControlTableStyle> result = this->model().getOptionalUniqueModelObject<OutputControlTableStyle>();
+      if (result) {
+        m_cachedOutputControlTableStyle = result;
+        result->getImpl<OutputControlTableStyle_Impl>()
+          .get()
+          ->OutputControlTableStyle_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputControlTableStyle>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedOutputControlTableStyle;
+    }
+
     boost::optional<OutputDiagnostics> Model_Impl::outputDiagnostics() const {
       if (m_cachedOutputDiagnostics) {
         return m_cachedOutputDiagnostics;
@@ -333,6 +350,23 @@ namespace model {
       }
 
       return m_cachedOutputJSON;
+    }
+
+    boost::optional<OutputSQLite> Model_Impl::outputSQLite() const {
+      if (m_cachedOutputSQLite) {
+        return m_cachedOutputSQLite;
+      }
+
+      boost::optional<OutputSQLite> result = this->model().getOptionalUniqueModelObject<OutputSQLite>();
+      if (result) {
+        m_cachedOutputSQLite = result;
+        result->getImpl<OutputSQLite_Impl>()
+          .get()
+          ->OutputSQLite_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputSQLite>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedOutputSQLite;
     }
 
     boost::optional<OutputEnergyManagementSystem> Model_Impl::outputEnergyManagementSystem() const {
@@ -1476,9 +1510,11 @@ namespace model {
       clearCachedFoundationKivaSettings(dummy);
       clearCachedOutputControlFiles(dummy);
       clearCachedOutputControlReportingTolerances(dummy);
+      clearCachedOutputControlTableStyle(dummy);
       clearCachedOutputDiagnostics(dummy);
       clearCachedOutputDebuggingData(dummy);
       clearCachedOutputJSON(dummy);
+      clearCachedOutputSQLite(dummy);
       clearCachedOutputEnergyManagementSystem(dummy);
       clearCachedOutputTableSummaryReports(dummy);
       clearCachedPerformancePrecisionTradeoffs(dummy);
@@ -1531,6 +1567,10 @@ namespace model {
       m_cachedOutputControlReportingTolerances.reset();
     }
 
+    void Model_Impl::clearCachedOutputControlTableStyle(const Handle&) {
+      m_cachedOutputControlTableStyle.reset();
+    }
+
     void Model_Impl::clearCachedOutputDiagnostics(const Handle&) {
       m_cachedOutputDiagnostics.reset();
     }
@@ -1541,6 +1581,10 @@ namespace model {
 
     void Model_Impl::clearCachedOutputJSON(const Handle&) {
       m_cachedOutputJSON.reset();
+    }
+
+    void Model_Impl::clearCachedOutputSQLite(const Handle&) {
+      m_cachedOutputSQLite.reset();
     }
 
     void Model_Impl::clearCachedOutputEnergyManagementSystem(const Handle&) {
@@ -1844,6 +1888,10 @@ namespace model {
     return getImpl<detail::Model_Impl>()->outputControlReportingTolerances();
   }
 
+  boost::optional<OutputControlTableStyle> Model::outputControlTableStyle() const {
+    return getImpl<detail::Model_Impl>()->outputControlTableStyle();
+  }
+
   boost::optional<OutputDiagnostics> Model::outputDiagnostics() const {
     return getImpl<detail::Model_Impl>()->outputDiagnostics();
   }
@@ -1854,6 +1902,10 @@ namespace model {
 
   boost::optional<OutputJSON> Model::outputJSON() const {
     return getImpl<detail::Model_Impl>()->outputJSON();
+  }
+
+  boost::optional<OutputSQLite> Model::outputSQLite() const {
+    return getImpl<detail::Model_Impl>()->outputSQLite();
   }
 
   boost::optional<OutputEnergyManagementSystem> Model::outputEnergyManagementSystem() const {
@@ -3367,6 +3419,15 @@ namespace model {
   }
 
   template <>
+  OutputControlTableStyle Model::getUniqueModelObject<OutputControlTableStyle>() {
+    if (boost::optional<OutputControlTableStyle> _b = outputControlTableStyle()) {
+      return _b.get();
+    } else {
+      return OutputControlTableStyle(*this);
+    }
+  }
+
+  template <>
   OutputDiagnostics Model::getUniqueModelObject<OutputDiagnostics>() {
     if (boost::optional<OutputDiagnostics> _b = outputDiagnostics()) {
       return _b.get();
@@ -3390,6 +3451,15 @@ namespace model {
       return _b.get();
     } else {
       return OutputJSON(*this);
+    }
+  }
+
+  template <>
+  OutputSQLite Model::getUniqueModelObject<OutputSQLite>() {
+    if (boost::optional<OutputSQLite> _b = outputSQLite()) {
+      return _b.get();
+    } else {
+      return OutputSQLite(*this);
     }
   }
 
@@ -4027,6 +4097,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(LuminaireDefinition);
     REGISTER_CONSTRUCTOR(MaterialPropertyGlazingSpectralData);
     REGISTER_CONSTRUCTOR(MaterialPropertyMoisturePenetrationDepthSettings);
+    REGISTER_CONSTRUCTOR(MaterialPropertyPhaseChange);
+    REGISTER_CONSTRUCTOR(MaterialPropertyPhaseChangeHysteresis);
     REGISTER_CONSTRUCTOR(MasslessOpaqueMaterial);
     REGISTER_CONSTRUCTOR(MeterCustom);
     REGISTER_CONSTRUCTOR(MeterCustomDecrement);
@@ -4036,10 +4108,12 @@ namespace model {
     REGISTER_CONSTRUCTOR(OtherEquipmentDefinition);
     REGISTER_CONSTRUCTOR(OutputControlFiles);
     REGISTER_CONSTRUCTOR(OutputControlReportingTolerances);
+    REGISTER_CONSTRUCTOR(OutputControlTableStyle);
     REGISTER_CONSTRUCTOR(OutputDebuggingData);
     REGISTER_CONSTRUCTOR(OutputDiagnostics);
     REGISTER_CONSTRUCTOR(OutputEnergyManagementSystem);
     REGISTER_CONSTRUCTOR(OutputJSON);
+    REGISTER_CONSTRUCTOR(OutputSQLite);
     REGISTER_CONSTRUCTOR(OutputEnvironmentalImpactFactors);
     REGISTER_CONSTRUCTOR(EnvironmentalImpactFactors);
     REGISTER_CONSTRUCTOR(FuelFactors);
@@ -4072,6 +4146,10 @@ namespace model {
     REGISTER_CONSTRUCTOR(ProgramControl);
     REGISTER_CONSTRUCTOR(PumpConstantSpeed);
     REGISTER_CONSTRUCTOR(PumpVariableSpeed);
+    REGISTER_CONSTRUCTOR(PythonPluginInstance);
+    REGISTER_CONSTRUCTOR(PythonPluginVariable);
+    REGISTER_CONSTRUCTOR(PythonPluginTrendVariable);
+    REGISTER_CONSTRUCTOR(PythonPluginOutputVariable);
     REGISTER_CONSTRUCTOR(RadianceParameters);
     REGISTER_CONSTRUCTOR(RefractionExtinctionGlazing);
     REGISTER_CONSTRUCTOR(RefrigerationAirChiller);
@@ -4132,6 +4210,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(SetpointManagerSingleZoneReheat);
     REGISTER_CONSTRUCTOR(SetpointManagerWarmest);
     REGISTER_CONSTRUCTOR(SetpointManagerWarmestTemperatureFlow);
+    REGISTER_CONSTRUCTOR(SetpointManagerSystemNodeResetHumidity);
+    REGISTER_CONSTRUCTOR(SetpointManagerSystemNodeResetTemperature);
     REGISTER_CONSTRUCTOR(Shade);
     REGISTER_CONSTRUCTOR(ShadingControl);
     REGISTER_CONSTRUCTOR(ShadingSurface);
@@ -4556,6 +4636,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(LuminaireDefinition);
     REGISTER_COPYCONSTRUCTORS(MaterialPropertyGlazingSpectralData);
     REGISTER_COPYCONSTRUCTORS(MaterialPropertyMoisturePenetrationDepthSettings);
+    REGISTER_COPYCONSTRUCTORS(MaterialPropertyPhaseChange);
+    REGISTER_COPYCONSTRUCTORS(MaterialPropertyPhaseChangeHysteresis);
     REGISTER_COPYCONSTRUCTORS(MasslessOpaqueMaterial);
     REGISTER_COPYCONSTRUCTORS(MeterCustom);
     REGISTER_COPYCONSTRUCTORS(MeterCustomDecrement);
@@ -4565,10 +4647,12 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(OtherEquipmentDefinition);
     REGISTER_COPYCONSTRUCTORS(OutputControlFiles);
     REGISTER_COPYCONSTRUCTORS(OutputControlReportingTolerances);
+    REGISTER_COPYCONSTRUCTORS(OutputControlTableStyle);
     REGISTER_COPYCONSTRUCTORS(OutputDebuggingData);
     REGISTER_COPYCONSTRUCTORS(OutputDiagnostics);
     REGISTER_COPYCONSTRUCTORS(OutputEnergyManagementSystem);
     REGISTER_COPYCONSTRUCTORS(OutputJSON);
+    REGISTER_COPYCONSTRUCTORS(OutputSQLite);
     REGISTER_COPYCONSTRUCTORS(OutputEnvironmentalImpactFactors);
     REGISTER_COPYCONSTRUCTORS(EnvironmentalImpactFactors);
     REGISTER_COPYCONSTRUCTORS(FuelFactors);
@@ -4601,6 +4685,10 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ProgramControl);
     REGISTER_COPYCONSTRUCTORS(PumpConstantSpeed);
     REGISTER_COPYCONSTRUCTORS(PumpVariableSpeed);
+    REGISTER_COPYCONSTRUCTORS(PythonPluginInstance);
+    REGISTER_COPYCONSTRUCTORS(PythonPluginVariable);
+    REGISTER_COPYCONSTRUCTORS(PythonPluginTrendVariable);
+    REGISTER_COPYCONSTRUCTORS(PythonPluginOutputVariable);
     REGISTER_COPYCONSTRUCTORS(RadianceParameters);
     REGISTER_COPYCONSTRUCTORS(RefractionExtinctionGlazing);
     REGISTER_COPYCONSTRUCTORS(RefrigerationAirChiller);
@@ -4661,6 +4749,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SetpointManagerSingleZoneReheat);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmest);
     REGISTER_COPYCONSTRUCTORS(SetpointManagerWarmestTemperatureFlow);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSystemNodeResetHumidity);
+    REGISTER_COPYCONSTRUCTORS(SetpointManagerSystemNodeResetTemperature);
     REGISTER_COPYCONSTRUCTORS(Shade);
     REGISTER_COPYCONSTRUCTORS(ShadingControl);
     REGISTER_COPYCONSTRUCTORS(ShadingSurface);

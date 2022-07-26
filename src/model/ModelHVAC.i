@@ -236,6 +236,8 @@ MODELOBJECT_TEMPLATES(SetpointManagerWarmest);
 MODELOBJECT_TEMPLATES(SetpointManagerWarmestTemperatureFlow);
 MODELOBJECT_TEMPLATES(SetpointManagerColdest);
 MODELOBJECT_TEMPLATES(SetpointManagerFollowGroundTemperature);
+MODELOBJECT_TEMPLATES(SetpointManagerSystemNodeResetHumidity);
+MODELOBJECT_TEMPLATES(SetpointManagerSystemNodeResetTemperature);
 
 SWIG_MODELOBJECT(PortList, 1);
 SWIG_MODELOBJECT(Loop, 0);
@@ -355,6 +357,8 @@ SWIG_MODELOBJECT(SetpointManagerWarmest,1);
 SWIG_MODELOBJECT(SetpointManagerWarmestTemperatureFlow,1);
 SWIG_MODELOBJECT(SetpointManagerColdest,1);
 SWIG_MODELOBJECT(SetpointManagerFollowGroundTemperature,1);
+SWIG_MODELOBJECT(SetpointManagerSystemNodeResetHumidity,1);
+SWIG_MODELOBJECT(SetpointManagerSystemNodeResetTemperature,1);
 
 #if defined(SWIGCSHARP) || defined(SWIGJAVA)
   %inline {

@@ -157,9 +157,9 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_addToNode) {
   std::vector<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirResets = m.getModelObjects<SetpointManagerOutdoorAirReset>();
   EXPECT_EQ(3, setpointManagerOutdoorAirResets.size());
 
-  EXPECT_EQ(testObject, spm_1.setpointNode());
+  EXPECT_EQ(testObject, spm_1.setpointNode().get());
   EXPECT_TRUE(spm_2.addToNode(testObject));
-  EXPECT_EQ(testObject, spm_2.setpointNode());
+  EXPECT_EQ(testObject, spm_2.setpointNode().get());
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());
@@ -246,13 +246,13 @@ TEST_F(ModelFixture, SetpointManagerOutdoorAirReset_customDataClone) {
   EXPECT_EQ(testObject.outdoorLowTemperature(), testObjectClone.outdoorLowTemperature());
   EXPECT_EQ(testObject.setpointatOutdoorHighTemperature(), testObjectClone.setpointatOutdoorHighTemperature());
   EXPECT_EQ(testObject.outdoorHighTemperature(), testObjectClone.outdoorHighTemperature());
-  EXPECT_EQ(testObject.schedule(), testObjectClone.schedule());
-  EXPECT_EQ(testObject.setpointatOutdoorLowTemperature2(), testObjectClone.setpointatOutdoorLowTemperature2());
+  EXPECT_EQ(testObject.schedule().get(), testObjectClone.schedule().get());
+  EXPECT_EQ(testObject.setpointatOutdoorLowTemperature2().get(), testObjectClone.setpointatOutdoorLowTemperature2().get());
   EXPECT_EQ("Temperature", testObjectClone.controlVariable());
   EXPECT_EQ(999.9, testObjectClone.setpointatOutdoorLowTemperature());
   EXPECT_EQ(999.9, testObjectClone.outdoorLowTemperature());
   EXPECT_EQ(999.9, testObjectClone.setpointatOutdoorHighTemperature());
   EXPECT_EQ(999.9, testObjectClone.outdoorHighTemperature());
-  EXPECT_EQ(s, testObjectClone.schedule());
+  EXPECT_EQ(s, testObjectClone.schedule().get());
   EXPECT_EQ(999.9, testObjectClone.setpointatOutdoorLowTemperature2().get());
 }

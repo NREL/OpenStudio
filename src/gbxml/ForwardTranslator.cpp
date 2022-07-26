@@ -36,6 +36,8 @@
 #include "../model/Material_Impl.hpp"
 #include "../model/ConstructionBase.hpp"
 #include "../model/ConstructionBase_Impl.hpp"
+#include "../model/Construction.hpp"
+#include "../model/Construction_Impl.hpp"
 #include "../model/Facility.hpp"
 #include "../model/Facility_Impl.hpp"
 #include "../model/Building.hpp"
@@ -54,6 +56,8 @@
 #include "../model/SubSurface_Impl.hpp"
 #include "../model/ShadingSurface.hpp"
 #include "../model/ShadingSurface_Impl.hpp"
+#include "../model/StandardOpaqueMaterial.hpp"
+#include "../model/StandardOpaqueMaterial_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
 #include "../model/ThermostatSetpointDualSetpoint.hpp"
@@ -77,17 +81,22 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/core/StringHelpers.hpp"
+#include "../utilities/xml/XMLValidator.hpp"
 
 #include <OpenStudio.hxx>
+#include <resources.hxx>
 
 #include <boost/math/constants/constants.hpp>
 
 #include <pugixml.hpp>
 
 #include <regex>
+#include <string_view>
 
 namespace openstudio {
 namespace gbxml {
+
+  static constexpr std::string_view shadingSurfaceWithoutConstructionName = "Shading_Surface_Without_Construction";
 
   ForwardTranslator::ForwardTranslator() {
     m_logSink.setLogLevel(Warn);
@@ -112,6 +121,12 @@ namespace gbxml {
     if (file.is_open()) {
       doc.save(file, "  ");
       file.close();
+
+      // validate the gbxml after forward translation
+      openstudio::path schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
+      XMLValidator xmlValidator(schemaPath);
+      xmlValidator.validate(path);
+
       return result;
     }
 
@@ -193,6 +208,7 @@ namespace gbxml {
     // Clear the map & set
     m_translatedObjects.clear();
     m_materials.clear();
+    m_placeholderShadingSurfaceConstructionAlreadyCreated = false;
 
     auto gbXMLElement = document.append_child("gbXML");
     gbXMLElement.append_attribute("xmlns") = "http://www.gbxml.org/schema";
@@ -819,7 +835,7 @@ namespace gbxml {
       if (construction->isOpaque()) {
         result.append_attribute("constructionIdRef") = escapeName(constructionName).c_str();
       } else {
-        result.append_attribute("constructionIdRef") = escapeName(constructionName).c_str();
+        result.append_attribute("constructionIdRef") = escapeName(constructionName).c_str();  // FIXME: windowTypeIdRef?
       }
     }
 
@@ -1145,6 +1161,21 @@ namespace gbxml {
         result.append_attribute("constructionIdRef") = escapeName(constructionName).c_str();
       } else {
         result.append_attribute("windowTypeIdRef") = escapeName(constructionName).c_str();
+      }
+    } else {
+      // no construction is relevant here, but we don't want to fail validation
+      std::string name{shadingSurfaceWithoutConstructionName};
+
+      result.append_attribute("constructionIdRef") = name.c_str();
+
+      if (!m_placeholderShadingSurfaceConstructionAlreadyCreated) {
+        // parent is Facility, and its parent is the gbXML element
+        auto gbXMLElement = parent.parent();
+        auto node = gbXMLElement.append_child("Construction");
+        node.append_attribute("id") = name.c_str();
+        node.append_child("Name").text() = name.c_str();
+        // Switch bool off
+        m_placeholderShadingSurfaceConstructionAlreadyCreated = true;
       }
     }
 

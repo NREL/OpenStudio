@@ -34,16 +34,6 @@ set(${target_name}_src
   ThreeJSForwardTranslator.cpp
   ThreeJSReverseTranslator.hpp
   ThreeJSReverseTranslator.cpp
-  GltfForwardTranslator.hpp
-  GltfForwardTranslator.cpp
-  GltfBoundingBoxWrapper.hpp
-  GltfBoundingBoxWrapper.cpp
-  GltfModelObjectMetadataWrapper.hpp
-  GltfModelObjectMetadataWrapper.cpp
-  GltfUserDataWrapper.hpp
-  GltfUserDataWrapper.cpp
-  GltfMetaDataWrapper.hpp
-  GltfMetaDataWrapper.cpp
   ModelMerger.hpp
   ModelMerger.cpp
 
@@ -1011,6 +1001,12 @@ set(${target_name}_src
   MaterialPropertyMoisturePenetrationDepthSettings.hpp
   MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp
   MaterialPropertyMoisturePenetrationDepthSettings.cpp
+  MaterialPropertyPhaseChange.hpp
+  MaterialPropertyPhaseChange_Impl.hpp
+  MaterialPropertyPhaseChange.cpp
+  MaterialPropertyPhaseChangeHysteresis.hpp
+  MaterialPropertyPhaseChangeHysteresis_Impl.hpp
+  MaterialPropertyPhaseChangeHysteresis.cpp
   MeterCustom.hpp
   MeterCustom_Impl.hpp
   MeterCustom.cpp
@@ -1041,12 +1037,18 @@ set(${target_name}_src
   OutputControlReportingTolerances.hpp
   OutputControlReportingTolerances_Impl.hpp
   OutputControlReportingTolerances.cpp
+  OutputControlTableStyle.hpp
+  OutputControlTableStyle_Impl.hpp
+  OutputControlTableStyle.cpp
   OutputDebuggingData.hpp
   OutputDebuggingData_Impl.hpp
   OutputDebuggingData.cpp
   OutputJSON.hpp
   OutputJSON_Impl.hpp
   OutputJSON.cpp
+  OutputSQLite.hpp
+  OutputSQLite_Impl.hpp
+  OutputSQLite.cpp
   OutputEnvironmentalImpactFactors.hpp
   OutputEnvironmentalImpactFactors_Impl.hpp
   OutputEnvironmentalImpactFactors.cpp
@@ -1167,6 +1169,18 @@ set(${target_name}_src
   PumpVariableSpeed.hpp
   PumpVariableSpeed_Impl.hpp
   PumpVariableSpeed.cpp
+  PythonPluginInstance.hpp
+  PythonPluginInstance_Impl.hpp
+  PythonPluginInstance.cpp
+  PythonPluginVariable.hpp
+  PythonPluginVariable_Impl.hpp
+  PythonPluginVariable.cpp
+  PythonPluginTrendVariable.hpp
+  PythonPluginTrendVariable_Impl.hpp
+  PythonPluginTrendVariable.cpp
+  PythonPluginOutputVariable.hpp
+  PythonPluginOutputVariable_Impl.hpp
+  PythonPluginOutputVariable.cpp
   RadianceParameters.hpp
   RadianceParameters_Impl.hpp
   RadianceParameters.cpp
@@ -1362,6 +1376,12 @@ set(${target_name}_src
   SetpointManagerWarmestTemperatureFlow.hpp
   SetpointManagerWarmestTemperatureFlow_Impl.hpp
   SetpointManagerWarmestTemperatureFlow.cpp
+  SetpointManagerSystemNodeResetHumidity.hpp
+  SetpointManagerSystemNodeResetHumidity_Impl.hpp
+  SetpointManagerSystemNodeResetHumidity.cpp
+  SetpointManagerSystemNodeResetTemperature.hpp
+  SetpointManagerSystemNodeResetTemperature_Impl.hpp
+  SetpointManagerSystemNodeResetTemperature.cpp
   Shade.hpp
   Shade_Impl.hpp
   Shade.cpp
@@ -2067,6 +2087,8 @@ set(${target_name}_test_src
   test/Material_GTest.cpp
   test/MaterialPropertyGlazingSpectralData_GTest.cpp
   test/MaterialPropertyMoisturePenetrationDepthSettings_GTest.cpp
+  test/MaterialPropertyPhaseChange_GTest.cpp
+  test/MaterialPropertyPhaseChangeHysteresis_GTest.cpp
   test/MeterCustom_GTest.cpp
   test/MeterCustomDecrement_GTest.cpp
   test/ModelFixture.cpp
@@ -2081,8 +2103,10 @@ set(${target_name}_test_src
   test/OtherEquipment_GTest.cpp
   test/OutputControlFiles_GTest.cpp
   test/OutputControlReportingTolerances_GTest.cpp
+  test/OutputControlTableStyle_GTest.cpp
   test/OutputDebuggingData_GTest.cpp
   test/OutputJSON_GTest.cpp
+  test/OutputSQLite_GTest.cpp
   test/OutputEnvironmentalImpactFactors_GTest.cpp
   test/EnvironmentalImpactFactors_GTest.cpp
   test/FuelFactors_GTest.cpp
@@ -2110,6 +2134,10 @@ set(${target_name}_test_src
   test/Plenums_GTest.cpp
   test/PumpConstantSpeed_GTest.cpp
   test/PumpVariableSpeed_GTest.cpp
+  test/PythonPluginInstance_GTest.cpp
+  test/PythonPluginVariable_GTest.cpp
+  test/PythonPluginTrendVariable_GTest.cpp
+  test/PythonPluginOutputVariable_GTest.cpp
   test/RadianceParameters_GTest.cpp
   test/RefractionExtinctionGlazing_GTest.cpp
   test/RefrigerationAirChiller_GTest.cpp
@@ -2158,6 +2186,8 @@ set(${target_name}_test_src
   test/SetpointManagerSingleZoneHeating_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
   test/SetpointManagerWarmestTemperatureFlow_GTest.cpp
+  test/SetpointManagerSystemNodeResetHumidity_GTest.cpp
+  test/SetpointManagerSystemNodeResetTemperature_GTest.cpp
   test/ScheduleDay_GTest.cpp
   test/ScheduleInterval_GTest.cpp
   test/ScheduleRuleset_GTest.cpp
@@ -2195,6 +2225,7 @@ set(${target_name}_test_src
   test/SpaceType_GTest.cpp
   test/Space_GTest.cpp
   test/StandardGlazing_GTest.cpp
+  test/StandardOpaqueMaterial_GTest.cpp
   test/SteamEquipment_GTest.cpp
   test/SubSurface_GTest.cpp
   test/Surface_GTest.cpp
@@ -2214,7 +2245,6 @@ set(${target_name}_test_src
   test/TemperingValve_GTest.cpp
   test/ThreeJSForwardTranslator_GTest.cpp
   test/ThreeJSReverseTranslator_GTest.cpp
-  test/GltfForwardTranslator_GTest.cpp
   test/UnitarySystemPerformanceMultispeed_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp

@@ -393,7 +393,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_ThreeSpacesOneZon
 
     EXPECT_EQ(-dSpace2.phiRotationAroundZAxis(),
               d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
-    EXPECT_EQ(dSpace2.maximumAllowableDiscomfortGlareIndex(), d.getDouble(Daylighting_ControlsFields::MaximumAllowableDiscomfortGlareIndex).get());
+    EXPECT_EQ(dSpace2.maximumAllowableDiscomfortGlareIndex().get(),
+              d.getDouble(Daylighting_ControlsFields::MaximumAllowableDiscomfortGlareIndex).get());
     EXPECT_TRUE(d.isEmpty(Daylighting_ControlsFields::DaylightingMethod));
     EXPECT_TRUE(d.isEmpty(Daylighting_ControlsFields::DElightGriddingResolution));
 
@@ -461,7 +462,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DaylightingControl_ThreeSpacesOneZon
 
     EXPECT_EQ(-dSpace2.phiRotationAroundZAxis(),
               d.getDouble(Daylighting_ControlsFields::GlareCalculationAzimuthAngleofViewDirectionClockwisefromZoneyAxis).get());
-    EXPECT_EQ(dSpace2.maximumAllowableDiscomfortGlareIndex(), d.getDouble(Daylighting_ControlsFields::MaximumAllowableDiscomfortGlareIndex).get());
+    EXPECT_EQ(dSpace2.maximumAllowableDiscomfortGlareIndex().get(),
+              d.getDouble(Daylighting_ControlsFields::MaximumAllowableDiscomfortGlareIndex).get());
     EXPECT_TRUE(d.isEmpty(Daylighting_ControlsFields::DaylightingMethod));
     EXPECT_TRUE(d.isEmpty(Daylighting_ControlsFields::DElightGriddingResolution));
 

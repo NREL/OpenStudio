@@ -91,9 +91,9 @@ TEST_F(ModelFixture, SetpointManagerMixedAir_addToNode) {
   std::vector<SetpointManagerMixedAir> setpointManagerMixedAirs = m.getModelObjects<SetpointManagerMixedAir>();
   EXPECT_EQ(3, setpointManagerMixedAirs.size());
 
-  EXPECT_EQ(node, spm_1.setpointNode());
+  EXPECT_EQ(node, spm_1.setpointNode().get());
   EXPECT_TRUE(spm_2.addToNode(node));
-  EXPECT_EQ(node, spm_2.setpointNode());
+  EXPECT_EQ(node, spm_2.setpointNode().get());
 
   _setpointManagers = node.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());

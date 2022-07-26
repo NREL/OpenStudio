@@ -59,8 +59,7 @@ namespace energyplus {
     }
 
     // It doesn't have a name
-    IdfObject idfObject(openstudio::IddObjectType::Output_EnvironmentalImpactFactors);
-    m_idfObjects.push_back(idfObject);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_EnvironmentalImpactFactors, modelObject);
 
     idfObject.setString(Output_EnvironmentalImpactFactorsFields::ReportingFrequency, modelObject.reportingFrequency());
 

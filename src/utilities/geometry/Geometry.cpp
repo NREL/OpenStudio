@@ -38,6 +38,8 @@
 
 #include <polypartition/polypartition.h>
 
+#include <cmath>
+
 namespace openstudio {
 /// convert degrees to radians
 double degToRad(double degrees) {
@@ -510,7 +512,7 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
 
     // should all have zero z coordinate now
     double z = vertices[n - i - 1].z();
-    if (abs(z) > tol) {
+    if (std::abs(z) > tol) {
       LOG_FREE(Error, "utilities.geometry.computeTriangulation", "All points must be on z = 0 plane for triangulation methods");
       return result;
     }
@@ -537,7 +539,7 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
 
       // should all have zero z coordinate now
       double z = holeVertices[i].z();
-      if (abs(z) > tol) {
+      if (std::abs(z) > tol) {
         LOG_FREE(Error, "utilities.geometry.computeTriangulation", "All points must be on z = 0 plane for triangulation methods");
         return result;
       }

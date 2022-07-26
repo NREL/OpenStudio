@@ -53,9 +53,11 @@ namespace model {
   class FoundationKivaSettings;
   class OutputControlFiles;
   class OutputControlReportingTolerances;
+  class OutputControlTableStyle;
   class OutputDiagnostics;
   class OutputDebuggingData;
   class OutputJSON;
+  class OutputSQLite;
   class OutputEnergyManagementSystem;
   class OutputTableSummaryReports;
   class PerformancePrecisionTradeoffs;
@@ -162,6 +164,10 @@ namespace model {
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlReportingTolerances>(). */
     boost::optional<OutputControlReportingTolerances> outputControlReportingTolerances() const;
 
+    /** Get the OutputControlTableStyle object if there is one, this implementation uses a cached reference to the OutputControlTableStyle
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlTableStyle>(). */
+    boost::optional<OutputControlTableStyle> outputControlTableStyle() const;
+
     /** Get the OutputDiagnostics object if there is one, this implementation uses a cached reference to the OutputDiagnostics
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputDiagnostics>(). */
     boost::optional<OutputDiagnostics> outputDiagnostics() const;
@@ -173,6 +179,10 @@ namespace model {
     /** Get the OutputJSON object if there is one, this implementation uses a cached reference to the OutputJSON
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputJSON>(). */
     boost::optional<OutputJSON> outputJSON() const;
+
+    /** Get the OutputSQLite object if there is one, this implementation uses a cached reference to the OutputSQLite
+   *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputSQLite>(). */
+    boost::optional<OutputSQLite> outputSQLite() const;
 
     /** Get the OutputEnergyManagementSystem object if there is one, this implementation uses a cached reference to the OutputEnergyManagementSystem
    *  object which can be significantly faster than calling getOptionalUniqueModelObject<OutputControlFiles>(). */
@@ -690,6 +700,9 @@ namespace model {
   MODEL_API OutputControlReportingTolerances Model::getUniqueModelObject<OutputControlReportingTolerances>();
 
   template <>
+  MODEL_API OutputControlTableStyle Model::getUniqueModelObject<OutputControlTableStyle>();
+
+  template <>
   MODEL_API OutputDiagnostics Model::getUniqueModelObject<OutputDiagnostics>();
 
   template <>
@@ -697,6 +710,9 @@ namespace model {
 
   template <>
   MODEL_API OutputJSON Model::getUniqueModelObject<OutputJSON>();
+
+  template <>
+  MODEL_API OutputSQLite Model::getUniqueModelObject<OutputSQLite>();
 
   template <>
   MODEL_API OutputEnergyManagementSystem Model::getUniqueModelObject<OutputEnergyManagementSystem>();

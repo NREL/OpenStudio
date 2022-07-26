@@ -58,6 +58,8 @@
 #include "../OutputControlFiles_Impl.hpp"
 #include "../OutputControlReportingTolerances.hpp"
 #include "../OutputControlReportingTolerances_Impl.hpp"
+#include "../OutputControlTableStyle.hpp"
+#include "../OutputControlTableStyle_Impl.hpp"
 #include "../OutputDebuggingData.hpp"
 #include "../OutputDebuggingData_Impl.hpp"
 #include "../OutputDiagnostics.hpp"
@@ -66,6 +68,8 @@
 #include "../OutputEnergyManagementSystem_Impl.hpp"
 #include "../OutputJSON.hpp"
 #include "../OutputJSON_Impl.hpp"
+#include "../OutputSQLite.hpp"
+#include "../OutputSQLite_Impl.hpp"
 #include "../PerformancePrecisionTradeoffs.hpp"
 #include "../PerformancePrecisionTradeoffs_Impl.hpp"
 #include "../RadianceParameters.hpp"
@@ -393,6 +397,31 @@ TEST_F(ModelFixture, OutputControlReportingTolerances_UniqueModelObject_Clone) {
   EXPECT_EQ("! Custom Object", outputControlReportingTolerancesClone2.comment());
 }
 
+TEST_F(ModelFixture, OutputControlTableStyle_UniqueModelObject_Clone) {
+  // create a model to use
+  Model model;
+
+  // Get the Unique ModelObject
+  EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputControlTableStyle>());
+  OutputControlTableStyle outputControlTableStyle = model.getUniqueModelObject<OutputControlTableStyle>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputControlTableStyle>());
+  // We use a comment to see if cloning to another model works
+  outputControlTableStyle.setComment("Custom Object");
+
+  // clone it into the same model
+  OutputControlTableStyle outputControlTableStyleClone = outputControlTableStyle.clone(model).cast<OutputControlTableStyle>();
+  // UniqueModelObject: should be the same as the original
+  EXPECT_EQ(outputControlTableStyle, outputControlTableStyleClone);
+  EXPECT_EQ("! Custom Object", outputControlTableStyleClone.comment());
+
+  // clone it into a different model
+  Model model2;
+  EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputControlTableStyle>());
+  OutputControlTableStyle outputControlTableStyleClone2 = outputControlTableStyle.clone(model2).cast<OutputControlTableStyle>();
+  EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputControlTableStyle>());
+  EXPECT_EQ("! Custom Object", outputControlTableStyleClone2.comment());
+}
+
 TEST_F(ModelFixture, OutputDebuggingData_UniqueModelObject_Clone) {
   // create a model to use
   Model model;
@@ -491,6 +520,31 @@ TEST_F(ModelFixture, OutputJSON_UniqueModelObject_Clone) {
   OutputJSON outputJSONClone2 = outputJSON.clone(model2).cast<OutputJSON>();
   EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputJSON>());
   EXPECT_EQ("! Custom Object", outputJSONClone2.comment());
+}
+
+TEST_F(ModelFixture, OutputSQLite_UniqueModelObject_Clone) {
+  // create a model to use
+  Model model;
+
+  // Get the Unique ModelObject
+  EXPECT_FALSE(model.getOptionalUniqueModelObject<OutputSQLite>());
+  OutputSQLite outputSQLite = model.getUniqueModelObject<OutputSQLite>();
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<OutputSQLite>());
+  // We use a comment to see if cloning to another model works
+  outputSQLite.setComment("Custom Object");
+
+  // clone it into the same model
+  OutputSQLite outputSQLiteClone = outputSQLite.clone(model).cast<OutputSQLite>();
+  // UniqueModelObject: should be the same as the original
+  EXPECT_EQ(outputSQLite, outputSQLiteClone);
+  EXPECT_EQ("! Custom Object", outputSQLiteClone.comment());
+
+  // clone it into a different model
+  Model model2;
+  EXPECT_FALSE(model2.getOptionalUniqueModelObject<OutputSQLite>());
+  OutputSQLite outputSQLiteClone2 = outputSQLite.clone(model2).cast<OutputSQLite>();
+  EXPECT_TRUE(model2.getOptionalUniqueModelObject<OutputSQLite>());
+  EXPECT_EQ("! Custom Object", outputSQLiteClone2.comment());
 }
 
 TEST_F(ModelFixture, PerformancePrecisionTradeoffs_UniqueModelObject_Clone) {
