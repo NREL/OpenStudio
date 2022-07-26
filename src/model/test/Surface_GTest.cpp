@@ -1196,9 +1196,8 @@ TEST_F(ModelFixture, Surface_4601_WWR_tooBig) {
   EXPECT_EQ(1, sink.logMessages().size());
   EXPECT_EQ(Warn, sink.logMessages().front().logLevel());
   EXPECT_EQ("utilities.geometry.applyViewAndDaylightingGlassRatios", sink.logMessages().front().logChannel());
-  EXPECT_EQ("Requested WWR (0.98) is greater than the Max WWR (0.900981). This limit is meant to preserve mandatory space between window and wall "
-            "(one inch on "
-            "all sides + minViewToDaylightDistance (0).",
+  EXPECT_EQ("Requested WWR (0.98) is greater than the Max WWR (0.900981). This limit is meant to preserve mandatory space between window and wall: "
+            "0.0254m (1 inch) on all sides + minViewToDaylightDistance (0m).",
             sink.logMessages().front().logMessage());
 }
 

@@ -675,14 +675,14 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
 
   if (wallWidth < 2 * minGlassToEdgeDistance) {
     LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios",
-             "Wall Width (" << wallWidth << "m) is too small to preserve one inch on both sides");
+             "Wall Width (" << wallWidth << "m) is too small to preserve 0.0254m (1 inch) on both sides.");
     return false;
   }
 
   if (wallHeight < 2 * minGlassToEdgeDistance + minViewToDaylightDistance) {
     LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios",
-             "Wall Height (" << wallHeight << "m) is too small to preserve one inch on both sides plus the minViewToDaylightDistance ("
-                             << minViewToDaylightDistance << ")");
+             "Wall Height (" << wallHeight << "m) is too small to preserve 0.0254m (1 inch) on both sides plus the minViewToDaylightDistance ("
+                             << minViewToDaylightDistance << "m).");
     return false;
   }
 
@@ -698,11 +698,12 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
   double requestedTotalWindowArea = totalWWR * wallArea;
 
   if (requestedTotalWindowArea > maxWindowArea) {
-    LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios",
-             "Requested WWR ("
-               << totalWWR << ") is greater than the Max WWR (" << maxWindowArea / wallArea
-               << "). This limit is meant to preserve mandatory space between window and wall (one inch on all sides + minViewToDaylightDistance ("
-               << minViewToDaylightDistance << ").");
+    LOG_FREE(
+      Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios",
+      "Requested WWR ("
+        << totalWWR << ") is greater than the Max WWR (" << maxWindowArea / wallArea
+        << "). This limit is meant to preserve mandatory space between window and wall: 0.0254m (1 inch) on all sides + minViewToDaylightDistance ("
+        << minViewToDaylightDistance << "m).");
     return false;
   }
 
