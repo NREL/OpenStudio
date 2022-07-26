@@ -118,6 +118,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalSingleDuctInletSideMixer)
   {
     Workspace w = ft.translateModel(m);
 
+    EXPECT_EQ(0, ft.warnings().size()) << [&ft]() {
+      std::string s;
+      bool firstTime = true;
+      for (auto& l : ft.warnings()) {
+        if (!firstTime) {
+          s += '\n';
+          firstTime = false;
+        }
+        s += l.logMessage();
+      }
+      return s;
+    }();
+    EXPECT_EQ(0, ft.errors().size());
+
     // Check the ATU
     auto idfObjs = w.getObjectsByType(IddObjectType::AirTerminal_SingleDuct_Mixer);
     EXPECT_EQ(1u, idfObjs.size());
