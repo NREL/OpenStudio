@@ -8058,6 +8058,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateWtrH
     // Save coil so that a meter can be created later
     if( istringEqual(fluidSysType, "HotWater") ) {
       m_spaceHeatingWaterHeaters.push_back(waterHeater);
+      m_spaceHeatingAirToWaterHeatPumps.push_back(coil);
+      m_spaceHeatingFans.push_back(fan);
     }
 
     // Heat pump inputs
