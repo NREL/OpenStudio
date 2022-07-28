@@ -18032,7 +18032,9 @@ OS:Coil:WaterHeating:Desuperheater,
   N2,  \field Rated Heat Reclaim Recovery Efficiency
        \type real
        \minimum> 0.0
+       \maximum 0.9
        \note Enter the fraction of waste heat reclaimed by the desuperheater water heating coil.
+       \note if not provided, uses a default
   N3,  \field Rated Inlet Water Temperature
        \required-field
        \type real
