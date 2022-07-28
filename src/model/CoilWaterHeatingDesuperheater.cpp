@@ -498,10 +498,17 @@ namespace model {
     : StraightComponent(CoilWaterHeatingDesuperheater::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilWaterHeatingDesuperheater_Impl>());
 
+    // That's the only bit that's user-specified and could be expected to really throw
+    bool ok = setSetpointTemperatureSchedule(setpointTemperatureSchedule);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Setpoint Temperature Schedule to " << setpointTemperatureSchedule.briefDescription()
+                                     << ".");
+    }
+
+    // All of the below is expected to work so an OS_ASSERT is good enough
     Schedule availabilitySchedule = model.alwaysOnDiscreteSchedule();
-    bool ok = setAvailabilitySchedule(availabilitySchedule);
-    OS_ASSERT(ok);
-    ok = setSetpointTemperatureSchedule(setpointTemperatureSchedule);
+    ok = setAvailabilitySchedule(availabilitySchedule);
     OS_ASSERT(ok);
     ok = setDeadBandTemperatureDifference(5.0);
     OS_ASSERT(ok);
