@@ -125,6 +125,7 @@ namespace energyplus {
             auto spaces = zone.cast<model::ThermalZone>().spaces();
             if (!spaces.empty()) {
               if (auto designSpecificationOutdoorAir = spaces.front().designSpecificationOutdoorAir()) {
+                dsoa_found = true;
                 idfObject.setString(AirTerminal_SingleDuct_MixerFields::DesignSpecificationOutdoorAirObjectName,
                                     designSpecificationOutdoorAir->name().get());
               }
