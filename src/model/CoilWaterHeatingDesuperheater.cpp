@@ -512,9 +512,6 @@ namespace model {
     OS_ASSERT(ok);
     ok = setDeadBandTemperatureDifference(5.0);
     OS_ASSERT(ok);
-    ok = setRatedHeatReclaimRecoveryEfficiency(
-      0.8);  // default for when Heating Source Name = Refrigeration:Condenser:AirCooled or Refrigeration:Condenser:EvaporativeCooled or Refrigeration:Condenser:WaterCooled
-    OS_ASSERT(ok);
     setRatedInletWaterTemperature(50.0);
     setRatedOutdoorAirTemperature(35.0);
     setMaximumInletWaterTemperatureforHeatReclaim(60.0);
