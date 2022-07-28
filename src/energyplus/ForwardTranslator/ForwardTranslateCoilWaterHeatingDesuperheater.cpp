@@ -56,35 +56,6 @@ namespace energyplus {
     boost::optional<std::string> s;
     boost::optional<double> d;
 
-    // #3666 - Initial check to avoid translating the object if the Heat Reclaim Recovery Efficiency is out of bounds based on heating source type
-    boost::optional<ModelObject> heatingSource_ = modelObject.heatingSource();
-    boost::optional<double> ratedHeatReclaimRecoveryEfficiency_ = modelObject.ratedHeatReclaimRecoveryEfficiency();
-
-    if (heatingSource_) {
-      auto heatingSourceIddObjectType = heatingSource_->iddObjectType();
-      if (ratedHeatReclaimRecoveryEfficiency_) {
-        if ((heatingSourceIddObjectType == IddObjectType::OS_Refrigeration_Condenser_AirCooled)
-            || (heatingSourceIddObjectType == IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled)
-            || (heatingSourceIddObjectType == IddObjectType::OS_Refrigeration_Condenser_WaterCooled)) {
-          if (ratedHeatReclaimRecoveryEfficiency_.get() > 0.9) {
-            LOG(Error, modelObject.briefDescription()
-                         << ": Rated Heat Reclaim Recovery Efficiency must be"
-                         << " <= 0.9 when Heating Source Object Type = " << heatingSourceIddObjectType << ". It will not be translated.");
-            return boost::none;
-          }
-        } else {
-          if (ratedHeatReclaimRecoveryEfficiency_.get() > 0.3) {
-            LOG(Error, modelObject.briefDescription()
-                         << ": Rated Heat Reclaim Recovery Efficiency must be"
-                         << " <= 0.3 when Heating Source Object Type = " << heatingSourceIddObjectType << ". It will not be translated.");
-            return boost::none;
-          }
-        }
-      }
-    }
-
-    // All good at this point
-
     // Name
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_WaterHeating_Desuperheater, modelObject);
 
@@ -117,8 +88,9 @@ namespace energyplus {
     }
 
     // RatedHeatReclaimRecoveryEfficiency
-    if (ratedHeatReclaimRecoveryEfficiency_) {
-      idfObject.setDouble(Coil_WaterHeating_DesuperheaterFields::RatedHeatReclaimRecoveryEfficiency, ratedHeatReclaimRecoveryEfficiency_.get());
+    d = modelObject.ratedHeatReclaimRecoveryEfficiency();
+    if (d) {
+      idfObject.setDouble(Coil_WaterHeating_DesuperheaterFields::RatedHeatReclaimRecoveryEfficiency, d.get());
     }
 
     // RatedInletWaterTemperature
