@@ -154,10 +154,6 @@ namespace model {
     return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted();
   }
 
-  bool ZoneAirMassFlowConservation::isSourceZoneInfiltrationTreatmentDefaulted() const {
-    return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->isSourceZoneInfiltrationTreatmentDefaulted();
-  }
-
   std::string ZoneAirMassFlowConservation::infiltrationBalancingMethod() const {
     return getImpl<detail::ZoneAirMassFlowConservation_Impl>()->infiltrationBalancingMethod();
   }
