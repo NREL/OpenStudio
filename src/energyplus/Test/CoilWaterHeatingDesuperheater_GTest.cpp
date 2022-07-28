@@ -123,6 +123,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_NonDX)
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_RatedHeatReclaimRecoveryEfficiency) {
+
+  // Test for #3666: use an out of bound RatedHeatReclaimEfficiency
   Model m;
 
   ScheduleConstant temperatureSetpointSchedule(m);
