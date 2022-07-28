@@ -75,10 +75,6 @@ namespace model {
       return isEmpty(OS_ZoneAirMassFlowConservationFields::AdjustZoneMixingandReturnForAirMassFlowBalance);
     }
 
-    bool ZoneAirMassFlowConservation_Impl::isSourceZoneInfiltrationTreatmentDefaulted() const {
-      return false;
-    }
-
     std::string ZoneAirMassFlowConservation_Impl::infiltrationBalancingMethod() const {
       boost::optional<std::string> value = getString(OS_ZoneAirMassFlowConservationFields::InfiltrationBalancingMethod, true);
       OS_ASSERT(value);
