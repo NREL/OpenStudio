@@ -39,6 +39,7 @@
 #  pragma warning(push)
 #  pragma warning(disable : 4244)
 #endif
+#include <boost/geometry.hpp>
 #include <boost/geometry/geometry.hpp>
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
@@ -49,21 +50,55 @@
 #include <boost/geometry/strategies/cartesian/point_in_poly_crossings_multiply.hpp>
 #include <boost/geometry/algorithms/within.hpp>
 #include <boost/geometry/algorithms/simplify.hpp>
+#include <boost/geometry/policies/robustness/get_rescale_policy.hpp>
+#include <boost/geometry/policies/robustness/robust_point_type.hpp>
 #if defined(_MSC_VER)
 #  pragma warning(pop)
 #endif
 
-typedef double coordinate_type;
-typedef boost::geometry::model::d2::point_xy<double> BoostPoint;
-typedef boost::geometry::model::polygon<BoostPoint> BoostPolygon;
-typedef boost::geometry::model::ring<BoostPoint> BoostRing;
-typedef boost::geometry::model::multi_polygon<BoostPolygon> BoostMultiPolygon;
+#include <cmath>
+
+using coordinate_type = double;
+using BoostPoint = boost::geometry::model::d2::point_xy<double>;
+using BoostPolygon = boost::geometry::model::polygon<BoostPoint>;
+using BoostRing = boost::geometry::model::ring<BoostPoint>;
+using BoostMultiPolygon = boost::geometry::model::multi_polygon<BoostPolygon>;
 
 #include <polypartition/polypartition.h>
 
 namespace openstudio {
 
 // Private implementation functions
+
+// Boost 1.73.0 has this bit in has_self_intersections.hpp:
+//
+// For backward compatibility
+// template <typename Geometry>
+// inline bool has_self_intersections(Geometry const& geometry, bool throw_on_self_intersection = true) {
+//   typedef typename geometry::point_type<Geometry>::type point_type;
+//   typedef typename geometry::rescale_policy_type<point_type>::type rescale_policy_type;
+
+//   typename strategy::intersection::services::default_strategy<typename cs_tag<Geometry>::type>::type strategy;
+
+//   rescale_policy_type robust_policy = geometry::get_rescale_policy<rescale_policy_type>(geometry, strategy);
+
+//   return has_self_intersections(geometry, strategy, robust_policy, throw_on_self_intersection);
+// }
+
+// For backward compatibility
+template <typename Geometry>
+inline bool has_self_intersections(Geometry const& geometry, bool throw_on_self_intersection = true) {
+  using point_type = typename boost::geometry::point_type<Geometry>::type;
+  using rescale_policy_type = typename boost::geometry::rescale_policy_type<point_type>::type;
+
+  typename boost::geometry::strategies::relate::services::default_strategy<Geometry, Geometry>::type strategy;
+
+  // typename boost::geometry::strategy::intersection::services::default_strategy<typename boost::geometry::cs_tag<Geometry>::type>::type strategy;
+
+  auto robust_policy = boost::geometry::get_rescale_policy<rescale_policy_type>(geometry, strategy);
+
+  return boost::geometry::detail::overlay::has_self_intersections(geometry, strategy, robust_policy, throw_on_self_intersection);
+}
 
 // Cleans a polygon by shrinking and expanding. Can return multiple polygons
 std::vector<BoostPolygon> removeSpikesEx(const BoostPolygon& polygon) {
@@ -227,7 +262,7 @@ std::vector<BoostPolygon> removeHoles(const std::vector<BoostPolygon>& polygons)
 
 // convert a Point3d to a BoostPoint
 boost::tuple<double, double> boostPointFromPoint3d(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) {
-  OS_ASSERT(abs(point3d.z()) <= tol);
+  OS_ASSERT(std::abs(point3d.z()) <= tol);
 
   // simple method
   //return boost::make_tuple(point3d.x(), point3d.y());
@@ -249,7 +284,7 @@ boost::optional<BoostPolygon> boostPolygonFromVertices(const std::vector<Point3d
 
     // should all have zero z coordinate now
     double z = vertex.z();
-    if (abs(z) > tol) {
+    if (std::abs(z) > tol) {
       LOG_FREE(Error, "utilities.geometry.boostPolygonFromVertices", "All points must be on z = 0 plane");
       return boost::none;
     }
@@ -281,7 +316,7 @@ boost::optional<BoostPolygon> nonIntersectingBoostPolygonFromVertices(const std:
   }
   // check if polygon overlaps itself
   try {
-    boost::geometry::detail::overlay::has_self_intersections(*result);
+    has_self_intersections(*result);
   } catch (const boost::geometry::overlay_invalid_input_exception&) {
     //LOG_FREE(Error, "utilities.geometry.nonIntersectingBoostPolygonFromVertices", "Self intersecting polygon");
     return boost::none;
@@ -300,7 +335,7 @@ boost::optional<BoostRing> boostRingFromVertices(const std::vector<Point3d>& ver
 
     // should all have zero z coordinate now
     double z = vertex.z();
-    if (abs(z) > tol) {
+    if (std::abs(z) > tol) {
       LOG_FREE(Error, "utilities.geometry.boostRingFromVertices", "All points must be on z = 0 plane");
       return boost::none;
     }
@@ -330,7 +365,7 @@ boost::optional<BoostRing> nonIntersectingBoostRingFromVertices(const std::vecto
   }
   // check if polygon overlaps itself
   try {
-    boost::geometry::detail::overlay::has_self_intersections(*result);
+    has_self_intersections(*result);
   } catch (const boost::geometry::overlay_invalid_input_exception&) {
     //LOG_FREE(Error, "utilities.geometry.nonIntersectingBoostRingFromVertices", "Self intersecting polygon");
     return boost::none;
@@ -526,7 +561,7 @@ bool polygonInPolygon(std::vector<Point3d>& points, const std::vector<Point3d>& 
   }
 
   for (const Point3d& point : points) {
-    if (abs(point.z()) > tol) {
+    if (std::abs(point.z()) > tol) {
       return false;
     }
   }
@@ -551,7 +586,7 @@ bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, d
     return false;
   }
 
-  if (abs(point.z()) > tol) {
+  if (std::abs(point.z()) > tol) {
     return false;
   }
 
@@ -622,7 +657,7 @@ boost::optional<std::vector<Point3d>> join(const std::vector<Point3d>& polygon1,
   }
 
   try {
-    boost::geometry::detail::overlay::has_self_intersections(unionResult[0]);
+    has_self_intersections(unionResult[0]);
   } catch (const boost::geometry::overlay_invalid_input_exception&) {
     LOG_FREE(Error, "utilities.geometry.join", "Union is self intersecting");
     return boost::none;
@@ -762,7 +797,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
     return boost::none;
   }
   try {
-    boost::geometry::detail::overlay::has_self_intersections(intersectionResult[0]);
+    has_self_intersections(intersectionResult[0]);
   } catch (const boost::geometry::overlay_invalid_input_exception&) {
     LOG_FREE(Error, "utilities.geometry.intersect", "Largest intersection is self intersecting");
     return boost::none;
@@ -791,7 +826,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       continue;
     }
     try {
-      boost::geometry::detail::overlay::has_self_intersections(intersectionResult[i]);
+      has_self_intersections(intersectionResult[i]);
     } catch (const boost::geometry::overlay_invalid_input_exception&) {
       LOG_FREE(Error, "utilities.geometry.intersect", "Intersection is self intersecting, result will not include this polygon, " << newPolygon);
       continue;
@@ -826,7 +861,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       continue;
     }
     try {
-      boost::geometry::detail::overlay::has_self_intersections(differenceResult1[i]);
+      has_self_intersections(differenceResult1[i]);
     } catch (const boost::geometry::overlay_invalid_input_exception&) {
       LOG_FREE(Error, "utilities.geometry.intersect", "Face difference is self intersecting, result will not include this polygon, " << newPolygon1);
       continue;
@@ -856,7 +891,7 @@ boost::optional<IntersectionResult> intersect(const std::vector<Point3d>& polygo
       continue;
     }
     try {
-      boost::geometry::detail::overlay::has_self_intersections(differenceResult2[i]);
+      has_self_intersections(differenceResult2[i]);
     } catch (const boost::geometry::overlay_invalid_input_exception&) {
       LOG_FREE(Error, "utilities.geometry.intersect", "Face difference is self intersecting, result will not include this polygon, " << newPolygon2);
       continue;
@@ -1155,7 +1190,7 @@ boost::optional<BoostPolygon> BoostPolygonFromPolygon(const Polygon3d& polygon, 
 
     // should all have zero z coordinate now
     //double z = vertex.z();
-    //if (abs(z) > tol) {
+    //if (std::abs(z) > tol) {
     //  LOG_FREE(Error, "utilities.geometry.boostPolygonFromVertices", "All points must be on z = 0 plane");
     //  return boost::none;
     //}

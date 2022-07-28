@@ -86,11 +86,25 @@ class HeatExchangerDesiccantBalancedFlow;
   }
 };
 
+// extend classes
+%extend openstudio::model::TemperatureEnthalpy {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 MODELOBJECT_TEMPLATES(ScheduleType)
 MODELOBJECT_TEMPLATES(ScheduleInterval);
 MODELOBJECT_TEMPLATES(ScheduleFixedInterval);
 MODELOBJECT_TEMPLATES(ExternalFile);
 MODELOBJECT_TEMPLATES(ScheduleFile);
+MODELOBJECT_TEMPLATES(PythonPluginInstance);
+MODELOBJECT_TEMPLATES(PythonPluginVariable);
+MODELOBJECT_TEMPLATES(PythonPluginTrendVariable);
+MODELOBJECT_TEMPLATES(PythonPluginOutputVariable);
 MODELOBJECT_TEMPLATES(ScheduleVariableInterval);
 MODELOBJECT_TEMPLATES(ScheduleCompact);
 MODELOBJECT_TEMPLATES(ScheduleConstant);
@@ -98,6 +112,9 @@ MODELOBJECT_TEMPLATES(DefaultScheduleSet);
 MODELOBJECT_TEMPLATES(SpectralDataField); // Helper class defined in MaterialPropertyGlazingSpectralData
 MODELOBJECT_TEMPLATES(MaterialPropertyGlazingSpectralData);
 MODELOBJECT_TEMPLATES(MaterialPropertyMoisturePenetrationDepthSettings);
+MODELOBJECT_TEMPLATES(TemperatureEnthalpy); // Helper class defined in MaterialPropertyPhaseChange
+MODELOBJECT_TEMPLATES(MaterialPropertyPhaseChange);
+MODELOBJECT_TEMPLATES(MaterialPropertyPhaseChangeHysteresis);
 MODELOBJECT_TEMPLATES(Material);
 MODELOBJECT_TEMPLATES(FenestrationMaterial);
 MODELOBJECT_TEMPLATES(GasLayer);
@@ -155,7 +172,7 @@ MODELOBJECT_TEMPLATES(CurveRectangularHyperbola1);
 MODELOBJECT_TEMPLATES(CurveRectangularHyperbola2);
 MODELOBJECT_TEMPLATES(CurveSigmoid);
 MODELOBJECT_TEMPLATES(CurveTriquadratic);
-MODELOBJECT_TEMPLATES(TableMultiVariableLookupPoint);
+MODELOBJECT_TEMPLATES(TableMultiVariableLookupPoint);  // Helper class defined in TableMultiVariableLookup
 MODELOBJECT_TEMPLATES(TableMultiVariableLookup);
 MODELOBJECT_TEMPLATES(SpaceLoadDefinition);
 MODELOBJECT_TEMPLATES(PeopleDefinition);
@@ -184,6 +201,10 @@ MODELOBJECT_TEMPLATES(HeatExchangerDesiccantBalancedFlowPerformanceDataType1);
 
 SWIG_MODELOBJECT(ScheduleInterval, 0);
 SWIG_MODELOBJECT(ScheduleFile, 1);
+SWIG_MODELOBJECT(PythonPluginInstance, 1);
+SWIG_MODELOBJECT(PythonPluginVariable, 1);
+SWIG_MODELOBJECT(PythonPluginTrendVariable, 1);
+SWIG_MODELOBJECT(PythonPluginOutputVariable, 1);
 SWIG_MODELOBJECT(ExternalFile, 1);
 SWIG_MODELOBJECT(ScheduleFixedInterval, 1);
 SWIG_MODELOBJECT(ScheduleVariableInterval, 1);
@@ -192,6 +213,8 @@ SWIG_MODELOBJECT(ScheduleConstant, 1);
 SWIG_MODELOBJECT(DefaultScheduleSet, 1);
 SWIG_MODELOBJECT(MaterialPropertyGlazingSpectralData, 1);
 SWIG_MODELOBJECT(MaterialPropertyMoisturePenetrationDepthSettings, 1);
+SWIG_MODELOBJECT(MaterialPropertyPhaseChange, 1);
+SWIG_MODELOBJECT(MaterialPropertyPhaseChangeHysteresis, 1);
 SWIG_MODELOBJECT(Material, 0);
 SWIG_MODELOBJECT(FenestrationMaterial, 0);
 SWIG_MODELOBJECT(GasLayer, 0);

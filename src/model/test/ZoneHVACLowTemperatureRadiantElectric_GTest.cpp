@@ -107,12 +107,12 @@ TEST_F(ModelFixture, ZoneHVACLowTemperatureRadiantElectric_Check_Clone) {
   // Clone into the same model
   ZoneHVACLowTemperatureRadiantElectric cloneLTRE =
     zoneHVACLowTemperatureRadiantElectric.clone(model).cast<model::ZoneHVACLowTemperatureRadiantElectric>();
-  ASSERT_EQ(zoneHVACLowTemperatureRadiantElectric.maximumElectricalPowertoPanel(), cloneLTRE.maximumElectricalPowertoPanel());
+  ASSERT_EQ(zoneHVACLowTemperatureRadiantElectric.maximumElectricalPowertoPanel().get(), cloneLTRE.maximumElectricalPowertoPanel().get());
 
   // Clone into another model
   Model model2;
   ZoneHVACLowTemperatureRadiantElectric cloneLTRE2 = cloneLTRE.clone(model2).cast<model::ZoneHVACLowTemperatureRadiantElectric>();
-  ASSERT_EQ(cloneLTRE.maximumElectricalPowertoPanel(), cloneLTRE2.maximumElectricalPowertoPanel());
+  ASSERT_EQ(cloneLTRE.maximumElectricalPowertoPanel().get(), cloneLTRE2.maximumElectricalPowertoPanel().get());
 }
 
 TEST_F(ModelFixture, ZoneHVACLowTemperatureRadiantElectric_Check_Setters_Getters) {

@@ -32,6 +32,7 @@
 
 #include "Model.hpp"
 #include "ScheduleFile.hpp"
+#include "PythonPluginInstance.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -44,6 +45,7 @@
 
 #include <unordered_map>
 #include "ScheduleFile_Impl.hpp"
+#include "PythonPluginInstance_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -97,9 +99,18 @@ namespace model {
       }
 
       std::vector<openstudio::IdfObject> tmp;
+
+      // ScheduleFile
       std::vector<ScheduleFile> sfs = scheduleFiles();
       for (auto& scheduleFile : sfs) {
         std::vector<openstudio::IdfObject> tmp2 = scheduleFile.remove();
+        tmp.insert(tmp.end(), tmp2.begin(), tmp2.end());
+      }
+
+      // PythonPluginInstance
+      std::vector<PythonPluginInstance> ppis = pythonPluginInstances();
+      for (auto& pythonPluginInstance : ppis) {
+        std::vector<openstudio::IdfObject> tmp2 = pythonPluginInstance.remove();
         tmp.insert(tmp.end(), tmp2.begin(), tmp2.end());
       }
 
@@ -173,6 +184,11 @@ namespace model {
 
     std::vector<ScheduleFile> ExternalFile_Impl::scheduleFiles() const {
       std::vector<ScheduleFile> result = getObject<ExternalFile>().getModelObjectSources<ScheduleFile>();
+      return result;
+    }
+
+    std::vector<PythonPluginInstance> ExternalFile_Impl::pythonPluginInstances() const {
+      std::vector<PythonPluginInstance> result = getObject<ExternalFile>().getModelObjectSources<PythonPluginInstance>();
       return result;
     }
 
@@ -291,6 +307,10 @@ namespace model {
 
   std::vector<ScheduleFile> ExternalFile::scheduleFiles() const {
     return getImpl<detail::ExternalFile_Impl>()->scheduleFiles();
+  }
+
+  std::vector<PythonPluginInstance> ExternalFile::pythonPluginInstances() const {
+    return getImpl<detail::ExternalFile_Impl>()->pythonPluginInstances();
   }
 
   /// @cond

@@ -73,7 +73,7 @@ TEST_F(ModelFixture, Schedule_FixedInterval) {
   EXPECT_EQ(timeSeries2.firstReportDateTime(), timeSeries3.firstReportDateTime());
   ASSERT_TRUE(timeSeries2.intervalLength());
   ASSERT_TRUE(timeSeries3.intervalLength());
-  EXPECT_EQ(timeSeries2.intervalLength(), timeSeries3.intervalLength());
+  EXPECT_EQ(timeSeries2.intervalLength().get(), timeSeries3.intervalLength().get());
   EXPECT_EQ(timeSeries2.values().size(), timeSeries3.values().size());
 
   boost::optional<ScheduleInterval> newSchedule = ScheduleInterval::fromTimeSeries(timeSeries3, model);
@@ -84,7 +84,7 @@ TEST_F(ModelFixture, Schedule_FixedInterval) {
   EXPECT_EQ(timeSeries2.firstReportDateTime(), timeSeries4.firstReportDateTime());
   ASSERT_TRUE(timeSeries2.intervalLength());
   ASSERT_TRUE(timeSeries4.intervalLength());
-  EXPECT_EQ(timeSeries2.intervalLength(), timeSeries4.intervalLength());
+  EXPECT_EQ(timeSeries2.intervalLength().get(), timeSeries4.intervalLength().get());
   EXPECT_EQ(timeSeries2.values().size(), timeSeries4.values().size());
 }
 

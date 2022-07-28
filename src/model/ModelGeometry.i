@@ -220,10 +220,10 @@ MODELOBJECT_TEMPLATES(DaylightingDeviceTubular);
 MODELOBJECT_TEMPLATES(DaylightingDeviceLightWell);
 MODELOBJECT_TEMPLATES(SpaceType);
 MODELOBJECT_TEMPLATES(LightingSimulationZone);
-MODELOBJECT_TEMPLATES(CustomBlock);
+MODELOBJECT_TEMPLATES(CustomBlock); // Helper class defined in FoundationKiva
 MODELOBJECT_TEMPLATES(FoundationKiva);
 MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
-MODELOBJECT_TEMPLATES(ViewFactor);
+MODELOBJECT_TEMPLATES(ViewFactor); // Helper class defined in ZonePropertyUserViewFactorsBySurfaceName
 MODELOBJECT_TEMPLATES(ZonePropertyUserViewFactorsBySurfaceName);
 MODELOBJECT_TEMPLATES(ExteriorLoadInstance);
 MODELOBJECT_TEMPLATES(ExteriorLights);
@@ -290,9 +290,24 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
   %inline {
     namespace openstudio {
       namespace model {
+
         openstudio::model::SpaceType getPlenumSpaceType(openstudio::model::Model model){
           return model.plenumSpaceType();
         }
+
+        boost::optional<Building> building(const openstudio::model::Model& model) {
+          return model.building();
+        }
+
+        boost::optional<Facility> facility(const openstudio::model::Model& model) {
+          return model.facility();
+        }
+
+        boost::optional<Site> site(const openstudio::model::Model& model) {
+          return model.site();
+        }
+
+
         std::vector<openstudio::model::Space> getSpaces(const openstudio::model::SpaceType& spaceType){
           return spaceType.spaces();
         }
@@ -360,11 +375,22 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
     using System.Runtime.InteropServices;
 
     public partial class Model : Workspace {
-      public SpaceType plenumSpaceType()
-      {
+      public SpaceType plenumSpaceType() {
         return OpenStudio.OpenStudioModelGeometry.getPlenumSpaceType(this);
       }
-    }
+
+      public OptionalBuilding building() {
+        return OpenStudio.OpenStudioModelGeometry.building(this);
+      }
+
+      public OptionalFacility facility() {
+        return OpenStudio.OpenStudioModelGeometry.facility(this);
+      }
+
+      public OptionalSite site() {
+        return OpenStudio.OpenStudioModelGeometry.site(this);
+      }
+    } // partial class Model
 
     public partial class SpaceType : ResourceObject {
       public SpaceVector spaces()

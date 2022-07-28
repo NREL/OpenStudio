@@ -79,6 +79,44 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
+struct SurfaceAreaCounter
+{
+  SurfaceAreaCounter(const Model& m) {
+
+    std::vector<Surface> surfaces = m.getConcreteModelObjects<Surface>();
+    for (auto& surface : surfaces) {
+      if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
+        if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
+          exteriorRoofArea += surface.grossArea();
+          ++numRoofSurfaces;
+        } else {
+          interiorRoofArea += surface.grossArea();
+        }
+      } else if (istringEqual(surface.surfaceType(), "Floor")) {
+        if (istringEqual(surface.outsideBoundaryCondition(), "Ground")) {
+          exteriorFloorArea += surface.grossArea();
+        } else {
+          interiorFloorArea += surface.grossArea();
+        }
+      } else if (istringEqual(surface.surfaceType(), "Wall")) {
+        if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
+          exteriorWallArea += surface.grossArea();
+        } else {
+          interiorWallArea += surface.grossArea();
+        }
+      }
+    }
+  }
+
+  double exteriorFloorArea = 0;
+  double interiorFloorArea = 0;
+  double exteriorRoofArea = 0;
+  double interiorRoofArea = 0;
+  double exteriorWallArea = 0;
+  double interiorWallArea = 0;
+  int numRoofSurfaces = 0;
+};
+
 TEST_F(ModelFixture, Space) {
   Model model;
 
@@ -1668,43 +1706,13 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate1) {
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
 
-  double exteriorFloorArea = 0;
-  double interiorFloorArea = 0;
-  double exteriorRoofArea = 0;
-  double interiorRoofArea = 0;
-  double exteriorWallArea = 0;
-  double interiorWallArea = 0;
-  int numRoofSurfaces = 0;
+  SurfaceAreaCounter sfCounter(m);
 
-  std::vector<Surface> surfaces = m.getConcreteModelObjects<Surface>();
-  for (auto& surface : surfaces) {
-    if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
-      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
-        exteriorRoofArea += surface.grossArea();
-        ++numRoofSurfaces;
-      } else {
-        interiorRoofArea += surface.grossArea();
-      }
-    } else if (istringEqual(surface.surfaceType(), "Floor")) {
-      if (istringEqual(surface.outsideBoundaryCondition(), "Ground")) {
-        exteriorFloorArea += surface.grossArea();
-      } else {
-        interiorFloorArea += surface.grossArea();
-      }
-    } else if (istringEqual(surface.surfaceType(), "Wall")) {
-      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
-        exteriorWallArea += surface.grossArea();
-      } else {
-        interiorWallArea += surface.grossArea();
-      }
-    }
-  }
-
-  EXPECT_NEAR(exteriorFloorArea, 825.8048, 0.01);
-  EXPECT_NEAR(interiorFloorArea, 412.9019, 0.01);
-  EXPECT_NEAR(exteriorRoofArea, 825.8048, 0.01);
-  EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
-  EXPECT_EQ(numRoofSurfaces, 11);
+  EXPECT_NEAR(sfCounter.exteriorFloorArea, 825.8048, 0.01);
+  EXPECT_NEAR(sfCounter.interiorFloorArea, 412.9019, 0.01);
+  EXPECT_NEAR(sfCounter.exteriorRoofArea, 825.8048, 0.01);
+  EXPECT_NEAR(sfCounter.interiorRoofArea, 412.9019, 0.01);
+  EXPECT_EQ(sfCounter.numRoofSurfaces, 11);
 
   // Debug
   // outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate1_after_intersect.osm");
@@ -1846,48 +1854,16 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate2) {
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
 
-  double exteriorFloorArea = 0;
-  double interiorFloorArea = 0;
-  double exteriorRoofArea = 0;
-  double interiorRoofArea = 0;
-  double exteriorWallArea = 0;
-  double interiorWallArea = 0;
-  int numRoofSurfaces = 0;
-
-  std::vector<Surface> surfaces = m.getConcreteModelObjects<Surface>();
-  //std::sort(surfaces.begin(), surfaces.end(), WorkspaceObjectNameLess());
-
-  for (auto& surface : surfaces) {
-    if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
-      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
-        exteriorRoofArea += surface.grossArea();
-        ++numRoofSurfaces;
-      } else {
-        interiorRoofArea += surface.grossArea();
-      }
-    } else if (istringEqual(surface.surfaceType(), "Floor")) {
-      if (istringEqual(surface.outsideBoundaryCondition(), "Ground")) {
-        exteriorFloorArea += surface.grossArea();
-      } else {
-        interiorFloorArea += surface.grossArea();
-      }
-    } else if (istringEqual(surface.surfaceType(), "Wall")) {
-      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
-        exteriorWallArea += surface.grossArea();
-      } else {
-        interiorWallArea += surface.grossArea();
-      }
-    }
-  }
+  SurfaceAreaCounter sfCounter(m);
 
   // We know there are two small surfaces that are being generated that don't have opposite
   // surfaces and therefore are being set as Outdoors, the small surfaces are approx 0.008m2 and triangular.
   // Small surfaces but enougb to throw off the area check and the surface count (obviously)
-  EXPECT_NEAR(exteriorFloorArea, 825.8048, 0.01);
-  //EXPECT_NEAR(interiorFloorArea, 412.9019, 0.01);
-  EXPECT_NEAR(exteriorRoofArea, 825.8048, 0.01);
-  //EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
-  EXPECT_EQ(numRoofSurfaces, 9);
+  EXPECT_NEAR(sfCounter.exteriorFloorArea, 825.8048, 0.01);
+  //EXPECT_NEAR(sfCounter.interiorFloorArea, 412.9019, 0.01);
+  EXPECT_NEAR(sfCounter.exteriorRoofArea, 825.8048, 0.01);
+  //EXPECT_NEAR(sfCounter.interiorRoofArea, 412.9019, 0.01);
+  EXPECT_EQ(sfCounter.numRoofSurfaces, 9);
 
   //openstudio::path outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate2_after_intersect.osm");
   //m.save(outpath, true);
@@ -2011,43 +1987,13 @@ TEST_F(ModelFixture, Space_intersectSurfaces_degenerate3) {
   intersectSurfaces(spaces);
   matchSurfaces(spaces);
 
-  double exteriorFloorArea = 0;
-  double interiorFloorArea = 0;
-  double exteriorRoofArea = 0;
-  double interiorRoofArea = 0;
-  double exteriorWallArea = 0;
-  double interiorWallArea = 0;
-  int numRoofSurfaces = 0;
+  SurfaceAreaCounter sfCounter(m);
 
-  std::vector<Surface> surfaces = m.getConcreteModelObjects<Surface>();
-  for (auto& surface : surfaces) {
-    if (istringEqual(surface.surfaceType(), "RoofCeiling")) {
-      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
-        exteriorRoofArea += surface.grossArea();
-        ++numRoofSurfaces;
-      } else {
-        interiorRoofArea += surface.grossArea();
-      }
-    } else if (istringEqual(surface.surfaceType(), "Floor")) {
-      if (istringEqual(surface.outsideBoundaryCondition(), "Ground")) {
-        exteriorFloorArea += surface.grossArea();
-      } else {
-        interiorFloorArea += surface.grossArea();
-      }
-    } else if (istringEqual(surface.surfaceType(), "Wall")) {
-      if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
-        exteriorWallArea += surface.grossArea();
-      } else {
-        interiorWallArea += surface.grossArea();
-      }
-    }
-  }
-
-  EXPECT_NEAR(exteriorFloorArea, 825.8048, 0.01);
-  //EXPECT_NEAR(interiorFloorArea, 412.9019, 0.01);
-  EXPECT_NEAR(exteriorRoofArea, 825.8048, 0.01);
-  //EXPECT_NEAR(interiorRoofArea, 412.9019, 0.01);
-  EXPECT_EQ(numRoofSurfaces, 9);
+  EXPECT_NEAR(sfCounter.exteriorFloorArea, 825.8048, 0.01);
+  //EXPECT_NEAR(sfCounter.interiorFloorArea, 412.9019, 0.01);
+  EXPECT_NEAR(sfCounter.exteriorRoofArea, 825.8048, 0.01);
+  //EXPECT_NEAR(sfCounter.interiorRoofArea, 412.9019, 0.01);
+  EXPECT_EQ(sfCounter.numRoofSurfaces, 9);
 
   //openstudio::path outpath = resourcesPath() / toPath("model/Space_intersectSurfaces_degenerate3_after_intersect.osm");
   //m.save(outpath, true);
@@ -2834,6 +2780,57 @@ TEST_F(ModelFixture, ExposedPerimeter) {
       ASSERT_FALSE(true);
     }
   }
+}
+
+TEST_F(ModelFixture, Space_setVolume) {
+  // create from floor print
+  Model model;
+  Point3dVector floorPrint;
+  floorPrint.push_back(Point3d(0, 10, 0));
+  floorPrint.push_back(Point3d(10, 10, 0));
+  floorPrint.push_back(Point3d(10, 0, 0));
+  floorPrint.push_back(Point3d(0, 0, 0));
+  boost::optional<Space> ospace = Space::fromFloorPrint(floorPrint, 3.6, model);
+  ASSERT_TRUE(ospace);
+  Space space = *ospace;
+
+  // check dimensions
+  EXPECT_TRUE(space.isVolumeAutocalculated());
+  EXPECT_TRUE(space.isVolumeDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // set volume
+  EXPECT_TRUE(space.setVolume(365.0));
+  EXPECT_FALSE(space.isVolumeAutocalculated());
+  EXPECT_FALSE(space.isVolumeDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(365.0, space.volume());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // reset volume
+  space.resetVolume();
+  EXPECT_TRUE(space.isVolumeAutocalculated());
+  EXPECT_TRUE(space.isVolumeDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // autocalculate volume
+  EXPECT_TRUE(space.setVolume(370.0));
+  EXPECT_FALSE(space.isVolumeAutocalculated());
+  EXPECT_FALSE(space.isVolumeDefaulted());
+  space.autocalculateVolume();
+  EXPECT_TRUE(space.isVolumeAutocalculated());
+  EXPECT_FALSE(space.isVolumeDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
 }
 
 /*****************************************************************************************************************************************************

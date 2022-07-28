@@ -102,7 +102,7 @@ TEST_F(ModelFixture, SiteWaterMainsTemperature_SetGetFields) {
   siteWater.setTemperatureSchedule(schedule);
   EXPECT_EQ("Schedule", siteWater.calculationMethod());
   ASSERT_TRUE(siteWater.temperatureSchedule());
-  EXPECT_EQ(schedule.name().get(), siteWater.temperatureSchedule().get().name());
+  EXPECT_EQ(schedule.name().get(), siteWater.temperatureSchedule().get().name().get());
   siteWater.setCalculationMethod("Correlation");
   EXPECT_TRUE(siteWater.temperatureSchedule());
   EXPECT_FALSE(siteWater.annualAverageOutdoorAirTemperature());

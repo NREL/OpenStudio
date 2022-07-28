@@ -18,7 +18,7 @@ namespace openstudio {
  *  The C++ standard template library (STL) and some boost libraries are used throughout
  *  OpenStudio. Please familiarize yourself with std::vector, std::set, and iterators in the STL
  *  library (<a href="http://www.cplusplus.com/reference/stl/">a good online reference</a>), and
- *  boost::optional (<a href="http://www.boost.org/doc/libs/1_49_0/libs/optional/doc/html/index.html">
+ *  boost::optional (<a href="http://www.boost.org/doc/libs/1_79_0/libs/optional/doc/html/index.html">
  *  library documentation</a>).
  *
  *  Moving on to the rest of the OpenStudio libraries, consider browsing the documentation for
@@ -50,7 +50,7 @@ namespace openstudio {
  *  \li Used more sparingly: Application.hpp, ApplicationPathHelpers.hpp, Checksum.hpp,
  *      CommandLine.hpp, EnumHelpers.hpp, Exception.hpp, FileReference.hpp, Finder.hpp,
  *      PathWatcher.hpp, Queue.hpp, Singleton.hpp, StaticInitializer.hpp,
- *      StringHelpers.hpp, StringStreamLogSink.hpp, System.hpp, UnzipFile.hpp, UpdateManager.hpp,
+ *      StringHelpers.hpp, StringStreamLogSink.hpp, System.hpp, UnzipFile.hpp
  *      URLHelpers.hpp, ZipFile.hpp
  *
  *  \section data_sec Data

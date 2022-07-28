@@ -6,6 +6,7 @@ include(idd/CMakeLists.txt)
 include(idf/CMakeLists.txt)
 include(sql/CMakeLists.txt)
 include(units/CMakeLists.txt)
+include(xml/CMakeLists.txt)
 
 CONFIGURE_FILE_WITH_CHECKSUM("core/ApplicationPathHelpers.cxx.in" "${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx")
 
@@ -65,8 +66,6 @@ set(core_src
   core/StringStreamLogSink.cpp
   core/System.hpp
   core/System.cpp
-  core/UpdateManager.hpp
-  core/UpdateManager.cpp
   core/UUID.hpp
   core/UUID.cpp
   core/UnzipFile.hpp
@@ -209,6 +208,13 @@ foreach(_FILE ${IDD_FILES})
   list(APPEND E_PATHS ${LOCATION})
 endforeach()
 
+file(GLOB_RECURSE XLST_TRANSFORM_FILES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/xml/resources/*.xsl")
+foreach(_FILE ${XLST_TRANSFORM_FILES})
+  file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
+  list(APPEND E_FILES ${_FILE})
+  list(APPEND E_PATHS ${LOCATION})
+endforeach()
+
 include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudio)
 
@@ -220,6 +226,7 @@ source_group(filetypes FILES ${filetypes_src})
 source_group(idd FILES ${idd_src})
 source_group(idf FILES ${idf_src})
 source_group(sql FILES ${sql_src})
+source_group(xml FILES ${xml_src})
 source_group(geometry FILES ${geometry_src})
 source_group(math FILES ${math_src})
 source_group(plot FILES ${plot_src})
@@ -249,6 +256,7 @@ set(${target_name}_src
   ${idd_src}
   ${idf_src}
   ${sql_src}
+  ${xml_src}
   ${geometry_src}
   ${math_src}
   ${plot_src}
@@ -261,6 +269,7 @@ set(${target_name}_test_src
   ${idd_test_src}
   ${idf_test_src}
   ${sql_test_src}
+  ${xml_test_src}
 
   core/test/CoreFixture.hpp
   core/test/CoreFixture.cpp
@@ -278,7 +287,6 @@ set(${target_name}_test_src
   core/test/SharedFromThis_GTest.cpp
   core/test/System_GTest.cpp
   core/test/String_GTest.cpp
-  core/test/UpdateManager_GTest.cpp
   core/test/UUID_GTest.cpp
   core/test/Zip_GTest.cpp
 
@@ -362,7 +370,6 @@ set(${target_name}_swig_src
   core/Path.i
   core/Singleton.i
   core/System.i
-  core/UpdateManager.i
   core/UUID.i
   core/UnzipFile.i
   core/ZipFile.i
@@ -393,6 +400,7 @@ set(${target_name}_swig_src
   units/Quantity.i
   units/QuantityFactory.i
   units/QuantityConverter.i
+  xml/XMLValidator.i
 )
 
 
@@ -407,7 +415,8 @@ set(${target_name}_depends
   CONAN_PKG::cpprestsdk
   CONAN_PKG::openssl
   CONAN_PKG::geographiclib
-  CONAN_PKG::tinygltf
+  CONAN_PKG::libxml2
+  CONAN_PKG::libxslt
 )
 
 if(WIN32)
@@ -492,5 +501,6 @@ MAKE_SWIG_TARGET(OpenStudioUtilitiesSql utilitiessql "${CMAKE_CURRENT_SOURCE_DIR
 MAKE_SWIG_TARGET(OpenStudioUtilitiesTime utilitiestime "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesTime.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesSql)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesUnits utilitiesunits "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesUnits.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesTime)
 MAKE_SWIG_TARGET(OpenStudioUtilitiesFileTypes utilitiesfiletypes "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesFileTypes.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesUnits)
+MAKE_SWIG_TARGET(OpenStudioUtilitiesXML utilitiesxml "${CMAKE_CURRENT_SOURCE_DIR}/UtilitiesXML.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesCore)
 
 MAKE_SWIG_TARGET(OpenStudioUtilities utilities "${CMAKE_CURRENT_SOURCE_DIR}/Utilities.i" "${${target_name}_swig_src}" ${swig_target_name} OpenStudioUtilitiesFileTypes)

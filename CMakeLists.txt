@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.14.0)
 cmake_policy(SET CMP0048 NEW)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Do not enable compiler specific extensions, for eg on GCC use -std=c++1z (=c++17) and not -std=gnu++17
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -15,7 +15,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.4.0)
+project(OpenStudio VERSION 3.4.1)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -156,7 +156,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-#set(PROJECT_VERSION_PRERELEASE "rc3")
+set(PROJECT_VERSION_PRERELEASE "alpha")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -215,6 +215,43 @@ elseif(APPLE)
   set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID} ${CMAKE_OSX_ARCHITECTURES} - OSX ${CMAKE_OSX_DEPLOYMENT_TARGET}")
 else()
   set(ABOUT_COMPILER "${CMAKE_CXX_COMPILER_ID}")
+endif()
+
+# If Linux, check LSB_RELEASE globally so we can use it after
+# But also infer the new E+ package names (starting at 9.4.0)
+if(APPLE)
+
+  set(ENERGYPLUS_SYSTEM_VERSION "")
+
+  find_program(UNAME uname)
+  execute_process(COMMAND ${UNAME} -m
+    OUTPUT_VARIABLE ARCH
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+elseif(UNIX)
+  # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
+  find_program(LSB_RELEASE lsb_release)
+  # -rs outputs only 16.04, or 18.04
+  execute_process(COMMAND ${LSB_RELEASE} -rs
+    OUTPUT_VARIABLE LSB_RELEASE_VERSION_SHORT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  # -is outputs "Ubuntu" or "Fedora"
+  execute_process(COMMAND ${LSB_RELEASE} -is
+    OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  # eg: `-Ubuntu18.04`
+  set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
+
+  message(STATUS "LSB_RELEASE_ID_SHORT=${LSB_RELEASE_ID_SHORT}, LSB_RELEASE_VERSION_SHORT=${LSB_RELEASE_VERSION_SHORT}")
+
+elseif(MSVC)
+  # no-op
+  set(ENERGYPLUS_SYSTEM_VERSION "")
 endif()
 
 ###############################################################################
@@ -349,6 +386,12 @@ endif()
 
 if(WIN32)
   add_definitions(-DNOMINMAX)
+  # Set the BOOST_USE_WINAPI_VERSION to Windows10
+  add_compile_definitions(BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_VERSION_WIN7)
+  # This will also align _WIN32_WINNT and WINVER
+  # add_compile_definitions(BOOST_USE_WINDOWS_H) # Getting a confict with `typedef GUID UUID` from windows.h
+  add_compile_definitions(BOOST_WINAPI_DEFINE_VERSION_MACROS)
+  add_compile_definitions(WIN32_LEAN_AND_MEAN) # That excludes stuff that's not used too often, including the GUID stuff
 endif()
 
 if(MSVC AND NOT NINJA)
@@ -427,6 +470,7 @@ set(ALL_TESTING_TARGETS "") # global list
 if(BUILD_TESTING)
   enable_testing()
   include(CTest)
+  include(GoogleTest)
 endif()
 
 ###############################################################################
@@ -445,8 +489,10 @@ if(UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual -ftemplate-depth=1024")
   else()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-overloaded-virtual")
-    # DLM: had to add this due to issues with boost optional and gcc, may be resolved if we move to std::optional
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized")
+    if (NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+      # DLM: had to add this due to issues with boost optional and gcc, may be resolved if we move to std::optional
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized")
+    endif()
   endif()
 
   # Note: CMAKE_CXX_STANDARD (with no extensions) already sets -std=c++17 (or std=c++1z).
@@ -538,42 +584,7 @@ endif()
 ###############################################################################
 # Dependencies
 
-# If Linux, check LSB_RELEASE globally so we can use it after
-# But also infer the new E+ package names (starting at 9.4.0)
-if(APPLE)
 
-  set(ENERGYPLUS_SYSTEM_VERSION "")
-
-  find_program(UNAME uname)
-  execute_process(COMMAND ${UNAME} -m
-    OUTPUT_VARIABLE ARCH
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-
-elseif(UNIX)
-  # OS_RELEASE is the result of `uname -r` which is unhelpful (eg '5.4.0-42-generic')
-  find_program(LSB_RELEASE lsb_release)
-  # -rs outputs only 16.04, or 18.04
-  execute_process(COMMAND ${LSB_RELEASE} -rs
-    OUTPUT_VARIABLE LSB_RELEASE_VERSION_SHORT
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-
-  # -is outputs "Ubuntu" or "Fedora"
-  execute_process(COMMAND ${LSB_RELEASE} -is
-    OUTPUT_VARIABLE LSB_RELEASE_ID_SHORT
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-  )
-
-  # eg: `-Ubuntu18.04`
-  set(ENERGYPLUS_SYSTEM_VERSION "-${LSB_RELEASE_ID_SHORT}${LSB_RELEASE_VERSION_SHORT}")
-
-  message(STATUS "LSB_RELEASE_ID_SHORT=${LSB_RELEASE_ID_SHORT}, LSB_RELEASE_VERSION_SHORT=${LSB_RELEASE_VERSION_SHORT}")
-
-elseif(MSVC)
-  # no-op
-  set(ENERGYPLUS_SYSTEM_VERSION "")
-endif()
 
 # EnergyPlus
 
@@ -586,10 +597,10 @@ if(UNIX)
       set(ENERGYPLUS_EXPECTED_HASH a8b7727f57273d6e80c5763b1c73945d)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
     endif()
-  elseif(EXISTS "/etc/redhat-release")
+  elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH DOES_NOT_EXIST_02ed618aab65bf46c96bf1faf2e1905b)
-    set(ENERGYPLUS_PLATFORM "Redhat-x86_64")
+    set(ENERGYPLUS_EXPECTED_HASH b39f88c94e33b462cd1939df13b241d2)
+    set(ENERGYPLUS_PLATFORM "Centos7-x86_64")
   else()
     if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
       set(ENERGYPLUS_EXPECTED_HASH 70dde5907e3e7f6aeee45bdff5145bc2)
@@ -606,7 +617,7 @@ if(UNIX)
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
     message(STATUS "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz") # TODO: Temp: custom build on my fork
 
-    if(EXISTS "/etc/redhat-release")
+    if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
            INACTIVITY_TIMEOUT 300 # 5-min timeout
            SHOW_PROGRESS
@@ -710,7 +721,7 @@ if(UNIX)
   endif()
   if(NOT EXISTS "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" OR NOT "${RADIANCE_HASH}" MATCHES "${RADIANCE_EXPECTED_HASH}")
   message(STATUS "Downloading Radiance ${RADIANCE_VERSION} (${RADIANCE_PLATFORM})")
-  if(EXISTS "/etc/redhat-release")
+  if(EXISTS "/etc/redhat-release" OR LSB_RELEASE_ID_SHORT MATCHES "CentOS")
     message("http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz")
     file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/radiance-${RADIANCE_VERSION}-${RADIANCE_PLATFORM}.tar.gz" "${PROJECT_BINARY_DIR}/${RADIANCE_PATH}.tar.gz" TIMEOUT 120 INACTIVITY_TIMEOUT 120 SHOW_PROGRESS EXPECTED_MD5 ${RADIANCE_EXPECTED_HASH})
   else()
@@ -781,8 +792,8 @@ if(BUILD_CLI)
   if(UNIX)
      if(APPLE)
        if (ARCH MATCHES arm64)
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220324-darwin_arm64.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "0779a1d8291df9890ccdce319596d9a0")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220420-darwin_arm64.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "abc2798729434f8835f824300a5fd420")
        else()
          set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220419-darwin.tar.gz")
          set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "cbf547ad374fbe938349834a1fdcfbf1")
@@ -1007,6 +1018,7 @@ set(project_directories
   epjson
   radiance
   gbxml
+  gltf
   airflow
   isomodel
   osversion
@@ -1237,16 +1249,20 @@ set(CPACK_PACKAGE_VERSION_PATCH ${OpenStudio_VERSION_PATCH}) # This one includes
 # set(CPACK_DEBIAN_PACKAGE_DEPENDS "")
 
 # Default the debian package name to include version to allow several versions to be installed concurrently instead of overwriting any existing one
+# CMAKE_PROJECT_HOMEPAGE_URL
 set(CPACK_DEBIAN_PACKAGE_NAME "openstudio-${OpenStudio_VERSION}")
+set(CPACK_RPM_PACKAGE_NAME "openstudio-${OpenStudio_VERSION}")
 # CPACK_DEBIAN_PACKAGE_DESCRIPTION defaults to this one too. dpkg-deb -I xxx.deb will show this description
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "OpenStudio is a cross-platform collection of software tools to support whole building energy modeling using EnergyPlus and advanced daylight analysis using Radiance")
 set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://www.openstudio.net")
+set(CPACK_RPM_PACKAGE_URL "https://www.openstudio.net")
 
 # The actual .deb file name on disk
 set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}")
 set(CPACK_PACKAGE_CONTACT "openstudio@nrel.gov")
 
 if(APPLE)
+  set(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${OPENSTUDIO_LONG_VERSION}-${CMAKE_SYSTEM_NAME}-${ARCH}")
   set(CPACK_IFW_TARGET_DIRECTORY /Applications/OpenStudio-${OpenStudio_VERSION}/)
 elseif(UNIX)
   # Default method doesn't use IFW but Deb, so this one is probably useless (but harmless)
@@ -1255,6 +1271,9 @@ elseif(UNIX)
   # These two will set the .deb install path correctly
   set(CPACK_SET_DESTDIR ON)
   set(CPACK_INSTALL_PREFIX /usr/local/openstudio-${OpenStudio_VERSION}/)
+  if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
+    set(CPACK_RPM_PACKAGE_RELOCATABLE OFF)
+  endif()
 
   # Add a symlink to the CLI: /usr/local/bin/openstudio should point to /usr/local/openstudio-${OpenStudio_VERSION}/bin/openstudio,
   # UNLESS it's from the OpenStudioApplication
@@ -1276,7 +1295,8 @@ elseif(UNIX)
     execute_process(COMMAND chmod 755 "${POSTRM_FILE}")
 
     set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CPACK_DEBIAN_BIN_PACKAGE_CONTROL_EXTRA};${POSTINST_FILE};${POSTRM_FILE}")
-
+    set(CPACK_RPM_POST_INSTALL_SCRIPT_FILE "${POSTINST_FILE}")
+    set(CPACK_RPM_POST_UNINSTALL_SCRIPT_FILE "${POSTRM_FILE}")
   endif()
 
   # TODO: for now since Mac and Windows installers aren't doing it for core, not doing it for Unix either.
@@ -1302,6 +1322,14 @@ if(WIN32)
   set(CPACK_BINARY_NSIS OFF CACHE BOOL "Enable to build NSIS packages")
 endif()
 
+if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
+  set(CPACK_RPM_SPEC_MORE_DEFINE "%define __python python3")
+  # tk (wish), tcsh and perl for radiance
+  set(CPACK_RPM_PACKAGE_REQUIRES "libicu libicu-devel tk tcsh perl")
+endif()
+
+message(STATUS "Installer name is set to '${CPACK_PACKAGE_FILE_NAME}'")
+
 if (BUILD_CLI)
   install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
   install(FILES "${PROJECT_BINARY_DIR}/openstudio-gems/Gemfile.lock" DESTINATION ./Ruby/ COMPONENT "RubyAPI")
@@ -1326,12 +1354,13 @@ install(DIRECTORY "${ENERGYPLUS_DIR}/pyenergyplus" DESTINATION ./EnergyPlus/ COM
 if(APPLE)
   install(PROGRAMS "${ENERGYPLUS_DIR}/libgfortran.5.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   if (ARCH MATCHES arm64)
-    install(PROGRAMS "${ENERGYPLUS_DIR}/libpython3.9.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
     install(PROGRAMS "${ENERGYPLUS_DIR}/libgcc_s.1.1.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+    install(PROGRAMS "${ENERGYPLUS_DIR}/libintl.8.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
     # TODO: quadmath / intl?
   else()
     install(PROGRAMS "${ENERGYPLUS_DIR}/libquadmath.0.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
     install(PROGRAMS "${ENERGYPLUS_DIR}/libgcc_s.1.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
+    install(PROGRAMS "${ENERGYPLUS_DIR}/libintl.8.dylib" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   endif()
   #install(PROGRAMS "${ENERGYPLUS_DIR}/Python" DESTINATION ./EnergyPlus/ COMPONENT EnergyPlus)
   file(GLOB ENERGYPLUS_PYTHON_LIBS "${ENERGYPLUS_DIR}/libpython*")

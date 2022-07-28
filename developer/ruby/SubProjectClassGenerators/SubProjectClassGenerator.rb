@@ -199,7 +199,7 @@ class SubProjectClassGenerator
     result = String.new
 
     if pImpl
-      result << "  typedef detail::" << className << "_Impl ImplType;\n\n"
+      result << "  using ImplType = detail::" << className << "_Impl;\n\n"
       result << "  explicit " << className << "(std::shared_ptr<detail::" << className << "_Impl> impl);\n\n"
       result << "  friend class detail::" << @className << "_Impl;\n"
     end
@@ -277,9 +277,9 @@ class SubProjectClassGenerator
   def hppPostClass()
     result = String.new
     result << "/** \\relates " << className << "*/\n"
-    result << "typedef boost::optional<" << className << "> Optional" << className << ";\n\n"
+    result << "using Optional" << className << " = boost::optional<" << className << ">;\n\n"
     result << "/** \\relates " << className << "*/\n"
-    result << "typedef std::vector<" << className << "> " << className << "Vector;\n\n"
+    result << "using " << className << "Vector = std::vector<" << className << ">;\n\n"
     return result
   end
 

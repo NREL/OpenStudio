@@ -170,7 +170,7 @@ TEST_F(ModelFixture, PumpConstantSpeed_GettersSetters) {
   // Skin Loss Radiative Fraction:  Double
   // No Default
   EXPECT_TRUE(pump.setSkinLossRadiativeFraction(0.5));
-  EXPECT_EQ(0.5, pump.skinLossRadiativeFraction());
+  EXPECT_EQ(0.5, pump.skinLossRadiativeFraction().get());
 
   // Design Power Sizing Method:  String
   // Default to PowerPerFlowPerPressure in Ctor

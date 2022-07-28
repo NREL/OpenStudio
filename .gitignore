@@ -19,3 +19,5 @@ cppcheck.txt*
 clang_format.patch
 
 .DS_Store
+__pycache__/
+*.pyc

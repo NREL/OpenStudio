@@ -110,8 +110,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Thermostat_Two_Schedules) {
 
   IdfObject idf_tstat = workspace.getObjectsByType(IddObjectType::ThermostatSetpoint_DualSetpoint)[0];
 
-  ASSERT_EQ(idf_tstat.getString(ThermostatSetpoint_DualSetpointFields::HeatingSetpointTemperatureScheduleName).get(), heat_sch.name());
-  ASSERT_EQ(idf_tstat.getString(ThermostatSetpoint_DualSetpointFields::CoolingSetpointTemperatureScheduleName).get(), cool_sch.name());
+  ASSERT_EQ(idf_tstat.getString(ThermostatSetpoint_DualSetpointFields::HeatingSetpointTemperatureScheduleName).get(), heat_sch.nameString());
+  ASSERT_EQ(idf_tstat.getString(ThermostatSetpoint_DualSetpointFields::CoolingSetpointTemperatureScheduleName).get(), cool_sch.nameString());
 
   IdfObject idf_zone_control = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat)[0];
   // TODO: JM 2019-09-04 switch back to an extensible object once/if https://github.com/NREL/EnergyPlus/issues/7484 is addressed and the
@@ -171,7 +171,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Thermostat_Heat_Only) {
 
   IdfObject idf_tstat = workspace.getObjectsByType(IddObjectType::ThermostatSetpoint_SingleHeating)[0];
 
-  ASSERT_EQ(idf_tstat.getString(ThermostatSetpoint_SingleHeatingFields::SetpointTemperatureScheduleName).get(), heat_sch.name());
+  ASSERT_EQ(idf_tstat.getString(ThermostatSetpoint_SingleHeatingFields::SetpointTemperatureScheduleName).get(), heat_sch.nameString());
 
   IdfObject idf_zone_control = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat)[0];
   // TODO: JM 2019-09-04 switch back to an extensible object once/if https://github.com/NREL/EnergyPlus/issues/7484 is addressed and the
@@ -231,7 +231,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Thermostat_Cool_Only) {
 
   IdfObject idf_tstat = workspace.getObjectsByType(IddObjectType::ThermostatSetpoint_SingleCooling)[0];
 
-  ASSERT_EQ(idf_tstat.getString(ThermostatSetpoint_SingleCoolingFields::SetpointTemperatureScheduleName).get(), cool_sch.name());
+  ASSERT_EQ(idf_tstat.getString(ThermostatSetpoint_SingleCoolingFields::SetpointTemperatureScheduleName).get(), cool_sch.nameString());
 
   IdfObject idf_zone_control = workspace.getObjectsByType(IddObjectType::ZoneControl_Thermostat)[0];
   // TODO: JM 2019-09-04 switch back to an extensible object once/if https://github.com/NREL/EnergyPlus/issues/7484 is addressed and the

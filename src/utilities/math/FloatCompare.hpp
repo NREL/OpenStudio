@@ -38,10 +38,10 @@ namespace openstudio {
 template <class T>
 bool equal(T val1, T val2, T tol = std::numeric_limits<T>::epsilon()) {
   T diff = val1 - val2;
-  if (fabs(diff) < tol) {
+  if (std::fabs(diff) < tol) {
     return true;
   }
-  return fabs(diff) <= ((fabs(val1) < fabs(val2) ? fabs(val2) : fabs(val1)) * tol);
+  return std::fabs(diff) <= ((std::fabs(val1) < std::fabs(val2) ? std::fabs(val2) : std::fabs(val1)) * tol);
 }
 
 template <class T>
@@ -56,10 +56,10 @@ bool greaterThanOrEqual(T val1, T val2, T tol = std::numeric_limits<T>::epsilon(
 
 template <class T>
 double relativeError(T expected, T actual, T tol = std::numeric_limits<T>::epsilon()) {
-  if (fabs(expected) <= tol) {
-    return fabs(expected - actual);
+  if (std::fabs(expected) <= tol) {
+    return std::fabs(expected - actual);
   }
-  return (fabs(expected - actual) / fabs(expected));
+  return (std::fabs(expected - actual) / std::fabs(expected));
 }
 
 }  // namespace openstudio

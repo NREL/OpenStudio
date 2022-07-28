@@ -73,12 +73,14 @@ set(utilities_resources_src
   utilities/Geometry/floorplan_school.gltf
   utilities/Geometry/open_to_below.gltf
   utilities/Geometry/RefBldgFullServiceRestaurantNew2004_Chicago.gltf
-  utilities/Geometry/RefBldgHospitalNew2004_Chicago.gltf
+  utilities/Geometry/Sample_DOE-RefBldgHospitalNew2004_Chicago.gltf
   utilities/Geometry/RefBldgLargeHotelNew2004_Chicago.gltf
   utilities/Geometry/RefBldgLargeOfficeNew2004_Chicago.gltf
-  utilities/Geometry/RefBldgOutPatientNew2004_Chicago.gltf
-  utilities/Geometry/RefBldgSecondarySchoolNew2004_Chicago.gltf
-  utilities/Geometry/RefBldgSmallHotelNew2004_Chicago.gltf
+  utilities/Geometry/Sample_DOE-RefBldgOutPatientNew2004_Chicago.gltf
+  utilities/Geometry/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.gltf
+  utilities/Geometry/Sample_DOE-RefBldgSmallHotelNew2004_Chicago.gltf
+  utilities/Geometry/ParkUnder_Retail_Office_C2.gltf
+  utilities/Geometry/ASHRAECourthouse.gltf
   utilities/Geometry/Space_SurfaceMatch_LargeTest.gltf
   utilities/Geometry/split_level.gltf
   utilities/Idf/CommentTest.idf
@@ -108,6 +110,13 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V9-5-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-6-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V22-1-0.sql
+  utilities/xml/base.xml
+  utilities/xml/hpxml_with_error.xml
+  utilities/xml/schema/HPXML.xsd
+  utilities/xml/schema/HPXMLBaseElements.xsd
+  utilities/xml/schema/HPXMLDataTypes.xsd
+  utilities/xml/schema/HPXMLvalidator.xslt
+  utilities/xml/schema/HPXMLvalidator.xml
   utilities/Zip/test1.zip
 )
 
@@ -130,24 +139,26 @@ set(ENERGYPLUS_OUTPUTS "")
 set(model_resources_src
   model/OpenStudio.idd
   model/schedulefile.csv
-
+  model/PythonPluginThermochromicWindow.py
   model/two_stories_pre_intersect.osm
   model/floorplan_school.osm
   model/7-7_Windows_Complete.osm
   model/15023_Model12.osm
   model/RefBldgFullServiceRestaurantNew2004_Chicago.osm
-  model/RefBldgHospitalNew2004_Chicago.osm
+  model/Sample_DOE-RefBldgHospitalNew2004_Chicago.osm
   model/RefBldgLargeHotelNew2004_Chicago.osm
   model/RefBldgLargeOfficeNew2004_Chicago.osm
-  model/RefBldgOutPatientNew2004_Chicago.osm
-  model/RefBldgSecondarySchoolNew2004_Chicago.osm
-  model/RefBldgSmallHotelNew2004_Chicago.osm
+  model/Sample_DOE-RefBldgOutPatientNew2004_Chicago.osm
+  model/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.osm
+  model/Sample_DOE-RefBldgSmallHotelNew2004_Chicago.osm
   model/Space_SurfaceMatch_LargeTest.osm
   model/split_level.osm
   model/open_to_below.osm
   model/TwoStoryOffice_Trane.osm
   model/story_multipliers.osm
   model/offset_tests.osm
+  model/ParkUnder_Retail_Office_C2.osm
+  model/ASHRAECourthouse.osm
 )
 
 
@@ -305,6 +316,7 @@ SET(gbxml_resources_src
   gbxml/gbXMLStandard_Single_Family_Residential_2016.xml
   gbxml/TropicBird_BEM_4_2018.xml
   gbxml/TropicBird.xml
+  gbxml/schema/GreenBuildingXML_Ver6.01.xsd
 )
 
 # update the resources
@@ -379,5 +391,6 @@ add_custom_target(openstudio_airflow_resources
 
 CREATE_SRC_GROUPS("${airflow_resources_src}")
 
-install(DIRECTORY "Examples" DESTINATION . COMPONENT "CLI")
+########################################################
 
+install(DIRECTORY "Examples" DESTINATION . COMPONENT "CLI")

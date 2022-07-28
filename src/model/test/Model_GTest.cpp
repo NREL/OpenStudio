@@ -44,6 +44,7 @@
 #include "../OutputVariable_Impl.hpp"
 #include "../ParentObject_Impl.hpp"
 #include "../RunPeriod.hpp"
+#include "../RunPeriod_Impl.hpp"
 
 #include "../Site.hpp"
 #include "../Site_Impl.hpp"
@@ -74,6 +75,83 @@
 #include "../FanConstantVolume_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVAC_Impl.hpp"
+
+#include "../FoundationKivaSettings.hpp"
+#include "../FoundationKivaSettings_Impl.hpp"
+#include "../OutputControlFiles.hpp"
+#include "../OutputControlFiles_Impl.hpp"
+#include "../OutputControlReportingTolerances.hpp"
+#include "../OutputControlReportingTolerances_Impl.hpp"
+#include "../OutputControlTableStyle.hpp"
+#include "../OutputControlTableStyle_Impl.hpp"
+#include "../OutputDiagnostics.hpp"
+#include "../OutputDiagnostics_Impl.hpp"
+#include "../OutputDebuggingData.hpp"
+#include "../OutputDebuggingData_Impl.hpp"
+#include "../OutputJSON.hpp"
+#include "../OutputJSON_Impl.hpp"
+#include "../OutputSQLite.hpp"
+#include "../OutputSQLite_Impl.hpp"
+#include "../OutputEnergyManagementSystem.hpp"
+#include "../OutputEnergyManagementSystem_Impl.hpp"
+#include "../OutputTableSummaryReports.hpp"
+#include "../OutputTableSummaryReports_Impl.hpp"
+#include "../PerformancePrecisionTradeoffs_Impl.hpp"
+#include "../PerformancePrecisionTradeoffs_Impl.hpp"
+#include "../LifeCycleCostParameters.hpp"
+#include "../LifeCycleCostParameters_Impl.hpp"
+#include "../SizingParameters.hpp"
+#include "../SizingParameters_Impl.hpp"
+#include "../RadianceParameters.hpp"
+#include "../RadianceParameters_Impl.hpp"
+#include "../RunPeriodControlDaylightSavingTime.hpp"
+#include "../RunPeriodControlDaylightSavingTime_Impl.hpp"
+#include "../YearDescription.hpp"
+#include "../YearDescription_Impl.hpp"
+#include "../SiteGroundReflectance.hpp"
+#include "../SiteGroundReflectance_Impl.hpp"
+#include "../SiteWaterMainsTemperature.hpp"
+#include "../SiteWaterMainsTemperature_Impl.hpp"
+#include "../SiteGroundTemperatureBuildingSurface.hpp"
+#include "../SiteGroundTemperatureBuildingSurface_Impl.hpp"
+#include "../SiteGroundTemperatureFCfactorMethod.hpp"
+#include "../SiteGroundTemperatureFCfactorMethod_Impl.hpp"
+#include "../SiteGroundTemperatureDeep.hpp"
+#include "../SiteGroundTemperatureDeep_Impl.hpp"
+#include "../SiteGroundTemperatureShallow.hpp"
+#include "../SiteGroundTemperatureShallow_Impl.hpp"
+#include "../WeatherFile.hpp"
+#include "../WeatherFile_Impl.hpp"
+#include "../Version.hpp"
+#include "../Version_Impl.hpp"
+#include "../LightingSimulationControl.hpp"
+#include "../LightingSimulationControl_Impl.hpp"
+#include "../AirflowNetworkSimulationControl.hpp"
+#include "../AirflowNetworkSimulationControl_Impl.hpp"
+#include "../InsideSurfaceConvectionAlgorithm.hpp"
+#include "../InsideSurfaceConvectionAlgorithm_Impl.hpp"
+#include "../OutsideSurfaceConvectionAlgorithm.hpp"
+#include "../OutsideSurfaceConvectionAlgorithm_Impl.hpp"
+#include "../HeatBalanceAlgorithm.hpp"
+#include "../HeatBalanceAlgorithm_Impl.hpp"
+#include "../ZoneAirHeatBalanceAlgorithm.hpp"
+#include "../ZoneAirHeatBalanceAlgorithm_Impl.hpp"
+#include "../ZoneAirMassFlowConservation.hpp"
+#include "../ZoneAirMassFlowConservation_Impl.hpp"
+#include "../ZoneCapacitanceMultiplierResearchSpecial.hpp"
+#include "../ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp"
+#include "../ConvergenceLimits.hpp"
+#include "../ConvergenceLimits_Impl.hpp"
+#include "../ShadowCalculation.hpp"
+#include "../ShadowCalculation_Impl.hpp"
+#include "../Timestep.hpp"
+#include "../Timestep_Impl.hpp"
+#include "../ClimateZones.hpp"
+#include "../ClimateZones_Impl.hpp"
+#include "../EnvironmentalImpactFactors.hpp"
+#include "../EnvironmentalImpactFactors_Impl.hpp"
+#include "../ExternalInterface.hpp"
+#include "../ExternalInterface_Impl.hpp"
 
 #include "../../utilities/sql/SqlFile.hpp"
 #include "../../utilities/data/TimeSeries.hpp"
@@ -847,4 +925,262 @@ TEST_F(ModelFixture, Issue_4372) {
 
   // modelPath = resourcesPath() / "model" / toPath("offset_tests_matched.osm");
   // model->save(modelPath, true);
+}
+
+TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
+  Model m;
+  unsigned i = 0;
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<Building>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto building = m.getUniqueModelObject<Building>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<Building>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<FoundationKivaSettings>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto foundationKivaSettings = m.getUniqueModelObject<FoundationKivaSettings>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<FoundationKivaSettings>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputControlFiles>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputControlFiles = m.getUniqueModelObject<OutputControlFiles>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputControlFiles>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputControlReportingTolerances = m.getUniqueModelObject<OutputControlReportingTolerances>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputControlTableStyle>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputControlTableStyle = m.getUniqueModelObject<OutputControlTableStyle>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputControlTableStyle>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputDiagnostics>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputDiagnostics = m.getUniqueModelObject<OutputDiagnostics>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputDiagnostics>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputDebuggingData>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputDebuggingData = m.getUniqueModelObject<OutputDebuggingData>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputDebuggingData>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputJSON>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputJSON = m.getUniqueModelObject<OutputJSON>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputJSON>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputSQLite>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputSQLite = m.getUniqueModelObject<OutputSQLite>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputSQLite>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputEnergyManagementSystem>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputEnergyManagementSystem = m.getUniqueModelObject<OutputEnergyManagementSystem>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputEnergyManagementSystem>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputTableSummaryReports>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputTableSummaryReports = m.getUniqueModelObject<OutputTableSummaryReports>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputTableSummaryReports>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto performancePrecisionTradeoffs = m.getUniqueModelObject<PerformancePrecisionTradeoffs>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<LifeCycleCostParameters>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto lifeCycleCostParameters = m.getUniqueModelObject<LifeCycleCostParameters>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<LifeCycleCostParameters>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SizingParameters>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto sizingParameters = m.getUniqueModelObject<SizingParameters>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SizingParameters>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<RadianceParameters>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto radianceParameters = m.getUniqueModelObject<RadianceParameters>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<RadianceParameters>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<RunPeriod>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto runPeriod = m.getUniqueModelObject<RunPeriod>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<RunPeriod>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto runPeriodControlDaylightSavingTime = m.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<model::YearDescription>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto yearDescription = m.getUniqueModelObject<model::YearDescription>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<model::YearDescription>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<Site>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto site = m.getUniqueModelObject<Site>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<Site>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SiteGroundReflectance>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto siteGroundReflectance = m.getUniqueModelObject<SiteGroundReflectance>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SiteGroundReflectance>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto siteWaterMainsTemperature = m.getUniqueModelObject<SiteWaterMainsTemperature>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto siteGroundTemperatureBuildingSurface = m.getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto siteGroundTemperatureFCfactorMethod = m.getUniqueModelObject<SiteGroundTemperatureFCfactorMethod>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SiteGroundTemperatureDeep>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto siteGroundTemperatureDeep = m.getUniqueModelObject<SiteGroundTemperatureDeep>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SiteGroundTemperatureDeep>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SiteGroundTemperatureShallow>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto siteGroundTemperatureShallow = m.getUniqueModelObject<SiteGroundTemperatureShallow>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SiteGroundTemperatureShallow>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<Facility>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto facility = m.getUniqueModelObject<Facility>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<Facility>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<WeatherFile>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto weatherFile = m.getUniqueModelObject<WeatherFile>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<WeatherFile>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SimulationControl>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto simulationControl = m.getUniqueModelObject<SimulationControl>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SimulationControl>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<LightingSimulationControl>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto lightingSimulationControl = m.getUniqueModelObject<LightingSimulationControl>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<LightingSimulationControl>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<AirflowNetworkSimulationControl>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto airflowNetworkSimulationControl = m.getUniqueModelObject<AirflowNetworkSimulationControl>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<AirflowNetworkSimulationControl>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<InsideSurfaceConvectionAlgorithm>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto insideSurfaceConvectionAlgorithm = m.getUniqueModelObject<InsideSurfaceConvectionAlgorithm>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<InsideSurfaceConvectionAlgorithm>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutsideSurfaceConvectionAlgorithm>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outsideSurfaceConvectionAlgorithm = m.getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutsideSurfaceConvectionAlgorithm>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<HeatBalanceAlgorithm>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto heatBalanceAlgorithm = m.getUniqueModelObject<HeatBalanceAlgorithm>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<HeatBalanceAlgorithm>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto zoneAirHeatBalanceAlgorithm = m.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto zoneAirMassFlowConservation = m.getUniqueModelObject<ZoneAirMassFlowConservation>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto zoneCapacitanceMultiplierResearchSpecial = m.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ConvergenceLimits>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto convergenceLimits = m.getUniqueModelObject<ConvergenceLimits>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ConvergenceLimits>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ShadowCalculation>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto shadowCalculation = m.getUniqueModelObject<ShadowCalculation>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ShadowCalculation>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<Timestep>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto timestep = m.getUniqueModelObject<Timestep>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<Timestep>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ClimateZones>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto climateZones = m.getUniqueModelObject<ClimateZones>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ClimateZones>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<EnvironmentalImpactFactors>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto environmentImpactFactors = m.getUniqueModelObject<EnvironmentalImpactFactors>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<EnvironmentalImpactFactors>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ExternalInterface>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto externalInterface = m.getUniqueModelObject<ExternalInterface>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ExternalInterface>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
 }

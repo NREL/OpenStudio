@@ -76,6 +76,7 @@ set(translator_wrappers
   csharp_OpenStudioAirflow_wrap.cxx
   csharp_OpenStudioEnergyPlus_wrap.cxx
   csharp_OpenStudioGBXML_wrap.cxx
+  csharp_OpenStudioGltf_wrap.cxx
   csharp_OpenStudioISOModel_wrap.cxx
   csharp_OpenStudioRadiance_wrap.cxx
   csharp_OpenStudioSDD_wrap.cxx
@@ -104,6 +105,7 @@ set(utilities_wrappers
   csharp_OpenStudioEnergyPlus_wrap.cxx
   csharp_OpenStudioRadiance_wrap.cxx
   csharp_OpenStudioGBXML_wrap.cxx
+  csharp_OpenStudioGltf_wrap.cxx
   csharp_OpenStudioAirflow_wrap.cxx
   csharp_OpenStudioISOModel_wrap.cxx
   csharp_OpenStudioSDD_wrap.cxx

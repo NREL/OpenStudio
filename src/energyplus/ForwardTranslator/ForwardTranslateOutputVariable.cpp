@@ -48,8 +48,8 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateOutputVariable(OutputVariable& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::Output_Variable);
-    m_idfObjects.push_back(idfObject);
+
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Variable, modelObject);
 
     if (!modelObject.isKeyValueDefaulted()) {
       idfObject.setString(Output_VariableFields::KeyValue, modelObject.keyValue());

@@ -297,6 +297,7 @@ target_link_libraries(openstudio
  openstudio_sdd
  openstudio_isomodel
  openstudio_gbxml
+ openstudio_gltf
  openstudio_radiance
  ${ruby_extension_libs}
 )
