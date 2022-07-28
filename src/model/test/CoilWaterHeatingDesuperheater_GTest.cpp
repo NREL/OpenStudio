@@ -67,6 +67,13 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_DefaultConstructor) {
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  // Passing an incompatible schedule: we expect the Ctor to throw, and no object to be created
+  Model model;
+  EXPECT_EQ(0, model.getConcreteModelObjects<CoilWaterHeatingDesuperheater>().size());
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  EXPECT_ANY_THROW(CoilWaterHeatingDesuperheater(model, alwaysOn));
+  EXPECT_EQ(0, model.getConcreteModelObjects<CoilWaterHeatingDesuperheater>().size());
 }
 
 TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove1) {
