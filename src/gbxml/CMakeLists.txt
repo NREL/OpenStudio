@@ -57,3 +57,8 @@ endforeach()
 
 include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiogbxml)
+
+# set up groups of source files for Visual Studio
+source_group(embedded FILES ${EMBEDDED_OUTPUT})
+
+add_library(${target_name} OBJECT ${${target_name}_src} ${EMBEDDED_OUTPUT})
