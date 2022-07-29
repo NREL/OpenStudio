@@ -76,7 +76,7 @@
 #include "utilities/xml/XMLValidator.hpp"
 #include <resources.hxx>
 
-#include <src/utilities/embedded_files.hxx>
+#include <src/gbxml/embedded_files.hxx>
 
 #include <sstream>
 #include <iostream>
@@ -920,7 +920,7 @@ TEST_F(gbXMLFixture, ForwardTranslator_exampleModelValid) {
 
   EXPECT_TRUE(test);
 
-  std::string xsdString = ::openstudio::embedded_files::getFileAsString(":/resources/GreenBuildingXML_Ver6.01.xsd");
+  std::string xsdString = ::openstudiogbxml::embedded_files::getFileAsString(":/resources/GreenBuildingXML_Ver6.01.xsd");
   path schemaPath = toPath(xsdString);
   XMLValidator xmlValidator(schemaPath);
 

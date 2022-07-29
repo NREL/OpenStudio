@@ -56,4 +56,4 @@ foreach(_FILE ${XSD_SCHEMA_FILES})
 endforeach()
 
 include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
-embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudio)
+embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudiogbxml)
