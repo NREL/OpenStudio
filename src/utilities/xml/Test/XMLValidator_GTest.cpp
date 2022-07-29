@@ -33,6 +33,8 @@
 #include "utilities/core/Filesystem.hpp"
 #include "utilities/core/PathHelpers.hpp"
 
+#include <src/gbxml/embedded_files.hxx>
+
 #include <algorithm>
 #include <iostream>
 #include <boost/regex.hpp>

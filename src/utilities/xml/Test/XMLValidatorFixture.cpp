@@ -31,8 +31,6 @@
 
 #include "../../core/ApplicationPathHelpers.hpp"
 
-#include <src/gbxml/embedded_files.hxx>
-
 using openstudio::Logger;
 using openstudio::toPath;
 using openstudio::FileLogSink;
