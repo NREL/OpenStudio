@@ -124,10 +124,10 @@ namespace gbxml {
             opaqueMaterial.setThermalAbsorptance(*extir);
           }
           if (extsolar) {
-            opaqueMaterial.setSolarAbsorptance(extsolar);
+            opaqueMaterial.setSolarAbsorptance(*extsolar);
           }
           if (extvisible) {
-            opaqueMaterial.setVisibleAbsorptance(extvisible);
+            opaqueMaterial.setVisibleAbsorptance(*extvisible);
           }
         }
 
