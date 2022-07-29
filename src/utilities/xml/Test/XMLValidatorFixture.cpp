@@ -29,6 +29,8 @@
 
 #include "XMLValidatorFixture.hpp"
 
+#include <src/gbxml/embedded_files.hxx>
+
 #include "../../core/ApplicationPathHelpers.hpp"
 
 using openstudio::Logger;
