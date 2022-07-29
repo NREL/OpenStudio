@@ -316,7 +316,6 @@ SET(gbxml_resources_src
   gbxml/gbXMLStandard_Single_Family_Residential_2016.xml
   gbxml/TropicBird_BEM_4_2018.xml
   gbxml/TropicBird.xml
-  gbxml/schema/GreenBuildingXML_Ver6.01.xsd
 )
 
 # update the resources
