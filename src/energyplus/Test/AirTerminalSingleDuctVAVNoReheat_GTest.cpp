@@ -41,6 +41,7 @@
 #include "../../model/Node.hpp"
 #include "../../model/DesignSpecificationOutdoorAir.hpp"
 
+#include <utilities/idd/IddObject.hpp>
 #include <utilities/idd/AirTerminal_SingleDuct_VAV_NoReheat_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 

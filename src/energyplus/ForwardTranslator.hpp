@@ -296,6 +296,8 @@ namespace model {
   class Luminaire;
   class MaterialPropertyGlazingSpectralData;
   class MaterialPropertyMoisturePenetrationDepthSettings;
+  class MaterialPropertyPhaseChange;
+  class MaterialPropertyPhaseChangeHysteresis;
   class MasslessOpaqueMaterial;
   class MeterCustom;
   class MeterCustomDecrement;
@@ -304,9 +306,11 @@ namespace model {
   class OutsideSurfaceConvectionAlgorithm;
   class OutputControlFiles;
   class OutputControlReportingTolerances;
+  class OutputControlTableStyle;
   class OutputDebuggingData;
   class OutputDiagnostics;
   class OutputJSON;
+  class OutputSQLite;
   class OutputEnvironmentalImpactFactors;
   class EnvironmentalImpactFactors;
   class FuelFactors;
@@ -337,6 +341,10 @@ namespace model {
   class PortList;
   class PumpConstantSpeed;
   class PumpVariableSpeed;
+  class PythonPluginInstance;
+  class PythonPluginVariable;
+  class PythonPluginTrendVariable;
+  class PythonPluginOutputVariable;
   class RefractionExtinctionGlazing;
   class RefrigerationAirChiller;
   class RefrigerationCase;
@@ -1110,6 +1118,10 @@ namespace energyplus {
     boost::optional<IdfObject>
       translateMaterialPropertyMoisturePenetrationDepthSettings(model::MaterialPropertyMoisturePenetrationDepthSettings& modelObject);
 
+    boost::optional<IdfObject> translateMaterialPropertyPhaseChange(model::MaterialPropertyPhaseChange& modelObject);
+
+    boost::optional<IdfObject> translateMaterialPropertyPhaseChangeHysteresis(model::MaterialPropertyPhaseChangeHysteresis& modelObject);
+
     boost::optional<IdfObject> translateMasslessOpaqueMaterial(model::MasslessOpaqueMaterial& modelObject);
 
     boost::optional<IdfObject> translateMeterCustom(model::MeterCustom& modelObject);
@@ -1126,11 +1138,15 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateOutputControlReportingTolerances(model::OutputControlReportingTolerances& modelObject);
 
+    boost::optional<IdfObject> translateOutputControlTableStyle(model::OutputControlTableStyle& modelObject);
+
     boost::optional<IdfObject> translateOutputDebuggingData(model::OutputDebuggingData& modelObject);
 
     boost::optional<IdfObject> translateOutputDiagnostics(model::OutputDiagnostics& modelObject);
 
     boost::optional<IdfObject> translateOutputJSON(model::OutputJSON& modelObject);
+
+    boost::optional<IdfObject> translateOutputSQLite(model::OutputSQLite& modelObject);
 
     boost::optional<IdfObject> translateOutputEnvironmentalImpactFactors(model::OutputEnvironmentalImpactFactors& modelObject);
 
@@ -1197,6 +1213,14 @@ namespace energyplus {
     boost::optional<IdfObject> translatePumpConstantSpeed(model::PumpConstantSpeed& modelObject);
 
     boost::optional<IdfObject> translatePumpVariableSpeed(model::PumpVariableSpeed& modelObject);
+
+    boost::optional<IdfObject> translatePythonPluginInstance(model::PythonPluginInstance& modelObject);
+
+    boost::optional<IdfObject> translatePythonPluginVariable(model::PythonPluginVariable& modelObject);
+
+    boost::optional<IdfObject> translatePythonPluginTrendVariable(model::PythonPluginTrendVariable& modelObject);
+
+    boost::optional<IdfObject> translatePythonPluginOutputVariable(model::PythonPluginOutputVariable& modelObject);
 
     boost::optional<IdfObject> translateRefractionExtinctionGlazing(model::RefractionExtinctionGlazing& modelObject);
 
@@ -1555,7 +1579,7 @@ namespace energyplus {
     // This should be used by the various translateUnitaryFoo methods.
     void fixSPMsForUnitarySystem(const model::HVACComponent& unitary, const std::string& fanInletNodeName, const std::string& FanOutletNodeName);
 
-    void createStandardOutputRequests();
+    void createStandardOutputRequests(const model::Model& model);
 
     std::string stripOS2(const std::string& s);
 

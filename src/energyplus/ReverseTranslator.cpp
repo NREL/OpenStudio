@@ -681,6 +681,10 @@ namespace energyplus {
         modelObject = translateOutputJSON(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Output_SQLite: {
+        modelObject = translateOutputSQLite(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Output_EnvironmentalImpactFactors: {
         modelObject = translateOutputEnvironmentalImpactFactors(workspaceObject);
         break;
@@ -713,9 +717,6 @@ namespace energyplus {
         modelObject = translateOutputMeterMeterFileOnly(workspaceObject);
         break;
       }
-      case openstudio::IddObjectType::Output_SQLite: {
-        break;  // no-op
-      }
       case openstudio::IddObjectType::Output_Table_Monthly: {
         break;  // no-op
       }
@@ -731,8 +732,13 @@ namespace energyplus {
         modelObject = translateOutputControlFiles(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::OutputControl_ReportingTolerances: {
+        modelObject = translateOutputControlReportingTolerances(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::OutputControl_Table_Style: {
-        break;  // no-op
+        modelObject = translateOutputControlTableStyle(workspaceObject);
+        break;
       }
       case openstudio::IddObjectType::People: {
         modelObject = translatePeople(workspaceObject);

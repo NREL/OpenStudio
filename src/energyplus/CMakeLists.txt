@@ -239,6 +239,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateLuminaire.cpp
   ForwardTranslator/ForwardTranslateMaterialPropertyGlazingSpectralData.cpp
   ForwardTranslator/ForwardTranslateMaterialPropertyMoisturePenetrationDepthSettings.cpp
+  ForwardTranslator/ForwardTranslateMaterialPropertyPhaseChange.cpp
+  ForwardTranslator/ForwardTranslateMaterialPropertyPhaseChangeHysteresis.cpp
   ForwardTranslator/ForwardTranslateMasslessOpaqueMaterial.cpp
   ForwardTranslator/ForwardTranslateMeterCustom.cpp
   ForwardTranslator/ForwardTranslateMeterCustomDecrement.cpp
@@ -247,12 +249,14 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutsideSurfaceConvectionAlgorithm.cpp
   ForwardTranslator/ForwardTranslateOutputControlFiles.cpp
   ForwardTranslator/ForwardTranslateOutputControlReportingTolerances.cpp
+  ForwardTranslator/ForwardTranslateOutputControlTableStyle.cpp
   ForwardTranslator/ForwardTranslateOutputMeter.cpp
   ForwardTranslator/ForwardTranslateOutputVariable.cpp
   ForwardTranslator/ForwardTranslateOutputDebuggingData.cpp
   ForwardTranslator/ForwardTranslateOutputDiagnostics.cpp
   ForwardTranslator/ForwardTranslateOutputEnergyManagementSystem.cpp
   ForwardTranslator/ForwardTranslateOutputJSON.cpp
+  ForwardTranslator/ForwardTranslateOutputSQLite.cpp
   ForwardTranslator/ForwardTranslateOutputEnvironmentalImpactFactors.cpp
   ForwardTranslator/ForwardTranslateEnvironmentalImpactFactors.cpp
   ForwardTranslator/ForwardTranslateFuelFactors.cpp
@@ -281,6 +285,10 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslatePortList.cpp
   ForwardTranslator/ForwardTranslatePumpConstantSpeed.cpp
   ForwardTranslator/ForwardTranslatePumpVariableSpeed.cpp
+  ForwardTranslator/ForwardTranslatePythonPluginInstance.cpp
+  ForwardTranslator/ForwardTranslatePythonPluginVariable.cpp
+  ForwardTranslator/ForwardTranslatePythonPluginTrendVariable.cpp
+  ForwardTranslator/ForwardTranslatePythonPluginOutputVariable.cpp
   ForwardTranslator/ForwardTranslateRefractionExtinctionGlazing.cpp
   ForwardTranslator/ForwardTranslateRefrigerationAirChiller.cpp
   ForwardTranslator/ForwardTranslateRefrigerationCase.cpp
@@ -521,10 +529,13 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateMeterCustomDecrement.cpp
   ReverseTranslator/ReverseTranslateOtherEquipment.cpp
   ReverseTranslator/ReverseTranslateOutputControlFiles.cpp
+  ReverseTranslator/ReverseTranslateOutputControlReportingTolerances.cpp
+  ReverseTranslator/ReverseTranslateOutputControlTableStyle.cpp
   ReverseTranslator/ReverseTranslateOutputDebuggingData.cpp
   ReverseTranslator/ReverseTranslateOutputDiagnostics.cpp
   ReverseTranslator/ReverseTranslateOutputEnergyManagementSystem.cpp
   ReverseTranslator/ReverseTranslateOutputJSON.cpp
+  ReverseTranslator/ReverseTranslateOutputSQLite.cpp
   ReverseTranslator/ReverseTranslateOutputEnvironmentalImpactFactors.cpp
   ReverseTranslator/ReverseTranslateEnvironmentalImpactFactors.cpp
   ReverseTranslator/ReverseTranslateFuelFactors.cpp
@@ -642,9 +653,7 @@ set(${target_name}_test_src
   Test/AvailabilityManagerNightCycle_GTest.cpp
   Test/AvailabilityManagerHybridVentilation_GTest.cpp
   Test/Building_GTest.cpp
-
   Test/CentralHeatPumpSystem_GTest.cpp
-
   Test/CoilCoolingDX_GTest.cpp
   Test/CoilCoolingDXCurveFitPerformance_GTest.cpp
   Test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp
@@ -676,6 +685,7 @@ set(${target_name}_test_src
   Test/ElectricLoadCenterStorageLiIonNMCBattery_GTest.cpp
   Test/ElectricLoadCenterTransformer_GTest.cpp
   Test/EMS_GTest.cpp
+  Test/EnvironmentalImpactFactors_GTest.cpp
   Test/EvaporativeCoolerDirectResearchSpecial_GTest.cpp
   Test/ExteriorLights_GTest.cpp
   Test/ExteriorFuelEquipment_GTest.cpp
@@ -686,6 +696,7 @@ set(${target_name}_test_src
   Test/FanVariableVolume_GTest.cpp
   Test/FanSystemModel_GTest.cpp
   Test/FuelCell_GTest.cpp
+  Test/FuelFactors_GTest.cpp
   Test/GasEquipment_GTest.cpp
   Test/GeneratorMicroTurbine_GTest.cpp
   Test/GeneratorWindTurbine_GTest.cpp
@@ -701,20 +712,28 @@ set(${target_name}_test_src
   Test/LifeCycleCostParameters_GTest.cpp
   Test/Lights_GTest.cpp
   Test/Luminaire_GTest.cpp
+  Test/MaterialPropertyMoisturePenetrationDepthSettings_GTest.cpp
+  Test/MaterialPropertyPhaseChange_GTest.cpp
+  Test/MaterialPropertyPhaseChangeHysteresis_GTest.cpp
   Test/Meter_GTest.cpp
   Test/OutputControlFiles_GTest.cpp
+  Test/OutputControlReportingTolerances_GTest.cpp
+  Test/OutputControlTableStyle_GTest.cpp
   Test/OutputDebuggingData_GTest.cpp
   Test/OutputDiagnostics_GTest.cpp
   Test/OutputJSON_GTest.cpp
+  Test/OutputSQLite_GTest.cpp
   Test/OutputEnvironmentalImpactFactors_GTest.cpp
-  Test/EnvironmentalImpactFactors_GTest.cpp
-  Test/FuelFactors_GTest.cpp
   Test/OutputTableSummaryReports_GTest.cpp
   Test/People_GTest.cpp
   Test/PhotovoltaicPerformanceSandia_GTest.cpp
   Test/PerformancePrecisionTradeoffs_GTest.cpp
   Test/PlantEquipmentOperationSchemes_GTest.cpp
   Test/PlantComponentUserDefined_GTest.cpp
+  Test/PythonPluginInstance_GTest.cpp
+  Test/PythonPluginVariable_GTest.cpp
+  Test/PythonPluginOutputVariable_GTest.cpp
+  Test/PythonPluginTrendVariable_GTest.cpp
   Test/RunPeriod_GTest.cpp
   Test/RunPeriodControlDaylightSavingTime_GTest.cpp
   Test/RunPeriodControlSpecialDays_GTest.cpp

@@ -70,6 +70,10 @@
 #include "../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
 #include "../model/ElectricEquipmentITEAirCooled.hpp"
 #include "../model/ElectricEquipmentITEAirCooled_Impl.hpp"
+#include "../model/OutputControlTableStyle.hpp"
+#include "../model/OutputControlTableStyle_Impl.hpp"
+#include "../model/OutputSQLite.hpp"
+#include "../model/OutputSQLite_Impl.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
@@ -678,7 +682,7 @@ namespace energyplus {
 
     if (fullModelTranslation) {
       // add output requests
-      this->createStandardOutputRequests();
+      this->createStandardOutputRequests(model);
     }
 
     Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
@@ -2161,6 +2165,16 @@ namespace energyplus {
         retVal = translateMaterialPropertyMoisturePenetrationDepthSettings(empd);
         break;
       }
+      case openstudio::IddObjectType::OS_MaterialProperty_PhaseChange: {
+        model::MaterialPropertyPhaseChange phaseChange = modelObject.cast<MaterialPropertyPhaseChange>();
+        retVal = translateMaterialPropertyPhaseChange(phaseChange);
+        break;
+      }
+      case openstudio::IddObjectType::OS_MaterialProperty_PhaseChangeHysteresis: {
+        model::MaterialPropertyPhaseChangeHysteresis phaseChangeHysteresis = modelObject.cast<MaterialPropertyPhaseChangeHysteresis>();
+        retVal = translateMaterialPropertyPhaseChangeHysteresis(phaseChangeHysteresis);
+        break;
+      }
       case openstudio::IddObjectType::OS_Material_RoofVegetation: {
         model::RoofVegetation material = modelObject.cast<RoofVegetation>();
         retVal = translateRoofVegetation(material);
@@ -2289,6 +2303,11 @@ namespace energyplus {
         retVal = translateOutputControlReportingTolerances(outputControlReportingTolerances);
         break;
       }
+      case openstudio::IddObjectType::OS_OutputControl_Table_Style: {
+        model::OutputControlTableStyle outputControlTableStyle = modelObject.cast<OutputControlTableStyle>();
+        retVal = translateOutputControlTableStyle(outputControlTableStyle);
+        break;
+      }
       case openstudio::IddObjectType::OS_Output_DebuggingData: {
         auto mo = modelObject.cast<OutputDebuggingData>();
         retVal = translateOutputDebuggingData(mo);
@@ -2302,6 +2321,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Output_JSON: {
         auto mo = modelObject.cast<OutputJSON>();
         retVal = translateOutputJSON(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Output_SQLite: {
+        auto mo = modelObject.cast<OutputSQLite>();
+        retVal = translateOutputSQLite(mo);
         break;
       }
       case openstudio::IddObjectType::OS_Output_EnvironmentalImpactFactors: {
@@ -2375,6 +2399,26 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_ProgramControl: {
         LOG(Warn, "OS_ProgramControl is not currently translated");
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_Instance: {
+        model::PythonPluginInstance obj = modelObject.cast<PythonPluginInstance>();
+        retVal = translatePythonPluginInstance(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_Variable: {
+        auto obj = modelObject.cast<PythonPluginVariable>();
+        retVal = translatePythonPluginVariable(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_TrendVariable: {
+        auto obj = modelObject.cast<PythonPluginTrendVariable>();
+        retVal = translatePythonPluginTrendVariable(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_OutputVariable: {
+        auto obj = modelObject.cast<PythonPluginOutputVariable>();
+        retVal = translatePythonPluginOutputVariable(obj);
         break;
       }
       case openstudio::IddObjectType::OS_RadianceParameters: {
@@ -3258,9 +3302,11 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial);
     result.push_back(IddObjectType::OS_OutputControl_Files);
     result.push_back(IddObjectType::OS_OutputControl_ReportingTolerances);
+    result.push_back(IddObjectType::OS_OutputControl_Table_Style);
     result.push_back(IddObjectType::OS_Output_DebuggingData);
     result.push_back(IddObjectType::OS_Output_Diagnostics);
     result.push_back(IddObjectType::OS_Output_JSON);
+    result.push_back(IddObjectType::OS_Output_SQLite);
 
     // Note: we just always translate Output:EnvironmentalImpactFactors, and in there (it exists), then trigger translatation of the two others
     result.push_back(IddObjectType::OS_Output_EnvironmentalImpactFactors);
@@ -3499,13 +3545,17 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Actuator);
     result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Schedule);
     result.push_back(IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Variable);
+
+    result.push_back(IddObjectType::OS_PythonPlugin_Instance);
+    result.push_back(IddObjectType::OS_PythonPlugin_Variable);
+    result.push_back(IddObjectType::OS_PythonPlugin_TrendVariable);
+    result.push_back(IddObjectType::OS_PythonPlugin_OutputVariable);
     return result;
   }
 
   void ForwardTranslator::translateConstructions(const model::Model& model) {
     std::vector<IddObjectType> iddObjectTypes;
     iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_GlazingSpectralData);
-    iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings);
     iddObjectTypes.push_back(IddObjectType::OS_Material);
     iddObjectTypes.push_back(IddObjectType::OS_Material_AirGap);
     iddObjectTypes.push_back(IddObjectType::OS_Material_AirWall);
@@ -3540,11 +3590,14 @@ namespace energyplus {
     iddObjectTypes.push_back(IddObjectType::OS_DefaultScheduleSet);
 
     // Translated by the object it references directly
-    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceControl_MovableInsulation);           // Surface Only
-    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);      // Surface, SubSurface,
-    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);   // Surface, SubSurface,
-    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter); // Surface Only
-    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);     // Surface, SubSurface, or InternalMass
+    //iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings); // Material Only
+    //iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_PhaseChange);                       // Material Only
+    //iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_PhaseChangeHysteresis);             // Material Only
+    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceControl_MovableInsulation);                   // Surface Only
+    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideCoefficients);              // Surface, SubSurface,
+    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel);           // Surface, SubSurface,
+    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter);         // Surface Only
+    //iddObjectTypes.push_back(IddObjectType::OS_SurfaceProperty_ConvectionCoefficients);             // Surface, SubSurface, or InternalMass
 
     for (const IddObjectType& iddObjectType : iddObjectTypes) {
 
@@ -4336,13 +4389,14 @@ namespace energyplus {
     }
   }
 
-  void ForwardTranslator::createStandardOutputRequests() {
+  void ForwardTranslator::createStandardOutputRequests(const model::Model& model) {
     if (!m_excludeHTMLOutputReport) {
-      IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
-      m_idfObjects.push_back(tableStyle);
-      tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator, "HTML");
-      if (m_ipTabularOutput) {
-        tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion, "InchPound");
+      if (!model.getOptionalUniqueModelObject<model::OutputControlTableStyle>()) {
+        IdfObject& tableStyle = m_idfObjects.emplace_back(IddObjectType::OutputControl_Table_Style);
+        tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator, "HTML");
+        if (m_ipTabularOutput) {
+          tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion, "InchPound");
+        }
       }
     }
 
@@ -4354,9 +4408,10 @@ namespace energyplus {
     }
 
     if (!m_excludeSQliteOutputReport) {
-      IdfObject sqliteOutput(IddObjectType::Output_SQLite);
-      sqliteOutput.setString(Output_SQLiteFields::OptionType, "SimpleAndTabular");
-      m_idfObjects.push_back(sqliteOutput);
+      if (!model.getOptionalUniqueModelObject<model::OutputSQLite>()) {
+        IdfObject& sqliteOutput = m_idfObjects.emplace_back(IddObjectType::Output_SQLite);
+        sqliteOutput.setString(Output_SQLiteFields::OptionType, "SimpleAndTabular");
+      }
     }
 
     // ensure at least one life cycle cost exists to prevent crash in E+ 8
