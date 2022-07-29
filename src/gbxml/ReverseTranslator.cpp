@@ -74,6 +74,8 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <resources.hxx>
 
+#include <src/utilities/embedded_files.hxx>
+
 #include <thread>
 
 #include <pugixml.hpp>
@@ -112,7 +114,8 @@ namespace gbxml {
     if (openstudio::filesystem::exists(path)) {
 
       // validate the gbxml prior to reverse translation
-      openstudio::path schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
+      std::string xsdString = ::openstudio::embedded_files::getFileAsString(":/resources/GreenBuildingXML_Ver6.01.xsd");
+      openstudio::path schemaPath = openstudio::toPath(xsdString);
       XMLValidator xmlValidator(schemaPath);
       xmlValidator.validate(path);
 

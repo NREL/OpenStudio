@@ -90,6 +90,8 @@
 
 #include <pugixml.hpp>
 
+#include <src/utilities/embedded_files.hxx>
+
 #include <regex>
 #include <string_view>
 
@@ -123,7 +125,8 @@ namespace gbxml {
       file.close();
 
       // validate the gbxml after forward translation
-      openstudio::path schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
+      std::string xsdString = ::openstudio::embedded_files::getFileAsString(":/resources/GreenBuildingXML_Ver6.01.xsd");
+      openstudio::path schemaPath = openstudio::toPath(xsdString);
       XMLValidator xmlValidator(schemaPath);
       xmlValidator.validate(path);
 
