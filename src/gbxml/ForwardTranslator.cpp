@@ -125,7 +125,7 @@ namespace gbxml {
       file.close();
 
       // validate the gbxml after forward translation
-      auto gbxmlValidator = XMLValidator::fromEmbeddedPath(":/resources/GreenBuildingXML_Ver6.01.xsd");
+      auto gbxmlValidator = XMLValidator::gbxmlValidator();
       gbxmlValidator.validate(path);
 
       return result;
