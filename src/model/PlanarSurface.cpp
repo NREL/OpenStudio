@@ -41,8 +41,6 @@
 #include "LayeredConstruction.hpp"
 #include "LayeredConstruction_Impl.hpp"
 #include "Material.hpp"
-#include "AirWallMaterial.hpp"
-#include "AirWallMaterial_Impl.hpp"
 #include "SubSurface.hpp"
 #include "SubSurface_Impl.hpp"
 #include "GeneratorPhotovoltaic.hpp"
@@ -228,10 +226,6 @@ namespace model {
           if (construction->numLayers() == 1) {
             MaterialVector layers = construction->layers();
             OS_ASSERT(layers.size() == 1u);
-            if (layers[0].optionalCast<AirWallMaterial>()) {
-              result = true;
-              LOG(Warn, "AirWallMaterial is deprecated, use ConstructionAirBoundary instead.");
-            }
           } else if (construction->numLayers() == 0) {
             LOG(Info, "Construction detected with zero layers, classifying as non-air wall");
             result = false;

@@ -104,7 +104,6 @@
 #include "../../model/Material.hpp"
 #include "../../model/Material_Impl.hpp"
 #include "../../model/AirGap.hpp"
-#include "../../model/AirWallMaterial.hpp"
 #include "../../model/StandardOpaqueMaterial.hpp"
 #include "../../model/StandardOpaqueMaterial_Impl.hpp"
 #include "../../model/StandardGlazing.hpp"

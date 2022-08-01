@@ -276,37 +276,6 @@ namespace energyplus {
       }
     }
 
-    // replace old style air wall Constructions with ConstructionAirBoundary
-    for (LayeredConstruction construction : model.getModelObjects<LayeredConstruction>()) {
-      if (construction.isModelPartition() && (construction.numLayers() == 1)) {
-        MaterialVector layers = construction.layers();
-        OS_ASSERT(layers.size() == 1u);
-
-        // if this is an old style air wall
-        if (layers[0].optionalCast<AirWallMaterial>()) {
-          ConstructionAirBoundary newConstruction(model);
-          newConstruction.setName(construction.nameString() + "_ConstructionAirBoundary");
-
-          for (WorkspaceObject source : construction.sources()) {
-            for (unsigned index : source.getSourceIndices(construction.handle())) {
-              bool test = source.setPointer(index, newConstruction.handle());
-              OS_ASSERT(test);
-            }
-          }
-
-          LOG(Warn, "Construction '" << construction.nameString() << "' has been converted to ConstructionAirBoundary '"
-                                     << newConstruction.nameString() << "'.");
-          construction.remove();
-        }
-      }
-    }
-
-    // remove all AirWallMaterial objects
-    for (AirWallMaterial airWall : model.getConcreteModelObjects<AirWallMaterial>()) {
-      LOG(Warn, "Removing AirWallMaterial '" << airWall.nameString() << "'.");
-      airWall.remove();
-    }
-
     // check for spaces not in a thermal zone
     for (Space space : model.getConcreteModelObjects<Space>()) {
       if (!space.thermalZone()) {
@@ -900,11 +869,6 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_AvailabilityManager_ScheduledOff: {
         auto mo = modelObject.cast<AvailabilityManagerScheduledOff>();
         retVal = translateAvailabilityManagerScheduledOff(mo);
-        break;
-      }
-      case openstudio::IddObjectType::OS_Material_AirWall: {
-        model::AirWallMaterial airWallMaterial = modelObject.cast<AirWallMaterial>();
-        retVal = translateAirWallMaterial(airWallMaterial);
         break;
       }
       case openstudio::IddObjectType::OS_AvailabilityManager_HybridVentilation: {

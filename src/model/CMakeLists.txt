@@ -203,9 +203,6 @@ set(${target_name}_src
   AirToAirComponent.hpp
   AirToAirComponent_Impl.hpp
   AirToAirComponent.cpp
-  AirWallMaterial.hpp
-  AirWallMaterial_Impl.hpp
-  AirWallMaterial.cpp
   AvailabilityManager.hpp
   AvailabilityManager_Impl.hpp
   AvailabilityManager.cpp

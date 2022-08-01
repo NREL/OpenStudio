@@ -58,7 +58,6 @@
 #include "../Material.hpp"
 #include "../Material_Impl.hpp"
 #include "../AirGap.hpp"
-#include "../AirWallMaterial.hpp"
 #include "../StandardOpaqueMaterial.hpp"
 #include "../StandardOpaqueMaterial_Impl.hpp"
 #include "../StandardGlazing.hpp"
@@ -392,9 +391,6 @@ TEST_F(ModelFixture, DuplicateMaterialName) {
 
   StandardOpaqueMaterial material(model);
   EXPECT_TRUE(material.setName("OS:Material:AirWall 1"));
-
-  AirWallMaterial airWall(model);
-  EXPECT_NE(airWall.name().get(), material.name().get());
 }
 
 TEST_F(ModelFixture, Construction_SetUFactor) {
