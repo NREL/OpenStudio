@@ -494,4 +494,14 @@ std::vector<LogMessage> XMLValidator::logMessages() const {
   return m_logMessages;
 }
 
+XMLValidator XMLValidator::fromEmbeddedPath(const std::string& embeddedPath) {
+  const auto tmpDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
+  if (tmpDir.empty()) {
+    LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
+  }
+  bool quiet = true;
+  ::openstudio::embedded_files::extractFile(embeddedPath, openstudio::toString(tmpDir), quiet);
+  return XMLValidator(tmpDir / toPath(embeddedPath));
+}
+
 }  // namespace openstudio

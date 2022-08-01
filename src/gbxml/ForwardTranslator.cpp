@@ -125,10 +125,8 @@ namespace gbxml {
       file.close();
 
       // validate the gbxml after forward translation
-      std::string xsdString = ::openstudiogbxml::embedded_files::getFileAsString(":/resources/GreenBuildingXML_Ver6.01.xsd");
-      openstudio::path schemaPath = openstudio::toPath(xsdString);
-      XMLValidator xmlValidator(schemaPath);
-      xmlValidator.validate(path);
+      auto gbxmlValidator = XMLValidator::fromEmbeddedPath(":/resources/GreenBuildingXML_Ver6.01.xsd");
+      gbxmlValidator.validate(path);
 
       return result;
     }

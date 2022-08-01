@@ -29,8 +29,6 @@
 
 #include "XMLValidatorFixture.hpp"
 
-#include <src/gbxml/embedded_files.hxx>
-
 #include "../../core/ApplicationPathHelpers.hpp"
 
 using openstudio::Logger;
@@ -45,9 +43,6 @@ void XMLValidatorFixture::SetUpTestSuite() {
   logFile = FileLogSink(toPath("./XMLValidatorFixture.log"));
   logFile->setLogLevel(Debug);
   openstudio::Logger::instance().standardOutLogger().disable();
-
-  std::string xsdString = ::openstudiogbxml::embedded_files::getFileAsString(":/resources/GreenBuildingXML_Ver6.01.xsd");
-  schemaPath = openstudio::toPath(xsdString);
 }
 
 void XMLValidatorFixture::TearDownTestSuite() {

@@ -114,10 +114,8 @@ namespace gbxml {
     if (openstudio::filesystem::exists(path)) {
 
       // validate the gbxml prior to reverse translation
-      std::string xsdString = ::openstudiogbxml::embedded_files::getFileAsString(":/resources/GreenBuildingXML_Ver6.01.xsd");
-      openstudio::path schemaPath = openstudio::toPath(xsdString);
-      XMLValidator xmlValidator(schemaPath);
-      xmlValidator.validate(path);
+      auto gbxmlValidator = XMLValidator::fromEmbeddedPath(":/resources/GreenBuildingXML_Ver6.01.xsd");
+      gbxmlValidator.validate(path);
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {
