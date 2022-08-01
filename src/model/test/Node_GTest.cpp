@@ -261,7 +261,7 @@ TEST_F(ModelFixture, Node_SetpointManagerScheduled) {
   setpointManagerScheduleds = m.getModelObjects<SetpointManagerScheduled>();
   EXPECT_EQ(1, setpointManagerScheduleds.size());
 
-  boost::optional<SetpointManagerSchedule> nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerScheduled>();
+  boost::optional<SetpointManagerScheduled> nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerScheduled>();
   ASSERT_TRUE(nodeSPM);
   EXPECT_EQ(spm, *nodeSPM);
 
@@ -294,7 +294,8 @@ TEST_F(ModelFixture, Node_SetpointManagerFollowOutdoorAirTemperature) {
   setpointManagerFollowOutdoorAirTemperatures = m.getModelObjects<SetpointManagerFollowOutdoorAirTemperature>();
   EXPECT_EQ(1, setpointManagerFollowOutdoorAirTemperatures.size());
 
-  boost::optional<SetpointManagerFollowOutdoorAirTemperature> nodeSPM = _setpointManagers[0].optionalCast<SetpointManagerFollowOutdoorAirTemperature>();
+  boost::optional<SetpointManagerFollowOutdoorAirTemperature> nodeSPM =
+    _setpointManagers[0].optionalCast<SetpointManagerFollowOutdoorAirTemperature>();
   ASSERT_TRUE(nodeSPM);
   EXPECT_EQ(spm, *nodeSPM);
 
