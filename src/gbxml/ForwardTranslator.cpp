@@ -90,8 +90,6 @@
 
 #include <pugixml.hpp>
 
-#include <gbxml/embedded_files.hxx>
-
 #include <regex>
 #include <string_view>
 

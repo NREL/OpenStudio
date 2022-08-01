@@ -74,8 +74,6 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <resources.hxx>
 
-#include <gbxml/embedded_files.hxx>
-
 #include <thread>
 
 #include <pugixml.hpp>

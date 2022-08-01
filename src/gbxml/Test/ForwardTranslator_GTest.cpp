@@ -76,8 +76,6 @@
 #include "utilities/xml/XMLValidator.hpp"
 #include <resources.hxx>
 
-#include <gbxml/embedded_files.hxx>
-
 #include <sstream>
 #include <iostream>
 #include <algorithm>
