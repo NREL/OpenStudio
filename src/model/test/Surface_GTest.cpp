@@ -425,7 +425,7 @@ TEST_F(ModelFixture, Surface_BuildingComponentLibraryRoofConstruction)
       << "roofs.");
 }
 */
-TEST_F(ModelFixture, Material) {
+TEST_F(ModelFixture, MaterialTypes) {
   Model model;
 
   // triangle with unit area
