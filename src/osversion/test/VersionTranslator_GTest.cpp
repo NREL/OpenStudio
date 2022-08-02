@@ -1833,8 +1833,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_AirWallMaterial_updated.osm");
   model->save(outPath, true);
 
-  std::vector<WorkspaceObject> airWallMaterials = model->getObjectsByType("OS:Material:AirWall");
-  ASSERT_EQ(0u, airWallMaterials.size());
+  ASSERT_EQ(1u, model->numbObjects());
 
   std::vector<WorkspaceObject> constrs = model->getObjectsByType("OS:Construction");
   ASSERT_EQ(0u, constrs.size());
