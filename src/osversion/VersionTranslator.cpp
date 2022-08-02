@@ -6923,32 +6923,46 @@ namespace osversion {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:Construction") {
-        
+
         // Remove Construction with Material:AirWall layer
         // Replace with Construction:AirBoundary
-        
+
         auto iddObject = idd_3_4_1.getObject(iddname);
-        
+
+        bool isAirWall = false;
         if (object.numExtensibleGroups() == 1u) {
           for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
             if (boost::optional<IdfObject> layer = idf_3_4_0.getObject(toUUID(eg.getString(0).get()))) {
               auto layeriddname = layer->iddObject().name();
               if (layeriddname == "OS:Material:AirWall") {
                 m_untranslated.push_back(*layer);
-               
+
                 auto iddObject = idd_3_4_1.getObject("OS:Construction:AirBoundary");
                 IdfObject newObject(iddObject.get());
 
-                newObject.setString(0, object.getString(0).get());
-                newObject.setString(1, object.getString(1).get() + "_ConstructionAirBoundary");
+                // Handle
+                if (auto value = object.getString(0)) {
+                  newObject.setString(0, value.get());
+                }
+
+                // Name
+                if (auto value = object.getString(1)) {
+                  newObject.setString(1, value.get() + "_ConstructionAirBoundary");
+                }
+
+                m_refactored.push_back(RefactoredObjectData(object, newObject));
+                ss << newObject;
+
+                isAirWall = true;
               }
             }
           }
         }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
-        ss << newObject;
-        
+        if (!isAirWall) {
+          ss << object;
+        }
+
         // No-op
       } else {
         ss << object;
