@@ -6963,15 +6963,20 @@ namespace osversion {
           ss << object;
         }
 
-        // No-op
-      } else {
-        ss << object;
+      } else if (iddname == "OS:Material:AirWall") {
+        m_untranslated.push_back(object);
       }
+
+      // No-op
     }
+    else {
+      ss << object;
+    }
+  }
 
-    return ss.str();
+  return ss.str();
 
-  }  // end update_3_4_0_to_3_4_1
+}  // end update_3_4_0_to_3_4_1
 
 }  // namespace osversion
 }  // namespace openstudio

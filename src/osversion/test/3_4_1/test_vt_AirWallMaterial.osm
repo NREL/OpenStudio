@@ -1,0 +1,15 @@
+
+OS:Version,
+  {9a3f7ebd-5065-4739-ada5-289c5212b5ee}, !- Handle
+  3.4.0;                                  !- Version Identifier
+
+OS:Material:AirWall,
+  {f542f438-d2f1-4e07-b9c6-ee74e7a24d11}, !- Handle
+  Material Air Wall 1;                    !- Name
+
+OS:Construction,
+  {ac911216-4d07-426c-8c4a-5c146c70462d}, !- Handle
+  Construction 1,                         !- Name
+  ,                                       !- Surface Rendering Name
+  {f542f438-d2f1-4e07-b9c6-ee74e7a24d11}; !- Layer 1
+

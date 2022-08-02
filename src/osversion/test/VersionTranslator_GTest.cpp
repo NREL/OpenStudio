@@ -1823,3 +1823,22 @@ TEST_F(OSVersionFixture, update_3_3_0_to_3_4_0_CoilHeatingDXMultiSpeed) {
   ASSERT_EQ(4u, model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed:StageData").size());
   ASSERT_EQ(0u, model->getObjectsByType("OS:ModelObjectList").size());
 }
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_AirWallMaterial.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_0/test_vt_AirWallMaterial_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> airWallMaterials = model->getObjectsByType("OS:Material:AirWall");
+  ASSERT_EQ(0u, airWallMaterials.size());
+
+  std::vector<WorkspaceObject> constrs = model->getObjectsByType("OS:Construction");
+  ASSERT_EQ(0u, constrs.size());
+
+  std::vector<WorkspaceObject> constrAirBoundarys = model->getObjectsByType("OS:Construction:AirBoundary");
+  ASSERT_EQ(1u, constrAirBoundarys.size());
+}
