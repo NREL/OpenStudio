@@ -102,8 +102,6 @@ TEST_F(IddFixture, IddFactory_IddFile) {
 TEST_F(IddFixture, IddFactory_isInFile) {
   EXPECT_TRUE(IddFactory::instance().isInFile(IddObjectType::Building, IddFileType::EnergyPlus));
   EXPECT_FALSE(IddFactory::instance().isInFile(IddObjectType::Building, IddFileType::OpenStudio));
-  EXPECT_FALSE(IddFactory::instance().isInFile(IddObjectType::OS_Material_AirWall, IddFileType::EnergyPlus));
-  EXPECT_TRUE(IddFactory::instance().isInFile(IddObjectType::OS_Material_AirWall, IddFileType::OpenStudio));
   EXPECT_TRUE(IddFactory::instance().isInFile(IddObjectType::GlobalGeometryRules, IddFileType::EnergyPlus));
   EXPECT_FALSE(IddFactory::instance().isInFile(IddObjectType::GlobalGeometryRules, IddFileType::OpenStudio));
   EXPECT_TRUE(IddFactory::instance().isInFile(IddObjectType::CommentOnly, IddFileType::EnergyPlus));
