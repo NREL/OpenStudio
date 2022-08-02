@@ -1830,7 +1830,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_0/test_vt_AirWallMaterial_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_AirWallMaterial_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> airWallMaterials = model->getObjectsByType("OS:Material:AirWall");
