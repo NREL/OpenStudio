@@ -3522,7 +3522,6 @@ namespace energyplus {
     iddObjectTypes.push_back(IddObjectType::OS_MaterialProperty_GlazingSpectralData);
     iddObjectTypes.push_back(IddObjectType::OS_Material);
     iddObjectTypes.push_back(IddObjectType::OS_Material_AirGap);
-    iddObjectTypes.push_back(IddObjectType::OS_Material_AirWall);
     iddObjectTypes.push_back(IddObjectType::OS_Material_InfraredTransparent);
     iddObjectTypes.push_back(IddObjectType::OS_Material_NoMass);
     iddObjectTypes.push_back(IddObjectType::OS_Material_RoofVegetation);
