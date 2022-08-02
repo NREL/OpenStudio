@@ -6935,7 +6935,6 @@ namespace osversion {
             if (boost::optional<IdfObject> layer = idf_3_4_0.getObject(toUUID(eg.getString(0).get()))) {
               auto layeriddname = layer->iddObject().name();
               if (layeriddname == "OS:Material:AirWall") {
-                m_untranslated.push_back(*layer);
 
                 auto iddObject = idd_3_4_1.getObject("OS:Construction:AirBoundary");
                 IdfObject newObject(iddObject.get());
@@ -6947,8 +6946,12 @@ namespace osversion {
 
                 // Name
                 if (auto value = object.getString(1)) {
-                  newObject.setString(1, value.get() + "_ConstructionAirBoundary");
+                  newObject.setString(1, value.get());
                 }
+
+                // Simple Mixing Air Changes per Hour
+                // Set ACH to 0.0, to match the old style Material:AirWall (same as the ConstructionAirBoundary Ctor)
+                newObject.setDouble(3, 0.0);
 
                 m_refactored.push_back(RefactoredObjectData(object, newObject));
                 ss << newObject;
