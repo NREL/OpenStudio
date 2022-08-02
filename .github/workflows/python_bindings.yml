@@ -27,9 +27,10 @@ jobs:
         name: [Ubuntu, macOS, Windows_py37, Windows_py38, Windows_py39, Windows_py310]
         include:
         - name: Ubuntu
-          os: ubuntu-20.04
+          os: ubuntu-18.04
           python-version: 3.8
           allow_failure: false
+          extra_cmake_args: "-DCONAN_FIRST_TIME_BUILD_ALL:BOOL=ON"
         - name: macOS
           os: macos-10.15
           python-version: 3.8
@@ -37,6 +38,7 @@ jobs:
           MACOSX_DEPLOYMENT_TARGET: 10.15
           SDKROOT: /Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
           DEVELOPER_DIR: /Applications/Xcode_11.7.app/Contents/Developer
+          extra_cmake_args: ""
         - name: Windows_py37
           os: windows-2019
           python-version: 3.7
@@ -191,7 +193,7 @@ jobs:
       run: |
         set -x
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
-        cmake -DCMAKE_BUILD_TYPE=Release \
+        cmake ${{ matrix.extra_cmake_args}} -DCMAKE_BUILD_TYPE=Release \
               -DBUILD_PYTHON_BINDINGS=ON -DBUILD_PYTHON_PIP_PACKAGE=ON -DPYTHON_PIP_REPOSITORY=${{ env.PYTHON_PIP_REPOSITORY }} -DPYTHON_VERSION=${{ matrix.python-version }} \
               -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI=${{ env.BUILD_CLI }} \
               ../
