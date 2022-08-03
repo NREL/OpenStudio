@@ -163,7 +163,7 @@ namespace model {
 
       bool setDesignSprayWaterFlowRate(double designSprayWaterFlowRate);
 
-      bool setPerformanceInputMethod(std::string& performanceInputMethod);
+      bool setPerformanceInputMethod(const std::string& performanceInputMethod);
 
       void resetOutdoorAirInletNode();
 
