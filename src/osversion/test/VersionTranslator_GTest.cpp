@@ -1842,15 +1842,16 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
   ASSERT_EQ(1u, constrAirBoundarys.size());
   WorkspaceObject constrAirBoundary = constrAirBoundarys[0];
 
-  EXPECT_EQ("None", constrAirBoundary.getString(2).get());  // Air Exchange Method
-  EXPECT_EQ(0.0, constrAirBoundary.getDouble(3).get());     // Simple Mixing Air Changes Per Hour
-  EXPECT_EQ("", constrAirBoundary.getString(4).get());      // Simple Mixing Schedule Name
-  EXPECT_EQ("", constrAirBoundary.getString(5).get());      // Surface Rendering Name
+  EXPECT_EQ("Construction 1", constrAirBoundary.getString(1).get());  // Name
+  EXPECT_EQ("", constrAirBoundary.getString(2).get());                // Air Exchange Method
+  EXPECT_EQ(0.0, constrAirBoundary.getDouble(3).get());               // Simple Mixing Air Changes Per Hour
+  EXPECT_EQ("", constrAirBoundary.getString(4).get());                // Simple Mixing Schedule Name
+  EXPECT_EQ("", constrAirBoundary.getString(5).get());                // Surface Rendering Name
 
   std::vector<WorkspaceObject> surfaces = model->getObjectsByType("OS:Surface");
   ASSERT_EQ(1u, surfaces.size());
   WorkspaceObject surface = surfaces[0];
   ASSERT_TRUE(surface.getTarget(3));  // Construction Name
   EXPECT_EQ("OS:Construction:AirBoundary", surface.getTarget(3).get().iddObject().name());
-  EXPECT_EQ("Construction Air Boundary 1", surface.getTarget(3).get().nameString());  // Construction Name
+  EXPECT_EQ("Construction 1", surface.getTarget(3).get().nameString());  // Construction Name
 }
