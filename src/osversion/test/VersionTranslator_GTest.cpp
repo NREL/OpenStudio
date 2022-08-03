@@ -1848,7 +1848,9 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
   EXPECT_EQ("", constrAirBoundary.getString(5).get());      // Surface Rendering Name
 
   std::vector<WorkspaceObject> surfaces = model->getObjectsByType("OS:Surface");
-  ASSERT_EQ(1y, surfaces.size());
+  ASSERT_EQ(1u, surfaces.size());
   WorkspaceObject surface = surfaces[0];
-  EXPECT_EQ(constrAirBoundary.handle(), surface.getString(3).get());  // Construction Name
+  ASSERT_TRUE(surface.getTarget(3));  // Construction Name
+  EXPECT_EQ("OS:Construction:AirBoundary", surface.getTarget(3).get().iddObject().name());
+  EXPECT_EQ("Construction Air Boundary 1", surface.getTarget(3).get().nameString());  // Construction Name
 }
