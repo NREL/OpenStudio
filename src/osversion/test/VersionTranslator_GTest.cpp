@@ -1842,15 +1842,13 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
   ASSERT_EQ(1u, constrAirBoundarys.size());
   WorkspaceObject constrAirBoundary = constrAirBoundarys[0];
 
-  EXPECT_EQ("None", constrAirBoundary.airExchangeMethod());
-  EXPECT_EQ(0.0, constrAirBoundary.simpleMixingAirChangesPerHour());
-  EXPECT_FALSE(constrAirBoundary.simpleMixingSchedule());
-  EXPECT_FALSE(constrAirBoundary.renderingColor());
+  EXPECT_EQ("None", constrAirBoundary.getString(2).get());  // Air Exchange Method
+  EXPECT_EQ(0.0, constrAirBoundary.getDouble(3).get());     // Simple Mixing Air Changes Per Hour
+  EXPECT_EQ("", constrAirBoundary.getString(4).get());      // Simple Mixing Schedule Name
+  EXPECT_EQ("", constrAirBoundary.getString(5).get());      // Surface Rendering Name
 
   std::vector<WorkspaceObject> surfaces = model->getObjectsByType("OS:Surface");
   ASSERT_EQ(1y, surfaces.size());
   WorkspaceObject surface = surfaces[0];
-  ASSERT_TRUE(surface.construction());
-  EXPECT_EQ(constrAirBoundary.handle(), surface.construction()->handle());
-  EXPECT_TRUE(surface.isAirWall());
+  EXPECT_EQ(constrAirBoundary.handle(), surface.getString(3).get());  // Construction Name
 }
