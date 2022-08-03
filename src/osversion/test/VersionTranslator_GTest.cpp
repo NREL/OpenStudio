@@ -1833,11 +1833,24 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_AirWallMaterial_updated.osm");
   model->save(outPath, true);
 
-  ASSERT_EQ(1u, model->numObjects());
+  ASSERT_EQ(2u, model->numObjects());
 
   std::vector<WorkspaceObject> constrs = model->getObjectsByType("OS:Construction");
   ASSERT_EQ(0u, constrs.size());
 
   std::vector<WorkspaceObject> constrAirBoundarys = model->getObjectsByType("OS:Construction:AirBoundary");
   ASSERT_EQ(1u, constrAirBoundarys.size());
+  WorkspaceObject constrAirBoundary = constrAirBoundarys[0];
+
+  EXPECT_EQ("None", constrAirBoundary.airExchangeMethod());
+  EXPECT_EQ(0.0, constrAirBoundary.simpleMixingAirChangesPerHour());
+  EXPECT_FALSE(constrAirBoundary.simpleMixingSchedule());
+  EXPECT_FALSE(constrAirBoundary.renderingColor());
+
+  std::vector<WorkspaceObject> surfaces = model->getObjectsByType("OS:Surface");
+  ASSERT_EQ(1y, surfaces.size());
+  WorkspaceObject surface = surfaces[0];
+  ASSERT_TRUE(surface.construction());
+  EXPECT_EQ(constrAirBoundary.handle(), surface.construction()->handle());
+  EXPECT_TRUE(surface.isAirWall());
 }
