@@ -70,6 +70,8 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 
 * [#4616](https://github.com/NREL/OpenStudio/pull/4616) - Addresses #4611, allow non-Quadratic curves for the EIR-f-PLR for the Chiller:Electric:EIR object
     * `Chiller:Electric:EIR` has a few API-breaking changes related to its Curves. The types for the constructor, getters and setters used to be explicit (eg: `CurveBiquadratic`): it is now the base class, more generic, `Curve` type for added flexibility.
+* [#4642](https://github.com/NREL/OpenStudio/pull/4642) - Addresses #4575, API change for EvaporativeCoolerFluid:SingleSpeed
+    * `EvaporativeCoolerFluid:SingleSpeed` has an API-breaking change related to its `performanceInputMethod` getter. It is now a required field that returns `std::string` instead of `boost::optional<std::string>`.
 
 
 ## Minor changes and bug fixes
