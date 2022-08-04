@@ -92,9 +92,9 @@
 
 #include "../../utilities/math/FloatCompare.hpp"
 
-#include "../../utilities/core/Finder.hpp"
-
 #include "../../utilities/core/Assert.hpp"
+#include "../../utilities/core/Finder.hpp"
+#include "../../utilities/core/StringStreamLogSink.hpp"
 
 #include <boost/algorithm/string/case_conv.hpp>
 #include <boost/math/constants/constants.hpp>
@@ -1154,6 +1154,51 @@ TEST_F(ModelFixture, Surface_SouthWall_WWR) {
     EXPECT_NEAR(wwr, wall.windowToWallRatio(), 0.001);
   }
   */
+}
+
+TEST_F(ModelFixture, Surface_4601_WWR_tooBig) {
+
+  // Test for #4601
+  constexpr double xmin = 0.0;
+  constexpr double xmax = 1.0;
+  constexpr double zmin = 0.0;
+  constexpr double zmax = 1.0;
+  std::vector<Point3d> vertices{
+    {xmin, 0, zmax},
+    {xmin, 0, zmin},
+    {xmax, 0, zmin},
+    {xmax, 0, zmax},
+  };
+
+  constexpr double oneInch = 0.0254;
+
+  constexpr double area = (xmax - xmin) * (zmax - zmin);
+  EXPECT_DOUBLE_EQ(1.0, area);
+  constexpr double maxWindowArea = (xmax - xmin - 2 * oneInch) * (zmax - zmin - 2 * oneInch);
+  EXPECT_DOUBLE_EQ(0.90098064, maxWindowArea);
+
+  constexpr double maxWWR = maxWindowArea / area;
+  EXPECT_DOUBLE_EQ(0.90098064, maxWWR);
+
+  // window extends below desired sill height
+  Model model;
+  Surface wall(vertices, model);
+  EXPECT_EQ("Wall", wall.surfaceType());
+  EXPECT_EQ(0.0, wall.windowToWallRatio());
+  constexpr double offset = 0.0;
+  constexpr double wwr = 0.98;
+
+  StringStreamLogSink sink;
+  sink.setLogLevel(Warn);
+
+  boost::optional<SubSurface> window = wall.setWindowToWallRatio(wwr, offset, true);
+  EXPECT_FALSE(window);
+  EXPECT_EQ(1, sink.logMessages().size());
+  EXPECT_EQ(Warn, sink.logMessages().front().logLevel());
+  EXPECT_EQ("utilities.geometry.applyViewAndDaylightingGlassRatios", sink.logMessages().front().logChannel());
+  EXPECT_EQ("Requested WWR (0.98) is greater than the Max WWR (0.900981). This limit is meant to preserve mandatory space between window and wall: "
+            "0.0254m (1 inch) on all sides + minViewToDaylightDistance (0m).",
+            sink.logMessages().front().logMessage());
 }
 
 TEST_F(ModelFixture, Surface_EastWall_WWR) {
