@@ -294,7 +294,8 @@ namespace model {
     }
 
     double CoilCoolingDXSingleSpeed_Impl::ratioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
+      boost::optional<double> value =
+        getDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity);
       OS_ASSERT(value);
       return value.get();
     }
