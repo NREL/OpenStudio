@@ -143,6 +143,8 @@ set(geometry_src
   geometry/Vector3d.cpp
   geometry/Polygon3d.hpp
   geometry/Polygon3d.cpp
+  geometry/Polyhedron.hpp
+  geometry/Polyhedron.cpp
   ../polypartition/polypartition.cpp
 )
 
@@ -315,6 +317,7 @@ set(${target_name}_test_src
   geometry/Test/ThreeJS_GTest.cpp
   geometry/Test/FloorplanJS_GTest.cpp
   geometry/Test/Transformation_GTest.cpp
+  geometry/Test/Polyhedron_GTest.cpp
 
   math/test/FloatCompare_GTest.cpp
   math/test/Permutation_GTest.cpp
