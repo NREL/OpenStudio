@@ -168,14 +168,6 @@ namespace model {
       return isEmpty(OS_WindowMaterial_GlazingFields::BackSideInfraredHemisphericalEmissivity);
     }
 
-    double StandardGlazing_Impl::thermalConductivity() const {
-      OptionalDouble od = getDouble(OS_WindowMaterial_GlazingFields::Conductivity, true);
-      if (!od) {
-        LOG_AND_THROW("Thermal conductivity is not yet set for " << briefDescription() << ".");
-      }
-      return *od;
-    }
-
     double StandardGlazing_Impl::conductivity() const {
       boost::optional<double> value = getDouble(OS_WindowMaterial_GlazingFields::Conductivity, true);
       OS_ASSERT(value);
@@ -399,10 +391,6 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool StandardGlazing_Impl::setThermalConductivity(double value) {
-      return setDouble(OS_WindowMaterial_GlazingFields::Conductivity, value);
-    }
-
     bool StandardGlazing_Impl::setConductivity(double conductivity) {
       bool result = setDouble(OS_WindowMaterial_GlazingFields::Conductivity, conductivity);
       return result;
@@ -432,6 +420,14 @@ namespace model {
     void StandardGlazing_Impl::resetSolarDiffusing() {
       bool result = setString(OS_WindowMaterial_GlazingFields::SolarDiffusing, "");
       OS_ASSERT(result);
+    }
+
+    double StandardGlazing_Impl::thermalConductivity() const {
+      OptionalDouble od = getDouble(OS_WindowMaterial_GlazingFields::Conductivity, true);
+      if (!od) {
+        LOG_AND_THROW("Thermal conductivity is not yet set for " << briefDescription() << ".");
+      }
+      return *od;
     }
 
     double StandardGlazing_Impl::thermalConductance() const {
@@ -468,6 +464,10 @@ namespace model {
 
     boost::optional<double> StandardGlazing_Impl::exteriorVisibleAbsorptance() const {
       return 1.0 - (*(getVisibleTransmittance()) + exteriorVisibleReflectance());
+    }
+
+    bool StandardGlazing_Impl::setThermalConductivity(double value) {
+      return setDouble(OS_WindowMaterial_GlazingFields::Conductivity, value);
     }
 
     bool StandardGlazing_Impl::setThermalConductance(double value) {
@@ -580,10 +580,6 @@ namespace model {
 
   bool StandardGlazing::isBackSideInfraredHemisphericalEmissivityDefaulted() const {
     return getImpl<detail::StandardGlazing_Impl>()->isBackSideInfraredHemisphericalEmissivityDefaulted();
-  }
-
-  double StandardGlazing::thermalConductivity() const {
-    return getImpl<detail::StandardGlazing_Impl>()->thermalConductivity();
   }
 
   double StandardGlazing::conductivity() const {
@@ -718,10 +714,6 @@ namespace model {
     getImpl<detail::StandardGlazing_Impl>()->resetBackSideInfraredHemisphericalEmissivity();
   }
 
-  bool StandardGlazing::setThermalConductivity(double value) {
-    return getImpl<detail::StandardGlazing_Impl>()->setThermalConductivity(value);
-  }
-
   bool StandardGlazing::setConductivity(double conductivity) {
     return getImpl<detail::StandardGlazing_Impl>()->setConductivity(conductivity);
   }
@@ -752,6 +744,10 @@ namespace model {
     getImpl<detail::StandardGlazing_Impl>()->resetSolarDiffusing();
   }
 
+  double StandardGlazing::thermalConductivity() const {
+    return getImpl<detail::StandardGlazing_Impl>()->thermalConductivity();
+  }
+
   double StandardGlazing::thermalConductance() const {
     return getImpl<detail::StandardGlazing_Impl>()->thermalConductance();
   }
@@ -770,6 +766,10 @@ namespace model {
 
   double StandardGlazing::exteriorVisibleReflectance() const {
     return getImpl<detail::StandardGlazing_Impl>()->exteriorVisibleReflectance();
+  }
+
+  bool StandardGlazing::setThermalConductivity(double value) {
+    return getImpl<detail::StandardGlazing_Impl>()->setThermalConductivity(value);
   }
 
   bool StandardGlazing::setThermalConductance(double value) {
