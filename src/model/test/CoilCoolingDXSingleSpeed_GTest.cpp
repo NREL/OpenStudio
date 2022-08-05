@@ -76,7 +76,7 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeed_RatedTotalCoolingCapacity_GettersS
 
   EXPECT_EQ(coil.ratedTotalCoolingCapacity().get(), 1.0);
   EXPECT_EQ(coil.ratedSensibleHeatRatio().get(), 0.6);
-  EXPECT_EQ(coil.ratedCOP() 3.6);
+  EXPECT_EQ(coil.ratedCOP(), 3.6);
   EXPECT_EQ(coil.ratedAirFlowRate().get(), 1.1);
   EXPECT_EQ(coil.ratedEvaporatorFanPowerPerVolumeFlowRate(), 600.0);
   EXPECT_EQ(coil.nominalTimeForCondensateRemovalToBegin(), 50.0);
