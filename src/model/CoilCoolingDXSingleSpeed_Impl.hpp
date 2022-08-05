@@ -198,13 +198,21 @@ namespace model {
 
       bool setEvaporativeCondenserEffectiveness(double value);
 
+      bool isEvaporativeCondenserAirFlowRateAutosized() const;
+
       bool setEvaporativeCondenserAirFlowRate(boost::optional<double> value);
 
       bool setEvaporativeCondenserAirFlowRate(double value);
 
+      void autosizeEvaporativeCondenserAirFlowRate();
+
+      bool isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const;
+
       bool setEvaporativeCondenserPumpRatedPowerConsumption(boost::optional<double> value);
 
       bool setEvaporativeCondenserPumpRatedPowerConsumption(double value);
+
+      void autosizeEvaporativeCondenserPumpRatedPowerConsumption();
 
       bool setCrankcaseHeaterCapacity(boost::optional<double> value);
 

@@ -221,6 +221,8 @@ namespace model {
 
     bool setEvaporativeCondenserEffectiveness(double value);
 
+    bool isEvaporativeCondenserAirFlowRateAutosized() const;
+
     /** Sets the value of the EvaporativeCondenserAirFlowRate field.
       if value==false then set field to "autosize"
   **/
@@ -228,12 +230,18 @@ namespace model {
 
     bool setEvaporativeCondenserAirFlowRate(double value);
 
+    void autosizeEvaporativeCondenserAirFlowRate();
+
+    bool isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const;
+
     /** Sets the value of the EvaporativeCondenserPumpRatedPowerConsumption field.
       if value==false then set field to "autosize"
   **/
     bool setEvaporativeCondenserPumpRatedPowerConsumption(boost::optional<double> value);
 
     bool setEvaporativeCondenserPumpRatedPowerConsumption(double value);
+
+    void autosizeEvaporativeCondenserPumpRatedPowerConsumption();
 
     /** Sets the value of the crankcaseHeaterCapacity field. **/
     bool setCrankcaseHeaterCapacity(boost::optional<double> value);

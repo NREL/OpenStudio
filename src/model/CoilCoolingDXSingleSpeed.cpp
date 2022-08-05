@@ -370,6 +370,15 @@ namespace model {
       return getDouble(OS_Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserAirFlowRate);
     }
 
+    bool CoilCoolingDXSingleSpeed_Impl::isEvaporativeCondenserAirFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserAirFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
     bool CoilCoolingDXSingleSpeed_Impl::setEvaporativeCondenserAirFlowRate(OptionalDouble value) {
       if (value) {
         return setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserAirFlowRate, *value);
@@ -382,8 +391,22 @@ namespace model {
       return setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserAirFlowRate, value);
     }
 
+    void CoilCoolingDXSingleSpeed_Impl::autosizeEvaporativeCondenserAirFlowRate() {
+      bool result = setString(OS_Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserAirFlowRate, "autosize");
+      OS_ASSERT(result);
+    }
+
     OptionalDouble CoilCoolingDXSingleSpeed_Impl::evaporativeCondenserPumpRatedPowerConsumption() const {
       return getDouble(OS_Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserPumpRatedPowerConsumption);
+    }
+
+    bool CoilCoolingDXSingleSpeed_Impl::isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserPumpRatedPowerConsumption, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
     }
 
     bool CoilCoolingDXSingleSpeed_Impl::setEvaporativeCondenserPumpRatedPowerConsumption(OptionalDouble value) {
@@ -396,6 +419,11 @@ namespace model {
 
     bool CoilCoolingDXSingleSpeed_Impl::setEvaporativeCondenserPumpRatedPowerConsumption(double value) {
       return setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserPumpRatedPowerConsumption, value);
+    }
+
+    void CoilCoolingDXSingleSpeed_Impl::autosizeEvaporativeCondenserPumpRatedPowerConsumption() {
+      bool result = setString(OS_Coil_Cooling_DX_SingleSpeedFields::EvaporativeCondenserPumpRatedPowerConsumption, "autosize");
+      OS_ASSERT(result);
     }
 
     double CoilCoolingDXSingleSpeed_Impl::crankcaseHeaterCapacity() const {
@@ -765,9 +793,8 @@ namespace model {
       autosizeRatedTotalCoolingCapacity();
       autosizeRatedSensibleHeatRatio();
       autosizeRatedAirFlowRate();
-      boost::optional<double> emptyVal;
-      setEvaporativeCondenserAirFlowRate(emptyVal);
-      setEvaporativeCondenserPumpRatedPowerConsumption(emptyVal);
+      autosizeEvaporativeCondenserAirFlowRate();
+      autosizeEvaporativeCondenserPumpRatedPowerConsumption();
     }
 
     void CoilCoolingDXSingleSpeed_Impl::applySizingValues() {
@@ -1102,12 +1129,24 @@ namespace model {
     return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->evaporativeCondenserAirFlowRate();
   }
 
+  bool CoilCoolingDXSingleSpeed::isEvaporativeCondenserAirFlowRateAutosized() const {
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->isEvaporativeCondenserAirFlowRateAutosized();
+  }
+
   bool CoilCoolingDXSingleSpeed::setEvaporativeCondenserAirFlowRate(OptionalDouble value) {
     return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setEvaporativeCondenserAirFlowRate(value);
   }
 
   bool CoilCoolingDXSingleSpeed::setEvaporativeCondenserAirFlowRate(double value) {
     return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setEvaporativeCondenserAirFlowRate(value);
+  }
+
+  void CoilCoolingDXSingleSpeed::autosizeEvaporativeCondenserAirFlowRate() {
+    getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizeEvaporativeCondenserAirFlowRate();
+  }
+
+  bool CoilCoolingDXSingleSpeed::isEvaporativeCondenserPumpRatedPowerConsumptionAutosized() const {
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->isEvaporativeCondenserPumpRatedPowerConsumptionAutosized();
   }
 
   OptionalDouble CoilCoolingDXSingleSpeed::evaporativeCondenserPumpRatedPowerConsumption() const {
@@ -1120,6 +1159,10 @@ namespace model {
 
   bool CoilCoolingDXSingleSpeed::setEvaporativeCondenserPumpRatedPowerConsumption(double value) {
     return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setEvaporativeCondenserPumpRatedPowerConsumption(value);
+  }
+
+  void CoilCoolingDXSingleSpeed::autosizeEvaporativeCondenserPumpRatedPowerConsumption() {
+    getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->autosizeEvaporativeCondenserPumpRatedPowerConsumption();
   }
 
   double CoilCoolingDXSingleSpeed::crankcaseHeaterCapacity() const {
