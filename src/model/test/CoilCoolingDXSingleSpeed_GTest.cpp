@@ -61,8 +61,8 @@ TEST_F(ModelFixture, CoilCoolingDXSingleSpeed_RatedTotalCoolingCapacity_GettersS
   EXPECT_TRUE(coil.isRatedTotalCoolingCapacityAutosized());
   EXPECT_TRUE(coil.isRatedSensibleHeatRatioAutosized());
   EXPECT_TRUE(coil.isRatedAirFlowRateAutosized());
-  EXPECT_FALSE(coil.isEvaporativeCondenserAirFlowRateAutosized());
-  EXPECT_FALSE(coil.isEvaporativeCondenserPumpRatedPowerConsumptionAutosized());
+  EXPECT_TRUE(coil.isEvaporativeCondenserAirFlowRateAutosized());
+  EXPECT_TRUE(coil.isEvaporativeCondenserPumpRatedPowerConsumptionAutosized());
 
   coil.setRatedTotalCoolingCapacity(1.0);
   coil.setRatedSensibleHeatRatio(0.6);

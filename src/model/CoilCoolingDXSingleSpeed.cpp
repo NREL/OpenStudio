@@ -923,8 +923,8 @@ namespace model {
     setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow);
     setPartLoadFractionCorrelationCurve(partLoadFraction);
     setEvaporativeCondenserEffectiveness(0.0);
-    setEvaporativeCondenserAirFlowRate(boost::none);
-    setEvaporativeCondenserPumpRatedPowerConsumption(boost::none);
+    autosizeEvaporativeCondenserAirFlowRateAutosized();                //autosize
+    autosizeEvaporativeCondenserPumpRatedPowerConsumptionAutosized();  //autosize
     setCrankcaseHeaterCapacity(0.0);
     setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(0.0);
     setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
@@ -962,8 +962,8 @@ namespace model {
     setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow);
     setPartLoadFractionCorrelationCurve(partLoadFraction);
     setEvaporativeCondenserEffectiveness(0.0);
-    setEvaporativeCondenserAirFlowRate(boost::none);
-    setEvaporativeCondenserPumpRatedPowerConsumption(boost::none);
+    autosizeEvaporativeCondenserAirFlowRateAutosized();                //autosize
+    autosizeEvaporativeCondenserPumpRatedPowerConsumptionAutosized();  //autosize
     setCrankcaseHeaterCapacity(0.0);
     setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(0.0);
     setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
