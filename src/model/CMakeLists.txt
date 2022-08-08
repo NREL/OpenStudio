@@ -34,6 +34,8 @@ set(${target_name}_src
   ThreeJSForwardTranslator.cpp
   ThreeJSReverseTranslator.hpp
   ThreeJSReverseTranslator.cpp
+  FloorspaceReverseTranslator.hpp
+  FloorspaceReverseTranslator.cpp
   ModelMerger.hpp
   ModelMerger.cpp
 
@@ -2245,6 +2247,7 @@ set(${target_name}_test_src
   test/TemperingValve_GTest.cpp
   test/ThreeJSForwardTranslator_GTest.cpp
   test/ThreeJSReverseTranslator_GTest.cpp
+  test/FloorspaceReverseTranslator_GTest.cpp
   test/UnitarySystemPerformanceMultispeed_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp

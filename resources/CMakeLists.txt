@@ -51,6 +51,8 @@ set(utilities_resources_src
   utilities/Filetypes/Floorspace_Issue4036_BeforeMerge.json
   utilities/Filetypes/Floorspace_Issue4036_AfterMerge.json
   utilities/Geometry/floorplan.json
+  utilities/Geometry/simple_test.json
+  utilities/Geometry/office_floorplan.json
   utilities/Geometry/floorplan_colors.json
   utilities/Geometry/floorplan_doors.json
   utilities/Geometry/floorplan_differing_num_vertices.json
