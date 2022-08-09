@@ -928,13 +928,16 @@ namespace model {
     setCrankcaseHeaterCapacity(0.0);
     setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(0.0);
     setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
-    //setSupplyWaterStorageTankName("");
-    //setCondensateCollectionWaterStorageTankName("");
+    setNominalTimeForCondensateRemovalToBegin(0.0);
+    setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity(0.0);
+    setMaximumCyclingRate(0.0);
+    setLatentCapacityTimeConstant(0.0);
+    setCondenserType("AirCooled");
+    setEvaporatorCondenserEffectiveness(0.9);
+    setCrankcaseHeaterCapacity(0.0);
+    setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(10.0);
     setBasinHeaterCapacity(0.0);
     setBasinHeaterSetpointTemperature(10.0);
-    //setBasinHeaterOperatingSchedule(boost::none);
-    setString(OS_Coil_Cooling_DX_SingleSpeedFields::BasinHeaterOperatingScheduleName, "");
-    setCondenserType("AirCooled");
 
     auto schedule = model.alwaysOnDiscreteSchedule();
     setAvailabilitySchedule(schedule);
@@ -967,13 +970,16 @@ namespace model {
     setCrankcaseHeaterCapacity(0.0);
     setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(0.0);
     setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
-    //setSupplyWaterStorageTankName("");
-    //setCondensateCollectionWaterStorageTankName("");
+    setNominalTimeForCondensateRemovalToBegin(0.0);
+    setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity(0.0);
+    setMaximumCyclingRate(0.0);
+    setLatentCapacityTimeConstant(0.0);
+    setCondenserType("AirCooled");
+    setEvaporatorCondenserEffectiveness(0.9);
+    setCrankcaseHeaterCapacity(0.0);
+    setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(10.0);
     setBasinHeaterCapacity(0.0);
     setBasinHeaterSetpointTemperature(10.0);
-    //setBasinHeaterOperatingSchedule(boost::none);
-    setString(OS_Coil_Cooling_DX_SingleSpeedFields::BasinHeaterOperatingScheduleName, "");
-    setCondenserType("AirCooled");
   }
 
   CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> p) : StraightComponent(std::move(p)) {}
