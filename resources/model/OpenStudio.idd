@@ -16863,7 +16863,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type real
        \units W/W
        \minimum> 0
-       \default 3.0
+       \required-field
   N4, \field Rated High Speed Air Flow Rate
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR
        \note and Rated COP. Should be between 0.00004027 m3/s and .00006041 m3/s per watt
@@ -16949,7 +16949,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type real
        \units W/W
        \minimum> 0
-       \default 3.0
+       \required-field
   N9, \field Rated Low Speed Air Flow Rate
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR
        \note and Rated COP. Should be between 0.00004027 m3/s and .00006041 m3/s per watt
@@ -16991,7 +16991,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \units dimensionless
        \minimum 0
        \maximum 1
-       \default 0.9
+       \required-field
   N12, \field High Speed Evaporative Condenser Air Flow Rate
        \note Used to calculate evaporative condenser water use
        \type real
@@ -17010,7 +17010,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \units dimensionless
        \minimum 0
        \maximum 1
-       \default 0.9
+       \required-field
   N15, \field Low Speed Evaporative Condenser Air Flow Rate
        \note Used to calculate evaporative condenser water use
        \type real
@@ -17039,14 +17039,14 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type real
        \units W/K
        \minimum 0
-       \default 0.0
+       \required-field
   N18, \field Basin Heater Setpoint Temperature
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Enter the outdoor dry-bulb temperature when the basin heater turns on.
        \type real
        \units C
        \minimum 2
-       \default 2.0
+       \required-field
   A17; \field Basin Heater Operating Schedule Name
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Schedule values greater than 0 allow the basin heater to operate whenever the outdoor
