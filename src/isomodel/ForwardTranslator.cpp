@@ -1721,7 +1721,7 @@ namespace isomodel {
           cop_area_sum += area;
         } else if (coil.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>()) {
           // check for two speed DX coil;
-          cop_sum += coil.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>().get().ratedHighSpeedCOP().get() * area;
+          cop_sum += coil.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>().get().ratedHighSpeedCOP() * area;
           cop_area_sum += area;
         } else if (coil.optionalCast<openstudio::model::AirLoopHVACUnitaryHeatPumpAirToAir>()) {
           // check for heat pump;
@@ -1756,7 +1756,7 @@ namespace isomodel {
               cop_area_sum += building.floorArea();
             } else if (component.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>()) {
               // check for two speed DX coil;
-              cop_sum += component.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>().get().ratedHighSpeedCOP().get();
+              cop_sum += component.optionalCast<openstudio::model::CoilCoolingDXTwoSpeed>().get().ratedHighSpeedCOP();
               cop_area_sum += area;
             } else if (component.optionalCast<openstudio::model::ChillerElectricEIR>()) {
               // check for a chiller;

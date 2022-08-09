@@ -933,7 +933,7 @@ namespace model {
     setMaximumCyclingRate(0.0);
     setLatentCapacityTimeConstant(0.0);
     setCondenserType("AirCooled");
-    setEvaporatorCondenserEffectiveness(0.9);
+    setEvaporativeCondenserEffectiveness(0.9);
     setCrankcaseHeaterCapacity(0.0);
     setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(10.0);
     setBasinHeaterCapacity(0.0);
@@ -975,7 +975,7 @@ namespace model {
     setMaximumCyclingRate(0.0);
     setLatentCapacityTimeConstant(0.0);
     setCondenserType("AirCooled");
-    setEvaporatorCondenserEffectiveness(0.9);
+    setEvaporativeCondenserEffectiveness(0.9);
     setCrankcaseHeaterCapacity(0.0);
     setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(10.0);
     setBasinHeaterCapacity(0.0);
