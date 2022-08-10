@@ -49,6 +49,7 @@
 #include <libxml/xpathInternals.h>  // BAD_CAST
 
 #include <src/utilities/embedded_files.hxx>
+#include <src/gbxml/embedded_files.hxx>
 
 #include <fmt/format.h>
 
@@ -492,6 +493,16 @@ boost::optional<std::string> XMLValidator::fullValidationReport() const {
 
 std::vector<LogMessage> XMLValidator::logMessages() const {
   return m_logMessages;
+}
+
+XMLValidator XMLValidator::gbxmlValidator() {
+  const auto tmpDir = openstudio::filesystem::create_temporary_directory("xmlvalidation");
+  if (tmpDir.empty()) {
+    LOG_AND_THROW("Failed to create a temporary directory for extracting the embedded path");
+  }
+  bool quiet = true;
+  ::openstudiogbxml::embedded_files::extractFile(":/resources/GreenBuildingXML_Ver6.01.xsd", openstudio::toString(tmpDir), quiet);
+  return XMLValidator(tmpDir / "GreenBuildingXML_Ver6.01.xsd");
 }
 
 }  // namespace openstudio

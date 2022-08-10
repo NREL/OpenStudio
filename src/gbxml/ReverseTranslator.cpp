@@ -112,9 +112,8 @@ namespace gbxml {
     if (openstudio::filesystem::exists(path)) {
 
       // validate the gbxml prior to reverse translation
-      openstudio::path schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
-      XMLValidator xmlValidator(schemaPath);
-      xmlValidator.validate(path);
+      auto gbxmlValidator = XMLValidator::gbxmlValidator();
+      gbxmlValidator.validate(path);
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {
@@ -589,6 +588,12 @@ namespace gbxml {
       translateCADObjectId(cadObjectId, space);
 
       break;  // TODO: import multiple CADObjectIds
+    }
+
+    // import Volume
+    auto volume = element.child("Volume").text();
+    if (!volume.empty()) {
+      space.setVolume(volume.as_double());
     }
 
     return space;
