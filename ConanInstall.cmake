@@ -50,7 +50,6 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
       set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/centos#ae043c41b4bec82e98ca765ce8b32a11")
     endif()
 
-    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/centos#ae043c41b4bec82e98ca765ce8b32a11")
   else()
     conan_add_remote(NAME nrel INDEX 0 
       URL https://conan.openstudio.net/artifactory/api/conan/openstudio)
@@ -95,11 +94,6 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     set(CONAN_GTEST "gtest/1.11.0#8aca975046f1b60c660ee9d066764d69")
   else()
     set(CONAN_GTEST "")
-  endif()
-
-  if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
-    # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-    set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/stable#ae043c41b4bec82e98ca765ce8b32a11")
   endif()
 
 
