@@ -27,13 +27,17 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <string>
+#include "InitRubyBindings.hpp"
+#include <RubyAPI.hpp>
+#include <iostream>
+#include <ruby.h>
 
+extern "C" {
 
-void init_openstudio_internal();
+RUBY_API void Init_openstudio(void) {
 
-void init_openstudio_internal_basic();
-void init_openstudio_internal_extended();
+  openstudio::ruby::initRubyBindings();
 
-void evalString(const std::string &t_str);
+}
 
+}

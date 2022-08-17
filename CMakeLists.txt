@@ -1005,6 +1005,7 @@ set(project_directories
   sdd
   lib
   install_utility
+  scriptengine
 )
 
 # resources must be added after find EnergyPlus

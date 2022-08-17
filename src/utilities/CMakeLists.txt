@@ -23,6 +23,9 @@ set(core_src
   core/Containers.hpp
   core/Containers.cpp
   core/Deprecated.hpp
+  core/DynamicLibrary.hpp
+  core/DynamicLibraryPOSIX.hpp
+  core/DynamicLibraryWindows.hpp
   core/Enum.hpp
   core/EnumHelpers.hpp
   core/Exception.hpp
@@ -451,6 +454,13 @@ target_link_libraries(${target_name} PUBLIC ${${target_name}_depends})
 target_compile_definitions(${target_name} PRIVATE openstudio_utilities_EXPORTS SHARED_OS_LIBS)
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR})
 target_include_directories(${target_name} PUBLIC ${PROJECT_BINARY_DIR}/src)
+
+include(CheckIncludeFile)
+check_include_file("unistd.h" HAVE_UNISTD_H)
+if(HAVE_UNISTD_H)
+  target_compile_definitions(${target_name} PUBLIC "-DHAVE_UNISTD_H")
+endif()
+
 
 if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib)
