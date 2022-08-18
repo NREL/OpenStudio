@@ -72,7 +72,7 @@ namespace model {
 
       std::string roughness() const;
 
-      /** The conductivitiy of the material in W/m*K. */
+      /** The conductivity of the material in W/m*K. */
       virtual double thermalConductivity() const override;
 
       /** The conductance of the material in W/m^2*K. */

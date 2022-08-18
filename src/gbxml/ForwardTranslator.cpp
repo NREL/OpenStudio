@@ -123,9 +123,8 @@ namespace gbxml {
       file.close();
 
       // validate the gbxml after forward translation
-      openstudio::path schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
-      XMLValidator xmlValidator(schemaPath);
-      xmlValidator.validate(path);
+      auto gbxmlValidator = XMLValidator::gbxmlValidator();
+      gbxmlValidator.validate(path);
 
       return result;
     }
@@ -837,6 +836,14 @@ namespace gbxml {
       } else {
         result.append_attribute("constructionIdRef") = escapeName(constructionName).c_str();  // FIXME: windowTypeIdRef?
       }
+    }
+
+    // exposedToSun
+    std::string exposedToSun = surface.sunExposure();
+    if (istringEqual("NoSun", exposedToSun)) {
+      result.append_attribute("exposedToSun") = "false";
+    } else if (istringEqual("SunExposed", exposedToSun)) {
+      result.append_attribute("exposedToSun") = "true";
     }
 
     // this space

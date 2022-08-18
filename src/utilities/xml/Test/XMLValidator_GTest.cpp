@@ -44,7 +44,7 @@ using namespace boost;
 using namespace openstudio;
 
 TEST_F(XMLValidatorFixture, XMLValidator_isValid) {
-  XMLValidator xmlValidator(schemaPath);
+  auto xmlValidator = XMLValidator::gbxmlValidator();
 
   EXPECT_FALSE(xmlValidator.isValid());
   ASSERT_EQ(1, xmlValidator.warnings().size());
@@ -64,7 +64,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_NonSchemaPath) {
 }
 
 TEST_F(XMLValidatorFixture, XMLValidator_NonXMLPath) {
-  XMLValidator xmlValidator(schemaPath);
+  auto xmlValidator = XMLValidator::gbxmlValidator();
   EXPECT_NE("", xmlValidator.schemaPath());
   EXPECT_FALSE(xmlValidator.xmlPath());
 
@@ -177,7 +177,7 @@ TEST_F(XMLValidatorFixture, XMLValidator_schematronToXslt) {
 TEST_P(GbXMLValidatorParametrizedFixture, XMLValidator_GBXMLvalidator_XSD) {
   auto& [filename, n_warnings, n_errors] = GetParam();
 
-  XMLValidator xmlValidator(schemaPath);
+  auto xmlValidator = XMLValidator::gbxmlValidator();
   openstudio::path xmlPath = resourcesPath() / openstudio::toPath(filename);
 
   if (n_errors > 0) {

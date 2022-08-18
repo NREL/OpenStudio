@@ -14,6 +14,7 @@
 %{
   #include <utilities/geometry/Transformation.hpp>
   #include <utilities/geometry/BoundingBox.hpp>
+  #include <utilities/geometry/Polyhedron.hpp>
   #include <utilities/data/TimeSeries.hpp>
   #include <utilities/sql/SqlFile.hpp>
 

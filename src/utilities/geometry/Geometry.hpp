@@ -127,6 +127,11 @@ UTILITIES_API bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRati
                                                       std::vector<Point3d>& daylightingVertices, std::vector<Point3d>& exteriorShadingVertices,
                                                       std::vector<Point3d>& interiorShelfVertices);
 
+// Checks that a point is **almost** equal to another (with some tolerance)
+UTILITIES_API bool isAlmostEqual3dPt(const Point3d& lhs, const Point3d& rhs, double tol = 0.0127);
+
+UTILITIES_API bool isPointOnLineBetweenPoints(const Point3d& start, const Point3d& end, const Point3d& test, double tol = 0.0127);
+
 }  // namespace openstudio
 
 #endif  //UTILITIES_GEOMETRY_GEOMETRY_HPP
