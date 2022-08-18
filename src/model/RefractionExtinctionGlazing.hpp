@@ -67,7 +67,7 @@ namespace model {
     /** @name Getters */
     //@{
 
-    /** The conductivitiy of the material in W/m*K. */
+    /** The conductivity of the material in W/m*K. */
     double thermalConductivity() const;
 
     /** The conductance of the material in W/m^2*K. */
@@ -119,13 +119,13 @@ namespace model {
     /** Sets the conductivity of the material in W/m*K, if possible. */
     bool setThermalConductivity(double value);
 
-    /** Sets the conductance of the material in W/m^2*K, if possible. */
+    /** Sets the conductance of the material in W/m^2*K, if possible. Sets thickness to achieve conductivity. */
     bool setThermalConductance(double value);
 
     /** Sets the resistivity of the material in m*K/W, if possible. */
     bool setThermalResistivity(double value);
 
-    /** Sets the resistance of the material in m^2*K/W, if possible. */
+    /** Sets the resistance of the material in m^2*K/W, if possible. Sets thickness to achieve resistivity. */
     bool setThermalResistance(double value);
 
     bool setThermalTransmittance(double value);

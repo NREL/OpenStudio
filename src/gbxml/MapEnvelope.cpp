@@ -68,6 +68,22 @@ namespace gbxml {
     translateId(element, construction);
     translateName(element, construction);
 
+    boost::optional<double> extir;
+    boost::optional<double> extsolar;
+    boost::optional<double> extvisible;
+
+    for (auto& absorptanceEl : element.children("Absorptance")) {
+      if (istringEqual("Fraction", absorptanceEl.attribute("unit").value())) {
+        if (istringEqual("ExtIR", absorptanceEl.attribute("type").value())) {
+          extir = absorptanceEl.text().as_double();
+        } else if (istringEqual("ExtSolar", absorptanceEl.attribute("type").value())) {
+          extsolar = absorptanceEl.text().as_double();
+        } else if (istringEqual("ExtVisible", absorptanceEl.attribute("type").value())) {
+          extvisible = absorptanceEl.text().as_double();
+        }
+      }
+    }
+
     // auto layerIdList = element.children("LayerId");
     // Construction::LayerId (layerIdList) -> Layer (layerElements), Layer::MaterialId -> Material
     std::vector<openstudio::model::Material> materials;
@@ -100,7 +116,22 @@ namespace gbxml {
       bool test = false;
 
       if (materials[i].optionalCast<openstudio::model::OpaqueMaterial>()) {
-        test = construction.insertLayer(i, materials[i].cast<openstudio::model::OpaqueMaterial>());
+        openstudio::model::OpaqueMaterial opaqueMaterial = materials[i].cast<openstudio::model::OpaqueMaterial>();
+
+        // assumes first material is the outside layer
+        if (i == 0) {
+          if (extir) {
+            opaqueMaterial.setThermalAbsorptance(*extir);
+          }
+          if (extsolar) {
+            opaqueMaterial.setSolarAbsorptance(*extsolar);
+          }
+          if (extvisible) {
+            opaqueMaterial.setVisibleAbsorptance(*extvisible);
+          }
+        }
+
+        test = construction.insertLayer(i, opaqueMaterial);
       } else if (materials[i].optionalCast<openstudio::model::FenestrationMaterial>()) {
         test = construction.insertLayer(i, materials[i].cast<openstudio::model::FenestrationMaterial>());
       } else if (materials[i].optionalCast<openstudio::model::ModelPartitionMaterial>()) {
@@ -170,6 +201,22 @@ namespace gbxml {
     auto specificHeatElement = element.child("SpecificHeat");
     auto roughnessElement = element.child("Roughness");
 
+    boost::optional<double> extir;
+    boost::optional<double> extsolar;
+    boost::optional<double> extvisible;
+
+    for (auto& absorptanceEl : element.children("Absorptance")) {
+      if (istringEqual("Fraction", absorptanceEl.attribute("unit").value())) {
+        if (istringEqual("ExtIR", absorptanceEl.attribute("type").value())) {
+          extir = absorptanceEl.text().as_double();
+        } else if (istringEqual("ExtSolar", absorptanceEl.attribute("type").value())) {
+          extsolar = absorptanceEl.text().as_double();
+        } else if (istringEqual("ExtVisible", absorptanceEl.attribute("type").value())) {
+          extvisible = absorptanceEl.text().as_double();
+        }
+      }
+    }
+
     if (!(densityElement.empty() || conductivityElement.empty() || thicknessElement.empty() || specificHeatElement.empty())) {
 
       double density = densityElement.text().as_double();
@@ -193,9 +240,17 @@ namespace gbxml {
       material.setThickness(thickness);
       material.setSpecificHeat(specificHeat);
       material.setRoughness(roughness);
+      if (extir) {
+        material.setThermalAbsorptance(*extir);
+      }
+      if (extsolar) {
+        material.setSolarAbsorptance(*extsolar);
+      }
+      if (extvisible) {
+        material.setVisibleAbsorptance(*extvisible);
+      }
+    } else if (!rvalueElement.empty()) {  //Material no mass that has only R-value
 
-    } else if (!rvalueElement.empty())  //Material no mass that has only R-value
-    {
       // Krishnan, this constructor should only be used for unique objects like Building and Site
       //openstudio::model::MasslessOpaqueMaterial material = model.getUniqueModelObject<openstudio::model::MasslessOpaqueMaterial>();
 
@@ -211,7 +266,6 @@ namespace gbxml {
       translateName(element, material);
 
       material.setThermalResistance(rvalue);
-
     } else {
 
       // make a stub material

@@ -235,7 +235,6 @@ namespace model {
     }
 
     bool StandardOpaqueMaterial_Impl::setThermalConductance(double value) {
-      // set thickness to achieve conductance
       return setThickness(thermalConductivity() / value);
     }
 
@@ -244,7 +243,6 @@ namespace model {
     }
 
     bool StandardOpaqueMaterial_Impl::setThermalResistance(double value) {
-      // set thickenss to achieve resistivity
       LOG(Trace, "Attempt to set thermal resistance to " << value << " by setting thickness.");
       return setThickness(value / thermalResistivity());
     }

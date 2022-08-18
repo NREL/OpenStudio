@@ -43,8 +43,6 @@ void XMLValidatorFixture::SetUpTestSuite() {
   logFile = FileLogSink(toPath("./XMLValidatorFixture.log"));
   logFile->setLogLevel(Debug);
   openstudio::Logger::instance().standardOutLogger().disable();
-
-  schemaPath = resourcesPath() / openstudio::toPath("gbxml/schema/GreenBuildingXML_Ver6.01.xsd");
 }
 
 void XMLValidatorFixture::TearDownTestSuite() {

@@ -75,16 +75,16 @@ namespace model {
     /** @name Getters */
     //@{
 
-    // Thermal conductivity of the OpaqueMaterial in W/m*K. Throws openstudio::Exception if unavailable.
+    /** The conductivity of the material in W/m*K. */
     double thermalConductivity() const;
 
-    // Thermal conductance of the OpaqueMaterial in W/m^2*K. Throws openstudio::Exception if unavailable.
+    /** The conductance of the material in W/m^2*K. */
     double thermalConductance() const;
 
-    // Thermal resistivity of the OpaqueMaterial in m*K/W. Throws openstudio::Exception if unavailable.
+    /** The resistivity of the material in m*K/W. */
     double thermalResistivity() const;
 
-    // Thermal resistance of the OpaqueMaterial in m^2*K/W. Throws openstudio::Exception if unavailable.
+    /** The resistance of the material in m^2*K/W. */
     double thermalResistance() const;
 
     // Thermal reflectance of the OpaqueMaterial (dimensionless fraction).
@@ -122,16 +122,16 @@ namespace model {
     /** @name Setters */
     //@{
 
-    // Set the thermal conductivity (W/m*K).
+    /** Sets the conductivity of the material in W/m*K, if possible. */
     bool setThermalConductivity(double value);
 
-    // Set the thermal conductance (W/m^2*K).
+    /** Sets the conductance of the material in W/m^2*K, if possible. Sets thickness to achieve conductivity. */
     bool setThermalConductance(double value);
 
-    // Set the thermal resistivity (m*K/W).
+    /** Sets the resistivity of the material in m*K/W, if possible. */
     bool setThermalResistivity(double value);
 
-    // Set the thermal resistance (m^2*K/W).
+    /** Sets the resistance of the material in m^2*K/W, if possible. Sets thickness to achieve resistivity. */
     bool setThermalResistance(double value);
 
     // Set the thermal absorptance (dimensionless fraction).
