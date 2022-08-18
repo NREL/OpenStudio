@@ -1,15 +1,14 @@
+#include "./ScriptEngineGlobals.hpp"
 #include "../scriptengine/ScriptEngine.hpp"
+#include <CLI/CLI.hpp>
 #include <iostream>
 
-std::unique_ptr<openstudio::ScriptEngine> rubyEngine;
-std::unique_ptr<openstudio::ScriptEngine> pythonEngine;
-
-int main(int argc, char* argv[]) {
+int rubyCLI(int argc, char* argv[]) {
   // chop off the first argument which is the exe path/name
-  rubyEngine = openstudio::loadScriptEngine("rubyengine", argc - 1, argv + 1);
-
+  openstudio::rubyEngine = openstudio::loadScriptEngine("rubyengine", argc - 1, argv + 1);
+  
   try {
-    rubyEngine->exec(R"(
+    openstudio::rubyEngine->exec(R"(
        begin
          require 'openstudio_cli'
        rescue Exception => e
@@ -20,15 +19,31 @@ int main(int argc, char* argv[]) {
        end
      )");
   } catch (const std::exception& e) {
-    rubyEngine->exec(R"(STDOUT.flush)");
+    openstudio::rubyEngine->exec(R"(STDOUT.flush)");
     std::cout << "Exception: " << e.what() << std::endl;  // endl will flush
     return 1;
   } catch (...) {
-    rubyEngine->exec(R"(STDOUT.flush)");
+    openstudio::rubyEngine->exec(R"(STDOUT.flush)");
     std::cout << "Unknown Exception" << std::endl;  // endl will flush
     return 1;
   }
-
-  rubyEngine->exec(R"(STDOUT.flush)");
+  
+  openstudio::rubyEngine->exec(R"(STDOUT.flush)");
   std::cout << std::flush;
+  return 0;
+}
+
+int main(int argc, char* argv[]) {
+  if ((argc > 1) && (std::string_view(argv[1]) == "experimental")) {
+    CLI::App app{"openstudio"};
+
+    const auto experimentalApp = app.add_subcommand("experimental");
+    [[maybe_unused]] const auto runCommand = experimentalApp->add_subcommand("run");
+
+    CLI11_PARSE(app, argc, argv);
+
+    return 0;
+  } else {
+    return rubyCLI(argc, argv);
+  }
 }
