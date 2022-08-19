@@ -46,7 +46,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateLookup(TableLookup& modelObject) {}
+  boost::optional<IdfObject> ForwardTranslator::translateTableLookup(TableLookup& modelObject) {}
 
 }  // namespace energyplus
 

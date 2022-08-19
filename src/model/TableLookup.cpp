@@ -68,6 +68,15 @@ namespace model {
       return TableLookup::iddObjectType();
     }
 
+    int TableLookup_Impl::numVariables() const {
+      return 1;
+    }
+
+    double TableLookup_Impl::evaluate(const std::vector<double>& independentVariables) const {
+      LOG(Warn, "Curve evaluation isn't implemented for TableLookup");
+      return -9999.0;
+    }
+
   }  // namespace detail
 
   TableLookup::TableLookup(const Model& model) : Curve(TableLookup::iddObjectType(), model) {

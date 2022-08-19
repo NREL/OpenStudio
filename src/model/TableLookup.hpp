@@ -94,9 +94,6 @@ namespace model {
   /** \relates TableLookup*/
   typedef std::vector<TableLookup> TableLookupVector;
 
-  /** \relates TableLookupPoint*/
-  typedef std::vector<TableLookupPoint> TableLookupPointVector;
-
 }  // namespace model
 }  // namespace openstudio
 

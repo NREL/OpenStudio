@@ -37,9 +37,6 @@
 namespace openstudio {
 namespace model {
 
-  // Foward declaration
-  class TableLookupPoint;
-
   namespace detail {
 
     /** TableLookup_Impl is a Curve_Impl that is the implementation class for TableLookup.*/
@@ -64,6 +61,10 @@ namespace model {
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
+
+      virtual int numVariables() const override;
+
+      virtual double evaluate(const std::vector<double>& independentVariables) const override;
 
       //@}
       /** @name Getters */
