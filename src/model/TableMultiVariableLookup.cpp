@@ -906,6 +906,8 @@ namespace model {
     : Curve(TableMultiVariableLookup::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::TableMultiVariableLookup_Impl>());
 
+    LOG(Warn, "TableMultiVariableLookup is deprecated.  Use TableLookup instead.");
+
     // Check if numberofIndependentVariables between 1 and 5 included, otherwise THROW
     bool ok = getImpl<detail::TableMultiVariableLookup_Impl>()->setNumberofIndependentVariables(numberofIndependentVariables);
     if (!ok) {
