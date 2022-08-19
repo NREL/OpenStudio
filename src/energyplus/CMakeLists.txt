@@ -391,6 +391,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSurfacePropertySurroundingSurfaces.cpp
   ForwardTranslator/ForwardTranslateSwimmingPoolIndoor.cpp
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp
+  ForwardTranslator/ForwardTranslateTableLookup.cpp
   ForwardTranslator/ForwardTranslateTemperingValve.cpp
   ForwardTranslator/ForwardTranslateThermalStorageIceDetailed.cpp
   ForwardTranslator/ForwardTranslateThermalStorageChilledWaterStratified.cpp
@@ -761,6 +762,7 @@ set(${target_name}_test_src
   Test/SurfacePropertySurroundingSurfaces_GTest.cpp
   Test/SwimmingPoolIndoor_GTest.cpp
   Test/TableMultiVariableLookup_GTest.cpp
+  Test/TableLookup_GTest.cpp
   Test/ThermalStorageChilledWaterStratified_GTest.cpp
   Test/ThermalZone_GTest.cpp
   Test/ThermostatSetpointDualSetpoint_GTest.cpp

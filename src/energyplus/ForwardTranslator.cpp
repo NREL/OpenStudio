@@ -2921,6 +2921,11 @@ namespace energyplus {
         retVal = translateTableMultiVariableLookup(table);
         break;
       }
+      case openstudio::IddObjectType::OS_Table_Lookup: {
+        model::TableLookup table = modelObject.cast<TableLookup>();
+        retVal = translateTableLookup(table);
+        break;
+      }
       case openstudio::IddObjectType::OS_TemperingValve: {
         auto mo = modelObject.cast<TemperingValve>();
         retVal = translateTemperingValve(mo);
@@ -3450,6 +3455,7 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Curve_Sigmoid);
     result.push_back(IddObjectType::OS_Curve_Triquadratic);
     result.push_back(IddObjectType::OS_Table_MultiVariableLookup);
+    result.push_back(IddObjectType::OS_Table_Lookup);
     result.push_back(IddObjectType::OS_DistrictCooling);
     result.push_back(IddObjectType::OS_DistrictHeating);
     result.push_back(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
