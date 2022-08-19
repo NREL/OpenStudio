@@ -4260,6 +4260,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(SurfacePropertySurroundingSurfaces);
     REGISTER_CONSTRUCTOR(SwimmingPoolIndoor);
     REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
+    REGISTER_CONSTRUCTOR(TableLookup);
     REGISTER_CONSTRUCTOR(TemperingValve);
     REGISTER_CONSTRUCTOR(ThermochromicGlazing);
     REGISTER_CONSTRUCTOR(ThermostatSetpointDualSetpoint);
@@ -4799,6 +4800,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SurfacePropertySurroundingSurfaces);
     REGISTER_COPYCONSTRUCTORS(SwimmingPoolIndoor);
     REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);
+    REGISTER_COPYCONSTRUCTORS(TableLookup);
     REGISTER_COPYCONSTRUCTORS(TemperingValve);
     REGISTER_COPYCONSTRUCTORS(ThermochromicGlazing);
     REGISTER_COPYCONSTRUCTORS(ThermostatSetpointDualSetpoint);
