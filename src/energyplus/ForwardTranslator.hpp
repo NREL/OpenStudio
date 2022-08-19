@@ -449,6 +449,7 @@ namespace model {
   class SurfacePropertySurroundingSurfaces;
   class SwimmingPoolIndoor;
   class TableMultiVariableLookup;
+  class TableLookup;
   class TemperingValve;
   class ThermalZone;
   class ThermalStorageIceDetailed;
@@ -1431,6 +1432,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateSwimmingPoolIndoor(model::SwimmingPoolIndoor& modelObject);
 
     boost::optional<IdfObject> translateTableMultiVariableLookup(model::TableMultiVariableLookup& modelObject);
+
+    boost::optional<IdfObject> translateTableLookup(model::TableLookup& modelObject);
 
     boost::optional<IdfObject> translateTemperingValve(model::TemperingValve& modelObject);
 
