@@ -21113,23 +21113,6 @@ OS:Table:IndependentVariable,
        \type real
        \begin-extensible
 
-OS:Table:IndependentVariableList,
-       \memo A sorted list of independent variables used by one or more Table:Lookup
-       \memo objects.
-       \extensible:1
-  A1,  \field Handle
-       \type handle
-       \required-field
-  A2,  \field Name
-       \required-field
-       \reference IndependentVariableListName
-       \type alpha
-  A3;  \field Independent Variable
-       \required-field
-       \type object-list
-       \object-list IndependentVariableName
-       \begin-extensible
-
 OS:Table:Lookup,
        \memo Lookup tables are used in place of curves and can represent any number
        \memo of independent variables (defined as Table:IndependentVariable objects
@@ -21154,7 +21137,7 @@ OS:Table:Lookup,
   A3,  \field Independent Variable List Name
        \required-field
        \type object-list
-       \object-list IndependentVariableListName
+       \object-list ModelObjectLists
   A4,  \field Normalization Method
        \type choice
        \key None
