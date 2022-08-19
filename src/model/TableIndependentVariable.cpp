@@ -51,13 +51,12 @@ namespace model {
     }
 
     TableIndependentVariable_Impl::TableIndependentVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
-                                                                       bool keepHandle)
+                                                                 bool keepHandle)
       : ParentObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == TableIndependentVariable::iddObjectType());
     }
 
-    TableIndependentVariable_Impl::TableIndependentVariable_Impl(const TableIndependentVariable_Impl& other, Model_Impl* model,
-                                                                       bool keepHandle)
+    TableIndependentVariable_Impl::TableIndependentVariable_Impl(const TableIndependentVariable_Impl& other, Model_Impl* model, bool keepHandle)
       : ParentObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& TableIndependentVariable_Impl::outputVariableNames() const {
@@ -95,11 +94,8 @@ namespace model {
     return IddObjectType(IddObjectType::OS_Table_IndependentVariable);
   }
 
-
-
   /// @cond
-  TableIndependentVariable::TableIndependentVariable(std::shared_ptr<detail::TableIndependentVariable_Impl> impl)
-    : ParentObject(std::move(impl)) {}
+  TableIndependentVariable::TableIndependentVariable(std::shared_ptr<detail::TableIndependentVariable_Impl> impl) : ParentObject(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model

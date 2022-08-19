@@ -69,26 +69,18 @@ namespace model {
       /** @name Getters */
       //@{
 
-
-
       //@}
       /** @name Setters */
       //@{
-
-
 
       //@}
       /** @name Other */
       //@{
 
-
-
       //@}
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.TableIndependentVariable");
-
-
     };
 
   }  // namespace detail
