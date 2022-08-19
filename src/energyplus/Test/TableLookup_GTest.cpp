@@ -54,6 +54,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup) {
   {
     Model m;
     TableLookup table(m);
-
   }
 }

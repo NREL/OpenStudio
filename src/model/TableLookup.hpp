@@ -61,24 +61,16 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-
-
     /** @name Getters */
     //@{
-
-
 
     //@}
     /** @name Setters */
     //@{
 
-
-
     //@}
     /** @name Other */
     //@{
-
-
 
     //@}
    protected:

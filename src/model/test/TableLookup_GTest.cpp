@@ -52,6 +52,5 @@ TEST_F(ModelFixture, TableLookup) {
   {
     Model m;
     TableLookup table(m);
-
   }
 }

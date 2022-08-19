@@ -48,19 +48,16 @@ namespace model {
 
   namespace detail {
 
-    TableLookup_Impl::TableLookup_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-      : Curve_Impl(idfObject, model, keepHandle) {
+    TableLookup_Impl::TableLookup_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle) : Curve_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == TableLookup::iddObjectType());
     }
 
-    TableLookup_Impl::TableLookup_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
-                                                                 bool keepHandle)
+    TableLookup_Impl::TableLookup_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
       : Curve_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == TableLookup::iddObjectType());
     }
 
-    TableLookup_Impl::TableLookup_Impl(const TableLookup_Impl& other, Model_Impl* model, bool keepHandle)
-      : Curve_Impl(other, model, keepHandle) {}
+    TableLookup_Impl::TableLookup_Impl(const TableLookup_Impl& other, Model_Impl* model, bool keepHandle) : Curve_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& TableLookup_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
@@ -71,26 +68,18 @@ namespace model {
       return TableLookup::iddObjectType();
     }
 
-
-
   }  // namespace detail
 
-  TableLookup::TableLookup(const Model& model)
-    : Curve(TableLookup::iddObjectType(), model) {
+  TableLookup::TableLookup(const Model& model) : Curve(TableLookup::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::TableLookup_Impl>());
-
-
   }
 
   IddObjectType TableLookup::iddObjectType() {
     return IddObjectType(IddObjectType::OS_Table_Lookup);
   }
 
-
-
   /// @cond
-  TableLookup::TableLookup(std::shared_ptr<detail::TableLookup_Impl> impl)
-    : Curve(std::dynamic_pointer_cast<detail::Curve_Impl>(std::move(impl))) {}
+  TableLookup::TableLookup(std::shared_ptr<detail::TableLookup_Impl> impl) : Curve(std::dynamic_pointer_cast<detail::Curve_Impl>(std::move(impl))) {}
   /// @endcond
 
 }  // namespace model
