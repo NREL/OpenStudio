@@ -1555,6 +1555,9 @@ set(${target_name}_src
   TableLookup.hpp
   TableLookup_Impl.hpp
   TableLookup.cpp
+  TableIndependentVariable.hpp
+  TableIndependentVariable_Impl.hpp
+  TableIndependentVariable.cpp
   ThermalStorageChilledWaterStratified.hpp
   ThermalStorageChilledWaterStratified_Impl.hpp
   ThermalStorageChilledWaterStratified.cpp
@@ -2245,6 +2248,7 @@ set(${target_name}_test_src
   test/SwimmingPoolIndoor_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/TableLookup_GTest.cpp
+  test/TableIndependentVariable_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/ThermalStorageIceDetailed_GTest.cpp
   test/ThermalStorageChilledWaterStratified_GTest.cpp

@@ -175,6 +175,7 @@ MODELOBJECT_TEMPLATES(CurveTriquadratic);
 MODELOBJECT_TEMPLATES(TableMultiVariableLookupPoint);  // Helper class defined in TableMultiVariableLookup
 MODELOBJECT_TEMPLATES(TableMultiVariableLookup);
 MODELOBJECT_TEMPLATES(TableLookup);
+MODELOBJECT_TEMPLATES(TableIndependentVariable);
 MODELOBJECT_TEMPLATES(SpaceLoadDefinition);
 MODELOBJECT_TEMPLATES(PeopleDefinition);
 MODELOBJECT_TEMPLATES(LightsDefinition);
@@ -275,6 +276,7 @@ SWIG_MODELOBJECT(CurveSigmoid, 1);
 SWIG_MODELOBJECT(CurveTriquadratic, 1);
 SWIG_MODELOBJECT(TableMultiVariableLookup, 1);
 SWIG_MODELOBJECT(TableLookup, 1);
+SWIG_MODELOBJECT(TableIndependentVariable, 1);
 SWIG_MODELOBJECT(SpaceLoadDefinition, 0);
 SWIG_MODELOBJECT(PeopleDefinition, 1);
 SWIG_MODELOBJECT(LightsDefinition, 1);
