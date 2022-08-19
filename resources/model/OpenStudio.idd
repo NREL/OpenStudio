@@ -21060,6 +21060,136 @@ OS:Table:MultiVariableLookup,
        \type real
        \begin-extensible
 
+OS:Table:IndependentVariable,
+       \memo An independent variable representing a single dimension of a Table:Lookup
+       \memo object.
+       \extensible:1
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference IndependentVariableName
+       \type alpha
+  A3,  \field Interpolation Method
+       \type choice
+       \key Linear
+       \key Cubic
+       \default Linear
+  A4,  \field Extrapolation Method
+       \type choice
+       \key Constant
+       \key Linear
+       \default Constant
+  N1,  \field Minimum Value
+       \type real
+       \unitsBasedOnField A4
+  N2,  \field Maximum Value
+       \type real
+       \unitsBasedOnField A4
+  N3,  \field Normalization Reference Value
+       \type real
+       \unitsBasedOnField A4
+  A5,  \field Unit Type
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key Angle
+       \default Dimensionless
+  A6,  \field External File Name
+       \type alpha
+       \retaincase
+  N4,  \field External File Column Number
+       \type integer
+       \minimum 1
+  N5,  \field External File Starting Row Number
+       \type integer
+       \minimum 1
+  N6;  \field Value
+       \type real
+       \begin-extensible
+
+OS:Table:IndependentVariableList,
+       \memo A sorted list of independent variables used by one or more Table:Lookup
+       \memo objects.
+       \extensible:1
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference IndependentVariableListName
+       \type alpha
+  A3;  \field Independent Variable
+       \required-field
+       \type object-list
+       \object-list IndependentVariableName
+       \begin-extensible
+
+OS:Table:Lookup,
+       \memo Lookup tables are used in place of curves and can represent any number
+       \memo of independent variables (defined as Table:IndependentVariable objects
+       \memo in a Table:IndependentVariableList). Output values are interpolated
+       \memo within the bounds defined by each independent variable and extrapolated
+       \memo beyond the bounds according to the interpolation/extrapolation methods
+       \memo defined by each independent variable.
+       \extensible:1
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference UnivariateFunctions
+       \reference BivariateFunctions
+       \reference TrivariateFunctions
+       \reference QuadvariateFunctions
+       \reference QuintvariateFunctions
+       \reference MultivariateFunctions
+       \reference AllCurves
+       \type alpha
+  A3,  \field Independent Variable List Name
+       \required-field
+       \type object-list
+       \object-list IndependentVariableListName
+  A4,  \field Normalization Method
+       \type choice
+       \key None
+       \key DivisorOnly
+       \key AutomaticWithDivisor
+       \default None
+  N1,  \field Normalization Divisor
+       \type real
+       \default 1.0
+  N2,  \field Minimum Output
+       \type real
+       \unitsBasedOnField A4
+  N3,  \field Maximum Output
+       \type real
+       \unitsBasedOnField A4
+  A5,  \field Output Unit Type
+       \type choice
+       \key Dimensionless
+       \key Capacity
+       \key Power
+       \default Dimensionless
+  A6,  \field External File Name
+       \type alpha
+       \retaincase
+  N4,  \field External File Column Number
+       \type integer
+       \minimum 1
+  N5,  \field External File Starting Row Number
+       \type integer
+       \minimum 1
+  N6;  \field Output Value
+       \type real
+       \unitsBasedOnField A4
+       \begin-extensible
+
 OS:DesignSpecification:OutdoorAir,
        \memo This object is used to describe general outdoor air requirements which
        \memo are referenced by other objects.
