@@ -36,6 +36,8 @@
 namespace openstudio {
 namespace model {
 
+  class TableLookup;
+
   namespace detail {
 
     /** TableIndependentVariable_Impl is a ParentObject_Impl that is the implementation class for TableIndependentVariable.*/

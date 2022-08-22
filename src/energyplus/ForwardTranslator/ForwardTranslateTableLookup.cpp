@@ -31,6 +31,7 @@
 #include "../../model/Model.hpp"
 #include "../../model/TableLookup.hpp"
 #include "../../model/TableLookup_Impl.hpp"
+#include "../../model/TableIndependentVariable.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"

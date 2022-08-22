@@ -36,6 +36,8 @@
 namespace openstudio {
 namespace model {
 
+  class TableLookup;
+
   namespace detail {
 
     class TableIndependentVariable_Impl;
