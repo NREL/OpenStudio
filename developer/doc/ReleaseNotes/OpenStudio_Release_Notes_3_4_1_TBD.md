@@ -73,7 +73,7 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [#4642](https://github.com/NREL/OpenStudio/pull/4642) - Addresses #4575, API change for EvaporativeCoolerFluid:SingleSpeed
     * `EvaporativeCoolerFluid:SingleSpeed` has an API-breaking change related to its `performanceInputMethod` getter. It is now a required field that returns `std::string` instead of `boost::optional<std::string>`.
 * [#4644](https://github.com/NREL/OpenStudio/pull/4644) - Addresses #4575, API change for Coil:Cooling:DX:SingleSpeed and Coil:Cooling:DX:TwoSpeed
-    * ` Coil:Cooling:DX:SingleSpeed` and `Coil:Cooling:DX:TwoSpeed` have API-breaking changes related to many of their getters. They are now required fields that return `double` instead of `boost::optional<double>`.
+    * ` Coil:Cooling:DX:SingleSpeed` and `Coil:Cooling:DX:TwoSpeed` have API-breaking changes related to many of their getters. They are now required fields that return `double` instead of `boost::optional<double>`. Also removes many deprecated methods.
 
 
 ## Minor changes and bug fixes
