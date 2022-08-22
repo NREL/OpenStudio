@@ -38,6 +38,8 @@
 
 #include <polypartition/polypartition.h>
 
+#include <cmath>
+
 namespace openstudio {
 /// convert degrees to radians
 double degToRad(double degrees) {
@@ -513,7 +515,7 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
 
     // should all have zero z coordinate now
     double z = vertices[n - i - 1].z();
-    if (abs(z) > tol) {
+    if (std::abs(z) > tol) {
       LOG_FREE(Error, "utilities.geometry.computeTriangulation", "All points must be on z = 0 plane for triangulation methods");
       return result;
     }
@@ -540,7 +542,7 @@ std::vector<std::vector<Point3d>> computeTriangulation(const Point3dVector& vert
 
       // should all have zero z coordinate now
       double z = holeVertices[i].z();
-      if (abs(z) > tol) {
+      if (std::abs(z) > tol) {
         LOG_FREE(Error, "utilities.geometry.computeTriangulation", "All points must be on z = 0 plane for triangulation methods");
         return result;
       }
@@ -676,10 +678,15 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
   double wallArea = wallWidth * wallHeight;
 
   if (wallWidth < 2 * minGlassToEdgeDistance) {
+    LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios",
+             "Wall Width (" << wallWidth << "m) is too small to preserve 0.0254m (1 inch) on both sides.");
     return false;
   }
 
   if (wallHeight < 2 * minGlassToEdgeDistance + minViewToDaylightDistance) {
+    LOG_FREE(Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios",
+             "Wall Height (" << wallHeight << "m) is too small to preserve 0.0254m (1 inch) on both sides plus the minViewToDaylightDistance ("
+                             << minViewToDaylightDistance << "m).");
     return false;
   }
 
@@ -695,6 +702,12 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
   double requestedTotalWindowArea = totalWWR * wallArea;
 
   if (requestedTotalWindowArea > maxWindowArea) {
+    LOG_FREE(
+      Warn, "utilities.geometry.applyViewAndDaylightingGlassRatios",
+      "Requested WWR ("
+        << totalWWR << ") is greater than the Max WWR (" << maxWindowArea / wallArea
+        << "). This limit is meant to preserve mandatory space between window and wall: 0.0254m (1 inch) on all sides + minViewToDaylightDistance ("
+        << minViewToDaylightDistance << "m).");
     return false;
   }
 
@@ -850,6 +863,23 @@ bool applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double dayl
   interiorShelfVertices = transformation * interiorShelfVertices;
 
   return true;
+}
+
+bool isAlmostEqual3dPt(const Point3d& lhs, const Point3d& rhs, double tol) {
+  // TODO: this is what E+ does... I think I would prefer just calling getDistance...
+  return ((std::abs(lhs.x() - rhs.x()) < tol) && (std::abs(lhs.y() - rhs.y()) < tol) && (std::abs(lhs.z() - rhs.z()) < tol));
+  // return getDistance(lhs, rhs) < tol;
+}
+
+bool isPointOnLineBetweenPoints(const Point3d& start, const Point3d& end, const Point3d& test, double tol) {
+  // The tolerance has to be low enough. Take for eg a plenum that has an edge that's 30meters long, you risk adding point from the floor to
+  // the roof, cf E+ #7383
+  // compute the shortest distance from the point to the line first to avoid false positive
+  double distance = getDistancePointToLineSegment(test, {start, end});
+  if (distance < tol) {  // getDistancePointToLineSegment always positive, it's calculated as norml_L2
+    return (std::abs((getDistance(start, end) - (getDistance(start, test) + getDistance(test, end)))) < tol);
+  }
+  return false;
 }
 
 }  // namespace openstudio

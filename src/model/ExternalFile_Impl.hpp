@@ -39,6 +39,7 @@ namespace model {
 
   class ExternalFile;
   class ScheduleFile;
+  class PythonPluginInstance;
 
   namespace detail {
 
@@ -97,6 +98,8 @@ namespace model {
       //bool isValid();
 
       std::vector<ScheduleFile> scheduleFiles() const;
+
+      std::vector<PythonPluginInstance> pythonPluginInstances() const;
 
       //@}
      protected:

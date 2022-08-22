@@ -71,6 +71,10 @@
 #include "../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
 #include "../model/ElectricEquipmentITEAirCooled.hpp"
 #include "../model/ElectricEquipmentITEAirCooled_Impl.hpp"
+#include "../model/OutputControlTableStyle.hpp"
+#include "../model/OutputControlTableStyle_Impl.hpp"
+#include "../model/OutputSQLite.hpp"
+#include "../model/OutputSQLite_Impl.hpp"
 
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
@@ -671,7 +675,7 @@ namespace energyplus {
 
     if (fullModelTranslation) {
       // add output requests
-      this->createStandardOutputRequests();
+      this->createStandardOutputRequests(model);
     }
 
     Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
@@ -2152,6 +2156,16 @@ namespace energyplus {
         retVal = translateMaterialPropertyMoisturePenetrationDepthSettings(empd);
         break;
       }
+      case openstudio::IddObjectType::OS_MaterialProperty_PhaseChange: {
+        model::MaterialPropertyPhaseChange phaseChange = modelObject.cast<MaterialPropertyPhaseChange>();
+        retVal = translateMaterialPropertyPhaseChange(phaseChange);
+        break;
+      }
+      case openstudio::IddObjectType::OS_MaterialProperty_PhaseChangeHysteresis: {
+        model::MaterialPropertyPhaseChangeHysteresis phaseChangeHysteresis = modelObject.cast<MaterialPropertyPhaseChangeHysteresis>();
+        retVal = translateMaterialPropertyPhaseChangeHysteresis(phaseChangeHysteresis);
+        break;
+      }
       case openstudio::IddObjectType::OS_Material_RoofVegetation: {
         auto material = modelObject.cast<RoofVegetation>();
         retVal = translateRoofVegetation(material);
@@ -2280,6 +2294,11 @@ namespace energyplus {
         retVal = translateOutputControlReportingTolerances(outputControlReportingTolerances);
         break;
       }
+      case openstudio::IddObjectType::OS_OutputControl_Table_Style: {
+        model::OutputControlTableStyle outputControlTableStyle = modelObject.cast<OutputControlTableStyle>();
+        retVal = translateOutputControlTableStyle(outputControlTableStyle);
+        break;
+      }
       case openstudio::IddObjectType::OS_Output_DebuggingData: {
         auto mo = modelObject.cast<OutputDebuggingData>();
         retVal = translateOutputDebuggingData(mo);
@@ -2293,6 +2312,11 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_Output_JSON: {
         auto mo = modelObject.cast<OutputJSON>();
         retVal = translateOutputJSON(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Output_SQLite: {
+        auto mo = modelObject.cast<OutputSQLite>();
+        retVal = translateOutputSQLite(mo);
         break;
       }
       case openstudio::IddObjectType::OS_Output_EnvironmentalImpactFactors: {
@@ -2366,6 +2390,26 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::OS_ProgramControl: {
         LOG(Warn, "OS_ProgramControl is not currently translated");
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_Instance: {
+        model::PythonPluginInstance obj = modelObject.cast<PythonPluginInstance>();
+        retVal = translatePythonPluginInstance(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_Variable: {
+        auto obj = modelObject.cast<PythonPluginVariable>();
+        retVal = translatePythonPluginVariable(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_TrendVariable: {
+        auto obj = modelObject.cast<PythonPluginTrendVariable>();
+        retVal = translatePythonPluginTrendVariable(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_PythonPlugin_OutputVariable: {
+        auto obj = modelObject.cast<PythonPluginOutputVariable>();
+        retVal = translatePythonPluginOutputVariable(obj);
         break;
       }
       case openstudio::IddObjectType::OS_RadianceParameters: {
@@ -2646,6 +2690,16 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_SetpointManager_WarmestTemperatureFlow: {
         auto spm = modelObject.cast<SetpointManagerWarmestTemperatureFlow>();
         retVal = translateSetpointManagerWarmestTemperatureFlow(spm);
+        break;
+      }
+      case openstudio::IddObjectType::OS_SetpointManager_SystemNodeReset_Humidity: {
+        auto spm = modelObject.cast<SetpointManagerSystemNodeResetHumidity>();
+        retVal = translateSetpointManagerSystemNodeResetHumidity(spm);
+        break;
+      }
+      case openstudio::IddObjectType::OS_SetpointManager_SystemNodeReset_Temperature: {
+        auto spm = modelObject.cast<SetpointManagerSystemNodeResetTemperature>();
+        retVal = translateSetpointManagerSystemNodeResetTemperature(spm);
         break;
       }
       case openstudio::IddObjectType::OS_ShadingControl: {
@@ -3232,9 +3286,11 @@ namespace energyplus {
       IddObjectType::OS_ZoneCapacitanceMultiplier_ResearchSpecial,
       IddObjectType::OS_OutputControl_Files,
       IddObjectType::OS_OutputControl_ReportingTolerances,
+      IddObjectType::OS_OutputControl_Table_Style,
       IddObjectType::OS_Output_DebuggingData,
       IddObjectType::OS_Output_Diagnostics,
       IddObjectType::OS_Output_JSON,
+      IddObjectType::OS_Output_SQLite,
 
       // Note: we just always translate Output:EnvironmentalImpactFactors, and in there (it exists), then trigger translatation of the two others
       IddObjectType::OS_Output_EnvironmentalImpactFactors,
@@ -3473,1010 +3529,1090 @@ namespace energyplus {
       IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Actuator,
       IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Schedule,
       IddObjectType::OS_ExternalInterface_FunctionalMockupUnitImport_To_Variable,
+
+      IddObjectType::OS_PythonPlugin_Instance,
+      IddObjectType::OS_PythonPlugin_Variable,
+      IddObjectType::OS_PythonPlugin_TrendVariable,
+      IddObjectType::OS_PythonPlugin_OutputVariable,
     };
+
     return result;
   }
 
   void ForwardTranslator::translateConstructions(const model::Model& model) {
-    std::vector<IddObjectType> iddObjectTypes{
-      IddObjectType::OS_MaterialProperty_GlazingSpectralData,
-      IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings,
-      IddObjectType::OS_Material,
-      IddObjectType::OS_Material_AirGap,
-      IddObjectType::OS_Material_AirWall,
-      IddObjectType::OS_Material_InfraredTransparent,
-      IddObjectType::OS_Material_NoMass,
-      IddObjectType::OS_Material_RoofVegetation,
+    std::vector<IddObjectType> iddObjectTypes {
+      IddObjectType::OS_MaterialProperty_GlazingSpectralData, IddObjectType::OS_Material, IddObjectType::OS_Material_AirGap,
+        IddObjectType::OS_Material_AirWall, IddObjectType::OS_Material_InfraredTransparent, IddObjectType::OS_Material_NoMass,
+        IddObjectType::OS_Material_RoofVegetation,
 
-      IddObjectType::OS_WindowMaterial_Blind,
-      IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice,
-      IddObjectType::OS_WindowMaterial_Gas,
-      IddObjectType::OS_WindowMaterial_GasMixture,
-      IddObjectType::OS_WindowMaterial_Glazing,
-      IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic,
-      IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod,
-      IddObjectType::OS_WindowMaterial_Screen,
-      IddObjectType::OS_WindowMaterial_Shade,
-      IddObjectType::OS_WindowMaterial_SimpleGlazingSystem,
-      IddObjectType::OS_WindowProperty_FrameAndDivider,
-      IddObjectType::OS_ShadingControl,
+        IddObjectType::OS_WindowMaterial_Blind, IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice, IddObjectType::OS_WindowMaterial_Gas,
+        IddObjectType::OS_WindowMaterial_GasMixture, IddObjectType::OS_WindowMaterial_Glazing,
+        IddObjectType::OS_WindowMaterial_GlazingGroup_Thermochromic, IddObjectType::OS_WindowMaterial_Glazing_RefractionExtinctionMethod,
+        IddObjectType::OS_WindowMaterial_Screen, IddObjectType::OS_WindowMaterial_Shade, IddObjectType::OS_WindowMaterial_SimpleGlazingSystem,
+        IddObjectType::OS_WindowProperty_FrameAndDivider, IddObjectType::OS_ShadingControl,
 
-      IddObjectType::OS_Construction,
-      IddObjectType::OS_Construction_AirBoundary,
-      IddObjectType::OS_Construction_CfactorUndergroundWall,
-      IddObjectType::OS_Construction_FfactorGroundFloor,
-      IddObjectType::OS_Construction_InternalSource,
-      IddObjectType::OS_Construction_WindowDataFile,
-      IddObjectType::OS_StandardsInformation_Construction,
+        IddObjectType::OS_Construction, IddObjectType::OS_Construction_AirBoundary, IddObjectType::OS_Construction_CfactorUndergroundWall,
+        IddObjectType::OS_Construction_FfactorGroundFloor, IddObjectType::OS_Construction_InternalSource,
+        IddObjectType::OS_Construction_WindowDataFile, IddObjectType::OS_StandardsInformation_Construction,
 
-      IddObjectType::OS_DefaultSubSurfaceConstructions,
-      IddObjectType::OS_DefaultSurfaceConstructions,
-      IddObjectType::OS_DefaultConstructionSet,
-      IddObjectType::OS_DefaultScheduleSet
+        IddObjectType::OS_DefaultSubSurfaceConstructions, IddObjectType::OS_DefaultSurfaceConstructions, IddObjectType::OS_DefaultConstructionSet,
+        IddObjectType::OS_DefaultScheduleSet,
 
-      // Translated by the object it references directly
-      //IddObjectType::OS_SurfaceControl_MovableInsulation,           // Surface Only
-      //IddObjectType::OS_SurfaceProperty_OtherSideCoefficients,      // Surface, SubSurface,
-      //IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel,   // Surface, SubSurface,
-      //IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter, // Surface Only
-      //IddObjectType::OS_SurfaceProperty_ConvectionCoefficients,     // Surface, SubSurface, or InternalMass
-    };
+        // Translated by the object it references directly
+        // IddObjectType::OS_MaterialProperty_MoisturePenetrationDepth_Settings,  // Material Only
+        // IdObjectType::OS_MaterialProperty_PhaseChange,                         // Material Only
+        // IddObjectType::OS_MaterialProperty_PhaseChangeHysteresis,              // Material Only
+        // IddObjectType::OS_SurfaceControl_MovableInsulation,                    // Surface Only
+        // IddObjectType::OS_SurfaceProperty_OtherSideCoefficients,               // Surface, SubSurface,
+        // IddObjectType::OS_SurfaceProperty_OtherSideConditionsModel,            // Surface, SubSurface,
+        // IddObjectType::OS_SurfaceProperty_ExposedFoundationPerimeter,          // Surface Only
+        // IddObjectType::OS_SurfaceProperty_ConvectionCoefficients,              // Surface, SubSurface, or InternalMass
 
-    for (const IddObjectType& iddObjectType : iddObjectTypes) {
+        for (const IddObjectType& iddObjectType : iddObjectTypes) {
 
-      // get objects by type in sorted order
-      std::vector<WorkspaceObject> objects = model.getObjectsByType(iddObjectType);
-      std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
+        // get objects by type in sorted order
+        std::vector<WorkspaceObject> objects = model.getObjectsByType(iddObjectType);
+        std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
 
-      for (const WorkspaceObject& workspaceObject : objects) {
-        auto modelObject = workspaceObject.cast<ModelObject>();
-        boost::optional<IdfObject> result = translateAndMapModelObject(modelObject);
+        for (const WorkspaceObject& workspaceObject : objects) {
+          auto modelObject = workspaceObject.cast<ModelObject>();
+          boost::optional<IdfObject> result = translateAndMapModelObject(modelObject);
 
-        if (auto constructionBase_ = modelObject.optionalCast<ConstructionBase>()) {
-          if (istringEqual("Interior Partition Surface Construction", workspaceObject.name().get())) {
-            m_interiorPartitionSurfaceConstruction = constructionBase_.get();
-          }
+          if (auto constructionBase_ = modelObject.optionalCast<ConstructionBase>()) {
+            if (istringEqual("Interior Partition Surface Construction", workspaceObject.name().get())) {
+              m_interiorPartitionSurfaceConstruction = constructionBase_.get();
+            }
 
-          if (istringEqual("Shading Surface Construction", workspaceObject.name().get())) {
-            m_exteriorSurfaceConstruction = constructionBase_.get();
-          }
-        }
-      }
-    }
-  }
-
-  void ForwardTranslator::translateSchedules(const model::Model& model) {
-
-    // loop over schedule type limits
-    std::vector<WorkspaceObject> objects = model.getObjectsByType(IddObjectType::OS_ScheduleTypeLimits);
-    std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
-    for (const WorkspaceObject& workspaceObject : objects) {
-      auto modelObject = workspaceObject.cast<ModelObject>();
-      translateAndMapModelObject(modelObject);
-    }
-
-    // now loop over all schedule types
-    std::vector<IddObjectType> iddObjectTypes{IddObjectType::OS_Schedule_Compact,       IddObjectType::OS_Schedule_Constant,
-                                              IddObjectType::OS_Schedule_Day,           IddObjectType::OS_Schedule_Week,
-                                              IddObjectType::OS_Schedule_Year,          IddObjectType::OS_Schedule_Ruleset,
-                                              IddObjectType::OS_Schedule_FixedInterval, IddObjectType::OS_Schedule_VariableInterval,
-                                              IddObjectType::OS_Schedule_File};
-
-    for (const IddObjectType& iddObjectType : iddObjectTypes) {
-
-      // get objects by type in sorted order
-      objects = model.getObjectsByType(iddObjectType);
-      std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
-
-      for (const WorkspaceObject& workspaceObject : objects) {
-        auto modelObject = workspaceObject.cast<ModelObject>();
-        boost::optional<IdfObject> result = translateAndMapModelObject(modelObject);
-
-        if ((iddObjectType == IddObjectType::OS_Schedule_Compact) || (iddObjectType == IddObjectType::OS_Schedule_Constant)
-            || (iddObjectType == IddObjectType::OS_Schedule_Ruleset) || (iddObjectType == IddObjectType::OS_Schedule_FixedInterval)
-            || (iddObjectType == IddObjectType::OS_Schedule_VariableInterval)) {
-          // This predates Model::alwaysOnDiscreteSchedule, but leaving it in place for now
-          if (istringEqual("Always_On", workspaceObject.name().get())) {
-            m_alwaysOnSchedule = result;
-          }
-
-          if (istringEqual("Always_Off", workspaceObject.name().get())) {
-            m_alwaysOffSchedule = result;
+            if (istringEqual("Shading Surface Construction", workspaceObject.name().get())) {
+              m_exteriorSurfaceConstruction = constructionBase_.get();
+            }
           }
         }
       }
     }
 
-    // Make sure these get in the idf file
-    {
-      auto schedule = model.alwaysOnDiscreteSchedule();
-      translateAndMapModelObject(schedule);
-      schedule = model.alwaysOffDiscreteSchedule();
-      translateAndMapModelObject(schedule);
-      schedule = model.alwaysOnContinuousSchedule();
-      translateAndMapModelObject(schedule);
-    }
-  }
+    void ForwardTranslator::translateSchedules(const model::Model& model) {
 
-  void ForwardTranslator::translateAirflowNetwork(const model::Model& model) {
-    // translate AFN if there is a simulation control object
-    boost::optional<model::AirflowNetworkSimulationControl> afnSimulationControl =
-      model.getOptionalUniqueModelObject<model::AirflowNetworkSimulationControl>();
-    if (afnSimulationControl) {
-      translateAirflowNetworkSimulationControl(afnSimulationControl.get());
-
-      // Zones
-      std::vector<model::AirflowNetworkZone> zones = model.getConcreteModelObjects<model::AirflowNetworkZone>();
-      std::sort(zones.begin(), zones.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : zones) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkZone(modelObject);
+      // loop over schedule type limits
+      std::vector<WorkspaceObject> objects = model.getObjectsByType(IddObjectType::OS_ScheduleTypeLimits);
+      std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
+      for (const WorkspaceObject& workspaceObject : objects) {
+        auto modelObject = workspaceObject.cast<ModelObject>();
+        translateAndMapModelObject(modelObject);
       }
 
-      // Reference Crack Conditions
-      std::vector<model::AirflowNetworkReferenceCrackConditions> refcracks =
-        model.getConcreteModelObjects<model::AirflowNetworkReferenceCrackConditions>();
-      std::sort(refcracks.begin(), refcracks.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : refcracks) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkReferenceCrackConditions(modelObject);
+      // now loop over all schedule types
+      std::vector<IddObjectType> iddObjectTypes{IddObjectType::OS_Schedule_Compact,       IddObjectType::OS_Schedule_Constant,
+                                                IddObjectType::OS_Schedule_Day,           IddObjectType::OS_Schedule_Week,
+                                                IddObjectType::OS_Schedule_Year,          IddObjectType::OS_Schedule_Ruleset,
+                                                IddObjectType::OS_Schedule_FixedInterval, IddObjectType::OS_Schedule_VariableInterval,
+                                                IddObjectType::OS_Schedule_File};
+
+      for (const IddObjectType& iddObjectType : iddObjectTypes) {
+
+        // get objects by type in sorted order
+        objects = model.getObjectsByType(iddObjectType);
+        std::sort(objects.begin(), objects.end(), WorkspaceObjectNameLess());
+
+        for (const WorkspaceObject& workspaceObject : objects) {
+          auto modelObject = workspaceObject.cast<ModelObject>();
+          boost::optional<IdfObject> result = translateAndMapModelObject(modelObject);
+
+          if ((iddObjectType == IddObjectType::OS_Schedule_Compact) || (iddObjectType == IddObjectType::OS_Schedule_Constant)
+              || (iddObjectType == IddObjectType::OS_Schedule_Ruleset) || (iddObjectType == IddObjectType::OS_Schedule_FixedInterval)
+              || (iddObjectType == IddObjectType::OS_Schedule_VariableInterval)) {
+            // This predates Model::alwaysOnDiscreteSchedule, but leaving it in place for now
+            if (istringEqual("Always_On", workspaceObject.name().get())) {
+              m_alwaysOnSchedule = result;
+            }
+
+            if (istringEqual("Always_Off", workspaceObject.name().get())) {
+              m_alwaysOffSchedule = result;
+            }
+          }
+        }
       }
 
-      // Cracks
-      std::vector<model::AirflowNetworkCrack> cracks = model.getConcreteModelObjects<model::AirflowNetworkCrack>();
-      std::sort(cracks.begin(), cracks.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : cracks) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkCrack(modelObject);
-      }
-
-      // Effective Leakage Area
-      std::vector<model::AirflowNetworkEffectiveLeakageArea> elas = model.getConcreteModelObjects<model::AirflowNetworkEffectiveLeakageArea>();
-      std::sort(elas.begin(), elas.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : elas) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkEffectiveLeakageArea(modelObject);
-      }
-
-      // Simple Openings
-      std::vector<model::AirflowNetworkSimpleOpening> simples = model.getConcreteModelObjects<model::AirflowNetworkSimpleOpening>();
-      std::sort(simples.begin(), simples.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : simples) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkSimpleOpening(modelObject);
-      }
-
-      // Detailed Openings
-      std::vector<model::AirflowNetworkDetailedOpening> detaileds = model.getConcreteModelObjects<model::AirflowNetworkDetailedOpening>();
-      std::sort(detaileds.begin(), detaileds.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : detaileds) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkDetailedOpening(modelObject);
-      }
-
-      // Horizontal Openings
-      std::vector<model::AirflowNetworkHorizontalOpening> horzs = model.getConcreteModelObjects<model::AirflowNetworkHorizontalOpening>();
-      std::sort(horzs.begin(), horzs.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : horzs) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkHorizontalOpening(modelObject);
-      }
-
-      // Specified Flow Rate
-      std::vector<model::AirflowNetworkSpecifiedFlowRate> sfrs = model.getConcreteModelObjects<model::AirflowNetworkSpecifiedFlowRate>();
-      std::sort(sfrs.begin(), sfrs.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : sfrs) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkSpecifiedFlowRate(modelObject);
-      }
-
-      // Surfaces
-      std::vector<model::AirflowNetworkSurface> surfs = model.getConcreteModelObjects<model::AirflowNetworkSurface>();
-      std::sort(surfs.begin(), surfs.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : surfs) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkSurface(modelObject);
-      }
-
-      // Nodes
-      std::vector<model::AirflowNetworkDistributionNode> nodes = model.getConcreteModelObjects<model::AirflowNetworkDistributionNode>();
-      std::sort(nodes.begin(), nodes.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : nodes) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkDistributionNode(modelObject);
-      }
-
-      // Linkages
-      std::vector<model::AirflowNetworkDistributionLinkage> links = model.getConcreteModelObjects<model::AirflowNetworkDistributionLinkage>();
-      std::sort(links.begin(), links.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : links) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkDistributionLinkage(modelObject);
-      }
-
-      // External Nodes
-      std::vector<model::AirflowNetworkExternalNode> exts = model.getConcreteModelObjects<model::AirflowNetworkExternalNode>();
-      std::sort(exts.begin(), exts.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : exts) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkExternalNode(modelObject);
-      }
-
-      // Zone Exhaust Fan
-      std::vector<model::AirflowNetworkZoneExhaustFan> zefs = model.getConcreteModelObjects<model::AirflowNetworkZoneExhaustFan>();
-      std::sort(zefs.begin(), zefs.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : zefs) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkZoneExhaustFan(modelObject);
-      }
-
-      // Fan
-      std::vector<model::AirflowNetworkFan> fans = model.getConcreteModelObjects<model::AirflowNetworkFan>();
-      std::sort(fans.begin(), fans.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : fans) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkFan(modelObject);
-      }
-
-      // Duct
-      std::vector<model::AirflowNetworkDuct> ducts = model.getConcreteModelObjects<model::AirflowNetworkDuct>();
-      std::sort(ducts.begin(), ducts.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : ducts) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkDuct(modelObject);
-      }
-
-      // Equivalent Duct
-      std::vector<model::AirflowNetworkEquivalentDuct> equivds = model.getConcreteModelObjects<model::AirflowNetworkEquivalentDuct>();
-      std::sort(equivds.begin(), equivds.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : equivds) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkEquivalentDuct(modelObject);
-      }
-
-      // Leakage Ratio
-      std::vector<model::AirflowNetworkLeakageRatio> lrs = model.getConcreteModelObjects<model::AirflowNetworkLeakageRatio>();
-      std::sort(lrs.begin(), lrs.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : lrs) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkLeakageRatio(modelObject);
-      }
-
-      // Constant Pressure Drops
-      std::vector<model::AirflowNetworkConstantPressureDrop> constps = model.getConcreteModelObjects<model::AirflowNetworkConstantPressureDrop>();
-      std::sort(constps.begin(), constps.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : constps) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkConstantPressureDrop(modelObject);
-      }
-
-      // Outdoor Air Flow
-      std::vector<model::AirflowNetworkOutdoorAirflow> oafs = model.getConcreteModelObjects<model::AirflowNetworkOutdoorAirflow>();
-      std::sort(oafs.begin(), oafs.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : oafs) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkOutdoorAirflow(modelObject);
-      }
-
-      // Duct VFs
-      std::vector<model::AirflowNetworkDuctViewFactors> ductvfs = model.getConcreteModelObjects<model::AirflowNetworkDuctViewFactors>();
-      std::sort(ductvfs.begin(), ductvfs.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : ductvfs) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkDuctViewFactors(modelObject);
-      }
-
-      // Occupant Ventilation Control
-      std::vector<model::AirflowNetworkOccupantVentilationControl> occvcs =
-        model.getConcreteModelObjects<model::AirflowNetworkOccupantVentilationControl>();
-      std::sort(occvcs.begin(), occvcs.end(), WorkspaceObjectNameLess());
-      for (auto& modelObject : occvcs) {
-        LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
-        translateAirflowNetworkOccupantVentilationControl(modelObject);
-      }
-
-    } else {
-
-      unsigned int count = 0;
-
-      // Zones
-      std::vector<model::AirflowNetworkZone> zones = model.getConcreteModelObjects<model::AirflowNetworkZone>();
-      count += zones.size();
-
-      // Reference Crack Conditions
-      std::vector<model::AirflowNetworkReferenceCrackConditions> refcracks =
-        model.getConcreteModelObjects<model::AirflowNetworkReferenceCrackConditions>();
-      count += refcracks.size();
-
-      // Cracks
-      std::vector<model::AirflowNetworkCrack> cracks = model.getConcreteModelObjects<model::AirflowNetworkCrack>();
-      count += cracks.size();
-
-      // Effective Leakage Area
-      std::vector<model::AirflowNetworkEffectiveLeakageArea> elas = model.getConcreteModelObjects<model::AirflowNetworkEffectiveLeakageArea>();
-      count += elas.size();
-
-      // Simple Openings
-      std::vector<model::AirflowNetworkSimpleOpening> simples = model.getConcreteModelObjects<model::AirflowNetworkSimpleOpening>();
-      count += simples.size();
-
-      // Detailed Openings
-      std::vector<model::AirflowNetworkDetailedOpening> detaileds = model.getConcreteModelObjects<model::AirflowNetworkDetailedOpening>();
-      count += detaileds.size();
-
-      // Horizontal Openings
-      std::vector<model::AirflowNetworkHorizontalOpening> horzs = model.getConcreteModelObjects<model::AirflowNetworkHorizontalOpening>();
-      count += horzs.size();
-
-      // Specified Flow Rate
-      std::vector<model::AirflowNetworkSpecifiedFlowRate> sfrs = model.getConcreteModelObjects<model::AirflowNetworkSpecifiedFlowRate>();
-      count += sfrs.size();
-
-      // Surfaces
-      std::vector<model::AirflowNetworkSurface> surfs = model.getConcreteModelObjects<model::AirflowNetworkSurface>();
-      count += surfs.size();
-
-      // Nodes
-      std::vector<model::AirflowNetworkDistributionNode> nodes = model.getConcreteModelObjects<model::AirflowNetworkDistributionNode>();
-      count += nodes.size();
-
-      // Linkages
-      std::vector<model::AirflowNetworkDistributionLinkage> links = model.getConcreteModelObjects<model::AirflowNetworkDistributionLinkage>();
-      count += links.size();
-
-      // External Nodes
-      std::vector<model::AirflowNetworkExternalNode> exts = model.getConcreteModelObjects<model::AirflowNetworkExternalNode>();
-      count += exts.size();
-
-      // Zone Exhaust Fan
-      std::vector<model::AirflowNetworkZoneExhaustFan> zefs = model.getConcreteModelObjects<model::AirflowNetworkZoneExhaustFan>();
-      count += zefs.size();
-
-      // Fan
-      std::vector<model::AirflowNetworkFan> fans = model.getConcreteModelObjects<model::AirflowNetworkFan>();
-      count += fans.size();
-
-      // Duct
-      std::vector<model::AirflowNetworkDuct> ducts = model.getConcreteModelObjects<model::AirflowNetworkDuct>();
-      count += ducts.size();
-
-      // Equivalent Duct
-      std::vector<model::AirflowNetworkEquivalentDuct> equivds = model.getConcreteModelObjects<model::AirflowNetworkEquivalentDuct>();
-      count += equivds.size();
-
-      // Leakage Ratio
-      std::vector<model::AirflowNetworkLeakageRatio> lrs = model.getConcreteModelObjects<model::AirflowNetworkLeakageRatio>();
-      count += lrs.size();
-
-      // Constant Pressure Drops
-      std::vector<model::AirflowNetworkConstantPressureDrop> constps = model.getConcreteModelObjects<model::AirflowNetworkConstantPressureDrop>();
-      count += constps.size();
-
-      // Outdoor Air Flow
-      std::vector<model::AirflowNetworkOutdoorAirflow> oafs = model.getConcreteModelObjects<model::AirflowNetworkOutdoorAirflow>();
-      count += oafs.size();
-
-      // Duct VFs
-      std::vector<model::AirflowNetworkDuctViewFactors> ductvfs = model.getConcreteModelObjects<model::AirflowNetworkDuctViewFactors>();
-      count += ductvfs.size();
-
-      // Occupant Ventilation Control
-      std::vector<model::AirflowNetworkOccupantVentilationControl> occvcs =
-        model.getConcreteModelObjects<model::AirflowNetworkOccupantVentilationControl>();
-      count += occvcs.size();
-
-      if (count > 0) {
-        LOG(Warn, "No AirflowNetworkSimulationControl found in model, skipping forward translation of " << count << " AirflowNetwork objects.");
+      // Make sure these get in the idf file
+      {
+        auto schedule = model.alwaysOnDiscreteSchedule();
+        translateAndMapModelObject(schedule);
+        schedule = model.alwaysOffDiscreteSchedule();
+        translateAndMapModelObject(schedule);
+        schedule = model.alwaysOnContinuousSchedule();
+        translateAndMapModelObject(schedule);
       }
     }
-  }
 
-  void ForwardTranslator::reset() {
-    m_idfObjects.clear();
+    void ForwardTranslator::translateAirflowNetwork(const model::Model& model) {
+      // translate AFN if there is a simulation control object
+      boost::optional<model::AirflowNetworkSimulationControl> afnSimulationControl =
+        model.getOptionalUniqueModelObject<model::AirflowNetworkSimulationControl>();
+      if (afnSimulationControl) {
+        translateAirflowNetworkSimulationControl(afnSimulationControl.get());
 
-    m_map.clear();
+        // Zones
+        std::vector<model::AirflowNetworkZone> zones = model.getConcreteModelObjects<model::AirflowNetworkZone>();
+        std::sort(zones.begin(), zones.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : zones) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkZone(modelObject);
+        }
 
-    m_anyNumberScheduleTypeLimits.reset();
+        // Reference Crack Conditions
+        std::vector<model::AirflowNetworkReferenceCrackConditions> refcracks =
+          model.getConcreteModelObjects<model::AirflowNetworkReferenceCrackConditions>();
+        std::sort(refcracks.begin(), refcracks.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : refcracks) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkReferenceCrackConditions(modelObject);
+        }
 
-    m_alwaysOnSchedule.reset();
+        // Cracks
+        std::vector<model::AirflowNetworkCrack> cracks = model.getConcreteModelObjects<model::AirflowNetworkCrack>();
+        std::sort(cracks.begin(), cracks.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : cracks) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkCrack(modelObject);
+        }
 
-    m_alwaysOffSchedule.reset();
+        // Effective Leakage Area
+        std::vector<model::AirflowNetworkEffectiveLeakageArea> elas = model.getConcreteModelObjects<model::AirflowNetworkEffectiveLeakageArea>();
+        std::sort(elas.begin(), elas.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : elas) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkEffectiveLeakageArea(modelObject);
+        }
 
-    m_interiorPartitionSurfaceConstruction.reset();
+        // Simple Openings
+        std::vector<model::AirflowNetworkSimpleOpening> simples = model.getConcreteModelObjects<model::AirflowNetworkSimpleOpening>();
+        std::sort(simples.begin(), simples.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : simples) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkSimpleOpening(modelObject);
+        }
 
-    m_exteriorSurfaceConstruction.reset();
+        // Detailed Openings
+        std::vector<model::AirflowNetworkDetailedOpening> detaileds = model.getConcreteModelObjects<model::AirflowNetworkDetailedOpening>();
+        std::sort(detaileds.begin(), detaileds.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : detaileds) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkDetailedOpening(modelObject);
+        }
 
-    m_constructionHandleToReversedConstructions.clear();
+        // Horizontal Openings
+        std::vector<model::AirflowNetworkHorizontalOpening> horzs = model.getConcreteModelObjects<model::AirflowNetworkHorizontalOpening>();
+        std::sort(horzs.begin(), horzs.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : horzs) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkHorizontalOpening(modelObject);
+        }
 
-    m_logSink.setThreadId(std::this_thread::get_id());
+        // Specified Flow Rate
+        std::vector<model::AirflowNetworkSpecifiedFlowRate> sfrs = model.getConcreteModelObjects<model::AirflowNetworkSpecifiedFlowRate>();
+        std::sort(sfrs.begin(), sfrs.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : sfrs) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkSpecifiedFlowRate(modelObject);
+        }
 
-    m_logSink.resetStringStream();
-  }
+        // Surfaces
+        std::vector<model::AirflowNetworkSurface> surfs = model.getConcreteModelObjects<model::AirflowNetworkSurface>();
+        std::sort(surfs.begin(), surfs.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : surfs) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkSurface(modelObject);
+        }
 
-  IdfObject ForwardTranslator::alwaysOnSchedule() {
-    if (m_alwaysOnSchedule) {
+        // Nodes
+        std::vector<model::AirflowNetworkDistributionNode> nodes = model.getConcreteModelObjects<model::AirflowNetworkDistributionNode>();
+        std::sort(nodes.begin(), nodes.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : nodes) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkDistributionNode(modelObject);
+        }
+
+        // Linkages
+        std::vector<model::AirflowNetworkDistributionLinkage> links = model.getConcreteModelObjects<model::AirflowNetworkDistributionLinkage>();
+        std::sort(links.begin(), links.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : links) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkDistributionLinkage(modelObject);
+        }
+
+        // External Nodes
+        std::vector<model::AirflowNetworkExternalNode> exts = model.getConcreteModelObjects<model::AirflowNetworkExternalNode>();
+        std::sort(exts.begin(), exts.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : exts) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkExternalNode(modelObject);
+        }
+
+        // Zone Exhaust Fan
+        std::vector<model::AirflowNetworkZoneExhaustFan> zefs = model.getConcreteModelObjects<model::AirflowNetworkZoneExhaustFan>();
+        std::sort(zefs.begin(), zefs.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : zefs) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkZoneExhaustFan(modelObject);
+        }
+
+        // Fan
+        std::vector<model::AirflowNetworkFan> fans = model.getConcreteModelObjects<model::AirflowNetworkFan>();
+        std::sort(fans.begin(), fans.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : fans) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkFan(modelObject);
+        }
+
+        // Duct
+        std::vector<model::AirflowNetworkDuct> ducts = model.getConcreteModelObjects<model::AirflowNetworkDuct>();
+        std::sort(ducts.begin(), ducts.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : ducts) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkDuct(modelObject);
+        }
+
+        // Equivalent Duct
+        std::vector<model::AirflowNetworkEquivalentDuct> equivds = model.getConcreteModelObjects<model::AirflowNetworkEquivalentDuct>();
+        std::sort(equivds.begin(), equivds.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : equivds) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkEquivalentDuct(modelObject);
+        }
+
+        // Leakage Ratio
+        std::vector<model::AirflowNetworkLeakageRatio> lrs = model.getConcreteModelObjects<model::AirflowNetworkLeakageRatio>();
+        std::sort(lrs.begin(), lrs.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : lrs) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkLeakageRatio(modelObject);
+        }
+
+        // Constant Pressure Drops
+        std::vector<model::AirflowNetworkConstantPressureDrop> constps = model.getConcreteModelObjects<model::AirflowNetworkConstantPressureDrop>();
+        std::sort(constps.begin(), constps.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : constps) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkConstantPressureDrop(modelObject);
+        }
+
+        // Outdoor Air Flow
+        std::vector<model::AirflowNetworkOutdoorAirflow> oafs = model.getConcreteModelObjects<model::AirflowNetworkOutdoorAirflow>();
+        std::sort(oafs.begin(), oafs.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : oafs) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkOutdoorAirflow(modelObject);
+        }
+
+        // Duct VFs
+        std::vector<model::AirflowNetworkDuctViewFactors> ductvfs = model.getConcreteModelObjects<model::AirflowNetworkDuctViewFactors>();
+        std::sort(ductvfs.begin(), ductvfs.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : ductvfs) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkDuctViewFactors(modelObject);
+        }
+
+        // Occupant Ventilation Control
+        std::vector<model::AirflowNetworkOccupantVentilationControl> occvcs =
+          model.getConcreteModelObjects<model::AirflowNetworkOccupantVentilationControl>();
+        std::sort(occvcs.begin(), occvcs.end(), WorkspaceObjectNameLess());
+        for (auto& modelObject : occvcs) {
+          LOG(Trace, "Translating " << modelObject.briefDescription() << ".");
+          translateAirflowNetworkOccupantVentilationControl(modelObject);
+        }
+
+      } else {
+
+        unsigned int count = 0;
+
+        // Zones
+        std::vector<model::AirflowNetworkZone> zones = model.getConcreteModelObjects<model::AirflowNetworkZone>();
+        count += zones.size();
+
+        // Reference Crack Conditions
+        std::vector<model::AirflowNetworkReferenceCrackConditions> refcracks =
+          model.getConcreteModelObjects<model::AirflowNetworkReferenceCrackConditions>();
+        count += refcracks.size();
+
+        // Cracks
+        std::vector<model::AirflowNetworkCrack> cracks = model.getConcreteModelObjects<model::AirflowNetworkCrack>();
+        count += cracks.size();
+
+        // Effective Leakage Area
+        std::vector<model::AirflowNetworkEffectiveLeakageArea> elas = model.getConcreteModelObjects<model::AirflowNetworkEffectiveLeakageArea>();
+        count += elas.size();
+
+        // Simple Openings
+        std::vector<model::AirflowNetworkSimpleOpening> simples = model.getConcreteModelObjects<model::AirflowNetworkSimpleOpening>();
+        count += simples.size();
+
+        // Detailed Openings
+        std::vector<model::AirflowNetworkDetailedOpening> detaileds = model.getConcreteModelObjects<model::AirflowNetworkDetailedOpening>();
+        count += detaileds.size();
+
+        // Horizontal Openings
+        std::vector<model::AirflowNetworkHorizontalOpening> horzs = model.getConcreteModelObjects<model::AirflowNetworkHorizontalOpening>();
+        count += horzs.size();
+
+        // Specified Flow Rate
+        std::vector<model::AirflowNetworkSpecifiedFlowRate> sfrs = model.getConcreteModelObjects<model::AirflowNetworkSpecifiedFlowRate>();
+        count += sfrs.size();
+
+        // Surfaces
+        std::vector<model::AirflowNetworkSurface> surfs = model.getConcreteModelObjects<model::AirflowNetworkSurface>();
+        count += surfs.size();
+
+        // Nodes
+        std::vector<model::AirflowNetworkDistributionNode> nodes = model.getConcreteModelObjects<model::AirflowNetworkDistributionNode>();
+        count += nodes.size();
+
+        // Linkages
+        std::vector<model::AirflowNetworkDistributionLinkage> links = model.getConcreteModelObjects<model::AirflowNetworkDistributionLinkage>();
+        count += links.size();
+
+        // External Nodes
+        std::vector<model::AirflowNetworkExternalNode> exts = model.getConcreteModelObjects<model::AirflowNetworkExternalNode>();
+        count += exts.size();
+
+        // Zone Exhaust Fan
+        std::vector<model::AirflowNetworkZoneExhaustFan> zefs = model.getConcreteModelObjects<model::AirflowNetworkZoneExhaustFan>();
+        count += zefs.size();
+
+        // Fan
+        std::vector<model::AirflowNetworkFan> fans = model.getConcreteModelObjects<model::AirflowNetworkFan>();
+        count += fans.size();
+
+        // Duct
+        std::vector<model::AirflowNetworkDuct> ducts = model.getConcreteModelObjects<model::AirflowNetworkDuct>();
+        count += ducts.size();
+
+        // Equivalent Duct
+        std::vector<model::AirflowNetworkEquivalentDuct> equivds = model.getConcreteModelObjects<model::AirflowNetworkEquivalentDuct>();
+        count += equivds.size();
+
+        // Leakage Ratio
+        std::vector<model::AirflowNetworkLeakageRatio> lrs = model.getConcreteModelObjects<model::AirflowNetworkLeakageRatio>();
+        count += lrs.size();
+
+        // Constant Pressure Drops
+        std::vector<model::AirflowNetworkConstantPressureDrop> constps = model.getConcreteModelObjects<model::AirflowNetworkConstantPressureDrop>();
+        count += constps.size();
+
+        // Outdoor Air Flow
+        std::vector<model::AirflowNetworkOutdoorAirflow> oafs = model.getConcreteModelObjects<model::AirflowNetworkOutdoorAirflow>();
+        count += oafs.size();
+
+        // Duct VFs
+        std::vector<model::AirflowNetworkDuctViewFactors> ductvfs = model.getConcreteModelObjects<model::AirflowNetworkDuctViewFactors>();
+        count += ductvfs.size();
+
+        // Occupant Ventilation Control
+        std::vector<model::AirflowNetworkOccupantVentilationControl> occvcs =
+          model.getConcreteModelObjects<model::AirflowNetworkOccupantVentilationControl>();
+        count += occvcs.size();
+
+        if (count > 0) {
+          LOG(Warn, "No AirflowNetworkSimulationControl found in model, skipping forward translation of " << count << " AirflowNetwork objects.");
+        }
+      }
+    }
+
+    void ForwardTranslator::reset() {
+      m_idfObjects.clear();
+
+      m_map.clear();
+
+      m_anyNumberScheduleTypeLimits.reset();
+
+      m_alwaysOnSchedule.reset();
+
+      m_alwaysOffSchedule.reset();
+
+      m_interiorPartitionSurfaceConstruction.reset();
+
+      m_exteriorSurfaceConstruction.reset();
+
+      m_constructionHandleToReversedConstructions.clear();
+
+      m_logSink.setThreadId(std::this_thread::get_id());
+
+      m_logSink.resetStringStream();
+    }
+
+    IdfObject ForwardTranslator::alwaysOnSchedule() {
+      if (m_alwaysOnSchedule) {
+        return *m_alwaysOnSchedule;
+      }
+
+      m_alwaysOnSchedule = IdfObject(IddObjectType::Schedule_Constant);
+      m_alwaysOnSchedule->setName("Always_On");
+      m_alwaysOnSchedule->setDouble(2, 1.0);
+
+      m_idfObjects.push_back(*m_alwaysOnSchedule);
+
       return *m_alwaysOnSchedule;
     }
 
-    m_alwaysOnSchedule = IdfObject(IddObjectType::Schedule_Constant);
-    m_alwaysOnSchedule->setName("Always_On");
-    m_alwaysOnSchedule->setDouble(2, 1.0);
+    IdfObject ForwardTranslator::alwaysOffSchedule() {
+      if (m_alwaysOffSchedule) {
+        return *m_alwaysOffSchedule;
+      }
 
-    m_idfObjects.push_back(*m_alwaysOnSchedule);
+      m_alwaysOffSchedule = IdfObject(IddObjectType::Schedule_Constant);
+      m_alwaysOffSchedule->setName("Always_Off");
+      m_alwaysOffSchedule->setDouble(2, 0.0);
 
-    return *m_alwaysOnSchedule;
-  }
+      m_idfObjects.push_back(*m_alwaysOffSchedule);
 
-  IdfObject ForwardTranslator::alwaysOffSchedule() {
-    if (m_alwaysOffSchedule) {
       return *m_alwaysOffSchedule;
     }
 
-    m_alwaysOffSchedule = IdfObject(IddObjectType::Schedule_Constant);
-    m_alwaysOffSchedule->setName("Always_Off");
-    m_alwaysOffSchedule->setDouble(2, 0.0);
+    model::ConstructionBase ForwardTranslator::interiorPartitionSurfaceConstruction(model::Model & model) {
+      if (m_interiorPartitionSurfaceConstruction) {
+        return *m_interiorPartitionSurfaceConstruction;
+      }
 
-    m_idfObjects.push_back(*m_alwaysOffSchedule);
+      StandardOpaqueMaterial material(model, "MediumSmooth", 0.0254, 0.16, 800, 1090);
+      material.setThermalAbsorptance(0.4);
+      material.setSolarAbsorptance(0.4);
+      material.setVisibleAbsorptance(0.3);
 
-    return *m_alwaysOffSchedule;
-  }
+      model::Construction construction(model);
+      construction.setName("Interior Partition Surface Construction");
+      construction.insertLayer(0, material);
+      m_interiorPartitionSurfaceConstruction = construction;
 
-  model::ConstructionBase ForwardTranslator::interiorPartitionSurfaceConstruction(model::Model& model) {
-    if (m_interiorPartitionSurfaceConstruction) {
+      translateAndMapModelObject(material);
+      translateAndMapModelObject(construction);
+
       return *m_interiorPartitionSurfaceConstruction;
     }
 
-    StandardOpaqueMaterial material(model, "MediumSmooth", 0.0254, 0.16, 800, 1090);
-    material.setThermalAbsorptance(0.4);
-    material.setSolarAbsorptance(0.4);
-    material.setVisibleAbsorptance(0.3);
+    model::ConstructionBase ForwardTranslator::exteriorSurfaceConstruction(model::Model & model) {
+      if (m_exteriorSurfaceConstruction) {
+        return *m_exteriorSurfaceConstruction;
+      }
 
-    model::Construction construction(model);
-    construction.setName("Interior Partition Surface Construction");
-    construction.insertLayer(0, material);
-    m_interiorPartitionSurfaceConstruction = construction;
+      StandardOpaqueMaterial material(model, "MediumSmooth", 0.1524, 0.49, 512, 880);
+      material.setThermalAbsorptance(0.6);
+      material.setSolarAbsorptance(0.6);
+      material.setVisibleAbsorptance(0.5);
 
-    translateAndMapModelObject(material);
-    translateAndMapModelObject(construction);
+      model::Construction construction(model);
+      construction.setName("Interior Partition Surface Construction");
+      construction.insertLayer(0, material);
+      m_exteriorSurfaceConstruction = construction;
 
-    return *m_interiorPartitionSurfaceConstruction;
-  }
+      translateAndMapModelObject(material);
+      translateAndMapModelObject(construction);
 
-  model::ConstructionBase ForwardTranslator::exteriorSurfaceConstruction(model::Model& model) {
-    if (m_exteriorSurfaceConstruction) {
       return *m_exteriorSurfaceConstruction;
     }
 
-    StandardOpaqueMaterial material(model, "MediumSmooth", 0.1524, 0.49, 512, 880);
-    material.setThermalAbsorptance(0.6);
-    material.setSolarAbsorptance(0.6);
-    material.setVisibleAbsorptance(0.5);
+    model::ConstructionBase ForwardTranslator::reverseConstruction(const model::ConstructionBase& construction) {
+      auto it = m_constructionHandleToReversedConstructions.find(construction.handle());
+      if (it != m_constructionHandleToReversedConstructions.end()) {
+        return it->second;
+      }
 
-    model::Construction construction(model);
-    construction.setName("Interior Partition Surface Construction");
-    construction.insertLayer(0, material);
-    m_exteriorSurfaceConstruction = construction;
+      if (!construction.optionalCast<model::LayeredConstruction>()) {
+        m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), construction));
+        return construction;
+      }
 
-    translateAndMapModelObject(material);
-    translateAndMapModelObject(construction);
+      auto layeredConstruction = construction.cast<model::LayeredConstruction>();
 
-    return *m_exteriorSurfaceConstruction;
-  }
+      if (layeredConstruction.isSymmetric()) {
+        m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), construction));
+        return construction;
+      }
 
-  model::ConstructionBase ForwardTranslator::reverseConstruction(const model::ConstructionBase& construction) {
-    auto it = m_constructionHandleToReversedConstructions.find(construction.handle());
-    if (it != m_constructionHandleToReversedConstructions.end()) {
-      return it->second;
-    }
+      if (construction.optionalCast<model::Construction>()) {
+        model::Construction reversed = construction.cast<model::Construction>().reverseConstruction();
+        m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed));
+        return std::move(reversed);
+      }
 
-    if (!construction.optionalCast<model::LayeredConstruction>()) {
-      m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), construction));
-      return construction;
-    }
+      if (construction.optionalCast<model::ConstructionWithInternalSource>()) {
+        model::ConstructionWithInternalSource reversed =
+          construction.cast<model::ConstructionWithInternalSource>().reverseConstructionWithInternalSource();
+        m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed));
+        return std::move(reversed);
+      }
 
-    auto layeredConstruction = construction.cast<model::LayeredConstruction>();
+      // DLM: this is not right, should make reverseConstruction a virtual method on LayeredConstruction so it will work for ConstructionWithInternalSource, etc
+      LOG(Error, "Do not know how to reverse construction " << construction);
 
-    if (layeredConstruction.isSymmetric()) {
-      m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), construction));
-      return construction;
-    }
+      model::MaterialVector layers = layeredConstruction.layers();
+      std::reverse(layers.begin(), layers.end());
 
-    if (construction.optionalCast<model::Construction>()) {
-      model::Construction reversed = construction.cast<model::Construction>().reverseConstruction();
+      model::Construction reversed = model::Construction(construction.model());
+      reversed.setName(construction.name().get() + " Reversed");
+      reversed.setLayers(layers);
       m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed));
+
       return std::move(reversed);
     }
 
-    if (construction.optionalCast<model::ConstructionWithInternalSource>()) {
-      model::ConstructionWithInternalSource reversed =
-        construction.cast<model::ConstructionWithInternalSource>().reverseConstructionWithInternalSource();
-      m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed));
-      return std::move(reversed);
-    }
+    void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model & model) {
+      // DLM: there is duplicate code in Surface_Impl::construction
+      // if you update this code you must update that code
 
-    // DLM: this is not right, should make reverseConstruction a virtual method on LayeredConstruction so it will work for ConstructionWithInternalSource, etc
-    LOG(Error, "Do not know how to reverse construction " << construction);
+      std::set<Handle> processedSurfaces;
 
-    model::MaterialVector layers = layeredConstruction.layers();
-    std::reverse(layers.begin(), layers.end());
+      model::SurfaceVector surfaces = model.getConcreteModelObjects<model::Surface>();
+      for (auto& surface : surfaces) {
 
-    model::Construction reversed = model::Construction(construction.model());
-    reversed.setName(construction.name().get() + " Reversed");
-    reversed.setLayers(layers);
-    m_constructionHandleToReversedConstructions.insert(std::make_pair(construction.handle(), reversed));
-
-    return std::move(reversed);
-  }
-
-  void ForwardTranslator::resolveMatchedSurfaceConstructionConflicts(model::Model& model) {
-    // DLM: there is duplicate code in Surface_Impl::construction
-    // if you update this code you must update that code
-
-    std::set<Handle> processedSurfaces;
-
-    model::SurfaceVector surfaces = model.getConcreteModelObjects<model::Surface>();
-    for (auto& surface : surfaces) {
-
-      if (processedSurfaces.find(surface.handle()) != processedSurfaces.end()) {
-        continue;
-      }
-
-      model::OptionalSurface adjacentSurface = surface.adjacentSurface();
-      if (!adjacentSurface) {
-        processedSurfaces.insert(surface.handle());
-        continue;
-      }
-
-      boost::optional<std::pair<model::ConstructionBase, int>> constructionWithSearchDistance = surface.constructionWithSearchDistance();
-      boost::optional<std::pair<model::ConstructionBase, int>> adjacentConstructionWithSearchDistance =
-        adjacentSurface->constructionWithSearchDistance();
-
-      if (constructionWithSearchDistance && !adjacentConstructionWithSearchDistance) {
-
-        model::ConstructionBase c1 = constructionWithSearchDistance->first;
-        model::ConstructionBase c2 = reverseConstruction(c1);
-
-        LOG(Info, "Surface '" << surface.nameString() << "' has a construction and '" << adjacentSurface->nameString() << "' does not, using '"
-                              << surface.nameString() << "'\'s construction.");
-
-        surface.setConstruction(c1);
-        adjacentSurface->setConstruction(c2);
-        processedSurfaces.insert(surface.handle());
-        processedSurfaces.insert(adjacentSurface->handle());
-        continue;
-      }
-
-      if (!constructionWithSearchDistance && adjacentConstructionWithSearchDistance) {
-
-        model::ConstructionBase c2 = adjacentConstructionWithSearchDistance->first;
-        model::ConstructionBase c1 = reverseConstruction(c2);
-
-        LOG(Info, "Surface '" << adjacentSurface->nameString() << "' has a construction and '" << surface.nameString() << "' does not, using '"
-                              << adjacentSurface->nameString() << "'\'s construction.");
-
-        surface.setConstruction(c1);
-        adjacentSurface->setConstruction(c2);
-        processedSurfaces.insert(surface.handle());
-        processedSurfaces.insert(adjacentSurface->handle());
-        continue;
-      }
-
-      if (!constructionWithSearchDistance && !adjacentConstructionWithSearchDistance) {
-        // no constructions, nothing to be done
-        LOG(Error, "No construction for either surface '" << surface.nameString() << "', and '" << adjacentSurface->nameString() << "'");
-
-        processedSurfaces.insert(surface.handle());
-        processedSurfaces.insert(adjacentSurface->handle());
-        continue;
-      }
-
-      // both surfaces return a construction
-
-      if (constructionWithSearchDistance->first.handle() == adjacentConstructionWithSearchDistance->first.handle()) {
-
-        // both surfaces have same construction
-
-        model::ConstructionBase c1 = constructionWithSearchDistance->first;
-        model::ConstructionBase c2 = reverseConstruction(c1);
-
-        if (c1.handle() != c2.handle()) {
-          LOG(Warn, "Both surfaces '" << surface.nameString() << "', and '" << adjacentSurface->nameString() << "' reference the same construction '"
-                                      << c1.nameString() << "' but it is not symmetric, creating a reversed copy.");
-
-          // DLM: use surface name to choose which surface gets the original copy, not a good way but at least repeatable
-          if (surface.nameString() < adjacentSurface->nameString()) {
-            surface.setConstruction(c1);
-            adjacentSurface->setConstruction(c2);
-          } else {
-            surface.setConstruction(c2);
-            adjacentSurface->setConstruction(c1);
-          }
+        if (processedSurfaces.find(surface.handle()) != processedSurfaces.end()) {
+          continue;
         }
 
-        processedSurfaces.insert(surface.handle());
-        processedSurfaces.insert(adjacentSurface->handle());
-        continue;
-      }
+        model::OptionalSurface adjacentSurface = surface.adjacentSurface();
+        if (!adjacentSurface) {
+          processedSurfaces.insert(surface.handle());
+          continue;
+        }
 
-      // both surfaces return a construction and they are not the same
+        boost::optional<std::pair<model::ConstructionBase, int>> constructionWithSearchDistance = surface.constructionWithSearchDistance();
+        boost::optional<std::pair<model::ConstructionBase, int>> adjacentConstructionWithSearchDistance =
+          adjacentSurface->constructionWithSearchDistance();
 
-      if (constructionWithSearchDistance->second < adjacentConstructionWithSearchDistance->second) {
-        // lower search distance to construction
-        model::ConstructionBase c1 = constructionWithSearchDistance->first;
-        model::ConstructionBase c2 = reverseConstruction(c1);
+        if (constructionWithSearchDistance && !adjacentConstructionWithSearchDistance) {
 
-        LOG(Info, "Surfaces '" << surface.nameString() << "', and '" << adjacentSurface->nameString()
-                               << "' reference different constructions, choosing '" << surface.nameString()
-                               << "'\'s construction based on search distance.");
+          model::ConstructionBase c1 = constructionWithSearchDistance->first;
+          model::ConstructionBase c2 = reverseConstruction(c1);
 
-        surface.setConstruction(c1);
-        adjacentSurface->setConstruction(c2);
-        processedSurfaces.insert(surface.handle());
-        processedSurfaces.insert(adjacentSurface->handle());
-        continue;
-      }
+          LOG(Info, "Surface '" << surface.nameString() << "' has a construction and '" << adjacentSurface->nameString() << "' does not, using '"
+                                << surface.nameString() << "'\'s construction.");
 
-      if (constructionWithSearchDistance->second > adjacentConstructionWithSearchDistance->second) {
-        // lower search distance to adjacent construction
-        model::ConstructionBase c2 = adjacentConstructionWithSearchDistance->first;
-        model::ConstructionBase c1 = reverseConstruction(c2);
-
-        LOG(Info, "Surfaces '" << surface.nameString() << "', and '" << adjacentSurface->nameString()
-                               << "' reference different constructions, choosing '" << adjacentSurface->nameString()
-                               << "'\'s construction based on search distance.");
-
-        surface.setConstruction(c1);
-        adjacentSurface->setConstruction(c2);
-        processedSurfaces.insert(surface.handle());
-        processedSurfaces.insert(adjacentSurface->handle());
-        continue;
-      }
-
-      // both surfaces return a construction, they are not the same, and both have same search distance
-
-      if (constructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>()
-          && adjacentConstructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>()) {
-        if (constructionWithSearchDistance->first.cast<model::LayeredConstruction>().reverseEqualLayers(
-              adjacentConstructionWithSearchDistance->first.cast<model::LayeredConstruction>())) {
-          // these constructions are reverse equal
-          surface.setConstruction(constructionWithSearchDistance->first);
-          adjacentSurface->setConstruction(adjacentConstructionWithSearchDistance->first);
+          surface.setConstruction(c1);
+          adjacentSurface->setConstruction(c2);
           processedSurfaces.insert(surface.handle());
           processedSurfaces.insert(adjacentSurface->handle());
           continue;
         }
-      }
 
-      // give up for now, we can add more later
-      LOG(Error, "Could not resolve matched surface construction conflicts between surfaces '" << surface.nameString() << "', and '"
-                                                                                               << adjacentSurface->nameString() << "'");
-      surface.setConstruction(constructionWithSearchDistance->first);
-      adjacentSurface->setConstruction(adjacentConstructionWithSearchDistance->first);
-      processedSurfaces.insert(surface.handle());
-      processedSurfaces.insert(adjacentSurface->handle());
-    }
-  }
+        if (!constructionWithSearchDistance && adjacentConstructionWithSearchDistance) {
 
-  void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Model& model) {
-    // DLM: there is duplicate code in SubSurface_Impl::construction
-    // if you update this code you must update that code
+          model::ConstructionBase c2 = adjacentConstructionWithSearchDistance->first;
+          model::ConstructionBase c1 = reverseConstruction(c2);
 
-    std::set<Handle> processedSubSurfaces;
+          LOG(Info, "Surface '" << adjacentSurface->nameString() << "' has a construction and '" << surface.nameString() << "' does not, using '"
+                                << adjacentSurface->nameString() << "'\'s construction.");
 
-    model::SubSurfaceVector subSurfaces = model.getConcreteModelObjects<model::SubSurface>();
-    for (auto& subSurface : subSurfaces) {
+          surface.setConstruction(c1);
+          adjacentSurface->setConstruction(c2);
+          processedSurfaces.insert(surface.handle());
+          processedSurfaces.insert(adjacentSurface->handle());
+          continue;
+        }
 
-      if (processedSubSurfaces.find(subSurface.handle()) != processedSubSurfaces.end()) {
-        continue;
-      }
+        if (!constructionWithSearchDistance && !adjacentConstructionWithSearchDistance) {
+          // no constructions, nothing to be done
+          LOG(Error, "No construction for either surface '" << surface.nameString() << "', and '" << adjacentSurface->nameString() << "'");
 
-      model::OptionalSubSurface adjacentSubSurface = subSurface.adjacentSubSurface();
-      if (!adjacentSubSurface) {
-        processedSubSurfaces.insert(subSurface.handle());
-        continue;
-      }
+          processedSurfaces.insert(surface.handle());
+          processedSurfaces.insert(adjacentSurface->handle());
+          continue;
+        }
 
-      boost::optional<std::pair<model::ConstructionBase, int>> constructionWithSearchDistance = subSurface.constructionWithSearchDistance();
-      boost::optional<std::pair<model::ConstructionBase, int>> adjacentConstructionWithSearchDistance =
-        adjacentSubSurface->constructionWithSearchDistance();
+        // both surfaces return a construction
 
-      if (constructionWithSearchDistance && !adjacentConstructionWithSearchDistance) {
+        if (constructionWithSearchDistance->first.handle() == adjacentConstructionWithSearchDistance->first.handle()) {
 
-        model::ConstructionBase c1 = constructionWithSearchDistance->first;
-        model::ConstructionBase c2 = reverseConstruction(c1);
+          // both surfaces have same construction
 
-        LOG(Info, "SubSurface '" << subSurface.nameString() << "' has a construction and '" << adjacentSubSurface->nameString()
-                                 << "' does not, using '" << subSurface.nameString() << "'\'s construction.");
+          model::ConstructionBase c1 = constructionWithSearchDistance->first;
+          model::ConstructionBase c2 = reverseConstruction(c1);
 
-        subSurface.setConstruction(c1);
-        adjacentSubSurface->setConstruction(c2);
-        processedSubSurfaces.insert(subSurface.handle());
-        processedSubSurfaces.insert(adjacentSubSurface->handle());
-        continue;
-      }
+          if (c1.handle() != c2.handle()) {
+            LOG(Warn, "Both surfaces '" << surface.nameString() << "', and '" << adjacentSurface->nameString()
+                                        << "' reference the same construction '" << c1.nameString()
+                                        << "' but it is not symmetric, creating a reversed copy.");
 
-      if (!constructionWithSearchDistance && adjacentConstructionWithSearchDistance) {
+            // DLM: use surface name to choose which surface gets the original copy, not a good way but at least repeatable
+            if (surface.nameString() < adjacentSurface->nameString()) {
+              surface.setConstruction(c1);
+              adjacentSurface->setConstruction(c2);
+            } else {
+              surface.setConstruction(c2);
+              adjacentSurface->setConstruction(c1);
+            }
+          }
 
-        model::ConstructionBase c2 = adjacentConstructionWithSearchDistance->first;
-        model::ConstructionBase c1 = reverseConstruction(c2);
+          processedSurfaces.insert(surface.handle());
+          processedSurfaces.insert(adjacentSurface->handle());
+          continue;
+        }
 
-        LOG(Info, "SubSurface '" << adjacentSubSurface->nameString() << "' has a construction and '" << subSurface.nameString()
-                                 << "' does not, using '" << adjacentSubSurface->nameString() << "'\'s construction.");
+        // both surfaces return a construction and they are not the same
 
-        subSurface.setConstruction(c1);
-        adjacentSubSurface->setConstruction(c2);
-        processedSubSurfaces.insert(subSurface.handle());
-        processedSubSurfaces.insert(adjacentSubSurface->handle());
-        continue;
-      }
+        if (constructionWithSearchDistance->second < adjacentConstructionWithSearchDistance->second) {
+          // lower search distance to construction
+          model::ConstructionBase c1 = constructionWithSearchDistance->first;
+          model::ConstructionBase c2 = reverseConstruction(c1);
 
-      if (!constructionWithSearchDistance && !adjacentConstructionWithSearchDistance) {
-        // no constructions, nothing to be done
-        LOG(Error, "No construction for either sub surface '" << subSurface.nameString() << "', and '" << adjacentSubSurface->nameString() << "'");
+          LOG(Info, "Surfaces '" << surface.nameString() << "', and '" << adjacentSurface->nameString()
+                                 << "' reference different constructions, choosing '" << surface.nameString()
+                                 << "'\'s construction based on search distance.");
 
-        processedSubSurfaces.insert(subSurface.handle());
-        processedSubSurfaces.insert(adjacentSubSurface->handle());
-        continue;
-      }
+          surface.setConstruction(c1);
+          adjacentSurface->setConstruction(c2);
+          processedSurfaces.insert(surface.handle());
+          processedSurfaces.insert(adjacentSurface->handle());
+          continue;
+        }
 
-      // both surfaces return a construction
+        if (constructionWithSearchDistance->second > adjacentConstructionWithSearchDistance->second) {
+          // lower search distance to adjacent construction
+          model::ConstructionBase c2 = adjacentConstructionWithSearchDistance->first;
+          model::ConstructionBase c1 = reverseConstruction(c2);
 
-      if (constructionWithSearchDistance->first.handle() == adjacentConstructionWithSearchDistance->first.handle()) {
+          LOG(Info, "Surfaces '" << surface.nameString() << "', and '" << adjacentSurface->nameString()
+                                 << "' reference different constructions, choosing '" << adjacentSurface->nameString()
+                                 << "'\'s construction based on search distance.");
 
-        // both surfaces have same construction
+          surface.setConstruction(c1);
+          adjacentSurface->setConstruction(c2);
+          processedSurfaces.insert(surface.handle());
+          processedSurfaces.insert(adjacentSurface->handle());
+          continue;
+        }
 
-        model::ConstructionBase c1 = constructionWithSearchDistance->first;
-        model::ConstructionBase c2 = reverseConstruction(c1);
+        // both surfaces return a construction, they are not the same, and both have same search distance
 
-        if (c1.handle() != c2.handle()) {
-          LOG(Warn, "Both sub surfaces '" << subSurface.nameString() << "', and '" << adjacentSubSurface->nameString()
-                                          << "' reference the same construction '" << c1.nameString()
-                                          << "' but it is not symmetric, creating a reversed copy.");
-
-          // DLM: use subSurface name to choose which surface gets the original copy, not a good way but at least repeatable
-          if (subSurface.nameString() < adjacentSubSurface->nameString()) {
-            subSurface.setConstruction(c1);
-            adjacentSubSurface->setConstruction(c2);
-          } else {
-            subSurface.setConstruction(c2);
-            adjacentSubSurface->setConstruction(c1);
+        if (constructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>()
+            && adjacentConstructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>()) {
+          if (constructionWithSearchDistance->first.cast<model::LayeredConstruction>().reverseEqualLayers(
+                adjacentConstructionWithSearchDistance->first.cast<model::LayeredConstruction>())) {
+            // these constructions are reverse equal
+            surface.setConstruction(constructionWithSearchDistance->first);
+            adjacentSurface->setConstruction(adjacentConstructionWithSearchDistance->first);
+            processedSurfaces.insert(surface.handle());
+            processedSurfaces.insert(adjacentSurface->handle());
+            continue;
           }
         }
 
-        processedSubSurfaces.insert(subSurface.handle());
-        processedSubSurfaces.insert(adjacentSubSurface->handle());
-        continue;
+        // give up for now, we can add more later
+        LOG(Error, "Could not resolve matched surface construction conflicts between surfaces '" << surface.nameString() << "', and '"
+                                                                                                 << adjacentSurface->nameString() << "'");
+        surface.setConstruction(constructionWithSearchDistance->first);
+        adjacentSurface->setConstruction(adjacentConstructionWithSearchDistance->first);
+        processedSurfaces.insert(surface.handle());
+        processedSurfaces.insert(adjacentSurface->handle());
       }
+    }
 
-      // both surfaces return a construction and they are not the same
+    void ForwardTranslator::resolveMatchedSubSurfaceConstructionConflicts(model::Model & model) {
+      // DLM: there is duplicate code in SubSurface_Impl::construction
+      // if you update this code you must update that code
 
-      if (constructionWithSearchDistance->second < adjacentConstructionWithSearchDistance->second) {
-        // lower search distance to construction
-        model::ConstructionBase c1 = constructionWithSearchDistance->first;
-        model::ConstructionBase c2 = reverseConstruction(c1);
+      std::set<Handle> processedSubSurfaces;
 
-        LOG(Info, "SubSurfaces '" << subSurface.nameString() << "', and '" << adjacentSubSurface->nameString()
-                                  << "' reference different constructions, choosing '" << subSurface.nameString()
-                                  << "'\'s construction based on search distance.");
+      model::SubSurfaceVector subSurfaces = model.getConcreteModelObjects<model::SubSurface>();
+      for (auto& subSurface : subSurfaces) {
 
-        subSurface.setConstruction(c1);
-        adjacentSubSurface->setConstruction(c2);
-        processedSubSurfaces.insert(subSurface.handle());
-        processedSubSurfaces.insert(adjacentSubSurface->handle());
-        continue;
-      }
+        if (processedSubSurfaces.find(subSurface.handle()) != processedSubSurfaces.end()) {
+          continue;
+        }
 
-      if (constructionWithSearchDistance->second > adjacentConstructionWithSearchDistance->second) {
-        // lower search distance to adjacent construction
-        model::ConstructionBase c2 = adjacentConstructionWithSearchDistance->first;
-        model::ConstructionBase c1 = reverseConstruction(c2);
+        model::OptionalSubSurface adjacentSubSurface = subSurface.adjacentSubSurface();
+        if (!adjacentSubSurface) {
+          processedSubSurfaces.insert(subSurface.handle());
+          continue;
+        }
 
-        LOG(Info, "SubSurfaces '" << subSurface.nameString() << "', and '" << adjacentSubSurface->nameString()
-                                  << "' reference different constructions, choosing '" << adjacentSubSurface->nameString()
-                                  << "'\'s construction based on search distance.");
+        boost::optional<std::pair<model::ConstructionBase, int>> constructionWithSearchDistance = subSurface.constructionWithSearchDistance();
+        boost::optional<std::pair<model::ConstructionBase, int>> adjacentConstructionWithSearchDistance =
+          adjacentSubSurface->constructionWithSearchDistance();
 
-        subSurface.setConstruction(c1);
-        adjacentSubSurface->setConstruction(c2);
-        processedSubSurfaces.insert(subSurface.handle());
-        processedSubSurfaces.insert(adjacentSubSurface->handle());
-        continue;
-      }
+        if (constructionWithSearchDistance && !adjacentConstructionWithSearchDistance) {
 
-      // both surfaces return a construction, they are not the same, and both have same search distance
+          model::ConstructionBase c1 = constructionWithSearchDistance->first;
+          model::ConstructionBase c2 = reverseConstruction(c1);
 
-      if (constructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>()
-          && adjacentConstructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>()) {
-        if (constructionWithSearchDistance->first.cast<model::LayeredConstruction>().reverseEqualLayers(
-              adjacentConstructionWithSearchDistance->first.cast<model::LayeredConstruction>())) {
-          // these constructions are reverse equal
-          subSurface.setConstruction(constructionWithSearchDistance->first);
-          adjacentSubSurface->setConstruction(adjacentConstructionWithSearchDistance->first);
+          LOG(Info, "SubSurface '" << subSurface.nameString() << "' has a construction and '" << adjacentSubSurface->nameString()
+                                   << "' does not, using '" << subSurface.nameString() << "'\'s construction.");
+
+          subSurface.setConstruction(c1);
+          adjacentSubSurface->setConstruction(c2);
           processedSubSurfaces.insert(subSurface.handle());
           processedSubSurfaces.insert(adjacentSubSurface->handle());
           continue;
         }
+
+        if (!constructionWithSearchDistance && adjacentConstructionWithSearchDistance) {
+
+          model::ConstructionBase c2 = adjacentConstructionWithSearchDistance->first;
+          model::ConstructionBase c1 = reverseConstruction(c2);
+
+          LOG(Info, "SubSurface '" << adjacentSubSurface->nameString() << "' has a construction and '" << subSurface.nameString()
+                                   << "' does not, using '" << adjacentSubSurface->nameString() << "'\'s construction.");
+
+          subSurface.setConstruction(c1);
+          adjacentSubSurface->setConstruction(c2);
+          processedSubSurfaces.insert(subSurface.handle());
+          processedSubSurfaces.insert(adjacentSubSurface->handle());
+          continue;
+        }
+
+        if (!constructionWithSearchDistance && !adjacentConstructionWithSearchDistance) {
+          // no constructions, nothing to be done
+          LOG(Error, "No construction for either sub surface '" << subSurface.nameString() << "', and '" << adjacentSubSurface->nameString() << "'");
+
+          processedSubSurfaces.insert(subSurface.handle());
+          processedSubSurfaces.insert(adjacentSubSurface->handle());
+          continue;
+        }
+
+        // both surfaces return a construction
+
+        if (constructionWithSearchDistance->first.handle() == adjacentConstructionWithSearchDistance->first.handle()) {
+
+          // both surfaces have same construction
+
+          model::ConstructionBase c1 = constructionWithSearchDistance->first;
+          model::ConstructionBase c2 = reverseConstruction(c1);
+
+          if (c1.handle() != c2.handle()) {
+            LOG(Warn, "Both sub surfaces '" << subSurface.nameString() << "', and '" << adjacentSubSurface->nameString()
+                                            << "' reference the same construction '" << c1.nameString()
+                                            << "' but it is not symmetric, creating a reversed copy.");
+
+            // DLM: use subSurface name to choose which surface gets the original copy, not a good way but at least repeatable
+            if (subSurface.nameString() < adjacentSubSurface->nameString()) {
+              subSurface.setConstruction(c1);
+              adjacentSubSurface->setConstruction(c2);
+            } else {
+              subSurface.setConstruction(c2);
+              adjacentSubSurface->setConstruction(c1);
+            }
+          }
+
+          processedSubSurfaces.insert(subSurface.handle());
+          processedSubSurfaces.insert(adjacentSubSurface->handle());
+          continue;
+        }
+
+        // both surfaces return a construction and they are not the same
+
+        if (constructionWithSearchDistance->second < adjacentConstructionWithSearchDistance->second) {
+          // lower search distance to construction
+          model::ConstructionBase c1 = constructionWithSearchDistance->first;
+          model::ConstructionBase c2 = reverseConstruction(c1);
+
+          LOG(Info, "SubSurfaces '" << subSurface.nameString() << "', and '" << adjacentSubSurface->nameString()
+                                    << "' reference different constructions, choosing '" << subSurface.nameString()
+                                    << "'\'s construction based on search distance.");
+
+          subSurface.setConstruction(c1);
+          adjacentSubSurface->setConstruction(c2);
+          processedSubSurfaces.insert(subSurface.handle());
+          processedSubSurfaces.insert(adjacentSubSurface->handle());
+          continue;
+        }
+
+        if (constructionWithSearchDistance->second > adjacentConstructionWithSearchDistance->second) {
+          // lower search distance to adjacent construction
+          model::ConstructionBase c2 = adjacentConstructionWithSearchDistance->first;
+          model::ConstructionBase c1 = reverseConstruction(c2);
+
+          LOG(Info, "SubSurfaces '" << subSurface.nameString() << "', and '" << adjacentSubSurface->nameString()
+                                    << "' reference different constructions, choosing '" << adjacentSubSurface->nameString()
+                                    << "'\'s construction based on search distance.");
+
+          subSurface.setConstruction(c1);
+          adjacentSubSurface->setConstruction(c2);
+          processedSubSurfaces.insert(subSurface.handle());
+          processedSubSurfaces.insert(adjacentSubSurface->handle());
+          continue;
+        }
+
+        // both surfaces return a construction, they are not the same, and both have same search distance
+
+        if (constructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>()
+            && adjacentConstructionWithSearchDistance->first.optionalCast<model::LayeredConstruction>()) {
+          if (constructionWithSearchDistance->first.cast<model::LayeredConstruction>().reverseEqualLayers(
+                adjacentConstructionWithSearchDistance->first.cast<model::LayeredConstruction>())) {
+            // these constructions are reverse equal
+            subSurface.setConstruction(constructionWithSearchDistance->first);
+            adjacentSubSurface->setConstruction(adjacentConstructionWithSearchDistance->first);
+            processedSubSurfaces.insert(subSurface.handle());
+            processedSubSurfaces.insert(adjacentSubSurface->handle());
+            continue;
+          }
+        }
+
+        // give up for now, we can add more later
+        LOG(Error, "Could not resolve matched construction conflicts between sub surfaces '" << subSurface.nameString() << "', and '"
+                                                                                             << adjacentSubSurface->nameString() << "'");
+        subSurface.setConstruction(constructionWithSearchDistance->first);
+        adjacentSubSurface->setConstruction(adjacentConstructionWithSearchDistance->first);
+        processedSubSurfaces.insert(subSurface.handle());
+        processedSubSurfaces.insert(adjacentSubSurface->handle());
+      }
+    }
+
+    void ForwardTranslator::createStandardOutputRequests(const model::Model& model) {
+      if (!m_excludeHTMLOutputReport) {
+        if (!model.getOptionalUniqueModelObject<model::OutputControlTableStyle>()) {
+          IdfObject& tableStyle = m_idfObjects.emplace_back(IddObjectType::OutputControl_Table_Style);
+          tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator, "HTML");
+          if (m_ipTabularOutput) {
+            tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion, "InchPound");
+          }
+        }
       }
 
-      // give up for now, we can add more later
-      LOG(Error, "Could not resolve matched construction conflicts between sub surfaces '" << subSurface.nameString() << "', and '"
-                                                                                           << adjacentSubSurface->nameString() << "'");
-      subSurface.setConstruction(constructionWithSearchDistance->first);
-      adjacentSubSurface->setConstruction(adjacentConstructionWithSearchDistance->first);
-      processedSubSurfaces.insert(subSurface.handle());
-      processedSubSurfaces.insert(adjacentSubSurface->handle());
-    }
-  }
+      if (!m_excludeVariableDictionary) {
+        IdfObject rddRequest(IddObjectType::Output_VariableDictionary);
+        rddRequest.setString(Output_VariableDictionaryFields::KeyField, "IDF");
+        rddRequest.setString(Output_VariableDictionaryFields::SortOption, "Unsorted");
+        m_idfObjects.push_back(rddRequest);
+      }
 
-  void ForwardTranslator::createStandardOutputRequests() {
-    if (!m_excludeHTMLOutputReport) {
-      IdfObject tableStyle(IddObjectType::OutputControl_Table_Style);
-      m_idfObjects.push_back(tableStyle);
-      tableStyle.setString(OutputControl_Table_StyleFields::ColumnSeparator, "HTML");
-      if (m_ipTabularOutput) {
-        tableStyle.setString(OutputControl_Table_StyleFields::UnitConversion, "InchPound");
+      if (!m_excludeSQliteOutputReport) {
+        if (!model.getOptionalUniqueModelObject<model::OutputSQLite>()) {
+          IdfObject& sqliteOutput = m_idfObjects.emplace_back(IddObjectType::Output_SQLite);
+          sqliteOutput.setString(Output_SQLiteFields::OptionType, "SimpleAndTabular");
+        }
+      }
+
+      // ensure at least one life cycle cost exists to prevent crash in E+ 8
+      if (!m_excludeLCCObjects) {
+        bool hasAtLeastOneCost = std::any_of(m_idfObjects.cbegin(), m_idfObjects.cend(), [](const auto& obj) {
+          auto iddObjType = obj.iddObject().type();
+          return (iddObjType == openstudio::IddObjectType::LifeCycleCost_NonrecurringCost)
+                 || (iddObjType == openstudio::IddObjectType::LifeCycleCost_RecurringCosts);
+        });
+
+        if (!hasAtLeastOneCost) {
+          // add default cost
+          auto& idfObject = m_idfObjects.emplace_back(openstudio::IddObjectType::LifeCycleCost_NonrecurringCost);
+          idfObject.setString(LifeCycleCost_NonrecurringCostFields::Name, "Default Cost");
+          idfObject.setString(LifeCycleCost_NonrecurringCostFields::Category, "Construction");
+          idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, 0.0);
+          idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
+        }
       }
     }
 
-    if (!m_excludeVariableDictionary) {
-      IdfObject rddRequest(IddObjectType::Output_VariableDictionary);
-      rddRequest.setString(Output_VariableDictionaryFields::KeyField, "IDF");
-      rddRequest.setString(Output_VariableDictionaryFields::SortOption, "Unsorted");
-      m_idfObjects.push_back(rddRequest);
+    IdfObject ForwardTranslator::createAndRegisterIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject) {
+      IdfObject idfObject(idfObjectType);
+      m_idfObjects.push_back(idfObject);
+      m_map.insert(std::make_pair(modelObject.handle(), idfObject));
+      return idfObject;
     }
 
-    if (!m_excludeSQliteOutputReport) {
-      IdfObject sqliteOutput(IddObjectType::Output_SQLite);
-      sqliteOutput.setString(Output_SQLiteFields::OptionType, "SimpleAndTabular");
-      m_idfObjects.push_back(sqliteOutput);
+    IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject) {
+      IdfObject idfObject = createAndRegisterIdfObject(idfObjectType, modelObject);
+      if (OptionalString moName = modelObject.name()) {
+        idfObject.setName(*moName);
+      }
+      return idfObject;
     }
 
-    // ensure at least one life cycle cost exists to prevent crash in E+ 8
-    if (!m_excludeLCCObjects) {
-      bool hasAtLeastOneCost = std::any_of(m_idfObjects.cbegin(), m_idfObjects.cend(), [](const auto& obj) {
-        auto iddObjType = obj.iddObject().type();
-        return (iddObjType == openstudio::IddObjectType::LifeCycleCost_NonrecurringCost)
-               || (iddObjType == openstudio::IddObjectType::LifeCycleCost_RecurringCosts);
+    boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path) {
+      std::stringstream ss;
+      ss << ::energyplus::embedded_files::getFileAsString(path);
+      return IdfFile::load(ss, IddFileType::EnergyPlus);
+    }
+
+    bool ForwardTranslator::isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) {
+      return (hvacComponent.containingHVACComponent() || hvacComponent.containingZoneHVACComponent() || hvacComponent.containingStraightComponent());
+    }
+
+    void ForwardTranslator::createFluidPropertiesMap() {
+      m_fluidPropertiesMap.insert(make_pair("R11", ":/Resources/R11_FluidPropertiesDataSet.idf"));
+      m_fluidPropertiesMap.insert(make_pair("R12", ":/Resources/R12_FluidPropertiesDataSet.idf"));
+      m_fluidPropertiesMap.insert(make_pair("R22", ":/Resources/R22_FluidPropertiesDataSet.idf"));
+      m_fluidPropertiesMap.insert(make_pair("R123", ":/Resources/R123_FluidPropertiesDataSet.idf"));
+      m_fluidPropertiesMap.insert(make_pair("R134a", ":/Resources/R134a_FluidPropertiesDataSet.idf"));
+      m_fluidPropertiesMap.insert(make_pair("R404a", ":/Resources/R404a_FluidPropertiesDataSet.idf"));
+      m_fluidPropertiesMap.insert(make_pair("R407a", ":/Resources/R407a_FluidPropertiesDataSet.idf"));
+      m_fluidPropertiesMap.insert(make_pair("R410a", ":/Resources/R410a_FluidPropertiesDataSet.idf"));
+      m_fluidPropertiesMap.insert(make_pair("NH3", ":/Resources/NH3_FluidPropertiesDataSet.idf"));
+      m_fluidPropertiesMap.insert(make_pair("R507a", ":/Resources/R507a_FluidPropertiesDataSet.idf"));
+      m_fluidPropertiesMap.insert(make_pair("R744", ":/Resources/R744_FluidPropertiesDataSet.idf"));
+    }
+
+    boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::string& glycolType, int glycolConcentration) {
+
+      if (!(istringEqual("PropyleneGlycol", glycolType) || istringEqual("EthyleneGlycol", glycolType))) {
+        return boost::none;
+      }
+
+      std::stringstream sstm;
+      sstm << glycolType << "_" << glycolConcentration;
+      std::string glycolName = sstm.str();
+
+      auto it = std::find_if(m_idfObjects.cbegin(), m_idfObjects.cend(), [&glycolName](const IdfObject& i) {
+        return (i.iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name)
+               && openstudio::istringEqual(i.getString(FluidProperties_NameFields::FluidName, true).get(), glycolName);
       });
-
-      if (!hasAtLeastOneCost) {
-        // add default cost
-        auto& idfObject = m_idfObjects.emplace_back(openstudio::IddObjectType::LifeCycleCost_NonrecurringCost);
-        idfObject.setString(LifeCycleCost_NonrecurringCostFields::Name, "Default Cost");
-        idfObject.setString(LifeCycleCost_NonrecurringCostFields::Category, "Construction");
-        idfObject.setDouble(LifeCycleCost_NonrecurringCostFields::Cost, 0.0);
-        idfObject.setString(LifeCycleCost_NonrecurringCostFields::StartofCosts, "ServicePeriod");
+      if (it != m_idfObjects.cend()) {
+        return *it;
       }
-    }
-  }
 
-  IdfObject ForwardTranslator::createAndRegisterIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject) {
-    IdfObject idfObject(idfObjectType);
-    m_idfObjects.push_back(idfObject);
-    m_map.insert(std::make_pair(modelObject.handle(), idfObject));
-    return idfObject;
-  }
+      // TODO: JM 2019-03-22 I am not sure you need this one
+      // But I temporarily removed the \reference FluidAndGlycolNames from FluidProperties_GlycolConcentration to avoid problems of having two objects of
+      // the same reference group bearing the same name (FluidProperties:Name also has the same reference group)
+      IdfObject& fluidPropName = m_idfObjects.emplace_back(openstudio::IddObjectType::FluidProperties_Name);
+      fluidPropName.setString(FluidProperties_NameFields::FluidName, glycolName);
+      fluidPropName.setString(FluidProperties_NameFields::FluidType, "Glycol");
 
-  IdfObject ForwardTranslator::createRegisterAndNameIdfObject(const IddObjectType& idfObjectType, const model::ModelObject& modelObject) {
-    IdfObject idfObject = createAndRegisterIdfObject(idfObjectType, modelObject);
-    if (OptionalString moName = modelObject.name()) {
-      idfObject.setName(*moName);
-    }
-    return idfObject;
-  }
+      IdfObject& fluidPropGlyConcentration = m_idfObjects.emplace_back(openstudio::IddObjectType::FluidProperties_GlycolConcentration);
+      fluidPropGlyConcentration.setName(glycolName);
+      fluidPropGlyConcentration.setString(FluidProperties_GlycolConcentrationFields::GlycolType, glycolType);
+      fluidPropGlyConcentration.setDouble(FluidProperties_GlycolConcentrationFields::GlycolConcentration, glycolConcentration * 0.01);
 
-  boost::optional<IdfFile> ForwardTranslator::findIdfFile(const std::string& path) {
-    std::stringstream ss;
-    ss << ::energyplus::embedded_files::getFileAsString(path);
-    return IdfFile::load(ss, IddFileType::EnergyPlus);
-  }
-
-  bool ForwardTranslator::isHVACComponentWithinUnitary(const model::HVACComponent& hvacComponent) {
-    return (hvacComponent.containingHVACComponent() || hvacComponent.containingZoneHVACComponent() || hvacComponent.containingStraightComponent());
-  }
-
-  void ForwardTranslator::createFluidPropertiesMap() {
-    m_fluidPropertiesMap.insert(make_pair("R11", ":/Resources/R11_FluidPropertiesDataSet.idf"));
-    m_fluidPropertiesMap.insert(make_pair("R12", ":/Resources/R12_FluidPropertiesDataSet.idf"));
-    m_fluidPropertiesMap.insert(make_pair("R22", ":/Resources/R22_FluidPropertiesDataSet.idf"));
-    m_fluidPropertiesMap.insert(make_pair("R123", ":/Resources/R123_FluidPropertiesDataSet.idf"));
-    m_fluidPropertiesMap.insert(make_pair("R134a", ":/Resources/R134a_FluidPropertiesDataSet.idf"));
-    m_fluidPropertiesMap.insert(make_pair("R404a", ":/Resources/R404a_FluidPropertiesDataSet.idf"));
-    m_fluidPropertiesMap.insert(make_pair("R407a", ":/Resources/R407a_FluidPropertiesDataSet.idf"));
-    m_fluidPropertiesMap.insert(make_pair("R410a", ":/Resources/R410a_FluidPropertiesDataSet.idf"));
-    m_fluidPropertiesMap.insert(make_pair("NH3", ":/Resources/NH3_FluidPropertiesDataSet.idf"));
-    m_fluidPropertiesMap.insert(make_pair("R507a", ":/Resources/R507a_FluidPropertiesDataSet.idf"));
-    m_fluidPropertiesMap.insert(make_pair("R744", ":/Resources/R744_FluidPropertiesDataSet.idf"));
-  }
-
-  boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::string& glycolType, int glycolConcentration) {
-
-    if (!(istringEqual("PropyleneGlycol", glycolType) || istringEqual("EthyleneGlycol", glycolType))) {
-      return boost::none;
+      return fluidPropName;
     }
 
-    std::stringstream sstm;
-    sstm << glycolType << "_" << glycolConcentration;
-    std::string glycolName = sstm.str();
+    boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::string& fluidType) {
 
-    auto it = std::find_if(m_idfObjects.cbegin(), m_idfObjects.cend(), [&glycolName](const IdfObject& i) {
-      return (i.iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name)
-             && openstudio::istringEqual(i.getString(FluidProperties_NameFields::FluidName, true).get(), glycolName);
-    });
-    if (it != m_idfObjects.cend()) {
-      return *it;
-    }
+      boost::optional<IdfObject> idfObject;
+      boost::optional<IdfFile> idfFile;
 
-    // TODO: JM 2019-03-22 I am not sure you need this one
-    // But I temporarily removed the \reference FluidAndGlycolNames from FluidProperties_GlycolConcentration to avoid problems of having two objects of
-    // the same reference group bearing the same name (FluidProperties:Name also has the same reference group)
-    IdfObject& fluidPropName = m_idfObjects.emplace_back(openstudio::IddObjectType::FluidProperties_Name);
-    fluidPropName.setString(FluidProperties_NameFields::FluidName, glycolName);
-    fluidPropName.setString(FluidProperties_NameFields::FluidType, "Glycol");
+      auto it = std::find_if(m_idfObjects.cbegin(), m_idfObjects.cend(), [&fluidType](const IdfObject& i) {
+        return (i.iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name)
+               && openstudio::istringEqual(i.getString(FluidProperties_NameFields::FluidName, true).get(), fluidType);
+      });
+      if (it != m_idfObjects.cend()) {
+        return *it;
+      }
+      auto objInMapIt = m_fluidPropertiesMap.find(fluidType);
+      if (objInMapIt != m_fluidPropertiesMap.end()) {
+        idfFile = findIdfFile(objInMapIt->second);
+      } else {
+        LOG(Warn, "Fluid Type not valid choice: '" << fluidType << "'");
+        return boost::none;
+      }
 
-    IdfObject& fluidPropGlyConcentration = m_idfObjects.emplace_back(openstudio::IddObjectType::FluidProperties_GlycolConcentration);
-    fluidPropGlyConcentration.setName(glycolName);
-    fluidPropGlyConcentration.setString(FluidProperties_GlycolConcentrationFields::GlycolType, glycolType);
-    fluidPropGlyConcentration.setDouble(FluidProperties_GlycolConcentrationFields::GlycolConcentration, glycolConcentration * 0.01);
+      if (idfFile) {
+        std::vector<IdfObject> fluidObjects = idfFile->objects();
 
-    return fluidPropName;
-  }
-
-  boost::optional<IdfObject> ForwardTranslator::createFluidProperties(const std::string& fluidType) {
-
-    boost::optional<IdfObject> idfObject;
-    boost::optional<IdfFile> idfFile;
-
-    auto it = std::find_if(m_idfObjects.cbegin(), m_idfObjects.cend(), [&fluidType](const IdfObject& i) {
-      return (i.iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name)
-             && openstudio::istringEqual(i.getString(FluidProperties_NameFields::FluidName, true).get(), fluidType);
-    });
-    if (it != m_idfObjects.cend()) {
-      return *it;
-    }
-    auto objInMapIt = m_fluidPropertiesMap.find(fluidType);
-    if (objInMapIt != m_fluidPropertiesMap.end()) {
-      idfFile = findIdfFile(objInMapIt->second);
-    } else {
-      LOG(Warn, "Fluid Type not valid choice: '" << fluidType << "'");
-      return boost::none;
-    }
-
-    if (idfFile) {
-      std::vector<IdfObject> fluidObjects = idfFile->objects();
-
-      for (auto& i : fluidObjects) {
-        if (i.iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
-          idfObject = i;
+        for (auto& i : fluidObjects) {
+          if (i.iddObject().type().value() == openstudio::IddObjectType::FluidProperties_Name) {
+            idfObject = i;
+          }
+          m_idfObjects.push_back(i);
         }
-        m_idfObjects.push_back(i);
       }
+
+      return idfObject;
     }
 
-    return idfObject;
-  }
+    boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::string& name,
+                                                                       const std::vector<std::pair<openstudio::Time, double>>& defaultDay,
+                                                                       const std::vector<std::pair<openstudio::Time, double>>& summerDesignDay,
+                                                                       const std::vector<std::pair<openstudio::Time, double>>& winterDesignDay) {
 
-  boost::optional<IdfObject> ForwardTranslator::createSimpleSchedule(const std::string& name,
-                                                                     const std::vector<std::pair<openstudio::Time, double>>& defaultDay,
-                                                                     const std::vector<std::pair<openstudio::Time, double>>& summerDesignDay,
-                                                                     const std::vector<std::pair<openstudio::Time, double>>& winterDesignDay) {
+      IdfObject idfObject(openstudio::IddObjectType::Schedule_Compact);
 
-    IdfObject idfObject(openstudio::IddObjectType::Schedule_Compact);
+      idfObject.setName(name);
 
-    idfObject.setName(name);
-
-    StringVector values;
-    values.push_back("Through: 12/31");
-    IdfExtensibleGroup eg = idfObject.pushExtensibleGroup(values);
-    OS_ASSERT(!eg.empty());
-
-    if (!summerDesignDay.empty()) {
-      bool hasEndTime = false;
-      double endTimeValue = 0.0;
-      values[0] = "For: SummerDesignDay";
-      eg = idfObject.pushExtensibleGroup(values);
+      StringVector values;
+      values.push_back("Through: 12/31");
+      IdfExtensibleGroup eg = idfObject.pushExtensibleGroup(values);
       OS_ASSERT(!eg.empty());
 
-      for (const auto& [time, val] : summerDesignDay) {
+      if (!summerDesignDay.empty()) {
+        bool hasEndTime = false;
+        double endTimeValue = 0.0;
+        values[0] = "For: SummerDesignDay";
+        eg = idfObject.pushExtensibleGroup(values);
+        OS_ASSERT(!eg.empty());
+
+        for (const auto& [time, val] : summerDesignDay) {
+
+          int minutes = time.minutes();
+          int hours = time.hours();
+
+          if (0 == minutes && 0 == hours) {
+            hasEndTime = true;
+            endTimeValue = val;
+            continue;
+          }
+          values[0] =
+            "Until: " + std::string(hours < 10 ? "0" : "") + std::to_string(hours) + std::string(minutes < 10 ? ":0" : ":") + std::to_string(minutes);
+          eg = idfObject.pushExtensibleGroup(values);
+          OS_ASSERT(!eg.empty());
+          values[0] = "";
+          eg = idfObject.pushExtensibleGroup(values);
+          OS_ASSERT(!eg.empty());
+          bool ok = eg.setDouble(0, val);
+          OS_ASSERT(ok);
+        }
+        if (hasEndTime) {
+          values[0] = "Until: 24:00";
+          eg = idfObject.pushExtensibleGroup(values);
+          OS_ASSERT(!eg.empty());
+          values[0] = "";
+          eg = idfObject.pushExtensibleGroup(values);
+          OS_ASSERT(!eg.empty());
+          bool ok = eg.setDouble(0, endTimeValue);
+          OS_ASSERT(ok);
+        } else {
+          LOG(Error, "Summer Design Day must have a value for all 24 hours");
+        }
+      }
+
+      if (!winterDesignDay.empty()) {
+        bool hasEndTime = false;
+        double endTimeValue = 0.0;
+        values[0] = "For: WinterDesignDay";
+        eg = idfObject.pushExtensibleGroup(values);
+        OS_ASSERT(!eg.empty());
+
+        for (const auto& [time, val] : winterDesignDay) {
+
+          int minutes = time.minutes();
+          int hours = time.hours();
+
+          if (0 == minutes && 0 == hours) {
+            hasEndTime = true;
+            endTimeValue = val;
+            continue;
+          }
+          values[0] =
+            "Until: " + std::string(hours < 10 ? "0" : "") + std::to_string(hours) + std::string(minutes < 10 ? ":0" : ":") + std::to_string(minutes);
+          eg = idfObject.pushExtensibleGroup(values);
+          OS_ASSERT(!eg.empty());
+          values[0] = "";
+          eg = idfObject.pushExtensibleGroup(values);
+          OS_ASSERT(!eg.empty());
+          bool ok = eg.setDouble(0, val);
+          OS_ASSERT(ok);
+        }
+        if (hasEndTime) {
+          values[0] = "Until: 24:00";
+          eg = idfObject.pushExtensibleGroup(values);
+          OS_ASSERT(!eg.empty());
+          values[0] = "";
+          eg = idfObject.pushExtensibleGroup(values);
+          OS_ASSERT(!eg.empty());
+          bool ok = eg.setDouble(0, endTimeValue);
+          OS_ASSERT(ok);
+        } else {
+          LOG(Error, "Winter Design Day must have a value for all 24 hours");
+        }
+      }
+
+      if (!summerDesignDay.empty() || !winterDesignDay.empty()) {
+        values[0] = "For: AllOtherDays";
+        eg = idfObject.pushExtensibleGroup(values);
+        OS_ASSERT(!eg.empty());
+      } else {
+        values[0] = "For: AllDays";
+        eg = idfObject.pushExtensibleGroup(values);
+        OS_ASSERT(!eg.empty());
+      }
+
+      bool hasEndTime = false;
+      double endTimeValue = 0.0;
+      for (const auto& [time, val] : defaultDay) {
 
         int minutes = time.minutes();
         int hours = time.hours();
@@ -4506,141 +4642,54 @@ namespace energyplus {
         bool ok = eg.setDouble(0, endTimeValue);
         OS_ASSERT(ok);
       } else {
-        LOG(Error, "Summer Design Day must have a value for all 24 hours");
+        LOG(Error, "Default Day must have a value for all 24 hours");
       }
+
+      m_idfObjects.push_back(idfObject);
+
+      return idfObject;
     }
 
-    if (!winterDesignDay.empty()) {
-      bool hasEndTime = false;
-      double endTimeValue = 0.0;
-      values[0] = "For: WinterDesignDay";
-      eg = idfObject.pushExtensibleGroup(values);
-      OS_ASSERT(!eg.empty());
-
-      for (const auto& [time, val] : winterDesignDay) {
-
-        int minutes = time.minutes();
-        int hours = time.hours();
-
-        if (0 == minutes && 0 == hours) {
-          hasEndTime = true;
-          endTimeValue = val;
-          continue;
+    void ForwardTranslator::fixSPMsForUnitarySystem(const model::HVACComponent& unitary, const std::string& fanInletNodeName,
+                                                    const std::string& fanOutletNodeName) {
+      if (auto airSystem = unitary.airLoopHVAC()) {
+        auto supplyComponents = airSystem->supplyComponents(airSystem->supplyInletNode(), unitary);
+        auto oaSystems = subsetCastVector<model::AirLoopHVACOutdoorAirSystem>(supplyComponents);
+        if (!oaSystems.empty()) {
+          auto reliefComponents = oaSystems.back().oaComponents();
+          supplyComponents.insert(supplyComponents.end(), reliefComponents.begin(), reliefComponents.end());
         }
-        values[0] =
-          "Until: " + std::string(hours < 10 ? "0" : "") + std::to_string(hours) + std::string(minutes < 10 ? ":0" : ":") + std::to_string(minutes);
-        eg = idfObject.pushExtensibleGroup(values);
-        OS_ASSERT(!eg.empty());
-        values[0] = "";
-        eg = idfObject.pushExtensibleGroup(values);
-        OS_ASSERT(!eg.empty());
-        bool ok = eg.setDouble(0, val);
-        OS_ASSERT(ok);
-      }
-      if (hasEndTime) {
-        values[0] = "Until: 24:00";
-        eg = idfObject.pushExtensibleGroup(values);
-        OS_ASSERT(!eg.empty());
-        values[0] = "";
-        eg = idfObject.pushExtensibleGroup(values);
-        OS_ASSERT(!eg.empty());
-        bool ok = eg.setDouble(0, endTimeValue);
-        OS_ASSERT(ok);
-      } else {
-        LOG(Error, "Winter Design Day must have a value for all 24 hours");
-      }
-    }
+        auto upstreamNodes = subsetCastVector<model::Node>(supplyComponents);
 
-    if (!summerDesignDay.empty() || !winterDesignDay.empty()) {
-      values[0] = "For: AllOtherDays";
-      eg = idfObject.pushExtensibleGroup(values);
-      OS_ASSERT(!eg.empty());
-    } else {
-      values[0] = "For: AllDays";
-      eg = idfObject.pushExtensibleGroup(values);
-      OS_ASSERT(!eg.empty());
-    }
-
-    bool hasEndTime = false;
-    double endTimeValue = 0.0;
-    for (const auto& [time, val] : defaultDay) {
-
-      int minutes = time.minutes();
-      int hours = time.hours();
-
-      if (0 == minutes && 0 == hours) {
-        hasEndTime = true;
-        endTimeValue = val;
-        continue;
-      }
-      values[0] =
-        "Until: " + std::string(hours < 10 ? "0" : "") + std::to_string(hours) + std::string(minutes < 10 ? ":0" : ":") + std::to_string(minutes);
-      eg = idfObject.pushExtensibleGroup(values);
-      OS_ASSERT(!eg.empty());
-      values[0] = "";
-      eg = idfObject.pushExtensibleGroup(values);
-      OS_ASSERT(!eg.empty());
-      bool ok = eg.setDouble(0, val);
-      OS_ASSERT(ok);
-    }
-    if (hasEndTime) {
-      values[0] = "Until: 24:00";
-      eg = idfObject.pushExtensibleGroup(values);
-      OS_ASSERT(!eg.empty());
-      values[0] = "";
-      eg = idfObject.pushExtensibleGroup(values);
-      OS_ASSERT(!eg.empty());
-      bool ok = eg.setDouble(0, endTimeValue);
-      OS_ASSERT(ok);
-    } else {
-      LOG(Error, "Default Day must have a value for all 24 hours");
-    }
-
-    m_idfObjects.push_back(idfObject);
-
-    return idfObject;
-  }
-
-  void ForwardTranslator::fixSPMsForUnitarySystem(const model::HVACComponent& unitary, const std::string& fanInletNodeName,
-                                                  const std::string& fanOutletNodeName) {
-    if (auto airSystem = unitary.airLoopHVAC()) {
-      auto supplyComponents = airSystem->supplyComponents(airSystem->supplyInletNode(), unitary);
-      auto oaSystems = subsetCastVector<model::AirLoopHVACOutdoorAirSystem>(supplyComponents);
-      if (!oaSystems.empty()) {
-        auto reliefComponents = oaSystems.back().oaComponents();
-        supplyComponents.insert(supplyComponents.end(), reliefComponents.begin(), reliefComponents.end());
-      }
-      auto upstreamNodes = subsetCastVector<model::Node>(supplyComponents);
-
-      for (const auto& node : upstreamNodes) {
-        auto spms = subsetCastVector<model::SetpointManagerMixedAir>(node.setpointManagers());
-        for (auto& spm : spms) {
-          auto pred = [&spm](IdfObject& idfObject) {
-            if (idfObject.iddObject().type() == IddObjectType::SetpointManager_MixedAir) {
-              auto idfName = idfObject.name();
-              auto osName = spm.name();
-              if (idfName && osName && (osName.get() == idfName.get())) {
-                return true;
+        for (const auto& node : upstreamNodes) {
+          auto spms = subsetCastVector<model::SetpointManagerMixedAir>(node.setpointManagers());
+          for (auto& spm : spms) {
+            auto pred = [&spm](IdfObject& idfObject) {
+              if (idfObject.iddObject().type() == IddObjectType::SetpointManager_MixedAir) {
+                auto idfName = idfObject.name();
+                auto osName = spm.name();
+                if (idfName && osName && (osName.get() == idfName.get())) {
+                  return true;
+                }
               }
-            }
-            return false;
-          };
-          auto spm_idf = std::find_if(m_idfObjects.begin(), m_idfObjects.end(), pred);
-          if (spm_idf != m_idfObjects.end()) {
-            auto result = spm_idf->getString(SetpointManager_MixedAirFields::FanInletNodeName);
-            if (!result || result->empty()) {
-              spm_idf->setString(SetpointManager_MixedAirFields::FanInletNodeName, fanInletNodeName);
-            }
-            result = spm_idf->getString(SetpointManager_MixedAirFields::FanOutletNodeName);
-            if (!result || result->empty()) {
-              spm_idf->setString(SetpointManager_MixedAirFields::FanOutletNodeName, fanOutletNodeName);
+              return false;
+            };
+            auto spm_idf = std::find_if(m_idfObjects.begin(), m_idfObjects.end(), pred);
+            if (spm_idf != m_idfObjects.end()) {
+              auto result = spm_idf->getString(SetpointManager_MixedAirFields::FanInletNodeName);
+              if (!result || result->empty()) {
+                spm_idf->setString(SetpointManager_MixedAirFields::FanInletNodeName, fanInletNodeName);
+              }
+              result = spm_idf->getString(SetpointManager_MixedAirFields::FanOutletNodeName);
+              if (!result || result->empty()) {
+                spm_idf->setString(SetpointManager_MixedAirFields::FanOutletNodeName, fanOutletNodeName);
+              }
             }
           }
         }
       }
     }
-  }
 
-}  // namespace energyplus
+  }  // namespace energyplus
 
 }  // namespace openstudio

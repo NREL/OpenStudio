@@ -50,8 +50,11 @@
 
 #include "../../utilities/units/QuantityConverter.hpp"
 
-#include <vector>
+#include <fmt/format.h>
+
+#include <limits>
 #include <map>
+#include <vector>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -388,4 +391,93 @@ TEST_F(MeasureFixture, RegisterValueNames) {
   EXPECT_EQ("v_a_l_u_e_f_i_v_e_v_a_l_u_e_f_i_v_e_v_a_l_u_e_f_i_v_e_v", attributes[5].name());
   EXPECT_EQ("value_six", attributes[6].name());
   EXPECT_EQ("value_seven", attributes[7].name());
+}
+
+class TestModelUserScriptDomain : public ModelMeasure
+{
+ public:
+  virtual std::string name() const override {
+    return "TestModelUserScriptDomain";
+  }
+
+  virtual std::vector<OSArgument> arguments(const Model& model) const override {
+    std::vector<OSArgument> result;
+
+    OSArgument arg = OSArgument::makeDoubleArgument("double_arg", true);
+    arg.setMaxValue(10.0);
+    result.push_back(arg);
+
+    arg = OSArgument::makeIntegerArgument("int_arg", true);
+    arg.setMinValue(0);
+    result.push_back(arg);
+
+    return result;
+  }
+
+  // remove all spaces and add a new one
+  virtual bool run(Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const override {
+    ModelMeasure::run(model, runner, user_arguments);  // initializes runner
+
+    if (!runner.validateUserArguments(arguments(model), user_arguments)) {
+      return false;
+    }
+
+    return true;
+  }
+};
+
+TEST_F(MeasureFixture, UserScript_TestModelUserScriptDomain) {
+  TestModelUserScriptDomain script;
+  EXPECT_EQ("TestModelUserScriptDomain", script.name());
+
+  Model model;
+
+  std::vector<WorkflowStep> steps;
+  steps.push_back(MeasureStep("dummy"));
+
+  WorkflowJSON workflow;
+  workflow.setWorkflowSteps(steps);
+
+  TestOSRunner runner(workflow);
+  OSArgumentVector definitions = script.arguments(model);
+  std::map<std::string, OSArgument> user_arguments = runner.getUserInput(definitions);
+  ASSERT_EQ(2, user_arguments.size());
+
+  OSArgument& double_arg = user_arguments["double_arg"];
+  OSArgument& int_arg = user_arguments["int_arg"];
+
+  // call with a good value
+  double_arg.setValue(-1.0);
+  int_arg.setValue(1.0);
+  EXPECT_TRUE(script.run(model, runner, user_arguments));
+  WorkflowStepResult result = runner.result();
+  ASSERT_TRUE(result.stepResult());
+  EXPECT_EQ(StepResult::Success, result.stepResult()->value());
+  EXPECT_EQ(0u, result.stepErrors().size());
+  EXPECT_EQ(0u, result.stepWarnings().size());
+
+  // Out of bound value for double_arg
+  runner.reset();
+  double_arg.setValue(100.0);
+  EXPECT_FALSE(script.run(model, runner, user_arguments));
+  result = runner.result();
+  ASSERT_TRUE(result.stepResult());
+  EXPECT_EQ(StepResult::Fail, result.stepResult()->value());
+  ASSERT_EQ(1u, result.stepErrors().size());
+  EXPECT_EQ(
+    fmt::format("Double User argument 'double_arg' has a value '100' that is not in the domain [{}, 10].", std::numeric_limits<double>::lowest()),
+    result.stepErrors()[0]);
+  EXPECT_EQ(0u, result.stepWarnings().size());
+
+  // Out of bound value for int_arg
+  runner.reset();
+  double_arg.setValue(1.0);
+  int_arg.setValue(-3);
+  EXPECT_FALSE(script.run(model, runner, user_arguments));
+  result = runner.result();
+  ASSERT_TRUE(result.stepResult());
+  EXPECT_EQ(StepResult::Fail, result.stepResult()->value());
+  ASSERT_EQ(1u, result.stepErrors().size());
+  EXPECT_EQ("Integer User argument 'int_arg' has a value '-3' that is not in the domain [0, 2147483647].", result.stepErrors()[0]);
+  EXPECT_EQ(0u, result.stepWarnings().size());
 }

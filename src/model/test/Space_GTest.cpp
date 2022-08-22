@@ -3090,4 +3090,60 @@ TEST_F(ModelFixture, DISABLED_ShatteredModel_Existing_3424) {
   EXPECT_EQ(3, ceilingSpace1.size());
   EXPECT_EQ(7, ceilingSpace4.size());
 }
+
+TEST_F(ModelFixture, Space_Polyhedron_Volume) {
+
+  Model m;
+  Space s(m);
+
+  // This is a 30x10x0.3 base, with a rectangle triangle on top of 30x10x10
+  //                       ▲ z
+  //                       │
+  //                      x├─ 10.0
+  //                    x  │
+  //                  x    │
+  //                x      │
+  //              x        │
+  //            x          │
+  //          x            │
+  //        x              ├─ 0.3
+  //        │              │
+  //   ◄────┼──────────────┼─
+  //  y    10.0            0.0
+
+  Surface south2({{+15.0, +0.0, +10.3}, {+15.0, +0.0, +0.0}, {+30.0, +0.0, +0.0}, {+30.0, +0.0, +10.3}}, m);
+  south2.setName("1-SOUTH-2");
+  south2.setSpace(s);
+
+  // Putting extra vertices here on purpose to show that the Space::volume will miscalculate due to averaging foor and ceiling heights
+  Surface roof({{+30.0, +0.0, +10.3}, {+30.0, +10.0, +0.3}, {+0.0, +10.0, +0.3}, {+0.0, +0.0, +10.3}, {+10.0, +0.0, +10.3}, {+20.0, +0.0, +10.3}}, m);
+  roof.setName("ROOF");
+  roof.setSpace(s);
+
+  Surface east({{+30.0, +0.0, +10.3}, {+30.0, +0.0, +0.0}, {+30.0, +10.0, +0.0}, {+30.0, +10.0, +0.3}}, m);
+  east.setName("3-EAST");
+  east.setSpace(s);
+
+  Surface north({{+30.0, +10.0, +0.3}, {+30.0, +10.0, +0.0}, {+0.0, +10.0, +0.0}, {+0.0, +10.0, +0.3}}, m);
+  north.setName("4-NORTH");
+  north.setSpace(s);
+
+  Surface west({{+0.0, +10.0, +0.3}, {+0.0, +10.0, +0.0}, {+0.0, +0.0, +0.0}, {+0.0, +0.0, +10.3}}, m);
+  west.setName("2-WEST");
+  west.setSpace(s);
+
+  Surface south1({{+0.0, +0.0, +10.3}, {+0.0, +0.0, +0.0}, {+15.0, +0.0, +0.0}, {+15.0, +0.0, +10.3}}, m);
+  south1.setName("1-SOUTH-1");
+  south1.setSpace(s);
+
+  Surface floor({{+0.0, +0.0, +0.0}, {+0.0, +10.0, +0.0}, {+30.0, +10.0, +0.0}, {+30.0, +0.0, +0.0}}, m);
+  floor.setName("FLOOR");
+  floor.setSpace(s);
+
+  EXPECT_TRUE(s.isEnclosedVolume());
+
+  double volume = 30.0 * 10.0 * 0.3 + 30.0 * 10.0 * 10.0 / 2.0;
+  EXPECT_EQ(volume, s.volume());
+}
+
 //#  endif // SURFACESHATTERING

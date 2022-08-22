@@ -245,11 +245,17 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateOutputControlFiles(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateOutputControlReportingTolerances(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateOutputControlTableStyle(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateOutputDebuggingData(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateOutputDiagnostics(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateOutputJSON(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateOutputSQLite(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateOutputEnvironmentalImpactFactors(const WorkspaceObject& workspaceObject);
 
@@ -314,6 +320,10 @@ namespace energyplus {
     boost::optional<model::ModelObject> translateSetpointManagerScheduled(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateSetpointManagerSingleZoneReheat(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateSetpointManagerSystemNodeResetHumidity(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateSetpointManagerSystemNodeResetTemperature(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateShadingBuildingDetailed(const WorkspaceObject& workspaceObject);
 

@@ -53,7 +53,7 @@ void ProgressBar::updatePercentage() {
     newPercentage = 100.0 * (value - min) / range;
   }
 
-  if (fabs(newPercentage - m_percentage) >= 1.0) {
+  if (std::fabs(newPercentage - m_percentage) >= 1.0) {
     m_percentage = newPercentage;
     this->percentageUpdated.nano_emit(m_percentage);
     onPercentageUpdated(m_percentage);

@@ -59,7 +59,7 @@ namespace model {
       /** @name Getters */
       //@{
 
-      /** The conductivitiy of the material in W/m*K. */
+      /** The conductivity of the material in W/m*K. */
       virtual double thermalConductivity() const = 0;
 
       /** The conductance of the material in W/m^2*K. */

@@ -127,6 +127,9 @@ namespace gbxml {
 
     std::set<openstudio::model::Material, openstudio::IdfObjectImplLess> m_materials;
 
+    // Assigning a Shading Surface Construction is mostly pointless, so to avoid gbXML validation errors, we create one if need be
+    bool m_placeholderShadingSurfaceConstructionAlreadyCreated = false;
+
     StringStreamLogSink m_logSink;
 
     ProgressBar* m_progressBar;

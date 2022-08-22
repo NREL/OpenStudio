@@ -96,7 +96,7 @@ namespace model {
       /** Get the thickness of the material. */
       virtual double thickness() const override;
 
-      /** The conductivitiy of the material in W/m*K. */
+      /** The conductivity of the material in W/m*K. */
       virtual double thermalConductivity() const override;
 
       /** The conductance of the material in W/m^2*K. */

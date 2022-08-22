@@ -33,6 +33,7 @@
 
 #include <boost/algorithm/string/replace.hpp>
 
+#include <cmath>
 #include <iomanip>
 
 namespace openstudio {
@@ -162,7 +163,7 @@ unsigned numFractionalDigits(double value, unsigned numSigFigs) {
     return numSigFigs - 1u;
   }
 
-  value = fabs(value);
+  value = std::fabs(value);
   int orderOfMagnitude = int(floor(log10(value)));  // 1683 => 3
                                                     // 0.001683892 => -3
   int figsBeforeDecimal = std::min(std::max(orderOfMagnitude + 1, 0), int(numSigFigs));
@@ -205,7 +206,7 @@ double toNumSigFigs(double value, unsigned numSigFigs) {
     return value;
   }
 
-  double absValue = fabs(value);
+  double absValue = std::fabs(value);
   bool negative = (value != absValue);
 
   double orderOfMagnitude = floor(log10(absValue));  // 1683 => 3

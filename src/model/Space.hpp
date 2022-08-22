@@ -34,7 +34,9 @@
 #include "PlanarSurfaceGroup.hpp"
 
 namespace openstudio {
+
 class Polygon3d;
+class Polyhedron;
 
 namespace model {
 
@@ -600,6 +602,9 @@ namespace model {
 
     // Calculates the exposed perimeter of a space
     double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
+
+    Polyhedron polyhedron() const;
+    bool isEnclosedVolume() const;
 
     //@}
    protected:

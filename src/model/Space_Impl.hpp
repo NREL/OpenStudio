@@ -37,6 +37,10 @@
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>
 
 namespace openstudio {
+
+class Polygon3d;
+class Polyhedron;
+
 namespace model {
 
   // forward declarations
@@ -477,6 +481,9 @@ namespace model {
       bool isPlenum() const;
 
       double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
+
+      Polyhedron polyhedron() const;
+      bool isEnclosedVolume() const;
 
      private:
       REGISTER_LOGGER("openstudio.model.Space");

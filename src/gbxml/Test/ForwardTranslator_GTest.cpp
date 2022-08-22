@@ -73,6 +73,7 @@
 
 #include "utilities/core/Compare.hpp"
 #include "utilities/geometry/BoundingBox.hpp"
+#include "utilities/xml/XMLValidator.hpp"
 #include <resources.hxx>
 
 #include <sstream>
@@ -906,5 +907,167 @@ TEST_F(gbXMLFixture, ForwardTranslator_IDs_Names) {
       EXPECT_EQ(_obj->additionalProperties().getFeatureAsString("gbXMLId").get(), _obj->gbXMLId().get());
       EXPECT_EQ("I0225mminsulationboard", _obj->gbXMLId().get());
     }
+  }
+}
+
+TEST_F(gbXMLFixture, ForwardTranslator_exampleModelValid) {
+  Model model = exampleModel();
+
+  path p = resourcesPath() / openstudio::toPath("gbxml/exampleModel.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test = forwardTranslator.modelToGbXML(model, p);
+
+  EXPECT_TRUE(test);
+
+  auto xmlValidator = XMLValidator::gbxmlValidator();
+
+  EXPECT_TRUE(xmlValidator.validate(p));
+  EXPECT_TRUE(xmlValidator.isValid());
+  EXPECT_EQ(0, xmlValidator.warnings().size());
+
+  auto errors = xmlValidator.errors();
+  EXPECT_EQ(0, errors.size());
+}
+
+TEST_F(gbXMLFixture, ForwardTranslator_exposedToSun) {
+  // Test for #4559 - OpenStudio exported gbXML 'exposedToSun' attribute not written
+  Model model = exampleModel();
+
+  // Write out the XML
+  path p = resourcesPath() / openstudio::toPath("gbxml/exampleModel.xml");
+
+  ForwardTranslator forwardTranslator;
+  bool test = forwardTranslator.modelToGbXML(model, p);
+
+  EXPECT_TRUE(test);
+
+  ASSERT_TRUE(openstudio::filesystem::exists(p));
+
+  openstudio::filesystem::ifstream file(p, std::ios_base::binary);
+  ASSERT_TRUE(file.is_open());
+  pugi::xml_document doc;
+  auto load_result = doc.load(file);
+  file.close();
+  ASSERT_TRUE(load_result) << "'" << p << "' Failed to load:\n"
+                           << "Error description: " << load_result.description() << "\n"
+                           << "Error offset: " << load_result.offset;
+
+  std::string exposedToSun;
+  std::string expectedExposedToSun;
+
+  pugi::xpath_node surfaceXPath1 = doc.select_node("//Surface[@id='Surface_1']");
+  ASSERT_TRUE(surfaceXPath1);
+  pugi::xml_node surfaceNode1 = surfaceXPath1.node();
+  EXPECT_EQ(1u, std::count_if(surfaceNode1.attributes_begin(), surfaceNode1.attributes_end(),
+                              [](const auto& att) { return openstudio::istringEqual(att.name(), "exposedToSun"); }));
+  exposedToSun = surfaceNode1.attribute("exposedToSun").value();
+  expectedExposedToSun = "false";
+  EXPECT_EQ(expectedExposedToSun, exposedToSun);
+
+  pugi::xpath_node surfaceXPath2 = doc.select_node("//Surface[@id='Surface_2']");
+  ASSERT_TRUE(surfaceXPath2);
+  pugi::xml_node surfaceNode2 = surfaceXPath2.node();
+  EXPECT_EQ(1u, std::count_if(surfaceNode2.attributes_begin(), surfaceNode2.attributes_end(),
+                              [](const auto& att) { return openstudio::istringEqual(att.name(), "exposedToSun"); }));
+  exposedToSun = surfaceNode2.attribute("exposedToSun").value();
+  expectedExposedToSun = "true";
+  EXPECT_EQ(expectedExposedToSun, exposedToSun);
+}
+
+TEST_F(gbXMLFixture, ForwardTranslator_spaceVolume) {
+  // Test for #4561 - gbxml export does not transfer thermalZone Volume
+  {
+    Model model = exampleModel();
+
+    auto ospace1 = model.getModelObjectByName<Space>("Space 1");
+    ASSERT_TRUE(ospace1);
+    EXPECT_EQ(300.0, ospace1->volume());
+
+    // Write out the XML
+    path p = resourcesPath() / openstudio::toPath("gbxml/exampleModel.xml");
+
+    ForwardTranslator forwardTranslator;
+    bool test = forwardTranslator.modelToGbXML(model, p);
+
+    EXPECT_TRUE(test);
+
+    ASSERT_TRUE(openstudio::filesystem::exists(p));
+
+    openstudio::filesystem::ifstream file(p, std::ios_base::binary);
+    ASSERT_TRUE(file.is_open());
+    pugi::xml_document doc;
+    auto load_result = doc.load(file);
+    file.close();
+    ASSERT_TRUE(load_result) << "'" << p << "' Failed to load:\n"
+                             << "Error description: " << load_result.description() << "\n"
+                             << "Error offset: " << load_result.offset;
+
+    pugi::xpath_node spaceXPath1 = doc.select_node("//Space[@id='Space_1']");
+    ASSERT_TRUE(spaceXPath1);
+    pugi::xml_node spaceNode1 = spaceXPath1.node();
+    double volume = spaceNode1.child("Volume").text().as_double();
+    EXPECT_EQ(300.0, volume);
+
+    // Read the XML back in and check the space
+    ReverseTranslator reverseTranslator;
+    boost::optional<Model> model2 = reverseTranslator.loadModel(p);
+
+    ASSERT_TRUE(model2);
+
+    auto ospace2 = model2->getModelObjectByName<Space>("Space_1");
+    ASSERT_TRUE(ospace2);
+    EXPECT_EQ(300.0, ospace2->volume());
+    EXPECT_FALSE(ospace2->isVolumeAutocalculated());
+
+    auto ospace3 = model2->getModelObjectByName<Space>("Shading_Surface_Group_1");
+    ASSERT_TRUE(ospace3);
+    EXPECT_EQ(0.0, ospace3->volume());
+    EXPECT_TRUE(ospace3->isVolumeAutocalculated());
+  }
+
+  {
+    Model model = exampleModel();
+
+    auto ospace1 = model.getModelObjectByName<Space>("Space 1");
+    ASSERT_TRUE(ospace1);
+    EXPECT_TRUE(ospace1->setVolume(305.0));
+    EXPECT_EQ(305.0, ospace1->volume());
+
+    // Write out the XML
+    path p = resourcesPath() / openstudio::toPath("gbxml/exampleModel.xml");
+
+    ForwardTranslator forwardTranslator;
+    bool test = forwardTranslator.modelToGbXML(model, p);
+
+    EXPECT_TRUE(test);
+
+    ASSERT_TRUE(openstudio::filesystem::exists(p));
+
+    openstudio::filesystem::ifstream file(p, std::ios_base::binary);
+    ASSERT_TRUE(file.is_open());
+    pugi::xml_document doc;
+    auto load_result = doc.load(file);
+    file.close();
+    ASSERT_TRUE(load_result) << "'" << p << "' Failed to load:\n"
+                             << "Error description: " << load_result.description() << "\n"
+                             << "Error offset: " << load_result.offset;
+
+    pugi::xpath_node spaceXPath1 = doc.select_node("//Space[@id='Space_1']");
+    ASSERT_TRUE(spaceXPath1);
+    pugi::xml_node spaceNode1 = spaceXPath1.node();
+    double volume = spaceNode1.child("Volume").text().as_double();
+    EXPECT_EQ(305.0, volume);
+
+    // Read the XML back in and check the space
+    ReverseTranslator reverseTranslator;
+    boost::optional<Model> model2 = reverseTranslator.loadModel(p);
+
+    ASSERT_TRUE(model2);
+
+    auto ospace2 = model2->getModelObjectByName<Space>("Space_1");
+    ASSERT_TRUE(ospace2);
+    EXPECT_EQ(305.0, ospace2->volume());
+    EXPECT_FALSE(ospace2->isVolumeAutocalculated());
   }
 }

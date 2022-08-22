@@ -69,8 +69,10 @@
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
 #include "../utilities/geometry/BoundingBox.hpp"
+#include "../utilities/xml/XMLValidator.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
+#include <resources.hxx>
 
 #include <thread>
 
@@ -108,6 +110,10 @@ namespace gbxml {
     boost::optional<openstudio::model::Model> result;
 
     if (openstudio::filesystem::exists(path)) {
+
+      // validate the gbxml prior to reverse translation
+      auto gbxmlValidator = XMLValidator::gbxmlValidator();
+      gbxmlValidator.validate(path);
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {
@@ -574,6 +580,12 @@ namespace gbxml {
       translateCADObjectId(cadObjectId, space);
 
       break;  // TODO: import multiple CADObjectIds
+    }
+
+    // import Volume
+    auto volume = element.child("Volume").text();
+    if (!volume.empty()) {
+      space.setVolume(volume.as_double());
     }
 
     return space;

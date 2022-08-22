@@ -306,7 +306,7 @@ class TranslatorGenerator
 
     # Instantiate the model object
     result << "\n"
-    result << "  // Instantiate an IdfObject of the class to store the values,\n"
+    result << "  // Instantiate an IdfObject of the class to store the values\n"
     result << "  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::" << @iddObjectType.valueName << ", modelObject);\n"
     result << "  // If it doesn't have a name, or if you aren't sure you are going to want to return it\n"
     result << "  // IdfObject idfObject( openstudio::IddObjectType::" << @iddObjectType.valueName << " );\n"
@@ -418,8 +418,7 @@ class TranslatorGenerator
     end # End loop on nonextensibleFields
 
     # Assign result and return
-    result << "  result = IdfObject;\n"
-    result << "  return result;\n"
+    result << "  return idfObject;\n"
 
     # Close method
     result << "} // End of translate function\n"

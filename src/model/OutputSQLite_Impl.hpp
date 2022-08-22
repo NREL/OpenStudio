@@ -27,40 +27,69 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <gtest/gtest.h>
+#ifndef MODEL_OUTPUTSQLITE_IMPL_HPP
+#define MODEL_OUTPUTSQLITE_IMPL_HPP
 
-#include "../UpdateManager.hpp"
-#include "../System.hpp"
-#include <OpenStudio.hxx>
-
-#include <sstream>
-#include <time.h>
+#include <model/ModelAPI.hpp>
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
+namespace model {
 
-TEST(UpdateManager, QtGUI_GeneralTest) {
-  UpdateManager manager("GTest");
-  EXPECT_EQ("GTest", manager.appName());
-  auto result = manager.waitForFinished();
-  ASSERT_TRUE(result);
-  EXPECT_TRUE(manager.finished());
-  EXPECT_FALSE(manager.error());
-}
+  namespace detail {
 
-// cppcheck-suppress syntaxError
-TEST(UpdateManager, QtGUI_ExpandedTest) {
-  std::string url("https://www.openstudio.net/updateGTest.html?app=GTest&version=0.0.0");
-  UpdateManager manager("GTest", url);
-  EXPECT_EQ("GTest", manager.appName());
-  auto result = manager.waitForFinished();
-  ASSERT_TRUE(result);
-  EXPECT_TRUE(manager.finished());
-  EXPECT_FALSE(manager.error());
-  EXPECT_TRUE(manager.newMajorRelease());
-  EXPECT_FALSE(manager.newMinorRelease());
-  EXPECT_FALSE(manager.newPatchRelease());
-  EXPECT_EQ("99.99.99.99", manager.mostRecentVersion());
-  EXPECT_EQ("https://www.openstudio.net/downloads/99", manager.mostRecentDownloadUrl());
-  ASSERT_EQ(2u, manager.updateMessages().size());
-}
+    /** OutputSQLite_Impl is a ModelObject_Impl that is the implementation class for OutputSQLite.*/
+    class MODEL_API OutputSQLite_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
+
+      OutputSQLite_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+
+      OutputSQLite_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+
+      OutputSQLite_Impl(const OutputSQLite_Impl& other, Model_Impl* model, bool keepHandle);
+
+      virtual ~OutputSQLite_Impl() {}
+
+      //@}
+      /** @name Virtual Methods */
+      //@{
+
+      virtual const std::vector<std::string>& outputVariableNames() const override;
+
+      virtual IddObjectType iddObjectType() const override;
+
+      //@}
+      /** @name Getters */
+      //@{
+
+      std::string optionType() const;
+
+      std::string unitConversionforTabularData() const;
+
+      //@}
+      /** @name Setters */
+      //@{
+
+      bool setOptionType(const std::string& optionType);
+
+      bool setUnitConversionforTabularData(const std::string& unitConversionforTabularData);
+
+      //@}
+      /** @name Other */
+      //@{
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.OutputSQLite");
+    };
+
+  }  // namespace detail
+
+}  // namespace model
 }  // namespace openstudio
+
+#endif  // MODEL_OUTPUTSQLITE_IMPL_HPP

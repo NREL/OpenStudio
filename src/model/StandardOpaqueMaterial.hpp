@@ -33,9 +33,20 @@
 #include "ModelAPI.hpp"
 #include "OpaqueMaterial.hpp"
 
+#include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
+#include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
+#include "MaterialPropertyPhaseChange.hpp"
+#include "MaterialPropertyPhaseChange_Impl.hpp"
+#include "MaterialPropertyPhaseChangeHysteresis.hpp"
+#include "MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
+
 namespace openstudio {
 
 namespace model {
+
+  class MaterialPropertyMoisturePenetrationDepthSettings;
+  class MaterialPropertyPhaseChange;
+  class MaterialPropertyPhaseChangeHysteresis;
 
   namespace detail {
 
@@ -69,16 +80,16 @@ namespace model {
     /** @name Getters */
     //@{
 
-    // Thermal conductivity of the OpaqueMaterial in W/m*K. Throws openstudio::Exception if unavailable.
+    /** The conductivity of the material in W/m*K. */
     double thermalConductivity() const;
 
-    // Thermal conductance of the OpaqueMaterial in W/m^2*K. Throws openstudio::Exception if unavailable.
+    /** The conductance of the material in W/m^2*K. */
     double thermalConductance() const;
 
-    // Thermal resistivity of the OpaqueMaterial in m*K/W. Throws openstudio::Exception if unavailable.
+    /** The resistivity of the material in m*K/W. */
     double thermalResistivity() const;
 
-    // Thermal resistance of the OpaqueMaterial in m^2*K/W. Throws openstudio::Exception if unavailable.
+    /** The resistance of the material in m^2*K/W. */
     double thermalResistance() const;
 
     // Thermal reflectance of the OpaqueMaterial (dimensionless fraction).
@@ -116,16 +127,16 @@ namespace model {
     /** @name Setters */
     //@{
 
-    // Set the thermal conductivity (W/m*K).
+    /** Sets the conductivity of the material in W/m*K, if possible. */
     bool setThermalConductivity(double value);
 
-    // Set the thermal conductance (W/m^2*K).
+    /** Sets the conductance of the material in W/m^2*K, if possible. Sets thickness to achieve conductivity. */
     bool setThermalConductance(double value);
 
-    // Set the thermal resistivity (m*K/W).
+    /** Sets the resistivity of the material in m*K/W, if possible. */
     bool setThermalResistivity(double value);
 
-    // Set the thermal resistance (m^2*K/W).
+    /** Sets the resistance of the material in m^2*K/W, if possible. Sets thickness to achieve resistivity. */
     bool setThermalResistance(double value);
 
     // Set the thermal absorptance (dimensionless fraction).
@@ -167,6 +178,38 @@ namespace model {
     bool setVisibleAbsorptance(double visibleAbsorptance);
 
     void resetVisibleAbsorptance();
+
+    // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it
+    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings>
+      createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA,
+                                                             double moistureEquationCoefficientB, double moistureEquationCoefficientC,
+                                                             double moistureEquationCoefficientD, double coatingLayerThickness,
+                                                             double coatingLayerWaterVaporDiffusionResistanceFactor);
+
+    // returns the material property moisture penetration depth settings if set
+    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
+
+    // resets the material property moisture penetration depth settings
+    void resetMaterialPropertyMoisturePenetrationDepthSettings();
+
+    // if material property phase change already exists, do nothing and return nil; creates the material property phase change if it does not already exist and return it
+    boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange();
+    boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
+
+    // returns the material property phase change if set
+    boost::optional<MaterialPropertyPhaseChange> materialPropertyPhaseChange() const;
+
+    // resets the material property phase change
+    void resetMaterialPropertyPhaseChange();
+
+    // if material property phase change hysteresis already exists, do nothing and return nil; creates the material property phase change hysteresis if it does not already exist and return it
+    boost::optional<MaterialPropertyPhaseChangeHysteresis> createMaterialPropertyPhaseChangeHysteresis();
+
+    // returns the material property phase change hysteresis if set
+    boost::optional<MaterialPropertyPhaseChangeHysteresis> materialPropertyPhaseChangeHysteresis() const;
+
+    // resets the material property phase change hysteresis
+    void resetMaterialPropertyPhaseChangeHysteresis();
 
     //@}
     /** @name Queries */

@@ -56,6 +56,8 @@
 #  pragma warning(pop)
 #endif
 
+#include <cmath>
+
 using coordinate_type = double;
 using BoostPoint = boost::geometry::model::d2::point_xy<double>;
 using BoostPolygon = boost::geometry::model::polygon<BoostPoint>;
@@ -261,7 +263,7 @@ std::vector<BoostPolygon> removeHoles(const std::vector<BoostPolygon>& polygons)
 
 // convert a Point3d to a BoostPoint
 boost::tuple<double, double> boostPointFromPoint3d(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) {
-  OS_ASSERT(abs(point3d.z()) <= tol);
+  OS_ASSERT(std::abs(point3d.z()) <= tol);
 
   // simple method
   //return boost::make_tuple(point3d.x(), point3d.y());
@@ -283,7 +285,7 @@ boost::optional<BoostPolygon> boostPolygonFromVertices(const std::vector<Point3d
 
     // should all have zero z coordinate now
     double z = vertex.z();
-    if (abs(z) > tol) {
+    if (std::abs(z) > tol) {
       LOG_FREE(Error, "utilities.geometry.boostPolygonFromVertices", "All points must be on z = 0 plane");
       return boost::none;
     }
@@ -334,7 +336,7 @@ boost::optional<BoostRing> boostRingFromVertices(const std::vector<Point3d>& ver
 
     // should all have zero z coordinate now
     double z = vertex.z();
-    if (abs(z) > tol) {
+    if (std::abs(z) > tol) {
       LOG_FREE(Error, "utilities.geometry.boostRingFromVertices", "All points must be on z = 0 plane");
       return boost::none;
     }
@@ -560,7 +562,7 @@ bool polygonInPolygon(std::vector<Point3d>& points, const std::vector<Point3d>& 
   }
 
   for (const Point3d& point : points) {
-    if (abs(point.z()) > tol) {
+    if (std::abs(point.z()) > tol) {
       return false;
     }
   }
@@ -585,7 +587,7 @@ bool pointInPolygon(const Point3d& point, const std::vector<Point3d>& polygon, d
     return false;
   }
 
-  if (abs(point.z()) > tol) {
+  if (std::abs(point.z()) > tol) {
     return false;
   }
 
@@ -1189,7 +1191,7 @@ boost::optional<BoostPolygon> BoostPolygonFromPolygon(const Polygon3d& polygon, 
 
     // should all have zero z coordinate now
     //double z = vertex.z();
-    //if (abs(z) > tol) {
+    //if (std::abs(z) > tol) {
     //  LOG_FREE(Error, "utilities.geometry.boostPolygonFromVertices", "All points must be on z = 0 plane");
     //  return boost::none;
     //}

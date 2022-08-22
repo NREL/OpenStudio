@@ -41,8 +41,9 @@
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <fmt/format.h>
+#include <cstdio>
+#include <cstdlib>
 
 namespace openstudio {
 namespace measure {
@@ -393,8 +394,7 @@ namespace measure {
   void OSRunner::destroyProgressBar() const {}
 
   bool OSRunner::validateUserArguments(const std::vector<OSArgument>& script_arguments, const std::map<std::string, OSArgument>& user_arguments) {
-    bool result(true);
-    std::stringstream ss;
+    bool result = true;
     std::vector<WorkflowStepValue> stepValues;
     for (const OSArgument& script_argument : script_arguments) {
       auto it = user_arguments.find(script_argument.name());
@@ -402,10 +402,7 @@ namespace measure {
         // script_argument is not in user_arguments
         // this is only okay for purely optional arguments
         if (script_argument.required() || script_argument.hasDefaultValue()) {
-          ss << "Argument " << script_argument.name() << " is required or has a default value, ";
-          ss << "but is not in user_arguments.";
-          registerError(ss.str());
-          ss.str("");
+          registerError(fmt::format("Argument '{}' is required or has a default value, but is not in user_arguments.", script_argument.name()));
           result = false;
         }
       } else {
@@ -414,46 +411,37 @@ namespace measure {
 
         // check that names still match
         if (user_argument.name() != script_argument.name()) {
-          ss << "User argument name '" << user_argument.name() << "' does not match map key ";
-          ss << script_argument.name() << ".";
-          registerWarning(ss.str());
-          ss.str("");
+          registerWarning(fmt::format("User argument name '{}' does not match map key ", user_argument.name()));
         }
 
         // check that types still match
         if (user_argument.type() != script_argument.type()) {
-          ss << "User argument type " << user_argument.type().valueName() << " does not match ";
-          ss << "script argument type " << script_argument.type().valueName() << ".";
-          registerError(ss.str());
-          ss.str("");
+          registerError(fmt::format("User argument type {} does not match script argument type {}.", user_argument.type().valueName(),
+                                    script_argument.type().valueName()));
           result = false;
         }
 
         //  check that we have values
         if ((script_argument.required()) && !(user_argument.hasValue() || user_argument.hasDefaultValue())) {
-          ss << "Script argument '" << script_argument.name() << "' is required, ";
-          ss << "but the user argument does not have a value or default value set.";
-          registerError(ss.str());
-          ss.str("");
+          registerError(fmt::format("Script argument '{}' is required, but the user argument does not have a value or default value set.",
+                                    script_argument.name()));
           result = false;
         }
 
         // check for default value mismatch
         if (script_argument.hasDefaultValue() && !user_argument.hasDefaultValue()) {
-          ss << "Script argument '" << script_argument.name() << "' has a default value, but the ";
-          ss << "user-supplied version does not.";
-          registerWarning(ss.str());
-          ss.str("");
+          registerWarning(fmt::format("Script argument '{}' has a default value, but the user-supplied version does not.", script_argument.name()));
         }
         if (!script_argument.hasDefaultValue() && user_argument.hasDefaultValue()) {
-          ss << "Script argument '" << script_argument.name() << "' does not have a default value, ";
-          ss << "but the user-supplied version does.";
-          registerWarning(ss.str());
-          ss.str("");
+          registerWarning(
+            fmt::format("Script argument '{}' does not have a default value, but the user-supplied version does.", script_argument.name()));
         }
         if (script_argument.hasDefaultValue() && user_argument.hasDefaultValue() && (user_argument.type() == script_argument.type())) {
-          ss << "The default value of script argument " << '\n' << script_argument << '\n';
-          ss << "does not match that of the corresponding user argument " << '\n' << user_argument << ".";
+          std::stringstream ss;
+          ss << "The default value of script argument " << '\n'
+             << script_argument << '\n'
+             << "does not match that of the corresponding user argument " << '\n'
+             << user_argument << ".";
           switch (script_argument.type().value()) {
             case OSArgumentType::Boolean:
               if (user_argument.defaultValueAsBool() != script_argument.defaultValueAsBool()) {
@@ -480,23 +468,19 @@ namespace measure {
             default:
               OS_ASSERT(false);
           }
-          ss.str("");
         }
 
         // check for domain mismatch
         if (script_argument.hasDomain() && !user_argument.hasDomain()) {
-          ss << "Script argument '" << script_argument.name() << "' has a specified domain, but the ";
-          ss << "user-supplied version does not.";
-          registerWarning(ss.str());
-          ss.str("");
+          registerWarning(
+            fmt::format("Script argument '{}' has a specified domain, but the user-supplied version does not.", script_argument.name()));
         }
         if (!script_argument.hasDomain() && user_argument.hasDomain()) {
-          ss << "Script argument '" << script_argument.name() << "' does not have a specified domain, ";
-          ss << "but the user-supplied version does.";
-          registerWarning(ss.str());
-          ss.str("");
+          registerWarning(
+            fmt::format("Script argument '{}' does not have a specified domain, but the user-supplied version does.", script_argument.name()));
         }
         if (script_argument.hasDomain() && user_argument.hasDomain() && (user_argument.type() == script_argument.type())) {
+          std::stringstream ss;
           ss << "The domain of script argument " << '\n' << script_argument << '\n';
           ss << "does not match that of the corresponding user argument " << '\n' << user_argument << ".";
           switch (script_argument.type().value()) {
@@ -532,48 +516,61 @@ namespace measure {
             default:
               OS_ASSERT(false);
           }
-          ss.str("");
         }
 
         // success, set the values
         if (result) {
-          switch (user_argument.type().value()) {
-            case OSArgumentType::Boolean:
-              if (user_argument.hasValue()) {
-                stepValues.push_back(WorkflowStepValue(user_argument.name(), user_argument.valueAsBool()));
-              } else if (user_argument.hasDefaultValue()) {
-                stepValues.push_back(WorkflowStepValue(user_argument.name(), user_argument.defaultValueAsBool()));
+          auto typeValue = user_argument.type().value();
+          if (typeValue == OSArgumentType::Boolean) {
+            if (user_argument.hasValue()) {
+              stepValues.emplace_back(user_argument.name(), user_argument.valueAsBool());
+            } else if (user_argument.hasDefaultValue()) {
+              stepValues.emplace_back(user_argument.name(), user_argument.defaultValueAsBool());
+            }
+          } else if (typeValue == OSArgumentType::Double) {
+            auto value = user_argument.hasValue() ? user_argument.valueAsDouble() : user_argument.defaultValueAsDouble();
+            if (script_argument.hasDomain()) {
+              // Validate it's in the domain
+              auto domain = script_argument.domainAsDouble();
+              auto& low = domain.front();
+              auto& high = domain.back();
+              if (value < low || value > high) {
+                registerError(fmt::format("{} User argument '{}' has a value '{}' that is not in the domain [{}, {}].",
+                                          user_argument.type().valueName(), script_argument.name(), value, low, high));
+                result = false;
               }
-              break;
-            case OSArgumentType::Double:
-              if (user_argument.hasValue()) {
-                stepValues.push_back(WorkflowStepValue(user_argument.name(), user_argument.valueAsDouble()));
-              } else if (user_argument.hasDefaultValue()) {
-                stepValues.push_back(WorkflowStepValue(user_argument.name(), user_argument.defaultValueAsDouble()));
+            }
+            if (result) {
+              stepValues.emplace_back(user_argument.name(), value);
+            }
+          } else if (typeValue == OSArgumentType::Integer) {
+            auto value = user_argument.hasValue() ? user_argument.valueAsInteger() : user_argument.defaultValueAsInteger();
+            if (script_argument.hasDomain()) {
+              // Validate it's in the domain
+              auto domain = script_argument.domainAsInteger();
+              auto& low = domain.front();
+              auto& high = domain.back();
+              if (value < low || value > high) {
+                registerError(fmt::format("{} User argument '{}' has a value '{}' that is not in the domain [{}, {}].",
+                                          user_argument.type().valueName(), script_argument.name(), value, low, high));
+                result = false;
               }
-              break;
-            case OSArgumentType::Integer:
-              if (user_argument.hasValue()) {
-                stepValues.push_back(WorkflowStepValue(user_argument.name(), user_argument.valueAsInteger()));
-              } else if (user_argument.hasDefaultValue()) {
-                stepValues.push_back(WorkflowStepValue(user_argument.name(), user_argument.defaultValueAsInteger()));
-              }
-              break;
-            case OSArgumentType::String:
-            case OSArgumentType::Choice:
-            case OSArgumentType::Path:
-              if (user_argument.hasValue()) {
-                stepValues.push_back(WorkflowStepValue(user_argument.name(), user_argument.valueAsString()));
-              } else if (user_argument.hasDefaultValue()) {
-                stepValues.push_back(WorkflowStepValue(user_argument.name(), user_argument.defaultValueAsString()));
-              }
-              break;
-            default:
-              OS_ASSERT(false);
+            }
+            if (result) {
+              stepValues.emplace_back(user_argument.name(), value);
+            }
+          } else if ((typeValue == OSArgumentType::String) || (typeValue == OSArgumentType::Choice) || (typeValue == OSArgumentType::Path)) {
+            if (user_argument.hasValue()) {
+              stepValues.emplace_back(user_argument.name(), user_argument.valueAsString());
+            } else if (user_argument.hasDefaultValue()) {
+              stepValues.emplace_back(user_argument.name(), user_argument.defaultValueAsString());
+            }
+          } else {
+            OS_ASSERT(false);
           }
-        }
+        }  // end if result
       }
-    }
+    }  // end for loop on arguments
 
     if (result) {
       for (const auto& stepValue : stepValues) {

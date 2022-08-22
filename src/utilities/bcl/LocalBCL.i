@@ -16,7 +16,6 @@
   #include <utilities/bcl/RemoteBCL.hpp>
   #include <utilities/core/FileReference.hpp>
   #include <utilities/plot/ProgressBar.hpp>
-  #include <utilities/core/UpdateManager.hpp>
 %}
 
 %ignore componentDownloaded;

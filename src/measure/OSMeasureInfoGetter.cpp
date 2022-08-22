@@ -161,7 +161,27 @@ namespace measure {
       boost::optional<std::string> minValue;
       boost::optional<std::string> maxValue;
       if (argument.hasDomain()) {
-        // TODO
+        if (argument.type() == OSArgumentType::Integer) {
+          auto domain = argument.domainAsInteger();
+          auto& low = domain.front();
+          auto& high = domain.back();
+          if (low > std::numeric_limits<int>::lowest()) {
+            minValue = std::to_string(low);
+          }
+          if (high < std::numeric_limits<int>::max()) {
+            maxValue = std::to_string(high);
+          }
+        } else if (argument.type() == OSArgumentType::Double) {
+          auto domain = argument.domainAsDouble();
+          auto& low = domain.front();
+          auto& high = domain.back();
+          if (low > std::numeric_limits<double>::lowest()) {
+            minValue = std::to_string(low);
+          }
+          if (high < std::numeric_limits<double>::max()) {
+            maxValue = std::to_string(high);
+          }
+        }
       }
 
       BCLMeasureArgument bclArgument(argument.name(), argument.displayName(), argument.description(), bclMeasureType, argument.units(),

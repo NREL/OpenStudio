@@ -14,6 +14,7 @@
 %{
   #include <utilities/geometry/Transformation.hpp>
   #include <utilities/geometry/BoundingBox.hpp>
+  #include <utilities/geometry/Polyhedron.hpp>
   #include <utilities/data/TimeSeries.hpp>
   #include <utilities/sql/SqlFile.hpp>
 
@@ -220,10 +221,10 @@ MODELOBJECT_TEMPLATES(DaylightingDeviceTubular);
 MODELOBJECT_TEMPLATES(DaylightingDeviceLightWell);
 MODELOBJECT_TEMPLATES(SpaceType);
 MODELOBJECT_TEMPLATES(LightingSimulationZone);
-MODELOBJECT_TEMPLATES(CustomBlock);
+MODELOBJECT_TEMPLATES(CustomBlock); // Helper class defined in FoundationKiva
 MODELOBJECT_TEMPLATES(FoundationKiva);
 MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
-MODELOBJECT_TEMPLATES(ViewFactor);
+MODELOBJECT_TEMPLATES(ViewFactor); // Helper class defined in ZonePropertyUserViewFactorsBySurfaceName
 MODELOBJECT_TEMPLATES(ZonePropertyUserViewFactorsBySurfaceName);
 MODELOBJECT_TEMPLATES(ExteriorLoadInstance);
 MODELOBJECT_TEMPLATES(ExteriorLights);

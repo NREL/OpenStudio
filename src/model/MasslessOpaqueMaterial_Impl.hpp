@@ -67,9 +67,12 @@ namespace model {
       /** @name Getters */
       //@{
 
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
+
       std::string roughness() const;
 
-      /** The conductivitiy of the material in W/m*K. */
+      /** The conductivity of the material in W/m*K. */
       virtual double thermalConductivity() const override;
 
       /** The conductance of the material in W/m^2*K. */
@@ -143,6 +146,38 @@ namespace model {
       bool setVisibleAbsorptance(double visibleAbsorptance);
 
       void resetVisibleAbsorptance();
+
+      // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it;
+      boost::optional<MaterialPropertyMoisturePenetrationDepthSettings>
+        createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA,
+                                                               double moistureEquationCoefficientB, double moistureEquationCoefficientC,
+                                                               double moistureEquationCoefficientD, double coatingLayerThickness,
+                                                               double coatingLayerWaterVaporDiffusionResistanceFactor);
+
+      // returns the material property moisture penetration depth settings if set
+      boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
+
+      // resets the material property moisture penetration depth settings
+      void resetMaterialPropertyMoisturePenetrationDepthSettings();
+
+      // if material property phase change already exists, do nothing and return nil; creates the material property phase change if it does not already exist and return it;
+      boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange();
+      boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
+
+      // returns the material property phase change if set
+      boost::optional<MaterialPropertyPhaseChange> materialPropertyPhaseChange() const;
+
+      // resets the material property phase change
+      void resetMaterialPropertyPhaseChange();
+
+      // if material property phase change hysteresis already exists, do nothing and return nil; creates the material property phase change hysteresis if it does not already exist and return it
+      boost::optional<MaterialPropertyPhaseChangeHysteresis> createMaterialPropertyPhaseChangeHysteresis();
+
+      // returns the material property phase change hysteresis if set
+      boost::optional<MaterialPropertyPhaseChangeHysteresis> materialPropertyPhaseChangeHysteresis() const;
+
+      // resets the material property phase change hysteresis
+      void resetMaterialPropertyPhaseChangeHysteresis();
 
       //@}
       /** @name Other */

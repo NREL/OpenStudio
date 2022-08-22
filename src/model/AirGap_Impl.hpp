@@ -71,7 +71,7 @@ namespace model {
 
       virtual double thickness() const override;
 
-      /** The conductivitiy of the material in W/m*K. Always throws because no real thickness, which
+      /** The conductivity of the material in W/m*K. Always throws because no real thickness, which
      *  is needed for conversion. */
       virtual double thermalConductivity() const override;
 

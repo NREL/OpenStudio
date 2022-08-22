@@ -37,6 +37,8 @@
 namespace openstudio {
 namespace model {
 
+  class Material;
+
   namespace detail {
 
     /** MaterialPropertyMoisturePenetrationDepthSettings_Impl is a ModelObject_Impl that is the implementation class for MaterialPropertyMoisturePenetrationDepthSettings.*/
@@ -70,6 +72,8 @@ namespace model {
       //@{
 
       std::string materialName() const;
+
+      Material material() const;
 
       double waterVaporDiffusionResistanceFactor() const;
 

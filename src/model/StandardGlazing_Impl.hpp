@@ -108,9 +108,6 @@ namespace model {
 
       bool isBackSideInfraredHemisphericalEmissivityDefaulted() const;
 
-      /** The conductivitiy of the material in W/m*K. */
-      double thermalConductivity() const;
-
       double conductivity() const;
 
       bool isConductivityDefaulted() const;
@@ -180,9 +177,6 @@ namespace model {
 
       void resetBackSideInfraredHemisphericalEmissivity();
 
-      /** Sets the conductivity of the material in W/m*K, if possible. */
-      bool setThermalConductivity(double value);
-
       bool setConductivity(double conductivity);
 
       void resetConductivity();
@@ -198,6 +192,9 @@ namespace model {
       //@}
       /** @name Other */
       //@{
+
+      /** The conductivity of the material in W/m*K. */
+      double thermalConductivity() const;
 
       /** The conductance of the material in W/m^2*K. */
       double thermalConductance() const;
@@ -215,6 +212,9 @@ namespace model {
       virtual boost::optional<double> interiorVisibleAbsorptance() const override;
 
       virtual boost::optional<double> exteriorVisibleAbsorptance() const override;
+
+      /** Sets the conductivity of the material in W/m*K, if possible. */
+      bool setThermalConductivity(double value);
 
       /** Sets the conductance of the material in W/m^2*K, if possible. */
       bool setThermalConductance(double value);

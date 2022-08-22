@@ -22,16 +22,32 @@
 
 %header %{
 // Must undo more of the damage caused by ruby/win32.h 2.0.0
-#ifdef access
-#undef access
-#endif
+#ifdef _MSC_VER
 
-#ifdef truncate
-#undef truncate
-#endif
+#  ifdef access
+#    undef access
+#  endif
 
-#ifdef inline
-#undef inline
+#  ifdef truncate
+#    undef truncate
+#  endif
+
+#  ifdef inline
+#    undef inline
+#  endif
+
+#  ifdef copysign
+#    undef copysign
+#  endif
+
+#  ifdef isinf
+#    undef isinf
+#  endif
+
+#  ifdef isnan
+#    undef isnan
+#  endif
+
 #endif
 %}
 

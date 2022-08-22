@@ -36,9 +36,11 @@
   %ignore openstudio::model::Model::lightingSimulationControl;
   %ignore openstudio::model::Model::outputControlFiles;
   %ignore openstudio::model::Model::outputControlReportingTolerances;
+  %ignore openstudio::model::Model::outputControlTableStyle;
   %ignore openstudio::model::Model::outputDebuggingData;
   %ignore openstudio::model::Model::outputDiagnostics;
   %ignore openstudio::model::Model::outputJSON;
+  %ignore openstudio::model::Model::outputSQLite;
   %ignore openstudio::model::Model::outputTableSummaryReports;
   %ignore openstudio::model::Model::outsideSurfaceConvectionAlgorithm;
   %ignore openstudio::model::Model::performancePrecisionTradeoffs;
