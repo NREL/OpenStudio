@@ -165,8 +165,10 @@ namespace model {
       return value.get();
     }
 
-    boost::optional<std::string> EvaporativeFluidCoolerSingleSpeed_Impl::performanceInputMethod() const {
-      return getString(OS_EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod, true);
+    std::string EvaporativeFluidCoolerSingleSpeed_Impl::performanceInputMethod() const {
+      boost::optional<std::string> value = getString(OS_EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     boost::optional<double> EvaporativeFluidCoolerSingleSpeed_Impl::standardDesignCapacity() const {
@@ -315,20 +317,9 @@ namespace model {
       return result;
     }
 
-    bool EvaporativeFluidCoolerSingleSpeed_Impl::setPerformanceInputMethod(boost::optional<std::string> performanceInputMethod) {
-      bool result(false);
-      if (performanceInputMethod) {
-        result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod, performanceInputMethod.get());
-      } else {
-        resetPerformanceInputMethod();
-        result = true;
-      }
+    bool EvaporativeFluidCoolerSingleSpeed_Impl::setPerformanceInputMethod(const std::string& performanceInputMethod) {
+      bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod, performanceInputMethod);
       return result;
-    }
-
-    void EvaporativeFluidCoolerSingleSpeed_Impl::resetPerformanceInputMethod() {
-      bool result = setString(OS_EvaporativeFluidCooler_SingleSpeedFields::PerformanceInputMethod, "");
-      OS_ASSERT(result);
     }
 
     bool EvaporativeFluidCoolerSingleSpeed_Impl::setStandardDesignCapacity(boost::optional<double> standardDesignCapacity) {
@@ -637,10 +628,13 @@ namespace model {
     : StraightComponent(EvaporativeFluidCoolerSingleSpeed::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>());
 
+    bool ok = true;
     autosizeDesignAirFlowRate();
     autosizeFanPoweratDesignAirFlowRate();
-    setDesignSprayWaterFlowRate(0.03);
-    setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
+    ok = setDesignSprayWaterFlowRate(0.03);
+    OS_ASSERT(ok);
+    ok = setPerformanceInputMethod("UFactorTimesAreaAndDesignWaterFlowRate");
+    OS_ASSERT(ok);
     resetStandardDesignCapacity();
     autosizeUfactorTimesAreaValueatDesignAirFlowRate();
     autosizeDesignWaterFlowRate();
@@ -650,10 +644,13 @@ namespace model {
     resetDesignEnteringAirWetbulbTemperature();
     setCapacityControl("FanCycling");
     setSizingFactor(1.0);
-    setEvaporationLossMode("SaturatedExit");
+    ok = setEvaporationLossMode("SaturatedExit");
+    OS_ASSERT(ok);
     setDriftLossPercent(0.008);
-    setBlowdownCalculationMode("ConcentrationRatio");
-    setBlowdownConcentrationRatio(3.0);
+    ok = setBlowdownCalculationMode("ConcentrationRatio");
+    OS_ASSERT(ok);
+    ok = setBlowdownConcentrationRatio(3.0);
+    OS_ASSERT(ok);
     resetBlowdownMakeupWaterUsageSchedule();
     setString(OS_EvaporativeFluidCooler_SingleSpeedFields::SupplyWaterStorageTankName, "");
   }
@@ -700,7 +697,7 @@ namespace model {
     return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->designSprayWaterFlowRate();
   }
 
-  boost::optional<std::string> EvaporativeFluidCoolerSingleSpeed::performanceInputMethod() const {
+  std::string EvaporativeFluidCoolerSingleSpeed::performanceInputMethod() const {
     return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->performanceInputMethod();
   }
 
@@ -816,12 +813,8 @@ namespace model {
     return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setDesignSprayWaterFlowRate(designSprayWaterFlowRate);
   }
 
-  bool EvaporativeFluidCoolerSingleSpeed::setPerformanceInputMethod(std::string performanceInputMethod) {
+  bool EvaporativeFluidCoolerSingleSpeed::setPerformanceInputMethod(const std::string& performanceInputMethod) {
     return getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->setPerformanceInputMethod(performanceInputMethod);
-  }
-
-  void EvaporativeFluidCoolerSingleSpeed::resetPerformanceInputMethod() {
-    getImpl<detail::EvaporativeFluidCoolerSingleSpeed_Impl>()->resetPerformanceInputMethod();
   }
 
   bool EvaporativeFluidCoolerSingleSpeed::setStandardDesignCapacity(double standardDesignCapacity) {
