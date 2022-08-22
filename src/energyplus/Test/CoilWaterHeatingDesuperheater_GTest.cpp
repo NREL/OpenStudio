@@ -64,6 +64,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_DXCoil
 
   ScheduleConstant temperatureSetpointSchedule(m);
   CoilWaterHeatingDesuperheater desuperheater(m, temperatureSetpointSchedule);
+  desuperheater.setRatedHeatReclaimRecoveryEfficiency(0.25);
 
   // DX Coils that will be wrapped in CoilSystem:Cooling:DX
   std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m), CoilCoolingDXTwoSpeed(m), CoilCoolingDXTwoStageWithHumidityControlMode(m),
@@ -95,6 +96,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_NonDX)
 
   ScheduleConstant temperatureSetpointSchedule(m);
   CoilWaterHeatingDesuperheater desuperheater(m, temperatureSetpointSchedule);
+  desuperheater.setRatedHeatReclaimRecoveryEfficiency(0.25);
 
   // Refrigeration stuff aren't HVACComponent but ParentObject
   std::vector<ModelObject> testCoils = {CoilCoolingWaterToAirHeatPumpEquationFit(m), RefrigerationCondenserAirCooled(m),
