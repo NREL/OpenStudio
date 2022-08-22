@@ -18022,7 +18022,9 @@ OS:Coil:WaterHeating:Desuperheater,
   N2,  \field Rated Heat Reclaim Recovery Efficiency
        \type real
        \minimum> 0.0
+       \maximum 0.9
        \note Enter the fraction of waste heat reclaimed by the desuperheater water heating coil.
+       \note if not provided, uses a default
   N3,  \field Rated Inlet Water Temperature
        \required-field
        \type real
@@ -21583,6 +21585,7 @@ OS:EvaporativeFluidCooler:SingleSpeed,
        \minimum> 0.0
        \ip-units gal/min
   A5 , \field Performance Input Method
+       \required-field
        \type Choice
        \key UFactorTimesAreaAndDesignWaterFlowRate
        \key StandardDesignCapacity

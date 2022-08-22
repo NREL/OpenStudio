@@ -55,6 +55,7 @@
 #include "../ScheduleCompact.hpp"
 #include "../ScheduleCompact_Impl.hpp"
 
+using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_DefaultConstructor) {
@@ -69,7 +70,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_DefaultConstructor) {
       EXPECT_TRUE(testObject.isDesignAirFlowRateAutosized());
       EXPECT_TRUE(testObject.isFanPoweratDesignAirFlowRateAutosized());
       EXPECT_DOUBLE_EQ(0.03, testObject.designSprayWaterFlowRate());
-      EXPECT_EQ("UFactorTimesAreaAndDesignWaterFlowRate", testObject.performanceInputMethod().get());
+      EXPECT_EQ("UFactorTimesAreaAndDesignWaterFlowRate", testObject.performanceInputMethod());
       EXPECT_FALSE(testObject.standardDesignCapacity());
       EXPECT_TRUE(testObject.isUfactorTimesAreaValueatDesignAirFlowRateAutosized());
       EXPECT_TRUE(testObject.isDesignWaterFlowRateAutosized());
@@ -212,7 +213,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_CloneOneModelWithDefaultD
   EXPECT_TRUE(testObjectClone.isDesignAirFlowRateAutosized());
   EXPECT_TRUE(testObjectClone.isFanPoweratDesignAirFlowRateAutosized());
   EXPECT_DOUBLE_EQ(0.03, testObjectClone.designSprayWaterFlowRate());
-  EXPECT_EQ("UFactorTimesAreaAndDesignWaterFlowRate", testObjectClone.performanceInputMethod().get());
+  EXPECT_EQ("UFactorTimesAreaAndDesignWaterFlowRate", testObjectClone.performanceInputMethod());
   EXPECT_FALSE(testObjectClone.standardDesignCapacity());
   EXPECT_TRUE(testObjectClone.isUfactorTimesAreaValueatDesignAirFlowRateAutosized());
   EXPECT_TRUE(testObjectClone.isDesignWaterFlowRateAutosized());
@@ -243,7 +244,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_CloneOneModelWithCustomDa
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.designAirFlowRate().get());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.fanPoweratDesignAirFlowRate().get());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.designSprayWaterFlowRate());
-  EXPECT_EQ("StandardDesignCapacity", testObjectClone.performanceInputMethod().get());
+  EXPECT_EQ("StandardDesignCapacity", testObjectClone.performanceInputMethod());
   EXPECT_DOUBLE_EQ(1.0, testObjectClone.standardDesignCapacity().get());
 }
 
@@ -259,7 +260,7 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_CloneTwoModelsWithDefault
   EXPECT_TRUE(testObjectClone2.isDesignAirFlowRateAutosized());
   EXPECT_TRUE(testObjectClone2.isFanPoweratDesignAirFlowRateAutosized());
   EXPECT_DOUBLE_EQ(0.03, testObjectClone2.designSprayWaterFlowRate());
-  EXPECT_EQ("UFactorTimesAreaAndDesignWaterFlowRate", testObjectClone2.performanceInputMethod().get());
+  EXPECT_EQ("UFactorTimesAreaAndDesignWaterFlowRate", testObjectClone2.performanceInputMethod());
   EXPECT_FALSE(testObjectClone2.standardDesignCapacity());
   EXPECT_TRUE(testObjectClone2.isUfactorTimesAreaValueatDesignAirFlowRateAutosized());
   EXPECT_TRUE(testObjectClone2.isDesignWaterFlowRateAutosized());
@@ -332,13 +333,13 @@ TEST_F(ModelFixture, EvaporativeFluidCoolerSingleSpeed_PerformanceInputMethod) {
   Model model;
   EvaporativeFluidCoolerSingleSpeed testObject = EvaporativeFluidCoolerSingleSpeed(model);
 
-  EXPECT_EQ("UFactorTimesAreaAndDesignWaterFlowRate", testObject.performanceInputMethod().get());
+  EXPECT_EQ("UFactorTimesAreaAndDesignWaterFlowRate", testObject.performanceInputMethod());
 
   testObject.setPerformanceInputMethod("StandardDesignCapacity");
-  EXPECT_EQ("StandardDesignCapacity", testObject.performanceInputMethod().get());
+  EXPECT_EQ("StandardDesignCapacity", testObject.performanceInputMethod());
 
   testObject.setPerformanceInputMethod("UserSpecifiedDesignCapacity");
-  EXPECT_EQ("UserSpecifiedDesignCapacity", testObject.performanceInputMethod().get());
+  EXPECT_EQ("UserSpecifiedDesignCapacity", testObject.performanceInputMethod());
 
   EXPECT_FALSE(testObject.setPerformanceInputMethod("Not Valid Entry"));
 }
