@@ -41,8 +41,8 @@ RubyEngine::RubyEngine(int argc, char *argv[]) : ScriptEngine(argc, argv) {
   initRubyEngine();
   openstudio::ruby::initBasicRubyBindings();
 
-  auto module = rb_define_module("OpenStudio");
-  rb_define_module_function(module, "init_rest_of_openstudio", initRestOfOpenStudio, 0);
+  auto rubymodule = rb_define_module("OpenStudio");
+  rb_define_module_function(rubymodule, "init_rest_of_openstudio", initRestOfOpenStudio, 0);
 
   ruby_set_argv(argc, argv);
 
