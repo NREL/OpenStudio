@@ -32,10 +32,12 @@
 
 #include "ModelAPI.hpp"
 #include "Curve_Impl.hpp"
-#include "TableLookup.hpp"
 
 namespace openstudio {
 namespace model {
+
+  class ModelObjectList;
+  class TableIndependentVariable;
 
   namespace detail {
 
@@ -70,6 +72,8 @@ namespace model {
       /** @name Getters */
       //@{
 
+      boost::optional<ModelObjectList> independentVariableList() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -77,6 +81,18 @@ namespace model {
       //@}
       /** @name Other */
       //@{
+
+      bool addIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
+
+      void removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
+
+      void removeAllIndependentVariables();
+
+      std::vector<TableIndependentVariable> independentVariables() const;
+
+      bool setIndependentVariableList(const boost::optional<ModelObjectList>& modelObjectList);
+
+      void resetIndependentVariableList();
 
       //@}
      protected:

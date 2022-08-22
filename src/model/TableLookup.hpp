@@ -34,8 +34,10 @@
 #include "Curve.hpp"
 
 namespace openstudio {
-
 namespace model {
+
+  class ModelObjectList;
+  class TableIndependentVariable;
 
   namespace detail {
 
@@ -71,6 +73,14 @@ namespace model {
     //@}
     /** @name Other */
     //@{
+
+    bool addIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
+
+    void removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
+
+    void removeAllIndependentVariables();
+
+    std::vector<TableIndependentVariable> independentVariables() const;
 
     //@}
    protected:

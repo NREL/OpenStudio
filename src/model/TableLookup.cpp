@@ -30,6 +30,13 @@
 #include "TableLookup.hpp"
 #include "TableLookup_Impl.hpp"
 
+#include "ModelObjectList.hpp"
+#include "ModelObjectList_Impl.hpp"
+#include "TableIndependentVariable.hpp"
+#include "TableIndependentVariable_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
+
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
@@ -77,6 +84,72 @@ namespace model {
       return -9999.0;
     }
 
+    boost::optional<ModelObjectList> TableLookup_Impl::independentVariableList() const {
+      return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Table_LookupFields::IndependentVariableListName);
+    }
+
+    bool TableLookup_Impl::addIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
+      bool result = false;
+      auto modelObjectList = independentVariableList();
+      if (modelObjectList) {
+        result = modelObjectList->addModelObject(tableIndependentVariable);
+      }
+      return result;
+    }
+
+    void TableLookup_Impl::removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
+      auto modelObjectList = independentVariableList();
+      if (modelObjectList) {
+        modelObjectList->removeModelObject(tableIndependentVariable);
+      }
+    }
+
+    void TableLookup_Impl::removeAllIndependentVariables() {
+      auto modelObjectList = independentVariableList();
+      if (modelObjectList) {
+        auto const modelObjects = modelObjectList->modelObjects();
+
+        for (const auto& elem : modelObjects) {
+          auto const modelObject = elem.optionalCast<TableIndependentVariable>();
+          if (modelObject) {
+            modelObjectList->removeModelObject(elem);
+          }
+        }
+      }
+    }
+
+    std::vector<TableIndependentVariable> TableLookup_Impl::independentVariables() const {
+      std::vector<TableIndependentVariable> result;
+      auto const modelObjectList = independentVariableList();
+      if (modelObjectList) {
+        auto const modelObjects = modelObjectList->modelObjects();
+
+        for (const auto& elem : modelObjects) {
+          auto const modelObject = elem.optionalCast<TableIndependentVariable>();
+          if (modelObject) {
+            result.push_back(modelObject.get());
+          }
+        }
+      }
+      return result;
+    }
+
+    bool TableLookup_Impl::setIndependentVariableList(const boost::optional<ModelObjectList>& modelObjectList) {
+      bool result(false);
+      if (modelObjectList) {
+        result = setPointer(OS_Table_LookupFields::IndependentVariableListName, modelObjectList.get().handle());
+      } else {
+        resetIndependentVariableList();
+        result = true;
+      }
+      return result;
+    }
+
+    void TableLookup_Impl::resetIndependentVariableList() {
+      bool result = setString(OS_Table_LookupFields::IndependentVariableListName, "");
+      OS_ASSERT(result);
+    }
+
   }  // namespace detail
 
   TableLookup::TableLookup(const Model& model) : Curve(TableLookup::iddObjectType(), model) {
@@ -85,6 +158,22 @@ namespace model {
 
   IddObjectType TableLookup::iddObjectType() {
     return IddObjectType(IddObjectType::OS_Table_Lookup);
+  }
+
+  bool TableLookup::addIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
+    return getImpl<detail::TableLookup_Impl>()->addIndependentVariable(tableIndependentVariable);
+  }
+
+  void TableLookup::removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
+    getImpl<detail::TableLookup_Impl>()->removeIndependentVariable(tableIndependentVariable);
+  }
+
+  void TableLookup::removeAllIndependentVariables() {
+    getImpl<detail::TableLookup_Impl>()->removeAllIndependentVariables();
+  }
+
+  std::vector<TableIndependentVariable> TableLookup::independentVariables() const {
+    return getImpl<detail::TableLookup_Impl>()->independentVariables();
   }
 
   /// @cond

@@ -46,7 +46,29 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateTableLookup(TableLookup& modelObject) {}
+  boost::optional<IdfObject> ForwardTranslator::translateTableLookup(TableLookup& modelObject) {
+    OptionalString s;
+    OptionalDouble d;
+    OptionalModelObject temp;
+
+    auto const& independentVariables = modelObject.getImpl<model::detail::TableLookup_Impl>()->independentVariables();
+
+    // If the TableLookup doesn't have at least one TableIndependentVariable, then it shouldn't be translated
+    if (independentVariables.empty()) {
+      LOG(Warn, "TableLookup " << modelObject.name().get() << " has no TableIndependentVariables, it will not be translated");
+      return boost::none;
+    }
+
+    // Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Table_Lookup, modelObject);
+    
+    
+    
+    
+
+
+    return idfObject;
+  }
 
 }  // namespace energyplus
 
