@@ -61,11 +61,6 @@ namespace energyplus {
 
     // Name
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Table_Lookup, modelObject);
-    
-    
-    
-    
-
 
     return idfObject;
   }
