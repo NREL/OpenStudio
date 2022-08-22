@@ -6,7 +6,7 @@
 int rubyCLI(int argc, char* argv[]) {
   // chop off the first argument which is the exe path/name
   openstudio::rubyEngine = openstudio::loadScriptEngine("rubyengine", argc - 1, argv + 1);
-  
+
   try {
     openstudio::rubyEngine->exec(R"(
        begin
@@ -27,7 +27,7 @@ int rubyCLI(int argc, char* argv[]) {
     std::cout << "Unknown Exception" << std::endl;  // endl will flush
     return 1;
   }
-  
+
   openstudio::rubyEngine->exec(R"(STDOUT.flush)");
   std::cout << std::flush;
   return 0;

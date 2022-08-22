@@ -1,5 +1,5 @@
 #if defined(_MSC_VER)
-#include "DynamicLibraryWindows.hpp"
+#  include "DynamicLibraryWindows.hpp"
 #elif defined(HAVE_UNISTD_H)
-#include "DynamicLibraryPOSIX.hpp"
+#  include "DynamicLibraryPOSIX.hpp"
 #endif

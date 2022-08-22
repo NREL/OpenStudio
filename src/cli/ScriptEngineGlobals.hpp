@@ -9,6 +9,6 @@ class ScriptEngine;
 extern std::unique_ptr<openstudio::ScriptEngine> rubyEngine;
 extern std::unique_ptr<openstudio::ScriptEngine> pythonEngine;
 
-}
+}  // namespace openstudio
 
 #endif
