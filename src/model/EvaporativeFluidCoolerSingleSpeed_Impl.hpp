@@ -86,7 +86,7 @@ namespace model {
 
       double designSprayWaterFlowRate() const;
 
-      boost::optional<std::string> performanceInputMethod() const;
+      std::string performanceInputMethod() const;
 
       boost::optional<double> standardDesignCapacity() const;
 
@@ -163,9 +163,7 @@ namespace model {
 
       bool setDesignSprayWaterFlowRate(double designSprayWaterFlowRate);
 
-      bool setPerformanceInputMethod(boost::optional<std::string> performanceInputMethod);
-
-      void resetPerformanceInputMethod();
+      bool setPerformanceInputMethod(const std::string& performanceInputMethod);
 
       void resetOutdoorAirInletNode();
 

@@ -21593,6 +21593,7 @@ OS:EvaporativeFluidCooler:SingleSpeed,
        \minimum> 0.0
        \ip-units gal/min
   A5 , \field Performance Input Method
+       \required-field
        \type Choice
        \key UFactorTimesAreaAndDesignWaterFlowRate
        \key StandardDesignCapacity
