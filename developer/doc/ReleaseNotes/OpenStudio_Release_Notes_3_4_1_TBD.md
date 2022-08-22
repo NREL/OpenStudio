@@ -72,6 +72,11 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
     * `Chiller:Electric:EIR` has a few API-breaking changes related to its Curves. The types for the constructor, getters and setters used to be explicit (eg: `CurveBiquadratic`): it is now the base class, more generic, `Curve` type for added flexibility.
 * [#4642](https://github.com/NREL/OpenStudio/pull/4642) - Addresses #4575, API change for EvaporativeCoolerFluid:SingleSpeed
     * `EvaporativeCoolerFluid:SingleSpeed` has an API-breaking change related to its `performanceInputMethod` getter. It is now a required field that returns `std::string` instead of `boost::optional<std::string>`.
+* [#4632](https://github.com/NREL/OpenStudio/pull/4632) - Remove deprecated methods for AirWallMaterial, Node, SizingSystem, ZoneAirMassFlowConservation
+    * Removes the deprecated `AirWallMaterial` class completely, in favor of `ConstructionAirBoundary`
+    * Removes functions in `Node` that have been deprecated for 9+ years
+    * Removes deprecated methods in the `SizingSystem` class
+    * Removes deprecated methods in the `ZoneAirMassFlowConservation` class
 
 
 ## Minor changes and bug fixes
