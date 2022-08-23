@@ -307,6 +307,20 @@ namespace energyplus {
       airWall.remove();
     }
 
+    // replace old TableMultiVariableLookup with TableLookup
+    for (TableMultiVariableLookup tableMulti : model.getModelObjects<TableMultiVariableLookup>()) {
+      TableLookup tableLookup(model);
+      TableIndependentVariable tableIndependentVariable(model);
+      tableLookup.addIndependentVariable(tableIndependentVariable);
+      // TODO
+    }
+
+    // remove all TableMultiVariableLookup objects
+    for (TableMultiVariableLookup tableMulti : model.getConcreteModelObjects<TableMultiVariableLookup>()) {
+      LOG(Warn, "Removing TableMultiVariableLookup '" << tableMulti.nameString() << "'.");
+      tableMulti.remove();
+    }
+
     // check for spaces not in a thermal zone
     for (Space space : model.getConcreteModelObjects<Space>()) {
       if (!space.thermalZone()) {

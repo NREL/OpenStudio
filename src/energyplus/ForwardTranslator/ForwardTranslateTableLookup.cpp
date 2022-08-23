@@ -60,8 +60,21 @@ namespace energyplus {
       return boost::none;
     }
 
-    // Name
+    // Table:Lookup
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Table_Lookup, modelObject);
+
+    // Table:IndependentVariable
+    IdfObject tableIndependentVariable(IddObjectType::Table_IndependentVariable);
+    tableIndependentVariable.setName("Table Independent Variable");
+    m_idfObjects.push_back(tableIndependentVariable);
+
+    // Table:IndependentVariableList
+    IdfObject tableIndependentVariableList(IddObjectType::Table_IndependentVariableList);
+    tableIndependentVariableList.setName("Table Independent Variable List");
+    tableIndependentVariableList.pushExtensibleGroup(std::vector<std::string>(1, tableIndependentVariable.nameString()));
+    m_idfObjects.push_back(tableIndependentVariableList);
+
+    idfObject.setString(Table_LookupFields::IndependentVariableListName, tableIndependentVariableList.nameString());
 
     return idfObject;
   }
