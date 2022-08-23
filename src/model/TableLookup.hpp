@@ -66,9 +66,21 @@ namespace model {
     /** @name Getters */
     //@{
 
+    std::string normalizationMethod() const;
+
+    double normalizationDivisor() const;
+
+    std::string outputUnitType() const;
+
     //@}
     /** @name Setters */
     //@{
+
+    bool setNormalizationMethod(std::string normalizationMethod);
+
+    bool setNormalizationDivisor(double normalizationDivisior);
+
+    bool setOutputUnitType(std::string outputUnitType);
 
     //@}
     /** @name Other */

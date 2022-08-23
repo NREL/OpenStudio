@@ -88,6 +88,39 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Table_LookupFields::IndependentVariableListName);
     }
 
+    std::string TableLookup_Impl::normalizationMethod() const {
+      boost::optional<std::string> value = getString(OS_Table_LookupFields::NormalizationMethod, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double TableLookup_Impl::normalizationDivisor() const {
+      boost::optional<double> value = getDouble(OS_Table_LookupFields::NormalizationDivisor, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string TableLookup_Impl::outputUnitType() const {
+      boost::optional<std::string> value = getString(OS_Table_LookupFields::OutputUnitType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool TableLookup_Impl::setNormalizationMethod(std::string normalizationMethod) {
+      bool result = setString(OS_Table_LookupFields::NormalizationMethod, normalizationMethod);
+      return result;
+    }
+
+    bool TableLookup_Impl::setNormalizationDivisor(double normalizationDivisior) {
+      bool result = setDouble(OS_Table_LookupFields::NormalizationDivisor, normalizationDivisior);
+      return result;
+    }
+
+    bool TableLookup_Impl::setOutputUnitType(std::string outputUnitType) {
+      bool result = setString(OS_Table_LookupFields::OutputUnitType, outputUnitType);
+      return result;
+    }
+
     bool TableLookup_Impl::addIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
       bool result = false;
       auto modelObjectList = independentVariableList();
@@ -155,7 +188,13 @@ namespace model {
   TableLookup::TableLookup(const Model& model) : Curve(TableLookup::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::TableLookup_Impl>());
 
-    // TODO
+    bool ok = true;
+    ok = setNormalizationMethod("None");
+    OS_ASSERT(ok);
+    ok = setNormalizationDivisor(1.0);
+    OS_ASSERT(ok);
+    ok = setOutputUnitType("Dimensionless");
+    OS_ASSERT(ok);
 
     auto tableIndependentVariableList = ModelObjectList(model);
     tableIndependentVariableList.setName(this->name().get() + " Independent Variable List");
@@ -165,6 +204,30 @@ namespace model {
 
   IddObjectType TableLookup::iddObjectType() {
     return IddObjectType(IddObjectType::OS_Table_Lookup);
+  }
+
+  std::string TableLookup::normalizationMethod() const {
+    return getImpl<detail::TableLookup_Impl>()->normalizationMethod();
+  }
+
+  double TableLookup::normalizationDivisor() const {
+    return getImpl<detail::TableLookup_Impl>()->normalizationDivisor();
+  }
+
+  std::string TableLookup::outputUnitType() const {
+    return getImpl<detail::TableLookup_Impl>()->outputUnitType();
+  }
+
+  bool TableLookup::setNormalizationMethod(std::string normalizationMethod) {
+    return getImpl<detail::TableLookup_Impl>()->setNormalizationMethod(normalizationMethod);
+  }
+
+  bool TableLookup::setNormalizationDivisor(double normalizationDivisior) {
+    return getImpl<detail::TableLookup_Impl>()->setNormalizationDivisor(normalizationDivisior);
+  }
+
+  bool TableLookup::setOutputUnitType(std::string outputUnitType) {
+    return getImpl<detail::TableLookup_Impl>()->setOutputUnitType(outputUnitType);
   }
 
   bool TableLookup::addIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {

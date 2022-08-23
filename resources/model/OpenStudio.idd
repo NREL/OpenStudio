@@ -21077,12 +21077,12 @@ OS:Table:IndependentVariable,
        \type choice
        \key Linear
        \key Cubic
-       \default Linear
+       \required-field
   A4,  \field Extrapolation Method
        \type choice
        \key Constant
        \key Linear
-       \default Constant
+       \required-field
   N1,  \field Minimum Value
        \type real
        \unitsBasedOnField A4
@@ -21101,7 +21101,7 @@ OS:Table:IndependentVariable,
        \key Power
        \key Distance
        \key Angle
-       \default Dimensionless
+       \required-field
   A6,  \field External File Name
        \type alpha
        \retaincase
@@ -21145,10 +21145,10 @@ OS:Table:Lookup,
        \key None
        \key DivisorOnly
        \key AutomaticWithDivisor
-       \default None
+       \required-field
   N1,  \field Normalization Divisor
        \type real
-       \default 1.0
+       \required-field
   N2,  \field Minimum Output
        \type real
        \unitsBasedOnField A4
@@ -21160,7 +21160,7 @@ OS:Table:Lookup,
        \key Dimensionless
        \key Capacity
        \key Power
-       \default Dimensionless
+       \required-field
   A6,  \field External File Name
        \type alpha
        \retaincase

@@ -63,9 +63,23 @@ namespace model {
     /** @name Getters */
     //@{
 
+    std::string interpolationMethod() const;
+
+    std::string extrapolationMethod() const;
+
+    std::string unitType() const;
+
+    std::vector<TableLookup> tableLookups() const;
+
     //@}
     /** @name Setters */
     //@{
+
+    bool setInterpolationMethod(std::string interpolationMethod);
+
+    bool setExtrapolationMethod(std::string extrapolationMethod);
+
+    bool setUnitType(std::string unitType);
 
     //@}
     /** @name Other */
