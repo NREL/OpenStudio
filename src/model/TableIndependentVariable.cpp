@@ -70,40 +70,47 @@ namespace model {
       return TableIndependentVariable::iddObjectType();
     }
 
-    std::string interpolationMethod() const {
+    std::string TableIndependentVariable_Impl::interpolationMethod() const {
       boost::optional<std::string> value = getString(OS_Table_IndependentVariableFields::InterpolationMethod, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    std::string extrapolationMethod() const {
+    std::string TableIndependentVariable_Impl::extrapolationMethod() const {
       boost::optional<std::string> value = getString(OS_Table_IndependentVariableFields::ExtrapolationMethod, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    std::string unitType() const {
+    std::string TableIndependentVariable_Impl::unitType() const {
       boost::optional<std::string> value = getString(OS_Table_IndependentVariableFields::UnitType, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    std::vector<TableLookup> tableLookups() const {
+    std::vector<TableLookup> TableIndependentVariable_Impl::tableLookups() const {
       std::vector<TableLookup> result;
+      for (const TableLookup& tableLookup : this->model().getConcreteModelObjects<TableLookup>()) {
+        for (const TableIndependentVariable& independentVariable : tableLookup.independentVariables()) {
+          if (independentVariable.handle() == this->handle()) {
+            result.push_back(tableLookup);
+          }
+        }
+      }
       return result;
     }
 
-    bool setInterpolationMethod(std::string interpolationMethod) {
+    bool TableIndependentVariable_Impl::setInterpolationMethod(std::string interpolationMethod) {
       bool result = setString(OS_Table_IndependentVariableFields::InterpolationMethod, interpolationMethod);
       return result;
     }
 
-    bool setExtrapolationMethod(std::string extrapolationMethod) {
+    bool TableIndependentVariable_Impl::setExtrapolationMethod(std::string extrapolationMethod) {
       bool result = setString(OS_Table_IndependentVariableFields::ExtrapolationMethod, extrapolationMethod);
       return result;
     }
 
-    bool setUnitType(std::string unitType) {
+    bool TableIndependentVariable_Impl::setUnitType(std::string unitType) {
       bool result = setString(OS_Table_IndependentVariableFields::UnitType, unitType);
       return result;
     }
@@ -126,31 +133,31 @@ namespace model {
     return IddObjectType(IddObjectType::OS_Table_IndependentVariable);
   }
 
-  std::string interpolationMethod() const {
+  std::string TableIndependentVariable::interpolationMethod() const {
     return getImpl<detail::TableIndependentVariable_Impl>()->interpolationMethod();
   }
 
-  std::string extrapolationMethod() const {
+  std::string TableIndependentVariable::extrapolationMethod() const {
     return getImpl<detail::TableIndependentVariable_Impl>()->extrapolationMethod();
   }
 
-  std::string unitType() const {
+  std::string TableIndependentVariable::unitType() const {
     return getImpl<detail::TableIndependentVariable_Impl>()->unitType();
   }
 
-  std::vector<TableLookup> tableLookups() const {
+  std::vector<TableLookup> TableIndependentVariable::tableLookups() const {
     return getImpl<detail::TableIndependentVariable_Impl>()->tableLookups();
   }
 
-  bool setInterpolationMethod(std::string interpolationMethod) {
+  bool TableIndependentVariable::setInterpolationMethod(std::string interpolationMethod) {
     return getImpl<detail::TableIndependentVariable_Impl>()->setInterpolationMethod(interpolationMethod);
   }
 
-  bool setExtrapolationMethod(std::string extrapolationMethod) {
+  bool TableIndependentVariable::setExtrapolationMethod(std::string extrapolationMethod) {
     return getImpl<detail::TableIndependentVariable_Impl>()->setExtrapolationMethod(extrapolationMethod);
   }
 
-  bool setUnitType(std::string unitType) {
+  bool TableIndependentVariable::setUnitType(std::string unitType) {
     return getImpl<detail::TableIndependentVariable_Impl>()->setUnitType(unitType);
   }
 

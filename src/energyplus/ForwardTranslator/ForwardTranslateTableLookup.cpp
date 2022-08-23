@@ -52,7 +52,7 @@ namespace energyplus {
     OptionalDouble d;
     OptionalModelObject temp;
 
-    auto const& independentVariables = modelObject.getImpl<model::detail::TableLookup_Impl>()->independentVariables();
+    std::vector<TableIndependentVariables> independentVariables = modelObject.independentVariables();
 
     // If the TableLookup doesn't have at least one TableIndependentVariable, then it shouldn't be translated
     if (independentVariables.empty()) {
@@ -63,18 +63,22 @@ namespace energyplus {
     // Table:Lookup
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Table_Lookup, modelObject);
 
-    // Table:IndependentVariable
-    IdfObject tableIndependentVariable(IddObjectType::Table_IndependentVariable);
-    tableIndependentVariable.setName("Table Independent Variable");
-    m_idfObjects.push_back(tableIndependentVariable);
-
     // Table:IndependentVariableList
     IdfObject tableIndependentVariableList(IddObjectType::Table_IndependentVariableList);
-    tableIndependentVariableList.setName("Table Independent Variable List");
-    tableIndependentVariableList.pushExtensibleGroup(std::vector<std::string>(1, tableIndependentVariable.nameString()));
+    tableIndependentVariableList.setName(modelObject.nameString() + " Independent Variable List");
     m_idfObjects.push_back(tableIndependentVariableList);
 
     idfObject.setString(Table_LookupFields::IndependentVariableListName, tableIndependentVariableList.nameString());
+
+    // Table:IndependentVariable
+    for (auto independentVariable : independentVariables) {
+      IdfObject tableIndependentVariable(IddObjectType::Table_IndependentVariable);
+      tableIndependentVariable.setName(independentVariable.nameString());
+      m_idfObjects.push_back(tableIndependentVariable);
+
+      auto eg = tableIndependentVariableList.pushExtensibleGroup();
+      eg.setString(Table_IndependentVariableListExtensibleFields::IndependentVariableName, independentVariable.nameString());
+    }
 
     return idfObject;
   }
