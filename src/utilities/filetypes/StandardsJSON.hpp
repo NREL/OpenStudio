@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,20 +34,19 @@
 #include "../core/Logger.hpp"
 
 namespace Json {
-  class Value;
+class Value;
 }
 
-namespace openstudio{
+namespace openstudio {
 
-namespace detail{
+namespace detail {
   class StandardsJSON_Impl;
 }
 
 /** Class for accessing the OpenStudio Standards (OSW) JSON format. */
 class UTILITIES_API StandardsJSON
 {
-public:
-
+ public:
   // TODO: JM 2018-11-09
   // Makes no sense really, providing it for SWIG only now
   StandardsJSON();
@@ -67,10 +66,9 @@ public:
   /** Attempt to load a StandardsJSON from string */
   static boost::optional<StandardsJSON> load(const std::string& s);
 
-protected:
-
+ protected:
   // get the impl
-  template<typename T>
+  template <typename T>
   std::shared_ptr<T> getImpl() const {
     return std::dynamic_pointer_cast<T>(m_impl);
   }
@@ -80,8 +78,7 @@ protected:
   /** Protected constructor from impl. */
   StandardsJSON(std::shared_ptr<detail::StandardsJSON_Impl> impl);
 
-private:
-
+ private:
   // configure logging
   REGISTER_LOGGER("openstudio.StandardsJSON");
 
@@ -91,6 +88,6 @@ private:
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const StandardsJSON& standardsJSON);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_FILETYPES_STANDARDSJSON_HPP
+#endif  //UTILITIES_FILETYPES_STANDARDSJSON_HPP

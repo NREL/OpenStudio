@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,120 +34,113 @@
 #include "AvailabilityManager.hpp"
 #include "../utilities/core/Deprecated.hpp"
 
-
 namespace openstudio {
-
 
 namespace model {
 
-class Schedule;
-class ThermalZone;
-class AirLoopHVAC;
+  class Schedule;
+  class ThermalZone;
+  class AirLoopHVAC;
 
-namespace detail {
+  namespace detail {
 
-  class AvailabilityManagerNightCycle_Impl;
+    class AvailabilityManagerNightCycle_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AvailabilityManagerNightCycle is a ModelObject that wraps the OpenStudio IDD object 'OS:AvailabilityManager:NightCycle'. */
-class MODEL_API AvailabilityManagerNightCycle : public AvailabilityManager {
- public:
+  /** AvailabilityManagerNightCycle is a ModelObject that wraps the OpenStudio IDD object 'OS:AvailabilityManager:NightCycle'. */
+  class MODEL_API AvailabilityManagerNightCycle : public AvailabilityManager
+  {
+   public:
+    explicit AvailabilityManagerNightCycle(const Model& model);
 
-  explicit AvailabilityManagerNightCycle(const Model& model);
+    virtual ~AvailabilityManagerNightCycle() {}
 
-  virtual ~AvailabilityManagerNightCycle() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> controlTypeValues();
 
-  static std::vector<std::string> controlTypeValues();
+    boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
-  boost::optional<AirLoopHVAC> airLoopHVAC() const;
+    Schedule applicabilitySchedule() const;
+    bool setApplicabilitySchedule(Schedule& schedule);
 
-  Schedule applicabilitySchedule() const;
-  bool setApplicabilitySchedule(Schedule& schedule);
+    /** Helper getter which will fetch the AirLoopHVAC::AvailabilitySchedule */
+    boost::optional<Schedule> fanSchedule() const;
 
-  /** Helper getter which will fetch the AirLoopHVAC::AvailabilitySchedule */
-  boost::optional<Schedule> fanSchedule() const;
+    std::string controlType() const;
+    bool setControlType(std::string controlType);
+    void resetControlType();
+    bool isControlTypeDefaulted() const;
 
-  std::string controlType() const;
-  bool setControlType(std::string controlType);
-  void resetControlType();
-  bool isControlTypeDefaulted() const;
+    double thermostatTolerance() const;
+    bool setThermostatTolerance(double thermostatTolerance);
+    bool isThermostatToleranceDefaulted() const;
+    void resetThermostatTolerance();
 
+    double cyclingRunTime() const;
+    bool setCyclingRunTime(double cyclingRunTime);
+    void resetCyclingRunTime();
+    bool isCyclingRunTimeDefaulted() const;
 
-  double thermostatTolerance() const;
-  bool setThermostatTolerance(double thermostatTolerance);
-  bool isThermostatToleranceDefaulted() const;
-  void resetThermostatTolerance();
+    static std::vector<std::string> cyclingRunTimeControlTypeValues();
+    std::string cyclingRunTimeControlType() const;
+    bool isCyclingRunTimeControlTypeDefaulted() const;
+    bool setCyclingRunTimeControlType(std::string cyclingRunTimeControlType);
+    void resetCyclingRunTimeControlType();
 
-
-  double cyclingRunTime() const;
-  bool setCyclingRunTime(double cyclingRunTime);
-  void resetCyclingRunTime();
-  bool isCyclingRunTimeDefaulted() const;
-
-
-  static std::vector<std::string> cyclingRunTimeControlTypeValues();
-  std::string cyclingRunTimeControlType() const;
-  bool isCyclingRunTimeControlTypeDefaulted() const;
-  bool setCyclingRunTimeControlType(std::string cyclingRunTimeControlType);
-  void resetCyclingRunTimeControlType();
-
-
-  /** \deprecated AvailabilityManagerNightCycle::controlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::controlThermalZones\n
+    /** \deprecated AvailabilityManagerNightCycle::controlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::controlThermalZones\n
     * Get the controlThermalZone if it's unique, otherwise returns the first one found and issues a warning. **/
-  OS_DEPRECATED boost::optional<ThermalZone> controlThermalZone() const;
+    OS_DEPRECATED boost::optional<ThermalZone> controlThermalZone() const;
 
-  /** \deprecated AvailabilityManagerNightCycle::setControlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::setControlThermalZones\n
+    /** \deprecated AvailabilityManagerNightCycle::setControlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::setControlThermalZones\n
   * sets the list of controlThermalZones by calling setControlThermalZones([thermalZone]) **/
-  OS_DEPRECATED bool setControlThermalZone(const ThermalZone& thermalZone);
+    OS_DEPRECATED bool setControlThermalZone(const ThermalZone& thermalZone);
 
-  /** \deprecated AvailabilityManagerNightCycle::resetControlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::resetControlThermalZones\n
+    /** \deprecated AvailabilityManagerNightCycle::resetControlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::resetControlThermalZones\n
   * Resets the list of controlThermalZones **/
-  OS_DEPRECATED void resetControlThermalZone();
+    OS_DEPRECATED void resetControlThermalZone();
 
-  std::vector<ThermalZone> controlThermalZones() const;
-  bool setControlThermalZones(const std::vector<ThermalZone>& thermalZones);
-  void resetControlThermalZones();
+    std::vector<ThermalZone> controlThermalZones() const;
+    bool setControlThermalZones(const std::vector<ThermalZone>& thermalZones);
+    void resetControlThermalZones();
 
-  std::vector<ThermalZone> coolingControlThermalZones() const;
-  bool setCoolingControlThermalZones(const std::vector<ThermalZone>& thermalZones);
-  void resetCoolingControlThermalZones();
+    std::vector<ThermalZone> coolingControlThermalZones() const;
+    bool setCoolingControlThermalZones(const std::vector<ThermalZone>& thermalZones);
+    void resetCoolingControlThermalZones();
 
-  std::vector<ThermalZone> heatingControlThermalZones() const;
-  bool setHeatingControlThermalZones(const std::vector<ThermalZone>& thermalZones);
-  void resetHeatingControlThermalZones();
+    std::vector<ThermalZone> heatingControlThermalZones() const;
+    bool setHeatingControlThermalZones(const std::vector<ThermalZone>& thermalZones);
+    void resetHeatingControlThermalZones();
 
-  std::vector<ThermalZone> heatingZoneFansOnlyThermalZones() const;
-  bool setHeatingZoneFansOnlyThermalZones(const std::vector<ThermalZone>& thermalZones);
-  void resetHeatingZoneFansOnlyThermalZones();
+    std::vector<ThermalZone> heatingZoneFansOnlyThermalZones() const;
+    bool setHeatingZoneFansOnlyThermalZones(const std::vector<ThermalZone>& thermalZones);
+    void resetHeatingZoneFansOnlyThermalZones();
 
- protected:
+   protected:
+    /// @cond
+    typedef detail::AvailabilityManagerNightCycle_Impl ImplType;
 
-  /// @cond
-  typedef detail::AvailabilityManagerNightCycle_Impl ImplType;
+    explicit AvailabilityManagerNightCycle(std::shared_ptr<detail::AvailabilityManagerNightCycle_Impl> impl);
 
-  explicit AvailabilityManagerNightCycle(std::shared_ptr<detail::AvailabilityManagerNightCycle_Impl> impl);
+    friend class detail::AvailabilityManagerNightCycle_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::AvailabilityManagerNightCycle_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
 
-  /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AvailabilityManagerNightCycle");
+  };
 
- private:
-  REGISTER_LOGGER("openstudio.model.AvailabilityManagerNightCycle");
-};
+  /** \relates AvailabilityManagerNightCycle*/
+  typedef boost::optional<AvailabilityManagerNightCycle> OptionalAvailabilityManagerNightCycle;
 
-/** \relates AvailabilityManagerNightCycle*/
-typedef boost::optional<AvailabilityManagerNightCycle> OptionalAvailabilityManagerNightCycle;
+  /** \relates AvailabilityManagerNightCycle*/
+  typedef std::vector<AvailabilityManagerNightCycle> AvailabilityManagerNightCycleVector;
 
-/** \relates AvailabilityManagerNightCycle*/
-typedef std::vector<AvailabilityManagerNightCycle> AvailabilityManagerNightCycleVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AVAILABILITYMANAGERNIGHTCYCLE_HPP
+#endif  // MODEL_AVAILABILITYMANAGERNIGHTCYCLE_HPP

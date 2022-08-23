@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,67 +36,67 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExteriorWaterEquipmentDefinition_Impl;
+    class ExteriorWaterEquipmentDefinition_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExteriorWaterEquipmentDefinition is a ExteriorLoadDefinition that wraps the OpenStudio IDD object
+  /** ExteriorWaterEquipmentDefinition is a ExteriorLoadDefinition that wraps the OpenStudio IDD object
  *  'OS:Exterior:WaterEquipment:Definition'. */
-class MODEL_API ExteriorWaterEquipmentDefinition : public ExteriorLoadDefinition {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ExteriorWaterEquipmentDefinition : public ExteriorLoadDefinition
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** Defaults design level to 0.0 W. */
-  explicit ExteriorWaterEquipmentDefinition(const Model& model);
+    /** Defaults design level to 0.0 W. */
+    explicit ExteriorWaterEquipmentDefinition(const Model& model);
 
-  virtual ~ExteriorWaterEquipmentDefinition() {}
+    virtual ~ExteriorWaterEquipmentDefinition() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double designLevel() const;
+    double designLevel() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setDesignLevel(double designLevel);
+    bool setDesignLevel(double designLevel);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExteriorWaterEquipmentDefinition_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExteriorWaterEquipmentDefinition_Impl ImplType;
 
-  explicit ExteriorWaterEquipmentDefinition(std::shared_ptr<detail::ExteriorWaterEquipmentDefinition_Impl> impl);
+    explicit ExteriorWaterEquipmentDefinition(std::shared_ptr<detail::ExteriorWaterEquipmentDefinition_Impl> impl);
 
-  friend class detail::ExteriorWaterEquipmentDefinition_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExteriorWaterEquipmentDefinition");
-};
+    friend class detail::ExteriorWaterEquipmentDefinition_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExteriorWaterEquipmentDefinition");
+  };
 
-/** \relates ExteriorWaterEquipmentDefinition*/
-typedef boost::optional<ExteriorWaterEquipmentDefinition> OptionalExteriorWaterEquipmentDefinition;
+  /** \relates ExteriorWaterEquipmentDefinition*/
+  typedef boost::optional<ExteriorWaterEquipmentDefinition> OptionalExteriorWaterEquipmentDefinition;
 
-/** \relates ExteriorWaterEquipmentDefinition*/
-typedef std::vector<ExteriorWaterEquipmentDefinition> ExteriorWaterEquipmentDefinitionVector;
+  /** \relates ExteriorWaterEquipmentDefinition*/
+  typedef std::vector<ExteriorWaterEquipmentDefinition> ExteriorWaterEquipmentDefinitionVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERIORWATEREQUIPMENTDEFINITION_HPP
-
+#endif  // MODEL_EXTERIORWATEREQUIPMENTDEFINITION_HPP

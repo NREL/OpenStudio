@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,9 +38,9 @@ namespace openstudio {
 
 /** Wraps the functionality of IddFile and \link IddFactorySingleton IddFactory \endlink
  *  into one class for use by IdfFile and Workspace. */
-class UTILITIES_API IddFileAndFactoryWrapper {
+class UTILITIES_API IddFileAndFactoryWrapper
+{
  public:
-
   /** @name Constructors and Destructors */
   //@{
 
@@ -136,8 +136,8 @@ class UTILITIES_API IddFileAndFactoryWrapper {
 
   //@}
  private:
-  boost::optional<IddFile>                  m_iddFile;
-  boost::optional<IddFileType>              m_iddFileType;
+  boost::optional<IddFile> m_iddFile;
+  boost::optional<IddFileType> m_iddFileType;
 
   // configure logging
   REGISTER_LOGGER("utilities.IddFileAndFactoryWrapper");
@@ -146,6 +146,6 @@ class UTILITIES_API IddFileAndFactoryWrapper {
 // helper function to get a particular Idd File that was released with CBECC-Com but not OpenStudio
 UTILITIES_API IddFile get_1_9_0_CBECC_IddFile();
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDD_IDDFILEANDFACTORYWRAPPER_HPP
+#endif  // UTILITIES_IDD_IDDFILEANDFACTORYWRAPPER_HPP

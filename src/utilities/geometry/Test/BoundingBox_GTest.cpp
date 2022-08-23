@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,8 +35,7 @@
 
 using namespace openstudio;
 
-TEST_F(GeometryFixture, BoundingBox)
-{
+TEST_F(GeometryFixture, BoundingBox) {
   BoundingBox b1;
   EXPECT_FALSE(b1.minX());
   EXPECT_FALSE(b1.minY());
@@ -45,7 +44,7 @@ TEST_F(GeometryFixture, BoundingBox)
   EXPECT_FALSE(b1.maxY());
   EXPECT_FALSE(b1.maxZ());
 
-  b1.addPoint(Point3d(1,2,3));
+  b1.addPoint(Point3d(1, 2, 3));
 
   ASSERT_TRUE(b1.minX());
   EXPECT_EQ(1, b1.minX().get());
@@ -60,7 +59,7 @@ TEST_F(GeometryFixture, BoundingBox)
   ASSERT_TRUE(b1.maxZ());
   EXPECT_EQ(3, b1.maxZ().get());
 
-  b1.addPoint(Point3d(2,3,4));
+  b1.addPoint(Point3d(2, 3, 4));
 
   ASSERT_TRUE(b1.minX());
   EXPECT_EQ(1, b1.minX().get());
@@ -76,8 +75,7 @@ TEST_F(GeometryFixture, BoundingBox)
   EXPECT_EQ(4, b1.maxZ().get());
 }
 
-TEST_F(GeometryFixture, BoundingBox_Empty)
-{
+TEST_F(GeometryFixture, BoundingBox_Empty) {
   BoundingBox b1;
   BoundingBox b2;
 
@@ -86,28 +84,28 @@ TEST_F(GeometryFixture, BoundingBox_Empty)
   EXPECT_FALSE(b1.intersects(b2));
   EXPECT_FALSE(b2.intersects(b1));
 
-  b1.addPoint(Point3d(0,0,0));
+  b1.addPoint(Point3d(0, 0, 0));
 
   EXPECT_TRUE(b1.intersects(b1));
   EXPECT_FALSE(b2.intersects(b2));
   EXPECT_FALSE(b1.intersects(b2));
   EXPECT_FALSE(b2.intersects(b1));
 
-  b1.addPoint(Point3d(1,1,0));
+  b1.addPoint(Point3d(1, 1, 0));
 
   EXPECT_TRUE(b1.intersects(b1));
   EXPECT_FALSE(b2.intersects(b2));
   EXPECT_FALSE(b1.intersects(b2));
   EXPECT_FALSE(b2.intersects(b1));
 
-  b2.addPoint(Point3d(0.5,0.5,0));
+  b2.addPoint(Point3d(0.5, 0.5, 0));
 
   EXPECT_TRUE(b1.intersects(b1));
   EXPECT_TRUE(b2.intersects(b2));
   EXPECT_TRUE(b1.intersects(b2));
   EXPECT_TRUE(b2.intersects(b1));
 
-  b2.addPoint(Point3d(1,1,0));
+  b2.addPoint(Point3d(1, 1, 0));
 
   EXPECT_TRUE(b1.intersects(b1));
   EXPECT_TRUE(b2.intersects(b2));
@@ -115,17 +113,15 @@ TEST_F(GeometryFixture, BoundingBox_Empty)
   EXPECT_TRUE(b2.intersects(b1));
 }
 
-
-TEST_F(GeometryFixture, BoundingBox_Touching)
-{
+TEST_F(GeometryFixture, BoundingBox_Touching) {
   BoundingBox b1;
   BoundingBox b2;
 
-  b1.addPoint(Point3d(0,0,0));
-  b1.addPoint(Point3d(1,1,1));
+  b1.addPoint(Point3d(0, 0, 0));
+  b1.addPoint(Point3d(1, 1, 1));
 
-  b2.addPoint(Point3d(1,1,1));
-  b2.addPoint(Point3d(2,2,2));
+  b2.addPoint(Point3d(1, 1, 1));
+  b2.addPoint(Point3d(2, 2, 2));
 
   EXPECT_TRUE(b1.intersects(b1));
   EXPECT_TRUE(b2.intersects(b2));
@@ -133,16 +129,15 @@ TEST_F(GeometryFixture, BoundingBox_Touching)
   EXPECT_TRUE(b2.intersects(b1));
 }
 
-TEST_F(GeometryFixture, BoundingBox_NoIntersection)
-{
+TEST_F(GeometryFixture, BoundingBox_NoIntersection) {
   BoundingBox b1;
   BoundingBox b2;
 
-  b1.addPoint(Point3d(0,0,0));
-  b1.addPoint(Point3d(1,1,0));
+  b1.addPoint(Point3d(0, 0, 0));
+  b1.addPoint(Point3d(1, 1, 0));
 
-  b2.addPoint(Point3d(2,2,0));
-  b2.addPoint(Point3d(3,3,0));
+  b2.addPoint(Point3d(2, 2, 0));
+  b2.addPoint(Point3d(3, 3, 0));
 
   EXPECT_TRUE(b1.intersects(b1));
   EXPECT_TRUE(b2.intersects(b2));

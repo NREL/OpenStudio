@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,14 +47,12 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirWallMaterial( AirWallMaterial& modelObject )
-{
-  LOG(Error, "Translation of AirWallMaterial has been removed.  Use ConstructionAirBoundary instead.");
-  OS_ASSERT(false);
-  return boost::none;
-}
+  boost::optional<IdfObject> ForwardTranslator::translateAirWallMaterial(AirWallMaterial& modelObject) {
+    LOG(Error, "Translation of AirWallMaterial has been removed.  Use ConstructionAirBoundary instead.");
+    OS_ASSERT(false);
+    return boost::none;
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

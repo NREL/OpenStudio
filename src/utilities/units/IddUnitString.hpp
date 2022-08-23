@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,14 +36,15 @@
 
 namespace openstudio {
 
-class UTILITIES_API IddUnitString {
+class UTILITIES_API IddUnitString
+{
  public:
-  explicit IddUnitString (const std::string &s);
-  ~IddUnitString ();
+  explicit IddUnitString(const std::string& s);
+  ~IddUnitString();
 
-  std::string toStandardUnitString();
+  std::string toStandardUnitString() const;
 
-  std::string prettyString();
+  std::string prettyString() const;
 
  private:
   IddUnitString();
@@ -52,6 +53,6 @@ class UTILITIES_API IddUnitString {
   std::string m_converted;
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_IDDUNITSTRING_HPP
+#endif  // UTILITIES_UNITS_IDDUNITSTRING_HPP

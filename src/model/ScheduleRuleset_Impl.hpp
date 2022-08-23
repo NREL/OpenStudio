@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,137 +39,156 @@ class Date;
 
 namespace model {
 
-class ScheduleDay;
-class ScheduleRule;
+  class ScheduleDay;
+  class ScheduleRule;
 
-namespace detail {
+  namespace detail {
 
-  /** ScheduleRuleset_Impl is a Schedule_Impl that is the implementation class for ScheduleRuleset.*/
-  class MODEL_API ScheduleRuleset_Impl : public Schedule_Impl {
-   public:
+    /** ScheduleRuleset_Impl is a Schedule_Impl that is the implementation class for ScheduleRuleset.*/
+    class MODEL_API ScheduleRuleset_Impl : public Schedule_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      ScheduleRuleset_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ScheduleRuleset_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ScheduleRuleset_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ScheduleRuleset_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      ScheduleRuleset_Impl(const ScheduleRuleset_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ScheduleRuleset_Impl(const ScheduleRuleset_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      virtual ~ScheduleRuleset_Impl() {}
 
-    virtual ~ScheduleRuleset_Impl() {}
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual ModelObject clone(Model model) const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual std::vector<ResourceObject> resources() const override;
 
-    virtual std::vector<ResourceObject> resources() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
 
-    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
-
-    /** Returns empty vector, because individual ScheduleDay objects will check values() against
+      /** Returns empty vector, because individual ScheduleDay objects will check values() against
      *  bounds. */
-    virtual std::vector<double> values() const override;
+      virtual std::vector<double> values() const override;
 
-    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
+      virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
 
-    virtual bool resetScheduleTypeLimits() override;
+      virtual bool resetScheduleTypeLimits() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    /// Returns the default day schedule.
-    ScheduleDay defaultDaySchedule() const;
+      /// Returns the default day schedule.
+      ScheduleDay defaultDaySchedule() const;
 
-    /// Returns the summer design day schedule.
-    ScheduleDay summerDesignDaySchedule() const;
+      /// Returns the summer design day schedule.
+      ScheduleDay summerDesignDaySchedule() const;
 
-    /// Returns true if the summer design day is defaulted.
-    bool isSummerDesignDayScheduleDefaulted() const;
+      /// Returns true if the summer design day is defaulted.
+      bool isSummerDesignDayScheduleDefaulted() const;
 
-    /// Returns the winter design day schedule.
-    ScheduleDay winterDesignDaySchedule() const;
+      /// Returns the winter design day schedule.
+      ScheduleDay winterDesignDaySchedule() const;
 
-    /// Returns true if the winter design day is defaulted.
-    bool isWinterDesignDayScheduleDefaulted() const;
+      /// Returns true if the winter design day is defaulted.
+      bool isWinterDesignDayScheduleDefaulted() const;
 
-    /// Returns the holiday schedule.
-    ScheduleDay holidaySchedule() const;
+      /// Returns the holiday schedule.
+      ScheduleDay holidaySchedule() const;
 
-    /// Returns true if the holiday schedule is defaulted.
-    bool isHolidayScheduleDefaulted() const;
+      /// Returns true if the holiday schedule is defaulted.
+      bool isHolidayScheduleDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      /// Returns the custom day 1 schedule.
+      ScheduleDay customDay1Schedule() const;
 
-    /// Sets the summer design day schedule.
-    bool setSummerDesignDaySchedule(const ScheduleDay& schedule);
+      /// Returns true if the custom day 1 schedule is defaulted.
+      bool isCustomDay1ScheduleDefaulted() const;
 
-    /// Resets the summer design day schedule.
-    void resetSummerDesignDaySchedule();
+      /// Returns the custom day 2 schedule.
+      ScheduleDay customDay2Schedule() const;
 
-    /// Sets the winter design day schedule.
-    bool setWinterDesignDaySchedule(const ScheduleDay& schedule);
+      /// Returns true if the custom day 2 schedule is defaulted.
+      bool isCustomDay2ScheduleDefaulted() const;
 
-    /// Resets the winter design day schedule.
-    void resetWinterDesignDaySchedule();
+      //@}
+      /** @name Setters */
+      //@{
 
-    /// Sets the holiday schedule.
-    bool setHolidaySchedule(const ScheduleDay& schedule);
+      /// Sets the summer design day schedule.
+      bool setSummerDesignDaySchedule(const ScheduleDay& schedule);
 
-    /// Resets the holiday schedule.
-    void resetHolidaySchedule();
+      /// Resets the summer design day schedule.
+      void resetSummerDesignDaySchedule();
 
-    //@}
-    /** @name Other */
-    //@{
+      /// Sets the winter design day schedule.
+      bool setWinterDesignDaySchedule(const ScheduleDay& schedule);
 
-    /// Returns a vector of the rules associated with this schedule, this may be empty.
-    /// The rules returned are in order from highest priority to lowest priority.
-    std::vector<ScheduleRule> scheduleRules() const;
+      /// Resets the winter design day schedule.
+      void resetWinterDesignDaySchedule();
 
-    /// Sets the index of the given rule, 0 is the highest priority.
-    /// Returns false if this rule is not a child of this rule set or if index > number of rules - 1.
-    bool setScheduleRuleIndex(ScheduleRule& scheduleRule, unsigned index);
+      /// Sets the holiday schedule.
+      bool setHolidaySchedule(const ScheduleDay& schedule);
 
-    /// Returns a vector of indices into the result of scheduleRules() between start date (inclusive) and end date (inclusive).
-    /// If no rule is in place on a given day then -1 is returned.
-    std::vector<int> getActiveRuleIndices(const openstudio::Date& startDate, const openstudio::Date& endDate) const;
+      /// Resets the holiday schedule.
+      void resetHolidaySchedule();
 
-    /// Returns a vector of day schedules between start date (inclusive) and end date (inclusive).
-    std::vector<ScheduleDay> getDaySchedules(const openstudio::Date& startDate, const openstudio::Date& endDate) const;
+      /// Sets the custom day 1 schedule.
+      bool setCustomDay1Schedule(const ScheduleDay& schedule);
 
-    // Moves this rule to the last position. Called in ScheduleRule remove.
-    bool moveToEnd(ScheduleRule& scheduleRule);
+      /// Resets the custom day 1 schedule.
+      void resetCustomDay1Schedule();
 
-    // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays() override;
+      /// Sets the custom day 2 schedule.
+      bool setCustomDay2Schedule(const ScheduleDay& schedule);
 
-    //@}
-   private:
-    REGISTER_LOGGER("openstudio.model.ScheduleRuleset");
+      /// Resets the custom day 2 schedule.
+      void resetCustomDay2Schedule();
 
-    boost::optional<ScheduleDay> optionalDefaultDaySchedule() const;
-  };
+      //@}
+      /** @name Other */
+      //@{
 
-} // detail
+      /// Returns a vector of the rules associated with this schedule, this may be empty.
+      /// The rules returned are in order from highest priority to lowest priority.
+      std::vector<ScheduleRule> scheduleRules() const;
 
-} // model
-} // openstudio
+      /// Sets the index of the given rule, 0 is the highest priority.
+      /// Returns false if this rule is not a child of this rule set or if index > number of rules - 1.
+      bool setScheduleRuleIndex(ScheduleRule& scheduleRule, unsigned index);
 
-#endif // MODEL_SCHEDULERULESET_IMPL_HPP
+      /// Returns a vector of indices into the result of scheduleRules() between start date (inclusive) and end date (inclusive).
+      /// If no rule is in place on a given day then -1 is returned.
+      std::vector<int> getActiveRuleIndices(const openstudio::Date& startDate, const openstudio::Date& endDate) const;
 
+      /// Returns a vector of day schedules between start date (inclusive) and end date (inclusive).
+      std::vector<ScheduleDay> getDaySchedules(const openstudio::Date& startDate, const openstudio::Date& endDate) const;
+
+      // Moves this rule to the last position. Called in ScheduleRule remove.
+      bool moveToEnd(ScheduleRule& scheduleRule);
+
+      // ensure that this object does not contain the date 2/29
+      virtual void ensureNoLeapDays() override;
+
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.ScheduleRuleset");
+
+      boost::optional<ScheduleDay> optionalDefaultDaySchedule() const;
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_SCHEDULERULESET_IMPL_HPP

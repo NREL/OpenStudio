@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,48 +36,49 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class ModelPartitionMaterial_Impl;
-}
+  namespace detail {
+    class ModelPartitionMaterial_Impl;
+  }
 
-/** ModelPartitionMaterial is an abstract class derived from Material.
+  /** ModelPartitionMaterial is an abstract class derived from Material.
  *
  *  The ModelPartitionMaterial class is the base class for materials that should
  *  exist as the only layer in a Construction.  ModelPartitionMaterial objects
  *  are typically used for the \link Construction Constructions\endlink of \link Surface Surfaces\endlink
  *  that are virtual boundaries between two \link Space Spaces\endlink. */
-class MODEL_API ModelPartitionMaterial : public Material {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ModelPartitionMaterial : public Material
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~ModelPartitionMaterial() {}
+    virtual ~ModelPartitionMaterial() {}
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ModelPartitionMaterial_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ModelPartitionMaterial_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::ModelPartitionMaterial_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::ModelPartitionMaterial_Impl;
 
-  ModelPartitionMaterial(IddObjectType type, const Model& model);
+    ModelPartitionMaterial(IddObjectType type, const Model& model);
 
-  explicit ModelPartitionMaterial(std::shared_ptr<detail::ModelPartitionMaterial_Impl> impl);
+    explicit ModelPartitionMaterial(std::shared_ptr<detail::ModelPartitionMaterial_Impl> impl);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ModelPartitionMaterial");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ModelPartitionMaterial");
+  };
 
-/** \relates ModelPartitionMaterial */
-typedef boost::optional<ModelPartitionMaterial> OptionalModelPartitionMaterial;
+  /** \relates ModelPartitionMaterial */
+  typedef boost::optional<ModelPartitionMaterial> OptionalModelPartitionMaterial;
 
-/** \relates ModelPartitionMaterial */
-typedef std::vector<ModelPartitionMaterial> ModelPartitionMaterialVector;
+  /** \relates ModelPartitionMaterial */
+  typedef std::vector<ModelPartitionMaterial> ModelPartitionMaterialVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_MODELPARTITIONMATERIAL_HPP
+#endif  // MODEL_MODELPARTITIONMATERIAL_HPP

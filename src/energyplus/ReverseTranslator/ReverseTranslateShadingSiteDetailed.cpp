@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,60 +47,58 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateShadingSiteDetailed( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Shading_Site_Detailed ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: Shading:Site:Detailed");
-    return boost::none;
-  }
-
-  openstudio::Point3dVector vertices = getVertices(Shading_Site_DetailedFields::NumberofVertices + 1, workspaceObject);
-
-  boost::optional<ShadingSurface> shadingSurface;
-  try{
-    shadingSurface = ShadingSurface(vertices, m_model);
-  }catch(const std::exception&){
-    LOG(Error, "Cannot create ShadingSurface for object: " << workspaceObject);
-    return boost::none;
-  }
-
-  OptionalString s = workspaceObject.name();
-  if( s) {
-    shadingSurface->setName(*s);
-  }
-
-  // look for first site level shading surface group
-  OptionalShadingSurfaceGroup shadingSurfaceGroup;
-  for (const ShadingSurfaceGroup& group : m_model.getConcreteModelObjects<ShadingSurfaceGroup>()){
-    if (istringEqual("Site", group.shadingSurfaceType())){
-      shadingSurfaceGroup = group;
-      break;
+  OptionalModelObject ReverseTranslator::translateShadingSiteDetailed(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Shading_Site_Detailed) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Shading:Site:Detailed");
+      return boost::none;
     }
-  }
 
-  // if not found make one
-  if (!shadingSurfaceGroup){
-    shadingSurfaceGroup = ShadingSurfaceGroup(m_model);
-    shadingSurfaceGroup->setShadingSurfaceType("Site");
-  }
+    openstudio::Point3dVector vertices = getVertices(Shading_Site_DetailedFields::NumberofVertices + 1, workspaceObject);
 
-  shadingSurface->setShadingSurfaceGroup(*shadingSurfaceGroup);
+    boost::optional<ShadingSurface> shadingSurface;
+    try {
+      shadingSurface = ShadingSurface(vertices, m_model);
+    } catch (const std::exception&) {
+      LOG(Error, "Cannot create ShadingSurface for object: " << workspaceObject);
+      return boost::none;
+    }
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::Shading_Site_DetailedFields::TransmittanceScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()){
-        Schedule schedule(*intermediate);
-        shadingSurface->setTransmittanceSchedule(schedule);
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      shadingSurface->setName(*s);
+    }
+
+    // look for first site level shading surface group
+    OptionalShadingSurfaceGroup shadingSurfaceGroup;
+    for (const ShadingSurfaceGroup& group : m_model.getConcreteModelObjects<ShadingSurfaceGroup>()) {
+      if (istringEqual("Site", group.shadingSurfaceType())) {
+        shadingSurfaceGroup = group;
+        break;
       }
     }
+
+    // if not found make one
+    if (!shadingSurfaceGroup) {
+      shadingSurfaceGroup = ShadingSurfaceGroup(m_model);
+      shadingSurfaceGroup->setShadingSurfaceType("Site");
+    }
+
+    shadingSurface->setShadingSurfaceGroup(*shadingSurfaceGroup);
+
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::Shading_Site_DetailedFields::TransmittanceScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()) {
+          Schedule schedule(*intermediate);
+          shadingSurface->setTransmittanceSchedule(schedule);
+        }
+      }
+    }
+
+    return shadingSurface.get();
   }
 
-  return shadingSurface.get();
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

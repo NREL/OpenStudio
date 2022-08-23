@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,34 +43,23 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateOutputControlReportingTolerances( OutputControlReportingTolerances& modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::OutputControl_ReportingTolerances );
+  boost::optional<IdfObject> ForwardTranslator::translateOutputControlReportingTolerances(OutputControlReportingTolerances& modelObject) {
 
-  m_idfObjects.push_back(idfObject);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::OutputControl_ReportingTolerances, modelObject);
 
-  OptionalString s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
+    boost::optional<double> value;
+
+    if ((value = modelObject.toleranceforTimeCoolingSetpointNotMet())) {
+      idfObject.setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet, value.get());
+    }
+
+    if ((value = modelObject.toleranceforTimeHeatingSetpointNotMet())) {
+      idfObject.setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet, value.get());
+    }
+
+    return idfObject;
   }
 
-  boost::optional<double> value;
+}  // namespace energyplus
 
-  if( (value = modelObject.toleranceforTimeCoolingSetpointNotMet()) )
-  {
-    idfObject.setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeCoolingSetpointNotMet,value.get());
-  }
-
-  if( (value = modelObject.toleranceforTimeHeatingSetpointNotMet()) )
-  {
-    idfObject.setDouble(OutputControl_ReportingTolerancesFields::ToleranceforTimeHeatingSetpointNotMet,value.get());
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

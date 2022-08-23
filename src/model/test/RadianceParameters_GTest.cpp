@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,20 +37,18 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
+TEST_F(ModelFixture, RadianceParameters_GettersSetters) {
 
   Model model;
   auto radianceParameters = model.getUniqueModelObject<RadianceParameters>();
 
- // Accumulated Rays per Record:  Integer
+  // Accumulated Rays per Record:  Integer
   // Check Idd default: 1
   EXPECT_EQ(1, radianceParameters.accumulatedRaysperRecord());
   EXPECT_TRUE(radianceParameters.setAccumulatedRaysperRecord(2));
   EXPECT_EQ(2, radianceParameters.accumulatedRaysperRecord());
   radianceParameters.resetAccumulatedRaysperRecord();
   EXPECT_EQ(1, radianceParameters.accumulatedRaysperRecord());
-
 
   // Direct Threshold:  Double
   // Check Idd default: 0.0
@@ -60,7 +58,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   radianceParameters.resetDirectThreshold();
   EXPECT_EQ(0.0, radianceParameters.directThreshold());
 
-
   // Direct Certainty:  Double
   // Check Idd default: 1.0
   EXPECT_EQ(1.0, radianceParameters.directCertainty());
@@ -68,7 +65,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   EXPECT_EQ(0.6, radianceParameters.directCertainty());
   radianceParameters.resetDirectCertainty();
   EXPECT_EQ(1.0, radianceParameters.directCertainty());
-
 
   // Direct Jitter:  Double
   // Check Idd default: 1.0
@@ -78,7 +74,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   radianceParameters.resetDirectJitter();
   EXPECT_EQ(1.0, radianceParameters.directJitter());
 
-
   // Direct Pretest:  Double
   // Check Idd default: 1.0
   EXPECT_EQ(1.0, radianceParameters.directPretest());
@@ -86,7 +81,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   EXPECT_EQ(0.8, radianceParameters.directPretest());
   radianceParameters.resetDirectPretest();
   EXPECT_EQ(1.0, radianceParameters.directPretest());
-
 
   // Ambient Bounces VMX:  Integer
   // Check Idd default: 6
@@ -96,7 +90,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   radianceParameters.resetAmbientBouncesVMX();
   EXPECT_EQ(6, radianceParameters.ambientBouncesVMX());
 
-
   // Ambient Bounces DMX:  Integer
   // Check Idd default: 2
   EXPECT_EQ(2, radianceParameters.ambientBouncesDMX());
@@ -104,7 +97,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   EXPECT_EQ(1, radianceParameters.ambientBouncesDMX());
   radianceParameters.resetAmbientBouncesDMX();
   EXPECT_EQ(2, radianceParameters.ambientBouncesDMX());
-
 
   // Ambient Divisions VMX:  Integer
   // Check Idd default: 4050
@@ -114,7 +106,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   radianceParameters.resetAmbientDivisionsVMX();
   EXPECT_EQ(4050, radianceParameters.ambientDivisionsVMX());
 
-
   // Ambient Divisions DMX:  Integer
   // Check Idd default: 512
   EXPECT_EQ(512, radianceParameters.ambientDivisionsDMX());
@@ -122,7 +113,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   EXPECT_EQ(256, radianceParameters.ambientDivisionsDMX());
   radianceParameters.resetAmbientDivisionsDMX();
   EXPECT_EQ(512, radianceParameters.ambientDivisionsDMX());
-
 
   // Ambient Supersamples:  Integer
   // Check Idd default: 256
@@ -132,7 +122,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   radianceParameters.resetAmbientSupersamples();
   EXPECT_EQ(256, radianceParameters.ambientSupersamples());
 
-
   // Limit Weight VMX:  Double
   // Check Idd default: 0.001
   EXPECT_EQ(0.001, radianceParameters.limitWeightVMX());
@@ -140,7 +129,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   EXPECT_EQ(0.21, radianceParameters.limitWeightVMX());
   radianceParameters.resetLimitWeightVMX();
   EXPECT_EQ(0.001, radianceParameters.limitWeightVMX());
-
 
   // Limit Weight DMX:  Double
   // Check Idd default: 0.001
@@ -150,7 +138,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   radianceParameters.resetLimitWeightDMX();
   EXPECT_EQ(0.001, radianceParameters.limitWeightDMX());
 
-
   // Klems Sampling Density:  Integer
   // Check Idd default: 500
   EXPECT_EQ(500, radianceParameters.klemsSamplingDensity());
@@ -158,7 +145,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   EXPECT_EQ(499, radianceParameters.klemsSamplingDensity());
   radianceParameters.resetKlemsSamplingDensity();
   EXPECT_EQ(500, radianceParameters.klemsSamplingDensity());
-
 
   // Sky Discretization Resolution:  String
   // Check Idd default: "146"
@@ -170,7 +156,6 @@ TEST_F(ModelFixture,RadianceParameters_GettersSetters) {
   EXPECT_FALSE(radianceParameters.setSkyDiscretizationResolution("BadChoice"));
   EXPECT_EQ("578", radianceParameters.skyDiscretizationResolution());
 }
-
 
 TEST_F(ModelFixture, RadianceParameters_FineAndCoarseSettings) {
   Model model;

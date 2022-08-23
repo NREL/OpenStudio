@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,84 +37,84 @@ namespace openstudio {
 
 namespace model {
 
-class Construction;
-class Node;
+  class Construction;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class PipeOutdoor_Impl;
+    class PipeOutdoor_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PipeOutdoor is a StraightComponent that wraps the OpenStudio IDD object 'OS:Pipe:Outdoor'. */
-class MODEL_API PipeOutdoor : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PipeOutdoor is a StraightComponent that wraps the OpenStudio IDD object 'OS:Pipe:Outdoor'. */
+  class MODEL_API PipeOutdoor : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit PipeOutdoor(const Model& model);
+    explicit PipeOutdoor(const Model& model);
 
-  virtual ~PipeOutdoor() {}
+    virtual ~PipeOutdoor() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Construction> construction() const;
+    boost::optional<Construction> construction() const;
 
-  boost::optional<Node> ambientTemperatureOutdoorAirNode() const;
+    boost::optional<Node> ambientTemperatureOutdoorAirNode() const;
 
-  double pipeInsideDiameter() const;
+    double pipeInsideDiameter() const;
 
-  double pipeLength() const;
+    double pipeLength() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setConstruction(const Construction& construction);
+    bool setConstruction(const Construction& construction);
 
-  void resetConstruction();
+    void resetConstruction();
 
-  bool setAmbientTemperatureOutdoorAirNode(const Node& node);
+    bool setAmbientTemperatureOutdoorAirNode(const Node& node);
 
-  void resetAmbientTemperatureOutdoorAirNode();
+    void resetAmbientTemperatureOutdoorAirNode();
 
-  bool setPipeInsideDiameter(double pipeInsideDiameter);
+    bool setPipeInsideDiameter(double pipeInsideDiameter);
 
-  bool setPipeLength(double pipeLength);
+    bool setPipeLength(double pipeLength);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::PipeOutdoor_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::PipeOutdoor_Impl ImplType;
 
-  explicit PipeOutdoor(std::shared_ptr<detail::PipeOutdoor_Impl> impl);
+    explicit PipeOutdoor(std::shared_ptr<detail::PipeOutdoor_Impl> impl);
 
-  friend class detail::PipeOutdoor_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PipeOutdoor");
-};
+    friend class detail::PipeOutdoor_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PipeOutdoor");
+  };
 
-/** \relates PipeOutdoor*/
-typedef boost::optional<PipeOutdoor> OptionalPipeOutdoor;
+  /** \relates PipeOutdoor*/
+  typedef boost::optional<PipeOutdoor> OptionalPipeOutdoor;
 
-/** \relates PipeOutdoor*/
-typedef std::vector<PipeOutdoor> PipeOutdoorVector;
+  /** \relates PipeOutdoor*/
+  typedef std::vector<PipeOutdoor> PipeOutdoorVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_PIPEOUTDOOR_HPP
-
+#endif  // MODEL_PIPEOUTDOOR_HPP

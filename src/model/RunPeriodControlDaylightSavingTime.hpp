@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,82 +42,80 @@ class DayOfWeek;
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class RunPeriodControlDaylightSavingTime_Impl;
+    class RunPeriodControlDaylightSavingTime_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** RunPeriodControlDaylightSavingTime is a ModelObject that wraps the OpenStudio IDD object 'OS_RunPeriodControl_DaylightSavingTime'. */
-class MODEL_API RunPeriodControlDaylightSavingTime : public ModelObject {
- public:
+  /** RunPeriodControlDaylightSavingTime is a ModelObject that wraps the OpenStudio IDD object 'OS_RunPeriodControl_DaylightSavingTime'. */
+  class MODEL_API RunPeriodControlDaylightSavingTime : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    virtual ~RunPeriodControlDaylightSavingTime() {}
 
-  virtual ~RunPeriodControlDaylightSavingTime() {}
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    openstudio::Date startDate() const;
 
-  openstudio::Date startDate() const;
+    boost::optional<openstudio::NthDayOfWeekInMonth> startNthDayOfWeekInMonth() const;
 
-  boost::optional<openstudio::NthDayOfWeekInMonth> startNthDayOfWeekInMonth() const;
+    openstudio::Date endDate() const;
 
-  openstudio::Date endDate() const;
+    boost::optional<openstudio::NthDayOfWeekInMonth> endNthDayOfWeekInMonth() const;
 
-  boost::optional<openstudio::NthDayOfWeekInMonth> endNthDayOfWeekInMonth() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setStartDate(const std::string& startDate);
+    bool setStartDate(const openstudio::MonthOfYear& monthOfYear, unsigned day);
+    bool setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear);
 
-  bool setStartDate(const std::string& startDate);
-  bool setStartDate(const openstudio::MonthOfYear& monthOfYear, unsigned day);
-  bool setStartDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear);
+    bool setEndDate(const std::string& endDate);
+    bool setEndDate(const openstudio::MonthOfYear& monthOfYear, unsigned day);
+    bool setEndDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear);
 
-  bool setEndDate(const std::string& endDate);
-  bool setEndDate(const openstudio::MonthOfYear& monthOfYear, unsigned day);
-  bool setEndDate(const openstudio::NthDayOfWeekInMonth& nth, const openstudio::DayOfWeek& dayOfWeek, const openstudio::MonthOfYear& monthOfYear);
+    // ensure that this object does not contain the date 2/29
+    void ensureNoLeapDays();
 
-  // ensure that this object does not contain the date 2/29
-  void ensureNoLeapDays();
+    //@}
+   protected:
+    /// @cond
+    typedef detail::RunPeriodControlDaylightSavingTime_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::RunPeriodControlDaylightSavingTime_Impl ImplType;
+    friend class detail::RunPeriodControlDaylightSavingTime_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::RunPeriodControlDaylightSavingTime_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    explicit RunPeriodControlDaylightSavingTime(std::shared_ptr<detail::RunPeriodControlDaylightSavingTime_Impl> impl);
 
-  explicit RunPeriodControlDaylightSavingTime(std::shared_ptr<detail::RunPeriodControlDaylightSavingTime_Impl> impl);
+    explicit RunPeriodControlDaylightSavingTime(Model& model);
 
-  explicit RunPeriodControlDaylightSavingTime(Model& model);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RunPeriodControlDaylightSavingTime");
+  };
 
-  /// @endcond
- private:
+  /** \relates RunPeriodControlDaylightSavingTime*/
+  typedef boost::optional<RunPeriodControlDaylightSavingTime> OptionalRunPeriodControlDaylightSavingTime;
 
-  REGISTER_LOGGER("openstudio.model.RunPeriodControlDaylightSavingTime");
-};
+  /** \relates RunPeriodControlDaylightSavingTime*/
+  typedef std::vector<RunPeriodControlDaylightSavingTime> RunPeriodControlDaylightSavingTimeVector;
 
-/** \relates RunPeriodControlDaylightSavingTime*/
-typedef boost::optional<RunPeriodControlDaylightSavingTime> OptionalRunPeriodControlDaylightSavingTime;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates RunPeriodControlDaylightSavingTime*/
-typedef std::vector<RunPeriodControlDaylightSavingTime> RunPeriodControlDaylightSavingTimeVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_RUNPERIODCONTROLDAYLIGHTSAVINGTIME_HPP
-
+#endif  // MODEL_RUNPERIODCONTROLDAYLIGHTSAVINGTIME_HPP

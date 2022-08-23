@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,49 +36,39 @@ namespace openstudio {
 namespace energyplus {
 
   /// constructor
-  ErrorFile::ErrorFile(const openstudio::path& errPath)
-    : m_completed(false), m_completedSuccessfully(false)
-  {
+  ErrorFile::ErrorFile(const openstudio::path& errPath) : m_completed(false), m_completedSuccessfully(false) {
     openstudio::filesystem::ifstream ifs(errPath);
     parse(ifs);
     ifs.close();
   }
 
   /// get warnings
-  std::vector<std::string> ErrorFile::warnings() const
-  {
+  std::vector<std::string> ErrorFile::warnings() const {
     return m_warnings;
   }
 
   /// get severe errors
-  std::vector<std::string> ErrorFile::severeErrors() const
-  {
+  std::vector<std::string> ErrorFile::severeErrors() const {
     return m_severeErrors;
   }
 
   /// get fatal errors
-  std::vector<std::string> ErrorFile::fatalErrors() const
-  {
+  std::vector<std::string> ErrorFile::fatalErrors() const {
     return m_fatalErrors;
   }
 
-
   /// did EnergyPlus complete or crash
-  bool ErrorFile::completed() const
-  {
+  bool ErrorFile::completed() const {
     return m_completed;
   }
 
   /// completed successfully
-  bool ErrorFile::completedSuccessfully() const
-  {
+  bool ErrorFile::completedSuccessfully() const {
     return m_completedSuccessfully;
   }
 
-  void ErrorFile::parse(openstudio::filesystem::ifstream& is)
-  {
+  void ErrorFile::parse(openstudio::filesystem::ifstream& is) {
     std::string line;
-
 
     // matches[1], warning/error type
     // matches[2], rest of line
@@ -98,7 +88,6 @@ namespace energyplus {
 
     // repeat count
 
-
     // read the file line by line using regexes
     bool alreadyGotLine = false;
 
@@ -112,19 +101,22 @@ namespace energyplus {
       // parse the file
       if (boost::regex_search(line, matches, warningOrError)) {
 
-        std::string warningOrErrorType = std::string(matches[1].first, matches[1].second); boost::trim(warningOrErrorType);
-        std::string warningOrErrorString = std::string(matches[2].first, matches[2].second); boost::trim(warningOrErrorString);
+        std::string warningOrErrorType = std::string(matches[1].first, matches[1].second);
+        boost::trim(warningOrErrorType);
+        std::string warningOrErrorString = std::string(matches[2].first, matches[2].second);
+        boost::trim(warningOrErrorString);
 
         // read the rest of the multi line warning or error
-        while(true){
+        while (true) {
           // std::streampos pos = is.tellg();
-          if (!std::getline(is, line)){
+          if (!std::getline(is, line)) {
             break;
           }
-          if (boost::regex_search(line, matches, warningOrErrorContinue)){
-            std::string temp = std::string(matches[1].first, matches[1].second); boost::trim_right(temp);
+          if (boost::regex_search(line, matches, warningOrErrorContinue)) {
+            std::string temp = std::string(matches[1].first, matches[1].second);
+            boost::trim_right(temp);
             warningOrErrorString += "\n" + temp;
-          }else{
+          } else {
             // unget the line
             // is.seekg(pos);
             // Instead of rewind then reread (which fails on Windows if you have LF line endings)
@@ -136,12 +128,11 @@ namespace energyplus {
 
         LOG(Trace, "Error parsed: " << warningOrErrorString);
 
-
         // correctly sort warnings and errors
-        try{
+        try {
           ErrorLevel level(warningOrErrorType);
 
-          switch(level.value()){
+          switch (level.value()) {
             case ErrorLevel::Warning:
               m_warnings.push_back(warningOrErrorString);
               break;
@@ -153,23 +144,21 @@ namespace energyplus {
               break;
           }
 
-        }catch(...){
+        } catch (...) {
           LOG(Error, "Unknown warning or error level '" << warningOrErrorType << "'");
         }
 
-      }else if (boost::regex_match(line, completedSuccessful)
-                || boost::regex_match(line, groundTempCompletedSuccessful)) {
+      } else if (boost::regex_match(line, completedSuccessful) || boost::regex_match(line, groundTempCompletedSuccessful)) {
         m_completed = true;
         m_completedSuccessfully = true;
         break;
-      }else if (boost::regex_match(line, completedUnsuccessful)){
+      } else if (boost::regex_match(line, completedUnsuccessful)) {
         m_completed = true;
         m_completedSuccessfully = false;
         break;
       }
     }
-
   }
 
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

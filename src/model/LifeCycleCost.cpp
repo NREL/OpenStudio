@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -78,725 +78,646 @@ using std::string;
 using std::type_info;
 
 namespace openstudio {
-namespace model  {
-namespace detail {
-
-LifeCycleCost_Impl::LifeCycleCost_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-  : ModelObject_Impl(idfObject, model, keepHandle)
-{
-  OS_ASSERT(idfObject.iddObject().type() == LifeCycleCost::iddObjectType());
-}
-
-LifeCycleCost_Impl::LifeCycleCost_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-  : ModelObject_Impl(other,model,keepHandle)
-{
-  OS_ASSERT(other.iddObject().type() == LifeCycleCost::iddObjectType());
-}
-
-LifeCycleCost_Impl::LifeCycleCost_Impl(const LifeCycleCost_Impl& other,Model_Impl* model,bool keepHandle)
-  : ModelObject_Impl(other,model,keepHandle)
-{
-}
-
-std::string LifeCycleCost_Impl::category() const
-{
-  boost::optional<std::string> value = getString(OS_LifeCycleCostFields::Category,true);
-  OS_ASSERT(value);
-  return value.get();
-}
-
-std::string LifeCycleCost_Impl::itemType() const
-{
-  boost::optional<std::string> value = getString(OS_LifeCycleCostFields::ItemType,true);
-  OS_ASSERT(value);
-  return value.get();
-}
-
-ModelObject LifeCycleCost_Impl::item() const
-{
-  boost::optional<ModelObject> value = getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_LifeCycleCostFields::ItemName);
-  OS_ASSERT(value);
-  return value.get();
-}
-
-double LifeCycleCost_Impl::cost() const
-{
-  boost::optional<double> value = getDouble(OS_LifeCycleCostFields::Cost,true);
-  OS_ASSERT(value);
-  return value.get();
-}
-
-std::vector<std::string> LifeCycleCost_Impl::validCostUnitsValues() const
-{
-  std::vector<std::string> result;
-  std::string itemType = this->itemType();
-  if (istringEqual("Construction", itemType)){
-    result.push_back("CostPerArea");
-  }else if (istringEqual("Building", itemType)){
-    result.push_back("CostPerEach");
-    result.push_back("CostPerArea");
-    result.push_back("CostPerThermalZone");
-  }else if (istringEqual("Space", itemType)){
-    result.push_back("CostPerEach");
-    result.push_back("CostPerArea");
-  }else if (istringEqual("ThermalZone", itemType)){
-    result.push_back("CostPerEach");
-    result.push_back("CostPerArea");
-  }else if (istringEqual("AirLoop", itemType)){
-    result.push_back("CostPerEach");
-    result.push_back("CostPerThermalZone");
-  }else if (istringEqual("PlantLoop", itemType)){
-    result.push_back("CostPerEach");
-  }else if (istringEqual("ZoneHVAC", itemType)){
-    result.push_back("CostPerEach");
-  }else if (istringEqual("Lights", itemType)){
-    result.push_back("CostPerEach");
-    result.push_back("CostPerArea");
-  }else if (istringEqual("Luminaire", itemType)){
-    result.push_back("CostPerEach");
-  }else if (istringEqual("Equipment", itemType)){
-    result.push_back("CostPerEach");
-    result.push_back("CostPerArea");
-  }else if (istringEqual("HVACComponent", itemType)){
-    result.push_back("CostPerEach");
-  }else if (istringEqual("ZoneHVACComponent", itemType)){
-    result.push_back("CostPerEach");
-  }else{
-    result.push_back("CostPerEach");
-  }
-
-  return result;
-}
-
-std::string LifeCycleCost_Impl::costUnits() const
-{
-  boost::optional<std::string> value = getString(OS_LifeCycleCostFields::CostUnits,true);
-  OS_ASSERT(value);
-  return value.get();
-}
-
-std::string LifeCycleCost_Impl::startOfCosts() const 
-{
-  boost::optional<std::string> value = getString(OS_LifeCycleCostFields::StartofCosts, true);
-  OS_ASSERT(value);
-  return value.get();
-}
-
-bool LifeCycleCost_Impl::isStartOfCostsDefaulted() const 
-{
-  return isEmpty(OS_LifeCycleCostFields::StartofCosts);
-}
-
-int LifeCycleCost_Impl::yearsFromStart() const
-{
-  boost::optional<int> value = getInt(OS_LifeCycleCostFields::YearsfromStart,true);
-  OS_ASSERT(value);
-  return value.get();
-}
-
-bool LifeCycleCost_Impl::isYearsFromStartDefaulted() const
-{
-  return isEmpty(OS_LifeCycleCostFields::YearsfromStart);
-}
-
-int LifeCycleCost_Impl::monthsFromStart() const
-{
-  boost::optional<int> value = getInt(OS_LifeCycleCostFields::MonthsfromStart,true);
-  OS_ASSERT(value);
-  return value.get();
-}
-
-bool LifeCycleCost_Impl::isMonthsFromStartDefaulted() const
-{
-  return isEmpty(OS_LifeCycleCostFields::MonthsfromStart);
-}
-
-int LifeCycleCost_Impl::repeatPeriodYears() const
-{
-  boost::optional<int> value = getInt(OS_LifeCycleCostFields::RepeatPeriodYears,true);
-  OS_ASSERT(value);
-  return value.get();
-}
-
-bool LifeCycleCost_Impl::isRepeatPeriodYearsDefaulted() const
-{
-  return isEmpty(OS_LifeCycleCostFields::RepeatPeriodYears);
-}
-
-int LifeCycleCost_Impl::repeatPeriodMonths() const
-{
-  boost::optional<int> value = getInt(OS_LifeCycleCostFields::RepeatPeriodMonths,true);
-  OS_ASSERT(value);
-  return value.get();
-}
-
-bool LifeCycleCost_Impl::isRepeatPeriodMonthsDefaulted() const
-{
-  return isEmpty(OS_LifeCycleCostFields::RepeatPeriodYears);
-}
-
-bool LifeCycleCost_Impl::setCategory(const std::string& category)
-{
-  return setString(OS_LifeCycleCostFields::Category, category);
-}
-
-bool LifeCycleCost_Impl::setCost(double cost)
-{
-  return setDouble(OS_LifeCycleCostFields::Cost, cost);
-}
-
-bool LifeCycleCost_Impl::setCostUnits(const std::string& costUnits)
-{
-  std::vector<std::string> validCostUnitsValues = this->validCostUnitsValues();
-  if (std::find(validCostUnitsValues.begin(), validCostUnitsValues.end(), costUnits) == validCostUnitsValues.end()){
-    return false;
-  }
-
-  return setString(OS_LifeCycleCostFields::CostUnits, costUnits);
-}
-
-bool LifeCycleCost_Impl::setStartOfCosts(const std::string& startOfCosts) {
-  return setString(OS_LifeCycleCostFields::StartofCosts, startOfCosts);
-}
-
-void LifeCycleCost_Impl::resetStartOfCosts() {
-  bool test = setString(OS_LifeCycleCostFields::StartofCosts, "");
-  OS_ASSERT(test);
-}
-
-bool LifeCycleCost_Impl::setYearsFromStart(int yearsFromStart)
-{
-  return setInt(OS_LifeCycleCostFields::YearsfromStart, yearsFromStart);
-}
-
-void LifeCycleCost_Impl::resetYearsFromStart()
-{
-  bool test = setString(OS_LifeCycleCostFields::YearsfromStart, "");
-  OS_ASSERT(test);
-}
-
-bool LifeCycleCost_Impl::setMonthsFromStart(int monthsFromStart)
-{
-  return setInt(OS_LifeCycleCostFields::MonthsfromStart, monthsFromStart);
-}
-
-void LifeCycleCost_Impl::resetMonthsFromStart()
-{
-  bool test = setString(OS_LifeCycleCostFields::MonthsfromStart, "");
-  OS_ASSERT(test);
-}
-
-bool LifeCycleCost_Impl::setRepeatPeriodYears(int repeatPeriodYears)
-{
-  return setInt(OS_LifeCycleCostFields::RepeatPeriodYears, repeatPeriodYears);
-}
-
-void LifeCycleCost_Impl::resetRepeatPeriodYears()
-{
-  bool test = setString(OS_LifeCycleCostFields::RepeatPeriodYears, "");
-  OS_ASSERT(test);
-}
-
-bool LifeCycleCost_Impl::setRepeatPeriodMonths(int repeatPeriodMonths)
-{
-  return setInt(OS_LifeCycleCostFields::RepeatPeriodMonths, repeatPeriodMonths);
-}
-
-void LifeCycleCost_Impl::resetRepeatPeriodMonths()
-{
-  bool test = setString(OS_LifeCycleCostFields::RepeatPeriodMonths, "");
-  OS_ASSERT(test);
-}
-
-double LifeCycleCost_Impl::totalCost() const
-{
-  double result = 0;
-  std::string costUnits = this->costUnits();
-
-  if (istringEqual("CostPerEach", costUnits)){
-    boost::optional<int> costedQuantity = this->costedQuantity();
-    if (costedQuantity){
-      result = costedQuantity.get() * this->cost();
-    }
-  }else if (istringEqual("CostPerArea", costUnits)){
-    boost::optional<double> costedArea = this->costedArea();
-    if (costedArea){
-      result = costedArea.get() * this->cost();
-    }
-  }else if (istringEqual("CostPerThermalZone", costUnits)){
-    boost::optional<int> costedThermalZones = this->costedThermalZones();
-    if (costedThermalZones){
-      result = costedThermalZones.get() * this->cost();
-    }
-  }
-
-  return result;
-}
-
-bool LifeCycleCost_Impl::convertToCostPerEach()
-{
-  std::string costUnits = this->costUnits();
-  if (istringEqual("CostPerEach", costUnits)){
-    return true;
-  }else if (istringEqual("CostPerArea", costUnits)){
-    boost::optional<double> costedArea = this->costedArea();
-    if (!costedArea){
-      return false;
-    }
-  }else if (istringEqual("CostPerThermalZone", costUnits)){
-    boost::optional<int> costedThermalZones = this->costedThermalZones();
-    if (!costedThermalZones){
-      return false;
-    }
-  }
-
-  double totalCost = this->totalCost();
-
-  if (!this->setCostUnits("CostPerEach")){
-    return false;
-  }
-
-  bool test = this->setCost(totalCost);
-  OS_ASSERT(test);
-  return true;
-}
-
-boost::optional<int> LifeCycleCost_Impl::costedQuantity() const
-{
-  boost::optional<int> result;
-
-  std::string costUnits = this->costUnits();
-  if (!istringEqual("CostPerEach", costUnits)){
-    return boost::none;
-  }
-
-  ModelObject modelObject = item();
-
-  if (modelObject.optionalCast<ConstructionBase>()){
-    // no quantity defined
-
-  }else if (modelObject.optionalCast<Building>()){
-    result = 1;
-
-  }else if (modelObject.optionalCast<Space>()){
-    result = modelObject.cast<Space>().multiplier();
-
-  }else if (modelObject.optionalCast<ThermalZone>()){
-    result = modelObject.cast<ThermalZone>().multiplier();
-
-  }else if (modelObject.optionalCast<AirLoopHVAC>()){
-    result = 1;
-
-  }else if (modelObject.optionalCast<PlantLoop>()){
-    result = 1;
-
-  }else if (modelObject.optionalCast<HVACComponent>()){
-    result = 1;
-
-  }else if (modelObject.optionalCast<ZoneHVACComponent>()){
-    result = 1;
-
-  }else if (modelObject.optionalCast<SpaceLoadDefinition>()){
-    // covers lights, equipment, etc
-    result = modelObject.cast<SpaceLoadDefinition>().quantity();
-
-  }
-
-  return result;
-}
-
-boost::optional<double> LifeCycleCost_Impl::costedArea() const
-{
-  boost::optional<double> result;
-
-  std::string costUnits = this->costUnits();
-  if (!istringEqual("CostPerArea", costUnits)){
-    return boost::none;
-  }
-
-  ModelObject modelObject = item();
-
-  if (modelObject.optionalCast<ConstructionBase>()){
-    result = modelObject.cast<ConstructionBase>().getNetArea();
-
-  }else if (modelObject.optionalCast<Building>()){
-    result = modelObject.cast<Building>().floorArea();
-
-  }else if (modelObject.optionalCast<Space>()){
-    result = modelObject.cast<Space>().multiplier() * modelObject.cast<Space>().floorArea();
-
-  }else if (modelObject.optionalCast<ThermalZone>()){
-    result = modelObject.cast<ThermalZone>().multiplier() * modelObject.cast<ThermalZone>().floorArea();
-
-  }else if (modelObject.optionalCast<AirLoopHVAC>()){
-    // no area defined
-
-  }else if (modelObject.optionalCast<PlantLoop>()){
-    // no area defined
-
-  }else if (modelObject.optionalCast<HVACComponent>()){
-    // no area defined
-
-  }else if (modelObject.optionalCast<ZoneHVACComponent>()){
-    // no area defined
-
-  }else if (modelObject.optionalCast<SpaceLoadDefinition>()){
-    // covers lights, equipment, etc
-    result = modelObject.cast<SpaceLoadDefinition>().floorArea();
-
-  }
-
-  return result;
-}
-
-boost::optional<int>  LifeCycleCost_Impl::costedThermalZones() const
-{
-  boost::optional<int> result;
-
-  std::string costUnits = this->costUnits();
-  if (!istringEqual("CostPerThermalZone", costUnits)){
-    return boost::none;
-  }
-
-  ModelObject modelObject = item();
-
-  if (modelObject.optionalCast<ConstructionBase>()){
-    // number of thermal zones not defined
-
-  }else if (modelObject.optionalCast<Building>()){
-    result = 0;
-    for (const ThermalZone& thermalZone : this->model().getConcreteModelObjects<ThermalZone>()){
-      result = result.get() + thermalZone.multiplier();
+namespace model {
+  namespace detail {
+
+    LifeCycleCost_Impl::LifeCycleCost_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == LifeCycleCost::iddObjectType());
     }
 
-  }else if (modelObject.optionalCast<Space>()){
-    // number of thermal zones not defined
-
-  }else if (modelObject.optionalCast<ThermalZone>()){
-    // number of thermal zones not defined
-
-  }else if (modelObject.optionalCast<AirLoopHVAC>()){
-    result = 0;
-    for (const ThermalZone& thermalZone : modelObject.cast<AirLoopHVAC>().thermalZones()){
-      result = result.get() + thermalZone.multiplier();
+    LifeCycleCost_Impl::LifeCycleCost_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == LifeCycleCost::iddObjectType());
     }
 
-  }else if (modelObject.optionalCast<PlantLoop>()){
-    // number of thermal zones not defined
+    LifeCycleCost_Impl::LifeCycleCost_Impl(const LifeCycleCost_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-  }else if (modelObject.optionalCast<ZoneHVACComponent>()){
-    // number of thermal zones not defined
+    std::string LifeCycleCost_Impl::category() const {
+      boost::optional<std::string> value = getString(OS_LifeCycleCostFields::Category, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  }else if (modelObject.optionalCast<SpaceLoadDefinition>()){
-    // number of thermal zones not defined
+    std::string LifeCycleCost_Impl::itemType() const {
+      boost::optional<std::string> value = getString(OS_LifeCycleCostFields::ItemType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
+    ModelObject LifeCycleCost_Impl::item() const {
+      boost::optional<ModelObject> value = getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_LifeCycleCostFields::ItemName);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double LifeCycleCost_Impl::cost() const {
+      boost::optional<double> value = getDouble(OS_LifeCycleCostFields::Cost, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::vector<std::string> LifeCycleCost_Impl::validCostUnitsValues() const {
+      std::vector<std::string> result;
+      std::string itemType = this->itemType();
+      if (istringEqual("Construction", itemType)) {
+        result.push_back("CostPerArea");
+      } else if (istringEqual("Building", itemType)) {
+        result.push_back("CostPerEach");
+        result.push_back("CostPerArea");
+        result.push_back("CostPerThermalZone");
+      } else if (istringEqual("Space", itemType)) {
+        result.push_back("CostPerEach");
+        result.push_back("CostPerArea");
+      } else if (istringEqual("ThermalZone", itemType)) {
+        result.push_back("CostPerEach");
+        result.push_back("CostPerArea");
+      } else if (istringEqual("AirLoop", itemType)) {
+        result.push_back("CostPerEach");
+        result.push_back("CostPerThermalZone");
+      } else if (istringEqual("PlantLoop", itemType)) {
+        result.push_back("CostPerEach");
+      } else if (istringEqual("ZoneHVAC", itemType)) {
+        result.push_back("CostPerEach");
+      } else if (istringEqual("Lights", itemType)) {
+        result.push_back("CostPerEach");
+        result.push_back("CostPerArea");
+      } else if (istringEqual("Luminaire", itemType)) {
+        result.push_back("CostPerEach");
+      } else if (istringEqual("Equipment", itemType)) {
+        result.push_back("CostPerEach");
+        result.push_back("CostPerArea");
+      } else if (istringEqual("HVACComponent", itemType)) {
+        result.push_back("CostPerEach");
+      } else if (istringEqual("ZoneHVACComponent", itemType)) {
+        result.push_back("CostPerEach");
+      } else {
+        result.push_back("CostPerEach");
+      }
+
+      return result;
+    }
+
+    std::string LifeCycleCost_Impl::costUnits() const {
+      boost::optional<std::string> value = getString(OS_LifeCycleCostFields::CostUnits, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string LifeCycleCost_Impl::startOfCosts() const {
+      boost::optional<std::string> value = getString(OS_LifeCycleCostFields::StartofCosts, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool LifeCycleCost_Impl::isStartOfCostsDefaulted() const {
+      return isEmpty(OS_LifeCycleCostFields::StartofCosts);
+    }
+
+    int LifeCycleCost_Impl::yearsFromStart() const {
+      boost::optional<int> value = getInt(OS_LifeCycleCostFields::YearsfromStart, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool LifeCycleCost_Impl::isYearsFromStartDefaulted() const {
+      return isEmpty(OS_LifeCycleCostFields::YearsfromStart);
+    }
+
+    int LifeCycleCost_Impl::monthsFromStart() const {
+      boost::optional<int> value = getInt(OS_LifeCycleCostFields::MonthsfromStart, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool LifeCycleCost_Impl::isMonthsFromStartDefaulted() const {
+      return isEmpty(OS_LifeCycleCostFields::MonthsfromStart);
+    }
+
+    int LifeCycleCost_Impl::repeatPeriodYears() const {
+      boost::optional<int> value = getInt(OS_LifeCycleCostFields::RepeatPeriodYears, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool LifeCycleCost_Impl::isRepeatPeriodYearsDefaulted() const {
+      return isEmpty(OS_LifeCycleCostFields::RepeatPeriodYears);
+    }
+
+    int LifeCycleCost_Impl::repeatPeriodMonths() const {
+      boost::optional<int> value = getInt(OS_LifeCycleCostFields::RepeatPeriodMonths, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool LifeCycleCost_Impl::isRepeatPeriodMonthsDefaulted() const {
+      return isEmpty(OS_LifeCycleCostFields::RepeatPeriodYears);
+    }
+
+    bool LifeCycleCost_Impl::setCategory(const std::string& category) {
+      return setString(OS_LifeCycleCostFields::Category, category);
+    }
+
+    bool LifeCycleCost_Impl::setCost(double cost) {
+      return setDouble(OS_LifeCycleCostFields::Cost, cost);
+    }
+
+    bool LifeCycleCost_Impl::setCostUnits(const std::string& costUnits) {
+      std::vector<std::string> validCostUnitsValues = this->validCostUnitsValues();
+      if (std::find(validCostUnitsValues.begin(), validCostUnitsValues.end(), costUnits) == validCostUnitsValues.end()) {
+        return false;
+      }
+
+      return setString(OS_LifeCycleCostFields::CostUnits, costUnits);
+    }
+
+    bool LifeCycleCost_Impl::setStartOfCosts(const std::string& startOfCosts) {
+      return setString(OS_LifeCycleCostFields::StartofCosts, startOfCosts);
+    }
+
+    void LifeCycleCost_Impl::resetStartOfCosts() {
+      bool test = setString(OS_LifeCycleCostFields::StartofCosts, "");
+      OS_ASSERT(test);
+    }
+
+    bool LifeCycleCost_Impl::setYearsFromStart(int yearsFromStart) {
+      return setInt(OS_LifeCycleCostFields::YearsfromStart, yearsFromStart);
+    }
+
+    void LifeCycleCost_Impl::resetYearsFromStart() {
+      bool test = setString(OS_LifeCycleCostFields::YearsfromStart, "");
+      OS_ASSERT(test);
+    }
+
+    bool LifeCycleCost_Impl::setMonthsFromStart(int monthsFromStart) {
+      return setInt(OS_LifeCycleCostFields::MonthsfromStart, monthsFromStart);
+    }
+
+    void LifeCycleCost_Impl::resetMonthsFromStart() {
+      bool test = setString(OS_LifeCycleCostFields::MonthsfromStart, "");
+      OS_ASSERT(test);
+    }
+
+    bool LifeCycleCost_Impl::setRepeatPeriodYears(int repeatPeriodYears) {
+      return setInt(OS_LifeCycleCostFields::RepeatPeriodYears, repeatPeriodYears);
+    }
+
+    void LifeCycleCost_Impl::resetRepeatPeriodYears() {
+      bool test = setString(OS_LifeCycleCostFields::RepeatPeriodYears, "");
+      OS_ASSERT(test);
+    }
+
+    bool LifeCycleCost_Impl::setRepeatPeriodMonths(int repeatPeriodMonths) {
+      return setInt(OS_LifeCycleCostFields::RepeatPeriodMonths, repeatPeriodMonths);
+    }
+
+    void LifeCycleCost_Impl::resetRepeatPeriodMonths() {
+      bool test = setString(OS_LifeCycleCostFields::RepeatPeriodMonths, "");
+      OS_ASSERT(test);
+    }
+
+    double LifeCycleCost_Impl::totalCost() const {
+      double result = 0;
+      std::string costUnits = this->costUnits();
+
+      if (istringEqual("CostPerEach", costUnits)) {
+        boost::optional<int> costedQuantity = this->costedQuantity();
+        if (costedQuantity) {
+          result = costedQuantity.get() * this->cost();
+        }
+      } else if (istringEqual("CostPerArea", costUnits)) {
+        boost::optional<double> costedArea = this->costedArea();
+        if (costedArea) {
+          result = costedArea.get() * this->cost();
+        }
+      } else if (istringEqual("CostPerThermalZone", costUnits)) {
+        boost::optional<int> costedThermalZones = this->costedThermalZones();
+        if (costedThermalZones) {
+          result = costedThermalZones.get() * this->cost();
+        }
+      }
+
+      return result;
+    }
+
+    bool LifeCycleCost_Impl::convertToCostPerEach() {
+      std::string costUnits = this->costUnits();
+      if (istringEqual("CostPerEach", costUnits)) {
+        return true;
+      } else if (istringEqual("CostPerArea", costUnits)) {
+        boost::optional<double> costedArea = this->costedArea();
+        if (!costedArea) {
+          return false;
+        }
+      } else if (istringEqual("CostPerThermalZone", costUnits)) {
+        boost::optional<int> costedThermalZones = this->costedThermalZones();
+        if (!costedThermalZones) {
+          return false;
+        }
+      }
+
+      double totalCost = this->totalCost();
+
+      if (!this->setCostUnits("CostPerEach")) {
+        return false;
+      }
+
+      bool test = this->setCost(totalCost);
+      OS_ASSERT(test);
+      return true;
+    }
+
+    boost::optional<int> LifeCycleCost_Impl::costedQuantity() const {
+      boost::optional<int> result;
+
+      std::string costUnits = this->costUnits();
+      if (!istringEqual("CostPerEach", costUnits)) {
+        return boost::none;
+      }
+
+      ModelObject modelObject = item();
+
+      if (modelObject.optionalCast<ConstructionBase>()) {
+        // no quantity defined
+
+      } else if (modelObject.optionalCast<Building>()) {
+        result = 1;
+
+      } else if (modelObject.optionalCast<Space>()) {
+        result = modelObject.cast<Space>().multiplier();
+
+      } else if (modelObject.optionalCast<ThermalZone>()) {
+        result = modelObject.cast<ThermalZone>().multiplier();
+
+      } else if (modelObject.optionalCast<AirLoopHVAC>()) {
+        result = 1;
+
+      } else if (modelObject.optionalCast<PlantLoop>()) {
+        result = 1;
+
+      } else if (modelObject.optionalCast<HVACComponent>()) {
+        result = 1;
+
+      } else if (modelObject.optionalCast<ZoneHVACComponent>()) {
+        result = 1;
+
+      } else if (modelObject.optionalCast<SpaceLoadDefinition>()) {
+        // covers lights, equipment, etc
+        result = modelObject.cast<SpaceLoadDefinition>().quantity();
+      }
+
+      return result;
+    }
+
+    boost::optional<double> LifeCycleCost_Impl::costedArea() const {
+      boost::optional<double> result;
+
+      std::string costUnits = this->costUnits();
+      if (!istringEqual("CostPerArea", costUnits)) {
+        return boost::none;
+      }
+
+      ModelObject modelObject = item();
+
+      if (modelObject.optionalCast<ConstructionBase>()) {
+        result = modelObject.cast<ConstructionBase>().getNetArea();
+
+      } else if (modelObject.optionalCast<Building>()) {
+        result = modelObject.cast<Building>().floorArea();
+
+      } else if (modelObject.optionalCast<Space>()) {
+        result = modelObject.cast<Space>().multiplier() * modelObject.cast<Space>().floorArea();
+
+      } else if (modelObject.optionalCast<ThermalZone>()) {
+        result = modelObject.cast<ThermalZone>().multiplier() * modelObject.cast<ThermalZone>().floorArea();
+
+      } else if (modelObject.optionalCast<AirLoopHVAC>()) {
+        // no area defined
+
+      } else if (modelObject.optionalCast<PlantLoop>()) {
+        // no area defined
+
+      } else if (modelObject.optionalCast<HVACComponent>()) {
+        // no area defined
+
+      } else if (modelObject.optionalCast<ZoneHVACComponent>()) {
+        // no area defined
+
+      } else if (modelObject.optionalCast<SpaceLoadDefinition>()) {
+        // covers lights, equipment, etc
+        result = modelObject.cast<SpaceLoadDefinition>().floorArea();
+      }
+
+      return result;
+    }
+
+    boost::optional<int> LifeCycleCost_Impl::costedThermalZones() const {
+      boost::optional<int> result;
+
+      std::string costUnits = this->costUnits();
+      if (!istringEqual("CostPerThermalZone", costUnits)) {
+        return boost::none;
+      }
+
+      ModelObject modelObject = item();
+
+      if (modelObject.optionalCast<ConstructionBase>()) {
+        // number of thermal zones not defined
+
+      } else if (modelObject.optionalCast<Building>()) {
+        result = 0;
+        for (const ThermalZone& thermalZone : this->model().getConcreteModelObjects<ThermalZone>()) {
+          result = result.get() + thermalZone.multiplier();
+        }
+
+      } else if (modelObject.optionalCast<Space>()) {
+        // number of thermal zones not defined
+
+      } else if (modelObject.optionalCast<ThermalZone>()) {
+        // number of thermal zones not defined
+
+      } else if (modelObject.optionalCast<AirLoopHVAC>()) {
+        result = 0;
+        for (const ThermalZone& thermalZone : modelObject.cast<AirLoopHVAC>().thermalZones()) {
+          result = result.get() + thermalZone.multiplier();
+        }
+
+      } else if (modelObject.optionalCast<PlantLoop>()) {
+        // number of thermal zones not defined
+
+      } else if (modelObject.optionalCast<ZoneHVACComponent>()) {
+        // number of thermal zones not defined
+
+      } else if (modelObject.optionalCast<SpaceLoadDefinition>()) {
+        // number of thermal zones not defined
+      }
+
+      return result;
+    }
+
+    // Get all output variable names that could be associated with this object.
+    const std::vector<std::string>& LifeCycleCost_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      // Not appropriate: no specific variables
+      return result;
+    }
+
+  }  // namespace detail
+
+  /// LifeCycleCost
+  LifeCycleCost::LifeCycleCost(const ModelObject& modelObject) : ModelObject(LifeCycleCost::iddObjectType(), modelObject.model()) {
+    OS_ASSERT(getImpl<detail::LifeCycleCost_Impl>());
+    bool test = getImpl<detail::LifeCycleCost_Impl>()->setPointer(OS_LifeCycleCostFields::ItemName, modelObject.handle());
+    OS_ASSERT(test);
+
+    if (modelObject.optionalCast<ConstructionBase>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "Construction");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<Building>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "Building");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<Space>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "Space");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<ThermalZone>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "ThermalZone");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<AirLoopHVAC>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "AirLoop");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<PlantLoop>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "PlantLoop");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<ZoneHVACComponent>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "ZoneHVAC");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<LightsDefinition>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "Lights");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<LuminaireDefinition>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "Luminaire");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<ElectricEquipmentDefinition>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "Equipment");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<GasEquipmentDefinition>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "Equipment");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<HotWaterEquipmentDefinition>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "Equipment");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<SteamEquipmentDefinition>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "Equipment");
+      OS_ASSERT(test);
+    } else if (modelObject.optionalCast<HVACComponent>()) {
+      test = setString(OS_LifeCycleCostFields::ItemType, "HVACComponent");
+      OS_ASSERT(test);
+    } else {
+      this->remove();
+      throw openstudio::Exception("Cannot add cost to unknown model object type '" + modelObject.iddObject().name() + "'");
+    }
+
+    // TODO: add ExteriorLoadDefinition?
+
+    test = this->setCost(0.0);
+    OS_ASSERT(test);
+
+    std::vector<std::string> validCostUnitsValues = this->validCostUnitsValues();
+    OS_ASSERT(!validCostUnitsValues.empty());
+    test = this->setCostUnits(validCostUnitsValues[0]);
+    OS_ASSERT(test);
+
+    test = this->setStartOfCosts("ServicePeriod");
+    OS_ASSERT(test);
   }
 
-  return result;
-}
+  // constructor
+  LifeCycleCost::LifeCycleCost(std::shared_ptr<detail::LifeCycleCost_Impl> impl) : ModelObject(std::move(impl)) {}
 
-// Get all output variable names that could be associated with this object.
-const std::vector<std::string>& LifeCycleCost_Impl::outputVariableNames() const
-{
-  static std::vector<std::string> result;
-    // Not appropriate: no specific variables
-  return result;
-}
-
-} // detail
-
-
-/// LifeCycleCost
-LifeCycleCost::LifeCycleCost(const ModelObject& modelObject)
-  : ModelObject(LifeCycleCost::iddObjectType(), modelObject.model())
-{
-  OS_ASSERT(getImpl<detail::LifeCycleCost_Impl>());
-  bool test = getImpl<detail::LifeCycleCost_Impl>()->setPointer(OS_LifeCycleCostFields::ItemName, modelObject.handle());
-  OS_ASSERT(test);
-
-  if (modelObject.optionalCast<ConstructionBase>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "Construction");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<Building>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "Building");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<Space>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "Space");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<ThermalZone>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "ThermalZone");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<AirLoopHVAC>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "AirLoop");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<PlantLoop>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "PlantLoop");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<ZoneHVACComponent>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "ZoneHVAC");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<LightsDefinition>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "Lights");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<LuminaireDefinition>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "Luminaire");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<ElectricEquipmentDefinition>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "Equipment");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<GasEquipmentDefinition>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "Equipment");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<HotWaterEquipmentDefinition>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "Equipment");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<SteamEquipmentDefinition>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "Equipment");
-    OS_ASSERT(test);
-  }else if (modelObject.optionalCast<HVACComponent>()){
-    test = setString(OS_LifeCycleCostFields::ItemType, "HVACComponent");
-    OS_ASSERT(test);
-  }else{
-    this->remove();
-    throw openstudio::Exception("Cannot add cost to unknown model object type '" + modelObject.iddObject().name() + "'");
+  IddObjectType LifeCycleCost::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_LifeCycleCost);
+    return result;
   }
 
-  // TODO: add ExteriorLoadDefinition?
-
-  test = this->setCost(0.0);
-  OS_ASSERT(test);
-
-  std::vector<std::string> validCostUnitsValues = this->validCostUnitsValues();
-  OS_ASSERT(!validCostUnitsValues.empty());
-  test = this->setCostUnits(validCostUnitsValues[0]);
-  OS_ASSERT(test);
-
-  test = this->setStartOfCosts("ServicePeriod");
-  OS_ASSERT(test);
-
-}
-
-// constructor
-LifeCycleCost::LifeCycleCost(std::shared_ptr<detail::LifeCycleCost_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
-
-IddObjectType LifeCycleCost::iddObjectType()
-{
-  IddObjectType result(IddObjectType::OS_LifeCycleCost);
-  return result;
-}
-
-std::vector<std::string> LifeCycleCost::validCategoryValues()
-{
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_LifeCycleCostFields::Category);
-}
-
-std::vector<std::string> LifeCycleCost::validItemTypeValues()
-{
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_LifeCycleCostFields::ItemType);
-}
-
-std::vector<std::string> LifeCycleCost::validStartOfCostsValues() 
-{
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_LifeCycleCostFields::StartofCosts);
-}
-
-boost::optional<LifeCycleCost> LifeCycleCost::createLifeCycleCost(const std::string& name, const ModelObject& modelObject, double cost, const std::string& costUnits, const std::string& category, int repeatPeriodYears, int yearsFromStart)
-{
-  boost::optional<LifeCycleCost> result;
-
-  try{
-    result = LifeCycleCost(modelObject);
-  }catch(const std::exception&){
-    return boost::none;
+  std::vector<std::string> LifeCycleCost::validCategoryValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_LifeCycleCostFields::Category);
   }
 
-  bool test = true;
-  test = test && result->setName(name);
-  test = test && result->setCost(cost);
-  test = test && result->setCostUnits(costUnits);
-  test = test && result->setCategory(category);
-  if (repeatPeriodYears > 0){
-    test = test && result->setRepeatPeriodYears(repeatPeriodYears);
-  }
-  if (yearsFromStart > 0){
-    test = test && result->setYearsFromStart(yearsFromStart);
+  std::vector<std::string> LifeCycleCost::validItemTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_LifeCycleCostFields::ItemType);
   }
 
-  if (!test){
-    result->remove();
-    return boost::none;
+  std::vector<std::string> LifeCycleCost::validStartOfCostsValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_LifeCycleCostFields::StartofCosts);
   }
 
-  return result;
-}
+  boost::optional<LifeCycleCost> LifeCycleCost::createLifeCycleCost(const std::string& name, const ModelObject& modelObject, double cost,
+                                                                    const std::string& costUnits, const std::string& category, int repeatPeriodYears,
+                                                                    int yearsFromStart) {
+    boost::optional<LifeCycleCost> result;
 
+    try {
+      result = LifeCycleCost(modelObject);
+    } catch (const std::exception&) {
+      return boost::none;
+    }
 
-std::string LifeCycleCost::category() const {
-  return getImpl<detail::LifeCycleCost_Impl>()->category();
-}
+    bool test = true;
+    test = test && result->setName(name);
+    test = test && result->setCost(cost);
+    test = test && result->setCostUnits(costUnits);
+    test = test && result->setCategory(category);
+    if (repeatPeriodYears > 0) {
+      test = test && result->setRepeatPeriodYears(repeatPeriodYears);
+    }
+    if (yearsFromStart > 0) {
+      test = test && result->setYearsFromStart(yearsFromStart);
+    }
 
-std::string LifeCycleCost::itemType() const {
-  return getImpl<detail::LifeCycleCost_Impl>()->itemType();
-}
+    if (!test) {
+      result->remove();
+      return boost::none;
+    }
 
-ModelObject LifeCycleCost::item() const {
-  return getImpl<detail::LifeCycleCost_Impl>()->item();
-}
+    return result;
+  }
 
-double LifeCycleCost::cost() const {
-  return getImpl<detail::LifeCycleCost_Impl>()->cost();
-}
+  std::string LifeCycleCost::category() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->category();
+  }
 
-std::vector<std::string> LifeCycleCost::validCostUnitsValues() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->validCostUnitsValues();
-}
+  std::string LifeCycleCost::itemType() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->itemType();
+  }
 
-std::string LifeCycleCost::costUnits() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->costUnits();
-}
+  ModelObject LifeCycleCost::item() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->item();
+  }
 
-std::string LifeCycleCost::startOfCosts() const 
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->startOfCosts();
-}
+  double LifeCycleCost::cost() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->cost();
+  }
 
-bool LifeCycleCost::isStartOfCostsDefaulted() const 
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->isStartOfCostsDefaulted();
-}
+  std::vector<std::string> LifeCycleCost::validCostUnitsValues() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->validCostUnitsValues();
+  }
 
-int LifeCycleCost::yearsFromStart() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->yearsFromStart();
-}
+  std::string LifeCycleCost::costUnits() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->costUnits();
+  }
 
-bool LifeCycleCost::isYearsFromStartDefaulted() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->isYearsFromStartDefaulted();
-}
+  std::string LifeCycleCost::startOfCosts() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->startOfCosts();
+  }
 
-int LifeCycleCost::monthsFromStart() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->monthsFromStart();
-}
+  bool LifeCycleCost::isStartOfCostsDefaulted() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->isStartOfCostsDefaulted();
+  }
 
-bool LifeCycleCost::isMonthsFromStartDefaulted() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->isMonthsFromStartDefaulted();
-}
+  int LifeCycleCost::yearsFromStart() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->yearsFromStart();
+  }
 
-int LifeCycleCost::repeatPeriodYears() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->repeatPeriodYears();
-}
+  bool LifeCycleCost::isYearsFromStartDefaulted() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->isYearsFromStartDefaulted();
+  }
 
-bool LifeCycleCost::isRepeatPeriodYearsDefaulted() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->isRepeatPeriodYearsDefaulted();
-}
+  int LifeCycleCost::monthsFromStart() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->monthsFromStart();
+  }
 
-int LifeCycleCost::repeatPeriodMonths() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->repeatPeriodMonths();
-}
+  bool LifeCycleCost::isMonthsFromStartDefaulted() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->isMonthsFromStartDefaulted();
+  }
 
-bool LifeCycleCost::isRepeatPeriodMonthsDefaulted() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->isRepeatPeriodMonthsDefaulted();
-}
+  int LifeCycleCost::repeatPeriodYears() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->repeatPeriodYears();
+  }
 
-bool LifeCycleCost::setCategory(const std::string& category){
-  return getImpl<detail::LifeCycleCost_Impl>()->setCategory(category);
-}
+  bool LifeCycleCost::isRepeatPeriodYearsDefaulted() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->isRepeatPeriodYearsDefaulted();
+  }
 
-bool LifeCycleCost::setCost(double cost) {
-  return getImpl<detail::LifeCycleCost_Impl>()->setCost(cost);
-}
+  int LifeCycleCost::repeatPeriodMonths() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->repeatPeriodMonths();
+  }
 
-bool LifeCycleCost::setCostUnits(const std::string& costUnits) {
-  return getImpl<detail::LifeCycleCost_Impl>()->setCostUnits(costUnits);
-}
+  bool LifeCycleCost::isRepeatPeriodMonthsDefaulted() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->isRepeatPeriodMonthsDefaulted();
+  }
 
-bool LifeCycleCost::setStartOfCosts(const std::string& startOfCosts) 
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->setStartOfCosts(startOfCosts);
-}
+  bool LifeCycleCost::setCategory(const std::string& category) {
+    return getImpl<detail::LifeCycleCost_Impl>()->setCategory(category);
+  }
 
-void LifeCycleCost::resetStartOfCosts() 
-{
-  getImpl<detail::LifeCycleCost_Impl>()->resetStartOfCosts();
-}
+  bool LifeCycleCost::setCost(double cost) {
+    return getImpl<detail::LifeCycleCost_Impl>()->setCost(cost);
+  }
 
-bool LifeCycleCost::setYearsFromStart(int yearsFromStart)
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->setYearsFromStart(yearsFromStart);
-}
+  bool LifeCycleCost::setCostUnits(const std::string& costUnits) {
+    return getImpl<detail::LifeCycleCost_Impl>()->setCostUnits(costUnits);
+  }
 
-void LifeCycleCost::resetYearsFromStart()
-{
-  getImpl<detail::LifeCycleCost_Impl>()->resetYearsFromStart();
-}
+  bool LifeCycleCost::setStartOfCosts(const std::string& startOfCosts) {
+    return getImpl<detail::LifeCycleCost_Impl>()->setStartOfCosts(startOfCosts);
+  }
 
-bool LifeCycleCost::setMonthsFromStart(int monthsFromStart)
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->setMonthsFromStart(monthsFromStart);
-}
+  void LifeCycleCost::resetStartOfCosts() {
+    getImpl<detail::LifeCycleCost_Impl>()->resetStartOfCosts();
+  }
 
-void LifeCycleCost::resetMonthsFromStart()
-{
-  getImpl<detail::LifeCycleCost_Impl>()->resetMonthsFromStart();
-}
+  bool LifeCycleCost::setYearsFromStart(int yearsFromStart) {
+    return getImpl<detail::LifeCycleCost_Impl>()->setYearsFromStart(yearsFromStart);
+  }
 
-bool LifeCycleCost::setRepeatPeriodYears(int repeatPeriodYears)
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->setRepeatPeriodYears(repeatPeriodYears);
-}
+  void LifeCycleCost::resetYearsFromStart() {
+    getImpl<detail::LifeCycleCost_Impl>()->resetYearsFromStart();
+  }
 
-void LifeCycleCost::resetRepeatPeriodYears()
-{
-  getImpl<detail::LifeCycleCost_Impl>()->resetRepeatPeriodYears();
-}
+  bool LifeCycleCost::setMonthsFromStart(int monthsFromStart) {
+    return getImpl<detail::LifeCycleCost_Impl>()->setMonthsFromStart(monthsFromStart);
+  }
 
-bool LifeCycleCost::setRepeatPeriodMonths(int repeatPeriodMonths)
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->setRepeatPeriodMonths(repeatPeriodMonths);
-}
+  void LifeCycleCost::resetMonthsFromStart() {
+    getImpl<detail::LifeCycleCost_Impl>()->resetMonthsFromStart();
+  }
 
-void LifeCycleCost::resetRepeatPeriodMonths()
-{
-  getImpl<detail::LifeCycleCost_Impl>()->resetRepeatPeriodMonths();
-}
+  bool LifeCycleCost::setRepeatPeriodYears(int repeatPeriodYears) {
+    return getImpl<detail::LifeCycleCost_Impl>()->setRepeatPeriodYears(repeatPeriodYears);
+  }
 
-double LifeCycleCost::totalCost() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->totalCost();
-}
+  void LifeCycleCost::resetRepeatPeriodYears() {
+    getImpl<detail::LifeCycleCost_Impl>()->resetRepeatPeriodYears();
+  }
 
-bool LifeCycleCost::convertToCostPerEach()
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->convertToCostPerEach();
-}
+  bool LifeCycleCost::setRepeatPeriodMonths(int repeatPeriodMonths) {
+    return getImpl<detail::LifeCycleCost_Impl>()->setRepeatPeriodMonths(repeatPeriodMonths);
+  }
 
-boost::optional<int> LifeCycleCost::costedQuantity() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->costedQuantity();
-}
+  void LifeCycleCost::resetRepeatPeriodMonths() {
+    getImpl<detail::LifeCycleCost_Impl>()->resetRepeatPeriodMonths();
+  }
 
-boost::optional<double> LifeCycleCost::costedArea() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->costedArea();
-}
+  double LifeCycleCost::totalCost() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->totalCost();
+  }
 
-boost::optional<int> LifeCycleCost::costedThermalZones() const
-{
-  return getImpl<detail::LifeCycleCost_Impl>()->costedThermalZones();
-}
+  bool LifeCycleCost::convertToCostPerEach() {
+    return getImpl<detail::LifeCycleCost_Impl>()->convertToCostPerEach();
+  }
 
-} // model
-} // openstudio
+  boost::optional<int> LifeCycleCost::costedQuantity() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->costedQuantity();
+  }
+
+  boost::optional<double> LifeCycleCost::costedArea() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->costedArea();
+  }
+
+  boost::optional<int> LifeCycleCost::costedThermalZones() const {
+    return getImpl<detail::LifeCycleCost_Impl>()->costedThermalZones();
+  }
+
+}  // namespace model
+}  // namespace openstudio

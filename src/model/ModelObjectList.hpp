@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,65 +36,65 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ModelObjectList_Impl;
+    class ModelObjectList_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ModelObjectList is a ModelObject that wraps the OpenStudio IDD object 'OS:ModelObjectList'. */
-class MODEL_API ModelObjectList : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ModelObjectList is a ModelObject that wraps the OpenStudio IDD object 'OS:ModelObjectList'. */
+  class MODEL_API ModelObjectList : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ModelObjectList(const Model& model);
+    explicit ModelObjectList(const Model& model);
 
-  virtual ~ModelObjectList() {}
+    virtual ~ModelObjectList() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  std::vector<IdfObject> remove();
+    std::vector<IdfObject> remove();
 
-  ModelObject clone(Model model) const;
+    ModelObject clone(Model model) const;
 
-  unsigned size() const;
+    unsigned size() const;
 
-  bool addModelObject(const ModelObject & modelObject );
+    bool addModelObject(const ModelObject& modelObject);
 
-  bool hasModelObject(const ModelObject & modelObject) const;
+    bool hasModelObject(const ModelObject& modelObject) const;
 
-  void removeModelObject(const ModelObject & modelObject );
+    void removeModelObject(const ModelObject& modelObject);
 
-  void removeAllModelObjects();
+    void removeAllModelObjects();
 
-  std::vector< ModelObject > modelObjects() const;
+    std::vector<ModelObject> modelObjects() const;
 
- protected:
-  /// @cond
-  typedef detail::ModelObjectList_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::ModelObjectList_Impl ImplType;
 
-  explicit ModelObjectList(std::shared_ptr<detail::ModelObjectList_Impl> impl);
+    explicit ModelObjectList(std::shared_ptr<detail::ModelObjectList_Impl> impl);
 
-  friend class detail::ModelObjectList_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ModelObjectList");
-};
+    friend class detail::ModelObjectList_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ModelObjectList");
+  };
 
-/** \relates ModelObjectList*/
-typedef boost::optional<ModelObjectList> OptionalModelObjectList;
+  /** \relates ModelObjectList*/
+  typedef boost::optional<ModelObjectList> OptionalModelObjectList;
 
-/** \relates ModelObjectList*/
-typedef std::vector<ModelObjectList> ModelObjectListVector;
+  /** \relates ModelObjectList*/
+  typedef std::vector<ModelObjectList> ModelObjectListVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_MODELOBJECTLIST_HPP
-
+#endif  // MODEL_MODELOBJECTLIST_HPP

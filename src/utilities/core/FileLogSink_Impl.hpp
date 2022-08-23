@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,40 +32,36 @@
 
 #include "../UtilitiesAPI.hpp"
 
-
 #include "LogSink_Impl.hpp"
 #include "FileLogSink.hpp"
 
-namespace openstudio{
+namespace openstudio {
 
-  namespace detail{
+namespace detail {
 
-    class UTILITIES_API FileLogSink_Impl : public LogSink_Impl
-    {
-      public:
+  class UTILITIES_API FileLogSink_Impl : public LogSink_Impl
+  {
+   public:
+    /// constructor takes path of file, opens in write mode positioned at file beginning
+    /// and registers in the global logger
+    FileLogSink_Impl(const openstudio::path& path);
 
-      /// constructor takes path of file, opens in write mode positioned at file beginning
-      /// and registers in the global logger
-      FileLogSink_Impl(const openstudio::path& path);
+    /// destructor, does not disable log sink
+    virtual ~FileLogSink_Impl();
 
-      /// destructor, does not disable log sink
-      virtual ~FileLogSink_Impl();
+    /// returns the path that log messages are written to
+    openstudio::path path() const;
 
-      /// returns the path that log messages are written to
-      openstudio::path path() const;
+    /// get messages out of the file content
+    std::vector<LogMessage> logMessages() const;
 
-      /// get messages out of the file content
-      std::vector<LogMessage> logMessages() const;
+   private:
+    openstudio::path m_path;
+    boost::shared_ptr<openstudio::filesystem::ofstream> m_ofs;
+  };
 
-      private:
+}  // namespace detail
 
-      openstudio::path m_path;
-      boost::shared_ptr<openstudio::filesystem::ofstream> m_ofs;
-    };
+}  // namespace openstudio
 
-
-  } // detail
-
-} // openstudio
-
-#endif // UTILITIES_CORE_FILELOGSINK_IMPL_HPP
+#endif  // UTILITIES_CORE_FILELOGSINK_IMPL_HPP

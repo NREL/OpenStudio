@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,133 +36,142 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class CoilCoolingDXMultiSpeedStageData;
+  class Schedule;
+  class CoilCoolingDXMultiSpeedStageData;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilCoolingDXMultiSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingDXMultiSpeed.*/
-  class MODEL_API CoilCoolingDXMultiSpeed_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilCoolingDXMultiSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingDXMultiSpeed.*/
+    class MODEL_API CoilCoolingDXMultiSpeed_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilCoolingDXMultiSpeed_Impl(const IdfObject& idfObject,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      CoilCoolingDXMultiSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingDXMultiSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      CoilCoolingDXMultiSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingDXMultiSpeed_Impl(const CoilCoolingDXMultiSpeed_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      CoilCoolingDXMultiSpeed_Impl(const CoilCoolingDXMultiSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilCoolingDXMultiSpeed_Impl() {}
+      virtual ~CoilCoolingDXMultiSpeed_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      virtual unsigned inletPort() const override;
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      virtual unsigned outletPort() const override;
 
-    std::string condenserType() const;
+      virtual ModelObject clone(Model model) const override;
 
-    bool applyPartLoadFractiontoSpeedsGreaterthan1() const;
+      virtual std::vector<ModelObject> children() const override;
 
-    bool applyLatentDegradationtoSpeedsGreaterthan1() const;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    bool isApplyLatentDegradationtoSpeedsGreaterthan1Defaulted() const;
+      virtual bool addToNode(Node& node) override;
 
-    double crankcaseHeaterCapacity() const;
+      //@}
+      /** @name Getters */
+      //@{
 
-    double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    double basinHeaterCapacity() const;
+      std::string condenserType() const;
 
-    double basinHeaterSetpointTemperature() const;
+      bool applyPartLoadFractiontoSpeedsGreaterthan1() const;
 
-    boost::optional<Schedule> basinHeaterOperatingSchedule() const;
+      bool applyLatentDegradationtoSpeedsGreaterthan1() const;
 
-    std::string fuelType() const;
+      bool isApplyLatentDegradationtoSpeedsGreaterthan1Defaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      double crankcaseHeaterCapacity() const;
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
-    void resetAvailabilitySchedule();
+      double basinHeaterCapacity() const;
 
-    bool setCondenserType(std::string condenserType);
+      double basinHeaterSetpointTemperature() const;
 
-    bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
+      boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
-    bool setApplyLatentDegradationtoSpeedsGreaterthan1(bool applyLatentDegradationtoSpeedsGreaterthan1);
+      std::string fuelType() const;
 
-    void resetApplyLatentDegradationtoSpeedsGreaterthan1();
+      double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-    bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setBasinHeaterCapacity(double basinHeaterCapacity);
+      void resetAvailabilitySchedule();
 
-    bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
+      bool setCondenserType(std::string condenserType);
 
-    bool setBasinHeaterOperatingSchedule(Schedule& schedule);
+      bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
 
-    void resetBasinHeaterOperatingSchedule();
+      bool setApplyLatentDegradationtoSpeedsGreaterthan1(bool applyLatentDegradationtoSpeedsGreaterthan1);
 
-    bool setFuelType(std::string fuelType);
+      void resetApplyLatentDegradationtoSpeedsGreaterthan1();
 
-    //@}
-    /** @name Other */
-    //@{
+      bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
-    virtual unsigned inletPort() const override;
+      bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 
-    virtual unsigned outletPort() const override;
+      bool setBasinHeaterCapacity(double basinHeaterCapacity);
 
-    ModelObject clone(Model model) const override;
+      bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
 
-    std::vector<ModelObject> children() const override;
+      bool setBasinHeaterOperatingSchedule(Schedule& schedule);
 
-    std::vector<CoilCoolingDXMultiSpeedStageData> stages() const;
+      void resetBasinHeaterOperatingSchedule();
 
-    void addStage(CoilCoolingDXMultiSpeedStageData& stage);
+      bool setFuelType(std::string fuelType);
 
-    boost::optional<HVACComponent> containingHVACComponent() const override;
+      bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-    bool addToNode(Node & node) override;
+      //@}
+      /** @name Other */
+      //@{
 
-    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-    
-    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+      // Extensible: Stages
+      std::vector<CoilCoolingDXMultiSpeedStageData> stages() const;
+      unsigned numberOfStages() const;
+      boost::optional<unsigned> stageIndex(const CoilCoolingDXMultiSpeedStageData& stage) const;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilCoolingDXMultiSpeed");
+      // Note: a CoilCoolingDXMultiSpeedStageData can be used only by one CoilCoolingDXMultiSpeed
+      bool addStage(const CoilCoolingDXMultiSpeedStageData& stage);
+      bool addStage(const CoilCoolingDXMultiSpeedStageData& stage, unsigned index);
+      bool setStageIndex(const CoilCoolingDXMultiSpeedStageData& stage, unsigned index);
+      bool setStages(const std::vector<CoilCoolingDXMultiSpeedStageData>& stages);
+      void removeAllStages();
+      bool removeStage(const CoilCoolingDXMultiSpeedStageData& stage);
+      bool removeStage(unsigned index);
 
-    boost::optional<Connection> optionalAirInletNode() const;
-    boost::optional<Connection> optionalAirOutletNode() const;
-  };
+      AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
-} // detail
+      boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-} // model
-} // openstudio
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilCoolingDXMultiSpeed");
 
-#endif // MODEL_COILCOOLINGDXMULTISPEED_IMPL_HPP
+      boost::optional<Connection> optionalAirInletNode() const;
+      boost::optional<Connection> optionalAirOutletNode() const;
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_COILCOOLINGDXMULTISPEED_IMPL_HPP

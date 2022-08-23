@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,7 +42,7 @@
 #include <set>
 #include <map>
 
-namespace openstudio{
+namespace openstudio {
 
 /** Singleton that creates units based on std::string representation.
  *  Access using UnitFactory::instance(). The class keeps up with standard
@@ -54,15 +54,15 @@ namespace openstudio{
  *
  *  Also provides a function for looking up pretty units without having to
  *  create a unit. */
-class UTILITIES_API UnitFactorySingleton {
+class UTILITIES_API UnitFactorySingleton
+{
 
   friend class Singleton<UnitFactorySingleton>;
 
  public:
-
   /** Units are created by functions that accept no arguments and return
    *  something that can be converted into a Unit::Ptr. */
-  typedef boost::function<Unit ()> CreateUnitCallback;
+  typedef boost::function<Unit()> CreateUnitCallback;
 
   // FACTORY MAINTENANCE
 
@@ -73,12 +73,11 @@ class UTILITIES_API UnitFactorySingleton {
    *  Option to specify a unit system is for conflict resolution. For instance, seconds
    *  is a base unit in SI and IP. For efficiency, only specify system if you expect a
    *  conflict. */
-  bool registerUnit(CreateUnitCallback createFn,UnitSystem system=UnitSystem::Mixed);
+  bool registerUnit(CreateUnitCallback createFn, UnitSystem system = UnitSystem::Mixed);
 
   /** Register alternative symbols for standardString. For instance, J is a pseudonym for
    *  kg*m^2/s^2. Returns false if equivalentString is already used as a key in the internal map. */
-  bool registerEquivalentString(const std::string& equivalentString,
-                                const std::string& standardString);
+  bool registerEquivalentString(const std::string& equivalentString, const std::string& standardString);
 
   // FACTORY USE
 
@@ -86,8 +85,7 @@ class UTILITIES_API UnitFactorySingleton {
    *  using the functions registerUnit and registerEquivalentString. Specify system to alert the
    *  factory of your preferred unit system. The returned pointer is not guaranteed to be from
    *  that system, but if there is a conflict, it will be preferred. */
-  boost::optional<Unit> createUnit(const std::string& unitString,
-                                   UnitSystem system=UnitSystem::Mixed) const;
+  boost::optional<Unit> createUnit(const std::string& unitString, UnitSystem system = UnitSystem::Mixed) const;
 
   /** Returns the prettyString registered for standardString. Returns the empty std::string for
    *  unregistered standardStrings. */
@@ -97,24 +95,23 @@ class UTILITIES_API UnitFactorySingleton {
   REGISTER_LOGGER("openstudio.units.UnitFactory");
   UnitFactorySingleton();
 
-  typedef std::map<std::string,boost::optional<Unit> > ResultCacheMap;
+  typedef std::map<std::string, boost::optional<Unit>> ResultCacheMap;
 
   mutable ResultCacheMap m_resultCacheMap;
 
-  typedef std::map<std::string,CreateUnitCallback> StandardStringCallbackMap;
-  typedef std::map<UnitSystem,StandardStringCallbackMap> CallbackMapMap;
+  typedef std::map<std::string, CreateUnitCallback> StandardStringCallbackMap;
+  typedef std::map<UnitSystem, StandardStringCallbackMap> CallbackMapMap;
 
   CallbackMapMap m_callbackMaps;
 
-  typedef std::map<std::string,std::string> PrettyStringLookupMap;
-  typedef std::map<std::string, std::vector<std::string> > StandardStringLookupMap;
+  typedef std::map<std::string, std::string> PrettyStringLookupMap;
+  typedef std::map<std::string, std::vector<std::string>> StandardStringLookupMap;
 
-  StandardStringLookupMap m_standardStringLookupMap; // look up alias, get back standardString
-  PrettyStringLookupMap m_prettyStringLookupMap;   // look up standardString, get back prettyString
+  StandardStringLookupMap m_standardStringLookupMap;  // look up alias, get back standardString
+  PrettyStringLookupMap m_prettyStringLookupMap;      // look up standardString, get back prettyString
 
   // helper create function--does simple lookups
-  boost::optional<Unit> createUnitSimple(const std::string& unitString,
-                                         UnitSystem system=UnitSystem::Mixed) const;
+  boost::optional<Unit> createUnitSimple(const std::string& unitString, UnitSystem system = UnitSystem::Mixed) const;
 };
 
 /** Typedef for accessing the UnitFactorySingleton as UnitFactory::instance().
@@ -142,8 +139,7 @@ UTILITIES_API std::string convertToStandardForm(const std::string& unitString);
 
 /** Replaces unitString in text, using same finder algorithm as extractUnitString.
  *  \relates UnitFactorySingleton */
-UTILITIES_API std::string replaceUnitString(const std::string& text,
-                                            const std::string& newUnitString);
+UTILITIES_API std::string replaceUnitString(const std::string& text, const std::string& newUnitString);
 
 /** Returns true if unitString can be turned into a Unit. \relates UnitFactorySingleton */
 UTILITIES_API bool isUnitString(const std::string& unitString);
@@ -154,7 +150,7 @@ UTILITIES_API Unit createDimensionlessUnit(UnitSystem system);
 /** Creates a Unit corresponding to unitString (using UnitFactory). User may specify preferred
  *  UnitSystem, and can cast the result to the appropriate class, as desired.
  *  \relates UnitFactorySingleton */
-UTILITIES_API boost::optional<Unit> createUnit(const std::string& unitString,UnitSystem system);
+UTILITIES_API boost::optional<Unit> createUnit(const std::string& unitString, UnitSystem system);
 
 /** Creates a Unit corresponding to unitString (using UnitFactory). Attempts to find the best
  *  UnitSystem for unitString, in priority order SI, IP, ..., Mixed. \relates UnitFactorySingleton */
@@ -174,6 +170,6 @@ UTILITIES_API Unit createGPMVolumetricFlowrate();
  *  unit. \relates UnitFactorySingleton */
 UTILITIES_API Unit createIPPressure();
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_UNITFACTORY_HPP
+#endif  // UTILITIES_UNITS_UNITFACTORY_HPP

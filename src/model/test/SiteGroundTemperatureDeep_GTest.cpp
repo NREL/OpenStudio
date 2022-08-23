@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,11 +39,10 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SiteGroundTemperatureDeep_SiteGroundTemperatureDeep)
-{
+TEST_F(ModelFixture, SiteGroundTemperatureDeep_SiteGroundTemperatureDeep) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
       // create a model to use
       Model m;
@@ -52,9 +51,7 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SiteGroundTemperatureDeep)
       SiteGroundTemperatureDeep groundTemp(m);
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
+    ::testing::ExitedWithCode(0), "");
 
   // create a model to use
   Model m;
@@ -75,12 +72,10 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SiteGroundTemperatureDeep)
   EXPECT_TRUE(groundTemp.isOctoberDeepGroundTemperatureDefaulted());
   EXPECT_TRUE(groundTemp.isNovemberDeepGroundTemperatureDefaulted());
   EXPECT_TRUE(groundTemp.isDecemberDeepGroundTemperatureDefaulted());
-
 }
 
 // Test cloning it
-TEST_F(ModelFixture, SiteGroundTemperatureDeep_Clone)
-{
+TEST_F(ModelFixture, SiteGroundTemperatureDeep_Clone) {
   // Create a model
   Model m;
 
@@ -102,12 +97,10 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_Clone)
   ASSERT_FALSE(groundTempClone2.isJanuaryDeepGroundTemperatureDefaulted());
   ASSERT_EQ(25.0, groundTempClone2.januaryDeepGroundTemperature());
   ASSERT_TRUE(groundTempClone2.isFebruaryDeepGroundTemperatureDefaulted());
-
 }
 
 // Test setting and getting fields
-TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
-{
+TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields) {
   // Create model
   Model m;
 
@@ -175,14 +168,14 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
   // Test the setTemperatureByMonth and getTemperatureByMonth methods.
   std::vector<double> temperatures;
   temperatures.reserve(12);
-  for (int i=0; i < 12; ++i) {
+  for (int i = 0; i < 12; ++i) {
     temperatures.push_back(i + 18.0);
   }
   ASSERT_EQ(temperatures.size(), 12);
-  for (int i=1; i <= 12; ++i) {
-    groundTemp.setTemperatureByMonth(i, temperatures[i-1]);
+  for (int i = 1; i <= 12; ++i) {
+    groundTemp.setTemperatureByMonth(i, temperatures[i - 1]);
     ASSERT_FALSE(groundTemp.isMonthDefaulted(i));
-    ASSERT_EQ(temperatures[i-1], groundTemp.getTemperatureByMonth(i));
+    ASSERT_EQ(temperatures[i - 1], groundTemp.getTemperatureByMonth(i));
   }
 
   // Reset them one by one with the resetTemperatureByMonth method and check that it worked.
@@ -196,10 +189,10 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
   ASSERT_TRUE(setWorked);
   std::vector<double> returned_temperatures = groundTemp.getAllMonthlyTemperatures();
   ASSERT_EQ(temperatures.size(), 12);
-  for (int i=0; i < 12; ++i) {
+  for (int i = 0; i < 12; ++i) {
     ASSERT_EQ(temperatures[i], returned_temperatures[i]);
-    ASSERT_FALSE(groundTemp.isMonthDefaulted(i+1));
-    ASSERT_EQ(temperatures[i], groundTemp.getTemperatureByMonth(i+1));
+    ASSERT_FALSE(groundTemp.isMonthDefaulted(i + 1));
+    ASSERT_EQ(temperatures[i], groundTemp.getTemperatureByMonth(i + 1));
   }
 
   // Try to set the monthly temperatures with a vector of the wrong length
@@ -219,7 +212,7 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
   const std::string errorMsg("Invalid Month 13");
   try {
     groundTemp.getTemperatureByMonth(13);
-  } catch (openstudio::Exception const & err) {
+  } catch (openstudio::Exception const& err) {
     // Test to make sure the error message returned ends with the value of errorMsg.
     ASSERT_EQ(err.message().rfind(errorMsg), err.message().size() - errorMsg.size());
   } catch (...) {
@@ -227,21 +220,21 @@ TEST_F(ModelFixture, SiteGroundTemperatureDeep_SetGetFields)
   }
   try {
     groundTemp.isMonthDefaulted(13);
-  } catch (openstudio::Exception const & err) {
+  } catch (openstudio::Exception const& err) {
     ASSERT_EQ(err.message().rfind(errorMsg), err.message().size() - errorMsg.size());
   } catch (...) {
     FAIL();
   }
   try {
     groundTemp.setTemperatureByMonth(13, 19.2);
-  } catch (openstudio::Exception const & err) {
+  } catch (openstudio::Exception const& err) {
     ASSERT_EQ(err.message().rfind(errorMsg), err.message().size() - errorMsg.size());
   } catch (...) {
     FAIL();
   }
   try {
     groundTemp.resetTemperatureByMonth(13);
-  } catch (openstudio::Exception const & err) {
+  } catch (openstudio::Exception const& err) {
     ASSERT_EQ(err.message().rfind(errorMsg), err.message().size() - errorMsg.size());
   } catch (...) {
     FAIL();

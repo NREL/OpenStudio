@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,95 +37,91 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Curve;
+  class Schedule;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  class CoilCoolingDXVariableRefrigerantFlow_Impl;
+    class CoilCoolingDXVariableRefrigerantFlow_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilCoolingDXVariableRefrigerantFlow is a HVACComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:VariableRefrigerantFlow'. */
-class MODEL_API CoilCoolingDXVariableRefrigerantFlow : public HVACComponent {
+  /** CoilCoolingDXVariableRefrigerantFlow is a HVACComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:VariableRefrigerantFlow'. */
+  class MODEL_API CoilCoolingDXVariableRefrigerantFlow : public HVACComponent
+  {
 
- public:
+   public:
+    explicit CoilCoolingDXVariableRefrigerantFlow(const Model& model);
 
-  explicit CoilCoolingDXVariableRefrigerantFlow(const Model& model);
+    virtual ~CoilCoolingDXVariableRefrigerantFlow() {}
 
-  virtual ~CoilCoolingDXVariableRefrigerantFlow() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    Schedule availabilitySchedule() const;
 
-  Schedule availabilitySchedule() const;
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    boost::optional<double> ratedTotalCoolingCapacity() const;
 
-  boost::optional<double> ratedTotalCoolingCapacity() const;
+    bool isRatedTotalCoolingCapacityAutosized() const;
 
-  bool isRatedTotalCoolingCapacityAutosized() const;
+    bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
 
-  bool setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity);
+    void autosizeRatedTotalCoolingCapacity();
 
-  void autosizeRatedTotalCoolingCapacity();
+    boost::optional<double> ratedSensibleHeatRatio() const;
 
-  boost::optional<double> ratedSensibleHeatRatio() const;
+    bool isRatedSensibleHeatRatioAutosized() const;
 
-  bool isRatedSensibleHeatRatioAutosized() const;
+    bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
 
-  bool setRatedSensibleHeatRatio(double ratedSensibleHeatRatio);
+    void autosizeRatedSensibleHeatRatio();
 
-  void autosizeRatedSensibleHeatRatio();
+    boost::optional<double> ratedAirFlowRate() const;
 
-  boost::optional<double> ratedAirFlowRate() const;
+    bool isRatedAirFlowRateAutosized() const;
 
-  bool isRatedAirFlowRateAutosized() const;
+    bool setRatedAirFlowRate(double ratedAirFlowRate);
 
-  bool setRatedAirFlowRate(double ratedAirFlowRate);
+    void autosizeRatedAirFlowRate();
 
-  void autosizeRatedAirFlowRate();
+    Curve coolingCapacityRatioModifierFunctionofTemperatureCurve() const;
 
-  Curve coolingCapacityRatioModifierFunctionofTemperatureCurve() const;
+    bool setCoolingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& lcurve);
 
-  bool setCoolingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& lcurve);
+    Curve coolingCapacityModifierCurveFunctionofFlowFraction() const;
 
-  Curve coolingCapacityModifierCurveFunctionofFlowFraction() const;
+    bool setCoolingCapacityModifierCurveFunctionofFlowFraction(const Curve& lcurve);
 
-  bool setCoolingCapacityModifierCurveFunctionofFlowFraction(const Curve& lcurve);
+    boost::optional<double> autosizedRatedTotalCoolingCapacity() const;
 
-  boost::optional<double> autosizedRatedTotalCoolingCapacity() const ;
+    boost::optional<double> autosizedRatedSensibleHeatRatio() const;
 
-  boost::optional<double> autosizedRatedSensibleHeatRatio() const ;
+    boost::optional<double> autosizedRatedAirFlowRate() const;
 
-  boost::optional<double> autosizedRatedAirFlowRate() const ;
+   protected:
+    /// @cond
+    typedef detail::CoilCoolingDXVariableRefrigerantFlow_Impl ImplType;
 
+    explicit CoilCoolingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilCoolingDXVariableRefrigerantFlow_Impl> impl);
 
+    friend class detail::CoilCoolingDXVariableRefrigerantFlow_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
 
- protected:
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableRefrigerantFlow");
+  };
 
-  /// @cond
-  typedef detail::CoilCoolingDXVariableRefrigerantFlow_Impl ImplType;
+  /** \relates CoilCoolingDXVariableRefrigerantFlow*/
+  typedef boost::optional<CoilCoolingDXVariableRefrigerantFlow> OptionalCoilCoolingDXVariableRefrigerantFlow;
 
-  explicit CoilCoolingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilCoolingDXVariableRefrigerantFlow_Impl> impl);
+  /** \relates CoilCoolingDXVariableRefrigerantFlow*/
+  typedef std::vector<CoilCoolingDXVariableRefrigerantFlow> CoilCoolingDXVariableRefrigerantFlowVector;
 
-  friend class detail::CoilCoolingDXVariableRefrigerantFlow_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingDXVariableRefrigerantFlow");
-};
-
-/** \relates CoilCoolingDXVariableRefrigerantFlow*/
-typedef boost::optional<CoilCoolingDXVariableRefrigerantFlow> OptionalCoilCoolingDXVariableRefrigerantFlow;
-
-/** \relates CoilCoolingDXVariableRefrigerantFlow*/
-typedef std::vector<CoilCoolingDXVariableRefrigerantFlow> CoilCoolingDXVariableRefrigerantFlowVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOW_HPP
-
+#endif  // MODEL_COILCOOLINGDXVARIABLEREFRIGERANTFLOW_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,11 +51,11 @@ namespace detail {
 
 /** Small class to let users identify a SqlFile environment period either by type or by name.
  *  If type is specified, there is a chance the environment name will not be unique. */
-class UTILITIES_API EnvironmentIdentifier {
+class UTILITIES_API EnvironmentIdentifier
+{
  public:
-
-   /** Construct from EnvironmentType enumeration. */
-  EnvironmentIdentifier(const openstudio::EnvironmentType& type=EnvironmentType());
+  /** Construct from EnvironmentType enumeration. */
+  EnvironmentIdentifier(const openstudio::EnvironmentType& type = EnvironmentType());
   /** Construct from name. */
   EnvironmentIdentifier(const std::string& name);
 
@@ -73,9 +73,9 @@ typedef boost::optional<openstudio::EnvironmentIdentifier> OptionalEnvironmentId
 
 /** Small class to let users identify a time series by name, or a set of time
  *  series by regex. */
-class UTILITIES_API TimeSeriesIdentifier {
+class UTILITIES_API TimeSeriesIdentifier
+{
  public:
-
   /** Construct from name. */
   TimeSeriesIdentifier(const std::string& name);
   /** Construct from regex. */
@@ -94,9 +94,9 @@ class UTILITIES_API TimeSeriesIdentifier {
 typedef boost::optional<openstudio::TimeSeriesIdentifier> OptionalTimeSeriesIdentifier;
 
 /** Small class to let users identify one or more key values by name or regex. */
-class UTILITIES_API KeyValueIdentifier {
+class UTILITIES_API KeyValueIdentifier
+{
  public:
-
   /** Construct from single name. */
   KeyValueIdentifier(const std::string& name);
   /** Construct from multiple names. Throws if names.size() == 0. */
@@ -122,9 +122,9 @@ typedef boost::optional<openstudio::KeyValueIdentifier> OptionalKeyValueIdentifi
  *  limited to one ReportingFrequency so that the resulting TimeSeries.values() Vectors are of the
  *  same length. This class is intended to serve as a way to streamline the SqlFile interface, and
  *  also as data storage for classes like analysis::SqlTimeSeriesVariableAccessor. */
-class UTILITIES_API SqlFileTimeSeriesQuery {
+class UTILITIES_API SqlFileTimeSeriesQuery
+{
  public:
-
   /** @name Constructors */
   //@{
 
@@ -139,10 +139,8 @@ class UTILITIES_API SqlFileTimeSeriesQuery {
   SqlFileTimeSeriesQuery(const EnvironmentIdentifier& envId);
 
   /** Construct from fully specified query. */
-  SqlFileTimeSeriesQuery(const std::string& environmentPeriod,
-                         const openstudio::ReportingFrequency& reportingFrequency,
-                         const std::string& timeSeriesName,
-                         const std::string& keyValue);
+  SqlFileTimeSeriesQuery(const std::string& environmentPeriod, const openstudio::ReportingFrequency& reportingFrequency,
+                         const std::string& timeSeriesName, const std::string& keyValue);
 
   //@}
   /** @name Getters */
@@ -205,7 +203,7 @@ class UTILITIES_API SqlFileTimeSeriesQuery {
   boost::optional<KeyValueIdentifier> m_keyValues;
 };
 
-UTILITIES_API std::ostream& operator<<(std::ostream& os,const SqlFileTimeSeriesQuery& query);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const SqlFileTimeSeriesQuery& query);
 
 typedef std::vector<SqlFileTimeSeriesQuery> SqlFileTimeSeriesQueryVector;
 
@@ -221,6 +219,6 @@ UTILITIES_API std::set<openstudio::ReportingFrequency> reportingFrequencies(cons
  *  returns an empty set. */
 UTILITIES_API std::set<std::string> timeSeriesNames(const std::vector<SqlFileTimeSeriesQuery>& queries);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_SQL_SQLFILETIMESERIESQUERY_HPP
+#endif  // UTILITIES_SQL_SQLFILETIMESERIESQUERY_HPP

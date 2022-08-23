@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,87 +37,87 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerMultiZoneMinimumHumidityAverage_Impl;
+    class SetpointManagerMultiZoneMinimumHumidityAverage_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerMultiZoneMinimumHumidityAverage is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:MultiZone:MinimumHumidity:Average'. */
-class MODEL_API SetpointManagerMultiZoneMinimumHumidityAverage : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SetpointManagerMultiZoneMinimumHumidityAverage is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:MultiZone:MinimumHumidity:Average'. */
+  class MODEL_API SetpointManagerMultiZoneMinimumHumidityAverage : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SetpointManagerMultiZoneMinimumHumidityAverage(const Model& model);
+    explicit SetpointManagerMultiZoneMinimumHumidityAverage(const Model& model);
 
-  virtual ~SetpointManagerMultiZoneMinimumHumidityAverage() {}
+    virtual ~SetpointManagerMultiZoneMinimumHumidityAverage() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlVariableValues();
+    static std::vector<std::string> controlVariableValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double minimumSetpointHumidityRatio() const;
+    double minimumSetpointHumidityRatio() const;
 
-  bool isMinimumSetpointHumidityRatioDefaulted() const;
+    bool isMinimumSetpointHumidityRatioDefaulted() const;
 
-  double maximumSetpointHumidityRatio() const;
+    double maximumSetpointHumidityRatio() const;
 
-  bool isMaximumSetpointHumidityRatioDefaulted() const;
+    bool isMaximumSetpointHumidityRatioDefaulted() const;
 
-  boost::optional<Node> setpointNode() const;
+    boost::optional<Node> setpointNode() const;
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
+    bool setMinimumSetpointHumidityRatio(double minimumSetpointHumidityRatio);
 
-  void resetMinimumSetpointHumidityRatio();
+    void resetMinimumSetpointHumidityRatio();
 
-  bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
+    bool setMaximumSetpointHumidityRatio(double maximumSetpointHumidityRatio);
 
-  void resetMaximumSetpointHumidityRatio();
+    void resetMaximumSetpointHumidityRatio();
 
-  bool setControlVariable(const std::string& controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl ImplType;
 
-  explicit SetpointManagerMultiZoneMinimumHumidityAverage(std::shared_ptr<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl> impl);
+    explicit SetpointManagerMultiZoneMinimumHumidityAverage(std::shared_ptr<detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl> impl);
 
-  friend class detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneMinimumHumidityAverage");
-};
+    friend class detail::SetpointManagerMultiZoneMinimumHumidityAverage_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneMinimumHumidityAverage");
+  };
 
-/** \relates SetpointManagerMultiZoneMinimumHumidityAverage*/
-typedef boost::optional<SetpointManagerMultiZoneMinimumHumidityAverage> OptionalSetpointManagerMultiZoneMinimumHumidityAverage;
+  /** \relates SetpointManagerMultiZoneMinimumHumidityAverage*/
+  typedef boost::optional<SetpointManagerMultiZoneMinimumHumidityAverage> OptionalSetpointManagerMultiZoneMinimumHumidityAverage;
 
-/** \relates SetpointManagerMultiZoneMinimumHumidityAverage*/
-typedef std::vector<SetpointManagerMultiZoneMinimumHumidityAverage> SetpointManagerMultiZoneMinimumHumidityAverageVector;
+  /** \relates SetpointManagerMultiZoneMinimumHumidityAverage*/
+  typedef std::vector<SetpointManagerMultiZoneMinimumHumidityAverage> SetpointManagerMultiZoneMinimumHumidityAverageVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERMULTIZONEMINIMUMHUMIDITYAVERAGE_HPP
-
+#endif  // MODEL_SETPOINTMANAGERMULTIZONEMINIMUMHUMIDITYAVERAGE_HPP

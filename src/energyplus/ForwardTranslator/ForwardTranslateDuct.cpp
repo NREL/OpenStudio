@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,28 +40,26 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateDuct(Duct & modelObject)
-{
-  IdfObject idfObject(openstudio::IddObjectType::Duct);
+  boost::optional<IdfObject> ForwardTranslator::translateDuct(Duct& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Duct);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  if(auto value = modelObject.name()){
-    idfObject.setName(value.get());
+    if (auto value = modelObject.name()) {
+      idfObject.setName(value.get());
+    }
+
+    if (auto node = modelObject.inletModelObject()) {
+      idfObject.setString(openstudio::DuctFields::InletNodeName, node->name().get());
+    }
+
+    if (auto node = modelObject.outletModelObject()) {
+      idfObject.setString(openstudio::DuctFields::OutletNodeName, node->name().get());
+    }
+
+    return idfObject;
   }
 
-  if(auto node = modelObject.inletModelObject()) {
-    idfObject.setString(openstudio::DuctFields::InletNodeName, node->name().get());
-  }
+}  // namespace energyplus
 
-  if(auto node = modelObject.outletModelObject()) {
-    idfObject.setString(openstudio::DuctFields::OutletNodeName, node->name().get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,13 +38,11 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
 TEST_F(ModelFixture, SizingZone_GettersSetters) {
 
   Model m;
   ThermalZone z(m);
   SizingZone sz = z.sizingZone();
-
 
   // Zone or ZoneList Name:  Object
   EXPECT_EQ(z, sz.thermalZone());
@@ -59,20 +57,17 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_FALSE(sz.setZoneCoolingDesignSupplyAirTemperatureInputMethod("BadChoice"));
   EXPECT_EQ("TemperatureDifference", sz.zoneCoolingDesignSupplyAirTemperatureInputMethod());
 
-
   // Zone Cooling Design Supply Air Temperature:  Double
   // Default in Ctor
   EXPECT_EQ(14.0, sz.zoneCoolingDesignSupplyAirTemperature());
   EXPECT_TRUE(sz.setZoneCoolingDesignSupplyAirTemperature(10.03));
   EXPECT_EQ(10.03, sz.zoneCoolingDesignSupplyAirTemperature());
 
-
   // Zone Cooling Design Supply Air Temperature Difference:  Double
   // Default in Ctor
   EXPECT_EQ(11.11, sz.zoneCoolingDesignSupplyAirTemperatureDifference());
   EXPECT_TRUE(sz.setZoneCoolingDesignSupplyAirTemperatureDifference(15.03));
   EXPECT_EQ(15.03, sz.zoneCoolingDesignSupplyAirTemperatureDifference());
-
 
   // Zone Heating Design Supply Air Temperature Input Method:  String
   // Default in Ctor
@@ -84,13 +79,11 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_FALSE(sz.setZoneHeatingDesignSupplyAirTemperatureInputMethod("BadChoice"));
   EXPECT_EQ("TemperatureDifference", sz.zoneHeatingDesignSupplyAirTemperatureInputMethod());
 
-
   // Zone Heating Design Supply Air Temperature:  Double
   // Default in Ctor
   EXPECT_EQ(40.0, sz.zoneHeatingDesignSupplyAirTemperature());
   EXPECT_TRUE(sz.setZoneHeatingDesignSupplyAirTemperature(38.03));
   EXPECT_EQ(38.03, sz.zoneHeatingDesignSupplyAirTemperature());
-
 
   // Zone Heating Design Supply Air Temperature Difference:  Double
   // Default in Ctor
@@ -98,20 +91,17 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_TRUE(sz.setZoneHeatingDesignSupplyAirTemperatureDifference(9.03));
   EXPECT_EQ(9.03, sz.zoneHeatingDesignSupplyAirTemperatureDifference());
 
-
   // Zone Cooling Design Supply Air Humidity Ratio:  Double
   // Default in Ctor
   EXPECT_EQ(0.0085, sz.zoneCoolingDesignSupplyAirHumidityRatio());
   EXPECT_TRUE(sz.setZoneCoolingDesignSupplyAirHumidityRatio(0.0095));
   EXPECT_EQ(0.0095, sz.zoneCoolingDesignSupplyAirHumidityRatio());
 
-
   // Zone Heating Design Supply Air Humidity Ratio:  Double
   // Default in Ctor
   EXPECT_EQ(0.0080, sz.zoneHeatingDesignSupplyAirHumidityRatio());
   EXPECT_TRUE(sz.setZoneHeatingDesignSupplyAirHumidityRatio(0.0075));
   EXPECT_EQ(0.0075, sz.zoneHeatingDesignSupplyAirHumidityRatio());
-
 
   // Zone Heating Sizing Factor: Optional Double
   // No Default
@@ -123,7 +113,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   sz.resetZoneHeatingSizingFactor();
   EXPECT_FALSE(sz.zoneHeatingSizingFactor());
 
-
   // Zone Cooling Sizing Factor: Optional Double
   // No Default
   EXPECT_FALSE(sz.zoneCoolingSizingFactor());
@@ -133,7 +122,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   // Test reset
   sz.resetZoneCoolingSizingFactor();
   EXPECT_FALSE(sz.zoneCoolingSizingFactor());
-
 
   // Cooling Design Air Flow Method:  String
   // Check Idd default: "DesignDay", overriden in Ctor with same value
@@ -163,7 +151,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_EQ(0.0, sz.coolingDesignAirFlowRate());
   EXPECT_TRUE(sz.isCoolingDesignAirFlowRateDefaulted());
 
-
   // Cooling Minimum Air Flow per Zone Floor Area:  Double
   // Check Idd default: 0.000762
   EXPECT_TRUE(sz.isCoolingMinimumAirFlowperZoneFloorAreaDefaulted());
@@ -175,7 +162,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   sz.resetCoolingMinimumAirFlowperZoneFloorArea();
   EXPECT_EQ(0.000762, sz.coolingMinimumAirFlowperZoneFloorArea());
   EXPECT_TRUE(sz.isCoolingMinimumAirFlowperZoneFloorAreaDefaulted());
-
 
   // Cooling Minimum Air Flow:  Double
   // Check Idd default: 0.0
@@ -189,7 +175,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_EQ(0.0, sz.coolingMinimumAirFlow());
   EXPECT_TRUE(sz.isCoolingMinimumAirFlowDefaulted());
 
-
   // Cooling Minimum Air Flow Fraction:  Double
   // Check Idd default: 0.0
   EXPECT_TRUE(sz.isCoolingMinimumAirFlowFractionDefaulted());
@@ -201,7 +186,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   sz.resetCoolingMinimumAirFlowFraction();
   EXPECT_EQ(0.0, sz.coolingMinimumAirFlowFraction());
   EXPECT_TRUE(sz.isCoolingMinimumAirFlowFractionDefaulted());
-
 
   // Heating Design Air Flow Method:  String
   // Check Idd default: "DesignDay", overriden in Ctor by same value
@@ -231,7 +215,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_EQ(0.0, sz.heatingDesignAirFlowRate());
   EXPECT_TRUE(sz.isHeatingDesignAirFlowRateDefaulted());
 
-
   // Heating Maximum Air Flow per Zone Floor Area:  Double
   // Check Idd default: 0.002032
   EXPECT_TRUE(sz.isHeatingMaximumAirFlowperZoneFloorAreaDefaulted());
@@ -243,7 +226,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   sz.resetHeatingMaximumAirFlowperZoneFloorArea();
   EXPECT_EQ(0.002032, sz.heatingMaximumAirFlowperZoneFloorArea());
   EXPECT_TRUE(sz.isHeatingMaximumAirFlowperZoneFloorAreaDefaulted());
-
 
   // Heating Maximum Air Flow:  Double
   // Check Idd default: 0.1415762
@@ -257,7 +239,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_EQ(0.1415762, sz.heatingMaximumAirFlow());
   EXPECT_TRUE(sz.isHeatingMaximumAirFlowDefaulted());
 
-
   // Heating Maximum Air Flow Fraction:  Double
   // Check Idd default: 0.3
   EXPECT_TRUE(sz.isHeatingMaximumAirFlowFractionDefaulted());
@@ -269,7 +250,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   sz.resetHeatingMaximumAirFlowFraction();
   EXPECT_EQ(0.3, sz.heatingMaximumAirFlowFraction());
   EXPECT_TRUE(sz.isHeatingMaximumAirFlowFractionDefaulted());
-
 
   // Design Zone Air Distribution Effectiveness in Cooling Mode:  Double
   // Check Idd default: 1.0
@@ -283,7 +263,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_EQ(1.0, sz.designZoneAirDistributionEffectivenessinCoolingMode());
   EXPECT_TRUE(sz.isDesignZoneAirDistributionEffectivenessinCoolingModeDefaulted());
 
-
   // Design Zone Air Distribution Effectiveness in Heating Mode:  Double
   // Check Idd default: 1.0
   EXPECT_TRUE(sz.isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted());
@@ -296,6 +275,29 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_EQ(1.0, sz.designZoneAirDistributionEffectivenessinHeatingMode());
   EXPECT_TRUE(sz.isDesignZoneAirDistributionEffectivenessinHeatingModeDefaulted());
 
+  // Design Zone Secondary Recirculation Fraction:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(sz.isDesignZoneSecondaryRecirculationFractionDefaulted());
+  EXPECT_EQ(0.0, sz.designZoneSecondaryRecirculationFraction());
+  EXPECT_TRUE(sz.setDesignZoneSecondaryRecirculationFraction(0.35));
+  EXPECT_FALSE(sz.isDesignZoneSecondaryRecirculationFractionDefaulted());
+  EXPECT_EQ(0.35, sz.designZoneSecondaryRecirculationFraction());
+  // Test reset
+  sz.resetDesignZoneSecondaryRecirculationFraction();
+  EXPECT_EQ(0.0, sz.designZoneSecondaryRecirculationFraction());
+  EXPECT_TRUE(sz.isDesignZoneSecondaryRecirculationFractionDefaulted());
+
+  // Design Minimum Zone Ventilation Efficiency:  Double
+  // Check Idd default: 0.0
+  EXPECT_TRUE(sz.isDesignMinimumZoneVentilationEfficiencyDefaulted());
+  EXPECT_EQ(0.0, sz.designMinimumZoneVentilationEfficiency());
+  EXPECT_TRUE(sz.setDesignMinimumZoneVentilationEfficiency(0.25));
+  EXPECT_FALSE(sz.isDesignMinimumZoneVentilationEfficiencyDefaulted());
+  EXPECT_EQ(0.25, sz.designMinimumZoneVentilationEfficiency());
+  // Test reset
+  sz.resetDesignMinimumZoneVentilationEfficiency();
+  EXPECT_EQ(0.0, sz.designMinimumZoneVentilationEfficiency());
+  EXPECT_TRUE(sz.isDesignMinimumZoneVentilationEfficiencyDefaulted());
 
   // Account for Dedicated Outdoor Air System:  Boolean
   // Default in Ctor
@@ -307,7 +309,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_TRUE(sz.setAccountforDedicatedOutdoorAirSystem(false));
   EXPECT_FALSE(sz.accountforDedicatedOutdoorAirSystem());
 
-
   // Dedicated Outdoor Air System Control Strategy:  String
   // Default in Ctor
   EXPECT_TRUE(sz.setDedicatedOutdoorAirSystemControlStrategy("NeutralSupplyAir"));
@@ -318,7 +319,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   // Test an invalid choice
   EXPECT_FALSE(sz.setDedicatedOutdoorAirSystemControlStrategy("BadChoice"));
   EXPECT_EQ("NeutralDehumidifiedSupplyAir", sz.dedicatedOutdoorAirSystemControlStrategy());
-
 
   // Dedicated Outdoor Air Low Setpoint Temperature for Design: Optional Double
   // Defaults to autosize in Ctor
@@ -332,7 +332,6 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   sz.autosizeDedicatedOutdoorAirLowSetpointTemperatureforDesign();
   EXPECT_TRUE(sz.isDedicatedOutdoorAirLowSetpointTemperatureforDesignAutosized());
 
-
   // Dedicated Outdoor Air High Setpoint Temperature for Design: Optional Double
   // Defaults to autosize in Ctor
   EXPECT_TRUE(sz.isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized());
@@ -344,5 +343,4 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   EXPECT_FALSE(sz.isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized());
   sz.autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
   EXPECT_TRUE(sz.isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized());
-
 }

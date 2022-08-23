@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,92 +36,92 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ConvergenceLimits_Impl;
+    class ConvergenceLimits_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ConvergenceLimits is a ModelObject that wraps the OpenStudio IDD object 'OS:ConvergenceLimits'. */
-class MODEL_API ConvergenceLimits : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ConvergenceLimits is a ModelObject that wraps the OpenStudio IDD object 'OS:ConvergenceLimits'. */
+  class MODEL_API ConvergenceLimits : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~ConvergenceLimits() {}
+    virtual ~ConvergenceLimits() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<int> minimumSystemTimestep() const;
+    boost::optional<int> minimumSystemTimestep() const;
 
-  int maximumHVACIterations() const;
+    int maximumHVACIterations() const;
 
-  bool isMaximumHVACIterationsDefaulted() const;
+    bool isMaximumHVACIterationsDefaulted() const;
 
-  int minimumPlantIterations() const;
+    int minimumPlantIterations() const;
 
-  bool isMinimumPlantIterationsDefaulted() const;
+    bool isMinimumPlantIterationsDefaulted() const;
 
-  int maximumPlantIterations() const;
+    int maximumPlantIterations() const;
 
-  bool isMaximumPlantIterationsDefaulted() const;
+    bool isMaximumPlantIterationsDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setMinimumSystemTimestep(int minimumSystemTimestep);
+    bool setMinimumSystemTimestep(int minimumSystemTimestep);
 
-  void resetMinimumSystemTimestep();
+    void resetMinimumSystemTimestep();
 
-  bool setMaximumHVACIterations(int maximumHVACIterations);
+    bool setMaximumHVACIterations(int maximumHVACIterations);
 
-  void resetMaximumHVACIterations();
+    void resetMaximumHVACIterations();
 
-  bool setMinimumPlantIterations(int minimumPlantIterations);
+    bool setMinimumPlantIterations(int minimumPlantIterations);
 
-  void resetMinimumPlantIterations();
+    void resetMinimumPlantIterations();
 
-  bool setMaximumPlantIterations(int maximumPlantIterations);
+    bool setMaximumPlantIterations(int maximumPlantIterations);
 
-  void resetMaximumPlantIterations();
+    void resetMaximumPlantIterations();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ConvergenceLimits_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ConvergenceLimits_Impl ImplType;
 
-  explicit ConvergenceLimits(std::shared_ptr<detail::ConvergenceLimits_Impl> impl);
+    explicit ConvergenceLimits(std::shared_ptr<detail::ConvergenceLimits_Impl> impl);
 
-  friend class detail::ConvergenceLimits_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::ConvergenceLimits_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  explicit ConvergenceLimits(Model& model);
+    explicit ConvergenceLimits(Model& model);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ConvergenceLimits");
+  };
 
-  REGISTER_LOGGER("openstudio.model.ConvergenceLimits");
-};
+  /** \relates ConvergenceLimits */
+  typedef boost::optional<ConvergenceLimits> OptionalConvergenceLimits;
 
-/** \relates ConvergenceLimits */
-typedef boost::optional<ConvergenceLimits> OptionalConvergenceLimits;
+  /** \relates ConvergenceLimits*/
+  typedef std::vector<ConvergenceLimits> ConvergenceLimitsVector;
 
-/** \relates ConvergenceLimits*/
-typedef std::vector<ConvergenceLimits> ConvergenceLimitsVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_CONVERGENCELIMITS_HPP
+#endif  // MODEL_CONVERGENCELIMITS_HPP

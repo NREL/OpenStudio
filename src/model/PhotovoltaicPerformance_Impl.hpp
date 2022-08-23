@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,59 +35,57 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API PhotovoltaicPerformance_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API PhotovoltaicPerformance_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    PhotovoltaicPerformance_Impl(IddObjectType type, Model_Impl* model);
+      PhotovoltaicPerformance_Impl(IddObjectType type, Model_Impl* model);
 
-    PhotovoltaicPerformance_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      PhotovoltaicPerformance_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    PhotovoltaicPerformance_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      PhotovoltaicPerformance_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    PhotovoltaicPerformance_Impl(const PhotovoltaicPerformance_Impl& other, Model_Impl* model, bool keepHandles);
+      PhotovoltaicPerformance_Impl(const PhotovoltaicPerformance_Impl& other, Model_Impl* model, bool keepHandles);
 
-    virtual ~PhotovoltaicPerformance_Impl() {}
+      virtual ~PhotovoltaicPerformance_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    /// do not allow this object to be removed if it is referenced by a PhotovoltaicGenerator
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      /// do not allow this object to be removed if it is referenced by a PhotovoltaicGenerator
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    // DLM: really don't want to implement this for this object, feels too kludgy
-    //virtual boost::optional<ParentObject> parent() override;
+      // DLM: really don't want to implement this for this object, feels too kludgy
+      //virtual boost::optional<ParentObject> parent() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    // DLM: really don't want to implement this for this object, feels too kludgy
-    //virtual bool setParent(ParentObject& newParent) override;
+      // DLM: really don't want to implement this for this object, feels too kludgy
+      //virtual bool setParent(ParentObject& newParent) override;
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   private:
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformance");
+    };
 
-    REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformance");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_PHOTOVOLTAICPERFORMANCE_IMPL_HPP
+#endif  // MODEL_PHOTOVOLTAICPERFORMANCE_IMPL_HPP

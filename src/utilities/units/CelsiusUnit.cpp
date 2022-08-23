@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,18 +35,16 @@
 namespace openstudio {
 namespace detail {
 
-  CelsiusUnit_Impl::CelsiusUnit_Impl(int CExp,int scaleExponent,const std::string& prettyString)
-    : TemperatureUnit_Impl(true,scaleExponent,prettyString,1,UnitSystem::Celsius)
-  {
-    m_units[0].first = "C"; m_units[0].second = CExp;
+  CelsiusUnit_Impl::CelsiusUnit_Impl(int CExp, int scaleExponent, const std::string& prettyString)
+    : TemperatureUnit_Impl(true, scaleExponent, prettyString, 1, UnitSystem::Celsius) {
+    m_units[0].first = "C";
+    m_units[0].second = CExp;
   }
 
-  CelsiusUnit_Impl::CelsiusUnit_Impl(const std::string& scaleAbbreviation,
-                                     int CExp,
-                                     const std::string& prettyString)
-    : TemperatureUnit_Impl(true,scaleAbbreviation,prettyString,1,UnitSystem::Celsius)
-  {
-    m_units[0].first = "C"; m_units[0].second = CExp;
+  CelsiusUnit_Impl::CelsiusUnit_Impl(const std::string& scaleAbbreviation, int CExp, const std::string& prettyString)
+    : TemperatureUnit_Impl(true, scaleAbbreviation, prettyString, 1, UnitSystem::Celsius) {
+    m_units[0].first = "C";
+    m_units[0].second = CExp;
   }
 
   Unit CelsiusUnit_Impl::clone() const {
@@ -55,39 +53,29 @@ namespace detail {
     return CelsiusUnit(impl).cast<Unit>();
   }
 
-  void CelsiusUnit_Impl::setBaseUnitExponent(const std::string& baseUnit,int exponent) {
+  void CelsiusUnit_Impl::setBaseUnitExponent(const std::string& baseUnit, int exponent) {
     auto loc = findBaseUnit(baseUnit);
     if (loc != m_units.end()) {
       loc->second = exponent;
-    }
-    else {
+    } else {
       LOG_AND_THROW("Cannot add base units to an instance of CelsiusUnit.");
     }
   }
 
-} // detail
+}  // namespace detail
 
-CelsiusUnit::CelsiusUnit(int CExp,int scaleExponent,const std::string& prettyString)
-  : TemperatureUnit(std::shared_ptr<detail::CelsiusUnit_Impl>(
-                        new detail::CelsiusUnit_Impl(CExp,scaleExponent,prettyString)))
-{}
+CelsiusUnit::CelsiusUnit(int CExp, int scaleExponent, const std::string& prettyString)
+  : TemperatureUnit(std::shared_ptr<detail::CelsiusUnit_Impl>(new detail::CelsiusUnit_Impl(CExp, scaleExponent, prettyString))) {}
 
-CelsiusUnit::CelsiusUnit(const std::string& scaleAbbreviation,
-                         int CExp,
-                         const std::string& prettyString)
-  : TemperatureUnit(std::shared_ptr<detail::CelsiusUnit_Impl>(
-                        new detail::CelsiusUnit_Impl(scaleAbbreviation,CExp,prettyString)))
-{}
+CelsiusUnit::CelsiusUnit(const std::string& scaleAbbreviation, int CExp, const std::string& prettyString)
+  : TemperatureUnit(std::shared_ptr<detail::CelsiusUnit_Impl>(new detail::CelsiusUnit_Impl(scaleAbbreviation, CExp, prettyString))) {}
 
 /// @cond
-CelsiusUnit::CelsiusUnit(std::shared_ptr<detail::CelsiusUnit_Impl> impl)
-  : TemperatureUnit(impl)
-{}
+CelsiusUnit::CelsiusUnit(std::shared_ptr<detail::CelsiusUnit_Impl> impl) : TemperatureUnit(impl) {}
 /// @endcond
 
 CelsiusUnit createCelsiusTemperature() {
   return CelsiusUnit(1);
 }
 
-} // openstudio
-
+}  // namespace openstudio

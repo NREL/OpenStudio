@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,55 +39,52 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateCurveDoubleExponentialDecay(
-    const WorkspaceObject& workspaceObject )
-{
-  CurveDoubleExponentialDecay curve(m_model);
+  boost::optional<ModelObject> ReverseTranslator::translateCurveDoubleExponentialDecay(const WorkspaceObject& workspaceObject) {
+    CurveDoubleExponentialDecay curve(m_model);
 
-  OptionalString s;
-  OptionalDouble d;
+    OptionalString s;
+    OptionalDouble d;
 
-  if ((s = workspaceObject.name())) {
-    curve.setName(*s);
+    if ((s = workspaceObject.name())) {
+      curve.setName(*s);
+    }
+
+    if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient1C1))) {
+      curve.setCoefficient1C1(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient2C2))) {
+      curve.setCoefficient2C2(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C3))) {
+      curve.setCoefficient3C3(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient4C4))) {
+      curve.setCoefficient4C4(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient5C5))) {
+      curve.setCoefficient5C5(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MinimumValueofx))) {
+      curve.setMinimumValueofx(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MaximumValueofx))) {
+      curve.setMaximumValueofx(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MinimumCurveOutput))) {
+      curve.setMinimumCurveOutput(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MaximumCurveOutput))) {
+      curve.setMaximumCurveOutput(*d);
+    }
+    if ((s = workspaceObject.getString(Curve_DoubleExponentialDecayFields::InputUnitTypeforx, false, true))) {
+      curve.setInputUnitTypeforx(*s);
+    }
+    if ((s = workspaceObject.getString(Curve_DoubleExponentialDecayFields::OutputUnitType, false, true))) {
+      curve.setOutputUnitType(*s);
+    }
+
+    return curve;
   }
 
-  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient1C1))) {
-    curve.setCoefficient1C1(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient2C2))) {
-    curve.setCoefficient2C2(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C3))) {
-    curve.setCoefficient3C3(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C4))) {
-    curve.setCoefficient3C4(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::Coefficient3C5))) {
-    curve.setCoefficient3C5(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MinimumValueofx))) {
-    curve.setMinimumValueofx(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MaximumValueofx))) {
-    curve.setMaximumValueofx(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MinimumCurveOutput))) {
-    curve.setMinimumCurveOutput(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_DoubleExponentialDecayFields::MaximumCurveOutput))) {
-    curve.setMaximumCurveOutput(*d);
-  }
-  if ((s = workspaceObject.getString(Curve_DoubleExponentialDecayFields::InputUnitTypeforx,false,true))) {
-    curve.setInputUnitTypeforx(*s);
-  }
-  if ((s = workspaceObject.getString(Curve_DoubleExponentialDecayFields::OutputUnitType,false,true))) {
-    curve.setOutputUnitType(*s);
-  }
-
-  return curve;
-}
-
-} // energyplus
-} // openstudio
-
+}  // namespace energyplus
+}  // namespace openstudio

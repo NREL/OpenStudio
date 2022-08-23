@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -64,19 +64,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_DXCoil
 
   ScheduleConstant temperatureSetpointSchedule(m);
   CoilWaterHeatingDesuperheater desuperheater(m, temperatureSetpointSchedule);
+  desuperheater.setRatedHeatReclaimRecoveryEfficiency(0.25);
 
   // DX Coils that will be wrapped in CoilSystem:Cooling:DX
-  std::vector<HVACComponent> testCoils = {
-    CoilCoolingDXSingleSpeed(m),
-    CoilCoolingDXTwoSpeed(m),
-    CoilCoolingDXTwoStageWithHumidityControlMode(m),
-    CoilCoolingDXVariableSpeed(m),
-    CoilCoolingDXMultiSpeed(m)
-  };
+  std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m), CoilCoolingDXTwoSpeed(m), CoilCoolingDXTwoStageWithHumidityControlMode(m),
+                                          CoilCoolingDXVariableSpeed(m), CoilCoolingDXMultiSpeed(m)};
 
   ForwardTranslator forwardTranslator;
 
-  for (const auto& dxCoil: testCoils) {
+  for (const auto& dxCoil : testCoils) {
 
     desuperheater.setHeatingSource(dxCoil);
 
@@ -91,9 +87,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_DXCoil
     // Check that the DX coil ends up directly onto the object, and NOT a CoilSystem:Cooling:DX wrapper
     EXPECT_EQ(ep_idd_name, idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceObjectType).get());
     EXPECT_EQ(dxCoil.nameString(), idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceName).get());
-
   }
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_NonDX) {
@@ -102,18 +96,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_NonDX)
 
   ScheduleConstant temperatureSetpointSchedule(m);
   CoilWaterHeatingDesuperheater desuperheater(m, temperatureSetpointSchedule);
+  desuperheater.setRatedHeatReclaimRecoveryEfficiency(0.25);
 
   // Refrigeration stuff aren't HVACComponent but ParentObject
-  std::vector<ModelObject> testCoils = {
-    CoilCoolingWaterToAirHeatPumpEquationFit(m),
-    RefrigerationCondenserAirCooled(m),
-    RefrigerationCondenserEvaporativeCooled(m),
-    RefrigerationCondenserWaterCooled(m)
-  };
+  std::vector<ModelObject> testCoils = {CoilCoolingWaterToAirHeatPumpEquationFit(m), RefrigerationCondenserAirCooled(m),
+                                        RefrigerationCondenserEvaporativeCooled(m), RefrigerationCondenserWaterCooled(m)};
 
   ForwardTranslator forwardTranslator;
 
-  for (const auto& nodxCoil: testCoils) {
+  for (const auto& nodxCoil : testCoils) {
 
     EXPECT_TRUE(desuperheater.setHeatingSource(nodxCoil));
 
@@ -128,7 +119,5 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_NonDX)
     // Check that the coil ends up directly onto the object (shouldn't be a problem)
     EXPECT_EQ(ep_idd_name, idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceObjectType).get());
     EXPECT_EQ(nodxCoil.nameString(), idf_desuperheater.getString(Coil_WaterHeating_DesuperheaterFields::HeatingSourceName).get());
-
   }
-
 }

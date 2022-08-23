@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,82 +36,76 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** OutputEnergyManagementSystem_Impl is a ModelObject_Impl that is the implementation class for OutputEnergyManagementSystem.*/
-  class MODEL_API OutputEnergyManagementSystem_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** OutputEnergyManagementSystem_Impl is a ModelObject_Impl that is the implementation class for OutputEnergyManagementSystem.*/
+    class MODEL_API OutputEnergyManagementSystem_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    OutputEnergyManagementSystem_Impl(const IdfObject& idfObject,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      OutputEnergyManagementSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    OutputEnergyManagementSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      OutputEnergyManagementSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    OutputEnergyManagementSystem_Impl(const OutputEnergyManagementSystem_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      OutputEnergyManagementSystem_Impl(const OutputEnergyManagementSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~OutputEnergyManagementSystem_Impl() {}
+      virtual ~OutputEnergyManagementSystem_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string actuatorAvailabilityDictionaryReporting() const;
+      std::string actuatorAvailabilityDictionaryReporting() const;
 
-    bool isActuatorAvailabilityDictionaryReportingDefaulted() const;
+      bool isActuatorAvailabilityDictionaryReportingDefaulted() const;
 
-    std::string internalVariableAvailabilityDictionaryReporting() const;
+      std::string internalVariableAvailabilityDictionaryReporting() const;
 
-    bool isInternalVariableAvailabilityDictionaryReportingDefaulted() const;
+      bool isInternalVariableAvailabilityDictionaryReportingDefaulted() const;
 
-    std::string eMSRuntimeLanguageDebugOutputLevel() const;
+      std::string eMSRuntimeLanguageDebugOutputLevel() const;
 
-    bool isEMSRuntimeLanguageDebugOutputLevelDefaulted() const;
+      bool isEMSRuntimeLanguageDebugOutputLevelDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setActuatorAvailabilityDictionaryReporting(const std::string& actuatorAvailabilityDictionaryReporting);
+      bool setActuatorAvailabilityDictionaryReporting(const std::string& actuatorAvailabilityDictionaryReporting);
 
-    void resetActuatorAvailabilityDictionaryReporting();
+      void resetActuatorAvailabilityDictionaryReporting();
 
-    bool setInternalVariableAvailabilityDictionaryReporting(const std::string& internalVariableAvailabilityDictionaryReporting);
+      bool setInternalVariableAvailabilityDictionaryReporting(const std::string& internalVariableAvailabilityDictionaryReporting);
 
-    void resetInternalVariableAvailabilityDictionaryReporting();
+      void resetInternalVariableAvailabilityDictionaryReporting();
 
-    bool setEMSRuntimeLanguageDebugOutputLevel(const std::string& eMSRuntimeLanguageDebugOutputLevel);
+      bool setEMSRuntimeLanguageDebugOutputLevel(const std::string& eMSRuntimeLanguageDebugOutputLevel);
 
-    void resetEMSRuntimeLanguageDebugOutputLevel();
+      void resetEMSRuntimeLanguageDebugOutputLevel();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.OutputEnergyManagementSystem");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.OutputEnergyManagementSystem");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_OUTPUTENERGYMANAGEMENTSYSTEM_IMPL_HPP
-
+#endif  // MODEL_OUTPUTENERGYMANAGEMENTSYSTEM_IMPL_HPP

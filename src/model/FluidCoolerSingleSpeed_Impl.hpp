@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,136 +36,130 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** FluidCoolerSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for FluidCoolerSingleSpeed.*/
-  class MODEL_API FluidCoolerSingleSpeed_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** FluidCoolerSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for FluidCoolerSingleSpeed.*/
+    class MODEL_API FluidCoolerSingleSpeed_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    FluidCoolerSingleSpeed_Impl(const IdfObject& idfObject,
-                                Model_Impl* model,
-                                bool keepHandle);
+      FluidCoolerSingleSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    FluidCoolerSingleSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      FluidCoolerSingleSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    FluidCoolerSingleSpeed_Impl(const FluidCoolerSingleSpeed_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      FluidCoolerSingleSpeed_Impl(const FluidCoolerSingleSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~FluidCoolerSingleSpeed_Impl() {}
+      virtual ~FluidCoolerSingleSpeed_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    std::string performanceInputMethod() const;
+      std::string performanceInputMethod() const;
 
-    boost::optional<double> designAirFlowRateUfactorTimesAreaValue() const;
+      boost::optional<double> designAirFlowRateUfactorTimesAreaValue() const;
 
-    bool isDesignAirFlowRateUfactorTimesAreaValueAutosized() const;
+      bool isDesignAirFlowRateUfactorTimesAreaValueAutosized() const;
 
-    double nominalCapacity() const;
+      double nominalCapacity() const;
 
-    double designEnteringWaterTemperature() const;
+      double designEnteringWaterTemperature() const;
 
-    double designEnteringAirTemperature() const;
+      double designEnteringAirTemperature() const;
 
-    double designEnteringAirWetbulbTemperature() const;
+      double designEnteringAirWetbulbTemperature() const;
 
-    boost::optional<double> designWaterFlowRate() const;
+      boost::optional<double> designWaterFlowRate() const;
 
-    bool isDesignWaterFlowRateAutosized() const;
+      bool isDesignWaterFlowRateAutosized() const;
 
-    boost::optional<double> designAirFlowRate() const;
+      boost::optional<double> designAirFlowRate() const;
 
-    bool isDesignAirFlowRateAutosized() const;
+      bool isDesignAirFlowRateAutosized() const;
 
-    boost::optional<double> designAirFlowRateFanPower() const;
+      boost::optional<double> designAirFlowRateFanPower() const;
 
-    bool isDesignAirFlowRateFanPowerAutosized() const;
+      bool isDesignAirFlowRateFanPowerAutosized() const;
 
-    boost::optional<Node> outdoorAirInletNode() const;
+      boost::optional<Node> outdoorAirInletNode() const;
 
-  boost::optional<double> autosizedDesignAirFlowRateUfactorTimesAreaValue() const ;
+      boost::optional<double> autosizedDesignAirFlowRateUfactorTimesAreaValue() const;
 
-  boost::optional<double> autosizedDesignWaterFlowRate() const ;
+      boost::optional<double> autosizedDesignWaterFlowRate() const;
 
-  boost::optional<double> autosizedDesignAirFlowRate() const ;
+      boost::optional<double> autosizedDesignAirFlowRate() const;
 
-  boost::optional<double> autosizedDesignAirFlowRateFanPower() const ;
+      boost::optional<double> autosizedDesignAirFlowRateFanPower() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setPerformanceInputMethod(std::string performanceInputMethod);
+      bool setPerformanceInputMethod(const std::string& performanceInputMethod);
 
-    bool setDesignAirFlowRateUfactorTimesAreaValue(boost::optional<double> designAirFlowRateUfactorTimesAreaValue);
+      bool setDesignAirFlowRateUfactorTimesAreaValue(boost::optional<double> designAirFlowRateUfactorTimesAreaValue);
 
-    void autosizeDesignAirFlowRateUfactorTimesAreaValue();
+      void autosizeDesignAirFlowRateUfactorTimesAreaValue();
 
-    bool setNominalCapacity(double nominalCapacity);
+      bool setNominalCapacity(double nominalCapacity);
 
-    bool setDesignEnteringWaterTemperature(double designEnteringWaterTemperature);
+      bool setDesignEnteringWaterTemperature(double designEnteringWaterTemperature);
 
-    bool setDesignEnteringAirTemperature(double designEnteringAirTemperature);
+      bool setDesignEnteringAirTemperature(double designEnteringAirTemperature);
 
-    bool setDesignEnteringAirWetbulbTemperature(double designEnteringAirWetbulbTemperature);
+      bool setDesignEnteringAirWetbulbTemperature(double designEnteringAirWetbulbTemperature);
 
-    bool setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate);
+      bool setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate);
 
-    void autosizeDesignWaterFlowRate();
+      void autosizeDesignWaterFlowRate();
 
-    bool setDesignAirFlowRate(boost::optional<double> designAirFlowRate);
+      bool setDesignAirFlowRate(boost::optional<double> designAirFlowRate);
 
-    void autosizeDesignAirFlowRate();
+      void autosizeDesignAirFlowRate();
 
-    bool setDesignAirFlowRateFanPower(boost::optional<double> designAirFlowRateFanPower);
+      bool setDesignAirFlowRateFanPower(boost::optional<double> designAirFlowRateFanPower);
 
-    void autosizeDesignAirFlowRateFanPower();
+      void autosizeDesignAirFlowRateFanPower();
 
-    bool setOutdoorAirInletNode(const boost::optional<Node>& node);
+      bool setOutdoorAirInletNode(const boost::optional<Node>& node);
 
-    void resetOutdoorAirInletNode();
+      void resetOutdoorAirInletNode();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.FluidCoolerSingleSpeed");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.FluidCoolerSingleSpeed");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_FLUIDCOOLERSINGLESPEED_IMPL_HPP
-
+#endif  // MODEL_FLUIDCOOLERSINGLESPEED_IMPL_HPP

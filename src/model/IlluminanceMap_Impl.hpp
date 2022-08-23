@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,150 +40,129 @@ class Transformation;
 
 namespace model {
 
-class IlluminanceMap;
+  class IlluminanceMap;
 
-namespace detail {
+  namespace detail {
 
-  /** IlluminanceMap_Impl is a SpaceItem_Impl that is the implementation class for IlluminanceMap.*/
-  class MODEL_API IlluminanceMap_Impl : public SpaceItem_Impl {
+    /** IlluminanceMap_Impl is a SpaceItem_Impl that is the implementation class for IlluminanceMap.*/
+    class MODEL_API IlluminanceMap_Impl : public SpaceItem_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      IlluminanceMap_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      IlluminanceMap_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      IlluminanceMap_Impl(const IlluminanceMap_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~IlluminanceMap_Impl() {}
 
+      //@}
 
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
 
+      /** @name Getters */
+      //@{
 
+      double originXCoordinate() const;
 
+      double originYCoordinate() const;
 
+      double originZCoordinate() const;
 
+      double psiRotationAroundXAxis() const;
 
+      bool isPsiRotationAroundXAxisDefaulted() const;
 
+      double thetaRotationAroundYAxis() const;
 
+      bool isThetaRotationAroundYAxisDefaulted() const;
 
+      double phiRotationAroundZAxis() const;
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      bool isPhiRotationAroundZAxisDefaulted() const;
 
-    IlluminanceMap_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      double xLength() const;
 
-    IlluminanceMap_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      bool isXLengthDefaulted() const;
 
-    IlluminanceMap_Impl(const IlluminanceMap_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      int numberofXGridPoints() const;
 
-    virtual ~IlluminanceMap_Impl() {}
+      bool isNumberofXGridPointsDefaulted() const;
 
-    //@}
+      double yLength() const;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      bool isYLengthDefaulted() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      int numberofYGridPoints() const;
 
-    /** @name Getters */
-    //@{
+      bool isNumberofYGridPointsDefaulted() const;
 
-    double originXCoordinate() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    double originYCoordinate() const;
+      bool setOriginXCoordinate(double originXCoordinate);
 
-    double originZCoordinate() const;
+      bool setOriginYCoordinate(double originYCoordinate);
 
-    double psiRotationAroundXAxis() const;
+      bool setOriginZCoordinate(double originZCoordinate);
 
-    bool isPsiRotationAroundXAxisDefaulted() const;
+      bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
 
-    double thetaRotationAroundYAxis() const;
+      void resetPsiRotationAroundXAxis();
 
-    bool isThetaRotationAroundYAxisDefaulted() const;
+      bool setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
 
-    double phiRotationAroundZAxis() const;
+      void resetThetaRotationAroundYAxis();
 
-    bool isPhiRotationAroundZAxisDefaulted() const;
+      bool setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
 
-    double xLength() const;
+      void resetPhiRotationAroundZAxis();
 
-    bool isXLengthDefaulted() const;
+      bool setXLength(double xLength);
 
-    int numberofXGridPoints() const;
+      void resetXLength();
 
-    bool isNumberofXGridPointsDefaulted() const;
+      bool setNumberofXGridPoints(int numberofXGridPoints);
 
-    double yLength() const;
+      void resetNumberofXGridPoints();
 
-    bool isYLengthDefaulted() const;
+      bool setYLength(double yLength);
 
-    int numberofYGridPoints() const;
+      void resetYLength();
 
-    bool isNumberofYGridPointsDefaulted() const;
+      bool setNumberofYGridPoints(int numberofYGridPoints);
 
-    //@}
-    /** @name Setters */
-    //@{
+      void resetNumberofYGridPoints();
 
-    bool setOriginXCoordinate(double originXCoordinate);
+      //@}
 
-    bool setOriginYCoordinate(double originYCoordinate);
+      openstudio::Transformation transformation() const;
 
-    bool setOriginZCoordinate(double originZCoordinate);
+      bool setTransformation(const openstudio::Transformation& transformation);
 
-    bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
+      std::vector<Point3d> referencePoints() const;
 
-    void resetPsiRotationAroundXAxis();
+      std::vector<Point3d> corners() const;
 
-    bool setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
+     protected:
+      // index of the space name
+      virtual int spaceIndex() const override;
 
-    void resetThetaRotationAroundYAxis();
+     private:
+      REGISTER_LOGGER("openstudio.model.IlluminanceMap");
+    };
 
-    bool setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
+  }  // namespace detail
 
-    void resetPhiRotationAroundZAxis();
+}  // namespace model
+}  // namespace openstudio
 
-    bool setXLength(double xLength);
-
-    void resetXLength();
-
-    bool setNumberofXGridPoints(int numberofXGridPoints);
-
-    void resetNumberofXGridPoints();
-
-    bool setYLength(double yLength);
-
-    void resetYLength();
-
-    bool setNumberofYGridPoints(int numberofYGridPoints);
-
-    void resetNumberofYGridPoints();
-
-    //@}
-
-    openstudio::Transformation transformation() const;
-
-    bool setTransformation(const openstudio::Transformation& transformation);
-
-    std::vector<Point3d> referencePoints() const;
-
-    std::vector<Point3d> corners() const;
-
-   protected:
-
-    // index of the space name
-    virtual int spaceIndex() const override;
-
-   private:
-    REGISTER_LOGGER("openstudio.model.IlluminanceMap");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_ILLUMINANCEMAP_IMPL_HPP
+#endif  // MODEL_ILLUMINANCEMAP_IMPL_HPP

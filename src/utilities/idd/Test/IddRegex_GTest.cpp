@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -79,7 +79,8 @@ TEST_F(IddFixture, IddRegex_FieldExtraction) {
         \\note that the pump is on and runs according to its other operational requirements\
         \\note specified above.  The schedule is for special pump operations.\
         \\type object-list\
-        \\object-list ScheduleNames"); trim(iddFieldText);
+        \\object-list ScheduleNames");
+  trim(iddFieldText);
 
   std::string iddLastField("A5 ; \\field Pump Flow Rate Schedule Name\
         \\note Modifies the rated flow rate of the pump on a time basis. Default is\
@@ -126,12 +127,11 @@ TEST_F(IddFixture, IddRegex_FieldExtraction) {
   std::string firstMatch;
   std::string secondMatch;
 
-  EXPECT_TRUE(boost::regex_search(iddFieldText,matches,iddRegex::lastField()));
-  firstMatch = std::string(matches[1].first,matches[1].second); trim(firstMatch);
-  secondMatch = std::string(matches[2].first,matches[2].second); trim(secondMatch);
-  EXPECT_EQ(iddLastFieldLeftovers,firstMatch);
-  EXPECT_EQ(iddLastField,secondMatch);
-
+  EXPECT_TRUE(boost::regex_search(iddFieldText, matches, iddRegex::lastField()));
+  firstMatch = std::string(matches[1].first, matches[1].second);
+  trim(firstMatch);
+  secondMatch = std::string(matches[2].first, matches[2].second);
+  trim(secondMatch);
+  EXPECT_EQ(iddLastFieldLeftovers, firstMatch);
+  EXPECT_EQ(iddLastField, secondMatch);
 }
-
-

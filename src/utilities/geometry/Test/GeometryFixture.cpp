@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,20 +38,18 @@ using openstudio::toPath;
 using openstudio::Point3d;
 using openstudio::Vector3d;
 
-bool pointEqual(const openstudio::Point3d& a, const openstudio::Point3d& b)
-{
-  Vector3d diff = a-b;
+bool pointEqual(const openstudio::Point3d& a, const openstudio::Point3d& b) {
+  Vector3d diff = a - b;
   return diff.length() <= 0.0001;
 }
 
-bool pointsEqual(const std::vector<openstudio::Point3d>& a, const std::vector<openstudio::Point3d>& b)
-{
-  if (a.size() != b.size()){
+bool pointsEqual(const std::vector<openstudio::Point3d>& a, const std::vector<openstudio::Point3d>& b) {
+  if (a.size() != b.size()) {
     return false;
   }
 
-  for (unsigned i = 0; i < a.size(); ++i){
-    if (!pointEqual(a[i], b[i])){
+  for (unsigned i = 0; i < a.size(); ++i) {
+    if (!pointEqual(a[i], b[i])) {
       return false;
     }
   }
@@ -59,33 +57,30 @@ bool pointsEqual(const std::vector<openstudio::Point3d>& a, const std::vector<op
   return true;
 }
 
-bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b)
-{
-  Vector3d diff = a-b;
+bool vectorEqual(const openstudio::Vector3d& a, const openstudio::Vector3d& b) {
+  Vector3d diff = a - b;
   return diff.length() <= 0.0001;
 }
 
-double totalArea(const std::vector<std::vector<Point3d> >& polygons)
-{
+double totalArea(const std::vector<std::vector<Point3d>>& polygons) {
   double result = 0.0;
-  for (auto polygon : polygons){
+  for (auto polygon : polygons) {
     boost::optional<double> a = getArea(polygon);
-    if (a){
+    if (a) {
       result += a.get();
     }
   }
   return result;
 }
 
-bool checkNormals(const openstudio::Vector3d& normal, const std::vector<std::vector<Point3d> >& polygons)
-{
-  for (auto polygon : polygons){
+bool checkNormals(const openstudio::Vector3d& normal, const std::vector<std::vector<Point3d>>& polygons) {
+  for (auto polygon : polygons) {
     boost::optional<Vector3d> a = getOutwardNormal(polygon);
-    if (a){
-      if (!vectorEqual(normal, *a)){
+    if (a) {
+      if (!vectorEqual(normal, *a)) {
         return false;
       }
-    }else{
+    } else {
       return false;
     }
   }
@@ -93,23 +88,19 @@ bool checkNormals(const openstudio::Vector3d& normal, const std::vector<std::vec
 }
 
 // initialize for each test
-void GeometryFixture::SetUp() {
-}
+void GeometryFixture::SetUp() {}
 
 // tear down after for each test
-void GeometryFixture::TearDown() {
-}
+void GeometryFixture::TearDown() {}
 
 // initialize static members
-void GeometryFixture::SetUpTestSuite()
-{
+void GeometryFixture::SetUpTestSuite() {
   logFile = FileLogSink(toPath("./GeometryFixture.log"));
   logFile->setLogLevel(Debug);
 }
 
 // tear down static members
-void GeometryFixture::TearDownTestSuite()
-{
+void GeometryFixture::TearDownTestSuite() {
   logFile->disable();
 }
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,169 +50,133 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWater( CoilCoolingWater & modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingWater(CoilCoolingWater& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::Coil_Cooling_Water);
+    IdfObject idfObject(IddObjectType::Coil_Cooling_Water);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
-  }
-
-  Schedule sched = modelObject.availableSchedule();
-  boost::optional<IdfObject> _sched = translateAndMapModelObject(sched);
-  if( _sched )
-  {
-    idfObject.setString(Coil_Cooling_WaterFields::AvailabilityScheduleName,
-                        _sched->name().get() );
-  }
-
-  // DesignWaterFlowRate
-
-  if( modelObject.isDesignWaterFlowRateAutosized() )
-  {
-    idfObject.setString(Coil_Cooling_WaterFields::DesignWaterFlowRate,"Autosize");
-  }
-  else if( (value = modelObject.designWaterFlowRate()) )
-  {
-    idfObject.setDouble(Coil_Cooling_WaterFields::DesignWaterFlowRate,value.get());
-  }
-
-  // DesignAirFlowRate
-
-  if( modelObject.isDesignAirFlowRateAutosized() )
-  {
-    idfObject.setString(Coil_Cooling_WaterFields::DesignAirFlowRate,"Autosize");
-  }
-  else if( (value = modelObject.designAirFlowRate()) )
-  {
-    idfObject.setDouble(Coil_Cooling_WaterFields::DesignAirFlowRate,value.get());
-  }
-
-  // DesignInletWaterTemperature
-
-  if( modelObject.isDesignInletWaterTemperatureAutosized() )
-  {
-    idfObject.setString(Coil_Cooling_WaterFields::DesignInletWaterTemperature,"Autosize");
-  }
-  else if( (value = modelObject.designInletWaterTemperature()) )
-  {
-    idfObject.setDouble(Coil_Cooling_WaterFields::DesignInletWaterTemperature,value.get());
-  }
-
-  // DesignInletAirTemperature
-
-  if( modelObject.isDesignInletAirTemperatureAutosized() )
-  {
-    idfObject.setString(Coil_Cooling_WaterFields::DesignInletAirTemperature,"Autosize");
-  }
-  else if( (value = modelObject.designInletAirTemperature()) )
-  {
-    idfObject.setDouble(Coil_Cooling_WaterFields::DesignInletAirTemperature,value.get());
-  }
-
-  // DesignOutletAirTemperature
-
-  if( modelObject.isDesignOutletAirTemperatureAutosized() )
-  {
-    idfObject.setString(Coil_Cooling_WaterFields::DesignOutletAirTemperature,"Autosize");
-  }
-  else if( (value = modelObject.designOutletAirTemperature()) )
-  {
-    idfObject.setDouble(Coil_Cooling_WaterFields::DesignOutletAirTemperature,value.get());
-  }
-
-  // DesignInletAirHumidityRatio
-
-  if( modelObject.isDesignInletAirHumidityRatioAutosized() )
-  {
-    idfObject.setString(Coil_Cooling_WaterFields::DesignInletAirHumidityRatio,"Autosize");
-  }
-  else if( (value = modelObject.designInletAirHumidityRatio()) )
-  {
-    idfObject.setDouble(Coil_Cooling_WaterFields::DesignInletAirHumidityRatio,value.get());
-  }
-
-  // DesignOutletAirHumidityRatio
-
-  if( modelObject.isDesignOutletAirHumidityRatioAutosized() )
-  {
-    idfObject.setString(Coil_Cooling_WaterFields::DesignOutletAirHumidityRatio,"Autosize");
-  }
-  else if( (value = modelObject.designOutletAirHumidityRatio()) )
-  {
-    idfObject.setDouble(Coil_Cooling_WaterFields::DesignOutletAirHumidityRatio,value.get());
-  }
-
-  // WaterInletNodeName
-
-  if( boost::optional<ModelObject> mo = modelObject.waterInletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Coil_Cooling_WaterFields::WaterInletNodeName,node->name().get());
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
-  }
 
-  // WaterOutletNodeName
-
-  if( boost::optional<ModelObject> mo = modelObject.waterOutletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Coil_Cooling_WaterFields::WaterOutletNodeName,node->name().get());
+    Schedule sched = modelObject.availableSchedule();
+    boost::optional<IdfObject> _sched = translateAndMapModelObject(sched);
+    if (_sched) {
+      idfObject.setString(Coil_Cooling_WaterFields::AvailabilityScheduleName, _sched->name().get());
     }
-  }
 
-  // AirInletNodeName
+    // DesignWaterFlowRate
 
-  if( boost::optional<ModelObject> mo = modelObject.airInletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Coil_Cooling_WaterFields::AirInletNodeName,node->name().get());
+    if (modelObject.isDesignWaterFlowRateAutosized()) {
+      idfObject.setString(Coil_Cooling_WaterFields::DesignWaterFlowRate, "Autosize");
+    } else if ((value = modelObject.designWaterFlowRate())) {
+      idfObject.setDouble(Coil_Cooling_WaterFields::DesignWaterFlowRate, value.get());
     }
-  }
 
-  // AirOutletNodeName
+    // DesignAirFlowRate
 
-  if( boost::optional<ModelObject> mo = modelObject.airOutletModelObject() )
-  {
-    if( boost::optional<Node> node = mo->optionalCast<Node>() )
-    {
-      idfObject.setString(Coil_Cooling_WaterFields::AirOutletNodeName,node->name().get());
+    if (modelObject.isDesignAirFlowRateAutosized()) {
+      idfObject.setString(Coil_Cooling_WaterFields::DesignAirFlowRate, "Autosize");
+    } else if ((value = modelObject.designAirFlowRate())) {
+      idfObject.setDouble(Coil_Cooling_WaterFields::DesignAirFlowRate, value.get());
     }
+
+    // DesignInletWaterTemperature
+
+    if (modelObject.isDesignInletWaterTemperatureAutosized()) {
+      idfObject.setString(Coil_Cooling_WaterFields::DesignInletWaterTemperature, "Autosize");
+    } else if ((value = modelObject.designInletWaterTemperature())) {
+      idfObject.setDouble(Coil_Cooling_WaterFields::DesignInletWaterTemperature, value.get());
+    }
+
+    // DesignInletAirTemperature
+
+    if (modelObject.isDesignInletAirTemperatureAutosized()) {
+      idfObject.setString(Coil_Cooling_WaterFields::DesignInletAirTemperature, "Autosize");
+    } else if ((value = modelObject.designInletAirTemperature())) {
+      idfObject.setDouble(Coil_Cooling_WaterFields::DesignInletAirTemperature, value.get());
+    }
+
+    // DesignOutletAirTemperature
+
+    if (modelObject.isDesignOutletAirTemperatureAutosized()) {
+      idfObject.setString(Coil_Cooling_WaterFields::DesignOutletAirTemperature, "Autosize");
+    } else if ((value = modelObject.designOutletAirTemperature())) {
+      idfObject.setDouble(Coil_Cooling_WaterFields::DesignOutletAirTemperature, value.get());
+    }
+
+    // DesignInletAirHumidityRatio
+
+    if (modelObject.isDesignInletAirHumidityRatioAutosized()) {
+      idfObject.setString(Coil_Cooling_WaterFields::DesignInletAirHumidityRatio, "Autosize");
+    } else if ((value = modelObject.designInletAirHumidityRatio())) {
+      idfObject.setDouble(Coil_Cooling_WaterFields::DesignInletAirHumidityRatio, value.get());
+    }
+
+    // DesignOutletAirHumidityRatio
+
+    if (modelObject.isDesignOutletAirHumidityRatioAutosized()) {
+      idfObject.setString(Coil_Cooling_WaterFields::DesignOutletAirHumidityRatio, "Autosize");
+    } else if ((value = modelObject.designOutletAirHumidityRatio())) {
+      idfObject.setDouble(Coil_Cooling_WaterFields::DesignOutletAirHumidityRatio, value.get());
+    }
+
+    // WaterInletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.waterInletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(Coil_Cooling_WaterFields::WaterInletNodeName, node->name().get());
+      }
+    }
+
+    // WaterOutletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.waterOutletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(Coil_Cooling_WaterFields::WaterOutletNodeName, node->name().get());
+      }
+    }
+
+    // AirInletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.airInletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(Coil_Cooling_WaterFields::AirInletNodeName, node->name().get());
+      }
+    }
+
+    // AirOutletNodeName
+
+    if (boost::optional<ModelObject> mo = modelObject.airOutletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        idfObject.setString(Coil_Cooling_WaterFields::AirOutletNodeName, node->name().get());
+      }
+    }
+
+    // TypeofAnalysis
+
+    s = modelObject.typeOfAnalysis();
+    if (s) {
+      idfObject.setString(Coil_Cooling_WaterFields::TypeofAnalysis, s.get());
+    }
+
+    // HeatExchangerConfiguration
+
+    s = modelObject.heatExchangerConfiguration();
+    if (s) {
+      idfObject.setString(Coil_Cooling_WaterFields::HeatExchangerConfiguration, s.get());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  // TypeofAnalysis
+  //((Name)(Name))
+  //((AvailabilityScheduleName)(Availability Schedule Name))
 
-  s = modelObject.typeOfAnalysis();
-  if( s )
-  {
-    idfObject.setString(Coil_Cooling_WaterFields::TypeofAnalysis,s.get());
-  }
+}  // namespace energyplus
 
-  // HeatExchangerConfiguration
-
-  s = modelObject.heatExchangerConfiguration();
-  if( s )
-  {
-    idfObject.setString(Coil_Cooling_WaterFields::HeatExchangerConfiguration,s.get());
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-//((Name)(Name))
-//((AvailabilityScheduleName)(Availability Schedule Name))
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

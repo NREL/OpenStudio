@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,65 +36,66 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class Construction_Impl;
-}
+  namespace detail {
+    class Construction_Impl;
+  }
 
-/** Construction is a LayeredConstruction that wraps the EnergyPlus IDD object 'Construction'.
+  /** Construction is a LayeredConstruction that wraps the EnergyPlus IDD object 'Construction'.
  *  A Construction consists of a number of material layers, each of which should belong to the
  *  same base class: OpaqueMaterial, FenestrationMaterial, or ModelPartitionMaterial. In addition
  *  the layers must satisfy some restrictions in order to form a valid EnergyPlus construction,
  *  see the documentation for LayeredConstruction. */
-class MODEL_API Construction : public LayeredConstruction {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API Construction : public LayeredConstruction
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit Construction(const Model& model);
+    explicit Construction(const Model& model);
 
-  explicit Construction(const std::vector<OpaqueMaterial>& opaqueMaterials);
+    explicit Construction(const std::vector<OpaqueMaterial>& opaqueMaterials);
 
-  explicit Construction(const std::vector<FenestrationMaterial>& fenestrationMaterials);
+    explicit Construction(const std::vector<FenestrationMaterial>& fenestrationMaterials);
 
-  explicit Construction(const ModelPartitionMaterial& modelPartitionMaterial);
+    explicit Construction(const ModelPartitionMaterial& modelPartitionMaterial);
 
-  virtual ~Construction() {}
+    virtual ~Construction() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
+    //@}
 
-  /** Searches the model for a layered construction with layers which are the reverse of this one.  Returns that construction
+    /** Searches the model for a layered construction with layers which are the reverse of this one.  Returns that construction
    *  if found, creates one if not. */
-  Construction reverseConstruction() const;
+    Construction reverseConstruction() const;
 
- protected:
-  /// @cond
-  typedef detail::Construction_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::Construction_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class detail::Construction_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::Construction_Impl;
 
-  explicit Construction(std::shared_ptr<detail::Construction_Impl> impl);
+    explicit Construction(std::shared_ptr<detail::Construction_Impl> impl);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.Construction");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.Construction");
+  };
 
-/** \relates Construction */
-typedef boost::optional<Construction> OptionalConstruction;
+  /** \relates Construction */
+  typedef boost::optional<Construction> OptionalConstruction;
 
-/** \relates Construction */
-typedef std::vector<Construction> ConstructionVector;
+  /** \relates Construction */
+  typedef std::vector<Construction> ConstructionVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_CONSTRUCTION_HPP
+#endif  // MODEL_CONSTRUCTION_HPP

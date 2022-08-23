@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,25 +31,27 @@
 #include "BCLFixture.hpp"
 
 #include "../BCLFileReference.hpp"
-
+#include "../../core/ApplicationPathHelpers.hpp"
 
 using namespace openstudio;
 
-TEST_F(BCLFixture, BCLFileReference)
-{
-  openstudio::path path = toPath("./BCLFileReference.txt");
-  if (exists(path)){
-    remove(path);
-  }
-  ASSERT_FALSE(exists(path));
+TEST_F(BCLFixture, BCLFileReference) {
 
-  BCLFileReference ref(path, true);
+  openstudio::path testDir = openstudio::filesystem::system_complete(getApplicationBuildDirectory() / toPath("Testing"));
+  openstudio::path relativePath = toPath("BCLFileReference.txt");
+  openstudio::path absolutePath = testDir / relativePath;
+  if (exists(absolutePath)) {
+    remove(absolutePath);
+  }
+  ASSERT_FALSE(exists(absolutePath));
+
+  BCLFileReference ref(testDir, relativePath, true);
   EXPECT_FALSE(ref.checkForUpdate());
 
   EXPECT_EQ("BCLFileReference.txt", ref.fileName());
   EXPECT_EQ("txt", ref.fileType());
 
-  openstudio::filesystem::ofstream file(path);
+  openstudio::filesystem::ofstream file(absolutePath);
   ASSERT_TRUE(file.is_open());
   file << "Hi";
   file.close();
@@ -58,7 +60,7 @@ TEST_F(BCLFixture, BCLFileReference)
 
   EXPECT_FALSE(ref.checkForUpdate());
 
-  file.open(path);
+  file.open(absolutePath);
   ASSERT_TRUE(file.is_open());
   file << "Bye";
   file.close();
@@ -67,9 +69,9 @@ TEST_F(BCLFixture, BCLFileReference)
 
   EXPECT_FALSE(ref.checkForUpdate());
 
-  ASSERT_TRUE(exists(path));
-  remove(path);
-  ASSERT_FALSE(exists(path));
+  ASSERT_TRUE(exists(absolutePath));
+  remove(absolutePath);
+  ASSERT_FALSE(exists(absolutePath));
 
   EXPECT_TRUE(ref.checkForUpdate());
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,71 +36,64 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class OutdoorAirController;
-class Crack;
+  // TODO: Check the following class names against object getters and setters.
+  class OutdoorAirController;
+  class Crack;
 
-namespace detail {
+  namespace detail {
 
-  /** AirflowNetworkOutdoorAirflow_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkOutdoorAirflow.*/
-  class MODEL_API AirflowNetworkOutdoorAirflow_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirflowNetworkOutdoorAirflow_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkOutdoorAirflow.*/
+    class MODEL_API AirflowNetworkOutdoorAirflow_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkOutdoorAirflow_Impl(const IdfObject& idfObject,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      AirflowNetworkOutdoorAirflow_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkOutdoorAirflow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      AirflowNetworkOutdoorAirflow_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkOutdoorAirflow_Impl(const AirflowNetworkOutdoorAirflow_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      AirflowNetworkOutdoorAirflow_Impl(const AirflowNetworkOutdoorAirflow_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirflowNetworkOutdoorAirflow_Impl() {}
+      virtual ~AirflowNetworkOutdoorAirflow_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<ControllerOutdoorAir> controllerOutdoorAir() const;
-    boost::optional<AirflowNetworkCrack> crack() const;
+      boost::optional<ControllerOutdoorAir> controllerOutdoorAir() const;
+      boost::optional<AirflowNetworkCrack> crack() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setCrack(const AirflowNetworkCrack& crack);
-    void resetCrack();
+      bool setCrack(const AirflowNetworkCrack& crack);
+      void resetCrack();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    void resetControllerOutdoorAir();
+      void resetControllerOutdoorAir();
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkOutdoorAirflow");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkOutdoorAirflow");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AIRFLOWNETWORKOUTDOORAIRFLOW_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKOUTDOORAIRFLOW_IMPL_HPP

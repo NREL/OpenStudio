@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,70 +36,64 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** SurfacePropertyOtherSideConditionsModel_Impl is a ResourceObject_Impl that is the implementation class for SurfacePropertyOtherSideConditionsModel.*/
-  class MODEL_API SurfacePropertyOtherSideConditionsModel_Impl : public ResourceObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SurfacePropertyOtherSideConditionsModel_Impl is a ResourceObject_Impl that is the implementation class for SurfacePropertyOtherSideConditionsModel.*/
+    class MODEL_API SurfacePropertyOtherSideConditionsModel_Impl : public ResourceObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SurfacePropertyOtherSideConditionsModel_Impl(const IdfObject& idfObject,
-                                                 Model_Impl* model,
-                                                 bool keepHandle);
+      SurfacePropertyOtherSideConditionsModel_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SurfacePropertyOtherSideConditionsModel_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                 Model_Impl* model,
-                                                 bool keepHandle);
+      SurfacePropertyOtherSideConditionsModel_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SurfacePropertyOtherSideConditionsModel_Impl(const SurfacePropertyOtherSideConditionsModel_Impl& other,
-                                                 Model_Impl* model,
-                                                 bool keepHandle);
+      SurfacePropertyOtherSideConditionsModel_Impl(const SurfacePropertyOtherSideConditionsModel_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SurfacePropertyOtherSideConditionsModel_Impl() {}
+      virtual ~SurfacePropertyOtherSideConditionsModel_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string typeOfModeling() const;
+      std::string typeOfModeling() const;
 
-    bool isTypeOfModelingDefaulted() const;
+      bool isTypeOfModelingDefaulted() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setTypeOfModeling(const std::string& typeOfModeling);
+      bool setTypeOfModeling(const std::string& typeOfModeling);
 
-    void resetTypeOfModeling();
+      void resetTypeOfModeling();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.SurfacePropertyOtherSideConditionsModel");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SurfacePropertyOtherSideConditionsModel");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SURFACEPROPERTYOTHERSIDECONDITIONSMODEL_IMPL_HPP
-
+#endif  // MODEL_SURFACEPROPERTYOTHERSIDECONDITIONSMODEL_IMPL_HPP

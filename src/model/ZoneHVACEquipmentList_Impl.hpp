@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,86 +36,76 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
-class ModelExtensibleGroup;
+  class ThermalZone;
+  class ModelExtensibleGroup;
 
-namespace detail {
+  namespace detail {
 
-/** ZoneHVACEquipmentList_Impl is a ModelObject_Impl that is the implementation class for ZoneHVACEquipmentList.*/
-class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl {
- public:
+    /** ZoneHVACEquipmentList_Impl is a ModelObject_Impl that is the implementation class for ZoneHVACEquipmentList.*/
+    class MODEL_API ZoneHVACEquipmentList_Impl : public ModelObject_Impl
+    {
+     public:
+      ZoneHVACEquipmentList_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  ZoneHVACEquipmentList_Impl(const IdfObject& idfObject,
-                             Model_Impl* model,
-                             bool keepHandle);
+      ZoneHVACEquipmentList_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  ZoneHVACEquipmentList_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                             Model_Impl* model,
-                             bool keepHandle);
+      ZoneHVACEquipmentList_Impl(const ZoneHVACEquipmentList_Impl& other, Model_Impl* model, bool keepHandle);
 
-  ZoneHVACEquipmentList_Impl(const ZoneHVACEquipmentList_Impl& other,
-                             Model_Impl* model,
-                             bool keepHandle);
+      bool addEquipment(const ModelObject& equipment);
 
-  bool addEquipment(const ModelObject & equipment);
+      bool removeEquipment(const ModelObject& equipment);
 
-  bool removeEquipment(const ModelObject & equipment);
+      bool setCoolingPriority(const ModelObject& equipment, unsigned priority);
 
-  bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
+      bool setHeatingPriority(const ModelObject& equipment, unsigned priority);
 
-  bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
+      std::vector<ModelObject> equipment() const;
 
-  std::vector<ModelObject> equipment() const;
+      std::vector<ModelObject> equipmentInHeatingOrder() const;
 
-  std::vector<ModelObject> equipmentInHeatingOrder() const;
+      std::vector<ModelObject> equipmentInCoolingOrder() const;
 
-  std::vector<ModelObject> equipmentInCoolingOrder() const;
+      boost::optional<ModelExtensibleGroup> getGroupForModelObject(const ModelObject& modelObject) const;
 
-  boost::optional<ModelExtensibleGroup> getGroupForModelObject(const ModelObject & modelObject) const;
+      virtual ~ZoneHVACEquipmentList_Impl() {}
 
-  virtual ~ZoneHVACEquipmentList_Impl() {}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      std::string loadDistributionScheme() const;
 
-  std::string loadDistributionScheme() const;
+      bool setLoadDistributionScheme(std::string scheme);
 
-  bool setLoadDistributionScheme(std::string scheme);
+      ThermalZone thermalZone() const;
 
-  ThermalZone thermalZone() const;
+      unsigned heatingPriority(const ModelObject& equipment) const;
 
-  unsigned heatingPriority(const ModelObject & equipment) const;
+      unsigned coolingPriority(const ModelObject& equipment) const;
 
-  unsigned coolingPriority(const ModelObject & equipment) const;
+      boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
+      bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
-  boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
-  bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
+      boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
+      bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
-  boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
-  bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
+      // Deprecated
+      boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+      bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
 
-  // Deprecated
-  boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
-  bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+      boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+      bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
 
-  boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
-  bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZoneHVACEquipmentList");
+    };
 
+  }  // namespace detail
 
- protected:
+}  // namespace model
+}  // namespace openstudio
 
-  private:
-
-  REGISTER_LOGGER("openstudio.model.ZoneHVACEquipmentList");
-};
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEHVACEQUIPMENTLIST_IMPL_HPP
-
+#endif  // MODEL_ZONEHVACEQUIPMENTLIST_IMPL_HPP

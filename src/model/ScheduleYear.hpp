@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,83 +39,83 @@ class Date;
 
 namespace model {
 
-class ScheduleWeek;
+  class ScheduleWeek;
 
-namespace detail {
+  namespace detail {
 
-  class ScheduleYear_Impl;
+    class ScheduleYear_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ScheduleYear is a Schedule that wraps the OpenStudio IDD object 'OS_Schedule_Year'. */
-class MODEL_API ScheduleYear : public Schedule {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ScheduleYear is a Schedule that wraps the OpenStudio IDD object 'OS_Schedule_Year'. */
+  class MODEL_API ScheduleYear : public Schedule
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ScheduleYear(const Model& model);
+    explicit ScheduleYear(const Model& model);
 
-  virtual ~ScheduleYear() {}
+    virtual ~ScheduleYear() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  // DLM@20111018: This almost needs a RunPeriod as an argument to know the year description?
-  /// Returns a vector of dates marking the end of week schedules.
-  /// These dates will be in order and have the same number of elements as scheduleWeeks.
-  std::vector<openstudio::Date> dates() const;
+    // DLM@20111018: This almost needs a RunPeriod as an argument to know the year description?
+    /// Returns a vector of dates marking the end of week schedules.
+    /// These dates will be in order and have the same number of elements as scheduleWeeks.
+    std::vector<openstudio::Date> dates() const;
 
-  /// Returns a vector of week schedules in the same order and with the same number of elements as dates.
-  std::vector<ScheduleWeek> scheduleWeeks() const;
+    /// Returns a vector of week schedules in the same order and with the same number of elements as dates.
+    std::vector<ScheduleWeek> scheduleWeeks() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /// Sets the given week schedule to be in effect until (inclusive) the date given starting
-  /// the day after the previous date marker or January 1st if no previous date marker exists.
-  /// Replaces existing scheduleWeek for same date if it exists.
-  bool addScheduleWeek(const openstudio::Date& untilDate, const ScheduleWeek& scheduleWeek);
+    /// Sets the given week schedule to be in effect until (inclusive) the date given starting
+    /// the day after the previous date marker or January 1st if no previous date marker exists.
+    /// Replaces existing scheduleWeek for same date if it exists.
+    bool addScheduleWeek(const openstudio::Date& untilDate, const ScheduleWeek& scheduleWeek);
 
-  /// Clear all week schedules from this schedule.
-  void clearScheduleWeeks();
+    /// Clear all week schedules from this schedule.
+    void clearScheduleWeeks();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  // DLM@20111018: Eventually allow "Nth day in Month" and other descriptors
-  /// Returns the week schedule in effect at the given date.
-  boost::optional<ScheduleWeek> getScheduleWeek(const openstudio::Date& date) const;
+    // DLM@20111018: Eventually allow "Nth day in Month" and other descriptors
+    /// Returns the week schedule in effect at the given date.
+    boost::optional<ScheduleWeek> getScheduleWeek(const openstudio::Date& date) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ScheduleYear_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ScheduleYear_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::ScheduleYear_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::ScheduleYear_Impl;
 
-  explicit ScheduleYear(std::shared_ptr<detail::ScheduleYear_Impl> impl);
+    explicit ScheduleYear(std::shared_ptr<detail::ScheduleYear_Impl> impl);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ScheduleYear");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ScheduleYear");
+  };
 
-/** \relates ScheduleYear*/
-typedef boost::optional<ScheduleYear> OptionalScheduleYear;
+  /** \relates ScheduleYear*/
+  typedef boost::optional<ScheduleYear> OptionalScheduleYear;
 
-/** \relates ScheduleYear*/
-typedef std::vector<ScheduleYear> ScheduleYearVector;
+  /** \relates ScheduleYear*/
+  typedef std::vector<ScheduleYear> ScheduleYearVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SCHEDULEYEAR_HPP
-
+#endif  // MODEL_SCHEDULEYEAR_HPP

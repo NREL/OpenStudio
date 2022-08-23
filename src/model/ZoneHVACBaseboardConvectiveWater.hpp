@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,89 +38,86 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class StraightComponent;
+  class Schedule;
+  class StraightComponent;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneHVACBaseboardConvectiveWater_Impl;
+    class ZoneHVACBaseboardConvectiveWater_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneHVACBaseboardConvectiveWater is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:Baseboard:Convective:Water'. */
-class MODEL_API ZoneHVACBaseboardConvectiveWater : public ZoneHVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneHVACBaseboardConvectiveWater is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:Baseboard:Convective:Water'. */
+  class MODEL_API ZoneHVACBaseboardConvectiveWater : public ZoneHVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  ZoneHVACBaseboardConvectiveWater(const Model& model,
-                                            Schedule & availabilitySchedule,
-                                            StraightComponent & heatingCoilBaseboard  );
+    ZoneHVACBaseboardConvectiveWater(const Model& model, Schedule& availabilitySchedule, StraightComponent& heatingCoilBaseboard);
 
-  virtual ~ZoneHVACBaseboardConvectiveWater() {}
+    virtual ~ZoneHVACBaseboardConvectiveWater() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  StraightComponent heatingCoil() const;
+    StraightComponent heatingCoil() const;
 
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setHeatingCoil(const StraightComponent& heatingCoilBaseboard);
 
-  bool setHeatingCoil(const StraightComponent& heatingCoilBaseboard);
-
-   /** Returns the optional ThermalZone that this ZoneHVACBaseboardConvectiveWater is attached to
+    /** Returns the optional ThermalZone that this ZoneHVACBaseboardConvectiveWater is attached to
    **/
-  boost::optional<ThermalZone> thermalZone() const override;
+    boost::optional<ThermalZone> thermalZone() const override;
 
-  /** Adds this ZoneHVACBaseboardConvectiveWater to the thermal zone.  Returns true if the operation was
+    /** Adds this ZoneHVACBaseboardConvectiveWater to the thermal zone.  Returns true if the operation was
    *  successful.
    **/
-  bool addToThermalZone(ThermalZone & thermalZone);
+    bool addToThermalZone(ThermalZone& thermalZone);
 
-  /** Detaches this ZoneHVACBaseboardConvectiveWater from the associated ThermalZone.
+    /** Detaches this ZoneHVACBaseboardConvectiveWater from the associated ThermalZone.
    *  If there is no attached ThermalZone there is no effect.
    **/
-  void removeFromThermalZone();
+    void removeFromThermalZone();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneHVACBaseboardConvectiveWater_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneHVACBaseboardConvectiveWater_Impl ImplType;
 
-  explicit ZoneHVACBaseboardConvectiveWater(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl);
+    explicit ZoneHVACBaseboardConvectiveWater(std::shared_ptr<detail::ZoneHVACBaseboardConvectiveWater_Impl> impl);
 
-  friend class detail::ZoneHVACBaseboardConvectiveWater_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneHVACBaseboardConvectiveWater");
-};
+    friend class detail::ZoneHVACBaseboardConvectiveWater_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneHVACBaseboardConvectiveWater");
+  };
 
-/** \relates ZoneHVACBaseboardConvectiveWater*/
-typedef boost::optional<ZoneHVACBaseboardConvectiveWater> OptionalZoneHVACBaseboardConvectiveWater;
+  /** \relates ZoneHVACBaseboardConvectiveWater*/
+  typedef boost::optional<ZoneHVACBaseboardConvectiveWater> OptionalZoneHVACBaseboardConvectiveWater;
 
-/** \relates ZoneHVACBaseboardConvectiveWater*/
-typedef std::vector<ZoneHVACBaseboardConvectiveWater> ZoneHVACBaseboardConvectiveWaterVector;
+  /** \relates ZoneHVACBaseboardConvectiveWater*/
+  typedef std::vector<ZoneHVACBaseboardConvectiveWater> ZoneHVACBaseboardConvectiveWaterVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONEHVACBASEBOARDCONVECTIVEWATER_HPP
-
+#endif  // MODEL_ZONEHVACBASEBOARDCONVECTIVEWATER_HPP

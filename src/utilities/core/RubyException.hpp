@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,40 +34,35 @@
 
 #include <boost/regex.hpp>
 
-namespace openstudio
+namespace openstudio {
+
+class RubyException : public std::runtime_error
 {
+ public:
+  RubyException(const std::string& msg, const std::string& location) : std::runtime_error(msg), m_location(location) {}
 
-  class RubyException : public std::runtime_error
-  {
-    public:
+  virtual ~RubyException() throw() {}
 
-      RubyException(const std::string& msg, const std::string& location)
-        : std::runtime_error(msg), m_location(location)
-      {}
+  std::string location() const {
+    return m_location;
+  }
 
-      virtual ~RubyException() throw() {}
+  std::string shortLocation() const {
+    std::string result;
 
-      std::string location() const {return m_location;}
+    boost::regex regex("\\w*\\.rb:\\d*");
+    boost::smatch m;
+    if (boost::regex_search(m_location, m, regex)) {
+      result = m[0];
+    }
 
-      std::string shortLocation() const
-      {
-        std::string result;
+    return result;
+  }
 
-        boost::regex regex("\\w*\\.rb:\\d*");
-        boost::smatch m;
-        if (boost::regex_search(m_location, m, regex)) {
-          result = m[0];
-        }
+ private:
+  std::string m_location;
+};
 
-        return result;
-      }
+}  // namespace openstudio
 
-    private:
-
-      std::string m_location;
-
-  };
-
-} // openstudio
-
-#endif // UTILITIES_CORE_RUBYEXCEPTION_HPP
+#endif  // UTILITIES_CORE_RUBYEXCEPTION_HPP

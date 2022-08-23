@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,157 +37,157 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class FoundationKivaSettings_Impl;
+    class FoundationKivaSettings_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** FoundationKivaSettings is a ModelObject that wraps the OpenStudio IDD object 'OS:Foundation:Kiva:Settings'. */
-class MODEL_API FoundationKivaSettings : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** FoundationKivaSettings is a ModelObject that wraps the OpenStudio IDD object 'OS:Foundation:Kiva:Settings'. */
+  class MODEL_API FoundationKivaSettings : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~FoundationKivaSettings() {}
+    virtual ~FoundationKivaSettings() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double soilConductivity() const;
-  
-  bool isSoilConductivityDefaulted() const;
-  
-  double soilDensity() const;
-  
-  bool isSoilDensityDefaulted() const;
-  
-  double soilSpecificHeat() const;
-  
-  bool isSoilSpecificHeatDefaulted() const;
-  
-  double groundSolarAbsorptivity() const;
-  
-  bool isGroundSolarAbsorptivityDefaulted() const;
-  
-  double groundThermalAbsorptivity() const;
-  
-  bool isGroundThermalAbsorptivityDefaulted() const;
-  
-  double groundSurfaceRoughness() const;
-  
-  bool isGroundSurfaceRoughnessDefaulted() const;
-  
-  double farFieldWidth() const;
-  
-  bool isFarFieldWidthDefaulted() const;
-  
-  std::string deepGroundBoundaryCondition() const;
-  
-  bool isDeepGroundBoundaryConditionAutoselected();
-  
-  boost::optional<double> deepGroundDepth();
-  
-  bool isDeepGroundDepthAutocalculated();
-  
-  double minimumCellDimension() const;
-  
-  bool isMinimumCellDimensionDefaulted() const;
-  
-  double maximumCellGrowthCoefficient() const;
-  
-  bool isMaximumCellGrowthCoefficientDefaulted() const;
-  
-  std::string simulationTimestep() const;
-  
-  bool isSimulationTimestepDefaulted() const;
+    double soilConductivity() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool isSoilConductivityDefaulted() const;
 
-  bool setSoilConductivity(double soilConductivity);
-  
-  void resetSoilConductivity();
-  
-  bool setSoilDensity(double soilDensity);
-  
-  void resetSoilDensity();
-  
-  bool setSoilSpecificHeat(double soilSpecificHeat);
-  
-  void resetSoilSpecificHeat();
-  
-  bool setGroundSolarAbsorptivity(double groundSolarAbsorptivity);
-  
-  void resetGroundSolarAbsorptivity();
-  
-  bool setGroundThermalAbsorptivity(double groundThermalAbsorptivity);
-  
-  void resetGroundThermalAbsorptivity();
-  
-  bool setGroundSurfaceRoughness(double groundSurfaceRoughness);
-  
-  void resetGroundSurfaceRoughness();
-  
-  bool setFarFieldWidth(double farFieldWidth);
-  
-  void resetFarFieldWidth();
-  
-  bool setDeepGroundBoundaryCondition(std::string deepGroundBoundaryCondition);
-  
-  void resetDeepGroundBoundaryCondition();
-  
-  bool setDeepGroundDepth(double deepGroundDepth);
-  
-  void autocalculateDeepGroundDepth();
-  
-  bool setMinimumCellDimension(double minimumCellDimension);
-  
-  void resetMinimumCellDimension();
-  
-  bool setMaximumCellGrowthCoefficient(double maximumCellGrowthCoefficient);
-  
-  void resetMaximumCellGrowthCoefficient();
-  
-  bool setSimulationTimestep(std::string simulationTimestep);
-  
-  void resetSimulationTimestep();
+    double soilDensity() const;
 
-  //@}
-  /** @name Other */
-  //@{
+    bool isSoilDensityDefaulted() const;
 
-  //@}
- protected:
- 
-  explicit FoundationKivaSettings(Model& model);
- 
-  /// @cond
-  typedef detail::FoundationKivaSettings_Impl ImplType;
+    double soilSpecificHeat() const;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::FoundationKivaSettings_Impl;
+    bool isSoilSpecificHeatDefaulted() const;
 
-  explicit FoundationKivaSettings(std::shared_ptr<detail::FoundationKivaSettings_Impl> impl);
+    double groundSolarAbsorptivity() const;
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.FoundationKivaSettings");
-};
+    bool isGroundSolarAbsorptivityDefaulted() const;
 
-/** \relates FoundationKivaSettings*/
-typedef boost::optional<FoundationKivaSettings> OptionalFoundationKivaSettings;
+    double groundThermalAbsorptivity() const;
 
-/** \relates FoundationKivaSettings*/
-typedef std::vector<FoundationKivaSettings> FoundationKivaSettingsVector;
+    bool isGroundThermalAbsorptivityDefaulted() const;
 
-} // model
-} // openstudio
+    double groundSurfaceRoughness() const;
 
-#endif // MODEL_FOUNDATIONKIVASETTINGS_HPP
+    bool isGroundSurfaceRoughnessDefaulted() const;
+
+    double farFieldWidth() const;
+
+    bool isFarFieldWidthDefaulted() const;
+
+    std::string deepGroundBoundaryCondition() const;
+
+    bool isDeepGroundBoundaryConditionAutoselected();
+
+    boost::optional<double> deepGroundDepth();
+
+    bool isDeepGroundDepthAutocalculated();
+
+    double minimumCellDimension() const;
+
+    bool isMinimumCellDimensionDefaulted() const;
+
+    double maximumCellGrowthCoefficient() const;
+
+    bool isMaximumCellGrowthCoefficientDefaulted() const;
+
+    std::string simulationTimestep() const;
+
+    bool isSimulationTimestepDefaulted() const;
+
+    //@}
+    /** @name Setters */
+    //@{
+
+    bool setSoilConductivity(double soilConductivity);
+
+    void resetSoilConductivity();
+
+    bool setSoilDensity(double soilDensity);
+
+    void resetSoilDensity();
+
+    bool setSoilSpecificHeat(double soilSpecificHeat);
+
+    void resetSoilSpecificHeat();
+
+    bool setGroundSolarAbsorptivity(double groundSolarAbsorptivity);
+
+    void resetGroundSolarAbsorptivity();
+
+    bool setGroundThermalAbsorptivity(double groundThermalAbsorptivity);
+
+    void resetGroundThermalAbsorptivity();
+
+    bool setGroundSurfaceRoughness(double groundSurfaceRoughness);
+
+    void resetGroundSurfaceRoughness();
+
+    bool setFarFieldWidth(double farFieldWidth);
+
+    void resetFarFieldWidth();
+
+    bool setDeepGroundBoundaryCondition(std::string deepGroundBoundaryCondition);
+
+    void resetDeepGroundBoundaryCondition();
+
+    bool setDeepGroundDepth(double deepGroundDepth);
+
+    void autocalculateDeepGroundDepth();
+
+    bool setMinimumCellDimension(double minimumCellDimension);
+
+    void resetMinimumCellDimension();
+
+    bool setMaximumCellGrowthCoefficient(double maximumCellGrowthCoefficient);
+
+    void resetMaximumCellGrowthCoefficient();
+
+    bool setSimulationTimestep(std::string simulationTimestep);
+
+    void resetSimulationTimestep();
+
+    //@}
+    /** @name Other */
+    //@{
+
+    //@}
+   protected:
+    explicit FoundationKivaSettings(Model& model);
+
+    /// @cond
+    typedef detail::FoundationKivaSettings_Impl ImplType;
+
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::FoundationKivaSettings_Impl;
+
+    explicit FoundationKivaSettings(std::shared_ptr<detail::FoundationKivaSettings_Impl> impl);
+
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.FoundationKivaSettings");
+  };
+
+  /** \relates FoundationKivaSettings*/
+  typedef boost::optional<FoundationKivaSettings> OptionalFoundationKivaSettings;
+
+  /** \relates FoundationKivaSettings*/
+  typedef std::vector<FoundationKivaSettings> FoundationKivaSettingsVector;
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_FOUNDATIONKIVASETTINGS_HPP

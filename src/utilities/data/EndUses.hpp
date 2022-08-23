@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,9 +38,9 @@ namespace openstudio {
 
 /** EndUses is wrapper around Attribute for storing information about end uses.
 */
-class UTILITIES_API EndUses {
+class UTILITIES_API EndUses
+{
  public:
-
   /// Returns the expected name for attributes of this type, 'EndUses'.
   static std::string attributeName();
 
@@ -71,20 +71,19 @@ class UTILITIES_API EndUses {
   /// get end use value across sub categories
   double getEndUse(const EndUseFuelType& fuelType, const EndUseCategoryType& category) const;
 
-   /// get end use value across fuel types
+  /// get end use value across fuel types
   double getEndUseByCategory(const EndUseCategoryType& category, const std::string& subCategory) const;
 
-   /// get end use value across fuel types and sub categories
+  /// get end use value across fuel types and sub categories
   double getEndUseByCategory(const EndUseCategoryType& category) const;
 
-   /// get end use value across categories and sub categories
+  /// get end use value across categories and sub categories
   double getEndUseByFuelType(const EndUseFuelType& fuelType) const;
 
   /// get list of all sub cateogories
   std::vector<std::string> subCategories() const;
 
  private:
-
   EndUses(const Attribute& attribute);
 
   Attribute m_attribute;
@@ -92,6 +91,6 @@ class UTILITIES_API EndUses {
   REGISTER_LOGGER("openstudio.EndUses");
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_DATA_ENDUSES_HPP
+#endif  // UTILITIES_DATA_ENDUSES_HPP

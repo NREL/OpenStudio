@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -66,49 +66,39 @@
 #include "../utilities/core/Compare.hpp"
 #include "../utilities/units/Unit.hpp"
 
-#include <boost/bind.hpp>
+namespace openstudio {
+namespace model {
 
-namespace openstudio{
-namespace model{
+  namespace detail {
 
-namespace detail{
+    AirflowNetworkSimulationControl_Impl::AirflowNetworkSimulationControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkSimulationControl::iddObjectType());
+    }
 
-AirflowNetworkSimulationControl_Impl::AirflowNetworkSimulationControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-: ParentObject_Impl(idfObject, model, keepHandle)
-{
-  OS_ASSERT(idfObject.iddObject().type() == AirflowNetworkSimulationControl::iddObjectType());
-}
+    AirflowNetworkSimulationControl_Impl::AirflowNetworkSimulationControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                               Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == AirflowNetworkSimulationControl::iddObjectType());
+    }
 
-AirflowNetworkSimulationControl_Impl::AirflowNetworkSimulationControl_Impl(
-  const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
-  : ParentObject_Impl(other,model,keepHandle)
-{
-  OS_ASSERT(other.iddObject().type() == AirflowNetworkSimulationControl::iddObjectType());
-}
+    AirflowNetworkSimulationControl_Impl::AirflowNetworkSimulationControl_Impl(const AirflowNetworkSimulationControl_Impl& other, Model_Impl* model,
+                                                                               bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {}
 
-AirflowNetworkSimulationControl_Impl::AirflowNetworkSimulationControl_Impl(const AirflowNetworkSimulationControl_Impl& other,
-                                                                           Model_Impl* model,
-                                                                           bool keepHandle)
-                                                                           : ParentObject_Impl(other,model,keepHandle)
-{
-}
+    AirflowNetworkSimulationControl_Impl::~AirflowNetworkSimulationControl_Impl() {}
 
-AirflowNetworkSimulationControl_Impl::~AirflowNetworkSimulationControl_Impl()
-{}
+    // return the parent object in the hierarchy
+    boost::optional<ParentObject> AirflowNetworkSimulationControl_Impl::parent() const {
+      // Simulation is highest level, there is no parent
+      return boost::optional<ParentObject>();
+    }
 
-// return the parent object in the hierarchy
-boost::optional<ParentObject> AirflowNetworkSimulationControl_Impl::parent() const
-{
-  // Simulation is highest level, there is no parent
-  return boost::optional<ParentObject>();
-}
+    // return any children objects in the hierarchy
+    std::vector<ModelObject> AirflowNetworkSimulationControl_Impl::children() const {
+      std::vector<ModelObject> result;
 
-// return any children objects in the hierarchy
-std::vector<ModelObject> AirflowNetworkSimulationControl_Impl::children() const
-{
-  std::vector<ModelObject> result;
-
-  /*
+      /*
   OptionalConvergenceLimits ocl = convergenceLimits();
   if (ocl) { result.push_back(*ocl); }
 
@@ -150,12 +140,12 @@ std::vector<ModelObject> AirflowNetworkSimulationControl_Impl::children() const
   if (ozcmrs) { result.push_back(*ozcmrs); }
   */
 
-  return result;
-}
+      return result;
+    }
 
-std::vector<IddObjectType> AirflowNetworkSimulationControl_Impl::allowableChildTypes() const {
-  IddObjectTypeVector result;
-  /*
+    std::vector<IddObjectType> AirflowNetworkSimulationControl_Impl::allowableChildTypes() const {
+      IddObjectTypeVector result;
+      /*
   result.push_back(ConvergenceLimits::iddObjectType());
   result.push_back(HeatBalanceAlgorithm::iddObjectType());
   result.push_back(InsideSurfaceConvectionAlgorithm::iddObjectType());
@@ -168,501 +158,515 @@ std::vector<IddObjectType> AirflowNetworkSimulationControl_Impl::allowableChildT
   result.push_back(ZoneAirHeatBalanceAlgorithm::iddObjectType());
   result.push_back(ZoneCapacitanceMultiplierResearchSpecial::iddObjectType());
   */
-  return result;
-}
+      return result;
+    }
 
-const std::vector<std::string>& AirflowNetworkSimulationControl_Impl::outputVariableNames() const
-{
-  static std::vector<std::string> result;
-  return result;
-}
+    const std::vector<std::string>& AirflowNetworkSimulationControl_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
 
-IddObjectType AirflowNetworkSimulationControl_Impl::iddObjectType() const {
-  return AirflowNetworkSimulationControl::iddObjectType();
-}
+    IddObjectType AirflowNetworkSimulationControl_Impl::iddObjectType() const {
+      return AirflowNetworkSimulationControl::iddObjectType();
+    }
 
-boost::optional<std::string> AirflowNetworkSimulationControl_Impl::airflowNetworkControl() const
-{
-  return getString(OS_AirflowNetworkSimulationControlFields::AirflowNetworkControl,true);
-}
+    boost::optional<std::string> AirflowNetworkSimulationControl_Impl::airflowNetworkControl() const {
+      return getString(OS_AirflowNetworkSimulationControlFields::AirflowNetworkControl, true);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::isAirflowNetworkControlDefaulted() const {
-  return isEmpty(OS_AirflowNetworkSimulationControlFields::AirflowNetworkControl);
-}
+    bool AirflowNetworkSimulationControl_Impl::isAirflowNetworkControlDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::AirflowNetworkControl);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::setAirflowNetworkControl(std::string control)
-{
-  return setString(OS_AirflowNetworkSimulationControlFields::AirflowNetworkControl, control);
-}
+    bool AirflowNetworkSimulationControl_Impl::setAirflowNetworkControl(std::string control) {
+      return setString(OS_AirflowNetworkSimulationControlFields::AirflowNetworkControl, control);
+    }
 
-void AirflowNetworkSimulationControl_Impl::resetAirflowNetworkControl() {
-  bool result = setString(OS_AirflowNetworkSimulationControlFields::AirflowNetworkControl, "");
-  OS_ASSERT(result);
-}
+    void AirflowNetworkSimulationControl_Impl::resetAirflowNetworkControl() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::AirflowNetworkControl, "");
+      OS_ASSERT(result);
+    }
 
-boost::optional<std::string> AirflowNetworkSimulationControl_Impl::windPressureCoefficientType() const
-{
-  return getString(OS_AirflowNetworkSimulationControlFields::WindPressureCoefficientType,true);
-}
+    boost::optional<std::string> AirflowNetworkSimulationControl_Impl::windPressureCoefficientType() const {
+      return getString(OS_AirflowNetworkSimulationControlFields::WindPressureCoefficientType, true);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::isWindPressureCoefficientTypeDefaulted() const {
-  return isEmpty(OS_AirflowNetworkSimulationControlFields::WindPressureCoefficientType);
-}
+    bool AirflowNetworkSimulationControl_Impl::isWindPressureCoefficientTypeDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::WindPressureCoefficientType);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::setWindPressureCoefficientType(std::string type)
-{
-  return setString(OS_AirflowNetworkSimulationControlFields::WindPressureCoefficientType, type);
-}
+    bool AirflowNetworkSimulationControl_Impl::setWindPressureCoefficientType(std::string type) {
+      return setString(OS_AirflowNetworkSimulationControlFields::WindPressureCoefficientType, type);
+    }
 
-void AirflowNetworkSimulationControl_Impl::resetWindPressureCoefficientType() {
-  bool result = setString(OS_AirflowNetworkSimulationControlFields::WindPressureCoefficientType, "");
-  OS_ASSERT(result);
-}
+    void AirflowNetworkSimulationControl_Impl::resetWindPressureCoefficientType() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::WindPressureCoefficientType, "");
+      OS_ASSERT(result);
+    }
 
-boost::optional<std::string> AirflowNetworkSimulationControl_Impl::heightSelectionforLocalWindPressureCalculation() const
-{
-  return getString(OS_AirflowNetworkSimulationControlFields::HeightSelectionforLocalWindPressureCalculation, true);
-}
+    boost::optional<std::string> AirflowNetworkSimulationControl_Impl::heightSelectionforLocalWindPressureCalculation() const {
+      return getString(OS_AirflowNetworkSimulationControlFields::HeightSelectionforLocalWindPressureCalculation, true);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::isHeightSelectionforLocalWindPressureCalculationDefaulted() const
-{
-  return isEmpty(OS_AirflowNetworkSimulationControlFields::HeightSelectionforLocalWindPressureCalculation);
-}
+    bool AirflowNetworkSimulationControl_Impl::isHeightSelectionforLocalWindPressureCalculationDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::HeightSelectionforLocalWindPressureCalculation);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::setHeightSelectionforLocalWindPressureCalculation(std::string type)
-{
-  return setString(OS_AirflowNetworkSimulationControlFields::HeightSelectionforLocalWindPressureCalculation, type);
-}
+    bool AirflowNetworkSimulationControl_Impl::setHeightSelectionforLocalWindPressureCalculation(std::string type) {
+      return setString(OS_AirflowNetworkSimulationControlFields::HeightSelectionforLocalWindPressureCalculation, type);
+    }
 
-void AirflowNetworkSimulationControl_Impl::resetHeightSelectionforLocalWindPressureCalculation() {
-  bool result = setString(OS_AirflowNetworkSimulationControlFields::HeightSelectionforLocalWindPressureCalculation, "");
-  OS_ASSERT(result);
-}
+    void AirflowNetworkSimulationControl_Impl::resetHeightSelectionforLocalWindPressureCalculation() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::HeightSelectionforLocalWindPressureCalculation, "");
+      OS_ASSERT(result);
+    }
 
-boost::optional<std::string> AirflowNetworkSimulationControl_Impl::buildingType() const
-{
-  return getString(OS_AirflowNetworkSimulationControlFields::BuildingType,true);
-}
+    boost::optional<std::string> AirflowNetworkSimulationControl_Impl::buildingType() const {
+      return getString(OS_AirflowNetworkSimulationControlFields::BuildingType, true);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::isBuildingTypeDefaulted() const {
-  return isEmpty(OS_AirflowNetworkSimulationControlFields::BuildingType);
-}
+    bool AirflowNetworkSimulationControl_Impl::isBuildingTypeDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::BuildingType);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::setBuildingType(std::string type)
-{
-  return setString(OS_AirflowNetworkSimulationControlFields::BuildingType, type);
-}
+    bool AirflowNetworkSimulationControl_Impl::setBuildingType(std::string type) {
+      return setString(OS_AirflowNetworkSimulationControlFields::BuildingType, type);
+    }
 
-void AirflowNetworkSimulationControl_Impl::resetBuildingType() {
-  bool result = setString(OS_AirflowNetworkSimulationControlFields::BuildingType, "");
-  OS_ASSERT(result);
-}
+    void AirflowNetworkSimulationControl_Impl::resetBuildingType() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::BuildingType, "");
+      OS_ASSERT(result);
+    }
 
-boost::optional<int> AirflowNetworkSimulationControl_Impl::maximumNumberofIterations() const
-{
-  return getInt(OS_AirflowNetworkSimulationControlFields::MaximumNumberofIterations,true);
-}
+    boost::optional<int> AirflowNetworkSimulationControl_Impl::maximumNumberofIterations() const {
+      return getInt(OS_AirflowNetworkSimulationControlFields::MaximumNumberofIterations, true);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::isMaximumNumberofIterationsDefaulted() const {
-  return isEmpty(OS_AirflowNetworkSimulationControlFields::MaximumNumberofIterations);
-}
+    bool AirflowNetworkSimulationControl_Impl::isMaximumNumberofIterationsDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::MaximumNumberofIterations);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::setMaximumNumberofIterations(int number)
-{
-  return setInt(OS_AirflowNetworkSimulationControlFields::MaximumNumberofIterations, number);
-}
+    bool AirflowNetworkSimulationControl_Impl::setMaximumNumberofIterations(int number) {
+      return setInt(OS_AirflowNetworkSimulationControlFields::MaximumNumberofIterations, number);
+    }
 
-void AirflowNetworkSimulationControl_Impl::resetMaximumNumberofIterations() {
-  bool result = setString(OS_AirflowNetworkSimulationControlFields::MaximumNumberofIterations, "");
-  OS_ASSERT(result);
-}
+    void AirflowNetworkSimulationControl_Impl::resetMaximumNumberofIterations() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::MaximumNumberofIterations, "");
+      OS_ASSERT(result);
+    }
 
-boost::optional<std::string> AirflowNetworkSimulationControl_Impl::initializationType() const
-{
-  return getString(OS_AirflowNetworkSimulationControlFields::InitializationType,true);
-}
+    boost::optional<std::string> AirflowNetworkSimulationControl_Impl::initializationType() const {
+      return getString(OS_AirflowNetworkSimulationControlFields::InitializationType, true);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::isInitializationTypeDefaulted() const {
-  return isEmpty(OS_AirflowNetworkSimulationControlFields::InitializationType);
-}
+    bool AirflowNetworkSimulationControl_Impl::isInitializationTypeDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::InitializationType);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::setInitializationType(std::string type)
-{
-  return setString(OS_AirflowNetworkSimulationControlFields::InitializationType, type);
-}
+    bool AirflowNetworkSimulationControl_Impl::setInitializationType(std::string type) {
+      return setString(OS_AirflowNetworkSimulationControlFields::InitializationType, type);
+    }
 
-void AirflowNetworkSimulationControl_Impl::resetInitializationType() {
-  bool result = setString(OS_AirflowNetworkSimulationControlFields::InitializationType, "");
-  OS_ASSERT(result);
-}
+    void AirflowNetworkSimulationControl_Impl::resetInitializationType() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::InitializationType, "");
+      OS_ASSERT(result);
+    }
 
-boost::optional<double> AirflowNetworkSimulationControl_Impl::relativeAirflowConvergenceTolerance() const
-{
-  return getDouble(OS_AirflowNetworkSimulationControlFields::RelativeAirflowConvergenceTolerance,true);
-}
+    boost::optional<double> AirflowNetworkSimulationControl_Impl::relativeAirflowConvergenceTolerance() const {
+      return getDouble(OS_AirflowNetworkSimulationControlFields::RelativeAirflowConvergenceTolerance, true);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::isRelativeAirflowConvergenceToleranceDefaulted() const {
-  return isEmpty(OS_AirflowNetworkSimulationControlFields::RelativeAirflowConvergenceTolerance);
-}
+    bool AirflowNetworkSimulationControl_Impl::isRelativeAirflowConvergenceToleranceDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::RelativeAirflowConvergenceTolerance);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::setRelativeAirflowConvergenceTolerance(double tolerance)
-{
-  return setDouble(OS_AirflowNetworkSimulationControlFields::RelativeAirflowConvergenceTolerance, tolerance);
-}
+    bool AirflowNetworkSimulationControl_Impl::setRelativeAirflowConvergenceTolerance(double tolerance) {
+      return setDouble(OS_AirflowNetworkSimulationControlFields::RelativeAirflowConvergenceTolerance, tolerance);
+    }
 
-void AirflowNetworkSimulationControl_Impl::resetRelativeAirflowConvergenceTolerance() {
-  bool result = setString(OS_AirflowNetworkSimulationControlFields::RelativeAirflowConvergenceTolerance, "");
-  OS_ASSERT(result);
-}
+    void AirflowNetworkSimulationControl_Impl::resetRelativeAirflowConvergenceTolerance() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::RelativeAirflowConvergenceTolerance, "");
+      OS_ASSERT(result);
+    }
 
-boost::optional<double> AirflowNetworkSimulationControl_Impl::absoluteAirflowConvergenceTolerance() const
-{
-  return getDouble(OS_AirflowNetworkSimulationControlFields::AbsoluteAirflowConvergenceTolerance,true);
-}
+    boost::optional<double> AirflowNetworkSimulationControl_Impl::absoluteAirflowConvergenceTolerance() const {
+      return getDouble(OS_AirflowNetworkSimulationControlFields::AbsoluteAirflowConvergenceTolerance, true);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::isAbsoluteAirflowConvergenceToleranceDefaulted() const {
-  return isEmpty(OS_AirflowNetworkSimulationControlFields::AbsoluteAirflowConvergenceTolerance);
-}
+    bool AirflowNetworkSimulationControl_Impl::isAbsoluteAirflowConvergenceToleranceDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::AbsoluteAirflowConvergenceTolerance);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::setAbsoluteAirflowConvergenceTolerance(double tolerance)
-{
-  return setDouble(OS_AirflowNetworkSimulationControlFields::AbsoluteAirflowConvergenceTolerance, tolerance);
-}
+    bool AirflowNetworkSimulationControl_Impl::setAbsoluteAirflowConvergenceTolerance(double tolerance) {
+      return setDouble(OS_AirflowNetworkSimulationControlFields::AbsoluteAirflowConvergenceTolerance, tolerance);
+    }
 
-void AirflowNetworkSimulationControl_Impl::resetAbsoluteAirflowConvergenceTolerance() {
-  bool result = setString(OS_AirflowNetworkSimulationControlFields::AbsoluteAirflowConvergenceTolerance, "");
-  OS_ASSERT(result);
-}
+    void AirflowNetworkSimulationControl_Impl::resetAbsoluteAirflowConvergenceTolerance() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::AbsoluteAirflowConvergenceTolerance, "");
+      OS_ASSERT(result);
+    }
 
-boost::optional<double> AirflowNetworkSimulationControl_Impl::convergenceAccelerationLimit() const
-{
-  return getDouble(OS_AirflowNetworkSimulationControlFields::ConvergenceAccelerationLimit,true);
-}
+    boost::optional<double> AirflowNetworkSimulationControl_Impl::convergenceAccelerationLimit() const {
+      return getDouble(OS_AirflowNetworkSimulationControlFields::ConvergenceAccelerationLimit, true);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::isConvergenceAccelerationLimitDefaulted() const {
-  return isEmpty(OS_AirflowNetworkSimulationControlFields::ConvergenceAccelerationLimit);
-}
+    bool AirflowNetworkSimulationControl_Impl::isConvergenceAccelerationLimitDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::ConvergenceAccelerationLimit);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::setConvergenceAccelerationLimit(double limit)
-{
-  return setDouble(OS_AirflowNetworkSimulationControlFields::ConvergenceAccelerationLimit, limit);
-}
+    bool AirflowNetworkSimulationControl_Impl::setConvergenceAccelerationLimit(double limit) {
+      return setDouble(OS_AirflowNetworkSimulationControlFields::ConvergenceAccelerationLimit, limit);
+    }
 
-void AirflowNetworkSimulationControl_Impl::resetConvergenceAccelerationLimit() {
-  bool result = setString(OS_AirflowNetworkSimulationControlFields::ConvergenceAccelerationLimit, "");
-  OS_ASSERT(result);
-}
+    void AirflowNetworkSimulationControl_Impl::resetConvergenceAccelerationLimit() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::ConvergenceAccelerationLimit, "");
+      OS_ASSERT(result);
+    }
 
-boost::optional<double> AirflowNetworkSimulationControl_Impl::azimuthAngleofLongAxisofBuilding() const
-{
-  return getDouble(OS_AirflowNetworkSimulationControlFields::AzimuthAngleofLongAxisofBuilding,true);
-}
+    boost::optional<double> AirflowNetworkSimulationControl_Impl::azimuthAngleofLongAxisofBuilding() const {
+      return getDouble(OS_AirflowNetworkSimulationControlFields::AzimuthAngleofLongAxisofBuilding, true);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::isAzimuthAngleofLongAxisofBuildingDefaulted() const {
-  return isEmpty(OS_AirflowNetworkSimulationControlFields::AzimuthAngleofLongAxisofBuilding);
-}
+    bool AirflowNetworkSimulationControl_Impl::isAzimuthAngleofLongAxisofBuildingDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::AzimuthAngleofLongAxisofBuilding);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::setAzimuthAngleofLongAxisofBuilding(double angle)
-{
-  return setDouble(OS_AirflowNetworkSimulationControlFields::AzimuthAngleofLongAxisofBuilding, angle);
-}
+    bool AirflowNetworkSimulationControl_Impl::setAzimuthAngleofLongAxisofBuilding(double angle) {
+      return setDouble(OS_AirflowNetworkSimulationControlFields::AzimuthAngleofLongAxisofBuilding, angle);
+    }
 
-void AirflowNetworkSimulationControl_Impl::resetAzimuthAngleofLongAxisofBuilding() {
-  bool result = setString(OS_AirflowNetworkSimulationControlFields::AzimuthAngleofLongAxisofBuilding, "");
-  OS_ASSERT(result);
-}
+    void AirflowNetworkSimulationControl_Impl::resetAzimuthAngleofLongAxisofBuilding() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::AzimuthAngleofLongAxisofBuilding, "");
+      OS_ASSERT(result);
+    }
 
-boost::optional<double> AirflowNetworkSimulationControl_Impl::buildingAspectRatio() const
-{
-  return getDouble(OS_AirflowNetworkSimulationControlFields::RatioofBuildingWidthAlongShortAxistoWidthAlongLongAxis,true);
-}
+    boost::optional<double> AirflowNetworkSimulationControl_Impl::buildingAspectRatio() const {
+      return getDouble(OS_AirflowNetworkSimulationControlFields::RatioofBuildingWidthAlongShortAxistoWidthAlongLongAxis, true);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::isBuildingAspectRatioDefaulted() const {
-  return isEmpty(OS_AirflowNetworkSimulationControlFields::RatioofBuildingWidthAlongShortAxistoWidthAlongLongAxis);
-}
+    bool AirflowNetworkSimulationControl_Impl::isBuildingAspectRatioDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::RatioofBuildingWidthAlongShortAxistoWidthAlongLongAxis);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::setBuildingAspectRatio(double ratio)
-{
-  return setDouble(OS_AirflowNetworkSimulationControlFields::RatioofBuildingWidthAlongShortAxistoWidthAlongLongAxis, ratio);
-}
+    bool AirflowNetworkSimulationControl_Impl::setBuildingAspectRatio(double ratio) {
+      return setDouble(OS_AirflowNetworkSimulationControlFields::RatioofBuildingWidthAlongShortAxistoWidthAlongLongAxis, ratio);
+    }
 
-void AirflowNetworkSimulationControl_Impl::resetBuildingAspectRatio() {
-  bool result = setString(OS_AirflowNetworkSimulationControlFields::RatioofBuildingWidthAlongShortAxistoWidthAlongLongAxis, "");
-  OS_ASSERT(result);
-}
+    void AirflowNetworkSimulationControl_Impl::resetBuildingAspectRatio() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::RatioofBuildingWidthAlongShortAxistoWidthAlongLongAxis, "");
+      OS_ASSERT(result);
+    }
 
-bool AirflowNetworkSimulationControl_Impl::heightDependenceofExternalNodeTemperature() const
-{
-  boost::optional<std::string> opt = getString(OS_AirflowNetworkSimulationControlFields::HeightDependenceofExternalNodeTemperature, true);
-  if (opt) {
-    return openstudio::istringEqual(opt.get(), "Yes");
+    bool AirflowNetworkSimulationControl_Impl::heightDependenceofExternalNodeTemperature() const {
+      boost::optional<std::string> opt = getString(OS_AirflowNetworkSimulationControlFields::HeightDependenceofExternalNodeTemperature, true);
+      if (opt) {
+        return openstudio::istringEqual(opt.get(), "Yes");
+      }
+      return false;  // Default is "No"
+    }
+
+    bool AirflowNetworkSimulationControl_Impl::isHeightDependenceofExternalNodeTemperatureDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::HeightDependenceofExternalNodeTemperature);
+    }
+
+    bool AirflowNetworkSimulationControl_Impl::setHeightDependenceofExternalNodeTemperature(bool tf) {
+      if (tf) {
+        return setString(OS_AirflowNetworkSimulationControlFields::HeightDependenceofExternalNodeTemperature, "Yes");
+      }
+      return setString(OS_AirflowNetworkSimulationControlFields::HeightDependenceofExternalNodeTemperature, "No");
+    }
+
+    void AirflowNetworkSimulationControl_Impl::resetHeightDependenceofExternalNodeTemperature() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::HeightDependenceofExternalNodeTemperature, "");
+      OS_ASSERT(result);
+    }
+
+    std::string AirflowNetworkSimulationControl_Impl::solver() const {
+      boost::optional<std::string> value = getString(OS_AirflowNetworkSimulationControlFields::Solver, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool AirflowNetworkSimulationControl_Impl::isSolverDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::Solver);
+    }
+
+    bool AirflowNetworkSimulationControl_Impl::setSolver(const std::string& solver) {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::Solver, solver);
+      return result;
+    }
+
+    void AirflowNetworkSimulationControl_Impl::resetSolver() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::Solver, "");
+      OS_ASSERT(result);
+    }
+
+    bool AirflowNetworkSimulationControl_Impl::allowUnsupportedZoneEquipment() const {
+      boost::optional<std::string> value = getString(OS_AirflowNetworkSimulationControlFields::AllowUnsupportedZoneEquipment, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
+    bool AirflowNetworkSimulationControl_Impl::isAllowUnsupportedZoneEquipmentDefaulted() const {
+      return isEmpty(OS_AirflowNetworkSimulationControlFields::AllowUnsupportedZoneEquipment);
+    }
+
+    bool AirflowNetworkSimulationControl_Impl::setAllowUnsupportedZoneEquipment(bool allowUnsupportedZoneEquipment) {
+      bool result = false;
+      if (allowUnsupportedZoneEquipment) {
+        result = setString(OS_AirflowNetworkSimulationControlFields::AllowUnsupportedZoneEquipment, "Yes");
+      } else {
+        result = setString(OS_AirflowNetworkSimulationControlFields::AllowUnsupportedZoneEquipment, "No");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void AirflowNetworkSimulationControl_Impl::resetAllowUnsupportedZoneEquipment() {
+      bool result = setString(OS_AirflowNetworkSimulationControlFields::AllowUnsupportedZoneEquipment, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  AirflowNetworkSimulationControl::AirflowNetworkSimulationControl(const Model& model) : ParentObject(iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::AirflowNetworkSimulationControl_Impl>());
   }
-  return false; // Default is "No"
-}
 
-bool AirflowNetworkSimulationControl_Impl::isHeightDependenceofExternalNodeTemperatureDefaulted() const {
-  return isEmpty(OS_AirflowNetworkSimulationControlFields::HeightDependenceofExternalNodeTemperature);
-}
+  AirflowNetworkSimulationControl::AirflowNetworkSimulationControl(std::shared_ptr<detail::AirflowNetworkSimulationControl_Impl> impl)
+    : ParentObject(impl) {}
 
-bool AirflowNetworkSimulationControl_Impl::setHeightDependenceofExternalNodeTemperature(bool tf)
-{
-  if (tf) {
-    return setString(OS_AirflowNetworkSimulationControlFields::HeightDependenceofExternalNodeTemperature, "Yes");
+  IddObjectType AirflowNetworkSimulationControl::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_AirflowNetworkSimulationControl);
   }
-  return setString(OS_AirflowNetworkSimulationControlFields::HeightDependenceofExternalNodeTemperature, "No");
-}
 
-void AirflowNetworkSimulationControl_Impl::resetHeightDependenceofExternalNodeTemperature() {
-  bool result = setString(OS_AirflowNetworkSimulationControlFields::HeightDependenceofExternalNodeTemperature, "");
-  OS_ASSERT(result);
-}
+  std::vector<std::string> AirflowNetworkSimulationControl::solverValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_AirflowNetworkSimulationControlFields::Solver);
+  }
 
-} // detail
+  boost::optional<std::string> AirflowNetworkSimulationControl::airflowNetworkControl() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->airflowNetworkControl();
+  }
 
-AirflowNetworkSimulationControl::AirflowNetworkSimulationControl( const Model& model ):
-ParentObject(iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::AirflowNetworkSimulationControl_Impl>());
-}
+  bool AirflowNetworkSimulationControl::isAirflowNetworkControlDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isAirflowNetworkControlDefaulted();
+  }
 
-AirflowNetworkSimulationControl::AirflowNetworkSimulationControl(std::shared_ptr<detail::AirflowNetworkSimulationControl_Impl> impl)
-: ParentObject(impl)
-{}
+  boost::optional<std::string> AirflowNetworkSimulationControl::windPressureCoefficientType() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->windPressureCoefficientType();
+  }
 
-IddObjectType AirflowNetworkSimulationControl::iddObjectType()
-{
-  return IddObjectType(IddObjectType::OS_AirflowNetworkSimulationControl);
-}
+  bool AirflowNetworkSimulationControl::isWindPressureCoefficientTypeDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isWindPressureCoefficientTypeDefaulted();
+  }
 
-boost::optional<std::string> AirflowNetworkSimulationControl::airflowNetworkControl() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->airflowNetworkControl();
-}
+  boost::optional<std::string> AirflowNetworkSimulationControl::heightSelectionforLocalWindPressureCalculation() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->heightSelectionforLocalWindPressureCalculation();
+  }
 
-bool AirflowNetworkSimulationControl::isAirflowNetworkControlDefaulted() const {
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isAirflowNetworkControlDefaulted();
-}
+  bool AirflowNetworkSimulationControl::isHeightSelectionforLocalWindPressureCalculationDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isHeightSelectionforLocalWindPressureCalculationDefaulted();
+  }
 
-boost::optional<std::string> AirflowNetworkSimulationControl::windPressureCoefficientType() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->windPressureCoefficientType();
-}
+  boost::optional<std::string> AirflowNetworkSimulationControl::buildingType() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->buildingType();
+  }
 
-bool AirflowNetworkSimulationControl::isWindPressureCoefficientTypeDefaulted() const {
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isWindPressureCoefficientTypeDefaulted();
-}
+  bool AirflowNetworkSimulationControl::isBuildingTypeDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isBuildingTypeDefaulted();
+  }
 
-boost::optional<std::string> AirflowNetworkSimulationControl::heightSelectionforLocalWindPressureCalculation() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->heightSelectionforLocalWindPressureCalculation();
-}
+  boost::optional<int> AirflowNetworkSimulationControl::maximumNumberofIterations() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->maximumNumberofIterations();
+  }
 
-bool AirflowNetworkSimulationControl::isHeightSelectionforLocalWindPressureCalculationDefaulted() const {
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isHeightSelectionforLocalWindPressureCalculationDefaulted();
-}
+  bool AirflowNetworkSimulationControl::isMaximumNumberofIterationsDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isMaximumNumberofIterationsDefaulted();
+  }
 
-boost::optional<std::string> AirflowNetworkSimulationControl::buildingType() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->buildingType();
-}
+  boost::optional<std::string> AirflowNetworkSimulationControl::initializationType() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->initializationType();
+  }
 
-bool AirflowNetworkSimulationControl::isBuildingTypeDefaulted() const {
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isBuildingTypeDefaulted();
-}
+  bool AirflowNetworkSimulationControl::isInitializationTypeDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isInitializationTypeDefaulted();
+  }
 
-boost::optional<int> AirflowNetworkSimulationControl::maximumNumberofIterations() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->maximumNumberofIterations();
-}
+  boost::optional<double> AirflowNetworkSimulationControl::relativeAirflowConvergenceTolerance() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->relativeAirflowConvergenceTolerance();
+  }
 
-bool AirflowNetworkSimulationControl::isMaximumNumberofIterationsDefaulted() const {
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isMaximumNumberofIterationsDefaulted();
-}
+  bool AirflowNetworkSimulationControl::isRelativeAirflowConvergenceToleranceDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isRelativeAirflowConvergenceToleranceDefaulted();
+  }
 
-boost::optional<std::string> AirflowNetworkSimulationControl::initializationType() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->initializationType();
-}
+  boost::optional<double> AirflowNetworkSimulationControl::absoluteAirflowConvergenceTolerance() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->absoluteAirflowConvergenceTolerance();
+  }
 
-bool AirflowNetworkSimulationControl::isInitializationTypeDefaulted() const {
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isInitializationTypeDefaulted();
-}
+  bool AirflowNetworkSimulationControl::isAbsoluteAirflowConvergenceToleranceDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isAbsoluteAirflowConvergenceToleranceDefaulted();
+  }
 
-boost::optional<double> AirflowNetworkSimulationControl::relativeAirflowConvergenceTolerance() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->relativeAirflowConvergenceTolerance();
-}
+  boost::optional<double> AirflowNetworkSimulationControl::convergenceAccelerationLimit() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->convergenceAccelerationLimit();
+  }
 
-bool AirflowNetworkSimulationControl::isRelativeAirflowConvergenceToleranceDefaulted() const {
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isRelativeAirflowConvergenceToleranceDefaulted();
-}
+  bool AirflowNetworkSimulationControl::isConvergenceAccelerationLimitDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isConvergenceAccelerationLimitDefaulted();
+  }
 
-boost::optional<double> AirflowNetworkSimulationControl::absoluteAirflowConvergenceTolerance() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->absoluteAirflowConvergenceTolerance();
-}
+  boost::optional<double> AirflowNetworkSimulationControl::azimuthAngleofLongAxisofBuilding() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->azimuthAngleofLongAxisofBuilding();
+  }
 
-bool AirflowNetworkSimulationControl::isAbsoluteAirflowConvergenceToleranceDefaulted() const {
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isAbsoluteAirflowConvergenceToleranceDefaulted();
-}
+  bool AirflowNetworkSimulationControl::isAzimuthAngleofLongAxisofBuildingDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isAzimuthAngleofLongAxisofBuildingDefaulted();
+  }
 
-boost::optional<double> AirflowNetworkSimulationControl::convergenceAccelerationLimit() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->convergenceAccelerationLimit();
-}
+  boost::optional<double> AirflowNetworkSimulationControl::buildingAspectRatio() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->buildingAspectRatio();
+  }
 
-bool AirflowNetworkSimulationControl::isConvergenceAccelerationLimitDefaulted() const {
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isConvergenceAccelerationLimitDefaulted();
-}
+  bool AirflowNetworkSimulationControl::isBuildingAspectRatioDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isBuildingAspectRatioDefaulted();
+  }
 
-boost::optional<double> AirflowNetworkSimulationControl::azimuthAngleofLongAxisofBuilding() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->azimuthAngleofLongAxisofBuilding();
-}
+  bool AirflowNetworkSimulationControl::heightDependenceofExternalNodeTemperature() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->heightDependenceofExternalNodeTemperature();
+  }
 
-bool AirflowNetworkSimulationControl::isAzimuthAngleofLongAxisofBuildingDefaulted() const {
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isAzimuthAngleofLongAxisofBuildingDefaulted();
-}
+  bool AirflowNetworkSimulationControl::isHeightDependenceofExternalNodeTemperatureDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isHeightDependenceofExternalNodeTemperatureDefaulted();
+  }
 
-boost::optional<double> AirflowNetworkSimulationControl::buildingAspectRatio() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->buildingAspectRatio();
-}
+  bool AirflowNetworkSimulationControl::setAirflowNetworkControl(std::string airflowNetworkControl) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setAirflowNetworkControl(airflowNetworkControl);
+  }
 
-bool AirflowNetworkSimulationControl::isBuildingAspectRatioDefaulted() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isBuildingAspectRatioDefaulted();
-}
+  void AirflowNetworkSimulationControl::resetAirflowNetworkControl() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetAirflowNetworkControl();
+  }
 
-bool AirflowNetworkSimulationControl::heightDependenceofExternalNodeTemperature() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->heightDependenceofExternalNodeTemperature();
-}
+  bool AirflowNetworkSimulationControl::setWindPressureCoefficientType(std::string type) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setWindPressureCoefficientType(type);
+  }
 
-bool AirflowNetworkSimulationControl::isHeightDependenceofExternalNodeTemperatureDefaulted() const
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isHeightDependenceofExternalNodeTemperatureDefaulted();
-}
+  void AirflowNetworkSimulationControl::resetWindPressureCoefficientType() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetWindPressureCoefficientType();
+  }
 
-bool AirflowNetworkSimulationControl::setAirflowNetworkControl(std::string airflowNetworkControl)
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setAirflowNetworkControl(airflowNetworkControl);
-}
+  bool AirflowNetworkSimulationControl::setHeightSelectionforLocalWindPressureCalculation(std::string height) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setHeightSelectionforLocalWindPressureCalculation(height);
+  }
 
-void AirflowNetworkSimulationControl::resetAirflowNetworkControl()
-{
-  getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetAirflowNetworkControl();
-}
+  void AirflowNetworkSimulationControl::resetHeightSelectionforLocalWindPressureCalculation() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetHeightSelectionforLocalWindPressureCalculation();
+  }
 
-bool AirflowNetworkSimulationControl::setWindPressureCoefficientType(std::string type)
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setWindPressureCoefficientType(type);
-}
+  bool AirflowNetworkSimulationControl::setBuildingType(std::string type) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setBuildingType(type);
+  }
 
-void AirflowNetworkSimulationControl::resetWindPressureCoefficientType()
-{
-  getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetWindPressureCoefficientType();
-}
+  void AirflowNetworkSimulationControl::resetBuildingType() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetBuildingType();
+  }
 
-bool AirflowNetworkSimulationControl::setHeightSelectionforLocalWindPressureCalculation(std::string height)
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setHeightSelectionforLocalWindPressureCalculation(height);
-}
+  bool AirflowNetworkSimulationControl::setMaximumNumberofIterations(int number) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setMaximumNumberofIterations(number);
+  }
 
-void AirflowNetworkSimulationControl::resetHeightSelectionforLocalWindPressureCalculation()
-{
-  getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetHeightSelectionforLocalWindPressureCalculation();
-}
+  void AirflowNetworkSimulationControl::resetMaximumNumberofIterations() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetMaximumNumberofIterations();
+  }
 
-bool AirflowNetworkSimulationControl::setBuildingType(std::string type)
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setBuildingType(type);
-}
+  bool AirflowNetworkSimulationControl::setInitializationType(std::string type) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setInitializationType(type);
+  }
 
-void AirflowNetworkSimulationControl::resetBuildingType()
-{
-  getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetBuildingType();
-}
+  void AirflowNetworkSimulationControl::resetInitializationType() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetInitializationType();
+  }
 
-bool AirflowNetworkSimulationControl::setMaximumNumberofIterations(int number)
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setMaximumNumberofIterations(number);
-}
+  bool AirflowNetworkSimulationControl::setRelativeAirflowConvergenceTolerance(double tolerance) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setRelativeAirflowConvergenceTolerance(tolerance);
+  }
 
-void AirflowNetworkSimulationControl::resetMaximumNumberofIterations()
-{
-  getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetMaximumNumberofIterations();
-}
+  void AirflowNetworkSimulationControl::resetRelativeAirflowConvergenceTolerance() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetRelativeAirflowConvergenceTolerance();
+  }
 
-bool AirflowNetworkSimulationControl::setInitializationType(std::string type)
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setInitializationType(type);
-}
+  bool AirflowNetworkSimulationControl::setAbsoluteAirflowConvergenceTolerance(double tolerance) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setAbsoluteAirflowConvergenceTolerance(tolerance);
+  }
 
-void AirflowNetworkSimulationControl::resetInitializationType()
-{
-  getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetInitializationType();
-}
+  void AirflowNetworkSimulationControl::resetAbsoluteAirflowConvergenceTolerance() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetAbsoluteAirflowConvergenceTolerance();
+  }
 
-bool AirflowNetworkSimulationControl::setRelativeAirflowConvergenceTolerance(double tolerance)
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setRelativeAirflowConvergenceTolerance(tolerance);
-}
+  bool AirflowNetworkSimulationControl::setConvergenceAccelerationLimit(double limit) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setConvergenceAccelerationLimit(limit);
+  }
 
-void AirflowNetworkSimulationControl::resetRelativeAirflowConvergenceTolerance()
-{
-  getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetRelativeAirflowConvergenceTolerance();
-}
+  void AirflowNetworkSimulationControl::resetConvergenceAccelerationLimit() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetConvergenceAccelerationLimit();
+  }
 
-bool AirflowNetworkSimulationControl::setAbsoluteAirflowConvergenceTolerance(double tolerance)
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setAbsoluteAirflowConvergenceTolerance(tolerance);
-}
+  bool AirflowNetworkSimulationControl::setAzimuthAngleofLongAxisofBuilding(double angle) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setAzimuthAngleofLongAxisofBuilding(angle);
+  }
 
-void AirflowNetworkSimulationControl::resetAbsoluteAirflowConvergenceTolerance()
-{
-  getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetAbsoluteAirflowConvergenceTolerance();
-}
+  void AirflowNetworkSimulationControl::resetAzimuthAngleofLongAxisofBuilding() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetAzimuthAngleofLongAxisofBuilding();
+  }
 
-bool AirflowNetworkSimulationControl::setConvergenceAccelerationLimit(double limit)
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setConvergenceAccelerationLimit(limit);
-}
+  bool AirflowNetworkSimulationControl::setBuildingAspectRatio(double ratio) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setBuildingAspectRatio(ratio);
+  }
 
-void AirflowNetworkSimulationControl::resetConvergenceAccelerationLimit()
-{
-  getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetConvergenceAccelerationLimit();
-}
+  void AirflowNetworkSimulationControl::resetBuildingAspectRatio() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetBuildingAspectRatio();
+  }
 
-bool AirflowNetworkSimulationControl::setAzimuthAngleofLongAxisofBuilding(double angle)
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setAzimuthAngleofLongAxisofBuilding(angle);
-}
+  bool AirflowNetworkSimulationControl::setHeightDependenceofExternalNodeTemperature(bool tf) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setHeightDependenceofExternalNodeTemperature(tf);
+  }
 
-void AirflowNetworkSimulationControl::resetAzimuthAngleofLongAxisofBuilding()
-{
-  getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetAzimuthAngleofLongAxisofBuilding();
-}
+  void AirflowNetworkSimulationControl::resetHeightDependenceofExternalNodeTemperature() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetHeightDependenceofExternalNodeTemperature();
+  }
 
-bool AirflowNetworkSimulationControl::setBuildingAspectRatio(double ratio)
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setBuildingAspectRatio(ratio);
-}
+  std::string AirflowNetworkSimulationControl::solver() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->solver();
+  }
 
-void AirflowNetworkSimulationControl::resetBuildingAspectRatio()
-{
-  getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetBuildingAspectRatio();
-}
+  bool AirflowNetworkSimulationControl::isSolverDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isSolverDefaulted();
+  }
 
-bool AirflowNetworkSimulationControl::setHeightDependenceofExternalNodeTemperature(bool tf)
-{
-  return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setHeightDependenceofExternalNodeTemperature(tf);
-}
+  bool AirflowNetworkSimulationControl::setSolver(const std::string& solver) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setSolver(solver);
+  }
 
-void AirflowNetworkSimulationControl::resetHeightDependenceofExternalNodeTemperature()
-{
-  getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetHeightDependenceofExternalNodeTemperature();
-}
+  void AirflowNetworkSimulationControl::resetSolver() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetSolver();
+  }
 
-} // model
-} // openstudio
+  bool AirflowNetworkSimulationControl::allowUnsupportedZoneEquipment() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->allowUnsupportedZoneEquipment();
+  }
+
+  bool AirflowNetworkSimulationControl::isAllowUnsupportedZoneEquipmentDefaulted() const {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->isAllowUnsupportedZoneEquipmentDefaulted();
+  }
+
+  bool AirflowNetworkSimulationControl::setAllowUnsupportedZoneEquipment(bool allowUnsupportedZoneEquipment) {
+    return getImpl<detail::AirflowNetworkSimulationControl_Impl>()->setAllowUnsupportedZoneEquipment(allowUnsupportedZoneEquipment);
+  }
+
+  void AirflowNetworkSimulationControl::resetAllowUnsupportedZoneEquipment() {
+    getImpl<detail::AirflowNetworkSimulationControl_Impl>()->resetAllowUnsupportedZoneEquipment();
+  }
+
+}  // namespace model
+}  // namespace openstudio

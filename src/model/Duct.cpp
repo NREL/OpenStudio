@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,86 +40,66 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  Duct_Impl::Duct_Impl(const IdfObject& idfObject,
-                       Model_Impl* model,
-                       bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == Duct::iddObjectType());
-  }
+    Duct_Impl::Duct_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle) : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == Duct::iddObjectType());
+    }
 
-  Duct_Impl::Duct_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                       Model_Impl* model,
-                       bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == Duct::iddObjectType());
-  }
+    Duct_Impl::Duct_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == Duct::iddObjectType());
+    }
 
-  Duct_Impl::Duct_Impl(const Duct_Impl& other,
-                       Model_Impl* model,
-                       bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
+    Duct_Impl::Duct_Impl(const Duct_Impl& other, Model_Impl* model, bool keepHandle) : StraightComponent_Impl(other, model, keepHandle) {}
 
-  const std::vector<std::string>& Duct_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
+    const std::vector<std::string>& Duct_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
       // Not appropriate: no specific output variables
-    return result;
-  }
-
-  IddObjectType Duct_Impl::iddObjectType() const {
-    return Duct::iddObjectType();
-  }
-
-  unsigned Duct_Impl::inletPort() const
-  {
-    return OS_DuctFields::InletNode;
-  }
-
-  unsigned Duct_Impl::outletPort() const
-  {
-    return OS_DuctFields::OutletNode;
-  }
-
-  bool Duct_Impl::addToNode(Node & node)
-  {
-    if(node.airLoopHVAC()) {
-      return StraightComponent_Impl::addToNode(node);
+      return result;
     }
 
-    if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
-      return StraightComponent_Impl::addToNode( node );
+    IddObjectType Duct_Impl::iddObjectType() const {
+      return Duct::iddObjectType();
     }
 
-    return false;
+    unsigned Duct_Impl::inletPort() const {
+      return OS_DuctFields::InletNode;
+    }
+
+    unsigned Duct_Impl::outletPort() const {
+      return OS_DuctFields::OutletNode;
+    }
+
+    bool Duct_Impl::addToNode(Node& node) {
+      if (node.airLoopHVAC()) {
+        return StraightComponent_Impl::addToNode(node);
+      }
+
+      if (node.airLoopHVACOutdoorAirSystem()) {
+        return StraightComponent_Impl::addToNode(node);
+      }
+
+      return false;
+    }
+
+  }  // namespace detail
+
+  Duct::Duct(const Model& model) : StraightComponent(Duct::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::Duct_Impl>());
+
+    bool ok = true;
+    // ok = setHandle();
+    OS_ASSERT(ok);
   }
 
-} // detail
+  IddObjectType Duct::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Duct);
+  }
 
-Duct::Duct(const Model& model)
-  : StraightComponent(Duct::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::Duct_Impl>());
+  /// @cond
+  Duct::Duct(std::shared_ptr<detail::Duct_Impl> impl) : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
-  bool ok = true;
-  // ok = setHandle();
-  OS_ASSERT(ok);
-}
-
-IddObjectType Duct::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Duct);
-}
-
-/// @cond
-Duct::Duct(std::shared_ptr<detail::Duct_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

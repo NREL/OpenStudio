@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,7 +38,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,SimulationControl_GettersSetters) {
+TEST_F(ModelFixture, SimulationControl_GettersSetters) {
   Model model;
 
   SimulationControl simulationControl = model.getUniqueModelObject<SimulationControl>();
@@ -59,7 +59,6 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
   EXPECT_TRUE(simulationControl.isDoZoneSizingCalculationDefaulted());
   EXPECT_FALSE(simulationControl.doZoneSizingCalculation());
 
-
   // Do System Sizing Calculation:  Boolean
   // Check Idd default: false
   EXPECT_TRUE(simulationControl.isDoSystemSizingCalculationDefaulted());
@@ -75,7 +74,6 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
   simulationControl.resetDoSystemSizingCalculation();
   EXPECT_TRUE(simulationControl.isDoSystemSizingCalculationDefaulted());
   EXPECT_FALSE(simulationControl.doSystemSizingCalculation());
-
 
   // Do Plant Sizing Calculation:  Boolean
   // Check Idd default: false
@@ -93,7 +91,6 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
   EXPECT_TRUE(simulationControl.isDoPlantSizingCalculationDefaulted());
   EXPECT_FALSE(simulationControl.doPlantSizingCalculation());
 
-
   // Run Simulation for Sizing Periods:  Boolean
   // Check Idd default: true
   EXPECT_TRUE(simulationControl.isRunSimulationforSizingPeriodsDefaulted());
@@ -109,7 +106,6 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
   simulationControl.resetRunSimulationforSizingPeriods();
   EXPECT_TRUE(simulationControl.isRunSimulationforSizingPeriodsDefaulted());
   EXPECT_TRUE(simulationControl.runSimulationforSizingPeriods());
-
 
   // Run Simulation for Weather File Run Periods:  Boolean
   // Check Idd default: true
@@ -127,7 +123,6 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
   EXPECT_TRUE(simulationControl.isRunSimulationforWeatherFileRunPeriodsDefaulted());
   EXPECT_TRUE(simulationControl.runSimulationforWeatherFileRunPeriods());
 
-
   // Loads Convergence Tolerance Value:  Double
   // Check Idd default: .04
   EXPECT_TRUE(simulationControl.isLoadsConvergenceToleranceValueDefaulted());
@@ -139,7 +134,6 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
   simulationControl.resetLoadsConvergenceToleranceValue();
   EXPECT_EQ(.04, simulationControl.loadsConvergenceToleranceValue());
   EXPECT_TRUE(simulationControl.isLoadsConvergenceToleranceValueDefaulted());
-
 
   // Temperature Convergence Tolerance Value:  Double
   // Check Idd default: .4
@@ -153,7 +147,6 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
   EXPECT_EQ(.4, simulationControl.temperatureConvergenceToleranceValue());
   EXPECT_TRUE(simulationControl.isTemperatureConvergenceToleranceValueDefaulted());
 
-
   // Solar Distribution:  String
   // Check Idd default: "FullExterior"
   EXPECT_TRUE(simulationControl.isSolarDistributionDefaulted());
@@ -165,7 +158,6 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
   // Test an invalid choice
   EXPECT_FALSE(simulationControl.setSolarDistribution("BadChoice"));
   EXPECT_EQ("MinimalShadowing", simulationControl.solarDistribution());
-
 
   // Maximum Number of Warmup Days:  Integer
   // Check Idd default: 25
@@ -179,19 +171,17 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
   EXPECT_EQ(25, simulationControl.maximumNumberofWarmupDays());
   EXPECT_TRUE(simulationControl.isMaximumNumberofWarmupDaysDefaulted());
 
-
   // Minimum Number of Warmup Days:  Integer
-  // Check Idd default: 6
+  // Check Idd default: 1 (Used to be 6 before 9.3.0)
   EXPECT_TRUE(simulationControl.isMinimumNumberofWarmupDaysDefaulted());
-  EXPECT_EQ(6, simulationControl.minimumNumberofWarmupDays());
+  EXPECT_EQ(1, simulationControl.minimumNumberofWarmupDays());
   EXPECT_TRUE(simulationControl.setMinimumNumberofWarmupDays(3));
   EXPECT_FALSE(simulationControl.isMinimumNumberofWarmupDaysDefaulted());
   EXPECT_EQ(3, simulationControl.minimumNumberofWarmupDays());
   // Test reset
   simulationControl.resetMinimumNumberofWarmupDays();
-  EXPECT_EQ(6, simulationControl.minimumNumberofWarmupDays());
+  EXPECT_EQ(1, simulationControl.minimumNumberofWarmupDays());
   EXPECT_TRUE(simulationControl.isMinimumNumberofWarmupDaysDefaulted());
-
 
   // Do HVAC Sizing Simulation for Sizing Periods:  Boolean
   // Check Idd default: false
@@ -209,7 +199,6 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
   EXPECT_TRUE(simulationControl.isDoHVACSizingSimulationforSizingPeriodsDefaulted());
   EXPECT_FALSE(simulationControl.doHVACSizingSimulationforSizingPeriods());
 
-
   // Maximum Number of HVAC Sizing Simulation Passes:  Integer
   // Check Idd default: 1
   EXPECT_TRUE(simulationControl.isMaximumNumberofHVACSizingSimulationPassesDefaulted());
@@ -221,15 +210,13 @@ TEST_F(ModelFixture,SimulationControl_GettersSetters) {
   simulationControl.resetMaximumNumberofHVACSizingSimulationPasses();
   EXPECT_EQ(1, simulationControl.maximumNumberofHVACSizingSimulationPasses());
   EXPECT_TRUE(simulationControl.isMaximumNumberofHVACSizingSimulationPassesDefaulted());
-
 }
 
-TEST_F(ModelFixture,SimulationControl_LifeCycleCost) {
+TEST_F(ModelFixture, SimulationControl_LifeCycleCost) {
   Model model;
 
   SimulationControl simulationControl = model.getUniqueModelObject<SimulationControl>();
 
   // adding this cost (and many others) would be really weird, expect a throw
   EXPECT_THROW(LifeCycleCost cost(simulationControl), openstudio::Exception);
-
 }

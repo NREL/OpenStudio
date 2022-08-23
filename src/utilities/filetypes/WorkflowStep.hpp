@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,12 +37,12 @@
 
 #include <json/json.h>
 
-namespace openstudio{
-namespace detail{
+namespace openstudio {
+namespace detail {
   class WorkflowStep_Impl;
   class WorkflowJSON_Impl;
   class MeasureStep_Impl;
-}
+}  // namespace detail
 
 class MeasureType;
 class WorkflowStepResult;
@@ -50,8 +50,7 @@ class WorkflowStepResult;
 /** Base class for defining a step in an OpenStudio Workflow. */
 class UTILITIES_API WorkflowStep
 {
-public:
-
+ public:
   virtual ~WorkflowStep();
 
   /// Construct from JSON formatted string
@@ -73,30 +72,29 @@ public:
   bool operator==(const WorkflowStep& other) const;
 
   /// cast to type T, can throw std::bad_cast
-  template<typename T>
-  T cast() const{
+  template <typename T>
+  T cast() const {
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
-    if (!impl){
+    if (!impl) {
       throw(std::bad_cast());
     }
     return T(std::move(impl));
   }
 
   /// cast to optional of type T
-  template<typename T>
-  boost::optional<T> optionalCast() const{
-    boost::optional<T> result;
+  template <typename T>
+  boost::optional<T> optionalCast() const {
+    boost::optional<T> thisResult;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
-    if (impl){
-      result = T(std::move(impl));
+    if (impl) {
+      thisResult = T(std::move(impl));
     }
-    return result;
+    return thisResult;
   }
 
-protected:
-
+ protected:
   // get the impl
-  template<typename T>
+  template <typename T>
   std::shared_ptr<T> getImpl() const {
     return std::dynamic_pointer_cast<T>(m_impl);
   }
@@ -107,21 +105,18 @@ protected:
   /** Protected constructor from impl. */
   WorkflowStep(std::shared_ptr<detail::WorkflowStep_Impl> impl);
 
-private:
-
+ private:
   // configure logging
   REGISTER_LOGGER("openstudio.WorkflowStep");
 
   // pointer to implementation
   std::shared_ptr<detail::WorkflowStep_Impl> m_impl;
-
 };
 
 /** Base class for defining a step in an OpenStudio Workflow. */
 class UTILITIES_API MeasureStep : public WorkflowStep
 {
-public:
-
+ public:
   MeasureStep(const std::string& measureDirName);
 
   std::string measureDirName() const;
@@ -152,14 +147,12 @@ public:
 
   void clearArguments();
 
-protected:
-
+ protected:
   MeasureStep(std::shared_ptr<detail::MeasureStep_Impl> impl);
 
   bool setMeasureDirName(const std::string& measureDirName);
 
-private:
-
+ private:
   typedef detail::MeasureStep_Impl ImplType;
 
   friend class WorkflowStep;
@@ -167,11 +160,10 @@ private:
 
   // configure logging
   REGISTER_LOGGER("openstudio.MeasureStep");
-
 };
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const WorkflowStep& workflowStep);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_FILETYPES_WORKFLOWSTEP_HPP
+#endif  //UTILITIES_FILETYPES_WORKFLOWSTEP_HPP

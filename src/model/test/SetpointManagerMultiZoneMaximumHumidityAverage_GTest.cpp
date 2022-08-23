@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,22 +40,20 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerMultiZoneMaximumHumidityAverage testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerMultiZoneMaximumHumidityAverage testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
@@ -77,12 +75,13 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_addToNode)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerMultiZoneMaximumHumidityAverage> SetpointManagerMultiZoneMaximumHumidityAverages = m.getModelObjects<SetpointManagerMultiZoneMaximumHumidityAverage>();
+  std::vector<SetpointManagerMultiZoneMaximumHumidityAverage> SetpointManagerMultiZoneMaximumHumidityAverages =
+    m.getModelObjects<SetpointManagerMultiZoneMaximumHumidityAverage>();
   EXPECT_EQ(3, SetpointManagerMultiZoneMaximumHumidityAverages.size());
 
-  EXPECT_EQ(testObject, spm_1.setpointNode());
+  EXPECT_EQ(testObject, spm_1.setpointNode().get());
   EXPECT_TRUE(spm_2.addToNode(testObject));
-  EXPECT_EQ(testObject, spm_2.setpointNode());
+  EXPECT_EQ(testObject, spm_2.setpointNode().get());
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_1) == _setpointManagers.end());
@@ -91,8 +90,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_addToNode)
   EXPECT_EQ(2, SetpointManagerMultiZoneMaximumHumidityAverages.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_remove)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
@@ -104,7 +102,8 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_remove)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerMultiZoneMaximumHumidityAverage> SetpointManagerMultiZoneMaximumHumidityAverages = m.getModelObjects<SetpointManagerMultiZoneMaximumHumidityAverage>();
+  std::vector<SetpointManagerMultiZoneMaximumHumidityAverage> SetpointManagerMultiZoneMaximumHumidityAverages =
+    m.getModelObjects<SetpointManagerMultiZoneMaximumHumidityAverage>();
   EXPECT_EQ(1, SetpointManagerMultiZoneMaximumHumidityAverages.size());
 
   spm.remove();
@@ -115,8 +114,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_remove)
   EXPECT_EQ(0, SetpointManagerMultiZoneMaximumHumidityAverages.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_clone)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -139,8 +137,7 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_clone)
   EXPECT_EQ(0.015, testObjectClone.maximumSetpointHumidityRatio());
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_customDataClone)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_customDataClone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -165,26 +162,24 @@ TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_customDataCl
   EXPECT_EQ(0.005, testObjectClone.maximumSetpointHumidityRatio());
 }
 
-TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_multipleSPMs)
-{
+TEST_F(ModelFixture, SetpointManagerMultiZoneMaximumHumidityAverage_multipleSPMs) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
 
   SetpointManagerMultiZoneMaximumHumidityAverage spmHumidity(m);
   spmHumidity.addToNode(outletNode);
-  ASSERT_EQ(1u,outletNode.setpointManagers().size());
+  ASSERT_EQ(1u, outletNode.setpointManagers().size());
 
   SetpointManagerSingleZoneReheat spmTemp(m);
   spmTemp.addToNode(outletNode);
-  ASSERT_EQ(2u,outletNode.setpointManagers().size());
+  ASSERT_EQ(2u, outletNode.setpointManagers().size());
 
   auto node = spmHumidity.setpointNode();
   ASSERT_TRUE(node);
-  ASSERT_EQ(outletNode,node.get());
+  ASSERT_EQ(outletNode, node.get());
 
   node = spmTemp.setpointNode();
   ASSERT_TRUE(node);
-  ASSERT_EQ(outletNode,node.get());
+  ASSERT_EQ(outletNode, node.get());
 }
-

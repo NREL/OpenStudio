@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,105 +52,103 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateElectricEquipment( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::ElectricEquipment ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: ElectricEquipment");
-    return boost::none;
-  }
-
-  // create the definition
-  openstudio::model::ElectricEquipmentDefinition definition(m_model);
-
-  OptionalString s = workspaceObject.name();
-  if(s){
-    definition.setName(*s + " Definition");
-  }
-
-  s = workspaceObject.getString(openstudio::ElectricEquipmentFields::DesignLevelCalculationMethod, true);
-  OS_ASSERT(s);
-
-  OptionalDouble d;
-  if (istringEqual("EquipmentLevel", *s)){
-    d = workspaceObject.getDouble(openstudio::ElectricEquipmentFields::DesignLevel);
-    if (d){
-      definition.setDesignLevel(*d);
-    }else{
-      LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
+  OptionalModelObject ReverseTranslator::translateElectricEquipment(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::ElectricEquipment) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: ElectricEquipment");
+      return boost::none;
     }
-  }else if(istringEqual("Watts/Area", *s)){
-    d = workspaceObject.getDouble(openstudio::ElectricEquipmentFields::WattsperZoneFloorArea);
-    if (d){
-      definition.setWattsperSpaceFloorArea(*d);
-    }else{
-      LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
+
+    // create the definition
+    openstudio::model::ElectricEquipmentDefinition definition(m_model);
+
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      definition.setName(*s + " Definition");
     }
-  }else if(istringEqual("Watts/Person", *s)){
-    d = workspaceObject.getDouble(openstudio::ElectricEquipmentFields::WattsperPerson);
-    if (d){
-      definition.setWattsperPerson(*d);
-    }else{
-      LOG(Error, "Watts/Person value not found for workspace object " << workspaceObject);
+
+    s = workspaceObject.getString(openstudio::ElectricEquipmentFields::DesignLevelCalculationMethod, true);
+    OS_ASSERT(s);
+
+    OptionalDouble d;
+    if (istringEqual("EquipmentLevel", *s)) {
+      d = workspaceObject.getDouble(openstudio::ElectricEquipmentFields::DesignLevel);
+      if (d) {
+        definition.setDesignLevel(*d);
+      } else {
+        LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
+      }
+    } else if (istringEqual("Watts/Area", *s)) {
+      d = workspaceObject.getDouble(openstudio::ElectricEquipmentFields::WattsperZoneFloorArea);
+      if (d) {
+        definition.setWattsperSpaceFloorArea(*d);
+      } else {
+        LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
+      }
+    } else if (istringEqual("Watts/Person", *s)) {
+      d = workspaceObject.getDouble(openstudio::ElectricEquipmentFields::WattsperPerson);
+      if (d) {
+        definition.setWattsperPerson(*d);
+      } else {
+        LOG(Error, "Watts/Person value not found for workspace object " << workspaceObject);
+      }
+    } else {
+      LOG(Error, "Unknown DesignLevelCalculationMethod value for workspace object" << workspaceObject);
     }
-  }else{
-    LOG(Error, "Unknown DesignLevelCalculationMethod value for workspace object" << workspaceObject);
-  }
 
-  d = workspaceObject.getDouble(openstudio::ElectricEquipmentFields::FractionLatent);
-  if (d){
-    definition.setFractionLatent(*d);
-  }
+    d = workspaceObject.getDouble(openstudio::ElectricEquipmentFields::FractionLatent);
+    if (d) {
+      definition.setFractionLatent(*d);
+    }
 
-  d = workspaceObject.getDouble(openstudio::ElectricEquipmentFields::FractionRadiant);
-  if (d){
-    definition.setFractionRadiant(*d);
-  }
+    d = workspaceObject.getDouble(openstudio::ElectricEquipmentFields::FractionRadiant);
+    if (d) {
+      definition.setFractionRadiant(*d);
+    }
 
-  d = workspaceObject.getDouble(openstudio::ElectricEquipmentFields::FractionLost);
-  if (d){
-    definition.setFractionLost(*d);
-  }
+    d = workspaceObject.getDouble(openstudio::ElectricEquipmentFields::FractionLost);
+    if (d) {
+      definition.setFractionLost(*d);
+    }
 
-  // create the instance
-  ElectricEquipment electricEquipment(definition);
+    // create the instance
+    ElectricEquipment electricEquipment(definition);
 
-  s = workspaceObject.name();
-  if(s){
-    electricEquipment.setName(*s);
-  }
+    s = workspaceObject.name();
+    if (s) {
+      electricEquipment.setName(*s);
+    }
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ElectricEquipmentFields::ZoneorZoneListName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<Space>()){
-        electricEquipment.setSpace(modelObject->cast<Space>());
-      }else if (modelObject->optionalCast<SpaceType>()){
-        electricEquipment.setSpaceType(modelObject->cast<SpaceType>());
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (modelObject->optionalCast<Space>()) {
+          electricEquipment.setSpace(modelObject->cast<Space>());
+        } else if (modelObject->optionalCast<SpaceType>()) {
+          electricEquipment.setSpaceType(modelObject->cast<SpaceType>());
+        }
       }
     }
-  }
 
-  target = workspaceObject.getTarget(openstudio::ElectricEquipmentFields::ScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()){
-        Schedule schedule = *intermediate;
-        electricEquipment.setSchedule(schedule);
+    target = workspaceObject.getTarget(openstudio::ElectricEquipmentFields::ScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()) {
+          Schedule schedule = *intermediate;
+          electricEquipment.setSchedule(schedule);
+        }
       }
     }
+
+    s = workspaceObject.getString(openstudio::ElectricEquipmentFields::EndUseSubcategory);
+    if (s) {
+      electricEquipment.setEndUseSubcategory(*s);
+    }
+
+    return electricEquipment;
   }
 
-  s = workspaceObject.getString(openstudio::ElectricEquipmentFields::EndUseSubcategory);
-  if(s){
-    electricEquipment.setEndUseSubcategory(*s);
-  }
+}  // namespace energyplus
 
-  return electricEquipment;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

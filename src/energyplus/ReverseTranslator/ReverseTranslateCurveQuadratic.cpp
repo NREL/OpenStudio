@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,49 +39,46 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateCurveQuadratic(
-    const WorkspaceObject& workspaceObject )
-{
-  CurveQuadratic curve(m_model);
+  boost::optional<ModelObject> ReverseTranslator::translateCurveQuadratic(const WorkspaceObject& workspaceObject) {
+    CurveQuadratic curve(m_model);
 
-  OptionalString s;
-  OptionalDouble d;
+    OptionalString s;
+    OptionalDouble d;
 
-  if ((s = workspaceObject.name())) {
-    curve.setName(*s);
+    if ((s = workspaceObject.name())) {
+      curve.setName(*s);
+    }
+
+    if ((d = workspaceObject.getDouble(Curve_QuadraticFields::Coefficient1Constant))) {
+      curve.setCoefficient1Constant(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_QuadraticFields::Coefficient2x))) {
+      curve.setCoefficient2x(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_QuadraticFields::Coefficient3x_POW_2))) {
+      curve.setCoefficient3xPOW2(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_QuadraticFields::MinimumValueofx))) {
+      curve.setMinimumValueofx(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_QuadraticFields::MaximumValueofx))) {
+      curve.setMaximumValueofx(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_QuadraticFields::MinimumCurveOutput))) {
+      curve.setMinimumCurveOutput(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_QuadraticFields::MaximumCurveOutput))) {
+      curve.setMaximumCurveOutput(*d);
+    }
+    if ((s = workspaceObject.getString(Curve_QuadraticFields::InputUnitTypeforX, false, true))) {
+      curve.setInputUnitTypeforX(*s);
+    }
+    if ((s = workspaceObject.getString(Curve_QuadraticFields::OutputUnitType, false, true))) {
+      curve.setOutputUnitType(*s);
+    }
+
+    return curve;
   }
 
-  if ((d = workspaceObject.getDouble(Curve_QuadraticFields::Coefficient1Constant))) {
-    curve.setCoefficient1Constant(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_QuadraticFields::Coefficient2x))) {
-    curve.setCoefficient2x(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_QuadraticFields::Coefficient3x_POW_2))) {
-    curve.setCoefficient3xPOW2(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_QuadraticFields::MinimumValueofx))) {
-    curve.setMinimumValueofx(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_QuadraticFields::MaximumValueofx))) {
-    curve.setMaximumValueofx(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_QuadraticFields::MinimumCurveOutput))) {
-    curve.setMinimumCurveOutput(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_QuadraticFields::MaximumCurveOutput))) {
-    curve.setMaximumCurveOutput(*d);
-  }
-  if ((s = workspaceObject.getString(Curve_QuadraticFields::InputUnitTypeforX,false,true))) {
-    curve.setInputUnitTypeforX(*s);
-  }
-  if ((s = workspaceObject.getString(Curve_QuadraticFields::OutputUnitType,false,true))) {
-    curve.setOutputUnitType(*s);
-  }
-
-  return curve;
-}
-
-} // energyplus
-} // openstudio
-
+}  // namespace energyplus
+}  // namespace openstudio

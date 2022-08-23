@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,24 +33,19 @@
 #include <stdexcept>
 #include <string>
 
+class RubyException : public std::runtime_error
+{
+ public:
+  RubyException(const std::string& msg, const std::string& location) : std::runtime_error(msg), m_location(location) {}
 
-  class RubyException : public std::runtime_error
-  {
-    public:
+  virtual ~RubyException() throw() {}
 
-      RubyException(const std::string& msg, const std::string& location)
-        : std::runtime_error(msg), m_location(location)
-      {}
+  std::string location() const {
+    return m_location;
+  }
 
-      virtual ~RubyException() throw() {}
+ private:
+  std::string m_location;
+};
 
-      std::string location() const {return m_location;}
-
-    private:
-
-      std::string m_location;
-
-  };
-
-
-#endif // CLI_RUBYEXCEPTION_HPP
+#endif  // CLI_RUBYEXCEPTION_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,11 +43,11 @@ namespace detail {
 
 /** WorkspaceObjectDiff represents a change to an WorkspaceObjectDiff.
 **/
-class UTILITIES_API WorkspaceObjectDiff : public IdfObjectDiff {
-public:
-
-  WorkspaceObjectDiff(unsigned index, boost::optional<std::string> oldValue, boost::optional<std::string> newValue,
-                      boost::optional<UUID> oldHandle, boost::optional<UUID> newHandle);
+class UTILITIES_API WorkspaceObjectDiff : public IdfObjectDiff
+{
+ public:
+  WorkspaceObjectDiff(unsigned index, boost::optional<std::string> oldValue, boost::optional<std::string> newValue, boost::optional<UUID> oldHandle,
+                      boost::optional<UUID> newHandle);
 
   /// get the old handle if there was one, use oldValue to determine if field existed or not
   boost::optional<UUID> oldHandle() const;
@@ -55,16 +55,14 @@ public:
   /// get the new handle if there is one, use newValue to determine if field exists or not
   boost::optional<UUID> newHandle() const;
 
-private:
-
+ private:
   friend class IdfObjectDiff;
 
   typedef detail::WorkspaceObjectDiff_Impl ImplType;
 
   WorkspaceObjectDiff(const std::shared_ptr<detail::WorkspaceObjectDiff_Impl>& impl);
-
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_WORKSPACEOBJECTDIFF_HPP
+#endif  // UTILITIES_IDF_WORKSPACEOBJECTDIFF_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,15 +35,23 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,ControllerMechanicalVentilation) {
+TEST_F(ModelFixture, ControllerMechanicalVentilation) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
+  ASSERT_EXIT(
     {
       model::Model m;
 
       model::ControllerMechanicalVentilation controller(m);
       exit(0);
-    } ,
-    ::testing::ExitedWithCode(0), "" );
+    },
+    ::testing::ExitedWithCode(0), "");
+}
+
+TEST_F(ModelFixture, ControllerMechanicalVentilation_SystemOutdoorAirMethod) {
+
+  Model m;
+  ControllerMechanicalVentilation c(m);
+  EXPECT_TRUE(c.isSystemOutdoorAirMethodDefaulted());
+  EXPECT_EQ("Standard62.1VentilationRateProcedure", c.systemOutdoorAirMethod());
 }

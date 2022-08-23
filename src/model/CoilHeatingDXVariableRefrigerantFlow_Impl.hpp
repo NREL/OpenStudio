@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,91 +36,82 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Curve;
+  class Schedule;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilHeatingDXVariableRefrigerantFlow_Impl is a HVACComponent_Impl that is the implementation class for CoilHeatingDXVariableRefrigerantFlow.*/
-  class MODEL_API CoilHeatingDXVariableRefrigerantFlow_Impl : public HVACComponent_Impl {
+    /** CoilHeatingDXVariableRefrigerantFlow_Impl is a HVACComponent_Impl that is the implementation class for CoilHeatingDXVariableRefrigerantFlow.*/
+    class MODEL_API CoilHeatingDXVariableRefrigerantFlow_Impl : public HVACComponent_Impl
+    {
 
-   public:
+     public:
+      CoilHeatingDXVariableRefrigerantFlow_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingDXVariableRefrigerantFlow_Impl(const IdfObject& idfObject,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      CoilHeatingDXVariableRefrigerantFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingDXVariableRefrigerantFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      CoilHeatingDXVariableRefrigerantFlow_Impl(const CoilHeatingDXVariableRefrigerantFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingDXVariableRefrigerantFlow_Impl(const CoilHeatingDXVariableRefrigerantFlow_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      virtual ~CoilHeatingDXVariableRefrigerantFlow_Impl() {}
 
-    virtual ~CoilHeatingDXVariableRefrigerantFlow_Impl() {}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      Schedule availabilitySchedule() const;
 
-    Schedule availabilitySchedule() const;
+      boost::optional<double> ratedTotalHeatingCapacity() const;
 
-    boost::optional<double> ratedTotalHeatingCapacity() const;
+      bool isRatedTotalHeatingCapacityAutosized() const;
 
-    bool isRatedTotalHeatingCapacityAutosized() const;
+      boost::optional<double> ratedAirFlowRate() const;
 
-    boost::optional<double> ratedAirFlowRate() const;
+      bool isRatedAirFlowRateAutosized() const;
 
-    bool isRatedAirFlowRateAutosized() const;
+      Curve heatingCapacityRatioModifierFunctionofTemperatureCurve() const;
 
-    Curve heatingCapacityRatioModifierFunctionofTemperatureCurve() const;
+      Curve heatingCapacityModifierFunctionofFlowFractionCurve() const;
 
-    Curve heatingCapacityModifierFunctionofFlowFractionCurve() const;
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setRatedTotalHeatingCapacity(boost::optional<double> ratedTotalHeatingCapacity);
 
-    bool setRatedTotalHeatingCapacity(boost::optional<double> ratedTotalHeatingCapacity);
+      void autosizeRatedTotalHeatingCapacity();
 
-    void autosizeRatedTotalHeatingCapacity();
+      bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
 
-    bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
+      void autosizeRatedAirFlowRate();
 
-    void autosizeRatedAirFlowRate();
+      bool setHeatingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& curve);
 
-    bool setHeatingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& curve);
+      bool setHeatingCapacityModifierFunctionofFlowFractionCurve(const Curve& curve);
 
-    bool setHeatingCapacityModifierFunctionofFlowFractionCurve(const Curve& curve);
+      ModelObject clone(Model model) const override;
 
-    ModelObject clone(Model model) const override;
+      std::vector<ModelObject> children() const override;
 
-    std::vector<ModelObject> children() const override;
+      boost::optional<double> autosizedRatedTotalHeatingCapacity() const;
 
-  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+      boost::optional<double> autosizedRatedAirFlowRate() const;
 
-  boost::optional<double> autosizedRatedAirFlowRate() const ;
+      virtual void autosize() override;
 
-  virtual void autosize() override;
+      virtual void applySizingValues() override;
 
-  virtual void applySizingValues() override;
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilHeatingDXVariableRefrigerantFlow");
 
-   protected:
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<Curve> optionalHeatingCapacityRatioModifierFunctionofTemperatureCurve() const;
+      boost::optional<Curve> optionalHeatingCapacityModifierFunctionofFlowFractionCurve() const;
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.CoilHeatingDXVariableRefrigerantFlow");
+}  // namespace model
+}  // namespace openstudio
 
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    boost::optional<Curve> optionalHeatingCapacityRatioModifierFunctionofTemperatureCurve() const;
-    boost::optional<Curve> optionalHeatingCapacityModifierFunctionofFlowFractionCurve() const;
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILHEATINGDXVARIABLEREFRIGERANTFLOW_IMPL_HPP
-
+#endif  // MODEL_COILHEATINGDXVARIABLEREFRIGERANTFLOW_IMPL_HPP

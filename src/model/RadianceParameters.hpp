@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,184 +35,184 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class RadianceParameters_Impl;
+    class RadianceParameters_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** RadianceParameters is a ModelObject that wraps the OpenStudio IDD object 'OS:RadianceParameters'. */
-class MODEL_API RadianceParameters : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** RadianceParameters is a ModelObject that wraps the OpenStudio IDD object 'OS:RadianceParameters'. */
+  class MODEL_API RadianceParameters : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~RadianceParameters() {}
+    virtual ~RadianceParameters() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> skyDiscretizationResolutionValues();
+    static std::vector<std::string> skyDiscretizationResolutionValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  int accumulatedRaysperRecord() const;
+    int accumulatedRaysperRecord() const;
 
-  bool isAccumulatedRaysperRecordDefaulted() const;
+    bool isAccumulatedRaysperRecordDefaulted() const;
 
-  double directThreshold() const;
+    double directThreshold() const;
 
-  bool isDirectThresholdDefaulted() const;
+    bool isDirectThresholdDefaulted() const;
 
-  double directCertainty() const;
+    double directCertainty() const;
 
-  bool isDirectCertaintyDefaulted() const;
+    bool isDirectCertaintyDefaulted() const;
 
-  double directJitter() const;
+    double directJitter() const;
 
-  bool isDirectJitterDefaulted() const;
+    bool isDirectJitterDefaulted() const;
 
-  double directPretest() const;
+    double directPretest() const;
 
-  bool isDirectPretestDefaulted() const;
+    bool isDirectPretestDefaulted() const;
 
-  int ambientBouncesVMX() const;
+    int ambientBouncesVMX() const;
 
-  bool isAmbientBouncesVMXDefaulted() const;
+    bool isAmbientBouncesVMXDefaulted() const;
 
-  int ambientBouncesDMX() const;
+    int ambientBouncesDMX() const;
 
-  bool isAmbientBouncesDMXDefaulted() const;
+    bool isAmbientBouncesDMXDefaulted() const;
 
-  int ambientDivisionsVMX() const;
+    int ambientDivisionsVMX() const;
 
-  bool isAmbientDivisionsVMXDefaulted() const;
+    bool isAmbientDivisionsVMXDefaulted() const;
 
-  int ambientDivisionsDMX() const;
+    int ambientDivisionsDMX() const;
 
-  bool isAmbientDivisionsDMXDefaulted() const;
+    bool isAmbientDivisionsDMXDefaulted() const;
 
-  int ambientSupersamples() const;
+    int ambientSupersamples() const;
 
-  bool isAmbientSupersamplesDefaulted() const;
+    bool isAmbientSupersamplesDefaulted() const;
 
-  double limitWeightVMX() const;
+    double limitWeightVMX() const;
 
-  bool isLimitWeightVMXDefaulted() const;
+    bool isLimitWeightVMXDefaulted() const;
 
-  double limitWeightDMX() const;
+    double limitWeightDMX() const;
 
-  bool isLimitWeightDMXDefaulted() const;
+    bool isLimitWeightDMXDefaulted() const;
 
-  int klemsSamplingDensity() const;
+    int klemsSamplingDensity() const;
 
-  bool isKlemsSamplingDensityDefaulted() const;
+    bool isKlemsSamplingDensityDefaulted() const;
 
-  // Note JM 2018-12-12: It's a discrete choice field of numbers, perhaps we should return as an int?
-  std::string skyDiscretizationResolution() const;
+    // Note JM 2018-12-12: It's a discrete choice field of numbers, perhaps we should return as an int?
+    std::string skyDiscretizationResolution() const;
 
-  bool isCoarseSettings();
+    bool isCoarseSettings();
 
-  bool isFineSettings();
+    bool isFineSettings();
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAccumulatedRaysperRecord(int accumulatedRaysperRecord);
+    bool setAccumulatedRaysperRecord(int accumulatedRaysperRecord);
 
-  void resetAccumulatedRaysperRecord();
+    void resetAccumulatedRaysperRecord();
 
-  bool setDirectThreshold(double directThreshold);
+    bool setDirectThreshold(double directThreshold);
 
-  void resetDirectThreshold();
+    void resetDirectThreshold();
 
-  bool setDirectCertainty(double directCertainty);
+    bool setDirectCertainty(double directCertainty);
 
-  void resetDirectCertainty();
+    void resetDirectCertainty();
 
-  bool setDirectJitter(double directJitter);
+    bool setDirectJitter(double directJitter);
 
-  void resetDirectJitter();
+    void resetDirectJitter();
 
-  bool setDirectPretest(double directPretest);
+    bool setDirectPretest(double directPretest);
 
-  void resetDirectPretest();
+    void resetDirectPretest();
 
-  bool setAmbientBouncesVMX(int ambientBouncesVMX);
+    bool setAmbientBouncesVMX(int ambientBouncesVMX);
 
-  void resetAmbientBouncesVMX();
+    void resetAmbientBouncesVMX();
 
-  bool setAmbientBouncesDMX(int ambientBouncesDMX);
+    bool setAmbientBouncesDMX(int ambientBouncesDMX);
 
-  void resetAmbientBouncesDMX();
+    void resetAmbientBouncesDMX();
 
-  bool setAmbientDivisionsVMX(int ambientDivisionsVMX);
+    bool setAmbientDivisionsVMX(int ambientDivisionsVMX);
 
-  void resetAmbientDivisionsVMX();
+    void resetAmbientDivisionsVMX();
 
-  bool setAmbientDivisionsDMX(int ambientDivisionsDMX);
+    bool setAmbientDivisionsDMX(int ambientDivisionsDMX);
 
-  void resetAmbientDivisionsDMX();
+    void resetAmbientDivisionsDMX();
 
-  bool setAmbientSupersamples(int ambientSupersamples);
+    bool setAmbientSupersamples(int ambientSupersamples);
 
-  void resetAmbientSupersamples();
+    void resetAmbientSupersamples();
 
-  bool setLimitWeightVMX(double limitWeightVMX);
+    bool setLimitWeightVMX(double limitWeightVMX);
 
-  void resetLimitWeightVMX();
+    void resetLimitWeightVMX();
 
-  bool setLimitWeightDMX(double limitWeightDMX);
+    bool setLimitWeightDMX(double limitWeightDMX);
 
-  void resetLimitWeightDMX();
+    void resetLimitWeightDMX();
 
-  bool setKlemsSamplingDensity(int klemsSamplingDensity);
+    bool setKlemsSamplingDensity(int klemsSamplingDensity);
 
-  void resetKlemsSamplingDensity();
+    void resetKlemsSamplingDensity();
 
-  bool setSkyDiscretizationResolution(std::string skyDiscretizationResolution);
+    bool setSkyDiscretizationResolution(const std::string& skyDiscretizationResolution);
 
-  void resetSkyDiscretizationResolution();
+    void resetSkyDiscretizationResolution();
 
-  void applyCoarseSettings();
+    void applyCoarseSettings();
 
-  void applyFineSettings();
+    void applyFineSettings();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::RadianceParameters_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::RadianceParameters_Impl ImplType;
 
-  explicit RadianceParameters(std::shared_ptr<detail::RadianceParameters_Impl> impl);
+    explicit RadianceParameters(std::shared_ptr<detail::RadianceParameters_Impl> impl);
 
-  friend class detail::RadianceParameters_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit RadianceParameters(Model& model);
+    friend class detail::RadianceParameters_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit RadianceParameters(Model& model);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.RadianceParameters");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RadianceParameters");
+  };
 
-/** \relates RadianceParameters*/
-typedef boost::optional<RadianceParameters> OptionalRadianceParameters;
+  /** \relates RadianceParameters*/
+  typedef boost::optional<RadianceParameters> OptionalRadianceParameters;
 
-/** \relates RadianceParameters*/
-typedef std::vector<RadianceParameters> RadianceParametersVector;
+  /** \relates RadianceParameters*/
+  typedef std::vector<RadianceParameters> RadianceParametersVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_RADIANCEPARAMETERS_HPP
+#endif  // MODEL_RADIANCEPARAMETERS_HPP

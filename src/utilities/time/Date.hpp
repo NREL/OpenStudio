@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,7 +45,9 @@
 #include <boost/date_time/gregorian/greg_calendar.hpp>
 #include "../core/Enum.hpp"
 
-namespace openstudio{
+namespace openstudio {
+
+// clang-format off
 
   /** \class DayOfWeek
    *  \brief DayOfWeek is an enumeration of the days of the week: Sunday, Monday, Tuesday,
@@ -148,193 +150,193 @@ namespace openstudio{
       ((fifth)(fifth)(boost::gregorian::nth_day_of_the_week_in_month::fifth))
   );
 
-  /// Convert string to NthDayOfWeekInMonth. Accepts full string, also accepts 1, 1st, 2, 2nd, etc.
-  UTILITIES_API NthDayOfWeekInMonth nthDayOfWeekInMonth(const std::string& nth);
+/// Convert string to NthDayOfWeekInMonth. Accepts full string, also accepts 1, 1st, 2, 2nd, etc.
+UTILITIES_API NthDayOfWeekInMonth nthDayOfWeekInMonth(const std::string& nth);
 
-  /// YearDescription describes a year with several optional parameters
-  struct UTILITIES_API YearDescription{
+// clang-format on
 
-    /// constructor
-    YearDescription();
+/// YearDescription describes a year with several optional parameters
+struct UTILITIES_API YearDescription
+{
 
-    /// get the assumed year
-    int assumedYear() const;
+  /// constructor
+  YearDescription();
 
-    /// is the year a leap year, defaults to false
-    bool isLeapYear;
+  /// get the assumed year
+  int assumedYear() const;
 
-    /// first day of the year, defaults to not set
-    boost::optional<DayOfWeek> yearStartsOnDayOfWeek;
+  /// is the year a leap year, defaults to false
+  bool isLeapYear;
 
-    /// look for year in future, defaults to false
-    bool lookInFuture;
-  };
+  /// first day of the year, defaults to not set
+  boost::optional<DayOfWeek> yearStartsOnDayOfWeek;
 
-  class DateTime;
+  /// look for year in future, defaults to false
+  bool lookInFuture;
+};
 
-  /// Date is an absolute unit of time, resolution to the day
-  /// Date is simple wrapper around boost::gregorian::date
-  class UTILITIES_API Date
-  {
-  public:
+class DateTime;
 
-    friend UTILITIES_API std::ostream& operator<<(std::ostream& os, const Date& date);
-    friend UTILITIES_API std::ostream& operator<<(std::ostream& os, const DateTime& dateTime);
-    friend class DateTime;
+/// Date is an absolute unit of time, resolution to the day
+/// Date is simple wrapper around boost::gregorian::date
+class UTILITIES_API Date
+{
+ public:
+  friend UTILITIES_API std::ostream& operator<<(std::ostream& os, const Date& date);
+  friend UTILITIES_API std::ostream& operator<<(std::ostream& os, const DateTime& dateTime);
+  friend class DateTime;
 
-    /// impl type is boost::gregorian::date
-    typedef boost::gregorian::date ImplType;
-    //typedef std::shared_ptr<ImplType> ImplPtr;
+  /// impl type is boost::gregorian::date
+  typedef boost::gregorian::date ImplType;
+  //typedef std::shared_ptr<ImplType> ImplPtr;
 
-    REGISTER_LOGGER("utilities.time.Date");
+  REGISTER_LOGGER("utilities.time.Date");
 
-    /// nth weekday of month generators
-    static Date fromNthDayOfMonth(NthDayOfWeekInMonth n, DayOfWeek dayOfWeek, MonthOfYear monthOfYear);
-    static Date fromNthDayOfMonth(NthDayOfWeekInMonth n, DayOfWeek dayOfWeek, MonthOfYear monthOfYear, int year);
+  /// nth weekday of month generators
+  static Date fromNthDayOfMonth(NthDayOfWeekInMonth n, DayOfWeek dayOfWeek, MonthOfYear monthOfYear);
+  static Date fromNthDayOfMonth(NthDayOfWeekInMonth n, DayOfWeek dayOfWeek, MonthOfYear monthOfYear, int year);
 
-    /// Day of year generators
-    static Date fromDayOfYear(unsigned dayOfYear);
-    static Date fromDayOfYear(unsigned dayOfYear, int year);
-    static Date fromDayOfYear(unsigned dayOfYear, const YearDescription& yearDescription);
+  /// Day of year generators
+  static Date fromDayOfYear(unsigned dayOfYear);
+  static Date fromDayOfYear(unsigned dayOfYear, int year);
+  static Date fromDayOfYear(unsigned dayOfYear, const YearDescription& yearDescription);
 
-    /// is year a leap year
-    static bool isLeapYear(int year);
+  /// is year a leap year
+  static bool isLeapYear(int year);
 
-    /// get current Date
-    static Date currentDate();
+  /// get current Date
+  static Date currentDate();
 
-    /// default constructor
-    Date();
+  /// default constructor
+  Date();
 
-    /// destructor
-    ~Date(){}
+  /// destructor
+  ~Date() {}
 
-    /// from impl
-    Date(const ImplType& impl);
+  /// from impl
+  Date(const ImplType& impl);
 
-    /// Date from month, day of month
-    Date(MonthOfYear monthOfYear, unsigned dayOfMonth);
+  /// Date from month, day of month
+  Date(MonthOfYear monthOfYear, unsigned dayOfMonth);
 
-    /// Date from month, day of month, year
-    Date(MonthOfYear monthOfYear, unsigned dayOfMonth, int year);
+  /// Date from month, day of month, year
+  Date(MonthOfYear monthOfYear, unsigned dayOfMonth, int year);
 
-    /// Date from YearDescription, month, and day of month
-    Date(MonthOfYear monthOfYear, unsigned dayOfMonth, const YearDescription& yearDescription);
+  /// Date from YearDescription, month, and day of month
+  Date(MonthOfYear monthOfYear, unsigned dayOfMonth, const YearDescription& yearDescription);
 
-    /// constructor from string
-    Date(const std::string& string);
+  /// constructor from string
+  Date(const std::string& string);
 
-    /// Date from a system tm structure
-    Date(tm t_tm);
+  /// Date from a system tm structure
+  Date(tm t_tm);
 
-    /// copy constructor
-    Date(const Date& other);
+  /// copy constructor
+  Date(const Date& other);
 
-    /// addition operator
-    Date operator+ (const Time& time) const;
+  /// addition operator
+  Date operator+(const Time& time) const;
 
-    /// assignment by addition operator
-    Date& operator+= (const Time& time);
+  /// assignment by addition operator
+  Date& operator+=(const Time& time);
 
-    /// difference operator
-    Date operator- (const Time& time) const;
+  /// difference operator
+  Date operator-(const Time& time) const;
 
-    /// assignment by difference operator
-    Date& operator-= (const Time& time);
+  /// assignment by difference operator
+  Date& operator-=(const Time& time);
 
-    /// time duration
-    Time operator- (const Date& date) const;
+  /// time duration
+  Time operator-(const Date& date) const;
 
-    /// equality operator
-    bool operator== (const Date& other) const;
+  /// equality operator
+  bool operator==(const Date& other) const;
 
-    /// non-equality operator
-    bool operator!= (const Date& other) const;
+  /// non-equality operator
+  bool operator!=(const Date& other) const;
 
-    /// less than operator
-    bool operator< (const Date& rhs) const;
+  /// less than operator
+  bool operator<(const Date& rhs) const;
 
-    /// less than equals operator
-    bool operator<= (const Date& rhs) const;
+  /// less than equals operator
+  bool operator<=(const Date& rhs) const;
 
-    /// greater than operator
-    bool operator> (const Date& rhs) const;
+  /// greater than operator
+  bool operator>(const Date& rhs) const;
 
-    /// greater than equals operator
-    bool operator>= (const Date& rhs) const;
+  /// greater than equals operator
+  bool operator>=(const Date& rhs) const;
 
-    /// assignment operator
-    Date &operator=(const Date &other);
+  /// assignment operator
+  Date& operator=(const Date& other);
 
-    /// user provided base year
-    boost::optional<int> baseYear() const;
+  /// user provided base year
+  boost::optional<int> baseYear() const;
 
-    /// set base year
-    void baseYear(int baseYear);
+  /// set base year
+  void baseYear(int baseYear);
 
-    /// assumed base year
-    int assumedBaseYear() const;
+  /// assumed base year
+  int assumedBaseYear() const;
 
-    /// year
-    int year() const;
+  /// year
+  int year() const;
 
-    /// month of year
-    MonthOfYear monthOfYear() const;
+  /// month of year
+  MonthOfYear monthOfYear() const;
 
-    /// day of month
-    unsigned dayOfMonth() const;
+  /// day of month
+  unsigned dayOfMonth() const;
 
-    /// day of year
-    unsigned dayOfYear() const;
+  /// day of year
+  unsigned dayOfYear() const;
 
-    /// is assumed year a leap year
-    bool isLeapYear() const;
+  /// is assumed year a leap year
+  bool isLeapYear() const;
 
-    /// day of the week
-    DayOfWeek dayOfWeek() const;
+  /// day of the week
+  DayOfWeek dayOfWeek() const;
 
-  protected:
+ protected:
+  // reference to impl
+  const ImplType impl() const;
 
-    // reference to impl
-    const ImplType impl() const;
+ private:
+  // initFromYearMonthDay
+  void initFromYearMonthDay(int year, MonthOfYear monthOfYear, unsigned dayOfMonth);
 
-  private:
+  // initFromYearDayOfYear
+  void initFromYearDayOfYear(int year, unsigned dayOfYear);
 
-    // initFromYearMonthDay
-    void initFromYearMonthDay(int year, MonthOfYear monthOfYear, unsigned dayOfMonth);
+  ImplType m_impl;
 
-    // initFromYearDayOfYear
-    void initFromYearDayOfYear(int year, unsigned dayOfYear);
+  // user provided base year is optional
+  boost::optional<int> m_baseYear;
 
-    ImplType m_impl;
+  // always have assumed base year
+  int m_assumedBaseYear;
+};
 
-    // user provided base year is optional
-    boost::optional<int> m_baseYear;
+/// optional Date
+typedef boost::optional<Date> OptionalDate;
 
-    // always have assumed base year
-    int m_assumedBaseYear;
-  };
+/// vector of Date
+typedef std::vector<Date> DateVector;
 
-  /// optional Date
-  typedef boost::optional<Date> OptionalDate;
+// std::ostream operator<<
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const Date& date);
 
-  /// vector of Date
-  typedef std::vector<Date> DateVector;
+/// DateCompare compares two dates, returns true if lhs is less than rhs
+class UTILITIES_API DateCompare
+{
+ public:
+  /// operator()
+  bool operator()(const Date& lhs, const Date& rhs) const;
+};
 
-  // std::ostream operator<<
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const Date& date);
+/// return nthDayOfWeekInMonth for given date
+UTILITIES_API NthDayOfWeekInMonth nthDayOfWeekInMonth(const Date& date);
 
-  /// DateCompare compares two dates, returns true if lhs is less than rhs
-  class UTILITIES_API DateCompare{
-  public:
-    /// operator()
-    bool operator()(const Date& lhs, const Date& rhs) const;
-  };
+}  // namespace openstudio
 
-  /// return nthDayOfWeekInMonth for given date
-  UTILITIES_API NthDayOfWeekInMonth nthDayOfWeekInMonth(const Date& date);
-
-} // openstudio
-
-
-#endif // UTILITIES_TIME_DATE_HPP
+#endif  // UTILITIES_TIME_DATE_HPP

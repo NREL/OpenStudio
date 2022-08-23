@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,69 +36,69 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class OutputDebuggingData_Impl;
+    class OutputDebuggingData_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** OutputDebuggingData is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:DebuggingData'. */
-class MODEL_API OutputDebuggingData : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** OutputDebuggingData is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:DebuggingData'. */
+  class MODEL_API OutputDebuggingData : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~OutputDebuggingData() {}
+    virtual ~OutputDebuggingData() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  bool reportDebuggingData() const;
+    bool reportDebuggingData() const;
 
-  bool reportDuringWarmup() const;
+    bool reportDuringWarmup() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setReportDebuggingData(bool reportDebuggingData);
+    bool setReportDebuggingData(bool reportDebuggingData);
 
-  bool setReportDuringWarmup(bool reportDuringWarmup);
+    bool setReportDuringWarmup(bool reportDuringWarmup);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::OutputDebuggingData_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::OutputDebuggingData_Impl ImplType;
 
-  explicit OutputDebuggingData(std::shared_ptr<detail::OutputDebuggingData_Impl> impl);
+    explicit OutputDebuggingData(std::shared_ptr<detail::OutputDebuggingData_Impl> impl);
 
-  friend class detail::OutputDebuggingData_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit OutputDebuggingData(Model& model);
+    friend class detail::OutputDebuggingData_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit OutputDebuggingData(Model& model);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.OutputDebuggingData");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.OutputDebuggingData");
+  };
 
-/** \relates OutputDebuggingData*/
-typedef boost::optional<OutputDebuggingData> OptionalOutputDebuggingData;
+  /** \relates OutputDebuggingData*/
+  typedef boost::optional<OutputDebuggingData> OptionalOutputDebuggingData;
 
-/** \relates OutputDebuggingData*/
-typedef std::vector<OutputDebuggingData> OutputDebuggingDataVector;
+  /** \relates OutputDebuggingData*/
+  typedef std::vector<OutputDebuggingData> OutputDebuggingDataVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_OUTPUTDEBUGGINGDATA_HPP
-
+#endif  // MODEL_OUTPUTDEBUGGINGDATA_HPP

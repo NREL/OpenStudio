@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,144 +36,138 @@
 namespace openstudio {
 namespace model {
 
-class Node;
-class CurveCubic;
-class CurveQuadratic;
-class GeneratorFuelCell;
-class AirSupplyConstituent;
+  class Node;
+  class CurveCubic;
+  class CurveQuadratic;
+  class GeneratorFuelCell;
+  class AirSupplyConstituent;
 
-namespace detail {
+  namespace detail {
 
-  /** GeneratorFuelCellAirSupply_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellAirSupply.*/
-  class MODEL_API GeneratorFuelCellAirSupply_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** GeneratorFuelCellAirSupply_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellAirSupply.*/
+    class MODEL_API GeneratorFuelCellAirSupply_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    GeneratorFuelCellAirSupply_Impl(const IdfObject& idfObject,
-                                    Model_Impl* model,
-                                    bool keepHandle);
+      GeneratorFuelCellAirSupply_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    GeneratorFuelCellAirSupply_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                    Model_Impl* model,
-                                    bool keepHandle);
+      GeneratorFuelCellAirSupply_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    GeneratorFuelCellAirSupply_Impl(const GeneratorFuelCellAirSupply_Impl& other,
-                                    Model_Impl* model,
-                                    bool keepHandle);
+      GeneratorFuelCellAirSupply_Impl(const GeneratorFuelCellAirSupply_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~GeneratorFuelCellAirSupply_Impl() {}
+      virtual ~GeneratorFuelCellAirSupply_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
+      virtual std::vector<IddObjectType> allowableChildTypes() const;
 
-    virtual std::vector<ModelObject> children() const;
+      virtual std::vector<ModelObject> children() const;
 
+      //extensible fields.
+      bool addConstituent(const AirSupplyConstituent& constituent);
+      bool addConstituent(std::string name, double molarFraction);
 
-    //extensible fields.
-    bool addConstituent(const AirSupplyConstituent& constituent);
-    bool addConstituent(std::string name, double molarFraction);
+      bool removeConstituent(unsigned groupIndex);
 
-    bool removeConstituent(unsigned groupIndex);
+      void removeAllConstituents();
 
-    void removeAllConstituents();
+      std::vector<AirSupplyConstituent> constituents() const;
 
-    std::vector<AirSupplyConstituent> constituents() const;
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      boost::optional<Node> airInletNode() const;
 
-    boost::optional<Node> airInletNode() const;
+      boost::optional<CurveCubic> blowerPowerCurve() const;
 
-    boost::optional<CurveCubic> blowerPowerCurve() const;
+      double blowerHeatLossFactor() const;
 
-    double blowerHeatLossFactor() const;
+      std::string airSupplyRateCalculationMode() const;
 
-    std::string airSupplyRateCalculationMode() const;
+      boost::optional<double> stoichiometricRatio() const;
 
-    boost::optional<double> stoichiometricRatio() const;
+      boost::optional<CurveQuadratic> airRateFunctionofElectricPowerCurve() const;
 
-    boost::optional<CurveQuadratic> airRateFunctionofElectricPowerCurve() const;
+      boost::optional<double> airRateAirTemperatureCoefficient() const;
 
-    boost::optional<double> airRateAirTemperatureCoefficient() const;
+      boost::optional<CurveQuadratic> airRateFunctionofFuelRateCurve() const;
 
-    boost::optional<CurveQuadratic> airRateFunctionofFuelRateCurve() const;
+      std::string airIntakeHeatRecoveryMode() const;
 
-    std::string airIntakeHeatRecoveryMode() const;
+      std::string airSupplyConstituentMode() const;
 
-    std::string airSupplyConstituentMode() const;
+      unsigned int numberofUserDefinedConstituents() const;
 
-    unsigned int numberofUserDefinedConstituents() const;
+      // Convenience function to check that it's equal to 1.0 (If no constituents, returns 0 and warns)
+      double sumofConstituentsMolarFractions() const;
 
-    // Convenience function to check that it's equal to 1.0 (If no constituents, returns 0 and warns)
-    double sumofConstituentsMolarFractions() const;
+      // Return optional parent generator
+      boost::optional<GeneratorFuelCell> fuelCell() const;
 
-    // Return optional parent generator
-    boost::optional<GeneratorFuelCell> fuelCell() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setAirInletNode(const Node& connection);
 
-    bool setAirInletNode(const Node& connection);
+      void resetAirInletNode();
 
-    void resetAirInletNode();
+      bool setBlowerPowerCurve(const CurveCubic& cubicCurves);
 
-    bool setBlowerPowerCurve(const CurveCubic& cubicCurves);
+      void resetBlowerPowerCurve();
 
-    void resetBlowerPowerCurve();
+      bool setBlowerHeatLossFactor(double blowerHeatLossFactor);
 
-    bool setBlowerHeatLossFactor(double blowerHeatLossFactor);
+      void resetBlowerHeatLossFactor();
 
-    void resetBlowerHeatLossFactor();
+      bool setAirSupplyRateCalculationMode(const std::string& airSupplyRateCalculationMode);
 
-    bool setAirSupplyRateCalculationMode(const std::string& airSupplyRateCalculationMode);
+      bool setStoichiometricRatio(double stoichiometricRatio);
 
-    bool setStoichiometricRatio(double stoichiometricRatio);
+      void resetStoichiometricRatio();
 
-    void resetStoichiometricRatio();
+      bool setAirRateFunctionofElectricPowerCurve(const CurveQuadratic& quadraticCurves);
 
-    bool setAirRateFunctionofElectricPowerCurve(const CurveQuadratic& quadraticCurves);
+      void resetAirRateFunctionofElectricPowerCurve();
 
-    void resetAirRateFunctionofElectricPowerCurve();
+      bool setAirRateAirTemperatureCoefficient(double airRateAirTemperatureCoefficient);
 
-    bool setAirRateAirTemperatureCoefficient(double airRateAirTemperatureCoefficient);
+      void resetAirRateAirTemperatureCoefficient();
 
-    void resetAirRateAirTemperatureCoefficient();
+      bool setAirRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves);
 
-    bool setAirRateFunctionofFuelRateCurve(const CurveQuadratic& quadraticCurves);
+      void resetAirRateFunctionofFuelRateCurve();
 
-    void resetAirRateFunctionofFuelRateCurve();
+      bool setAirIntakeHeatRecoveryMode(const std::string& airIntakeHeatRecoveryMode);
 
-    bool setAirIntakeHeatRecoveryMode(const std::string& airIntakeHeatRecoveryMode);
+      bool setAirSupplyConstituentMode(const std::string& airSupplyConstituentMode);
 
-    bool setAirSupplyConstituentMode(const std::string& airSupplyConstituentMode);
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+     protected:
+     private:
+      // Not to be exposed publicly, handled automatically by add/removeConstituent
+      bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
+      void resetNumberofUserDefinedConstituents();
 
-    //@}
-   protected:
-   private:
-    // Not to be exposed publicly, handled automatically by add/removeConstituent
-    bool setNumberofUserDefinedConstituents(unsigned int numberofUserDefinedConstituents);
-    void resetNumberofUserDefinedConstituents();
+      REGISTER_LOGGER("openstudio.model.GeneratorFuelCellAirSupply");
+    };
 
-    REGISTER_LOGGER("openstudio.model.GeneratorFuelCellAirSupply");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_GENERATORFUELCELLAIRSUPPLY_IMPL_HPP
+#endif  // MODEL_GENERATORFUELCELLAIRSUPPLY_IMPL_HPP

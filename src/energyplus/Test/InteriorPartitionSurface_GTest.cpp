@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,6 +54,7 @@
 #include "../../model/StandardOpaqueMaterial_Impl.hpp"
 
 #include <utilities/idd/InternalMass_FieldEnums.hxx>
+#include <utilities/idd/BuildingSurface_Detailed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
@@ -64,14 +65,13 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_InteriorPartitionSurface)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_InteriorPartitionSurface) {
   Model model;
   Point3dVector points;
-  points.push_back(Point3d(0,1,0));
-  points.push_back(Point3d(1,1,0));
-  points.push_back(Point3d(1,0,0));
-  points.push_back(Point3d(0,0,0));
+  points.push_back(Point3d(0, 1, 0));
+  points.push_back(Point3d(1, 1, 0));
+  points.push_back(Point3d(1, 0, 0));
+  points.push_back(Point3d(0, 0, 0));
 
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 1, model);
   boost::optional<Space> space2 = Space::fromFloorPrint(points, 1, model);
@@ -106,33 +106,51 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_InteriorPartitionSurface)
   EXPECT_EQ(12u, model.getModelObjects<Surface>().size());
 
   unsigned n = 0;
-  for (Surface surface : space1->surfaces()){
+  for (Surface surface : space1->surfaces()) {
     EXPECT_EQ(1.0, surface.grossArea());
-    if (surface.adjacentSurface()){
+    if (surface.adjacentSurface()) {
       ++n;
     }
   }
   EXPECT_EQ(1u, n);
 
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(10u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::InternalMass).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Construction).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
 
-  WorkspaceObject internalMassObject = workspace.getObjectsByType(IddObjectType::InternalMass)[0];
-  ASSERT_TRUE(internalMassObject.getDouble(InternalMassFields::SurfaceArea));
-  EXPECT_EQ(1.0, internalMassObject.getDouble(InternalMassFields::SurfaceArea).get());
+    // In this case, the surface that is between the two Spaces will be converted to an InternalMass object
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  WorkspaceObject constructionObject = workspace.getObjectsByType(IddObjectType::Construction)[0];
-  ASSERT_TRUE(internalMassObject.getTarget(InternalMassFields::ConstructionName));
-  EXPECT_EQ(constructionObject.handle(), internalMassObject.getTarget(InternalMassFields::ConstructionName)->handle());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(10u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::InternalMass).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Construction).size());
 
-  WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
-  ASSERT_TRUE(internalMassObject.getTarget(InternalMassFields::ZoneorZoneListName));
-  EXPECT_EQ(zoneObject.handle(), internalMassObject.getTarget(InternalMassFields::ZoneorZoneListName)->handle());
+    WorkspaceObject internalMassObject = workspace.getObjectsByType(IddObjectType::InternalMass)[0];
+    ASSERT_TRUE(internalMassObject.getDouble(InternalMassFields::SurfaceArea));
+    EXPECT_EQ(1.0, internalMassObject.getDouble(InternalMassFields::SurfaceArea).get());
+
+    WorkspaceObject constructionObject = workspace.getObjectsByType(IddObjectType::Construction)[0];
+    ASSERT_TRUE(internalMassObject.getTarget(InternalMassFields::ConstructionName));
+    EXPECT_EQ(constructionObject.handle(), internalMassObject.getTarget(InternalMassFields::ConstructionName)->handle());
+
+    WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
+    ASSERT_TRUE(internalMassObject.getTarget(InternalMassFields::ZoneorZoneListName));
+    EXPECT_EQ(zoneObject.handle(), internalMassObject.getTarget(InternalMassFields::ZoneorZoneListName)->handle());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+
+    // In this case, the surface between the two spaces does exist. Each space is its own enclosure
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(12u, workspace.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+    ASSERT_EQ(0u, workspace.getObjectsByType(IddObjectType::InternalMass).size());
+    ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Construction).size());
+  }
 }
-
-

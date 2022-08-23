@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,7 +62,6 @@
 
 #include "../../model/Schedule.hpp"
 
-
 #include "../../model/Version.hpp"
 #include "../../model/Version_Impl.hpp"
 
@@ -104,7 +103,6 @@
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
-
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -120,12 +118,11 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-
 /* Ensures that the nodes that translated correctly
  * that means correct node names in the CentralHeatPumpSystem but also
  * on the Branches
  */
-TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_Nodes) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorCentralHeatPumpSystem_Nodes) {
 
   boost::optional<WorkspaceObject> _wo;
   ForwardTranslator ft;
@@ -151,9 +148,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_Nodes) {
   central_hp.addModule(central_hp_module2);
   ASSERT_TRUE(central_hp_module2.setNumberofChillerHeaterModules(2));
 
-
-  ASSERT_EQ( (unsigned)2, central_hp.modules().size() );
-
+  ASSERT_EQ((unsigned)2, central_hp.modules().size());
 
   // Connect the CentralHP to three plant loops
   // CoolingLoop: on the supply side
@@ -180,7 +175,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_Nodes) {
   EXPECT_TRUE(central_hp.addToTertiaryNode(node));
   temp_b.remove();
 
-
   // Translate
   Workspace w = ft.translateModel(m);
 
@@ -191,25 +185,24 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_Nodes) {
 
   // supply = Cooling
   ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::CoolingLoopInletNodeName).get(),
-            central_hp.supplyInletModelObject().get().name());
+            central_hp.supplyInletModelObject().get().nameString());
 
   ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::CoolingLoopOutletNodeName).get(),
-            central_hp.supplyOutletModelObject().get().name());
+            central_hp.supplyOutletModelObject().get().nameString());
 
   // demand = Source
   ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::SourceLoopInletNodeName).get(),
-            central_hp.demandInletModelObject().get().name());
+            central_hp.demandInletModelObject().get().nameString());
 
   ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::SourceLoopOutletNodeName).get(),
-            central_hp.demandOutletModelObject().get().name());
+            central_hp.demandOutletModelObject().get().nameString());
 
   // tertiary = Heating
   ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::HeatingLoopInletNodeName).get(),
-            central_hp.tertiaryInletModelObject().get().name());
+            central_hp.tertiaryInletModelObject().get().nameString());
 
   ASSERT_EQ(i_central_hp.getString(CentralHeatPumpSystemFields::HeatingLoopOutletNodeName).get(),
-            central_hp.tertiaryOutletModelObject().get().name());
-
+            central_hp.tertiaryOutletModelObject().get().nameString());
 
   // Check node names on supply/demand branches
   // Checks that the special case implemented in ForwardTranslatePlantLoop::populateBranch does the right job
@@ -231,14 +224,11 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_Nodes) {
     ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
     WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
-    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(),
-        central_hp.name());
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), central_hp.nameString());
 
-    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(),
-        central_hp.supplyInletModelObject().get().name());
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(), central_hp.supplyInletModelObject().get().nameString());
 
-    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(),
-        central_hp.supplyOutletModelObject().get().name());
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(), central_hp.supplyOutletModelObject().get().nameString());
   }
 
   // tertiary = Heating (on supply)
@@ -258,14 +248,11 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_Nodes) {
     ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
     WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
-    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(),
-        central_hp.name());
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), central_hp.nameString());
 
-    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(),
-        central_hp.tertiaryInletModelObject().get().name());
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(), central_hp.tertiaryInletModelObject().get().nameString());
 
-    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(),
-        central_hp.tertiaryOutletModelObject().get().name());
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(), central_hp.tertiaryOutletModelObject().get().nameString());
   }
 
   // demand = Source (on demand)
@@ -286,26 +273,22 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_Nodes) {
     ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
     WorkspaceExtensibleGroup w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
-    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(),
-        central_hp.name());
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), central_hp.nameString());
 
-    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(),
-        central_hp.demandInletModelObject().get().name());
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(), central_hp.demandInletModelObject().get().nameString());
 
-    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(),
-        central_hp.demandOutletModelObject().get().name());
+    ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(), central_hp.demandOutletModelObject().get().nameString());
   }
 
   // m.save(toPath("./ft_central_hp.osm"), true);
   // w.save(toPath("./ft_central_hp.idf"), true);
-
 }
 
 /* This tests ensures that the CentralHeatPumpSystem ends up in a PlantEquipmentOperation:HeatingLoad for the heating loop
  * and PlantEquipmentOperation:CoolingLoad for the cooling loop. For the source loop, it's on the demand side so it shouldn't
  * be part of the plant equipment list used
  */
-TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentOperation) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentOperation) {
 
   boost::optional<WorkspaceObject> _wo;
   ForwardTranslator ft;
@@ -344,16 +327,12 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentOp
   EXPECT_TRUE(central_hp.addToTertiaryNode(node));
   temp_b.remove();
 
-
-
   Workspace w = ft.translateModel(m);
 
   EXPECT_EQ(0u, ft.errors().size());
   EXPECT_EQ(1u, w.getObjectsByType(IddObjectType::CentralHeatPumpSystem).size());
 
   IdfObject i_central_hp = w.getObjectsByType(IddObjectType::CentralHeatPumpSystem)[0];
-
-
 
   // Get the Loops, and find their plant operation scheme
 
@@ -387,9 +366,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentOp
     ASSERT_EQ(1u, idf_peq_list.extensibleGroups().size());
     IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
     ASSERT_EQ(central_hp.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
   }
-
 
   // tertiary = Heating
   {
@@ -421,10 +398,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentOp
     ASSERT_EQ(1u, idf_peq_list.extensibleGroups().size());
     IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
     ASSERT_EQ(central_hp.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
   }
-
-
 
   // SourceLoop: on the demand side. So it shouldn't be on it
   {
@@ -456,15 +430,13 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_PlantEquipmentOp
     ASSERT_EQ(1u, idf_peq_list.extensibleGroups().size());
     IdfExtensibleGroup idf_eg(idf_peq_list.extensibleGroups()[0]);
     ASSERT_EQ(ct.name().get(), idf_eg.getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
-
   }
 
   // m.save(toPath("./ft_central_hp.osm"), true);
   // w.save(toPath("./ft_central_hp.idf"), true);
-
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_NoModules) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorCentralHeatPumpSystem_NoModules) {
 
   boost::optional<WorkspaceObject> _wo;
   ForwardTranslator ft;
@@ -488,7 +460,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_NoModules) {
   CoolingTowerSingleSpeed ct(m);
   sourcePlant.addSupplyBranchForComponent(ct);
 
-   // HeatingLoop: on the supply side
+  // HeatingLoop: on the supply side
   PlantLoop heatingPlant(m);
   // Workaround to be able to use addToTertiaryNode directly
   // (addSupplyBranchForComponent should work directly, but this is tested in model GTest, so here we just make sure we call
@@ -508,5 +480,4 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorCentralHeatPumpSystem_NoModules) {
 
   EXPECT_EQ(0u, ft.errors().size());
   EXPECT_EQ(0u, w.getObjectsByType(IddObjectType::CentralHeatPumpSystem).size());
-
 }

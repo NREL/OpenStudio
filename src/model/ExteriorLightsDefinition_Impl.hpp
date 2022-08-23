@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,61 +36,57 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ExteriorLightsDefinition_Impl is a ExteriorLoadDefinition_Impl that is the implementation class for ExteriorLightsDefinition.*/
-  class MODEL_API ExteriorLightsDefinition_Impl : public ExteriorLoadDefinition_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ExteriorLightsDefinition_Impl is a ExteriorLoadDefinition_Impl that is the implementation class for ExteriorLightsDefinition.*/
+    class MODEL_API ExteriorLightsDefinition_Impl : public ExteriorLoadDefinition_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ExteriorLightsDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ExteriorLightsDefinition_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ExteriorLightsDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      ExteriorLightsDefinition_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ExteriorLightsDefinition_Impl(const ExteriorLightsDefinition_Impl& other,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      ExteriorLightsDefinition_Impl(const ExteriorLightsDefinition_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ExteriorLightsDefinition_Impl() {}
+      virtual ~ExteriorLightsDefinition_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    // TODO: remove (unused)
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      // TODO: remove (unused)
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double designLevel() const;
+      double designLevel() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setDesignLevel(double designLevel);
+      bool setDesignLevel(double designLevel);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ExteriorLightsDefinition");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ExteriorLightsDefinition");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERIORLIGHTSDEFINITION_IMPL_HPP
-
+#endif  // MODEL_EXTERIORLIGHTSDEFINITION_IMPL_HPP

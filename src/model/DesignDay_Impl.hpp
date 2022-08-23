@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,279 +35,258 @@
 namespace openstudio {
 namespace model {
 
-class ScheduleDay;
+  class ScheduleDay;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API DesignDay_Impl : public SizingPeriod_Impl {
+    class MODEL_API DesignDay_Impl : public SizingPeriod_Impl
+    {
 
+     public:
+      // constructor
+      DesignDay_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      // construct from workspace
+      DesignDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      // clone copy constructor
+      DesignDay_Impl(const DesignDay_Impl& other, Model_Impl* model, bool keepHandle);
 
+      // virtual destructor
+      virtual ~DesignDay_Impl() {}
 
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
 
+      /** @name Getters */
+      //@{
 
+      double maximumDryBulbTemperature() const;
 
+      bool isMaximumDryBulbTemperatureDefaulted() const;
 
+      double dailyDryBulbTemperatureRange() const;
 
+      bool isDailyDryBulbTemperatureRangeDefaulted() const;
 
+      double barometricPressure() const;
 
+      bool isBarometricPressureDefaulted() const;
 
+      double windSpeed() const;
 
+      bool isWindSpeedDefaulted() const;
 
+      double windDirection() const;
 
+      bool isWindDirectionDefaulted() const;
 
+      double skyClearness() const;
 
+      bool isSkyClearnessDefaulted() const;
 
+      bool rainIndicator() const;
 
+      bool isRainIndicatorDefaulted() const;
 
+      bool snowIndicator() const;
 
+      bool isSnowIndicatorDefaulted() const;
 
+      int dayOfMonth() const;
 
+      bool isDayOfMonthDefaulted() const;
 
+      int month() const;
 
+      bool isMonthDefaulted() const;
 
+      std::string dayType() const;
 
+      bool isDayTypeDefaulted() const;
 
+      bool daylightSavingTimeIndicator() const;
 
+      bool isDaylightSavingTimeIndicatorDefaulted() const;
 
+      std::string humidityConditionType() const;
 
+      bool isHumidityConditionTypeDefaulted() const;
 
+      boost::optional<ScheduleDay> humidityConditionDaySchedule() const;
 
+      boost::optional<double> wetBulbOrDewPointAtMaximumDryBulb() const;
 
+      boost::optional<double> humidityRatioAtMaximumDryBulb() const;
 
+      boost::optional<double> enthalpyAtMaximumDryBulb() const;
 
+      std::string dryBulbTemperatureRangeModifierType() const;
 
+      bool isDryBulbTemperatureRangeModifierTypeDefaulted() const;
 
+      boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierDaySchedule() const;
 
+      std::string solarModelIndicator() const;
 
+      bool isSolarModelIndicatorDefaulted() const;
 
-   public:
+      boost::optional<ScheduleDay> beamSolarDaySchedule() const;
 
-    // constructor
-    DesignDay_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      boost::optional<ScheduleDay> diffuseSolarDaySchedule() const;
 
-    // construct from workspace
-    DesignDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                   Model_Impl* model,
-                   bool keepHandle);
+      double ashraeClearSkyOpticalDepthForBeamIrradiance() const;
 
-    // clone copy constructor
-    DesignDay_Impl(const DesignDay_Impl& other,Model_Impl* model,bool keepHandle);
+      bool isAshraeClearSkyOpticalDepthForBeamIrradianceDefaulted() const;
 
-    // virtual destructor
-    virtual ~DesignDay_Impl(){}
+      double ashraeClearSkyOpticalDepthForDiffuseIrradiance() const;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      bool isAshraeClearSkyOpticalDepthForDiffuseIrradianceDefaulted() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      boost::optional<double> dailyWetBulbTemperatureRange() const;
 
-    /** @name Getters */
-    //@{
+      boost::optional<int> maximumNumberWarmupDays() const;
 
-    double maximumDryBulbTemperature() const;
+      std::string beginEnvironmentResetMode() const;
 
-    bool isMaximumDryBulbTemperatureDefaulted() const;
+      bool isBeginEnvironmentResetModeDefaulted() const;
 
-    double dailyDryBulbTemperatureRange() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool isDailyDryBulbTemperatureRangeDefaulted() const;
+      bool setMaximumDryBulbTemperature(double maximumDryBulbTemperature);
 
-    double humidityIndicatingConditionsAtMaximumDryBulb() const;
+      void resetMaximumDryBulbTemperature();
 
-    bool isHumidityIndicatingConditionsAtMaximumDryBulbDefaulted() const;
+      bool setDailyDryBulbTemperatureRange(double dailyDryBulbTemperatureRange);
 
-    double barometricPressure() const;
+      void resetDailyDryBulbTemperatureRange();
 
-    bool isBarometricPressureDefaulted() const;
+      bool setBarometricPressure(double barometricPressure);
 
-    double windSpeed() const;
+      void resetBarometricPressure();
 
-    bool isWindSpeedDefaulted() const;
+      bool setWindSpeed(double windSpeed);
 
-    double windDirection() const;
+      void resetWindSpeed();
 
-    bool isWindDirectionDefaulted() const;
+      bool setWindDirection(double windDirection);
 
-    double skyClearness() const;
+      void resetWindDirection();
 
-    bool isSkyClearnessDefaulted() const;
+      bool setSkyClearness(double skyClearness);
 
-    bool rainIndicator() const;
+      void resetSkyClearness();
 
-    bool isRainIndicatorDefaulted() const;
+      bool setRainIndicator(bool rainIndicator);
 
-    bool snowIndicator() const;
+      void resetRainIndicator();
 
-    bool isSnowIndicatorDefaulted() const;
+      bool setSnowIndicator(bool snowIndicator);
 
-    int dayOfMonth() const;
+      void resetSnowIndicator();
 
-    bool isDayOfMonthDefaulted() const;
+      bool setDayOfMonth(int dayOfMonth);
 
-    int month() const;
+      void resetDayOfMonth();
 
-    bool isMonthDefaulted() const;
+      bool setMonth(int month);
 
-    std::string dayType() const;
+      void resetMonth();
 
-    bool isDayTypeDefaulted() const;
+      bool setDayType(const std::string& dayType);
 
-    bool daylightSavingTimeIndicator() const;
+      void resetDayType();
 
-    bool isDaylightSavingTimeIndicatorDefaulted() const;
+      bool setDaylightSavingTimeIndicator(bool daylightSavingTimeIndicator);
 
-    std::string humidityIndicatingType() const;
+      void resetDaylightSavingTimeIndicator();
 
-    bool isHumidityIndicatingTypeDefaulted() const;
+      bool setHumidityConditionType(const std::string& humidityConditionType);
 
-    boost::optional<ScheduleDay> humidityIndicatingDaySchedule() const;
+      void resetHumidityConditionType();
 
-    std::string dryBulbTemperatureRangeModifierType() const;
+      bool setHumidityConditionDaySchedule(const ScheduleDay& schedule);
 
-    bool isDryBulbTemperatureRangeModifierTypeDefaulted() const;
+      void resetHumidityConditionDaySchedule();
 
-    boost::optional<ScheduleDay> dryBulbTemperatureRangeModifierSchedule() const;
+      bool setWetBulbOrDewPointAtMaximumDryBulb(boost::optional<double> wetBulbOrDewPointAtMaximumDryBulb);
 
-    std::string solarModelIndicator() const;
+      void resetWetBulbOrDewPointAtMaximumDryBulb();
 
-    bool isSolarModelIndicatorDefaulted() const;
+      bool setHumidityRatioAtMaximumDryBulb(boost::optional<double> humidityRatioAtMaximumDryBulb);
 
-    boost::optional<ScheduleDay> beamSolarDaySchedule() const;
+      void resetHumidityRatioAtMaximumDryBulb();
 
-    boost::optional<ScheduleDay> diffuseSolarDaySchedule() const;
+      bool setEnthalpyAtMaximumDryBulb(boost::optional<double> enthalpyAtMaximumDryBulb);
 
-    double ashraeTaub() const;
+      void resetEnthalpyAtMaximumDryBulb();
 
-    bool isAshraeTaubDefaulted() const;
+      bool setDryBulbTemperatureRangeModifierType(const std::string& dryBulbTemperatureRangeModifierType);
 
-    double ashraeTaud() const;
+      void resetDryBulbTemperatureRangeModifierType();
 
-    bool isAshraeTaudDefaulted() const;
+      bool setDryBulbTemperatureRangeModifierDaySchedule(const ScheduleDay& schedule);
 
-    boost::optional<double> dailyWetBulbTemperatureRange() const;
+      void resetDryBulbTemperatureRangeModifierDaySchedule();
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setSolarModelIndicator(const std::string& solarModelIndicator);
 
-    bool setMaximumDryBulbTemperature(double maximumDryBulbTemperature);
+      void resetSolarModelIndicator();
 
-    void resetMaximumDryBulbTemperature();
+      bool setBeamSolarDaySchedule(const ScheduleDay& schedule);
 
-    bool setDailyDryBulbTemperatureRange(double dailyDryBulbTemperatureRange);
+      void resetBeamSolarDaySchedule();
 
-    void resetDailyDryBulbTemperatureRange();
+      bool setDiffuseSolarDaySchedule(const ScheduleDay& schedule);
 
-    bool setHumidityIndicatingConditionsAtMaximumDryBulb(double humidityIndicatingConditionsAtMaximumDryBulb);
+      void resetDiffuseSolarDaySchedule();
 
-    void resetHumidityIndicatingConditionsAtMaximumDryBulb();
+      bool setAshraeClearSkyOpticalDepthForBeamIrradiance(double ashraeClearSkyOpticalDepthForBeamIrradiance);
 
-    bool setBarometricPressure(double barometricPressure);
+      void resetAshraeClearSkyOpticalDepthForBeamIrradiance();
 
-    void resetBarometricPressure();
+      bool setAshraeClearSkyOpticalDepthForDiffuseIrradiance(double ashraeClearSkyOpticalDepthForDiffuseIrradiance);
 
-    bool setWindSpeed(double windSpeed);
+      void resetAshraeClearSkyOpticalDepthForDiffuseIrradiance();
 
-    void resetWindSpeed();
+      bool setDailyWetBulbTemperatureRange(boost::optional<double> dailyWetBulbTemperatureRange);
 
-    bool setWindDirection(double windDirection);
+      void resetDailyWetBulbTemperatureRange();
 
-    void resetWindDirection();
+      bool setMaximumNumberWarmupDays(boost::optional<int> maximumNumberWarmupDays);
 
-    bool setSkyClearness(double skyClearness);
+      void resetMaximumNumberWarmupDays();
 
-    void resetSkyClearness();
+      bool setBeginEnvironmentResetMode(const std::string& beginEnvironmentResetMode);
 
-    bool setRainIndicator(bool rainIndicator);
+      void resetBeginEnvironmentResetMode();
 
-    void resetRainIndicator();
+      // ensure that this object does not contain the date 2/29
+      virtual void ensureNoLeapDays() override;
 
-    bool setSnowIndicator(bool snowIndicator);
+      //@}
 
-    void resetSnowIndicator();
+     private:
+      REGISTER_LOGGER("openstudio.model.DesignDay");
 
-    bool setDayOfMonth(int dayOfMonth);
+      boost::optional<ModelObject> humidityConditionDayScheduleAsModelObject() const;
+      boost::optional<ModelObject> dryBulbTemperatureRangeModifierDayScheduleAsModelObject() const;
+      boost::optional<ModelObject> beamSolarDayScheduleAsModelObject() const;
+      boost::optional<ModelObject> diffuseSolarDayScheduleAsModelObject() const;
 
-    void resetDayOfMonth();
+      bool setHumidityConditionDayScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setDryBulbTemperatureRangeModifierDayScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setBeamSolarDayScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setDiffuseSolarDayScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setMonth(int month);
+  }  // namespace detail
 
-    void resetMonth();
+}  // namespace model
+}  // namespace openstudio
 
-    bool setDayType(std::string dayType);
-
-    void resetDayType();
-
-    bool setDaylightSavingTimeIndicator(bool daylightSavingTimeIndicator);
-
-    void resetDaylightSavingTimeIndicator();
-
-    bool setHumidityIndicatingType(std::string humidityIndicatingType);
-
-    void resetHumidityIndicatingType();
-
-    bool setHumidityIndicatingDaySchedule(const ScheduleDay& schedule);
-
-    void resetHumidityIndicatingDaySchedule();
-
-    bool setDryBulbTemperatureRangeModifierType(std::string dryBulbTemperatureRangeModifierType);
-
-    void resetDryBulbTemperatureRangeModifierType();
-
-    bool setDryBulbTemperatureRangeModifierSchedule(const ScheduleDay & schedule);
-
-    void resetDryBulbTemperatureRangeModifierSchedule();
-
-    bool setSolarModelIndicator(std::string solarModelIndicator);
-
-    void resetSolarModelIndicator();
-
-    bool setBeamSolarDaySchedule(const ScheduleDay & schedule);
-
-    void resetBeamSolarDaySchedule();
-
-    bool setDiffuseSolarDaySchedule(const ScheduleDay & schedule);
-
-    void resetDiffuseSolarDaySchedule();
-
-    bool setAshraeTaub(double ashraeTaub);
-
-    void resetAshraeTaub();
-
-    bool setAshraeTaud(double ashraeTaud);
-
-    void resetAshraeTaud();
-
-    bool setDailyWetBulbTemperatureRange(boost::optional<double> dailyWetBulbTemperatureRange);
-
-    void resetDailyWetBulbTemperatureRange();
-
-    // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays() override;
-
-    //@}
-
-   private:
-
-    REGISTER_LOGGER("openstudio.model.DesignDay");
-
-    boost::optional<ModelObject> humidityIndicatingDayScheduleAsModelObject() const;
-    boost::optional<ModelObject> dryBulbTemperatureRangeModifierScheduleAsModelObject() const;
-    boost::optional<ModelObject> beamSolarDayScheduleAsModelObject() const;
-    boost::optional<ModelObject> diffuseSolarDayScheduleAsModelObject() const;
-
-    bool setHumidityIndicatingDayScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setDryBulbTemperatureRangeModifierScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setBeamSolarDayScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setDiffuseSolarDayScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_DESIGNDAY_IMPL_HPP
+#endif  // MODEL_DESIGNDAY_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,67 +36,77 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class AirTerminalSingleDuctInletSideMixer_Impl;
+    class AirTerminalSingleDuctInletSideMixer_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirTerminalSingleDuctInletSideMixer is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:InletSideMixer'.
+  /** AirTerminalSingleDuctInletSideMixer is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:InletSideMixer'.
  *  As of EnergyPlus version 8.6 this object maps to AirTerminal:SingleDuct:Mixer. **/
-class MODEL_API AirTerminalSingleDuctInletSideMixer : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API AirTerminalSingleDuctInletSideMixer : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AirTerminalSingleDuctInletSideMixer(const Model& model);
+    explicit AirTerminalSingleDuctInletSideMixer(const Model& model);
 
-  virtual ~AirTerminalSingleDuctInletSideMixer() {}
+    virtual ~AirTerminalSingleDuctInletSideMixer() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    static std::vector<std::string> perPersonVentilationRateModeValues();
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
+    * with the terminal's zone on export to EnergyPlus idf format.
+    * This field replaces the functionality of the EnergyPlus field: Design Specification Outdoor Air Object Name.*/
+    bool controlForOutdoorAir() const;
 
+    std::string perPersonVentilationRateMode() const;
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  unsigned secondaryAirInletPort() const;
+    bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
-  boost::optional<Node> secondaryAirInletNode() const;
+    bool setPerPersonVentilationRateMode(const std::string& perPersonVentilationRateMode);
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirTerminalSingleDuctInletSideMixer_Impl ImplType;
+    unsigned secondaryAirInletPort() const;
 
-  explicit AirTerminalSingleDuctInletSideMixer(std::shared_ptr<detail::AirTerminalSingleDuctInletSideMixer_Impl> impl);
+    boost::optional<Node> secondaryAirInletNode() const;
 
-  friend class detail::AirTerminalSingleDuctInletSideMixer_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctInletSideMixer");
-};
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirTerminalSingleDuctInletSideMixer_Impl ImplType;
 
-/** \relates AirTerminalSingleDuctInletSideMixer*/
-typedef boost::optional<AirTerminalSingleDuctInletSideMixer> OptionalAirTerminalSingleDuctInletSideMixer;
+    explicit AirTerminalSingleDuctInletSideMixer(std::shared_ptr<detail::AirTerminalSingleDuctInletSideMixer_Impl> impl);
 
-/** \relates AirTerminalSingleDuctInletSideMixer*/
-typedef std::vector<AirTerminalSingleDuctInletSideMixer> AirTerminalSingleDuctInletSideMixerVector;
+    friend class detail::AirTerminalSingleDuctInletSideMixer_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctInletSideMixer");
+  };
 
-} // model
-} // openstudio
+  /** \relates AirTerminalSingleDuctInletSideMixer*/
+  typedef boost::optional<AirTerminalSingleDuctInletSideMixer> OptionalAirTerminalSingleDuctInletSideMixer;
 
-#endif // MODEL_AIRTERMINALSINGLEDUCTINLETSIDEMIXER_HPP
+  /** \relates AirTerminalSingleDuctInletSideMixer*/
+  typedef std::vector<AirTerminalSingleDuctInletSideMixer> AirTerminalSingleDuctInletSideMixerVector;
 
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_AIRTERMINALSINGLEDUCTINLETSIDEMIXER_HPP

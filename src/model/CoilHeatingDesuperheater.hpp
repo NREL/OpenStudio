@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,116 +38,117 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class ModelObject;
-class AirflowNetworkEquivalentDuct;
+  class Schedule;
+  class ModelObject;
+  class AirflowNetworkEquivalentDuct;
 
-namespace detail {
+  namespace detail {
 
-  class CoilHeatingDesuperheater_Impl;
+    class CoilHeatingDesuperheater_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilHeatingDesuperheater is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:Desuperheater'.
+  /** CoilHeatingDesuperheater is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:Desuperheater'.
 
   This coil can be used in air loop simulations but can’t be used by certain compound objects
   (e.g., AirLoopHVACUnitaryHeatPumpAirToAir, AirLoopHVACUnitaryHeatPumpWaterToAir, or DehumidifierDesiccantNoFans)
   or any air distribution equipment (e.g., AirTerminalSingleDuctConstantVolumeReheat, AirTerminalSingleDuctVAVReheat,
   or AirTerminalSingleDuctSeriesPIUReheat).
 */
-class MODEL_API CoilHeatingDesuperheater : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API CoilHeatingDesuperheater : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilHeatingDesuperheater(const Model& model);
+    explicit CoilHeatingDesuperheater(const Model& model);
 
-  virtual ~CoilHeatingDesuperheater() {}
+    virtual ~CoilHeatingDesuperheater() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  double heatReclaimRecoveryEfficiency() const;
+    double heatReclaimRecoveryEfficiency() const;
 
-  bool isHeatReclaimRecoveryEfficiencyDefaulted() const;
+    bool isHeatReclaimRecoveryEfficiencyDefaulted() const;
 
-  boost::optional<ModelObject> heatingSource() const;
+    boost::optional<ModelObject> heatingSource() const;
 
-  double parasiticElectricLoad() const;
+    double parasiticElectricLoad() const;
 
-  bool isParasiticElectricLoadDefaulted() const;
+    bool isParasiticElectricLoadDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setHeatReclaimRecoveryEfficiency(double heatReclaimRecoveryEfficiency);
+    bool setHeatReclaimRecoveryEfficiency(double heatReclaimRecoveryEfficiency);
 
-  void resetHeatReclaimRecoveryEfficiency();
+    void resetHeatReclaimRecoveryEfficiency();
 
-  /** \fn bool setHeatingSource(const ModelObject& heatingSource)
+    /** \fn bool setHeatingSource(const ModelObject& heatingSource)
       \brief Sets the heating source from which the desuperheater heating coil recovers energy.
       \param[in] heatingSource The heating source.
 
       Valid inputs: \n
       \ref CoilCoolingDXSingleSpeed \n
       \ref CoilCoolingDXTwoSpeed \n
+      \ref RefrigerationCompressorRack \n
       \ref RefrigerationCondenserAirCooled \n
       \ref RefrigerationCondenserEvaporativeCooled \n
       \ref RefrigerationCondenserWaterCooled \n
   */
-  bool setHeatingSource(const ModelObject& modelObject);
+    bool setHeatingSource(const ModelObject& modelObject);
 
-  void resetHeatingSource();
+    void resetHeatingSource();
 
-  bool setParasiticElectricLoad(double parasiticElectricLoad);
+    bool setParasiticElectricLoad(double parasiticElectricLoad);
 
-  void resetParasiticElectricLoad();
+    void resetParasiticElectricLoad();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Creates a new equivalent duct object if an object is not already attached. */
-  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-  
-  /** Returns the attached equivalent duct object, if any. */
-  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+    /** Creates a new equivalent duct object if an object is not already attached. */
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilHeatingDesuperheater_Impl ImplType;
+    /** Returns the attached equivalent duct object, if any. */
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-  explicit CoilHeatingDesuperheater(std::shared_ptr<detail::CoilHeatingDesuperheater_Impl> impl);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilHeatingDesuperheater_Impl ImplType;
 
-  friend class detail::CoilHeatingDesuperheater_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilHeatingDesuperheater");
-};
+    explicit CoilHeatingDesuperheater(std::shared_ptr<detail::CoilHeatingDesuperheater_Impl> impl);
 
-/** \relates CoilHeatingDesuperheater*/
-typedef boost::optional<CoilHeatingDesuperheater> OptionalCoilHeatingDesuperheater;
+    friend class detail::CoilHeatingDesuperheater_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilHeatingDesuperheater");
+  };
 
-/** \relates CoilHeatingDesuperheater*/
-typedef std::vector<CoilHeatingDesuperheater> CoilHeatingDesuperheaterVector;
+  /** \relates CoilHeatingDesuperheater*/
+  typedef boost::optional<CoilHeatingDesuperheater> OptionalCoilHeatingDesuperheater;
 
-} // model
-} // openstudio
+  /** \relates CoilHeatingDesuperheater*/
+  typedef std::vector<CoilHeatingDesuperheater> CoilHeatingDesuperheaterVector;
 
-#endif // MODEL_COILHEATINGDESUPERHEATER_HPP
+}  // namespace model
+}  // namespace openstudio
 
+#endif  // MODEL_COILHEATINGDESUPERHEATER_HPP

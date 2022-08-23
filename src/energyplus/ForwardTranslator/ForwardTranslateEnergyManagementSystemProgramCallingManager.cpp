@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,31 +56,30 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemProgramCallingManager(EnergyManagementSystemProgramCallingManager & modelObject)
-{
-  boost::optional<std::string> s;
+  boost::optional<IdfObject>
+    ForwardTranslator::translateEnergyManagementSystemProgramCallingManager(EnergyManagementSystemProgramCallingManager& modelObject) {
+    boost::optional<std::string> s;
 
-  IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_ProgramCallingManager, modelObject);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    pcm.setName(*s);
+    IdfObject pcm = createAndRegisterIdfObject(openstudio::IddObjectType::EnergyManagementSystem_ProgramCallingManager, modelObject);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      pcm.setName(*s);
+    }
+
+    //callingpoint
+    s = modelObject.callingPoint();
+    if (s) {
+      pcm.setString(EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, s.get());
+    }
+
+    //program names
+    for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
+      pcm.pushExtensibleGroup(eg.fields());
+    }
+    return pcm;
   }
 
-  //callingpoint
-  s = modelObject.callingPoint();
-  if (s) {
-    pcm.setString(EnergyManagementSystem_ProgramCallingManagerFields::EnergyPlusModelCallingPoint, s.get());
-  }
+}  // namespace energyplus
 
-  //program names
-  for (const IdfExtensibleGroup& eg : modelObject.extensibleGroups()) {
-    pcm.pushExtensibleGroup(eg.fields());
-  }
-  return pcm;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

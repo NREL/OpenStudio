@@ -19,7 +19,6 @@
 %{
   #include <utilities/core/Path.hpp>
   #include <utilities/core/PathHelpers.hpp>
-  #include <utilities/core/String.hpp>
 
   namespace openstudio{
 //    #ifdef _WINDOWS
@@ -107,7 +106,7 @@ namespace openstudio {
     //PathStringType file_string() const;
     //PathStringType directory_string() const;
     //PathStringType external_file_string() const;
-    // TODO: this generates a CSHARP SWIG warning: 'string' is a C# keyword
+    // This generates a CSHARP SWIG warning: 'string' is a C# keyword: renamed above
     path string() const;
 
     path root_path() const;
@@ -140,9 +139,12 @@ namespace openstudio {
   // DLM: deprecate in favor of path.to_s
   std::string toString(const path& p);
 
+  // C# not happy about overloads, so just leave the std::string one
+#ifndef SWIGCSHARP
   // UTF-8 encoded char* to path
   // DLM: deprecate
   path toPath(const char* s);
+#endif
 
   // UTF-8 encoded std::string to path
   // DLM: deprecate in favor of Path.new(string)
@@ -306,7 +308,12 @@ namespace openstudio {
         }else{
           SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path const &");
         }
+      } else if(PyUnicode_Check($input)) {
+        // Python 3
+        std::string s(PyUnicode_AsUTF8($input));
+        $1 = openstudio::toPath(s);
       } else if(PyString_Check($input)) {
+        // Python2, PyString_Check does PyBytes_Check
         std::string s(PyString_AsString($input));
         $1 = openstudio::toPath(s);
       } else {
@@ -315,7 +322,7 @@ namespace openstudio {
     }
 
     %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING) (path) {
-      bool stringType = PyString_Check($input);
+      bool stringType = PyString_Check($input) || PyUnicode_Check($input);
       bool pathType = false;
       if (!stringType){
         void *vptr = 0;
@@ -345,7 +352,12 @@ namespace openstudio {
         }else{
           SWIG_exception_fail(SWIG_ValueError, "Invalid null reference openstudio::path const &");
         }
+      } else if(PyUnicode_Check($input)) {
+        // Python 3
+        std::string s(PyUnicode_AsUTF8($input));
+        $1 = new openstudio::path(openstudio::toPath(s));
       } else if(PyString_Check($input)) {
+        // Python2, PyString_Check does PyBytes_Check
         std::string s(PyString_AsString($input));
         $1 = new openstudio::path(openstudio::toPath(s));
       } else {
@@ -354,7 +366,7 @@ namespace openstudio {
     }
 
     %typemap(typecheck, precedence=SWIG_TYPECHECK_STRING) (const path&) {
-      bool stringType = PyString_Check($input);
+      bool stringType = PyString_Check($input) || PyUnicode_Check($input);
       bool pathType = false;
       if (!stringType){
         void *vptr = 0;
@@ -375,58 +387,58 @@ namespace openstudio {
 
 
 %include <utilities/core/PathHelpers.hpp>
+%include <utilities/core/String.i>
 
 
 // DLM@20100101: demo purposes only, should be able to automatically convert a string input, delete when working
-%{
-  openstudio::path funcOnlyTakesAConstPathRef(const openstudio::path& p)
-  {
-    openstudio::path copy(p);
-    return copy;
-  }
-  openstudio::path funcOnlyTakesAConstPath(const openstudio::path p)
-  {
-    openstudio::path copy(p);
-    return copy;
-  }
-  openstudio::path funcOnlyTakesAPath(openstudio::path p)
-  {
-    openstudio::path copy(p);
-    return copy;
-  }
-
-  openstudio::path defaultArgFuncTakesAConstPathRef(const openstudio::path& p, bool copy = true)
-  {
-    openstudio::path result;
-    if (copy){
-      result = p;
-    }
-    return result;
-  }
-  openstudio::path defaultArgFuncTakesAConstPath(const openstudio::path p, bool copy = true)
-  {
-    openstudio::path result;
-    if (copy){
-      result = p;
-    }
-    return result;
-  }
-  openstudio::path defaultArgFuncTakesAPath(openstudio::path p, bool copy = true)
-  {
-    openstudio::path result;
-    if (copy){
-      result = p;
-    }
-    return result;
-  }
-%}
-openstudio::path funcOnlyTakesAConstPathRef(const openstudio::path& p);
-openstudio::path funcOnlyTakesAConstPath(const openstudio::path p);
-openstudio::path funcOnlyTakesAPath(openstudio::path p);
-
-openstudio::path defaultArgFuncTakesAConstPathRef(const openstudio::path& p, bool copy = true);
-openstudio::path defaultArgFuncTakesAConstPath(const openstudio::path p, bool copy = true);
-openstudio::path defaultArgFuncTakesAPath(openstudio::path p, bool copy = true);
-
+// %{
+//   openstudio::path funcOnlyTakesAConstPathRef(const openstudio::path& p)
+//   {
+//     openstudio::path copy(p);
+//     return copy;
+//   }
+//   openstudio::path funcOnlyTakesAConstPath(const openstudio::path p)
+//   {
+//     openstudio::path copy(p);
+//     return copy;
+//   }
+//   openstudio::path funcOnlyTakesAPath(openstudio::path p)
+//   {
+//     openstudio::path copy(p);
+//     return copy;
+//   }
+//
+//   openstudio::path defaultArgFuncTakesAConstPathRef(const openstudio::path& p, bool copy = true)
+//   {
+//     openstudio::path result;
+//     if (copy){
+//       result = p;
+//     }
+//     return result;
+//   }
+//   openstudio::path defaultArgFuncTakesAConstPath(const openstudio::path p, bool copy = true)
+//   {
+//     openstudio::path result;
+//     if (copy){
+//       result = p;
+//     }
+//     return result;
+//   }
+//   openstudio::path defaultArgFuncTakesAPath(openstudio::path p, bool copy = true)
+//   {
+//     openstudio::path result;
+//     if (copy){
+//       result = p;
+//     }
+//     return result;
+//   }
+// %}
+// openstudio::path funcOnlyTakesAConstPathRef(const openstudio::path& p);
+// openstudio::path funcOnlyTakesAConstPath(const openstudio::path p);
+// openstudio::path funcOnlyTakesAPath(openstudio::path p);
+//
+// openstudio::path defaultArgFuncTakesAConstPathRef(const openstudio::path& p, bool copy = true);
+// openstudio::path defaultArgFuncTakesAConstPath(const openstudio::path p, bool copy = true);
+// openstudio::path defaultArgFuncTakesAPath(openstudio::path p, bool copy = true);
 
 #endif // UTILITIES_CORE_PATH_I

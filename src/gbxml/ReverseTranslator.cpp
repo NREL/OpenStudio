@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -68,8 +68,11 @@
 #include "../utilities/units/UnitFactory.hpp"
 #include "../utilities/units/QuantityConverter.hpp"
 #include "../utilities/plot/ProgressBar.hpp"
+#include "../utilities/geometry/BoundingBox.hpp"
+#include "../utilities/xml/XMLValidator.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
+#include <resources.hxx>
 
 #include <thread>
 
@@ -80,28 +83,22 @@
 namespace openstudio {
 namespace gbxml {
 
-  std::ostream& operator<<(std::ostream& os, const pugi::xml_node& element)
-  {
+  std::ostream& operator<<(std::ostream& os, const pugi::xml_node& element) {
     pugi::xml_document doc;
     doc.append_copy(element);
     doc.save(os, "  ");
     return os;
   }
 
-  ReverseTranslator::ReverseTranslator()
-    : m_nonBaseMultiplier(1.0), m_lengthMultiplier(1.0)
-  {
+  ReverseTranslator::ReverseTranslator() : m_nonBaseMultiplier(1.0), m_lengthMultiplier(1.0) {
     m_logSink.setLogLevel(Warn);
     m_logSink.setChannelRegex(boost::regex("openstudio\\.gbxml\\.ReverseTranslator"));
     m_logSink.setThreadId(std::this_thread::get_id());
   }
 
-  ReverseTranslator::~ReverseTranslator()
-  {
-  }
+  ReverseTranslator::~ReverseTranslator() {}
 
-  boost::optional<openstudio::model::Model> ReverseTranslator::loadModel(const openstudio::path& path, ProgressBar* progressBar)
-  {
+  boost::optional<openstudio::model::Model> ReverseTranslator::loadModel(const openstudio::path& path, ProgressBar* progressBar) {
     m_progressBar = progressBar;
 
     m_logSink.setThreadId(std::this_thread::get_id());
@@ -112,7 +109,11 @@ namespace gbxml {
 
     boost::optional<openstudio::model::Model> result;
 
-    if (openstudio::filesystem::exists(path)){
+    if (openstudio::filesystem::exists(path)) {
+
+      // validate the gbxml prior to reverse translation
+      auto gbxmlValidator = XMLValidator::gbxmlValidator();
+      gbxmlValidator.validate(path);
 
       openstudio::filesystem::ifstream file(path, std::ios_base::binary);
       if (file.is_open()) {
@@ -122,7 +123,6 @@ namespace gbxml {
           result = this->convert(doc.document_element());
         }
         file.close();
-
       }
       // JWD: Would be nice to add some error handling here
     }
@@ -130,13 +130,11 @@ namespace gbxml {
     return result;
   }
 
-
-  std::vector<LogMessage> ReverseTranslator::warnings() const
-  {
+  std::vector<LogMessage> ReverseTranslator::warnings() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()){
-      if (logMessage.logLevel() == Warn){
+    for (LogMessage logMessage : m_logSink.logMessages()) {
+      if (logMessage.logLevel() == Warn) {
         result.push_back(logMessage);
       }
     }
@@ -144,12 +142,11 @@ namespace gbxml {
     return result;
   }
 
-  std::vector<LogMessage> ReverseTranslator::errors() const
-  {
+  std::vector<LogMessage> ReverseTranslator::errors() const {
     std::vector<LogMessage> result;
 
-    for (LogMessage logMessage : m_logSink.logMessages()){
-      if (logMessage.logLevel() > Warn){
+    for (LogMessage logMessage : m_logSink.logMessages()) {
+      if (logMessage.logLevel() > Warn) {
         result.push_back(logMessage);
       }
     }
@@ -157,8 +154,7 @@ namespace gbxml {
     return result;
   }
 
-  std::string ReverseTranslator::escapeName(const std::string& id, const std::string& name)
-  {
+  std::string ReverseTranslator::escapeName(const std::string& id, const std::string& name) {
     std::string value = id;
     if (!name.empty()) {
       value = name;
@@ -168,13 +164,11 @@ namespace gbxml {
     return value;
   }
 
-  boost::optional<model::Model> ReverseTranslator::convert(const pugi::xml_node& root)
-  {
+  boost::optional<model::Model> ReverseTranslator::convert(const pugi::xml_node& root) {
     return translateGBXML(root);
   }
 
-  boost::optional<model::Model> ReverseTranslator::translateGBXML(const pugi::xml_node& root)
-  {
+  boost::optional<model::Model> ReverseTranslator::translateGBXML(const pugi::xml_node& root) {
     openstudio::model::Model model;
     model.setFastNaming(true);
 
@@ -182,7 +176,7 @@ namespace gbxml {
 
     // {F, C, K, R}
     // JWD: the previous check was not great, this one is better and more true to the schema
-    std::string temperatureUnit{ root.attribute("temperatureUnit").value() };
+    std::string temperatureUnit{root.attribute("temperatureUnit").value()};
     if (temperatureUnit == "F") {
       m_temperatureUnit = UnitFactory::instance().createUnit("F").get();
     } else if (temperatureUnit == "C") {
@@ -198,7 +192,7 @@ namespace gbxml {
 
     // {Kilometers, Centimeters, Millimeters, Meters, Miles, Yards, Feet, Inches}
     // JWD: the previous check was not great, this one is better, though still not exactly true to the schema
-    std::string lengthUnit{ root.attribute("lengthUnit").value() };
+    std::string lengthUnit{root.attribute("lengthUnit").value()};
     if (istringEqual(lengthUnit, "Kilometers")) {
       m_nonBaseMultiplier = 1000.0;
       m_lengthUnit = UnitFactory::instance().createUnit("m").get();
@@ -238,7 +232,7 @@ namespace gbxml {
 
     // {true, false}
     m_useSIUnitsForResults = true;
-    std::string useSIUnitsForResults{ root.attribute("useSIUnitsForResults").value() };
+    std::string useSIUnitsForResults{root.attribute("useSIUnitsForResults").value()};
     if (istringEqual(useSIUnitsForResults, "False")) {
       m_useSIUnitsForResults = false;
     }
@@ -252,9 +246,9 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    for (auto &materialElement : materialElements) {
+    for (auto& materialElement : materialElements) {
       boost::optional<model::ModelObject> material = translateMaterial(materialElement, model);
-      OS_ASSERT(material); // Krishnan, what type of error handling do you want?
+      OS_ASSERT(material);  // Krishnan, what type of error handling do you want?
 
       if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
@@ -263,7 +257,7 @@ namespace gbxml {
 
     // do constructions before surfaces
     std::unordered_map<std::string, pugi::xml_node> layerElements;
-    for (auto &layerEl : root.children("Layer")) {
+    for (auto& layerEl : root.children("Layer")) {
       std::string layerId = layerEl.attribute("id").value();
       // Could maybe use some error checking here for empty IDs
       layerElements[layerId] = layerEl;
@@ -277,9 +271,9 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    for (auto &constructionElement : constructionElements) {
+    for (auto& constructionElement : constructionElements) {
       boost::optional<model::ModelObject> construction = translateConstruction(constructionElement, layerElements, model);
-      OS_ASSERT(construction); // Krishnan, what type of error handling do you want?
+      OS_ASSERT(construction);  // Krishnan, what type of error handling do you want?
 
       if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
@@ -295,9 +289,9 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    for (auto &windowTypeElement : windowTypeElements) {
+    for (auto& windowTypeElement : windowTypeElements) {
       boost::optional<model::ModelObject> construction = translateWindowType(windowTypeElement, model);
-      OS_ASSERT(construction); // Krishnan, what type of error handling do you want?
+      OS_ASSERT(construction);  // Krishnan, what type of error handling do you want?
 
       if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
@@ -313,9 +307,9 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    for (auto &scheduleElement : scheduleElements) {
+    for (auto& scheduleElement : scheduleElements) {
       boost::optional<model::ModelObject> schedule = translateSchedule(scheduleElement, root, model);
-      OS_ASSERT(schedule); // Krishnan, what type of error handling do you want?
+      OS_ASSERT(schedule);  // Krishnan, what type of error handling do you want?
 
       if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
@@ -331,9 +325,9 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    for (auto &zoneElement : zoneElements) {
+    for (auto& zoneElement : zoneElements) {
       boost::optional<model::ModelObject> zone = translateThermalZone(zoneElement, model);
-      OS_ASSERT(zone); // Krishnan, what type of error handling do you want?
+      OS_ASSERT(zone);  // Krishnan, what type of error handling do you want?
 
       if (m_progressBar) {
         m_progressBar->setValue(m_progressBar->value() + 1);
@@ -343,15 +337,87 @@ namespace gbxml {
     auto campusElement = root.child("Campus");
     OS_ASSERT(campusElement.next_sibling("Campus").empty());
     boost::optional<model::ModelObject> facility = translateCampus(campusElement, model);
-    OS_ASSERT(facility); // Krishnan, what type of error handling do you want?
+    OS_ASSERT(facility);  // Krishnan, what type of error handling do you want?
 
     model.setFastNaming(false);
 
     return model;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateCampus(const pugi::xml_node& element, openstudio::model::Model& model)
-  {
+  // A 'quick and dirty' method to find and correct surfaces that have incorrect orientations
+  // Checks the surface against the space bounding box
+  // If the surface is at or near the upper bound of the bounding box it should be a Roof/Ceiling
+  // If the surface is at or near the lower bound of the bounding box it should be a Floor
+  // Works only for spaces with 3D shapes that are prisms in the sense that they have only two
+  // levels where there are horizontal surfaces.
+  void ReverseTranslator::validateSpaceSurfaces(openstudio::model::Model& model) {
+
+    double tol = 0.001;
+
+    const auto& spaces = model.getConcreteModelObjects<openstudio::model::Space>();
+    for (auto& space : spaces) {
+      std::string spaceName = space.name().value();
+
+      const auto& bounds = space.boundingBox();
+      auto surfaces = space.surfaces();
+      for (auto& surface : surfaces) {
+        std::string surfType = surface.surfaceType();
+        std::string surfName = surface.name().value();
+
+        // Look for Roof or Floor surfaces that have adjacent surface (if there's no adjacwent surface
+        // then the spaces cannot be in the wrong order and the orientation would have already been fixed)
+        boost::optional<openstudio::model::Surface> adjacentSurf = surface.adjacentSurface();
+        if ((surfType == "RoofCeiling" || surfType == "Floor") && adjacentSurf) {
+          auto vertices = surface.vertices();
+
+          if (std::abs(vertices[0].z() - bounds.maxZ().value()) > tol && std::abs(vertices[0].z() - bounds.minZ().value()) > tol) {
+
+            // Log this because we cant do a face orientation check because the space
+            // isnt a prism (it has > 2 levels of horizontal surfaces)
+            LOG(Warn, "Skipping surface " << surfName << " of type " << surfType << " because it is not a prism");
+            continue;
+          }
+
+          if (std::abs(vertices[0].z() - bounds.maxZ().value()) <= tol) {
+
+            // Surface is at the top of the space bounding box so it should be a roof/ceiling
+            // and the normal should be up (z should be > 0)
+            auto surfType = surface.surfaceType();
+            if (surfType != "RoofCeiling") {
+              // Log changing surface type
+              LOG(Warn, "Changing surface type from " << surfType << " to RoofCeiling. Surface vertices elevation is above the space.");
+              surface.setSurfaceType("RoofCeiling");
+            }
+            const auto& normal = surface.outwardNormal();
+            if (normal.z() < 0) {
+              // Log reversing surface
+              LOG(Warn, "Reversing surface orientation because surface is a RoofCeiling but the surface is oriented down.");
+              std::reverse(vertices.begin(), vertices.end());
+              surface.setVertices(vertices);
+            }
+          } else if (std::abs(vertices[0].z() - bounds.minZ().value()) <= tol) {
+
+            // Surface is at the bottom of the space's bounding box and so should be a floor
+            // and the normal shuld be down (z < 0)
+            auto surfType = surface.surfaceType();
+            if (surfType != "Floor") {
+              // Log changing surface type
+              surface.setSurfaceType("Floor");
+            }
+            const auto& normal = surface.outwardNormal();
+            if (normal.z() > 0) {
+              // Log reversing surface
+              LOG(Warn, "Reversing surface orientation because surface is a Floor but the surface is oriented up.");
+              std::reverse(vertices.begin(), vertices.end());
+              surface.setVertices(vertices);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  boost::optional<model::ModelObject> ReverseTranslator::translateCampus(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::Facility facility = model.getUniqueModelObject<openstudio::model::Facility>();
 
     auto buildingElement = element.child("Building");
@@ -368,7 +434,7 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    for (auto &surfEl : surfaceElements) {
+    for (auto& surfEl : surfaceElements) {
       try {
         boost::optional<model::ModelObject> surface = translateSurface(surfEl, model);
       } catch (const std::exception&) {
@@ -380,19 +446,15 @@ namespace gbxml {
       }
     }
 
+    validateSpaceSurfaces(model);
     return facility;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model)
-  {
+  boost::optional<model::ModelObject> ReverseTranslator::translateBuilding(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, building));
-    building.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    building.setName(escapeName(id, name));
+    translateId(element, building);
+    translateName(element, building);
 
     auto storyElements = element.children("BuildingStorey");
     if (m_progressBar) {
@@ -402,7 +464,7 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    for (auto &storyEl : storyElements) {
+    for (auto& storyEl : storyElements) {
       boost::optional<model::ModelObject> story = translateBuildingStory(storyEl, model);
       OS_ASSERT(story);
 
@@ -419,7 +481,7 @@ namespace gbxml {
       m_progressBar->setValue(0);
     }
 
-    for(auto &spaceEl : spaceElements) {
+    for (auto& spaceEl : spaceElements) {
       boost::optional<model::ModelObject> space = translateSpace(spaceEl, model);
       OS_ASSERT(space);
 
@@ -431,16 +493,11 @@ namespace gbxml {
     return building;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateBuildingStory(const pugi::xml_node& element, openstudio::model::Model& model)
-  {
+  boost::optional<model::ModelObject> ReverseTranslator::translateBuildingStory(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::BuildingStory story(model);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, story));
-    story.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    story.setName(escapeName(id, name));
+    translateId(element, story);
+    translateName(element, story);
 
     // DLM: we need to better support separate name from id in this translator
 
@@ -449,43 +506,30 @@ namespace gbxml {
     return story;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model)
-  {
+  boost::optional<model::ModelObject> ReverseTranslator::translateThermalZone(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::ThermalZone zone(model);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, zone));
-    zone.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    zone.setName(escapeName(id, name));
-
-    // DLM: we need to better support separate name from id in this translator
+    translateId(element, zone);
+    translateName(element, zone);
 
     // DLM: todo, translate setpoints
 
     // import CADObjectId
-    for (auto &cadObjectId : element.children("CADObjectId")) {
+    for (auto& cadObjectId : element.children("CADObjectId")) {
       // TODO: import multiple CADObjectIds
       translateCADObjectId(cadObjectId, zone);
 
-      break; // TODO: import multiple CADObjectIds
+      break;  // TODO: import multiple CADObjectIds
     }
 
     return zone;
   }
 
-
-  boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const pugi::xml_node& element, openstudio::model::Model& model)
-  {
+  boost::optional<model::ModelObject> ReverseTranslator::translateSpace(const pugi::xml_node& element, openstudio::model::Model& model) {
     openstudio::model::Space space(model);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, space));
-    space.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    space.setName(escapeName(id, name));
+    translateId(element, space);
+    translateName(element, space);
 
     //DLM: we should be using a map of id to model object to get this, not relying on name
     std::string storyId = element.attribute("buildingStoreyIdRef").value();
@@ -512,7 +556,11 @@ namespace gbxml {
       // DLM: may want to revisit this
       // create a new thermal zone if none assigned
       openstudio::model::ThermalZone thermalZone(model);
-      thermalZone.setName(escapeName(id, name) + " ThermalZone");
+      std::string id = element.attribute("id").value();
+      std::string name = element.child("Name").text().as_string();
+      thermalZone.setName(id + " ThermalZone");
+      thermalZone.additionalProperties().setFeature("gbXMLId", id + " Thermal Zone");
+      thermalZone.additionalProperties().setFeature("displayName", name + " Thermal Zone");
       space.setThermalZone(thermalZone);
     }
 
@@ -535,18 +583,23 @@ namespace gbxml {
     }
 
     // import CADObjectId
-    for (auto &cadObjectId : element.children("CADObjectId")) {
+    for (auto& cadObjectId : element.children("CADObjectId")) {
       // TODO: import multiple CADObjectIds
       translateCADObjectId(cadObjectId, space);
 
-      break; // TODO: import multiple CADObjectIds
+      break;  // TODO: import multiple CADObjectIds
+    }
+
+    // import Volume
+    auto volume = element.child("Volume").text();
+    if (!volume.empty()) {
+      space.setVolume(volume.as_double());
     }
 
     return space;
   }
 
-  boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const pugi::xml_node& element, openstudio::model::Model& model)
-  {
+  boost::optional<model::ModelObject> ReverseTranslator::translateSurface(const pugi::xml_node& element, openstudio::model::Model& model) {
     boost::optional<model::ModelObject> result;
     std::vector<openstudio::Point3d> vertices;
 
@@ -554,7 +607,7 @@ namespace gbxml {
     auto polyLoopElement = planarGeometryElement.child("PolyLoop");
     auto cartesianPointElements = polyLoopElement.children("CartesianPoint");
 
-    for (auto &cart_el : cartesianPointElements) {
+    for (auto& cart_el : cartesianPointElements) {
       auto coordinateElements = cart_el.children("Coordinate");
       OS_ASSERT(std::distance(coordinateElements.begin(), coordinateElements.end()) == 3);
 
@@ -570,10 +623,10 @@ namespace gbxml {
       double z = QuantityConverter::instance().convert(zQuantity, targetUnit)->value();
       */
 
-      std::array<double, 3> coords{ {0.0, 0.0, 0.0} };
-      size_t i{ 0 };
-      for (auto &el : coordinateElements) {
-        coords[i] = m_lengthMultiplier*el.text().as_double();
+      std::array<double, 3> coords{{0.0, 0.0, 0.0}};
+      size_t i{0};
+      for (auto& el : coordinateElements) {
+        coords[i] = m_lengthMultiplier * el.text().as_double();
         ++i;
         if (i == 3) {
           break;
@@ -588,12 +641,8 @@ namespace gbxml {
 
       openstudio::model::ShadingSurface shadingSurface(vertices, model);
 
-      std::string shadingSurfaceId = element.attribute("id").value();
-      m_idToObjectMap.insert(std::make_pair(shadingSurfaceId, shadingSurface));
-      shadingSurface.additionalProperties().setFeature("gbXMLId", shadingSurfaceId);
-
-      std::string shadingSurfaceName = element.child("Name").text().as_string();
-      shadingSurface.setName(escapeName(shadingSurfaceId, shadingSurfaceName));
+      translateId(element, shadingSurface);
+      translateName(element, shadingSurface);
 
       openstudio::model::Building building = model.getUniqueModelObject<openstudio::model::Building>();
 
@@ -616,7 +665,7 @@ namespace gbxml {
 
       // The rest of the function wants array-type access to the elements, so create that
       std::vector<pugi::xml_node> adjacentSpaceElements;
-      for (auto &adj : element.children("AdjacentSpaceId")) {
+      for (auto& adj : element.children("AdjacentSpaceId")) {
         adjacentSpaceElements.push_back(adj);
       }
 
@@ -637,42 +686,38 @@ namespace gbxml {
 
       openstudio::model::Surface surface(vertices, model);
 
-      std::string surfaceId = element.attribute("id").value();
-      m_idToObjectMap.insert(std::make_pair(surfaceId, surface));
-      surface.additionalProperties().setFeature("gbXMLId", surfaceId);
-
-      std::string surfaceName = element.child("Name").text().as_string();
-      surface.setName(escapeName(surfaceId, surfaceName));
+      translateId(element, surface);
+      translateName(element, surface);
 
       std::string exposedToSun = element.attribute("exposedToSun").value();
 
       // set surface type
       // wall types
-      if (surfaceType.find("ExteriorWall")) {
+      if (surfaceType.find("ExteriorWall") != std::string::npos) {
         surface.setSurfaceType("Wall");
-      } else if (surfaceType.find("InteriorWall")) {
+      } else if (surfaceType.find("InteriorWall") != std::string::npos) {
         surface.setSurfaceType("Wall");
-      } else if (surfaceType.find("UndergroundWall")) {
+      } else if (surfaceType.find("UndergroundWall") != std::string::npos) {
         surface.setSurfaceType("Wall");
         // roof types
-      } else if (surfaceType.find("Roof")) {
+      } else if (surfaceType.find("Roof") != std::string::npos) {
         surface.setSurfaceType("RoofCeiling");
-      } else if (surfaceType.find("Ceiling")) {
+      } else if (surfaceType.find("Ceiling") != std::string::npos) {
         surface.setSurfaceType("RoofCeiling");
-      } else if (surfaceType.find("UndergroundCeiling")) {
+      } else if (surfaceType.find("UndergroundCeiling") != std::string::npos) {
         surface.setSurfaceType("RoofCeiling");
         // floor types
-      } else if (surfaceType.find("UndergroundSlab")) {
+      } else if (surfaceType.find("UndergroundSlab") != std::string::npos) {
         surface.setSurfaceType("Floor");
-      } else if (surfaceType.find("SlabOnGrade")) {
+      } else if (surfaceType.find("SlabOnGrade") != std::string::npos) {
         surface.setSurfaceType("Floor");
-      } else if (surfaceType.find("InteriorFloor")) {
+      } else if (surfaceType.find("InteriorFloor") != std::string::npos) {
         surface.setSurfaceType("Floor");
-      } else if (surfaceType.find("RaisedFloor")) {
+      } else if (surfaceType.find("RaisedFloor") != std::string::npos) {
         surface.setSurfaceType("Floor");
-      } else if (surfaceType.find("ExposedFloor")) {
+      } else if (surfaceType.find("ExposedFloor") != std::string::npos) {
         surface.setSurfaceType("Floor");
-      } else if (surfaceType.find("Air")) {
+      } else if (surfaceType.find("Air") != std::string::npos) {
         // this type can be wall, roof, or floor.  just use default surface type based on vertices.
       }
 
@@ -705,11 +750,11 @@ namespace gbxml {
       if (surfaceType.find("Air") != std::string::npos) {
         boost::optional<model::ConstructionAirBoundary> airWall;
 
-        for (const auto& construction : model.getConcreteModelObjects<model::ConstructionAirBoundary>()){
+        for (const auto& construction : model.getConcreteModelObjects<model::ConstructionAirBoundary>()) {
           airWall = construction;
           break;
         }
-        if (!airWall){
+        if (!airWall) {
           airWall = model::ConstructionAirBoundary(model);
         }
         surface.setConstruction(*airWall);
@@ -730,14 +775,13 @@ namespace gbxml {
         }
 
         // translate subSurfaces
-        for (auto &subsurf : element.children("Opening")) {
+        for (auto& subsurf : element.children("Opening")) {
           try {
             boost::optional<model::ModelObject> subSurface = translateSubSurface(subsurf, surface);
           } catch (const std::exception&) {
             LOG(Error, "Could not translate sub surface " << subsurf);
           }
         }
-
       }
 
       // adjacent surfaces
@@ -828,13 +872,14 @@ namespace gbxml {
               if (currentSurfaceType == "RoofCeiling" || currentSurfaceType == "Floor") {
 
                 // both the spaceSurfaceType and adjacentSpaceSurfaceType should be either Ceiling or InteriorFloor
-                if (!((spaceSurfaceType == "InteriorFloor" || spaceSurfaceType == "Ceiling") && (adjacentSpaceSurfaceType == "InteriorFloor" || adjacentSpaceSurfaceType == "Ceiling"))) {
+                if (!((spaceSurfaceType == "InteriorFloor" || spaceSurfaceType == "Ceiling")
+                      && (adjacentSpaceSurfaceType == "InteriorFloor" || adjacentSpaceSurfaceType == "Ceiling"))) {
 
                   // one of the spaces lists this as a wall or some other surfaceType
                   // we could try to reapply the surfaceType from the gbXML back here, but then we would be in the same problem as before
                   // at least now we have a surface type that matches the vertex outward normal
-                  LOG(Warn, "Adjacent surfaceTypes '" << spaceSurfaceType << "' and  '" << adjacentSpaceSurfaceType
-                         << "' listed for '" << surface.name().get() << "' do not match vertices");
+                  LOG(Warn, "Adjacent surfaceTypes '" << spaceSurfaceType << "' and  '" << adjacentSpaceSurfaceType << "' listed for '"
+                                                      << surface.name().get() << "' do not match vertices");
 
                 } else if (spaceSurfaceType == adjacentSpaceSurfaceType) {
 
@@ -858,8 +903,8 @@ namespace gbxml {
 
                       // Schema says, "The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element,
                       // is always pointing away from the first AdjacentSpaceID listed." but this does not match surfaceType in the first AdjacentSpaceID
-                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType '"
-                             << spaceSurfaceType << "' attribute of first AdjacentSpaceID");
+                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType '" << spaceSurfaceType
+                                                       << "' attribute of first AdjacentSpaceID");
 
                       // construction listed in order for first space which is now the adjacent space
                       reverseConstruction = true;
@@ -879,8 +924,8 @@ namespace gbxml {
 
                       // Schema says, "The outward normal of the surface, as defined by the right hand rule of the coordinates in the planar geometry element,
                       // is always pointing away from the first AdjacentSpaceID listed." but this does not match surfaceType in the first AdjacentSpaceID
-                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType attribute '"
-                             << spaceSurfaceType << "' of first AdjacentSpaceID");
+                      LOG(Warn, "Outward normal for '" << surface.name().get() << "' does not match surfaceType attribute '" << spaceSurfaceType
+                                                       << "' of first AdjacentSpaceID");
 
                       // construction listed in order for first space which is now the adjacent space
                       reverseConstruction = true;
@@ -898,7 +943,8 @@ namespace gbxml {
             // if we changed surface type and didn't figure out if that is ok, issue warning
             if (!figuredOut) {
               if (currentSurfaceType != gbXMLSurfaceType) {
-                LOG(Warn, "Changing surface type from '" << gbXMLSurfaceType << "' to '" << currentSurfaceType << "' for surface '" << surface.name().get() << "'");
+                LOG(Warn, "Changing surface type from '" << gbXMLSurfaceType << "' to '" << currentSurfaceType << "' for surface '"
+                                                         << surface.name().get() << "'");
               }
             }
 
@@ -909,14 +955,14 @@ namespace gbxml {
                 boost::optional<openstudio::model::ConstructionBase> construction = surface.construction();
                 if (construction) {
                   otherSurface->setConstruction(*construction);
-                  surface.resetConstruction(); // will be inherited from the adjacent surface
+                  surface.resetConstruction();  // will be inherited from the adjacent surface
                 }
               }
             } else {
-              LOG(Error, "Could not create adjacent surface in adjacent space '" << adjacentSpace->name().get() << "' for surface '" << surface.name().get() << "' in space '" << space->name().get() << "'");
+              LOG(Error, "Could not create adjacent surface in adjacent space '" << adjacentSpace->name().get() << "' for surface '"
+                                                                                 << surface.name().get() << "' in space '" << space->name().get()
+                                                                                 << "'");
             }
-
-
           }
         } else {
           LOG(Error, "Could not find adjacent space '" << adjacentSpaceId << "' for surface '" << surface.name().get() << "'");
@@ -927,7 +973,7 @@ namespace gbxml {
     OS_ASSERT(result);
 
     // import CADObjectId
-    for (auto &cadObjectId : element.children("CADObjectId")) {
+    for (auto& cadObjectId : element.children("CADObjectId")) {
       translateCADObjectId(cadObjectId, *result);
     }
 
@@ -953,12 +999,11 @@ namespace gbxml {
       _surface->additionalProperties().setFeature("gbXMLReversed", false);
     }
 
-
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSubSurface(const pugi::xml_node& element, openstudio::model::Surface& surface)
-  {
+  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateSubSurface(const pugi::xml_node& element,
+                                                                                         openstudio::model::Surface& surface) {
     openstudio::model::Model model = surface.model();
 
     boost::optional<model::ModelObject> result;
@@ -969,7 +1014,7 @@ namespace gbxml {
     auto polyLoopElement = planarGeometryElement.child("PolyLoop");
     auto cartesianPointElements = polyLoopElement.children("CartesianPoint");
 
-    for (auto &cart_el : cartesianPointElements) {
+    for (auto& cart_el : cartesianPointElements) {
       auto coordinateElements = cart_el.children("Coordinate");
       OS_ASSERT(std::distance(coordinateElements.begin(), coordinateElements.end()) == 3);
 
@@ -984,10 +1029,10 @@ namespace gbxml {
       double y = QuantityConverter::instance().convert(yQuantity, targetUnit)->value();
       double z = QuantityConverter::instance().convert(zQuantity, targetUnit)->value();
       */
-      std::array<double, 3> coords{ {0.0, 0.0, 0.0} };
-      size_t i{ 0 };
-      for (auto &el : coordinateElements) {
-        coords[i] = el.text().as_double();
+      std::array<double, 3> coords{{0.0, 0.0, 0.0}};
+      size_t i{0};
+      for (auto& el : coordinateElements) {
+        coords[i] = m_lengthMultiplier * el.text().as_double();
         ++i;
         if (i == 3) {
           break;
@@ -1000,12 +1045,8 @@ namespace gbxml {
     openstudio::model::SubSurface subSurface(vertices, model);
     subSurface.setSurface(surface);
 
-    std::string id = element.attribute("id").value();
-    m_idToObjectMap.insert(std::make_pair(id, subSurface));
-    subSurface.additionalProperties().setFeature("gbXMLId", id);
-
-    std::string name = element.child("Name").text().as_string();
-    subSurface.setName(escapeName(id, name));
+    translateId(element, subSurface);
+    translateName(element, subSurface);
 
     result = subSurface;
 
@@ -1019,7 +1060,7 @@ namespace gbxml {
       subSurface.setSubSurfaceType("Skylight");
     } else if (openingType.find("OperableSkylight") != std::string::npos) {
       subSurface.setSubSurfaceType("Skylight");
-    } else if (openingType.find("NonSlidingDoor") != std::string::npos) { // do before testing contains door
+    } else if (openingType.find("NonSlidingDoor") != std::string::npos) {  // do before testing contains door
       subSurface.setSubSurfaceType("Door");
     } else if (openingType.find("SlidingDoor") != std::string::npos) {
       subSurface.setSubSurfaceType("GlassDoor");
@@ -1035,7 +1076,7 @@ namespace gbxml {
         airWall = construction;
         break;
       }
-      if (!airWall){
+      if (!airWall) {
         airWall = model::ConstructionAirBoundary(model);
       }
       subSurface.setConstruction(*airWall);
@@ -1059,29 +1100,41 @@ namespace gbxml {
     // todo: translate "interiorShadeType", "exteriorShadeType", and other properties of the opening
 
     // import CADObjectId
-    for (auto &cadObjectId : element.children("CADObjectId")) {
+    for (auto& cadObjectId : element.children("CADObjectId")) {
       translateCADObjectId(cadObjectId, subSurface);
     }
 
     return result;
   }
 
-  boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateCADObjectId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject)
-  {
-    model::AdditionalProperties result = modelObject.additionalProperties();
+  void ReverseTranslator::translateId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject) {
+    std::string id = element.attribute("id").value();
+    m_idToObjectMap.insert(std::make_pair(id, modelObject));
+    modelObject.setName(id);
+    modelObject.setGBXMLId(id);
+  }
+
+  void ReverseTranslator::translateName(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject) {
+
+    auto name = element.child("Name").text();
+    if (!name.empty()) {
+      modelObject.setDisplayName(name.as_string());
+    }
+  }
+
+  void ReverseTranslator::translateCADObjectId(const pugi::xml_node& element, openstudio::model::ModelObject& modelObject) {
 
     auto cadObjectId = element.text();
     if (!cadObjectId.empty()) {
-      result.setFeature("CADObjectId", cadObjectId.as_string());
+      modelObject.setCADObjectId(cadObjectId.as_string());
 
       auto programIdRef = element.attribute("programIdRef");
       if (programIdRef) {
+        model::AdditionalProperties result = modelObject.additionalProperties();
         result.setFeature("programIdRef", programIdRef.value());
       }
     }
-
-    return result;
   }
 
-} // gbxml
-} // openstudio
+}  // namespace gbxml
+}  // namespace openstudio

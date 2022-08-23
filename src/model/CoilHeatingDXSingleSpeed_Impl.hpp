@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,222 +35,218 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Curve;
-class ZoneHVACComponent;
+  class Schedule;
+  class Curve;
+  class ZoneHVACComponent;
 
-namespace detail {
+  namespace detail {
 
-/** CoilHeatingDXSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingDXSingleSpeed.*/
-class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl {
-   public:
-  /** @name Constructors and Destructors */
-  //@{
+    /** CoilHeatingDXSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingDXSingleSpeed.*/
+    class MODEL_API CoilHeatingDXSingleSpeed_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-  CoilHeatingDXSingleSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      CoilHeatingDXSingleSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  CoilHeatingDXSingleSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      CoilHeatingDXSingleSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  CoilHeatingDXSingleSpeed_Impl(const CoilHeatingDXSingleSpeed_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      CoilHeatingDXSingleSpeed_Impl(const CoilHeatingDXSingleSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-  virtual ~CoilHeatingDXSingleSpeed_Impl() {}
+      virtual ~CoilHeatingDXSingleSpeed_Impl() {}
 
-  //@}
-  /** @name Virtual Methods */
-  //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-  virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-  virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-  virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-  virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-  virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-  //@}
-  /** @name Getters */
-  //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-  Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-  boost::optional<double> ratedTotalHeatingCapacity() const;
+      boost::optional<double> ratedTotalHeatingCapacity() const;
 
-  bool isRatedTotalHeatingCapacityAutosized() const;
+      bool isRatedTotalHeatingCapacityAutosized() const;
 
-  double ratedCOP() const;
+      double ratedCOP() const;
 
-  boost::optional<double> ratedAirFlowRate() const;
+      boost::optional<double> ratedAirFlowRate() const;
 
-  double ratedSupplyFanPowerPerVolumeFlowRate() const;
+      double ratedSupplyFanPowerPerVolumeFlowRate() const;
 
-  bool isRatedAirFlowRateAutosized() const;
+      bool isRatedAirFlowRateAutosized() const;
 
-  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+      double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-  bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
+      bool isMinimumOutdoorDryBulbTemperatureforCompressorOperationDefaulted() const;
 
-  double maximumOutdoorDryBulbTemperatureforDefrostOperation() const;
+      double maximumOutdoorDryBulbTemperatureforDefrostOperation() const;
 
-  bool isMaximumOutdoorDryBulbTemperatureforDefrostOperationDefaulted() const;
+      bool isMaximumOutdoorDryBulbTemperatureforDefrostOperationDefaulted() const;
 
-  double crankcaseHeaterCapacity() const;
+      double crankcaseHeaterCapacity() const;
 
-  bool isCrankcaseHeaterCapacityDefaulted() const;
+      bool isCrankcaseHeaterCapacityDefaulted() const;
 
-  double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
+      double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
-  bool isMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperationDefaulted() const;
+      bool isMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperationDefaulted() const;
 
-  std::string defrostStrategy() const;
+      std::string defrostStrategy() const;
 
-  bool isDefrostStrategyDefaulted() const;
+      bool isDefrostStrategyDefaulted() const;
 
-  std::string defrostControl() const;
+      std::string defrostControl() const;
 
-  bool isDefrostControlDefaulted() const;
+      bool isDefrostControlDefaulted() const;
 
-  double defrostTimePeriodFraction() const;
+      double defrostTimePeriodFraction() const;
 
-  bool isDefrostTimePeriodFractionDefaulted() const;
+      bool isDefrostTimePeriodFractionDefaulted() const;
 
-  boost::optional<double> resistiveDefrostHeaterCapacity() const;
+      boost::optional<double> resistiveDefrostHeaterCapacity() const;
 
-  bool isResistiveDefrostHeaterCapacityDefaulted() const;
+      bool isResistiveDefrostHeaterCapacityDefaulted() const;
 
-  bool isResistiveDefrostHeaterCapacityAutosized() const;
+      bool isResistiveDefrostHeaterCapacityAutosized() const;
 
-  boost::optional<double> autosizedRatedTotalHeatingCapacity() const ;
+      boost::optional<double> autosizedRatedTotalHeatingCapacity() const;
 
-  boost::optional<double> autosizedRatedAirFlowRate() const ;
+      boost::optional<double> autosizedRatedAirFlowRate() const;
 
-  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+      boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-  //@}
-  /** @name Setters */
-  //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setRatedTotalHeatingCapacity(boost::optional<double> ratedTotalHeatingCapacity);
+      bool setRatedTotalHeatingCapacity(boost::optional<double> ratedTotalHeatingCapacity);
 
-  void autosizeRatedTotalHeatingCapacity();
+      void autosizeRatedTotalHeatingCapacity();
 
-  bool setRatedCOP(double ratedCOP);
+      bool setRatedCOP(double ratedCOP);
 
-  bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
+      bool setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate);
 
-  void autosizeRatedAirFlowRate();
+      void autosizeRatedAirFlowRate();
 
-  bool setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate);
+      bool setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate);
 
-  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+      bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-  void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
+      void resetMinimumOutdoorDryBulbTemperatureforCompressorOperation();
 
-  bool setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation);
+      bool setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation);
 
-  void resetMaximumOutdoorDryBulbTemperatureforDefrostOperation();
+      void resetMaximumOutdoorDryBulbTemperatureforDefrostOperation();
 
-  bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+      bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
-  void resetCrankcaseHeaterCapacity();
+      void resetCrankcaseHeaterCapacity();
 
-  bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
+      bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 
-  void resetMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
+      void resetMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
 
-  bool setDefrostStrategy(std::string defrostStrategy);
+      bool setDefrostStrategy(std::string defrostStrategy);
 
-  void resetDefrostStrategy();
+      void resetDefrostStrategy();
 
-  bool setDefrostControl(std::string defrostControl);
+      bool setDefrostControl(std::string defrostControl);
 
-  void resetDefrostControl();
+      void resetDefrostControl();
 
-  bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
+      bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
 
-  void resetDefrostTimePeriodFraction();
+      void resetDefrostTimePeriodFraction();
 
-  bool setResistiveDefrostHeaterCapacity(boost::optional<double> resistiveDefrostHeaterCapacity);
+      bool setResistiveDefrostHeaterCapacity(boost::optional<double> resistiveDefrostHeaterCapacity);
 
-  void resetResistiveDefrostHeaterCapacity();
+      void resetResistiveDefrostHeaterCapacity();
 
-  void autosizeResistiveDefrostHeaterCapacity();
+      void autosizeResistiveDefrostHeaterCapacity();
 
-  //@}
-  /** @name Curves */
-  //@{
+      //@}
+      /** @name Curves */
+      //@{
 
-  // A5 , \field Total Heating Capacity Function of Temperature Curve Name
-  // \object-list BiquadraticQuadraticCubicCurves
-  Curve totalHeatingCapacityFunctionofTemperatureCurve() const;
-  bool setTotalHeatingCapacityFunctionofTemperatureCurve( const Curve& curve );
+      // A5 , \field Total Heating Capacity Function of Temperature Curve Name
+      // \object-list BiquadraticQuadraticCubicCurves
+      Curve totalHeatingCapacityFunctionofTemperatureCurve() const;
+      bool setTotalHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 
-  // A6 , \field Total Heating Capacity Function of Flow Fraction Curve Name
-  // \object-list QuadraticCubicCurves
-  Curve totalHeatingCapacityFunctionofFlowFractionCurve() const;
-  bool setTotalHeatingCapacityFunctionofFlowFractionCurve( const Curve& curve );
+      // A6 , \field Total Heating Capacity Function of Flow Fraction Curve Name
+      // \object-list QuadraticCubicCurves
+      Curve totalHeatingCapacityFunctionofFlowFractionCurve() const;
+      bool setTotalHeatingCapacityFunctionofFlowFractionCurve(const Curve& curve);
 
-  // A7 ,  \field Energy Input Ratio Function of Temperature Curve Name
-  // \object-list BiquadraticQuadraticCubicCurves
-  Curve energyInputRatioFunctionofTemperatureCurve() const;
-  bool setEnergyInputRatioFunctionofTemperatureCurve( const Curve& curve );
+      // A7 ,  \field Energy Input Ratio Function of Temperature Curve Name
+      // \object-list BiquadraticQuadraticCubicCurves
+      Curve energyInputRatioFunctionofTemperatureCurve() const;
+      bool setEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-  // A8 , \field Energy Input Ratio Function of Flow Fraction Curve Name
-  // \object-list QuadraticCubicCurves
-  Curve energyInputRatioFunctionofFlowFractionCurve() const;
-  bool setEnergyInputRatioFunctionofFlowFractionCurve( const Curve& curve );
+      // A8 , \field Energy Input Ratio Function of Flow Fraction Curve Name
+      // \object-list QuadraticCubicCurves
+      Curve energyInputRatioFunctionofFlowFractionCurve() const;
+      bool setEnergyInputRatioFunctionofFlowFractionCurve(const Curve& curve);
 
-  // A9 , \field Part Load Fraction Correlation Curve Name
-  // \object-list QuadraticCubicCurves
-  Curve partLoadFractionCorrelationCurve() const;
-  bool setPartLoadFractionCorrelationCurve( const Curve& curve );
+      // A9 , \field Part Load Fraction Correlation Curve Name
+      // \object-list QuadraticCubicCurves
+      Curve partLoadFractionCorrelationCurve() const;
+      bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-  // A10, \field Defrost Energy Input Ratio Function of Temperature Curve Name
-  // \object-list BiquadraticCurves
-  // not a required curve so it needs a reset
-  boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
-  bool setDefrostEnergyInputRatioFunctionofTemperatureCurve( const boost::optional<Curve> curve );
+      // A10, \field Defrost Energy Input Ratio Function of Temperature Curve Name
+      // \object-list BiquadraticCurves
+      // not a required curve so it needs a reset
+      boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
+      bool setDefrostEnergyInputRatioFunctionofTemperatureCurve(const boost::optional<Curve> curve);
 
-  bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-  //@}
+      //@}
 
-  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+      AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+      boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
- protected:
- private:
-  REGISTER_LOGGER("openstudio.model.CoilHeatingDXSingleSpeed");
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilHeatingDXSingleSpeed");
 
-  boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
+      boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
-  bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-};
+      bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
+}  // namespace model
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // MODEL_COILHEATINGDXSINGLESPEED_IMPL_HPP
-
+#endif  // MODEL_COILHEATINGDXSINGLESPEED_IMPL_HPP

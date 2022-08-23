@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,124 +33,117 @@
 #include "ModelAPI.hpp"
 #include "OpaqueMaterial_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** AirGap_Impl is a OpaqueMaterial_Impl that is the implementation class for AirGap.*/
-  class MODEL_API AirGap_Impl : public OpaqueMaterial_Impl {
+    /** AirGap_Impl is a OpaqueMaterial_Impl that is the implementation class for AirGap.*/
+    class MODEL_API AirGap_Impl : public OpaqueMaterial_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirGap_Impl(const IdfObject& idfObject,
-                Model_Impl* model,
-                bool keepHandle);
+      AirGap_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirGap_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                Model_Impl* model,
-                bool keepHandle);
+      AirGap_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirGap_Impl(const AirGap_Impl& other,
-                Model_Impl* model,
-                bool keepHandle);
+      AirGap_Impl(const AirGap_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirGap_Impl() {}
+      virtual ~AirGap_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double thermalResistance() const override;
+      double thermalResistance() const override;
 
-    virtual double thickness() const override;
+      virtual double thickness() const override;
 
-    /** The conductivitiy of the material in W/m*K. Always throws because no real thickness, which
+      /** The conductivity of the material in W/m*K. Always throws because no real thickness, which
      *  is needed for conversion. */
-    virtual double thermalConductivity() const override;
+      virtual double thermalConductivity() const override;
 
-    /** The conductance of the material in W/m^2*K. Always throws because no real thickness, which
+      /** The conductance of the material in W/m^2*K. Always throws because no real thickness, which
      *  is needed for conversion. */
-    virtual double thermalConductance() const override;
+      virtual double thermalConductance() const override;
 
-    /** The resistivity of the material in m*K/W. Always throws because no real thickness, which
+      /** The resistivity of the material in m*K/W. Always throws because no real thickness, which
      *  is needed for conversion. */
-    virtual double thermalResistivity() const override;
+      virtual double thermalResistivity() const override;
 
-    virtual double thermalAbsorptance() const override;
+      virtual double thermalAbsorptance() const override;
 
-    virtual boost::optional<double> thermalReflectance() const override;
+      virtual boost::optional<double> thermalReflectance() const override;
 
-    virtual double solarAbsorptance() const override;
+      virtual double solarAbsorptance() const override;
 
-    virtual boost::optional<double> solarReflectance() const override;
+      virtual boost::optional<double> solarReflectance() const override;
 
-    virtual double visibleTransmittance() const;
+      virtual double visibleTransmittance() const;
 
-    virtual double visibleAbsorptance() const override;
+      virtual double visibleAbsorptance() const override;
 
-    virtual boost::optional<double> visibleReflectance() const override;
+      virtual boost::optional<double> visibleReflectance() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setThermalResistance(boost::optional<double> thermalResistance);
+      bool setThermalResistance(boost::optional<double> thermalResistance);
 
-    void resetThermalResistance();
+      void resetThermalResistance();
 
-    virtual bool setThickness(double value) override;
+      virtual bool setThickness(double value) override;
 
-    /** Sets the conductivity of the material in W/m*K, if possible. Always returns false. */
-    virtual bool setThermalConductivity(double value) override;
+      /** Sets the conductivity of the material in W/m*K, if possible. Always returns false. */
+      virtual bool setThermalConductivity(double value) override;
 
-    /** Sets the conductance of the material in W/m^2*K, if possible. */
-    virtual bool setThermalConductance(double value) override;
+      /** Sets the conductance of the material in W/m^2*K, if possible. */
+      virtual bool setThermalConductance(double value) override;
 
-    /** Sets the resistivity of the material in m*K/W, if possible. */
-    virtual bool setThermalResistivity(double value) override;
+      /** Sets the resistivity of the material in m*K/W, if possible. */
+      virtual bool setThermalResistivity(double value) override;
 
-    /** Sets the resistance of the material in m^2*K/W, if possible. */
-    virtual bool setThermalResistance(double value) override;
+      /** Sets the resistance of the material in m^2*K/W, if possible. */
+      virtual bool setThermalResistance(double value) override;
 
-    virtual bool setThermalAbsorptance(double value) override;
+      virtual bool setThermalAbsorptance(double value) override;
 
-    virtual bool setThermalReflectance(boost::optional<double> value) override;
+      virtual bool setThermalReflectance(boost::optional<double> value) override;
 
-    virtual bool setSolarAbsorptance(boost::optional<double> value) override;
+      virtual bool setSolarAbsorptance(boost::optional<double> value) override;
 
-    virtual bool setSolarReflectance(boost::optional<double> value) override;
+      virtual bool setSolarReflectance(boost::optional<double> value) override;
 
-    virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
+      virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
 
-    virtual bool setVisibleReflectance(boost::optional<double> value) override;
+      virtual bool setVisibleReflectance(boost::optional<double> value) override;
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirGap");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirGap");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_AIRGAP_IMPL_HPP
+#endif  // MODEL_AIRGAP_IMPL_HPP

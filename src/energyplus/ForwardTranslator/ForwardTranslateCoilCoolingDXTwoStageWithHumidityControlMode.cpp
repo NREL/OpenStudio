@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -55,174 +55,181 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary( model::CoilCoolingDXTwoStageWithHumidityControlMode & modelObject )
-{
-  //create the IdfObject that will be the coil
-  IdfObject idfObject(IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode);
+  boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary(
+    model::CoilCoolingDXTwoStageWithHumidityControlMode& modelObject) {
+    //create the IdfObject that will be the coil
+    IdfObject idfObject(IddObjectType::Coil_Cooling_DX_TwoStageWithHumidityControlMode);
 
-  //Name
-  m_idfObjects.push_back(idfObject);
-  if( auto value = modelObject.name() ) {
-    idfObject.setName(value.get());
-  }
-
-  // AirInletNodeName
-  if( auto mo = modelObject.inletModelObject() ) {
-    if( auto node = mo->optionalCast<model::Node>() ) {
-      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirInletNodeName,node->name().get());
+    //Name
+    m_idfObjects.push_back(idfObject);
+    if (auto value = modelObject.name()) {
+      idfObject.setName(value.get());
     }
-  }
 
-  // AirOutletNodeName
-  if( auto mo = modelObject.outletModelObject() ) {
-    if( auto node = mo->optionalCast<model::Node>() ) {
-      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirOutletNodeName,node->name().get());
+    // AirInletNodeName
+    if (auto mo = modelObject.inletModelObject()) {
+      if (auto node = mo->optionalCast<model::Node>()) {
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirInletNodeName, node->name().get());
+      }
     }
-  }
 
-  // AvailabilityScheduleName
-  if( auto schedule = modelObject.availabilitySchedule() ) {
-    if( auto idf = translateAndMapModelObject(schedule.get()) ) {
-      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AvailabilityScheduleName,idf->name().get());
+    // AirOutletNodeName
+    if (auto mo = modelObject.outletModelObject()) {
+      if (auto node = mo->optionalCast<model::Node>()) {
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AirOutletNodeName, node->name().get());
+      }
     }
-  }
 
-  // CrankcaseHeaterCapacity
-  {
-    auto value = modelObject.crankcaseHeaterCapacity();
-    idfObject.setDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::CrankcaseHeaterCapacity,value);
-  }
-
-  // MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation
-  {
-    auto value = modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
-    idfObject.setDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation,value);
-  }
-
-  // NumberofCapacityStages
-  {
-    auto value = modelObject.numberofCapacityStages();
-    idfObject.setInt(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NumberofCapacityStages,value);
-  }
-
-  // NumberofEnhancedDehumidificationModes
-  {
-    auto value = modelObject.numberofEnhancedDehumidificationModes();
-    idfObject.setInt(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NumberofEnhancedDehumidificationModes,value);
-  }
-
-  // NormalModeStage1CoilPerformanceName
-  if( auto curve = modelObject.normalModeStage1CoilPerformance() ) {
-    if( auto idf = translateAndMapModelObject(curve.get()) ) {
-      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NormalModeStage1CoilPerformanceObjectType,idf->iddObject().name());
-      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NormalModeStage1CoilPerformanceName,idf->name().get());
+    // AvailabilityScheduleName
+    if (auto schedule = modelObject.availabilitySchedule()) {
+      if (auto idf = translateAndMapModelObject(schedule.get())) {
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::AvailabilityScheduleName, idf->name().get());
+      }
     }
-  }
 
-  // NormalModeStage1_PLUS_2CoilPerformanceName
-  if( auto curve = modelObject.normalModeStage1Plus2CoilPerformance() ) {
-    if( auto idf = translateAndMapModelObject(curve.get()) ) {
-      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NormalModeStage1_PLUS_2CoilPerformanceObjectType,idf->iddObject().name());
-      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NormalModeStage1_PLUS_2CoilPerformanceName,idf->name().get());
-    }
-  }
-
-  // DehumidificationMode1Stage1CoilPerformanceName
-  if( auto curve = modelObject.dehumidificationMode1Stage1CoilPerformance() ) {
-    if( auto idf = translateAndMapModelObject(curve.get()) ) {
-      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1CoilPerformanceObjectType,idf->iddObject().name());
-      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1CoilPerformanceName,idf->name().get());
-    }
-  }
-
-  // DehumidificationMode1Stage1_PLUS_2CoilPerformanceName
-  if( auto curve = modelObject.dehumidificationMode1Stage1Plus2CoilPerformance() ) {
-    if( auto idf = translateAndMapModelObject(curve.get()) ) {
-      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1_PLUS_2CoilPerformanceObjectType,idf->iddObject().name());
-      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1_PLUS_2CoilPerformanceName,idf->name().get());
-    }
-  }
-
-  // BasinHeaterCapacity
-  {
-    auto value = modelObject.basinHeaterCapacity();
-    idfObject.setDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::BasinHeaterCapacity,value);
-  }
-
-  // BasinHeaterSetpointTemperature
-  {
-    auto value = modelObject.basinHeaterSetpointTemperature();
-    idfObject.setDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::BasinHeaterSetpointTemperature,value);
-  }
-
-  // BasinHeaterOperatingScheduleName
-  if( auto schedule = modelObject.basinHeaterOperatingSchedule() ) {
-    if( auto idf = translateAndMapModelObject(schedule.get()) ) {
-      idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::BasinHeaterOperatingScheduleName,idf->name().get());
-    }
-  }
-
-  return idfObject;
-}
-
-boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXTwoStageWithHumidityControlMode( model::CoilCoolingDXTwoStageWithHumidityControlMode & modelObject )
-{
-  IdfObject coilSystemCoolingDXIdf(IddObjectType::CoilSystem_Cooling_DX);
-
-  m_idfObjects.push_back(coilSystemCoolingDXIdf);
-
-  boost::optional<IdfObject> oIdfObject = translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary(modelObject);
-
-  if( ! oIdfObject ) { return boost::none; }
-
-  IdfObject idfObject = oIdfObject.get();
-
-  OptionalString s;
-
-  s = modelObject.name();
-  if( s )
-  {
-    coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType,idfObject.iddObject().name());
-
-    coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilName,*s);
-
-    coilSystemCoolingDXIdf.setName(*s + " CoilSystem");
-  }
-
-  if( auto sched = modelObject.availabilitySchedule() ) {
-    if( auto _sched = translateAndMapModelObject(sched.get()) ) {
-      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::AvailabilityScheduleName,_sched->name().get());
-    }
-  }
-
-  OptionalModelObject omo = modelObject.inletModelObject();
-  if( omo )
-  {
-    translateAndMapModelObject(*omo);
-    s = omo->name();
-    if(s)
+    // CrankcaseHeaterCapacity
     {
-      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemInletNodeName,*s);
+      auto value = modelObject.crankcaseHeaterCapacity();
+      idfObject.setDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::CrankcaseHeaterCapacity, value);
     }
-  }
 
-  omo= modelObject.outletModelObject();
-  if( omo )
-  {
-    translateAndMapModelObject(*omo);
-    s = omo->name();
-    if(s)
+    // MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation
     {
-      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemOutletNodeName,*s);
-
-      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemSensorNodeName,*s);
+      auto value = modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation();
+      idfObject.setDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation, value);
     }
+
+    // NumberofCapacityStages
+    {
+      auto value = modelObject.numberofCapacityStages();
+      idfObject.setInt(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NumberofCapacityStages, value);
+    }
+
+    // NumberofEnhancedDehumidificationModes
+    {
+      auto value = modelObject.numberofEnhancedDehumidificationModes();
+      idfObject.setInt(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NumberofEnhancedDehumidificationModes, value);
+    }
+
+    // NormalModeStage1CoilPerformanceName
+    if (auto curve = modelObject.normalModeStage1CoilPerformance()) {
+      if (auto idf = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NormalModeStage1CoilPerformanceObjectType,
+                            idf->iddObject().name());
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NormalModeStage1CoilPerformanceName, idf->name().get());
+      }
+    }
+
+    // NormalModeStage1_PLUS_2CoilPerformanceName
+    if (auto curve = modelObject.normalModeStage1Plus2CoilPerformance()) {
+      if (auto idf = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NormalModeStage1_PLUS_2CoilPerformanceObjectType,
+                            idf->iddObject().name());
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::NormalModeStage1_PLUS_2CoilPerformanceName, idf->name().get());
+      }
+    }
+
+    // DehumidificationMode1Stage1CoilPerformanceName
+    if (auto curve = modelObject.dehumidificationMode1Stage1CoilPerformance()) {
+      if (auto idf = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1CoilPerformanceObjectType,
+                            idf->iddObject().name());
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1CoilPerformanceName, idf->name().get());
+      }
+    }
+
+    // DehumidificationMode1Stage1_PLUS_2CoilPerformanceName
+    if (auto curve = modelObject.dehumidificationMode1Stage1Plus2CoilPerformance()) {
+      if (auto idf = translateAndMapModelObject(curve.get())) {
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1_PLUS_2CoilPerformanceObjectType,
+                            idf->iddObject().name());
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::DehumidificationMode1Stage1_PLUS_2CoilPerformanceName,
+                            idf->name().get());
+      }
+    }
+
+    // Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+    {
+      auto value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation();
+      idfObject.setDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, value);
+    }
+
+    // BasinHeaterCapacity
+    {
+      auto value = modelObject.basinHeaterCapacity();
+      idfObject.setDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::BasinHeaterCapacity, value);
+    }
+
+    // BasinHeaterSetpointTemperature
+    {
+      auto value = modelObject.basinHeaterSetpointTemperature();
+      idfObject.setDouble(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::BasinHeaterSetpointTemperature, value);
+    }
+
+    // BasinHeaterOperatingScheduleName
+    if (auto schedule = modelObject.basinHeaterOperatingSchedule()) {
+      if (auto idf = translateAndMapModelObject(schedule.get())) {
+        idfObject.setString(Coil_Cooling_DX_TwoStageWithHumidityControlModeFields::BasinHeaterOperatingScheduleName, idf->name().get());
+      }
+    }
+
+    return idfObject;
   }
 
-  return coilSystemCoolingDXIdf;
-}
+  boost::optional<IdfObject>
+    ForwardTranslator::translateCoilCoolingDXTwoStageWithHumidityControlMode(model::CoilCoolingDXTwoStageWithHumidityControlMode& modelObject) {
+    IdfObject coilSystemCoolingDXIdf(IddObjectType::CoilSystem_Cooling_DX);
 
-} // energyplus
+    m_idfObjects.push_back(coilSystemCoolingDXIdf);
 
-} // openstudio
+    boost::optional<IdfObject> oIdfObject = translateCoilCoolingDXTwoStageWithHumidityControlModeWithoutUnitary(modelObject);
 
+    if (!oIdfObject) {
+      return boost::none;
+    }
+
+    IdfObject idfObject = oIdfObject.get();
+
+    OptionalString s;
+
+    s = modelObject.name();
+    if (s) {
+      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType, idfObject.iddObject().name());
+
+      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilName, *s);
+
+      coilSystemCoolingDXIdf.setName(*s + " CoilSystem");
+    }
+
+    if (auto sched = modelObject.availabilitySchedule()) {
+      if (auto _sched = translateAndMapModelObject(sched.get())) {
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::AvailabilityScheduleName, _sched->name().get());
+      }
+    }
+
+    OptionalModelObject omo = modelObject.inletModelObject();
+    if (omo) {
+      translateAndMapModelObject(*omo);
+      s = omo->name();
+      if (s) {
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemInletNodeName, *s);
+      }
+    }
+
+    omo = modelObject.outletModelObject();
+    if (omo) {
+      translateAndMapModelObject(*omo);
+      s = omo->name();
+      if (s) {
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemOutletNodeName, *s);
+
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemSensorNodeName, *s);
+      }
+    }
+
+    return coilSystemCoolingDXIdf;
+  }
+
+}  // namespace energyplus
+
+}  // namespace openstudio

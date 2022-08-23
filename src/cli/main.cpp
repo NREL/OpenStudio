@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,15 +36,16 @@
 #include <iostream>
 
 #ifndef _MSC_VER
-#include <dlfcn.h>
-#include <dirent.h>
+#  include <dlfcn.h>
+#  include <dirent.h>
 #else
-#include <windows.h>
-#pragma warning(disable : 4930 )
-#pragma warning(disable : 4101 )
+#  include <windows.h>
+#  pragma warning(disable : 4930)
+#  pragma warning(disable : 4101)
 #endif
 
-extern "C" {
+extern "C"
+{
   void Init_EmbeddedScripting(void);
   INIT_DECLARATIONS;
 
@@ -52,6 +53,7 @@ extern "C" {
 
   //void Init_ascii(); // this is not included in libenc
   void Init_big5();
+  void Init_cesu_8();
   void Init_cp949();
   void Init_emacs_mule();
   void Init_euc_jp();
@@ -96,6 +98,7 @@ extern "C" {
   void Init_transdb();
 
   void Init_trans_big5();
+  void Init_trans_cesu_8();
   void Init_trans_chinese();
   void Init_trans_ebcdic();
   void Init_trans_emoji();
@@ -129,6 +132,7 @@ extern "C" {
   void Init_fiddle(void);
   void Init_generator(void);
   void Init_md5(void);
+  void Init_monitor(void);
   void Init_nkf(void);
   void Init_nonblock(void);
   void Init_objspace(void);
@@ -148,24 +152,27 @@ extern "C" {
   void Init_zlib(void);
 
   void Init_openssl(void);
+  void Init_ruby_description(void);
 
-  void Init_nonblock(void);
+#ifndef _WIN32
+  void Init_console(void);
+  void Init_dbm(void);
+  void Init_gdbm(void);
+  void Init_pty(void);
+  void Init_readline(void);
+  void Init_syslog(void);
+#endif
 
-  #ifndef _WIN32
-    void Init_console(void);
-    void Init_dbm(void);
-    void Init_gdbm(void);
-    void Init_pty(void);
-    void Init_readline(void);
-    void Init_syslog(void);
-  #endif
+  VALUE init_rest_of_openstudio(...) {
+    init_openstudio_internal_extended();
+    return Qtrue;
+  }
 }
 
 std::vector<std::string> paths;
-static RubyInterpreter rubyInterpreter(paths);//(paths);
+static RubyInterpreter rubyInterpreter(paths);  //(paths);
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
   ruby_sysinit(&argc, &argv);
   {
     RUBY_INIT_STACK;
@@ -189,7 +196,7 @@ int main(int argc, char *argv[])
     swig::GC_VALUE::mod_id = rb_intern("%");
 
     swig::GC_VALUE::and_id = rb_intern("&");
-    swig::GC_VALUE::or_id  = rb_intern("|");
+    swig::GC_VALUE::or_id = rb_intern("|");
     swig::GC_VALUE::xor_id = rb_intern("^");
 
     swig::GC_VALUE::lshift_id = rb_intern("<<");
@@ -205,31 +212,32 @@ int main(int argc, char *argv[])
 
     try {
       rubyInterpreter.evalString(embedded_extensions_string);
-    }
-    catch (const std::exception& e) {
+    } catch (const std::exception& e) {
       rubyInterpreter.evalString(R"(STDOUT.flush)");
-      std::cout << "Exception in embedded_help: " << e.what() << std::endl; // endl will flush
+      std::cout << "Exception in embedded_help: " << e.what() << std::endl;  // endl will flush
       return ruby_cleanup(1);
-    }
-    catch (...) {
+    } catch (...) {
       rubyInterpreter.evalString(R"(STDOUT.flush)");
-      std::cout << "Unknown Exception in embedded_help" << std::endl; // endl will flush
+      std::cout << "Unknown Exception in embedded_help" << std::endl;  // endl will flush
       return ruby_cleanup(1);
     }
 
     //// encodings
+    /// Get the symbols from: `DUMPBIN /ARCHIVEMEMBERS  C:\Users\julien\.conan\data\openstudio_ruby\2.7.2\nrel\testing\package\2fa339f0e9f8e459bd56b19a37be69734f2745f4\lib\enc\libenc.lib`
     Init_encdb();
     rb_provide("enc/encdb.so");
     //Init_ascii();
     //rb_provide("enc/ascii.so");
     Init_big5();
     rb_provide("enc/big5.so");
+    Init_cesu_8();
+    rb_provide("enc/cesu_8.so");
     Init_cp949();
     rb_provide("enc/cp949.so");
     Init_emacs_mule();
     rb_provide("enc/emacs_mule.so");
     Init_euc_jp();
-    rb_provide("enc/euc_ip.so");
+    rb_provide("enc/euc_jp.so");
     Init_euc_kr();
     rb_provide("enc/euc_kr.so");
     Init_euc_tw();
@@ -305,6 +313,7 @@ int main(int argc, char *argv[])
     Init_windows_31j();
     rb_provide("enc/windows_31j.so");
 
+    /// Get the symbols from: `DUMPBIN /ARCHIVEMEMBERS  C:\Users\julien\.conan\data\openstudio_ruby\2.7.2\nrel\testing\package\2fa339f0e9f8e459bd56b19a37be69734f2745f4\lib\enc\libtrans.lib`
     Init_transdb();
     rb_provide("enc/trans/transdb.so");
 
@@ -312,6 +321,9 @@ int main(int argc, char *argv[])
     //rb_provide("enc/trans/big5.so");
     Init_trans_big5();
     rb_provide("enc/trans/big5.so");
+
+    Init_trans_cesu_8();
+    rb_provide("enc/trans/cesu_8.so");
 
     Init_trans_chinese();
     rb_provide("enc/trans/chinese.so");
@@ -335,37 +347,37 @@ int main(int argc, char *argv[])
     rb_provide("enc/trans/emoji_sjis_softbank.so");
 
     Init_trans_escape();
-    rb_provide("enc/trans/escape.o");
+    rb_provide("enc/trans/escape.so");
 
     Init_trans_gb18030();
-    rb_provide("enc/trans/gb18030.o");
+    rb_provide("enc/trans/gb18030.so");
 
     Init_trans_gbk();
-    rb_provide("enc/trans/gbk.o");
+    rb_provide("enc/trans/gbk.so");
 
     Init_trans_iso2022();
-    rb_provide("enc/trans/iso2022.o");
+    rb_provide("enc/trans/iso2022.so");
 
     Init_trans_japanese();
-    rb_provide("enc/trans/japanese.o");
+    rb_provide("enc/trans/japanese.so");
 
     Init_trans_japanese_euc();
-    rb_provide("enc/trans/japanese_euc.o");
+    rb_provide("enc/trans/japanese_euc.so");
 
     Init_trans_japanese_sjis();
-    rb_provide("enc/trans/japanese_sjis.o");
+    rb_provide("enc/trans/japanese_sjis.so");
 
     Init_trans_korean();
-    rb_provide("enc/trans/korean.o");
+    rb_provide("enc/trans/korean.so");
 
     Init_trans_single_byte();
-    rb_provide("enc/trans/single_byte.o");
+    rb_provide("enc/trans/single_byte.so");
 
     Init_trans_utf8_mac();
-    rb_provide("enc/trans/utf8_mac.o");
+    rb_provide("enc/trans/utf8_mac.so");
 
     Init_trans_utf_16_32();
-    rb_provide("enc/trans/utf_16_32.o");
+    rb_provide("enc/trans/utf_16_32.so");
 
     Init_bigdecimal();
     rb_provide("bigdecimal");
@@ -381,7 +393,9 @@ int main(int argc, char *argv[])
 
     Init_cparse();
     rb_provide("cparse");
+    rb_provide("racc/cparse");
     rb_provide("cparse.so");
+    rb_provide("racc/cparse.so");
 
     Init_date_core();
     rb_provide("date_core");
@@ -411,11 +425,19 @@ int main(int argc, char *argv[])
     rb_provide("fiddle");
     rb_provide("fiddle.so");
 
+    Init_generator();
+    rb_provide("json/ext/generator");
+    rb_provide("json/ext/generator.so");
+
     Init_md5();
     rb_provide("md5");
     rb_provide("digest/md5");
     rb_provide("md5.so");
     rb_provide("digest/md5.so");
+
+    Init_monitor();
+    rb_provide("monitor");
+    rb_provide("monitor.so");
 
     Init_nkf();
     rb_provide("nkf");
@@ -424,14 +446,14 @@ int main(int argc, char *argv[])
     Init_nonblock();
     rb_provide("nonblock");
     rb_provide("nonblock.so");
+    rb_provide("io/nonblock");
+    rb_provide("io/nonblock.so");
+
+    Init_ruby_description();
 
     Init_objspace();
     rb_provide("objspace");
     rb_provide("objspace.so");
-
-    Init_generator();
-    rb_provide("json/ext/generator");
-    rb_provide("json/ext/generator.so");
 
     Init_parser();
     rb_provide("json/ext/parser");
@@ -505,36 +527,39 @@ int main(int argc, char *argv[])
     rb_provide("io/nonblock");
     rb_provide("io/nonblock.so");
 
-   #ifndef _WIN32
+#ifndef _WIN32
 
     // DLM: we have Init_console on Windows but crashes when try to init it, fails to load openssl
-     Init_console();
-     rb_provide("console");
-     rb_provide("console.so");
+    Init_console();
+    rb_provide("console");
+    rb_provide("console.so");
 
-     Init_dbm();
-     rb_provide("dbm");
-     rb_provide("dbm.so");
+    Init_dbm();
+    rb_provide("dbm");
+    rb_provide("dbm.so");
 
-     Init_gdbm();
-     rb_provide("gdbm");
-     rb_provide("gdbm.so");
+    Init_gdbm();
+    rb_provide("gdbm");
+    rb_provide("gdbm.so");
 
-     Init_pty();
-     rb_provide("pty");
-     rb_provide("pty.so");
+    Init_pty();
+    rb_provide("pty");
+    rb_provide("pty.so");
 
-     Init_readline();
-     rb_provide("readline");
-     rb_provide("readline.so");
+    Init_readline();
+    rb_provide("readline");
+    rb_provide("readline.so");
 
-     Init_syslog();
-     rb_provide("syslog");
-     rb_provide("syslog.so");
-    #endif
+    Init_syslog();
+    rb_provide("syslog");
+    rb_provide("syslog.so");
+#endif
 
     // openstudio
-    init_openstudio_internal();
+    init_openstudio_internal_basic();
+
+    auto module = rb_define_module("OpenStudio");
+    rb_define_module_function(module, "init_rest_of_openstudio", init_rest_of_openstudio, 0);
   }
 
   // DLM: this will interpret any strings passed on the command line as UTF-8
@@ -543,12 +568,12 @@ int main(int argc, char *argv[])
   rb_enc_set_default_external(rb_enc_from_encoding(rb_utf8_encoding()));
 
   // chop off the first argument which is the exe path/name
-  ruby_set_argv(argc - 1,argv + 1);
+  ruby_set_argv(argc - 1, argv + 1);
 
-  try{
+  try {
     rubyInterpreter.evalString(R"(
        begin
-         (require 'openstudio_cli')
+         require 'openstudio_cli'
        rescue Exception => e
          puts
          puts "Error: #{e.message}"
@@ -556,13 +581,13 @@ int main(int argc, char *argv[])
          raise
        end
      )");
-  } catch (const std::exception& e){
+  } catch (const std::exception& e) {
     rubyInterpreter.evalString(R"(STDOUT.flush)");
-    std::cout << "Exception: " << e.what() << std::endl; // endl will flush
+    std::cout << "Exception: " << e.what() << std::endl;  // endl will flush
     return ruby_cleanup(1);
-  } catch (...){
+  } catch (...) {
     rubyInterpreter.evalString(R"(STDOUT.flush)");
-    std::cout << "Unknown Exception" << std::endl; // endl will flush
+    std::cout << "Unknown Exception" << std::endl;  // endl will flush
     return ruby_cleanup(1);
   }
   rubyInterpreter.evalString(R"(STDOUT.flush)");
@@ -570,17 +595,17 @@ int main(int argc, char *argv[])
   return ruby_cleanup(0);
 }
 
-extern "C" {
-  int rb_hasFile(const char *t_filename) {
+extern "C"
+{
+  int rb_hasFile(const char* t_filename) {
     // TODO Consider expanding this to use the path which we have artificially defined in embedded_help.rb
-    std::string expandedName = std::string(":/ruby/2.5.0/") + std::string(t_filename) + ".rb";
+    std::string expandedName = std::string(":/ruby/2.7.0/") + std::string(t_filename) + ".rb";
     return embedded_files::hasFile(expandedName);
   }
 
-  int rb_require_embedded(const char *t_filename) {
+  int rb_require_embedded(const char* t_filename) {
     std::string require_script = R"(require ')" + std::string(t_filename) + R"(')";
     rubyInterpreter.evalString(require_script);
     return 0;
   }
 }
-

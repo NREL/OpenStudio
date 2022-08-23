@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,35 +32,35 @@
 namespace openstudio {
 namespace commentRegex {
 
-const boost::regex &whitespaceOnlyLine() {
-  const static boost::regex result("^[\\h]*$");
-  return result;
-}
+  const boost::regex& whitespaceOnlyLine() {
+    static const boost::regex result("^[\\h]*$");
+    return result;
+  }
 
-const boost::regex &commentWhitespaceOnlyLine() {
-  const static boost::regex result("^[\\h]*(?:!([^\\n\\r\\v]*))?$");
-  return result;
-}
+  const boost::regex& commentWhitespaceOnlyLine() {
+    static const boost::regex result("^[\\h]*(?:!([^\\n\\r\\v]*))?$");
+    return result;
+  }
 
-const boost::regex &editorCommentWhitespaceOnlyLine() {
-  const static boost::regex result("^[\\h]*(?:!-([^\\n\\r\\v]*))?$");
-  return result;
-}
+  const boost::regex& editorCommentWhitespaceOnlyLine() {
+    static const boost::regex result("^[\\h]*(?:!-([^\\n\\r\\v]*))?$");
+    return result;
+  }
 
-const boost::regex &whitespaceOnlyBlock() {
-  const static boost::regex result("[\\s]*");
-  return result;
-}
+  const boost::regex& whitespaceOnlyBlock() {
+    static const boost::regex result("[\\s]*");
+    return result;
+  }
 
-const boost::regex &commentWhitespaceOnlyBlock() {
-  const static boost::regex result("(?:^[\\h]*(?:![^\\v\\n]*)?[\\v\\n]?)*");
-  return result;
-}
+  const boost::regex& commentWhitespaceOnlyBlock() {
+    static const boost::regex result("(?:^[\\h]*(?:![^\\v\\n]*)?[\\v\\n]?)*");
+    return result;
+  }
 
-const boost::regex &editorCommentWhitespaceOnlyBlock() {
-  const static boost::regex result("(?:^[\\h]*(?:!-[^\\v\\n]*)?[\\v\\n]?)*");
-  return result;
-}
+  const boost::regex& editorCommentWhitespaceOnlyBlock() {
+    static const boost::regex result("(?:^[\\h]*(?:!-[^\\v\\n]*)?[\\v\\n]?)*");
+    return result;
+  }
 
-} // commentRegex
-} // openstudio
+}  // namespace commentRegex
+}  // namespace openstudio

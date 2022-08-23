@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,87 +36,80 @@
 namespace openstudio {
 namespace model {
 
-class CurveQuadratic;
-class GeneratorFuelCell;
+  class CurveQuadratic;
+  class GeneratorFuelCell;
 
-namespace detail {
+  namespace detail {
 
-  /** GeneratorFuelCellInverter_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellInverter.*/
-  class MODEL_API GeneratorFuelCellInverter_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** GeneratorFuelCellInverter_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellInverter.*/
+    class MODEL_API GeneratorFuelCellInverter_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    GeneratorFuelCellInverter_Impl(const IdfObject& idfObject,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      GeneratorFuelCellInverter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    GeneratorFuelCellInverter_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      GeneratorFuelCellInverter_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    GeneratorFuelCellInverter_Impl(const GeneratorFuelCellInverter_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      GeneratorFuelCellInverter_Impl(const GeneratorFuelCellInverter_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~GeneratorFuelCellInverter_Impl() {}
+      virtual ~GeneratorFuelCellInverter_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
+      virtual std::vector<IddObjectType> allowableChildTypes() const;
 
-    virtual std::vector<ModelObject> children() const;
+      virtual std::vector<ModelObject> children() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string inverterEfficiencyCalculationMode() const;
+      std::string inverterEfficiencyCalculationMode() const;
 
-    double inverterEfficiency() const;
+      double inverterEfficiency() const;
 
-    boost::optional<CurveQuadratic> efficiencyFunctionofDCPowerCurve() const;
+      boost::optional<CurveQuadratic> efficiencyFunctionofDCPowerCurve() const;
 
-    // Return optional parent generator
-    boost::optional<GeneratorFuelCell> fuelCell() const;
+      // Return optional parent generator
+      boost::optional<GeneratorFuelCell> fuelCell() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setInverterEfficiencyCalculationMode(const std::string& inverterEfficiencyCalculationMode);
+      bool setInverterEfficiencyCalculationMode(const std::string& inverterEfficiencyCalculationMode);
 
-    void resetInverterEfficiencyCalculationMode();
+      void resetInverterEfficiencyCalculationMode();
 
-    bool setInverterEfficiency(double inverterEfficiency);
+      bool setInverterEfficiency(double inverterEfficiency);
 
-    void resetInverterEfficiency();
+      void resetInverterEfficiency();
 
-    bool setEfficiencyFunctionofDCPowerCurve(const CurveQuadratic& quadraticCurves);
+      bool setEfficiencyFunctionofDCPowerCurve(const CurveQuadratic& quadraticCurves);
 
-    void resetEfficiencyFunctionofDCPowerCurve();
+      void resetEfficiencyFunctionofDCPowerCurve();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.GeneratorFuelCellInverter");
+    };
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.GeneratorFuelCellInverter");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_GENERATORFUELCELLINVERTER_IMPL_HPP
-
+#endif  // MODEL_GENERATORFUELCELLINVERTER_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,93 +40,77 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateSiteGroundTemperatureBuildingSurface( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Site_GroundTemperature_BuildingSurface )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: Site_GroundTemperature_BuildingSurface");
-     return boost::none;
+  OptionalModelObject ReverseTranslator::translateSiteGroundTemperatureBuildingSurface(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Site_GroundTemperature_BuildingSurface) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Site_GroundTemperature_BuildingSurface");
+      return boost::none;
+    }
+
+    SiteGroundTemperatureBuildingSurface mo = m_model.getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
+
+    boost::optional<double> value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::JanuaryGroundTemperature);
+    if (value) {
+      mo.setJanuaryGroundTemperature(value.get());
+    }
+
+    value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::FebruaryGroundTemperature);
+    if (value) {
+      mo.setFebruaryGroundTemperature(value.get());
+    }
+
+    value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::MarchGroundTemperature);
+    if (value) {
+      mo.setMarchGroundTemperature(value.get());
+    }
+
+    value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::AprilGroundTemperature);
+    if (value) {
+      mo.setAprilGroundTemperature(value.get());
+    }
+
+    value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::MayGroundTemperature);
+    if (value) {
+      mo.setMayGroundTemperature(value.get());
+    }
+
+    value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::JuneGroundTemperature);
+    if (value) {
+      mo.setJuneGroundTemperature(value.get());
+    }
+
+    value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::JulyGroundTemperature);
+    if (value) {
+      mo.setJulyGroundTemperature(value.get());
+    }
+
+    value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::AugustGroundTemperature);
+    if (value) {
+      mo.setAugustGroundTemperature(value.get());
+    }
+
+    value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::SeptemberGroundTemperature);
+    if (value) {
+      mo.setSeptemberGroundTemperature(value.get());
+    }
+
+    value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::OctoberGroundTemperature);
+    if (value) {
+      mo.setOctoberGroundTemperature(value.get());
+    }
+
+    value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::NovemberGroundTemperature);
+    if (value) {
+      mo.setNovemberGroundTemperature(value.get());
+    }
+
+    value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::DecemberGroundTemperature);
+    if (value) {
+      mo.setDecemberGroundTemperature(value.get());
+    }
+
+    return mo;
   }
 
-  SiteGroundTemperatureBuildingSurface mo = m_model.getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
+}  // namespace energyplus
 
-  boost::optional<double> value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::JanuaryGroundTemperature);
-  if( value )
-  {
-    mo.setJanuaryGroundTemperature(value.get());
-  }
-
-  value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::FebruaryGroundTemperature);
-  if( value )
-  {
-    mo.setFebruaryGroundTemperature(value.get());
-  }
-
-  value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::MarchGroundTemperature);
-  if( value )
-  {
-    mo.setMarchGroundTemperature(value.get());
-  }
-
-  value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::AprilGroundTemperature);
-  if( value )
-  {
-    mo.setAprilGroundTemperature(value.get());
-  }
-
-  value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::MayGroundTemperature);
-  if( value )
-  {
-    mo.setMayGroundTemperature(value.get());
-  }
-
-  value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::JuneGroundTemperature);
-  if( value )
-  {
-    mo.setJuneGroundTemperature(value.get());
-  }
-
-  value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::JulyGroundTemperature);
-  if( value )
-  {
-    mo.setJulyGroundTemperature(value.get());
-  }
-
-  value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::AugustGroundTemperature);
-  if( value )
-  {
-    mo.setAugustGroundTemperature(value.get());
-  }
-
-  value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::SeptemberGroundTemperature);
-  if( value )
-  {
-    mo.setSeptemberGroundTemperature(value.get());
-  }
-
-  value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::OctoberGroundTemperature);
-  if( value )
-  {
-    mo.setOctoberGroundTemperature(value.get());
-  }
-
-  value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::NovemberGroundTemperature);
-  if( value )
-  {
-    mo.setNovemberGroundTemperature(value.get());
-  }
-
-  value = workspaceObject.getDouble(Site_GroundTemperature_BuildingSurfaceFields::DecemberGroundTemperature);
-  if( value )
-  {
-    mo.setDecemberGroundTemperature(value.get());
-  }
-
-  return mo;
-
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

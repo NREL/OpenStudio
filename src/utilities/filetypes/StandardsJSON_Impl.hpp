@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,38 +39,36 @@
 #include <nano/nano_signal_slot.hpp>
 #include <json/json.h>
 
-namespace openstudio{
+namespace openstudio {
 
 class StandardsJSON;
 
 namespace detail {
 
-    class UTILITIES_API StandardsJSON_Impl
-    {
-    public:
+  class UTILITIES_API StandardsJSON_Impl
+  {
+   public:
+    StandardsJSON_Impl();
 
-      StandardsJSON_Impl();
+    StandardsJSON_Impl(const std::string& s);
 
-      StandardsJSON_Impl(const std::string& s);
+    StandardsJSON clone() const;
 
-      StandardsJSON clone() const;
+    std::string string() const;
 
-      std::string string() const;
+    boost::optional<Json::Value> getPrimaryKey(const std::string& primaryKey) const;
 
-      boost::optional<Json::Value> getPrimaryKey(const std::string& primaryKey) const;
+    /** A crude schema validation, will only check the first entry */
+    bool isValidStandardsJSON() const;
 
-      /** A crude schema validation, will only check the first entry */
-      bool isValidStandardsJSON() const;
+   private:
+    REGISTER_LOGGER("openstudio.StandardsJSON");
 
-    private:
+    // Store the entire standards JSON that is passed
+    Json::Value m_standardsRoot;
+  };
 
-      REGISTER_LOGGER("openstudio.StandardsJSON");
+}  // namespace detail
+}  // namespace openstudio
 
-      // Store the entire standards JSON that is passed
-      Json::Value m_standardsRoot;
-    };
-
-} // detail
-} // openstudio
-
-#endif //UTILITIES_FILETYPES_STANDARDSJSON_IMPL_HPP
+#endif  //UTILITIES_FILETYPES_STANDARDSJSON_IMPL_HPP

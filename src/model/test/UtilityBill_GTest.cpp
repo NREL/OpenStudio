@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -66,53 +66,53 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   EXPECT_EQ(0, utilityBill.billingPeriods().size());
 
   BillingPeriod bp1 = utilityBill.addBillingPeriod();
-  EXPECT_EQ(Date(1,1,1999), bp1.startDate());
+  EXPECT_EQ(Date(1, 1, 1999), bp1.startDate());
   EXPECT_EQ(30, bp1.numberOfDays());
-  EXPECT_EQ(Date(1,30,1999), bp1.endDate());
+  EXPECT_EQ(Date(1, 30, 1999), bp1.endDate());
 
   BillingPeriod bp2 = utilityBill.addBillingPeriod();
-  EXPECT_EQ(Date(1,31,1999), bp2.startDate());
+  EXPECT_EQ(Date(1, 31, 1999), bp2.startDate());
   EXPECT_EQ(30, bp2.numberOfDays());
-  EXPECT_EQ(Date(3,1,1999), bp2.endDate());
+  EXPECT_EQ(Date(3, 1, 1999), bp2.endDate());
   EXPECT_TRUE(bp2.setNumberOfDays(10));
-  EXPECT_EQ(Date(1,31,1999), bp2.startDate());
+  EXPECT_EQ(Date(1, 31, 1999), bp2.startDate());
   EXPECT_EQ(10, bp2.numberOfDays());
-  EXPECT_EQ(Date(2,9,1999), bp2.endDate());
+  EXPECT_EQ(Date(2, 9, 1999), bp2.endDate());
 
   BillingPeriod bp3 = utilityBill.addBillingPeriod();
-  EXPECT_EQ(Date(2,10,1999), bp3.startDate());
+  EXPECT_EQ(Date(2, 10, 1999), bp3.startDate());
   EXPECT_EQ(10, bp3.numberOfDays());
-  EXPECT_EQ(Date(2,19,1999), bp3.endDate());
+  EXPECT_EQ(Date(2, 19, 1999), bp3.endDate());
 
   /** Sets the start date.  If startDate is before endDate then endDate is retained.
       If startDate is after endDate then numberOfDays is retained. */
-  EXPECT_TRUE(bp1.setStartDate(Date(1,6,1999)));
-  EXPECT_EQ(Date(1,6,1999), bp1.startDate());
+  EXPECT_TRUE(bp1.setStartDate(Date(1, 6, 1999)));
+  EXPECT_EQ(Date(1, 6, 1999), bp1.startDate());
   EXPECT_EQ(25, bp1.numberOfDays());
-  EXPECT_EQ(Date(1,30,1999), bp1.endDate());
+  EXPECT_EQ(Date(1, 30, 1999), bp1.endDate());
 
-  EXPECT_TRUE(bp1.setStartDate(Date(2,1,1999)));
-  EXPECT_EQ(Date(2,1,1999), bp1.startDate());
+  EXPECT_TRUE(bp1.setStartDate(Date(2, 1, 1999)));
+  EXPECT_EQ(Date(2, 1, 1999), bp1.startDate());
   EXPECT_EQ(25, bp1.numberOfDays());
-  EXPECT_EQ(Date(2,25,1999), bp1.endDate());
+  EXPECT_EQ(Date(2, 25, 1999), bp1.endDate());
 
   /** Sets the number of days in billing period, startDate is always retained. */
   EXPECT_TRUE(bp1.setNumberOfDays(4));
-  EXPECT_EQ(Date(2,1,1999), bp1.startDate());
+  EXPECT_EQ(Date(2, 1, 1999), bp1.startDate());
   EXPECT_EQ(4, bp1.numberOfDays());
-  EXPECT_EQ(Date(2,4,1999), bp1.endDate());
+  EXPECT_EQ(Date(2, 4, 1999), bp1.endDate());
 
   /** Sets the end date.  If endDate is after startDate then startDate is retained.
       If endDate is before startDate then numberOfDays is retained. */
-  EXPECT_TRUE(bp1.setEndDate(Date(2,8,1999)));
-  EXPECT_EQ(Date(2,1,1999), bp1.startDate());
+  EXPECT_TRUE(bp1.setEndDate(Date(2, 8, 1999)));
+  EXPECT_EQ(Date(2, 1, 1999), bp1.startDate());
   EXPECT_EQ(8, bp1.numberOfDays());
-  EXPECT_EQ(Date(2,8,1999), bp1.endDate());
+  EXPECT_EQ(Date(2, 8, 1999), bp1.endDate());
 
-  EXPECT_TRUE(bp1.setEndDate(Date(1,8,1999)));
-  EXPECT_EQ(Date(1,1,1999), bp1.startDate());
+  EXPECT_TRUE(bp1.setEndDate(Date(1, 8, 1999)));
+  EXPECT_EQ(Date(1, 1, 1999), bp1.startDate());
   EXPECT_EQ(8, bp1.numberOfDays());
-  EXPECT_EQ(Date(1,8,1999), bp1.endDate());
+  EXPECT_EQ(Date(1, 8, 1999), bp1.endDate());
 
   EXPECT_EQ(0u, model.getModelObjects<OutputMeter>().size());
   OutputMeter meter = utilityBill.consumptionMeter();
@@ -153,7 +153,6 @@ TEST_F(ModelFixture, UtilityBill_Electricity) {
   boost::optional<OutputMeter> meter9 = utilityBill.peakDemandMeter();
   ASSERT_TRUE(meter9);
   EXPECT_EQ(2u, model.getModelObjects<OutputMeter>().size());
-
 }
 
 TEST_F(ModelFixture, UtilityBill_Gas_Issue765) {
@@ -181,19 +180,19 @@ TEST_F(ModelFixture, UtilityBill_Gas_Issue765) {
   EXPECT_EQ(0, utilityBill.billingPeriods().size());
 
   BillingPeriod bp1 = utilityBill.addBillingPeriod();
-  EXPECT_EQ(Date(1,1,2011), bp1.startDate());
+  EXPECT_EQ(Date(1, 1, 2011), bp1.startDate());
   EXPECT_EQ(30, bp1.numberOfDays());
-  EXPECT_EQ(Date(1,30,2011), bp1.endDate());
+  EXPECT_EQ(Date(1, 30, 2011), bp1.endDate());
 
   BillingPeriod bp2 = utilityBill.addBillingPeriod();
-  EXPECT_EQ(Date(1,31,2011), bp2.startDate());
+  EXPECT_EQ(Date(1, 31, 2011), bp2.startDate());
   EXPECT_EQ(30, bp2.numberOfDays());
-  EXPECT_EQ(Date(3,1,2011), bp2.endDate());
+  EXPECT_EQ(Date(3, 1, 2011), bp2.endDate());
 
-  EXPECT_TRUE(bp2.setStartDate(Date(2,1,2011)));
-  EXPECT_EQ(Date(2,1,2011), bp2.startDate());
+  EXPECT_TRUE(bp2.setStartDate(Date(2, 1, 2011)));
+  EXPECT_EQ(Date(2, 1, 2011), bp2.startDate());
   EXPECT_EQ(29, bp2.numberOfDays());
-  EXPECT_EQ(Date(3,1,2011), bp2.endDate());
+  EXPECT_EQ(Date(3, 1, 2011), bp2.endDate());
 }
 
 TEST_F(ModelFixture, UtilityBill_Electricity_Issue765) {
@@ -222,25 +221,25 @@ TEST_F(ModelFixture, UtilityBill_Electricity_Issue765) {
   EXPECT_EQ(0, utilityBill.billingPeriods().size());
 
   BillingPeriod bp1 = utilityBill.addBillingPeriod();
-  EXPECT_EQ(Date(1,1,2011), bp1.startDate());
+  EXPECT_EQ(Date(1, 1, 2011), bp1.startDate());
   EXPECT_EQ(30, bp1.numberOfDays());
-  EXPECT_EQ(Date(1,30,2011), bp1.endDate());
+  EXPECT_EQ(Date(1, 30, 2011), bp1.endDate());
 
   BillingPeriod bp2 = utilityBill.addBillingPeriod();
-  EXPECT_EQ(Date(1,31,2011), bp2.startDate());
+  EXPECT_EQ(Date(1, 31, 2011), bp2.startDate());
   EXPECT_EQ(30, bp2.numberOfDays());
-  EXPECT_EQ(Date(3,1,2011), bp2.endDate());
+  EXPECT_EQ(Date(3, 1, 2011), bp2.endDate());
 
-  EXPECT_TRUE(bp2.setStartDate(Date(2,1,2011)));
-  EXPECT_EQ(Date(2,1,2011), bp2.startDate());
+  EXPECT_TRUE(bp2.setStartDate(Date(2, 1, 2011)));
+  EXPECT_EQ(Date(2, 1, 2011), bp2.startDate());
   EXPECT_EQ(29, bp2.numberOfDays());
-  EXPECT_EQ(Date(3,1,2011), bp2.endDate());
+  EXPECT_EQ(Date(3, 1, 2011), bp2.endDate());
 }
 
 TEST_F(ModelFixture, UtilityBill_Coverage) {
   Model model;
 
-  for (FuelType fuelType : FuelType::getValues()){
+  for (FuelType fuelType : FuelType::getValues()) {
 
     UtilityBill utilityBill(fuelType, model);
     EXPECT_EQ(fuelType, utilityBill.fuelType().value());
@@ -254,7 +253,7 @@ TEST_F(ModelFixture, UtilityBill_Coverage) {
     EXPECT_EQ(0, utilityBill.billingPeriods().size());
 
     EXPECT_FALSE(utilityBill.consumptionUnitValues().empty());
-    for (const std::string& consumptionUnit : utilityBill.consumptionUnitValues()){
+    for (const std::string& consumptionUnit : utilityBill.consumptionUnitValues()) {
 
       OutputMeter meter = utilityBill.consumptionMeter();
 
@@ -263,7 +262,7 @@ TEST_F(ModelFixture, UtilityBill_Coverage) {
       EXPECT_NE(0, utilityBill.consumptionUnitConversionFactor());
       EXPECT_TRUE(utilityBill.consumptionUnitDescription());
 
-      for (const std::string& peakDemandUnit : utilityBill.peakDemandUnitValues()){
+      for (const std::string& peakDemandUnit : utilityBill.peakDemandUnitValues()) {
 
         boost::optional<OutputMeter> peakDemandMeter = utilityBill.peakDemandMeter();
 
@@ -277,8 +276,7 @@ TEST_F(ModelFixture, UtilityBill_Coverage) {
     }
   }
 
-
-  for (const std::string& calibrationGuideline : UtilityBill::calibrationGuidelines()){
+  for (const std::string& calibrationGuideline : UtilityBill::calibrationGuidelines()) {
     // results tabs in OS app and PAT require these return values for each calibrationGuideline
     EXPECT_TRUE(UtilityBill::maxNMBE(calibrationGuideline)) << "maxNMBE " << calibrationGuideline;
     EXPECT_TRUE(UtilityBill::maxCVRMSE(calibrationGuideline)) << "maxCVRMSE " << calibrationGuideline;

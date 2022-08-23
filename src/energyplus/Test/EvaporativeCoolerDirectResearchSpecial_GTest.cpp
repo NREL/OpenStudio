@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,11 +49,10 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_EvaporativeCoolerDirectResearchSpecial_LimitFields)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_EvaporativeCoolerDirectResearchSpecial_LimitFields) {
   Model m;
 
-  Schedule sch =  m.alwaysOnDiscreteSchedule();
+  Schedule sch = m.alwaysOnDiscreteSchedule();
   EvaporativeCoolerDirectResearchSpecial e(m, sch);
 
   EXPECT_TRUE(e.setPrimaryAirDesignFlowRate(1.05));
@@ -76,14 +75,11 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_EvaporativeCoolerDirectResearchSpecia
   WorkspaceObject idfObj(idfObjs[0]);
 
   EXPECT_DOUBLE_EQ(e.primaryAirDesignFlowRate().get(),
-            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate).get());
+                   idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::PrimaryAirDesignFlowRate).get());
   EXPECT_DOUBLE_EQ(e.evaporativeOperationMinimumDrybulbTemperature(),
-            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature).get());
+                   idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMinimumDrybulbTemperature).get());
   EXPECT_DOUBLE_EQ(e.evaporativeOperationMaximumLimitWetbulbTemperature(),
-            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature).get());
+                   idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitWetbulbTemperature).get());
   EXPECT_DOUBLE_EQ(e.evaporativeOperationMaximumLimitDrybulbTemperature(),
-            idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature).get());
-
+                   idfObj.getDouble(EvaporativeCooler_Direct_ResearchSpecialFields::EvaporativeOperationMaximumLimitDrybulbTemperature).get());
 }
-
-

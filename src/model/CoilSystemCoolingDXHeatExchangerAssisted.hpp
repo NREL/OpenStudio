@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,71 +36,73 @@
 namespace openstudio {
 namespace model {
 
-class AirToAirComponent;
+  class AirToAirComponent;
 
-namespace detail {
+  namespace detail {
 
-  class CoilSystemCoolingDXHeatExchangerAssisted_Impl;
+    class CoilSystemCoolingDXHeatExchangerAssisted_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilSystemCoolingDXHeatExchangerAssisted is a StraightComponent that wraps the OpenStudio IDD object 'OS:CoilSystem:Cooling:DX:HeatExchangerAssisted'. */
-class MODEL_API CoilSystemCoolingDXHeatExchangerAssisted : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilSystemCoolingDXHeatExchangerAssisted is a StraightComponent that wraps the OpenStudio IDD object 'OS:CoilSystem:Cooling:DX:HeatExchangerAssisted'. */
+  class MODEL_API CoilSystemCoolingDXHeatExchangerAssisted : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilSystemCoolingDXHeatExchangerAssisted(const Model& model);
+    explicit CoilSystemCoolingDXHeatExchangerAssisted(const Model& model);
 
-  virtual ~CoilSystemCoolingDXHeatExchangerAssisted() {}
+    explicit CoilSystemCoolingDXHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger);
 
-  //@}
+    virtual ~CoilSystemCoolingDXHeatExchangerAssisted() {}
 
-  static IddObjectType iddObjectType();
+    //@}
 
-  /** @name Getters */
-  //@{
+    static IddObjectType iddObjectType();
 
-  AirToAirComponent heatExchanger() const;
+    /** @name Getters */
+    //@{
 
-  StraightComponent coolingCoil() const;
+    AirToAirComponent heatExchanger() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    StraightComponent coolingCoil() const;
 
-  bool setHeatExchanger(const AirToAirComponent& heatExchanger);
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setCoolingCoil(const StraightComponent& coolingCoil);
+    bool setHeatExchanger(const AirToAirComponent& heatExchanger);
 
-  //@}
-  /** @name Other */
-  //@{
+    bool setCoolingCoil(const StraightComponent& coolingCoil);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl ImplType;
+    //@}
+    /** @name Other */
+    //@{
 
-  explicit CoilSystemCoolingDXHeatExchangerAssisted(std::shared_ptr<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl> impl);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl ImplType;
 
-  friend class detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilSystemCoolingDXHeatExchangerAssisted");
-};
+    explicit CoilSystemCoolingDXHeatExchangerAssisted(std::shared_ptr<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl> impl);
 
-/** \relates CoilSystemCoolingDXHeatExchangerAssisted*/
-typedef boost::optional<CoilSystemCoolingDXHeatExchangerAssisted> OptionalCoilSystemCoolingDXHeatExchangerAssisted;
+    friend class detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilSystemCoolingDXHeatExchangerAssisted");
+  };
 
-/** \relates CoilSystemCoolingDXHeatExchangerAssisted*/
-typedef std::vector<CoilSystemCoolingDXHeatExchangerAssisted> CoilSystemCoolingDXHeatExchangerAssistedVector;
+  /** \relates CoilSystemCoolingDXHeatExchangerAssisted*/
+  typedef boost::optional<CoilSystemCoolingDXHeatExchangerAssisted> OptionalCoilSystemCoolingDXHeatExchangerAssisted;
 
-} // model
-} // openstudio
+  /** \relates CoilSystemCoolingDXHeatExchangerAssisted*/
+  typedef std::vector<CoilSystemCoolingDXHeatExchangerAssisted> CoilSystemCoolingDXHeatExchangerAssistedVector;
 
-#endif // MODEL_COILSYSTEMCOOLINGDXHEATEXCHANGERASSISTED_HPP
+}  // namespace model
+}  // namespace openstudio
 
+#endif  // MODEL_COILSYSTEMCOOLINGDXHEATEXCHANGERASSISTED_HPP

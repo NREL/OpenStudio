@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,76 +36,71 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class AirflowNetworkNode_Impl;
-}
+  namespace detail {
+    class AirflowNetworkNode_Impl;
+  }
 
-/** AirflowNetworkNode is the base class for AirflowNetwork objects that are nodes in the pressure network.
+  /** AirflowNetworkNode is the base class for AirflowNetwork objects that are nodes in the pressure network.
  *
  */
-class MODEL_API AirflowNetworkNode : public ModelObject
-{
+  class MODEL_API AirflowNetworkNode : public ModelObject
+  {
 
-  public:
+   public:
+    AirflowNetworkNode(IddObjectType type, const Model& model);
 
-  AirflowNetworkNode(IddObjectType type,const Model& model);
+    virtual ~AirflowNetworkNode() {}
 
-  virtual ~AirflowNetworkNode() {}
+    //std::vector<openstudio::IdfObject> remove();
 
-  //std::vector<openstudio::IdfObject> remove();
+    //bool removeFromLoop();
 
-  //bool removeFromLoop();
+    //** Returns the inlet port. **/
+    //unsigned inletPort() const;
 
-  //** Returns the inlet port. **/
-  //unsigned inletPort() const;
+    //** Returns the outlet port. **/
+    //unsigned outletPort() const;
 
-  //** Returns the outlet port. **/
-  //unsigned outletPort() const;
+    //** Returns the optional ModelObject connected to the inlet port. **/
+    //boost::optional<ModelObject> inletModelObject() const;
 
-  //** Returns the optional ModelObject connected to the inlet port. **/
-  //boost::optional<ModelObject> inletModelObject() const;
+    //** Returns the optional ModelObject connected to the outlet port. **/
+    //boost::optional<ModelObject> outletModelObject() const;
 
-  //** Returns the optional ModelObject connected to the outlet port. **/
-  //boost::optional<ModelObject> outletModelObject() const;
+    //** Returns the optional AirLoopHVAC object that this AirToAirComponent is attached to.
+    // *
+    // *  Reimplemented from HVACComponent.
+    // */
+    //boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
-  //** Returns the optional AirLoopHVAC object that this AirToAirComponent is attached to.
-  // *
-  // *  Reimplemented from HVACComponent.
-  // */
-  //boost::optional<AirLoopHVAC> airLoopHVAC() const;
+    //bool addToNode(Node & node);
 
-  //bool addToNode(Node & node);
+    //ModelObject clone(Model model) const;
 
-  //ModelObject clone(Model model) const;
+    //void disconnect();
 
-  //void disconnect();
+   protected:
+    friend class Model;
 
-  protected:
+    friend class openstudio::IdfObject;
 
-  friend class Model;
+    /// @cond
 
-  friend class openstudio::IdfObject;
+    typedef detail::AirflowNetworkNode_Impl ImplType;
 
-  /// @cond
+    explicit AirflowNetworkNode(std::shared_ptr<detail::AirflowNetworkNode_Impl> impl);
 
-  typedef detail::AirflowNetworkNode_Impl ImplType;
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkNode");
 
-  explicit AirflowNetworkNode(std::shared_ptr<detail::AirflowNetworkNode_Impl> impl);
+    /// @endcond
+  };
 
-  private:
+  typedef boost::optional<AirflowNetworkNode> OptionalAirflowNetworkNode;
 
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkNode");
+  typedef std::vector<AirflowNetworkNode> AirflowNetworkNodeVector;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-typedef boost::optional<AirflowNetworkNode> OptionalAirflowNetworkNode;
-
-typedef std::vector<AirflowNetworkNode> AirflowNetworkNodeVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRFLOWNETWORKNODE_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKNODE_HPP

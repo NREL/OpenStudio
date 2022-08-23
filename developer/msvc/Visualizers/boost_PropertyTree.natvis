@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+    <!--Based on boost::multiindex visualizer by Anton Tokar <anton@tokar.xyz> https://github.com/a-tokar/BoostMultiIndexNatvis -->
+
+    <!--Common ptree view-->
+    <Type Name="boost::property_tree::basic_ptree&lt;*&gt;">
+        <DisplayString Condition="m_data.size() != 0">{m_data}:{*static_cast&lt;subs::base_container*&gt;(this->m_children)}</DisplayString>
+        <DisplayString Condition="m_data.size() == 0">{*static_cast&lt;subs::base_container*&gt;(this->m_children)}</DisplayString>
+        <Expand HideRawView="true">
+            <Item Name ="[Data]" Condition="m_data._Mypair._Myval2._Mysize!=0" Optional="true">m_data</Item>
+            <!--<Item Name ="[Elements]" Condition="static_cast&lt;base_container*&gt;(this->m_children)->node_count!=0">*static_cast&lt;base_container*&gt;(this->m_children),view(ptree)</Item>-->
+            <ExpandedItem Condition="static_cast&lt;subs::base_container*&gt;(this->m_children)->node_count!=0">*static_cast&lt;subs::base_container*&gt;(this->m_children),view(ptree)</ExpandedItem>
+            <Item Name="[Raw View]">*this,view(raw)</Item>
+        </Expand>
+    </Type>
+
+    <!--Pseudo-raw view.  m_children is casted to actual container type (pointer. May be dereference?)-->
+    <Type Name="boost::property_tree::basic_ptree&lt;*&gt;" IncludeView="raw">
+        <DisplayString Condition="m_data.size() != 0">{m_data}:{*static_cast&lt;subs::base_container*&gt;(m_children)}</DisplayString>
+        <DisplayString Condition="m_data.size() == 0">{*static_cast&lt;subs::base_container*&gt;(m_children)}</DisplayString>
+        <Expand HideRawView="true">
+            <Item Name="m_data">m_data</Item>
+            <Item Name="m_children">static_cast&lt;subs::base_container*&gt;(m_children)</Item>
+        </Expand>
+    </Type>
+
+    <!--Custom view of multi_index when used in ptree implementation-->
+    <Type Name="boost::multi_index::detail::header_holder&lt;boost::multi_index::detail::sequenced_index_node&lt;*&gt;*,*&gt;" IncludeView="ptree">
+        <DisplayString>{{ size={(($T2*)this)-&gt;node_count} }}</DisplayString>
+        <Expand HideRawView="true">
+            <LinkedListItems>
+                <Size>(($T2*)this)-&gt;node_count</Size>
+                <HeadPointer>((boost::multi_index::detail::sequenced_index_node&lt;$T1&gt;*)(member))-&gt;next_</HeadPointer>
+                <NextPointer>next_</NextPointer>
+                <ValueNode Name="{(*reinterpret_cast&lt;$T2::value_type*&gt;(&amp;((boost::multi_index::detail::sequenced_index_node&lt;$T1&gt;*)this)-&gt;space)).first}">*reinterpret_cast&lt;$T2::value_type*&gt;(&amp;((boost::multi_index::detail::sequenced_index_node&lt;$T1&gt;*)this)-&gt;space),view(ptree)</ValueNode>
+            </LinkedListItems>
+        </Expand>
+    </Type>
+
+    <!--Custom view of pair when used in ptree implementation-->
+    <Type Name="std::pair&lt;*, *&gt;" IncludeView="ptree">
+        <DisplayString>{second}</DisplayString>
+        <Expand HideRawView="true">
+            <Item Name="[Key]">first</Item>
+            <ExpandedItem>second</ExpandedItem>
+            <!--<Item Name="[Data]">second</Item>-->
+        </Expand>
+    </Type>
+</AutoVisualizer>

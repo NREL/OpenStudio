@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -58,86 +58,80 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateControllerMechanicalVentilation( ControllerMechanicalVentilation& modelObject )
-{
-  OptionalString s;
-  OptionalDouble d;
-  OptionalModelObject temp;
+  boost::optional<IdfObject> ForwardTranslator::translateControllerMechanicalVentilation(ControllerMechanicalVentilation& modelObject) {
+    OptionalString s;
+    OptionalDouble d;
+    OptionalModelObject temp;
 
-  IdfObject idfObject(IddObjectType::Controller_MechanicalVentilation);
+    IdfObject idfObject(IddObjectType::Controller_MechanicalVentilation);
 
-  // Name
-  s = modelObject.name();
-  if(s)
-  {
-    idfObject.setName(*s);
-  }
-
-  // Availability Schedule
-  // If there is a ControllerOutdoorAir::minimumOutdoorAirSchedule
-  // then use that for the ControllerMechanicalVentilation::availabilitySchedule
-  // Note that this scheme will not support fractions (schedule values above 0) because anything greater than 0 will
-  // make the mechanical ventilation controller avaiable and thus taking precedence.
-  bool useAvailabiltySchedule = true;
-  auto availabilitySchedule = modelObject.availabilitySchedule();
-
-  // Find the associated oa controller
-  auto oaControllers = modelObject.model().getConcreteModelObjects<ControllerOutdoorAir>();
-  auto predicate = [&] (const ControllerOutdoorAir & oaController) {
-    auto mechanicalVentilationController = oaController.controllerMechanicalVentilation();
-    if( mechanicalVentilationController.handle() == modelObject.handle() ) {
-      return true;
+    // Name
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
-    return false;
-  };
-  auto oaController = std::find_if(oaControllers.begin(),oaControllers.end(),predicate);
-  // alwaysOnDiscreteSchedule is the default availability schedule for the mechanical ventilation controller
-  // if the default is still in place BUT the user has defined a minimumOutdoorAirSchedule for the oa controller,
-  // then use the minimumOutdoorAirSchedule for the mechanical ventilation controller availability schedule
-  // The minimumOutdoorAirSchedule will not do its job while the controller mechanical ventilation object is available.
-  if( availabilitySchedule == modelObject.model().alwaysOnDiscreteSchedule() ) {
-    if( oaController != oaControllers.end() ) {
-      if( auto minOASchedule = oaController->minimumOutdoorAirSchedule() ) {
-        auto _schedule = translateAndMapModelObject(minOASchedule.get());
-        OS_ASSERT(_schedule);
-        idfObject.setString(Controller_MechanicalVentilationFields::AvailabilityScheduleName,_schedule->name().get());
-        useAvailabiltySchedule = false;
+
+    // Availability Schedule
+    // If there is a ControllerOutdoorAir::minimumOutdoorAirSchedule
+    // then use that for the ControllerMechanicalVentilation::availabilitySchedule
+    // Note that this scheme will not support fractions (schedule values above 0) because anything greater than 0 will
+    // make the mechanical ventilation controller avaiable and thus taking precedence.
+    bool useAvailabiltySchedule = true;
+    auto availabilitySchedule = modelObject.availabilitySchedule();
+
+    // Find the associated oa controller
+    auto oaControllers = modelObject.model().getConcreteModelObjects<ControllerOutdoorAir>();
+    auto predicate = [&](const ControllerOutdoorAir& oaController) {
+      auto mechanicalVentilationController = oaController.controllerMechanicalVentilation();
+      if (mechanicalVentilationController.handle() == modelObject.handle()) {
+        return true;
+      }
+      return false;
+    };
+    auto oaController = std::find_if(oaControllers.begin(), oaControllers.end(), predicate);
+    // alwaysOnDiscreteSchedule is the default availability schedule for the mechanical ventilation controller
+    // if the default is still in place BUT the user has defined a minimumOutdoorAirSchedule for the oa controller,
+    // then use the minimumOutdoorAirSchedule for the mechanical ventilation controller availability schedule
+    // The minimumOutdoorAirSchedule will not do its job while the controller mechanical ventilation object is available.
+    if (availabilitySchedule == modelObject.model().alwaysOnDiscreteSchedule()) {
+      if (oaController != oaControllers.end()) {
+        if (auto minOASchedule = oaController->minimumOutdoorAirSchedule()) {
+          auto _schedule = translateAndMapModelObject(minOASchedule.get());
+          OS_ASSERT(_schedule);
+          idfObject.setString(Controller_MechanicalVentilationFields::AvailabilityScheduleName, _schedule->name().get());
+          useAvailabiltySchedule = false;
+        }
       }
     }
-  }
 
-  if( useAvailabiltySchedule ) {
-    boost::optional<IdfObject> availabilityScheduleIdf = translateAndMapModelObject(availabilitySchedule);
-    OS_ASSERT(availabilityScheduleIdf);
-    idfObject.setString(openstudio::Controller_MechanicalVentilationFields::AvailabilityScheduleName,availabilityScheduleIdf->name().get());
-  }
-
-  // Demand Controlled Ventilation
-  if( modelObject.demandControlledVentilation() )
-  {
-    idfObject.setString(openstudio::Controller_MechanicalVentilationFields::DemandControlledVentilation,"Yes");
-  }
-  else
-  {
-    idfObject.setString(openstudio::Controller_MechanicalVentilationFields::DemandControlledVentilation,"No");
-  }
-
-  // System Outdoor Air Method
-  s = modelObject.systemOutdoorAirMethod();
-  if( s )
-  {
-    if( istringEqual("ProportionalControl",s.get()) ) {
-      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,"ProportionalControlBasedonOccupancySchedule");
-    } else {
-      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,s.get());
+    if (useAvailabiltySchedule) {
+      boost::optional<IdfObject> availabilityScheduleIdf = translateAndMapModelObject(availabilitySchedule);
+      OS_ASSERT(availabilityScheduleIdf);
+      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::AvailabilityScheduleName, availabilityScheduleIdf->name().get());
     }
+
+    // Demand Controlled Ventilation
+    if (modelObject.demandControlledVentilation()) {
+      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::DemandControlledVentilation, "Yes");
+    } else {
+      idfObject.setString(openstudio::Controller_MechanicalVentilationFields::DemandControlledVentilation, "No");
+    }
+
+    // System Outdoor Air Method
+    s = modelObject.systemOutdoorAirMethod();
+    if (s) {
+      if (istringEqual("ProportionalControl", s.get())) {
+        idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod,
+                            "ProportionalControlBasedonOccupancySchedule");
+      } else {
+        idfObject.setString(openstudio::Controller_MechanicalVentilationFields::SystemOutdoorAirMethod, s.get());
+      }
+    }
+
+    m_idfObjects.push_back(idfObject);
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  m_idfObjects.push_back(idfObject);
-  return boost::optional<IdfObject>(idfObject);
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

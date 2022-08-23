@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,104 +42,103 @@
 
 #include <vector>
 
-namespace openstudio{
+namespace openstudio {
 
-namespace detail{
+namespace detail {
 
-class UTILITIES_API TimeSeries_Impl
-{
-public:
+  class UTILITIES_API TimeSeries_Impl
+  {
+   public:
+    TimeSeries_Impl();
 
-  TimeSeries_Impl();
+    TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units);
 
-  TimeSeries_Impl(const Date& startDate, const Time& intervalLength, const Vector& values, const std::string& units);
+    TimeSeries_Impl(const DateTime& firstReportDateTime, const Time& intervalLength, const Vector& values, const std::string& units);
 
-  TimeSeries_Impl(const DateTime& firstReportDateTime, const Time& intervalLength, const Vector& values, const std::string& units);
+    TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& timeInDays, const Vector& values, const std::string& units);
 
-  TimeSeries_Impl(const DateTime& firstReportDateTime, const Vector& timeInDays, const Vector& values, const std::string& units);
+    TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& timeInDays, const std::vector<double>& values,
+                    const std::string& units);
 
-  TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<double>& timeInDays, const std::vector<double>& values, const std::string& units);
+    TimeSeries_Impl(const DateTimeVector& inDateTimes, const Vector& values, const std::string& units);
 
-  TimeSeries_Impl(const DateTimeVector& dateTimes, const Vector& values, const std::string& units);
+    TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const Vector& values, const std::string& units);
 
-  TimeSeries_Impl(const DateTime& firstReportDateTime, const std::vector<long>& timeInSeconds, const Vector& values, const std::string& units);
+    ~TimeSeries_Impl() {}
 
-  ~TimeSeries_Impl() {}
+    openstudio::OptionalTime intervalLength() const;
 
-  openstudio::OptionalTime intervalLength() const;
+    openstudio::DateTime firstReportDateTime() const;
 
-  openstudio::DateTime firstReportDateTime() const;
+    DateTimeVector dateTimes() const;
 
-  DateTimeVector dateTimes() const;
+    openstudio::Vector daysFromFirstReport() const;
 
-  openstudio::Vector daysFromFirstReport() const;
+    double daysFromFirstReport(unsigned int i) const;
 
-  double daysFromFirstReport(const unsigned& i) const;
+    std::vector<long> secondsFromFirstReport() const;
 
-  std::vector<long> secondsFromFirstReport() const;
+    long secondsFromFirstReport(unsigned int i) const;
 
-  long secondsFromFirstReport(const unsigned& i) const;
+    openstudio::Vector values() const;
 
-  openstudio::Vector values() const;
+    double values(unsigned int i) const;
 
-  double values(const unsigned& i) const;
+    const std::string units() const;
 
-  const std::string units() const;
+    double valueAtSecondsFromFirstReport(long secondsFromFirstReport) const;
 
-  double valueAtSecondsFromFirstReport(long secondsFromFirstReport) const;
+    double value(double daysFromFirstReport) const;
 
-  double value(double daysFromFirstReport) const;
+    double value(const Time& timeFromFirstReport) const;
 
-  double value(const Time& timeFromFirstReport) const;
+    double value(const DateTime& dateTime) const;
 
-  double value(const DateTime& dateTime) const;
+    Vector values(const DateTime& startDateTime, const DateTime& endDateTime) const;
 
-  Vector values(const DateTime& startDateTime, const DateTime& endDateTime) const;
+    double outOfRangeValue() const;
 
-  double outOfRangeValue() const;
+    void setOutOfRangeValue(double value);
 
-  void setOutOfRangeValue(double value);
+    std::shared_ptr<TimeSeries_Impl> operator+(const TimeSeries_Impl& other) const;
 
-  std::shared_ptr<TimeSeries_Impl> operator+(const TimeSeries_Impl& other) const;
+    std::shared_ptr<TimeSeries_Impl> operator-(const TimeSeries_Impl& other) const;
 
-  std::shared_ptr<TimeSeries_Impl> operator-(const TimeSeries_Impl& other) const;
+    std::shared_ptr<TimeSeries_Impl> operator*(double d) const;
 
-  std::shared_ptr<TimeSeries_Impl> operator*(double d) const;
+    double integrate() const;
 
-  double integrate() const;
+    double averageValue() const;
 
-  double averageValue() const;
+   private:
+    REGISTER_LOGGER("utilities.TimeSeries_Impl");
+    // fully qualified first report date
+    DateTime m_firstReportDateTime;
 
-private:
+    // start date and time of time series
+    DateTime m_startDateTime;
 
-  REGISTER_LOGGER("utilities.TimeSeries_Impl");
-  // fully qualified first report date
-  DateTime m_firstReportDateTime;
+    // integer seconds from first report date time, used for quick interpolation
+    std::vector<long> m_secondsFromFirstReport;
+    Vector m_secondsFromFirstReportAsVector;  // same as m_secondsFromFirstReport but stored as Vector
+    std::vector<long> m_secondsFromStart;
 
-  // start date and time of time series
-  DateTime m_startDateTime;
+    // values reported at m_dateTimes
+    Vector m_values;
 
-  // integer seconds from first report date time, used for quick interpolation
-  std::vector<long> m_secondsFromFirstReport;
-  Vector m_secondsFromFirstReportAsVector; // same as m_secondsFromFirstReport but stored as Vector
-  std::vector<long> m_secondsFromStart;
+    // units of the values
+    std::string m_units;
 
-  // values reported at m_dateTimes
-  Vector m_values;
+    // length of the reporting interval if known, can be used to speed up interpolation
+    OptionalTime m_intervalLength;
 
-  // units of the values
-  std::string m_units;
+    // value used for out of range data
+    double m_outOfRangeValue;
 
-  // length of the reporting interval if known, can be used to speed up interpolation
-  OptionalTime m_intervalLength;
-
-  // value used for out of range data
-  double m_outOfRangeValue;
-
-  // true if the time series should support wrap around dates, e.g. 4/11-4/10 without specific year
-  bool m_wrapAround;
-};
-} // detail
+    // true if the time series should support wrap around dates, e.g. 4/11-4/10 without specific year
+    bool m_wrapAround;
+  };
+}  // namespace detail
 
 /** TimeSeries is a series of values each reported at a single time.  We follow the EnergyPlus
  *   convention that the time reported for each value is at the end of the reporting interval.  For example, if a value
@@ -155,7 +154,7 @@ private:
  **/
 class UTILITIES_API TimeSeries
 {
-public:
+ public:
   /** @name Constructors */
   //@{
 
@@ -234,19 +233,19 @@ public:
   openstudio::Vector daysFromFirstReport() const;
 
   /// Returns the time in days from end of the first reporting interval at index i to prevent implicit vector copy for single value
-  double daysFromFirstReport(const unsigned& i) const;
+  double daysFromFirstReport(unsigned int i) const;
 
   /// Returns the time in seconds from end of the first reporting interval
   std::vector<long> secondsFromFirstReport() const;
 
   /// Return the time in seconds from end of the first reporting interval at index i to prevent implicit vector copy for single value
-  long secondsFromFirstReport(const unsigned& i) const;
+  long secondsFromFirstReport(unsigned int i) const;
 
   /// Returns the values vector
   openstudio::Vector values() const;
 
   /// Returns the value at index i to prevent implicit vector copy for single value
-  double values(const unsigned& i) const;
+  double values(unsigned int i) const;
 
   /// Returns the series units as a standard string
   const std::string units() const;
@@ -300,8 +299,7 @@ public:
   double averageValue() const;
 
   //@}
-private:
-
+ private:
   REGISTER_LOGGER("utilities.TimeSeries");
   // constructor from impl
   TimeSeries(std::shared_ptr<detail::TimeSeries_Impl> impl);
@@ -330,11 +328,9 @@ UTILITIES_API TimeSeries sum(const std::vector<TimeSeries>& timeSeriesVector);
 UTILITIES_API boost::function1<TimeSeries, const std::vector<TimeSeries>&> sumTimeSeriesFunctor();
 
 /** Evaluates functor(timeSeriesVector). For use in SWIG bindings. */
-UTILITIES_API TimeSeries evaluateTimeSeriesFromTimeSeriesVectorFunctor(
-  const boost::function1<TimeSeries, const std::vector<TimeSeries>&>& functor,
-  const std::vector<TimeSeries>& timeSeriesVector);
+UTILITIES_API TimeSeries evaluateTimeSeriesFromTimeSeriesVectorFunctor(const boost::function1<TimeSeries, const std::vector<TimeSeries>&>& functor,
+                                                                       const std::vector<TimeSeries>& timeSeriesVector);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_DATA_TIMESERIES_HPP
-
+#endif  // UTILITIES_DATA_TIMESERIES_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,11 +40,10 @@
 
 using namespace openstudio;
 
-class WorkspaceReciever  {
+class WorkspaceReciever
+{
  public:
-
-  WorkspaceReciever(const Workspace& workspace)
-  {
+  WorkspaceReciever(const Workspace& workspace) {
 
     // Due to the switch to Nano Signals and Slots, testing for connects are no longer
     // necessary because the NanoS&S are guarenteed to connect, else error on compile
@@ -66,8 +65,7 @@ class WorkspaceReciever  {
     //OS_ASSERT(test);
   }
 
-  void clear()
-  {
+  void clear() {
     m_objectImpl.reset();
     m_iddObjectType.reset();
     m_handle.reset();
@@ -80,21 +78,17 @@ class WorkspaceReciever  {
   boost::optional<Handle> m_handle;
 
  public:
-
-  void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
-  {
+  void removeWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) {
     m_objectImpl = object.getImpl<detail::WorkspaceObject_Impl>();
     m_iddObjectType = iddObjectType;
     m_handle = handle;
   }
 
-  void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle)
-  {
+  void addWorkspaceObject(const WorkspaceObject& object, const openstudio::IddObjectType& iddObjectType, const openstudio::UUID& handle) {
     m_objectImpl = object.getImpl<detail::WorkspaceObject_Impl>();
     m_iddObjectType = iddObjectType;
     m_handle = handle;
   }
-
 };
 
-#endif // UTILITIES_IDF_TEST_IDFTESTQOBJECTS_HPP
+#endif  // UTILITIES_IDF_TEST_IDFTESTQOBJECTS_HPP

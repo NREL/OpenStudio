@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -29,6 +29,8 @@
 
 #include "AvailabilityManagerHybridVentilation.hpp"
 #include "AvailabilityManagerHybridVentilation_Impl.hpp"
+#include "Model.hpp"
+#include "Model_Impl.hpp"
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "Schedule.hpp"
@@ -49,396 +51,531 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  AvailabilityManagerHybridVentilation_Impl::AvailabilityManagerHybridVentilation_Impl(const IdfObject& idfObject,
-                                                                                       Model_Impl* model,
-                                                                                       bool keepHandle)
-    : AvailabilityManager_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == AvailabilityManagerHybridVentilation::iddObjectType());
-  }
+    AvailabilityManagerHybridVentilation_Impl::AvailabilityManagerHybridVentilation_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                         bool keepHandle)
+      : AvailabilityManager_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == AvailabilityManagerHybridVentilation::iddObjectType());
+    }
 
-  AvailabilityManagerHybridVentilation_Impl::AvailabilityManagerHybridVentilation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                       Model_Impl* model,
-                                                                                       bool keepHandle)
-    : AvailabilityManager_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == AvailabilityManagerHybridVentilation::iddObjectType());
-  }
+    AvailabilityManagerHybridVentilation_Impl::AvailabilityManagerHybridVentilation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                         Model_Impl* model, bool keepHandle)
+      : AvailabilityManager_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == AvailabilityManagerHybridVentilation::iddObjectType());
+    }
 
-  AvailabilityManagerHybridVentilation_Impl::AvailabilityManagerHybridVentilation_Impl(const AvailabilityManagerHybridVentilation_Impl& other,
-                                                                                       Model_Impl* model,
-                                                                                       bool keepHandle)
-    : AvailabilityManager_Impl(other,model,keepHandle)
-  {}
+    AvailabilityManagerHybridVentilation_Impl::AvailabilityManagerHybridVentilation_Impl(const AvailabilityManagerHybridVentilation_Impl& other,
+                                                                                         Model_Impl* model, bool keepHandle)
+      : AvailabilityManager_Impl(other, model, keepHandle) {}
 
-  const std::vector<std::string>& AvailabilityManagerHybridVentilation_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result{
-      "Availability Manager Hybrid Ventilation Control Mode",
-      "Availability Manager Hybrid Ventilation Control Status",
-      "Hybrid Ventilation Control HVAC System Operation Elapsed Time",
-      "Hybrid Ventilation Control Natural Ventilation Elapsed Time",
-      "Hybrid Ventilation Operative Temperature",
-      "Hybrid Ventilation Lower Limit Operative Temperature",
-      "Hybrid Ventilation Upper Limit Operative Temperature"
-    };
-    return result;
-  }
+    const std::vector<std::string>& AvailabilityManagerHybridVentilation_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Availability Manager Hybrid Ventilation Control Mode",
+                                                   "Availability Manager Hybrid Ventilation Control Status",
+                                                   "Hybrid Ventilation Control HVAC System Operation Elapsed Time",
+                                                   "Hybrid Ventilation Control Natural Ventilation Elapsed Time",
+                                                   "Hybrid Ventilation Operative Temperature",
+                                                   "Hybrid Ventilation Lower Limit Operative Temperature",
+                                                   "Hybrid Ventilation Upper Limit Operative Temperature"};
+      return result;
+    }
 
-  IddObjectType AvailabilityManagerHybridVentilation_Impl::iddObjectType() const {
-    return AvailabilityManagerHybridVentilation::iddObjectType();
-  }
+    IddObjectType AvailabilityManagerHybridVentilation_Impl::iddObjectType() const {
+      return AvailabilityManagerHybridVentilation::iddObjectType();
+    }
 
-  std::vector<ScheduleTypeKey> AvailabilityManagerHybridVentilation_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_AvailabilityManager_HybridVentilationFields::VentilationControlModeSchedule) != e)
+    std::vector<ScheduleTypeKey> AvailabilityManagerHybridVentilation_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_AvailabilityManager_HybridVentilationFields::VentilationControlModeSchedule) != e) {
+        result.push_back(ScheduleTypeKey("AvailabilityManagerHybridVentilation", "Ventilation Control Mode Schedule"));
+      }
+      if (std::find(b, e, OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirSchedule) != e) {
+        result.push_back(ScheduleTypeKey("AvailabilityManagerHybridVentilation", "Minimum Outdoor Ventilation Air Schedule"));
+      }
+      if (std::find(b, e, OS_AvailabilityManager_HybridVentilationFields::AirflowNetworkControlTypeSchedule) != e) {
+        result.push_back(ScheduleTypeKey("AvailabilityManagerHybridVentilation", "AirflowNetwork Control Type Schedule"));
+      }
+      if (std::find(b, e, OS_AvailabilityManager_HybridVentilationFields::SimpleAirflowControlTypeSchedule) != e) {
+        result.push_back(ScheduleTypeKey("AvailabilityManagerHybridVentilation", "Simple Airflow Control Type Schedule"));
+      }
+      return result;
+    }
+
+    ModelObject AvailabilityManagerHybridVentilation_Impl::clone(Model model) const {
+      auto avmClone = AvailabilityManager_Impl::clone(model).cast<AvailabilityManagerHybridVentilation>();
+
+      // Makes little sense to me to keep these two which are AirLoopHVAC specific. If you're cloning this object, it's to set to to ANOTHER AirLoopHVAC
+      avmClone.resetControlledZone();
+      avmClone.resetZoneVentilationObject();
+
+      return avmClone;
+    }
+
+    boost::optional<ThermalZone> AvailabilityManagerHybridVentilation_Impl::controlledZone() const {
+      return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_AvailabilityManager_HybridVentilationFields::ControlledZone);
+    }
+
+    Schedule AvailabilityManagerHybridVentilation_Impl::ventilationControlModeSchedule() const {
+      boost::optional<Schedule> value = optionalVentilationControlModeSchedule();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Ventilation Control Mode Schedule attached.");
+      }
+      return value.get();
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::useWeatherFileRainIndicators() const {
+      boost::optional<std::string> value = getString(OS_AvailabilityManager_HybridVentilationFields::UseWeatherFileRainIndicators, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
+    double AvailabilityManagerHybridVentilation_Impl::maximumWindSpeed() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumWindSpeed, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double AvailabilityManagerHybridVentilation_Impl::minimumOutdoorTemperature() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double AvailabilityManagerHybridVentilation_Impl::maximumOutdoorTemperature() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumOutdoorTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double AvailabilityManagerHybridVentilation_Impl::minimumOutdoorEnthalpy() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorEnthalpy, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double AvailabilityManagerHybridVentilation_Impl::maximumOutdoorEnthalpy() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumOutdoorEnthalpy, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double AvailabilityManagerHybridVentilation_Impl::minimumOutdoorDewpoint() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorDewpoint, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double AvailabilityManagerHybridVentilation_Impl::maximumOutdoorDewpoint() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumOutdoorDewpoint, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    Schedule AvailabilityManagerHybridVentilation_Impl::minimumOutdoorVentilationAirSchedule() const {
+      auto result =
+        getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirSchedule);
+      OS_ASSERT(result);
+      return result.get();
+    }
+
+    boost::optional<Curve> AvailabilityManagerHybridVentilation_Impl::openingFactorFunctionofWindSpeedCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_AvailabilityManager_HybridVentilationFields::OpeningFactorFunctionofWindSpeedCurve);
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setControlledZone(const boost::optional<ThermalZone>& thermalZone) {
+      bool result(false);
+      if (thermalZone) {
+        result = setPointer(OS_AvailabilityManager_HybridVentilationFields::ControlledZone, thermalZone.get().handle());
+      } else {
+        resetControlledZone();
+        result = true;
+      }
+      return result;
+    }
+
+    void AvailabilityManagerHybridVentilation_Impl::resetControlledZone() {
+      bool result = setString(OS_AvailabilityManager_HybridVentilationFields::ControlledZone, "");
+      OS_ASSERT(result);
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setVentilationControlModeSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_AvailabilityManager_HybridVentilationFields::VentilationControlModeSchedule,
+                                "AvailabilityManagerHybridVentilation", "Ventilation Control Mode Schedule", schedule);
+      return result;
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators) {
+      return setBooleanFieldValue(OS_AvailabilityManager_HybridVentilationFields::UseWeatherFileRainIndicators, useWeatherFileRainIndicators);
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setMaximumWindSpeed(double maximumWindSpeed) {
+      bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumWindSpeed, maximumWindSpeed);
+      return result;
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setMinimumOutdoorTemperature(double minimumOutdoorTemperature) {
+      bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorTemperature, minimumOutdoorTemperature);
+      return result;
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setMaximumOutdoorTemperature(double maximumOutdoorTemperature) {
+      bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumOutdoorTemperature, maximumOutdoorTemperature);
+      return result;
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setMinimumOutdoorEnthalpy(double minimumOutdoorEnthalpy) {
+      bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorEnthalpy, minimumOutdoorEnthalpy);
+      return result;
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setMaximumOutdoorEnthalpy(double maximumOutdoorEnthalpy) {
+      bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumOutdoorEnthalpy, maximumOutdoorEnthalpy);
+      return result;
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setMinimumOutdoorDewpoint(double minimumOutdoorDewpoint) {
+      bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorDewpoint, minimumOutdoorDewpoint);
+      return result;
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setMaximumOutdoorDewpoint(double maximumOutdoorDewpoint) {
+      bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumOutdoorDewpoint, maximumOutdoorDewpoint);
+      return result;
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setMinimumOutdoorVentilationAirSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirSchedule,
+                                "AvailabilityManagerHybridVentilation", "Minimum Outdoor Ventilation Air Schedule", schedule);
+      return result;
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setOpeningFactorFunctionofWindSpeedCurve(const boost::optional<Curve>& curve) {
+      bool result(false);
+      if (curve) {
+        result = setPointer(OS_AvailabilityManager_HybridVentilationFields::OpeningFactorFunctionofWindSpeedCurve, curve.get().handle());
+      } else {
+        resetOpeningFactorFunctionofWindSpeedCurve();
+        result = true;
+      }
+      return result;
+    }
+
+    void AvailabilityManagerHybridVentilation_Impl::resetOpeningFactorFunctionofWindSpeedCurve() {
+      bool result = setString(OS_AvailabilityManager_HybridVentilationFields::OpeningFactorFunctionofWindSpeedCurve, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Schedule> AvailabilityManagerHybridVentilation_Impl::optionalVentilationControlModeSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AvailabilityManager_HybridVentilationFields::VentilationControlModeSchedule);
+    }
+
+    double AvailabilityManagerHybridVentilation_Impl::minimumHVACOperationTime() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumHVACOperationTime, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setMinimumHVACOperationTime(double minimumHVACOperationTime) {
+      bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumHVACOperationTime, minimumHVACOperationTime);
+      return result;
+    }
+
+    double AvailabilityManagerHybridVentilation_Impl::minimumVentilationTime() const {
+      boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumVentilationTime, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setMinimumVentilationTime(double minimumVentilationTime) {
+      bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumVentilationTime, minimumVentilationTime);
+      return result;
+    }
+
+    boost::optional<Schedule> AvailabilityManagerHybridVentilation_Impl::airflowNetworkControlTypeSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_AvailabilityManager_HybridVentilationFields::AirflowNetworkControlTypeSchedule);
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setAirflowNetworkControlTypeSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_AvailabilityManager_HybridVentilationFields::AirflowNetworkControlTypeSchedule,
+                                "AvailabilityManagerHybridVentilation", "AirflowNetwork Control Type Schedule", schedule);
+      return result;
+    }
+
+    void AvailabilityManagerHybridVentilation_Impl::resetAirflowNetworkControlTypeSchedule() {
+      bool result = setString(OS_AvailabilityManager_HybridVentilationFields::AirflowNetworkControlTypeSchedule, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Schedule> AvailabilityManagerHybridVentilation_Impl::simpleAirflowControlTypeSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_AvailabilityManager_HybridVentilationFields::SimpleAirflowControlTypeSchedule);
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setSimpleAirflowControlTypeSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_AvailabilityManager_HybridVentilationFields::SimpleAirflowControlTypeSchedule,
+                                "AvailabilityManagerHybridVentilation", "Simple Airflow Control Type Schedule", schedule);
+      return result;
+    }
+
+    void AvailabilityManagerHybridVentilation_Impl::resetSimpleAirflowControlTypeSchedule() {
+      bool result = setString(OS_AvailabilityManager_HybridVentilationFields::SimpleAirflowControlTypeSchedule, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<ModelObject> AvailabilityManagerHybridVentilation_Impl::zoneVentilationObject() const {
+      return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_AvailabilityManager_HybridVentilationFields::ZoneVentilationObject);
+    }
+
+    bool AvailabilityManagerHybridVentilation_Impl::setZoneVentilationObject(const ModelObject& mo) {
+      bool result = false;
+
+      switch (mo.iddObject().type().value()) {
+        case openstudio::IddObjectType::OS_ZoneVentilation_WindandStackOpenArea: {
+          result = true;
+          break;
+        }
+        case openstudio::IddObjectType::OS_ZoneVentilation_DesignFlowRate: {
+          result = true;
+          break;
+        }
+        default: {
+          LOG(Warn,
+              "Unsupported or invalid IddObjectType, only ZoneVentilation:DesignFlowRate or ZoneVentilation:WindAndStackOpenArea are supported. "
+                << "Occurred in setZoneVentilationObject for " << this->briefDescription() << ", was passed " << mo.briefDescription());
+          result = false;
+        }
+      }
+
+      if (result) {
+        result = this->setPointer(OS_AvailabilityManager_HybridVentilationFields::ZoneVentilationObject, mo.handle());
+      }
+
+      return result;
+    }
+
+    void AvailabilityManagerHybridVentilation_Impl::resetZoneVentilationObject() {
+      bool result = setString(OS_AvailabilityManager_HybridVentilationFields::ZoneVentilationObject, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const Model& model)
+    : AvailabilityManager(AvailabilityManagerHybridVentilation::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::AvailabilityManagerHybridVentilation_Impl>());
+
     {
-      result.push_back(ScheduleTypeKey("AvailabilityManagerHybridVentilation","Ventilation Control Mode Schedule"));
+      ScheduleRuleset schedule(model);
+      schedule.defaultDaySchedule().addValue(Time(0, 24, 0, 0), 1.0);
+      setVentilationControlModeSchedule(schedule);
     }
-    if (std::find(b,e,OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirSchedule) != e)
+
     {
-      result.push_back(ScheduleTypeKey("AvailabilityManagerHybridVentilation","Minimum Outdoor Ventilation Air Schedule"));
+      ScheduleRuleset schedule(model);
+      schedule.defaultDaySchedule().addValue(Time(0, 24, 0, 0), 0.0);
+      setMinimumOutdoorVentilationAirSchedule(schedule);
     }
-    if (std::find(b,e,OS_AvailabilityManager_HybridVentilationFields::AirflowNetworkControlTypeSchedule) != e)
-    {
-      result.push_back(ScheduleTypeKey("AvailabilityManagerHybridVentilation","AirflowNetwork Control Type Schedule"));
-    }
-    if (std::find(b,e,OS_AvailabilityManager_HybridVentilationFields::SimpleAirflowControlTypeSchedule) != e)
-    {
-      result.push_back(ScheduleTypeKey("AvailabilityManagerHybridVentilation","Simple Airflow Control Type Schedule"));
-    }
-    return result;
+
+    setUseWeatherFileRainIndicators(true);
+    setMaximumWindSpeed(40.0);
+    setMinimumOutdoorTemperature(20.0);
+    setMaximumOutdoorTemperature(30.0);
+    setMinimumOutdoorEnthalpy(20000.0);
+    setMaximumOutdoorEnthalpy(30000.0);
+    setMinimumOutdoorDewpoint(15.0);
+    setMaximumOutdoorDewpoint(30.0);
+    setMinimumHVACOperationTime(0.0);
+    setMinimumVentilationTime(0.0);
   }
 
-  boost::optional<ThermalZone> AvailabilityManagerHybridVentilation_Impl::controlledZone() const {
-    return getObject<ModelObject>().getModelObjectTarget<ThermalZone>(OS_AvailabilityManager_HybridVentilationFields::ControlledZone);
+  AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const Model& model, Schedule& ventilationControlModeSchedule,
+                                                                             Schedule& minimumOutdoorVentilationAirSchedule)
+    : AvailabilityManager(AvailabilityManagerHybridVentilation::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::AvailabilityManagerHybridVentilation_Impl>());
+
+    setVentilationControlModeSchedule(ventilationControlModeSchedule);
+    setMinimumOutdoorVentilationAirSchedule(minimumOutdoorVentilationAirSchedule);
+
+    setUseWeatherFileRainIndicators(true);
+    setMaximumWindSpeed(40.0);
+    setMinimumOutdoorTemperature(-100.0);
+    setMaximumOutdoorTemperature(100.0);
+    setMinimumOutdoorEnthalpy(0.0);
+    setMaximumOutdoorEnthalpy(300000.0);
+    setMinimumOutdoorDewpoint(-100.0);
+    setMaximumOutdoorDewpoint(100.0);
+    setMinimumHVACOperationTime(0.0);
+    setMinimumVentilationTime(0.0);
   }
 
-  Schedule AvailabilityManagerHybridVentilation_Impl::ventilationControlModeSchedule() const {
-    boost::optional<Schedule> value = optionalVentilationControlModeSchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Ventilation Control Mode Schedule attached.");
-    }
-    return value.get();
+  IddObjectType AvailabilityManagerHybridVentilation::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_AvailabilityManager_HybridVentilation);
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::useWeatherFileRainIndicators() const {
-    boost::optional<std::string> value = getString(OS_AvailabilityManager_HybridVentilationFields::UseWeatherFileRainIndicators,true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Yes");
+  boost::optional<ThermalZone> AvailabilityManagerHybridVentilation::controlledZone() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->controlledZone();
   }
 
-  double AvailabilityManagerHybridVentilation_Impl::maximumWindSpeed() const {
-    boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumWindSpeed,true);
-    OS_ASSERT(value);
-    return value.get();
+  Schedule AvailabilityManagerHybridVentilation::ventilationControlModeSchedule() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->ventilationControlModeSchedule();
   }
 
-  double AvailabilityManagerHybridVentilation_Impl::minimumOutdoorTemperature() const {
-    boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
+  bool AvailabilityManagerHybridVentilation::useWeatherFileRainIndicators() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->useWeatherFileRainIndicators();
   }
 
-  double AvailabilityManagerHybridVentilation_Impl::maximumOutdoorTemperature() const {
-    boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumOutdoorTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
+  double AvailabilityManagerHybridVentilation::maximumWindSpeed() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->maximumWindSpeed();
   }
 
-  double AvailabilityManagerHybridVentilation_Impl::minimumOutdoorEnthalpy() const {
-    boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorEnthalpy,true);
-    OS_ASSERT(value);
-    return value.get();
+  double AvailabilityManagerHybridVentilation::minimumOutdoorTemperature() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumOutdoorTemperature();
   }
 
-  double AvailabilityManagerHybridVentilation_Impl::maximumOutdoorEnthalpy() const {
-    boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumOutdoorEnthalpy,true);
-    OS_ASSERT(value);
-    return value.get();
+  double AvailabilityManagerHybridVentilation::maximumOutdoorTemperature() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->maximumOutdoorTemperature();
   }
 
-  double AvailabilityManagerHybridVentilation_Impl::minimumOutdoorDewpoint() const {
-    boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorDewpoint,true);
-    OS_ASSERT(value);
-    return value.get();
+  double AvailabilityManagerHybridVentilation::minimumOutdoorEnthalpy() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumOutdoorEnthalpy();
   }
 
-  double AvailabilityManagerHybridVentilation_Impl::maximumOutdoorDewpoint() const {
-    boost::optional<double> value = getDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumOutdoorDewpoint,true);
-    OS_ASSERT(value);
-    return value.get();
+  double AvailabilityManagerHybridVentilation::maximumOutdoorEnthalpy() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->maximumOutdoorEnthalpy();
   }
 
-  Schedule AvailabilityManagerHybridVentilation_Impl::minimumOutdoorVentilationAirSchedule() const {
-    auto result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirSchedule);
-    OS_ASSERT(result);
-    return result.get();
+  double AvailabilityManagerHybridVentilation::minimumOutdoorDewpoint() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumOutdoorDewpoint();
   }
 
-  boost::optional<Curve> AvailabilityManagerHybridVentilation_Impl::openingFactorFunctionofWindSpeedCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_AvailabilityManager_HybridVentilationFields::OpeningFactorFunctionofWindSpeedCurve);
+  double AvailabilityManagerHybridVentilation::maximumOutdoorDewpoint() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->maximumOutdoorDewpoint();
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::setControlledZone(const boost::optional<ThermalZone>& thermalZone) {
-    bool result(false);
-    if (thermalZone) {
-      result = setPointer(OS_AvailabilityManager_HybridVentilationFields::ControlledZone, thermalZone.get().handle());
-    }
-    else {
-      resetControlledZone();
-      result = true;
-    }
-    return result;
+  Schedule AvailabilityManagerHybridVentilation::minimumOutdoorVentilationAirSchedule() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumOutdoorVentilationAirSchedule();
   }
 
-  void AvailabilityManagerHybridVentilation_Impl::resetControlledZone() {
-    bool result = setString(OS_AvailabilityManager_HybridVentilationFields::ControlledZone, "");
-    OS_ASSERT(result);
+  boost::optional<Curve> AvailabilityManagerHybridVentilation::openingFactorFunctionofWindSpeedCurve() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->openingFactorFunctionofWindSpeedCurve();
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::setVentilationControlModeSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_AvailabilityManager_HybridVentilationFields::VentilationControlModeSchedule,
-                              "AvailabilityManagerHybridVentilation",
-                              "Ventilation Control Mode Schedule",
-                              schedule);
-    return result;
+  bool AvailabilityManagerHybridVentilation::setControlledZone(const ThermalZone& thermalZone) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setControlledZone(thermalZone);
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators) {
-    return setBooleanFieldValue(OS_AvailabilityManager_HybridVentilationFields::UseWeatherFileRainIndicators, useWeatherFileRainIndicators);
+  void AvailabilityManagerHybridVentilation::resetControlledZone() {
+    getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->resetControlledZone();
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::setMaximumWindSpeed(double maximumWindSpeed) {
-    bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumWindSpeed, maximumWindSpeed);
-    return result;
+  bool AvailabilityManagerHybridVentilation::setVentilationControlModeSchedule(Schedule& schedule) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setVentilationControlModeSchedule(schedule);
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::setMinimumOutdoorTemperature(double minimumOutdoorTemperature) {
-    bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorTemperature, minimumOutdoorTemperature);
-    return result;
+  bool AvailabilityManagerHybridVentilation::setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setUseWeatherFileRainIndicators(useWeatherFileRainIndicators);
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::setMaximumOutdoorTemperature(double maximumOutdoorTemperature) {
-    bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumOutdoorTemperature, maximumOutdoorTemperature);
-    return result;
+  bool AvailabilityManagerHybridVentilation::setMaximumWindSpeed(double maximumWindSpeed) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMaximumWindSpeed(maximumWindSpeed);
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::setMinimumOutdoorEnthalpy(double minimumOutdoorEnthalpy) {
-    bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorEnthalpy, minimumOutdoorEnthalpy);
-    return result;
+  bool AvailabilityManagerHybridVentilation::setMinimumOutdoorTemperature(double minimumOutdoorTemperature) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumOutdoorTemperature(minimumOutdoorTemperature);
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::setMaximumOutdoorEnthalpy(double maximumOutdoorEnthalpy) {
-    bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumOutdoorEnthalpy, maximumOutdoorEnthalpy);
-    return result;
+  bool AvailabilityManagerHybridVentilation::setMaximumOutdoorTemperature(double maximumOutdoorTemperature) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMaximumOutdoorTemperature(maximumOutdoorTemperature);
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::setMinimumOutdoorDewpoint(double minimumOutdoorDewpoint) {
-    bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorDewpoint, minimumOutdoorDewpoint);
-    return result;
+  bool AvailabilityManagerHybridVentilation::setMinimumOutdoorEnthalpy(double minimumOutdoorEnthalpy) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumOutdoorEnthalpy(minimumOutdoorEnthalpy);
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::setMaximumOutdoorDewpoint(double maximumOutdoorDewpoint) {
-    bool result = setDouble(OS_AvailabilityManager_HybridVentilationFields::MaximumOutdoorDewpoint, maximumOutdoorDewpoint);
-    return result;
+  bool AvailabilityManagerHybridVentilation::setMaximumOutdoorEnthalpy(double maximumOutdoorEnthalpy) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMaximumOutdoorEnthalpy(maximumOutdoorEnthalpy);
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::setMinimumOutdoorVentilationAirSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_AvailabilityManager_HybridVentilationFields::MinimumOutdoorVentilationAirSchedule,
-                              "AvailabilityManagerHybridVentilation",
-                              "Minimum Outdoor Ventilation Air Schedule",
-                              schedule);
-    return result;
+  bool AvailabilityManagerHybridVentilation::setMinimumOutdoorDewpoint(double minimumOutdoorDewpoint) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumOutdoorDewpoint(minimumOutdoorDewpoint);
   }
 
-  bool AvailabilityManagerHybridVentilation_Impl::setOpeningFactorFunctionofWindSpeedCurve(const boost::optional<Curve>& curve) {
-    bool result(false);
-    if (curve) {
-      result = setPointer(OS_AvailabilityManager_HybridVentilationFields::OpeningFactorFunctionofWindSpeedCurve, curve.get().handle());
-    }
-    else {
-      resetOpeningFactorFunctionofWindSpeedCurve();
-      result = true;
-    }
-    return result;
+  bool AvailabilityManagerHybridVentilation::setMaximumOutdoorDewpoint(double maximumOutdoorDewpoint) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMaximumOutdoorDewpoint(maximumOutdoorDewpoint);
   }
 
-  void AvailabilityManagerHybridVentilation_Impl::resetOpeningFactorFunctionofWindSpeedCurve() {
-    bool result = setString(OS_AvailabilityManager_HybridVentilationFields::OpeningFactorFunctionofWindSpeedCurve, "");
-    OS_ASSERT(result);
+  bool AvailabilityManagerHybridVentilation::setMinimumOutdoorVentilationAirSchedule(Schedule& schedule) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumOutdoorVentilationAirSchedule(schedule);
   }
 
-  boost::optional<Schedule> AvailabilityManagerHybridVentilation_Impl::optionalVentilationControlModeSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_AvailabilityManager_HybridVentilationFields::VentilationControlModeSchedule);
+  bool AvailabilityManagerHybridVentilation::setOpeningFactorFunctionofWindSpeedCurve(const Curve& curve) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setOpeningFactorFunctionofWindSpeedCurve(curve);
   }
 
-} // detail
-
-AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const Model& model)
-  : AvailabilityManager(AvailabilityManagerHybridVentilation::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::AvailabilityManagerHybridVentilation_Impl>());
-
-  {
-    ScheduleRuleset schedule(model);
-    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),1.0);
-    setVentilationControlModeSchedule(schedule);
+  void AvailabilityManagerHybridVentilation::resetOpeningFactorFunctionofWindSpeedCurve() {
+    getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->resetOpeningFactorFunctionofWindSpeedCurve();
   }
 
-  {
-    ScheduleRuleset schedule(model);
-    schedule.defaultDaySchedule().addValue(Time(0,24,0,0),0.0);
-    setMinimumOutdoorVentilationAirSchedule(schedule);
+  double AvailabilityManagerHybridVentilation::minimumHVACOperationTime() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumHVACOperationTime();
   }
 
-  setUseWeatherFileRainIndicators(true);
-  setMaximumWindSpeed(40.0);
-  setMinimumOutdoorTemperature(20.0);
-  setMaximumOutdoorTemperature(30.0);
-  setMinimumOutdoorEnthalpy(20000.0);
-  setMaximumOutdoorEnthalpy(30000.0);
-  setMinimumOutdoorDewpoint(15.0);
-  setMaximumOutdoorDewpoint(30.0);
-}
+  bool AvailabilityManagerHybridVentilation::setMinimumHVACOperationTime(double minimumHVACOperationTime) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumHVACOperationTime(minimumHVACOperationTime);
+  }
 
-AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(const Model& model, Schedule& ventilationControlModeSchedule, Schedule& minimumOutdoorVentilationAirSchedule)
-  : AvailabilityManager(AvailabilityManagerHybridVentilation::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::AvailabilityManagerHybridVentilation_Impl>());
+  double AvailabilityManagerHybridVentilation::minimumVentilationTime() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumVentilationTime();
+  }
 
-  setVentilationControlModeSchedule(ventilationControlModeSchedule);
-  setMinimumOutdoorVentilationAirSchedule(minimumOutdoorVentilationAirSchedule);
+  bool AvailabilityManagerHybridVentilation::setMinimumVentilationTime(double minimumVentilationTime) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumVentilationTime(minimumVentilationTime);
+  }
 
-  setUseWeatherFileRainIndicators(true);
-  setMaximumWindSpeed(40.0);
-  setMinimumOutdoorTemperature(-100.0);
-  setMaximumOutdoorTemperature(100.0);
-  setMinimumOutdoorEnthalpy(0.0);
-  setMaximumOutdoorEnthalpy(300000.0);
-  setMinimumOutdoorDewpoint(-100.0);
-  setMaximumOutdoorDewpoint(100.0);
-}
+  boost::optional<Schedule> AvailabilityManagerHybridVentilation::airflowNetworkControlTypeSchedule() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->airflowNetworkControlTypeSchedule();
+  }
 
-IddObjectType AvailabilityManagerHybridVentilation::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_AvailabilityManager_HybridVentilation);
-}
+  bool AvailabilityManagerHybridVentilation::setAirflowNetworkControlTypeSchedule(Schedule& schedule) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setAirflowNetworkControlTypeSchedule(schedule);
+  }
 
-boost::optional<ThermalZone> AvailabilityManagerHybridVentilation::controlledZone() const {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->controlledZone();
-}
+  void AvailabilityManagerHybridVentilation::resetAirflowNetworkControlTypeSchedule() {
+    getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->resetAirflowNetworkControlTypeSchedule();
+  }
 
-Schedule AvailabilityManagerHybridVentilation::ventilationControlModeSchedule() const {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->ventilationControlModeSchedule();
-}
+  boost::optional<Schedule> AvailabilityManagerHybridVentilation::simpleAirflowControlTypeSchedule() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->simpleAirflowControlTypeSchedule();
+  }
 
-bool AvailabilityManagerHybridVentilation::useWeatherFileRainIndicators() const {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->useWeatherFileRainIndicators();
-}
+  bool AvailabilityManagerHybridVentilation::setSimpleAirflowControlTypeSchedule(Schedule& schedule) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setSimpleAirflowControlTypeSchedule(schedule);
+  }
 
-double AvailabilityManagerHybridVentilation::maximumWindSpeed() const {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->maximumWindSpeed();
-}
+  void AvailabilityManagerHybridVentilation::resetSimpleAirflowControlTypeSchedule() {
+    getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->resetSimpleAirflowControlTypeSchedule();
+  }
 
-double AvailabilityManagerHybridVentilation::minimumOutdoorTemperature() const {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumOutdoorTemperature();
-}
+  boost::optional<ModelObject> AvailabilityManagerHybridVentilation::zoneVentilationObject() const {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->zoneVentilationObject();
+  }
 
-double AvailabilityManagerHybridVentilation::maximumOutdoorTemperature() const {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->maximumOutdoorTemperature();
-}
+  bool AvailabilityManagerHybridVentilation::setZoneVentilationObject(const ModelObject& zv) {
+    return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setZoneVentilationObject(zv);
+  }
 
-double AvailabilityManagerHybridVentilation::minimumOutdoorEnthalpy() const {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumOutdoorEnthalpy();
-}
+  void AvailabilityManagerHybridVentilation::resetZoneVentilationObject() {
+    getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->resetZoneVentilationObject();
+  }
 
-double AvailabilityManagerHybridVentilation::maximumOutdoorEnthalpy() const {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->maximumOutdoorEnthalpy();
-}
+  /// @cond
+  AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(std::shared_ptr<detail::AvailabilityManagerHybridVentilation_Impl> impl)
+    : AvailabilityManager(std::move(impl)) {}
+  /// @endcond
 
-double AvailabilityManagerHybridVentilation::minimumOutdoorDewpoint() const {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumOutdoorDewpoint();
-}
-
-double AvailabilityManagerHybridVentilation::maximumOutdoorDewpoint() const {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->maximumOutdoorDewpoint();
-}
-
-Schedule AvailabilityManagerHybridVentilation::minimumOutdoorVentilationAirSchedule() const {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->minimumOutdoorVentilationAirSchedule();
-}
-
-boost::optional<Curve> AvailabilityManagerHybridVentilation::openingFactorFunctionofWindSpeedCurve() const {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->openingFactorFunctionofWindSpeedCurve();
-}
-
-bool AvailabilityManagerHybridVentilation::setControlledZone(const ThermalZone& thermalZone) {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setControlledZone(thermalZone);
-}
-
-void AvailabilityManagerHybridVentilation::resetControlledZone() {
-  getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->resetControlledZone();
-}
-
-bool AvailabilityManagerHybridVentilation::setVentilationControlModeSchedule(Schedule& schedule) {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setVentilationControlModeSchedule(schedule);
-}
-
-bool AvailabilityManagerHybridVentilation::setUseWeatherFileRainIndicators(bool useWeatherFileRainIndicators) {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setUseWeatherFileRainIndicators(useWeatherFileRainIndicators);
-}
-
-bool AvailabilityManagerHybridVentilation::setMaximumWindSpeed(double maximumWindSpeed) {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMaximumWindSpeed(maximumWindSpeed);
-}
-
-bool AvailabilityManagerHybridVentilation::setMinimumOutdoorTemperature(double minimumOutdoorTemperature) {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumOutdoorTemperature(minimumOutdoorTemperature);
-}
-
-bool AvailabilityManagerHybridVentilation::setMaximumOutdoorTemperature(double maximumOutdoorTemperature) {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMaximumOutdoorTemperature(maximumOutdoorTemperature);
-}
-
-bool AvailabilityManagerHybridVentilation::setMinimumOutdoorEnthalpy(double minimumOutdoorEnthalpy) {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumOutdoorEnthalpy(minimumOutdoorEnthalpy);
-}
-
-bool AvailabilityManagerHybridVentilation::setMaximumOutdoorEnthalpy(double maximumOutdoorEnthalpy) {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMaximumOutdoorEnthalpy(maximumOutdoorEnthalpy);
-}
-
-bool AvailabilityManagerHybridVentilation::setMinimumOutdoorDewpoint(double minimumOutdoorDewpoint) {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumOutdoorDewpoint(minimumOutdoorDewpoint);
-}
-
-bool AvailabilityManagerHybridVentilation::setMaximumOutdoorDewpoint(double maximumOutdoorDewpoint) {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMaximumOutdoorDewpoint(maximumOutdoorDewpoint);
-}
-
-bool AvailabilityManagerHybridVentilation::setMinimumOutdoorVentilationAirSchedule(Schedule& schedule) {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setMinimumOutdoorVentilationAirSchedule(schedule);
-}
-
-bool AvailabilityManagerHybridVentilation::setOpeningFactorFunctionofWindSpeedCurve(const Curve& curve) {
-  return getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->setOpeningFactorFunctionofWindSpeedCurve(curve);
-}
-
-void AvailabilityManagerHybridVentilation::resetOpeningFactorFunctionofWindSpeedCurve() {
-  getImpl<detail::AvailabilityManagerHybridVentilation_Impl>()->resetOpeningFactorFunctionofWindSpeedCurve();
-}
-
-/// @cond
-AvailabilityManagerHybridVentilation::AvailabilityManagerHybridVentilation(std::shared_ptr<detail::AvailabilityManagerHybridVentilation_Impl> impl)
-  : AvailabilityManager(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

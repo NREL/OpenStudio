@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -65,8 +65,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, EMSActuator_EMSActuator)
-{
+TEST_F(ModelFixture, EMSActuator_EMSActuator) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -104,7 +103,7 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
   ElectricEquipmentDefinition definition(model);
   ElectricEquipment electricEquipment(definition);
   ComponentType = "ElectricEquipment";
-  std::string equipControlType = "Electric Power Level";
+  std::string equipControlType = "Electricity Rate";
   EnergyManagementSystemActuator equipActuator(electricEquipment, ComponentType, equipControlType);
   EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
@@ -121,8 +120,7 @@ TEST_F(ModelFixture, EMSActuator_EMSActuator)
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
 }
 
-TEST_F(ModelFixture, EMSActuator_newEMSActuator)
-{
+TEST_F(ModelFixture, EMSActuator_newEMSActuator) {
   Model model;
   //no use spacetype
   Space space1(model);
@@ -155,7 +153,7 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator)
 
   //actuator settings
   std::string elecComponentType = "ElectricEquipment";
-  std::string elecControlType = "Electric Power Level";
+  std::string elecControlType = "Electricity Rate";
   //create actuator
   EnergyManagementSystemActuator elecActuator(electricEquipment, elecComponentType, elecControlType, zone1);
   EXPECT_EQ(elecControlType, elecActuator.actuatedComponentControlType());
@@ -171,7 +169,7 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator)
 
   //actuator settings
   std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
+  std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
   EnergyManagementSystemActuator lightsActuator2(lights, lightsComponentType, lightsControlType, zone2);
   EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
@@ -185,8 +183,7 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator)
   EXPECT_EQ(lights, lightsActuator3.actuatedComponent().get());
 }
 
-TEST_F(ModelFixture, EMSActuator_newEMSActuator2)
-{
+TEST_F(ModelFixture, EMSActuator_newEMSActuator2) {
   //USE ONLY 1 TZ in constructor
   Model model;
 
@@ -213,7 +210,7 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator2)
 
   //actuator settings
   std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
+  std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
   EnergyManagementSystemActuator lightsActuator2(lights, lightsComponentType, lightsControlType, zone2);
   EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
@@ -229,8 +226,7 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator2)
   EXPECT_EQ(zone2.handle(), lightsActuator3.zoneName().get().handle());
 }
 
-TEST_F(ModelFixture, EMSActuator_newEMSActuator3)
-{
+TEST_F(ModelFixture, EMSActuator_newEMSActuator3) {
   //USE spaces in constructor
   Model model;
 
@@ -257,7 +253,7 @@ TEST_F(ModelFixture, EMSActuator_newEMSActuator3)
 
   //actuator settings
   std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
+  std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
   EnergyManagementSystemActuator lightsActuator2(lights, lightsComponentType, lightsControlType, space2);
   EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,134 +36,128 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
-class GeneratorFuelCell;
+  class ThermalZone;
+  class GeneratorFuelCell;
 
-namespace detail {
+  namespace detail {
 
-  /** GeneratorFuelCellAuxiliaryHeater_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellAuxiliaryHeater.*/
-  class MODEL_API GeneratorFuelCellAuxiliaryHeater_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** GeneratorFuelCellAuxiliaryHeater_Impl is a ModelObject_Impl that is the implementation class for GeneratorFuelCellAuxiliaryHeater.*/
+    class MODEL_API GeneratorFuelCellAuxiliaryHeater_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    GeneratorFuelCellAuxiliaryHeater_Impl(const IdfObject& idfObject,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      GeneratorFuelCellAuxiliaryHeater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    GeneratorFuelCellAuxiliaryHeater_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      GeneratorFuelCellAuxiliaryHeater_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    GeneratorFuelCellAuxiliaryHeater_Impl(const GeneratorFuelCellAuxiliaryHeater_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      GeneratorFuelCellAuxiliaryHeater_Impl(const GeneratorFuelCellAuxiliaryHeater_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~GeneratorFuelCellAuxiliaryHeater_Impl() {}
+      virtual ~GeneratorFuelCellAuxiliaryHeater_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const;
+      virtual std::vector<IddObjectType> allowableChildTypes() const;
 
-    virtual std::vector<ModelObject> children() const;
+      virtual std::vector<ModelObject> children() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double excessAirRatio() const;
+      double excessAirRatio() const;
 
-    double ancillaryPowerConstantTerm() const;
+      double ancillaryPowerConstantTerm() const;
 
-    double ancillaryPowerLinearTerm() const;
+      double ancillaryPowerLinearTerm() const;
 
-    double skinLossUFactorTimesAreaValue() const;
+      double skinLossUFactorTimesAreaValue() const;
 
-    std::string skinLossDestination() const;
+      std::string skinLossDestination() const;
 
-    boost::optional<ThermalZone> zonetoReceiveSkinLosses() const;
+      boost::optional<ThermalZone> zonetoReceiveSkinLosses() const;
 
-    std::string heatingCapacityUnits() const;
+      std::string heatingCapacityUnits() const;
 
-    double maximumHeatingCapacityinWatts() const;
+      double maximumHeatingCapacityinWatts() const;
 
-    double minimumHeatingCapacityinWatts() const;
+      double minimumHeatingCapacityinWatts() const;
 
-    double maximumHeatingCapacityinKmolperSecond() const;
+      double maximumHeatingCapacityinKmolperSecond() const;
 
-    double minimumHeatingCapacityinKmolperSecond() const;
+      double minimumHeatingCapacityinKmolperSecond() const;
 
-    // Return optional parent generator
-    boost::optional<GeneratorFuelCell> fuelCell() const;
+      // Return optional parent generator
+      boost::optional<GeneratorFuelCell> fuelCell() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setExcessAirRatio(double excessAirRatio);
+      bool setExcessAirRatio(double excessAirRatio);
 
-    void resetExcessAirRatio();
+      void resetExcessAirRatio();
 
-    bool setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm);
+      bool setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm);
 
-    void resetAncillaryPowerConstantTerm();
+      void resetAncillaryPowerConstantTerm();
 
-    bool setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm);
+      bool setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm);
 
-    void resetAncillaryPowerLinearTerm();
+      void resetAncillaryPowerLinearTerm();
 
-    bool setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue);
+      bool setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue);
 
-    void resetSkinLossUFactorTimesAreaValue();
+      void resetSkinLossUFactorTimesAreaValue();
 
-    bool setSkinLossDestination(const std::string& skinLossDestination);
+      bool setSkinLossDestination(const std::string& skinLossDestination);
 
-    void resetSkinLossDestination();
+      void resetSkinLossDestination();
 
-    bool setZonetoReceiveSkinLosses(const ThermalZone& zone);
+      bool setZonetoReceiveSkinLosses(const ThermalZone& zone);
 
-    void resetZonetoReceiveSkinLosses();
+      void resetZonetoReceiveSkinLosses();
 
-    bool setHeatingCapacityUnits(const std::string& heatingCapacityUnits);
+      bool setHeatingCapacityUnits(const std::string& heatingCapacityUnits);
 
-    void resetHeatingCapacityUnits();
+      void resetHeatingCapacityUnits();
 
-    bool setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts);
+      bool setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts);
 
-    void resetMaximumHeatingCapacityinWatts();
+      void resetMaximumHeatingCapacityinWatts();
 
-    bool setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts);
+      bool setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts);
 
-    void resetMinimumHeatingCapacityinWatts();
+      void resetMinimumHeatingCapacityinWatts();
 
-    bool setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond);
+      bool setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond);
 
-    void resetMaximumHeatingCapacityinKmolperSecond();
+      void resetMaximumHeatingCapacityinKmolperSecond();
 
-    bool setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond);
+      bool setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond);
 
-    void resetMinimumHeatingCapacityinKmolperSecond();
+      void resetMinimumHeatingCapacityinKmolperSecond();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.GeneratorFuelCellAuxiliaryHeater");
+    };
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.GeneratorFuelCellAuxiliaryHeater");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_GENERATORFUELCELLAUXILIARYHEATER_IMPL_HPP
+#endif  // MODEL_GENERATORFUELCELLAUXILIARYHEATER_IMPL_HPP

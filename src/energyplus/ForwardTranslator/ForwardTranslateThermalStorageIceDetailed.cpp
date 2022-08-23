@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,102 +48,101 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateThermalStorageIceDetailed(
-    ThermalStorageIceDetailed & modelObject)
-{
-  IdfObject idfObject(IddObjectType::ThermalStorage_Ice_Detailed);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateThermalStorageIceDetailed(ThermalStorageIceDetailed& modelObject) {
+    IdfObject idfObject(IddObjectType::ThermalStorage_Ice_Detailed);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  if( auto s = modelObject.name() ) {
-    idfObject.setName(*s);
-  }
-
-  // InletNodeName
-  if( auto mo = modelObject.inletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(ThermalStorage_Ice_DetailedFields::InletNodeName,node->name().get());
+    // Name
+    if (auto s = modelObject.name()) {
+      idfObject.setName(*s);
     }
-  }
 
-  // OutletNodeName
-  if( auto mo = modelObject.outletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(ThermalStorage_Ice_DetailedFields::OutletNodeName,node->name().get());
+    // InletNodeName
+    if (auto mo = modelObject.inletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(ThermalStorage_Ice_DetailedFields::InletNodeName, node->name().get());
+      }
     }
+
+    // OutletNodeName
+    if (auto mo = modelObject.outletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(ThermalStorage_Ice_DetailedFields::OutletNodeName, node->name().get());
+      }
+    }
+
+    // AvailabilityScheduleName
+    if (auto schedule = modelObject.availabilitySchedule()) {
+      idfObject.setString(ThermalStorage_Ice_DetailedFields::AvailabilityScheduleName, schedule->name().get());
+    }
+
+    // Capacity
+    {
+      auto value = modelObject.capacity();
+      idfObject.setDouble(ThermalStorage_Ice_DetailedFields::Capacity, value);
+    }
+
+    // DischargingCurveObjectType
+    // DischargingCurveName
+    {
+      auto curve = modelObject.dischargingCurve();
+      auto idf = translateAndMapModelObject(curve);
+      OS_ASSERT(idf);
+
+      idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveVariableSpecifications,
+                          modelObject.dischargingCurveVariableSpecifications());
+      idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveName, idf->name().get());
+    }
+
+    // ChargingCurveObjectType
+    // ChargingCurveName
+    {
+      auto curve = modelObject.chargingCurve();
+      auto idf = translateAndMapModelObject(curve);
+      OS_ASSERT(idf);
+
+      idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveVariableSpecifications, modelObject.chargingCurveVariableSpecifications());
+      idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveName, idf->name().get());
+    }
+
+    // TimestepoftheCurveData
+    {
+      auto value = modelObject.timestepoftheCurveData();
+      idfObject.setDouble(ThermalStorage_Ice_DetailedFields::TimestepoftheCurveData, value);
+    }
+
+    // ParasiticElectricLoadDuringDischarging
+    {
+      auto value = modelObject.parasiticElectricLoadDuringDischarging();
+      idfObject.setDouble(ThermalStorage_Ice_DetailedFields::ParasiticElectricLoadDuringDischarging, value);
+    }
+
+    // ParasiticElectricLoadDuringCharging
+    {
+      auto value = modelObject.parasiticElectricLoadDuringCharging();
+      idfObject.setDouble(ThermalStorage_Ice_DetailedFields::ParasiticElectricLoadDuringCharging, value);
+    }
+
+    // TankLossCoefficient
+    {
+      auto value = modelObject.tankLossCoefficient();
+      idfObject.setDouble(ThermalStorage_Ice_DetailedFields::TankLossCoefficient, value);
+    }
+
+    // FreezingTemperatureofStorageMedium
+    {
+      auto value = modelObject.freezingTemperatureofStorageMedium();
+      idfObject.setDouble(ThermalStorage_Ice_DetailedFields::FreezingTemperatureofStorageMedium, value);
+    }
+
+    // ThawProcessIndicator
+    {
+      auto value = modelObject.thawProcessIndicator();
+      idfObject.setString(ThermalStorage_Ice_DetailedFields::ThawProcessIndicator, value);
+    }
+
+    return idfObject;
   }
 
-  // AvailabilityScheduleName
-  if( auto schedule = modelObject.availabilitySchedule() ) {
-    idfObject.setString(ThermalStorage_Ice_DetailedFields::AvailabilityScheduleName,schedule->name().get());
-  }
-
-  // Capacity
-  {
-    auto value = modelObject.capacity();
-    idfObject.setDouble(ThermalStorage_Ice_DetailedFields::Capacity,value);
-  }
-
-  // DischargingCurveObjectType
-  // DischargingCurveName
-  {
-    auto curve = modelObject.dischargingCurve();
-    auto idf = translateAndMapModelObject(curve);
-    OS_ASSERT(idf);
-
-    idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveVariableSpecifications, modelObject.dischargingCurveVariableSpecifications());
-    idfObject.setString(ThermalStorage_Ice_DetailedFields::DischargingCurveName,idf->name().get());
-  }
-
-  // ChargingCurveObjectType
-  // ChargingCurveName
-  {
-    auto curve = modelObject.chargingCurve();
-    auto idf = translateAndMapModelObject(curve);
-    OS_ASSERT(idf);
-
-    idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveVariableSpecifications, modelObject.chargingCurveVariableSpecifications());
-    idfObject.setString(ThermalStorage_Ice_DetailedFields::ChargingCurveName,idf->name().get());
-  }
-
-  // TimestepoftheCurveData
-  {
-    auto value = modelObject.timestepoftheCurveData();
-    idfObject.setDouble(ThermalStorage_Ice_DetailedFields::TimestepoftheCurveData,value);
-  }
-
-  // ParasiticElectricLoadDuringDischarging
-  {
-    auto value = modelObject.parasiticElectricLoadDuringDischarging();
-    idfObject.setDouble(ThermalStorage_Ice_DetailedFields::ParasiticElectricLoadDuringDischarging,value);
-  }
-
-  // ParasiticElectricLoadDuringCharging
-  {
-    auto value = modelObject.parasiticElectricLoadDuringCharging();
-    idfObject.setDouble(ThermalStorage_Ice_DetailedFields::ParasiticElectricLoadDuringCharging,value);
-  }
-
-  // TankLossCoefficient
-  {
-    auto value = modelObject.tankLossCoefficient();
-    idfObject.setDouble(ThermalStorage_Ice_DetailedFields::TankLossCoefficient,value);
-  }
-
-  // FreezingTemperatureofStorageMedium
-  {
-    auto value = modelObject.freezingTemperatureofStorageMedium();
-    idfObject.setDouble(ThermalStorage_Ice_DetailedFields::FreezingTemperatureofStorageMedium,value);
-  }
-
-  // ThawProcessIndicator
-  {
-    auto value = modelObject.thawProcessIndicator();
-    idfObject.setString(ThermalStorage_Ice_DetailedFields::ThawProcessIndicator,value);
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

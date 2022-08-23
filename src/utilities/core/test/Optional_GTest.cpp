@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,49 +38,53 @@ using openstudio::OptionalDouble;
 using openstudio::OptionalString;
 using openstudio::operator<<;
 
-namespace
-{
+namespace {
 
-  TEST(OptionalTest, builtInTypes)
-  {
-    std::stringstream ss;
+TEST(OptionalTest, builtInTypes) {
+  std::stringstream ss;
 
-    OptionalInt i;
-    EXPECT_FALSE(i);
-    ss << i;
-    EXPECT_EQ("",ss.str()); ss.str("");
-    i = 1;
-    EXPECT_TRUE(i);
-    ss << i;
-    EXPECT_EQ("1",ss.str()); ss.str("");
-    int j = *i + 1;
-    EXPECT_EQ(2,j);
+  OptionalInt i;
+  EXPECT_FALSE(i);
+  ss << i;
+  EXPECT_EQ("", ss.str());
+  ss.str("");
+  i = 1;
+  EXPECT_TRUE(i);
+  ss << i;
+  EXPECT_EQ("1", ss.str());
+  ss.str("");
+  int j = *i + 1;
+  EXPECT_EQ(2, j);
 
-    OptionalDouble d;
-    EXPECT_FALSE(d);
-    ss << d;
-    EXPECT_EQ("",ss.str()); ss.str("");
-    d = 1.0;
-    EXPECT_TRUE(d);
-    ss << d;
-    EXPECT_EQ("1",ss.str()); ss.str("");
-    double d2 = *d + 1.0;
-    EXPECT_EQ(2.0,d2);
-  }
-
-  TEST(OptionalTest, stdTypes)
-  {
-    std::stringstream ss;
-
-    OptionalString str;
-    EXPECT_FALSE(str);
-    ss << str;
-    EXPECT_EQ("",ss.str()); ss.str("");
-    str = "Hello World!";
-    ASSERT_TRUE(str);
-    EXPECT_EQ("Hello World!",*str);
-    ss << str;
-    EXPECT_EQ("Hello World!",ss.str()); ss.str("");
-  }
-
+  OptionalDouble d;
+  EXPECT_FALSE(d);
+  ss << d;
+  EXPECT_EQ("", ss.str());
+  ss.str("");
+  d = 1.0;
+  EXPECT_TRUE(d);
+  ss << d;
+  EXPECT_EQ("1", ss.str());
+  ss.str("");
+  double d2 = *d + 1.0;
+  EXPECT_EQ(2.0, d2);
 }
+
+// cppcheck-suppress syntaxError
+TEST(OptionalTest, stdTypes) {
+  std::stringstream ss;
+
+  OptionalString str;
+  EXPECT_FALSE(str);
+  ss << str;
+  EXPECT_EQ("", ss.str());
+  ss.str("");
+  str = "Hello World!";
+  ASSERT_TRUE(str);
+  EXPECT_EQ("Hello World!", *str);
+  ss << str;
+  EXPECT_EQ("Hello World!", ss.str());
+  ss.str("");
+}
+
+}  // namespace

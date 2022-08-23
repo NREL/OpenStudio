@@ -81,7 +81,7 @@
 ! Environmental Emissions:        None
 ! Utility Tariffs:                None
 
-  Version,9.1;
+  Version,22.1;
 
   Timestep,4;
 
@@ -89,7 +89,7 @@
     BUILDING #1,             !- Name
     0.0000000E+00,           !- North Axis {deg}
     Suburbs,                 !- Terrain
-    3.9999999E-02,           !- Loads Convergence Tolerance Value
+    3.9999999E-02,           !- Loads Convergence Tolerance Value {W}
     0.4000000,               !- Temperature Convergence Tolerance Value {deltaC}
     FullExterior,            !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -108,7 +108,9 @@
     No,                      !- Do System Sizing Calculation
     No,                      !- Do Plant Sizing Calculation
     Yes,                     !- Run Simulation for Sizing Periods
-    No;                      !- Run Simulation for Weather File Run Periods
+    No,                      !- Run Simulation for Weather File Run Periods
+    No,                      !- Do HVAC Sizing Simulation for Sizing Periods
+    1;                       !- Maximum Number of HVAC Sizing Simulation Passes
 
   Site:Location,
     Chicago Ohare Intl Ap IL USA WMO=725300,  !- Name
@@ -183,7 +185,7 @@
     1.00;                    !- Sky Clearness
 
   RunPeriod,
-    ,                        !- Name
+    RUNPERIOD 1,             !- Name
     1,                       !- Begin Month
     1,                       !- Begin Day of Month
     ,                        !- Begin Year
@@ -513,6 +515,7 @@
     Zn001:Wall001,           !- Name
     EXTERIOR,                !- Construction Name
     ZONE 1,                  !- Zone Name
+    ,                        !- Space Name
     180,                     !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -579,6 +582,7 @@
     Zn001:Wall002,           !- Name
     EXTERIOR,                !- Construction Name
     ZONE 1,                  !- Zone Name
+    ,                        !- Space Name
     0,                       !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     20,                      !- Starting X Coordinate {m}
@@ -591,6 +595,7 @@
     Zn001:Wall003,           !- Name
     EXTERIOR,                !- Construction Name
     ZONE 1,                  !- Zone Name
+    ,                        !- Space Name
     270,                     !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -613,6 +618,7 @@
     Zn001:Wall004,           !- Name
     INTERIOR,                !- Construction Name
     ZONE 1,                  !- Zone Name
+    ,                        !- Space Name
     90,                      !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     20,                      !- Starting X Coordinate {m}
@@ -625,6 +631,7 @@
     Zn001:Flr001,            !- Name
     FLOOR,                   !- Construction Name
     ZONE 1,                  !- Zone Name
+    ,                        !- Space Name
     90,                      !- Azimuth Angle {deg}
     180,                     !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -637,6 +644,7 @@
     Zn001:Roof001,           !- Name
     CEILING34,               !- Construction Name
     ZONE 1,                  !- Zone Name
+    ,                        !- Space Name
     180,                     !- Azimuth Angle {deg}
     0,                       !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -649,6 +657,7 @@
     Zn002:Wall001,           !- Name
     EXTERIOR,                !- Construction Name
     ZONE 2,                  !- Zone Name
+    ,                        !- Space Name
     180,                     !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -692,6 +701,7 @@
     Zn002:Wall002,           !- Name
     EXTERIOR,                !- Construction Name
     ZONE 2,                  !- Zone Name
+    ,                        !- Space Name
     90,                      !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     20,                      !- Starting X Coordinate {m}
@@ -704,6 +714,7 @@
     Zn002:Wall003,           !- Name
     EXTERIOR,                !- Construction Name
     ZONE 2,                  !- Zone Name
+    ,                        !- Space Name
     0,                       !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     20,                      !- Starting X Coordinate {m}
@@ -716,6 +727,7 @@
     Zn002:Wall004,           !- Name
     INTERIOR,                !- Construction Name
     ZONE 2,                  !- Zone Name
+    ,                        !- Space Name
     270,                     !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -728,6 +740,7 @@
     Zn002:Flr001,            !- Name
     FLOOR,                   !- Construction Name
     ZONE 2,                  !- Zone Name
+    ,                        !- Space Name
     90,                      !- Azimuth Angle {deg}
     180,                     !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -740,6 +753,7 @@
     Zn002:Roof001,           !- Name
     CEILING34,               !- Construction Name
     ZONE 2,                  !- Zone Name
+    ,                        !- Space Name
     180,                     !- Azimuth Angle {deg}
     0,                       !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -752,6 +766,7 @@
     Zn003:Wall001,           !- Name
     EXTERIOR,                !- Construction Name
     ZONE 3,                  !- Zone Name
+    ,                        !- Space Name
     180,                     !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -775,6 +790,7 @@
     Zn003:Wall002,           !- Name
     EXTERIOR,                !- Construction Name
     ZONE 3,                  !- Zone Name
+    ,                        !- Space Name
     0,                       !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     20,                      !- Starting X Coordinate {m}
@@ -787,6 +803,7 @@
     Zn003:Wall003,           !- Name
     EXTERIOR,                !- Construction Name
     ZONE 3,                  !- Zone Name
+    ,                        !- Space Name
     270,                     !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -799,6 +816,7 @@
     Zn003:Wall004,           !- Name
     INTERIOR,                !- Construction Name
     ZONE 3,                  !- Zone Name
+    ,                        !- Space Name
     ZONE 4,                  !- Outside Boundary Condition Object
     90,                      !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
@@ -845,6 +863,7 @@
     Zn003:Flr001,            !- Name
     FLOOR34,                 !- Construction Name
     ZONE 3,                  !- Zone Name
+    ,                        !- Space Name
     Zn001:Roof001,           !- Outside Boundary Condition Object
     90,                      !- Azimuth Angle {deg}
     180,                     !- Tilt Angle {deg}
@@ -858,6 +877,7 @@
     Zn003:Roof001,           !- Name
     ROOF31,                  !- Construction Name
     ZONE 3,                  !- Zone Name
+    ,                        !- Space Name
     180,                     !- Azimuth Angle {deg}
     0,                       !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -870,6 +890,7 @@
     Zn004:Wall001,           !- Name
     EXTERIOR,                !- Construction Name
     ZONE 4,                  !- Zone Name
+    ,                        !- Space Name
     180,                     !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -893,6 +914,7 @@
     Zn004:Wall002,           !- Name
     EXTERIOR,                !- Construction Name
     ZONE 4,                  !- Zone Name
+    ,                        !- Space Name
     90,                      !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     20,                      !- Starting X Coordinate {m}
@@ -905,6 +927,7 @@
     Zn004:Wall003,           !- Name
     EXTERIOR,                !- Construction Name
     ZONE 4,                  !- Zone Name
+    ,                        !- Space Name
     0,                       !- Azimuth Angle {deg}
     90,                      !- Tilt Angle {deg}
     20,                      !- Starting X Coordinate {m}
@@ -917,6 +940,7 @@
     Zn004:Flr001,            !- Name
     FLOOR34,                 !- Construction Name
     ZONE 4,                  !- Zone Name
+    ,                        !- Space Name
     Zn002:Roof001,           !- Outside Boundary Condition Object
     90,                      !- Azimuth Angle {deg}
     180,                     !- Tilt Angle {deg}
@@ -930,6 +954,7 @@
     Zn004:Roof001,           !- Name
     ROOF31,                  !- Construction Name
     ZONE 4,                  !- Zone Name
+    ,                        !- Space Name
     180,                     !- Azimuth Angle {deg}
     0,                       !- Tilt Angle {deg}
     0,                       !- Starting X Coordinate {m}
@@ -1006,8 +1031,8 @@
     ZONE 1 Ideal Loads,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
-    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
-    ;                        !- Zone Equipment 1 Sequential Heating Fraction
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     ZONE 1 Ideal Loads,      !- Name
@@ -1069,8 +1094,8 @@
     ZONE 2 Ideal Loads,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
-    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
-    ;                        !- Zone Equipment 1 Sequential Heating Fraction
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     ZONE 2 Ideal Loads,      !- Name
@@ -1132,8 +1157,8 @@
     ZONE 3 Ideal Loads,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
-    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
-    ;                        !- Zone Equipment 1 Sequential Heating Fraction
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     ZONE 3 Ideal Loads,      !- Name
@@ -1195,8 +1220,8 @@
     ZONE 4 Ideal Loads,      !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
-    ,                        !- Zone Equipment 1 Sequential Cooling Fraction
-    ;                        !- Zone Equipment 1 Sequential Heating Fraction
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
   ZoneHVAC:IdealLoadsAirSystem,
     ZONE 4 Ideal Loads,      !- Name

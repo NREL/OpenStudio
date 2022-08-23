@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,6 +41,8 @@
 #include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "HeatExchangerDesiccantBalancedFlow.hpp"
+#include "HeatExchangerDesiccantBalancedFlow_Impl.hpp"
 
 #include "ZoneHVACPackagedTerminalHeatPump.hpp"
 #include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
@@ -59,249 +61,239 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  CoilSystemCoolingDXHeatExchangerAssisted_Impl::CoilSystemCoolingDXHeatExchangerAssisted_Impl(const IdfObject& idfObject,
-                                                                                               Model_Impl* model,
-                                                                                               bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType());
-  }
+    CoilSystemCoolingDXHeatExchangerAssisted_Impl::CoilSystemCoolingDXHeatExchangerAssisted_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                                 bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType());
+    }
 
-  CoilSystemCoolingDXHeatExchangerAssisted_Impl::CoilSystemCoolingDXHeatExchangerAssisted_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                               Model_Impl* model,
-                                                                                               bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType());
-  }
+    CoilSystemCoolingDXHeatExchangerAssisted_Impl::CoilSystemCoolingDXHeatExchangerAssisted_Impl(
+      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType());
+    }
 
-  CoilSystemCoolingDXHeatExchangerAssisted_Impl::CoilSystemCoolingDXHeatExchangerAssisted_Impl(const CoilSystemCoolingDXHeatExchangerAssisted_Impl& other,
-                                                                                               Model_Impl* model,
-                                                                                               bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
+    CoilSystemCoolingDXHeatExchangerAssisted_Impl::CoilSystemCoolingDXHeatExchangerAssisted_Impl(
+      const CoilSystemCoolingDXHeatExchangerAssisted_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
 
-  const std::vector<std::string>& CoilSystemCoolingDXHeatExchangerAssisted_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
+    const std::vector<std::string>& CoilSystemCoolingDXHeatExchangerAssisted_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
       // Not appropriate: no specific output, there are at the coil and HX level
-    return result;
-  }
-
-  IddObjectType CoilSystemCoolingDXHeatExchangerAssisted_Impl::iddObjectType() const {
-    return CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType();
-  }
-
-
-  std::vector<ModelObject> CoilSystemCoolingDXHeatExchangerAssisted_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-
-    result.push_back(coolingCoil());
-    result.push_back(heatExchanger());
-
-    return result;
-  }
-
-  ModelObject CoilSystemCoolingDXHeatExchangerAssisted_Impl::clone(Model model) const
-  {
-    auto newCoilSystem = StraightComponent_Impl::clone(model).cast<CoilSystemCoolingDXHeatExchangerAssisted>();
-
-    {
-      auto mo = coolingCoil().clone(model).cast<StraightComponent>();
-      newCoilSystem.setCoolingCoil(mo);
+      return result;
     }
 
-    {
-      auto mo = heatExchanger().clone(model).cast<AirToAirComponent>();
-      newCoilSystem.setHeatExchanger(mo);
+    IddObjectType CoilSystemCoolingDXHeatExchangerAssisted_Impl::iddObjectType() const {
+      return CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType();
     }
 
-    return newCoilSystem;
-  }
+    std::vector<ModelObject> CoilSystemCoolingDXHeatExchangerAssisted_Impl::children() const {
+      std::vector<ModelObject> result;
 
-  boost::optional<HVACComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::containingHVACComponent() const
-  {
-     // AirLoopHVACUnitarySystem
-    std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+      result.push_back(coolingCoil());
+      result.push_back(heatExchanger());
 
-    for( const auto & airLoopHVACUnitarySystem : airLoopHVACUnitarySystems )
-    {
-      if( boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil() )
+      return result;
+    }
+
+    ModelObject CoilSystemCoolingDXHeatExchangerAssisted_Impl::clone(Model model) const {
+      auto newCoilSystem = StraightComponent_Impl::clone(model).cast<CoilSystemCoolingDXHeatExchangerAssisted>();
+
       {
-        if( coolingCoil->handle() == this->handle() )
-        {
-          return airLoopHVACUnitarySystem;
+        auto mo = coolingCoil().clone(model).cast<StraightComponent>();
+        newCoilSystem.setCoolingCoil(mo);
+      }
+
+      {
+        auto mo = heatExchanger().clone(model).cast<AirToAirComponent>();
+        newCoilSystem.setHeatExchanger(mo);
+      }
+
+      return newCoilSystem;
+    }
+
+    boost::optional<HVACComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::containingHVACComponent() const {
+      // AirLoopHVACUnitarySystem
+      std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+      for (const auto& airLoopHVACUnitarySystem : airLoopHVACUnitarySystems) {
+        if (boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil()) {
+          if (coolingCoil->handle() == this->handle()) {
+            return airLoopHVACUnitarySystem;
+          }
         }
       }
-    }
 
-    // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
-    std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
+      // AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass
+      std::vector<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass> bypassSystems =
+        this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass>();
 
-    for( const auto & bypassSystem : bypassSystems )
-    {
-      if( boost::optional<HVACComponent> coolingCoil = bypassSystem.coolingCoil() )
-      {
-        if( coolingCoil->handle() == this->handle() )
-        {
-          return bypassSystem;
+      for (const auto& bypassSystem : bypassSystems) {
+        if (boost::optional<HVACComponent> coolingCoil = bypassSystem.coolingCoil()) {
+          if (coolingCoil->handle() == this->handle()) {
+            return bypassSystem;
+          }
         }
       }
-    }
 
-    // AirLoopHVACUnitaryHeatPumpAirToAir
+      // AirLoopHVACUnitaryHeatPumpAirToAir
 
-    std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs;
+      std::vector<AirLoopHVACUnitaryHeatPumpAirToAir> airLoopHVACUnitaryHeatPumpAirToAirs;
 
-    airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
+      airLoopHVACUnitaryHeatPumpAirToAirs = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAir>();
 
-    for( const auto & airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs )
-    {
-      if( boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil() )
-      {
-        if( coil->handle() == this->handle() )
-        {
-          return airLoopHVACUnitaryHeatPumpAirToAir;
+      for (const auto& airLoopHVACUnitaryHeatPumpAirToAir : airLoopHVACUnitaryHeatPumpAirToAirs) {
+        if (boost::optional<HVACComponent> coil = airLoopHVACUnitaryHeatPumpAirToAir.coolingCoil()) {
+          if (coil->handle() == this->handle()) {
+            return airLoopHVACUnitaryHeatPumpAirToAir;
+          }
         }
       }
-    }   return boost::none;
-  }
+      return boost::none;
+    }
 
-  boost::optional<ZoneHVACComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::containingZoneHVACComponent() const
-  {
+    boost::optional<ZoneHVACComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::containingZoneHVACComponent() const {
 
-    // ZoneHVACPackagedTerminalHeatPump
+      // ZoneHVACPackagedTerminalHeatPump
 
-    std::vector<ZoneHVACPackagedTerminalHeatPump> zoneHVACPackagedTerminalHeatPumps;
+      std::vector<ZoneHVACPackagedTerminalHeatPump> zoneHVACPackagedTerminalHeatPumps;
 
-    zoneHVACPackagedTerminalHeatPumps = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
+      zoneHVACPackagedTerminalHeatPumps = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
 
-    for( const auto & zoneHVACPackagedTerminalHeatPump : zoneHVACPackagedTerminalHeatPumps )
-    {
-      if( boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalHeatPump.coolingCoil() )
-      {
-        if( coil->handle() == this->handle() )
-        {
-          return zoneHVACPackagedTerminalHeatPump;
+      for (const auto& zoneHVACPackagedTerminalHeatPump : zoneHVACPackagedTerminalHeatPumps) {
+        if (boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalHeatPump.coolingCoil()) {
+          if (coil->handle() == this->handle()) {
+            return zoneHVACPackagedTerminalHeatPump;
+          }
         }
       }
+
+      // ZoneHVAC:WindowAirConditioner not wrapped
+
+      return boost::none;
     }
 
-    // ZoneHVAC:WindowAirConditioner not wrapped
-
-    return boost::none;
-  }
-
-  AirToAirComponent CoilSystemCoolingDXHeatExchangerAssisted_Impl::heatExchanger() const {
-    boost::optional<AirToAirComponent> value = optionalHeatExchanger();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Heat Exchanger attached.");
+    AirToAirComponent CoilSystemCoolingDXHeatExchangerAssisted_Impl::heatExchanger() const {
+      boost::optional<AirToAirComponent> value = optionalHeatExchanger();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Heat Exchanger attached.");
+      }
+      return value.get();
     }
-    return value.get();
-  }
 
-  StraightComponent CoilSystemCoolingDXHeatExchangerAssisted_Impl::coolingCoil() const {
-    boost::optional<StraightComponent> value = optionalCoolingCoil();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Cooling Coil attached.");
+    StraightComponent CoilSystemCoolingDXHeatExchangerAssisted_Impl::coolingCoil() const {
+      boost::optional<StraightComponent> value = optionalCoolingCoil();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Cooling Coil attached.");
+      }
+      return value.get();
     }
-    return value.get();
-  }
 
-  bool CoilSystemCoolingDXHeatExchangerAssisted_Impl::setHeatExchanger(const AirToAirComponent& heatExchanger) {
-    bool result = setPointer(OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::HeatExchanger, heatExchanger.handle());
-    return result;
-  }
+    bool CoilSystemCoolingDXHeatExchangerAssisted_Impl::setHeatExchanger(const AirToAirComponent& heatExchanger) {
+      bool result = setPointer(OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::HeatExchanger, heatExchanger.handle());
+      return result;
+    }
 
-  bool CoilSystemCoolingDXHeatExchangerAssisted_Impl::setCoolingCoil(const StraightComponent& coolingCoil) {
-    bool result = setPointer(OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::CoolingCoil, coolingCoil.handle());
-    return result;
-  }
+    bool CoilSystemCoolingDXHeatExchangerAssisted_Impl::setCoolingCoil(const StraightComponent& coolingCoil) {
+      bool result = setPointer(OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::CoolingCoil, coolingCoil.handle());
+      return result;
+    }
 
-  boost::optional<AirToAirComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::optionalHeatExchanger() const {
-    return getObject<ModelObject>().getModelObjectTarget<AirToAirComponent>(OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::HeatExchanger);
-  }
+    boost::optional<AirToAirComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::optionalHeatExchanger() const {
+      return getObject<ModelObject>().getModelObjectTarget<AirToAirComponent>(OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::HeatExchanger);
+    }
 
-  boost::optional<StraightComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::optionalCoolingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::CoolingCoil);
-  }
+    boost::optional<StraightComponent> CoilSystemCoolingDXHeatExchangerAssisted_Impl::optionalCoolingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<StraightComponent>(OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::CoolingCoil);
+    }
 
-  unsigned CoilSystemCoolingDXHeatExchangerAssisted_Impl::inletPort() const {
-    return OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirInletNodeName;
-  }
+    unsigned CoilSystemCoolingDXHeatExchangerAssisted_Impl::inletPort() const {
+      return OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirInletNodeName;
+    }
 
-  unsigned CoilSystemCoolingDXHeatExchangerAssisted_Impl::outletPort() const {
-    return OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirOutletNodeName;
-  }
+    unsigned CoilSystemCoolingDXHeatExchangerAssisted_Impl::outletPort() const {
+      return OS_CoilSystem_Cooling_DX_HeatExchangerAssistedFields::AirOutletNodeName;
+    }
 
-  bool CoilSystemCoolingDXHeatExchangerAssisted_Impl::addToNode(Node & node)
-  {
+    bool CoilSystemCoolingDXHeatExchangerAssisted_Impl::addToNode(Node& node) {
 
-    /**
+      /**
      * Note JM 2019-03-13: At this point in time
      * CoilSystemCoolingDXHeatExchangerAssisted is **NOT** allowed on a Branch directly and should be placed inside one of the Unitary systems
      * cf https://github.com/NREL/EnergyPlus/issues/7222
      * This method returns false and does nothing as a result
      */
 
-    // TODO: uncomment this if it becomes allowed
-    //if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() ) {
+      // TODO: uncomment this if it becomes allowed
+      //if( boost::optional<AirLoopHVAC> airLoop = node.airLoopHVAC() ) {
       //if( ! airLoop->demandComponent(node.handle()) ) {
-        //return StraightComponent_Impl::addToNode( node );
-      //}
-    //}
-
-    //if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
       //return StraightComponent_Impl::addToNode( node );
-    //}
+      //}
+      //}
 
-    return false;
+      //if ( auto oa = node.airLoopHVACOutdoorAirSystem() ) {
+      //return StraightComponent_Impl::addToNode( node );
+      //}
+
+      return false;
+    }
+
+  }  // namespace detail
+
+  CoilSystemCoolingDXHeatExchangerAssisted::CoilSystemCoolingDXHeatExchangerAssisted(const Model& model)
+    : StraightComponent(CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>());
+
+    CoilCoolingDXSingleSpeed coolingCoil(model);
+    setCoolingCoil(coolingCoil);
+
+    HeatExchangerAirToAirSensibleAndLatent heatExchanger(model);
+    heatExchanger.setSupplyAirOutletTemperatureControl(false);
+    setHeatExchanger(heatExchanger);
   }
 
-} // detail
+  CoilSystemCoolingDXHeatExchangerAssisted::CoilSystemCoolingDXHeatExchangerAssisted(const Model& model, const AirToAirComponent& heatExchanger)
+    : StraightComponent(CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>());
 
-CoilSystemCoolingDXHeatExchangerAssisted::CoilSystemCoolingDXHeatExchangerAssisted(const Model& model)
-  : StraightComponent(CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>());
+    bool ok = setHeatExchanger(heatExchanger);
+    if (!ok) {
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Heat Exchanger " << heatExchanger.briefDescription() << ".");
+    }
 
-  CoilCoolingDXSingleSpeed coolingCoil(model);
-  setCoolingCoil(coolingCoil);
+    CoilCoolingDXSingleSpeed coolingCoil(model);
+    setCoolingCoil(coolingCoil);
 
-  HeatExchangerAirToAirSensibleAndLatent heatExchanger(model);
-  heatExchanger.setSupplyAirOutletTemperatureControl(false);
-  setHeatExchanger(heatExchanger);
-}
+    setHeatExchanger(heatExchanger);
+  }
 
-IddObjectType CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted);
-}
+  IddObjectType CoilSystemCoolingDXHeatExchangerAssisted::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted);
+  }
 
-AirToAirComponent CoilSystemCoolingDXHeatExchangerAssisted::heatExchanger() const {
-  return getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>()->heatExchanger();
-}
+  AirToAirComponent CoilSystemCoolingDXHeatExchangerAssisted::heatExchanger() const {
+    return getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>()->heatExchanger();
+  }
 
-StraightComponent CoilSystemCoolingDXHeatExchangerAssisted::coolingCoil() const {
-  return getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>()->coolingCoil();
-}
+  StraightComponent CoilSystemCoolingDXHeatExchangerAssisted::coolingCoil() const {
+    return getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>()->coolingCoil();
+  }
 
-bool CoilSystemCoolingDXHeatExchangerAssisted::setHeatExchanger(const AirToAirComponent& heatExchanger) {
-  return getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>()->setHeatExchanger(heatExchanger);
-}
+  bool CoilSystemCoolingDXHeatExchangerAssisted::setHeatExchanger(const AirToAirComponent& heatExchanger) {
+    return getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>()->setHeatExchanger(heatExchanger);
+  }
 
-bool CoilSystemCoolingDXHeatExchangerAssisted::setCoolingCoil(const StraightComponent& coolingCoil) {
-  return getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>()->setCoolingCoil(coolingCoil);
-}
+  bool CoilSystemCoolingDXHeatExchangerAssisted::setCoolingCoil(const StraightComponent& coolingCoil) {
+    return getImpl<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl>()->setCoolingCoil(coolingCoil);
+  }
 
-/// @cond
-CoilSystemCoolingDXHeatExchangerAssisted::CoilSystemCoolingDXHeatExchangerAssisted(std::shared_ptr<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
+  /// @cond
+  CoilSystemCoolingDXHeatExchangerAssisted::CoilSystemCoolingDXHeatExchangerAssisted(
+    std::shared_ptr<detail::CoilSystemCoolingDXHeatExchangerAssisted_Impl> impl)
+    : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

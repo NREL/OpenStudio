@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,21 +36,20 @@
 #include "../core/Path.hpp"
 #include "../data/Vector.hpp"
 
-namespace openstudio{
+namespace openstudio {
 
 class Variant;
 class TimeSeries;
 class DateTime;
 
-namespace detail{
+namespace detail {
   class CSVFile_Impl;
 }
 
 /** Class for reading and writing CSV files. */
 class UTILITIES_API CSVFile
 {
-public:
-
+ public:
   /** Create a new, empty CSVFile. */
   CSVFile();
 
@@ -76,33 +75,39 @@ public:
   bool save() const;
 
   /** Saves this file to a new location. Updates the CSVFile path. */
+  // cppcheck-suppress functionConst
   bool saveAs(const openstudio::path& p);
 
   /** Returns the absolute path this CSVFile was loaded from or saved to, empty for new CSVFile. */
   boost::optional<openstudio::path> path() const;
 
   /** Sets the absolute path for this CSVFile. */
+  // cppcheck-suppress functionConst
   bool setPath(const openstudio::path& path);
 
   /** Resets the absolute path for this CSVFile. */
+  // cppcheck-suppress functionConst
   void resetPath();
 
   /** Returns number of columns, this is the maximum number of columns across all rows. */
   unsigned numColumns() const;
-  
+
   /** Returns number of rows. */
   unsigned numRows() const;
-  
+
   /** Get all rows. */
-  std::vector<std::vector<Variant> > rows() const;
-  
+  std::vector<std::vector<Variant>> rows() const;
+
   /** Add a row. */
+  // cppcheck-suppress functionConst
   void addRow(const std::vector<Variant>& row);
-  
+
   /** Set all rows. */
-  void setRows(const std::vector<std::vector<Variant> >& rows);  
-  
+  // cppcheck-suppress functionConst
+  void setRows(const std::vector<std::vector<Variant>>& rows);
+
   /** Clear all rows. */
+  // cppcheck-suppress functionConst
   void clear();
 
   /** Add a column of std::vector<DateTime>, returns column index (first column is index 0). */
@@ -126,10 +131,9 @@ public:
   /** Get column as a Vector (first column is index 0). Numeric cells will be converted to strings. Empty vector is returned if column index is invalid.*/
   std::vector<std::string> getColumnAsStringVector(unsigned columnIndex) const;
 
-protected:
-
+ protected:
   // get the impl
-  template<typename T>
+  template <typename T>
   std::shared_ptr<T> getImpl() const {
     return std::dynamic_pointer_cast<T>(m_impl);
   }
@@ -139,8 +143,7 @@ protected:
   /** Protected constructor from impl. */
   CSVFile(std::shared_ptr<detail::CSVFile_Impl> impl);
 
-private:
-
+ private:
   // configure logging
   REGISTER_LOGGER("openstudio.CSVFile");
 
@@ -150,6 +153,6 @@ private:
 
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const CSVFile& csvFile);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_FILETYPES_CSVFILE_HPP
+#endif  //UTILITIES_FILETYPES_CSVFILE_HPP

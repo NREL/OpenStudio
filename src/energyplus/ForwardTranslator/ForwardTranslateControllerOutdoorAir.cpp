@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,248 +44,203 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateControllerOutdoorAir( ControllerOutdoorAir& modelObject )
-{
-  OptionalString s;
-  OptionalDouble d;
+  boost::optional<IdfObject> ForwardTranslator::translateControllerOutdoorAir(ControllerOutdoorAir& modelObject) {
+    OptionalString s;
+    OptionalDouble d;
 
-  // Create a new IddObjectType::AirLoopHVAC_OutdoorAirSystem
-  IdfObject idfObject(IddObjectType::Controller_OutdoorAir);
+    // Create a new IddObjectType::AirLoopHVAC_OutdoorAirSystem
+    IdfObject idfObject(IddObjectType::Controller_OutdoorAir);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Name ////////////////////////////////////////////////////////////
-  s = modelObject.name();
-  if(s)
-  {
-    idfObject.setString(openstudio::Controller_OutdoorAirFields::Name,*s);
-  }
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Relief Air Outlet Node Name /////////////////////////////////////
-  s = modelObject.airLoopHVACOutdoorAirSystem()->reliefAirModelObject()->name();
-  if(s)
-  {
-    idfObject.setString( openstudio::Controller_OutdoorAirFields::ReliefAirOutletNodeName,*s );
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Return Air Outlet Node Name /////////////////////////////////////
-  s = modelObject.airLoopHVACOutdoorAirSystem()->returnAirModelObject()->name();
-  if(s)
-  {
-    idfObject.setString( openstudio::Controller_OutdoorAirFields::ReturnAirNodeName,*s );
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Mixed Air Outlet Node Name //////////////////////////////////////
-  s = modelObject.airLoopHVACOutdoorAirSystem()->mixedAirModelObject()->name();
-  if(s)
-  {
-    idfObject.setString( openstudio::Controller_OutdoorAirFields::MixedAirNodeName,*s );
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Actuator Node Name //////////////////////////////////////////////
-  s = modelObject.airLoopHVACOutdoorAirSystem()->outboardOANode()->name();
-  if(s)
-  {
-    idfObject.setString( openstudio::Controller_OutdoorAirFields::ActuatorNodeName,*s );
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Minimum Outdoor Air Flow Rate ///////////////////////////////////
-  if( modelObject.controllerMechanicalVentilation().demandControlledVentilation() &&
-      modelObject.isMinimumOutdoorAirFlowRateAutosized() )
-  {
-    idfObject.setDouble(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate,0.0);
-  }
-  else
-  {
-    d = modelObject.minimumOutdoorAirFlowRate();
-    if(d)
-    {
-      idfObject.setDouble(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate,*d);
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Name ////////////////////////////////////////////////////////////
+    s = modelObject.name();
+    if (s) {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::Name, *s);
     }
-    else
-    {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate,"Autosize");
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Relief Air Outlet Node Name /////////////////////////////////////
+    s = modelObject.airLoopHVACOutdoorAirSystem()->reliefAirModelObject()->name();
+    if (s) {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::ReliefAirOutletNodeName, *s);
     }
-  }
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Maximum Outdoor Air Flow Rate ///////////////////////////////////
-  d = modelObject.maximumOutdoorAirFlowRate();
-  if(d)
-  {
-    idfObject.setDouble(openstudio::Controller_OutdoorAirFields::MaximumOutdoorAirFlowRate,*d);
-  }
-  else
-  {
-    idfObject.setString(openstudio::Controller_OutdoorAirFields::MaximumOutdoorAirFlowRate,"Autosize");
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Economizer Control Type /////////////////////////////////////////
-  idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerControlType,
-                      modelObject.getEconomizerControlType());
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Economizer Control Action Type //////////////////////////////////
-  idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerControlActionType,
-                      modelObject.getEconomizerControlActionType());
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Economizer Maximum Limit DryBulb Temperature ////////////////////
-  d = modelObject.getEconomizerMaximumLimitDryBulbTemperature();
-  if (d){
-    idfObject.setDouble(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitDryBulbTemperature,d.get());
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Return Air Outlet Node Name /////////////////////////////////////
+    s = modelObject.airLoopHVACOutdoorAirSystem()->returnAirModelObject()->name();
+    if (s) {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::ReturnAirNodeName, *s);
     }
-  else {
-    idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitDryBulbTemperature, "");
-  }
 
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Economizer Maximum Limit Enthalpy ///////////////////////////////
-  d = modelObject.getEconomizerMaximumLimitEnthalpy();
-  if (d) {
-    idfObject.setDouble(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitEnthalpy,d.get());
-  }
-  else {
-    idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitEnthalpy, "");
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Economizer Maximum Limit Dewpoint Temperature ///////////////////
-  d = modelObject.getEconomizerMaximumLimitDewpointTemperature();
-  if (d) {
-    idfObject.setDouble(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitDewpointTemperature,d.get());
-  }
-  else {
-    idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitDewpointTemperature, "");
-  }
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Electronic Enthalpy Limit Curve Name ////////////////////////////
-  idfObject.setString(openstudio::Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName,"");
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Economizer Minimum Limit DryBulb Temperature ////////////////////
-  d = modelObject.getEconomizerMinimumLimitDryBulbTemperature();
-  if (d) {
-    idfObject.setDouble(openstudio::Controller_OutdoorAirFields::EconomizerMinimumLimitDryBulbTemperature,d.get());
-  }
-  else {
-    idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerMinimumLimitDryBulbTemperature, "");
-  }
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Lockout Type ////////////////////////////////////////////////////
-  idfObject.setString(openstudio::Controller_OutdoorAirFields::LockoutType,
-                      modelObject.getLockoutType());
-
-  ///////////////////////////////////////////////////////////////////////////
-  // Field: Minimum Limit Type //////////////////////////////////////////////
-  idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumLimitType,
-                      modelObject.getMinimumLimitType());
-
-
-  // HighHumidityControl
-  boost::optional<bool> ob;
-  ob=modelObject.getHighHumidityControl();
-  if(ob)
-  {
-    if(*ob)
-    {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::HighHumidityControl,"Yes");
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Mixed Air Outlet Node Name //////////////////////////////////////
+    s = modelObject.airLoopHVACOutdoorAirSystem()->mixedAirModelObject()->name();
+    if (s) {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::MixedAirNodeName, *s);
     }
-    else
-    {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::HighHumidityControl,"No");
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Actuator Node Name //////////////////////////////////////////////
+    s = modelObject.airLoopHVACOutdoorAirSystem()->outboardOANode()->name();
+    if (s) {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::ActuatorNodeName, *s);
     }
-  }
 
-  // HighHumidityOutdoorAirFlowRatio
-  d=modelObject.getHighHumidityOutdoorAirFlowRatio();
-  if(d)
-  {
-    idfObject.setDouble(openstudio::Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio,*d);
-  }
-
-  // ControlHighIndoorHumidityBasedonOutdoorHumidityRatio
-  ob=modelObject.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio();
-  if(ob)
-  {
-    if(*ob)
-    {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio,"Yes");
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Minimum Outdoor Air Flow Rate ///////////////////////////////////
+    if (modelObject.controllerMechanicalVentilation().demandControlledVentilation() && modelObject.isMinimumOutdoorAirFlowRateAutosized()) {
+      idfObject.setDouble(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate, 0.0);
+    } else {
+      d = modelObject.minimumOutdoorAirFlowRate();
+      if (d) {
+        idfObject.setDouble(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate, *d);
+      } else {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirFlowRate, "Autosize");
+      }
     }
-    else
-    {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio,"No");
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Maximum Outdoor Air Flow Rate ///////////////////////////////////
+    d = modelObject.maximumOutdoorAirFlowRate();
+    if (d) {
+      idfObject.setDouble(openstudio::Controller_OutdoorAirFields::MaximumOutdoorAirFlowRate, *d);
+    } else {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::MaximumOutdoorAirFlowRate, "Autosize");
     }
-  }
 
-  // HeatRecoveryBypassControlType
-  s=modelObject.getHeatRecoveryBypassControlType();
-  if(s)
-  {
-    idfObject.setString(openstudio::Controller_OutdoorAirFields::HeatRecoveryBypassControlType, *s );
-  }
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Economizer Control Type /////////////////////////////////////////
+    idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerControlType, modelObject.getEconomizerControlType());
 
-  // Controller Mechanical Ventilation
-  model::ControllerMechanicalVentilation controllerMechanicalVentilation = modelObject.controllerMechanicalVentilation();
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Economizer Control Action Type //////////////////////////////////
+    idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerControlActionType, modelObject.getEconomizerControlActionType());
 
-  boost::optional<IdfObject> controllerMechanicalVentilationIdf = translateAndMapModelObject(controllerMechanicalVentilation);
-  if( controllerMechanicalVentilationIdf )
-  {
-    idfObject.setString(openstudio::Controller_OutdoorAirFields::MechanicalVentilationControllerName,
-                        controllerMechanicalVentilationIdf->name().get());
-  }
-
-  // MinimumOutdoorAirSchedule
-
-  if( boost::optional<Schedule> s = modelObject.minimumOutdoorAirSchedule() )
-  {
-    if( boost::optional<IdfObject> _s = translateAndMapModelObject(s.get()) )
-    {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName,_s->name().get());
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Economizer Maximum Limit DryBulb Temperature ////////////////////
+    d = modelObject.getEconomizerMaximumLimitDryBulbTemperature();
+    if (d) {
+      idfObject.setDouble(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitDryBulbTemperature, d.get());
+    } else {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitDryBulbTemperature, "");
     }
-  }
 
-  // MinimumFractionofOutdoorAirSchedule
-
-  if( boost::optional<Schedule> s = modelObject.minimumFractionofOutdoorAirSchedule() )
-  {
-    if( boost::optional<IdfObject> _s = translateAndMapModelObject(s.get()) )
-    {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName,_s->name().get());
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Economizer Maximum Limit Enthalpy ///////////////////////////////
+    d = modelObject.getEconomizerMaximumLimitEnthalpy();
+    if (d) {
+      idfObject.setDouble(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitEnthalpy, d.get());
+    } else {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitEnthalpy, "");
     }
-  }
 
-  // MaximumFractionofOutdoorAirSchedule
-
-  if( boost::optional<Schedule> s = modelObject.maximumFractionofOutdoorAirSchedule() )
-  {
-    if( boost::optional<IdfObject> _s = translateAndMapModelObject(s.get()) )
-    {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName,_s->name().get());
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Economizer Maximum Limit Dewpoint Temperature ///////////////////
+    d = modelObject.getEconomizerMaximumLimitDewpointTemperature();
+    if (d) {
+      idfObject.setDouble(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitDewpointTemperature, d.get());
+    } else {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerMaximumLimitDewpointTemperature, "");
     }
-  }
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Electronic Enthalpy Limit Curve Name ////////////////////////////
+    idfObject.setString(openstudio::Controller_OutdoorAirFields::ElectronicEnthalpyLimitCurveName, "");
 
-  // TimeofDayEconomizerControlSchedule
-
-  if( boost::optional<Schedule> s = modelObject.timeofDayEconomizerControlSchedule() )
-  {
-    if( boost::optional<IdfObject> _s = translateAndMapModelObject(s.get()) )
-    {
-      idfObject.setString(openstudio::Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName,_s->name().get());
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Economizer Minimum Limit DryBulb Temperature ////////////////////
+    d = modelObject.getEconomizerMinimumLimitDryBulbTemperature();
+    if (d) {
+      idfObject.setDouble(openstudio::Controller_OutdoorAirFields::EconomizerMinimumLimitDryBulbTemperature, d.get());
+    } else {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::EconomizerMinimumLimitDryBulbTemperature, "");
     }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Lockout Type ////////////////////////////////////////////////////
+    idfObject.setString(openstudio::Controller_OutdoorAirFields::LockoutType, modelObject.getLockoutType());
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Field: Minimum Limit Type //////////////////////////////////////////////
+    idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumLimitType, modelObject.getMinimumLimitType());
+
+    // HighHumidityControl
+    boost::optional<bool> ob;
+    ob = modelObject.getHighHumidityControl();
+    if (ob) {
+      if (*ob) {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::HighHumidityControl, "Yes");
+      } else {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::HighHumidityControl, "No");
+      }
+    }
+
+    // HighHumidityOutdoorAirFlowRatio
+    d = modelObject.getHighHumidityOutdoorAirFlowRatio();
+    if (d) {
+      idfObject.setDouble(openstudio::Controller_OutdoorAirFields::HighHumidityOutdoorAirFlowRatio, *d);
+    }
+
+    // ControlHighIndoorHumidityBasedonOutdoorHumidityRatio
+    ob = modelObject.getControlHighIndoorHumidityBasedOnOutdoorHumidityRatio();
+    if (ob) {
+      if (*ob) {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "Yes");
+      } else {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::ControlHighIndoorHumidityBasedonOutdoorHumidityRatio, "No");
+      }
+    }
+
+    // HeatRecoveryBypassControlType
+    s = modelObject.getHeatRecoveryBypassControlType();
+    if (s) {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::HeatRecoveryBypassControlType, *s);
+    }
+
+    // Controller Mechanical Ventilation
+    model::ControllerMechanicalVentilation controllerMechanicalVentilation = modelObject.controllerMechanicalVentilation();
+
+    boost::optional<IdfObject> controllerMechanicalVentilationIdf = translateAndMapModelObject(controllerMechanicalVentilation);
+    if (controllerMechanicalVentilationIdf) {
+      idfObject.setString(openstudio::Controller_OutdoorAirFields::MechanicalVentilationControllerName,
+                          controllerMechanicalVentilationIdf->name().get());
+    }
+
+    // MinimumOutdoorAirSchedule
+
+    if (boost::optional<Schedule> s = modelObject.minimumOutdoorAirSchedule()) {
+      if (boost::optional<IdfObject> _s = translateAndMapModelObject(s.get())) {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumOutdoorAirScheduleName, _s->name().get());
+      }
+    }
+
+    // MinimumFractionofOutdoorAirSchedule
+
+    if (boost::optional<Schedule> s = modelObject.minimumFractionofOutdoorAirSchedule()) {
+      if (boost::optional<IdfObject> _s = translateAndMapModelObject(s.get())) {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::MinimumFractionofOutdoorAirScheduleName, _s->name().get());
+      }
+    }
+
+    // MaximumFractionofOutdoorAirSchedule
+
+    if (boost::optional<Schedule> s = modelObject.maximumFractionofOutdoorAirSchedule()) {
+      if (boost::optional<IdfObject> _s = translateAndMapModelObject(s.get())) {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::MaximumFractionofOutdoorAirScheduleName, _s->name().get());
+      }
+    }
+
+    // TimeofDayEconomizerControlSchedule
+
+    if (boost::optional<Schedule> s = modelObject.timeofDayEconomizerControlSchedule()) {
+      if (boost::optional<IdfObject> _s = translateAndMapModelObject(s.get())) {
+        idfObject.setString(openstudio::Controller_OutdoorAirFields::TimeofDayEconomizerControlScheduleName, _s->name().get());
+      }
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  return boost::optional<IdfObject>(idfObject);
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

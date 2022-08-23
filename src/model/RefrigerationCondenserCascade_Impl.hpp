@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,99 +36,104 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  class RefrigerationSystem;
 
-  /** RefrigerationCondenserCascade_Impl is a ModelObject_Impl that is the implementation class for RefrigerationCondenserCascade.*/
-  class MODEL_API RefrigerationCondenserCascade_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+  namespace detail {
 
-    RefrigerationCondenserCascade_Impl(const IdfObject& idfObject,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+    /** RefrigerationCondenserCascade_Impl is a ModelObject_Impl that is the implementation class for RefrigerationCondenserCascade.*/
+    class MODEL_API RefrigerationCondenserCascade_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    RefrigerationCondenserCascade_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      RefrigerationCondenserCascade_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    RefrigerationCondenserCascade_Impl(const RefrigerationCondenserCascade_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      RefrigerationCondenserCascade_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~RefrigerationCondenserCascade_Impl() {}
+      RefrigerationCondenserCascade_Impl(const RefrigerationCondenserCascade_Impl& other, Model_Impl* model, bool keepHandle);
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual ~RefrigerationCondenserCascade_Impl() {}
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      virtual IddObjectType iddObjectType() const override;
 
-    double ratedCondensingTemperature() const;
+      virtual std::vector<IdfObject> remove() override;
 
-    double ratedApproachTemperatureDifference() const;
+      //@}
+      /** @name Getters */
+      //@{
 
-    bool isRatedApproachTemperatureDifferenceDefaulted() const;
+      double ratedCondensingTemperature() const;
 
-    double ratedEffectiveTotalHeatRejectionRate() const;
+      double ratedApproachTemperatureDifference() const;
 
-    std::string condensingTemperatureControlType() const;
+      bool isRatedApproachTemperatureDifferenceDefaulted() const;
 
-    bool isCondensingTemperatureControlTypeDefaulted() const;
+      double ratedEffectiveTotalHeatRejectionRate() const;
 
-    boost::optional<double> condenserRefrigerantOperatingChargeInventory() const;
+      std::string condensingTemperatureControlType() const;
 
-    boost::optional<double> condensateReceiverRefrigerantInventory() const;
+      bool isCondensingTemperatureControlTypeDefaulted() const;
 
-    boost::optional<double> condensatePipingRefrigerantInventory() const;
+      boost::optional<double> condenserRefrigerantOperatingChargeInventory() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      boost::optional<double> condensateReceiverRefrigerantInventory() const;
 
-    bool setRatedCondensingTemperature(double ratedCondensingTemperature);
+      boost::optional<double> condensatePipingRefrigerantInventory() const;
 
-    bool setRatedApproachTemperatureDifference(double ratedApproachTemperatureDifference);
+      //@}
+      /** @name Setters */
+      //@{
 
-    void resetRatedApproachTemperatureDifference();
+      bool setRatedCondensingTemperature(double ratedCondensingTemperature);
 
-    bool setRatedEffectiveTotalHeatRejectionRate(double ratedEffectiveTotalHeatRejectionRate);
+      bool setRatedApproachTemperatureDifference(double ratedApproachTemperatureDifference);
 
-    bool setCondensingTemperatureControlType(std::string condensingTemperatureControlType);
+      void resetRatedApproachTemperatureDifference();
 
-    void resetCondensingTemperatureControlType();
+      bool setRatedEffectiveTotalHeatRejectionRate(double ratedEffectiveTotalHeatRejectionRate);
 
-    bool setCondenserRefrigerantOperatingChargeInventory(boost::optional<double> condenserRefrigerantOperatingChargeInventory);
+      bool setCondensingTemperatureControlType(std::string condensingTemperatureControlType);
 
-    void resetCondenserRefrigerantOperatingChargeInventory();
+      void resetCondensingTemperatureControlType();
 
-    bool setCondensateReceiverRefrigerantInventory(boost::optional<double> condensateReceiverRefrigerantInventory);
+      bool setCondenserRefrigerantOperatingChargeInventory(boost::optional<double> condenserRefrigerantOperatingChargeInventory);
 
-    void resetCondensateReceiverRefrigerantInventory();
+      void resetCondenserRefrigerantOperatingChargeInventory();
 
-    bool setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory);
+      bool setCondensateReceiverRefrigerantInventory(boost::optional<double> condensateReceiverRefrigerantInventory);
 
-    void resetCondensatePipingRefrigerantInventory();
+      void resetCondensateReceiverRefrigerantInventory();
 
-    //@}
-    /** @name Other */
-    //@{
+      bool setCondensatePipingRefrigerantInventory(boost::optional<double> condensatePipingRefrigerantInventory);
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RefrigerationCondenserCascade");
-  };
+      void resetCondensatePipingRefrigerantInventory();
 
-} // detail
+      //@}
+      /** @name Other */
+      //@{
 
-} // model
-} // openstudio
+      boost::optional<RefrigerationSystem> system() const;
+      void removeFromSystem();
 
-#endif // MODEL_REFRIGERATIONCONDENSERCASCADE_IMPL_HPP
+      boost::optional<RefrigerationSystem> heatRejectingSystem() const;
+      void removeFromHeatRejectingSystem();
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RefrigerationCondenserCascade");
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_REFRIGERATIONCONDENSERCASCADE_IMPL_HPP

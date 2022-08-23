@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,46 +48,52 @@
  *  Error = something that definitely should not have happened
  *  Fatal = something so bad execution can't proceed
  *  Defined at the root namespace level for simplicity */
-enum LogLevel{Trace = -3, Debug = -2, Info = -1, Warn = 0, Error = 1, Fatal = 2};
+enum LogLevel
+{
+  Trace = -3,
+  Debug = -2,
+  Info = -1,
+  Warn = 0,
+  Error = 1,
+  Fatal = 2
+};
 
-namespace openstudio{
+namespace openstudio {
 
-  /// LogChannel identifies a logger
-  typedef std::string LogChannel;
+/// LogChannel identifies a logger
+typedef std::string LogChannel;
 
-  /// Type of stream sink used
-  typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend> LogSinkBackend;
+/// Type of stream sink used
+typedef boost::log::sinks::synchronous_sink<boost::log::sinks::text_ostream_backend> LogSinkBackend;
 
-  /// Type of logger used
-  typedef boost::log::sources::severity_channel_logger_mt<LogLevel> LoggerType;
+/// Type of logger used
+typedef boost::log::sources::severity_channel_logger_mt<LogLevel> LoggerType;
 
-  /// LogMessage encapsulates a single logging message
-  class UTILITIES_API LogMessage
-  {
-    public:
+/// LogMessage encapsulates a single logging message
+class UTILITIES_API LogMessage
+{
+ public:
+  /// constructor
+  LogMessage(LogLevel logLevel, const std::string& logChannel, const std::string& logMessage);
 
-      /// constructor
-      LogMessage(LogLevel logLevel, const std::string& channel, const std::string& message);
+  /// parse logText and get log messages
+  static std::vector<LogMessage> parseLogText(const std::string& logText);
 
-      /// parse logText and get log messages
-      static std::vector<LogMessage> parseLogText(const std::string& logText);
+  /// get the message's log level
+  LogLevel logLevel() const;
 
-      /// get the message's log level
-      LogLevel logLevel() const;
+  /// get the messages log channel
+  LogChannel logChannel() const;
 
-      /// get the messages log channel
-      LogChannel logChannel() const;
+  /// get the content of the log message
+  std::string logMessage() const;
 
-      /// get the content of the log message
-      std::string logMessage() const;
+ private:
+  LogLevel m_logLevel;
+  std::string m_logChannel;
+  std::string m_logMessage;
+};
 
-    private:
+}  // namespace openstudio
 
-      LogLevel m_logLevel;
-      std::string m_logChannel;
-      std::string m_logMessage;
-  };
-
-} // openstudio
-
-#endif // UTILITIES_CORE_LOGMESSAGE_HPP
+#endif  // UTILITIES_CORE_LOGMESSAGE_HPP

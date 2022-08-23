@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,36 +38,27 @@ namespace detail {
 
   class MPHUnit_Impl;
 
-} // detail
+}  // namespace detail
 
 /** Structure to hold MPHUnit exponents needed for MPHUnit construction. \relates MPHUnit */
-struct UTILITIES_API MPHExpnt {
+struct UTILITIES_API MPHExpnt
+{
  public:
-  MPHExpnt(int inHg=0,
-           int mi=0,
-           int h=0,
-           int R=0,
-           int A=0,
-           int cd=0,
-           int lbmol=0,
-           int deg=0,
-           int sr=0,
-           int people=0,
-           int cycle=0,
-           int dollar=0)
-   : m_inHg(inHg),
-     m_mi(mi),
-     m_h(h),
-     m_R(R),
-     m_A(A),
-     m_cd(cd),
-     m_lbmol(lbmol),
-     m_deg(deg),
-     m_sr(sr),
-     m_people(people),
-     m_cycle(cycle),
-     m_dollar(dollar)
-  {}
+  MPHExpnt(int inHg = 0, int mi = 0, int h = 0, int R = 0, int A = 0, int cd = 0, int lbmol = 0, int deg = 0, int sr = 0, int people = 0,
+           int cycle = 0, int dollar = 0)
+    : m_inHg(inHg),
+      m_mi(mi),
+      m_h(h),
+      m_R(R),
+      m_A(A),
+      m_cd(cd),
+      m_lbmol(lbmol),
+      m_deg(deg),
+      m_sr(sr),
+      m_people(people),
+      m_cycle(cycle),
+      m_dollar(dollar) {}
+
  private:
   int m_inHg;
   int m_mi;
@@ -88,7 +79,8 @@ struct UTILITIES_API MPHExpnt {
 /** MPHUnit is a Unit with baseUnits fixed by its constructors, see MPHExpnt. setBaseUnitExponent
  *  throws an exception if any other string is passed in as a baseUnit. MPHUnit.hpp declares
  *  related operators and UnitFactory callback functions. */
-class UTILITIES_API MPHUnit : public Unit {
+class UTILITIES_API MPHUnit : public Unit
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -98,9 +90,7 @@ class UTILITIES_API MPHUnit : public Unit {
    *  \param[in] exponents holds the exponents for each base unit.
    *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  MPHUnit(const MPHExpnt& exponents=MPHExpnt(),
-         int scaleExponent=0,
-         const std::string& prettyString="");
+  MPHUnit(const MPHExpnt& exponents = MPHExpnt(), int scaleExponent = 0, const std::string& prettyString = "");
 
   /** Alternate constructor. Specify the abbreviation of the scale, rather than its
    *  exponent.
@@ -109,9 +99,7 @@ class UTILITIES_API MPHUnit : public Unit {
    *    "k" for kilo.
    *  \param[in] exponents holds the exponents for each base unit.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  MPHUnit(const std::string& scaleAbbreviation,
-         const MPHExpnt& exponents=MPHExpnt(),
-         const std::string& prettyString="");
+  MPHUnit(const std::string& scaleAbbreviation, const MPHExpnt& exponents = MPHExpnt(), const std::string& prettyString = "");
 
   virtual ~MPHUnit() {}
 
@@ -174,7 +162,6 @@ UTILITIES_API MPHUnit createMPHLuminousFlux();
 
 //@}
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_MPHUNIT_HPP
-
+#endif  // UTILITIES_UNITS_MPHUNIT_HPP

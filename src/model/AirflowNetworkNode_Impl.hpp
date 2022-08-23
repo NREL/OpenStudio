@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,78 +35,75 @@
 namespace openstudio {
 namespace model {
 
-class AirLoopHVAC;
+  class AirLoopHVAC;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API AirflowNetworkNode_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API AirflowNetworkNode_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkNode_Impl(IddObjectType type, Model_Impl* model);
+      AirflowNetworkNode_Impl(IddObjectType type, Model_Impl* model);
 
-    AirflowNetworkNode_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      AirflowNetworkNode_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkNode_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      AirflowNetworkNode_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkNode_Impl(const AirflowNetworkNode_Impl& other, Model_Impl* model, bool keepHandles);
+      AirflowNetworkNode_Impl(const AirflowNetworkNode_Impl& other, Model_Impl* model, bool keepHandles);
 
-    virtual ~AirflowNetworkNode_Impl() {}
+      virtual ~AirflowNetworkNode_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    //virtual ModelObject clone(Model model) const override;
+      //virtual ModelObject clone(Model model) const override;
 
-    //virtual boost::optional<ParentObject> parent() const override;
+      //virtual boost::optional<ParentObject> parent() const override;
 
-    //virtual std::vector<ModelObject> children() const override;
+      //virtual std::vector<ModelObject> children() const override;
 
-    //virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
+      //virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    //virtual unsigned inletPort() = 0;
+      //virtual unsigned inletPort() = 0;
 
-    //virtual unsigned outletPort() = 0;
+      //virtual unsigned outletPort() = 0;
 
-    //virtual boost::optional<ModelObject> inletModelObject() const;
+      //virtual boost::optional<ModelObject> inletModelObject() const;
 
-    //virtual boost::optional<ModelObject> outletModelObject() const;
+      //virtual boost::optional<ModelObject> outletModelObject() const;
 
-    //virtual boost::optional<AirLoopHVAC> airLoopHVAC() const override;
+      //virtual boost::optional<AirLoopHVAC> airLoopHVAC() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
+      //@}
+      /** @name Other */
+      //@{
+      //virtual bool addToNode(Node & node) override;
 
-    //@}
-    /** @name Other */
-    //@{
-    //virtual bool addToNode(Node & node) override;
+      //virtual std::vector<openstudio::IdfObject> remove() override;
 
-    //virtual std::vector<openstudio::IdfObject> remove() override;
+      //bool removeFromLoop();
 
-    //bool removeFromLoop();
+      //void disconnect() override;
 
-    //void disconnect() override;
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkNode");
+    };
 
-    //@}
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkNode");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRFLOWNETWORKNODE_IMPL_HPP
+#endif  // MODEL_AIRFLOWNETWORKNODE_IMPL_HPP

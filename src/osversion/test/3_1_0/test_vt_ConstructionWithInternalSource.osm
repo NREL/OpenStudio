@@ -1,0 +1,51 @@
+
+OS:Version,
+  {b7321f90-7e34-44d8-ab99-15e20b711148}, !- Handle
+  3.0.1;                                  !- Version Identifier
+
+OS:Construction:InternalSource,
+  {d3dff258-e73e-48bd-8cfb-d734269b6e9c}, !- Handle
+  Construction Internal Source 1,         !- Name
+  1,                                      !- Source Present After Layer Number
+  2,                                      !- Temperature Calculation Requested After Layer Number
+  1,                                      !- Dimensions for the CTF Calculation
+  0.2,                                    !- Tube Spacing {m}
+  {380094ce-cae9-4801-9570-e364808e5dff}, !- Surface Rendering Name
+  {df7adc4a-5d11-4326-8666-9759b7b41160}, !- Layer 1
+  {d8990472-0728-4192-bc22-1f70f4441380}, !- Layer 2
+  {46f3aa1c-b2cf-413c-90d7-3123c5d30915}; !- Layer 3
+
+OS:Material,
+  {df7adc4a-5d11-4326-8666-9759b7b41160}, !- Handle
+  Material1,                              !- Name
+  Smooth,                                 !- Roughness
+  0.1,                                    !- Thickness {m}
+  0.1,                                    !- Conductivity {W/m-K}
+  0.1,                                    !- Density {kg/m3}
+  1400;                                   !- Specific Heat {J/kg-K}
+
+OS:Material,
+  {d8990472-0728-4192-bc22-1f70f4441380}, !- Handle
+  Material2,                              !- Name
+  Smooth,                                 !- Roughness
+  0.1,                                    !- Thickness {m}
+  0.1,                                    !- Conductivity {W/m-K}
+  0.1,                                    !- Density {kg/m3}
+  1400;                                   !- Specific Heat {J/kg-K}
+
+OS:Material,
+  {46f3aa1c-b2cf-413c-90d7-3123c5d30915}, !- Handle
+  Material3,                              !- Name
+  Smooth,                                 !- Roughness
+  0.1,                                    !- Thickness {m}
+  0.1,                                    !- Conductivity {W/m-K}
+  0.1,                                    !- Density {kg/m3}
+  1400;                                   !- Specific Heat {J/kg-K}
+
+OS:Rendering:Color,
+  {380094ce-cae9-4801-9570-e364808e5dff}, !- Handle
+  RenderingColor for InternalSource,      !- Name
+  0,                                      !- Rendering Red Value
+  139,                                    !- Rendering Green Value
+  139;                                    !- Rendering Blue Value
+

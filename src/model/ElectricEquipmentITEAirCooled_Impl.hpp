@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,151 +36,143 @@
 namespace openstudio {
 namespace model {
 
-class ElectricEquipmentITEAirCooledDefinition;
-class ElectricEquipmentITEAirCooled;
-class Curve;
-class Schedule;
+  class ElectricEquipmentITEAirCooledDefinition;
+  class ElectricEquipmentITEAirCooled;
+  class Curve;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** ElectricEquipmentITEAirCooled_Impl is a SpaceLoadInstance_Impl that is the implementation class for ElectricEquipmentITEAirCooled.*/
-  class MODEL_API ElectricEquipmentITEAirCooled_Impl : public SpaceLoadInstance_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ElectricEquipmentITEAirCooled_Impl is a SpaceLoadInstance_Impl that is the implementation class for ElectricEquipmentITEAirCooled.*/
+    class MODEL_API ElectricEquipmentITEAirCooled_Impl : public SpaceLoadInstance_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ElectricEquipmentITEAirCooled_Impl(const IdfObject& idfObject,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      ElectricEquipmentITEAirCooled_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ElectricEquipmentITEAirCooled_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      ElectricEquipmentITEAirCooled_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ElectricEquipmentITEAirCooled_Impl(const ElectricEquipmentITEAirCooled_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      ElectricEquipmentITEAirCooled_Impl(const ElectricEquipmentITEAirCooled_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ElectricEquipmentITEAirCooled_Impl() {}
+      virtual ~ElectricEquipmentITEAirCooled_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual bool hardSize() override;
+      virtual bool hardSize() override;
 
-    virtual bool hardApplySchedules() override;
+      virtual bool hardApplySchedules() override;
 
-    virtual double multiplier() const override;
+      virtual double multiplier() const override;
 
-    virtual bool isMultiplierDefaulted() const override;
+      virtual bool isMultiplierDefaulted() const override;
 
-    virtual bool isAbsolute() const override;
-    //@}
-    /** @name Getters */
-    //@{
+      virtual bool isAbsolute() const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    ElectricEquipmentITEAirCooledDefinition electricEquipmentITEAirCooledDefinition() const;
+      ElectricEquipmentITEAirCooledDefinition electricEquipmentITEAirCooledDefinition() const;
 
-    // Return the Design Power Input Schedule. If not specified, default to always 1.
-    boost::optional<Schedule> designPowerInputSchedule() const;
+      // Return the Design Power Input Schedule. If not specified, default to always 1.
+      boost::optional<Schedule> designPowerInputSchedule() const;
 
-    bool isDesignPowerInputScheduleDefaulted() const;
+      bool isDesignPowerInputScheduleDefaulted() const;
 
-    // Return the CPU Loading Schedule. If not specified, default to always 1.
-    boost::optional<Schedule> cPULoadingSchedule() const;
+      // Return the CPU Loading Schedule. If not specified, default to always 1.
+      boost::optional<Schedule> cPULoadingSchedule() const;
 
-    bool isCPULoadingScheduleDefaulted() const;
+      bool isCPULoadingScheduleDefaulted() const;
 
-    std::string cPUEndUseSubcategory() const;
+      std::string cPUEndUseSubcategory() const;
 
-    bool isCPUEndUseSubcategoryDefaulted() const;
+      bool isCPUEndUseSubcategoryDefaulted() const;
 
-    std::string fanEndUseSubcategory() const;
+      std::string fanEndUseSubcategory() const;
 
-    bool isFanEndUseSubcategoryDefaulted() const;
+      bool isFanEndUseSubcategoryDefaulted() const;
 
-    std::string electricPowerSupplyEndUseSubcategory() const;
+      std::string electricPowerSupplyEndUseSubcategory() const;
 
-    bool isElectricPowerSupplyEndUseSubcategoryDefaulted() const;
+      bool isElectricPowerSupplyEndUseSubcategoryDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setElectricEquipmentITEAirCooledDefinition(const ElectricEquipmentITEAirCooledDefinition& electricEquipmentITEAirCooledDefinition);
+      bool setElectricEquipmentITEAirCooledDefinition(const ElectricEquipmentITEAirCooledDefinition& electricEquipmentITEAirCooledDefinition);
 
-    /** Sets the definition of this instance. */
-    virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
+      /** Sets the definition of this instance. */
+      virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
 
-  // Note Schedules are passed by reference, not const reference.
-    bool setDesignPowerInputSchedule(Schedule& schedule);
+      // Note Schedules are passed by reference, not const reference.
+      bool setDesignPowerInputSchedule(Schedule& schedule);
 
-    void resetDesignPowerInputSchedule();
+      void resetDesignPowerInputSchedule();
 
-  // Note Schedules are passed by reference, not const reference.
-    bool setCPULoadingSchedule(Schedule& schedule);
+      // Note Schedules are passed by reference, not const reference.
+      bool setCPULoadingSchedule(Schedule& schedule);
 
-    void resetCPULoadingSchedule();
+      void resetCPULoadingSchedule();
 
-    bool setMultiplier(double multiplier);
+      bool setMultiplier(double multiplier);
 
-    void resetMultiplier();
+      void resetMultiplier();
 
-    bool setCPUEndUseSubcategory(const std::string& cPUEndUseSubcategory);
+      bool setCPUEndUseSubcategory(const std::string& cPUEndUseSubcategory);
 
-    void resetCPUEndUseSubcategory();
+      void resetCPUEndUseSubcategory();
 
-    bool setFanEndUseSubcategory(const std::string& fanEndUseSubcategory);
+      bool setFanEndUseSubcategory(const std::string& fanEndUseSubcategory);
 
-    void resetFanEndUseSubcategory();
+      void resetFanEndUseSubcategory();
 
-    bool setElectricPowerSupplyEndUseSubcategory(const std::string& electricPowerSupplyEndUseSubcategory);
+      bool setElectricPowerSupplyEndUseSubcategory(const std::string& electricPowerSupplyEndUseSubcategory);
 
-    void resetElectricPowerSupplyEndUseSubcategory();
+      void resetElectricPowerSupplyEndUseSubcategory();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    boost::optional<double> wattsperUnit() const;
+      boost::optional<double> wattsperUnit() const;
 
-    boost::optional<double> wattsperZoneFloorArea() const;
+      boost::optional<double> wattsperZoneFloorArea() const;
 
-    double getWattsperUnit(double floorArea) const;
+      double getWattsperUnit(double floorArea) const;
 
-    double getWattsperZoneFloorArea(double floorArea) const;
+      double getWattsperZoneFloorArea(double floorArea) const;
 
-    //@}
-   protected:
+      //@}
+     protected:
+      // index of the space name
+      virtual int spaceIndex() const override;
 
-     // index of the space name
-     virtual int spaceIndex() const override;
+      // index of the definition name
+      virtual int definitionIndex() const override;
 
-     // index of the definition name
-     virtual int definitionIndex() const override;
-     
-   private:
-    REGISTER_LOGGER("openstudio.model.ElectricEquipmentITEAirCooled");
+     private:
+      REGISTER_LOGGER("openstudio.model.ElectricEquipmentITEAirCooled");
 
-    boost::optional<ModelObject> scheduleAsModelObject() const;
-    boost::optional<ModelObject> electricEquipmentITEAirCooledDefinitionAsModelObject() const;
+      boost::optional<ModelObject> scheduleAsModelObject() const;
+      boost::optional<ModelObject> electricEquipmentITEAirCooledDefinitionAsModelObject() const;
 
-    bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setElectricEquipmentITEAirCooledDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setElectricEquipmentITEAirCooledDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_ELECTRICEQUIPMENTITEAIRCOOLED_IMPL_HPP
-
+#endif  // MODEL_ELECTRICEQUIPMENTITEAIRCOOLED_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -28,59 +28,31 @@
 ***********************************************************************************************************************/
 
 #ifndef UTILITIES_CORE_SINGLETON_HPP
-#define UTILITIES_CORE_SINGLETON_HPP
+#  define UTILITIES_CORE_SINGLETON_HPP
 
 // Warning: If T's constructor throws, instance() will return a null reference.
 
-namespace openstudio{
+namespace openstudio {
 
-  // Ripped from boost http://www.boost.org/doc/libs/1_42_0/libs/pool/doc/implementation/singleton.html
-  // T must be: no-throw default constructible and no-throw destructible
-  template <typename T>
-  class Singleton
-  {
-    private:
-      struct object_creator
-      {
-        // This constructor does nothing more than ensure that instance()
-        //  is called before main() begins, thus creating the static
-        //  T object before multithreading race issues can come up.
-        object_creator() { Singleton<T>::instance(); }
-        inline void do_nothing() const {  }
-      };
-      static object_creator create_object;
+// Ripped from boost http://www.boost.org/doc/libs/1_42_0/libs/pool/doc/implementation/singleton.html
+// T must be: no-throw default constructible and no-throw destructible
+template <typename T>
+class Singleton
+{
+ public:
+  Singleton() = delete;
+  typedef T object_type;
 
-      Singleton();
+  // If, at any point (in user code), Singleton<T>::instance()
+  //  is called, then the following function is instantiated.
+  static object_type& instance() {
+    static object_type obj;
+    return obj;
+  }
+};
+}  // namespace openstudio
 
-    public:
-
-      typedef T object_type;
-
-      // If, at any point (in user code), Singleton<T>::instance()
-      //  is called, then the following function is instantiated.
-      static object_type & instance()
-      {
-        // This is the object that we return a reference to.
-        // It is guaranteed to be created before main() begins because of
-        //  the next line.
-        static object_type obj;
-
-        // The following line does nothing else than force the instantiation
-        //  of Singleton<T>::create_object, whose constructor is
-        //  called before main() begins.
-        create_object.do_nothing();
-
-        return obj;
-      }
-  };
-  template <typename T>
-  typename Singleton<T>::object_creator
-  Singleton<T>::create_object;
-
-}; // openstudio
-
-#endif // UTILITIES_CORE_SINGLETON_HPP
-
+#endif  // UTILITIES_CORE_SINGLETON_HPP
 
 /* EXAMPLE USAGE
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,63 +35,57 @@
 namespace openstudio {
 namespace model {
 
-// forward declaration
-class Space;
-class SpaceItem;
+  // forward declaration
+  class Space;
+  class SpaceItem;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API SpaceItem_Impl : public ModelObject_Impl {
+    class MODEL_API SpaceItem_Impl : public ModelObject_Impl
+    {
 
+     public:
+      // Construct completely new object.
+      SpaceItem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      // Construct from existing workspace object (typically when Model is being constructed
+      // from Workspace).
+      SpaceItem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-   public:
+      // Clone copy constructor.
+      SpaceItem_Impl(const SpaceItem_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Construct completely new object.
-    SpaceItem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      virtual ~SpaceItem_Impl() {}
 
-    // Construct from existing workspace object (typically when Model is being constructed
-    // from Workspace).
-    SpaceItem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // Clone copy constructor.
-    SpaceItem_Impl(const SpaceItem_Impl& other, Model_Impl* model, bool keepHandle);
+      /// set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    virtual ~SpaceItem_Impl() {}
+      /// Returns the parent Space.
+      boost::optional<Space> space() const;
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      /// Sets the parent Space.
+      bool setSpace(const Space& space);
 
-    /// set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      void resetSpace();
 
-    /// Returns the parent Space.
-    boost::optional<Space> space() const;
+     protected:
+      // index of the space name
+      virtual int spaceIndex() const = 0;
 
-    /// Sets the parent Space.
-    bool setSpace(const Space& space);
+     private:
+      REGISTER_LOGGER("openstudio.model.SpaceItem");
 
-    void resetSpace();
+      boost::optional<ModelObject> spaceAsModelObject() const;
 
-   protected:
+      bool setSpaceAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    // index of the space name
-    virtual int spaceIndex() const = 0;
+  }  // namespace detail
 
-   private:
+}  // namespace model
+}  // namespace openstudio
 
-    REGISTER_LOGGER("openstudio.model.SpaceItem");
-
-    boost::optional<ModelObject> spaceAsModelObject() const;
-
-    bool setSpaceAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SPACEITEM_IMPL_HPP
+#endif  // MODEL_SPACEITEM_IMPL_HPP

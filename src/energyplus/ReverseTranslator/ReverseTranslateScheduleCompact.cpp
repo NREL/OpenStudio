@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,43 +45,40 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateScheduleCompact( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Schedule_Compact )
-  {
-    LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:Compact");
-    return boost::none;
-  }
-
-  ScheduleCompact scheduleCompact(m_model);
-
-  OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_CompactFields::ScheduleTypeLimitsName);
-  if (target){
-    OptionalModelObject scheduleTypeLimits = translateAndMapWorkspaceObject(*target);
-    if (scheduleTypeLimits){
-      scheduleCompact.setPointer(OS_Schedule_CompactFields::ScheduleTypeLimitsName, scheduleTypeLimits->handle());
+  OptionalModelObject ReverseTranslator::translateScheduleCompact(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Schedule_Compact) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Schedule:Compact");
+      return boost::none;
     }
-  }
 
-  if (OptionalString os = workspaceObject.name()) {
-    scheduleCompact.setName(*os);
-  }
+    ScheduleCompact scheduleCompact(m_model);
 
-  for ( IdfExtensibleGroup& eg : workspaceObject.extensibleGroups()) {
-    for ( unsigned i = 0; i < eg.numFields(); ++i ) {
-      if( auto value = eg.getString(i) ) {
-        if( istringEqual(value.get(), "Interpolate:Average") ) {
-          eg.setString(i, "Interpolate:Yes");
-        }
+    OptionalWorkspaceObject target = workspaceObject.getTarget(Schedule_CompactFields::ScheduleTypeLimitsName);
+    if (target) {
+      OptionalModelObject scheduleTypeLimits = translateAndMapWorkspaceObject(*target);
+      if (scheduleTypeLimits) {
+        scheduleCompact.setPointer(OS_Schedule_CompactFields::ScheduleTypeLimitsName, scheduleTypeLimits->handle());
       }
     }
-    scheduleCompact.pushExtensibleGroup(eg.fields());
+
+    if (OptionalString os = workspaceObject.name()) {
+      scheduleCompact.setName(*os);
+    }
+
+    for (IdfExtensibleGroup& eg : workspaceObject.extensibleGroups()) {
+      for (unsigned i = 0; i < eg.numFields(); ++i) {
+        if (auto value = eg.getString(i)) {
+          if (istringEqual(value.get(), "Interpolate:Average")) {
+            eg.setString(i, "Interpolate:Yes");
+          }
+        }
+      }
+      scheduleCompact.pushExtensibleGroup(eg.fields());
+    }
+
+    return scheduleCompact;
   }
 
-  return scheduleCompact;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

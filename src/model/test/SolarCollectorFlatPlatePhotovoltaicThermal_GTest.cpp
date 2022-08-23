@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,21 +50,19 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_SolarCollectorFlatPlatePhotovoltaicThermal)
-{
+TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_SolarCollectorFlatPlatePhotovoltaicThermal) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SolarCollectorFlatPlatePhotovoltaicThermal testObject(m);
-    SolarCollectorPerformancePhotovoltaicThermalSimple performance = testObject.solarCollectorPerformance();
+  ASSERT_EXIT(
+    {
+      Model m;
+      SolarCollectorFlatPlatePhotovoltaicThermal testObject(m);
+      SolarCollectorPerformancePhotovoltaicThermalSimple performance = testObject.solarCollectorPerformance();
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
-
 
 TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_addToNode) {
   Model model;
@@ -132,9 +130,7 @@ TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_addToNode) {
   EXPECT_EQ(1u, plant.supplyComponents(WaterHeaterMixed::iddObjectType()).size());
   EXPECT_EQ(1u, plant.supplyComponents(TemperingValve::iddObjectType()).size());
   EXPECT_EQ(0u, plant.supplyComponents(SolarCollectorFlatPlatePhotovoltaicThermal::iddObjectType()).size());
-
 }
-
 
 TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_SetPerformance) {
   {
@@ -187,9 +183,7 @@ TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_PV) {
   EXPECT_EQ(0u, model.getObjectsByType(SolarCollectorPerformancePhotovoltaicThermalSimple::iddObjectType()).size());
   EXPECT_EQ(1u, model.getObjectsByType(GeneratorPhotovoltaic::iddObjectType()).size());
   EXPECT_EQ(1u, model.getObjectsByType(PhotovoltaicPerformanceSimple::iddObjectType()).size());
-
 }
-
 
 TEST_F(ModelFixture, SolarCollectorFlatPlatePhotovoltaicThermal_Clone) {
   {

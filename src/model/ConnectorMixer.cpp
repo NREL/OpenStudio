@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,129 +40,101 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
+  namespace detail {
 
-  ConnectorMixer_Impl::ConnectorMixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : Mixer_Impl(idfObject, model, keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ConnectorMixer::iddObjectType());
-  }
-
-  ConnectorMixer_Impl::ConnectorMixer_Impl(
-      const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
-        : Mixer_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ConnectorMixer::iddObjectType());
-  }
-
-  ConnectorMixer_Impl::ConnectorMixer_Impl(
-      const ConnectorMixer_Impl& other,
-      Model_Impl* model,
-      bool keepHandle)
-        : Mixer_Impl(other,model,keepHandle)
-  {
-  }
-
-  ConnectorMixer_Impl::~ConnectorMixer_Impl(){}
-
-  const std::vector<std::string> & ConnectorMixer_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType ConnectorMixer_Impl::iddObjectType() const {
-    return ConnectorMixer::iddObjectType();
-  }
-
-  std::vector<openstudio::IdfObject> ConnectorMixer_Impl::remove()
-  {
-    OptionalMixer self = model().getModelObject<Mixer>(handle());
-    model().disconnect(*self,outletPort());
-    for( int i = 0; i < int(nextBranchIndex()) - 1; i++ )
-    {
-      model().disconnect(*self,inletPort(i));
+    ConnectorMixer_Impl::ConnectorMixer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : Mixer_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ConnectorMixer::iddObjectType());
     }
-    return ModelObject_Impl::remove();
+
+    ConnectorMixer_Impl::ConnectorMixer_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : Mixer_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ConnectorMixer::iddObjectType());
+    }
+
+    ConnectorMixer_Impl::ConnectorMixer_Impl(const ConnectorMixer_Impl& other, Model_Impl* model, bool keepHandle)
+      : Mixer_Impl(other, model, keepHandle) {}
+
+    ConnectorMixer_Impl::~ConnectorMixer_Impl() {}
+
+    const std::vector<std::string>& ConnectorMixer_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType ConnectorMixer_Impl::iddObjectType() const {
+      return ConnectorMixer::iddObjectType();
+    }
+
+    std::vector<openstudio::IdfObject> ConnectorMixer_Impl::remove() {
+      OptionalMixer self = model().getModelObject<Mixer>(handle());
+      model().disconnect(*self, outletPort());
+      for (int i = 0; i < int(nextBranchIndex()) - 1; i++) {
+        model().disconnect(*self, inletPort(i));
+      }
+      return ModelObject_Impl::remove();
+    }
+
+    unsigned ConnectorMixer_Impl::outletPort() const {
+      return OS_Connector_MixerFields::OutletBranchName;
+    }
+
+    unsigned ConnectorMixer_Impl::inletPort(unsigned branchIndex) const {
+      unsigned result;
+      result = numNonextensibleFields();
+      result = result + branchIndex;
+      return result;
+    }
+
+    unsigned ConnectorMixer_Impl::nextInletPort() const {
+      return inletPort(this->nextBranchIndex());
+    }
+
+    bool ConnectorMixer_Impl::addToNode(Node& node) {
+      return HVACComponent_Impl::addToNode(node);
+    }
+
+    ModelObject ConnectorMixer_Impl::clone(Model model) const {
+      return HVACComponent_Impl::clone(model);
+    }
+
+  }  // namespace detail
+
+  // create a new Mixer object in the model's workspace
+  ConnectorMixer::ConnectorMixer(const Model& model) : Mixer(ConnectorMixer::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ConnectorMixer_Impl>());
   }
 
-  unsigned ConnectorMixer_Impl::outletPort() const
-  {
-    return OS_Connector_MixerFields::OutletBranchName;
+  ConnectorMixer::ConnectorMixer(std::shared_ptr<detail::ConnectorMixer_Impl> p) : Mixer(std::move(p)) {}
+
+  std::vector<openstudio::IdfObject> ConnectorMixer::remove() {
+    return getImpl<detail::ConnectorMixer_Impl>()->remove();
   }
 
-  unsigned ConnectorMixer_Impl::inletPort(unsigned branchIndex) const
-  {
-    unsigned result;
-    result = numNonextensibleFields();
-    result = result + branchIndex;
+  unsigned ConnectorMixer::outletPort() const {
+    return getImpl<detail::ConnectorMixer_Impl>()->outletPort();
+  }
+
+  unsigned ConnectorMixer::inletPort(unsigned branchIndex) const {
+    return getImpl<detail::ConnectorMixer_Impl>()->inletPort(branchIndex);
+  }
+
+  unsigned ConnectorMixer::nextInletPort() const {
+    return getImpl<detail::ConnectorMixer_Impl>()->nextInletPort();
+  }
+
+  bool ConnectorMixer::addToNode(Node& node) {
+    return getImpl<detail::ConnectorMixer_Impl>()->addToNode(node);
+  }
+
+  ModelObject ConnectorMixer::clone(Model model) const {
+    return getImpl<detail::ConnectorMixer_Impl>()->clone(model);
+  }
+
+  IddObjectType ConnectorMixer::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_Connector_Mixer);
     return result;
   }
 
-  unsigned ConnectorMixer_Impl::nextInletPort() const
-  {
-    return inletPort( this->nextBranchIndex() );
-  }
-
-  bool ConnectorMixer_Impl::addToNode(Node & node)
-  {
-    return HVACComponent_Impl::addToNode( node );
-  }
-
-  ModelObject ConnectorMixer_Impl::clone(Model model) const
-  {
-    return HVACComponent_Impl::clone( model );
-  }
-
-}// detail
-
-// create a new Mixer object in the model's workspace
-ConnectorMixer::ConnectorMixer(const Model& model)
-  : Mixer(ConnectorMixer::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ConnectorMixer_Impl>());
-}
-
-ConnectorMixer::ConnectorMixer(
-    std::shared_ptr<detail::ConnectorMixer_Impl> p)
-  : Mixer(std::move(p))
-{}
-
-std::vector<openstudio::IdfObject> ConnectorMixer::remove()
-{
-  return getImpl<detail::ConnectorMixer_Impl>()->remove();
-}
-
-unsigned ConnectorMixer::outletPort() const
-{
-  return getImpl<detail::ConnectorMixer_Impl>()->outletPort();
-}
-
-unsigned ConnectorMixer::inletPort(unsigned branchIndex) const
-{
-  return getImpl<detail::ConnectorMixer_Impl>()->inletPort(branchIndex);
-}
-
-unsigned ConnectorMixer::nextInletPort() const
-{
-  return getImpl<detail::ConnectorMixer_Impl>()->nextInletPort();
-}
-
-bool ConnectorMixer::addToNode(Node & node)
-{
-  return getImpl<detail::ConnectorMixer_Impl>()->addToNode( node );
-}
-
-ModelObject ConnectorMixer::clone(Model model) const
-{
-  return getImpl<detail::ConnectorMixer_Impl>()->clone( model );
-}
-
-IddObjectType ConnectorMixer::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_Connector_Mixer);
-  return result;
-}
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

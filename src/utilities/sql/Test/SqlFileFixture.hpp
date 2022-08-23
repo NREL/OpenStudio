@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,9 +38,9 @@
 
 #include <resources.hxx>
 
-class SqlFileFixture : public ::testing::Test {
+class SqlFileFixture : public ::testing::Test
+{
  protected:
-
   // initialize for each test
   virtual void SetUp() override;
 
@@ -54,7 +54,7 @@ class SqlFileFixture : public ::testing::Test {
   static void TearDownTestSuite();
 
   // Tolerance defaults to 0.001=0.1%
-  ::testing::AssertionResult IsWithinRelativeTolerance(double expectedValue, double actualValue, double tolerance=0.001);
+  ::testing::AssertionResult IsWithinRelativeTolerance(double expectedValue, double actualValue, double tolerance = 0.001);
 
   // set up logging
   REGISTER_LOGGER("SqlFileFixture");
@@ -66,5 +66,4 @@ class SqlFileFixture : public ::testing::Test {
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 
-#endif // UTILITIES_SQL_TEST_SQLFILEFIXTURE_HPP
-
+#endif  // UTILITIES_SQL_TEST_SQLFILEFIXTURE_HPP

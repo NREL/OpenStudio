@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,185 +33,176 @@
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-class Connection;
-class Schedule;
-class Curve;
-class ThermalZone;
+  class Connection;
+  class Schedule;
+  class Curve;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  /** PumpConstantSpeed_Impl is a StraightComponent_Impl that is the implementation class for PumpConstantSpeed.*/
-  class MODEL_API PumpConstantSpeed_Impl : public StraightComponent_Impl {
-   public:
+    /** PumpConstantSpeed_Impl is a StraightComponent_Impl that is the implementation class for PumpConstantSpeed.*/
+    class MODEL_API PumpConstantSpeed_Impl : public StraightComponent_Impl
+    {
+     public:
+      PumpConstantSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    PumpConstantSpeed_Impl(const IdfObject& idfObject,
-                           Model_Impl* model,
-                           bool keepHandle);
+      PumpConstantSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    PumpConstantSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      PumpConstantSpeed_Impl(const PumpConstantSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-    PumpConstantSpeed_Impl(const PumpConstantSpeed_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      virtual ~PumpConstantSpeed_Impl() {}
 
-    virtual ~PumpConstantSpeed_Impl() {}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      boost::optional<double> ratedFlowRate() const;
 
-    boost::optional<double> ratedFlowRate() const;
+      bool isRatedFlowRateAutosized() const;
 
-    bool isRatedFlowRateAutosized() const;
+      double ratedPumpHead() const;
 
-    double ratedPumpHead() const;
+      bool isRatedPumpHeadDefaulted() const;
 
-    bool isRatedPumpHeadDefaulted() const;
+      boost::optional<double> ratedPowerConsumption() const;
 
-    boost::optional<double> ratedPowerConsumption() const;
+      bool isRatedPowerConsumptionAutosized() const;
 
-    bool isRatedPowerConsumptionAutosized() const;
+      double motorEfficiency() const;
 
-    double motorEfficiency() const;
+      bool isMotorEfficiencyDefaulted() const;
 
-    bool isMotorEfficiencyDefaulted() const;
+      double fractionofMotorInefficienciestoFluidStream() const;
 
-    double fractionofMotorInefficienciestoFluidStream() const;
+      bool isFractionofMotorInefficienciestoFluidStreamDefaulted() const;
 
-    bool isFractionofMotorInefficienciestoFluidStreamDefaulted() const;
+      std::string pumpControlType() const;
 
-    std::string pumpControlType() const;
+      bool isPumpControlTypeDefaulted() const;
 
-    bool isPumpControlTypeDefaulted() const;
+      boost::optional<Schedule> pumpFlowRateSchedule() const;
 
-    boost::optional<Schedule> pumpFlowRateSchedule() const;
+      boost::optional<Curve> pumpCurve() const;
 
-    boost::optional<Curve> pumpCurve() const;
+      boost::optional<double> impellerDiameter() const;
 
-    boost::optional<double> impellerDiameter() const;
+      boost::optional<double> rotationalSpeed() const;
 
-    boost::optional<double> rotationalSpeed() const;
+      boost::optional<ThermalZone> zone() const;
 
-    boost::optional<ThermalZone> zone() const;
+      boost::optional<double> skinLossRadiativeFraction() const;
 
-    boost::optional<double> skinLossRadiativeFraction() const;
+      std::string endUseSubcategory() const;
 
-    std::string endUseSubcategory() const;
+      bool setRatedFlowRate(boost::optional<double> ratedFlowRate);
 
-    bool setRatedFlowRate(boost::optional<double> ratedFlowRate);
+      void resetRatedFlowRate();
 
-    void resetRatedFlowRate();
+      void autosizeRatedFlowRate();
 
-    void autosizeRatedFlowRate();
+      bool setRatedPumpHead(double ratedPumpHead);
 
-    bool setRatedPumpHead(double ratedPumpHead);
+      void resetRatedPumpHead();
 
-    void resetRatedPumpHead();
+      bool setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
 
-    bool setRatedPowerConsumption(boost::optional<double> ratedPowerConsumption);
+      void resetRatedPowerConsumption();
 
-    void resetRatedPowerConsumption();
+      void autosizeRatedPowerConsumption();
 
-    void autosizeRatedPowerConsumption();
+      bool setMotorEfficiency(double motorEfficiency);
 
-    bool setMotorEfficiency(double motorEfficiency);
+      void resetMotorEfficiency();
 
-    void resetMotorEfficiency();
+      bool setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream);
 
-    bool setFractionofMotorInefficienciestoFluidStream(double fractionofMotorInefficienciestoFluidStream);
+      void resetFractionofMotorInefficienciestoFluidStream();
 
-    void resetFractionofMotorInefficienciestoFluidStream();
+      bool setPumpControlType(const std::string& pumpControlType);
 
-    bool setPumpControlType(std::string pumpControlType);
+      void resetPumpControlType();
 
-    void resetPumpControlType();
+      bool setPumpFlowRateSchedule(Schedule& schedule);
 
-    bool setPumpFlowRateSchedule(Schedule& schedule);
+      void resetPumpFlowRateSchedule();
 
-    void resetPumpFlowRateSchedule();
+      bool setPumpCurve(const boost::optional<Curve>& curve);
 
-    bool setPumpCurve(const boost::optional<Curve>& curve);
+      void resetPumpCurve();
 
-    void resetPumpCurve();
+      bool setImpellerDiameter(boost::optional<double> impellerDiameter);
 
-    bool setImpellerDiameter(boost::optional<double> impellerDiameter);
+      void resetImpellerDiameter();
 
-    void resetImpellerDiameter();
+      bool setRotationalSpeed(boost::optional<double> rotationalSpeed);
 
-    bool setRotationalSpeed(boost::optional<double> rotationalSpeed);
+      void resetRotationalSpeed();
 
-    void resetRotationalSpeed();
+      bool setZone(const boost::optional<ThermalZone>& thermalZone);
 
-    bool setZone(const boost::optional<ThermalZone>& thermalZone);
+      void resetZone();
 
-    void resetZone();
+      bool setSkinLossRadiativeFraction(boost::optional<double> skinLossRadiativeFraction);
 
-    bool setSkinLossRadiativeFraction(boost::optional<double> skinLossRadiativeFraction);
+      void resetSkinLossRadiativeFraction();
 
-    void resetSkinLossRadiativeFraction();
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      bool addToNode(Node& node) override;
 
-    bool addToNode(Node & node) override;
+      boost::optional<double> autosizedRatedFlowRate() const;
 
-    boost::optional<double> autosizedRatedFlowRate() const ;
+      boost::optional<double> autosizedRatedPowerConsumption() const;
 
-    boost::optional<double> autosizedRatedPowerConsumption() const ;
+      virtual void autosize() override;
 
-    virtual void autosize() override;
+      virtual void applySizingValues() override;
 
-    virtual void applySizingValues() override;
+      std::string designPowerSizingMethod() const;
 
-    std::string designPowerSizingMethod() const;
+      bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
 
-    bool setDesignPowerSizingMethod(const std::string & designPowerSizingMethod);
+      double designElectricPowerPerUnitFlowRate() const;
 
-    double designElectricPowerPerUnitFlowRate() const;
+      bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
 
-    bool setDesignElectricPowerPerUnitFlowRate(double designElectricPowerPerUnitFlowRate);
+      double designShaftPowerPerUnitFlowRatePerUnitHead() const;
 
-    double designShaftPowerPerUnitFlowRatePerUnitHead() const;
+      bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
 
-    bool setDesignShaftPowerPerUnitFlowRatePerUnitHead(double designShaftPowerPerUnitFlowRatePerUnitHead);
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-    bool setEndUseSubcategory(const std::string & endUseSubcategory);
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.PumpConstantSpeed");
 
-   protected:
+      boost::optional<Connection> optionalInletNode() const;
+      boost::optional<Connection> optionalOutletNode() const;
 
-   private:
+      std::vector<std::string> pumpControlTypeValues() const;
+      boost::optional<ModelObject> pumpFlowRateScheduleAsModelObject() const;
+      boost::optional<ModelObject> pumpCurveAsModelObject() const;
+      boost::optional<ModelObject> zoneAsModelObject() const;
 
-    REGISTER_LOGGER("openstudio.model.PumpConstantSpeed");
+      bool setPumpFlowRateScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setPumpCurveAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    boost::optional<Connection> optionalInletNode() const;
-    boost::optional<Connection> optionalOutletNode() const;
+  }  // namespace detail
 
-    std::vector<std::string> pumpControlTypeValues() const;
-    boost::optional<ModelObject> pumpFlowRateScheduleAsModelObject() const;
-    boost::optional<ModelObject> pumpCurveAsModelObject() const;
-    boost::optional<ModelObject> zoneAsModelObject() const;
+}  // namespace model
+}  // namespace openstudio
 
-    bool setPumpFlowRateScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setPumpCurveAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_PUMPCONSTANTSPEED_IMPL_HPP
+#endif  // MODEL_PUMPCONSTANTSPEED_IMPL_HPP

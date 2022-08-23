@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,109 +50,85 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSimulationControl( SimulationControl& modelObject )
-{
-  IdfObject simCon( openstudio::IddObjectType::SimulationControl );
+  boost::optional<IdfObject> ForwardTranslator::translateSimulationControl(SimulationControl& modelObject) {
+    IdfObject simCon(openstudio::IddObjectType::SimulationControl);
 
-  m_idfObjects.push_back(simCon);
+    m_idfObjects.push_back(simCon);
 
-  OptionalString s = modelObject.name();
-  if( s )
-  {
-    simCon.setName(*s);
-  }
+    OptionalString s = modelObject.name();
+    if (s) {
+      simCon.setName(*s);
+    }
 
-  unsigned numSizingPeriods = modelObject.model().getModelObjects<SizingPeriod>().size();
+    unsigned numSizingPeriods = modelObject.model().getModelObjects<SizingPeriod>().size();
 
-  if( modelObject.doZoneSizingCalculation() )
-  {
-    simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation,"Yes");
-  }
-  else if( (numSizingPeriods > 0) && (modelObject.model().getConcreteModelObjects<ThermalZone>().size() > 0) )
-  {
-    simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation,"Yes");
-  }
-  else
-  {
-    simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation,"No");
-  }
+    if (modelObject.doZoneSizingCalculation()) {
+      simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation, "Yes");
+    } else if ((numSizingPeriods > 0) && (modelObject.model().getConcreteModelObjects<ThermalZone>().size() > 0)) {
+      simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation, "Yes");
+    } else {
+      simCon.setString(openstudio::SimulationControlFields::DoZoneSizingCalculation, "No");
+    }
 
-  if( modelObject.doSystemSizingCalculation() )
-  {
-    simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation,"Yes");
-  }
-  else if( (numSizingPeriods > 0) && (modelObject.model().getConcreteModelObjects<AirLoopHVAC>().size() > 0) )
-  {
-    simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation,"Yes");
-  }
-  else
-  {
-    simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation,"No");
-  }
+    if (modelObject.doSystemSizingCalculation()) {
+      simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation, "Yes");
+    } else if ((numSizingPeriods > 0) && (modelObject.model().getConcreteModelObjects<AirLoopHVAC>().size() > 0)) {
+      simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation, "Yes");
+    } else {
+      simCon.setString(openstudio::SimulationControlFields::DoSystemSizingCalculation, "No");
+    }
 
-  if( modelObject.doPlantSizingCalculation() )
-  {
-    simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation,"Yes");
-  }
-  else if( (numSizingPeriods > 0) && (modelObject.model().getConcreteModelObjects<PlantLoop>().size() > 0) )
-  {
-    simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation,"Yes");
-  }
-  else
-  {
-    simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation,"No");
-  }
+    if (modelObject.doPlantSizingCalculation()) {
+      simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation, "Yes");
+    } else if ((numSizingPeriods > 0) && (modelObject.model().getConcreteModelObjects<PlantLoop>().size() > 0)) {
+      simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation, "Yes");
+    } else {
+      simCon.setString(openstudio::SimulationControlFields::DoPlantSizingCalculation, "No");
+    }
 
-  if( modelObject.runSimulationforSizingPeriods() )
-  {
-    simCon.setString(openstudio::SimulationControlFields::RunSimulationforSizingPeriods,"Yes");
-  }
-  else
-  {
-    simCon.setString(openstudio::SimulationControlFields::RunSimulationforSizingPeriods,"No");
-  }
+    if (modelObject.runSimulationforSizingPeriods()) {
+      simCon.setString(openstudio::SimulationControlFields::RunSimulationforSizingPeriods, "Yes");
+    } else {
+      simCon.setString(openstudio::SimulationControlFields::RunSimulationforSizingPeriods, "No");
+    }
 
-  // DLM: might want to check for weather file object?
-  if( modelObject.runSimulationforWeatherFileRunPeriods() )
-  {
-    simCon.setString(openstudio::SimulationControlFields::RunSimulationforWeatherFileRunPeriods,"Yes");
-  }
-  else
-  {
-    simCon.setString(openstudio::SimulationControlFields::RunSimulationforWeatherFileRunPeriods,"No");
-  }
+    // DLM: might want to check for weather file object?
+    if (modelObject.runSimulationforWeatherFileRunPeriods()) {
+      simCon.setString(openstudio::SimulationControlFields::RunSimulationforWeatherFileRunPeriods, "Yes");
+    } else {
+      simCon.setString(openstudio::SimulationControlFields::RunSimulationforWeatherFileRunPeriods, "No");
+    }
 
-  if( modelObject.doHVACSizingSimulationforSizingPeriods() ) {
-    simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"Yes");
-  } else if (numSizingPeriods > 0) {
-    // Sizing:Plant I/O: "The use of 'Coincident' sizing option requires that the object
-    // be set to YES for the input field called Do HVAC Sizing Simulation for Sizing Periods"
-    std::vector<PlantLoop> plantLoops = modelObject.model().getConcreteModelObjects<PlantLoop>();
-    if (std::any_of(plantLoops.begin(), plantLoops.end(),
-          [](const PlantLoop& p) { return openstudio::istringEqual("Coincident", p.sizingPlant().sizingOption()); }))
-    {
-      simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"Yes");
+    if (modelObject.doHVACSizingSimulationforSizingPeriods()) {
+      simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, "Yes");
+    } else if (numSizingPeriods > 0) {
+      // Sizing:Plant I/O: "The use of 'Coincident' sizing option requires that the object
+      // be set to YES for the input field called Do HVAC Sizing Simulation for Sizing Periods"
+      std::vector<PlantLoop> plantLoops = modelObject.model().getConcreteModelObjects<PlantLoop>();
+      if (std::any_of(plantLoops.begin(), plantLoops.end(),
+                      [](const PlantLoop& p) { return openstudio::istringEqual("Coincident", p.sizingPlant().sizingOption()); })) {
+        simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, "Yes");
+      } else {
+        if (!modelObject.isDoZoneSizingCalculationDefaulted()) {
+          simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, "No");
+        }
+      }
     } else {
       if (!modelObject.isDoZoneSizingCalculationDefaulted()) {
-        simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"No");
+        simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods, "No");
       }
     }
-  } else {
-    if (!modelObject.isDoZoneSizingCalculationDefaulted()) {
-      simCon.setString(openstudio::SimulationControlFields::DoHVACSizingSimulationforSizingPeriods,"No");
+
+    if (!modelObject.isMaximumNumberofHVACSizingSimulationPassesDefaulted()) {
+      simCon.setInt(openstudio::SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses,
+                    modelObject.maximumNumberofHVACSizingSimulationPasses());
     }
+
+    // other fields mapped to Building
+
+    return boost::optional<IdfObject>(simCon);
   }
 
-  if (!modelObject.isMaximumNumberofHVACSizingSimulationPassesDefaulted()) {
-    simCon.setInt(openstudio::SimulationControlFields::MaximumNumberofHVACSizingSimulationPasses, modelObject.maximumNumberofHVACSizingSimulationPasses());
-  }
+}  // namespace energyplus
 
-  // other fields mapped to Building
-
-  return boost::optional<IdfObject>(simCon);
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

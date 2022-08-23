@@ -26,6 +26,7 @@ set_target_properties(${target_name} PROPERTIES COMPILE_DEFINITIONS OPENSTUDIO_D
 
 target_link_libraries(${target_name}
   CONAN_PKG::boost
+  CONAN_PKG::fmt
   #CONAN_PKG::boost_filesystem
   #CONAN_PKG::boost_regex
   #CONAN_PKG::boost_program_options

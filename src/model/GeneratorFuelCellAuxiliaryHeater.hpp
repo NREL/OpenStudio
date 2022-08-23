@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,136 +37,137 @@ namespace openstudio {
 
 namespace model {
 
-class ThermalZone;
-class GeneratorFuelCell;
+  class ThermalZone;
+  class GeneratorFuelCell;
 
-namespace detail {
+  namespace detail {
 
-  class GeneratorFuelCellAuxiliaryHeater_Impl;
+    class GeneratorFuelCellAuxiliaryHeater_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** GeneratorFuelCellAuxiliaryHeater is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelCell:AuxiliaryHeater'. */
-class MODEL_API GeneratorFuelCellAuxiliaryHeater : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** GeneratorFuelCellAuxiliaryHeater is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelCell:AuxiliaryHeater'. */
+  class MODEL_API GeneratorFuelCellAuxiliaryHeater : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit GeneratorFuelCellAuxiliaryHeater(const Model& model);
+    explicit GeneratorFuelCellAuxiliaryHeater(const Model& model);
 
-  virtual ~GeneratorFuelCellAuxiliaryHeater() {}
+    virtual ~GeneratorFuelCellAuxiliaryHeater() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> skinLossDestinationValues();
+    static std::vector<std::string> skinLossDestinationValues();
 
-  static std::vector<std::string> heatingCapacityUnitsValues();
+    static std::vector<std::string> heatingCapacityUnitsValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double excessAirRatio() const;
+    double excessAirRatio() const;
 
-  double ancillaryPowerConstantTerm() const;
+    double ancillaryPowerConstantTerm() const;
 
-  double ancillaryPowerLinearTerm() const;
+    double ancillaryPowerLinearTerm() const;
 
-  double skinLossUFactorTimesAreaValue() const;
+    double skinLossUFactorTimesAreaValue() const;
 
-  std::string skinLossDestination() const;
+    std::string skinLossDestination() const;
 
-  boost::optional<ThermalZone> zonetoReceiveSkinLosses() const;
+    boost::optional<ThermalZone> zonetoReceiveSkinLosses() const;
 
-  std::string heatingCapacityUnits() const;
+    std::string heatingCapacityUnits() const;
 
-  double maximumHeatingCapacityinWatts() const;
+    double maximumHeatingCapacityinWatts() const;
 
-  double minimumHeatingCapacityinWatts() const;
+    double minimumHeatingCapacityinWatts() const;
 
-  double maximumHeatingCapacityinKmolperSecond() const;
+    double maximumHeatingCapacityinKmolperSecond() const;
 
-  double minimumHeatingCapacityinKmolperSecond() const;
+    double minimumHeatingCapacityinKmolperSecond() const;
 
-  // Return optional parent generator
-  boost::optional<GeneratorFuelCell> fuelCell() const;
+    // Return optional parent generator
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setExcessAirRatio(double excessAirRatio);
+    bool setExcessAirRatio(double excessAirRatio);
 
-  void resetExcessAirRatio();
+    void resetExcessAirRatio();
 
-  bool setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm);
+    bool setAncillaryPowerConstantTerm(double ancillaryPowerConstantTerm);
 
-  void resetAncillaryPowerConstantTerm();
+    void resetAncillaryPowerConstantTerm();
 
-  bool setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm);
+    bool setAncillaryPowerLinearTerm(double ancillaryPowerLinearTerm);
 
-  void resetAncillaryPowerLinearTerm();
+    void resetAncillaryPowerLinearTerm();
 
-  bool setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue);
+    bool setSkinLossUFactorTimesAreaValue(double skinLossUFactorTimesAreaValue);
 
-  void resetSkinLossUFactorTimesAreaValue();
+    void resetSkinLossUFactorTimesAreaValue();
 
-  bool setSkinLossDestination(const std::string& skinLossDestination);
+    bool setSkinLossDestination(const std::string& skinLossDestination);
 
-  void resetSkinLossDestination();
+    void resetSkinLossDestination();
 
-  bool setZonetoReceiveSkinLosses(const ThermalZone& zone);
+    bool setZonetoReceiveSkinLosses(const ThermalZone& zone);
 
-  void resetZonetoReceiveSkinLosses();
+    void resetZonetoReceiveSkinLosses();
 
-  bool setHeatingCapacityUnits(const std::string& heatingCapacityUnits);
+    bool setHeatingCapacityUnits(const std::string& heatingCapacityUnits);
 
-  void resetHeatingCapacityUnits();
+    void resetHeatingCapacityUnits();
 
-  bool setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts);
+    bool setMaximumHeatingCapacityinWatts(double maximumHeatingCapacityinWatts);
 
-  void resetMaximumHeatingCapacityinWatts();
+    void resetMaximumHeatingCapacityinWatts();
 
-  bool setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts);
+    bool setMinimumHeatingCapacityinWatts(double minimumHeatingCapacityinWatts);
 
-  void resetMinimumHeatingCapacityinWatts();
+    void resetMinimumHeatingCapacityinWatts();
 
-  bool setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond);
+    bool setMaximumHeatingCapacityinKmolperSecond(double maximumHeatingCapacityinKmolperSecond);
 
-  void resetMaximumHeatingCapacityinKmolperSecond();
+    void resetMaximumHeatingCapacityinKmolperSecond();
 
-  bool setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond);
+    bool setMinimumHeatingCapacityinKmolperSecond(double minimumHeatingCapacityinKmolperSecond);
 
-  void resetMinimumHeatingCapacityinKmolperSecond();
+    void resetMinimumHeatingCapacityinKmolperSecond();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GeneratorFuelCellAuxiliaryHeater_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GeneratorFuelCellAuxiliaryHeater_Impl ImplType;
 
-  explicit GeneratorFuelCellAuxiliaryHeater(std::shared_ptr<detail::GeneratorFuelCellAuxiliaryHeater_Impl> impl);
+    explicit GeneratorFuelCellAuxiliaryHeater(std::shared_ptr<detail::GeneratorFuelCellAuxiliaryHeater_Impl> impl);
 
-  friend class detail::GeneratorFuelCellAuxiliaryHeater_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.GeneratorFuelCellAuxiliaryHeater");
-};
+    friend class detail::GeneratorFuelCellAuxiliaryHeater_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GeneratorFuelCellAuxiliaryHeater");
+  };
 
-/** \relates GeneratorFuelCellAuxiliaryHeater*/
-typedef boost::optional<GeneratorFuelCellAuxiliaryHeater> OptionalGeneratorFuelCellAuxiliaryHeater;
+  /** \relates GeneratorFuelCellAuxiliaryHeater*/
+  typedef boost::optional<GeneratorFuelCellAuxiliaryHeater> OptionalGeneratorFuelCellAuxiliaryHeater;
 
-/** \relates GeneratorFuelCellAuxiliaryHeater*/
-typedef std::vector<GeneratorFuelCellAuxiliaryHeater> GeneratorFuelCellAuxiliaryHeaterVector;
+  /** \relates GeneratorFuelCellAuxiliaryHeater*/
+  typedef std::vector<GeneratorFuelCellAuxiliaryHeater> GeneratorFuelCellAuxiliaryHeaterVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GENERATORFUELCELLAUXILIARYHEATER_HPP
+#endif  // MODEL_GENERATORFUELCELLAUXILIARYHEATER_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,6 +36,7 @@
 #include <utilities/idd/Schedule_Compact_FieldEnums.hxx>
 #include <utilities/idd/OS_DaylightingDevice_Shelf_FieldEnums.hxx>
 #include <utilities/idd/OS_SetpointManager_MixedAir_FieldEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 #include "../WorkspaceExtensibleGroup.hpp"
 #include "../IdfFile.hpp"
@@ -47,7 +48,7 @@
 
 using namespace openstudio;
 
-TEST_F(IdfFixture,WorkspaceObject_Construction) {
+TEST_F(IdfFixture, WorkspaceObject_Construction) {
   // get vector of IdfFile objects as fodder for tests
   IdfObjectVector idfObjects = epIdfFile.objects();
   OptionalWorkspaceObject w;
@@ -56,11 +57,11 @@ TEST_F(IdfFixture,WorkspaceObject_Construction) {
   // construct empty workspace, and set Idd to be EnergyPlusIdd
   StrictnessLevel level(StrictnessLevel::Draft);
   IddFileType fileType(IddFileType::EnergyPlus);
-  Workspace ws(level,fileType);
+  Workspace ws(level, fileType);
 
   // add object with no pointers. should be successful.
-  w = ws.addObject(idfObjects[0]); // Building
-  ASSERT_TRUE(w); // should return OptionalHandle instead
+  w = ws.addObject(idfObjects[0]);  // Building
+  ASSERT_TRUE(w);                   // should return OptionalHandle instead
   OptionalWorkspaceObject object = ws.getObject(w->handle());
   ASSERT_TRUE(object);
   EXPECT_TRUE(object->iddObject().type() == openstudio::IddObjectType::Building);
@@ -71,26 +72,24 @@ TEST_F(IdfFixture,WorkspaceObject_Construction) {
   // add object with pointer, and do include pointed to object. should be successful, and
   // following pointer should yield target object. source should be source, target should be
   // target.
-
 }
 
-TEST_F(IdfFixture, WorkspaceObject_GetStringAfterSetStringAddsFields)
-{
+TEST_F(IdfFixture, WorkspaceObject_GetStringAfterSetStringAddsFields) {
   // construct empty workspace, and set Idd to be EnergyPlusIdd
   StrictnessLevel level(StrictnessLevel::Draft);
   IddFileType fileType(IddFileType::EnergyPlus);
-  Workspace ws(level,fileType);
+  Workspace ws(level, fileType);
 
   OptionalWorkspaceObject w;
   IdfObject idfObj(IddObjectType::SurfaceProperty_ConvectionCoefficients);
   w = ws.addObject(idfObj);
 
-  EXPECT_TRUE(w->numNonextensibleFields()==3);
-  EXPECT_TRUE(w->setString(w->iddObject().numFields()-1,""));
-  EXPECT_TRUE(w->numNonextensibleFields()==11);
-  OptionalString s4 = w->getString(4,true);
+  EXPECT_TRUE(w->numNonextensibleFields() == 3);
+  EXPECT_TRUE(w->setString(w->iddObject().numFields() - 1, ""));
+  EXPECT_TRUE(w->numNonextensibleFields() == 11);
+  OptionalString s4 = w->getString(4, true);
   EXPECT_TRUE(s4);
-  OptionalString s10 = w->getString(10,true);
+  OptionalString s10 = w->getString(10, true);
   EXPECT_TRUE(s10);
 }
 
@@ -131,7 +130,6 @@ TEST_F(IdfFixture, WorkspaceObject_Building) {
   OptionalUnsigned maximumNumberofWarmupDays = building.getUnsigned(BuildingFields::MaximumNumberofWarmupDays);
   ASSERT_TRUE(maximumNumberofWarmupDays);
   EXPECT_EQ(static_cast<unsigned>(25), *maximumNumberofWarmupDays);
-
 }
 
 TEST_F(IdfFixture, WorkspaceObject_Lights) {
@@ -140,13 +138,13 @@ TEST_F(IdfFixture, WorkspaceObject_Lights) {
   OptionalWorkspaceObject light = workspace.getObjectByTypeAndName(IddObjectType::Lights, "SPACE1-1 Lights 1");
   ASSERT_TRUE(light);
 
-  OptionalString lightsZoneName = light->getString(LightsFields::ZoneorZoneListName);
+  OptionalString lightsZoneName = light->getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
   ASSERT_TRUE(lightsZoneName);
 
   OptionalString lightsScheduleName = light->getString(LightsFields::ScheduleName);
   ASSERT_TRUE(lightsScheduleName);
 
-  OptionalWorkspaceObject zone = light->getTarget(LightsFields::ZoneorZoneListName);
+  OptionalWorkspaceObject zone = light->getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
   ASSERT_TRUE(zone);
 
   OptionalString zoneName = zone->getString(ZoneFields::Name);
@@ -168,16 +166,16 @@ TEST_F(IdfFixture, WorkspaceObject_Lights) {
   ASSERT_TRUE(zoneName);
   EXPECT_EQ("New Zone Name", *zoneName);
 
-  lightsZoneName = light->getString(LightsFields::ZoneorZoneListName);
+  lightsZoneName = light->getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
   ASSERT_TRUE(lightsZoneName);
   EXPECT_EQ(*lightsZoneName, *zoneName);
 
   EXPECT_TRUE(zone->createName());
   zoneName = zone->getString(ZoneFields::Name);
   ASSERT_TRUE(zoneName);
-  EXPECT_EQ("Zone 1",*zoneName);
+  EXPECT_EQ("Zone 1", *zoneName);
 
-  lightsZoneName = light->getString(LightsFields::ZoneorZoneListName);
+  lightsZoneName = light->getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
   ASSERT_TRUE(lightsZoneName);
   EXPECT_EQ(*lightsZoneName, *zoneName);
 
@@ -189,12 +187,11 @@ TEST_F(IdfFixture, WorkspaceObject_Lights) {
   lightsScheduleName = light->getString(LightsFields::ScheduleName);
   ASSERT_TRUE(lightsScheduleName);
   EXPECT_EQ(*lightsScheduleName, *scheduleName);
-
 }
 
-TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_None) {
+TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Minimal) {
 
-  Workspace workspace(StrictnessLevel::None,IddFileType::EnergyPlus);
+  Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   EXPECT_TRUE(workspace.isValid());
 
   OptionalWorkspaceObject w = workspace.addObject(IdfObject(IddObjectType::Lights));
@@ -207,8 +204,8 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_None) {
   EXPECT_TRUE(light->setString(LightsFields::Name, ""));
   EXPECT_TRUE(light->setDouble(LightsFields::Name, 0));
 
-  EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListName, ""));
-  EXPECT_TRUE(light->setPointer(LightsFields::ZoneorZoneListName, Handle()));
+  EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, ""));
+  EXPECT_TRUE(light->setPointer(LightsFields::ZoneorZoneListorSpaceorSpaceListName, Handle()));
 
   EXPECT_TRUE(light->setString(LightsFields::ScheduleName, ""));
   EXPECT_TRUE(light->setPointer(LightsFields::ScheduleName, Handle()));
@@ -221,14 +218,14 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_None) {
   EXPECT_TRUE(light->setDouble(LightsFields::LightingLevel, 0));
   EXPECT_TRUE(light->setDouble(LightsFields::LightingLevel, 1));
 
-  EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
+  EXPECT_TRUE(workspace.isValid(StrictnessLevel::Minimal));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Final));
 }
 
 TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Draft) {
 
-  Workspace workspace(StrictnessLevel::Draft,IddFileType::EnergyPlus);
+  Workspace workspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);
   EXPECT_TRUE(workspace.isValid());
 
   OptionalWorkspaceObject w = workspace.addObject(IdfObject(IddObjectType::Lights));
@@ -238,25 +235,25 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Draft) {
   ASSERT_TRUE(light);
 
   // certain things we can't invalidate
-  EXPECT_TRUE(light->setString(LightsFields::Name, ""));
+  EXPECT_FALSE(light->setString(LightsFields::Name, ""));
   EXPECT_TRUE(light->setDouble(LightsFields::Name, 0));
 
-  EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListName, "")); // PointerType error
-  EXPECT_TRUE(light->setPointer(LightsFields::ZoneorZoneListName, Handle())); // PointerType error
+  EXPECT_TRUE(light->setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, ""));         // PointerType error
+  EXPECT_TRUE(light->setPointer(LightsFields::ZoneorZoneListorSpaceorSpaceListName, Handle()));  // PointerType error
 
-  EXPECT_TRUE(light->setString(LightsFields::ScheduleName, "")); // PointerType error
-  EXPECT_TRUE(light->setPointer(LightsFields::ScheduleName, Handle())); // PointerType error
+  EXPECT_TRUE(light->setString(LightsFields::ScheduleName, ""));         // PointerType error
+  EXPECT_TRUE(light->setPointer(LightsFields::ScheduleName, Handle()));  // PointerType error
 
-  EXPECT_TRUE(light->setString(LightsFields::DesignLevelCalculationMethod, "")); // this is ok because there is a default
-  EXPECT_FALSE(light->setString(LightsFields::DesignLevelCalculationMethod, "Hi")); // DataType error
-  EXPECT_FALSE(light->setDouble(LightsFields::DesignLevelCalculationMethod, 0)); // DataType error
+  EXPECT_TRUE(light->setString(LightsFields::DesignLevelCalculationMethod, ""));     // this is ok because there is a default
+  EXPECT_FALSE(light->setString(LightsFields::DesignLevelCalculationMethod, "Hi"));  // DataType error
+  EXPECT_FALSE(light->setDouble(LightsFields::DesignLevelCalculationMethod, 0));     // DataType error
 
-  EXPECT_FALSE(light->setString(LightsFields::LightingLevel, "Hi")); // DataType error
-  EXPECT_FALSE(light->setDouble(LightsFields::LightingLevel, -1));  // NumericBound error
+  EXPECT_FALSE(light->setString(LightsFields::LightingLevel, "Hi"));  // DataType error
+  EXPECT_FALSE(light->setDouble(LightsFields::LightingLevel, -1));    // NumericBound error
   EXPECT_TRUE(light->setDouble(LightsFields::LightingLevel, 0));
   EXPECT_TRUE(light->setDouble(LightsFields::LightingLevel, 1));
 
-  EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
+  EXPECT_TRUE(workspace.isValid(StrictnessLevel::Minimal));
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Final));
 }
@@ -268,35 +265,35 @@ TEST_F(IdfFixture, WorkspaceObject_Lights_Strictness_Draft) {
 // immediately prior to simulation.
 
 TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
-  Workspace scratch(StrictnessLevel::None,IddFileType::EnergyPlus); // Strictness level None
+  Workspace scratch(StrictnessLevel::Minimal, IddFileType::EnergyPlus);  // Strictness level None
 
   std::stringstream text;
-  text << "ZoneHVAC:HighTemperatureRadiant," << std::endl
-       << "  MyRadiantSystem," << std::endl
-       << "  MyHVACSchedule," << std::endl
-       << "  MyCoreZone," << std::endl
-       << "  HeatingDesignCapacity," << std::endl
-       << "  Autosize," << std::endl
-       << "  ," << std::endl
-       << "  ," << std::endl
+  text << "ZoneHVAC:HighTemperatureRadiant," << '\n'
+       << "  MyRadiantSystem," << '\n'
+       << "  MyHVACSchedule," << '\n'
+       << "  MyCoreZone," << '\n'
+       << "  HeatingDesignCapacity," << '\n'
+       << "  Autosize," << '\n'
+       << "  ," << '\n'
+       << "  ," << '\n'
        << "  Electricity;";
   OptionalIdfObject oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
   IdfObject idfObject = *oObj;
   OptionalWorkspaceObject w1 = scratch.addObject(idfObject);
   ASSERT_TRUE(w1);
-  OptionalWorkspaceObject tObject = scratch.getObject(w1->handle ());
+  OptionalWorkspaceObject tObject = scratch.getObject(w1->handle());
   ASSERT_TRUE(tObject);
   WorkspaceObject object = *tObject;
-  EXPECT_EQ(static_cast<unsigned>(14),object.numFields());
+  EXPECT_EQ(static_cast<unsigned>(14), object.numFields());
 
   // create schedule object to point to from non-extensible field
   text.str("");
-  text << "Schedule:Compact," << std::endl
-       << "  AlwaysOn," << std::endl
-       << "  ," << std::endl
-       << "  For: AllOtherDays," << std::endl
-       << "  Until: 24:00," << std::endl
+  text << "Schedule:Compact," << '\n'
+       << "  AlwaysOn," << '\n'
+       << "  ," << '\n'
+       << "  For: AllOtherDays," << '\n'
+       << "  Until: 24:00," << '\n'
        << "  1.0;";
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -304,37 +301,37 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   ASSERT_TRUE(idfObject.iddObject().type() == IddObjectType::Schedule_Compact);
   OptionalWorkspaceObject w2 = scratch.addObject(idfObject);
   ASSERT_TRUE(w2);
-  EXPECT_TRUE(object.setPointer(14,w2->handle ()));
-  EXPECT_EQ(15u,object.numFields());
+  EXPECT_TRUE(object.setPointer(14, w2->handle()));
+  EXPECT_EQ(15u, object.numFields());
   tObject = object.getTarget(14);
   ASSERT_TRUE(tObject);
   EXPECT_TRUE(tObject->handle() == w2->handle());
 
   // hidden pushing for setting extensible string pointer
-  EXPECT_TRUE(object.setString(16,*(tObject->name()))); // should only work at strictness none
+  EXPECT_TRUE(object.setString(16, *(tObject->name())));  // should only work at strictness none
   tObject = object.getTarget(16);
   ASSERT_TRUE(tObject);
   EXPECT_TRUE(tObject->handle() == w2->handle());
-  EXPECT_EQ(18u,object.numFields());
+  EXPECT_EQ(18u, object.numFields());
 
   // hidden pushing for setting extensible double
-  EXPECT_TRUE(object.setDouble(19,0.5));
-  EXPECT_EQ(20u,object.numFields());
+  EXPECT_TRUE(object.setDouble(19, 0.5));
+  EXPECT_EQ(20u, object.numFields());
   OptionalDouble dValue = object.getDouble(19);
   ASSERT_TRUE(dValue);
-  EXPECT_NEAR(0.5,*dValue,tol);
+  EXPECT_NEAR(0.5, *dValue, tol);
 
   // SHOULD NOT BE VALID
-  scratch = Workspace(StrictnessLevel::Draft, IddFileType::EnergyPlus); // Non-null data must be valid
+  scratch = Workspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);  // Non-null data must be valid
   text.str("");
-  text << "ZoneHVAC:HighTemperatureRadiant," << std::endl
-       << "  MyRadiantSystem," << std::endl
-       << "  MyHVACSchedule," << std::endl
-       << "  MyCoreZone," << std::endl
-       << "  HeatingDesignCapacity," << std::endl
-       << "  Autosize," << std::endl
-       << "  ," << std::endl
-       << "  ," << std::endl
+  text << "ZoneHVAC:HighTemperatureRadiant," << '\n'
+       << "  MyRadiantSystem," << '\n'
+       << "  MyHVACSchedule," << '\n'
+       << "  MyCoreZone," << '\n'
+       << "  HeatingDesignCapacity," << '\n'
+       << "  Autosize," << '\n'
+       << "  ," << '\n'
+       << "  ," << '\n'
        << "  Electricity;";
   oObj = IdfObject::load(text.str());
   ASSERT_TRUE(oObj);
@@ -346,38 +343,38 @@ TEST_F(IdfFixture, WorkspaceObject_FieldSettingWithHiddenPushes) {
   object = *tObject;
 
   // hidden pushing for setting nonextensible double
-  EXPECT_FALSE(object.setDouble(9,1.5));
-  EXPECT_EQ(14u,object.numFields());
-  EXPECT_TRUE(object.setDouble(9,0.6));
-  EXPECT_EQ(14u,object.numFields());
+  EXPECT_FALSE(object.setDouble(9, 1.5));
+  EXPECT_EQ(14u, object.numFields());
+  EXPECT_TRUE(object.setDouble(9, 0.6));
+  EXPECT_EQ(14u, object.numFields());
 
   // hidden pushing for setting nonextensible string
-  EXPECT_FALSE(object.setString(12,"bad key"));
-  EXPECT_EQ(14u,object.numFields());
-  EXPECT_TRUE(object.setString(12,"MeanAirTemperature"));
-  EXPECT_EQ(14u,object.numFields());
+  EXPECT_FALSE(object.setString(12, "bad key"));
+  EXPECT_EQ(14u, object.numFields());
+  EXPECT_TRUE(object.setString(12, "MeanAirTemperature"));
+  EXPECT_EQ(14u, object.numFields());
 
   // hidden pushing for setting nonextensible pointer
-  EXPECT_TRUE(object.setString(14,""));
-  EXPECT_EQ(15u,object.numFields());
+  EXPECT_TRUE(object.setString(14, ""));
+  EXPECT_EQ(15u, object.numFields());
 
   // hidden pushing for setting extensible string pointer
-  EXPECT_FALSE(object.setString(16,"MySurface"));
-  EXPECT_EQ(15u,object.numFields());
-  EXPECT_TRUE(object.setString(16,""));
-  EXPECT_EQ(18u,object.numFields());
+  EXPECT_FALSE(object.setString(16, "MySurface"));
+  EXPECT_EQ(15u, object.numFields());
+  EXPECT_TRUE(object.setString(16, ""));
+  EXPECT_EQ(18u, object.numFields());
 
   // hidden pushing for setting extensible double
-  EXPECT_FALSE(object.setDouble(21,-1.5));
-  EXPECT_EQ(18u,object.numFields());
-  EXPECT_TRUE(object.setDouble(19,0.5));
-  EXPECT_EQ(20u,object.numFields());
+  EXPECT_FALSE(object.setDouble(21, -1.5));
+  EXPECT_EQ(18u, object.numFields());
+  EXPECT_TRUE(object.setDouble(19, 0.5));
+  EXPECT_EQ(20u, object.numFields());
 }
 
-TEST_F(IdfFixture,WorkspaceObject_ClearGroups) {
+TEST_F(IdfFixture, WorkspaceObject_ClearGroups) {
   // always works in None or Draft strictness
   Workspace ws(epIdfFile);
-  EXPECT_TRUE(ws.strictnessLevel() == StrictnessLevel::None);
+  EXPECT_TRUE(ws.strictnessLevel() == StrictnessLevel::Minimal);
   WorkspaceObjectVector surfaces = ws.getObjectsByType(IddObjectType::BuildingSurface_Detailed);
   ASSERT_TRUE(surfaces.size() > 0);
   unsigned n = surfaces[0].numFields();
@@ -391,12 +388,10 @@ TEST_F(IdfFixture,WorkspaceObject_ClearGroups) {
   ASSERT_TRUE(surfaces.size() > 0);
   n = surfaces[0].numFields();
   surfaces[0].clearExtensibleGroups();
-  EXPECT_EQ(n,surfaces[0].numFields());
+  EXPECT_EQ(n, surfaces[0].numFields());
 }
 
-
-TEST_F(IdfFixture, WorkspaceObject_OS_DaylightingDevice_Shelf)
-{
+TEST_F(IdfFixture, WorkspaceObject_OS_DaylightingDevice_Shelf) {
   // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
   Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject w1 = ws.addObject(IdfObject(IddObjectType::OS_DaylightingDevice_Shelf));
@@ -437,8 +432,7 @@ TEST_F(IdfFixture, WorkspaceObject_OS_DaylightingDevice_Shelf)
 //  //OptionalHandle h2 = ws.addObject(IdfObject(IddObjectType::OS_Connection));
 //}
 
-TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
-{
+TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects) {
   // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
   Workspace ws1(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject w1 = ws1.addObject(IdfObject(IddObjectType::OS_Surface));
@@ -461,8 +455,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects)
   EXPECT_EQ(h2, w2.handle());
 }
 
-TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
-{
+TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2) {
   // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
   Workspace ws1(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject w1 = ws1.addObject(IdfObject(IddObjectType::OS_Surface));
@@ -475,13 +468,13 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   EXPECT_EQ(h1, w1->handle());
 
   IdfFile idf1 = ws1.toIdfFile();
-  ASSERT_EQ(1u,idf1.objects().size());
+  ASSERT_EQ(1u, idf1.objects().size());
   IdfObject i1 = idf1.objects()[0];
   OptionalString i1hString = i1.getString(0);
   ASSERT_TRUE(i1hString);
   Handle ih(toUUID(*i1hString));
   EXPECT_FALSE(ih.isNull());
-  EXPECT_EQ(ih,i1.handle());
+  EXPECT_EQ(ih, i1.handle());
 
   Workspace ws2(StrictnessLevel::Draft, IddFileType::OpenStudio);
   ws2.addObjects(idf1.objects());
@@ -494,8 +487,7 @@ TEST_F(IdfFixture, WorkspaceObject_RestoreHandleInAddObjects2)
   EXPECT_EQ(h2, w2.handle());
 }
 
-TEST_F(IdfFixture, WorkspaceObject_Filter_Sources)
-{
+TEST_F(IdfFixture, WorkspaceObject_Filter_Sources) {
   // defaults to IddFileType::EnergyPlus so need to specify IddFileType::OpenStudio
   Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
   OptionalWorkspaceObject node = ws.addObject(IdfObject(IddObjectType::OS_Node));
@@ -504,16 +496,15 @@ TEST_F(IdfFixture, WorkspaceObject_Filter_Sources)
   OptionalWorkspaceObject spm = ws.addObject(IdfObject(IddObjectType::OS_SetpointManager_MixedAir));
 
   EXPECT_TRUE(spm->setPointer(OS_SetpointManager_MixedAirFields::SetpointNodeorNodeListName, node->handle()));
-  EXPECT_TRUE(spm->setPointer(OS_SetpointManager_MixedAirFields::FanInletNodeName,node->handle()));
-  EXPECT_TRUE(spm->setPointer(OS_SetpointManager_MixedAirFields::FanOutletNodeName,node2->handle()));
-  EXPECT_TRUE(spm->setPointer(OS_SetpointManager_MixedAirFields::ReferenceSetpointNodeName,node3->handle()));
+  EXPECT_TRUE(spm->setPointer(OS_SetpointManager_MixedAirFields::FanInletNodeName, node->handle()));
+  EXPECT_TRUE(spm->setPointer(OS_SetpointManager_MixedAirFields::FanOutletNodeName, node2->handle()));
+  EXPECT_TRUE(spm->setPointer(OS_SetpointManager_MixedAirFields::ReferenceSetpointNodeName, node3->handle()));
 
   WorkspaceObjectVector sourcesVector = node->sources();
   EXPECT_EQ(1, sourcesVector.size());
   sourcesVector = node->getSources(IddObjectType::OS_SetpointManager_MixedAir);
   EXPECT_EQ(1, sourcesVector.size());
 }
-
 
 TEST_F(IdfFixture, WorkspaceObject_SetDouble_NaN_and_Inf) {
 
@@ -566,4 +557,54 @@ TEST_F(IdfFixture, WorkspaceObject_SetDouble_NaN_and_Inf) {
   EXPECT_EQ(1u, object2.numExtensibleGroups());
   EXPECT_FALSE(object2.pushExtensibleGroup(group).empty());
   EXPECT_EQ(2u, object2.numExtensibleGroups());
+}
+
+TEST_F(IdfFixture, WorkspaceObject_setString) {
+
+  // Test for #4205 - setString on a WorkspaceObject should prevent duplicate names
+  Workspace ws(StrictnessLevel::Draft, IddFileType::OpenStudio);
+  WorkspaceObject space1 = ws.addObject(IdfObject(IddObjectType::OS_Space)).get();
+
+  WorkspaceObject space2 = ws.addObject(IdfObject(IddObjectType::OS_Space)).get();
+
+  unsigned nameIndex = 1;
+  EXPECT_TRUE(space1.setString(nameIndex, "Space 1"));
+  ASSERT_TRUE(space1.getString(nameIndex));
+  EXPECT_EQ("Space 1", space1.getString(nameIndex).get());
+
+  EXPECT_TRUE(space2.setString(nameIndex, "SpaceA"));
+  EXPECT_EQ("SpaceA", space2.getString(nameIndex).get());
+
+  EXPECT_TRUE(space2.setString(nameIndex, "Space 1"));  // Setting works, but it should modify it
+  ASSERT_TRUE(space2.getString(nameIndex));
+  EXPECT_NE("Space 1", space2.getString(nameIndex).get());
+  EXPECT_EQ("Space 2", space2.getString(nameIndex).get());
+
+  // That portion is not accepted either, even at Draft level
+  EXPECT_FALSE(space2.setString(nameIndex, ""));
+  ASSERT_TRUE(space2.getString(nameIndex));
+  EXPECT_EQ("Space 2", space2.getString(nameIndex).get());
+}
+
+TEST_F(IdfFixture, WorkspaceObject_setName_allObjects) {
+
+  std::vector<openstudio::IddObjectType> exclusions{openstudio::IddObjectType::OS_Output_Meter};
+
+  auto osIddFile = openstudio::IddFactory::instance().getIddFile(openstudio::IddFileType::OpenStudio);
+
+  for (const IddObject& iddObject : osIddFile.objects()) {
+    auto iddObjectType = iddObject.type();
+    if (std::find(exclusions.cbegin(), exclusions.cend(), iddObjectType) == exclusions.cend()) {
+      if (auto index_ = iddObject.nameFieldIndex()) {
+        Workspace w(StrictnessLevel::Draft, IddFileType::OpenStudio);
+        WorkspaceObjectVector objs;
+        for (auto i = 0; i < 2; ++i) {
+          WorkspaceObject obj = w.addObject(IdfObject(iddObjectType)).get();
+          EXPECT_TRUE(obj.setString(index_.get(), "object name"));
+          objs.emplace_back(obj);
+        }
+        EXPECT_NE(objs[0].nameString(), objs[1].nameString()) << "Name unicity isn't enforced for " << iddObject.name();
+      }
+    }
+  }
 }

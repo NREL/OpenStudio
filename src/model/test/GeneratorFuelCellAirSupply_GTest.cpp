@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,7 +51,7 @@ TEST_F(ModelFixture, FuelCellAirSupply) {
   GeneratorFuelCellAirSupply airSupply(model);
   boost::optional<CurveCubic> blowerCurve = airSupply.blowerPowerCurve();
   ASSERT_TRUE(blowerCurve);
-  EXPECT_EQ(0 ,blowerCurve.get().coefficient1Constant());
+  EXPECT_EQ(0, blowerCurve.get().coefficient1Constant());
   EXPECT_EQ(0, blowerCurve.get().coefficient2x());
   EXPECT_EQ(0, blowerCurve.get().coefficient3xPOW2());
   EXPECT_EQ(0, blowerCurve.get().coefficient4xPOW3());
@@ -74,7 +74,6 @@ TEST_F(ModelFixture, FuelCellAirSupply) {
   //should throw in Ctor of AirSupplyConstituent since name is wrong
   EXPECT_THROW(airSupply.addConstituent("MadeUp", 0.0092), openstudio::Exception);
   EXPECT_EQ(0, airSupply.numberofUserDefinedConstituents().get());
-
 
   ASSERT_TRUE(airSupply.addConstituent("CarbonDioxide", 0.0003));
   EXPECT_EQ(1, airSupply.numberofUserDefinedConstituents().get());
@@ -102,17 +101,17 @@ TEST_F(ModelFixture, FuelCellAirSupply2) {
 
   Node airInletNode(model);
   GeneratorFuelCellAirSupply airSupply(model, airInletNode);
-  EXPECT_EQ(airInletNode, airSupply.airInletNode());
+  EXPECT_EQ(airInletNode, airSupply.airInletNode().get());
   airSupply.resetAirInletNode();
   ASSERT_FALSE(airSupply.airInletNode());
   ASSERT_TRUE(airSupply.setAirInletNode(airInletNode));
-  EXPECT_EQ(airInletNode, airSupply.airInletNode());
+  EXPECT_EQ(airInletNode, airSupply.airInletNode().get());
   CurveQuadratic curveQ1(model);
   ASSERT_TRUE(airSupply.setAirRateFunctionofElectricPowerCurve(curveQ1));
-  EXPECT_EQ(curveQ1, airSupply.airRateFunctionofElectricPowerCurve());
+  EXPECT_EQ(curveQ1, airSupply.airRateFunctionofElectricPowerCurve().get());
   CurveQuadratic curveQ2(model);
   ASSERT_TRUE(airSupply.setAirRateFunctionofFuelRateCurve(curveQ2));
-  EXPECT_EQ(curveQ2, airSupply.airRateFunctionofFuelRateCurve());
+  EXPECT_EQ(curveQ2, airSupply.airRateFunctionofFuelRateCurve().get());
   CurveCubic blowerCurve(model);
   ASSERT_TRUE(airSupply.setBlowerPowerCurve(blowerCurve));
   airSupply.resetBlowerPowerCurve();
@@ -122,4 +121,3 @@ TEST_F(ModelFixture, FuelCellAirSupply2) {
   airSupply.resetAirRateFunctionofFuelRateCurve();
   ASSERT_FALSE(airSupply.airRateFunctionofFuelRateCurve());
 }
-

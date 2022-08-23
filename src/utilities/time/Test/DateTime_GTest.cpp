@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,41 +38,39 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-TEST(DateTime, Normalization)
-{
-  Date baseDate(MonthOfYear::Jan,1,2008);
+TEST(DateTime, Normalization) {
+  Date baseDate(MonthOfYear::Jan, 1, 2008);
 
-  DateTime testDateTime(baseDate, Time(0,0,0,0));
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan,1,2008));
+  DateTime testDateTime(baseDate, Time(0, 0, 0, 0));
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan, 1, 2008));
 
-  testDateTime = DateTime(baseDate, Time(0,0,0,1));
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan,1,2008));
+  testDateTime = DateTime(baseDate, Time(0, 0, 0, 1));
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan, 1, 2008));
 
-  testDateTime = DateTime(baseDate, Time(0,0,0,-1));
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec,31,2007));
+  testDateTime = DateTime(baseDate, Time(0, 0, 0, -1));
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec, 31, 2007));
 
-  testDateTime = DateTime(baseDate, Time(0,23,59,59));
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan,1,2008));
+  testDateTime = DateTime(baseDate, Time(0, 23, 59, 59));
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan, 1, 2008));
 
-  testDateTime = DateTime(baseDate, Time(0,-23,-59,-59));
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec,31,2007));
+  testDateTime = DateTime(baseDate, Time(0, -23, -59, -59));
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec, 31, 2007));
 
-  testDateTime = DateTime(baseDate, Time(1,0,0,0));
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan,2,2008));
+  testDateTime = DateTime(baseDate, Time(1, 0, 0, 0));
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan, 2, 2008));
 
-  testDateTime = DateTime(baseDate, Time(-1,0,0,0));
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec,31,2007));
+  testDateTime = DateTime(baseDate, Time(-1, 0, 0, 0));
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec, 31, 2007));
 
-  testDateTime = DateTime(baseDate, Time(1,23,59,59));
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan,2,2008));
+  testDateTime = DateTime(baseDate, Time(1, 23, 59, 59));
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan, 2, 2008));
 
-  testDateTime = DateTime(baseDate, Time(-1,-23,-59,-59));
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec,30,2007));
+  testDateTime = DateTime(baseDate, Time(-1, -23, -59, -59));
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec, 30, 2007));
 };
 
-TEST(DateTime, StringConstructor)
-{
-  DateTime dateTime(Date(MonthOfYear::Jan,1,2008), Time(0,0,0,0));
+TEST(DateTime, StringConstructor) {
+  DateTime dateTime(Date(MonthOfYear::Jan, 1, 2008), Time(0, 0, 0, 0));
 
   std::stringstream ss;
   ss << dateTime;
@@ -80,7 +78,7 @@ TEST(DateTime, StringConstructor)
 
   EXPECT_TRUE(dateTime == dateTime2) << ss.str() << ", " << dateTime << " != " << dateTime2;
 
-  dateTime = DateTime(Date(MonthOfYear::Jan,1,2008), Time(0,4,0,0));
+  dateTime = DateTime(Date(MonthOfYear::Jan, 1, 2008), Time(0, 4, 0, 0));
 
   ss.str("");
   ss << dateTime;
@@ -88,7 +86,7 @@ TEST(DateTime, StringConstructor)
 
   EXPECT_TRUE(dateTime == dateTime2) << ss.str() << ", " << dateTime << " != " << dateTime2;
 
-  dateTime = DateTime(Date(MonthOfYear::Jan,1,2008), Time(4,4,0,0));
+  dateTime = DateTime(Date(MonthOfYear::Jan, 1, 2008), Time(4, 4, 0, 0));
 
   ss.str("");
   ss << dateTime;
@@ -96,7 +94,7 @@ TEST(DateTime, StringConstructor)
 
   EXPECT_TRUE(dateTime == dateTime2) << ss.str() << ", " << dateTime << " != " << dateTime2;
 
-  dateTime = DateTime(Date(MonthOfYear::Jan,10,2008), Time(4,4,0,0));
+  dateTime = DateTime(Date(MonthOfYear::Jan, 10, 2008), Time(4, 4, 0, 0));
 
   ss.str("");
   ss << dateTime;
@@ -104,7 +102,7 @@ TEST(DateTime, StringConstructor)
 
   EXPECT_TRUE(dateTime == dateTime2) << ss.str() << ", " << dateTime << " != " << dateTime2;
 
-  dateTime = DateTime(Date(MonthOfYear::Jan,10), Time(4,4,0,0));
+  dateTime = DateTime(Date(MonthOfYear::Jan, 10), Time(4, 4, 0, 0));
 
   ss.str("");
   ss << dateTime;
@@ -113,74 +111,72 @@ TEST(DateTime, StringConstructor)
   EXPECT_TRUE(dateTime == dateTime2) << ss.str() << ", " << dateTime << " != " << dateTime2;
 }
 
-TEST(DateTime, TMConstructor)
-{
+TEST(DateTime, TMConstructor) {
   time_t t = time(nullptr);
   tm* lt = localtime(&t);
   DateTime zd(*lt);
 
   EXPECT_EQ(zd.date().dayOfMonth(), static_cast<unsigned>(lt->tm_mday));
   EXPECT_EQ(openstudio::month(zd.date().monthOfYear()) - 1, static_cast<unsigned>(lt->tm_mon));
-  EXPECT_EQ(zd.date().year(), lt->tm_year+1900);
+  EXPECT_EQ(zd.date().year(), lt->tm_year + 1900);
 
   EXPECT_EQ(zd.time().hours(), lt->tm_hour);
   EXPECT_EQ(zd.time().minutes(), lt->tm_min);
   EXPECT_EQ(zd.time().seconds(), lt->tm_sec);
 }
 
-TEST(DateTime, normalization2)
-{
-  Date baseDate(MonthOfYear::Jan,1);
+TEST(DateTime, normalization2) {
+  Date baseDate(MonthOfYear::Jan, 1);
 
   DateTime testDateTime(baseDate);
-  testDateTime += Time(0,0,0,0);
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan,1,2009));
+  testDateTime += Time(0, 0, 0, 0);
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan, 1, 2009));
 
   testDateTime = DateTime(baseDate);
-  testDateTime -= Time(0,0,0,0);
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan,1,2009));
+  testDateTime -= Time(0, 0, 0, 0);
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan, 1, 2009));
 
   testDateTime = DateTime(baseDate);
-  testDateTime += Time(0,0,0,1);
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan,1,2009));
+  testDateTime += Time(0, 0, 0, 1);
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan, 1, 2009));
 
   testDateTime = DateTime(baseDate);
-  testDateTime -= Time(0,0,0,1);
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec,31,2008));
+  testDateTime -= Time(0, 0, 0, 1);
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec, 31, 2008));
 
   testDateTime = DateTime(baseDate);
-  testDateTime += Time(0,23,59,59);
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan,1,2009));
+  testDateTime += Time(0, 23, 59, 59);
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan, 1, 2009));
 
   testDateTime = DateTime(baseDate);
-  testDateTime -= Time(0,23,59,59);
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec,31,2008));
+  testDateTime -= Time(0, 23, 59, 59);
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec, 31, 2008));
 
   testDateTime = DateTime(baseDate);
-  testDateTime += Time(1,0,0,0);
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan,2,2009));
+  testDateTime += Time(1, 0, 0, 0);
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan, 2, 2009));
 
   testDateTime = DateTime(baseDate);
-  testDateTime -= Time(1,0,0,0);
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec,31,2008));
+  testDateTime -= Time(1, 0, 0, 0);
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec, 31, 2008));
 
   testDateTime = DateTime(baseDate);
-  testDateTime += Time(1,23,59,59);
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan,2,2009));
+  testDateTime += Time(1, 23, 59, 59);
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Jan, 2, 2009));
 
   testDateTime = DateTime(baseDate);
-  testDateTime -= Time(1,23,59,59);
-  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec,30,2008));
+  testDateTime -= Time(1, 23, 59, 59);
+  EXPECT_TRUE(testDateTime.date() == Date(MonthOfYear::Dec, 30, 2008));
 };
 
-TEST(DateTime,EpochConversions) {
+TEST(DateTime, EpochConversions) {
   DateTime dateTime = DateTime::now();
   std::time_t asEpoch = dateTime.toEpoch();
   DateTime copy = DateTime::fromEpoch(asEpoch);
-  EXPECT_EQ(dateTime,copy);
+  EXPECT_EQ(dateTime, copy);
 }
 
-TEST(DateTime,ISO8601Conversions) {
+TEST(DateTime, ISO8601Conversions) {
   {
     DateTime dateTime = DateTime::now();
     double utcOffset = dateTime.utcOffset();
@@ -209,7 +205,6 @@ TEST(DateTime,ISO8601Conversions) {
 
 TEST(DateTime, ISO8601Conversions_2) {
   boost::optional<DateTime> test;
-
 
   // Complete date plus hours and minutes :
   test = DateTime::fromISO8601("1997-07-16T19:20+01:00");
@@ -338,18 +333,17 @@ TEST(DateTime, ISO8601Conversions_2) {
 TEST(DateTime, OutOfRangeYearTest) {
 
   std::string timeString = "20151025T085412";
-  for (unsigned i = 0; i < 10000; ++i){
+  for (unsigned i = 0; i < 10000; ++i) {
     boost::optional<openstudio::DateTime> dateTime = openstudio::DateTime::fromISO8601(timeString);
     ASSERT_TRUE(dateTime);
     openstudio::Date date = dateTime->date();
-    for (unsigned j = 0; j < 10; ++j){
+    for (unsigned j = 0; j < 10; ++j) {
       EXPECT_EQ(2015, date.year());
       EXPECT_EQ(10, date.monthOfYear().value());
       EXPECT_EQ(25, date.dayOfMonth());
     }
-   }
+  }
 }
-
 
 /////////////////////////////////////////////////////////////
 // Calendar for 2008.  Format is day of month, day of year //
@@ -455,8 +449,6 @@ December 2008
 28,363  29,364  30,365  31,366
 */
 /////////////////////////////////////////////////////////////
-
-
 
 /////////////////////////////////////////////////////////////
 // Calendar for 2009.  Format is day of month, day of year //

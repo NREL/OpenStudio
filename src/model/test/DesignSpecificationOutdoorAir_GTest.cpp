@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,8 +47,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, DesignSpecificationOutdoorAir_Space)
-{
+TEST_F(ModelFixture, DesignSpecificationOutdoorAir_Space) {
   Model model;
 
   DesignSpecificationOutdoorAir designSpecificationOutdoorAir(model);
@@ -60,8 +59,7 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_Space)
   EXPECT_EQ(designSpecificationOutdoorAir.handle(), space.designSpecificationOutdoorAir()->handle());
 }
 
-TEST_F(ModelFixture, DesignSpecificationOutdoorAir_SpaceType)
-{
+TEST_F(ModelFixture, DesignSpecificationOutdoorAir_SpaceType) {
   Model model;
 
   DesignSpecificationOutdoorAir designSpecificationOutdoorAir(model);
@@ -83,8 +81,7 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_SpaceType)
   EXPECT_EQ(designSpecificationOutdoorAir2.handle(), space.designSpecificationOutdoorAir()->handle());
 }
 
-TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2SameSpaces)
-{
+TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2SameSpaces) {
   Model model;
 
   ThermalZone thermalZone(model);
@@ -108,8 +105,7 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2SameSpaces)
   EXPECT_EQ(designSpecificationOutdoorAir.handle(), combinedSpace->designSpecificationOutdoorAir()->handle());
 }
 
-TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2DifferentSpaces)
-{
+TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2DifferentSpaces) {
   Model model;
 
   // 1 m^2
@@ -118,7 +114,6 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2DifferentSpaces)
   points.push_back(Point3d(0, 1, 0));
   points.push_back(Point3d(1, 1, 0));
   points.push_back(Point3d(1, 0, 0));
-
 
   ThermalZone thermalZone(model);
 
@@ -160,6 +155,6 @@ TEST_F(ModelFixture, DesignSpecificationOutdoorAir_ThermalZone_2DifferentSpaces)
   EXPECT_NE(designSpecificationOutdoorAir1.handle(), combinedSpace->designSpecificationOutdoorAir()->handle());
   EXPECT_NE(designSpecificationOutdoorAir2.handle(), combinedSpace->designSpecificationOutdoorAir()->handle());
 
-  EXPECT_EQ(1.0, combinedSpace->designSpecificationOutdoorAir()->outdoorAirFlowperFloorArea()); // (2*1 + 0*1)/2
-  EXPECT_EQ(2.0, combinedSpace->designSpecificationOutdoorAir()->outdoorAirFlowperPerson()); // (0*1 + 3*2)/3
+  EXPECT_EQ(1.0, combinedSpace->designSpecificationOutdoorAir()->outdoorAirFlowperFloorArea());  // (2*1 + 0*1)/2
+  EXPECT_EQ(2.0, combinedSpace->designSpecificationOutdoorAir()->outdoorAirFlowperPerson());     // (0*1 + 3*2)/3
 }

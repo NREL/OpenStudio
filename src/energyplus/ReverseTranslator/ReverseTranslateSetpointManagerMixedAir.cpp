@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,93 +42,78 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateSetpointManagerMixedAir( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::SetpointManager_MixedAir )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: SetpointManager_MixedAir");
-     return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateSetpointManagerMixedAir(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::SetpointManager_MixedAir) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: SetpointManager_MixedAir");
+      return boost::none;
+    }
 
-  bool nodeFound = false;
+    bool nodeFound = false;
 
-  if( boost::optional<std::string> setpointNodeName = workspaceObject.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName) )
-  {
-    boost::optional<Node> setpointNode = m_model.getModelObjectByName<Node>(setpointNodeName.get());
+    if (boost::optional<std::string> setpointNodeName = workspaceObject.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName)) {
+      boost::optional<Node> setpointNode = m_model.getModelObjectByName<Node>(setpointNodeName.get());
 
-    if( setpointNode ) { nodeFound = true; }
-  }
+      if (setpointNode) {
+        nodeFound = true;
+      }
+    }
 
-  if( ! nodeFound )
-  {
-    LOG(Error, workspaceObject.briefDescription() << " is not attached to a node in the model");
+    if (!nodeFound) {
+      LOG(Error, workspaceObject.briefDescription() << " is not attached to a node in the model");
 
-    return boost::none;
-  }
+      return boost::none;
+    }
 
-  SetpointManagerMixedAir mo(m_model);
+    SetpointManagerMixedAir mo(m_model);
 
-  boost::optional<std::string> s = workspaceObject.getString(SetpointManager_MixedAirFields::Name);
-  if( s )
-  {
-    mo.setName(s.get());
-  }
+    boost::optional<std::string> s = workspaceObject.getString(SetpointManager_MixedAirFields::Name);
+    if (s) {
+      mo.setName(s.get());
+    }
 
-  s = workspaceObject.getString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName);
-  if( s )
-  {
-    boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
+    s = workspaceObject.getString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName);
+    if (s) {
+      boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
 
-    if( node )
-    {
-      mo.setReferenceSetpointNode(node.get());
+      if (node) {
+        mo.setReferenceSetpointNode(node.get());
+      }
+    }
+
+    s = workspaceObject.getString(SetpointManager_MixedAirFields::FanInletNodeName);
+    if (s) {
+      boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
+
+      if (node) {
+        mo.setFanInletNode(node.get());
+      }
+    }
+
+    s = workspaceObject.getString(SetpointManager_MixedAirFields::FanOutletNodeName);
+    if (s) {
+      boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
+
+      if (node) {
+        mo.setFanOutletNode(node.get());
+      }
+    }
+
+    s = workspaceObject.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName);
+    if (s) {
+      boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
+
+      if (node) {
+        mo.addToNode(node.get());
+      }
+    }
+
+    if (mo.setpointNode()) {
+      return mo;
+    } else {
+      return boost::none;
     }
   }
 
-  s = workspaceObject.getString(SetpointManager_MixedAirFields::FanInletNodeName);
-  if( s )
-  {
-    boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
+}  // namespace energyplus
 
-    if( node )
-    {
-      mo.setFanInletNode(node.get());
-    }
-  }
-
-  s = workspaceObject.getString(SetpointManager_MixedAirFields::FanOutletNodeName);
-  if( s )
-  {
-    boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
-
-    if( node )
-    {
-      mo.setFanOutletNode(node.get());
-    }
-  }
-
-  s = workspaceObject.getString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName);
-  if( s )
-  {
-    boost::optional<Node> node = m_model.getModelObjectByName<Node>(s.get());
-
-    if( node )
-    {
-      mo.addToNode(node.get());
-    }
-  }
-
-  if( mo.setpointNode() )
-  {
-    return mo;
-  }
-  else
-  {
-    return boost::none;
-  }
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

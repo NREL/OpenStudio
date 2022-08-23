@@ -41,4 +41,5 @@
 
 // order that these are loaded matters, e.g TimeSeries in data needs to know about DateTime in time
 %include <utilities/sql/SqlFile.i>
+
 #endif // UTILITIES_UTILITIESSQL_I

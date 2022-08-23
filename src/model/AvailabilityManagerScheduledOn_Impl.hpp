@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,68 +36,62 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** AvailabilityManagerScheduledOn_Impl is a AvailabilityManager_Impl that is the implementation class for AvailabilityManagerScheduledOn.*/
-  class MODEL_API AvailabilityManagerScheduledOn_Impl : public AvailabilityManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AvailabilityManagerScheduledOn_Impl is a AvailabilityManager_Impl that is the implementation class for AvailabilityManagerScheduledOn.*/
+    class MODEL_API AvailabilityManagerScheduledOn_Impl : public AvailabilityManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AvailabilityManagerScheduledOn_Impl(const IdfObject& idfObject,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      AvailabilityManagerScheduledOn_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AvailabilityManagerScheduledOn_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      AvailabilityManagerScheduledOn_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AvailabilityManagerScheduledOn_Impl(const AvailabilityManagerScheduledOn_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      AvailabilityManagerScheduledOn_Impl(const AvailabilityManagerScheduledOn_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AvailabilityManagerScheduledOn_Impl() {}
+      virtual ~AvailabilityManagerScheduledOn_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule schedule() const;
+      Schedule schedule() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setSchedule(Schedule& schedule);
+      bool setSchedule(Schedule& schedule);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AvailabilityManagerScheduledOn");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AvailabilityManagerScheduledOn");
 
-    boost::optional<Schedule> optionalSchedule() const;
-  };
+      boost::optional<Schedule> optionalSchedule() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AVAILABILITYMANAGERSCHEDULEDON_IMPL_HPP
-
+#endif  // MODEL_AVAILABILITYMANAGERSCHEDULEDON_IMPL_HPP

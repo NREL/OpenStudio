@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,68 +40,67 @@
 #include "../utilities/geometry/Vector3d.hpp"
 #include "../utilities/core/Logger.hpp"
 
-namespace openstudio{
-namespace radiance{
+namespace openstudio {
+namespace radiance {
 
-  struct RADIANCE_API WindowGroupControl{
-      boost::optional<double> largestArea;
-      boost::optional<openstudio::Point3d> centroid;
-      boost::optional<openstudio::Vector3d> outwardNormal;
+  struct RADIANCE_API WindowGroupControl
+  {
+    boost::optional<double> largestArea;
+    boost::optional<openstudio::Point3d> centroid;
+    boost::optional<openstudio::Vector3d> outwardNormal;
   };
 
   /** A WindowGroup represents a group of windows which are simulated together in the single or three phase method.
   */
-  class RADIANCE_API WindowGroup{
-    public:
-      WindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space,
-                  const model::ConstructionBase& construction,
-                  const boost::optional<model::ShadingControl>& shadingControl);
+  class RADIANCE_API WindowGroup
+  {
+   public:
+    WindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, const model::ConstructionBase& construction,
+                const boost::optional<model::ShadingControl>& shadingControl);
 
-      bool operator==(const WindowGroup& other) const;
+    bool operator==(const WindowGroup& other) const;
 
-      std::string name() const;
+    std::string name() const;
 
-      void setName(const std::string& name);
+    void setName(const std::string& name);
 
-      openstudio::Vector3d outwardNormal() const;
+    openstudio::Vector3d outwardNormal() const;
 
-      model::Space space() const;
+    model::Space space() const;
 
-      model::ConstructionBase construction() const;
+    model::ConstructionBase construction() const;
 
-      boost::optional<model::ShadingControl> shadingControl() const;
+    boost::optional<model::ShadingControl> shadingControl() const;
 
-      std::string interiorShadeBSDF() const;
+    std::string interiorShadeBSDF() const;
 
-      std::string shadingControlType() const;
+    std::string shadingControlType() const;
 
-      // returns numeric value if it exists, returns schedule name for scheduled control, n/a otherwise
-      std::string shadingControlSetpoint() const;
+    // returns numeric value if it exists, returns schedule name for scheduled control, n/a otherwise
+    std::string shadingControlSetpoint() const;
 
-      void addWindowPolygon(const openstudio::Point3dVector& windowPolygon);
+    void addWindowPolygon(const openstudio::Point3dVector& windowPolygon);
 
-      WindowGroupControl windowGroupControl() const;
+    WindowGroupControl windowGroupControl() const;
 
-      std::string windowGroupPoints() const;
+    std::string windowGroupPoints() const;
 
-    private:
+   private:
+    std::string m_name;
 
-      std::string m_name;
+    openstudio::Vector3d m_outwardNormal;
+    model::Space m_space;
+    model::ConstructionBase m_construction;
+    boost::optional<model::ShadingControl> m_shadingControl;
+    std::vector<openstudio::Point3dVector> m_windowPolygons;
 
-      openstudio::Vector3d m_outwardNormal;
-      model::Space m_space;
-      model::ConstructionBase m_construction;
-      boost::optional<model::ShadingControl> m_shadingControl;
-      std::vector<openstudio::Point3dVector> m_windowPolygons;
-
-      REGISTER_LOGGER("openstudio.radiance.ForwardTranslator");
+    REGISTER_LOGGER("openstudio.radiance.ForwardTranslator");
   };
 
   // vector of WindowGroup
   typedef std::vector<WindowGroup> WindowGroupVector;
 
+}  // namespace radiance
+}  // namespace openstudio
 
-} // radiance
-} // openstudio
-
-#endif //RADIANCE_LIGHTFIXTURE_HPP
+#endif  //RADIANCE_LIGHTFIXTURE_HPP

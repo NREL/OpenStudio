@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,200 +46,202 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  PlanarSurfaceGroup_Impl::PlanarSurfaceGroup_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ParentObject_Impl(idfObject, model, keepHandle)
-  {
-    // connect signals
-    this->PlanarSurfaceGroup_Impl::onChange.connect<PlanarSurfaceGroup_Impl, &PlanarSurfaceGroup_Impl::clearCachedVariables>(this);
-  }
-
-  PlanarSurfaceGroup_Impl::PlanarSurfaceGroup_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {
-    // connect signals
-    this->PlanarSurfaceGroup_Impl::onChange.connect<PlanarSurfaceGroup_Impl, &PlanarSurfaceGroup_Impl::clearCachedVariables>(this);
-  }
-
-  PlanarSurfaceGroup_Impl::PlanarSurfaceGroup_Impl(const PlanarSurfaceGroup_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {
-    // connect signals
-    this->PlanarSurfaceGroup_Impl::onChange.connect<PlanarSurfaceGroup_Impl, &PlanarSurfaceGroup_Impl::clearCachedVariables>(this);
-  }
-
-  openstudio::Transformation PlanarSurfaceGroup_Impl::transformation() const
-  {
-    if (!m_cachedTransformation){
-      double x = this->xOrigin();
-      double y = this->yOrigin();
-      double z = this->zOrigin();
-
-      // translation
-      Transformation translation = Transformation::translation(Vector3d(x, y, z));
-
-      double dORN = this->directionofRelativeNorth();
-
-      // rotate negative amount around the z axis, EnergyPlus defines rotation clockwise
-      Transformation rotation = Transformation::rotation(Vector3d(0,0,1), -openstudio::degToRad(dORN));
-
-      m_cachedTransformation = translation*rotation;
+    PlanarSurfaceGroup_Impl::PlanarSurfaceGroup_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(idfObject, model, keepHandle) {
+      // connect signals
+      this->PlanarSurfaceGroup_Impl::onChange.connect<PlanarSurfaceGroup_Impl, &PlanarSurfaceGroup_Impl::clearCachedVariables>(this);
     }
 
-    return m_cachedTransformation.get();
-  }
-
-  bool PlanarSurfaceGroup_Impl::setTransformation(const openstudio::Transformation& transformation) {
-
-    EulerAngles eulerAngles = transformation.eulerAngles();
-    if ((eulerAngles.psi() != 0) || (eulerAngles.theta() != 0)){
-      return false;
+    PlanarSurfaceGroup_Impl::PlanarSurfaceGroup_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {
+      // connect signals
+      this->PlanarSurfaceGroup_Impl::onChange.connect<PlanarSurfaceGroup_Impl, &PlanarSurfaceGroup_Impl::clearCachedVariables>(this);
     }
 
-    double dORN = -radToDeg(eulerAngles.phi());
-    this->setDirectionofRelativeNorth(dORN, false);
-
-    Vector3d translation = transformation.translation();
-    this->setXOrigin(translation.x(), false);
-    this->setYOrigin(translation.y(), false);
-    this->setZOrigin(translation.z(), false);
-    this->emitChangeSignals();
-
-    return true;
-  }
-
-  openstudio::Transformation PlanarSurfaceGroup_Impl::siteTransformation() const
-  {
-    Transformation transformation;
-
-    boost::optional<Building> building = this->model().building();
-    if (building){
-      transformation = building->transformation() * this->buildingTransformation();
-    }else{
-      transformation = this->buildingTransformation();
+    PlanarSurfaceGroup_Impl::PlanarSurfaceGroup_Impl(const PlanarSurfaceGroup_Impl& other, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {
+      // connect signals
+      this->PlanarSurfaceGroup_Impl::onChange.connect<PlanarSurfaceGroup_Impl, &PlanarSurfaceGroup_Impl::clearCachedVariables>(this);
     }
-    return transformation;
+
+    openstudio::Transformation PlanarSurfaceGroup_Impl::transformation() const {
+      if (!m_cachedTransformation) {
+        double x = this->xOrigin();
+        double y = this->yOrigin();
+        double z = this->zOrigin();
+
+        // translation
+        Transformation translation = Transformation::translation(Vector3d(x, y, z));
+
+        double dORN = this->directionofRelativeNorth();
+
+        // rotate negative amount around the z axis, EnergyPlus defines rotation clockwise
+        Transformation rotation = Transformation::rotation(Vector3d(0, 0, 1), -openstudio::degToRad(dORN));
+
+        m_cachedTransformation = translation * rotation;
+      }
+
+      return m_cachedTransformation.get();
+    }
+
+    bool PlanarSurfaceGroup_Impl::setTransformation(const openstudio::Transformation& transformation) {
+
+      EulerAngles eulerAngles = transformation.eulerAngles();
+      if ((eulerAngles.psi() != 0) || (eulerAngles.theta() != 0)) {
+        return false;
+      }
+
+      double dORN = -radToDeg(eulerAngles.phi());
+      this->setDirectionofRelativeNorth(dORN, false);
+
+      Vector3d translation = transformation.translation();
+      this->setXOrigin(translation.x(), false);
+      this->setYOrigin(translation.y(), false);
+      this->setZOrigin(translation.z(), false);
+      this->emitChangeSignals();
+
+      return true;
+    }
+
+    openstudio::Transformation PlanarSurfaceGroup_Impl::siteTransformation() const {
+      Transformation transformation;
+
+      boost::optional<Building> building = this->model().building();
+      if (building) {
+        transformation = building->transformation() * this->buildingTransformation();
+      } else {
+        transformation = this->buildingTransformation();
+      }
+      return transformation;
+    }
+
+    openstudio::BoundingBox PlanarSurfaceGroup_Impl::boundingBoxParentCoordinates() const {
+      return transformation() * boundingBox();
+    }
+
+    openstudio::BoundingBox PlanarSurfaceGroup_Impl::boundingBoxBuildingCoordinates() const {
+      return buildingTransformation() * boundingBox();
+    }
+
+    openstudio::BoundingBox PlanarSurfaceGroup_Impl::boundingBoxSiteCoordinates() const {
+      return siteTransformation() * boundingBox();
+    }
+
+    void PlanarSurfaceGroup_Impl::clearCachedVariables() {
+      m_cachedTransformation.reset();
+    }
+
+  }  // namespace detail
+
+  PlanarSurfaceGroup::PlanarSurfaceGroup(IddObjectType iddObjectType, const Model& model) : ParentObject(iddObjectType, model) {
+    OS_ASSERT(getImpl<detail::PlanarSurfaceGroup_Impl>());
   }
 
-  void PlanarSurfaceGroup_Impl::clearCachedVariables()
-  {
-    m_cachedTransformation.reset();
+  double PlanarSurfaceGroup::directionofRelativeNorth() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->directionofRelativeNorth();
   }
 
-} // detail
+  bool PlanarSurfaceGroup::isDirectionofRelativeNorthDefaulted() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->isDirectionofRelativeNorthDefaulted();
+  }
 
-PlanarSurfaceGroup::PlanarSurfaceGroup(IddObjectType iddObjectType, const Model& model)
-  : ParentObject(iddObjectType,model)
-{
-  OS_ASSERT(getImpl<detail::PlanarSurfaceGroup_Impl>());
-}
+  double PlanarSurfaceGroup::xOrigin() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->xOrigin();
+  }
 
+  bool PlanarSurfaceGroup::isXOriginDefaulted() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->isXOriginDefaulted();
+  }
 
-double PlanarSurfaceGroup::directionofRelativeNorth() const {
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->directionofRelativeNorth();
-}
+  double PlanarSurfaceGroup::yOrigin() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->yOrigin();
+  }
 
-bool PlanarSurfaceGroup::isDirectionofRelativeNorthDefaulted() const {
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->isDirectionofRelativeNorthDefaulted();
-}
+  bool PlanarSurfaceGroup::isYOriginDefaulted() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->isYOriginDefaulted();
+  }
 
-double PlanarSurfaceGroup::xOrigin() const {
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->xOrigin();
-}
+  double PlanarSurfaceGroup::zOrigin() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->zOrigin();
+  }
 
-bool PlanarSurfaceGroup::isXOriginDefaulted() const {
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->isXOriginDefaulted();
-}
+  bool PlanarSurfaceGroup::isZOriginDefaulted() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->isZOriginDefaulted();
+  }
 
-double PlanarSurfaceGroup::yOrigin() const {
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->yOrigin();
-}
+  bool PlanarSurfaceGroup::setDirectionofRelativeNorth(double directionofRelativeNorth) {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->setDirectionofRelativeNorth(directionofRelativeNorth);
+  }
 
-bool PlanarSurfaceGroup::isYOriginDefaulted() const {
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->isYOriginDefaulted();
-}
+  void PlanarSurfaceGroup::resetDirectionofRelativeNorth() {
+    getImpl<detail::PlanarSurfaceGroup_Impl>()->resetDirectionofRelativeNorth();
+  }
 
-double PlanarSurfaceGroup::zOrigin() const {
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->zOrigin();
-}
+  bool PlanarSurfaceGroup::setXOrigin(double xOrigin) {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->setXOrigin(xOrigin);
+  }
 
-bool PlanarSurfaceGroup::isZOriginDefaulted() const {
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->isZOriginDefaulted();
-}
+  void PlanarSurfaceGroup::resetXOrigin() {
+    getImpl<detail::PlanarSurfaceGroup_Impl>()->resetXOrigin();
+  }
 
-bool PlanarSurfaceGroup::setDirectionofRelativeNorth(double directionofRelativeNorth) {
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->setDirectionofRelativeNorth(directionofRelativeNorth);
-}
+  bool PlanarSurfaceGroup::setYOrigin(double yOrigin) {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->setYOrigin(yOrigin);
+  }
 
-void PlanarSurfaceGroup::resetDirectionofRelativeNorth() {
-  getImpl<detail::PlanarSurfaceGroup_Impl>()->resetDirectionofRelativeNorth();
-}
+  void PlanarSurfaceGroup::resetYOrigin() {
+    getImpl<detail::PlanarSurfaceGroup_Impl>()->resetYOrigin();
+  }
 
-bool PlanarSurfaceGroup::setXOrigin(double xOrigin) {
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->setXOrigin(xOrigin);
-}
+  bool PlanarSurfaceGroup::setZOrigin(double zOrigin) {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->setZOrigin(zOrigin);
+  }
 
-void PlanarSurfaceGroup::resetXOrigin() {
-  getImpl<detail::PlanarSurfaceGroup_Impl>()->resetXOrigin();
-}
+  void PlanarSurfaceGroup::resetZOrigin() {
+    getImpl<detail::PlanarSurfaceGroup_Impl>()->resetZOrigin();
+  }
 
-bool PlanarSurfaceGroup::setYOrigin(double yOrigin) {
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->setYOrigin(yOrigin);
-}
+  openstudio::Transformation PlanarSurfaceGroup::transformation() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->transformation();
+  }
 
-void PlanarSurfaceGroup::resetYOrigin() {
-  getImpl<detail::PlanarSurfaceGroup_Impl>()->resetYOrigin();
-}
+  openstudio::Transformation PlanarSurfaceGroup::buildingTransformation() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->buildingTransformation();
+  }
 
-bool PlanarSurfaceGroup::setZOrigin(double zOrigin) {
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->setZOrigin(zOrigin);
-}
+  openstudio::Transformation PlanarSurfaceGroup::siteTransformation() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->siteTransformation();
+  }
 
-void PlanarSurfaceGroup::resetZOrigin() {
-  getImpl<detail::PlanarSurfaceGroup_Impl>()->resetZOrigin();
-}
+  bool PlanarSurfaceGroup::setTransformation(const openstudio::Transformation& transformation) {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->setTransformation(transformation);
+  }
 
-openstudio::Transformation PlanarSurfaceGroup::transformation() const
-{
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->transformation();
-}
+  bool PlanarSurfaceGroup::changeTransformation(const openstudio::Transformation& transformation) {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->changeTransformation(transformation);
+  }
 
-openstudio::Transformation PlanarSurfaceGroup::buildingTransformation() const
-{
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->buildingTransformation();
-}
+  openstudio::BoundingBox PlanarSurfaceGroup::boundingBox() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->boundingBox();
+  }
 
-openstudio::Transformation PlanarSurfaceGroup::siteTransformation() const
-{
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->siteTransformation();
-}
+  openstudio::BoundingBox PlanarSurfaceGroup::boundingBoxParentCoordinates() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->boundingBoxParentCoordinates();
+  }
 
-bool PlanarSurfaceGroup::setTransformation(const openstudio::Transformation& transformation)
-{
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->setTransformation(transformation);
-}
+  openstudio::BoundingBox PlanarSurfaceGroup::boundingBoxBuildingCoordinates() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->boundingBoxBuildingCoordinates();
+  }
 
-bool PlanarSurfaceGroup::changeTransformation(const openstudio::Transformation& transformation)
-{
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->changeTransformation(transformation);
-}
+  openstudio::BoundingBox PlanarSurfaceGroup::boundingBoxSiteCoordinates() const {
+    return getImpl<detail::PlanarSurfaceGroup_Impl>()->boundingBoxSiteCoordinates();
+  }
 
-openstudio::BoundingBox PlanarSurfaceGroup::boundingBox() const
-{
-  return getImpl<detail::PlanarSurfaceGroup_Impl>()->boundingBox();
-}
+  /// @cond
+  PlanarSurfaceGroup::PlanarSurfaceGroup(std::shared_ptr<detail::PlanarSurfaceGroup_Impl> impl) : ParentObject(std::move(impl)) {}
+  /// @endcond
 
-
-/// @cond
-PlanarSurfaceGroup::PlanarSurfaceGroup(std::shared_ptr<detail::PlanarSurfaceGroup_Impl> impl)
-  : ParentObject(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

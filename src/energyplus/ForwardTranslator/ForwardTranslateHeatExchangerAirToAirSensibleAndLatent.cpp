@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,208 +45,173 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerAirToAirSensibleAndLatent( HeatExchangerAirToAirSensibleAndLatent & modelObject )
-{
-  OptionalString s;
-  OptionalDouble d;
-  OptionalModelObject temp;
+  boost::optional<IdfObject> ForwardTranslator::translateHeatExchangerAirToAirSensibleAndLatent(HeatExchangerAirToAirSensibleAndLatent& modelObject) {
+    OptionalString s;
+    OptionalDouble d;
+    OptionalModelObject temp;
 
-  IdfObject idfObject(IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent);
+    IdfObject idfObject(IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  s = modelObject.name();
-  if(s)
-  {
-    idfObject.setName(*s);
-  }
-
-  // AvailabilityScheduleName
-  Schedule sched = modelObject.availabilitySchedule();
-  translateAndMapModelObject(sched);
-  idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::AvailabilityScheduleName,sched.name().get());
-
-  // NominalSupplyAirFlowRate
-  if( modelObject.isNominalSupplyAirFlowRateAutosized() )
-  {
-    idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::NominalSupplyAirFlowRate,"Autosize");
-  }
-  else
-  {
-    d = modelObject.nominalSupplyAirFlowRate();
-    if( d )
-    {
-      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::NominalSupplyAirFlowRate,d.get());
+    // Name
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
-  }
 
-  // SensibleEffectivenessat100_HeatingAirFlow
-  d = modelObject.sensibleEffectivenessat100HeatingAirFlow();
-  if( d )
-  {
-    idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_HeatingAirFlow,d.get());
-  }
+    // AvailabilityScheduleName
+    Schedule sched = modelObject.availabilitySchedule();
+    translateAndMapModelObject(sched);
+    idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::AvailabilityScheduleName, sched.name().get());
 
-  // LatentEffectivenessat100_HeatingAirFlow
-  d = modelObject.latentEffectivenessat100HeatingAirFlow();
-  if( d )
-  {
-    idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_HeatingAirFlow,d.get());
-  }
-
-  // SensibleEffectivenessat75_HeatingAirFlow
-  d = modelObject.sensibleEffectivenessat75HeatingAirFlow();
-  if( d )
-  {
-    idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_HeatingAirFlow,d.get());
-  }
-
-  // LatentEffectivenessat75_HeatingAirFlow
-  d = modelObject.latentEffectivenessat75HeatingAirFlow();
-  if( d )
-  {
-    idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_HeatingAirFlow,d.get());
-  }
-
-  // SensibleEffectivenessat100_CoolingAirFlow
-  d = modelObject.sensibleEffectivenessat100CoolingAirFlow();
-  if( d )
-  {
-    idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_CoolingAirFlow,d.get());
-  }
-
-  // LatentEffectivenessat100_CoolingAirFlow
-  d = modelObject.latentEffectivenessat100CoolingAirFlow();
-  if( d )
-  {
-    idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_CoolingAirFlow,d.get());
-  }
-
-  // SensibleEffectivenessat75_CoolingAirFlow
-  d = modelObject.sensibleEffectivenessat75CoolingAirFlow();
-  if( d )
-  {
-    idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_CoolingAirFlow,d.get());
-  }
-
-  // LatentEffectivenessat75_CoolingAirFlow
-  d = modelObject.latentEffectivenessat75CoolingAirFlow();
-  if( d )
-  {
-    idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_CoolingAirFlow,d.get());
-  }
-
-  // SupplyAirInletNodeName
-  temp = modelObject.primaryAirInletModelObject();
-  if(temp)
-  {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName,*s);
+    // NominalSupplyAirFlowRate
+    if (modelObject.isNominalSupplyAirFlowRateAutosized()) {
+      idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::NominalSupplyAirFlowRate, "Autosize");
+    } else {
+      d = modelObject.nominalSupplyAirFlowRate();
+      if (d) {
+        idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::NominalSupplyAirFlowRate, d.get());
+      }
     }
-  }
 
-  // SupplyAirOutletNodeName
-  temp = modelObject.primaryAirOutletModelObject();
-  if(temp)
-  {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletNodeName,*s);
+    // SensibleEffectivenessat100_HeatingAirFlow
+    d = modelObject.sensibleEffectivenessat100HeatingAirFlow();
+    if (d) {
+      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_HeatingAirFlow, d.get());
     }
-  }
 
-  // ExhaustAirInletNodeName
-  temp = modelObject.secondaryAirInletModelObject();
-  if(temp)
-  {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirInletNodeName,*s);
+    // LatentEffectivenessat100_HeatingAirFlow
+    d = modelObject.latentEffectivenessat100HeatingAirFlow();
+    if (d) {
+      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_HeatingAirFlow, d.get());
     }
-  }
 
-  // ExhaustAirOutletNodeName
-  temp = modelObject.secondaryAirOutletModelObject();
-  if(temp)
-  {
-    s = temp->name();
-    if(s)
-    {
-      idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName,*s);
+    // SensibleEffectivenessat75_HeatingAirFlow
+    d = modelObject.sensibleEffectivenessat75HeatingAirFlow();
+    if (d) {
+      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_HeatingAirFlow, d.get());
     }
+
+    // LatentEffectivenessat75_HeatingAirFlow
+    d = modelObject.latentEffectivenessat75HeatingAirFlow();
+    if (d) {
+      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_HeatingAirFlow, d.get());
+    }
+
+    // SensibleEffectivenessat100_CoolingAirFlow
+    d = modelObject.sensibleEffectivenessat100CoolingAirFlow();
+    if (d) {
+      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat100_CoolingAirFlow, d.get());
+    }
+
+    // LatentEffectivenessat100_CoolingAirFlow
+    d = modelObject.latentEffectivenessat100CoolingAirFlow();
+    if (d) {
+      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat100_CoolingAirFlow, d.get());
+    }
+
+    // SensibleEffectivenessat75_CoolingAirFlow
+    d = modelObject.sensibleEffectivenessat75CoolingAirFlow();
+    if (d) {
+      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::SensibleEffectivenessat75_CoolingAirFlow, d.get());
+    }
+
+    // LatentEffectivenessat75_CoolingAirFlow
+    d = modelObject.latentEffectivenessat75CoolingAirFlow();
+    if (d) {
+      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::LatentEffectivenessat75_CoolingAirFlow, d.get());
+    }
+
+    // SupplyAirInletNodeName
+    temp = modelObject.primaryAirInletModelObject();
+    if (temp) {
+      s = temp->name();
+      if (s) {
+        idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName, *s);
+      }
+    }
+
+    // SupplyAirOutletNodeName
+    temp = modelObject.primaryAirOutletModelObject();
+    if (temp) {
+      s = temp->name();
+      if (s) {
+        idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletNodeName, *s);
+      }
+    }
+
+    // ExhaustAirInletNodeName
+    temp = modelObject.secondaryAirInletModelObject();
+    if (temp) {
+      s = temp->name();
+      if (s) {
+        idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirInletNodeName, *s);
+      }
+    }
+
+    // ExhaustAirOutletNodeName
+    temp = modelObject.secondaryAirOutletModelObject();
+    if (temp) {
+      s = temp->name();
+      if (s) {
+        idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName, *s);
+      }
+    }
+
+    // NominalElectricPower
+    d = modelObject.nominalElectricPower();
+    if (d) {
+      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::NominalElectricPower, *d);
+    }
+
+    // SupplyAirOutletTemperatureControl
+    if (modelObject.supplyAirOutletTemperatureControl()) {
+      idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletTemperatureControl, "Yes");
+    } else {
+      idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletTemperatureControl, "No");
+    }
+
+    // HeatExchangerType
+    s = modelObject.heatExchangerType();
+    if (s) {
+      idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::HeatExchangerType, *s);
+    }
+
+    // FrostControlType
+    s = modelObject.frostControlType();
+    if (s) {
+      idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::FrostControlType, *s);
+    }
+
+    // ThresholdTemperature
+    d = modelObject.thresholdTemperature();
+    if (d) {
+      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::ThresholdTemperature, *d);
+    }
+
+    // InitialDefrostTimeFraction
+    d = modelObject.initialDefrostTimeFraction();
+    if (d) {
+      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::InitialDefrostTimeFraction, *d);
+    }
+
+    // RateofDefrostTimeFractionIncrease
+    d = modelObject.rateofDefrostTimeFractionIncrease();
+    if (d) {
+      idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::RateofDefrostTimeFractionIncrease, *d);
+    }
+
+    // EconomizerLockout
+    if (modelObject.economizerLockout()) {
+      idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::EconomizerLockout, "Yes");
+    } else {
+      idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::EconomizerLockout, "No");
+    }
+
+    return idfObject;
   }
 
-  // NominalElectricPower
-  d = modelObject.nominalElectricPower();
-  if( d )
-  {
-    idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::NominalElectricPower,*d);
-  }
+}  // namespace energyplus
 
-  // SupplyAirOutletTemperatureControl
-  if( modelObject.supplyAirOutletTemperatureControl() )
-  {
-    idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletTemperatureControl,"Yes");
-  }
-  else
-  {
-    idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletTemperatureControl,"No");
-  }
-
-  // HeatExchangerType
-  s = modelObject.heatExchangerType();
-  if( s )
-  {
-    idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::HeatExchangerType,*s);
-  }
-
-  // FrostControlType
-  s = modelObject.frostControlType();
-  if( s )
-  {
-    idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::FrostControlType,*s);
-  }
-
-  // ThresholdTemperature
-  d = modelObject.thresholdTemperature();
-  if( d )
-  {
-    idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::ThresholdTemperature,*d);
-  }
-
-  // InitialDefrostTimeFraction
-  d = modelObject.initialDefrostTimeFraction();
-  if( d )
-  {
-    idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::InitialDefrostTimeFraction,*d);
-  }
-
-  // RateofDefrostTimeFractionIncrease
-  d = modelObject.rateofDefrostTimeFractionIncrease();
-  if( d )
-  {
-    idfObject.setDouble(HeatExchanger_AirToAir_SensibleAndLatentFields::RateofDefrostTimeFractionIncrease,*d);
-  }
-
-  // EconomizerLockout
-  if( modelObject.economizerLockout() )
-  {
-    idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::EconomizerLockout,"Yes");
-  }
-  else
-  {
-    idfObject.setString(HeatExchanger_AirToAir_SensibleAndLatentFields::EconomizerLockout,"No");
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

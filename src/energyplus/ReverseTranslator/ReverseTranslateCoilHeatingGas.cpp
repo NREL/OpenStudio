@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,90 +42,72 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateCoilHeatingGas( const WorkspaceObject & workspaceObject )
-{
-  OptionalModelObject result,temp;
+  OptionalModelObject ReverseTranslator::translateCoilHeatingGas(const WorkspaceObject& workspaceObject) {
+    OptionalModelObject result, temp;
 
-  OptionalSchedule schedule;
+    OptionalSchedule schedule;
 
- //get the Schedule
-  OptionalWorkspaceObject owo = workspaceObject.getTarget(Coil_Heating_FuelFields::AvailabilityScheduleName);
-  if(!owo)
-  {
-    LOG(Error, "Error importing object: "
-             << workspaceObject.briefDescription()
-             << " Can't find Schedule.");
+    //get the Schedule
+    OptionalWorkspaceObject owo = workspaceObject.getTarget(Coil_Heating_FuelFields::AvailabilityScheduleName);
+    if (!owo) {
+      LOG(Error, "Error importing object: " << workspaceObject.briefDescription() << " Can't find Schedule.");
+      return result;
+    }
+    temp = translateAndMapWorkspaceObject(*owo);
+    if (temp) {
+      schedule = temp->optionalCast<Schedule>();
+    }
+
+    if (!schedule) {
+      LOG(Error, "Error importing object: " << workspaceObject.briefDescription()
+                                            << "Failed to convert iddObject (schedule) into ModelObject. Maybe it does not exist in model yet");
+      return result;
+    }
+
+    try {
+
+      openstudio::model::CoilHeatingGas coil(m_model, *schedule);
+      OptionalString optS = workspaceObject.name();
+      if (optS) {
+        coil.setName(*optS);
+      }
+      OptionalDouble d;
+      d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::BurnerEfficiency);
+      if (d) {
+        coil.setGasBurnerEfficiency(*d);
+      }
+      d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::NominalCapacity);
+      if (d) {
+        coil.setNominalCapacity(*d);
+      }
+      //skip inlet and outlet node names. That should be done FOR us by the AirLoop Translator.
+      d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::BurnerEfficiency);
+      if (d) {
+        coil.setGasBurnerEfficiency(*d);
+      }
+
+      d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::NominalCapacity);
+      if (d) {
+        coil.setNominalCapacity(*d);
+      }
+
+      d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::ParasiticElectricLoad);
+      if (d) {
+        coil.setParasiticElectricLoad(*d);
+      }
+      d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::ParasiticFuelLoad);
+      if (d) {
+        coil.setParasiticGasLoad(*d);
+      }
+      result = coil;
+    } catch (std::exception& e) {
+      LOG(Error, "Unable to reverse translate " << workspaceObject.briefDescription() << ", because " << e.what() << ".");
+      return boost::none;
+    }
+
     return result;
   }
-  temp = translateAndMapWorkspaceObject(*owo);
-  if(temp)
-  {
-    schedule=temp->optionalCast<Schedule>();
-  }
 
-  if( !schedule  )
-  {
-    LOG(Error, "Error importing object: "
-             << workspaceObject.briefDescription()
-             <<"Failed to convert iddObject (schedule) into ModelObject. Maybe it does not exist in model yet");
-    return result;
-  }
+}  // namespace energyplus
 
-  try {
-
-    openstudio::model::CoilHeatingGas coil( m_model,
-                                            *schedule );
-    OptionalString optS = workspaceObject.name();
-    if(optS)
-    {
-      coil.setName(*optS);
-    }
-    OptionalDouble d;
-    d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::BurnerEfficiency);
-    if(d)
-    {
-      coil.setGasBurnerEfficiency(*d);
-    }
-    d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::NominalCapacity);
-    if(d)
-    {
-      coil.setNominalCapacity(*d);
-    }
-    //skip inlet and outlet node names. That should be done FOR us by the AirLoop Translator.
-    d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::BurnerEfficiency);
-    if(d)
-    {
-      coil.setGasBurnerEfficiency(*d);
-    }
-
-    d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::NominalCapacity);
-    if(d)
-    {
-      coil.setNominalCapacity(*d);
-    }
-
-    d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::ParasiticElectricLoad);
-    if(d)
-    {
-      coil.setParasiticElectricLoad(*d);
-    }
-    d = workspaceObject.getDouble(openstudio::Coil_Heating_FuelFields::ParasiticFuelLoad);
-    if(d)
-    {
-      coil.setParasiticGasLoad(*d);
-    }
-    result = coil;
-  }
-  catch (std::exception& e) {
-    LOG(Error,"Unable to reverse translate " << workspaceObject.briefDescription() << ", because "
-        << e.what() << ".");
-    return boost::none;
-  }
-
-  return result;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

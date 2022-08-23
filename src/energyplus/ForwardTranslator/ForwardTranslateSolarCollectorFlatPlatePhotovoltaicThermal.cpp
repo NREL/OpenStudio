@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,91 +52,86 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateSolarCollectorFlatPlatePhotovoltaicThermal(SolarCollectorFlatPlatePhotovoltaicThermal & modelObject)
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+  boost::optional<IdfObject>
+    ForwardTranslator::translateSolarCollectorFlatPlatePhotovoltaicThermal(SolarCollectorFlatPlatePhotovoltaicThermal& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::SolarCollector_FlatPlate_PhotovoltaicThermal);
+    IdfObject idfObject(IddObjectType::SolarCollector_FlatPlate_PhotovoltaicThermal);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  std::string name = modelObject.name().get();
-  idfObject.setName(name);
+    // Name
+    std::string name = modelObject.name().get();
+    idfObject.setName(name);
 
-  // SolarCollectorPerformanceFlatPlate
-  {
-    auto mo = modelObject.solarCollectorPerformance();
-    IdfObject performance = translateAndMapModelObject(mo).get();
-    idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName, performance.name().get());
-  }
-
-  // SurfaceName
-  OptionalPlanarSurface surface = modelObject.surface();
-  if (surface){
-    IdfObject surf = translateAndMapModelObject(*surface).get();
-    idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, surf.name().get());
-  } else{
-    LOG(Error, "SolarCollector:FlatPlate:PhotovoltaicThermal '" << name << "' does not reference a surface.");
-  }
-
-  // PhotovoltaicName
-  OptionalGeneratorPhotovoltaic generatorPhotovoltaic = modelObject.generatorPhotovoltaic();
-  if (generatorPhotovoltaic){
-    // generator will be translated with the other generators
-    idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicName, generatorPhotovoltaic->name().get());
-  } else{
-    LOG(Warn, "SolarCollector:FlatPlate:PhotovoltaicThermal '" << name << "' does not reference a GeneratorPhotovoltaic.");
-  }
-
-  // figure out if this is on an air loop or plant loop
-  boost::optional<AirLoopHVAC> airLoopHVAC = modelObject.airLoopHVAC();
-  boost::optional<PlantLoop> plantLoop = modelObject.plantLoop();
-
-  // ThermalWorkingFluidType
-  if (airLoopHVAC){
-    idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::ThermalWorkingFluidType, "Air");
-  } else if (plantLoop){
-    idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::ThermalWorkingFluidType, "Water");
-  }
-
-  // InletNodeName
-  if (boost::optional<ModelObject> mo = modelObject.inletModelObject())
-  {
-    if (boost::optional<Node> node = mo->optionalCast<Node>())
+    // SolarCollectorPerformanceFlatPlate
     {
-      if (airLoopHVAC){
-        idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::AirInletNodeName, node->name().get());
-      } else if (plantLoop){
-        idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::WaterInletNodeName, node->name().get());
+      auto mo = modelObject.solarCollectorPerformance();
+      IdfObject performance = translateAndMapModelObject(mo).get();
+      idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicThermalModelPerformanceName, performance.name().get());
+    }
+
+    // SurfaceName
+    OptionalPlanarSurface surface = modelObject.surface();
+    if (surface) {
+      IdfObject surf = translateAndMapModelObject(*surface).get();
+      idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::SurfaceName, surf.name().get());
+    } else {
+      LOG(Error, "SolarCollector:FlatPlate:PhotovoltaicThermal '" << name << "' does not reference a surface.");
+    }
+
+    // PhotovoltaicName
+    OptionalGeneratorPhotovoltaic generatorPhotovoltaic = modelObject.generatorPhotovoltaic();
+    if (generatorPhotovoltaic) {
+      // generator will be translated with the other generators
+      idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::PhotovoltaicName, generatorPhotovoltaic->name().get());
+    } else {
+      LOG(Warn, "SolarCollector:FlatPlate:PhotovoltaicThermal '" << name << "' does not reference a GeneratorPhotovoltaic.");
+    }
+
+    // figure out if this is on an air loop or plant loop
+    boost::optional<AirLoopHVAC> airLoopHVAC = modelObject.airLoopHVAC();
+    boost::optional<PlantLoop> plantLoop = modelObject.plantLoop();
+
+    // ThermalWorkingFluidType
+    if (airLoopHVAC) {
+      idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::ThermalWorkingFluidType, "Air");
+    } else if (plantLoop) {
+      idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::ThermalWorkingFluidType, "Water");
+    }
+
+    // InletNodeName
+    if (boost::optional<ModelObject> mo = modelObject.inletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        if (airLoopHVAC) {
+          idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::AirInletNodeName, node->name().get());
+        } else if (plantLoop) {
+          idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::WaterInletNodeName, node->name().get());
+        }
       }
     }
-  }
 
-  // OutletNodeName
-  if (boost::optional<ModelObject> mo = modelObject.outletModelObject())
-  {
-    if (boost::optional<Node> node = mo->optionalCast<Node>())
-    {
-      if (airLoopHVAC){
-        idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::AirOutletNodeName, node->name().get());
-      } else if (plantLoop){
-        idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::WaterOutletNodeName, node->name().get());
+    // OutletNodeName
+    if (boost::optional<ModelObject> mo = modelObject.outletModelObject()) {
+      if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+        if (airLoopHVAC) {
+          idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::AirOutletNodeName, node->name().get());
+        } else if (plantLoop) {
+          idfObject.setString(SolarCollector_FlatPlate_PhotovoltaicThermalFields::WaterOutletNodeName, node->name().get());
+        }
       }
     }
+
+    // DesignFlowRate
+    boost::optional<double> designFlowRate = modelObject.designFlowRate();
+    if (designFlowRate) {
+      idfObject.setDouble(SolarCollector_FlatPlate_PhotovoltaicThermalFields::DesignFlowRate, *designFlowRate);
+    }
+
+    return idfObject;
   }
 
-  // DesignFlowRate
-  boost::optional<double> designFlowRate = modelObject.designFlowRate();
-  if (designFlowRate){
-    idfObject.setDouble(SolarCollector_FlatPlate_PhotovoltaicThermalFields::DesignFlowRate, *designFlowRate);
-  }
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,7 +43,7 @@
 #include <vector>
 #include <algorithm>
 
-namespace openstudio{
+namespace openstudio {
 
 // forward declarations
 class IddObject;
@@ -56,11 +56,11 @@ class Quantity;
 class OSOptionalQuantity;
 struct IdfObjectImplLess;
 
-namespace detail{
+namespace detail {
   class IdfObject_Impl;
   class WorkspaceObject_Impl;
   class Workspace_Impl;
-}
+}  // namespace detail
 
 /** IdfObject holds and manipulates data in the EnergyPlus Idd/Idf format. An IdfObject
  *  consists of an IddObject, which defines the IdfObject's data, some number of string fields
@@ -86,9 +86,9 @@ namespace detail{
  *
  *  On its own, IdfObject maintains validity at enums::Strictness level None.
  */
-class UTILITIES_API IdfObject {
+class UTILITIES_API IdfObject
+{
  public:
-
   /** @name Constructors */
   //@{
 
@@ -96,11 +96,11 @@ class UTILITIES_API IdfObject {
    *  unless type == IddObjectType::UserCustom, in which case, the constructed object is equivalent
    *  to IdfObject(IddObjectType::Catchall). If fastName is true a UUID is assigned as the name,
    *  otherwise no name is assigned.*/
-  explicit IdfObject(IddObjectType type, bool fastName=false);
+  explicit IdfObject(IddObjectType type, bool fastName = false);
 
   /** Constructor from iddObject. If fastName is true a UUID is assigned as the name,
    *  otherwise no name is assigned.*/
-  explicit IdfObject(const IddObject&, bool fastName=false);
+  explicit IdfObject(const IddObject&, bool fastName = false);
 
   /** Copy constructor. Shares data with other, so changes made by either copy affects the data of
    *  both. */
@@ -110,7 +110,7 @@ class UTILITIES_API IdfObject {
 
   /** Creates a deep copy of this object. This object and the newly created object do not share
    *  data, and the new object is always unlocked. */
-  IdfObject clone(bool keepHandle=false) const;
+  IdfObject clone(bool keepHandle = false) const;
 
   //@}
   /** @name Getters */
@@ -128,15 +128,15 @@ class UTILITIES_API IdfObject {
   /** Returns the comment associated with field index, if one exists. Optionally, if returnDefault
    *  is passed in as true, and no field comment exists for index, fieldComment will return a
    *  comment-ized version of the IddField name, following a commonly used Idf convention. */
-  boost::optional<std::string> fieldComment(unsigned index, bool returnDefault=false) const;
+  boost::optional<std::string> fieldComment(unsigned index, bool returnDefault = false) const;
 
   /** Get the name of the object, if it exists. Optionally, if returnDefault is passed in as true,
    *  name will return the default name, if it exists. */
-  boost::optional<std::string> name(bool returnDefault=false) const;
+  boost::optional<std::string> name(bool returnDefault = false) const;
 
   /** Returns the name if set or returns an empty string. Optionally, if returnDefault is passed in as true,
    *  name will return the default name, if it exists. */
-  std::string nameString(bool returnDefault=false) const;
+  std::string nameString(bool returnDefault = false) const;
 
   /** Get a brief description of this object. Always includes iddObject().type(), and includes
    *  name() if available and not empty. */
@@ -151,7 +151,7 @@ class UTILITIES_API IdfObject {
    *  If the default does not exist or is not requested and the field is empty
    *  then returnUninitializedEmpty is used to determine if an uninitialized result is returned.
    */
-  boost::optional<std::string> getString(unsigned index, bool returnDefault=false, bool returnUninitializedEmpty=false ) const;
+  boost::optional<std::string> getString(unsigned index, bool returnDefault = false, bool returnUninitializedEmpty = false) const;
 
   /** Get the value of the field at index, converted to double, if possible. Returns an
    *  uninitialized object if the conversion is unsuccessful for any reason. Logs a warning
@@ -161,13 +161,11 @@ class UTILITIES_API IdfObject {
    *  Optionally, if returnDefault is passed in as true, getDouble will return the default
    *  value for non-existent (non-extensible) fields and fields with empty data, if a
    *  real-valued default exists. */
-  boost::optional<double> getDouble(unsigned index, bool returnDefault=false) const;
+  boost::optional<double> getDouble(unsigned index, bool returnDefault = false) const;
 
   /** Returns the Quantity at index, if possible. Uses markup in IDD to determine the units. If
    *  returnIP == true, uses the IP unit mark-up in the IDD to perform a conversion. */
-  OSOptionalQuantity getQuantity (unsigned index,
-                                  bool returnDefault=false,
-                                  bool returnIP=false) const;
+  OSOptionalQuantity getQuantity(unsigned index, bool returnDefault = false, bool returnIP = false) const;
 
   /** Get the value of the field at index, converted to unsigned, if possible. Returns an
    *  uninitialized object if the conversion is unsuccessful for any reason. Logs a warning
@@ -177,7 +175,7 @@ class UTILITIES_API IdfObject {
    *  Optionally, if returnDefault is passed in as true, getUnsigned will return the default
    *  value for non-existent (non-extensible) fields and fields with empty data, if an
    *  unsigned default exists. */
-  boost::optional<unsigned> getUnsigned(unsigned index, bool returnDefault=false) const;
+  boost::optional<unsigned> getUnsigned(unsigned index, bool returnDefault = false) const;
 
   /** Get value of the field at index, converted to int, if possible. Returns an
    *  uninitialized object if the conversion is unsuccessful for any reason. Logs a warning
@@ -187,7 +185,7 @@ class UTILITIES_API IdfObject {
    *  Optionally, if returnDefault is passed in as true, getInt will return the default
    *  value for non-existent (non-extensible) fields and fields with empty data, if an
    *  int default exists. */
-  boost::optional<int> getInt(unsigned index, bool returnDefault=false) const;
+  boost::optional<int> getInt(unsigned index, bool returnDefault = false) const;
 
   /** Returns the IdfExtensibleGroup at groupIndex, if it exists. Otherwise, return value will be
    *  .empty(). */
@@ -216,7 +214,7 @@ class UTILITIES_API IdfObject {
 
   /** Sets the name field to a new, unique name, if the name field exists and (is empty or
    *  overwrite == true). Returns false otherwise. Created name is returned. */
-  boost::optional<std::string> createName(bool overwrite=true);
+  boost::optional<std::string> createName(bool overwrite = true);
 
   /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
    *  any reason. (Perhaps index >= numFields().) */
@@ -228,7 +226,7 @@ class UTILITIES_API IdfObject {
 
   /** Sets the field at index to q, if possible. Returns false if the units of q cannot be converted
    *  to getUnits(index). */
-  bool setQuantity (unsigned index, const Quantity& q);
+  bool setQuantity(unsigned index, const Quantity& q);
 
   /** Sets the field at index to value, if possible. Returns false if the value cannot be set for
    *  any reason. (Perhaps index >= numFields(), the field is not IntegerType, or the value is out
@@ -254,8 +252,7 @@ class UTILITIES_API IdfObject {
 
   /** Inserts a new extensible group at groupIndex, if possible. Return value will be empty() if
    *  the operation cannot be completed for any reason. */
-  IdfExtensibleGroup insertExtensibleGroup(unsigned groupIndex,
-                                           const std::vector<std::string>& values);
+  IdfExtensibleGroup insertExtensibleGroup(unsigned groupIndex, const std::vector<std::string>& values);
 
   /** Pops the final extensible group from the object, if possible. Returns the popped data if
    *  successful. Otherwise, the returned vector will be empty. */
@@ -268,7 +265,7 @@ class UTILITIES_API IdfObject {
 
   /** Pops all \link IdfExtensibleGroup IdfExtensibleGroups\endlink from the object, if possible.
    *  Returns popped data if successful. Otherwise, the returned vector will be empty. */
-  std::vector<std::vector<std::string> > clearExtensibleGroups();
+  std::vector<std::vector<std::string>> clearExtensibleGroups();
 
   //@}
   /** @name Queries */
@@ -315,10 +312,10 @@ class UTILITIES_API IdfObject {
   std::vector<unsigned> requiredFields() const;
 
   /** Returns true if this IdfObject is valid, that is, has no errors at or below level. */
-  bool isValid(StrictnessLevel level, bool checkNames=false) const;
+  bool isValid(StrictnessLevel level, bool checkNames = false) const;
 
   /** Returns a ValidityReport for this IdfObject containing all errors at or below level. */
-  ValidityReport validityReport(StrictnessLevel level, bool checkNames=false) const;
+  ValidityReport validityReport(StrictnessLevel level, bool checkNames = false) const;
 
   /** Checks for equality of data (non-managedObjectList) fields. Prerequisite: iddObject()s
    *  must be equal. For objects with handle fields, checks for equality of handle OR equality
@@ -349,7 +346,7 @@ class UTILITIES_API IdfObject {
   static boost::optional<IdfObject> load(const std::string& text);
 
   /** Constructor from text and an explicit iddObject. */
-  static boost::optional<IdfObject> load(const std::string& text,const IddObject& iddObject);
+  static boost::optional<IdfObject> load(const std::string& text, const IddObject& iddObject);
 
   /** Returns the width, in characters, of the default amount of space given to field data
    *  during printing. */
@@ -361,11 +358,11 @@ class UTILITIES_API IdfObject {
   /** Serialize just the preceding comments and name of this IdfObject in the format used by
    *  full object print. If hasFields, the name is followed by a ','. Otherwise, the name is
    *  followed by a ';'. */
-  std::ostream& printName(std::ostream& os, bool hasFields=true) const;
+  std::ostream& printName(std::ostream& os, bool hasFields = true) const;
 
   /** Serialize field index in the format used by full object print. If not isLastField, the
    *  field value is followed by a ','. Otherwise, the object is ended by using a ';'. */
-  std::ostream& printField(std::ostream& os, unsigned index, bool isLastField=false) const;
+  std::ostream& printField(std::ostream& os, unsigned index, bool isLastField = false) const;
 
   //@}
   /** @name Type Casting */
@@ -376,26 +373,27 @@ class UTILITIES_API IdfObject {
   //impls do NOT inherit from the object tree, so it's either friend every single
   //model class or make it public.
   // get the impl
-  template<typename T>
-    std::shared_ptr<T> getImpl() const
-  {  return std::dynamic_pointer_cast<T>(m_impl); }
+  template <typename T>
+  std::shared_ptr<T> getImpl() const {
+    return std::dynamic_pointer_cast<T>(m_impl);
+  }
 
   /// cast to type T, can throw std::bad_cast
-  template<typename T>
-  T cast() const{
+  template <typename T>
+  T cast() const {
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
-    if (!impl){
+    if (!impl) {
       throw(std::bad_cast());
     }
     return T(std::move(impl));
   }
 
   /// cast to optional of type T
-  template<typename T>
-  boost::optional<T> optionalCast() const{
+  template <typename T>
+  boost::optional<T> optionalCast() const {
     boost::optional<T> result;
     std::shared_ptr<typename T::ImplType> impl = this->getImpl<typename T::ImplType>();
-    if (impl){
+    if (impl) {
       result = T(std::move(impl));
     }
     return result;
@@ -404,21 +402,19 @@ class UTILITIES_API IdfObject {
   //@}
 
  protected:
-
   typedef detail::IdfObject_Impl ImplType;
 
-  friend struct IdfObjectImplLess;           // lets friend sort by impl
-  friend class detail::IdfObject_Impl;       // for IdfObject_Impl::getObject<T>()
-  friend class detail::WorkspaceObject_Impl; // for WorkspaceObject_Impl construction
-  friend class detail::Workspace_Impl;       // for finding IdfObjects in a workspace
-  friend class WorkspaceObject;              // for WorkspaceObject::idfObject()
-  friend class Workspace;                    // for toIdfFile completion (constructs IdfObject from impl)
+  friend struct IdfObjectImplLess;            // lets friend sort by impl
+  friend class detail::IdfObject_Impl;        // for IdfObject_Impl::getObject<T>()
+  friend class detail::WorkspaceObject_Impl;  // for WorkspaceObject_Impl construction
+  friend class detail::Workspace_Impl;        // for finding IdfObjects in a workspace
+  friend class WorkspaceObject;               // for WorkspaceObject::idfObject()
+  friend class Workspace;                     // for toIdfFile completion (constructs IdfObject from impl)
 
   /** Protected constructor from impl. */
   IdfObject(std::shared_ptr<detail::IdfObject_Impl> impl);
 
  private:
-
   // pointer to impl
   std::shared_ptr<detail::IdfObject_Impl> m_impl;
 
@@ -427,17 +423,20 @@ class UTILITIES_API IdfObject {
 };
 
 /** Function object for sorting objects by name. \relates IdfObject */
-struct UTILITIES_API IdfObjectNameLess {
+struct UTILITIES_API IdfObjectNameLess
+{
   bool operator()(const IdfObject& left, const IdfObject& right) const;
 };
 
 /** Function object for sorting objects by impl. \relates IdfObject */
-struct UTILITIES_API IdfObjectImplLess {
+struct UTILITIES_API IdfObjectImplLess
+{
   bool operator()(const IdfObject& left, const IdfObject& right) const;
 };
 
 /** Function object for sorting by IddObjectType. \relates IdfObject */
-struct UTILITIES_API IdfObjectTypeLess {
+struct UTILITIES_API IdfObjectTypeLess
+{
   bool operator()(const IdfObject& left, const IdfObject& right) const;
 };
 
@@ -448,17 +447,18 @@ typedef boost::optional<IdfObject> OptionalIdfObject;
 typedef std::vector<IdfObject> IdfObjectVector;
 
 /** \relates IdfObject */
-typedef std::pair<IdfObject,IdfObject> IdfObjectPair;
+typedef std::pair<IdfObject, IdfObject> IdfObjectPair;
 
 /** \relates IdfObject */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const IdfObject& IdfObject);
 
 /** Helper function to get the handles of a vector of objects. \relates IdfObject */
-template<typename T>
-std::vector<Handle> getHandles(const std::vector<T>& objects)
-{
+template <typename T>
+std::vector<Handle> getHandles(const std::vector<T>& objects) {
   HandleVector result;
-  for (const T& object : objects) { result.push_back(object.handle()); }
+  for (const T& object : objects) {
+    result.push_back(object.handle());
+  }
   return result;
 }
 
@@ -466,14 +466,13 @@ std::vector<Handle> getHandles(const std::vector<T>& objects)
  *  which is a good choice for unique objects. */
 UTILITIES_API std::string objectName(const IdfObject& obj);
 
-template<typename T>
+template <typename T>
 std::vector<T> sortByObjectName(std::vector<T> objects) {
-  std::sort(objects.begin(),
-            objects.end(),
-            std::bind(&istringLess,std::bind(&objectName,std::placeholders::_1),std::bind(&objectName,std::placeholders::_1)));
+  std::sort(objects.begin(), objects.end(),
+            std::bind(&istringLess, std::bind(&objectName, std::placeholders::_1), std::bind(&objectName, std::placeholders::_1)));
   return objects;
 }
 
-} // openstudio
+}  // namespace openstudio
 
-#endif //UTILITIES_IDF_IDFOBJECT_HPP
+#endif  //UTILITIES_IDF_IDFOBJECT_HPP

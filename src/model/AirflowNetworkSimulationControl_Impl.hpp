@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,113 +36,119 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-class MODEL_API AirflowNetworkSimulationControl_Impl : public ParentObject_Impl {
-public:
+    class MODEL_API AirflowNetworkSimulationControl_Impl : public ParentObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+      // constructor
+      AirflowNetworkSimulationControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  // constructor
-  AirflowNetworkSimulationControl_Impl(const IdfObject& idfObject,
-    Model_Impl* model,
-    bool keepHandle);
+      // construct from workspace
+      AirflowNetworkSimulationControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  // construct from workspace
-  AirflowNetworkSimulationControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
+      // copy constructor
+      AirflowNetworkSimulationControl_Impl(const AirflowNetworkSimulationControl_Impl& other, Model_Impl* model, bool keepHandle);
 
-  // copy constructor
-  AirflowNetworkSimulationControl_Impl(const AirflowNetworkSimulationControl_Impl& other,
-    Model_Impl* model,
-    bool keepHandle);
+      // virtual destructor
+      virtual ~AirflowNetworkSimulationControl_Impl();
 
-  // virtual destructor
-  virtual ~AirflowNetworkSimulationControl_Impl();
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-  // return the parent object in the hierarchy
-  virtual boost::optional<ParentObject> parent() const;
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-  // return any children objects in the hierarchy
-  virtual std::vector<ModelObject> children() const;
+      /// get a vector of allowable children types
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-  /// get a vector of allowable children types
-  virtual std::vector<IddObjectType> allowableChildTypes() const;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  // Get all output variable names that could be associated with this object.
-  virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual IddObjectType iddObjectType() const;
+      //@}
+      /** @name Getters */
+      //@{
 
-  boost::optional<std::string> airflowNetworkControl() const;
-  bool isAirflowNetworkControlDefaulted() const;
-  boost::optional<std::string> windPressureCoefficientType() const;
-  bool isWindPressureCoefficientTypeDefaulted() const;
-  boost::optional<std::string> heightSelectionforLocalWindPressureCalculation() const;
-  bool isHeightSelectionforLocalWindPressureCalculationDefaulted() const;
-  boost::optional<std::string> buildingType() const;
-  bool isBuildingTypeDefaulted() const;
-  boost::optional<int> maximumNumberofIterations() const;
-  bool isMaximumNumberofIterationsDefaulted() const;
-  boost::optional<std::string> initializationType() const;
-  bool isInitializationTypeDefaulted() const;
-  boost::optional<double> relativeAirflowConvergenceTolerance() const;
-  bool isRelativeAirflowConvergenceToleranceDefaulted() const;
-  boost::optional<double> absoluteAirflowConvergenceTolerance() const;
-  bool isAbsoluteAirflowConvergenceToleranceDefaulted() const;
-  boost::optional<double> convergenceAccelerationLimit() const;
-  bool isConvergenceAccelerationLimitDefaulted() const;
-  boost::optional<double> azimuthAngleofLongAxisofBuilding() const;
-  bool isAzimuthAngleofLongAxisofBuildingDefaulted() const;
-  boost::optional<double> buildingAspectRatio() const;
-  bool isBuildingAspectRatioDefaulted() const;
-  bool heightDependenceofExternalNodeTemperature() const;
-  bool isHeightDependenceofExternalNodeTemperatureDefaulted() const;
+      boost::optional<std::string> airflowNetworkControl() const;
+      bool isAirflowNetworkControlDefaulted() const;
+      boost::optional<std::string> windPressureCoefficientType() const;
+      bool isWindPressureCoefficientTypeDefaulted() const;
+      boost::optional<std::string> heightSelectionforLocalWindPressureCalculation() const;
+      bool isHeightSelectionforLocalWindPressureCalculationDefaulted() const;
+      boost::optional<std::string> buildingType() const;
+      bool isBuildingTypeDefaulted() const;
+      boost::optional<int> maximumNumberofIterations() const;
+      bool isMaximumNumberofIterationsDefaulted() const;
+      boost::optional<std::string> initializationType() const;
+      bool isInitializationTypeDefaulted() const;
+      boost::optional<double> relativeAirflowConvergenceTolerance() const;
+      bool isRelativeAirflowConvergenceToleranceDefaulted() const;
+      boost::optional<double> absoluteAirflowConvergenceTolerance() const;
+      bool isAbsoluteAirflowConvergenceToleranceDefaulted() const;
+      boost::optional<double> convergenceAccelerationLimit() const;
+      bool isConvergenceAccelerationLimitDefaulted() const;
+      boost::optional<double> azimuthAngleofLongAxisofBuilding() const;
+      bool isAzimuthAngleofLongAxisofBuildingDefaulted() const;
+      boost::optional<double> buildingAspectRatio() const;
+      bool isBuildingAspectRatioDefaulted() const;
+      bool heightDependenceofExternalNodeTemperature() const;
+      bool isHeightDependenceofExternalNodeTemperatureDefaulted() const;
+      std::string solver() const;
+      bool isSolverDefaulted() const;
+      bool allowUnsupportedZoneEquipment() const;
+      bool isAllowUnsupportedZoneEquipmentDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-  bool setAirflowNetworkControl(std::string airflowNetworkControl);
-  void resetAirflowNetworkControl();
-  bool setWindPressureCoefficientType(std::string type);
-  void resetWindPressureCoefficientType();
-  bool setHeightSelectionforLocalWindPressureCalculation(std::string height);
-  void resetHeightSelectionforLocalWindPressureCalculation();
-  bool setBuildingType(std::string type);
-  void resetBuildingType();
-  bool setMaximumNumberofIterations(int number);
-  void resetMaximumNumberofIterations();
-  bool setInitializationType(std::string type);
-  void resetInitializationType();
-  bool setRelativeAirflowConvergenceTolerance(double tolerance);
-  void resetRelativeAirflowConvergenceTolerance();
-  bool setAbsoluteAirflowConvergenceTolerance(double tolerance);
-  void resetAbsoluteAirflowConvergenceTolerance();
-  bool setConvergenceAccelerationLimit(double limit);
-  void resetConvergenceAccelerationLimit();
-  bool setAzimuthAngleofLongAxisofBuilding(double angle);
-  void resetAzimuthAngleofLongAxisofBuilding();
-  bool setBuildingAspectRatio(double ratio);
-  void resetBuildingAspectRatio();
-  bool setHeightDependenceofExternalNodeTemperature(bool tf);
-  void resetHeightDependenceofExternalNodeTemperature();
-  //@}
+      bool setAirflowNetworkControl(std::string airflowNetworkControl);
+      void resetAirflowNetworkControl();
+      bool setWindPressureCoefficientType(std::string type);
+      void resetWindPressureCoefficientType();
+      bool setHeightSelectionforLocalWindPressureCalculation(std::string height);
+      void resetHeightSelectionforLocalWindPressureCalculation();
+      bool setBuildingType(std::string type);
+      void resetBuildingType();
+      bool setMaximumNumberofIterations(int number);
+      void resetMaximumNumberofIterations();
+      bool setInitializationType(std::string type);
+      void resetInitializationType();
+      bool setRelativeAirflowConvergenceTolerance(double tolerance);
+      void resetRelativeAirflowConvergenceTolerance();
+      bool setAbsoluteAirflowConvergenceTolerance(double tolerance);
+      void resetAbsoluteAirflowConvergenceTolerance();
+      bool setConvergenceAccelerationLimit(double limit);
+      void resetConvergenceAccelerationLimit();
+      bool setAzimuthAngleofLongAxisofBuilding(double angle);
+      void resetAzimuthAngleofLongAxisofBuilding();
+      bool setBuildingAspectRatio(double ratio);
+      void resetBuildingAspectRatio();
+      bool setHeightDependenceofExternalNodeTemperature(bool tf);
+      void resetHeightDependenceofExternalNodeTemperature();
+      bool setSolver(const std::string& solver);
+      void resetSolver();
+      bool setAllowUnsupportedZoneEquipment(bool allowUnsupportedZoneEquipment);
+      void resetAllowUnsupportedZoneEquipment();
 
-private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkSimulationControl");
+      //@}
 
-};
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkSimulationControl");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKSIMULATIONCONTROL_IMPL_HPP
+#endif  // MODEL_AIRFLOWNETWORKSIMULATIONCONTROL_IMPL_HPP

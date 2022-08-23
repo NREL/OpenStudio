@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -60,7 +60,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputJSON) {
   OutputJSON outputJSON = m.getUniqueModelObject<OutputJSON>();
 
   // Check all cases where a single output request is True so we know we assigned the fields correctly
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
+  auto boolToString = [](bool b) { return b ? "Yes" : "No"; };
 
   for (int i = 0; i < 3; ++i) {
     bool status[] = {false, false, false};
@@ -89,7 +89,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputJSON) {
 
   ReverseTranslator rt;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   // Not there, Model shouldn't have it either
   Model m = rt.translateWorkspace(w);
@@ -98,7 +98,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputJSON) {
   OptionalWorkspaceObject _i_outputJSON = w.addObject(IdfObject(IddObjectType::Output_JSON));
   ASSERT_TRUE(_i_outputJSON);
 
-  auto boolToString = [](bool b) { return b ? "Yes" : "No";};
+  auto boolToString = [](bool b) { return b ? "Yes" : "No"; };
 
   for (int i = 0; i < 3; ++i) {
     bool status[] = {false, false, false};

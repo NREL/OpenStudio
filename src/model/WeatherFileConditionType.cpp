@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,66 +37,52 @@
 #include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
-namespace model  {
+namespace model {
 
-namespace detail {
+  namespace detail {
 
-  WeatherFileConditionType_Impl::WeatherFileConditionType_Impl(const IdfObject& idfObject,
-                                                               Model_Impl* model,
-                                                               bool keepHandle)
-    : SizingPeriod_Impl(idfObject, model, keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == WeatherFileConditionType::iddObjectType());
+    WeatherFileConditionType_Impl::WeatherFileConditionType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : SizingPeriod_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == WeatherFileConditionType::iddObjectType());
+    }
+
+    WeatherFileConditionType_Impl::WeatherFileConditionType_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                 bool keepHandle)
+      : SizingPeriod_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == WeatherFileConditionType::iddObjectType());
+    }
+
+    WeatherFileConditionType_Impl::WeatherFileConditionType_Impl(const WeatherFileConditionType_Impl& other, Model_Impl* model, bool keepHandle)
+      : SizingPeriod_Impl(other, model, keepHandle) {}
+
+    // Get all output variable names that could be associated with this object.
+    const std::vector<std::string>& WeatherFileConditionType_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType WeatherFileConditionType_Impl::iddObjectType() const {
+      return WeatherFileConditionType::iddObjectType();
+    }
+
+    void WeatherFileConditionType_Impl::ensureNoLeapDays() {
+      // nothing to do
+    }
+
+  }  // namespace detail
+
+  /// constructor
+  WeatherFileConditionType::WeatherFileConditionType(const Model& model) : SizingPeriod(WeatherFileConditionType::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::WeatherFileConditionType_Impl>());
   }
 
-  WeatherFileConditionType_Impl::WeatherFileConditionType_Impl(
-      const openstudio::detail::WorkspaceObject_Impl& other,Model_Impl* model,bool keepHandle)
-    : SizingPeriod_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == WeatherFileConditionType::iddObjectType());
-  }
+  // constructor
+  WeatherFileConditionType::WeatherFileConditionType(std::shared_ptr<detail::WeatherFileConditionType_Impl> impl) : SizingPeriod(std::move(impl)) {}
 
-  WeatherFileConditionType_Impl::WeatherFileConditionType_Impl(
-      const WeatherFileConditionType_Impl& other,Model_Impl* model,bool keepHandle)
-    : SizingPeriod_Impl(other,model,keepHandle)
-  {
-  }
-
-  // Get all output variable names that could be associated with this object.
-  const std::vector<std::string>& WeatherFileConditionType_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
+  IddObjectType WeatherFileConditionType::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_SizingPeriod_WeatherFileConditionType);
     return result;
   }
 
-  IddObjectType WeatherFileConditionType_Impl::iddObjectType() const {
-    return WeatherFileConditionType::iddObjectType();
-  }
-
-  void WeatherFileConditionType_Impl::ensureNoLeapDays()
-  {
-    // nothing to do
-  }
-
-} // detail
-
-/// constructor
-WeatherFileConditionType::WeatherFileConditionType(const Model& model)
-  : SizingPeriod(WeatherFileConditionType::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::WeatherFileConditionType_Impl>());
-}
-
-// constructor
-WeatherFileConditionType::WeatherFileConditionType(
-    std::shared_ptr<detail::WeatherFileConditionType_Impl> impl)
-  : SizingPeriod(std::move(impl))
-{}
-
-IddObjectType WeatherFileConditionType::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_SizingPeriod_WeatherFileConditionType);
-  return result;
-}
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

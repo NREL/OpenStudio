@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,78 +36,78 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class OutputDiagnostics_Impl;
+    class OutputDiagnostics_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** OutputDiagnostics is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:Diagnostics'. */
-class MODEL_API OutputDiagnostics : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** OutputDiagnostics is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:Diagnostics'. */
+  class MODEL_API OutputDiagnostics : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~OutputDiagnostics() {}
+    virtual ~OutputDiagnostics() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> keyValues();
-  static std::vector<std::string> validKeyValues();
+    static std::vector<std::string> keyValues();
+    static std::vector<std::string> validKeyValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::vector<std::string> keys() const;
+    std::vector<std::string> keys() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  // Return false if key isn't valid. If is already present, not added twice (ensures unicity) and logs an info in that case too
-  bool addKey(const std::string& key);
+    // Return false if key isn't valid. If is already present, not added twice (ensures unicity) and logs an info in that case too
+    bool addKey(const std::string& key);
 
-  // Calls clearKeys, then for each k, addKey(k)
-  bool setKeys(const std::vector<std::string>& keys);
+    // Calls clearKeys, then for each k, addKey(k)
+    bool setKeys(const std::vector<std::string>& keys);
 
-  // Just a convenience function to add 'DisplayExtraWarnings' as a key since it's so common
-  bool enableDisplayExtraWarnings();
+    // Just a convenience function to add 'DisplayExtraWarnings' as a key since it's so common
+    bool enableDisplayExtraWarnings();
 
-  // Clears out every key
-  void clearKeys();
+    // Clears out every key
+    void clearKeys();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::OutputDiagnostics_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::OutputDiagnostics_Impl ImplType;
 
-  explicit OutputDiagnostics(std::shared_ptr<detail::OutputDiagnostics_Impl> impl);
+    explicit OutputDiagnostics(std::shared_ptr<detail::OutputDiagnostics_Impl> impl);
 
-  friend class detail::OutputDiagnostics_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit OutputDiagnostics(Model& model);
+    friend class detail::OutputDiagnostics_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit OutputDiagnostics(Model& model);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.OutputDiagnostics");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.OutputDiagnostics");
+  };
 
-/** \relates OutputDiagnostics*/
-typedef boost::optional<OutputDiagnostics> OptionalOutputDiagnostics;
+  /** \relates OutputDiagnostics*/
+  typedef boost::optional<OutputDiagnostics> OptionalOutputDiagnostics;
 
-/** \relates OutputDiagnostics*/
-typedef std::vector<OutputDiagnostics> OutputDiagnosticsVector;
+  /** \relates OutputDiagnostics*/
+  typedef std::vector<OutputDiagnostics> OutputDiagnosticsVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_OUTPUTDIAGNOSTICS_HPP
-
+#endif  // MODEL_OUTPUTDIAGNOSTICS_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,120 +39,138 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class CoilCoolingLowTempRadiantVarFlow_Impl;
+    class CoilCoolingLowTempRadiantVarFlow_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilCoolingLowTempRadiantVarFlow is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow'. */
-class MODEL_API CoilCoolingLowTempRadiantVarFlow : public StraightComponent {
- public:
+  /** CoilCoolingLowTempRadiantVarFlow is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Cooling:LowTemperatureRadiant:VariableFlow'. */
+  class MODEL_API CoilCoolingLowTempRadiantVarFlow : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    explicit CoilCoolingLowTempRadiantVarFlow(const Model& model, Schedule& coolingControlTemperatureSchedule);
 
-  explicit CoilCoolingLowTempRadiantVarFlow(const Model& model,
-                                            Schedule& coolingControlTemperatureSchedule);
+    virtual ~CoilCoolingLowTempRadiantVarFlow() {}
 
-  virtual ~CoilCoolingLowTempRadiantVarFlow() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    //unsigned inletPort() const;
 
-  //unsigned inletPort() const;
+    //unsigned outletPort() const;
 
-  //unsigned outletPort() const;
+    static std::vector<std::string> coolingDesignCapacityMethodValues();
 
-  static std::vector<std::string> condensationControlTypeValues();
+    static std::vector<std::string> condensationControlTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<double> maximumColdWaterFlow() const;
+    boost::optional<double> maximumColdWaterFlow() const;
 
-  bool isMaximumColdWaterFlowDefaulted() const;
+    bool isMaximumColdWaterFlowDefaulted() const;
 
-  bool isMaximumColdWaterFlowAutosized() const;
+    bool isMaximumColdWaterFlowAutosized() const;
 
-  double coolingControlThrottlingRange() const;
+    double coolingControlThrottlingRange() const;
 
-  bool isCoolingControlThrottlingRangeDefaulted() const;
+    bool isCoolingControlThrottlingRangeDefaulted() const;
 
-  boost::optional<Schedule> coolingControlTemperatureSchedule() const;
+    boost::optional<Schedule> coolingControlTemperatureSchedule() const;
 
-  std::string condensationControlType() const;
+    std::string condensationControlType() const;
 
-  bool isCondensationControlTypeDefaulted() const;
+    bool isCondensationControlTypeDefaulted() const;
 
-  double condensationControlDewpointOffset() const;
+    double condensationControlDewpointOffset() const;
 
-  bool isCondensationControlDewpointOffsetDefaulted() const;
+    bool isCondensationControlDewpointOffsetDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    std::string coolingDesignCapacityMethod() const;
 
-  bool setMaximumColdWaterFlow(double maximumColdWaterFlow);
+    boost::optional<double> coolingDesignCapacity() const;
+    bool isCoolingDesignCapacityAutosized() const;
 
-  void resetMaximumColdWaterFlow();
+    double coolingDesignCapacityPerFloorArea() const;
 
-  void autosizeMaximumColdWaterFlow();
+    double fractionofAutosizedCoolingDesignCapacity() const;
 
-  bool setCoolingControlThrottlingRange(double coolingControlThrottlingRange);
+    //@}
+    /** @name Setters */
+    //@{
 
-  void resetCoolingControlThrottlingRange();
+    bool setMaximumColdWaterFlow(double maximumColdWaterFlow);
 
-  bool setCoolingControlTemperatureSchedule(Schedule& schedule);
+    void resetMaximumColdWaterFlow();
 
-  void resetCoolingControlTemperatureSchedule();
+    void autosizeMaximumColdWaterFlow();
 
-  bool setCondensationControlType(std::string condensationControlType);
+    bool setCoolingControlThrottlingRange(double coolingControlThrottlingRange);
 
-  void resetCondensationControlType();
+    void resetCoolingControlThrottlingRange();
 
-  bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
+    bool setCoolingControlTemperatureSchedule(Schedule& schedule);
 
-  void resetCondensationControlDewpointOffset();
+    void resetCoolingControlTemperatureSchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    bool setCondensationControlType(std::string condensationControlType);
 
-  boost::optional<double> autosizedMaximumColdWaterFlow() const ;
+    void resetCondensationControlType();
 
+    bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
 
+    void resetCondensationControlDewpointOffset();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilCoolingLowTempRadiantVarFlow_Impl ImplType;
+    bool setCoolingDesignCapacityMethod(const std::string& coolingDesignCapacityMethod);
 
-  explicit CoilCoolingLowTempRadiantVarFlow(std::shared_ptr<detail::CoilCoolingLowTempRadiantVarFlow_Impl> impl);
+    bool setCoolingDesignCapacity(double coolingDesignCapacity);
+    void autosizeCoolingDesignCapacity();
 
-  friend class detail::CoilCoolingLowTempRadiantVarFlow_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilCoolingLowTempRadiantVarFlow");
+    bool setCoolingDesignCapacityPerFloorArea(double coolingDesignCapacityPerFloorArea);
 
-  // Used to find the ZoneHVAC that contains this coil
-  boost::optional<ZoneHVACLowTempRadiantVarFlow> parentZoneHVAC() const;
+    bool setFractionofAutosizedCoolingDesignCapacity(double fractionofAutosizedCoolingDesignCapacity);
 
-};
+    //@}
+    /** @name Other */
+    //@{
 
-/** \relates CoilCoolingLowTempRadiantVarFlow*/
-typedef boost::optional<CoilCoolingLowTempRadiantVarFlow> OptionalCoilCoolingLowTempRadiantVarFlow;
+    boost::optional<double> autosizedMaximumColdWaterFlow() const;
 
-/** \relates CoilCoolingLowTempRadiantVarFlow*/
-typedef std::vector<CoilCoolingLowTempRadiantVarFlow> CoilCoolingLowTempRadiantVarFlowVector;
+    boost::optional<double> autosizedCoolingDesignCapacity() const;
 
-} // model
-} // openstudio
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilCoolingLowTempRadiantVarFlow_Impl ImplType;
 
-#endif // MODEL_COILCOOLINGLOWTEMPRADIANTVARFLOW_HPP
+    explicit CoilCoolingLowTempRadiantVarFlow(std::shared_ptr<detail::CoilCoolingLowTempRadiantVarFlow_Impl> impl);
+
+    friend class detail::CoilCoolingLowTempRadiantVarFlow_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilCoolingLowTempRadiantVarFlow");
+
+    // Used to find the ZoneHVAC that contains this coil
+    boost::optional<ZoneHVACLowTempRadiantVarFlow> parentZoneHVAC() const;
+  };
+
+  /** \relates CoilCoolingLowTempRadiantVarFlow*/
+  typedef boost::optional<CoilCoolingLowTempRadiantVarFlow> OptionalCoilCoolingLowTempRadiantVarFlow;
+
+  /** \relates CoilCoolingLowTempRadiantVarFlow*/
+  typedef std::vector<CoilCoolingLowTempRadiantVarFlow> CoilCoolingLowTempRadiantVarFlowVector;
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_COILCOOLINGLOWTEMPRADIANTVARFLOW_HPP

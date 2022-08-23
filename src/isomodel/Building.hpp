@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,37 +32,63 @@
 
 namespace openstudio {
 namespace isomodel {
-class Building
+  class Building
   {
-  public:
-    double lightingOccupancySensor() const {return _lightingOccupancySensor;}
-    double constantIllumination() const {return _constantIllumination;}
-    double electricApplianceHeatGainOccupied() const {return _electricApplianceHeatGainOccupied;}
-    double electricApplianceHeatGainUnoccupied() const {return _electricApplianceHeatGainUnoccupied;}
-    double gasApplianceHeatGainOccupied() const {return _gasApplianceHeatGainOccupied;}
-    double gasApplianceHeatGainUnoccupied() const {return _gasApplianceHeatGainUnoccupied;}
-    double buildingEnergyManagement() const {return _buildingEnergyManagement;}
+   public:
+    double lightingOccupancySensor() const {
+      return _lightingOccupancySensor;
+    }
+    double constantIllumination() const {
+      return _constantIllumination;
+    }
+    double electricApplianceHeatGainOccupied() const {
+      return _electricApplianceHeatGainOccupied;
+    }
+    double electricApplianceHeatGainUnoccupied() const {
+      return _electricApplianceHeatGainUnoccupied;
+    }
+    double gasApplianceHeatGainOccupied() const {
+      return _gasApplianceHeatGainOccupied;
+    }
+    double gasApplianceHeatGainUnoccupied() const {
+      return _gasApplianceHeatGainUnoccupied;
+    }
+    double buildingEnergyManagement() const {
+      return _buildingEnergyManagement;
+    }
 
-    void setLightingOccupancySensor(double value) {_lightingOccupancySensor = value;}
-    void setConstantIllumination(double value) {_constantIllumination = value;}
-    void setElectricApplianceHeatGainOccupied(double value) {_electricApplianceHeatGainOccupied = value;}
-    void setElectricApplianceHeatGainUnoccupied(double value) {_electricApplianceHeatGainUnoccupied = value;}
-    void setGasApplianceHeatGainOccupied(double value) {_gasApplianceHeatGainOccupied = value;}
-    void setGasApplianceHeatGainUnoccupied(double value) {_gasApplianceHeatGainUnoccupied = value;}
-    void setBuildingEnergyManagement(double value) {_buildingEnergyManagement = value;}
+    void setLightingOccupancySensor(double value) {
+      _lightingOccupancySensor = value;
+    }
+    void setConstantIllumination(double value) {
+      _constantIllumination = value;
+    }
+    void setElectricApplianceHeatGainOccupied(double value) {
+      _electricApplianceHeatGainOccupied = value;
+    }
+    void setElectricApplianceHeatGainUnoccupied(double value) {
+      _electricApplianceHeatGainUnoccupied = value;
+    }
+    void setGasApplianceHeatGainOccupied(double value) {
+      _gasApplianceHeatGainOccupied = value;
+    }
+    void setGasApplianceHeatGainUnoccupied(double value) {
+      _gasApplianceHeatGainUnoccupied = value;
+    }
+    void setBuildingEnergyManagement(double value) {
+      _buildingEnergyManagement = value;
+    }
 
-  private:
-    double _lightingOccupancySensor;
-    double _constantIllumination;
-    double _electricApplianceHeatGainOccupied;
-    double _electricApplianceHeatGainUnoccupied;
-    double _gasApplianceHeatGainOccupied;
-    double _gasApplianceHeatGainUnoccupied;
-    double _buildingEnergyManagement;
+   private:
+    double _lightingOccupancySensor = 0;
+    double _constantIllumination = 0;
+    double _electricApplianceHeatGainOccupied = 0;
+    double _electricApplianceHeatGainUnoccupied = 0;
+    double _gasApplianceHeatGainOccupied = 0;
+    double _gasApplianceHeatGainUnoccupied = 0;
+    double _buildingEnergyManagement = 0;
   };
 
-
-} // isomodel
-} // openstudio
-#endif // ISOMODEL_BUILDING_HPP
-
+}  // namespace isomodel
+}  // namespace openstudio
+#endif  // ISOMODEL_BUILDING_HPP

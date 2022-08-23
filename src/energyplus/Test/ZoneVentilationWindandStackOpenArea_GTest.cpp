@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,6 +39,7 @@
 #include "../../model/ZoneVentilationWindandStackOpenArea_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/ScheduleConstant.hpp"
 
@@ -51,8 +52,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea) {
   ForwardTranslator ft;
 
   Model m;
@@ -68,6 +68,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea)
   }
 
   ThermalZone z(m);
+  Space s(m);
+  s.setThermalZone(z);
   EXPECT_TRUE(zv.addToThermalZone(z));
 
   EXPECT_TRUE(zv.setOpeningArea(10.0));
@@ -95,7 +97,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea)
   ScheduleConstant deltaTempSch(m);
   deltaTempSch.setValue(3.0);
   EXPECT_TRUE(zv.setDeltaTemperatureSchedule(deltaTempSch));
-
 
   EXPECT_TRUE(zv.setMinimumOutdoorTemperature(10.0));
   ScheduleConstant minOutdoorTempSch(m);
@@ -128,10 +129,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea)
     EXPECT_EQ(idf_zone.nameString(), idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::ZoneName).get());
     EXPECT_EQ(openingAreaSch.nameString(), idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName).get());
     EXPECT_EQ(zv.openingArea(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningArea).get());
-    EXPECT_EQ(zv.openingEffectiveness(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness).get());
+    EXPECT_EQ(zv.openingEffectiveness().get(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness).get());
     EXPECT_EQ(zv.effectiveAngle(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::EffectiveAngle).get());
     EXPECT_EQ(zv.heightDifference(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::HeightDifference).get());
-    EXPECT_EQ(zv.dischargeCoefficientforOpening(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening).get());
+    EXPECT_EQ(zv.dischargeCoefficientforOpening().get(),
+              idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening).get());
 
     EXPECT_EQ(zv.minimumIndoorTemperature(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperature).get());
     EXPECT_EQ(zv.minimumIndoorTemperatureSchedule().get().nameString(),
@@ -156,8 +158,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea)
     EXPECT_EQ(zv.maximumWindSpeed(), idf_zv.getDouble(ZoneVentilation_WindandStackOpenAreaFields::MaximumWindSpeed).get());
   }
 
-
-
   zv.autocalculateOpeningEffectiveness();
   {
     Workspace w = ft.translateModel(m);
@@ -168,7 +168,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea)
 
     EXPECT_EQ("Autocalculate", idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness).get());
   }
-
 
   EXPECT_TRUE(zv.setOpeningEffectiveness(0.5));
   zv.autocalculateDischargeCoefficientforOpening();
@@ -182,11 +181,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneVentilationWindandStackOpenArea)
 
     EXPECT_EQ("Autocalculate", idf_zv.getString(ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening).get());
   }
-
 }
 
-TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneVentilationWindandStackOpenArea)
-{
+TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneVentilationWindandStackOpenArea) {
   StrictnessLevel level(StrictnessLevel::Draft);
   IddFileType iddFileType(IddFileType::EnergyPlus);
   Workspace workspace(level, iddFileType);
@@ -223,7 +220,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ZoneVentilationWindandStackOpenArea)
   objects.push_back(idf_zone);
   objects.push_back(idf_zv);
   objects.push_back(idf_minIndoorTempSch);
-  EXPECT_EQ(3u,workspace.addObjects(objects).size());
+  EXPECT_EQ(3u, workspace.addObjects(objects).size());
 
   ReverseTranslator rt;
   Model m = rt.translateWorkspace(workspace);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,89 +38,88 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-class AirflowNetworkEffectiveLeakageArea_Impl;
+    class AirflowNetworkEffectiveLeakageArea_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirflowNetworkEffectiveLeakageArea is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkEffectiveLeakageArea'. */
-class MODEL_API AirflowNetworkEffectiveLeakageArea : public AirflowNetworkComponent
-{
-public:
-  /** @name Constructors and Destructors */
-  //@{
-  /** Construct an effective leakage area object with default values and a specified effective leakage area. */
-  AirflowNetworkEffectiveLeakageArea(const Model& model, double effectiveLeakageArea);
-  /** Construct an effective leakage area object. */
-  AirflowNetworkEffectiveLeakageArea(const Model& model, double effectiveLeakageArea,
-    double dischargeCoefficient, double referencePressureDifference, double massFlowExponent);
+  /** AirflowNetworkEffectiveLeakageArea is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkEffectiveLeakageArea'. */
+  class MODEL_API AirflowNetworkEffectiveLeakageArea : public AirflowNetworkComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
+    /** Construct an effective leakage area object with default values and a specified effective leakage area. */
+    AirflowNetworkEffectiveLeakageArea(const Model& model, double effectiveLeakageArea);
+    /** Construct an effective leakage area object. */
+    AirflowNetworkEffectiveLeakageArea(const Model& model, double effectiveLeakageArea, double dischargeCoefficient,
+                                       double referencePressureDifference, double massFlowExponent);
 
-  virtual ~AirflowNetworkEffectiveLeakageArea() {}
+    virtual ~AirflowNetworkEffectiveLeakageArea() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
-  /** Returns the effective leakage area in square meters. */
-  double effectiveLeakageArea() const;
-  /** Returns the discharge coefficient. */
-  double dischargeCoefficient() const;
-  /** Returns true if the discharge coefficient is defaulted. */
-  bool isDischargeCoefficientDefaulted() const;
-  /** Returns the reference pressure difference in Pa. */
-  double referencePressureDifference() const;
-  /** Returns true if the reference pressure difference is defaulted. */
-  bool isReferencePressureDifferenceDefaulted() const;
-  /** Returns the mass flow exponent. */
-  double airMassFlowExponent() const;
-  /** Returns true if the mass flow exponent. */
-  bool isAirMassFlowExponentDefaulted() const;
+    /** @name Getters */
+    //@{
+    /** Returns the effective leakage area in square meters. */
+    double effectiveLeakageArea() const;
+    /** Returns the discharge coefficient. */
+    double dischargeCoefficient() const;
+    /** Returns true if the discharge coefficient is defaulted. */
+    bool isDischargeCoefficientDefaulted() const;
+    /** Returns the reference pressure difference in Pa. */
+    double referencePressureDifference() const;
+    /** Returns true if the reference pressure difference is defaulted. */
+    bool isReferencePressureDifferenceDefaulted() const;
+    /** Returns the mass flow exponent. */
+    double airMassFlowExponent() const;
+    /** Returns true if the mass flow exponent. */
+    bool isAirMassFlowExponentDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
-  /** Sets the effective leakage area in square meters. */
-  bool setEffectiveLeakageArea(double effectiveLeakageArea);
-  /** Sets the discharge coefficient. */
-  bool setDischargeCoefficient(double dischargeCoefficient);
-  /** Returns the discharge coefficient to the default value. */
-  void resetDischargeCoefficient();
-  /** Sets the reference pressure difference in Pa. */
-  bool setReferencePressureDifference(double referencePressureDifference);
-  /** Returns the reference pressure difference to the default value. */
-  void resetReferencePressureDifference();
-  /** Sets the mass flow exponent. */
-  bool setAirMassFlowExponent(double airMassFlowExponent);
-  /** Returns the mass flow exponent to the default value. */
-  void resetAirMassFlowExponent();
+    //@}
+    /** @name Setters */
+    //@{
+    /** Sets the effective leakage area in square meters. */
+    bool setEffectiveLeakageArea(double effectiveLeakageArea);
+    /** Sets the discharge coefficient. */
+    bool setDischargeCoefficient(double dischargeCoefficient);
+    /** Returns the discharge coefficient to the default value. */
+    void resetDischargeCoefficient();
+    /** Sets the reference pressure difference in Pa. */
+    bool setReferencePressureDifference(double referencePressureDifference);
+    /** Returns the reference pressure difference to the default value. */
+    void resetReferencePressureDifference();
+    /** Sets the mass flow exponent. */
+    bool setAirMassFlowExponent(double airMassFlowExponent);
+    /** Returns the mass flow exponent to the default value. */
+    void resetAirMassFlowExponent();
 
-  //@}
-protected:
-  /// @cond
-  typedef detail::AirflowNetworkEffectiveLeakageArea_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirflowNetworkEffectiveLeakageArea_Impl ImplType;
 
-  explicit AirflowNetworkEffectiveLeakageArea(std::shared_ptr<detail::AirflowNetworkEffectiveLeakageArea_Impl> impl);
+    explicit AirflowNetworkEffectiveLeakageArea(std::shared_ptr<detail::AirflowNetworkEffectiveLeakageArea_Impl> impl);
 
-  friend class detail::AirflowNetworkEffectiveLeakageArea_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
-private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkEffectiveLeakageArea");
-};
+    friend class detail::AirflowNetworkEffectiveLeakageArea_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkEffectiveLeakageArea");
+  };
 
-/** \relates AirflowNetworkEffectiveLeakageArea*/
-typedef boost::optional<AirflowNetworkEffectiveLeakageArea> OptionalAirflowNetworkEffectiveLeakageArea;
+  /** \relates AirflowNetworkEffectiveLeakageArea*/
+  typedef boost::optional<AirflowNetworkEffectiveLeakageArea> OptionalAirflowNetworkEffectiveLeakageArea;
 
-/** \relates AirflowNetworkEffectiveLeakageArea*/
-typedef std::vector<AirflowNetworkEffectiveLeakageArea> AirflowNetworkEffectiveLeakageAreaVector;
+  /** \relates AirflowNetworkEffectiveLeakageArea*/
+  typedef std::vector<AirflowNetworkEffectiveLeakageArea> AirflowNetworkEffectiveLeakageAreaVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKEFFECTIVELEAKAGEAREA_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKEFFECTIVELEAKAGEAREA_HPP

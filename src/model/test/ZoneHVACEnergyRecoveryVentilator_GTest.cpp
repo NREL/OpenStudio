@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,35 +37,33 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ZoneHVACEnergyRecoveryVentilator)
-{
+TEST_F(ModelFixture, ZoneHVACEnergyRecoveryVentilator) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    ZoneHVACEnergyRecoveryVentilator zonehvac(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      ZoneHVACEnergyRecoveryVentilator zonehvac(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, ZoneHVACEnergyRecoveryVentilator_AddAndRemove)
-{
+TEST_F(ModelFixture, ZoneHVACEnergyRecoveryVentilator_AddAndRemove) {
   Model m;
   ZoneHVACEnergyRecoveryVentilator zonehvac(m);
 
   ThermalZone tz(m);
   ASSERT_TRUE(zonehvac.addToThermalZone(tz));
   ASSERT_TRUE(zonehvac.thermalZone());
-  ASSERT_EQ(tz,zonehvac.thermalZone().get());
-  ASSERT_EQ(1u,tz.equipment().size());
+  ASSERT_EQ(tz, zonehvac.thermalZone().get());
+  ASSERT_EQ(1u, tz.equipment().size());
   zonehvac.removeFromThermalZone();
-  ASSERT_EQ(0u,tz.equipment().size());
+  ASSERT_EQ(0u, tz.equipment().size());
 
   ZoneHVACEnergyRecoveryVentilator zonehvac2(m);
   zonehvac2.addToThermalZone(tz);
   zonehvac2.remove();
-  ASSERT_EQ(0u,tz.equipment().size());
+  ASSERT_EQ(0u, tz.equipment().size());
 }

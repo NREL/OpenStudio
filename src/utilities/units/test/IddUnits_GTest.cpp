@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,24 +46,24 @@
 
 using namespace openstudio;
 
-TEST_F(UnitsFixture,IddUnits_BtuSystem) {
+TEST_F(UnitsFixture, IddUnits_BtuSystem) {
   IddUnitString iddString("Btu/h-ft-F");
-  EXPECT_EQ("Btu/h*ft*R",iddString.toStandardUnitString());
+  EXPECT_EQ("Btu/h*ft*R", iddString.toStandardUnitString());
   OptionalUnit unit = createUnit(iddString.toStandardUnitString());
   ASSERT_TRUE(unit);
   EXPECT_TRUE(unit->system() == UnitSystem::BTU);
 }
 
-TEST_F(UnitsFixture,IddUnits_Grams) {
+TEST_F(UnitsFixture, IddUnits_Grams) {
   IddUnitString iddString("g/m-s-K");
-  EXPECT_EQ("mkg/m*s*K",iddString.toStandardUnitString());
+  EXPECT_EQ("mkg/m*s*K", iddString.toStandardUnitString());
   OptionalUnit unit = createUnit(iddString.toStandardUnitString());
   ASSERT_TRUE(unit);
   EXPECT_TRUE(unit->system() == UnitSystem::SI);
-  EXPECT_EQ(-3,unit->scale().exponent);
+  EXPECT_EQ(-3, unit->scale().exponent);
 }
 
-TEST_F(UnitsFixture,IddUnits_PowerPerFlowRatePerUnitPressure) {
+TEST_F(UnitsFixture, IddUnits_PowerPerFlowRatePerUnitPressure) {
   {
     IddUnitString iddString("W/((m3/s)-Pa)");
     OptionalUnit unit = createUnit(iddString.toStandardUnitString());
@@ -72,13 +72,13 @@ TEST_F(UnitsFixture,IddUnits_PowerPerFlowRatePerUnitPressure) {
 
   {
     IddUnitString iddString("W-s/m3-Pa");
-    EXPECT_EQ("W*s/m^3*Pa",iddString.toStandardUnitString());
+    EXPECT_EQ("W*s/m^3*Pa", iddString.toStandardUnitString());
     OptionalUnit unit = createUnit(iddString.toStandardUnitString());
     ASSERT_TRUE(unit);
     EXPECT_TRUE(unit->system() == UnitSystem::SI);
 
     IddUnitString iddStringIP("W-min/ft3-inH2O");
-    EXPECT_EQ("W*min/ft^3*inH_{2}O",iddStringIP.toStandardUnitString());
+    EXPECT_EQ("W*min/ft^3*inH_{2}O", iddStringIP.toStandardUnitString());
     OptionalUnit unitIP = createUnit(iddStringIP.toStandardUnitString());
     ASSERT_TRUE(unitIP);
     // it's returning UnitSystem::SI instead
@@ -88,5 +88,4 @@ TEST_F(UnitsFixture,IddUnits_PowerPerFlowRatePerUnitPressure) {
     // Pa = kg.m-1.s-2 => (m3/s)*Pa = kg.m2.s-3
     // => This is a dimensionless unit
   }
-
 }

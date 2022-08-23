@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,15 +33,12 @@
 #include "../core/Json.hpp"
 #include <json/json.h>
 
-namespace openstudio{
-namespace detail{
+namespace openstudio {
+namespace detail {
 
+  StandardsJSON_Impl::StandardsJSON_Impl() {}
 
-  StandardsJSON_Impl::StandardsJSON_Impl()
-  { }
-
-  StandardsJSON_Impl::StandardsJSON_Impl(const std::string& s)
-  {
+  StandardsJSON_Impl::StandardsJSON_Impl(const std::string& s) {
     std::istringstream ss(s);
 
     Json::CharReaderBuilder rbuilder;
@@ -49,7 +46,7 @@ namespace detail{
     std::string formattedErrors;
 
     bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &m_standardsRoot, &formattedErrors);
-    if (!parsingSuccessful){
+    if (!parsingSuccessful) {
       LOG_AND_THROW("StandardsJSON cannot be processed, " << formattedErrors);
     }
 
@@ -65,7 +62,7 @@ namespace detail{
       return false;
     }
 
-    if ( m_standardsRoot.getMemberNames().size()  < 1 ) {
+    if (m_standardsRoot.getMemberNames().size() < 1) {
       LOG(Warn, "Root doesn't have at least one entry");
       return false;
     }
@@ -87,7 +84,7 @@ namespace detail{
       return false;
     }
     // There shouldn't be any nested levels below that
-    for (auto& v: firstArrEntry) {
+    for (auto& v : firstArrEntry) {
       if (v.isArray() || v.isObject()) {
         LOG(Warn, "There shouldn't be any nested objects");
         return false;
@@ -95,22 +92,18 @@ namespace detail{
     }
 
     return true;
-
   }
 
-  std::string StandardsJSON_Impl::string() const
-  {
+  std::string StandardsJSON_Impl::string() const {
     Json::StreamWriterBuilder wbuilder;
     const std::string output = Json::writeString(wbuilder, m_standardsRoot);
     return output;
   }
 
-  StandardsJSON StandardsJSON_Impl::clone() const
-  {
+  StandardsJSON StandardsJSON_Impl::clone() const {
     StandardsJSON result(this->string());
     return result;
   }
-
 
   boost::optional<Json::Value> StandardsJSON_Impl::getPrimaryKey(const std::string& primaryKey) const {
 
@@ -126,37 +119,28 @@ namespace detail{
     return result;
   }
 
-} // detail
+}  // namespace detail
 
-StandardsJSON::StandardsJSON()
-  : m_impl(std::shared_ptr<detail::StandardsJSON_Impl>(new detail::StandardsJSON_Impl()))
-{}
+StandardsJSON::StandardsJSON() : m_impl(std::shared_ptr<detail::StandardsJSON_Impl>(new detail::StandardsJSON_Impl())) {}
 
-StandardsJSON::StandardsJSON(const std::string& s)
-  : m_impl(std::shared_ptr<detail::StandardsJSON_Impl>(new detail::StandardsJSON_Impl(s)))
-{}
+StandardsJSON::StandardsJSON(const std::string& s) : m_impl(std::shared_ptr<detail::StandardsJSON_Impl>(new detail::StandardsJSON_Impl(s))) {}
 
-StandardsJSON::StandardsJSON(std::shared_ptr<detail::StandardsJSON_Impl> impl)
-  : m_impl(impl)
-{}
+StandardsJSON::StandardsJSON(std::shared_ptr<detail::StandardsJSON_Impl> impl) : m_impl(impl) {}
 
-boost::optional<StandardsJSON> StandardsJSON::load(const std::string& s)
-{
+boost::optional<StandardsJSON> StandardsJSON::load(const std::string& s) {
   boost::optional<StandardsJSON> result;
   try {
     result = StandardsJSON(s);
-  } catch (const std::exception&){
+  } catch (const std::exception&) {
   }
   return result;
 }
 
-std::string StandardsJSON::string() const
-{
+std::string StandardsJSON::string() const {
   return getImpl<detail::StandardsJSON_Impl>()->string();
 }
 
-StandardsJSON StandardsJSON::clone() const
-{
+StandardsJSON StandardsJSON::clone() const {
   return getImpl<detail::StandardsJSON_Impl>()->clone();
 }
 
@@ -165,10 +149,9 @@ boost::optional<Json::Value> StandardsJSON::getPrimaryKey(const std::string& pri
 }
 
 // ostream operator
-std::ostream& operator<<(std::ostream& os, const StandardsJSON& standardsJSON)
-{
+std::ostream& operator<<(std::ostream& os, const StandardsJSON& standardsJSON) {
   os << standardsJSON.string();
   return os;
 }
 
-} // openstudio
+}  // namespace openstudio

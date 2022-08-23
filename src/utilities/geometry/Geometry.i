@@ -13,6 +13,7 @@
   using namespace openstudio;
   #include <utilities/geometry/Vector3d.hpp>
   #include <utilities/geometry/Point3d.hpp>
+  #include <utilities/geometry/Polygon3d.hpp>
   #include <utilities/geometry/PointLatLon.hpp>
   #include <utilities/geometry/Plane.hpp>
   #include <utilities/geometry/EulerAngles.hpp>
@@ -22,6 +23,8 @@
   #include <utilities/geometry/Intersection.hpp>
   #include <utilities/geometry/ThreeJS.hpp>
   #include <utilities/geometry/FloorplanJS.hpp>
+  #include <utilities/geometry/RoofGeometry.hpp>
+  #include <utilities/geometry/Polyhedron.hpp>
 
   #include <utilities/units/Quantity.hpp>
   #include <utilities/units/Unit.hpp>
@@ -51,14 +54,20 @@
 %template(OptionalThreeGeometry) boost::optional<openstudio::ThreeGeometry>;
 %template(OptionalFloorplanJS) boost::optional<openstudio::FloorplanJS>;
 %template(OptionalFloorplanObject) boost::optional<openstudio::FloorplanObject>;
+%template(OptionalPolygon3d) boost::optional<openstudio::Polygon3d>;
+%template(OptionalPolyhedron) boost::optional<openstudio::Polyhedron>;
 
 // create an instantiation of the vector classes
 // Note JM 2019-04-16: No need to ignore std::vector<T>::vector/resize when you have a default constructor
 %template(Point3dVector) std::vector<openstudio::Point3d>;
 %template(Point3dVectorVector) std::vector<std::vector<openstudio::Point3d> >; // for polygon subtraction routines
 %template(OptionalPoint3dVector) boost::optional< std::vector<openstudio::Point3d> >; // For openstudio::join (Intersection.hpp)
+%template(OptionalPoint3dVectorVector) boost::optional< std::vector< std::vector<openstudio::Point3d> > >; // For openstudio::buffer (Intersection.hpp)
 %template(PointLatLonVector) std::vector<openstudio::PointLatLon>;
 %template(Vector3dVector) std::vector<openstudio::Vector3d>;
+%template(Polygon3dVector) std::vector<openstudio::Polygon3d>;
+%template(PolyhedronVector) std::vector<openstudio::Polyhedron>;
+%template(Surface3dVector) std::vector<openstudio::Surface3d>;
 
 %ignore std::vector<openstudio::Plane>::vector(size_type);
 %ignore std::vector<openstudio::Plane>::resize(size_type);
@@ -87,10 +96,18 @@
 %ignore std::vector<openstudio::FloorplanObject>::resize(size_type);
 %template(FloorplanObjectVector) std::vector<openstudio::FloorplanObject>;
 
+%ignore std::vector<openstudio::Surface3dEdge>::vector(size_type);
+%ignore std::vector<openstudio::Surface3dEdge>::resize(size_type);
+%template(Surface3dEdgeVector) std::vector<openstudio::Surface3dEdge>;
+
+%template(SizeTVector) std::vector<size_t>;
+%template(StringStringMap) std::map<std::string, std::string>;
+
 %ignore openstudio::operator<<;
 
 %include <utilities/geometry/Vector3d.hpp>
 %include <utilities/geometry/Point3d.hpp>
+%include <utilities/geometry/Polygon3d.hpp>
 %include <utilities/geometry/PointLatLon.hpp>
 %include <utilities/geometry/Plane.hpp>
 %include <utilities/geometry/EulerAngles.hpp>
@@ -100,6 +117,8 @@
 %include <utilities/geometry/Intersection.hpp>
 %include <utilities/geometry/ThreeJS.hpp>
 %include <utilities/geometry/FloorplanJS.hpp>
+%include <utilities/geometry/RoofGeometry.hpp>
+%include <utilities/geometry/Polyhedron.hpp>
 
 %extend openstudio::Vector3d{
   std::string __str__() const {
@@ -121,6 +140,58 @@
   std::string __str__() const {
     std::ostringstream os;
     os << *self;
+    return os.str();
+  }
+}
+
+%extend openstudio::Plane {
+  std::string __str__() const {
+    std::ostringstream os;
+    os << *self;
+    return os.str();
+  }
+}
+
+%extend openstudio::Surface3dEdge {
+  std::string __str__() const {
+    std::ostringstream os;
+    os << *self;
+    return os.str();
+  }
+}
+
+%extend openstudio::Transformation {
+
+  std::string __str__() const {
+    std::ostringstream os;
+
+    typedef Matrix::size_type size_type;
+    Matrix m = self->matrix();
+    size_type size1 = m.size1();
+    size_type size2 = m.size2();
+
+    // Always size (4, 4) really
+    os << "Transformation with Matrix";
+    if ((size1 == 0) || (size2 == 0)) {
+      os << ": Nothing to show, at least one dimension is zero";
+      return os.str();
+    } else {
+      os << ":\n[";
+      for (size_type i = 0; i < size1; ++i) {
+        os << '[';
+        for (size_type j = 0; j < size2; ++j) {
+          os << m(i, j);
+          if (j != size2 - 1) {
+            os << ", ";
+          }
+        }
+        os << ']';
+        if (i != size1 - 1) {
+          os << ",\n ";
+        }
+      }
+      os << ']';
+    }
     return os.str();
   }
 }

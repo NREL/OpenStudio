@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,8 +51,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorLights)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_ExteriorLights) {
   Model model;
 
   ExteriorLightsDefinition exteriorLightsDefinition(model);
@@ -61,11 +60,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorLights)
   ScheduleConstant schedule(model);
   schedule.setValue(1.0);
 
-  ExteriorLights exteriorLights(exteriorLightsDefinition,schedule);
+  ExteriorLights exteriorLights(exteriorLightsDefinition, schedule);
   exteriorLights.setControlOption("AstronomicalClock");
   exteriorLights.setName("My ExteriorLights");
   exteriorLights.setEndUseSubcategory("Exterior Lighting");
-
 
   ForwardTranslator trans;
   Workspace workspace = trans.translateModel(model);
@@ -81,19 +79,16 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_ExteriorLights)
   EXPECT_EQ("AstronomicalClock", idf_extEq.getString(Exterior_LightsFields::ControlOption).get());
 
   // Schedule Name
-  ASSERT_EQ(schedule.name(), idf_extEq.getString(Exterior_LightsFields::ScheduleName).get());
+  ASSERT_EQ(schedule.nameString(), idf_extEq.getString(Exterior_LightsFields::ScheduleName).get());
 
   // Design Level
   EXPECT_DOUBLE_EQ(2303.3, idf_extEq.getDouble(Exterior_LightsFields::DesignLevel).get());
 
   // End Use Subcategory
   EXPECT_EQ("Exterior Lighting", idf_extEq.getString(Exterior_LightsFields::EndUseSubcategory).get());
-
 }
 
-
-TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorLights)
-{
+TEST_F(EnergyPlusFixture, ReverseTranslator_ExteriorLights) {
   StrictnessLevel level(StrictnessLevel::Draft);
   IddFileType iddFileType(IddFileType::EnergyPlus);
   Workspace workspace(level, iddFileType);
@@ -118,7 +113,7 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorLights)
   IdfObjectVector objects;
   objects.push_back(idf_extEq);
   objects.push_back(idf_sch);
-  EXPECT_EQ(2u,workspace.addObjects(objects).size());
+  EXPECT_EQ(2u, workspace.addObjects(objects).size());
 
   ReverseTranslator rt;
   Model m = rt.translateWorkspace(workspace);
@@ -139,7 +134,4 @@ TEST_F(EnergyPlusFixture,ReverseTranslator_ExteriorLights)
   EXPECT_DOUBLE_EQ(2303.3, extEqDef.designLevel());
 
   EXPECT_EQ("My EndUseSubcategory", extEq.endUseSubcategory());
-
 }
-
-

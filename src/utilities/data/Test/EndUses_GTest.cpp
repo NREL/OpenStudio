@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,12 +34,10 @@
 
 using namespace openstudio;
 
-
-TEST_F(DataFixture, EndUses)
-{
+TEST_F(DataFixture, EndUses) {
 
   openstudio::path xmlPath = toPath("./report.xml");
-  if(openstudio::filesystem::exists(xmlPath)){
+  if (openstudio::filesystem::exists(xmlPath)) {
     openstudio::filesystem::remove(xmlPath);
   }
 
@@ -103,16 +101,16 @@ TEST_F(DataFixture, EndUses)
 
   // figure out which fuel types are used
   std::vector<EndUseFuelType> fuelTypes;
-  for (const EndUseFuelType& fuelType : allFuelTypes){
-    if (endUses.getEndUseByFuelType(fuelType) != 0){
+  for (const EndUseFuelType& fuelType : allFuelTypes) {
+    if (endUses.getEndUseByFuelType(fuelType) != 0) {
       fuelTypes.push_back(fuelType);
     }
   }
 
   // figure out which categories are used
   std::vector<EndUseCategoryType> categories;
-  for (const EndUseCategoryType& category : allCategories){
-    if (endUses.getEndUseByCategory(category) != 0){
+  for (const EndUseCategoryType& category : allCategories) {
+    if (endUses.getEndUseByCategory(category) != 0) {
       categories.push_back(category);
     }
   }
@@ -121,20 +119,18 @@ TEST_F(DataFixture, EndUses)
   EXPECT_EQ(static_cast<unsigned>(5), categories.size());
   EXPECT_EQ(static_cast<unsigned>(2), subCategories.size());
 
-  for (const EndUseFuelType& fuelType : fuelTypes){
+  for (const EndUseFuelType& fuelType : fuelTypes) {
     std::string units = endUses.getUnitsForFuelType(fuelType);
-    for (const EndUseCategoryType& category : categories){
-      for (const std::string& subCategory : subCategories){
-        /* double value =*/ endUses.getEndUse(fuelType, category, subCategory);
+    for (const EndUseCategoryType& category : categories) {
+      for (const std::string& subCategory : subCategories) {
+        /* double value =*/endUses.getEndUse(fuelType, category, subCategory);
         // barchart(value, units) ??
       }
     }
   }
-
 }
 
-TEST_F(DataFixture, EndUses2)
-{
+TEST_F(DataFixture, EndUses2) {
 
   EndUses endUses;
 
@@ -209,23 +205,20 @@ TEST_F(DataFixture, EndUses2)
   EXPECT_EQ(0.0, endUses.getEndUse(EndUseFuelType::Electricity, EndUseCategoryType::Heating, "Outdoor"));
   EXPECT_EQ(0.0, endUses.getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling, "General"));
   EXPECT_EQ(0.0, endUses.getEndUse(EndUseFuelType::Gas, EndUseCategoryType::Cooling, "Outdoor"));
-
 }
 
-TEST_F(DataFixture, EndUses3)
-{
+TEST_F(DataFixture, EndUses3) {
   // EndUseCategoryType is a subset of EndUseType
-  for (int i : EndUseCategoryType::getValues()){
+  for (int i : EndUseCategoryType::getValues()) {
     EndUseCategoryType endUseCategoryType(i);
     EXPECT_NO_THROW(EndUseType(endUseCategoryType.valueName())) << endUseCategoryType.valueName();
   }
 }
 
-TEST_F(DataFixture, EndUses_Conversions)
-{
+TEST_F(DataFixture, EndUses_Conversions) {
 
   openstudio::path xmlPath = toPath("./report.xml");
-  if(openstudio::filesystem::exists(xmlPath)){
+  if (openstudio::filesystem::exists(xmlPath)) {
     openstudio::filesystem::remove(xmlPath);
   }
 
@@ -241,5 +234,4 @@ TEST_F(DataFixture, EndUses_Conversions)
   EXPECT_FALSE(EndUses::fromAttribute(attribute1));
   EXPECT_FALSE(EndUses::fromAttribute(attribute2));
   EXPECT_TRUE(EndUses::fromAttribute(*testAttribute));
-
 }

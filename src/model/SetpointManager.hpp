@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,76 +37,75 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-class SetpointManager_Impl;
+    class SetpointManager_Impl;
 
-}
+  }
 
- /** SetpointManager is the base class for setpoint managers.
+  /** SetpointManager is the base class for setpoint managers.
  *
  */
-class MODEL_API SetpointManager : public HVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API SetpointManager : public HVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~SetpointManager() {}
+    virtual ~SetpointManager() {}
 
-  //@}
+    //@}
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** Returns the Node referred to by the SetpointNodeName field. **/
-  boost::optional<Node> setpointNode() const;
+    /** Returns the Node referred to by the SetpointNodeName field. **/
+    boost::optional<Node> setpointNode() const;
 
-  /** Returns the Control Variable **/
-  std::string controlVariable() const;
+    /** Returns the Control Variable **/
+    std::string controlVariable() const;
 
-  /** Returns whether this SPM is allowed to be placed on a PlantLoop
+    /** Returns whether this SPM is allowed to be placed on a PlantLoop
    * (*all* SPMs are allowed on an AirLoopHVAC, *some* are allowed on a PlantLoop) **/
-  bool isAllowedOnPlantLoop() const;
+    bool isAllowedOnPlantLoop() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the Control Variable **/
-  bool setControlVariable(const std::string& controlVariable);
+    /** Sets the Control Variable **/
+    bool setControlVariable(const std::string& controlVariable);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-
-  /** Constructs a new SetpointManager object and places it inside
+    //@}
+   protected:
+    /** Constructs a new SetpointManager object and places it inside
    *  model. */
-  SetpointManager(IddObjectType type, const Model& model);
+    SetpointManager(IddObjectType type, const Model& model);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class detail::SetpointManager_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::SetpointManager_Impl;
 
-  /// @cond
-  typedef detail::SetpointManager_Impl ImplType;
+    /// @cond
+    typedef detail::SetpointManager_Impl ImplType;
 
-  explicit SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> impl);
+    explicit SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> impl);
 
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManager");
-  /// @endcond
-};
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManager");
+    /// @endcond
+  };
 
-typedef boost::optional<SetpointManager> OptionalSetpointManager;
-typedef std::vector<SetpointManager> SetpointManagerVector;
+  typedef boost::optional<SetpointManager> OptionalSetpointManager;
+  typedef std::vector<SetpointManager> SetpointManagerVector;
 
-} // model
+}  // namespace model
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGER_HPP
-
+#endif  // MODEL_SETPOINTMANAGER_HPP

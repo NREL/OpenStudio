@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,34 +48,32 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateSurfacePropertyExposedFoundationPerimeter( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::SurfaceProperty_ExposedFoundationPerimeter ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: SurfacePropertyExposedFoundationPerimeter");
-    return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateSurfacePropertyExposedFoundationPerimeter(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::SurfaceProperty_ExposedFoundationPerimeter) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: SurfacePropertyExposedFoundationPerimeter");
+      return boost::none;
+    }
 
-  OptionalString s = workspaceObject.getString(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod);
+    OptionalString s = workspaceObject.getString(SurfaceProperty_ExposedFoundationPerimeterFields::ExposedPerimeterCalculationMethod);
 
-  OptionalDouble d = workspaceObject.getDouble(SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter);
-  
-  boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter;
+    OptionalDouble d = workspaceObject.getDouble(SurfaceProperty_ExposedFoundationPerimeterFields::TotalExposedPerimeter);
 
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<Surface>()){
-        boost::optional<Surface> surface = modelObject->optionalCast<Surface>();
-        surfacePropertyExposedFoundationPerimeter = surface.get().createSurfacePropertyExposedFoundationPerimeter(*s, *d);
+    boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter;
+
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::SurfaceProperty_ExposedFoundationPerimeterFields::SurfaceName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (modelObject->optionalCast<Surface>()) {
+          boost::optional<Surface> surface = modelObject->optionalCast<Surface>();
+          surfacePropertyExposedFoundationPerimeter = surface.get().createSurfacePropertyExposedFoundationPerimeter(*s, *d);
+        }
       }
     }
+
+    return surfacePropertyExposedFoundationPerimeter.get();
   }
-  
-  return surfacePropertyExposedFoundationPerimeter.get();
-}
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
-
+}  // namespace openstudio

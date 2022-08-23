@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,46 +54,31 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_WrongOrderConstructor)
-{
+TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_WrongOrderConstructor) {
   model::Model m;
   model::Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
-  model::FanConstantVolume fan(m,availabilitySchedule);
-  model::CoilHeatingWater heatingCoil(m,availabilitySchedule);
-  CoilCoolingWater coolingCoil(m,availabilitySchedule);
+  model::FanConstantVolume fan(m, availabilitySchedule);
+  model::CoilHeatingWater heatingCoil(m, availabilitySchedule);
+  CoilCoolingWater coolingCoil(m, availabilitySchedule);
 
   // Takes in cooling coil THEN heating coil
-  ASSERT_THROW(
-    model::ZoneHVACFourPipeFanCoil fpfc( m,
-                                         availabilitySchedule,
-                                         fan,
-                                         heatingCoil,
-                                         coolingCoil ),
-    openstudio::Exception
-  );
+  ASSERT_THROW(model::ZoneHVACFourPipeFanCoil fpfc(m, availabilitySchedule, fan, heatingCoil, coolingCoil), openstudio::Exception);
 }
 
-TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
-{
+TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters) {
   model::Model m;
   model::Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
-  model::FanConstantVolume fan(m,availabilitySchedule);
-  model::CoilHeatingWater heatingCoil(m,availabilitySchedule);
-  CoilCoolingWater coolingCoil(m,availabilitySchedule);
+  model::FanConstantVolume fan(m, availabilitySchedule);
+  model::CoilHeatingWater heatingCoil(m, availabilitySchedule);
+  CoilCoolingWater coolingCoil(m, availabilitySchedule);
 
-  model::ZoneHVACFourPipeFanCoil fpfc( m,
-                                       availabilitySchedule,
-                                       fan,
-                                       coolingCoil,
-                                       heatingCoil );
-
+  model::ZoneHVACFourPipeFanCoil fpfc(m, availabilitySchedule, fan, coolingCoil, heatingCoil);
 
   // Availability Schedule Name:  Object
   EXPECT_EQ(availabilitySchedule, fpfc.availabilitySchedule());
   ScheduleCompact sch(m);
   EXPECT_TRUE(fpfc.setAvailabilitySchedule(sch));
   EXPECT_EQ(sch, fpfc.availabilitySchedule());
-
 
   // Capacity Control Method:  String
   // No Default
@@ -104,13 +89,11 @@ TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
   EXPECT_FALSE(fpfc.setCapacityControlMethod("BadChoice"));
   EXPECT_EQ("ConstantFanVariableFlow", fpfc.capacityControlMethod());
 
-
   // Maximum Supply Air Flow Rate: Optional Double
   // No Default
   EXPECT_TRUE(fpfc.setMaximumSupplyAirFlowRate(10.03));
   ASSERT_TRUE(fpfc.maximumSupplyAirFlowRate());
   EXPECT_EQ(10.03, fpfc.maximumSupplyAirFlowRate().get());
-
 
   // Low Speed Supply Air Flow Ratio:  Double
   // Check Idd default: 0.33
@@ -120,7 +103,6 @@ TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
   fpfc.resetLowSpeedSupplyAirFlowRatio();
   EXPECT_EQ(0.33, fpfc.lowSpeedSupplyAirFlowRatio());
 
-
   // Medium Speed Supply Air Flow Ratio:  Double
   // Check Idd default: 0.66
   EXPECT_EQ(0.66, fpfc.mediumSpeedSupplyAirFlowRatio());
@@ -129,13 +111,11 @@ TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
   fpfc.resetMediumSpeedSupplyAirFlowRatio();
   EXPECT_EQ(0.66, fpfc.mediumSpeedSupplyAirFlowRatio());
 
-
   // Maximum Outdoor Air Flow Rate: Optional Double
   // No Default
   EXPECT_TRUE(fpfc.setMaximumOutdoorAirFlowRate(10.03));
   ASSERT_TRUE(fpfc.maximumOutdoorAirFlowRate());
   EXPECT_EQ(10.03, fpfc.maximumOutdoorAirFlowRate().get());
-
 
   // Outdoor Air Schedule Name: Optional Object
   // No Default
@@ -157,9 +137,7 @@ TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
   EXPECT_FALSE(fpfc.setOutdoorAirMixerObjectType("BadChoice"));
   EXPECT_EQ("OutdoorAir:Mixer", fpfc.outdoorAirMixerObjectType());
 
-
   // Outdoor Air Mixer Name:  Object
-
 
   // Supply Air Fan Name:  Object
   EXPECT_EQ(fan, fpfc.supplyAirFan());
@@ -180,7 +158,6 @@ TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
   ASSERT_TRUE(fpfc.maximumColdWaterFlowRate());
   EXPECT_EQ(10.03, fpfc.maximumColdWaterFlowRate().get());
 
-
   // Minimum Cold Water Flow Rate:  Double
   // Check Idd default: 0.0
   EXPECT_EQ(0.0, fpfc.minimumColdWaterFlowRate());
@@ -188,7 +165,6 @@ TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
   EXPECT_EQ(-1.0, fpfc.minimumColdWaterFlowRate());
   fpfc.resetMinimumColdWaterFlowRate();
   EXPECT_EQ(0.0, fpfc.minimumColdWaterFlowRate());
-
 
   // Cooling Convergence Tolerance:  Double
   // Check Idd default: 0.001
@@ -198,7 +174,6 @@ TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
   fpfc.resetCoolingConvergenceTolerance();
   EXPECT_EQ(0.001, fpfc.coolingConvergenceTolerance());
 
-
   // Heating Coil Name:  Object
   // No Default
   EXPECT_EQ(heatingCoil, fpfc.heatingCoil());
@@ -206,13 +181,11 @@ TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
   EXPECT_TRUE(fpfc.setHeatingCoil(heatingCoil2));
   EXPECT_EQ(heatingCoil2, fpfc.heatingCoil());
 
-
   // Maximum Hot Water Flow Rate: Optional Double
   // No Default
   EXPECT_TRUE(fpfc.setMaximumHotWaterFlowRate(10.03));
   ASSERT_TRUE(fpfc.maximumHotWaterFlowRate());
   EXPECT_EQ(10.03, fpfc.maximumHotWaterFlowRate().get());
-
 
   // Minimum Hot Water Flow Rate:  Double
   // Check Idd default: 0.0
@@ -222,7 +195,6 @@ TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
   fpfc.resetMinimumHotWaterFlowRate();
   EXPECT_EQ(0.0, fpfc.minimumHotWaterFlowRate());
 
-
   // Heating Convergence Tolerance:  Double
   // Check Idd default: 0.001
   EXPECT_EQ(0.001, fpfc.heatingConvergenceTolerance());
@@ -230,7 +202,6 @@ TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
   EXPECT_EQ(0.0005, fpfc.heatingConvergenceTolerance());
   fpfc.resetHeatingConvergenceTolerance();
   EXPECT_EQ(0.001, fpfc.heatingConvergenceTolerance());
-
 
   // Supply Air Fan Operating Mode Schedule Name: Optional Object
   // No Default
@@ -240,77 +211,68 @@ TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_GettersSetters)
   ASSERT_TRUE(fpfc.supplyAirFanOperatingModeSchedule());
   EXPECT_EQ(sch_op, fpfc.supplyAirFanOperatingModeSchedule().get());
 
-
   // Minimum Supply Air Temperature in Cooling Mode: Optional Double
   // No Default
   EXPECT_TRUE(fpfc.setMinimumSupplyAirTemperatureInCoolingMode(1.0));
   ASSERT_TRUE(fpfc.minimumSupplyAirTemperatureInCoolingMode());
   EXPECT_EQ(1.0, fpfc.minimumSupplyAirTemperatureInCoolingMode().get());
 
-
   // Maximum Supply Air Temperature in Heating Mode: Optional Double
   // No Default
   EXPECT_TRUE(fpfc.setMaximumSupplyAirTemperatureInHeatingMode(1.0));
   ASSERT_TRUE(fpfc.maximumSupplyAirTemperatureInHeatingMode());
   EXPECT_EQ(1.0, fpfc.maximumSupplyAirTemperatureInHeatingMode().get());
-
 }
 
-
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_addToThermalZone) {
+TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_addToThermalZone) {
   Model model;
 
   // need schedule
   ScheduleConstant sched(model);
-  EXPECT_EQ(1u,model.objects().size());
-  sched.setValue(1.0); // Always on
+  EXPECT_EQ(1u, model.objects().size());
+  sched.setValue(1.0);  // Always on
 
   // need fan
-  FanConstantVolume fan(model,sched);
+  FanConstantVolume fan(model, sched);
 
   // need cooling and heating coils
-  CoilCoolingWater coolingCoil(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
+  CoilCoolingWater coolingCoil(model, sched);
+  CoilHeatingWater heatingCoil(model, sched);
 
   // construct object
-  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(model,sched,fan,coolingCoil,heatingCoil);
+  ZoneHVACFourPipeFanCoil zoneHVACFourPipeFanCoil(model, sched, fan, coolingCoil, heatingCoil);
 
   // Is it hooked up to the inside components?
-  EXPECT_EQ(fan.handle(),zoneHVACFourPipeFanCoil.supplyAirFan().handle());
-  EXPECT_EQ(coolingCoil.handle(),zoneHVACFourPipeFanCoil.coolingCoil().handle());
-  EXPECT_EQ(heatingCoil.handle(),zoneHVACFourPipeFanCoil.heatingCoil().handle());
+  EXPECT_EQ(fan.handle(), zoneHVACFourPipeFanCoil.supplyAirFan().handle());
+  EXPECT_EQ(coolingCoil.handle(), zoneHVACFourPipeFanCoil.coolingCoil().handle());
+  EXPECT_EQ(heatingCoil.handle(), zoneHVACFourPipeFanCoil.heatingCoil().handle());
 
   // construct a ThermalZone
 
   ThermalZone thermalZone(model);
 
-  EXPECT_EQ(0u,thermalZone.equipment().size());
+  EXPECT_EQ(0u, thermalZone.equipment().size());
 
   EXPECT_TRUE(zoneHVACFourPipeFanCoil.addToThermalZone(thermalZone));
 
   EXPECT_TRUE(zoneHVACFourPipeFanCoil.inletNode());
   EXPECT_TRUE(zoneHVACFourPipeFanCoil.outletNode());
 
-  EXPECT_EQ(1u,thermalZone.equipment().size());
+  EXPECT_EQ(1u, thermalZone.equipment().size());
 
   EXPECT_TRUE(fan.containingZoneHVACComponent());
   EXPECT_TRUE(coolingCoil.containingZoneHVACComponent());
   EXPECT_TRUE(heatingCoil.containingZoneHVACComponent());
 }
 
-TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_AddRemoveAirLoopHVAC)
-{
+TEST_F(ModelFixture, ZoneHVACFourPipeFanCoil_AddRemoveAirLoopHVAC) {
   model::Model m;
   model::Schedule availabilitySchedule = m.alwaysOnDiscreteSchedule();
-  model::FanConstantVolume fan(m,availabilitySchedule);
-  model::CoilHeatingWater heatingCoil(m,availabilitySchedule);
-  CoilCoolingWater coolingCoil(m,availabilitySchedule);
+  model::FanConstantVolume fan(m, availabilitySchedule);
+  model::CoilHeatingWater heatingCoil(m, availabilitySchedule);
+  CoilCoolingWater coolingCoil(m, availabilitySchedule);
 
-  model::ZoneHVACFourPipeFanCoil fpfc( m,
-                                       availabilitySchedule,
-                                       fan,
-                                       coolingCoil,
-                                       heatingCoil );
+  model::ZoneHVACFourPipeFanCoil fpfc(m, availabilitySchedule, fan, coolingCoil, heatingCoil);
 
   AirLoopHVAC airLoop(m);
   ThermalZone thermalZone(m);
@@ -329,14 +291,14 @@ TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_AddRemoveAirLoopHVAC)
   ASSERT_TRUE(fpfc.airLoopHVAC());
   ASSERT_TRUE(fpfc.thermalZone());
   ASSERT_TRUE(terminal.secondaryAirInletNode());
-  ASSERT_EQ(thermalZone,fpfc.thermalZone().get());
-  ASSERT_EQ(2u,thermalZone.equipment().size());
-  ASSERT_EQ(airLoop,fpfc.airLoopHVAC().get());
+  ASSERT_EQ(thermalZone, fpfc.thermalZone().get());
+  ASSERT_EQ(2u, thermalZone.equipment().size());
+  ASSERT_EQ(airLoop, fpfc.airLoopHVAC().get());
 
   fpfc.removeFromThermalZone();
   ASSERT_FALSE(fpfc.airLoopHVAC());
   ASSERT_FALSE(fpfc.thermalZone());
-  ASSERT_EQ(1u,thermalZone.equipment().size());
+  ASSERT_EQ(1u, thermalZone.equipment().size());
   ASSERT_EQ(9u, airLoop.demandComponents().size());
 
   // Demonstrate that when you remove the terminal,
@@ -350,7 +312,6 @@ TEST_F(ModelFixture,ZoneHVACFourPipeFanCoil_AddRemoveAirLoopHVAC)
   terminal.remove();
 
   ASSERT_EQ(7u, airLoop.demandComponents().size());
-  ASSERT_EQ(thermalZone,fpfc.thermalZone().get());
-  ASSERT_EQ(1u,thermalZone.equipment().size());
+  ASSERT_EQ(thermalZone, fpfc.thermalZone().get());
+  ASSERT_EQ(1u, thermalZone.equipment().size());
 }
-

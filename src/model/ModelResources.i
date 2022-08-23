@@ -26,6 +26,18 @@
   %ignore openstudio::model::SpaceLoadDefinition::instances;
   %ignore openstudio::model::ExteriorLoadDefinition::instances;
   %ignore openstudio::model::ShadingControl::subSurfaces;
+  %ignore openstudio::model::ShadingControl::subSurfaceIndex;
+  %ignore openstudio::model::ShadingControl::addSubSurface;
+  %ignore openstudio::model::ShadingControl::setSubSurfaceIndex;
+  %ignore openstudio::model::ShadingControl::removeSubSurface(const SubSurface& subSurface); // The unsigned index overload is fine
+  %ignore openstudio::model::ShadingControl::addSubSurfaces;
+  %ignore openstudio::model::ShadingControl::setSubSurfaces;
+
+  // CoilCoolingDX is defined in StraightComponent.i
+  %ignore openstudio::model::CoilCoolingDXCurveFitPerformance::coilCoolingDXs;
+
+  // HeatExchangerDesiccantBalancedFlow is done later in ModelHVAC.i
+  %ignore openstudio::model::HeatExchangerDesiccantBalancedFlowPerformanceDataType1::heatExchangerDesiccantBalancedFlows;
 
   // TODO: why?
   // ignore schedule type
@@ -42,11 +54,23 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 namespace openstudio {
 namespace model {
 
 // forward declarations
 class ShadingControl;
+%feature("valuewrapper") SubSurface;
+class SubSurface;
+%feature("valuewrapper") CoilCoolingDX;
+class CoilCoolingDX;
+%feature("valuewrapper") HeatExchangerDesiccantBalancedFlow;
+class HeatExchangerDesiccantBalancedFlow;
 
 }
 }
@@ -62,11 +86,25 @@ class ShadingControl;
   }
 };
 
+// extend classes
+%extend openstudio::model::TemperatureEnthalpy {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 MODELOBJECT_TEMPLATES(ScheduleType)
 MODELOBJECT_TEMPLATES(ScheduleInterval);
 MODELOBJECT_TEMPLATES(ScheduleFixedInterval);
 MODELOBJECT_TEMPLATES(ExternalFile);
 MODELOBJECT_TEMPLATES(ScheduleFile);
+MODELOBJECT_TEMPLATES(PythonPluginInstance);
+MODELOBJECT_TEMPLATES(PythonPluginVariable);
+MODELOBJECT_TEMPLATES(PythonPluginTrendVariable);
+MODELOBJECT_TEMPLATES(PythonPluginOutputVariable);
 MODELOBJECT_TEMPLATES(ScheduleVariableInterval);
 MODELOBJECT_TEMPLATES(ScheduleCompact);
 MODELOBJECT_TEMPLATES(ScheduleConstant);
@@ -74,6 +112,9 @@ MODELOBJECT_TEMPLATES(DefaultScheduleSet);
 MODELOBJECT_TEMPLATES(SpectralDataField); // Helper class defined in MaterialPropertyGlazingSpectralData
 MODELOBJECT_TEMPLATES(MaterialPropertyGlazingSpectralData);
 MODELOBJECT_TEMPLATES(MaterialPropertyMoisturePenetrationDepthSettings);
+MODELOBJECT_TEMPLATES(TemperatureEnthalpy); // Helper class defined in MaterialPropertyPhaseChange
+MODELOBJECT_TEMPLATES(MaterialPropertyPhaseChange);
+MODELOBJECT_TEMPLATES(MaterialPropertyPhaseChangeHysteresis);
 MODELOBJECT_TEMPLATES(Material);
 MODELOBJECT_TEMPLATES(FenestrationMaterial);
 MODELOBJECT_TEMPLATES(GasLayer);
@@ -122,6 +163,8 @@ MODELOBJECT_TEMPLATES(CurveExponentialSkewNormal);
 MODELOBJECT_TEMPLATES(CurveFanPressureRise);
 MODELOBJECT_TEMPLATES(CurveFunctionalPressureDrop);
 MODELOBJECT_TEMPLATES(CurveLinear);
+MODELOBJECT_TEMPLATES(CurveQuadLinear);
+MODELOBJECT_TEMPLATES(CurveQuintLinear);
 MODELOBJECT_TEMPLATES(CurveQuadratic);
 MODELOBJECT_TEMPLATES(CurveQuadraticLinear);
 MODELOBJECT_TEMPLATES(CurveQuartic);
@@ -129,7 +172,7 @@ MODELOBJECT_TEMPLATES(CurveRectangularHyperbola1);
 MODELOBJECT_TEMPLATES(CurveRectangularHyperbola2);
 MODELOBJECT_TEMPLATES(CurveSigmoid);
 MODELOBJECT_TEMPLATES(CurveTriquadratic);
-MODELOBJECT_TEMPLATES(TableMultiVariableLookupPoint);
+MODELOBJECT_TEMPLATES(TableMultiVariableLookupPoint);  // Helper class defined in TableMultiVariableLookup
 MODELOBJECT_TEMPLATES(TableMultiVariableLookup);
 MODELOBJECT_TEMPLATES(SpaceLoadDefinition);
 MODELOBJECT_TEMPLATES(PeopleDefinition);
@@ -150,8 +193,18 @@ MODELOBJECT_TEMPLATES(ExteriorWaterEquipmentDefinition)
 MODELOBJECT_TEMPLATES(RenderingColor);
 MODELOBJECT_TEMPLATES(DesignSpecificationOutdoorAir);
 
+MODELOBJECT_TEMPLATES(CoilCoolingDXCurveFitPerformance);
+MODELOBJECT_TEMPLATES(CoilCoolingDXCurveFitOperatingMode);
+MODELOBJECT_TEMPLATES(CoilCoolingDXCurveFitSpeed);
+
+MODELOBJECT_TEMPLATES(HeatExchangerDesiccantBalancedFlowPerformanceDataType1);
+
 SWIG_MODELOBJECT(ScheduleInterval, 0);
 SWIG_MODELOBJECT(ScheduleFile, 1);
+SWIG_MODELOBJECT(PythonPluginInstance, 1);
+SWIG_MODELOBJECT(PythonPluginVariable, 1);
+SWIG_MODELOBJECT(PythonPluginTrendVariable, 1);
+SWIG_MODELOBJECT(PythonPluginOutputVariable, 1);
 SWIG_MODELOBJECT(ExternalFile, 1);
 SWIG_MODELOBJECT(ScheduleFixedInterval, 1);
 SWIG_MODELOBJECT(ScheduleVariableInterval, 1);
@@ -160,6 +213,8 @@ SWIG_MODELOBJECT(ScheduleConstant, 1);
 SWIG_MODELOBJECT(DefaultScheduleSet, 1);
 SWIG_MODELOBJECT(MaterialPropertyGlazingSpectralData, 1);
 SWIG_MODELOBJECT(MaterialPropertyMoisturePenetrationDepthSettings, 1);
+SWIG_MODELOBJECT(MaterialPropertyPhaseChange, 1);
+SWIG_MODELOBJECT(MaterialPropertyPhaseChangeHysteresis, 1);
 SWIG_MODELOBJECT(Material, 0);
 SWIG_MODELOBJECT(FenestrationMaterial, 0);
 SWIG_MODELOBJECT(GasLayer, 0);
@@ -208,6 +263,8 @@ SWIG_MODELOBJECT(CurveExponentialSkewNormal, 1);
 SWIG_MODELOBJECT(CurveFanPressureRise, 1);
 SWIG_MODELOBJECT(CurveFunctionalPressureDrop, 1);
 SWIG_MODELOBJECT(CurveLinear, 1);
+SWIG_MODELOBJECT(CurveQuadLinear, 1);
+SWIG_MODELOBJECT(CurveQuintLinear, 1);
 SWIG_MODELOBJECT(CurveQuadratic, 1);
 SWIG_MODELOBJECT(CurveQuadraticLinear, 1);
 SWIG_MODELOBJECT(CurveQuartic, 1);
@@ -233,6 +290,12 @@ SWIG_MODELOBJECT(ExteriorFuelEquipmentDefinition, 1);
 SWIG_MODELOBJECT(ExteriorWaterEquipmentDefinition, 1);
 SWIG_MODELOBJECT(RenderingColor, 1);
 SWIG_MODELOBJECT(DesignSpecificationOutdoorAir, 1);
+
+SWIG_MODELOBJECT(CoilCoolingDXCurveFitPerformance, 1);
+SWIG_MODELOBJECT(CoilCoolingDXCurveFitOperatingMode, 1);
+SWIG_MODELOBJECT(CoilCoolingDXCurveFitSpeed, 1);
+
+SWIG_MODELOBJECT(HeatExchangerDesiccantBalancedFlowPerformanceDataType1, 1);
 
 %include <model/ScheduleTypeRegistry.hpp>
 

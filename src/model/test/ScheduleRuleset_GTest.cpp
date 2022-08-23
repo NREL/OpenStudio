@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,13 +50,12 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, ScheduleRuleset)
-{
+TEST_F(ModelFixture, ScheduleRuleset) {
   Model model;
 
   model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
   yd.setCalendarYear(2009);
-/*
+  /*
   RunPeriodControlSpecialDays newYears(openstudio::MonthOfYear::Jan, 1, model);
 
   RunPeriodControlSpecialDays thanksgiving(openstudio::NthDayOfWeekInMonth::fourth, openstudio::DayOfWeek::Thursday, openstudio::MonthOfYear::Nov, model);
@@ -68,9 +67,13 @@ TEST_F(ModelFixture, ScheduleRuleset)
   ASSERT_NO_THROW(schedule.summerDesignDaySchedule());
   ASSERT_NO_THROW(schedule.winterDesignDaySchedule());
   ASSERT_NO_THROW(schedule.holidaySchedule());
+  ASSERT_NO_THROW(schedule.customDay1Schedule());
+  ASSERT_NO_THROW(schedule.customDay2Schedule());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
   EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
 
   // one default schedule created
   EXPECT_EQ(1u, model.getModelObjects<ScheduleDay>().size());
@@ -102,10 +105,10 @@ TEST_F(ModelFixture, ScheduleRuleset)
   ASSERT_EQ(365u, daySchedules.size());
 
   // all defaulted
-  for (int i : activeRuleIndices){
+  for (int i : activeRuleIndices) {
     EXPECT_EQ(-1, i);
   }
-  for (ScheduleDay daySchedule : daySchedules){
+  for (ScheduleDay daySchedule : daySchedules) {
     EXPECT_EQ(schedule.defaultDaySchedule().handle(), daySchedule.handle());
   }
 
@@ -127,10 +130,10 @@ TEST_F(ModelFixture, ScheduleRuleset)
   ASSERT_EQ(365u, daySchedules.size());
 
   // all using the first rule
-  for (int i : activeRuleIndices){
+  for (int i : activeRuleIndices) {
     EXPECT_EQ(0, i);
   }
-  for (ScheduleDay daySchedule : daySchedules){
+  for (ScheduleDay daySchedule : daySchedules) {
     EXPECT_EQ(scheduleRules[0].daySchedule().handle(), daySchedule.handle());
   }
 
@@ -140,7 +143,7 @@ TEST_F(ModelFixture, ScheduleRuleset)
 
   scheduleRules = schedule.scheduleRules();
   ASSERT_EQ(2u, scheduleRules.size());
-  EXPECT_EQ(weekendRule.handle(), scheduleRules[0].handle()); // weekend rule is on top
+  EXPECT_EQ(weekendRule.handle(), scheduleRules[0].handle());  // weekend rule is on top
   EXPECT_EQ(baseRule.handle(), scheduleRules[1].handle());
 
   weekendRule.setApplySunday(true);
@@ -158,27 +161,27 @@ TEST_F(ModelFixture, ScheduleRuleset)
   ASSERT_EQ(365u, daySchedules.size());
 
   unsigned doy = 1;
-  for (int i : activeRuleIndices){
+  for (int i : activeRuleIndices) {
     Date date = yd.makeDate(doy);
-    if (date.dayOfWeek().value() == DayOfWeek::Saturday || date.dayOfWeek().value() == DayOfWeek::Sunday){
-      EXPECT_EQ(0, i); // weekend rule
-    }else{
-      EXPECT_EQ(1, i); // base rule
+    if (date.dayOfWeek().value() == DayOfWeek::Saturday || date.dayOfWeek().value() == DayOfWeek::Sunday) {
+      EXPECT_EQ(0, i);  // weekend rule
+    } else {
+      EXPECT_EQ(1, i);  // base rule
     }
     ++doy;
   }
   doy = 1;
-  for (ScheduleDay daySchedule : daySchedules){
+  for (ScheduleDay daySchedule : daySchedules) {
     Date date = yd.makeDate(doy);
-    if (date.dayOfWeek().value() == DayOfWeek::Saturday || date.dayOfWeek().value() == DayOfWeek::Sunday){
-      EXPECT_EQ(weekendRule.daySchedule().handle(), daySchedule.handle()); // weekend rule
-    }else{
-      EXPECT_EQ(baseRule.daySchedule().handle(), daySchedule.handle()); // base rule
+    if (date.dayOfWeek().value() == DayOfWeek::Saturday || date.dayOfWeek().value() == DayOfWeek::Sunday) {
+      EXPECT_EQ(weekendRule.daySchedule().handle(), daySchedule.handle());  // weekend rule
+    } else {
+      EXPECT_EQ(baseRule.daySchedule().handle(), daySchedule.handle());  // base rule
     }
     ++doy;
   }
 
-/*
+  /*
 
   ASSERT_EQ(2u, schedule.startDates().size());
   EXPECT_EQ(openstudio::Date(openstudio::MonthOfYear::Jan, 1), schedule.startDates()[0]);
@@ -304,18 +307,16 @@ TEST_F(ModelFixture, ScheduleRuleset)
   */
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_ScheduleRule)
-{
+TEST_F(ModelFixture, ScheduleRuleset_ScheduleRule) {
   Model model;
   ScheduleRuleset schedule(model);
 
   ScheduleRule scheduleRule1(schedule);
 
-  EXPECT_EQ(0,scheduleRule1.ruleIndex());
+  EXPECT_EQ(0, scheduleRule1.ruleIndex());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex)
-{
+TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex) {
   Model model;
   ScheduleRuleset schedule(model);
 
@@ -324,24 +325,23 @@ TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex)
   ScheduleRule scheduleRule3(schedule);
   ScheduleRule scheduleRule4(schedule);
 
-  ASSERT_EQ(4u,schedule.scheduleRules().size());
+  ASSERT_EQ(4u, schedule.scheduleRules().size());
 
-  EXPECT_EQ(0,scheduleRule4.ruleIndex());
-  EXPECT_EQ(1,scheduleRule3.ruleIndex());
-  EXPECT_EQ(2,scheduleRule2.ruleIndex());
-  EXPECT_EQ(3,scheduleRule1.ruleIndex());
+  EXPECT_EQ(0, scheduleRule4.ruleIndex());
+  EXPECT_EQ(1, scheduleRule3.ruleIndex());
+  EXPECT_EQ(2, scheduleRule2.ruleIndex());
+  EXPECT_EQ(3, scheduleRule1.ruleIndex());
 
   // Move scheduleRule3 to the end
-  schedule.setScheduleRuleIndex(scheduleRule3,3);
+  schedule.setScheduleRuleIndex(scheduleRule3, 3);
 
-  EXPECT_EQ(0,scheduleRule4.ruleIndex());
-  EXPECT_EQ(3,scheduleRule3.ruleIndex());
-  EXPECT_EQ(1,scheduleRule2.ruleIndex());
-  EXPECT_EQ(2,scheduleRule1.ruleIndex());
+  EXPECT_EQ(0, scheduleRule4.ruleIndex());
+  EXPECT_EQ(3, scheduleRule3.ruleIndex());
+  EXPECT_EQ(1, scheduleRule2.ruleIndex());
+  EXPECT_EQ(2, scheduleRule1.ruleIndex());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex2)
-{
+TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex2) {
   Model model;
   ScheduleRuleset schedule(model);
 
@@ -350,24 +350,23 @@ TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex2)
   ScheduleRule scheduleRule3(schedule);
   ScheduleRule scheduleRule4(schedule);
 
-  ASSERT_EQ(4u,schedule.scheduleRules().size());
+  ASSERT_EQ(4u, schedule.scheduleRules().size());
 
-  EXPECT_EQ(0,scheduleRule4.ruleIndex());
-  EXPECT_EQ(1,scheduleRule3.ruleIndex());
-  EXPECT_EQ(2,scheduleRule2.ruleIndex());
-  EXPECT_EQ(3,scheduleRule1.ruleIndex());
+  EXPECT_EQ(0, scheduleRule4.ruleIndex());
+  EXPECT_EQ(1, scheduleRule3.ruleIndex());
+  EXPECT_EQ(2, scheduleRule2.ruleIndex());
+  EXPECT_EQ(3, scheduleRule1.ruleIndex());
 
   // Move scheduleRule1 to index 1
-  schedule.setScheduleRuleIndex(scheduleRule1,1);
+  schedule.setScheduleRuleIndex(scheduleRule1, 1);
 
-  EXPECT_EQ(0,scheduleRule4.ruleIndex());
-  EXPECT_EQ(2,scheduleRule3.ruleIndex());
-  EXPECT_EQ(3,scheduleRule2.ruleIndex());
-  EXPECT_EQ(1,scheduleRule1.ruleIndex());
+  EXPECT_EQ(0, scheduleRule4.ruleIndex());
+  EXPECT_EQ(2, scheduleRule3.ruleIndex());
+  EXPECT_EQ(3, scheduleRule2.ruleIndex());
+  EXPECT_EQ(1, scheduleRule1.ruleIndex());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex3)
-{
+TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex3) {
   Model model;
   ScheduleRuleset schedule(model);
 
@@ -376,24 +375,23 @@ TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex3)
   ScheduleRule scheduleRule3(schedule);
   ScheduleRule scheduleRule4(schedule);
 
-  ASSERT_EQ(4u,schedule.scheduleRules().size());
+  ASSERT_EQ(4u, schedule.scheduleRules().size());
 
-  EXPECT_EQ(0,scheduleRule4.ruleIndex());
-  EXPECT_EQ(1,scheduleRule3.ruleIndex());
-  EXPECT_EQ(2,scheduleRule2.ruleIndex());
-  EXPECT_EQ(3,scheduleRule1.ruleIndex());
+  EXPECT_EQ(0, scheduleRule4.ruleIndex());
+  EXPECT_EQ(1, scheduleRule3.ruleIndex());
+  EXPECT_EQ(2, scheduleRule2.ruleIndex());
+  EXPECT_EQ(3, scheduleRule1.ruleIndex());
 
   // Move scheduleRule3 index 2
-  schedule.setScheduleRuleIndex(scheduleRule3,2);
+  schedule.setScheduleRuleIndex(scheduleRule3, 2);
 
-  EXPECT_EQ(0,scheduleRule4.ruleIndex());
-  EXPECT_EQ(2,scheduleRule3.ruleIndex());
-  EXPECT_EQ(1,scheduleRule2.ruleIndex());
-  EXPECT_EQ(3,scheduleRule1.ruleIndex());
+  EXPECT_EQ(0, scheduleRule4.ruleIndex());
+  EXPECT_EQ(2, scheduleRule3.ruleIndex());
+  EXPECT_EQ(1, scheduleRule2.ruleIndex());
+  EXPECT_EQ(3, scheduleRule1.ruleIndex());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex4)
-{
+TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex4) {
   Model model;
   ScheduleRuleset schedule(model);
 
@@ -402,24 +400,23 @@ TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex4)
   ScheduleRule scheduleRule3(schedule);
   ScheduleRule scheduleRule4(schedule);
 
-  ASSERT_EQ(4u,schedule.scheduleRules().size());
+  ASSERT_EQ(4u, schedule.scheduleRules().size());
 
-  EXPECT_EQ(0,scheduleRule4.ruleIndex());
-  EXPECT_EQ(1,scheduleRule3.ruleIndex());
-  EXPECT_EQ(2,scheduleRule2.ruleIndex());
-  EXPECT_EQ(3,scheduleRule1.ruleIndex());
+  EXPECT_EQ(0, scheduleRule4.ruleIndex());
+  EXPECT_EQ(1, scheduleRule3.ruleIndex());
+  EXPECT_EQ(2, scheduleRule2.ruleIndex());
+  EXPECT_EQ(3, scheduleRule1.ruleIndex());
 
   // Move scheduleRule3 to index 0
-  schedule.setScheduleRuleIndex(scheduleRule3,0);
+  schedule.setScheduleRuleIndex(scheduleRule3, 0);
 
-  EXPECT_EQ(1,scheduleRule4.ruleIndex());
-  EXPECT_EQ(0,scheduleRule3.ruleIndex());
-  EXPECT_EQ(2,scheduleRule2.ruleIndex());
-  EXPECT_EQ(3,scheduleRule1.ruleIndex());
+  EXPECT_EQ(1, scheduleRule4.ruleIndex());
+  EXPECT_EQ(0, scheduleRule3.ruleIndex());
+  EXPECT_EQ(2, scheduleRule2.ruleIndex());
+  EXPECT_EQ(3, scheduleRule1.ruleIndex());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex5)
-{
+TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex5) {
   Model model;
   ScheduleRuleset schedule(model);
 
@@ -480,8 +477,7 @@ TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex5)
   EXPECT_EQ(1, scheduleRule4.ruleIndex());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex6)
-{
+TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex6) {
   Model model;
   ScheduleRuleset schedule(model);
 
@@ -542,8 +538,7 @@ TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex6)
   EXPECT_EQ(1, scheduleRule4.ruleIndex());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex7)
-{
+TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex7) {
   Model model;
   ScheduleRuleset schedule(model);
 
@@ -604,8 +599,7 @@ TEST_F(ModelFixture, ScheduleRuleset_setScheduleRuleIndex7)
   EXPECT_EQ(1, scheduleRule4.ruleIndex());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_Clone)
-{
+TEST_F(ModelFixture, ScheduleRuleset_Clone) {
   Model model;
   ScheduleRuleset schedule(model);
 
@@ -614,13 +608,13 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone)
   ScheduleRule scheduleRule3(schedule);
   ScheduleRule scheduleRule4(schedule);
 
-  ASSERT_EQ(4u,schedule.scheduleRules().size());
+  ASSERT_EQ(4u, schedule.scheduleRules().size());
 
   Model model2;
 
   ModelObject modelObject = schedule.clone(model2);
   ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
-  ASSERT_EQ(4u,schedule2.scheduleRules().size());
+  ASSERT_EQ(4u, schedule2.scheduleRules().size());
   ASSERT_NO_THROW(schedule2.scheduleRules()[0].daySchedule());
   ASSERT_NO_THROW(schedule2.scheduleRules()[1].daySchedule());
   ASSERT_NO_THROW(schedule2.scheduleRules()[2].daySchedule());
@@ -629,8 +623,7 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone)
   EXPECT_EQ(model.objects().size(), model2.objects().size());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_Clone2)
-{
+TEST_F(ModelFixture, ScheduleRuleset_Clone2) {
   Model model;
   ScheduleRuleset schedule(model);
 
@@ -639,12 +632,12 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone2)
   ScheduleRule scheduleRule3(schedule);
   ScheduleRule scheduleRule4(schedule);
 
-  ASSERT_EQ(4u,schedule.scheduleRules().size());
+  ASSERT_EQ(4u, schedule.scheduleRules().size());
 
   ModelObject modelObject = schedule.clone(model);
   ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
 
-  ASSERT_EQ(4u,schedule2.scheduleRules().size());
+  ASSERT_EQ(4u, schedule2.scheduleRules().size());
 
   EXPECT_FALSE(schedule.handle() == schedule2.handle());
   EXPECT_FALSE(schedule.scheduleRules()[0].handle() == schedule2.scheduleRules()[0].handle());
@@ -653,8 +646,7 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone2)
   EXPECT_FALSE(schedule.scheduleRules()[3].handle() == schedule2.scheduleRules()[3].handle());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_Clone3)
-{
+TEST_F(ModelFixture, ScheduleRuleset_Clone3) {
   Model model;
   ScheduleTypeLimits typeLimits(model);
 
@@ -674,12 +666,12 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone3)
   ASSERT_TRUE(scheduleRule4.daySchedule().scheduleTypeLimits());
   EXPECT_EQ(typeLimits.handle(), scheduleRule4.daySchedule().scheduleTypeLimits()->handle());
 
-  ASSERT_EQ(4u,schedule.scheduleRules().size());
+  ASSERT_EQ(4u, schedule.scheduleRules().size());
 
   ModelObject modelObject = schedule.clone(model);
   ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
 
-  ASSERT_EQ(4u,schedule2.scheduleRules().size());
+  ASSERT_EQ(4u, schedule2.scheduleRules().size());
 
   EXPECT_FALSE(schedule.handle() == schedule2.handle());
   EXPECT_FALSE(schedule.scheduleRules()[0].handle() == schedule2.scheduleRules()[0].handle());
@@ -690,8 +682,7 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone3)
   modelObject = schedule.clone(model);
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_Clone4)
-{
+TEST_F(ModelFixture, ScheduleRuleset_Clone4) {
   Model model;
   ScheduleTypeLimits typeLimits(model);
   typeLimits.setName(toString(createUUID()));
@@ -720,12 +711,12 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone4)
   ASSERT_TRUE(scheduleRule4.daySchedule().scheduleTypeLimits());
   EXPECT_EQ(typeLimits.handle(), scheduleRule4.daySchedule().scheduleTypeLimits()->handle());
 
-  ASSERT_EQ(4u,schedule.scheduleRules().size());
+  ASSERT_EQ(4u, schedule.scheduleRules().size());
 
   ModelObject modelObject = schedule.clone(model);
   ScheduleRuleset schedule2 = modelObject.cast<ScheduleRuleset>();
 
-  ASSERT_EQ(4u,schedule2.scheduleRules().size());
+  ASSERT_EQ(4u, schedule2.scheduleRules().size());
 
   EXPECT_FALSE(schedule.handle() == schedule2.handle());
   EXPECT_FALSE(schedule.scheduleRules()[0].handle() == schedule2.scheduleRules()[0].handle());
@@ -736,8 +727,7 @@ TEST_F(ModelFixture, ScheduleRuleset_Clone4)
   modelObject = schedule.clone(model);
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_DaySchedule)
-{
+TEST_F(ModelFixture, ScheduleRuleset_DaySchedule) {
   Model model;
   ScheduleRuleset schedule(model);
   ScheduleDay daySchedule = schedule.defaultDaySchedule();
@@ -746,8 +736,7 @@ TEST_F(ModelFixture, ScheduleRuleset_DaySchedule)
   EXPECT_EQ("My Day Schedule", daySchedule.name().get());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_DaySchedule2)
-{
+TEST_F(ModelFixture, ScheduleRuleset_DaySchedule2) {
   Model model;
   ScheduleRuleset schedule(model);
   ScheduleRule rule(schedule);
@@ -757,9 +746,7 @@ TEST_F(ModelFixture, ScheduleRuleset_DaySchedule2)
   EXPECT_EQ("My Day Schedule", daySchedule.name().get());
 }
 
-
-TEST_F(ModelFixture, ScheduleRuleset_InsertObjects)
-{
+TEST_F(ModelFixture, ScheduleRuleset_InsertObjects) {
   Model model;
   ScheduleTypeLimits typeLimits(model);
 
@@ -782,7 +769,7 @@ TEST_F(ModelFixture, ScheduleRuleset_InsertObjects)
   Workspace workspace2 = model.clone();
 
   IdfObjectVector idfObjects1;
-  for (const WorkspaceObject& object : workspace1.objects()){
+  for (const WorkspaceObject& object : workspace1.objects()) {
     // this handle should not exist in the original model
     EXPECT_FALSE(model.getObject(object.handle()));
 
@@ -790,7 +777,7 @@ TEST_F(ModelFixture, ScheduleRuleset_InsertObjects)
   }
 
   IdfObjectVector idfObjects2;
-  for (const WorkspaceObject& object : workspace2.objects()){
+  for (const WorkspaceObject& object : workspace2.objects()) {
     // this handle should not exist in the original model
     EXPECT_FALSE(model.getObject(object.handle()));
 
@@ -811,8 +798,7 @@ TEST_F(ModelFixture, ScheduleRuleset_InsertObjects)
   EXPECT_FALSE(addedObjects.empty());
 }
 
-TEST_F(ModelFixture, ScheduleRuleset_SpecialDays)
-{
+TEST_F(ModelFixture, ScheduleRuleset_SpecialDays) {
   Model model;
   ScheduleTypeLimits typeLimits(model);
 
@@ -836,14 +822,116 @@ TEST_F(ModelFixture, ScheduleRuleset_SpecialDays)
   schedule.setHolidaySchedule(holidaySchedule);
   EXPECT_NE(holidaySchedule.handle(), schedule.holidaySchedule().handle());
 
-  // DefaultDay, the 3 schedules we created, and the 3 clones made by setters = 7
-  EXPECT_EQ(7u, model.getConcreteModelObjects<ScheduleDay>().size());
+  ScheduleDay customDay1Schedule(model);
+  schedule.setCustomDay1Schedule(customDay1Schedule);
+  EXPECT_NE(customDay1Schedule.handle(), schedule.customDay1Schedule().handle());
+
+  ScheduleDay customDay2Schedule(model);
+  schedule.setCustomDay2Schedule(customDay2Schedule);
+  EXPECT_NE(customDay2Schedule.handle(), schedule.customDay2Schedule().handle());
+
+  // DefaultDay, the 5 schedules we created, and the 5 clones made by setters = 11
+  EXPECT_EQ(11u, model.getConcreteModelObjects<ScheduleDay>().size());
 
   schedule.remove();
 
-  EXPECT_EQ(3u, model.getConcreteModelObjects<ScheduleDay>().size());
+  EXPECT_EQ(5u, model.getConcreteModelObjects<ScheduleDay>().size());
   EXPECT_FALSE(winterSchedule.handle().isNull());
   EXPECT_FALSE(summerSchedule.handle().isNull());
+  EXPECT_FALSE(holidaySchedule.handle().isNull());
+  EXPECT_FALSE(customDay1Schedule.handle().isNull());
+  EXPECT_FALSE(customDay2Schedule.handle().isNull());
+}
+
+TEST_F(ModelFixture, ScheduleRuleset_resetSpecialDays) {
+  Model model;
+  ScheduleTypeLimits typeLimits(model);
+
+  ScheduleRuleset schedule(model);
+  schedule.setName("Always_On");
+  EXPECT_EQ("Always_On", schedule.name().get());
+  schedule.setScheduleTypeLimits(typeLimits);
+
+  EXPECT_EQ(1u, model.getConcreteModelObjects<ScheduleDay>().size());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
+
+  // For each of these, the setter clones the original schedule
+  ScheduleDay winterSchedule(model);
+  ScheduleDay summerSchedule(model);
+  ScheduleDay holidaySchedule(model);
+  ScheduleDay customDay1Schedule(model);
+  ScheduleDay customDay2Schedule(model);
+  EXPECT_EQ(6u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.setWinterDesignDaySchedule(winterSchedule);
+  EXPECT_EQ(7u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.setSummerDesignDaySchedule(summerSchedule);
+  EXPECT_EQ(8u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.setHolidaySchedule(holidaySchedule);
+  EXPECT_EQ(9u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.setCustomDay1Schedule(customDay1Schedule);
+  EXPECT_EQ(10u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.setCustomDay2Schedule(customDay2Schedule);
+  // DefaultDay, the 5 schedules we created, and the 5 clones made by setters = 11
+  EXPECT_EQ(11u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  EXPECT_NE(winterSchedule.handle(), schedule.winterDesignDaySchedule().handle());
+  EXPECT_NE(summerSchedule.handle(), schedule.summerDesignDaySchedule().handle());
+  EXPECT_NE(holidaySchedule.handle(), schedule.holidaySchedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
+
+  // reset should delete the special clone it made when setting
+  schedule.resetWinterDesignDaySchedule();
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
+  EXPECT_EQ(10u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.resetSummerDesignDaySchedule();
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
+  EXPECT_EQ(9u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.resetHolidaySchedule();
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
+  EXPECT_EQ(8u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.resetCustomDay1Schedule();
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_NE(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
+  EXPECT_EQ(7u, model.getConcreteModelObjects<ScheduleDay>().size());
+
+  schedule.resetCustomDay2Schedule();
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.winterDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.summerDesignDaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.holidaySchedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay1Schedule().handle());
+  EXPECT_EQ(schedule.defaultDaySchedule().handle(), schedule.customDay2Schedule().handle());
+  EXPECT_EQ(6u, model.getConcreteModelObjects<ScheduleDay>().size());
 }
 
 /*

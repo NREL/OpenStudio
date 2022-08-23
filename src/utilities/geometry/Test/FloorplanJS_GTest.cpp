@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,8 +37,7 @@
 
 using namespace openstudio;
 
-TEST_F(GeometryFixture, FloorplanJS)
-{
+TEST_F(GeometryFixture, FloorplanJS) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
   ASSERT_TRUE(exists(p));
 
@@ -53,8 +52,18 @@ TEST_F(GeometryFixture, FloorplanJS)
   boost::optional<FloorplanJS> floorplan = FloorplanJS::load(contents);
   ASSERT_TRUE(floorplan);
 
+  EXPECT_DOUBLE_EQ(floorplan->northAxis(), 30.0);
+  EXPECT_DOUBLE_EQ(floorplan->latitude(), 40.0);
+  EXPECT_DOUBLE_EQ(floorplan->longitude(), -104.0);
+  EXPECT_DOUBLE_EQ(floorplan->elevation(), 5280.0);
+
   floorplan = FloorplanJS::load(toString(p));
   ASSERT_TRUE(floorplan);
+
+  EXPECT_DOUBLE_EQ(floorplan->northAxis(), 30.0);
+  EXPECT_DOUBLE_EQ(floorplan->latitude(), 40.0);
+  EXPECT_DOUBLE_EQ(floorplan->longitude(), -104.0);
+  EXPECT_DOUBLE_EQ(floorplan->elevation(), 5280.0);
 
   ThreeScene scene = floorplan->toThreeScene(true);
   std::string json = scene.toJSON(false);
@@ -75,5 +84,4 @@ TEST_F(GeometryFixture, FloorplanJS)
     file << json;
     file.close();
   }
-
 }

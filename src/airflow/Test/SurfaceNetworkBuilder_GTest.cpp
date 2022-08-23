@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,14 +49,12 @@
 
 class SurfaceCounter : public openstudio::airflow::SurfaceNetworkBuilder
 {
-public:
-  SurfaceCounter() : openstudio::airflow::SurfaceNetworkBuilder(nullptr)
-  {
+ public:
+  SurfaceCounter() : openstudio::airflow::SurfaceNetworkBuilder(nullptr) {
     clear();
   }
 
-  virtual void clear() override
-  {
+  virtual void clear() override {
     interiorSurface = 0;
     interiorSubSurface = 0;
     exteriorSurface = 0;
@@ -68,34 +66,32 @@ public:
   int interiorSubSurface;
   int exteriorSubSurface;
 
-protected:
-  virtual bool linkExteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface) override
-  {
+ protected:
+  virtual bool linkExteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface) override {
     exteriorSurface++;
     return true;
   }
-  virtual bool linkExteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface, openstudio::model::SubSurface subSurface) override
-  {
+  virtual bool linkExteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface,
+                                      openstudio::model::SubSurface subSurface) override {
     exteriorSubSurface++;
     return true;
   }
   virtual bool linkInteriorSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface,
-    openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace, openstudio::model::ThermalZone adjacentZone) override
-  {
+                                   openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace,
+                                   openstudio::model::ThermalZone adjacentZone) override {
     interiorSurface++;
     return true;
   }
-  virtual bool linkInteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface, openstudio::model::SubSurface subSurface,
-    openstudio::model::SubSurface adjacentSubSurface, openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace, openstudio::model::ThermalZone adjacentZone) override
-  {
+  virtual bool linkInteriorSubSurface(openstudio::model::ThermalZone zone, openstudio::model::Space space, openstudio::model::Surface surface,
+                                      openstudio::model::SubSurface subSurface, openstudio::model::SubSurface adjacentSubSurface,
+                                      openstudio::model::Surface adjacentSurface, openstudio::model::Space adjacentSpace,
+                                      openstudio::model::ThermalZone adjacentZone) override {
     interiorSubSurface++;
     return true;
   }
-
 };
 
-TEST_F(AirflowFixture, SurfaceNetworkBuilder_DemoModel_2012)
-{
+TEST_F(AirflowFixture, SurfaceNetworkBuilder_DemoModel_2012) {
   openstudio::path modelPath = (resourcesPath() / openstudio::toPath("contam") / openstudio::toPath("CONTAMTemplate.osm"));
   openstudio::osversion::VersionTranslator vt;
   boost::optional<openstudio::model::Model> optionalModel = vt.loadModel(modelPath);
@@ -113,11 +109,9 @@ TEST_F(AirflowFixture, SurfaceNetworkBuilder_DemoModel_2012)
   EXPECT_EQ(12, counter.exteriorSurface);
   EXPECT_EQ(0, counter.interiorSubSurface);
   EXPECT_EQ(0, counter.exteriorSubSurface);
-
 }
 
-TEST_F(AirflowFixture, SurfaceNetworkBuilder_DemoModel_2014)
-{
+TEST_F(AirflowFixture, SurfaceNetworkBuilder_DemoModel_2014) {
   openstudio::path modelPath = (resourcesPath() / openstudio::toPath("contam") / openstudio::toPath("CONTAMTemplate.osm"));
   openstudio::osversion::VersionTranslator vt;
   boost::optional<openstudio::model::Model> optionalModel = vt.loadModel(modelPath);

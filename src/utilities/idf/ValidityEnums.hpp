@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,24 +34,31 @@
 
 namespace openstudio {
 
+// clang-format off
+
 /** \class StrictnessLevel
  *  \brief Specifies the desired amount of validity.
  *
- *  \li None - (Almost) anything goes.
+ *  \li None - Anything goes.
+ *  \li Minimal - (Almost) anything goes.
  *  \li Draft - Non-null data is valid.
  *  \li Final - Required and unique data has correct cardinality.
  *
  *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
  *  \code
 OPENSTUDIO_ENUM(StrictnessLevel,
-                ((None))
-                ((Draft))
-                ((Final)) );
+  ((None))
+  ((Minimal))
+  ((Draft))
+  ((Final))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(StrictnessLevel,
-                ((None))
-                ((Draft))
-                ((Final)) );
+  ((None))
+  ((Minimal))
+  ((Draft))
+  ((Final))
+);
 
 /** \class Scope
  *  \brief Indicates whether a ValidityReport or DataError pertains to a single field, a
@@ -60,14 +67,16 @@ OPENSTUDIO_ENUM(StrictnessLevel,
  *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
  *  \code
 OPENSTUDIO_ENUM(Scope,
-                ((Field))
-                ((Object))
-                ((Collection)) );
+  ((Field))
+  ((Object))
+  ((Collection))
+);
  *  \endcode */
 OPENSTUDIO_ENUM(Scope,
-                ((Field))
-                ((Object))
-                ((Collection)) );
+  ((Field))
+  ((Object))
+  ((Collection))
+);
 
 /** \class DataErrorType
  *  \brief Lists the ways in which an Idf field, object, or collection of objects can be invalid
@@ -77,6 +86,8 @@ OPENSTUDIO_ENUM(Scope,
  *  at the lower levels as well.)
  *
  *  Strictness::None
+ *
+ *  Strictness::Minimal
  *
  *  \li NoIdd (field-level, collection-level) - The input data definition is missing or empty.
  *  \li NotInitialized - Data is not ready for use or has been removed from the collection.
@@ -99,25 +110,30 @@ OPENSTUDIO_ENUM(Scope,
  *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
  *  \code
 OPENSTUDIO_ENUM(DataErrorType,
-    ((NoIdd)(input data definition is missing or empty))
-    ((NotInitialized)(data is not ready for use or has been removed from collection))
-    ((DataType)(field-level data is of an incorrect type))
-    ((NumericBound)(numeric data violates a min or max bound))
-    ((NameConflict)(two objects of the same type or with overlapping references also have the same name))
-    ((NullAndRequired)(required data is missing))
-    ((NumberOfFields)(object has too few or too many fields))
-    ((Duplicate)(unique data is duplicated)) );
+  ((NoIdd)(input data definition is missing or empty))
+  ((NotInitialized)(data is not ready for use or has been removed from collection))
+  ((DataType)(field-level data is of an incorrect type))
+  ((NumericBound)(numeric data violates a min or max bound))
+  ((NameConflict)(two objects of the same type or with overlapping references also have the same name))
+  ((NullAndRequired)(required data is missing))
+  ((NumberOfFields)(object has too few or too many fields))
+  ((Duplicate)(unique data is duplicated))
+);
  *  \endcode */
+// cppcheck-suppress syntaxError
 OPENSTUDIO_ENUM(DataErrorType,
-    ((NoIdd)(input data definition is missing or empty))
-    ((NotInitialized)(data is not ready for use or has been removed from collection))
-    ((DataType)(field-level data is of an incorrect type))
-    ((NumericBound)(numeric data violates a min or max bound))
-    ((NameConflict)(two objects of the same type or with overlapping references also have the same name))
-    ((NullAndRequired)(required data is missing))
-    ((NumberOfFields)(object has too few or too many fields))
-    ((Duplicate)(unique data is duplicated)) );
+  ((NoIdd)(input data definition is missing or empty))
+  ((NotInitialized)(data is not ready for use or has been removed from collection))
+  ((DataType)(field-level data is of an incorrect type))
+  ((NumericBound)(numeric data violates a min or max bound))
+  ((NameConflict)(two objects of the same type or with overlapping references also have the same name))
+  ((NullAndRequired)(required data is missing))
+  ((NumberOfFields)(object has too few or too many fields))
+  ((Duplicate)(unique data is duplicated))
+);
 
-} // openstudio
+// clang-format on
 
-#endif // UTILITIES_IDF_VALIDITYENUMS_HPP
+}  // namespace openstudio
+
+#endif  // UTILITIES_IDF_VALIDITYENUMS_HPP

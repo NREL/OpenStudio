@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,8 +45,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, InteriorPartitionSurface_Hierarchy)
-{
+TEST_F(ModelFixture, InteriorPartitionSurface_Hierarchy) {
   Model model;
 
   Space space(model);
@@ -93,8 +92,7 @@ TEST_F(ModelFixture, InteriorPartitionSurface_Hierarchy)
   EXPECT_NE(group.handle(), spaceClone->children()[0].handle());
 }
 
-TEST_F(ModelFixture, InteriorPartitionSurface_DefaultConstruction)
-{
+TEST_F(ModelFixture, InteriorPartitionSurface_DefaultConstruction) {
   Model model;
 
   Space space(model);

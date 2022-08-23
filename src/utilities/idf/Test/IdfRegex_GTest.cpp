@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,30 +35,26 @@
 
 using openstudio::commentRegex::commentWhitespaceOnlyBlock;
 
-TEST_F(IdfFixture, MultipleFieldsPerLine)
-{
+TEST_F(IdfFixture, MultipleFieldsPerLine) {}
 
-}
-
-TEST_F(IdfFixture, CommentsAndWhitespace)
-{
+TEST_F(IdfFixture, CommentsAndWhitespace) {
   std::string testString;
   testString = "\n\n! A comment block\n! Of two lines.\n\n\n\n! More comments.";
   boost::match_results<std::string::const_iterator> m;
-  EXPECT_TRUE(boost::regex_match(testString,m,commentWhitespaceOnlyBlock()));
+  EXPECT_TRUE(boost::regex_match(testString, m, commentWhitespaceOnlyBlock()));
 
   testString = "! A comment line\n code() and other text ! comment\n\n";
-  EXPECT_FALSE(boost::regex_match(testString,m,commentWhitespaceOnlyBlock()));
+  EXPECT_FALSE(boost::regex_match(testString, m, commentWhitespaceOnlyBlock()));
 
   testString = "The quick brown fox jumped over the lazy dog.";
-  EXPECT_FALSE(boost::regex_match(testString,m,commentWhitespaceOnlyBlock()));
+  EXPECT_FALSE(boost::regex_match(testString, m, commentWhitespaceOnlyBlock()));
 
   testString = "";
-  EXPECT_TRUE(boost::regex_match(testString,m,commentWhitespaceOnlyBlock()));
+  EXPECT_TRUE(boost::regex_match(testString, m, commentWhitespaceOnlyBlock()));
 
   testString = "\n\n\n";
-  EXPECT_TRUE(boost::regex_match(testString,m,commentWhitespaceOnlyBlock()));
+  EXPECT_TRUE(boost::regex_match(testString, m, commentWhitespaceOnlyBlock()));
 
   testString = "    \n\n   ";
-  EXPECT_TRUE(boost::regex_match(testString,m,commentWhitespaceOnlyBlock()));
+  EXPECT_TRUE(boost::regex_match(testString, m, commentWhitespaceOnlyBlock()));
 }

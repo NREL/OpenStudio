@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,215 +44,171 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail{
+  namespace detail {
 
-  SetpointManagerFollowOutdoorAirTemperature_Impl::SetpointManagerFollowOutdoorAirTemperature_Impl(
-      const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : SetpointManager_Impl(idfObject, model, keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType());
-  }
+    SetpointManagerFollowOutdoorAirTemperature_Impl::SetpointManagerFollowOutdoorAirTemperature_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                                     bool keepHandle)
+      : SetpointManager_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType());
+    }
 
-  SetpointManagerFollowOutdoorAirTemperature_Impl::SetpointManagerFollowOutdoorAirTemperature_Impl(
+    SetpointManagerFollowOutdoorAirTemperature_Impl::SetpointManagerFollowOutdoorAirTemperature_Impl(
       const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
-    : SetpointManager_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType());
-  }
-
-  SetpointManagerFollowOutdoorAirTemperature_Impl::SetpointManagerFollowOutdoorAirTemperature_Impl(
-      const SetpointManagerFollowOutdoorAirTemperature_Impl& other,
-      Model_Impl* model,
-      bool keepHandles)
-    : SetpointManager_Impl(other,model,keepHandles)
-  {
-  }
-
-  SetpointManagerFollowOutdoorAirTemperature_Impl::~SetpointManagerFollowOutdoorAirTemperature_Impl(){}
-
-  const std::vector<std::string>& SetpointManagerFollowOutdoorAirTemperature_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType SetpointManagerFollowOutdoorAirTemperature_Impl::iddObjectType() const {
-    return SetpointManagerFollowOutdoorAirTemperature::iddObjectType();
-  }
-
-  /** This SPM is allowed on a PlantLoop */
-  bool SetpointManagerFollowOutdoorAirTemperature_Impl::isAllowedOnPlantLoop() const {
-    return true;
-  }
-
-  boost::optional<Node> SetpointManagerFollowOutdoorAirTemperature_Impl::setpointNode() const
-  {
-    return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName);
-  }
-
-  bool SetpointManagerFollowOutdoorAirTemperature_Impl::setSetpointNode(const Node & node )
-  {
-    return setPointer(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName,node.handle());
-  }
-
-  void SetpointManagerFollowOutdoorAirTemperature_Impl::resetSetpointNode()
-  {
-    bool result = setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName,"");
-    OS_ASSERT(result);
-  }
-
-  std::string SetpointManagerFollowOutdoorAirTemperature_Impl::controlVariable() const
-  {
-    return this->getString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable).get();
-  }
-
-  bool SetpointManagerFollowOutdoorAirTemperature_Impl::setControlVariable(const std::string & value)
-  {
-    if( istringEqual(value,"Temperature") )
-    {
-      return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable,"Temperature");
+      : SetpointManager_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == SetpointManagerFollowOutdoorAirTemperature::iddObjectType());
     }
-    else if( istringEqual(value,"MaximumTemperature") )
-    {
-      return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable,"MaximumTemperature");
+
+    SetpointManagerFollowOutdoorAirTemperature_Impl::SetpointManagerFollowOutdoorAirTemperature_Impl(
+      const SetpointManagerFollowOutdoorAirTemperature_Impl& other, Model_Impl* model, bool keepHandles)
+      : SetpointManager_Impl(other, model, keepHandles) {}
+
+    SetpointManagerFollowOutdoorAirTemperature_Impl::~SetpointManagerFollowOutdoorAirTemperature_Impl() {}
+
+    const std::vector<std::string>& SetpointManagerFollowOutdoorAirTemperature_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
     }
-    else if( istringEqual(value,"MinimumTemperature") )
-    {
-      return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable,"MinimumTemperature");
+
+    IddObjectType SetpointManagerFollowOutdoorAirTemperature_Impl::iddObjectType() const {
+      return SetpointManagerFollowOutdoorAirTemperature::iddObjectType();
     }
-    else
-    {
+
+    /** This SPM is allowed on a PlantLoop */
+    bool SetpointManagerFollowOutdoorAirTemperature_Impl::isAllowedOnPlantLoop() const {
+      return true;
+    }
+
+    boost::optional<Node> SetpointManagerFollowOutdoorAirTemperature_Impl::setpointNode() const {
+      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName);
+    }
+
+    bool SetpointManagerFollowOutdoorAirTemperature_Impl::setSetpointNode(const Node& node) {
+      return setPointer(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName, node.handle());
+    }
+
+    void SetpointManagerFollowOutdoorAirTemperature_Impl::resetSetpointNode() {
+      bool result = setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::SetpointNodeorNodeListName, "");
+      OS_ASSERT(result);
+    }
+
+    std::string SetpointManagerFollowOutdoorAirTemperature_Impl::controlVariable() const {
+      return this->getString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable).get();
+    }
+
+    bool SetpointManagerFollowOutdoorAirTemperature_Impl::setControlVariable(const std::string& value) {
+      if (istringEqual(value, "Temperature")) {
+        return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable, "Temperature");
+      } else if (istringEqual(value, "MaximumTemperature")) {
+        return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable, "MaximumTemperature");
+      } else if (istringEqual(value, "MinimumTemperature")) {
+        return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ControlVariable, "MinimumTemperature");
+      } else {
+        return false;
+      }
+    }
+
+    bool SetpointManagerFollowOutdoorAirTemperature_Impl::setReferenceTemperatureType(const std::string& value) {
+      if (istringEqual(value, "OutdoorAirWetBulb")) {
+        return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ReferenceTemperatureType, "OutdoorAirWetBulb");
+      } else if (istringEqual(value, "OutdoorAirDryBulb")) {
+        return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ReferenceTemperatureType, "OutdoorAirDryBulb");
+      }
       return false;
     }
-  }
 
-  bool SetpointManagerFollowOutdoorAirTemperature_Impl::setReferenceTemperatureType(const std::string & value)
-  {
-    if( istringEqual(value,"OutdoorAirWetBulb") )
-    {
-      return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ReferenceTemperatureType,"OutdoorAirWetBulb");
+    std::string SetpointManagerFollowOutdoorAirTemperature_Impl::referenceTemperatureType() const {
+      return getString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ReferenceTemperatureType).get();
     }
-    else if( istringEqual(value,"OutdoorAirDryBulb") )
-    {
-      return this->setString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ReferenceTemperatureType,"OutdoorAirDryBulb");
+
+    double SetpointManagerFollowOutdoorAirTemperature_Impl::offsetTemperatureDifference() const {
+      return getDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::OffsetTemperatureDifference).get();
     }
-    return false;
+
+    bool SetpointManagerFollowOutdoorAirTemperature_Impl::setOffsetTemperatureDifference(double value) {
+      return setDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::OffsetTemperatureDifference, value);
+    }
+
+    double SetpointManagerFollowOutdoorAirTemperature_Impl::maximumSetpointTemperature() const {
+      return getDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MaximumSetpointTemperature).get();
+    }
+
+    bool SetpointManagerFollowOutdoorAirTemperature_Impl::setMaximumSetpointTemperature(double value) {
+      return setDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MaximumSetpointTemperature, value);
+    }
+
+    double SetpointManagerFollowOutdoorAirTemperature_Impl::minimumSetpointTemperature() const {
+      return getDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MinimumSetpointTemperature).get();
+    }
+
+    bool SetpointManagerFollowOutdoorAirTemperature_Impl::setMinimumSetpointTemperature(double value) {
+      return setDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MinimumSetpointTemperature, value);
+    }
+
+  }  // namespace detail
+
+  SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(const Model& model)
+    : SetpointManager(SetpointManagerFollowOutdoorAirTemperature::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>());
+
+    setControlVariable("Temperature");
+    setReferenceTemperatureType("OutdoorAirWetBulb");
+    setOffsetTemperatureDifference(1.5);
+    setMaximumSetpointTemperature(80.0);
+    setMinimumSetpointTemperature(6.0);
   }
 
-  std::string SetpointManagerFollowOutdoorAirTemperature_Impl::referenceTemperatureType() const
-  {
-    return getString(OS_SetpointManager_FollowOutdoorAirTemperatureFields::ReferenceTemperatureType).get();
+  SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(
+    std::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> p)
+    : SetpointManager(std::move(p)) {}
+
+  IddObjectType SetpointManagerFollowOutdoorAirTemperature::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature);
   }
 
-  double SetpointManagerFollowOutdoorAirTemperature_Impl::offsetTemperatureDifference() const
-  {
-    return getDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::OffsetTemperatureDifference).get();
+  boost::optional<Node> SetpointManagerFollowOutdoorAirTemperature::setpointNode() const {
+    return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setpointNode();
   }
 
-  bool SetpointManagerFollowOutdoorAirTemperature_Impl::setOffsetTemperatureDifference(double value)
-  {
-    return setDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::OffsetTemperatureDifference,value);
+  std::string SetpointManagerFollowOutdoorAirTemperature::controlVariable() const {
+    return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->controlVariable();
   }
 
-  double SetpointManagerFollowOutdoorAirTemperature_Impl::maximumSetpointTemperature() const
-  {
-    return getDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MaximumSetpointTemperature).get();
+  bool SetpointManagerFollowOutdoorAirTemperature::setControlVariable(const std::string& value) {
+    return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setControlVariable(value);
   }
 
-  bool SetpointManagerFollowOutdoorAirTemperature_Impl::setMaximumSetpointTemperature(double value)
-  {
-    return setDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MaximumSetpointTemperature,value);
+  std::string SetpointManagerFollowOutdoorAirTemperature::referenceTemperatureType() const {
+    return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->referenceTemperatureType();
   }
 
-  double SetpointManagerFollowOutdoorAirTemperature_Impl::minimumSetpointTemperature() const
-  {
-    return getDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MinimumSetpointTemperature).get();
+  bool SetpointManagerFollowOutdoorAirTemperature::setReferenceTemperatureType(const std::string& value) {
+    return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setReferenceTemperatureType(value);
   }
 
-  bool SetpointManagerFollowOutdoorAirTemperature_Impl::setMinimumSetpointTemperature(double value)
-  {
-    return setDouble(OS_SetpointManager_FollowOutdoorAirTemperatureFields::MinimumSetpointTemperature,value);
+  double SetpointManagerFollowOutdoorAirTemperature::offsetTemperatureDifference() const {
+    return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->offsetTemperatureDifference();
   }
 
-} // detail
+  bool SetpointManagerFollowOutdoorAirTemperature::setOffsetTemperatureDifference(double value) {
+    return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setOffsetTemperatureDifference(value);
+  }
 
-SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(const Model& model)
-  : SetpointManager(SetpointManagerFollowOutdoorAirTemperature::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>());
+  double SetpointManagerFollowOutdoorAirTemperature::maximumSetpointTemperature() const {
+    return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->maximumSetpointTemperature();
+  }
 
-  setControlVariable("Temperature");
-  setReferenceTemperatureType("OutdoorAirWetBulb");
-  setOffsetTemperatureDifference(1.5);
-  setMaximumSetpointTemperature(80.0);
-  setMinimumSetpointTemperature(6.0);
-}
+  bool SetpointManagerFollowOutdoorAirTemperature::setMaximumSetpointTemperature(double value) {
+    return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setMaximumSetpointTemperature(value);
+  }
 
-SetpointManagerFollowOutdoorAirTemperature::SetpointManagerFollowOutdoorAirTemperature(std::shared_ptr<detail::SetpointManagerFollowOutdoorAirTemperature_Impl> p)
-  : SetpointManager(std::move(p))
-{
-}
+  double SetpointManagerFollowOutdoorAirTemperature::minimumSetpointTemperature() const {
+    return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->minimumSetpointTemperature();
+  }
 
-IddObjectType SetpointManagerFollowOutdoorAirTemperature::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_SetpointManager_FollowOutdoorAirTemperature);
-}
+  bool SetpointManagerFollowOutdoorAirTemperature::setMinimumSetpointTemperature(double value) {
+    return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setMinimumSetpointTemperature(value);
+  }
 
-boost::optional<Node> SetpointManagerFollowOutdoorAirTemperature::setpointNode() const
-{
-  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setpointNode();
-}
+}  // namespace model
 
-std::string SetpointManagerFollowOutdoorAirTemperature::controlVariable() const
-{
-  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->controlVariable();
-}
-
-bool SetpointManagerFollowOutdoorAirTemperature::setControlVariable(const std::string & value)
-{
-  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setControlVariable(value);
-}
-
-std::string SetpointManagerFollowOutdoorAirTemperature::referenceTemperatureType() const
-{
-  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->referenceTemperatureType();
-}
-
-bool SetpointManagerFollowOutdoorAirTemperature::setReferenceTemperatureType(const std::string & value)
-{
-  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setReferenceTemperatureType(value);
-}
-
-double SetpointManagerFollowOutdoorAirTemperature::offsetTemperatureDifference() const
-{
-  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->offsetTemperatureDifference();
-}
-
-bool SetpointManagerFollowOutdoorAirTemperature::setOffsetTemperatureDifference(double value)
-{
-  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setOffsetTemperatureDifference(value);
-}
-
-double SetpointManagerFollowOutdoorAirTemperature::maximumSetpointTemperature() const
-{
-  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->maximumSetpointTemperature();
-}
-
-bool SetpointManagerFollowOutdoorAirTemperature::setMaximumSetpointTemperature(double value)
-{
-  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setMaximumSetpointTemperature(value);
-}
-
-double SetpointManagerFollowOutdoorAirTemperature::minimumSetpointTemperature() const
-{
-  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->minimumSetpointTemperature();
-}
-
-bool SetpointManagerFollowOutdoorAirTemperature::setMinimumSetpointTemperature(double value)
-{
-  return getImpl<detail::SetpointManagerFollowOutdoorAirTemperature_Impl>()->setMinimumSetpointTemperature(value);
-}
-
-} // model
-
-} // openstudio
-
+}  // namespace openstudio

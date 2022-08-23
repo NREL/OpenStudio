@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,9 +52,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture, Lights_DefaultConstructor)
-{
+TEST_F(ModelFixture, Lights_DefaultConstructor) {
   Model model;
 
   // make a new lights object
@@ -74,8 +72,7 @@ TEST_F(ModelFixture, Lights_DefaultConstructor)
   EXPECT_FALSE(definition.wattsperPerson());
 }
 
-TEST_F(ModelFixture, Lights_LightingLevels)
-{
+TEST_F(ModelFixture, Lights_LightingLevels) {
   Model model;
 
   // make a new lights object
@@ -93,12 +90,12 @@ TEST_F(ModelFixture, Lights_LightingLevels)
   EXPECT_EQ(1.0, definition.getLightingPower(100.0, 0.0));
   EXPECT_EQ(1.0, definition.getLightingPower(100.0, 10.0));
   EXPECT_EQ(1.0, definition.getLightingPower(0.0, 10.0));
-  EXPECT_THROW(definition.getPowerPerFloorArea(0.0, 0.0),std::exception); // division by 0
+  EXPECT_THROW(definition.getPowerPerFloorArea(0.0, 0.0), std::exception);  // division by 0
   EXPECT_EQ(0.01, definition.getPowerPerFloorArea(100.0, 0.0));
   EXPECT_EQ(0.01, definition.getPowerPerFloorArea(100.0, 10.0));
-  EXPECT_THROW(definition.getPowerPerFloorArea(0.0, 10.0),std::exception);  // division by 0
-  EXPECT_THROW(definition.getPowerPerPerson(0.0, 0.0),std::exception);  // division by 0
-  EXPECT_THROW(definition.getPowerPerPerson(100.0, 0.0),std::exception);  // division by 0
+  EXPECT_THROW(definition.getPowerPerFloorArea(0.0, 10.0), std::exception);  // division by 0
+  EXPECT_THROW(definition.getPowerPerPerson(0.0, 0.0), std::exception);      // division by 0
+  EXPECT_THROW(definition.getPowerPerPerson(100.0, 0.0), std::exception);    // division by 0
   EXPECT_EQ(0.1, definition.getPowerPerPerson(100.0, 10.0));
   EXPECT_EQ(0.1, definition.getPowerPerPerson(0.0, 10.0));
 
@@ -117,8 +114,8 @@ TEST_F(ModelFixture, Lights_LightingLevels)
   EXPECT_EQ(1.0, definition.getPowerPerFloorArea(100.0, 0.0));
   EXPECT_EQ(1.0, definition.getPowerPerFloorArea(100.0, 10.0));
   EXPECT_EQ(1.0, definition.getPowerPerFloorArea(0.0, 10.0));
-  EXPECT_THROW(definition.getPowerPerPerson(0.0, 0.0),std::exception);  // 0.0/0.0
-  EXPECT_THROW(definition.getPowerPerPerson(100.0, 0.0),std::exception);   // division by 0.0
+  EXPECT_THROW(definition.getPowerPerPerson(0.0, 0.0), std::exception);    // 0.0/0.0
+  EXPECT_THROW(definition.getPowerPerPerson(100.0, 0.0), std::exception);  // division by 0.0
   EXPECT_EQ(10.0, definition.getPowerPerPerson(100.0, 10.0));
   EXPECT_EQ(0.0, definition.getPowerPerPerson(0.0, 10.0));
 
@@ -133,18 +130,17 @@ TEST_F(ModelFixture, Lights_LightingLevels)
   EXPECT_EQ(0.0, definition.getLightingPower(100.0, 0.0));
   EXPECT_EQ(10.0, definition.getLightingPower(100.0, 10.0));
   EXPECT_EQ(10.0, definition.getLightingPower(0.0, 10.0));
-  EXPECT_THROW(definition.getPowerPerFloorArea(0.0, 0.0),std::exception); // 0/0
+  EXPECT_THROW(definition.getPowerPerFloorArea(0.0, 0.0), std::exception);  // 0/0
   EXPECT_EQ(0.0, definition.getPowerPerFloorArea(100.0, 0.0));
   EXPECT_EQ(0.1, definition.getPowerPerFloorArea(100.0, 10.0));
-  EXPECT_THROW(definition.getPowerPerFloorArea(0.0, 10.0),std::exception);
+  EXPECT_THROW(definition.getPowerPerFloorArea(0.0, 10.0), std::exception);
   EXPECT_EQ(1.0, definition.getPowerPerPerson(0.0, 0.0));
   EXPECT_EQ(1.0, definition.getPowerPerPerson(100.0, 0.0));
   EXPECT_EQ(1.0, definition.getPowerPerPerson(100.0, 10.0));
   EXPECT_EQ(1.0, definition.getPowerPerPerson(0.0, 10.0));
 }
 
-TEST_F(ModelFixture, Lights_Remove)
-{
+TEST_F(ModelFixture, Lights_Remove) {
   Model model;
 
   LightsDefinition definition(model);
@@ -161,8 +157,7 @@ TEST_F(ModelFixture, Lights_Remove)
   EXPECT_EQ(1u, model.numObjects());
 }
 
-TEST_F(ModelFixture, Lights_Remove2)
-{
+TEST_F(ModelFixture, Lights_Remove2) {
   Model model;
 
   LightsDefinition definition(model);
@@ -180,8 +175,7 @@ TEST_F(ModelFixture, Lights_Remove2)
   EXPECT_EQ(2u, model.numObjects());
 }
 
-TEST_F(ModelFixture, Lights_RemoveDefinition)
-{
+TEST_F(ModelFixture, Lights_RemoveDefinition) {
   Model model;
 
   LightsDefinition definition(model);
@@ -199,8 +193,7 @@ TEST_F(ModelFixture, Lights_RemoveDefinition)
   EXPECT_EQ(0u, model.numObjects());
 }
 
-TEST_F(ModelFixture, Lights_RemoveDefinition2)
-{
+TEST_F(ModelFixture, Lights_RemoveDefinition2) {
   Model model;
 
   LightsDefinition definition(model);
@@ -220,21 +213,18 @@ TEST_F(ModelFixture, Lights_RemoveDefinition2)
   EXPECT_EQ(0u, model.numObjects());
 }
 
-TEST_F(ModelFixture, Lights_ExampleModel)
-{
+TEST_F(ModelFixture, Lights_ExampleModel) {
   Model model = exampleModel();
 
   std::vector<Lights> lights = model.getModelObjects<Lights>();
   EXPECT_FALSE(lights.empty());
 
-  for (Lights light : lights){
+  for (Lights light : lights) {
     EXPECT_TRUE(light.schedule());
   }
-
 }
 
-TEST_F(ModelFixture, Lights_Precision)
-{
+TEST_F(ModelFixture, Lights_Precision) {
   Model model;
 
   LightsDefinition definition(model);
@@ -248,7 +238,7 @@ TEST_F(ModelFixture, Lights_Precision)
   std::string testString = definition.getString(OS_Lights_DefinitionFields::LightingLevel).get();
   EXPECT_EQ("0.01", testString);
 
-  for (unsigned i = 0; i < 100; i++){
+  for (unsigned i = 0; i < 100; i++) {
     EXPECT_TRUE(definition.setLightingLevel(watts));
     ASSERT_TRUE(definition.lightingLevel());
     EXPECT_EQ(watts, definition.lightingLevel().get());
@@ -266,7 +256,7 @@ TEST_F(ModelFixture, Lights_Precision)
   testString = definition.getString(OS_Lights_DefinitionFields::LightingLevel).get();
   EXPECT_EQ("0.03", testString);
 
-  for (unsigned i = 0; i < 100; i++){
+  for (unsigned i = 0; i < 100; i++) {
     EXPECT_TRUE(definition.setLightingLevel(watts));
     ASSERT_TRUE(definition.lightingLevel());
     EXPECT_EQ(watts, definition.lightingLevel().get());
@@ -284,7 +274,7 @@ TEST_F(ModelFixture, Lights_Precision)
   testString = definition.getString(OS_Lights_DefinitionFields::LightingLevel).get();
   EXPECT_EQ("0.05", testString);
 
-  for (unsigned i = 0; i < 100; i++){
+  for (unsigned i = 0; i < 100; i++) {
     EXPECT_TRUE(definition.setLightingLevel(watts));
     ASSERT_TRUE(definition.lightingLevel());
     EXPECT_EQ(watts, definition.lightingLevel().get());
@@ -302,7 +292,7 @@ TEST_F(ModelFixture, Lights_Precision)
   testString = definition.getString(OS_Lights_DefinitionFields::LightingLevel).get();
   EXPECT_EQ("0.9", testString);
 
-  for (unsigned i = 0; i < 100; i++){
+  for (unsigned i = 0; i < 100; i++) {
     EXPECT_TRUE(definition.setLightingLevel(watts));
     ASSERT_TRUE(definition.lightingLevel());
     EXPECT_EQ(watts, definition.lightingLevel().get());
@@ -320,8 +310,7 @@ TEST_F(ModelFixture, Lights_Precision)
   EXPECT_TRUE(x1 == x2);
 }
 
-TEST_F(ModelFixture, Lights_Costs)
-{
+TEST_F(ModelFixture, Lights_Costs) {
   Model model;
 
   // make a new lights object
@@ -365,8 +354,7 @@ TEST_F(ModelFixture, Lights_Costs)
   EXPECT_EQ(0u, model.numObjects());
 }
 
-TEST_F(ModelFixture, Lights_Costs2)
-{
+TEST_F(ModelFixture, Lights_Costs2) {
   Model model;
 
   // make a new lights object
@@ -438,7 +426,6 @@ TEST_F(ModelFixture, Lights_Costs2)
   EXPECT_FALSE(definitionCost.costedQuantity());
   EXPECT_FALSE(definitionCost.costedThermalZones());
 }
-
 
 TEST_F(ModelFixture, Lights_FloorArea) {
   Model model;

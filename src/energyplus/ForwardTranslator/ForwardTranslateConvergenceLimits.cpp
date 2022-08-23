@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,37 +38,33 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateConvergenceLimits( ConvergenceLimits & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::ConvergenceLimits);
+  boost::optional<IdfObject> ForwardTranslator::translateConvergenceLimits(ConvergenceLimits& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::ConvergenceLimits);
 
-  if (OptionalInt i = modelObject.minimumSystemTimestep()) {
-    idfObject.setInt(ConvergenceLimitsFields::MinimumSystemTimestep,*i);
-  }else{
-    // EnergyPlus IDD has a note saying 1 is the default but does not actually list it as the default
-    // A severe error message is issued if this field is blank
-    idfObject.setInt(ConvergenceLimitsFields::MinimumSystemTimestep,1);
+    if (OptionalInt i = modelObject.minimumSystemTimestep()) {
+      idfObject.setInt(ConvergenceLimitsFields::MinimumSystemTimestep, *i);
+    } else {
+      // EnergyPlus IDD has a note saying 1 is the default but does not actually list it as the default
+      // A severe error message is issued if this field is blank
+      idfObject.setInt(ConvergenceLimitsFields::MinimumSystemTimestep, 1);
+    }
+
+    if (!modelObject.isMaximumHVACIterationsDefaulted()) {
+      idfObject.setInt(ConvergenceLimitsFields::MaximumHVACIterations, modelObject.maximumHVACIterations());
+    }
+
+    if (!modelObject.isMinimumPlantIterationsDefaulted()) {
+      idfObject.setInt(ConvergenceLimitsFields::MinimumPlantIterations, modelObject.minimumPlantIterations());
+    }
+
+    if (!modelObject.isMaximumPlantIterationsDefaulted()) {
+      idfObject.setInt(ConvergenceLimitsFields::MaximumPlantIterations, modelObject.maximumPlantIterations());
+    }
+
+    m_idfObjects.push_back(idfObject);
+
+    return idfObject;
   }
 
-  if (!modelObject.isMaximumHVACIterationsDefaulted()) {
-    idfObject.setInt(ConvergenceLimitsFields::MaximumHVACIterations,
-                     modelObject.maximumHVACIterations());
-  }
-
-  if (!modelObject.isMinimumPlantIterationsDefaulted()) {
-    idfObject.setInt(ConvergenceLimitsFields::MinimumPlantIterations,
-                     modelObject.minimumPlantIterations());
-  }
-
-  if (!modelObject.isMaximumPlantIterationsDefaulted()) {
-    idfObject.setInt(ConvergenceLimitsFields::MaximumPlantIterations,
-                     modelObject.maximumPlantIterations());
-  }
-
-  m_idfObjects.push_back(idfObject);
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

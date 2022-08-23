@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,126 +39,127 @@
 namespace openstudio {
 namespace model {
 
-class PlanarSurface;
+  class PlanarSurface;
 
-namespace detail {
+  namespace detail {
 
-  class GeneratorPVWatts_Impl;
+    class GeneratorPVWatts_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** GeneratorPVWatts is a Generator that wraps the OpenStudio IDD object 'OS:Generator:PVWatts'. */
-class MODEL_API GeneratorPVWatts : public Generator {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** GeneratorPVWatts is a Generator that wraps the OpenStudio IDD object 'OS:Generator:PVWatts'. */
+  class MODEL_API GeneratorPVWatts : public Generator
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit GeneratorPVWatts(const Model& model, double dcSystemCapacity);
+    explicit GeneratorPVWatts(const Model& model, double dcSystemCapacity);
 
-  explicit GeneratorPVWatts(const Model& model, const PlanarSurface& surface, double dcSystemCapacity);
+    explicit GeneratorPVWatts(const Model& model, const PlanarSurface& surface, double dcSystemCapacity);
 
-  virtual ~GeneratorPVWatts() {}
+    virtual ~GeneratorPVWatts() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string pvWattsVersion() const;
+    std::string pvWattsVersion() const;
 
-  double dcSystemCapacity() const;
+    double dcSystemCapacity() const;
 
-  std::string moduleType() const;
+    std::string moduleType() const;
 
-  bool isModuleTypeDefaulted() const;
+    bool isModuleTypeDefaulted() const;
 
-  std::string arrayType() const;
+    std::string arrayType() const;
 
-  bool isArrayTypeDefaulted() const;
+    bool isArrayTypeDefaulted() const;
 
-  double systemLosses() const;
+    double systemLosses() const;
 
-  bool isSystemLossesDefaulted() const;
+    bool isSystemLossesDefaulted() const;
 
-  double tiltAngle() const;
+    double tiltAngle() const;
 
-  bool isTiltAngleDefaulted() const;
+    bool isTiltAngleDefaulted() const;
 
-  double azimuthAngle() const;
+    double azimuthAngle() const;
 
-  bool isAzimuthAngleDefaulted() const;
+    bool isAzimuthAngleDefaulted() const;
 
-  boost::optional<PlanarSurface> surface() const;
+    boost::optional<PlanarSurface> surface() const;
 
-  double groundCoverageRatio() const;
+    double groundCoverageRatio() const;
 
-  bool isGroundCoverageRatioDefaulted() const;
+    bool isGroundCoverageRatioDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setDCSystemCapacity(double dcSystemCapacity);
+    bool setDCSystemCapacity(double dcSystemCapacity);
 
-  bool setModuleType(std::string moduleType);
+    bool setModuleType(std::string moduleType);
 
-  void resetModuleType();
+    void resetModuleType();
 
-  bool setArrayType(std::string arrayType);
+    bool setArrayType(std::string arrayType);
 
-  void resetArrayType();
+    void resetArrayType();
 
-  bool setSystemLosses(double systemLosses);
+    bool setSystemLosses(double systemLosses);
 
-  void resetSystemLosses();
+    void resetSystemLosses();
 
-  bool setTiltAngle(double tiltAngle);
+    bool setTiltAngle(double tiltAngle);
 
-  void resetTiltAngle();
+    void resetTiltAngle();
 
-  bool setAzimuthAngle(double azimuthAngle);
+    bool setAzimuthAngle(double azimuthAngle);
 
-  void resetAzimuthAngle();
+    void resetAzimuthAngle();
 
-  bool setSurface(const PlanarSurface& surface);
+    bool setSurface(const PlanarSurface& surface);
 
-  void resetSurface();
+    void resetSurface();
 
-  bool setGroundCoverageRatio(double groundCoverageRatio);
+    bool setGroundCoverageRatio(double groundCoverageRatio);
 
-  void resetGroundCoverageRatio();
+    void resetGroundCoverageRatio();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
+    //@}
+   protected:
+    /// @cond
 
-   typedef detail::GeneratorPVWatts_Impl ImplType;
+    typedef detail::GeneratorPVWatts_Impl ImplType;
 
-   explicit GeneratorPVWatts(std::shared_ptr<detail::GeneratorPVWatts_Impl> impl);
+    explicit GeneratorPVWatts(std::shared_ptr<detail::GeneratorPVWatts_Impl> impl);
 
-   friend class detail::GeneratorPVWatts_Impl;
-   friend class Model;
-   friend class IdfObject;
-   friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::GeneratorPVWatts_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.GeneratorPVWatts");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GeneratorPVWatts");
+  };
 
-/** \relates GeneratorPVWatts*/
-typedef boost::optional<GeneratorPVWatts> OptionalGeneratorPVWatts;
+  /** \relates GeneratorPVWatts*/
+  typedef boost::optional<GeneratorPVWatts> OptionalGeneratorPVWatts;
 
-/** \relates GeneratorPVWatts*/
-typedef std::vector<GeneratorPVWatts> GeneratorPVWattsVector;
+  /** \relates GeneratorPVWatts*/
+  typedef std::vector<GeneratorPVWatts> GeneratorPVWattsVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GENERATORPVWATTS_HPP
+#endif  // MODEL_GENERATORPVWATTS_HPP

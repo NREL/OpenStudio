@@ -10,6 +10,15 @@
   %rename(toString) openstudio::WorkflowStepResult::string;
   %rename(toString) openstudio::WorkflowStep::string;
   %rename(toString) openstudio::WorkflowJSON::string;
+  %rename(toString) openstudio::CSVFile::string;
+  %rename(toString) openstudio::StandardsJSON::string;
+
+  // Overload resolution
+  %ignore openstudio::WorkflowStepValue::WorkflowStepValue(std::string const&, char const*);
+  %ignore openstudio::MeasureStep::setArgument(std::string const&, char const*);
+
+  // Ignore Json::Value return type
+  %ignore openstudio::StandardsJSON::getPrimaryKey;
 
 #endif
 
@@ -56,6 +65,12 @@
 
 %template(EpwDataPointVector) std::vector<openstudio::EpwDataPoint>;
 %template(EpwDesignConditionVector) std::vector<openstudio::EpwDesignCondition>;
+%template(OptionalEpwDesignCondition) boost::optional<openstudio::EpwDesignCondition>;
+
+%ignore std::vector<openstudio::EpwHoliday>::vector(size_type);
+%ignore std::vector<openstudio::EpwHoliday>::resize(size_type);
+%template(EpwHolidayVector) std::vector< openstudio::EpwHoliday >;
+
 %template(OptionalEpwDataPoint) boost::optional<openstudio::EpwDataPoint>;
 %template(OptionalAirState) boost::optional<openstudio::AirState>;
 

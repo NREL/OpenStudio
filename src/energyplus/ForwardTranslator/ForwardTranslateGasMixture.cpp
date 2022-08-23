@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,30 +42,28 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateGasMixture( GasMixture & modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::WindowMaterial_GasMixture);
+  boost::optional<IdfObject> ForwardTranslator::translateGasMixture(GasMixture& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::WindowMaterial_GasMixture);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(WindowMaterial_GasMixtureFields::Name, modelObject.name().get());
+    idfObject.setString(WindowMaterial_GasMixtureFields::Name, modelObject.name().get());
 
-  idfObject.setDouble(WindowMaterial_GasMixtureFields::Thickness, modelObject.thickness());
+    idfObject.setDouble(WindowMaterial_GasMixtureFields::Thickness, modelObject.thickness());
 
-  idfObject.setInt(WindowMaterial_GasMixtureFields::NumberofGasesinMixture, modelObject.numGases());
+    idfObject.setInt(WindowMaterial_GasMixtureFields::NumberofGasesinMixture, modelObject.numGases());
 
-  int fieldIndex = WindowMaterial_GasMixtureFields::Gas1Type;
-  for (unsigned gasIndex = 0; gasIndex < modelObject.numGases(); ++gasIndex){
+    int fieldIndex = WindowMaterial_GasMixtureFields::Gas1Type;
+    for (unsigned gasIndex = 0; gasIndex < modelObject.numGases(); ++gasIndex) {
 
-    idfObject.setString(fieldIndex++, modelObject.getGasType(gasIndex));
+      idfObject.setString(fieldIndex++, modelObject.getGasType(gasIndex));
 
-    idfObject.setDouble(fieldIndex++, modelObject.getGasFraction(gasIndex));
+      idfObject.setDouble(fieldIndex++, modelObject.getGasFraction(gasIndex));
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  return boost::optional<IdfObject>(idfObject);
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

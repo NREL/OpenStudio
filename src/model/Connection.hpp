@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,59 +37,57 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class Connection_Impl;
-} // detail
+  namespace detail {
+    class Connection_Impl;
+  }  // namespace detail
 
-class MODEL_API Connection : public ModelObject {
- public:
+  class MODEL_API Connection : public ModelObject
+  {
+   public:
+    // constructor
+    explicit Connection(const Model& model);
 
-  // constructor
-  explicit Connection(const Model& model);
+    virtual ~Connection() {}
 
-  virtual ~Connection() {}
+    boost::optional<ModelObject> sourceObject() const;
 
-  boost::optional<ModelObject> sourceObject() const;
+    boost::optional<unsigned> sourceObjectPort() const;
 
-  boost::optional<unsigned> sourceObjectPort() const;
+    boost::optional<ModelObject> targetObject() const;
 
-  boost::optional<ModelObject> targetObject() const;
+    boost::optional<unsigned> targetObjectPort() const;
 
-  boost::optional<unsigned> targetObjectPort() const;
+    bool setSourceObject(ModelObject object);
 
-  bool setSourceObject(ModelObject object);
+    bool setSourceObjectPort(unsigned port);
 
-  bool setSourceObjectPort(unsigned port);
+    bool setTargetObject(ModelObject object);
 
-  bool setTargetObject(ModelObject object);
+    bool setTargetObjectPort(unsigned port);
 
-  bool setTargetObjectPort(unsigned port);
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+   protected:
+    typedef detail::Connection_Impl ImplType;
 
- protected:
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::ModelObject_Impl;
 
-  typedef detail::Connection_Impl ImplType;
+    // constructor
+    explicit Connection(std::shared_ptr<detail::Connection_Impl> impl);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::ModelObject_Impl;
+   private:
+    REGISTER_LOGGER("openstudio.model.Connection");
+  };
 
-  // constructor
-  explicit Connection(std::shared_ptr<detail::Connection_Impl> impl);
+  /** \relates Connection */
+  typedef boost::optional<Connection> OptionalConnection;
 
- private:
+  /** \relates Connection */
+  typedef std::vector<Connection> ConnectionVector;
 
-  REGISTER_LOGGER("openstudio.model.Connection");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates Connection */
-typedef boost::optional<Connection> OptionalConnection;
-
-/** \relates Connection */
-typedef std::vector<Connection> ConnectionVector;
-
-  } // model
-} // openstudio
-
-#endif // MODEL_CONNECTION_HPP
+#endif  // MODEL_CONNECTION_HPP

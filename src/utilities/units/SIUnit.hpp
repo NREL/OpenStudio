@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,39 +38,19 @@ namespace detail {
 
   class SIUnit_Impl;
 
-} // detail
+}  // namespace detail
 
 /** Structure to hold SIUnit exponents needed for SIUnit construction. The first seven units
  *  are true base units in the SI system. The last four are, strictly speaking, derived and/or
  *  dimensionless units, but have meanings and conversions that are easier to express when they
  *  are broken out into distinct elements. \relates SIUnit */
-struct UTILITIES_API SIExpnt {
+struct UTILITIES_API SIExpnt
+{
  public:
-  SIExpnt(int kg=0,
-          int m=0,
-          int s=0,
-          int K=0,
-          int A=0,
-          int cd=0,
-          int mol=0,
-          int rad=0,
-          int sr=0,
-          int people=0,
-          int cycle=0,
-          int dollar=0)
-  : m_kg(kg),
-    m_m(m),
-    m_s(s),
-    m_K(K),
-    m_A(A),
-    m_cd(cd),
-    m_mol(mol),
-    m_rad(rad),
-    m_sr(sr),
-    m_people(people),
-    m_cycle(cycle),
-    m_dollar(dollar)
-  {}
+  SIExpnt(int kg = 0, int m = 0, int s = 0, int K = 0, int A = 0, int cd = 0, int mol = 0, int rad = 0, int sr = 0, int people = 0, int cycle = 0,
+          int dollar = 0)
+    : m_kg(kg), m_m(m), m_s(s), m_K(K), m_A(A), m_cd(cd), m_mol(mol), m_rad(rad), m_sr(sr), m_people(people), m_cycle(cycle), m_dollar(dollar) {}
+
  private:
   int m_kg;
   int m_m;
@@ -91,7 +71,8 @@ struct UTILITIES_API SIExpnt {
 /** SIUnit is a Unit with baseUnits are fixed by its constructors, see SIExpnt. setBaseUnitExponent
  *  throws an exception if any other string is passed in as a baseUnit. SIUnit.hpp declares related
 *   operators and UnitFactory callback functions. */
-class UTILITIES_API SIUnit : public Unit {
+class UTILITIES_API SIUnit : public Unit
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -103,9 +84,7 @@ class UTILITIES_API SIUnit : public Unit {
    *  \param[in] exponents holds the exponents for each base unit.
    *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  SIUnit(const SIExpnt& exponents=SIExpnt(),
-         int scaleExponent=0,
-         const std::string& prettyString="");
+  SIUnit(const SIExpnt& exponents = SIExpnt(), int scaleExponent = 0, const std::string& prettyString = "");
 
   /** Alternate constructor. Specify the abbreviation of the scale, rather than its
    *  exponent. Example: \verbatim
@@ -116,9 +95,7 @@ class UTILITIES_API SIUnit : public Unit {
    *    "k" for kilo.
    *  \param[in] exponents holds the exponents for each base unit.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  SIUnit(const std::string& scaleAbbreviation,
-         const SIExpnt& exponents=SIExpnt(),
-         const std::string& prettyString="");
+  SIUnit(const std::string& scaleAbbreviation, const SIExpnt& exponents = SIExpnt(), const std::string& prettyString = "");
 
   virtual ~SIUnit() {}
 
@@ -134,7 +111,6 @@ class UTILITIES_API SIUnit : public Unit {
 
   /// @endcond
  private:
-
   REGISTER_LOGGER("openstudio.units.SIUnit");
 };
 
@@ -223,7 +199,6 @@ UTILITIES_API SIUnit createSIHeatCapacity();
 
 //@}
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_SIUNIT_HPP
-
+#endif  // UTILITIES_UNITS_SIUNIT_HPP

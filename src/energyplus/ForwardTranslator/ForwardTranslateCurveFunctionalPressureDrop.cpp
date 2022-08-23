@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,36 +43,34 @@ using namespace std;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCurveFunctionalPressureDrop(CurveFunctionalPressureDrop& modelObject)
-{
-  IdfObject idfObject(IddObjectType::Curve_Functional_PressureDrop);
+  boost::optional<IdfObject> ForwardTranslator::translateCurveFunctionalPressureDrop(CurveFunctionalPressureDrop& modelObject) {
+    IdfObject idfObject(IddObjectType::Curve_Functional_PressureDrop);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  OptionalString s;
-  OptionalDouble d;
+    OptionalString s;
+    OptionalDouble d;
 
-  if((s = modelObject.name())) {
-    idfObject.setName(*s);
+    if ((s = modelObject.name())) {
+      idfObject.setName(*s);
+    }
+
+    idfObject.setDouble(Curve_Functional_PressureDropFields::Diameter, modelObject.diameter());
+    if ((d = modelObject.minorLossCoefficient())) {
+      idfObject.setDouble(Curve_Functional_PressureDropFields::MinorLossCoefficient, *d);
+    }
+    if ((d = modelObject.length())) {
+      idfObject.setDouble(Curve_Functional_PressureDropFields::Length, *d);
+    }
+    if ((d = modelObject.roughness())) {
+      idfObject.setDouble(Curve_Functional_PressureDropFields::Roughness, *d);
+    }
+    if ((d = modelObject.fixedFrictionFactor())) {
+      idfObject.setDouble(Curve_Functional_PressureDropFields::FixedFrictionFactor, *d);
+    }
+
+    return idfObject;
   }
 
-  idfObject.setDouble(Curve_Functional_PressureDropFields::Diameter,modelObject.diameter());
-  if ((d = modelObject.minorLossCoefficient())) {
-    idfObject.setDouble(Curve_Functional_PressureDropFields::MinorLossCoefficient,*d);
-  }
-  if ((d = modelObject.length())) {
-    idfObject.setDouble(Curve_Functional_PressureDropFields::Length,*d);
-  }
-  if ((d = modelObject.roughness())) {
-    idfObject.setDouble(Curve_Functional_PressureDropFields::Roughness,*d);
-  }
-  if ((d = modelObject.fixedFrictionFactor())) {
-    idfObject.setDouble(Curve_Functional_PressureDropFields::FixedFrictionFactor,*d);
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
-
+}  // namespace energyplus
+}  // namespace openstudio

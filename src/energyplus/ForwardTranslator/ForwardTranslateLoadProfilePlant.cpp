@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,50 +43,48 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateLoadProfilePlant( LoadProfilePlant& modelObject )
-{
-  OptionalString s;
-  OptionalDouble value;
-  OptionalModelObject temp;
+  boost::optional<IdfObject> ForwardTranslator::translateLoadProfilePlant(LoadProfilePlant& modelObject) {
+    OptionalString s;
+    OptionalDouble value;
+    OptionalModelObject temp;
 
-  //Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::LoadProfile_Plant, modelObject);
+    //Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::LoadProfile_Plant, modelObject);
 
-  // InletNodeName
-  if( auto node = modelObject.inletModelObject() ) {
-    idfObject.setString(LoadProfile_PlantFields::InletNodeName,node->name().get());
-  }
-
-  // OutletNodeName
-  if( auto node = modelObject.outletModelObject() ) {
-    idfObject.setString(LoadProfile_PlantFields::OutletNodeName,node->name().get());
-  }
-
-  // LoadScheduleName
-  {
-    auto schedule = modelObject.loadSchedule();
-    if( auto _schedule = translateAndMapModelObject(schedule) ) {
-      idfObject.setString(LoadProfile_PlantFields::LoadScheduleName,_schedule->name().get());
+    // InletNodeName
+    if (auto node = modelObject.inletModelObject()) {
+      idfObject.setString(LoadProfile_PlantFields::InletNodeName, node->name().get());
     }
-  }
 
-  // PeakFlowRate
-  if( (value = modelObject.peakFlowRate()) ) {
-    idfObject.setDouble(LoadProfile_PlantFields::PeakFlowRate,value.get());
-  }
-
-  // FlowRateFractionScheduleName
-  {
-    auto schedule = modelObject.flowRateFractionSchedule();
-    if( auto _schedule = translateAndMapModelObject(schedule) ) {
-      idfObject.setString(LoadProfile_PlantFields::FlowRateFractionScheduleName,_schedule->name().get());
+    // OutletNodeName
+    if (auto node = modelObject.outletModelObject()) {
+      idfObject.setString(LoadProfile_PlantFields::OutletNodeName, node->name().get());
     }
+
+    // LoadScheduleName
+    {
+      auto schedule = modelObject.loadSchedule();
+      if (auto _schedule = translateAndMapModelObject(schedule)) {
+        idfObject.setString(LoadProfile_PlantFields::LoadScheduleName, _schedule->name().get());
+      }
+    }
+
+    // PeakFlowRate
+    if ((value = modelObject.peakFlowRate())) {
+      idfObject.setDouble(LoadProfile_PlantFields::PeakFlowRate, value.get());
+    }
+
+    // FlowRateFractionScheduleName
+    {
+      auto schedule = modelObject.flowRateFractionSchedule();
+      if (auto _schedule = translateAndMapModelObject(schedule)) {
+        idfObject.setString(LoadProfile_PlantFields::FlowRateFractionScheduleName, _schedule->name().get());
+      }
+    }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

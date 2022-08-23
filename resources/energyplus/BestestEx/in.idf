@@ -5,28 +5,31 @@
 !BESTEST-EX Case L200EX-PH BASE-CASE, developed by NREL
 !Use EnergyPlus IDFEditor to view inputs in IP units
 
-  Version,9.2;
+  Version,22.1;
 
   SimulationControl,
     No,                      !- Do Zone Sizing Calculation
     No,                      !- Do System Sizing Calculation
     No,                      !- Do Plant Sizing Calculation
     No,                      !- Run Simulation for Sizing Periods
-    Yes;                     !- Run Simulation for Weather File Run Periods
+    Yes,                     !- Run Simulation for Weather File Run Periods
+    No,                      !- Do HVAC Sizing Simulation for Sizing Periods
+    1;                       !- Maximum Number of HVAC Sizing Simulation Passes
 
   Building,
     L200EX-PH BASE-CASE,     !- Name
     0.0,                     !- North Axis {deg}
     Suburbs,                 !- Terrain
-    0.04,                    !- Loads Convergence Tolerance Value
+    0.04,                    !- Loads Convergence Tolerance Value {W}
     0.004,                   !- Temperature Convergence Tolerance Value {deltaC}
     MinimalShadowing,        !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
     6;                       !- Minimum Number of Warmup Days
 
   ShadowCalculation,
-    AverageOverDaysInFrequency,  !- Calculation Method
-    1;                       !- Calculation Frequency
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    1;                       !- Shading Calculation Update Frequency
 
   SurfaceConvectionAlgorithm:Inside,TARP;
 
@@ -691,6 +694,7 @@
     Floor,                   !- Surface Type
     FLOOR OVCS BATTING,      !- Construction Name
     ZONE ONE,                !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -707,6 +711,7 @@
     Ceiling,                 !- Surface Type
     CEILING BATT,            !- Construction Name
     ZONE ONE,                !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Z2 FLOOR BATT,           !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -723,6 +728,7 @@
     Floor,                   !- Surface Type
     ATTIC FLOOR BATT,        !- Construction Name
     ZONE TWO ATTIC,          !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Z1 CEILING BATT,         !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -739,6 +745,7 @@
     Floor,                   !- Surface Type
     FLOOR OVCS JOISTS,       !- Construction Name
     ZONE ONE,                !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -755,6 +762,7 @@
     Wall,                    !- Surface Type
     EXTERIOR WALL (BATTING), !- Construction Name
     ZONE ONE,                !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -771,6 +779,7 @@
     Ceiling,                 !- Surface Type
     CEILING JOISTS,          !- Construction Name
     ZONE ONE,                !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Z2 FLOOR FRAMED,         !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -787,6 +796,7 @@
     Wall,                    !- Surface Type
     EXTERIOR WALL (BATTING), !- Construction Name
     ZONE ONE,                !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -803,6 +813,7 @@
     Wall,                    !- Surface Type
     EXTERIOR WALL (BATTING), !- Construction Name
     ZONE ONE,                !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -819,6 +830,7 @@
     Wall,                    !- Surface Type
     EXTERIOR WALL (BATTING), !- Construction Name
     ZONE ONE,                !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -835,6 +847,7 @@
     Floor,                   !- Surface Type
     ATTIC FLOOR JOISTS,      !- Construction Name
     ZONE TWO ATTIC,          !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Z1 CEILING FRAMED,       !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -851,6 +864,7 @@
     Wall,                    !- Surface Type
     END GABLE,               !- Construction Name
     ZONE TWO ATTIC,          !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -866,6 +880,7 @@
     Roof,                    !- Surface Type
     ROOF,                    !- Construction Name
     ZONE TWO ATTIC,          !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -882,6 +897,7 @@
     Wall,                    !- Surface Type
     END GABLE,               !- Construction Name
     ZONE TWO ATTIC,          !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -897,6 +913,7 @@
     Roof,                    !- Surface Type
     ROOF,                    !- Construction Name
     ZONE TWO ATTIC,          !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1184,17 +1201,19 @@
     INTERIOR WALLS AIR,      !- Name
     INTERIOR WALL AIR,       !- Construction Name
     ZONE ONE,                !- Zone or ZoneList Name
+    ,                        !- Space or SpaceList Name
     171.222167776412;        !- Surface Area {m2}
 
   InternalMass,
     INTERIOR WALLS FRAMED,   !- Name
     INTERIOR WALL FRAMED,    !- Construction Name
     ZONE ONE,                !- Zone or ZoneList Name
+    ,                        !- Space or SpaceList Name
     19.0246853084902;        !- Surface Area {m2}
 
   ElectricEquipment,
     OCCUPANT GAINS,          !- Name
-    ZONE ONE,                !- Zone or ZoneList Name
+    ZONE ONE,                !- Zone or ZoneList or Space or SpaceList Name
     OCCUPANTS YEAR,          !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
     2548,                    !- Design Level {W}
@@ -1207,7 +1226,7 @@
 
   ElectricEquipment,
     ELECTRIC GAINS,          !- Name
-    ZONE ONE,                !- Zone or ZoneList Name
+    ZONE ONE,                !- Zone or ZoneList or Space or SpaceList Name
     ELECTRIC YEAR,           !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
     10687.7,                 !- Design Level {W}
@@ -1220,7 +1239,7 @@
 
   ElectricEquipment,
     GAS GAINS,               !- Name
-    ZONE ONE,                !- Zone or ZoneList Name
+    ZONE ONE,                !- Zone or ZoneList or Space or SpaceList Name
     GAS YEAR,                !- Schedule Name
     EquipmentLevel,          !- Design Level Calculation Method
     4375,                    !- Design Level {W}

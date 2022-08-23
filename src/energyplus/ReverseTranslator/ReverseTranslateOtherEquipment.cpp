@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,118 +52,115 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateOtherEquipment(
-    const WorkspaceObject & workspaceObject)
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::OtherEquipment ){
-    LOG(Error, "WorkspaceObject is not IddObjectType::OtherEquipment");
-    return boost::none;
-  }
-
-  LOG(Info,"OtherEquipment is an internal load separate from any other system, and not "
-      << "associated with an end use subcategory. Use with caution.");
-
-  // create the definition
-  openstudio::model::OtherEquipmentDefinition definition(m_model);
-
-  OptionalString s = workspaceObject.name();
-  if(s){
-    definition.setName(*s + " Definition");
-  }
-
-  s = workspaceObject.getString(openstudio::OtherEquipmentFields::DesignLevelCalculationMethod, true);
-  OS_ASSERT(s);
-
-  OptionalDouble d;
-  if (istringEqual("EquipmentLevel", *s)){
-    d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::DesignLevel);
-    if (d){
-      if (d.get() < 0.0) {
-        LOG(Warn,"OtherEquipment has negative energy use. Advanced feature--use with caution.");
-      }
-      definition.setDesignLevel(*d);
-    }else{
-      LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
+  OptionalModelObject ReverseTranslator::translateOtherEquipment(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::OtherEquipment) {
+      LOG(Error, "WorkspaceObject is not IddObjectType::OtherEquipment");
+      return boost::none;
     }
-  }else if(istringEqual("Watts/Area", *s)){
-    d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::PowerperZoneFloorArea);
-    if (d){
-      if (d.get() < 0.0) {
-        LOG(Warn,"OtherEquipment has negative energy use. Advanced feature--use with caution.");
-      }
-      definition.setWattsperSpaceFloorArea(*d);
-    }else{
-      LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
+
+    LOG(Info, "OtherEquipment is an internal load separate from any other system, and not "
+                << "associated with an end use subcategory. Use with caution.");
+
+    // create the definition
+    openstudio::model::OtherEquipmentDefinition definition(m_model);
+
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      definition.setName(*s + " Definition");
     }
-  }else if(istringEqual("Watts/Person", *s)){
-    d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::PowerperPerson);
-    if (d){
-      if (d.get() < 0.0) {
-        LOG(Warn,"OtherEquipment has negative energy use. Advanced feature--use with caution.");
+
+    s = workspaceObject.getString(openstudio::OtherEquipmentFields::DesignLevelCalculationMethod, true);
+    OS_ASSERT(s);
+
+    OptionalDouble d;
+    if (istringEqual("EquipmentLevel", *s)) {
+      d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::DesignLevel);
+      if (d) {
+        if (d.get() < 0.0) {
+          LOG(Warn, "OtherEquipment has negative energy use. Advanced feature--use with caution.");
+        }
+        definition.setDesignLevel(*d);
+      } else {
+        LOG(Error, "EquipmentLevel value not found for workspace object " << workspaceObject);
       }
-      definition.setWattsperPerson(*d);
-    }else{
-      LOG(Error, "Watts/Person value not found for workspace object " << workspaceObject);
-    }
-  }else{
-    LOG(Error, "Unknown DesignLevelCalculationMethod value for workspace object" << workspaceObject);
-  }
-
-  d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::FractionLatent);
-  if (d){
-    definition.setFractionLatent(*d);
-  }
-
-  d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::FractionRadiant);
-  if (d){
-    definition.setFractionRadiant(*d);
-  }
-
-  d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::FractionLost);
-  if (d){
-    definition.setFractionLost(*d);
-  }
-
-  // create the instance
-  OtherEquipment otherEquipment(definition);
-
-  s = workspaceObject.name();
-  if(s){
-    otherEquipment.setName(*s);
-  }
-
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::OtherEquipmentFields::ZoneorZoneListName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (modelObject->optionalCast<Space>()){
-        otherEquipment.setSpace(modelObject->cast<Space>());
-      }else if (modelObject->optionalCast<SpaceType>()){
-        otherEquipment.setSpaceType(modelObject->cast<SpaceType>());
+    } else if (istringEqual("Watts/Area", *s)) {
+      d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::PowerperZoneFloorArea);
+      if (d) {
+        if (d.get() < 0.0) {
+          LOG(Warn, "OtherEquipment has negative energy use. Advanced feature--use with caution.");
+        }
+        definition.setWattsperSpaceFloorArea(*d);
+      } else {
+        LOG(Error, "Watts/Area value not found for workspace object " << workspaceObject);
       }
+    } else if (istringEqual("Watts/Person", *s)) {
+      d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::PowerperPerson);
+      if (d) {
+        if (d.get() < 0.0) {
+          LOG(Warn, "OtherEquipment has negative energy use. Advanced feature--use with caution.");
+        }
+        definition.setWattsperPerson(*d);
+      } else {
+        LOG(Error, "Watts/Person value not found for workspace object " << workspaceObject);
+      }
+    } else {
+      LOG(Error, "Unknown DesignLevelCalculationMethod value for workspace object" << workspaceObject);
     }
-  }
 
-  target = workspaceObject.getTarget(openstudio::OtherEquipmentFields::ScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()){
-        Schedule schedule(*intermediate);
-        otherEquipment.setSchedule(schedule);
+    d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::FractionLatent);
+    if (d) {
+      definition.setFractionLatent(*d);
+    }
+
+    d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::FractionRadiant);
+    if (d) {
+      definition.setFractionRadiant(*d);
+    }
+
+    d = workspaceObject.getDouble(openstudio::OtherEquipmentFields::FractionLost);
+    if (d) {
+      definition.setFractionLost(*d);
+    }
+
+    // create the instance
+    OtherEquipment otherEquipment(definition);
+
+    s = workspaceObject.name();
+    if (s) {
+      otherEquipment.setName(*s);
+    }
+
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::OtherEquipmentFields::ZoneorZoneListorSpaceorSpaceListName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (modelObject->optionalCast<Space>()) {
+          otherEquipment.setSpace(modelObject->cast<Space>());
+        } else if (modelObject->optionalCast<SpaceType>()) {
+          otherEquipment.setSpaceType(modelObject->cast<SpaceType>());
+        }
       }
     }
+
+    target = workspaceObject.getTarget(openstudio::OtherEquipmentFields::ScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()) {
+          Schedule schedule(*intermediate);
+          otherEquipment.setSchedule(schedule);
+        }
+      }
+    }
+
+    s = workspaceObject.getString(openstudio::OtherEquipmentFields::EndUseSubcategory);
+    if (s) {
+      otherEquipment.setEndUseSubcategory(*s);
+    }
+
+    return otherEquipment;
   }
 
-  s = workspaceObject.getString(openstudio::OtherEquipmentFields::EndUseSubcategory);
-  if (s) {
-    otherEquipment.setEndUseSubcategory(*s);
-  }
+}  // namespace energyplus
 
-  return otherEquipment;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,233 +49,212 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  CentralHeatPumpSystemModule_Impl::CentralHeatPumpSystemModule_Impl(const IdfObject& idfObject,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : ParentObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == CentralHeatPumpSystemModule::iddObjectType());
-  }
-
-  CentralHeatPumpSystemModule_Impl::CentralHeatPumpSystemModule_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == CentralHeatPumpSystemModule::iddObjectType());
-  }
-
-  CentralHeatPumpSystemModule_Impl::CentralHeatPumpSystemModule_Impl(const CentralHeatPumpSystemModule_Impl& other,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : ParentObject_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& CentralHeatPumpSystemModule_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType CentralHeatPumpSystemModule_Impl::iddObjectType() const {
-    return CentralHeatPumpSystemModule::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> CentralHeatPumpSystemModule_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    // TODO: Check schedule display names.
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesControlScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("CentralHeatPumpSystemModule","Chiller Heater Modules Control"));
+    CentralHeatPumpSystemModule_Impl::CentralHeatPumpSystemModule_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ParentObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == CentralHeatPumpSystemModule::iddObjectType());
     }
-    return result;
-  }
 
-  /** This method clones the CentralHeatPumpSystemModyle but sets the chillerHeaterModulesPerformanceComponent to the same as the original
+    CentralHeatPumpSystemModule_Impl::CentralHeatPumpSystemModule_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == CentralHeatPumpSystemModule::iddObjectType());
+    }
+
+    CentralHeatPumpSystemModule_Impl::CentralHeatPumpSystemModule_Impl(const CentralHeatPumpSystemModule_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
+      : ParentObject_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& CentralHeatPumpSystemModule_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType CentralHeatPumpSystemModule_Impl::iddObjectType() const {
+      return CentralHeatPumpSystemModule::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> CentralHeatPumpSystemModule_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      // TODO: Check schedule display names.
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesControlScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("CentralHeatPumpSystemModule", "Chiller Heater Modules Control"));
+      }
+      return result;
+    }
+
+    /** This method clones the CentralHeatPumpSystemModyle but sets the chillerHeaterModulesPerformanceComponent to the same as the original
    * By using the "children" method and listing the chillerHeaterModulesPerformanceComponent there ModelObject_Impl::clone will automatically do
    * the right thing -> NO IT DOESN'T */
-  ModelObject CentralHeatPumpSystemModule_Impl::clone(Model model) const
-  {
-    CentralHeatPumpSystemModule newCentralHPMod = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
+    ModelObject CentralHeatPumpSystemModule_Impl::clone(Model model) const {
+      CentralHeatPumpSystemModule newCentralHPMod = ModelObject_Impl::clone(model).cast<CentralHeatPumpSystemModule>();
 
-    // If not using "children", then expliclity do it:
-    bool ok = true;
-    Model t_model = this->model();
+      // If not using "children", then expliclity do it:
+      bool ok = true;
+      Model t_model = this->model();
 
-    // If it's the same model
-    if (t_model == model) {
-      // We don't want to clone the perf object, set it to the same ChillHeaterPerformanceElectricEIR
-      ChillerHeaterPerformanceElectricEIR chillerHeaterPerf = this->chillerHeaterModulesPerformanceComponent();
-      ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent(chillerHeaterPerf);
+      // If it's the same model
+      if (t_model == model) {
+        // We don't want to clone the perf object, set it to the same ChillHeaterPerformanceElectricEIR
+        ChillerHeaterPerformanceElectricEIR chillerHeaterPerf = this->chillerHeaterModulesPerformanceComponent();
+        ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent(chillerHeaterPerf);
 
-    // If it's a different model
-    } else {
-      // We clone the chillerHeaterPerformance into the target model
-      ChillerHeaterPerformanceElectricEIR chillerHeaterPerf = this->chillerHeaterModulesPerformanceComponent().clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
-      ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent(chillerHeaterPerf);
+        // If it's a different model
+      } else {
+        // We clone the chillerHeaterPerformance into the target model
+        ChillerHeaterPerformanceElectricEIR chillerHeaterPerf =
+          this->chillerHeaterModulesPerformanceComponent().clone(model).cast<ChillerHeaterPerformanceElectricEIR>();
+        ok = newCentralHPMod.setChillerHeaterModulesPerformanceComponent(chillerHeaterPerf);
+      }
+
+      // This better have worked
+      OS_ASSERT(ok);
+
+      return newCentralHPMod;
     }
 
-    // This better have worked
-    OS_ASSERT(ok);
-
-    return newCentralHPMod;
-  }
-
-
-  // Returns allowable child types: ChillerHeaterPerformanceElectricEIR
-  std::vector<IddObjectType> CentralHeatPumpSystemModule_Impl::allowableChildTypes() const
-  {
-    std::vector<IddObjectType> result;
-    // result.push_back(IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR);
-    return result;
-  }
-
-  // Returns the single child object: the ChillerHeaterPerformanceElectricEIR
-  std::vector<ModelObject> CentralHeatPumpSystemModule_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-
-    // ChillerHeaterPerformanceElectricEIR ch_heater = chillerHeaterModulesPerformanceComponent();
-    // result.push_back(ch_heater);
-
-    // The chillerHeaterModulesControlSchedule, being a schedule, is already a resource so no need here
-
-    return result;
-  }
-
-
-
-  ChillerHeaterPerformanceElectricEIR CentralHeatPumpSystemModule_Impl::chillerHeaterModulesPerformanceComponent() const {
-    boost::optional<ChillerHeaterPerformanceElectricEIR> value = optionalChillerHeaterModulesPerformanceComponent();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Chiller Heater Modules Performance Component attached.");
+    // Returns allowable child types: ChillerHeaterPerformanceElectricEIR
+    std::vector<IddObjectType> CentralHeatPumpSystemModule_Impl::allowableChildTypes() const {
+      std::vector<IddObjectType> result;
+      // result.push_back(IddObjectType::OS_ChillerHeaterPerformance_Electric_EIR);
+      return result;
     }
-    return value.get();
-  }
 
-  Schedule CentralHeatPumpSystemModule_Impl::chillerHeaterModulesControlSchedule() const {
-    boost::optional<Schedule> value = optionalChillerHeaterModulesControlSchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Chiller Heater Modules Control Schedule attached.");
+    // Returns the single child object: the ChillerHeaterPerformanceElectricEIR
+    std::vector<ModelObject> CentralHeatPumpSystemModule_Impl::children() const {
+      std::vector<ModelObject> result;
+
+      // ChillerHeaterPerformanceElectricEIR ch_heater = chillerHeaterModulesPerformanceComponent();
+      // result.push_back(ch_heater);
+
+      // The chillerHeaterModulesControlSchedule, being a schedule, is already a resource so no need here
+
+      return result;
     }
-    return value.get();
-  }
 
-  int CentralHeatPumpSystemModule_Impl::numberofChillerHeaterModules() const {
-    boost::optional<int> value = getInt(OS_CentralHeatPumpSystem_ModuleFields::NumberofChillerHeaterModules,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    ChillerHeaterPerformanceElectricEIR CentralHeatPumpSystemModule_Impl::chillerHeaterModulesPerformanceComponent() const {
+      boost::optional<ChillerHeaterPerformanceElectricEIR> value = optionalChillerHeaterModulesPerformanceComponent();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Chiller Heater Modules Performance Component attached.");
+      }
+      return value.get();
+    }
 
-  bool CentralHeatPumpSystemModule_Impl::setChillerHeaterModulesPerformanceComponent(const ChillerHeaterPerformanceElectricEIR& chillerHeaterPerformanceElectricEIR) {
-    bool result = setPointer(OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesPerformanceComponentName, chillerHeaterPerformanceElectricEIR.handle());
-    return result;
-  }
+    Schedule CentralHeatPumpSystemModule_Impl::chillerHeaterModulesControlSchedule() const {
+      boost::optional<Schedule> value = optionalChillerHeaterModulesControlSchedule();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Chiller Heater Modules Control Schedule attached.");
+      }
+      return value.get();
+    }
 
-  bool CentralHeatPumpSystemModule_Impl::setChillerHeaterModulesControlSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesControlScheduleName,
-                              "CentralHeatPumpSystemModule",
-                              "Chiller Heater Modules Control",
-                              schedule);
-    return result;
-  }
+    int CentralHeatPumpSystemModule_Impl::numberofChillerHeaterModules() const {
+      boost::optional<int> value = getInt(OS_CentralHeatPumpSystem_ModuleFields::NumberofChillerHeaterModules, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  bool CentralHeatPumpSystemModule_Impl::setNumberofChillerHeaterModules(int numberofChillerHeaterModules) {
-    bool result = setInt(OS_CentralHeatPumpSystem_ModuleFields::NumberofChillerHeaterModules, numberofChillerHeaterModules);
-    return result;
-  }
+    bool CentralHeatPumpSystemModule_Impl::setChillerHeaterModulesPerformanceComponent(
+      const ChillerHeaterPerformanceElectricEIR& chillerHeaterPerformanceElectricEIR) {
+      bool result =
+        setPointer(OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesPerformanceComponentName, chillerHeaterPerformanceElectricEIR.handle());
+      return result;
+    }
 
-  boost::optional<ChillerHeaterPerformanceElectricEIR> CentralHeatPumpSystemModule_Impl::optionalChillerHeaterModulesPerformanceComponent() const {
-    return getObject<ModelObject>().getModelObjectTarget<ChillerHeaterPerformanceElectricEIR>(OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesPerformanceComponentName);
-  }
+    bool CentralHeatPumpSystemModule_Impl::setChillerHeaterModulesControlSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesControlScheduleName, "CentralHeatPumpSystemModule",
+                                "Chiller Heater Modules Control", schedule);
+      return result;
+    }
 
-  boost::optional<Schedule> CentralHeatPumpSystemModule_Impl::optionalChillerHeaterModulesControlSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesControlScheduleName);
-  }
+    bool CentralHeatPumpSystemModule_Impl::setNumberofChillerHeaterModules(int numberofChillerHeaterModules) {
+      bool result = setInt(OS_CentralHeatPumpSystem_ModuleFields::NumberofChillerHeaterModules, numberofChillerHeaterModules);
+      return result;
+    }
 
-  // Convenience function to return parent CentralHeatPumpSystem
-  boost::optional<CentralHeatPumpSystem> CentralHeatPumpSystemModule_Impl::centralHeatPumpSystem() const {
+    boost::optional<ChillerHeaterPerformanceElectricEIR> CentralHeatPumpSystemModule_Impl::optionalChillerHeaterModulesPerformanceComponent() const {
+      return getObject<ModelObject>().getModelObjectTarget<ChillerHeaterPerformanceElectricEIR>(
+        OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesPerformanceComponentName);
+    }
 
-    boost::optional<CentralHeatPumpSystem> result;
+    boost::optional<Schedule> CentralHeatPumpSystemModule_Impl::optionalChillerHeaterModulesControlSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_CentralHeatPumpSystem_ModuleFields::ChillerHeaterModulesControlScheduleName);
+    }
 
-    // loop on all CentralHeatPumpSystems in the model
-    for ( const CentralHeatPumpSystem& central_hp : this->model().getConcreteModelObjects<CentralHeatPumpSystem>() )
-    {
-      // Loop on each CentralHeatPumpSystemModules
-      for (const CentralHeatPumpSystemModule& central_hp_module : central_hp.modules() )
-      {
-        if ( central_hp_module.handle() == this->handle() )
-        {
-          result = central_hp;
+    // Convenience function to return parent CentralHeatPumpSystem
+    boost::optional<CentralHeatPumpSystem> CentralHeatPumpSystemModule_Impl::centralHeatPumpSystem() const {
+
+      boost::optional<CentralHeatPumpSystem> result;
+
+      // loop on all CentralHeatPumpSystems in the model
+      for (const CentralHeatPumpSystem& central_hp : this->model().getConcreteModelObjects<CentralHeatPumpSystem>()) {
+        // Loop on each CentralHeatPumpSystemModules
+        for (const CentralHeatPumpSystemModule& central_hp_module : central_hp.modules()) {
+          if (central_hp_module.handle() == this->handle()) {
+            result = central_hp;
+          }
         }
       }
+      return result;
     }
-    return result;
+
+  }  // namespace detail
+
+  CentralHeatPumpSystemModule::CentralHeatPumpSystemModule(const Model& model) : ParentObject(CentralHeatPumpSystemModule::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CentralHeatPumpSystemModule_Impl>());
+
+    auto alwaysOn = model.alwaysOnDiscreteSchedule();
+    auto const module = ChillerHeaterPerformanceElectricEIR(model);
+
+    bool ok = true;
+    ok = setChillerHeaterModulesPerformanceComponent(module);
+    OS_ASSERT(ok);
+    ok = setChillerHeaterModulesControlSchedule(alwaysOn);
+    OS_ASSERT(ok);
+    ok = setNumberofChillerHeaterModules(1);
+    OS_ASSERT(ok);
   }
 
+  IddObjectType CentralHeatPumpSystemModule::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_CentralHeatPumpSystem_Module);
+  }
 
-} // detail
+  ChillerHeaterPerformanceElectricEIR CentralHeatPumpSystemModule::chillerHeaterModulesPerformanceComponent() const {
+    return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->chillerHeaterModulesPerformanceComponent();
+  }
 
-CentralHeatPumpSystemModule::CentralHeatPumpSystemModule(const Model& model)
-  : ParentObject(CentralHeatPumpSystemModule::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CentralHeatPumpSystemModule_Impl>());
+  Schedule CentralHeatPumpSystemModule::chillerHeaterModulesControlSchedule() const {
+    return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->chillerHeaterModulesControlSchedule();
+  }
 
-  auto alwaysOn = model.alwaysOnDiscreteSchedule();
-  auto const module = ChillerHeaterPerformanceElectricEIR(model);
+  int CentralHeatPumpSystemModule::numberofChillerHeaterModules() const {
+    return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->numberofChillerHeaterModules();
+  }
 
-  bool ok = true;
-  ok = setChillerHeaterModulesPerformanceComponent( module );
-  OS_ASSERT(ok);
-  ok = setChillerHeaterModulesControlSchedule( alwaysOn );
-  OS_ASSERT(ok);
-  ok = setNumberofChillerHeaterModules( 1 );
-  OS_ASSERT(ok);
-}
+  bool CentralHeatPumpSystemModule::setChillerHeaterModulesPerformanceComponent(
+    const ChillerHeaterPerformanceElectricEIR& chillerHeaterPerformanceElectricEIR) {
+    return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->setChillerHeaterModulesPerformanceComponent(chillerHeaterPerformanceElectricEIR);
+  }
 
-IddObjectType CentralHeatPumpSystemModule::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_CentralHeatPumpSystem_Module);
-}
+  bool CentralHeatPumpSystemModule::setChillerHeaterModulesControlSchedule(Schedule& schedule) {
+    return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->setChillerHeaterModulesControlSchedule(schedule);
+  }
 
-ChillerHeaterPerformanceElectricEIR CentralHeatPumpSystemModule::chillerHeaterModulesPerformanceComponent() const {
-  return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->chillerHeaterModulesPerformanceComponent();
-}
+  bool CentralHeatPumpSystemModule::setNumberofChillerHeaterModules(int numberofChillerHeaterModules) {
+    return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->setNumberofChillerHeaterModules(numberofChillerHeaterModules);
+  }
 
-Schedule CentralHeatPumpSystemModule::chillerHeaterModulesControlSchedule() const {
-  return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->chillerHeaterModulesControlSchedule();
-}
+  boost::optional<CentralHeatPumpSystem> CentralHeatPumpSystemModule::centralHeatPumpSystem() const {
+    return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->centralHeatPumpSystem();
+  }
 
-int CentralHeatPumpSystemModule::numberofChillerHeaterModules() const {
-  return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->numberofChillerHeaterModules();
-}
+  /// @cond
+  CentralHeatPumpSystemModule::CentralHeatPumpSystemModule(std::shared_ptr<detail::CentralHeatPumpSystemModule_Impl> impl)
+    : ParentObject(std::move(impl)) {}
+  /// @endcond
 
-bool CentralHeatPumpSystemModule::setChillerHeaterModulesPerformanceComponent(const ChillerHeaterPerformanceElectricEIR& chillerHeaterPerformanceElectricEIR) {
-  return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->setChillerHeaterModulesPerformanceComponent(chillerHeaterPerformanceElectricEIR);
-}
-
-bool CentralHeatPumpSystemModule::setChillerHeaterModulesControlSchedule(Schedule& schedule) {
-  return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->setChillerHeaterModulesControlSchedule(schedule);
-}
-
-bool CentralHeatPumpSystemModule::setNumberofChillerHeaterModules(int numberofChillerHeaterModules) {
-  return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->setNumberofChillerHeaterModules(numberofChillerHeaterModules);
-}
-
-boost::optional<CentralHeatPumpSystem> CentralHeatPumpSystemModule::centralHeatPumpSystem() const {
-  return getImpl<detail::CentralHeatPumpSystemModule_Impl>()->centralHeatPumpSystem();
-}
-
-/// @cond
-CentralHeatPumpSystemModule::CentralHeatPumpSystemModule(std::shared_ptr<detail::CentralHeatPumpSystemModule_Impl> impl)
-  : ParentObject(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

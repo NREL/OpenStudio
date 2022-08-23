@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,142 +36,137 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class GasEquipment;
-class GasEquipmentDefinition;
+  class Schedule;
+  class GasEquipment;
+  class GasEquipmentDefinition;
 
-namespace detail {
+  namespace detail {
 
-  /** GasEquipment_Impl is a SpaceLoadInstance_Impl that is the implementation class for GasEquipment.*/
-  class MODEL_API GasEquipment_Impl : public SpaceLoadInstance_Impl {
+    /** GasEquipment_Impl is a SpaceLoadInstance_Impl that is the implementation class for GasEquipment.*/
+    class MODEL_API GasEquipment_Impl : public SpaceLoadInstance_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    GasEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      GasEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    GasEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      GasEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    GasEquipment_Impl(const GasEquipment_Impl& other,
-                      Model_Impl* model,
-                      bool keepHandle);
+      GasEquipment_Impl(const GasEquipment_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~GasEquipment_Impl() {}
+      virtual ~GasEquipment_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual bool hardSize() override;
+      virtual bool hardSize() override;
 
-    virtual bool hardApplySchedules() override;
+      virtual bool hardApplySchedules() override;
 
-    virtual double multiplier() const override;
+      virtual double multiplier() const override;
 
-    virtual bool isMultiplierDefaulted() const override;
+      virtual bool isMultiplierDefaulted() const override;
 
-    virtual bool isAbsolute() const override;
+      virtual bool isAbsolute() const override;
 
-    //@]
-    /** @name Getters */
-    //@{
+      //@]
+      /** @name Getters */
+      //@{
 
-    /** Gets the GasEquipmentDefinition object. */
-    GasEquipmentDefinition gasEquipmentDefinition() const;
+      /** Gets the GasEquipmentDefinition object. */
+      GasEquipmentDefinition gasEquipmentDefinition() const;
 
-    /** Returns the (fractional) equipment schedule.  If this object does not
+      /** Returns the (fractional) equipment schedule.  If this object does not
      *  specify a schedule this function will search the hierarchy. */
-    boost::optional<Schedule> schedule() const;
+      boost::optional<Schedule> schedule() const;
 
-    /** Returns true if this object does not specify a schedule directly. */
-    bool isScheduleDefaulted() const;
+      /** Returns true if this object does not specify a schedule directly. */
+      bool isScheduleDefaulted() const;
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
+      bool isEndUseSubcategoryDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    /** Sets the GasEquipmentDefinition object. */
-    bool setGasEquipmentDefinition(const GasEquipmentDefinition& definition);
+      /** Sets the GasEquipmentDefinition object. */
+      bool setGasEquipmentDefinition(const GasEquipmentDefinition& definition);
 
-    /** Sets the definition of this instance. */
-    virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
+      /** Sets the definition of this instance. */
+      virtual bool setDefinition(const SpaceLoadDefinition& definition) override;
 
-    /** Sets the (fractional) Schedule. */
-    bool setSchedule(Schedule& schedule);
+      /** Sets the (fractional) Schedule. */
+      bool setSchedule(Schedule& schedule);
 
-    /** Resets the (fractional) Schedule. */
-    void resetSchedule();
+      /** Resets the (fractional) Schedule. */
+      void resetSchedule();
 
-    bool setMultiplier(double multiplier);
+      bool setMultiplier(double multiplier);
 
-    void resetMultiplier();
+      void resetMultiplier();
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    void resetEndUseSubcategory();
+      void resetEndUseSubcategory();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    boost::optional<double> designLevel() const;
+      boost::optional<double> designLevel() const;
 
-    boost::optional<double> powerPerFloorArea() const;
+      boost::optional<double> powerPerFloorArea() const;
 
-    boost::optional<double> powerPerPerson() const;
+      boost::optional<double> powerPerPerson() const;
 
-    /** Returns the design level represented by this instance, assuming floorArea (m^2) and
+      /** Returns the design level represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
-    double getDesignLevel(double floorArea, double numPeople) const;
+      double getDesignLevel(double floorArea, double numPeople) const;
 
-    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
+      /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
-    double getPowerPerFloorArea(double floorArea, double numPeople) const;
+      double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
+      /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
      *  numPeople. */
-    double getPowerPerPerson(double floorArea, double numPeople) const;
+      double getPowerPerPerson(double floorArea, double numPeople) const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
-   protected:
+      //@}
+     protected:
+      // index of the space name
+      virtual int spaceIndex() const override;
 
-    // index of the space name
-    virtual int spaceIndex() const override;
+      // index of the definition name
+      virtual int definitionIndex() const override;
 
-    // index of the definition name
-    virtual int definitionIndex() const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.GasEquipment");
 
-   private:
-    REGISTER_LOGGER("openstudio.model.GasEquipment");
+      boost::optional<ModelObject> gasEquipmentDefinitionAsModelObject() const;
+      boost::optional<ModelObject> scheduleAsModelObject() const;
 
-    boost::optional<ModelObject> gasEquipmentDefinitionAsModelObject() const;
-    boost::optional<ModelObject> scheduleAsModelObject() const;
+      bool setGasEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setGasEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_GASEQUIPMENT_IMPL_HPP
-
+#endif  // MODEL_GASEQUIPMENT_IMPL_HPP

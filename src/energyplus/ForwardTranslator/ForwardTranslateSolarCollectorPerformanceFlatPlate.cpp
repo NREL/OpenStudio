@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,47 +41,45 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSolarCollectorPerformanceFlatPlate(model::SolarCollectorPerformanceFlatPlate & modelObject)
-{
-  IdfObject idfObject(openstudio::IddObjectType::SolarCollectorPerformance_FlatPlate);
+  boost::optional<IdfObject> ForwardTranslator::translateSolarCollectorPerformanceFlatPlate(model::SolarCollectorPerformanceFlatPlate& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::SolarCollectorPerformance_FlatPlate);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  boost::optional<double> d;
+    boost::optional<double> d;
 
-  idfObject.setString(SolarCollectorPerformance_FlatPlateFields::Name, modelObject.name().get());
+    idfObject.setString(SolarCollectorPerformance_FlatPlateFields::Name, modelObject.name().get());
 
-  idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::GrossArea, modelObject.grossArea());
+    idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::GrossArea, modelObject.grossArea());
 
-  idfObject.setString(SolarCollectorPerformance_FlatPlateFields::TestFluid, modelObject.testFluid());
+    idfObject.setString(SolarCollectorPerformance_FlatPlateFields::TestFluid, modelObject.testFluid());
 
-  idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::TestFlowRate, modelObject.testFlowRate());
+    idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::TestFlowRate, modelObject.testFlowRate());
 
-  idfObject.setString(SolarCollectorPerformance_FlatPlateFields::TestCorrelationType, modelObject.testCorrelationType());
+    idfObject.setString(SolarCollectorPerformance_FlatPlateFields::TestCorrelationType, modelObject.testCorrelationType());
 
-  idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::Coefficient1ofEfficiencyEquation, modelObject.coefficient1ofEfficiencyEquation());
+    idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::Coefficient1ofEfficiencyEquation, modelObject.coefficient1ofEfficiencyEquation());
 
-  idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::Coefficient2ofEfficiencyEquation, modelObject.coefficient2ofEfficiencyEquation());
+    idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::Coefficient2ofEfficiencyEquation, modelObject.coefficient2ofEfficiencyEquation());
 
-  d = modelObject.coefficient3ofEfficiencyEquation();
-  if (d){
-    idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::Coefficient3ofEfficiencyEquation, *d);
+    d = modelObject.coefficient3ofEfficiencyEquation();
+    if (d) {
+      idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::Coefficient3ofEfficiencyEquation, *d);
+    }
+
+    d = modelObject.coefficient2ofIncidentAngleModifier();
+    if (d) {
+      idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::Coefficient2ofIncidentAngleModifier, *d);
+    }
+
+    d = modelObject.coefficient3ofIncidentAngleModifier();
+    if (d) {
+      idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::Coefficient3ofIncidentAngleModifier, *d);
+    }
+
+    return idfObject;
   }
 
-  d = modelObject.coefficient2ofIncidentAngleModifier();
-  if (d){
-    idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::Coefficient2ofIncidentAngleModifier, *d);
-  }
+}  // namespace energyplus
 
-  d = modelObject.coefficient3ofIncidentAngleModifier();
-  if (d){
-    idfObject.setDouble(SolarCollectorPerformance_FlatPlateFields::Coefficient3ofIncidentAngleModifier, *d);
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

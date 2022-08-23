@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,22 +39,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, RefrigerationCompressor_DefaultConstructor)
-{
+TEST_F(ModelFixture, RefrigerationCompressor_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    RefrigerationCompressor testObject = RefrigerationCompressor(model);
+  ASSERT_EXIT(
+    {
+      Model model;
+      RefrigerationCompressor testObject = RefrigerationCompressor(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, RefrigerationCompressor_Remove)
-{
+TEST_F(ModelFixture, RefrigerationCompressor_Remove) {
   Model model;
   RefrigerationCompressor testObject = RefrigerationCompressor(model);
 
@@ -67,8 +65,7 @@ TEST_F(ModelFixture, RefrigerationCompressor_Remove)
   EXPECT_EQ(0, refrigerationCompressors.size());
 }
 
-TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithDefaultData) {
   Model model;
   RefrigerationCompressor testObject = RefrigerationCompressor(model);
   EXPECT_EQ("Subcritical", testObject.modeofOperation());
@@ -76,7 +73,7 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithDefaultData)
   RefrigerationCompressor testObjectClone = testObject.clone(model).cast<RefrigerationCompressor>();
 
   std::vector<CurveBicubic> refrigerationCompressorCurves = model.getModelObjects<CurveBicubic>();
-  for(auto it = refrigerationCompressorCurves.begin(); it != refrigerationCompressorCurves.end(); ++it) {
+  for (auto it = refrigerationCompressorCurves.begin(); it != refrigerationCompressorCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
@@ -87,8 +84,7 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithDefaultData)
   EXPECT_EQ(testObject.refrigerationCompressorCapacityCurve().handle(), testObjectClone.refrigerationCompressorCapacityCurve().handle());
 }
 
-TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithCustomData)
-{
+TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithCustomData) {
   Model model;
   RefrigerationCompressor testObject = RefrigerationCompressor(model);
   testObject.setRatedReturnGasTemperature(999.0);
@@ -195,8 +191,7 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneOneModelWithCustomData)
   EXPECT_EQ(transCapacityCurve.handle(), testObjectClone.transcriticalCompressorCapacityCurve().get().handle());
 }
 
-TEST_F(ModelFixture, RefrigerationCompressor_CloneTwoModelsWithDefaultData)
-{
+TEST_F(ModelFixture, RefrigerationCompressor_CloneTwoModelsWithDefaultData) {
   Model model;
   RefrigerationCompressor testObject = RefrigerationCompressor(model);
 
@@ -215,11 +210,11 @@ TEST_F(ModelFixture, RefrigerationCompressor_CloneTwoModelsWithDefaultData)
   refrigerationCompressorCurves2 = model2.getModelObjects<CurveBicubic>();
   EXPECT_EQ(2, refrigerationCompressorCurves2.size());
 
-  for(auto it = refrigerationCompressorCurves.begin(); it != refrigerationCompressorCurves.end(); ++it) {
+  for (auto it = refrigerationCompressorCurves.begin(); it != refrigerationCompressorCurves.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 
-  for(auto it = refrigerationCompressorCurves2.begin(); it != refrigerationCompressorCurves2.end(); ++it) {
+  for (auto it = refrigerationCompressorCurves2.begin(); it != refrigerationCompressorCurves2.end(); ++it) {
     EXPECT_TRUE(it->parent());
   }
 

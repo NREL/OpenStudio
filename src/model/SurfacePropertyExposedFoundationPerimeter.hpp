@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,82 +37,81 @@
 namespace openstudio {
 namespace model {
 
-class Surface;
+  class Surface;
 
-namespace detail {
+  namespace detail {
 
-  class SurfacePropertyExposedFoundationPerimeter_Impl;
+    class SurfacePropertyExposedFoundationPerimeter_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SurfacePropertyExposedFoundationPerimeter is a ModelObject that wraps the OpenStudio IDD object 'OS:SurfaceProperty:ExposedFoundationPerimeter'. */
-class MODEL_API SurfacePropertyExposedFoundationPerimeter : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
-                                                     
-  explicit SurfacePropertyExposedFoundationPerimeter(Surface& surface,
-                                                     std::string exposedPerimeterCalculationMethod,
-                                                     double exposedPerimeter);
+  /** SurfacePropertyExposedFoundationPerimeter is a ModelObject that wraps the OpenStudio IDD object 'OS:SurfaceProperty:ExposedFoundationPerimeter'. */
+  class MODEL_API SurfacePropertyExposedFoundationPerimeter : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~SurfacePropertyExposedFoundationPerimeter() {}
+    explicit SurfacePropertyExposedFoundationPerimeter(Surface& surface, std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
 
-  //@}
+    virtual ~SurfacePropertyExposedFoundationPerimeter() {}
 
-  static IddObjectType iddObjectType();
+    //@}
 
-  /** @name Getters */
-  //@{
+    static IddObjectType iddObjectType();
 
-  std::string surfaceName() const;
-  
-  std::string exposedPerimeterCalculationMethod() const;
-  
-  boost::optional<double> totalExposedPerimeter();
-  
-  double exposedPerimeterFraction() const;
-  
-  bool isExposedPerimeterFractionDefaulted() const;
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    std::string surfaceName() const;
 
-  bool setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod);
-  
-  bool setTotalExposedPerimeter(double totalExposedPerimeter);
-  
-  bool setExposedPerimeterFraction(double exposedPerimeterFraction);
-  
-  void resetExposedPerimeterFraction();
+    std::string exposedPerimeterCalculationMethod() const;
 
-  //@}
-  /** @name Other */
-  //@{
+    boost::optional<double> totalExposedPerimeter();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SurfacePropertyExposedFoundationPerimeter_Impl ImplType;
+    double exposedPerimeterFraction() const;
 
-  explicit SurfacePropertyExposedFoundationPerimeter(std::shared_ptr<detail::SurfacePropertyExposedFoundationPerimeter_Impl> impl);
+    bool isExposedPerimeterFractionDefaulted() const;
 
-  friend class detail::SurfacePropertyExposedFoundationPerimeter_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SurfacePropertyExposedFoundationPerimeter");
-};
+    //@}
+    /** @name Setters */
+    //@{
 
-/** \relates SurfacePropertyExposedFoundationPerimeter*/
-typedef boost::optional<SurfacePropertyExposedFoundationPerimeter> OptionalSurfacePropertyExposedFoundationPerimeter;
+    bool setExposedPerimeterCalculationMethod(std::string exposedPerimeterCalculationMethod);
 
-/** \relates SurfacePropertyExposedFoundationPerimeter*/
-typedef std::vector<SurfacePropertyExposedFoundationPerimeter> SurfacePropertyExposedFoundationPerimeterVector;
+    bool setTotalExposedPerimeter(double totalExposedPerimeter);
 
-} // model
-} // openstudio
+    bool setExposedPerimeterFraction(double exposedPerimeterFraction);
 
-#endif // MODEL_SURFACEPROPERTYEXPOSEDFOUNDATIONPERIMETER_HPP
+    void resetExposedPerimeterFraction();
+
+    //@}
+    /** @name Other */
+    //@{
+
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SurfacePropertyExposedFoundationPerimeter_Impl ImplType;
+
+    explicit SurfacePropertyExposedFoundationPerimeter(std::shared_ptr<detail::SurfacePropertyExposedFoundationPerimeter_Impl> impl);
+
+    friend class detail::SurfacePropertyExposedFoundationPerimeter_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SurfacePropertyExposedFoundationPerimeter");
+  };
+
+  /** \relates SurfacePropertyExposedFoundationPerimeter*/
+  typedef boost::optional<SurfacePropertyExposedFoundationPerimeter> OptionalSurfacePropertyExposedFoundationPerimeter;
+
+  /** \relates SurfacePropertyExposedFoundationPerimeter*/
+  typedef std::vector<SurfacePropertyExposedFoundationPerimeter> SurfacePropertyExposedFoundationPerimeterVector;
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_SURFACEPROPERTYEXPOSEDFOUNDATIONPERIMETER_HPP

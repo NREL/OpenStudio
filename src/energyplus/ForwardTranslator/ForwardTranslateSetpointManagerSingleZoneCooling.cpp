@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,68 +43,60 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerSingleZoneCooling( SetpointManagerSingleZoneCooling & modelObject )
-{
-  std::string s;
-  double n;
-  boost::optional<Node> node;
+  boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerSingleZoneCooling(SetpointManagerSingleZoneCooling& modelObject) {
+    std::string s;
+    double n;
+    boost::optional<Node> node;
 
-  IdfObject idfObject(IddObjectType::SetpointManager_SingleZone_Cooling);
+    IdfObject idfObject(IddObjectType::SetpointManager_SingleZone_Cooling);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  s = modelObject.name().get();
-  idfObject.setString(SetpointManager_SingleZone_CoolingFields::Name,s);
+    // Name
+    s = modelObject.name().get();
+    idfObject.setString(SetpointManager_SingleZone_CoolingFields::Name, s);
 
-  // ControlVariable
-  idfObject.setString(SetpointManager_SingleZone_CoolingFields::ControlVariable,modelObject.controlVariable());
+    // ControlVariable
+    idfObject.setString(SetpointManager_SingleZone_CoolingFields::ControlVariable, modelObject.controlVariable());
 
-  // MinimumSupplyAirTemperature
-  n = modelObject.minimumSupplyAirTemperature();
-  idfObject.setDouble(SetpointManager_SingleZone_CoolingFields::MinimumSupplyAirTemperature,n);
+    // MinimumSupplyAirTemperature
+    n = modelObject.minimumSupplyAirTemperature();
+    idfObject.setDouble(SetpointManager_SingleZone_CoolingFields::MinimumSupplyAirTemperature, n);
 
-  // MaximumSupplyAirTemperature
-  n = modelObject.maximumSupplyAirTemperature();
-  idfObject.setDouble(SetpointManager_SingleZone_CoolingFields::MaximumSupplyAirTemperature,n);
+    // MaximumSupplyAirTemperature
+    n = modelObject.maximumSupplyAirTemperature();
+    idfObject.setDouble(SetpointManager_SingleZone_CoolingFields::MaximumSupplyAirTemperature, n);
 
-  // ControlZoneName
-  auto thermalZone = modelObject.controlZone();
-  if( thermalZone )
-  {
-    idfObject.setString(SetpointManager_SingleZone_CoolingFields::ControlZoneName,thermalZone->name().get());
-  }
+    // ControlZoneName
+    auto thermalZone = modelObject.controlZone();
+    if (thermalZone) {
+      idfObject.setString(SetpointManager_SingleZone_CoolingFields::ControlZoneName, thermalZone->name().get());
+    }
 
-  // ZoneNodeName
-  if( thermalZone )
-  {
-    node = thermalZone->zoneAirNode();
-    idfObject.setString(SetpointManager_SingleZone_CoolingFields::ZoneNodeName,node->name().get());
-  }
+    // ZoneNodeName
+    if (thermalZone) {
+      node = thermalZone->zoneAirNode();
+      idfObject.setString(SetpointManager_SingleZone_CoolingFields::ZoneNodeName, node->name().get());
+    }
 
-  // ZoneInletNodeName
-  if( thermalZone )
-  {
-    if( boost::optional<ModelObject> mo = thermalZone->inletPortList().airLoopHVACModelObject() )
-    {
-      if( (node = mo->optionalCast<Node>()) )
-      {
-        idfObject.setString(SetpointManager_SingleZone_CoolingFields::ZoneInletNodeName,node->name().get());
+    // ZoneInletNodeName
+    if (thermalZone) {
+      if (boost::optional<ModelObject> mo = thermalZone->inletPortList().airLoopHVACModelObject()) {
+        if ((node = mo->optionalCast<Node>())) {
+          idfObject.setString(SetpointManager_SingleZone_CoolingFields::ZoneInletNodeName, node->name().get());
+        }
       }
     }
+
+    // SetpointNodeorNodeListName
+    node = modelObject.setpointNode();
+    if (node) {
+      idfObject.setString(SetpointManager_SingleZone_CoolingFields::SetpointNodeorNodeListName, node->name().get());
+    }
+
+    return idfObject;
   }
 
-  // SetpointNodeorNodeListName
-  node = modelObject.setpointNode();
-  if( node )
-  {
-    idfObject.setString(SetpointManager_SingleZone_CoolingFields::SetpointNodeorNodeListName,node->name().get());
-  }
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

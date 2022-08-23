@@ -1,10 +1,10 @@
-  Version,9.2;
+  Version,22.1;
 
   Building,
     Building 1,              !- Name
     0.0,                     !- North Axis {deg}
     Suburbs,                 !- Terrain
-    .04,                     !- Loads Convergence Tolerance Value
+    .04,                     !- Loads Convergence Tolerance Value {W}
     .4,                      !- Temperature Convergence Tolerance Value {deltaC}
     FullExterior,            !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -29,6 +29,7 @@
     Floor,                   !- Surface Type
     ExtSlabCarpet 4in ClimateZone 1-8,  !- Construction Name
     Thermal Zone: Story 1 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -45,6 +46,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 4,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -61,6 +63,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 10,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -77,6 +80,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 16,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -93,6 +97,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 22,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -109,6 +114,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 1 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 55,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -489,7 +495,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 1 Core Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 1 Core Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 1 Core Space Design Spec Zone Air Dist,  !- Name
@@ -523,6 +533,7 @@
     Floor,                   !- Surface Type
     ExtSlabCarpet 4in ClimateZone 1-8,  !- Construction Name
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -539,6 +550,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -570,6 +582,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 23,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -586,6 +599,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 28,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -602,6 +616,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 9,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -618,6 +633,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 1 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 43,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -917,7 +933,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 1 East Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 1 East Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 1 East Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -943,6 +963,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 27,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -959,6 +980,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 3,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -975,6 +997,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 37,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -991,6 +1014,7 @@
     Floor,                   !- Surface Type
     ExtSlabCarpet 4in ClimateZone 1-8,  !- Construction Name
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1007,6 +1031,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1038,6 +1063,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 17,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1086,17 +1112,29 @@
     Thermal Zone: Story 1 North Perimeter Space Inlet Node List,  !- Name
     Node 37;                 !- Node 1 Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Air Terminal Single Duct Uncontrolled 1,  !- Name
     Always On Discrete,      !- Availability Schedule Name
-    Node 37,                 !- Zone Supply Air Node Name
-    AutoSize;                !- Maximum Air Flow Rate {m3/s}
+    Node 37 ATInlet,         !- Air Inlet Node Name
+    Node 37,                 !- Air Outlet Node Name
+    AutoSize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Air Terminal Single Duct Uncontrolled 1 ADU,  !- Name
+    Node 37,                 !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Air Terminal Single Duct Uncontrolled 1,  !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 1 North Perimeter Space Equipment List,  !- Name
     SequentialLoad,          !- Load Distribution Scheme
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Air Terminal Single Duct Uncontrolled 1,  !- Zone Equipment 1 Name
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Air Terminal Single Duct Uncontrolled 1 ADU,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
     ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
@@ -1125,7 +1163,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 1 North Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 1 North Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 1 North Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -1140,7 +1182,7 @@
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
-    Thermal Zone: Story 1 North Perimeter Space,  !- Zone 1 Name
+    Thermal Zone: Story 1 North Perimeter Space,  !- Zone or ZoneList 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 1 North Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name 1
 
@@ -1163,6 +1205,7 @@
     Floor,                   !- Surface Type
     ExtSlabCarpet 4in ClimateZone 1-8,  !- Construction Name
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1179,6 +1222,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1210,6 +1254,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 5,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1226,6 +1271,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 29,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1242,6 +1288,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 15,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1258,6 +1305,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 1 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 49,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1306,17 +1354,29 @@
     Thermal Zone: Story 1 South Perimeter Space Inlet Node List,  !- Name
     Node 31;                 !- Node 1 Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Air Terminal Single Duct Uncontrolled 2,  !- Name
     Always On Discrete,      !- Availability Schedule Name
-    Node 31,                 !- Zone Supply Air Node Name
-    AutoSize;                !- Maximum Air Flow Rate {m3/s}
+    Node 31 ATInlet,         !- Air Inlet Node Name
+    Node 31,                 !- Air Outlet Node Name
+    AutoSize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Air Terminal Single Duct Uncontrolled 2 ADU,  !- Name
+    Node 31,                 !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Air Terminal Single Duct Uncontrolled 2,  !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 1 South Perimeter Space Equipment List,  !- Name
     SequentialLoad,          !- Load Distribution Scheme
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Air Terminal Single Duct Uncontrolled 2,  !- Zone Equipment 1 Name
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Air Terminal Single Duct Uncontrolled 2 ADU,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
     ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
@@ -1345,7 +1405,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 1 South Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 1 South Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 1 South Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -1358,10 +1422,10 @@
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
-    Thermal Zone: Story 1 South Perimeter Space,  !- Zone 1 Name
+    Thermal Zone: Story 1 South Perimeter Space,  !- Zone or ZoneList 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 1 South Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name 1
-    Thermal Zone: Story 1 West Perimeter Space,  !- Zone 2 Name
+    Thermal Zone: Story 1 West Perimeter Space,  !- Zone or ZoneList 2 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 2
     Thermal Zone: Story 1 West Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name 2
 
@@ -1384,6 +1448,7 @@
     Floor,                   !- Surface Type
     ExtSlabCarpet 4in ClimateZone 1-8,  !- Construction Name
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1400,6 +1465,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1431,6 +1497,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 11,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1447,6 +1514,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 26,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1463,6 +1531,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 21,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1479,6 +1548,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 1 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 31,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1527,17 +1597,29 @@
     Thermal Zone: Story 1 West Perimeter Space Inlet Node List,  !- Name
     Node 33;                 !- Node 1 Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Air Terminal Single Duct Uncontrolled 3,  !- Name
     Always On Discrete,      !- Availability Schedule Name
-    Node 33,                 !- Zone Supply Air Node Name
-    AutoSize;                !- Maximum Air Flow Rate {m3/s}
+    Node 33 ATInlet,         !- Air Inlet Node Name
+    Node 33,                 !- Air Outlet Node Name
+    AutoSize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Air Terminal Single Duct Uncontrolled 3 ADU,  !- Name
+    Node 33,                 !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Air Terminal Single Duct Uncontrolled 3,  !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 1 West Perimeter Space Equipment List,  !- Name
     SequentialLoad,          !- Load Distribution Scheme
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Air Terminal Single Duct Uncontrolled 3,  !- Zone Equipment 1 Name
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Air Terminal Single Duct Uncontrolled 3 ADU,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
     ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
@@ -1566,7 +1648,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 1 West Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 1 West Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 1 West Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -1592,6 +1678,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 2 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 30,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1608,6 +1695,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 34,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1624,6 +1712,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 40,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1640,6 +1729,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 46,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1656,6 +1746,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 52,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1672,6 +1763,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 2 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 85,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1797,7 +1889,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 2 Core Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 2 Core Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 2 Core Space Design Spec Zone Air Dist,  !- Name
@@ -1810,10 +1906,10 @@
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
-    Thermal Zone: Story 2 Core Space,  !- Zone 1 Name
+    Thermal Zone: Story 2 Core Space,  !- Zone or ZoneList 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 2 Core Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name 1
-    Thermal Zone: Story 2 East Perimeter Space,  !- Zone 2 Name
+    Thermal Zone: Story 2 East Perimeter Space,  !- Zone or ZoneList 2 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 2
     Thermal Zone: Story 2 East Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name 2
 
@@ -1836,6 +1932,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 18,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1852,6 +1949,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -1883,6 +1981,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 53,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1899,6 +1998,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 58,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1915,6 +2015,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 39,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -1931,6 +2032,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 2 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 73,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2056,7 +2158,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 2 East Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 2 East Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 2 East Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -2082,6 +2188,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 12,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2098,6 +2205,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -2129,6 +2237,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 47,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2145,6 +2254,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 57,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2161,6 +2271,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 33,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2177,6 +2288,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 2 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 67,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2225,17 +2337,29 @@
     Thermal Zone: Story 2 North Perimeter Space Inlet Node List,  !- Name
     Node 47;                 !- Node 1 Name
 
-  AirTerminal:SingleDuct:Uncontrolled,
+  AirTerminal:SingleDuct:ConstantVolume:NoReheat,
     Air Terminal Single Duct Uncontrolled 4,  !- Name
     Always On Discrete,      !- Availability Schedule Name
-    Node 47,                 !- Zone Supply Air Node Name
-    AutoSize;                !- Maximum Air Flow Rate {m3/s}
+    Node 47 ATInlet,         !- Air Inlet Node Name
+    Node 47,                 !- Air Outlet Node Name
+    AutoSize,                !- Maximum Air Flow Rate {m3/s}
+    ,                        !- Design Specification Outdoor Air Object Name
+    ;                        !- Per Person Ventilation Rate Mode
+
+  ZoneHVAC:AirDistributionUnit,
+    Air Terminal Single Duct Uncontrolled 4 ADU,  !- Name
+    Node 47,                 !- Air Distribution Unit Outlet Node Name
+    AirTerminal:SingleDuct:ConstantVolume:NoReheat,  !- Air Terminal Object Type
+    Air Terminal Single Duct Uncontrolled 4,  !- Air Terminal Name
+    ,                        !- Nominal Upstream Leakage Fraction
+    ,                        !- Constant Downstream Leakage Fraction
+    ;                        !- Design Specification Air Terminal Sizing Object Name
 
   ZoneHVAC:EquipmentList,
     Thermal Zone: Story 2 North Perimeter Space Equipment List,  !- Name
     SequentialLoad,          !- Load Distribution Scheme
-    AirTerminal:SingleDuct:Uncontrolled,  !- Zone Equipment 1 Object Type
-    Air Terminal Single Duct Uncontrolled 4,  !- Zone Equipment 1 Name
+    ZoneHVAC:AirDistributionUnit,  !- Zone Equipment 1 Object Type
+    Air Terminal Single Duct Uncontrolled 4 ADU,  !- Zone Equipment 1 Name
     1,                       !- Zone Equipment 1 Cooling Sequence
     1,                       !- Zone Equipment 1 Heating or No-Load Sequence
     ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
@@ -2264,7 +2388,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 2 North Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 2 North Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 2 North Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -2277,7 +2405,7 @@
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
-    Thermal Zone: Story 2 North Perimeter Space,  !- Zone 1 Name
+    Thermal Zone: Story 2 North Perimeter Space,  !- Zone or ZoneList 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 2 North Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name 1
 
@@ -2300,6 +2428,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 24,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2316,6 +2445,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -2347,6 +2477,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 35,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2363,6 +2494,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 59,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2379,6 +2511,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 45,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2395,6 +2528,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 2 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 79,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2530,7 +2664,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 2 South Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 2 South Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 2 South Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -2543,10 +2681,10 @@
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
-    Thermal Zone: Story 2 South Perimeter Space,  !- Zone 1 Name
+    Thermal Zone: Story 2 South Perimeter Space,  !- Zone or ZoneList 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 2 South Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name 1
-    Thermal Zone: Story 2 West Perimeter Space,  !- Zone 2 Name
+    Thermal Zone: Story 2 West Perimeter Space,  !- Zone or ZoneList 2 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 2
     Thermal Zone: Story 2 West Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name 2
 
@@ -2569,6 +2707,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 6,               !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2585,6 +2724,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -2616,6 +2756,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 41,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2632,6 +2773,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 56,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2648,6 +2790,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 51,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2664,6 +2807,7 @@
     Ceiling,                 !- Surface Type
     Interior Ceiling,        !- Construction Name
     Thermal Zone: Story 2 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 61,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2799,7 +2943,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 2 West Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 2 West Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 2 West Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -2825,6 +2973,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 3 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 60,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2841,6 +2990,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 64,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2857,6 +3007,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 70,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2873,6 +3024,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 76,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2889,6 +3041,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 82,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -2905,6 +3058,7 @@
     Roof,                    !- Surface Type
     ASHRAE 90.1-2007 ExtRoof IEAD ClimateZone 2-8,  !- Construction Name
     Thermal Zone: Story 3 Core Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3030,7 +3184,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 3 Core Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 3 Core Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 3 Core Space Design Spec Zone Air Dist,  !- Name
@@ -3043,13 +3201,13 @@
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
-    Thermal Zone: Story 3 Core Space,  !- Zone 1 Name
+    Thermal Zone: Story 3 Core Space,  !- Zone or ZoneList 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 3 Core Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name 1
-    Thermal Zone: Story 3 East Perimeter Space,  !- Zone 2 Name
+    Thermal Zone: Story 3 East Perimeter Space,  !- Zone or ZoneList 2 Name
     90.1-2007 - Office - Corridor Ventilation,  !- Design Specification Outdoor Air Object Name 2
     Thermal Zone: Story 3 East Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name 2
-    Thermal Zone: Story 3 North Perimeter Space,  !- Zone 3 Name
+    Thermal Zone: Story 3 North Perimeter Space,  !- Zone or ZoneList 3 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 3
     Thermal Zone: Story 3 North Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name 3
 
@@ -3072,6 +3230,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 48,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3088,6 +3247,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3119,6 +3279,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 83,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3135,6 +3296,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 88,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3151,6 +3313,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 69,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3167,6 +3330,7 @@
     Roof,                    !- Surface Type
     ASHRAE 90.1-2007 ExtRoof IEAD ClimateZone 2-8,  !- Construction Name
     Thermal Zone: Story 3 East Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3292,7 +3456,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 3 East Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 3 East Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 3 East Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -3326,6 +3494,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 42,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3342,6 +3511,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3373,6 +3543,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 77,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3389,6 +3560,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 87,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3405,6 +3577,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 63,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3421,6 +3594,7 @@
     Roof,                    !- Surface Type
     ASHRAE 90.1-2007 ExtRoof IEAD ClimateZone 2-8,  !- Construction Name
     Thermal Zone: Story 3 North Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3546,7 +3720,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 3 North Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 3 North Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 3 North Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -3572,6 +3750,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 54,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3588,6 +3767,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3619,6 +3799,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 65,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3635,6 +3816,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 89,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3651,6 +3833,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 75,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3667,6 +3850,7 @@
     Roof,                    !- Surface Type
     ASHRAE 90.1-2007 ExtRoof IEAD ClimateZone 2-8,  !- Construction Name
     Thermal Zone: Story 3 South Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3802,7 +3986,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 3 South Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 3 South Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 3 South Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -3815,10 +4003,10 @@
     No,                      !- Demand Controlled Ventilation
     ZoneSum,                 !- System Outdoor Air Method
     1.0,                     !- Zone Maximum Outdoor Air Fraction {dimensionless}
-    Thermal Zone: Story 3 South Perimeter Space,  !- Zone 1 Name
+    Thermal Zone: Story 3 South Perimeter Space,  !- Zone or ZoneList 1 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 1
     Thermal Zone: Story 3 South Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name 1
-    Thermal Zone: Story 3 West Perimeter Space,  !- Zone 2 Name
+    Thermal Zone: Story 3 West Perimeter Space,  !- Zone or ZoneList 2 Name
     90.1-2007 - Office - OpenOffice Ventilation,  !- Design Specification Outdoor Air Object Name 2
     Thermal Zone: Story 3 West Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name 2
 
@@ -3841,6 +4029,7 @@
     Floor,                   !- Surface Type
     Interior Floor,          !- Construction Name
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 36,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3857,6 +4046,7 @@
     Wall,                    !- Surface Type
     ASHRAE 90.1-2007 ExtWall Mass ClimateZone 5,  !- Construction Name
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -3888,6 +4078,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 71,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3904,6 +4095,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 86,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3920,6 +4112,7 @@
     Wall,                    !- Surface Type
     Interior Wall,           !- Construction Name
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Surface,                 !- Outside Boundary Condition
     Surface 81,              !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -3936,6 +4129,7 @@
     Roof,                    !- Surface Type
     ASHRAE 90.1-2007 ExtRoof IEAD ClimateZone 2-8,  !- Construction Name
     Thermal Zone: Story 3 West Perimeter Space,  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -4071,7 +4265,11 @@
     0.002032,                !- Heating Maximum Air Flow per Zone Floor Area {m3/s-m2}
     0.1415762,               !- Heating Maximum Air Flow {m3/s}
     0.3,                     !- Heating Maximum Air Flow Fraction
-    Thermal Zone: Story 3 West Perimeter Space Design Spec Zone Air Dist;  !- Design Specification Zone Air Distribution Object Name
+    Thermal Zone: Story 3 West Perimeter Space Design Spec Zone Air Dist,  !- Design Specification Zone Air Distribution Object Name
+    No,                      !- Account for Dedicated Outdoor Air System
+    NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
+    autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
+    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 3 West Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -4083,7 +4281,9 @@
     Yes,                     !- Do System Sizing Calculation
     Yes,                     !- Do Plant Sizing Calculation
     No,                      !- Run Simulation for Sizing Periods
-    Yes;                     !- Run Simulation for Weather File Run Periods
+    Yes,                     !- Run Simulation for Weather File Run Periods
+    No,                      !- Do HVAC Sizing Simulation for Sizing Periods
+    1;                       !- Maximum Number of HVAC Sizing Simulation Passes
 
   ConvergenceLimits,
     1;                       !- Minimum System Timestep {minutes}
@@ -4107,8 +4307,9 @@
     No;                      !- Treat Weather as Actual
 
   ShadowCalculation,
-    AverageOverDaysInFrequency,  !- Calculation Method
-    7,                       !- Calculation Frequency
+    PolygonClipping,         !- Shading Calculation Method
+    Periodic,                !- Shading Calculation Update Frequency Method
+    7,                       !- Shading Calculation Update Frequency
     15000;                   !- Maximum Figures in Shadow Overlap Calculations
 
   SurfaceConvectionAlgorithm:Inside,TARP;
@@ -5762,8 +5963,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 3,  !- Name
     Air Loop HVAC Outdoor Air System 3 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 3 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 3 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 3 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 3 Controller List,  !- Name
@@ -5877,7 +6077,7 @@
   AirLoopHVAC:ZoneSplitter,
     Air Loop HVAC Zone Splitter 3,  !- Name
     Node 45,                 !- Inlet Node Name
-    Node 47;                 !- Outlet 1 Node Name
+    Node 47 ATInlet;         !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     Electric Furnace Return Path,  !- Name
@@ -5973,8 +6173,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 2,  !- Name
     Air Loop HVAC Outdoor Air System 2 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 2 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 2 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 2 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 2 Controller List,  !- Name
@@ -6092,7 +6291,7 @@
   AirLoopHVAC:ZoneSplitter,
     Air Loop HVAC Zone Splitter 2,  !- Name
     Node 35,                 !- Inlet Node Name
-    Node 37;                 !- Outlet 1 Node Name
+    Node 37 ATInlet;         !- Outlet 1 Node Name
 
   AirLoopHVAC:ReturnPath,
     Gas Fired Furnace Return Path,  !- Name
@@ -6192,8 +6391,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 1,  !- Name
     Air Loop HVAC Outdoor Air System 1 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 1 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 1 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 1 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 1 Controller List,  !- Name
@@ -6410,8 +6608,8 @@
   AirLoopHVAC:ZoneSplitter,
     Air Loop HVAC Zone Splitter 1,  !- Name
     Node 22,                 !- Inlet Node Name
-    Node 31,                 !- Outlet 1 Node Name
-    Node 33;                 !- Outlet 2 Node Name
+    Node 31 ATInlet,         !- Outlet 1 Node Name
+    Node 33 ATInlet;         !- Outlet 2 Node Name
 
   AirLoopHVAC:ReturnPath,
     Packaged Rooftop Air Conditioner Return Path,  !- Name
@@ -6512,8 +6710,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 5,  !- Name
     Air Loop HVAC Outdoor Air System 5 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 5 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 5 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 5 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 5 Controller List,  !- Name
@@ -6877,8 +7074,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 4,  !- Name
     Air Loop HVAC Outdoor Air System 4 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 4 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 4 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 4 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 4 Controller List,  !- Name
@@ -7250,8 +7446,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 7,  !- Name
     Air Loop HVAC Outdoor Air System 7 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 7 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 7 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 7 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 7 Controller List,  !- Name
@@ -7525,8 +7720,7 @@
   AirLoopHVAC:OutdoorAirSystem,
     Air Loop HVAC Outdoor Air System 6,  !- Name
     Air Loop HVAC Outdoor Air System 6 Controller List,  !- Controller List Name
-    Air Loop HVAC Outdoor Air System 6 Equipment List,  !- Outdoor Air Equipment List Name
-    Air Loop HVAC Outdoor Air System 6 Availability Manager List;  !- Availability Manager List Name
+    Air Loop HVAC Outdoor Air System 6 Equipment List;  !- Outdoor Air Equipment List Name
 
   AirLoopHVAC:ControllerList,
     Air Loop HVAC Outdoor Air System 6 Controller List,  !- Name
@@ -8553,7 +8747,7 @@
 
   Boiler:HotWater,
     Boiler Hot Water 1,      !- Name
-    FuelOil#1,               !- Fuel Type
+    FuelOilNo1,              !- Fuel Type
     Autosize,                !- Nominal Capacity {W}
     0.8,                     !- Nominal Thermal Efficiency
     LeavingBoiler,           !- Efficiency Curve Temperature Evaluation Variable
@@ -9187,7 +9381,7 @@
 
   Lights,
     90.1-2007 - Office - Corridor Lights,  !- Name
-    90.1-2007 - Office - Corridor,  !- Zone or ZoneList Name
+    90.1-2007 - Office - Corridor,  !- Zone or ZoneList or Space or SpaceList Name
     Office Bldg Light,       !- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Lighting Level {W}
@@ -9200,19 +9394,19 @@
 
   People,
     90.1-2007 - Office - Corridor People,  !- Name
-    90.1-2007 - Office - Corridor,  !- Zone or ZoneList Name
+    90.1-2007 - Office - Corridor,  !- Zone or ZoneList or Space or SpaceList Name
     Medium Office Bldg Occ,  !- Number of People Schedule Name
     People/Area,             !- Number of People Calculation Method
     ,                        !- Number of People
-    0.0107639104167097,      !- People per Zone Floor Area {person/m2}
-    ,                        !- Zone Floor Area per Person {m2/person}
+    0.0107639104167097,      !- People per Floor Area {person/m2}
+    ,                        !- Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
     Autocalculate,           !- Sensible Heat Fraction
     Medium Office Activity;  !- Activity Level Schedule Name
 
   ElectricEquipment,
     90.1-2007 - Office - Corridor Electric Equipment,  !- Name
-    90.1-2007 - Office - Corridor,  !- Zone or ZoneList Name
+    90.1-2007 - Office - Corridor,  !- Zone or ZoneList or Space or SpaceList Name
     Medium Office Bldg Equip,!- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Design Level {W}
@@ -9255,7 +9449,7 @@
 
   Lights,
     90.1-2007 - Office - OpenOffice Lights,  !- Name
-    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList Name
+    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList or Space or SpaceList Name
     Office Bldg Light,       !- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Lighting Level {W}
@@ -9268,19 +9462,19 @@
 
   People,
     90.1-2007 - Office - OpenOffice People,  !- Name
-    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList Name
+    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList or Space or SpaceList Name
     Medium Office Bldg Occ,  !- Number of People Schedule Name
     People/Area,             !- Number of People Calculation Method
     ,                        !- Number of People
-    0.056510529687726,       !- People per Zone Floor Area {person/m2}
-    ,                        !- Zone Floor Area per Person {m2/person}
+    0.056510529687726,       !- People per Floor Area {person/m2}
+    ,                        !- Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
     Autocalculate,           !- Sensible Heat Fraction
     Medium Office Activity;  !- Activity Level Schedule Name
 
   ElectricEquipment,
     90.1-2007 - Office - OpenOffice Electric Equipment,  !- Name
-    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList Name
+    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList or Space or SpaceList Name
     Medium Office Bldg Equip,!- Schedule Name
     Watts/Area,              !- Design Level Calculation Method
     ,                        !- Design Level {W}
@@ -9440,7 +9634,7 @@
 
   UtilityCost:Tariff,
     Large CG,                !- Name
-    Gas:Facility,            !- Output Meter Name
+    NaturalGas:Facility,     !- Output Meter Name
     MMBtu,                   !- Conversion Factor Choice
     ,                        !- Energy Conversion Factor
     ,                        !- Demand Conversion Factor
@@ -9544,7 +9738,7 @@
 
   UtilityCost:Tariff,
     Generic Fuel Oil 1,      !- Name
-    FuelOil#1:Facility,      !- Output Meter Name
+    FuelOilNo1:Facility,     !- Output Meter Name
     ,                        !- Conversion Factor Choice
     ,                        !- Energy Conversion Factor
     ,                        !- Demand Conversion Factor
@@ -9615,7 +9809,7 @@
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Commercial-Distillate Oil,  !- LCC Price Escalation Name
-    FuelOil#1,               !- Resource
+    FuelOilNo1,              !- Resource
     2011,                    !- Escalation Start Year
     January,                 !- Escalation Start Month
     0.9714,                  !- Year 1 Escalation
@@ -9651,7 +9845,7 @@
 
   LifeCycleCost:UsePriceEscalation,
     U.S. Avg  Commercial-Residual Oil,  !- LCC Price Escalation Name
-    FuelOil#2,               !- Resource
+    FuelOilNo2,              !- Resource
     2011,                    !- Escalation Start Year
     January,                 !- Escalation Start Month
     0.8469,                  !- Year 1 Escalation
@@ -9792,17 +9986,17 @@
   Output:Table:Monthly,
     Building Energy Performance - Natural Gas,  !- Name
     2,                       !- Digits After Decimal
-    InteriorEquipment:Gas,   !- Variable or Meter 1 Name
+    InteriorEquipment:NaturalGas,  !- Variable or Meter 1 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 1
-    ExteriorEquipment:Gas,   !- Variable or Meter 2 Name
+    ExteriorEquipment:NaturalGas,  !- Variable or Meter 2 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 2
-    Heating:Gas,             !- Variable or Meter 3 Name
+    Heating:NaturalGas,      !- Variable or Meter 3 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 3
-    Cooling:Gas,             !- Variable or Meter 4 Name
+    Cooling:NaturalGas,      !- Variable or Meter 4 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 4
-    WaterSystems:Gas,        !- Variable or Meter 5 Name
+    WaterSystems:NaturalGas, !- Variable or Meter 5 Name
     SumOrAverage,            !- Aggregation Type for Variable or Meter 5
-    Cogeneration:Gas,        !- Variable or Meter 6 Name
+    Cogeneration:NaturalGas, !- Variable or Meter 6 Name
     SumOrAverage;            !- Aggregation Type for Variable or Meter 6
 
   Output:Table:Monthly,
@@ -9900,19 +10094,19 @@
   Output:Table:Monthly,
     Building Energy Performance - Natural Gas Peak Demand,  !- Name
     2,                       !- Digits After Decimal
-    Gas:Facility,            !- Variable or Meter 1 Name
+    NaturalGas:Facility,     !- Variable or Meter 1 Name
     Maximum,                 !- Aggregation Type for Variable or Meter 1
-    InteriorEquipment:Gas,   !- Variable or Meter 2 Name
+    InteriorEquipment:NaturalGas,  !- Variable or Meter 2 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 2
-    ExteriorEquipment:Gas,   !- Variable or Meter 3 Name
+    ExteriorEquipment:NaturalGas,  !- Variable or Meter 3 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 3
-    Heating:Gas,             !- Variable or Meter 4 Name
+    Heating:NaturalGas,      !- Variable or Meter 4 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 4
-    Cooling:Gas,             !- Variable or Meter 5 Name
+    Cooling:NaturalGas,      !- Variable or Meter 5 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 5
-    WaterSystems:Gas,        !- Variable or Meter 6 Name
+    WaterSystems:NaturalGas, !- Variable or Meter 6 Name
     ValueWhenMaximumOrMinimum,  !- Aggregation Type for Variable or Meter 6
-    Cogeneration:Gas,        !- Variable or Meter 7 Name
+    Cogeneration:NaturalGas, !- Variable or Meter 7 Name
     ValueWhenMaximumOrMinimum;  !- Aggregation Type for Variable or Meter 7
 
   Output:Table:Monthly,
@@ -9981,7 +10175,7 @@
 
   Output:Meter,Electricity:Facility,Timestep;
 
-  Output:Meter,Gas:Facility,Timestep;
+  Output:Meter,NaturalGas:Facility,Timestep;
 
   Output:Meter,DistrictCooling:Facility,Timestep;
 

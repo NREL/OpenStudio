@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,98 +39,98 @@ class Time;
 
 namespace model {
 
-class ScheduleTypeLimits;
+  class ScheduleTypeLimits;
 
-namespace detail {
+  namespace detail {
 
-  class ScheduleDay_Impl;
+    class ScheduleDay_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ScheduleDay is a ScheduleBase that wraps the OpenStudio IDD object 'OS_Schedule_Day'. */
-class MODEL_API ScheduleDay : public ScheduleBase {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ScheduleDay is a ScheduleBase that wraps the OpenStudio IDD object 'OS_Schedule_Day'. */
+  class MODEL_API ScheduleDay : public ScheduleBase
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** Initializes the schedule to a value of 0.0 until 24:00. */
-  explicit ScheduleDay(const Model& model);
+    /** Initializes the schedule to a value of 0.0 until 24:00. */
+    explicit ScheduleDay(const Model& model);
 
-  /** Initializes the schedule to value until 24:00. */
-  ScheduleDay(const Model& model, double value);
+    /** Initializes the schedule to value until 24:00. */
+    ScheduleDay(const Model& model, double value);
 
-  virtual ~ScheduleDay() {}
+    virtual ~ScheduleDay() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** Returns true if this object does not specify a ScheduleTypeLimits directly, but rather
+    /** Returns true if this object does not specify a ScheduleTypeLimits directly, but rather
    *  inherits one from a Schedule. */
-  bool isScheduleTypeLimitsDefaulted() const;
+    bool isScheduleTypeLimitsDefaulted() const;
 
-  bool interpolatetoTimestep() const;
+    bool interpolatetoTimestep() const;
 
-  bool isInterpolatetoTimestepDefaulted() const;
+    bool isInterpolatetoTimestepDefaulted() const;
 
-  /// Returns a vector of times marking the end value intervals.
-  /// These times will be in order and have the same number of elements as values.
-  /// All times will be less than or equal to 1 day.
-  std::vector<openstudio::Time> times() const;
+    /// Returns a vector of times marking the end value intervals.
+    /// These times will be in order and have the same number of elements as values.
+    /// All times will be less than or equal to 1 day.
+    std::vector<openstudio::Time> times() const;
 
-  /// Returns a vector of values in the same order and with the same number of elements as times.
-  std::vector<double> values() const;
+    /// Returns a vector of values in the same order and with the same number of elements as times.
+    std::vector<double> values() const;
 
-  /// Returns the value in effect at the given time.  If time is less than 0 days or greater than 1 day, 0 is returned.
-  double getValue(const openstudio::Time& time) const;
+    /// Returns the value in effect at the given time.  If time is less than 0 days or greater than 1 day, 0 is returned.
+    double getValue(const openstudio::Time& time) const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setInterpolatetoTimestep(bool interpolatetoTimestep);
+    bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
-  void resetInterpolatetoTimestep();
+    void resetInterpolatetoTimestep();
 
-  /** Returns false if time is less than 0 days or greater than 1 day.  Replaces existing value
+    /** Returns false if time is less than 0 days or greater than 1 day.  Replaces existing value
    *  for same time. */
-  bool addValue(const openstudio::Time& untilTime, double value);
+    bool addValue(const openstudio::Time& untilTime, double value);
 
-  /** Remove a value added by addValue at the exact time.  Returns the removed
+    /** Remove a value added by addValue at the exact time.  Returns the removed
    *  value if there was one. */
-  boost::optional<double> removeValue(const openstudio::Time& time);
+    boost::optional<double> removeValue(const openstudio::Time& time);
 
-  /// Clear all values from this schedule.
-  void clearValues();
+    /// Clear all values from this schedule.
+    void clearValues();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ScheduleDay_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ScheduleDay_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class detail::ScheduleDay_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::ScheduleDay_Impl;
 
-  explicit ScheduleDay(std::shared_ptr<detail::ScheduleDay_Impl> impl);
+    explicit ScheduleDay(std::shared_ptr<detail::ScheduleDay_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ScheduleDay");
+  };
 
-  REGISTER_LOGGER("openstudio.model.ScheduleDay");
-};
+  /** \relates ScheduleDay*/
+  typedef boost::optional<ScheduleDay> OptionalScheduleDay;
 
-/** \relates ScheduleDay*/
-typedef boost::optional<ScheduleDay> OptionalScheduleDay;
+  /** \relates ScheduleDay*/
+  typedef std::vector<ScheduleDay> ScheduleDayVector;
 
-/** \relates ScheduleDay*/
-typedef std::vector<ScheduleDay> ScheduleDayVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SCHEDULEDAY_HPP
+#endif  // MODEL_SCHEDULEDAY_HPP

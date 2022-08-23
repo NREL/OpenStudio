@@ -1,6 +1,9 @@
 #ifndef UTILITIES_BCL_LOCALBCL_I
 #define UTILITIES_BCL_LOCALBCL_I
 
+%include <utilities/core/CommonInclude.i>
+%import <utilities/core/CommonImport.i>
+
 %{
   #include <utilities/bcl/BCL.hpp>
   #include <utilities/bcl/BCLComponent.hpp>
@@ -8,11 +11,11 @@
   #include <utilities/bcl/BCLMeasureArgument.hpp>
   #include <utilities/bcl/BCLMeasureOutput.hpp>
   #include <utilities/bcl/BCLMeasure.hpp>
+  #include <utilities/bcl/BCLXML.hpp>
   #include <utilities/bcl/LocalBCL.hpp>
   #include <utilities/bcl/RemoteBCL.hpp>
   #include <utilities/core/FileReference.hpp>
   #include <utilities/plot/ProgressBar.hpp>
-  #include <utilities/core/UpdateManager.hpp>
 %}
 
 %ignore componentDownloaded;
@@ -75,12 +78,21 @@
 %template(OptionalBCLMeasure) boost::optional<openstudio::BCLMeasure>;
 %template(BCLMeasureVector) std::vector<openstudio::BCLMeasure>;
 
+%ignore std::vector<openstudio::BCLXML>::vector(size_type);
+%ignore std::vector<openstudio::BCLXML>::resize(size_type);
+%template(BCLXMLVector)std::vector<openstudio::BCLXML>;
+%template(OptionalBCLXML)boost::optional<openstudio::BCLXML>;
+
+%template(PugixmldocPtr) std::shared_ptr<pugi::xml_document>;
+
+%template(OptionalMeasureType) boost::optional<openstudio::MeasureType>;
+
 %include <utilities/bcl/BCLFileReference.hpp>
-%include <utilities/bcl/BCLXML.hpp>
 %include <utilities/bcl/BCLComponent.hpp>
 %include <utilities/bcl/BCLMeasureArgument.hpp>
 %include <utilities/bcl/BCLMeasureOutput.hpp>
 %include <utilities/bcl/BCLMeasure.hpp>
+%include <utilities/bcl/BCLXML.hpp>
 %include <utilities/bcl/BCL.hpp>
 %include <utilities/bcl/RemoteBCL.hpp>
 %include <utilities/bcl/LocalBCL.hpp>

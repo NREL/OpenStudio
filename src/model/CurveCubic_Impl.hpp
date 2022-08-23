@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,125 +36,109 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** CurveCubic_Impl is a Curve_Impl that is the implementation class for CurveCubic.*/
-  class MODEL_API CurveCubic_Impl : public Curve_Impl {
+    /** CurveCubic_Impl is a Curve_Impl that is the implementation class for CurveCubic.*/
+    class MODEL_API CurveCubic_Impl : public Curve_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      CurveCubic_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      CurveCubic_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      CurveCubic_Impl(const CurveCubic_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~CurveCubic_Impl() {}
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
 
+      virtual int numVariables() const override;
 
+      virtual double evaluate(const std::vector<double>& independentVariables) const override;
 
+      //@}
+      /** @name Getters */
+      //@{
 
+      double coefficient1Constant() const;
 
-   public:
+      double coefficient2x() const;
 
-    /** @name Constructors and Destructors */
-    //@{
+      double coefficient3xPOW2() const;
 
-    CurveCubic_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      double coefficient4xPOW3() const;
 
-    CurveCubic_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                    Model_Impl* model,
-                    bool keepHandle);
+      double minimumValueofx() const;
 
-    CurveCubic_Impl(const CurveCubic_Impl& other,
-                    Model_Impl* model,
-                    bool keepHandle);
+      double maximumValueofx() const;
 
-    virtual ~CurveCubic_Impl() {}
+      boost::optional<double> minimumCurveOutput() const;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      boost::optional<double> maximumCurveOutput() const;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      std::string inputUnitTypeforX() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      bool isInputUnitTypeforXDefaulted() const;
 
-    virtual int numVariables() const override;
+      std::string outputUnitType() const;
 
-    virtual double evaluate(const std::vector<double>& x) const override;
+      bool isOutputUnitTypeDefaulted() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    double coefficient1Constant() const;
+      bool setCoefficient1Constant(double coefficient1Constant);
 
-    double coefficient2x() const;
+      bool setCoefficient2x(double coefficient2x);
 
-    double coefficient3xPOW2() const;
+      bool setCoefficient3xPOW2(double coefficient3xPOW2);
 
-    double coefficient4xPOW3() const;
+      bool setCoefficient4xPOW3(double coefficient4xPOW3);
 
-    double minimumValueofx() const;
+      bool setMinimumValueofx(double minimumValueofx);
 
-    double maximumValueofx() const;
+      bool setMaximumValueofx(double maximumValueofx);
 
-    boost::optional<double> minimumCurveOutput() const;
+      bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
 
-    boost::optional<double> maximumCurveOutput() const;
+      void resetMinimumCurveOutput();
 
-    std::string inputUnitTypeforX() const;
+      bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
 
-    bool isInputUnitTypeforXDefaulted() const;
+      void resetMaximumCurveOutput();
 
-    std::string outputUnitType() const;
+      bool setInputUnitTypeforX(const std::string& inputUnitTypeforX);
 
-    bool isOutputUnitTypeDefaulted() const;
+      void resetInputUnitTypeforX();
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setOutputUnitType(const std::string& outputUnitType);
 
-    bool setCoefficient1Constant(double coefficient1Constant);
+      void resetOutputUnitType();
 
-    bool setCoefficient2x(double coefficient2x);
+      //@}
+      /** @name Other */
+      //@{
 
-    bool setCoefficient3xPOW2(double coefficient3xPOW2);
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CurveCubic");
+    };
 
-    bool setCoefficient4xPOW3(double coefficient4xPOW3);
+  }  // namespace detail
 
-    bool setMinimumValueofx(double minimumValueofx);
+}  // namespace model
+}  // namespace openstudio
 
-    bool setMaximumValueofx(double maximumValueofx);
-
-    bool setMinimumCurveOutput(boost::optional<double> minimumCurveOutput);
-
-    void resetMinimumCurveOutput();
-
-    bool setMaximumCurveOutput(boost::optional<double> maximumCurveOutput);
-
-    void resetMaximumCurveOutput();
-
-    bool setInputUnitTypeforX(std::string inputUnitTypeforX);
-
-    void resetInputUnitTypeforX();
-
-    bool setOutputUnitType(std::string outputUnitType);
-
-    void resetOutputUnitType();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CurveCubic");
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_CURVECUBIC_IMPL_HPP
+#endif  // MODEL_CURVECUBIC_IMPL_HPP

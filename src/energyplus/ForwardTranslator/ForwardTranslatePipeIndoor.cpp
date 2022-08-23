@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,50 +46,48 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translatePipeIndoor(PipeIndoor & modelObject)
-{
-  IdfObject idfObject(openstudio::IddObjectType::Pipe_Indoor);
+  boost::optional<IdfObject> ForwardTranslator::translatePipeIndoor(PipeIndoor& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Pipe_Indoor);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  if(auto value = modelObject.name()) {
-    idfObject.setName(value.get());
+    if (auto value = modelObject.name()) {
+      idfObject.setName(value.get());
+    }
+
+    if (auto node = modelObject.inletModelObject()) {
+      idfObject.setString(openstudio::Pipe_IndoorFields::FluidInletNodeName, node->name().get());
+    }
+
+    if (auto node = modelObject.outletModelObject()) {
+      idfObject.setString(openstudio::Pipe_IndoorFields::FluidOutletNodeName, node->name().get());
+    }
+
+    if (auto construction = modelObject.construction()) {
+      idfObject.setString(openstudio::Pipe_IndoorFields::ConstructionName, construction->name().get());
+    }
+
+    idfObject.setString(openstudio::Pipe_IndoorFields::EnvironmentType, modelObject.environmentType());
+
+    if (auto zone = modelObject.ambientTemperatureZone()) {
+      idfObject.setString(openstudio::Pipe_IndoorFields::AmbientTemperatureZoneName, zone->name().get());
+    }
+
+    if (auto schedule = modelObject.ambientTemperatureSchedule()) {
+      idfObject.setString(openstudio::Pipe_IndoorFields::AmbientTemperatureScheduleName, schedule->name().get());
+    }
+
+    if (auto schedule = modelObject.ambientAirVelocitySchedule()) {
+      idfObject.setString(openstudio::Pipe_IndoorFields::AmbientAirVelocityScheduleName, schedule->name().get());
+    }
+
+    idfObject.setDouble(openstudio::Pipe_IndoorFields::PipeInsideDiameter, modelObject.pipeInsideDiameter());
+
+    idfObject.setDouble(openstudio::Pipe_IndoorFields::PipeLength, modelObject.pipeLength());
+
+    return idfObject;
   }
 
-  if(auto node = modelObject.inletModelObject()) {
-    idfObject.setString(openstudio::Pipe_IndoorFields::FluidInletNodeName, node->name().get());
-  }
+}  // namespace energyplus
 
-  if(auto node = modelObject.outletModelObject()) {
-    idfObject.setString(openstudio::Pipe_IndoorFields::FluidOutletNodeName, node->name().get());
-  }
-
-  if(auto construction = modelObject.construction()) {
-    idfObject.setString(openstudio::Pipe_IndoorFields::ConstructionName,construction->name().get());
-  }
-
-  idfObject.setString(openstudio::Pipe_IndoorFields::EnvironmentType, modelObject.environmentType());
-
-  if(auto zone = modelObject.ambientTemperatureZone()) {
-    idfObject.setString(openstudio::Pipe_IndoorFields::AmbientTemperatureZoneName,zone->name().get());
-  }
-
-  if(auto schedule = modelObject.ambientTemperatureSchedule()) {
-    idfObject.setString(openstudio::Pipe_IndoorFields::AmbientTemperatureScheduleName,schedule->name().get());
-  }
-
-  if(auto schedule = modelObject.ambientAirVelocitySchedule()) {
-    idfObject.setString(openstudio::Pipe_IndoorFields::AmbientAirVelocityScheduleName,schedule->name().get());
-  }
-
-  idfObject.setDouble(openstudio::Pipe_IndoorFields::PipeInsideDiameter, modelObject.pipeInsideDiameter());
-
-  idfObject.setDouble(openstudio::Pipe_IndoorFields::PipeLength, modelObject.pipeLength());
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

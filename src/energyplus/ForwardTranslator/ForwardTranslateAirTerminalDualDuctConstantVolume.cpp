@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,57 +48,54 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirTerminalDualDuctConstantVolume( AirTerminalDualDuctConstantVolume & modelObject )
-{
+  boost::optional<IdfObject> ForwardTranslator::translateAirTerminalDualDuctConstantVolume(AirTerminalDualDuctConstantVolume& modelObject) {
 
-  std::string baseName = modelObject.name().get();
+    std::string baseName = modelObject.name().get();
 
-  IdfObject _airDistributionUnit(openstudio::IddObjectType::ZoneHVAC_AirDistributionUnit);
-  _airDistributionUnit.setName("ADU " + baseName ); //ADU: Air Distribution Unit
+    IdfObject _airDistributionUnit(openstudio::IddObjectType::ZoneHVAC_AirDistributionUnit);
+    _airDistributionUnit.setName("ADU " + baseName);  //ADU: Air Distribution Unit
 
-  IdfObject idfObject(openstudio::IddObjectType::AirTerminal_DualDuct_ConstantVolume);
-  idfObject.setName(baseName);
+    IdfObject idfObject(openstudio::IddObjectType::AirTerminal_DualDuct_ConstantVolume);
+    idfObject.setName(baseName);
 
-  m_idfObjects.push_back(_airDistributionUnit);
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(_airDistributionUnit);
+    m_idfObjects.push_back(idfObject);
 
-  {
-    auto schedule = modelObject.availabilitySchedule();
-    if( auto idf = translateAndMapModelObject(schedule) ) {
-      idfObject.setString(AirTerminal_DualDuct_ConstantVolumeFields::AvailabilityScheduleName,idf->name().get());
+    {
+      auto schedule = modelObject.availabilitySchedule();
+      if (auto idf = translateAndMapModelObject(schedule)) {
+        idfObject.setString(AirTerminal_DualDuct_ConstantVolumeFields::AvailabilityScheduleName, idf->name().get());
+      }
     }
+
+    if (auto mo = modelObject.outletModelObject()) {
+      idfObject.setString(AirTerminal_DualDuct_ConstantVolumeFields::AirOutletNodeName, mo->name().get());
+    }
+
+    if (auto mo = modelObject.inletModelObject(0)) {
+      idfObject.setString(AirTerminal_DualDuct_ConstantVolumeFields::HotAirInletNodeName, mo->name().get());
+    }
+
+    if (auto mo = modelObject.inletModelObject(1)) {
+      idfObject.setString(AirTerminal_DualDuct_ConstantVolumeFields::ColdAirInletNodeName, mo->name().get());
+    }
+
+    if (modelObject.isMaximumAirFlowRateAutosized()) {
+      idfObject.setString(AirTerminal_DualDuct_ConstantVolumeFields::MaximumAirFlowRate, "Autosize");
+    } else if (auto value = modelObject.maximumAirFlowRate()) {
+      idfObject.setDouble(AirTerminal_DualDuct_ConstantVolumeFields::MaximumAirFlowRate, value.get());
+    }
+
+    // Populate fields for AirDistributionUnit
+    if (boost::optional<ModelObject> outletNode = modelObject.outletModelObject()) {
+      _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirDistributionUnitOutletNodeName, outletNode->name().get());
+    }
+    _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType, idfObject.iddObject().name());
+    _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName, idfObject.name().get());
+
+    return _airDistributionUnit;
   }
 
-  if( auto mo = modelObject.outletModelObject() ) {
-    idfObject.setString(AirTerminal_DualDuct_ConstantVolumeFields::AirOutletNodeName,mo->name().get());
-  }
+}  // namespace energyplus
 
-  if( auto mo = modelObject.inletModelObject(0) ) {
-    idfObject.setString(AirTerminal_DualDuct_ConstantVolumeFields::HotAirInletNodeName,mo->name().get());
-  }
-
-  if( auto mo = modelObject.inletModelObject(1) ) {
-    idfObject.setString(AirTerminal_DualDuct_ConstantVolumeFields::ColdAirInletNodeName,mo->name().get());
-  }
-
-  if( modelObject.isMaximumAirFlowRateAutosized() ) {
-    idfObject.setString(AirTerminal_DualDuct_ConstantVolumeFields::MaximumAirFlowRate,"Autosize");
-  } else if ( auto value = modelObject.maximumAirFlowRate() ) {
-    idfObject.setDouble(AirTerminal_DualDuct_ConstantVolumeFields::MaximumAirFlowRate,value.get());
-  }
-
-  // Populate fields for AirDistributionUnit
-  if( boost::optional<ModelObject> outletNode = modelObject.outletModelObject() )
-  {
-    _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirDistributionUnitOutletNodeName,outletNode->name().get());
-  }
-  _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType,idfObject.iddObject().name());
-  _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName,idfObject.name().get());
-
-  return _airDistributionUnit;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

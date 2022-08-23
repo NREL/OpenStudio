@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,228 +36,221 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-//class WaterStorageTank;
+  class Schedule;
+  //class WaterStorageTank;
 
-namespace detail {
+  namespace detail {
 
-  /** EvaporativeFluidCoolerSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for EvaporativeFluidCoolerSingleSpeed.*/
-  class MODEL_API EvaporativeFluidCoolerSingleSpeed_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** EvaporativeFluidCoolerSingleSpeed_Impl is a StraightComponent_Impl that is the implementation class for EvaporativeFluidCoolerSingleSpeed.*/
+    class MODEL_API EvaporativeFluidCoolerSingleSpeed_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    EvaporativeFluidCoolerSingleSpeed_Impl(const IdfObject& idfObject,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      EvaporativeFluidCoolerSingleSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    EvaporativeFluidCoolerSingleSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      EvaporativeFluidCoolerSingleSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    EvaporativeFluidCoolerSingleSpeed_Impl(const EvaporativeFluidCoolerSingleSpeed_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle);
+      EvaporativeFluidCoolerSingleSpeed_Impl(const EvaporativeFluidCoolerSingleSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~EvaporativeFluidCoolerSingleSpeed_Impl() {}
+      virtual ~EvaporativeFluidCoolerSingleSpeed_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    //@}
-    /** @name Getters */
-    //@{
-    boost::optional<double> designAirFlowRate() const;
+      //@}
+      /** @name Getters */
+      //@{
+      boost::optional<double> designAirFlowRate() const;
 
-    bool isDesignAirFlowRateAutosized() const;
+      bool isDesignAirFlowRateAutosized() const;
 
-    boost::optional<double> fanPoweratDesignAirFlowRate() const;
+      boost::optional<double> fanPoweratDesignAirFlowRate() const;
 
-    bool isFanPoweratDesignAirFlowRateAutosized() const;
+      bool isFanPoweratDesignAirFlowRateAutosized() const;
 
-    double designSprayWaterFlowRate() const;
+      double designSprayWaterFlowRate() const;
 
-    boost::optional<std::string> performanceInputMethod() const;
+      std::string performanceInputMethod() const;
 
-    boost::optional<double> standardDesignCapacity() const;
+      boost::optional<double> standardDesignCapacity() const;
 
-    boost::optional<double> ufactorTimesAreaValueatDesignAirFlowRate() const;
+      boost::optional<double> ufactorTimesAreaValueatDesignAirFlowRate() const;
 
-    bool isUfactorTimesAreaValueatDesignAirFlowRateAutosized() const;
+      bool isUfactorTimesAreaValueatDesignAirFlowRateAutosized() const;
 
-    boost::optional<double> designWaterFlowRate() const;
+      boost::optional<double> designWaterFlowRate() const;
 
-    bool isDesignWaterFlowRateAutosized() const;
+      bool isDesignWaterFlowRateAutosized() const;
 
-    boost::optional<double> userSpecifiedDesignCapacity() const;
+      boost::optional<double> userSpecifiedDesignCapacity() const;
 
-    boost::optional<double> designEnteringWaterTemperature() const;
+      boost::optional<double> designEnteringWaterTemperature() const;
 
-    boost::optional<double> designEnteringAirTemperature() const;
+      boost::optional<double> designEnteringAirTemperature() const;
 
-    boost::optional<double> designEnteringAirWetbulbTemperature() const;
+      boost::optional<double> designEnteringAirWetbulbTemperature() const;
 
-    std::string capacityControl() const;
+      std::string capacityControl() const;
 
-    bool isCapacityControlDefaulted() const;
+      bool isCapacityControlDefaulted() const;
 
-    double sizingFactor() const;
+      double sizingFactor() const;
 
-    bool isSizingFactorDefaulted() const;
+      bool isSizingFactorDefaulted() const;
 
-    std::string evaporationLossMode() const;
+      std::string evaporationLossMode() const;
 
-    bool isEvaporationLossModeDefaulted() const;
+      bool isEvaporationLossModeDefaulted() const;
 
-    boost::optional<double> evaporationLossFactor() const;
+      boost::optional<double> evaporationLossFactor() const;
 
-    double driftLossPercent() const;
+      double driftLossPercent() const;
 
-    bool isDriftLossPercentDefaulted() const;
+      bool isDriftLossPercentDefaulted() const;
 
-    std::string blowdownCalculationMode() const;
+      std::string blowdownCalculationMode() const;
 
-    bool isBlowdownCalculationModeDefaulted() const;
+      bool isBlowdownCalculationModeDefaulted() const;
 
-    double blowdownConcentrationRatio() const;
+      double blowdownConcentrationRatio() const;
 
-    bool isBlowdownConcentrationRatioDefaulted() const;
+      bool isBlowdownConcentrationRatioDefaulted() const;
 
-    boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
+      boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
 
-    boost::optional<double> autosizedDesignAirFlowRate() const ;
+      boost::optional<double> autosizedDesignAirFlowRate() const;
 
-    boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const ;
+      boost::optional<double> autosizedFanPoweratDesignAirFlowRate() const;
 
-    boost::optional<double> autosizedUfactorTimesAreaValueatDesignAirFlowRate() const ;
+      boost::optional<double> autosizedUfactorTimesAreaValueatDesignAirFlowRate() const;
 
-    boost::optional<double> autosizedDesignWaterFlowRate() const ;
+      boost::optional<double> autosizedDesignWaterFlowRate() const;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
-    // A11; \field Supply Water Storage Tank Name
+      // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
+      // A11; \field Supply Water Storage Tank Name
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setDesignAirFlowRate(boost::optional<double> designAirFlowRate);
+      bool setDesignAirFlowRate(boost::optional<double> designAirFlowRate);
 
-    void autosizeDesignAirFlowRate();
+      void autosizeDesignAirFlowRate();
 
-    bool setFanPoweratDesignAirFlowRate(boost::optional<double> fanPoweratDesignAirFlowRate);
+      bool setFanPoweratDesignAirFlowRate(boost::optional<double> fanPoweratDesignAirFlowRate);
 
-    void autosizeFanPoweratDesignAirFlowRate();
+      void autosizeFanPoweratDesignAirFlowRate();
 
-    bool setDesignSprayWaterFlowRate(double designSprayWaterFlowRate);
+      bool setDesignSprayWaterFlowRate(double designSprayWaterFlowRate);
 
-    bool setPerformanceInputMethod(boost::optional<std::string> performanceInputMethod);
+      bool setPerformanceInputMethod(const std::string& performanceInputMethod);
 
-    void resetPerformanceInputMethod();
+      void resetOutdoorAirInletNode();
 
-    void resetOutdoorAirInletNode();
+      bool setStandardDesignCapacity(boost::optional<double> standardDesignCapacity);
 
-    bool setStandardDesignCapacity(boost::optional<double> standardDesignCapacity);
+      void resetStandardDesignCapacity();
 
-    void resetStandardDesignCapacity();
+      bool setUfactorTimesAreaValueatDesignAirFlowRate(boost::optional<double> ufactorTimesAreaValueatDesignAirFlowRate);
 
-    bool setUfactorTimesAreaValueatDesignAirFlowRate(boost::optional<double> ufactorTimesAreaValueatDesignAirFlowRate);
+      void resetUfactorTimesAreaValueatDesignAirFlowRate();
 
-    void resetUfactorTimesAreaValueatDesignAirFlowRate();
+      void autosizeUfactorTimesAreaValueatDesignAirFlowRate();
 
-    void autosizeUfactorTimesAreaValueatDesignAirFlowRate();
+      bool setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate);
 
-    bool setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate);
+      void resetDesignWaterFlowRate();
 
-    void resetDesignWaterFlowRate();
+      void autosizeDesignWaterFlowRate();
 
-    void autosizeDesignWaterFlowRate();
+      bool setUserSpecifiedDesignCapacity(boost::optional<double> userSpecifiedDesignCapacity);
 
-    bool setUserSpecifiedDesignCapacity(boost::optional<double> userSpecifiedDesignCapacity);
+      void resetUserSpecifiedDesignCapacity();
 
-    void resetUserSpecifiedDesignCapacity();
+      bool setDesignEnteringWaterTemperature(boost::optional<double> designEnteringWaterTemperature);
 
-    bool setDesignEnteringWaterTemperature(boost::optional<double> designEnteringWaterTemperature);
+      void resetDesignEnteringWaterTemperature();
 
-    void resetDesignEnteringWaterTemperature();
+      bool setDesignEnteringAirTemperature(boost::optional<double> designEnteringAirTemperature);
 
-    bool setDesignEnteringAirTemperature(boost::optional<double> designEnteringAirTemperature);
+      void resetDesignEnteringAirTemperature();
 
-    void resetDesignEnteringAirTemperature();
+      bool setDesignEnteringAirWetbulbTemperature(boost::optional<double> designEnteringAirWetbulbTemperature);
 
-    bool setDesignEnteringAirWetbulbTemperature(boost::optional<double> designEnteringAirWetbulbTemperature);
+      void resetDesignEnteringAirWetbulbTemperature();
 
-    void resetDesignEnteringAirWetbulbTemperature();
+      bool setCapacityControl(std::string capacityControl);
 
-    bool setCapacityControl(std::string capacityControl);
+      void resetCapacityControl();
 
-    void resetCapacityControl();
+      bool setSizingFactor(double sizingFactor);
 
-    bool setSizingFactor(double sizingFactor);
+      void resetSizingFactor();
 
-    void resetSizingFactor();
+      bool setEvaporationLossMode(std::string evaporationLossMode);
 
-    bool setEvaporationLossMode(std::string evaporationLossMode);
+      void resetEvaporationLossMode();
 
-    void resetEvaporationLossMode();
+      bool setEvaporationLossFactor(boost::optional<double> evaporationLossFactor);
 
-    bool setEvaporationLossFactor(boost::optional<double> evaporationLossFactor);
+      void resetEvaporationLossFactor();
 
-    void resetEvaporationLossFactor();
+      bool setDriftLossPercent(double driftLossPercent);
 
-    bool setDriftLossPercent(double driftLossPercent);
+      void resetDriftLossPercent();
 
-    void resetDriftLossPercent();
+      bool setBlowdownCalculationMode(std::string blowdownCalculationMode);
 
-    bool setBlowdownCalculationMode(std::string blowdownCalculationMode);
+      void resetBlowdownCalculationMode();
 
-    void resetBlowdownCalculationMode();
+      bool setBlowdownConcentrationRatio(double blowdownConcentrationRatio);
 
-    bool setBlowdownConcentrationRatio(double blowdownConcentrationRatio);
+      void resetBlowdownConcentrationRatio();
 
-    void resetBlowdownConcentrationRatio();
+      bool setBlowdownMakeupWaterUsageSchedule(Schedule& schedule);
 
-    bool setBlowdownMakeupWaterUsageSchedule(Schedule& schedule);
+      void resetBlowdownMakeupWaterUsageSchedule();
 
-    void resetBlowdownMakeupWaterUsageSchedule();
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.EvaporativeFluidCoolerSingleSpeed");
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.EvaporativeFluidCoolerSingleSpeed");
+      std::vector<std::string> performanceInputMethodValues() const;
+      std::vector<std::string> capacityControlValues() const;
+      std::vector<std::string> evaporationLossModeValues() const;
+      std::vector<std::string> blowdownCalculationModeValues() const;
+      boost::optional<ModelObject> blowdownMakeupWaterUsageScheduleAsModelObject() const;
+      bool setBlowdownMakeupWaterUsageScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    std::vector<std::string> performanceInputMethodValues() const;
-    std::vector<std::string> capacityControlValues() const;
-    std::vector<std::string> evaporationLossModeValues() const;
-    std::vector<std::string> blowdownCalculationModeValues() const;
-    boost::optional<ModelObject> blowdownMakeupWaterUsageScheduleAsModelObject() const;
-    bool setBlowdownMakeupWaterUsageScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_IMPL_HPP
+#endif  // MODEL_EVAPORATIVEFLUIDCOOLERSINGLESPEED_IMPL_HPP

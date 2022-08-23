@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,120 +37,124 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class DesignSpecificationOutdoorAir;
+  class Schedule;
+  class DesignSpecificationOutdoorAir;
 
-namespace detail {
+  namespace detail {
 
-  class AirTerminalSingleDuctVAVNoReheat_Impl;
+    class AirTerminalSingleDuctVAVNoReheat_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirTerminalSingleDuctVAVNoReheat is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:VAV:NoReheat'. */
-class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirTerminalSingleDuctVAVNoReheat is a StraightComponent that wraps the OpenStudio IDD object 'OS:AirTerminal:SingleDuct:VAV:NoReheat'. */
+  class MODEL_API AirTerminalSingleDuctVAVNoReheat : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
+    explicit AirTerminalSingleDuctVAVNoReheat(const Model& model, Schedule& schedule);
 
-  explicit AirTerminalSingleDuctVAVNoReheat(const Model& model, Schedule& schedule);
+    virtual ~AirTerminalSingleDuctVAVNoReheat() {}
 
-  virtual ~AirTerminalSingleDuctVAVNoReheat() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> zoneMinimumAirFlowInputMethodValues();
 
-  static std::vector<std::string> zoneMinimumAirFlowInputMethodValues();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    Schedule availabilitySchedule() const;
 
-  Schedule availabilitySchedule() const;
+    boost::optional<double> maximumAirFlowRate() const;
 
-  boost::optional<double> maximumAirFlowRate() const;
+    bool isMaximumAirFlowRateAutosized() const;
 
-  bool isMaximumAirFlowRateAutosized() const;
+    boost::optional<std::string> zoneMinimumAirFlowInputMethod() const;
 
-  boost::optional<std::string> zoneMinimumAirFlowInputMethod() const;
+    boost::optional<double> constantMinimumAirFlowFraction() const;
+    bool isConstantMinimumAirFlowFractionAutosized() const;
+    bool isConstantMinimumAirFlowFractionDefaulted() const;
 
-  boost::optional<double> constantMinimumAirFlowFraction() const;
-  bool isConstantMinimumAirFlowFractionAutosized() const;
-  bool isConstantMinimumAirFlowFractionDefaulted() const;
+    boost::optional<double> fixedMinimumAirFlowRate() const;
+    bool isFixedMinimumAirFlowRateAutosized() const;
+    bool isFixedMinimumAirFlowRateDefaulted() const;
 
-  boost::optional<double> fixedMinimumAirFlowRate() const;
-  bool isFixedMinimumAirFlowRateAutosized() const;
-  bool isFixedMinimumAirFlowRateDefaulted() const;
+    boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
+    boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
 
-  boost::optional<Schedule> minimumAirFlowFractionSchedule() const;
-
-  /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
+    /** If true, OpenStudio will attach the DesignSpecificationOutdoorAir object associated
     * with the terminal's zone on export to EnergyPlus idf format.
     * This field replaces the functionality of the EnergyPlus field: Design Specification Outdoor Air Object Name.*/
-  bool controlForOutdoorAir() const;
+    bool controlForOutdoorAir() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setMaximumAirFlowRate(double maximumAirFlowRate);
+    bool setMaximumAirFlowRate(double maximumAirFlowRate);
 
-  void resetMaximumAirFlowRate();
+    void resetMaximumAirFlowRate();
 
-  void autosizeMaximumAirFlowRate();
+    void autosizeMaximumAirFlowRate();
 
-  bool setZoneMinimumAirFlowInputMethod(std::string zoneMinimumAirFlowInputMethod);
+    bool setZoneMinimumAirFlowInputMethod(std::string zoneMinimumAirFlowInputMethod);
 
-  void resetZoneMinimumAirFlowInputMethod();
+    void resetZoneMinimumAirFlowInputMethod();
 
-  bool setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction);
-  void autosizeConstantMinimumAirFlowFraction();
-  void resetConstantMinimumAirFlowFraction();
+    bool setConstantMinimumAirFlowFraction(double constantMinimumAirFlowFraction);
+    void autosizeConstantMinimumAirFlowFraction();
+    void resetConstantMinimumAirFlowFraction();
 
-  bool setFixedMinimumAirFlowRate(double fixedMinimumAirFlowRate);
-  void autosizeFixedMinimumAirFlowRate();
-  void resetFixedMinimumAirFlowRate();
+    bool setFixedMinimumAirFlowRate(double fixedMinimumAirFlowRate);
+    void autosizeFixedMinimumAirFlowRate();
+    void resetFixedMinimumAirFlowRate();
 
+    bool setMinimumAirFlowFractionSchedule(Schedule& schedule);
 
-  bool setMinimumAirFlowFractionSchedule(Schedule& schedule);
+    void resetMinimumAirFlowFractionSchedule();
 
-  void resetMinimumAirFlowFractionSchedule();
+    bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
 
-  bool setControlForOutdoorAir(bool controlForOutdoorAir);
+    void resetMinimumAirFlowTurndownSchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    bool setControlForOutdoorAir(bool controlForOutdoorAir);
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const;
-  boost::optional<double> autosizedConstantMinimumAirFlowFraction() const;
-  boost::optional<double> autosizedFixedMinimumAirFlowRate() const;
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirTerminalSingleDuctVAVNoReheat_Impl ImplType;
+    boost::optional<double> autosizedMaximumAirFlowRate() const;
+    boost::optional<double> autosizedConstantMinimumAirFlowFraction() const;
+    boost::optional<double> autosizedFixedMinimumAirFlowRate() const;
 
-  explicit AirTerminalSingleDuctVAVNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVNoReheat_Impl> impl);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirTerminalSingleDuctVAVNoReheat_Impl ImplType;
 
-  friend class detail::AirTerminalSingleDuctVAVNoReheat_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVNoReheat");
-};
+    explicit AirTerminalSingleDuctVAVNoReheat(std::shared_ptr<detail::AirTerminalSingleDuctVAVNoReheat_Impl> impl);
 
-/** \relates AirTerminalSingleDuctVAVNoReheat*/
-typedef boost::optional<AirTerminalSingleDuctVAVNoReheat> OptionalAirTerminalSingleDuctVAVNoReheat;
+    friend class detail::AirTerminalSingleDuctVAVNoReheat_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVNoReheat");
+  };
 
-/** \relates AirTerminalSingleDuctVAVNoReheat*/
-typedef std::vector<AirTerminalSingleDuctVAVNoReheat> AirTerminalSingleDuctVAVNoReheatVector;
+  /** \relates AirTerminalSingleDuctVAVNoReheat*/
+  typedef boost::optional<AirTerminalSingleDuctVAVNoReheat> OptionalAirTerminalSingleDuctVAVNoReheat;
 
-} // model
-} // openstudio
+  /** \relates AirTerminalSingleDuctVAVNoReheat*/
+  typedef std::vector<AirTerminalSingleDuctVAVNoReheat> AirTerminalSingleDuctVAVNoReheatVector;
 
-#endif // MODEL_AIRTERMINALSINGLEDUCTVAVNOREHEAT_HPP
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_AIRTERMINALSINGLEDUCTVAVNOREHEAT_HPP

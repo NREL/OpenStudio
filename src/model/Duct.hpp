@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,60 +36,60 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class Duct_Impl;
+    class Duct_Impl;
 
-} // detail
+  }  // namespace detail
 
-class MODEL_API Duct : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API Duct : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit Duct(const Model& model);
+    explicit Duct(const Model& model);
 
-  virtual ~Duct() {}
+    virtual ~Duct() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::Duct_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::Duct_Impl ImplType;
 
-  explicit Duct(std::shared_ptr<detail::Duct_Impl> impl);
+    explicit Duct(std::shared_ptr<detail::Duct_Impl> impl);
 
-  friend class detail::Duct_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.Duct");
-};
+    friend class detail::Duct_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.Duct");
+  };
 
-/** \relates Duct*/
-typedef boost::optional<Duct> OptionalDuct;
+  /** \relates Duct*/
+  typedef boost::optional<Duct> OptionalDuct;
 
-/** \relates Duct*/
-typedef std::vector<Duct> DuctVector;
+  /** \relates Duct*/
+  typedef std::vector<Duct> DuctVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_DUCT_HPP
-
+#endif  // MODEL_DUCT_HPP

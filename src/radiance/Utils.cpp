@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,27 +35,22 @@
 namespace openstudio {
 namespace radiance {
 
-  std::vector<double> parseGenDayMtxLine(const std::string &t_line)
-  {
+  std::vector<double> parseGenDayMtxLine(const std::string& t_line) {
     std::stringstream ss(t_line);
     std::vector<double> retval(8760);
 
-    int valuenum=0;
-    while (ss.good() && valuenum < 8760)
-    {
+    int valuenum = 0;
+    while (ss.good() && valuenum < 8760) {
       std::vector<double> colors(3, 0);
       int color = 0;
-      for (; ss.good() && color < 3; ++color)
-      {
+      for (; ss.good() && color < 3; ++color) {
         char c = static_cast<char>(ss.peek());
-        if (c == ' ' || c == '\t')
-        {
+        if (c == ' ' || c == '\t') {
           ss.ignore();
         }
 
         char p = static_cast<char>(ss.peek());
-        if (p < '0' || p > '9')
-        {
+        if (p < '0' || p > '9') {
           // this is either a nan, or a -nan or a -number, which we cannot handle
           // and don't care about
           colors[color] = 0;
@@ -67,12 +62,10 @@ namespace radiance {
           ss >> d;
           colors[color] = d;
         }
-
-
       }
 
       assert(color == 3 && "not an even multiple of 3 read");
-      retval[valuenum] = 179*((colors[0] * 0.265) + (colors[1] * 0.67) + (colors[2] * 0.065));
+      retval[valuenum] = 179 * ((colors[0] * 0.265) + (colors[1] * 0.67) + (colors[2] * 0.065));
       ++valuenum;
     }
 
@@ -80,7 +73,5 @@ namespace radiance {
     return retval;
   }
 
-}
-}
-
-
+}  // namespace radiance
+}  // namespace openstudio

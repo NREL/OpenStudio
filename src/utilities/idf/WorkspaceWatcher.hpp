@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,7 +34,7 @@
 #include <utilities/idf/IdfObject.hpp>
 #include <utilities/idf/Workspace.hpp>
 
-namespace openstudio{
+namespace openstudio {
 
 /** WorkspaceWatcher watches a Workspace for signals emitted on changes.  This signals will cause the
  *  watcher to mark the Workspace  as dirty.  The dirty flag will persist until reset by the user.  A virtual
@@ -46,10 +46,10 @@ namespace openstudio{
  *  would be preferred to connect your own heap allocated object to the Workspace signals directly rather
  *  than using this convenience class.
  **/
-class UTILITIES_API WorkspaceWatcher {
+class UTILITIES_API WorkspaceWatcher
+{
 
  public:
-
   WorkspaceWatcher(const Workspace& workspace);
 
   virtual ~WorkspaceWatcher();
@@ -93,7 +93,7 @@ class UTILITIES_API WorkspaceWatcher {
   /// the object is still valid when this method is called
   virtual void onObjectRemove(const WorkspaceObject& removedObject);
 
- // public slots:
+  // public slots:
 
   void change();
 
@@ -104,12 +104,11 @@ class UTILITIES_API WorkspaceWatcher {
   void objectRemove(const WorkspaceObject& removedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
  private:
-
   bool m_enabled;
   bool m_dirty;
   bool m_objectAdded;
   bool m_objectRemoved;
 };
 
-}
+}  // namespace openstudio
 #endif

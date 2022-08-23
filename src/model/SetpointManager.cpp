@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,210 +44,164 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail{
+  namespace detail {
 
-  SetpointManager_Impl::SetpointManager_Impl(
-      const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : HVACComponent_Impl(idfObject, model, keepHandle)
-  {
-  }
+    SetpointManager_Impl::SetpointManager_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : HVACComponent_Impl(idfObject, model, keepHandle) {}
 
-  SetpointManager_Impl::SetpointManager_Impl(
-      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
-    : HVACComponent_Impl(other,model,keepHandle)
-  {
-  }
+    SetpointManager_Impl::SetpointManager_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : HVACComponent_Impl(other, model, keepHandle) {}
 
-  SetpointManager_Impl::SetpointManager_Impl(
-      const SetpointManager_Impl& other,
-      Model_Impl* model,
-      bool keepHandles)
-    : HVACComponent_Impl(other,model,keepHandles)
-  {
-  }
+    SetpointManager_Impl::SetpointManager_Impl(const SetpointManager_Impl& other, Model_Impl* model, bool keepHandles)
+      : HVACComponent_Impl(other, model, keepHandles) {}
 
-    SetpointManager_Impl::SetpointManager_Impl(IddObjectType type, Model_Impl* model)
-    : HVACComponent_Impl(type,model)
-  {
-  }
+    SetpointManager_Impl::SetpointManager_Impl(IddObjectType type, Model_Impl* model) : HVACComponent_Impl(type, model) {}
 
-  SetpointManager_Impl::~SetpointManager_Impl(){}
+    SetpointManager_Impl::~SetpointManager_Impl() {}
 
-  const std::vector<std::string>& SetpointManager_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    return result;
-  }
-
-  boost::optional<ParentObject> SetpointManager_Impl::parent() const {
-    NodeVector nodes = getObject<ModelObject>().getModelObjectSources<Node>();
-    if (nodes.size() == 1u) {
-      return nodes[0];
+    const std::vector<std::string>& SetpointManager_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
     }
-    return boost::none;
-  }
 
-  std::vector<ModelObject> SetpointManager_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    return result;
-  }
+    boost::optional<ParentObject> SetpointManager_Impl::parent() const {
+      NodeVector nodes = getObject<ModelObject>().getModelObjectSources<Node>();
+      if (nodes.size() == 1u) {
+        return nodes[0];
+      }
+      return boost::none;
+    }
 
+    std::vector<ModelObject> SetpointManager_Impl::children() const {
+      std::vector<ModelObject> result;
+      return result;
+    }
 
-  /** Returns false by default. This is a virtual method which will be overriden for specific SPMs to return true
+    /** Returns false by default. This is a virtual method which will be overriden for specific SPMs to return true
    * if they are allowed on a plantLoop
    **/
-  bool SetpointManager_Impl::isAllowedOnPlantLoop() const {
-    return false;
-  }
-
-  bool SetpointManager_Impl::addToNode(Node & node)
-  {
-    if( node.model() != this->model() )
-    {
+    bool SetpointManager_Impl::isAllowedOnPlantLoop() const {
       return false;
     }
 
-    // Erase any existing setpoint manager that has the same control variable
-    // eg you can't have two temperature ones. But Humidity ones can be MaximumHumidityRatio or MinimumHumidityRatio so you can have a Min and Max
-    std::vector<SetpointManager> _setpointManagers = node.setpointManagers();
-    if( !_setpointManagers.empty() )
-    {
-      for(auto it = _setpointManagers.begin();
-        it != _setpointManagers.end();
-        ++it)
-      {
-        if( istringEqual(this->controlVariable(), it->controlVariable()) )
-        {
-          it->remove();
-        }
+    bool SetpointManager_Impl::addToNode(Node& node) {
+      if (node.model() != this->model()) {
+        return false;
       }
-    }
 
-    if( OptionalAirLoopHVAC airLoop = node.airLoopHVAC() )
-    {
-      // If this is one of the regular nodes of the supply path (eg not in the AirLoopHVACOASys)
-      if( airLoop->supplyComponent(node.handle()) )
-      {
-        return this->setSetpointNode(node);
-      }
-    }
-
-    if(OptionalAirLoopHVACOutdoorAirSystem oaSystem = node.airLoopHVACOutdoorAirSystem())
-    {
-      // We only accept it if it's neither the relief or the OA node (doesn't make sense to place one there)
-      if ( (node != oaSystem->outboardReliefNode()) && (node != oaSystem->outboardOANode()) ) {
-        return this->setSetpointNode(node);
-      }
-    }
-
-    // If the specific SPM (derived class) is allowed on PlantLoop, then we allow it on the supply side,
-    // or the demand side EXCEPT on a demand branch
-    if ( boost::optional<PlantLoop> plant = node.plantLoop() ) {
-      if( this->isAllowedOnPlantLoop() ) {
-        // If it's the supply side
-        if( plant->supplyComponent(node.handle()) ) {
-          return this->setSetpointNode(node);
-        } else {
-          // On the demand side
-          Splitter splitter = plant->demandSplitter();
-          Mixer mixer = plant->demandMixer();
-          // We check that the node is NOT between the splitter and the mixer
-          auto branchcomps = plant->demandComponents(splitter, mixer);
-          if ( std::find(branchcomps.begin(), branchcomps.end(), node) == branchcomps.end() ) {
-            return this->setSetpointNode(node);
-          } else {
-            LOG(Info, this->briefDescription() << " cannot be added on a demand branch");
-
+      // Erase any existing setpoint manager that has the same control variable
+      // eg you can't have two temperature ones. But Humidity ones can be MaximumHumidityRatio or MinimumHumidityRatio so you can have a Min and Max
+      std::vector<SetpointManager> _setpointManagers = node.setpointManagers();
+      if (!_setpointManagers.empty()) {
+        for (auto it = _setpointManagers.begin(); it != _setpointManagers.end(); ++it) {
+          if (istringEqual(this->controlVariable(), it->controlVariable())) {
+            it->remove();
           }
         }
-      } else {
-        LOG(Info,"This SetpointManager cannot be connected to a PlantLoop, for " << this->briefDescription());
       }
+
+      if (OptionalAirLoopHVAC airLoop = node.airLoopHVAC()) {
+        // If this is one of the regular nodes of the supply path (eg not in the AirLoopHVACOASys)
+        if (airLoop->supplyComponent(node.handle())) {
+          return this->setSetpointNode(node);
+        }
+      }
+
+      if (OptionalAirLoopHVACOutdoorAirSystem oaSystem = node.airLoopHVACOutdoorAirSystem()) {
+        // We only accept it if it's neither the relief or the OA node (doesn't make sense to place one there)
+        if ((node != oaSystem->outboardReliefNode()) && (node != oaSystem->outboardOANode())) {
+          return this->setSetpointNode(node);
+        }
+      }
+
+      // If the specific SPM (derived class) is allowed on PlantLoop, then we allow it on the supply side,
+      // or the demand side EXCEPT on a demand branch
+      if (boost::optional<PlantLoop> plant = node.plantLoop()) {
+        if (this->isAllowedOnPlantLoop()) {
+          // If it's the supply side
+          if (plant->supplyComponent(node.handle())) {
+            return this->setSetpointNode(node);
+          } else {
+            // On the demand side
+            Splitter splitter = plant->demandSplitter();
+            Mixer mixer = plant->demandMixer();
+            // We check that the node is NOT between the splitter and the mixer
+            auto branchcomps = plant->demandComponents(splitter, mixer);
+            if (std::find(branchcomps.begin(), branchcomps.end(), node) == branchcomps.end()) {
+              return this->setSetpointNode(node);
+            } else {
+              LOG(Info, this->briefDescription() << " cannot be added on a demand branch");
+            }
+          }
+        } else {
+          LOG(Info, "This SetpointManager cannot be connected to a PlantLoop, for " << this->briefDescription());
+        }
+      }
+
+      return false;
     }
 
-    return false;
-  }
-
-  std::vector<openstudio::IdfObject> SetpointManager_Impl::remove()
-  {
-    return HVACComponent_Impl::remove();
-  }
-
-  ModelObject SetpointManager_Impl::clone(Model model) const
-  {
-    SetpointManager clonedObject = HVACComponent_Impl::clone( model ).cast<SetpointManager>();
-    clonedObject.getImpl<detail::SetpointManager_Impl>()->resetSetpointNode();
-    return clonedObject;
-  }
-
-  boost::optional<Loop> SetpointManager_Impl::loop() const
-  {
-    if( boost::optional<Node> node = setpointNode() ) {
-      return node->loop();
+    std::vector<openstudio::IdfObject> SetpointManager_Impl::remove() {
+      return HVACComponent_Impl::remove();
     }
-    return boost::none;
-  }
 
-  boost::optional<AirLoopHVAC> SetpointManager_Impl::airLoopHVAC() const
-  {
-    if( boost::optional<Node> node = setpointNode() ) {
-      return node->airLoopHVAC();
+    ModelObject SetpointManager_Impl::clone(Model model) const {
+      SetpointManager clonedObject = HVACComponent_Impl::clone(model).cast<SetpointManager>();
+      clonedObject.getImpl<detail::SetpointManager_Impl>()->resetSetpointNode();
+      return clonedObject;
     }
-    return boost::none;
-  }
 
-  boost::optional<AirLoopHVACOutdoorAirSystem> SetpointManager_Impl::airLoopHVACOutdoorAirSystem() const
-  {
-    if( boost::optional<Node> node = setpointNode() ) {
-      return node->airLoopHVACOutdoorAirSystem();
+    boost::optional<Loop> SetpointManager_Impl::loop() const {
+      if (boost::optional<Node> node = setpointNode()) {
+        return node->loop();
+      }
+      return boost::none;
     }
-    return boost::none;
-  }
 
-  boost::optional<PlantLoop> SetpointManager_Impl::plantLoop() const
-  {
-    if( boost::optional<Node> node = setpointNode() ) {
-      return node->plantLoop();
+    boost::optional<AirLoopHVAC> SetpointManager_Impl::airLoopHVAC() const {
+      if (boost::optional<Node> node = setpointNode()) {
+        return node->airLoopHVAC();
+      }
+      return boost::none;
     }
-    return boost::none;
+
+    boost::optional<AirLoopHVACOutdoorAirSystem> SetpointManager_Impl::airLoopHVACOutdoorAirSystem() const {
+      if (boost::optional<Node> node = setpointNode()) {
+        return node->airLoopHVACOutdoorAirSystem();
+      }
+      return boost::none;
+    }
+
+    boost::optional<PlantLoop> SetpointManager_Impl::plantLoop() const {
+      if (boost::optional<Node> node = setpointNode()) {
+        return node->plantLoop();
+      }
+      return boost::none;
+    }
+
+  }  // namespace detail
+
+  SetpointManager::SetpointManager(IddObjectType type, const Model& model) : HVACComponent(type, model) {
+    OS_ASSERT(getImpl<detail::SetpointManager_Impl>());
   }
 
-} // detail
+  SetpointManager::SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> p) : HVACComponent(std::move(p)) {}
 
-SetpointManager::SetpointManager(IddObjectType type, const Model& model)
-  : HVACComponent(type, model)
-{
-  OS_ASSERT(getImpl<detail::SetpointManager_Impl>());
-}
+  boost::optional<Node> SetpointManager::setpointNode() const {
+    return getImpl<detail::SetpointManager_Impl>()->setpointNode();
+  }
 
-SetpointManager::SetpointManager(std::shared_ptr<detail::SetpointManager_Impl> p)
-  : HVACComponent(std::move(p))
-{
-}
+  std::string SetpointManager::controlVariable() const {
+    return getImpl<detail::SetpointManager_Impl>()->controlVariable();
+  }
 
-boost::optional<Node> SetpointManager::setpointNode() const
-{
-  return getImpl<detail::SetpointManager_Impl>()->setpointNode();
-}
+  bool SetpointManager::setControlVariable(const std::string& value) {
+    return getImpl<detail::SetpointManager_Impl>()->setControlVariable(value);
+  }
 
-std::string SetpointManager::controlVariable() const
-{
-  return getImpl<detail::SetpointManager_Impl>()->controlVariable();
-}
+  bool SetpointManager::isAllowedOnPlantLoop() const {
+    return getImpl<detail::SetpointManager_Impl>()->isAllowedOnPlantLoop();
+  }
 
-bool SetpointManager::setControlVariable(const std::string & value)
-{
-  return getImpl<detail::SetpointManager_Impl>()->setControlVariable(value);
-}
-
-bool SetpointManager::isAllowedOnPlantLoop() const
-{
-  return getImpl<detail::SetpointManager_Impl>()->isAllowedOnPlantLoop();
-}
-
-
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

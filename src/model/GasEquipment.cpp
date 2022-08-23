@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,7 +43,6 @@
 #include "LifeCycleCost.hpp"
 #include "Model.hpp"
 
-
 #include <utilities/idd/OS_GasEquipment_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -52,426 +51,392 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  GasEquipment_Impl::GasEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : SpaceLoadInstance_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == GasEquipment::iddObjectType());
-  }
-
-  GasEquipment_Impl::GasEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle)
-    : SpaceLoadInstance_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == GasEquipment::iddObjectType());
-  }
-
-  GasEquipment_Impl::GasEquipment_Impl(const GasEquipment_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle)
-    : SpaceLoadInstance_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& GasEquipment_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result{
-      "Gas Equipment Gas Rate",
-      "Gas Equipment Gas Energy",
-      "Gas Equipment Radiant Heating Energy",
-      "Gas Equipment Convective Heating Energy",
-      "Gas Equipment Latent Gain Energy",
-      "Gas Equipment Lost Heat Energy",
-      "Gas Equipment Total Heating Energy",
-      "Gas Equipment Radiant Heating Rate",
-      "Gas Equipment Convective Heating Rate",
-      "Gas Equipment Latent Gain Rate",
-      "Gas Equipment Lost Heat Rate",
-      "Gas Equipment Total Heating Rate"
-
-      // Reported in ThermalZone
-      //"Zone Gas Equipment Gas Rate",
-      //"Zone Gas Equipment Gas Energy",
-      //"Zone Gas Equipment Radiant Heating Energy",
-      //"Zone Gas Equipment Radiant Heating Rate",
-      //"Zone Gas Equipment Convective Heating Energy",
-      //"Zone Gas Equipment Convective Heating Rate",
-      //"Zone Gas Equipment Latent Gain Energy",
-      //"Zone Gas Equipment Latent Gain Rate",
-      //"Zone Gas Equipment Lost Heat Energy",
-      //"Zone Gas Equipment Lost Heat Rate",
-      //"Zone Gas Equipment Total Heating Energy",
-      //"Zone Gas Equipment Total Heating Rate"
-    };
-    return result;
-  }
-
-  IddObjectType GasEquipment_Impl::iddObjectType() const {
-    return GasEquipment::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> GasEquipment_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_GasEquipmentFields::ScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("GasEquipment","Gas Equipment"));
+    GasEquipment_Impl::GasEquipment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : SpaceLoadInstance_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == GasEquipment::iddObjectType());
     }
-    return result;
-  }
 
-  bool GasEquipment_Impl::hardSize()
-  {
-    boost::optional<Space> space = this->space();
-    if (!space){
+    GasEquipment_Impl::GasEquipment_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : SpaceLoadInstance_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == GasEquipment::iddObjectType());
+    }
+
+    GasEquipment_Impl::GasEquipment_Impl(const GasEquipment_Impl& other, Model_Impl* model, bool keepHandle)
+      : SpaceLoadInstance_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& GasEquipment_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{
+        "Gas Equipment NaturalGas Rate",
+        "Gas Equipment NaturalGas Energy",
+        "Gas Equipment Radiant Heating Energy",
+        "Gas Equipment Convective Heating Energy",
+        "Gas Equipment Latent Gain Energy",
+        "Gas Equipment Lost Heat Energy",
+        "Gas Equipment Total Heating Energy",
+        "Gas Equipment Radiant Heating Rate",
+        "Gas Equipment Convective Heating Rate",
+        "Gas Equipment Latent Gain Rate",
+        "Gas Equipment Lost Heat Rate",
+        "Gas Equipment Total Heating Rate"
+
+        // Reported in ThermalZone
+        //"Zone Gas Equipment NaturalGas Rate",
+        //"Zone Gas Equipment NaturalGas Energy",
+        //"Zone Gas Equipment Radiant Heating Energy",
+        //"Zone Gas Equipment Radiant Heating Rate",
+        //"Zone Gas Equipment Convective Heating Energy",
+        //"Zone Gas Equipment Convective Heating Rate",
+        //"Zone Gas Equipment Latent Gain Energy",
+        //"Zone Gas Equipment Latent Gain Rate",
+        //"Zone Gas Equipment Lost Heat Energy",
+        //"Zone Gas Equipment Lost Heat Rate",
+        //"Zone Gas Equipment Total Heating Energy",
+        //"Zone Gas Equipment Total Heating Rate"
+      };
+      return result;
+    }
+
+    IddObjectType GasEquipment_Impl::iddObjectType() const {
+      return GasEquipment::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> GasEquipment_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_GasEquipmentFields::ScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("GasEquipment", "Gas Equipment"));
+      }
+      return result;
+    }
+
+    bool GasEquipment_Impl::hardSize() {
+      boost::optional<Space> space = this->space();
+      if (!space) {
+        return false;
+      }
+
+      this->makeUnique();
+
+      GasEquipmentDefinition gasEquipmentDefinition = this->gasEquipmentDefinition();
+      for (LifeCycleCost cost : gasEquipmentDefinition.lifeCycleCosts()) {
+        cost.convertToCostPerEach();
+      }
+
+      boost::optional<double> designLevel = gasEquipmentDefinition.designLevel();
+      if (designLevel) {
+        return true;
+      }
+
+      boost::optional<double> wattsperSpaceFloorArea = gasEquipmentDefinition.wattsperSpaceFloorArea();
+      if (wattsperSpaceFloorArea) {
+        return gasEquipmentDefinition.setDesignLevel(*wattsperSpaceFloorArea * space->floorArea());
+      }
+
+      boost::optional<double> wattsperPerson = gasEquipmentDefinition.wattsperPerson();
+      if (wattsperPerson) {
+        return gasEquipmentDefinition.setDesignLevel(*wattsperPerson * space->numberOfPeople());
+      }
+
       return false;
     }
 
-    this->makeUnique();
-
-    GasEquipmentDefinition gasEquipmentDefinition = this->gasEquipmentDefinition();
-    for (LifeCycleCost cost : gasEquipmentDefinition.lifeCycleCosts()){
-      cost.convertToCostPerEach();
+    bool GasEquipment_Impl::hardApplySchedules() {
+      bool result = false;
+      boost::optional<Schedule> schedule = this->schedule();
+      if (schedule) {
+        result = this->setSchedule(*schedule);
+      }
+      return result;
     }
 
-    boost::optional<double> designLevel = gasEquipmentDefinition.designLevel();
-    if (designLevel){
+    double GasEquipment_Impl::multiplier() const {
+      boost::optional<double> value = getDouble(OS_GasEquipmentFields::Multiplier, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool GasEquipment_Impl::isMultiplierDefaulted() const {
+      return isEmpty(OS_GasEquipmentFields::Multiplier);
+    }
+
+    bool GasEquipment_Impl::isAbsolute() const {
+      GasEquipmentDefinition definition = gasEquipmentDefinition();
+      if (definition.designLevel()) {
+        return true;
+      }
+      return false;
+    }
+
+    std::string GasEquipment_Impl::endUseSubcategory() const {
+      boost::optional<std::string> value = getString(OS_GasEquipmentFields::EndUseSubcategory, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool GasEquipment_Impl::isEndUseSubcategoryDefaulted() const {
+      return isEmpty(OS_GasEquipmentFields::EndUseSubcategory);
+    }
+
+    bool GasEquipment_Impl::setMultiplier(double multiplier) {
+      bool result = setDouble(OS_GasEquipmentFields::Multiplier, multiplier);
+      return result;
+    }
+
+    void GasEquipment_Impl::resetMultiplier() {
+      bool result = setString(OS_GasEquipmentFields::Multiplier, "");
+      OS_ASSERT(result);
+    }
+
+    bool GasEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
+      bool result = setString(OS_GasEquipmentFields::EndUseSubcategory, endUseSubcategory);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void GasEquipment_Impl::resetEndUseSubcategory() {
+      bool result = setString(OS_GasEquipmentFields::EndUseSubcategory, "");
+      OS_ASSERT(result);
+    }
+
+    int GasEquipment_Impl::spaceIndex() const {
+      return OS_GasEquipmentFields::SpaceorSpaceTypeName;
+    }
+
+    int GasEquipment_Impl::definitionIndex() const {
+      return OS_GasEquipmentFields::GasEquipmentDefinitionName;
+    }
+
+    boost::optional<Schedule> GasEquipment_Impl::schedule() const {
+      boost::optional<Schedule> result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_GasEquipmentFields::ScheduleName);
+      if (!result) {
+        // search upwards
+        OptionalSpace space = this->space();
+        OptionalSpaceType spaceType = this->spaceType();
+        if (space) {
+          result = space->getDefaultSchedule(DefaultScheduleType::GasEquipmentSchedule);
+        } else if (spaceType) {
+          result = spaceType->getDefaultSchedule(DefaultScheduleType::GasEquipmentSchedule);
+        }
+      }
+      return result;
+    }
+
+    bool GasEquipment_Impl::isScheduleDefaulted() const {
+      return isEmpty(OS_GasEquipmentFields::ScheduleName);
+    }
+
+    bool GasEquipment_Impl::setSchedule(Schedule& schedule) {
+      bool result = ModelObject_Impl::setSchedule(OS_GasEquipmentFields::ScheduleName, "GasEquipment", "Gas Equipment", schedule);
+      return result;
+    }
+
+    void GasEquipment_Impl::resetSchedule() {
+      bool result = setString(OS_GasEquipmentFields::ScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    GasEquipmentDefinition GasEquipment_Impl::gasEquipmentDefinition() const {
+      return this->definition().cast<GasEquipmentDefinition>();
+    }
+
+    bool GasEquipment_Impl::setGasEquipmentDefinition(const GasEquipmentDefinition& definition) {
+      return this->setPointer(this->definitionIndex(), definition.handle());
+    }
+
+    bool GasEquipment_Impl::setDefinition(const SpaceLoadDefinition& definition) {
+      bool result = false;
+      boost::optional<GasEquipmentDefinition> gasEquipmentDefinition = definition.optionalCast<GasEquipmentDefinition>();
+      if (gasEquipmentDefinition) {
+        result = setGasEquipmentDefinition(*gasEquipmentDefinition);
+      }
+      return result;
+    }
+
+    boost::optional<double> GasEquipment_Impl::designLevel() const {
+      OptionalDouble result = gasEquipmentDefinition().designLevel();
+      if (result) {
+        return result.get() * multiplier();
+      }
+      return result;
+    }
+
+    boost::optional<double> GasEquipment_Impl::powerPerFloorArea() const {
+      OptionalDouble result = gasEquipmentDefinition().wattsperSpaceFloorArea();
+      if (result) {
+        return result.get() * multiplier();
+      }
+      return result;
+    }
+
+    boost::optional<double> GasEquipment_Impl::powerPerPerson() const {
+      OptionalDouble result = gasEquipmentDefinition().wattsperPerson();
+      if (result) {
+        return result.get() * multiplier();
+      }
+      return result;
+    }
+
+    double GasEquipment_Impl::getDesignLevel(double floorArea, double numPeople) const {
+      return gasEquipmentDefinition().getDesignLevel(floorArea, numPeople) * multiplier();
+    }
+
+    double GasEquipment_Impl::getPowerPerFloorArea(double floorArea, double numPeople) const {
+      return gasEquipmentDefinition().getPowerPerFloorArea(floorArea, numPeople) * multiplier();
+    }
+
+    double GasEquipment_Impl::getPowerPerPerson(double floorArea, double numPeople) const {
+      return gasEquipmentDefinition().getPowerPerPerson(floorArea, numPeople) * multiplier();
+    }
+
+    boost::optional<ModelObject> GasEquipment_Impl::gasEquipmentDefinitionAsModelObject() const {
+      OptionalModelObject result = gasEquipmentDefinition();
+      return result;
+    }
+
+    boost::optional<ModelObject> GasEquipment_Impl::scheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = schedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
+    }
+
+    bool GasEquipment_Impl::setGasEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalGasEquipmentDefinition intermediate = modelObject->optionalCast<GasEquipmentDefinition>();
+        if (intermediate) {
+          return setGasEquipmentDefinition(*intermediate);
+        }
+      }
+      return false;
+    }
+
+    bool GasEquipment_Impl::setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setSchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetSchedule();
+      }
       return true;
     }
 
-    boost::optional<double> wattsperSpaceFloorArea = gasEquipmentDefinition.wattsperSpaceFloorArea();
-    if (wattsperSpaceFloorArea){
-      return gasEquipmentDefinition.setDesignLevel(*wattsperSpaceFloorArea * space->floorArea());
+    std::vector<EMSActuatorNames> GasEquipment_Impl::emsActuatorNames() const {
+      std::vector<EMSActuatorNames> actuators{{"GasEquipment", "NaturalGas Rate"}};
+      return actuators;
     }
 
-    boost::optional<double> wattsperPerson = gasEquipmentDefinition.wattsperPerson();
-    if (wattsperPerson){
-      return gasEquipmentDefinition.setDesignLevel(*wattsperPerson * space->numberOfPeople());
+    std::vector<std::string> GasEquipment_Impl::emsInternalVariableNames() const {
+      std::vector<std::string> types{"Gas Process Power Design Level"};
+      return types;
     }
 
-    return false;
-  }
+  }  // namespace detail
 
-  bool GasEquipment_Impl::hardApplySchedules()
-  {
-    bool result = false;
-    boost::optional<Schedule> schedule = this->schedule();
-    if (schedule){
-      result = this->setSchedule(*schedule);
-    }
-    return result;
-  }
+  GasEquipment::GasEquipment(const GasEquipmentDefinition& gasEquipmentDefinition)
+    : SpaceLoadInstance(GasEquipment::iddObjectType(), gasEquipmentDefinition) {
+    OS_ASSERT(getImpl<detail::GasEquipment_Impl>());
 
-  double GasEquipment_Impl::multiplier() const {
-    boost::optional<double> value = getDouble(OS_GasEquipmentFields::Multiplier,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool GasEquipment_Impl::isMultiplierDefaulted() const {
-    return isEmpty(OS_GasEquipmentFields::Multiplier);
-  }
-
-  bool GasEquipment_Impl::isAbsolute() const {
-    GasEquipmentDefinition definition = gasEquipmentDefinition();
-    if (definition.designLevel()) {
-      return true;
-    }
-    return false;
-  }
-
-  std::string GasEquipment_Impl::endUseSubcategory() const {
-    boost::optional<std::string> value = getString(OS_GasEquipmentFields::EndUseSubcategory,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool GasEquipment_Impl::isEndUseSubcategoryDefaulted() const {
-    return isEmpty(OS_GasEquipmentFields::EndUseSubcategory);
-  }
-
-  bool GasEquipment_Impl::setMultiplier(double multiplier) {
-    bool result = setDouble(OS_GasEquipmentFields::Multiplier, multiplier);
-    return result;
-  }
-
-  void GasEquipment_Impl::resetMultiplier() {
-    bool result = setString(OS_GasEquipmentFields::Multiplier, "");
-    OS_ASSERT(result);
-  }
-
-  bool GasEquipment_Impl::setEndUseSubcategory(std::string endUseSubcategory) {
-    bool result = setString(OS_GasEquipmentFields::EndUseSubcategory, endUseSubcategory);
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void GasEquipment_Impl::resetEndUseSubcategory() {
-    bool result = setString(OS_GasEquipmentFields::EndUseSubcategory, "");
-    OS_ASSERT(result);
-  }
-
-  int GasEquipment_Impl::spaceIndex() const {
-    return OS_GasEquipmentFields::SpaceorSpaceTypeName;
-  }
-
-  int GasEquipment_Impl::definitionIndex() const {
-    return OS_GasEquipmentFields::GasEquipmentDefinitionName;
-  }
-
-  boost::optional<Schedule> GasEquipment_Impl::schedule() const
-  {
-    boost::optional<Schedule> result = getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_GasEquipmentFields::ScheduleName);
-    if (!result){
-      // search upwards
-      OptionalSpace space = this->space();
-      OptionalSpaceType spaceType = this->spaceType();
-      if (space){
-        result = space->getDefaultSchedule(DefaultScheduleType::GasEquipmentSchedule);
-      }else if (spaceType){
-        result = spaceType->getDefaultSchedule(DefaultScheduleType::GasEquipmentSchedule);
-      }
-    }
-    return result;
-  }
-
-  bool GasEquipment_Impl::isScheduleDefaulted() const
-  {
-    return isEmpty(OS_GasEquipmentFields::ScheduleName);
-  }
-
-  bool GasEquipment_Impl::setSchedule(Schedule& schedule) {
-    bool result = ModelObject_Impl::setSchedule(OS_GasEquipmentFields::ScheduleName,
-                                                "GasEquipment",
-                                                "Gas Equipment",
-                                                schedule);
-    return result;
-  }
-
-  void GasEquipment_Impl::resetSchedule() {
-    bool result = setString(OS_GasEquipmentFields::ScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  GasEquipmentDefinition GasEquipment_Impl::gasEquipmentDefinition() const
-  {
-    return this->definition().cast<GasEquipmentDefinition>();
-  }
-
-  bool GasEquipment_Impl::setGasEquipmentDefinition(const GasEquipmentDefinition& definition)
-  {
-    return this->setPointer(this->definitionIndex(), definition.handle());
-  }
-
-  bool GasEquipment_Impl::setDefinition(const SpaceLoadDefinition& definition)
-  {
-    bool result = false;
-    boost::optional<GasEquipmentDefinition> gasEquipmentDefinition = definition.optionalCast<GasEquipmentDefinition>();
-    if (gasEquipmentDefinition){
-      result = setGasEquipmentDefinition(*gasEquipmentDefinition);
-    }
-    return result;
-  }
-
-  boost::optional<double> GasEquipment_Impl::designLevel() const {
-    OptionalDouble result = gasEquipmentDefinition().designLevel();
-    if (result) {
-      return result.get() * multiplier();
-    }
-    return result;
-  }
-
-  boost::optional<double> GasEquipment_Impl::powerPerFloorArea() const {
-    OptionalDouble result = gasEquipmentDefinition().wattsperSpaceFloorArea();
-    if (result) {
-      return result.get() * multiplier();
-    }
-    return result;
-  }
-
-  boost::optional<double> GasEquipment_Impl::powerPerPerson() const {
-    OptionalDouble result = gasEquipmentDefinition().wattsperPerson();
-    if (result) {
-      return result.get() * multiplier();
-    }
-    return result;
-  }
-
-  double GasEquipment_Impl::getDesignLevel(double floorArea, double numPeople) const {
-    return gasEquipmentDefinition().getDesignLevel(floorArea,numPeople) * multiplier();
-  }
-
-  double GasEquipment_Impl::getPowerPerFloorArea(double floorArea, double numPeople) const
-  {
-    return gasEquipmentDefinition().getPowerPerFloorArea(floorArea,numPeople) * multiplier();
-  }
-
-  double GasEquipment_Impl::getPowerPerPerson(double floorArea, double numPeople) const {
-    return gasEquipmentDefinition().getPowerPerPerson(floorArea,numPeople) * multiplier();
-  }
-
-  boost::optional<ModelObject> GasEquipment_Impl::gasEquipmentDefinitionAsModelObject() const {
-    OptionalModelObject result = gasEquipmentDefinition();
-    return result;
-  }
-
-  boost::optional<ModelObject> GasEquipment_Impl::scheduleAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSchedule intermediate = schedule();
-    if (intermediate) {
-      result = *intermediate;
-    }
-    return result;
-  }
-
-  bool GasEquipment_Impl::setGasEquipmentDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalGasEquipmentDefinition intermediate = modelObject->optionalCast<GasEquipmentDefinition>();
-      if (intermediate) {
-        return setGasEquipmentDefinition(*intermediate);
-      }
-    }
-    return false;
-  }
-
-  bool GasEquipment_Impl::setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
-      if (intermediate) {
-        Schedule schedule(*intermediate);
-        return setSchedule(schedule);
-      }
-      else {
-        return false;
-      }
-    }
-    else {
-      resetSchedule();
-    }
-    return true;
-  }
-
-  std::vector<EMSActuatorNames> GasEquipment_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{ { "GasEquipment", "Gas Power Level" } };
-    return actuators;
-  }
-
-  std::vector<std::string> GasEquipment_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types{ "Gas Process Power Design Level" };
-    return types;
-  }
-
-} // detail
-
-GasEquipment::GasEquipment(const GasEquipmentDefinition& gasEquipmentDefinition)
-  : SpaceLoadInstance(GasEquipment::iddObjectType(),gasEquipmentDefinition)
-{
-  OS_ASSERT(getImpl<detail::GasEquipment_Impl>());
-
-  /*
+    /*
    *Schedule sch = this->model().alwaysOnDiscreteSchedule();
    *bool test = this->setSchedule(sch);
    *OS_ASSERT(test);
    *test = this->setMultiplier(1.0);
    *OS_ASSERT(test);
    */
-  bool test = this->setEndUseSubcategory("General");
-  OS_ASSERT(test);
-}
+    bool test = this->setEndUseSubcategory("General");
+    OS_ASSERT(test);
+  }
 
-IddObjectType GasEquipment::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_GasEquipment);
-  return result;
-}
+  IddObjectType GasEquipment::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_GasEquipment);
+    return result;
+  }
 
-std::string GasEquipment::endUseSubcategory() const {
-  return getImpl<detail::GasEquipment_Impl>()->endUseSubcategory();
-}
+  std::string GasEquipment::endUseSubcategory() const {
+    return getImpl<detail::GasEquipment_Impl>()->endUseSubcategory();
+  }
 
-bool GasEquipment::isEndUseSubcategoryDefaulted() const {
-  return getImpl<detail::GasEquipment_Impl>()->isEndUseSubcategoryDefaulted();
-}
+  bool GasEquipment::isEndUseSubcategoryDefaulted() const {
+    return getImpl<detail::GasEquipment_Impl>()->isEndUseSubcategoryDefaulted();
+  }
 
-bool GasEquipment::setMultiplier(double multiplier) {
-  return getImpl<detail::GasEquipment_Impl>()->setMultiplier(multiplier);
-}
+  bool GasEquipment::setMultiplier(double multiplier) {
+    return getImpl<detail::GasEquipment_Impl>()->setMultiplier(multiplier);
+  }
 
-void GasEquipment::resetMultiplier() {
-  getImpl<detail::GasEquipment_Impl>()->resetMultiplier();
-}
+  void GasEquipment::resetMultiplier() {
+    getImpl<detail::GasEquipment_Impl>()->resetMultiplier();
+  }
 
-bool GasEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
-  return getImpl<detail::GasEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
-}
+  bool GasEquipment::setEndUseSubcategory(std::string endUseSubcategory) {
+    return getImpl<detail::GasEquipment_Impl>()->setEndUseSubcategory(endUseSubcategory);
+  }
 
-void GasEquipment::resetEndUseSubcategory() {
-  getImpl<detail::GasEquipment_Impl>()->resetEndUseSubcategory();
-}
+  void GasEquipment::resetEndUseSubcategory() {
+    getImpl<detail::GasEquipment_Impl>()->resetEndUseSubcategory();
+  }
 
-boost::optional<Schedule> GasEquipment::schedule() const
-{
-  return getImpl<detail::GasEquipment_Impl>()->schedule();
-}
+  boost::optional<Schedule> GasEquipment::schedule() const {
+    return getImpl<detail::GasEquipment_Impl>()->schedule();
+  }
 
-bool GasEquipment::isScheduleDefaulted() const
-{
-  return getImpl<detail::GasEquipment_Impl>()->isScheduleDefaulted();
-}
+  bool GasEquipment::isScheduleDefaulted() const {
+    return getImpl<detail::GasEquipment_Impl>()->isScheduleDefaulted();
+  }
 
-bool GasEquipment::setSchedule(Schedule& schedule)
-{
-  return getImpl<detail::GasEquipment_Impl>()->setSchedule(schedule);
-}
+  bool GasEquipment::setSchedule(Schedule& schedule) {
+    return getImpl<detail::GasEquipment_Impl>()->setSchedule(schedule);
+  }
 
-void GasEquipment::resetSchedule()
-{
-  getImpl<detail::GasEquipment_Impl>()->resetSchedule();
-}
+  void GasEquipment::resetSchedule() {
+    getImpl<detail::GasEquipment_Impl>()->resetSchedule();
+  }
 
-GasEquipmentDefinition GasEquipment::gasEquipmentDefinition() const
-{
-  return getImpl<detail::GasEquipment_Impl>()->gasEquipmentDefinition();
-}
+  GasEquipmentDefinition GasEquipment::gasEquipmentDefinition() const {
+    return getImpl<detail::GasEquipment_Impl>()->gasEquipmentDefinition();
+  }
 
-bool GasEquipment::setGasEquipmentDefinition(const GasEquipmentDefinition& gasEquipmentDefinition)
-{
-  return getImpl<detail::GasEquipment_Impl>()->setGasEquipmentDefinition(gasEquipmentDefinition);
-}
+  bool GasEquipment::setGasEquipmentDefinition(const GasEquipmentDefinition& gasEquipmentDefinition) {
+    return getImpl<detail::GasEquipment_Impl>()->setGasEquipmentDefinition(gasEquipmentDefinition);
+  }
 
-boost::optional<double> GasEquipment::designLevel() const {
-  return getImpl<detail::GasEquipment_Impl>()->designLevel();
-}
+  boost::optional<double> GasEquipment::designLevel() const {
+    return getImpl<detail::GasEquipment_Impl>()->designLevel();
+  }
 
-boost::optional<double> GasEquipment::powerPerFloorArea() const {
-  return getImpl<detail::GasEquipment_Impl>()->powerPerFloorArea();
-}
+  boost::optional<double> GasEquipment::powerPerFloorArea() const {
+    return getImpl<detail::GasEquipment_Impl>()->powerPerFloorArea();
+  }
 
-boost::optional<double> GasEquipment::powerPerPerson() const {
-  return getImpl<detail::GasEquipment_Impl>()->powerPerPerson();
-}
+  boost::optional<double> GasEquipment::powerPerPerson() const {
+    return getImpl<detail::GasEquipment_Impl>()->powerPerPerson();
+  }
 
-double GasEquipment::getDesignLevel(double floorArea, double numPeople) const {
-  return getImpl<detail::GasEquipment_Impl>()->getDesignLevel(floorArea,numPeople);
-}
+  double GasEquipment::getDesignLevel(double floorArea, double numPeople) const {
+    return getImpl<detail::GasEquipment_Impl>()->getDesignLevel(floorArea, numPeople);
+  }
 
-double GasEquipment::getPowerPerFloorArea(double floorArea, double numPeople) const {
-  return getImpl<detail::GasEquipment_Impl>()->getPowerPerFloorArea(floorArea,numPeople);
-}
+  double GasEquipment::getPowerPerFloorArea(double floorArea, double numPeople) const {
+    return getImpl<detail::GasEquipment_Impl>()->getPowerPerFloorArea(floorArea, numPeople);
+  }
 
-double GasEquipment::getPowerPerPerson(double floorArea, double numPeople) const {
-  return getImpl<detail::GasEquipment_Impl>()->getPowerPerPerson(floorArea,numPeople);
-}
+  double GasEquipment::getPowerPerPerson(double floorArea, double numPeople) const {
+    return getImpl<detail::GasEquipment_Impl>()->getPowerPerPerson(floorArea, numPeople);
+  }
 
-/// @cond
-GasEquipment::GasEquipment(std::shared_ptr<detail::GasEquipment_Impl> impl)
-  : SpaceLoadInstance(std::move(impl))
-{}
-/// @endcond
+  /// @cond
+  GasEquipment::GasEquipment(std::shared_ptr<detail::GasEquipment_Impl> impl) : SpaceLoadInstance(std::move(impl)) {}
+  /// @endcond
 
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

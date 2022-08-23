@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -72,176 +72,174 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateShadingSurface( model::ShadingSurface & modelObject )
-{
-  boost::optional<IdfObject> idfObject;
+  boost::optional<IdfObject> ForwardTranslator::translateShadingSurface(model::ShadingSurface& modelObject) {
+    boost::optional<IdfObject> idfObject;
 
-  boost::optional<Schedule> transmittanceSchedule = modelObject.transmittanceSchedule();
-  Transformation transformation;
-  Point3dVector points;
+    boost::optional<Schedule> transmittanceSchedule = modelObject.transmittanceSchedule();
+    Transformation transformation;
+    Point3dVector points;
 
-  boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup = modelObject.shadingSurfaceGroup();
-  if (shadingSurfaceGroup){
+    boost::optional<ShadingSurfaceGroup> shadingSurfaceGroup = modelObject.shadingSurfaceGroup();
+    if (shadingSurfaceGroup) {
 
-    transformation = shadingSurfaceGroup->transformation();
-    points = transformation * modelObject.vertices();
+      transformation = shadingSurfaceGroup->transformation();
+      points = transformation * modelObject.vertices();
 
-    if (istringEqual("Space", shadingSurfaceGroup->shadingSurfaceType())){
+      if (istringEqual("Space", shadingSurfaceGroup->shadingSurfaceType())) {
 
-      idfObject = IdfObject(openstudio::IddObjectType::Shading_Zone_Detailed);
-      idfObject->setString(Shading_Zone_DetailedFields::Name, modelObject.name().get());
+        idfObject = IdfObject(openstudio::IddObjectType::Shading_Zone_Detailed);
+        idfObject->setString(Shading_Zone_DetailedFields::Name, modelObject.name().get());
 
-      boost::optional<Space> space = shadingSurfaceGroup->space();
-      if (space){
+        boost::optional<Space> space = shadingSurfaceGroup->space();
+        if (space) {
 
-        boost::optional<Surface> baseSurface;
-        double minDistance = std::numeric_limits<double>::max();
+          boost::optional<Surface> baseSurface;
+          double minDistance = std::numeric_limits<double>::max();
 
-        // at this point zone has one space and internal surfaces have already been combined
-        for (const Surface& surface : space->surfaces()){
-          if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")){
-            Point3dVector surfaceVertices = surface.vertices();
-            for (const Point3d& point : points){
-              for (const Point3d& surfaceVertex : surfaceVertices){
-                double distance = getDistance(point, surfaceVertex);
-                if (distance < minDistance){
-                  baseSurface = surface;
-                  minDistance = distance;
+          // at this point zone has one space and internal surfaces have already been combined
+          for (const Surface& surface : space->surfaces()) {
+            if (istringEqual(surface.outsideBoundaryCondition(), "Outdoors")) {
+              Point3dVector surfaceVertices = surface.vertices();
+              for (const Point3d& point : points) {
+                for (const Point3d& surfaceVertex : surfaceVertices) {
+                  double distance = getDistance(point, surfaceVertex);
+                  if (distance < minDistance) {
+                    baseSurface = surface;
+                    minDistance = distance;
+                  }
                 }
               }
             }
           }
+
+          if (!baseSurface) {
+            LOG(Error, "Cannot find appropriate base surface for shading surface '" << modelObject.name().get()
+                                                                                    << "', the shading surface will not be translated");
+            return boost::none;
+          }
+
+          idfObject->setString(Shading_Zone_DetailedFields::BaseSurfaceName, baseSurface->name().get());
         }
 
-        if (!baseSurface){
-          LOG(Error, "Cannot find appropriate base surface for shading surface '" << modelObject.name().get() <<
-                     "', the shading surface will not be translated");
-          return boost::none;
+        if (transmittanceSchedule) {
+          idfObject->setString(Shading_Zone_DetailedFields::TransmittanceScheduleName, transmittanceSchedule->name().get());
         }
 
-        idfObject->setString(Shading_Zone_DetailedFields::BaseSurfaceName, baseSurface->name().get());
+      } else if (istringEqual("Site", shadingSurfaceGroup->shadingSurfaceType())) {
+
+        idfObject = IdfObject(openstudio::IddObjectType::Shading_Site_Detailed);
+        idfObject->setString(Shading_Site_DetailedFields::Name, modelObject.name().get());
+
+        if (transmittanceSchedule) {
+          idfObject->setString(Shading_Site_DetailedFields::TransmittanceScheduleName, transmittanceSchedule->name().get());
+        }
+
+      } else if (istringEqual("Building", shadingSurfaceGroup->shadingSurfaceType())) {
+        boost::optional<Building> building = modelObject.model().getUniqueModelObject<Building>();
+        if (building) {
+          transformation = building->transformation().inverse() * transformation;
+        }
+
+        idfObject = IdfObject(openstudio::IddObjectType::Shading_Building_Detailed);
+        idfObject->setString(Shading_Building_DetailedFields::Name, modelObject.name().get());
+
+        if (transmittanceSchedule) {
+          idfObject->setString(Shading_Building_DetailedFields::TransmittanceScheduleName, transmittanceSchedule->name().get());
+        }
+      } else {
+        OS_ASSERT(false);
       }
 
-      if (transmittanceSchedule){
-        idfObject->setString(Shading_Zone_DetailedFields::TransmittanceScheduleName, transmittanceSchedule->name().get());
-      }
-
-    }else if (istringEqual("Site", shadingSurfaceGroup->shadingSurfaceType())){
-
-      idfObject = IdfObject(openstudio::IddObjectType::Shading_Site_Detailed);
-      idfObject->setString(Shading_Site_DetailedFields::Name, modelObject.name().get());
-
-      if (transmittanceSchedule){
-        idfObject->setString(Shading_Site_DetailedFields::TransmittanceScheduleName, transmittanceSchedule->name().get());
-      }
-
-    }else{
-      boost::optional<Building> building = modelObject.model().getUniqueModelObject<Building>();
-      if (building){
-        transformation = building->transformation().inverse()*transformation;
-      }
-
+    } else {
       idfObject = IdfObject(openstudio::IddObjectType::Shading_Building_Detailed);
       idfObject->setString(Shading_Building_DetailedFields::Name, modelObject.name().get());
 
-      if (transmittanceSchedule){
+      if (transmittanceSchedule) {
         idfObject->setString(Shading_Building_DetailedFields::TransmittanceScheduleName, transmittanceSchedule->name().get());
       }
     }
 
-  }else{
-    idfObject = IdfObject(openstudio::IddObjectType::Shading_Building_Detailed);
-    idfObject->setString(Shading_Building_DetailedFields::Name, modelObject.name().get());
+    m_idfObjects.push_back(*idfObject);
 
-    if (transmittanceSchedule){
-      idfObject->setString(Shading_Building_DetailedFields::TransmittanceScheduleName, transmittanceSchedule->name().get());
+    idfObject->clearExtensibleGroups();
+
+    for (const Point3d& point : points) {
+      IdfExtensibleGroup group = idfObject->pushExtensibleGroup();
+      OS_ASSERT(group.numFields() == 3);
+      group.setDouble(0, point.x());
+      group.setDouble(1, point.y());
+      group.setDouble(2, point.z());
     }
-  }
 
-  m_idfObjects.push_back(*idfObject);
+    // get reflectance properties from construction if possible
+    bool addShadingPropertyObject = false;
 
-  idfObject->clearExtensibleGroups();
+    IdfObject shadingPropertyObject = IdfObject(openstudio::IddObjectType::ShadingProperty_Reflectance);
+    shadingPropertyObject.setString(ShadingProperty_ReflectanceFields::ShadingSurfaceName, modelObject.name().get());
 
-  for (const Point3d& point : points){
-    IdfExtensibleGroup group = idfObject->pushExtensibleGroup();
-    OS_ASSERT(group.numFields() == 3);
-    group.setDouble(0, point.x());
-    group.setDouble(1, point.y());
-    group.setDouble(2, point.z());
-  }
+    boost::optional<model::ConstructionBase> constructionBase = modelObject.construction();
+    if (constructionBase) {
+      if (constructionBase->isFenestration()) {
 
-  // get reflectance properties from construction if possible
-  bool addShadingPropertyObject = false;
+        shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::FractionofShadingSurfaceThatIsGlazed, 1.0);
+        shadingPropertyObject.setString(ShadingProperty_ReflectanceFields::GlazingConstructionName, constructionBase->name().get());
+        addShadingPropertyObject = true;
 
-  IdfObject shadingPropertyObject = IdfObject(openstudio::IddObjectType::ShadingProperty_Reflectance);
-  shadingPropertyObject.setString(ShadingProperty_ReflectanceFields::ShadingSurfaceName, modelObject.name().get());
+      } else {
 
-  boost::optional<model::ConstructionBase> constructionBase = modelObject.construction();
-  if (constructionBase){
-    if (constructionBase->isFenestration()){
+        shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::FractionofShadingSurfaceThatIsGlazed, 0.0);
 
-      shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::FractionofShadingSurfaceThatIsGlazed, 1.0);
-      shadingPropertyObject.setString(ShadingProperty_ReflectanceFields::GlazingConstructionName, constructionBase->name().get());
-      addShadingPropertyObject = true;
+        boost::optional<model::Construction> construction = constructionBase->optionalCast<model::Construction>();
+        if (construction) {
 
-    }else{
+          std::vector<model::Material> layers = construction->layers();
 
-      shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::FractionofShadingSurfaceThatIsGlazed, 0.0);
+          // we want the outer layer
+          if (!layers.empty()) {
 
-      boost::optional<model::Construction> construction = constructionBase->optionalCast<model::Construction>();
-      if (construction){
+            if (layers[0].optionalCast<model::StandardOpaqueMaterial>()) {
+              model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
 
-        std::vector<model::Material> layers = construction->layers();
+              boost::optional<double> solRefl = outerMaterial.solarReflectance();
+              if (solRefl) {
+                shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseSolarReflectanceofUnglazedPartofShadingSurface, *solRefl);
+                addShadingPropertyObject = true;
+              }
 
-        // we want the outer layer
-        if (!layers.empty()){
-
-          if (layers[0].optionalCast<model::StandardOpaqueMaterial>()){
-            model::StandardOpaqueMaterial outerMaterial = layers[0].cast<model::StandardOpaqueMaterial>();
-
-            boost::optional<double> solRefl = outerMaterial.solarReflectance();
-            if (solRefl){
-              shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseSolarReflectanceofUnglazedPartofShadingSurface, *solRefl);
-              addShadingPropertyObject = true;
+              boost::optional<double> visRefl = outerMaterial.visibleReflectance();
+              if (visRefl) {
+                shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseVisibleReflectanceofUnglazedPartofShadingSurface, *visRefl);
+                addShadingPropertyObject = true;
+              }
             }
 
-            boost::optional<double> visRefl = outerMaterial.visibleReflectance();
-            if (visRefl){
-              shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseVisibleReflectanceofUnglazedPartofShadingSurface, *visRefl);
-              addShadingPropertyObject = true;
-            }
-          }
+            if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()) {
+              model::MasslessOpaqueMaterial outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
 
+              boost::optional<double> solRefl = outerMaterial.solarReflectance();
+              if (solRefl) {
+                shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseSolarReflectanceofUnglazedPartofShadingSurface, *solRefl);
+                addShadingPropertyObject = true;
+              }
 
-          if (layers[0].optionalCast<model::MasslessOpaqueMaterial>()){
-            model::MasslessOpaqueMaterial outerMaterial = layers[0].cast<model::MasslessOpaqueMaterial>();
-
-            boost::optional<double> solRefl = outerMaterial.solarReflectance();
-            if (solRefl){
-              shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseSolarReflectanceofUnglazedPartofShadingSurface, *solRefl);
-              addShadingPropertyObject = true;
-            }
-
-            boost::optional<double> visRefl = outerMaterial.visibleReflectance();
-            if (visRefl){
-              shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseVisibleReflectanceofUnglazedPartofShadingSurface, *visRefl);
-              addShadingPropertyObject = true;
+              boost::optional<double> visRefl = outerMaterial.visibleReflectance();
+              if (visRefl) {
+                shadingPropertyObject.setDouble(ShadingProperty_ReflectanceFields::DiffuseVisibleReflectanceofUnglazedPartofShadingSurface, *visRefl);
+                addShadingPropertyObject = true;
+              }
             }
           }
-
         }
       }
     }
+
+    if (addShadingPropertyObject) {
+      m_idfObjects.push_back(shadingPropertyObject);
+    }
+
+    return idfObject;
   }
 
-  if (addShadingPropertyObject){
-    m_idfObjects.push_back(shadingPropertyObject);
-  }
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

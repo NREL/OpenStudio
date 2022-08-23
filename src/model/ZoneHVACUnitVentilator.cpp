@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,724 +49,678 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ZoneHVACUnitVentilator_Impl::ZoneHVACUnitVentilator_Impl(const IdfObject& idfObject,
-                                                           Model_Impl* model,
-                                                           bool keepHandle)
-    : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ZoneHVACUnitVentilator::iddObjectType());
-  }
-
-  ZoneHVACUnitVentilator_Impl::ZoneHVACUnitVentilator_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                           Model_Impl* model,
-                                                           bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ZoneHVACUnitVentilator::iddObjectType());
-  }
-
-  ZoneHVACUnitVentilator_Impl::ZoneHVACUnitVentilator_Impl(const ZoneHVACUnitVentilator_Impl& other,
-                                                           Model_Impl* model,
-                                                           bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& ZoneHVACUnitVentilator_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result{
-      "Zone Unit Ventilator Heating Rate",
-      "Zone Unit Ventilator Heating Energy",
-      "Zone Unit Ventilator Total Cooling Rate",
-      "Zone Unit Ventilator Total Cooling Energy",
-      "Zone Unit Ventilator Sensible Cooling Rate",
-      "Zone Unit Ventilator Sensible Cooling Energy",
-      "Zone Unit Ventilator Fan Electric Power",
-      "Zone Unit Ventilator Fan Electric Energy",
-      "Zone Unit Ventilator Fan Availability Status",
-      "Zone Unit Ventilator Fan Part Load Ratio"
-    };
-    return result;
-  }
-
-  IddObjectType ZoneHVACUnitVentilator_Impl::iddObjectType() const {
-    return ZoneHVACUnitVentilator::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> ZoneHVACUnitVentilator_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_ZoneHVAC_UnitVentilatorFields::AvailabilityScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneHVACUnitVentilator","Availability"));
+    ZoneHVACUnitVentilator_Impl::ZoneHVACUnitVentilator_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ZoneHVACUnitVentilator::iddObjectType());
     }
-    if (std::find(b,e,OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneHVACUnitVentilator","Minimum Outdoor Air"));
+
+    ZoneHVACUnitVentilator_Impl::ZoneHVACUnitVentilator_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                             bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ZoneHVACUnitVentilator::iddObjectType());
     }
-    if (std::find(b,e,OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFractionorTemperatureScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneHVACUnitVentilator","Maximum Outdoor Air Fraction or Temperature"));
+
+    ZoneHVACUnitVentilator_Impl::ZoneHVACUnitVentilator_Impl(const ZoneHVACUnitVentilator_Impl& other, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& ZoneHVACUnitVentilator_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{
+        "Zone Unit Ventilator Heating Rate",         "Zone Unit Ventilator Heating Energy",         "Zone Unit Ventilator Total Cooling Rate",
+        "Zone Unit Ventilator Total Cooling Energy", "Zone Unit Ventilator Sensible Cooling Rate",  "Zone Unit Ventilator Sensible Cooling Energy",
+        "Zone Unit Ventilator Fan Electricity Rate", "Zone Unit Ventilator Fan Electricity Energy", "Zone Unit Ventilator Fan Availability Status",
+        "Zone Unit Ventilator Fan Part Load Ratio"};
+      return result;
     }
-    if (std::find(b,e,OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanOperatingModeScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneHVACUnitVentilator","Supply Air Fan Operating Mode"));
+
+    IddObjectType ZoneHVACUnitVentilator_Impl::iddObjectType() const {
+      return ZoneHVACUnitVentilator::iddObjectType();
     }
-    return result;
-  }
 
-  Schedule ZoneHVACUnitVentilator_Impl::availabilitySchedule() const {
-    boost::optional<Schedule> value = optionalAvailabilitySchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+    std::vector<ScheduleTypeKey> ZoneHVACUnitVentilator_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_ZoneHVAC_UnitVentilatorFields::AvailabilityScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneHVACUnitVentilator", "Availability"));
+      }
+      if (std::find(b, e, OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneHVACUnitVentilator", "Minimum Outdoor Air"));
+      }
+      if (std::find(b, e, OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFractionorTemperatureScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneHVACUnitVentilator", "Maximum Outdoor Air Fraction or Temperature"));
+      }
+      if (std::find(b, e, OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanOperatingModeScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneHVACUnitVentilator", "Supply Air Fan Operating Mode"));
+      }
+      return result;
     }
-    return value.get();
-  }
 
-  ModelObject ZoneHVACUnitVentilator_Impl::clone(Model model) const
-  {
-    auto objectClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACUnitVentilator>();
+    Schedule ZoneHVACUnitVentilator_Impl::availabilitySchedule() const {
+      boost::optional<Schedule> value = optionalAvailabilitySchedule();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+      }
+      return value.get();
+    }
 
-    auto const supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+    ModelObject ZoneHVACUnitVentilator_Impl::clone(Model model) const {
+      auto objectClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACUnitVentilator>();
 
-    objectClone.setSupplyAirFan(supplyFanClone);
+      auto const supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
-    bool sameModel = model == this->model();
+      objectClone.setSupplyAirFan(supplyFanClone);
 
-    if( auto const t_coolingCoil = coolingCoil() ) {
-      auto const coolingCoilClone = t_coolingCoil->clone(model).cast<HVACComponent>();
-      objectClone.setCoolingCoil(coolingCoilClone);
+      bool sameModel = model == this->model();
 
-      if ( sameModel ) {
-        if( auto waterToAirComponent = t_coolingCoil->optionalCast<WaterToAirComponent>() ) {
-          if( auto plant = waterToAirComponent->plantLoop() ) {
-            plant->addDemandBranchForComponent(coolingCoilClone);
+      if (auto const t_coolingCoil = coolingCoil()) {
+        auto const coolingCoilClone = t_coolingCoil->clone(model).cast<HVACComponent>();
+        objectClone.setCoolingCoil(coolingCoilClone);
+
+        if (sameModel) {
+          if (auto waterToAirComponent = t_coolingCoil->optionalCast<WaterToAirComponent>()) {
+            if (auto plant = waterToAirComponent->plantLoop()) {
+              plant->addDemandBranchForComponent(coolingCoilClone);
+            }
           }
         }
       }
-    }
 
-    if( auto const t_heatingCoil = heatingCoil() ) {
-      auto const heatingCoilClone = t_heatingCoil->clone(model).cast<HVACComponent>();
-      objectClone.setHeatingCoil(heatingCoilClone);
+      if (auto const t_heatingCoil = heatingCoil()) {
+        auto const heatingCoilClone = t_heatingCoil->clone(model).cast<HVACComponent>();
+        objectClone.setHeatingCoil(heatingCoilClone);
 
-      if ( sameModel ) {
-        if( auto waterToAirComponent = t_heatingCoil->optionalCast<WaterToAirComponent>() ) {
-          if( auto plant = waterToAirComponent->plantLoop() ) {
-            plant->addDemandBranchForComponent(heatingCoilClone);
+        if (sameModel) {
+          if (auto waterToAirComponent = t_heatingCoil->optionalCast<WaterToAirComponent>()) {
+            if (auto plant = waterToAirComponent->plantLoop()) {
+              plant->addDemandBranchForComponent(heatingCoilClone);
+            }
           }
         }
       }
+
+      return objectClone;
     }
 
-    return objectClone;
-  }
-
-  std::vector<IdfObject> ZoneHVACUnitVentilator_Impl::remove()
-  {
-    if( auto const waterHeatingCoil = heatingCoil() ) {
-      if( auto waterToAirComponent = waterHeatingCoil->optionalCast<WaterToAirComponent>() ) {
-        if( auto plant = waterToAirComponent->plantLoop() ) {
-          plant->removeDemandBranchWithComponent(waterHeatingCoil.get());
+    std::vector<IdfObject> ZoneHVACUnitVentilator_Impl::remove() {
+      if (auto const waterHeatingCoil = heatingCoil()) {
+        if (auto waterToAirComponent = waterHeatingCoil->optionalCast<WaterToAirComponent>()) {
+          if (auto plant = waterToAirComponent->plantLoop()) {
+            plant->removeDemandBranchWithComponent(waterHeatingCoil.get());
+          }
         }
       }
-    }
-    if( auto const waterCoolingCoil = coolingCoil() ) {
-      if( auto waterToAirComponent = waterCoolingCoil->optionalCast<WaterToAirComponent>() ) {
-        if( auto plant = waterToAirComponent->plantLoop() ) {
-          plant->removeDemandBranchWithComponent(waterCoolingCoil.get());
+      if (auto const waterCoolingCoil = coolingCoil()) {
+        if (auto waterToAirComponent = waterCoolingCoil->optionalCast<WaterToAirComponent>()) {
+          if (auto plant = waterToAirComponent->plantLoop()) {
+            plant->removeDemandBranchWithComponent(waterCoolingCoil.get());
+          }
         }
       }
+      return ZoneHVACComponent_Impl::remove();
     }
-    return ZoneHVACComponent_Impl::remove();
-  }
 
-  std::vector<ModelObject> ZoneHVACUnitVentilator_Impl::children() const
-  {
-    std::vector<ModelObject> result;
-    if (auto const intermediate = optionalSupplyAirFan()) {
-      result.push_back(intermediate.get());
+    std::vector<ModelObject> ZoneHVACUnitVentilator_Impl::children() const {
+      std::vector<ModelObject> result;
+      if (auto const intermediate = optionalSupplyAirFan()) {
+        result.push_back(intermediate.get());
+      }
+      if (auto const intermediate = heatingCoil()) {
+        result.push_back(intermediate.get());
+      }
+      if (auto const intermediate = coolingCoil()) {
+        result.push_back(intermediate.get());
+      }
+      return result;
     }
-    if (auto const intermediate = heatingCoil()) {
-      result.push_back(intermediate.get());
+
+    unsigned ZoneHVACUnitVentilator_Impl::inletPort() const {
+      return OS_ZoneHVAC_UnitVentilatorFields::AirInletNodeName;
     }
-    if (auto const intermediate = coolingCoil()) {
-      result.push_back(intermediate.get());
+
+    unsigned ZoneHVACUnitVentilator_Impl::outletPort() const {
+      return OS_ZoneHVAC_UnitVentilatorFields::AirOutletNodeName;
     }
-    return result;
-  }
 
-  unsigned ZoneHVACUnitVentilator_Impl::inletPort() const
-  {
-    return OS_ZoneHVAC_UnitVentilatorFields::AirInletNodeName;
-  }
-
-  unsigned ZoneHVACUnitVentilator_Impl::outletPort() const
-  {
-    return OS_ZoneHVAC_UnitVentilatorFields::AirOutletNodeName;
-  }
-
-  boost::optional<double> ZoneHVACUnitVentilator_Impl::maximumSupplyAirFlowRate() const {
-    return getDouble(OS_ZoneHVAC_UnitVentilatorFields::MaximumSupplyAirFlowRate,true);
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::isMaximumSupplyAirFlowRateAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_UnitVentilatorFields::MaximumSupplyAirFlowRate, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    boost::optional<double> ZoneHVACUnitVentilator_Impl::maximumSupplyAirFlowRate() const {
+      return getDouble(OS_ZoneHVAC_UnitVentilatorFields::MaximumSupplyAirFlowRate, true);
     }
-    return result;
-  }
 
-  std::string ZoneHVACUnitVentilator_Impl::outdoorAirControlType() const {
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_UnitVentilatorFields::OutdoorAirControlType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> ZoneHVACUnitVentilator_Impl::minimumOutdoorAirFlowRate() const {
-    return getDouble(OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirFlowRate,true);
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::isMinimumOutdoorAirFlowRateAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirFlowRate, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    bool ZoneHVACUnitVentilator_Impl::isMaximumSupplyAirFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_UnitVentilatorFields::MaximumSupplyAirFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
     }
-    return result;
-  }
 
-  Schedule ZoneHVACUnitVentilator_Impl::minimumOutdoorAirSchedule() const {
-    boost::optional<Schedule> value = optionalMinimumOutdoorAirSchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Minimum Outdoor Air Schedule attached.");
+    std::string ZoneHVACUnitVentilator_Impl::outdoorAirControlType() const {
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_UnitVentilatorFields::OutdoorAirControlType, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    return value.get();
-  }
 
-  boost::optional<double> ZoneHVACUnitVentilator_Impl::maximumOutdoorAirFlowRate() const {
-    return getDouble(OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFlowRate,true);
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::isMaximumOutdoorAirFlowRateAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFlowRate, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    boost::optional<double> ZoneHVACUnitVentilator_Impl::minimumOutdoorAirFlowRate() const {
+      return getDouble(OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirFlowRate, true);
     }
-    return result;
-  }
 
-  Schedule ZoneHVACUnitVentilator_Impl::maximumOutdoorAirFractionorTemperatureSchedule() const {
-    boost::optional<Schedule> value = optionalMaximumOutdoorAirFractionorTemperatureSchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Maximum Outdoor Air Fractionor Temperature Schedule attached.");
+    bool ZoneHVACUnitVentilator_Impl::isMinimumOutdoorAirFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
     }
-    return value.get();
-  }
 
-  HVACComponent ZoneHVACUnitVentilator_Impl::supplyAirFan() const {
-    boost::optional<HVACComponent> value = optionalSupplyAirFan();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Supply Air Fan attached.");
+    Schedule ZoneHVACUnitVentilator_Impl::minimumOutdoorAirSchedule() const {
+      boost::optional<Schedule> value = optionalMinimumOutdoorAirSchedule();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Minimum Outdoor Air Schedule attached.");
+      }
+      return value.get();
     }
-    return value.get();
-  }
 
-  boost::optional<Schedule> ZoneHVACUnitVentilator_Impl::supplyAirFanOperatingModeSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanOperatingModeScheduleName);
-  }
-
-  boost::optional<HVACComponent> ZoneHVACUnitVentilator_Impl::heatingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_UnitVentilatorFields::HeatingCoilName);
-  }
-
-  double ZoneHVACUnitVentilator_Impl::heatingConvergenceTolerance() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_UnitVentilatorFields::HeatingConvergenceTolerance,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<HVACComponent> ZoneHVACUnitVentilator_Impl::coolingCoil() const {
-    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_UnitVentilatorFields::CoolingCoilName);
-  }
-
-  double ZoneHVACUnitVentilator_Impl::coolingConvergenceTolerance() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_UnitVentilatorFields::CoolingConvergenceTolerance,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  // boost::optional<ModelObject> ZoneHVACUnitVentilator_Impl::availabilityManagerList() const {
-  //   return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ZoneHVAC_UnitVentilatorFields::AvailabilityManagerListName);
-  // }
-
-  // boost::optional<ModelObject> ZoneHVACUnitVentilator_Impl::designSpecificationZoneHVACSizingObject() const {
-  //   return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ZoneHVAC_UnitVentilatorFields::DesignSpecificationZoneHVACSizingObjectName);
-  // }
-
-  bool ZoneHVACUnitVentilator_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneHVAC_UnitVentilatorFields::AvailabilityScheduleName,
-                              "ZoneHVACUnitVentilator",
-                              "Availability",
-                              schedule);
-    return result;
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::setMaximumSupplyAirFlowRate(boost::optional<double> maximumSupplyAirFlowRate) {
-    bool result(false);
-    if (maximumSupplyAirFlowRate) {
-      result = setDouble(OS_ZoneHVAC_UnitVentilatorFields::MaximumSupplyAirFlowRate, maximumSupplyAirFlowRate.get());
+    boost::optional<double> ZoneHVACUnitVentilator_Impl::maximumOutdoorAirFlowRate() const {
+      return getDouble(OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFlowRate, true);
     }
-    return result;
-  }
 
-  void ZoneHVACUnitVentilator_Impl::autosizeMaximumSupplyAirFlowRate() {
-    bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::MaximumSupplyAirFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::setOutdoorAirControlType(std::string outdoorAirControlType) {
-    bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::OutdoorAirControlType, outdoorAirControlType);
-    return result;
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::setMinimumOutdoorAirFlowRate(boost::optional<double> minimumOutdoorAirFlowRate) {
-    bool result(false);
-    if (minimumOutdoorAirFlowRate) {
-      result = setDouble(OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirFlowRate, minimumOutdoorAirFlowRate.get());
+    bool ZoneHVACUnitVentilator_Impl::isMaximumOutdoorAirFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
     }
-    return result;
-  }
 
-  void ZoneHVACUnitVentilator_Impl::autosizeMinimumOutdoorAirFlowRate() {
-    bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::setMinimumOutdoorAirSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirScheduleName,
-                              "ZoneHVACUnitVentilator",
-                              "Minimum Outdoor Air",
-                              schedule);
-    return result;
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate) {
-    bool result(false);
-    if (maximumOutdoorAirFlowRate) {
-      result = setDouble(OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFlowRate, maximumOutdoorAirFlowRate.get());
+    Schedule ZoneHVACUnitVentilator_Impl::maximumOutdoorAirFractionorTemperatureSchedule() const {
+      boost::optional<Schedule> value = optionalMaximumOutdoorAirFractionorTemperatureSchedule();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Maximum Outdoor Air Fractionor Temperature Schedule attached.");
+      }
+      return value.get();
     }
-    return result;
-  }
 
-  void ZoneHVACUnitVentilator_Impl::autosizeMaximumOutdoorAirFlowRate() {
-    bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::setMaximumOutdoorAirFractionorTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFractionorTemperatureScheduleName,
-                              "ZoneHVACUnitVentilator",
-                              "Maximum Outdoor Air Fraction or Temperature",
-                              schedule);
-    return result;
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::setSupplyAirFan(const HVACComponent& supplyAirFan) {
-    bool result = setPointer(OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanName, supplyAirFan.handle());
-    return result;
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanOperatingModeScheduleName,
-                              "ZoneHVACUnitVentilator",
-                              "Supply Air Fan Operating Mode",
-                              schedule);
-    return result;
-  }
-
-  void ZoneHVACUnitVentilator_Impl::resetSupplyAirFanOperatingModeSchedule() {
-    bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanOperatingModeScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::setHeatingCoil(const boost::optional<HVACComponent>& heatingCoil) {
-    bool result(false);
-    if (heatingCoil) {
-      result = setPointer(OS_ZoneHVAC_UnitVentilatorFields::HeatingCoilName, heatingCoil.get().handle());
+    HVACComponent ZoneHVACUnitVentilator_Impl::supplyAirFan() const {
+      boost::optional<HVACComponent> value = optionalSupplyAirFan();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Supply Air Fan attached.");
+      }
+      return value.get();
     }
-    else {
-      resetHeatingCoil();
-      result = true;
+
+    boost::optional<Schedule> ZoneHVACUnitVentilator_Impl::supplyAirFanOperatingModeSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanOperatingModeScheduleName);
     }
-    return result;
-  }
 
-  void ZoneHVACUnitVentilator_Impl::resetHeatingCoil() {
-    bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::HeatingCoilName, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::setHeatingConvergenceTolerance(double heatingConvergenceTolerance) {
-    bool result = setDouble(OS_ZoneHVAC_UnitVentilatorFields::HeatingConvergenceTolerance, heatingConvergenceTolerance);
-    return result;
-  }
-
-  bool ZoneHVACUnitVentilator_Impl::setCoolingCoil(const boost::optional<HVACComponent>& coolingCoil) {
-    bool result(false);
-    if (coolingCoil) {
-      result = setPointer(OS_ZoneHVAC_UnitVentilatorFields::CoolingCoilName, coolingCoil.get().handle());
+    boost::optional<HVACComponent> ZoneHVACUnitVentilator_Impl::heatingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_UnitVentilatorFields::HeatingCoilName);
     }
-    else {
-      resetCoolingCoil();
-      result = true;
+
+    double ZoneHVACUnitVentilator_Impl::heatingConvergenceTolerance() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_UnitVentilatorFields::HeatingConvergenceTolerance, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    return result;
-  }
 
-  void ZoneHVACUnitVentilator_Impl::resetCoolingCoil() {
-    bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::CoolingCoilName, "");
-    OS_ASSERT(result);
-  }
+    boost::optional<HVACComponent> ZoneHVACUnitVentilator_Impl::coolingCoil() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_UnitVentilatorFields::CoolingCoilName);
+    }
 
-  bool ZoneHVACUnitVentilator_Impl::setCoolingConvergenceTolerance(double coolingConvergenceTolerance) {
-    bool result = setDouble(OS_ZoneHVAC_UnitVentilatorFields::CoolingConvergenceTolerance, coolingConvergenceTolerance);
-    return result;
-  }
+    double ZoneHVACUnitVentilator_Impl::coolingConvergenceTolerance() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_UnitVentilatorFields::CoolingConvergenceTolerance, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  // bool ZoneHVACUnitVentilator_Impl::setAvailabilityManagerList(const boost::optional<ModelObject>& systemAvailabilityManagerLists) {
-  //   bool result(false);
-  //   if (systemAvailabilityManagerLists) {
-  //     result = setPointer(OS_ZoneHVAC_UnitVentilatorFields::AvailabilityManagerListName, systemAvailabilityManagerLists.get().handle());
-  //   }
-  //   else {
-  //     resetAvailabilityManagerList();
-  //     result = true;
-  //   }
-  //   return result;
-  // }
+    // boost::optional<ModelObject> ZoneHVACUnitVentilator_Impl::availabilityManagerList() const {
+    //   return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ZoneHVAC_UnitVentilatorFields::AvailabilityManagerListName);
+    // }
 
-  // void ZoneHVACUnitVentilator_Impl::resetAvailabilityManagerList() {
-  //   bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::AvailabilityManagerListName, "");
-  //   OS_ASSERT(result);
-  // }
+    // boost::optional<ModelObject> ZoneHVACUnitVentilator_Impl::designSpecificationZoneHVACSizingObject() const {
+    //   return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ZoneHVAC_UnitVentilatorFields::DesignSpecificationZoneHVACSizingObjectName);
+    // }
 
-  // bool ZoneHVACUnitVentilator_Impl::setDesignSpecificationZoneHVACSizingObject(const boost::optional<ModelObject>& designSpecificationZoneHVACSizingName) {
-  //   bool result(false);
-  //   if (designSpecificationZoneHVACSizingName) {
-  //     result = setPointer(OS_ZoneHVAC_UnitVentilatorFields::DesignSpecificationZoneHVACSizingObjectName, designSpecificationZoneHVACSizingName.get().handle());
-  //   }
-  //   else {
-  //     resetDesignSpecificationZoneHVACSizingObject();
-  //     result = true;
-  //   }
-  //   return result;
-  // }
+    bool ZoneHVACUnitVentilator_Impl::setAvailabilitySchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_ZoneHVAC_UnitVentilatorFields::AvailabilityScheduleName, "ZoneHVACUnitVentilator", "Availability", schedule);
+      return result;
+    }
 
-  // void ZoneHVACUnitVentilator_Impl::resetDesignSpecificationZoneHVACSizingObject() {
-  //   bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::DesignSpecificationZoneHVACSizingObjectName, "");
-  //   OS_ASSERT(result);
-  // }
+    bool ZoneHVACUnitVentilator_Impl::setMaximumSupplyAirFlowRate(boost::optional<double> maximumSupplyAirFlowRate) {
+      bool result(false);
+      if (maximumSupplyAirFlowRate) {
+        result = setDouble(OS_ZoneHVAC_UnitVentilatorFields::MaximumSupplyAirFlowRate, maximumSupplyAirFlowRate.get());
+      }
+      return result;
+    }
 
-  boost::optional<Schedule> ZoneHVACUnitVentilator_Impl::optionalAvailabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_UnitVentilatorFields::AvailabilityScheduleName);
-  }
+    void ZoneHVACUnitVentilator_Impl::autosizeMaximumSupplyAirFlowRate() {
+      bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::MaximumSupplyAirFlowRate, "autosize");
+      OS_ASSERT(result);
+    }
 
-  boost::optional<Schedule> ZoneHVACUnitVentilator_Impl::optionalMinimumOutdoorAirSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirScheduleName);
-  }
+    bool ZoneHVACUnitVentilator_Impl::setOutdoorAirControlType(std::string outdoorAirControlType) {
+      bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::OutdoorAirControlType, outdoorAirControlType);
+      return result;
+    }
 
-  boost::optional<Schedule> ZoneHVACUnitVentilator_Impl::optionalMaximumOutdoorAirFractionorTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFractionorTemperatureScheduleName);
-  }
+    bool ZoneHVACUnitVentilator_Impl::setMinimumOutdoorAirFlowRate(boost::optional<double> minimumOutdoorAirFlowRate) {
+      bool result(false);
+      if (minimumOutdoorAirFlowRate) {
+        result = setDouble(OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirFlowRate, minimumOutdoorAirFlowRate.get());
+      }
+      return result;
+    }
 
-  boost::optional<HVACComponent> ZoneHVACUnitVentilator_Impl::optionalSupplyAirFan() const {
-    return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanName);
-  }
+    void ZoneHVACUnitVentilator_Impl::autosizeMinimumOutdoorAirFlowRate() {
+      bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirFlowRate, "autosize");
+      OS_ASSERT(result);
+    }
 
-  boost::optional<double> ZoneHVACUnitVentilator_Impl::autosizedMaximumSupplyAirFlowRate() const {
-    return getAutosizedValue("Design Size Maximum Supply Air Flow Rate", "m3/s");
-  }
+    bool ZoneHVACUnitVentilator_Impl::setMinimumOutdoorAirSchedule(Schedule& schedule) {
+      bool result =
+        setSchedule(OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirScheduleName, "ZoneHVACUnitVentilator", "Minimum Outdoor Air", schedule);
+      return result;
+    }
 
-  boost::optional<double> ZoneHVACUnitVentilator_Impl::autosizedMinimumOutdoorAirFlowRate() const {
-    return getAutosizedValue("Design Size Minimum Outdoor Air Flow Rate", "m3/s");
-  }
+    bool ZoneHVACUnitVentilator_Impl::setMaximumOutdoorAirFlowRate(boost::optional<double> maximumOutdoorAirFlowRate) {
+      bool result(false);
+      if (maximumOutdoorAirFlowRate) {
+        result = setDouble(OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFlowRate, maximumOutdoorAirFlowRate.get());
+      }
+      return result;
+    }
 
-  boost::optional<double> ZoneHVACUnitVentilator_Impl::autosizedMaximumOutdoorAirFlowRate() const {
-    return getAutosizedValue("Design Size Maximum Outdoor Air Flow Rate", "m3/s");
-  }
+    void ZoneHVACUnitVentilator_Impl::autosizeMaximumOutdoorAirFlowRate() {
+      bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFlowRate, "autosize");
+      OS_ASSERT(result);
+    }
 
-  void ZoneHVACUnitVentilator_Impl::autosize() {
+    bool ZoneHVACUnitVentilator_Impl::setMaximumOutdoorAirFractionorTemperatureSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFractionorTemperatureScheduleName, "ZoneHVACUnitVentilator",
+                                "Maximum Outdoor Air Fraction or Temperature", schedule);
+      return result;
+    }
+
+    bool ZoneHVACUnitVentilator_Impl::setSupplyAirFan(const HVACComponent& supplyAirFan) {
+      bool result = setPointer(OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanName, supplyAirFan.handle());
+      return result;
+    }
+
+    bool ZoneHVACUnitVentilator_Impl::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanOperatingModeScheduleName, "ZoneHVACUnitVentilator",
+                                "Supply Air Fan Operating Mode", schedule);
+      return result;
+    }
+
+    void ZoneHVACUnitVentilator_Impl::resetSupplyAirFanOperatingModeSchedule() {
+      bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanOperatingModeScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACUnitVentilator_Impl::setHeatingCoil(const boost::optional<HVACComponent>& heatingCoil) {
+      bool result(false);
+      if (heatingCoil) {
+        result = setPointer(OS_ZoneHVAC_UnitVentilatorFields::HeatingCoilName, heatingCoil.get().handle());
+      } else {
+        resetHeatingCoil();
+        result = true;
+      }
+      return result;
+    }
+
+    void ZoneHVACUnitVentilator_Impl::resetHeatingCoil() {
+      bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::HeatingCoilName, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACUnitVentilator_Impl::setHeatingConvergenceTolerance(double heatingConvergenceTolerance) {
+      bool result = setDouble(OS_ZoneHVAC_UnitVentilatorFields::HeatingConvergenceTolerance, heatingConvergenceTolerance);
+      return result;
+    }
+
+    bool ZoneHVACUnitVentilator_Impl::setCoolingCoil(const boost::optional<HVACComponent>& coolingCoil) {
+      bool result(false);
+      if (coolingCoil) {
+        result = setPointer(OS_ZoneHVAC_UnitVentilatorFields::CoolingCoilName, coolingCoil.get().handle());
+      } else {
+        resetCoolingCoil();
+        result = true;
+      }
+      return result;
+    }
+
+    void ZoneHVACUnitVentilator_Impl::resetCoolingCoil() {
+      bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::CoolingCoilName, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACUnitVentilator_Impl::setCoolingConvergenceTolerance(double coolingConvergenceTolerance) {
+      bool result = setDouble(OS_ZoneHVAC_UnitVentilatorFields::CoolingConvergenceTolerance, coolingConvergenceTolerance);
+      return result;
+    }
+
+    // bool ZoneHVACUnitVentilator_Impl::setAvailabilityManagerList(const boost::optional<ModelObject>& systemAvailabilityManagerLists) {
+    //   bool result(false);
+    //   if (systemAvailabilityManagerLists) {
+    //     result = setPointer(OS_ZoneHVAC_UnitVentilatorFields::AvailabilityManagerListName, systemAvailabilityManagerLists.get().handle());
+    //   }
+    //   else {
+    //     resetAvailabilityManagerList();
+    //     result = true;
+    //   }
+    //   return result;
+    // }
+
+    // void ZoneHVACUnitVentilator_Impl::resetAvailabilityManagerList() {
+    //   bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::AvailabilityManagerListName, "");
+    //   OS_ASSERT(result);
+    // }
+
+    // bool ZoneHVACUnitVentilator_Impl::setDesignSpecificationZoneHVACSizingObject(const boost::optional<ModelObject>& designSpecificationZoneHVACSizingName) {
+    //   bool result(false);
+    //   if (designSpecificationZoneHVACSizingName) {
+    //     result = setPointer(OS_ZoneHVAC_UnitVentilatorFields::DesignSpecificationZoneHVACSizingObjectName, designSpecificationZoneHVACSizingName.get().handle());
+    //   }
+    //   else {
+    //     resetDesignSpecificationZoneHVACSizingObject();
+    //     result = true;
+    //   }
+    //   return result;
+    // }
+
+    // void ZoneHVACUnitVentilator_Impl::resetDesignSpecificationZoneHVACSizingObject() {
+    //   bool result = setString(OS_ZoneHVAC_UnitVentilatorFields::DesignSpecificationZoneHVACSizingObjectName, "");
+    //   OS_ASSERT(result);
+    // }
+
+    boost::optional<Schedule> ZoneHVACUnitVentilator_Impl::optionalAvailabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_UnitVentilatorFields::AvailabilityScheduleName);
+    }
+
+    boost::optional<Schedule> ZoneHVACUnitVentilator_Impl::optionalMinimumOutdoorAirSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_UnitVentilatorFields::MinimumOutdoorAirScheduleName);
+    }
+
+    boost::optional<Schedule> ZoneHVACUnitVentilator_Impl::optionalMaximumOutdoorAirFractionorTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_ZoneHVAC_UnitVentilatorFields::MaximumOutdoorAirFractionorTemperatureScheduleName);
+    }
+
+    boost::optional<HVACComponent> ZoneHVACUnitVentilator_Impl::optionalSupplyAirFan() const {
+      return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_UnitVentilatorFields::SupplyAirFanName);
+    }
+
+    boost::optional<double> ZoneHVACUnitVentilator_Impl::autosizedMaximumSupplyAirFlowRate() const {
+      return getAutosizedValue("Design Size Maximum Supply Air Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> ZoneHVACUnitVentilator_Impl::autosizedMinimumOutdoorAirFlowRate() const {
+      return getAutosizedValue("Design Size Minimum Outdoor Air Flow Rate", "m3/s");
+    }
+
+    boost::optional<double> ZoneHVACUnitVentilator_Impl::autosizedMaximumOutdoorAirFlowRate() const {
+      return getAutosizedValue("Design Size Maximum Outdoor Air Flow Rate", "m3/s");
+    }
+
+    void ZoneHVACUnitVentilator_Impl::autosize() {
+      autosizeMaximumSupplyAirFlowRate();
+      autosizeMinimumOutdoorAirFlowRate();
+      autosizeMaximumOutdoorAirFlowRate();
+    }
+
+    void ZoneHVACUnitVentilator_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedMaximumSupplyAirFlowRate();
+      if (val) {
+        setMaximumSupplyAirFlowRate(val.get());
+      }
+
+      val = autosizedMinimumOutdoorAirFlowRate();
+      if (val) {
+        setMinimumOutdoorAirFlowRate(val.get());
+      }
+
+      val = autosizedMaximumOutdoorAirFlowRate();
+      if (val) {
+        setMaximumOutdoorAirFlowRate(val.get());
+      }
+    }
+
+  }  // namespace detail
+
+  ZoneHVACUnitVentilator::ZoneHVACUnitVentilator(const Model& model) : ZoneHVACComponent(ZoneHVACUnitVentilator::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ZoneHVACUnitVentilator_Impl>());
+
+    auto always_on = model.alwaysOnDiscreteSchedule();
+    auto always_off = model.alwaysOffDiscreteSchedule();
+    auto supplyAirFan = FanConstantVolume(model);
+
+    bool ok = true;
+    ok = setAvailabilitySchedule(always_on);
+    OS_ASSERT(ok);
     autosizeMaximumSupplyAirFlowRate();
+    ok = setOutdoorAirControlType("VariablePercent");
+    OS_ASSERT(ok);
     autosizeMinimumOutdoorAirFlowRate();
+    ok = setMinimumOutdoorAirSchedule(always_off);
+    OS_ASSERT(ok);
     autosizeMaximumOutdoorAirFlowRate();
+    ok = setMaximumOutdoorAirFractionorTemperatureSchedule(always_on);
+    OS_ASSERT(ok);
+    ok = setSupplyAirFan(supplyAirFan);
+    OS_ASSERT(ok);
+    ok = setHeatingConvergenceTolerance(0.001);
+    OS_ASSERT(ok);
+    ok = setCoolingConvergenceTolerance(0.001);
+    OS_ASSERT(ok);
   }
 
-  void ZoneHVACUnitVentilator_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedMaximumSupplyAirFlowRate();
-    if (val) {
-      setMaximumSupplyAirFlowRate(val.get());
-    }
+  ZoneHVACUnitVentilator::ZoneHVACUnitVentilator(const Model& model, const HVACComponent& supplyAirFan)
+    : ZoneHVACComponent(ZoneHVACUnitVentilator::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ZoneHVACUnitVentilator_Impl>());
 
-    val = autosizedMinimumOutdoorAirFlowRate();
-    if (val) {
-      setMinimumOutdoorAirFlowRate(val.get());
-    }
+    auto always_on = model.alwaysOnDiscreteSchedule();
+    auto always_off = model.alwaysOffDiscreteSchedule();
 
-    val = autosizedMaximumOutdoorAirFlowRate();
-    if (val) {
-      setMaximumOutdoorAirFlowRate(val.get());
-    }
-
+    bool ok = true;
+    ok = setAvailabilitySchedule(always_on);
+    OS_ASSERT(ok);
+    autosizeMaximumSupplyAirFlowRate();
+    ok = setOutdoorAirControlType("VariablePercent");
+    OS_ASSERT(ok);
+    autosizeMinimumOutdoorAirFlowRate();
+    ok = setMinimumOutdoorAirSchedule(always_off);
+    OS_ASSERT(ok);
+    autosizeMaximumOutdoorAirFlowRate();
+    ok = setMaximumOutdoorAirFractionorTemperatureSchedule(always_on);
+    OS_ASSERT(ok);
+    ok = setSupplyAirFan(supplyAirFan);
+    OS_ASSERT(ok);
+    ok = setHeatingConvergenceTolerance(0.001);
+    OS_ASSERT(ok);
+    ok = setCoolingConvergenceTolerance(0.001);
+    OS_ASSERT(ok);
   }
 
-} // detail
+  IddObjectType ZoneHVACUnitVentilator::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_ZoneHVAC_UnitVentilator);
+  }
 
-ZoneHVACUnitVentilator::ZoneHVACUnitVentilator(const Model& model)
-  : ZoneHVACComponent(ZoneHVACUnitVentilator::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ZoneHVACUnitVentilator_Impl>());
+  std::vector<std::string> ZoneHVACUnitVentilator::outdoorAirControlTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_ZoneHVAC_UnitVentilatorFields::OutdoorAirControlType);
+  }
 
-  auto always_on = model.alwaysOnDiscreteSchedule();
-  auto always_off = model.alwaysOffDiscreteSchedule();
-  auto supplyAirFan = FanConstantVolume( model );
+  Schedule ZoneHVACUnitVentilator::availabilitySchedule() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->availabilitySchedule();
+  }
 
-  bool ok = true;
-  ok = setAvailabilitySchedule( always_on );
-  OS_ASSERT(ok);
-  autosizeMaximumSupplyAirFlowRate();
-  ok = setOutdoorAirControlType( "VariablePercent" );
-  OS_ASSERT(ok);
-  autosizeMinimumOutdoorAirFlowRate();
-  ok = setMinimumOutdoorAirSchedule( always_off );
-  OS_ASSERT(ok);
-  autosizeMaximumOutdoorAirFlowRate();
-  ok = setMaximumOutdoorAirFractionorTemperatureSchedule( always_on );
-  OS_ASSERT(ok);
-  ok = setSupplyAirFan( supplyAirFan );
-  OS_ASSERT(ok);
-  ok = setHeatingConvergenceTolerance( 0.001 );
-  OS_ASSERT(ok);
-  ok = setCoolingConvergenceTolerance( 0.001 );
-  OS_ASSERT(ok);
-}
+  boost::optional<double> ZoneHVACUnitVentilator::maximumSupplyAirFlowRate() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->maximumSupplyAirFlowRate();
+  }
 
-ZoneHVACUnitVentilator::ZoneHVACUnitVentilator(
-  const Model& model,
-  const HVACComponent& supplyAirFan
-  )
-  : ZoneHVACComponent(ZoneHVACUnitVentilator::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ZoneHVACUnitVentilator_Impl>());
+  bool ZoneHVACUnitVentilator::isMaximumSupplyAirFlowRateAutosized() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->isMaximumSupplyAirFlowRateAutosized();
+  }
 
-  auto always_on = model.alwaysOnDiscreteSchedule();
-  auto always_off = model.alwaysOffDiscreteSchedule();
+  std::string ZoneHVACUnitVentilator::outdoorAirControlType() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->outdoorAirControlType();
+  }
 
-  bool ok = true;
-  ok = setAvailabilitySchedule( always_on );
-  OS_ASSERT(ok);
-  autosizeMaximumSupplyAirFlowRate();
-  ok = setOutdoorAirControlType( "VariablePercent" );
-  OS_ASSERT(ok);
-  autosizeMinimumOutdoorAirFlowRate();
-  ok = setMinimumOutdoorAirSchedule( always_off );
-  OS_ASSERT(ok);
-  autosizeMaximumOutdoorAirFlowRate();
-  ok = setMaximumOutdoorAirFractionorTemperatureSchedule( always_on );
-  OS_ASSERT(ok);
-  ok = setSupplyAirFan( supplyAirFan );
-  OS_ASSERT(ok);
-  ok = setHeatingConvergenceTolerance( 0.001 );
-  OS_ASSERT(ok);
-  ok = setCoolingConvergenceTolerance( 0.001 );
-  OS_ASSERT(ok);
-}
+  boost::optional<double> ZoneHVACUnitVentilator::minimumOutdoorAirFlowRate() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->minimumOutdoorAirFlowRate();
+  }
 
-IddObjectType ZoneHVACUnitVentilator::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_ZoneHVAC_UnitVentilator);
-}
+  bool ZoneHVACUnitVentilator::isMinimumOutdoorAirFlowRateAutosized() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->isMinimumOutdoorAirFlowRateAutosized();
+  }
 
-std::vector<std::string> ZoneHVACUnitVentilator::outdoorAirControlTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneHVAC_UnitVentilatorFields::OutdoorAirControlType);
-}
+  Schedule ZoneHVACUnitVentilator::minimumOutdoorAirSchedule() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->minimumOutdoorAirSchedule();
+  }
 
-Schedule ZoneHVACUnitVentilator::availabilitySchedule() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->availabilitySchedule();
-}
+  boost::optional<double> ZoneHVACUnitVentilator::maximumOutdoorAirFlowRate() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->maximumOutdoorAirFlowRate();
+  }
 
-boost::optional<double> ZoneHVACUnitVentilator::maximumSupplyAirFlowRate() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->maximumSupplyAirFlowRate();
-}
+  bool ZoneHVACUnitVentilator::isMaximumOutdoorAirFlowRateAutosized() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->isMaximumOutdoorAirFlowRateAutosized();
+  }
 
-bool ZoneHVACUnitVentilator::isMaximumSupplyAirFlowRateAutosized() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->isMaximumSupplyAirFlowRateAutosized();
-}
+  Schedule ZoneHVACUnitVentilator::maximumOutdoorAirFractionorTemperatureSchedule() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->maximumOutdoorAirFractionorTemperatureSchedule();
+  }
 
-std::string ZoneHVACUnitVentilator::outdoorAirControlType() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->outdoorAirControlType();
-}
+  HVACComponent ZoneHVACUnitVentilator::supplyAirFan() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->supplyAirFan();
+  }
 
-boost::optional<double> ZoneHVACUnitVentilator::minimumOutdoorAirFlowRate() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->minimumOutdoorAirFlowRate();
-}
+  boost::optional<Schedule> ZoneHVACUnitVentilator::supplyAirFanOperatingModeSchedule() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->supplyAirFanOperatingModeSchedule();
+  }
 
-bool ZoneHVACUnitVentilator::isMinimumOutdoorAirFlowRateAutosized() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->isMinimumOutdoorAirFlowRateAutosized();
-}
+  boost::optional<HVACComponent> ZoneHVACUnitVentilator::heatingCoil() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->heatingCoil();
+  }
 
-Schedule ZoneHVACUnitVentilator::minimumOutdoorAirSchedule() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->minimumOutdoorAirSchedule();
-}
+  double ZoneHVACUnitVentilator::heatingConvergenceTolerance() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->heatingConvergenceTolerance();
+  }
 
-boost::optional<double> ZoneHVACUnitVentilator::maximumOutdoorAirFlowRate() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->maximumOutdoorAirFlowRate();
-}
+  boost::optional<HVACComponent> ZoneHVACUnitVentilator::coolingCoil() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->coolingCoil();
+  }
 
-bool ZoneHVACUnitVentilator::isMaximumOutdoorAirFlowRateAutosized() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->isMaximumOutdoorAirFlowRateAutosized();
-}
+  double ZoneHVACUnitVentilator::coolingConvergenceTolerance() const {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->coolingConvergenceTolerance();
+  }
 
-Schedule ZoneHVACUnitVentilator::maximumOutdoorAirFractionorTemperatureSchedule() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->maximumOutdoorAirFractionorTemperatureSchedule();
-}
+  // boost::optional<ModelObject> ZoneHVACUnitVentilator::availabilityManagerList() const {
+  //   return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->availabilityManagerList();
+  // }
 
-HVACComponent ZoneHVACUnitVentilator::supplyAirFan() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->supplyAirFan();
-}
+  // boost::optional<ModelObject> ZoneHVACUnitVentilator::designSpecificationZoneHVACSizingObject() const {
+  //   return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->designSpecificationZoneHVACSizingObject();
+  // }
 
-boost::optional<Schedule> ZoneHVACUnitVentilator::supplyAirFanOperatingModeSchedule() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->supplyAirFanOperatingModeSchedule();
-}
+  bool ZoneHVACUnitVentilator::setAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setAvailabilitySchedule(schedule);
+  }
 
-boost::optional<HVACComponent> ZoneHVACUnitVentilator::heatingCoil() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->heatingCoil();
-}
+  bool ZoneHVACUnitVentilator::setMaximumSupplyAirFlowRate(double maximumSupplyAirFlowRate) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setMaximumSupplyAirFlowRate(maximumSupplyAirFlowRate);
+  }
 
-double ZoneHVACUnitVentilator::heatingConvergenceTolerance() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->heatingConvergenceTolerance();
-}
+  void ZoneHVACUnitVentilator::autosizeMaximumSupplyAirFlowRate() {
+    getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizeMaximumSupplyAirFlowRate();
+  }
 
-boost::optional<HVACComponent> ZoneHVACUnitVentilator::coolingCoil() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->coolingCoil();
-}
+  bool ZoneHVACUnitVentilator::setOutdoorAirControlType(std::string outdoorAirControlType) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setOutdoorAirControlType(outdoorAirControlType);
+  }
 
-double ZoneHVACUnitVentilator::coolingConvergenceTolerance() const {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->coolingConvergenceTolerance();
-}
+  bool ZoneHVACUnitVentilator::setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setMinimumOutdoorAirFlowRate(minimumOutdoorAirFlowRate);
+  }
 
-// boost::optional<ModelObject> ZoneHVACUnitVentilator::availabilityManagerList() const {
-//   return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->availabilityManagerList();
-// }
+  void ZoneHVACUnitVentilator::autosizeMinimumOutdoorAirFlowRate() {
+    getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizeMinimumOutdoorAirFlowRate();
+  }
 
-// boost::optional<ModelObject> ZoneHVACUnitVentilator::designSpecificationZoneHVACSizingObject() const {
-//   return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->designSpecificationZoneHVACSizingObject();
-// }
+  bool ZoneHVACUnitVentilator::setMinimumOutdoorAirSchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setMinimumOutdoorAirSchedule(schedule);
+  }
 
-bool ZoneHVACUnitVentilator::setAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setAvailabilitySchedule(schedule);
-}
+  bool ZoneHVACUnitVentilator::setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setMaximumOutdoorAirFlowRate(maximumOutdoorAirFlowRate);
+  }
 
-bool ZoneHVACUnitVentilator::setMaximumSupplyAirFlowRate(double maximumSupplyAirFlowRate) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setMaximumSupplyAirFlowRate(maximumSupplyAirFlowRate);
-}
+  void ZoneHVACUnitVentilator::autosizeMaximumOutdoorAirFlowRate() {
+    getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizeMaximumOutdoorAirFlowRate();
+  }
 
-void ZoneHVACUnitVentilator::autosizeMaximumSupplyAirFlowRate() {
-  getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizeMaximumSupplyAirFlowRate();
-}
+  bool ZoneHVACUnitVentilator::setMaximumOutdoorAirFractionorTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setMaximumOutdoorAirFractionorTemperatureSchedule(schedule);
+  }
 
-bool ZoneHVACUnitVentilator::setOutdoorAirControlType(std::string outdoorAirControlType) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setOutdoorAirControlType(outdoorAirControlType);
-}
+  bool ZoneHVACUnitVentilator::setSupplyAirFan(const HVACComponent& supplyAirFan) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setSupplyAirFan(supplyAirFan);
+  }
 
-bool ZoneHVACUnitVentilator::setMinimumOutdoorAirFlowRate(double minimumOutdoorAirFlowRate) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setMinimumOutdoorAirFlowRate(minimumOutdoorAirFlowRate);
-}
+  bool ZoneHVACUnitVentilator::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setSupplyAirFanOperatingModeSchedule(schedule);
+  }
 
-void ZoneHVACUnitVentilator::autosizeMinimumOutdoorAirFlowRate() {
-  getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizeMinimumOutdoorAirFlowRate();
-}
+  void ZoneHVACUnitVentilator::resetSupplyAirFanOperatingModeSchedule() {
+    getImpl<detail::ZoneHVACUnitVentilator_Impl>()->resetSupplyAirFanOperatingModeSchedule();
+  }
 
-bool ZoneHVACUnitVentilator::setMinimumOutdoorAirSchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setMinimumOutdoorAirSchedule(schedule);
-}
+  bool ZoneHVACUnitVentilator::setHeatingCoil(const HVACComponent& heatingCoil) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setHeatingCoil(heatingCoil);
+  }
 
-bool ZoneHVACUnitVentilator::setMaximumOutdoorAirFlowRate(double maximumOutdoorAirFlowRate) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setMaximumOutdoorAirFlowRate(maximumOutdoorAirFlowRate);
-}
+  void ZoneHVACUnitVentilator::resetHeatingCoil() {
+    getImpl<detail::ZoneHVACUnitVentilator_Impl>()->resetHeatingCoil();
+  }
 
-void ZoneHVACUnitVentilator::autosizeMaximumOutdoorAirFlowRate() {
-  getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizeMaximumOutdoorAirFlowRate();
-}
+  bool ZoneHVACUnitVentilator::setHeatingConvergenceTolerance(double heatingConvergenceTolerance) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setHeatingConvergenceTolerance(heatingConvergenceTolerance);
+  }
 
-bool ZoneHVACUnitVentilator::setMaximumOutdoorAirFractionorTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setMaximumOutdoorAirFractionorTemperatureSchedule(schedule);
-}
+  bool ZoneHVACUnitVentilator::setCoolingCoil(const HVACComponent& coolingCoil) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setCoolingCoil(coolingCoil);
+  }
 
-bool ZoneHVACUnitVentilator::setSupplyAirFan(const HVACComponent& supplyAirFan) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setSupplyAirFan(supplyAirFan);
-}
+  void ZoneHVACUnitVentilator::resetCoolingCoil() {
+    getImpl<detail::ZoneHVACUnitVentilator_Impl>()->resetCoolingCoil();
+  }
 
-bool ZoneHVACUnitVentilator::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setSupplyAirFanOperatingModeSchedule(schedule);
-}
+  bool ZoneHVACUnitVentilator::setCoolingConvergenceTolerance(double coolingConvergenceTolerance) {
+    return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setCoolingConvergenceTolerance(coolingConvergenceTolerance);
+  }
 
-void ZoneHVACUnitVentilator::resetSupplyAirFanOperatingModeSchedule() {
-  getImpl<detail::ZoneHVACUnitVentilator_Impl>()->resetSupplyAirFanOperatingModeSchedule();
-}
+  // bool ZoneHVACUnitVentilator::setAvailabilityManagerList(const ModelObject& systemAvailabilityManagerLists) {
+  //   return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setAvailabilityManagerList(systemAvailabilityManagerLists);
+  // }
 
-bool ZoneHVACUnitVentilator::setHeatingCoil(const HVACComponent& heatingCoil) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setHeatingCoil(heatingCoil);
-}
+  // void ZoneHVACUnitVentilator::resetAvailabilityManagerList() {
+  //   getImpl<detail::ZoneHVACUnitVentilator_Impl>()->resetAvailabilityManagerList();
+  // }
 
-void ZoneHVACUnitVentilator::resetHeatingCoil() {
-  getImpl<detail::ZoneHVACUnitVentilator_Impl>()->resetHeatingCoil();
-}
+  // bool ZoneHVACUnitVentilator::setDesignSpecificationZoneHVACSizingObject(const ModelObject& designSpecificationZoneHVACSizingName) {
+  //   return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setDesignSpecificationZoneHVACSizingObject(designSpecificationZoneHVACSizingName);
+  // }
 
-bool ZoneHVACUnitVentilator::setHeatingConvergenceTolerance(double heatingConvergenceTolerance) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setHeatingConvergenceTolerance(heatingConvergenceTolerance);
-}
+  // void ZoneHVACUnitVentilator::resetDesignSpecificationZoneHVACSizingObject() {
+  //   getImpl<detail::ZoneHVACUnitVentilator_Impl>()->resetDesignSpecificationZoneHVACSizingObject();
+  // }
 
-bool ZoneHVACUnitVentilator::setCoolingCoil(const HVACComponent& coolingCoil) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setCoolingCoil(coolingCoil);
-}
-
-void ZoneHVACUnitVentilator::resetCoolingCoil() {
-  getImpl<detail::ZoneHVACUnitVentilator_Impl>()->resetCoolingCoil();
-}
-
-bool ZoneHVACUnitVentilator::setCoolingConvergenceTolerance(double coolingConvergenceTolerance) {
-  return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setCoolingConvergenceTolerance(coolingConvergenceTolerance);
-}
-
-// bool ZoneHVACUnitVentilator::setAvailabilityManagerList(const ModelObject& systemAvailabilityManagerLists) {
-//   return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setAvailabilityManagerList(systemAvailabilityManagerLists);
-// }
-
-// void ZoneHVACUnitVentilator::resetAvailabilityManagerList() {
-//   getImpl<detail::ZoneHVACUnitVentilator_Impl>()->resetAvailabilityManagerList();
-// }
-
-// bool ZoneHVACUnitVentilator::setDesignSpecificationZoneHVACSizingObject(const ModelObject& designSpecificationZoneHVACSizingName) {
-//   return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->setDesignSpecificationZoneHVACSizingObject(designSpecificationZoneHVACSizingName);
-// }
-
-// void ZoneHVACUnitVentilator::resetDesignSpecificationZoneHVACSizingObject() {
-//   getImpl<detail::ZoneHVACUnitVentilator_Impl>()->resetDesignSpecificationZoneHVACSizingObject();
-// }
-
-/// @cond
-ZoneHVACUnitVentilator::ZoneHVACUnitVentilator(std::shared_ptr<detail::ZoneHVACUnitVentilator_Impl> impl)
-  : ZoneHVACComponent(std::move(impl))
-{}
-/// @endcond
+  /// @cond
+  ZoneHVACUnitVentilator::ZoneHVACUnitVentilator(std::shared_ptr<detail::ZoneHVACUnitVentilator_Impl> impl) : ZoneHVACComponent(std::move(impl)) {}
+  /// @endcond
 
   boost::optional<double> ZoneHVACUnitVentilator::autosizedMaximumSupplyAirFlowRate() const {
     return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizedMaximumSupplyAirFlowRate();
@@ -780,6 +734,5 @@ ZoneHVACUnitVentilator::ZoneHVACUnitVentilator(std::shared_ptr<detail::ZoneHVACU
     return getImpl<detail::ZoneHVACUnitVentilator_Impl>()->autosizedMaximumOutdoorAirFlowRate();
   }
 
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

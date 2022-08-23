@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,82 +36,76 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** AirflowNetworkReferenceCrackConditions_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkReferenceCrackConditions.*/
-  class MODEL_API AirflowNetworkReferenceCrackConditions_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirflowNetworkReferenceCrackConditions_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkReferenceCrackConditions.*/
+    class MODEL_API AirflowNetworkReferenceCrackConditions_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkReferenceCrackConditions_Impl(const IdfObject& idfObject,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      AirflowNetworkReferenceCrackConditions_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkReferenceCrackConditions_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      AirflowNetworkReferenceCrackConditions_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkReferenceCrackConditions_Impl(const AirflowNetworkReferenceCrackConditions_Impl& other,
-                                                Model_Impl* model,
-                                                bool keepHandle);
+      AirflowNetworkReferenceCrackConditions_Impl(const AirflowNetworkReferenceCrackConditions_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirflowNetworkReferenceCrackConditions_Impl() {}
+      virtual ~AirflowNetworkReferenceCrackConditions_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double referenceTemperature() const;
+      double referenceTemperature() const;
 
-    bool isReferenceTemperatureDefaulted() const;
+      bool isReferenceTemperatureDefaulted() const;
 
-    double referenceBarometricPressure() const;
+      double referenceBarometricPressure() const;
 
-    bool isReferenceBarometricPressureDefaulted() const;
+      bool isReferenceBarometricPressureDefaulted() const;
 
-    double referenceHumidityRatio() const;
+      double referenceHumidityRatio() const;
 
-    bool isReferenceHumidityRatioDefaulted() const;
+      bool isReferenceHumidityRatioDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    void setReferenceTemperature(double referenceTemperature);
+      void setReferenceTemperature(double referenceTemperature);
 
-    void resetReferenceTemperature();
+      void resetReferenceTemperature();
 
-    bool setReferenceBarometricPressure(double referenceBarometricPressure);
+      bool setReferenceBarometricPressure(double referenceBarometricPressure);
 
-    void resetReferenceBarometricPressure();
+      void resetReferenceBarometricPressure();
 
-    void setReferenceHumidityRatio(double referenceHumidityRatio);
+      void setReferenceHumidityRatio(double referenceHumidityRatio);
 
-    void resetReferenceHumidityRatio();
+      void resetReferenceHumidityRatio();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkReferenceCrackConditions");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkReferenceCrackConditions");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKREFERENCECRACKCONDITIONS_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKREFERENCECRACKCONDITIONS_IMPL_HPP

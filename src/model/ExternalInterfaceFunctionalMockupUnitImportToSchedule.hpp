@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,80 +40,80 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl;
+    class ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExternalInterfaceFunctionalMockupUnitImportToSchedule is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitImport:To:Schedule'. */
-class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public Schedule {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ExternalInterfaceFunctionalMockupUnitImportToSchedule is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitImport:To:Schedule'. */
+  class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToSchedule : public Schedule
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitImportToSchedule(const Model& model,
-                                                                 const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
-                                                                 const std::string& fMUInstanceName,
-                                                                 const std::string& fMUVariableName,
-                                                                 double initialValue);
+    explicit ExternalInterfaceFunctionalMockupUnitImportToSchedule(const Model& model, const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
+                                                                   const std::string& fMUInstanceName, const std::string& fMUVariableName,
+                                                                   double initialValue);
 
-  virtual ~ExternalInterfaceFunctionalMockupUnitImportToSchedule() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitImportToSchedule() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
+    ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
 
-  std::string fMUInstanceName() const;
+    std::string fMUInstanceName() const;
 
-  std::string fMUVariableName() const;
+    std::string fMUVariableName() const;
 
-  double initialValue() const;
+    double initialValue() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
+    bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
-  bool setFMUInstanceName(const std::string& fMUInstanceName);
+    bool setFMUInstanceName(const std::string& fMUInstanceName);
 
-  bool setFMUVariableName(const std::string& fMUVariableName);
+    bool setFMUVariableName(const std::string& fMUVariableName);
 
-  bool setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl ImplType;
 
-  explicit ExternalInterfaceFunctionalMockupUnitImportToSchedule(std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl> impl);
+    explicit ExternalInterfaceFunctionalMockupUnitImportToSchedule(
+      std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl> impl);
 
-  friend class detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImportToSchedule");
-};
+    friend class detail::ExternalInterfaceFunctionalMockupUnitImportToSchedule_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImportToSchedule");
+  };
 
-/** \relates ExternalInterfaceFunctionalMockupUnitImportToSchedule*/
-typedef boost::optional<ExternalInterfaceFunctionalMockupUnitImportToSchedule> OptionalExternalInterfaceFunctionalMockupUnitImportToSchedule;
+  /** \relates ExternalInterfaceFunctionalMockupUnitImportToSchedule*/
+  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitImportToSchedule> OptionalExternalInterfaceFunctionalMockupUnitImportToSchedule;
 
-/** \relates ExternalInterfaceFunctionalMockupUnitImportToSchedule*/
-typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportToSchedule> ExternalInterfaceFunctionalMockupUnitImportToScheduleVector;
+  /** \relates ExternalInterfaceFunctionalMockupUnitImportToSchedule*/
+  typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportToSchedule> ExternalInterfaceFunctionalMockupUnitImportToScheduleVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_HPP
+#endif  // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOSCHEDULE_HPP

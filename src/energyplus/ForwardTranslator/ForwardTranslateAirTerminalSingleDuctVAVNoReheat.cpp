@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -55,227 +55,219 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVNoReheat( AirTerminalSingleDuctVAVNoReheat & modelObject )
-{
-  OptionalModelObject temp;
-  OptionalString optS;
-  boost::optional<std::string> s;
+  boost::optional<IdfObject> ForwardTranslator::translateAirTerminalSingleDuctVAVNoReheat(AirTerminalSingleDuctVAVNoReheat& modelObject) {
+    OptionalModelObject temp;
+    OptionalString optS;
+    boost::optional<std::string> s;
 
-  std::string baseName = modelObject.name().get();
+    std::string baseName = modelObject.name().get();
 
-  IdfObject _airDistributionUnit(openstudio::IddObjectType::ZoneHVAC_AirDistributionUnit);
-  _airDistributionUnit.setName("ADU " + baseName ); //ADU: Air Distribution Unit
+    IdfObject _airDistributionUnit(openstudio::IddObjectType::ZoneHVAC_AirDistributionUnit);
+    _airDistributionUnit.setName("ADU " + baseName);  //ADU: Air Distribution Unit
 
-  IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat);
+    IdfObject idfObject(openstudio::IddObjectType::AirTerminal_SingleDuct_VAV_NoReheat);
 
-  idfObject.setName(baseName);
+    idfObject.setName(baseName);
 
-  //HVACComponent coil = modelObject.NoReheatCoil();
+    //HVACComponent coil = modelObject.NoReheatCoil();
 
-  m_idfObjects.push_back(_airDistributionUnit);
+    m_idfObjects.push_back(_airDistributionUnit);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  //boost::optional<IdfObject> _ReheatCoil = translateAndMapModelObject(coil);
+    //boost::optional<IdfObject> _ReheatCoil = translateAndMapModelObject(coil);
 
- // if( _NoReheatCoil && _NoReheatCoil->name() )
-  //{
-  //  std::string damperOutletNodeName = modelObject.name().get() + " Damper Outlet";
+    // if( _NoReheatCoil && _NoReheatCoil->name() )
+    //{
+    //  std::string damperOutletNodeName = modelObject.name().get() + " Damper Outlet";
 
     boost::optional<std::string> inletNodeName;
     boost::optional<std::string> outletNodeName;
 
-    if( boost::optional<ModelObject> inletModelObject = modelObject.inletModelObject() )
-    {
-      if( boost::optional<Node> inletNode = inletModelObject->optionalCast<Node>() )
-      {
+    if (boost::optional<ModelObject> inletModelObject = modelObject.inletModelObject()) {
+      if (boost::optional<Node> inletNode = inletModelObject->optionalCast<Node>()) {
         inletNodeName = inletNode->name().get();
       }
     }
 
-    if( boost::optional<ModelObject> outletModelObject = modelObject.outletModelObject() )
-    {
-      if( boost::optional<Node> outletNode = outletModelObject->optionalCast<Node>() )
-      {
+    if (boost::optional<ModelObject> outletModelObject = modelObject.outletModelObject()) {
+      if (boost::optional<Node> outletNode = outletModelObject->optionalCast<Node>()) {
         outletNodeName = outletNode->name().get();
       }
     }
 
     // Reheat Coil Name
-  //  idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::ReheatCoilName,_reheatCoil->name().get());
+    //  idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::ReheatCoilName,_reheatCoil->name().get());
 
     // Reheat Coil Type
     //idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::ReheatCoilObjectType,_reheatCoil->iddObject().name());
 
     //idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::DamperAirOutletNodeName,damperOutletNodeName);
 
-    if( outletNodeName && inletNodeName )
-    {
-    //  if( _reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
-    //  {
-    //    _reheatCoil->setString(Coil_Heating_GasFields::AirInletNodeName,damperOutletNodeName);
-    //    _reheatCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,outletNodeName.get());
-    //  }
-    //  else if( _reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric )
-    //  {
-    //    _reheatCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,damperOutletNodeName);
-    //    _reheatCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,outletNodeName.get());
-    //  }
-    //  else if( _reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
-    //  {
-    //    _reheatCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,damperOutletNodeName);
-    //    _reheatCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,outletNodeName.get());
-    //  }
-    //
-      idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::AirOutletNodeName,outletNodeName.get());
-      idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::AirInletNodeName,inletNodeName.get());
+    if (outletNodeName && inletNodeName) {
+      //  if( _reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Gas )
+      //  {
+      //    _reheatCoil->setString(Coil_Heating_GasFields::AirInletNodeName,damperOutletNodeName);
+      //    _reheatCoil->setString(Coil_Heating_GasFields::AirOutletNodeName,outletNodeName.get());
+      //  }
+      //  else if( _reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric )
+      //  {
+      //    _reheatCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName,damperOutletNodeName);
+      //    _reheatCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName,outletNodeName.get());
+      //  }
+      //  else if( _reheatCoil->iddObject().type() == IddObjectType::Coil_Heating_Water )
+      //  {
+      //    _reheatCoil->setString(Coil_Heating_WaterFields::AirInletNodeName,damperOutletNodeName);
+      //    _reheatCoil->setString(Coil_Heating_WaterFields::AirOutletNodeName,outletNodeName.get());
+      //  }
+      //
+      idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::AirOutletNodeName, outletNodeName.get());
+      idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::AirInletNodeName, inletNodeName.get());
     }
-  //}
-  //else
-  //{
+    //}
+    //else
+    //{
     //LOG(Error,modelObject.briefDescription() << ": Could not translate heating coil");
 
     //return boost::none;
- // }
+    // }
 
-  // AvailabilityScheduleName
-  Schedule availabilitySchedule = modelObject.availabilitySchedule();
+    // AvailabilityScheduleName
+    Schedule availabilitySchedule = modelObject.availabilitySchedule();
 
-  boost::optional<IdfObject> _availabilitySchedule = translateAndMapModelObject(availabilitySchedule);
+    boost::optional<IdfObject> _availabilitySchedule = translateAndMapModelObject(availabilitySchedule);
 
-  if( _availabilitySchedule && _availabilitySchedule->name() )
-  {
-    idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName,_availabilitySchedule->name().get());
-  }
-
-  // MaximumAirFlowRate
-  boost::optional<double> value = modelObject.maximumAirFlowRate();
-  if( value )
-  {
-    idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate,value.get());
-  }
-  else if( modelObject.isMaximumAirFlowRateAutosized() )
-  {
-    idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate,"Autosize");
-  }
-
-  // ZoneMinimumAirFlowMethod
-  s = modelObject.zoneMinimumAirFlowInputMethod();
-  if( s )
-  {
-    idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::ZoneMinimumAirFlowInputMethod,s.get());
-  }
-
-  // ConstantMinimumAirFlowFraction: autosizable
-  if( modelObject.isConstantMinimumAirFlowFractionAutosized() ) {
-    idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, "Autosize");
-  } else if( (value = modelObject.constantMinimumAirFlowFraction()) ) {
-    idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, value.get());
-  }
-
-  // FixedMinimumAirFlowRate: autosizable
-  if( modelObject.isFixedMinimumAirFlowRateAutosized() ) {
-    idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate, "Autosize");
-  } else if( (value = modelObject.fixedMinimumAirFlowRate()) ) {
-    idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate, value.get());
-  }
-
-  // MinimumAirFlowFractionScheduleName
-  boost::optional<Schedule> minAirFlowFractionSchedule = modelObject.minimumAirFlowFractionSchedule();
-
-  if( minAirFlowFractionSchedule )
-  {
-    boost::optional<IdfObject> _minAirFlowFractionSchedule = translateAndMapModelObject(minAirFlowFractionSchedule.get());
-
-    if( _minAirFlowFractionSchedule && _minAirFlowFractionSchedule->name() )
-    {
-      idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName,_minAirFlowFractionSchedule->name().get());
+    if (_availabilitySchedule && _availabilitySchedule->name()) {
+      idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::AvailabilityScheduleName, _availabilitySchedule->name().get());
     }
-  }
 
-  // ControlForOutdoorAir
-  {
-    if( modelObject.controlForOutdoorAir() ) {
-      if( auto airLoopHVAC = modelObject.airLoopHVAC() ) {
-        auto zones = airLoopHVAC->demandComponents(modelObject,airLoopHVAC->demandOutletNode(),model::ThermalZone::iddObjectType());
-        if( ! zones.empty() ) {
-          auto zone = zones.front();
-          auto spaces = zone.cast<model::ThermalZone>().spaces();
-          if( ! spaces.empty() ) {
-            if( auto designSpecificationOutdoorAir = spaces.front().designSpecificationOutdoorAir() ) {
-              idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName,
-                designSpecificationOutdoorAir->name().get());
+    // MaximumAirFlowRate
+    boost::optional<double> value = modelObject.maximumAirFlowRate();
+    if (value) {
+      idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate, value.get());
+    } else if (modelObject.isMaximumAirFlowRateAutosized()) {
+      idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumAirFlowRate, "Autosize");
+    }
+
+    // ZoneMinimumAirFlowInputMethod
+    s = modelObject.zoneMinimumAirFlowInputMethod();
+    if (s) {
+      idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::ZoneMinimumAirFlowInputMethod, s.get());
+    }
+
+    // ConstantMinimumAirFlowFraction: autosizable
+    if (modelObject.isConstantMinimumAirFlowFractionAutosized()) {
+      idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, "Autosize");
+    } else if ((value = modelObject.constantMinimumAirFlowFraction())) {
+      idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::ConstantMinimumAirFlowFraction, value.get());
+    }
+
+    // FixedMinimumAirFlowRate: autosizable
+    if (modelObject.isFixedMinimumAirFlowRateAutosized()) {
+      idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate, "Autosize");
+    } else if ((value = modelObject.fixedMinimumAirFlowRate())) {
+      idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::FixedMinimumAirFlowRate, value.get());
+    }
+
+    // MinimumAirFlowFractionScheduleName
+    boost::optional<Schedule> minAirFlowFractionSchedule = modelObject.minimumAirFlowFractionSchedule();
+
+    if (minAirFlowFractionSchedule) {
+      boost::optional<IdfObject> _minAirFlowFractionSchedule = translateAndMapModelObject(minAirFlowFractionSchedule.get());
+
+      if (_minAirFlowFractionSchedule) {
+        idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowFractionScheduleName, _minAirFlowFractionSchedule->nameString());
+      }
+    }
+
+    // ControlForOutdoorAir
+    {
+      if (modelObject.controlForOutdoorAir()) {
+        if (auto airLoopHVAC = modelObject.airLoopHVAC()) {
+          auto zones = airLoopHVAC->demandComponents(modelObject, airLoopHVAC->demandOutletNode(), model::ThermalZone::iddObjectType());
+          if (!zones.empty()) {
+            auto zone = zones.front();
+            auto spaces = zone.cast<model::ThermalZone>().spaces();
+            if (!spaces.empty()) {
+              if (auto designSpecificationOutdoorAir = spaces.front().designSpecificationOutdoorAir()) {
+                idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::DesignSpecificationOutdoorAirObjectName,
+                                    designSpecificationOutdoorAir->name().get());
+              }
             }
           }
         }
       }
     }
-  }
 
-  // MaximumHotWaterOrSteamFlowRate
-   // value = modelObject.maximumHotWaterOrSteamFlowRate();
-   //
-   // if( value )
-   // {
-  //    idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumHotWaterorSteamFlowRate,value.get());
+    // MinimumAirFlowTurndownScheduleName
+    if (boost::optional<Schedule> minAirFlowTurndownSchedule = modelObject.minimumAirFlowTurndownSchedule()) {
+      if (boost::optional<IdfObject> _minAirFlowTurndownSchedule = translateAndMapModelObject(minAirFlowTurndownSchedule.get())) {
+        idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumAirFlowTurndownScheduleName, _minAirFlowTurndownSchedule->nameString());
+      }
+    }
+
+    // MaximumHotWaterOrSteamFlowRate
+    // value = modelObject.maximumHotWaterOrSteamFlowRate();
+    //
+    // if( value )
+    // {
+    //    idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumHotWaterorSteamFlowRate,value.get());
     //}
-   // else if( modelObject.isMaximumHotWaterOrSteamFlowRateAutosized() )
-   // {
-   //   idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumHotWaterorSteamFlowRate,"Autosize");
-   // }
+    // else if( modelObject.isMaximumHotWaterOrSteamFlowRateAutosized() )
+    // {
+    //   idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumHotWaterorSteamFlowRate,"Autosize");
+    // }
 
-  // MinimumHotWaterOrSteamFlowRate
-   // value = modelObject.minimumHotWaterOrSteamFlowRate();
-   // idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumHotWaterorSteamFlowRate,value.get());
+    // MinimumHotWaterOrSteamFlowRate
+    // value = modelObject.minimumHotWaterOrSteamFlowRate();
+    // idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MinimumHotWaterorSteamFlowRate,value.get());
 
-  // ConvergenceTolerance
-  //value = modelObject.convergenceTolerance();
-  //idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::ConvergenceTolerance,value.get());
+    // ConvergenceTolerance
+    //value = modelObject.convergenceTolerance();
+    //idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::ConvergenceTolerance,value.get());
 
-  // DamperHeatingAction
-  //  s = modelObject.damperHeatingAction();
-   // idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::DamperHeatingAction,s.get());
+    // DamperHeatingAction
+    //  s = modelObject.damperHeatingAction();
+    // idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::DamperHeatingAction,s.get());
 
-  // MaximumFlowPerZoneFloorAreaDuringReheat
+    // MaximumFlowPerZoneFloorAreaDuringReheat
     //value = modelObject.maximumFlowPerZoneFloorAreaDuringReheat();
 
-   // if( value )
-   // {
-   //   idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,value.get());
-   // }
-  //  else if ( modelObject.isMaximumFlowPerZoneFloorAreaDuringReheatAutosized() )
-  //  {
-   //   idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,"Autocalculate");
-  //  }
+    // if( value )
+    // {
+    //   idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,value.get());
+    // }
+    //  else if ( modelObject.isMaximumFlowPerZoneFloorAreaDuringReheatAutosized() )
+    //  {
+    //   idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumFlowperZoneFloorAreaDuringReheat,"Autocalculate");
+    //  }
 
-  // MaximumFlowFractionDuringReheat
-   // value = modelObject.maximumFlowPerZoneFloorAreaDuringReheat();
+    // MaximumFlowFractionDuringReheat
+    // value = modelObject.maximumFlowPerZoneFloorAreaDuringReheat();
 
     //if( value )
     //{
     //  idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumFlowFractionDuringReheat,value.get());
-   // }
-   // else if( modelObject.isMaximumFlowFractionDuringReheatAutosized() )
-   // {
-   //   idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumFlowFractionDuringReheat,"Autocalculate");
-   // }
+    // }
+    // else if( modelObject.isMaximumFlowFractionDuringReheatAutosized() )
+    // {
+    //   idfObject.setString(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumFlowFractionDuringReheat,"Autocalculate");
+    // }
 
-  // MaximumReheatAirTemperature
-  //  value = modelObject.maximumReheatAirTemperature();
-   // idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumReheatAirTemperature,value.get());
+    // MaximumReheatAirTemperature
+    //  value = modelObject.maximumReheatAirTemperature();
+    // idfObject.setDouble(AirTerminal_SingleDuct_VAV_NoReheatFields::MaximumReheatAirTemperature,value.get());
 
-  // Populate fields for AirDistributionUnit
-  if( boost::optional<ModelObject> outletNode = modelObject.outletModelObject() )
-  {
-    _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirDistributionUnitOutletNodeName,outletNode->name().get());
+    // Populate fields for AirDistributionUnit
+    if (boost::optional<ModelObject> outletNode = modelObject.outletModelObject()) {
+      _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirDistributionUnitOutletNodeName, outletNode->name().get());
+    }
+    _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType, idfObject.iddObject().name());
+    _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName, idfObject.name().get());
+
+    return _airDistributionUnit;
   }
-  _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalObjectType,idfObject.iddObject().name());
-  _airDistributionUnit.setString(ZoneHVAC_AirDistributionUnitFields::AirTerminalName,idfObject.name().get());
 
-  return _airDistributionUnit;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,66 +35,59 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
-class AirflowNetworkDistributionNode;
+  class ThermalZone;
+  class AirflowNetworkDistributionNode;
 
-namespace detail {
+  namespace detail {
 
-class MODEL_API AirLoopHVACZoneSplitter_Impl : public Splitter_Impl {
- public:
+    class MODEL_API AirLoopHVACZoneSplitter_Impl : public Splitter_Impl
+    {
+     public:
+      // constructor
+      AirLoopHVACZoneSplitter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  // constructor
-  AirLoopHVACZoneSplitter_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // construct from workspace
+      AirLoopHVACZoneSplitter_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  // construct from workspace
-  AirLoopHVACZoneSplitter_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      // copy constructor
+      AirLoopHVACZoneSplitter_Impl(const AirLoopHVACZoneSplitter_Impl& other, Model_Impl* model, bool keepHandle);
 
-  // copy constructor
-  AirLoopHVACZoneSplitter_Impl(const AirLoopHVACZoneSplitter_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      // virtual destructor
+      virtual ~AirLoopHVACZoneSplitter_Impl();
 
-  // virtual destructor
-  virtual ~AirLoopHVACZoneSplitter_Impl();
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  // Get all output variable names that could be associated with this object.
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-  virtual std::vector<ModelObject> children() const override;
+      std::vector<openstudio::IdfObject> remove() override;
 
-  std::vector<openstudio::IdfObject> remove() override;
+      virtual unsigned inletPort() const override;
 
-  virtual unsigned inletPort() const override;
+      unsigned outletPort(unsigned branchIndex) const override;
 
-  unsigned outletPort(unsigned branchIndex) const override;
+      unsigned nextOutletPort() const override;
 
-  unsigned nextOutletPort() const override;
+      std::vector<ThermalZone> thermalZones();
 
-  std::vector<ThermalZone> thermalZones();
+      boost::optional<ModelObject> zoneEquipmentForBranch(int branchIndex);
 
-  boost::optional<ModelObject> zoneEquipmentForBranch(int branchIndex);
+      void disconnect() override;
 
-  void disconnect() override;
+      AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
-  AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+      boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
-  boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
+     private:
+      REGISTER_LOGGER("openstudio.model.AirLoopHVACZoneSplitter");
+    };
 
-  private:
+  }  // namespace detail
 
-  REGISTER_LOGGER("openstudio.model.AirLoopHVACZoneSplitter");
+}  // namespace model
 
-};
+}  // namespace openstudio
 
-} // detail
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_AIRLOOPHVACZONESPLITTER_IMPL_HPP
-
+#endif  // MODEL_AIRLOOPHVACZONESPLITTER_IMPL_HPP

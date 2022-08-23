@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,7 +52,6 @@
 #include "../../model/RunPeriodControlSpecialDays.hpp"
 #include "../../model/RunPeriodControlSpecialDays_Impl.hpp"
 
-
 #include "../../utilities/core/Optional.hpp"
 
 #include <resources.hxx>
@@ -69,5 +68,4 @@ TEST_F(SDDFixture, ReverseTranslator_load) {
   boost::optional<openstudio::model::Model> _m = rt.loadModel(p);
 
   EXPECT_TRUE(_m);
-
 }

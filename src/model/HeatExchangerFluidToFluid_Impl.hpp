@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,183 +36,178 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Node;
+  class Schedule;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** HeatExchangerFluidToFluid_Impl is a WaterToWaterComponent_Impl that is the implementation class for HeatExchangerFluidToFluid.*/
-  class MODEL_API HeatExchangerFluidToFluid_Impl : public WaterToWaterComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** HeatExchangerFluidToFluid_Impl is a WaterToWaterComponent_Impl that is the implementation class for HeatExchangerFluidToFluid.*/
+    class MODEL_API HeatExchangerFluidToFluid_Impl : public WaterToWaterComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    HeatExchangerFluidToFluid_Impl(const IdfObject& idfObject,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      HeatExchangerFluidToFluid_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    HeatExchangerFluidToFluid_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      HeatExchangerFluidToFluid_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    HeatExchangerFluidToFluid_Impl(const HeatExchangerFluidToFluid_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      HeatExchangerFluidToFluid_Impl(const HeatExchangerFluidToFluid_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~HeatExchangerFluidToFluid_Impl() {}
+      virtual ~HeatExchangerFluidToFluid_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned supplyInletPort() const override;
+      virtual unsigned supplyInletPort() const override;
 
-    virtual unsigned supplyOutletPort() const override;
+      virtual unsigned supplyOutletPort() const override;
 
-    virtual unsigned demandInletPort() const override;
+      virtual unsigned demandInletPort() const override;
 
-    virtual unsigned demandOutletPort() const override;
+      virtual unsigned demandOutletPort() const override;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    boost::optional<double> loopDemandSideDesignFlowRate() const;
+      boost::optional<double> loopDemandSideDesignFlowRate() const;
 
-    bool isLoopDemandSideDesignFlowRateAutosized() const;
+      bool isLoopDemandSideDesignFlowRateAutosized() const;
 
-    boost::optional<double> loopSupplySideDesignFlowRate() const;
+      boost::optional<double> loopSupplySideDesignFlowRate() const;
 
-    bool isLoopSupplySideDesignFlowRateAutosized() const;
+      bool isLoopSupplySideDesignFlowRateAutosized() const;
 
-    std::string heatExchangeModelType() const;
+      std::string heatExchangeModelType() const;
 
-    bool isHeatExchangeModelTypeDefaulted() const;
+      bool isHeatExchangeModelTypeDefaulted() const;
 
-    boost::optional<double> heatExchangerUFactorTimesAreaValue() const;
+      boost::optional<double> heatExchangerUFactorTimesAreaValue() const;
 
-    bool isHeatExchangerUFactorTimesAreaValueAutosized() const;
+      bool isHeatExchangerUFactorTimesAreaValueAutosized() const;
 
-    std::string controlType() const;
+      std::string controlType() const;
 
-    bool isControlTypeDefaulted() const;
+      bool isControlTypeDefaulted() const;
 
-    double minimumTemperatureDifferencetoActivateHeatExchanger() const;
+      double minimumTemperatureDifferencetoActivateHeatExchanger() const;
 
-    bool isMinimumTemperatureDifferencetoActivateHeatExchangerDefaulted() const;
+      bool isMinimumTemperatureDifferencetoActivateHeatExchangerDefaulted() const;
 
-    std::string heatTransferMeteringEndUseType() const;
+      std::string heatTransferMeteringEndUseType() const;
 
-    bool isHeatTransferMeteringEndUseTypeDefaulted() const;
+      bool isHeatTransferMeteringEndUseTypeDefaulted() const;
 
-    boost::optional<Node> componentOverrideLoopSupplySideInletNode() const;
+      boost::optional<Node> componentOverrideLoopSupplySideInletNode() const;
 
-    boost::optional<Node> componentOverrideLoopDemandSideInletNode() const;
+      boost::optional<Node> componentOverrideLoopDemandSideInletNode() const;
 
-    std::string componentOverrideCoolingControlTemperatureMode() const;
+      std::string componentOverrideCoolingControlTemperatureMode() const;
 
-    bool isComponentOverrideCoolingControlTemperatureModeDefaulted() const;
+      bool isComponentOverrideCoolingControlTemperatureModeDefaulted() const;
 
-    double sizingFactor() const;
+      double sizingFactor() const;
 
-    bool isSizingFactorDefaulted() const;
+      bool isSizingFactorDefaulted() const;
 
-    boost::optional<double> operationMinimumTemperatureLimit() const;
+      boost::optional<double> operationMinimumTemperatureLimit() const;
 
-    boost::optional<double> operationMaximumTemperatureLimit() const;
+      boost::optional<double> operationMaximumTemperatureLimit() const;
 
-    boost::optional<double> autosizedLoopDemandSideDesignFlowRate() const ;
+      boost::optional<double> autosizedLoopDemandSideDesignFlowRate() const;
 
-    boost::optional<double> autosizedLoopSupplySideDesignFlowRate() const ;
+      boost::optional<double> autosizedLoopSupplySideDesignFlowRate() const;
 
-    boost::optional<double> autosizedHeatExchangerUFactorTimesAreaValue() const ;
+      boost::optional<double> autosizedHeatExchangerUFactorTimesAreaValue() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    bool setAvailabilitySchedule(Schedule& schedule);
+      // TODO: Check argument type. From object lists, some candidates are: Schedule.
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetAvailabilitySchedule();
+      void resetAvailabilitySchedule();
 
-    bool setLoopDemandSideDesignFlowRate(boost::optional<double> loopDemandSideDesignFlowRate);
+      bool setLoopDemandSideDesignFlowRate(boost::optional<double> loopDemandSideDesignFlowRate);
 
-    void autosizeLoopDemandSideDesignFlowRate();
+      void autosizeLoopDemandSideDesignFlowRate();
 
-    bool setLoopSupplySideDesignFlowRate(boost::optional<double> loopSupplySideDesignFlowRate);
+      bool setLoopSupplySideDesignFlowRate(boost::optional<double> loopSupplySideDesignFlowRate);
 
-    void autosizeLoopSupplySideDesignFlowRate();
+      void autosizeLoopSupplySideDesignFlowRate();
 
-    bool setHeatExchangeModelType(std::string heatExchangeModelType);
+      bool setHeatExchangeModelType(std::string heatExchangeModelType);
 
-    void resetHeatExchangeModelType();
+      void resetHeatExchangeModelType();
 
-    bool setHeatExchangerUFactorTimesAreaValue(boost::optional<double> heatExchangerUFactorTimesAreaValue);
+      bool setHeatExchangerUFactorTimesAreaValue(boost::optional<double> heatExchangerUFactorTimesAreaValue);
 
-    void autosizeHeatExchangerUFactorTimesAreaValue();
+      void autosizeHeatExchangerUFactorTimesAreaValue();
 
-    bool setControlType(std::string controlType);
+      bool setControlType(std::string controlType);
 
-    void resetControlType();
+      void resetControlType();
 
-    bool setMinimumTemperatureDifferencetoActivateHeatExchanger(double minimumTemperatureDifferencetoActivateHeatExchanger);
+      bool setMinimumTemperatureDifferencetoActivateHeatExchanger(double minimumTemperatureDifferencetoActivateHeatExchanger);
 
-    void resetMinimumTemperatureDifferencetoActivateHeatExchanger();
+      void resetMinimumTemperatureDifferencetoActivateHeatExchanger();
 
-    bool setHeatTransferMeteringEndUseType(std::string heatTransferMeteringEndUseType);
+      bool setHeatTransferMeteringEndUseType(std::string heatTransferMeteringEndUseType);
 
-    void resetHeatTransferMeteringEndUseType();
+      void resetHeatTransferMeteringEndUseType();
 
-    bool setComponentOverrideLoopSupplySideInletNode(const boost::optional<Node>& node);
+      bool setComponentOverrideLoopSupplySideInletNode(const boost::optional<Node>& node);
 
-    void resetComponentOverrideLoopSupplySideInletNode();
+      void resetComponentOverrideLoopSupplySideInletNode();
 
-    bool setComponentOverrideLoopDemandSideInletNode(const boost::optional<Node>& node);
+      bool setComponentOverrideLoopDemandSideInletNode(const boost::optional<Node>& node);
 
-    void resetComponentOverrideLoopDemandSideInletNode();
+      void resetComponentOverrideLoopDemandSideInletNode();
 
-    bool setComponentOverrideCoolingControlTemperatureMode(std::string componentOverrideCoolingControlTemperatureMode);
+      bool setComponentOverrideCoolingControlTemperatureMode(std::string componentOverrideCoolingControlTemperatureMode);
 
-    void resetComponentOverrideCoolingControlTemperatureMode();
+      void resetComponentOverrideCoolingControlTemperatureMode();
 
-    bool setSizingFactor(double sizingFactor);
+      bool setSizingFactor(double sizingFactor);
 
-    void resetSizingFactor();
+      void resetSizingFactor();
 
-    bool setOperationMinimumTemperatureLimit(boost::optional<double> operationMinimumTemperatureLimit);
+      bool setOperationMinimumTemperatureLimit(boost::optional<double> operationMinimumTemperatureLimit);
 
-    void resetOperationMinimumTemperatureLimit();
+      void resetOperationMinimumTemperatureLimit();
 
-    bool setOperationMaximumTemperatureLimit(boost::optional<double> operationMaximumTemperatureLimit);
+      bool setOperationMaximumTemperatureLimit(boost::optional<double> operationMaximumTemperatureLimit);
 
-    void resetOperationMaximumTemperatureLimit();
+      void resetOperationMaximumTemperatureLimit();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.HeatExchangerFluidToFluid");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.HeatExchangerFluidToFluid");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_HEATEXCHANGERFLUIDTOFLUID_IMPL_HPP
+#endif  // MODEL_HEATEXCHANGERFLUIDTOFLUID_IMPL_HPP

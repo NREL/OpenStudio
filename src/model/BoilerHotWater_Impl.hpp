@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,177 +35,170 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  /** BoilerHotWater_Impl is a StraightComponent_Impl that is the implementation class for BoilerHotWater.*/
-  class MODEL_API BoilerHotWater_Impl : public StraightComponent_Impl {
+    /** BoilerHotWater_Impl is a StraightComponent_Impl that is the implementation class for BoilerHotWater.*/
+    class MODEL_API BoilerHotWater_Impl : public StraightComponent_Impl
+    {
 
-   public:
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      BoilerHotWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    BoilerHotWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      BoilerHotWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    BoilerHotWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      BoilerHotWater_Impl(const BoilerHotWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-    BoilerHotWater_Impl(const BoilerHotWater_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      virtual ~BoilerHotWater_Impl() {}
 
-    virtual ~BoilerHotWater_Impl() {}
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual void autosize() override;
 
-    virtual void autosize() override;
+      virtual void applySizingValues() override;
 
-    virtual void applySizingValues() override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual ModelObject clone(Model model) const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      std::string fuelType() const;
 
-    std::string fuelType() const;
+      boost::optional<double> nominalCapacity() const;
 
-    boost::optional<double> nominalCapacity() const;
+      bool isNominalCapacityAutosized() const;
 
-    bool isNominalCapacityAutosized() const;
+      double nominalThermalEfficiency() const;
 
-    double nominalThermalEfficiency() const;
+      boost::optional<std::string> efficiencyCurveTemperatureEvaluationVariable() const;
 
-    boost::optional<std::string> efficiencyCurveTemperatureEvaluationVariable() const;
+      boost::optional<Curve> normalizedBoilerEfficiencyCurve() const;
 
-    boost::optional<Curve> normalizedBoilerEfficiencyCurve() const;
+      boost::optional<double> designWaterFlowRate() const;
 
-    boost::optional<double> designWaterFlowRate() const;
+      bool isDesignWaterFlowRateAutosized() const;
 
-    bool isDesignWaterFlowRateAutosized() const;
+      double minimumPartLoadRatio() const;
 
-    double minimumPartLoadRatio() const;
+      bool isMinimumPartLoadRatioDefaulted() const;
 
-    bool isMinimumPartLoadRatioDefaulted() const;
+      double maximumPartLoadRatio() const;
 
-    double maximumPartLoadRatio() const;
+      bool isMaximumPartLoadRatioDefaulted() const;
 
-    bool isMaximumPartLoadRatioDefaulted() const;
+      double optimumPartLoadRatio() const;
 
-    double optimumPartLoadRatio() const;
+      bool isOptimumPartLoadRatioDefaulted() const;
 
-    bool isOptimumPartLoadRatioDefaulted() const;
+      double waterOutletUpperTemperatureLimit() const;
 
-    double waterOutletUpperTemperatureLimit() const;
+      bool isWaterOutletUpperTemperatureLimitDefaulted() const;
 
-    bool isWaterOutletUpperTemperatureLimitDefaulted() const;
+      std::string boilerFlowMode() const;
 
-    std::string boilerFlowMode() const;
+      bool isBoilerFlowModeDefaulted() const;
 
-    bool isBoilerFlowModeDefaulted() const;
+      boost::optional<double> parasiticElectricLoad() const;
 
-    boost::optional<double> parasiticElectricLoad() const;
+      double sizingFactor() const;
 
-    double sizingFactor() const;
+      bool isSizingFactorDefaulted() const;
 
-    bool isSizingFactorDefaulted() const;
+      boost::optional<double> autosizedNominalCapacity() const;
 
-    boost::optional<double> autosizedNominalCapacity() const ;
+      boost::optional<double> autosizedDesignWaterFlowRate() const;
 
-    boost::optional<double> autosizedDesignWaterFlowRate() const ;
+      std::string endUseSubcategory() const;
 
-    std::string endUseSubcategory() const;
+      //@}
+      /** @name Setters */
+      //@{
 
+      bool setFuelType(std::string fuelType);
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setNominalCapacity(boost::optional<double> nominalCapacity);
 
-    bool setFuelType(std::string fuelType);
+      void resetNominalCapacity();
 
-    bool setNominalCapacity(boost::optional<double> nominalCapacity);
+      void autosizeNominalCapacity();
 
-    void resetNominalCapacity();
+      bool setNominalThermalEfficiency(double nominalThermalEfficiency);
 
-    void autosizeNominalCapacity();
+      bool setEfficiencyCurveTemperatureEvaluationVariable(boost::optional<std::string> efficiencyCurveTemperatureEvaluationVariable);
 
-    bool setNominalThermalEfficiency(double nominalThermalEfficiency);
+      void resetEfficiencyCurveTemperatureEvaluationVariable();
 
-    bool setEfficiencyCurveTemperatureEvaluationVariable(boost::optional<std::string> efficiencyCurveTemperatureEvaluationVariable);
+      bool setNormalizedBoilerEfficiencyCurve(const boost::optional<Curve>& normalizedBoilerEfficiencyCurve);
 
-    void resetEfficiencyCurveTemperatureEvaluationVariable();
+      void resetNormalizedBoilerEfficiencyCurve();
 
-    bool setNormalizedBoilerEfficiencyCurve(const boost::optional<Curve>& normalizedBoilerEfficiencyCurve);
+      bool setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate);
 
-    void resetNormalizedBoilerEfficiencyCurve();
+      void resetDesignWaterFlowRate();
 
-    bool setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate);
+      void autosizeDesignWaterFlowRate();
 
-    void resetDesignWaterFlowRate();
+      bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
 
-    void autosizeDesignWaterFlowRate();
+      void resetMinimumPartLoadRatio();
 
-    bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
+      bool setMaximumPartLoadRatio(double maximumPartLoadRatio);
 
-    void resetMinimumPartLoadRatio();
+      void resetMaximumPartLoadRatio();
 
-    bool setMaximumPartLoadRatio(double maximumPartLoadRatio);
+      bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
 
-    void resetMaximumPartLoadRatio();
+      void resetOptimumPartLoadRatio();
 
-    bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
+      bool setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit);
 
-    void resetOptimumPartLoadRatio();
+      void resetWaterOutletUpperTemperatureLimit();
 
-    bool setWaterOutletUpperTemperatureLimit(double waterOutletUpperTemperatureLimit);
+      bool setBoilerFlowMode(std::string boilerFlowMode);
 
-    void resetWaterOutletUpperTemperatureLimit();
+      void resetBoilerFlowMode();
 
-    bool setBoilerFlowMode(std::string boilerFlowMode);
+      bool setParasiticElectricLoad(boost::optional<double> parasiticElectricLoad);
 
-    void resetBoilerFlowMode();
+      void resetParasiticElectricLoad();
 
-    bool setParasiticElectricLoad(boost::optional<double> parasiticElectricLoad);
+      bool setSizingFactor(double sizingFactor);
 
-    void resetParasiticElectricLoad();
+      void resetSizingFactor();
 
-    bool setSizingFactor(double sizingFactor);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-    void resetSizingFactor();
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.BoilerHotWater");
 
-    bool setEndUseSubcategory(const std::string & endUseSubcategory);
+      boost::optional<ModelObject> normalizedBoilerEfficiencyCurveAsModelObject() const;
 
-    //@}
-   private:
+      bool setNormalizedBoilerEfficiencyCurveAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    REGISTER_LOGGER("openstudio.model.BoilerHotWater");
+  }  // namespace detail
 
-    boost::optional<ModelObject> normalizedBoilerEfficiencyCurveAsModelObject() const;
+}  // namespace model
+}  // namespace openstudio
 
-    bool setNormalizedBoilerEfficiencyCurveAsModelObject(const boost::optional<ModelObject>& modelObject);
-
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_BOILERHOTWATER_IMPL_HPP
+#endif  // MODEL_BOILERHOTWATER_IMPL_HPP

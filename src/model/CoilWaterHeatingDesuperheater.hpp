@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,33 +37,34 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class CurveBiquadratic;
-class HVACComponent;
+  class Schedule;
+  class CurveBiquadratic;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  class CoilWaterHeatingDesuperheater_Impl;
+    class CoilWaterHeatingDesuperheater_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilWaterHeatingDesuperheater is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:WaterHeating:Desuperheater'. */
-class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilWaterHeatingDesuperheater is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:WaterHeating:Desuperheater'. */
+  class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilWaterHeatingDesuperheater(const Model& model, Schedule& setpointTemperatureSchedule);
+    explicit CoilWaterHeatingDesuperheater(const Model& model, Schedule& setpointTemperatureSchedule);
 
-  virtual ~CoilWaterHeatingDesuperheater() {}
+    virtual ~CoilWaterHeatingDesuperheater() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  boost::optional<ModelObject> heatRejectionTarget() const;
+    boost::optional<ModelObject> heatRejectionTarget() const;
 
-  /** \fn bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget)
+    /** \fn bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget)
       \brief Sets the heating rejection target from which the desuperheater heating coil rejects energy.
       \param[in] heatRejectionTarget The heating rejection target.
 
@@ -71,84 +72,84 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
       \ref WaterHeaterMixed
       \ref WaterHeaterStratified
   */
-  bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
+    bool addToHeatRejectionTarget(const ModelObject& heatRejectionTarget);
 
-  void removeFromHeatRejectionTarget();
+    void removeFromHeatRejectionTarget();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  Schedule setpointTemperatureSchedule() const;
+    Schedule setpointTemperatureSchedule() const;
 
-  double deadBandTemperatureDifference() const;
+    double deadBandTemperatureDifference() const;
 
-  bool isDeadBandTemperatureDifferenceDefaulted() const;
+    bool isDeadBandTemperatureDifferenceDefaulted() const;
 
-  boost::optional<double> ratedHeatReclaimRecoveryEfficiency() const;
+    boost::optional<double> ratedHeatReclaimRecoveryEfficiency() const;
 
-  double ratedInletWaterTemperature() const;
+    double ratedInletWaterTemperature() const;
 
-  double ratedOutdoorAirTemperature() const;
+    double ratedOutdoorAirTemperature() const;
 
-  double maximumInletWaterTemperatureforHeatReclaim() const;
+    double maximumInletWaterTemperatureforHeatReclaim() const;
 
-  boost::optional<CurveBiquadratic> heatReclaimEfficiencyFunctionofTemperatureCurve() const;
+    boost::optional<CurveBiquadratic> heatReclaimEfficiencyFunctionofTemperatureCurve() const;
 
-  // boost::optional<HVACComponent> tank() const;
+    // boost::optional<HVACComponent> tank() const;
 
-  boost::optional<ModelObject> heatingSource() const;
+    boost::optional<ModelObject> heatingSource() const;
 
-  double waterFlowRate() const;
+    double waterFlowRate() const;
 
-  double waterPumpPower() const;
+    double waterPumpPower() const;
 
-  bool isWaterPumpPowerDefaulted() const;
+    bool isWaterPumpPowerDefaulted() const;
 
-  double fractionofPumpHeattoWater() const;
+    double fractionofPumpHeattoWater() const;
 
-  bool isFractionofPumpHeattoWaterDefaulted() const;
+    bool isFractionofPumpHeattoWaterDefaulted() const;
 
-  double onCycleParasiticElectricLoad() const;
+    double onCycleParasiticElectricLoad() const;
 
-  bool isOnCycleParasiticElectricLoadDefaulted() const;
+    bool isOnCycleParasiticElectricLoadDefaulted() const;
 
-  double offCycleParasiticElectricLoad() const;
+    double offCycleParasiticElectricLoad() const;
 
-  bool isOffCycleParasiticElectricLoadDefaulted() const;
+    bool isOffCycleParasiticElectricLoadDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setSetpointTemperatureSchedule(Schedule& schedule);
+    bool setSetpointTemperatureSchedule(Schedule& schedule);
 
-  bool setDeadBandTemperatureDifference(double deadBandTemperatureDifference);
+    bool setDeadBandTemperatureDifference(double deadBandTemperatureDifference);
 
-  void resetDeadBandTemperatureDifference();
+    void resetDeadBandTemperatureDifference();
 
-  bool setRatedHeatReclaimRecoveryEfficiency(double ratedHeatReclaimRecoveryEfficiency);
+    bool setRatedHeatReclaimRecoveryEfficiency(double ratedHeatReclaimRecoveryEfficiency);
 
-  void resetRatedHeatReclaimRecoveryEfficiency();
+    void resetRatedHeatReclaimRecoveryEfficiency();
 
-  bool setRatedInletWaterTemperature(double ratedInletWaterTemperature);
+    bool setRatedInletWaterTemperature(double ratedInletWaterTemperature);
 
-  bool setRatedOutdoorAirTemperature(double ratedOutdoorAirTemperature);
+    bool setRatedOutdoorAirTemperature(double ratedOutdoorAirTemperature);
 
-  bool setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim);
+    bool setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim);
 
-  bool setHeatReclaimEfficiencyFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
+    bool setHeatReclaimEfficiencyFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
 
-  void resetHeatReclaimEfficiencyFunctionofTemperatureCurve();
+    void resetHeatReclaimEfficiencyFunctionofTemperatureCurve();
 
-  // bool setTank(const HVACComponent& waterHeater);
+    // bool setTank(const HVACComponent& waterHeater);
 
-  /** \fn bool setHeatingSource(const ModelObject& heatingSource)
+    /** \fn bool setHeatingSource(const ModelObject& heatingSource)
       \brief Sets the heating source from which the desuperheater heating coil recovers energy.
       \param[in] heatingSource The heating source.
 
@@ -164,55 +165,55 @@ class MODEL_API CoilWaterHeatingDesuperheater : public StraightComponent {
       \ref RefrigerationCondenserEvaporativeCooled \n
       \ref RefrigerationCondenserWaterCooled \n
   */
-  bool setHeatingSource(const ModelObject& heatingSource);
+    bool setHeatingSource(const ModelObject& heatingSource);
 
-  void resetHeatingSource();
+    void resetHeatingSource();
 
-  bool setWaterFlowRate(double waterFlowRate);
+    bool setWaterFlowRate(double waterFlowRate);
 
-  bool setWaterPumpPower(double waterPumpPower);
+    bool setWaterPumpPower(double waterPumpPower);
 
-  void resetWaterPumpPower();
+    void resetWaterPumpPower();
 
-  bool setFractionofPumpHeattoWater(double fractionofPumpHeattoWater);
+    bool setFractionofPumpHeattoWater(double fractionofPumpHeattoWater);
 
-  void resetFractionofPumpHeattoWater();
+    void resetFractionofPumpHeattoWater();
 
-  bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
+    bool setOnCycleParasiticElectricLoad(double onCycleParasiticElectricLoad);
 
-  void resetOnCycleParasiticElectricLoad();
+    void resetOnCycleParasiticElectricLoad();
 
-  bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
+    bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
 
-  void resetOffCycleParasiticElectricLoad();
+    void resetOffCycleParasiticElectricLoad();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilWaterHeatingDesuperheater_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilWaterHeatingDesuperheater_Impl ImplType;
 
-  explicit CoilWaterHeatingDesuperheater(std::shared_ptr<detail::CoilWaterHeatingDesuperheater_Impl> impl);
+    explicit CoilWaterHeatingDesuperheater(std::shared_ptr<detail::CoilWaterHeatingDesuperheater_Impl> impl);
 
-  friend class detail::CoilWaterHeatingDesuperheater_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilWaterHeatingDesuperheater");
-};
+    friend class detail::CoilWaterHeatingDesuperheater_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilWaterHeatingDesuperheater");
+  };
 
-/** \relates CoilWaterHeatingDesuperheater*/
-typedef boost::optional<CoilWaterHeatingDesuperheater> OptionalCoilWaterHeatingDesuperheater;
+  /** \relates CoilWaterHeatingDesuperheater*/
+  typedef boost::optional<CoilWaterHeatingDesuperheater> OptionalCoilWaterHeatingDesuperheater;
 
-/** \relates CoilWaterHeatingDesuperheater*/
-typedef std::vector<CoilWaterHeatingDesuperheater> CoilWaterHeatingDesuperheaterVector;
+  /** \relates CoilWaterHeatingDesuperheater*/
+  typedef std::vector<CoilWaterHeatingDesuperheater> CoilWaterHeatingDesuperheaterVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILWATERHEATINGDESUPERHEATER_HPP
+#endif  // MODEL_COILWATERHEATINGDESUPERHEATER_HPP

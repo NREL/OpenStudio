@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,26 +36,24 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,WaterUseEquipment_WaterUseEquipment)
-{
+TEST_F(ModelFixture, WaterUseEquipment_WaterUseEquipment) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    //create a model to use in testing this code.
-    model::Model m;
+  ASSERT_EXIT(
+    {
+      //create a model to use in testing this code.
+      model::Model m;
 
-    model::WaterUseEquipmentDefinition definition(m);
+      model::WaterUseEquipmentDefinition definition(m);
 
-    model::WaterUseEquipment waterUseEquipment(definition);
+      model::WaterUseEquipment waterUseEquipment(definition);
 
-    exit(0);
-  } ,
-  ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,WaterUseEquipment_Space)
-{
+TEST_F(ModelFixture, WaterUseEquipment_Space) {
   model::Model m;
 
   model::Space space(m);
@@ -83,5 +81,4 @@ TEST_F(ModelFixture,WaterUseEquipment_Space)
   EXPECT_TRUE(waterUseEquipment.handle().isNull());
 
   EXPECT_FALSE(definition.handle().isNull());
-
 }

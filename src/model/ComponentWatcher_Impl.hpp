@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,69 +36,70 @@
 
 #include "../utilities/core/Logger.hpp"
 
-#include "../nano/nano_signal_slot.hpp" // Signal-Slot replacement
-
+#include "../nano/nano_signal_slot.hpp"  // Signal-Slot replacement
 
 namespace openstudio {
 namespace model {
 
-class ComponentWatcher;
+  class ComponentWatcher;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API ComponentWatcher_Impl : public std::enable_shared_from_this<ComponentWatcher_Impl>, public Nano::Observer {
+    class MODEL_API ComponentWatcher_Impl
+      : public std::enable_shared_from_this<ComponentWatcher_Impl>
+      , public Nano::Observer
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ComponentWatcher_Impl(ComponentData& componentData);
+      ComponentWatcher_Impl(ComponentData& componentData);
 
-    virtual ~ComponentWatcher_Impl() {}
+      virtual ~ComponentWatcher_Impl() {}
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    ComponentWatcher componentWatcher() const;
+      ComponentWatcher componentWatcher() const;
 
-    ComponentData componentData() const;
+      ComponentData componentData() const;
 
-    //@}
-    /** @name Nano Signals */
-    //@{
+      //@}
+      /** @name Nano Signals */
+      //@{
 
-    Nano::Signal<void(const ComponentWatcher &)> obsolete;
+      Nano::Signal<void(const ComponentWatcher&)> obsolete;
 
+      void dataChange();
 
-    void dataChange();
+      void nameChange();
 
-    void nameChange();
+      void componentDataChange();
 
-    void componentDataChange();
+      void relationshipChange(int index, Handle newHandle, Handle oldHandle);
 
-    void relationshipChange(int index,Handle newHandle,Handle oldHandle);
+      void objectRemove(const Handle& handleOfRemovedObject);
 
-    void objectRemove(const Handle& handleOfRemovedObject);
+      void objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
 
-    void objectAdd(const WorkspaceObject& addedObject, const openstudio::IddObjectType& type, const openstudio::UUID& uuid);
+     private:
+      ComponentData m_componentData;
+      std::vector<ModelObject> m_componentObjects;
 
-   private:
-    ComponentData m_componentData;
-    std::vector<ModelObject> m_componentObjects;
+      void mf_changeComponentVersion();
 
-    void mf_changeComponentVersion();
+      void mf_refreshComponentContents(bool logWarnings);
 
-    void mf_refreshComponentContents(bool logWarnings);
+      void mf_removeComponent();
 
-    void mf_removeComponent();
+      REGISTER_LOGGER("openstudio.model.ComponentWatcher");
+    };
 
-    REGISTER_LOGGER("openstudio.model.ComponentWatcher");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_COMPONENTWATCHER_IMPL_HPP
+#endif  // MODEL_COMPONENTWATCHER_IMPL_HPP

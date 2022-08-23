@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,8 +52,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, Material)
-{
+TEST_F(ModelFixture, Material) {
   Model model;
 
   StandardOpaqueMaterial exterior(model);
@@ -88,7 +87,6 @@ TEST_F(ModelFixture, Material)
     Model testModel;
 
     exterior.clone(testModel);
-
 
     materials = model.getModelObjects<Material>();
     ASSERT_EQ(static_cast<unsigned>(1), materials.size());
@@ -128,5 +126,4 @@ TEST_F(ModelFixture, Material)
 
   materialInformations = model.getModelObjects<StandardsInformationMaterial>();
   ASSERT_EQ(static_cast<unsigned>(2), materialInformations.size());
-
 }

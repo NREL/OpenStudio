@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,126 +36,123 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class GasEquipmentDefinition_Impl;
+    class GasEquipmentDefinition_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** GasEquipmentDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
+  /** GasEquipmentDefinition is a SpaceLoadDefinition that wraps the OpenStudio IDD object
  *  'OS_GasEquipment_Definition'.  Its fields are derived from the EnergyPlus IDD object
  *  'GasEquipment'. \sa GasEquipmentDefinition
  */
-class MODEL_API GasEquipmentDefinition : public SpaceLoadDefinition {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API GasEquipmentDefinition : public SpaceLoadDefinition
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit GasEquipmentDefinition(const Model& model);
+    explicit GasEquipmentDefinition(const Model& model);
 
-  virtual ~GasEquipmentDefinition() {}
+    virtual ~GasEquipmentDefinition() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validDesignLevelCalculationMethodValues();
+    static std::vector<std::string> validDesignLevelCalculationMethodValues();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  std::string designLevelCalculationMethod() const;
-  boost::optional<double> designLevel() const;
-  boost::optional<double> wattsperSpaceFloorArea() const;
-  boost::optional<double> wattsperPerson() const;
+    std::string designLevelCalculationMethod() const;
+    boost::optional<double> designLevel() const;
+    boost::optional<double> wattsperSpaceFloorArea() const;
+    boost::optional<double> wattsperPerson() const;
 
-  double fractionLatent() const;
-  bool isFractionLatentDefaulted() const;
+    double fractionLatent() const;
+    bool isFractionLatentDefaulted() const;
 
-  double fractionRadiant() const;
-  bool isFractionRadiantDefaulted() const;
+    double fractionRadiant() const;
+    bool isFractionRadiantDefaulted() const;
 
-  double fractionLost() const;
-  bool isFractionLostDefaulted() const;
+    double fractionLost() const;
+    bool isFractionLostDefaulted() const;
 
-  double carbonDioxideGenerationRate() const;
-  bool isCarbonDioxideGenerationRateDefaulted() const;
+    double carbonDioxideGenerationRate() const;
+    bool isCarbonDioxideGenerationRateDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Also sets designLevelCalculationMethod accordingly. */
-  bool setDesignLevel(double designLevel);
+    /** Also sets designLevelCalculationMethod accordingly. */
+    bool setDesignLevel(double designLevel);
 
-  /** Also sets designLevelCalculationMethod accordingly. */
-  bool setWattsperSpaceFloorArea(double wattsperSpaceFloorArea);
+    /** Also sets designLevelCalculationMethod accordingly. */
+    bool setWattsperSpaceFloorArea(double wattsperSpaceFloorArea);
 
-  /** Also sets designLevelCalculationMethod accordingly. */
-  bool setWattsperPerson(double wattsperPerson);
+    /** Also sets designLevelCalculationMethod accordingly. */
+    bool setWattsperPerson(double wattsperPerson);
 
-  bool setFractionLatent(double fractionLatent);
-  void resetFractionLatent();
+    bool setFractionLatent(double fractionLatent);
+    void resetFractionLatent();
 
-  bool setFractionRadiant(double fractionRadiant);
-  void resetFractionRadiant();
+    bool setFractionRadiant(double fractionRadiant);
+    void resetFractionRadiant();
 
-  bool setFractionLost(double fractionLost);
-  void resetFractionLost();
+    bool setFractionLost(double fractionLost);
+    void resetFractionLost();
 
-  bool setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate);
-  void resetCarbonDioxideGenerationRate();
+    bool setCarbonDioxideGenerationRate(double carbonDioxideGenerationRate);
+    void resetCarbonDioxideGenerationRate();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the design level represented by this definition, assuming floorArea (m^2) and
+    /** Returns the design level represented by this definition, assuming floorArea (m^2) and
    *  numPeople. */
-  double getDesignLevel(double floorArea, double numPeople) const;
+    double getDesignLevel(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) and
+    /** Returns the watts/m^2 represented by this definition, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerFloorArea(double floorArea, double numPeople) const;
+    double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this definition, assuming floorArea (m^2) and
+    /** Returns the watts/person represented by this definition, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerPerson(double floorArea, double numPeople) const;
+    double getPowerPerPerson(double floorArea, double numPeople) const;
 
-  /** If method is a \link validDesignLevelCalculationMethodValues valid design level
+    /** If method is a \link validDesignLevelCalculationMethodValues valid design level
    *  calculation method \endlink, changes this definition to an equivalent power level, under
    *  the assumptions of floorArea (m^2) and numPeople. */
-  bool setDesignLevelCalculationMethod(const std::string& method,
-                                       double floorArea,
-                                       double numPeople);
+    bool setDesignLevelCalculationMethod(const std::string& method, double floorArea, double numPeople);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GasEquipmentDefinition_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GasEquipmentDefinition_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit GasEquipmentDefinition(std::shared_ptr<detail::GasEquipmentDefinition_Impl> impl);
+    explicit GasEquipmentDefinition(std::shared_ptr<detail::GasEquipmentDefinition_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GasEquipmentDefinition");
+  };
 
-  REGISTER_LOGGER("openstudio.model.GasEquipmentDefinition");
-};
+  /** \relates GasEquipmentDefinition*/
+  typedef boost::optional<GasEquipmentDefinition> OptionalGasEquipmentDefinition;
 
-/** \relates GasEquipmentDefinition*/
-typedef boost::optional<GasEquipmentDefinition> OptionalGasEquipmentDefinition;
+  /** \relates GasEquipmentDefinition*/
+  typedef std::vector<GasEquipmentDefinition> GasEquipmentDefinitionVector;
 
-/** \relates GasEquipmentDefinition*/
-typedef std::vector<GasEquipmentDefinition> GasEquipmentDefinitionVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_GASEQUIPMENTDEFINITION_HPP
-
+#endif  // MODEL_GASEQUIPMENTDEFINITION_HPP

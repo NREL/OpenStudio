@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,36 +39,34 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateCurveFunctionalPressureDrop(
-    const WorkspaceObject& workspaceObject )
-{
-  CurveFunctionalPressureDrop curve(m_model);
+  boost::optional<ModelObject> ReverseTranslator::translateCurveFunctionalPressureDrop(const WorkspaceObject& workspaceObject) {
+    CurveFunctionalPressureDrop curve(m_model);
 
-  OptionalString s;
-  OptionalDouble d;
+    OptionalString s;
+    OptionalDouble d;
 
-  if ((s = workspaceObject.name())) {
-    curve.setName(*s);
+    if ((s = workspaceObject.name())) {
+      curve.setName(*s);
+    }
+
+    if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::Diameter))) {
+      curve.setDiameter(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::MinorLossCoefficient))) {
+      curve.setMinorLossCoefficient(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::Length))) {
+      curve.setLength(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::Roughness))) {
+      curve.setRoughness(*d);
+    }
+    if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::FixedFrictionFactor))) {
+      curve.setFixedFrictionFactor(*d);
+    }
+
+    return curve;
   }
 
-  if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::Diameter))) {
-    curve.setDiameter(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::MinorLossCoefficient))) {
-    curve.setMinorLossCoefficient(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::Length))) {
-    curve.setLength(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::Roughness))) {
-    curve.setRoughness(*d);
-  }
-  if ((d = workspaceObject.getDouble(Curve_Functional_PressureDropFields::FixedFrictionFactor))) {
-    curve.setFixedFrictionFactor(*d);
-  }
-
-  return curve;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

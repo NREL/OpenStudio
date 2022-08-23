@@ -1,0 +1,24 @@
+
+OS:Version,
+  {34878cc2-9e69-40f2-bc00-afb143270dde}, !- Handle
+  3.0.0;                                  !- Version Identifier
+
+OS:Coil:Cooling:DX:MultiSpeed,
+  {b2a088a6-f401-4e6a-bb9c-dac196b46d81}, !- Handle
+  Coil Cooling DX Multi Speed 1,          !- Name
+  ,                                       !- Availability Schedule
+  ,                                       !- Air Inlet Node
+  ,                                       !- Air Outlet Node
+  ,                                       !- Condenser Air Inlet Node
+  EvaporativelyCooled,                    !- Condenser Type
+  ,                                       !- Supply Water Storage Tank
+  ,                                       !- Condensate Collection Water Storage Tank
+  No,                                     !- Apply Part Load Fraction to Speeds Greater than 1
+  ,                                       !- Apply Latent Degradation to Speeds Greater than 1
+  0,                                      !- Crankcase Heater Capacity {W}
+  10,                                     !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  0,                                      !- Basin Heater Capacity {W/K}
+  2,                                      !- Basin Heater Setpoint Temperature {C}
+  ,                                       !- Basin Heater Operating Schedule
+  Electricity;                            !- Fuel Type
+

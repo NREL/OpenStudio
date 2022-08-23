@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,44 +36,45 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class ShadingMaterial_Impl;
-}
+  namespace detail {
+    class ShadingMaterial_Impl;
+  }
 
-/** ShadingMaterial is a FenestrationMaterial that serves as a base class for objects like Blind,
+  /** ShadingMaterial is a FenestrationMaterial that serves as a base class for objects like Blind,
  *  Screen, and Shade. */
-class MODEL_API ShadingMaterial : public FenestrationMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ShadingMaterial : public FenestrationMaterial
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~ShadingMaterial() {}
+    virtual ~ShadingMaterial() {}
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ShadingMaterial_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ShadingMaterial_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::ShadingMaterial_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::ShadingMaterial_Impl;
 
-  ShadingMaterial(IddObjectType type,const Model& model);
+    ShadingMaterial(IddObjectType type, const Model& model);
 
-  explicit ShadingMaterial(std::shared_ptr<detail::ShadingMaterial_Impl> impl);
+    explicit ShadingMaterial(std::shared_ptr<detail::ShadingMaterial_Impl> impl);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ShadingMaterial");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ShadingMaterial");
+  };
 
-/** \relates ShadingMaterial */
-typedef boost::optional<ShadingMaterial> OptionalShadingMaterial;
+  /** \relates ShadingMaterial */
+  typedef boost::optional<ShadingMaterial> OptionalShadingMaterial;
 
-/** \relates ShadingMaterial */
-typedef std::vector<ShadingMaterial> ShadingMaterialVector;
+  /** \relates ShadingMaterial */
+  typedef std::vector<ShadingMaterial> ShadingMaterialVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SHADINGMATERIAL_HPP
+#endif  // MODEL_SHADINGMATERIAL_HPP

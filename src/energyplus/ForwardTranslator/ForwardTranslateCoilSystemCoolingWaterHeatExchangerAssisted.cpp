@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -61,129 +61,122 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCoilSystemCoolingWaterHeatExchangerAssisted(
-    CoilSystemCoolingWaterHeatExchangerAssisted & modelObject)
-{
-  IdfObject idfObject(IddObjectType::CoilSystem_Cooling_Water_HeatExchangerAssisted);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject>
+    ForwardTranslator::translateCoilSystemCoolingWaterHeatExchangerAssisted(CoilSystemCoolingWaterHeatExchangerAssisted& modelObject) {
+    IdfObject idfObject(IddObjectType::CoilSystem_Cooling_Water_HeatExchangerAssisted);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  if( auto s = modelObject.name() ) {
-    idfObject.setName(*s);
-  }
-
-  std::string hxSupplyAirInletNodeName;
-  // InletNodeName
-  if( auto mo = modelObject.inletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      hxSupplyAirInletNodeName = node->name().get();
+    // Name
+    if (auto s = modelObject.name()) {
+      idfObject.setName(*s);
     }
-  }
 
-  std::string hxExhaustAirOutletNodeName;
-  // OutletNodeName
-  if( auto mo = modelObject.outletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      hxExhaustAirOutletNodeName = node->name().get();
-    }
-  }
-
-  std::string hxSupplyAirOutletNodeName = modelObject.name().get() + " HX Supply Air Outlet - Cooling Inlet Node";
-  std::string hxExhaustAirInletNodeName = modelObject.name().get() + " HX Exhaust Air Inlet - Cooling Outlet Node";
-
-  // HeatExchangerObjectType
-  // HeatExchangerName
-  {
-    auto hx = modelObject.heatExchanger();
-    if( auto idf = translateAndMapModelObject(hx) ) {
-      idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::HeatExchangerObjectType,idf->iddObject().name());
-      idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::HeatExchangerName,idf->name().get());
-      if( idf->iddObject().type() == IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent ) {
-        idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName,hxSupplyAirInletNodeName);
-        idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletNodeName,hxSupplyAirOutletNodeName);
-        idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName,hxExhaustAirOutletNodeName);
-        idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirInletNodeName,hxExhaustAirInletNodeName);
+    std::string hxSupplyAirInletNodeName;
+    // InletNodeName
+    if (auto mo = modelObject.inletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        hxSupplyAirInletNodeName = node->name().get();
       }
     }
-  }
 
-  // CoolingCoilObjectType
-  // CoolingCoilName
-  {
-    auto coolingCoil = modelObject.coolingCoil();
-    if( auto idf = translateAndMapModelObject(coolingCoil) ) {
-      idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::CoolingCoilObjectType,idf->iddObject().name());
-      idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::CoolingCoilName,idf->name().get());
-      if( idf->iddObject().type() == IddObjectType::Coil_Cooling_Water ) {
-        idf->setString(Coil_Cooling_WaterFields::AirInletNodeName,hxSupplyAirOutletNodeName);
-        idf->setString(Coil_Cooling_WaterFields::AirOutletNodeName,hxExhaustAirInletNodeName);
-      // Add IddObjectType::Coil_Cooling_Water_DetailedGeometry if implemented
-      } else {
-        // Shouldn't happen, accepts only Coil:Cooling:Water or Coil:Cooling:Water:DetailedGeometry
-        // Shouldn't happen, accepts only Coil:Cooling:DX:SingleSpeed or Coil:Cooling:DX:VariableSpeed
-        LOG(Fatal, modelObject.briefDescription() << " appears to have a cooling coil that shouldn't have been accepted: "
-            << coolingCoil.briefDescription());
-        OS_ASSERT(false);
+    std::string hxExhaustAirOutletNodeName;
+    // OutletNodeName
+    if (auto mo = modelObject.outletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        hxExhaustAirOutletNodeName = node->name().get();
       }
     }
-    if( auto coilCoolingWater = coolingCoil.optionalCast<CoilCoolingWater>() ) {
-      if( auto controller = coilCoolingWater->controllerWaterCoil() ) {
-        if( auto idf = translateAndMapModelObject(controller.get()) ) {
-          idf->setString(Controller_WaterCoilFields::SensorNodeName,hxExhaustAirInletNodeName);
+
+    std::string hxSupplyAirOutletNodeName = modelObject.name().get() + " HX Supply Air Outlet - Cooling Inlet Node";
+    std::string hxExhaustAirInletNodeName = modelObject.name().get() + " HX Exhaust Air Inlet - Cooling Outlet Node";
+
+    // HeatExchangerObjectType
+    // HeatExchangerName
+    {
+      auto hx = modelObject.heatExchanger();
+      if (auto idf = translateAndMapModelObject(hx)) {
+        idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::HeatExchangerObjectType, idf->iddObject().name());
+        idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::HeatExchangerName, idf->name().get());
+        if (idf->iddObject().type() == IddObjectType::HeatExchanger_AirToAir_SensibleAndLatent) {
+          idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirInletNodeName, hxSupplyAirInletNodeName);
+          idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::SupplyAirOutletNodeName, hxSupplyAirOutletNodeName);
+          idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirOutletNodeName, hxExhaustAirOutletNodeName);
+          idf->setString(HeatExchanger_AirToAir_SensibleAndLatentFields::ExhaustAirInletNodeName, hxExhaustAirInletNodeName);
         }
       }
     }
 
-    // Need a SPM:MixedAir on the Coil:Cooling:Water outlet node (that we **created** just above in IDF directly, so it won't get picked up by the
-    // ForwardTranslateAirLoopHVAC method)
-    if( boost::optional<AirLoopHVAC> _airLoop = modelObject.airLoopHVAC() ) {
-      std::vector<StraightComponent> fans;
-      std::vector<ModelObject> supplyComponents = _airLoop->supplyComponents();
-
-      for( auto it = supplyComponents.begin();
-           it != supplyComponents.end();
-           ++it )
-      {
-        if( boost::optional<FanVariableVolume> variableFan = it->optionalCast<FanVariableVolume>() ) {
-          fans.insert(fans.begin(), *variableFan);
+    // CoolingCoilObjectType
+    // CoolingCoilName
+    {
+      auto coolingCoil = modelObject.coolingCoil();
+      if (auto idf = translateAndMapModelObject(coolingCoil)) {
+        idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::CoolingCoilObjectType, idf->iddObject().name());
+        idfObject.setString(CoilSystem_Cooling_Water_HeatExchangerAssistedFields::CoolingCoilName, idf->name().get());
+        if (idf->iddObject().type() == IddObjectType::Coil_Cooling_Water) {
+          idf->setString(Coil_Cooling_WaterFields::AirInletNodeName, hxSupplyAirOutletNodeName);
+          idf->setString(Coil_Cooling_WaterFields::AirOutletNodeName, hxExhaustAirInletNodeName);
+          // Add IddObjectType::Coil_Cooling_Water_DetailedGeometry if implemented
+        } else {
+          // Shouldn't happen, accepts only Coil:Cooling:Water or Coil:Cooling:Water:DetailedGeometry
+          // Shouldn't happen, accepts only Coil:Cooling:DX:SingleSpeed or Coil:Cooling:DX:VariableSpeed
+          LOG(Fatal, modelObject.briefDescription()
+                       << " appears to have a cooling coil that shouldn't have been accepted: " << coolingCoil.briefDescription());
+          OS_ASSERT(false);
         }
-        else if( boost::optional<FanConstantVolume> constantFan = it->optionalCast<FanConstantVolume>() ) {
-          fans.insert(fans.begin(), *constantFan);
+      }
+      if (auto coilCoolingWater = coolingCoil.optionalCast<CoilCoolingWater>()) {
+        if (auto controller = coilCoolingWater->controllerWaterCoil()) {
+          if (auto idf = translateAndMapModelObject(controller.get())) {
+            idf->setString(Controller_WaterCoilFields::SensorNodeName, hxExhaustAirInletNodeName);
+          }
         }
       }
 
-      if( !fans.empty() ) {
-        // Fan closest to the supply outlet node
-        StraightComponent fan = fans.front();
-        OptionalNode inletNode = fan.inletModelObject()->optionalCast<Node>();
-        OptionalNode outletNode = fan.outletModelObject()->optionalCast<Node>();
+      // Need a SPM:MixedAir on the Coil:Cooling:Water outlet node (that we **created** just above in IDF directly, so it won't get picked up by the
+      // ForwardTranslateAirLoopHVAC method)
+      if (boost::optional<AirLoopHVAC> _airLoop = modelObject.airLoopHVAC()) {
+        std::vector<StraightComponent> fans;
+        std::vector<ModelObject> supplyComponents = _airLoop->supplyComponents();
 
-        // No reason this wouldn't be ok at this point really...
-        // TODO: change to OS_ASSERT?
-        if( inletNode && outletNode ) {
+        for (auto it = supplyComponents.begin(); it != supplyComponents.end(); ++it) {
+          if (boost::optional<FanVariableVolume> variableFan = it->optionalCast<FanVariableVolume>()) {
+            fans.insert(fans.begin(), *variableFan);
+          } else if (boost::optional<FanConstantVolume> constantFan = it->optionalCast<FanConstantVolume>()) {
+            fans.insert(fans.begin(), *constantFan);
+          }
+        }
 
-          IdfObject idf_spm(IddObjectType::SetpointManager_MixedAir);
-          idf_spm.setString(SetpointManager_MixedAirFields::Name, hxExhaustAirInletNodeName + " OS Default SPM");
-          idf_spm.setString(SetpointManager_MixedAirFields::ControlVariable,"Temperature");
+        if (!fans.empty()) {
+          // Fan closest to the supply outlet node
+          StraightComponent fan = fans.front();
+          OptionalNode inletNode = fan.inletModelObject()->optionalCast<Node>();
+          OptionalNode outletNode = fan.outletModelObject()->optionalCast<Node>();
 
-          Node supplyOutletNode = _airLoop->supplyOutletNode();
-          idf_spm.setString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName, supplyOutletNode.name().get());
+          // No reason this wouldn't be ok at this point really...
+          // TODO: change to OS_ASSERT?
+          if (inletNode && outletNode) {
 
-          idf_spm.setString(SetpointManager_MixedAirFields::FanInletNodeName, inletNode->name().get());
-          idf_spm.setString(SetpointManager_MixedAirFields::FanOutletNodeName, outletNode->name().get());
+            IdfObject idf_spm(IddObjectType::SetpointManager_MixedAir);
+            idf_spm.setString(SetpointManager_MixedAirFields::Name, hxExhaustAirInletNodeName + " OS Default SPM");
+            idf_spm.setString(SetpointManager_MixedAirFields::ControlVariable, "Temperature");
 
-          idf_spm.setString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName, hxExhaustAirInletNodeName);
+            Node supplyOutletNode = _airLoop->supplyOutletNode();
+            idf_spm.setString(SetpointManager_MixedAirFields::ReferenceSetpointNodeName, supplyOutletNode.name().get());
 
-          m_idfObjects.push_back(idf_spm);
+            idf_spm.setString(SetpointManager_MixedAirFields::FanInletNodeName, inletNode->name().get());
+            idf_spm.setString(SetpointManager_MixedAirFields::FanOutletNodeName, outletNode->name().get());
 
+            idf_spm.setString(SetpointManager_MixedAirFields::SetpointNodeorNodeListName, hxExhaustAirInletNodeName);
+
+            m_idfObjects.push_back(idf_spm);
+          }
         }
       }
     }
 
+    return idfObject;
   }
 
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

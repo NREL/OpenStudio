@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,9 +34,10 @@
 
 #include <ostream>
 #include <boost/optional.hpp>
+#include <string>
+#include <string_view>
 
 #include "Filesystem.hpp"
-
 
 namespace openstudio {
 
@@ -49,13 +50,13 @@ UTILITIES_API path tempDir();
 /** path to std::string. */
 UTILITIES_API std::string toString(const path& p);
 
-
 /** UTF-8 encoded char* to path*/
 UTILITIES_API path toPath(const char* s);
 
 /** UTF-8 encoded std::string to path*/
 UTILITIES_API path toPath(const std::string& s);
 
+UTILITIES_API path toPath(std::string_view s);
 
 #ifdef _WIN32
 /** UTF-16 encoded std::wstring for opening fstreams*/
@@ -68,12 +69,11 @@ UTILITIES_API std::string toSystemFilename(const path& p);
 /** Optional path*/
 typedef boost::optional<path> OptionalPath;
 
-typedef std::pair<path,path> PathPair;
+typedef std::pair<path, path> PathPair;
 
 /// Return the fully expanded Windows path name ie "c:\Progra~1" into "C:\Program Files"
 //UTILITIES_API QString longPathName(const QString& path);
 
-} // openstudio
+}  // namespace openstudio
 
-
-#endif // UTILITIES_CORE_PATH_HPP
+#endif  // UTILITIES_CORE_PATH_HPP

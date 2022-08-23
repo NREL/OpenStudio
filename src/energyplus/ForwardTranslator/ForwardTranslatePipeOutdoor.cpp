@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,47 +44,45 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePipeOutdoor(PipeOutdoor & modelObject)
-{
-  IdfObject idfObject(openstudio::IddObjectType::Pipe_Outdoor);
+  boost::optional<IdfObject> ForwardTranslator::translatePipeOutdoor(PipeOutdoor& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Pipe_Outdoor);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  if(auto node = modelObject.inletModelObject()) {
-    idfObject.setString(openstudio::Pipe_OutdoorFields::FluidInletNodeName, node->name().get());
+    if (auto node = modelObject.inletModelObject()) {
+      idfObject.setString(openstudio::Pipe_OutdoorFields::FluidInletNodeName, node->name().get());
+    }
+
+    if (auto node = modelObject.outletModelObject()) {
+      idfObject.setString(openstudio::Pipe_OutdoorFields::FluidOutletNodeName, node->name().get());
+    }
+
+    if (auto value = modelObject.name()) {
+      idfObject.setName(value.get());
+    }
+
+    if (auto construction = modelObject.construction()) {
+      idfObject.setString(openstudio::Pipe_OutdoorFields::ConstructionName, construction->name().get());
+    }
+
+    if (auto node = modelObject.ambientTemperatureOutdoorAirNode()) {
+      idfObject.setString(openstudio::Pipe_OutdoorFields::AmbientTemperatureOutdoorAirNodeName, node->name().get());
+    } else {
+      auto name = modelObject.name().get() + " OA Node";
+      IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
+      oaNodeListIdf.setString(0, name);
+      m_idfObjects.push_back(oaNodeListIdf);
+
+      idfObject.setString(openstudio::Pipe_OutdoorFields::AmbientTemperatureOutdoorAirNodeName, name);
+    }
+
+    idfObject.setDouble(openstudio::Pipe_OutdoorFields::PipeInsideDiameter, modelObject.pipeInsideDiameter());
+
+    idfObject.setDouble(openstudio::Pipe_OutdoorFields::PipeLength, modelObject.pipeLength());
+
+    return idfObject;
   }
 
-  if(auto node = modelObject.outletModelObject()) {
-    idfObject.setString(openstudio::Pipe_OutdoorFields::FluidOutletNodeName, node->name().get());
-  }
+}  // namespace energyplus
 
-  if(auto value = modelObject.name()) {
-    idfObject.setName(value.get());
-  }
-
-  if(auto construction = modelObject.construction()) {
-    idfObject.setString(openstudio::Pipe_OutdoorFields::ConstructionName, construction->name().get());
-  }
-
-  if(auto node = modelObject.ambientTemperatureOutdoorAirNode()) {
-    idfObject.setString(openstudio::Pipe_OutdoorFields::AmbientTemperatureOutdoorAirNodeName, node->name().get());
-  } else {
-    auto name = modelObject.name().get() + " OA Node";
-    IdfObject oaNodeListIdf(openstudio::IddObjectType::OutdoorAir_NodeList);
-    oaNodeListIdf.setString(0,name);
-    m_idfObjects.push_back(oaNodeListIdf);
-
-    idfObject.setString(openstudio::Pipe_OutdoorFields::AmbientTemperatureOutdoorAirNodeName, name);
-  }
-
-  idfObject.setDouble(openstudio::Pipe_OutdoorFields::PipeInsideDiameter, modelObject.pipeInsideDiameter());
-
-  idfObject.setDouble(openstudio::Pipe_OutdoorFields::PipeLength, modelObject.pipeLength());
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

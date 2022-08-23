@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,19 +30,22 @@
 #include "init_openstudio.hpp"
 #include <ruby.h>
 #include <stdexcept>
+#include <iostream>
 
-
-extern "C" {
+extern "C"
+{
   void Init_openstudioairflow(void);
   void Init_openstudiomodelcore(void);
   void Init_openstudiomodelsimulation(void);
   void Init_openstudioutilitiescore(void);
   void Init_openstudioutilitiesplot(void);
   void Init_openstudioenergyplus(void);
+  void Init_openstudioepjson(void);
   void Init_openstudioosversion(void);
   void Init_openstudioutilitiesdata(void);
   void Init_openstudioutilitiessql(void);
-  void Init_openstudiogbxml(void); 
+  void Init_openstudiogbxml(void);
+  void Init_openstudiogltf(void);
   void Init_openstudiomodelgenerators(void);
   void Init_openstudioradiance(void);
   void Init_openstudioutilitiestime(void);
@@ -66,11 +69,12 @@ extern "C" {
   void Init_openstudiomodel(void);
   void Init_openstudiomodelresources(void);
   void Init_openstudioutilitiesidf(void);
+  void Init_openstudioutilitiesxml(void);
 
   ////void Init_openstudiomodeleditor(void); # happens separately in openstudio.so only, for SketchUp plug-in
 }
 
-void init_openstudio_internal() {
+void init_openstudio_internal_basic() {
   rb_provide("openstudio");
   rb_provide("openstudio.so");
 
@@ -107,9 +111,15 @@ void init_openstudio_internal() {
   Init_openstudioutilitiesfiletypes();
   rb_provide("openstudioutilitiesfiletypes");
   rb_provide("openstudioutilitiesfiletypes.so");
+  Init_openstudioutilitiesxml();
+  rb_provide("openstudioutilitiesxml");
+  rb_provide("openstudioutilitiesxml.so");
   Init_openstudioutilities();
   rb_provide("openstudioutilities");
   rb_provide("openstudioutilities.so");
+}
+
+void init_openstudio_internal_extended() {
   Init_openstudiomodel();
   rb_provide("openstudiomodel");
   rb_provide("openstudiomodel.so");
@@ -149,15 +159,22 @@ void init_openstudio_internal() {
   Init_openstudiomodelgenerators();
   rb_provide("openstudiomodelgenerators");
   rb_provide("openstudiomodelgenerators.so");
+
   Init_openstudioenergyplus();
   rb_provide("openstudioenergyplus");
   rb_provide("openstudioenergyplus.so");
+  Init_openstudioepjson();
+  rb_provide("openstudioepjson");
+  rb_provide("openstudioepjson.so");
   Init_openstudioradiance();
   rb_provide("openstudioradiance");
   rb_provide("openstudioradiance.so");
   Init_openstudiogbxml();
   rb_provide("openstudiogbxml");
   rb_provide("openstudiogbxml.so");
+  Init_openstudiogltf();
+  rb_provide("openstudiogltf");
+  rb_provide("openstudiogltf.so");
   Init_openstudioairflow();
   rb_provide("openstudioairflow");
   rb_provide("openstudioairflow.so");
@@ -350,45 +367,42 @@ end # module OpenStudio
 )END";
 
   evalString(ruby_typedef_script);
+}
 
+void init_openstudio_internal() {
+  init_openstudio_internal_basic();
+  init_openstudio_internal_extended();
 }
 
 class RubyException : public std::runtime_error
 {
-  public:
+ public:
+  RubyException(const std::string& msg, const std::string& location) : std::runtime_error(msg), m_location(location) {}
 
-    RubyException(const std::string& msg, const std::string& location)
-      : std::runtime_error(msg), m_location(location)
-    {}
+  virtual ~RubyException() throw() {}
 
-    virtual ~RubyException() throw() {}
+  std::string location() const {
+    return m_location;
+  }
 
-    std::string location() const {return m_location;}
-
-  private:
-
-    std::string m_location;
-
+ private:
+  std::string m_location;
 };
 
-static VALUE evaluateSimpleImpl(VALUE arg)
-{
+static VALUE evaluateSimpleImpl(VALUE arg) {
   return rb_eval_string(StringValuePtr(arg));
 }
 
-void evalString(const std::string &t_str)
-{
+void evalString(const std::string& t_str) {
 
   VALUE val = rb_str_new2(t_str.c_str());
   int error;
 
-  rb_protect(evaluateSimpleImpl,val,&error);
+  rb_protect(evaluateSimpleImpl, val, &error);
 
-
-  if (error != 0)
-  {
+  if (error != 0) {
     VALUE errval = rb_eval_string("$!.to_s");
-    char *str = StringValuePtr(errval);
+    char* str = StringValuePtr(errval);
     std::string err(str);
 
     VALUE locval = rb_eval_string("$@.to_s");
@@ -398,6 +412,3 @@ void evalString(const std::string &t_str)
     throw RubyException(err, loc);
   }
 }
-
-
-

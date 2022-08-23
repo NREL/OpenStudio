@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,132 +35,125 @@
 #include "ZoneHVACComponent.hpp"
 #include "ZoneHVACComponent_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** CoilHeatingWaterBaseboard_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingWaterBaseboard.*/
-  class MODEL_API CoilHeatingWaterBaseboard_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilHeatingWaterBaseboard_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingWaterBaseboard.*/
+    class MODEL_API CoilHeatingWaterBaseboard_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilHeatingWaterBaseboard_Impl(const IdfObject& idfObject,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      CoilHeatingWaterBaseboard_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingWaterBaseboard_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      CoilHeatingWaterBaseboard_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingWaterBaseboard_Impl(const CoilHeatingWaterBaseboard_Impl& other,
-                                   Model_Impl* model,
-                                   bool keepHandle);
+      CoilHeatingWaterBaseboard_Impl(const CoilHeatingWaterBaseboard_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilHeatingWaterBaseboard_Impl() {}
+      virtual ~CoilHeatingWaterBaseboard_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string heatingDesignCapacityMethod() const;
+      std::string heatingDesignCapacityMethod() const;
 
-    boost::optional<double> heatingDesignCapacity() const;
+      boost::optional<double> heatingDesignCapacity() const;
 
-    bool isHeatingDesignCapacityAutosized() const;
+      bool isHeatingDesignCapacityAutosized() const;
 
-    double heatingDesignCapacityPerFloorArea() const;
+      double heatingDesignCapacityPerFloorArea() const;
 
-    double fractionofAutosizedHeatingDesignCapacity() const;
+      double fractionofAutosizedHeatingDesignCapacity() const;
 
-    boost::optional<double> uFactorTimesAreaValue() const;
+      boost::optional<double> uFactorTimesAreaValue() const;
 
-    bool isUFactorTimesAreaValueDefaulted() const;
+      bool isUFactorTimesAreaValueDefaulted() const;
 
-    bool isUFactorTimesAreaValueAutosized() const;
+      bool isUFactorTimesAreaValueAutosized() const;
 
-    boost::optional<double> maximumWaterFlowRate() const;
+      boost::optional<double> maximumWaterFlowRate() const;
 
-    bool isMaximumWaterFlowRateDefaulted() const;
+      bool isMaximumWaterFlowRateDefaulted() const;
 
-    bool isMaximumWaterFlowRateAutosized() const;
+      bool isMaximumWaterFlowRateAutosized() const;
 
-    double convergenceTolerance() const;
+      double convergenceTolerance() const;
 
-    bool isConvergenceToleranceDefaulted() const;
+      bool isConvergenceToleranceDefaulted() const;
 
-  boost::optional<double> autosizedHeatingDesignCapacity() const ;
+      boost::optional<double> autosizedHeatingDesignCapacity() const;
 
-  boost::optional<double> autosizedUFactorTimesAreaValue() const ;
+      boost::optional<double> autosizedUFactorTimesAreaValue() const;
 
-  boost::optional<double> autosizedMaximumWaterFlowRate() const ;
+      boost::optional<double> autosizedMaximumWaterFlowRate() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Setters */
-    //@{
-    bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+      //@}
+      /** @name Setters */
+      //@{
+      bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
 
-    bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
+      bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
 
-    void autosizeHeatingDesignCapacity();
+      void autosizeHeatingDesignCapacity();
 
-    bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
+      bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
 
-    bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
+      bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
-    bool setUFactorTimesAreaValue(boost::optional<double> uFactorTimesAreaValue);
+      bool setUFactorTimesAreaValue(boost::optional<double> uFactorTimesAreaValue);
 
-    void resetUFactorTimesAreaValue();
+      void resetUFactorTimesAreaValue();
 
-    void autosizeUFactorTimesAreaValue();
+      void autosizeUFactorTimesAreaValue();
 
-    bool setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate);
+      bool setMaximumWaterFlowRate(boost::optional<double> maximumWaterFlowRate);
 
-    void resetMaximumWaterFlowRate();
+      void resetMaximumWaterFlowRate();
 
-    void autosizeMaximumWaterFlowRate();
+      void autosizeMaximumWaterFlowRate();
 
-    bool setConvergenceTolerance(double convergenceTolerance);
+      bool setConvergenceTolerance(double convergenceTolerance);
 
-    void resetConvergenceTolerance();
+      void resetConvergenceTolerance();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    bool addToNode(Node & node) override;
+      bool addToNode(Node& node) override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilHeatingWaterBaseboard");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilHeatingWaterBaseboard");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_COILHEATINGWATERBASEBOARD_IMPL_HPP
+#endif  // MODEL_COILHEATINGWATERBASEBOARD_IMPL_HPP

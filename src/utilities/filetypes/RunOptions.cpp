@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,46 +33,52 @@
 #include "../core/Assert.hpp"
 #include <json/json.h>
 
-namespace openstudio{
-namespace detail{
+namespace openstudio {
+namespace detail {
 
   RunOptions_Impl::RunOptions_Impl()
-    : m_debug(false), m_fast(false), m_preserveRunDir(false), m_skipExpandObjects(false), m_skipEnergyPlusPreprocess(false), m_cleanup(true)
-  {}
+    : m_debug(false),
+      m_epjson(false),
+      m_fast(false),
+      m_preserveRunDir(false),
+      m_skipExpandObjects(false),
+      m_skipEnergyPlusPreprocess(false),
+      m_cleanup(true) {}
 
-  RunOptions_Impl::~RunOptions_Impl()
-  {}
+  RunOptions_Impl::~RunOptions_Impl() {}
 
-  void RunOptions_Impl::onUpdate()
-  {
+  void RunOptions_Impl::onUpdate() {
     this->onChange.nano_emit();
   }
 
-  std::string RunOptions_Impl::string() const
-  {
+  std::string RunOptions_Impl::string() const {
     Json::Value value;
 
-    if (m_debug){
+    if (m_debug) {
       value["debug"] = m_debug;
     }
 
-    if (m_fast){
+    if (m_epjson) {
+      value["epjson"] = m_epjson;
+    }
+
+    if (m_fast) {
       value["fast"] = m_fast;
     }
 
-    if (m_preserveRunDir){
+    if (m_preserveRunDir) {
       value["preserve_run_dir"] = m_preserveRunDir;
     }
 
-    if (m_skipExpandObjects){
+    if (m_skipExpandObjects) {
       value["skip_expand_objects"] = m_skipExpandObjects;
     }
 
-    if (m_skipEnergyPlusPreprocess){
+    if (m_skipEnergyPlusPreprocess) {
       value["skip_energyplus_preprocess"] = m_skipEnergyPlusPreprocess;
     }
 
-    if (m_customOutputAdapter){
+    if (m_customOutputAdapter) {
       Json::Value outputAdapter;
       outputAdapter["custom_file_name"] = m_customOutputAdapter->customFileName();
       outputAdapter["class_name"] = m_customOutputAdapter->className();
@@ -91,6 +97,19 @@ namespace detail{
       value["output_adapter"] = outputAdapter;
     }
 
+    if (!m_forwardTranslateOptions.empty()) {
+      Json::Value options;
+      Json::CharReaderBuilder rbuilder;
+      std::istringstream ss(m_forwardTranslateOptions);
+      std::string formattedErrors;
+      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &options, &formattedErrors);
+      if (parsingSuccessful) {
+        value["ft_options"] = options;
+      } else {
+        LOG(Warn, "Couldn't parse forwardTranslateOptions's options='" << m_forwardTranslateOptions << "'. Error: '" << formattedErrors << "'.");
+      }
+    }
+
     // Write to string
     Json::StreamWriterBuilder wbuilder;
     // mimic the old StyledWriter behavior:
@@ -100,164 +119,165 @@ namespace detail{
     return result;
   }
 
-  bool RunOptions_Impl::debug() const
-  {
+  bool RunOptions_Impl::debug() const {
     return m_debug;
   }
 
-  bool RunOptions_Impl::setDebug(bool debug)
-  {
+  bool RunOptions_Impl::setDebug(bool debug) {
     m_debug = debug;
     onUpdate();
     return true;
   }
 
-  void RunOptions_Impl::resetDebug()
-  {
+  void RunOptions_Impl::resetDebug() {
     m_debug = false;
     onUpdate();
   }
 
-  bool RunOptions_Impl::fast() const
-  {
+  bool RunOptions_Impl::epjson() const {
+    return m_epjson;
+  }
+
+  bool RunOptions_Impl::setEpjson(bool epjson) {
+    m_epjson = epjson;
+    onUpdate();
+    return true;
+  }
+
+  void RunOptions_Impl::resetEpjson() {
+    m_epjson = false;
+    onUpdate();
+  }
+
+  bool RunOptions_Impl::fast() const {
     return m_fast;
   }
 
-  bool RunOptions_Impl::setFast(bool fast)
-  {
+  bool RunOptions_Impl::setFast(bool fast) {
     m_fast = fast;
     onUpdate();
     return true;
   }
 
-  void RunOptions_Impl::resetFast()
-  {
+  void RunOptions_Impl::resetFast() {
     m_fast = false;
     onUpdate();
   }
 
-  bool RunOptions_Impl::preserveRunDir() const
-  {
+  bool RunOptions_Impl::preserveRunDir() const {
     return m_preserveRunDir;
   }
 
-  bool RunOptions_Impl::setPreserveRunDir(bool preserve)
-  {
+  bool RunOptions_Impl::setPreserveRunDir(bool preserve) {
     m_preserveRunDir = preserve;
     onUpdate();
     return true;
   }
 
-  void RunOptions_Impl::resetPreserveRunDir()
-  {
+  void RunOptions_Impl::resetPreserveRunDir() {
     m_preserveRunDir = false;
     onUpdate();
   }
 
-  bool RunOptions_Impl::skipExpandObjects() const
-  {
+  bool RunOptions_Impl::skipExpandObjects() const {
     return m_skipExpandObjects;
   }
 
-  bool RunOptions_Impl::setSkipExpandObjects(bool skip)
-  {
+  bool RunOptions_Impl::setSkipExpandObjects(bool skip) {
     m_skipExpandObjects = skip;
     onUpdate();
     return true;
   }
 
-  void RunOptions_Impl::resetSkipExpandObjects()
-  {
+  void RunOptions_Impl::resetSkipExpandObjects() {
     m_skipExpandObjects = false;
     onUpdate();
   }
 
-  bool RunOptions_Impl::skipEnergyPlusPreprocess() const
-  {
+  bool RunOptions_Impl::skipEnergyPlusPreprocess() const {
     return m_skipEnergyPlusPreprocess;
   }
 
-  bool RunOptions_Impl::setSkipEnergyPlusPreprocess(bool skip)
-  {
+  bool RunOptions_Impl::setSkipEnergyPlusPreprocess(bool skip) {
     m_skipEnergyPlusPreprocess = skip;
     onUpdate();
     return true;
   }
 
-  void RunOptions_Impl::resetSkipEnergyPlusPreprocess()
-  {
+  void RunOptions_Impl::resetSkipEnergyPlusPreprocess() {
     m_skipEnergyPlusPreprocess = false;
     onUpdate();
   }
 
-  bool RunOptions_Impl::cleanup() const
-  {
+  bool RunOptions_Impl::cleanup() const {
     return m_cleanup;
   }
 
-  bool RunOptions_Impl::setCleanup(bool cleanup)
-  {
+  bool RunOptions_Impl::setCleanup(bool cleanup) {
     m_cleanup = cleanup;
     onUpdate();
     return true;
   }
 
-  void RunOptions_Impl::resetCleanup()
-  {
+  void RunOptions_Impl::resetCleanup() {
     m_cleanup = true;
     onUpdate();
   }
 
-  boost::optional<CustomOutputAdapter> RunOptions_Impl::customOutputAdapter() const
-  {
+  boost::optional<CustomOutputAdapter> RunOptions_Impl::customOutputAdapter() const {
     return m_customOutputAdapter;
   }
 
-  bool RunOptions_Impl::setCustomOutputAdapter(const CustomOutputAdapter& adapter)
-  {
+  bool RunOptions_Impl::setCustomOutputAdapter(const CustomOutputAdapter& adapter) {
     m_customOutputAdapter = adapter;
     onUpdate();
     return true;
   }
 
-  void RunOptions_Impl::resetCustomOutputAdapter()
-  {
+  void RunOptions_Impl::resetCustomOutputAdapter() {
     m_customOutputAdapter.reset();
     onUpdate();
   }
 
-} //detail
+  std::string RunOptions_Impl::forwardTranslateOptions() const {
+    return m_forwardTranslateOptions;
+  }
+
+  bool RunOptions_Impl::setForwardTranslateOptions(const std::string& options) {
+    m_forwardTranslateOptions = options;
+    onUpdate();
+    return true;
+  }
+
+  void RunOptions_Impl::resetForwardTranslateOptions() {
+    m_forwardTranslateOptions.clear();
+    onUpdate();
+  }
+
+}  // namespace detail
 
 CustomOutputAdapter::CustomOutputAdapter(const std::string& customFileName, const std::string& className, const std::string& options)
-  : m_customFileName(customFileName), m_className(className), m_options(options)
-{}
+  : m_customFileName(customFileName), m_className(className), m_options(options) {}
 
-std::string CustomOutputAdapter::customFileName() const
-{
+std::string CustomOutputAdapter::customFileName() const {
   return m_customFileName;
 }
 
-std::string CustomOutputAdapter::className() const
-{
+std::string CustomOutputAdapter::className() const {
   return m_className;
 }
 
-std::string CustomOutputAdapter::options() const
-{
+std::string CustomOutputAdapter::options() const {
   return m_options;
 }
 
-RunOptions::RunOptions()
-  : m_impl(std::shared_ptr<detail::RunOptions_Impl>(new detail::RunOptions_Impl()))
-{
+RunOptions::RunOptions() : m_impl(std::shared_ptr<detail::RunOptions_Impl>(new detail::RunOptions_Impl())) {
   OS_ASSERT(getImpl<detail::RunOptions_Impl>());
 }
 
-RunOptions::~RunOptions()
-{}
+RunOptions::~RunOptions() {}
 
-boost::optional<RunOptions> RunOptions::fromString(const std::string& s)
-{
+boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
   boost::optional<RunOptions> result;
 
   // We let it fail with a warning message
@@ -273,29 +293,33 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s)
 
   result = RunOptions();
 
-  if (value.isMember("debug") && value["debug"].isBool()){
+  if (value.isMember("epjson") && value["epjson"].isBool()) {
+    result->setEpjson(value["epjson"].asBool());
+  }
+
+  if (value.isMember("debug") && value["debug"].isBool()) {
     result->setDebug(value["debug"].asBool());
   }
 
-  if (value.isMember("fast") && value["fast"].isBool()){
+  if (value.isMember("fast") && value["fast"].isBool()) {
     result->setFast(value["fast"].asBool());
   }
 
-  if (value.isMember("preserve_run_dir") && value["preserve_run_dir"].isBool()){
+  if (value.isMember("preserve_run_dir") && value["preserve_run_dir"].isBool()) {
     result->setPreserveRunDir(value["preserve_run_dir"].asBool());
   }
 
-  if (value.isMember("skip_expand_objects") && value["skip_expand_objects"].isBool()){
+  if (value.isMember("skip_expand_objects") && value["skip_expand_objects"].isBool()) {
     result->setSkipExpandObjects(value["skip_expand_objects"].asBool());
   }
 
-  if (value.isMember("skip_energyplus_preprocess") && value["skip_energyplus_preprocess"].isBool()){
+  if (value.isMember("skip_energyplus_preprocess") && value["skip_energyplus_preprocess"].isBool()) {
     result->setSkipEnergyPlusPreprocess(value["skip_energyplus_preprocess"].asBool());
   }
 
-  if (value.isMember("output_adapter")){
+  if (value.isMember("output_adapter")) {
     Json::Value outputAdapter = value["output_adapter"];
-    if (outputAdapter.isMember("custom_file_name") && outputAdapter.isMember("class_name")){
+    if (outputAdapter.isMember("custom_file_name") && outputAdapter.isMember("class_name")) {
       std::string customFileName = outputAdapter["custom_file_name"].asString();
       std::string className = outputAdapter["class_name"].asString();
       Json::Value options = outputAdapter["options"];
@@ -310,122 +334,143 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s)
     }
   }
 
+  if (value.isMember("ft_options")) {
+    Json::Value options = value["ft_options"];
+
+    // Do some filtering to avoid passing bogus values to workflow-gem, and checking that it's correctly a boolean
+    Json::Value cleaned_options;
+    for (auto& known_opt : {"runcontrolspecialdays", "ip_tabular_output", "no_lifecyclecosts", "no_sqlite_output", "no_html_output",
+                            "no_variable_dictionary", "no_space_translation"}) {
+      if (options.isMember(known_opt) && options[known_opt].isBool()) {
+        cleaned_options[known_opt] = options[known_opt].asBool();
+      }
+    }
+
+    Json::StreamWriterBuilder wbuilder;
+    // mimic the old StyledWriter behavior:
+    wbuilder["indentation"] = "   ";
+    std::string optionString = Json::writeString(wbuilder, cleaned_options);
+
+    result->setForwardTranslateOptions(optionString);
+  }
+
   return result;
 }
 
-std::string RunOptions::string() const
-{
+std::string RunOptions::string() const {
   return getImpl<detail::RunOptions_Impl>()->string();
 }
 
-bool RunOptions::debug() const
-{
+bool RunOptions::debug() const {
   return getImpl<detail::RunOptions_Impl>()->debug();
 }
 
-bool RunOptions::setDebug(bool debug)
-{
+bool RunOptions::setDebug(bool debug) {
   return getImpl<detail::RunOptions_Impl>()->setDebug(debug);
 }
 
-void RunOptions::resetDebug()
-{
+void RunOptions::resetDebug() {
   getImpl<detail::RunOptions_Impl>()->resetDebug();
 }
 
-bool RunOptions::fast() const
-{
+bool RunOptions::epjson() const {
+  return getImpl<detail::RunOptions_Impl>()->epjson();
+}
+
+bool RunOptions::setEpjson(bool epjson) {
+  return getImpl<detail::RunOptions_Impl>()->setEpjson(epjson);
+}
+
+void RunOptions::resetEpjson() {
+  getImpl<detail::RunOptions_Impl>()->resetEpjson();
+}
+
+bool RunOptions::fast() const {
   return getImpl<detail::RunOptions_Impl>()->fast();
 }
 
-bool RunOptions::setFast(bool fast)
-{
+bool RunOptions::setFast(bool fast) {
   return getImpl<detail::RunOptions_Impl>()->setFast(fast);
 }
-void RunOptions::resetFast()
-{
+void RunOptions::resetFast() {
   getImpl<detail::RunOptions_Impl>()->resetFast();
 }
 
-bool RunOptions::preserveRunDir() const
-{
+bool RunOptions::preserveRunDir() const {
   return getImpl<detail::RunOptions_Impl>()->preserveRunDir();
 }
 
-bool RunOptions::setPreserveRunDir(bool preserve)
-{
+bool RunOptions::setPreserveRunDir(bool preserve) {
   return getImpl<detail::RunOptions_Impl>()->setPreserveRunDir(preserve);
 }
 
-void RunOptions::resetPreserveRunDir()
-{
+void RunOptions::resetPreserveRunDir() {
   getImpl<detail::RunOptions_Impl>()->resetPreserveRunDir();
 }
 
-bool RunOptions::skipExpandObjects() const
-{
+bool RunOptions::skipExpandObjects() const {
   return getImpl<detail::RunOptions_Impl>()->skipExpandObjects();
 }
 
-bool RunOptions::setSkipExpandObjects(bool preserve)
-{
-  return getImpl<detail::RunOptions_Impl>()->setSkipExpandObjects(preserve);
+bool RunOptions::setSkipExpandObjects(bool skip) {
+  return getImpl<detail::RunOptions_Impl>()->setSkipExpandObjects(skip);
 }
 
-void RunOptions::resetSkipExpandObjects()
-{
+void RunOptions::resetSkipExpandObjects() {
   getImpl<detail::RunOptions_Impl>()->resetSkipExpandObjects();
 }
 
-bool RunOptions::skipEnergyPlusPreprocess() const
-{
+bool RunOptions::skipEnergyPlusPreprocess() const {
   return getImpl<detail::RunOptions_Impl>()->skipEnergyPlusPreprocess();
 }
 
-bool RunOptions::setSkipEnergyPlusPreprocess(bool preserve)
-{
-  return getImpl<detail::RunOptions_Impl>()->setSkipEnergyPlusPreprocess(preserve);
+bool RunOptions::setSkipEnergyPlusPreprocess(bool skip) {
+  return getImpl<detail::RunOptions_Impl>()->setSkipEnergyPlusPreprocess(skip);
 }
 
-void RunOptions::resetSkipEnergyPlusPreprocess()
-{
+void RunOptions::resetSkipEnergyPlusPreprocess() {
   getImpl<detail::RunOptions_Impl>()->resetSkipEnergyPlusPreprocess();
 }
 
-bool RunOptions::cleanup() const
-{
+bool RunOptions::cleanup() const {
   return getImpl<detail::RunOptions_Impl>()->cleanup();
 }
 
-bool RunOptions::setCleanup(bool cleanup)
-{
+bool RunOptions::setCleanup(bool cleanup) {
   return getImpl<detail::RunOptions_Impl>()->setCleanup(cleanup);
 }
 
-void RunOptions::resetCleanup()
-{
+void RunOptions::resetCleanup() {
   getImpl<detail::RunOptions_Impl>()->resetCleanup();
 }
 
-boost::optional<CustomOutputAdapter> RunOptions::customOutputAdapter() const
-{
+boost::optional<CustomOutputAdapter> RunOptions::customOutputAdapter() const {
   return getImpl<detail::RunOptions_Impl>()->customOutputAdapter();
 }
 
-bool RunOptions::setCustomOutputAdapter(const CustomOutputAdapter& adapter)
-{
+bool RunOptions::setCustomOutputAdapter(const CustomOutputAdapter& adapter) {
   return getImpl<detail::RunOptions_Impl>()->setCustomOutputAdapter(adapter);
 }
 
-void RunOptions::resetCustomOutputAdapter()
-{
+void RunOptions::resetCustomOutputAdapter() {
   getImpl<detail::RunOptions_Impl>()->resetCustomOutputAdapter();
 }
 
-std::ostream& operator<<(std::ostream& os, const RunOptions& runOptions)
-{
+std::string RunOptions::forwardTranslateOptions() const {
+  return getImpl<detail::RunOptions_Impl>()->forwardTranslateOptions();
+}
+
+bool RunOptions::setForwardTranslateOptions(const std::string& options) {
+  return getImpl<detail::RunOptions_Impl>()->setForwardTranslateOptions(options);
+}
+
+void RunOptions::resetForwardTranslateOptions() {
+  getImpl<detail::RunOptions_Impl>()->resetForwardTranslateOptions();
+}
+
+std::ostream& operator<<(std::ostream& os, const RunOptions& runOptions) {
   os << runOptions.string();
   return os;
 }
 
-} // openstudio
+}  // namespace openstudio

@@ -14,6 +14,7 @@
 %{
   #include <utilities/geometry/Transformation.hpp>
   #include <utilities/geometry/BoundingBox.hpp>
+  #include <utilities/geometry/Polyhedron.hpp>
   #include <utilities/data/TimeSeries.hpp>
   #include <utilities/sql/SqlFile.hpp>
 
@@ -29,6 +30,12 @@
   %ignore openstudio::model::Space::thermalZone;
   %ignore openstudio::model::Space::setThermalZone;
   %ignore openstudio::model::Space::waterUseEquipment;
+
+  %ignore openstudio::model::DaylightingDeviceTubular::transitionZones;
+  %ignore openstudio::model::DaylightingDeviceTubular::addTransitionZone;
+  %ignore openstudio::model::DaylightingDeviceTubular::addTransitionZones;
+
+
   // Ignore this ctor, use of zone.getZonePropertyUserViewFactorsBySurfaceName is preferred anyways (so I won't even reimplement it using partial classes)
   %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::ZonePropertyUserViewFactorsBySurfaceName(const ThermalZone& thermalZone);
   %ignore openstudio::model::ZonePropertyUserViewFactorsBySurfaceName::thermalZone;
@@ -41,6 +48,9 @@
 
   // ignore generator objects for now, add back in with partial classes in ModelGenerators.i
   %ignore openstudio::model::PlanarSurface::generatorPhotovoltaics;
+
+  // Overload resolution: prefer std::string over char const *
+  %ignore openstudio::model::BuildingUnit::setFeature(std::string const&, char const*);
 
   // DLM: this is a proof of concept section to see how attributes work in C#
   %include <attribute.i>
@@ -59,6 +69,12 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 // These cannot easily be wrapped due to default constructor requirements in the swig wrapper of std::pair
 %ignore openstudio::model::Space::getDefaultConstructionWithSearchDistance;
 %ignore openstudio::model::PlanarSurface::constructionWithSearchDistance;
@@ -74,6 +90,7 @@ class Schedule;
 class DefaultScheduleType;
 class DefaultScheduleSet;
 class ThermalZone;
+class TransitionZone;
 class BuildingStory;
 class BuildingUnit;
 class ShadingSurfaceGroup;
@@ -96,6 +113,7 @@ class IlluminanceMap;
 class GlareSensor;
 class SpaceInfiltrationDesignFlowRate;
 class SpaceInfiltrationEffectiveLeakageArea;
+class SpaceInfiltrationFlowCoefficient;
 class DesignSpecificationOutdoorAir;
 class SpaceLoadInstance;
 class SpaceLoadDefinition;
@@ -147,6 +165,15 @@ class ExteriorLoadInstance;
   }
 };
 
+%extend openstudio::model::SurroundingSurfaceGroup {
+  // Use the overloaded operator<< for string representation
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
+    return os.str();
+  }
+};
+
 UNIQUEMODELOBJECT_TEMPLATES(Site);
 UNIQUEMODELOBJECT_TEMPLATES(Facility);
 UNIQUEMODELOBJECT_TEMPLATES(Building);
@@ -167,8 +194,12 @@ MODELOBJECT_TEMPLATES(ShadingSurfaceGroup);
 MODELOBJECT_TEMPLATES(ShadingSurface);
 MODELOBJECT_TEMPLATES(InteriorPartitionSurfaceGroup);
 MODELOBJECT_TEMPLATES(InteriorPartitionSurface);
+MODELOBJECT_TEMPLATES(SurfaceControlMovableInsulation);
 MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideCoefficients);
 MODELOBJECT_TEMPLATES(SurfacePropertyOtherSideConditionsModel);
+MODELOBJECT_TEMPLATES(SurfacePropertyLocalEnvironment);
+MODELOBJECT_TEMPLATES(SurroundingSurfaceGroup); // helper for extensible fields for SurfacePropertySurroundingSurfaces
+MODELOBJECT_TEMPLATES(SurfacePropertySurroundingSurfaces);
 MODELOBJECT_TEMPLATES(SurfacePropertyConvectionCoefficients);
 MODELOBJECT_TEMPLATES(People);
 MODELOBJECT_TEMPLATES(Luminaire);
@@ -181,16 +212,19 @@ MODELOBJECT_TEMPLATES(OtherEquipment);
 MODELOBJECT_TEMPLATES(InternalMass);
 MODELOBJECT_TEMPLATES(SpaceInfiltrationDesignFlowRate);
 MODELOBJECT_TEMPLATES(SpaceInfiltrationEffectiveLeakageArea);
+MODELOBJECT_TEMPLATES(SpaceInfiltrationFlowCoefficient);
 MODELOBJECT_TEMPLATES(DaylightingControl);
 MODELOBJECT_TEMPLATES(GlareSensor);
 MODELOBJECT_TEMPLATES(IlluminanceMap);
 MODELOBJECT_TEMPLATES(DaylightingDeviceShelf);
+MODELOBJECT_TEMPLATES(DaylightingDeviceTubular);
+MODELOBJECT_TEMPLATES(DaylightingDeviceLightWell);
 MODELOBJECT_TEMPLATES(SpaceType);
 MODELOBJECT_TEMPLATES(LightingSimulationZone);
-MODELOBJECT_TEMPLATES(CustomBlock);
+MODELOBJECT_TEMPLATES(CustomBlock); // Helper class defined in FoundationKiva
 MODELOBJECT_TEMPLATES(FoundationKiva);
 MODELOBJECT_TEMPLATES(SurfacePropertyExposedFoundationPerimeter);
-MODELOBJECT_TEMPLATES(ViewFactor);
+MODELOBJECT_TEMPLATES(ViewFactor); // Helper class defined in ZonePropertyUserViewFactorsBySurfaceName
 MODELOBJECT_TEMPLATES(ZonePropertyUserViewFactorsBySurfaceName);
 MODELOBJECT_TEMPLATES(ExteriorLoadInstance);
 MODELOBJECT_TEMPLATES(ExteriorLights);
@@ -217,8 +251,11 @@ SWIG_MODELOBJECT(ShadingSurfaceGroup, 1);
 SWIG_MODELOBJECT(ShadingSurface, 1);
 SWIG_MODELOBJECT(InteriorPartitionSurfaceGroup, 1);
 SWIG_MODELOBJECT(InteriorPartitionSurface, 1);
+SWIG_MODELOBJECT(SurfaceControlMovableInsulation, 1);
 SWIG_MODELOBJECT(SurfacePropertyOtherSideCoefficients, 1);
 SWIG_MODELOBJECT(SurfacePropertyOtherSideConditionsModel, 1);
+SWIG_MODELOBJECT(SurfacePropertyLocalEnvironment, 1);
+SWIG_MODELOBJECT(SurfacePropertySurroundingSurfaces, 1);
 SWIG_MODELOBJECT(SurfacePropertyConvectionCoefficients, 1);
 SWIG_MODELOBJECT(People, 1);
 SWIG_MODELOBJECT(Luminaire, 1);
@@ -231,10 +268,13 @@ SWIG_MODELOBJECT(OtherEquipment, 1);
 SWIG_MODELOBJECT(InternalMass, 1);
 SWIG_MODELOBJECT(SpaceInfiltrationDesignFlowRate, 1);
 SWIG_MODELOBJECT(SpaceInfiltrationEffectiveLeakageArea, 1);
+SWIG_MODELOBJECT(SpaceInfiltrationFlowCoefficient, 1);
 SWIG_MODELOBJECT(DaylightingControl, 1);
 SWIG_MODELOBJECT(GlareSensor, 1);
 SWIG_MODELOBJECT(IlluminanceMap, 1);
 SWIG_MODELOBJECT(DaylightingDeviceShelf, 1);
+SWIG_MODELOBJECT(DaylightingDeviceTubular, 1);
+SWIG_MODELOBJECT(DaylightingDeviceLightWell, 1);
 SWIG_MODELOBJECT(SpaceType, 1);
 SWIG_MODELOBJECT(LightingSimulationZone, 1);
 SWIG_MODELOBJECT(FoundationKiva, 1);
@@ -251,15 +291,58 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
   %inline {
     namespace openstudio {
       namespace model {
+
         openstudio::model::SpaceType getPlenumSpaceType(openstudio::model::Model model){
           return model.plenumSpaceType();
         }
+
+        boost::optional<Building> building(const openstudio::model::Model& model) {
+          return model.building();
+        }
+
+        boost::optional<Facility> facility(const openstudio::model::Model& model) {
+          return model.facility();
+        }
+
+        boost::optional<Site> site(const openstudio::model::Model& model) {
+          return model.site();
+        }
+
+
         std::vector<openstudio::model::Space> getSpaces(const openstudio::model::SpaceType& spaceType){
           return spaceType.spaces();
         }
 
         std::vector<openstudio::model::SubSurface> getSubSurfaces(const openstudio::model::ShadingControl& sc) {
           return sc.subSurfaces();
+        }
+
+        boost::optional<unsigned> getSubSurfaceIndexForShadingControl(const openstudio::model::ShadingControl& sc, const openstudio::model::SubSurface& subSurface) {
+          return sc.subSurfaceIndex(subSurface);
+        }
+
+        bool addSubSurfaceForShadingControl(openstudio::model::ShadingControl sc, const openstudio::model::SubSurface& subSurface) {
+          return sc.addSubSurface(subSurface);
+        }
+
+        bool addSubSurfaceForShadingControlWithIndex(openstudio::model::ShadingControl sc, const openstudio::model::SubSurface& subSurface, unsigned index) {
+          return sc.addSubSurface(subSurface, index);
+        }
+
+        bool setSubSurfaceIndexForShadingControl(openstudio::model::ShadingControl sc, const openstudio::model::SubSurface& subSurface, unsigned index) {
+          return sc.setSubSurfaceIndex(subSurface, index);
+        }
+
+        bool removeSubSurfaceForShadingControl(openstudio::model::ShadingControl sc,  const openstudio::model::SubSurface& subSurface) {
+          return sc.removeSubSurface(subSurface);
+        }
+
+        bool addSubSurfacesForShadingControl(openstudio::model::ShadingControl sc, const std::vector<openstudio::model::SubSurface>& subSurfaces) {
+          return sc.addSubSurfaces(subSurfaces);
+        }
+
+        bool setSubSurfacesForShadingControl(openstudio::model::ShadingControl sc, const std::vector<openstudio::model::SubSurface>& subSurfaces) {
+          return sc.setSubSurfaces(subSurfaces);
         }
 
         // EMS Actuator setter for Space (reimplemented from ModelCore.i)
@@ -293,11 +376,22 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
     using System.Runtime.InteropServices;
 
     public partial class Model : Workspace {
-      public SpaceType plenumSpaceType()
-      {
+      public SpaceType plenumSpaceType() {
         return OpenStudio.OpenStudioModelGeometry.getPlenumSpaceType(this);
       }
-    }
+
+      public OptionalBuilding building() {
+        return OpenStudio.OpenStudioModelGeometry.building(this);
+      }
+
+      public OptionalFacility facility() {
+        return OpenStudio.OpenStudioModelGeometry.facility(this);
+      }
+
+      public OptionalSite site() {
+        return OpenStudio.OpenStudioModelGeometry.site(this);
+      }
+    } // partial class Model
 
     public partial class SpaceType : ResourceObject {
       public SpaceVector spaces()
@@ -309,6 +403,34 @@ SWIG_MODELOBJECT(ExteriorWaterEquipment, 1);
     public partial class ShadingControl : ResourceObject {
       public SubSurfaceVector subSurfaces() {
         return OpenStudio.OpenStudioModelGeometry.getSubSurfaces(this);
+      }
+
+      public OptionalUnsigned subSurfaceIndex(OpenStudio.SubSurface subSurface) {
+        return OpenStudio.OpenStudioModelGeometry.getSubSurfaceIndexForShadingControl(this, subSurface);
+      }
+
+      public bool addSubSurface(OpenStudio.SubSurface subSurface) {
+        return OpenStudio.OpenStudioModelGeometry.addSubSurfaceForShadingControl(this, subSurface);
+      }
+
+      public bool addSubSurface(OpenStudio.SubSurface subSurface, uint index) {
+        return OpenStudio.OpenStudioModelGeometry.addSubSurfaceForShadingControlWithIndex(this, subSurface, index);
+      }
+
+      public bool setSubSurfaceIndex(OpenStudio.SubSurface subSurface, uint index) {
+        return OpenStudio.OpenStudioModelGeometry.setSubSurfaceIndexForShadingControl(this, subSurface, index);
+      }
+
+      public bool removeSubSurface(OpenStudio.SubSurface subSurface) {
+        return OpenStudio.OpenStudioModelGeometry.removeSubSurfaceForShadingControl(this, subSurface);
+      }
+
+      public bool addSubSurfaces(SubSurfaceVector subSurfaces) {
+        return OpenStudio.OpenStudioModelGeometry.addSubSurfacesForShadingControl(this, subSurfaces);
+      }
+
+      public bool setSubSurfaces(SubSurfaceVector subSurfaces) {
+        return OpenStudio.OpenStudioModelGeometry.setSubSurfacesForShadingControl(this, subSurfaces);
       }
     }
 

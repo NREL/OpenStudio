@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,103 +38,109 @@
 #include <vector>
 
 namespace pugi {
-  class xml_node;
+class xml_node;
 }
 
-namespace openstudio{
+namespace openstudio {
 
-  /** BCLFileReference is a class for tracking files that come with BCL components and measures.
+/** BCLFileReference is a class for tracking files that come with BCL components and measures.
   **/
-  class UTILITIES_API BCLFileReference {
+class UTILITIES_API BCLFileReference
+{
 
-  public:
+ public:
+  /** @name Constructors */
+  //@{
 
-    /** @name Constructors */
-    //@{
+  /// Constructor from file path.
+  explicit BCLFileReference(const openstudio::path& measureRootDir, const openstudio::path& relativePath, const bool setMembers = false);
 
-    /// Constructor from file path.
-    explicit BCLFileReference(const openstudio::path& path, const bool setMembers = false);
+  //@}
+  /** @name Destructor */
+  //@{
 
-    //@}
-    /** @name Destructor */
-    //@{
+  /// Virtual destructor
+  virtual ~BCLFileReference();
 
-    /// Virtual destructor
-    virtual ~BCLFileReference();
+  //@}
+  /** @name Getters */
+  //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+  /// Returns absolute path to file.
+  openstudio::path path() const;
 
-    /// Returns path to file.
-    openstudio::path path() const;
+  // Returns path to file, relative to measure root directory (including subdirectory, eg 'docs/subfolder/docs.rb')
+  openstudio::path relativePath() const;
 
-    /// Returns the last recorded checksum.
-    std::string checksum() const;
+  /// Returns the last recorded checksum.
+  std::string checksum() const;
 
-    std::string softwareProgram() const;
+  std::string softwareProgram() const;
 
-    std::string softwareProgramVersion() const;
+  std::string softwareProgramVersion() const;
 
-    boost::optional<VersionString> minCompatibleVersion() const;
+  boost::optional<VersionString> minCompatibleVersion() const;
 
-    boost::optional<VersionString> maxCompatibleVersion() const;
+  boost::optional<VersionString> maxCompatibleVersion() const;
 
-    std::string fileName() const;
+  // This returns filename to write to the XML. It omits the subdirectory based on usageType
+  // eg: a file at docs/subfolder/docs.rb has a usageType='doc' and filename() = 'subfolder/docs.rb'
+  std::string fileName() const;
 
-    std::string fileType() const;
+  std::string fileType() const;
 
-    std::string usageType() const;
+  std::string usageType() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+  //@}
+  /** @name Setters */
+  //@{
 
-    void setChecksum(const std::string& checksum);
+  void setChecksum(const std::string& checksum);
 
-    void setSoftwareProgram(const std::string& softwareProgram);
+  void setSoftwareProgram(const std::string& softwareProgram);
 
-    void setSoftwareProgramVersion(const std::string& softwareProgramVersion);
+  void setSoftwareProgramVersion(const std::string& softwareProgramVersion);
 
-    void setMinCompatibleVersion(const VersionString& minCompatibleVersion);
+  void setMinCompatibleVersion(const VersionString& minCompatibleVersion);
 
-    void resetMinCompatibleVersion();
+  void resetMinCompatibleVersion();
 
-    void setMaxCompatibleVersion(const VersionString& maxCompatibleVersion);
+  void setMaxCompatibleVersion(const VersionString& maxCompatibleVersion);
 
-    void resetMaxCompatibleVersion();
+  void resetMaxCompatibleVersion();
 
-    void setUsageType(const std::string& usageType);
+  void setUsageType(const std::string& usageType);
 
-    //@}
-    /** @name Operators */
-    //@{
+  //@}
+  /** @name Operators */
+  //@{
 
-    void writeValues(pugi::xml_node &element) const;
+  void writeValues(pugi::xml_node& element) const;
 
-    /// Check if the file has been updated and return if so.  Will update checksum.
-    bool checkForUpdate();
+  /// Check if the file has been updated and return if so.  Will update checksum.
+  bool checkForUpdate();
 
-    //@}
+  //@}
 
-  private:
-    // configure logging
-    REGISTER_LOGGER("utilities.bcl.BCLFileReference");
+ private:
+  // configure logging
+  REGISTER_LOGGER("utilities.bcl.BCLFileReference");
 
-    openstudio::path m_path;
-    std::string m_checksum;
-    std::string m_softwareProgram;
-    std::string m_softwareProgramVersion;
-    boost::optional<VersionString> m_minCompatibleVersion;
-    boost::optional<VersionString> m_maxCompatibleVersion;
-    std::string m_fileName;
-    std::string m_fileType;
-    std::string m_usageType;
-  };
+  openstudio::path m_measureRootDir;
+  openstudio::path m_path;
+  std::string m_checksum;
+  std::string m_softwareProgram;
+  std::string m_softwareProgramVersion;
+  boost::optional<VersionString> m_minCompatibleVersion;
+  boost::optional<VersionString> m_maxCompatibleVersion;
+  std::string m_fileName;
+  std::string m_fileType;
+  std::string m_usageType;
+};
 
-  /** Prints BCLFileReference to os. \relates BCLFileReference */
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const BCLFileReference& file);
+/** Prints BCLFileReference to os. \relates BCLFileReference */
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const BCLFileReference& file);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_BCL_BCLFILEREFERENCE_HPP
+#endif  // UTILITIES_BCL_BCLFILEREFERENCE_HPP

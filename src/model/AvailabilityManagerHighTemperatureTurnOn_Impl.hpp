@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,70 +36,64 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** AvailabilityManagerHighTemperatureTurnOn_Impl is a AvailabilityManager_Impl that is the implementation class for AvailabilityManagerHighTemperatureTurnOn.*/
-  class MODEL_API AvailabilityManagerHighTemperatureTurnOn_Impl : public AvailabilityManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AvailabilityManagerHighTemperatureTurnOn_Impl is a AvailabilityManager_Impl that is the implementation class for AvailabilityManagerHighTemperatureTurnOn.*/
+    class MODEL_API AvailabilityManagerHighTemperatureTurnOn_Impl : public AvailabilityManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AvailabilityManagerHighTemperatureTurnOn_Impl(const IdfObject& idfObject,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      AvailabilityManagerHighTemperatureTurnOn_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AvailabilityManagerHighTemperatureTurnOn_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      AvailabilityManagerHighTemperatureTurnOn_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AvailabilityManagerHighTemperatureTurnOn_Impl(const AvailabilityManagerHighTemperatureTurnOn_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      AvailabilityManagerHighTemperatureTurnOn_Impl(const AvailabilityManagerHighTemperatureTurnOn_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AvailabilityManagerHighTemperatureTurnOn_Impl() {}
+      virtual ~AvailabilityManagerHighTemperatureTurnOn_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Node> sensorNode() const;
+      boost::optional<Node> sensorNode() const;
 
-    double temperature() const;
+      double temperature() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setSensorNode(const Node& node);
+      bool setSensorNode(const Node& node);
 
-    void resetSensorNode();
+      void resetSensorNode();
 
-    bool setTemperature(double temperature);
+      bool setTemperature(double temperature);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AvailabilityManagerHighTemperatureTurnOn");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AvailabilityManagerHighTemperatureTurnOn");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AVAILABILITYMANAGERHIGHTEMPERATURETURNON_IMPL_HPP
-
+#endif  // MODEL_AVAILABILITYMANAGERHIGHTEMPERATURETURNON_IMPL_HPP

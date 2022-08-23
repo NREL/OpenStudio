@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,33 +48,25 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ZoneVentilationWindandStackOpenArea_Impl::ZoneVentilationWindandStackOpenArea_Impl(const IdfObject& idfObject,
-                                                                         Model_Impl* model,
-                                                                         bool keepHandle)
-    : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ZoneVentilationWindandStackOpenArea::iddObjectType());
-  }
+    ZoneVentilationWindandStackOpenArea_Impl::ZoneVentilationWindandStackOpenArea_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ZoneVentilationWindandStackOpenArea::iddObjectType());
+    }
 
-  ZoneVentilationWindandStackOpenArea_Impl::ZoneVentilationWindandStackOpenArea_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                         Model_Impl* model,
-                                                                         bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ZoneVentilationWindandStackOpenArea::iddObjectType());
-  }
+    ZoneVentilationWindandStackOpenArea_Impl::ZoneVentilationWindandStackOpenArea_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                       Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ZoneVentilationWindandStackOpenArea::iddObjectType());
+    }
 
-  ZoneVentilationWindandStackOpenArea_Impl::ZoneVentilationWindandStackOpenArea_Impl(const ZoneVentilationWindandStackOpenArea_Impl& other,
-                                                                         Model_Impl* model,
-                                                                         bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {}
+    ZoneVentilationWindandStackOpenArea_Impl::ZoneVentilationWindandStackOpenArea_Impl(const ZoneVentilationWindandStackOpenArea_Impl& other,
+                                                                                       Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
-  const std::vector<std::string>& ZoneVentilationWindandStackOpenArea_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
+    const std::vector<std::string>& ZoneVentilationWindandStackOpenArea_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
       // Not appropriate: all variables reported at the zone level
       //result.push_back("Zone Ventilation Sensible Heat Loss Energy");
       //result.push_back("Zone Ventilation Sensible Heat Gain Energy");
@@ -89,590 +81,552 @@ namespace detail {
       //result.push_back("Zone Ventilation Mass");
       //result.push_back("Zone Ventilation Mass Flow Rate");
       //result.push_back("Zone Ventilation Air Change Rate");
-      //result.push_back("Zone Ventilation Fan Electric Energy");
+      //result.push_back("Zone Ventilation Fan Electricity Energy");
       //result.push_back("Zone Ventilation Air Inlet Temperature");
-    return result;
-  }
+      return result;
+    }
 
-  IddObjectType ZoneVentilationWindandStackOpenArea_Impl::iddObjectType() const {
-    return ZoneVentilationWindandStackOpenArea::iddObjectType();
-  }
+    IddObjectType ZoneVentilationWindandStackOpenArea_Impl::iddObjectType() const {
+      return ZoneVentilationWindandStackOpenArea::iddObjectType();
+    }
 
-  std::vector<ScheduleTypeKey> ZoneVentilationWindandStackOpenArea_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea","Opening Area Fraction Schedule"));
+    std::vector<ScheduleTypeKey> ZoneVentilationWindandStackOpenArea_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea", "Opening Area Fraction Schedule"));
+      }
+      if (std::find(b, e, OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperatureScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea", "Minimum Indoor Temperature"));
+      }
+      if (std::find(b, e, OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperatureScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea", "Maximum Indoor Temperature"));
+      }
+      if (std::find(b, e, OS_ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperatureScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea", "Delta Temperature"));
+      }
+      if (std::find(b, e, OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperatureScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea", "Minimum Outdoor Temperature"));
+      }
+      if (std::find(b, e, OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperatureScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea", "Maximum Outdoor Temperature"));
+      }
+      return result;
     }
-    if (std::find(b,e,OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperatureScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea","Minimum Indoor Temperature"));
-    }
-    if (std::find(b,e,OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperatureScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea","Maximum Indoor Temperature"));
-    }
-    if (std::find(b,e,OS_ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperatureScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea","Delta Temperature"));
-    }
-    if (std::find(b,e,OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperatureScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea","Minimum Outdoor Temperature"));
-    }
-    if (std::find(b,e,OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperatureScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneVentilationWindandStackOpenArea","Maximum Outdoor Temperature"));
-    }
-    return result;
-  }
 
+    boost::optional<Schedule> ZoneVentilationWindandStackOpenArea_Impl::optionalOpeningAreaFractionSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName);
+    }
 
-  boost::optional<Schedule> ZoneVentilationWindandStackOpenArea_Impl::optionalOpeningAreaFractionSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName);
-  }
-
-  Schedule ZoneVentilationWindandStackOpenArea_Impl::openingAreaFractionSchedule() const {
-    boost::optional<Schedule> value = optionalOpeningAreaFractionSchedule();
-    if (!value)
-    {
-      // it is an error if we get here, however we don't want to crash
-      // so we hook up to global always on schedule
-      LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
-      value = this->model().alwaysOnDiscreteSchedule();
+    Schedule ZoneVentilationWindandStackOpenArea_Impl::openingAreaFractionSchedule() const {
+      boost::optional<Schedule> value = optionalOpeningAreaFractionSchedule();
+      if (!value) {
+        // it is an error if we get here, however we don't want to crash
+        // so we hook up to global always on schedule
+        LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
+        value = this->model().alwaysOnDiscreteSchedule();
+        OS_ASSERT(value);
+        const_cast<ZoneVentilationWindandStackOpenArea_Impl*>(this)->setOpeningAreaFractionSchedule(*value);
+        value = optionalOpeningAreaFractionSchedule();
+      }
       OS_ASSERT(value);
-      const_cast<ZoneVentilationWindandStackOpenArea_Impl*>(this)->setOpeningAreaFractionSchedule(*value);
-      value = optionalOpeningAreaFractionSchedule();
+      return value.get();
     }
-    OS_ASSERT(value);
-    return value.get();
-  }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setOpeningAreaFractionSchedule(Schedule& schedule) {
-    bool result = ModelObject_Impl::setSchedule(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName,
-                                                "ZoneVentilationWindandStackOpenArea",
-                                                "Opening Area Fraction Schedule",
-                                                schedule);
-    return result;
-  }
-
-
-  double ZoneVentilationWindandStackOpenArea_Impl::openingArea() const {
-    boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningArea,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ZoneVentilationWindandStackOpenArea_Impl::setOpeningArea(double openingArea) {
-    bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningArea, openingArea);
-    // OS_ASSERT(result);
-    return result;
-  }
-
-  boost::optional<double> ZoneVentilationWindandStackOpenArea_Impl::openingEffectiveness() const {
-    boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness, false);
-    return value;
-  }
-
-  bool ZoneVentilationWindandStackOpenArea_Impl::isOpeningEffectivenessAutocalculated() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "Autocalculate");
+    bool ZoneVentilationWindandStackOpenArea_Impl::setOpeningAreaFractionSchedule(Schedule& schedule) {
+      bool result = ModelObject_Impl::setSchedule(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName,
+                                                  "ZoneVentilationWindandStackOpenArea", "Opening Area Fraction Schedule", schedule);
+      return result;
     }
-    return result;
-  }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setOpeningEffectiveness(double openingEffectiveness) {
-    bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness, openingEffectiveness);
-    return result;
-  }
-
-  void ZoneVentilationWindandStackOpenArea_Impl::autocalculateOpeningEffectiveness() {
-    bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness, "autocalculate");
-    OS_ASSERT(result);
-  }
-
-  double ZoneVentilationWindandStackOpenArea_Impl::effectiveAngle() const {
-    boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::EffectiveAngle, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ZoneVentilationWindandStackOpenArea_Impl::setEffectiveAngle(double effectiveAngle) {
-    bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::EffectiveAngle, effectiveAngle);
-    // OS_ASSERT(result);
-    return result;
-  }
-
-  double ZoneVentilationWindandStackOpenArea_Impl::heightDifference() const {
-    boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::HeightDifference, true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ZoneVentilationWindandStackOpenArea_Impl::setHeightDifference(double heightDifference) {
-    bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::HeightDifference, heightDifference);
-    // OS_ASSERT(result);
-    return result;
-  }
-
-
-  boost::optional<double> ZoneVentilationWindandStackOpenArea_Impl::dischargeCoefficientforOpening() const {
-    boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening, false);
-    return value;
-  }
-
-  bool ZoneVentilationWindandStackOpenArea_Impl::isDischargeCoefficientforOpeningAutocalculated() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "Autocalculate");
+    double ZoneVentilationWindandStackOpenArea_Impl::openingArea() const {
+      boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningArea, true);
+      OS_ASSERT(value);
+      return value.get();
     }
-    return result;
-  }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setDischargeCoefficientforOpening(double dischargeCoefficientforOpening) {
-    bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening, dischargeCoefficientforOpening);
-    // OS_ASSERT(result);
-    return result;
-  }
+    bool ZoneVentilationWindandStackOpenArea_Impl::setOpeningArea(double openingArea) {
+      bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningArea, openingArea);
+      // OS_ASSERT(result);
+      return result;
+    }
 
-  void ZoneVentilationWindandStackOpenArea_Impl::autocalculateDischargeCoefficientforOpening() {
-    bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening, "autocalculate");
-    OS_ASSERT(result);
-  }
+    boost::optional<double> ZoneVentilationWindandStackOpenArea_Impl::openingEffectiveness() const {
+      boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness, false);
+      return value;
+    }
 
+    bool ZoneVentilationWindandStackOpenArea_Impl::isOpeningEffectivenessAutocalculated() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
+      }
+      return result;
+    }
 
-  double ZoneVentilationWindandStackOpenArea_Impl::minimumIndoorTemperature() const {
-    boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    bool ZoneVentilationWindandStackOpenArea_Impl::setOpeningEffectiveness(double openingEffectiveness) {
+      bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness, openingEffectiveness);
+      return result;
+    }
 
-  boost::optional<Schedule> ZoneVentilationWindandStackOpenArea_Impl::minimumIndoorTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperatureScheduleName);
-  }
+    void ZoneVentilationWindandStackOpenArea_Impl::autocalculateOpeningEffectiveness() {
+      bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness, "autocalculate");
+      OS_ASSERT(result);
+    }
 
-  double ZoneVentilationWindandStackOpenArea_Impl::maximumIndoorTemperature() const {
-    boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    double ZoneVentilationWindandStackOpenArea_Impl::effectiveAngle() const {
+      boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::EffectiveAngle, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  boost::optional<Schedule> ZoneVentilationWindandStackOpenArea_Impl::maximumIndoorTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperatureScheduleName);
-  }
+    bool ZoneVentilationWindandStackOpenArea_Impl::setEffectiveAngle(double effectiveAngle) {
+      bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::EffectiveAngle, effectiveAngle);
+      // OS_ASSERT(result);
+      return result;
+    }
 
-  double ZoneVentilationWindandStackOpenArea_Impl::deltaTemperature() const {
-    boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    double ZoneVentilationWindandStackOpenArea_Impl::heightDifference() const {
+      boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::HeightDifference, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  boost::optional<Schedule> ZoneVentilationWindandStackOpenArea_Impl::deltaTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperatureScheduleName);
-  }
+    bool ZoneVentilationWindandStackOpenArea_Impl::setHeightDifference(double heightDifference) {
+      bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::HeightDifference, heightDifference);
+      // OS_ASSERT(result);
+      return result;
+    }
 
-  double ZoneVentilationWindandStackOpenArea_Impl::minimumOutdoorTemperature() const {
-    boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    boost::optional<double> ZoneVentilationWindandStackOpenArea_Impl::dischargeCoefficientforOpening() const {
+      boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening, false);
+      return value;
+    }
 
-  boost::optional<Schedule> ZoneVentilationWindandStackOpenArea_Impl::minimumOutdoorTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperatureScheduleName);
-  }
+    bool ZoneVentilationWindandStackOpenArea_Impl::isDischargeCoefficientforOpeningAutocalculated() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
+      }
+      return result;
+    }
 
-  double ZoneVentilationWindandStackOpenArea_Impl::maximumOutdoorTemperature() const {
-    boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperature,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    bool ZoneVentilationWindandStackOpenArea_Impl::setDischargeCoefficientforOpening(double dischargeCoefficientforOpening) {
+      bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening, dischargeCoefficientforOpening);
+      // OS_ASSERT(result);
+      return result;
+    }
 
-  boost::optional<Schedule> ZoneVentilationWindandStackOpenArea_Impl::maximumOutdoorTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperatureScheduleName);
-  }
+    void ZoneVentilationWindandStackOpenArea_Impl::autocalculateDischargeCoefficientforOpening() {
+      bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening, "autocalculate");
+      OS_ASSERT(result);
+    }
 
-  double ZoneVentilationWindandStackOpenArea_Impl::maximumWindSpeed() const {
-    boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumWindSpeed,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
+    double ZoneVentilationWindandStackOpenArea_Impl::minimumIndoorTemperature() const {
+      boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
+    boost::optional<Schedule> ZoneVentilationWindandStackOpenArea_Impl::minimumIndoorTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperatureScheduleName);
+    }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setMinimumIndoorTemperature(double minimumIndoorTemperature) {
-    bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperature, minimumIndoorTemperature);
-    return result;
-  }
+    double ZoneVentilationWindandStackOpenArea_Impl::maximumIndoorTemperature() const {
+      boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setMinimumIndoorTemperatureSchedule(Schedule& schedule) {
-    bool result = ModelObject_Impl::setSchedule(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperatureScheduleName,
-                              "ZoneVentilationWindandStackOpenArea",
-                              "Minimum Indoor Temperature",
-                              schedule);
-    return result;
-  }
+    boost::optional<Schedule> ZoneVentilationWindandStackOpenArea_Impl::maximumIndoorTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperatureScheduleName);
+    }
 
-  void ZoneVentilationWindandStackOpenArea_Impl::resetMinimumIndoorTemperatureSchedule() {
-    bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperatureScheduleName, "");
-    OS_ASSERT(result);
-  }
+    double ZoneVentilationWindandStackOpenArea_Impl::deltaTemperature() const {
+      boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setMaximumIndoorTemperature(double maximumIndoorTemperature) {
-    bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperature, maximumIndoorTemperature);
-    return result;
-  }
+    boost::optional<Schedule> ZoneVentilationWindandStackOpenArea_Impl::deltaTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperatureScheduleName);
+    }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setMaximumIndoorTemperatureSchedule(Schedule& schedule) {
-    bool result = ModelObject_Impl::setSchedule(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperatureScheduleName,
-                              "ZoneVentilationWindandStackOpenArea",
-                              "Maximum Indoor Temperature",
-                              schedule);
-    return result;
-  }
+    double ZoneVentilationWindandStackOpenArea_Impl::minimumOutdoorTemperature() const {
+      boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  void ZoneVentilationWindandStackOpenArea_Impl::resetMaximumIndoorTemperatureSchedule() {
-    bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperatureScheduleName, "");
-    OS_ASSERT(result);
-  }
+    boost::optional<Schedule> ZoneVentilationWindandStackOpenArea_Impl::minimumOutdoorTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperatureScheduleName);
+    }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setDeltaTemperature(double deltaTemperature) {
-    bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperature, deltaTemperature);
-    return result;
-  }
+    double ZoneVentilationWindandStackOpenArea_Impl::maximumOutdoorTemperature() const {
+      boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setDeltaTemperatureSchedule(Schedule& schedule) {
-    bool result = ModelObject_Impl::setSchedule(OS_ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperatureScheduleName,
-                              "ZoneVentilationWindandStackOpenArea",
-                              "Delta Temperature",
-                              schedule);
-    return result;
-  }
+    boost::optional<Schedule> ZoneVentilationWindandStackOpenArea_Impl::maximumOutdoorTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperatureScheduleName);
+    }
 
-  void ZoneVentilationWindandStackOpenArea_Impl::resetDeltaTemperatureSchedule() {
-    bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperatureScheduleName, "");
-    OS_ASSERT(result);
-  }
+    double ZoneVentilationWindandStackOpenArea_Impl::maximumWindSpeed() const {
+      boost::optional<double> value = getDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumWindSpeed, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setMinimumOutdoorTemperature(double minimumOutdoorTemperature) {
-    bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperature, minimumOutdoorTemperature);
-    return result;
-  }
+    bool ZoneVentilationWindandStackOpenArea_Impl::setMinimumIndoorTemperature(double minimumIndoorTemperature) {
+      bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperature, minimumIndoorTemperature);
+      return result;
+    }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setMinimumOutdoorTemperatureSchedule(Schedule& schedule) {
-    bool result = ModelObject_Impl::setSchedule(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperatureScheduleName,
-                              "ZoneVentilationWindandStackOpenArea",
-                              "Minimum Outdoor Temperature",
-                              schedule);
-    return result;
-  }
+    bool ZoneVentilationWindandStackOpenArea_Impl::setMinimumIndoorTemperatureSchedule(Schedule& schedule) {
+      bool result = ModelObject_Impl::setSchedule(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperatureScheduleName,
+                                                  "ZoneVentilationWindandStackOpenArea", "Minimum Indoor Temperature", schedule);
+      return result;
+    }
 
-  void ZoneVentilationWindandStackOpenArea_Impl::resetMinimumOutdoorTemperatureSchedule() {
-    bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperatureScheduleName, "");
-    OS_ASSERT(result);
-  }
+    void ZoneVentilationWindandStackOpenArea_Impl::resetMinimumIndoorTemperatureSchedule() {
+      bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperatureScheduleName, "");
+      OS_ASSERT(result);
+    }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setMaximumOutdoorTemperature(double maximumOutdoorTemperature) {
-    bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperature, maximumOutdoorTemperature);
-    return result;
-  }
+    bool ZoneVentilationWindandStackOpenArea_Impl::setMaximumIndoorTemperature(double maximumIndoorTemperature) {
+      bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperature, maximumIndoorTemperature);
+      return result;
+    }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setMaximumOutdoorTemperatureSchedule(Schedule& schedule) {
-    bool result = ModelObject_Impl::setSchedule(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperatureScheduleName,
-                              "ZoneVentilationWindandStackOpenArea",
-                              "Maximum Outdoor Temperature",
-                              schedule);
-    return result;
-  }
+    bool ZoneVentilationWindandStackOpenArea_Impl::setMaximumIndoorTemperatureSchedule(Schedule& schedule) {
+      bool result = ModelObject_Impl::setSchedule(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperatureScheduleName,
+                                                  "ZoneVentilationWindandStackOpenArea", "Maximum Indoor Temperature", schedule);
+      return result;
+    }
 
-  void ZoneVentilationWindandStackOpenArea_Impl::resetMaximumOutdoorTemperatureSchedule() {
-    bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperatureScheduleName, "");
-    OS_ASSERT(result);
-  }
+    void ZoneVentilationWindandStackOpenArea_Impl::resetMaximumIndoorTemperatureSchedule() {
+      bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperatureScheduleName, "");
+      OS_ASSERT(result);
+    }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::setMaximumWindSpeed(double maximumWindSpeed) {
-    bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumWindSpeed, maximumWindSpeed);
-    return result;
-  }
+    bool ZoneVentilationWindandStackOpenArea_Impl::setDeltaTemperature(double deltaTemperature) {
+      bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperature, deltaTemperature);
+      return result;
+    }
 
+    bool ZoneVentilationWindandStackOpenArea_Impl::setDeltaTemperatureSchedule(Schedule& schedule) {
+      bool result = ModelObject_Impl::setSchedule(OS_ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperatureScheduleName,
+                                                  "ZoneVentilationWindandStackOpenArea", "Delta Temperature", schedule);
+      return result;
+    }
 
-  unsigned ZoneVentilationWindandStackOpenArea_Impl::inletPort() const
-  {
-    return 0; // this object has no inlet or outlet node
-  }
+    void ZoneVentilationWindandStackOpenArea_Impl::resetDeltaTemperatureSchedule() {
+      bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperatureScheduleName, "");
+      OS_ASSERT(result);
+    }
 
-  unsigned ZoneVentilationWindandStackOpenArea_Impl::outletPort() const
-  {
-    return 0; // this object has no inlet or outlet node
-  }
+    bool ZoneVentilationWindandStackOpenArea_Impl::setMinimumOutdoorTemperature(double minimumOutdoorTemperature) {
+      bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperature, minimumOutdoorTemperature);
+      return result;
+    }
 
-  boost::optional<ThermalZone> ZoneVentilationWindandStackOpenArea_Impl::thermalZone() const
-  {
-    ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
-    for( const auto & thermalZone : thermalZones )
-    {
-      std::vector<ModelObject> equipment = thermalZone.equipment();
+    bool ZoneVentilationWindandStackOpenArea_Impl::setMinimumOutdoorTemperatureSchedule(Schedule& schedule) {
+      bool result = ModelObject_Impl::setSchedule(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperatureScheduleName,
+                                                  "ZoneVentilationWindandStackOpenArea", "Minimum Outdoor Temperature", schedule);
+      return result;
+    }
 
-      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
-      {
-        return thermalZone;
+    void ZoneVentilationWindandStackOpenArea_Impl::resetMinimumOutdoorTemperatureSchedule() {
+      bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperatureScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneVentilationWindandStackOpenArea_Impl::setMaximumOutdoorTemperature(double maximumOutdoorTemperature) {
+      bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperature, maximumOutdoorTemperature);
+      return result;
+    }
+
+    bool ZoneVentilationWindandStackOpenArea_Impl::setMaximumOutdoorTemperatureSchedule(Schedule& schedule) {
+      bool result = ModelObject_Impl::setSchedule(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperatureScheduleName,
+                                                  "ZoneVentilationWindandStackOpenArea", "Maximum Outdoor Temperature", schedule);
+      return result;
+    }
+
+    void ZoneVentilationWindandStackOpenArea_Impl::resetMaximumOutdoorTemperatureSchedule() {
+      bool result = setString(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperatureScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneVentilationWindandStackOpenArea_Impl::setMaximumWindSpeed(double maximumWindSpeed) {
+      bool result = setDouble(OS_ZoneVentilation_WindandStackOpenAreaFields::MaximumWindSpeed, maximumWindSpeed);
+      return result;
+    }
+
+    unsigned ZoneVentilationWindandStackOpenArea_Impl::inletPort() const {
+      return 0;  // this object has no inlet or outlet node
+    }
+
+    unsigned ZoneVentilationWindandStackOpenArea_Impl::outletPort() const {
+      return 0;  // this object has no inlet or outlet node
+    }
+
+    boost::optional<ThermalZone> ZoneVentilationWindandStackOpenArea_Impl::thermalZone() const {
+      ModelObject thisObject = this->getObject<ModelObject>();
+      std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
+      for (const auto& thermalZone : thermalZones) {
+        std::vector<ModelObject> equipment = thermalZone.equipment();
+
+        if (std::find(equipment.begin(), equipment.end(), thisObject) != equipment.end()) {
+          return thermalZone;
+        }
+      }
+      return boost::none;
+    }
+
+    bool ZoneVentilationWindandStackOpenArea_Impl::addToThermalZone(ThermalZone& thermalZone) {
+      Model m = this->model();
+
+      if (thermalZone.model() != m) {
+        return false;
+      }
+
+      if (thermalZone.isPlenum()) {
+        return false;
+      }
+
+      removeFromThermalZone();
+
+      thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
+
+      return true;
+    }
+
+    void ZoneVentilationWindandStackOpenArea_Impl::removeFromThermalZone() {
+      if (boost::optional<ThermalZone> thermalZone = this->thermalZone()) {
+        thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
       }
     }
-    return boost::none;
-  }
 
-  bool ZoneVentilationWindandStackOpenArea_Impl::addToThermalZone(ThermalZone & thermalZone)
-  {
-    Model m = this->model();
+    std::vector<EMSActuatorNames> ZoneVentilationWindandStackOpenArea_Impl::emsActuatorNames() const {
+      std::vector<EMSActuatorNames> actuators{{"Zone Ventilation", "Air Exchange Flow Rate"}};
+      return actuators;
+    }
 
-    if( thermalZone.model() != m )
+    std::vector<std::string> ZoneVentilationWindandStackOpenArea_Impl::emsInternalVariableNames() const {
+      std::vector<std::string> types;
+      return types;
+    }
+  }  // namespace detail
+
+  ZoneVentilationWindandStackOpenArea::ZoneVentilationWindandStackOpenArea(const Model& model)
+    : ZoneHVACComponent(ZoneVentilationWindandStackOpenArea::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>());
+
     {
-      return false;
+      auto schedule = model.alwaysOnDiscreteSchedule();
+      setOpeningAreaFractionSchedule(schedule);
     }
 
-    if( thermalZone.isPlenum() )
-    {
-      return false;
-    }
-
-    removeFromThermalZone();
-
-    thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
-
-    return true;
+    setOpeningArea(0.0);
+    autocalculateOpeningEffectiveness();
+    setEffectiveAngle(0.0);
+    setHeightDifference(0.0);
+    autocalculateDischargeCoefficientforOpening();
+    setMinimumIndoorTemperature(-100.0);
+    setMaximumIndoorTemperature(100.0);
+    setDeltaTemperature(-100.0);
+    setMinimumOutdoorTemperature(-100.0);
+    setMaximumOutdoorTemperature(100.0);
+    setMaximumWindSpeed(40.0);
   }
 
-  void ZoneVentilationWindandStackOpenArea_Impl::removeFromThermalZone()
-  {
-    if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
-      thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
-    }
+  IddObjectType ZoneVentilationWindandStackOpenArea::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_ZoneVentilation_WindandStackOpenArea);
   }
 
-  std::vector<EMSActuatorNames> ZoneVentilationWindandStackOpenArea_Impl::emsActuatorNames() const {
-    std::vector<EMSActuatorNames> actuators{{"Zone Ventilation", "Air Exchange Flow Rate"}};
-    return actuators;
+  double ZoneVentilationWindandStackOpenArea::openingArea() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->openingArea();
   }
 
-  std::vector<std::string> ZoneVentilationWindandStackOpenArea_Impl::emsInternalVariableNames() const {
-    std::vector<std::string> types;
-    return types;
-  }
-} // detail
-
-ZoneVentilationWindandStackOpenArea::ZoneVentilationWindandStackOpenArea(const Model& model)
-  : ZoneHVACComponent(ZoneVentilationWindandStackOpenArea::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>());
-
-  {
-    auto schedule = model.alwaysOnDiscreteSchedule();
-    setOpeningAreaFractionSchedule(schedule);
+  bool ZoneVentilationWindandStackOpenArea::setOpeningArea(double openingArea) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setOpeningArea(openingArea);
   }
 
-  setOpeningArea(0.0);
-  autocalculateOpeningEffectiveness();
-  setEffectiveAngle(0.0);
-  setHeightDifference(0.0);
-  autocalculateDischargeCoefficientforOpening();
-  setMinimumIndoorTemperature(-100.0);
-  setMaximumIndoorTemperature(100.0);
-  setDeltaTemperature(-100.0);
-  setMinimumOutdoorTemperature(-100.0);
-  setMaximumOutdoorTemperature(100.0);
-  setMaximumWindSpeed(40.0);
+  Schedule ZoneVentilationWindandStackOpenArea::openingAreaFractionSchedule() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->openingAreaFractionSchedule();
+  }
 
-}
+  bool ZoneVentilationWindandStackOpenArea::setOpeningAreaFractionSchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setOpeningAreaFractionSchedule(schedule);
+  }
+  boost::optional<double> ZoneVentilationWindandStackOpenArea::openingEffectiveness() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->openingEffectiveness();
+  }
 
-IddObjectType ZoneVentilationWindandStackOpenArea::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_ZoneVentilation_WindandStackOpenArea);
-}
+  bool ZoneVentilationWindandStackOpenArea::isOpeningEffectivenessAutocalculated() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->isOpeningEffectivenessAutocalculated();
+  }
 
-double ZoneVentilationWindandStackOpenArea::openingArea() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->openingArea();
-}
+  bool ZoneVentilationWindandStackOpenArea::setOpeningEffectiveness(double openingEffectiveness) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setOpeningEffectiveness(openingEffectiveness);
+  }
 
-bool ZoneVentilationWindandStackOpenArea::setOpeningArea(double openingArea) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setOpeningArea(openingArea);
-}
+  void ZoneVentilationWindandStackOpenArea::autocalculateOpeningEffectiveness() {
+    getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->autocalculateOpeningEffectiveness();
+  }
 
-Schedule ZoneVentilationWindandStackOpenArea::openingAreaFractionSchedule() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->openingAreaFractionSchedule();
-}
+  double ZoneVentilationWindandStackOpenArea::effectiveAngle() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->effectiveAngle();
+  }
 
-bool ZoneVentilationWindandStackOpenArea::setOpeningAreaFractionSchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setOpeningAreaFractionSchedule(schedule);
-}
-boost::optional<double> ZoneVentilationWindandStackOpenArea::openingEffectiveness() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->openingEffectiveness();
-}
+  bool ZoneVentilationWindandStackOpenArea::setEffectiveAngle(double effectiveAngle) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setEffectiveAngle(effectiveAngle);
+  }
 
-bool ZoneVentilationWindandStackOpenArea::isOpeningEffectivenessAutocalculated() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->isOpeningEffectivenessAutocalculated();
-}
+  double ZoneVentilationWindandStackOpenArea::heightDifference() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->heightDifference();
+  }
 
-bool ZoneVentilationWindandStackOpenArea::setOpeningEffectiveness(double openingEffectiveness) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setOpeningEffectiveness(openingEffectiveness);
-}
+  bool ZoneVentilationWindandStackOpenArea::setHeightDifference(double heightDifference) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setHeightDifference(heightDifference);
+  }
 
-void ZoneVentilationWindandStackOpenArea::autocalculateOpeningEffectiveness() {
-  getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->autocalculateOpeningEffectiveness();
-}
+  boost::optional<double> ZoneVentilationWindandStackOpenArea::dischargeCoefficientforOpening() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->dischargeCoefficientforOpening();
+  }
 
-double ZoneVentilationWindandStackOpenArea::effectiveAngle() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->effectiveAngle();
-}
+  bool ZoneVentilationWindandStackOpenArea::isDischargeCoefficientforOpeningAutocalculated() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->isDischargeCoefficientforOpeningAutocalculated();
+  }
 
-bool ZoneVentilationWindandStackOpenArea::setEffectiveAngle(double effectiveAngle) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setEffectiveAngle(effectiveAngle);
-}
+  bool ZoneVentilationWindandStackOpenArea::setDischargeCoefficientforOpening(double dischargeCoefficientforOpening) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setDischargeCoefficientforOpening(dischargeCoefficientforOpening);
+  }
 
-double ZoneVentilationWindandStackOpenArea::heightDifference() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->heightDifference();
-}
+  void ZoneVentilationWindandStackOpenArea::autocalculateDischargeCoefficientforOpening() {
+    getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->autocalculateDischargeCoefficientforOpening();
+  }
 
-bool ZoneVentilationWindandStackOpenArea::setHeightDifference(double heightDifference) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setHeightDifference(heightDifference);
-}
+  double ZoneVentilationWindandStackOpenArea::minimumIndoorTemperature() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->minimumIndoorTemperature();
+  }
 
-boost::optional<double> ZoneVentilationWindandStackOpenArea::dischargeCoefficientforOpening() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->dischargeCoefficientforOpening();
-}
+  boost::optional<Schedule> ZoneVentilationWindandStackOpenArea::minimumIndoorTemperatureSchedule() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->minimumIndoorTemperatureSchedule();
+  }
 
-bool ZoneVentilationWindandStackOpenArea::isDischargeCoefficientforOpeningAutocalculated() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->isDischargeCoefficientforOpeningAutocalculated();
-}
+  double ZoneVentilationWindandStackOpenArea::maximumIndoorTemperature() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->maximumIndoorTemperature();
+  }
 
-bool ZoneVentilationWindandStackOpenArea::setDischargeCoefficientforOpening(double dischargeCoefficientforOpening) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setDischargeCoefficientforOpening(dischargeCoefficientforOpening);
-}
+  boost::optional<Schedule> ZoneVentilationWindandStackOpenArea::maximumIndoorTemperatureSchedule() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->maximumIndoorTemperatureSchedule();
+  }
 
-void ZoneVentilationWindandStackOpenArea::autocalculateDischargeCoefficientforOpening() {
-  getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->autocalculateDischargeCoefficientforOpening();
-}
+  double ZoneVentilationWindandStackOpenArea::deltaTemperature() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->deltaTemperature();
+  }
 
-double ZoneVentilationWindandStackOpenArea::minimumIndoorTemperature() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->minimumIndoorTemperature();
-}
+  boost::optional<Schedule> ZoneVentilationWindandStackOpenArea::deltaTemperatureSchedule() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->deltaTemperatureSchedule();
+  }
 
-boost::optional<Schedule> ZoneVentilationWindandStackOpenArea::minimumIndoorTemperatureSchedule() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->minimumIndoorTemperatureSchedule();
-}
+  double ZoneVentilationWindandStackOpenArea::minimumOutdoorTemperature() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->minimumOutdoorTemperature();
+  }
 
-double ZoneVentilationWindandStackOpenArea::maximumIndoorTemperature() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->maximumIndoorTemperature();
-}
+  boost::optional<Schedule> ZoneVentilationWindandStackOpenArea::minimumOutdoorTemperatureSchedule() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->minimumOutdoorTemperatureSchedule();
+  }
 
-boost::optional<Schedule> ZoneVentilationWindandStackOpenArea::maximumIndoorTemperatureSchedule() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->maximumIndoorTemperatureSchedule();
-}
+  double ZoneVentilationWindandStackOpenArea::maximumOutdoorTemperature() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->maximumOutdoorTemperature();
+  }
 
-double ZoneVentilationWindandStackOpenArea::deltaTemperature() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->deltaTemperature();
-}
+  boost::optional<Schedule> ZoneVentilationWindandStackOpenArea::maximumOutdoorTemperatureSchedule() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->maximumOutdoorTemperatureSchedule();
+  }
 
-boost::optional<Schedule> ZoneVentilationWindandStackOpenArea::deltaTemperatureSchedule() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->deltaTemperatureSchedule();
-}
+  double ZoneVentilationWindandStackOpenArea::maximumWindSpeed() const {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->maximumWindSpeed();
+  }
 
-double ZoneVentilationWindandStackOpenArea::minimumOutdoorTemperature() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->minimumOutdoorTemperature();
-}
+  bool ZoneVentilationWindandStackOpenArea::setMinimumIndoorTemperature(double minimumIndoorTemperature) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMinimumIndoorTemperature(minimumIndoorTemperature);
+  }
 
-boost::optional<Schedule> ZoneVentilationWindandStackOpenArea::minimumOutdoorTemperatureSchedule() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->minimumOutdoorTemperatureSchedule();
-}
+  bool ZoneVentilationWindandStackOpenArea::setMinimumIndoorTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMinimumIndoorTemperatureSchedule(schedule);
+  }
 
-double ZoneVentilationWindandStackOpenArea::maximumOutdoorTemperature() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->maximumOutdoorTemperature();
-}
+  void ZoneVentilationWindandStackOpenArea::resetMinimumIndoorTemperatureSchedule() {
+    getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->resetMinimumIndoorTemperatureSchedule();
+  }
 
-boost::optional<Schedule> ZoneVentilationWindandStackOpenArea::maximumOutdoorTemperatureSchedule() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->maximumOutdoorTemperatureSchedule();
-}
+  bool ZoneVentilationWindandStackOpenArea::setMaximumIndoorTemperature(double maximumIndoorTemperature) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMaximumIndoorTemperature(maximumIndoorTemperature);
+  }
 
-double ZoneVentilationWindandStackOpenArea::maximumWindSpeed() const {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->maximumWindSpeed();
-}
+  bool ZoneVentilationWindandStackOpenArea::setMaximumIndoorTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMaximumIndoorTemperatureSchedule(schedule);
+  }
 
+  void ZoneVentilationWindandStackOpenArea::resetMaximumIndoorTemperatureSchedule() {
+    getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->resetMaximumIndoorTemperatureSchedule();
+  }
 
+  bool ZoneVentilationWindandStackOpenArea::setDeltaTemperature(double deltaTemperature) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setDeltaTemperature(deltaTemperature);
+  }
 
+  bool ZoneVentilationWindandStackOpenArea::setDeltaTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setDeltaTemperatureSchedule(schedule);
+  }
 
+  void ZoneVentilationWindandStackOpenArea::resetDeltaTemperatureSchedule() {
+    getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->resetDeltaTemperatureSchedule();
+  }
 
-bool ZoneVentilationWindandStackOpenArea::setMinimumIndoorTemperature(double minimumIndoorTemperature) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMinimumIndoorTemperature(minimumIndoorTemperature);
-}
+  bool ZoneVentilationWindandStackOpenArea::setMinimumOutdoorTemperature(double minimumOutdoorTemperature) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMinimumOutdoorTemperature(minimumOutdoorTemperature);
+  }
 
-bool ZoneVentilationWindandStackOpenArea::setMinimumIndoorTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMinimumIndoorTemperatureSchedule(schedule);
-}
+  bool ZoneVentilationWindandStackOpenArea::setMinimumOutdoorTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMinimumOutdoorTemperatureSchedule(schedule);
+  }
 
-void ZoneVentilationWindandStackOpenArea::resetMinimumIndoorTemperatureSchedule() {
-  getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->resetMinimumIndoorTemperatureSchedule();
-}
+  void ZoneVentilationWindandStackOpenArea::resetMinimumOutdoorTemperatureSchedule() {
+    getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->resetMinimumOutdoorTemperatureSchedule();
+  }
 
-bool ZoneVentilationWindandStackOpenArea::setMaximumIndoorTemperature(double maximumIndoorTemperature) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMaximumIndoorTemperature(maximumIndoorTemperature);
-}
+  bool ZoneVentilationWindandStackOpenArea::setMaximumOutdoorTemperature(double maximumOutdoorTemperature) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMaximumOutdoorTemperature(maximumOutdoorTemperature);
+  }
 
-bool ZoneVentilationWindandStackOpenArea::setMaximumIndoorTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMaximumIndoorTemperatureSchedule(schedule);
-}
+  bool ZoneVentilationWindandStackOpenArea::setMaximumOutdoorTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMaximumOutdoorTemperatureSchedule(schedule);
+  }
 
-void ZoneVentilationWindandStackOpenArea::resetMaximumIndoorTemperatureSchedule() {
-  getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->resetMaximumIndoorTemperatureSchedule();
-}
+  void ZoneVentilationWindandStackOpenArea::resetMaximumOutdoorTemperatureSchedule() {
+    getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->resetMaximumOutdoorTemperatureSchedule();
+  }
 
-bool ZoneVentilationWindandStackOpenArea::setDeltaTemperature(double deltaTemperature) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setDeltaTemperature(deltaTemperature);
-}
+  bool ZoneVentilationWindandStackOpenArea::setMaximumWindSpeed(double maximumWindSpeed) {
+    return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMaximumWindSpeed(maximumWindSpeed);
+  }
 
-bool ZoneVentilationWindandStackOpenArea::setDeltaTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setDeltaTemperatureSchedule(schedule);
-}
+  /// @cond
+  ZoneVentilationWindandStackOpenArea::ZoneVentilationWindandStackOpenArea(std::shared_ptr<detail::ZoneVentilationWindandStackOpenArea_Impl> impl)
+    : ZoneHVACComponent(std::move(impl)) {}
+  /// @endcond
 
-void ZoneVentilationWindandStackOpenArea::resetDeltaTemperatureSchedule() {
-  getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->resetDeltaTemperatureSchedule();
-}
-
-bool ZoneVentilationWindandStackOpenArea::setMinimumOutdoorTemperature(double minimumOutdoorTemperature) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMinimumOutdoorTemperature(minimumOutdoorTemperature);
-}
-
-bool ZoneVentilationWindandStackOpenArea::setMinimumOutdoorTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMinimumOutdoorTemperatureSchedule(schedule);
-}
-
-void ZoneVentilationWindandStackOpenArea::resetMinimumOutdoorTemperatureSchedule() {
-  getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->resetMinimumOutdoorTemperatureSchedule();
-}
-
-bool ZoneVentilationWindandStackOpenArea::setMaximumOutdoorTemperature(double maximumOutdoorTemperature) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMaximumOutdoorTemperature(maximumOutdoorTemperature);
-}
-
-bool ZoneVentilationWindandStackOpenArea::setMaximumOutdoorTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMaximumOutdoorTemperatureSchedule(schedule);
-}
-
-void ZoneVentilationWindandStackOpenArea::resetMaximumOutdoorTemperatureSchedule() {
-  getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->resetMaximumOutdoorTemperatureSchedule();
-}
-
-bool ZoneVentilationWindandStackOpenArea::setMaximumWindSpeed(double maximumWindSpeed) {
-  return getImpl<detail::ZoneVentilationWindandStackOpenArea_Impl>()->setMaximumWindSpeed(maximumWindSpeed);
-}
-
-/// @cond
-ZoneVentilationWindandStackOpenArea::ZoneVentilationWindandStackOpenArea(std::shared_ptr<detail::ZoneVentilationWindandStackOpenArea_Impl> impl)
-  : ZoneHVACComponent(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

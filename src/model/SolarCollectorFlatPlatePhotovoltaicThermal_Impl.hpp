@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,114 +36,107 @@
 namespace openstudio {
 namespace model {
 
-class PlanarSurface;
-class SolarCollectorPerformancePhotovoltaicThermalSimple;
+  class PlanarSurface;
+  class SolarCollectorPerformancePhotovoltaicThermalSimple;
 
-namespace detail {
+  namespace detail {
 
-  /** SolarCollectorFlatPlatePhotovoltaicThermal_Impl is a StraightComponent_Impl that is the implementation class for SolarCollectorFlatPlatePhotovoltaicThermal.*/
-  class MODEL_API SolarCollectorFlatPlatePhotovoltaicThermal_Impl : public StraightComponent_Impl {
+    /** SolarCollectorFlatPlatePhotovoltaicThermal_Impl is a StraightComponent_Impl that is the implementation class for SolarCollectorFlatPlatePhotovoltaicThermal.*/
+    class MODEL_API SolarCollectorFlatPlatePhotovoltaicThermal_Impl : public StraightComponent_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SolarCollectorFlatPlatePhotovoltaicThermal_Impl(const IdfObject& idfObject,
-                                                    Model_Impl* model,
-                                                    bool keepHandle);
+      SolarCollectorFlatPlatePhotovoltaicThermal_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SolarCollectorFlatPlatePhotovoltaicThermal_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                    Model_Impl* model,
-                                                    bool keepHandle);
+      SolarCollectorFlatPlatePhotovoltaicThermal_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SolarCollectorFlatPlatePhotovoltaicThermal_Impl(const SolarCollectorFlatPlatePhotovoltaicThermal_Impl& other,
-                                                    Model_Impl* model,
-                                                    bool keepHandle);
+      SolarCollectorFlatPlatePhotovoltaicThermal_Impl(const SolarCollectorFlatPlatePhotovoltaicThermal_Impl& other, Model_Impl* model,
+                                                      bool keepHandle);
 
-    virtual ~SolarCollectorFlatPlatePhotovoltaicThermal_Impl() {}
+      virtual ~SolarCollectorFlatPlatePhotovoltaicThermal_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<PlanarSurface> surface() const;
+      boost::optional<PlanarSurface> surface() const;
 
-    boost::optional<GeneratorPhotovoltaic> generatorPhotovoltaic() const;
+      boost::optional<GeneratorPhotovoltaic> generatorPhotovoltaic() const;
 
-    SolarCollectorPerformancePhotovoltaicThermalSimple solarCollectorPerformance() const;
+      SolarCollectorPerformancePhotovoltaicThermalSimple solarCollectorPerformance() const;
 
-    boost::optional<double> designFlowRate() const;
+      boost::optional<double> designFlowRate() const;
 
-    bool isDesignFlowRateAutosized() const;
+      bool isDesignFlowRateAutosized() const;
 
-  boost::optional<double> autosizedDesignFlowRate() const ;
+      boost::optional<double> autosizedDesignFlowRate() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& parameters);
+      bool setSolarCollectorPerformance(const SolarCollectorPerformancePhotovoltaicThermalSimple& parameters);
 
-    void resetSolarCollectorPerformance();
+      void resetSolarCollectorPerformance();
 
-    bool setSurface(const PlanarSurface& surface);
+      bool setSurface(const PlanarSurface& surface);
 
-    void resetSurface();
+      void resetSurface();
 
-    bool setGeneratorPhotovoltaic(const GeneratorPhotovoltaic& generatorPhotovoltaic);
+      bool setGeneratorPhotovoltaic(const GeneratorPhotovoltaic& generatorPhotovoltaic);
 
-    void resetGeneratorPhotovoltaic();
+      void resetGeneratorPhotovoltaic();
 
-    bool setDesignFlowRate(double designFlowRate);
+      bool setDesignFlowRate(double designFlowRate);
 
-    void resetDesignFlowRate();
+      void resetDesignFlowRate();
 
-    void autosizeDesignFlowRate();
+      void autosizeDesignFlowRate();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SolarCollectorFlatPlatePhotovoltaicThermal");
 
-    REGISTER_LOGGER("openstudio.model.SolarCollectorFlatPlatePhotovoltaicThermal");
+      bool setSolarCollectorPerformanceNoClone(const SolarCollectorPerformancePhotovoltaicThermalSimple& parameters);
 
-    bool setSolarCollectorPerformanceNoClone(const SolarCollectorPerformancePhotovoltaicThermalSimple& parameters);
+      friend class openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal;
+    };
 
-    friend class openstudio::model::SolarCollectorFlatPlatePhotovoltaicThermal;
+  }  // namespace detail
 
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SOLARCOLLECTORFLATPLATEPHOTOVOLTAICTHERMAL_IMPL_HPP
-
+#endif  // MODEL_SOLARCOLLECTORFLATPLATEPHOTOVOLTAICTHERMAL_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,25 +39,20 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<ModelObject> ReverseTranslator::translateSurfaceConvectionAlgorithmInside(
-    const WorkspaceObject & workspaceObject)
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::SurfaceConvectionAlgorithm_Inside )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: SurfaceConvectionAlgorithm_Inside");
-     return boost::none;
+  boost::optional<ModelObject> ReverseTranslator::translateSurfaceConvectionAlgorithmInside(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::SurfaceConvectionAlgorithm_Inside) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: SurfaceConvectionAlgorithm_Inside");
+      return boost::none;
+    }
+
+    InsideSurfaceConvectionAlgorithm mo = m_model.getUniqueModelObject<InsideSurfaceConvectionAlgorithm>();
+
+    if (OptionalString s = workspaceObject.getString(SurfaceConvectionAlgorithm_InsideFields::Algorithm)) {
+      mo.setAlgorithm(s.get());
+    }
+
+    return mo;
   }
 
-  InsideSurfaceConvectionAlgorithm mo = m_model.getUniqueModelObject<InsideSurfaceConvectionAlgorithm>();
-
-  if(OptionalString s = workspaceObject.getString(SurfaceConvectionAlgorithm_InsideFields::Algorithm))
-  {
-    mo.setAlgorithm(s.get());
-  }
-
-  return mo;
-}
-
-} // energyplus
-} // openstudio
-
+}  // namespace energyplus
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,89 +37,89 @@ namespace openstudio {
 
 namespace model {
 
-class SolarCollectorPerformanceFlatPlate;
-class PlanarSurface;
+  class SolarCollectorPerformanceFlatPlate;
+  class PlanarSurface;
 
-namespace detail {
+  namespace detail {
 
-  class SolarCollectorFlatPlateWater_Impl;
+    class SolarCollectorFlatPlateWater_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SolarCollectorFlatPlateWater is a StraightComponent that wraps the OpenStudio IDD object 'OS:SolarCollector:FlatPlate:Water'. */
-class MODEL_API SolarCollectorFlatPlateWater : public StraightComponent {
+  /** SolarCollectorFlatPlateWater is a StraightComponent that wraps the OpenStudio IDD object 'OS:SolarCollector:FlatPlate:Water'. */
+  class MODEL_API SolarCollectorFlatPlateWater : public StraightComponent
+  {
 
- public:
-  /** @name Constructors and Destructors */
-  //@{
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SolarCollectorFlatPlateWater(const Model& model);
+    explicit SolarCollectorFlatPlateWater(const Model& model);
 
-  virtual ~SolarCollectorFlatPlateWater() {}
+    virtual ~SolarCollectorFlatPlateWater() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  SolarCollectorPerformanceFlatPlate solarCollectorPerformance() const;
+    SolarCollectorPerformanceFlatPlate solarCollectorPerformance() const;
 
-  boost::optional<PlanarSurface> surface() const;
+    boost::optional<PlanarSurface> surface() const;
 
-  boost::optional<double> maximumFlowRate() const;
+    boost::optional<double> maximumFlowRate() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /// Deletes the current parameters and clones the parameters passed in
-  bool setSolarCollectorPerformance(const SolarCollectorPerformanceFlatPlate& parameters);
+    /// Deletes the current parameters and clones the parameters passed in
+    bool setSolarCollectorPerformance(const SolarCollectorPerformanceFlatPlate& parameters);
 
-  /// Deletes the current parameters and constructs a new default set of parameters
-  void resetSolarCollectorPerformance();
+    /// Deletes the current parameters and constructs a new default set of parameters
+    void resetSolarCollectorPerformance();
 
-  bool setSurface(const PlanarSurface& surface);
+    bool setSurface(const PlanarSurface& surface);
 
-  void resetSurface();
+    void resetSurface();
 
-  //bool setInletNode(const Connection& connection);
+    //bool setInletNode(const Connection& connection);
 
-  //bool setOutletNode(const Connection& connection);
+    //bool setOutletNode(const Connection& connection);
 
-  bool setMaximumFlowRate(double maximumFlowRate);
+    bool setMaximumFlowRate(double maximumFlowRate);
 
-  void resetMaximumFlowRate();
+    void resetMaximumFlowRate();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SolarCollectorFlatPlateWater_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SolarCollectorFlatPlateWater_Impl ImplType;
 
-  explicit SolarCollectorFlatPlateWater(std::shared_ptr<detail::SolarCollectorFlatPlateWater_Impl> impl);
+    explicit SolarCollectorFlatPlateWater(std::shared_ptr<detail::SolarCollectorFlatPlateWater_Impl> impl);
 
-  friend class detail::SolarCollectorFlatPlateWater_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SolarCollectorFlatPlateWater");
-};
+    friend class detail::SolarCollectorFlatPlateWater_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SolarCollectorFlatPlateWater");
+  };
 
-/** \relates SolarCollectorFlatPlateWater*/
-typedef boost::optional<SolarCollectorFlatPlateWater> OptionalSolarCollectorFlatPlateWater;
+  /** \relates SolarCollectorFlatPlateWater*/
+  typedef boost::optional<SolarCollectorFlatPlateWater> OptionalSolarCollectorFlatPlateWater;
 
-/** \relates SolarCollectorFlatPlateWater*/
-typedef std::vector<SolarCollectorFlatPlateWater> SolarCollectorFlatPlateWaterVector;
+  /** \relates SolarCollectorFlatPlateWater*/
+  typedef std::vector<SolarCollectorFlatPlateWater> SolarCollectorFlatPlateWaterVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SOLARCOLLECTORFLATPLATEWATER_HPP
-
+#endif  // MODEL_SOLARCOLLECTORFLATPLATEWATER_HPP

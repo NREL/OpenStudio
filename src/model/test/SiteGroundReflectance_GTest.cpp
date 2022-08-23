@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,8 +37,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
-{
+TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters) {
   Model m;
 
   SiteGroundReflectance siteGroundReflectance = m.getUniqueModelObject<SiteGroundReflectance>();
@@ -55,7 +54,6 @@ TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
   EXPECT_EQ(0.2, siteGroundReflectance.januaryGroundReflectance());
   EXPECT_TRUE(siteGroundReflectance.isJanuaryGroundReflectanceDefaulted());
 
-
   // February Ground Reflectance:  Double
   // Check Idd default: 0.2
   EXPECT_TRUE(siteGroundReflectance.isFebruaryGroundReflectanceDefaulted());
@@ -67,7 +65,6 @@ TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
   siteGroundReflectance.resetFebruaryGroundReflectance();
   EXPECT_EQ(0.2, siteGroundReflectance.februaryGroundReflectance());
   EXPECT_TRUE(siteGroundReflectance.isFebruaryGroundReflectanceDefaulted());
-
 
   // March Ground Reflectance:  Double
   // Check Idd default: 0.2
@@ -81,7 +78,6 @@ TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
   EXPECT_EQ(0.2, siteGroundReflectance.marchGroundReflectance());
   EXPECT_TRUE(siteGroundReflectance.isMarchGroundReflectanceDefaulted());
 
-
   // April Ground Reflectance:  Double
   // Check Idd default: 0.2
   EXPECT_TRUE(siteGroundReflectance.isAprilGroundReflectanceDefaulted());
@@ -93,7 +89,6 @@ TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
   siteGroundReflectance.resetAprilGroundReflectance();
   EXPECT_EQ(0.2, siteGroundReflectance.aprilGroundReflectance());
   EXPECT_TRUE(siteGroundReflectance.isAprilGroundReflectanceDefaulted());
-
 
   // May Ground Reflectance:  Double
   // Check Idd default: 0.2
@@ -107,7 +102,6 @@ TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
   EXPECT_EQ(0.2, siteGroundReflectance.mayGroundReflectance());
   EXPECT_TRUE(siteGroundReflectance.isMayGroundReflectanceDefaulted());
 
-
   // June Ground Reflectance:  Double
   // Check Idd default: 0.2
   EXPECT_TRUE(siteGroundReflectance.isJuneGroundReflectanceDefaulted());
@@ -119,7 +113,6 @@ TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
   siteGroundReflectance.resetJuneGroundReflectance();
   EXPECT_EQ(0.2, siteGroundReflectance.juneGroundReflectance());
   EXPECT_TRUE(siteGroundReflectance.isJuneGroundReflectanceDefaulted());
-
 
   // July Ground Reflectance:  Double
   // Check Idd default: 0.2
@@ -133,7 +126,6 @@ TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
   EXPECT_EQ(0.2, siteGroundReflectance.julyGroundReflectance());
   EXPECT_TRUE(siteGroundReflectance.isJulyGroundReflectanceDefaulted());
 
-
   // August Ground Reflectance:  Double
   // Check Idd default: 0.2
   EXPECT_TRUE(siteGroundReflectance.isAugustGroundReflectanceDefaulted());
@@ -145,7 +137,6 @@ TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
   siteGroundReflectance.resetAugustGroundReflectance();
   EXPECT_EQ(0.2, siteGroundReflectance.augustGroundReflectance());
   EXPECT_TRUE(siteGroundReflectance.isAugustGroundReflectanceDefaulted());
-
 
   // September Ground Reflectance:  Double
   // Check Idd default: 0.2
@@ -159,7 +150,6 @@ TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
   EXPECT_EQ(0.2, siteGroundReflectance.septemberGroundReflectance());
   EXPECT_TRUE(siteGroundReflectance.isSeptemberGroundReflectanceDefaulted());
 
-
   // October Ground Reflectance:  Double
   // Check Idd default: 0.2
   EXPECT_TRUE(siteGroundReflectance.isOctoberGroundReflectanceDefaulted());
@@ -171,7 +161,6 @@ TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
   siteGroundReflectance.resetOctoberGroundReflectance();
   EXPECT_EQ(0.2, siteGroundReflectance.octoberGroundReflectance());
   EXPECT_TRUE(siteGroundReflectance.isOctoberGroundReflectanceDefaulted());
-
 
   // November Ground Reflectance:  Double
   // Check Idd default: 0.2
@@ -185,7 +174,6 @@ TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
   EXPECT_EQ(0.2, siteGroundReflectance.novemberGroundReflectance());
   EXPECT_TRUE(siteGroundReflectance.isNovemberGroundReflectanceDefaulted());
 
-
   // December Ground Reflectance:  Double
   // Check Idd default: 0.2
   EXPECT_TRUE(siteGroundReflectance.isDecemberGroundReflectanceDefaulted());
@@ -197,5 +185,4 @@ TEST_F(ModelFixture, SiteGroundReflectance_GettersSetters)
   siteGroundReflectance.resetDecemberGroundReflectance();
   EXPECT_EQ(0.2, siteGroundReflectance.decemberGroundReflectance());
   EXPECT_TRUE(siteGroundReflectance.isDecemberGroundReflectanceDefaulted());
-
 }

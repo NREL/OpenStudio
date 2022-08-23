@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,140 +38,123 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  SimpleGlazing_Impl::SimpleGlazing_Impl(const IdfObject& idfObject,
-                                         Model_Impl* model,
-                                         bool keepHandle)
-    : Glazing_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == SimpleGlazing::iddObjectType());
-  }
-
-  SimpleGlazing_Impl::SimpleGlazing_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle)
-    : Glazing_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == SimpleGlazing::iddObjectType());
-  }
-
-  SimpleGlazing_Impl::SimpleGlazing_Impl(const SimpleGlazing_Impl& other,
-                                         Model_Impl* model,
-                                         bool keepHandle)
-    : Glazing_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& SimpleGlazing_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType SimpleGlazing_Impl::iddObjectType() const {
-    return SimpleGlazing::iddObjectType();
-  }
-
-  boost::optional<double> SimpleGlazing_Impl::getVisibleTransmittance() const {
-    return visibleTransmittance();
-  }
-
-  double SimpleGlazing_Impl::uFactor() const {
-    boost::optional<double> value = getDouble(OS_WindowMaterial_SimpleGlazingSystemFields::UFactor,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double SimpleGlazing_Impl::solarHeatGainCoefficient() const {
-    boost::optional<double> value = getDouble(OS_WindowMaterial_SimpleGlazingSystemFields::SolarHeatGainCoefficient,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<double> SimpleGlazing_Impl::visibleTransmittance() const {
-    return getDouble(OS_WindowMaterial_SimpleGlazingSystemFields::VisibleTransmittance,true);
-  }
-
-  bool SimpleGlazing_Impl::setUFactor(double uFactor) {
-    bool result = setDouble(OS_WindowMaterial_SimpleGlazingSystemFields::UFactor, uFactor);
-    return result;
-  }
-
-  bool SimpleGlazing_Impl::setSolarHeatGainCoefficient(double solarHeatGainCoefficient) {
-    bool result = setDouble(OS_WindowMaterial_SimpleGlazingSystemFields::SolarHeatGainCoefficient, solarHeatGainCoefficient);
-    return result;
-  }
-
-  bool SimpleGlazing_Impl::setVisibleTransmittance(boost::optional<double> visibleTransmittance) {
-    bool result(false);
-    if (visibleTransmittance) {
-      result = setDouble(OS_WindowMaterial_SimpleGlazingSystemFields::VisibleTransmittance, visibleTransmittance.get());
+    SimpleGlazing_Impl::SimpleGlazing_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : Glazing_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == SimpleGlazing::iddObjectType());
     }
-    else {
-      resetVisibleTransmittance();
-      result = true;
+
+    SimpleGlazing_Impl::SimpleGlazing_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : Glazing_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == SimpleGlazing::iddObjectType());
     }
-    return result;
+
+    SimpleGlazing_Impl::SimpleGlazing_Impl(const SimpleGlazing_Impl& other, Model_Impl* model, bool keepHandle)
+      : Glazing_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& SimpleGlazing_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType SimpleGlazing_Impl::iddObjectType() const {
+      return SimpleGlazing::iddObjectType();
+    }
+
+    boost::optional<double> SimpleGlazing_Impl::getVisibleTransmittance() const {
+      return visibleTransmittance();
+    }
+
+    double SimpleGlazing_Impl::uFactor() const {
+      boost::optional<double> value = getDouble(OS_WindowMaterial_SimpleGlazingSystemFields::UFactor, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double SimpleGlazing_Impl::solarHeatGainCoefficient() const {
+      boost::optional<double> value = getDouble(OS_WindowMaterial_SimpleGlazingSystemFields::SolarHeatGainCoefficient, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<double> SimpleGlazing_Impl::visibleTransmittance() const {
+      return getDouble(OS_WindowMaterial_SimpleGlazingSystemFields::VisibleTransmittance, true);
+    }
+
+    bool SimpleGlazing_Impl::setUFactor(double uFactor) {
+      bool result = setDouble(OS_WindowMaterial_SimpleGlazingSystemFields::UFactor, uFactor);
+      return result;
+    }
+
+    bool SimpleGlazing_Impl::setSolarHeatGainCoefficient(double solarHeatGainCoefficient) {
+      bool result = setDouble(OS_WindowMaterial_SimpleGlazingSystemFields::SolarHeatGainCoefficient, solarHeatGainCoefficient);
+      return result;
+    }
+
+    bool SimpleGlazing_Impl::setVisibleTransmittance(boost::optional<double> visibleTransmittance) {
+      bool result(false);
+      if (visibleTransmittance) {
+        result = setDouble(OS_WindowMaterial_SimpleGlazingSystemFields::VisibleTransmittance, visibleTransmittance.get());
+      } else {
+        resetVisibleTransmittance();
+        result = true;
+      }
+      return result;
+    }
+
+    void SimpleGlazing_Impl::resetVisibleTransmittance() {
+      bool result = setString(OS_WindowMaterial_SimpleGlazingSystemFields::VisibleTransmittance, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  SimpleGlazing::SimpleGlazing(const Model& model, double uFactor, double solarHeatGainCoefficient) : Glazing(SimpleGlazing::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::SimpleGlazing_Impl>());
+
+    bool ok = true;
+    ok = setUFactor(uFactor);
+    OS_ASSERT(ok);
+    ok = setSolarHeatGainCoefficient(solarHeatGainCoefficient);
+    OS_ASSERT(ok);
   }
 
-  void SimpleGlazing_Impl::resetVisibleTransmittance() {
-    bool result = setString(OS_WindowMaterial_SimpleGlazingSystemFields::VisibleTransmittance, "");
-    OS_ASSERT(result);
+  IddObjectType SimpleGlazing::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_WindowMaterial_SimpleGlazingSystem);
   }
 
-} // detail
+  double SimpleGlazing::uFactor() const {
+    return getImpl<detail::SimpleGlazing_Impl>()->uFactor();
+  }
 
-SimpleGlazing::SimpleGlazing(const Model& model,
-                             double uFactor,
-                             double solarHeatGainCoefficient)
-  : Glazing(SimpleGlazing::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::SimpleGlazing_Impl>());
+  double SimpleGlazing::solarHeatGainCoefficient() const {
+    return getImpl<detail::SimpleGlazing_Impl>()->solarHeatGainCoefficient();
+  }
 
-  bool ok = true;
-  ok = setUFactor(uFactor);
-  OS_ASSERT(ok);
-  ok = setSolarHeatGainCoefficient(solarHeatGainCoefficient);
-  OS_ASSERT(ok);
-}
+  boost::optional<double> SimpleGlazing::visibleTransmittance() const {
+    return getImpl<detail::SimpleGlazing_Impl>()->visibleTransmittance();
+  }
 
-IddObjectType SimpleGlazing::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_WindowMaterial_SimpleGlazingSystem);
-}
+  bool SimpleGlazing::setUFactor(double uFactor) {
+    return getImpl<detail::SimpleGlazing_Impl>()->setUFactor(uFactor);
+  }
 
-double SimpleGlazing::uFactor() const {
-  return getImpl<detail::SimpleGlazing_Impl>()->uFactor();
-}
+  bool SimpleGlazing::setSolarHeatGainCoefficient(double solarHeatGainCoefficient) {
+    return getImpl<detail::SimpleGlazing_Impl>()->setSolarHeatGainCoefficient(solarHeatGainCoefficient);
+  }
 
-double SimpleGlazing::solarHeatGainCoefficient() const {
-  return getImpl<detail::SimpleGlazing_Impl>()->solarHeatGainCoefficient();
-}
+  bool SimpleGlazing::setVisibleTransmittance(double visibleTransmittance) {
+    return getImpl<detail::SimpleGlazing_Impl>()->setVisibleTransmittance(visibleTransmittance);
+  }
 
-boost::optional<double> SimpleGlazing::visibleTransmittance() const {
-  return getImpl<detail::SimpleGlazing_Impl>()->visibleTransmittance();
-}
+  void SimpleGlazing::resetVisibleTransmittance() {
+    getImpl<detail::SimpleGlazing_Impl>()->resetVisibleTransmittance();
+  }
 
-bool SimpleGlazing::setUFactor(double uFactor) {
-  return getImpl<detail::SimpleGlazing_Impl>()->setUFactor(uFactor);
-}
+  /// @cond
+  SimpleGlazing::SimpleGlazing(std::shared_ptr<detail::SimpleGlazing_Impl> impl) : Glazing(std::move(impl)) {}
+  /// @endcond
 
-bool SimpleGlazing::setSolarHeatGainCoefficient(double solarHeatGainCoefficient) {
-  return getImpl<detail::SimpleGlazing_Impl>()->setSolarHeatGainCoefficient(solarHeatGainCoefficient);
-}
-
-bool SimpleGlazing::setVisibleTransmittance(double visibleTransmittance) {
-  return getImpl<detail::SimpleGlazing_Impl>()->setVisibleTransmittance(visibleTransmittance);
-}
-
-void SimpleGlazing::resetVisibleTransmittance() {
-  getImpl<detail::SimpleGlazing_Impl>()->resetVisibleTransmittance();
-}
-
-/// @cond
-SimpleGlazing::SimpleGlazing(std::shared_ptr<detail::SimpleGlazing_Impl> impl)
-  : Glazing(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

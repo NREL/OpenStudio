@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -49,8 +49,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using std::string;
 
-TEST_F(ModelFixture, OutputVariable_ThermalZone)
-{
+TEST_F(ModelFixture, OutputVariable_ThermalZone) {
   Model model;
 
   Building building = model.getUniqueModelObject<Building>();
@@ -62,7 +61,7 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
 
     // all possible variables
     std::vector<std::string> variableNames = zone.outputVariableNames();
-    EXPECT_TRUE(std::find(variableNames.begin(), variableNames.end(), "Zone Lights Electric Power") != variableNames.end());
+    EXPECT_TRUE(std::find(variableNames.begin(), variableNames.end(), "Zone Lights Electricity Rate") != variableNames.end());
     EXPECT_TRUE(std::find(variableNames.begin(), variableNames.end(), "Zone Lights Radiant Heating Energy") != variableNames.end());
 
     // variables actually found
@@ -70,10 +69,10 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
     EXPECT_TRUE(variables.empty());
   }
 
-  // add Zone Lights Electric Power to both zones
-  OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
+  // add Zone Lights Electricity Rate to both zones
+  OutputVariable lightsElectricPower("Zone Lights Electricity Rate", model);
   EXPECT_EQ("*", lightsElectricPower.keyValue());
-  EXPECT_EQ("Zone Lights Electric Power", lightsElectricPower.variableName());
+  EXPECT_EQ("Zone Lights Electricity Rate", lightsElectricPower.variableName());
   //Check BCVTB
   EXPECT_FALSE(lightsElectricPower.exportToBCVTB());
   EXPECT_TRUE(lightsElectricPower.isExportToBCVTBDefaulted());
@@ -89,39 +88,37 @@ TEST_F(ModelFixture, OutputVariable_ThermalZone)
   EXPECT_EQ("Zone Lights Radiant Heating Energy", lightsRadiantHeatGain.variableName());
 
   ASSERT_EQ(2u, zone1.outputVariables().size());
-  if (lightsElectricPower.handle() == zone1.outputVariables()[0].handle()){
+  if (lightsElectricPower.handle() == zone1.outputVariables()[0].handle()) {
     EXPECT_EQ(lightsElectricPower.handle(), zone1.outputVariables()[0].handle());
     EXPECT_EQ(lightsRadiantHeatGain.handle(), zone1.outputVariables()[1].handle());
-  }else{
+  } else {
     EXPECT_EQ(lightsRadiantHeatGain.handle(), zone1.outputVariables()[0].handle());
     EXPECT_EQ(lightsElectricPower.handle(), zone1.outputVariables()[1].handle());
   }
 
   ASSERT_EQ(1u, zone2.outputVariables().size());
   EXPECT_EQ(lightsElectricPower.handle(), zone2.outputVariables()[0].handle());
-
 }
 
-TEST_F(ModelFixture, MapOfAllOutputVariables)
-{
+TEST_F(ModelFixture, MapOfAllOutputVariables) {
   Model model = exampleModel();
 
   // map of variable name to output variable
-  std::map<std::string, boost::optional<OutputVariable> > outputVariableMap;
+  std::map<std::string, boost::optional<OutputVariable>> outputVariableMap;
 
   // get list of all variable names
-  for (const ModelObject& modelObject : model.getModelObjects<ModelObject>()){
-    for (const std::string& variableName : modelObject.outputVariableNames()){
+  for (const ModelObject& modelObject : model.getModelObjects<ModelObject>()) {
+    for (const std::string& variableName : modelObject.outputVariableNames()) {
       outputVariableMap[variableName] = boost::none;
     }
   }
 
   // add all variables to map, allow only one variable per variable name in this application
-  for (OutputVariable outputVariable : model.getModelObjects<OutputVariable>()){
-    if (outputVariableMap[outputVariable.variableName()]){
+  for (OutputVariable outputVariable : model.getModelObjects<OutputVariable>()) {
+    if (outputVariableMap[outputVariable.variableName()]) {
       // already have output variable for this name, then remove this object
       outputVariable.remove();
-    }else{
+    } else {
 
       // make sure that key value is set to '*'
       outputVariable.setKeyValue("*");
@@ -131,9 +128,9 @@ TEST_F(ModelFixture, MapOfAllOutputVariables)
   }
 
   // now make an output variable for each variable name
-  typedef std::pair<std::string, boost::optional<OutputVariable> > MapType;
-  for (MapType mapVal : outputVariableMap){
-    if (!mapVal.second){
+  typedef std::pair<std::string, boost::optional<OutputVariable>> MapType;
+  for (MapType mapVal : outputVariableMap) {
+    if (!mapVal.second) {
       OutputVariable outputVariable(mapVal.first, model);
       outputVariable.setReportingFrequency("Hourly");
       outputVariableMap[mapVal.first] = outputVariable;
@@ -144,9 +141,7 @@ TEST_F(ModelFixture, MapOfAllOutputVariables)
   }
 }
 
-
-TEST_F(ModelFixture, BadVariableName)
-{
+TEST_F(ModelFixture, BadVariableName) {
   Model model;
 
   OutputVariable goodVar("Good Name", model);

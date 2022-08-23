@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,67 +56,61 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationHeatingLoad( PlantEquipmentOperationHeatingLoad & modelObject )
-{
-  IdfObject idfObject(IddObjectType::PlantEquipmentOperation_HeatingLoad);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationHeatingLoad(PlantEquipmentOperationHeatingLoad& modelObject) {
+    IdfObject idfObject(IddObjectType::PlantEquipmentOperation_HeatingLoad);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  auto name = modelObject.name().get();
-  idfObject.setName(name);
+    // Name
+    auto name = modelObject.name().get();
+    idfObject.setName(name);
 
-  double lowerLimit = modelObject.minimumLowerLimit();
-  int i = 1;
-  for( auto upperLimit : modelObject.loadRangeUpperLimits() ) {
-    auto equipment = modelObject.equipment(upperLimit);
-    if( ! equipment.empty() ) {
-      auto eg = idfObject.pushExtensibleGroup();
-      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeLowerLimit,lowerLimit);
-      eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeUpperLimit,upperLimit);
+    double lowerLimit = modelObject.minimumLowerLimit();
+    int i = 1;
+    for (auto upperLimit : modelObject.loadRangeUpperLimits()) {
+      auto equipment = modelObject.equipment(upperLimit);
+      if (!equipment.empty()) {
+        auto eg = idfObject.pushExtensibleGroup();
+        eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeLowerLimit, lowerLimit);
+        eg.setDouble(PlantEquipmentOperation_HeatingLoadExtensibleFields::LoadRangeUpperLimit, upperLimit);
 
-      IdfObject equipmentList(IddObjectType::PlantEquipmentList);
-      m_idfObjects.push_back(equipmentList);
-      auto equipmentListName = name + " equipment list " + std::to_string(i);
-      equipmentList.setName(equipmentListName);
-      eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName,equipmentListName);
+        IdfObject equipmentList(IddObjectType::PlantEquipmentList);
+        m_idfObjects.push_back(equipmentList);
+        auto equipmentListName = name + " equipment list " + std::to_string(i);
+        equipmentList.setName(equipmentListName);
+        eg.setString(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName, equipmentListName);
 
-      for( auto component : equipment )
-      {
+        for (auto component : equipment) {
 
-        // TODO: Find the right way to deal with this
-        // For now, "dirty" (?) fix for Generator:MicroTurbine
-        // @kbenne, FYI
-        boost::optional<IdfObject> idf_component;
+          // TODO: Find the right way to deal with this
+          // For now, "dirty" (?) fix for Generator:MicroTurbine
+          // @kbenne, FYI
+          boost::optional<IdfObject> idf_component;
 
-        // If you find a mCHPHR
-        if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = component.optionalCast<GeneratorMicroTurbineHeatRecovery>())
-        {
-          // Get the parent mchp and translate that, which will pull the appropriate fields from the mchpHR
-          // But we need the name of the mchp for the plant equipment list, not the mchpHR
-          GeneratorMicroTurbine mchp = mchpHR->generatorMicroTurbine();
-          idf_component = translateAndMapModelObject(mchp);
-          LOG(Trace, "Found a mchpHR, instead translated " << idf_component->briefDescription());
+          // If you find a mCHPHR
+          if (boost::optional<GeneratorMicroTurbineHeatRecovery> mchpHR = component.optionalCast<GeneratorMicroTurbineHeatRecovery>()) {
+            // Get the parent mchp and translate that, which will pull the appropriate fields from the mchpHR
+            // But we need the name of the mchp for the plant equipment list, not the mchpHR
+            GeneratorMicroTurbine mchp = mchpHR->generatorMicroTurbine();
+            idf_component = translateAndMapModelObject(mchp);
+            LOG(Trace, "Found a mchpHR, instead translated " << idf_component->briefDescription());
+          } else {
+            idf_component = translateAndMapModelObject(component);
+          }
+
+          auto eg2 = equipmentList.pushExtensibleGroup();
+          OS_ASSERT(idf_component);
+          eg2.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType, idf_component->iddObject().name());
+          eg2.setString(PlantEquipmentListExtensibleFields::EquipmentName, idf_component->name().get());
         }
-        else
-        {
-          idf_component = translateAndMapModelObject(component);
-        }
-
-        auto eg2 = equipmentList.pushExtensibleGroup();
-        OS_ASSERT(idf_component);
-        eg2.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idf_component->iddObject().name());
-        eg2.setString(PlantEquipmentListExtensibleFields::EquipmentName,idf_component->name().get());
       }
+
+      lowerLimit = upperLimit;
+      ++i;
     }
 
-    lowerLimit = upperLimit;
-    ++i;
+    return idfObject;
   }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,53 +42,49 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture, OtherEquipmentDefinition_SetDesignLevel)
-{
+TEST_F(ModelFixture, OtherEquipmentDefinition_SetDesignLevel) {
   Model model;
 
   OtherEquipmentDefinition definition(model);
   // Default constructor
-  EXPECT_EQ("EquipmentLevel",definition.designLevelCalculationMethod());
+  EXPECT_EQ("EquipmentLevel", definition.designLevelCalculationMethod());
   ASSERT_TRUE(definition.designLevel());
-  EXPECT_EQ(0.0,definition.designLevel().get());
+  EXPECT_EQ(0.0, definition.designLevel().get());
   EXPECT_FALSE(definition.wattsperSpaceFloorArea());
   EXPECT_FALSE(definition.wattsperPerson());
 
   // Make sure hard-coded design level calculation method strings are still valid
 
   EXPECT_NO_THROW(definition.setWattsperSpaceFloorArea(5.0));
-  EXPECT_EQ("Watts/Area",definition.designLevelCalculationMethod());
+  EXPECT_EQ("Watts/Area", definition.designLevelCalculationMethod());
   EXPECT_FALSE(definition.designLevel());
   ASSERT_TRUE(definition.wattsperSpaceFloorArea());
-  EXPECT_EQ(5.0,definition.wattsperSpaceFloorArea().get());
+  EXPECT_EQ(5.0, definition.wattsperSpaceFloorArea().get());
   EXPECT_FALSE(definition.wattsperPerson());
 
   EXPECT_NO_THROW(definition.setWattsperPerson(10.0));
-  EXPECT_EQ("Watts/Person",definition.designLevelCalculationMethod());
+  EXPECT_EQ("Watts/Person", definition.designLevelCalculationMethod());
   EXPECT_FALSE(definition.designLevel());
   EXPECT_FALSE(definition.wattsperSpaceFloorArea());
   ASSERT_TRUE(definition.wattsperPerson());
-  EXPECT_EQ(10.0,definition.wattsperPerson().get());
+  EXPECT_EQ(10.0, definition.wattsperPerson().get());
 
   EXPECT_NO_THROW(definition.setDesignLevel(100.0));
-  EXPECT_EQ("EquipmentLevel",definition.designLevelCalculationMethod());
+  EXPECT_EQ("EquipmentLevel", definition.designLevelCalculationMethod());
   ASSERT_TRUE(definition.designLevel());
-  EXPECT_EQ(100.0,definition.designLevel().get());
+  EXPECT_EQ(100.0, definition.designLevel().get());
   EXPECT_FALSE(definition.wattsperSpaceFloorArea());
   EXPECT_FALSE(definition.wattsperPerson());
 }
 
-TEST_F(ModelFixture, OtherEquipment_Instance)
-{
+TEST_F(ModelFixture, OtherEquipment_Instance) {
   Model model;
   OtherEquipmentDefinition definition(model);
   OtherEquipment instance(definition);
   EXPECT_TRUE(instance.definition().optionalCast<OtherEquipmentDefinition>());
 }
 
-TEST_F(ModelFixture, OtherEquipment_FuelType)
-{
+TEST_F(ModelFixture, OtherEquipment_FuelType) {
   Model model;
   OtherEquipmentDefinition definition(model);
   OtherEquipment equipment(definition);
@@ -105,11 +101,9 @@ TEST_F(ModelFixture, OtherEquipment_FuelType)
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "NaturalGas"), validFuelTypes.end());
   EXPECT_NE(std::find(validFuelTypes.begin(), validFuelTypes.end(), "Coal"), validFuelTypes.end());
   EXPECT_EQ(validFuelTypes.size(), 14);
-
 }
 
-TEST_F(ModelFixture, OtherEquipment_EndUseSubcategory)
-{
+TEST_F(ModelFixture, OtherEquipment_EndUseSubcategory) {
   Model model;
   OtherEquipmentDefinition definition(model);
   OtherEquipment equipment(definition);
@@ -123,5 +117,16 @@ TEST_F(ModelFixture, OtherEquipment_EndUseSubcategory)
   equipment.resetEndUseSubcategory();
   EXPECT_EQ(equipment.endUseSubcategory(), "General");
   EXPECT_TRUE(equipment.isEndUseSubcategoryDefaulted());
+}
 
+/* Tests that you cannot set Fractions that sum to greater than 1 */
+TEST_F(ModelFixture, OtherEquipment_FractionsLatentRadiantLost) {
+  Model m;
+  OtherEquipmentDefinition definition(m);
+
+  ASSERT_TRUE(definition.setFractionLatent(0.5));
+  ASSERT_TRUE(definition.setFractionRadiant(0.5));
+  ASSERT_FALSE(definition.setFractionLost(0.75));
+  ASSERT_FALSE(definition.setFractionLatent(0.75));
+  ASSERT_FALSE(definition.setFractionRadiant(0.75));
 }

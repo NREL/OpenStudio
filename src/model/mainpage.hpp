@@ -1,7 +1,7 @@
 namespace openstudio {
 namespace model {
 
-/** \mainpage OpenStudio Model
+  /** \mainpage OpenStudio Model
  *
  *  \section overview_model Overview
  *
@@ -502,12 +502,9 @@ namespace model {
  *  high-level modeling and various types of analysis (perturbation, optimization, standards, etc.)
  *  For example, Space::lightingPowerPerFloorArea calculates lighting power in the space by adding up
  *  lighting power from all Lights and Luminaire objects directly assigned to the space or it's space type,
- *  then dividing by the floor area of these space. Furthermore,
- *  that method, and the Space compound "getter" that corresponds to it are wrapped up together in
- *  an Attribute named "lightingPowerDensity" available through the ModelObject::getAttribute
- *  interface.
+ *  then dividing by the floor area of these space.
  *
- *  PlanarSurface::uFactor and PlanarSurface::setUFactor (and the associated Attribute) is another
+ *  PlanarSurface::uFactor and PlanarSurface::setUFactor is another
  *  example that brings a lot of pieces together to expose a high-level piece of data. Depending on
  *  the underlying construction type, these methods may operate directly on a SimpleGlazing object;
  *  may use static film resistance data in conjunction with one or more Material objects, and maybe
@@ -730,6 +727,7 @@ namespace model {
  *                <li> People (SpaceLoadInstance)
  *                <li> SpaceInfiltrationDesignFlowRate (SpaceLoad)
  *                <li> SpaceInfiltrationEffectiveLeakageArea (SpaceLoad)
+ *                <li> SpaceInfiltrationFlowCoefficient (SpaceLoad)
  *                <li> DaylightingControl (SpaceItem)
  *                <li> IlluminanceMap (SpaceItem)
  *                <li> GlareSensor (SpaceItem)
@@ -895,6 +893,7 @@ namespace model {
  *        <li> People (SpaceLoadInstance)
  *        <li> SpaceInfiltrationDesignFlowRate (SpaceLoad)
  *        <li> SpaceInfiltrationEffectiveLeakageArea (SpaceLoad)
+ *        <li> SpaceInfiltrationFlowCoefficient (SpaceLoad)
  *      </ul>
  *    <li> RenderingColor (ResourceObject)
  *    <li> ElectricEquipmentDefinition (SpaceLoadDefinition)
@@ -1267,5 +1266,5 @@ namespace model {
  *  }
  *  \endcode
  */
- } // model
- } // openstudio
+}  // namespace model
+}  // namespace openstudio

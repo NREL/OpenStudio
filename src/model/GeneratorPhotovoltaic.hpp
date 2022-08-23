@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,116 +37,125 @@ namespace openstudio {
 
 namespace model {
 
-class PlanarSurface;
-class PhotovoltaicPerformance;
-class Schedule;
+  class PlanarSurface;
+  class PhotovoltaicPerformance;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class GeneratorPhotovoltaic_Impl;
+    class GeneratorPhotovoltaic_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** GeneratorPhotovoltaic is a Generator that wraps the OpenStudio IDD object 'OS:Generator:Photovoltaic'. */
-class MODEL_API GeneratorPhotovoltaic : public Generator {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** GeneratorPhotovoltaic is a Generator that wraps the OpenStudio IDD object 'OS:Generator:Photovoltaic'. */
+  class MODEL_API GeneratorPhotovoltaic : public Generator
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceSimple performance
-  static GeneratorPhotovoltaic simple(const Model& model);
+    /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceSimple performance
+    static GeneratorPhotovoltaic simple(const Model& model);
 
-  /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceEquivalentOneDiode performance
-  static GeneratorPhotovoltaic equivalentOneDiode(const Model& model);
+    /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceEquivalentOneDiode performance
+    static GeneratorPhotovoltaic equivalentOneDiode(const Model& model);
 
-  virtual ~GeneratorPhotovoltaic() {}
+    /// Creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceSandia performance, using the default Ctor
+    static GeneratorPhotovoltaic sandia(const Model& model);
 
-  //@}
+    /// Factory method to creates a GeneratorPhotovoltaic object with PhotovoltaicPerformanceSandia by looking up characteristics in the embedded
+    // Sandia database by its name. Please use the PhotovoltaicPerformanceSandia::sandiaModulePerformanceNames() static method
+    // to look up the valid names as it will throw if it cannot find it
+    static GeneratorPhotovoltaic fromSandiaDatabase(const Model& model, const std::string& sandiaModulePerformanceName);
 
-  static IddObjectType iddObjectType();
+    virtual ~GeneratorPhotovoltaic() {}
 
-  static std::vector<std::string> heatTransferIntegrationModeValues();
+    //@}
 
-  /** @name Getters */
-  //@{
+    static IddObjectType iddObjectType();
 
-  boost::optional<PlanarSurface> surface() const;
+    static std::vector<std::string> heatTransferIntegrationModeValues();
 
-  PhotovoltaicPerformance photovoltaicPerformance() const;
+    /** @name Getters */
+    //@{
 
-  std::string heatTransferIntegrationMode() const;
+    boost::optional<PlanarSurface> surface() const;
 
-  bool isHeatTransferIntegrationModeDefaulted() const;
+    PhotovoltaicPerformance photovoltaicPerformance() const;
 
-  double numberOfModulesInParallel() const;
+    std::string heatTransferIntegrationMode() const;
 
-  bool isNumberOfModulesInParallelDefaulted() const;
+    bool isHeatTransferIntegrationModeDefaulted() const;
 
-  double numberOfModulesInSeries() const;
+    double numberOfModulesInParallel() const;
 
-  bool isNumberOfModulesInSeriesDefaulted() const;
+    bool isNumberOfModulesInParallelDefaulted() const;
 
-  boost::optional<double> ratedElectricPowerOutput() const;
+    double numberOfModulesInSeries() const;
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    bool isNumberOfModulesInSeriesDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    boost::optional<double> ratedElectricPowerOutput() const;
 
-  bool setSurface(const PlanarSurface& surface);
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  void resetSurface();
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setHeatTransferIntegrationMode(std::string heatTransferIntegrationMode);
+    bool setSurface(const PlanarSurface& surface);
 
-  void resetHeatTransferIntegrationMode();
+    void resetSurface();
 
-  bool setNumberOfModulesInParallel(double numberOfModulesInParallel);
+    bool setHeatTransferIntegrationMode(std::string heatTransferIntegrationMode);
 
-  void resetNumberOfModulesInParallel();
+    void resetHeatTransferIntegrationMode();
 
-  bool setNumberOfModulesInSeries(double numberOfModulesInSeries);
+    bool setNumberOfModulesInParallel(double numberOfModulesInParallel);
 
-  void resetNumberOfModulesInSeries();
+    void resetNumberOfModulesInParallel();
 
-  bool setRatedElectricPowerOutput(double ratedElectricPowerOutput);
+    bool setNumberOfModulesInSeries(double numberOfModulesInSeries);
 
-  void resetRatedElectricPowerOutput();
+    void resetNumberOfModulesInSeries();
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setRatedElectricPowerOutput(double ratedElectricPowerOutput);
 
-  void resetAvailabilitySchedule();
+    void resetRatedElectricPowerOutput();
 
-  //@}
-  /** @name Other */
-  //@{
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GeneratorPhotovoltaic_Impl ImplType;
+    void resetAvailabilitySchedule();
 
-  GeneratorPhotovoltaic(const Model& model, const PhotovoltaicPerformance& performance);
+    //@}
+    /** @name Other */
+    //@{
 
-  explicit GeneratorPhotovoltaic(std::shared_ptr<detail::GeneratorPhotovoltaic_Impl> impl);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GeneratorPhotovoltaic_Impl ImplType;
 
-  friend class detail::GeneratorPhotovoltaic_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.GeneratorPhotovoltaic");
-};
+    GeneratorPhotovoltaic(const Model& model, const PhotovoltaicPerformance& performance);
 
-/** \relates GeneratorPhotovoltaic*/
-typedef boost::optional<GeneratorPhotovoltaic> OptionalGeneratorPhotovoltaic;
+    explicit GeneratorPhotovoltaic(std::shared_ptr<detail::GeneratorPhotovoltaic_Impl> impl);
 
-/** \relates GeneratorPhotovoltaic*/
-typedef std::vector<GeneratorPhotovoltaic> GeneratorPhotovoltaicVector;
+    friend class detail::GeneratorPhotovoltaic_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GeneratorPhotovoltaic");
+  };
 
-} // model
-} // openstudio
+  /** \relates GeneratorPhotovoltaic*/
+  typedef boost::optional<GeneratorPhotovoltaic> OptionalGeneratorPhotovoltaic;
 
-#endif // MODEL_GENERATORPHOTOVOLTAIC_HPP
+  /** \relates GeneratorPhotovoltaic*/
+  typedef std::vector<GeneratorPhotovoltaic> GeneratorPhotovoltaicVector;
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_GENERATORPHOTOVOLTAIC_HPP

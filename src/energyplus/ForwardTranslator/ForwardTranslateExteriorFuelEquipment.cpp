@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,31 +43,29 @@
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateExteriorFuelEquipment(
-    model::ExteriorFuelEquipment& modelObject)
-{
-  IdfObject idfObject(IddObjectType::Exterior_FuelEquipment);
-  m_idfObjects.push_back(idfObject);
-  idfObject.setString(Exterior_FuelEquipmentFields::Name, modelObject.name().get());
+  boost::optional<IdfObject> ForwardTranslator::translateExteriorFuelEquipment(model::ExteriorFuelEquipment& modelObject) {
+    IdfObject idfObject(IddObjectType::Exterior_FuelEquipment);
+    m_idfObjects.push_back(idfObject);
+    idfObject.setString(Exterior_FuelEquipmentFields::Name, modelObject.name().get());
 
-  auto sch = modelObject.schedule();
-  OptionalIdfObject relatedIdfObject = translateAndMapModelObject(sch);
-  OS_ASSERT(relatedIdfObject);
-  idfObject.setString(Exterior_FuelEquipmentFields::ScheduleName,relatedIdfObject->name().get());
+    auto sch = modelObject.schedule();
+    OptionalIdfObject relatedIdfObject = translateAndMapModelObject(sch);
+    OS_ASSERT(relatedIdfObject);
+    idfObject.setString(Exterior_FuelEquipmentFields::ScheduleName, relatedIdfObject->name().get());
 
-  // Get the Design Level from the attached equipment definition, and take multiplier into account
-  model::ExteriorFuelEquipmentDefinition definition = modelObject.exteriorFuelEquipmentDefinition();
-  double designLevel = definition.designLevel()*modelObject.multiplier();
-  idfObject.setDouble(Exterior_FuelEquipmentFields::DesignLevel,designLevel);
+    // Get the Design Level from the attached equipment definition, and take multiplier into account
+    model::ExteriorFuelEquipmentDefinition definition = modelObject.exteriorFuelEquipmentDefinition();
+    double designLevel = definition.designLevel() * modelObject.multiplier();
+    idfObject.setDouble(Exterior_FuelEquipmentFields::DesignLevel, designLevel);
 
-  // Fuel Use Type
-  idfObject.setString(Exterior_FuelEquipmentFields::FuelUseType, modelObject.fuelType());
+    // Fuel Use Type
+    idfObject.setString(Exterior_FuelEquipmentFields::FuelUseType, modelObject.fuelType());
 
-  // End Use Subcategory
-  idfObject.setString(Exterior_FuelEquipmentFields::EndUseSubcategory,modelObject.endUseSubcategory());
+    // End Use Subcategory
+    idfObject.setString(Exterior_FuelEquipmentFields::EndUseSubcategory, modelObject.endUseSubcategory());
 
-  return idfObject;
-}
+    return idfObject;
+  }
 
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

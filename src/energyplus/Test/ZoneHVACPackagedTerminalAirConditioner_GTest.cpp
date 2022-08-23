@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,8 +34,11 @@
 #include "../../model/Model.hpp"
 #include "../../model/ZoneHVACPackagedTerminalAirConditioner.hpp"
 #include "../../model/ThermalZone.hpp"
+#include "../../model/Space.hpp"
 #include "../../model/CoilWaterHeatingDesuperheater.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
 #include "../../model/CoilHeatingElectric.hpp"
 #include "../../model/FanConstantVolume.hpp"
 
@@ -59,9 +62,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalAirCondition
 
   ZoneHVACPackagedTerminalAirConditioner ptac(m, sch, fan, hc, cc);
 
-  // Need to be in a thermal zone to be translated
+  // Need to be in a thermal zone to be translated, and TZ needs at least one space
   ThermalZone z(m);
   ptac.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(m);
@@ -75,5 +80,68 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalAirCondition
   EXPECT_EQ(cc.nameString(), idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName).get());
 
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
+}
 
+TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalAirConditioner_CoilCoolingDXVariableSpeed) {
+
+  Model m;
+
+  Schedule sch = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(m);
+  CoilCoolingDXVariableSpeed cc(m);
+  CoilHeatingElectric hc(m);
+
+  ZoneHVACPackagedTerminalAirConditioner ptac(m, sch, fan, hc, cc);
+
+  // Need to be in a thermal zone to be translated, and TZ needs at least one space
+  ThermalZone z(m);
+  ptac.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(m);
+
+  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ZoneHVAC_PackagedTerminalAirConditioner));
+  ASSERT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_ptac(idfObjs[0]);
+
+  // Check that the DX coil ends up directly onto the object, and NOT a CoilSystem:Cooling:DX wrapper
+  EXPECT_EQ("Coil:Cooling:DX:VariableSpeed", idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilObjectType).get());
+  EXPECT_EQ(cc.nameString(), idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName).get());
+
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalAirConditioner_CoilSystemCoolingDXHeatExchangerAssisted) {
+
+  Model m;
+
+  Schedule sch = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(m);
+  CoilSystemCoolingDXHeatExchangerAssisted cc(m);
+  CoilHeatingElectric hc(m);
+
+  ZoneHVACPackagedTerminalAirConditioner ptac(m, sch, fan, hc, cc);
+
+  // Need to be in a thermal zone to be translated, and TZ needs at least one space
+  ThermalZone z(m);
+  ptac.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(m);
+
+  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ZoneHVAC_PackagedTerminalAirConditioner));
+  ASSERT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_ptac(idfObjs[0]);
+
+  // Check that the DX coil ends up directly onto the object, and NOT a CoilSystem:Cooling:DX wrapper|
+  EXPECT_EQ("CoilSystem:Cooling:DX:HeatExchangerAssisted",
+            idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilObjectType).get());
+  EXPECT_EQ(cc.nameString(), idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName).get());
+
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted).size());
 }

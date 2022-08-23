@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,48 +35,45 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API SizingPeriod_Impl : public ParentObject_Impl {
-   public:
+    class MODEL_API SizingPeriod_Impl : public ParentObject_Impl
+    {
+     public:
+      // constructor
+      SizingPeriod_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // constructor
-    SizingPeriod_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // construct from workspace
+      SizingPeriod_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    SizingPeriod_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                   Model_Impl* model,
-                   bool keepHandle);
+      // clone copy constructor
+      SizingPeriod_Impl(const SizingPeriod_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // clone copy constructor
-    SizingPeriod_Impl(const SizingPeriod_Impl& other,Model_Impl* model,bool keepHandle);
+      // virtual destructor
+      virtual ~SizingPeriod_Impl() {}
 
-    // virtual destructor
-    virtual ~SizingPeriod_Impl(){}
+      // ensure that this object does not contain the date 2/29
+      virtual void ensureNoLeapDays() = 0;
 
-    // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays() = 0;
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-    // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const override;
+      /// get a vector of allowable children types
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    /// get a vector of allowable children types
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.SizingPeriod");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.SizingPeriod");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SIZINGPERIOD_IMPL_HPP
+#endif  // MODEL_SIZINGPERIOD_IMPL_HPP

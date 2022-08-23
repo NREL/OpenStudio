@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,127 +36,120 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** CoilCoolingLowTempRadiantConstFlow_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingLowTempRadiantConstFlow.*/
-  class MODEL_API CoilCoolingLowTempRadiantConstFlow_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoilCoolingLowTempRadiantConstFlow_Impl is a StraightComponent_Impl that is the implementation class for CoilCoolingLowTempRadiantConstFlow.*/
+    class MODEL_API CoilCoolingLowTempRadiantConstFlow_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilCoolingLowTempRadiantConstFlow_Impl(const IdfObject& idfObject,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      CoilCoolingLowTempRadiantConstFlow_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingLowTempRadiantConstFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      CoilCoolingLowTempRadiantConstFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilCoolingLowTempRadiantConstFlow_Impl(const CoilCoolingLowTempRadiantConstFlow_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      CoilCoolingLowTempRadiantConstFlow_Impl(const CoilCoolingLowTempRadiantConstFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilCoolingLowTempRadiantConstFlow_Impl() {}
+      virtual ~CoilCoolingLowTempRadiantConstFlow_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      boost::optional<Schedule> coolingHighWaterTemperatureSchedule() const;
 
-    boost::optional<Schedule> coolingHighWaterTemperatureSchedule() const;
+      boost::optional<Schedule> coolingLowWaterTemperatureSchedule() const;
 
-    boost::optional<Schedule> coolingLowWaterTemperatureSchedule() const;
+      boost::optional<Schedule> coolingHighControlTemperatureSchedule() const;
 
-    boost::optional<Schedule> coolingHighControlTemperatureSchedule() const;
+      boost::optional<Schedule> coolingLowControlTemperatureSchedule() const;
 
-    boost::optional<Schedule> coolingLowControlTemperatureSchedule() const;
+      std::string condensationControlType() const;
 
-    std::string condensationControlType() const;
+      bool isCondensationControlTypeDefaulted() const;
 
-    bool isCondensationControlTypeDefaulted() const;
+      double condensationControlDewpointOffset() const;
 
-    double condensationControlDewpointOffset() const;
+      bool isCondensationControlDewpointOffsetDefaulted() const;
 
-    bool isCondensationControlDewpointOffsetDefaulted() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setCoolingHighWaterTemperatureSchedule(Schedule& schedule);
 
+      void resetCoolingHighWaterTemperatureSchedule();
 
-    bool setCoolingHighWaterTemperatureSchedule(Schedule& schedule);
+      bool setCoolingLowWaterTemperatureSchedule(Schedule& schedule);
 
-    void resetCoolingHighWaterTemperatureSchedule();
+      void resetCoolingLowWaterTemperatureSchedule();
 
-    bool setCoolingLowWaterTemperatureSchedule(Schedule& schedule);
+      bool setCoolingHighControlTemperatureSchedule(Schedule& schedule);
 
-    void resetCoolingLowWaterTemperatureSchedule();
+      void resetCoolingHighControlTemperatureSchedule();
 
-    bool setCoolingHighControlTemperatureSchedule(Schedule& schedule);
+      bool setCoolingLowControlTemperatureSchedule(Schedule& schedule);
 
-    void resetCoolingHighControlTemperatureSchedule();
+      void resetCoolingLowControlTemperatureSchedule();
 
-    bool setCoolingLowControlTemperatureSchedule(Schedule& schedule);
+      bool setCondensationControlType(std::string condensationControlType);
 
-    void resetCoolingLowControlTemperatureSchedule();
+      void resetCondensationControlType();
 
-    bool setCondensationControlType(std::string condensationControlType);
+      bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
 
-    void resetCondensationControlType();
+      void resetCondensationControlDewpointOffset();
 
-    bool setCondensationControlDewpointOffset(double condensationControlDewpointOffset);
+      //@}
+      /** @name Other */
+      //@{
 
-    void resetCondensationControlDewpointOffset();
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilCoolingLowTempRadiantConstFlow");
 
-    //@}
-    /** @name Other */
-    //@{
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoilCoolingLowTempRadiantConstFlow");
+      std::vector<std::string> condensationControlTypeValues() const;
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
+      boost::optional<ModelObject> coolingHighWaterTemperatureScheduleAsModelObject() const;
+      boost::optional<ModelObject> coolingLowWaterTemperatureScheduleAsModelObject() const;
+      boost::optional<ModelObject> coolingHighControlTemperatureScheduleAsModelObject() const;
+      boost::optional<ModelObject> coolingLowControlTemperatureScheduleAsModelObject() const;
 
-    std::vector<std::string> condensationControlTypeValues() const;
+      bool setCoolingHighWaterTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setCoolingLowWaterTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setCoolingHighControlTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setCoolingLowControlTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    boost::optional<ModelObject> coolingHighWaterTemperatureScheduleAsModelObject() const;
-    boost::optional<ModelObject> coolingLowWaterTemperatureScheduleAsModelObject() const;
-    boost::optional<ModelObject> coolingHighControlTemperatureScheduleAsModelObject() const;
-    boost::optional<ModelObject> coolingLowControlTemperatureScheduleAsModelObject() const;
+  }  // namespace detail
 
-    bool setCoolingHighWaterTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setCoolingLowWaterTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setCoolingHighControlTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setCoolingLowControlTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_COILCOOLINGLOWTEMPRADIANTCONSTFLOW_IMPL_HPP
+#endif  // MODEL_COILCOOLINGLOWTEMPRADIANTCONSTFLOW_IMPL_HPP

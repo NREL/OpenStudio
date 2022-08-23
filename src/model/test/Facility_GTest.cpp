@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -454,12 +454,11 @@ TEST_F(ModelFixture, Facility_EconomicsTest_EmptyModel) {
   RunPeriod runPeriod = model.getUniqueModelObject<RunPeriod>();
 
   boost::optional<openstudio::TimeSeries> timeSeries = electricMeter->getData(runPeriod.name().get());
-  if (timeSeries){
+  if (timeSeries) {
     openstudio::Vector values = timeSeries->values();
     unsigned numValues = values.size();
-    for (unsigned i = 0; i < numValues; ++i){
+    for (unsigned i = 0; i < numValues; ++i) {
       EXPECT_NO_THROW(values(i));
     }
   }
-
 }

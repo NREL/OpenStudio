@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,124 +40,124 @@ class Transformation;
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class GlareSensor_Impl;
+    class GlareSensor_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** GlareSensor is a SpaceItem that wraps the OpenStudio IDD object 'OS:Glare:Sensor'. */
-class MODEL_API GlareSensor : public SpaceItem {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** GlareSensor is a SpaceItem that wraps the OpenStudio IDD object 'OS:Glare:Sensor'. */
+  class MODEL_API GlareSensor : public SpaceItem
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit GlareSensor(const Model& model);
+    explicit GlareSensor(const Model& model);
 
-  virtual ~GlareSensor() {}
+    virtual ~GlareSensor() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  double positionXCoordinate() const;
+    double positionXCoordinate() const;
 
-  double positionYCoordinate() const;
+    double positionYCoordinate() const;
 
-  double positionZCoordinate() const;
+    double positionZCoordinate() const;
 
-  double psiRotationAroundXAxis() const;
+    double psiRotationAroundXAxis() const;
 
-  bool isPsiRotationAroundXAxisDefaulted() const;
+    bool isPsiRotationAroundXAxisDefaulted() const;
 
-  double thetaRotationAroundYAxis() const;
+    double thetaRotationAroundYAxis() const;
 
-  bool isThetaRotationAroundYAxisDefaulted() const;
+    bool isThetaRotationAroundYAxisDefaulted() const;
 
-  double phiRotationAroundZAxis() const;
+    double phiRotationAroundZAxis() const;
 
-  bool isPhiRotationAroundZAxisDefaulted() const;
+    bool isPhiRotationAroundZAxisDefaulted() const;
 
-  int numberofGlareViewVectors() const;
+    int numberofGlareViewVectors() const;
 
-  boost::optional<double> maximumAllowableDaylightGlareProbability() const;
+    boost::optional<double> maximumAllowableDaylightGlareProbability() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setPositionXCoordinate(double positionXCoordinate);
+    bool setPositionXCoordinate(double positionXCoordinate);
 
-  bool setPositionYCoordinate(double positionYCoordinate);
+    bool setPositionYCoordinate(double positionYCoordinate);
 
-  bool setPositionZCoordinate(double positionZCoordinate);
+    bool setPositionZCoordinate(double positionZCoordinate);
 
-  bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
+    bool setPsiRotationAroundXAxis(double psiRotationAroundXAxis);
 
-  void resetPsiRotationAroundXAxis();
+    void resetPsiRotationAroundXAxis();
 
-  bool setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
+    bool setThetaRotationAroundYAxis(double thetaRotationAroundYAxis);
 
-  void resetThetaRotationAroundYAxis();
+    void resetThetaRotationAroundYAxis();
 
-  bool setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
+    bool setPhiRotationAroundZAxis(double phiRotationAroundZAxis);
 
-  void resetPhiRotationAroundZAxis();
+    void resetPhiRotationAroundZAxis();
 
-  bool setNumberofGlareViewVectors(int numberofGlareViewVectors);
+    bool setNumberofGlareViewVectors(int numberofGlareViewVectors);
 
-  void resetNumberofGlareViewVectors();
+    void resetNumberofGlareViewVectors();
 
-  bool setMaximumAllowableDaylightGlareProbability(double maximumAllowableDaylightGlareProbability);
+    bool setMaximumAllowableDaylightGlareProbability(double maximumAllowableDaylightGlareProbability);
 
-  void resetMaximumAllowableDaylightGlareProbability();
+    void resetMaximumAllowableDaylightGlareProbability();
 
-  //@}
+    //@}
 
-  /// Returns a Point3d representing position only in meters relative to the Space.
-  openstudio::Point3d position() const;
+    /// Returns a Point3d representing position only in meters relative to the Space.
+    openstudio::Point3d position() const;
 
-  /// Sets a Point3d representing position only position in meters relative to the Space.
-  /// Does not change the orientation of the GlareSensor.
-  bool setPosition(const openstudio::Point3d& position);
+    /// Sets a Point3d representing position only position in meters relative to the Space.
+    /// Does not change the orientation of the GlareSensor.
+    bool setPosition(const openstudio::Point3d& position);
 
-  /// Returns a Transformation representing position and orientation in meters relative to the Space.
-  openstudio::Transformation transformation() const;
+    /// Returns a Transformation representing position and orientation in meters relative to the Space.
+    openstudio::Transformation transformation() const;
 
-  /** Sets a Transformation representing position and orientation in meters relative to the Space. */
-  bool setTransformation(const openstudio::Transformation& transformation);
+    /** Sets a Transformation representing position and orientation in meters relative to the Space. */
+    bool setTransformation(const openstudio::Transformation& transformation);
 
-  /// Keeps current position and orients the view towards the target, target is in space coordinates.
-  bool aimAt(const Point3d& target);
+    /// Keeps current position and orients the view towards the target, target is in space coordinates.
+    bool aimAt(const Point3d& target);
 
- protected:
-  /// @cond
-  typedef detail::GlareSensor_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::GlareSensor_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit GlareSensor(std::shared_ptr<detail::GlareSensor_Impl> impl);
+    explicit GlareSensor(std::shared_ptr<detail::GlareSensor_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GlareSensor");
+  };
 
-  REGISTER_LOGGER("openstudio.model.GlareSensor");
-};
+  /** \relates GlareSensor*/
+  typedef boost::optional<GlareSensor> OptionalGlareSensor;
 
-/** \relates GlareSensor*/
-typedef boost::optional<GlareSensor> OptionalGlareSensor;
+  /** \relates GlareSensor*/
+  typedef std::vector<GlareSensor> GlareSensorVector;
 
-/** \relates GlareSensor*/
-typedef std::vector<GlareSensor> GlareSensorVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_GLARESENSOR_HPP
+#endif  // MODEL_GLARESENSOR_HPP

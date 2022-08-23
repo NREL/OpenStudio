@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,42 +35,42 @@
 namespace openstudio {
 namespace model {
 
-class ScheduleTypeLimits;
+  class ScheduleTypeLimits;
 
-namespace detail {
+  namespace detail {
 
-  // derive Schedule_Impl from ResourceObject_Impl to override virtual methods
-  class MODEL_API Schedule_Impl : public ScheduleBase_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    // derive Schedule_Impl from ResourceObject_Impl to override virtual methods
+    class MODEL_API Schedule_Impl : public ScheduleBase_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    // constructor
-    Schedule_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // constructor
+      Schedule_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    Schedule_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                  Model_Impl* model,
-                  bool keepHandle);
+      // construct from workspace
+      Schedule_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // clone copy constructor
-    Schedule_Impl(const Schedule_Impl& other, Model_Impl* model,bool keepHandles);
+      // clone copy constructor
+      Schedule_Impl(const Schedule_Impl& other, Model_Impl* model, bool keepHandles);
 
-    // virtual destructor
-    virtual ~Schedule_Impl(){}
+      // virtual destructor
+      virtual ~Schedule_Impl() {}
 
-    //@}
-   protected:
-    virtual bool candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const override;
+      //@}
+     protected:
+      virtual bool candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const override;
 
-    virtual bool okToResetScheduleTypeLimits() const override;
-   private:
-    REGISTER_LOGGER("openstudio.model.Schedule");
-  };
+      virtual bool okToResetScheduleTypeLimits() const override;
 
-} // detail
+     private:
+      REGISTER_LOGGER("openstudio.model.Schedule");
+    };
 
-} // model
-} // openstudio
+  }  // namespace detail
 
-#endif // MODEL_SCHEDULE_IMPL_HPP
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_SCHEDULE_IMPL_HPP

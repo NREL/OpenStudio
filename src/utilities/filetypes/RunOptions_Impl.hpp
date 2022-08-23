@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,13 +40,12 @@
 
 #include <nano/nano_signal_slot.hpp>
 
-namespace openstudio{
+namespace openstudio {
 namespace detail {
 
   class UTILITIES_API RunOptions_Impl
   {
-  public:
-
+   public:
     RunOptions_Impl();
 
     virtual ~RunOptions_Impl();
@@ -56,6 +55,10 @@ namespace detail {
     bool debug() const;
     bool setDebug(bool debug);
     void resetDebug();
+
+    bool epjson() const;
+    bool setEpjson(bool epjson);
+    void resetEpjson();
 
     bool fast() const;
     bool setFast(bool fast);
@@ -81,28 +84,32 @@ namespace detail {
     bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
     void resetCustomOutputAdapter();
 
+    std::string forwardTranslateOptions() const;
+    bool setForwardTranslateOptions(const std::string& options);
+    void resetForwardTranslateOptions();
+
     // Emitted on any change
     Nano::Signal<void()> onChange;
 
-  protected:
-
+   protected:
     void onUpdate();
 
-  private:
-
+   private:
     // configure logging
     REGISTER_LOGGER("openstudio.RunOptions");
 
     bool m_debug;
+    bool m_epjson;
     bool m_fast;
     bool m_preserveRunDir;
     bool m_skipExpandObjects;
     bool m_skipEnergyPlusPreprocess;
     bool m_cleanup;
+    std::string m_forwardTranslateOptions;
     boost::optional<CustomOutputAdapter> m_customOutputAdapter;
   };
 
-} // detail
-} // openstudio
+}  // namespace detail
+}  // namespace openstudio
 
-#endif //UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
+#endif  //UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP

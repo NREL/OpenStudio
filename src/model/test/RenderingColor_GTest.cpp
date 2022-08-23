@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -98,7 +98,7 @@ TEST_F(ModelFixture, RenderingColor4) {
 
   Model model;
 
-  for (int i = -1; i <= 256; ++i){
+  for (int i = -1; i <= 256; ++i) {
     RenderingColor color(model);
     EXPECT_GE(color.renderingRedValue(), 0);
     EXPECT_LE(color.renderingRedValue(), 255);
@@ -109,11 +109,11 @@ TEST_F(ModelFixture, RenderingColor4) {
     EXPECT_EQ(255, color.renderingAlphaValue());
     EXPECT_TRUE(color.isRenderingAlphaValueDefaulted());
 
-    if (i < 0 || i > 255){
+    if (i < 0 || i > 255) {
       EXPECT_FALSE(color.setRenderingAlphaValue(i));
       EXPECT_EQ(255, color.renderingAlphaValue());
       EXPECT_TRUE(color.isRenderingAlphaValueDefaulted());
-    }else{
+    } else {
       EXPECT_TRUE(color.setRenderingAlphaValue(i));
       EXPECT_EQ(i, color.renderingAlphaValue());
       EXPECT_FALSE(color.isRenderingAlphaValueDefaulted());
@@ -125,16 +125,13 @@ TEST_F(ModelFixture, RenderingColor4) {
 // may need a similar test for another object that requires other model objects
 // be connected during initializer
 
-class RenderingColorWorkspaceWatcher : public openstudio::WorkspaceWatcher {
+class RenderingColorWorkspaceWatcher : public openstudio::WorkspaceWatcher
+{
 
  public:
+  RenderingColorWorkspaceWatcher(const Workspace& workspace) : WorkspaceWatcher(workspace) {}
 
-  RenderingColorWorkspaceWatcher(const Workspace& workspace)
-    : WorkspaceWatcher(workspace)
-  {}
-
-  virtual void onObjectAdd(const WorkspaceObject& addedObject) override
-  {
+  virtual void onObjectAdd(const WorkspaceObject& addedObject) override {
     WorkspaceWatcher::onObjectAdd(addedObject);
 
     EXPECT_EQ(IddObjectType::OS_Rendering_Color, addedObject.iddObject().type().value());
@@ -152,8 +149,7 @@ class RenderingColorWorkspaceWatcher : public openstudio::WorkspaceWatcher {
   }
 };
 
-TEST_F(ModelFixture, RenderingColor_Initializer1)
-{
+TEST_F(ModelFixture, RenderingColor_Initializer1) {
   Model model;
   RenderingColorWorkspaceWatcher watcher(model);
   EXPECT_FALSE(watcher.objectAdded());
@@ -169,8 +165,7 @@ TEST_F(ModelFixture, RenderingColor_Initializer1)
   EXPECT_LE(color.renderingBlueValue(), 255);
 }
 
-TEST_F(ModelFixture, RenderingColor_Initializer2)
-{
+TEST_F(ModelFixture, RenderingColor_Initializer2) {
   Model model;
   RenderingColorWorkspaceWatcher watcher(model);
   EXPECT_FALSE(watcher.objectAdded());
@@ -190,8 +185,6 @@ TEST_F(ModelFixture, RenderingColor_Initializer2)
   EXPECT_GE(color.renderingBlueValue(), 0);
   EXPECT_LE(color.renderingBlueValue(), 255);
 }
-
-
 
 TEST_F(ModelFixture, RenderingColor_ColorString) {
   Model model;

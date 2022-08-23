@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,192 +37,199 @@ namespace openstudio {
 
 namespace model {
 
-class HVACComponent;
-class Schedule;
-class CoilHeatingDXVariableRefrigerantFlow;
-class CoilCoolingDXVariableRefrigerantFlow;
+  class HVACComponent;
+  class Schedule;
+  class CoilHeatingDXVariableRefrigerantFlow;
+  class CoilCoolingDXVariableRefrigerantFlow;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl;
+    class ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneHVACTerminalUnitVariableRefrigerantFlow is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow'. */
-class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACComponent {
+  /** ZoneHVACTerminalUnitVariableRefrigerantFlow is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow'. */
+  class MODEL_API ZoneHVACTerminalUnitVariableRefrigerantFlow : public ZoneHVACComponent
+  {
 
- public:
+   public:
+    explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model);
 
-  explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model);
+    explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model, const CoilCoolingDXVariableRefrigerantFlow& coolingCoil,
+                                                         const CoilHeatingDXVariableRefrigerantFlow& heatingCoil, const HVACComponent& fan);
 
-  explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(const Model& model,
-    const CoilCoolingDXVariableRefrigerantFlow & coolingCoil,
-    const CoilHeatingDXVariableRefrigerantFlow & heatingCoil,
-    const HVACComponent & fan);
+    virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow() {}
 
-  virtual ~ZoneHVACTerminalUnitVariableRefrigerantFlow() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> supplyAirFanPlacementValues();
 
-  static std::vector<std::string> supplyAirFanplacementValues();
+    Schedule terminalUnitAvailabilityschedule() const;
 
-  Schedule terminalUnitAvailabilityschedule() const;
+    bool setTerminalUnitAvailabilityschedule(Schedule& schedule);
 
-  bool setTerminalUnitAvailabilityschedule(Schedule& schedule);
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
+    boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
-  boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
+    bool isSupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
-  bool isSupplyAirFlowRateDuringCoolingOperationAutosized() const;
+    bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
 
-  bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
+    void autosizeSupplyAirFlowRateDuringCoolingOperation();
 
-  void autosizeSupplyAirFlowRateDuringCoolingOperation();
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Cooling Supply Air Flow Rate" **/
+    boost::optional<double> supplyAirFlowRateWhenNoCoolingisNeeded() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Cooling Supply Air Flow Rate" **/
-  boost::optional<double> supplyAirFlowRateWhenNoCoolingisNeeded() const;
+    bool isSupplyAirFlowRateWhenNoCoolingisNeededAutosized() const;
 
-  bool isSupplyAirFlowRateWhenNoCoolingisNeededAutosized() const;
+    bool setSupplyAirFlowRateWhenNoCoolingisNeeded(double supplyAirFlowRateWhenNoCoolingisNeeded);
 
-  bool setSupplyAirFlowRateWhenNoCoolingisNeeded(double supplyAirFlowRateWhenNoCoolingisNeeded);
+    void autosizeSupplyAirFlowRateWhenNoCoolingisNeeded();
 
-  void autosizeSupplyAirFlowRateWhenNoCoolingisNeeded();
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate" **/
+    boost::optional<double> supplyAirFlowRateDuringHeatingOperation() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate" **/
-  boost::optional<double> supplyAirFlowRateDuringHeatingOperation() const;
+    bool isSupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
-  bool isSupplyAirFlowRateDuringHeatingOperationAutosized() const;
+    bool setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation);
 
-  bool setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation);
+    void autosizeSupplyAirFlowRateDuringHeatingOperation();
 
-  void autosizeSupplyAirFlowRateDuringHeatingOperation();
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Heating Supply Air Flow Rate" **/
+    boost::optional<double> supplyAirFlowRateWhenNoHeatingisNeeded() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Heating Supply Air Flow Rate" **/
-  boost::optional<double> supplyAirFlowRateWhenNoHeatingisNeeded() const;
+    bool isSupplyAirFlowRateWhenNoHeatingisNeededAutosized() const;
 
-  bool isSupplyAirFlowRateWhenNoHeatingisNeededAutosized() const;
+    bool setSupplyAirFlowRateWhenNoHeatingisNeeded(double supplyAirFlowRateWhenNoHeatingisNeeded);
 
-  bool setSupplyAirFlowRateWhenNoHeatingisNeeded(double supplyAirFlowRateWhenNoHeatingisNeeded);
+    void autosizeSupplyAirFlowRateWhenNoHeatingisNeeded();
 
-  void autosizeSupplyAirFlowRateWhenNoHeatingisNeeded();
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Outdoor Air Flow Rate" **/
+    boost::optional<double> outdoorAirFlowRateDuringCoolingOperation() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Outdoor Air Flow Rate" **/
-  boost::optional<double> outdoorAirFlowRateDuringCoolingOperation() const;
+    bool isOutdoorAirFlowRateDuringCoolingOperationAutosized() const;
 
-  bool isOutdoorAirFlowRateDuringCoolingOperationAutosized() const;
+    bool setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation);
 
-  bool setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation);
+    void autosizeOutdoorAirFlowRateDuringCoolingOperation();
 
-  void autosizeOutdoorAirFlowRateDuringCoolingOperation();
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Outdoor Air Flow Rate" **/
+    boost::optional<double> outdoorAirFlowRateDuringHeatingOperation() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Outdoor Air Flow Rate" **/
-  boost::optional<double> outdoorAirFlowRateDuringHeatingOperation() const;
+    bool isOutdoorAirFlowRateDuringHeatingOperationAutosized() const;
 
-  bool isOutdoorAirFlowRateDuringHeatingOperationAutosized() const;
+    bool setOutdoorAirFlowRateDuringHeatingOperation(double outdoorAirFlowRateDuringHeatingOperation);
 
-  bool setOutdoorAirFlowRateDuringHeatingOperation(double outdoorAirFlowRateDuringHeatingOperation);
+    void autosizeOutdoorAirFlowRateDuringHeatingOperation();
 
-  void autosizeOutdoorAirFlowRateDuringHeatingOperation();
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Outdoor Air Flow Rate" **/
+    boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Outdoor Air Flow Rate" **/
-  boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
+    bool isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
 
-  bool isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
+    bool setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(double outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded);
 
-  bool setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(double outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded);
+    void autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    Schedule supplyAirFanOperatingModeSchedule() const;
 
-  Schedule supplyAirFanOperatingModeSchedule() const;
+    bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
-  bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
+    // Required for zone equipment. Leave blank if terminal unit is used in AirLoopHVAC:OutdoorAirSystem:EquipmentList.
+    // Also leave blank if terminal unit is used on main AirloopHVAC branch and terminal unit has no fan.
+    // TODO: not breaking API (yet), so leaving it as non optional
+    HVACComponent supplyAirFan() const;  // TODO: OS_DEPRECATED
+    // bool setSupplyAirFan(const HVACComponent& fan);
+    // void resetSupplyAirFan();
 
-  HVACComponent supplyAirFan() const;
+    boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;
 
-  boost::optional<CoilCoolingDXVariableRefrigerantFlow> coolingCoil() const;
+    bool setCoolingCoil(const CoilCoolingDXVariableRefrigerantFlow& coil);
 
-  bool setCoolingCoil(const CoilCoolingDXVariableRefrigerantFlow & coil);
+    boost::optional<CoilHeatingDXVariableRefrigerantFlow> heatingCoil() const;
 
-  boost::optional<CoilHeatingDXVariableRefrigerantFlow> heatingCoil() const;
+    bool setHeatingCoil(const CoilHeatingDXVariableRefrigerantFlow& coil);
 
-  bool setHeatingCoil(const CoilHeatingDXVariableRefrigerantFlow & coil);
+    double zoneTerminalUnitOnParasiticElectricEnergyUse() const;
 
-  double zoneTerminalUnitOnParasiticElectricEnergyUse() const;
+    bool setZoneTerminalUnitOnParasiticElectricEnergyUse(double zoneTerminalUnitOnParasiticElectricEnergyUse);
 
-  bool setZoneTerminalUnitOnParasiticElectricEnergyUse(double zoneTerminalUnitOnParasiticElectricEnergyUse);
+    double zoneTerminalUnitOffParasiticElectricEnergyUse() const;
 
-  double zoneTerminalUnitOffParasiticElectricEnergyUse() const;
+    bool setZoneTerminalUnitOffParasiticElectricEnergyUse(double zoneTerminalUnitOffParasiticElectricEnergyUse);
 
-  bool setZoneTerminalUnitOffParasiticElectricEnergyUse(double zoneTerminalUnitOffParasiticElectricEnergyUse);
+    double ratedTotalHeatingCapacitySizingRatio() const;
 
-  double ratedTotalHeatingCapacitySizingRatio() const;
+    bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
 
-  bool setRatedTotalHeatingCapacitySizingRatio(double ratedTotalHeatingCapacitySizingRatio);
+    // \field Availability Manager List Name
+    // \field Design Specification ZoneHVAC Sizing Object Name
 
+    // Supplemental Heating Coil Name
+    boost::optional<HVACComponent> supplementalHeatingCoil() const;
+    bool setSupplementalHeatingCoil(const HVACComponent& coil);
+    void resetSupplementalHeatingCoil();
 
+    // Maximum Supply Air Temperature from Supplemental Heater (autosized)
+    boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
+    bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const;
+    bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
+    void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
 
-  // \field Availability Manager List Name
-  // \field Design Specification ZoneHVAC Sizing Object Name
+    // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation (default 21C)
+    double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
+    bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
 
+    // Supply Air Fan Placement
+    std::string supplyAirFanPlacement() const;
+    bool setSupplyAirFanPlacement(const std::string& supplyAirFanPlacement);
 
-  // Supplemental Heating Coil Name
-  boost::optional<HVACComponent> supplementalHeatingCoil() const;
-  bool setSupplementalHeatingCoil(const HVACComponent& coil);
-  void resetSupplementalHeatingCoil();
+    // Controlling Zone or Thermostat Location
+    boost::optional<ThermalZone> controllingZoneorThermostatLocation() const;
+    bool setControllingZoneorThermostatLocation(const ThermalZone& thermalZone);
+    void resetControllingZoneorThermostatLocation();
 
-  // Maximum Supply Air Temperature from Supplemental Heater (autosized)
-  boost::optional<double> maximumSupplyAirTemperaturefromSupplementalHeater() const;
-  bool isMaximumSupplyAirTemperaturefromSupplementalHeaterAutosized() const;
-  bool setMaximumSupplyAirTemperaturefromSupplementalHeater(double maximumSupplyAirTemperaturefromSupplementalHeater);
-  void autosizeMaximumSupplyAirTemperaturefromSupplementalHeater();
+    boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 
-  // Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation (default 21C)
-  double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation() const;
-  bool setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(double maximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation);
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingisNeeded() const;
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoHeatingisNeeded() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const;
+    boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoHeatingisNeeded() const;
+    boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const;
+    boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const;
+    boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
+   protected:
+    /// @cond
+    typedef detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl ImplType;
 
-  boost::optional<double> autosizedMaximumSupplyAirTemperaturefromSupplementalHeater() const;
+    explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(std::shared_ptr<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl> impl);
 
- protected:
+    friend class detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  /// @cond
-  typedef detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl ImplType;
+    /// @endcond
 
-  explicit ZoneHVACTerminalUnitVariableRefrigerantFlow(std::shared_ptr<detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneHVACTerminalUnitVariableRefrigerantFlow");
+  };
 
-  friend class detail::ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+  /** \relates ZoneHVACTerminalUnitVariableRefrigerantFlow*/
+  typedef boost::optional<ZoneHVACTerminalUnitVariableRefrigerantFlow> OptionalZoneHVACTerminalUnitVariableRefrigerantFlow;
 
-  /// @endcond
+  /** \relates ZoneHVACTerminalUnitVariableRefrigerantFlow*/
+  typedef std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> ZoneHVACTerminalUnitVariableRefrigerantFlowVector;
 
- private:
+}  // namespace model
+}  // namespace openstudio
 
-  REGISTER_LOGGER("openstudio.model.ZoneHVACTerminalUnitVariableRefrigerantFlow");
-};
-
-/** \relates ZoneHVACTerminalUnitVariableRefrigerantFlow*/
-typedef boost::optional<ZoneHVACTerminalUnitVariableRefrigerantFlow> OptionalZoneHVACTerminalUnitVariableRefrigerantFlow;
-
-/** \relates ZoneHVACTerminalUnitVariableRefrigerantFlow*/
-typedef std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> ZoneHVACTerminalUnitVariableRefrigerantFlowVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEHVACTERMINALUNITVARIABLEREFRIGERANTFLOW_HPP
-
+#endif  // MODEL_ZONEHVACTERMINALUNITVARIABLEREFRIGERANTFLOW_HPP

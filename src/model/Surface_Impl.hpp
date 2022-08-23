@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,271 +34,278 @@
 #include "PlanarSurface_Impl.hpp"
 
 namespace openstudio {
+class Polygon3d;
 namespace model {
 
-class AirflowNetworkSurface;
-class AirflowNetworkComponent;
-class Space;
-class SubSurface;
-class Surface;
-class ShadingSurfaceGroup;
-class SurfaceIntersection;
-class ConstructionBase;
-class SurfacePropertyOtherSideCoefficients;
-class SurfacePropertyOtherSideConditionsModel;
-class SurfacePropertyConfectionCoefficients;
-class FoundationKiva;
+  class AirflowNetworkSurface;
+  class AirflowNetworkComponent;
+  class Space;
+  class SubSurface;
+  class Surface;
+  class ShadingSurfaceGroup;
+  class SurfaceIntersection;
+  class ConstructionBase;
+  class SurfaceControlMovableInsulation;
+  class SurfacePropertyOtherSideCoefficients;
+  class SurfacePropertyOtherSideConditionsModel;
+  class SurfacePropertyConfectionCoefficients;
+  class SurfacePropertyLocalEnvironment;
+  class FoundationKiva;
 
-namespace detail {
+  namespace detail {
 
-  /** Surface_Impl is a PlanarSurface_Impl that is the implementation class for Surface.*/
-  class MODEL_API Surface_Impl : public PlanarSurface_Impl {
+    /** Surface_Impl is a PlanarSurface_Impl that is the implementation class for Surface.*/
+    class MODEL_API Surface_Impl : public PlanarSurface_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    Surface_Impl(const IdfObject& idfObject,
-                 Model_Impl* model,
-                 bool keepHandle);
+      Surface_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    Surface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                 Model_Impl* model,
-                 bool keepHandle);
+      Surface_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    Surface_Impl(const Surface_Impl& other,
-                 Model_Impl* model,
-                 bool keepHandle);
+      Surface_Impl(const Surface_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~Surface_Impl();
+      virtual ~Surface_Impl();
 
-    //@}
+      //@}
 
-    virtual boost::optional<ParentObject> parent() const override;
+      virtual boost::optional<ParentObject> parent() const override;
 
-    virtual bool setParent(ParentObject& newParent) override;
+      virtual bool setParent(ParentObject& newParent) override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual bool subtractFromGrossArea() const override;
+      virtual bool subtractFromGrossArea() const override;
 
-    virtual boost::optional<ConstructionBase> construction() const override;
+      virtual boost::optional<ConstructionBase> construction() const override;
 
-    virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const override;
+      virtual boost::optional<std::pair<ConstructionBase, int>> constructionWithSearchDistance() const override;
 
-    virtual bool isConstructionDefaulted() const override;
+      virtual bool isConstructionDefaulted() const override;
 
-    virtual bool setVertices(const std::vector<Point3d>& vertices) override;
+      virtual bool setVertices(const std::vector<Point3d>& vertices) override;
 
-    virtual bool setConstruction(const ConstructionBase& construction) override;
+      virtual bool setConstruction(const ConstructionBase& construction) override;
 
-    virtual void resetConstruction() override;
+      virtual void resetConstruction() override;
 
-    virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const override;
+      virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const override;
 
-    virtual boost::optional<Space> space() const override;
+      virtual boost::optional<Space> space() const override;
 
-    virtual boost::optional<double> uFactor() const override;
+      virtual boost::optional<double> uFactor() const override;
 
-    virtual boost::optional<double> thermalConductance() const override;
+      virtual boost::optional<double> thermalConductance() const override;
 
-    virtual bool setUFactor(double value) override;
+      virtual bool setUFactor(double value) override;
 
-    virtual bool setThermalConductance(double value) override;
+      virtual bool setThermalConductance(double value) override;
 
-    /** @name Getters */
-    //@{
+      /** @name Getters */
+      //@{
 
-    std::string surfaceType() const;
+      std::string surfaceType() const;
 
-    std::vector<std::string> surfaceTypeValues() const;
+      std::vector<std::string> surfaceTypeValues() const;
 
-    std::string outsideBoundaryCondition() const;
+      std::string outsideBoundaryCondition() const;
 
-    std::vector<std::string> outsideBoundaryConditionValues() const;
+      std::vector<std::string> outsideBoundaryConditionValues() const;
 
-    bool isGroundSurface() const;
+      bool isGroundSurface() const;
 
-    std::string sunExposure() const;
+      std::string sunExposure() const;
 
-    std::vector<std::string> sunExposureValues() const;
+      std::vector<std::string> sunExposureValues() const;
 
-    bool isSunExposureDefaulted() const;
+      bool isSunExposureDefaulted() const;
 
-    std::string windExposure() const;
+      std::string windExposure() const;
 
-    std::vector<std::string> windExposureValues() const;
+      std::vector<std::string> windExposureValues() const;
 
-    bool isWindExposureDefaulted() const;
+      bool isWindExposureDefaulted() const;
 
-    boost::optional<double> viewFactortoGround() const;
+      boost::optional<double> viewFactortoGround() const;
 
-    bool isViewFactortoGroundDefaulted() const;
+      bool isViewFactortoGroundDefaulted() const;
 
-    bool isViewFactortoGroundAutocalculated() const;
+      bool isViewFactortoGroundAutocalculated() const;
 
-    boost::optional<double> numberofVertices() const;
+      boost::optional<double> numberofVertices() const;
 
-    bool isNumberofVerticesDefaulted() const;
+      bool isNumberofVerticesDefaulted() const;
 
-    bool isNumberofVerticesAutocalculated() const;
+      bool isNumberofVerticesAutocalculated() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setSurfaceType(std::string surfaceType);
-    bool setSurfaceType(std::string surfaceType, bool driverMethod);
+      bool setSurfaceType(std::string surfaceType);
+      bool setSurfaceType(std::string surfaceType, bool driverMethod);
 
-    bool setOutsideBoundaryCondition(std::string outsideBoundaryCondition);
-    bool setOutsideBoundaryCondition(std::string outsideBoundaryCondition, bool driverMethod);
+      bool setOutsideBoundaryCondition(std::string outsideBoundaryCondition);
+      bool setOutsideBoundaryCondition(std::string outsideBoundaryCondition, bool driverMethod);
 
-    bool setSunExposure(std::string sunExposure);
-    bool setSunExposure(std::string sunExposure, bool driverMethod);
+      bool setSunExposure(std::string sunExposure);
+      bool setSunExposure(std::string sunExposure, bool driverMethod);
 
-    void resetSunExposure();
+      void resetSunExposure();
 
-    bool setWindExposure(std::string windExposure);
-    bool setWindExposure(std::string windExposure, bool driverMethod);
+      bool setWindExposure(std::string windExposure);
+      bool setWindExposure(std::string windExposure, bool driverMethod);
 
-    void resetWindExposure();
+      void resetWindExposure();
 
-    bool setViewFactortoGround(boost::optional<double> viewFactortoGround);
+      bool setViewFactortoGround(boost::optional<double> viewFactortoGround);
 
-    bool setViewFactortoGround(double viewFactortoGround);
+      bool setViewFactortoGround(double viewFactortoGround);
 
-    void resetViewFactortoGround();
+      void resetViewFactortoGround();
 
-    void autocalculateViewFactortoGround();
+      void autocalculateViewFactortoGround();
 
-    bool setNumberofVertices(boost::optional<double> numberofVertices);
+      bool setNumberofVertices(boost::optional<double> numberofVertices);
 
-    bool setNumberofVertices(double numberofVertices);
+      bool setNumberofVertices(double numberofVertices);
 
-    void resetNumberofVertices();
+      void resetNumberofVertices();
 
-    void autocalculateNumberofVertices();
+      void autocalculateNumberofVertices();
 
-    //@}
+      //@}
 
-    std::vector<SubSurface> subSurfaces() const;
+      std::vector<SubSurface> subSurfaces() const;
 
-    bool setSpace(const Space& space);
+      bool setSpace(const Space& space);
 
-    boost::optional<Surface> adjacentSurface() const;
+      boost::optional<Surface> adjacentSurface() const;
 
-    bool setAdjacentSurface(Surface& surface);
+      bool setAdjacentSurface(Surface& surface);
 
-    void resetAdjacentSurface();
+      void resetAdjacentSurface();
 
-    boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+      boost::optional<SurfaceControlMovableInsulation> surfaceControlMovableInsulation() const;
 
-    boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
+      boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
-    bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
+      boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;
 
-    void resetSurfacePropertyOtherSideCoefficients();
+      boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;
 
-    boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel() const;
+      bool setSurfacePropertyOtherSideCoefficients(SurfacePropertyOtherSideCoefficients& otherSideCoefficients);
 
-    bool setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel);
+      void resetSurfacePropertyOtherSideCoefficients();
 
-    void resetSurfacePropertyOtherSideConditionsModel();
+      boost::optional<SurfacePropertyOtherSideConditionsModel> surfacePropertyOtherSideConditionsModel() const;
 
-    bool intersect(Surface& otherSurface);
-    boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface);
+      bool setSurfacePropertyOtherSideConditionsModel(SurfacePropertyOtherSideConditionsModel& otherSideModel);
 
-    boost::optional<Surface> createAdjacentSurface(const Space& otherSpace);
+      void resetSurfacePropertyOtherSideConditionsModel();
 
-    bool isPartOfEnvelope() const;
+      bool intersect(Surface& otherSurface);
+      boost::optional<SurfaceIntersection> computeIntersection(Surface& otherSurface);
 
-    void assignDefaultSurfaceType();
-    void assignDefaultSurfaceType(bool driverMethod);
+      boost::optional<Surface> createAdjacentSurface(const Space& otherSpace);
 
-    void assignDefaultBoundaryCondition();
-    void assignDefaultBoundaryCondition(bool driverMethod);
+      bool isPartOfEnvelope() const;
 
-    void assignDefaultSunExposure();
-    void assignDefaultSunExposure(bool driverMethod);
+      void assignDefaultSurfaceType();
+      void assignDefaultSurfaceType(bool driverMethod);
 
-    void assignDefaultWindExposure();
-    void assignDefaultWindExposure(bool driverMethod);
+      void assignDefaultBoundaryCondition();
+      void assignDefaultBoundaryCondition(bool driverMethod);
 
-    double filmResistance() const;
+      void assignDefaultSunExposure();
+      void assignDefaultSunExposure(bool driverMethod);
 
-    double windowToWallRatio() const;
+      void assignDefaultWindExposure();
+      void assignDefaultWindExposure(bool driverMethod);
 
-    double skylightToRoofRatio() const;
+      double filmResistance() const;
 
-    double skylightToProjectedFloorRatio() const;
+      double windowToWallRatio() const;
 
-    boost::optional<SubSurface> setWindowToWallRatio(double wwr);
+      double totalAreaOfSubSurfaces() const;
 
-    boost::optional<SubSurface> setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor);
+      double skylightToRoofRatio() const;
 
-    std::vector<SubSurface> applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio,
-                                                               double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
-                                                               double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor,
-                                                               const boost::optional<ConstructionBase>& viewGlassConstruction,
-                                                               const boost::optional<ConstructionBase>& daylightingGlassConstruction);
+      double skylightToProjectedFloorRatio() const;
 
-    std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
+      boost::optional<SubSurface> setWindowToWallRatio(double wwr);
 
-    std::vector<Surface> splitSurfaceForSubSurfaces();
+      boost::optional<SubSurface> setWindowToWallRatio(double wwr, double desiredHeightOffset, bool heightOffsetFromFloor);
 
-    std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d> >& faces, double inset, const boost::optional<ConstructionBase>& construction);
+      std::vector<SubSurface> applyViewAndDaylightingGlassRatios(double viewGlassToWallRatio, double daylightingGlassToWallRatio,
+                                                                 double desiredViewGlassSillHeight, double desiredDaylightingGlassHeaderHeight,
+                                                                 double exteriorShadingProjectionFactor, double interiorShelfProjectionFactor,
+                                                                 const boost::optional<ConstructionBase>& viewGlassConstruction,
+                                                                 const boost::optional<ConstructionBase>& daylightingGlassConstruction);
 
-    AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkComponent &surfaceAirflowLeakage);
+      std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
 
-    boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
+      std::vector<Surface> splitSurfaceForSubSurfaces();
 
-    bool setAdjacentFoundation(const FoundationKiva& kiva);
+      std::vector<SubSurface> createSubSurfaces(const std::vector<std::vector<Point3d>>& faces, double inset,
+                                                const boost::optional<ConstructionBase>& construction);
 
-    boost::optional<FoundationKiva> adjacentFoundation() const;
+      AirflowNetworkSurface getAirflowNetworkSurface(const AirflowNetworkComponent& surfaceAirflowLeakage);
 
-    void resetAdjacentFoundation();
+      boost::optional<AirflowNetworkSurface> airflowNetworkSurface() const;
 
-    // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
-    boost::optional<SurfacePropertyExposedFoundationPerimeter> createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
+      bool setAdjacentFoundation(const FoundationKiva& kiva);
 
-    // returns the surface property exposed foundation perimeter if set
-    boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter() const;
+      boost::optional<FoundationKiva> adjacentFoundation() const;
 
-    // resets the surface property exposed foundation perimeter
-    void resetSurfacePropertyExposedFoundationPerimeter();
+      void resetAdjacentFoundation();
 
-   protected:
-   private:
-    friend class openstudio::model::Surface;
+      // if surface property exposed foundation perimeter already exists, do nothing and return nil; creates the surface property exposed foundation perimeter if it does not already exist and return it;
+      boost::optional<SurfacePropertyExposedFoundationPerimeter>
+        createSurfacePropertyExposedFoundationPerimeter(std::string exposedPerimeterCalculationMethod, double exposedPerimeter);
 
-    REGISTER_LOGGER("openstudio.model.Surface");
+      // returns the surface property exposed foundation perimeter if set
+      boost::optional<SurfacePropertyExposedFoundationPerimeter> surfacePropertyExposedFoundationPerimeter() const;
 
-    std::vector<ModelObject> subSurfacesAsModelObjects() const;
-    boost::optional<ModelObject> adjacentSurfaceAsModelObject() const;
+      // resets the surface property exposed foundation perimeter
+      void resetSurfacePropertyExposedFoundationPerimeter();
 
-    bool setSpaceAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setAdjacentSurfaceAsModelObject(const boost::optional<ModelObject>& modelObject);
+      // calculates the exposed perimeter of the surface
+      double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
 
-  };
+     protected:
+     private:
+      friend class openstudio::model::Surface;
 
-} // detail
+      REGISTER_LOGGER("openstudio.model.Surface");
 
-} // model
-} // openstudio
+      std::vector<ModelObject> subSurfacesAsModelObjects() const;
+      boost::optional<ModelObject> adjacentSurfaceAsModelObject() const;
 
-#endif // MODEL_SURFACE_IMPL_HPP
+      bool setSpaceAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setAdjacentSurfaceAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_SURFACE_IMPL_HPP

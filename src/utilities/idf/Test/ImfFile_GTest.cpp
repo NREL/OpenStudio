@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,21 +36,17 @@
 
 #include <resources.hxx>
 
-
-
 using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-TEST_F(IdfFixture, ImfFile)
-{
+TEST_F(IdfFixture, ImfFile) {
   EXPECT_TRUE(imfFile.numSections() > 0);
   StringVector sectionNames = imfFile.sectionNames();
   unsigned i = 1;
-  LOG(Info,"Sections in the IdfFixture ImfFile:");
+  LOG(Info, "Sections in the IdfFixture ImfFile:");
   for (const std::string& name : sectionNames) {
-    LOG(Info,"  " << i << ": " << name << ", " << imfFile.section(name).size() << " objects");
+    LOG(Info, "  " << i << ": " << name << ", " << imfFile.section(name).size() << " objects");
     ++i;
   }
 }
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,126 +43,109 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ZoneAirHeatBalanceAlgorithm_Impl::ZoneAirHeatBalanceAlgorithm_Impl(const IdfObject& idfObject,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : ModelObject_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ZoneAirHeatBalanceAlgorithm::iddObjectType());
-  }
-
-  ZoneAirHeatBalanceAlgorithm_Impl::ZoneAirHeatBalanceAlgorithm_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ZoneAirHeatBalanceAlgorithm::iddObjectType());
-  }
-
-  ZoneAirHeatBalanceAlgorithm_Impl::ZoneAirHeatBalanceAlgorithm_Impl(const ZoneAirHeatBalanceAlgorithm_Impl& other,
-                                                                     Model_Impl* model,
-                                                                     bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
-
-
-  // return the parent object in the hierarchy
-  boost::optional<ParentObject> ZoneAirHeatBalanceAlgorithm_Impl::parent() const
-  {
-    boost::optional<ParentObject> result(model().getUniqueModelObject<SimulationControl>());
-    return result;
-  }
-
-  // set the parent, child may have to call methods on the parent
-  bool ZoneAirHeatBalanceAlgorithm_Impl::setParent(ParentObject& newParent)
-  {
-    if (newParent.optionalCast<SimulationControl>() && (newParent.model() == model())) {
-      return true;
+    ZoneAirHeatBalanceAlgorithm_Impl::ZoneAirHeatBalanceAlgorithm_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ZoneAirHeatBalanceAlgorithm::iddObjectType());
     }
-    return false;
-  }
 
-  // Get all output variable names that could be associated with this object.
-  const std::vector<std::string>& ZoneAirHeatBalanceAlgorithm_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
+    ZoneAirHeatBalanceAlgorithm_Impl::ZoneAirHeatBalanceAlgorithm_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ZoneAirHeatBalanceAlgorithm::iddObjectType());
+    }
+
+    ZoneAirHeatBalanceAlgorithm_Impl::ZoneAirHeatBalanceAlgorithm_Impl(const ZoneAirHeatBalanceAlgorithm_Impl& other, Model_Impl* model,
+                                                                       bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
+
+    // return the parent object in the hierarchy
+    boost::optional<ParentObject> ZoneAirHeatBalanceAlgorithm_Impl::parent() const {
+      boost::optional<ParentObject> result(model().getUniqueModelObject<SimulationControl>());
+      return result;
+    }
+
+    // set the parent, child may have to call methods on the parent
+    bool ZoneAirHeatBalanceAlgorithm_Impl::setParent(ParentObject& newParent) {
+      if (newParent.optionalCast<SimulationControl>() && (newParent.model() == model())) {
+        return true;
+      }
+      return false;
+    }
+
+    // Get all output variable names that could be associated with this object.
+    const std::vector<std::string>& ZoneAirHeatBalanceAlgorithm_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
       // Not appropriate
-    return result;
+      return result;
+    }
+
+    IddObjectType ZoneAirHeatBalanceAlgorithm_Impl::iddObjectType() const {
+      return ZoneAirHeatBalanceAlgorithm::iddObjectType();
+    }
+
+    std::string ZoneAirHeatBalanceAlgorithm_Impl::algorithm() const {
+      boost::optional<std::string> value = getString(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ZoneAirHeatBalanceAlgorithm_Impl::isAlgorithmDefaulted() const {
+      return isEmpty(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm);
+    }
+
+    bool ZoneAirHeatBalanceAlgorithm_Impl::setAlgorithm(std::string algorithm) {
+      bool result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm, algorithm);
+      return result;
+    }
+
+    void ZoneAirHeatBalanceAlgorithm_Impl::resetAlgorithm() {
+      bool result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm, "");
+      OS_ASSERT(result);
+    }
+
+    std::vector<std::string> ZoneAirHeatBalanceAlgorithm_Impl::validAlgorithmValues() const {
+      return ZoneAirHeatBalanceAlgorithm::validAlgorithmValues();
+    }
+
+  }  // namespace detail
+
+  IddObjectType ZoneAirHeatBalanceAlgorithm::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_ZoneAirHeatBalanceAlgorithm);
   }
 
-  IddObjectType ZoneAirHeatBalanceAlgorithm_Impl::iddObjectType() const {
-    return ZoneAirHeatBalanceAlgorithm::iddObjectType();
+  std::vector<std::string> ZoneAirHeatBalanceAlgorithm::validAlgorithmValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm);
   }
 
-  std::string ZoneAirHeatBalanceAlgorithm_Impl::algorithm() const {
-    boost::optional<std::string> value = getString(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm,true);
-    OS_ASSERT(value);
-    return value.get();
+  std::string ZoneAirHeatBalanceAlgorithm::algorithm() const {
+    return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->algorithm();
   }
 
-  bool ZoneAirHeatBalanceAlgorithm_Impl::isAlgorithmDefaulted() const {
-    return isEmpty(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm);
+  bool ZoneAirHeatBalanceAlgorithm::isAlgorithmDefaulted() const {
+    return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->isAlgorithmDefaulted();
   }
 
-  bool ZoneAirHeatBalanceAlgorithm_Impl::setAlgorithm(std::string algorithm) {
-    bool result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm, algorithm);
-    return result;
+  bool ZoneAirHeatBalanceAlgorithm::setAlgorithm(std::string algorithm) {
+    return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->setAlgorithm(algorithm);
   }
 
-  void ZoneAirHeatBalanceAlgorithm_Impl::resetAlgorithm() {
-    bool result = setString(OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm, "");
-    OS_ASSERT(result);
+  void ZoneAirHeatBalanceAlgorithm::resetAlgorithm() {
+    getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->resetAlgorithm();
   }
 
-  std::vector<std::string> ZoneAirHeatBalanceAlgorithm_Impl::validAlgorithmValues() const {
-    return ZoneAirHeatBalanceAlgorithm::validAlgorithmValues();
+  /// @cond
+  ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(std::shared_ptr<detail::ZoneAirHeatBalanceAlgorithm_Impl> impl)
+    : ModelObject(std::move(impl)) {}
+
+  ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(Model& model) : ModelObject(ZoneAirHeatBalanceAlgorithm::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>());
+
+    setAlgorithm("ThirdOrderBackwardDifference");
   }
 
-} // detail
+  /// @endcond
 
-IddObjectType ZoneAirHeatBalanceAlgorithm::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_ZoneAirHeatBalanceAlgorithm);
-}
-
-std::vector<std::string> ZoneAirHeatBalanceAlgorithm::validAlgorithmValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneAirHeatBalanceAlgorithmFields::Algorithm);
-}
-
-std::string ZoneAirHeatBalanceAlgorithm::algorithm() const {
-  return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->algorithm();
-}
-
-bool ZoneAirHeatBalanceAlgorithm::isAlgorithmDefaulted() const {
-  return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->isAlgorithmDefaulted();
-}
-
-bool ZoneAirHeatBalanceAlgorithm::setAlgorithm(std::string algorithm) {
-  return getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->setAlgorithm(algorithm);
-}
-
-void ZoneAirHeatBalanceAlgorithm::resetAlgorithm() {
-  getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>()->resetAlgorithm();
-}
-
-/// @cond
-ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(std::shared_ptr<detail::ZoneAirHeatBalanceAlgorithm_Impl> impl)
-  : ModelObject(std::move(impl))
-{
-}
-
-ZoneAirHeatBalanceAlgorithm::ZoneAirHeatBalanceAlgorithm(Model& model)
-  : ModelObject(ZoneAirHeatBalanceAlgorithm::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ZoneAirHeatBalanceAlgorithm_Impl>());
-
-  setAlgorithm("ThirdOrderBackwardDifference");
-}
-
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

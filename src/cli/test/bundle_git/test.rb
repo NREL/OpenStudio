@@ -13,7 +13,7 @@ puts local_gems.map{ |name, specs|
 require 'openstudio'
 require 'openstudio/extension'
 puts OpenStudio::Extension::VERSION
-raise "OpenStudio Extension version does not match" unless OpenStudio::Extension::VERSION.to_s == '0.2.0'
+raise "OpenStudio Extension version does not match" unless OpenStudio::Extension::VERSION.to_s == '0.4.0'
 
 require 'tilt'
 puts Tilt::VERSION
@@ -25,4 +25,4 @@ begin
 rescue LoadError
   did_fail = true
 end
-raise "Should not load openstudio-standards" unless did_fail == true
+raise "Should allow to load the embedded openstudio-standards" unless did_fail == false

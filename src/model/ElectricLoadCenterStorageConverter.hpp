@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,125 +37,125 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Curve;
-class ThermalZone;
-class ElectricLoadCenterDistribution;
+  class Schedule;
+  class Curve;
+  class ThermalZone;
+  class ElectricLoadCenterDistribution;
 
-namespace detail {
+  namespace detail {
 
-  class ElectricLoadCenterStorageConverter_Impl;
+    class ElectricLoadCenterStorageConverter_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ElectricLoadCenterStorageConverter is a ParentObject that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Storage:Converter'. */
-class MODEL_API ElectricLoadCenterStorageConverter : public ParentObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ElectricLoadCenterStorageConverter is a ParentObject that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Storage:Converter'. */
+  class MODEL_API ElectricLoadCenterStorageConverter : public ParentObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ElectricLoadCenterStorageConverter(const Model& model);
+    explicit ElectricLoadCenterStorageConverter(const Model& model);
 
-  virtual ~ElectricLoadCenterStorageConverter() {}
+    virtual ~ElectricLoadCenterStorageConverter() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> powerConversionEfficiencyMethodValues();
+    static std::vector<std::string> powerConversionEfficiencyMethodValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
+    boost::optional<ElectricLoadCenterDistribution> electricLoadCenterDistribution() const;
 
-  Schedule availabilitySchedule() const;
-  bool isAvailabilityScheduleDefaulted() const;
+    Schedule availabilitySchedule() const;
+    bool isAvailabilityScheduleDefaulted() const;
 
-  std::string powerConversionEfficiencyMethod() const;
+    std::string powerConversionEfficiencyMethod() const;
 
-  // Required if powerConversionEfficiencyMethod == "SimpleFixed"
-  boost::optional<double> simpleFixedEfficiency() const;
+    // Required if powerConversionEfficiencyMethod == "SimpleFixed"
+    boost::optional<double> simpleFixedEfficiency() const;
 
-  // Required if powerConversionEfficiencyMethod == "FunctionOfPower"
-  boost::optional<double> designMaximumContinuousInputPower() const;
+    // Required if powerConversionEfficiencyMethod == "FunctionOfPower"
+    boost::optional<double> designMaximumContinuousInputPower() const;
 
-  // Required if powerConversionEfficiencyMethod == "FunctionOfPower"
-  // TODO: Later may need to add support for Tables. (UniVariateCurves, UniVariateTables.)
-  boost::optional<Curve> efficiencyFunctionofPowerCurve() const;
+    // Required if powerConversionEfficiencyMethod == "FunctionOfPower"
+    // TODO: Later may need to add support for Tables. (UniVariateCurves, UniVariateTables.)
+    boost::optional<Curve> efficiencyFunctionofPowerCurve() const;
 
-  // Defaults to 0.0
-  double ancillaryPowerConsumedInStandby() const;
+    // Defaults to 0.0
+    double ancillaryPowerConsumedInStandby() const;
 
-  bool isAncillaryPowerConsumedInStandbyDefaulted() const;
+    bool isAncillaryPowerConsumedInStandbyDefaulted() const;
 
-  // TODO: Check return type. From object lists, some candidates are: ThermalZone.
-  boost::optional<ThermalZone> thermalZone() const;
+    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
+    boost::optional<ThermalZone> thermalZone() const;
 
-  double radiativeFraction() const;
+    double radiativeFraction() const;
 
-  bool isRadiativeFractionDefaulted() const;
+    bool isRadiativeFractionDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  // TODO: Check argument type. From object lists, some candidates are: Schedule.
-  // Note Schedules are passed by reference, not const reference.
-  bool setAvailabilitySchedule(Schedule& schedule);
+    // TODO: Check argument type. From object lists, some candidates are: Schedule.
+    // Note Schedules are passed by reference, not const reference.
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  // No Setter, will be done when calling one of the three following functions
-  //bool setPowerConversionEfficiencyMethod(const std::string& powerConversionEfficiencyMethod);
+    // No Setter, will be done when calling one of the three following functions
+    //bool setPowerConversionEfficiencyMethod(const std::string& powerConversionEfficiencyMethod);
 
-  bool setSimpleFixedEfficiency(double simpleFixedEfficiency);
+    bool setSimpleFixedEfficiency(double simpleFixedEfficiency);
 
-  bool setDesignMaximumContinuousInputPower(double designMaximumContinuousInputPower);
+    bool setDesignMaximumContinuousInputPower(double designMaximumContinuousInputPower);
 
-  bool setEfficiencyFunctionofPowerCurve(const Curve& efficiencyFunctionofPowerCurve);
+    bool setEfficiencyFunctionofPowerCurve(const Curve& efficiencyFunctionofPowerCurve);
 
-  bool setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby);
+    bool setAncillaryPowerConsumedInStandby(double ancillaryPowerConsumedInStandby);
 
-  void resetAncillaryPowerConsumedInStandby();
+    void resetAncillaryPowerConsumedInStandby();
 
-  // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
-  bool setThermalZone(const ThermalZone& thermalZone);
+    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
+    bool setThermalZone(const ThermalZone& thermalZone);
 
-  void resetThermalZone();
+    void resetThermalZone();
 
-  bool setRadiativeFraction(double radiativeFraction);
+    bool setRadiativeFraction(double radiativeFraction);
 
-  void resetRadiativeFraction();
+    void resetRadiativeFraction();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ElectricLoadCenterStorageConverter_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ElectricLoadCenterStorageConverter_Impl ImplType;
 
-  explicit ElectricLoadCenterStorageConverter(std::shared_ptr<detail::ElectricLoadCenterStorageConverter_Impl> impl);
+    explicit ElectricLoadCenterStorageConverter(std::shared_ptr<detail::ElectricLoadCenterStorageConverter_Impl> impl);
 
-  friend class detail::ElectricLoadCenterStorageConverter_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ElectricLoadCenterStorageConverter");
-};
+    friend class detail::ElectricLoadCenterStorageConverter_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ElectricLoadCenterStorageConverter");
+  };
 
-/** \relates ElectricLoadCenterStorageConverter */
-typedef boost::optional<ElectricLoadCenterStorageConverter> OptionalElectricLoadCenterStorageConverter;
+  /** \relates ElectricLoadCenterStorageConverter */
+  typedef boost::optional<ElectricLoadCenterStorageConverter> OptionalElectricLoadCenterStorageConverter;
 
-/** \relates ElectricLoadCenterStorageConverter */
-typedef std::vector<ElectricLoadCenterStorageConverter> ElectricLoadCenterStorageConverterVector;
+  /** \relates ElectricLoadCenterStorageConverter */
+  typedef std::vector<ElectricLoadCenterStorageConverter> ElectricLoadCenterStorageConverterVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ELECTRICLOADCENTERSTORAGECONVERTER_HPP
-
+#endif  // MODEL_ELECTRICLOADCENTERSTORAGECONVERTER_HPP

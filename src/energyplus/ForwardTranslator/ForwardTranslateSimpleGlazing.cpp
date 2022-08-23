@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,27 +44,25 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSimpleGlazing( SimpleGlazing & modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::WindowMaterial_SimpleGlazingSystem );
+  boost::optional<IdfObject> ForwardTranslator::translateSimpleGlazing(SimpleGlazing& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::WindowMaterial_SimpleGlazingSystem);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(WindowMaterial_SimpleGlazingSystemFields::Name, modelObject.name().get());
+    idfObject.setString(WindowMaterial_SimpleGlazingSystemFields::Name, modelObject.name().get());
 
-  idfObject.setDouble(WindowMaterial_SimpleGlazingSystemFields::UFactor, modelObject.uFactor());
+    idfObject.setDouble(WindowMaterial_SimpleGlazingSystemFields::UFactor, modelObject.uFactor());
 
-  idfObject.setDouble(WindowMaterial_SimpleGlazingSystemFields::SolarHeatGainCoefficient, modelObject.solarHeatGainCoefficient());
+    idfObject.setDouble(WindowMaterial_SimpleGlazingSystemFields::SolarHeatGainCoefficient, modelObject.solarHeatGainCoefficient());
 
-  OptionalDouble d = modelObject.visibleTransmittance();
-  if(d) {
-    idfObject.setDouble(WindowMaterial_SimpleGlazingSystemFields::VisibleTransmittance, *d);
+    OptionalDouble d = modelObject.visibleTransmittance();
+    if (d) {
+      idfObject.setDouble(WindowMaterial_SimpleGlazingSystemFields::VisibleTransmittance, *d);
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  return boost::optional<IdfObject>(idfObject);
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

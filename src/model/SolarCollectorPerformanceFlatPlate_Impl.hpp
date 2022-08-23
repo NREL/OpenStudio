@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,104 +36,99 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** SolarCollectorPerformanceFlatPlate_Impl is a ModelObject_Impl that is the implementation class for SolarCollectorPerformanceFlatPlate.*/
-  class MODEL_API SolarCollectorPerformanceFlatPlate_Impl : public ModelObject_Impl {
+    /** SolarCollectorPerformanceFlatPlate_Impl is a ModelObject_Impl that is the implementation class for SolarCollectorPerformanceFlatPlate.*/
+    class MODEL_API SolarCollectorPerformanceFlatPlate_Impl : public ModelObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SolarCollectorPerformanceFlatPlate_Impl(const IdfObject& idfObject,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      SolarCollectorPerformanceFlatPlate_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SolarCollectorPerformanceFlatPlate_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      SolarCollectorPerformanceFlatPlate_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SolarCollectorPerformanceFlatPlate_Impl(const SolarCollectorPerformanceFlatPlate_Impl& other,
-                                            Model_Impl* model,
-                                            bool keepHandle);
+      SolarCollectorPerformanceFlatPlate_Impl(const SolarCollectorPerformanceFlatPlate_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SolarCollectorPerformanceFlatPlate_Impl() {}
+      virtual ~SolarCollectorPerformanceFlatPlate_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double grossArea() const;
+      double grossArea() const;
 
-    std::string testFluid() const;
+      std::string testFluid() const;
 
-    bool isTestFluidDefaulted() const;
+      bool isTestFluidDefaulted() const;
 
-    double testFlowRate() const;
+      double testFlowRate() const;
 
-    std::string testCorrelationType() const;
+      std::string testCorrelationType() const;
 
-    double coefficient1ofEfficiencyEquation() const;
+      double coefficient1ofEfficiencyEquation() const;
 
-    double coefficient2ofEfficiencyEquation() const;
+      double coefficient2ofEfficiencyEquation() const;
 
-    boost::optional<double> coefficient3ofEfficiencyEquation() const;
+      boost::optional<double> coefficient3ofEfficiencyEquation() const;
 
-    boost::optional<double> coefficient2ofIncidentAngleModifier() const;
+      boost::optional<double> coefficient2ofIncidentAngleModifier() const;
 
-    boost::optional<double> coefficient3ofIncidentAngleModifier() const;
+      boost::optional<double> coefficient3ofIncidentAngleModifier() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setGrossArea(double grossArea);
+      bool setGrossArea(double grossArea);
 
-    bool setTestFluid(std::string testFluid);
+      bool setTestFluid(const std::string& testFluid);
 
-    void resetTestFluid();
+      void resetTestFluid();
 
-    bool setTestFlowRate(double testFlowRate);
+      bool setTestFlowRate(double testFlowRate);
 
-    bool setTestCorrelationType(std::string testCorrelationType);
+      bool setTestCorrelationType(const std::string& testCorrelationType);
 
-    bool setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation);
+      bool setCoefficient1ofEfficiencyEquation(double coefficient1ofEfficiencyEquation);
 
-    bool setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation);
+      bool setCoefficient2ofEfficiencyEquation(double coefficient2ofEfficiencyEquation);
 
-    bool setCoefficient3ofEfficiencyEquation(boost::optional<double> coefficient3ofEfficiencyEquation);
+      bool setCoefficient3ofEfficiencyEquation(boost::optional<double> coefficient3ofEfficiencyEquation);
 
-    void resetCoefficient3ofEfficiencyEquation();
+      void resetCoefficient3ofEfficiencyEquation();
 
-    bool setCoefficient2ofIncidentAngleModifier(boost::optional<double> coefficient2ofIncidentAngleModifier);
+      bool setCoefficient2ofIncidentAngleModifier(boost::optional<double> coefficient2ofIncidentAngleModifier);
 
-    void resetCoefficient2ofIncidentAngleModifier();
+      void resetCoefficient2ofIncidentAngleModifier();
 
-    bool setCoefficient3ofIncidentAngleModifier(boost::optional<double> coefficient3ofIncidentAngleModifier);
+      bool setCoefficient3ofIncidentAngleModifier(boost::optional<double> coefficient3ofIncidentAngleModifier);
 
-    void resetCoefficient3ofIncidentAngleModifier();
+      void resetCoefficient3ofIncidentAngleModifier();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.SolarCollectorPerformanceFlatPlate");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SolarCollectorPerformanceFlatPlate");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SOLARCOLLECTORPERFORMANCEFLATPLATE_IMPL_HPP
+#endif  // MODEL_SOLARCOLLECTORPERFORMANCEFLATPLATE_IMPL_HPP

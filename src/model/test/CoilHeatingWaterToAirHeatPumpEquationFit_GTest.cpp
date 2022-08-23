@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,14 +37,14 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,CoilHeatingWaterToAirHeatPumpEquationFit_Test) {
+TEST_F(ModelFixture, CoilHeatingWaterToAirHeatPumpEquationFit_Test) {
   Model model;
   // test constructor.
   CoilHeatingWaterToAirHeatPumpEquationFit coilHeatingWaterToAirHPEquationFit(model);
 
   // test rated air flow rate getter and setter
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setRatedAirFlowRate(0.1));
-  boost::optional <double> testRatedAirFlowRate = coilHeatingWaterToAirHPEquationFit.ratedAirFlowRate();
+  boost::optional<double> testRatedAirFlowRate = coilHeatingWaterToAirHPEquationFit.ratedAirFlowRate();
   EXPECT_EQ(*testRatedAirFlowRate, 0.1);
 
   // test if rated air flow rate is defaulted to autosize
@@ -54,10 +54,9 @@ TEST_F(ModelFixture,CoilHeatingWaterToAirHeatPumpEquationFit_Test) {
   coilHeatingWaterToAirHPEquationFit.autosizeRatedAirFlowRate();
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.isRatedAirFlowRateAutosized());
 
-
- // test rated water flow rate getter and setter
+  // test rated water flow rate getter and setter
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setRatedWaterFlowRate(0.1));
-  boost::optional <double> testRatedWaterFlowRate = coilHeatingWaterToAirHPEquationFit.ratedWaterFlowRate();
+  boost::optional<double> testRatedWaterFlowRate = coilHeatingWaterToAirHPEquationFit.ratedWaterFlowRate();
   EXPECT_EQ(*testRatedWaterFlowRate, 0.1);
 
   // test if rated water flow rate autosize
@@ -67,9 +66,9 @@ TEST_F(ModelFixture,CoilHeatingWaterToAirHeatPumpEquationFit_Test) {
   coilHeatingWaterToAirHPEquationFit.autosizeRatedWaterFlowRate();
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.isRatedWaterFlowRateAutosized());
 
- // test rated heating capacity
+  // test rated heating capacity
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setRatedHeatingCapacity(200));
-  boost::optional <double> testRatedHeatingCapacity = coilHeatingWaterToAirHPEquationFit.ratedHeatingCapacity();
+  boost::optional<double> testRatedHeatingCapacity = coilHeatingWaterToAirHPEquationFit.ratedHeatingCapacity();
   EXPECT_EQ(*testRatedHeatingCapacity, 200);
 
   // test if rated heating capacity autosize
@@ -79,10 +78,9 @@ TEST_F(ModelFixture,CoilHeatingWaterToAirHeatPumpEquationFit_Test) {
   coilHeatingWaterToAirHPEquationFit.autosizeRatedHeatingCapacity();
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.isRatedHeatingCapacityAutosized());
 
-
- // test rated heatingCOP
+  // test rated heatingCOP
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setRatedHeatingCoefficientofPerformance(4));
-  boost::optional <double> testRatedHeatingCOP = coilHeatingWaterToAirHPEquationFit.ratedHeatingCoefficientofPerformance();
+  boost::optional<double> testRatedHeatingCOP = coilHeatingWaterToAirHPEquationFit.ratedHeatingCoefficientofPerformance();
   EXPECT_EQ(*testRatedHeatingCOP, 4);
 
   // test if rated HeatingCOP default
@@ -90,9 +88,4 @@ TEST_F(ModelFixture,CoilHeatingWaterToAirHeatPumpEquationFit_Test) {
   coilHeatingWaterToAirHPEquationFit.resetRatedHeatingCoefficientofPerformance();
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.ratedHeatingCoefficientofPerformance());
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.isRatedHeatingCoefficientofPerformanceDefaulted());
-
 }
-
-
-
-

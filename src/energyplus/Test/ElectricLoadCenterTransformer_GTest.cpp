@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,9 +41,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/OutputMeter.hpp"
 #include "../../model/OutputMeter_Impl.hpp"
-
 #include "../../model/ThermalZone.hpp"
-
+#include "../../model/Space.hpp"
 #include "../../model/ElectricLoadCenterTransformer.hpp"
 #include "../../model/ElectricLoadCenterTransformer_Impl.hpp"
 #include "../../model/ElectricLoadCenterDistribution.hpp"
@@ -79,7 +78,6 @@
 using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
-
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorElectricLoadCenterTransformer) {
 
@@ -131,6 +129,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorElectricLoadCenterTransformer2) {
   Building building = model.getUniqueModelObject<Building>();
 
   ThermalZone zone1(model);
+  Space space(model);
+  space.setThermalZone(zone1);
 
   //add schedule
   Schedule s = model.alwaysOffDiscreteSchedule();
@@ -198,12 +198,17 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorElectricLoadCenterTransformer_Distrib
 
   elcd.setTransformer(elct);
 
+  // Need to set buss type accordingly, or it won't be translated
+  elcd.setElectricalBussType("AlternatingCurrent");
+
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
   // model.save(toPath("./ElectricLoadCenterDistribution.osm"), true);
   // workspace.save(toPath("./ElectricLoadCenterDistribution.idf"), true);
 
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Transformer).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution).size());
   WorkspaceObject transformer = workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Transformer)[0];
   WorkspaceObject distribution = workspace.getObjectsByType(IddObjectType::ElectricLoadCenter_Distribution)[0];
 

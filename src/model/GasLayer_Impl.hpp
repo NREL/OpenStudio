@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,51 +35,48 @@
 namespace openstudio {
 namespace model {
 
-// forward declaration
-class GasLayer;
+  // forward declaration
+  class GasLayer;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API GasLayer_Impl : public FenestrationMaterial_Impl {
-   public:
+    class MODEL_API GasLayer_Impl : public FenestrationMaterial_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      // Construct completely new object.
+      GasLayer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // Construct completely new object.
-    GasLayer_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // Construct from existing workspace object (typically when Model is being constructed
+      // from Workspace).
+      GasLayer_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Construct from existing workspace object (typically when Model is being constructed
-    // from Workspace).
-    GasLayer_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                  Model_Impl* model,
-                  bool keepHandle);
+      // Clone copy constructor.
+      GasLayer_Impl(const GasLayer_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // Clone copy constructor.
-    GasLayer_Impl(const GasLayer_Impl& other,Model_Impl* model,bool keepHandle);
+      virtual ~GasLayer_Impl() {}
 
-    virtual ~GasLayer_Impl() {}
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      virtual boost::optional<double> getVisibleTransmittance() const override;
 
-    virtual boost::optional<double> getVisibleTransmittance() const override;
+      virtual boost::optional<double> interiorVisibleAbsorptance() const override;
 
-    virtual boost::optional<double> interiorVisibleAbsorptance() const override;
+      virtual boost::optional<double> exteriorVisibleAbsorptance() const override;
 
-    virtual boost::optional<double> exteriorVisibleAbsorptance() const override;
+      //@}
 
-    //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.GasLayer");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.GasLayer");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_GASLAYER_IMPL_HPP
+#endif  // MODEL_GASLAYER_IMPL_HPP

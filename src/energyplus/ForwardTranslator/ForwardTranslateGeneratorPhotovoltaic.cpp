@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,42 +47,51 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateGeneratorPhotovoltaic(model::GeneratorPhotovoltaic & modelObject)
-{
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_Photovoltaic, modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateGeneratorPhotovoltaic(model::GeneratorPhotovoltaic& modelObject) {
 
-  PhotovoltaicPerformance performance = modelObject.photovoltaicPerformance();
-  boost::optional<IdfObject> performanceIdf = translateAndMapModelObject(performance);
-  if (performanceIdf){
-    idfObject.setString(Generator_PhotovoltaicFields::PhotovoltaicPerformanceObjectType, performanceIdf->iddObject().name());
-    idfObject.setString(Generator_PhotovoltaicFields::ModulePerformanceName, performanceIdf->name().get());
-  } else{
-    LOG(Warn, "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Module Performance Name'")
-  }
+    // We are going to check for required properties such as Surface before we register the object
+    // IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Generator_Photovoltaic, modelObject);
+    IdfObject idfObject(openstudio::IddObjectType::Generator_Photovoltaic);
+    // Name
+    idfObject.setName(modelObject.nameString());
 
-  boost::optional<PlanarSurface> surface = modelObject.surface();
-  bool hasSurface = false;
-  if (surface){
-    boost::optional<IdfObject> surfaceIdf = translateAndMapModelObject(*surface);
-    if (surfaceIdf){
-      idfObject.setString(Generator_PhotovoltaicFields::SurfaceName, surfaceIdf->name().get());
-      hasSurface = true;
+    PhotovoltaicPerformance performance = modelObject.photovoltaicPerformance();
+    boost::optional<IdfObject> performanceIdf = translateAndMapModelObject(performance);
+    if (performanceIdf) {
+      idfObject.setString(Generator_PhotovoltaicFields::PhotovoltaicPerformanceObjectType, performanceIdf->iddObject().name());
+      idfObject.setString(Generator_PhotovoltaicFields::ModulePerformanceName, performanceIdf->name().get());
+    } else {
+      LOG(Error,
+          "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Module Performance Name', it will not be translated.");
+      return boost::none;
     }
+
+    boost::optional<PlanarSurface> surface = modelObject.surface();
+    bool hasSurface = false;
+    if (surface) {
+      boost::optional<IdfObject> surfaceIdf = translateAndMapModelObject(*surface);
+      if (surfaceIdf) {
+        idfObject.setString(Generator_PhotovoltaicFields::SurfaceName, surfaceIdf->name().get());
+        hasSurface = true;
+      }
+    }
+    if (!hasSurface) {
+      LOG(Error, "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Surface Name', it will not be translated.");
+      return boost::none;
+    }
+
+    // at this point, we can register the new object
+    m_idfObjects.push_back(idfObject);
+
+    idfObject.setString(Generator_PhotovoltaicFields::HeatTransferIntegrationMode, modelObject.heatTransferIntegrationMode());
+
+    idfObject.setDouble(Generator_PhotovoltaicFields::NumberofSeriesStringsinParallel, modelObject.numberOfModulesInParallel());
+
+    idfObject.setDouble(Generator_PhotovoltaicFields::NumberofModulesinSeries, modelObject.numberOfModulesInSeries());
+
+    return idfObject;
   }
-  if (!hasSurface){
-    LOG(Warn, "Generator:Photovoltaic '" << idfObject.name().get() << "' missing required field 'Surface Name'")
-  }
 
-  idfObject.setString(Generator_PhotovoltaicFields::HeatTransferIntegrationMode, modelObject.heatTransferIntegrationMode());
+}  // namespace energyplus
 
-  idfObject.setDouble(Generator_PhotovoltaicFields::NumberofSeriesStringsinParallel, modelObject.numberOfModulesInParallel());
-
-  idfObject.setDouble(Generator_PhotovoltaicFields::NumberofModulesinSeries, modelObject.numberOfModulesInSeries());
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

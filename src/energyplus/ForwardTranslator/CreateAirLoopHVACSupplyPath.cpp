@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,43 +53,41 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACSupplyPath( const Node & demandInletNode )
-{
-  boost::optional<IdfObject> supplyPathIdf;
+  boost::optional<IdfObject> ForwardTranslator::createAirLoopHVACSupplyPath(const Node& demandInletNode) {
+    boost::optional<IdfObject> supplyPathIdf;
 
-  if( auto t_airLoopHVAC = demandInletNode.airLoopHVAC() ) {
-    IdfObject supplyPathIdf(openstudio::IddObjectType::AirLoopHVAC_SupplyPath);
-    m_idfObjects.push_back(supplyPathIdf);
+    if (auto t_airLoopHVAC = demandInletNode.airLoopHVAC()) {
+      IdfObject supplyPathIdf(openstudio::IddObjectType::AirLoopHVAC_SupplyPath);
+      m_idfObjects.push_back(supplyPathIdf);
 
-    supplyPathIdf.setName(t_airLoopHVAC->name().get() + " " + demandInletNode.name().get() + " Supply Path");
+      supplyPathIdf.setName(t_airLoopHVAC->name().get() + " " + demandInletNode.name().get() + " Supply Path");
 
-    supplyPathIdf.setString(openstudio::AirLoopHVAC_SupplyPathFields::SupplyAirPathInletNodeName,demandInletNode.name().get());
+      supplyPathIdf.setString(openstudio::AirLoopHVAC_SupplyPathFields::SupplyAirPathInletNodeName, demandInletNode.name().get());
 
-    auto t_comps = t_airLoopHVAC->demandComponents(demandInletNode,t_airLoopHVAC->demandOutletNode());
-    auto splitters = subsetCastVector<model::AirLoopHVACZoneSplitter>(t_comps);
-    OS_ASSERT(splitters.size() == 1u);
+      auto t_comps = t_airLoopHVAC->demandComponents(demandInletNode, t_airLoopHVAC->demandOutletNode());
+      auto splitters = subsetCastVector<model::AirLoopHVACZoneSplitter>(t_comps);
+      OS_ASSERT(splitters.size() == 1u);
 
-    boost::optional<IdfObject> _zoneSplitter = translateAndMapModelObject(splitters.front());
-    OS_ASSERT(_zoneSplitter);
-    IdfExtensibleGroup eg = supplyPathIdf.pushExtensibleGroup();
-    eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentObjectType,_zoneSplitter->iddObject().name());
-    eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentName,_zoneSplitter->name().get());
+      boost::optional<IdfObject> _zoneSplitter = translateAndMapModelObject(splitters.front());
+      OS_ASSERT(_zoneSplitter);
+      IdfExtensibleGroup eg = supplyPathIdf.pushExtensibleGroup();
+      eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentObjectType, _zoneSplitter->iddObject().name());
+      eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentName, _zoneSplitter->name().get());
 
-    std::vector<ModelObject> supplyPlenums = t_airLoopHVAC->demandComponents(demandInletNode,t_airLoopHVAC->demandOutletNode(),AirLoopHVACSupplyPlenum::iddObjectType());
-    for( auto & supplyPlenum : supplyPlenums )
-    {
-      eg = supplyPathIdf.pushExtensibleGroup();
-      boost::optional<IdfObject> _supplyPlenum = translateAndMapModelObject(supplyPlenum);
-      OS_ASSERT(_supplyPlenum);
-      eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentObjectType,_supplyPlenum->iddObject().name());
-      eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentName,_supplyPlenum->name().get());
+      std::vector<ModelObject> supplyPlenums =
+        t_airLoopHVAC->demandComponents(demandInletNode, t_airLoopHVAC->demandOutletNode(), AirLoopHVACSupplyPlenum::iddObjectType());
+      for (auto& supplyPlenum : supplyPlenums) {
+        eg = supplyPathIdf.pushExtensibleGroup();
+        boost::optional<IdfObject> _supplyPlenum = translateAndMapModelObject(supplyPlenum);
+        OS_ASSERT(_supplyPlenum);
+        eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentObjectType, _supplyPlenum->iddObject().name());
+        eg.setString(AirLoopHVAC_SupplyPathExtensibleFields::ComponentName, _supplyPlenum->name().get());
+      }
     }
+
+    return supplyPathIdf;
   }
 
-  return supplyPathIdf;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

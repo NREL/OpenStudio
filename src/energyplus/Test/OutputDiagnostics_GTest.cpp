@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -81,7 +81,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputDiagnostics) {
     ASSERT_EQ(1u, idfObjs.size());
     WorkspaceObject idf_diagnostics(idfObjs[0]);
 
-
     ASSERT_EQ(3u, idf_diagnostics.extensibleGroups().size());
     for (int i = 0; i < 3; ++i) {
       EXPECT_EQ(keys[i], idf_diagnostics.extensibleGroups()[i].getString(Output_DiagnosticsExtensibleFields::Key).get());
@@ -93,7 +92,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDiagnostics) {
 
   ReverseTranslator rt;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_outputDiagnostics = w.addObject(IdfObject(IddObjectType::Output_Diagnostics));
   ASSERT_TRUE(_i_outputDiagnostics);
 
@@ -105,10 +104,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDiagnostics) {
 
   {
     std::vector<std::string> keys({"ReportDuringWarmup", "ReportDetailedWarmupConvergence",
-                                  // Oops, this one is twice
-                                  "ReportDuringHVACSizingSimulation", "ReportDuringHVACSizingSimulation"});
+                                   // Oops, this one is twice
+                                   "ReportDuringHVACSizingSimulation", "ReportDuringHVACSizingSimulation"});
 
-    for (const auto key: keys) {
+    for (const auto& key : keys) {
       IdfExtensibleGroup eg = _i_outputDiagnostics->pushExtensibleGroup();
       EXPECT_TRUE(eg.setString(Output_DiagnosticsExtensibleFields::Key, key));
     }
@@ -127,4 +126,3 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputDiagnostics) {
     }
   }
 }
-

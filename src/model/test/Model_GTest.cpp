@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,6 +44,7 @@
 #include "../OutputVariable_Impl.hpp"
 #include "../ParentObject_Impl.hpp"
 #include "../RunPeriod.hpp"
+#include "../RunPeriod_Impl.hpp"
 
 #include "../Site.hpp"
 #include "../Site_Impl.hpp"
@@ -75,12 +76,91 @@
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVAC_Impl.hpp"
 
+#include "../FoundationKivaSettings.hpp"
+#include "../FoundationKivaSettings_Impl.hpp"
+#include "../OutputControlFiles.hpp"
+#include "../OutputControlFiles_Impl.hpp"
+#include "../OutputControlReportingTolerances.hpp"
+#include "../OutputControlReportingTolerances_Impl.hpp"
+#include "../OutputControlTableStyle.hpp"
+#include "../OutputControlTableStyle_Impl.hpp"
+#include "../OutputDiagnostics.hpp"
+#include "../OutputDiagnostics_Impl.hpp"
+#include "../OutputDebuggingData.hpp"
+#include "../OutputDebuggingData_Impl.hpp"
+#include "../OutputJSON.hpp"
+#include "../OutputJSON_Impl.hpp"
+#include "../OutputSQLite.hpp"
+#include "../OutputSQLite_Impl.hpp"
+#include "../OutputEnergyManagementSystem.hpp"
+#include "../OutputEnergyManagementSystem_Impl.hpp"
+#include "../OutputTableSummaryReports.hpp"
+#include "../OutputTableSummaryReports_Impl.hpp"
+#include "../PerformancePrecisionTradeoffs_Impl.hpp"
+#include "../PerformancePrecisionTradeoffs_Impl.hpp"
+#include "../LifeCycleCostParameters.hpp"
+#include "../LifeCycleCostParameters_Impl.hpp"
+#include "../SizingParameters.hpp"
+#include "../SizingParameters_Impl.hpp"
+#include "../RadianceParameters.hpp"
+#include "../RadianceParameters_Impl.hpp"
+#include "../RunPeriodControlDaylightSavingTime.hpp"
+#include "../RunPeriodControlDaylightSavingTime_Impl.hpp"
+#include "../YearDescription.hpp"
+#include "../YearDescription_Impl.hpp"
+#include "../SiteGroundReflectance.hpp"
+#include "../SiteGroundReflectance_Impl.hpp"
+#include "../SiteWaterMainsTemperature.hpp"
+#include "../SiteWaterMainsTemperature_Impl.hpp"
+#include "../SiteGroundTemperatureBuildingSurface.hpp"
+#include "../SiteGroundTemperatureBuildingSurface_Impl.hpp"
+#include "../SiteGroundTemperatureFCfactorMethod.hpp"
+#include "../SiteGroundTemperatureFCfactorMethod_Impl.hpp"
+#include "../SiteGroundTemperatureDeep.hpp"
+#include "../SiteGroundTemperatureDeep_Impl.hpp"
+#include "../SiteGroundTemperatureShallow.hpp"
+#include "../SiteGroundTemperatureShallow_Impl.hpp"
+#include "../WeatherFile.hpp"
+#include "../WeatherFile_Impl.hpp"
+#include "../Version.hpp"
+#include "../Version_Impl.hpp"
+#include "../LightingSimulationControl.hpp"
+#include "../LightingSimulationControl_Impl.hpp"
+#include "../AirflowNetworkSimulationControl.hpp"
+#include "../AirflowNetworkSimulationControl_Impl.hpp"
+#include "../InsideSurfaceConvectionAlgorithm.hpp"
+#include "../InsideSurfaceConvectionAlgorithm_Impl.hpp"
+#include "../OutsideSurfaceConvectionAlgorithm.hpp"
+#include "../OutsideSurfaceConvectionAlgorithm_Impl.hpp"
+#include "../HeatBalanceAlgorithm.hpp"
+#include "../HeatBalanceAlgorithm_Impl.hpp"
+#include "../ZoneAirHeatBalanceAlgorithm.hpp"
+#include "../ZoneAirHeatBalanceAlgorithm_Impl.hpp"
+#include "../ZoneAirMassFlowConservation.hpp"
+#include "../ZoneAirMassFlowConservation_Impl.hpp"
+#include "../ZoneCapacitanceMultiplierResearchSpecial.hpp"
+#include "../ZoneCapacitanceMultiplierResearchSpecial_Impl.hpp"
+#include "../ConvergenceLimits.hpp"
+#include "../ConvergenceLimits_Impl.hpp"
+#include "../ShadowCalculation.hpp"
+#include "../ShadowCalculation_Impl.hpp"
+#include "../Timestep.hpp"
+#include "../Timestep_Impl.hpp"
+#include "../ClimateZones.hpp"
+#include "../ClimateZones_Impl.hpp"
+#include "../EnvironmentalImpactFactors.hpp"
+#include "../EnvironmentalImpactFactors_Impl.hpp"
+#include "../ExternalInterface.hpp"
+#include "../ExternalInterface_Impl.hpp"
+
 #include "../../utilities/sql/SqlFile.hpp"
 #include "../../utilities/data/TimeSeries.hpp"
 #include "../../utilities/idf/IdfFile.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/ValidityReport.hpp"
+
+#include "../../osversion/VersionTranslator.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 
@@ -97,7 +177,7 @@ void checkObject(ModelObject object){
   OptionalModelObject optionalObject = object.model().getModelObject<ModelObject>(handle);
   EXPECT_TRUE(optionalObject);
   if (!optionalObject){
-    std::cout << "Need to add wrapper for '" << object.iddObject().name() << "' to Model::getModelObject" << std::endl;
+    std::cout << "Need to add wrapper for '" << object.iddObject().name() << "' to Model::getModelObject" << '\n';
   }
 
   // object might have a name
@@ -151,12 +231,12 @@ void checkObject(ModelObject object){
     for (ModelObject child : parentObject->children()){
       OptionalParentObject parent = child.parent();
       if (!parent){
-        std::cout << "Child " << child << " does not have a parent" << std::endl;
+        std::cout << "Child " << child << " does not have a parent" << '\n';
       }
       ASSERT_TRUE(parent);
       EXPECT_TRUE(*parentObject == *parent);
       if (*parentObject != *parent){
-        std::cout << "pcObject = " << *parentObject << " does not equal parent = " << *parent << std::endl;
+        std::cout << "pcObject = " << *parentObject << " does not equal parent = " << *parent << '\n';
       }
       checkObject(child);
     }
@@ -164,23 +244,21 @@ void checkObject(ModelObject object){
 }
 */
 
-TEST_F(ModelFixture, iddObjectType)
-{
+TEST_F(ModelFixture, iddObjectType) {
 
   Model model;
   model.order().setDirectOrder(HandleVector());
   ScheduleCompact s(model);
-  FanConstantVolume fan(model, s); // sets schedule's ScheduleTypeLimits
+  FanConstantVolume fan(model, s);  // sets schedule's ScheduleTypeLimits
 
-  ModelObjectVector mos = model.getModelObjects<ModelObject>(true); // sort objects
-  ASSERT_EQ(3u,mos.size());
+  ModelObjectVector mos = model.getModelObjects<ModelObject>(true);  // sort objects
+  ASSERT_EQ(3u, mos.size());
   EXPECT_TRUE(ScheduleCompact::iddObjectType() == mos[0].iddObjectType());
   EXPECT_TRUE(FanConstantVolume::iddObjectType() == mos[1].iddObjectType());
   EXPECT_TRUE(ScheduleTypeLimits::iddObjectType() == mos[2].iddObjectType());
 }
 
-TEST_F(ModelFixture,IddFile)
-{
+TEST_F(ModelFixture, IddFile) {
   boost::optional<IddFile> iddFile = IddFile::load(resourcesPath() / toPath("model/OpenStudio.idd"));
   ASSERT_TRUE(iddFile);
 }
@@ -221,8 +299,7 @@ TEST_F(ModelFixture, Model)
 */
 
 // Create several model objects and check their uniqueness
-TEST_F(ModelFixture, UniqueModelObjects)
-{
+TEST_F(ModelFixture, UniqueModelObjects) {
   Model model;
 
   AirLoopHVAC airLoopHVAC1(model);
@@ -239,15 +316,15 @@ TEST_F(ModelFixture, UniqueModelObjects)
   modelObjectHandles.push_back(openstudio::toString(airLoopHVAC5.handle()));
 
   // DLM: have to sort before calling unique, unique only works on consecutive elements
-  std::sort(modelObjectHandles.begin(),modelObjectHandles.end());
-  auto end = std::unique(modelObjectHandles.begin(),modelObjectHandles.end());
-  std::vector<std::string> uniqueModelObjectHandles(modelObjectHandles.begin(),end);
+  std::sort(modelObjectHandles.begin(), modelObjectHandles.end());
+  auto end = std::unique(modelObjectHandles.begin(), modelObjectHandles.end());
+  std::vector<std::string> uniqueModelObjectHandles(modelObjectHandles.begin(), end);
 
-  EXPECT_EQ(modelObjectHandles.size(),uniqueModelObjectHandles.size());
+  EXPECT_EQ(modelObjectHandles.size(), uniqueModelObjectHandles.size());
 
   std::vector<AirLoopHVAC> modelObjects = model.getModelObjects<AirLoopHVAC>();
 
-  EXPECT_EQ(modelObjectHandles.size(),modelObjects.size());
+  EXPECT_EQ(modelObjectHandles.size(), modelObjects.size());
 
   std::vector<std::string> workspaceObjectNames;
   workspaceObjectNames.push_back(airLoopHVAC1.name().get());
@@ -257,15 +334,14 @@ TEST_F(ModelFixture, UniqueModelObjects)
   workspaceObjectNames.push_back(airLoopHVAC5.name().get());
 
   // DLM: have to sort before calling unique, unique only works on consecutive elements
-  std::sort(workspaceObjectNames.begin(),workspaceObjectNames.end());
-  end = std::unique(workspaceObjectNames.begin(),workspaceObjectNames.end());
-  std::vector<std::string> uniqueWorkspaceObjectNames(workspaceObjectNames.begin(),end);
+  std::sort(workspaceObjectNames.begin(), workspaceObjectNames.end());
+  end = std::unique(workspaceObjectNames.begin(), workspaceObjectNames.end());
+  std::vector<std::string> uniqueWorkspaceObjectNames(workspaceObjectNames.begin(), end);
 
-  EXPECT_EQ(modelObjects.size(),uniqueWorkspaceObjectNames.size());
+  EXPECT_EQ(modelObjects.size(), uniqueWorkspaceObjectNames.size());
 
-  for (const std::string& name : uniqueWorkspaceObjectNames)
-  {
-    EXPECT_NE(name,"");
+  for (const std::string& name : uniqueWorkspaceObjectNames) {
+    EXPECT_NE(name, "");
   }
 
   airLoopHVAC1.setName("one");
@@ -274,12 +350,11 @@ TEST_F(ModelFixture, UniqueModelObjects)
   airLoopHVAC4.setName("four");
   airLoopHVAC5.setName("five");
 
-  EXPECT_EQ(airLoopHVAC1.name().get(),"one");
-  EXPECT_EQ(airLoopHVAC2.name().get(),"two");
-  EXPECT_EQ(airLoopHVAC3.name().get(),"three");
-  EXPECT_EQ(airLoopHVAC4.name().get(),"four");
-  EXPECT_EQ(airLoopHVAC5.name().get(),"five");
-
+  EXPECT_EQ(airLoopHVAC1.name().get(), "one");
+  EXPECT_EQ(airLoopHVAC2.name().get(), "two");
+  EXPECT_EQ(airLoopHVAC3.name().get(), "three");
+  EXPECT_EQ(airLoopHVAC4.name().get(), "four");
+  EXPECT_EQ(airLoopHVAC5.name().get(), "five");
 }
 /*
 // Tests undo of a remove operation
@@ -403,17 +478,20 @@ TEST_F(ModelFixture, UndoAdd)
 }
 */
 
-class ExampleModelFixture : public ModelFixture {
+class ExampleModelFixture : public ModelFixture
+{
  protected:
   // By default, SetUp() inherits the behavior of ModelFixture::SetUp(). In both cases, nothing to be done
 
-  void addPathToCleanUp(const openstudio::path& p) { m_cleanUpPaths.push_back(p); }
+  void addPathToCleanUp(const openstudio::path& p) {
+    m_cleanUpPaths.push_back(p);
+  }
 
   // We override the teardown to make sure we clean up any files we output to the root directory
   void TearDown() override {
 
-    for (const openstudio::path& p: m_cleanUpPaths) {
-      if(openstudio::filesystem::exists(p)){
+    for (const openstudio::path& p : m_cleanUpPaths) {
+      if (openstudio::filesystem::exists(p)) {
         openstudio::filesystem::remove(p);
       }
     }
@@ -422,11 +500,10 @@ class ExampleModelFixture : public ModelFixture {
   }
 
  private:
-    std::vector<openstudio::path> m_cleanUpPaths;
+  std::vector<openstudio::path> m_cleanUpPaths;
 };
 
-TEST_F(ExampleModelFixture, ExampleModel)
-{
+TEST_F(ExampleModelFixture, ExampleModel) {
   Model model = exampleModel();
 
   boost::optional<Building> building = model.getOptionalUniqueModelObject<Building>();
@@ -449,7 +526,7 @@ TEST_F(ExampleModelFixture, ExampleModel)
   ASSERT_EQ(1u, defaultScheduleSets.size());
   EXPECT_EQ(4u, spaces.size());
 
-  for (const Space& space : spaces){
+  for (const Space& space : spaces) {
     boost::optional<SpaceType> testSpaceType = space.spaceType();
     ASSERT_TRUE(testSpaceType);
     EXPECT_EQ(spaceTypes[0].handle(), testSpaceType->handle());
@@ -457,8 +534,7 @@ TEST_F(ExampleModelFixture, ExampleModel)
   }
 }
 
-TEST_F(ExampleModelFixture, ExampleModel_Save)
-{
+TEST_F(ExampleModelFixture, ExampleModel_Save) {
   Model model = exampleModel();
 
   openstudio::path path = toPath("./ExampleModel_Save.osm");
@@ -475,9 +551,9 @@ TEST_F(ExampleModelFixture, ExampleModel_StagedLoad) {
   Model model = exampleModel();
   openstudio::path path = toPath("./ExampleModel_StagedLoad.osm");
   addPathToCleanUp(path);
-  model.save(path,true);
+  model.save(path, true);
 
-  IdfFile idf = IdfFile::load(path,IddFileType::OpenStudio).get();
+  IdfFile idf = IdfFile::load(path, IddFileType::OpenStudio).get();
   model = Model();
   WorkspaceObjectVector added = model.addObjects(idf.objects());
   // check that links between objects were kept
@@ -486,8 +562,7 @@ TEST_F(ExampleModelFixture, ExampleModel_StagedLoad) {
   EXPECT_FALSE(zones[0].spaces().empty());
 }
 
-TEST_F(ExampleModelFixture, ExampleModel_ReloadTwoTimes)
-{
+TEST_F(ExampleModelFixture, ExampleModel_ReloadTwoTimes) {
   Model model = exampleModel();
 
   openstudio::path path1 = toPath("./ExampleModel_ReloadTwoTimes1.osm");
@@ -513,7 +588,7 @@ TEST_F(ExampleModelFixture, ExampleModel_ReloadTwoTimes)
   std::vector<WorkspaceObject> objects1 = model1->objects();
   std::vector<WorkspaceObject> objects2 = model2->objects();
 
-  for (unsigned i = 0; i < N; ++i){
+  for (unsigned i = 0; i < N; ++i) {
     EXPECT_EQ(objects[i].handle(), objects1[i].handle());
     if (objects[i].name()) {
       // not every object has a name
@@ -526,7 +601,6 @@ TEST_F(ExampleModelFixture, ExampleModel_ReloadTwoTimes)
     }
   }
 }
-
 
 TEST_F(ModelFixture, Model_building) {
   Model model;
@@ -548,8 +622,7 @@ TEST_F(ModelFixture, Model_building) {
   EXPECT_FALSE(building);
 }
 
-TEST_F(ModelFixture, MatchSurfaces)
-{
+TEST_F(ModelFixture, MatchSurfaces) {
   std::stringstream testOSMString;
   testOSMString << "OS:Version,  \n\
     {7c2c8c1a-908e-44c0-82c1-ba2dba9143c9},  ! Handle  \n\
@@ -708,7 +781,7 @@ TEST_F(ModelFixture, MatchSurfaces)
     248,                      ! Rendering Green Value  \n\
     255;                      ! Rendering Blue Value";
 
-  IdfFile idfFile = IdfFile::load(testOSMString,IddFileType(IddFileType::OpenStudio)).get();
+  IdfFile idfFile = IdfFile::load(testOSMString, IddFileType(IddFileType::OpenStudio)).get();
   Model model(idfFile);
 
   //get ahold of the surfaces we want to match
@@ -728,15 +801,13 @@ TEST_F(ModelFixture, MatchSurfaces)
   EXPECT_EQ("Outdoors", surface28.outsideBoundaryCondition());
 
   //match surfaces
-  std::vector<Space> spaces =  model.getModelObjects<Space>();
+  std::vector<Space> spaces = model.getModelObjects<Space>();
   matchSurfaces(spaces);
-
 
   //both walls should now be matched
   //before surface matching, both walls should have exterior boundary condition
   EXPECT_EQ("Surface", surface16.outsideBoundaryCondition());
   EXPECT_EQ("Surface", surface28.outsideBoundaryCondition());
-
 
   //ASSERT_TRUE(zone->name());
   //EXPECT_EQ("Zone", zone->name().get());
@@ -757,10 +828,359 @@ TEST_F(ModelFixture, MatchSurfaces)
   //EXPECT_EQ("Wall", window->getTarget(WindowFields::BuildingSurfaceName)->name().get());
 }
 
-TEST_F(ModelFixture,Model_BadSwaps) {
+TEST_F(ModelFixture, Model_BadSwaps) {
   Workspace workspace;
   Model model;
 
   EXPECT_ANY_THROW(workspace.swap(model));
   EXPECT_ANY_THROW(model.swap(workspace));
+}
+
+TEST_F(ModelFixture, Ensure_Name_Unicity_SpaceAndSpaceGroupNames) {
+  // Starting in 9.6.0, Space and SpaceList are supported.
+  // Zone, ZoneList, Space, SpaceList all need to be unique names
+  Model m;
+
+  std::vector<ModelObject> mos{Space{m}, m.getUniqueModelObject<Building>(), BuildingStory{m}, SpaceType{m}, ThermalZone{m}};
+  EXPECT_EQ(5, m.getObjectsByReference("SpaceAndSpaceGroupNames").size());
+
+  std::string name = "A Name";
+
+  std::vector<std::pair<size_t, size_t>> combinations{
+    {0, 1}, {0, 2}, {0, 3}, {0, 4}, {1, 2}, {1, 3}, {1, 4}, {2, 3}, {2, 4}, {3, 4},
+  };
+
+  auto resetNames = [&mos]() {
+    for (auto& mo : mos) {
+      mo.setName(mo.iddObject().name());
+    }
+  };
+
+  for (auto& [i1, i2] : combinations) {
+    resetNames();  // Starting point: all names are unique
+    // We set two names: first one should work
+    auto s1_ = mos[i1].setName(name);
+    ASSERT_TRUE(s1_);
+    EXPECT_EQ(name, s1_.get());
+    // Second should be modified to keep unicity of names
+    auto s2_ = mos[i2].setName(name);
+    ASSERT_TRUE(s2_);
+    EXPECT_NE(name, s2_.get());
+    EXPECT_NE(s1_.get(), s2_.get());
+    EXPECT_NE(mos[i1].nameString(), mos[i2].nameString());
+  }
+}
+
+TEST_F(ModelFixture, Issue_4372) {
+
+  // Open OffsetTests
+  // INtersect surfaces
+  // Match Surfaces
+  // Check the internal walls are paired
+  // Surface 4 Space 101 with SPace 102 surface 12
+  // Surface 2 Space 102 with
+
+  openstudio::path modelPath = resourcesPath() / "model" / toPath("offset_tests.osm");
+  ASSERT_TRUE(openstudio::filesystem::exists(modelPath));
+
+  openstudio::osversion::VersionTranslator vt;
+  boost::optional<openstudio::model::Model> model = vt.loadModel(modelPath);
+  ASSERT_TRUE(model);
+
+  std::vector<Space> spaces = model->getConcreteModelObjects<Space>();
+  intersectSurfaces(spaces);
+
+  matchSurfaces(spaces);
+  std::vector<Surface> surfacesAfter = model->getConcreteModelObjects<Surface>();
+  for (const auto& surface : surfacesAfter) {
+
+    std::string name = surface.name().value();
+    OptionalSurface otherSurface;
+    if (name == "Surface 4") {
+      otherSurface = surface.adjacentSurface();
+      ASSERT_TRUE(otherSurface);
+      EXPECT_EQ(otherSurface->nameString(), "Surface 8");
+    } else if (name == "Surface 10") {
+      otherSurface = surface.adjacentSurface();
+      ASSERT_TRUE(otherSurface);
+      ASSERT_EQ(otherSurface->name().value(), "Surface 14");
+    } else if (name == "Surface 16") {
+      otherSurface = surface.adjacentSurface();
+      ASSERT_TRUE(otherSurface);
+      ASSERT_EQ(otherSurface->name().value(), "Surface 20");
+    } else if (name == "Surface 22") {
+      otherSurface = surface.adjacentSurface();
+      ASSERT_TRUE(otherSurface);
+      ASSERT_EQ(otherSurface->name().value(), "Surface 26");
+    } else if (name == "Surface 28") {
+      otherSurface = surface.adjacentSurface();
+      ASSERT_TRUE(otherSurface);
+      ASSERT_EQ(otherSurface->name().value(), "Surface 32");
+    }
+
+    // if (otherSurface) {
+    //   LOG(Info, "Surface " << surface.name().value() << " is paired with " << otherSurface->name().value());
+    // }
+  }
+
+  // modelPath = resourcesPath() / "model" / toPath("offset_tests_matched.osm");
+  // model->save(modelPath, true);
+}
+
+TEST_F(ModelFixture, UniqueModelObjectCachedGetters) {
+  Model m;
+  unsigned i = 0;
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<Building>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto building = m.getUniqueModelObject<Building>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<Building>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<FoundationKivaSettings>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto foundationKivaSettings = m.getUniqueModelObject<FoundationKivaSettings>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<FoundationKivaSettings>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputControlFiles>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputControlFiles = m.getUniqueModelObject<OutputControlFiles>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputControlFiles>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputControlReportingTolerances = m.getUniqueModelObject<OutputControlReportingTolerances>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputControlReportingTolerances>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputControlTableStyle>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputControlTableStyle = m.getUniqueModelObject<OutputControlTableStyle>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputControlTableStyle>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputDiagnostics>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputDiagnostics = m.getUniqueModelObject<OutputDiagnostics>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputDiagnostics>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputDebuggingData>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputDebuggingData = m.getUniqueModelObject<OutputDebuggingData>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputDebuggingData>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputJSON>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputJSON = m.getUniqueModelObject<OutputJSON>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputJSON>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputSQLite>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputSQLite = m.getUniqueModelObject<OutputSQLite>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputSQLite>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputEnergyManagementSystem>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputEnergyManagementSystem = m.getUniqueModelObject<OutputEnergyManagementSystem>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputEnergyManagementSystem>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputTableSummaryReports>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outputTableSummaryReports = m.getUniqueModelObject<OutputTableSummaryReports>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutputTableSummaryReports>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto performancePrecisionTradeoffs = m.getUniqueModelObject<PerformancePrecisionTradeoffs>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<PerformancePrecisionTradeoffs>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<LifeCycleCostParameters>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto lifeCycleCostParameters = m.getUniqueModelObject<LifeCycleCostParameters>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<LifeCycleCostParameters>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SizingParameters>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto sizingParameters = m.getUniqueModelObject<SizingParameters>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SizingParameters>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<RadianceParameters>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto radianceParameters = m.getUniqueModelObject<RadianceParameters>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<RadianceParameters>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<RunPeriod>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto runPeriod = m.getUniqueModelObject<RunPeriod>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<RunPeriod>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto runPeriodControlDaylightSavingTime = m.getUniqueModelObject<RunPeriodControlDaylightSavingTime>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<RunPeriodControlDaylightSavingTime>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<model::YearDescription>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto yearDescription = m.getUniqueModelObject<model::YearDescription>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<model::YearDescription>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<Site>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto site = m.getUniqueModelObject<Site>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<Site>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SiteGroundReflectance>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto siteGroundReflectance = m.getUniqueModelObject<SiteGroundReflectance>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SiteGroundReflectance>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto siteWaterMainsTemperature = m.getUniqueModelObject<SiteWaterMainsTemperature>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SiteWaterMainsTemperature>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto siteGroundTemperatureBuildingSurface = m.getUniqueModelObject<SiteGroundTemperatureBuildingSurface>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SiteGroundTemperatureBuildingSurface>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto siteGroundTemperatureFCfactorMethod = m.getUniqueModelObject<SiteGroundTemperatureFCfactorMethod>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SiteGroundTemperatureFCfactorMethod>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SiteGroundTemperatureDeep>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto siteGroundTemperatureDeep = m.getUniqueModelObject<SiteGroundTemperatureDeep>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SiteGroundTemperatureDeep>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SiteGroundTemperatureShallow>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto siteGroundTemperatureShallow = m.getUniqueModelObject<SiteGroundTemperatureShallow>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SiteGroundTemperatureShallow>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<Facility>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto facility = m.getUniqueModelObject<Facility>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<Facility>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<WeatherFile>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto weatherFile = m.getUniqueModelObject<WeatherFile>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<WeatherFile>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<SimulationControl>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto simulationControl = m.getUniqueModelObject<SimulationControl>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<SimulationControl>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<LightingSimulationControl>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto lightingSimulationControl = m.getUniqueModelObject<LightingSimulationControl>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<LightingSimulationControl>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<AirflowNetworkSimulationControl>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto airflowNetworkSimulationControl = m.getUniqueModelObject<AirflowNetworkSimulationControl>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<AirflowNetworkSimulationControl>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<InsideSurfaceConvectionAlgorithm>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto insideSurfaceConvectionAlgorithm = m.getUniqueModelObject<InsideSurfaceConvectionAlgorithm>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<InsideSurfaceConvectionAlgorithm>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutsideSurfaceConvectionAlgorithm>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto outsideSurfaceConvectionAlgorithm = m.getUniqueModelObject<OutsideSurfaceConvectionAlgorithm>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<OutsideSurfaceConvectionAlgorithm>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<HeatBalanceAlgorithm>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto heatBalanceAlgorithm = m.getUniqueModelObject<HeatBalanceAlgorithm>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<HeatBalanceAlgorithm>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto zoneAirHeatBalanceAlgorithm = m.getUniqueModelObject<ZoneAirHeatBalanceAlgorithm>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ZoneAirHeatBalanceAlgorithm>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto zoneAirMassFlowConservation = m.getUniqueModelObject<ZoneAirMassFlowConservation>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto zoneCapacitanceMultiplierResearchSpecial = m.getUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ZoneCapacitanceMultiplierResearchSpecial>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ConvergenceLimits>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto convergenceLimits = m.getUniqueModelObject<ConvergenceLimits>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ConvergenceLimits>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ShadowCalculation>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto shadowCalculation = m.getUniqueModelObject<ShadowCalculation>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ShadowCalculation>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<Timestep>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto timestep = m.getUniqueModelObject<Timestep>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<Timestep>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ClimateZones>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto climateZones = m.getUniqueModelObject<ClimateZones>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ClimateZones>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<EnvironmentalImpactFactors>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto environmentImpactFactors = m.getUniqueModelObject<EnvironmentalImpactFactors>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<EnvironmentalImpactFactors>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
+
+  EXPECT_FALSE(m.getOptionalUniqueModelObject<ExternalInterface>());
+  EXPECT_EQ(i, m.getModelObjects<ModelObject>().size());
+  auto externalInterface = m.getUniqueModelObject<ExternalInterface>();
+  EXPECT_TRUE(m.getOptionalUniqueModelObject<ExternalInterface>());
+  EXPECT_EQ(++i, m.getModelObjects<ModelObject>().size());
 }

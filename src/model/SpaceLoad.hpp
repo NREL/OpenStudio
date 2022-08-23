@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,73 +36,71 @@
 namespace openstudio {
 namespace model {
 
-class SpaceType;
+  class SpaceType;
 
-namespace detail{
-  class SpaceLoad_Impl;
-}
+  namespace detail {
+    class SpaceLoad_Impl;
+  }
 
-/** SpaceLoad is an abstract class derived from SpaceItem.
+  /** SpaceLoad is an abstract class derived from SpaceItem.
  */
-class MODEL_API SpaceLoad : public SpaceItem {
- public:
-  virtual ~SpaceLoad() {}
+  class MODEL_API SpaceLoad : public SpaceItem
+  {
+   public:
+    virtual ~SpaceLoad() {}
 
-  /// Returns the parent SpaceType.
-  boost::optional<SpaceType> spaceType() const;
+    /// Returns the parent SpaceType.
+    boost::optional<SpaceType> spaceType() const;
 
-  /// Sets the parent SpaceType.
-  bool setSpaceType(const SpaceType& spaceType);
+    /// Sets the parent SpaceType.
+    bool setSpaceType(const SpaceType& spaceType);
 
-  void resetSpaceType();
+    void resetSpaceType();
 
-  /// Converts space load levels to absolute values rather than by per area, etc.
-  /// Also hard sizes any costs associated with this load.
-  /// Only possible if this space load is parented by a space, returns false if
-  /// parented by a space type.
-  bool hardSize();
+    /// Converts space load levels to absolute values rather than by per area, etc.
+    /// Also hard sizes any costs associated with this load.
+    /// Only possible if this space load is parented by a space, returns false if
+    /// parented by a space type.
+    bool hardSize();
 
-  /// Directly applies default schedules to this space load if found.
-  bool hardApplySchedules();
+    /// Directly applies default schedules to this space load if found.
+    bool hardApplySchedules();
 
-  /// Returns true if the load represents an absolute quantity that must be added when combining space types
-  bool isAbsolute() const;
+    /// Returns true if the load represents an absolute quantity that must be added when combining space types
+    bool isAbsolute() const;
 
- protected:
+   protected:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /// Constructs a new SpaceLoad object in the model.
+    SpaceLoad(IddObjectType type, const Model& model);
 
-  /// Constructs a new SpaceLoad object in the model.
-  SpaceLoad(IddObjectType type,const Model& model);
+    //@}
 
-  //@}
+    /// @cond
 
-  /// @cond
+    typedef detail::SpaceLoad_Impl ImplType;
 
-  typedef detail::SpaceLoad_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::SpaceLoad_Impl;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::SpaceLoad_Impl;
+    explicit SpaceLoad(std::shared_ptr<detail::SpaceLoad_Impl> impl);
 
-  explicit SpaceLoad(std::shared_ptr<detail::SpaceLoad_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.SpaceLoad");
 
- private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.SpaceLoad");
+  /** \relates SpaceLoad */
+  typedef boost::optional<SpaceLoad> OptionalSpaceLoad;
 
-  /// @endcond
+  /** \relates SpaceLoad */
+  typedef std::vector<SpaceLoad> SpaceLoadVector;
 
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates SpaceLoad */
-typedef boost::optional<SpaceLoad> OptionalSpaceLoad;
-
-/** \relates SpaceLoad */
-typedef std::vector<SpaceLoad> SpaceLoadVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SPACELOAD_HPP
+#endif  // MODEL_SPACELOAD_HPP

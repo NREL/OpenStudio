@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,211 +42,214 @@
 
 #include <vector>
 
-namespace openstudio{
+namespace openstudio {
 
-  class BCLComponent;
-  class BCLMeasure;
-  class DateTime;
+class BCLComponent;
+class BCLMeasure;
+class DateTime;
 
-  /** \class BCLXMLType
-   *  \brief Enumeration of the BCL XML file types.
-   *  \details The Building Component Library (BCL) hosts both components and measures. The
-   *  meta-data for individual instances of these two types of items are transmitted using XML
-   *  files that with slightly different structures. Thus, this enum helps distinguish between the
-   *  expected schema.
-   *
-   *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
-   *  \code
-  OPENSTUDIO_ENUM( BCLXMLType,
-    ((ComponentXML)(ComponentXML))
-    ((MeasureXML)(MeasureXML))
-  );
-   *  \endcode */
-  OPENSTUDIO_ENUM( BCLXMLType,
-    ((ComponentXML)(ComponentXML))
-    ((MeasureXML)(MeasureXML))
-  );
+// clang-format off
 
-  /** BCLXML is a class for accessing the common XML structures of BCLComponent and BCLMeasure.
+/** \class BCLXMLType
+ *  \brief Enumeration of the BCL XML file types.
+ *  \details The Building Component Library (BCL) hosts both components and measures. The
+ *  meta-data for individual instances of these two types of items are transmitted using XML
+ *  files that with slightly different structures. Thus, this enum helps distinguish between the
+ *  expected schema.
+ *
+ *  See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro call is:
+ *  \code
+OPENSTUDIO_ENUM(BCLXMLType,
+  ((ComponentXML)(ComponentXML))
+  ((MeasureXML)(MeasureXML))
+);
+ *  \endcode */
+OPENSTUDIO_ENUM(BCLXMLType,
+  ((ComponentXML)(ComponentXML))
+  ((MeasureXML)(MeasureXML))
+);
+
+// clang-format on
+
+/** BCLXML is a class for accessing the common XML structures of BCLComponent and BCLMeasure.
   **/
-  class UTILITIES_API BCLXML {
+class UTILITIES_API BCLXML
+{
 
-  public:
+ public:
+  /** @name Constructors */
+  //@{
 
-    /** @name Constructors */
-    //@{
+  /// Constructor for a new XML
+  explicit BCLXML(const BCLXMLType& bclXMLType);
 
-    /// Constructor for a new XML
-    explicit BCLXML(const BCLXMLType& bclXMLType);
+  /// Constructor from file path, will throw exception if file does not exist or is incorrect.
+  explicit BCLXML(const openstudio::path& xmlPath);
 
-    /// Constructor from file path, will throw exception if file does not exist or is incorrect.
-    explicit BCLXML(const openstudio::path& xmlPath);
+  /// Try to load a BCLXML from disk.
+  static boost::optional<BCLXML> load(const openstudio::path& xmlPath);
 
-    /// Try to load a BCLXML from disk.
-    static boost::optional<BCLXML> load(const openstudio::path& xmlPath);
+  /// Escape a string to write to xml
+  static std::string escapeString(const std::string& txt);
 
-    /// Escape a string to write to xml
-    static std::string escapeString(const std::string& txt);
+  /// Decode a string written in xml
+  static std::string decodeString(const std::string& txt);
 
-    /// Decode a string written in xml
-    static std::string decodeString(const std::string& txt);
+  //@}
+  /** @name Destructor */
+  //@{
 
-    //@}
-    /** @name Destructor */
-    //@{
+  /// Virtual destructor
+  virtual ~BCLXML() {}
 
-    /// Virtual destructor
-    virtual ~BCLXML()
-    {}
+  //@}
+  /** @name Getters */
+  //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+  /// Returns path to XML file.
+  openstudio::path path() const;
 
-    /// Returns path to XML file.
-    openstudio::path path() const;
+  /// Returns parent path of XML file.
+  openstudio::path directory() const;
 
-    /// Returns parent path of XML file.
-    openstudio::path directory() const;
+  boost::optional<std::string> error() const;
 
-    boost::optional<std::string> error() const;
+  std::string uid() const;
 
-    std::string uid() const;
+  std::string versionId() const;
 
-    std::string versionId() const;
+  boost::optional<DateTime> versionModified() const;
 
-    boost::optional<DateTime> versionModified() const;
+  std::string xmlChecksum() const;
 
-    std::string xmlChecksum() const;
+  std::string name() const;
 
-    std::string name() const;
+  std::string displayName() const;
 
-    std::string displayName() const;
+  std::string className() const;
 
-    std::string className() const;
+  std::string description() const;
 
-    std::string description() const;
+  std::string modelerDescription() const;
 
-    std::string modelerDescription() const;
+  std::vector<BCLMeasureArgument> arguments() const;
 
-    std::vector<BCLMeasureArgument> arguments() const;
+  std::vector<BCLMeasureOutput> outputs() const;
 
-    std::vector<BCLMeasureOutput> outputs() const;
+  std::vector<BCLFileReference> files() const;
 
-    std::vector<BCLFileReference> files() const;
+  /// Returns references to all files of given type.
+  std::vector<BCLFileReference> files(const std::string& filetype) const;
 
-    /// Returns references to all files of given type.
-    std::vector<BCLFileReference> files(const std::string& filetype) const;
+  std::vector<Attribute> attributes() const;
 
-    std::vector<Attribute> attributes() const;
+  /// get attributes by name
+  std::vector<Attribute> getAttributes(const std::string& name) const;
 
-    /// get attributes by name
-    std::vector<Attribute> getAttributes(const std::string& name) const;
+  std::vector<std::string> tags() const;
 
-    std::vector<std::string> tags() const;
+  //@}
+  /** @name Setters */
+  //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+  void resetXMLChecksum();
 
-    void resetXMLChecksum();
+  void setError(const std::string& error);
 
-    void setError(const std::string& error);
+  void resetError();
 
-    void resetError();
+  void setName(const std::string& name);
 
-    void setName(const std::string& name);
+  void setDisplayName(const std::string& displayName);
 
-    void setDisplayName(const std::string& displayName);
+  void setClassName(const std::string& className);
 
-    void setClassName(const std::string& className);
+  void setDescription(const std::string& description);
 
-    void setDescription(const std::string& description);
+  void setModelerDescription(const std::string& modelerDescription);
 
-    void setModelerDescription(const std::string& modelerDescription);
+  void setArguments(const std::vector<BCLMeasureArgument>& arguments);
 
-    void setArguments(const std::vector<BCLMeasureArgument>& arguments);
+  void setOutputs(const std::vector<BCLMeasureOutput>& outputs);
 
-    void setOutputs(const std::vector<BCLMeasureOutput>& outputs);
+  /// adds file to list, file with same full path will be removed
+  void addFile(const BCLFileReference& file);
 
-    /// adds file to list, file with same full path will be removed
-    void addFile(const BCLFileReference& file);
+  /// check if has file reference by full path, returns true if file was found
+  bool hasFile(const openstudio::path& path) const;
 
-    /// check if has file reference by full path, returns true if file was found
-    bool hasFile(const openstudio::path& path) const;
+  /// remove file reference by full path, returns true if file was found and removed
+  bool removeFile(const openstudio::path& path);
 
-    /// remove file reference by full path, returns true if file was found and removed
-    bool removeFile(const openstudio::path& path);
+  /// clear all files
+  void clearFiles();
 
-    /// clear all files
-    void clearFiles();
+  /// adds attribute to attribute list
+  void addAttribute(const Attribute& attribute);
 
-    /// adds attribute to attribute list
-    void addAttribute(const Attribute& attribute);
+  /// removes all attributes with name, returns true if attributes were found and removed
+  bool removeAttributes(const std::string& name);
 
-    /// removes all attributes with name, returns true if attributes were found and removed
-    bool removeAttributes(const std::string& name);
+  /// removes all attributes
+  void clearAttributes();
 
-    /// removes all attributes
-    void clearAttributes();
+  /// adds a tag, existing tag with same name will be removed
+  void addTag(const std::string& tagName);
 
-    /// adds a tag, existing tag with same name will be removed
-    void addTag(const std::string& tagName);
+  /// removes tag by name, returns true if tag was found and removed
+  bool removeTag(const std::string& tagName);
 
-    /// removes tag by name, returns true if tag was found and removed
-    bool removeTag(const std::string& tagName);
+  /// removes all tags
+  void clearTags();
 
-    /// removes all tags
-    void clearTags();
+  //@}
+  /** @name Operators */
+  //@{
 
-    //@}
-    /** @name Operators */
-    //@{
+  /// Save the XML back to the original path, always increments version id.
+  bool save() const;
 
-    /// Save the XML back to the original path, always increments version id.
-    bool save() const;
+  /// Save the XML to a new path, always increments version id.
+  bool saveAs(const openstudio::path& xmlPath);
 
-    /// Save the XML to a new path, always increments version id.
-    bool saveAs(const openstudio::path& xmlPath);
+  void changeUID();
 
-    void changeUID();
+  void incrementVersionId();
 
-    void incrementVersionId();
+  /// Check for updates to the xml, will increment versionID and xmlChecksum then return true
+  /// if any xml fields (other than uid, version id, or xml checksum) have changed
+  /// The xml file must still be saved to disk to preserve the new versionID
+  bool checkForUpdatesXML();
 
-    /// Check for updates to the xml, will increment versionID and xmlChecksum then return true
-    /// if any xml fields (other than uid, version id, or xml checksum) have changed
-    /// The xml file must still be saved to disk to preserve the new versionID
-    bool checkForUpdatesXML();
+  //@}
 
-    //@}
+ private:
+  // configure logging
+  REGISTER_LOGGER("utilities.bcl.BCLXML");
 
-  private:
-    // configure logging
-    REGISTER_LOGGER("utilities.bcl.BCLXML");
+  /// Compute the current xml checksum
+  std::string computeXMLChecksum() const;
 
-    /// Compute the current xml checksum
-    std::string computeXMLChecksum() const;
+  openstudio::path m_path;
+  BCLXMLType m_bclXMLType;
+  boost::optional<std::string> m_error;
+  std::string m_name;
+  std::string m_displayName;
+  std::string m_className;  // only for measures
+  std::string m_uid;
+  std::string m_versionId;
+  std::string m_versionModified;
+  std::string m_xmlChecksum;
+  std::string m_description;
+  std::string m_modelerDescription;             // only for measures
+  std::vector<BCLMeasureArgument> m_arguments;  // only for measures
+  std::vector<BCLMeasureOutput> m_outputs;      // only for measures
+  std::vector<BCLFileReference> m_files;
+  std::vector<std::string> m_filetypes;
+  std::vector<Attribute> m_attributes;
+  std::vector<std::string> m_tags;
+};
 
-    openstudio::path m_path;
-    BCLXMLType m_bclXMLType;
-    boost::optional<std::string> m_error;
-    std::string m_name;
-    std::string m_displayName;
-    std::string m_className; // only for measures
-    std::string m_uid;
-    std::string m_versionId;
-    std::string m_versionModified;
-    std::string m_xmlChecksum;
-    std::string m_description;
-    std::string m_modelerDescription; // only for measures
-    std::vector<BCLMeasureArgument> m_arguments; // only for measures
-    std::vector<BCLMeasureOutput> m_outputs; // only for measures
-    std::vector<BCLFileReference> m_files;
-    std::vector<std::string> m_filetypes;
-    std::vector<Attribute> m_attributes;
-    std::vector<std::string> m_tags;
-  };
+}  // namespace openstudio
 
-} // openstudio
-
-#endif // UTILITIES_BCL_BCLXML_HPP
+#endif  // UTILITIES_BCL_BCLXML_HPP

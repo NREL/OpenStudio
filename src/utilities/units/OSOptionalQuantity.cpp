@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,28 +34,20 @@
 
 #include <cmath>
 
-namespace openstudio{
+namespace openstudio {
 
-OSOptionalQuantity::OSOptionalQuantity(const UnitSystem& sys)
-{
+OSOptionalQuantity::OSOptionalQuantity(const UnitSystem& sys) {
   Quantity q(sys);
   m_units = q.units();
 }
 
-OSOptionalQuantity::OSOptionalQuantity(const Unit& units)
-  : m_units(units.clone())
-{}
+OSOptionalQuantity::OSOptionalQuantity(const Unit& units) : m_units(units.clone()) {}
 
-OSOptionalQuantity::OSOptionalQuantity(const Quantity& quantity)
-  : m_value(quantity.value()), m_units(quantity.units())
-{}
+OSOptionalQuantity::OSOptionalQuantity(const Quantity& quantity) : m_value(quantity.value()), m_units(quantity.units()) {}
 
-OSOptionalQuantity::OSOptionalQuantity(const OSOptionalQuantity& oq)
-  : m_value(oq.m_value), m_units(oq.units())
-{}
+OSOptionalQuantity::OSOptionalQuantity(const OSOptionalQuantity& oq) : m_value(oq.m_value), m_units(oq.units()) {}
 
-OSOptionalQuantity& OSOptionalQuantity::operator=(const OSOptionalQuantity& oq)
-{
+OSOptionalQuantity& OSOptionalQuantity::operator=(const OSOptionalQuantity& oq) {
   if (this == &oq) {
     return *this;
   }
@@ -75,11 +67,11 @@ bool OSOptionalQuantity::isSet() const {
 
 Quantity OSOptionalQuantity::get() const {
   OS_ASSERT(m_value);
-  return Quantity(*m_value,units());
+  return Quantity(*m_value, units());
 }
 
 Unit OSOptionalQuantity::units() const {
   return m_units.clone();
 }
 
-} // openstudio
+}  // namespace openstudio

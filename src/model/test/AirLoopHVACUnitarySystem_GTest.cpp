@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -66,33 +66,35 @@
 #include "../CurveCubic.hpp"
 #include "../CurveExponent.hpp"
 #include "../CurveBiquadratic.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../AirLoopHVAC_Impl.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirLoopHVACUnitarySystem_DefaultConstructors)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, AirLoopHVACUnitarySystem_Remove)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_Remove) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
-  FanOnOff fan = FanOnOff(m,s);
-  CoilHeatingElectric heatingCoil = CoilHeatingElectric(m,s);
-  CoilHeatingElectric suppHeatingCoil = CoilHeatingElectric(m,s);
-  CoilCoolingWater coolingCoil = CoilCoolingWater(m,s);
+  FanOnOff fan = FanOnOff(m, s);
+  CoilHeatingElectric heatingCoil = CoilHeatingElectric(m, s);
+  CoilHeatingElectric suppHeatingCoil = CoilHeatingElectric(m, s);
+  CoilCoolingWater coolingCoil = CoilCoolingWater(m, s);
 
   testObject.setSupplyFan(fan);
   testObject.setCoolingCoil(coolingCoil);
@@ -126,15 +128,14 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_Remove)
   EXPECT_EQ(0, coolingCoils.size());
 }
 
-TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithDefaultData)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithDefaultData) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
-  FanOnOff fan = FanOnOff(m,s);
-  CoilHeatingElectric heatingCoil = CoilHeatingElectric(m,s);
-  CoilHeatingElectric suppHeatingCoil = CoilHeatingElectric(m,s);
-  CoilCoolingWater coolingCoil = CoilCoolingWater(m,s);
+  FanOnOff fan = FanOnOff(m, s);
+  CoilHeatingElectric heatingCoil = CoilHeatingElectric(m, s);
+  CoilHeatingElectric suppHeatingCoil = CoilHeatingElectric(m, s);
+  CoilCoolingWater coolingCoil = CoilCoolingWater(m, s);
 
   testObject.setSupplyFan(fan);
   testObject.setCoolingCoil(coolingCoil);
@@ -162,10 +163,10 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithDefaultData)
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.ancilliaryOffCycleElectricPower());
   // EXPECT_DOUBLE_EQ(80.0, testObjectClone.maximumTemperatureforHeatRecovery());
 
-  EXPECT_NE(testObject.supplyFan(), testObjectClone.supplyFan());
-  EXPECT_NE(testObject.coolingCoil(), testObjectClone.coolingCoil());
-  EXPECT_NE(testObject.heatingCoil(), testObjectClone.heatingCoil());
-  EXPECT_NE(testObject.supplementalHeatingCoil(), testObjectClone.supplementalHeatingCoil());
+  EXPECT_NE(testObject.supplyFan().get(), testObjectClone.supplyFan().get());
+  EXPECT_NE(testObject.coolingCoil().get(), testObjectClone.coolingCoil().get());
+  EXPECT_NE(testObject.heatingCoil().get(), testObjectClone.heatingCoil().get());
+  EXPECT_NE(testObject.supplementalHeatingCoil().get(), testObjectClone.supplementalHeatingCoil().get());
 
   std::vector<AirLoopHVACUnitarySystem> unitarySystem = m.getConcreteModelObjects<AirLoopHVACUnitarySystem>();
   EXPECT_EQ(2, unitarySystem.size());
@@ -180,15 +181,14 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithDefaultData)
   EXPECT_EQ(2, coolingCoils.size());
 }
 
-TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
-  FanOnOff fan = FanOnOff(m,s);
-  CoilHeatingElectric heatingCoil = CoilHeatingElectric(m,s);
-  CoilHeatingElectric suppHeatingCoil = CoilHeatingElectric(m,s);
-  CoilCoolingWater coolingCoil = CoilCoolingWater(m,s);
+  FanOnOff fan = FanOnOff(m, s);
+  CoilHeatingElectric heatingCoil = CoilHeatingElectric(m, s);
+  CoilHeatingElectric suppHeatingCoil = CoilHeatingElectric(m, s);
+  CoilCoolingWater coolingCoil = CoilCoolingWater(m, s);
 
   testObject.setSupplyFan(fan);
   testObject.setCoolingCoil(coolingCoil);
@@ -247,10 +247,10 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData)
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ancilliaryOffCycleElectricPower());
   // EXPECT_DOUBLE_EQ(100.0, testObjectClone.maximumTemperatureforHeatRecovery());
 
-  EXPECT_NE(testObject.supplyFan(), testObjectClone.supplyFan());
-  EXPECT_NE(testObject.coolingCoil(), testObjectClone.coolingCoil());
-  EXPECT_NE(testObject.heatingCoil(), testObjectClone.heatingCoil());
-  EXPECT_NE(testObject.supplementalHeatingCoil(), testObjectClone.supplementalHeatingCoil());
+  EXPECT_NE(testObject.supplyFan().get(), testObjectClone.supplyFan().get());
+  EXPECT_NE(testObject.coolingCoil().get(), testObjectClone.coolingCoil().get());
+  EXPECT_NE(testObject.heatingCoil().get(), testObjectClone.heatingCoil().get());
+  EXPECT_NE(testObject.supplementalHeatingCoil().get(), testObjectClone.supplementalHeatingCoil().get());
 
   std::vector<AirLoopHVACUnitarySystem> unitarySystem = m.getConcreteModelObjects<AirLoopHVACUnitarySystem>();
   EXPECT_EQ(2, unitarySystem.size());
@@ -265,15 +265,14 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneOneModelWithCustomData)
   EXPECT_EQ(2, coolingCoils.size());
 }
 
-TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneTwoModelsWithCustomData)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneTwoModelsWithCustomData) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
-  FanOnOff fan = FanOnOff(m,s);
-  CoilHeatingElectric heatingCoil = CoilHeatingElectric(m,s);
-  CoilHeatingElectric suppHeatingCoil = CoilHeatingElectric(m,s);
-  CoilCoolingWater coolingCoil = CoilCoolingWater(m,s);
+  FanOnOff fan = FanOnOff(m, s);
+  CoilHeatingElectric heatingCoil = CoilHeatingElectric(m, s);
+  CoilHeatingElectric suppHeatingCoil = CoilHeatingElectric(m, s);
+  CoilCoolingWater coolingCoil = CoilCoolingWater(m, s);
 
   testObject.setSupplyFan(fan);
   testObject.setCoolingCoil(coolingCoil);
@@ -282,10 +281,10 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneTwoModelsWithCustomData)
 
   AirLoopHVACUnitarySystem testObjectClone = testObject.clone(m).cast<AirLoopHVACUnitarySystem>();
 
-  EXPECT_NE(testObject.supplyFan(), testObjectClone.supplyFan());
-  EXPECT_NE(testObject.coolingCoil(), testObjectClone.coolingCoil());
-  EXPECT_NE(testObject.heatingCoil(), testObjectClone.heatingCoil());
-  EXPECT_NE(testObject.supplementalHeatingCoil(), testObjectClone.supplementalHeatingCoil());
+  EXPECT_NE(testObject.supplyFan().get(), testObjectClone.supplyFan().get());
+  EXPECT_NE(testObject.coolingCoil().get(), testObjectClone.coolingCoil().get());
+  EXPECT_NE(testObject.heatingCoil().get(), testObjectClone.heatingCoil().get());
+  EXPECT_NE(testObject.supplementalHeatingCoil().get(), testObjectClone.supplementalHeatingCoil().get());
 
   std::vector<AirLoopHVACUnitarySystem> unitarySystem = m.getConcreteModelObjects<AirLoopHVACUnitarySystem>();
   EXPECT_EQ(2, unitarySystem.size());
@@ -315,8 +314,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_CloneTwoModelsWithCustomData)
   EXPECT_EQ(1, coolingCoils.size());
 }
 
-TEST_F(ModelFixture,AirLoopHVACUnitarySystem_addToNode)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_addToNode) {
   Model m;
   AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
   AirLoopHVAC airLoop(m);
@@ -325,14 +323,13 @@ TEST_F(ModelFixture,AirLoopHVACUnitarySystem_addToNode)
 
   EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
 
-  EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size());
 
   EXPECT_TRUE(testObject.inletPort());
   EXPECT_TRUE(testObject.outletPort());
 }
 
-TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeTwoSameObjects)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeTwoSameObjects) {
   Model m;
   AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
   AirLoopHVAC airLoop(m);
@@ -346,8 +343,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeTwoSameObjects)
   EXPECT_TRUE(testObject.outletPort());
 }
 
-TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeAirLoopDemandSide)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeAirLoopDemandSide) {
   Model m;
   AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
   AirLoopHVAC airLoop(m);
@@ -359,8 +355,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodeAirLoopDemandSide)
   EXPECT_EQ((unsigned)5, airLoop.demandComponents().size());
 }
 
-TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodePlantLoop)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodePlantLoop) {
   // As of right now you cannot add the unitary to a plant.
   // Some heat recovery configurations may enable it, but more likely
   // the inner components will be added to the plant.
@@ -369,7 +364,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodePlantLoop)
   AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
   PlantLoop plantLoop(m);
 
-  EXPECT_EQ( (unsigned)5,plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
   Node demandInletNode = plantLoop.demandSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -387,15 +382,14 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_AddToNodePlantLoop)
   // EXPECT_EQ(plantLoop, testObject.plantLoop().get());
 }
 
-TEST_F(ModelFixture, AirLoopHVACUnitarySystem_WaterHeatingCoilToPlant)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_WaterHeatingCoilToPlant) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
-  FanOnOff fan = FanOnOff(m,s);
-  CoilHeatingWater heatingCoil = CoilHeatingWater(m,s);
-  CoilHeatingWater suppHeatingCoil = CoilHeatingWater(m,s);
-  CoilCoolingWater coolingCoil = CoilCoolingWater(m,s);
+  FanOnOff fan = FanOnOff(m, s);
+  CoilHeatingWater heatingCoil = CoilHeatingWater(m, s);
+  CoilHeatingWater suppHeatingCoil = CoilHeatingWater(m, s);
+  CoilCoolingWater coolingCoil = CoilCoolingWater(m, s);
 
   testObject.setSupplyFan(fan);
   testObject.setCoolingCoil(coolingCoil);
@@ -412,15 +406,14 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_WaterHeatingCoilToPlant)
   EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 }
 
-TEST_F(ModelFixture, AirLoopHVACUnitarySystem_RemoveWaterHeatingCoilFromPlant)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_RemoveWaterHeatingCoilFromPlant) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   AirLoopHVACUnitarySystem testObject = AirLoopHVACUnitarySystem(m);
-  FanOnOff fan = FanOnOff(m,s);
-  CoilHeatingWater heatingCoil = CoilHeatingWater(m,s);
-  CoilHeatingWater suppHeatingCoil = CoilHeatingWater(m,s);
-  CoilCoolingWater coolingCoil = CoilCoolingWater(m,s);
+  FanOnOff fan = FanOnOff(m, s);
+  CoilHeatingWater heatingCoil = CoilHeatingWater(m, s);
+  CoilHeatingWater suppHeatingCoil = CoilHeatingWater(m, s);
+  CoilCoolingWater coolingCoil = CoilCoolingWater(m, s);
 
   testObject.setSupplyFan(fan);
   testObject.setCoolingCoil(coolingCoil);
@@ -436,8 +429,7 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_RemoveWaterHeatingCoilFromPlant)
   EXPECT_NE((unsigned)7, plantLoop.demandComponents().size());
 }
 
-TEST_F(ModelFixture,AirLoopHVACUnitarySystem_containingHVACComponent)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_containingHVACComponent) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
   CurveBiquadratic c1(m);
@@ -561,8 +553,7 @@ TEST_F(ModelFixture,AirLoopHVACUnitarySystem_containingHVACComponent)
   EXPECT_EQ(*component, testObject);
 }
 
-TEST_F(ModelFixture, AirLoopHVACUnitarySystem_ControlType)
-{
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_ControlType) {
   Model m;
   AirLoopHVACUnitarySystem a = AirLoopHVACUnitarySystem(m);
 
@@ -576,6 +567,53 @@ TEST_F(ModelFixture, AirLoopHVACUnitarySystem_ControlType)
   a.resetControlType();
   ASSERT_TRUE(a.isControlTypeDefaulted());
   ASSERT_EQ("Load", a.controlType());
-
 }
 
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_clone_Nodes) {
+
+  // Test for #4335 - when cloning a UnitarySystem, the clone should have its inlet/outlet nodes cleared out
+  Model m;
+  AirLoopHVACUnitarySystem unitary = AirLoopHVACUnitarySystem(m);
+  AirLoopHVAC a(m);
+
+  Node supplyOutletNode = a.supplyOutletNode();
+  EXPECT_TRUE(unitary.addToNode(supplyOutletNode));
+
+  auto unitaryClone = unitary.clone(m).cast<AirLoopHVACUnitarySystem>();
+
+  EXPECT_TRUE(unitary.inletNode());
+  EXPECT_TRUE(unitary.outletNode());
+  EXPECT_FALSE(unitaryClone.inletNode());
+  EXPECT_FALSE(unitaryClone.outletNode());
+  EXPECT_FALSE(unitaryClone.getString(unitaryClone.inletPort(), true, true));
+  EXPECT_FALSE(unitaryClone.getString(unitaryClone.outletPort(), true, true));
+}
+
+TEST_F(ModelFixture, AirLoopHVACUnitarySystem_cloneAirLoopHVAC_Nodes) {
+
+  // Test for #4335 -  when cloning an AirLoopHVAC with a unitary sys, the original one should still be connected
+  Model m;
+  AirLoopHVACUnitarySystem unitary = AirLoopHVACUnitarySystem(m);
+  AirLoopHVAC a(m);
+
+  Node supplyOutletNode = a.supplyOutletNode();
+  EXPECT_TRUE(unitary.addToNode(supplyOutletNode));
+
+  auto aClone = a.clone(m).cast<AirLoopHVAC>();
+
+  auto unitarys = m.getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+  ASSERT_EQ(2, unitarys.size());
+  auto unitaryClone = (unitarys[0] == unitary) ? unitarys[1] : unitarys[0];
+
+  EXPECT_TRUE(unitaryClone.inletNode());
+  EXPECT_TRUE(unitaryClone.outletNode());
+  EXPECT_TRUE(unitary.inletNode());
+  EXPECT_TRUE(unitary.outletNode());
+  EXPECT_NE(unitary.inletNode().get(), unitaryClone.inletNode().get());
+  EXPECT_NE(unitary.outletNode().get(), unitaryClone.outletNode().get());
+
+  ASSERT_EQ(1u, aClone.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem).size());
+  EXPECT_EQ(unitaryClone, aClone.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem)[0]);
+  ASSERT_EQ(1u, a.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem).size());
+  EXPECT_EQ(unitary, a.supplyComponents(openstudio::IddObjectType::OS_AirLoopHVAC_UnitarySystem)[0]);
+}

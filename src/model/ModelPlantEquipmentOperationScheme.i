@@ -18,6 +18,12 @@
   #define _csharp_module_name OpenStudioModelPlantEquipmentOperationScheme
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 MODELOBJECT_TEMPLATES(PlantEquipmentOperationCoolingLoad);
 MODELOBJECT_TEMPLATES(PlantEquipmentOperationHeatingLoad);
 MODELOBJECT_TEMPLATES(PlantEquipmentOperationOutdoorDryBulb);

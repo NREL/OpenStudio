@@ -37,20 +37,6 @@
     </Expand>
 </Type>
 
-<!-- VS2013 -->
-<Type Name="boost::match_results&lt;char const*,*&gt;" Priority="MediumLow">
-    <Expand>
-        <Synthetic Name="Empty" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &lt; 0"><DisplayString>This item is empty.</DisplayString></Synthetic>
-        <Item Name="SubexpressionCount" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Mylast -  m_subs._Myfirst - 3</Item>
-        <Item Name="Location" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Myfirst[2].first -  m_subs._Myfirst[1].first</Item>
-        <Item Name="Length" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Myfirst[2].second -  m_subs._Myfirst[2].first</Item>
-        <ArrayItems Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">
-            <Size>m_subs._Mylast - m_subs._Myfirst - 2</Size>
-            <ValuePointer>m_subs._Myfirst + 2</ValuePointer>
-        </ArrayItems>
-    </Expand>
-</Type>
-
 <!-- VS2015 -->
 <Type Name="boost::match_results&lt;char const*,*&gt;" Priority="Medium">
     <Expand>
@@ -61,20 +47,6 @@
         <ArrayItems Condition="m_subs._Mypair._Myval2._Mylast - m_subs._Mypair._Myval2._Myfirst - 3 &gt;= 0">
             <Size>m_subs._Mypair._Myval2._Mylast - m_subs._Mypair._Myval2._Myfirst - 2</Size>
             <ValuePointer>m_subs._Mypair._Myval2._Myfirst + 2</ValuePointer>
-        </ArrayItems>
-    </Expand>
-</Type>
-
-<!-- VS2013 -->
-<Type Name="boost::match_results&lt;char*,*&gt;" Priority="MediumLow">
-    <Expand>
-        <Synthetic Name="Empty" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &lt; 0"><DisplayString>This item is empty.</DisplayString></Synthetic>
-        <Item Name="SubexpressionCount" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Mylast -  m_subs._Myfirst - 3</Item>
-        <Item Name="Location" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Myfirst[2].first -  m_subs._Myfirst[1].first</Item>
-        <Item Name="Length" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Myfirst[2].second -  m_subs._Myfirst[2].first</Item>
-        <ArrayItems Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">
-            <Size>m_subs._Mylast - m_subs._Myfirst - 2</Size>
-            <ValuePointer>m_subs._Myfirst + 2</ValuePointer>
         </ArrayItems>
     </Expand>
 </Type>
@@ -93,20 +65,6 @@
     </Expand>
 </Type>
 
-<!-- VS2013 -->
-<Type Name="boost::match_results&lt;wchar_t const*,*&gt;" Priority="MediumLow">
-    <Expand>
-        <Synthetic Name="Empty" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &lt; 0"><DisplayString>This item is empty.</DisplayString></Synthetic>
-        <Item Name="SubexpressionCount" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Mylast -  m_subs._Myfirst - 3</Item>
-        <Item Name="Location" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Myfirst[2].first -  m_subs._Myfirst[1].first</Item>
-        <Item Name="Length" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Myfirst[2].second -  m_subs._Myfirst[2].first</Item>
-        <ArrayItems Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">
-            <Size>m_subs._Mylast - m_subs._Myfirst - 2</Size>
-            <ValuePointer>m_subs._Myfirst + 2</ValuePointer>
-        </ArrayItems>
-    </Expand>
-</Type>
-
 <!-- VS2015 -->
 <Type Name="boost::match_results&lt;wchar_t const*,*&gt;" Priority="Medium">
     <Expand>
@@ -117,20 +75,6 @@
         <ArrayItems Condition="m_subs._Mypair._Myval2._Mylast - m_subs._Mypair._Myval2._Myfirst - 3 &gt;= 0">
             <Size>m_subs._Mypair._Myval2._Mylast - m_subs._Mypair._Myval2._Myfirst - 2</Size>
             <ValuePointer>m_subs._Mypair._Myval2._Myfirst + 2</ValuePointer>
-        </ArrayItems>
-    </Expand>
-</Type>
-
-<!-- VS2013 -->
-<Type Name="boost::match_results&lt;wchar_t*,*&gt;" Priority="MediumLow">
-    <Expand>
-        <Synthetic Name="Empty" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &lt; 0"><DisplayString>This item is empty.</DisplayString></Synthetic>
-        <Item Name="SubexpressionCount" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Mylast -  m_subs._Myfirst - 3</Item>
-        <Item Name="Location" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Myfirst[2].first -  m_subs._Myfirst[1].first</Item>
-        <Item Name="Length" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Myfirst[2].second -  m_subs._Myfirst[2].first</Item>
-        <ArrayItems Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">
-            <Size>m_subs._Mylast - m_subs._Myfirst - 2</Size>
-            <ValuePointer>m_subs._Myfirst + 2</ValuePointer>
         </ArrayItems>
     </Expand>
 </Type>
@@ -146,22 +90,6 @@
             <Size>m_subs._Mypair._Myval2._Mylast - m_subs._Mypair._Myval2._Myfirst - 2</Size>
             <ValuePointer>m_subs._Mypair._Myval2._Myfirst + 2</ValuePointer>
         </ArrayItems>
-    </Expand>
-</Type>
-
-<!-- VS2013 -->
-<Type Name="boost::match_results&lt;std::_String_const_iterator&lt;std::_String_val&lt;std::_Simple_types&lt;char&gt; &gt;  &gt;,*&gt;" Priority="MediumLow">
-    <Expand>
-        <Item Name="SubexpressionCount" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Mylast -  m_subs._Myfirst - 3</Item>
-        <Item Name="Location" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Myfirst[2].first._Ptr -  m_subs._Myfirst[1].first._Ptr</Item>
-        <Item Name="Length" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">m_subs._Myfirst[2].second._Ptr -  m_subs._Myfirst[2].first._Ptr</Item>
-        <ArrayItems Condition="m_subs._Mylast - m_subs._Myfirst - 3 &gt;= 0">
-            <Size>m_subs._Mylast - m_subs._Myfirst - 2</Size>
-            <ValuePointer>m_subs._Myfirst + 2</ValuePointer>
-        </ArrayItems>
-        <Synthetic Name="Empty" Condition="m_subs._Mylast - m_subs._Myfirst - 3 &lt; 0">
-            <DisplayString>This item is empty</DisplayString>
-        </Synthetic>
     </Expand>
 </Type>
 

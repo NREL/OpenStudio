@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,302 +33,296 @@
 #include "ModelAPI.hpp"
 #include "OpaqueMaterial_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** RoofVegetation_Impl is a OpaqueMaterial_Impl that is the implementation class for RoofVegetation.*/
-  class MODEL_API RoofVegetation_Impl : public OpaqueMaterial_Impl {
+    /** RoofVegetation_Impl is a OpaqueMaterial_Impl that is the implementation class for RoofVegetation.*/
+    class MODEL_API RoofVegetation_Impl : public OpaqueMaterial_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    RoofVegetation_Impl(const IdfObject& idfObject,
-                        Model_Impl* model,
-                        bool keepHandle);
+      RoofVegetation_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    RoofVegetation_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      RoofVegetation_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    RoofVegetation_Impl(const RoofVegetation_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      RoofVegetation_Impl(const RoofVegetation_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~RoofVegetation_Impl() {}
+      virtual ~RoofVegetation_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double heightofPlants() const;
+      double heightofPlants() const;
 
-    bool isHeightofPlantsDefaulted() const;
+      bool isHeightofPlantsDefaulted() const;
 
-    double leafAreaIndex() const;
+      double leafAreaIndex() const;
 
-    bool isLeafAreaIndexDefaulted() const;
+      bool isLeafAreaIndexDefaulted() const;
 
-    double leafReflectivity() const;
+      double leafReflectivity() const;
 
-    bool isLeafReflectivityDefaulted() const;
+      bool isLeafReflectivityDefaulted() const;
 
-    double leafEmissivity() const;
+      double leafEmissivity() const;
 
-    bool isLeafEmissivityDefaulted() const;
+      bool isLeafEmissivityDefaulted() const;
 
-    double minimumStomatalResistance() const;
+      double minimumStomatalResistance() const;
 
-    bool isMinimumStomatalResistanceDefaulted() const;
+      bool isMinimumStomatalResistanceDefaulted() const;
 
-    std::string soilLayerName() const;
+      std::string soilLayerName() const;
 
-    bool isSoilLayerNameDefaulted() const;
+      bool isSoilLayerNameDefaulted() const;
 
-    std::string roughness() const;
+      std::string roughness() const;
 
-    /** Get the thickness of the material. */
-    virtual double thickness() const override;
+      /** Get the thickness of the material. */
+      virtual double thickness() const override;
 
-    /** The conductivitiy of the material in W/m*K. */
-    virtual double thermalConductivity() const override;
+      /** The conductivity of the material in W/m*K. */
+      virtual double thermalConductivity() const override;
 
-    /** The conductance of the material in W/m^2*K. */
-    virtual double thermalConductance() const override;
+      /** The conductance of the material in W/m^2*K. */
+      virtual double thermalConductance() const override;
 
-    /** The resistivity of the material in m*K/W. */
-    virtual double thermalResistivity() const override;
+      /** The resistivity of the material in m*K/W. */
+      virtual double thermalResistivity() const override;
 
-    /** The resistance of the material in m^2*K/W. */
-    double thermalResistance() const override;
+      /** The resistance of the material in m^2*K/W. */
+      double thermalResistance() const override;
 
-    /** Density of dry soil (kg/m^3). */
-    double density() const;
+      /** Density of dry soil (kg/m^3). */
+      double density() const;
 
-    /** Specific heat of dry soil (J/kg*K). */
-    double specificHeat() const;
+      /** Specific heat of dry soil (J/kg*K). */
+      double specificHeat() const;
 
-    virtual double thermalTransmittance() const;
+      virtual double thermalTransmittance() const;
 
-    virtual double thermalAbsorptance() const override;
+      virtual double thermalAbsorptance() const override;
 
-    virtual boost::optional<double> thermalReflectance() const override;
+      virtual boost::optional<double> thermalReflectance() const override;
 
-    virtual double solarTransmittance() const;
+      virtual double solarTransmittance() const;
 
-    virtual double solarAbsorptance() const override;
+      virtual double solarAbsorptance() const override;
 
-    virtual boost::optional<double> solarReflectance() const override;
+      virtual boost::optional<double> solarReflectance() const override;
 
-    virtual double visibleTransmittance() const;
+      virtual double visibleTransmittance() const;
 
-    virtual double visibleAbsorptance() const override;
+      virtual double visibleAbsorptance() const override;
 
-    virtual boost::optional<double> visibleReflectance() const override;
+      virtual boost::optional<double> visibleReflectance() const override;
 
-    /** Maximum moisture content of the soil layer by volume fraction. */
-    double saturationVolumetricMoistureContent() const;
+      /** Maximum moisture content of the soil layer by volume fraction. */
+      double saturationVolumetricMoistureContent() const;
 
-    double residualVolumetricMoistureContent() const;
+      double residualVolumetricMoistureContent() const;
 
-    double initialVolumetricMoistureContent() const;
+      double initialVolumetricMoistureContent() const;
 
-    bool isRoughnessDefaulted() const;
+      bool isRoughnessDefaulted() const;
 
-    bool isThicknessDefaulted() const;
+      bool isThicknessDefaulted() const;
 
-    double conductivityofDrySoil() const;
+      double conductivityofDrySoil() const;
 
-    bool isConductivityofDrySoilDefaulted() const;
+      bool isConductivityofDrySoilDefaulted() const;
 
-    double densityofDrySoil() const;
+      double densityofDrySoil() const;
 
-    bool isDensityofDrySoilDefaulted() const;
+      bool isDensityofDrySoilDefaulted() const;
 
-    double specificHeatofDrySoil() const;
+      double specificHeatofDrySoil() const;
 
-    bool isSpecificHeatofDrySoilDefaulted() const;
+      bool isSpecificHeatofDrySoilDefaulted() const;
 
-    bool isThermalAbsorptanceDefaulted() const;
+      bool isThermalAbsorptanceDefaulted() const;
 
-    bool isSolarAbsorptanceDefaulted() const;
+      bool isSolarAbsorptanceDefaulted() const;
 
-    bool isVisibleAbsorptanceDefaulted() const;
+      bool isVisibleAbsorptanceDefaulted() const;
 
-    double saturationVolumetricMoistureContentoftheSoilLayer() const;
+      double saturationVolumetricMoistureContentoftheSoilLayer() const;
 
-    bool isSaturationVolumetricMoistureContentoftheSoilLayerDefaulted() const;
+      bool isSaturationVolumetricMoistureContentoftheSoilLayerDefaulted() const;
 
-    double residualVolumetricMoistureContentoftheSoilLayer() const;
+      double residualVolumetricMoistureContentoftheSoilLayer() const;
 
-    bool isResidualVolumetricMoistureContentoftheSoilLayerDefaulted() const;
+      bool isResidualVolumetricMoistureContentoftheSoilLayerDefaulted() const;
 
-    double initialVolumetricMoistureContentoftheSoilLayer() const;
+      double initialVolumetricMoistureContentoftheSoilLayer() const;
 
-    bool isInitialVolumetricMoistureContentoftheSoilLayerDefaulted() const;
+      bool isInitialVolumetricMoistureContentoftheSoilLayerDefaulted() const;
 
-    std::string moistureDiffusionCalculationMethod() const;
+      std::string moistureDiffusionCalculationMethod() const;
 
-    bool isMoistureDiffusionCalculationMethodDefaulted() const;
+      bool isMoistureDiffusionCalculationMethodDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setHeightOfPlants(double value);
+      bool setHeightOfPlants(double value);
 
-    bool setLeafAreaIndex(double value);
+      bool setLeafAreaIndex(double value);
 
-    bool setLeafReflectivity(double value);
+      bool setLeafReflectivity(double value);
 
-    bool setLeafEmissivity(double value);
+      bool setLeafEmissivity(double value);
 
-    bool setMinimumStomatalResistance(double value);
+      bool setMinimumStomatalResistance(double value);
 
-    bool setSoilLayerName(const std::string& name);
+      bool setSoilLayerName(const std::string& name);
 
-    bool setRoughness(const std::string& value);
+      bool setRoughness(const std::string& value);
 
-    /** Set thickness to value (m). */
-    virtual bool setThickness(double value) override;
+      /** Set thickness to value (m). */
+      virtual bool setThickness(double value) override;
 
-    /** Sets the conductivity of the material in W/m*K, if possible. */
-    virtual bool setThermalConductivity(double value) override;
+      /** Sets the conductivity of the material in W/m*K, if possible. */
+      virtual bool setThermalConductivity(double value) override;
 
-    /** Sets the conductance of the material in W/m^2*K, if possible. */
-    virtual bool setThermalConductance(double value) override;
+      /** Sets the conductance of the material in W/m^2*K, if possible. */
+      virtual bool setThermalConductance(double value) override;
 
-    /** Sets the resistivity of the material in m*K/W, if possible. */
-    virtual bool setThermalResistivity(double value) override;
+      /** Sets the resistivity of the material in m*K/W, if possible. */
+      virtual bool setThermalResistivity(double value) override;
 
-    /** Sets the resistance of the material in m^2*K/W, if possible. */
-    virtual bool setThermalResistance(double value) override;
+      /** Sets the resistance of the material in m^2*K/W, if possible. */
+      virtual bool setThermalResistance(double value) override;
 
-    /** Set density of dry soil (kg/m^3). */
-    bool setDensity(double value);
+      /** Set density of dry soil (kg/m^3). */
+      bool setDensity(double value);
 
-    /** Set specific heat of dry soil (J/kg*K). */
-    bool setSpecificHeat(double value);
+      /** Set specific heat of dry soil (J/kg*K). */
+      bool setSpecificHeat(double value);
 
-    virtual bool setThermalTransmittance(double value);
+      virtual bool setThermalTransmittance(double value);
 
-    virtual bool setThermalAbsorptance(boost::optional<double> value);
+      virtual bool setThermalAbsorptance(boost::optional<double> value);
 
-    virtual bool setThermalReflectance(boost::optional<double> value) override;
+      virtual bool setThermalReflectance(boost::optional<double> value) override;
 
-    virtual bool setSolarTransmittance(double value);
+      virtual bool setSolarTransmittance(double value);
 
-    virtual bool setSolarAbsorptance(boost::optional<double> value) override;
+      virtual bool setSolarAbsorptance(boost::optional<double> value) override;
 
-    virtual bool setSolarReflectance(boost::optional<double> value) override;
+      virtual bool setSolarReflectance(boost::optional<double> value) override;
 
-    virtual bool setVisibleTransmittance(double value);
+      virtual bool setVisibleTransmittance(double value);
 
-    virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
+      virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
 
-    virtual bool setVisibleReflectance(boost::optional<double> value) override;
+      virtual bool setVisibleReflectance(boost::optional<double> value) override;
 
-    /** Set the maximum moisture content of the soil layer by volume fraction. */
-    bool setSaturationVolumetricMoistureContent(double value);
+      /** Set the maximum moisture content of the soil layer by volume fraction. */
+      bool setSaturationVolumetricMoistureContent(double value);
 
-    bool setResidualVolumetricMoistureContent(double value);
+      bool setResidualVolumetricMoistureContent(double value);
 
-    bool setInitialVolumetricMoistureContent(double value);
+      bool setInitialVolumetricMoistureContent(double value);
 
-    bool setMoistureDiffusionCalculationMethod(const std::string& value);
+      bool setMoistureDiffusionCalculationMethod(const std::string& value);
 
-    bool setHeightofPlants(double heightofPlants);
+      bool setHeightofPlants(double heightofPlants);
 
-    void resetHeightofPlants();
+      void resetHeightofPlants();
 
-    void resetLeafAreaIndex();
+      void resetLeafAreaIndex();
 
-    void resetLeafReflectivity();
+      void resetLeafReflectivity();
 
-    void resetLeafEmissivity();
+      void resetLeafEmissivity();
 
-    void resetMinimumStomatalResistance();
+      void resetMinimumStomatalResistance();
 
-    void resetSoilLayerName();
+      void resetSoilLayerName();
 
-    void resetRoughness();
+      void resetRoughness();
 
-    void resetThickness();
+      void resetThickness();
 
-    bool setConductivityofDrySoil(double conductivityofDrySoil);
+      bool setConductivityofDrySoil(double conductivityofDrySoil);
 
-    void resetConductivityofDrySoil();
+      void resetConductivityofDrySoil();
 
-    bool setDensityofDrySoil(double densityofDrySoil);
+      bool setDensityofDrySoil(double densityofDrySoil);
 
-    void resetDensityofDrySoil();
+      void resetDensityofDrySoil();
 
-    bool setSpecificHeatofDrySoil(double specificHeatofDrySoil);
+      bool setSpecificHeatofDrySoil(double specificHeatofDrySoil);
 
-    void resetSpecificHeatofDrySoil();
+      void resetSpecificHeatofDrySoil();
 
-    bool setThermalAbsorptance(double thermalAbsorptance) override;
+      bool setThermalAbsorptance(double thermalAbsorptance) override;
 
-    void resetThermalAbsorptance();
+      void resetThermalAbsorptance();
 
-    bool setSolarAbsorptance(double solarAbsorptance);
+      bool setSolarAbsorptance(double solarAbsorptance);
 
-    void resetSolarAbsorptance();
+      void resetSolarAbsorptance();
 
-    bool setVisibleAbsorptance(double visibleAbsorptance);
+      bool setVisibleAbsorptance(double visibleAbsorptance);
 
-    void resetVisibleAbsorptance();
+      void resetVisibleAbsorptance();
 
-    bool setSaturationVolumetricMoistureContentoftheSoilLayer(double saturationVolumetricMoistureContentoftheSoilLayer);
+      bool setSaturationVolumetricMoistureContentoftheSoilLayer(double saturationVolumetricMoistureContentoftheSoilLayer);
 
-    void resetSaturationVolumetricMoistureContentoftheSoilLayer();
+      void resetSaturationVolumetricMoistureContentoftheSoilLayer();
 
-    bool setResidualVolumetricMoistureContentoftheSoilLayer(double residualVolumetricMoistureContentoftheSoilLayer);
+      bool setResidualVolumetricMoistureContentoftheSoilLayer(double residualVolumetricMoistureContentoftheSoilLayer);
 
-    void resetResidualVolumetricMoistureContentoftheSoilLayer();
+      void resetResidualVolumetricMoistureContentoftheSoilLayer();
 
-    bool setInitialVolumetricMoistureContentoftheSoilLayer(double initialVolumetricMoistureContentoftheSoilLayer);
+      bool setInitialVolumetricMoistureContentoftheSoilLayer(double initialVolumetricMoistureContentoftheSoilLayer);
 
-    void resetInitialVolumetricMoistureContentoftheSoilLayer();
+      void resetInitialVolumetricMoistureContentoftheSoilLayer();
 
-    void resetMoistureDiffusionCalculationMethod();
+      void resetMoistureDiffusionCalculationMethod();
 
-    //@}
-    /** @name Queries */
-    //@{
+      //@}
+      /** @name Queries */
+      //@{
 
-    /** Energy it takes to raise the temperature of this material 1 K (J/m^2*K). Equal to
+      /** Energy it takes to raise the temperature of this material 1 K (J/m^2*K). Equal to
      *  specificHeat() * density() * thickness(). */
-    virtual boost::optional<double> heatCapacity() const override;
+      virtual boost::optional<double> heatCapacity() const override;
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RoofVegetation");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RoofVegetation");
 
-    std::vector<std::string> roughnessValues() const;
-    std::vector<std::string> moistureDiffusionCalculationMethodValues() const;
-  };
+      std::vector<std::string> roughnessValues() const;
+      std::vector<std::string> moistureDiffusionCalculationMethodValues() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ROOFVEGETATION_IMPL_HPP
+#endif  // MODEL_ROOFVEGETATION_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,90 +37,89 @@ namespace openstudio {
 
 namespace model {
 
-class CurveQuadratic;
-class GeneratorFuelCell;
+  class CurveQuadratic;
+  class GeneratorFuelCell;
 
-namespace detail {
+  namespace detail {
 
-  class GeneratorFuelCellInverter_Impl;
+    class GeneratorFuelCellInverter_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** GeneratorFuelCellInverter is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelCell:Inverter'. */
-class MODEL_API GeneratorFuelCellInverter : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** GeneratorFuelCellInverter is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelCell:Inverter'. */
+  class MODEL_API GeneratorFuelCellInverter : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit GeneratorFuelCellInverter(const Model& model);
+    explicit GeneratorFuelCellInverter(const Model& model);
 
-  explicit GeneratorFuelCellInverter(const Model& model,
-                                     const CurveQuadratic& powerCurve);
+    explicit GeneratorFuelCellInverter(const Model& model, const CurveQuadratic& powerCurve);
 
-  virtual ~GeneratorFuelCellInverter() {}
+    virtual ~GeneratorFuelCellInverter() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> inverterEfficiencyCalculationModeValues();
+    static std::vector<std::string> inverterEfficiencyCalculationModeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string inverterEfficiencyCalculationMode() const;
+    std::string inverterEfficiencyCalculationMode() const;
 
-  double inverterEfficiency() const;
+    double inverterEfficiency() const;
 
-  boost::optional<CurveQuadratic> efficiencyFunctionofDCPowerCurve() const;
+    boost::optional<CurveQuadratic> efficiencyFunctionofDCPowerCurve() const;
 
-  // Return optional parent generator
-  boost::optional<GeneratorFuelCell> fuelCell() const;
+    // Return optional parent generator
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setInverterEfficiencyCalculationMode(const std::string& inverterEfficiencyCalculationMode);
+    bool setInverterEfficiencyCalculationMode(const std::string& inverterEfficiencyCalculationMode);
 
-  void resetInverterEfficiencyCalculationMode();
+    void resetInverterEfficiencyCalculationMode();
 
-  bool setInverterEfficiency(double inverterEfficiency);
+    bool setInverterEfficiency(double inverterEfficiency);
 
-  void resetInverterEfficiency();
+    void resetInverterEfficiency();
 
-  bool setEfficiencyFunctionofDCPowerCurve(const CurveQuadratic& quadraticCurves);
+    bool setEfficiencyFunctionofDCPowerCurve(const CurveQuadratic& quadraticCurves);
 
-  void resetEfficiencyFunctionofDCPowerCurve();
+    void resetEfficiencyFunctionofDCPowerCurve();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GeneratorFuelCellInverter_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GeneratorFuelCellInverter_Impl ImplType;
 
-  explicit GeneratorFuelCellInverter(std::shared_ptr<detail::GeneratorFuelCellInverter_Impl> impl);
+    explicit GeneratorFuelCellInverter(std::shared_ptr<detail::GeneratorFuelCellInverter_Impl> impl);
 
-  friend class detail::GeneratorFuelCellInverter_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.GeneratorFuelCellInverter");
-};
+    friend class detail::GeneratorFuelCellInverter_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GeneratorFuelCellInverter");
+  };
 
-/** \relates GeneratorFuelCellInverter*/
-typedef boost::optional<GeneratorFuelCellInverter> OptionalGeneratorFuelCellInverter;
+  /** \relates GeneratorFuelCellInverter*/
+  typedef boost::optional<GeneratorFuelCellInverter> OptionalGeneratorFuelCellInverter;
 
-/** \relates GeneratorFuelCellInverter*/
-typedef std::vector<GeneratorFuelCellInverter> GeneratorFuelCellInverterVector;
+  /** \relates GeneratorFuelCellInverter*/
+  typedef std::vector<GeneratorFuelCellInverter> GeneratorFuelCellInverterVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GENERATORFUELCELLINVERTER_HPP
-
+#endif  // MODEL_GENERATORFUELCELLINVERTER_HPP

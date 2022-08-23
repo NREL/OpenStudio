@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,104 +36,103 @@
 namespace openstudio {
 namespace model {
 
-class InternalMassDefinition;
-class SurfacePropertyConvectionCoefficients;
+  class InternalMassDefinition;
+  class SurfacePropertyConvectionCoefficients;
 
-namespace detail {
+  namespace detail {
 
-  class InternalMass_Impl;
+    class InternalMass_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** InternalMass is a SpaceLoadInstance that wraps the OpenStudio IDD object 'OS_InternalMass'.
+  /** InternalMass is a SpaceLoadInstance that wraps the OpenStudio IDD object 'OS_InternalMass'.
  *  Its fields are derived from the EnergyPlus IDD object 'InternalMass'.
  *  \sa InternalMassDefinition
  */
-class MODEL_API InternalMass : public SpaceLoadInstance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API InternalMass : public SpaceLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit InternalMass(const InternalMassDefinition& internalMassDefinition);
+    explicit InternalMass(const InternalMassDefinition& internalMassDefinition);
 
-  virtual ~InternalMass() {}
+    virtual ~InternalMass() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** Gets the InternalMassDefinition object. */
-  InternalMassDefinition internalMassDefinition() const;
+    /** Gets the InternalMassDefinition object. */
+    InternalMassDefinition internalMassDefinition() const;
 
-  /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
-  boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
+    /** Returns the SurfacePropertyConvectionCoefficients, if it exists. */
+    boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the InternalMassDefinition object. */
-  bool setInternalMassDefinition(const InternalMassDefinition& definition);
+    /** Sets the InternalMassDefinition object. */
+    bool setInternalMassDefinition(const InternalMassDefinition& definition);
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the surfaceArea if possible based on the underlying data of
+    /** Returns the surfaceArea if possible based on the underlying data of
    *  internalMassDefinition(). */
-  boost::optional<double> surfaceArea() const;
+    boost::optional<double> surfaceArea() const;
 
-  /** Returns the surfaceAreaPerFloorArea if possible based on the underlying data of
+    /** Returns the surfaceAreaPerFloorArea if possible based on the underlying data of
    *  internalMassDefinition(). */
-  boost::optional<double> surfaceAreaPerFloorArea() const;
+    boost::optional<double> surfaceAreaPerFloorArea() const;
 
-  /** Returns the surfaceAreaPerPerson if possible based on the underlying data of
+    /** Returns the surfaceAreaPerPerson if possible based on the underlying data of
    *  internalMassDefinition(). */
-  boost::optional<double> surfaceAreaPerPerson() const;
+    boost::optional<double> surfaceAreaPerPerson() const;
 
-  /** Returns the construction surface area represented by this instance, assuming floorArea (m^2)
+    /** Returns the construction surface area represented by this instance, assuming floorArea (m^2)
    *  and numPeople. */
-  double getSurfaceArea(double floorArea, double numPeople) const;
+    double getSurfaceArea(double floorArea, double numPeople) const;
 
-  /** Returns the m^2/m^2 of construction surface area per floor area represented by this
+    /** Returns the m^2/m^2 of construction surface area per floor area represented by this
    *  instance, assuming floorArea (m^2) and numPeople. */
-  double getSurfaceAreaPerFloorArea(double floorArea, double numPeople) const;
+    double getSurfaceAreaPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the m^2/person of construction surface area represented by this instance, assuming
+    /** Returns the m^2/person of construction surface area represented by this instance, assuming
    *  floorArea (m^2) and numPeople. */
-  double getSurfaceAreaPerPerson(double floorArea, double numPeople) const;
+    double getSurfaceAreaPerPerson(double floorArea, double numPeople) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::InternalMass_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::InternalMass_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit InternalMass(std::shared_ptr<detail::InternalMass_Impl> impl);
+    explicit InternalMass(std::shared_ptr<detail::InternalMass_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.InternalMass");
+  };
 
-  REGISTER_LOGGER("openstudio.model.InternalMass");
-};
+  /** \relates InternalMass*/
+  typedef boost::optional<InternalMass> OptionalInternalMass;
 
-/** \relates InternalMass*/
-typedef boost::optional<InternalMass> OptionalInternalMass;
+  /** \relates InternalMass*/
+  typedef std::vector<InternalMass> InternalMassVector;
 
-/** \relates InternalMass*/
-typedef std::vector<InternalMass> InternalMassVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_INTERNALMASS_HPP
-
+#endif  // MODEL_INTERNALMASS_HPP

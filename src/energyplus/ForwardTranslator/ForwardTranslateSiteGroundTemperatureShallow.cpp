@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,39 +44,38 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSiteGroundTemperatureShallow( SiteGroundTemperatureShallow& modelObject )
-{
-  IdfObject idfObject( openstudio::IddObjectType::Site_GroundTemperature_Shallow );
+  boost::optional<IdfObject> ForwardTranslator::translateSiteGroundTemperatureShallow(SiteGroundTemperatureShallow& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Site_GroundTemperature_Shallow);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::JanuarySurfaceGroundTemperature, modelObject.januarySurfaceGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_ShallowFields::JanuarySurfaceGroundTemperature, modelObject.januarySurfaceGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::FebruarySurfaceGroundTemperature, modelObject.februarySurfaceGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_ShallowFields::FebruarySurfaceGroundTemperature, modelObject.februarySurfaceGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::MarchSurfaceGroundTemperature, modelObject.marchSurfaceGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_ShallowFields::MarchSurfaceGroundTemperature, modelObject.marchSurfaceGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::AprilSurfaceGroundTemperature, modelObject.aprilSurfaceGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_ShallowFields::AprilSurfaceGroundTemperature, modelObject.aprilSurfaceGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::MaySurfaceGroundTemperature, modelObject.maySurfaceGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_ShallowFields::MaySurfaceGroundTemperature, modelObject.maySurfaceGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::JuneSurfaceGroundTemperature, modelObject.juneSurfaceGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_ShallowFields::JuneSurfaceGroundTemperature, modelObject.juneSurfaceGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::JulySurfaceGroundTemperature, modelObject.julySurfaceGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_ShallowFields::JulySurfaceGroundTemperature, modelObject.julySurfaceGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::AugustSurfaceGroundTemperature, modelObject.augustSurfaceGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_ShallowFields::AugustSurfaceGroundTemperature, modelObject.augustSurfaceGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::SeptemberSurfaceGroundTemperature, modelObject.septemberSurfaceGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_ShallowFields::SeptemberSurfaceGroundTemperature, modelObject.septemberSurfaceGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::OctoberSurfaceGroundTemperature, modelObject.octoberSurfaceGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_ShallowFields::OctoberSurfaceGroundTemperature, modelObject.octoberSurfaceGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::NovemberSurfaceGroundTemperature, modelObject.novemberSurfaceGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_ShallowFields::NovemberSurfaceGroundTemperature, modelObject.novemberSurfaceGroundTemperature());
 
-  idfObject.setDouble(Site_GroundTemperature_ShallowFields::DecemberSurfaceGroundTemperature, modelObject.decemberSurfaceGroundTemperature());
+    idfObject.setDouble(Site_GroundTemperature_ShallowFields::DecemberSurfaceGroundTemperature, modelObject.decemberSurfaceGroundTemperature());
 
-  return idfObject;
-}
+    return idfObject;
+  }
 
-} // energyplus
+}  // namespace energyplus
 
-} // openstudio
+}  // namespace openstudio

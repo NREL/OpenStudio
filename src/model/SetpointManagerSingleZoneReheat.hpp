@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,89 +37,87 @@ namespace openstudio {
 
 namespace model {
 
-class ThermalZone;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerSingleZoneReheat_Impl;
+    class SetpointManagerSingleZoneReheat_Impl;
 
-}
+  }
 
-/** SetpointManagerSingleZoneReheat is an interface to theIDD object
+  /** SetpointManagerSingleZoneReheat is an interface to theIDD object
  *  named "OS:SetpointManager:SingleZone:Reheat"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  of the EnergyPlus SetpointManager:SingleZone:Reheat object.
  */
-class MODEL_API SetpointManagerSingleZoneReheat : public SetpointManager {
+  class MODEL_API SetpointManagerSingleZoneReheat : public SetpointManager
+  {
 
-  public:
-  virtual ~SetpointManagerSingleZoneReheat() {}
+   public:
+    virtual ~SetpointManagerSingleZoneReheat() {}
 
-  /** Constructs a new SetpointManagerSingleZoneReheat object and places it inside the
+    /** Constructs a new SetpointManagerSingleZoneReheat object and places it inside the
    *  model.  The loop is fully initialized with all companion objects.
    */
-  explicit SetpointManagerSingleZoneReheat(const Model& model);
+    explicit SetpointManagerSingleZoneReheat(const Model& model);
 
-  /** Returns the value of the MinimumSupplyAirTemperature field. **/
-  double minimumSupplyAirTemperature();
+    /** Returns the value of the MinimumSupplyAirTemperature field. **/
+    double minimumSupplyAirTemperature();
 
-  /** Sets the value of the MinimumSupplyAirTemperature field. **/
-  bool setMinimumSupplyAirTemperature( double value );
+    /** Sets the value of the MinimumSupplyAirTemperature field. **/
+    bool setMinimumSupplyAirTemperature(double value);
 
-  /** Returns the value of the MaximumSupplyAirTemperature field. **/
-  double maximumSupplyAirTemperature();
+    /** Returns the value of the MaximumSupplyAirTemperature field. **/
+    double maximumSupplyAirTemperature();
 
-  /** Sets the value of the MaximumSupplyAirTemperature field. **/
-  bool setMaximumSupplyAirTemperature( double value );
+    /** Sets the value of the MaximumSupplyAirTemperature field. **/
+    bool setMaximumSupplyAirTemperature(double value);
 
-  /** Returns the Node referred to by the SetpointNodeName field. **/
-  boost::optional<Node> setpointNode() const;
+    /** Returns the Node referred to by the SetpointNodeName field. **/
+    boost::optional<Node> setpointNode() const;
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  bool setControlVariable( const std::string& controlVariable );
+    bool setControlVariable(const std::string& controlVariable);
 
-  boost::optional<ThermalZone> controlZone();
+    boost::optional<ThermalZone> controlZone();
 
-  bool setControlZone(ThermalZone & thermalZone);
+    bool setControlZone(ThermalZone& thermalZone);
 
-  void resetControlZone();
+    void resetControlZone();
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlVariableValues();
+    static std::vector<std::string> controlVariableValues();
 
-  protected:
+   protected:
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::SetpointManagerSingleZoneReheat_Impl;
 
-  friend class detail::SetpointManagerSingleZoneReheat_Impl;
+    /// @cond
 
-  /// @cond
+    typedef detail::SetpointManagerSingleZoneReheat_Impl ImplType;
 
-  typedef detail::SetpointManagerSingleZoneReheat_Impl ImplType;
+    explicit SetpointManagerSingleZoneReheat(std::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> impl);
 
-  explicit SetpointManagerSingleZoneReheat(std::shared_ptr<detail::SetpointManagerSingleZoneReheat_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneReheat");
 
-  private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneReheat");
+  typedef boost::optional<SetpointManagerSingleZoneReheat> OptionalSetpointManagerSingleZoneReheat;
 
-  /// @endcond
+  typedef std::vector<SetpointManagerSingleZoneReheat> SetpointManagerSingleZoneReheatVector;
 
-};
+}  // namespace model
 
-typedef boost::optional<SetpointManagerSingleZoneReheat> OptionalSetpointManagerSingleZoneReheat;
+}  // namespace openstudio
 
-typedef std::vector<SetpointManagerSingleZoneReheat> SetpointManagerSingleZoneReheatVector;
-
-} // model
-
-} // openstudio
-
-#endif // MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_HPP
+#endif  // MODEL_SETPOINTMANAGERSINGLEZONEREHEAT_HPP

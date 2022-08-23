@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,170 +38,166 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** SiteGroundTemperatureShallow_Impl is a ModelObject_Impl that is the implementation class for SiteGroundTemperatureShallow.*/
-  class MODEL_API SiteGroundTemperatureShallow_Impl : public ModelObject_Impl {
+    /** SiteGroundTemperatureShallow_Impl is a ModelObject_Impl that is the implementation class for SiteGroundTemperatureShallow.*/
+    class MODEL_API SiteGroundTemperatureShallow_Impl : public ModelObject_Impl
+    {
 
-   public:
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      SiteGroundTemperatureShallow_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SiteGroundTemperatureShallow_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      SiteGroundTemperatureShallow_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SiteGroundTemperatureShallow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      SiteGroundTemperatureShallow_Impl(const SiteGroundTemperatureShallow_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SiteGroundTemperatureShallow_Impl(const SiteGroundTemperatureShallow_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      virtual ~SiteGroundTemperatureShallow_Impl() {}
 
-    virtual ~SiteGroundTemperatureShallow_Impl() {}
+      //@}
 
-    //@}
+      virtual boost::optional<ParentObject> parent() const override;
 
-    virtual boost::optional<ParentObject> parent() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      /** @name Getters */
+      //@{
 
-    /** @name Getters */
-    //@{
+      double januarySurfaceGroundTemperature() const;
 
-    double januarySurfaceGroundTemperature() const;
+      bool isJanuarySurfaceGroundTemperatureDefaulted() const;
 
-    bool isJanuarySurfaceGroundTemperatureDefaulted() const;
+      double februarySurfaceGroundTemperature() const;
 
-    double februarySurfaceGroundTemperature() const;
+      bool isFebruarySurfaceGroundTemperatureDefaulted() const;
 
-    bool isFebruarySurfaceGroundTemperatureDefaulted() const;
+      double marchSurfaceGroundTemperature() const;
 
-    double marchSurfaceGroundTemperature() const;
+      bool isMarchSurfaceGroundTemperatureDefaulted() const;
 
-    bool isMarchSurfaceGroundTemperatureDefaulted() const;
+      double aprilSurfaceGroundTemperature() const;
 
-    double aprilSurfaceGroundTemperature() const;
+      bool isAprilSurfaceGroundTemperatureDefaulted() const;
 
-    bool isAprilSurfaceGroundTemperatureDefaulted() const;
+      double maySurfaceGroundTemperature() const;
 
-    double maySurfaceGroundTemperature() const;
+      bool isMaySurfaceGroundTemperatureDefaulted() const;
 
-    bool isMaySurfaceGroundTemperatureDefaulted() const;
+      double juneSurfaceGroundTemperature() const;
 
-    double juneSurfaceGroundTemperature() const;
+      bool isJuneSurfaceGroundTemperatureDefaulted() const;
 
-    bool isJuneSurfaceGroundTemperatureDefaulted() const;
+      double julySurfaceGroundTemperature() const;
 
-    double julySurfaceGroundTemperature() const;
+      bool isJulySurfaceGroundTemperatureDefaulted() const;
 
-    bool isJulySurfaceGroundTemperatureDefaulted() const;
+      double augustSurfaceGroundTemperature() const;
 
-    double augustSurfaceGroundTemperature() const;
+      bool isAugustSurfaceGroundTemperatureDefaulted() const;
 
-    bool isAugustSurfaceGroundTemperatureDefaulted() const;
+      double septemberSurfaceGroundTemperature() const;
 
-    double septemberSurfaceGroundTemperature() const;
+      bool isSeptemberSurfaceGroundTemperatureDefaulted() const;
 
-    bool isSeptemberSurfaceGroundTemperatureDefaulted() const;
+      double octoberSurfaceGroundTemperature() const;
 
-    double octoberSurfaceGroundTemperature() const;
+      bool isOctoberSurfaceGroundTemperatureDefaulted() const;
 
-    bool isOctoberSurfaceGroundTemperatureDefaulted() const;
+      double novemberSurfaceGroundTemperature() const;
 
-    double novemberSurfaceGroundTemperature() const;
+      bool isNovemberSurfaceGroundTemperatureDefaulted() const;
 
-    bool isNovemberSurfaceGroundTemperatureDefaulted() const;
+      double decemberSurfaceGroundTemperature() const;
 
-    double decemberSurfaceGroundTemperature() const;
+      bool isDecemberSurfaceGroundTemperatureDefaulted() const;
 
-    bool isDecemberSurfaceGroundTemperatureDefaulted() const;
+      double getTemperatureByMonth(int month) const;
 
-    double getTemperatureByMonth(int month) const;
+      double getTemperatureByMonth(const openstudio::MonthOfYear& month) const;
 
-    double getTemperatureByMonth(const openstudio::MonthOfYear & month) const;
+      bool isMonthDefaulted(int month) const;
 
-    bool isMonthDefaulted(int month) const;
+      bool isMonthDefaulted(const openstudio::MonthOfYear& month) const;
 
-    bool isMonthDefaulted(const openstudio::MonthOfYear & month) const;
+      std::vector<double> getAllMonthlyTemperatures() const;
 
-    std::vector<double> getAllMonthlyTemperatures() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setJanuarySurfaceGroundTemperature(double januarySurfaceGroundTemperature);
 
-    bool setJanuarySurfaceGroundTemperature(double januarySurfaceGroundTemperature);
+      void resetJanuarySurfaceGroundTemperature();
 
-    void resetJanuarySurfaceGroundTemperature();
+      bool setFebruarySurfaceGroundTemperature(double februarySurfaceGroundTemperature);
 
-    bool setFebruarySurfaceGroundTemperature(double februarySurfaceGroundTemperature);
+      void resetFebruarySurfaceGroundTemperature();
 
-    void resetFebruarySurfaceGroundTemperature();
+      bool setMarchSurfaceGroundTemperature(double marchSurfaceGroundTemperature);
 
-    bool setMarchSurfaceGroundTemperature(double marchSurfaceGroundTemperature);
+      void resetMarchSurfaceGroundTemperature();
 
-    void resetMarchSurfaceGroundTemperature();
+      bool setAprilSurfaceGroundTemperature(double aprilSurfaceGroundTemperature);
 
-    bool setAprilSurfaceGroundTemperature(double aprilSurfaceGroundTemperature);
+      void resetAprilSurfaceGroundTemperature();
 
-    void resetAprilSurfaceGroundTemperature();
+      bool setMaySurfaceGroundTemperature(double maySurfaceGroundTemperature);
 
-    bool setMaySurfaceGroundTemperature(double maySurfaceGroundTemperature);
+      void resetMaySurfaceGroundTemperature();
 
-    void resetMaySurfaceGroundTemperature();
+      bool setJuneSurfaceGroundTemperature(double juneSurfaceGroundTemperature);
 
-    bool setJuneSurfaceGroundTemperature(double juneSurfaceGroundTemperature);
+      void resetJuneSurfaceGroundTemperature();
 
-    void resetJuneSurfaceGroundTemperature();
+      bool setJulySurfaceGroundTemperature(double julySurfaceGroundTemperature);
 
-    bool setJulySurfaceGroundTemperature(double julySurfaceGroundTemperature);
+      void resetJulySurfaceGroundTemperature();
 
-    void resetJulySurfaceGroundTemperature();
+      bool setAugustSurfaceGroundTemperature(double augustSurfaceGroundTemperature);
 
-    bool setAugustSurfaceGroundTemperature(double augustSurfaceGroundTemperature);
+      void resetAugustSurfaceGroundTemperature();
 
-    void resetAugustSurfaceGroundTemperature();
+      bool setSeptemberSurfaceGroundTemperature(double septemberSurfaceGroundTemperature);
 
-    bool setSeptemberSurfaceGroundTemperature(double septemberSurfaceGroundTemperature);
+      void resetSeptemberSurfaceGroundTemperature();
 
-    void resetSeptemberSurfaceGroundTemperature();
+      bool setOctoberSurfaceGroundTemperature(double octoberSurfaceGroundTemperature);
 
-    bool setOctoberSurfaceGroundTemperature(double octoberSurfaceGroundTemperature);
+      void resetOctoberSurfaceGroundTemperature();
 
-    void resetOctoberSurfaceGroundTemperature();
+      bool setNovemberSurfaceGroundTemperature(double novemberSurfaceGroundTemperature);
 
-    bool setNovemberSurfaceGroundTemperature(double novemberSurfaceGroundTemperature);
+      void resetNovemberSurfaceGroundTemperature();
 
-    void resetNovemberSurfaceGroundTemperature();
+      bool setDecemberSurfaceGroundTemperature(double decemberSurfaceGroundTemperature);
 
-    bool setDecemberSurfaceGroundTemperature(double decemberSurfaceGroundTemperature);
+      void resetDecemberSurfaceGroundTemperature();
 
-    void resetDecemberSurfaceGroundTemperature();
+      bool setTemperatureByMonth(int month, double temperature);
 
-    bool setTemperatureByMonth(int month, double temperature);
+      bool setTemperatureByMonth(const openstudio::MonthOfYear& month, double temperature);
 
-    bool setTemperatureByMonth(const openstudio::MonthOfYear & month, double temperature);
+      void resetTemperatureByMonth(int month);
 
-    void resetTemperatureByMonth(int month);
+      void resetTemperatureByMonth(const openstudio::MonthOfYear& month);
 
-    void resetTemperatureByMonth(const openstudio::MonthOfYear & month);
+      void resetAllMonths();
 
-    void resetAllMonths();
+      bool setAllMonthlyTemperatures(const std::vector<double>& monthly_temperatures);
 
-    bool setAllMonthlyTemperatures(const std::vector<double> &monthly_temperatures);
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SiteGroundTemperatureShallow");
+    };
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.SiteGroundTemperatureShallow");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SITEGROUNDTEMPERATURESHALLOW_IMPL_HPP
+#endif  // MODEL_SITEGROUNDTEMPERATURESHALLOW_IMPL_HPP

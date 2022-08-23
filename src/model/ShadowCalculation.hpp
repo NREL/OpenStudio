@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,11 +36,14 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class ShadowCalculation_Impl;
-} // detail
+  // Forward declarations
+  class ThermalZone;
 
-/** ShadowCalculation derives from ModelObject and is an interface to the OpenStudio IDD object named "ShadowCalculation".
+  namespace detail {
+    class ShadowCalculation_Impl;
+  }  // namespace detail
+
+  /** ShadowCalculation derives from ModelObject and is an interface to the OpenStudio IDD object named "ShadowCalculation".
  *
  *  ShadowCalculation defines how often shadowing calculations should be performed in EnergyPlus simulations
  *  as well as how many overlapping figures can be considered in a shadow calculation.
@@ -48,99 +51,127 @@ namespace detail {
  *  To get the ShadowCalculation object for a Model or create one if it does not yet exist use model.getUniqueObject<ShadowCalculation>().
  *  To get the ShadowCalculation object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<ShadowCalculation>().
  */
-class MODEL_API ShadowCalculation : public ModelObject {
- public:
-  virtual ~ShadowCalculation() {}
+  class MODEL_API ShadowCalculation : public ModelObject
+  {
+   public:
+    virtual ~ShadowCalculation() {}
 
-  /** @name Static Methods */
-  //@{
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> validCalculationMethodValues();
+    static std::vector<std::string> shadingCalculationMethodValues();
+    static std::vector<std::string> validShadingCalculationMethodValues();
 
-  static std::vector<std::string> validPolygonClippingAlgorithmValues();
+    static std::vector<std::string> shadingCalculationUpdateFrequencyMethodValues();
+    static std::vector<std::string> validShadingCalculationUpdateFrequencyMethodValues();
 
-  static std::vector<std::string> validSkyDiffuseModelingAlgorithmValues();
+    static std::vector<std::string> polygonClippingAlgorithmValues();
+    static std::vector<std::string> validPolygonClippingAlgorithmValues();
 
-  //@}
-  /** @name Getters */
-  //@{
+    static std::vector<std::string> skyDiffuseModelingAlgorithmValues();
+    static std::vector<std::string> validSkyDiffuseModelingAlgorithmValues();
 
-  std::string calculationMethod() const;
+    //@}
+    /** @name Getters */
+    //@{
 
-  bool isCalculationMethodDefaulted() const;
+    // new field
+    std::string shadingCalculationMethod() const;
+    // bool isShadingCalculationMethodDefaulted() const;
 
-  int calculationFrequency() const;
+    // renamed method, used to be 'calculationMethod'
+    std::string shadingCalculationUpdateFrequencyMethod() const;
+    bool isShadingCalculationUpdateFrequencyMethodDefaulted() const;
 
-  bool isCalculationFrequencyDefaulted() const;
+    int shadingCalculationUpdateFrequency() const;
+    bool isShadingCalculationUpdateFrequencyDefaulted() const;
 
-  int maximumFiguresInShadowOverlapCalculations() const;
+    int maximumFiguresInShadowOverlapCalculations() const;
+    bool isMaximumFiguresInShadowOverlapCalculationsDefaulted() const;
 
-  bool isMaximumFiguresInShadowOverlapCalculationsDefaulted() const;
+    std::string polygonClippingAlgorithm() const;
 
-  boost::optional<std::string> polygonClippingAlgorithm() const;
+    int pixelCountingResolution() const;
 
-  boost::optional<std::string> skyDiffuseModelingAlgorithm() const;
+    std::string skyDiffuseModelingAlgorithm() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool outputExternalShadingCalculationResults() const;
 
-  bool setCalculationMethod(const std::string& calculationMethod);
+    bool disableSelfShadingWithinShadingZoneGroups() const;
 
-  void resetCalculationMethod();
+    bool disableSelfShadingFromShadingZoneGroupstoOtherZones() const;
 
-  bool setCalculationFrequency(int calculationFrequency);
+    unsigned int numberofShadingZoneGroups() const;
+    std::vector<ThermalZone> getShadingZoneGroup(unsigned groupIndex) const;
 
-  void resetCalculationFrequency();
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setMaximumFiguresInShadowOverlapCalculations(int maximumFiguresInShadowOverlapCalculations);
+    bool setShadingCalculationMethod(const std::string& shadingCalculationMethod);
+    // void resetShadingCalculationMethod();
 
-  void resetMaximumFiguresInShadowOverlapCalculations();
+    bool setShadingCalculationUpdateFrequencyMethod(const std::string& shadingCalculationUpdateFrequencyMethod);
+    void resetShadingCalculationUpdateFrequencyMethod();
 
-  bool setPolygonClippingAlgorithm(std::string polygonClippingAlgorithm);
+    bool setShadingCalculationUpdateFrequency(int shadingCalculationUpdateFrequency);
+    void resetShadingCalculationUpdateFrequency();
 
-  void resetPolygonClippingAlgorithm();
+    bool setMaximumFiguresInShadowOverlapCalculations(int maximumFiguresInShadowOverlapCalculations);
+    void resetMaximumFiguresInShadowOverlapCalculations();
 
-  bool setSkyDiffuseModelingAlgorithm(std::string skyDiffuseModelingAlgorithm);
+    bool setPolygonClippingAlgorithm(const std::string& polygonClippingAlgorithm);
+    void resetPolygonClippingAlgorithm();
 
-  void resetSkyDiffuseModelingAlgorithm();
+    bool setPixelCountingResolution(int pixelCountingResolution);
+    // void resetPixelCountingResolution();
 
-  //@}
+    bool setSkyDiffuseModelingAlgorithm(const std::string& skyDiffuseModelingAlgorithm);
+    void resetSkyDiffuseModelingAlgorithm();
 
- protected:
+    bool setOutputExternalShadingCalculationResults(bool outputExternalShadingCalculationResults);
 
-  /** @name Constructors and Destructors */
-  //@{
+    bool setDisableSelfShadingWithinShadingZoneGroups(bool disableSelfShadingWithinShadingZoneGroups);
 
-  /// Constructs a new ShadowCalculation object in the model.
-  explicit ShadowCalculation(const Model& model);
+    bool setDisableSelfShadingFromShadingZoneGroupstoOtherZones(bool disableSelfShadingFromShadingZoneGroupstoOtherZones);
 
-  //@}
+    bool addShadingZoneGroup(const std::vector<ThermalZone>& thermalZones);
+    bool removeShadingZoneGroup(unsigned groupIndex);
+    void removeAllShadingZoneGroups();
 
-  /// @cond
+    //@}
 
-  typedef detail::ShadowCalculation_Impl ImplType;
+   protected:
+    /** @name Constructors and Destructors */
+    //@{
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    /// Constructs a new ShadowCalculation object in the model.
+    explicit ShadowCalculation(const Model& model);
 
-  // constructor
-  explicit ShadowCalculation(std::shared_ptr<detail::ShadowCalculation_Impl> impl);
+    //@}
 
- private:
+    /// @cond
 
-  REGISTER_LOGGER("openstudio.model.ShadowCalculation");
+    typedef detail::ShadowCalculation_Impl ImplType;
 
-  /// @endcond
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-};
+    // constructor
+    explicit ShadowCalculation(std::shared_ptr<detail::ShadowCalculation_Impl> impl);
 
-/** \relates ShadowCalculation */
-typedef boost::optional<ShadowCalculation> OptionalShadowCalculation;
+   private:
+    REGISTER_LOGGER("openstudio.model.ShadowCalculation");
 
-} // model
-} // openstudio
+    /// @endcond
+  };
 
-#endif // MODEL_SHADOWCALCULATION_HPP
+  /** \relates ShadowCalculation */
+  typedef boost::optional<ShadowCalculation> OptionalShadowCalculation;
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_SHADOWCALCULATION_HPP

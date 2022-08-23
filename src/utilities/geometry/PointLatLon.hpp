@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,100 +38,98 @@
 #include <boost/optional.hpp>
 
 // do not include anything from GeographicLib in header or expose in the API
-namespace GeographicLib{
-  class LocalCartesian;
-  class UTMUPS;
-}
+namespace GeographicLib {
+class LocalCartesian;
+class UTMUPS;
+}  // namespace GeographicLib
 
-namespace openstudio{
+namespace openstudio {
 
-  class Point3d;
+class Point3d;
 
-  /* PointLatLon represents a point on the Earth's (reference ellipsoid) surface, an optional height parameter is available
+/* PointLatLon represents a point on the Earth's (reference ellipsoid) surface, an optional height parameter is available
   ** for points above or below the geoid surface.  Currently only the WGS84 ellipsoid is supported,
   ** other systems may be added in the future. When one PointLatLon is taken as an origin, it can be used to
   ** translate other PointLatLon's into either a local Cartesian coordinate system (centered on the origin, with z up and y oriented North)
   ** or the UTM (Universal Transverse Mercator) zone which contains the origin. The origin PointLatLon can be used to
   ** translate Point3d's in either local Cartesian or UTM coordinate systems back to lat/lon.
   */
-  class UTILITIES_API PointLatLon{
-  public:
+class UTILITIES_API PointLatLon
+{
+ public:
+  /// default constructor creates point at 0, 0, 0
+  PointLatLon();
 
-    /// default constructor creates point at 0, 0, 0
-    PointLatLon();
+  /// constructor with lat, lon, and height
+  PointLatLon(double lat, double lon, double height = 0);
 
-    /// constructor with lat, lon, and height
-    PointLatLon(double lat, double lon, double height = 0);
+  /// copy constructor
+  PointLatLon(const PointLatLon& other);
 
-    /// copy constructor
-    PointLatLon(const PointLatLon& other);
+  /// destructor
+  ~PointLatLon();
 
-    /// destructor
-    ~PointLatLon();
+  /// get lat
+  double lat() const;
 
-    /// get lat
-    double lat() const;
+  /// get lon
+  double lon() const;
 
-    /// get lon
-    double lon() const;
+  /// get height
+  double height() const;
 
-    /// get height
-    double height() const;
+  PointLatLon& operator=(const openstudio::PointLatLon& other);
 
-    PointLatLon& operator=(const openstudio::PointLatLon& other);
+  /// check equality
+  bool operator==(const PointLatLon& other) const;
 
-    /// check equality
-    bool operator==(const PointLatLon& other) const;
+  /// point minus another point is distance along geodesic line
+  double operator-(const PointLatLon& other) const;
 
-    /// point minus another point is distance along geodesic line
-    double operator-(const PointLatLon& other) const;
+  /// converts a PointLatLon to a Point3d in a Local Cartesian frame centered on this with y oriented North and z oriented up
+  Point3d toLocalCartesian(const PointLatLon& point) const;
+  std::vector<Point3d> toLocalCartesian(const std::vector<PointLatLon>& points) const;
 
-    /// converts a PointLatLon to a Point3d in a Local Cartesian frame centered on this with y oriented North and z oriented up
-    Point3d toLocalCartesian(const PointLatLon& point) const;
-    std::vector<Point3d> toLocalCartesian(const std::vector<PointLatLon>& points) const;
+  /// converts a Point3d in Local Cartesian coordinate system centered on this to LatLon
+  PointLatLon fromLocalCartesian(const Point3d& point) const;
+  std::vector<PointLatLon> fromLocalCartesian(const std::vector<Point3d>& points) const;
 
-    /// converts a Point3d in Local Cartesian coordinate system centered on this to LatLon
-    PointLatLon fromLocalCartesian(const Point3d& point) const;
-    std::vector<PointLatLon> fromLocalCartesian(const std::vector<Point3d>& points) const;
+  /// gets the UTM zone for this point
+  int utmZone() const;
 
-    /// gets the UTM zone for this point
-    int utmZone() const;
+  /// converts a PointLatLon to a Point3d in UTM centered on this
+  Point3d toUTM(const PointLatLon& point) const;
+  std::vector<Point3d> toUTM(const std::vector<PointLatLon>& points) const;
 
-    /// converts a PointLatLon to a Point3d in UTM centered on this
-    Point3d toUTM(const PointLatLon& point) const;
-    std::vector<Point3d> toUTM(const std::vector<PointLatLon>& points) const;
+  /// converts a Point3d in UTM centered on this to LatLon
+  PointLatLon fromUTM(const Point3d& point) const;
+  std::vector<PointLatLon> fromUTM(const std::vector<Point3d>& points) const;
 
-    /// converts a Point3d in UTM centered on this to LatLon
-    PointLatLon fromUTM(const Point3d& point) const;
-    std::vector<PointLatLon> fromUTM(const std::vector<Point3d>& points) const;
+ private:
+  REGISTER_LOGGER("utilities.PointLatLon");
+  Vector m_storage;
 
-  private:
+  void initLocalCartesianConverter() const;
 
-    REGISTER_LOGGER("utilities.PointLatLon");
-    Vector m_storage;
+  mutable std::unique_ptr<GeographicLib::LocalCartesian> m_localCartesianConverter;
+};
 
-    void initLocalCartesianConverter() const;
+/// ostream operator
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const PointLatLon& point);
 
-    mutable std::unique_ptr<GeographicLib::LocalCartesian> m_localCartesianConverter;
+/// ostream operator
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<PointLatLon>& pointVector);
 
-  };
+// optional PointLatLon
+typedef boost::optional<PointLatLon> OptionalPointLatLon;
 
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const PointLatLon& point);
+// vector of PointLatLon
+typedef std::vector<PointLatLon> PointLatLonVector;
 
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const std::vector<PointLatLon>& pointVector);
+/// compute distance in meters between two points on the Earth's surface
+/// lat and lon are specified in degrees
+UTILITIES_API double getDistanceLatLon(double lat1, double lon1, double lat2, double lon2);
 
-  // optional PointLatLon
-  typedef boost::optional<PointLatLon> OptionalPointLatLon;
+}  // namespace openstudio
 
-  // vector of PointLatLon
-  typedef std::vector<PointLatLon> PointLatLonVector;
-
-  /// compute distance in meters between two points on the Earth's surface
-  /// lat and lon are specified in degrees
-  UTILITIES_API double getDistanceLatLon(double lat1, double lon1, double lat2, double lon2);
-
-} // openstudio
-
-#endif //UTILITIES_GEOMETRY_POINTLATLON_HPP
+#endif  //UTILITIES_GEOMETRY_POINTLATLON_HPP

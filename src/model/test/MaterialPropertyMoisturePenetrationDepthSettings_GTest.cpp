@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,22 +44,6 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_MaterialPropertyMoisturePenetrationDepthSettings) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT(
-    {
-      // create a model to use
-      Model model;
-
-      // create a material object to use
-      StandardOpaqueMaterial material(model);
-
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
-
   // create a model to use
   Model model;
 
@@ -68,10 +52,11 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_MaterialPr
   EXPECT_EQ(1, model.modelObjects().size());
 
   // new material does not have material property moisture penetration depth settings yet
-  EXPECT_TRUE(!material.materialPropertyMoisturePenetrationDepthSettings());
+  EXPECT_FALSE(material.materialPropertyMoisturePenetrationDepthSettings());
 
   // create a material property moisture penetration depth settings object to use
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd = material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140); // drywall
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd =
+    material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);  // drywall
   ASSERT_TRUE(optempd);
   EXPECT_EQ(2, model.modelObjects().size());
 
@@ -84,7 +69,8 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_MaterialPr
   EXPECT_TRUE(empd.isDeepLayerPenetrationDepthAutocalculated());
 
   // check that creating the material property moisture penetration depth settings when they already exists does nothing and returns nil
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd2 = material.createMaterialPropertyMoisturePenetrationDepthSettings(6.6, 0.019, 1, 0, 1, 0, 0); // carpet
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd2 =
+    material.createMaterialPropertyMoisturePenetrationDepthSettings(6.6, 0.019, 1, 0, 1, 0, 0);  // carpet
   ASSERT_FALSE(optempd2);
   EXPECT_EQ(2, model.modelObjects().size());
 }
@@ -93,7 +79,8 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_MaterialPr
 TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_SetGetFields) {
   Model model;
   StandardOpaqueMaterial material(model);
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd = material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd =
+    material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
   auto empd = optempd.get();
 
   // check that the drywall properties were set properly
@@ -160,7 +147,8 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_ParentRese
   Model model;
   StandardOpaqueMaterial material(model);
   auto size = model.modelObjects().size();
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd = material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd =
+    material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
   material.resetMaterialPropertyMoisturePenetrationDepthSettings();
   EXPECT_FALSE(material.materialPropertyMoisturePenetrationDepthSettings());
   EXPECT_EQ(size, model.modelObjects().size());
@@ -171,7 +159,8 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_ParentRemo
   Model model;
   auto size = model.modelObjects().size();
   StandardOpaqueMaterial material(model);
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd = material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd =
+    material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
   EXPECT_FALSE(material.remove().empty());
   EXPECT_EQ(size, model.modelObjects().size());
 }
@@ -181,7 +170,8 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_ChildRemov
   Model model;
   StandardOpaqueMaterial material(model);
   auto size = model.modelObjects().size();
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd = material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd =
+    material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
   auto empd = optempd.get();
   EXPECT_EQ(2, model.modelObjects().size());
   EXPECT_FALSE(empd.remove().empty());
@@ -192,11 +182,26 @@ TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_ChildRemov
 TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_MaterialName) {
   Model model;
   StandardOpaqueMaterial material(model);
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd = material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd =
+    material.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
   auto empd = optempd.get();
   EXPECT_EQ("Material 1", empd.materialName());
+  EXPECT_EQ(material.handle(), empd.material().handle());
   StandardOpaqueMaterial material2(model);
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd2 = material2.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
+  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> optempd2 =
+    material2.createMaterialPropertyMoisturePenetrationDepthSettings(8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140);
   auto empd2 = optempd2.get();
   EXPECT_EQ("Material 2", empd2.materialName());
+  EXPECT_EQ(material2.handle(), empd2.material().handle());
+}
+
+TEST_F(ModelFixture, MaterialPropertyMoisturePenetrationDepthSettings_CtorThrow) {
+  Model model;
+  StandardOpaqueMaterial material(model);
+
+  EXPECT_NO_THROW(MaterialPropertyMoisturePenetrationDepthSettings empd(material, 8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140));
+  EXPECT_TRUE(material.materialPropertyMoisturePenetrationDepthSettings());
+  EXPECT_THROW(MaterialPropertyMoisturePenetrationDepthSettings empd(material, 8.9, 0.0069, 0.9066, 0.0404, 22.1121, 0.005, 140),
+               openstudio::Exception);
+  EXPECT_TRUE(material.materialPropertyMoisturePenetrationDepthSettings());
 }

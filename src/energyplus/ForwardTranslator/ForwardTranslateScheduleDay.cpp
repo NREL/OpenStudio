@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,60 +52,57 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateScheduleDay( ScheduleDay & modelObject )
-{
-  IdfObject scheduleDay = createRegisterAndNameIdfObject(openstudio::IddObjectType::Schedule_Day_Interval,
-                                                         modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateScheduleDay(ScheduleDay& modelObject) {
+    IdfObject scheduleDay = createRegisterAndNameIdfObject(openstudio::IddObjectType::Schedule_Day_Interval, modelObject);
 
-  boost::optional<ScheduleTypeLimits> scheduleTypeLimits = modelObject.scheduleTypeLimits();
-  if (scheduleTypeLimits){
-    boost::optional<IdfObject> idfScheduleTypeLimits = translateAndMapModelObject(*scheduleTypeLimits);
-    if (idfScheduleTypeLimits){
-      scheduleDay.setString(Schedule_Day_IntervalFields::ScheduleTypeLimitsName, idfScheduleTypeLimits->name().get());
-    }
-  }
-
-  if (modelObject.interpolatetoTimestep()){
-    scheduleDay.setString(Schedule_Day_IntervalFields::InterpolatetoTimestep, "Average");
-  }else{
-    scheduleDay.setString(Schedule_Day_IntervalFields::InterpolatetoTimestep, "No");
-  }
-
-  std::vector<double> values = modelObject.values();
-  std::vector<openstudio::Time> times = modelObject.times();
-
-  unsigned N = values.size();
-  OS_ASSERT(N == times.size());
-
-  scheduleDay.clearExtensibleGroups();
-
-  for (unsigned i = 0; i < N; ++i){
-    IdfExtensibleGroup group = scheduleDay.pushExtensibleGroup();
-
-    std::string hourPrefix;
-    std::string minutePrefix;
-
-    int hours = times[i].hours() + 24*times[i].days();
-    if (hours < 10){
-      hourPrefix = "0";
+    boost::optional<ScheduleTypeLimits> scheduleTypeLimits = modelObject.scheduleTypeLimits();
+    if (scheduleTypeLimits) {
+      boost::optional<IdfObject> idfScheduleTypeLimits = translateAndMapModelObject(*scheduleTypeLimits);
+      if (idfScheduleTypeLimits) {
+        scheduleDay.setString(Schedule_Day_IntervalFields::ScheduleTypeLimitsName, idfScheduleTypeLimits->name().get());
+      }
     }
 
-    int minutes = times[i].minutes() + (int)floor((times[i].seconds()/60.0) + 0.5);
-    if (minutes < 10){
-      minutePrefix = "0";
+    if (modelObject.interpolatetoTimestep()) {
+      scheduleDay.setString(Schedule_Day_IntervalFields::InterpolatetoTimestep, "Average");
+    } else {
+      scheduleDay.setString(Schedule_Day_IntervalFields::InterpolatetoTimestep, "No");
     }
 
-    std::stringstream ss;
-    ss << hourPrefix << hours << ":" << minutePrefix << minutes;
+    std::vector<double> values = modelObject.values();
+    std::vector<openstudio::Time> times = modelObject.times();
 
-    group.setString(Schedule_Day_IntervalExtensibleFields::Time, ss.str());
-    group.setDouble(Schedule_Day_IntervalExtensibleFields::ValueUntilTime, values[i]);
+    unsigned N = values.size();
+    OS_ASSERT(N == times.size());
+
+    scheduleDay.clearExtensibleGroups();
+
+    for (unsigned i = 0; i < N; ++i) {
+      IdfExtensibleGroup group = scheduleDay.pushExtensibleGroup();
+
+      std::string hourPrefix;
+      std::string minutePrefix;
+
+      int hours = times[i].hours() + 24 * times[i].days();
+      if (hours < 10) {
+        hourPrefix = "0";
+      }
+
+      int minutes = times[i].minutes() + (int)floor((times[i].seconds() / 60.0) + 0.5);
+      if (minutes < 10) {
+        minutePrefix = "0";
+      }
+
+      std::stringstream ss;
+      ss << hourPrefix << hours << ":" << minutePrefix << minutes;
+
+      group.setString(Schedule_Day_IntervalExtensibleFields::Time, ss.str());
+      group.setDouble(Schedule_Day_IntervalExtensibleFields::ValueUntilTime, values[i]);
+    }
+
+    return scheduleDay;
   }
 
-  return scheduleDay;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

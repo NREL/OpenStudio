@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,24 +37,24 @@
 #include "../UtilitiesAPI.hpp"
 
 #ifdef __GNUC__
-  #define OS_DEPRECATED __attribute__((deprecated))
+#  define OS_DEPRECATED __attribute__((deprecated))
 #elif defined(_MSC_VER)
-  /// In MSVC this will generate warning C4996
-  /// To intentionally disable this warning, e.g. in test code that still uses deprecated functionality
-  /// place this around the code that uses the deprecated functionality
-  /// #if defined(_MSC_VER)
-  ///   #pragma warning( push )
-  ///   #pragma warning( disable : 4996 )
-  /// #endif
-  /// Some code
-  /// #if defined(_MSC_VER)
-  ///   #pragma warning( pop )
-  /// #endif
+/// In MSVC this will generate warning C4996
+/// To intentionally disable this warning, e.g. in test code that still uses deprecated functionality
+/// place this around the code that uses the deprecated functionality
+/// #if defined(_MSC_VER)
+///   #pragma warning( push )
+///   #pragma warning( disable : 4996 )
+/// #endif
+/// Some code
+/// #if defined(_MSC_VER)
+///   #pragma warning( pop )
+/// #endif
 
-  #define OS_DEPRECATED __declspec(deprecated)
+#  define OS_DEPRECATED __declspec(deprecated)
 #else
-  #pragma message("WARNING: You need to implement DEPRECATED for this compiler")
-  #define OS_DEPRECATED
+#  pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+#  define OS_DEPRECATED
 #endif
 
-#endif // UTILITIES_CORE_DEPRECATED_HPP
+#endif  // UTILITIES_CORE_DEPRECATED_HPP

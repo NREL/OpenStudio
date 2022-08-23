@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,46 +36,42 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class PhotovoltaicPerformance_Impl;
-}
+  namespace detail {
+    class PhotovoltaicPerformance_Impl;
+  }
 
-/** PhotovoltaicPerformance is the base class for photovoltaic performance objects.
+  /** PhotovoltaicPerformance is the base class for photovoltaic performance objects.
  */
-class MODEL_API PhotovoltaicPerformance : public ModelObject {
+  class MODEL_API PhotovoltaicPerformance : public ModelObject
+  {
 
-  public:
+   public:
+    PhotovoltaicPerformance(IddObjectType type, const Model& model);
 
-  PhotovoltaicPerformance(IddObjectType type, const Model& model);
+    virtual ~PhotovoltaicPerformance() {}
 
-  virtual ~PhotovoltaicPerformance() {}
+   protected:
+    friend class Model;
 
-  protected:
+    friend class openstudio::IdfObject;
 
-  friend class Model;
+    /// @cond
 
-  friend class openstudio::IdfObject;
+    typedef detail::PhotovoltaicPerformance_Impl ImplType;
 
-  /// @cond
+    explicit PhotovoltaicPerformance(std::shared_ptr<detail::PhotovoltaicPerformance_Impl> impl);
 
-  typedef detail::PhotovoltaicPerformance_Impl ImplType;
+   private:
+    REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformance");
 
-  explicit PhotovoltaicPerformance(std::shared_ptr<detail::PhotovoltaicPerformance_Impl> impl);
+    /// @endcond
+  };
 
-  private:
+  typedef boost::optional<PhotovoltaicPerformance> OptionalPhotovoltaicPerformance;
 
-  REGISTER_LOGGER("openstudio.model.PhotovoltaicPerformance");
+  typedef std::vector<PhotovoltaicPerformance> PhotovoltaicPerformanceVector;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-typedef boost::optional<PhotovoltaicPerformance> OptionalPhotovoltaicPerformance;
-
-typedef std::vector<PhotovoltaicPerformance> PhotovoltaicPerformanceVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_PHOTOVOLTAICPERFORMANCE_HPP
-
+#endif  // MODEL_PHOTOVOLTAICPERFORMANCE_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,84 +40,86 @@ namespace openstudio {
 namespace model {
 
   class ScheduleFile;
+  class PythonPluginInstance;
 
-namespace detail {
+  namespace detail {
 
-  class ExternalFile_Impl;
+    class ExternalFile_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExternalFile is a ResourceObject that wraps the OpenStudio IDD object 'OS:External:File'. */
-class MODEL_API ExternalFile : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ExternalFile is a ResourceObject that wraps the OpenStudio IDD object 'OS:External:File'. */
+  class MODEL_API ExternalFile : public ResourceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~ExternalFile() {}
+    virtual ~ExternalFile() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> columnSeparatorValues();
+    static std::vector<std::string> columnSeparatorValues();
 
-  static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string &filename);
+    static boost::optional<ExternalFile> getExternalFile(const Model& model, const std::string& filename);
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string fileName() const;
+    std::string fileName() const;
 
-  path filePath() const;
+    path filePath() const;
 
-  //boost::optional<std::string> columnSeparator() const;
+    //boost::optional<std::string> columnSeparator() const;
 
-  //bool isColumnSeparatorDefaulted() const;
+    //bool isColumnSeparatorDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  //bool setColumnSeparator(const std::string& columnSeparator);
+    //bool setColumnSeparator(const std::string& columnSeparator);
 
-  //void resetColumnSeparator();
+    //void resetColumnSeparator();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //bool isValid();
+    //bool isValid();
 
-  std::vector<ScheduleFile> scheduleFiles() const;
+    std::vector<ScheduleFile> scheduleFiles() const;
 
-  //@}
- protected:
+    std::vector<PythonPluginInstance> pythonPluginInstances() const;
 
-  /// @cond
-  typedef detail::ExternalFile_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExternalFile_Impl ImplType;
 
-  explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
+    explicit ExternalFile(std::shared_ptr<detail::ExternalFile_Impl> impl);
 
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExternalFile");
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExternalFile");
 
-  ExternalFile(const Model& model, const std::string &filename);
+    ExternalFile(const Model& model, const std::string& filename);
 
-  bool setFileName(const std::string& fileName);
-};
+    bool setFileName(const std::string& fileName);
+  };
 
-/** \relates ExternalFile*/
-typedef boost::optional<ExternalFile> OptionalExternalFile;
+  /** \relates ExternalFile*/
+  typedef boost::optional<ExternalFile> OptionalExternalFile;
 
-/** \relates ExternalFile*/
-typedef std::vector<ExternalFile> ExternalFileVector;
+  /** \relates ExternalFile*/
+  typedef std::vector<ExternalFile> ExternalFileVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALFILE_HPP
-
+#endif  // MODEL_EXTERNALFILE_HPP

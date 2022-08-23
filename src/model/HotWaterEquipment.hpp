@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,110 +36,109 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class HotWaterEquipmentDefinition;
+  class Schedule;
+  class HotWaterEquipmentDefinition;
 
-namespace detail {
+  namespace detail {
 
-  class HotWaterEquipment_Impl;
+    class HotWaterEquipment_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** HotWaterEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object
+  /** HotWaterEquipment is a SpaceLoadInstance that wraps the OpenStudio IDD object
  *  'OS:HotWaterEquipment'. Its fields are derived from the EnergyPlus IDD object
  *  'HotWaterEquipment'. \sa HotWaterEquipmentDefinition
  */
-class MODEL_API HotWaterEquipment : public SpaceLoadInstance {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API HotWaterEquipment : public SpaceLoadInstance
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit HotWaterEquipment(const HotWaterEquipmentDefinition& hotWaterEquipmentDefinition);
+    explicit HotWaterEquipment(const HotWaterEquipmentDefinition& hotWaterEquipmentDefinition);
 
-  virtual ~HotWaterEquipment() {}
+    virtual ~HotWaterEquipment() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** Gets the HotWaterEquipmentDefinition object. */
-  HotWaterEquipmentDefinition hotWaterEquipmentDefinition() const;
+    /** Gets the HotWaterEquipmentDefinition object. */
+    HotWaterEquipmentDefinition hotWaterEquipmentDefinition() const;
 
-  /** Returns the (fractional) equipment schedule.  If this object does not
+    /** Returns the (fractional) equipment schedule.  If this object does not
    *  specify a schedule this function will search the hierarchy. */
-  boost::optional<Schedule> schedule() const;
+    boost::optional<Schedule> schedule() const;
 
-  /** Returns true if this object does not specify a schedule directly. */
-  bool isScheduleDefaulted() const;
+    /** Returns true if this object does not specify a schedule directly. */
+    bool isScheduleDefaulted() const;
 
-  std::string endUseSubcategory() const;
+    std::string endUseSubcategory() const;
 
-  bool isEndUseSubcategoryDefaulted() const;
+    bool isEndUseSubcategoryDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the HotWaterEquipmentDefinition object. */
-  bool setHotWaterEquipmentDefinition(const HotWaterEquipmentDefinition& definition);
+    /** Sets the HotWaterEquipmentDefinition object. */
+    bool setHotWaterEquipmentDefinition(const HotWaterEquipmentDefinition& definition);
 
-  /** Sets the (fractional) Schedule. */
-  bool setSchedule(Schedule& schedule);
+    /** Sets the (fractional) Schedule. */
+    bool setSchedule(Schedule& schedule);
 
-  /** Resets the (fractional) Schedule. */
-  void resetSchedule();
+    /** Resets the (fractional) Schedule. */
+    void resetSchedule();
 
-  bool setMultiplier(double multiplier);
+    bool setMultiplier(double multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  void resetEndUseSubcategory();
+    void resetEndUseSubcategory();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the design level represented by this instance, assuming floorArea (m^2) and
+    /** Returns the design level represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getDesignLevel(double floorArea, double numPeople) const;
+    double getDesignLevel(double floorArea, double numPeople) const;
 
-  /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
+    /** Returns the watts/m^2 represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerFloorArea(double floorArea, double numPeople) const;
+    double getPowerPerFloorArea(double floorArea, double numPeople) const;
 
-  /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
+    /** Returns the watts/person represented by this instance, assuming floorArea (m^2) and
    *  numPeople. */
-  double getPowerPerPerson(double floorArea, double numPeople) const;
+    double getPowerPerPerson(double floorArea, double numPeople) const;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::HotWaterEquipment_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::HotWaterEquipment_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit HotWaterEquipment(std::shared_ptr<detail::HotWaterEquipment_Impl> impl);
+    explicit HotWaterEquipment(std::shared_ptr<detail::HotWaterEquipment_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.HotWaterEquipment");
+  };
 
-  REGISTER_LOGGER("openstudio.model.HotWaterEquipment");
-};
+  /** \relates HotWaterEquipment*/
+  typedef boost::optional<HotWaterEquipment> OptionalHotWaterEquipment;
 
-/** \relates HotWaterEquipment*/
-typedef boost::optional<HotWaterEquipment> OptionalHotWaterEquipment;
+  /** \relates HotWaterEquipment*/
+  typedef std::vector<HotWaterEquipment> HotWaterEquipmentVector;
 
-/** \relates HotWaterEquipment*/
-typedef std::vector<HotWaterEquipment> HotWaterEquipmentVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_HOTWATEREQUIPMENT_HPP
-
+#endif  // MODEL_HOTWATEREQUIPMENT_HPP

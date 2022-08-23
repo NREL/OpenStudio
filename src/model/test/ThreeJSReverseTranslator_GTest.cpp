@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,6 +57,12 @@
 #include "../DefaultConstructionSet_Impl.hpp"
 #include "../RenderingColor.hpp"
 #include "../RenderingColor_Impl.hpp"
+#include "../ClimateZones.hpp"
+#include "../ClimateZones_Impl.hpp"
+#include "../Site.hpp"
+#include "../Site_Impl.hpp"
+#include "../Building.hpp"
+#include "../Building_Impl.hpp"
 
 #include "../../utilities/geometry/ThreeJS.hpp"
 #include "../../utilities/geometry/FloorplanJS.hpp"
@@ -65,7 +71,6 @@
 
 using namespace openstudio;
 using namespace openstudio::model;
-
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS) {
 
@@ -133,7 +138,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SurfaceMatch) {
 
   unsigned numMatched = 0;
   for (const auto& surface : model->getModelObjects<Surface>()) {
-    if (surface.outsideBoundaryCondition() == "Surface"){
+    if (surface.outsideBoundaryCondition() == "Surface") {
       EXPECT_TRUE(surface.adjacentSurface());
       ++numMatched;
     }
@@ -150,13 +155,12 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SurfaceMatch) {
 
   numMatched = 0;
   for (const auto& surface : newModel.getModelObjects<Surface>()) {
-    if (surface.outsideBoundaryCondition() == "Surface"){
+    if (surface.outsideBoundaryCondition() == "Surface") {
       EXPECT_TRUE(surface.adjacentSurface());
       ++numMatched;
     }
   }
   EXPECT_EQ(8u, numMatched);
-
 }
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Doors) {
@@ -194,15 +198,15 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Doors) {
   double glassDoorArea = 0;
   double overheadDoorArea = 0;
 
-  for (const auto& surface : space1->surfaces()){
-    for (const auto& subSurface : surface.subSurfaces()){
-      if (subSurface.subSurfaceType() == "Door"){
+  for (const auto& surface : space1->surfaces()) {
+    for (const auto& subSurface : surface.subSurfaces()) {
+      if (subSurface.subSurfaceType() == "Door") {
         doorArea += subSurface.grossArea();
         numDoors++;
-      }else if (subSurface.subSurfaceType() == "GlassDoor"){
+      } else if (subSurface.subSurfaceType() == "GlassDoor") {
         glassDoorArea += subSurface.grossArea();
         numGlassDoors++;
-      } else if (subSurface.subSurfaceType() == "OverheadDoor"){
+      } else if (subSurface.subSurfaceType() == "OverheadDoor") {
         overheadDoorArea += subSurface.grossArea();
         numOverheadDoors++;
       }
@@ -213,9 +217,9 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Doors) {
   EXPECT_EQ(3, numGlassDoors);
   EXPECT_EQ(2, numOverheadDoors);
 
-  EXPECT_NEAR(convert(3.0*3.0*6.67, "ft^2", "m^2").get(), doorArea, 0.01);
-  EXPECT_NEAR(convert(3.0*6.0*6.67, "ft^2", "m^2").get(), glassDoorArea, 0.01);
-  EXPECT_NEAR(convert(2.0*15.0*8.0, "ft^2", "m^2").get(), overheadDoorArea, 0.01);
+  EXPECT_NEAR(convert(3.0 * 3.0 * 6.67, "ft^2", "m^2").get(), doorArea, 0.01);
+  EXPECT_NEAR(convert(3.0 * 6.0 * 6.67, "ft^2", "m^2").get(), glassDoorArea, 0.01);
+  EXPECT_NEAR(convert(2.0 * 15.0 * 8.0, "ft^2", "m^2").get(), overheadDoorArea, 0.01);
 
   Model model2;
   ModelMerger merger;
@@ -234,15 +238,15 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Doors) {
   glassDoorArea = 0;
   overheadDoorArea = 0;
 
-  for (const auto& surface : space1->surfaces()){
-    for (const auto& subSurface : surface.subSurfaces()){
-      if (subSurface.subSurfaceType() == "Door"){
+  for (const auto& surface : space1->surfaces()) {
+    for (const auto& subSurface : surface.subSurfaces()) {
+      if (subSurface.subSurfaceType() == "Door") {
         doorArea += subSurface.grossArea();
         numDoors++;
-      }else if (subSurface.subSurfaceType() == "GlassDoor"){
+      } else if (subSurface.subSurfaceType() == "GlassDoor") {
         glassDoorArea += subSurface.grossArea();
         numGlassDoors++;
-      } else if (subSurface.subSurfaceType() == "OverheadDoor"){
+      } else if (subSurface.subSurfaceType() == "OverheadDoor") {
         overheadDoorArea += subSurface.grossArea();
         numOverheadDoors++;
       }
@@ -253,11 +257,10 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Doors) {
   EXPECT_EQ(3, numGlassDoors);
   EXPECT_EQ(2, numOverheadDoors);
 
-  EXPECT_NEAR(convert(3.0*3.0*6.67, "ft^2", "m^2").get(), doorArea, 0.01);
-  EXPECT_NEAR(convert(3.0*6.0*6.67, "ft^2", "m^2").get(), glassDoorArea, 0.01);
-  EXPECT_NEAR(convert(2.0*15.0*8.0, "ft^2", "m^2").get(), overheadDoorArea, 0.01);
+  EXPECT_NEAR(convert(3.0 * 3.0 * 6.67, "ft^2", "m^2").get(), doorArea, 0.01);
+  EXPECT_NEAR(convert(3.0 * 6.0 * 6.67, "ft^2", "m^2").get(), glassDoorArea, 0.01);
+  EXPECT_NEAR(convert(2.0 * 15.0 * 8.0, "ft^2", "m^2").get(), overheadDoorArea, 0.01);
 }
-
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
 
@@ -298,7 +301,8 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   spaces.push_back(*space2);
   spaces.push_back(*space3);
 
-  struct SpaceInfo{
+  struct SpaceInfo
+  {
     std::string name;
     unsigned numExteriorWalls;
     boost::optional<Surface> southSurface;
@@ -307,19 +311,19 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   };
 
   std::vector<SpaceInfo> infos;
-  for (const auto& space : spaces){
+  for (const auto& space : spaces) {
     SpaceInfo info;
     info.name = space.nameString();
     info.numExteriorWalls = 0;
-    for (const auto& surface : space.surfaces()){
-      if (surface.surfaceType() == "Wall"){
-        if (surface.outsideBoundaryCondition() == "Outdoors"){
+    for (const auto& surface : space.surfaces()) {
+      if (surface.surfaceType() == "Wall") {
+        if (surface.outsideBoundaryCondition() == "Outdoors") {
           info.numExteriorWalls += 1;
-          if ((surface.azimuth() > degToRad(179)) && (surface.azimuth() < degToRad(181))){
+          if ((surface.azimuth() > degToRad(179)) && (surface.azimuth() < degToRad(181))) {
             // only one
             EXPECT_FALSE(info.southSurface) << info.name;
             info.southSurface = surface;
-            for (const auto& subSurface : surface.subSurfaces()){
+            for (const auto& subSurface : surface.subSurfaces()) {
               info.windows.push_back(subSurface);
             }
           }
@@ -327,14 +331,14 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
       }
     }
 
-    for (const auto& dc : space.daylightingControls()){
+    for (const auto& dc : space.daylightingControls()) {
       info.dcs.push_back(dc);
     }
 
     infos.push_back(info);
   }
 
-  std::sort(std::begin(infos), std::end(infos), [](SpaceInfo a, SpaceInfo b) {return a.name < b.name; });
+  std::sort(std::begin(infos), std::end(infos), [](SpaceInfo a, SpaceInfo b) { return a.name < b.name; });
 
   ASSERT_EQ(3u, infos.size());
 
@@ -342,41 +346,40 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Windows) {
   EXPECT_EQ(3, infos[0].numExteriorWalls);
   ASSERT_TRUE(infos[0].southSurface);
   EXPECT_EQ(9, infos[0].windows.size());
-  for (const auto& window : infos[0].windows){
+  for (const auto& window : infos[0].windows) {
     EXPECT_NEAR(convert(8.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
     ASSERT_EQ(1u, window.shadingSurfaceGroups().size());
-    EXPECT_EQ(3u, window.shadingSurfaceGroups()[0].shadingSurfaces().size()); // overhang + fins
+    EXPECT_EQ(3u, window.shadingSurfaceGroups()[0].shadingSurfaces().size());  // overhang + fins
   }
   EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[0].southSurface->grossArea(), 0.001);
-  EXPECT_NEAR(convert(800.0 - 9*8.0, "ft^2", "m^2").get(), infos[0].southSurface->netArea(), 0.001);
+  EXPECT_NEAR(convert(800.0 - 9 * 8.0, "ft^2", "m^2").get(), infos[0].southSurface->netArea(), 0.001);
   EXPECT_EQ(1, infos[0].dcs.size());
 
   EXPECT_EQ("Space 2", infos[1].name);
   EXPECT_EQ(2, infos[1].numExteriorWalls);
   ASSERT_TRUE(infos[1].southSurface);
   EXPECT_EQ(17, infos[1].windows.size());
-  for (const auto& window : infos[1].windows){
+  for (const auto& window : infos[1].windows) {
     EXPECT_NEAR(convert(8.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
-    EXPECT_EQ(0, window.shadingSurfaceGroups().size()); // no shades
+    EXPECT_EQ(0, window.shadingSurfaceGroups().size());  // no shades
   }
   EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[1].southSurface->grossArea(), 0.001);
-  EXPECT_NEAR(convert(800.0 - 17*8.0, "ft^2", "m^2").get(), infos[1].southSurface->netArea(), 0.001);
+  EXPECT_NEAR(convert(800.0 - 17 * 8.0, "ft^2", "m^2").get(), infos[1].southSurface->netArea(), 0.001);
   EXPECT_EQ(1, infos[1].dcs.size());
 
   EXPECT_EQ("Space 3", infos[2].name);
   EXPECT_EQ(3, infos[2].numExteriorWalls);
   ASSERT_TRUE(infos[2].southSurface);
   EXPECT_EQ(1, infos[2].windows.size());
-  for (const auto& window : infos[2].windows){
-    EXPECT_NEAR(convert(0.4*800.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
+  for (const auto& window : infos[2].windows) {
+    EXPECT_NEAR(convert(0.4 * 800.0, "ft^2", "m^2").get(), window.grossArea(), 0.001);
     ASSERT_EQ(1u, window.shadingSurfaceGroups().size());
-    EXPECT_EQ(1u, window.shadingSurfaceGroups()[0].shadingSurfaces().size()); // just overhang
+    EXPECT_EQ(1u, window.shadingSurfaceGroups()[0].shadingSurfaces().size());  // just overhang
   }
   EXPECT_NEAR(convert(800.0, "ft^2", "m^2").get(), infos[2].southSurface->grossArea(), 0.001);
-  EXPECT_NEAR(convert(0.6*800.0, "ft^2", "m^2").get(), infos[2].southSurface->netArea(), 0.001);
+  EXPECT_NEAR(convert(0.6 * 800.0, "ft^2", "m^2").get(), infos[2].southSurface->netArea(), 0.001);
   EXPECT_EQ(1, infos[2].dcs.size());
 }
-
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SimAUD_Paper) {
 
@@ -402,16 +405,14 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SimAUD_Paper) {
   EXPECT_EQ(0, rt.errors().size());
   EXPECT_EQ(0, rt.warnings().size());
 
-  for (const auto& error : rt.errors()){
+  for (const auto& error : rt.errors()) {
     EXPECT_TRUE(false) << "Error: " << error.logMessage();
   }
 
-  for (const auto& warning : rt.warnings()){
+  for (const auto& warning : rt.warnings()) {
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
-
 }
-
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Shading) {
 
@@ -446,7 +447,6 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Shading) {
   ASSERT_TRUE(shading2);
 }
 
-
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SplitLevel) {
 
   ThreeJSReverseTranslator rt;
@@ -471,11 +471,11 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SplitLevel) {
   EXPECT_EQ(0, rt.errors().size());
   EXPECT_EQ(0, rt.warnings().size());
 
-  for (const auto& error : rt.errors()){
+  for (const auto& error : rt.errors()) {
     EXPECT_TRUE(false) << "Error: " << error.logMessage();
   }
 
-  for (const auto& warning : rt.warnings()){
+  for (const auto& warning : rt.warnings()) {
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
 
@@ -501,7 +501,8 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SplitLevel) {
   spaces.push_back(*space2);
   spaces.push_back(*space3);
 
-  struct SpaceInfo{
+  struct SpaceInfo
+  {
     std::string name;
     unsigned numExteriorWalls;
     unsigned numInteriorWalls;
@@ -510,19 +511,19 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SplitLevel) {
   };
 
   std::vector<SpaceInfo> infos;
-  for (const auto& space : spaces){
+  for (const auto& space : spaces) {
     SpaceInfo info;
     info.name = space.nameString();
     info.numExteriorWalls = 0;
     info.numInteriorWalls = 0;
     info.exteriorWallArea = 0;
     info.interiorWallArea = 0;
-    for (const auto& surface : space.surfaces()){
-      if (surface.surfaceType() == "Wall"){
-        if (surface.outsideBoundaryCondition() == "Outdoors"){
+    for (const auto& surface : space.surfaces()) {
+      if (surface.surfaceType() == "Wall") {
+        if (surface.outsideBoundaryCondition() == "Outdoors") {
           info.numExteriorWalls += 1;
           info.exteriorWallArea += surface.grossArea();
-        } else if (surface.outsideBoundaryCondition() == "Surface"){
+        } else if (surface.outsideBoundaryCondition() == "Surface") {
           info.numInteriorWalls += 1;
           info.interiorWallArea += surface.grossArea();
         }
@@ -536,19 +537,19 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_SplitLevel) {
   EXPECT_EQ("Main Space", infos[0].name);
   EXPECT_EQ(4, infos[0].numExteriorWalls);
   EXPECT_EQ(1, infos[0].numInteriorWalls);
-  EXPECT_NEAR(convert(3*800.0 + 400.0, "ft^2", "m^2").get(), infos[0].exteriorWallArea, 0.001);
+  EXPECT_NEAR(convert(3 * 800.0 + 400.0, "ft^2", "m^2").get(), infos[0].exteriorWallArea, 0.001);
   EXPECT_NEAR(convert(400.0, "ft^2", "m^2").get(), infos[0].interiorWallArea, 0.001);
 
   EXPECT_EQ("Split Level", infos[1].name);
   EXPECT_EQ(3, infos[1].numExteriorWalls);
   EXPECT_EQ(2, infos[1].numInteriorWalls);
-  EXPECT_NEAR(convert(3*800.0, "ft^2", "m^2").get(), infos[1].exteriorWallArea, 0.001);
-  EXPECT_NEAR(convert(2*400.0, "ft^2", "m^2").get(), infos[1].interiorWallArea, 0.001);
+  EXPECT_NEAR(convert(3 * 800.0, "ft^2", "m^2").get(), infos[1].exteriorWallArea, 0.001);
+  EXPECT_NEAR(convert(2 * 400.0, "ft^2", "m^2").get(), infos[1].interiorWallArea, 0.001);
 
   EXPECT_EQ("Upper floor", infos[2].name);
   EXPECT_EQ(4, infos[2].numExteriorWalls);
   EXPECT_EQ(1, infos[2].numInteriorWalls);
-  EXPECT_NEAR(convert(3*800.0 + 400.0, "ft^2", "m^2").get(), infos[2].exteriorWallArea, 0.001);
+  EXPECT_NEAR(convert(3 * 800.0 + 400.0, "ft^2", "m^2").get(), infos[2].exteriorWallArea, 0.001);
   EXPECT_NEAR(convert(400.0, "ft^2", "m^2").get(), infos[2].interiorWallArea, 0.001);
 }
 
@@ -576,11 +577,11 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StorySpaceHeights) {
   EXPECT_EQ(0, rt.errors().size());
   EXPECT_EQ(0, rt.warnings().size());
 
-  for (const auto& error : rt.errors()){
+  for (const auto& error : rt.errors()) {
     EXPECT_TRUE(false) << "Error: " << error.logMessage();
   }
 
-  for (const auto& warning : rt.warnings()){
+  for (const auto& warning : rt.warnings()) {
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
 
@@ -642,9 +643,10 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StorySpaceHeights) {
   volume1 += space2->volume();
   volume1 += space3->volume();
 
-  EXPECT_NEAR(volume1, space4->volume() , 0.001);
+  EXPECT_NEAR(volume1, space4->volume(), 0.001);
 
-  struct SpaceInfo{
+  struct SpaceInfo
+  {
     std::string name;
     unsigned numExterior;
     unsigned numInterior;
@@ -654,19 +656,19 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StorySpaceHeights) {
   };
 
   std::vector<SpaceInfo> infos;
-  for (const auto& space : spaces){
+  for (const auto& space : spaces) {
     SpaceInfo info;
     info.name = space.nameString();
     info.numExterior = 0;
     info.numInterior = 0;
     info.exteriorArea = 0;
     info.interiorArea = 0;
-    for (const auto& surface : space.surfaces()){
+    for (const auto& surface : space.surfaces()) {
 
-      if ((surface.outsideBoundaryCondition() == "Outdoors") || (surface.outsideBoundaryCondition() == "Ground")){
+      if ((surface.outsideBoundaryCondition() == "Outdoors") || (surface.outsideBoundaryCondition() == "Ground")) {
         info.numExterior += 1;
         info.exteriorArea += surface.grossArea();
-      } else if (surface.outsideBoundaryCondition() == "Surface"){
+      } else if (surface.outsideBoundaryCondition() == "Surface") {
         info.numInterior += 1;
         info.interiorArea += surface.grossArea();
         ASSERT_TRUE(surface.adjacentSurface());
@@ -682,8 +684,8 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StorySpaceHeights) {
   EXPECT_EQ("Story Default", infos[0].name);
   EXPECT_EQ(3, infos[0].numExterior);
   EXPECT_EQ(3, infos[0].numInterior);
-  EXPECT_NEAR(convert(3*800.0, "ft^2", "m^2").get(), infos[0].exteriorArea, 0.001);
-  EXPECT_NEAR(convert(2*100.0*100.0 + 800.0, "ft^2", "m^2").get(), infos[0].interiorArea, 0.001);
+  EXPECT_NEAR(convert(3 * 800.0, "ft^2", "m^2").get(), infos[0].exteriorArea, 0.001);
+  EXPECT_NEAR(convert(2 * 100.0 * 100.0 + 800.0, "ft^2", "m^2").get(), infos[0].interiorArea, 0.001);
   EXPECT_EQ(3u, infos[0].adjacentSpaces.size());
   EXPECT_EQ(0u, infos[0].adjacentSpaces.count("Story Default"));
   EXPECT_EQ(1u, infos[0].adjacentSpaces.count("Story Default Plenum"));
@@ -693,8 +695,8 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StorySpaceHeights) {
   EXPECT_EQ("Story Default Plenum", infos[1].name);
   EXPECT_EQ(4, infos[1].numExterior);
   EXPECT_EQ(2, infos[1].numInterior);
-  EXPECT_NEAR(convert(3*200.0 + 100.0*100.0, "ft^2", "m^2").get(), infos[1].exteriorArea, 0.001);
-  EXPECT_NEAR(convert(200.0 + 100.0*100.0, "ft^2", "m^2").get(), infos[1].interiorArea, 0.001);
+  EXPECT_NEAR(convert(3 * 200.0 + 100.0 * 100.0, "ft^2", "m^2").get(), infos[1].exteriorArea, 0.001);
+  EXPECT_NEAR(convert(200.0 + 100.0 * 100.0, "ft^2", "m^2").get(), infos[1].interiorArea, 0.001);
   EXPECT_EQ(2u, infos[1].adjacentSpaces.size());
   EXPECT_EQ(1u, infos[1].adjacentSpaces.count("Story Default"));
   EXPECT_EQ(0u, infos[1].adjacentSpaces.count("Story Default Plenum"));
@@ -704,8 +706,8 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StorySpaceHeights) {
   EXPECT_EQ("Story Default Floor Plenum", infos[2].name);
   EXPECT_EQ(4, infos[2].numExterior);
   EXPECT_EQ(2, infos[2].numInterior);
-  EXPECT_NEAR(convert(3*200.0 + 100.0*100.0, "ft^2", "m^2").get(), infos[2].exteriorArea, 0.001);
-  EXPECT_NEAR(convert(200.0 + 100.0*100.0, "ft^2", "m^2").get(), infos[2].interiorArea, 0.001);
+  EXPECT_NEAR(convert(3 * 200.0 + 100.0 * 100.0, "ft^2", "m^2").get(), infos[2].exteriorArea, 0.001);
+  EXPECT_NEAR(convert(200.0 + 100.0 * 100.0, "ft^2", "m^2").get(), infos[2].interiorArea, 0.001);
   EXPECT_EQ(2u, infos[2].adjacentSpaces.size());
   EXPECT_EQ(1u, infos[2].adjacentSpaces.count("Story Default"));
   EXPECT_EQ(0u, infos[2].adjacentSpaces.count("Story Default Plenum"));
@@ -715,7 +717,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StorySpaceHeights) {
   EXPECT_EQ("Tall No Plenums", infos[3].name);
   EXPECT_EQ(5, infos[3].numExterior);
   EXPECT_EQ(3, infos[3].numInterior);
-  EXPECT_NEAR(convert(3*1200.0 + 2*100.0*100.0, "ft^2", "m^2").get(), infos[3].exteriorArea, 0.001);
+  EXPECT_NEAR(convert(3 * 1200.0 + 2 * 100.0 * 100.0, "ft^2", "m^2").get(), infos[3].exteriorArea, 0.001);
   EXPECT_NEAR(convert(1200.0, "ft^2", "m^2").get(), infos[3].interiorArea, 0.001);
   EXPECT_EQ(3u, infos[3].adjacentSpaces.size());
   EXPECT_EQ(1u, infos[3].adjacentSpaces.count("Story Default"));
@@ -723,7 +725,6 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StorySpaceHeights) {
   EXPECT_EQ(1u, infos[3].adjacentSpaces.count("Story Default Floor Plenum"));
   EXPECT_EQ(0u, infos[3].adjacentSpaces.count("Tall No Plenums"));
 }
-
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Colors) {
 
@@ -749,11 +750,11 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Colors) {
   EXPECT_EQ(0, rt.errors().size());
   EXPECT_EQ(0u, rt.warnings().size());
 
-  for (const auto& error : rt.errors()){
+  for (const auto& error : rt.errors()) {
     EXPECT_TRUE(false) << "Error: " << error.logMessage();
   }
 
-  for (const auto& warning : rt.warnings()){
+  for (const auto& warning : rt.warnings()) {
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
 
@@ -797,7 +798,6 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Colors) {
   //EXPECT_EQ(0, story->renderingColor()->renderingGreenValue());
   //EXPECT_EQ(255, story->renderingColor()->renderingBlueValue());
   //EXPECT_EQ(255, story->renderingColor()->renderingAlphaValue());
-
 }
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_DifferingNumVertices) {
@@ -824,11 +824,11 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_DifferingNumVertices) 
   EXPECT_EQ(0, rt.errors().size());
   EXPECT_EQ(0u, rt.warnings().size());
 
-  for (const auto& error : rt.errors()){
+  for (const auto& error : rt.errors()) {
     EXPECT_TRUE(false) << "Error: " << error.logMessage();
   }
 
-  for (const auto& warning : rt.warnings()){
+  for (const auto& warning : rt.warnings()) {
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
 
@@ -839,21 +839,22 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_DifferingNumVertices) 
 
   std::vector<Space> spaces = model->getConcreteModelObjects<Space>();
 
-  struct SpaceInfo{
+  struct SpaceInfo
+  {
     std::string name;
     boost::optional<Surface> floor;
     boost::optional<Surface> ceiling;
   };
 
   std::vector<SpaceInfo> infos;
-  for (const auto& space : spaces){
+  for (const auto& space : spaces) {
     SpaceInfo info;
     info.name = space.nameString();
-    for (const auto& surface : space.surfaces()){
-      if (surface.surfaceType() == "Floor"){
+    for (const auto& surface : space.surfaces()) {
+      if (surface.surfaceType() == "Floor") {
         EXPECT_FALSE(info.floor);
         info.floor = surface;
-      }else if (surface.surfaceType() == "RoofCeiling"){
+      } else if (surface.surfaceType() == "RoofCeiling") {
         EXPECT_FALSE(info.ceiling);
         info.ceiling = surface;
       }
@@ -861,7 +862,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_DifferingNumVertices) 
     infos.push_back(info);
   }
 
-  std::sort(std::begin(infos), std::end(infos), [](SpaceInfo a, SpaceInfo b) {return a.name < b.name; });
+  std::sort(std::begin(infos), std::end(infos), [](SpaceInfo a, SpaceInfo b) { return a.name < b.name; });
 
   ASSERT_EQ(2u, infos.size());
 
@@ -910,17 +911,18 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_School) {
   EXPECT_EQ(0, rt.errors().size());
   EXPECT_EQ(0u, rt.warnings().size());
 
-  for (const auto& error : rt.errors()){
+  for (const auto& error : rt.errors()) {
     EXPECT_TRUE(false) << "Error: " << error.logMessage();
   }
 
-  for (const auto& warning : rt.warnings()){
+  for (const auto& warning : rt.warnings()) {
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
 
   std::vector<Space> spaces = model->getConcreteModelObjects<Space>();
 
-  struct SpaceInfo{
+  struct SpaceInfo
+  {
     std::string name;
     std::vector<Surface> floors;
     std::vector<Surface> walls;
@@ -936,30 +938,30 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_School) {
   };
 
   std::vector<SpaceInfo> infos;
-  for (const auto& space : spaces){
+  for (const auto& space : spaces) {
     SpaceInfo info;
     info.name = space.nameString();
-    for (const auto& surface : space.surfaces()){
-      if (surface.surfaceType() == "Floor"){
+    for (const auto& surface : space.surfaces()) {
+      if (surface.surfaceType() == "Floor") {
         info.floors.push_back(surface);
-        if (surface.outsideBoundaryCondition() == "Ground"){
+        if (surface.outsideBoundaryCondition() == "Ground") {
           info.exteriorFloorArea += surface.grossArea();
-        } else if (surface.outsideBoundaryCondition() == "Surface"){
+        } else if (surface.outsideBoundaryCondition() == "Surface") {
           info.interiorFloorArea += surface.grossArea();
         }
-      }else if (surface.surfaceType() == "RoofCeiling"){
+      } else if (surface.surfaceType() == "RoofCeiling") {
         info.ceilings.push_back(surface);
-        if (surface.outsideBoundaryCondition() == "Outdoors"){
+        if (surface.outsideBoundaryCondition() == "Outdoors") {
           info.exteriorRoofArea += surface.grossArea();
-        } else if (surface.outsideBoundaryCondition() == "Surface"){
+        } else if (surface.outsideBoundaryCondition() == "Surface") {
           info.interiorRoofArea += surface.grossArea();
         }
-      }else if (surface.surfaceType() == "Wall"){
+      } else if (surface.surfaceType() == "Wall") {
         info.walls.push_back(surface);
-        if (surface.outsideBoundaryCondition() == "Outdoors"){
+        if (surface.outsideBoundaryCondition() == "Outdoors") {
           info.numExteriorWalls += 1;
           info.exteriorWallArea += surface.grossArea();
-        } else if (surface.outsideBoundaryCondition() == "Surface"){
+        } else if (surface.outsideBoundaryCondition() == "Surface") {
           info.numInteriorWalls += 1;
           info.interiorWallArea += surface.grossArea();
         }
@@ -968,11 +970,11 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_School) {
     infos.push_back(info);
   }
 
-  std::sort(std::begin(infos), std::end(infos), [](SpaceInfo a, SpaceInfo b) {return a.name < b.name; });
+  std::sort(std::begin(infos), std::end(infos), [](SpaceInfo a, SpaceInfo b) { return a.name < b.name; });
 
   ASSERT_EQ(33u, infos.size());
 
-  auto it = std::find_if(infos.begin(), infos.end(), [](SpaceInfo a) {return a.name == "Space 2 - 1"; });
+  auto it = std::find_if(infos.begin(), infos.end(), [](SpaceInfo a) { return a.name == "Space 2 - 1"; });
   ASSERT_TRUE(it != infos.end());
   EXPECT_EQ(1u, it->floors.size());
   EXPECT_NEAR(0.0, it->exteriorFloorArea, 1.0);
@@ -986,7 +988,7 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_School) {
   EXPECT_NEAR(2178.75, it->exteriorWallArea, 1.0);
   EXPECT_NEAR(2546.25, it->interiorWallArea, 1.0);
 
-  it = std::find_if(infos.begin(), infos.end(), [](SpaceInfo a) {return a.name == "Lobby 113"; });
+  it = std::find_if(infos.begin(), infos.end(), [](SpaceInfo a) { return a.name == "Lobby 113"; });
   ASSERT_TRUE(it != infos.end());
   EXPECT_EQ(1u, it->floors.size());
   EXPECT_NEAR(1860.0, it->exteriorFloorArea, 1.0);
@@ -1000,7 +1002,6 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_School) {
   EXPECT_NEAR(813.75, it->exteriorWallArea, 1.0);
   EXPECT_NEAR(1601.25, it->interiorWallArea, 1.0);
 }
-
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StoryMultipliers) {
 
@@ -1024,18 +1025,16 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StoryMultipliers) {
   model->save(outpath, true);
 
   EXPECT_EQ(0, rt.errors().size());
-  EXPECT_EQ(2u, rt.warnings().size()); // DLM: temporarily expect 2 warnings about non-translated multipliers
+  EXPECT_EQ(2u, rt.warnings().size());  // DLM: temporarily expect 2 warnings about non-translated multipliers
 
-  for (const auto& error : rt.errors()){
+  for (const auto& error : rt.errors()) {
     EXPECT_TRUE(false) << "Error: " << error.logMessage();
   }
 
   //for (const auto& warning : rt.warnings()){
   //  EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   //}
-
 }
-
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StoryMultipliers2) {
 
@@ -1059,16 +1058,15 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_StoryMultipliers2) {
   model->save(outpath, true);
 
   EXPECT_EQ(0, rt.errors().size());
-  EXPECT_EQ(1u, rt.warnings().size()); // DLM: temporarily expect 1 warnings about non-translated multipliers
+  EXPECT_EQ(1u, rt.warnings().size());  // DLM: temporarily expect 1 warnings about non-translated multipliers
 
-  for (const auto& error : rt.errors()){
+  for (const auto& error : rt.errors()) {
     EXPECT_TRUE(false) << "Error: " << error.logMessage();
   }
 
   //for (const auto& warning : rt.warnings()){
   //  EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   //}
-
 }
 
 TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_OpenToBelow) {
@@ -1095,11 +1093,11 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_OpenToBelow) {
   EXPECT_EQ(0, rt.errors().size());
   EXPECT_EQ(0, rt.warnings().size());
 
-  for (const auto& error : rt.errors()){
+  for (const auto& error : rt.errors()) {
     EXPECT_TRUE(false) << "Error: " << error.logMessage();
   }
 
-  for (const auto& warning : rt.warnings()){
+  for (const auto& warning : rt.warnings()) {
     EXPECT_TRUE(false) << "Warning: " << warning.logMessage();
   }
 
@@ -1118,26 +1116,27 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_OpenToBelow) {
   spaces.push_back(*space3);
   spaces.push_back(*space4);
 
-  EXPECT_NEAR(convert(100.0*100.0, "ft^2", "m^2").get(), space1->floorArea(), 0.001);
-  EXPECT_NEAR(convert(100.0*100.0, "ft^2", "m^2").get(), space2->floorArea(), 0.001);
-  EXPECT_NEAR(convert(0.0, "ft^2", "m^2").get(), space3->floorArea(), 0.001); // air wall floor
-  EXPECT_NEAR(convert(100.0*100.0, "ft^2", "m^2").get(), space4->floorArea(), 0.001);
+  EXPECT_NEAR(convert(100.0 * 100.0, "ft^2", "m^2").get(), space1->floorArea(), 0.001);
+  EXPECT_NEAR(convert(100.0 * 100.0, "ft^2", "m^2").get(), space2->floorArea(), 0.001);
+  EXPECT_NEAR(convert(0.0, "ft^2", "m^2").get(), space3->floorArea(), 0.001);  // air wall floor
+  EXPECT_NEAR(convert(100.0 * 100.0, "ft^2", "m^2").get(), space4->floorArea(), 0.001);
 
-  struct SpaceInfo{
+  struct SpaceInfo
+  {
     std::string name;
     boost::optional<Surface> floor;
     boost::optional<Surface> ceiling;
   };
 
   std::vector<SpaceInfo> infos;
-  for (const auto& space : spaces){
+  for (const auto& space : spaces) {
     SpaceInfo info;
     info.name = space.nameString();
-    for (const auto& surface : space.surfaces()){
-      if (surface.surfaceType() == "Floor"){
+    for (const auto& surface : space.surfaces()) {
+      if (surface.surfaceType() == "Floor") {
         EXPECT_FALSE(info.floor);
         info.floor = surface;
-      }else if (surface.surfaceType() == "RoofCeiling"){
+      } else if (surface.surfaceType() == "RoofCeiling") {
         EXPECT_FALSE(info.ceiling);
         info.ceiling = surface;
       }
@@ -1186,4 +1185,75 @@ TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_OpenToBelow) {
   ASSERT_TRUE(infos[3].ceiling);
   EXPECT_FALSE(infos[3].ceiling->isAirWall());
   EXPECT_FALSE(infos[3].ceiling->adjacentSurface());
+}
+
+TEST_F(ModelFixture, ThreeJSReverseTranslator_FloorplanJS_Site_ClimateZones_4166) {
+
+  // Test for #4166 - Merging FloorSpaceJS strips out climate zone assignment.
+
+  // Start with a base model, put some climate zone in there
+  // Add a Climate Zone to model1 only
+  Model model;
+  ClimateZones czs = model.getUniqueModelObject<ClimateZones>();
+  ClimateZone cz = czs.setClimateZone(ClimateZones::ashraeInstitutionName(), "4A");
+  EXPECT_EQ(1, czs.numClimateZones());
+  EXPECT_EQ(1, czs.climateZones().size());
+
+  // To reproduce the original issue, we also need a Site object since it's the fact that the Site object is deleted, and along with it its children
+  // and that includes the ClimateZones
+  Site site = model.getUniqueModelObject<Site>();
+  ASSERT_EQ(1, site.children().size());
+  EXPECT_EQ(czs, site.children().front());
+
+  // I'm going to instantiate the Building object as well, to check if the floorplan.json north_axis (30) is properly written anyways
+  Building building = model.getUniqueModelObject<Building>();
+  EXPECT_TRUE(building.setNominalFloortoFloorHeight(2.5));
+
+  // Now RT (any) floor plan back to a model
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  std::string json = scene.toJSON();
+  EXPECT_TRUE(ThreeScene::load(json));
+
+  boost::optional<Model> newModel_ = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(newModel_);
+
+  EXPECT_TRUE(model.getOptionalUniqueModelObject<ClimateZones>());
+  EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<ClimateZones>());
+
+  EXPECT_EQ(0.0, building.northAxis());
+  EXPECT_EQ(2.5, building.nominalFloortoFloorHeight().get());
+
+  ASSERT_TRUE(newModel_->getOptionalUniqueModelObject<Building>());
+  EXPECT_EQ(-30.0, newModel_->getOptionalUniqueModelObject<Building>()->northAxis());
+  EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
+
+  model::ModelMerger mm;
+  mm.mergeModels(model, newModel_.get(), rt.handleMapping());
+
+  // Expect to still have retained the ClimateZone
+  ASSERT_TRUE(model.getOptionalUniqueModelObject<ClimateZones>());
+  EXPECT_EQ("4A", model.getOptionalUniqueModelObject<ClimateZones>()->climateZones()[0].value());
+  EXPECT_EQ(ClimateZones::ashraeInstitutionName(), model.getOptionalUniqueModelObject<ClimateZones>()->climateZones()[0].institution());
+
+  EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<ClimateZones>());
+
+  // It should have overridden only the things that were actually not defaulted, so building name and north axis
+  ASSERT_TRUE(model.getOptionalUniqueModelObject<Building>());
+  EXPECT_EQ(-30.0, model.getOptionalUniqueModelObject<Building>()->northAxis());
+  ASSERT_TRUE(model.getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
+  EXPECT_EQ(2.5, model.getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight().get());
+
+  // New Model isn't touched anyways...
+  ASSERT_TRUE(newModel_->getOptionalUniqueModelObject<Building>());
+  EXPECT_EQ(-30.0, newModel_->getOptionalUniqueModelObject<Building>()->northAxis());
+  EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
 }

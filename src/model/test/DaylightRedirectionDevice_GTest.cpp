@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,9 +54,7 @@ TEST_F(ModelFixture, DaylightRedirectionDevice_Material) {
   EXPECT_EQ("InteriorDaylightRedirectionDevice", shadingControl.shadingType());
   EXPECT_EQ("AlwaysOn", shadingControl.shadingControlType());
   EXPECT_FALSE(shadingControl.schedule());
-
 }
-
 
 TEST_F(ModelFixture, DaylightRedirectionDevice_Construction) {
   Model model;
@@ -83,7 +81,6 @@ TEST_F(ModelFixture, DaylightRedirectionDevice_Construction) {
     EXPECT_THROW(ShadingControl shadingControl(construction), openstudio::Exception);
   }
 
-
   // proper placement inside the glass
   Construction construction(model);
   EXPECT_TRUE(construction.insertLayer(0, glazing));
@@ -97,5 +94,4 @@ TEST_F(ModelFixture, DaylightRedirectionDevice_Construction) {
   EXPECT_EQ("InteriorDaylightRedirectionDevice", shadingControl.shadingType());
   EXPECT_EQ("AlwaysOn", shadingControl.shadingControlType());
   EXPECT_FALSE(shadingControl.schedule());
-
 }

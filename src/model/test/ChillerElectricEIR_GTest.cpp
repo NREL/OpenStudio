@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,6 +36,9 @@
 #include "../ChillerElectricEIR.hpp"
 #include "../CurveBiquadratic.hpp"
 #include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
+#include "../CurveCubic.hpp"
+#include "../CurveCubic_Impl.hpp"
 #include "../Mixer.hpp"
 #include "../Mixer_Impl.hpp"
 #include "../Splitter.hpp"
@@ -45,28 +48,26 @@
 
 using namespace openstudio;
 
-TEST_F(ModelFixture, ChillerElectricEIR_ChillerElectricEIR)
-{
+TEST_F(ModelFixture, ChillerElectricEIR_ChillerElectricEIR) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     model::Model m;
+  ASSERT_EXIT(
+    {
+      model::Model m;
 
-     model::CurveBiquadratic ccFofT(m);
-     model::CurveBiquadratic eirToCorfOfT(m);
-     model::CurveQuadratic eiToCorfOfPlr(m);
+      model::CurveBiquadratic ccFofT(m);
+      model::CurveBiquadratic eirToCorfOfT(m);
+      model::CurveQuadratic eiToCorfOfPlr(m);
 
-     model::ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
+      model::ChillerElectricEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 // Add to the end of an empty supply side and check that it is placed correctly.
-TEST_F(ModelFixture, ChillerElectricEIR_addToNode1)
-{
+TEST_F(ModelFixture, ChillerElectricEIR_addToNode1) {
   model::Model m;
 
   model::PlantLoop plantLoop(m);
@@ -75,18 +76,18 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToNode1)
   model::CurveBiquadratic eirToCorfOfT(m);
   model::CurveQuadratic eiToCorfOfPlr(m);
 
-  model::ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
+  model::ChillerElectricEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
   model::Node supplyOutletNode = plantLoop.supplyOutletNode();
   model::Mixer supplyMixer = plantLoop.supplyMixer();
 
   EXPECT_TRUE(chiller.addToNode(supplyOutletNode));
 
-  EXPECT_EQ(7u,plantLoop.supplyComponents().size());
+  EXPECT_EQ(7u, plantLoop.supplyComponents().size());
 
   ASSERT_TRUE(chiller.supplyOutletModelObject());
 
-  EXPECT_EQ(supplyOutletNode,chiller.supplyOutletModelObject().get());
+  EXPECT_EQ(supplyOutletNode, chiller.supplyOutletModelObject().get());
 
   boost::optional<model::ModelObject> mo = chiller.supplyInletModelObject();
 
@@ -106,8 +107,7 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToNode1)
 }
 
 // Add to the front of an empty supply side and check that it is placed correctly.
-TEST_F(ModelFixture, ChillerElectricEIR_addToNode2)
-{
+TEST_F(ModelFixture, ChillerElectricEIR_addToNode2) {
   model::Model m;
 
   model::PlantLoop plantLoop(m);
@@ -116,19 +116,19 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToNode2)
   model::CurveBiquadratic eirToCorfOfT(m);
   model::CurveQuadratic eiToCorfOfPlr(m);
 
-  model::ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
+  model::ChillerElectricEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
   model::Node supplyInletNode = plantLoop.supplyInletNode();
 
   EXPECT_TRUE(chiller.addToNode(supplyInletNode));
 
-  EXPECT_EQ(7u,plantLoop.supplyComponents().size());
+  EXPECT_EQ(7u, plantLoop.supplyComponents().size());
 
   boost::optional<model::ModelObject> mo = chiller.supplyInletModelObject();
 
   ASSERT_TRUE(mo);
 
-  ASSERT_EQ(supplyInletNode,mo.get());
+  ASSERT_EQ(supplyInletNode, mo.get());
 
   mo = chiller.supplyOutletModelObject();
 
@@ -142,12 +142,11 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToNode2)
 
   ASSERT_TRUE(mo);
 
-  ASSERT_EQ(plantLoop.supplySplitter(),mo.get());
+  ASSERT_EQ(plantLoop.supplySplitter(), mo.get());
 }
 
 // Add to the middle of the existing branch.
-TEST_F(ModelFixture, ChillerElectricEIR_addToNode3)
-{
+TEST_F(ModelFixture, ChillerElectricEIR_addToNode3) {
   model::Model m;
 
   model::PlantLoop plantLoop(m);
@@ -156,7 +155,7 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToNode3)
   model::CurveBiquadratic eirToCorfOfT(m);
   model::CurveQuadratic eiToCorfOfPlr(m);
 
-  model::ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
+  model::ChillerElectricEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
   model::Mixer supplyMixer = plantLoop.supplyMixer();
   model::Splitter supplySplitter = plantLoop.supplySplitter();
@@ -171,19 +170,19 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToNode3)
 
   EXPECT_TRUE(chiller.addToNode(node.get()));
 
-  EXPECT_EQ(7u,plantLoop.supplyComponents().size());
+  EXPECT_EQ(7u, plantLoop.supplyComponents().size());
 
   mo = chiller.supplyInletModelObject();
 
   ASSERT_TRUE(mo);
 
-  ASSERT_EQ(node.get(),mo.get());
+  ASSERT_EQ(node.get(), mo.get());
 
   mo = node->inletModelObject();
 
   EXPECT_TRUE(mo);
 
-  EXPECT_EQ(mo.get(),supplySplitter);
+  EXPECT_EQ(mo.get(), supplySplitter);
 
   mo = chiller.supplyOutletModelObject();
 
@@ -197,7 +196,7 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToNode3)
 
   ASSERT_TRUE(mo);
 
-  ASSERT_EQ(supplyMixer,mo.get());
+  ASSERT_EQ(supplyMixer, mo.get());
 
   mo = supplySplitter.outletModelObject(0);
 
@@ -212,14 +211,13 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToNode3)
   ASSERT_TRUE(comp);
   ASSERT_TRUE(comp2);
 
-  std::vector<model::ModelObject> comps = plantLoop.supplyComponents(comp.get(),comp2.get());
+  std::vector<model::ModelObject> comps = plantLoop.supplyComponents(comp.get(), comp2.get());
 
-  ASSERT_EQ(3u,comps.size());
+  ASSERT_EQ(3u, comps.size());
 }
 
 // Add to new branch
-TEST_F(ModelFixture, ChillerElectricEIR_PlantLoop_addSupplyBranch)
-{
+TEST_F(ModelFixture, ChillerElectricEIR_PlantLoop_addSupplyBranch) {
   model::Model m;
 
   model::PlantLoop plantLoop(m);
@@ -228,11 +226,11 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoop_addSupplyBranch)
   model::CurveBiquadratic eirToCorfOfT(m);
   model::CurveQuadratic eiToCorfOfPlr(m);
 
-  model::ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
+  model::ChillerElectricEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
   ASSERT_TRUE(plantLoop.addSupplyBranchForComponent(chiller));
 
-  EXPECT_EQ(7u,plantLoop.supplyComponents().size());
+  EXPECT_EQ(7u, plantLoop.supplyComponents().size());
 
   model::Mixer supplyMixer = plantLoop.supplyMixer();
 
@@ -248,7 +246,7 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoop_addSupplyBranch)
 
   ASSERT_TRUE(mo);
 
-  ASSERT_EQ(node.get(),mo.get());
+  ASSERT_EQ(node.get(), mo.get());
 
   mo = chiller.supplyOutletModelObject();
 
@@ -262,12 +260,11 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoop_addSupplyBranch)
 
   ASSERT_TRUE(mo);
 
-  ASSERT_EQ(supplyMixer,mo.get());
+  ASSERT_EQ(supplyMixer, mo.get());
 }
 
 // Add to the end of an empty demand side and check that it is placed correctly.
-TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode1)
-{
+TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode1) {
   model::Model m;
 
   model::PlantLoop plantLoop(m);
@@ -276,18 +273,18 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode1)
   model::CurveBiquadratic eirToCorfOfT(m);
   model::CurveQuadratic eiToCorfOfPlr(m);
 
-  model::ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
+  model::ChillerElectricEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
   model::Node demandOutletNode = plantLoop.demandOutletNode();
   model::Mixer demandMixer = plantLoop.demandMixer();
 
   EXPECT_TRUE(chiller.addToNode(demandOutletNode));
 
-  EXPECT_EQ(7u,plantLoop.demandComponents().size());
+  EXPECT_EQ(7u, plantLoop.demandComponents().size());
 
   ASSERT_TRUE(chiller.demandOutletModelObject());
 
-  EXPECT_EQ(demandOutletNode,chiller.demandOutletModelObject().get());
+  EXPECT_EQ(demandOutletNode, chiller.demandOutletModelObject().get());
 
   boost::optional<model::ModelObject> mo = chiller.demandInletModelObject();
 
@@ -307,12 +304,11 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode1)
 
   ASSERT_TRUE(chiller.remove().size() > 0);
 
-  EXPECT_EQ(5u,plantLoop.demandComponents().size());
+  EXPECT_EQ(5u, plantLoop.demandComponents().size());
 }
 
 // Add to the front of an empty demand side and check that it is placed correctly.
-TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode2)
-{
+TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode2) {
   model::Model m;
 
   model::PlantLoop plantLoop(m);
@@ -321,19 +317,19 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode2)
   model::CurveBiquadratic eirToCorfOfT(m);
   model::CurveQuadratic eiToCorfOfPlr(m);
 
-  model::ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
+  model::ChillerElectricEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
   model::Node demandInletNode = plantLoop.demandInletNode();
 
   EXPECT_TRUE(chiller.addToNode(demandInletNode));
 
-  EXPECT_EQ(7u,plantLoop.demandComponents().size());
+  EXPECT_EQ(7u, plantLoop.demandComponents().size());
 
   boost::optional<model::ModelObject> mo = chiller.demandInletModelObject();
 
   ASSERT_TRUE(mo);
 
-  ASSERT_EQ(demandInletNode,mo.get());
+  ASSERT_EQ(demandInletNode, mo.get());
 
   mo = chiller.demandOutletModelObject();
 
@@ -347,16 +343,15 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode2)
 
   ASSERT_TRUE(mo);
 
-  ASSERT_EQ(plantLoop.demandSplitter(),mo.get());
+  ASSERT_EQ(plantLoop.demandSplitter(), mo.get());
 
   ASSERT_TRUE(chiller.remove().size() > 0);
 
-  EXPECT_EQ(5u,plantLoop.demandComponents().size());
+  EXPECT_EQ(5u, plantLoop.demandComponents().size());
 }
 
 // Add to the middle of the existing branch.
-TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode3)
-{
+TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode3) {
   model::Model m;
 
   model::PlantLoop plantLoop(m);
@@ -365,7 +360,7 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode3)
   model::CurveBiquadratic eirToCorfOfT(m);
   model::CurveQuadratic eiToCorfOfPlr(m);
 
-  model::ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
+  model::ChillerElectricEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
   model::Mixer demandMixer = plantLoop.demandMixer();
 
@@ -379,13 +374,13 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode3)
 
   EXPECT_TRUE(chiller.addToNode(node.get()));
 
-  EXPECT_EQ(7u,plantLoop.demandComponents().size());
+  EXPECT_EQ(7u, plantLoop.demandComponents().size());
 
   mo = chiller.demandInletModelObject();
 
   ASSERT_TRUE(mo);
 
-  ASSERT_EQ(node.get(),mo.get());
+  ASSERT_EQ(node.get(), mo.get());
 
   mo = chiller.demandOutletModelObject();
 
@@ -399,16 +394,15 @@ TEST_F(ModelFixture, ChillerElectricEIR_addToDemandNode3)
 
   ASSERT_TRUE(mo);
 
-  ASSERT_EQ(demandMixer,mo.get());
+  ASSERT_EQ(demandMixer, mo.get());
 
   ASSERT_TRUE(chiller.remove().size() > 0);
 
-  EXPECT_EQ(5u,plantLoop.demandComponents().size());
+  EXPECT_EQ(5u, plantLoop.demandComponents().size());
 }
 
 // Add to new demand branch
-TEST_F(ModelFixture, ChillerElectricEIR_PlantLoop_addDemandBranch)
-{
+TEST_F(ModelFixture, ChillerElectricEIR_PlantLoop_addDemandBranch) {
   model::Model m;
 
   model::PlantLoop plantLoop(m);
@@ -417,11 +411,11 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoop_addDemandBranch)
   model::CurveBiquadratic eirToCorfOfT(m);
   model::CurveQuadratic eiToCorfOfPlr(m);
 
-  model::ChillerElectricEIR chiller(m,ccFofT,eirToCorfOfT,eiToCorfOfPlr);
+  model::ChillerElectricEIR chiller(m, ccFofT, eirToCorfOfT, eiToCorfOfPlr);
 
   ASSERT_TRUE(plantLoop.addDemandBranchForComponent(chiller));
 
-  EXPECT_EQ(7u,plantLoop.demandComponents().size());
+  EXPECT_EQ(7u, plantLoop.demandComponents().size());
 
   model::Mixer demandMixer = plantLoop.demandMixer();
 
@@ -437,7 +431,7 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoop_addDemandBranch)
 
   ASSERT_TRUE(mo);
 
-  ASSERT_EQ(node.get(),mo.get());
+  ASSERT_EQ(node.get(), mo.get());
 
   mo = chiller.demandOutletModelObject();
 
@@ -451,16 +445,15 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoop_addDemandBranch)
 
   ASSERT_TRUE(mo);
 
-  ASSERT_EQ(demandMixer,mo.get());
+  ASSERT_EQ(demandMixer, mo.get());
 
   ASSERT_TRUE(plantLoop.removeDemandBranchWithComponent(chiller));
 
-  EXPECT_EQ(5u,plantLoop.demandComponents().size());
+  EXPECT_EQ(5u, plantLoop.demandComponents().size());
 }
 
 // Check condenser type setting/defaulting
-TEST_F(ModelFixture, ChillerElectricEIR_CondenserType)
-{
+TEST_F(ModelFixture, ChillerElectricEIR_CondenserType) {
   model::Model m;
 
   model::PlantLoop pl1(m);
@@ -492,7 +485,6 @@ TEST_F(ModelFixture, ChillerElectricEIR_CondenserType)
 
   ASSERT_FALSE(ch.setCondenserType("WaterCooled"));
 
-
   // Add to the Secondary plant loop (on demand), behavior should be reversed
   ASSERT_TRUE(pl2.addDemandBranchForComponent(ch));
   // Should have been automatically set to WaterCooled
@@ -513,11 +505,9 @@ TEST_F(ModelFixture, ChillerElectricEIR_CondenserType)
   ASSERT_EQ("AirCooled", ch.condenserType());
 
   ASSERT_FALSE(ch.setCondenserType("WaterCooled"));
-
 }
 
-TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections)
-{
+TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections) {
   model::Model model;
   model::ChillerElectricEIR chiller(model);
 
@@ -528,19 +518,18 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections)
     EXPECT_TRUE(chiller.addToNode(node));
     auto plant = chiller.plantLoop();
     EXPECT_TRUE(plant);
-    if( plant ) {
-      EXPECT_EQ(chwLoop.handle(),plant->handle());
+    if (plant) {
+      EXPECT_EQ(chwLoop.handle(), plant->handle());
     }
     // PlantLoop has 5 components on the supply side by default (3 Nodes, One splitter, One mixer)
-    EXPECT_EQ(7u,chwLoop.supplyComponents().size());
+    EXPECT_EQ(7u, chwLoop.supplyComponents().size());
 
     // test the convenience function
     auto plant_bis = chiller.chilledWaterLoop();
     EXPECT_TRUE(plant_bis);
-    if( plant ) {
-      EXPECT_EQ(chwLoop.handle(),plant_bis->handle());
+    if (plant) {
+      EXPECT_EQ(chwLoop.handle(), plant_bis->handle());
     }
-
   }
 
   // Condenser Loop: on the demand side
@@ -550,17 +539,17 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections)
     EXPECT_TRUE(chiller.addToNode(node));
     auto plant = chiller.secondaryPlantLoop();
     EXPECT_TRUE(plant);
-    if( plant ) {
-      EXPECT_EQ(cndwLoop.handle(),plant->handle());
+    if (plant) {
+      EXPECT_EQ(cndwLoop.handle(), plant->handle());
     }
 
-    EXPECT_EQ(7u,cndwLoop.demandComponents().size());
+    EXPECT_EQ(7u, cndwLoop.demandComponents().size());
 
     // test the convenience function
     auto plant_bis = chiller.condenserWaterLoop();
     EXPECT_TRUE(plant_bis);
-    if( plant ) {
-      EXPECT_EQ(cndwLoop.handle(),plant_bis->handle());
+    if (plant) {
+      EXPECT_EQ(cndwLoop.handle(), plant_bis->handle());
     }
   }
 
@@ -571,25 +560,24 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections)
     EXPECT_TRUE(chiller.addToTertiaryNode(node));
     auto plant = chiller.tertiaryPlantLoop();
     EXPECT_TRUE(plant);
-    if( plant ) {
-      EXPECT_EQ(hrLoop.handle(),plant->handle());
+    if (plant) {
+      EXPECT_EQ(hrLoop.handle(), plant->handle());
     }
     // test the convenience function
     auto plant_bis = chiller.heatRecoveryLoop();
     EXPECT_TRUE(plant_bis);
-    if( plant ) {
-      EXPECT_EQ(hrLoop.handle(),plant_bis->handle());
+    if (plant) {
+      EXPECT_EQ(hrLoop.handle(), plant_bis->handle());
     }
 
     EXPECT_EQ(7u, hrLoop.demandComponents().size());
 
-    EXPECT_TRUE( chiller.removeFromTertiaryPlantLoop() );
+    EXPECT_TRUE(chiller.removeFromTertiaryPlantLoop());
     plant = chiller.tertiaryPlantLoop();
     EXPECT_FALSE(plant);
     EXPECT_EQ(5u, hrLoop.demandComponents().size());
   }
 }
-
 
 /* I have overriden the base class WaterToWaterComponent addToNode() and addToTertiaryNode()
  * addToNode will call addToTertiaryNode behind the scenes when needed
@@ -597,8 +585,7 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections)
  * it should add it to the tertiary(=HR) loop
  * This should work with addDemandBranchForComponent too
  * AddToTertiaryNode is overriden to not work when trying to add to a supply side node */
-TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride)
-{
+TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride) {
   model::Model model;
   model::ChillerElectricEIR chiller(model);
 
@@ -612,7 +599,6 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride)
   auto h_supply_node = hrLoop.supplyOutletNode();
   auto h_demand_node = hrLoop.demandInletNode();
 
-
   // Connect to the chw loop
   EXPECT_TRUE(chwLoop.addSupplyBranchForComponent(chiller));
   ASSERT_TRUE(chiller.chilledWaterLoop());
@@ -620,7 +606,6 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride)
 
   EXPECT_FALSE(chiller.condenserWaterLoop());
   EXPECT_FALSE(chiller.heatRecoveryLoop());
-
 
   // Connect to the condenser loop
   EXPECT_TRUE(cndwLoop.addDemandBranchForComponent(chiller));
@@ -633,7 +618,6 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride)
 
   EXPECT_FALSE(chiller.heatRecoveryLoop());
 
-
   // Have a chw loop and no hr loop: should connect the hr loop if trying to add to demand side
   EXPECT_TRUE(hrLoop.addDemandBranchForComponent(chiller));
   ASSERT_TRUE(chiller.chilledWaterLoop());
@@ -642,7 +626,6 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride)
   EXPECT_EQ(cndwLoop, chiller.condenserWaterLoop().get());
   ASSERT_TRUE(chiller.heatRecoveryLoop());
   EXPECT_EQ(hrLoop, chiller.heatRecoveryLoop().get());
-
 
   // Have a condenser loop and a hr loop: should reconnect the condenser loop
   // Try with addToNode instead
@@ -656,7 +639,6 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride)
 
   ASSERT_TRUE(chiller.heatRecoveryLoop());
   EXPECT_EQ(hrLoop, chiller.heatRecoveryLoop().get());
-
 
   // Disconnect the tertiary (hr) loop
   EXPECT_TRUE(chiller.removeFromTertiaryPlantLoop());
@@ -677,5 +659,58 @@ TEST_F(ModelFixture, ChillerElectricEIR_PlantLoopConnections_addToNodeOverride)
 
   ASSERT_TRUE(chiller.heatRecoveryLoop());
   EXPECT_EQ(hrLoop, chiller.heatRecoveryLoop().get());
+}
 
+TEST_F(ModelFixture, ChillerElectricEIR_ElectricInputToCoolingOutputRatioFunctionOfPLR) {
+  // Test for #4611 - Allow non-Quadratic curves for the EIR-f-PLR for the Chiller:Electric:EIR object
+
+  model::Model model;
+
+  // test ctor 1
+  {
+    // ctor maintains backward compatibility
+    model::ChillerElectricEIR chiller(model);
+    ASSERT_TRUE(chiller.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveQuadratic>());
+  }
+
+  // test ctor 2
+  {
+    // ctor maintains backward compatibility
+    model::CurveBiquadratic ccFofT(model);
+    model::CurveBiquadratic eirToCorfOfT(model);
+    model::CurveQuadratic eirToCorfOfPlr(model);
+    model::ChillerElectricEIR chiller(model, ccFofT, eirToCorfOfT, eirToCorfOfPlr);
+    ASSERT_TRUE(chiller.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveQuadratic>());
+    EXPECT_EQ(ccFofT, chiller.coolingCapacityFunctionOfTemperature());
+    EXPECT_EQ(eirToCorfOfT, chiller.electricInputToCoolingOutputRatioFunctionOfTemperature());
+    EXPECT_EQ(eirToCorfOfPlr, chiller.electricInputToCoolingOutputRatioFunctionOfPLR());
+  }
+  {
+    // ctor can now handle cubic curves
+    model::CurveBiquadratic ccFofT2(model);
+    model::CurveBiquadratic eirToCorfOfT2(model);
+    model::CurveCubic eirToCorfOfPlr2(model);
+    model::ChillerElectricEIR chiller(model, ccFofT2, eirToCorfOfT2, eirToCorfOfPlr2);
+    ASSERT_TRUE(chiller.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveCubic>());
+    EXPECT_EQ(ccFofT2, chiller.coolingCapacityFunctionOfTemperature());
+    EXPECT_EQ(eirToCorfOfT2, chiller.electricInputToCoolingOutputRatioFunctionOfTemperature());
+    EXPECT_EQ(eirToCorfOfPlr2, chiller.electricInputToCoolingOutputRatioFunctionOfPLR());
+  }
+
+  // test new setter/getter
+  {
+    model::ChillerElectricEIR chiller(model);
+
+    // setter maintains backward compatibility
+    model::CurveQuadratic curveQuadratic(model);
+    EXPECT_TRUE(chiller.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveQuadratic));
+    ASSERT_TRUE(chiller.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveQuadratic>());
+    EXPECT_EQ(curveQuadratic, chiller.electricInputToCoolingOutputRatioFunctionOfPLR());
+
+    // setter can now handle cubic curves
+    model::CurveCubic curveCubic(model);
+    EXPECT_TRUE(chiller.setElectricInputToCoolingOutputRatioFunctionOfPLR(curveCubic));
+    ASSERT_TRUE(chiller.electricInputToCoolingOutputRatioFunctionOfPLR().optionalCast<model::CurveCubic>());
+    EXPECT_EQ(curveCubic, chiller.electricInputToCoolingOutputRatioFunctionOfPLR());
+  }
 }

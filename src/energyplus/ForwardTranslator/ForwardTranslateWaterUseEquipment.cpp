@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,97 +54,85 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateWaterUseEquipment(
-    WaterUseEquipment & modelObject)
-{
-  boost::optional<std::string> s;
-  boost::optional<double> value;
-  OptionalSchedule schedule;
+  boost::optional<IdfObject> ForwardTranslator::translateWaterUseEquipment(WaterUseEquipment& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> value;
+    OptionalSchedule schedule;
 
-  model::WaterUseEquipmentDefinition definition = modelObject.waterUseEquipmentDefinition();
+    model::WaterUseEquipmentDefinition definition = modelObject.waterUseEquipmentDefinition();
 
-  IdfObject idfObject(IddObjectType::WaterUse_Equipment);
-  m_idfObjects.push_back(idfObject);
+    IdfObject idfObject(IddObjectType::WaterUse_Equipment);
+    m_idfObjects.push_back(idfObject);
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
-  }
-
-  // Name
-
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
-  }
-
-  // EndUseSubcategory
-
-  s = definition.endUseSubcategory();
-  if( s )
-  {
-    idfObject.setString(WaterUse_EquipmentFields::EndUseSubcategory,s.get());
-  }
-
-  // PeakFlowRate
-
-  value = definition.peakFlowRate();
-  if( value )
-  {
-    idfObject.setDouble(WaterUse_EquipmentFields::PeakFlowRate,value.get());
-  }
-
-  // FlowRateFractionScheduleName
-
-  if( boost::optional<Schedule> s = modelObject.flowRateFractionSchedule() )
-  {
-    translateAndMapModelObject(s.get());
-
-    idfObject.setString(WaterUse_EquipmentFields::FlowRateFractionScheduleName,s->name().get());
-  }
-
-  // TargetTemperatureScheduleName
-
-  if( boost::optional<Schedule> s = definition.targetTemperatureSchedule() )
-  {
-    translateAndMapModelObject(s.get());
-
-    idfObject.setString(WaterUse_EquipmentFields::TargetTemperatureScheduleName,s->name().get());
-  }
-
-  // ZoneName
-
-  if( boost::optional<Space> space = modelObject.space() )
-  {
-    if( boost::optional<ThermalZone> zone = space->thermalZone() )
-    {
-      translateAndMapModelObject(zone.get());
-
-      idfObject.setString(WaterUse_EquipmentFields::ZoneName,zone->name().get());
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
     }
+
+    // Name
+
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+
+    // EndUseSubcategory
+
+    s = definition.endUseSubcategory();
+    if (s) {
+      idfObject.setString(WaterUse_EquipmentFields::EndUseSubcategory, s.get());
+    }
+
+    // PeakFlowRate
+
+    value = definition.peakFlowRate();
+    if (value) {
+      idfObject.setDouble(WaterUse_EquipmentFields::PeakFlowRate, value.get());
+    }
+
+    // FlowRateFractionScheduleName
+
+    if (boost::optional<Schedule> s = modelObject.flowRateFractionSchedule()) {
+      translateAndMapModelObject(s.get());
+
+      idfObject.setString(WaterUse_EquipmentFields::FlowRateFractionScheduleName, s->name().get());
+    }
+
+    // TargetTemperatureScheduleName
+
+    if (boost::optional<Schedule> s = definition.targetTemperatureSchedule()) {
+      translateAndMapModelObject(s.get());
+
+      idfObject.setString(WaterUse_EquipmentFields::TargetTemperatureScheduleName, s->name().get());
+    }
+
+    // ZoneName
+
+    if (boost::optional<Space> space = modelObject.space()) {
+      if (boost::optional<ThermalZone> zone = space->thermalZone()) {
+        translateAndMapModelObject(zone.get());
+
+        idfObject.setString(WaterUse_EquipmentFields::ZoneName, zone->name().get());
+      }
+    }
+
+    // SensibleFractionScheduleName
+
+    if (boost::optional<Schedule> s = definition.sensibleFractionSchedule()) {
+      translateAndMapModelObject(s.get());
+
+      idfObject.setString(WaterUse_EquipmentFields::SensibleFractionScheduleName, s->name().get());
+    }
+
+    // LatentFractionScheduleName
+
+    if (boost::optional<Schedule> s = definition.latentFractionSchedule()) {
+      translateAndMapModelObject(s.get());
+
+      idfObject.setString(WaterUse_EquipmentFields::LatentFractionScheduleName, s->name().get());
+    }
+
+    return idfObject;
   }
 
-  // SensibleFractionScheduleName
-
-  if( boost::optional<Schedule> s = definition.sensibleFractionSchedule() )
-  {
-    translateAndMapModelObject(s.get());
-
-    idfObject.setString(WaterUse_EquipmentFields::SensibleFractionScheduleName,s->name().get());
-  }
-
-  // LatentFractionScheduleName
-
-  if( boost::optional<Schedule> s = definition.latentFractionSchedule() )
-  {
-    translateAndMapModelObject(s.get());
-
-    idfObject.setString(WaterUse_EquipmentFields::LatentFractionScheduleName,s->name().get());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
-
+}  // namespace energyplus
+}  // namespace openstudio

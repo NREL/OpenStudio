@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,22 +38,20 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_DefaultConstructor)
-{
+TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    SetpointManagerFollowSystemNodeTemperature testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      SetpointManagerFollowSystemNodeTemperature testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_addToNode)
-{
+TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_addToNode) {
   Model m;
   AirLoopHVAC airloop(m);
   PlantLoop plantLoop(m);
@@ -83,12 +81,13 @@ TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_addToNode)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(3, _setpointManagers.size());
-  std::vector<SetpointManagerFollowSystemNodeTemperature> SetpointManagerFollowSystemNodeTemperatures = m.getModelObjects<SetpointManagerFollowSystemNodeTemperature>();
+  std::vector<SetpointManagerFollowSystemNodeTemperature> SetpointManagerFollowSystemNodeTemperatures =
+    m.getModelObjects<SetpointManagerFollowSystemNodeTemperature>();
   EXPECT_EQ(5, SetpointManagerFollowSystemNodeTemperatures.size());
 
-  EXPECT_EQ(testObject, spm_3.setpointNode());
+  EXPECT_EQ(testObject, spm_3.setpointNode().get());
   EXPECT_TRUE(spm_4.addToNode(testObject));
-  EXPECT_EQ(testObject, spm_4.setpointNode());
+  EXPECT_EQ(testObject, spm_4.setpointNode().get());
 
   _setpointManagers = testObject.setpointManagers();
   EXPECT_TRUE(std::find(_setpointManagers.begin(), _setpointManagers.end(), spm_3) == _setpointManagers.end());
@@ -97,8 +96,7 @@ TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_addToNode)
   EXPECT_EQ(4, SetpointManagerFollowSystemNodeTemperatures.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_remove)
-{
+TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_remove) {
   Model m;
   AirLoopHVAC airloop(m);
   Node testObject = airloop.supplyOutletNode();
@@ -110,7 +108,8 @@ TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_remove)
 
   std::vector<SetpointManager> _setpointManagers = testObject.setpointManagers();
   EXPECT_EQ(1, _setpointManagers.size());
-  std::vector<SetpointManagerFollowSystemNodeTemperature> SetpointManagerFollowSystemNodeTemperatures = m.getModelObjects<SetpointManagerFollowSystemNodeTemperature>();
+  std::vector<SetpointManagerFollowSystemNodeTemperature> SetpointManagerFollowSystemNodeTemperatures =
+    m.getModelObjects<SetpointManagerFollowSystemNodeTemperature>();
   EXPECT_EQ(1, SetpointManagerFollowSystemNodeTemperatures.size());
 
   spm.remove();
@@ -121,8 +120,7 @@ TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_remove)
   EXPECT_EQ(0, SetpointManagerFollowSystemNodeTemperatures.size());
 }
 
-TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_clone)
-{
+TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_clone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -154,8 +152,7 @@ TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_clone)
   EXPECT_DOUBLE_EQ(0.0, testObjectClone.minimumLimitSetpointTemperature());
 }
 
-TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_customDataClone)
-{
+TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_customDataClone) {
   Model m;
   AirLoopHVAC airloop(m);
   Node outletNode = airloop.supplyOutletNode();
@@ -191,4 +188,3 @@ TEST_F(ModelFixture, SetpointManagerFollowSystemNodeTemperature_customDataClone)
   EXPECT_DOUBLE_EQ(999.9, testObjectClone.maximumLimitSetpointTemperature());
   EXPECT_DOUBLE_EQ(999.9, testObjectClone.minimumLimitSetpointTemperature());
 }
-

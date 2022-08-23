@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,116 +39,109 @@ namespace openstudio {
 
 namespace model {
 
-class ScheduleTypeLimits;
+  class ScheduleTypeLimits;
 
-namespace detail {
+  namespace detail {
 
-  /** ScheduleDay_Impl is a ResourceObject_Impl that is the implementation class for ScheduleDay.*/
-  class MODEL_API ScheduleDay_Impl : public ScheduleBase_Impl {
+    /** ScheduleDay_Impl is a ResourceObject_Impl that is the implementation class for ScheduleDay.*/
+    class MODEL_API ScheduleDay_Impl : public ScheduleBase_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      ScheduleDay_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      ScheduleDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ScheduleDay_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ScheduleDay_Impl(const ScheduleDay_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ScheduleDay_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      virtual ~ScheduleDay_Impl() {}
 
-    ScheduleDay_Impl(const ScheduleDay_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual ~ScheduleDay_Impl() {}
+      virtual std::vector<IdfObject> remove() override;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual boost::optional<ParentObject> parent() const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual bool setParent(ParentObject& newParent) override;
 
-    virtual boost::optional<ParentObject> parent() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual bool setParent(ParentObject& newParent) override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      bool isScheduleTypeLimitsDefaulted() const;
 
-    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
+      bool interpolatetoTimestep() const;
 
-    bool isScheduleTypeLimitsDefaulted() const;
+      bool isInterpolatetoTimestepDefaulted() const;
 
-    bool interpolatetoTimestep() const;
+      /// Returns a vector of times marking the end value intervals.
+      /// These times will be in order and have the same number of elements as values.
+      /// All times will be less than or equal to 1 day.
+      std::vector<openstudio::Time> times() const;
 
-    bool isInterpolatetoTimestepDefaulted() const;
+      /// Returns a vector of values in the same order and with the same number of elements as times.
+      virtual std::vector<double> values() const override;
 
-    /// Returns a vector of times marking the end value intervals.
-    /// These times will be in order and have the same number of elements as values.
-    /// All times will be less than or equal to 1 day.
-    std::vector<openstudio::Time> times() const;
+      /// Returns the value in effect at the given time.  If time is less than 0 days or greater than 1 day, 0 is returned.
+      double getValue(const openstudio::Time& time) const;
 
-    /// Returns a vector of values in the same order and with the same number of elements as times.
-    virtual std::vector<double> values() const override;
+      //@}
+      /** @name Setters */
+      //@{
 
-    /// Returns the value in effect at the given time.  If time is less than 0 days or greater than 1 day, 0 is returned.
-    double getValue(const openstudio::Time& time) const;
+      virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
 
+      virtual bool resetScheduleTypeLimits() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
-    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
+      void resetInterpolatetoTimestep();
 
-    virtual bool resetScheduleTypeLimits() override;
+      /// Sets the given week schedule to be in effect until (inclusive) the date given starting the day after the
+      /// previous date marker or January 1st if no previous date marker exists.
+      /// Returns false if time is less than 0 days or greater than 1 day.  Replaces existing value
+      /// for same time if it exists.
+      bool addValue(const openstudio::Time& untilTime, double value);
 
-    bool setInterpolatetoTimestep(bool interpolatetoTimestep);
+      boost::optional<double> removeValue(const openstudio::Time& time);
 
-    void resetInterpolatetoTimestep();
+      /// Clear all values from this schedule.
+      void clearValues();
 
-    /// Sets the given week schedule to be in effect until (inclusive) the date given starting the day after the
-    /// previous date marker or January 1st if no previous date marker exists.
-    /// Returns false if time is less than 0 days or greater than 1 day.  Replaces existing value
-    /// for same time if it exists.
-    bool addValue(const openstudio::Time& untilTime, double value);
+      // ensure that this object does not contain the date 2/29
+      virtual void ensureNoLeapDays() override;
 
-    boost::optional<double> removeValue(const openstudio::Time& time);
+      //@}
+     protected:
+      virtual bool candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const override;
 
-    /// Clear all values from this schedule.
-    void clearValues();
+      virtual bool okToResetScheduleTypeLimits() const override;
 
-    // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays() override;
+      //private slots:
+     private:
+      void clearCachedVariables();
 
-    //@}
-   protected:
-    virtual bool candidateIsCompatibleWithCurrentUse(const ScheduleTypeLimits& candidate) const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.ScheduleDay");
 
-    virtual bool okToResetScheduleTypeLimits() const override;
+      mutable boost::optional<std::vector<openstudio::Time>> m_cachedTimes;
+      mutable boost::optional<std::vector<double>> m_cachedValues;
+    };
 
-   //private slots:
-   private:
+  }  // namespace detail
 
-    void clearCachedVariables();
+}  // namespace model
+}  // namespace openstudio
 
-   private:
-    REGISTER_LOGGER("openstudio.model.ScheduleDay");
-
-    mutable boost::optional<std::vector<openstudio::Time> > m_cachedTimes;
-    mutable boost::optional<std::vector<double> > m_cachedValues;
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SCHEDULEDAY_IMPL_HPP
+#endif  // MODEL_SCHEDULEDAY_IMPL_HPP

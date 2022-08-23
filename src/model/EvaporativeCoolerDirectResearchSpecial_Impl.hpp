@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,132 +35,126 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
+  class Curve;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API EvaporativeCoolerDirectResearchSpecial_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API EvaporativeCoolerDirectResearchSpecial_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    EvaporativeCoolerDirectResearchSpecial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      EvaporativeCoolerDirectResearchSpecial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    EvaporativeCoolerDirectResearchSpecial_Impl(
-        const openstudio::detail::WorkspaceObject_Impl& other,
-        Model_Impl* model,
-        bool keepHandle);
+      EvaporativeCoolerDirectResearchSpecial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    EvaporativeCoolerDirectResearchSpecial_Impl(
-        const EvaporativeCoolerDirectResearchSpecial_Impl& other,
-        Model_Impl* model,
-        bool keepHandle);
+      EvaporativeCoolerDirectResearchSpecial_Impl(const EvaporativeCoolerDirectResearchSpecial_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~EvaporativeCoolerDirectResearchSpecial_Impl(){}
+      virtual ~EvaporativeCoolerDirectResearchSpecial_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    //@}
-    /** @name Getters and Setters */
-    //@{
+      //@}
+      /** @name Getters and Setters */
+      //@{
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    double coolerDesignEffectiveness() const;
+      double coolerDesignEffectiveness() const;
 
-    bool setCoolerDesignEffectiveness( double value );
+      bool setCoolerDesignEffectiveness(double value);
 
-    boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
+      boost::optional<double> recirculatingWaterPumpPowerConsumption() const;
 
-    bool setRecirculatingWaterPumpPowerConsumption( double value );
+      bool setRecirculatingWaterPumpPowerConsumption(double value);
 
-    void autosizeRecirculatingWaterPumpPowerConsumption();
+      void autosizeRecirculatingWaterPumpPowerConsumption();
 
-    bool isRecirculatingWaterPumpPowerConsumptionAutosized() const;
+      bool isRecirculatingWaterPumpPowerConsumptionAutosized() const;
 
-    boost::optional<Node> sensorNode() const;
+      boost::optional<Node> sensorNode() const;
 
-    bool setSensorNode( const Node & node );
+      bool setSensorNode(const Node& node);
 
-    double driftLossFraction() const;
+      double driftLossFraction() const;
 
-    bool setDriftLossFraction( double value );
+      bool setDriftLossFraction(double value);
 
-    double blowdownConcentrationRatio() const;
+      double blowdownConcentrationRatio() const;
 
-    bool setBlowdownConcentrationRatio( double value );
+      bool setBlowdownConcentrationRatio(double value);
 
-    boost::optional<Curve> effectivenessFlowRatioModifierCurve() const;
+      boost::optional<Curve> effectivenessFlowRatioModifierCurve() const;
 
-    bool setEffectivenessFlowRatioModifierCurve(const Curve& curve);
+      bool setEffectivenessFlowRatioModifierCurve(const Curve& curve);
 
-    void resetEffectivenessFlowRatioModifierCurve();
+      void resetEffectivenessFlowRatioModifierCurve();
 
-    double waterPumpPowerSizingFactor() const;
+      double waterPumpPowerSizingFactor() const;
 
-    bool setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
+      bool setWaterPumpPowerSizingFactor(double waterPumpPowerSizingFactor);
 
-    boost::optional<Curve> waterPumpPowerModifierCurve() const;
+      boost::optional<Curve> waterPumpPowerModifierCurve() const;
 
-    bool setWaterPumpPowerModifierCurve(const Curve& curve);
+      bool setWaterPumpPowerModifierCurve(const Curve& curve);
 
-    void resetWaterPumpPowerModifierCurve();
+      void resetWaterPumpPowerModifierCurve();
 
-    boost::optional<double> primaryAirDesignFlowRate() const;
+      boost::optional<double> primaryAirDesignFlowRate() const;
 
-    bool setPrimaryAirDesignFlowRate( double value );
+      bool setPrimaryAirDesignFlowRate(double value);
 
-    void autosizePrimaryAirDesignFlowRate();
+      void autosizePrimaryAirDesignFlowRate();
 
-    bool isPrimaryAirDesignFlowRateAutosized() const;
+      bool isPrimaryAirDesignFlowRateAutosized() const;
 
-    double evaporativeOperationMinimumDrybulbTemperature() const;
-    bool setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature);
+      double evaporativeOperationMinimumDrybulbTemperature() const;
+      bool setEvaporativeOperationMinimumDrybulbTemperature(double evaporativeOperationMinimumDrybulbTemperature);
 
-    double evaporativeOperationMaximumLimitWetbulbTemperature() const;
-    bool setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature);
+      double evaporativeOperationMaximumLimitWetbulbTemperature() const;
+      bool setEvaporativeOperationMaximumLimitWetbulbTemperature(double evaporativeOperationMaximumLimitWetbulbTemperature);
 
-    double evaporativeOperationMaximumLimitDrybulbTemperature() const;
-    bool setEvaporativeOperationMaximumLimitDrybulbTemperature(double evaporativeOperationMaximumLimitDrybulbTemperature);
+      double evaporativeOperationMaximumLimitDrybulbTemperature() const;
+      bool setEvaporativeOperationMaximumLimitDrybulbTemperature(double evaporativeOperationMaximumLimitDrybulbTemperature);
 
-    boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const ;
+      boost::optional<double> autosizedRecirculatingWaterPumpPowerConsumption() const;
 
-    boost::optional<double> autosizedPrimaryAirDesignFlowRate() const ;
+      boost::optional<double> autosizedPrimaryAirDesignFlowRate() const;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-   private:
+     private:
+      REGISTER_LOGGER("openstudio.model.EvaporativeCoolerDirectResearchSpecial");
 
-    REGISTER_LOGGER("openstudio.model.EvaporativeCoolerDirectResearchSpecial");
+      boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
-    boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
+      bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_EVAPORATIVECOOLERDIRECTRESEARCHSPECIAL_IMPL_HPP
+#endif  // MODEL_EVAPORATIVECOOLERDIRECTRESEARCHSPECIAL_IMPL_HPP

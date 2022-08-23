@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,173 +36,158 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class DefaultScheduleType;
-class DefaultScheduleSet;
+  class Schedule;
+  class DefaultScheduleType;
+  class DefaultScheduleSet;
 
-namespace detail {
+  namespace detail {
 
-  /** DefaultScheduleSet_Impl is a ResourceObject_Impl that is the implementation class for DefaultScheduleSet.*/
-  class MODEL_API DefaultScheduleSet_Impl : public ResourceObject_Impl {
+    /** DefaultScheduleSet_Impl is a ResourceObject_Impl that is the implementation class for DefaultScheduleSet.*/
+    class MODEL_API DefaultScheduleSet_Impl : public ResourceObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      DefaultScheduleSet_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      DefaultScheduleSet_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      DefaultScheduleSet_Impl(const DefaultScheduleSet_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~DefaultScheduleSet_Impl() {}
 
+      //@}
 
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
+      virtual IddObjectType iddObjectType() const override;
 
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      /** @name Getters */
+      //@{
 
+      boost::optional<Schedule> hoursofOperationSchedule() const;
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      boost::optional<Schedule> numberofPeopleSchedule() const;
 
-    DefaultScheduleSet_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      boost::optional<Schedule> peopleActivityLevelSchedule() const;
 
-    DefaultScheduleSet_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      boost::optional<Schedule> lightingSchedule() const;
 
-    DefaultScheduleSet_Impl(const DefaultScheduleSet_Impl& other,
-                            Model_Impl* model,
-                            bool keepHandle);
+      boost::optional<Schedule> electricEquipmentSchedule() const;
 
-    virtual ~DefaultScheduleSet_Impl() {}
+      boost::optional<Schedule> gasEquipmentSchedule() const;
 
-    //@}
+      boost::optional<Schedule> hotWaterEquipmentSchedule() const;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      boost::optional<Schedule> steamEquipmentSchedule() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      boost::optional<Schedule> otherEquipmentSchedule() const;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      boost::optional<Schedule> ventilationperPersonSchedule() const;
 
-    /** @name Getters */
-    //@{
+      boost::optional<Schedule> ventilationperFloorAreaSchedule() const;
 
-    boost::optional<Schedule> hoursofOperationSchedule() const;
+      boost::optional<Schedule> infiltrationSchedule() const;
 
-    boost::optional<Schedule> numberofPeopleSchedule() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    boost::optional<Schedule> peopleActivityLevelSchedule() const;
+      bool setHoursofOperationSchedule(Schedule& schedule);
 
-    boost::optional<Schedule> lightingSchedule() const;
+      void resetHoursofOperationSchedule();
 
-    boost::optional<Schedule> electricEquipmentSchedule() const;
+      bool setNumberofPeopleSchedule(Schedule& schedule);
 
-    boost::optional<Schedule> gasEquipmentSchedule() const;
+      void resetNumberofPeopleSchedule();
 
-    boost::optional<Schedule> hotWaterEquipmentSchedule() const;
+      bool setPeopleActivityLevelSchedule(Schedule& schedule);
 
-    boost::optional<Schedule> steamEquipmentSchedule() const;
+      void resetPeopleActivityLevelSchedule();
 
-    boost::optional<Schedule> otherEquipmentSchedule() const;
+      bool setLightingSchedule(Schedule& schedule);
 
-    boost::optional<Schedule> ventilationperPersonSchedule() const;
+      void resetLightingSchedule();
 
-    boost::optional<Schedule> ventilationperFloorAreaSchedule() const;
+      bool setElectricEquipmentSchedule(Schedule& schedule);
 
-    boost::optional<Schedule> infiltrationSchedule() const;
+      void resetElectricEquipmentSchedule();
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setGasEquipmentSchedule(Schedule& schedule);
 
-    bool setHoursofOperationSchedule(Schedule& schedule);
+      void resetGasEquipmentSchedule();
 
-    void resetHoursofOperationSchedule();
+      bool setHotWaterEquipmentSchedule(Schedule& schedule);
 
-    bool setNumberofPeopleSchedule(Schedule& schedule);
+      void resetHotWaterEquipmentSchedule();
 
-    void resetNumberofPeopleSchedule();
+      bool setSteamEquipmentSchedule(Schedule& schedule);
 
-    bool setPeopleActivityLevelSchedule(Schedule& schedule);
+      void resetSteamEquipmentSchedule();
 
-    void resetPeopleActivityLevelSchedule();
+      bool setOtherEquipmentSchedule(Schedule& schedule);
 
-    bool setLightingSchedule(Schedule& schedule);
+      void resetOtherEquipmentSchedule();
 
-    void resetLightingSchedule();
+      bool setVentilationperPersonSchedule(Schedule& schedule);
 
-    bool setElectricEquipmentSchedule(Schedule& schedule);
+      void resetVentilationperPersonSchedule();
 
-    void resetElectricEquipmentSchedule();
-
-    bool setGasEquipmentSchedule(Schedule& schedule);
-
-    void resetGasEquipmentSchedule();
-
-    bool setHotWaterEquipmentSchedule(Schedule& schedule);
-
-    void resetHotWaterEquipmentSchedule();
-
-    bool setSteamEquipmentSchedule(Schedule& schedule);
-
-    void resetSteamEquipmentSchedule();
-
-    bool setOtherEquipmentSchedule(Schedule& schedule);
-
-    void resetOtherEquipmentSchedule();
-
-    bool setVentilationperPersonSchedule(Schedule& schedule);
-
-    void resetVentilationperPersonSchedule();
-
-    bool setVentilationperFloorAreaSchedule(Schedule& schedule);
-
-    void resetVentilationperFloorAreaSchedule();
-
-    bool setInfiltrationSchedule(Schedule& schedule);
-
-    void resetInfiltrationSchedule();
-
-    //@}
-    /** @name Other */
-    //@{
-
-    /// Returns the default schedule of a particular type.
-    boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
-
-    /// Merge this object with other one, keep fields from this object if set otherwise set to value from other.
-    void merge(const DefaultScheduleSet& other);
-
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.DefaultScheduleSet");
-
-    boost::optional<ModelObject> hoursofOperationScheduleAsModelObject() const;
-    boost::optional<ModelObject> numberofPeopleScheduleAsModelObject() const;
-    boost::optional<ModelObject> peopleActivityLevelScheduleAsModelObject() const;
-    boost::optional<ModelObject> lightingScheduleAsModelObject() const;
-    boost::optional<ModelObject> electricEquipmentScheduleAsModelObject() const;
-    boost::optional<ModelObject> gasEquipmentScheduleAsModelObject() const;
-    boost::optional<ModelObject> hotWaterEquipmentScheduleAsModelObject() const;
-    boost::optional<ModelObject> steamEquipmentScheduleAsModelObject() const;
-    boost::optional<ModelObject> otherEquipmentScheduleAsModelObject() const;
-    boost::optional<ModelObject> ventilationperPersonScheduleAsModelObject() const;
-    boost::optional<ModelObject> ventilationperFloorAreaScheduleAsModelObject() const;
-    boost::optional<ModelObject> infiltrationScheduleAsModelObject() const;
-
-    bool setHoursofOperationScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setNumberofPeopleScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setPeopleActivityLevelScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setLightingScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setElectricEquipmentScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setGasEquipmentScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setHotWaterEquipmentScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setInfiltrationScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setSteamEquipmentScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setOtherEquipmentScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_DEFAULTSCHEDULESET_IMPL_HPP
-
+      bool setVentilationperFloorAreaSchedule(Schedule& schedule);
+
+      void resetVentilationperFloorAreaSchedule();
+
+      bool setInfiltrationSchedule(Schedule& schedule);
+
+      void resetInfiltrationSchedule();
+
+      //@}
+      /** @name Other */
+      //@{
+
+      /// Returns the default schedule of a particular type.
+      boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
+
+      /// Merge this object with other one, keep fields from this object if set otherwise set to value from other.
+      void merge(const DefaultScheduleSet& other);
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.DefaultScheduleSet");
+
+      boost::optional<ModelObject> hoursofOperationScheduleAsModelObject() const;
+      boost::optional<ModelObject> numberofPeopleScheduleAsModelObject() const;
+      boost::optional<ModelObject> peopleActivityLevelScheduleAsModelObject() const;
+      boost::optional<ModelObject> lightingScheduleAsModelObject() const;
+      boost::optional<ModelObject> electricEquipmentScheduleAsModelObject() const;
+      boost::optional<ModelObject> gasEquipmentScheduleAsModelObject() const;
+      boost::optional<ModelObject> hotWaterEquipmentScheduleAsModelObject() const;
+      boost::optional<ModelObject> steamEquipmentScheduleAsModelObject() const;
+      boost::optional<ModelObject> otherEquipmentScheduleAsModelObject() const;
+      boost::optional<ModelObject> ventilationperPersonScheduleAsModelObject() const;
+      boost::optional<ModelObject> ventilationperFloorAreaScheduleAsModelObject() const;
+      boost::optional<ModelObject> infiltrationScheduleAsModelObject() const;
+
+      bool setHoursofOperationScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setNumberofPeopleScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setPeopleActivityLevelScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setLightingScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setElectricEquipmentScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setGasEquipmentScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setHotWaterEquipmentScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setInfiltrationScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setSteamEquipmentScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setOtherEquipmentScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_DEFAULTSCHEDULESET_IMPL_HPP

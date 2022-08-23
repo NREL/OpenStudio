@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,198 +51,220 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ScheduleFile_Impl::ScheduleFile_Impl(const IdfObject& idfObject,
-                                       Model_Impl* model,
-                                       bool keepHandle)
-    : ScheduleInterval_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ScheduleFile::iddObjectType());
-  }
-
-  ScheduleFile_Impl::ScheduleFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle)
-    : ScheduleInterval_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ScheduleFile::iddObjectType());
-  }
-
-  ScheduleFile_Impl::ScheduleFile_Impl(const ScheduleFile_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle)
-    : ScheduleInterval_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& ScheduleFile_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    if (result.empty()){
+    ScheduleFile_Impl::ScheduleFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ScheduleInterval_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ScheduleFile::iddObjectType());
     }
-    return result;
-  }
 
-  IddObjectType ScheduleFile_Impl::iddObjectType() const {
-    return ScheduleFile::iddObjectType();
-  }
+    ScheduleFile_Impl::ScheduleFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ScheduleInterval_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ScheduleFile::iddObjectType());
+    }
 
-  std::vector<ResourceObject> ScheduleFile_Impl::resources() const
+    ScheduleFile_Impl::ScheduleFile_Impl(const ScheduleFile_Impl& other, Model_Impl* model, bool keepHandle)
+      : ScheduleInterval_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& ScheduleFile_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      if (result.empty()) {
+      }
+      return result;
+    }
+
+    IddObjectType ScheduleFile_Impl::iddObjectType() const {
+      return ScheduleFile::iddObjectType();
+    }
+
+    std::vector<ResourceObject> ScheduleFile_Impl::resources() const {
+      std::vector<ResourceObject> result;
+      result.push_back(externalFile());
+      return result;
+    }
+
+    boost::optional<ScheduleTypeLimits> ScheduleFile_Impl::scheduleTypeLimits() const {
+      return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_Schedule_FileFields::ScheduleTypeLimitsName);
+    }
+
+    ExternalFile ScheduleFile_Impl::externalFile() const {
+      auto value = getObject<ModelObject>().getModelObjectTarget<ExternalFile>(OS_Schedule_FileFields::ExternalFileName);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    int ScheduleFile_Impl::columnNumber() const {
+      boost::optional<int> value = getInt(OS_Schedule_FileFields::ColumnNumber, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    int ScheduleFile_Impl::rowstoSkipatTop() const {
+      boost::optional<int> value = getInt(OS_Schedule_FileFields::RowstoSkipatTop, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    int ScheduleFile_Impl::numberofHoursofData() const {
+      boost::optional<int> value = getInt(OS_Schedule_FileFields::NumberofHoursofData, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ScheduleFile_Impl::isNumberofHoursofDataDefaulted() const {
+      return isEmpty(OS_Schedule_FileFields::NumberofHoursofData);
+    }
+
+    std::string ScheduleFile_Impl::columnSeparator() const {
+      boost::optional<std::string> value = getString(OS_Schedule_FileFields::ColumnSeparator, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    char ScheduleFile_Impl::columnSeparatorChar() const {
+      static const std::unordered_map<std::string, char> lookup({{"Comma", ','}, {"Tab", '\t'}, {"Fixed", ' '}, {"Space", ' '}, {"Semicolon", ';'}});
+      boost::optional<std::string> value = getString(OS_Schedule_FileFields::ColumnSeparator, true);
+      OS_ASSERT(value);
+      auto it = lookup.find(value.get());
+      if (it == std::end(lookup)) {
+        // Invalid separator
+        return '\0';
+      }
+      return it->second;
+    }
+
+    bool ScheduleFile_Impl::isColumnSeparatorDefaulted() const {
+      return isEmpty(OS_Schedule_FileFields::ColumnSeparator);
+    }
+
+    bool ScheduleFile_Impl::interpolatetoTimestep() const {
+      boost::optional<std::string> value = getString(OS_Schedule_FileFields::InterpolatetoTimestep, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
+    bool ScheduleFile_Impl::isInterpolatetoTimestepDefaulted() const {
+      return isEmpty(OS_Schedule_FileFields::InterpolatetoTimestep);
+    }
+
+    int ScheduleFile_Impl::minutesperItem() const {
+      boost::optional<int> value = getInt(OS_Schedule_FileFields::MinutesperItem, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ScheduleFile_Impl::isMinutesperItemDefaulted() const {
+      return isEmpty(OS_Schedule_FileFields::MinutesperItem);
+    }
+
+    bool ScheduleFile_Impl::adjustScheduleforDaylightSavings() const {
+      boost::optional<std::string> value = getString(OS_Schedule_FileFields::AdjustScheduleforDaylightSavings, true);
+      OS_ASSERT(value);
+      return openstudio::istringEqual(value.get(), "Yes");
+    }
+
+    bool ScheduleFile_Impl::isAdjustScheduleforDaylightSavingsDefaulted() const {
+      return isEmpty(OS_Schedule_FileFields::AdjustScheduleforDaylightSavings);
+    }
+
+    bool ScheduleFile_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
+      bool result = setPointer(OS_Schedule_FileFields::ScheduleTypeLimitsName, scheduleTypeLimits.handle());
+      return result;
+    }
+
+    bool ScheduleFile_Impl::resetScheduleTypeLimits() {
+      bool result = setString(OS_Schedule_FileFields::ScheduleTypeLimitsName, "");
+      OS_ASSERT(result);
+      return result;
+    }
+
+    bool ScheduleFile_Impl::setColumnNumber(int columnNumber) {
+      bool result = setInt(OS_Schedule_FileFields::ColumnNumber, columnNumber);
+      return result;
+    }
+
+    bool ScheduleFile_Impl::setRowstoSkipatTop(int rowstoSkipatTop) {
+      bool result = setInt(OS_Schedule_FileFields::RowstoSkipatTop, rowstoSkipatTop);
+      return result;
+    }
+
+    bool ScheduleFile_Impl::setNumberofHoursofData(int numberofHours) {
+      bool result = setInt(OS_Schedule_FileFields::NumberofHoursofData, numberofHours);
+      return result;
+    }
+
+    bool ScheduleFile_Impl::setColumnSeparator(const std::string& columnSeparator) {
+      bool result = setString(OS_Schedule_FileFields::ColumnSeparator, columnSeparator);
+      return result;
+    }
+
+    void ScheduleFile_Impl::resetColumnSeparator() {
+      bool result = setString(OS_Schedule_FileFields::ColumnSeparator, "");
+      OS_ASSERT(result);
+    }
+
+    bool ScheduleFile_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep) {
+      bool result = false;
+      if (interpolatetoTimestep) {
+        result = setString(OS_Schedule_FileFields::InterpolatetoTimestep, "Yes");
+      } else {
+        result = setString(OS_Schedule_FileFields::InterpolatetoTimestep, "No");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ScheduleFile_Impl::resetInterpolatetoTimestep() {
+      bool result = setString(OS_Schedule_FileFields::InterpolatetoTimestep, "");
+      OS_ASSERT(result);
+    }
+
+    bool ScheduleFile_Impl::setMinutesperItem(int minutesperItem) {
+      bool result = setInt(OS_Schedule_FileFields::MinutesperItem, minutesperItem);
+      if (!result) {
+        LOG(Warn, "Invalid 'Minutes per Item' (=" << minutesperItem << ") supplied for " << briefDescription());
+      }
+      return result;
+    }
+
+    void ScheduleFile_Impl::resetMinutesperItem() {
+      bool result = setString(OS_Schedule_FileFields::MinutesperItem, "");
+      OS_ASSERT(result);
+    }
+
+    bool ScheduleFile_Impl::setAdjustScheduleforDaylightSavings(bool adjustScheduleforDaylightSavings) {
+      bool result = false;
+      if (adjustScheduleforDaylightSavings) {
+        result = setString(OS_Schedule_FileFields::AdjustScheduleforDaylightSavings, "Yes");
+      } else {
+        result = setString(OS_Schedule_FileFields::AdjustScheduleforDaylightSavings, "No");
+      }
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void ScheduleFile_Impl::resetAdjustScheduleforDaylightSavings() {
+      bool result = setString(OS_Schedule_FileFields::AdjustScheduleforDaylightSavings, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<CSVFile> ScheduleFile_Impl::csvFile() const {
+      boost::optional<CSVFile> csvFile;
+      ExternalFile externalFile = this->externalFile();
+      csvFile = CSVFile::load(externalFile.filePath());
+      return csvFile;
+    }
+
+    /* FIXME!
+  openstudio::TimeSeries ScheduleFile_Impl::timeSeries(unsigned columnIndex) const
   {
-    std::vector<ResourceObject> result;
-    result.push_back(externalFile());
-    return result;
-  }
+    // need to catch integers less than or equal to 0
+    // need to ensure that first column is dateTimes
 
-  boost::optional<ScheduleTypeLimits> ScheduleFile_Impl::scheduleTypeLimits() const {
-    return getObject<ModelObject>().getModelObjectTarget<ScheduleTypeLimits>(OS_Schedule_FileFields::ScheduleTypeLimitsName);
-  }
-
-  ExternalFile ScheduleFile_Impl::externalFile() const {
-    auto value = getObject<ModelObject>().getModelObjectTarget<ExternalFile>(OS_Schedule_FileFields::ExternalFileName);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  int ScheduleFile_Impl::columnNumber() const {
-    boost::optional<int> value = getInt(OS_Schedule_FileFields::ColumnNumber,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  int ScheduleFile_Impl::rowstoSkipatTop() const {
-    boost::optional<int> value = getInt(OS_Schedule_FileFields::RowstoSkipatTop,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<int> ScheduleFile_Impl::numberofHoursofData() const {
-    return getInt(OS_Schedule_FileFields::NumberofHoursofData, true);
-  }
-
-  bool ScheduleFile_Impl::isNumberofHoursofDataDefaulted() const {
-    return isEmpty(OS_Schedule_FileFields::NumberofHoursofData);
-  }
-
-  std::string ScheduleFile_Impl::columnSeparator() const {
-    boost::optional<std::string> value = getString(OS_Schedule_FileFields::ColumnSeparator,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  char ScheduleFile_Impl::columnSeparatorChar() const {
-    static std::unordered_map<std::string, char> lookup({ { "Comma", ',' }, { "Tab", '\t' }, {"Fixed", ' ' }, { "Space", ' ' }, { "Semicolon", ';' } });
-    boost::optional<std::string> value = getString(OS_Schedule_FileFields::ColumnSeparator, true);
-    OS_ASSERT(value);
-    auto it = lookup.find(value.get());
-    if (it == std::end(lookup)) {
-      // Invalid separator
-      return '\0';
-    }
-    return it->second;
-  }
-
-  bool ScheduleFile_Impl::isColumnSeparatorDefaulted() const {
-    return isEmpty(OS_Schedule_FileFields::ColumnSeparator);
-  }
-
-  bool ScheduleFile_Impl::interpolatetoTimestep() const {
-    boost::optional<std::string> value = getString(OS_Schedule_FileFields::InterpolatetoTimestep,true);
-    OS_ASSERT(value);
-    return openstudio::istringEqual(value.get(), "Yes");
-  }
-
-  bool ScheduleFile_Impl::isInterpolatetoTimestepDefaulted() const {
-    return isEmpty(OS_Schedule_FileFields::InterpolatetoTimestep);
-  }
-
-  boost::optional<std::string> ScheduleFile_Impl::minutesperItem() const {
-    return getString(OS_Schedule_FileFields::MinutesperItem,true);
-  }
-
-  bool ScheduleFile_Impl::isMinutesperItemDefaulted() const {
-    return isEmpty(OS_Schedule_FileFields::MinutesperItem);
-  }
-
-  bool ScheduleFile_Impl::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
-    bool result = setPointer(OS_Schedule_FileFields::ScheduleTypeLimitsName, scheduleTypeLimits.handle());
-    return result;
-  }
-
-  bool ScheduleFile_Impl::resetScheduleTypeLimits() {
-    bool result = setString(OS_Schedule_FileFields::ScheduleTypeLimitsName, "");
-    OS_ASSERT(result);
-    return result;
-  }
-
-  bool ScheduleFile_Impl::setColumnNumber(int columnNumber) {
-    bool result = setInt(OS_Schedule_FileFields::ColumnNumber, columnNumber);
-    return result;
-  }
-
-  bool ScheduleFile_Impl::setRowstoSkipatTop(int rowstoSkipatTop) {
-    bool result = setInt(OS_Schedule_FileFields::RowstoSkipatTop, rowstoSkipatTop);
-    return result;
-  }
-
-  bool ScheduleFile_Impl::setNumberofHoursofData(int numberofHours) {
-    bool result = setInt(OS_Schedule_FileFields::NumberofHoursofData, numberofHours);
-    return result;
-  }
-
-  bool ScheduleFile_Impl::setColumnSeparator(const std::string& columnSeparator) {
-    bool result = setString(OS_Schedule_FileFields::ColumnSeparator, columnSeparator);
-    return result;
-  }
-
-  void ScheduleFile_Impl::resetColumnSeparator() {
-    bool result = setString(OS_Schedule_FileFields::ColumnSeparator, "");
-    OS_ASSERT(result);
-  }
-
-  bool ScheduleFile_Impl::setInterpolatetoTimestep(bool interpolatetoTimestep) {
-    bool result = false;
-    if (interpolatetoTimestep) {
-      result = setString(OS_Schedule_FileFields::InterpolatetoTimestep, "Yes");
-    } else {
-      result = setString(OS_Schedule_FileFields::InterpolatetoTimestep, "No");
-    }
-    OS_ASSERT(result);
-    return result;
-  }
-
-  void ScheduleFile_Impl::resetInterpolatetoTimestep() {
-    bool result = setString(OS_Schedule_FileFields::InterpolatetoTimestep, "");
-    OS_ASSERT(result);
-  }
-
-  bool ScheduleFile_Impl::setMinutesperItem(const std::string& minutesperItem) {
-    bool result = setString(OS_Schedule_FileFields::MinutesperItem, minutesperItem);
-    return result;
-  }
-
-  void ScheduleFile_Impl::resetMinutesperItem() {
-    bool result = setString(OS_Schedule_FileFields::MinutesperItem, "");
-    OS_ASSERT(result);
-  }
-  
-  boost::optional<CSVFile> ScheduleFile_Impl::csvFile() const {
     boost::optional<CSVFile> csvFile;
     ExternalFile externalFile = this->externalFile();
     csvFile = CSVFile::load(externalFile.filePath());
-    return csvFile;
-  }
 
-  /* FIXME!
-  openstudio::TimeSeries ScheduleFile_Impl::timeSeries(unsigned columnIndex) const
-  { 
-    // need to catch integers less than or equal to 0
-    // need to ensure that first column is dateTimes
-    
-    boost::optional<CSVFile> csvFile;
-    ExternalFile externalFile = this->externalFile();
-    csvFile = CSVFile::load(externalFile.filePath());    
-    
     std::vector<DateTime> dateTimes = csvFile->getColumnAsDateTimes(0);
     std::vector<double> values = csvFile->getColumnAsDoubleVector(columnIndex);
     Vector vectorValues(values.size());
@@ -260,7 +282,7 @@ namespace detail {
   }
   */
 
-  /* FIXME!
+    /* FIXME!
   unsigned ScheduleFile_Impl::addTimeSeries(const openstudio::TimeSeries& timeSeries)
   {
     // need to ensure that first column is dateTimes
@@ -276,10 +298,9 @@ namespace detail {
   }
   */
 
-  openstudio::TimeSeries ScheduleFile_Impl::timeSeries() const
-  {
-    openstudio::TimeSeries result;
-    /* FIXME!
+    openstudio::TimeSeries ScheduleFile_Impl::timeSeries() const {
+      openstudio::TimeSeries result;
+      /* FIXME!
     Date startDate(openstudio::MonthOfYear(this->startMonth()), this->startDay());
     Time intervalLength(0, 0, this->intervalLength());
     Vector values(this->numExtensibleGroups());
@@ -293,12 +314,11 @@ namespace detail {
     TimeSeries result(startDate, intervalLength, values, "");
     result.setOutOfRangeValue(this->outOfRangeValue());
     */
-    return result;
-  }
+      return result;
+    }
 
-  bool ScheduleFile_Impl::setTimeSeries(const openstudio::TimeSeries& timeSeries)
-  {
-    /* FIXME!
+    bool ScheduleFile_Impl::setTimeSeries(const openstudio::TimeSeries& timeSeries) {
+      /* FIXME!
     // check the interval
     boost::optional<openstudio::Time> intervalTime = timeSeries.intervalLength();
     if (!intervalTime) {
@@ -361,12 +381,11 @@ namespace detail {
     this->emitChangeSignals();
     return true;
     */
-    return false;
-  }
+      return false;
+    }
 
-  void ScheduleFile_Impl::ensureNoLeapDays()
-  {
-    /* FIXME!
+    void ScheduleFile_Impl::ensureNoLeapDays() {
+      /* FIXME!
     boost::optional<int> month;
     boost::optional<int> day;
 
@@ -377,146 +396,166 @@ namespace detail {
         this->setInt(OS_Schedule_FixedIntervalFields::StartDay, 28);
       }
     }*/
+    }
+
+  }  // namespace detail
+
+  ScheduleFile::ScheduleFile(const ExternalFile& externalfile, int column, int rowsToSkip)
+    : ScheduleInterval(ScheduleFile::iddObjectType(), externalfile.model()) {
+    OS_ASSERT(getImpl<detail::ScheduleFile_Impl>());
+    bool ok;
+    ok = setPointer(OS_Schedule_FileFields::ExternalFileName, externalfile.handle());
+    OS_ASSERT(ok);
+    ok = setColumnNumber(column);
+    OS_ASSERT(ok);
+    ok = setRowstoSkipatTop(rowsToSkip);
+    OS_ASSERT(ok);
   }
 
-} // detail
+  IddObjectType ScheduleFile::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Schedule_File);
+  }
 
-ScheduleFile::ScheduleFile(const ExternalFile& externalfile, int column, int rowsToSkip)
-  : ScheduleInterval(ScheduleFile::iddObjectType(),externalfile.model())
-{
-  OS_ASSERT(getImpl<detail::ScheduleFile_Impl>());
-  bool ok;
-  ok = setPointer(OS_Schedule_FileFields::ExternalFileName, externalfile.handle());
-  OS_ASSERT(ok);
-  ok = setColumnNumber(column);
-  OS_ASSERT(ok);
-  ok = setRowstoSkipatTop(rowsToSkip);
-  OS_ASSERT(ok);
-}
+  std::vector<std::string> ScheduleFile::minutesperItemValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Schedule_FileFields::MinutesperItem);
+  }
 
-IddObjectType ScheduleFile::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Schedule_File);
-}
+  boost::optional<ScheduleTypeLimits> ScheduleFile::scheduleTypeLimits() const {
+    return getImpl<detail::ScheduleFile_Impl>()->scheduleTypeLimits();
+  }
 
-std::vector<std::string> ScheduleFile::minutesperItemValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_Schedule_FileFields::MinutesperItem);
-}
+  ExternalFile ScheduleFile::externalFile() const {
+    return getImpl<detail::ScheduleFile_Impl>()->externalFile();
+  }
 
-boost::optional<ScheduleTypeLimits> ScheduleFile::scheduleTypeLimits() const {
-  return getImpl<detail::ScheduleFile_Impl>()->scheduleTypeLimits();
-}
+  int ScheduleFile::columnNumber() const {
+    return getImpl<detail::ScheduleFile_Impl>()->columnNumber();
+  }
 
-ExternalFile ScheduleFile::externalFile() const {
-  return getImpl<detail::ScheduleFile_Impl>()->externalFile();
-}
+  int ScheduleFile::rowstoSkipatTop() const {
+    return getImpl<detail::ScheduleFile_Impl>()->rowstoSkipatTop();
+  }
 
-int ScheduleFile::columnNumber() const {
-  return getImpl<detail::ScheduleFile_Impl>()->columnNumber();
-}
+  boost::optional<int> ScheduleFile::numberofHoursofData() const {
+    return getImpl<detail::ScheduleFile_Impl>()->numberofHoursofData();
+  }
 
-int ScheduleFile::rowstoSkipatTop() const {
-  return getImpl<detail::ScheduleFile_Impl>()->rowstoSkipatTop();
-}
+  bool ScheduleFile::isNumberofHoursofDataDefaulted() const {
+    return getImpl<detail::ScheduleFile_Impl>()->isNumberofHoursofDataDefaulted();
+  }
 
-boost::optional<int> ScheduleFile::numberofHoursofData() const {
-  return getImpl<detail::ScheduleFile_Impl>()->numberofHoursofData();
-}
+  std::string ScheduleFile::columnSeparator() const {
+    return getImpl<detail::ScheduleFile_Impl>()->columnSeparator();
+  }
 
-bool ScheduleFile::isNumberofHoursofDataDefaulted() const {
-  return getImpl<detail::ScheduleFile_Impl>()->isNumberofHoursofDataDefaulted();
-}
+  bool ScheduleFile::isColumnSeparatorDefaulted() const {
+    return getImpl<detail::ScheduleFile_Impl>()->isColumnSeparatorDefaulted();
+  }
 
-std::string ScheduleFile::columnSeparator() const {
-  return getImpl<detail::ScheduleFile_Impl>()->columnSeparator();
-}
+  bool ScheduleFile::interpolatetoTimestep() const {
+    return getImpl<detail::ScheduleFile_Impl>()->interpolatetoTimestep();
+  }
 
-bool ScheduleFile::isColumnSeparatorDefaulted() const {
-  return getImpl<detail::ScheduleFile_Impl>()->isColumnSeparatorDefaulted();
-}
+  bool ScheduleFile::isInterpolatetoTimestepDefaulted() const {
+    return getImpl<detail::ScheduleFile_Impl>()->isInterpolatetoTimestepDefaulted();
+  }
 
-bool ScheduleFile::interpolatetoTimestep() const {
-  return getImpl<detail::ScheduleFile_Impl>()->interpolatetoTimestep();
-}
+  boost::optional<std::string> ScheduleFile::minutesperItem() const {
+    return std::to_string(getImpl<detail::ScheduleFile_Impl>()->minutesperItem());
+  }
 
-bool ScheduleFile::isInterpolatetoTimestepDefaulted() const {
-  return getImpl<detail::ScheduleFile_Impl>()->isInterpolatetoTimestepDefaulted();
-}
+  bool ScheduleFile::isMinutesperItemDefaulted() const {
+    return getImpl<detail::ScheduleFile_Impl>()->isMinutesperItemDefaulted();
+  }
 
-boost::optional<std::string> ScheduleFile::minutesperItem() const {
-  return getImpl<detail::ScheduleFile_Impl>()->minutesperItem();
-}
+  bool ScheduleFile::adjustScheduleforDaylightSavings() const {
+    return getImpl<detail::ScheduleFile_Impl>()->adjustScheduleforDaylightSavings();
+  }
 
-bool ScheduleFile::isMinutesperItemDefaulted() const {
-  return getImpl<detail::ScheduleFile_Impl>()->isMinutesperItemDefaulted();
-}
+  bool ScheduleFile::isAdjustScheduleforDaylightSavingsDefaulted() const {
+    return getImpl<detail::ScheduleFile_Impl>()->isAdjustScheduleforDaylightSavingsDefaulted();
+  }
 
-boost::optional<CSVFile> ScheduleFile::csvFile() const {
-  return getImpl<detail::ScheduleFile_Impl>()->csvFile();
-}
+  boost::optional<CSVFile> ScheduleFile::csvFile() const {
+    return getImpl<detail::ScheduleFile_Impl>()->csvFile();
+  }
 
-/* FIXME!
+  /* FIXME!
 openstudio::TimeSeries ScheduleFile::timeSeries(unsigned columnIndex) const {
   return getImpl<detail::ScheduleFile_Impl>()->timeSeries(columnIndex);
 }
 */
 
-/* FIXME!
+  /* FIXME!
 unsigned ScheduleFile::addTimeSeries(const openstudio::TimeSeries& timeSeries) {
   return getImpl<detail::ScheduleFile_Impl>()->addTimeSeries(timeSeries);
 }
 */
 
-bool ScheduleFile::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
-  return getImpl<detail::ScheduleFile_Impl>()->setScheduleTypeLimits(scheduleTypeLimits);
-}
+  bool ScheduleFile::setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) {
+    return getImpl<detail::ScheduleFile_Impl>()->setScheduleTypeLimits(scheduleTypeLimits);
+  }
 
-bool ScheduleFile::resetScheduleTypeLimits() {
-  return getImpl<detail::ScheduleFile_Impl>()->resetScheduleTypeLimits();
-}
+  bool ScheduleFile::resetScheduleTypeLimits() {
+    return getImpl<detail::ScheduleFile_Impl>()->resetScheduleTypeLimits();
+  }
 
-bool ScheduleFile::setColumnNumber(int columnNumber) {
-  return getImpl<detail::ScheduleFile_Impl>()->setColumnNumber(columnNumber);
-}
+  bool ScheduleFile::setColumnNumber(int columnNumber) {
+    return getImpl<detail::ScheduleFile_Impl>()->setColumnNumber(columnNumber);
+  }
 
-bool ScheduleFile::setRowstoSkipatTop(int rowstoSkipatTop) {
-  return getImpl<detail::ScheduleFile_Impl>()->setRowstoSkipatTop(rowstoSkipatTop);
-}
+  bool ScheduleFile::setRowstoSkipatTop(int rowstoSkipatTop) {
+    return getImpl<detail::ScheduleFile_Impl>()->setRowstoSkipatTop(rowstoSkipatTop);
+  }
 
-bool ScheduleFile::setNumberofHoursofData(int numberofHours) {
-  return getImpl<detail::ScheduleFile_Impl>()->setNumberofHoursofData(numberofHours);
-}
+  bool ScheduleFile::setNumberofHoursofData(int numberofHours) {
+    return getImpl<detail::ScheduleFile_Impl>()->setNumberofHoursofData(numberofHours);
+  }
 
-bool ScheduleFile::setColumnSeparator(const std::string& columnSeparator) {
-  return getImpl<detail::ScheduleFile_Impl>()->setColumnSeparator(columnSeparator);
-}
+  bool ScheduleFile::setColumnSeparator(const std::string& columnSeparator) {
+    return getImpl<detail::ScheduleFile_Impl>()->setColumnSeparator(columnSeparator);
+  }
 
-void ScheduleFile::resetColumnSeparator() {
-  getImpl<detail::ScheduleFile_Impl>()->resetColumnSeparator();
-}
+  void ScheduleFile::resetColumnSeparator() {
+    getImpl<detail::ScheduleFile_Impl>()->resetColumnSeparator();
+  }
 
-bool ScheduleFile::setInterpolatetoTimestep(bool interpolatetoTimestep) {
-  return getImpl<detail::ScheduleFile_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
-}
+  bool ScheduleFile::setInterpolatetoTimestep(bool interpolatetoTimestep) {
+    return getImpl<detail::ScheduleFile_Impl>()->setInterpolatetoTimestep(interpolatetoTimestep);
+  }
 
-void ScheduleFile::resetInterpolatetoTimestep() {
-  getImpl<detail::ScheduleFile_Impl>()->resetInterpolatetoTimestep();
-}
+  void ScheduleFile::resetInterpolatetoTimestep() {
+    getImpl<detail::ScheduleFile_Impl>()->resetInterpolatetoTimestep();
+  }
 
-bool ScheduleFile::setMinutesperItem(const std::string& minutesperItem) {
-  return getImpl<detail::ScheduleFile_Impl>()->setMinutesperItem(minutesperItem);
-}
+  bool ScheduleFile::setMinutesperItem(const std::string& minutesperItem) {
+    LOG(Warn, "ScheduleFile::setMinutesperItem(const std::string&) is deprecated, use the ScheduleFile::setMinutesperItem(int) instead");
+    try {
+      return getImpl<detail::ScheduleFile_Impl>()->setMinutesperItem(std::stoi(minutesperItem));
+    } catch (...) {
+      return false;
+    }
+  }
 
-void ScheduleFile::resetMinutesperItem() {
-  getImpl<detail::ScheduleFile_Impl>()->resetMinutesperItem();
-}
+  bool ScheduleFile::setMinutesperItem(int minutesperItem) {
+    return getImpl<detail::ScheduleFile_Impl>()->setMinutesperItem(minutesperItem);
+  }
 
-/// @cond
-ScheduleFile::ScheduleFile(std::shared_ptr<detail::ScheduleFile_Impl> impl)
-  : ScheduleInterval(impl)
-{}
-/// @endcond
+  void ScheduleFile::resetMinutesperItem() {
+    getImpl<detail::ScheduleFile_Impl>()->resetMinutesperItem();
+  }
 
-} // model
-} // openstudio
+  bool ScheduleFile::setAdjustScheduleforDaylightSavings(bool adjustScheduleforDaylightSavings) {
+    return getImpl<detail::ScheduleFile_Impl>()->setAdjustScheduleforDaylightSavings(adjustScheduleforDaylightSavings);
+  }
 
+  void ScheduleFile::resetAdjustScheduleforDaylightSavings() {
+    getImpl<detail::ScheduleFile_Impl>()->resetAdjustScheduleforDaylightSavings();
+  }
+
+  /// @cond
+  ScheduleFile::ScheduleFile(std::shared_ptr<detail::ScheduleFile_Impl> impl) : ScheduleInterval(impl) {}
+  /// @endcond
+
+}  // namespace model
+}  // namespace openstudio

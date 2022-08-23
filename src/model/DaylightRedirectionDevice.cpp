@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,105 +42,92 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  DaylightRedirectionDevice_Impl::DaylightRedirectionDevice_Impl(const IdfObject& idfObject,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle)
-    : ShadingMaterial_Impl(idfObject, model, keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == DaylightRedirectionDevice::iddObjectType());
+    DaylightRedirectionDevice_Impl::DaylightRedirectionDevice_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ShadingMaterial_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == DaylightRedirectionDevice::iddObjectType());
+    }
+
+    DaylightRedirectionDevice_Impl::DaylightRedirectionDevice_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                   bool keepHandle)
+      : ShadingMaterial_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == DaylightRedirectionDevice::iddObjectType());
+    }
+
+    DaylightRedirectionDevice_Impl::DaylightRedirectionDevice_Impl(const DaylightRedirectionDevice_Impl& other, Model_Impl* model, bool keepHandle)
+      : ShadingMaterial_Impl(other, model, keepHandle) {}
+
+    OptionalDouble DaylightRedirectionDevice_Impl::getVisibleTransmittance() const {
+      // DLM: should this really throw?
+      LOG_AND_THROW("Visible transmittance not supported for blinds.");
+      return boost::none;
+    }
+
+    const std::vector<std::string>& DaylightRedirectionDevice_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType DaylightRedirectionDevice_Impl::iddObjectType() const {
+      return DaylightRedirectionDevice::iddObjectType();
+    }
+
+    std::string DaylightRedirectionDevice_Impl::daylightRedirectionDeviceType() const {
+      OptionalString os = getString(OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType, true);
+      OS_ASSERT(os);
+      return *os;
+    }
+
+    bool DaylightRedirectionDevice_Impl::isDaylightRedirectionDeviceTypeDefaulted() const {
+      return isEmpty(OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType);
+    }
+
+    bool DaylightRedirectionDevice_Impl::setDaylightRedirectionDeviceType(const std::string& daylightRedirectionDeviceType) {
+      bool result = setString(OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType, daylightRedirectionDeviceType);
+      return result;
+    }
+
+    void DaylightRedirectionDevice_Impl::resetDaylightRedirectionDeviceType() {
+      bool result = setString(OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType, "");
+      OS_ASSERT(result);
+    }
+
+  }  // namespace detail
+
+  DaylightRedirectionDevice::DaylightRedirectionDevice(const Model& model) : ShadingMaterial(DaylightRedirectionDevice::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::DaylightRedirectionDevice_Impl>());
   }
 
-  DaylightRedirectionDevice_Impl::DaylightRedirectionDevice_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle)
-    : ShadingMaterial_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == DaylightRedirectionDevice::iddObjectType());
+  IddObjectType DaylightRedirectionDevice::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice);
   }
 
-  DaylightRedirectionDevice_Impl::DaylightRedirectionDevice_Impl(const DaylightRedirectionDevice_Impl& other,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle)
-    : ShadingMaterial_Impl(other,model,keepHandle)
-  {}
-
-  OptionalDouble DaylightRedirectionDevice_Impl::getVisibleTransmittance() const {
-    // DLM: should this really throw?
-    LOG_AND_THROW("Visible transmittance not supported for blinds.");
-    return boost::none;
+  std::vector<std::string> DaylightRedirectionDevice::daylightRedirectionDeviceTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType);
   }
 
-  const std::vector<std::string>& DaylightRedirectionDevice_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    return result;
+  std::string DaylightRedirectionDevice::daylightRedirectionDeviceType() const {
+    return getImpl<detail::DaylightRedirectionDevice_Impl>()->daylightRedirectionDeviceType();
   }
 
-  IddObjectType DaylightRedirectionDevice_Impl::iddObjectType() const {
-    return DaylightRedirectionDevice::iddObjectType();
+  bool DaylightRedirectionDevice::isDaylightRedirectionDeviceTypeDefaulted() const {
+    return getImpl<detail::DaylightRedirectionDevice_Impl>()->isDaylightRedirectionDeviceTypeDefaulted();
   }
 
-  std::string DaylightRedirectionDevice_Impl::daylightRedirectionDeviceType() const {
-    OptionalString os = getString(OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType,true);
-    OS_ASSERT(os);
-    return *os;
+  bool DaylightRedirectionDevice::setDaylightRedirectionDeviceType(const std::string& daylightRedirectionDeviceType) {
+    return getImpl<detail::DaylightRedirectionDevice_Impl>()->setDaylightRedirectionDeviceType(daylightRedirectionDeviceType);
   }
 
-  bool DaylightRedirectionDevice_Impl::isDaylightRedirectionDeviceTypeDefaulted() const {
-    return isEmpty(OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType);
+  void DaylightRedirectionDevice::resetDaylightRedirectionDeviceType() {
+    getImpl<detail::DaylightRedirectionDevice_Impl>()->resetDaylightRedirectionDeviceType();
   }
 
-  bool DaylightRedirectionDevice_Impl::setDaylightRedirectionDeviceType(const std::string& daylightRedirectionDeviceType) {
-    bool result = setString(OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType, daylightRedirectionDeviceType);
-    return result;
-  }
+  /// @cond
+  DaylightRedirectionDevice::DaylightRedirectionDevice(std::shared_ptr<detail::DaylightRedirectionDevice_Impl> impl)
+    : ShadingMaterial(std::move(impl)) {}
+  /// @endcond
 
-  void DaylightRedirectionDevice_Impl::resetDaylightRedirectionDeviceType() {
-    bool result = setString(OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType, "");
-    OS_ASSERT(result);
-  }
-
-} // detail
-
-DaylightRedirectionDevice::DaylightRedirectionDevice(const Model& model)
-  : ShadingMaterial(DaylightRedirectionDevice::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::DaylightRedirectionDevice_Impl>());
-}
-
-IddObjectType DaylightRedirectionDevice::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_WindowMaterial_DaylightRedirectionDevice);
-}
-
-std::vector<std::string> DaylightRedirectionDevice::daylightRedirectionDeviceTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_WindowMaterial_DaylightRedirectionDeviceFields::DaylightRedirectionDeviceType);
-}
-
-std::string DaylightRedirectionDevice::daylightRedirectionDeviceType() const {
-  return getImpl<detail::DaylightRedirectionDevice_Impl>()->daylightRedirectionDeviceType();
-}
-
-bool DaylightRedirectionDevice::isDaylightRedirectionDeviceTypeDefaulted() const {
-  return getImpl<detail::DaylightRedirectionDevice_Impl>()->isDaylightRedirectionDeviceTypeDefaulted();
-}
-
-bool DaylightRedirectionDevice::setDaylightRedirectionDeviceType(const std::string& daylightRedirectionDeviceType) {
-  return getImpl<detail::DaylightRedirectionDevice_Impl>()->setDaylightRedirectionDeviceType(daylightRedirectionDeviceType);
-}
-
-void DaylightRedirectionDevice::resetDaylightRedirectionDeviceType() {
-  getImpl<detail::DaylightRedirectionDevice_Impl>()->resetDaylightRedirectionDeviceType();
-}
-
-/// @cond
-DaylightRedirectionDevice::DaylightRedirectionDevice(std::shared_ptr<detail::DaylightRedirectionDevice_Impl> impl)
-  : ShadingMaterial(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

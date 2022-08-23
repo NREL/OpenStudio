@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,410 +33,410 @@
 #include "ModelAPI.hpp"
 #include "PlanarSurfaceGroup_Impl.hpp"
 
-
 #include <boost/geometry/geometries/point_xy.hpp>
 #include <boost/geometry/geometries/adapted/boost_tuple.hpp>
 
 namespace openstudio {
+
+class Polygon3d;
+class Polyhedron;
+
 namespace model {
 
-// forward declarations
-class SpaceType;
-class ConstructionBase;
-class DefaultConstructionSet;
-class Schedule;
-class DefaultScheduleType;
-class DefaultScheduleSet;
-class ThermalZone;
-class BuildingStory;
-class BuildingUnit;
-class ShadingSurfaceGroup;
-class InteriorPartitionSurfaceGroup;
-class PlanarSurface;
-class Surface;
-class InternalMass;
-class People;
-class Lights;
-class Luminaire;
-class ElectricEquipment;
-class ElectricEquipmentITEAirCooled;
-class GasEquipment;
-class HotWaterEquipment;
-class SteamEquipment;
-class OtherEquipment;
-class WaterUseEquipment;
-class DaylightingControl;
-class IlluminanceMap;
-class GlareSensor;
-class SpaceInfiltrationDesignFlowRate;
-class SpaceInfiltrationEffectiveLeakageArea;
-class DesignSpecificationOutdoorAir;
-class Space;
+  // forward declarations
+  class SpaceType;
+  class ConstructionBase;
+  class DefaultConstructionSet;
+  class Schedule;
+  class DefaultScheduleType;
+  class DefaultScheduleSet;
+  class ThermalZone;
+  class BuildingStory;
+  class BuildingUnit;
+  class ShadingSurfaceGroup;
+  class InteriorPartitionSurfaceGroup;
+  class PlanarSurface;
+  class Surface;
+  class InternalMass;
+  class People;
+  class Lights;
+  class Luminaire;
+  class ElectricEquipment;
+  class ElectricEquipmentITEAirCooled;
+  class GasEquipment;
+  class HotWaterEquipment;
+  class SteamEquipment;
+  class OtherEquipment;
+  class WaterUseEquipment;
+  class DaylightingControl;
+  class IlluminanceMap;
+  class GlareSensor;
+  class SpaceInfiltrationDesignFlowRate;
+  class SpaceInfiltrationEffectiveLeakageArea;
+  class SpaceInfiltrationFlowCoefficient;
+  class DesignSpecificationOutdoorAir;
+  class Space;
 
-namespace detail {
+  namespace detail {
 
-  /** Space_Impl is a PlanarSurfaceGroup_Impl that is the implementation class for Space.*/
-  class MODEL_API Space_Impl : public PlanarSurfaceGroup_Impl {
+    /** Space_Impl is a PlanarSurfaceGroup_Impl that is the implementation class for Space.*/
+    class MODEL_API Space_Impl : public PlanarSurfaceGroup_Impl
+    {
 
-  public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    Space_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      Space_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    Space_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-               Model_Impl* model,
-               bool keepHandle);
+      Space_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    Space_Impl(const Space_Impl& other,
-               Model_Impl* model,
-               bool keepHandle);
+      Space_Impl(const Space_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~Space_Impl() {}
+      virtual ~Space_Impl() {}
 
-    //@}
+      //@}
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      // set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const override;
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-    /// get a vector of allowable children types
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      /// get a vector of allowable children types
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual openstudio::Transformation buildingTransformation() const override;
+      virtual openstudio::Transformation buildingTransformation() const override;
 
-    virtual bool changeTransformation(const openstudio::Transformation& transformation) override;
+      virtual bool changeTransformation(const openstudio::Transformation& transformation) override;
 
-    virtual openstudio::BoundingBox boundingBox() const override;
+      virtual openstudio::BoundingBox boundingBox() const override;
 
-    /** @name Getters */
-    //@{
+      /** @name Getters */
+      //@{
 
-    virtual double directionofRelativeNorth() const override;
+      virtual double directionofRelativeNorth() const override;
 
-    virtual bool isDirectionofRelativeNorthDefaulted() const override;
+      virtual bool isDirectionofRelativeNorthDefaulted() const override;
 
-    virtual double xOrigin() const override;
+      virtual double xOrigin() const override;
 
-    virtual bool isXOriginDefaulted() const override;
+      virtual bool isXOriginDefaulted() const override;
 
-    virtual double yOrigin() const override;
+      virtual double yOrigin() const override;
 
-    virtual bool isYOriginDefaulted() const override;
+      virtual bool isYOriginDefaulted() const override;
 
-    virtual double zOrigin() const override;
+      virtual double zOrigin() const override;
 
-    virtual bool isZOriginDefaulted() const override;
+      virtual bool isZOriginDefaulted() const override;
 
-    bool partofTotalFloorArea() const;
+      bool partofTotalFloorArea() const;
 
-    bool isPartofTotalFloorAreaDefaulted() const;
+      bool isPartofTotalFloorAreaDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    virtual bool setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod = true) override;
+      virtual bool setDirectionofRelativeNorth(double directionofRelativeNorth, bool driverMethod = true) override;
 
-    virtual void resetDirectionofRelativeNorth() override;
+      virtual void resetDirectionofRelativeNorth() override;
 
-    virtual bool setXOrigin(double xOrigin, bool driverMethod = true) override;
+      virtual bool setXOrigin(double xOrigin, bool driverMethod = true) override;
 
-    virtual void resetXOrigin() override;
+      virtual void resetXOrigin() override;
 
-    virtual bool setYOrigin(double yOrigin, bool driverMethod = true) override;
+      virtual bool setYOrigin(double yOrigin, bool driverMethod = true) override;
 
-    virtual void resetYOrigin() override;
+      virtual void resetYOrigin() override;
 
-    virtual bool setZOrigin(double zOrigin, bool driverMethod = true) override;
+      virtual bool setZOrigin(double zOrigin, bool driverMethod = true) override;
 
-    virtual void resetZOrigin() override;
+      virtual void resetZOrigin() override;
 
-    bool setPartofTotalFloorArea(bool partofTotalFloorArea);
+      bool setPartofTotalFloorArea(bool partofTotalFloorArea);
 
-    void resetPartofTotalFloorArea();
+      void resetPartofTotalFloorArea();
 
-    //@}
+      bool setVolume(double volume);
 
-    /// Returns the space type for this space.
-    boost::optional<SpaceType> spaceType() const;
+      void autocalculateVolume();
 
-    /// Returns true if space type for this space is inherited from the building.
-    bool isSpaceTypeDefaulted() const;
+      void resetVolume();
 
-    /// Sets the space type for this space.
-    bool setSpaceType(const SpaceType& spaceType);
+      //@}
 
-    /// Resets the space type for this space.
-    void resetSpaceType();
+      /// Returns the space type for this space.
+      boost::optional<SpaceType> spaceType() const;
 
-    /// Returns the default construction set that this space references directly.
-    boost::optional<DefaultConstructionSet> defaultConstructionSet() const;
+      /// Returns true if space type for this space is inherited from the building.
+      bool isSpaceTypeDefaulted() const;
 
-    /// Returns the default construction for this planar surface if available by searching (in order):
-    /// This space's default construction set, search distance = 1
-    /// This space's space type's default construction set, search distance = 2
-    /// This space's building story's default construction set, search distance = 3
-    /// The building's default construction set, search distance = 4
-    /// The building's space type's default construction set, search distance = 5
-    boost::optional<ConstructionBase> getDefaultConstruction(const PlanarSurface& planarSurface) const;
-    boost::optional<std::pair<ConstructionBase, int> > getDefaultConstructionWithSearchDistance(const PlanarSurface& planarSurface) const;
+      /// Sets the space type for this space.
+      bool setSpaceType(const SpaceType& spaceType);
 
-    /// Sets the default construction set for this space directly.
-    bool setDefaultConstructionSet(const DefaultConstructionSet& defaultConstructionSet);
+      /// Resets the space type for this space.
+      void resetSpaceType();
 
-    /// Resets the default construction set for this space.
-    void resetDefaultConstructionSet();
+      /// Returns the default construction set that this space references directly.
+      boost::optional<DefaultConstructionSet> defaultConstructionSet() const;
 
-    /// Returns the default schedule set.
-    boost::optional<DefaultScheduleSet> defaultScheduleSet() const;
+      /// Returns the default construction for this planar surface if available by searching (in order):
+      /// This space's default construction set, search distance = 1
+      /// This space's space type's default construction set, search distance = 2
+      /// This space's building story's default construction set, search distance = 3
+      /// The building's default construction set, search distance = 4
+      /// The building's space type's default construction set, search distance = 5
+      boost::optional<ConstructionBase> getDefaultConstruction(const PlanarSurface& planarSurface) const;
+      boost::optional<std::pair<ConstructionBase, int>> getDefaultConstructionWithSearchDistance(const PlanarSurface& planarSurface) const;
 
-    /// Returns the default schedule set for the specified type if available by searching (in order):
-    /// This space's default schedule set
-    /// This space's space type's default schedule set
-    /// This space's building story's default schedule set
-    /// This space's building's default schedule set
-    /// This space's building's space type's default schedule set
-    boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
+      /// Sets the default construction set for this space directly.
+      bool setDefaultConstructionSet(const DefaultConstructionSet& defaultConstructionSet);
 
-    /// Sets the default schedule set.
-    bool setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet);
+      /// Resets the default construction set for this space.
+      void resetDefaultConstructionSet();
 
-    /// Resets the default schedule set.
-    void resetDefaultScheduleSet();
+      /// Returns the default schedule set.
+      boost::optional<DefaultScheduleSet> defaultScheduleSet() const;
 
-    // returns the thermal zone if set
-    boost::optional<ThermalZone> thermalZone() const;
+      /// Returns the default schedule set for the specified type if available by searching (in order):
+      /// This space's default schedule set
+      /// This space's space type's default schedule set
+      /// This space's building story's default schedule set
+      /// This space's building's default schedule set
+      /// This space's building's space type's default schedule set
+      boost::optional<Schedule> getDefaultSchedule(const DefaultScheduleType& defaultScheduleType) const;
 
-    // sets the thermal zone
-    bool setThermalZone(ThermalZone& thermalZone);
+      /// Sets the default schedule set.
+      bool setDefaultScheduleSet(const DefaultScheduleSet& defaultScheduleSet);
 
-    // resets the thermal zone
-    void resetThermalZone();
+      /// Resets the default schedule set.
+      void resetDefaultScheduleSet();
 
-    // returns the building story if set
-    boost::optional<BuildingStory> buildingStory() const;
+      // returns the thermal zone if set
+      boost::optional<ThermalZone> thermalZone() const;
 
-    // sets the building story
-    bool setBuildingStory(const BuildingStory& buildingStory);
+      // sets the thermal zone
+      bool setThermalZone(ThermalZone& thermalZone);
 
-    // resets the building story
-    void resetBuildingStory();
+      // resets the thermal zone
+      void resetThermalZone();
 
-    boost::optional<BuildingUnit> buildingUnit() const;
+      // returns the building story if set
+      boost::optional<BuildingStory> buildingStory() const;
 
-    bool setBuildingUnit(const BuildingUnit& buildingUnit);
+      // sets the building story
+      bool setBuildingStory(const BuildingStory& buildingStory);
 
-    void resetBuildingUnit();
+      // resets the building story
+      void resetBuildingStory();
 
-    /// Returns all \link ShadingSurfaceGroup ShadingSurfaceGroups \endlink in this space.
-    std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
+      boost::optional<BuildingUnit> buildingUnit() const;
 
-    /// Returns all \link InteriorPartitionSurfaceGroup InteriorPartitionSurfaceGroups \endlink in this space.
-    std::vector<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroups() const;
+      bool setBuildingUnit(const BuildingUnit& buildingUnit);
 
-    /// Returns all \link Surface Surfaces \endlink in this space.
-    std::vector<Surface> surfaces() const;
+      void resetBuildingUnit();
 
-    /// Returns all InternalMass in this space.
-    std::vector<InternalMass> internalMass() const;
+      /// Returns all \link ShadingSurfaceGroup ShadingSurfaceGroups \endlink in this space.
+      std::vector<ShadingSurfaceGroup> shadingSurfaceGroups() const;
 
-    /// Returns all People in this space.
-    std::vector<People> people() const;
+      /// Returns all \link InteriorPartitionSurfaceGroup InteriorPartitionSurfaceGroups \endlink in this space.
+      std::vector<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroups() const;
 
-    /// Returns all Lights in this space.
-    std::vector<Lights> lights() const;
+      /// Returns all \link Surface Surfaces \endlink in this space.
+      std::vector<Surface> surfaces() const;
 
-    /// Returns all \link Luminaire Luminaires \endlink in this space.
-    std::vector<Luminaire> luminaires() const;
+      /// Returns all InternalMass in this space.
+      std::vector<InternalMass> internalMass() const;
 
-    /// Returns all ElectricEquipment in this space.
-    std::vector<ElectricEquipment> electricEquipment() const;
+      /// Returns all People in this space.
+      std::vector<People> people() const;
 
-    /// Returns all ElectricEquipmentITEAirCooled in this space.
-    std::vector<ElectricEquipmentITEAirCooled> electricEquipmentITEAirCooled() const;
+      /// Returns all Lights in this space.
+      std::vector<Lights> lights() const;
 
-    /// Returns all GasEquipment in this space.
-    std::vector<GasEquipment> gasEquipment() const;
+      /// Returns all \link Luminaire Luminaires \endlink in this space.
+      std::vector<Luminaire> luminaires() const;
 
-    /// Returns all HotWaterEquipment in this space.
-    std::vector<HotWaterEquipment> hotWaterEquipment() const;
+      /// Returns all ElectricEquipment in this space.
+      std::vector<ElectricEquipment> electricEquipment() const;
 
-    /// Returns all SteamEquipment in this space.
-    std::vector<SteamEquipment> steamEquipment() const;
+      /// Returns all ElectricEquipmentITEAirCooled in this space.
+      std::vector<ElectricEquipmentITEAirCooled> electricEquipmentITEAirCooled() const;
 
-    /// Returns all OtherEquipment in this space.
-    std::vector<OtherEquipment> otherEquipment() const;
+      /// Returns all GasEquipment in this space.
+      std::vector<GasEquipment> gasEquipment() const;
 
-    /// Returns all WaterUseEquipment in this space.
-    std::vector<WaterUseEquipment> waterUseEquipment() const;
+      /// Returns all HotWaterEquipment in this space.
+      std::vector<HotWaterEquipment> hotWaterEquipment() const;
 
-    /// Returns all DaylightingControls in this space.
-    std::vector<DaylightingControl> daylightingControls() const;
+      /// Returns all SteamEquipment in this space.
+      std::vector<SteamEquipment> steamEquipment() const;
 
-    /// Returns all IlluminanceMaps in this space.
-    std::vector<IlluminanceMap> illuminanceMaps() const;
+      /// Returns all OtherEquipment in this space.
+      std::vector<OtherEquipment> otherEquipment() const;
 
-    /// Returns all GlareSensors in this space.
-    std::vector<GlareSensor> glareSensors() const;
+      /// Returns all WaterUseEquipment in this space.
+      std::vector<WaterUseEquipment> waterUseEquipment() const;
 
-    /// Returns all SpaceInfiltrationDesignFlowRate objects in this space.
-    std::vector<SpaceInfiltrationDesignFlowRate> spaceInfiltrationDesignFlowRates() const;
+      /// Returns all DaylightingControls in this space.
+      std::vector<DaylightingControl> daylightingControls() const;
 
-    /// Returns all SpaceInfiltrationEffectiveLeakageArea objects in this space.
-    std::vector<SpaceInfiltrationEffectiveLeakageArea> spaceInfiltrationEffectiveLeakageAreas() const;
+      /// Returns all IlluminanceMaps in this space.
+      std::vector<IlluminanceMap> illuminanceMaps() const;
 
-    /// Returns DesignSpecificationOutdoorAir for this space, if not set directly on this space then
-    /// the SpaceType's DesignSpecificationOutdoorAir will be returned.
-    boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir() const;
+      /// Returns all GlareSensors in this space.
+      std::vector<GlareSensor> glareSensors() const;
 
-    /// Returns true if DesignSpecificationOutdoorAir is not directly specified for this space.
-    bool isDesignSpecificationOutdoorAirDefaulted() const;
+      /// Returns all SpaceInfiltrationDesignFlowRate objects in this space.
+      std::vector<SpaceInfiltrationDesignFlowRate> spaceInfiltrationDesignFlowRates() const;
 
-    /// Sets DesignSpecificationOutdoorAir for this space.
-    bool setDesignSpecificationOutdoorAir(const DesignSpecificationOutdoorAir& designSpecificationOutdoorAir) ;
+      /// Returns all SpaceInfiltrationEffectiveLeakageArea objects in this space.
+      std::vector<SpaceInfiltrationEffectiveLeakageArea> spaceInfiltrationEffectiveLeakageAreas() const;
 
-    /// Resets DesignSpecificationOutdoorAir for this space.
-    void resetDesignSpecificationOutdoorAir();
+      /// Returns all SpaceInfiltrationFlowCoefficient objects in this space.
+      std::vector<SpaceInfiltrationFlowCoefficient> spaceInfiltrationFlowCoefficients() const;
 
-    /// Returns the multiplier for this space, comes from thermal zone, defaults to 1.
-    int multiplier() const;
+      /// Returns DesignSpecificationOutdoorAir for this space, if not set directly on this space then
+      /// the SpaceType's DesignSpecificationOutdoorAir will be returned.
+      boost::optional<DesignSpecificationOutdoorAir> designSpecificationOutdoorAir() const;
 
-    double floorArea() const;
+      /// Returns true if DesignSpecificationOutdoorAir is not directly specified for this space.
+      bool isDesignSpecificationOutdoorAirDefaulted() const;
 
-    double exteriorArea() const;
+      /// Sets DesignSpecificationOutdoorAir for this space.
+      bool setDesignSpecificationOutdoorAir(const DesignSpecificationOutdoorAir& designSpecificationOutdoorAir);
 
-    double exteriorWallArea() const;
+      /// Resets DesignSpecificationOutdoorAir for this space.
+      void resetDesignSpecificationOutdoorAir();
 
-    double volume() const;
+      /// Returns the multiplier for this space, comes from thermal zone, defaults to 1.
+      int multiplier() const;
 
-    double numberOfPeople() const;
+      double floorArea() const;
 
-    bool setNumberOfPeople(double numberOfPeople);
+      double exteriorArea() const;
 
-    bool setNumberOfPeople(double numberOfPeople,
-                           const boost::optional<People>& templatePeople);
+      double exteriorWallArea() const;
 
-    double peoplePerFloorArea() const;
+      double volume() const;
 
-    bool setPeoplePerFloorArea(double peoplePerFloorArea);
+      bool isVolumeDefaulted() const;
 
-    bool setPeoplePerFloorArea(double peoplePerFloorArea,
-                               const boost::optional<People>& templatePeople);
+      bool isVolumeAutocalculated() const;
 
-    double floorAreaPerPerson() const;
+      double numberOfPeople() const;
 
-    bool setFloorAreaPerPerson(double floorAreaPerPerson);
+      bool setNumberOfPeople(double numberOfPeople);
 
-    bool setFloorAreaPerPerson(double floorAreaPerPerson,
-                               const boost::optional<People>& templatePeople);
+      bool setNumberOfPeople(double numberOfPeople, const boost::optional<People>& templatePeople);
 
-    double lightingPower() const;
+      double peoplePerFloorArea() const;
 
-    bool setLightingPower(double lightingPower);
+      bool setPeoplePerFloorArea(double peoplePerFloorArea);
 
-    bool setLightingPower(double lightingPower, const boost::optional<Lights>& templateLights);
+      bool setPeoplePerFloorArea(double peoplePerFloorArea, const boost::optional<People>& templatePeople);
 
-    double lightingPowerPerFloorArea() const;
+      double floorAreaPerPerson() const;
 
-    bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea);
+      bool setFloorAreaPerPerson(double floorAreaPerPerson);
 
-    bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea,
-                                      const boost::optional<Lights>& templateLights);
+      bool setFloorAreaPerPerson(double floorAreaPerPerson, const boost::optional<People>& templatePeople);
 
-    double lightingPowerPerPerson() const;
+      double lightingPower() const;
 
-    bool setLightingPowerPerPerson(double lightingPowerPerPerson);
+      bool setLightingPower(double lightingPower);
 
-    bool setLightingPowerPerPerson(double lightingPowerPerPerson,
-                                   const boost::optional<Lights>& templateLights);
+      bool setLightingPower(double lightingPower, const boost::optional<Lights>& templateLights);
 
-    double electricEquipmentPower() const;
+      double lightingPowerPerFloorArea() const;
 
-    bool setElectricEquipmentPower(double electricEquipmentPower);
+      bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea);
 
-    bool setElectricEquipmentPower(
-        double electricEquipmentPower,
-        const boost::optional<ElectricEquipment>& templateElectricEquipment);
+      bool setLightingPowerPerFloorArea(double lightingPowerPerFloorArea, const boost::optional<Lights>& templateLights);
 
-    double electricEquipmentPowerPerFloorArea() const;
+      double lightingPowerPerPerson() const;
 
-    bool setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea);
+      bool setLightingPowerPerPerson(double lightingPowerPerPerson);
 
-    bool setElectricEquipmentPowerPerFloorArea(
-        double electricEquipmentPowerPerFloorArea,
-        const boost::optional<ElectricEquipment>& templateElectricEquipment);
+      bool setLightingPowerPerPerson(double lightingPowerPerPerson, const boost::optional<Lights>& templateLights);
 
-    double electricEquipmentPowerPerPerson() const;
+      double electricEquipmentPower() const;
 
-    bool setElectricEquipmentPowerPerPerson(double electricEquipmentPowerPerPerson);
+      bool setElectricEquipmentPower(double electricEquipmentPower);
 
-    bool setElectricEquipmentPowerPerPerson(
-        double electricEquipmentPowerPerPerson,
-        const boost::optional<ElectricEquipment>& templateElectricEquipment);
+      bool setElectricEquipmentPower(double electricEquipmentPower, const boost::optional<ElectricEquipment>& templateElectricEquipment);
 
-    double electricEquipmentITEAirCooledPower() const;
+      double electricEquipmentPowerPerFloorArea() const;
 
-    double electricEquipmentITEAirCooledPowerPerFloorArea() const;
+      bool setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea);
 
-    double gasEquipmentPower() const;
+      bool setElectricEquipmentPowerPerFloorArea(double electricEquipmentPowerPerFloorArea,
+                                                 const boost::optional<ElectricEquipment>& templateElectricEquipment);
 
-    bool setGasEquipmentPower(double gasEquipmentPower);
+      double electricEquipmentPowerPerPerson() const;
 
-    bool setGasEquipmentPower(double gasEquipmentPower,
-                              const boost::optional<GasEquipment>& templateGasEquipment);
+      bool setElectricEquipmentPowerPerPerson(double electricEquipmentPowerPerPerson);
 
-    double gasEquipmentPowerPerFloorArea() const;
+      bool setElectricEquipmentPowerPerPerson(double electricEquipmentPowerPerPerson,
+                                              const boost::optional<ElectricEquipment>& templateElectricEquipment);
 
-    bool setGasEquipmentPowerPerFloorArea(double gasEquipmentPowerPerFloorArea);
+      double electricEquipmentITEAirCooledPower() const;
 
-    bool setGasEquipmentPowerPerFloorArea(
-        double gasEquipmentPowerPerFloorArea,
-        const boost::optional<GasEquipment>& templateGasEquipment);
+      double electricEquipmentITEAirCooledPowerPerFloorArea() const;
 
-    double gasEquipmentPowerPerPerson() const;
+      double gasEquipmentPower() const;
 
-    bool setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson);
+      bool setGasEquipmentPower(double gasEquipmentPower);
 
-    bool setGasEquipmentPowerPerPerson(
-        double gasEquipmentPowerPerPerson,
-        const boost::optional<GasEquipment>& templateGasEquipment);
+      bool setGasEquipmentPower(double gasEquipmentPower, const boost::optional<GasEquipment>& templateGasEquipment);
 
-    /** Returns the infiltration design flow rate (m^3/s) in the space. Ignores
-     *  SpaceInfiltrationEffectiveLeakageArea objects. */
-    /// Does not include space multiplier in calculation.
-    double infiltrationDesignFlowRate() const;
+      double gasEquipmentPowerPerFloorArea() const;
 
-    /** Returns the infiltration design flow per space floor area (m^3/m^2*s) in the space.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
-    /// Does not include space multiplier in calculation.
-    double infiltrationDesignFlowPerSpaceFloorArea() const;
+      bool setGasEquipmentPowerPerFloorArea(double gasEquipmentPowerPerFloorArea);
 
-    /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) in the space.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
-    /// Does not include space multiplier in calculation.
-    double infiltrationDesignFlowPerExteriorSurfaceArea() const;
+      bool setGasEquipmentPowerPerFloorArea(double gasEquipmentPowerPerFloorArea, const boost::optional<GasEquipment>& templateGasEquipment);
 
-    /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) in the space.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
-    /// Does not include space multiplier in calculation.
-    double infiltrationDesignFlowPerExteriorWallArea() const;
+      double gasEquipmentPowerPerPerson() const;
 
-    /** Returns the infiltration design air changes per hour (1/h) in the space.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. */
-    /// Does not include space multiplier in calculation.
-    double infiltrationDesignAirChangesPerHour() const;
+      bool setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson);
 
-    /** The following functionality is used by the EnergyPlus translator, the primary aim
+      bool setGasEquipmentPowerPerPerson(double gasEquipmentPowerPerPerson, const boost::optional<GasEquipment>& templateGasEquipment);
+
+      /** Returns the infiltration design flow rate (m^3/s) in the space. Ignores
+     *  SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
+      /// Does not include space multiplier in calculation.
+      double infiltrationDesignFlowRate() const;
+
+      /** Returns the infiltration design flow per space floor area (m^3/m^2*s) in the space.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
+      /// Does not include space multiplier in calculation.
+      double infiltrationDesignFlowPerSpaceFloorArea() const;
+
+      /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) in the space.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
+      /// Does not include space multiplier in calculation.
+      double infiltrationDesignFlowPerExteriorSurfaceArea() const;
+
+      /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) in the space.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
+      /// Does not include space multiplier in calculation.
+      double infiltrationDesignFlowPerExteriorWallArea() const;
+
+      /** Returns the infiltration design air changes per hour (1/h) in the space.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. */
+      /// Does not include space multiplier in calculation.
+      double infiltrationDesignAirChangesPerHour() const;
+
+      /** The following functionality is used by the EnergyPlus translator, the primary aim
      *  is to preserve information while putting the space into a state where it can easily
      *  be translated to EnergyPlus:
      *    Clone the space type if there is a space type
@@ -447,89 +447,91 @@ namespace detail {
      *    If hard sizing loads, make each space load refer to unique definition and hard size it
      *    Remove the cloned space type if there is a space type
      */
-    void hardApplySpaceType(bool hardSizeLoads);
+      void hardApplySpaceType(bool hardSizeLoads);
 
-    /** Set all schedules for child space loads to their default value if there is one. */
-    void hardApplySpaceLoadSchedules();
+      /** Set all schedules for child space loads to their default value if there is one. */
+      void hardApplySpaceLoadSchedules();
 
-    /** Set all constructions for child surfaces to their default value if there is one. */
-    void hardApplyConstructions();
+      /** Set all constructions for child surfaces to their default value if there is one. */
+      void hardApplyConstructions();
 
-    /** Unmatch any matched surfaces and sub surfaces in this space. */
-    void unmatchSurfaces();
+      /** Unmatch any matched surfaces and sub surfaces in this space. */
+      void unmatchSurfaces();
 
-    /** Match surfaces and sub surfaces in this space with those in the other. */
-    void matchSurfaces(Space& other);
+      /** Match surfaces and sub surfaces in this space with those in the other. */
+      void matchSurfaces(Space& other);
 
-    /** Intersect surfaces in this space with those in the other. */
-    void intersectSurfaces(Space& other);
+      /** Intersect surfaces in this space with those in the other. */
+      void intersectSurfaces(Space& other);
 
-    /** Find surfaces within angular range, specified in degrees and in the site coordinate system, an unset optional means no limit.
+      /** Find surfaces within angular range, specified in degrees and in the site coordinate system, an unset optional means no limit.
         Values for degrees from North are between 0 and 360 and for degrees tilt they are between 0 and 180.
         Note that maxDegreesFromNorth may be less than minDegreesFromNorth,
         e.g. to search between NorthWest and NorthEast set minDegreesFromNorth = 315 and maxDegreesFromNorth = 45.
         The value of maxDegreesTilt must be greater than or equal to minDegreesTilt.  A tolerance of one degree is applied by default.
     */
-    std::vector <Surface> findSurfaces(boost::optional<double> minDegreesFromNorth,
-                                       boost::optional<double> maxDegreesFromNorth,
-                                       boost::optional<double> minDegreesTilt,
-                                       boost::optional<double> maxDegreesTilt,
-                                       double tol);
+      std::vector<Surface> findSurfaces(boost::optional<double> minDegreesFromNorth, boost::optional<double> maxDegreesFromNorth,
+                                        boost::optional<double> minDegreesTilt, boost::optional<double> maxDegreesTilt, double tol);
 
-    /** Returns the floor print of the space.
+      /** Returns the floor print of the space.
         Will return empty vector if all floors in space are not on the same x,y plane.
     */
-    std::vector<Point3d> floorPrint() const;
+      std::vector<Point3d> floorPrint() const;
 
-    bool isPlenum() const;
+      bool isPlenum() const;
 
-   private:
-    REGISTER_LOGGER("openstudio.model.Space");
+      double exposedPerimeter(const Polygon3d& buildingPerimeter) const;
 
-    boost::optional<ModelObject> spaceTypeAsModelObject() const;
-    boost::optional<ModelObject> defaultConstructionSetAsModelObject() const;
-    boost::optional<ModelObject> defaultScheduleSetAsModelObject() const;
-    boost::optional<ModelObject> thermalZoneAsModelObject() const;
-    boost::optional<ModelObject> buildingStoryAsModelObject() const;
-    std::vector<ModelObject> shadingSurfaceGroupsAsModelObjects() const;
-    std::vector<ModelObject> interiorPartitionSurfaceGroupsAsModelObjects() const;
-    std::vector<ModelObject> surfacesAsModelObjects() const;
-    std::vector<ModelObject> internalMassAsModelObjects() const;
-    std::vector<ModelObject> peopleAsModelObjects() const;
-    std::vector<ModelObject> lightsAsModelObjects() const;
-    std::vector<ModelObject> luminairesAsModelObjects() const;
-    std::vector<ModelObject> electricEquipmentAsModelObjects() const;
-    std::vector<ModelObject> electricEquipmentITEAirCooledAsModelObjects() const;
-    std::vector<ModelObject> gasEquipmentAsModelObjects() const;
-    std::vector<ModelObject> hotWaterEquipmentAsModelObjects() const;
-    std::vector<ModelObject> steamEquipmentAsModelObjects() const;
-    std::vector<ModelObject> otherEquipmentAsModelObjects() const;
-    std::vector<ModelObject> daylightingControlsAsModelObjects() const;
-    std::vector<ModelObject> illuminanceMapsAsModelObjects() const;
-    std::vector<ModelObject> spaceInfiltrationDesignFlowRatesAsModelObjects() const;
-    std::vector<ModelObject> spaceInfiltrationEffectiveLeakageAreasAsModelObjects() const;
-    std::vector<ModelObject> spaceVentilationDesignFlowRatesAsModelObjects() const;
+      Polyhedron polyhedron() const;
+      bool isEnclosedVolume() const;
 
-    bool setSpaceTypeAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setDefaultConstructionSetAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setDefaultScheduleSetAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setThermalZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setBuildingStoryAsModelObject(const boost::optional<ModelObject>& modelObject);
+     private:
+      REGISTER_LOGGER("openstudio.model.Space");
 
-    template <typename T, typename TDef>
-    boost::optional<T> getMySpaceLoadInstance(const boost::optional<T>& templateSpaceLoadInstance);
+      boost::optional<ModelObject> spaceTypeAsModelObject() const;
+      boost::optional<ModelObject> defaultConstructionSetAsModelObject() const;
+      boost::optional<ModelObject> defaultScheduleSetAsModelObject() const;
+      boost::optional<ModelObject> thermalZoneAsModelObject() const;
+      boost::optional<ModelObject> buildingStoryAsModelObject() const;
+      std::vector<ModelObject> shadingSurfaceGroupsAsModelObjects() const;
+      std::vector<ModelObject> interiorPartitionSurfaceGroupsAsModelObjects() const;
+      std::vector<ModelObject> surfacesAsModelObjects() const;
+      std::vector<ModelObject> internalMassAsModelObjects() const;
+      std::vector<ModelObject> peopleAsModelObjects() const;
+      std::vector<ModelObject> lightsAsModelObjects() const;
+      std::vector<ModelObject> luminairesAsModelObjects() const;
+      std::vector<ModelObject> electricEquipmentAsModelObjects() const;
+      std::vector<ModelObject> electricEquipmentITEAirCooledAsModelObjects() const;
+      std::vector<ModelObject> gasEquipmentAsModelObjects() const;
+      std::vector<ModelObject> hotWaterEquipmentAsModelObjects() const;
+      std::vector<ModelObject> steamEquipmentAsModelObjects() const;
+      std::vector<ModelObject> otherEquipmentAsModelObjects() const;
+      std::vector<ModelObject> daylightingControlsAsModelObjects() const;
+      std::vector<ModelObject> illuminanceMapsAsModelObjects() const;
+      std::vector<ModelObject> spaceInfiltrationDesignFlowRatesAsModelObjects() const;
+      std::vector<ModelObject> spaceInfiltrationEffectiveLeakageAreasAsModelObjects() const;
+      std::vector<ModelObject> spaceInfiltrationFlowCoefficientsAsModelObjects() const;
+      std::vector<ModelObject> spaceVentilationDesignFlowRatesAsModelObjects() const;
 
-    template <typename T>
-    void removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep);
+      bool setSpaceTypeAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setDefaultConstructionSetAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setDefaultScheduleSetAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setThermalZoneAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setBuildingStoryAsModelObject(const boost::optional<ModelObject>& modelObject);
 
-    // helper function to get a boost polygon point from a Point3d
-    boost::tuple<double, double> point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const;
+      template <typename T, typename TDef>
+      boost::optional<T> getMySpaceLoadInstance(const boost::optional<T>& templateSpaceLoadInstance);
 
-  };
+      template <typename T>
+      void removeAllButOneSpaceLoadInstance(std::vector<T>& instances, const T& instanceToKeep);
 
-} // detail
+      // helper function to get a boost polygon point from a Point3d
+      boost::tuple<double, double> point3dToTuple(const Point3d& point3d, std::vector<Point3d>& allPoints, double tol) const;
+    };
 
-} // model
-} // openstudio
+  }  // namespace detail
 
-#endif // MODEL_SPACE_IMPL_HPP
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_SPACE_IMPL_HPP

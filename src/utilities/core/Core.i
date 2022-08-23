@@ -1,6 +1,22 @@
 #ifndef UTILITIES_CORE_CORE_I
 #define UTILITIES_CORE_CORE_I
 
+#if defined(SWIGCSHARP)
+
+  // Avoid triggering a SWIG warning: 'fixed' is a C# keyword
+  %rename(fixedFormat) openstudio::FloatFormat::fixed;
+
+  %ignore openstudio::string_conversions::number(std::int32_t, int);
+  %ignore openstudio::string_conversions::number(std::uint32_t, int);
+  %ignore openstudio::string_conversions::number(std::int64_t, int);
+  %ignore openstudio::string_conversions::number(std::uint64_t, int);
+  // Because the int base param has a default, we also need to ignore this implicitly declared overload
+  %ignore openstudio::string_conversions::number(std::int32_t);
+  %ignore openstudio::string_conversions::number(std::uint32_t);
+  %ignore openstudio::string_conversions::number(std::int64_t);
+  %ignore openstudio::string_conversions::number(std::uint64_t);
+#endif
+
 // does not turn on directors for all classes, just enables them
 %module(directors="1") OpenStudio
 
@@ -33,14 +49,13 @@
 
 %include <utilities/core/Enum.i>
 //%include <utilities/core/Exception.i> // moved ahead in include order in CommonInclude
+%include <utilities/core/String.i>
 %include <utilities/core/Path.i>
 %include <OpenStudio.hxx>
 %include <utilities/core/ApplicationPathHelpers.hpp>
-%include <utilities/core/String.hpp>
 %include <utilities/core/StringHelpers.hpp>
 %include <utilities/core/Singleton.i>
 %include <utilities/core/Logger.i>
-%include <utilities/core/UpdateManager.i>
 %include <utilities/core/UUID.i>
 %include <utilities/core/Checksum.i>
 %include <utilities/core/Optional.hpp>
@@ -59,6 +74,21 @@
 %template(FileReferenceVector) std::vector<openstudio::FileReference>;
 %template(OptionalFileReference) boost::optional<openstudio::FileReference>;
 %template(OptionalVersionString) boost::optional<openstudio::VersionString>;
+%template(VersionStringPair) std::pair<openstudio::VersionString, std::string>;
+
+// Ignore the deserialization constructor
+%ignore openstudio::FileReference::FileReference(const openstudio::UUID&, const openstudio::UUID&, const std::string&, const std::string&, const std::string&, const openstudio::path&, const FileReferenceType&, const DateTime&, const std::string&, const std::string& checksumLast);
+
+#if defined SWIGCSHARP
+  // Don't want to have to do partial classes for this (defined in UtilitiesTime.i, swig'ed later)
+  %ignore openstudio::FileReference::timestampLast;
+
+  %ignore openstudio::WorkspaceObjectNameLess;
+  %ignore openstudio::WorkspaceObjectNameGreater;
+  %ignore openstudio::BCLComponentNameLess;
+  %ignore openstudio::BCLComponentNameGreater;
+
+#endif
 
 %include <utilities/core/FileReference.hpp>
 

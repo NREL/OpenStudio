@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,82 +38,68 @@
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
-namespace model  {
+namespace model {
 
-namespace detail {
+  namespace detail {
 
-  WeatherFileDays_Impl::WeatherFileDays_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : SizingPeriod_Impl(idfObject, model, keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == WeatherFileDays::iddObjectType());
+    WeatherFileDays_Impl::WeatherFileDays_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : SizingPeriod_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == WeatherFileDays::iddObjectType());
+    }
+
+    WeatherFileDays_Impl::WeatherFileDays_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : SizingPeriod_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == WeatherFileDays::iddObjectType());
+    }
+
+    WeatherFileDays_Impl::WeatherFileDays_Impl(const WeatherFileDays_Impl& other, Model_Impl* model, bool keepHandle)
+      : SizingPeriod_Impl(other, model, keepHandle) {}
+
+    // Get all output variable names that could be associated with this object.
+    const std::vector<std::string>& WeatherFileDays_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType WeatherFileDays_Impl::iddObjectType() const {
+      return WeatherFileDays::iddObjectType();
+    }
+
+    void WeatherFileDays_Impl::ensureNoLeapDays() {
+      boost::optional<int> month;
+      boost::optional<int> day;
+
+      month = getInt(OS_SizingPeriod_WeatherFileDaysFields::BeginMonth);
+      if (month && (month.get() == 2)) {
+        day = this->getInt(OS_SizingPeriod_WeatherFileDaysFields::BeginDayofMonth);
+        if (day && (day.get() == 29)) {
+          this->setInt(OS_SizingPeriod_WeatherFileDaysFields::BeginDayofMonth, 28);
+        }
+      }
+
+      month = getInt(OS_SizingPeriod_WeatherFileDaysFields::EndMonth);
+      if (month && (month.get() == 2)) {
+        day = this->getInt(OS_SizingPeriod_WeatherFileDaysFields::EndDayofMonth);
+        if (day && (day.get() == 29)) {
+          this->setInt(OS_SizingPeriod_WeatherFileDaysFields::EndDayofMonth, 28);
+        }
+      }
+    }
+
+  }  // namespace detail
+
+  /// constructor
+  WeatherFileDays::WeatherFileDays(const Model& model) : SizingPeriod(WeatherFileDays::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::WeatherFileDays_Impl>());
   }
 
-  WeatherFileDays_Impl::WeatherFileDays_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : SizingPeriod_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == WeatherFileDays::iddObjectType());
-  }
+  // constructor
+  WeatherFileDays::WeatherFileDays(std::shared_ptr<detail::WeatherFileDays_Impl> impl) : SizingPeriod(std::move(impl)) {}
 
-  WeatherFileDays_Impl::WeatherFileDays_Impl(const WeatherFileDays_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : SizingPeriod_Impl(other,model,keepHandle)
-  {
-  }
-
-  // Get all output variable names that could be associated with this object.
-  const std::vector<std::string>& WeatherFileDays_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
+  IddObjectType WeatherFileDays::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_SizingPeriod_WeatherFileDays);
     return result;
   }
 
-  IddObjectType WeatherFileDays_Impl::iddObjectType() const {
-    return WeatherFileDays::iddObjectType();
-  }
-
-  void WeatherFileDays_Impl::ensureNoLeapDays()
-  {
-    boost::optional<int> month;
-    boost::optional<int> day;
-
-    month = getInt(OS_SizingPeriod_WeatherFileDaysFields::BeginMonth);
-    if (month && (month.get() == 2)){
-      day = this->getInt(OS_SizingPeriod_WeatherFileDaysFields::BeginDayofMonth);
-      if (day && (day.get() == 29)){
-        this->setInt(OS_SizingPeriod_WeatherFileDaysFields::BeginDayofMonth, 28);
-      }
-    }
-
-    month = getInt(OS_SizingPeriod_WeatherFileDaysFields::EndMonth);
-    if (month && (month.get() == 2)){
-      day = this->getInt(OS_SizingPeriod_WeatherFileDaysFields::EndDayofMonth);
-      if (day && (day.get() == 29)){
-        this->setInt(OS_SizingPeriod_WeatherFileDaysFields::EndDayofMonth, 28);
-      }
-    }
-  }
-
-} // detail
-
-/// constructor
-WeatherFileDays::WeatherFileDays(const Model& model)
-  : SizingPeriod(WeatherFileDays::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::WeatherFileDays_Impl>());
-}
-
-// constructor
-WeatherFileDays::WeatherFileDays(std::shared_ptr<detail::WeatherFileDays_Impl> impl)
-  : SizingPeriod(std::move(impl))
-{}
-
-IddObjectType WeatherFileDays::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_SizingPeriod_WeatherFileDays);
-  return result;
-}
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

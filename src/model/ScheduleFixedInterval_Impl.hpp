@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,100 +36,96 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ScheduleFixedInterval_Impl is a ScheduleInterval_Impl that is the implementation class for ScheduleFixedInterval.*/
-  class MODEL_API ScheduleFixedInterval_Impl : public ScheduleInterval_Impl {
+    /** ScheduleFixedInterval_Impl is a ScheduleInterval_Impl that is the implementation class for ScheduleFixedInterval.*/
+    class MODEL_API ScheduleFixedInterval_Impl : public ScheduleInterval_Impl
+    {
 
-   public:
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      ScheduleFixedInterval_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ScheduleFixedInterval_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ScheduleFixedInterval_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ScheduleFixedInterval_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      ScheduleFixedInterval_Impl(const ScheduleFixedInterval_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ScheduleFixedInterval_Impl(const ScheduleFixedInterval_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      virtual ~ScheduleFixedInterval_Impl() {}
 
-    virtual ~ScheduleFixedInterval_Impl() {}
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
 
-    virtual boost::optional<ScheduleTypeLimits> scheduleTypeLimits() const override;
+      virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
 
-    virtual bool setScheduleTypeLimits(const ScheduleTypeLimits& scheduleTypeLimits) override;
+      virtual bool resetScheduleTypeLimits() override;
 
-    virtual bool resetScheduleTypeLimits() override;
+      virtual openstudio::TimeSeries timeSeries() const override;
 
-    virtual openstudio::TimeSeries timeSeries() const override;
+      virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) override;
 
-    virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      bool interpolatetoTimestep() const;
 
-    bool interpolatetoTimestep() const;
+      bool isInterpolatetoTimestepDefaulted() const;
 
-    bool isInterpolatetoTimestepDefaulted() const;
-    
-    bool translatetoScheduleFile() const;
-    
-    bool isTranslatetoScheduleFileDefaulted() const;
+      bool translatetoScheduleFile() const;
 
-    double intervalLength() const;
+      bool isTranslatetoScheduleFileDefaulted() const;
 
-    double outOfRangeValue() const;
+      double intervalLength() const;
 
-    bool isOutOfRangeValueDefaulted() const;
+      double outOfRangeValue() const;
 
-    int startMonth() const;
+      bool isOutOfRangeValueDefaulted() const;
 
-    int startDay() const;
+      int startMonth() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      int startDay() const;
 
-    bool setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod = true);
+      //@}
+      /** @name Setters */
+      //@{
 
-    void resetInterpolatetoTimestep(bool driverMethod = true);
-    
-    bool setTranslatetoScheduleFile(bool translatetoScheduleFile, bool driverMethod = true);
-    
-    void resetTranslatetoScheduleFile(bool driverMethod = true);
+      bool setInterpolatetoTimestep(bool interpolatetoTimestep, bool driverMethod = true);
 
-    bool setIntervalLength(double intervalLength, bool driverMethod = true);
+      void resetInterpolatetoTimestep(bool driverMethod = true);
 
-    bool setOutOfRangeValue(double outOfRangeValue, bool driverMethod = true);
+      bool setTranslatetoScheduleFile(bool translatetoScheduleFile, bool driverMethod = true);
 
-    void resetOutOfRangeValue(bool driverMethod = true);
+      void resetTranslatetoScheduleFile(bool driverMethod = true);
 
-    bool setStartMonth(int startMonth, bool driverMethod = true);
+      bool setIntervalLength(double intervalLength, bool driverMethod = true);
 
-    bool setStartDay(int startDay, bool driverMethod = true);
+      bool setOutOfRangeValue(double outOfRangeValue, bool driverMethod = true);
 
-    // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays() override;
+      void resetOutOfRangeValue(bool driverMethod = true);
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ScheduleFixedInterval");
-  };
+      bool setStartMonth(int startMonth, bool driverMethod = true);
 
-} // detail
+      bool setStartDay(int startDay, bool driverMethod = true);
 
-} // model
-} // openstudio
+      // ensure that this object does not contain the date 2/29
+      virtual void ensureNoLeapDays() override;
 
-#endif // MODEL_SCHEDULEFIXEDINTERVAL_IMPL_HPP
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ScheduleFixedInterval");
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_SCHEDULEFIXEDINTERVAL_IMPL_HPP

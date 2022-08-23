@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,389 +36,415 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
+  class WaterHeaterSizing;
+  class Node;
+  class PlantLoop;
 
-namespace detail {
+  namespace detail {
 
-  /** WaterHeaterStratified_Impl is a WaterToWaterComponent_Impl that is the implementation class for WaterHeater:Stratified.*/
-  class MODEL_API WaterHeaterStratified_Impl : public WaterToWaterComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** WaterHeaterStratified_Impl is a WaterToWaterComponent_Impl that is the implementation class for WaterHeater:Stratified.*/
+    class MODEL_API WaterHeaterStratified_Impl : public WaterToWaterComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    WaterHeaterStratified_Impl(const IdfObject& idfObject,
-                                Model_Impl* model,
-                                bool keepHandle);
+      WaterHeaterStratified_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    WaterHeaterStratified_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      WaterHeaterStratified_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    WaterHeaterStratified_Impl(const WaterHeaterStratified_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      WaterHeaterStratified_Impl(const WaterHeaterStratified_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~WaterHeaterStratified_Impl() {}
+      virtual ~WaterHeaterStratified_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned supplyInletPort() const override;
+      // Correspond to the Use Side Nodes
+      virtual unsigned supplyInletPort() const override;
+      virtual unsigned supplyOutletPort() const override;
 
-    virtual unsigned supplyOutletPort() const override;
+      // Correspond to the Source Side Nodes
+      virtual unsigned demandInletPort() const override;
+      virtual unsigned demandOutletPort() const override;
 
-    virtual unsigned demandInletPort() const override;
+      virtual void autosize() override;
 
-    virtual unsigned demandOutletPort() const override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    std::string endUseSubcategory() const;
+      virtual std::vector<ModelObject> children() const override;
 
-    boost::optional<double> tankVolume() const;
+      virtual ModelObject clone(Model model) const override;
 
-    bool isTankVolumeAutosized() const;
+      // We have to override to avoid returning the source side plant loop if it is also on the supply side of this one
+      virtual boost::optional<PlantLoop> plantLoop() const override;
 
-    boost::optional<double> tankHeight() const;
+      // Override to return the PlantLoop connected to the Source Side Inlet/Outlet Nodes whether that is on the demand or supply side
+      virtual boost::optional<PlantLoop> secondaryPlantLoop() const override;
 
-    bool isTankHeightAutosized() const;
+      virtual bool removeFromSecondaryPlantLoop() override;
 
-    std::string tankShape() const;
+      virtual bool addToNode(Node& node) override;
 
-    boost::optional<double> tankPerimeter() const;
+      //@}
+      /** @name Getters */
+      //@{
 
-    double maximumTemperatureLimit() const;
+      std::string endUseSubcategory() const;
 
-    std::string heaterPriorityControl() const;
+      boost::optional<double> tankVolume() const;
 
-    Schedule heater1SetpointTemperatureSchedule() const;
+      bool isTankVolumeAutosized() const;
 
-    double heater1DeadbandTemperatureDifference() const;
+      boost::optional<double> tankHeight() const;
 
-    boost::optional<double> heater1Capacity() const;
+      bool isTankHeightAutosized() const;
 
-    bool isHeater1CapacityAutosized() const;
+      std::string tankShape() const;
 
-    double heater1Height() const;
+      boost::optional<double> tankPerimeter() const;
 
-    Schedule heater2SetpointTemperatureSchedule() const;
+      double maximumTemperatureLimit() const;
 
-    double heater2DeadbandTemperatureDifference() const;
+      std::string heaterPriorityControl() const;
 
-    double heater2Capacity() const;
+      Schedule heater1SetpointTemperatureSchedule() const;
 
-    double heater2Height() const;
+      double heater1DeadbandTemperatureDifference() const;
 
-    std::string heaterFuelType() const;
+      boost::optional<double> heater1Capacity() const;
 
-    double heaterThermalEfficiency() const;
+      bool isHeater1CapacityAutosized() const;
 
-    double offCycleParasiticFuelConsumptionRate() const;
+      double heater1Height() const;
 
-    std::string offCycleParasiticFuelType() const;
+      Schedule heater2SetpointTemperatureSchedule() const;
 
-    double offCycleParasiticHeatFractiontoTank() const;
+      double heater2DeadbandTemperatureDifference() const;
 
-    double offCycleParasiticHeight() const;
+      double heater2Capacity() const;
 
-    double onCycleParasiticFuelConsumptionRate() const;
+      double heater2Height() const;
 
-    std::string onCycleParasiticFuelType() const;
+      std::string heaterFuelType() const;
 
-    double onCycleParasiticHeatFractiontoTank() const;
+      double heaterThermalEfficiency() const;
 
-    double onCycleParasiticHeight() const;
+      double offCycleParasiticFuelConsumptionRate() const;
 
-    std::string ambientTemperatureIndicator() const;
+      std::string offCycleParasiticFuelType() const;
 
-    boost::optional<Schedule> ambientTemperatureSchedule() const;
+      double offCycleParasiticHeatFractiontoTank() const;
 
-    boost::optional<ThermalZone> ambientTemperatureThermalZone() const;
+      double offCycleParasiticHeight() const;
 
-    boost::optional<std::string> ambientTemperatureOutdoorAirNodeName() const;
+      double onCycleParasiticFuelConsumptionRate() const;
 
-    boost::optional<double> uniformSkinLossCoefficientperUnitAreatoAmbientTemperature() const;
+      std::string onCycleParasiticFuelType() const;
 
-    double skinLossFractiontoZone() const;
+      double onCycleParasiticHeatFractiontoTank() const;
 
-    boost::optional<double> offCycleFlueLossCoefficienttoAmbientTemperature() const;
+      double onCycleParasiticHeight() const;
 
-    double offCycleFlueLossFractiontoZone() const;
+      std::string ambientTemperatureIndicator() const;
 
-    boost::optional<double> peakUseFlowRate() const;
+      boost::optional<Schedule> ambientTemperatureSchedule() const;
 
-    boost::optional<Schedule> useFlowRateFractionSchedule() const;
+      boost::optional<ThermalZone> ambientTemperatureThermalZone() const;
 
-    boost::optional<Schedule> coldWaterSupplyTemperatureSchedule() const;
+      boost::optional<std::string> ambientTemperatureOutdoorAirNodeName() const;
 
-    double useSideEffectiveness() const;
+      boost::optional<double> uniformSkinLossCoefficientperUnitAreatoAmbientTemperature() const;
 
-    double useSideInletHeight() const;
+      double skinLossFractiontoZone() const;
 
-    boost::optional<double> useSideOutletHeight() const;
+      boost::optional<double> offCycleFlueLossCoefficienttoAmbientTemperature() const;
 
-    bool isUseSideOutletHeightAutocalculated() const;
+      double offCycleFlueLossFractiontoZone() const;
 
-    double sourceSideEffectiveness() const;
+      boost::optional<double> peakUseFlowRate() const;
 
-    boost::optional<double> sourceSideInletHeight() const;
+      boost::optional<Schedule> useFlowRateFractionSchedule() const;
 
-    bool isSourceSideInletHeightAutocalculated() const;
+      boost::optional<Schedule> coldWaterSupplyTemperatureSchedule() const;
 
-    double sourceSideOutletHeight() const;
+      double useSideEffectiveness() const;
 
-    std::string inletMode() const;
+      double useSideInletHeight() const;
 
-    boost::optional<double> useSideDesignFlowRate() const;
+      boost::optional<double> useSideOutletHeight() const;
 
-    bool isUseSideDesignFlowRateAutosized() const;
+      bool isUseSideOutletHeightAutocalculated() const;
 
-    boost::optional<double> sourceSideDesignFlowRate() const;
+      double sourceSideEffectiveness() const;
 
-    bool isSourceSideDesignFlowRateAutosized() const;
+      boost::optional<double> sourceSideInletHeight() const;
 
-    double indirectWaterHeatingRecoveryTime() const;
+      bool isSourceSideInletHeightAutocalculated() const;
 
-    int numberofNodes() const;
+      double sourceSideOutletHeight() const;
 
-    double additionalDestratificationConductivity() const;
+      std::string inletMode() const;
 
-    double node1AdditionalLossCoefficient() const;
+      boost::optional<double> useSideDesignFlowRate() const;
 
-    double node2AdditionalLossCoefficient() const;
+      bool isUseSideDesignFlowRateAutosized() const;
 
-    double node3AdditionalLossCoefficient() const;
+      boost::optional<double> sourceSideDesignFlowRate() const;
 
-    double node4AdditionalLossCoefficient() const;
+      bool isSourceSideDesignFlowRateAutosized() const;
 
-    double node5AdditionalLossCoefficient() const;
+      double indirectWaterHeatingRecoveryTime() const;
 
-    double node6AdditionalLossCoefficient() const;
+      int numberofNodes() const;
 
-    double node7AdditionalLossCoefficient() const;
+      double additionalDestratificationConductivity() const;
 
-    double node8AdditionalLossCoefficient() const;
+      double node1AdditionalLossCoefficient() const;
 
-    double node9AdditionalLossCoefficient() const;
+      double node2AdditionalLossCoefficient() const;
 
-    double node10AdditionalLossCoefficient() const;
+      double node3AdditionalLossCoefficient() const;
 
-    double node11AdditionalLossCoefficient() const;
+      double node4AdditionalLossCoefficient() const;
 
-    double node12AdditionalLossCoefficient() const;
+      double node5AdditionalLossCoefficient() const;
 
-    std::string sourceSideFlowControlMode() const;
+      double node6AdditionalLossCoefficient() const;
 
-    boost::optional<Schedule> indirectAlternateSetpointTemperatureSchedule() const;
+      double node7AdditionalLossCoefficient() const;
 
-  boost::optional<double> autosizedTankVolume() const ;
+      double node8AdditionalLossCoefficient() const;
 
-  boost::optional<double> autosizedTankHeight() const ;
+      double node9AdditionalLossCoefficient() const;
 
-  boost::optional<double> autosizedHeater1Capacity() const ;
+      double node10AdditionalLossCoefficient() const;
 
-  boost::optional<double> autosizedUseSideDesignFlowRate() const ;
+      double node11AdditionalLossCoefficient() const;
 
-  boost::optional<double> autosizedSourceSideDesignFlowRate() const ;
+      double node12AdditionalLossCoefficient() const;
 
-  virtual void autosize() override;
+      std::string sourceSideFlowControlMode() const;
 
-  virtual void applySizingValues() override;
+      boost::optional<Schedule> indirectAlternateSetpointTemperatureSchedule() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      boost::optional<double> autosizedTankVolume() const;
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      boost::optional<double> autosizedTankHeight() const;
 
-    bool setTankVolume(boost::optional<double> tankVolume);
+      boost::optional<double> autosizedHeater1Capacity() const;
 
-    void autosizeTankVolume();
+      boost::optional<double> autosizedUseSideDesignFlowRate() const;
 
-    bool setTankHeight(boost::optional<double> tankHeight);
+      boost::optional<double> autosizedSourceSideDesignFlowRate() const;
 
-    void autosizeTankHeight();
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setTankShape(std::string tankShape);
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    bool setTankPerimeter(boost::optional<double> tankPerimeter);
+      bool setTankVolume(boost::optional<double> tankVolume);
 
-    void resetTankPerimeter();
+      void autosizeTankVolume();
 
-    bool setMaximumTemperatureLimit(double maximumTemperatureLimit);
+      bool setTankHeight(boost::optional<double> tankHeight);
 
-    bool setHeaterPriorityControl(std::string heaterPriorityControl);
+      void autosizeTankHeight();
 
-    bool setHeater1SetpointTemperatureSchedule(Schedule& schedule);
+      bool setTankShape(std::string tankShape);
 
-    bool setHeater1DeadbandTemperatureDifference(double heater1DeadbandTemperatureDifference);
+      bool setTankPerimeter(boost::optional<double> tankPerimeter);
 
-    bool setHeater1Capacity(boost::optional<double> heater1Capacity);
+      void resetTankPerimeter();
 
-    void autosizeHeater1Capacity();
+      bool setMaximumTemperatureLimit(double maximumTemperatureLimit);
 
-    bool setHeater1Height(double heater1Height);
+      bool setHeaterPriorityControl(std::string heaterPriorityControl);
 
-    bool setHeater2SetpointTemperatureSchedule(Schedule& schedule);
+      bool setHeater1SetpointTemperatureSchedule(Schedule& schedule);
 
-    bool setHeater2DeadbandTemperatureDifference(double heater2DeadbandTemperatureDifference);
+      bool setHeater1DeadbandTemperatureDifference(double heater1DeadbandTemperatureDifference);
 
-    bool setHeater2Capacity(double heater2Capacity);
+      bool setHeater1Capacity(boost::optional<double> heater1Capacity);
 
-    bool setHeater2Height(double heater2Height);
+      void autosizeHeater1Capacity();
 
-    bool setHeaterFuelType(std::string heaterFuelType);
+      bool setHeater1Height(double heater1Height);
 
-    bool setHeaterThermalEfficiency(double heaterThermalEfficiency);
+      bool setHeater2SetpointTemperatureSchedule(Schedule& schedule);
 
-    bool setOffCycleParasiticFuelConsumptionRate(double offCycleParasiticFuelConsumptionRate);
+      bool setHeater2DeadbandTemperatureDifference(double heater2DeadbandTemperatureDifference);
 
-    bool setOffCycleParasiticFuelType(std::string offCycleParasiticFuelType);
+      bool setHeater2Capacity(double heater2Capacity);
 
-    bool setOffCycleParasiticHeatFractiontoTank(double offCycleParasiticHeatFractiontoTank);
+      bool setHeater2Height(double heater2Height);
 
-    bool setOffCycleParasiticHeight(double offCycleParasiticHeight);
+      bool setHeaterFuelType(std::string heaterFuelType);
 
-    bool setOnCycleParasiticFuelConsumptionRate(double onCycleParasiticFuelConsumptionRate);
+      bool setHeaterThermalEfficiency(double heaterThermalEfficiency);
 
-    bool setOnCycleParasiticFuelType(std::string onCycleParasiticFuelType);
+      bool setOffCycleParasiticFuelConsumptionRate(double offCycleParasiticFuelConsumptionRate);
 
-    bool setOnCycleParasiticHeatFractiontoTank(double onCycleParasiticHeatFractiontoTank);
+      bool setOffCycleParasiticFuelType(std::string offCycleParasiticFuelType);
 
-    bool setOnCycleParasiticHeight(double onCycleParasiticHeight);
+      bool setOffCycleParasiticHeatFractiontoTank(double offCycleParasiticHeatFractiontoTank);
 
-    bool setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator);
+      bool setOffCycleParasiticHeight(double offCycleParasiticHeight);
 
-    bool setAmbientTemperatureSchedule(Schedule& schedule);
+      bool setOnCycleParasiticFuelConsumptionRate(double onCycleParasiticFuelConsumptionRate);
 
-    void resetAmbientTemperatureSchedule();
+      bool setOnCycleParasiticFuelType(std::string onCycleParasiticFuelType);
 
-    bool setAmbientTemperatureThermalZone(const boost::optional<ThermalZone>& thermalZone);
+      bool setOnCycleParasiticHeatFractiontoTank(double onCycleParasiticHeatFractiontoTank);
 
-    void resetAmbientTemperatureThermalZone();
+      bool setOnCycleParasiticHeight(double onCycleParasiticHeight);
 
-    bool setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName);
+      bool setAmbientTemperatureIndicator(std::string ambientTemperatureIndicator);
 
-    void resetAmbientTemperatureOutdoorAirNodeName();
+      bool setAmbientTemperatureSchedule(Schedule& schedule);
 
-    bool setUniformSkinLossCoefficientperUnitAreatoAmbientTemperature(boost::optional<double> uniformSkinLossCoefficientperUnitAreatoAmbientTemperature);
+      void resetAmbientTemperatureSchedule();
 
-    void resetUniformSkinLossCoefficientperUnitAreatoAmbientTemperature();
+      bool setAmbientTemperatureThermalZone(const boost::optional<ThermalZone>& thermalZone);
 
-    bool setSkinLossFractiontoZone(double skinLossFractiontoZone);
+      void resetAmbientTemperatureThermalZone();
 
-    bool setOffCycleFlueLossCoefficienttoAmbientTemperature(boost::optional<double> offCycleFlueLossCoefficienttoAmbientTemperature);
+      bool setAmbientTemperatureOutdoorAirNodeName(boost::optional<std::string> ambientTemperatureOutdoorAirNodeName);
 
-    void resetOffCycleFlueLossCoefficienttoAmbientTemperature();
+      void resetAmbientTemperatureOutdoorAirNodeName();
 
-    bool setOffCycleFlueLossFractiontoZone(double offCycleFlueLossFractiontoZone);
+      bool setUniformSkinLossCoefficientperUnitAreatoAmbientTemperature(
+        boost::optional<double> uniformSkinLossCoefficientperUnitAreatoAmbientTemperature);
 
-    bool setPeakUseFlowRate(boost::optional<double> peakUseFlowRate);
+      void resetUniformSkinLossCoefficientperUnitAreatoAmbientTemperature();
 
-    void resetPeakUseFlowRate();
+      bool setSkinLossFractiontoZone(double skinLossFractiontoZone);
 
-    bool setUseFlowRateFractionSchedule(Schedule& schedule);
+      bool setOffCycleFlueLossCoefficienttoAmbientTemperature(boost::optional<double> offCycleFlueLossCoefficienttoAmbientTemperature);
 
-    void resetUseFlowRateFractionSchedule();
+      void resetOffCycleFlueLossCoefficienttoAmbientTemperature();
 
-    bool setColdWaterSupplyTemperatureSchedule(Schedule& schedule);
+      bool setOffCycleFlueLossFractiontoZone(double offCycleFlueLossFractiontoZone);
 
-    void resetColdWaterSupplyTemperatureSchedule();
+      bool setPeakUseFlowRate(boost::optional<double> peakUseFlowRate);
 
-    bool setUseSideEffectiveness(double useSideEffectiveness);
+      void resetPeakUseFlowRate();
 
-    bool setUseSideInletHeight(double useSideInletHeight);
+      bool setUseFlowRateFractionSchedule(Schedule& schedule);
 
-    bool setUseSideOutletHeight(boost::optional<double> useSideOutletHeight);
+      void resetUseFlowRateFractionSchedule();
 
-    void autocalculateUseSideOutletHeight();
+      bool setColdWaterSupplyTemperatureSchedule(Schedule& schedule);
 
-    bool setSourceSideEffectiveness(double sourceSideEffectiveness);
+      void resetColdWaterSupplyTemperatureSchedule();
 
-    bool setSourceSideInletHeight(boost::optional<double> sourceSideInletHeight);
+      bool setUseSideEffectiveness(double useSideEffectiveness);
 
-    void autocalculateSourceSideInletHeight();
+      bool setUseSideInletHeight(double useSideInletHeight);
 
-    bool setSourceSideOutletHeight(double sourceSideOutletHeight);
+      bool setUseSideOutletHeight(boost::optional<double> useSideOutletHeight);
 
-    bool setInletMode(std::string inletMode);
+      void autocalculateUseSideOutletHeight();
 
-    bool setUseSideDesignFlowRate(boost::optional<double> useSideDesignFlowRate);
+      bool setSourceSideEffectiveness(double sourceSideEffectiveness);
 
-    void autosizeUseSideDesignFlowRate();
+      bool setSourceSideInletHeight(boost::optional<double> sourceSideInletHeight);
 
-    bool setSourceSideDesignFlowRate(boost::optional<double> sourceSideDesignFlowRate);
+      void autocalculateSourceSideInletHeight();
 
-    void autosizeSourceSideDesignFlowRate();
+      bool setSourceSideOutletHeight(double sourceSideOutletHeight);
 
-    bool setIndirectWaterHeatingRecoveryTime(double indirectWaterHeatingRecoveryTime);
+      bool setInletMode(std::string inletMode);
 
-    bool setNumberofNodes(int numberofNodes);
+      bool setUseSideDesignFlowRate(boost::optional<double> useSideDesignFlowRate);
 
-    bool setAdditionalDestratificationConductivity(double additionalDestratificationConductivity);
+      void autosizeUseSideDesignFlowRate();
 
-    bool setNode1AdditionalLossCoefficient(double node1AdditionalLossCoefficient);
+      bool setSourceSideDesignFlowRate(boost::optional<double> sourceSideDesignFlowRate);
 
-    bool setNode2AdditionalLossCoefficient(double node2AdditionalLossCoefficient);
+      void autosizeSourceSideDesignFlowRate();
 
-    bool setNode3AdditionalLossCoefficient(double node3AdditionalLossCoefficient);
+      bool setIndirectWaterHeatingRecoveryTime(double indirectWaterHeatingRecoveryTime);
 
-    bool setNode4AdditionalLossCoefficient(double node4AdditionalLossCoefficient);
+      bool setNumberofNodes(int numberofNodes);
 
-    bool setNode5AdditionalLossCoefficient(double node5AdditionalLossCoefficient);
+      bool setAdditionalDestratificationConductivity(double additionalDestratificationConductivity);
 
-    bool setNode6AdditionalLossCoefficient(double node6AdditionalLossCoefficient);
+      bool setNode1AdditionalLossCoefficient(double node1AdditionalLossCoefficient);
 
-    bool setNode7AdditionalLossCoefficient(double node7AdditionalLossCoefficient);
+      bool setNode2AdditionalLossCoefficient(double node2AdditionalLossCoefficient);
 
-    bool setNode8AdditionalLossCoefficient(double node8AdditionalLossCoefficient);
+      bool setNode3AdditionalLossCoefficient(double node3AdditionalLossCoefficient);
 
-    bool setNode9AdditionalLossCoefficient(double node9AdditionalLossCoefficient);
+      bool setNode4AdditionalLossCoefficient(double node4AdditionalLossCoefficient);
 
-    bool setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient);
+      bool setNode5AdditionalLossCoefficient(double node5AdditionalLossCoefficient);
 
-    bool setNode11AdditionalLossCoefficient(double node11AdditionalLossCoefficient);
+      bool setNode6AdditionalLossCoefficient(double node6AdditionalLossCoefficient);
 
-    bool setNode12AdditionalLossCoefficient(double node12AdditionalLossCoefficient);
+      bool setNode7AdditionalLossCoefficient(double node7AdditionalLossCoefficient);
 
-    bool setSourceSideFlowControlMode(std::string sourceSideFlowControlMode);
+      bool setNode8AdditionalLossCoefficient(double node8AdditionalLossCoefficient);
 
-    bool setIndirectAlternateSetpointTemperatureSchedule(Schedule& schedule);
+      bool setNode9AdditionalLossCoefficient(double node9AdditionalLossCoefficient);
 
-    void resetIndirectAlternateSetpointTemperatureSchedule();
+      bool setNode10AdditionalLossCoefficient(double node10AdditionalLossCoefficient);
 
-    //@}
-    /** @name Other */
-    //@{
+      bool setNode11AdditionalLossCoefficient(double node11AdditionalLossCoefficient);
 
-    boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      bool setNode12AdditionalLossCoefficient(double node12AdditionalLossCoefficient);
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.WaterHeaterStratified");
+      bool setSourceSideFlowControlMode(std::string sourceSideFlowControlMode);
 
-    // TODO: Check the return types of these methods.
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalHeater1SetpointTemperatureSchedule() const;
-    boost::optional<Schedule> optionalHeater2SetpointTemperatureSchedule() const;
-  };
+      bool setIndirectAlternateSetpointTemperatureSchedule(Schedule& schedule);
 
-} // detail
+      void resetIndirectAlternateSetpointTemperatureSchedule();
 
-} // model
-} // openstudio
+      //@}
+      /** @name Other */
+      //@{
 
-#endif // MODEL_WATERHEATERSTRATIFIED_IMPL_HPP
+      WaterHeaterSizing waterHeaterSizing() const;
+
+      bool addToSourceSideNode(Node& node);
+
+      // Name aliases
+      boost::optional<ModelObject> useSideInletModelObject() const;
+      boost::optional<ModelObject> useSideOutletModelObject() const;
+      boost::optional<ModelObject> sourceSideInletModelObject() const;
+      boost::optional<ModelObject> sourceSideOutletModelObject() const;
+      boost::optional<PlantLoop> sourceSidePlantLoop() const;
+      boost::optional<PlantLoop> useSidePlantLoop() const;
+      bool removeFromSourceSidePlantLoop();
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.WaterHeaterStratified");
+
+      // TODO: Check the return types of these methods.
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalHeater1SetpointTemperatureSchedule() const;
+      boost::optional<Schedule> optionalHeater2SetpointTemperatureSchedule() const;
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_WATERHEATERSTRATIFIED_IMPL_HPP

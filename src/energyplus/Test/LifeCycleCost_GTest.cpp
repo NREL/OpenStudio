@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -86,8 +86,7 @@ using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::energyplus;
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Construction)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_Construction) {
   Model model;
 
   Construction construction(model);
@@ -149,8 +148,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Construction)
   EXPECT_FALSE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Annualescalationrate));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Construction2)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_Construction2) {
   Model model;
 
   Construction construction(model);
@@ -211,8 +209,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Construction2)
   EXPECT_FALSE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Annualescalationrate));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Construction3)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_Construction3) {
   Model model;
 
   Construction construction(model);
@@ -261,9 +258,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Construction3)
   EXPECT_EQ(0u, idfObjects.size());
 }
 
-
-TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Lights)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_Lights) {
   Model model;
 
   ThermalZone thermalZone(model);
@@ -325,8 +320,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Lights)
   EXPECT_FALSE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Annualescalationrate));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Lights_Multiplier)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_Lights_Multiplier) {
   Model model;
 
   ThermalZone thermalZone(model);
@@ -366,7 +360,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Lights_Multiplier)
   ASSERT_TRUE(idfObjects[0].getString(LifeCycleCost_NonrecurringCostFields::Category));
   EXPECT_EQ("Construction", idfObjects[0].getString(LifeCycleCost_NonrecurringCostFields::Category).get());
   ASSERT_TRUE(idfObjects[0].getDouble(LifeCycleCost_NonrecurringCostFields::Cost));
-  EXPECT_EQ(6*40.0, idfObjects[0].getDouble(LifeCycleCost_NonrecurringCostFields::Cost).get());
+  EXPECT_EQ(6 * 40.0, idfObjects[0].getDouble(LifeCycleCost_NonrecurringCostFields::Cost).get());
   ASSERT_TRUE(idfObjects[0].getString(LifeCycleCost_NonrecurringCostFields::StartofCosts));
   EXPECT_EQ("ServicePeriod", idfObjects[0].getString(LifeCycleCost_NonrecurringCostFields::StartofCosts).get());
   EXPECT_FALSE(idfObjects[0].getInt(LifeCycleCost_NonrecurringCostFields::YearsfromStart));
@@ -379,7 +373,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Lights_Multiplier)
   ASSERT_TRUE(idfObjects[0].getString(LifeCycleCost_RecurringCostsFields::Category));
   EXPECT_EQ("Maintenance", idfObjects[0].getString(LifeCycleCost_RecurringCostsFields::Category).get());
   ASSERT_TRUE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Cost));
-  EXPECT_EQ(6*4.0, idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Cost).get());
+  EXPECT_EQ(6 * 4.0, idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Cost).get());
   ASSERT_TRUE(idfObjects[0].getString(LifeCycleCost_RecurringCostsFields::StartofCosts));
   EXPECT_EQ("ServicePeriod", idfObjects[0].getString(LifeCycleCost_RecurringCostsFields::StartofCosts).get());
   EXPECT_FALSE(idfObjects[0].getInt(LifeCycleCost_RecurringCostsFields::YearsfromStart));
@@ -390,9 +384,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Lights_Multiplier)
   EXPECT_FALSE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Annualescalationrate));
 }
 
-
-TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Building)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_Building) {
   Model model;
 
   ThermalZone thermalZone(model);
@@ -452,15 +444,14 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_Building)
   EXPECT_FALSE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Annualescalationrate));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_HVACComponent)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_HVACComponent) {
 
   //create a model to use in testing this code.
   model::Model model;
 
   //create a schedule and the curves to use in the constructor
   ScheduleConstant schedule(model);
-  schedule.setValue(1.0); // Always on
+  schedule.setValue(1.0);  // Always on
   model::CurveBiquadratic ccfot1(model);
   model::CurveCubic ccfof2(model);
   model::CurveBiquadratic eirfot3(model);
@@ -470,15 +461,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_HVACComponent)
   model::CurveBiquadratic lseirfot7(model);
 
   //make a coil to do the testing on
-  model::CoilCoolingDXTwoSpeed coil(model,
-                                    schedule,
-                                    ccfot1,
-                                    ccfof2,
-                                    eirfot3,
-                                    eirfof4,
-                                    plf5,
-                                    lsccfot6,
-                                    lseirfot7);
+  model::CoilCoolingDXTwoSpeed coil(model, schedule, ccfot1, ccfof2, eirfot3, eirfof4, plf5, lsccfot6, lseirfot7);
 
   boost::optional<LifeCycleCost> cost1 = LifeCycleCost::createLifeCycleCost("Installation", coil, 10.0, "CostPerEach", "Construction");
   ASSERT_TRUE(cost1);
@@ -519,15 +502,14 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_HVACComponent)
   EXPECT_FALSE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Annualescalationrate));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_LifeCycleCost_ZoneHVACComponent)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_LifeCycleCost_ZoneHVACComponent) {
 
   model::Model model;
   ScheduleConstant sched(model);
-  sched.setValue(1.0); // Always on
-  FanConstantVolume fan(model,sched);
-  CoilHeatingWater heatingCoil(model,sched);
-  ZoneHVACUnitHeater zoneHVACUnitHeater(model,sched,fan,heatingCoil);
+  sched.setValue(1.0);  // Always on
+  FanConstantVolume fan(model, sched);
+  CoilHeatingWater heatingCoil(model, sched);
+  ZoneHVACUnitHeater zoneHVACUnitHeater(model, sched, fan, heatingCoil);
 
   boost::optional<LifeCycleCost> cost1 = LifeCycleCost::createLifeCycleCost("Installation", zoneHVACUnitHeater, 10.0, "CostPerEach", "Construction");
   ASSERT_TRUE(cost1);

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,13 +39,15 @@ bool isMember(const _enum_name& e, const StringVector& strValues) {
   for (const std::string& str : strValues) {
     try {
       _enum_name setMember(str);
-      if (e == setMember) { return true; }
+      if (e == setMember) {
+        return true;
+      }
+    } catch (...) {
     }
-    catch (...) {}
   }
   return false;
 }
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_CORE_ENUMHELPERS_HPP
+#endif  // UTILITIES_CORE_ENUMHELPERS_HPP

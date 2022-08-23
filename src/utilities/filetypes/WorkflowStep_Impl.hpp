@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,13 +43,12 @@
 
 #include <nano/nano_signal_slot.hpp>
 
-namespace openstudio{
+namespace openstudio {
 namespace detail {
 
   class UTILITIES_API WorkflowStep_Impl
   {
-  public:
-
+   public:
     WorkflowStep_Impl();
 
     virtual ~WorkflowStep_Impl();
@@ -65,26 +64,22 @@ namespace detail {
     // Emitted on any change
     Nano::Signal<void()> onChange;
 
-  protected:
-
+   protected:
     void onUpdate();
 
-  private:
-
+   private:
     // configure logging
     REGISTER_LOGGER("openstudio.WorkflowStep");
 
     boost::optional<WorkflowStepResult> m_result;
-
   };
 
   class UTILITIES_API MeasureStep_Impl : public WorkflowStep_Impl
   {
-  public:
-
+   public:
     MeasureStep_Impl(const std::string& measureDirName);
 
-    virtual std::string string() const;
+    virtual std::string string() const override;
 
     std::string measureDirName() const;
     bool setMeasureDirName(const std::string& measureDirName);
@@ -114,8 +109,7 @@ namespace detail {
 
     void clearArguments();
 
-  private:
-
+   private:
     // configure logging
     REGISTER_LOGGER("openstudio.MeasureStep");
 
@@ -124,10 +118,9 @@ namespace detail {
     boost::optional<std::string> m_description;
     boost::optional<std::string> m_modelerDescription;
     std::map<std::string, Variant> m_arguments;
-
   };
 
-} // detail
-} // openstudio
+}  // namespace detail
+}  // namespace openstudio
 
-#endif //UTILITIES_FILETYPES_WORKFLOWSTEP_IMPL_HPP
+#endif  //UTILITIES_FILETYPES_WORKFLOWSTEP_IMPL_HPP

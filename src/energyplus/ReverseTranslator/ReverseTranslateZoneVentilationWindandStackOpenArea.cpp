@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,156 +47,153 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateZoneVentilationWindandStackOpenArea( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::ZoneVentilation_WindandStackOpenArea ){
-    LOG(Error, "WorkspaceObject is not IddObjectType: ZoneVentilation:WindandStackOpenArea");
-    return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateZoneVentilationWindandStackOpenArea(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::ZoneVentilation_WindandStackOpenArea) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: ZoneVentilation:WindandStackOpenArea");
+      return boost::none;
+    }
 
-  // Start by checking if the WorkspaceObject has a ThermalZone before you even initialize a ModelObject
-  boost::optional<ThermalZone> _zone;
-  OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::ZoneName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (boost::optional<Space> _space = modelObject->optionalCast<Space>()) {
-        _zone = _space->thermalZone();
+    // Start by checking if the WorkspaceObject has a ThermalZone before you even initialize a ModelObject
+    boost::optional<ThermalZone> _zone;
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::ZoneName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (boost::optional<Space> _space = modelObject->optionalCast<Space>()) {
+          _zone = _space->thermalZone();
+        }
       }
     }
-  }
 
-  if(!_zone.has_value()) {
-    LOG(Error, "Zone not found for workspace object " << workspaceObject.briefDescription() << ", it will not be Reverse Translated.");
-    return boost::none;
-  }
+    if (!_zone.has_value()) {
+      LOG(Error, "Zone not found for workspace object " << workspaceObject.briefDescription() << ", it will not be Reverse Translated.");
+      return boost::none;
+    }
 
-  openstudio::model::ZoneVentilationWindandStackOpenArea ventilation(m_model);
+    openstudio::model::ZoneVentilationWindandStackOpenArea ventilation(m_model);
 
-  OptionalString s = workspaceObject.name();
-  if (s) {
-    ventilation.setName(*s);
-  }
+    OptionalString s = workspaceObject.name();
+    if (s) {
+      ventilation.setName(*s);
+    }
 
-  ventilation.addToThermalZone(_zone.get());
+    ventilation.addToThermalZone(_zone.get());
 
-  OptionalDouble _d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::OpeningArea);
-  if (_d) {
-    ventilation.setOpeningArea(_d.get());
-  } else {
-    // This one has a default of zero, but we should care about it (zero means it's useless too)
-    LOG(Error, "Opening Area value not found for workspace object " << workspaceObject.briefDescription());
-  }
+    OptionalDouble _d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::OpeningArea);
+    if (_d) {
+      ventilation.setOpeningArea(_d.get());
+    } else {
+      // This one has a default of zero, but we should care about it (zero means it's useless too)
+      LOG(Error, "Opening Area value not found for workspace object " << workspaceObject.briefDescription());
+    }
 
-  target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (boost::optional<Schedule> _sch = modelObject->optionalCast<Schedule>()){
-        ventilation.setOpeningAreaFractionSchedule(_sch.get());
+    target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::OpeningAreaFractionScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (boost::optional<Schedule> _sch = modelObject->optionalCast<Schedule>()) {
+          ventilation.setOpeningAreaFractionSchedule(_sch.get());
+        }
       }
     }
-  }
 
-  if ( (_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness)) ) {
-    ventilation.setOpeningEffectiveness(_d.get());
-  } else {
-    ventilation.autocalculateOpeningEffectiveness();
-  }
+    if ((_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::OpeningEffectiveness))) {
+      ventilation.setOpeningEffectiveness(_d.get());
+    } else {
+      ventilation.autocalculateOpeningEffectiveness();
+    }
 
-  if ( (_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::EffectiveAngle)) ) {
-    ventilation.setEffectiveAngle(_d.get());
-  }
+    if ((_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::EffectiveAngle))) {
+      ventilation.setEffectiveAngle(_d.get());
+    }
 
-  if ( (_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::HeightDifference)) ) {
-    ventilation.setHeightDifference(_d.get());
-  }
+    if ((_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::HeightDifference))) {
+      ventilation.setHeightDifference(_d.get());
+    }
 
-  if ( (_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening)) ) {
-    ventilation.setDischargeCoefficientforOpening(_d.get());
-  } else {
-    ventilation.autocalculateDischargeCoefficientforOpening();
-  }
+    if ((_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::DischargeCoefficientforOpening))) {
+      ventilation.setDischargeCoefficientforOpening(_d.get());
+    } else {
+      ventilation.autocalculateDischargeCoefficientforOpening();
+    }
 
-  if ( (_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperature)) ) {
-    ventilation.setMinimumIndoorTemperature(_d.get());
-  }
+    if ((_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperature))) {
+      ventilation.setMinimumIndoorTemperature(_d.get());
+    }
 
-  target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperatureScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (boost::optional<Schedule> _sch = modelObject->optionalCast<Schedule>()){
-        ventilation.setMinimumIndoorTemperatureSchedule(_sch.get());
+    target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MinimumIndoorTemperatureScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (boost::optional<Schedule> _sch = modelObject->optionalCast<Schedule>()) {
+          ventilation.setMinimumIndoorTemperatureSchedule(_sch.get());
+        }
       }
     }
-  }
 
-  if ( (_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperature)) ) {
-    ventilation.setMaximumIndoorTemperature(_d.get());
-  }
+    if ((_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperature))) {
+      ventilation.setMaximumIndoorTemperature(_d.get());
+    }
 
-  target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperatureScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (boost::optional<Schedule> _sch = modelObject->optionalCast<Schedule>()){
-        ventilation.setMaximumIndoorTemperatureSchedule(_sch.get());
+    target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MaximumIndoorTemperatureScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (boost::optional<Schedule> _sch = modelObject->optionalCast<Schedule>()) {
+          ventilation.setMaximumIndoorTemperatureSchedule(_sch.get());
+        }
       }
     }
-  }
 
-  if ( (_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperature)) ) {
-    ventilation.setDeltaTemperature(_d.get());
-  }
+    if ((_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperature))) {
+      ventilation.setDeltaTemperature(_d.get());
+    }
 
-  target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperatureScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (boost::optional<Schedule> _sch = modelObject->optionalCast<Schedule>()){
-        ventilation.setDeltaTemperatureSchedule(_sch.get());
+    target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::DeltaTemperatureScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (boost::optional<Schedule> _sch = modelObject->optionalCast<Schedule>()) {
+          ventilation.setDeltaTemperatureSchedule(_sch.get());
+        }
       }
     }
-  }
 
-  if ( (_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperature)) ) {
-    ventilation.setMinimumOutdoorTemperature(_d.get());
-  }
+    if ((_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperature))) {
+      ventilation.setMinimumOutdoorTemperature(_d.get());
+    }
 
-  target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperatureScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (boost::optional<Schedule> _sch = modelObject->optionalCast<Schedule>()){
-        ventilation.setMinimumOutdoorTemperatureSchedule(_sch.get());
+    target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MinimumOutdoorTemperatureScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (boost::optional<Schedule> _sch = modelObject->optionalCast<Schedule>()) {
+          ventilation.setMinimumOutdoorTemperatureSchedule(_sch.get());
+        }
       }
     }
-  }
 
-  if ( (_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperature)) ) {
-    ventilation.setMaximumOutdoorTemperature(_d.get());
-  }
+    if ((_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperature))) {
+      ventilation.setMaximumOutdoorTemperature(_d.get());
+    }
 
-  target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperatureScheduleName);
-  if (target){
-    OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-    if (modelObject){
-      if (boost::optional<Schedule> _sch = modelObject->optionalCast<Schedule>()){
-        ventilation.setMaximumOutdoorTemperatureSchedule(_sch.get());
+    target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MaximumOutdoorTemperatureScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (boost::optional<Schedule> _sch = modelObject->optionalCast<Schedule>()) {
+          ventilation.setMaximumOutdoorTemperatureSchedule(_sch.get());
+        }
       }
     }
+
+    if ((_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MaximumWindSpeed))) {
+      ventilation.setMaximumWindSpeed(_d.get());
+    }
+
+    return ventilation;
   }
 
-  if ( (_d = workspaceObject.getDouble(openstudio::ZoneVentilation_WindandStackOpenAreaFields::MaximumWindSpeed)) ) {
-    ventilation.setMaximumWindSpeed(_d.get());
-  }
+}  // namespace energyplus
 
-  return ventilation;
-
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

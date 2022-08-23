@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,24 +44,22 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateOutputDiagnostics( model::OutputDiagnostics& modelObject )
-{
-  // If nothing to write, don't
-  auto keys = modelObject.keys();
-  if (keys.empty()) {
-    return boost::none;
-  }
+  boost::optional<IdfObject> ForwardTranslator::translateOutputDiagnostics(model::OutputDiagnostics& modelObject) {
+    // If nothing to write, don't
+    auto keys = modelObject.keys();
+    if (keys.empty()) {
+      return boost::none;
+    }
 
-  IdfObject idfObject( openstudio::IddObjectType::Output_Diagnostics );
-  m_idfObjects.push_back(idfObject);
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Diagnostics, modelObject);
 
-  for (const std::string& key: modelObject.keys()) {
-    IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
-    eg.setString(Output_DiagnosticsExtensibleFields::Key, key);
-  }
+    for (const std::string& key : modelObject.keys()) {
+      IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
+      eg.setString(Output_DiagnosticsExtensibleFields::Key, key);
+    }
 
-  return idfObject;
-} // End of translate function
+    return idfObject;
+  }  // End of translate function
 
-} // end namespace energyplus
-} // end namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

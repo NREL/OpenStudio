@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,61 +36,58 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class CFactorUndergroundWallConstruction_Impl;
-}
+  namespace detail {
+    class CFactorUndergroundWallConstruction_Impl;
+  }
 
-/** CFactorUndergroundWallConstruction is a ConstructionBase object that wraps EnergyPlus IDD
+  /** CFactorUndergroundWallConstruction is a ConstructionBase object that wraps EnergyPlus IDD
  *  object 'Construction:CfactorUndergroundWall'. */
-class MODEL_API CFactorUndergroundWallConstruction : public ConstructionBase {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API CFactorUndergroundWallConstruction : public ConstructionBase
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** TODO default values should be reviewed */
-  explicit CFactorUndergroundWallConstruction(const Model& model,
-    double cFactor = 0.1,
-    double height = 0.1);
+    /** TODO default values should be reviewed */
+    explicit CFactorUndergroundWallConstruction(const Model& model, double cFactor = 0.1, double height = 0.1);
 
-  virtual ~CFactorUndergroundWallConstruction() {}
+    virtual ~CFactorUndergroundWallConstruction() {}
 
-  /** Attribute Name: 'cFactor' */
-  virtual double cFactor() const;
-  virtual bool setCFactor(double cFactor);
-  /** Attribute Name: 'height' */
-  virtual double height() const;
-  virtual bool setHeight(double height);
+    double cFactor() const;
+    bool setCFactor(double cFactor);
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    double height() const;
+    bool setHeight(double height);
 
-  static IddObjectType iddObjectType();
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CFactorUndergroundWallConstruction_Impl ImplType;
+    static IddObjectType iddObjectType();
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::CFactorUndergroundWallConstruction_Impl;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CFactorUndergroundWallConstruction_Impl ImplType;
 
-  explicit CFactorUndergroundWallConstruction(
-      std::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl);
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::CFactorUndergroundWallConstruction_Impl;
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CFactorUndergroundWallConstruction");
-};
+    explicit CFactorUndergroundWallConstruction(std::shared_ptr<detail::CFactorUndergroundWallConstruction_Impl> impl);
 
-/** \relates CFactorUndergroundWallConstruction */
-typedef boost::optional<CFactorUndergroundWallConstruction> OptionalCFactorUndergroundWallConstruction;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CFactorUndergroundWallConstruction");
+  };
 
-/** \relates CFactorUndergroundWallConstruction */
-typedef std::vector<CFactorUndergroundWallConstruction> CFactorUndergroundWallConstructionVector;
+  /** \relates CFactorUndergroundWallConstruction */
+  typedef boost::optional<CFactorUndergroundWallConstruction> OptionalCFactorUndergroundWallConstruction;
 
-} // model
-} // openstudio
+  /** \relates CFactorUndergroundWallConstruction */
+  typedef std::vector<CFactorUndergroundWallConstruction> CFactorUndergroundWallConstructionVector;
 
-#endif // MODEL_CFACTORUNDERGROUNDWALLCONSTRUCTION_HPP
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_CFACTORUNDERGROUNDWALLCONSTRUCTION_HPP

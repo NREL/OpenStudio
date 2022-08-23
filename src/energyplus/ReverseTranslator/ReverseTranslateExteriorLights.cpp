@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,67 +45,61 @@
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<model::ModelObject> ReverseTranslator::translateExteriorLights(
-    const WorkspaceObject& workspaceObject)
-{
-  if (workspaceObject.iddObject().type() != IddObjectType::Exterior_Lights) {
-    LOG(Error,"WorkspaceObject " << workspaceObject.briefDescription()
-        << " is not of IddObjectType::Exterior_Lights.");
-    return boost::none;
-  }
-
-  model::ExteriorLightsDefinition definition(m_model);
-
-  OptionalString s;
-  OptionalDouble d;
-
-  if ((s = workspaceObject.name())) {
-    definition.setName(*s + " Definition");
-  }
-
-  if ((d = workspaceObject.getDouble(Exterior_LightsFields::DesignLevel))){
-    definition.setDesignLevel(*d);
-  }
-
-  model::OptionalExteriorLights exteriorLights;
-  model::OptionalSchedule schedule;
-
-  if (OptionalWorkspaceObject target = workspaceObject.getTarget(Exterior_LightsFields::ScheduleName))
-  {
-    if (model::OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target)) {
-      schedule = modelObject->optionalCast<model::Schedule>();
+  boost::optional<model::ModelObject> ReverseTranslator::translateExteriorLights(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Exterior_Lights) {
+      LOG(Error, "WorkspaceObject " << workspaceObject.briefDescription() << " is not of IddObjectType::Exterior_Lights.");
+      return boost::none;
     }
-  }
 
-  if (schedule) {
-    try {
-      exteriorLights = model::ExteriorLights(definition,*schedule);
+    model::ExteriorLightsDefinition definition(m_model);
+
+    OptionalString s;
+    OptionalDouble d;
+
+    if ((s = workspaceObject.name())) {
+      definition.setName(*s + " Definition");
     }
-    catch (std::exception& e) {
-      LOG(Warn,"Could not reverse translate " << workspaceObject.briefDescription()
-          << " in full, because " << e.what() << ".");
+
+    if ((d = workspaceObject.getDouble(Exterior_LightsFields::DesignLevel))) {
+      definition.setDesignLevel(*d);
     }
+
+    model::OptionalExteriorLights exteriorLights;
+    model::OptionalSchedule schedule;
+
+    if (OptionalWorkspaceObject target = workspaceObject.getTarget(Exterior_LightsFields::ScheduleName)) {
+      if (model::OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target)) {
+        schedule = modelObject->optionalCast<model::Schedule>();
+      }
+    }
+
+    if (schedule) {
+      try {
+        exteriorLights = model::ExteriorLights(definition, *schedule);
+      } catch (std::exception& e) {
+        LOG(Warn, "Could not reverse translate " << workspaceObject.briefDescription() << " in full, because " << e.what() << ".");
+      }
+    }
+    if (!exteriorLights) {
+      exteriorLights = model::ExteriorLights(definition);
+    }
+
+    OS_ASSERT(exteriorLights);
+
+    if ((s = workspaceObject.name())) {
+      exteriorLights->setName(*s);
+    }
+
+    if ((s = workspaceObject.getString(Exterior_LightsFields::ControlOption, false, true))) {
+      exteriorLights->setControlOption(*s);
+    }
+
+    if ((s = workspaceObject.getString(Exterior_LightsFields::EndUseSubcategory, false, true))) {
+      exteriorLights->setEndUseSubcategory(*s);
+    }
+
+    return *exteriorLights;
   }
-  if (!exteriorLights) {
-    exteriorLights = model::ExteriorLights(definition);
-  }
 
-  OS_ASSERT(exteriorLights);
-
-  if ((s = workspaceObject.name())) {
-    exteriorLights->setName(*s);
-  }
-
-  if ((s = workspaceObject.getString(Exterior_LightsFields::ControlOption,false,true))) {
-    exteriorLights->setControlOption(*s);
-  }
-
-  if ((s = workspaceObject.getString(Exterior_LightsFields::EndUseSubcategory,false,true))) {
-    exteriorLights->setEndUseSubcategory(*s);
-  }
-
-  return *exteriorLights;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,138 +33,167 @@
 #include "ModelAPI.hpp"
 #include "OpaqueMaterial_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** MasslessOpaqueMaterial_Impl is a OpaqueMaterial_Impl that is the implementation class for MasslessOpaqueMaterial.*/
-  class MODEL_API MasslessOpaqueMaterial_Impl : public OpaqueMaterial_Impl {
+    /** MasslessOpaqueMaterial_Impl is a OpaqueMaterial_Impl that is the implementation class for MasslessOpaqueMaterial.*/
+    class MODEL_API MasslessOpaqueMaterial_Impl : public OpaqueMaterial_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    MasslessOpaqueMaterial_Impl(const IdfObject& idfObject,
-                                Model_Impl* model,
-                                bool keepHandle);
+      MasslessOpaqueMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    MasslessOpaqueMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      MasslessOpaqueMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    MasslessOpaqueMaterial_Impl(const MasslessOpaqueMaterial_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      MasslessOpaqueMaterial_Impl(const MasslessOpaqueMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~MasslessOpaqueMaterial_Impl() {}
+      virtual ~MasslessOpaqueMaterial_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string roughness() const;
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-    /** The conductivitiy of the material in W/m*K. */
-    virtual double thermalConductivity() const override;
+      std::string roughness() const;
 
-    /** The conductance of the material in W/m^2*K. */
-    virtual double thermalConductance() const override;
+      /** The conductivity of the material in W/m*K. */
+      virtual double thermalConductivity() const override;
 
-    /** The resistivity of the material in m*K/W. */
-    virtual double thermalResistivity() const override;
+      /** The conductance of the material in W/m^2*K. */
+      virtual double thermalConductance() const override;
 
-    /** The resistance of the material in m^2*K/W. */
-    virtual double thermalResistance() const override;
+      /** The resistivity of the material in m*K/W. */
+      virtual double thermalResistivity() const override;
 
-    virtual double thermalAbsorptance() const override;
+      /** The resistance of the material in m^2*K/W. */
+      virtual double thermalResistance() const override;
 
-    virtual boost::optional<double> thermalReflectance() const override;
+      virtual double thermalAbsorptance() const override;
 
-    virtual double solarAbsorptance() const override;
+      virtual boost::optional<double> thermalReflectance() const override;
 
-    virtual boost::optional<double> solarReflectance() const override;
+      virtual double solarAbsorptance() const override;
 
-    virtual double visibleAbsorptance() const override;
+      virtual boost::optional<double> solarReflectance() const override;
 
-    virtual boost::optional<double> visibleReflectance() const override;
+      virtual double visibleAbsorptance() const override;
 
-    bool isThermalAbsorptanceDefaulted() const;
+      virtual boost::optional<double> visibleReflectance() const override;
 
-    bool isSolarAbsorptanceDefaulted() const;
+      bool isThermalAbsorptanceDefaulted() const;
 
-    bool isVisibleAbsorptanceDefaulted() const;
+      bool isSolarAbsorptanceDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool isVisibleAbsorptanceDefaulted() const;
 
-    bool setRoughness(std::string roughness);
+      //@}
+      /** @name Setters */
+      //@{
 
-    /** Set thickness to value (m). */
-    virtual bool setThickness(double value) override;
+      bool setRoughness(const std::string& roughness);
 
-    /** Sets the conductivity of the material in W/m*K, if possible. */
-    virtual bool setThermalConductivity(double value) override;
+      /** Set thickness to value (m). */
+      virtual bool setThickness(double value) override;
 
-    /** Sets the conductance of the material in W/m^2*K, if possible. */
-    virtual bool setThermalConductance(double value) override;
+      /** Sets the conductivity of the material in W/m*K, if possible. */
+      virtual bool setThermalConductivity(double value) override;
 
-    /** Sets the resistivity of the material in m*K/W, if possible. */
-    virtual bool setThermalResistivity(double value) override;
+      /** Sets the conductance of the material in W/m^2*K, if possible. */
+      virtual bool setThermalConductance(double value) override;
 
-    /** Sets the resistance of the material in m^2*K/W, if possible. */
-    virtual bool setThermalResistance(double value) override;
+      /** Sets the resistivity of the material in m*K/W, if possible. */
+      virtual bool setThermalResistivity(double value) override;
 
-    virtual bool setThermalAbsorptance(boost::optional<double> value);
+      /** Sets the resistance of the material in m^2*K/W, if possible. */
+      virtual bool setThermalResistance(double thermalResistance) override;
 
-    virtual bool setThermalReflectance(boost::optional<double> value) override;
+      virtual bool setThermalAbsorptance(boost::optional<double> value);
 
-    virtual bool setSolarAbsorptance(boost::optional<double> value) override;
+      virtual bool setThermalReflectance(boost::optional<double> value) override;
 
-    virtual bool setSolarReflectance(boost::optional<double> value) override;
+      virtual bool setSolarAbsorptance(boost::optional<double> value) override;
 
-    virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
+      virtual bool setSolarReflectance(boost::optional<double> value) override;
 
-    virtual bool setVisibleReflectance(boost::optional<double> value) override;
+      virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
 
-    bool setThermalAbsorptance(double thermalAbsorptance) override;
+      virtual bool setVisibleReflectance(boost::optional<double> value) override;
 
-    void resetThermalAbsorptance();
+      bool setThermalAbsorptance(double thermalAbsorptance) override;
 
-    bool setSolarAbsorptance(double solarAbsorptance);
+      void resetThermalAbsorptance();
 
-    void resetSolarAbsorptance();
+      bool setSolarAbsorptance(double solarAbsorptance);
 
-    bool setVisibleAbsorptance(double visibleAbsorptance);
+      void resetSolarAbsorptance();
 
-    void resetVisibleAbsorptance();
+      bool setVisibleAbsorptance(double visibleAbsorptance);
 
-    //@}
-    /** @name Other */
-    //@{
+      void resetVisibleAbsorptance();
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.MasslessOpaqueMaterial");
+      // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it;
+      boost::optional<MaterialPropertyMoisturePenetrationDepthSettings>
+        createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA,
+                                                               double moistureEquationCoefficientB, double moistureEquationCoefficientC,
+                                                               double moistureEquationCoefficientD, double coatingLayerThickness,
+                                                               double coatingLayerWaterVaporDiffusionResistanceFactor);
 
-    std::vector<std::string> roughnessValues() const;
-  };
+      // returns the material property moisture penetration depth settings if set
+      boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
 
-} // detail
+      // resets the material property moisture penetration depth settings
+      void resetMaterialPropertyMoisturePenetrationDepthSettings();
 
-} // model
-} // openstudio
+      // if material property phase change already exists, do nothing and return nil; creates the material property phase change if it does not already exist and return it;
+      boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange();
+      boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
 
-#endif // MODEL_MASSLESSOPAQUEMATERIAL_IMPL_HPP
+      // returns the material property phase change if set
+      boost::optional<MaterialPropertyPhaseChange> materialPropertyPhaseChange() const;
+
+      // resets the material property phase change
+      void resetMaterialPropertyPhaseChange();
+
+      // if material property phase change hysteresis already exists, do nothing and return nil; creates the material property phase change hysteresis if it does not already exist and return it
+      boost::optional<MaterialPropertyPhaseChangeHysteresis> createMaterialPropertyPhaseChangeHysteresis();
+
+      // returns the material property phase change hysteresis if set
+      boost::optional<MaterialPropertyPhaseChangeHysteresis> materialPropertyPhaseChangeHysteresis() const;
+
+      // resets the material property phase change hysteresis
+      void resetMaterialPropertyPhaseChangeHysteresis();
+
+      //@}
+      /** @name Other */
+      //@{
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.MasslessOpaqueMaterial");
+
+      std::vector<std::string> roughnessValues() const;
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_MASSLESSOPAQUEMATERIAL_IMPL_HPP

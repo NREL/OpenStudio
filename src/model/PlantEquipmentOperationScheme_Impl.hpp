@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,37 +35,35 @@
 namespace openstudio {
 namespace model {
 
-class PlantLoop;
+  class PlantLoop;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API PlantEquipmentOperationScheme_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API PlantEquipmentOperationScheme_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    PlantEquipmentOperationScheme_Impl(IddObjectType type, Model_Impl* model);
+      PlantEquipmentOperationScheme_Impl(IddObjectType type, Model_Impl* model);
 
-    PlantEquipmentOperationScheme_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      PlantEquipmentOperationScheme_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    PlantEquipmentOperationScheme_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      PlantEquipmentOperationScheme_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    PlantEquipmentOperationScheme_Impl(const PlantEquipmentOperationScheme_Impl& other, Model_Impl* model, bool keepHandles);
+      PlantEquipmentOperationScheme_Impl(const PlantEquipmentOperationScheme_Impl& other, Model_Impl* model, bool keepHandles);
 
-    virtual ~PlantEquipmentOperationScheme_Impl() {}
+      virtual ~PlantEquipmentOperationScheme_Impl() {}
 
-    boost::optional<PlantLoop> plantLoop() const;
+      boost::optional<PlantLoop> plantLoop() const;
 
-   private:
+     private:
+      REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationScheme");
+    };
 
-    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationScheme");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_PLANTEQUIPMENTOPERATIONSCHEME_IMPL_HPP
+#endif  // MODEL_PLANTEQUIPMENTOPERATIONSCHEME_IMPL_HPP

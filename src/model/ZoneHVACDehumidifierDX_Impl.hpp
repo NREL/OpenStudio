@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,125 +36,120 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Curve;
-// class WaterStorageTank;
+  class Schedule;
+  class Curve;
+  // class WaterStorageTank;
 
-namespace detail {
+  namespace detail {
 
-  /** ZoneHVACDehumidifierDX_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACDehumidifierDX.*/
-  class MODEL_API ZoneHVACDehumidifierDX_Impl : public ZoneHVACComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ZoneHVACDehumidifierDX_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACDehumidifierDX.*/
+    class MODEL_API ZoneHVACDehumidifierDX_Impl : public ZoneHVACComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ZoneHVACDehumidifierDX_Impl(const IdfObject& idfObject,
-                                Model_Impl* model,
-                                bool keepHandle);
+      ZoneHVACDehumidifierDX_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ZoneHVACDehumidifierDX_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      ZoneHVACDehumidifierDX_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ZoneHVACDehumidifierDX_Impl(const ZoneHVACDehumidifierDX_Impl& other,
-                                Model_Impl* model,
-                                bool keepHandle);
+      ZoneHVACDehumidifierDX_Impl(const ZoneHVACDehumidifierDX_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ZoneHVACDehumidifierDX_Impl() {}
+      virtual ~ZoneHVACDehumidifierDX_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    double ratedWaterRemoval() const;
+      double ratedWaterRemoval() const;
 
-    double ratedEnergyFactor() const;
+      double ratedEnergyFactor() const;
 
-    double ratedAirFlowRate() const;
+      double ratedAirFlowRate() const;
 
-    Curve waterRemovalCurve() const;
+      Curve waterRemovalCurve() const;
 
-    Curve energyFactorCurve() const;
+      Curve energyFactorCurve() const;
 
-    Curve partLoadFractionCorrelationCurve() const;
+      Curve partLoadFractionCorrelationCurve() const;
 
-    double minimumDryBulbTemperatureforDehumidifierOperation() const;
+      double minimumDryBulbTemperatureforDehumidifierOperation() const;
 
-    double maximumDryBulbTemperatureforDehumidifierOperation() const;
+      double maximumDryBulbTemperatureforDehumidifierOperation() const;
 
-    double offCycleParasiticElectricLoad() const;
+      double offCycleParasiticElectricLoad() const;
 
-    // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
+      // boost::optional<WaterStorageTank> condensateCollectionWaterStorageTank() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setRatedWaterRemoval(double ratedWaterRemoval);
+      bool setRatedWaterRemoval(double ratedWaterRemoval);
 
-    bool setRatedEnergyFactor(double ratedEnergyFactor);
+      bool setRatedEnergyFactor(double ratedEnergyFactor);
 
-    bool setRatedAirFlowRate(double ratedAirFlowRate);
+      bool setRatedAirFlowRate(double ratedAirFlowRate);
 
-    bool setWaterRemovalCurve(const Curve& curve);
+      bool setWaterRemovalCurve(const Curve& curve);
 
-    bool setEnergyFactorCurve(const Curve& curve);
+      bool setEnergyFactorCurve(const Curve& curve);
 
-    bool setPartLoadFractionCorrelationCurve(const Curve& curve);
+      bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-    bool setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation);
+      bool setMinimumDryBulbTemperatureforDehumidifierOperation(double minimumDryBulbTemperatureforDehumidifierOperation);
 
-    bool setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation);
+      bool setMaximumDryBulbTemperatureforDehumidifierOperation(double maximumDryBulbTemperatureforDehumidifierOperation);
 
-    bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
+      bool setOffCycleParasiticElectricLoad(double offCycleParasiticElectricLoad);
 
-    // bool setCondensateCollectionWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
+      // bool setCondensateCollectionWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
 
-    // void resetCondensateCollectionWaterStorageTank();
+      // void resetCondensateCollectionWaterStorageTank();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    ModelObject clone(Model model) const override;
+      ModelObject clone(Model model) const override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ZoneHVACDehumidifierDX");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZoneHVACDehumidifierDX");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    boost::optional<Curve> optionalWaterRemovalCurve() const;
-    boost::optional<Curve> optionalEnergyFactorCurve() const;
-    boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<Curve> optionalWaterRemovalCurve() const;
+      boost::optional<Curve> optionalEnergyFactorCurve() const;
+      boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ZONEHVACDEHUMIDIFIERDX_IMPL_HPP
+#endif  // MODEL_ZONEHVACDEHUMIDIFIERDX_IMPL_HPP

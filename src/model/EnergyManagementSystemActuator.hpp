@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,99 +41,101 @@ namespace energyplus {
 
 namespace model {
 
-class ThermalZone;
-class Space;
+  class ThermalZone;
+  class Space;
 
-namespace detail {
+  namespace detail {
 
-  class EnergyManagementSystemActuator_Impl;
+    class EnergyManagementSystemActuator_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** EnergyManagementSystemActuator is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:Actuator'. */
-class MODEL_API EnergyManagementSystemActuator : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** EnergyManagementSystemActuator is a ModelObject that wraps the OpenStudio IDD object 'OS:EnergyManagementSystem:Actuator'. */
+  class MODEL_API EnergyManagementSystemActuator : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType, const std::string& actuatedComponentControlType);
-  /**These constructors below are for SpaceloadInstances that are defined in SpaceTypes that are used in Spaces.
+    explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
+                                            const std::string& actuatedComponentControlType);
+    /**These constructors below are for SpaceloadInstances that are defined in SpaceTypes that are used in Spaces.
      * Upon translation, the SpaceLoadInstances use ZoneLists which are not avail in OS
      * The ZoneListName is the SpaceType name
      * The Zone's are the Space->ThermalZone names
      * So to attach to a future zone, use the TZ or the Space that the SpaceLoadInstance will operate on
   **/
-  explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType, const std::string& actuatedComponentControlType, const ThermalZone& thermalZone);
+    explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
+                                            const std::string& actuatedComponentControlType, const ThermalZone& thermalZone);
 
-  explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType, const std::string& actuatedComponentControlType, const Space& space);
+    explicit EnergyManagementSystemActuator(const ModelObject& modelObject, const std::string& actuatedComponentType,
+                                            const std::string& actuatedComponentControlType, const Space& space);
 
-  virtual ~EnergyManagementSystemActuator() {}
+    virtual ~EnergyManagementSystemActuator() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<ModelObject> actuatedComponent() const;
+    boost::optional<ModelObject> actuatedComponent() const;
 
-  std::string actuatedComponentControlType() const;
+    std::string actuatedComponentControlType() const;
 
-  std::string actuatedComponentType() const;
+    std::string actuatedComponentType() const;
 
-  boost::optional<ModelObject> zoneName() const;
+    boost::optional<ModelObject> zoneName() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setActuatedComponent(const ModelObject& modelObject);
+    bool setActuatedComponent(const ModelObject& modelObject);
 
-  bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
+    bool setActuatedComponentControlType(const std::string& actuatedComponentControlType);
 
-  bool setActuatedComponentType(const std::string& actuatedComponentType);
-  //set the ZoneName field to the ThermalZone's names
-  bool setThermalZone(const ThermalZone& thermalZone);
-  //set the ZoneName field to the Space's ThermalZone's name
-  bool setSpace(const Space& space);
+    bool setActuatedComponentType(const std::string& actuatedComponentType);
+    //set the ZoneName field to the ThermalZone's names
+    bool setThermalZone(const ThermalZone& thermalZone);
+    //set the ZoneName field to the Space's ThermalZone's name
+    bool setSpace(const Space& space);
 
-  void resetZoneName();
+    void resetZoneName();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::EnergyManagementSystemActuator_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::EnergyManagementSystemActuator_Impl ImplType;
 
-  explicit EnergyManagementSystemActuator(std::shared_ptr<detail::EnergyManagementSystemActuator_Impl> impl);
+    explicit EnergyManagementSystemActuator(std::shared_ptr<detail::EnergyManagementSystemActuator_Impl> impl);
 
-  friend class detail::EnergyManagementSystemActuator_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class energyplus::ReverseTranslator;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.EnergyManagementSystemActuator");
-  //These are for the ReveseTranslator
-  explicit EnergyManagementSystemActuator(const ModelObject& modelObject);
+    friend class detail::EnergyManagementSystemActuator_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class energyplus::ReverseTranslator;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemActuator");
+    //These are for the ReveseTranslator
+    explicit EnergyManagementSystemActuator(const ModelObject& modelObject);
 
-  explicit EnergyManagementSystemActuator(const Model& model);
+    explicit EnergyManagementSystemActuator(const Model& model);
+  };
 
-};
+  /** \relates EnergyManagementSystemActuator*/
+  typedef boost::optional<EnergyManagementSystemActuator> OptionalEnergyManagementSystemActuator;
 
-/** \relates EnergyManagementSystemActuator*/
-typedef boost::optional<EnergyManagementSystemActuator> OptionalEnergyManagementSystemActuator;
+  /** \relates EnergyManagementSystemActuator*/
+  typedef std::vector<EnergyManagementSystemActuator> EnergyManagementSystemActuatorVector;
 
-/** \relates EnergyManagementSystemActuator*/
-typedef std::vector<EnergyManagementSystemActuator> EnergyManagementSystemActuatorVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMACTUATOR_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMACTUATOR_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,62 +36,56 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ExternalInterface_Impl is a ModelObject_Impl that is the implementation class for ExternalInterface.*/
-  class MODEL_API ExternalInterface_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ExternalInterface_Impl is a ModelObject_Impl that is the implementation class for ExternalInterface.*/
+    class MODEL_API ExternalInterface_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ExternalInterface_Impl(const IdfObject& idfObject,
-                           Model_Impl* model,
-                           bool keepHandle);
+      ExternalInterface_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ExternalInterface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      ExternalInterface_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ExternalInterface_Impl(const ExternalInterface_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      ExternalInterface_Impl(const ExternalInterface_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ExternalInterface_Impl() {}
+      virtual ~ExternalInterface_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string nameofExternalInterface() const;
+      std::string nameofExternalInterface() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setNameofExternalInterface(const std::string& nameofExternalInterface);
+      bool setNameofExternalInterface(const std::string& nameofExternalInterface);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ExternalInterface");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ExternalInterface");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACE_IMPL_HPP
-
+#endif  // MODEL_EXTERNALINTERFACE_IMPL_HPP

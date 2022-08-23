@@ -1,6 +1,6 @@
 !-   ===========  ALL OBJECTS IN CLASS: VERSION ===========
 
-  Version,9.2;
+  Version,22.1;
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDING ===========
 
@@ -8,7 +8,7 @@
     Untitled,                !- Name
     0.0,                     !- North Axis {deg}
     City,                    !- Terrain
-    0.04,                    !- Loads Convergence Tolerance Value
+    0.04,                    !- Loads Convergence Tolerance Value {W}
     0.4,                     !- Temperature Convergence Tolerance Value {deltaC}
     FullInteriorAndExterior, !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -25,7 +25,9 @@
     No,                      !- Do System Sizing Calculation
     No,                      !- Do Plant Sizing Calculation
     Yes,                     !- Run Simulation for Sizing Periods
-    Yes;                     !- Run Simulation for Weather File Run Periods
+    Yes,                     !- Run Simulation for Weather File Run Periods
+    No,                      !- Do HVAC Sizing Simulation for Sizing Periods
+    1;                       !- Maximum Number of HVAC Sizing Simulation Passes
 
 !-   ===========  ALL OBJECTS IN CLASS: LOCATION ===========
 
@@ -39,7 +41,7 @@
   GlobalGeometryRules,
     UpperLeftCorner,         !- Starting Vertex Position
     Counterclockwise,        !- Vertex Entry Direction
-    Absolute;                !- Coordinate System
+    World;                   !- Coordinate System
 
 !-   ===========  ALL OBJECTS IN CLASS: MATERIAL ===========
 
@@ -571,6 +573,7 @@
     Floor,                   !- Surface Type
     Exterior Floor,          !- Construction Name
     CD775B,                  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -587,6 +590,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     CD775B,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -603,6 +607,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     CD775B,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -619,6 +624,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     CD775B,                  !- Zone Name
+    ,                        !- Space Name
     Zone,                    !- Outside Boundary Condition
     8B02A8,                  !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -635,6 +641,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     CD775B,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -651,6 +658,7 @@
     Roof,                    !- Surface Type
     Exterior Roof,           !- Construction Name
     CD775B,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -676,6 +684,7 @@
     Floor,                   !- Surface Type
     Exterior Floor,          !- Construction Name
     8B02A8,                  !- Zone Name
+    ,                        !- Space Name
     Ground,                  !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     NoSun,                   !- Sun Exposure
@@ -692,6 +701,7 @@
     Roof,                    !- Surface Type
     Exterior Roof,           !- Construction Name
     8B02A8,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -708,6 +718,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     8B02A8,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -724,6 +735,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     8B02A8,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure
@@ -740,6 +752,7 @@
     Wall,                    !- Surface Type
     Exterior Wall,           !- Construction Name
     8B02A8,                  !- Zone Name
+    ,                        !- Space Name
     Outdoors,                !- Outside Boundary Condition
     ,                        !- Outside Boundary Condition Object
     SunExposed,              !- Sun Exposure

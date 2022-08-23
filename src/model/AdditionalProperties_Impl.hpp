@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,104 +35,95 @@
 namespace openstudio {
 namespace model {
 
-class AdditionalProperties;
-class ModelObject;
+  class AdditionalProperties;
+  class ModelObject;
 
-namespace detail {
+  namespace detail {
 
-class MODEL_API AdditionalProperties_Impl : public ModelObject_Impl {
- public:
+    class MODEL_API AdditionalProperties_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+      AdditionalProperties_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  AdditionalProperties_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      AdditionalProperties_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  AdditionalProperties_Impl(
-          const openstudio::detail::WorkspaceObject_Impl& other,
-          Model_Impl* model,
-          bool keepHandle
-  );
+      AdditionalProperties_Impl(const AdditionalProperties_Impl& other, Model_Impl* model, bool keepHandle);
 
-  AdditionalProperties_Impl(
-          const AdditionalProperties_Impl& other,
-          Model_Impl* model,
-          bool keepHandle
-  );
+      virtual ~AdditionalProperties_Impl() {}
 
-  virtual ~AdditionalProperties_Impl() {}
+      //@}
 
-  //@}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      /// return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-  /// return the parent object in the hierarchy
-  virtual boost::optional<ParentObject> parent() const override;
+      /// set the parent, child may have to call non-const methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-  /// set the parent, child may have to call non-const methods on the parent
-  virtual bool setParent(ParentObject& newParent) override;
+      /** Get the resources directly used by this ModelObject. */
+      virtual std::vector<ResourceObject> resources() const override;
 
-  /** Get the resources directly used by this ModelObject. */
-  virtual std::vector<ResourceObject> resources() const override;
+      /** @name Getters */
+      //@{
 
-  /** @name Getters */
-  //@{
+      ModelObject modelObject() const;
 
-  ModelObject modelObject() const;
+      std::vector<std::string> featureNames() const;
 
-  std::vector<std::string> featureNames() const;
+      bool hasFeature(const std::string& name) const;
 
-  bool hasFeature(const std::string& name) const;
+      boost::optional<std::string> getFeatureDataType(const std::string& name) const;
 
-  boost::optional<std::string> getFeatureDataType(const std::string& name) const;
+      boost::optional<std::string> getFeatureAsString(const std::string& name) const;
 
-  boost::optional<std::string> getFeatureAsString(const std::string& name) const;
+      boost::optional<double> getFeatureAsDouble(const std::string& name) const;
 
-  boost::optional<double> getFeatureAsDouble(const std::string& name) const;
+      boost::optional<int> getFeatureAsInteger(const std::string& name) const;
 
-  boost::optional<int> getFeatureAsInteger(const std::string& name) const;
+      boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
 
-  boost::optional<bool> getFeatureAsBoolean(const std::string& name) const;
+      std::vector<std::string> suggestedFeatureNames() const;
 
-  std::vector<std::string> suggestedFeatureNames() const;
+      //@}
 
-  //@}
+      /** @name Setters */
+      //@{
 
-  /** @name Setters */
-  //@{
+      bool setFeature(const std::string& name, const std::string& value);
 
-  bool setFeature(const std::string& name, const std::string& value);
+      bool setFeature(const std::string& name, const char* value);
 
-  bool setFeature(const std::string& name, const char* value);
+      bool setFeature(const std::string& name, double value);
 
-  bool setFeature(const std::string& name, double value);
+      bool setFeature(const std::string& name, int value);
 
-  bool setFeature(const std::string& name, int value);
+      bool setFeature(const std::string& name, bool value);
 
-  bool setFeature(const std::string& name, bool value);
+      bool resetFeature(const std::string& name);
 
-  bool resetFeature(const std::string& name);
+      //@}
 
-  //@}
+      void merge(const AdditionalProperties& other, bool overwrite = false);
 
-  void merge(const AdditionalProperties& other, bool overwrite = false);
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AdditionalProperties")
 
- protected:
- private:
-  REGISTER_LOGGER("openstudio.model.AdditionalProperties")
+      boost::optional<ModelExtensibleGroup> getFeatureGroupByName(const std::string& name) const;
 
-  boost::optional<ModelExtensibleGroup> getFeatureGroupByName(const std::string& name) const;
+      bool setFeatureGroupDataTypeAndValue(const std::string& name, const std::string& dataType, const std::string& value);
 
-  bool setFeatureGroupDataTypeAndValue(const std::string& name, const std::string& dataType, const std::string& value);
+      boost::optional<std::string> getFeatureStringAndCheckForType(const std::string& name, const std::string& expectedDataType) const;
+    };
 
-  boost::optional<std::string> getFeatureStringAndCheckForType(const std::string& name, const std::string& expectedDataType) const;
+  }  // namespace detail
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-} // detail
-} // model
-} // openstudio
-
-#endif //MODEL_ADDITIONALPROPERTIES_IMPL_HPP
+#endif  //MODEL_ADDITIONALPROPERTIES_IMPL_HPP

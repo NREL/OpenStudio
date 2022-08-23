@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -52,373 +52,356 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  CoilCoolingDXVariableRefrigerantFlow_Impl::CoilCoolingDXVariableRefrigerantFlow_Impl(const IdfObject& idfObject,
-                                                                                       Model_Impl* model,
-                                                                                       bool keepHandle)
-    : HVACComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == CoilCoolingDXVariableRefrigerantFlow::iddObjectType());
-  }
-
-  CoilCoolingDXVariableRefrigerantFlow_Impl::CoilCoolingDXVariableRefrigerantFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                       Model_Impl* model,
-                                                                                       bool keepHandle)
-    : HVACComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == CoilCoolingDXVariableRefrigerantFlow::iddObjectType());
-  }
-
-  CoilCoolingDXVariableRefrigerantFlow_Impl::CoilCoolingDXVariableRefrigerantFlow_Impl(const CoilCoolingDXVariableRefrigerantFlow_Impl& other,
-                                                                                       Model_Impl* model,
-                                                                                       bool keepHandle)
-    : HVACComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& CoilCoolingDXVariableRefrigerantFlow_Impl::outputVariableNames() const
-  {
-    // static for now, need to change if storage tank is implemented
-    static std::vector<std::string> result{
-      "Cooling Coil Total Cooling Rate",
-      "Cooling Coil Total Cooling Energy",
-      "Cooling Coil Sensible Cooling Rate",
-      "Cooling Coil Sensible Cooling Energy",
-      "Cooling Coil Latent Cooling Rate",
-      "Cooling Coil Latent Cooling Energy",
-      "Cooling Coil Runtime Fraction"
-      // Storage tank isn't implemented
-      // "Cooling Coil Condensate Volume Flow Rate",
-      // "Cooling Coil Condensate Volume"
-    };
-    return result;
-  }
-
-  IddObjectType CoilCoolingDXVariableRefrigerantFlow_Impl::iddObjectType() const {
-    return CoilCoolingDXVariableRefrigerantFlow::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> CoilCoolingDXVariableRefrigerantFlow_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::AvailabilitySchedule) != e)
-    {
-      result.push_back(ScheduleTypeKey("CoilCoolingDXVariableRefrigerantFlow","Availability Schedule"));
+    CoilCoolingDXVariableRefrigerantFlow_Impl::CoilCoolingDXVariableRefrigerantFlow_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                         bool keepHandle)
+      : HVACComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == CoilCoolingDXVariableRefrigerantFlow::iddObjectType());
     }
-    return result;
-  }
 
-  Schedule CoilCoolingDXVariableRefrigerantFlow_Impl::availabilitySchedule() const {
-    boost::optional<Schedule> value = optionalAvailabilitySchedule();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+    CoilCoolingDXVariableRefrigerantFlow_Impl::CoilCoolingDXVariableRefrigerantFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                         Model_Impl* model, bool keepHandle)
+      : HVACComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == CoilCoolingDXVariableRefrigerantFlow::iddObjectType());
     }
-    return value.get();
-  }
 
-  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::ratedTotalCoolingCapacity() const {
-    return getDouble(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedTotalCoolingCapacity,true);
-  }
+    CoilCoolingDXVariableRefrigerantFlow_Impl::CoilCoolingDXVariableRefrigerantFlow_Impl(const CoilCoolingDXVariableRefrigerantFlow_Impl& other,
+                                                                                         Model_Impl* model, bool keepHandle)
+      : HVACComponent_Impl(other, model, keepHandle) {}
 
-  bool CoilCoolingDXVariableRefrigerantFlow_Impl::isRatedTotalCoolingCapacityAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedTotalCoolingCapacity, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    const std::vector<std::string>& CoilCoolingDXVariableRefrigerantFlow_Impl::outputVariableNames() const {
+      // static for now, need to change if storage tank is implemented
+      static const std::vector<std::string> result{
+        "Cooling Coil Total Cooling Rate",      "Cooling Coil Total Cooling Energy", "Cooling Coil Sensible Cooling Rate",
+        "Cooling Coil Sensible Cooling Energy", "Cooling Coil Latent Cooling Rate",  "Cooling Coil Latent Cooling Energy",
+        "Cooling Coil Runtime Fraction"
+        // Storage tank isn't implemented
+        // "Cooling Coil Condensate Volume Flow Rate",
+        // "Cooling Coil Condensate Volume"
+      };
+      return result;
     }
-    return result;
-  }
 
-  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::ratedSensibleHeatRatio() const {
-    return getDouble(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedSensibleHeatRatio,true);
-  }
-
-  bool CoilCoolingDXVariableRefrigerantFlow_Impl::isRatedSensibleHeatRatioAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedSensibleHeatRatio, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    IddObjectType CoilCoolingDXVariableRefrigerantFlow_Impl::iddObjectType() const {
+      return CoilCoolingDXVariableRefrigerantFlow::iddObjectType();
     }
-    return result;
-  }
 
-  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::ratedAirFlowRate() const {
-    return getDouble(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedAirFlowRate,true);
-  }
-
-  bool CoilCoolingDXVariableRefrigerantFlow_Impl::isRatedAirFlowRateAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedAirFlowRate, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    std::vector<ScheduleTypeKey> CoilCoolingDXVariableRefrigerantFlow_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::AvailabilitySchedule) != e) {
+        result.push_back(ScheduleTypeKey("CoilCoolingDXVariableRefrigerantFlow", "Availability Schedule"));
+      }
+      return result;
     }
-    return result;
-  }
 
-  Curve CoilCoolingDXVariableRefrigerantFlow_Impl::coolingCapacityRatioModifierFunctionofTemperatureCurve() const {
-    boost::optional<Curve> value = optionalCoolingCapacityRatioModifierFunctionofTemperatureCurve();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Cooling Capacity Ratio Modifier Functionof Temperature Curve attached.");
+    Schedule CoilCoolingDXVariableRefrigerantFlow_Impl::availabilitySchedule() const {
+      boost::optional<Schedule> value = optionalAvailabilitySchedule();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Availability Schedule attached.");
+      }
+      return value.get();
     }
-    return value.get();
-  }
 
-  Curve CoilCoolingDXVariableRefrigerantFlow_Impl::coolingCapacityModifierCurveFunctionofFlowFraction() const {
-    boost::optional<Curve> value = optionalCoolingCapacityModifierCurveFunctionofFlowFraction();
-    if (!value) {
-      LOG_AND_THROW(briefDescription() << " does not have an Cooling Capacity Modifier Curve Functionof Flow Fraction attached.");
+    boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::ratedTotalCoolingCapacity() const {
+      return getDouble(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedTotalCoolingCapacity, true);
     }
-    return value.get();
-  }
 
-  bool CoilCoolingDXVariableRefrigerantFlow_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::AvailabilitySchedule,
-                              "CoilCoolingDXVariableRefrigerantFlow",
-                              "Availability Schedule",
-                              schedule);
-    return result;
-  }
-
-  bool CoilCoolingDXVariableRefrigerantFlow_Impl::setRatedTotalCoolingCapacity(boost::optional<double> ratedTotalCoolingCapacity) {
-    bool result(false);
-    if (ratedTotalCoolingCapacity) {
-      result = setDouble(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedTotalCoolingCapacity, ratedTotalCoolingCapacity.get());
+    bool CoilCoolingDXVariableRefrigerantFlow_Impl::isRatedTotalCoolingCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedTotalCoolingCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
     }
-    return result;
-  }
 
-  void CoilCoolingDXVariableRefrigerantFlow_Impl::autosizeRatedTotalCoolingCapacity() {
-    bool result = setString(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedTotalCoolingCapacity, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool CoilCoolingDXVariableRefrigerantFlow_Impl::setRatedSensibleHeatRatio(boost::optional<double> ratedSensibleHeatRatio) {
-    bool result(false);
-    if (ratedSensibleHeatRatio) {
-      result = setDouble(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedSensibleHeatRatio, ratedSensibleHeatRatio.get());
+    boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::ratedSensibleHeatRatio() const {
+      return getDouble(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedSensibleHeatRatio, true);
     }
-    return result;
-  }
 
-  void CoilCoolingDXVariableRefrigerantFlow_Impl::autosizeRatedSensibleHeatRatio() {
-    bool result = setString(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedSensibleHeatRatio, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool CoilCoolingDXVariableRefrigerantFlow_Impl::setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate) {
-    bool result(false);
-    if (ratedAirFlowRate) {
-      result = setDouble(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedAirFlowRate, ratedAirFlowRate.get());
+    bool CoilCoolingDXVariableRefrigerantFlow_Impl::isRatedSensibleHeatRatioAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedSensibleHeatRatio, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
     }
-    return result;
-  }
 
-  void CoilCoolingDXVariableRefrigerantFlow_Impl::autosizeRatedAirFlowRate() {
-    bool result = setString(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedAirFlowRate, "autosize");
-    OS_ASSERT(result);
-  }
+    boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::ratedAirFlowRate() const {
+      return getDouble(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedAirFlowRate, true);
+    }
 
-  bool CoilCoolingDXVariableRefrigerantFlow_Impl::setCoolingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
-    bool result = setPointer(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityRatioModifierFunctionofTemperatureCurve, curve.handle());
-    return result;
-  }
+    bool CoilCoolingDXVariableRefrigerantFlow_Impl::isRatedAirFlowRateAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedAirFlowRate, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
 
-  bool CoilCoolingDXVariableRefrigerantFlow_Impl::setCoolingCapacityModifierCurveFunctionofFlowFraction(const Curve& curve) {
-    bool result = setPointer(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityModifierCurveFunctionofFlowFraction, curve.handle());
-    return result;
-  }
+    Curve CoilCoolingDXVariableRefrigerantFlow_Impl::coolingCapacityRatioModifierFunctionofTemperatureCurve() const {
+      boost::optional<Curve> value = optionalCoolingCapacityRatioModifierFunctionofTemperatureCurve();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Cooling Capacity Ratio Modifier Functionof Temperature Curve attached.");
+      }
+      return value.get();
+    }
 
-  boost::optional<Schedule> CoilCoolingDXVariableRefrigerantFlow_Impl::optionalAvailabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::AvailabilitySchedule);
-  }
+    Curve CoilCoolingDXVariableRefrigerantFlow_Impl::coolingCapacityModifierCurveFunctionofFlowFraction() const {
+      boost::optional<Curve> value = optionalCoolingCapacityModifierCurveFunctionofFlowFraction();
+      if (!value) {
+        LOG_AND_THROW(briefDescription() << " does not have an Cooling Capacity Modifier Curve Functionof Flow Fraction attached.");
+      }
+      return value.get();
+    }
 
-  boost::optional<Curve> CoilCoolingDXVariableRefrigerantFlow_Impl::optionalCoolingCapacityRatioModifierFunctionofTemperatureCurve() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityRatioModifierFunctionofTemperatureCurve);
-  }
+    bool CoilCoolingDXVariableRefrigerantFlow_Impl::setAvailabilitySchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::AvailabilitySchedule, "CoilCoolingDXVariableRefrigerantFlow",
+                                "Availability Schedule", schedule);
+      return result;
+    }
 
-  boost::optional<Curve> CoilCoolingDXVariableRefrigerantFlow_Impl::optionalCoolingCapacityModifierCurveFunctionofFlowFraction() const {
-    return getObject<ModelObject>().getModelObjectTarget<Curve>(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityModifierCurveFunctionofFlowFraction);
-  }
+    bool CoilCoolingDXVariableRefrigerantFlow_Impl::setRatedTotalCoolingCapacity(boost::optional<double> ratedTotalCoolingCapacity) {
+      bool result(false);
+      if (ratedTotalCoolingCapacity) {
+        result = setDouble(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedTotalCoolingCapacity, ratedTotalCoolingCapacity.get());
+      }
+      return result;
+    }
 
-  ModelObject CoilCoolingDXVariableRefrigerantFlow_Impl::clone(Model model) const
-  {
-    CoilCoolingDXVariableRefrigerantFlow objectClone = HVACComponent_Impl::clone(model).cast<CoilCoolingDXVariableRefrigerantFlow>();
+    void CoilCoolingDXVariableRefrigerantFlow_Impl::autosizeRatedTotalCoolingCapacity() {
+      bool result = setString(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedTotalCoolingCapacity, "autosize");
+      OS_ASSERT(result);
+    }
 
-    return objectClone;
-  }
+    bool CoilCoolingDXVariableRefrigerantFlow_Impl::setRatedSensibleHeatRatio(boost::optional<double> ratedSensibleHeatRatio) {
+      bool result(false);
+      if (ratedSensibleHeatRatio) {
+        result = setDouble(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedSensibleHeatRatio, ratedSensibleHeatRatio.get());
+      }
+      return result;
+    }
 
-  std::vector<ModelObject> CoilCoolingDXVariableRefrigerantFlow_Impl::children() const
-  {
-    std::vector<ModelObject> result;
+    void CoilCoolingDXVariableRefrigerantFlow_Impl::autosizeRatedSensibleHeatRatio() {
+      bool result = setString(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedSensibleHeatRatio, "autosize");
+      OS_ASSERT(result);
+    }
 
-    result.push_back(coolingCapacityRatioModifierFunctionofTemperatureCurve());
-    result.push_back(coolingCapacityModifierCurveFunctionofFlowFraction());
+    bool CoilCoolingDXVariableRefrigerantFlow_Impl::setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate) {
+      bool result(false);
+      if (ratedAirFlowRate) {
+        result = setDouble(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedAirFlowRate, ratedAirFlowRate.get());
+      }
+      return result;
+    }
 
-    return result;
-  }
+    void CoilCoolingDXVariableRefrigerantFlow_Impl::autosizeRatedAirFlowRate() {
+      bool result = setString(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::RatedAirFlowRate, "autosize");
+      OS_ASSERT(result);
+    }
 
-  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::autosizedRatedTotalCoolingCapacity() const {
-    return getAutosizedValue("Design Size Gross Rated Total Cooling Capacity", "W");
-  }
+    bool CoilCoolingDXVariableRefrigerantFlow_Impl::setCoolingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
+      bool result =
+        setPointer(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityRatioModifierFunctionofTemperatureCurve, curve.handle());
+      return result;
+    }
 
-  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::autosizedRatedSensibleHeatRatio() const {
-    return getAutosizedValue("Design Size Gross Rated Sensible Heat Ratio", "");
-  }
+    bool CoilCoolingDXVariableRefrigerantFlow_Impl::setCoolingCapacityModifierCurveFunctionofFlowFraction(const Curve& curve) {
+      bool result = setPointer(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityModifierCurveFunctionofFlowFraction, curve.handle());
+      return result;
+    }
 
-  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::autosizedRatedAirFlowRate() const {
-    return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
-  }
+    boost::optional<Schedule> CoilCoolingDXVariableRefrigerantFlow_Impl::optionalAvailabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::AvailabilitySchedule);
+    }
 
-  void CoilCoolingDXVariableRefrigerantFlow_Impl::autosize() {
+    boost::optional<Curve> CoilCoolingDXVariableRefrigerantFlow_Impl::optionalCoolingCapacityRatioModifierFunctionofTemperatureCurve() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityRatioModifierFunctionofTemperatureCurve);
+    }
+
+    boost::optional<Curve> CoilCoolingDXVariableRefrigerantFlow_Impl::optionalCoolingCapacityModifierCurveFunctionofFlowFraction() const {
+      return getObject<ModelObject>().getModelObjectTarget<Curve>(
+        OS_Coil_Cooling_DX_VariableRefrigerantFlowFields::CoolingCapacityModifierCurveFunctionofFlowFraction);
+    }
+
+    ModelObject CoilCoolingDXVariableRefrigerantFlow_Impl::clone(Model model) const {
+      CoilCoolingDXVariableRefrigerantFlow objectClone = HVACComponent_Impl::clone(model).cast<CoilCoolingDXVariableRefrigerantFlow>();
+
+      return objectClone;
+    }
+
+    std::vector<ModelObject> CoilCoolingDXVariableRefrigerantFlow_Impl::children() const {
+      std::vector<ModelObject> result;
+
+      result.push_back(coolingCapacityRatioModifierFunctionofTemperatureCurve());
+      result.push_back(coolingCapacityModifierCurveFunctionofFlowFraction());
+
+      return result;
+    }
+
+    boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::autosizedRatedTotalCoolingCapacity() const {
+      return getAutosizedValue("Design Size Gross Rated Total Cooling Capacity", "W");
+    }
+
+    boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::autosizedRatedSensibleHeatRatio() const {
+      return getAutosizedValue("Design Size Gross Rated Sensible Heat Ratio", "");
+    }
+
+    boost::optional<double> CoilCoolingDXVariableRefrigerantFlow_Impl::autosizedRatedAirFlowRate() const {
+      return getAutosizedValue("Design Size Rated Air Flow Rate", "m3/s");
+    }
+
+    void CoilCoolingDXVariableRefrigerantFlow_Impl::autosize() {
+      autosizeRatedTotalCoolingCapacity();
+      autosizeRatedSensibleHeatRatio();
+      autosizeRatedAirFlowRate();
+    }
+
+    void CoilCoolingDXVariableRefrigerantFlow_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedRatedTotalCoolingCapacity();
+      if (val) {
+        setRatedTotalCoolingCapacity(val.get());
+      }
+
+      val = autosizedRatedSensibleHeatRatio();
+      if (val) {
+        setRatedSensibleHeatRatio(val.get());
+      }
+
+      val = autosizedRatedAirFlowRate();
+      if (val) {
+        setRatedAirFlowRate(val.get());
+      }
+    }
+
+  }  // namespace detail
+
+  CoilCoolingDXVariableRefrigerantFlow::CoilCoolingDXVariableRefrigerantFlow(const Model& model)
+    : HVACComponent(CoilCoolingDXVariableRefrigerantFlow::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>());
+
+    Schedule schedule = model.alwaysOnDiscreteSchedule();
+    setAvailabilitySchedule(schedule);
+
     autosizeRatedTotalCoolingCapacity();
+
     autosizeRatedSensibleHeatRatio();
+
     autosizeRatedAirFlowRate();
+
+    CurveBiquadratic vrfTUCoolCapFT(model);
+    vrfTUCoolCapFT.setName("VRFTUCoolCapFT");
+    vrfTUCoolCapFT.setCoefficient1Constant(5.85884077803259E-02);
+    vrfTUCoolCapFT.setCoefficient2x(5.87396532718384E-02);
+    vrfTUCoolCapFT.setCoefficient3xPOW2(-2.10274979759697E-04);
+    vrfTUCoolCapFT.setCoefficient4y(1.09370473889647E-02);
+    vrfTUCoolCapFT.setCoefficient5yPOW2(-0.0001219549);
+    vrfTUCoolCapFT.setCoefficient6xTIMESY(-0.0005246615);
+    vrfTUCoolCapFT.setMinimumValueofx(15);
+    vrfTUCoolCapFT.setMaximumValueofx(23.89);
+    vrfTUCoolCapFT.setMinimumValueofy(20);
+    vrfTUCoolCapFT.setMaximumValueofy(43.33);
+    vrfTUCoolCapFT.setMinimumCurveOutput(0.8083);
+    vrfTUCoolCapFT.setMaximumCurveOutput(1.2583);
+    setCoolingCapacityRatioModifierFunctionofTemperatureCurve(vrfTUCoolCapFT);
+
+    CurveQuadratic vrfACCoolCapFFF(model);
+    vrfACCoolCapFFF.setName("VRFACCoolCapFFF");
+    vrfACCoolCapFFF.setCoefficient1Constant(0.8);
+    vrfACCoolCapFFF.setCoefficient2x(0.2);
+    vrfACCoolCapFFF.setCoefficient3xPOW2(0.0);
+    vrfACCoolCapFFF.setMinimumValueofx(0.5);
+    vrfACCoolCapFFF.setMaximumValueofx(1.5);
+    setCoolingCapacityModifierCurveFunctionofFlowFraction(vrfACCoolCapFFF);
   }
 
-  void CoilCoolingDXVariableRefrigerantFlow_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedRatedTotalCoolingCapacity();
-    if (val) {
-      setRatedTotalCoolingCapacity(val.get());
-    }
-
-    val = autosizedRatedSensibleHeatRatio();
-    if (val) {
-      setRatedSensibleHeatRatio(val.get());
-    }
-
-    val = autosizedRatedAirFlowRate();
-    if (val) {
-      setRatedAirFlowRate(val.get());
-    }
-
+  IddObjectType CoilCoolingDXVariableRefrigerantFlow::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow);
   }
 
-} // detail
+  Schedule CoilCoolingDXVariableRefrigerantFlow::availabilitySchedule() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->availabilitySchedule();
+  }
 
-CoilCoolingDXVariableRefrigerantFlow::CoilCoolingDXVariableRefrigerantFlow(const Model& model)
-  : HVACComponent(CoilCoolingDXVariableRefrigerantFlow::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>());
+  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow::ratedTotalCoolingCapacity() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->ratedTotalCoolingCapacity();
+  }
 
-  Schedule schedule = model.alwaysOnDiscreteSchedule();
-  setAvailabilitySchedule(schedule);
+  bool CoilCoolingDXVariableRefrigerantFlow::isRatedTotalCoolingCapacityAutosized() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->isRatedTotalCoolingCapacityAutosized();
+  }
 
-  autosizeRatedTotalCoolingCapacity();
+  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow::ratedSensibleHeatRatio() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->ratedSensibleHeatRatio();
+  }
 
-  autosizeRatedSensibleHeatRatio();
+  bool CoilCoolingDXVariableRefrigerantFlow::isRatedSensibleHeatRatioAutosized() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->isRatedSensibleHeatRatioAutosized();
+  }
 
-  autosizeRatedAirFlowRate();
+  boost::optional<double> CoilCoolingDXVariableRefrigerantFlow::ratedAirFlowRate() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->ratedAirFlowRate();
+  }
 
-  CurveBiquadratic vrfTUCoolCapFT(model);
-  vrfTUCoolCapFT.setName("VRFTUCoolCapFT");
-  vrfTUCoolCapFT.setCoefficient1Constant(5.85884077803259E-02);
-  vrfTUCoolCapFT.setCoefficient2x(5.87396532718384E-02);
-  vrfTUCoolCapFT.setCoefficient3xPOW2(-2.10274979759697E-04);
-  vrfTUCoolCapFT.setCoefficient4y(1.09370473889647E-02);
-  vrfTUCoolCapFT.setCoefficient5yPOW2(-0.0001219549);
-  vrfTUCoolCapFT.setCoefficient6xTIMESY(-0.0005246615);
-  vrfTUCoolCapFT.setMinimumValueofx(15);
-  vrfTUCoolCapFT.setMaximumValueofx(23.89);
-  vrfTUCoolCapFT.setMinimumValueofy(20);
-  vrfTUCoolCapFT.setMaximumValueofy(43.33);
-  vrfTUCoolCapFT.setMinimumCurveOutput(0.8083);
-  vrfTUCoolCapFT.setMaximumCurveOutput(1.2583);
-  setCoolingCapacityRatioModifierFunctionofTemperatureCurve(vrfTUCoolCapFT);
+  bool CoilCoolingDXVariableRefrigerantFlow::isRatedAirFlowRateAutosized() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->isRatedAirFlowRateAutosized();
+  }
 
-  CurveQuadratic vrfACCoolCapFFF(model);
-  vrfACCoolCapFFF.setName("VRFACCoolCapFFF");
-  vrfACCoolCapFFF.setCoefficient1Constant(0.8);
-  vrfACCoolCapFFF.setCoefficient2x(0.2);
-  vrfACCoolCapFFF.setCoefficient3xPOW2(0.0);
-  vrfACCoolCapFFF.setMinimumValueofx(0.5);
-  vrfACCoolCapFFF.setMaximumValueofx(1.5);
-  setCoolingCapacityModifierCurveFunctionofFlowFraction(vrfACCoolCapFFF);
-}
+  Curve CoilCoolingDXVariableRefrigerantFlow::coolingCapacityRatioModifierFunctionofTemperatureCurve() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->coolingCapacityRatioModifierFunctionofTemperatureCurve();
+  }
 
-IddObjectType CoilCoolingDXVariableRefrigerantFlow::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_Coil_Cooling_DX_VariableRefrigerantFlow);
-}
+  Curve CoilCoolingDXVariableRefrigerantFlow::coolingCapacityModifierCurveFunctionofFlowFraction() const {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->coolingCapacityModifierCurveFunctionofFlowFraction();
+  }
 
-Schedule CoilCoolingDXVariableRefrigerantFlow::availabilitySchedule() const {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->availabilitySchedule();
-}
+  bool CoilCoolingDXVariableRefrigerantFlow::setAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->setAvailabilitySchedule(schedule);
+  }
 
-boost::optional<double> CoilCoolingDXVariableRefrigerantFlow::ratedTotalCoolingCapacity() const {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->ratedTotalCoolingCapacity();
-}
+  bool CoilCoolingDXVariableRefrigerantFlow::setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity) {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->setRatedTotalCoolingCapacity(ratedTotalCoolingCapacity);
+  }
 
-bool CoilCoolingDXVariableRefrigerantFlow::isRatedTotalCoolingCapacityAutosized() const {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->isRatedTotalCoolingCapacityAutosized();
-}
+  void CoilCoolingDXVariableRefrigerantFlow::autosizeRatedTotalCoolingCapacity() {
+    getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->autosizeRatedTotalCoolingCapacity();
+  }
 
-boost::optional<double> CoilCoolingDXVariableRefrigerantFlow::ratedSensibleHeatRatio() const {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->ratedSensibleHeatRatio();
-}
+  bool CoilCoolingDXVariableRefrigerantFlow::setRatedSensibleHeatRatio(double ratedSensibleHeatRatio) {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->setRatedSensibleHeatRatio(ratedSensibleHeatRatio);
+  }
 
-bool CoilCoolingDXVariableRefrigerantFlow::isRatedSensibleHeatRatioAutosized() const {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->isRatedSensibleHeatRatioAutosized();
-}
+  void CoilCoolingDXVariableRefrigerantFlow::autosizeRatedSensibleHeatRatio() {
+    getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->autosizeRatedSensibleHeatRatio();
+  }
 
-boost::optional<double> CoilCoolingDXVariableRefrigerantFlow::ratedAirFlowRate() const {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->ratedAirFlowRate();
-}
+  bool CoilCoolingDXVariableRefrigerantFlow::setRatedAirFlowRate(double ratedAirFlowRate) {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->setRatedAirFlowRate(ratedAirFlowRate);
+  }
 
-bool CoilCoolingDXVariableRefrigerantFlow::isRatedAirFlowRateAutosized() const {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->isRatedAirFlowRateAutosized();
-}
+  void CoilCoolingDXVariableRefrigerantFlow::autosizeRatedAirFlowRate() {
+    getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->autosizeRatedAirFlowRate();
+  }
 
-Curve CoilCoolingDXVariableRefrigerantFlow::coolingCapacityRatioModifierFunctionofTemperatureCurve() const {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->coolingCapacityRatioModifierFunctionofTemperatureCurve();
-}
+  bool CoilCoolingDXVariableRefrigerantFlow::setCoolingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->setCoolingCapacityRatioModifierFunctionofTemperatureCurve(curve);
+  }
 
-Curve CoilCoolingDXVariableRefrigerantFlow::coolingCapacityModifierCurveFunctionofFlowFraction() const {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->coolingCapacityModifierCurveFunctionofFlowFraction();
-}
+  bool CoilCoolingDXVariableRefrigerantFlow::setCoolingCapacityModifierCurveFunctionofFlowFraction(const Curve& curve) {
+    return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->setCoolingCapacityModifierCurveFunctionofFlowFraction(curve);
+  }
 
-bool CoilCoolingDXVariableRefrigerantFlow::setAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->setAvailabilitySchedule(schedule);
-}
-
-bool CoilCoolingDXVariableRefrigerantFlow::setRatedTotalCoolingCapacity(double ratedTotalCoolingCapacity) {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->setRatedTotalCoolingCapacity(ratedTotalCoolingCapacity);
-}
-
-void CoilCoolingDXVariableRefrigerantFlow::autosizeRatedTotalCoolingCapacity() {
-  getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->autosizeRatedTotalCoolingCapacity();
-}
-
-bool CoilCoolingDXVariableRefrigerantFlow::setRatedSensibleHeatRatio(double ratedSensibleHeatRatio) {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->setRatedSensibleHeatRatio(ratedSensibleHeatRatio);
-}
-
-void CoilCoolingDXVariableRefrigerantFlow::autosizeRatedSensibleHeatRatio() {
-  getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->autosizeRatedSensibleHeatRatio();
-}
-
-bool CoilCoolingDXVariableRefrigerantFlow::setRatedAirFlowRate(double ratedAirFlowRate) {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->setRatedAirFlowRate(ratedAirFlowRate);
-}
-
-void CoilCoolingDXVariableRefrigerantFlow::autosizeRatedAirFlowRate() {
-  getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->autosizeRatedAirFlowRate();
-}
-
-bool CoilCoolingDXVariableRefrigerantFlow::setCoolingCapacityRatioModifierFunctionofTemperatureCurve(const Curve& curve) {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->setCoolingCapacityRatioModifierFunctionofTemperatureCurve(curve);
-}
-
-bool CoilCoolingDXVariableRefrigerantFlow::setCoolingCapacityModifierCurveFunctionofFlowFraction(const Curve& curve) {
-  return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->setCoolingCapacityModifierCurveFunctionofFlowFraction(curve);
-}
-
-/// @cond
-CoilCoolingDXVariableRefrigerantFlow::CoilCoolingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilCoolingDXVariableRefrigerantFlow_Impl> impl)
-  : HVACComponent(std::move(impl))
-{}
-/// @endcond
+  /// @cond
+  CoilCoolingDXVariableRefrigerantFlow::CoilCoolingDXVariableRefrigerantFlow(std::shared_ptr<detail::CoilCoolingDXVariableRefrigerantFlow_Impl> impl)
+    : HVACComponent(std::move(impl)) {}
+  /// @endcond
 
   boost::optional<double> CoilCoolingDXVariableRefrigerantFlow::autosizedRatedTotalCoolingCapacity() const {
     return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->autosizedRatedTotalCoolingCapacity();
@@ -432,6 +415,5 @@ CoilCoolingDXVariableRefrigerantFlow::CoilCoolingDXVariableRefrigerantFlow(std::
     return getImpl<detail::CoilCoolingDXVariableRefrigerantFlow_Impl>()->autosizedRatedAirFlowRate();
   }
 
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

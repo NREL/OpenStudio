@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,32 +40,31 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,EvaporativeCoolerDirectResearchSpecial_EvaporativeCoolerDirectResearchSpecial)
-{
+TEST_F(ModelFixture, EvaporativeCoolerDirectResearchSpecial_EvaporativeCoolerDirectResearchSpecial) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    Schedule s = m.alwaysOnDiscreteSchedule();
-    EvaporativeCoolerDirectResearchSpecial testObject(m,s);
+  ASSERT_EXIT(
+    {
+      Model m;
+      Schedule s = m.alwaysOnDiscreteSchedule();
+      EvaporativeCoolerDirectResearchSpecial testObject(m, s);
 
-    exit(0);
-  } ,
-  ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,EvaporativeCoolerDirectResearchSpecial_addToNode) {
+TEST_F(ModelFixture, EvaporativeCoolerDirectResearchSpecial_addToNode) {
   Model m;
   Schedule s = m.alwaysOnDiscreteSchedule();
-  EvaporativeCoolerDirectResearchSpecial testObject(m,s);
+  EvaporativeCoolerDirectResearchSpecial testObject(m, s);
 
   AirLoopHVAC airLoop(m);
 
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)3, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)3, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -75,15 +74,15 @@ TEST_F(ModelFixture,EvaporativeCoolerDirectResearchSpecial_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
   EvaporativeCoolerDirectResearchSpecial testObjectClone = testObject.clone(m).cast<EvaporativeCoolerDirectResearchSpecial>();
   supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)5, airLoop.supplyComponents().size());
 }

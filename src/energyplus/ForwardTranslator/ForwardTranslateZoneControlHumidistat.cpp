@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,42 +39,41 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateZoneControlHumidistat( ZoneControlHumidistat& modelObject )
-{
-  boost::optional<IdfObject> result;
+  boost::optional<IdfObject> ForwardTranslator::translateZoneControlHumidistat(ZoneControlHumidistat& modelObject) {
+    boost::optional<IdfObject> result;
 
-  auto humidifyingSchedule = modelObject.humidifyingRelativeHumiditySetpointSchedule();
-  auto dehumidifyingSchedule = modelObject.dehumidifyingRelativeHumiditySetpointSchedule();
+    auto humidifyingSchedule = modelObject.humidifyingRelativeHumiditySetpointSchedule();
+    auto dehumidifyingSchedule = modelObject.dehumidifyingRelativeHumiditySetpointSchedule();
 
-  if( humidifyingSchedule || dehumidifyingSchedule ) {
-    // Name
-    result = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneControl_Humidistat, modelObject);
+    if (humidifyingSchedule || dehumidifyingSchedule) {
+      // Name
+      result = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneControl_Humidistat, modelObject);
 
-    // Zone Name
-    // set by ThermalZone
+      // Zone Name
+      // set by ThermalZone
 
-    // Humidifying Relative Humidity Setpoint Schedule Name
-    if( humidifyingSchedule ) {
-      boost::optional<IdfObject> _humidifyingSchedule = translateAndMapModelObject(humidifyingSchedule.get());
+      // Humidifying Relative Humidity Setpoint Schedule Name
+      if (humidifyingSchedule) {
+        boost::optional<IdfObject> _humidifyingSchedule = translateAndMapModelObject(humidifyingSchedule.get());
 
-      if( _humidifyingSchedule && _humidifyingSchedule->name() ) {
-        result->setString(ZoneControl_HumidistatFields::HumidifyingRelativeHumiditySetpointScheduleName,_humidifyingSchedule->name().get());
+        if (_humidifyingSchedule && _humidifyingSchedule->name()) {
+          result->setString(ZoneControl_HumidistatFields::HumidifyingRelativeHumiditySetpointScheduleName, _humidifyingSchedule->name().get());
+        }
+      }
+
+      // Dehumidifying Relative Humidity Setpoint Schedule Name
+      if (dehumidifyingSchedule) {
+        boost::optional<IdfObject> _dehumidifyingSchedule = translateAndMapModelObject(dehumidifyingSchedule.get());
+
+        if (_dehumidifyingSchedule && _dehumidifyingSchedule->name()) {
+          result->setString(ZoneControl_HumidistatFields::DehumidifyingRelativeHumiditySetpointScheduleName, _dehumidifyingSchedule->name().get());
+        }
       }
     }
 
-    // Dehumidifying Relative Humidity Setpoint Schedule Name
-    if( dehumidifyingSchedule ) {
-      boost::optional<IdfObject> _dehumidifyingSchedule = translateAndMapModelObject(dehumidifyingSchedule.get());
-
-      if( _dehumidifyingSchedule && _dehumidifyingSchedule->name() ) {
-        result->setString(ZoneControl_HumidistatFields::DehumidifyingRelativeHumiditySetpointScheduleName,_dehumidifyingSchedule->name().get());
-      }
-    }
+    return result;
   }
 
-  return result;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,81 +43,73 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateThermostatSetpointDualSetpoint( ThermostatSetpointDualSetpoint& modelObject )
-{
-  OptionalSchedule heat_sch = modelObject.getHeatingSchedule();
-  OptionalSchedule cool_sch = modelObject.getCoolingSchedule();
-  boost::optional<IdfObject> result;
+  boost::optional<IdfObject> ForwardTranslator::translateThermostatSetpointDualSetpoint(ThermostatSetpointDualSetpoint& modelObject) {
+    OptionalSchedule heat_sch = modelObject.getHeatingSchedule();
+    OptionalSchedule cool_sch = modelObject.getCoolingSchedule();
+    boost::optional<IdfObject> result;
 
-  // Two schedules = DualSetpoint
-  if (heat_sch.is_initialized() && cool_sch.is_initialized()) {
-    IdfObject thermostat(openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint);
-    m_idfObjects.push_back(thermostat);
+    // Two schedules = DualSetpoint
+    if (heat_sch.is_initialized() && cool_sch.is_initialized()) {
+      IdfObject thermostat(openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint);
+      m_idfObjects.push_back(thermostat);
 
-    // Name
-    OptionalString s = modelObject.name();
-    if( s )
-    {
-      thermostat.setName(*s);
+      // Name
+      OptionalString s = modelObject.name();
+      if (s) {
+        thermostat.setName(*s);
+      }
+
+      // Heating Setpoint Temperature Schedule Name
+      translateAndMapModelObject(*heat_sch);
+      thermostat.setString(ThermostatSetpoint_DualSetpointFields::HeatingSetpointTemperatureScheduleName, heat_sch->name().get());
+
+      // Cooling Setpoint Temperature Schedule Name
+      translateAndMapModelObject(*cool_sch);
+      thermostat.setString(ThermostatSetpoint_DualSetpointFields::CoolingSetpointTemperatureScheduleName, cool_sch->name().get());
+
+      result = thermostat;
+
+      // Heating only
+    } else if (heat_sch.is_initialized() && !cool_sch.is_initialized()) {
+      IdfObject thermostat(openstudio::IddObjectType::ThermostatSetpoint_SingleHeating);
+      m_idfObjects.push_back(thermostat);
+
+      // Name
+      OptionalString s = modelObject.name();
+      if (s) {
+        thermostat.setName(*s);
+      }
+
+      // (Heating) Setpoint Temperature Schedule Name
+      translateAndMapModelObject(*heat_sch);
+      thermostat.setString(ThermostatSetpoint_SingleHeatingFields::SetpointTemperatureScheduleName, heat_sch->name().get());
+
+      result = thermostat;
+
+      // Cooling only
+    } else if (!heat_sch.is_initialized() && cool_sch.is_initialized()) {
+      IdfObject thermostat(openstudio::IddObjectType::ThermostatSetpoint_SingleCooling);
+      m_idfObjects.push_back(thermostat);
+
+      // Name
+      OptionalString s = modelObject.name();
+      if (s) {
+        thermostat.setName(*s);
+      }
+
+      // (Cooling) Setpoint Temperature Schedule Name
+      translateAndMapModelObject(*cool_sch);
+      thermostat.setString(ThermostatSetpoint_SingleCoolingFields::SetpointTemperatureScheduleName, cool_sch->name().get());
+
+      result = thermostat;
     }
+    // No other cases, in ForwardTranslateThermalZone, we have checked that there is at least one schedule
 
-    // Heating Setpoint Temperature Schedule Name
-    translateAndMapModelObject(*heat_sch);
-    thermostat.setString(ThermostatSetpoint_DualSetpointFields::HeatingSetpointTemperatureScheduleName,heat_sch->name().get());
+    // Temperature Difference Between Cutout And Setpoint => Handle in ForwardTranslateThermalZone to place on ZoneControlThermostat object
 
-    // Cooling Setpoint Temperature Schedule Name
-    translateAndMapModelObject(*cool_sch);
-    thermostat.setString(ThermostatSetpoint_DualSetpointFields::CoolingSetpointTemperatureScheduleName,cool_sch->name().get());
-
-    result = thermostat;
-
-  // Heating only
-  } else if ( heat_sch.is_initialized() && !cool_sch.is_initialized() ) {
-    IdfObject thermostat(openstudio::IddObjectType::ThermostatSetpoint_SingleHeating);
-    m_idfObjects.push_back(thermostat);
-
-    // Name
-    OptionalString s = modelObject.name();
-    if( s )
-    {
-      thermostat.setName(*s);
-    }
-
-    // (Heating) Setpoint Temperature Schedule Name
-    translateAndMapModelObject(*heat_sch);
-    thermostat.setString(ThermostatSetpoint_SingleHeatingFields::SetpointTemperatureScheduleName, heat_sch->name().get());
-
-    result = thermostat;
-
-
-  // Cooling only
-  } else if ( !heat_sch.is_initialized() && cool_sch.is_initialized()) {
-    IdfObject thermostat(openstudio::IddObjectType::ThermostatSetpoint_SingleCooling);
-    m_idfObjects.push_back(thermostat);
-
-    // Name
-    OptionalString s = modelObject.name();
-    if( s )
-    {
-      thermostat.setName(*s);
-    }
-
-    // (Cooling) Setpoint Temperature Schedule Name
-    translateAndMapModelObject(*cool_sch);
-    thermostat.setString(ThermostatSetpoint_SingleCoolingFields::SetpointTemperatureScheduleName, cool_sch->name().get());
-
-    result = thermostat;
-
+    return result;
   }
-  // No other cases, in ForwardTranslateThermalZone, we have checked that there is at least one schedule
 
-  // Temperature Difference Between Cutout And Setpoint => Handle in ForwardTranslateThermalZone to place on ZoneControlThermostat object
+}  // namespace energyplus
 
-  return result;
-
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

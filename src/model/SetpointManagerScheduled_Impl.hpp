@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,96 +36,89 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-class MODEL_API SetpointManagerScheduled_Impl : public SetpointManager_Impl {
+    class MODEL_API SetpointManagerScheduled_Impl : public SetpointManager_Impl
+    {
 
- public:
-  /** @name Constructors and Destructors */
-  //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-  SetpointManagerScheduled_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      SetpointManagerScheduled_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  SetpointManagerScheduled_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      SetpointManagerScheduled_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  SetpointManagerScheduled_Impl(const SetpointManagerScheduled_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandles);
+      SetpointManagerScheduled_Impl(const SetpointManagerScheduled_Impl& other, Model_Impl* model, bool keepHandles);
 
-  virtual ~SetpointManagerScheduled_Impl();
+      virtual ~SetpointManagerScheduled_Impl();
 
-  //@}
-  /** @name Virtual Methods */
-  //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  // virtual bool addToNode(Node & node) override;
+      // virtual bool addToNode(Node & node) override;
 
-  virtual bool isAllowedOnPlantLoop() const override;
+      virtual bool isAllowedOnPlantLoop() const override;
 
-  //@}
-  /** @name Getters */
-  //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-  virtual boost::optional<Node> setpointNode() const override;
+      virtual boost::optional<Node> setpointNode() const override;
 
-  virtual std::string controlVariable() const override;
+      virtual std::string controlVariable() const override;
 
-  Schedule schedule() const;
+      Schedule schedule() const;
 
-  bool hasSchedule() const;
+      bool hasSchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-  virtual bool setControlVariable(const std::string& controlVariable) override;
+      virtual bool setControlVariable(const std::string& controlVariable) override;
 
-  bool setSchedule(Schedule& schedule);
+      bool setSchedule(Schedule& schedule);
 
-  //@}
-  /** @name Other */
-  //@{
+      //@}
+      /** @name Other */
+      //@{
 
-  /** Sets control variable and schedule simultaneously. Use in the case that the
+      /** Sets control variable and schedule simultaneously. Use in the case that the
    *  control variable change implies a change in schedule units. */
-  bool setControlVariableAndSchedule(const std::string& controlVariable,
-                                     Schedule& schedule);
+      bool setControlVariableAndSchedule(const std::string& controlVariable, Schedule& schedule);
 
-  //@}
- private:
+      //@}
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-  virtual bool setSetpointNode( const Node & node ) override;
+      virtual void resetSetpointNode() override;
 
-  virtual void resetSetpointNode() override;
+      // converts control variable to the schedule's display name
+      std::string scheduleDisplayName() const;
 
-  // converts control variable to the schedule's display name
-  std::string scheduleDisplayName() const;
+      // as above, but used to check candidate control variables
+      std::string scheduleDisplayName(const std::string& candidateControlVariable) const;
 
-  // as above, but used to check candidate control variables
-  std::string scheduleDisplayName(const std::string& candidateControlVariable) const;
+      std::vector<std::string> controlVariableValues() const;
 
-  std::vector<std::string> controlVariableValues() const;
+      boost::optional<ModelObject> scheduleAsModelObject() const;
 
-  boost::optional<ModelObject> scheduleAsModelObject() const;
+      bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-  bool setScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+  }  // namespace detail
 
-};
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SETPOINTMANAGERSCHEDULED_IMPL_HPP
-
+#endif  // MODEL_SETPOINTMANAGERSCHEDULED_IMPL_HPP

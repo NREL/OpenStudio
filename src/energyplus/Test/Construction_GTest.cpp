@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -67,33 +67,31 @@ using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::energyplus;
 
-TEST_F(EnergyPlusFixture,ReverseTranslator_WindowConstruction)
-{
+TEST_F(EnergyPlusFixture, ReverseTranslator_WindowConstruction) {
   StrictnessLevel level(StrictnessLevel::Draft);
   IddFileType iddFileType(IddFileType::EnergyPlus);
-  Workspace workspace(level,iddFileType);
+  Workspace workspace(level, iddFileType);
 
   IdfObject glazing(IddObjectType::WindowMaterial_Glazing);
   IdfObject gas(IddObjectType::WindowMaterial_Gas);
   glazing.setName("Glazing Material");
   gas.setName("Gas Material");
   IdfObject construction(IddObjectType::Construction);
-  ASSERT_EQ(0u,construction.numExtensibleGroups());
-  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u,glazing.name().get())).empty());
-  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u,gas.name().get())).empty());
-  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u,glazing.name().get())).empty());
+  ASSERT_EQ(0u, construction.numExtensibleGroups());
+  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u, glazing.name().get())).empty());
+  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u, gas.name().get())).empty());
+  EXPECT_FALSE(construction.pushExtensibleGroup(StringVector(1u, glazing.name().get())).empty());
   IdfObjectVector objects;
   objects.push_back(glazing);
   objects.push_back(gas);
   objects.push_back(construction);
-  EXPECT_EQ(3u,workspace.addObjects(objects).size());
+  EXPECT_EQ(3u, workspace.addObjects(objects).size());
 
   ReverseTranslator reverseTranslator;
   Model model = reverseTranslator.translateWorkspace(workspace);
 
   ASSERT_EQ(1u, model.getModelObjects<Construction>().size());
   Construction mConstruction = model.getModelObjects<Construction>()[0];
-  EXPECT_EQ(3u,mConstruction.layers().size());
+  EXPECT_EQ(3u, mConstruction.layers().size());
   EXPECT_EQ(2u, model.getModelObjects<FenestrationMaterial>().size());
 }
-

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,7 +41,8 @@ namespace openstudio {
 namespace detail {
 
   /** Unit_Impl is the implementation class for Unit.*/
-  class UTILITIES_API Unit_Impl : public std::enable_shared_from_this<Unit_Impl> {
+  class UTILITIES_API Unit_Impl : public std::enable_shared_from_this<Unit_Impl>
+  {
    public:
     /** @name Constructors and Destructors */
     //@{
@@ -57,12 +58,12 @@ namespace detail {
         std::cout << u; // would print cJ, using default openstudio::ScaleFactory initialization \endverbatim
      *  Note that this is not the preferred method for constructing Joules. See openstudio::SIUnit,
      *  and openstudio::UnitFactory for alternatives. */
-    Unit_Impl(int scaleExponent = 0,const std::string& prettyString="");
+    Unit_Impl(int scaleExponent = 0, const std::string& prettyString = "");
 
     /** Constructor using scale abbreviations registered in ScaleFactory. For instance, pass
      *  in "k" to access kilo = 10^3 (using the default ScaleFactory initialization). Throws if
      *  there is no entry for scaleAbbreviation in ScaleFactory. */
-    Unit_Impl(const std::string& scaleAbbreviation,const std::string& prettyString="");
+    Unit_Impl(const std::string& scaleAbbreviation, const std::string& prettyString = "");
 
     virtual ~Unit_Impl() {}
 
@@ -119,14 +120,14 @@ namespace detail {
      *  If withScale==true (the default since this is probably preferred by users), scale
      *  abbreviation is prefixed. Prefers km^2 to M(m^2), kBtu/ft^2 to k(Btu/ft^2).
      */
-    std::string standardString(bool withScale=true) const;
+    std::string standardString(bool withScale = true) const;
 
     /** Returns the preferred output string for this unit. For instance, the prettyString
      *  for SI energy is 'J' for Joules, but the standard string is 'kg*m^2/s^2'.
      *
      *  If withScale==true (the default since this is probably preferred by users), scale
      *  abbreviation is prefixed. Prefers km^2 to M(m^2), kBtu/ft^2 to k(Btu/ft^2). */
-    std::string prettyString(bool withScale=true) const;
+    std::string prettyString(bool withScale = true) const;
 
     /** Setter for prettyString (do not include scale abbreviation). openstudio::Unit attempts
      *  to keep up with prettyStrings, but makes no promises. Precondition: isCompoundUnit(str).
@@ -134,7 +135,7 @@ namespace detail {
     void setPrettyString(const std::string& str);
 
     /** Returns prettyString(withScale) if it exists; otherwise returns standardString(withScale). */
-    std::string print(bool withScale=true) const;
+    std::string print(bool withScale = true) const;
 
     //@}
     /** @name Unit System */
@@ -164,39 +165,32 @@ namespace detail {
      *  for all baseUnit and scale exponents. Returned scale exponent may differ from expectation
      *  based on initialization of openstudio::ScaleFactory, see Scale operators declared in
      *  ScaleFactory.hpp.  */
-    void pow(int expNum,int expDenom=1,bool okToCallFactory=true);
+    void pow(int expNum, int expDenom = 1, bool okToCallFactory = true);
 
     //@}
     /** @name Type Casting */
     //@{
 
     /** Get a public object that wraps this impl.*/
-    template<typename T>
+    template <typename T>
     T getPublicObject() const {
-      T result(std::dynamic_pointer_cast<typename T::ImplType>(
-                 std::const_pointer_cast<Unit_Impl>(shared_from_this())));
+      T result(std::dynamic_pointer_cast<typename T::ImplType>(std::const_pointer_cast<Unit_Impl>(shared_from_this())));
       return result;
     }
 
     //@}
    protected:
-    typedef std::pair<std::string,int> UnitElement;
+    typedef std::pair<std::string, int> UnitElement;
     std::vector<UnitElement> m_units;
     ScaleConstant m_scale;
     std::string m_prettyString;
     UnitSystem m_system;
 
     // constructor for derived classes
-    Unit_Impl(int scaleExponent,
-              const std::string& prettyString,
-              int numBaseUnits,
-              UnitSystem system);
+    Unit_Impl(int scaleExponent, const std::string& prettyString, int numBaseUnits, UnitSystem system);
 
     // constructor for derived classes
-    Unit_Impl(const std::string& scaleAbbreviation,
-              const std::string& prettyString,
-              int numBaseUnits,
-              UnitSystem system);
+    Unit_Impl(const std::string& scaleAbbreviation, const std::string& prettyString, int numBaseUnits, UnitSystem system);
 
     std::vector<UnitElement>::iterator findBaseUnit(const std::string&);
 
@@ -206,9 +200,8 @@ namespace detail {
     REGISTER_LOGGER("openstudio.units.Unit");
   };
 
-} // detail
+}  // namespace detail
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_UNIT_IMPL_HPP
-
+#endif  // UTILITIES_UNITS_UNIT_IMPL_HPP

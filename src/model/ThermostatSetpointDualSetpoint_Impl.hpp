@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,86 +35,78 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
-  class MODEL_API ThermostatSetpointDualSetpoint_Impl : public Thermostat_Impl {
+  namespace detail {
+    class MODEL_API ThermostatSetpointDualSetpoint_Impl : public Thermostat_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      ThermostatSetpointDualSetpoint_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      ThermostatSetpointDualSetpoint_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      ThermostatSetpointDualSetpoint_Impl(const ThermostatSetpointDualSetpoint_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ThermostatSetpointDualSetpoint_Impl(const IdfObject& idfObject,
-                                        Model_Impl* model,
-                                        bool keepHandle);
+      virtual ~ThermostatSetpointDualSetpoint_Impl() {}
 
-    ThermostatSetpointDualSetpoint_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                        Model_Impl* model,
-                                        bool keepHandle);
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    ThermostatSetpointDualSetpoint_Impl(const ThermostatSetpointDualSetpoint_Impl& other,
-                                        Model_Impl* model,
-                                        bool keepHandle);
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual ~ThermostatSetpointDualSetpoint_Impl() {}
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual IddObjectType iddObjectType() const override;
+      boost::optional<Schedule> heatingSetpointTemperatureSchedule() const;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      boost::optional<Schedule> coolingSetpointTemperatureSchedule() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      double temperatureDifferenceBetweenCutoutAndSetpoint() const;
+      bool isTemperatureDifferenceBetweenCutoutAndSetpointDefaulted() const;
 
-    boost::optional<Schedule> heatingSetpointTemperatureSchedule() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    boost::optional<Schedule> coolingSetpointTemperatureSchedule() const;
+      bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
 
-    double temperatureDifferenceBetweenCutoutAndSetpoint() const;
-    bool isTemperatureDifferenceBetweenCutoutAndSetpointDefaulted() const;
+      void resetHeatingSetpointTemperatureSchedule();
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setCoolingSetpointTemperatureSchedule(Schedule& schedule);
 
-    bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
+      void resetCoolingSetpointTemperatureSchedule();
 
-    void resetHeatingSetpointTemperatureSchedule();
+      bool setTemperatureDifferenceBetweenCutoutAndSetpoint(double deltaT);
 
-    bool setCoolingSetpointTemperatureSchedule(Schedule& schedule);
+      //@}
+      /** @name Other */
+      //@{
 
-    void resetCoolingSetpointTemperatureSchedule();
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ThermostatSetpointDualSetpoint");
 
-    bool setTemperatureDifferenceBetweenCutoutAndSetpoint(double deltaT);
+      boost::optional<ModelObject> heatingSetpointTemperatureScheduleAsModelObject() const;
+      boost::optional<ModelObject> coolingSetpointTemperatureScheduleAsModelObject() const;
 
-    //@}
-    /** @name Other */
-    //@{
+      bool setHeatingSetpointTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setCoolingSetpointTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ThermostatSetpointDualSetpoint");
+  }  // namespace detail
 
-    boost::optional<ModelObject> heatingSetpointTemperatureScheduleAsModelObject() const;
-    boost::optional<ModelObject> coolingSetpointTemperatureScheduleAsModelObject() const;
+}  // namespace model
+}  // namespace openstudio
 
-    bool setHeatingSetpointTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setCoolingSetpointTemperatureScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_THERMOSTATSETPOINTDUALSETPOINT_IMPL_HPP
+#endif  // MODEL_THERMOSTATSETPOINTDUALSETPOINT_IMPL_HPP

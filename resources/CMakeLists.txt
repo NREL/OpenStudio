@@ -13,6 +13,8 @@ set(utilities_resources_src
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/component.xml"
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/files/USA_PA_Philadelphia_TMY2.epw"
   "utilities/BCL/Components/philadelphia pa [724086 TMY2-13739]/images/noimage_100px.png"
+  utilities/BCL/Components/323_wrongXMLType_float/component.xml
+  utilities/BCL/Components/323_wrongXMLType_int/component.xml
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.xml
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/measure.rb
   utilities/BCL/Measures/v2/SetWindowToWallRatioByFacade/tests/EnvelopeAndLoadTestModel_01.osm
@@ -46,7 +48,11 @@ set(utilities_resources_src
   utilities/Filetypes/min.osw
   utilities/Filetypes/full.osw
   utilities/Filetypes/test_csv.csv
+  utilities/Filetypes/Floorspace_Issue4036_BeforeMerge.json
+  utilities/Filetypes/Floorspace_Issue4036_AfterMerge.json
   utilities/Geometry/floorplan.json
+  utilities/Geometry/simple_test.json
+  utilities/Geometry/office_floorplan.json
   utilities/Geometry/floorplan_colors.json
   utilities/Geometry/floorplan_doors.json
   utilities/Geometry/floorplan_differing_num_vertices.json
@@ -62,6 +68,23 @@ set(utilities_resources_src
   utilities/Geometry/surface_match_floorplan.json
   utilities/Geometry/threejs.json
   utilities/Geometry/window_floorplan.json
+  utilities/Geometry/minimal_GLTF_File.gltf
+  utilities/Geometry/7-7_Windows_Complete.gltf
+  utilities/Geometry/15023_Model12.gltf
+  utilities/Geometry/exampleModel.gltf
+  utilities/Geometry/floorplan_school.gltf
+  utilities/Geometry/open_to_below.gltf
+  utilities/Geometry/RefBldgFullServiceRestaurantNew2004_Chicago.gltf
+  utilities/Geometry/Sample_DOE-RefBldgHospitalNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgLargeHotelNew2004_Chicago.gltf
+  utilities/Geometry/RefBldgLargeOfficeNew2004_Chicago.gltf
+  utilities/Geometry/Sample_DOE-RefBldgOutPatientNew2004_Chicago.gltf
+  utilities/Geometry/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.gltf
+  utilities/Geometry/Sample_DOE-RefBldgSmallHotelNew2004_Chicago.gltf
+  utilities/Geometry/ParkUnder_Retail_Office_C2.gltf
+  utilities/Geometry/ASHRAECourthouse.gltf
+  utilities/Geometry/Space_SurfaceMatch_LargeTest.gltf
+  utilities/Geometry/split_level.gltf
   utilities/Idf/CommentTest.idf
   utilities/Idf/DosLineEndingTest.idf
   utilities/Idf/UnixLineEndingTest.idf
@@ -84,6 +107,18 @@ set(utilities_resources_src
   utilities/SqlFile/1ZoneEvapCooler-V9-0-1.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-1-0.sql
   utilities/SqlFile/1ZoneEvapCooler-V9-2-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V9-3-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V9-4-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V9-5-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V9-6-0.sql
+  utilities/SqlFile/1ZoneEvapCooler-V22-1-0.sql
+  utilities/xml/base.xml
+  utilities/xml/hpxml_with_error.xml
+  utilities/xml/schema/HPXML.xsd
+  utilities/xml/schema/HPXMLBaseElements.xsd
+  utilities/xml/schema/HPXMLDataTypes.xsd
+  utilities/xml/schema/HPXMLvalidator.xslt
+  utilities/xml/schema/HPXMLvalidator.xml
   utilities/Zip/test1.zip
 )
 
@@ -106,6 +141,26 @@ set(ENERGYPLUS_OUTPUTS "")
 set(model_resources_src
   model/OpenStudio.idd
   model/schedulefile.csv
+  model/PythonPluginThermochromicWindow.py
+  model/two_stories_pre_intersect.osm
+  model/floorplan_school.osm
+  model/7-7_Windows_Complete.osm
+  model/15023_Model12.osm
+  model/RefBldgFullServiceRestaurantNew2004_Chicago.osm
+  model/Sample_DOE-RefBldgHospitalNew2004_Chicago.osm
+  model/RefBldgLargeHotelNew2004_Chicago.osm
+  model/RefBldgLargeOfficeNew2004_Chicago.osm
+  model/Sample_DOE-RefBldgOutPatientNew2004_Chicago.osm
+  model/Sample_DOE-RefBldgSecondarySchoolNew2004_Chicago.osm
+  model/Sample_DOE-RefBldgSmallHotelNew2004_Chicago.osm
+  model/Space_SurfaceMatch_LargeTest.osm
+  model/split_level.osm
+  model/open_to_below.osm
+  model/TwoStoryOffice_Trane.osm
+  model/story_multipliers.osm
+  model/offset_tests.osm
+  model/ParkUnder_Retail_Office_C2.osm
+  model/ASHRAECourthouse.osm
 )
 
 
@@ -201,6 +256,9 @@ set(energyplus_resources_src
   energyplus/TranslatorV2_Tests/Simple_Construction.idf
   energyplus/RefLargeOffice/RefBldgLargeOfficeNew2004_Chicago.idf
   energyplus/ZoneBoundaryCondition/Bug_486_zone_bdr_test.idf
+  energyplus/SmallOffice/SmallOffice.idf
+  energyplus/AllFuelTypes/in.idf
+  energyplus/FrameAndDivider/in.idf
 )
 
 # update the resources
@@ -211,6 +269,8 @@ RUN_ENERGYPLUS("in.idf" "energyplus/5ZoneAirCooled" "USA_IL_Chicago-OHare.Intl.A
 RUN_ENERGYPLUS("in.idf" "energyplus/Daylighting_Office" "USA_CO_Golden-NREL.724666_TMY3.epw")
 RUN_ENERGYPLUS("in.idf" "energyplus/Daylighting_School" "USA_CO_Golden-NREL.724666_TMY3.epw")
 RUN_ENERGYPLUS("in.idf" "energyplus/Office_With_Many_HVAC_Types" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
+RUN_ENERGYPLUS("in.idf" "energyplus/AllFuelTypes" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
+RUN_ENERGYPLUS("in.idf" "energyplus/FrameAndDivider" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
 
 # add target
 add_custom_target(openstudio_energyplus_resources
@@ -241,37 +301,6 @@ add_custom_target(openstudio_radiance_resources
 CREATE_SRC_GROUPS("${radiance_resources_src}")
 
 ########################################################
-# resultsviewer resources
-
-# clear runs, calls to RUN_ENERGYPLUS will populate this
-set(ENERGYPLUS_OUTPUTS "")
-
-set(ResultsViewer_resources_src
-  resultsviewer/1ZoneEvapCooler/in.idf
-  resultsviewer/1ZoneUncontrolled/in.idf
-  resultsviewer/DaylightingDeviceShelf/in.idf
-  resultsviewer/QkSvcRest/in.idf
-  resultsviewer/SmallOffice/SmallOffice.idf
-  resultsviewer/SolarCollectorFlatPlateWater/in.idf
-)
-
-# update the resources
-UPDATE_RESOURCES("${ResultsViewer_resources_src}")
-
-# add runs
-RUN_ENERGYPLUS("in.idf" "resultsviewer/QkSvcRest" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
-RUN_ENERGYPLUS("SmallOffice.idf" "resultsviewer/SmallOffice" "USA_IL_Chicago-OHare.Intl.AP.725300_TMY3.epw")
-
-# add target
-add_custom_target(ResultsViewer_resources
-  DEPENDS ${ResultsViewer_resources_src} ${ENERGYPLUS_OUTPUTS}
-
-  SOURCES ${ResultsViewer_resources_src}
-)
-
-CREATE_SRC_GROUPS("${ResultsViewer_resources_src}")
-
-########################################################
 # gbxml resources
 # clear runs, calls to RUN_ENERGYPLUS will populate this
 set(ENERGYPLUS_OUTPUTS "")
@@ -283,6 +312,12 @@ SET(gbxml_resources_src
   gbxml/TestCubeAlternateUnits.xml
   gbxml/TwoStoryOffice_Trane.xml
   gbxml/ZNETH.xml
+  gbxml/3951_Geometry_bug.xml
+  gbxml/3997_WindowScaling_bug.xml
+  gbxml/TestSchedules.xml
+  gbxml/gbXMLStandard_Single_Family_Residential_2016.xml
+  gbxml/TropicBird_BEM_4_2018.xml
+  gbxml/TropicBird.xml
 )
 
 # update the resources
@@ -357,5 +392,6 @@ add_custom_target(openstudio_airflow_resources
 
 CREATE_SRC_GROUPS("${airflow_resources_src}")
 
-install(DIRECTORY "Examples" DESTINATION . COMPONENT "CLI")
+########################################################
 
+install(DIRECTORY "Examples" DESTINATION . COMPONENT "CLI")

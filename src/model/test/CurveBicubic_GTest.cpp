@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,28 +31,30 @@
 
 #include "ModelFixture.hpp"
 #include "../CurveBicubic.hpp"
+#include "../CurveBicubic_Impl.hpp"
+#include "../RefrigerationCompressor.hpp"
+#include "../RefrigerationCompressor_Impl.hpp"
+#include "../Model.hpp"
 
 #include <cmath>
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CurveBicubic_DefaultConstructors)
-{
+TEST_F(ModelFixture, CurveBicubic_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    CurveBicubic curve(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CurveBicubic curve(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CurveBicubic_GetterSetters_evaluate)
-{
+TEST_F(ModelFixture, CurveBicubic_GetterSetters_evaluate) {
 
   Model m;
   CurveBicubic curve(m);
@@ -89,8 +91,8 @@ TEST_F(ModelFixture, CurveBicubic_GetterSetters_evaluate)
   double max_y = 30;
 
   auto calc = [c1, c2, c3, c4, c5, c6, c7, c8, c9, c10](double x, double y) {
-    return c1 + c2 * x + c3 * std::pow(x, 2) + c4 * y + c5 * std::pow(y, 2) + c6 * x * y +
-           c7 * std::pow(x, 3) + c8 * std::pow(y, 3) + c9 * std::pow(x, 2) * y + c10 * x * std::pow(y, 2);
+    return c1 + c2 * x + c3 * std::pow(x, 2) + c4 * y + c5 * std::pow(y, 2) + c6 * x * y + c7 * std::pow(x, 3) + c8 * std::pow(y, 3)
+           + c9 * std::pow(x, 2) * y + c10 * x * std::pow(y, 2);
   };
 
   EXPECT_TRUE(curve.setCoefficient1Constant(c1));
@@ -129,7 +131,8 @@ TEST_F(ModelFixture, CurveBicubic_GetterSetters_evaluate)
   EXPECT_FALSE(curve.maximumCurveOutput());
 
   // x and y in range, no output limit
-  double x = 0.5; double y = 15;
+  double x = 0.5;
+  double y = 15;
   EXPECT_DOUBLE_EQ(calc(x, y), curve.evaluate(x, y));
   EXPECT_DOUBLE_EQ(29392.375, curve.evaluate(x, y));
 
@@ -155,12 +158,14 @@ TEST_F(ModelFixture, CurveBicubic_GetterSetters_evaluate)
   EXPECT_DOUBLE_EQ(225281.125, curve.evaluate(x, y));
 
   // x < min_x, y < min_y
-  x = 0.05; y = 5.0;
+  x = 0.05;
+  y = 5.0;
   EXPECT_DOUBLE_EQ(calc(min_x, min_y), curve.evaluate(x, y));
   EXPECT_DOUBLE_EQ(8648.137, curve.evaluate(x, y));
 
   // x > max_x, y > max_y
-  x = 20.0; y = 50.0;
+  x = 20.0;
+  y = 50.0;
   EXPECT_DOUBLE_EQ(calc(max_x, max_y), curve.evaluate(x, y));
   EXPECT_DOUBLE_EQ(250813.0, curve.evaluate(x, y));
 
@@ -175,7 +180,6 @@ TEST_F(ModelFixture, CurveBicubic_GetterSetters_evaluate)
   EXPECT_EQ(min_output, curve.minimumCurveOutput().get());
   EXPECT_EQ(max_output, curve.maximumCurveOutput().get());
 
-
   // out < min output
   EXPECT_DOUBLE_EQ(min_output, curve.evaluate(min_x, min_y));
   // out > max output
@@ -184,5 +188,42 @@ TEST_F(ModelFixture, CurveBicubic_GetterSetters_evaluate)
   // Wrong number of arguments
   // EXPECT_THROW(curve.evaluate(1.0), openstudio::Exception);
   // EXPECT_THROW(curve.evaluate(1.0, 2.0, 3.0), openstudio::Exception);
+}
 
+TEST_F(ModelFixture, CurveBicubic_Remove) {
+
+  Model m;
+  CurveBicubic curve(m);
+  EXPECT_EQ(1u, m.getModelObjects<CurveBicubic>().size());
+
+  curve.remove();
+  EXPECT_EQ(0u, m.getModelObjects<CurveBicubic>().size());
+
+  // This object instantiates 2 CurveBicubic objects
+  RefrigerationCompressor refrigeration(m);
+  EXPECT_EQ(1u, m.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(2u, m.getModelObjects<CurveBicubic>().size());
+  EXPECT_EQ(3u, m.objects().size());
+  // Curves are used only by this object, so we should be able to remove them
+  refrigeration.remove();
+  EXPECT_EQ(0u, m.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(0u, m.getModelObjects<CurveBicubic>().size());
+  EXPECT_EQ(0u, m.objects().size());
+
+  refrigeration = RefrigerationCompressor(m);
+  RefrigerationCompressor refrigerationClone = refrigeration.clone(m).cast<RefrigerationCompressor>();
+  // Should have 2 refrigereation objects, but with the same curves
+  EXPECT_EQ(2u, m.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(2u, m.getModelObjects<CurveBicubic>().size());
+  EXPECT_EQ(4u, m.objects().size());
+  // Curves are used by more than the object we want to remove, so they should stay
+  refrigeration.remove();
+  EXPECT_EQ(1u, m.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(2u, m.getModelObjects<CurveBicubic>().size());
+  EXPECT_EQ(3u, m.objects().size());
+  // Last one, should remove them
+  refrigerationClone.remove();
+  EXPECT_EQ(0u, m.getModelObjects<RefrigerationCompressor>().size());
+  EXPECT_EQ(0u, m.getModelObjects<CurveBicubic>().size());
+  EXPECT_EQ(0u, m.objects().size());
 }

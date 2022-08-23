@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,142 +36,129 @@
 namespace openstudio {
 namespace model {
 
-class InteriorPartitionSurfaceGroup;
-class InteriorPartitionSurface;
-class DaylightingDeviceShelf;
+  class InteriorPartitionSurfaceGroup;
+  class InteriorPartitionSurface;
+  class DaylightingDeviceShelf;
 
-namespace detail {
+  namespace detail {
 
-  /** InteriorPartitionSurface_Impl is a PlanarSurface_Impl that is the implementation class for InteriorPartitionSurface.*/
-  class MODEL_API InteriorPartitionSurface_Impl : public PlanarSurface_Impl {
+    /** InteriorPartitionSurface_Impl is a PlanarSurface_Impl that is the implementation class for InteriorPartitionSurface.*/
+    class MODEL_API InteriorPartitionSurface_Impl : public PlanarSurface_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      InteriorPartitionSurface_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      InteriorPartitionSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      InteriorPartitionSurface_Impl(const InteriorPartitionSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
+      virtual ~InteriorPartitionSurface_Impl() {}
 
+      //@}
 
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      /// set the parent, child may have to call methods on the parent
+      bool setParent(ParentObject& newParent) override;
 
-    InteriorPartitionSurface_Impl(const IdfObject& idfObject,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    InteriorPartitionSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      virtual IddObjectType iddObjectType() const override;
 
-    InteriorPartitionSurface_Impl(const InteriorPartitionSurface_Impl& other,
-                                  Model_Impl* model,
-                                  bool keepHandle);
+      /// should subtract this surface from parent's gross area for net area
+      virtual bool subtractFromGrossArea() const override;
 
-    virtual ~InteriorPartitionSurface_Impl() {}
+      /// get the construction object and search distance
+      virtual boost::optional<std::pair<ConstructionBase, int>> constructionWithSearchDistance() const override;
 
-    //@}
+      /// Returns true if the construction is not directly referenced by this surface .
+      virtual bool isConstructionDefaulted() const override;
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      /// set the construction object
+      virtual bool setConstruction(const ConstructionBase& construction) override;
 
-    // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const override;
+      /// Resets the construction object.
+      virtual void resetConstruction() override;
 
-    /// set the parent, child may have to call methods on the parent
-    bool setParent(ParentObject& newParent) override;
+      /// Returns the containing PlanarSurfaceGroup if available.
+      virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      /// Returns the containing Space if available.
+      virtual boost::optional<Space> space() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      /** @name Getters */
+      //@{
 
-    /// should subtract this surface from parent's gross area for net area
-    virtual bool subtractFromGrossArea() const override;
+      bool converttoInternalMass() const;
 
-    /// get the construction object and search distance
-    virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const override;
+      bool isConverttoInternalMassDefaulted() const;
 
-    /// Returns true if the construction is not directly referenced by this surface .
-    virtual bool isConstructionDefaulted() const override;
+      boost::optional<double> surfaceArea() const;
 
-    /// set the construction object
-    virtual bool setConstruction(const ConstructionBase& construction) override;
+      boost::optional<double> numberofVertices() const;
 
-    /// Resets the construction object.
-    virtual void resetConstruction() override;
+      bool isNumberofVerticesDefaulted() const;
 
-    /// Returns the containing PlanarSurfaceGroup if available.
-    virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const override;
+      bool isNumberofVerticesAutocalculated() const;
 
-    /// Returns the containing Space if available.
-    virtual boost::optional<Space> space() const override;
+      // TODO: Handle this object's extensible fields.
 
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool converttoInternalMass() const;
+      bool setConverttoInternalMass(bool converttoInternalMass);
 
-    bool isConverttoInternalMassDefaulted() const;
+      void resetConverttoInternalMass();
 
-    boost::optional<double> surfaceArea() const;
+      bool setSurfaceArea(boost::optional<double> surfaceArea);
 
-    boost::optional<double> numberofVertices() const;
+      bool setSurfaceArea(double surfaceArea);
 
-    bool isNumberofVerticesDefaulted() const;
+      void resetSurfaceArea();
 
-    bool isNumberofVerticesAutocalculated() const;
+      bool setNumberofVertices(boost::optional<double> numberofVertices);
 
-    // TODO: Handle this object's extensible fields.
+      bool setNumberofVertices(double numberofVertices);
 
-    //@}
-    /** @name Setters */
-    //@{
+      void resetNumberofVertices();
 
-    bool setConverttoInternalMass(bool converttoInternalMass);
+      void autocalculateNumberofVertices();
 
-    void resetConverttoInternalMass();
+      // TODO: Handle this object's extensible fields.
 
-    bool setSurfaceArea(boost::optional<double> surfaceArea);
+      //@}
 
-    bool setSurfaceArea(double surfaceArea);
+      /// get the interior partition surface group
+      boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup() const;
 
-    void resetSurfaceArea();
+      /// set the interior partition surface group
+      bool setInteriorPartitionSurfaceGroup(const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup);
 
-    bool setNumberofVertices(boost::optional<double> numberofVertices);
+      void resetInteriorPartitionSurfaceGroup();
 
-    bool setNumberofVertices(double numberofVertices);
+      boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
 
-    void resetNumberofVertices();
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.InteriorPartitionSurface");
 
-    void autocalculateNumberofVertices();
+      boost::optional<ModelObject> interiorPartitionSurfaceGroupAsModelObject() const;
 
-    // TODO: Handle this object's extensible fields.
+      bool setInteriorPartitionSurfaceGroupAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-    //@}
+  }  // namespace detail
 
-    /// get the interior partition surface group
-    boost::optional<InteriorPartitionSurfaceGroup> interiorPartitionSurfaceGroup() const;
+}  // namespace model
+}  // namespace openstudio
 
-    /// set the interior partition surface group
-    bool setInteriorPartitionSurfaceGroup(const InteriorPartitionSurfaceGroup& interiorPartitionSurfaceGroup);
-
-    void resetInteriorPartitionSurfaceGroup();
-
-    boost::optional<DaylightingDeviceShelf> daylightingDeviceShelf() const;
-
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.InteriorPartitionSurface");
-
-    boost::optional<ModelObject> interiorPartitionSurfaceGroupAsModelObject() const;
-
-    bool setInteriorPartitionSurfaceGroupAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_INTERIORPARTITIONSURFACE_IMPL_HPP
+#endif  // MODEL_INTERIORPARTITIONSURFACE_IMPL_HPP

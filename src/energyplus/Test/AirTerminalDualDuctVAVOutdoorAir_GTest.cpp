@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -81,8 +81,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalDualDuctVAVOutdoorAir) {
 
   EXPECT_TRUE(atu.setAvailabilitySchedule(sch));
 
-
-  AirLoopHVAC a(m);
+  AirLoopHVAC a(m, true);
+  ASSERT_TRUE(a.isDualDuct());
   a.addBranchForZone(z, atu);
 
   ForwardTranslator ft;
@@ -98,8 +98,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalDualDuctVAVOutdoorAir) {
   EXPECT_EQ(atu.availabilitySchedule().name().get(), idf_atu.getString(AirTerminal_DualDuct_VAV_OutdoorAirFields::AvailabilityScheduleName).get());
   EXPECT_EQ(sch.name().get(), idf_atu.getString(AirTerminal_DualDuct_VAV_OutdoorAirFields::AvailabilityScheduleName).get());
 
-  EXPECT_EQ(atu.outdoorAirInletNode().get().name().get(), idf_atu.getString(AirTerminal_DualDuct_VAV_OutdoorAirFields::OutdoorAirInletNodeName).get());
-  EXPECT_EQ(atu.recirculatedAirInletNode().get().name().get(), idf_atu.getString(AirTerminal_DualDuct_VAV_OutdoorAirFields::RecirculatedAirInletNodeName).get());
+  EXPECT_EQ(atu.outdoorAirInletNode().get().name().get(),
+            idf_atu.getString(AirTerminal_DualDuct_VAV_OutdoorAirFields::OutdoorAirInletNodeName).get());
+  EXPECT_EQ(atu.recirculatedAirInletNode().get().name().get(),
+            idf_atu.getString(AirTerminal_DualDuct_VAV_OutdoorAirFields::RecirculatedAirInletNodeName).get());
 
   EXPECT_TRUE(openstudio::istringEqual("autosize", idf_atu.getString(AirTerminal_DualDuct_VAV_OutdoorAirFields::MaximumTerminalAirFlowRate).get()));
 
@@ -108,7 +110,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalDualDuctVAVOutdoorAir) {
 
   // DSOA
   EXPECT_EQ(dsoa.name().get(), idf_atu.getString(AirTerminal_DualDuct_VAV_OutdoorAirFields::DesignSpecificationOutdoorAirObjectName).get());
-
 
   // Check the ADU
   WorkspaceObjectVector idfObjs2 = w.getObjectsByType(IddObjectType::ZoneHVAC_AirDistributionUnit);
@@ -136,9 +137,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirTerminalDualDuctVAVOutdoorAir) {
   EXPECT_EQ(1u, idfObjs3.size());
   WorkspaceObject idf_atu3(idfObjs3[0]);
 
-  EXPECT_DOUBLE_EQ(atu.maximumTerminalAirFlowRate().get(), idf_atu3.getDouble(AirTerminal_DualDuct_VAV_OutdoorAirFields::MaximumTerminalAirFlowRate).get());
+  EXPECT_DOUBLE_EQ(atu.maximumTerminalAirFlowRate().get(),
+                   idf_atu3.getDouble(AirTerminal_DualDuct_VAV_OutdoorAirFields::MaximumTerminalAirFlowRate).get());
 
   EXPECT_EQ("CurrentOccupancy", idf_atu3.getString(AirTerminal_DualDuct_VAV_OutdoorAirFields::PerPersonVentilationRateMode).get());
   EXPECT_EQ("", idf_atu3.getString(AirTerminal_DualDuct_VAV_OutdoorAirFields::DesignSpecificationOutdoorAirObjectName).get());
-
 }

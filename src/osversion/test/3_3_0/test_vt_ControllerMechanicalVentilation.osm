@@ -1,0 +1,26 @@
+
+OS:Version,
+  {5e6efa26-097f-474d-92a1-e90173b4ca52}, !- Handle
+  3.2.1;                                  !- Version Identifier
+
+OS:Controller:MechanicalVentilation,
+  {af66226c-9d9a-4dbe-b623-d5a30a6d0ce1}, !- Handle
+  Controller Mechanical Ventilation 1,    !- Name
+  {d3bdc2ec-e0df-4a23-bea0-fabab572c6f4}, !- Availability Schedule
+  ,                                       !- Demand Controlled Ventilation
+  VentilationRateProcedure;               !- System Outdoor Air Method
+
+OS:Schedule:Constant,
+  {d3bdc2ec-e0df-4a23-bea0-fabab572c6f4}, !- Handle
+  Always On Discrete,                     !- Name
+  {d39d05cb-9d51-4736-b8ea-c39217f47a8c}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {d39d05cb-9d51-4736-b8ea-c39217f47a8c}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+

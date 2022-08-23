@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,48 +42,40 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateSiteWaterMainsTemperature( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Site_WaterMainsTemperature )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: Site_WaterMainsTemperature");
-     return boost::none;
-  }
+  OptionalModelObject ReverseTranslator::translateSiteWaterMainsTemperature(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Site_WaterMainsTemperature) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Site_WaterMainsTemperature");
+      return boost::none;
+    }
 
-  SiteWaterMainsTemperature mo = m_model.getUniqueModelObject<SiteWaterMainsTemperature>();
+    SiteWaterMainsTemperature mo = m_model.getUniqueModelObject<SiteWaterMainsTemperature>();
 
-  boost::optional<WorkspaceObject> wo;
-  boost::optional<Schedule> schedule;
+    boost::optional<WorkspaceObject> wo;
+    boost::optional<Schedule> schedule;
 
-  wo = workspaceObject.getTarget(Site_WaterMainsTemperatureFields::TemperatureScheduleName);
-  if( wo )
-  {
-    boost::optional<ModelObject> mo2 = translateAndMapWorkspaceObject(wo.get());
-    if( mo2 )
-    {
-      if( (schedule = mo2->optionalCast<Schedule>()) )
-      {
-        mo.setTemperatureSchedule(schedule.get());
+    wo = workspaceObject.getTarget(Site_WaterMainsTemperatureFields::TemperatureScheduleName);
+    if (wo) {
+      boost::optional<ModelObject> mo2 = translateAndMapWorkspaceObject(wo.get());
+      if (mo2) {
+        if ((schedule = mo2->optionalCast<Schedule>())) {
+          mo.setTemperatureSchedule(schedule.get());
+        }
       }
     }
+
+    boost::optional<double> value = workspaceObject.getDouble(Site_WaterMainsTemperatureFields::AnnualAverageOutdoorAirTemperature);
+    if (value) {
+      mo.setAnnualAverageOutdoorAirTemperature(value.get());
+    }
+
+    value = workspaceObject.getDouble(Site_WaterMainsTemperatureFields::MaximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
+    if (value) {
+      mo.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(value.get());
+    }
+
+    return mo;
   }
 
-  boost::optional<double> value = workspaceObject.getDouble(Site_WaterMainsTemperatureFields::AnnualAverageOutdoorAirTemperature);
-  if( value )
-  {
-    mo.setAnnualAverageOutdoorAirTemperature(value.get());
-  }
+}  // namespace energyplus
 
-  value = workspaceObject.getDouble(Site_WaterMainsTemperatureFields::MaximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
-  if( value )
-  {
-    mo.setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(value.get());
-  }
-
-  return mo;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

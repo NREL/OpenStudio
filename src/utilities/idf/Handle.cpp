@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,7 +40,7 @@ Handle applyHandleMap(const Handle& original, const HandleMap& handleMap) {
   return result;
 }
 
-HandleVector applyHandleMap(const HandleVector& original,const HandleMap& handleMap) {
+HandleVector applyHandleMap(const HandleVector& original, const HandleMap& handleMap) {
   HandleVector result;
   for (const Handle& oh : original) {
     auto it = handleMap.find(oh);
@@ -51,4 +51,4 @@ HandleVector applyHandleMap(const HandleVector& original,const HandleMap& handle
   return result;
 }
 
-}
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,92 +37,86 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-class AirflowNetworkHorizontalOpening_Impl;
+    class AirflowNetworkHorizontalOpening_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirflowNetworkHorizontalOpening is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkHorizontalOpening'. */
-class MODEL_API AirflowNetworkHorizontalOpening : public AirflowNetworkComponent
-{
-public:
-  /** @name Constructors and Destructors */
-  //@{
-  /** Construct a horizontal opening object with default mass flow exponent and sloping plane angle. */
-  AirflowNetworkHorizontalOpening(const Model& model,
-    double massFlowCoefficientWhenOpeningisClosed,
-    double dischargeCoefficient);
-  /** Construct a horizontal opening object. */
-  AirflowNetworkHorizontalOpening(const Model& model,
-    double massFlowCoefficientWhenOpeningisClosed,
-    double massFlowExponentWhenOpeningisClosed,
-    double slopingPlaneAngle,
-    double dischargeCoefficient);
+  /** AirflowNetworkHorizontalOpening is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkHorizontalOpening'. */
+  class MODEL_API AirflowNetworkHorizontalOpening : public AirflowNetworkComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
+    /** Construct a horizontal opening object with default mass flow exponent and sloping plane angle. */
+    AirflowNetworkHorizontalOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed, double dischargeCoefficient);
+    /** Construct a horizontal opening object. */
+    AirflowNetworkHorizontalOpening(const Model& model, double massFlowCoefficientWhenOpeningisClosed, double massFlowExponentWhenOpeningisClosed,
+                                    double slopingPlaneAngle, double dischargeCoefficient);
 
-  virtual ~AirflowNetworkHorizontalOpening() {}
+    virtual ~AirflowNetworkHorizontalOpening() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
-  /** Returns the mass flow coefficient when the opening is closed in kg/s-m at 1 Pa pressure difference. */
-  double airMassFlowCoefficientWhenOpeningisClosed() const;
-  /** Returns the mass flow exponent when the opening is closed. */
-  double airMassFlowExponentWhenOpeningisClosed() const;
-  /** Returns true if the  mass flow exponent is defaulted. */
-  bool isAirMassFlowExponentWhenOpeningisClosedDefaulted() const;
-  /** Returns the angle of the horizontal opening to a sloping plane beneath it (reducing the effective opening area)
+    /** @name Getters */
+    //@{
+    /** Returns the mass flow coefficient when the opening is closed in kg/s-m at 1 Pa pressure difference. */
+    double airMassFlowCoefficientWhenOpeningisClosed() const;
+    /** Returns the mass flow exponent when the opening is closed. */
+    double airMassFlowExponentWhenOpeningisClosed() const;
+    /** Returns true if the  mass flow exponent is defaulted. */
+    bool isAirMassFlowExponentWhenOpeningisClosedDefaulted() const;
+    /** Returns the angle of the horizontal opening to a sloping plane beneath it (reducing the effective opening area)
       in degrees, 90 degrees corresponds to fully open. */
-  double slopingPlaneAngle() const;
-  /** Returns true if the sloping plane angle is defaulted. */
-  bool isSlopingPlaneAngleDefaulted() const;
-  /** Returns the discharge coefficient. */
-  double dischargeCoefficient() const;
+    double slopingPlaneAngle() const;
+    /** Returns true if the sloping plane angle is defaulted. */
+    bool isSlopingPlaneAngleDefaulted() const;
+    /** Returns the discharge coefficient. */
+    double dischargeCoefficient() const;
 
-  //@}
-  /** @name Setters */
-  //@{
-  /** Sets the mass flow coefficient when the opening is closed in kg/s-m at 1 Pa pressure difference. */
-  bool setAirMassFlowCoefficientWhenOpeningisClosed(double airMassFlowCoefficientWhenOpeningisClosed);
-  /** Sets the mass flow exponent when the opening is closed. */
-  bool setAirMassFlowExponentWhenOpeningisClosed(double airMassFlowExponentWhenOpeningisClosed);
-  /** Resets the mass flow exponent when the opening is closed to the default value. */
-  void resetAirMassFlowExponentWhenOpeningisClosed();
-  /** Sets the angle of the horizontal opening to a sloping plane beneath it (reducing the effective opening area)
+    //@}
+    /** @name Setters */
+    //@{
+    /** Sets the mass flow coefficient when the opening is closed in kg/s-m at 1 Pa pressure difference. */
+    bool setAirMassFlowCoefficientWhenOpeningisClosed(double airMassFlowCoefficientWhenOpeningisClosed);
+    /** Sets the mass flow exponent when the opening is closed. */
+    bool setAirMassFlowExponentWhenOpeningisClosed(double airMassFlowExponentWhenOpeningisClosed);
+    /** Resets the mass flow exponent when the opening is closed to the default value. */
+    void resetAirMassFlowExponentWhenOpeningisClosed();
+    /** Sets the angle of the horizontal opening to a sloping plane beneath it (reducing the effective opening area)
   in degrees, 90 degrees corresponds to fully open. */
-  bool setSlopingPlaneAngle(double slopingPlaneAngle);
-  /** Resets the sloping plane to the default value. */
-  void resetSlopingPlaneAngle();
-  /** Sets the discharge coefficient. */
-  bool setDischargeCoefficient(double dischargeCoefficient);
+    bool setSlopingPlaneAngle(double slopingPlaneAngle);
+    /** Resets the sloping plane to the default value. */
+    void resetSlopingPlaneAngle();
+    /** Sets the discharge coefficient. */
+    bool setDischargeCoefficient(double dischargeCoefficient);
 
-  //@}
-protected:
-  /// @cond
-  typedef detail::AirflowNetworkHorizontalOpening_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirflowNetworkHorizontalOpening_Impl ImplType;
 
-  explicit AirflowNetworkHorizontalOpening(std::shared_ptr<detail::AirflowNetworkHorizontalOpening_Impl> impl);
+    explicit AirflowNetworkHorizontalOpening(std::shared_ptr<detail::AirflowNetworkHorizontalOpening_Impl> impl);
 
-  friend class detail::AirflowNetworkHorizontalOpening_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
-private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkHorizontalOpening");
-};
+    friend class detail::AirflowNetworkHorizontalOpening_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkHorizontalOpening");
+  };
 
-/** \relates AirflowNetworkHorizontalOpening*/
-typedef boost::optional<AirflowNetworkHorizontalOpening> OptionalAirflowNetworkHorizontalOpening;
+  /** \relates AirflowNetworkHorizontalOpening*/
+  typedef boost::optional<AirflowNetworkHorizontalOpening> OptionalAirflowNetworkHorizontalOpening;
 
-/** \relates AirflowNetworkHorizontalOpening*/
-typedef std::vector<AirflowNetworkHorizontalOpening> AirflowNetworkHorizontalOpeningVector;
+  /** \relates AirflowNetworkHorizontalOpening*/
+  typedef std::vector<AirflowNetworkHorizontalOpening> AirflowNetworkHorizontalOpeningVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKHORIZONTALOPENING_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKHORIZONTALOPENING_HPP

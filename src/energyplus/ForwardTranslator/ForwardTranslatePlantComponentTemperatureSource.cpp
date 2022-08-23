@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,53 +43,51 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePlantComponentTemperatureSource( PlantComponentTemperatureSource& modelObject )
-{
-  OptionalString s;
-  OptionalDouble value;
-  OptionalModelObject temp;
+  boost::optional<IdfObject> ForwardTranslator::translatePlantComponentTemperatureSource(PlantComponentTemperatureSource& modelObject) {
+    OptionalString s;
+    OptionalDouble value;
+    OptionalModelObject temp;
 
-  //Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PlantComponent_TemperatureSource, modelObject);
+    //Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::PlantComponent_TemperatureSource, modelObject);
 
-  // InletNode
-  if( auto node = modelObject.inletModelObject() ) {
-    idfObject.setString(PlantComponent_TemperatureSourceFields::InletNode,node->name().get());
-  }
-
-  // OutletNode
-  if( auto node = modelObject.outletModelObject() ) {
-    idfObject.setString(PlantComponent_TemperatureSourceFields::OutletNode,node->name().get());
-  }
-
-  // DesignVolumeFlowRate
-  if( modelObject.isDesignVolumeFlowRateAutosized() ) {
-    idfObject.setString(PlantComponent_TemperatureSourceFields::DesignVolumeFlowRate,"Autosize");
-  } else if( (value = modelObject.designVolumeFlowRate()) ) {
-    idfObject.setDouble(PlantComponent_TemperatureSourceFields::DesignVolumeFlowRate,value.get());
-  }
-
-  // TemperatureSpecificationType
-  if( (s = modelObject.temperatureSpecificationType()) ) {
-    idfObject.setString(PlantComponent_TemperatureSourceFields::TemperatureSpecificationType,s.get());
-  }
-
-  // SourceTemperature
-  if( (value = modelObject.sourceTemperature()) ) {
-    idfObject.setDouble(PlantComponent_TemperatureSourceFields::SourceTemperature,value.get());
-  }
-
-  // SourceTemperatureScheduleName
-  if( auto schedule = modelObject.sourceTemperatureSchedule() ) {
-    if( auto _schedule = translateAndMapModelObject(schedule.get()) ) {
-      idfObject.setString(PlantComponent_TemperatureSourceFields::SourceTemperatureScheduleName,_schedule->name().get());
+    // InletNode
+    if (auto node = modelObject.inletModelObject()) {
+      idfObject.setString(PlantComponent_TemperatureSourceFields::InletNode, node->name().get());
     }
+
+    // OutletNode
+    if (auto node = modelObject.outletModelObject()) {
+      idfObject.setString(PlantComponent_TemperatureSourceFields::OutletNode, node->name().get());
+    }
+
+    // DesignVolumeFlowRate
+    if (modelObject.isDesignVolumeFlowRateAutosized()) {
+      idfObject.setString(PlantComponent_TemperatureSourceFields::DesignVolumeFlowRate, "Autosize");
+    } else if ((value = modelObject.designVolumeFlowRate())) {
+      idfObject.setDouble(PlantComponent_TemperatureSourceFields::DesignVolumeFlowRate, value.get());
+    }
+
+    // TemperatureSpecificationType
+    if ((s = modelObject.temperatureSpecificationType())) {
+      idfObject.setString(PlantComponent_TemperatureSourceFields::TemperatureSpecificationType, s.get());
+    }
+
+    // SourceTemperature
+    if ((value = modelObject.sourceTemperature())) {
+      idfObject.setDouble(PlantComponent_TemperatureSourceFields::SourceTemperature, value.get());
+    }
+
+    // SourceTemperatureScheduleName
+    if (auto schedule = modelObject.sourceTemperatureSchedule()) {
+      if (auto _schedule = translateAndMapModelObject(schedule.get())) {
+        idfObject.setString(PlantComponent_TemperatureSourceFields::SourceTemperatureScheduleName, _schedule->name().get());
+      }
+    }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

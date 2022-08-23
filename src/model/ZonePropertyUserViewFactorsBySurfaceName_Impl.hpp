@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,104 +37,98 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
-class Surface;
-class SubSurface;
-class InternalMass;
-class ViewFactor;
+  class ThermalZone;
+  class Surface;
+  class SubSurface;
+  class InternalMass;
+  class ViewFactor;
 
-namespace detail {
+  namespace detail {
 
-  /** ZonePropertyUserViewFactorsBySurfaceName_Impl is a ModelObject_Impl that is the implementation class for ZonePropertyUserViewFactorsBySurfaceName.*/
-  class MODEL_API ZonePropertyUserViewFactorsBySurfaceName_Impl : public ModelObject_Impl {
+    /** ZonePropertyUserViewFactorsBySurfaceName_Impl is a ModelObject_Impl that is the implementation class for ZonePropertyUserViewFactorsBySurfaceName.*/
+    class MODEL_API ZonePropertyUserViewFactorsBySurfaceName_Impl : public ModelObject_Impl
+    {
 
-  public:
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      ZonePropertyUserViewFactorsBySurfaceName_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ZonePropertyUserViewFactorsBySurfaceName_Impl(const IdfObject& idfObject,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      ZonePropertyUserViewFactorsBySurfaceName_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ZonePropertyUserViewFactorsBySurfaceName_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      ZonePropertyUserViewFactorsBySurfaceName_Impl(const ZonePropertyUserViewFactorsBySurfaceName_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ZonePropertyUserViewFactorsBySurfaceName_Impl(const ZonePropertyUserViewFactorsBySurfaceName_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      virtual ~ZonePropertyUserViewFactorsBySurfaceName_Impl() {}
 
-    virtual ~ZonePropertyUserViewFactorsBySurfaceName_Impl() {}
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      // Disallow cloning
+      virtual ModelObject clone(Model model) const override;
 
-    // Disallow cloning
-    virtual ModelObject clone(Model model) const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      ThermalZone thermalZone() const;
 
-    ThermalZone thermalZone() const;
+      std::vector<ViewFactor> viewFactors() const;
 
-    std::vector<ViewFactor> viewFactors() const;
+      unsigned int numberofViewFactors() const;
 
-    unsigned int numberofViewFactors() const;
+      boost::optional<unsigned> viewFactorIndex(const ViewFactor& viewFactor) const;
 
-    boost::optional<unsigned> viewFactorIndex(const ViewFactor& viewFactor) const;
+      boost::optional<ViewFactor> getViewFactor(unsigned groupIndex) const;
 
-    boost::optional<ViewFactor> getViewFactor(unsigned groupIndex) const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool addViewFactor(const ViewFactor& viewFactor);
 
-    bool addViewFactor(const ViewFactor& viewFactor);
+      bool addViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor);
 
-    bool addViewFactor(const Surface& fromSurface, const Surface& toSurface, double viewFactor);
+      bool addViewFactor(const Surface& fromSurface, const SubSurface& toSubSurface, double viewFactor);
 
-    bool addViewFactor(const Surface& fromSurface, const SubSurface& toSubSurface, double viewFactor);
+      bool addViewFactor(const Surface& fromSurface, const InternalMass& toInternalMass, double viewFactor);
 
-    bool addViewFactor(const Surface& fromSurface, const InternalMass& toInternalMass, double viewFactor);
+      bool addViewFactor(const SubSurface& fromSubSurface, const SubSurface& toSubSurface, double viewFactor);
 
-    bool addViewFactor(const SubSurface& fromSubSurface, const SubSurface& toSubSurface, double viewFactor);
+      bool addViewFactor(const SubSurface& fromSubSurface, const Surface& toSurface, double viewFactor);
 
-    bool addViewFactor(const SubSurface& fromSubSurface, const Surface& toSurface, double viewFactor);
+      bool addViewFactor(const SubSurface& fromSubSurface, const InternalMass& toInternalMass, double viewFactor);
 
-    bool addViewFactor(const SubSurface& fromSubSurface, const InternalMass& toInternalMass, double viewFactor);
+      bool addViewFactor(const InternalMass& fromInternalMass, const InternalMass& toInernalMass, double viewFactor);
 
-    bool addViewFactor(const InternalMass& fromInternalMass, const InternalMass& toInernalMass, double viewFactor);
+      bool addViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double viewFactor);
 
-    bool addViewFactor(const InternalMass& fromInternalMass, const Surface& toSurface, double viewFactor);
+      bool addViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor);
 
-    bool addViewFactor(const InternalMass& fromInternalMass, const SubSurface& toSubSurface, double viewFactor);
+      bool addViewFactors(const std::vector<ViewFactor>& viewFactors);
 
-    bool addViewFactors(const std::vector<ViewFactor> &viewFactors);
+      bool removeViewFactor(unsigned groupIndex);
 
-    bool removeViewFactor(unsigned groupIndex);
+      void removeAllViewFactors();
 
-    void removeAllViewFactors();
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZonePropertyUserViewFactorsBySurfaceName");
+    };
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ZonePropertyUserViewFactorsBySurfaceName");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEPROPERTYUSERVIEWFACTORSBYSURFACENAME_IMPL_HPP
+#endif  // MODEL_ZONEPROPERTYUSERVIEWFACTORSBYSURFACENAME_IMPL_HPP

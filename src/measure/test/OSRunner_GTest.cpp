@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,6 +33,7 @@
 #include "../OSRunner.hpp"
 #include "../OSMeasure.hpp"
 #include "../ModelMeasure.hpp"
+#include "../OSArgument.hpp"
 
 #include "../../model/Model.hpp"
 
@@ -46,23 +47,18 @@
 using namespace openstudio;
 using namespace openstudio::measure;
 
-class TestModelMeasure : public ModelMeasure {
+class TestModelMeasure : public ModelMeasure
+{
  public:
-
   virtual std::string name() const override {
     return "TestModelMeasure";
   }
 
-  virtual bool run(model::Model& model,
-                   OSRunner& runner,
-                   const std::map<std::string, OSArgument>& user_arguments) const override
-  {
-    ModelMeasure::run(model,runner,user_arguments);
+  virtual bool run(model::Model& model, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const override {
+    ModelMeasure::run(model, runner, user_arguments);
     return true;
   }
-
 };
-
 
 TEST_F(MeasureFixture, OSRunner_StdOut) {
 
@@ -76,23 +72,57 @@ TEST_F(MeasureFixture, OSRunner_StdOut) {
 
   OSRunner runner(workflow);
 
-  std::cout << "Hi Output" << std::endl;
-  std::cerr << "Hi Error" << std::endl;
+  std::cout << "Hi Output" << '\n';
+  std::cerr << "Hi Error" << '\n';
 
   TestModelMeasure measure;
   runner.prepareForMeasureRun(measure);
 
-  std::cout << "Standard Output" << std::endl;
-  std::cerr << "Standard Error" << std::endl;
+  std::cout << "Standard Output" << '\n';
+  std::cerr << "Standard Error" << '\n';
 
   runner.incrementStep();
 
-  std::cout << "Bye Output" << std::endl;
-  std::cerr << "Bye Error" << std::endl;
+  std::cout << "Bye Output" << '\n';
+  std::cerr << "Bye Error" << '\n';
 
   ASSERT_TRUE(step.result());
   ASSERT_TRUE(step.result()->stdOut());
   EXPECT_EQ("Standard Output\n", step.result()->stdOut().get());
   ASSERT_TRUE(step.result()->stdErr());
   EXPECT_EQ("Standard Error\n", step.result()->stdErr().get());
+}
+
+TEST_F(MeasureFixture, OSRunner_getOptionalBoolArgumentValue) {
+
+  WorkflowJSON workflow;
+  OSRunner runner(workflow);
+
+  constexpr bool required = false;
+  constexpr auto arg_name = "heat_pump_is_ducted";
+
+  std::vector<boost::optional<bool>> tests{
+    boost::optional<bool>(),
+    boost::optional<bool>(true),
+    boost::optional<bool>(false),
+  };
+
+  for (const auto& test : tests) {
+    std::vector<OSArgument> argumentVector;
+    OSArgument boolArgument = OSArgument::makeBoolArgument(arg_name, required);
+    if (test.has_value()) {
+      boolArgument.setValue(test.get());
+    }
+    argumentVector.push_back(boolArgument);
+
+    std::map<std::string, OSArgument> argumentMap = convertOSArgumentVectorToMap(argumentVector);
+
+    boost::optional<bool> result_ = runner.getOptionalBoolArgumentValue(arg_name, argumentMap);
+    if (!test.has_value()) {
+      EXPECT_FALSE(result_.has_value());
+    } else {
+      ASSERT_TRUE(result_.has_value());
+      EXPECT_EQ(test.get(), result_.get());
+    }
+  }
 }

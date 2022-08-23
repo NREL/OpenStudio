@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,156 +37,151 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ZoneHVACEquipmentList_Impl;
+    class ZoneHVACEquipmentList_Impl;
 
-} // detail
+  }  // namespace detail
 
-class ThermalZone;
+  class ThermalZone;
 
-/** ZoneHVACEquipmentList is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneHVAC:EquipmentList'. */
-class MODEL_API ZoneHVACEquipmentList : public ModelObject {
-  public:
+  /** ZoneHVACEquipmentList is a ModelObject that wraps the OpenStudio IDD object 'OS:ZoneHVAC:EquipmentList'. */
+  class MODEL_API ZoneHVACEquipmentList : public ModelObject
+  {
+   public:
+    explicit ZoneHVACEquipmentList(const ThermalZone& thermalZone);
 
-  explicit ZoneHVACEquipmentList(const ThermalZone & thermalZone);
+    virtual ~ZoneHVACEquipmentList() {}
 
-  virtual ~ZoneHVACEquipmentList() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> loadDistributionSchemeValues();
 
-  static std::vector<std::string> loadDistributionSchemeValues();
+    static std::vector<std::string> validLoadDistributionSchemeValues();
 
-  static std::vector<std::string> validLoadDistributionSchemeValues();
+    std::string loadDistributionScheme() const;
 
+    bool setLoadDistributionScheme(std::string scheme);
 
-  std::string loadDistributionScheme() const;
-
-  bool setLoadDistributionScheme(std::string scheme);
-
-  /** Add new equipment setting the heating and cooling priorities
+    /** Add new equipment setting the heating and cooling priorities
    *  to the next available priority level.
    *  Air terminals associated with AirLoopHVAC will be moved to first priority.
    *  This method is relatively dumb.  It will add any model object to the list
    *  even if it is not hvac equipment.  That might change in the future.
    */
-  bool addEquipment(const ModelObject & equipment);
+    bool addEquipment(const ModelObject& equipment);
 
-  /** Remove equipment from the EquipmentList.
+    /** Remove equipment from the EquipmentList.
     * This will not remove the equipment from the model or
     * disconnect any node connections.  Use only if you know what you are doing.
     */
-  bool removeEquipment(const ModelObject & equipment);
+    bool removeEquipment(const ModelObject& equipment);
 
-  /** Set cooling priority of equipment.
+    /** Set cooling priority of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
-  bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
+    bool setCoolingPriority(const ModelObject& equipment, unsigned priority);
 
-  /** Set heating or no-load priority of equipment.
+    /** Set heating or no-load priority of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList
    */
-  bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
+    bool setHeatingPriority(const ModelObject& equipment, unsigned priority);
 
-  /** Return all equipment.  Order is undetermined. */
-  std::vector<ModelObject> equipment() const;
+    /** Return all equipment.  Order is undetermined. */
+    std::vector<ModelObject> equipment() const;
 
-  /** Return all equipment.  Order is determined by heating priority.
+    /** Return all equipment.  Order is determined by heating priority.
    *  Equipment having a Heating Priority of 0 is filtered out (unavailable)
    */
-  std::vector<ModelObject> equipmentInHeatingOrder() const;
+    std::vector<ModelObject> equipmentInHeatingOrder() const;
 
-  /** Return all equipment.  Order is determined by cooling priority
+    /** Return all equipment.  Order is determined by cooling priority
    *  Equipment having a Cooling Priority of 0 is filtered out (unavailable)
    */
-  std::vector<ModelObject> equipmentInCoolingOrder() const;
+    std::vector<ModelObject> equipmentInCoolingOrder() const;
 
-  ThermalZone thermalZone() const;
+    ThermalZone thermalZone() const;
 
-  // TODO: JM 2019-02-25 These should actually return a boost::optional<unsigned> in case the equipment isn't actually part of the list...
-  /** Return the heating or no-load priority for equipment */
-  unsigned heatingPriority(const ModelObject & equipment) const;
+    // TODO: JM 2019-02-25 These should actually return a boost::optional<unsigned> in case the equipment isn't actually part of the list...
+    /** Return the heating or no-load priority for equipment */
+    unsigned heatingPriority(const ModelObject& equipment) const;
 
-  /** Return the cooling priority for equipment */
-  unsigned coolingPriority(const ModelObject & equipment) const;
+    /** Return the cooling priority for equipment */
+    unsigned coolingPriority(const ModelObject& equipment) const;
 
-
-  /** Return the Sequential Cooling Fraction of equipment.
+    /** Return the Sequential Cooling Fraction of equipment.
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  OS_DEPRECATED boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+    OS_DEPRECATED boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
 
-  /** Return the Sequential Cooling Fraction Schedule of equipment.
+    /** Return the Sequential Cooling Fraction Schedule of equipment.
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
+    boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
 
-  /** Return the Sequential Heating Fraction of equipment.
+    /** Return the Sequential Heating Fraction of equipment.
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  OS_DEPRECATED boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+    OS_DEPRECATED boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
 
-  /** Return the Sequential Heating Fraction Schedule of equipment.
+    /** Return the Sequential Heating Fraction Schedule of equipment.
    *  Returns nothing if when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
+    boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
 
-  /** Set the Sequential Cooling Fraction Schedule Constant of equipment.
+    /** Set the Sequential Cooling Fraction Schedule Constant of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  OS_DEPRECATED bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+    OS_DEPRECATED bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
 
-  /** Set the Sequential Cooling Fraction Schedule of equipment.
+    /** Set the Sequential Cooling Fraction Schedule of equipment.
    *  Returns false when equipement is not in the ZoneHVACEquipmentList, its cooling priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
+    bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
-  /** Set the Sequential Heating Fraction Schedule Constant of equipment.
+    /** Set the Sequential Heating Fraction Schedule Constant of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  OS_DEPRECATED bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
+    OS_DEPRECATED bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
 
-  /** Set the Sequential Heating Fraction Schedule of equipment.
+    /** Set the Sequential Heating Fraction Schedule of equipment.
    *  Returns false when equipment is not in the ZoneHVACEquipmentList, its heating priority is zero,
    *  or the loadDistributionScheme isn't 'Sequential'
    */
-  bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
+    bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
-  protected:
+   protected:
+    /// @cond
 
-  /// @cond
+    typedef detail::ZoneHVACEquipmentList_Impl ImplType;
 
-  typedef detail::ZoneHVACEquipmentList_Impl ImplType;
+    explicit ZoneHVACEquipmentList(std::shared_ptr<detail::ZoneHVACEquipmentList_Impl> impl);
 
-  explicit ZoneHVACEquipmentList(std::shared_ptr<detail::ZoneHVACEquipmentList_Impl> impl);
+    friend class detail::ZoneHVACEquipmentList_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::ZoneHVACEquipmentList_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
 
-  /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneHVACEquipmentList");
+  };
 
-  private:
+  /** \relates ZoneHVACEquipmentList*/
+  typedef boost::optional<ZoneHVACEquipmentList> OptionalZoneHVACEquipmentList;
 
-  REGISTER_LOGGER("openstudio.model.ZoneHVACEquipmentList");
-};
+  /** \relates ZoneHVACEquipmentList*/
+  typedef std::vector<ZoneHVACEquipmentList> ZoneHVACEquipmentListVector;
 
-/** \relates ZoneHVACEquipmentList*/
-typedef boost::optional<ZoneHVACEquipmentList> OptionalZoneHVACEquipmentList;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates ZoneHVACEquipmentList*/
-typedef std::vector<ZoneHVACEquipmentList> ZoneHVACEquipmentListVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEHVACEQUIPMENTLIST_HPP
-
+#endif  // MODEL_ZONEHVACEQUIPMENTLIST_HPP

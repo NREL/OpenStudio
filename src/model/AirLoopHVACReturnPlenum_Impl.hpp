@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,70 +36,62 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
-class PortList;
-class ZoneHVACIdealLoadsAirSystem;
+  class ThermalZone;
+  class PortList;
+  class ZoneHVACIdealLoadsAirSystem;
 
-namespace detail {
+  namespace detail {
 
-  /** AirLoopHVACReturnPlenum_Impl is a Mixer_Impl that is the implementation class for AirLoopHVACReturnPlenum.*/
-  class MODEL_API AirLoopHVACReturnPlenum_Impl : public Mixer_Impl {
+    /** AirLoopHVACReturnPlenum_Impl is a Mixer_Impl that is the implementation class for AirLoopHVACReturnPlenum.*/
+    class MODEL_API AirLoopHVACReturnPlenum_Impl : public Mixer_Impl
+    {
 
-   public:
+     public:
+      AirLoopHVACReturnPlenum_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirLoopHVACReturnPlenum_Impl(const IdfObject& idfObject,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      AirLoopHVACReturnPlenum_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirLoopHVACReturnPlenum_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      AirLoopHVACReturnPlenum_Impl(const AirLoopHVACReturnPlenum_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirLoopHVACReturnPlenum_Impl(const AirLoopHVACReturnPlenum_Impl& other,
-                                 Model_Impl* model,
-                                 bool keepHandle);
+      virtual ~AirLoopHVACReturnPlenum_Impl() {}
 
-    virtual ~AirLoopHVACReturnPlenum_Impl() {}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      boost::optional<ThermalZone> thermalZone() const;
 
-    boost::optional<ThermalZone> thermalZone() const;
+      bool setThermalZone(const boost::optional<ThermalZone>& thermalZone);
 
-    bool setThermalZone(const boost::optional<ThermalZone>& thermalZone);
+      void resetThermalZone();
 
-    void resetThermalZone();
+      unsigned outletPort() const override;
 
-    unsigned outletPort() const override;
+      PortList inducedAirOutletPortList();
 
-    PortList inducedAirOutletPortList();
+      unsigned inletPort(unsigned branchIndex) const override;
 
-    unsigned inletPort(unsigned branchIndex) const override;
+      unsigned nextInletPort() const override;
 
-    unsigned nextInletPort() const override;
+      bool addToNode(Node& node) override;
 
-    bool addToNode(Node & node) override;
+      bool addBranchForZone(openstudio::model::ThermalZone& thermalZone);
 
-    bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
+      bool addBranchForZone(openstudio::model::ThermalZone& thermalZone, HVACComponent& terminal);
 
-    bool addBranchForZone(openstudio::model::ThermalZone & thermalZone, HVACComponent & terminal);
+      bool addBranchForZoneImpl(openstudio::model::ThermalZone& thermalZone, boost::optional<HVACComponent>& terminal);
 
-    bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone, boost::optional<HVACComponent> & terminal);
+      std::vector<IdfObject> remove() override;
 
-    std::vector<IdfObject> remove() override;
+      std::vector<model::ZoneHVACIdealLoadsAirSystem> zoneHVACIdealLoadsAirSystems() const;
 
-    std::vector<model::ZoneHVACIdealLoadsAirSystem> zoneHVACIdealLoadsAirSystems() const;
+     private:
+      REGISTER_LOGGER("openstudio.model.AirLoopHVACReturnPlenum");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.AirLoopHVACReturnPlenum");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_AIRLOOPHVACRETURNPLENUM_IMPL_HPP
-
+#endif  // MODEL_AIRLOOPHVACRETURNPLENUM_IMPL_HPP

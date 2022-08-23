@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,79 +36,79 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class OutputJSON_Impl;
+    class OutputJSON_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** OutputJSON is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:JSON'. */
-class MODEL_API OutputJSON : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** OutputJSON is a ModelObject that wraps the OpenStudio IDD object 'OS:Output:JSON'. */
+  class MODEL_API OutputJSON : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~OutputJSON() {}
+    virtual ~OutputJSON() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> optionTypeValues();
+    static std::vector<std::string> optionTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string optionType() const;
+    std::string optionType() const;
 
-  bool outputJSON() const;
+    bool outputJSON() const;
 
-  bool outputCBOR() const;
+    bool outputCBOR() const;
 
-  bool outputMessagePack() const;
+    bool outputMessagePack() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setOptionType(const std::string& optionType);
+    bool setOptionType(const std::string& optionType);
 
-  bool setOutputJSON(bool outputJSON);
+    bool setOutputJSON(bool outputJSON);
 
-  bool setOutputCBOR(bool outputCBOR);
+    bool setOutputCBOR(bool outputCBOR);
 
-  bool setOutputMessagePack(bool outputMessagePack);
+    bool setOutputMessagePack(bool outputMessagePack);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::OutputJSON_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::OutputJSON_Impl ImplType;
 
-  explicit OutputJSON(std::shared_ptr<detail::OutputJSON_Impl> impl);
+    explicit OutputJSON(std::shared_ptr<detail::OutputJSON_Impl> impl);
 
-  friend class detail::OutputJSON_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  explicit OutputJSON(Model& model);
+    friend class detail::OutputJSON_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    explicit OutputJSON(Model& model);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.OutputJSON");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.OutputJSON");
+  };
 
-/** \relates OutputJSON*/
-typedef boost::optional<OutputJSON> OptionalOutputJSON;
+  /** \relates OutputJSON*/
+  typedef boost::optional<OutputJSON> OptionalOutputJSON;
 
-/** \relates OutputJSON*/
-typedef std::vector<OutputJSON> OutputJSONVector;
+  /** \relates OutputJSON*/
+  typedef std::vector<OutputJSON> OutputJSONVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_OUTPUTJSON_HPP
-
+#endif  // MODEL_OUTPUTJSON_HPP

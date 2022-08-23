@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,8 +36,7 @@
 using openstudio::StringVector;
 using openstudio::eraseEmptyElements;
 
-TEST(Containers,StringVector)
-{
+TEST(Containers, StringVector) {
   StringVector sv;
   sv.push_back("");
   sv.push_back("Hello");
@@ -45,8 +44,8 @@ TEST(Containers,StringVector)
   sv.push_back("");
   sv.push_back("Bonjour");
   sv = eraseEmptyElements(sv);
-  ASSERT_EQ(static_cast<unsigned>(3),sv.size());
-  EXPECT_EQ("Hello",sv[0]);
-  EXPECT_EQ("Guten Tag",sv[1]);
-  EXPECT_EQ("Bonjour",sv[2]);
+  ASSERT_EQ(static_cast<unsigned>(3), sv.size());
+  EXPECT_EQ("Hello", sv[0]);
+  EXPECT_EQ("Guten Tag", sv[1]);
+  EXPECT_EQ("Bonjour", sv[2]);
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,24 +40,19 @@
 #include <string>
 #include <iostream>
 
-
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
   std::string inputPathString;
 
   boost::program_options::options_description desc("Allowed options");
-  desc.add_options()
-      ("help", "print help message")
-      ("inputPath", boost::program_options::value<std::string>(&inputPathString), "path to gbXML file")
-  ;
+  desc.add_options()("help", "print help message")("inputPath", boost::program_options::value<std::string>(&inputPathString), "path to gbXML file");
 
   boost::program_options::variables_map vm;
   boost::program_options::store(boost::program_options::parse_command_line(argc, argv, desc), vm);
   boost::program_options::notify(vm);
 
   if (vm.count("help")) {
-    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << std::endl;
-    std::cout << desc << std::endl;
+    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << '\n';
+    std::cout << desc << std::endl;  // endl will flush
     return 1;
   }
 
@@ -67,13 +62,13 @@ int main(int argc, char *argv[])
 
     openstudio::gbxml::ReverseTranslator reverseTranslator;
     boost::optional<openstudio::model::Model> model = reverseTranslator.loadModel(inputPath);
-    if(model){
+    if (model) {
       openstudio::path osmPath = inputPath.replace_extension(openstudio::toPath("osm").string());
       model->save(osmPath, true);
 
       openstudio::path idfPath = inputPath.replace_extension(openstudio::toPath("idf").string());
       openstudio::energyplus::ForwardTranslator forwardTranslator;
-      openstudio::Workspace workspace =  forwardTranslator.translateModel(*model);
+      openstudio::Workspace workspace = forwardTranslator.translateModel(*model);
       workspace.toIdfFile().save(idfPath, true);
 
       // resave as gbXML, not part of production code
@@ -82,17 +77,14 @@ int main(int argc, char *argv[])
       gbxmlForwardTranslator.modelToGbXML(*model, gbxmlPath);
       return 0;
 
-    }else{
-      std::cout << "Could not convert file at '" << inputPathString << "' to an OpenStudio Model" << std::endl;
+    } else {
+      std::cout << "Could not convert file at '" << inputPathString << "' to an OpenStudio Model" << std::endl;  // endl will flush
       return 1;
     }
 
   } else {
-    std::cout << "No input path given." << desc << std::endl;
-    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << std::endl;
+    std::cout << "No input path given." << desc << '\n';
+    std::cout << "Usage: gbXMLToIdf --inputPath=./path/to/gbXML.xml" << std::endl;  // endl will flush
     return 1;
   }
 }
-
-
-

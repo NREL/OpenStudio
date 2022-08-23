@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,108 +33,77 @@
 #include "ModelAPI.hpp"
 #include "ResourceObject.hpp"
 
-#include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
-#include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
-
 namespace openstudio {
 namespace model {
 
   class StandardsInformationMaterial;
-  class MaterialPropertyMoisturePenetrationDepthSettings;
 
-namespace detail{
-  class Material_Impl;
-}
+  namespace detail {
+    class Material_Impl;
+  }
 
-/** A Material is a ResourceObject that serves as a base class for all objects that can be used
- *  in \link LayeredConstruction LayeredConstructions \endlink. It also provides Attributes for
- *  'thickness', 'getVisibleTransmiattance', 'interiorVisibleAbsorptance', and
- *  'exteriorVisibleAbsorptance'. */
-class MODEL_API Material : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** A Material is a ResourceObject that serves as a base class for all objects that can be used
+   *  in \link LayeredConstruction LayeredConstructions \endlink. */
+  class MODEL_API Material : public ResourceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~Material() {}
+    virtual ~Material() {}
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  /** Get the thickness of the material. Virtual implementation. For some materials, 0.0 is always
-   *  returned.
-   *
-   *  Attribute Name: 'thickness' */
-  double thickness() const;
+    // Get the thickness of the material. Virtual implementation. For some materials, 0.0 is always returned.
+    double thickness() const;
 
-  /** Get the visible transmittance of the material. Virtual implementation.
-   *
-   *  Attribute Name: 'getVisibleTransmittance' */
-  boost::optional<double> getVisibleTransmittance() const;
+    // Get the visible transmittance of the material. Virtual implementation.
+    boost::optional<double> getVisibleTransmittance() const;
 
-  /** Get the interiorVisibleAbsorptance of the material. Virtual implementation.
-   *
-   *  Attribute Name: 'interiorVisibleAbsorptance' */
-  boost::optional<double> interiorVisibleAbsorptance() const;
+    // Get the interiorVisibleAbsorptance of the material. Virtual implementation.
+    boost::optional<double> interiorVisibleAbsorptance() const;
 
-  /** Get the exteriorVisibleAbsorptance of the material. Virtual implementation.
-   *
-   *  Attribute Name: 'exteriorVisibleAbsorptance' */
-  boost::optional<double> exteriorVisibleAbsorptance() const;
+    // Get the exteriorVisibleAbsorptance of the material. Virtual implementation.
+    boost::optional<double> exteriorVisibleAbsorptance() const;
 
-  /** Returns this materials's standards information, constructing a new object if necessary. */
-  StandardsInformationMaterial standardsInformation() const;
+    /** Returns this materials's standards information, constructing a new object if necessary. */
+    StandardsInformationMaterial standardsInformation() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Set thickness to value (m). For some materials, false is always returned.
-   *
-   *  Attribute Name: 'thickness' */
-  bool setThickness(double value);
+    // Set thickness to value (m). For some materials, false is always returned.
+    bool setThickness(double value);
 
-  // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor,
-                                                                                                                           double moistureEquationCoefficientA,
-                                                                                                                           double moistureEquationCoefficientB,
-                                                                                                                           double moistureEquationCoefficientC,
-                                                                                                                           double moistureEquationCoefficientD,
-                                                                                                                           double coatingLayerThickness,
-                                                                                                                           double coatingLayerWaterVaporDiffusionResistanceFactor);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::Material_Impl ImplType;
 
-  // returns the material property moisture penetration depth settings if set
-  boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::Material_Impl;
 
-  // resets the material property moisture penetration depth settings
-  void resetMaterialPropertyMoisturePenetrationDepthSettings();
+    Material(IddObjectType type, const Model& model);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::Material_Impl ImplType;
+    explicit Material(std::shared_ptr<detail::Material_Impl> impl);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class detail::Material_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.Material");
+  };
 
-  Material(IddObjectType type,const Model& model);
+  /** \relates Material */
+  typedef boost::optional<Material> OptionalMaterial;
 
-  explicit Material(std::shared_ptr<detail::Material_Impl> impl);
+  /** \relates Material */
+  typedef std::vector<Material> MaterialVector;
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.Material");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates Material */
-typedef boost::optional<Material> OptionalMaterial;
-
-/** \relates Material */
-typedef std::vector<Material> MaterialVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_MATERIAL_HPP
+#endif  // MODEL_MATERIAL_HPP

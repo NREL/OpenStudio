@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,123 +35,124 @@
 namespace openstudio {
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-/** ControllerWaterCoil_Impl is a HVACComponent_Impl that is the implementation class for ControllerWaterCoil.*/
-class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl {
+    /** ControllerWaterCoil_Impl is a HVACComponent_Impl that is the implementation class for ControllerWaterCoil.*/
+    class MODEL_API ControllerWaterCoil_Impl : public HVACComponent_Impl
+    {
 
- public:
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+      ControllerWaterCoil_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  ControllerWaterCoil_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ControllerWaterCoil_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  ControllerWaterCoil_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      ControllerWaterCoil_Impl(const ControllerWaterCoil_Impl& other, Model_Impl* model, bool keepHandle);
 
-  ControllerWaterCoil_Impl(const ControllerWaterCoil_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      virtual ~ControllerWaterCoil_Impl() {}
 
-  virtual ~ControllerWaterCoil_Impl() {}
+      //@}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  //@}
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      virtual void autosize() override;
 
-  /** @name Getters */
-  //@{
+      virtual void applySizingValues() override;
 
-  boost::optional<std::string> controlVariable() const;
+      //@}
+      /** @name Getters */
+      //@{
 
-  boost::optional<std::string> action() const;
+      boost::optional<HVACComponent> waterCoil() const;
 
-  boost::optional<std::string> actuatorVariable() const;
+      std::string controlVariable() const;
+      bool isControlVariableDefaulted() const;
 
-  boost::optional<double> controllerConvergenceTolerance() const;
+      boost::optional<std::string> action() const;
 
-  bool isControllerConvergenceToleranceDefaulted() const;
+      std::string actuatorVariable() const;
+      bool isActuatorVariableDefaulted() const;
 
-  bool isControllerConvergenceToleranceAutosized() const;
+      boost::optional<Node> sensorNode() const;
 
-  boost::optional<double> maximumActuatedFlow() const;
+      boost::optional<Node> actuatorNode() const;
 
-  bool isMaximumActuatedFlowAutosized() const;
+      boost::optional<double> controllerConvergenceTolerance() const;
 
-  double minimumActuatedFlow() const;
+      bool isControllerConvergenceToleranceDefaulted() const;
 
-  bool isMinimumActuatedFlowDefaulted() const;
+      bool isControllerConvergenceToleranceAutosized() const;
 
-  boost::optional<double> autosizedControllerConvergenceTolerance() const ;
+      boost::optional<double> maximumActuatedFlow() const;
 
-  boost::optional<double> autosizedMaximumActuatedFlow() const ;
+      bool isMaximumActuatedFlowAutosized() const;
 
-  virtual void autosize() override;
+      double minimumActuatedFlow() const;
 
-  virtual void applySizingValues() override;
+      bool isMinimumActuatedFlowDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-  bool setControlVariable(boost::optional<std::string> controlVariable);
+      bool setWaterCoil(const HVACComponent& comp);
 
-  void resetControlVariable();
+      bool setControlVariable(const std::string& controlVariable);
 
-  bool setAction(boost::optional<std::string> action);
+      void resetControlVariable();
 
-  void resetAction();
+      bool setAction(const std::string& action);
 
-  bool setActuatorVariable(boost::optional<std::string> actuatorVariable);
+      void resetAction();
 
-  void resetActuatorVariable();
+      bool setActuatorVariable(const std::string& actuatorVariable);
 
-  bool setControllerConvergenceTolerance(boost::optional<double> controllerConvergenceTolerance);
+      void resetActuatorVariable();
 
-  void resetControllerConvergenceTolerance();
+      bool setSensorNode(const Node& node);
 
-  void autosizeControllerConvergenceTolerance();
+      bool setActuatorNode(const Node& node);
 
-  bool setMaximumActuatedFlow(boost::optional<double> maximumActuatedFlow);
+      bool setControllerConvergenceTolerance(double controllerConvergenceTolerance);
 
-  void resetMaximumActuatedFlow();
+      void resetControllerConvergenceTolerance();
 
-  void autosizeMaximumActuatedFlow();
+      void autosizeControllerConvergenceTolerance();
 
-  bool setMinimumActuatedFlow(double minimumActuatedFlow);
+      bool setMaximumActuatedFlow(double maximumActuatedFlow);
 
-  void resetMinimumActuatedFlow();
+      void resetMaximumActuatedFlow();
 
-  //@}
+      void autosizeMaximumActuatedFlow();
 
-  boost::optional<Node> sensorNode() const;
+      bool setMinimumActuatedFlow(double minimumActuatedFlow);
 
-  boost::optional<Node> actuatorNode() const;
+      void resetMinimumActuatedFlow();
 
-  bool setSensorNode( Node & node );
+      //@}
+      /** @name Other */
+      //@{
 
-  bool setActuatorNode( Node & node );
+      boost::optional<double> autosizedControllerConvergenceTolerance() const;
 
-  bool setWaterCoil( const HVACComponent & comp );
+      boost::optional<double> autosizedMaximumActuatedFlow() const;
 
-  boost::optional<HVACComponent> waterCoil() const;
+      //@}
 
-  protected:
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ControllerWaterCoil");
+    };
 
-  private:
+  }  // namespace detail
 
-  REGISTER_LOGGER("openstudio.model.ControllerWaterCoil");
-};
+}  // namespace model
 
-} // detail
+}  // namespace openstudio
 
-} // model
-
-} // openstudio
-
-#endif // MODEL_CONTROLLERWATERCOIL_IMPL_HPP
+#endif  // MODEL_CONTROLLERWATERCOIL_IMPL_HPP

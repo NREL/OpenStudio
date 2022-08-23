@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,7 +43,6 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
-
 using namespace openstudio::model;
 
 // I don't think I'm using this
@@ -56,49 +55,43 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateMeterCustom( MeterCustom & modelObject )
-{
+  boost::optional<IdfObject> ForwardTranslator::translateMeterCustom(MeterCustom& modelObject) {
 
-  boost::optional<std::string> s;
-  boost::optional<double> value;
+    boost::optional<std::string> s;
+    boost::optional<double> value;
 
-  IdfObject idfObject(IddObjectType::Meter_Custom);
+    IdfObject idfObject(IddObjectType::Meter_Custom);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  s = modelObject.name();
-  if( s )
-  {
-    idfObject.setName(*s);
-  }
-
-  // FuelType
-  if( (s = modelObject.fuelType()) )
-  {
-    idfObject.setString(Meter_CustomFields::FuelType,s.get());
-  }
-
-  // Handle the (Key Name, Output Variable or Meter Name) pairs
-  std::vector< std::pair<std::string, std::string> > keyVarGroups = modelObject.keyVarGroups();
-
-  if( !keyVarGroups.empty() )
-  {
-    for( const auto & keyVarGroup : keyVarGroups )
-    {
-      IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
-
-      eg.setString(Meter_CustomExtensibleFields::KeyName,keyVarGroup.first);
-      eg.setString(Meter_CustomExtensibleFields::OutputVariableorMeterName,keyVarGroup.second);
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
     }
+
+    // FuelType
+    if ((s = modelObject.fuelType())) {
+      idfObject.setString(Meter_CustomFields::ResourceType, s.get());
+    }
+
+    // Handle the (Key Name, Output Variable or Meter Name) pairs
+    std::vector<std::pair<std::string, std::string>> keyVarGroups = modelObject.keyVarGroups();
+
+    if (!keyVarGroups.empty()) {
+      for (const auto& keyVarGroup : keyVarGroups) {
+        IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
+
+        eg.setString(Meter_CustomExtensibleFields::KeyName, keyVarGroup.first);
+        eg.setString(Meter_CustomExtensibleFields::OutputVariableorMeterName, keyVarGroup.second);
+      }
+    } else {
+      LOG(Error, modelObject.briefDescription() << ": At least one pair of (Key Name, Output Variable or Meter Name) required");
+      return boost::none;
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
-  else {
-    LOG(Error,modelObject.briefDescription() << ": At least one pair of (Key Name, Output Variable or Meter Name) required");
-    return boost::none;
-  }
 
-  return boost::optional<IdfObject>(idfObject);
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

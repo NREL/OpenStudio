@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,52 +41,51 @@ class Workspace;
 
 namespace measure {
 
-/** EnergyPlusMeasure is an abstract base class for OSMeasures that operate on EnergyPlus
+  /** EnergyPlusMeasure is an abstract base class for OSMeasures that operate on EnergyPlus
  *  Workspaces. */
-class MEASURE_API EnergyPlusMeasure : public OSMeasure {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MEASURE_API EnergyPlusMeasure : public OSMeasure
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~EnergyPlusMeasure();
+    virtual ~EnergyPlusMeasure();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  /** Returns the arguments for this script. In interactive applications, an OSRunner presents
+    /** Returns the arguments for this script. In interactive applications, an OSRunner presents
    *  these arguments to the user to produce an OSArgumentMap of user_arguments that it then passes
    *  to this script's run method. The same basic steps should happen in applications with non-
    *  interactive scripts, but in that case an entity other than an OSRunner may be in charge of
    *  collecting user arguments. The base class implementation returns an empty vector. */
-  virtual std::vector<OSArgument> arguments(const openstudio::Workspace& workspace) const;
+    virtual std::vector<OSArgument> arguments(const openstudio::Workspace& workspace) const;
 
-  /** Returns the outputs for this script. The base class implementation returns an empty vector. */
-  virtual std::vector<OSOutput> outputs() const;
+    /** Returns the outputs for this script. The base class implementation returns an empty vector. */
+    virtual std::vector<OSOutput> outputs() const;
 
-  //@}
-  /** @name Actions */
-  //@{
+    //@}
+    /** @name Actions */
+    //@{
 
-  /** Run the script on the given workspace with the given runner and user_arguments. The base
+    /** Run the script on the given workspace with the given runner and user_arguments. The base
    *  class implementation calls runner.prepareForMeasureRun(*this) and should be called at the
    *  beginning of derived class implementations of this method. (In C++, that call looks like
    *  EnergyPlusMeasure::run(workspace, runner, user_arguments). In Ruby that call looks like
    *  super(workspace, runner, user_arguments). */
-  virtual bool run(openstudio::Workspace& workspace,
-                   OSRunner& runner,
-                   const std::map<std::string, OSArgument>& user_arguments) const;
+    virtual bool run(openstudio::Workspace& workspace, OSRunner& runner, const std::map<std::string, OSArgument>& user_arguments) const;
 
-  //@}
+    //@}
 
- protected:
-   EnergyPlusMeasure() {}
+   protected:
+    EnergyPlusMeasure() {}
 
- private:
-  REGISTER_LOGGER("openstudio.measure.EnergyPlusMeasure");
-};
+   private:
+    REGISTER_LOGGER("openstudio.measure.EnergyPlusMeasure");
+  };
 
-} // measure
-} // openstudio
+}  // namespace measure
+}  // namespace openstudio
 
-#endif // MEASURE_ENERGYPLUSMEASURE_HPP
+#endif  // MEASURE_ENERGYPLUSMEASURE_HPP

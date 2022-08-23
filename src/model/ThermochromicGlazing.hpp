@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,69 +36,69 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ThermochromicGlazing_Impl;
+    class ThermochromicGlazing_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ThermochromicGlazing is a Glazing that wraps the OpenStudio IDD object 'OS:WindowMaterial:GlazingGroup:Thermochromic'. */
-class MODEL_API ThermochromicGlazing : public Glazing {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ThermochromicGlazing is a Glazing that wraps the OpenStudio IDD object 'OS:WindowMaterial:GlazingGroup:Thermochromic'. */
+  class MODEL_API ThermochromicGlazing : public Glazing
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ThermochromicGlazing(const Model& model,
-    double opticalDataTemperature = 80.0);
+    explicit ThermochromicGlazing(const Model& model, double opticalDataTemperature = 80.0);
 
-  virtual ~ThermochromicGlazing() {}
+    virtual ~ThermochromicGlazing() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double opticalDataTemperature() const;
+    double opticalDataTemperature() const;
 
-  // TODO: Handle this object's extensible fields.
+    // TODO: Handle this object's extensible fields.
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setOpticalDataTemperature(double value);
+    bool setOpticalDataTemperature(double value);
 
-  // TODO: Handle this object's extensible fields.
+    // TODO: Handle this object's extensible fields.
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ThermochromicGlazing_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ThermochromicGlazing_Impl ImplType;
 
-  explicit ThermochromicGlazing(std::shared_ptr<detail::ThermochromicGlazing_Impl> impl);
+    explicit ThermochromicGlazing(std::shared_ptr<detail::ThermochromicGlazing_Impl> impl);
 
-  friend class detail::ThermochromicGlazing_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ThermochromicGlazing");
-};
+    friend class detail::ThermochromicGlazing_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ThermochromicGlazing");
+  };
 
-/** \relates ThermochromicGlazing*/
-typedef boost::optional<ThermochromicGlazing> OptionalThermochromicGlazing;
+  /** \relates ThermochromicGlazing*/
+  typedef boost::optional<ThermochromicGlazing> OptionalThermochromicGlazing;
 
-/** \relates ThermochromicGlazing*/
-typedef std::vector<ThermochromicGlazing> ThermochromicGlazingVector;
+  /** \relates ThermochromicGlazing*/
+  typedef std::vector<ThermochromicGlazing> ThermochromicGlazingVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_THERMOCHROMICGLAZING_HPP
+#endif  // MODEL_THERMOCHROMICGLAZING_HPP

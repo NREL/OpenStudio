@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,32 +32,31 @@
 namespace openstudio {
 namespace measure {
 
-OSMeasure::~OSMeasure()
-{}
+  OSMeasure::~OSMeasure() {}
 
-std::string OSMeasure::name() const{
-  return "";
-}
+  std::string OSMeasure::name() const {
+    return "";
+  }
 
-std::string OSMeasure::description() const{
-  return "";
-}
+  std::string OSMeasure::description() const {
+    return "";
+  }
 
-std::string OSMeasure::taxonomy() const{
-  return "";
-}
+  std::string OSMeasure::taxonomy() const {
+    return "";
+  }
 
-std::string OSMeasure::modeler_description() const{
-  return "";
-}
+  std::string OSMeasure::modeler_description() const {
+    return "";
+  }
 
-bool OSMeasure::registerWithSketchUp() const {
-  return false;
-}
+  bool OSMeasure::registerWithSketchUp() const {
+    return false;
+  }
 
-bool OSMeasure::registerWithApplication() const {
-  return false;
-}
+  bool OSMeasure::registerWithApplication() const {
+    return false;
+  }
 
-} // measure
-} // openstudio
+}  // namespace measure
+}  // namespace openstudio

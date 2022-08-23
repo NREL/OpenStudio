@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,159 +47,147 @@
 #include "../model/Schedule.hpp"
 #include "../utilities/geometry/Geometry.hpp"
 
-namespace openstudio{
-namespace radiance{
+namespace openstudio {
+namespace radiance {
 
-  WindowGroup::WindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space,
-                           const model::ConstructionBase& construction,
+  WindowGroup::WindowGroup(const openstudio::Vector3d& outwardNormal, const model::Space& space, const model::ConstructionBase& construction,
                            const boost::optional<model::ShadingControl>& shadingControl)
-    : m_outwardNormal(outwardNormal), m_space(space), m_construction(construction), m_shadingControl(shadingControl)
-  {
+    : m_outwardNormal(outwardNormal), m_space(space), m_construction(construction), m_shadingControl(shadingControl) {
     // start with a gross name, forward translator is in charge of nice names
     m_name = "WG" + toString(createUUID());
     m_outwardNormal.normalize();
   }
 
- bool WindowGroup::operator==(const WindowGroup& other) const
-{
-  if (!m_shadingControl && !other.shadingControl()){
+  bool WindowGroup::operator==(const WindowGroup& other) const {
+    if (!m_shadingControl && !other.shadingControl()) {
 
-    if (m_space.handle() == other.space().handle()){
-      if (m_construction.handle() == other.construction().handle()){
-        double angle = std::abs(radToDeg(getAngle(m_outwardNormal, other.outwardNormal())));
-        const double tol = 1.0;
-        if (angle < tol){
-          return true;
+      if (m_space.handle() == other.space().handle()) {
+        if (m_construction.handle() == other.construction().handle()) {
+          double angle = std::abs(radToDeg(getAngle(m_outwardNormal, other.outwardNormal())));
+          const double tol = 1.0;
+          if (angle < tol) {
+            return true;
+          }
+        }
+      }
+      return false;
+
+    } else if (m_shadingControl && !other.shadingControl()) {
+      return false;
+    } else if (!m_shadingControl && other.shadingControl()) {
+      return false;
+    }
+
+    if (m_space.handle() == other.space().handle()) {
+      if (m_construction.handle() == other.construction().handle()) {
+        if (m_shadingControl->handle() == other.shadingControl()->handle()) {
+          double angle = std::abs(radToDeg(getAngle(m_outwardNormal, other.outwardNormal())));
+          const double tol = 1.0;
+          if (angle < tol) {
+            return true;
+          }
         }
       }
     }
     return false;
-
-  }else if (m_shadingControl && !other.shadingControl()){
-    return false;
-  }else if (!m_shadingControl && other.shadingControl()){
-    return false;
   }
 
-  if (m_space.handle() == other.space().handle()){
-    if (m_construction.handle() == other.construction().handle()){
-      if (m_shadingControl->handle() == other.shadingControl()->handle()){
-        double angle = std::abs(radToDeg(getAngle(m_outwardNormal, other.outwardNormal())));
-        const double tol = 1.0;
-        if (angle < tol){
-          return true;
-        }
-      }
-    }
-  }
-  return false;
-}
-
-  std::string WindowGroup::name() const
-  {
+  std::string WindowGroup::name() const {
     return m_name;
   }
 
-  void WindowGroup::setName(const std::string& name)
-  {
+  void WindowGroup::setName(const std::string& name) {
     m_name = name;
   }
 
-  openstudio::Vector3d WindowGroup::outwardNormal() const
-  {
+  openstudio::Vector3d WindowGroup::outwardNormal() const {
     return m_outwardNormal;
   }
 
-  model::Space WindowGroup::space() const
-  {
+  model::Space WindowGroup::space() const {
     return m_space;
   }
 
-  model::ConstructionBase WindowGroup::construction() const
-  {
+  model::ConstructionBase WindowGroup::construction() const {
     return m_construction;
   }
 
-  boost::optional<model::ShadingControl> WindowGroup::shadingControl() const
-  {
+  boost::optional<model::ShadingControl> WindowGroup::shadingControl() const {
     return m_shadingControl;
   }
 
-  std::string WindowGroup::interiorShadeBSDF() const
-  {
+  std::string WindowGroup::interiorShadeBSDF() const {
     std::string result = "air.xml";
-    if (m_shadingControl){
+    if (m_shadingControl) {
 
       std::string shadingType = m_shadingControl->shadingType();
-      if (istringEqual("InteriorShade", shadingType)){
+      if (istringEqual("InteriorShade", shadingType)) {
         result = "05_shadecloth_light.xml";
-      } else if (istringEqual("ExteriorShade", shadingType)){
+      } else if (istringEqual("ExteriorShade", shadingType)) {
         // shouldn't get here but use air if we do
-      } else if (istringEqual("ExteriorScreen", shadingType)){
+      } else if (istringEqual("ExteriorScreen", shadingType)) {
         // shouldn't get here but use air if we do
-      } else if (istringEqual("InteriorBlind", shadingType)){
+      } else if (istringEqual("InteriorBlind", shadingType)) {
         result = "blinds.xml";
-      } else if (istringEqual("ExteriorBlind", shadingType)){
+      } else if (istringEqual("ExteriorBlind", shadingType)) {
         // shouldn't get here but use air if we do
-      } else if (istringEqual("BetweenGlassShade", shadingType)){
+      } else if (istringEqual("BetweenGlassShade", shadingType)) {
         // shouldn't get here but use air if we do
-      } else if (istringEqual("BetweenGlassBlind", shadingType)){
+      } else if (istringEqual("BetweenGlassBlind", shadingType)) {
         // shouldn't get here but use air if we do
-      } else if (istringEqual("SwitchableGlazing", shadingType)){
+      } else if (istringEqual("SwitchableGlazing", shadingType)) {
         // shouldn't get here but use air if we do
-      } else if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)){
+      } else if (istringEqual("InteriorDaylightRedirectionDevice", shadingType)) {
         result = "1xliloX.xml";
-      }else{
+      } else {
         LOG(Warn, "Unknown shadingType '" << shadingType << "' found for ShadingControl '" << m_shadingControl->name().get() << "'");
       }
-
     }
     return result;
   }
 
-  std::string WindowGroup::shadingControlType() const
-  {
+  std::string WindowGroup::shadingControlType() const {
     std::string result = "AlwaysOff";
-    if (m_shadingControl){
+    if (m_shadingControl) {
       result = m_shadingControl->shadingControlType();
 
-      if (istringEqual("OnIfScheduleAllows", result)){
+      if (istringEqual("OnIfScheduleAllows", result)) {
         result = "OnIfHighSolarOnWindow";
-        LOG(Warn, "ShadingControlType 'OnIfHighSolarOnWindow' is not currently supported for ShadingControl '" << m_shadingControl->name().get() << "', using 'OnIfHighSolarOnWindow' instead.");
+        LOG(Warn, "ShadingControlType 'OnIfHighSolarOnWindow' is not currently supported for ShadingControl '"
+                    << m_shadingControl->name().get() << "', using 'OnIfHighSolarOnWindow' instead.");
       }
     }
 
     return result;
   }
 
-  std::string WindowGroup::shadingControlSetpoint() const
-  {
+  std::string WindowGroup::shadingControlSetpoint() const {
     std::string result = "n/a";
-    if (m_shadingControl){
+    if (m_shadingControl) {
       std::string shadingControlType = this->shadingControlType();
 
-      if (istringEqual("AlwaysOff", shadingControlType)){
+      if (istringEqual("AlwaysOff", shadingControlType)) {
         result = "n/a";
-      } else if (istringEqual("AlwaysOn", shadingControlType)){
+      } else if (istringEqual("AlwaysOn", shadingControlType)) {
         result = "n/a";
-      } else if (istringEqual("OnIfHighSolarOnWindow", shadingControlType)){
+      } else if (istringEqual("OnIfHighSolarOnWindow", shadingControlType)) {
         boost::optional<double> d = m_shadingControl->setpoint();
-        if (d){
+        if (d) {
           std::stringstream ss;
           ss << *d;
           result = ss.str();
-        } else{
-        	// setting default in lux
+        } else {
+          // setting default in lux
           result = "5000";
         }
-      } else if (istringEqual("OnIfScheduleAllows", shadingControlType)){
+      } else if (istringEqual("OnIfScheduleAllows", shadingControlType)) {
         boost::optional<openstudio::model::Schedule> schedule = m_shadingControl->schedule();
-        if (schedule){
+        if (schedule) {
           result = schedule->name().get();
-        } else{
+        } else {
           result = "";
         }
-      } else{
+      } else {
         result = "n/a";
         LOG(Warn, "Unknown shadingControlType '" << shadingControlType << "' for ShadingControl '" << m_shadingControl->name().get() << "'.");
       }
@@ -208,24 +196,22 @@ namespace radiance{
     return result;
   }
 
-  void WindowGroup::addWindowPolygon(const openstudio::Point3dVector& windowPolygon)
-  {
+  void WindowGroup::addWindowPolygon(const openstudio::Point3dVector& windowPolygon) {
     m_windowPolygons.push_back(windowPolygon);
   }
 
-  WindowGroupControl WindowGroup::windowGroupControl() const
-  {
+  WindowGroupControl WindowGroup::windowGroupControl() const {
     boost::optional<double> largestArea;
     boost::optional<Point3d> centroid;
     boost::optional<Vector3d> outwardNormal;
 
-    for (const auto & windowPolygon : m_windowPolygons){
+    for (const auto& windowPolygon : m_windowPolygons) {
       boost::optional<double> area = getArea(windowPolygon);
-      if (area){
-        if (!largestArea || (*area > *largestArea)){
+      if (area) {
+        if (!largestArea || (*area > *largestArea)) {
           boost::optional<Point3d> tmpCentroid = getCentroid(windowPolygon);
           boost::optional<Vector3d> tmpOutwardNormal = getOutwardNormal(windowPolygon);
-          if (tmpCentroid && tmpOutwardNormal){
+          if (tmpCentroid && tmpOutwardNormal) {
             largestArea = area;
             centroid = tmpCentroid;
             outwardNormal = tmpOutwardNormal;
@@ -242,24 +228,24 @@ namespace radiance{
     return result;
   }
 
-  std::string WindowGroup::windowGroupPoints() const
-  {
+  std::string WindowGroup::windowGroupPoints() const {
     WindowGroupControl control = this->windowGroupControl();
 
     std::string result;
-    if (control.centroid && control.outwardNormal){
+    if (control.centroid && control.outwardNormal) {
 
       double offset = 0.05;
       Vector3d vec = control.outwardNormal.get();
       vec.setLength(offset);
       Point3d wcPoint = control.centroid.get() + vec;
 
-      result = formatString(wcPoint.x()) + " " + formatString(wcPoint.y()) + " " + formatString(wcPoint.z()) + " " +
-        formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " " + formatString(control.outwardNormal->z()) + "\n";
+      result = formatString(wcPoint.x()) + " " + formatString(wcPoint.y()) + " " + formatString(wcPoint.z()) + " "
+               + formatString(control.outwardNormal->x()) + " " + formatString(control.outwardNormal->y()) + " "
+               + formatString(control.outwardNormal->z()) + "\n";
     }
 
     return result;
   }
 
-} // radiance
-} // openstudio
+}  // namespace radiance
+}  // namespace openstudio

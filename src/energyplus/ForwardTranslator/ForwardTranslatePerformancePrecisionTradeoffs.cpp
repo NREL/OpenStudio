@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,7 +37,6 @@
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
-
 using namespace openstudio::model;
 
 using namespace std;
@@ -46,21 +45,42 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePerformancePrecisionTradeoffs( PerformancePrecisionTradeoffs & modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::PerformancePrecisionTradeoffs);
+  boost::optional<IdfObject> ForwardTranslator::translatePerformancePrecisionTradeoffs(PerformancePrecisionTradeoffs& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::PerformancePrecisionTradeoffs);
 
-  m_idfObjects.push_back(idfObject);
-  
-  if ( modelObject.useCoilDirectSolutions() ) {
-    idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
-  } else {
-    idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "No");
+    m_idfObjects.push_back(idfObject);
+
+    if (modelObject.useCoilDirectSolutions()) {
+      idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "Yes");
+    } else {
+      idfObject.setString(PerformancePrecisionTradeoffsFields::UseCoilDirectSolutions, "No");
+    }
+
+    if (!modelObject.isZoneRadiantExchangeAlgorithmDefaulted()) {
+      idfObject.setString(PerformancePrecisionTradeoffsFields::ZoneRadiantExchangeAlgorithm, modelObject.zoneRadiantExchangeAlgorithm());
+    }
+
+    if (!modelObject.isOverrideModeDefaulted()) {
+      idfObject.setString(PerformancePrecisionTradeoffsFields::OverrideMode, modelObject.overrideMode());
+    }
+
+    if (!modelObject.isMaxZoneTempDiffDefaulted()) {
+      idfObject.setDouble(PerformancePrecisionTradeoffsFields::MaxZoneTempDiff, modelObject.maxZoneTempDiff());
+    }
+
+    if (!modelObject.isMaxAllowedDelTempDefaulted()) {
+      idfObject.setDouble(PerformancePrecisionTradeoffsFields::MaxAllowedDelTemp, modelObject.maxAllowedDelTemp());
+    }
+
+    if (modelObject.useRepresentativeSurfacesforCalculations()) {
+      idfObject.setString(PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, "Yes");
+    } else {
+      idfObject.setString(PerformancePrecisionTradeoffsFields::UseRepresentativeSurfacesforCalculations, "No");
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  return boost::optional<IdfObject>(idfObject);
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,145 +35,142 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API CoilHeatingWater_Impl : public WaterToAirComponent_Impl {
-      public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API CoilHeatingWater_Impl : public WaterToAirComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoilHeatingWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      CoilHeatingWater_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      CoilHeatingWater_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoilHeatingWater_Impl(const CoilHeatingWater_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      CoilHeatingWater_Impl(const CoilHeatingWater_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilHeatingWater_Impl();
+      virtual ~CoilHeatingWater_Impl();
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual bool removeFromPlantLoop() override;
+      virtual bool removeFromPlantLoop() override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual unsigned airInletPort() const override;
+      virtual unsigned airInletPort() const override;
 
-    virtual unsigned airOutletPort() const override;
+      virtual unsigned airOutletPort() const override;
 
-    virtual unsigned waterInletPort() const override;
+      virtual unsigned waterInletPort() const override;
 
-    virtual unsigned waterOutletPort() const override;
+      virtual unsigned waterOutletPort() const override;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    //@}
-    /** @name Getters and Setters */
-    //@{
+      //@}
+      /** @name Getters and Setters */
+      //@{
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    boost::optional<double> uFactorTimesAreaValue();
+      boost::optional<double> uFactorTimesAreaValue();
 
-    bool setUFactorTimesAreaValue( double value );
+      bool setUFactorTimesAreaValue(double value);
 
-    bool isUFactorTimesAreaValueAutosized();
+      bool isUFactorTimesAreaValueAutosized();
 
-    void autosizeUFactorTimesAreaValue();
+      void autosizeUFactorTimesAreaValue();
 
-    boost::optional<double> maximumWaterFlowRate();
+      boost::optional<double> maximumWaterFlowRate();
 
-    bool setMaximumWaterFlowRate( double value );
+      bool setMaximumWaterFlowRate(double value);
 
-    bool isMaximumWaterFlowRateAutosized();
+      bool isMaximumWaterFlowRateAutosized();
 
-    void autosizeMaximumWaterFlowRate();
+      void autosizeMaximumWaterFlowRate();
 
-    std::string performanceInputMethod();
+      std::string performanceInputMethod();
 
-    bool setPerformanceInputMethod( std::string value );
+      bool setPerformanceInputMethod(std::string value);
 
-    boost::optional<double> ratedCapacity();
+      boost::optional<double> ratedCapacity();
 
-    bool setRatedCapacity( double value );
+      bool setRatedCapacity(double value);
 
-    bool isRatedCapacityAutosized();
+      bool isRatedCapacityAutosized();
 
-    void autosizeRatedCapacity();
+      void autosizeRatedCapacity();
 
-    double ratedInletWaterTemperature();
+      double ratedInletWaterTemperature();
 
-    bool setRatedInletWaterTemperature( double value );
+      bool setRatedInletWaterTemperature(double value);
 
-    double ratedInletAirTemperature();
+      double ratedInletAirTemperature();
 
-    bool setRatedInletAirTemperature( double value );
+      bool setRatedInletAirTemperature(double value);
 
-    double ratedOutletWaterTemperature();
+      double ratedOutletWaterTemperature();
 
-    bool setRatedOutletWaterTemperature( double value );
+      bool setRatedOutletWaterTemperature(double value);
 
-    double ratedOutletAirTemperature();
+      double ratedOutletAirTemperature();
 
-    bool setRatedOutletAirTemperature( double value );
+      bool setRatedOutletAirTemperature(double value);
 
-    double ratedRatioForAirAndWaterConvection();
+      double ratedRatioForAirAndWaterConvection();
 
-    bool setRatedRatioForAirAndWaterConvection( double value );
+      bool setRatedRatioForAirAndWaterConvection(double value);
 
-  boost::optional<double> autosizedUFactorTimesAreaValue() const ;
+      boost::optional<double> autosizedUFactorTimesAreaValue() const;
 
-  boost::optional<double> autosizedMaximumWaterFlowRate() const ;
+      boost::optional<double> autosizedMaximumWaterFlowRate() const;
 
-  boost::optional<double> autosizedRatedCapacity() const ;
+      boost::optional<double> autosizedRatedCapacity() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+      AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
+      boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-    //@}
+      //@}
 
-  private:
-    REGISTER_LOGGER("openstudio.model.CoilHeatingWater");
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilHeatingWater");
 
-    boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
+      boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
-    bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
+      bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COILHEATINGWATER_IMPL_HPP
+#endif  // MODEL_COILHEATINGWATER_IMPL_HPP

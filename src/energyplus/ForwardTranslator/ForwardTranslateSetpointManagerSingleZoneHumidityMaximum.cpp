@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,32 +43,30 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerSingleZoneHumidityMaximum( SetpointManagerSingleZoneHumidityMaximum & modelObject )
-{
-  boost::optional<double> d;
+  boost::optional<IdfObject>
+    ForwardTranslator::translateSetpointManagerSingleZoneHumidityMaximum(SetpointManagerSingleZoneHumidityMaximum& modelObject) {
+    boost::optional<double> d;
 
-  // Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SingleZone_Humidity_Maximum, modelObject);
+    // Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SingleZone_Humidity_Maximum, modelObject);
 
-  // ControlVariable \deprecated
-  // ScheduleName \deprecated
+    // ControlVariable \deprecated
+    // ScheduleName \deprecated
 
-  // ControlZoneAirNodeName
-  if( boost::optional<ThermalZone> thermalZone = modelObject.controlZone() )
-  {
-    auto node = thermalZone->zoneAirNode();
-    idfObject.setString(SetpointManager_SingleZone_Humidity_MaximumFields::ControlZoneAirNodeName,node.name().get());
+    // ControlZoneAirNodeName
+    if (boost::optional<ThermalZone> thermalZone = modelObject.controlZone()) {
+      auto node = thermalZone->zoneAirNode();
+      idfObject.setString(SetpointManager_SingleZone_Humidity_MaximumFields::ControlZoneAirNodeName, node.name().get());
+    }
+
+    // Setpoint Node or NodeList Name
+    if (boost::optional<Node> node = modelObject.setpointNode()) {
+      idfObject.setString(SetpointManager_SingleZone_Humidity_MaximumFields::SetpointNodeorNodeListName, node->name().get());
+    }
+
+    return idfObject;
   }
 
-  // Setpoint Node or NodeList Name
-  if( boost::optional<Node> node = modelObject.setpointNode() )
-  {
-    idfObject.setString(SetpointManager_SingleZone_Humidity_MaximumFields::SetpointNodeorNodeListName,node->name().get());
-  }
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

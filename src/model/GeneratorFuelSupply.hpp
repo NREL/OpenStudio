@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,178 +37,178 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
-class Schedule;
-class CurveCubic;
-class GeneratorFuelCell;
+  class Node;
+  class Schedule;
+  class CurveCubic;
+  class GeneratorFuelCell;
 
-namespace detail {
+  namespace detail {
 
-  class GeneratorFuelSupply_Impl;
+    class GeneratorFuelSupply_Impl;
 
-} // detail
+  }  // namespace detail
 
+  /** This class implements a constituent */
+  class MODEL_API FuelSupplyConstituent
+  {
+   public:
+    FuelSupplyConstituent(std::string constituentName, double molarFraction);
 
-/** This class implements a constituent */
-class MODEL_API FuelSupplyConstituent {
- public:
-  FuelSupplyConstituent(std::string constituentName, double molarFraction);
+    std::string constituentName() const;
+    double molarFraction() const;
 
-  std::string constituentName() const;
-  double molarFraction() const;
+    static bool isValid(std::string constituentName);
+    static std::vector<std::string> constituentNameValues();
+    static std::vector<std::string> validConstituentNameValues();
 
-  static bool isValid(std::string constituentName);
-  static std::vector<std::string> constituentNameValues();
-  static std::vector<std::string> validConstituentNameValues();
+   private:
+    std::string m_name;
+    double m_molarFraction;
+    REGISTER_LOGGER("openstudio.model.FuelSupplyConstituent");
+  };
 
- private:
-  std::string m_name;
-  double m_molarFraction;
-  REGISTER_LOGGER("openstudio.model.FuelSupplyConstituent");
-};
+  // Overload operator<<
+  MODEL_API std::ostream& operator<<(std::ostream& out, const openstudio::model::FuelSupplyConstituent& constituent);
 
-// Overload operator<<
-MODEL_API std::ostream& operator<< (std::ostream& out, const openstudio::model::FuelSupplyConstituent& constituent);
+  /** GeneratorFuelSupply is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelSupply'. */
+  class MODEL_API GeneratorFuelSupply : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-/** GeneratorFuelSupply is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelSupply'. */
-class MODEL_API GeneratorFuelSupply : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+    explicit GeneratorFuelSupply(const Model& model);
 
-  explicit GeneratorFuelSupply(const Model& model);
+    explicit GeneratorFuelSupply(const Model& model, Schedule& tempSchedule, const CurveCubic& powerCurve);
 
-  explicit GeneratorFuelSupply(const Model& model, Schedule& tempSchedule, const CurveCubic& powerCurve);
+    virtual ~GeneratorFuelSupply() {}
 
-  virtual ~GeneratorFuelSupply() {}
+    //@}
 
-  //@}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> fuelTemperatureModelingModeValues();
 
-  static std::vector<std::string> fuelTemperatureModelingModeValues();
+    static std::vector<std::string> fuelTypeValues();
 
-  static std::vector<std::string> fuelTypeValues();
+    //extensible fields
 
-  //extensible fields
+    bool addConstituent(const FuelSupplyConstituent& constituent);
+    // Convenience function to add a constituent without explicitly creating a FuelSupplyConstituent
+    bool addConstituent(std::string name, double molarFraction);
 
-  bool addConstituent(const FuelSupplyConstituent& constituent);
-  // Convenience function to add a constituent without explicitly creating a FuelSupplyConstituent
-  bool addConstituent(std::string name, double molarFraction);
+    // TODO: this should return bool (to indicate whether groupIndex is valid...)
+    void removeConstituent(int groupIndex);
 
-  // TODO: this should return bool (to indicate whether groupIndex is valid...)
-  void removeConstituent(int groupIndex);
+    void removeAllConstituents();
 
-  void removeAllConstituents();
+    std::vector<FuelSupplyConstituent> constituents() const;
 
-  std::vector<FuelSupplyConstituent> constituents() const;
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    std::string fuelTemperatureModelingMode() const;
 
-  std::string fuelTemperatureModelingMode() const;
+    boost::optional<Node> fuelTemperatureReferenceNode() const;
 
-  boost::optional<Node> fuelTemperatureReferenceNode() const;
+    boost::optional<Schedule> fuelTemperatureSchedule() const;
 
-  boost::optional<Schedule> fuelTemperatureSchedule() const;
+    CurveCubic compressorPowerMultiplierFunctionofFuelRateCurve() const;
 
-  CurveCubic compressorPowerMultiplierFunctionofFuelRateCurve() const;
+    double compressorHeatLossFactor() const;
 
-  double compressorHeatLossFactor() const;
+    std::string fuelType() const;
 
-  std::string fuelType() const;
+    boost::optional<double> liquidGenericFuelLowerHeatingValue() const;
 
-  boost::optional<double> liquidGenericFuelLowerHeatingValue() const;
+    boost::optional<double> liquidGenericFuelHigherHeatingValue() const;
 
-  boost::optional<double> liquidGenericFuelHigherHeatingValue() const;
+    boost::optional<double> liquidGenericFuelMolecularWeight() const;
 
-  boost::optional<double> liquidGenericFuelMolecularWeight() const;
+    boost::optional<double> liquidGenericFuelCO2EmissionFactor() const;
 
-  boost::optional<double> liquidGenericFuelCO2EmissionFactor() const;
+    // TODO: this should be non optional
+    boost::optional<unsigned int> numberofConstituentsinGaseousConstituentFuelSupply() const;
 
-  // TODO: this should be non optional
-  boost::optional<unsigned int> numberofConstituentsinGaseousConstituentFuelSupply() const;
+    // Convenience function to check that it's equal to 1.0 (If no constituents, returns 0 and warns)
+    double sumofConstituentsMolarFractions() const;
 
-  // Convenience function to check that it's equal to 1.0 (If no constituents, returns 0 and warns)
-  double sumofConstituentsMolarFractions() const;
+    // Return optional parent generator
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
-  // Return optional parent generator
-  boost::optional<GeneratorFuelCell> fuelCell() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setFuelTemperatureModelingMode(const std::string& fuelTemperatureModelingMode);
 
-  bool setFuelTemperatureModelingMode(const std::string& fuelTemperatureModelingMode);
+    void resetFuelTemperatureModelingMode();
 
-  void resetFuelTemperatureModelingMode();
+    bool setFuelTemperatureReferenceNode(const Node& connection);
 
-  bool setFuelTemperatureReferenceNode(const Node& connection);
+    void resetFuelTemperatureReferenceNode();
 
-  void resetFuelTemperatureReferenceNode();
+    bool setFuelTemperatureSchedule(Schedule& schedule);
 
-  bool setFuelTemperatureSchedule(Schedule& schedule);
+    void resetFuelTemperatureSchedule();
 
-  void resetFuelTemperatureSchedule();
+    bool setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
 
-  bool setCompressorPowerMultiplierFunctionofFuelRateCurve(const CurveCubic& cubicCurves);
+    bool setCompressorHeatLossFactor(double compressorHeatLossFactor);
 
-  bool setCompressorHeatLossFactor(double compressorHeatLossFactor);
+    void resetCompressorHeatLossFactor();
 
-  void resetCompressorHeatLossFactor();
+    bool setFuelType(const std::string& fuelType);
 
-  bool setFuelType(const std::string& fuelType);
+    void resetFuelType();
 
-  void resetFuelType();
+    bool setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue);
 
-  bool setLiquidGenericFuelLowerHeatingValue(double liquidGenericFuelLowerHeatingValue);
+    void resetLiquidGenericFuelLowerHeatingValue();
 
-  void resetLiquidGenericFuelLowerHeatingValue();
+    bool setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue);
 
-  bool setLiquidGenericFuelHigherHeatingValue(double liquidGenericFuelHigherHeatingValue);
+    void resetLiquidGenericFuelHigherHeatingValue();
 
-  void resetLiquidGenericFuelHigherHeatingValue();
+    bool setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight);
 
-  bool setLiquidGenericFuelMolecularWeight(double liquidGenericFuelMolecularWeight);
+    void resetLiquidGenericFuelMolecularWeight();
 
-  void resetLiquidGenericFuelMolecularWeight();
+    bool setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor);
 
-  bool setLiquidGenericFuelCO2EmissionFactor(double liquidGenericFuelCO2EmissionFactor);
+    void resetLiquidGenericFuelCO2EmissionFactor();
 
-  void resetLiquidGenericFuelCO2EmissionFactor();
+    // Automatically handled by addConstituent, removeConstituent
+    // bool setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply);
+    // void resetNumberofConstituentsinGaseousConstituentFuelSupply();
 
-  // Automatically handled by addConstituent, removeConstituent
-  // bool setNumberofConstituentsinGaseousConstituentFuelSupply(unsigned int numberofConstituentsinGaseousConstituentFuelSupply);
-  // void resetNumberofConstituentsinGaseousConstituentFuelSupply();
+    //@}
+    /** @name Other */
+    //@{
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GeneratorFuelSupply_Impl ImplType;
 
-  //@}
-  /** @name Other */
-  //@{
+    explicit GeneratorFuelSupply(std::shared_ptr<detail::GeneratorFuelSupply_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GeneratorFuelSupply_Impl ImplType;
+    friend class detail::GeneratorFuelSupply_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GeneratorFuelSupply");
+  };
 
-  explicit GeneratorFuelSupply(std::shared_ptr<detail::GeneratorFuelSupply_Impl> impl);
+  /** \relates GeneratorFuelSupply*/
+  typedef boost::optional<GeneratorFuelSupply> OptionalGeneratorFuelSupply;
 
-  friend class detail::GeneratorFuelSupply_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.GeneratorFuelSupply");
-};
+  /** \relates GeneratorFuelSupply*/
+  typedef std::vector<GeneratorFuelSupply> GeneratorFuelSupplyVector;
 
-/** \relates GeneratorFuelSupply*/
-typedef boost::optional<GeneratorFuelSupply> OptionalGeneratorFuelSupply;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates GeneratorFuelSupply*/
-typedef std::vector<GeneratorFuelSupply> GeneratorFuelSupplyVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_GENERATORFUELSUPPLY_HPP
+#endif  // MODEL_GENERATORFUELSUPPLY_HPP

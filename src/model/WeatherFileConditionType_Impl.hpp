@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,41 +35,38 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API WeatherFileConditionType_Impl : public SizingPeriod_Impl {
-   public:
+    class MODEL_API WeatherFileConditionType_Impl : public SizingPeriod_Impl
+    {
+     public:
+      // constructor
+      WeatherFileConditionType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // constructor
-    WeatherFileConditionType_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // construct from workspace
+      WeatherFileConditionType_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    WeatherFileConditionType_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                   Model_Impl* model,
-                   bool keepHandle);
+      // clone copy constructor
+      WeatherFileConditionType_Impl(const WeatherFileConditionType_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // clone copy constructor
-    WeatherFileConditionType_Impl(const WeatherFileConditionType_Impl& other,Model_Impl* model,bool keepHandle);
+      // virtual destructor
+      virtual ~WeatherFileConditionType_Impl() {}
 
-    // virtual destructor
-    virtual ~WeatherFileConditionType_Impl(){}
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      // ensure that this object does not contain the date 2/29
+      virtual void ensureNoLeapDays() override;
 
-    // ensure that this object does not contain the date 2/29
-    virtual void ensureNoLeapDays() override;
+     private:
+      REGISTER_LOGGER("openstudio.model.WeatherFileConditionType");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.WeatherFileConditionType");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_WEATHERFILECONDITIONTYPE_IMPL_HPP
+#endif  // MODEL_WEATHERFILECONDITIONTYPE_IMPL_HPP

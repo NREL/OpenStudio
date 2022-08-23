@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,122 +37,122 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class AirflowNetworkZoneExhaustFan;
-class AirflowNetworkCrack;
+  class Schedule;
+  class AirflowNetworkZoneExhaustFan;
+  class AirflowNetworkCrack;
 
-namespace detail {
+  namespace detail {
 
-class FanZoneExhaust_Impl;
+    class FanZoneExhaust_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** FanZoneExhaust is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:Fan:ZoneExhaust'. */
-class MODEL_API FanZoneExhaust : public ZoneHVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** FanZoneExhaust is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:Fan:ZoneExhaust'. */
+  class MODEL_API FanZoneExhaust : public ZoneHVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit FanZoneExhaust(const Model& model);
+    explicit FanZoneExhaust(const Model& model);
 
-  virtual ~FanZoneExhaust() {}
+    virtual ~FanZoneExhaust() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> systemAvailabilityManagerCouplingModeValues();
+    static std::vector<std::string> systemAvailabilityManagerCouplingModeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
+    double fanTotalEfficiency() const;
 
-  double fanTotalEfficiency() const;
+    /** Deprecated, forwards to fanTotalEfficiency */
+    double fanEfficiency() const;
 
-  /** Deprecated, forwards to fanTotalEfficiency */
-  double fanEfficiency() const;
+    double pressureRise() const;
 
-  double pressureRise() const;
+    boost::optional<double> maximumFlowRate() const;
 
-  boost::optional<double> maximumFlowRate() const;
+    std::string endUseSubcategory() const;
 
-  std::string endUseSubcategory() const;
+    boost::optional<Schedule> flowFractionSchedule() const;
 
-  boost::optional<Schedule> flowFractionSchedule() const;
+    std::string systemAvailabilityManagerCouplingMode() const;
 
-  std::string systemAvailabilityManagerCouplingMode() const;
+    boost::optional<Schedule> minimumZoneTemperatureLimitSchedule() const;
 
-  boost::optional<Schedule> minimumZoneTemperatureLimitSchedule() const;
+    boost::optional<Schedule> balancedExhaustFractionSchedule() const;
 
-  boost::optional<Schedule> balancedExhaustFractionSchedule() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    void resetAvailabilitySchedule();
 
-  void resetAvailabilitySchedule();
+    bool setFanTotalEfficiency(double fanTotalEfficiency);
 
-  bool setFanTotalEfficiency(double fanTotalEfficiency);
+    /** Deprecated, forwards to setFanTotalEfficiency */
+    bool setFanEfficiency(double fanTotalEfficiency);
 
-  /** Deprecated, forwards to setFanTotalEfficiency */
-  bool setFanEfficiency(double fanTotalEfficiency);
+    bool setPressureRise(double pressureRise);
 
-  bool setPressureRise(double pressureRise);
+    bool setMaximumFlowRate(double maximumFlowRate);
 
-  bool setMaximumFlowRate(double maximumFlowRate);
+    void resetMaximumFlowRate();
 
-  void resetMaximumFlowRate();
+    bool setEndUseSubcategory(std::string endUseSubcategory);
 
-  bool setEndUseSubcategory(std::string endUseSubcategory);
+    bool setFlowFractionSchedule(Schedule& schedule);
 
-  bool setFlowFractionSchedule(Schedule& schedule);
+    void resetFlowFractionSchedule();
 
-  void resetFlowFractionSchedule();
+    bool setSystemAvailabilityManagerCouplingMode(std::string systemAvailabilityManagerCouplingMode);
 
-  bool setSystemAvailabilityManagerCouplingMode(std::string systemAvailabilityManagerCouplingMode);
+    bool setMinimumZoneTemperatureLimitSchedule(Schedule& schedule);
 
-  bool setMinimumZoneTemperatureLimitSchedule(Schedule& schedule);
+    void resetMinimumZoneTemperatureLimitSchedule();
 
-  void resetMinimumZoneTemperatureLimitSchedule();
+    bool setBalancedExhaustFractionSchedule(Schedule& schedule);
 
-  bool setBalancedExhaustFractionSchedule(Schedule& schedule);
+    void resetBalancedExhaustFractionSchedule();
 
-  void resetBalancedExhaustFractionSchedule();
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    AirflowNetworkZoneExhaustFan getAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack);
+    boost::optional<AirflowNetworkZoneExhaustFan> airflowNetworkZoneExhaustFan() const;
 
-  AirflowNetworkZoneExhaustFan getAirflowNetworkZoneExhaustFan(const AirflowNetworkCrack& crack);
-  boost::optional<AirflowNetworkZoneExhaustFan> airflowNetworkZoneExhaustFan() const;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::FanZoneExhaust_Impl ImplType;
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::FanZoneExhaust_Impl ImplType;
+    explicit FanZoneExhaust(std::shared_ptr<detail::FanZoneExhaust_Impl> impl);
 
-  explicit FanZoneExhaust(std::shared_ptr<detail::FanZoneExhaust_Impl> impl);
+    friend class detail::FanZoneExhaust_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.FanZoneExhaust");
+  };
 
-  friend class detail::FanZoneExhaust_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.FanZoneExhaust");
-};
+  /** \relates FanZoneExhaust*/
+  typedef boost::optional<FanZoneExhaust> OptionalFanZoneExhaust;
 
-/** \relates FanZoneExhaust*/
-typedef boost::optional<FanZoneExhaust> OptionalFanZoneExhaust;
+  /** \relates FanZoneExhaust*/
+  typedef std::vector<FanZoneExhaust> FanZoneExhaustVector;
 
-/** \relates FanZoneExhaust*/
-typedef std::vector<FanZoneExhaust> FanZoneExhaustVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_FANZONEEXHAUST_HPP
+#endif  // MODEL_FANZONEEXHAUST_HPP

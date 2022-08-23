@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,78 +56,69 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateGasEquipment( GasEquipment& modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::GasEquipment);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateGasEquipment(GasEquipment& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::GasEquipment);
+    m_idfObjects.push_back(idfObject);
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
-  }
-
-  GasEquipmentDefinition definition = modelObject.gasEquipmentDefinition();
-
-  idfObject.setString(GasEquipmentFields::Name, modelObject.name().get());
-
-  boost::optional<Space> space = modelObject.space();
-  boost::optional<SpaceType> spaceType = modelObject.spaceType();
-  if (space){
-    boost::optional<ThermalZone> thermalZone = space->thermalZone();
-    if (thermalZone){
-      idfObject.setString(GasEquipmentFields::ZoneorZoneListName, thermalZone->name().get());
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
     }
-  }else if(spaceType){
-    idfObject.setString(GasEquipmentFields::ZoneorZoneListName, spaceType->name().get());
+
+    GasEquipmentDefinition definition = modelObject.gasEquipmentDefinition();
+
+    idfObject.setString(GasEquipmentFields::Name, modelObject.name().get());
+
+    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
+    idfObject.setString(GasEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
+
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(GasEquipmentFields::ScheduleName, idf_schedule_->nameString());
+    }
+
+    idfObject.setString(GasEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());
+
+    double multiplier = modelObject.multiplier();
+
+    OptionalDouble d = definition.designLevel();
+    if (d) {
+      idfObject.setDouble(GasEquipmentFields::DesignLevel, (*d) * multiplier);
+    }
+
+    d = definition.wattsperSpaceFloorArea();
+    if (d) {
+      idfObject.setDouble(GasEquipmentFields::PowerperZoneFloorArea, (*d) * multiplier);
+    }
+
+    d = definition.wattsperPerson();
+    if (d) {
+      idfObject.setDouble(GasEquipmentFields::PowerperPerson, (*d) * multiplier);
+    }
+
+    if (!definition.isFractionLatentDefaulted()) {
+      idfObject.setDouble(GasEquipmentFields::FractionLatent, definition.fractionLatent());
+    }
+
+    if (!definition.isFractionRadiantDefaulted()) {
+      idfObject.setDouble(GasEquipmentFields::FractionRadiant, definition.fractionRadiant());
+    }
+
+    if (!definition.isFractionLostDefaulted()) {
+      idfObject.setDouble(GasEquipmentFields::FractionLost, definition.fractionLost());
+    }
+
+    if (!definition.isCarbonDioxideGenerationRateDefaulted()) {
+      idfObject.setDouble(GasEquipmentFields::CarbonDioxideGenerationRate, definition.carbonDioxideGenerationRate());
+    }
+
+    if (!modelObject.isEndUseSubcategoryDefaulted()) {
+      idfObject.setString(GasEquipmentFields::EndUseSubcategory, modelObject.endUseSubcategory());
+    }
+
+    return idfObject;
   }
 
-  boost::optional<Schedule> schedule = modelObject.schedule();
-  if (schedule){
-    idfObject.setString(GasEquipmentFields::ScheduleName, schedule->name().get());
-  }
+}  // namespace energyplus
 
-  idfObject.setString(GasEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());
-
-  double multiplier = modelObject.multiplier();
-
-  OptionalDouble d = definition.designLevel();
-  if (d){
-    idfObject.setDouble(GasEquipmentFields::DesignLevel, (*d)*multiplier);
-  }
-
-  d = definition.wattsperSpaceFloorArea();
-  if (d){
-    idfObject.setDouble(GasEquipmentFields::PowerperZoneFloorArea, (*d)*multiplier);
-  }
-
-  d = definition.wattsperPerson();
-  if (d){
-    idfObject.setDouble(GasEquipmentFields::PowerperPerson, (*d)*multiplier);
-  }
-
-  if (!definition.isFractionLatentDefaulted()){
-    idfObject.setDouble(GasEquipmentFields::FractionLatent, definition.fractionLatent());
-  }
-
-  if (!definition.isFractionRadiantDefaulted()){
-    idfObject.setDouble(GasEquipmentFields::FractionRadiant, definition.fractionRadiant());
-  }
-
-  if (!definition.isFractionLostDefaulted()){
-    idfObject.setDouble(GasEquipmentFields::FractionLost, definition.fractionLost());
-  }
-
-  if (!definition.isCarbonDioxideGenerationRateDefaulted()){
-    idfObject.setDouble(GasEquipmentFields::CarbonDioxideGenerationRate, definition.carbonDioxideGenerationRate());
-  }
-
-  if (!modelObject.isEndUseSubcategoryDefaulted()){
-    idfObject.setString(GasEquipmentFields::EndUseSubcategory, modelObject.endUseSubcategory());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

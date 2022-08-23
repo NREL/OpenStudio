@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,8 +50,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, ScheduleRule)
-{
+TEST_F(ModelFixture, ScheduleRule) {
   Model model;
 
   model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
@@ -151,8 +150,7 @@ TEST_F(ModelFixture, ScheduleRule)
   EXPECT_FALSE(rule.containsDate(yd.makeDate(MonthOfYear::Dec, 27)));
 }
 
-TEST_F(ModelFixture, ScheduleRule_Convenience)
-{
+TEST_F(ModelFixture, ScheduleRule_Convenience) {
   Model model;
 
   model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
@@ -195,7 +193,6 @@ TEST_F(ModelFixture, ScheduleRule_Convenience)
   EXPECT_FALSE(rule.applyWeekends());
   EXPECT_FALSE(rule.applyAllDays());
 
-
   EXPECT_TRUE(rule.setApplyWeekdays(false));
   EXPECT_FALSE(rule.applyMonday());
   EXPECT_FALSE(rule.applyTuesday());
@@ -208,7 +205,6 @@ TEST_F(ModelFixture, ScheduleRule_Convenience)
   EXPECT_FALSE(rule.applyWeekdays());
   EXPECT_FALSE(rule.applyWeekends());
   EXPECT_FALSE(rule.applyAllDays());
-
 
   EXPECT_TRUE(rule.setApplyWeekends(true));
   EXPECT_FALSE(rule.applyMonday());
@@ -223,7 +219,6 @@ TEST_F(ModelFixture, ScheduleRule_Convenience)
   EXPECT_TRUE(rule.applyWeekends());
   EXPECT_FALSE(rule.applyAllDays());
 
-
   EXPECT_TRUE(rule.setApplyWeekdays(true));
   EXPECT_TRUE(rule.applyMonday());
   EXPECT_TRUE(rule.applyTuesday());
@@ -236,7 +231,6 @@ TEST_F(ModelFixture, ScheduleRule_Convenience)
   EXPECT_TRUE(rule.applyWeekdays());
   EXPECT_TRUE(rule.applyWeekends());
   EXPECT_TRUE(rule.applyAllDays());
-
 
   EXPECT_TRUE(rule.setApplyWeekends(false));
   EXPECT_TRUE(rule.applyMonday());
@@ -251,7 +245,6 @@ TEST_F(ModelFixture, ScheduleRule_Convenience)
   EXPECT_FALSE(rule.applyWeekends());
   EXPECT_FALSE(rule.applyAllDays());
 
-
   EXPECT_TRUE(rule.setApplyAllDays(false));
   EXPECT_FALSE(rule.applyMonday());
   EXPECT_FALSE(rule.applyTuesday());
@@ -264,7 +257,6 @@ TEST_F(ModelFixture, ScheduleRule_Convenience)
   EXPECT_FALSE(rule.applyWeekdays());
   EXPECT_FALSE(rule.applyWeekends());
   EXPECT_FALSE(rule.applyAllDays());
-
 
   EXPECT_TRUE(rule.setApplyAllDays(true));
   EXPECT_TRUE(rule.applyMonday());
@@ -279,7 +271,6 @@ TEST_F(ModelFixture, ScheduleRule_Convenience)
   EXPECT_TRUE(rule.applyWeekends());
   EXPECT_TRUE(rule.applyAllDays());
 }
-
 
 /*
 January

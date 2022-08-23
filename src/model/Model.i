@@ -4,12 +4,18 @@
 #ifdef SWIGPYTHON
   %module openstudiomodel
 
+  // Inject every submodule into the openstudio.model namespace, so we can do like in Ruby
+  // `fan = openstudio.model.FanVariableVolume(m)` (and not `openstudio.model.openstudiomodelstraightcomponent.FanVariableVolume(m)`)
   %pythoncode %{
     from openstudiomodelcore import *
     from openstudiomodelsimulation import *
     from openstudiomodelresources import *
     from openstudiomodelgeometry import *
     from openstudiomodelhvac import *
+    from openstudiomodelzonehvac import *
+    from openstudiomodelavailabilitymanager import *
+    from openstudiomodelplantequipmentoperationscheme import *
+    from openstudiomodelstraightcomponent import *
     from openstudiomodelairflow import *
     from openstudiomodelrefrigeration import *
     from openstudiomodelgenerators import *

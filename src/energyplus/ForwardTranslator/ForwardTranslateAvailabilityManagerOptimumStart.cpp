@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -54,106 +54,104 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerOptimumStart(
-    AvailabilityManagerOptimumStart & modelObject)
-{
-  IdfObject idfObject(IddObjectType::AvailabilityManager_OptimumStart);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerOptimumStart(AvailabilityManagerOptimumStart& modelObject) {
+    IdfObject idfObject(IddObjectType::AvailabilityManager_OptimumStart);
+    m_idfObjects.push_back(idfObject);
 
-  boost::optional<AirLoopHVAC> airLoopHVAC;
-  if( auto loop = modelObject.loop() ) {
-    airLoopHVAC = loop->optionalCast<model::AirLoopHVAC>();
-  }
-
-  // Name
-  if( auto s = modelObject.name() ) {
-    idfObject.setName(*s);
-  }
-
-  // ApplicabilityScheduleName
-  {
-    auto schedule = modelObject.applicabilitySchedule();
-    idfObject.setString(AvailabilityManager_OptimumStartFields::ApplicabilityScheduleName,schedule.name().get());
-  }
-
-  // FanScheduleName
-  if( airLoopHVAC ) {
-    // Fan schedules are set to match the availabilitySchedule in the translator
-    idfObject.setString(AvailabilityManager_OptimumStartFields::FanScheduleName,airLoopHVAC->availabilitySchedule().name().get());
-  }
-
-  // ControlType
-  auto controlType = modelObject.controlType();
-  idfObject.setString(AvailabilityManager_OptimumStartFields::ControlType,controlType);
-
-  if( istringEqual(controlType,"ControlZone") ) {
-    if( auto zone = modelObject.controlZone() ) {
-      idfObject.setString(AvailabilityManager_OptimumStartFields::ControlZoneName,zone->name().get());
+    boost::optional<AirLoopHVAC> airLoopHVAC;
+    if (auto loop = modelObject.loop()) {
+      airLoopHVAC = loop->optionalCast<model::AirLoopHVAC>();
     }
-  } else if( istringEqual(controlType,"MaximumofZoneList") ) {
-    if( airLoopHVAC ) {
-      IdfObject zoneList(IddObjectType::ZoneList);
-      auto zoneListName = modelObject.name().get() + " Control Zones List";
-      zoneList.setName(zoneListName);
-      m_idfObjects.push_back(zoneList);
-      for( const auto & zone : airLoopHVAC->thermalZones() ) {
-        auto eg = zoneList.pushExtensibleGroup();
-        eg.setString(ZoneListExtensibleFields::ZoneName,zone.name().get());
+
+    // Name
+    if (auto s = modelObject.name()) {
+      idfObject.setName(*s);
+    }
+
+    // ApplicabilityScheduleName
+    {
+      auto schedule = modelObject.applicabilitySchedule();
+      idfObject.setString(AvailabilityManager_OptimumStartFields::ApplicabilityScheduleName, schedule.name().get());
+    }
+
+    // FanScheduleName
+    if (airLoopHVAC) {
+      // Fan schedules are set to match the availabilitySchedule in the translator
+      idfObject.setString(AvailabilityManager_OptimumStartFields::FanScheduleName, airLoopHVAC->availabilitySchedule().name().get());
+    }
+
+    // ControlType
+    auto controlType = modelObject.controlType();
+    idfObject.setString(AvailabilityManager_OptimumStartFields::ControlType, controlType);
+
+    if (istringEqual(controlType, "ControlZone")) {
+      if (auto zone = modelObject.controlZone()) {
+        idfObject.setString(AvailabilityManager_OptimumStartFields::ControlZoneName, zone->name().get());
       }
-      idfObject.setString(AvailabilityManager_OptimumStartFields::ZoneListName,zoneListName);
+    } else if (istringEqual(controlType, "MaximumofZoneList")) {
+      if (airLoopHVAC) {
+        IdfObject zoneList(IddObjectType::ZoneList);
+        auto zoneListName = modelObject.name().get() + " Control Zones List";
+        zoneList.setName(zoneListName);
+        m_idfObjects.push_back(zoneList);
+        for (const auto& zone : airLoopHVAC->thermalZones()) {
+          auto eg = zoneList.pushExtensibleGroup();
+          eg.setString(ZoneListExtensibleFields::ZoneName, zone.name().get());
+        }
+        idfObject.setString(AvailabilityManager_OptimumStartFields::ZoneListName, zoneListName);
+      }
     }
+
+    // MaximumValueforOptimumStartTime
+    {
+      auto value = modelObject.maximumValueforOptimumStartTime();
+      idfObject.setDouble(AvailabilityManager_OptimumStartFields::MaximumValueforOptimumStartTime, value);
+    }
+
+    // ControlAlgorithm
+    {
+      auto value = modelObject.controlAlgorithm();
+      idfObject.setString(AvailabilityManager_OptimumStartFields::ControlAlgorithm, value);
+    }
+
+    // ConstantTemperatureGradientduringCooling
+    {
+      auto value = modelObject.constantTemperatureGradientduringCooling();
+      idfObject.setDouble(AvailabilityManager_OptimumStartFields::ConstantTemperatureGradientduringCooling, value);
+    }
+
+    // ConstantTemperatureGradientduringHeating
+    {
+      auto value = modelObject.constantTemperatureGradientduringHeating();
+      idfObject.setDouble(AvailabilityManager_OptimumStartFields::ConstantTemperatureGradientduringHeating, value);
+    }
+
+    // InitialTemperatureGradientduringCooling
+    {
+      auto value = modelObject.initialTemperatureGradientduringCooling();
+      idfObject.setDouble(AvailabilityManager_OptimumStartFields::InitialTemperatureGradientduringCooling, value);
+    }
+
+    // InitialTemperatureGradientduringHeating
+    {
+      auto value = modelObject.initialTemperatureGradientduringHeating();
+      idfObject.setDouble(AvailabilityManager_OptimumStartFields::InitialTemperatureGradientduringHeating, value);
+    }
+
+    // ConstantStartTime
+    {
+      auto value = modelObject.constantStartTime();
+      idfObject.setDouble(AvailabilityManager_OptimumStartFields::ConstantStartTime, value);
+    }
+
+    // NumberofPreviousDays
+    {
+      auto value = modelObject.numberofPreviousDays();
+      idfObject.setUnsigned(AvailabilityManager_OptimumStartFields::NumberofPreviousDays, value);
+    }
+
+    return idfObject;
   }
 
-  // MaximumValueforOptimumStartTime
-  {
-    auto value = modelObject.maximumValueforOptimumStartTime();
-    idfObject.setDouble(AvailabilityManager_OptimumStartFields::MaximumValueforOptimumStartTime,value);
-  }
-
-  // ControlAlgorithm
-  {
-    auto value = modelObject.controlAlgorithm();
-    idfObject.setString(AvailabilityManager_OptimumStartFields::ControlAlgorithm,value);
-  }
-
-  // ConstantTemperatureGradientduringCooling
-  {
-    auto value = modelObject.constantTemperatureGradientduringCooling();
-    idfObject.setDouble(AvailabilityManager_OptimumStartFields::ConstantTemperatureGradientduringCooling,value);
-  }
-
-  // ConstantTemperatureGradientduringHeating
-  {
-    auto value = modelObject.constantTemperatureGradientduringHeating();
-    idfObject.setDouble(AvailabilityManager_OptimumStartFields::ConstantTemperatureGradientduringHeating,value);
-  }
-
-  // InitialTemperatureGradientduringCooling
-  {
-    auto value = modelObject.initialTemperatureGradientduringCooling();
-    idfObject.setDouble(AvailabilityManager_OptimumStartFields::InitialTemperatureGradientduringCooling,value);
-  }
-
-  // InitialTemperatureGradientduringHeating
-  {
-    auto value = modelObject.initialTemperatureGradientduringHeating();
-    idfObject.setDouble(AvailabilityManager_OptimumStartFields::InitialTemperatureGradientduringHeating,value);
-  }
-
-  // ConstantStartTime
-  {
-    auto value = modelObject.constantStartTime();
-    idfObject.setDouble(AvailabilityManager_OptimumStartFields::ConstantStartTime,value);
-  }
-
-  // NumberofPreviousDays
-  {
-    auto value = modelObject.numberofPreviousDays();
-    idfObject.setUnsigned(AvailabilityManager_OptimumStartFields::NumberofPreviousDays,value);
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

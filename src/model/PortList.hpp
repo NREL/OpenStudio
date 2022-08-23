@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,118 +37,115 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-class ThermalZone;
+  class ThermalZone;
 
-class HVACComponent;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  class PortList_Impl;
+    class PortList_Impl;
 
-  class ThermalZone_Impl;
+    class ThermalZone_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PortList is a ModelObject that wraps the OpenStudio IDD object 'OS:PortList'. */
-class MODEL_API PortList : public ModelObject {
-  public:
+  /** PortList is a ModelObject that wraps the OpenStudio IDD object 'OS:PortList'. */
+  class MODEL_API PortList : public ModelObject
+  {
+   public:
+    explicit PortList(const HVACComponent& comp);
 
-  explicit PortList(const HVACComponent& comp);
+    virtual ~PortList() {}
 
-  virtual ~PortList() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
-
-  /** Returns the port for portIndex.  Ports are consequtively
+    /** Returns the port for portIndex.  Ports are consequtively
    *  indexed starting from 0.
    */
-  unsigned port(unsigned portIndex) const;
+    unsigned port(unsigned portIndex) const;
 
-  /** Given a port, return the port index.
+    /** Given a port, return the port index.
    *  Consider that a "port" is simply an unsigned, so
    *  port and port index share the same type, but they do not share the same value.
    */
-  unsigned portIndex(unsigned port) const;
+    unsigned portIndex(unsigned port) const;
 
-  /** Returns the next available port.  This will be the first port
+    /** Returns the next available port.  This will be the first port
    *  with no connected objects */
-  unsigned nextPort() const;
+    unsigned nextPort() const;
 
-  /** Returns the optional ModelObject connected to the port designated by portIndex.
+    /** Returns the optional ModelObject connected to the port designated by portIndex.
    *  If there is no connected object then the optional will be false.
    */
-  boost::optional<ModelObject> modelObject(unsigned portIndex) const;
+    boost::optional<ModelObject> modelObject(unsigned portIndex) const;
 
-  /** Returns the optional ModelObject connected to the last port of the PortList.
+    /** Returns the optional ModelObject connected to the last port of the PortList.
    *  If there are no connections to the list's outlet ports, then the
    *  optional will be false.
    */
-  boost::optional<ModelObject> lastModelObject();
+    boost::optional<ModelObject> lastModelObject();
 
-  /** Returns a vector of all objects connected to the PortList's ports.
+    /** Returns a vector of all objects connected to the PortList's ports.
    *  If no objects are connected to the PortList then an empty vector will be returned.
    */
-  std::vector<ModelObject> modelObjects() const;
+    std::vector<ModelObject> modelObjects() const;
 
-  /** Returns the port index for the ModelObject specified by modelObject.
+    /** Returns the port index for the ModelObject specified by modelObject.
    */
-  unsigned portIndexForModelObject( ModelObject & modelObject ) const;
+    unsigned portIndexForModelObject(ModelObject& modelObject) const;
 
-  /** Returns the index of the next available port */
-  unsigned nextPortIndex() const;
+    /** Returns the index of the next available port */
+    unsigned nextPortIndex() const;
 
-  ThermalZone thermalZone() const;
+    ThermalZone thermalZone() const;
 
-  /** Returns the port connected to an AirLoopHVAC object.
+    /** Returns the port connected to an AirLoopHVAC object.
    *  If there is no AirLoopHVAC object, then the next available port is returned
    */
-  unsigned airLoopHVACPort() const;
+    unsigned airLoopHVACPort() const;
 
-  std::vector<unsigned> airLoopHVACPorts() const;
+    std::vector<unsigned> airLoopHVACPorts() const;
 
-  /** Returns the port Index connected to an AirLoopHVAC object.
+    /** Returns the port Index connected to an AirLoopHVAC object.
    *  If there is no AirLoopHVAC object, then the next available portIndex is returned
    */
-  unsigned airLoopHVACPortIndex() const;
+    unsigned airLoopHVACPortIndex() const;
 
-  std::vector<unsigned> airLoopHVACPortIndexes() const;
+    std::vector<unsigned> airLoopHVACPortIndexes() const;
 
-  /** Returns the object connected to an AirLoopHVAC object. */
-  boost::optional<ModelObject> airLoopHVACModelObject() const;
+    /** Returns the object connected to an AirLoopHVAC object. */
+    boost::optional<ModelObject> airLoopHVACModelObject() const;
 
-  std::vector<ModelObject> airLoopHVACModelObjects() const;
+    std::vector<ModelObject> airLoopHVACModelObjects() const;
 
-  protected:
+   protected:
+    /// @cond
+    typedef detail::PortList_Impl ImplType;
 
-  /// @cond
-  typedef detail::PortList_Impl ImplType;
+    explicit PortList(std::shared_ptr<detail::PortList_Impl> impl);
 
-  explicit PortList(std::shared_ptr<detail::PortList_Impl> impl);
+    friend class detail::PortList_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class ThermalZone;
+    friend class detail::ThermalZone_Impl;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  friend class detail::PortList_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class ThermalZone;
-  friend class detail::ThermalZone_Impl;
-  friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
 
-  /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PortList");
+  };
 
-  private:
+  /** \relates PortList*/
+  typedef boost::optional<PortList> OptionalPortList;
 
-  REGISTER_LOGGER("openstudio.model.PortList");
-};
+  /** \relates PortList*/
+  typedef std::vector<PortList> PortListVector;
 
-/** \relates PortList*/
-typedef boost::optional<PortList> OptionalPortList;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates PortList*/
-typedef std::vector<PortList> PortListVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_PORTLIST_HPP
-
+#endif  // MODEL_PORTLIST_HPP

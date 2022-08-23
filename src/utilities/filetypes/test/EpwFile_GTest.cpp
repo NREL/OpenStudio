@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,9 +37,8 @@
 
 using namespace openstudio;
 
-TEST(Filetypes, EpwFile)
-{
-  try{
+TEST(Filetypes, EpwFile) {
+  try {
     // LOCATION,Climate Zone 1,CA,USA,CTZRV2,725945,40.80,-124.20,-8.0,13.0
     // DESIGN CONDITIONS,1,Climate Design Data 2009 ASHRAE Handbook,,Heating,12,-0.6,0.6,-4.1,2.7,5.3,-2.2,3.2,3.8,11.1,12.3,9.7,11.3,2,90,Cooling,8,6.5,21.6,15.2,19.9,15.1,18.7,14.6,16.8,19.5,16.1,18.6,15.5,17.6,4.3,320,15.9,11.4,17.5,15.1,10.8,16.8,14.4,10.3,16.2,47.3,19.8,45,18.5,43.3,17.6,1804,Extremes,9,8.2,7.4,20.8,-2.5,28.3,1.7,2.2,-3.7,29.8,-4.6,31.1,-5.6,32.3,-6.8,33.9
     // TYPICAL/EXTREME PERIODS,6,Summer - Week Nearest Max Temperature For Period,Extreme,7/ 8,7/14,Summer - Week Nearest Average Temperature For Period,Typical,8/12,8/18,Winter - Week Nearest Min Temperature For Period,Extreme,1/15,1/21,Winter - Week Nearest Average Temperature For Period,Typical,1/22,1/28,Autumn - Week Nearest Average Temperature For Period,Typical,11/26,12/ 2,Spring - Week Nearest Average Temperature For Period,Typical,5/27,6/ 2
@@ -62,7 +61,7 @@ TEST(Filetypes, EpwFile)
     EXPECT_EQ(-105.18, epwFile.longitude());
     EXPECT_EQ(-7, epwFile.timeZone());
     EXPECT_EQ(1829, epwFile.elevation());
-    EXPECT_EQ(Time(0,1,0,0), epwFile.timeStep());
+    EXPECT_EQ(Time(0, 1, 0, 0), epwFile.timeStep());
     EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
     EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());
     EXPECT_EQ(Date(MonthOfYear::Dec, 31), epwFile.endDate());
@@ -72,9 +71,8 @@ TEST(Filetypes, EpwFile)
   }
 }
 
-TEST(Filetypes, EpwFile_Data)
-{
-  try{
+TEST(Filetypes, EpwFile_Data) {
+  try {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
@@ -89,13 +87,13 @@ TEST(Filetypes, EpwFile_Data)
     EXPECT_EQ(-105.18, epwFile.longitude());
     EXPECT_EQ(-7, epwFile.timeZone());
     EXPECT_EQ(1829, epwFile.elevation());
-    EXPECT_EQ(Time(0,1,0,0), epwFile.timeStep());
+    EXPECT_EQ(Time(0, 1, 0, 0), epwFile.timeStep());
     EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
     EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());
     EXPECT_EQ(Date(MonthOfYear::Dec, 31), epwFile.endDate());
     // Up to here, everything should be the same as the first test. Now ask for the data
     std::vector<EpwDataPoint> data = epwFile.data();
-    EXPECT_EQ(8760,data.size());
+    EXPECT_EQ(8760, data.size());
     // The last data point should be for the last hour 12/31/1996, with a dry bulb temp of 4C and pressure 81100
     // Gets reported as "1997-Jan-01 00:00:00"
     openstudio::DateTime dateTime = data[8759].dateTime();
@@ -105,34 +103,35 @@ TEST(Filetypes, EpwFile_Data)
     EXPECT_EQ(0, dateTime.time().hours());
     EXPECT_EQ(0, dateTime.time().minutes());
     EXPECT_EQ(0, dateTime.time().seconds());
-    EXPECT_EQ(4.0,data[8759].dryBulbTemperature().get());
-    EXPECT_EQ(81100,data[8759].atmosphericStationPressure().get());
+    EXPECT_EQ(4.0, data[8759].dryBulbTemperature().get());
+    EXPECT_EQ(81100, data[8759].atmosphericStationPressure().get());
     // Try out the alternate access functions, dew point temperature should be -1C
-    EXPECT_EQ(-1.0,data[8759].getFieldByName("Dew Point Temperature").get());
-    EXPECT_EQ(-1.0,data[8759].getField(EpwDataField("Dew Point Temperature")).get());
+    EXPECT_EQ(-1.0, data[8759].getFieldByName("Dew Point Temperature").get());
+    EXPECT_EQ(-1.0, data[8759].getField(EpwDataField("Dew Point Temperature")).get());
     // The last data point should not have a liquid precipitation depth
     EXPECT_FALSE(data[8759].getFieldByName("Liquid Precipitation Depth"));
     // Get the data as strings
     std::vector<std::string> epwStrings = data[8759].toEpwStrings();
     ASSERT_EQ(35, epwStrings.size());
-    std::vector<std::string> known = { "1996", "12", "31", "24", "0",
-      "?9?9?9?9E0?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9*9*9?9*9*9", "4.0", "-1.0",
-      "69", "81100", "0", "0", "294", "0.000000", "0", "0", "0", "0", "0",
-      "0", "130", "6.200000", "9", "9", "48.3", "7500", "9", "999999999",
-      "60", "0.0310", "0", "88", "0.210", "999", "99" };
+    std::vector<std::string> known = {"1996", "12",       "31",    "24",        "0",  "?9?9?9?9E0?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9*9*9?9*9*9",
+                                      "4.0",  "-1.0",     "69",    "81100",     "0",  "0",
+                                      "294",  "0.000000", "0",     "0",         "0",  "0",
+                                      "0",    "0",        "130",   "6.200000",  "9",  "9",
+                                      "48.3", "7500",     "9",     "999999999", "60", "0.0310",
+                                      "0",    "88",       "0.210", "999",       "99"};
     for (unsigned i = 0; i < 35; i++) {
       EXPECT_EQ(known[i], epwStrings[i]);
     }
     // Get a time series
     boost::optional<openstudio::TimeSeries> series = epwFile.getTimeSeries("Wind Speed");
     ASSERT_TRUE(series);
-    ASSERT_EQ(8760,series->values().size());
+    ASSERT_EQ(8760, series->values().size());
     DateTimeVector seriesTimes = series->dateTimes();
-    ASSERT_EQ(8760,seriesTimes.size());
+    ASSERT_EQ(8760, seriesTimes.size());
     // Check the times in the data and the time series
-    DateTime current(Date(1,1,1999),Time(0,1)); // Use 1999 to avoid leap years
-    Time delta(0,1);
-    for(unsigned i=0;i<8760;i++) {
+    DateTime current(Date(1, 1, 1999), Time(0, 1));  // Use 1999 to avoid leap years
+    Time delta(0, 1);
+    for (unsigned i = 0; i < 8760; i++) {
       // This is a lot more complicated that it probably should be to avoid the year being a problem
       DateTime datatime = data[i].dateTime();
       EXPECT_EQ(datatime.date().monthOfYear(), current.date().monthOfYear());
@@ -159,7 +158,7 @@ TEST(Filetypes, EpwFile_Data)
     EXPECT_EQ(-105.18, epwFile.longitude());
     EXPECT_EQ(-7, epwFile.timeZone());
     EXPECT_EQ(1829, epwFile.elevation());
-    EXPECT_EQ(Time(0,1,0,0), epwFile.timeStep());
+    EXPECT_EQ(Time(0, 1, 0, 0), epwFile.timeStep());
     EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
     EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());
     EXPECT_EQ(Date(MonthOfYear::Dec, 31), epwFile.endDate());
@@ -169,9 +168,8 @@ TEST(Filetypes, EpwFile_Data)
   }
 }
 
-TEST(Filetypes, EpwFile_Design)
-{
-  try{
+TEST(Filetypes, EpwFile_Design) {
+  try {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
@@ -261,14 +259,12 @@ TEST(Filetypes, EpwFile_Design)
     EXPECT_EQ(38.3, designs[0].extremeN20YearsMaxDryBulb());
     EXPECT_EQ(-32.8, designs[0].extremeN50YearsMinDryBulb());
     EXPECT_EQ(39.2, designs[0].extremeN50YearsMaxDryBulb());
-  }
-  catch (...) {
+  } catch (...) {
     ASSERT_TRUE(false);
   }
 }
 
-TEST(Filetypes, EpwFile_Design_DoubleRead)
-{
+TEST(Filetypes, EpwFile_Design_DoubleRead) {
   try {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
@@ -385,8 +381,7 @@ TEST(Filetypes, EpwFile_Design_DoubleRead)
   }
 }
 
-TEST(Filetypes, EpwFile_Data_DoubleRead)
-{
+TEST(Filetypes, EpwFile_Data_DoubleRead) {
   try {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
@@ -503,8 +498,7 @@ TEST(Filetypes, EpwFile_Data_DoubleRead)
   }
 }
 
-TEST(Filetypes, EpwFile_NoDesign)
-{
+TEST(Filetypes, EpwFile_NoDesign) {
   try {
     path p = resourcesPath() / toPath("utilities/Filetypes/leapday-test.epw");
     EpwFile epwFile(p);
@@ -522,8 +516,7 @@ TEST(Filetypes, EpwFile_NoDesign)
   }
 }
 
-TEST(Filetypes, EpwFile_LeapTimeSeries)
-{
+TEST(Filetypes, EpwFile_LeapTimeSeries) {
   try {
     path p = resourcesPath() / toPath("utilities/Filetypes/leapday-test.epw");
     EpwFile epwFile(p);
@@ -555,8 +548,7 @@ TEST(Filetypes, EpwFile_LeapTimeSeries)
   }
 }
 
-TEST(Filetypes, EpwFile_NonActualTimeSeries)
-{
+TEST(Filetypes, EpwFile_NonActualTimeSeries) {
   try {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
@@ -583,11 +575,10 @@ TEST(Filetypes, EpwFile_NonActualTimeSeries)
   }
 }
 
-TEST(Filetypes, EpwFile_International_Data)
-{
-  try{
+TEST(Filetypes, EpwFile_International_Data) {
+  try {
     path p = resourcesPath() / toPath("utilities/Filetypes/CHN_Guangdong.Shaoguan.590820_CSWD.epw");
-    EpwFile epwFile(p,true);
+    EpwFile epwFile(p, true);
     EXPECT_EQ(p, epwFile.path());
     EXPECT_EQ("B68C068B", epwFile.checksum());
     EXPECT_EQ("Shaoguan", epwFile.city());
@@ -599,31 +590,31 @@ TEST(Filetypes, EpwFile_International_Data)
     EXPECT_EQ(113.6, epwFile.longitude());
     EXPECT_EQ(8, epwFile.timeZone());
     EXPECT_EQ(61, epwFile.elevation());
-    EXPECT_EQ(Time(0,1,0,0), epwFile.timeStep());
+    EXPECT_EQ(Time(0, 1, 0, 0), epwFile.timeStep());
     EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
     EXPECT_EQ(Date(MonthOfYear::Jan, 1), epwFile.startDate());
     EXPECT_EQ(Date(MonthOfYear::Dec, 31), epwFile.endDate());
     // Up to here, everything should be the same as the first test. Now ask for the data
     std::vector<EpwDataPoint> data = epwFile.data();
-    EXPECT_EQ(8760,data.size());
+    EXPECT_EQ(8760, data.size());
     // The last data point check
-    EXPECT_EQ(14.7,data[8759].dryBulbTemperature().get());
-    EXPECT_EQ(101100,data[8759].atmosphericStationPressure().get());
+    EXPECT_EQ(14.7, data[8759].dryBulbTemperature().get());
+    EXPECT_EQ(101100, data[8759].atmosphericStationPressure().get());
     // Try out the alternate access functions, dew point temperature should be -1C
-    EXPECT_EQ(11.7,data[8759].getFieldByName("Dew Point Temperature").get());
-    EXPECT_EQ(11.7,data[8759].getField(EpwDataField("Dew Point Temperature")).get());
+    EXPECT_EQ(11.7, data[8759].getFieldByName("Dew Point Temperature").get());
+    EXPECT_EQ(11.7, data[8759].getField(EpwDataField("Dew Point Temperature")).get());
     // The last data point should not have a liquid precipitation depth
     EXPECT_FALSE(data[8759].getFieldByName("Liquid Precipitation Depth"));
     // Get a time series
     boost::optional<openstudio::TimeSeries> series = epwFile.getTimeSeries("Wind Speed");
     ASSERT_TRUE(series);
-    ASSERT_EQ(8760,series->values().size());
+    ASSERT_EQ(8760, series->values().size());
     DateTimeVector seriesTimes = series->dateTimes();
-    ASSERT_EQ(8760,seriesTimes.size());
+    ASSERT_EQ(8760, seriesTimes.size());
     // Check the times in the data and the time series
-    DateTime current(Date(1,1,1999),Time(0,1)); // Use 1999 to avoid leap years
-    Time delta(0,1);
-    for(unsigned i=0;i<8760;i++) {
+    DateTime current(Date(1, 1, 1999), Time(0, 1));  // Use 1999 to avoid leap years
+    Time delta(0, 1);
+    for (unsigned i = 0; i < 8760; i++) {
       // This is a lot more complicated that it probably should be to avoid the year being a problem
       DateTime datatime = data[i].dateTime();
       EXPECT_EQ(datatime.date().monthOfYear(), current.date().monthOfYear());
@@ -638,13 +629,12 @@ TEST(Filetypes, EpwFile_International_Data)
       current += delta;
     }
     // No need to redo the original tests here since the data should have been loaded in the constructor
-  }catch(...){
+  } catch (...) {
     ASSERT_TRUE(false);
   }
 }
 
-TEST(Filetypes, EpwFile_IWEC_Data)
-{
+TEST(Filetypes, EpwFile_IWEC_Data) {
   try {
     path p = resourcesPath() / toPath("utilities/Filetypes/TUN_Tunis.607150_IWEC.epw");
     EpwFile epwFile(p, true);
@@ -679,9 +669,9 @@ TEST(Filetypes, EpwFile_IWEC_Data)
     DateTimeVector seriesTimes = series->dateTimes();
     ASSERT_EQ(8760, seriesTimes.size());
     // Check the times in the data and the time series
-    DateTime current(Date(1, 1, 1999), Time(0, 1)); // Use 1999 to avoid leap years
+    DateTime current(Date(1, 1, 1999), Time(0, 1));  // Use 1999 to avoid leap years
     Time delta(0, 1);
-    for (unsigned i = 0; i<8760; i++) {
+    for (unsigned i = 0; i < 8760; i++) {
       // This is a lot more complicated that it probably should be to avoid the year being a problem
       DateTime datatime = data[i].dateTime();
       EXPECT_EQ(datatime.date().monthOfYear(), current.date().monthOfYear());
@@ -696,15 +686,13 @@ TEST(Filetypes, EpwFile_IWEC_Data)
       current += delta;
     }
     // No need to redo the original tests here since the data should have been loaded in the constructor
-  }
-  catch (...) {
+  } catch (...) {
     ASSERT_TRUE(false);
   }
 }
 
-TEST(Filetypes, EpwFile_TMY)
-{
-  try{
+TEST(Filetypes, EpwFile_TMY) {
+  try {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.724666_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
@@ -718,7 +706,7 @@ TEST(Filetypes, EpwFile_TMY)
     EXPECT_EQ(-105.18, epwFile.longitude());
     EXPECT_EQ(-7, epwFile.timeZone());
     EXPECT_EQ(1829, epwFile.elevation());
-    EXPECT_EQ(Time(0,1,0,0), epwFile.timeStep());
+    EXPECT_EQ(Time(0, 1, 0, 0), epwFile.timeStep());
     EXPECT_EQ(DayOfWeek(DayOfWeek::Sunday), epwFile.startDayOfWeek());
     EXPECT_FALSE(epwFile.startDateActualYear());
     EXPECT_FALSE(epwFile.endDateActualYear());
@@ -731,20 +719,18 @@ TEST(Filetypes, EpwFile_TMY)
   }
 }
 
-TEST(Filetypes, EpwFile_Wrap_TMY)
-{
-  try{
+TEST(Filetypes, EpwFile_Wrap_TMY) {
+  try {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.wrap.epw");
     EpwFile epwFile(p);
     EXPECT_TRUE(false);
-  }catch(...){
+  } catch (...) {
     EXPECT_TRUE(true);
   }
 }
 
-TEST(Filetypes, EpwFile_AMY)
-{
-  try{
+TEST(Filetypes, EpwFile_AMY) {
+  try {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.amy");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
@@ -758,7 +744,7 @@ TEST(Filetypes, EpwFile_AMY)
     EXPECT_EQ(-105.18, epwFile.longitude());
     EXPECT_EQ(-7, epwFile.timeZone());
     EXPECT_EQ(1829, epwFile.elevation());
-    EXPECT_EQ(Time(0,1,0,0), epwFile.timeStep());
+    EXPECT_EQ(Time(0, 1, 0, 0), epwFile.timeStep());
     EXPECT_EQ(DayOfWeek(DayOfWeek::Friday), epwFile.startDayOfWeek());
     ASSERT_TRUE(epwFile.startDateActualYear());
     EXPECT_EQ(1999, epwFile.startDateActualYear().get());
@@ -768,14 +754,13 @@ TEST(Filetypes, EpwFile_AMY)
     EXPECT_EQ(Date(MonthOfYear::Dec, 31, 1999), epwFile.endDate());
     EXPECT_EQ(365, (epwFile.endDate() - epwFile.startDate()).totalDays() + 1);
     EXPECT_TRUE(epwFile.isActual());
-  }catch(...){
+  } catch (...) {
     ASSERT_TRUE(false);
   }
 }
 
-TEST(Filetypes, EpwFile_Wrap_AMY)
-{
-  try{
+TEST(Filetypes, EpwFile_Wrap_AMY) {
+  try {
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CO_Golden-NREL.wrap.amy");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
@@ -789,14 +774,14 @@ TEST(Filetypes, EpwFile_Wrap_AMY)
     EXPECT_EQ(-105.18, epwFile.longitude());
     EXPECT_EQ(-7, epwFile.timeZone());
     EXPECT_EQ(1829, epwFile.elevation());
-    EXPECT_EQ(Time(0,1,0,0), epwFile.timeStep());
+    EXPECT_EQ(Time(0, 1, 0, 0), epwFile.timeStep());
     EXPECT_EQ(DayOfWeek(DayOfWeek::Saturday), epwFile.startDayOfWeek());
     ASSERT_TRUE(epwFile.startDateActualYear());
     EXPECT_EQ(1999, epwFile.startDateActualYear().get());
     ASSERT_TRUE(epwFile.endDateActualYear());
     EXPECT_EQ(2000, epwFile.endDateActualYear().get());
     EXPECT_EQ(Date(MonthOfYear::Apr, 10, 1999), epwFile.startDate());
-    EXPECT_EQ(Date(MonthOfYear::Apr, 8, 2000), epwFile.endDate()); // 2000 is a leap year
+    EXPECT_EQ(Date(MonthOfYear::Apr, 8, 2000), epwFile.endDate());  // 2000 is a leap year
     EXPECT_EQ(365, (epwFile.endDate() - epwFile.startDate()).totalDays() + 1);
     EXPECT_TRUE(epwFile.isActual());
   } catch (...) {
@@ -804,16 +789,14 @@ TEST(Filetypes, EpwFile_Wrap_AMY)
   }
 }
 
-TEST(Filetypes, EpwFile_DataPoint)
-{
-  try{
+TEST(Filetypes, EpwFile_DataPoint) {
+  try {
     // Check that we can read all timeseries wind speed values, even if they are extreme
     path p = resourcesPath() / toPath("utilities/Filetypes/USA_CT_New.Haven-Tweed.AP.725045_TMY3.epw");
     EpwFile epwFile(p);
     EXPECT_EQ(p, epwFile.path());
-    std::vector<EpwDataPoint> data = epwFile.data();
-    for (EpwDataPoint dataPoint : data) {
-      EXPECT_NE(dataPoint.windSpeed(), boost::none);
+    for (const EpwDataPoint& dataPoint : epwFile.data()) {
+      EXPECT_TRUE(dataPoint.windSpeed());
       //EXPECT_NO_THROW(dataPoint.windSpeed().get());
     }
   } catch (...) {
@@ -821,8 +804,7 @@ TEST(Filetypes, EpwFile_DataPoint)
   }
 }
 
-TEST(Filetypes, EpwFile_parseDataPeriods)
-{
+TEST(Filetypes, EpwFile_parseDataPeriods) {
 
   // I would construct an empty EpwFile to call parseDataPeriods but I can't since it's a private Ctor, and the method itself is private...
 
@@ -862,7 +844,6 @@ DATA PERIODS,1,1,Data,Sunday, 1/ 1,1/1
 1999,1,1,23,0,?9?9?9?9E0?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9*9*9?9*9*9,-7.0,-9.0,84,81800,0,0,250,0,0,0,0,0,0,0,30,6.7,10,10,1.2,150,9,999999999,69,0.0310,0,88,0.330,999.0,99.0
 1999,1,1,24,0,?9?9?9?9E0?9?9?9?9?9?9?9?9?9?9?9?9?9?9?9*9*9?9*9*9,-7.0,-9.0,84,81700,0,0,250,0,0,0,0,0,0,0,30,6.7,10,10,1.2,150,9,999999999,69,0.0310,0,88,0.330,999.0,99.0
 )";
-
 
   boost::optional<EpwFile> _epwFile = EpwFile::loadFromString(epwFileStringNoYear);
   ASSERT_TRUE(_epwFile);
@@ -908,11 +889,9 @@ DATA PERIODS,1,1,Data,Sunday, 1/ 1/2012,1/1/2012
   ASSERT_TRUE(_epwFile);
   ASSERT_TRUE(_epwFile->startDateActualYear());
   EXPECT_EQ(2012, _epwFile->startDateActualYear().get());
-
 }
 
-TEST(Filetypes, EpwFile_parseHolidaysDaylightSavings)
-{
+TEST(Filetypes, EpwFile_parseHolidaysDaylightSavings) {
 
   // I would construct an empty EpwFile to call parseDataPeriods but I can't since it's a private Ctor, and the method itself is private...
 
@@ -958,7 +937,6 @@ DATA PERIODS,1,1,Data,Sunday, 1/ 1,1/1
   EXPECT_FALSE(_epwFile->daylightSavingEndDate());
   std::vector<EpwHoliday> holidays = _epwFile->holidays();
   EXPECT_TRUE(holidays.empty());
-
 
   // Taken from NREL/EnergyPlus: weather/Drycold_blast.epw
   // HOLIDAYS/DAYLIGHT SAVINGS,No, 4/29,10/28,9,Hol:001, 1/ 1,Hol:002, 2/19,Hol:003, 5/28,Hol:004, 7/ 4,Hol:005, 9/ 3,Hol:006,10/ 8,Hol:007,11/12,Hol:008,11/22,Hol:009,12/25
@@ -1010,25 +988,15 @@ DATA PERIODS,1,1,Data,Sunday, 1/ 1,1/1
   EXPECT_FALSE(holidays.empty());
   EXPECT_EQ(9u, holidays.size());
 
-
-  std::vector<std::pair<std::string, std::string> > expectedResult = {
-    {"Hol:001", "1/ 1"},
-    {"Hol:002", "2/19"},
-    {"Hol:003", "5/28"},
-    {"Hol:004", "7/ 4"},
-    {"Hol:005", "9/ 3"},
-    {"Hol:006", "10/ 8"},
-    {"Hol:007", "11/12"},
-    {"Hol:008", "11/22"},
-    {"Hol:009", "12/25"},
+  std::vector<std::pair<std::string, std::string>> expectedResult = {
+    {"Hol:001", "1/ 1"},  {"Hol:002", "2/19"},  {"Hol:003", "5/28"},  {"Hol:004", "7/ 4"},  {"Hol:005", "9/ 3"},
+    {"Hol:006", "10/ 8"}, {"Hol:007", "11/12"}, {"Hol:008", "11/22"}, {"Hol:009", "12/25"},
   };
 
   int i = 0;
-  for (const EpwHoliday& holiday: holidays) {
+  for (const EpwHoliday& holiday : holidays) {
     EXPECT_EQ(expectedResult[i].first, holiday.holidayName());
     EXPECT_EQ(expectedResult[i].second, holiday.holidayDateString());
     ++i;
   }
-
 }
-

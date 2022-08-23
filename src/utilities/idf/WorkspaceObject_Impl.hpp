@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,7 +31,7 @@
 #define UTILITIES_IDF_WORKSPACEOBJECT_IMPL_HPP
 
 #include <utilities/UtilitiesAPI.hpp>
-#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp>  // Signal-Slot replacement
 
 #include <utilities/idf/IdfObject_Impl.hpp>
 #include <utilities/idf/ObjectPointer.hpp>
@@ -44,88 +44,86 @@ class Workspace;
 
 namespace detail {
 
-  class Workspace_Impl; // forward declaration
+  class Workspace_Impl;  // forward declaration
 
-  struct UTILITIES_API ForwardPointer {
+  struct UTILITIES_API ForwardPointer
+  {
     unsigned fieldIndex;
-    Handle   targetHandle;
+    Handle targetHandle;
 
     /// \todo Default constructor needed to iterate over Source Map, but setting fieldIndex to 0
     /// seems sub-optimal.
     ForwardPointer() : fieldIndex(0) {}
-    ForwardPointer(unsigned i,const Handle& h) : fieldIndex(i), targetHandle(h) {}
+    ForwardPointer(unsigned i, const Handle& h) : fieldIndex(i), targetHandle(h) {}
   };
-  typedef std::set<ForwardPointer,FieldIndexLess<ForwardPointer> > ForwardPointerSet;
+  typedef std::set<ForwardPointer, FieldIndexLess<ForwardPointer>> ForwardPointerSet;
 
-  struct UTILITIES_API SourceData {
-    typedef ForwardPointer    pointer_type;
+  struct UTILITIES_API SourceData
+  {
+    typedef ForwardPointer pointer_type;
     typedef ForwardPointerSet pointer_set;
 
-    pointer_set     pointers;
+    pointer_set pointers;
 
     SourceData() {}
   };
   typedef boost::optional<SourceData> OptionalSourceData;
 
-  struct UTILITIES_API ReversePointer {
-    Handle   sourceHandle;
+  struct UTILITIES_API ReversePointer
+  {
+    Handle sourceHandle;
     unsigned fieldIndex;
 
     ReversePointer() : fieldIndex(0) {}
     ReversePointer(const Handle& h, unsigned i) : sourceHandle(h), fieldIndex(i) {}
   };
-  struct UTILITIES_API ReversePointerLess {
+  struct UTILITIES_API ReversePointerLess
+  {
     bool operator()(const ReversePointer& left, const ReversePointer& right) const {
       if (left.sourceHandle == right.sourceHandle) {
         return (left.fieldIndex < right.fieldIndex);
-      }
-      else {
+      } else {
         return (left.sourceHandle < right.sourceHandle);
       }
     }
   };
-  typedef std::set<ReversePointer,ReversePointerLess > ReversePointerSet;
+  typedef std::set<ReversePointer, ReversePointerLess> ReversePointerSet;
 
-  struct UTILITIES_API TargetData {
-    typedef ReversePointer    pointer_type;
+  struct UTILITIES_API TargetData
+  {
+    typedef ReversePointer pointer_type;
     typedef ReversePointerSet pointer_set;
 
     pointer_set reversePointers;
   };
   typedef boost::optional<TargetData> OptionalTargetData;
 
-  template<class T>
-  typename T::pointer_set::iterator getIteratorAtFieldIndex(
-                                                            typename T::pointer_set& pointerSet,
-                                                            unsigned fieldIndex)
-  {
-    return std::find_if(pointerSet.begin(),pointerSet.end(),
-                        std::bind(fieldIndexEqualTo<typename T::pointer_type>,std::placeholders::_1,fieldIndex));
+  template <class T>
+  typename T::pointer_set::iterator getIteratorAtFieldIndex(typename T::pointer_set& pointerSet, unsigned fieldIndex) {
+    return std::find_if(pointerSet.begin(), pointerSet.end(),
+                        std::bind(fieldIndexEqualTo<typename T::pointer_type>, std::placeholders::_1, fieldIndex));
   }
 
-  template<class T>
-  typename T::pointer_set::const_iterator getConstIteratorAtFieldIndex(
-                                                                       const typename T::pointer_set& pointerSet,
-                                                                       unsigned fieldIndex)
-  {
-    return std::find_if(pointerSet.begin(),pointerSet.end(),
-                        std::bind(fieldIndexEqualTo<typename T::pointer_type>,std::placeholders::_1,fieldIndex));
+  template <class T>
+  typename T::pointer_set::const_iterator getConstIteratorAtFieldIndex(const typename T::pointer_set& pointerSet, unsigned fieldIndex) {
+    return std::find_if(pointerSet.begin(), pointerSet.end(),
+                        std::bind(fieldIndexEqualTo<typename T::pointer_type>, std::placeholders::_1, fieldIndex));
   }
 
-  class UTILITIES_API WorkspaceObject_Impl : public IdfObject_Impl {
+  class UTILITIES_API WorkspaceObject_Impl : public IdfObject_Impl
+  {
    public:
-
     /** @name Constructors */
     //@{
 
     /** Construct from IdfObject_Impl (via idfObject). */
-    WorkspaceObject_Impl(const IdfObject& idfObject, Workspace_Impl* workspace, bool keepHandle=false);
+    WorkspaceObject_Impl(const IdfObject& idfObject, Workspace_Impl* workspace, bool keepHandle = false);
 
     /** Copy constructor. Assigns new handle, keeps same workspace pointer. Workspace should know
      *  whether copy is to live in original workspace, or in cloned workspace. If the latter,
      *  Workspace will need to update the workspace pointer, and any source and target pointer
      *  handles. */
-    WorkspaceObject_Impl(const WorkspaceObject_Impl& other, Workspace_Impl* workspace, bool keepHandle=false);
+    WorkspaceObject_Impl(const WorkspaceObject_Impl& other, Workspace_Impl* workspace, bool keepHandle = false);
 
     /** Complete construction process by pointing to workspace and replacing name pointers. */
     virtual void initializeOnAdd(bool expectToLosePointers = false);
@@ -153,7 +151,7 @@ namespace detail {
     /** Get the value of field index, if index < numFields(). Optionally, if returnDefault is
      *  passed in as true, getString will return the default value for non-existent
      *  (non-extensible) fields and fields with empty data, if a default exists. */
-    virtual boost::optional<std::string> getString(unsigned index, bool returnDefault=false,bool returnUninitializedEmpty=false) const override;
+    virtual boost::optional<std::string> getString(unsigned index, bool returnDefault = false, bool returnUninitializedEmpty = false) const override;
 
     boost::optional<std::string> getField(unsigned index) const;
 
@@ -244,8 +242,7 @@ namespace detail {
      *  this call is equivalent to iddObject().getField(index)->isObjectListField(). If a
      *  non-empty vector of refLists is specified, then true is only returned if there is a match
      *  between field index's object lists and the referencesLists argument. */
-    bool canBeSource(unsigned index,
-                     const std::vector<std::string>& refLists=std::vector<std::string>()) const;
+    bool canBeSource(unsigned index, const std::vector<std::string>& refLists = std::vector<std::string>()) const;
 
     /** Returns true if another object points to this object. */
     bool isTarget() const;
@@ -288,7 +285,7 @@ namespace detail {
 
     //@}
 
-   //@}
+    //@}
     /** @name Nano Signal */
     //@{
 
@@ -297,13 +294,12 @@ namespace detail {
 
     /** Emitted when this object is disconnected from the workspace.  Do not
      *  access any methods of this object as it is invalid. */
-    Nano::Signal<void(const Handle &)> onRemoveFromWorkspace;
+    Nano::Signal<void(const Handle&)> onRemoveFromWorkspace;
     // Nano::Signal<void(Handle&)> onRemoveFromWorkspaceRef;
 
-    Nano::Signal<void(const openstudio::Handle &)> workspaceObjectRemovedSignal;
+    Nano::Signal<void(const openstudio::Handle&)> workspaceObjectRemovedSignal;
 
    protected:
-
     friend class Workspace_Impl;
 
     /** Denotes that this object has been initialized by Workspace_Impl. */
@@ -317,7 +313,6 @@ namespace detail {
 
     void nullifyReversePointer(const Handle& sourceHandle, unsigned index);
 
-
     void setReversePointer(const Handle& sourceHandle, unsigned index);
 
     /** Called when restoring object because could not remove and retain validity. Double-checks
@@ -328,7 +323,7 @@ namespace detail {
 
     // QUERY HELPERS
 
-    virtual void populateValidityReport(ValidityReport& report,bool checkNames) const override;
+    virtual void populateValidityReport(ValidityReport& report, bool checkNames) const override;
 
     /** Returns true if the object is identifiable (within its collection) by IddObjectType and
      *  name. Also, if this object is in a reference list, its name must be unique within (single)
@@ -341,20 +336,17 @@ namespace detail {
     virtual bool fieldIsNonnullIfRequired(unsigned index) const override;
 
    private:
-
-    bool                m_initialized;
-    Workspace_Impl*     m_workspace;
-    OptionalSourceData  m_sourceData;
-    OptionalTargetData  m_targetData;
+    bool m_initialized;
+    Workspace_Impl* m_workspace;
+    OptionalSourceData m_sourceData;
+    OptionalTargetData m_targetData;
 
     // SETTER HELPERS
 
     /** Sets pointer at field index to targetHandle, and returns old target. */
     Handle setPointerImpl(unsigned index, const Handle& targetHandle);
 
-    boost::optional<Handle> convertToTargetHandle(const std::string& name,
-                                                     const std::set<std::string>& referenceLists,
-                                                     bool checkValidity) const;
+    boost::optional<Handle> convertToTargetHandle(const std::string& name, const std::set<std::string>& referenceLists, bool checkValidity) const;
 
     void restoreOriginalNumFields(unsigned n);
 
@@ -370,8 +362,8 @@ namespace detail {
   /** \relates WorkspaceObject_Impl */
   typedef std::vector<WorkspaceObject_ImplPtr> WorkspaceObject_ImplPtrVector;
 
-} // detail
+}  // namespace detail
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_WORKSPACEOBJECT_IMPL_HPP
+#endif  // UTILITIES_IDF_WORKSPACEOBJECT_IMPL_HPP

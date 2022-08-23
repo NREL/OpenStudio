@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -46,105 +46,85 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateLights( Lights & modelObject )
-{
-  // create, register, and name object
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Lights,
-                                                       modelObject);
+  boost::optional<IdfObject> ForwardTranslator::translateLights(Lights& modelObject) {
+    // create, register, and name object
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Lights, modelObject);
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
-  }
-
-  LightsDefinition definition = modelObject.lightsDefinition();
-
-  OptionalIdfObject relatedIdfObject;
-
-  boost::optional<Space> space = modelObject.space();
-  boost::optional<SpaceType> spaceType = modelObject.spaceType();
-  if (space){
-    boost::optional<ThermalZone> thermalZone = space->thermalZone();
-    if (thermalZone){
-      relatedIdfObject = translateAndMapModelObject(*thermalZone);
-      OS_ASSERT(relatedIdfObject);
-      idfObject.setString(LightsFields::ZoneorZoneListName,
-                          relatedIdfObject->name().get());
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
     }
-  }else if(spaceType){
-    relatedIdfObject = translateAndMapModelObject(*spaceType);
-    OS_ASSERT(relatedIdfObject);
-    idfObject.setString(LightsFields::ZoneorZoneListName,
-                        relatedIdfObject->name().get());
-  }
 
-  boost::optional<Schedule> schedule = modelObject.schedule();
-  if (schedule){
-    relatedIdfObject = translateAndMapModelObject(*schedule);
-    OS_ASSERT(relatedIdfObject);
-    idfObject.setString(LightsFields::ScheduleName, relatedIdfObject->name().get());
-  }
+    LightsDefinition definition = modelObject.lightsDefinition();
 
-  idfObject.setString(LightsFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());
+    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
+    idfObject.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
-  double multiplier = modelObject.multiplier();
-
-  boost::optional<double> d = definition.lightingLevel();
-  if (d){
-    idfObject.setDouble(LightsFields::LightingLevel, (*d)*multiplier);
-  }
-
-  d = definition.wattsperSpaceFloorArea();
-  if (d){
-    idfObject.setDouble(LightsFields::WattsperZoneFloorArea, (*d)*multiplier);
-  }
-
-  d = definition.wattsperPerson();
-  if (d){
-    idfObject.setDouble(LightsFields::WattsperPerson, (*d)*multiplier);
-  }
-
-  if (!definition.isReturnAirFractionDefaulted()){
-    idfObject.setDouble(LightsFields::ReturnAirFraction, definition.returnAirFraction());
-  }
-
-  if (!definition.isFractionRadiantDefaulted()){
-    idfObject.setDouble(LightsFields::FractionRadiant, definition.fractionRadiant());
-  }
-
-  if (!definition.isFractionVisibleDefaulted()){
-    idfObject.setDouble(LightsFields::FractionVisible, definition.fractionVisible());
-  }
-
-  if (!modelObject.isFractionReplaceableDefaulted()){
-    idfObject.setDouble(LightsFields::FractionReplaceable, modelObject.fractionReplaceable());
-  }
-
-  if (!modelObject.isEndUseSubcategoryDefaulted()){
-    idfObject.setString(LightsFields::EndUseSubcategory, modelObject.endUseSubcategory());
-  }
-
-  if (!definition.isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted()){
-    if (definition.returnAirFractionCalculatedfromPlenumTemperature()){
-      idfObject.setString(LightsFields::ReturnAirFractionCalculatedfromPlenumTemperature,"Yes");
-    }else{
-      idfObject.setString(LightsFields::ReturnAirFractionCalculatedfromPlenumTemperature,"No");
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(LightsFields::ScheduleName, idf_schedule_->nameString());
     }
+
+    idfObject.setString(LightsFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());
+
+    double multiplier = modelObject.multiplier();
+
+    boost::optional<double> d = definition.lightingLevel();
+    if (d) {
+      idfObject.setDouble(LightsFields::LightingLevel, (*d) * multiplier);
+    }
+
+    d = definition.wattsperSpaceFloorArea();
+    if (d) {
+      idfObject.setDouble(LightsFields::WattsperZoneFloorArea, (*d) * multiplier);
+    }
+
+    d = definition.wattsperPerson();
+    if (d) {
+      idfObject.setDouble(LightsFields::WattsperPerson, (*d) * multiplier);
+    }
+
+    if (!definition.isReturnAirFractionDefaulted()) {
+      idfObject.setDouble(LightsFields::ReturnAirFraction, definition.returnAirFraction());
+    }
+
+    if (!definition.isFractionRadiantDefaulted()) {
+      idfObject.setDouble(LightsFields::FractionRadiant, definition.fractionRadiant());
+    }
+
+    if (!definition.isFractionVisibleDefaulted()) {
+      idfObject.setDouble(LightsFields::FractionVisible, definition.fractionVisible());
+    }
+
+    if (!modelObject.isFractionReplaceableDefaulted()) {
+      idfObject.setDouble(LightsFields::FractionReplaceable, modelObject.fractionReplaceable());
+    }
+
+    if (!modelObject.isEndUseSubcategoryDefaulted()) {
+      idfObject.setString(LightsFields::EndUseSubcategory, modelObject.endUseSubcategory());
+    }
+
+    if (!definition.isReturnAirFractionCalculatedfromPlenumTemperatureDefaulted()) {
+      if (definition.returnAirFractionCalculatedfromPlenumTemperature()) {
+        idfObject.setString(LightsFields::ReturnAirFractionCalculatedfromPlenumTemperature, "Yes");
+      } else {
+        idfObject.setString(LightsFields::ReturnAirFractionCalculatedfromPlenumTemperature, "No");
+      }
+    }
+
+    if (!definition.isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted()) {
+      idfObject.setDouble(LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient1,
+                          definition.returnAirFractionFunctionofPlenumTemperatureCoefficient1());
+    }
+
+    if (!definition.isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted()) {
+      idfObject.setDouble(LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient2,
+                          definition.returnAirFractionFunctionofPlenumTemperatureCoefficient2());
+    }
+
+    return idfObject;
   }
 
-  if (!definition.isReturnAirFractionFunctionofPlenumTemperatureCoefficient1Defaulted()){
-    idfObject.setDouble(LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient1,
-                        definition.returnAirFractionFunctionofPlenumTemperatureCoefficient1());
-  }
+}  // namespace energyplus
 
-  if (!definition.isReturnAirFractionFunctionofPlenumTemperatureCoefficient2Defaulted()){
-    idfObject.setDouble(LightsFields::ReturnAirFractionFunctionofPlenumTemperatureCoefficient2,
-                        definition.returnAirFractionFunctionofPlenumTemperatureCoefficient2());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

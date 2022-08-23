@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,8 +39,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirflowNetwork_DuctViewFactors_Basic)
-{
+TEST_F(ModelFixture, AirflowNetwork_DuctViewFactors_Basic) {
   // openstudio::Logger::instance().standardOutLogger().enable();
   // openstudio::Logger::instance().standardOutLogger().setLogLevel(Info);
   Model model;
@@ -60,5 +59,4 @@ TEST_F(ModelFixture, AirflowNetwork_DuctViewFactors_Basic)
   dvf.setViewFactor(surface, 1.0);
 
   dvf.setViewFactor(surface, 1.0);
-
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,36 +40,33 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateWindowMaterialSimpleGlazingSystem( const WorkspaceObject & workspaceObject )
-{
-  OptionalModelObject result;
-  SimpleGlazing simpleGlazing( m_model );
-  OptionalString optS = workspaceObject.name();
-  if(optS)
-  {
-    simpleGlazing.setName(*optS);
+  OptionalModelObject ReverseTranslator::translateWindowMaterialSimpleGlazingSystem(const WorkspaceObject& workspaceObject) {
+    OptionalModelObject result;
+    SimpleGlazing simpleGlazing(m_model);
+    OptionalString optS = workspaceObject.name();
+    if (optS) {
+      simpleGlazing.setName(*optS);
+    }
+
+    OptionalDouble d = workspaceObject.getDouble(WindowMaterial_SimpleGlazingSystemFields::UFactor);
+    if (d) {
+      simpleGlazing.setUFactor(*d);
+    }
+
+    d = workspaceObject.getDouble(WindowMaterial_SimpleGlazingSystemFields::SolarHeatGainCoefficient);
+    if (d) {
+      simpleGlazing.setSolarHeatGainCoefficient(*d);
+    }
+
+    d = workspaceObject.getDouble(WindowMaterial_SimpleGlazingSystemFields::VisibleTransmittance);
+    if (d) {
+      simpleGlazing.setVisibleTransmittance(*d);
+    }
+
+    result = simpleGlazing;
+    return result;
   }
 
-  OptionalDouble d = workspaceObject.getDouble(WindowMaterial_SimpleGlazingSystemFields::UFactor);
-  if(d) {
-    simpleGlazing.setUFactor(*d);
-  }
+}  // namespace energyplus
 
-  d = workspaceObject.getDouble(WindowMaterial_SimpleGlazingSystemFields::SolarHeatGainCoefficient);
-  if(d) {
-    simpleGlazing.setSolarHeatGainCoefficient(*d);
-  }
-
-  d = workspaceObject.getDouble(WindowMaterial_SimpleGlazingSystemFields::VisibleTransmittance);
-  if(d) {
-    simpleGlazing.setVisibleTransmittance(*d);
-  }
-
-  result = simpleGlazing;
-  return result;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

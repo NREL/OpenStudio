@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,120 +37,118 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneHVACBaseboardRadiantConvectiveElectric_Impl;
+    class ZoneHVACBaseboardRadiantConvectiveElectric_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneHVACBaseboardRadiantConvectiveElectric is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:Baseboard:RadiantConvective:Electric'. */
-class MODEL_API ZoneHVACBaseboardRadiantConvectiveElectric : public ZoneHVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneHVACBaseboardRadiantConvectiveElectric is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:Baseboard:RadiantConvective:Electric'. */
+  class MODEL_API ZoneHVACBaseboardRadiantConvectiveElectric : public ZoneHVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ZoneHVACBaseboardRadiantConvectiveElectric(const Model& model);
+    explicit ZoneHVACBaseboardRadiantConvectiveElectric(const Model& model);
 
-  virtual ~ZoneHVACBaseboardRadiantConvectiveElectric() {}
+    virtual ~ZoneHVACBaseboardRadiantConvectiveElectric() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> heatingDesignCapacityMethodValues();
+    static std::vector<std::string> heatingDesignCapacityMethodValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
-  std::string heatingDesignCapacityMethod() const;
+    std::string heatingDesignCapacityMethod() const;
 
-  boost::optional<double> heatingDesignCapacity() const;
+    boost::optional<double> heatingDesignCapacity() const;
 
-  bool isHeatingDesignCapacityAutosized() const;
+    bool isHeatingDesignCapacityAutosized() const;
 
-  double heatingDesignCapacityPerFloorArea() const;
+    double heatingDesignCapacityPerFloorArea() const;
 
-  double fractionofAutosizedHeatingDesignCapacity() const;
+    double fractionofAutosizedHeatingDesignCapacity() const;
 
-  double efficiency() const;
+    double efficiency() const;
 
-  double fractionRadiant() const;
+    double fractionRadiant() const;
 
-  double fractionofRadiantEnergyIncidentonPeople() const;
+    double fractionofRadiantEnergyIncidentonPeople() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+    bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
 
-  bool setHeatingDesignCapacity(double heatingDesignCapacity);
+    bool setHeatingDesignCapacity(double heatingDesignCapacity);
 
-  void autosizeHeatingDesignCapacity();
+    void autosizeHeatingDesignCapacity();
 
-  bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
+    bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
 
-  bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
+    bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
-  bool setEfficiency(double efficiency);
+    bool setEfficiency(double efficiency);
 
-  bool setFractionRadiant(double fractionRadiant);
+    bool setFractionRadiant(double fractionRadiant);
 
-  bool setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople);
+    bool setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Returns the optional ThermalZone that this ZoneHVACBaseboardRadiantConvectiveElectric is attached to
+    /** Returns the optional ThermalZone that this ZoneHVACBaseboardRadiantConvectiveElectric is attached to
    **/
-  boost::optional<ThermalZone> thermalZone() const override;
+    boost::optional<ThermalZone> thermalZone() const override;
 
-  /** Adds this ZoneHVACBaseboardRadiantConvectiveElectric to the thermal zone.  Returns true if the operation was
+    /** Adds this ZoneHVACBaseboardRadiantConvectiveElectric to the thermal zone.  Returns true if the operation was
    *  successful.
    **/
-  bool addToThermalZone(ThermalZone & thermalZone);
+    bool addToThermalZone(ThermalZone& thermalZone);
 
-  /** Detaches this ZoneHVACBaseboardRadiantConvectiveElectric from the associated ThermalZone.
+    /** Detaches this ZoneHVACBaseboardRadiantConvectiveElectric from the associated ThermalZone.
    *  If there is no attached ThermalZone there is no effect.
    **/
-  void removeFromThermalZone();
+    void removeFromThermalZone();
 
-  boost::optional<double> autosizedHeatingDesignCapacity() const ;
+    boost::optional<double> autosizedHeatingDesignCapacity() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl ImplType;
 
+    explicit ZoneHVACBaseboardRadiantConvectiveElectric(std::shared_ptr<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl ImplType;
+    friend class detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneHVACBaseboardRadiantConvectiveElectric");
+  };
 
-  explicit ZoneHVACBaseboardRadiantConvectiveElectric(std::shared_ptr<detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl> impl);
+  /** \relates ZoneHVACBaseboardRadiantConvectiveElectric*/
+  typedef boost::optional<ZoneHVACBaseboardRadiantConvectiveElectric> OptionalZoneHVACBaseboardRadiantConvectiveElectric;
 
-  friend class detail::ZoneHVACBaseboardRadiantConvectiveElectric_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneHVACBaseboardRadiantConvectiveElectric");
-};
+  /** \relates ZoneHVACBaseboardRadiantConvectiveElectric*/
+  typedef std::vector<ZoneHVACBaseboardRadiantConvectiveElectric> ZoneHVACBaseboardRadiantConvectiveElectricVector;
 
-/** \relates ZoneHVACBaseboardRadiantConvectiveElectric*/
-typedef boost::optional<ZoneHVACBaseboardRadiantConvectiveElectric> OptionalZoneHVACBaseboardRadiantConvectiveElectric;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates ZoneHVACBaseboardRadiantConvectiveElectric*/
-typedef std::vector<ZoneHVACBaseboardRadiantConvectiveElectric> ZoneHVACBaseboardRadiantConvectiveElectricVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEHVACBASEBOARDRADIANTCONVECTIVEELECTRIC_HPP
-
+#endif  // MODEL_ZONEHVACBASEBOARDRADIANTCONVECTIVEELECTRIC_HPP

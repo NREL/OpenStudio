@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,80 +40,80 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl;
+    class ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExternalInterfaceFunctionalMockupUnitImportToVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitImport:To:Variable'. */
-class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToVariable : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ExternalInterfaceFunctionalMockupUnitImportToVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:FunctionalMockupUnitImport:To:Variable'. */
+  class MODEL_API ExternalInterfaceFunctionalMockupUnitImportToVariable : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ExternalInterfaceFunctionalMockupUnitImportToVariable(const Model& model,
-                                                                 const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
-                                                                 const std::string& fMUInstanceName,
-                                                                 const std::string& fMUVariableName,
-                                                                 double initialValue);
+    explicit ExternalInterfaceFunctionalMockupUnitImportToVariable(const Model& model, const ExternalInterfaceFunctionalMockupUnitImport& fMUFile,
+                                                                   const std::string& fMUInstanceName, const std::string& fMUVariableName,
+                                                                   double initialValue);
 
-  virtual ~ExternalInterfaceFunctionalMockupUnitImportToVariable() {}
+    virtual ~ExternalInterfaceFunctionalMockupUnitImportToVariable() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
+    ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
 
-  std::string fMUInstanceName() const;
+    std::string fMUInstanceName() const;
 
-  std::string fMUVariableName() const;
+    std::string fMUVariableName() const;
 
-  double initialValue() const;
+    double initialValue() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
+    bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
-  bool setFMUInstanceName(const std::string& fMUInstanceName);
+    bool setFMUInstanceName(const std::string& fMUInstanceName);
 
-  bool setFMUVariableName(const std::string& fMUVariableName);
+    bool setFMUVariableName(const std::string& fMUVariableName);
 
-  bool setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl ImplType;
 
-  explicit ExternalInterfaceFunctionalMockupUnitImportToVariable(std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl> impl);
+    explicit ExternalInterfaceFunctionalMockupUnitImportToVariable(
+      std::shared_ptr<detail::ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl> impl);
 
-  friend class detail::ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImportToVariable");
-};
+    friend class detail::ExternalInterfaceFunctionalMockupUnitImportToVariable_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImportToVariable");
+  };
 
-/** \relates ExternalInterfaceFunctionalMockupUnitImportToVariable*/
-typedef boost::optional<ExternalInterfaceFunctionalMockupUnitImportToVariable> OptionalExternalInterfaceFunctionalMockupUnitImportToVariable;
+  /** \relates ExternalInterfaceFunctionalMockupUnitImportToVariable*/
+  typedef boost::optional<ExternalInterfaceFunctionalMockupUnitImportToVariable> OptionalExternalInterfaceFunctionalMockupUnitImportToVariable;
 
-/** \relates ExternalInterfaceFunctionalMockupUnitImportToVariable*/
-typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportToVariable> ExternalInterfaceFunctionalMockupUnitImportToVariableVector;
+  /** \relates ExternalInterfaceFunctionalMockupUnitImportToVariable*/
+  typedef std::vector<ExternalInterfaceFunctionalMockupUnitImportToVariable> ExternalInterfaceFunctionalMockupUnitImportToVariableVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOVARIABLE_HPP
+#endif  // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTTOVARIABLE_HPP

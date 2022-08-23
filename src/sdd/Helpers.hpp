@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,49 +35,48 @@
 #include "../utilities/core/Assert.hpp"
 
 namespace pugi {
-  class xml_node;
-  class xml_attribute;
-}
+class xml_node;
+class xml_attribute;
+}  // namespace pugi
 
 namespace openstudio {
-  namespace sdd {
+namespace sdd {
 
-    // Helper to make a vector of pugi::xml_node of all children under an element (regardless of their tag)
-    std::vector<pugi::xml_node> makeVectorOfChildren(const pugi::xml_node& root);
+  // Helper to make a vector of pugi::xml_node of all children under an element (regardless of their tag)
+  std::vector<pugi::xml_node> makeVectorOfChildren(const pugi::xml_node& root);
 
-    // Helper to make a vector of pugi::xml_node of children matching a specific tag (first-descendants only)
-    std::vector<pugi::xml_node> makeVectorOfChildren(const pugi::xml_node& root, const char * tagName);
+  // Helper to make a vector of pugi::xml_node of children matching a specific tag (first-descendants only)
+  std::vector<pugi::xml_node> makeVectorOfChildren(const pugi::xml_node& root, const char* tagName);
 
-    // Helper to make a vector of pugi::xml_node of children matching a specific tag (any level descendants)
-    std::vector<pugi::xml_node> makeVectorOfChildrenRecursive(const pugi::xml_node& root, const std::string& tagName);
+  // Helper to make a vector of pugi::xml_node of children matching a specific tag (any level descendants)
+  std::vector<pugi::xml_node> makeVectorOfChildrenRecursive(const pugi::xml_node& root, const std::string& tagName);
 
-    // Lexical cast the text() of a node as a double
-    // Checks if the element actually exists, then if it can be converted to a double.
-    // (pugi::xml_node::text().as_double() will return a default value in all cases, which is too permissive)
-    boost::optional<double> lexicalCastToDouble(const pugi::xml_node& element);
+  // Lexical cast the text() of a node as a double
+  // Checks if the element actually exists, then if it can be converted to a double.
+  // (pugi::xml_node::text().as_double() will return a default value in all cases, which is too permissive)
+  boost::optional<double> lexicalCastToDouble(const pugi::xml_node& element);
 
-    // Lexical cast an attribute's value() as a double
-    // Checks if the attribute actually exists, then if it can be converted to a double
-    boost::optional<double> lexicalCastToDouble(const pugi::xml_attribute& attr);
+  // Lexical cast an attribute's value() as a double
+  // Checks if the attribute actually exists, then if it can be converted to a double
+  boost::optional<double> lexicalCastToDouble(const pugi::xml_attribute& attr);
 
-    // Lexical cast the text() of a node as an integer
-    // Checks if the element actually exists, then if it can be converted to an int.
-    boost::optional<int> lexicalCastToInt(const pugi::xml_node& element);
+  // Lexical cast the text() of a node as an integer
+  // Checks if the element actually exists, then if it can be converted to an int.
+  boost::optional<int> lexicalCastToInt(const pugi::xml_node& element);
 
-    // Lexical cast an attribute's value() as an integer
-    // Checks if the attribute actually exists, then if it can be converted to an integer
-    boost::optional<int> lexicalCastToInt(const pugi::xml_attribute& attr);
+  // Lexical cast an attribute's value() as an integer
+  // Checks if the attribute actually exists, then if it can be converted to an integer
+  boost::optional<int> lexicalCastToInt(const pugi::xml_attribute& attr);
 
-    // Lexical cast an attribute's value() as an Unsigned
-    // Checks if the attribute actually exists, then if it can be converted to an Unsigned
-    // (boost::lexical_cast<unsigned>(-1) would not throw but return gibberish)
-    boost::optional<unsigned> lexicalCastToUnsigned(const pugi::xml_attribute& attr);
+  // Lexical cast an attribute's value() as an Unsigned
+  // Checks if the attribute actually exists, then if it can be converted to an Unsigned
+  // (boost::lexical_cast<unsigned>(-1) would not throw but return gibberish)
+  boost::optional<unsigned> lexicalCastToUnsigned(const pugi::xml_attribute& attr);
 
-    // Returns the 'Proj' element from any element in the tree
-    pugi::xml_node getProjectElement(const pugi::xml_node& element);
+  // Returns the 'Proj' element from any element in the tree
+  pugi::xml_node getProjectElement(const pugi::xml_node& element);
 
-  } // sdd
-} // openstudio
+}  // namespace sdd
+}  // namespace openstudio
 
-
-#endif // SDD_HELPERS_HPP
+#endif  // SDD_HELPERS_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,434 +33,442 @@
 #include "ModelAPI.hpp"
 #include "HVACComponent_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-class Space;
-class DaylightingControl;
-class IlluminanceMap;
-class RenderingColor;
-class HVACTemplateZoneIdealLoadsAirSystem;
-class ThermostatSetpointDualSetpoint;
-class Thermostat;
-class ZoneControlContaminantController;
-class ZoneControlHumidistat;
-class ThermalZone;
-class SizingZone;
-class PortList;
-class ZoneMixing;
-class ZoneHVACEquipmentList;
-class AirflowNetworkZone;
-class ZonePropertyUserViewFactorsBySurfaceName;
+  class Space;
+  class DaylightingControl;
+  class IlluminanceMap;
+  class RenderingColor;
+  class HVACTemplateZoneIdealLoadsAirSystem;
+  class ThermostatSetpointDualSetpoint;
+  class Thermostat;
+  class ZoneControlContaminantController;
+  class ZoneControlHumidistat;
+  class ThermalZone;
+  class SizingZone;
+  class PortList;
+  class ZoneMixing;
+  class ZoneHVACEquipmentList;
+  class AirflowNetworkZone;
+  class ZonePropertyUserViewFactorsBySurfaceName;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** ThermalZone_Impl is a HVACComponent_Impl that is the implementation class for ThermalZone.*/
-  class MODEL_API ThermalZone_Impl : public HVACComponent_Impl {
+    /** ThermalZone_Impl is a HVACComponent_Impl that is the implementation class for ThermalZone.*/
+    class MODEL_API ThermalZone_Impl : public HVACComponent_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ThermalZone_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      ThermalZone_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ThermalZone_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      ThermalZone_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ThermalZone_Impl(const ThermalZone_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      ThermalZone_Impl(const ThermalZone_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ThermalZone_Impl() {}
+      virtual ~ThermalZone_Impl() {}
 
-    //@}
+      //@}
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      // set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const override;
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-    /// get a vector of allowable children types
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      /// get a vector of allowable children types
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
+      virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent>& prev) override;
 
-    /** @name Getters */
-    //@{
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    int multiplier() const;
+      /** @name Getters */
+      //@{
 
-    bool isMultiplierDefaulted() const;
+      int multiplier() const;
 
-    boost::optional<double> ceilingHeight() const;
+      bool isMultiplierDefaulted() const;
 
-    bool isCeilingHeightDefaulted() const;
+      boost::optional<double> ceilingHeight() const;
 
-    bool isCeilingHeightAutocalculated() const;
+      bool isCeilingHeightDefaulted() const;
 
-    boost::optional<double> volume() const;
+      bool isCeilingHeightAutocalculated() const;
 
-    bool isVolumeDefaulted() const;
+      boost::optional<double> volume() const;
 
-    bool isVolumeAutocalculated() const;
+      bool isVolumeDefaulted() const;
 
-    boost::optional<std::string> zoneInsideConvectionAlgorithm() const;
+      bool isVolumeAutocalculated() const;
 
-    boost::optional<std::string> zoneOutsideConvectionAlgorithm() const;
+      boost::optional<std::string> zoneInsideConvectionAlgorithm() const;
 
-    std::string zoneConditioningEquipmentListName() const;
+      boost::optional<std::string> zoneOutsideConvectionAlgorithm() const;
 
-    boost::optional<ThermostatSetpointDualSetpoint> thermostatSetpointDualSetpoint() const;
+      std::string zoneConditioningEquipmentListName() const;
 
-    boost::optional<Thermostat> thermostat() const;
+      boost::optional<ThermostatSetpointDualSetpoint> thermostatSetpointDualSetpoint() const;
 
-    boost::optional<ZoneControlContaminantController> zoneControlContaminantController() const;
+      boost::optional<Thermostat> thermostat() const;
 
-    boost::optional<ZoneControlHumidistat> zoneControlHumidistat() const;
+      boost::optional<ZoneControlContaminantController> zoneControlContaminantController() const;
 
-    double fractionofZoneControlledbyPrimaryDaylightingControl() const;
+      boost::optional<ZoneControlHumidistat> zoneControlHumidistat() const;
 
-    bool isFractionofZoneControlledbyPrimaryDaylightingControlDefaulted() const;
+      double fractionofZoneControlledbyPrimaryDaylightingControl() const;
 
-    double fractionofZoneControlledbySecondaryDaylightingControl() const;
+      bool isFractionofZoneControlledbyPrimaryDaylightingControlDefaulted() const;
 
-    bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const;
+      double fractionofZoneControlledbySecondaryDaylightingControl() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      bool isFractionofZoneControlledbySecondaryDaylightingControlDefaulted() const;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    ZonePropertyUserViewFactorsBySurfaceName getZonePropertyUserViewFactorsBySurfaceName() const;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      ZonePropertyUserViewFactorsBySurfaceName getZonePropertyUserViewFactorsBySurfaceName() const;
 
-    bool setMultiplier(int multiplier);
+      //@}
+      /** @name Setters */
+      //@{
 
-    void resetMultiplier();
+      bool setMultiplier(int multiplier);
 
-    bool setCeilingHeight(boost::optional<double> ceilingHeight);
+      void resetMultiplier();
 
-    bool setCeilingHeight(double ceilingHeight);
+      bool setCeilingHeight(boost::optional<double> ceilingHeight);
 
-    void resetCeilingHeight();
+      bool setCeilingHeight(double ceilingHeight);
 
-    void autocalculateCeilingHeight();
+      void resetCeilingHeight();
 
-    bool setVolume(boost::optional<double> volume);
+      void autocalculateCeilingHeight();
 
-    bool setVolume(double volume);
+      bool setVolume(boost::optional<double> volume);
 
-    void resetVolume();
+      bool setVolume(double volume);
 
-    void autocalculateVolume();
+      void resetVolume();
 
-    bool setZoneInsideConvectionAlgorithm(boost::optional<std::string> zoneInsideConvectionAlgorithm);
+      void autocalculateVolume();
 
-    bool setZoneInsideConvectionAlgorithm(std::string zoneInsideConvectionAlgorithm);
+      bool setZoneInsideConvectionAlgorithm(boost::optional<std::string> zoneInsideConvectionAlgorithm);
 
-    void resetZoneInsideConvectionAlgorithm();
+      bool setZoneInsideConvectionAlgorithm(std::string zoneInsideConvectionAlgorithm);
 
-    bool setZoneOutsideConvectionAlgorithm(boost::optional<std::string> zoneOutsideConvectionAlgorithm);
+      void resetZoneInsideConvectionAlgorithm();
 
-    bool setZoneOutsideConvectionAlgorithm(std::string zoneOutsideConvectionAlgorithm);
+      bool setZoneOutsideConvectionAlgorithm(boost::optional<std::string> zoneOutsideConvectionAlgorithm);
 
-    void resetZoneOutsideConvectionAlgorithm();
+      bool setZoneOutsideConvectionAlgorithm(std::string zoneOutsideConvectionAlgorithm);
 
-    bool setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
+      void resetZoneOutsideConvectionAlgorithm();
 
-    bool setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint& thermostat);
+      bool setZoneConditioningEquipmentListName(std::string zoneConditioningEquipmentListName);
 
-    void resetThermostatSetpointDualSetpoint();
+      bool setThermostatSetpointDualSetpoint(const ThermostatSetpointDualSetpoint& thermostat);
 
-    bool setThermostat(const Thermostat& thermostat);
+      void resetThermostatSetpointDualSetpoint();
 
-    void resetThermostat();
+      bool setThermostat(const Thermostat& thermostat);
 
-    bool setZoneControlHumidistat(const ZoneControlHumidistat & humidistat);
+      void resetThermostat();
 
-    void resetZoneControlHumidistat();
+      bool setZoneControlHumidistat(const ZoneControlHumidistat& humidistat);
 
-    bool setZoneControlContaminantController(const ZoneControlContaminantController & contaminantController);
+      void resetZoneControlHumidistat();
 
-    void resetZoneControlContaminantController();
+      bool setZoneControlContaminantController(const ZoneControlContaminantController& contaminantController);
 
-    bool setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl);
+      void resetZoneControlContaminantController();
 
-    void resetFractionofZoneControlledbyPrimaryDaylightingControl();
+      bool setFractionofZoneControlledbyPrimaryDaylightingControl(double fractionofZoneControlledbyPrimaryDaylightingControl);
 
-    bool setFractionofZoneControlledbySecondaryDaylightingControl(double fractionofZoneControlledbySecondaryDaylightingControl);
+      void resetFractionofZoneControlledbyPrimaryDaylightingControl();
 
-    void resetFractionofZoneControlledbySecondaryDaylightingControl();
+      bool setFractionofZoneControlledbySecondaryDaylightingControl(double fractionofZoneControlledbySecondaryDaylightingControl);
 
-    //@}
+      void resetFractionofZoneControlledbySecondaryDaylightingControl();
 
-    unsigned returnAirPort() const;
+      //@}
 
-    unsigned zoneAirPort() const;
+      unsigned returnAirPort() const;
 
-    OptionalModelObject returnAirModelObject() const;
+      unsigned zoneAirPort() const;
 
-    std::vector<ModelObject> returnAirModelObjects() const;
+      OptionalModelObject returnAirModelObject() const;
 
-    Node zoneAirNode() const;
+      std::vector<ModelObject> returnAirModelObjects() const;
 
-    boost::optional<DaylightingControl> primaryDaylightingControl() const;
+      Node zoneAirNode() const;
 
-    bool setPrimaryDaylightingControl(const DaylightingControl& daylightingControl);
+      boost::optional<DaylightingControl> primaryDaylightingControl() const;
 
-    void resetPrimaryDaylightingControl();
+      bool setPrimaryDaylightingControl(const DaylightingControl& daylightingControl);
 
-    boost::optional<DaylightingControl> secondaryDaylightingControl() const;
+      void resetPrimaryDaylightingControl();
 
-    bool setSecondaryDaylightingControl(const DaylightingControl& daylightingControl);
+      boost::optional<DaylightingControl> secondaryDaylightingControl() const;
 
-    void resetSecondaryDaylightingControl();
+      bool setSecondaryDaylightingControl(const DaylightingControl& daylightingControl);
 
-    boost::optional<IlluminanceMap> illuminanceMap() const;
+      void resetSecondaryDaylightingControl();
 
-    bool setIlluminanceMap(const IlluminanceMap& illuminanceMap);
+      boost::optional<IlluminanceMap> illuminanceMap() const;
 
-    void resetIlluminanceMap();
+      bool setIlluminanceMap(const IlluminanceMap& illuminanceMap);
 
-    bool setDaylightingControlsAndIlluminanceMaps(const boost::optional<DaylightingControl>& primaryDaylightingControl,
-                                                  const boost::optional<DaylightingControl>& secondaryDaylightingControl,
-                                                  const boost::optional<IlluminanceMap>& illuminanceMap);
+      void resetIlluminanceMap();
 
-    void checkDaylightingControlsAndIlluminanceMaps();
+      bool setDaylightingControlsAndIlluminanceMaps(const boost::optional<DaylightingControl>& primaryDaylightingControl,
+                                                    const boost::optional<DaylightingControl>& secondaryDaylightingControl,
+                                                    const boost::optional<IlluminanceMap>& illuminanceMap);
 
-    /// Returns the rendering color.
-    boost::optional<RenderingColor> renderingColor() const;
+      void checkDaylightingControlsAndIlluminanceMaps();
 
-    /// Sets the rendering color.
-    bool setRenderingColor(const RenderingColor& renderingColor);
+      boost::optional<Schedule> daylightingControlsAvailabilitySchedule() const;
 
-    /// Resets the rendering color.
-    void resetRenderingColor();
+      bool setDaylightingControlsAvailabilitySchedule(Schedule& schedule);
 
-    std::vector<ModelObject> equipment() const;
+      void resetDaylightingControlsAvailabilitySchedule();
 
-    /// returns all spaces in this thermal zone
-    std::vector<Space> spaces() const;
+      /// Returns the rendering color.
+      boost::optional<RenderingColor> renderingColor() const;
 
-    /** Accumulates the floorArea of spaces. Does not include space multiplier. */
-    double floorArea() const;
+      /// Sets the rendering color.
+      bool setRenderingColor(const RenderingColor& renderingColor);
 
-    /** Accumulates the exterior surface area (m^2) of spaces. Does not include space
+      /// Resets the rendering color.
+      void resetRenderingColor();
+
+      std::vector<ModelObject> equipment() const;
+
+      /// returns all spaces in this thermal zone
+      std::vector<Space> spaces() const;
+
+      /** Accumulates the floorArea of spaces. Does not include space multiplier. */
+      double floorArea() const;
+
+      /** Accumulates the exterior surface area (m^2) of spaces. Does not include space
      *  multiplier. */
-    double exteriorSurfaceArea() const;
+      double exteriorSurfaceArea() const;
 
-    /** Accumulates the exterior wall area (m^2) of spaces. Does not include space
+      /** Accumulates the exterior wall area (m^2) of spaces. Does not include space
      *  multiplier. */
-    double exteriorWallArea() const;
+      double exteriorWallArea() const;
 
-    // TODO: How should this interact with the volume field. If there is an interaction,
-    // how should Building calculate its airVolume and accumulate infiltration design
-    // flow rate?
-    /** Accumulates the air volume (m^3) of spaces. Does not include space multiplier. */
-    double airVolume() const;
+      // TODO: How should this interact with the volume field. If there is an interaction,
+      // how should Building calculate its airVolume and accumulate infiltration design
+      // flow rate?
+      /** Accumulates the air volume (m^3) of spaces. Does not include space multiplier. */
+      double airVolume() const;
 
-    /** Returns the number of people in the thermal zone. Does not include space multiplier. Does include people multiplier. */
-    double numberOfPeople() const;
+      /** Returns the number of people in the thermal zone. Does not include space multiplier. Does include people multiplier. */
+      double numberOfPeople() const;
 
-    /** Returns the number of people per floor area (people/m^2). Does not include space multiplier. Does include people multiplier. */
-    double peoplePerFloorArea() const;
+      /** Returns the number of people per floor area (people/m^2). Does not include space multiplier. Does include people multiplier. */
+      double peoplePerFloorArea() const;
 
-    /** Returns the total floor area per person in this thermal zone (m^2/person). Does not include space multiplier. Does include people multiplier. */
-    double floorAreaPerPerson() const;
+      /** Returns the total floor area per person in this thermal zone (m^2/person). Does not include space multiplier. Does include people multiplier. */
+      double floorAreaPerPerson() const;
 
-    /** Returns the lighting power (W) in this thermal zone. Does not include space multiplier. Does include lighting multiplier. */
-    double lightingPower() const;
+      /** Returns the lighting power (W) in this thermal zone. Does not include space multiplier. Does include lighting multiplier. */
+      double lightingPower() const;
 
-    /** Returns the lighting power density (W/m^2) of this thermal zone. Does not include space multiplier. Does include lighting multiplier. */
-    double lightingPowerPerFloorArea() const;
+      /** Returns the lighting power density (W/m^2) of this thermal zone. Does not include space multiplier. Does include lighting multiplier. */
+      double lightingPowerPerFloorArea() const;
 
-    /** Returns the lighting power per person (W/person) of this thermal zone. Does not include space multiplier. Does include lighting multiplier. */
-    double lightingPowerPerPerson() const;
+      /** Returns the lighting power per person (W/person) of this thermal zone. Does not include space multiplier. Does include lighting multiplier. */
+      double lightingPowerPerPerson() const;
 
-    /** Returns the electric equipment power (W) of this thermal zone. Does not include space multiplier. */
-    double electricEquipmentPower() const;
+      /** Returns the electric equipment power (W) of this thermal zone. Does not include space multiplier. */
+      double electricEquipmentPower() const;
 
-    /** Returns the electric equipment power density (W/m^2) of this thermal zone. Does not include space multiplier. Does include equipment multiplier. */
-    double electricEquipmentPowerPerFloorArea() const;
+      /** Returns the electric equipment power density (W/m^2) of this thermal zone. Does not include space multiplier. Does include equipment multiplier. */
+      double electricEquipmentPowerPerFloorArea() const;
 
-    /** Returns the electric equipment power per person (W/person) of this thermal zone. Does not include space multiplier. Does include equipment multiplier. */
-    double electricEquipmentPowerPerPerson() const;
+      /** Returns the electric equipment power per person (W/person) of this thermal zone. Does not include space multiplier. Does include equipment multiplier. */
+      double electricEquipmentPowerPerPerson() const;
 
-    /** Returns the gas equipment power (W) of this thermal zone. Does not include space multiplier. Does include equipment multiplier. */
-    double gasEquipmentPower() const;
+      /** Returns the gas equipment power (W) of this thermal zone. Does not include space multiplier. Does include equipment multiplier. */
+      double gasEquipmentPower() const;
 
-    /** Returns the gas equipment power density (W/m^2) of this thermal zone. Does not include space multiplier. Does include equipment multiplier. */
-    double gasEquipmentPowerPerFloorArea() const;
+      /** Returns the gas equipment power density (W/m^2) of this thermal zone. Does not include space multiplier. Does include equipment multiplier. */
+      double gasEquipmentPowerPerFloorArea() const;
 
-    /** Returns the gas equipment power per person (W/person) of this thermal zone. Does not include space multiplier. Does include equipment multiplier. */
-    double gasEquipmentPowerPerPerson() const;
+      /** Returns the gas equipment power per person (W/person) of this thermal zone. Does not include space multiplier. Does include equipment multiplier. */
+      double gasEquipmentPowerPerPerson() const;
 
-    /** Returns the infiltration design flow rate (m^3/s) in this thermal zone. Ignores
-     *  SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
-    double infiltrationDesignFlowRate() const;
+      /** Returns the infiltration design flow rate (m^3/s) in this thermal zone.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
+      double infiltrationDesignFlowRate() const;
 
-    /** Returns the infiltration design flow per space floor area (m^3/m^2*s) in this thermal zone.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
-    double infiltrationDesignFlowPerSpaceFloorArea() const;
+      /** Returns the infiltration design flow per space floor area (m^3/m^2*s) in this thermal zone.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
+      double infiltrationDesignFlowPerSpaceFloorArea() const;
 
-    /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) in this thermal zone.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
-    double infiltrationDesignFlowPerExteriorSurfaceArea() const;
+      /** Returns the infiltration design flow per exterior surface area (m^3/m^2*s) in this thermal zone.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
+      double infiltrationDesignFlowPerExteriorSurfaceArea() const;
 
-    /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) in this thermal zone.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
-    double infiltrationDesignFlowPerExteriorWallArea() const;
+      /** Returns the infiltration design flow per exterior wall area (m^3/m^2*s) in this thermal zone.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
+      double infiltrationDesignFlowPerExteriorWallArea() const;
 
-    /** Returns the infiltration design air changes per hour (1/h) in this thermal zone.
-     *  Ignores SpaceInfiltrationEffectiveLeakageArea objects. Does not include space multiplier. */
-    double infiltrationDesignAirChangesPerHour() const;
+      /** Returns the infiltration design air changes per hour (1/h) in this thermal zone.
+     *  Ignores SpaceInfiltrationEffectiveLeakageArea and SpaceInfiltrationFlowCoefficient objects. Does not include space multiplier. */
+      double infiltrationDesignAirChangesPerHour() const;
 
-    /// Returns the HVACTemplateZoneIdealLoadsAirSystem in this ThermalZone if present.
-    boost::optional<HVACTemplateZoneIdealLoadsAirSystem> hvacTemplateZoneIdealLoadsAirSystem() const;
+      /// Returns the HVACTemplateZoneIdealLoadsAirSystem in this ThermalZone if present.
+      boost::optional<HVACTemplateZoneIdealLoadsAirSystem> hvacTemplateZoneIdealLoadsAirSystem() const;
 
-    /** Determines if this zone is conditioned, based on the SqlFile output. Returns 'Yes' if zone is conditioned. */
-    boost::optional<std::string> isConditioned() const;
+      /** Determines if this zone is conditioned, based on the SqlFile output. Returns 'Yes' if zone is conditioned. */
+      boost::optional<std::string> isConditioned() const;
 
-    /// Combines all spaces referencing this zone into a single space referencing this zone.
-    /// If this zone has no spaces referencing it, then an uninitialized optional space is returned.
-    /// If this zone has one space referencing it, then that space is returned.
-    /// If this zone is referenced by more than one space, then geometry from all spaces is added to a single zone.
-    /// The space origin is at the minimum x, y, z coordinate of all space origins, direction of relative north is preserved if same for all spaces.
-    /// If all spaces reference the same building story then that is preserved, otherwise it is cleared.
-    /// If all spaces reference the same space type then that is preserved, otherwise space loads from the space type are applied to the new space directly.
-    /// Direct child space loads are converted to absolute levels.
-    /// Constructions and schedules are hard applied to all child surfaces and loads.
-    /// Surfaces referencing other surfaces within the space are converted to interior partitions.
-    boost::optional<Space> combineSpaces();
+      /// Combines all spaces referencing this zone into a single space referencing this zone.
+      /// If this zone has no spaces referencing it, then an uninitialized optional space is returned.
+      /// If this zone has one space referencing it, then that space is returned.
+      /// If this zone is referenced by more than one space, then geometry from all spaces is added to a single zone.
+      /// The space origin is at the minimum x, y, z coordinate of all space origins, direction of relative north is preserved if same for all spaces.
+      /// If all spaces reference the same building story then that is preserved, otherwise it is cleared.
+      /// If all spaces reference the same space type then that is preserved, otherwise space loads from the space type are applied to the new space directly.
+      /// Direct child space loads are converted to absolute levels.
+      /// Constructions and schedules are hard applied to all child surfaces and loads.
+      /// Surfaces referencing other surfaces within the space are converted to interior partitions.
+      boost::optional<Space> combineSpaces();
 
-    SizingZone sizingZone() const;
+      SizingZone sizingZone() const;
 
-    void disconnect() override;
+      void disconnect() override;
 
-    bool isRemovable() const override;
+      bool isRemovable() const override;
 
-    std::vector<IdfObject> remove() override;
+      std::vector<IdfObject> remove() override;
 
-    bool useIdealAirLoads() const;
+      bool useIdealAirLoads() const;
 
-    bool setUseIdealAirLoads(bool useIdealAirLoads);
+      bool setUseIdealAirLoads(bool useIdealAirLoads);
 
-    bool addToNode(Node & node) override;
+      // Handles the logic of connecting the thermal zone to a Node: allowing or disallowing, and adding the equipment (AirTerminal) to the
+      // ZoneEquipmentList as appropriate
+      // Only allows connection to a node that's on the demand branch of an AirLoopHVAC, on the node right before the Demand Mixer, and as long as there
+      // are no other ThermalZones already connected on the branch
+      bool addToNodeImpl(Node& node);
 
-    bool addToNodeImpl(Node & node);
+      // Calls addToNodeImpl, then removes connections to all pre-existing AirLoopHVAC
+      bool addToNode(Node& node) override;
 
-    bool multiAddToNode(Node & node);
+      // Calls addToNodeImpl, not touching connections to all pre-existing AirLoopHVAC
+      bool multiAddToNode(Node& node);
 
-    PortList inletPortList() const;
+      PortList inletPortList() const;
 
-    PortList exhaustPortList() const;
+      PortList exhaustPortList() const;
 
-    PortList returnPortList() const;
+      PortList returnPortList() const;
 
+      ZoneHVACEquipmentList zoneHVACEquipmentList() const;
 
-    ZoneHVACEquipmentList zoneHVACEquipmentList() const;
+      bool addEquipment(const ModelObject& equipment);
 
-    bool addEquipment(const ModelObject & equipment);
+      bool removeEquipment(const ModelObject& equipment);
 
-    bool removeEquipment(const ModelObject & equipment);
+      std::string loadDistributionScheme() const;
 
-    std::string loadDistributionScheme() const;
+      bool setLoadDistributionScheme(std::string scheme);
 
-    bool setLoadDistributionScheme(std::string scheme);
+      bool setCoolingPriority(const ModelObject& equipment, unsigned priority);
 
-    bool setCoolingPriority(const ModelObject & equipment, unsigned priority);
+      bool setHeatingPriority(const ModelObject& equipment, unsigned priority);
 
-    bool setHeatingPriority(const ModelObject & equipment, unsigned priority);
+      std::vector<ModelObject> equipmentInHeatingOrder() const;
 
-    std::vector<ModelObject> equipmentInHeatingOrder() const;
+      std::vector<ModelObject> equipmentInCoolingOrder() const;
 
-    std::vector<ModelObject> equipmentInCoolingOrder() const;
+      boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
 
-    boost::optional<Schedule> sequentialCoolingFractionSchedule(const ModelObject& equipment) const;
+      boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
 
-    boost::optional<Schedule> sequentialHeatingFractionSchedule(const ModelObject& equipment) const;
+      bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
-    bool setSequentialCoolingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
+      bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
 
-    bool setSequentialHeatingFractionSchedule(const ModelObject& equipment, Schedule& schedule);
+      // Convenience methods
+      boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
+      boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
 
-    // Convenience methods
-    boost::optional<double> sequentialCoolingFraction(const ModelObject& equipment) const;
-    boost::optional<double> sequentialHeatingFraction(const ModelObject& equipment) const;
+      bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
+      bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
 
-    bool setSequentialCoolingFraction(const ModelObject& equipment, double fraction);
-    bool setSequentialHeatingFraction(const ModelObject& equipment, double fraction);
+      virtual ModelObject clone(Model model) const override;
 
+      boost::optional<AirLoopHVACSupplyPlenum> airLoopHVACSupplyPlenum() const;
 
-    virtual ModelObject clone(Model model) const override;
+      boost::optional<AirLoopHVACReturnPlenum> airLoopHVACReturnPlenum() const;
 
-    boost::optional<AirLoopHVACSupplyPlenum> airLoopHVACSupplyPlenum() const;
+      bool isPlenum() const;
+      bool canBePlenum() const;
+      bool setSupplyPlenum(const ThermalZone& plenumZone);
+      bool setSupplyPlenum(const ThermalZone& plenumZone, unsigned branchIndex);
+      void removeSupplyPlenum();
+      void removeSupplyPlenum(unsigned branchIndex);
+      void removeSupplyPlenum(const AirLoopHVAC& airloop);
+      void removeSupplyPlenum(const AirLoopHVAC& airloop, unsigned branchIndex);
+      bool setReturnPlenum(const ThermalZone& plenumZone);
+      bool setReturnPlenum(const ThermalZone& plenumZone, AirLoopHVAC& airLoop);
+      void removeReturnPlenum();
+      void removeReturnPlenum(AirLoopHVAC& airLoop);
 
-    boost::optional<AirLoopHVACReturnPlenum> airLoopHVACReturnPlenum() const;
+      std::vector<ZoneMixing> zoneMixing() const;
+      std::vector<ZoneMixing> supplyZoneMixing() const;
+      std::vector<ZoneMixing> exhaustZoneMixing() const;
 
-    bool isPlenum() const;
-    bool canBePlenum() const;
-    bool setSupplyPlenum(const ThermalZone & plenumZone);
-    bool setSupplyPlenum(const ThermalZone & plenumZone, unsigned branchIndex);
-    void removeSupplyPlenum();
-    void removeSupplyPlenum(unsigned branchIndex);
-    void removeSupplyPlenum(const AirLoopHVAC & airloop);
-    void removeSupplyPlenum(const AirLoopHVAC & airloop, unsigned branchIndex);
-    bool setReturnPlenum(const ThermalZone & plenumZone);
-    bool setReturnPlenum(const ThermalZone & plenumZone, AirLoopHVAC & airLoop);
-    void removeReturnPlenum();
-    void removeReturnPlenum(AirLoopHVAC & airLoop);
+      boost::optional<HVACComponent> airLoopHVACTerminal() const;
+      std::vector<HVACComponent> airLoopHVACTerminals() const;
 
-    std::vector<ZoneMixing> zoneMixing() const;
-    std::vector<ZoneMixing> supplyZoneMixing() const;
-    std::vector<ZoneMixing> exhaustZoneMixing() const;
+      AirflowNetworkZone getAirflowNetworkZone();
+      boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
 
-    boost::optional<HVACComponent> airLoopHVACTerminal() const;
-    std::vector<HVACComponent> airLoopHVACTerminals() const;
+      std::vector<AirLoopHVAC> airLoopHVACs() const;
 
-    AirflowNetworkZone getAirflowNetworkZone();
-    boost::optional<AirflowNetworkZone> airflowNetworkZone() const;
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ThermalZone");
 
-    std::vector<AirLoopHVAC> airLoopHVACs() const;
+      boost::optional<ModelObject> thermostatSetpointDualSetpointAsModelObject() const;
+      boost::optional<ModelObject> zoneControlHumidistatAsModelObject() const;
+      boost::optional<ModelObject> primaryDaylightingControlAsModelObject() const;
+      boost::optional<ModelObject> secondaryDaylightingControlAsModelObject() const;
+      boost::optional<ModelObject> illuminanceMapAsModelObject() const;
+      boost::optional<ModelObject> renderingColorAsModelObject() const;
+      std::vector<ModelObject> equipmentAsModelObjects();
+      std::vector<ModelObject> spacesAsModelObjects() const;
 
-   protected:
+      bool setThermostatSetpointDualSetpointAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setZoneControlHumidistatAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setPrimaryDaylightingControlAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setSecondaryDaylightingControlAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setIlluminanceMapAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setRenderingColorAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
 
-   private:
-    REGISTER_LOGGER("openstudio.model.ThermalZone");
+  }  // namespace detail
 
-    boost::optional<ModelObject> thermostatSetpointDualSetpointAsModelObject() const;
-    boost::optional<ModelObject> zoneControlHumidistatAsModelObject() const;
-    boost::optional<ModelObject> primaryDaylightingControlAsModelObject() const;
-    boost::optional<ModelObject> secondaryDaylightingControlAsModelObject() const;
-    boost::optional<ModelObject> illuminanceMapAsModelObject() const;
-    boost::optional<ModelObject> renderingColorAsModelObject() const;
-    std::vector<ModelObject> equipmentAsModelObjects();
-    std::vector<ModelObject> spacesAsModelObjects() const;
+}  // namespace model
+}  // namespace openstudio
 
-    bool setThermostatSetpointDualSetpointAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setZoneControlHumidistatAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setPrimaryDaylightingControlAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setSecondaryDaylightingControlAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setIlluminanceMapAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setRenderingColorAsModelObject(const boost::optional<ModelObject>& modelObject);
-  };
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_THERMALZONE_IMPL_HPP
+#endif  // MODEL_THERMALZONE_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,22 +37,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, Screen_DefaultConstructor)
-{
+TEST_F(ModelFixture, Screen_DefaultConstructor) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    Screen screen(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      Screen screen(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, Screen_GettersSetters)
-{
+TEST_F(ModelFixture, Screen_GettersSetters) {
   Model m;
   Screen screen(m);
 
@@ -74,13 +72,11 @@ TEST_F(ModelFixture, Screen_GettersSetters)
   EXPECT_FALSE(screen.setReflectedBeamTransmittanceAccountingMethod("BadChoice"));
   EXPECT_EQ("DoNotModel", screen.reflectedBeamTransmittanceAccountingMethod());
 
-
   // Diffuse Solar Reflectance:  Double
   // Check Idd default: 0.08, overriden by ctor arg with same value
   EXPECT_EQ(diffuseSolarReflectance, screen.diffuseSolarReflectance());
   EXPECT_TRUE(screen.setDiffuseSolarReflectance(0.04));
   EXPECT_EQ(0.04, screen.diffuseSolarReflectance());
-
 
   // Diffuse Visible Reflectance:  Double
   // Check Idd default: 0.08, overriden by ctor arg with same value
@@ -98,7 +94,6 @@ TEST_F(ModelFixture, Screen_GettersSetters)
   screen.resetThermalHemisphericalEmissivity();
   EXPECT_EQ(0.9, screen.thermalHemisphericalEmissivity());
 
-
   // Conductivity:  Double
   // Check Idd default: 221.0
   EXPECT_TRUE(screen.isConductivityDefaulted());
@@ -108,7 +103,6 @@ TEST_F(ModelFixture, Screen_GettersSetters)
   EXPECT_EQ(110.5, screen.conductivity());
   screen.resetConductivity();
   EXPECT_EQ(221.0, screen.conductivity());
-
 
   // Screen Material Spacing:  Double
   // Check Idd default: 0.00157, overriden by ctor arg with same value
@@ -122,7 +116,6 @@ TEST_F(ModelFixture, Screen_GettersSetters)
   EXPECT_TRUE(screen.setScreenMaterialDiameter(0.01));
   EXPECT_EQ(0.01, screen.screenMaterialDiameter());
 
-
   // Screen to Glass Distance:  Double
   // Check Idd default: 0.025
   EXPECT_TRUE(screen.isScreentoGlassDistanceDefaulted());
@@ -132,7 +125,6 @@ TEST_F(ModelFixture, Screen_GettersSetters)
   EXPECT_EQ(0.01, screen.screentoGlassDistance());
   screen.resetScreentoGlassDistance();
   EXPECT_EQ(0.025, screen.screentoGlassDistance());
-
 
   // Top Opening Multiplier:  Double
   // Check Idd default: 0.0
@@ -144,7 +136,6 @@ TEST_F(ModelFixture, Screen_GettersSetters)
   screen.resetTopOpeningMultiplier();
   EXPECT_EQ(0.0, screen.topOpeningMultiplier());
 
-
   // Bottom Opening Multiplier:  Double
   // Check Idd default: 0.0
   EXPECT_TRUE(screen.isBottomOpeningMultiplierDefaulted());
@@ -154,7 +145,6 @@ TEST_F(ModelFixture, Screen_GettersSetters)
   EXPECT_EQ(0.0, screen.bottomOpeningMultiplier());
   screen.resetBottomOpeningMultiplier();
   EXPECT_EQ(0.0, screen.bottomOpeningMultiplier());
-
 
   // Left Side Opening Multiplier:  Double
   // Check Idd default: 0.0
@@ -166,7 +156,6 @@ TEST_F(ModelFixture, Screen_GettersSetters)
   screen.resetLeftSideOpeningMultiplier();
   EXPECT_EQ(0.0, screen.leftSideOpeningMultiplier());
 
-
   // Right Side Opening Multiplier:  Double
   // Check Idd default: 0.0
   EXPECT_TRUE(screen.isRightSideOpeningMultiplierDefaulted());
@@ -176,7 +165,6 @@ TEST_F(ModelFixture, Screen_GettersSetters)
   EXPECT_EQ(0.0, screen.rightSideOpeningMultiplier());
   screen.resetRightSideOpeningMultiplier();
   EXPECT_EQ(0.0, screen.rightSideOpeningMultiplier());
-
 
   // Angle of Resolution for Screen Transmittance Output Map:  String
   // Check Idd default: "0"
@@ -189,5 +177,4 @@ TEST_F(ModelFixture, Screen_GettersSetters)
   // Test an invalid choice
   EXPECT_FALSE(screen.setAngleofResolutionforScreenTransmittanceOutputMap("BadChoice"));
   EXPECT_EQ("1", screen.angleofResolutionforScreenTransmittanceOutputMap());
-
 }

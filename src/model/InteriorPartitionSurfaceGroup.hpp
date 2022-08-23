@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,83 +39,82 @@ class Transformation;
 
 namespace model {
 
-class Space;
-class InteriorPartitionSurface;
+  class Space;
+  class InteriorPartitionSurface;
 
-namespace detail {
+  namespace detail {
 
-  class InteriorPartitionSurfaceGroup_Impl;
+    class InteriorPartitionSurfaceGroup_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** InteriorPartitionSurfaceGroup is a PlanarSurfaceGroup that wraps the OpenStudio IDD object 'OS_InteriorPartitionSurfaceGroup'. */
-class MODEL_API InteriorPartitionSurfaceGroup : public PlanarSurfaceGroup {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** InteriorPartitionSurfaceGroup is a PlanarSurfaceGroup that wraps the OpenStudio IDD object 'OS_InteriorPartitionSurfaceGroup'. */
+  class MODEL_API InteriorPartitionSurfaceGroup : public PlanarSurfaceGroup
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit InteriorPartitionSurfaceGroup(const Model& model);
+    explicit InteriorPartitionSurfaceGroup(const Model& model);
 
-  virtual ~InteriorPartitionSurfaceGroup() {}
+    virtual ~InteriorPartitionSurfaceGroup() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  int multiplier() const;
+    int multiplier() const;
 
-  bool isMultiplierDefaulted() const;
+    bool isMultiplierDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setMultiplier(int multiplier);
+    bool setMultiplier(int multiplier);
 
-  void resetMultiplier();
+    void resetMultiplier();
 
-  //@}
+    //@}
 
-  /// Returns the parent Space.
-  boost::optional<Space> space() const;
+    /// Returns the parent Space.
+    boost::optional<Space> space() const;
 
-  /// Sets the parent Space.
-  bool setSpace(const Space& space);
+    /// Sets the parent Space.
+    bool setSpace(const Space& space);
 
-  void resetSpace();
+    void resetSpace();
 
-  /// Returns all \link InteriorPartitionSurface InteriorPartitionSurfaces \endlink in this group.
-  std::vector<InteriorPartitionSurface> interiorPartitionSurfaces() const;
+    /// Returns all \link InteriorPartitionSurface InteriorPartitionSurfaces \endlink in this group.
+    std::vector<InteriorPartitionSurface> interiorPartitionSurfaces() const;
 
- protected:
-  /// @cond
-  typedef detail::InteriorPartitionSurfaceGroup_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::InteriorPartitionSurfaceGroup_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit InteriorPartitionSurfaceGroup(std::shared_ptr<detail::InteriorPartitionSurfaceGroup_Impl> impl);
+    explicit InteriorPartitionSurfaceGroup(std::shared_ptr<detail::InteriorPartitionSurfaceGroup_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.InteriorPartitionSurfaceGroup");
+  };
 
-  REGISTER_LOGGER("openstudio.model.InteriorPartitionSurfaceGroup");
-};
+  /** \relates InteriorPartitionSurfaceGroup*/
+  typedef boost::optional<InteriorPartitionSurfaceGroup> OptionalInteriorPartitionSurfaceGroup;
 
-/** \relates InteriorPartitionSurfaceGroup*/
-typedef boost::optional<InteriorPartitionSurfaceGroup> OptionalInteriorPartitionSurfaceGroup;
+  /** \relates InteriorPartitionSurfaceGroup*/
+  typedef std::vector<InteriorPartitionSurfaceGroup> InteriorPartitionSurfaceGroupVector;
 
-/** \relates InteriorPartitionSurfaceGroup*/
-typedef std::vector<InteriorPartitionSurfaceGroup> InteriorPartitionSurfaceGroupVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_INTERIORPARTITIONSURFACEGROUP_HPP
-
+#endif  // MODEL_INTERIORPARTITIONSURFACEGROUP_HPP

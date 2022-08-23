@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -62,13 +62,12 @@ const boost::regex& regexEmbeddedFixedPrecisionValue() {
 }
 
 bool isFixedPrecisionValue(const std::string& s) {
-  return boost::regex_match(s,regexFixedPrecisionValue());
+  return boost::regex_match(s, regexFixedPrecisionValue());
 }
 
 bool containsFixedPrecisionValue(const std::string& s) {
-  return boost::regex_search(s,regexEmbeddedFixedPrecisionValue());
+  return boost::regex_search(s, regexEmbeddedFixedPrecisionValue());
 }
-
 
 const boost::regex& regexScientificNotationValue() {
   // Equivalent to "-?\d*[.]?\d+[EDed][-\+]?\d+" in standard flavor
@@ -87,13 +86,12 @@ const boost::regex& regexEmbeddedScientificNotationValue() {
 }
 
 bool isScientificNotationValue(const std::string& s) {
-  return boost::regex_match(s,regexScientificNotationValue());
+  return boost::regex_match(s, regexScientificNotationValue());
 }
 
 bool containsScientificNotationValue(const std::string& s) {
-  return boost::regex_search(s,regexEmbeddedScientificNotationValue());
+  return boost::regex_search(s, regexEmbeddedScientificNotationValue());
 }
-
 
 const boost::regex& regexBaseUnit() {
   // ETH@20120320 It doesn't seem like the last [\\l\\u]{0,10} should not be necessary, but now
@@ -165,13 +163,12 @@ const boost::regex& regexEmbeddedAtomicUnit() {
 }
 
 bool isAtomicUnit(const std::string& s) {
-  return boost::regex_match(s,regexAtomicUnit());
+  return boost::regex_match(s, regexAtomicUnit());
 }
 
 bool containsAtomicUnit(const std::string& s) {
-  return boost::regex_search(s,regexEmbeddedAtomicUnit());
+  return boost::regex_search(s, regexEmbeddedAtomicUnit());
 }
-
 
 const boost::regex& regexCompoundUnit() {
   // ETH@20120320 Somehow a quantity (0.12 kg) is getting by this regex. Now is not a good
@@ -195,13 +192,12 @@ const boost::regex& regexEmbeddedCompoundUnit() {
 }
 
 bool isCompoundUnit(const std::string& s) {
-  return boost::regex_match(s,regexCompoundUnit());
+  return boost::regex_match(s, regexCompoundUnit());
 }
 
 bool containsCompoundUnit(const std::string& s) {
-  return boost::regex_search(s,regexEmbeddedCompoundUnit());
+  return boost::regex_search(s, regexEmbeddedCompoundUnit());
 }
-
 
 const boost::regex& regexScaledUnit() {
   std::stringstream regexComposer;
@@ -219,11 +215,11 @@ const boost::regex& regexEmbeddedScaledUnit() {
 }
 
 bool isScaledUnit(const std::string& s) {
-  return boost::regex_match(s,regexScaledUnit());
+  return boost::regex_match(s, regexScaledUnit());
 }
 
 bool containsScaledUnit(const std::string& s) {
-  return boost::regex_search(s,regexEmbeddedScaledUnit());
+  return boost::regex_search(s, regexEmbeddedScaledUnit());
 }
 
 const boost::regex& regexDirectScaledUnit() {
@@ -239,39 +235,37 @@ const boost::regex& regexDirectScaledUnit() {
 const boost::regex& regexEmbeddedDirectScaledUnit() {
   std::stringstream regexComposer;
   regexComposer << "(?:(?:^| )(" << regexDirectScaledUnit().str() << ")(?:$| |\\.$|\\. |,|;)|"
-                       << "\\((" << regexDirectScaledUnit().str() << ")\\)|"
-                       << "\\{(" << regexDirectScaledUnit().str() << ")\\}|"
-                       << "\\[(" << regexDirectScaledUnit().str() << ")\\])";
+                << "\\((" << regexDirectScaledUnit().str() << ")\\)|"
+                << "\\{(" << regexDirectScaledUnit().str() << ")\\}|"
+                << "\\[(" << regexDirectScaledUnit().str() << ")\\])";
   static boost::regex rgx(regexComposer.str());
   return rgx;
 }
 
-std::pair<std::string,std::pair<unsigned,std::string> >
-decomposeDirectScaledUnit(const std::string& s) {
+std::pair<std::string, std::pair<unsigned, std::string>> decomposeDirectScaledUnit(const std::string& s) {
   if (!isDirectScaledUnit(s)) {
-    LOG_FREE_AND_THROW("openstudio.QuantityRegex","Cannot decompose " << s
-      << " into a numerator and scaled denominator because it is not an direct scaled unit.");
+    LOG_FREE_AND_THROW("openstudio.QuantityRegex",
+                       "Cannot decompose " << s << " into a numerator and scaled denominator because it is not an direct scaled unit.");
   }
-  std::pair<std::string,std::pair<unsigned,std::string> > result;
+  std::pair<std::string, std::pair<unsigned, std::string>> result;
   boost::match_results<std::string::const_iterator> match;
 
-  boost::regex_search(s,match,regexDirectScaledUnit());
-  result.first = std::string(match[1].first,match[1].second);
-  std::string powerOfTen(match[2].first,match[2].second);
+  boost::regex_search(s, match, regexDirectScaledUnit());
+  result.first = std::string(match[1].first, match[1].second);
+  std::string powerOfTen(match[2].first, match[2].second);
   result.second.first = powerOfTen.size() - 1;
-  result.second.second = std::string(match[3].first,match[3].second);
+  result.second.second = std::string(match[3].first, match[3].second);
 
   return result;
 }
 
 bool isDirectScaledUnit(const std::string& s) {
-  return boost::regex_match(s,regexDirectScaledUnit());
+  return boost::regex_match(s, regexDirectScaledUnit());
 }
 
 bool containsDirectScaledUnit(const std::string& s) {
-  return boost::regex_search(s,regexEmbeddedDirectScaledUnit());
+  return boost::regex_search(s, regexEmbeddedDirectScaledUnit());
 }
-
 
 const boost::regex& regexUnit() {
   std::stringstream regexComposer;
@@ -283,27 +277,24 @@ const boost::regex& regexUnit() {
 const boost::regex& regexEmbeddedUnit() {
   std::stringstream regexComposer;
   regexComposer << "(?:(?:^| )" << regexUnit().str() << "(?:$| |\\.$|\\. |,|;)|"
-                       << "\\(" << regexUnit().str() << "\\)|"
-                       << "\\{" << regexUnit().str() << "\\}|"
-                       << "\\[" << regexUnit().str() << "\\])";
+                << "\\(" << regexUnit().str() << "\\)|"
+                << "\\{" << regexUnit().str() << "\\}|"
+                << "\\[" << regexUnit().str() << "\\])";
   static boost::regex rgx(regexComposer.str());
   return rgx;
 }
 
 bool isUnit(const std::string& s) {
-  std::string tmp = regexUnit().str();
-  return boost::regex_match(s,regexUnit());
+  return boost::regex_match(s, regexUnit());
 }
 
 bool containsUnit(const std::string& s) {
-  return boost::regex_search(s,regexEmbeddedUnit());
+  return boost::regex_search(s, regexEmbeddedUnit());
 }
-
 
 const boost::regex& regexQuantity() {
   std::stringstream regexComposer;
-  regexComposer << "(" << regexFixedPrecisionValue().str() << "|"
-    << regexScientificNotationValue().str() << ")( |/)" << regexUnit().str();
+  regexComposer << "(" << regexFixedPrecisionValue().str() << "|" << regexScientificNotationValue().str() << ")( |/)" << regexUnit().str();
   static boost::regex rgx(regexComposer.str());
   return rgx;
 }
@@ -316,133 +307,134 @@ const boost::regex& regexEmbeddedQuantity() {
 }
 
 bool isQuantity(const std::string& s) {
-  return boost::regex_match(s,regexQuantity());
+  return boost::regex_match(s, regexQuantity());
 }
 
 bool containsQuantity(const std::string& s) {
-  return boost::regex_search(s,regexEmbeddedQuantity());
+  return boost::regex_search(s, regexEmbeddedQuantity());
 }
 
-std::pair<std::string,std::string> decomposeQuantityString(const std::string& s) {
+std::pair<std::string, std::string> decomposeQuantityString(const std::string& s) {
 
-  std::pair<std::string,std::string> result;
+  std::pair<std::string, std::string> result;
   boost::match_results<std::string::const_iterator> match;
-  if (!boost::regex_match(s,match,regexQuantity())) {
-    LOG_FREE_AND_THROW("openstudio.QuantityRegex","Cannot decompose " << s
-      << " into (value,unit) because it is not a quantity.");
+  if (!boost::regex_match(s, match, regexQuantity())) {
+    LOG_FREE_AND_THROW("openstudio.QuantityRegex", "Cannot decompose " << s << " into (value,unit) because it is not a quantity.");
   }
   // pull out number
-  result.first = std::string(match[1].first,match[1].second);
+  result.first = std::string(match[1].first, match[1].second);
   // see if there is / between number and unit
-  std::string temp(match[2].first,match[2].second);
+  std::string temp(match[2].first, match[2].second);
   if (temp == "/") {
     result.second = "1/";
   }
   // pull out unit
-  result.second += std::string(match[3].first,match[3].second);
+  result.second += std::string(match[3].first, match[3].second);
 
   return result;
-
 }
 
-std::pair<std::string,std::string> decomposeScaledUnitString(const std::string& s) {
+std::pair<std::string, std::string> decomposeScaledUnitString(const std::string& s) {
   if (!isScaledUnit(s)) {
-    LOG_FREE_AND_THROW("openstudio.QuantityRegex","Cannot decompose " << s
-      << " into a scale and a compound unit because it is not a scaled unit.");
+    LOG_FREE_AND_THROW("openstudio.QuantityRegex", "Cannot decompose " << s << " into a scale and a compound unit because it is not a scaled unit.");
   }
 
-  std::pair<std::string,std::string> result;
+  std::pair<std::string, std::string> result;
   boost::match_results<std::string::const_iterator> match;
   boost::regex scaleRegex("(\\\\?[\\l\\u]{1,5})\\(");
   // pull out scale
-  if (!boost::regex_search(s,match,scaleRegex,boost::match_continuous)) {
-    LOG_FREE_AND_THROW("openstudio.QuantityRegex","Could not extract a scale from the scaled unit "
-      << s << ".");
+  if (!boost::regex_search(s, match, scaleRegex, boost::match_continuous)) {
+    LOG_FREE_AND_THROW("openstudio.QuantityRegex", "Could not extract a scale from the scaled unit " << s << ".");
   }
-  result.first = std::string(match[1].first,match[1].second);
+  result.first = std::string(match[1].first, match[1].second);
 
   // pull out compound unit
-  if (!boost::regex_search(s,match,regexEmbeddedCompoundUnit())) {
-    LOG_FREE_AND_THROW("openstudio.QuantityRegex","Could not extract a compound unit from " << s << ".");
+  if (!boost::regex_search(s, match, regexEmbeddedCompoundUnit())) {
+    LOG_FREE_AND_THROW("openstudio.QuantityRegex", "Could not extract a compound unit from " << s << ".");
   }
   int i = 1;
-  while (!match[i].matched) {++i;}
-  result.second = std::string(match[1].first,match[1].second);
+  while (!match[i].matched) {
+    ++i;
+  }
+  result.second = std::string(match[1].first, match[1].second);
 
   return result;
 }
 
-std::pair< std::vector<std::string>,std::vector<std::string> > decomposeCompoundUnitString(
-    const std::string& s) {
+std::pair<std::vector<std::string>, std::vector<std::string>> decomposeCompoundUnitString(const std::string& s) {
 
   if (!isCompoundUnit(s)) {
-    LOG_FREE_AND_THROW("openstudio.QuantityRegex","Cannot decompose " << s
-      << " into AtomicUnits in the numerator and denominator because it is not a compound unit.");
+    LOG_FREE_AND_THROW("openstudio.QuantityRegex",
+                       "Cannot decompose " << s << " into AtomicUnits in the numerator and denominator because it is not a compound unit.");
   }
-  std::pair< std::vector<std::string>,std::vector<std::string> > result;
+  std::pair<std::vector<std::string>, std::vector<std::string>> result;
   boost::match_results<std::string::const_iterator> match;
 
   std::string ws(s);
 
   // remove leading 1, if applicable
-  std::string::iterator firstCharEnd = ws.begin(); ++firstCharEnd;
-  std::string::const_iterator tempStrConstIter; // for gcc
-  std::string firstChar(ws.begin(),firstCharEnd);
+  std::string::iterator firstCharEnd = ws.begin();
+  ++firstCharEnd;
+  std::string::const_iterator tempStrConstIter;  // for gcc
+  std::string firstChar(ws.begin(), firstCharEnd);
   if (firstChar == "1") {
-    ws = std::string(firstCharEnd,ws.end());
-    firstCharEnd = ws.begin(); ++firstCharEnd;
-    firstChar = std::string(ws.begin(),firstCharEnd);
+    ws = std::string(firstCharEnd, ws.end());
+    firstCharEnd = ws.begin();
+    ++firstCharEnd;
+    firstChar = std::string(ws.begin(), firstCharEnd);
   }
   while (!ws.empty() && (firstChar != "/")) {
     // populate numerator
-    boost::regex_search(ws,match,regexAtomicUnit());
-    result.first.push_back(std::string(match[0].first,match[0].second));
-    tempStrConstIter = ws.end(); // for gcc
-    ws = std::string(match[0].second,tempStrConstIter);
+    boost::regex_search(ws, match, regexAtomicUnit());
+    result.first.push_back(std::string(match[0].first, match[0].second));
+    tempStrConstIter = ws.end();  // for gcc
+    // cppcheck-suppress invalidContainer
+    ws = std::string(match[0].second, tempStrConstIter);
     if (!ws.empty()) {
-      firstCharEnd = ws.begin(); ++firstCharEnd;
-      firstChar = std::string(ws.begin(),firstCharEnd);
+      firstCharEnd = ws.begin();
+      ++firstCharEnd;
+      firstChar = std::string(ws.begin(), firstCharEnd);
     }
   }
   if (firstChar == "/") {
-    ws = std::string(firstCharEnd,ws.end());
+    // cppcheck-suppress invalidContainer
+    ws = std::string(firstCharEnd, ws.end());
     while (!ws.empty()) {
       // populate denominator
-      boost::regex_search(ws,match,regexAtomicUnit());
-      result.second.push_back(std::string(match[0].first,match[0].second));
-      tempStrConstIter = ws.end(); // for gcc
-      ws = std::string(match[0].second,tempStrConstIter);
+      boost::regex_search(ws, match, regexAtomicUnit());
+      result.second.push_back(std::string(match[0].first, match[0].second));
+      tempStrConstIter = ws.end();  // for gcc
+      // cppcheck-suppress invalidContainer
+      ws = std::string(match[0].second, tempStrConstIter);
     }
   }
 
   return result;
 }
 
-std::pair<std::string,int> decomposeAtomicUnitString(const std::string& s) {
+std::pair<std::string, int> decomposeAtomicUnitString(const std::string& s) {
 
   if (!isAtomicUnit(s)) {
-    LOG_FREE_AND_THROW("openstudio.QuantityRegex","Cannot decompose " << s
-      << " into a base unit and exponent because it is not an atomic unit.");
+    LOG_FREE_AND_THROW("openstudio.QuantityRegex", "Cannot decompose " << s << " into a base unit and exponent because it is not an atomic unit.");
   }
 
-  std::pair<std::string,int> result;
+  std::pair<std::string, int> result;
   boost::smatch match;
 
-  boost::regex_search(s,match,regexBaseUnit());
+  boost::regex_search(s, match, regexBaseUnit());
 
   // First is the baseUnit (match[0].first is the start of sequence that matched, match[0].second is the end of sequence)
-  result.first = std::string(match[0].first,match[0].second);
+  result.first = std::string(match[0].first, match[0].second);
   // Match an exponent and put that in result.second
-  if (boost::regex_search(s,match,regexExponent())) {
+  if (boost::regex_search(s, match, regexExponent())) {
     // We want the submatch (capturing group)
     std::istringstream iss(match[1]);
     iss >> result.second;
-  }
-  else {
+  } else {
     result.second = 1;
   }
 
   return result;
 }
 
-}
+}  // namespace openstudio

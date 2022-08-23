@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,6 +30,7 @@
 #include "ParentObject.hpp"
 #include "ParentObject_Impl.hpp"
 #include "ResourceObject.hpp"
+#include "ResourceObject_Impl.hpp"
 #include "Curve.hpp"
 #include "Curve_Impl.hpp"
 #include "LifeCycleCost.hpp"
@@ -46,201 +47,184 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ParentObject_Impl::ParentObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ModelObject_Impl(idfObject, model, keepHandle)
-  {}
+    ParentObject_Impl::ParentObject_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {}
 
-  ParentObject_Impl::ParentObject_Impl(IddObjectType type, Model_Impl* model)
-    : ModelObject_Impl(type, model)
-  {}
+    ParentObject_Impl::ParentObject_Impl(IddObjectType type, Model_Impl* model) : ModelObject_Impl(type, model) {}
 
-  ParentObject_Impl::ParentObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle)
-    : ModelObject_Impl(other, model,keepHandle)
-  {}
+    ParentObject_Impl::ParentObject_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-  ParentObject_Impl::ParentObject_Impl(const ParentObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle)
-    : ModelObject_Impl(other,model,keepHandle)
-  {}
+    ParentObject_Impl::ParentObject_Impl(const ParentObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-  std::vector<ModelObject> ParentObject_Impl::children() const {
-    return ModelObjectVector();
-  }
-
-  /// remove self and all children objects recursively
-  std::vector<IdfObject> ParentObject_Impl::remove()
-  {
-    std::vector<IdfObject> result;
-
-    // DLM: the following code does not work because subTree includes this object
-    // and we don't want to call remove on the same object recursively
-    //
-    //ModelObjectVector subTree = getRecursiveChildren(getObject<ParentObject>());
-    //for (ModelObject& object : subTree) {
-    //  std::vector<IdfObject> removed = object.remove();
-    //  result.insert(result.end(), removed.begin(), removed.end());
-    //}
-
-    // subTree includes this object, make sure to include costs as well
-    auto subTree = getRecursiveChildren(getObject<ParentObject>(), true);
-    // drop the Curve instances
-    // Perhaps this could be done in the getRecursiveChildren, but this way
-    // the getRecursiveChildren method might be less surprising
-    // This is probably the unique situation where you want to get children minus curves
-    auto isCurve = [](const ModelObject & modelObject) {
-      return modelObject.optionalCast<Curve>();
-    };
-    auto end = std::remove_if(subTree.begin(), subTree.end(), isCurve);
-    std::vector<ModelObject> noCurvesSubTree(subTree.begin(),end);
-
-    for (const ModelObject& object : noCurvesSubTree) {
-      result.push_back(object.idfObject());
+    std::vector<ModelObject> ParentObject_Impl::children() const {
+      return ModelObjectVector();
     }
 
-    bool ok = model().removeObjects(getHandles<ModelObject>(noCurvesSubTree));
-    if (!ok) { result.clear(); }
+    /// remove self and all children objects recursively
+    std::vector<IdfObject> ParentObject_Impl::remove() {
+      std::vector<IdfObject> result;
 
-    return result;
+      // DLM: the following code does not work because subTree includes this object
+      // and we don't want to call remove on the same object recursively
+      //
+      //ModelObjectVector subTree = getRecursiveChildren(getObject<ParentObject>());
+      //for (ModelObject& object : subTree) {
+      //  std::vector<IdfObject> removed = object.remove();
+      //  result.insert(result.end(), removed.begin(), removed.end());
+      //}
+
+      // subTree includes this object, make sure to include costs as well
+      // drop the ResourceObject instances, if they are used by other objects
+      // This is probably the unique situation where you want to get children minus ResourceObjects
+      auto subTree = getRecursiveChildren(getObject<ParentObject>(), true, false);
+
+      for (const ModelObject& object : subTree) {
+        result.push_back(object.idfObject());
+      }
+
+      bool ok = model().removeObjects(getHandles<ModelObject>(subTree));
+      if (!ok) {
+        result.clear();
+      }
+
+      return result;
+    }
+
+    /// get a vector of allowable children types
+    std::vector<IddObjectType> ParentObject_Impl::allowableChildTypes() const {
+      IddObjectTypeVector result;
+      return result;
+    }
+
+    ModelObject ParentObject_Impl::clone(Model model) const {
+      ModelObject newParentAsModelObject = ModelObject_Impl::clone(model);
+      ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
+      for (ModelObject child : children()) {
+        ModelObject newChild = child.clone(model);
+        newChild.setParent(newParent);
+      }
+      return newParentAsModelObject;
+    }
+
+  }  // namespace detail
+
+  ParentObject::ParentObject(IddObjectType type, const Model& model) : ModelObject(type, model) {
+    OS_ASSERT(getImpl<detail::ParentObject_Impl>());
+  }
+
+  ParentObject::ParentObject(std::shared_ptr<detail::ParentObject_Impl> p) : ModelObject(std::move(p)) {}
+
+  /// return any children objects in the hierarchy
+  ModelObjectVector ParentObject::children() const {
+    return getImpl<detail::ParentObject_Impl>()->children();
   }
 
   /// get a vector of allowable children types
-  std::vector<IddObjectType> ParentObject_Impl::allowableChildTypes() const
-  {
-    IddObjectTypeVector result;
+  std::vector<IddObjectType> ParentObject::allowableChildTypes() const {
+    return getImpl<detail::ParentObject_Impl>()->allowableChildTypes();
+  }
+
+  std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCostsAndAdditionalProperties,
+                                                bool includeUsedResources) {
+    std::set<Handle> resultSet;
+    std::pair<HandleSet::const_iterator, bool> insertResult;
+    std::vector<ModelObject> result;
+    resultSet.insert(object.handle());
+    result.push_back(object);
+
+    if (includeLifeCycleCostsAndAdditionalProperties) {
+      for (const LifeCycleCost& lifeCycleCost : object.lifeCycleCosts()) {
+        result.push_back(lifeCycleCost);
+      }
+      if (object.hasAdditionalProperties()) {
+        result.push_back(object.additionalProperties());
+      }
+    }
+
+    std::deque<ParentObject> parents;
+    parents.push_back(object);
+
+    while (parents.size() > 0) {
+      ParentObject currentParent(parents[0]);
+      parents.pop_front();
+
+      // parent's costs have already been added
+
+      for (const ModelObject& child : currentParent.children()) {
+        if (!includeUsedResources) {
+          auto _ro = child.optionalCast<ResourceObject>();
+          if (_ro && _ro->directUseCount() > 1) {
+            continue;
+          }
+        }
+        insertResult = resultSet.insert(child.handle());
+        if (insertResult.second) {
+          result.push_back(child);
+
+          if (includeLifeCycleCostsAndAdditionalProperties) {
+            for (const LifeCycleCost& lifeCycleCost : child.lifeCycleCosts()) {
+              result.push_back(lifeCycleCost);
+            }
+            if (child.hasAdditionalProperties()) {
+              result.push_back(child.additionalProperties());
+            }
+          }
+
+          OptionalParentObject opo = child.optionalCast<ParentObject>();
+          if (opo) {
+            parents.push_back(*opo);
+          }
+        }
+      }
+    }
+
     return result;
   }
 
-  ModelObject ParentObject_Impl::clone(Model model) const
-  {
-    ModelObject newParentAsModelObject = ModelObject_Impl::clone(model);
-    ParentObject newParent = newParentAsModelObject.cast<ParentObject>();
-    for (ModelObject child : children())
-    {
-      ModelObject newChild = child.clone(model);
-      newChild.setParent(newParent);
-    }
-    return newParentAsModelObject;
-  }
+  std::vector<ModelObject> getRecursiveChildrenAndResources(const ModelObject& object) {
+    std::set<Handle> resultSet;
+    std::pair<HandleSet::const_iterator, bool> insertResult;
+    std::vector<ModelObject> result;
+    resultSet.insert(object.handle());
+    result.push_back(object);
 
-} // detail
+    std::deque<ModelObject> objectQueue;
+    objectQueue.push_back(object);
 
-ParentObject::ParentObject(IddObjectType type,const Model& model)
-  : ModelObject(type,model)
-{
-  OS_ASSERT(getImpl<detail::ParentObject_Impl>());
-}
-
-ParentObject::ParentObject(std::shared_ptr<detail::ParentObject_Impl> p)
-  : ModelObject(std::move(p))
-{  }
-
-/// return any children objects in the hierarchy
-ModelObjectVector ParentObject::children() const
-{
-  return getImpl<detail::ParentObject_Impl>()->children();
-}
-
-/// get a vector of allowable children types
-std::vector<IddObjectType> ParentObject::allowableChildTypes() const
-{
-  return getImpl<detail::ParentObject_Impl>()->allowableChildTypes();
-}
-
-std::vector<ModelObject> getRecursiveChildren(const ParentObject& object, bool includeLifeCycleCostsAndAdditionalProperties) {
-  std::set<Handle> resultSet;
-  std::pair<HandleSet::const_iterator,bool> insertResult;
-  std::vector<ModelObject> result;
-  resultSet.insert(object.handle());
-  result.push_back(object);
-
-  if (includeLifeCycleCostsAndAdditionalProperties){
-    for (const LifeCycleCost& lifeCycleCost : object.lifeCycleCosts()){
-      result.push_back(lifeCycleCost);
-    }
-    if (object.hasAdditionalProperties()){
-      result.push_back(object.additionalProperties());
-    }
-  }
-
-  std::deque<ParentObject> parents;
-  parents.push_back(object);
-
-  while (parents.size() > 0) {
-    ParentObject currentParent(parents[0]);
-    parents.pop_front();
-
-    // parent's costs have already been added
-
-    for (const ModelObject& child : currentParent.children()) {
-      insertResult = resultSet.insert(child.handle());
-      if (insertResult.second) {
-        result.push_back(child);
-
-        if (includeLifeCycleCostsAndAdditionalProperties){
-          for (const LifeCycleCost& lifeCycleCost : child.lifeCycleCosts()){
-            result.push_back(lifeCycleCost);
-          }
-          if (child.hasAdditionalProperties()){
-            result.push_back(child.additionalProperties());
-          }
-        }
-
-        OptionalParentObject opo = child.optionalCast<ParentObject>();
-        if (opo) {
-          parents.push_back(*opo);
-        }
-      }
-    }
-  }
-
-  return result;
-}
-
-std::vector<ModelObject> getRecursiveChildrenAndResources(const ModelObject& object) {
-  std::set<Handle> resultSet;
-  std::pair<HandleSet::const_iterator,bool> insertResult;
-  std::vector<ModelObject> result;
-  resultSet.insert(object.handle());
-  result.push_back(object);
-
-  std::deque<ModelObject> objectQueue;
-  objectQueue.push_back(object);
-
-  while (objectQueue.size() > 0) {
-    ModelObject currentObject(objectQueue[0]);
-    objectQueue.pop_front();
-    // resources
-    for (const ResourceObject& resource : currentObject.resources()) {
-      insertResult = resultSet.insert(resource.handle());
-      if (insertResult.second) {
-        // new object
-        ModelObject mo = resource.cast<ModelObject>();
-        result.push_back(mo);
-        objectQueue.push_back(mo);
-      }
-    }
-    // children
-    OptionalParentObject opo = currentObject.optionalCast<ParentObject>();
-    if (opo) {
-      ParentObject currentParent(*opo);
-      for (const ModelObject& child : currentParent.children()) {
-        insertResult = resultSet.insert(child.handle());
+    while (objectQueue.size() > 0) {
+      ModelObject currentObject(objectQueue[0]);
+      objectQueue.pop_front();
+      // resources
+      for (const ResourceObject& resource : currentObject.resources()) {
+        insertResult = resultSet.insert(resource.handle());
         if (insertResult.second) {
           // new object
-          result.push_back(child);
-          objectQueue.push_back(child);
+          ModelObject mo = resource.cast<ModelObject>();
+          result.push_back(mo);
+          objectQueue.push_back(mo);
+        }
+      }
+      // children
+      OptionalParentObject opo = currentObject.optionalCast<ParentObject>();
+      if (opo) {
+        ParentObject currentParent(*opo);
+        for (const ModelObject& child : currentParent.children()) {
+          insertResult = resultSet.insert(child.handle());
+          if (insertResult.second) {
+            // new object
+            result.push_back(child);
+            objectQueue.push_back(child);
+          }
         }
       }
     }
+
+    return result;
   }
 
-  return result;
-}
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

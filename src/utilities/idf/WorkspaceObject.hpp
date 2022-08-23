@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,14 +43,15 @@ namespace detail {
   class IdfObject_Impl;
   class WorkspaceObject_Impl;
   class Workspace_Impl;
-}
+}  // namespace detail
 
 /** WorkspaceObject holds and manipulates data objects in Energyplus IDF format in the context of
  *  a Workspace. Over and above IdfObject, WorkspaceObject maintains ObjectListType fields as
  *  pointers (possibly null) to other WorkspaceObjects in the same Workspace, and only commits
  *  changes that maintain the validity of its Workspace at the current StrictnessLevel (typically
  *  Draft, moving to Final right before simulation). */
-class UTILITIES_API WorkspaceObject : public IdfObject {
+class UTILITIES_API WorkspaceObject : public IdfObject
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -121,8 +122,7 @@ class UTILITIES_API WorkspaceObject : public IdfObject {
    *  this call is equivalent to iddObject().getField(index)->isObjectListField(). If a
    *  non-empty vector of refLists is specified, then true is only returned if there is a match
    *  between field index's object lists and the referencesLists argument. */
-  bool canBeSource(unsigned index,
-                   const std::vector<std::string>& refLists=std::vector<std::string>()) const;
+  bool canBeSource(unsigned index, const std::vector<std::string>& refLists = std::vector<std::string>()) const;
 
   /** Returns true if another object points to this object. */
   bool isTarget() const;
@@ -159,7 +159,6 @@ class UTILITIES_API WorkspaceObject : public IdfObject {
   //@}
 
  protected:
-
   typedef detail::WorkspaceObject_Impl ImplType;
 
   friend class Workspace;
@@ -172,8 +171,7 @@ class UTILITIES_API WorkspaceObject : public IdfObject {
   WorkspaceObject(std::shared_ptr<detail::WorkspaceObject_Impl> impl);
 
  private:
-
-  std::vector<WorkspaceObject> objects(const std::vector<Handle>& handles,bool sorted) const;
+  std::vector<WorkspaceObject> objects(const std::vector<Handle>& handles, bool sorted) const;
 
   REGISTER_LOGGER("utilities.idf.WorkspaceObject");
 };
@@ -188,6 +186,6 @@ typedef std::vector<WorkspaceObject> WorkspaceObjectVector;
  *  Outputs WorkspaceObject as (IDF) text. */
 UTILITIES_API std::ostream& operator<<(std::ostream& os, const WorkspaceObject& workspaceObject);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_WORKSPACEOBJECT_HPP
+#endif  // UTILITIES_IDF_WORKSPACEOBJECT_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,72 +37,73 @@ namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ExternalInterfaceVariable_Impl;
+    class ExternalInterfaceVariable_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ExternalInterfaceVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:Variable'. */
-class MODEL_API ExternalInterfaceVariable : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ExternalInterfaceVariable is a ModelObject that wraps the OpenStudio IDD object 'OS:ExternalInterface:Variable'. */
+  class MODEL_API ExternalInterfaceVariable : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ExternalInterfaceVariable(const Model& model, const std::string& variableName, double initialValue);
+    explicit ExternalInterfaceVariable(const Model& model, const std::string& variableName, double initialValue);
 
-  virtual ~ExternalInterfaceVariable() {}
+    virtual ~ExternalInterfaceVariable() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double initialValue() const;
+    double initialValue() const;
 
-  bool exportToBCVTB() const;
+    bool exportToBCVTB() const;
 
-  bool isExportToBCVTBDefaulted() const;
+    bool isExportToBCVTBDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setInitialValue(double initialValue);
+    bool setInitialValue(double initialValue);
 
-  bool setExportToBCVTB(bool exportToBCVTB);
+    bool setExportToBCVTB(bool exportToBCVTB);
 
-  void resetExportToBCVTB();
+    void resetExportToBCVTB();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ExternalInterfaceVariable_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ExternalInterfaceVariable_Impl ImplType;
 
-  explicit ExternalInterfaceVariable(std::shared_ptr<detail::ExternalInterfaceVariable_Impl> impl);
+    explicit ExternalInterfaceVariable(std::shared_ptr<detail::ExternalInterfaceVariable_Impl> impl);
 
-  friend class detail::ExternalInterfaceVariable_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ExternalInterfaceVariable");
-};
+    friend class detail::ExternalInterfaceVariable_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ExternalInterfaceVariable");
+  };
 
-/** \relates ExternalInterfaceVariable*/
-typedef boost::optional<ExternalInterfaceVariable> OptionalExternalInterfaceVariable;
+  /** \relates ExternalInterfaceVariable*/
+  typedef boost::optional<ExternalInterfaceVariable> OptionalExternalInterfaceVariable;
 
-/** \relates ExternalInterfaceVariable*/
-typedef std::vector<ExternalInterfaceVariable> ExternalInterfaceVariableVector;
+  /** \relates ExternalInterfaceVariable*/
+  typedef std::vector<ExternalInterfaceVariable> ExternalInterfaceVariableVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_EXTERNALINTERFACEVARIABLE_HPP
+#endif  // MODEL_EXTERNALINTERFACEVARIABLE_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,40 +40,37 @@ template <typename T>
 struct StaticInitializer
 {
 #ifndef __GNUC__
-  private:
-    struct object_creator
-    {
-      // This constructor does nothing more than ensure that instance()
-      //  is called before main() begins, thus creating the static
-      //  T object before multithreading race issues can come up.
-      object_creator() {
-        StaticInitializer<T>::do_initialize();
-      }
-
-      inline void do_nothing() const {  }
-    };
-    static object_creator create_object;
-
-  public:
-    StaticInitializer()
-    {
-      do_initialize();
+ private:
+  struct object_creator
+  {
+    // This constructor does nothing more than ensure that instance()
+    //  is called before main() begins, thus creating the static
+    //  T object before multithreading race issues can come up.
+    object_creator() {
+      StaticInitializer<T>::do_initialize();
     }
 
-    // If, at any point (in user code), Singleton<T>::instance()
-    //  is called, then the following function is instantiated.
-    static void do_initialize()
-    {
-      // call the static function
-      T::initialize();
+    inline void do_nothing() const {}
+  };
+  static object_creator create_object;
 
-      // The following line does nothing else than force the instantiation
-      //  of Singleton<T>::create_object, whose constructor is
-      //  called before main() begins.
-      create_object.do_nothing();
-    }
+ public:
+  StaticInitializer() {
+    do_initialize();
+  }
+
+  // If, at any point (in user code), Singleton<T>::instance()
+  //  is called, then the following function is instantiated.
+  static void do_initialize() {
+    // call the static function
+    T::initialize();
+
+    // The following line does nothing else than force the instantiation
+    //  of Singleton<T>::create_object, whose constructor is
+    //  called before main() begins.
+    create_object.do_nothing();
+  }
 #endif
-
 };
 
 #ifndef __GNUC__
@@ -81,5 +78,4 @@ template <typename T>
 typename StaticInitializer<T>::object_creator StaticInitializer<T>::create_object;
 #endif
 
-
-#endif // UTILITIES_CORE_STATICINITIALIZER_HPP
+#endif  // UTILITIES_CORE_STATICINITIALIZER_HPP

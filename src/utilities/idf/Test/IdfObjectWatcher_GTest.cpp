@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,8 +41,7 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-TEST_F(IdfFixture,IdfObjectWatcher_NonExtensible)
-{
+TEST_F(IdfFixture, IdfObjectWatcher_NonExtensible) {
   IdfObject object(IddObjectType::Lights);
   IdfObjectWatcher watcher(object);
   EXPECT_FALSE(watcher.dirty());
@@ -56,7 +55,7 @@ TEST_F(IdfFixture,IdfObjectWatcher_NonExtensible)
   EXPECT_FALSE(watcher.dataChanged());
   EXPECT_FALSE(watcher.nameChanged());
 
-  object.setFieldComment(1,"Change from default to that");
+  object.setFieldComment(1, "Change from default to that");
   EXPECT_TRUE(watcher.dirty());
   EXPECT_FALSE(watcher.dataChanged());
   watcher.clearState();
@@ -64,7 +63,7 @@ TEST_F(IdfFixture,IdfObjectWatcher_NonExtensible)
   EXPECT_FALSE(watcher.dataChanged());
   EXPECT_FALSE(watcher.nameChanged());
 
-  object.setFieldComment(1000,"Way out of bounds");
+  object.setFieldComment(1000, "Way out of bounds");
   EXPECT_FALSE(watcher.dirty());
 
   // this causes object to become dirty because it doesn't have a name yet
@@ -77,7 +76,7 @@ TEST_F(IdfFixture,IdfObjectWatcher_NonExtensible)
   object.createName(false);
   EXPECT_FALSE(watcher.dirty());
 
-  ASSERT_TRUE(object.setString(4,"22.3"));
+  ASSERT_TRUE(object.setString(4, "22.3"));
   EXPECT_TRUE(watcher.dirty());
   EXPECT_TRUE(watcher.dataChanged());
   EXPECT_FALSE(watcher.nameChanged());
@@ -86,14 +85,13 @@ TEST_F(IdfFixture,IdfObjectWatcher_NonExtensible)
   EXPECT_FALSE(watcher.dataChanged());
   EXPECT_FALSE(watcher.nameChanged());
 
-  EXPECT_FALSE(object.setString(1000,"22.3"));
+  EXPECT_FALSE(object.setString(1000, "22.3"));
   EXPECT_FALSE(watcher.dirty());
   EXPECT_FALSE(watcher.dataChanged());
   EXPECT_FALSE(watcher.nameChanged());
 }
 
-TEST_F(IdfFixture,IdfObjectWatcher_Extensible)
-{
+TEST_F(IdfFixture, IdfObjectWatcher_Extensible) {
   IdfObject object(IddObjectType::DaylightingDevice_Tubular);
   IdfObjectWatcher watcher(object);
   EXPECT_FALSE(watcher.dirty());
@@ -108,15 +106,15 @@ TEST_F(IdfFixture,IdfObjectWatcher_Extensible)
   EXPECT_FALSE(watcher.dirty());
   EXPECT_FALSE(watcher.dataChanged());
 
-  object.insertExtensibleGroup(0,vals);
+  object.insertExtensibleGroup(0, vals);
   EXPECT_TRUE(watcher.dirty());
   EXPECT_TRUE(watcher.dataChanged());
   watcher.clearState();
   EXPECT_FALSE(watcher.dirty());
   EXPECT_FALSE(watcher.dataChanged());
 
-  vals=object.popExtensibleGroup();
-  ASSERT_TRUE(vals.size()==2);
+  vals = object.popExtensibleGroup();
+  ASSERT_TRUE(vals.size() == 2);
   EXPECT_TRUE(watcher.dirty());
   EXPECT_TRUE(watcher.dataChanged());
   watcher.clearState();
@@ -124,7 +122,7 @@ TEST_F(IdfFixture,IdfObjectWatcher_Extensible)
   EXPECT_FALSE(watcher.dataChanged());
 
   vals = object.eraseExtensibleGroup(0);
-  ASSERT_TRUE(vals.size()==2);
+  ASSERT_TRUE(vals.size() == 2);
   EXPECT_TRUE(watcher.dirty());
   EXPECT_TRUE(watcher.dataChanged());
   watcher.clearState();

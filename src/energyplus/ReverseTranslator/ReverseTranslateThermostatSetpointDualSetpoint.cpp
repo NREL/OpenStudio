@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,56 +42,46 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateThermostatSetpointDualSetpoint( const WorkspaceObject & workspaceObject )
-{
-OptionalModelObject result,temp;
-  OptionalSchedule schedule;
+  OptionalModelObject ReverseTranslator::translateThermostatSetpointDualSetpoint(const WorkspaceObject& workspaceObject) {
+    OptionalModelObject result, temp;
+    OptionalSchedule schedule;
 
-  ThermostatSetpointDualSetpoint tsds(m_model);
+    ThermostatSetpointDualSetpoint tsds(m_model);
 
-  if (OptionalString os = workspaceObject.name()) {
-    tsds.setName(*os);
-  }
+    if (OptionalString os = workspaceObject.name()) {
+      tsds.setName(*os);
+    }
 
-  OptionalWorkspaceObject owo = workspaceObject.getTarget(ThermostatSetpoint_DualSetpointFields::HeatingSetpointTemperatureScheduleName);
-  if(!owo)
-  {
-    LOG(Error, "Error importing object: "
-             << workspaceObject.briefDescription()
-             << " Can't find Schedule: ");
+    OptionalWorkspaceObject owo = workspaceObject.getTarget(ThermostatSetpoint_DualSetpointFields::HeatingSetpointTemperatureScheduleName);
+    if (!owo) {
+      LOG(Error, "Error importing object: " << workspaceObject.briefDescription() << " Can't find Schedule: ");
+      return result;
+    }
+    temp = translateAndMapWorkspaceObject(*owo);
+    if (temp) {
+      schedule = temp->optionalCast<Schedule>();
+      if (schedule) {
+        tsds.setHeatingSchedule(*schedule);
+      }
+    }
+
+    owo = workspaceObject.getTarget(ThermostatSetpoint_DualSetpointFields::CoolingSetpointTemperatureScheduleName);
+    if (!owo) {
+      LOG(Error, "Error importing object: " << workspaceObject.briefDescription() << " Can't find Schedule: ");
+      return result;
+    }
+    temp = translateAndMapWorkspaceObject(*owo);
+    if (temp) {
+      schedule = temp->optionalCast<Schedule>();
+      if (schedule) {
+        tsds.setCoolingSchedule(*schedule);
+      }
+    }
+
+    result = tsds;
     return result;
   }
-  temp = translateAndMapWorkspaceObject( *owo);
-  if(temp)
-  {
-    schedule=temp->optionalCast<Schedule>();
-    if(schedule){
-      tsds.setHeatingSchedule( *schedule );
-    }
-  }
 
-  owo = workspaceObject.getTarget(ThermostatSetpoint_DualSetpointFields::CoolingSetpointTemperatureScheduleName);
-  if(!owo)
-  {
-    LOG(Error, "Error importing object: "
-             << workspaceObject.briefDescription()
-             << " Can't find Schedule: ");
-    return result;
-  }
-  temp = translateAndMapWorkspaceObject( *owo);
-  if(temp)
-  {
-    schedule=temp->optionalCast<Schedule>();
-    if(schedule){
-      tsds.setCoolingSchedule( *schedule );
-    }
-  }
+}  // namespace energyplus
 
-  result = tsds;
-  return result;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

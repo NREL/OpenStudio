@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,47 +50,45 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationOutdoorDryBulb( PlantEquipmentOperationOutdoorDryBulb & modelObject )
-{
-  IdfObject idfObject(IddObjectType::PlantEquipmentOperation_OutdoorDryBulb);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translatePlantEquipmentOperationOutdoorDryBulb(PlantEquipmentOperationOutdoorDryBulb& modelObject) {
+    IdfObject idfObject(IddObjectType::PlantEquipmentOperation_OutdoorDryBulb);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  auto name = modelObject.name().get();
-  idfObject.setName(name);
+    // Name
+    auto name = modelObject.name().get();
+    idfObject.setName(name);
 
-  double lowerLimit = modelObject.minimumLowerLimit();
-  int i = 1;
-  for( auto upperLimit : modelObject.loadRangeUpperLimits() ) {
-    auto equipment = modelObject.equipment(upperLimit);
-    if( ! equipment.empty() ) {
-      auto eg = idfObject.pushExtensibleGroup();
-      eg.setDouble(PlantEquipmentOperation_OutdoorDryBulbExtensibleFields::DryBulbTemperatureRangeLowerLimit,lowerLimit);
-      eg.setDouble(PlantEquipmentOperation_OutdoorDryBulbExtensibleFields::DryBulbTemperatureRangeUpperLimit,upperLimit);
+    double lowerLimit = modelObject.minimumLowerLimit();
+    int i = 1;
+    for (auto upperLimit : modelObject.loadRangeUpperLimits()) {
+      auto equipment = modelObject.equipment(upperLimit);
+      if (!equipment.empty()) {
+        auto eg = idfObject.pushExtensibleGroup();
+        eg.setDouble(PlantEquipmentOperation_OutdoorDryBulbExtensibleFields::DryBulbTemperatureRangeLowerLimit, lowerLimit);
+        eg.setDouble(PlantEquipmentOperation_OutdoorDryBulbExtensibleFields::DryBulbTemperatureRangeUpperLimit, upperLimit);
 
-      IdfObject equipmentList(IddObjectType::PlantEquipmentList);
-      m_idfObjects.push_back(equipmentList);
-      auto equipmentListName = name + " equipment list " + std::to_string(i);
-      equipmentList.setName(equipmentListName);
-      eg.setString(PlantEquipmentOperation_OutdoorDryBulbExtensibleFields::RangeEquipmentListName,equipmentListName);
+        IdfObject equipmentList(IddObjectType::PlantEquipmentList);
+        m_idfObjects.push_back(equipmentList);
+        auto equipmentListName = name + " equipment list " + std::to_string(i);
+        equipmentList.setName(equipmentListName);
+        eg.setString(PlantEquipmentOperation_OutdoorDryBulbExtensibleFields::RangeEquipmentListName, equipmentListName);
 
-      for( auto component : equipment ) {
-        auto eg2 = equipmentList.pushExtensibleGroup();
-        auto idf_component = translateAndMapModelObject(component);
-        OS_ASSERT(idf_component);
-        eg2.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType,idf_component->iddObject().name());
-        eg2.setString(PlantEquipmentListExtensibleFields::EquipmentName,idf_component->name().get());
+        for (auto component : equipment) {
+          auto eg2 = equipmentList.pushExtensibleGroup();
+          auto idf_component = translateAndMapModelObject(component);
+          OS_ASSERT(idf_component);
+          eg2.setString(PlantEquipmentListExtensibleFields::EquipmentObjectType, idf_component->iddObject().name());
+          eg2.setString(PlantEquipmentListExtensibleFields::EquipmentName, idf_component->name().get());
+        }
       }
+
+      lowerLimit = upperLimit;
+      ++i;
     }
 
-    lowerLimit = upperLimit;
-    ++i;
+    return idfObject;
   }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,109 +37,110 @@ namespace openstudio {
 
 namespace model {
 
-class GeneratorFuelCell;
+  class GeneratorFuelCell;
 
-namespace detail {
+  namespace detail {
 
-  class GeneratorFuelCellElectricalStorage_Impl;
+    class GeneratorFuelCellElectricalStorage_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** GeneratorFuelCellElectricalStorage is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelCell:ElectricalStorage'. */
-class MODEL_API GeneratorFuelCellElectricalStorage : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** GeneratorFuelCellElectricalStorage is a ModelObject that wraps the OpenStudio IDD object 'OS:Generator:FuelCell:ElectricalStorage'. */
+  class MODEL_API GeneratorFuelCellElectricalStorage : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit GeneratorFuelCellElectricalStorage(const Model& model);
+    explicit GeneratorFuelCellElectricalStorage(const Model& model);
 
-  virtual ~GeneratorFuelCellElectricalStorage() {}
+    virtual ~GeneratorFuelCellElectricalStorage() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> choiceofModelValues();
+    static std::vector<std::string> choiceofModelValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string choiceofModel() const;
+    std::string choiceofModel() const;
 
-  double nominalChargingEnergeticEfficiency() const;
+    double nominalChargingEnergeticEfficiency() const;
 
-  double nominalDischargingEnergeticEfficiency() const;
+    double nominalDischargingEnergeticEfficiency() const;
 
-  double simpleMaximumCapacity() const;
+    double simpleMaximumCapacity() const;
 
-  double simpleMaximumPowerDraw() const;
+    double simpleMaximumPowerDraw() const;
 
-  double simpleMaximumPowerStore() const;
+    double simpleMaximumPowerStore() const;
 
-  double initialChargeState() const;
+    double initialChargeState() const;
 
-  // Return optional parent generator
-  boost::optional<GeneratorFuelCell> fuelCell() const;
+    // Return optional parent generator
+    boost::optional<GeneratorFuelCell> fuelCell() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setChoiceofModel(const std::string& choiceofModel);
+    bool setChoiceofModel(const std::string& choiceofModel);
 
-  void resetChoiceofModel();
+    void resetChoiceofModel();
 
-  bool setNominalChargingEnergeticEfficiency(double nominalChargingEnergeticEfficiency);
+    bool setNominalChargingEnergeticEfficiency(double nominalChargingEnergeticEfficiency);
 
-  void resetNominalChargingEnergeticEfficiency();
+    void resetNominalChargingEnergeticEfficiency();
 
-  bool setNominalDischargingEnergeticEfficiency(double nominalDischargingEnergeticEfficiency);
+    bool setNominalDischargingEnergeticEfficiency(double nominalDischargingEnergeticEfficiency);
 
-  void resetNominalDischargingEnergeticEfficiency();
+    void resetNominalDischargingEnergeticEfficiency();
 
-  bool setSimpleMaximumCapacity(double simpleMaximumCapacity);
+    bool setSimpleMaximumCapacity(double simpleMaximumCapacity);
 
-  void resetSimpleMaximumCapacity();
+    void resetSimpleMaximumCapacity();
 
-  bool setSimpleMaximumPowerDraw(double simpleMaximumPowerDraw);
+    bool setSimpleMaximumPowerDraw(double simpleMaximumPowerDraw);
 
-  void resetSimpleMaximumPowerDraw();
+    void resetSimpleMaximumPowerDraw();
 
-  bool setSimpleMaximumPowerStore(double simpleMaximumPowerStore);
+    bool setSimpleMaximumPowerStore(double simpleMaximumPowerStore);
 
-  void resetSimpleMaximumPowerStore();
+    void resetSimpleMaximumPowerStore();
 
-  bool setInitialChargeState(double initialChargeState);
+    bool setInitialChargeState(double initialChargeState);
 
-  void resetInitialChargeState();
+    void resetInitialChargeState();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GeneratorFuelCellElectricalStorage_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GeneratorFuelCellElectricalStorage_Impl ImplType;
 
-  explicit GeneratorFuelCellElectricalStorage(std::shared_ptr<detail::GeneratorFuelCellElectricalStorage_Impl> impl);
+    explicit GeneratorFuelCellElectricalStorage(std::shared_ptr<detail::GeneratorFuelCellElectricalStorage_Impl> impl);
 
-  friend class detail::GeneratorFuelCellElectricalStorage_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.GeneratorFuelCellElectricalStorage");
-};
+    friend class detail::GeneratorFuelCellElectricalStorage_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GeneratorFuelCellElectricalStorage");
+  };
 
-/** \relates GeneratorFuelCellElectricalStorage*/
-typedef boost::optional<GeneratorFuelCellElectricalStorage> OptionalGeneratorFuelCellElectricalStorage;
+  /** \relates GeneratorFuelCellElectricalStorage*/
+  typedef boost::optional<GeneratorFuelCellElectricalStorage> OptionalGeneratorFuelCellElectricalStorage;
 
-/** \relates GeneratorFuelCellElectricalStorage*/
-typedef std::vector<GeneratorFuelCellElectricalStorage> GeneratorFuelCellElectricalStorageVector;
+  /** \relates GeneratorFuelCellElectricalStorage*/
+  typedef std::vector<GeneratorFuelCellElectricalStorage> GeneratorFuelCellElectricalStorageVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_GENERATORFUELCELLELECTRICALSTORAGE_HPP
+#endif  // MODEL_GENERATORFUELCELLELECTRICALSTORAGE_HPP

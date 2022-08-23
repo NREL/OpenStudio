@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,63 +36,61 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class ScheduleConstant_Impl;
-} // detail
+  namespace detail {
+    class ScheduleConstant_Impl;
+  }  // namespace detail
 
-/** ScheduleConstant is a Schedule that wraps the OpenStudio IDD object 'OS:Schedule:Constant'. */
-class MODEL_API ScheduleConstant : public Schedule {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ScheduleConstant is a Schedule that wraps the OpenStudio IDD object 'OS:Schedule:Constant'. */
+  class MODEL_API ScheduleConstant : public Schedule
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** Creates new ScheduleConstant in model and sets its value to 0.0. */
-  explicit ScheduleConstant(const Model& model);
+    /** Creates new ScheduleConstant in model and sets its value to 0.0. */
+    explicit ScheduleConstant(const Model& model);
 
-  virtual ~ScheduleConstant() {}
+    virtual ~ScheduleConstant() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double value() const;
+    double value() const;
 
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setValue(double value);
 
-  bool setValue(double value);
-
-  /** Sets this ScheduleConstant's value if scheduleTypeLimits() is set and value can be properly
+    /** Sets this ScheduleConstant's value if scheduleTypeLimits() is set and value can be properly
    *  converted to the 'SI' units so implied. */
 
-  //@}
- protected:
+    //@}
+   protected:
+    typedef detail::ScheduleConstant_Impl ImplType;
 
-  typedef detail::ScheduleConstant_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    // constructor
+    explicit ScheduleConstant(std::shared_ptr<detail::ScheduleConstant_Impl> impl);
 
-  // constructor
-  explicit ScheduleConstant(std::shared_ptr<detail::ScheduleConstant_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.ScheduleConstant");
+  };
 
- private:
+  /** \relates ScheduleConstant */
+  typedef boost::optional<ScheduleConstant> OptionalScheduleConstant;
 
-  REGISTER_LOGGER("openstudio.model.ScheduleConstant");
-};
+  /** \relates ScheduleConstant */
+  typedef std::vector<ScheduleConstant> ScheduleConstantVector;
 
-/** \relates ScheduleConstant */
-typedef boost::optional<ScheduleConstant> OptionalScheduleConstant;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates ScheduleConstant */
-typedef std::vector<ScheduleConstant> ScheduleConstantVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SCHEDULECONSTANT_HPP
+#endif  // MODEL_SCHEDULECONSTANT_HPP

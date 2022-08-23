@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,101 +33,142 @@
 #include "ModelAPI.hpp"
 #include "OpaqueMaterial.hpp"
 
-namespace openstudio {
+#include "MaterialPropertyMoisturePenetrationDepthSettings.hpp"
+#include "MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
+#include "MaterialPropertyPhaseChange.hpp"
+#include "MaterialPropertyPhaseChange_Impl.hpp"
+#include "MaterialPropertyPhaseChangeHysteresis.hpp"
+#include "MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
 
+namespace openstudio {
 
 namespace model {
 
-namespace detail {
+  class MaterialPropertyMoisturePenetrationDepthSettings;
+  class MaterialPropertyPhaseChange;
+  class MaterialPropertyPhaseChangeHysteresis;
 
-  class MasslessOpaqueMaterial_Impl;
+  namespace detail {
 
-} // detail
+    class MasslessOpaqueMaterial_Impl;
 
-/** MasslessOpaqueMaterial is a OpaqueMaterial that wraps the OpenStudio IDD object 'OS:Material:NoMass'. */
-class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  }  // namespace detail
 
-  explicit MasslessOpaqueMaterial(const Model& model,
-    std::string roughness = "Smooth",
-    double thermalResistance = 0.1);
+  /** MasslessOpaqueMaterial is a OpaqueMaterial that wraps the OpenStudio IDD object 'OS:Material:NoMass'. */
+  class MODEL_API MasslessOpaqueMaterial : public OpaqueMaterial
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~MasslessOpaqueMaterial() {}
+    explicit MasslessOpaqueMaterial(const Model& model, const std::string& roughness = "Smooth", double thermalResistance = 0.1);
 
-  //@}
+    virtual ~MasslessOpaqueMaterial() {}
 
-  static IddObjectType iddObjectType();
+    //@}
 
-  static std::vector<std::string> roughnessValues();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    static std::vector<std::string> roughnessValues();
 
-  std::string roughness() const;
+    /** @name Getters */
+    //@{
 
-  double thermalResistance() const;
+    std::string roughness() const;
 
-  boost::optional<double> thermalAbsorptance() const;
+    double thermalResistance() const;
 
-  bool isThermalAbsorptanceDefaulted() const;
+    boost::optional<double> thermalAbsorptance() const;
 
-  boost::optional<double> solarAbsorptance() const;
+    bool isThermalAbsorptanceDefaulted() const;
 
-  bool isSolarAbsorptanceDefaulted() const;
+    boost::optional<double> solarAbsorptance() const;
 
-  boost::optional<double> visibleAbsorptance() const;
+    bool isSolarAbsorptanceDefaulted() const;
 
-  bool isVisibleAbsorptanceDefaulted() const;
+    boost::optional<double> visibleAbsorptance() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool isVisibleAbsorptanceDefaulted() const;
 
-  bool setRoughness(std::string roughness);
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setThermalResistance(double thermalResistance);
+    bool setRoughness(const std::string& roughness);
 
-  bool setThermalAbsorptance(double thermalAbsorptance);
+    bool setThermalResistance(double thermalResistance);
 
-  void resetThermalAbsorptance();
+    bool setThermalAbsorptance(double thermalAbsorptance);
 
-  bool setSolarAbsorptance(double solarAbsorptance);
+    void resetThermalAbsorptance();
 
-  void resetSolarAbsorptance();
+    bool setSolarAbsorptance(double solarAbsorptance);
 
-  bool setVisibleAbsorptance(double visibleAbsorptance);
+    void resetSolarAbsorptance();
 
-  void resetVisibleAbsorptance();
+    bool setVisibleAbsorptance(double visibleAbsorptance);
 
-  //@}
-  /** @name Other */
-  //@{
+    void resetVisibleAbsorptance();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::MasslessOpaqueMaterial_Impl ImplType;
+    // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it
+    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings>
+      createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA,
+                                                             double moistureEquationCoefficientB, double moistureEquationCoefficientC,
+                                                             double moistureEquationCoefficientD, double coatingLayerThickness,
+                                                             double coatingLayerWaterVaporDiffusionResistanceFactor);
 
-  explicit MasslessOpaqueMaterial(std::shared_ptr<detail::MasslessOpaqueMaterial_Impl> impl);
+    // returns the material property moisture penetration depth settings if set
+    boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
 
-  friend class detail::MasslessOpaqueMaterial_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.MasslessOpaqueMaterial");
-};
+    // resets the material property moisture penetration depth settings
+    void resetMaterialPropertyMoisturePenetrationDepthSettings();
 
-/** \relates MasslessOpaqueMaterial*/
-typedef boost::optional<MasslessOpaqueMaterial> OptionalMasslessOpaqueMaterial;
+    // if material property phase change already exists, do nothing and return nil; creates the material property phase change if it does not already exist and return it
+    boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange();
+    boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
 
-/** \relates MasslessOpaqueMaterial*/
-typedef std::vector<MasslessOpaqueMaterial> MasslessOpaqueMaterialVector;
+    // returns the material property phase change if set
+    boost::optional<MaterialPropertyPhaseChange> materialPropertyPhaseChange() const;
 
-} // model
-} // openstudio
+    // resets the material property phase change
+    void resetMaterialPropertyPhaseChange();
 
-#endif // MODEL_MASSLESSOPAQUEMATERIAL_HPP
+    // if material property phase change hysteresis already exists, do nothing and return nil; creates the material property phase change hysteresis if it does not already exist and return it
+    boost::optional<MaterialPropertyPhaseChangeHysteresis> createMaterialPropertyPhaseChangeHysteresis();
+
+    // returns the material property phase change hysteresis if set
+    boost::optional<MaterialPropertyPhaseChangeHysteresis> materialPropertyPhaseChangeHysteresis() const;
+
+    // resets the material property phase change hysteresis
+    void resetMaterialPropertyPhaseChangeHysteresis();
+
+    //@}
+    /** @name Other */
+    //@{
+
+    //@}
+   protected:
+    /// @cond
+    typedef detail::MasslessOpaqueMaterial_Impl ImplType;
+
+    explicit MasslessOpaqueMaterial(std::shared_ptr<detail::MasslessOpaqueMaterial_Impl> impl);
+
+    friend class detail::MasslessOpaqueMaterial_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.MasslessOpaqueMaterial");
+  };
+
+  /** \relates MasslessOpaqueMaterial*/
+  typedef boost::optional<MasslessOpaqueMaterial> OptionalMasslessOpaqueMaterial;
+
+  /** \relates MasslessOpaqueMaterial*/
+  typedef std::vector<MasslessOpaqueMaterial> MasslessOpaqueMaterialVector;
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_MASSLESSOPAQUEMATERIAL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,88 +37,89 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerFollowGroundTemperature_Impl;
+    class SetpointManagerFollowGroundTemperature_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerFollowGroundTemperature is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:FollowGroundTemperature'. */
-class MODEL_API SetpointManagerFollowGroundTemperature : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SetpointManagerFollowGroundTemperature is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:FollowGroundTemperature'. */
+  class MODEL_API SetpointManagerFollowGroundTemperature : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SetpointManagerFollowGroundTemperature(const Model& model);
+    explicit SetpointManagerFollowGroundTemperature(const Model& model);
 
-  virtual ~SetpointManagerFollowGroundTemperature() {}
+    virtual ~SetpointManagerFollowGroundTemperature() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlVariableValues();
+    static std::vector<std::string> controlVariableValues();
 
-  static std::vector<std::string> referenceGroundTemperatureObjectTypeValues();
+    static std::vector<std::string> referenceGroundTemperatureObjectTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  std::string referenceGroundTemperatureObjectType() const;
+    std::string referenceGroundTemperatureObjectType() const;
 
-  double offsetTemperatureDifference() const;
+    double offsetTemperatureDifference() const;
 
-  double maximumSetpointTemperature() const;
+    double maximumSetpointTemperature() const;
 
-  double minimumSetpointTemperature() const;
+    double minimumSetpointTemperature() const;
 
-  boost::optional<Node> setpointNode() const;
+    boost::optional<Node> setpointNode() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setControlVariable(const std::string& controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
-  bool setReferenceGroundTemperatureObjectType(const std::string& groundTemperatureObjType);
+    bool setReferenceGroundTemperatureObjectType(const std::string& groundTemperatureObjType);
 
-  bool setOffsetTemperatureDifference(double offsetTemperatureDifference);
+    bool setOffsetTemperatureDifference(double offsetTemperatureDifference);
 
-  bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
+    bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-  bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
+    bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerFollowGroundTemperature_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerFollowGroundTemperature_Impl ImplType;
 
-  explicit SetpointManagerFollowGroundTemperature(std::shared_ptr<detail::SetpointManagerFollowGroundTemperature_Impl> impl);
+    explicit SetpointManagerFollowGroundTemperature(std::shared_ptr<detail::SetpointManagerFollowGroundTemperature_Impl> impl);
 
-  friend class detail::SetpointManagerFollowGroundTemperature_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerFollowGroundTemperature");
-};
+    friend class detail::SetpointManagerFollowGroundTemperature_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerFollowGroundTemperature");
+  };
 
-/** \relates SetpointManagerFollowGroundTemperature*/
-typedef boost::optional<SetpointManagerFollowGroundTemperature> OptionalSetpointManagerFollowGroundTemperature;
+  /** \relates SetpointManagerFollowGroundTemperature*/
+  typedef boost::optional<SetpointManagerFollowGroundTemperature> OptionalSetpointManagerFollowGroundTemperature;
 
-/** \relates SetpointManagerFollowGroundTemperature*/
-typedef std::vector<SetpointManagerFollowGroundTemperature> SetpointManagerFollowGroundTemperatureVector;
+  /** \relates SetpointManagerFollowGroundTemperature*/
+  typedef std::vector<SetpointManagerFollowGroundTemperature> SetpointManagerFollowGroundTemperatureVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERFOLLOWGROUNDTEMPERATURE_HPP
+#endif  // MODEL_SETPOINTMANAGERFOLLOWGROUNDTEMPERATURE_HPP

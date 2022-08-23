@@ -34,6 +34,8 @@ set(${target_name}_src
   ThreeJSForwardTranslator.cpp
   ThreeJSReverseTranslator.hpp
   ThreeJSReverseTranslator.cpp
+  FloorspaceReverseTranslator.hpp
+  FloorspaceReverseTranslator.cpp
   ModelMerger.hpp
   ModelMerger.cpp
 
@@ -107,6 +109,9 @@ set(${target_name}_src
   AirflowNetworkSimulationControl.hpp
   AirflowNetworkSimulationControl_Impl.hpp
   AirflowNetworkSimulationControl.cpp
+  AirflowNetworkSpecifiedFlowRate.hpp
+  AirflowNetworkSpecifiedFlowRate_Impl.hpp
+  AirflowNetworkSpecifiedFlowRate.cpp
   AirflowNetworkSurface.hpp
   AirflowNetworkSurface_Impl.hpp
   AirflowNetworkSurface.cpp
@@ -137,6 +142,9 @@ set(${target_name}_src
   AirLoopHVACOutdoorAirSystem.hpp
   AirLoopHVACOutdoorAirSystem_Impl.hpp
   AirLoopHVACOutdoorAirSystem.cpp
+  AirLoopHVACDedicatedOutdoorAirSystem.hpp
+  AirLoopHVACDedicatedOutdoorAirSystem_Impl.hpp
+  AirLoopHVACDedicatedOutdoorAirSystem.cpp
   AirLoopHVACReturnPlenum.hpp
   AirLoopHVACReturnPlenum_Impl.hpp
   AirLoopHVACReturnPlenum.cpp
@@ -279,6 +287,9 @@ set(${target_name}_src
   ChillerElectricEIR.hpp
   ChillerElectricEIR_Impl.hpp
   ChillerElectricEIR.cpp
+  ChillerElectricReformulatedEIR.hpp
+  ChillerElectricReformulatedEIR_Impl.hpp
+  ChillerElectricReformulatedEIR.cpp
   ChillerHeaterPerformanceElectricEIR.hpp
   ChillerHeaterPerformanceElectricEIR_Impl.hpp
   ChillerHeaterPerformanceElectricEIR.cpp
@@ -288,6 +299,18 @@ set(${target_name}_src
   CoilCoolingCooledBeam.hpp
   CoilCoolingCooledBeam_Impl.hpp
   CoilCoolingCooledBeam.cpp
+  CoilCoolingDX.hpp
+  CoilCoolingDX_Impl.hpp
+  CoilCoolingDX.cpp
+  CoilCoolingDXCurveFitPerformance.hpp
+  CoilCoolingDXCurveFitPerformance_Impl.hpp
+  CoilCoolingDXCurveFitPerformance.cpp
+  CoilCoolingDXCurveFitOperatingMode.hpp
+  CoilCoolingDXCurveFitOperatingMode_Impl.hpp
+  CoilCoolingDXCurveFitOperatingMode.cpp
+  CoilCoolingDXCurveFitSpeed.hpp
+  CoilCoolingDXCurveFitSpeed_Impl.hpp
+  CoilCoolingDXCurveFitSpeed.cpp
   CoilCoolingDXMultiSpeed.hpp
   CoilCoolingDXMultiSpeed_Impl.hpp
   CoilCoolingDXMultiSpeed.cpp
@@ -333,6 +356,9 @@ set(${target_name}_src
   CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.hpp
   CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_Impl.hpp
   CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData.cpp
+  CoilCoolingWaterPanelRadiant.hpp
+  CoilCoolingWaterPanelRadiant_Impl.hpp
+  CoilCoolingWaterPanelRadiant.cpp
   CoilHeatingDesuperheater.hpp
   CoilHeatingDesuperheater_Impl.hpp
   CoilHeatingDesuperheater.cpp
@@ -402,9 +428,18 @@ set(${target_name}_src
   CoilSystemCoolingDXHeatExchangerAssisted.hpp
   CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp
   CoilSystemCoolingDXHeatExchangerAssisted.cpp
+  CoilSystemIntegratedHeatPumpAirSource.hpp
+  CoilSystemIntegratedHeatPumpAirSource_Impl.hpp
+  CoilSystemIntegratedHeatPumpAirSource.cpp
   CoilWaterHeatingAirToWaterHeatPump.hpp
   CoilWaterHeatingAirToWaterHeatPump_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPump.cpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeed.cpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_Impl.hpp
+  CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData.cpp
   CoilWaterHeatingAirToWaterHeatPumpWrapped.hpp
   CoilWaterHeatingAirToWaterHeatPumpWrapped_Impl.hpp
   CoilWaterHeatingAirToWaterHeatPumpWrapped.cpp
@@ -501,6 +536,12 @@ set(${target_name}_src
   CurveLinear.hpp
   CurveLinear_Impl.hpp
   CurveLinear.cpp
+  CurveQuadLinear.hpp
+  CurveQuadLinear_Impl.hpp
+  CurveQuadLinear.cpp
+  CurveQuintLinear.hpp
+  CurveQuintLinear_Impl.hpp
+  CurveQuintLinear.cpp
   CurveQuadratic.hpp
   CurveQuadratic_Impl.hpp
   CurveQuadratic.cpp
@@ -528,6 +569,12 @@ set(${target_name}_src
   DaylightingDeviceShelf.hpp
   DaylightingDeviceShelf_Impl.hpp
   DaylightingDeviceShelf.cpp
+  DaylightingDeviceTubular.hpp
+  DaylightingDeviceTubular_Impl.hpp
+  DaylightingDeviceTubular.cpp
+  DaylightingDeviceLightWell.hpp
+  DaylightingDeviceLightWell_Impl.hpp
+  DaylightingDeviceLightWell.cpp
   DaylightRedirectionDevice.hpp
   DaylightRedirectionDevice_Impl.hpp
   DaylightRedirectionDevice.cpp
@@ -594,6 +641,9 @@ set(${target_name}_src
   ElectricLoadCenterStorageConverter.hpp
   ElectricLoadCenterStorageConverter_Impl.hpp
   ElectricLoadCenterStorageConverter.cpp
+  ElectricLoadCenterStorageLiIonNMCBattery.hpp
+  ElectricLoadCenterStorageLiIonNMCBattery_Impl.hpp
+  ElectricLoadCenterStorageLiIonNMCBattery.cpp
   ElectricLoadCenterTransformer.hpp
   ElectricLoadCenterTransformer_Impl.hpp
   ElectricLoadCenterTransformer.cpp
@@ -714,6 +764,9 @@ set(${target_name}_src
   Facility.hpp
   Facility_Impl.hpp
   Facility.cpp
+  FanComponentModel.hpp
+  FanComponentModel_Impl.hpp
+  FanComponentModel.cpp
   FanConstantVolume.hpp
   FanConstantVolume_Impl.hpp
   FanConstantVolume.cpp
@@ -807,6 +860,9 @@ set(${target_name}_src
   GeneratorPVWatts.hpp
   GeneratorPVWatts_Impl.hpp
   GeneratorPVWatts.cpp
+  GeneratorWindTurbine.hpp
+  GeneratorWindTurbine_Impl.hpp
+  GeneratorWindTurbine.cpp
   GlareSensor.hpp
   GlareSensor_Impl.hpp
   GlareSensor.cpp
@@ -834,9 +890,21 @@ set(${target_name}_src
   HeatPumpWaterToWaterEquationFitHeating.hpp
   HeatPumpWaterToWaterEquationFitHeating_Impl.hpp
   HeatPumpWaterToWaterEquationFitHeating.cpp
+  HeatPumpPlantLoopEIRCooling.hpp
+  HeatPumpPlantLoopEIRCooling_Impl.hpp
+  HeatPumpPlantLoopEIRCooling.cpp
+  HeatPumpPlantLoopEIRHeating.hpp
+  HeatPumpPlantLoopEIRHeating_Impl.hpp
+  HeatPumpPlantLoopEIRHeating.cpp
   HeatExchangerAirToAirSensibleAndLatent.hpp
   HeatExchangerAirToAirSensibleAndLatent_Impl.hpp
   HeatExchangerAirToAirSensibleAndLatent.cpp
+  HeatExchangerDesiccantBalancedFlow.hpp
+  HeatExchangerDesiccantBalancedFlow_Impl.hpp
+  HeatExchangerDesiccantBalancedFlow.cpp
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1.hpp
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1_Impl.hpp
+  HeatExchangerDesiccantBalancedFlowPerformanceDataType1.cpp
   HeatExchangerFluidToFluid.hpp
   HeatExchangerFluidToFluid_Impl.hpp
   HeatExchangerFluidToFluid.cpp
@@ -849,6 +917,9 @@ set(${target_name}_src
   HumidifierSteamElectric.hpp
   HumidifierSteamElectric_Impl.hpp
   HumidifierSteamElectric.cpp
+  HumidifierSteamGas.hpp
+  HumidifierSteamGas_Impl.hpp
+  HumidifierSteamGas.cpp
   HVACComponent.hpp
   HVACComponent_Impl.hpp
   HVACComponent.cpp
@@ -932,6 +1003,12 @@ set(${target_name}_src
   MaterialPropertyMoisturePenetrationDepthSettings.hpp
   MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp
   MaterialPropertyMoisturePenetrationDepthSettings.cpp
+  MaterialPropertyPhaseChange.hpp
+  MaterialPropertyPhaseChange_Impl.hpp
+  MaterialPropertyPhaseChange.cpp
+  MaterialPropertyPhaseChangeHysteresis.hpp
+  MaterialPropertyPhaseChangeHysteresis_Impl.hpp
+  MaterialPropertyPhaseChangeHysteresis.cpp
   MeterCustom.hpp
   MeterCustom_Impl.hpp
   MeterCustom.cpp
@@ -956,15 +1033,33 @@ set(${target_name}_src
   OpaqueMaterial.hpp
   OpaqueMaterial_Impl.hpp
   OpaqueMaterial.cpp
+  OutputControlFiles.hpp
+  OutputControlFiles_Impl.hpp
+  OutputControlFiles.cpp
   OutputControlReportingTolerances.hpp
   OutputControlReportingTolerances_Impl.hpp
   OutputControlReportingTolerances.cpp
+  OutputControlTableStyle.hpp
+  OutputControlTableStyle_Impl.hpp
+  OutputControlTableStyle.cpp
   OutputDebuggingData.hpp
   OutputDebuggingData_Impl.hpp
   OutputDebuggingData.cpp
   OutputJSON.hpp
   OutputJSON_Impl.hpp
   OutputJSON.cpp
+  OutputSQLite.hpp
+  OutputSQLite_Impl.hpp
+  OutputSQLite.cpp
+  OutputEnvironmentalImpactFactors.hpp
+  OutputEnvironmentalImpactFactors_Impl.hpp
+  OutputEnvironmentalImpactFactors.cpp
+  EnvironmentalImpactFactors.hpp
+  EnvironmentalImpactFactors_Impl.hpp
+  EnvironmentalImpactFactors.cpp
+  FuelFactors.hpp
+  FuelFactors_Impl.hpp
+  FuelFactors.cpp
   OutputDiagnostics.hpp
   OutputDiagnostics_Impl.hpp
   OutputDiagnostics.cpp
@@ -977,6 +1072,9 @@ set(${target_name}_src
   OutputVariable.hpp
   OutputVariable_Impl.hpp
   OutputVariable.cpp
+  OutputTableSummaryReports.hpp
+  OutputTableSummaryReports_Impl.hpp
+  OutputTableSummaryReports.cpp
   OutsideSurfaceConvectionAlgorithm.hpp
   OutsideSurfaceConvectionAlgorithm_Impl.hpp
   OutsideSurfaceConvectionAlgorithm.cpp
@@ -1001,6 +1099,9 @@ set(${target_name}_src
   PhotovoltaicPerformanceSimple.hpp
   PhotovoltaicPerformanceSimple_Impl.hpp
   PhotovoltaicPerformanceSimple.cpp
+  PhotovoltaicPerformanceSandia.hpp
+  PhotovoltaicPerformanceSandia_Impl.hpp
+  PhotovoltaicPerformanceSandia.cpp
   PipeAdiabatic.hpp
   PipeAdiabatic_Impl.hpp
   PipeAdiabatic.cpp
@@ -1070,6 +1171,18 @@ set(${target_name}_src
   PumpVariableSpeed.hpp
   PumpVariableSpeed_Impl.hpp
   PumpVariableSpeed.cpp
+  PythonPluginInstance.hpp
+  PythonPluginInstance_Impl.hpp
+  PythonPluginInstance.cpp
+  PythonPluginVariable.hpp
+  PythonPluginVariable_Impl.hpp
+  PythonPluginVariable.cpp
+  PythonPluginTrendVariable.hpp
+  PythonPluginTrendVariable_Impl.hpp
+  PythonPluginTrendVariable.cpp
+  PythonPluginOutputVariable.hpp
+  PythonPluginOutputVariable_Impl.hpp
+  PythonPluginOutputVariable.cpp
   RadianceParameters.hpp
   RadianceParameters_Impl.hpp
   RadianceParameters.cpp
@@ -1085,6 +1198,9 @@ set(${target_name}_src
   RefrigerationCompressor.hpp
   RefrigerationCompressor_Impl.hpp
   RefrigerationCompressor.cpp
+  RefrigerationCompressorRack.hpp
+  RefrigerationCompressorRack_Impl.hpp
+  RefrigerationCompressorRack.cpp
   RefrigerationCondenserAirCooled.hpp
   RefrigerationCondenserAirCooled_Impl.hpp
   RefrigerationCondenserAirCooled.cpp
@@ -1262,6 +1378,12 @@ set(${target_name}_src
   SetpointManagerWarmestTemperatureFlow.hpp
   SetpointManagerWarmestTemperatureFlow_Impl.hpp
   SetpointManagerWarmestTemperatureFlow.cpp
+  SetpointManagerSystemNodeResetHumidity.hpp
+  SetpointManagerSystemNodeResetHumidity_Impl.hpp
+  SetpointManagerSystemNodeResetHumidity.cpp
+  SetpointManagerSystemNodeResetTemperature.hpp
+  SetpointManagerSystemNodeResetTemperature_Impl.hpp
+  SetpointManagerSystemNodeResetTemperature.cpp
   Shade.hpp
   Shade_Impl.hpp
   Shade.cpp
@@ -1352,6 +1474,9 @@ set(${target_name}_src
   SpaceInfiltrationEffectiveLeakageArea.hpp
   SpaceInfiltrationEffectiveLeakageArea_Impl.hpp
   SpaceInfiltrationEffectiveLeakageArea.cpp
+  SpaceInfiltrationFlowCoefficient.hpp
+  SpaceInfiltrationFlowCoefficient_Impl.hpp
+  SpaceInfiltrationFlowCoefficient.cpp
   SpaceItem.hpp
   SpaceItem_Impl.hpp
   SpaceItem.cpp
@@ -1397,6 +1522,9 @@ set(${target_name}_src
   Surface.hpp
   Surface_Impl.hpp
   Surface.cpp
+  SurfaceControlMovableInsulation.hpp
+  SurfaceControlMovableInsulation_Impl.hpp
+  SurfaceControlMovableInsulation.cpp
   SurfacePropertyConvectionCoefficients.cpp
   SurfacePropertyConvectionCoefficients.hpp
   SurfacePropertyConvectionCoefficients_Impl.hpp
@@ -1406,12 +1534,21 @@ set(${target_name}_src
   SurfacePropertyExposedFoundationPerimeter.cpp
   SurfacePropertyExposedFoundationPerimeter.hpp
   SurfacePropertyExposedFoundationPerimeter_Impl.hpp
+  SurfacePropertyLocalEnvironment.cpp
+  SurfacePropertyLocalEnvironment.hpp
+  SurfacePropertyLocalEnvironment_Impl.hpp
   SurfacePropertyOtherSideCoefficients.cpp
   SurfacePropertyOtherSideCoefficients.hpp
   SurfacePropertyOtherSideCoefficients_Impl.hpp
   SurfacePropertyOtherSideConditionsModel.cpp
   SurfacePropertyOtherSideConditionsModel.hpp
   SurfacePropertyOtherSideConditionsModel_Impl.hpp
+  SurfacePropertySurroundingSurfaces.cpp
+  SurfacePropertySurroundingSurfaces.hpp
+  SurfacePropertySurroundingSurfaces_Impl.hpp
+  SwimmingPoolIndoor.cpp
+  SwimmingPoolIndoor.hpp
+  SwimmingPoolIndoor_Impl.hpp
   TableMultiVariableLookup.hpp
   TableMultiVariableLookup_Impl.hpp
   TableMultiVariableLookup.cpp
@@ -1487,6 +1624,9 @@ set(${target_name}_src
   WaterHeaterHeatPump.hpp
   WaterHeaterHeatPump_Impl.hpp
   WaterHeaterHeatPump.cpp
+  WaterHeaterSizing.hpp
+  WaterHeaterSizing_Impl.hpp
+  WaterHeaterSizing.cpp
   WaterHeaterStratified.hpp
   WaterHeaterStratified_Impl.hpp
   WaterHeaterStratified.cpp
@@ -1550,6 +1690,9 @@ set(${target_name}_src
   ZoneHVACBaseboardRadiantConvectiveWater.hpp
   ZoneHVACBaseboardRadiantConvectiveWater_Impl.hpp
   ZoneHVACBaseboardRadiantConvectiveWater.cpp
+  ZoneHVACCoolingPanelRadiantConvectiveWater.hpp
+  ZoneHVACCoolingPanelRadiantConvectiveWater_Impl.hpp
+  ZoneHVACCoolingPanelRadiantConvectiveWater.cpp
   ZoneHVACDehumidifierDX.hpp
   ZoneHVACDehumidifierDX_Impl.hpp
   ZoneHVACDehumidifierDX.cpp
@@ -1632,9 +1775,8 @@ set(${target_name}_swig_src
 # Embed resource files
 # Glob all files inside model/Resources
 file(GLOB_RECURSE embedded_files "${CMAKE_CURRENT_SOURCE_DIR}/Resources/**/*.*")
-
-# Exclude rb scripts (helpers to generate JSON files)
-list(FILTER embedded_files EXCLUDE REGEX ".*\.rb")
+# Exclude rb/py scripts (helpers to generate JSON files)
+list(FILTER embedded_files EXCLUDE REGEX ".*\.(rb|py)")
 
 # We compute a relative path, so that they end up in :/Resources/
 foreach( _FILE ${embedded_files} )
@@ -1657,7 +1799,7 @@ set(${target_name}_depends
   ${openstudio_utilities_depends}
 )
 set(${target_name}_depends ${${target_name}_depends} PARENT_SCOPE)
- 
+
 
 add_library(${target_name} OBJECT ${${target_name}_src} ${EMBEDDED_OUTPUT})
 
@@ -1690,10 +1832,12 @@ set(${target_name}_test_src
   test/AirflowNetworkOccupantVentilationControl_GTest.cpp
   test/AirflowNetworkSimpleOpening_GTest.cpp
   test/AirflowNetworkSimulationControl_GTest.cpp
+  test/AirflowNetworkSpecifiedFlowRate_GTest.cpp
   test/AirflowNetworkSurface_GTest.cpp
   test/AirflowNetworkZone_GTest.cpp
   test/AirGap_GTest.cpp
   test/AirLoopHVACOutdoorAirSystem_GTest.cpp
+  test/AirLoopHVACDedicatedOutdoorAirSystem_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAir_GTest.cpp
   test/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_GTest.cpp
   test/AirLoopHVACUnitarySystem_GTest.cpp
@@ -1739,9 +1883,14 @@ set(${target_name}_test_src
   test/ChillerAbsorption_GTest.cpp
   test/ChillerAbsorptionIndirect_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
+  test/ChillerElectricReformulatedEIR_GTest.cpp
   test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
   test/ClimateZones_GTest.cpp
   test/CoilCoolingCooledBeam_GTest.cpp
+  test/CoilCoolingDX_GTest.cpp
+  test/CoilCoolingDXCurveFitPerformance_GTest.cpp
+  test/CoilCoolingDXCurveFitOperatingMode_GTest.cpp
+  test/CoilCoolingDXCurveFitSpeed_GTest.cpp
   test/CoilCoolingDXSingleSpeed_GTest.cpp
   test/CoilCoolingDXMultiSpeed_GTest.cpp
   test/CoilCoolingDXTwoSpeed_GTest.cpp
@@ -1755,6 +1904,7 @@ set(${target_name}_test_src
   test/CoilCoolingWaterToAirHeatPumpEquationFit_GTest.cpp
   test/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFit_GTest.cpp
   test/CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData_GTest.cpp
+  test/CoilCoolingWaterPanelRadiant_GTest.cpp
   test/CoilHeatingDesuperheater_GTest.cpp
   test/CoilHeatingDXMultiSpeed_GTest.cpp
   test/CoilHeatingDXMultiSpeedStageData_GTest.cpp
@@ -1775,8 +1925,12 @@ set(${target_name}_test_src
   test/CoilHeatingWaterBaseboardRadiant_GTest.cpp
   test/CoilSystemCoolingDXHeatExchangerAssisted_GTest.cpp
   test/CoilSystemCoolingWaterHeatExchangerAssisted_GTest.cpp
+  test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
   test/CoilPerformanceDXCooling_GTest.cpp
   test/CoilWaterHeatingAirToWaterHeatPump_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeedSpeedData_GTest.cpp
+  test/CoilWaterHeatingAirToWaterHeatPumpWrapped_GTest.cpp
   test/CoilWaterHeatingDesuperheater_GTest.cpp
   test/Component_GTest.cpp
   test/Connection_GTest.cpp
@@ -1808,14 +1962,23 @@ set(${target_name}_test_src
   test/CurveQuadraticLinear_GTest.cpp
   # n == 3
   test/CurveTriquadratic_GTest.cpp
+  # n == 4
+  test/CurveQuadLinear_GTest.cpp
+  # n == 5
+  test/CurveQuintLinear_GTest.cpp
+  # n == ?
+  test/CurveFunctionalPressureDrop_GTest.cpp
 
   test/DaylightingControl_GTest.cpp
   test/DaylightingDeviceShelf_GTest.cpp
+  test/DaylightingDeviceTubular_GTest.cpp
+  test/DaylightingDeviceLightWell_GTest.cpp
   test/DaylightRedirectionDevice_GTest.cpp
   test/DefaultConstructionSet_GTest.cpp
   test/DefaultScheduleSet_GTest.cpp
   test/DefaultSubSurfaceConstructions_GTest.cpp
   test/DefaultSurfaceConstructions_GTest.cpp
+  test/DesignDay_GTest.cpp
   test/DesignSpecificationOutdoorAir_GTest.cpp
   test/DesignSpecificationZoneAirDistribution_GTest.cpp
   test/DistrictCooling_GTest.cpp
@@ -1829,6 +1992,7 @@ set(${target_name}_test_src
   test/ElectricLoadCenterInverterLookUpTable_GTest.cpp
   test/ElectricLoadCenterStorageSimple_GTest.cpp
   test/ElectricLoadCenterStorageConverter_GTest.cpp
+  test/ElectricLoadCenterStorageLiIonNMCBattery_GTest.cpp
   test/ElectricLoadCenterTransformer_GTest.cpp
   test/EnergyManagementSystemActuator_GTest.cpp
   test/EnergyManagementSystemConstructionIndexVariable_GTest.cpp
@@ -1868,6 +2032,7 @@ set(${target_name}_test_src
   test/FanZoneExhaust_GTest.cpp
   test/FanOnOff_GTest.cpp
   test/FanSystemModel_GTest.cpp
+  test/FanComponentModel_GTest.cpp
   test/FenestrationMaterial_GTest.cpp
   test/FloorplanJSForwardTranslator_GTest.cpp
   test/FluidCoolerSingleSpeed_GTest.cpp
@@ -1890,6 +2055,7 @@ set(${target_name}_test_src
   test/GeneratorPhotovoltaic_GTest.cpp
   test/GeneratorMicroTurbine_GTest.cpp
   test/GeneratorPVWatts_GTest.cpp
+  test/GeneratorWindTurbine_GTest.cpp
   test/GlareSensor_GTest.cpp
   test/GroundHeatExchangerHorizontalTrench_GTest.cpp
   test/GroundHeatExchangerVertical_GTest.cpp
@@ -1897,10 +2063,15 @@ set(${target_name}_test_src
   test/HeaderedPumpsConstantSpeed_GTest.cpp
   test/HeaderedPumpsVariableSpeed_GTest.cpp
   test/HeatExchangerAirToAirSensibleAndLatent_GTest.cpp
+  test/HeatExchangerDesiccantBalancedFlow_GTest.cpp
+  test/HeatExchangerDesiccantBalancedFlowPerformanceDataType1_GTest.cpp
   test/HeatExchangerFluidToFluid_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitHeating_GTest.cpp
   test/HeatPumpWaterToWaterEquationFitCooling_GTest.cpp
+  test/HeatPumpPlantLoopEIRHeating_GTest.cpp
+  test/HeatPumpPlantLoopEIRCooling_GTest.cpp
   test/HumidifierSteamElectric_GTest.cpp
+  test/HumidifierSteamGas_GTest.cpp
   test/IlluminanceMap_GTest.cpp
   test/InteriorPartitionSurfaceGroup_GTest.cpp
   test/InteriorPartitionSurface_GTest.cpp
@@ -1918,6 +2089,8 @@ set(${target_name}_test_src
   test/Material_GTest.cpp
   test/MaterialPropertyGlazingSpectralData_GTest.cpp
   test/MaterialPropertyMoisturePenetrationDepthSettings_GTest.cpp
+  test/MaterialPropertyPhaseChange_GTest.cpp
+  test/MaterialPropertyPhaseChangeHysteresis_GTest.cpp
   test/MeterCustom_GTest.cpp
   test/MeterCustomDecrement_GTest.cpp
   test/ModelFixture.cpp
@@ -1930,19 +2103,27 @@ set(${target_name}_test_src
   test/PortList_GTest.cpp
   test/OpaqueMaterial_GTest.cpp
   test/OtherEquipment_GTest.cpp
+  test/OutputControlFiles_GTest.cpp
   test/OutputControlReportingTolerances_GTest.cpp
+  test/OutputControlTableStyle_GTest.cpp
   test/OutputDebuggingData_GTest.cpp
   test/OutputJSON_GTest.cpp
+  test/OutputSQLite_GTest.cpp
+  test/OutputEnvironmentalImpactFactors_GTest.cpp
+  test/EnvironmentalImpactFactors_GTest.cpp
+  test/FuelFactors_GTest.cpp
   test/OutputDiagnostics_GTest.cpp
   test/OutputEnergyManagementSystem_GTest.cpp
   test/OutputMeter_GTest.cpp
   test/OutputVariable_GTest.cpp
+  test/OutputTableSummaryReports_GTest.cpp
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp
   test/PeopleDefinition_GTest.cpp
   test/PerformancePrecisionTradeoffs_GTest.cpp
   test/PhotovoltaicPerformanceEquivalentOneDiode_GTest.cpp
   test/PhotovoltaicPerformanceSimple_GTest.cpp
+  test/PhotovoltaicPerformanceSandia_GTest.cpp
   test/PipeAdiabatic_GTest.cpp
   test/PipeIndoor_GTest.cpp
   test/PipeOutdoor_GTest.cpp
@@ -1955,11 +2136,16 @@ set(${target_name}_test_src
   test/Plenums_GTest.cpp
   test/PumpConstantSpeed_GTest.cpp
   test/PumpVariableSpeed_GTest.cpp
+  test/PythonPluginInstance_GTest.cpp
+  test/PythonPluginVariable_GTest.cpp
+  test/PythonPluginTrendVariable_GTest.cpp
+  test/PythonPluginOutputVariable_GTest.cpp
   test/RadianceParameters_GTest.cpp
   test/RefractionExtinctionGlazing_GTest.cpp
   test/RefrigerationAirChiller_GTest.cpp
   test/RefrigerationCase_GTest.cpp
   test/RefrigerationCompressor_GTest.cpp
+  test/RefrigerationCompressorRack_GTest.cpp
   test/RefrigerationCondenserAirCooled_GTest.cpp
   test/RefrigerationCondenserCascade_GTest.cpp
   test/RefrigerationCondenserEvaporativeCooled_GTest.cpp
@@ -2002,6 +2188,8 @@ set(${target_name}_test_src
   test/SetpointManagerSingleZoneHeating_GTest.cpp
   test/SetpointManagerWarmest_GTest.cpp
   test/SetpointManagerWarmestTemperatureFlow_GTest.cpp
+  test/SetpointManagerSystemNodeResetHumidity_GTest.cpp
+  test/SetpointManagerSystemNodeResetTemperature_GTest.cpp
   test/ScheduleDay_GTest.cpp
   test/ScheduleInterval_GTest.cpp
   test/ScheduleRuleset_GTest.cpp
@@ -2025,6 +2213,7 @@ set(${target_name}_test_src
   test/SiteGroundTemperatureFCfactorMethod_GTest.cpp
   test/SiteGroundTemperatureShallow_GTest.cpp
   test/SiteGroundTemperatureBuildingSurface_GTest.cpp
+  test/SiteWaterMainsTemperature_GTest.cpp
   test/SizingPlant_GTest.cpp
   test/SizingSystem_GTest.cpp
   test/SizingZone_GTest.cpp
@@ -2034,17 +2223,23 @@ set(${target_name}_test_src
   test/SolarCollectorIntegralCollectorStorage_GTest.cpp
   test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
+  test/SpaceInfiltrationFlowCoefficient_GTest.cpp
   test/SpaceType_GTest.cpp
   test/Space_GTest.cpp
   test/StandardGlazing_GTest.cpp
+  test/StandardOpaqueMaterial_GTest.cpp
   test/SteamEquipment_GTest.cpp
   test/SubSurface_GTest.cpp
   test/Surface_GTest.cpp
+  test/SurfaceControlMovableInsulation_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
   test/SurfacePropertyConvectionCoefficientsMultipleSurface_GTest.cpp
   test/SurfacePropertyConvectionCoefficients_GTest.cpp
+  test/SurfacePropertyLocalEnvironment_GTest.cpp
   test/SurfacePropertyOtherSideCoefficients_GTest.cpp
   test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
+  test/SurfacePropertySurroundingSurfaces_GTest.cpp
+  test/SwimmingPoolIndoor_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/ThermalZone_GTest.cpp
   test/ThermalStorageIceDetailed_GTest.cpp
@@ -2052,10 +2247,13 @@ set(${target_name}_test_src
   test/TemperingValve_GTest.cpp
   test/ThreeJSForwardTranslator_GTest.cpp
   test/ThreeJSReverseTranslator_GTest.cpp
+  test/FloorspaceReverseTranslator_GTest.cpp
   test/UnitarySystemPerformanceMultispeed_GTest.cpp
   test/UtilityBill_GTest.cpp
   test/WaterHeaterMixed_GTest.cpp
   test/WaterHeaterHeatPump_GTest.cpp
+  test/WaterHeaterHeatPumpWrappedCondenser_GTest.cpp
+  test/WaterHeaterSizing_GTest.cpp
   test/WaterHeaterStratified_GTest.cpp
   test/WaterUseConnections_GTest.cpp
   test/WaterUseEquipment_GTest.cpp
@@ -2069,6 +2267,7 @@ set(${target_name}_test_src
   test/ZoneHVACBaseboardConvectiveWater_GTest.cpp
   test/ZoneHVACBaseboardRadiantConvectiveElectric_GTest.cpp
   test/ZoneHVACBaseboardRadiantConvectiveWater_GTest.cpp
+  test/ZoneHVACCoolingPanelRadiantConvectiveWater_GTest.cpp
   test/ZoneHVACDehumidifierDX_GTest.cpp
   test/ZoneHVACEnergyRecoveryVentilator_GTest.cpp
   test/ZoneHVACEnergyRecoveryVentilatorController_GTest.cpp
@@ -2089,6 +2288,8 @@ set(${target_name}_test_src
   test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   test/ZoneVentilationDesignFlowRate_GTest.cpp
   test/ZoneVentilationWindandStackOpenArea_GTest.cpp
+
+  test/UniqueModelObject_GTest.cpp
 )
 
 set(${target_name}_test_depends
@@ -2112,6 +2313,27 @@ if(BUILD_TESTING)
     #set_target_properties("${target_name}_tests" PROPERTIES "COMPILE_FLAGS" "-Werror")
   endif()
 endif()
+
+SET(${target_name}_benchmark_src
+  test/Model_Benchmark.cpp
+)
+
+if(BUILD_BENCHMARK)
+
+  foreach( bench_file ${${target_name}_benchmark_src} )
+    get_filename_component(bench_name ${bench_file} NAME_WE)
+    message("bench_name=${bench_name}")
+    add_executable( ${bench_name} ${bench_file} )
+    target_link_libraries(${bench_name}
+      CONAN_PKG::benchmark
+      CONAN_PKG::fmt
+      openstudiolib
+    )
+  endforeach()
+
+endif()
+
+
 
 set(swig_target_name ${target_name})
 

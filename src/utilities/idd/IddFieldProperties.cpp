@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,7 +33,7 @@
 
 #include <sstream>
 
-namespace openstudio{
+namespace openstudio {
 
 /// default constructor
 IddFieldProperties::IddFieldProperties()
@@ -45,18 +45,15 @@ IddFieldProperties::IddFieldProperties()
     deprecated(false),
     beginExtensible(false),
     minBoundType(Unbounded),
-    maxBoundType(Unbounded)
-{}
+    maxBoundType(Unbounded) {}
 
-bool IddFieldProperties::isGeneric() const
-{
+bool IddFieldProperties::isGeneric() const {
   IddFieldProperties genericProperties;
   genericProperties.type = type;
   return (*this == genericProperties);
 }
 
-bool IddFieldProperties::operator==(const IddFieldProperties& other) const
-{
+bool IddFieldProperties::operator==(const IddFieldProperties& other) const {
   /** Only compare one or other of string versus numeric. */
   if (this == &other) {
     return true;
@@ -99,9 +96,13 @@ bool IddFieldProperties::operator==(const IddFieldProperties& other) const
     return false;
   }
   if (maxBoundValue != other.maxBoundValue) {
-    std::string myBound, theirBound;
-    if (maxBoundText) { myBound = *maxBoundText; }
-    if (other.maxBoundText) { theirBound = *(other.maxBoundText); }
+    // std::string myBound, theirBound;
+    // if (maxBoundText) {
+    //   myBound = *maxBoundText;
+    // }
+    // if (other.maxBoundText) {
+    //   theirBound = *(other.maxBoundText);
+    // }
     return false;
   }
   if (stringDefault != other.stringDefault) {
@@ -123,113 +124,111 @@ bool IddFieldProperties::operator==(const IddFieldProperties& other) const
   return true;
 }
 
-bool IddFieldProperties::operator!=(const IddFieldProperties& other) const
-{
-  return !((*this)==other);
+bool IddFieldProperties::operator!=(const IddFieldProperties& other) const {
+  return !((*this) == other);
 }
 
-std::ostream& IddFieldProperties::print(std::ostream& os) const
-{
-  if (!note.empty()){
+std::ostream& IddFieldProperties::print(std::ostream& os) const {
+  if (!note.empty()) {
     std::stringstream ss(note);
     std::string line;
-    while (! ss.eof() ) {
-      std::getline(ss,line);
-      os << "       \\note " << line << std::endl;
+    while (!ss.eof()) {
+      std::getline(ss, line);
+      os << "       \\note " << line << '\n';
     }
   }
 
-  if(type == IddFieldType::IntegerType){
-    os << "       \\type integer" << std::endl;
-  }else if(type == IddFieldType::RealType){
-    os << "       \\type real" << std::endl;
-  }else if(type == IddFieldType::AlphaType){
-    os << "       \\type alpha" << std::endl;
-  }else if(type == IddFieldType::ChoiceType){
-    os << "       \\type choice" << std::endl;
-  }else if(type == IddFieldType::NodeType){
-    os << "       \\type node" << std::endl;
-  }else if(type == IddFieldType::ObjectListType){
-    os << "       \\type object-list" << std::endl;
-  }else if(type == IddFieldType::ExternalListType) {
-    os << "       \\type external-list" << std::endl;
-  }else if(type == IddFieldType::URLType){
-    os << "       \\type url" << std::endl;
-  }else if(type == IddFieldType::HandleType){
-    os << "       \\type handle" << std::endl;
+  if (type == IddFieldType::IntegerType) {
+    os << "       \\type integer" << '\n';
+  } else if (type == IddFieldType::RealType) {
+    os << "       \\type real" << '\n';
+  } else if (type == IddFieldType::AlphaType) {
+    os << "       \\type alpha" << '\n';
+  } else if (type == IddFieldType::ChoiceType) {
+    os << "       \\type choice" << '\n';
+  } else if (type == IddFieldType::NodeType) {
+    os << "       \\type node" << '\n';
+  } else if (type == IddFieldType::ObjectListType) {
+    os << "       \\type object-list" << '\n';
+  } else if (type == IddFieldType::ExternalListType) {
+    os << "       \\type external-list" << '\n';
+  } else if (type == IddFieldType::URLType) {
+    os << "       \\type url" << '\n';
+  } else if (type == IddFieldType::HandleType) {
+    os << "       \\type handle" << '\n';
   }
 
-  if (required){
-    os << "       \\required-field" << std::endl;
+  if (required) {
+    os << "       \\required-field" << '\n';
   }
-  if (autosizable){
-    os << "       \\autosizable" << std::endl;
+  if (autosizable) {
+    os << "       \\autosizable" << '\n';
   }
-  if (autocalculatable){
-    os << "       \\autocalculatable" << std::endl;
+  if (autocalculatable) {
+    os << "       \\autocalculatable" << '\n';
   }
 
-  if (retaincase){
-    os << "       \\retaincase" << std::endl;
+  if (retaincase) {
+    os << "       \\retaincase" << '\n';
   }
-  if (deprecated){
-    os << "       \\deprecated" << std::endl;
+  if (deprecated) {
+    os << "       \\deprecated" << '\n';
   }
-  if (beginExtensible){
-    os << "       \\begin-extensible" << std::endl;
+  if (beginExtensible) {
+    os << "       \\begin-extensible" << '\n';
   }
-  if (units){
-    os << "       \\units " << *units << std::endl;
+  if (units) {
+    os << "       \\units " << *units << '\n';
   }
-  if (ipUnits){
-    os << "       \\ip-units " << *ipUnits << std::endl;
+  if (ipUnits) {
+    os << "       \\ip-units " << *ipUnits << '\n';
   }
-  if (minBoundType == IddFieldProperties::InclusiveBound && minBoundValue){
-    os << "       \\minimum " << *minBoundValue << std::endl;
+  if (minBoundType == IddFieldProperties::InclusiveBound && minBoundValue) {
+    os << "       \\minimum " << *minBoundValue << '\n';
   }
-  if (minBoundType == IddFieldProperties::ExclusiveBound && minBoundValue){
-    os << "       \\minimum> " << *minBoundValue << std::endl;
+  if (minBoundType == IddFieldProperties::ExclusiveBound && minBoundValue) {
+    os << "       \\minimum> " << *minBoundValue << '\n';
   }
-  if (maxBoundType == IddFieldProperties::InclusiveBound && maxBoundValue){
-    os << "       \\maximum " << *maxBoundValue << std::endl;
+  if (maxBoundType == IddFieldProperties::InclusiveBound && maxBoundValue) {
+    os << "       \\maximum " << *maxBoundValue << '\n';
   }
-  if (maxBoundType == IddFieldProperties::ExclusiveBound && maxBoundValue){
-    os << "       \\maximum< " << *maxBoundValue << std::endl;
+  if (maxBoundType == IddFieldProperties::ExclusiveBound && maxBoundValue) {
+    os << "       \\maximum< " << *maxBoundValue << '\n';
   }
-  if (stringDefault){
-    os << "       \\default " << *stringDefault << std::endl;
+  if (stringDefault) {
+    os << "       \\default " << *stringDefault << '\n';
   }
-  if (!objectLists.empty()){
+  if (!objectLists.empty()) {
     for (const std::string& objectList : objectLists) {
-      os << "       \\object-list " << objectList << std::endl;
+      os << "       \\object-list " << objectList << '\n';
     }
   }
-  if (!references.empty()){
-    for (const std::string& reference : references){
-      os << "       \\reference " << reference << std::endl;
+  if (!references.empty()) {
+    for (const std::string& reference : references) {
+      os << "       \\reference " << reference << '\n';
     }
   }
-  if (!references.empty()){
-    for (const std::string& reference : referenceClassNames){
-      os << "       \\reference-class-name " << reference << std::endl;
+  if (!references.empty()) {
+    for (const std::string& reference : referenceClassNames) {
+      os << "       \\reference-class-name " << reference << '\n';
     }
   }
   if (!externalLists.empty()) {
     for (const std::string& externalList : externalLists) {
-      os << "       \\external-list " << externalList << std::endl;
+      os << "       \\external-list " << externalList << '\n';
     }
   }
 
   return os;
 }
 
-StringVector intersectReferenceLists(const StringVector& list1,const StringVector& list2) {
-  IStringSet set1(list1.begin(),list1.end());
-  IStringSet set2(list2.begin(),list2.end());
+StringVector intersectReferenceLists(const StringVector& list1, const StringVector& list2) {
+  IStringSet set1(list1.begin(), list1.end());
+  IStringSet set2(list2.begin(), list2.end());
   IStringSet intersection;
-  std::set_intersection(set1.begin(),set1.end(),set2.begin(),set2.end(),
-      std::inserter(intersection,intersection.begin()),IStringSet::key_compare());
-  return StringVector(intersection.begin(),intersection.end());
+  std::set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), std::inserter(intersection, intersection.begin()),
+                        IStringSet::key_compare());
+  return StringVector(intersection.begin(), intersection.end());
 }
 
-} // openstudio
+}  // namespace openstudio

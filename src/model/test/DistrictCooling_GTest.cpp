@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,23 +41,21 @@ using namespace openstudio;
 using namespace openstudio::model;
 
 //test construction of the object
-TEST_F(ModelFixture,DistrictCooling_DistrictCooling)
-{
+TEST_F(ModelFixture, DistrictCooling_DistrictCooling) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    DistrictCooling testObject(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      DistrictCooling testObject(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 //test connecting the object to a loop and get the inlet node and the outlet node
-TEST_F(ModelFixture,DistrictCooling_connections)
-{
+TEST_F(ModelFixture, DistrictCooling_connections) {
   Model m;
 
   //make a plant loop
@@ -70,23 +68,23 @@ TEST_F(ModelFixture,DistrictCooling_connections)
   Node plantOutletNode = plantLoop.supplyOutletNode();
 
   //hook the DistrictCooling object to the supply outlet node
-  ASSERT_TRUE (testObject.addToNode(plantOutletNode));
+  ASSERT_TRUE(testObject.addToNode(plantOutletNode));
 
   //it should now be on a loop and have inlet and outlet objects
-  ASSERT_TRUE (testObject.loop());
-  ASSERT_TRUE(testObject.inletModelObject() );
-  ASSERT_TRUE(testObject.outletModelObject() );
+  ASSERT_TRUE(testObject.loop());
+  ASSERT_TRUE(testObject.inletModelObject());
+  ASSERT_TRUE(testObject.outletModelObject());
 
   //it should be removable from the loop
-  ASSERT_TRUE(testObject.isRemovable() );
+  ASSERT_TRUE(testObject.isRemovable());
 
   //now, disconnect the object
   testObject.disconnect();
 
   //it should no longer have a loop or inlet/outlet objects
-  ASSERT_FALSE(testObject.loop() );
-  ASSERT_FALSE(testObject.inletModelObject() );
-  ASSERT_FALSE(testObject.outletModelObject() );
+  ASSERT_FALSE(testObject.loop());
+  ASSERT_FALSE(testObject.inletModelObject());
+  ASSERT_FALSE(testObject.outletModelObject());
 
   //make an airloop
   AirLoopHVAC airLoop(m);
@@ -99,7 +97,7 @@ TEST_F(ModelFixture,DistrictCooling_connections)
 }
 
 //test setting and getting the nominal capacity
-TEST_F(ModelFixture,DistrictCooling_NominalCapacity) {
+TEST_F(ModelFixture, DistrictCooling_NominalCapacity) {
   Model m;
   DistrictCooling testObject(m);
 
@@ -108,11 +106,11 @@ TEST_F(ModelFixture,DistrictCooling_NominalCapacity) {
   testObject.setNominalCapacity(testValue);
   auto capacity = testObject.nominalCapacity();
   ASSERT_TRUE(capacity);
-  ASSERT_EQ(1,capacity.get());
+  ASSERT_EQ(1, capacity.get());
 }
 
 //test cloning the object
-TEST_F(ModelFixture,DistrictCooling_Clone){
+TEST_F(ModelFixture, DistrictCooling_Clone) {
   Model m;
   //make an object to clone, and edit some property to make sure the clone worked
   DistrictCooling testObject(m);
@@ -123,7 +121,7 @@ TEST_F(ModelFixture,DistrictCooling_Clone){
   DistrictCooling testObjectClone = testObject.clone(m).cast<DistrictCooling>();
   auto capacity = testObjectClone.nominalCapacity();
   ASSERT_TRUE(capacity);
-  ASSERT_EQ(1234,capacity.get());
+  ASSERT_EQ(1234, capacity.get());
 
   //clone into another model
   Model m2;
@@ -131,10 +129,10 @@ TEST_F(ModelFixture,DistrictCooling_Clone){
 
   capacity = testObjectClone2.nominalCapacity();
   ASSERT_TRUE(capacity);
-  ASSERT_EQ(1234,capacity.get());
+  ASSERT_EQ(1234, capacity.get());
 }
 
-TEST_F(ModelFixture,DistrictCooling_addToNode) {
+TEST_F(ModelFixture, DistrictCooling_addToNode) {
   Model m;
   DistrictCooling testObject(m);
 
@@ -143,7 +141,7 @@ TEST_F(ModelFixture,DistrictCooling_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -153,15 +151,15 @@ TEST_F(ModelFixture,DistrictCooling_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_FALSE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.demandComponents().size());
 
   DistrictCooling testObjectClone = testObject.clone(m).cast<DistrictCooling>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)9, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)9, plantLoop.supplyComponents().size());
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,26 +41,22 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateTimestep( const WorkspaceObject & workspaceObject )
-{
-  if( workspaceObject.iddObject().type() != IddObjectType::Timestep )
-  {
-     LOG(Error, "WorkspaceObject is not IddObjectType: Timestep");
-     return boost::none;
+  OptionalModelObject ReverseTranslator::translateTimestep(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Timestep) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Timestep");
+      return boost::none;
+    }
+
+    Timestep mo = m_model.getUniqueModelObject<Timestep>();
+
+    boost::optional<int> i = workspaceObject.getInt(TimestepFields::NumberofTimestepsperHour);
+    if (i) {
+      mo.setInt(OS_TimestepFields::NumberofTimestepsperHour, i.get());
+    }
+
+    return mo;
   }
 
-  Timestep mo = m_model.getUniqueModelObject<Timestep>();
+}  // namespace energyplus
 
-  boost::optional<int> i = workspaceObject.getInt(TimestepFields::NumberofTimestepsperHour);
-  if( i )
-  {
-    mo.setInt(OS_TimestepFields::NumberofTimestepsperHour,i.get());
-  }
-
-  return mo;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

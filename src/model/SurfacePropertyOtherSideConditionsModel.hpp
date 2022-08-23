@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,71 +36,71 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class SurfacePropertyOtherSideConditionsModel_Impl;
+    class SurfacePropertyOtherSideConditionsModel_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SurfacePropertyOtherSideConditionsModel is a ResourceObject that wraps the OpenStudio IDD object 'OS:SurfaceProperty:OtherSideConditionsModel'. */
-class MODEL_API SurfacePropertyOtherSideConditionsModel : public ResourceObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SurfacePropertyOtherSideConditionsModel is a ResourceObject that wraps the OpenStudio IDD object 'OS:SurfaceProperty:OtherSideConditionsModel'. */
+  class MODEL_API SurfacePropertyOtherSideConditionsModel : public ResourceObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SurfacePropertyOtherSideConditionsModel(const Model& model);
+    explicit SurfacePropertyOtherSideConditionsModel(const Model& model);
 
-  virtual ~SurfacePropertyOtherSideConditionsModel() {}
+    virtual ~SurfacePropertyOtherSideConditionsModel() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> typeOfModelingValues();
+    static std::vector<std::string> typeOfModelingValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string typeOfModeling() const;
+    std::string typeOfModeling() const;
 
-  bool isTypeOfModelingDefaulted() const;
+    bool isTypeOfModelingDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setTypeOfModeling(const std::string& typeOfModeling);
+    bool setTypeOfModeling(const std::string& typeOfModeling);
 
-  void resetTypeOfModeling();
+    void resetTypeOfModeling();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SurfacePropertyOtherSideConditionsModel_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SurfacePropertyOtherSideConditionsModel_Impl ImplType;
 
-  explicit SurfacePropertyOtherSideConditionsModel(std::shared_ptr<detail::SurfacePropertyOtherSideConditionsModel_Impl> impl);
+    explicit SurfacePropertyOtherSideConditionsModel(std::shared_ptr<detail::SurfacePropertyOtherSideConditionsModel_Impl> impl);
 
-  friend class detail::SurfacePropertyOtherSideConditionsModel_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SurfacePropertyOtherSideConditionsModel");
-};
+    friend class detail::SurfacePropertyOtherSideConditionsModel_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SurfacePropertyOtherSideConditionsModel");
+  };
 
-/** \relates SurfacePropertyOtherSideConditionsModel*/
-typedef boost::optional<SurfacePropertyOtherSideConditionsModel> OptionalSurfacePropertyOtherSideConditionsModel;
+  /** \relates SurfacePropertyOtherSideConditionsModel*/
+  typedef boost::optional<SurfacePropertyOtherSideConditionsModel> OptionalSurfacePropertyOtherSideConditionsModel;
 
-/** \relates SurfacePropertyOtherSideConditionsModel*/
-typedef std::vector<SurfacePropertyOtherSideConditionsModel> SurfacePropertyOtherSideConditionsModelVector;
+  /** \relates SurfacePropertyOtherSideConditionsModel*/
+  typedef std::vector<SurfacePropertyOtherSideConditionsModel> SurfacePropertyOtherSideConditionsModelVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SURFACEPROPERTYOTHERSIDECONDITIONSMODEL_HPP
-
+#endif  // MODEL_SURFACEPROPERTYOTHERSIDECONDITIONSMODEL_HPP

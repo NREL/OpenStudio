@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,35 +53,33 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CentralHeatPumpSystem_CentralHeatPumpSystem)
-{
+TEST_F(ModelFixture, CentralHeatPumpSystem_CentralHeatPumpSystem) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
-    CentralHeatPumpSystem central_hp(model);
+  ASSERT_EXIT(
+    {
+      Model model;
+      CentralHeatPumpSystem central_hp(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 // Test the various setters and getters
-TEST_F(ModelFixture, CentralHeatPumpSystem_SettersGetters)
-{
+TEST_F(ModelFixture, CentralHeatPumpSystem_SettersGetters) {
   Model model;
 
   CentralHeatPumpSystem central_hp(model);
 
   // std::vector<CentralHeatPumpSystemModule> modules()
-  ASSERT_EQ( (unsigned)0, central_hp.modules().size() );
+  ASSERT_EQ((unsigned)0, central_hp.modules().size());
   CentralHeatPumpSystemModule central_hp_module(model);
   central_hp.addModule(central_hp_module);
-  ASSERT_EQ( (unsigned)1, central_hp.modules().size() );
+  ASSERT_EQ((unsigned)1, central_hp.modules().size());
   // Test the parent method
-  ASSERT_TRUE(central_hp_module.centralHeatPumpSystem() );
-  ASSERT_EQ( central_hp.handle(), central_hp_module.centralHeatPumpSystem()->handle() );
+  ASSERT_TRUE(central_hp_module.centralHeatPumpSystem());
+  ASSERT_EQ(central_hp.handle(), central_hp_module.centralHeatPumpSystem()->handle());
 
   // Return type: bool
   // Only "SmartMixing" is valid
@@ -107,8 +105,6 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_SettersGetters)
   central_hp.resetAncillaryOperationSchedule();
   ASSERT_FALSE(central_hp.ancillaryOperationSchedule());
 
-
-
   // Test the CentralHeatPumpSystemModule
   // ChillerHeaterPerformanceElectricEIR chillerHeaterModulesPerformanceComponent() const;
   // Schedule chillerHeaterModulesControlSchedule() const;
@@ -123,7 +119,6 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_SettersGetters)
   ASSERT_TRUE(central_hp_module_2.setNumberofChillerHeaterModules(2));
   ASSERT_EQ(2, central_hp_module_2.numberofChillerHeaterModules());
 
-
   // ChillerHeaterModulesPerformanceComponent
   ChillerHeaterPerformanceElectricEIR ch_heater(model);
   // Return type: bool
@@ -136,23 +131,20 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_SettersGetters)
   ASSERT_TRUE(central_hp_module_2.setChillerHeaterModulesControlSchedule(schedule2));
   ASSERT_EQ(schedule2, central_hp_module_2.chillerHeaterModulesControlSchedule());
 
-
   // Test adding/removing modules
   // Return type: bool
   ASSERT_TRUE(central_hp.addModule(central_hp_module_2));
-  ASSERT_EQ( (unsigned)2, central_hp.modules().size() );
+  ASSERT_EQ((unsigned)2, central_hp.modules().size());
   // Return type: void
   central_hp.removeModule(central_hp_module);
-  ASSERT_EQ( (unsigned)1, central_hp.modules().size() );
-  ASSERT_EQ( central_hp_module_2, central_hp.modules()[0]);
+  ASSERT_EQ((unsigned)1, central_hp.modules().size());
+  ASSERT_EQ(central_hp_module_2, central_hp.modules()[0]);
   // Return type: void
   central_hp.removeAllModules();
-  ASSERT_EQ( (unsigned)0, central_hp.modules().size() );
-
+  ASSERT_EQ((unsigned)0, central_hp.modules().size());
 }
 
-TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections)
-{
+TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections) {
   Model model;
   CentralHeatPumpSystem central_hp(model);
 
@@ -163,19 +155,18 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections)
     EXPECT_TRUE(central_hp.addToNode(node));
     auto plant = central_hp.plantLoop();
     EXPECT_TRUE(plant);
-    if( plant ) {
-      EXPECT_EQ(coolingPlant.handle(),plant->handle());
+    if (plant) {
+      EXPECT_EQ(coolingPlant.handle(), plant->handle());
     }
     // PlantLoop has 5 components on the supply side by default (3 Nodes, One splitter, One mixer)
-    EXPECT_EQ(7u,coolingPlant.supplyComponents().size());
+    EXPECT_EQ(7u, coolingPlant.supplyComponents().size());
 
     // test the convenience function
     auto plant_bis = central_hp.coolingPlantLoop();
     EXPECT_TRUE(plant_bis);
-    if( plant ) {
-      EXPECT_EQ(coolingPlant.handle(),plant_bis->handle());
+    if (plant) {
+      EXPECT_EQ(coolingPlant.handle(), plant_bis->handle());
     }
-
   }
 
   // SourceLoop: on the demand side
@@ -185,17 +176,17 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections)
     EXPECT_TRUE(central_hp.addToNode(node));
     auto plant = central_hp.secondaryPlantLoop();
     EXPECT_TRUE(plant);
-    if( plant ) {
-      EXPECT_EQ(sourcePlant.handle(),plant->handle());
+    if (plant) {
+      EXPECT_EQ(sourcePlant.handle(), plant->handle());
     }
 
-    EXPECT_EQ(7u,sourcePlant.demandComponents().size());
+    EXPECT_EQ(7u, sourcePlant.demandComponents().size());
 
     // test the convenience function
     auto plant_bis = central_hp.sourcePlantLoop();
     EXPECT_TRUE(plant_bis);
-    if( plant ) {
-      EXPECT_EQ(sourcePlant.handle(),plant_bis->handle());
+    if (plant) {
+      EXPECT_EQ(sourcePlant.handle(), plant_bis->handle());
     }
   }
 
@@ -206,25 +197,24 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections)
     EXPECT_TRUE(central_hp.addToTertiaryNode(node));
     auto plant = central_hp.tertiaryPlantLoop();
     EXPECT_TRUE(plant);
-    if( plant ) {
-      EXPECT_EQ(heatingPlant.handle(),plant->handle());
+    if (plant) {
+      EXPECT_EQ(heatingPlant.handle(), plant->handle());
     }
     // test the convenience function
     auto plant_bis = central_hp.heatingPlantLoop();
     EXPECT_TRUE(plant_bis);
-    if( plant ) {
-      EXPECT_EQ(heatingPlant.handle(),plant_bis->handle());
+    if (plant) {
+      EXPECT_EQ(heatingPlant.handle(), plant_bis->handle());
     }
 
-    EXPECT_EQ(7u,heatingPlant.supplyComponents().size());
+    EXPECT_EQ(7u, heatingPlant.supplyComponents().size());
 
-    EXPECT_TRUE( central_hp.removeFromTertiaryPlantLoop() );
+    EXPECT_TRUE(central_hp.removeFromTertiaryPlantLoop());
     plant = central_hp.tertiaryPlantLoop();
     EXPECT_FALSE(plant);
     EXPECT_EQ(5u, heatingPlant.demandComponents().size());
   }
 }
-
 
 /* I overriden the base class WaterToWaterComponent addToNode() and addToTertiaryNode()
  * addToNode will call addToTertiaryNode behind the scenes when needed
@@ -232,8 +222,7 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections)
  * it should add it to the tertiary(=heating) loop
  * This should work with addSupplyBranchForComponent too
  * AddToTertiaryNode is overriden to not work when trying to add to a demand side node */
-TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections_addToNodeOverride)
-{
+TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections_addToNodeOverride) {
   Model model;
   CentralHeatPumpSystem central_hp(model);
 
@@ -248,7 +237,6 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections_addToNodeOverrid
   auto h_supply_node = heatingPlant.supplyOutletNode();
   auto h_demand_node = heatingPlant.demandInletNode();
 
-
   // Connect to the cooling loop
   EXPECT_TRUE(coolingPlant.addSupplyBranchForComponent(central_hp));
   ASSERT_TRUE(central_hp.coolingPlantLoop());
@@ -256,7 +244,6 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections_addToNodeOverrid
 
   EXPECT_FALSE(central_hp.sourcePlantLoop());
   EXPECT_FALSE(central_hp.heatingPlantLoop());
-
 
   // Connect to the source loop
   EXPECT_TRUE(sourcePlant.addDemandBranchForComponent(central_hp));
@@ -269,7 +256,6 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections_addToNodeOverrid
 
   EXPECT_FALSE(central_hp.heatingPlantLoop());
 
-
   // Have a cooling loop and no heating loop: should connect the heating loop
   EXPECT_TRUE(heatingPlant.addSupplyBranchForComponent(central_hp));
   ASSERT_TRUE(central_hp.coolingPlantLoop());
@@ -278,7 +264,6 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections_addToNodeOverrid
   EXPECT_EQ(sourcePlant, central_hp.sourcePlantLoop().get());
   ASSERT_TRUE(central_hp.heatingPlantLoop());
   EXPECT_EQ(heatingPlant, central_hp.heatingPlantLoop().get());
-
 
   // Have a cooling loop and a heating loop: should reconnect the cooling loop
   // Try with addToNode instead
@@ -292,7 +277,6 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections_addToNodeOverrid
 
   ASSERT_TRUE(central_hp.heatingPlantLoop());
   EXPECT_EQ(heatingPlant, central_hp.heatingPlantLoop().get());
-
 
   // Disconnect the tertiary (heating) loop
   EXPECT_TRUE(central_hp.removeFromTertiaryPlantLoop());
@@ -312,15 +296,9 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_PlantLoopConnections_addToNodeOverrid
 
   ASSERT_TRUE(central_hp.heatingPlantLoop());
   EXPECT_EQ(heatingPlant, central_hp.heatingPlantLoop().get());
-
-
 }
 
-
-
-
-TEST_F(ModelFixture, CentralHeatPumpSystem_Clone_PlantLoops)
-{
+TEST_F(ModelFixture, CentralHeatPumpSystem_Clone_PlantLoops) {
   Model model;
   CentralHeatPumpSystem central_hp(model);
 
@@ -336,27 +314,24 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone_PlantLoops)
   ASSERT_TRUE(central_hp.addToTertiaryNode(node3));
 
   //Clone into the same model
-  CentralHeatPumpSystem  central_hpClone = central_hp.clone(model).cast<CentralHeatPumpSystem>();
+  CentralHeatPumpSystem central_hpClone = central_hp.clone(model).cast<CentralHeatPumpSystem>();
   // Make sure it isn't connected to the same plant loop
   ASSERT_FALSE(central_hpClone.coolingPlantLoop());
   ASSERT_FALSE(central_hpClone.sourcePlantLoop());
   ASSERT_FALSE(central_hpClone.heatingPlantLoop());
 
-
   //Clone into another model
   Model model2;
-  CentralHeatPumpSystem  central_hpClone2 = central_hp.clone(model2).cast<CentralHeatPumpSystem>();
+  CentralHeatPumpSystem central_hpClone2 = central_hp.clone(model2).cast<CentralHeatPumpSystem>();
   // Make sure it isn't connected to any plant loops
   ASSERT_FALSE(central_hpClone2.coolingPlantLoop());
   ASSERT_FALSE(central_hpClone2.sourcePlantLoop());
   ASSERT_FALSE(central_hpClone2.heatingPlantLoop());
-
 }
 
 // Test cloning the CentralHeatPump system, make sure the modules are cloned too
 // Will test cloning the CentralHeatPumpSystemModule too, see if the ChillerHeater is cloned too
-TEST_F(ModelFixture, CentralHeatPumpSystem_Clone)
-{
+TEST_F(ModelFixture, CentralHeatPumpSystem_Clone) {
   Model model;
   CentralHeatPumpSystem central_hp(model);
 
@@ -364,7 +339,7 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone)
   ASSERT_EQ(0u, model.getModelObjects<CentralHeatPumpSystemModule>().size());
 
   //Clone into the same model
-  CentralHeatPumpSystem  central_hpClone = central_hp.clone(model).cast<CentralHeatPumpSystem>();
+  CentralHeatPumpSystem central_hpClone = central_hp.clone(model).cast<CentralHeatPumpSystem>();
   ASSERT_EQ(2u, model.getModelObjects<CentralHeatPumpSystem>().size());
   ASSERT_EQ(0u, model.getModelObjects<CentralHeatPumpSystemModule>().size());
 
@@ -383,9 +358,8 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone)
   // (modules should be a new instance of ModelObjectList, not the same)
   ASSERT_EQ(0u, central_hpClone.modules().size());
 
-
   // Clone in same model and verify that the CentralHeatPumpSystemModule is also cloned
-  CentralHeatPumpSystem  central_hpClone1 = central_hp.clone(model).cast<CentralHeatPumpSystem>();
+  CentralHeatPumpSystem central_hpClone1 = central_hp.clone(model).cast<CentralHeatPumpSystem>();
   // There should now be 3 CentralHeatPumpSystems
   ASSERT_EQ(3u, model.getModelObjects<CentralHeatPumpSystem>().size());
   // The CentralHeatPumpModule should have been cloned
@@ -403,10 +377,9 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone)
   ChillerHeaterPerformanceElectricEIR ch_heaterClone1 = central_hp_moduleClone1.chillerHeaterModulesPerformanceComponent();
   ASSERT_EQ(ch_heater.handle(), ch_heaterClone1.handle());
 
-
   //Clone into another model
   Model model2;
-  CentralHeatPumpSystem  central_hpClone2 = central_hp.clone(model2).cast<CentralHeatPumpSystem>();
+  CentralHeatPumpSystem central_hpClone2 = central_hp.clone(model2).cast<CentralHeatPumpSystem>();
   // Check that the Module and ChillerHeater are carried with
   ASSERT_EQ(1u, model2.getModelObjects<CentralHeatPumpSystem>().size());
   ASSERT_EQ(1u, model2.getModelObjects<CentralHeatPumpSystemModule>().size());
@@ -415,11 +388,9 @@ TEST_F(ModelFixture, CentralHeatPumpSystem_Clone)
 
   CentralHeatPumpSystemModule central_hp_moduleClone2 = central_hpClone2.modules()[0];
   EXPECT_NE(central_hp_module.handle(), central_hp_moduleClone2.handle());
-
 }
 
-TEST_F(ModelFixture, CentralHeatPumpSystemModule_ReverseLookup)
-{
+TEST_F(ModelFixture, CentralHeatPumpSystemModule_ReverseLookup) {
   Model model;
   CentralHeatPumpSystem central_hp(model);
 
@@ -432,5 +403,4 @@ TEST_F(ModelFixture, CentralHeatPumpSystemModule_ReverseLookup)
   // Test that you can get the CentralHeatPumpSystem from the Module
   ASSERT_TRUE(central_hp_module.centralHeatPumpSystem());
   ASSERT_EQ(central_hp.handle(), central_hp_module.centralHeatPumpSystem()->handle());
-
 }

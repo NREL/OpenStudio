@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,7 +33,6 @@
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
 
-
 namespace openstudio {
 
 class FuelType;
@@ -42,138 +41,133 @@ class EndUseCategoryType;
 
 namespace model {
 
-class BillingPeriod;
+  class BillingPeriod;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API UtilityBill_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    class MODEL_API UtilityBill_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    UtilityBill_Impl(const IdfObject& idfObject,
-                     Model_Impl* model,
-                     bool keepHandle);
+      UtilityBill_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    UtilityBill_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      UtilityBill_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    UtilityBill_Impl(const UtilityBill_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      UtilityBill_Impl(const UtilityBill_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~UtilityBill_Impl() {}
+      virtual ~UtilityBill_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::vector<std::string> consumptionUnitValues() const;
+      std::vector<std::string> consumptionUnitValues() const;
 
-    std::vector<std::string> peakDemandUnitValues() const;
+      std::vector<std::string> peakDemandUnitValues() const;
 
-    FuelType fuelType() const;
+      FuelType fuelType() const;
 
-    InstallLocationType meterInstallLocation() const;
+      InstallLocationType meterInstallLocation() const;
 
-    bool isMeterInstallLocationDefaulted() const;
+      bool isMeterInstallLocationDefaulted() const;
 
-    boost::optional<std::string> meterSpecificInstallLocation() const;
+      boost::optional<std::string> meterSpecificInstallLocation() const;
 
-    boost::optional<EndUseCategoryType> meterEndUseCategory() const;
+      boost::optional<EndUseCategoryType> meterEndUseCategory() const;
 
-    boost::optional<std::string> meterSpecificEndUse() const;
+      boost::optional<std::string> meterSpecificEndUse() const;
 
-    std::string consumptionUnit() const;
+      std::string consumptionUnit() const;
 
-    boost::optional<std::string> consumptionUnitDescription() const;
+      boost::optional<std::string> consumptionUnitDescription() const;
 
-    double consumptionUnitConversionFactor() const;
+      double consumptionUnitConversionFactor() const;
 
-    bool isConsumptionUnitConversionFactorDefaulted() const;
+      bool isConsumptionUnitConversionFactorDefaulted() const;
 
-    boost::optional<std::string> peakDemandUnit() const;
+      boost::optional<std::string> peakDemandUnit() const;
 
-    boost::optional<std::string> peakDemandUnitDescription() const;
+      boost::optional<std::string> peakDemandUnitDescription() const;
 
-    boost::optional<double> peakDemandUnitConversionFactor() const;
+      boost::optional<double> peakDemandUnitConversionFactor() const;
 
-    boost::optional<unsigned> timestepsInPeakDemandWindow() const;
+      boost::optional<unsigned> timestepsInPeakDemandWindow() const;
 
-    bool isTimestepsInPeakDemandWindowDefaulted() const;
+      bool isTimestepsInPeakDemandWindowDefaulted() const;
 
-    boost::optional<double> minutesInPeakDemandWindow() const;
+      boost::optional<double> minutesInPeakDemandWindow() const;
 
-    std::vector<BillingPeriod> billingPeriods() const;
+      std::vector<BillingPeriod> billingPeriods() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setMeterInstallLocation(const InstallLocationType& meterInstallLocation);
+      bool setMeterInstallLocation(const InstallLocationType& meterInstallLocation);
 
-    void resetMeterInstallLocation();
+      void resetMeterInstallLocation();
 
-    bool setMeterSpecificInstallLocation(const std::string& meterSpecificInstallLocation);
+      bool setMeterSpecificInstallLocation(const std::string& meterSpecificInstallLocation);
 
-    void resetMeterSpecificInstallLocation();
+      void resetMeterSpecificInstallLocation();
 
-    bool setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory);
+      bool setMeterEndUseCategory(const EndUseCategoryType& meterEndUseCategory);
 
-    void resetMeterEndUseCategory();
+      void resetMeterEndUseCategory();
 
-    bool setMeterSpecificEndUse(const std::string& meterSpecificEndUse);
+      bool setMeterSpecificEndUse(const std::string& meterSpecificEndUse);
 
-    void resetMeterSpecificEndUse();
+      void resetMeterSpecificEndUse();
 
-    bool setConsumptionUnit(const std::string& consumptionUnit);
+      bool setConsumptionUnit(const std::string& consumptionUnit);
 
-    bool setConsumptionUnitConversionFactor(double consumptionUnitConversionFactor);
+      bool setConsumptionUnitConversionFactor(double consumptionUnitConversionFactor);
 
-    void resetConsumptionUnitConversionFactor();
+      void resetConsumptionUnitConversionFactor();
 
-    bool setPeakDemandUnit(const std::string& peakDemandUnit);
+      bool setPeakDemandUnit(const std::string& peakDemandUnit);
 
-    bool setTimestepsInPeakDemandWindow(unsigned timestepsInPeakDemandWindow);
+      bool setTimestepsInPeakDemandWindow(unsigned timestepsInPeakDemandWindow);
 
-    void resetTimestepsInPeakDemandWindow();
+      void resetTimestepsInPeakDemandWindow();
 
-    void clearBillingPeriods();
+      void clearBillingPeriods();
 
-    BillingPeriod addBillingPeriod();
+      BillingPeriod addBillingPeriod();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    OutputMeter consumptionMeter() const;
+      OutputMeter consumptionMeter() const;
 
-    boost::optional<OutputMeter> peakDemandMeter() const;
+      boost::optional<OutputMeter> peakDemandMeter() const;
 
-    unsigned numberBillingPeriodsInCalculations() const;
+      unsigned numberBillingPeriodsInCalculations() const;
 
-    boost::optional<double> CVRMSE() const;
+      boost::optional<double> CVRMSE() const;
 
-    boost::optional<double> NMBE() const;
+      boost::optional<double> NMBE() const;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.UtilityBill");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.UtilityBill");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_UTILITYBILL_IMPL_HPP
+#endif  // MODEL_UTILITYBILL_IMPL_HPP

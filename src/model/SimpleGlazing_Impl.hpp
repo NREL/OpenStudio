@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,81 +33,73 @@
 #include "ModelAPI.hpp"
 #include "Glazing_Impl.hpp"
 
-
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** SimpleGlazing_Impl is a Glazing_Impl that is the implementation class for SimpleGlazing.*/
-  class MODEL_API SimpleGlazing_Impl : public Glazing_Impl {
+    /** SimpleGlazing_Impl is a Glazing_Impl that is the implementation class for SimpleGlazing.*/
+    class MODEL_API SimpleGlazing_Impl : public Glazing_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SimpleGlazing_Impl(const IdfObject& idfObject,
-                       Model_Impl* model,
-                       bool keepHandle);
+      SimpleGlazing_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SimpleGlazing_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                       Model_Impl* model,
-                       bool keepHandle);
+      SimpleGlazing_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SimpleGlazing_Impl(const SimpleGlazing_Impl& other,
-                       Model_Impl* model,
-                       bool keepHandle);
+      SimpleGlazing_Impl(const SimpleGlazing_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SimpleGlazing_Impl() {}
+      virtual ~SimpleGlazing_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual boost::optional<double> getVisibleTransmittance() const override;
+      virtual boost::optional<double> getVisibleTransmittance() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double uFactor() const;
+      double uFactor() const;
 
-    double solarHeatGainCoefficient() const;
+      double solarHeatGainCoefficient() const;
 
-    boost::optional<double> visibleTransmittance() const;
+      boost::optional<double> visibleTransmittance() const;
 
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setUFactor(double uFactor);
 
-    bool setUFactor(double uFactor);
+      bool setSolarHeatGainCoefficient(double solarHeatGainCoefficient);
 
-    bool setSolarHeatGainCoefficient(double solarHeatGainCoefficient);
+      bool setVisibleTransmittance(boost::optional<double> visibleTransmittance);
 
-    bool setVisibleTransmittance(boost::optional<double> visibleTransmittance);
+      void resetVisibleTransmittance();
 
-    void resetVisibleTransmittance();
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SimpleGlazing");
+    };
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.SimpleGlazing");
+  }  // namespace detail
 
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SIMPLEGLAZING_IMPL_HPP
+#endif  // MODEL_SIMPLEGLAZING_IMPL_HPP

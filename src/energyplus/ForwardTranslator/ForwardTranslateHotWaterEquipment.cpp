@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,75 +56,65 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateHotWaterEquipment(
-    HotWaterEquipment& modelObject)
-{
-  IdfObject idfObject(openstudio::IddObjectType::HotWaterEquipment);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateHotWaterEquipment(HotWaterEquipment& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::HotWaterEquipment);
+    m_idfObjects.push_back(idfObject);
 
-  for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()){
-    translateAndMapModelObject(lifeCycleCost);
-  }
-
-  HotWaterEquipmentDefinition definition = modelObject.hotWaterEquipmentDefinition();
-
-  idfObject.setString(HotWaterEquipmentFields::Name, modelObject.name().get());
-
-  boost::optional<Space> space = modelObject.space();
-  boost::optional<SpaceType> spaceType = modelObject.spaceType();
-  if (space){
-    boost::optional<ThermalZone> thermalZone = space->thermalZone();
-    if (thermalZone){
-      idfObject.setString(HotWaterEquipmentFields::ZoneorZoneListName, thermalZone->name().get());
+    for (LifeCycleCost lifeCycleCost : modelObject.lifeCycleCosts()) {
+      translateAndMapModelObject(lifeCycleCost);
     }
-  }else if(spaceType){
-    idfObject.setString(HotWaterEquipmentFields::ZoneorZoneListName, spaceType->name().get());
+
+    HotWaterEquipmentDefinition definition = modelObject.hotWaterEquipmentDefinition();
+
+    idfObject.setString(HotWaterEquipmentFields::Name, modelObject.name().get());
+
+    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
+    idfObject.setString(HotWaterEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
+
+    if (boost::optional<Schedule> schedule = modelObject.schedule()) {
+      auto idf_schedule_ = translateAndMapModelObject(*schedule);
+      OS_ASSERT(idf_schedule_);
+      idfObject.setString(HotWaterEquipmentFields::ScheduleName, idf_schedule_->nameString());
+    }
+
+    idfObject.setString(HotWaterEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());
+
+    double multiplier = modelObject.multiplier();
+
+    OptionalDouble d = definition.designLevel();
+    if (d) {
+      idfObject.setDouble(HotWaterEquipmentFields::DesignLevel, (*d) * multiplier);
+    }
+
+    d = definition.wattsperSpaceFloorArea();
+    if (d) {
+      idfObject.setDouble(HotWaterEquipmentFields::PowerperZoneFloorArea, (*d) * multiplier);
+    }
+
+    d = definition.wattsperPerson();
+    if (d) {
+      idfObject.setDouble(HotWaterEquipmentFields::PowerperPerson, (*d) * multiplier);
+    }
+
+    if (!definition.isFractionLatentDefaulted()) {
+      idfObject.setDouble(HotWaterEquipmentFields::FractionLatent, definition.fractionLatent());
+    }
+
+    if (!definition.isFractionRadiantDefaulted()) {
+      idfObject.setDouble(HotWaterEquipmentFields::FractionRadiant, definition.fractionRadiant());
+    }
+
+    if (!definition.isFractionLostDefaulted()) {
+      idfObject.setDouble(HotWaterEquipmentFields::FractionLost, definition.fractionLost());
+    }
+
+    if (!modelObject.isEndUseSubcategoryDefaulted()) {
+      idfObject.setString(HotWaterEquipmentFields::EndUseSubcategory, modelObject.endUseSubcategory());
+    }
+
+    return idfObject;
   }
 
-  boost::optional<Schedule> schedule = modelObject.schedule();
-  if (schedule){
-    idfObject.setString(HotWaterEquipmentFields::ScheduleName, schedule->name().get());
-  }
+}  // namespace energyplus
 
-  idfObject.setString(HotWaterEquipmentFields::DesignLevelCalculationMethod, definition.designLevelCalculationMethod());
-
-  double multiplier = modelObject.multiplier();
-
-  OptionalDouble d = definition.designLevel();
-  if (d){
-    idfObject.setDouble(HotWaterEquipmentFields::DesignLevel, (*d)*multiplier);
-  }
-
-  d = definition.wattsperSpaceFloorArea();
-  if (d){
-    idfObject.setDouble(HotWaterEquipmentFields::PowerperZoneFloorArea, (*d)*multiplier);
-  }
-
-  d = definition.wattsperPerson();
-  if (d){
-    idfObject.setDouble(HotWaterEquipmentFields::PowerperPerson, (*d)*multiplier);
-  }
-
-  if (!definition.isFractionLatentDefaulted()){
-    idfObject.setDouble(HotWaterEquipmentFields::FractionLatent, definition.fractionLatent());
-  }
-
-  if (!definition.isFractionRadiantDefaulted()){
-    idfObject.setDouble(HotWaterEquipmentFields::FractionRadiant, definition.fractionRadiant());
-  }
-
-  if (!definition.isFractionLostDefaulted()){
-    idfObject.setDouble(HotWaterEquipmentFields::FractionLost, definition.fractionLost());
-  }
-
-  if (!modelObject.isEndUseSubcategoryDefaulted()){
-    idfObject.setString(HotWaterEquipmentFields::EndUseSubcategory, modelObject.endUseSubcategory());
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

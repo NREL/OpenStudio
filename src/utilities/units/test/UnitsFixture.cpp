@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -47,28 +47,25 @@ using openstudio::path;
 using openstudio::toPath;
 
 // initialize for each test
-void UnitsFixture::SetUp() {
-}
+void UnitsFixture::SetUp() {}
 
 // tear down after for each test
-void UnitsFixture::TearDown() {
-}
+void UnitsFixture::TearDown() {}
 
 // initialize static members
-void UnitsFixture::SetUpTestSuite()
-{
+void UnitsFixture::SetUpTestSuite() {
   logFile = FileLogSink(toPath("./UnitsFixture.log"));
   logFile->setLogLevel(Debug);
   Logger::instance().standardOutLogger().disable();
 
   tol = 1.0E-8;
 
-  openstudio::DoubleVector vals = openstudio::toStandardVector(openstudio::randVector(0.0,1000.0,8760u));
+  openstudio::DoubleVector vals = openstudio::toStandardVector(openstudio::randVector(0.0, 1000.0, 8760u));
   openstudio::Unit u = openstudio::createSIPower();
   for (double val : vals) {
-    testQuantityVector.push_back(openstudio::Quantity(val,u));
+    testQuantityVector.push_back(openstudio::Quantity(val, u));
   }
-  testOSQuantityVector = openstudio::OSQuantityVector(u,vals);
+  testOSQuantityVector = openstudio::OSQuantityVector(u, vals);
 }
 
 // tear down static members

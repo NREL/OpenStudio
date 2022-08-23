@@ -3,7 +3,7 @@
 
 %{
   #include <utilities/core/Checksum.hpp>
-  
+
   #include <utilities/idf/Handle.hpp>
   #include <utilities/idf/IdfExtensibleGroup.hpp>
   #include <utilities/idf/IdfObject.hpp>
@@ -43,7 +43,6 @@
   class QNetworkAccessManager;
   namespace openstudio{
     class RemoteBCL;
-    class UpdateManager;
     class PathWatcher;
   }
 %}
@@ -55,7 +54,6 @@
 %ignore QNetworkAccessManager;
 %ignore openstudio::PathWatcher;
 %ignore openstudio::RemoteBCL;
-%ignore openstudio::UpdateManager;
 
 // no default constructors
 %ignore std::vector<openstudio::IdfObject>::vector(size_type);
@@ -107,6 +105,23 @@
   %typemap(csclassmodifiers) openstudio::WorkspaceExtensibleGroup "public partial class"
   %typemap(csclassmodifiers) openstudio::IdfObject "public partial class"
   %typemap(csclassmodifiers) openstudio::IdfExtensibleGroup "public partial class"
+
+  // Help in overload resolution
+  // these have both const and non const
+  %ignore openstudio::WorkspaceObject::idfObject() const;
+  %ignore openstudio::Workspace::order() const;
+
+  // Ignore the progressBar stuff, which is swig'ed later in UtilitiesPlot. I doubt it's useful, so do not bother with partial classes
+  %ignore openstudio::Workspace::connectProgressBar(openstudio::ProgressBar&);
+  %ignore openstudio::Workspace::disconnectProgressBar(openstudio::ProgressBar&);
+
+  // In all of these, progressBar is an optional argument, which translates to two overloads (one with the arg, one without) so we ignore that overload with the arg
+  %ignore openstudio::IdfFile::load(std::istream&, const IddFileType&, ProgressBar*);
+  %ignore openstudio::IdfFile::load(std::istream&, const IddFile&, ProgressBar*);
+  %ignore openstudio::IdfFile::load(const path&, ProgressBar*);
+  %ignore openstudio::IdfFile::load(const path&, const IddFileType&, ProgressBar*);
+  %ignore openstudio::IdfFile::load(const path&, const IddFile&, ProgressBar*);
+
 #endif
 
 #if defined(SWIGJAVA)

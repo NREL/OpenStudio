@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,137 +37,148 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class ControllerWaterCoil_Impl;
+    class ControllerWaterCoil_Impl;
+    class CoilCoolingWater_Impl;
+    class CoilHeatingWater_Impl;
+    class CoilSystemCoolingWaterHeatExchangerAssisted_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ControllerWaterCoil is a HVACComponent that wraps the OpenStudio IDD object
+  /** ControllerWaterCoil is a HVACComponent that wraps the OpenStudio IDD object
  *  'OS:Controller:WaterCoil'. */
-class MODEL_API ControllerWaterCoil : public HVACComponent
-{
-  public:
+  class MODEL_API ControllerWaterCoil : public HVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    virtual ~ControllerWaterCoil() {}
 
-  explicit ControllerWaterCoil(const Model& model);
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  virtual ~ControllerWaterCoil() {}
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    static std::vector<std::string> validControlVariableValues();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validActionValues();
 
-  static std::vector<std::string> validControlVariableValues();
+    static std::vector<std::string> validActuatorVariableValues();
 
-  static std::vector<std::string> validActionValues();
+    //@}
+    /** @name Getters */
+    //@{
 
-  static std::vector<std::string> validActuatorVariableValues();
+    boost::optional<HVACComponent> waterCoil() const;
 
-  //@}
-  /** @name Getters */
-  //@{
+    boost::optional<std::string> controlVariable() const;  // Shouldn't return an optional, has a default
+    bool isControlVariableDefaulted() const;
 
-  boost::optional<std::string> controlVariable() const;
+    boost::optional<std::string> action() const;  // Has no default and is required...
 
-  boost::optional<std::string> action() const;
+    boost::optional<std::string> actuatorVariable() const;  // Shouldn't return an optional, has a default
+    bool isActuatorVariableDefaulted() const;
 
-  boost::optional<std::string> actuatorVariable() const;
+    boost::optional<Node> sensorNode() const;
 
-  boost::optional<Node> sensorNode() const;
+    boost::optional<Node> actuatorNode() const;
 
-  boost::optional<Node> actuatorNode() const;
+    boost::optional<double> controllerConvergenceTolerance() const;
 
-  boost::optional<double> controllerConvergenceTolerance() const;
+    bool isControllerConvergenceToleranceDefaulted() const;
 
-  bool isControllerConvergenceToleranceDefaulted() const;
+    bool isControllerConvergenceToleranceAutosized() const;
 
-  bool isControllerConvergenceToleranceAutosized() const;
+    boost::optional<double> maximumActuatedFlow() const;
 
-  boost::optional<double> maximumActuatedFlow() const;
+    bool isMaximumActuatedFlowAutosized() const;
 
-  bool isMaximumActuatedFlowAutosized() const;
+    double minimumActuatedFlow() const;
 
-  double minimumActuatedFlow() const;
+    bool isMinimumActuatedFlowDefaulted() const;
 
-  bool isMinimumActuatedFlowDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setControlVariable(const std::string& controlVariable);
 
-  bool setControlVariable(std::string controlVariable);
+    void resetControlVariable();
 
-  void resetControlVariable();
+    bool setAction(const std::string& action);
 
-  bool setAction(std::string action);
+    void resetAction();
 
-  void resetAction();
+    bool setActuatorVariable(const std::string& actuatorVariable);
 
-  bool setActuatorVariable(std::string actuatorVariable);
+    void resetActuatorVariable();
 
-  void resetActuatorVariable();
+    bool setSensorNode(const Node& node);
 
-  bool setSensorNode( Node & node );
+    bool setActuatorNode(const Node& node);
 
-  bool setActuatorNode( Node & node );
+    bool setControllerConvergenceTolerance(double controllerConvergenceTolerance);
 
-  bool setControllerConvergenceTolerance(double controllerConvergenceTolerance);
+    void resetControllerConvergenceTolerance();
 
-  void resetControllerConvergenceTolerance();
+    void autosizeControllerConvergenceTolerance();
 
-  void autosizeControllerConvergenceTolerance();
+    bool setMaximumActuatedFlow(double maximumActuatedFlow);
 
-  bool setMaximumActuatedFlow(double maximumActuatedFlow);
+    void resetMaximumActuatedFlow();
 
-  void resetMaximumActuatedFlow();
+    void autosizeMaximumActuatedFlow();
 
-  void autosizeMaximumActuatedFlow();
+    bool setMinimumActuatedFlow(double minimumActuatedFlow);
 
-  bool setMinimumActuatedFlow(double minimumActuatedFlow);
+    void resetMinimumActuatedFlow();
 
-  void resetMinimumActuatedFlow();
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedControllerConvergenceTolerance() const ;
+    boost::optional<double> autosizedControllerConvergenceTolerance() const;
 
-  boost::optional<double> autosizedMaximumActuatedFlow() const ;
+    boost::optional<double> autosizedMaximumActuatedFlow() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ControllerWaterCoil_Impl ImplType;
 
+    friend class detail::ControllerWaterCoil_Impl;
 
-  //@}
-  protected:
+    friend class Model;
 
-  /// @cond
-  typedef detail::ControllerWaterCoil_Impl ImplType;
+    friend class openstudio::IdfObject;
 
-  friend class detail::ControllerWaterCoil_Impl;
+    // Classes that need to instantiate it
+    friend class openstudio::model::detail::CoilCoolingWater_Impl;
+    friend class openstudio::model::detail::CoilHeatingWater_Impl;
+    friend class openstudio::model::detail::CoilSystemCoolingWaterHeatExchangerAssisted_Impl;
 
-  friend class Model;
+    explicit ControllerWaterCoil(const Model& model);
 
-  friend class openstudio::IdfObject;
+    explicit ControllerWaterCoil(std::shared_ptr<detail::ControllerWaterCoil_Impl> impl);
 
-  explicit ControllerWaterCoil(std::shared_ptr<detail::ControllerWaterCoil_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ControllerWaterCoil");
+  };
 
-  /// @endcond
-  private:
+  /** \relates ControllerWaterCoil*/
+  typedef boost::optional<ControllerWaterCoil> OptionalControllerWaterCoil;
 
-  REGISTER_LOGGER("openstudio.model.ControllerWaterCoil");
-};
+  /** \relates ControllerWaterCoil*/
+  typedef std::vector<ControllerWaterCoil> ControllerWaterCoilVector;
 
-/** \relates ControllerWaterCoil*/
-typedef boost::optional<ControllerWaterCoil> OptionalControllerWaterCoil;
+}  // namespace model
 
-/** \relates ControllerWaterCoil*/
-typedef std::vector<ControllerWaterCoil> ControllerWaterCoilVector;
+}  // namespace openstudio
 
-} // model
-
-} // openstudio
-
-#endif // MODEL_CONTROLLERWATERCOIL_HPP
+#endif  // MODEL_CONTROLLERWATERCOIL_HPP

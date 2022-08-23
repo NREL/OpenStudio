@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,51 +38,48 @@
 
 #include <boost/optional.hpp>
 
+namespace openstudio {
 
-namespace openstudio{
-
-  /** Euler angles specify an orientation in space, they characterize:
+/** Euler angles specify an orientation in space, they characterize:
   * a rotation of psi radians about the x-axis followed by
   * a rotation of theta radians about the y-axis followed by
   * a rotation of phi radians about the z-axis.
   **/
-  class UTILITIES_API EulerAngles{
-  public:
+class UTILITIES_API EulerAngles
+{
+ public:
+  /// default constructor with no rotation
+  EulerAngles();
 
-    /// default constructor with no rotation
-    EulerAngles();
+  /// constructor with psi, theta, phi
+  EulerAngles(double psi, double theta, double phi);
 
-    /// constructor with psi, theta, phi
-    EulerAngles(double psi, double theta, double phi);
+  /// copy constructor
+  EulerAngles(const EulerAngles& other);
 
-    /// copy constructor
-    EulerAngles(const EulerAngles& other);
+  /// get psi
+  double psi() const;
 
-    /// get psi
-    double psi() const;
+  /// get theta
+  double theta() const;
 
-    /// get theta
-    double theta() const;
+  /// get phi
+  double phi() const;
 
-    /// get phi
-    double phi() const;
+ private:
+  REGISTER_LOGGER("utilities.EulerAngles");
+  Vector m_storage;
+};
 
-  private:
+/// ostream operator
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const EulerAngles& angles);
 
-    REGISTER_LOGGER("utilities.EulerAngles");
-    Vector m_storage;
+// optional EulerAngles
+typedef boost::optional<EulerAngles> OptionalEulerAngles;
 
-  };
+// vector of EulerAngles
+typedef std::vector<EulerAngles> EulerAnglesVector;
 
-  /// ostream operator
-  UTILITIES_API std::ostream& operator<<(std::ostream& os, const EulerAngles& angles);
+}  // namespace openstudio
 
-  // optional EulerAngles
-  typedef boost::optional<EulerAngles> OptionalEulerAngles;
-
-  // vector of EulerAngles
-  typedef std::vector<EulerAngles> EulerAnglesVector;
-
-} // openstudio
-
-#endif //UTILITIES_GEOMETRY_EULERANGLES_HPP
+#endif  //UTILITIES_GEOMETRY_EULERANGLES_HPP

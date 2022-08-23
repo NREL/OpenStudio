@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -32,11 +32,16 @@
 #include "../../model/Model.hpp"
 #include "../../model/MasslessOpaqueMaterial.hpp"
 #include "../../model/MasslessOpaqueMaterial_Impl.hpp"
+#include "../../model/MaterialPropertyMoisturePenetrationDepthSettings.hpp"
+#include "../../model/MaterialPropertyMoisturePenetrationDepthSettings_Impl.hpp"
+#include "../../model/MaterialPropertyPhaseChange.hpp"
+#include "../../model/MaterialPropertyPhaseChange_Impl.hpp"
+#include "../../model/MaterialPropertyPhaseChangeHysteresis.hpp"
+#include "../../model/MaterialPropertyPhaseChangeHysteresis_Impl.hpp"
 
 #include <utilities/idd/Material_NoMass_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
-
 
 using namespace openstudio::model;
 
@@ -46,36 +51,50 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateMasslessOpaqueMaterial( MasslessOpaqueMaterial & modelObject )
-{
-  IdfObject idfObject(openstudio::IddObjectType::Material_NoMass);
+  boost::optional<IdfObject> ForwardTranslator::translateMasslessOpaqueMaterial(MasslessOpaqueMaterial& modelObject) {
+    IdfObject idfObject(openstudio::IddObjectType::Material_NoMass);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  idfObject.setString(openstudio::Material_NoMassFields::Name, modelObject.name().get());
+    idfObject.setString(openstudio::Material_NoMassFields::Name, modelObject.name().get());
 
-  idfObject.setString(openstudio::Material_NoMassFields::Roughness, modelObject.roughness());
+    idfObject.setString(openstudio::Material_NoMassFields::Roughness, modelObject.roughness());
 
-  idfObject.setDouble(openstudio::Material_NoMassFields::ThermalResistance, modelObject.thermalResistance());
+    idfObject.setDouble(openstudio::Material_NoMassFields::ThermalResistance, modelObject.thermalResistance());
 
-  OptionalDouble d = modelObject.thermalAbsorptance();
-  if(d) {
-    idfObject.setDouble(openstudio::Material_NoMassFields::ThermalAbsorptance, *d);
+    OptionalDouble d = modelObject.thermalAbsorptance();
+    if (d) {
+      idfObject.setDouble(openstudio::Material_NoMassFields::ThermalAbsorptance, *d);
+    }
+
+    d = modelObject.solarAbsorptance();
+    if (d) {
+      idfObject.setDouble(openstudio::Material_NoMassFields::SolarAbsorptance, *d);
+    }
+
+    d = modelObject.visibleAbsorptance();
+    if (d) {
+      idfObject.setDouble(openstudio::Material_NoMassFields::VisibleAbsorptance, *d);
+    }
+
+    // Call the translation of these objects, which has two advantages:
+    // * will not translate them if they are orphaned (=not referencing a material), and,
+    // * makes the order of these objects in the IDF deterministic
+    if (boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> _empd = modelObject.materialPropertyMoisturePenetrationDepthSettings()) {
+      translateAndMapModelObject(_empd.get());
+    }
+
+    if (boost::optional<MaterialPropertyPhaseChange> _phaseChange = modelObject.materialPropertyPhaseChange()) {
+      translateAndMapModelObject(_phaseChange.get());
+    }
+
+    if (boost::optional<MaterialPropertyPhaseChangeHysteresis> _phaseChangeHysteresis = modelObject.materialPropertyPhaseChangeHysteresis()) {
+      translateAndMapModelObject(_phaseChangeHysteresis.get());
+    }
+
+    return boost::optional<IdfObject>(idfObject);
   }
 
-  d = modelObject.solarAbsorptance();
-  if(d) {
-    idfObject.setDouble(openstudio::Material_NoMassFields::SolarAbsorptance, *d);
-  }
+}  // namespace energyplus
 
-  d = modelObject.visibleAbsorptance();
-  if(d) {
-    idfObject.setDouble(openstudio::Material_NoMassFields::VisibleAbsorptance, *d);
-  }
-
-  return boost::optional<IdfObject>(idfObject);
-}
-
-} // energyplus
-
-} // openstudio
+}  // namespace openstudio

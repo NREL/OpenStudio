@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,73 +36,70 @@
 namespace openstudio {
 namespace model {
 
-class RefrigerationSystem;
+  class RefrigerationSystem;
 
-namespace detail {
+  namespace detail {
 
-  /** RefrigerationSubcoolerMechanical_Impl is a ModelObject_Impl that is the implementation class for RefrigerationSubcoolerMechanical.*/
-  class MODEL_API RefrigerationSubcoolerMechanical_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** RefrigerationSubcoolerMechanical_Impl is a ModelObject_Impl that is the implementation class for RefrigerationSubcoolerMechanical.*/
+    class MODEL_API RefrigerationSubcoolerMechanical_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    RefrigerationSubcoolerMechanical_Impl(const IdfObject& idfObject,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      RefrigerationSubcoolerMechanical_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    RefrigerationSubcoolerMechanical_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      RefrigerationSubcoolerMechanical_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    RefrigerationSubcoolerMechanical_Impl(const RefrigerationSubcoolerMechanical_Impl& other,
-                                          Model_Impl* model,
-                                          bool keepHandle);
+      RefrigerationSubcoolerMechanical_Impl(const RefrigerationSubcoolerMechanical_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~RefrigerationSubcoolerMechanical_Impl() {}
+      virtual ~RefrigerationSubcoolerMechanical_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<RefrigerationSystem> capacityProvidingSystem() const;
+      boost::optional<RefrigerationSystem> capacityProvidingSystem() const;
 
-    boost::optional<double> outletControlTemperature() const;
+      boost::optional<double> outletControlTemperature() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setCapacityProvidingSystem(const boost::optional<RefrigerationSystem>& refrigerationSystem);
+      bool setCapacityProvidingSystem(const boost::optional<RefrigerationSystem>& refrigerationSystem);
 
-    void resetCapacityProvidingSystem();
+      void resetCapacityProvidingSystem();
 
-    bool setOutletControlTemperature(boost::optional<double> outletControlTemperature);
+      bool setOutletControlTemperature(boost::optional<double> outletControlTemperature);
 
-    void resetOutletControlTemperature();
+      void resetOutletControlTemperature();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.RefrigerationSubcoolerMechanical");
-  };
+      boost::optional<RefrigerationSystem> system() const;
 
-} // detail
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.RefrigerationSubcoolerMechanical");
+    };
 
-} // model
-} // openstudio
+  }  // namespace detail
 
-#endif // MODEL_REFRIGERATIONSUBCOOLERMECHANICAL_IMPL_HPP
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_REFRIGERATIONSUBCOOLERMECHANICAL_IMPL_HPP

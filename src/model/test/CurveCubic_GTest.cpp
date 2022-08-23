@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,22 +37,20 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CurveCubic_DefaultConstructors)
-{
+TEST_F(ModelFixture, CurveCubic_DefaultConstructors) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model m;
-    CurveCubic curve(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CurveCubic curve(m);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture, CurveCubic_GetterSetters_evaluate)
-{
+TEST_F(ModelFixture, CurveCubic_GetterSetters_evaluate) {
 
   Model m;
   CurveCubic curve(m);
@@ -72,9 +70,7 @@ TEST_F(ModelFixture, CurveCubic_GetterSetters_evaluate)
   double min_x = 0.1;
   double max_x = 3.0;
 
-  auto calc = [c1, c2, c3, c4](double x) {
-    return c1 + c2 * x + c3 * std::pow(x, 2) + c4 * std::pow(x, 3);
-  };
+  auto calc = [c1, c2, c3, c4](double x) { return c1 + c2 * x + c3 * std::pow(x, 2) + c4 * std::pow(x, 3); };
 
   EXPECT_TRUE(curve.setCoefficient1Constant(c1));
   EXPECT_TRUE(curve.setCoefficient2x(c2));
@@ -103,12 +99,10 @@ TEST_F(ModelFixture, CurveCubic_GetterSetters_evaluate)
   EXPECT_DOUBLE_EQ(calc(min_x), curve.evaluate(x));
   EXPECT_DOUBLE_EQ(1.234, curve.evaluate(x));
 
-
   // x > max_x
   x = 20.0;
   EXPECT_DOUBLE_EQ(calc(max_x), curve.evaluate(x));
   EXPECT_DOUBLE_EQ(142, curve.evaluate(x));
-
 
   // Set output limits
   double min_output = 2.5;
@@ -121,7 +115,6 @@ TEST_F(ModelFixture, CurveCubic_GetterSetters_evaluate)
   EXPECT_EQ(min_output, curve.minimumCurveOutput().get());
   EXPECT_EQ(max_output, curve.maximumCurveOutput().get());
 
-
   // 1.234 < min output
   EXPECT_DOUBLE_EQ(min_output, curve.evaluate(min_x));
   // 142 > max output
@@ -130,6 +123,4 @@ TEST_F(ModelFixture, CurveCubic_GetterSetters_evaluate)
   // Wrong number of arguments
   // EXPECT_THROW(curve.evaluate(1.0, 2.0), openstudio::Exception);
   // EXPECT_THROW(curve.evaluate(1.0, 2.0, 3.0), openstudio::Exception);
-
 }
-

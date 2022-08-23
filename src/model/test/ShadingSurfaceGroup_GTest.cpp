@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,8 +45,7 @@
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(ModelFixture, ShadingSurfaceGroup_Space_Hierarchy)
-{
+TEST_F(ModelFixture, ShadingSurfaceGroup_Space_Hierarchy) {
   Model model;
 
   // add a space
@@ -98,8 +97,7 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_Space_Hierarchy)
   EXPECT_NE(surface.handle(), cloneChild->children()[0].handle());
 }
 
-TEST_F(ModelFixture, ShadingSurfaceGroup_Building_Hierarchy)
-{
+TEST_F(ModelFixture, ShadingSurfaceGroup_Building_Hierarchy) {
   Model model;
 
   // make a building
@@ -136,8 +134,7 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_Building_Hierarchy)
   EXPECT_EQ(group.handle(), surface.parent()->handle());
 }
 
-TEST_F(ModelFixture, ShadingSurfaceGroup_Site_Hierarchy)
-{
+TEST_F(ModelFixture, ShadingSurfaceGroup_Site_Hierarchy) {
   Model model;
 
   // make a site
@@ -174,8 +171,7 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_Site_Hierarchy)
   EXPECT_EQ(group.handle(), surface.parent()->handle());
 }
 
-TEST_F(ModelFixture, ShadingSurfaceGroup_SetParent)
-{
+TEST_F(ModelFixture, ShadingSurfaceGroup_SetParent) {
   Model model;
 
   Site site = model.getUniqueModelObject<Site>();
@@ -208,8 +204,7 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_SetParent)
   EXPECT_FALSE(group.space());
 }
 
-TEST_F(ModelFixture, ShadingSurfaceGroup_Hierarchy)
-{
+TEST_F(ModelFixture, ShadingSurfaceGroup_Hierarchy) {
   Model model;
   Space space(model);
 
@@ -247,7 +242,7 @@ TEST_F(ModelFixture, ShadingSurfaceGroup_Hierarchy)
   EXPECT_EQ(1u, buildingGroup.shadingSurfaces().size());
   EXPECT_EQ(0u, spaceGroup.shadingSurfaces().size());
 
-   // add space shading surface
+  // add space shading surface
   ShadingSurface spaceSurface(points, model);
   EXPECT_TRUE(spaceSurface.setShadingSurfaceGroup(spaceGroup));
   ASSERT_TRUE(spaceSurface.shadingSurfaceGroup());

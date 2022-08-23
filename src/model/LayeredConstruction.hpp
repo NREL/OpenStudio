@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,29 +36,30 @@
 namespace openstudio {
 namespace model {
 
-class Material;
-class OpaqueMaterial;
-class FenestrationMaterial;
-class ModelPartitionMaterial;
+  class Material;
+  class OpaqueMaterial;
+  class FenestrationMaterial;
+  class ModelPartitionMaterial;
 
-namespace detail{
-  class LayeredConstruction_Impl;
-}
+  namespace detail {
+    class LayeredConstruction_Impl;
+  }
 
-/** LayeredConstruction is a ConstructionBase that serves as a base class to concrete construction
+  /** LayeredConstruction is a ConstructionBase that serves as a base class to concrete construction
  *  classes that are composed of Material layers. */
-class MODEL_API LayeredConstruction : public ConstructionBase {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API LayeredConstruction : public ConstructionBase
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~LayeredConstruction() {}
+    virtual ~LayeredConstruction() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  /** Returns true if materials defines a valid EnergyPlus construction. Returns false if layers are empty.
+    /** Returns true if materials defines a valid EnergyPlus construction. Returns false if layers are empty.
    *  Checks the following rules if first layer is an OpaqueMaterial:
    *
    *  \li AirGap must have non-AirGap on either side.
@@ -77,118 +78,117 @@ class MODEL_API LayeredConstruction : public ConstructionBase {
    *
    *  \todo Verify that this is a comprehensive and accurate list.
    */
-  static bool layersAreValid(const std::vector<Material>& materials);
-  static bool layersAreValid(const std::vector<OpaqueMaterial>& opaqueMaterials);
-  static bool layersAreValid(const std::vector<FenestrationMaterial>& fenestrationMaterials);
+    static bool layersAreValid(const std::vector<Material>& materials);
+    static bool layersAreValid(const std::vector<OpaqueMaterial>& opaqueMaterials);
+    static bool layersAreValid(const std::vector<FenestrationMaterial>& fenestrationMaterials);
 
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
-
-  /** Returns the material layers that make up this construction. Listed in order from outside in,
+    /** Returns the material layers that make up this construction. Listed in order from outside in,
    *  that is, the Material at index 0 faces out from the point of view of the Zone, should this
    *  LayeredConstruction be associated with a PlanarSurface. */
-  std::vector<Material> layers() const;
+    std::vector<Material> layers() const;
 
-  /** Get the Material at layerIndex, where layerIndex is between 0 and numLayers() - 1. Throws a
+    /** Get the Material at layerIndex, where layerIndex is between 0 and numLayers() - 1. Throws a
    *  openstudio::Exception if layerIndex >= numLayers. */
-  Material getLayer(unsigned layerIndex) const;
+    Material getLayer(unsigned layerIndex) const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Erases the Material at layerIndex, if possible. Must have 0 <= layerIndex < numLayers, and
+    /** Erases the Material at layerIndex, if possible. Must have 0 <= layerIndex < numLayers, and
    *  resulting construction must satisfy layersAreValid. */
-  bool eraseLayer(unsigned layerIndex);
+    bool eraseLayer(unsigned layerIndex);
 
-  /** Insert opaqueMaterial at layerIndex, if possible. Must have 0 <= layerIndex <= numLayers,
+    /** Insert opaqueMaterial at layerIndex, if possible. Must have 0 <= layerIndex <= numLayers,
    *  and this construction must have no layers or satisfy isOpaque == true. Furthermore, the
    *  resulting construction must satisfy layersAreValid. */
-  bool insertLayer(unsigned layerIndex, const Material& material);
+    bool insertLayer(unsigned layerIndex, const Material& material);
 
-  /** Set the layer at layerIndex to opaqueMaterial, if possible. Must have 0 <= layerIndex <
+    /** Set the layer at layerIndex to opaqueMaterial, if possible. Must have 0 <= layerIndex <
    *  numLayers, and this construction must satisfy isOpaque == true. Furthermore, the
    *  resulting construction must satisfy layersAreValid. */
-  bool setLayer(unsigned layerIndex, const Material& material);
+    bool setLayer(unsigned layerIndex, const Material& material);
 
-  /** Set the construction to use opaqueMaterials as its layers, if layersAreValid(opaqueMaterials).
+    /** Set the construction to use opaqueMaterials as its layers, if layersAreValid(opaqueMaterials).
    *  Clears out all previous Material layers. */
-  bool setLayers(const std::vector<Material>& materials);
+    bool setLayers(const std::vector<Material>& materials);
 
-  /** Sets the construction to use modelPartitionMaterial. Clears out all previous Material
+    /** Sets the construction to use modelPartitionMaterial. Clears out all previous Material
    *  layers. */
-  bool setLayer(const ModelPartitionMaterial& modelPartitionMaterial);
+    bool setLayer(const ModelPartitionMaterial& modelPartitionMaterial);
 
-  //@}
-  /** @name Queries */
-  //@{
+    //@}
+    /** @name Queries */
+    //@{
 
-  /** Returns true if this is a symmetric layered construction. */
-  bool isSymmetric() const;
+    /** Returns true if this is a symmetric layered construction. */
+    bool isSymmetric() const;
 
-  /** Returns true if this construction has the same layers as other one. */
-  bool equalLayers(const LayeredConstruction& other) const;
+    /** Returns true if this construction has the same layers as other one. */
+    bool equalLayers(const LayeredConstruction& other) const;
 
-  /** Returns true if this construction has the same layers but in reverse order as other one. */
-  bool reverseEqualLayers(const LayeredConstruction& other) const;
+    /** Returns true if this construction has the same layers but in reverse order as other one. */
+    bool reverseEqualLayers(const LayeredConstruction& other) const;
 
-  /** Returns layer indices that do not actually point to a Material. Before simulation, the
+    /** Returns layer indices that do not actually point to a Material. Before simulation, the
    *  returned vector should be empty. */
-  std::vector<unsigned> nullLayers() const;
+    std::vector<unsigned> nullLayers() const;
 
-  /** Returns the number of non-null layers in this construction. */
-  unsigned numLayers() const;
+    /** Returns the number of non-null layers in this construction. */
+    unsigned numLayers() const;
 
-  /** Returns the indices from which this construction points to material. */
-  std::vector<unsigned> getLayerIndices(const Material& material) const;
+    /** Returns the indices from which this construction points to material. */
+    std::vector<unsigned> getLayerIndices(const Material& material) const;
 
-  //@}
-  /** @name Standards Methods */
-  //@{
+    //@}
+    /** @name Standards Methods */
+    //@{
 
-  /** Returns the layer designated as insulation, if such a designation has been made. */
-  boost::optional<OpaqueMaterial> insulation() const;
+    /** Returns the layer designated as insulation, if such a designation has been made. */
+    boost::optional<OpaqueMaterial> insulation() const;
 
-  /** Notes that insulationLayer is the perturbable insulation layer. Only works if
+    /** Notes that insulationLayer is the perturbable insulation layer. Only works if
    *  insulationLayer is already in this construction. */
-  bool setInsulation(const OpaqueMaterial& insulationLayer);
+    bool setInsulation(const OpaqueMaterial& insulationLayer);
 
-  /** Removes any existing insulation layer designations. Does not touch the actual composition
+    /** Removes any existing insulation layer designations. Does not touch the actual composition
    *  of the construction. */
-  void resetInsulation();
+    void resetInsulation();
 
-  /** Ensures that all materials in this construction are used by this construction only.  Allows standards
+    /** Ensures that all materials in this construction are used by this construction only.  Allows standards
   *   to then appply standards specified material properties to each layer (e.g. SRI). */
-  void ensureUniqueLayers();
+    void ensureUniqueLayers();
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::LayeredConstruction_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::LayeredConstruction_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  friend class detail::LayeredConstruction_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    friend class detail::LayeredConstruction_Impl;
 
-  LayeredConstruction(IddObjectType type,const Model& model);
+    LayeredConstruction(IddObjectType type, const Model& model);
 
-  explicit LayeredConstruction(std::shared_ptr<detail::LayeredConstruction_Impl> impl);
+    explicit LayeredConstruction(std::shared_ptr<detail::LayeredConstruction_Impl> impl);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.LayeredConstruction");
-};
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.LayeredConstruction");
+  };
 
-/** \relates LayeredConstruction */
-typedef boost::optional<LayeredConstruction> OptionalLayeredConstruction;
+  /** \relates LayeredConstruction */
+  typedef boost::optional<LayeredConstruction> OptionalLayeredConstruction;
 
-/** \relates LayeredConstruction */
-typedef std::vector<LayeredConstruction> LayeredConstructionVector;
+  /** \relates LayeredConstruction */
+  typedef std::vector<LayeredConstruction> LayeredConstructionVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_LAYEREDCONSTRUCTION_HPP
+#endif  // MODEL_LAYEREDCONSTRUCTION_HPP

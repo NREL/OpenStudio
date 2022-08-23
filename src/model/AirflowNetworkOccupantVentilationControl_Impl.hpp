@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,128 +36,122 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class Curve;
-class Schedule;
+  // TODO: Check the following class names against object getters and setters.
+  class Curve;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** AirflowNetworkOccupantVentilationControl_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkOccupantVentilationControl.*/
-  class MODEL_API AirflowNetworkOccupantVentilationControl_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirflowNetworkOccupantVentilationControl_Impl is a ModelObject_Impl that is the implementation class for AirflowNetworkOccupantVentilationControl.*/
+    class MODEL_API AirflowNetworkOccupantVentilationControl_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirflowNetworkOccupantVentilationControl_Impl(const IdfObject& idfObject,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      AirflowNetworkOccupantVentilationControl_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkOccupantVentilationControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      AirflowNetworkOccupantVentilationControl_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirflowNetworkOccupantVentilationControl_Impl(const AirflowNetworkOccupantVentilationControl_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      AirflowNetworkOccupantVentilationControl_Impl(const AirflowNetworkOccupantVentilationControl_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~AirflowNetworkOccupantVentilationControl_Impl() {}
+      virtual ~AirflowNetworkOccupantVentilationControl_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    double minimumOpeningTime() const;
+      double minimumOpeningTime() const;
 
-    bool isMinimumOpeningTimeDefaulted() const;
+      bool isMinimumOpeningTimeDefaulted() const;
 
-    double minimumClosingTime() const;
+      double minimumClosingTime() const;
 
-    bool isMinimumClosingTimeDefaulted() const;
+      bool isMinimumClosingTimeDefaulted() const;
 
-    Curve thermalComfortLowTemperatureCurve() const;
+      Curve thermalComfortLowTemperatureCurve() const;
 
-    double thermalComfortTemperatureBoundaryPoint() const;
+      double thermalComfortTemperatureBoundaryPoint() const;
 
-    bool isThermalComfortTemperatureBoundaryPointDefaulted() const;
+      bool isThermalComfortTemperatureBoundaryPointDefaulted() const;
 
-    boost::optional<Curve> thermalComfortHighTemperatureCurve() const;
+      boost::optional<Curve> thermalComfortHighTemperatureCurve() const;
 
-    double maximumPredictedPercentageofDissatisfiedThreshold() const;
+      double maximumPredictedPercentageofDissatisfiedThreshold() const;
 
-    bool isMaximumPredictedPercentageofDissatisfiedThresholdDefaulted() const;
+      bool isMaximumPredictedPercentageofDissatisfiedThresholdDefaulted() const;
 
-    bool occupancyCheck() const;
+      bool occupancyCheck() const;
 
-    bool isOccupancyCheckDefaulted() const;
+      bool isOccupancyCheckDefaulted() const;
 
-    boost::optional<Schedule> openingProbabilitySchedule() const;
+      boost::optional<Schedule> openingProbabilitySchedule() const;
 
-    boost::optional<Schedule> closingProbabilitySchedule() const;
+      boost::optional<Schedule> closingProbabilitySchedule() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setMinimumOpeningTime(double minimumOpeningTime);
+      bool setMinimumOpeningTime(double minimumOpeningTime);
 
-    void resetMinimumOpeningTime();
+      void resetMinimumOpeningTime();
 
-    bool setMinimumClosingTime(double minimumClosingTime);
+      bool setMinimumClosingTime(double minimumClosingTime);
 
-    void resetMinimumClosingTime();
+      void resetMinimumClosingTime();
 
-    bool setThermalComfortLowTemperatureCurve(const Curve& curve);
+      bool setThermalComfortLowTemperatureCurve(const Curve& curve);
 
-    //void resetThermalComfortLowTemperatureCurve();
+      //void resetThermalComfortLowTemperatureCurve();
 
-    bool setThermalComfortTemperatureBoundaryPoint(double thermalComfortTemperatureBoundaryPoint);
+      bool setThermalComfortTemperatureBoundaryPoint(double thermalComfortTemperatureBoundaryPoint);
 
-    void resetThermalComfortTemperatureBoundaryPoint();
+      void resetThermalComfortTemperatureBoundaryPoint();
 
-    bool setThermalComfortHighTemperatureCurve(const Curve& curve);
+      bool setThermalComfortHighTemperatureCurve(const Curve& curve);
 
-    void resetThermalComfortHighTemperatureCurve();
+      void resetThermalComfortHighTemperatureCurve();
 
-    bool setMaximumPredictedPercentageofDissatisfiedThreshold(double maximumPredictedPercentageofDissatisfiedThreshold);
+      bool setMaximumPredictedPercentageofDissatisfiedThreshold(double maximumPredictedPercentageofDissatisfiedThreshold);
 
-    void resetMaximumPredictedPercentageofDissatisfiedThreshold();
+      void resetMaximumPredictedPercentageofDissatisfiedThreshold();
 
-    void setOccupancyCheck(bool occupancyCheck);
+      void setOccupancyCheck(bool occupancyCheck);
 
-    void resetOccupancyCheck();
+      void resetOccupancyCheck();
 
-    bool setOpeningProbabilitySchedule(Schedule& schedule);
+      bool setOpeningProbabilitySchedule(Schedule& schedule);
 
-    void resetOpeningProbabilitySchedule();
+      void resetOpeningProbabilitySchedule();
 
-    bool setClosingProbabilitySchedule(Schedule& schedule);
+      bool setClosingProbabilitySchedule(Schedule& schedule);
 
-    void resetClosingProbabilitySchedule();
+      void resetClosingProbabilitySchedule();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirflowNetworkOccupantVentilationControl");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirflowNetworkOccupantVentilationControl");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKOCCUPANTVENTILATIONCONTROL_IMPL_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKOCCUPANTVENTILATIONCONTROL_IMPL_HPP

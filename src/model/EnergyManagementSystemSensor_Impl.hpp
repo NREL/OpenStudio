@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,79 +40,73 @@
 namespace openstudio {
 namespace model {
 
-class OutputVariable;
-class OutputMeter;
+  class OutputVariable;
+  class OutputMeter;
 
-namespace detail {
+  namespace detail {
 
-  /** EnergyManagementSystemSensor_Impl is a ModelObject_Impl that is the implementation class for EnergyManagementSystemSensor.*/
-  class MODEL_API EnergyManagementSystemSensor_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** EnergyManagementSystemSensor_Impl is a ModelObject_Impl that is the implementation class for EnergyManagementSystemSensor.*/
+    class MODEL_API EnergyManagementSystemSensor_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    EnergyManagementSystemSensor_Impl(const IdfObject& idfObject,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      EnergyManagementSystemSensor_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    EnergyManagementSystemSensor_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      EnergyManagementSystemSensor_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    EnergyManagementSystemSensor_Impl(const EnergyManagementSystemSensor_Impl& other,
-                                      Model_Impl* model,
-                                      bool keepHandle);
+      EnergyManagementSystemSensor_Impl(const EnergyManagementSystemSensor_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~EnergyManagementSystemSensor_Impl() {}
+      virtual ~EnergyManagementSystemSensor_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string keyName() const;
+      std::string keyName() const;
 
-    boost::optional<OutputVariable> outputVariable() const;
-    boost::optional<OutputMeter> outputMeter() const;
-    std::string outputVariableOrMeterName() const;
+      boost::optional<OutputVariable> outputVariable() const;
+      boost::optional<OutputMeter> outputMeter() const;
+      std::string outputVariableOrMeterName() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setKeyName(const std::string& keyName);
+      bool setKeyName(const std::string& keyName);
 
-    bool setOutputVariable(const OutputVariable& outputVariable);
-    bool setOutputMeter(const OutputMeter& outputMeter);
-    bool setOutputVariableOrMeterName(const std::string& outputVariableOrMeterName);
+      bool setOutputVariable(const OutputVariable& outputVariable);
+      bool setOutputMeter(const OutputMeter& outputMeter);
+      bool setOutputVariableOrMeterName(const std::string& outputVariableOrMeterName);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.EnergyManagementSystemSensor");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.EnergyManagementSystemSensor");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<OutputVariable> optionalOutputVariable() const;
-    boost::optional<OutputMeter> optionalOutputMeter() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<OutputVariable> optionalOutputVariable() const;
+      boost::optional<OutputMeter> optionalOutputMeter() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ENERGYMANAGEMENTSYSTEMSENSOR_IMPL_HPP
-
+#endif  // MODEL_ENERGYMANAGEMENTSYSTEMSENSOR_IMPL_HPP

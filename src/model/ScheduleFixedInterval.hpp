@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,93 +36,94 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ScheduleFixedInterval_Impl;
+    class ScheduleFixedInterval_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ScheduleFixedInterval is a ScheduleInterval that wraps the OpenStudio IDD object
+  /** ScheduleFixedInterval is a ScheduleInterval that wraps the OpenStudio IDD object
  *  'OS_Schedule_FixedInterval'. */
-class MODEL_API ScheduleFixedInterval : public ScheduleInterval {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ScheduleFixedInterval : public ScheduleInterval
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ScheduleFixedInterval(const Model& model);
+    explicit ScheduleFixedInterval(const Model& model);
 
-  virtual ~ScheduleFixedInterval() {}
+    virtual ~ScheduleFixedInterval() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  bool interpolatetoTimestep() const;
+    bool interpolatetoTimestep() const;
 
-  bool isInterpolatetoTimestepDefaulted() const;
-  
-  bool translatetoScheduleFile() const;
-  
-  bool isTranslatetoScheduleFileDefaulted() const;
+    bool isInterpolatetoTimestepDefaulted() const;
 
-  double intervalLength() const;
+    bool translatetoScheduleFile() const;
 
-  double outOfRangeValue() const;
+    bool isTranslatetoScheduleFileDefaulted() const;
 
-  bool isOutOfRangeValueDefaulted() const;
+    double intervalLength() const;
 
-  int startMonth() const;
+    double outOfRangeValue() const;
 
-  int startDay() const;
+    bool isOutOfRangeValueDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    int startMonth() const;
 
-  bool setInterpolatetoTimestep(bool interpolatetoTimestep);
+    int startDay() const;
 
-  void resetInterpolatetoTimestep();
-  
-  bool setTranslatetoScheduleFile(bool translatetoScheduleFile);
-  
-  void resetTranslatetoScheduleFile();
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setIntervalLength(double intervalLength);
+    bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
-  bool setOutOfRangeValue(double outOfRangeValue);
+    void resetInterpolatetoTimestep();
 
-  void resetOutOfRangeValue();
+    bool setTranslatetoScheduleFile(bool translatetoScheduleFile);
 
-  bool setStartMonth(int startMonth);
+    void resetTranslatetoScheduleFile();
 
-  bool setStartDay(int startDay);
+    bool setIntervalLength(double intervalLength);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ScheduleFixedInterval_Impl ImplType;
+    bool setOutOfRangeValue(double outOfRangeValue);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::ScheduleFixedInterval_Impl;
+    void resetOutOfRangeValue();
 
-  explicit ScheduleFixedInterval(std::shared_ptr<detail::ScheduleFixedInterval_Impl> impl);
+    bool setStartMonth(int startMonth);
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ScheduleFixedInterval");
-};
+    bool setStartDay(int startDay);
 
-/** \relates ScheduleFixedInterval*/
-typedef boost::optional<ScheduleFixedInterval> OptionalScheduleFixedInterval;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ScheduleFixedInterval_Impl ImplType;
 
-/** \relates ScheduleFixedInterval*/
-typedef std::vector<ScheduleFixedInterval> ScheduleFixedIntervalVector;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::ScheduleFixedInterval_Impl;
 
-} // model
-} // openstudio
+    explicit ScheduleFixedInterval(std::shared_ptr<detail::ScheduleFixedInterval_Impl> impl);
 
-#endif // MODEL_SCHEDULEFIXEDINTERVAL_HPP
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ScheduleFixedInterval");
+  };
+
+  /** \relates ScheduleFixedInterval*/
+  typedef boost::optional<ScheduleFixedInterval> OptionalScheduleFixedInterval;
+
+  /** \relates ScheduleFixedInterval*/
+  typedef std::vector<ScheduleFixedInterval> ScheduleFixedIntervalVector;
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_SCHEDULEFIXEDINTERVAL_HPP

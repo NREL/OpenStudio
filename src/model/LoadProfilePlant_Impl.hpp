@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,90 +36,85 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Node;
+  class Schedule;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** LoadProfilePlant_Impl is a StraightComponent_Impl that is the implementation class for LoadProfilePlant.*/
-  class MODEL_API LoadProfilePlant_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** LoadProfilePlant_Impl is a StraightComponent_Impl that is the implementation class for LoadProfilePlant.*/
+    class MODEL_API LoadProfilePlant_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    LoadProfilePlant_Impl(const IdfObject& idfObject,
-                          Model_Impl* model,
-                          bool keepHandle);
+      LoadProfilePlant_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    LoadProfilePlant_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      LoadProfilePlant_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    LoadProfilePlant_Impl(const LoadProfilePlant_Impl& other,
-                          Model_Impl* model,
-                          bool keepHandle);
+      LoadProfilePlant_Impl(const LoadProfilePlant_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~LoadProfilePlant_Impl() {}
+      virtual ~LoadProfilePlant_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule loadSchedule() const;
+      Schedule loadSchedule() const;
 
-    double peakFlowRate() const;
+      double peakFlowRate() const;
 
-    Schedule flowRateFractionSchedule() const;
+      Schedule flowRateFractionSchedule() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setLoadSchedule(Schedule& schedule);
+      bool setLoadSchedule(Schedule& schedule);
 
-    bool setPeakFlowRate(double peakFlowRate);
+      bool setPeakFlowRate(double peakFlowRate);
 
-    bool setFlowRateFractionSchedule(Schedule& schedule);
+      bool setFlowRateFractionSchedule(Schedule& schedule);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.LoadProfilePlant");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.LoadProfilePlant");
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalLoadSchedule() const;
-    boost::optional<Schedule> optionalFlowRateFractionSchedule() const;
-  };
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalLoadSchedule() const;
+      boost::optional<Schedule> optionalFlowRateFractionSchedule() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_LOADPROFILEPLANT_IMPL_HPP
+#endif  // MODEL_LOADPROFILEPLANT_IMPL_HPP

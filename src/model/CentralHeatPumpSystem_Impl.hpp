@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,54 +36,48 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class ModelObjectList;
-class CentralHeatPumpSystemModule;
+  class Schedule;
+  class ModelObjectList;
+  class CentralHeatPumpSystemModule;
 
-namespace detail {
+  namespace detail {
 
-  /** CentralHeatPumpSystem_Impl is a WaterToWaterComponent_Impl that is the implementation class for CentralHeatPumpSystem.*/
-  class MODEL_API CentralHeatPumpSystem_Impl : public WaterToWaterComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CentralHeatPumpSystem_Impl is a WaterToWaterComponent_Impl that is the implementation class for CentralHeatPumpSystem.*/
+    class MODEL_API CentralHeatPumpSystem_Impl : public WaterToWaterComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CentralHeatPumpSystem_Impl(const IdfObject& idfObject,
-                               Model_Impl* model,
-                               bool keepHandle);
+      CentralHeatPumpSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CentralHeatPumpSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      CentralHeatPumpSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CentralHeatPumpSystem_Impl(const CentralHeatPumpSystem_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      CentralHeatPumpSystem_Impl(const CentralHeatPumpSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CentralHeatPumpSystem_Impl() {}
+      virtual ~CentralHeatPumpSystem_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    // CoolingLoop
-    virtual unsigned supplyInletPort() const override;
-    virtual unsigned supplyOutletPort() const override;
-    // SourceLoop
-    virtual unsigned demandInletPort() const override;
-    virtual unsigned demandOutletPort() const override;
-    // HeatingLoop
-    virtual unsigned tertiaryInletPort() const override;
-    virtual unsigned tertiaryOutletPort() const override;
+      // CoolingLoop
+      virtual unsigned supplyInletPort() const override;
+      virtual unsigned supplyOutletPort() const override;
+      // SourceLoop
+      virtual unsigned demandInletPort() const override;
+      virtual unsigned demandOutletPort() const override;
+      // HeatingLoop
+      virtual unsigned tertiaryInletPort() const override;
+      virtual unsigned tertiaryOutletPort() const override;
 
-
-    /* This function will perform a check if trying to add it to a node that is on the supply side of a plant loop.
+      /* This function will perform a check if trying to add it to a node that is on the supply side of a plant loop.
      * If:
      *     - the node is on the supply side of a loop
      *     - the CentralHeatPumpSystem already has a cooling loop (supply side)
@@ -92,82 +86,80 @@ namespace detail {
      * then it tries to add it to the Tertiary loop.
      * In all other cases, it will call the base class' method WaterToWaterComponent_Impl::addToNode()
      */
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    /* Restricts addToTertiaryNode to a node that is on the supply side of a plant loop (tertiary = Heating Loop) */
-    virtual bool addToTertiaryNode(Node & node) override;
+      /* Restricts addToTertiaryNode to a node that is on the supply side of a plant loop (tertiary = Heating Loop) */
+      virtual bool addToTertiaryNode(Node& node) override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string controlMethod() const;
+      std::string controlMethod() const;
 
-    double ancillaryPower() const;
+      double ancillaryPower() const;
 
-    boost::optional<Schedule> ancillaryOperationSchedule() const;
+      boost::optional<Schedule> ancillaryOperationSchedule() const;
 
-    boost::optional<ModelObjectList> chillerHeaterModuleList() const;
+      boost::optional<ModelObjectList> chillerHeaterModuleList() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setControlMethod(std::string controlMethod);
+      bool setControlMethod(std::string controlMethod);
 
-    bool setAncillaryPower(double ancillaryPower);
+      bool setAncillaryPower(double ancillaryPower);
 
-    bool setAncillaryOperationSchedule(Schedule& schedule);
+      bool setAncillaryOperationSchedule(Schedule& schedule);
 
-    void resetAncillaryOperationSchedule();
+      void resetAncillaryOperationSchedule();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    bool addModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule);
+      bool addModule(const CentralHeatPumpSystemModule& centralHeatPumpSystemModule);
 
-    void removeModule( const CentralHeatPumpSystemModule & centralHeatPumpSystemModule);
+      void removeModule(const CentralHeatPumpSystemModule& centralHeatPumpSystemModule);
 
-    void removeAllModules();
+      void removeAllModules();
 
-    std::vector<CentralHeatPumpSystemModule> modules() const;
+      std::vector<CentralHeatPumpSystemModule> modules() const;
 
-    bool setChillerHeaterModuleList(const boost::optional<ModelObjectList>& modelObjectList);
+      bool setChillerHeaterModuleList(const boost::optional<ModelObjectList>& modelObjectList);
 
-    void resetChillerHeaterModuleList();
+      void resetChillerHeaterModuleList();
 
-    /** Convenience Function to return the Cooling Loop **/
-    boost::optional<PlantLoop> coolingPlantLoop() const;
+      /** Convenience Function to return the Cooling Loop **/
+      boost::optional<PlantLoop> coolingPlantLoop() const;
 
-    /** Convenience Function to return the Source Loop **/
-    boost::optional<PlantLoop> sourcePlantLoop() const;
+      /** Convenience Function to return the Source Loop **/
+      boost::optional<PlantLoop> sourcePlantLoop() const;
 
-    /** Convenience Function to return the Heating Loop **/
-    boost::optional<PlantLoop> heatingPlantLoop() const;
+      /** Convenience Function to return the Heating Loop **/
+      boost::optional<PlantLoop> heatingPlantLoop() const;
 
+      // TODO: Need to override the clone, allowableChildTypes and children methods
+      ModelObject clone(Model model) const override;
 
-    // TODO: Need to override the clone, allowableChildTypes and children methods
-    ModelObject clone(Model model) const override;
+      // std::vector<IddObjectType> allowableChildTypes() const override;
 
-    // std::vector<IddObjectType> allowableChildTypes() const override;
+      // std::vector<ModelObject> children() const override;
 
-    // std::vector<ModelObject> children() const override;
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CentralHeatPumpSystem");
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CentralHeatPumpSystem");
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+    };
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_CENTRALHEATPUMPSYSTEM_IMPL_HPP
-
+#endif  // MODEL_CENTRALHEATPUMPSYSTEM_IMPL_HPP

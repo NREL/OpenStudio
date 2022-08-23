@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,63 +38,60 @@ class TimeSeries;
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API ScheduleInterval_Impl : public Schedule_Impl {
-   public:
+    class MODEL_API ScheduleInterval_Impl : public Schedule_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    /** @name Constructors and Destructors */
-    //@{
+      // constructor
+      ScheduleInterval_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // constructor
-    ScheduleInterval_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // construct from workspace
+      ScheduleInterval_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    ScheduleInterval_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                         Model_Impl* model,
-                         bool keepHandle);
+      ScheduleInterval_Impl(const ScheduleInterval_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ScheduleInterval_Impl(const ScheduleInterval_Impl& other, Model_Impl* model,bool keepHandle);
+      // virtual destructor
+      virtual ~ScheduleInterval_Impl() {}
 
-    // virtual destructor
-    virtual ~ScheduleInterval_Impl(){}
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-    // return any children objects in the hierarchy
-    virtual std::vector<ModelObject> children() const override;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual std::vector<double> values() const override;
 
-    virtual std::vector<double> values() const override;
+      //@}
+      /** @name Getters */
+      //@{
 
-    //@}
-    /** @name Getters */
-    //@{
+      virtual openstudio::TimeSeries timeSeries() const = 0;
 
-    virtual openstudio::TimeSeries timeSeries() const = 0;
+      //@}
+      /** @name Setters */
+      //@{
 
-    //@}
-    /** @name Setters */
-    //@{
+      virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) = 0;
 
-    virtual bool setTimeSeries(const openstudio::TimeSeries& timeSeries) = 0;
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.ScheduleInterval");
+    };
 
-    //@}
-   private:
-    REGISTER_LOGGER("openstudio.model.ScheduleInterval");
+  }  // namespace detail
 
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_SCHEDULEINTERVAL_IMPL_HPP
+#endif  // MODEL_SCHEDULEINTERVAL_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,73 +36,66 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** OutputDiagnostics_Impl is a ModelObject_Impl that is the implementation class for OutputDiagnostics.*/
-  class MODEL_API OutputDiagnostics_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** OutputDiagnostics_Impl is a ModelObject_Impl that is the implementation class for OutputDiagnostics.*/
+    class MODEL_API OutputDiagnostics_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    OutputDiagnostics_Impl(const IdfObject& idfObject,
-                           Model_Impl* model,
-                           bool keepHandle);
+      OutputDiagnostics_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    OutputDiagnostics_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      OutputDiagnostics_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    OutputDiagnostics_Impl(const OutputDiagnostics_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      OutputDiagnostics_Impl(const OutputDiagnostics_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~OutputDiagnostics_Impl() {}
+      virtual ~OutputDiagnostics_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::vector<std::string> keys() const;
+      std::vector<std::string> keys() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    // Return false if key isn't valid. If is already present, not added twice (ensures unicity) and logs an info in that case too
-    bool addKey(const std::string& key);
+      // Return false if key isn't valid. If is already present, not added twice (ensures unicity) and logs an info in that case too
+      bool addKey(const std::string& key);
 
-    // Calls clearKeys, then for each k, addKey(k)
-    bool setKeys(const std::vector<std::string>& keys);
+      // Calls clearKeys, then for each k, addKey(k)
+      bool setKeys(const std::vector<std::string>& keys);
 
-    // Just a convenience function to add 'DisplayExtraWarnings' as a key since it's so common
-    bool enableDisplayExtraWarnings();
+      // Just a convenience function to add 'DisplayExtraWarnings' as a key since it's so common
+      bool enableDisplayExtraWarnings();
 
-    // Clears out every key
-    void clearKeys();
+      // Clears out every key
+      void clearKeys();
 
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.OutputDiagnostics");
+    };
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.OutputDiagnostics");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_OUTPUTDIAGNOSTICS_IMPL_HPP
-
+#endif  // MODEL_OUTPUTDIAGNOSTICS_IMPL_HPP

@@ -23,5 +23,6 @@
 %import <utilities/UtilitiesIdd.i>
 %import <utilities/UtilitiesIdf.i>
 %import <utilities/UtilitiesFileTypes.i>
+%import <utilities/UtilitiesXML.i>
 
 #endif // UTILITIES_UTILITIES_I

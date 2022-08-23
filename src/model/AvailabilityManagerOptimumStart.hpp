@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,113 +37,114 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class AvailabilityManagerOptimumStart_Impl;
+    class AvailabilityManagerOptimumStart_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AvailabilityManagerOptimumStart is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:OptimumStart'. */
-class MODEL_API AvailabilityManagerOptimumStart : public AvailabilityManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AvailabilityManagerOptimumStart is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:OptimumStart'. */
+  class MODEL_API AvailabilityManagerOptimumStart : public AvailabilityManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AvailabilityManagerOptimumStart(const Model& model);
+    explicit AvailabilityManagerOptimumStart(const Model& model);
 
-  virtual ~AvailabilityManagerOptimumStart() {}
+    virtual ~AvailabilityManagerOptimumStart() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlTypeValues();
+    static std::vector<std::string> controlTypeValues();
 
-  static std::vector<std::string> controlAlgorithmValues();
+    static std::vector<std::string> controlAlgorithmValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  Schedule applicabilitySchedule() const;
+    Schedule applicabilitySchedule() const;
 
-  std::string controlType() const;
+    std::string controlType() const;
 
-  boost::optional<ThermalZone> controlZone() const;
+    boost::optional<ThermalZone> controlZone() const;
 
-  double maximumValueforOptimumStartTime() const;
+    double maximumValueforOptimumStartTime() const;
 
-  std::string controlAlgorithm() const;
+    std::string controlAlgorithm() const;
 
-  double constantTemperatureGradientduringCooling() const;
+    double constantTemperatureGradientduringCooling() const;
 
-  double constantTemperatureGradientduringHeating() const;
+    double constantTemperatureGradientduringHeating() const;
 
-  double initialTemperatureGradientduringCooling() const;
+    double initialTemperatureGradientduringCooling() const;
 
-  double initialTemperatureGradientduringHeating() const;
+    double initialTemperatureGradientduringHeating() const;
 
-  double constantStartTime() const;
+    double constantStartTime() const;
 
-  int numberofPreviousDays() const;
+    int numberofPreviousDays() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setApplicabilitySchedule(Schedule& schedule);
+    bool setApplicabilitySchedule(Schedule& schedule);
 
-  bool setControlType(std::string controlType);
+    bool setControlType(std::string controlType);
 
-  bool setControlZone(const ThermalZone& thermalZone);
+    bool setControlZone(const ThermalZone& thermalZone);
 
-  void resetControlZone();
+    void resetControlZone();
 
-  bool setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime);
+    bool setMaximumValueforOptimumStartTime(double maximumValueforOptimumStartTime);
 
-  bool setControlAlgorithm(std::string controlAlgorithm);
+    bool setControlAlgorithm(std::string controlAlgorithm);
 
-  bool setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling);
+    bool setConstantTemperatureGradientduringCooling(double constantTemperatureGradientduringCooling);
 
-  bool setConstantTemperatureGradientduringHeating(double constantTemperatureGradientduringHeating);
+    bool setConstantTemperatureGradientduringHeating(double constantTemperatureGradientduringHeating);
 
-  bool setInitialTemperatureGradientduringCooling(double initialTemperatureGradientduringCooling);
+    bool setInitialTemperatureGradientduringCooling(double initialTemperatureGradientduringCooling);
 
-  bool setInitialTemperatureGradientduringHeating(double initialTemperatureGradientduringHeating);
+    bool setInitialTemperatureGradientduringHeating(double initialTemperatureGradientduringHeating);
 
-  bool setConstantStartTime(double constantStartTime);
+    bool setConstantStartTime(double constantStartTime);
 
-  bool setNumberofPreviousDays(int numberofPreviousDays);
+    bool setNumberofPreviousDays(int numberofPreviousDays);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AvailabilityManagerOptimumStart_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AvailabilityManagerOptimumStart_Impl ImplType;
 
-  explicit AvailabilityManagerOptimumStart(std::shared_ptr<detail::AvailabilityManagerOptimumStart_Impl> impl);
+    explicit AvailabilityManagerOptimumStart(std::shared_ptr<detail::AvailabilityManagerOptimumStart_Impl> impl);
 
-  friend class detail::AvailabilityManagerOptimumStart_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AvailabilityManagerOptimumStart");
-};
+    friend class detail::AvailabilityManagerOptimumStart_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AvailabilityManagerOptimumStart");
+  };
 
-/** \relates AvailabilityManagerOptimumStart*/
-typedef boost::optional<AvailabilityManagerOptimumStart> OptionalAvailabilityManagerOptimumStart;
+  /** \relates AvailabilityManagerOptimumStart*/
+  typedef boost::optional<AvailabilityManagerOptimumStart> OptionalAvailabilityManagerOptimumStart;
 
-/** \relates AvailabilityManagerOptimumStart*/
-typedef std::vector<AvailabilityManagerOptimumStart> AvailabilityManagerOptimumStartVector;
+  /** \relates AvailabilityManagerOptimumStart*/
+  typedef std::vector<AvailabilityManagerOptimumStart> AvailabilityManagerOptimumStartVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AVAILABILITYMANAGEROPTIMUMSTART_HPP
+#endif  // MODEL_AVAILABILITYMANAGEROPTIMUMSTART_HPP

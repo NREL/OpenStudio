@@ -1,5 +1,5 @@
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -86,7 +86,7 @@ class MeasureManager
     @measures = {} # measure_dir => BCLMeasure
     @measure_info = {} # measure_dir => {osm_path => RubyUserScriptInfo}
 
-    eval(OpenStudio::Ruleset::infoExtractorRubyFunction)
+    eval(OpenStudio::Measure::infoExtractorRubyFunction)
   end
 
   def force_encoding(object, encoding = 'utf-8')
@@ -342,7 +342,7 @@ class MeasureManager
 
           rescue => e
             # update error in info
-            info = OpenStudio::Ruleset::RubyUserScriptInfo.new(e.message)
+            info = OpenStudio::Measure::OSMeasureInfo.new(e.message)
             info.update(result)
           end
 
@@ -358,7 +358,7 @@ class MeasureManager
     return result
   end
 
-  # returns OpenStudio::Ruleset::RubyUserScriptInfo
+  # returns OpenStudio::Measure::OSMeasureInfo
   def get_measure_info(measure_dir, measure, osm_path, model, workspace)
 
     result = nil
@@ -379,9 +379,9 @@ class MeasureManager
       # might need some timeouts or additional protection
       print_message("Loading measure info for '#{measure_dir}', '#{osm_path}'")
       begin
-        result = OpenStudio::Ruleset.getInfo(measure, model, workspace)
+        result = OpenStudio::Measure.getInfo(measure, model, workspace)
       rescue Exception => e
-        result = OpenStudio::Ruleset::RubyUserScriptInfo.new(e.message)
+        result = OpenStudio::Measure::OSMeasureInfo.new(e.message)
       end
 
       @measure_info[measure_dir] = {} if @measure_info[measure_dir].nil?
@@ -423,6 +423,8 @@ class MeasureManager
         when 'Integer'
           arg[:units] = argument.units.get if argument.units.is_initialized
           arg[:default_value] = argument.defaultValue.get.to_i if argument.defaultValue.is_initialized
+          arg[:min_value] = argument.minValue.get.to_i if argument.minValue.is_initialized
+          arg[:max_value] = argument.maxValue.get.to_i if argument.maxValue.is_initialized
 
         when 'String'
           arg[:default_value] = argument.defaultValue.get if argument.defaultValue.is_initialized
@@ -468,7 +470,17 @@ class MeasureManager
       elsif type == "Double".to_OSArgumentType
         arg[:units] = argument.units.get if argument.units.is_initialized
         arg[:default_value] = argument.defaultValueAsDouble if argument.hasDefaultValue
-
+        if argument.hasDomain
+          min, max = argument.domainAsDouble
+          # I'm a bit wary of rounding issues... I think 1e308 instead of
+          # Float::MAX (1.7976931348623157e+308) is fine for our applications...
+          if min > -1e308 # -Float::MAX
+            arg[:min_value] = min
+          end
+          if max < 1e308 # Float::MAX
+            arg[:max_value] = max
+          end
+        end
       elsif type == "Quantity".to_OSArgumentType
         arg[:units] = argument.units.get if argument.units.is_initialized
         arg[:default_value] = argument.defaultValueAsQuantity.value if argument.hasDefaultValue
@@ -476,16 +488,24 @@ class MeasureManager
       elsif type == "Integer".to_OSArgumentType
         arg[:units] = argument.units.get if argument.units.is_initialized
         arg[:default_value] = argument.defaultValueAsInteger if argument.hasDefaultValue
-
+        if argument.hasDomain
+          min, max = argument.domainAsInteger
+          if min != -2147483648
+            arg[:min_value] = min
+          end
+          if max != 2147483648
+            arg[:max_value] = max
+          end
+        end
       elsif type == "String".to_OSArgumentType
         arg[:default_value] = argument.defaultValueAsString if argument.hasDefaultValue
 
       elsif type == "Choice".to_OSArgumentType
         arg[:default_value] = argument.defaultValueAsString if argument.hasDefaultValue
-          arg[:choice_values] = []
-          argument.choiceValues.each {|value| arg[:choice_values] << value}
-          arg[:choice_display_names] = []
-          argument.choiceValueDisplayNames.each {|value| arg[:choice_display_names] << value}
+        arg[:choice_values] = []
+        argument.choiceValues.each {|value| arg[:choice_values] << value}
+        arg[:choice_display_names] = []
+        argument.choiceValueDisplayNames.each {|value| arg[:choice_display_names] << value}
 
       elsif type == "Path".to_OSArgumentType
         arg[:default_value] = argument.defaultValueAsPath.to_s if argument.hasDefaultValue

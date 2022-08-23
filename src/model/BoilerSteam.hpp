@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,121 +35,115 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class BoilerSteam_Impl;
+    class BoilerSteam_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** BoilerSteam is a StraightComponent that wraps the OpenStudio IDD object 'OS:Boiler:Steam'. */
-class MODEL_API BoilerSteam : public StraightComponent {
+  /** BoilerSteam is a StraightComponent that wraps the OpenStudio IDD object 'OS:Boiler:Steam'. */
+  class MODEL_API BoilerSteam : public StraightComponent
+  {
 
- public:
+   public:
+    explicit BoilerSteam(const Model& model);
 
-  explicit BoilerSteam(const Model& model);
+    virtual ~BoilerSteam() {}
 
-  virtual ~BoilerSteam() {}
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> fuelTypeValues();
 
-  static std::vector<std::string> fuelTypeValues();
+    /** @name Getters and Setters */
+    //@{
 
-  /** @name Getters and Setters */
-  //@{
+    std::string fuelType() const;
+    bool setFuelType(const std::string& fuelType);
 
-  std::string fuelType() const;
-  bool setFuelType(std::string fuelType);
+    boost::optional<double> maximumOperatingPressure() const;
+    bool setMaximumOperatingPressure(double maximumOperatingPressure);
+    void resetMaximumOperatingPressure();
 
-  boost::optional<double> maximumOperatingPressure() const;
-  bool setMaximumOperatingPressure(double maximumOperatingPressure);
-  void resetMaximumOperatingPressure();
+    boost::optional<double> theoreticalEfficiency() const;
+    bool setTheoreticalEfficiency(double theoreticalEfficiency);
+    void resetTheoreticalEfficiency();
 
-  boost::optional<double> theoreticalEfficiency() const;
-  bool setTheoreticalEfficiency(double theoreticalEfficiency);
-  void resetTheoreticalEfficiency();
+    boost::optional<double> designOutletSteamTemperature() const;
+    bool setDesignOutletSteamTemperature(double designOutletSteamTemperature);
+    void resetDesignOutletSteamTemperature();
 
-  boost::optional<double> designOutletSteamTemperature() const;
-  bool setDesignOutletSteamTemperature(double designOutletSteamTemperature);
-  void resetDesignOutletSteamTemperature();
+    boost::optional<double> nominalCapacity() const;
+    bool isNominalCapacityAutosized() const;
+    bool setNominalCapacity(double nominalCapacity);
+    void resetNominalCapacity();
+    void autosizeNominalCapacity();
 
-  boost::optional<double> nominalCapacity() const;
-  bool isNominalCapacityAutosized() const;
-  bool setNominalCapacity(double nominalCapacity);
-  void resetNominalCapacity();
-  void autosizeNominalCapacity();
+    boost::optional<double> minimumPartLoadRatio() const;
+    bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
+    void resetMinimumPartLoadRatio();
 
-  boost::optional<double> minimumPartLoadRatio() const;
-  bool setMinimumPartLoadRatio(double minimumPartLoadRatio);
-  void resetMinimumPartLoadRatio();
+    boost::optional<double> maximumPartLoadRatio() const;
+    bool setMaximumPartLoadRatio(double maximumPartLoadRatio);
+    void resetMaximumPartLoadRatio();
 
-  boost::optional<double> maximumPartLoadRatio() const;
-  bool setMaximumPartLoadRatio(double maximumPartLoadRatio);
-  void resetMaximumPartLoadRatio();
+    boost::optional<double> optimumPartLoadRatio() const;
+    bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
+    void resetOptimumPartLoadRatio();
 
-  boost::optional<double> optimumPartLoadRatio() const;
-  bool setOptimumPartLoadRatio(double optimumPartLoadRatio);
-  void resetOptimumPartLoadRatio();
+    boost::optional<double> coefficient1ofFuelUseFunctionofPartLoadRatioCurve() const;
+    bool setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(double coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
+    void resetCoefficient1ofFuelUseFunctionofPartLoadRatioCurve();
 
-  boost::optional<double> coefficient1ofFuelUseFunctionofPartLoadRatioCurve() const;
-  bool setCoefficient1ofFuelUseFunctionofPartLoadRatioCurve(double coefficient1ofFuelUseFunctionofPartLoadRatioCurve);
-  void resetCoefficient1ofFuelUseFunctionofPartLoadRatioCurve();
+    boost::optional<double> coefficient2ofFuelUseFunctionofPartLoadRatioCurve() const;
+    bool setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(double coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
+    void resetCoefficient2ofFuelUseFunctionofPartLoadRatioCurve();
 
-  boost::optional<double> coefficient2ofFuelUseFunctionofPartLoadRatioCurve() const;
-  bool setCoefficient2ofFuelUseFunctionofPartLoadRatioCurve(double coefficient2ofFuelUseFunctionofPartLoadRatioCurve);
-  void resetCoefficient2ofFuelUseFunctionofPartLoadRatioCurve();
+    boost::optional<double> coefficient3ofFuelUseFunctionofPartLoadRatioCurve() const;
+    bool setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(double coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
+    void resetCoefficient3ofFuelUseFunctionofPartLoadRatioCurve();
 
-  boost::optional<double> coefficient3ofFuelUseFunctionofPartLoadRatioCurve() const;
-  bool setCoefficient3ofFuelUseFunctionofPartLoadRatioCurve(double coefficient3ofFuelUseFunctionofPartLoadRatioCurve);
-  void resetCoefficient3ofFuelUseFunctionofPartLoadRatioCurve();
+    double sizingFactor() const;
+    bool isSizingFactorDefaulted() const;
+    bool setSizingFactor(double sizingFactor);
+    void resetSizingFactor();
 
-  double sizingFactor() const;
-  bool isSizingFactorDefaulted() const;
-  bool setSizingFactor(double sizingFactor);
-  void resetSizingFactor();
+    std::string endUseSubcategory() const;
+    bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-  std::string endUseSubcategory() const;
-  bool setEndUseSubcategory(const std::string & endUseSubcategory);
+    //@}
+    /** @name Other */
+    //@{
 
+    //@}
 
-  //@}
-  /** @name Other */
-  //@{
+    boost::optional<double> autosizedNominalCapacity() const;
 
-  //@}
+   protected:
+    /// @cond
+    typedef detail::BoilerSteam_Impl ImplType;
 
-  boost::optional<double> autosizedNominalCapacity() const ;
+    explicit BoilerSteam(std::shared_ptr<detail::BoilerSteam_Impl> impl);
 
+    friend class detail::BoilerSteam_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
+    /// @endcond
 
- protected:
+   private:
+    REGISTER_LOGGER("openstudio.model.BoilerSteam");
+  };
 
-  /// @cond
-  typedef detail::BoilerSteam_Impl ImplType;
+  /** \relates BoilerSteam*/
+  typedef boost::optional<BoilerSteam> OptionalBoilerSteam;
 
-  explicit BoilerSteam(std::shared_ptr<detail::BoilerSteam_Impl> impl);
+  /** \relates BoilerSteam*/
+  typedef std::vector<BoilerSteam> BoilerSteamVector;
 
-  friend class detail::BoilerSteam_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+}  // namespace model
+}  // namespace openstudio
 
-  /// @endcond
-
- private:
-
-  REGISTER_LOGGER("openstudio.model.BoilerSteam");
-};
-
-/** \relates BoilerSteam*/
-typedef boost::optional<BoilerSteam> OptionalBoilerSteam;
-
-/** \relates BoilerSteam*/
-typedef std::vector<BoilerSteam> BoilerSteamVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_BOILERSTEAM_HPP
+#endif  // MODEL_BOILERSTEAM_HPP

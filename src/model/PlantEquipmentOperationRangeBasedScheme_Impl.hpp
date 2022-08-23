@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,61 +35,58 @@
 namespace openstudio {
 namespace model {
 
-class PlantLoop;
+  class PlantLoop;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API PlantEquipmentOperationRangeBasedScheme_Impl : public PlantEquipmentOperationScheme_Impl {
-   public:
+    class MODEL_API PlantEquipmentOperationRangeBasedScheme_Impl : public PlantEquipmentOperationScheme_Impl
+    {
+     public:
+      PlantEquipmentOperationRangeBasedScheme_Impl(IddObjectType type, Model_Impl* model);
 
-    PlantEquipmentOperationRangeBasedScheme_Impl(IddObjectType type, Model_Impl* model);
+      PlantEquipmentOperationRangeBasedScheme_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    PlantEquipmentOperationRangeBasedScheme_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      PlantEquipmentOperationRangeBasedScheme_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    PlantEquipmentOperationRangeBasedScheme_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                           Model_Impl* model,
-                           bool keepHandle);
+      PlantEquipmentOperationRangeBasedScheme_Impl(const PlantEquipmentOperationRangeBasedScheme_Impl& other, Model_Impl* model, bool keepHandles);
 
-    PlantEquipmentOperationRangeBasedScheme_Impl(const PlantEquipmentOperationRangeBasedScheme_Impl& other, Model_Impl* model, bool keepHandles);
+      virtual ~PlantEquipmentOperationRangeBasedScheme_Impl() {}
 
-    virtual ~PlantEquipmentOperationRangeBasedScheme_Impl() {}
+      bool addLoadRange(double upperLimit, const std::vector<HVACComponent>& equipment);
 
-    bool addLoadRange(double upperLimit, const std::vector<HVACComponent> & equipment);
+      std::vector<HVACComponent> removeLoadRange(double upperLimit);
 
-    std::vector<HVACComponent> removeLoadRange(double upperLimit);
+      std::vector<double> loadRangeUpperLimits() const;
 
-    std::vector<double> loadRangeUpperLimits() const;
+      std::vector<HVACComponent> equipment(double upperLimit) const;
 
-    std::vector<HVACComponent> equipment(double upperLimit) const;
+      bool addEquipment(double upperLimit, const HVACComponent& equipment);
 
-    bool addEquipment(double upperLimit, const HVACComponent & equipment);
+      bool addEquipment(const HVACComponent& equipment);
 
-    bool addEquipment(const HVACComponent & equipment);
+      bool replaceEquipment(double upperLimit, const std::vector<HVACComponent>& equipment);
 
-    bool replaceEquipment(double upperLimit, const std::vector<HVACComponent> & equipment);
+      bool replaceEquipment(const std::vector<HVACComponent>& equipment);
 
-    bool replaceEquipment(const std::vector<HVACComponent> & equipment);
+      bool removeEquipment(double upperLimit, const HVACComponent& equipment);
 
-    bool removeEquipment(double upperLimit, const HVACComponent & equipment);
+      bool removeEquipment(const HVACComponent& equipment);
 
-    bool removeEquipment(const HVACComponent & equipment);
+      void clearLoadRanges();
 
-    void clearLoadRanges();
+      virtual double maximumUpperLimit() const = 0;
 
-    virtual double maximumUpperLimit() const = 0;
+      virtual double minimumLowerLimit() const = 0;
 
-    virtual double minimumLowerLimit() const = 0;
+      ModelObject clone(Model model) const override;
 
-    ModelObject clone(Model model) const override;
+     private:
+      REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationRangeBasedScheme");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationRangeBasedScheme");
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_PLANTEQUIPMENTOPERATIONRANGEBASEDSCHEME_IMPL_HPP
+#endif  // MODEL_PLANTEQUIPMENTOPERATIONRANGEBASEDSCHEME_IMPL_HPP

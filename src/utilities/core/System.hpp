@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,38 +31,27 @@
 #define UTILITIES_CORE_SYSTEM_HPP
 
 #include "../UtilitiesAPI.hpp"
-#include "../time/Time.hpp"
-
-#include <boost/optional.hpp>
 
 namespace openstudio {
 
-  class UTILITIES_API System{
-  public:
+class UTILITIES_API System
+{
+ public:
+  /// Sleep for number of milliseconds
+  static void msleep(int msecs);
 
-    /// Returns the time that the system has been idle
-    static boost::optional<Time> systemIdleTime();
+  /// Returns the number of processors on this computer
+  static unsigned numberOfProcessors();
 
-    /// Sleep for number of milliseconds
-    static void msleep(int msecs);
+  /// \note not using string_view because we need null terminated strings
+  /// Utility for testing exception handling within the system
+  static void testExceptions1();
+  static void testExceptions2();
+  static void testExceptions3();
+  static void testExceptions4();
+  static void testExceptions5();
+};
 
-    /// Returns the number of processors on this computer
-    static unsigned numberOfProcessors();
+}  // namespace openstudio
 
-    /// \note not using string_view because we need null terminated strings
-    static boost::optional<std::string> getenv(const std::string &name) noexcept;
-
-    /// \note not using string_view because we need null terminated strings
-    static void setenv(const std::string &name, const std::string &value);
-
-    /// Utility for testing exception handling within the system
-    static void testExceptions1();
-    static void testExceptions2();
-    static void testExceptions3();
-    static void testExceptions4();
-    static void testExceptions5();
-  };
-
-} // openstudio
-
-#endif // UTILITIES_CORE_SYSTEM_HPP
+#endif  // UTILITIES_CORE_SYSTEM_HPP

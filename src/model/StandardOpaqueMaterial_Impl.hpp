@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,170 +36,198 @@
 namespace openstudio {
 namespace model {
 
-// forward declaration
-class StandardOpaqueMaterial;
+  // forward declaration
+  class StandardOpaqueMaterial;
 
-namespace detail {
+  namespace detail {
 
-  /** StandardOpaqueMaterial_Impl is a OpaqueMaterial_Impl that is the implementation class for StandardOpaqueMaterial.*/
-  class MODEL_API StandardOpaqueMaterial_Impl : public OpaqueMaterial_Impl {
+    /** StandardOpaqueMaterial_Impl is a OpaqueMaterial_Impl that is the implementation class for StandardOpaqueMaterial.*/
+    class MODEL_API StandardOpaqueMaterial_Impl : public OpaqueMaterial_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    StandardOpaqueMaterial_Impl(const IdfObject& idfObject,
-                  Model_Impl* model,
-                  bool keepHandle);
+      StandardOpaqueMaterial_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    StandardOpaqueMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                  Model_Impl* model,
-                  bool keepHandle);
+      StandardOpaqueMaterial_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    StandardOpaqueMaterial_Impl(const StandardOpaqueMaterial_Impl& other,
-                  Model_Impl* model,
-                  bool keepHandle);
+      StandardOpaqueMaterial_Impl(const StandardOpaqueMaterial_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~StandardOpaqueMaterial_Impl() {}
+      virtual ~StandardOpaqueMaterial_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    /** The conductivitiy of the material in W/m*K. */
-    virtual double thermalConductivity() const override;
+      // return any children objects in the hierarchy
+      virtual std::vector<ModelObject> children() const override;
 
-    /** The conductance of the material in W/m^2*K. */
-    virtual double thermalConductance() const override;
+      /** The conductivity of the material in W/m*K. */
+      virtual double thermalConductivity() const override;
 
-    /** The resistivity of the material in m*K/W. */
-    virtual double thermalResistivity() const override;
+      /** The conductance of the material in W/m^2*K. */
+      virtual double thermalConductance() const override;
 
-    /** The resistance of the material in m^2*K/W. */
-    virtual double thermalResistance() const override;
+      /** The resistivity of the material in m*K/W. */
+      virtual double thermalResistivity() const override;
 
-    virtual boost::optional<double> thermalReflectance() const override;
+      /** The resistance of the material in m^2*K/W. */
+      virtual double thermalResistance() const override;
 
-    virtual boost::optional<double> solarReflectance() const override;
+      virtual boost::optional<double> thermalReflectance() const override;
 
-    virtual boost::optional<double> visibleReflectance() const override;
+      virtual boost::optional<double> solarReflectance() const override;
 
-    virtual boost::optional<double> getVisibleTransmittance() const override;
+      virtual boost::optional<double> visibleReflectance() const override;
 
-    virtual boost::optional<double> interiorVisibleAbsorptance() const override;
+      virtual boost::optional<double> getVisibleTransmittance() const override;
 
-    virtual boost::optional<double> exteriorVisibleAbsorptance() const override;
+      virtual boost::optional<double> interiorVisibleAbsorptance() const override;
 
-    virtual std::string roughness() const;
+      virtual boost::optional<double> exteriorVisibleAbsorptance() const override;
 
-    virtual double thickness() const override;
+      virtual std::string roughness() const;
 
-    virtual double conductivity() const;
+      virtual double thickness() const override;
 
-    virtual double density() const;
+      virtual double conductivity() const;
 
-    virtual double specificHeat() const;
+      virtual double density() const;
 
-    virtual double thermalAbsorptance() const override;
+      virtual double specificHeat() const;
 
-    virtual double solarAbsorptance() const override;
+      virtual double thermalAbsorptance() const override;
 
-    virtual bool isSolarAbsorptanceDefaulted() const;
+      virtual double solarAbsorptance() const override;
 
-    virtual double visibleAbsorptance() const override;
+      virtual bool isSolarAbsorptanceDefaulted() const;
 
-    virtual bool isVisibleAbsorptanceDefaulted() const;
+      virtual double visibleAbsorptance() const override;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual bool isVisibleAbsorptanceDefaulted() const;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    /** Sets the conductivity of the material in W/m*K, if possible. */
-    virtual bool setThermalConductivity(double value) override;
+      //@}
+      /** @name Setters */
+      //@{
 
-    /** Sets the conductance of the material in W/m^2*K, if possible. */
-    virtual bool setThermalConductance(double value) override;
+      /** Sets the conductivity of the material in W/m*K, if possible. */
+      virtual bool setThermalConductivity(double value) override;
 
-    /** Sets the resistivity of the material in m*K/W, if possible. */
-    virtual bool setThermalResistivity(double value) override;
+      /** Sets the conductance of the material in W/m^2*K, if possible. */
+      virtual bool setThermalConductance(double value) override;
 
-    /** Sets the resistance of the material in m^2*K/W, if possible. */
-    virtual bool setThermalResistance(double value) override;
+      /** Sets the resistivity of the material in m*K/W, if possible. */
+      virtual bool setThermalResistivity(double value) override;
 
-    virtual bool setThermalReflectance(boost::optional<double> value) override;
+      /** Sets the resistance of the material in m^2*K/W, if possible. */
+      virtual bool setThermalResistance(double value) override;
 
-    virtual bool setSolarAbsorptance(boost::optional<double> value) override;
+      virtual bool setThermalReflectance(boost::optional<double> value) override;
 
-    virtual bool setSolarReflectance(boost::optional<double> value) override;
+      virtual bool setSolarAbsorptance(boost::optional<double> value) override;
 
-    virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
+      virtual bool setSolarReflectance(boost::optional<double> value) override;
 
-    virtual bool setVisibleReflectance(boost::optional<double> value) override;
+      virtual bool setVisibleAbsorptance(boost::optional<double> value) override;
 
-    virtual bool setRoughness(std::string roughness);
+      virtual bool setVisibleReflectance(boost::optional<double> value) override;
 
-    virtual bool setThickness(double thickness) override;
+      virtual bool setRoughness(const std::string& roughness);
 
-    virtual bool setConductivity(double conductivity);
+      virtual bool setThickness(double thickness) override;
 
-    virtual bool setDensity(double density);
+      virtual bool setConductivity(double conductivity);
 
-    virtual bool setSpecificHeat(double specificHeat);
+      virtual bool setDensity(double density);
 
-    virtual bool setThermalAbsorptance(double thermalAbsorptance) override;
+      virtual bool setSpecificHeat(double specificHeat);
 
-    virtual void resetThermalAbsorptance();
+      virtual bool setThermalAbsorptance(double thermalAbsorptance) override;
 
-    virtual bool isThermalAbsorptanceDefaulted() const;
+      virtual void resetThermalAbsorptance();
 
-    virtual bool setSolarAbsorptance(double solarAbsorptance);
+      virtual bool isThermalAbsorptanceDefaulted() const;
 
-    virtual void resetSolarAbsorptance();
+      virtual bool setSolarAbsorptance(double solarAbsorptance);
 
-    virtual bool setVisibleAbsorptance(double visibleAbsorptance);
+      virtual void resetSolarAbsorptance();
 
-    virtual void resetVisibleAbsorptance();
+      virtual bool setVisibleAbsorptance(double visibleAbsorptance);
 
-    //@}
-    /** @name Queries */
-    //@{
+      virtual void resetVisibleAbsorptance();
 
-    /** Energy it takes to raise the temperature of this material 1 K (J/m^2*K). Equal to
+      // if material property moisture penetration depth settings already exists, do nothing and return nil; creates the material property moisture penetration depth settings if it does not already exist and return it;
+      boost::optional<MaterialPropertyMoisturePenetrationDepthSettings>
+        createMaterialPropertyMoisturePenetrationDepthSettings(double waterVaporDiffusionResistanceFactor, double moistureEquationCoefficientA,
+                                                               double moistureEquationCoefficientB, double moistureEquationCoefficientC,
+                                                               double moistureEquationCoefficientD, double coatingLayerThickness,
+                                                               double coatingLayerWaterVaporDiffusionResistanceFactor);
+
+      // returns the material property moisture penetration depth settings if set
+      boost::optional<MaterialPropertyMoisturePenetrationDepthSettings> materialPropertyMoisturePenetrationDepthSettings() const;
+
+      // resets the material property moisture penetration depth settings
+      void resetMaterialPropertyMoisturePenetrationDepthSettings();
+
+      // if material property phase change already exists, do nothing and return nil; creates the material property phase change if it does not already exist and return it;
+      boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange();
+      boost::optional<MaterialPropertyPhaseChange> createMaterialPropertyPhaseChange(const std::vector<TemperatureEnthalpy>& temperatureEnthalpys);
+
+      // returns the material property phase change if set
+      boost::optional<MaterialPropertyPhaseChange> materialPropertyPhaseChange() const;
+
+      // resets the material property phase change
+      void resetMaterialPropertyPhaseChange();
+
+      // if material property phase change hysteresis already exists, do nothing and return nil; creates the material property phase change hysteresis if it does not already exist and return it
+      boost::optional<MaterialPropertyPhaseChangeHysteresis> createMaterialPropertyPhaseChangeHysteresis();
+
+      // returns the material property phase change hysteresis if set
+      boost::optional<MaterialPropertyPhaseChangeHysteresis> materialPropertyPhaseChangeHysteresis() const;
+
+      // resets the material property phase change hysteresis
+      void resetMaterialPropertyPhaseChangeHysteresis();
+
+      //@}
+      /** @name Queries */
+      //@{
+
+      /** Energy it takes to raise the temperature of this material 1 K (J/m^2*K). Equal to
      *  specificHeat() * density() * thickness(). */
-    virtual boost::optional<double> heatCapacity() const override;
+      virtual boost::optional<double> heatCapacity() const override;
 
-    //@}
+      //@}
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.StandardOpaqueMaterial");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.StandardOpaqueMaterial");
 
-    std::vector<std::string> roughnessValues() const;
+      std::vector<std::string> roughnessValues() const;
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_STANDARDOPAQUEMATERIAL_IMPL_HPP
-
+#endif  // MODEL_STANDARDOPAQUEMATERIAL_IMPL_HPP

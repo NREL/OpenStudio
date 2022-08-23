@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,6 +33,7 @@
 
 #include "../AirLoopHVAC.hpp"
 #include "../AirLoopHVACZoneSplitter.hpp"
+#include "../AirLoopHVACZoneMixer.hpp"
 #include "../AirTerminalSingleDuctConstantVolumeNoReheat.hpp"
 #include "../CoilCoolingDXSingleSpeed.hpp"
 #include "../CoilHeatingWater.hpp"
@@ -53,6 +54,8 @@
 #include "../ScheduleCompact.hpp"
 #include "../ScheduleRuleset.hpp"
 #include "../ScheduleRuleset_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 #include "../SetpointManagerSingleZoneReheat.hpp"
 #include "../SizingZone.hpp"
 #include "../SizingZone_Impl.hpp"
@@ -70,7 +73,6 @@
 #include "../ZoneControlContaminantController_Impl.hpp"
 #include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
 
-
 #include "../ScheduleConstant.hpp"
 #include "../ZoneHVACUnitHeater.hpp"
 #include "../ZoneHVACUnitHeater_Impl.hpp"
@@ -81,8 +83,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ThermalZone_Spaces)
-{
+TEST_F(ModelFixture, ThermalZone_Spaces) {
   Model model;
   ThermalZone thermalZone(model);
   Space space1(model);
@@ -106,22 +107,21 @@ TEST_F(ModelFixture, ThermalZone_Spaces)
   EXPECT_EQ(2u, thermalZone.spaces().size());
 }
 
-TEST_F(ModelFixture,ThermalZone_Remove)
-{
+TEST_F(ModelFixture, ThermalZone_Remove) {
   Model model;
   ThermalZone zone1(model);
   AirLoopHVAC airLoopHVAC(model);
   std::vector<ModelObject> modelObjects;
 
   modelObjects = airLoopHVAC.demandComponents();
-  EXPECT_EQ(5u,modelObjects.size());
+  EXPECT_EQ(5u, modelObjects.size());
 
   EXPECT_TRUE(airLoopHVAC.addBranchForZone(zone1, boost::none));
 
   modelObjects = airLoopHVAC.demandComponents();
-  EXPECT_EQ(7u,modelObjects.size());
+  EXPECT_EQ(7u, modelObjects.size());
   ThermalZoneVector thermalZones = subsetCastVector<ThermalZone>(modelObjects);
-  ASSERT_EQ(1u,thermalZones.size());
+  ASSERT_EQ(1u, thermalZones.size());
   EXPECT_EQ(zone1.handle(), thermalZones[0].handle());
 
   auto mo = zone1.returnAirModelObject();
@@ -136,20 +136,19 @@ TEST_F(ModelFixture,ThermalZone_Remove)
   ASSERT_NO_THROW(zone1.remove());
 
   modelObjects = airLoopHVAC.demandComponents();
-  EXPECT_EQ(5u,modelObjects.size());
+  EXPECT_EQ(5u, modelObjects.size());
 
   modelObjects = airLoopHVAC2.demandComponents();
-  EXPECT_EQ(5u,modelObjects.size());
+  EXPECT_EQ(5u, modelObjects.size());
 }
 
-TEST_F(ModelFixture,ThermalZone_AddToNode_SPM)
-{
+TEST_F(ModelFixture, ThermalZone_AddToNode_SPM) {
   Model m;
   AirLoopHVAC airLoopHVAC(m);
   ThermalZone thermalZone(m);
   ThermalZone thermalZone2(m);
   ScheduleCompact s(m);
-  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(m,s);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(m, s);
   SetpointManagerSingleZoneReheat spm(m);
 
   Node outletNode = airLoopHVAC.supplyOutletNode();
@@ -161,17 +160,16 @@ TEST_F(ModelFixture,ThermalZone_AddToNode_SPM)
   EXPECT_TRUE(thermalZone.addToNode(inletNode));
 
   EXPECT_TRUE(spm.controlZone());
-  EXPECT_EQ(thermalZone, spm.controlZone());
+  EXPECT_EQ(thermalZone, spm.controlZone().get());
 
-  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2,singleDuctTerminal));
+  EXPECT_TRUE(airLoopHVAC.addBranchForZone(thermalZone2, singleDuctTerminal));
 
   EXPECT_TRUE(spm.controlZone());
-  EXPECT_EQ(thermalZone, spm.controlZone());
-  EXPECT_NE(thermalZone2, spm.controlZone());
+  EXPECT_EQ(thermalZone, spm.controlZone().get());
+  EXPECT_NE(thermalZone2, spm.controlZone().get());
 }
 
-TEST_F(ModelFixture,ThermalZone_sizingZone)
-{
+TEST_F(ModelFixture, ThermalZone_sizingZone) {
   Model model;
   ThermalZone zone1(model);
 
@@ -179,7 +177,7 @@ TEST_F(ModelFixture,ThermalZone_sizingZone)
 }
 
 /* Tests that you cannot set Fractions that sum to greater than 1 */
-TEST_F(ModelFixture,ThermalZone_FractionofZoneControlledbyDaylightingControl_PriSecLimits) {
+TEST_F(ModelFixture, ThermalZone_FractionofZoneControlledbyDaylightingControl_PriSecLimits) {
   Model m;
   ThermalZone z(m);
 
@@ -187,9 +185,7 @@ TEST_F(ModelFixture,ThermalZone_FractionofZoneControlledbyDaylightingControl_Pri
   ASSERT_TRUE(z.setFractionofZoneControlledbySecondaryDaylightingControl(0.5));
   ASSERT_FALSE(z.setFractionofZoneControlledbySecondaryDaylightingControl(0.75));
   ASSERT_FALSE(z.setFractionofZoneControlledbyPrimaryDaylightingControl(0.75));
-
 }
-
 
 TEST_F(ModelFixture, CombinedInfiltration) {
   Model model;
@@ -234,25 +230,24 @@ TEST_F(ModelFixture, CombinedInfiltration) {
   double totalRate = 0;
   totalRate += spaceInfiltrationDesignFlowRates[0].designFlowRate().get();
   totalRate += spaceInfiltrationDesignFlowRates[1].designFlowRate().get();
-  EXPECT_EQ(500.0/3600.0, totalRate);
-
+  EXPECT_EQ(500.0 / 3600.0, totalRate);
 }
 
-TEST_F(ModelFixture,ThermalZone_ThermalZone) {
+TEST_F(ModelFixture, ThermalZone_ThermalZone) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-    Model model;
+  ASSERT_EXIT(
+    {
+      Model model;
 
-    ThermalZone thermalZone(model);
+      ThermalZone thermalZone(model);
 
-    exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,ThermalZone_equipment) {
+TEST_F(ModelFixture, ThermalZone_equipment) {
   Model model;
 
   ThermalZone thermalZone(model);
@@ -260,15 +255,15 @@ TEST_F(ModelFixture,ThermalZone_equipment) {
   AirLoopHVAC airLoopHVAC(model);
 
   ScheduleCompact scheduleCompact(model);
-  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(model,scheduleCompact);
+  AirTerminalSingleDuctConstantVolumeNoReheat singleDuctTerminal(model, scheduleCompact);
 
-  airLoopHVAC.addBranchForZone(thermalZone,singleDuctTerminal);
+  airLoopHVAC.addBranchForZone(thermalZone, singleDuctTerminal);
 
-  EXPECT_EQ(1u,thermalZone.equipment().size());
+  EXPECT_EQ(1u, thermalZone.equipment().size());
 
-  FanConstantVolume fan(model,scheduleCompact);
+  FanConstantVolume fan(model, scheduleCompact);
 
-  CoilHeatingWater heatingCoil(model,scheduleCompact);
+  CoilHeatingWater heatingCoil(model, scheduleCompact);
 
   CurveBiquadratic coolingCurveFofTemp = CurveBiquadratic(model);
   coolingCurveFofTemp.setCoefficient1Constant(0.42415);
@@ -315,41 +310,31 @@ TEST_F(ModelFixture,ThermalZone_equipment) {
   partLoadFraction.setMinimumValueofx(0.0);
   partLoadFraction.setMaximumValueofx(1.0);
 
-  CoilCoolingDXSingleSpeed coolingCoil = CoilCoolingDXSingleSpeed( model,
-                                                                   scheduleCompact,
-                                                                   coolingCurveFofTemp,
-                                                                   coolingCurveFofFlow,
-                                                                   energyInputRatioFofTemp,
-                                                                   energyInputRatioFofFlow,
-                                                                   partLoadFraction );
+  CoilCoolingDXSingleSpeed coolingCoil = CoilCoolingDXSingleSpeed(model, scheduleCompact, coolingCurveFofTemp, coolingCurveFofFlow,
+                                                                  energyInputRatioFofTemp, energyInputRatioFofFlow, partLoadFraction);
 
-
-  ZoneHVACPackagedTerminalAirConditioner ptac( model,
-                                               scheduleCompact,
-                                               fan,
-                                               heatingCoil,
-                                               coolingCoil );
+  ZoneHVACPackagedTerminalAirConditioner ptac(model, scheduleCompact, fan, heatingCoil, coolingCoil);
 
   EXPECT_TRUE(ptac.addToThermalZone(thermalZone));
 
-  EXPECT_EQ(2u,thermalZone.equipment().size());
+  EXPECT_EQ(2u, thermalZone.equipment().size());
 }
 
-TEST_F(ModelFixture,ThermalZone_LoadDistributionScheme) {
+TEST_F(ModelFixture, ThermalZone_LoadDistributionScheme) {
   Model model;
 
   ThermalZone thermalZone(model);
 
-  EXPECT_EQ("SequentialLoad",thermalZone.loadDistributionScheme());
+  EXPECT_EQ("SequentialLoad", thermalZone.loadDistributionScheme());
 
   thermalZone.setLoadDistributionScheme("UniformLoad");
-  EXPECT_EQ("UniformLoad",thermalZone.loadDistributionScheme());
+  EXPECT_EQ("UniformLoad", thermalZone.loadDistributionScheme());
 
   thermalZone.setLoadDistributionScheme("InvalidChoice");
-  EXPECT_EQ("UniformLoad",thermalZone.loadDistributionScheme());
+  EXPECT_EQ("UniformLoad", thermalZone.loadDistributionScheme());
 }
 
-TEST_F(ModelFixture,ThermalZone_Cost) {
+TEST_F(ModelFixture, ThermalZone_Cost) {
   Model model;
   ThermalZone thermalZone(model);
 
@@ -378,8 +363,7 @@ TEST_F(ModelFixture,ThermalZone_Cost) {
   EXPECT_EQ(0u, model.getModelObjects<LifeCycleCost>().size());
 }
 
-TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost)
-{
+TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost) {
   Model model;
 
   Point3dVector floorPrint;
@@ -418,8 +402,7 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost)
   EXPECT_EQ(100, newSpace->lifeCycleCosts()[1].totalCost());
 }
 
-TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost2)
-{
+TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost2) {
   Model model;
 
   Point3dVector floorPrint;
@@ -463,8 +446,7 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost2)
   EXPECT_EQ(100, newSpace->lights()[1].definition().lifeCycleCosts()[0].totalCost());
 }
 
-TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost3)
-{
+TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost3) {
   Model model;
 
   Point3dVector floorPrint;
@@ -514,8 +496,7 @@ TEST_F(ModelFixture, ThermalZone_CombineSpaces_Cost3)
   EXPECT_EQ(100, newSpace->electricEquipment()[1].definition().lifeCycleCosts()[0].totalCost());
 }
 
-TEST_F(ModelFixture, ThermalZone_Clone)
-{
+TEST_F(ModelFixture, ThermalZone_Clone) {
   Model m;
   ThermalZone thermalZone(m);
 
@@ -539,34 +520,33 @@ TEST_F(ModelFixture, ThermalZone_Clone)
 
   auto humidistatClone = thermalZoneClone.zoneControlHumidistat();
   ASSERT_TRUE(humidistatClone);
-  ASSERT_NE(humidistatClone.get(),humidistat);
+  ASSERT_NE(humidistatClone.get(), humidistat);
   auto humidSchedule2 = humidistatClone->humidifyingRelativeHumiditySetpointSchedule();
   ASSERT_TRUE(humidSchedule2);
-  ASSERT_EQ(humidSchedule,humidSchedule2.get());
+  ASSERT_EQ(humidSchedule, humidSchedule2.get());
   auto dehumidSchedule2 = humidistatClone->dehumidifyingRelativeHumiditySetpointSchedule();
   ASSERT_TRUE(dehumidSchedule2);
-  ASSERT_EQ(dehumidSchedule,dehumidSchedule2.get());
+  ASSERT_EQ(dehumidSchedule, dehumidSchedule2.get());
 
   auto thermostatClone = thermalZoneClone.thermostat();
   ASSERT_TRUE(thermostatClone);
-  ASSERT_NE(thermostatClone.get(),thermostat);
+  ASSERT_NE(thermostatClone.get(), thermostat);
   auto coolingSchedule2 = thermostatClone->cast<ThermostatSetpointDualSetpoint>().coolingSetpointTemperatureSchedule();
   ASSERT_TRUE(coolingSchedule2);
-  ASSERT_EQ(coolingSchedule,coolingSchedule2.get());
+  ASSERT_EQ(coolingSchedule, coolingSchedule2.get());
   auto heatingSchedule2 = thermostatClone->cast<ThermostatSetpointDualSetpoint>().heatingSetpointTemperatureSchedule();
   ASSERT_TRUE(heatingSchedule2);
-  ASSERT_EQ(heatingSchedule,heatingSchedule2.get());
+  ASSERT_EQ(heatingSchedule, heatingSchedule2.get());
 
   EXPECT_FALSE(thermalZoneClone.zoneAirNode().handle().isNull());
-  EXPECT_EQ(zoneAirNode,thermalZone.zoneAirNode());
+  EXPECT_EQ(zoneAirNode, thermalZone.zoneAirNode());
   EXPECT_FALSE(thermalZone.zoneAirNode().handle().isNull());
 }
 
-TEST_F(ModelFixture, ThermalZone_SonOfClone)
-{
+TEST_F(ModelFixture, ThermalZone_SonOfClone) {
   Model model;
   ScheduleConstant schedule(model);
-  schedule.setValue(1.0); // Always on
+  schedule.setValue(1.0);  // Always on
   FanConstantVolume fan(model, schedule);
   CoilHeatingWater heatingCoil(model, schedule);
   ZoneHVACUnitHeater zoneHVACUnitHeater(model, schedule, fan, heatingCoil);
@@ -596,8 +576,7 @@ TEST_F(ModelFixture, ThermalZone_SonOfClone)
   ASSERT_TRUE(clone2->cast<model::ZoneHVACComponent>().thermalZone());
 }
 
-TEST_F(ModelFixture, ThermalZone_Ports)
-{
+TEST_F(ModelFixture, ThermalZone_Ports) {
   Model m;
   ThermalZone zone(m);
 
@@ -607,16 +586,15 @@ TEST_F(ModelFixture, ThermalZone_Ports)
   auto inletPortListZone = inletPortList.thermalZone();
   auto exhaustPortListZone = exhaustPortList.thermalZone();
 
-  EXPECT_EQ(zone.handle(),inletPortListZone.handle());
-  EXPECT_EQ(zone.handle(),exhaustPortListZone.handle());
+  EXPECT_EQ(zone.handle(), inletPortListZone.handle());
+  EXPECT_EQ(zone.handle(), exhaustPortListZone.handle());
 
   zone.remove();
   EXPECT_TRUE(inletPortList.handle().isNull());
   EXPECT_TRUE(exhaustPortList.handle().isNull());
 }
 
-TEST_F(ModelFixture, ThermalZone_Thermostat)
-{
+TEST_F(ModelFixture, ThermalZone_Thermostat) {
   {
     Model m;
 
@@ -627,27 +605,27 @@ TEST_F(ModelFixture, ThermalZone_Thermostat)
     EXPECT_TRUE(zone1.setThermostat(thermostat1));
 
     ASSERT_TRUE(thermostat1.thermalZone());
-    EXPECT_EQ(zone1,thermostat1.thermalZone().get());
+    EXPECT_EQ(zone1, thermostat1.thermalZone().get());
 
     auto returnvalue = zone1.thermostat();
     ASSERT_TRUE(returnvalue);
-    EXPECT_EQ(thermostat1,returnvalue.get());
+    EXPECT_EQ(thermostat1, returnvalue.get());
 
     ThermalZone zone2(m);
 
     EXPECT_TRUE(zone2.setThermostat(thermostat1));
     returnvalue = zone2.thermostat();
     ASSERT_TRUE(returnvalue);
-    EXPECT_NE(returnvalue.get(),thermostat1);
+    EXPECT_NE(returnvalue.get(), thermostat1);
     auto thermostats = m.getModelObjects<Thermostat>();
-    EXPECT_EQ(2u,thermostats.size());
+    EXPECT_EQ(2u, thermostats.size());
 
     ThermostatSetpointDualSetpoint themostat2(m);
     EXPECT_TRUE(zone2.setThermostat(themostat2));
     EXPECT_TRUE(returnvalue->handle().isNull());
     ASSERT_TRUE(zone2.thermostat());
     EXPECT_EQ(themostat2.handle(), zone2.thermostat()->handle());
-    EXPECT_EQ(2u,m.getModelObjects<Thermostat>().size());
+    EXPECT_EQ(2u, m.getModelObjects<Thermostat>().size());
   }
 
   {
@@ -660,12 +638,11 @@ TEST_F(ModelFixture, ThermalZone_Thermostat)
     ASSERT_TRUE(zone.thermostat());
     ASSERT_TRUE(zone2.thermostat());
     EXPECT_NE(zone.thermostat()->handle(), zone2.thermostat()->handle());
-    EXPECT_EQ(2u,m.getModelObjects<model::Thermostat>().size());
+    EXPECT_EQ(2u, m.getModelObjects<model::Thermostat>().size());
   }
 }
 
-TEST_F(ModelFixture, ThermalZone_ZoneControlContaminantController)
-{
+TEST_F(ModelFixture, ThermalZone_ZoneControlContaminantController) {
   {
     Model m;
 
@@ -676,27 +653,27 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlContaminantController)
     EXPECT_TRUE(zone1.setZoneControlContaminantController(controller1));
 
     ASSERT_TRUE(controller1.controlledZone());
-    EXPECT_EQ(zone1,controller1.controlledZone().get());
+    EXPECT_EQ(zone1, controller1.controlledZone().get());
 
     auto returnvalue = zone1.zoneControlContaminantController();
     ASSERT_TRUE(returnvalue);
-    EXPECT_EQ(controller1,returnvalue.get());
+    EXPECT_EQ(controller1, returnvalue.get());
 
     ThermalZone zone2(m);
 
     EXPECT_TRUE(zone2.setZoneControlContaminantController(controller1));
     returnvalue = zone2.zoneControlContaminantController();
     ASSERT_TRUE(returnvalue);
-    EXPECT_NE(returnvalue.get(),controller1);
+    EXPECT_NE(returnvalue.get(), controller1);
     auto controllers = m.getModelObjects<ZoneControlContaminantController>();
-    EXPECT_EQ(2u,controllers.size());
+    EXPECT_EQ(2u, controllers.size());
 
     ZoneControlContaminantController controller2(m);
     EXPECT_TRUE(zone2.setZoneControlContaminantController(controller2));
     EXPECT_TRUE(returnvalue->handle().isNull());
     ASSERT_TRUE(zone2.zoneControlContaminantController());
     EXPECT_EQ(controller2.handle(), zone2.zoneControlContaminantController()->handle());
-    EXPECT_EQ(2u,m.getModelObjects<ZoneControlContaminantController>().size());
+    EXPECT_EQ(2u, m.getModelObjects<ZoneControlContaminantController>().size());
   }
 
   {
@@ -709,12 +686,11 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlContaminantController)
     ASSERT_TRUE(zone.zoneControlContaminantController());
     ASSERT_TRUE(zone2.zoneControlContaminantController());
     EXPECT_NE(zone.zoneControlContaminantController()->handle(), zone2.zoneControlContaminantController()->handle());
-    EXPECT_EQ(2u,m.getModelObjects<model::ZoneControlContaminantController>().size());
+    EXPECT_EQ(2u, m.getModelObjects<model::ZoneControlContaminantController>().size());
   }
 }
 
-TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
-{
+TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat) {
   {
     Model m;
 
@@ -725,27 +701,27 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
     EXPECT_TRUE(zone1.setZoneControlHumidistat(controller1));
 
     ASSERT_TRUE(controller1.controlledZone());
-    EXPECT_EQ(zone1,controller1.controlledZone().get());
+    EXPECT_EQ(zone1, controller1.controlledZone().get());
 
     auto returnvalue = zone1.zoneControlHumidistat();
     ASSERT_TRUE(returnvalue);
-    EXPECT_EQ(controller1,returnvalue.get());
+    EXPECT_EQ(controller1, returnvalue.get());
 
     ThermalZone zone2(m);
 
     EXPECT_TRUE(zone2.setZoneControlHumidistat(controller1));
     returnvalue = zone2.zoneControlHumidistat();
     ASSERT_TRUE(returnvalue);
-    EXPECT_NE(returnvalue.get(),controller1);
+    EXPECT_NE(returnvalue.get(), controller1);
     auto controllers = m.getModelObjects<ZoneControlHumidistat>();
-    EXPECT_EQ(2u,controllers.size());
+    EXPECT_EQ(2u, controllers.size());
 
     ZoneControlHumidistat controller2(m);
     EXPECT_TRUE(zone2.setZoneControlHumidistat(controller2));
     EXPECT_TRUE(returnvalue->handle().isNull());
     ASSERT_TRUE(zone2.zoneControlHumidistat());
     EXPECT_EQ(controller2.handle(), zone2.zoneControlHumidistat()->handle());
-    EXPECT_EQ(2u,m.getModelObjects<ZoneControlHumidistat>().size());
+    EXPECT_EQ(2u, m.getModelObjects<ZoneControlHumidistat>().size());
   }
 
   {
@@ -758,6 +734,83 @@ TEST_F(ModelFixture, ThermalZone_ZoneControlHumidistat)
     ASSERT_TRUE(zone.zoneControlHumidistat());
     ASSERT_TRUE(zone2.zoneControlHumidistat());
     EXPECT_NE(zone.zoneControlHumidistat()->handle(), zone2.zoneControlHumidistat()->handle());
-    EXPECT_EQ(2u,m.getModelObjects<model::ZoneControlHumidistat>().size());
+    EXPECT_EQ(2u, m.getModelObjects<model::ZoneControlHumidistat>().size());
   }
+}
+
+TEST_F(ModelFixture, ThermalZone_AddToNode_NotInSeries) {
+  Model m;
+  AirLoopHVAC a(m);
+  ThermalZone z1(m);
+  ThermalZone z2(m);
+  ScheduleCompact s(m);
+  AirTerminalSingleDuctConstantVolumeNoReheat atu(m, s);
+
+  AirLoopHVACZoneMixer mixer = a.zoneMixer();
+  AirLoopHVACZoneSplitter splitter = a.zoneSplitter();
+
+  EXPECT_EQ(5u, a.demandComponents().size());
+
+  EXPECT_TRUE(a.addBranchForHVACComponent(atu));
+  EXPECT_EQ(7u, a.demandComponents().size());
+
+  // 9 components:
+  // Inlet -- (Mixer) -- Node ----- ATU ----- Node ---- ThermalZone ----- Node ----- (SPlitter) -------- OutletNode
+
+  //            -----o-----ATU-----o-----TZ-----o-----
+  // -----o-----|                                    |-----o------
+
+  Node connectingNode = mixer.lastInletModelObject()->cast<Node>();
+  EXPECT_TRUE(z1.multiAddToNode(connectingNode));
+  EXPECT_EQ(9u, a.demandComponents().size());
+
+  // Try to add Zone 1 twice in series
+  connectingNode = mixer.lastInletModelObject()->cast<Node>();
+  EXPECT_FALSE(z1.multiAddToNode(connectingNode));
+  EXPECT_EQ(9u, a.demandComponents().size());
+
+  // Try to add Zone 2 in series with zone 1
+  connectingNode = mixer.lastInletModelObject()->cast<Node>();
+  EXPECT_FALSE(z2.multiAddToNode(connectingNode));
+  EXPECT_EQ(9u, a.demandComponents().size());
+
+  // TRY WITH PLENUMS NOW
+  ThermalZone supplyPlenumZone(m);
+  ThermalZone returnPlenumZone(m);
+
+  EXPECT_TRUE(supplyPlenumZone.canBePlenum());
+  EXPECT_TRUE(z1.setSupplyPlenum(supplyPlenumZone));
+  // Added one one and the plenum
+  EXPECT_EQ(11u, a.demandComponents().size());
+
+  // Try to add Zone 2 in series with zone 1
+  connectingNode = mixer.lastInletModelObject()->cast<Node>();
+  EXPECT_FALSE(z2.multiAddToNode(connectingNode));
+  EXPECT_EQ(11u, a.demandComponents().size());
+
+  EXPECT_TRUE(returnPlenumZone.canBePlenum());
+  EXPECT_TRUE(z1.setReturnPlenum(returnPlenumZone));
+  // Added one node and the plenum
+  EXPECT_EQ(13u, a.demandComponents().size());
+
+  // Try to add Zone 2 in series with zone 1
+  connectingNode = mixer.lastInletModelObject()->cast<Node>();
+  EXPECT_FALSE(z2.multiAddToNode(connectingNode));
+  EXPECT_EQ(13u, a.demandComponents().size());
+}
+
+TEST_F(ModelFixture, ThermalZone_DaylightingControlsAvailabilitySchedule) {
+  Model m;
+  ThermalZone z(m);
+
+  EXPECT_FALSE(z.daylightingControlsAvailabilitySchedule());
+
+  auto schedule = m.alwaysOffDiscreteSchedule();
+
+  EXPECT_TRUE(z.setDaylightingControlsAvailabilitySchedule(schedule));
+  ASSERT_TRUE(z.daylightingControlsAvailabilitySchedule());
+  EXPECT_EQ(schedule, z.daylightingControlsAvailabilitySchedule().get());
+
+  z.resetDaylightingControlsAvailabilitySchedule();
+  EXPECT_FALSE(z.daylightingControlsAvailabilitySchedule());
 }

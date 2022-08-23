@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,70 +37,103 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class PerformancePrecisionTradeoffs_Impl;
+    class PerformancePrecisionTradeoffs_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PerformancePrecisionTradeoffs is a ModelObject that wraps the OpenStudio IDD object 'OS:PerformancePrecisionTradeoffs'. */
-class MODEL_API PerformancePrecisionTradeoffs : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PerformancePrecisionTradeoffs is a ModelObject that wraps the OpenStudio IDD object 'OS:PerformancePrecisionTradeoffs'. */
+  class MODEL_API PerformancePrecisionTradeoffs : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~PerformancePrecisionTradeoffs() {}
+    virtual ~PerformancePrecisionTradeoffs() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    static std::vector<std::string> zoneRadiantExchangeAlgorithmValues();
+    static std::vector<std::string> validZoneRadiantExchangeAlgorithmValues();
 
-  bool useCoilDirectSolutions() const;
-  
-  bool isUseCoilDirectSolutionsDefaulted() const;
+    static std::vector<std::string> overrideModeValues();
+    static std::vector<std::string> validOverrideModeValues();
 
-  //@}
-  /** @name Setters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  bool setUseCoilDirectSolutions(bool useCoilDirectSolutions);
-  
-  void resetUseCoilDirectSolutions();
+    bool useCoilDirectSolutions() const;
+    bool isUseCoilDirectSolutionsDefaulted() const;
 
+    std::string zoneRadiantExchangeAlgorithm() const;
+    bool isZoneRadiantExchangeAlgorithmDefaulted() const;
 
-  //@}
-  /** @name Other */
-  //@{
+    std::string overrideMode() const;
+    bool isOverrideModeDefaulted() const;
 
-  //@}
- protected:
+    double maxZoneTempDiff() const;
+    bool isMaxZoneTempDiffDefaulted() const;
 
-  explicit PerformancePrecisionTradeoffs(Model& model);
- 
-  /// @cond
-  typedef detail::PerformancePrecisionTradeoffs_Impl ImplType;
+    double maxAllowedDelTemp() const;
+    bool isMaxAllowedDelTempDefaulted() const;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::PerformancePrecisionTradeoffs_Impl;
+    bool useRepresentativeSurfacesforCalculations() const;
+    bool isUseRepresentativeSurfacesforCalculationsDefaulted() const;
 
-  explicit PerformancePrecisionTradeoffs(std::shared_ptr<detail::PerformancePrecisionTradeoffs_Impl> impl);
+    //@}
+    /** @name Setters */
+    //@{
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PerformancePrecisionTradeoffs");
-};
+    bool setUseCoilDirectSolutions(bool useCoilDirectSolutions);
+    void resetUseCoilDirectSolutions();
 
-/** \relates PerformancePrecisionTradeoffs*/
-typedef boost::optional<PerformancePrecisionTradeoffs> OptionalPerformancePrecisionTradeoffs;
+    bool setZoneRadiantExchangeAlgorithm(const std::string& zoneRadiantExchangeAlgorithm);
+    void resetZoneRadiantExchangeAlgorithm();
 
-/** \relates PerformancePrecisionTradeoffs*/
-typedef std::vector<PerformancePrecisionTradeoffs> PerformancePrecisionTradeoffsVector;
+    bool setOverrideMode(const std::string& overrideMode);
+    void resetOverrideMode();
 
-} // model
-} // openstudio
+    bool setMaxZoneTempDiff(double maxZoneTempDiff);
+    void resetMaxZoneTempDiff();
 
-#endif // MODEL_PERFORMANCEPRECISIONTRADEOFFS_HPP
+    bool setMaxAllowedDelTemp(double maxAllowedDelTemp);
+    void resetMaxAllowedDelTemp();
+
+    bool setUseRepresentativeSurfacesforCalculations(bool useRepresentativeSurfacesforCalculations);
+    void resetUseRepresentativeSurfacesforCalculations();
+
+    //@}
+    /** @name Other */
+    //@{
+
+    //@}
+   protected:
+    explicit PerformancePrecisionTradeoffs(Model& model);
+
+    /// @cond
+    typedef detail::PerformancePrecisionTradeoffs_Impl ImplType;
+
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::PerformancePrecisionTradeoffs_Impl;
+
+    explicit PerformancePrecisionTradeoffs(std::shared_ptr<detail::PerformancePrecisionTradeoffs_Impl> impl);
+
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PerformancePrecisionTradeoffs");
+  };
+
+  /** \relates PerformancePrecisionTradeoffs*/
+  typedef boost::optional<PerformancePrecisionTradeoffs> OptionalPerformancePrecisionTradeoffs;
+
+  /** \relates PerformancePrecisionTradeoffs*/
+  typedef std::vector<PerformancePrecisionTradeoffs> PerformancePrecisionTradeoffsVector;
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_PERFORMANCEPRECISIONTRADEOFFS_HPP

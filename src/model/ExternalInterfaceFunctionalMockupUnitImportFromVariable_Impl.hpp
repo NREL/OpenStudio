@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,78 +38,74 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl is a ModelObject_Impl that is the implementation class for ExternalInterfaceFunctionalMockupUnitImportFromVariable.*/
-  class MODEL_API ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl is a ModelObject_Impl that is the implementation class for ExternalInterfaceFunctionalMockupUnitImportFromVariable.*/
+    class MODEL_API ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl(const IdfObject& idfObject,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle);
+      ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle);
+      ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                   bool keepHandle);
 
-    ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl(const ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl& other,
-                                                                 Model_Impl* model,
-                                                                 bool keepHandle);
+      ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl(const ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl& other,
+                                                                   Model_Impl* model, bool keepHandle);
 
-    virtual ~ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl() {}
+      virtual ~ExternalInterfaceFunctionalMockupUnitImportFromVariable_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string outputVariableIndexKeyName() const;
+      std::string outputVariableIndexKeyName() const;
 
-    std::string outputVariableName() const;
+      std::string outputVariableName() const;
 
-    ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
+      ExternalInterfaceFunctionalMockupUnitImport fMUFile() const;
 
-    std::string fMUInstanceName() const;
+      std::string fMUInstanceName() const;
 
-    std::string fMUVariableName() const;
+      std::string fMUVariableName() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName);
+      bool setOutputVariableIndexKeyName(const std::string& outputVariableIndexKeyName);
 
-    bool setOutputVariableName(const std::string& outputVariableName);
+      bool setOutputVariableName(const std::string& outputVariableName);
 
-    bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
+      bool setFMUFile(const ExternalInterfaceFunctionalMockupUnitImport& fMUFile);
 
-    bool setFMUInstanceName(const std::string& fMUInstanceName);
+      bool setFMUInstanceName(const std::string& fMUInstanceName);
 
-    bool setFMUVariableName(const std::string& fMUVariableName);
+      bool setFMUVariableName(const std::string& fMUVariableName);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImportFromVariable");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ExternalInterfaceFunctionalMockupUnitImportFromVariable");
+    };
 
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTFROMVARIABLE_IMPL_HPP
+#endif  // MODEL_EXTERNALINTERFACEFUNCTIONALMOCKUPUNITIMPORTFROMVARIABLE_IMPL_HPP

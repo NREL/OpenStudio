@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,82 +37,83 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class AvailabilityManagerDifferentialThermostat_Impl;
+    class AvailabilityManagerDifferentialThermostat_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AvailabilityManagerDifferentialThermostat is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:DifferentialThermostat'. */
-class MODEL_API AvailabilityManagerDifferentialThermostat : public AvailabilityManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AvailabilityManagerDifferentialThermostat is a AvailabilityManager that wraps the OpenStudio IDD object 'OS:AvailabilityManager:DifferentialThermostat'. */
+  class MODEL_API AvailabilityManagerDifferentialThermostat : public AvailabilityManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit AvailabilityManagerDifferentialThermostat(const Model& model);
+    explicit AvailabilityManagerDifferentialThermostat(const Model& model);
 
-  virtual ~AvailabilityManagerDifferentialThermostat() {}
+    virtual ~AvailabilityManagerDifferentialThermostat() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Node> hotNode() const;
+    boost::optional<Node> hotNode() const;
 
-  boost::optional<Node> coldNode() const;
+    boost::optional<Node> coldNode() const;
 
-  double temperatureDifferenceOnLimit() const;
+    double temperatureDifferenceOnLimit() const;
 
-  double temperatureDifferenceOffLimit() const;
+    double temperatureDifferenceOffLimit() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setHotNode(const Node& node);
+    bool setHotNode(const Node& node);
 
-  void resetHotNode();
+    void resetHotNode();
 
-  bool setColdNode(const Node& node);
+    bool setColdNode(const Node& node);
 
-  void resetColdNode();
+    void resetColdNode();
 
-  bool setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit);
+    bool setTemperatureDifferenceOnLimit(double temperatureDifferenceOnLimit);
 
-  bool setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit);
+    bool setTemperatureDifferenceOffLimit(double temperatureDifferenceOffLimit);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AvailabilityManagerDifferentialThermostat_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AvailabilityManagerDifferentialThermostat_Impl ImplType;
 
-  explicit AvailabilityManagerDifferentialThermostat(std::shared_ptr<detail::AvailabilityManagerDifferentialThermostat_Impl> impl);
+    explicit AvailabilityManagerDifferentialThermostat(std::shared_ptr<detail::AvailabilityManagerDifferentialThermostat_Impl> impl);
 
-  friend class detail::AvailabilityManagerDifferentialThermostat_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AvailabilityManagerDifferentialThermostat");
-};
+    friend class detail::AvailabilityManagerDifferentialThermostat_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AvailabilityManagerDifferentialThermostat");
+  };
 
-/** \relates AvailabilityManagerDifferentialThermostat*/
-typedef boost::optional<AvailabilityManagerDifferentialThermostat> OptionalAvailabilityManagerDifferentialThermostat;
+  /** \relates AvailabilityManagerDifferentialThermostat*/
+  typedef boost::optional<AvailabilityManagerDifferentialThermostat> OptionalAvailabilityManagerDifferentialThermostat;
 
-/** \relates AvailabilityManagerDifferentialThermostat*/
-typedef std::vector<AvailabilityManagerDifferentialThermostat> AvailabilityManagerDifferentialThermostatVector;
+  /** \relates AvailabilityManagerDifferentialThermostat*/
+  typedef std::vector<AvailabilityManagerDifferentialThermostat> AvailabilityManagerDifferentialThermostatVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AVAILABILITYMANAGERDIFFERENTIALTHERMOSTAT_HPP
+#endif  // MODEL_AVAILABILITYMANAGERDIFFERENTIALTHERMOSTAT_HPP

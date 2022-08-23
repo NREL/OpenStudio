@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -56,18 +56,16 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SurfacePropertyEx
       points.clear();
       points.push_back(Point3d(0, 2, 0));
       points.push_back(Point3d(0, 0, 0));
-      points.push_back(Point3d(1, 0, 0));      
+      points.push_back(Point3d(1, 0, 0));
       Surface surface(points, model);
-      
+
       exit(0);
     },
-    ::testing::ExitedWithCode(0),
-    ""
-  );
-    
+    ::testing::ExitedWithCode(0), "");
+
   // create a model to use
   Model model;
-  
+
   // create a surface object to use
   Point3dVector points;
   points.clear();
@@ -76,28 +74,30 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SurfacePropertyEx
   points.push_back(Point3d(1, 0, 0));
   Surface surface(points, model);
   EXPECT_EQ(1, model.modelObjects().size());
-  
+
   // new surface does not have surface property exposed foundation perimeter yet
   EXPECT_TRUE(!surface.surfacePropertyExposedFoundationPerimeter());
 
   // create a surface property exposed foundation perimeter object to use
-  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop = surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop =
+    surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
   ASSERT_TRUE(optprop);
   EXPECT_EQ(2, model.modelObjects().size());
 
   // now the surface has surface property exposed foundation perimeter
   EXPECT_TRUE(surface.surfacePropertyExposedFoundationPerimeter());
-  
+
   // check perimeter properties were defaulted properly
   auto prop = optprop.get();
-  EXPECT_EQ("TotalExposedPerimeter", prop.exposedPerimeterCalculationMethod());  
+  EXPECT_EQ("TotalExposedPerimeter", prop.exposedPerimeterCalculationMethod());
   boost::optional<double> opttotalexposedperimeter = prop.totalExposedPerimeter();
   EXPECT_TRUE(opttotalexposedperimeter);
   EXPECT_TRUE(prop.isExposedPerimeterFractionDefaulted());
   EXPECT_EQ(1, prop.exposedPerimeterFraction());
 
   // check that creating the surface property exposed foundation perimeter when they already exists does nothing and returns nil
-  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop2 = surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop2 =
+    surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
   ASSERT_FALSE(optprop2);
   EXPECT_EQ(2, model.modelObjects().size());
 }
@@ -111,7 +111,8 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SetGetFields) {
   points.push_back(Point3d(0, 0, 0));
   points.push_back(Point3d(1, 0, 0));
   Surface surface(points, model);
-  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop = surface.createSurfacePropertyExposedFoundationPerimeter("ExposedPerimeterFraction", 1);
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop =
+    surface.createSurfacePropertyExposedFoundationPerimeter("ExposedPerimeterFraction", 1);
   auto prop = optprop.get();
   EXPECT_FALSE(prop.totalExposedPerimeter());
 
@@ -140,7 +141,8 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_ParentReset) {
   points.push_back(Point3d(1, 0, 0));
   Surface surface(points, model);
   auto size = model.modelObjects().size();
-  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop = surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop =
+    surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
   surface.resetSurfacePropertyExposedFoundationPerimeter();
   EXPECT_FALSE(surface.surfacePropertyExposedFoundationPerimeter());
   EXPECT_EQ(size, model.modelObjects().size());
@@ -156,7 +158,8 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_ParentRemove) {
   points.push_back(Point3d(1, 0, 0));
   auto size = model.modelObjects().size();
   Surface surface(points, model);
-  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop = surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop =
+    surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
   EXPECT_FALSE(surface.remove().empty());
   EXPECT_EQ(size, model.modelObjects().size());
 }
@@ -171,7 +174,8 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_ChildRemove) {
   points.push_back(Point3d(1, 0, 0));
   Surface surface(points, model);
   auto size = model.modelObjects().size();
-  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop = surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop =
+    surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
   auto prop = optprop.get();
   EXPECT_EQ(2, model.modelObjects().size());
   EXPECT_FALSE(prop.remove().empty());
@@ -187,11 +191,13 @@ TEST_F(ModelFixture, SurfacePropertyExposedFoundationPerimeter_SurfaceName) {
   points.push_back(Point3d(0, 0, 0));
   points.push_back(Point3d(1, 0, 0));
   Surface surface(points, model);
-  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop = surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop =
+    surface.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
   auto prop = optprop.get();
   EXPECT_EQ("Surface 1", prop.surfaceName());
   Surface surface2(points, model);
-  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop2 = surface2.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
+  boost::optional<SurfacePropertyExposedFoundationPerimeter> optprop2 =
+    surface2.createSurfacePropertyExposedFoundationPerimeter("TotalExposedPerimeter", 100);
   auto prop2 = optprop2.get();
   EXPECT_EQ("Surface 2", prop2.surfaceName());
 }

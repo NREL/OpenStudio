@@ -23,6 +23,12 @@
 
 #endif
 
+#if defined SWIGPYTHON
+  %pythoncode %{
+    Model = openstudiomodelcore.Model
+  %}
+#endif
+
 // May be able to remove these includes once they are included by concrete classes
 %{
   #include <model/AirflowNetworkComponent.hpp>
@@ -72,6 +78,7 @@ MODELOBJECT_TEMPLATES(AirflowNetworkOutdoorAirflow);
 MODELOBJECT_TEMPLATES(AirflowNetworkReferenceCrackConditions);
 MODELOBJECT_TEMPLATES(AirflowNetworkSimpleOpening);
 UNIQUEMODELOBJECT_TEMPLATES(AirflowNetworkSimulationControl);
+MODELOBJECT_TEMPLATES(AirflowNetworkSpecifiedFlowRate);
 MODELOBJECT_TEMPLATES(AirflowNetworkSurface);
 MODELOBJECT_TEMPLATES(AirflowNetworkZone);
 MODELOBJECT_TEMPLATES(AirflowNetworkZoneExhaustFan);
@@ -94,6 +101,7 @@ SWIG_MODELOBJECT(AirflowNetworkOutdoorAirflow, 1);
 SWIG_MODELOBJECT(AirflowNetworkReferenceCrackConditions, 1);
 SWIG_MODELOBJECT(AirflowNetworkSimpleOpening, 1);
 SWIG_UNIQUEMODELOBJECT(AirflowNetworkSimulationControl);
+SWIG_MODELOBJECT(AirflowNetworkSpecifiedFlowRate, 1);
 SWIG_MODELOBJECT(AirflowNetworkSurface, 1);
 SWIG_MODELOBJECT(AirflowNetworkZone, 1);
 SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
@@ -114,6 +122,11 @@ SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
         //    afz->remove();
         //  }
         //}
+
+        boost::optional<AirflowNetworkSimulationControl> airflowNetworkSimulationControl(const openstudio::model::Model& model) {
+          return model.airflowNetworkSimulationControl();
+        }
+
       }
     }
   }
@@ -138,6 +151,13 @@ SWIG_MODELOBJECT(AirflowNetworkZoneExhaustFan, 1);
       //  return OpenStudio.OpenStudioModelAirflow.getOptionalAirflowNetworkZone(this);
       //}
     }
+
+    public partial class Model : Workspace {
+      public OptionalAirflowNetworkSimulationControl airflowNetworkSimulationControl() {
+        return OpenStudio.OpenStudioModelAirflow.airflowNetworkSimulationControl(this);
+      }
+    } // partial class Model
+
   %}
 #endif
 

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,156 +45,154 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerHorizontalTrench(
-    GroundHeatExchangerHorizontalTrench & modelObject)
-{
-  IdfObject idfObject(IddObjectType::GroundHeatExchanger_HorizontalTrench);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerHorizontalTrench(GroundHeatExchangerHorizontalTrench& modelObject) {
+    IdfObject idfObject(IddObjectType::GroundHeatExchanger_HorizontalTrench);
+    m_idfObjects.push_back(idfObject);
 
-  // Name
-  if( auto s = modelObject.name() ) {
-    idfObject.setName(*s);
-  }
-
-  // InletNodeName
-  if( auto mo = modelObject.inletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::InletNodeName,node->name().get());
+    // Name
+    if (auto s = modelObject.name()) {
+      idfObject.setName(*s);
     }
-  }
 
-  // OutletNodeName
-  if( auto mo = modelObject.outletModelObject() ) {
-    if( auto node = mo->optionalCast<Node>() ) {
-      idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::OutletNodeName,node->name().get());
+    // InletNodeName
+    if (auto mo = modelObject.inletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::InletNodeName, node->name().get());
+      }
     }
-  }
 
-  // DesignFlowRate
-  {
-    auto value = modelObject.designFlowRate();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::DesignFlowRate,value);
-  }
+    // OutletNodeName
+    if (auto mo = modelObject.outletModelObject()) {
+      if (auto node = mo->optionalCast<Node>()) {
+        idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::OutletNodeName, node->name().get());
+      }
+    }
 
-  // TrenchLengthinPipeAxialDirection
-  {
-    auto value = modelObject.trenchLengthinPipeAxialDirection();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::TrenchLengthinPipeAxialDirection,value);
-  }
-
-  // NumberofTrenches
-  {
-    auto value = modelObject.numberofTrenches();
-    idfObject.setInt(GroundHeatExchanger_HorizontalTrenchFields::NumberofTrenches,value);
-  }
-
-  // HorizontalSpacingBetweenPipes
-  {
-    auto value = modelObject.horizontalSpacingBetweenPipes();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::HorizontalSpacingBetweenPipes,value);
-  }
-
-  // PipeInnerDiameter
-  {
-    auto value = modelObject.pipeInnerDiameter();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::PipeInnerDiameter,value);
-  }
-
-  // PipeOuterDiameter
-  {
-    auto value = modelObject.pipeOuterDiameter();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::PipeOuterDiameter,value);
-  }
-
-  // BurialDepth
-  {
-    auto value = modelObject.burialDepth();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::BurialDepth,value);
-  }
-
-  // SoilThermalConductivity
-  {
-    auto value = modelObject.soilThermalConductivity();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilThermalConductivity,value);
-  }
-
-  // SoilDensity`
-  {
-    auto value = modelObject.soilDensity();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilDensity,value);
-  }
-
-  // SoilSpecificHeat
-  {
-    auto value = modelObject.soilSpecificHeat();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilSpecificHeat,value);
-  }
-
-  // PipeThermalConductivity
-  {
-    auto value = modelObject.pipeThermalConductivity();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::PipeThermalConductivity,value);
-  }
-
-  // PipeDensity
-  {
-    auto value = modelObject.pipeDensity();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::PipeDensity,value);
-  }
-
-  // PipeSpecificHeat
-  {
-    auto value = modelObject.pipeSpecificHeat();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::PipeSpecificHeat,value);
-  }
-
-  // SoilMoistureContentPercent
-  {
-    auto value = modelObject.soilMoistureContentPercent();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilMoistureContentPercent,value);
-  }
-
-  // SoilMoistureContentPercentatSaturation
-  {
-    auto value = modelObject.soilMoistureContentPercentatSaturation();
-    idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilMoistureContentPercentatSaturation,value);
-  }
-
-  if( istringEqual(modelObject.groundTemperatureModel(),"KusudaAchenbach") ) {
-    IdfObject groundModel(IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach);
-    m_idfObjects.push_back(groundModel);
-
-    groundModel.setName(modelObject.name().get() + " Ground Model");
-
-    idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelName,groundModel.name().get());
-
-    // KusudaAchenbachAverageSurfaceTemperature
+    // DesignFlowRate
     {
-      auto value = modelObject.kusudaAchenbachAverageSurfaceTemperature();
-      groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature,value);
+      auto value = modelObject.designFlowRate();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::DesignFlowRate, value);
     }
 
-    // KusudaAchenbachAverageAmplitudeofSurfaceTemperature
+    // TrenchLengthinPipeAxialDirection
     {
-      auto value = modelObject.kusudaAchenbachAverageAmplitudeofSurfaceTemperature();
-      groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature,value);
+      auto value = modelObject.trenchLengthinPipeAxialDirection();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::TrenchLengthinPipeAxialDirection, value);
     }
 
-    // KusudaAchenbachPhaseShiftofMinimumSurfaceTemperature
+    // NumberofTrenches
     {
-      auto value = modelObject.kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature();
-      groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature,value);
+      auto value = modelObject.numberofTrenches();
+      idfObject.setInt(GroundHeatExchanger_HorizontalTrenchFields::NumberofTrenches, value);
     }
 
-    // EvapotranspirationGroundCoverParameter
+    // HorizontalSpacingBetweenPipes
     {
-      auto value = modelObject.evapotranspirationGroundCoverParameter();
-      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::EvapotranspirationGroundCoverParameter,value);
+      auto value = modelObject.horizontalSpacingBetweenPipes();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::HorizontalSpacingBetweenPipes, value);
     }
+
+    // PipeInnerDiameter
+    {
+      auto value = modelObject.pipeInnerDiameter();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::PipeInnerDiameter, value);
+    }
+
+    // PipeOuterDiameter
+    {
+      auto value = modelObject.pipeOuterDiameter();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::PipeOuterDiameter, value);
+    }
+
+    // BurialDepth
+    {
+      auto value = modelObject.burialDepth();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::BurialDepth, value);
+    }
+
+    // SoilThermalConductivity
+    {
+      auto value = modelObject.soilThermalConductivity();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilThermalConductivity, value);
+    }
+
+    // SoilDensity`
+    {
+      auto value = modelObject.soilDensity();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilDensity, value);
+    }
+
+    // SoilSpecificHeat
+    {
+      auto value = modelObject.soilSpecificHeat();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilSpecificHeat, value);
+    }
+
+    // PipeThermalConductivity
+    {
+      auto value = modelObject.pipeThermalConductivity();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::PipeThermalConductivity, value);
+    }
+
+    // PipeDensity
+    {
+      auto value = modelObject.pipeDensity();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::PipeDensity, value);
+    }
+
+    // PipeSpecificHeat
+    {
+      auto value = modelObject.pipeSpecificHeat();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::PipeSpecificHeat, value);
+    }
+
+    // SoilMoistureContentPercent
+    {
+      auto value = modelObject.soilMoistureContentPercent();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilMoistureContentPercent, value);
+    }
+
+    // SoilMoistureContentPercentatSaturation
+    {
+      auto value = modelObject.soilMoistureContentPercentatSaturation();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilMoistureContentPercentatSaturation, value);
+    }
+
+    if (istringEqual(modelObject.groundTemperatureModel(), "KusudaAchenbach")) {
+      IdfObject groundModel(IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach);
+      m_idfObjects.push_back(groundModel);
+
+      groundModel.setName(modelObject.name().get() + " Ground Model");
+
+      idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelName, groundModel.name().get());
+
+      // KusudaAchenbachAverageSurfaceTemperature
+      {
+        auto value = modelObject.kusudaAchenbachAverageSurfaceTemperature();
+        groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature, value);
+      }
+
+      // KusudaAchenbachAverageAmplitudeofSurfaceTemperature
+      {
+        auto value = modelObject.kusudaAchenbachAverageAmplitudeofSurfaceTemperature();
+        groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature, value);
+      }
+
+      // KusudaAchenbachPhaseShiftofMinimumSurfaceTemperature
+      {
+        auto value = modelObject.kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature();
+        groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature, value);
+      }
+
+      // EvapotranspirationGroundCoverParameter
+      {
+        auto value = modelObject.evapotranspirationGroundCoverParameter();
+        idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::EvapotranspirationGroundCoverParameter, value);
+      }
+    }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

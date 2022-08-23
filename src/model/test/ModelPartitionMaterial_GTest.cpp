@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -59,47 +59,42 @@ TEST_F(ModelFixture, ModelPartitionMaterial_Daylighting_School_1)
   EXPECT_TRUE(modelPartitionMaterials.empty());
 }
 */
-TEST_F(ModelFixture, ModelPartitionMaterial_AirWallMaterial_Constructors)
-{
+TEST_F(ModelFixture, ModelPartitionMaterial_AirWallMaterial_Constructors) {
   // construct from scratch
   Model model;
   AirWallMaterial airWallMaterial(model);
-  EXPECT_EQ(static_cast<unsigned>(1),model.objects().size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
   AirWallMaterialVector airWallMaterials = model.getModelObjects<AirWallMaterial>();
-  ASSERT_EQ(static_cast<unsigned>(1),airWallMaterials.size());
+  ASSERT_EQ(static_cast<unsigned>(1), airWallMaterials.size());
   EXPECT_TRUE(airWallMaterial == airWallMaterials[0]);
   EXPECT_TRUE(airWallMaterial.iddObject().type() == IddObjectType::OS_Material_AirWall);
 
   // construct by clone
   Model modelClone = model.clone().cast<Model>();
-  EXPECT_EQ(static_cast<unsigned>(1),modelClone.objects().size());
+  EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   airWallMaterials = modelClone.getModelObjects<AirWallMaterial>();
-  ASSERT_EQ(static_cast<unsigned>(1),airWallMaterials.size());
+  ASSERT_EQ(static_cast<unsigned>(1), airWallMaterials.size());
   airWallMaterial = airWallMaterials[0];
   EXPECT_FALSE(airWallMaterial.model() == model);
   EXPECT_TRUE(airWallMaterial.iddObject().type() == IddObjectType::OS_Material_AirWall);
 }
 
-TEST_F(ModelFixture, ModelPartitionMaterial_InfraredTransparentMaterial_Constructors)
-{
-    // construct from scratch
+TEST_F(ModelFixture, ModelPartitionMaterial_InfraredTransparentMaterial_Constructors) {
+  // construct from scratch
   Model model;
   InfraredTransparentMaterial infraredTransparentMaterial(model);
-  EXPECT_EQ(static_cast<unsigned>(1),model.objects().size());
-  InfraredTransparentMaterialVector infraredTransparentMaterials =
-      model.getModelObjects<InfraredTransparentMaterial>();
-  ASSERT_EQ(static_cast<unsigned>(1),infraredTransparentMaterials.size());
+  EXPECT_EQ(static_cast<unsigned>(1), model.objects().size());
+  InfraredTransparentMaterialVector infraredTransparentMaterials = model.getModelObjects<InfraredTransparentMaterial>();
+  ASSERT_EQ(static_cast<unsigned>(1), infraredTransparentMaterials.size());
   EXPECT_TRUE(infraredTransparentMaterial == infraredTransparentMaterials[0]);
-  EXPECT_TRUE(infraredTransparentMaterial.iddObject().type() ==
-              IddObjectType::OS_Material_InfraredTransparent);
+  EXPECT_TRUE(infraredTransparentMaterial.iddObject().type() == IddObjectType::OS_Material_InfraredTransparent);
 
   // construct by clone
   Model modelClone = model.clone().cast<Model>();
-  EXPECT_EQ(static_cast<unsigned>(1),modelClone.objects().size());
+  EXPECT_EQ(static_cast<unsigned>(1), modelClone.objects().size());
   infraredTransparentMaterials = modelClone.getModelObjects<InfraredTransparentMaterial>();
-  ASSERT_EQ(static_cast<unsigned>(1),infraredTransparentMaterials.size());
+  ASSERT_EQ(static_cast<unsigned>(1), infraredTransparentMaterials.size());
   infraredTransparentMaterial = infraredTransparentMaterials[0];
   EXPECT_FALSE(infraredTransparentMaterial.model() == model);
-  EXPECT_TRUE(infraredTransparentMaterial.iddObject().type() ==
-              IddObjectType::OS_Material_InfraredTransparent);
+  EXPECT_TRUE(infraredTransparentMaterial.iddObject().type() == IddObjectType::OS_Material_InfraredTransparent);
 }

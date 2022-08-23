@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,410 +36,409 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** CoolingTowerTwoSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoolingTowerTwoSpeed.*/
-  class MODEL_API CoolingTowerTwoSpeed_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** CoolingTowerTwoSpeed_Impl is a StraightComponent_Impl that is the implementation class for CoolingTowerTwoSpeed.*/
+    class MODEL_API CoolingTowerTwoSpeed_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    CoolingTowerTwoSpeed_Impl(const IdfObject& idfObject,
-                              Model_Impl* model,
-                              bool keepHandle);
+      CoolingTowerTwoSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    CoolingTowerTwoSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      CoolingTowerTwoSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    CoolingTowerTwoSpeed_Impl(const CoolingTowerTwoSpeed_Impl& other,
-                              Model_Impl* model,
-                              bool keepHandle);
+      CoolingTowerTwoSpeed_Impl(const CoolingTowerTwoSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoolingTowerTwoSpeed_Impl() {}
+      virtual ~CoolingTowerTwoSpeed_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<double> designWaterFlowRate() const;
+      boost::optional<double> designWaterFlowRate() const;
 
-    bool isDesignWaterFlowRateAutosized() const;
+      bool isDesignWaterFlowRateAutosized() const;
 
-    boost::optional<double> highFanSpeedAirFlowRate() const;
+      boost::optional<double> highFanSpeedAirFlowRate() const;
 
-    bool isHighFanSpeedAirFlowRateAutosized() const;
+      bool isHighFanSpeedAirFlowRateAutosized() const;
 
-    boost::optional<double> highFanSpeedFanPower() const;
+      boost::optional<double> highFanSpeedFanPower() const;
 
-    bool isHighFanSpeedFanPowerAutosized() const;
+      bool isHighFanSpeedFanPowerAutosized() const;
 
-    boost::optional<double> highFanSpeedUFactorTimesAreaValue() const;
+      boost::optional<double> highFanSpeedUFactorTimesAreaValue() const;
 
-    bool isHighFanSpeedUFactorTimesAreaValueAutosized() const;
+      bool isHighFanSpeedUFactorTimesAreaValueAutosized() const;
 
-    boost::optional<double> lowFanSpeedAirFlowRate() const;
+      boost::optional<double> lowFanSpeedAirFlowRate() const;
 
-    bool isLowFanSpeedAirFlowRateAutosized() const;
+      bool isLowFanSpeedAirFlowRateAutosized() const;
 
-    double lowFanSpeedAirFlowRateSizingFactor() const;
+      double lowFanSpeedAirFlowRateSizingFactor() const;
 
-    bool isLowFanSpeedAirFlowRateSizingFactorDefaulted() const;
+      bool isLowFanSpeedAirFlowRateSizingFactorDefaulted() const;
 
-    boost::optional<double> lowFanSpeedFanPower() const;
+      boost::optional<double> lowFanSpeedFanPower() const;
 
-    bool isLowFanSpeedFanPowerAutosized() const;
+      bool isLowFanSpeedFanPowerAutosized() const;
 
-    double lowFanSpeedFanPowerSizingFactor() const;
+      double lowFanSpeedFanPowerSizingFactor() const;
 
-    bool isLowFanSpeedFanPowerSizingFactorDefaulted() const;
+      bool isLowFanSpeedFanPowerSizingFactorDefaulted() const;
 
-    boost::optional<double> lowFanSpeedUFactorTimesAreaValue() const;
+      boost::optional<double> lowFanSpeedUFactorTimesAreaValue() const;
 
-    bool isLowFanSpeedUFactorTimesAreaValueAutosized() const;
+      bool isLowFanSpeedUFactorTimesAreaValueAutosized() const;
 
-    double lowFanSpeedUFactorTimesAreaSizingFactor() const;
+      double lowFanSpeedUFactorTimesAreaSizingFactor() const;
 
-    bool isLowFanSpeedUFactorTimesAreaSizingFactorDefaulted() const;
+      bool isLowFanSpeedUFactorTimesAreaSizingFactorDefaulted() const;
 
-    boost::optional<double> freeConvectionRegimeAirFlowRate() const;
+      boost::optional<double> freeConvectionRegimeAirFlowRate() const;
 
-    bool isFreeConvectionRegimeAirFlowRateDefaulted() const;
+      bool isFreeConvectionRegimeAirFlowRateDefaulted() const;
 
-    bool isFreeConvectionRegimeAirFlowRateAutosized() const;
+      bool isFreeConvectionRegimeAirFlowRateAutosized() const;
 
-    double freeConvectionRegimeAirFlowRateSizingFactor() const;
+      double freeConvectionRegimeAirFlowRateSizingFactor() const;
 
-    bool isFreeConvectionRegimeAirFlowRateSizingFactorDefaulted() const;
+      bool isFreeConvectionRegimeAirFlowRateSizingFactorDefaulted() const;
 
-    boost::optional<double> freeConvectionRegimeUFactorTimesAreaValue() const;
+      boost::optional<double> freeConvectionRegimeUFactorTimesAreaValue() const;
 
-    bool isFreeConvectionRegimeUFactorTimesAreaValueDefaulted() const;
+      bool isFreeConvectionRegimeUFactorTimesAreaValueDefaulted() const;
 
-    bool isFreeConvectionRegimeUFactorTimesAreaValueAutosized() const;
+      bool isFreeConvectionRegimeUFactorTimesAreaValueAutosized() const;
 
-    double freeConvectionUFactorTimesAreaValueSizingFactor() const;
+      double freeConvectionUFactorTimesAreaValueSizingFactor() const;
 
-    bool isFreeConvectionUFactorTimesAreaValueSizingFactorDefaulted() const;
+      bool isFreeConvectionUFactorTimesAreaValueSizingFactorDefaulted() const;
 
-    std::string performanceInputMethod() const;
+      std::string performanceInputMethod() const;
 
-    bool isPerformanceInputMethodDefaulted() const;
+      bool isPerformanceInputMethodDefaulted() const;
 
-    double heatRejectionCapacityandNominalCapacitySizingRatio() const;
+      double heatRejectionCapacityandNominalCapacitySizingRatio() const;
 
-    bool isHeatRejectionCapacityandNominalCapacitySizingRatioDefaulted() const;
+      bool isHeatRejectionCapacityandNominalCapacitySizingRatioDefaulted() const;
 
-    boost::optional<double> highSpeedNominalCapacity() const;
+      boost::optional<double> highSpeedNominalCapacity() const;
 
-    boost::optional<double> lowSpeedNominalCapacity() const;
+      boost::optional<double> lowSpeedNominalCapacity() const;
 
-    bool isLowSpeedNominalCapacityAutosized() const;
+      bool isLowSpeedNominalCapacityAutosized() const;
 
-    double lowSpeedNominalCapacitySizingFactor() const;
+      double lowSpeedNominalCapacitySizingFactor() const;
 
-    bool isLowSpeedNominalCapacitySizingFactorDefaulted() const;
+      bool isLowSpeedNominalCapacitySizingFactorDefaulted() const;
 
-    boost::optional<double> freeConvectionNominalCapacity() const;
+      boost::optional<double> freeConvectionNominalCapacity() const;
 
-    bool isFreeConvectionNominalCapacityAutosized() const;
+      bool isFreeConvectionNominalCapacityAutosized() const;
 
-    double freeConvectionNominalCapacitySizingFactor() const;
+      double freeConvectionNominalCapacitySizingFactor() const;
 
-    bool isFreeConvectionNominalCapacitySizingFactorDefaulted() const;
+      bool isFreeConvectionNominalCapacitySizingFactorDefaulted() const;
 
-    double basinHeaterCapacity() const;
+      double basinHeaterCapacity() const;
 
-    bool isBasinHeaterCapacityDefaulted() const;
+      bool isBasinHeaterCapacityDefaulted() const;
 
-    double basinHeaterSetpointTemperature() const;
+      double basinHeaterSetpointTemperature() const;
 
-    bool isBasinHeaterSetpointTemperatureDefaulted() const;
+      bool isBasinHeaterSetpointTemperatureDefaulted() const;
 
-    boost::optional<Schedule> basinHeaterOperatingSchedule() const;
+      boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
-    boost::optional<std::string> evaporationLossMode() const;
+      std::string evaporationLossMode() const;
 
-    double evaporationLossFactor() const;
+      bool isEvaporationLossModeDefaulted() const;
 
-    bool isEvaporationLossFactorDefaulted() const;
+      double evaporationLossFactor() const;
 
-    double driftLossPercent() const;
+      bool isEvaporationLossFactorDefaulted() const;
 
-    bool isDriftLossPercentDefaulted() const;
+      double driftLossPercent() const;
 
-    boost::optional<std::string> blowdownCalculationMode() const;
+      bool isDriftLossPercentDefaulted() const;
 
-    double blowdownConcentrationRatio() const;
+      std::string blowdownCalculationMode() const;
 
-    bool isBlowdownConcentrationRatioDefaulted() const;
+      bool isBlowdownCalculationModeDefaulted() const;
 
-    boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
+      double blowdownConcentrationRatio() const;
 
-    // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
+      bool isBlowdownConcentrationRatioDefaulted() const;
 
-    int numberofCells() const;
+      boost::optional<Schedule> blowdownMakeupWaterUsageSchedule() const;
 
-    bool isNumberofCellsDefaulted() const;
+      // boost::optional<WaterStorageTank> supplyWaterStorageTank() const;
 
-    std::string cellControl() const;
+      int numberofCells() const;
 
-    bool isCellControlDefaulted() const;
+      bool isNumberofCellsDefaulted() const;
 
-    double cellMinimumWaterFlowRateFraction() const;
+      std::string cellControl() const;
 
-    bool isCellMinimumWaterFlowRateFractionDefaulted() const;
+      bool isCellControlDefaulted() const;
 
-    double cellMaximumWaterFlowRateFraction() const;
+      double cellMinimumWaterFlowRateFraction() const;
 
-    bool isCellMaximumWaterFlowRateFractionDefaulted() const;
+      bool isCellMinimumWaterFlowRateFractionDefaulted() const;
 
-    double sizingFactor() const;
+      double cellMaximumWaterFlowRateFraction() const;
 
-    bool isSizingFactorDefaulted() const;
+      bool isCellMaximumWaterFlowRateFractionDefaulted() const;
 
-    boost::optional<double> autosizedDesignWaterFlowRate() const;
+      double sizingFactor() const;
 
-    boost::optional<double> autosizedHighFanSpeedAirFlowRate() const;
+      bool isSizingFactorDefaulted() const;
 
-    boost::optional<double> autosizedHighFanSpeedFanPower() const;
+      boost::optional<double> autosizedDesignWaterFlowRate() const;
 
-    boost::optional<double> autosizedHighFanSpeedUFactorTimesAreaValue() const;
+      boost::optional<double> autosizedHighFanSpeedAirFlowRate() const;
 
-    boost::optional<double> autosizedLowFanSpeedAirFlowRate() const;
+      boost::optional<double> autosizedHighFanSpeedFanPower() const;
 
-    boost::optional<double> autosizedLowFanSpeedFanPower() const;
+      boost::optional<double> autosizedHighFanSpeedUFactorTimesAreaValue() const;
 
-    boost::optional<double> autosizedLowFanSpeedUFactorTimesAreaValue() const;
+      boost::optional<double> autosizedLowFanSpeedAirFlowRate() const;
 
-    boost::optional<double> autosizedFreeConvectionRegimeAirFlowRate() const;
+      boost::optional<double> autosizedLowFanSpeedFanPower() const;
 
-    boost::optional<double> autosizedFreeConvectionRegimeUFactorTimesAreaValue() const;
+      boost::optional<double> autosizedLowFanSpeedUFactorTimesAreaValue() const;
 
-    boost::optional<double> autosizedLowSpeedNominalCapacity() const;
+      boost::optional<double> autosizedFreeConvectionRegimeAirFlowRate() const;
 
-    boost::optional<double> autosizedFreeConvectionNominalCapacity() const;
+      boost::optional<double> autosizedFreeConvectionRegimeUFactorTimesAreaValue() const;
 
-    boost::optional<double> autosizedDesignApproachTemperature() const;
+      boost::optional<double> autosizedLowSpeedNominalCapacity() const;
 
-    boost::optional<double> autosizedDesignRangeTemperature() const;
+      boost::optional<double> autosizedFreeConvectionNominalCapacity() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      boost::optional<double> autosizedDesignApproachTemperature() const;
 
-    bool setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate);
+      boost::optional<double> autosizedDesignRangeTemperature() const;
 
-    void resetDesignWaterFlowRate();
+      //@}
+      /** @name Setters */
+      //@{
 
-    void autosizeDesignWaterFlowRate();
+      bool setDesignWaterFlowRate(boost::optional<double> designWaterFlowRate);
 
-    bool setHighFanSpeedAirFlowRate(boost::optional<double> highFanSpeedAirFlowRate);
+      void resetDesignWaterFlowRate();
 
-    void autosizeHighFanSpeedAirFlowRate();
+      void autosizeDesignWaterFlowRate();
 
-    bool setHighFanSpeedFanPower(boost::optional<double> highFanSpeedFanPower);
+      bool setHighFanSpeedAirFlowRate(boost::optional<double> highFanSpeedAirFlowRate);
 
-    void autosizeHighFanSpeedFanPower();
+      void autosizeHighFanSpeedAirFlowRate();
 
-    bool setHighFanSpeedUFactorTimesAreaValue(boost::optional<double> highFanSpeedUFactorTimesAreaValue);
+      bool setHighFanSpeedFanPower(boost::optional<double> highFanSpeedFanPower);
 
-    void resetHighFanSpeedUFactorTimesAreaValue();
+      void autosizeHighFanSpeedFanPower();
 
-    void autosizeHighFanSpeedUFactorTimesAreaValue();
+      bool setHighFanSpeedUFactorTimesAreaValue(boost::optional<double> highFanSpeedUFactorTimesAreaValue);
 
-    bool setLowFanSpeedAirFlowRate(boost::optional<double> lowFanSpeedAirFlowRate);
+      void resetHighFanSpeedUFactorTimesAreaValue();
 
-    void autosizeLowFanSpeedAirFlowRate();
+      void autosizeHighFanSpeedUFactorTimesAreaValue();
 
-    bool setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
+      bool setLowFanSpeedAirFlowRate(boost::optional<double> lowFanSpeedAirFlowRate);
 
-    void resetLowFanSpeedAirFlowRateSizingFactor();
+      void autosizeLowFanSpeedAirFlowRate();
 
-    bool setLowFanSpeedFanPower(boost::optional<double> lowFanSpeedFanPower);
+      bool setLowFanSpeedAirFlowRateSizingFactor(double lowFanSpeedAirFlowRateSizingFactor);
 
-    void autosizeLowFanSpeedFanPower();
+      void resetLowFanSpeedAirFlowRateSizingFactor();
 
-    bool setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
+      bool setLowFanSpeedFanPower(boost::optional<double> lowFanSpeedFanPower);
 
-    void resetLowFanSpeedFanPowerSizingFactor();
+      void autosizeLowFanSpeedFanPower();
 
-    bool setLowFanSpeedUFactorTimesAreaValue(boost::optional<double> lowFanSpeedUFactorTimesAreaValue);
+      bool setLowFanSpeedFanPowerSizingFactor(double lowFanSpeedFanPowerSizingFactor);
 
-    void resetLowFanSpeedUFactorTimesAreaValue();
+      void resetLowFanSpeedFanPowerSizingFactor();
 
-    void autosizeLowFanSpeedUFactorTimesAreaValue();
+      bool setLowFanSpeedUFactorTimesAreaValue(boost::optional<double> lowFanSpeedUFactorTimesAreaValue);
 
-    bool setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
+      void resetLowFanSpeedUFactorTimesAreaValue();
 
-    void resetLowFanSpeedUFactorTimesAreaSizingFactor();
+      void autosizeLowFanSpeedUFactorTimesAreaValue();
 
-    bool setFreeConvectionRegimeAirFlowRate(boost::optional<double> freeConvectionRegimeAirFlowRate);
+      bool setLowFanSpeedUFactorTimesAreaSizingFactor(double lowFanSpeedUFactorTimesAreaSizingFactor);
 
-    void resetFreeConvectionRegimeAirFlowRate();
+      void resetLowFanSpeedUFactorTimesAreaSizingFactor();
 
-    void autosizeFreeConvectionRegimeAirFlowRate();
+      bool setFreeConvectionRegimeAirFlowRate(boost::optional<double> freeConvectionRegimeAirFlowRate);
 
-    bool setFreeConvectionRegimeAirFlowRateSizingFactor(double freeConvectionRegimeAirFlowRateSizingFactor);
+      void resetFreeConvectionRegimeAirFlowRate();
 
-    void resetFreeConvectionRegimeAirFlowRateSizingFactor();
+      void autosizeFreeConvectionRegimeAirFlowRate();
 
-    bool setFreeConvectionRegimeUFactorTimesAreaValue(boost::optional<double> freeConvectionRegimeUFactorTimesAreaValue);
+      bool setFreeConvectionRegimeAirFlowRateSizingFactor(double freeConvectionRegimeAirFlowRateSizingFactor);
 
-    void resetFreeConvectionRegimeUFactorTimesAreaValue();
+      void resetFreeConvectionRegimeAirFlowRateSizingFactor();
 
-    void autosizeFreeConvectionRegimeUFactorTimesAreaValue();
+      bool setFreeConvectionRegimeUFactorTimesAreaValue(boost::optional<double> freeConvectionRegimeUFactorTimesAreaValue);
 
-    bool setFreeConvectionUFactorTimesAreaValueSizingFactor(double freeConvectionUFactorTimesAreaValueSizingFactor);
+      void resetFreeConvectionRegimeUFactorTimesAreaValue();
 
-    void resetFreeConvectionUFactorTimesAreaValueSizingFactor();
+      void autosizeFreeConvectionRegimeUFactorTimesAreaValue();
 
-    bool setPerformanceInputMethod(std::string performanceInputMethod);
+      bool setFreeConvectionUFactorTimesAreaValueSizingFactor(double freeConvectionUFactorTimesAreaValueSizingFactor);
 
-    void resetPerformanceInputMethod();
+      void resetFreeConvectionUFactorTimesAreaValueSizingFactor();
 
-    bool setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio);
+      bool setPerformanceInputMethod(const std::string& performanceInputMethod);
 
-    void resetHeatRejectionCapacityandNominalCapacitySizingRatio();
+      void resetPerformanceInputMethod();
 
-    bool setHighSpeedNominalCapacity(boost::optional<double> highSpeedNominalCapacity);
+      bool setHeatRejectionCapacityandNominalCapacitySizingRatio(double heatRejectionCapacityandNominalCapacitySizingRatio);
 
-    void resetHighSpeedNominalCapacity();
+      void resetHeatRejectionCapacityandNominalCapacitySizingRatio();
 
-    bool setLowSpeedNominalCapacity(boost::optional<double> lowSpeedNominalCapacity);
+      bool setHighSpeedNominalCapacity(boost::optional<double> highSpeedNominalCapacity);
 
-    void resetLowSpeedNominalCapacity();
+      void resetHighSpeedNominalCapacity();
 
-    void autosizeLowSpeedNominalCapacity();
+      bool setLowSpeedNominalCapacity(boost::optional<double> lowSpeedNominalCapacity);
 
-    bool setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor);
+      void resetLowSpeedNominalCapacity();
 
-    void resetLowSpeedNominalCapacitySizingFactor();
+      void autosizeLowSpeedNominalCapacity();
 
-    bool setFreeConvectionNominalCapacity(boost::optional<double> freeConvectionNominalCapacity);
+      bool setLowSpeedNominalCapacitySizingFactor(double lowSpeedNominalCapacitySizingFactor);
 
-    void resetFreeConvectionNominalCapacity();
+      void resetLowSpeedNominalCapacitySizingFactor();
 
-    void autosizeFreeConvectionNominalCapacity();
+      bool setFreeConvectionNominalCapacity(boost::optional<double> freeConvectionNominalCapacity);
 
-    bool setFreeConvectionNominalCapacitySizingFactor(double freeConvectionNominalCapacitySizingFactor);
+      void resetFreeConvectionNominalCapacity();
 
-    void resetFreeConvectionNominalCapacitySizingFactor();
+      void autosizeFreeConvectionNominalCapacity();
 
-    bool setBasinHeaterCapacity(double basinHeaterCapacity);
+      bool setFreeConvectionNominalCapacitySizingFactor(double freeConvectionNominalCapacitySizingFactor);
 
-    void resetBasinHeaterCapacity();
+      void resetFreeConvectionNominalCapacitySizingFactor();
 
-    bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
+      bool setBasinHeaterCapacity(double basinHeaterCapacity);
 
-    void resetBasinHeaterSetpointTemperature();
+      void resetBasinHeaterCapacity();
 
-    bool setBasinHeaterOperatingSchedule(Schedule& schedule);
+      bool setBasinHeaterSetpointTemperature(double basinHeaterSetpointTemperature);
 
-    void resetBasinHeaterOperatingSchedule();
+      void resetBasinHeaterSetpointTemperature();
 
-    bool setEvaporationLossMode(boost::optional<std::string> evaporationLossMode);
+      bool setBasinHeaterOperatingSchedule(Schedule& schedule);
 
-    void resetEvaporationLossMode();
+      void resetBasinHeaterOperatingSchedule();
 
-    bool setEvaporationLossFactor(double evaporationLossFactor);
+      bool setEvaporationLossMode(boost::optional<std::string> evaporationLossMode);
 
-    void resetEvaporationLossFactor();
+      void resetEvaporationLossMode();
 
-    bool setDriftLossPercent(double driftLossPercent);
+      bool setEvaporationLossFactor(double evaporationLossFactor);
 
-    void resetDriftLossPercent();
+      void resetEvaporationLossFactor();
 
-    bool setBlowdownCalculationMode(boost::optional<std::string> blowdownCalculationMode);
+      bool setDriftLossPercent(double driftLossPercent);
 
-    void resetBlowdownCalculationMode();
+      void resetDriftLossPercent();
 
-    bool setBlowdownConcentrationRatio(double blowdownConcentrationRatio);
+      bool setBlowdownCalculationMode(boost::optional<std::string> blowdownCalculationMode);
 
-    void resetBlowdownConcentrationRatio();
+      void resetBlowdownCalculationMode();
 
-    bool setBlowdownMakeupWaterUsageSchedule(Schedule& schedule);
+      bool setBlowdownConcentrationRatio(double blowdownConcentrationRatio);
 
-    void resetBlowdownMakeupWaterUsageSchedule();
+      void resetBlowdownConcentrationRatio();
 
-    // bool setSupplyWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
+      bool setBlowdownMakeupWaterUsageSchedule(Schedule& schedule);
 
-    // void resetSupplyWaterStorageTank();
+      void resetBlowdownMakeupWaterUsageSchedule();
 
-    bool setNumberofCells(int numberofCells);
+      // bool setSupplyWaterStorageTank(const boost::optional<WaterStorageTank>& waterStorageTank);
 
-    void resetNumberofCells();
+      // void resetSupplyWaterStorageTank();
 
-    bool setCellControl(std::string cellControl);
+      bool setNumberofCells(int numberofCells);
 
-    void resetCellControl();
+      void resetNumberofCells();
 
-    bool setCellMinimumWaterFlowRateFraction(double cellMinimumWaterFlowRateFraction);
+      bool setCellControl(const std::string& cellControl);
 
-    void resetCellMinimumWaterFlowRateFraction();
+      void resetCellControl();
 
-    bool setCellMaximumWaterFlowRateFraction(double cellMaximumWaterFlowRateFraction);
+      bool setCellMinimumWaterFlowRateFraction(double cellMinimumWaterFlowRateFraction);
 
-    void resetCellMaximumWaterFlowRateFraction();
+      void resetCellMinimumWaterFlowRateFraction();
 
-    bool setSizingFactor(double sizingFactor);
+      bool setCellMaximumWaterFlowRateFraction(double cellMaximumWaterFlowRateFraction);
 
-    void resetSizingFactor();
+      void resetCellMaximumWaterFlowRateFraction();
 
-    double designInletAirDryBulbTemperature() const;
-    bool setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature);
+      bool setSizingFactor(double sizingFactor);
 
-    double designInletAirWetBulbTemperature() const;
-    bool setDesignInletAirWetBulbTemperature(double designInletAirWetBulbTemperature);
+      void resetSizingFactor();
 
-    boost::optional<double> designApproachTemperature() const;
-    bool isDesignApproachTemperatureAutosized() const;
-    bool setDesignApproachTemperature(double designApproachTemperature);
-    void autosizeDesignApproachTemperature();
+      double designInletAirDryBulbTemperature() const;
+      bool setDesignInletAirDryBulbTemperature(double designInletAirDryBulbTemperature);
 
-    boost::optional<double> designRangeTemperature() const;
-    bool isDesignRangeTemperatureAutosized() const;
-    bool setDesignRangeTemperature(double designRangeTemperature);
-    void autosizeDesignRangeTemperature();
+      double designInletAirWetBulbTemperature() const;
+      bool setDesignInletAirWetBulbTemperature(double designInletAirWetBulbTemperature);
 
-    std::string endUseSubcategory() const;
-    bool setEndUseSubcategory(const std::string & endUseSubcategory);
+      boost::optional<double> designApproachTemperature() const;
+      bool isDesignApproachTemperatureAutosized() const;
+      bool setDesignApproachTemperature(double designApproachTemperature);
+      void autosizeDesignApproachTemperature();
 
-    //@}
-    /** @name Other */
-    //@{
+      boost::optional<double> designRangeTemperature() const;
+      bool isDesignRangeTemperatureAutosized() const;
+      bool setDesignRangeTemperature(double designRangeTemperature);
+      void autosizeDesignRangeTemperature();
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.CoolingTowerTwoSpeed");
-  };
+      std::string endUseSubcategory() const;
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-} // detail
+      //@}
+      /** @name Other */
+      //@{
 
-} // model
-} // openstudio
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.CoolingTowerTwoSpeed");
+    };
 
-#endif // MODEL_COOLINGTOWERTWOSPEED_IMPL_HPP
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_COOLINGTOWERTWOSPEED_IMPL_HPP

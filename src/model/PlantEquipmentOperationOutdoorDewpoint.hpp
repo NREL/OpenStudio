@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,64 +36,61 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class PlantEquipmentOperationOutdoorDewpoint_Impl;
+    class PlantEquipmentOperationOutdoorDewpoint_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PlantEquipmentOperationOutdoorDewpoint is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:OutdoorDewpoint'. */
-class MODEL_API PlantEquipmentOperationOutdoorDewpoint : public PlantEquipmentOperationRangeBasedScheme {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PlantEquipmentOperationOutdoorDewpoint is a PlantEquipmentOperationRangeBasedScheme that wraps the OpenStudio IDD object 'OS:PlantEquipmentOperation:OutdoorDewpoint'. */
+  class MODEL_API PlantEquipmentOperationOutdoorDewpoint : public PlantEquipmentOperationRangeBasedScheme
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit PlantEquipmentOperationOutdoorDewpoint(const Model& model);
+    explicit PlantEquipmentOperationOutdoorDewpoint(const Model& model);
 
-  virtual ~PlantEquipmentOperationOutdoorDewpoint() {}
+    virtual ~PlantEquipmentOperationOutdoorDewpoint() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::PlantEquipmentOperationOutdoorDewpoint_Impl ImplType;
 
-  //@}
-  /** @name Other */
-  //@{
+    explicit PlantEquipmentOperationOutdoorDewpoint(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDewpoint_Impl> impl);
 
+    friend class detail::PlantEquipmentOperationOutdoorDewpoint_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorDewpoint");
+  };
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::PlantEquipmentOperationOutdoorDewpoint_Impl ImplType;
+  /** \relates PlantEquipmentOperationOutdoorDewpoint*/
+  typedef boost::optional<PlantEquipmentOperationOutdoorDewpoint> OptionalPlantEquipmentOperationOutdoorDewpoint;
 
-  explicit PlantEquipmentOperationOutdoorDewpoint(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDewpoint_Impl> impl);
+  /** \relates PlantEquipmentOperationOutdoorDewpoint*/
+  typedef std::vector<PlantEquipmentOperationOutdoorDewpoint> PlantEquipmentOperationOutdoorDewpointVector;
 
-  friend class detail::PlantEquipmentOperationOutdoorDewpoint_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PlantEquipmentOperationOutdoorDewpoint");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates PlantEquipmentOperationOutdoorDewpoint*/
-typedef boost::optional<PlantEquipmentOperationOutdoorDewpoint> OptionalPlantEquipmentOperationOutdoorDewpoint;
-
-/** \relates PlantEquipmentOperationOutdoorDewpoint*/
-typedef std::vector<PlantEquipmentOperationOutdoorDewpoint> PlantEquipmentOperationOutdoorDewpointVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORDEWPOINT_HPP
-
+#endif  // MODEL_PLANTEQUIPMENTOPERATIONOUTDOORDEWPOINT_HPP

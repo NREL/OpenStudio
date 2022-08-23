@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,11 +42,9 @@
 
 #include <gtest/gtest.h>
 
-
-
-class IddFixture : public ::testing::Test {
-protected:
-
+class IddFixture : public ::testing::Test
+{
+ protected:
   // initialize for each test
   virtual void SetUp() override {}
 
@@ -59,8 +57,7 @@ protected:
   // tear down static members
   static void TearDownTestSuite();
 
-public:
-
+ public:
   REGISTER_LOGGER("IddFixture");
 
   // Note: storage for static variables must be defined in a separate .cpp file
@@ -70,4 +67,4 @@ public:
   static boost::optional<openstudio::FileLogSink> logFile;
 };
 
-#endif // UTILITIES_IDD_TEST_IDDFIXTURE_HPP
+#endif  // UTILITIES_IDD_TEST_IDDFIXTURE_HPP

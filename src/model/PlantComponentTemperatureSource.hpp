@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,92 +37,91 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class PlantComponentTemperatureSource_Impl;
+    class PlantComponentTemperatureSource_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** PlantComponentTemperatureSource is a StraightComponent that wraps the OpenStudio IDD object 'OS:PlantComponent:TemperatureSource'. */
-class MODEL_API PlantComponentTemperatureSource : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** PlantComponentTemperatureSource is a StraightComponent that wraps the OpenStudio IDD object 'OS:PlantComponent:TemperatureSource'. */
+  class MODEL_API PlantComponentTemperatureSource : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit PlantComponentTemperatureSource(const Model& model);
+    explicit PlantComponentTemperatureSource(const Model& model);
 
-  virtual ~PlantComponentTemperatureSource() {}
+    virtual ~PlantComponentTemperatureSource() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> temperatureSpecificationTypeValues();
+    static std::vector<std::string> temperatureSpecificationTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<double> designVolumeFlowRate() const;
+    boost::optional<double> designVolumeFlowRate() const;
 
-  bool isDesignVolumeFlowRateAutosized() const;
+    bool isDesignVolumeFlowRateAutosized() const;
 
-  std::string temperatureSpecificationType() const;
+    std::string temperatureSpecificationType() const;
 
-  boost::optional<double> sourceTemperature() const;
+    boost::optional<double> sourceTemperature() const;
 
-  boost::optional<Schedule> sourceTemperatureSchedule() const;
+    boost::optional<Schedule> sourceTemperatureSchedule() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setDesignVolumeFlowRate(double designVolumeFlowRate);
+    bool setDesignVolumeFlowRate(double designVolumeFlowRate);
 
-  void autosizeDesignVolumeFlowRate();
+    void autosizeDesignVolumeFlowRate();
 
-  bool setTemperatureSpecificationType(std::string temperatureSpecificationType);
+    bool setTemperatureSpecificationType(const std::string& temperatureSpecificationType);
 
-  bool setSourceTemperature(double sourceTemperature);
+    bool setSourceTemperature(double sourceTemperature);
 
-  void resetSourceTemperature();
+    void resetSourceTemperature();
 
-  bool setSourceTemperatureSchedule(Schedule& schedule);
+    bool setSourceTemperatureSchedule(Schedule& schedule);
 
-  void resetSourceTemperatureSchedule();
+    void resetSourceTemperatureSchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedDesignVolumeFlowRate() const ;
+    boost::optional<double> autosizedDesignVolumeFlowRate() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::PlantComponentTemperatureSource_Impl ImplType;
 
+    explicit PlantComponentTemperatureSource(std::shared_ptr<detail::PlantComponentTemperatureSource_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::PlantComponentTemperatureSource_Impl ImplType;
+    friend class detail::PlantComponentTemperatureSource_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.PlantComponentTemperatureSource");
+  };
 
-  explicit PlantComponentTemperatureSource(std::shared_ptr<detail::PlantComponentTemperatureSource_Impl> impl);
+  /** \relates PlantComponentTemperatureSource*/
+  typedef boost::optional<PlantComponentTemperatureSource> OptionalPlantComponentTemperatureSource;
 
-  friend class detail::PlantComponentTemperatureSource_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.PlantComponentTemperatureSource");
-};
+  /** \relates PlantComponentTemperatureSource*/
+  typedef std::vector<PlantComponentTemperatureSource> PlantComponentTemperatureSourceVector;
 
-/** \relates PlantComponentTemperatureSource*/
-typedef boost::optional<PlantComponentTemperatureSource> OptionalPlantComponentTemperatureSource;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates PlantComponentTemperatureSource*/
-typedef std::vector<PlantComponentTemperatureSource> PlantComponentTemperatureSourceVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_PLANTCOMPONENTTEMPERATURESOURCE_HPP
+#endif  // MODEL_PLANTCOMPONENTTEMPERATURESOURCE_HPP

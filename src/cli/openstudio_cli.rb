@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 ########################################################################################################################
-#  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+#  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 #
 #  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 #  following conditions are met:
@@ -55,6 +55,19 @@ $logger.level = Logger::WARN
 #OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Warn)
 OpenStudio::Logger.instance.standardOutLogger.setLogLevel(OpenStudio::Error)
 
+OpenStudio.autoload(:Airflow, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:EnergyPlus, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:EPJSON, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:GbXML, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:Gltf, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:ISOModel, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:Measure, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:Ruleset, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:Model, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:OSVersion, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:Radiance, ":/openstudio_init_extended.rb")
+OpenStudio.autoload(:SDD, ":/openstudio_init_extended.rb")
+
 # debug Gem::Resolver, must go before resolver is required
 #ENV['DEBUG_RESOLVER'] = "1"
 original_arch = nil
@@ -75,6 +88,31 @@ end
 
 module Gem
 class Specification < BasicSpecification
+
+  # This isn't ideal but there really is no available method to add specs for our use case.
+  # Using self.dirs=() works for ruby official gems but since it appends the dir paths with 'specifications' it breaks for bundled gem specs
+  def self.add_spec spec
+    warn "Gem::Specification.add_spec is deprecated and will be removed in RubyGems 3.0" unless Gem::Deprecate.skip
+    # TODO: find all extraneous adds
+    # puts
+    # p :add_spec => [spec.full_name, caller.reject { |s| s =~ /minitest/ }]
+
+    # TODO: flush the rest of the crap from the tests
+    # raise "no dupes #{spec.full_name} in #{all_names.inspect}" if
+    #   _all.include? spec
+
+    raise "nil spec!" unless spec # TODO: remove once we're happy with tests
+
+    return if _all.include? spec
+
+    _all << spec
+    stubs << spec
+    (@@stubs_by_name[spec.name] ||= []) << spec
+    sort_by!(@@stubs_by_name[spec.name]) { |s| s.version }
+    _resort!(_all)
+    _resort!(stubs)
+  end
+
   def gem_dir
     embedded = false
     tmp_loaded_from = loaded_from.clone
@@ -282,6 +320,14 @@ end
 # parse the main args, those that come before the sub command
 def parse_main_args(main_args)
 
+  # Unset RUBY ENVs if previously set (e.g. rvm sets these in shell)
+
+  ENV.delete('GEM_HOME') if ENV['GEM_HOME']
+  ENV.delete('GEM_PATH') if ENV['GEM_PATH']
+  ENV.delete('BUNDLE_GEMFILE') if ENV['BUNDLE_GEMFILE']
+  ENV.delete('BUNDLE_PATH') if ENV['BUNDLE_PATH']
+  ENV.delete('BUNDLE_WITHOUT') if ENV['BUNDLE_WITHOUT']
+
   $logger.debug "Parsing main_args #{main_args}"
 
   # verbose already handled
@@ -350,9 +396,6 @@ def parse_main_args(main_args)
   remove_indices.reverse_each {|i| main_args.delete_at(i)}
 
   if !new_path.empty?
-    if ENV['GEM_PATH']
-      new_path << ENV['GEM_PATH'].to_s
-    end
 
     new_path = new_path.join(File::PATH_SEPARATOR)
 
@@ -385,11 +428,6 @@ def parse_main_args(main_args)
     ENV['BUNDLE_GEMFILE'] = gemfile
     use_bundler = true
 
-  elsif ENV['BUNDLE_GEMFILE']
-    # no argument but env var is set
-    $logger.info "ENV['BUNDLE_GEMFILE'] set to '#{ENV['BUNDLE_GEMFILE']}'"
-    use_bundler = true
-
   end
 
   if main_args.include? '--bundle_path'
@@ -402,16 +440,12 @@ def parse_main_args(main_args)
     $logger.info "Setting BUNDLE_PATH to #{bundle_path}"
     ENV['BUNDLE_PATH'] = bundle_path
 
-  elsif ENV['BUNDLE_PATH']
-    # no argument but env var is set
-    $logger.info "ENV['BUNDLE_PATH'] set to '#{ENV['BUNDLE_PATH']}'"
-
   elsif use_bundler
     # bundle was requested but bundle_path was not provided
     $logger.warn "Bundle activated but ENV['BUNDLE_PATH'] is not set"
 
-    $logger.info "Setting BUNDLE_PATH to ':/ruby/2.5.0/'"
-    ENV['BUNDLE_PATH'] = ':/ruby/2.5.0/'
+    $logger.info "Setting BUNDLE_PATH to ':/ruby/2.7.0/'"
+    ENV['BUNDLE_PATH'] = ':/ruby/2.7.0/'
 
   end
 
@@ -425,13 +459,9 @@ def parse_main_args(main_args)
     $logger.info "Setting BUNDLE_WITHOUT to #{bundle_without}"
     ENV['BUNDLE_WITHOUT'] = bundle_without
 
-  elsif ENV['BUNDLE_WITHOUT']
-    # no argument but env var is set
-    $logger.info "ENV['BUNDLE_WITHOUT'] set to '#{ENV['BUNDLE_WITHOUT']}'"
-
   elsif use_bundler
     # bundle was requested but bundle_path was not provided
-    $logger.warn "Bundle activated but ENV['BUNDLE_WITHOUT'] is not set"
+    $logger.info "Bundle activated but ENV['BUNDLE_WITHOUT'] is not set"
 
     # match configuration in build_openstudio_gems
     $logger.info "Setting BUNDLE_WITHOUT to 'test'"
@@ -444,27 +474,33 @@ def parse_main_args(main_args)
 
   end
 
-  Gem.paths.path << ':/ruby/2.5.0/gems/'
-  Gem.paths.path << ':/ruby/2.5.0/bundler/gems/'
+  Gem.paths.path << ':/ruby/2.7.0/gems/'
+  Gem.paths.path << ':/ruby/2.7.0/bundler/gems/'
   Gem::Deprecate.skip = true
 
   # find all the embedded gems
   original_embedded_gems = {}
   begin
-    EmbeddedScripting::allFileNamesAsString().split(';').each do |f|
+    EmbeddedScripting::fileNames.each do |f|
       if md = /specifications\/.*\.gemspec$/.match(f) ||
          md = /bundler\/.*\.gemspec$/.match(f)
         begin
           spec = EmbeddedScripting::getFileAsString(f)
           s = eval(spec)
           s.loaded_from = f
+          # This is shenanigans because otherwise rubygems will think extensions are missing
+          # But we are initing them manually so they are not missing
+          # Here the missing_extensions? method is redefined for only this instance "s"
+          class << s
+            define_method(:missing_extensions?) { false }
+          end
           original_embedded_gems[s.name] = s
 
           init_count = 0
           Gem::Specification.each {|x| init_count += 1}
 
           # if already have an equivalent spec this will be a no-op
-          Gem::Specification.add_spec(s)
+	  Gem::Specification.add_spec(s)
 
           post_count = 0
           Gem::Specification.each {|x| post_count += 1}
@@ -484,21 +520,69 @@ def parse_main_args(main_args)
     # EmbeddedScripting not available
   end
 
-  # activate or remove bundler
-  Gem::Specification.each do |spec|
-    if spec.gem_dir.chars.first == ':'
-      if spec.name == 'bundler'
-        if use_bundler
+  original_load_path = $LOAD_PATH.clone
+  embedded_gems_to_activate = []
+
+  # Identify the embedded gems (don't activate them yet)
+  current_dir = Dir.pwd
+  begin
+    # get a list of all the embedded gems
+    dependencies = []
+    original_embedded_gems.each_value do |spec|
+      $logger.debug "Adding dependency on #{spec.name} '~> #{spec.version}'"
+      dependencies << Gem::Dependency.new(spec.name, "~> #{spec.version}")
+    end
+
+    # resolve dependencies
+    activation_errors = false
+    resolver = Gem::Resolver.for_current_gems(dependencies)
+    activation_requests = resolver.resolve
+    $logger.debug "Processing #{activation_requests.size} activation requests"
+    activation_requests.each do |request|
+      do_activate = true
+      spec = request.spec
+
+      # check if this is one of our embedded gems
+      if original_embedded_gems[spec.name]
+        # check if gem can be loaded from RUBYLIB, this supports developer use case
+        original_load_path.each do |lp|
+          if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
+            $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
+            do_activate = false
+            break
+          end
+        end
+      end
+      if do_activate
+        embedded_gems_to_activate << spec
+      end
+
+    end
+
+    if activation_errors
+      return false
+    end
+  ensure
+    Dir.chdir(current_dir)
+  end
+
+  # Load the bundle before activating any embedded gems
+  if use_bundler
+
+    embedded_gems_to_activate.each do |spec|
+      if spec.name == "bundler"
+        $logger.debug "Activating gem #{spec.spec_file}"
+        begin
+          # Activate will manipulate the $LOAD_PATH to include the gem
           spec.activate
-        else
-          # DLM: don't remove, used by Resolver
-          #Gem::Specification.remove_spec(spec)
+        rescue Gem::LoadError
+          # There may be conflicts between the bundle and the embedded gems,
+          # those will be logged here
+          $logger.error "Error activating gem #{spec.spec_file}"
+          activation_errors = true
         end
       end
     end
-  end
-
-  if use_bundler
 
     current_dir = Dir.pwd
 
@@ -509,8 +593,6 @@ def parse_main_args(main_args)
       $logger.info "Temporarily replacing arch '#{original_arch}' with 'x64-mingw32' for Bundle"
       RbConfig::CONFIG['arch'] = 'x64-mingw32'
     end
-
-
 
     # require bundler
     # have to do some forward declaration and pre-require to get around autoload cycles
@@ -558,15 +640,8 @@ def parse_main_args(main_args)
 
       $logger.info "Specs to be included [#{remaining_specs.join(',')}]"
 
+
       Bundler.setup(*keep_groups)
-      #Bundler.require(*keep_groups)
-
-    #rescue Bundler::BundlerError => e
-
-      #$logger.info e.backtrace.join("\n")
-      #$logger.error "Bundler #{e.class}: Use `bundle install` to install missing gems"
-      #exit e.status_code
-
     ensure
 
       if original_arch
@@ -576,73 +651,31 @@ def parse_main_args(main_args)
 
       Dir.chdir(current_dir)
     end
+  end
 
-  else
-    # not using_bundler
+  original_load_path = $LOAD_PATH.clone
 
-    current_dir = Dir.pwd
-
+  embedded_gems_to_activate.each do |spec|
+    $logger.debug "Activating gem #{spec.spec_file}"
     begin
-      # DLM: test code, useful for testing from command line using system ruby
-      #Gem::Specification.each do |spec|
-      #  if /openstudio/.match(spec.name)
-      #    original_embedded_gems[spec.name] = spec
-      #  end
-      #end
-
-      # get a list of all the embedded gems
-      dependencies = []
-      original_embedded_gems.each_value do |spec|
-        $logger.debug "Adding dependency on #{spec.name} '~> #{spec.version}'"
-        dependencies << Gem::Dependency.new(spec.name, "~> #{spec.version}")
-      end
-      #dependencies.each {|d| $logger.debug "Added dependency #{d}"}
-
-      # resolve dependencies
-      activation_errors = false
-      original_load_path = $:.clone
-      resolver = Gem::Resolver.for_current_gems(dependencies)
-      activation_requests = resolver.resolve
-      $logger.debug "Processing #{activation_requests.size} activation requests"
-      activation_requests.each do |request|
-        do_activate = true
-        spec = request.spec
-
-        # check if this is one of our embedded gems
-        if original_embedded_gems[spec.name]
-
-          # check if gem can be loaded from RUBYLIB, this supports developer use case
-          original_load_path.each do |lp|
-            if File.exists?(File.join(lp, spec.name)) || File.exists?(File.join(lp, spec.name + '.rb')) || File.exists?(File.join(lp, spec.name + '.so'))
-              $logger.debug "Found #{spec.name} in '#{lp}', overrides gem #{spec.spec_file}"
-              Gem::Specification.remove_spec(spec)
-              do_activate = false
-              break
-            end
-          end
-        end
-
-        if do_activate
-          $logger.debug "Activating gem #{spec.spec_file}"
-          begin
-            spec.activate
-          rescue Gem::LoadError
-            $logger.error "Error activating gem #{spec.spec_file}"
-            activation_errors = true
-          end
-        end
-
-      end
-
-      if activation_errors
-        return false
-      end
-
-    ensure
-      Dir.chdir(current_dir)
+      # Activate will manipulate the $LOAD_PATH to include the gem
+      spec.activate
+    rescue Gem::LoadError
+      # There may be conflicts between the bundle and the embedded gems,
+      # those will be logged here
+      $logger.error "Error activating gem #{spec.spec_file}"
+      activation_errors = true
     end
+  end
 
-  end # use_bundler
+  # Get all of the embedded gem paths which were added by activating the embedded gems
+  # This is used by embedded_help::require
+  $EMBEDDED_GEM_PATH = $LOAD_PATH - original_load_path
+  # Make sure no non embedded paths snuck in
+  $EMBEDDED_GEM_PATH = $EMBEDDED_GEM_PATH.select {|p| p.to_s.chars.first == ':'}
+  # Restore LOAD_PATH
+  $LOAD_PATH.reject! {|p| not original_load_path.any? p}
+
 
   # Handle -e commands
   remove_indices = []
@@ -724,6 +757,14 @@ class CLI
       return 0
     end
 
+    if $main_args.include?('--version')
+      # Version is next in short-circuiting everything. Print it and exit.
+      # This is to have the same behavior as pretty much every CLI, you expect
+      # `<cli> --version` to return the version
+      safe_puts OpenStudio.openStudioLongVersion
+      return 0
+    end
+
     if !parse_main_args($main_args)
       help
       return 1
@@ -733,7 +774,7 @@ class CLI
     if !$eval_cmds.empty?
       $eval_cmds.each do |cmd|
         $logger.debug "Executing cmd: #{cmd}"
-        eval(cmd)
+        eval(cmd, BINDING)
       end
       if $sub_command
         $logger.warn "Evaluate mode detected, ignoring sub_command #{$sub_command}"
@@ -874,6 +915,21 @@ class Run
     options[:no_simulation] = false
     options[:osw_path] = './workflow.osw'
     options[:post_process] = false
+    options[:ep_json] = false
+    options[:ft_options] = {}
+    options[:show_stdout] = false
+    options[:add_timings] = false
+    options[:style_stdout] = false
+    # TODO: I don't know if there's any value harcoding a default here really
+    # options[:ft_options] = {
+    #   :runcontrolspecialdays => true,
+    #   :ip_tabular_output => false,
+    #   :no_lifecyclecosts => false,
+    #   :no_sqlite_output => false,
+    #   :no_html_output => false,
+    #   :no_variable_dictionary => false,
+    #   :no_space_translation => false,
+    # }
 
     opts = OptionParser.new do |o|
       o.banner = 'Usage: openstudio run [options]'
@@ -890,12 +946,58 @@ class Run
       o.on('-p', '--postprocess_only', 'Only run the reporting measures') do
         options[:post_process] = true
       end
+      o.on('--export-epJSON', 'export epJSON file format. The default is IDF') do
+        options[:ep_json] = true
+      end
       o.on('-s', '--socket PORT', 'Pipe status messages to a socket on localhost PORT') do |port|
         options[:socket] = port
+      end
+      o.on('--show-stdout', 'Prints the output of the workflow run in real time to the console, including E+ output') do
+        options[:show_stdout] = true
       end
       o.on('--debug', 'Includes additional outputs for debugging failing workflows and does not clean up the run directory') do |f|
         options[:debug] = f
       end
+
+      o.separator ""
+      o.separator "Forward Translator Options:"
+
+      o.on('--[no-]runcontrolspecialdays', "Include RunControlSpecialDays (Holidays) [Default: True]") do |b|
+        options[:ft_options][:runcontrolspecialdays] = b
+      end
+
+      o.on('--set-ip-tabular-output', "Request IP units from E+ Tabular (HTML) Report [Default: False]") do |b|
+        options[:ft_options][:ip_tabular_output] = b
+      end
+
+      o.on('--[no-]lifecyclecosts', "Include LifeCycleCosts [Default: True]") do |b|
+        options[:ft_options][:no_lifecyclecosts] = !b
+      end
+
+      o.on('--[no-]sqlite-output', "Request Output:SQLite from E+ [Default: True]") do |b|
+        options[:ft_options][:no_sqlite_output] = !b
+      end
+
+      o.on('--[no-]html-output', "Request Output:Table:SummaryReports report from E+ [Default: True]") do |b|
+        options[:ft_options][:no_html_output] = !b
+      end
+
+      o.on('--[no-]space-translation', "Add individual E+ Space [Default: True]") do |b|
+        options[:ft_options][:no_space_translation] = !b
+      end
+
+      o.separator ""
+      o.separator "Stdout Options: only available when --show-stdout is passed"
+
+      o.on('--add-timings', 'Print the start, end and elapsed times of each state of the simulation.') do
+          options[:add_timings] = true
+      end
+      o.on('--style-stdout', 'Style the stdout output to more clearly show the start and end of each state of the simulation') do
+          options[:style_stdout] = true
+      end
+
+      o.separator ""
+
     end
 
     # Parse the options
@@ -925,11 +1027,105 @@ class Run
       run_options[:cleanup] = false
     end
 
+    if options[:ep_json]
+      run_options[:ep_json] = true
+    end
+
+    if !options[:ft_options].empty?
+      run_options[:ft_options] = {}
+      options[:ft_options].each do |opt_flag_name, opt_flag|
+        run_options[:ft_options][opt_flag_name] = opt_flag
+      end
+    end
+
+    if options[:show_stdout] && options[:socket]
+      raise "Error: --show-stdout and --socket cannot be used at the same time"
+    end
+
     if options[:socket]
       require 'openstudio/workflow/adapters/input/local'
       require 'openstudio/workflow/adapters/output/socket'
       input_adapter = OpenStudio::Workflow::InputAdapter::Local.new(osw_path)
       output_adapter = OpenStudio::Workflow::OutputAdapter::Socket.new({output_directory: input_adapter.run_dir, port: options[:socket]})
+      run_options[:output_adapter] = output_adapter
+    end
+
+    tcp_thread = nil
+    if options[:show_stdout]
+      # prefered port
+      port = 8080
+      server = nil
+      n_try = 0
+      begin
+        n_try += 1
+        server = TCPServer.open('localhost', port)
+      rescue Errno::EADDRINUSE
+        port = rand(65000 - 1024) + 1024
+        if n_try < 10
+          retry
+        else
+          raise "Cannot find a TCP port that isn't in use"
+        end
+      end
+
+      def h1(str)
+        len = [80, str.length + 4].max
+        l1 = "#" * len
+        n1 = (len - str.length - 2) / 2
+        n2 = (len - str.length - 2) - n1
+        l2 = "#" + " " * n1 + str + " " * n2 + "#"
+
+        return "\n" + l1 + "\n" + l2 + "\n" + l1
+      end
+
+      def end_h1(str)
+        len = [80, str.length + 4].max
+        n1 = (len - str.length - 2) / 2
+        n2 = (len - str.length - 2) - n1
+        l2 = "#" * n1 + " " + str + + " " + "#" * n2
+        return l2 + "\n"
+      end
+
+      # Start a TCP thread to receive the messages that workflow-gem with send
+      tcp_thread = Thread.new do
+        start_time = nil
+        while client = server.accept
+          while line = client.gets.strip
+
+            if line.downcase.start_with?('starting state')
+              if options[:style_stdout]
+                puts h1(line)
+              else
+                puts line
+              end
+              if options[:add_timings]
+                start_time = Time.now
+                puts "Start Time: #{start_time}"
+              end
+
+            elsif line.downcase.start_with?('returned from state')
+              if options[:add_timings]
+                end_time = Time.now
+                puts "End Time: #{end_time}"
+                puts "Elapsed Time for state: #{(end_time - start_time).round(2)} s"
+              end
+              if options[:style_stdout]
+                puts end_h1(line)
+              else
+                puts line
+              end
+
+            else
+              puts line
+            end
+          end
+        end
+      end
+
+      require 'openstudio/workflow/adapters/input/local'
+      require 'openstudio/workflow/adapters/output/socket'
+      input_adapter = OpenStudio::Workflow::InputAdapter::Local.new(osw_path)
+      output_adapter = OpenStudio::Workflow::OutputAdapter::Socket.new({output_directory: input_adapter.run_dir, port: port})
       run_options[:output_adapter] = output_adapter
     end
 
@@ -966,13 +1162,33 @@ class Run
       run_options[:preserve_run_dir] = true
     end
 
+    if options[:add_timings]
+      workflow_start = Time.now
+      puts "WORKFLOW START TIME: #{workflow_start}"
+    end
+
     $logger.debug "Initializing run method"
     k = OpenStudio::Workflow::Run.new osw_path, run_options
 
     $logger.debug "Beginning run"
-    k.run
+    state = k.run
 
-    0
+    if options[:add_timings]
+      workflow_end = Time.now
+      puts "WORKFLOW END TIME: #{workflow_end}"
+      puts "WORKFLOW ELAPSED TIME: #{(workflow_end - workflow_start).round(2)} s"
+    end
+
+    if options[:show_stdout]
+      Thread.kill(tcp_thread)
+    end
+
+    # check if state symbol is either :finished or :errored
+    if state == :finished
+      return 0
+    else
+      return 1
+    end
   end
 end
 
@@ -1757,7 +1973,11 @@ begin
   result = CLI.new(ARGV).execute
 rescue Exception => e
   puts "Error executing argv: #{ARGV}"
-  puts "Error: #{e.message} in #{e.backtrace.join("\n")}"
+  if e.backtrace.nil?
+    puts "Error: #{e.message}"
+  else
+    puts "Error: #{e.message} in #{e.backtrace.join("\n")}"
+  end
   result = 1
 end
 STDOUT.flush

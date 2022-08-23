@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,8 +31,7 @@
 
 #include "../Assert.hpp"
 
-namespace sharedfromthistest
-{
+namespace sharedfromthistest {
 struct Object_Impl : public std::enable_shared_from_this<Object_Impl>
 {
   Object_Impl(std::shared_ptr<int> counter);
@@ -43,66 +42,52 @@ struct Object_Impl : public std::enable_shared_from_this<Object_Impl>
 
   struct null_deleter
   {
-    void operator()(void const *) const
-      {
-      }
+    void operator()(void const*) const {}
   };
 };
 
 struct Object
 {
-  Object(std::shared_ptr<Object_Impl> impl)
-    : m_impl(impl)
-  {
+  Object(std::shared_ptr<Object_Impl> impl) : m_impl(impl) {
     OS_ASSERT(m_impl);
     std::weak_ptr<Object_Impl> weakImpl(impl);
     OS_ASSERT(weakImpl.lock());
   }
 
-  ~Object()
-  {
-  }
+  ~Object() {}
 
-  void increment()
-  {
+  void increment() {
     m_impl->increment();
   }
 
-  void incrementFromThis()
-  {
+  void incrementFromThis() {
     m_impl->incrementFromThis();
   }
 
   std::shared_ptr<Object_Impl> m_impl;
 };
 
-
-Object_Impl::Object_Impl(std::shared_ptr<int> counter)
-  : m_counter(counter)
-{
+Object_Impl::Object_Impl(std::shared_ptr<int> counter) : m_counter(counter) {
   OS_ASSERT(m_counter);
 }
 
-Object_Impl::~Object_Impl()
-{
-
+Object_Impl::~Object_Impl() {
 
   Object object(std::shared_ptr<Object_Impl>(this, Object_Impl::null_deleter()));
   object.increment();
 }
 
-void Object_Impl::increment(){
+void Object_Impl::increment() {
   ++(*m_counter);
 }
 
-void Object_Impl::incrementFromThis(){
+void Object_Impl::incrementFromThis() {
   Object object(this->shared_from_this());
   object.increment();
 }
 
-}
-TEST(SharedFromThis, Destructor)
-{
+}  // namespace sharedfromthistest
+TEST(SharedFromThis, Destructor) {
   std::shared_ptr<int> counter(new int(0));
   ASSERT_TRUE(counter.get());
   EXPECT_EQ(0, *counter);
@@ -118,4 +103,3 @@ TEST(SharedFromThis, Destructor)
 
   EXPECT_EQ(3, *counter);
 }
-

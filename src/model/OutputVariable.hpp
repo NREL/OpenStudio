@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,13 +39,13 @@ class ReportingFrequency;
 
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
-  class OutputVariable_Impl;
-} // detail
+  namespace detail {
+    class OutputVariable_Impl;
+  }  // namespace detail
 
-/** OutputVariable derives from ModelObject and is an interface to the OpenStudio
+  /** OutputVariable derives from ModelObject and is an interface to the OpenStudio
  *  IDD object named "OS:Output:Variable".
  *
  *  OutputVariable is used to request output data from EnergyPlus simulations.  Each ModelObject defines
@@ -56,93 +56,91 @@ namespace detail {
  *  If an OutputVariable object is present when a Model is simulated in EnergyPlus, the OutputVariable can be
  *  used to access simulation results for its parent ModelObject.
  */
-class MODEL_API OutputVariable : public ModelObject {
- public:
-  virtual ~OutputVariable() {}
+  class MODEL_API OutputVariable : public ModelObject
+  {
+   public:
+    virtual ~OutputVariable() {}
 
-  /** @name Constructors and Destructors */
-  //@{
+    /** @name Constructors and Destructors */
+    //@{
 
-  /// Constructs a new OutputVariable object in the model.
-  explicit OutputVariable(const std::string& variableName, const Model& model);
+    /// Constructs a new OutputVariable object in the model.
+    explicit OutputVariable(const std::string& variableName, const Model& model);
 
-  virtual std::vector<openstudio::IdfObject> remove();
+    virtual std::vector<openstudio::IdfObject> remove();
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> reportingFrequencyValues();
+    static std::vector<std::string> reportingFrequencyValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string keyValue() const;
+    std::string keyValue() const;
 
-  bool isKeyValueDefaulted() const;
+    bool isKeyValueDefaulted() const;
 
-  std::string variableName() const;
+    std::string variableName() const;
 
-  std::string reportingFrequency() const;
+    std::string reportingFrequency() const;
 
-  bool isReportingFrequencyDefaulted() const;
+    bool isReportingFrequencyDefaulted() const;
 
-  boost::optional<Schedule> schedule() const;
+    boost::optional<Schedule> schedule() const;
 
-  bool exportToBCVTB() const;
+    bool exportToBCVTB() const;
 
-  bool isExportToBCVTBDefaulted() const;
+    bool isExportToBCVTBDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setKeyValue(const std::string& keyValue);
+    bool setKeyValue(const std::string& keyValue);
 
-  void resetKeyValue();
+    void resetKeyValue();
 
-  bool setVariableName(const std::string& variableName);
+    bool setVariableName(const std::string& variableName);
 
-  bool setReportingFrequency(const std::string& reportingFrequency);
+    bool setReportingFrequency(const std::string& reportingFrequency);
 
-  void resetReportingFrequency();
+    void resetReportingFrequency();
 
-  bool setSchedule(Schedule& schedule);
+    bool setSchedule(Schedule& schedule);
 
-  void resetSchedule();
+    void resetSchedule();
 
-  bool setExportToBCVTB(bool exportToBCVTB);
+    bool setExportToBCVTB(bool exportToBCVTB);
 
-  void resetExportToBCVTB();
+    void resetExportToBCVTB();
 
-  //@}
- protected:
+    //@}
+   protected:
+    /// @cond
 
-  /// @cond
+    typedef detail::OutputVariable_Impl ImplType;
 
-  typedef detail::OutputVariable_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    // constructor
+    explicit OutputVariable(std::shared_ptr<detail::OutputVariable_Impl> impl);
 
-  // constructor
-  explicit OutputVariable(std::shared_ptr<detail::OutputVariable_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.OutputVariable");
 
- private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.OutputVariable");
+  /** \relates OutputVariable */
+  typedef boost::optional<OutputVariable> OptionalOutputVariable;
 
-  /// @endcond
+  /** \relates OutputVariable */
+  typedef std::vector<OutputVariable> OutputVariableVector;
 
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates OutputVariable */
-typedef boost::optional<OutputVariable> OptionalOutputVariable;
-
-/** \relates OutputVariable */
-typedef std::vector<OutputVariable> OutputVariableVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_VARIABLE_HPP
+#endif  // MODEL_VARIABLE_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -204,7 +204,6 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-
 TEST_F(EnergyPlusFixture, ForwardTranslatorSensorRename_EMS) {
 
   Model model;
@@ -221,15 +220,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensorRename_EMS) {
   CurveQuadratic energyInputRatioFunctionofFlowFractionCurve(model);
   CurveQuadratic partLoadFractionCorrelationCurve(model);
   // make cooling coil
-  CoilCoolingDXSingleSpeed dx_coil(model, s,
-    totalCoolingCapacityFunctionofTemperatureCurve,
-    totalCoolingCapacityFunctionofFlowFractionCurve,
-    energyInputRatioFunctionofTemperatureCurve,
-    energyInputRatioFunctionofFlowFractionCurve,
-    partLoadFractionCorrelationCurve);
+  CoilCoolingDXSingleSpeed dx_coil(model, s, totalCoolingCapacityFunctionofTemperatureCurve, totalCoolingCapacityFunctionofFlowFractionCurve,
+                                   energyInputRatioFunctionofTemperatureCurve, energyInputRatioFunctionofFlowFractionCurve,
+                                   partLoadFractionCorrelationCurve);
 
   dx_coil.setName("Coil Name Before Change");
-  EXPECT_EQ("Coil Name Before Change",dx_coil.nameString());
+  EXPECT_EQ("Coil Name Before Change", dx_coil.nameString());
 
   // add sensor
   EnergyManagementSystemSensor sensor(model, "Cooling Coil Runtime Fraction");
@@ -270,7 +266,7 @@ Model prepareSensor1_EMS() {
   return model;
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslatorSensor1_EMS) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorSensor1_EMS) {
 
   Model model = prepareSensor1_EMS();
 
@@ -287,7 +283,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorSensor1_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
   EXPECT_EQ("", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
-  EXPECT_EQ("Site Outdoor Air Drybulb Temperature", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
+  EXPECT_EQ("Site Outdoor Air Drybulb Temperature",
+            object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
 
   // model.save(toPath("./EMS_sensor1.osm"), true);
   // workspace.save(toPath("./EMS_sensor1.idf"), true);
@@ -305,12 +302,10 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS) {
   // m.save(toPath("./EMS_sensor1T.osm"), true);
 }
 
-
-TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS_explicit)
-{
+TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS_explicit) {
   ReverseTranslator reverseTranslator;
 
-  Workspace w(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   OptionalWorkspaceObject _i_zone1 = w.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(_i_zone1);
   EXPECT_TRUE(_i_zone1->setName("Zone1"));
@@ -325,8 +320,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS_explicit)
   OptionalWorkspaceObject _i_emsSensor = w.addObject(IdfObject(IddObjectType::EnergyManagementSystem_Sensor));
   ASSERT_TRUE(_i_emsSensor);
   EXPECT_TRUE(_i_emsSensor->setName("OATdb_Sensor"));
-  EXPECT_TRUE(_i_emsSensor->setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName,
-                                   "Site Outdoor Air Drybulb Temperature"));
+  EXPECT_TRUE(
+    _i_emsSensor->setString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, "Site Outdoor Air Drybulb Temperature"));
 
   // To avoid other warnings, we add required objects
   OptionalWorkspaceObject _i_globalGeometryRules = w.addObject(IdfObject(IddObjectType::GlobalGeometryRules));
@@ -341,7 +336,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS_explicit)
   OptionalWorkspaceObject _i_building = w.addObject(IdfObject(IddObjectType::Building));
   ASSERT_TRUE(_i_building);
 
-
   // w.save(toPath("./EMS_sensor1.idf"), true);
 
   {
@@ -350,7 +344,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS_explicit)
     EXPECT_TRUE(reverseTranslator.errors().empty());
     EXPECT_TRUE(reverseTranslator.warnings().empty());
 
-    std::vector<openstudio::model::EnergyManagementSystemSensor> emsSensors = model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>();
+    std::vector<openstudio::model::EnergyManagementSystemSensor> emsSensors =
+      model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>();
     ASSERT_EQ(static_cast<unsigned>(1), model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>().size());
 
     openstudio::model::EnergyManagementSystemSensor emsSensor1 = model.getModelObjects<openstudio::model::EnergyManagementSystemSensor>()[0];
@@ -363,7 +358,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensor1_EMS_explicit)
   }
 }
 
-
 Model prepareSensor2_EMS() {
 
   Model model;
@@ -375,17 +369,16 @@ Model prepareSensor2_EMS() {
   ThermalZone zone2(model);
   zone2.setName("Zone 2");
 
-  // add Zone Lights Electric Power to both zones
-  OutputVariable lightsElectricPower("Zone Lights Electric Power", model);
+  // add Zone Lights Electricity Rate to both zones
+  OutputVariable lightsElectricPower("Zone Lights Electricity Rate", model);
 
   // add light sensor on zone1
   EnergyManagementSystemSensor lights(model, lightsElectricPower);
   lights.setName("Light Sensor");
- // lights.setOutputVariable(lightsElectricPower);
+  // lights.setOutputVariable(lightsElectricPower);
   lights.setKeyName(zone1.name().get());
 
   return model;
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorSensor2_EMS) {
@@ -405,7 +398,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensor2_EMS) {
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false));
   EXPECT_EQ("Zone 1", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterIndexKeyName, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false));
-  EXPECT_EQ("Zone Lights Electric Power", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
+  EXPECT_EQ("Zone Lights Electricity Rate", object.getString(EnergyManagementSystem_SensorFields::Output_VariableorOutput_MeterName, false).get());
 
   // model.save(toPath("./EMS_sensor2.osm"), true);
   // workspace.save(toPath("./EMS_sensor2.idf"), true);
@@ -421,7 +414,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensor2_EMS) {
   Model m = reverseTranslator.translateWorkspace(workspace);
   // m.save(toPath("./EMS_sensor2T.osm"), true);
 }
-
 
 Model prepareSensoronMeter_EMS() {
 
@@ -443,7 +435,6 @@ Model prepareSensoronMeter_EMS() {
   EnergyManagementSystemSensor meter_sensor(model, meter);
   meter_sensor.setName("meter sensor");
   //meter_sensor.setOutputMeter(meter);
-
 
   return model;
 }
@@ -480,7 +471,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorSensoronMeter_EMS) {
   ReverseTranslator reverseTranslator;
   Model m = reverseTranslator.translateWorkspace(workspace);
   // m.save(toPath("./EMS_sensor_meterT.osm"), true);
-
 }
 TEST_F(EnergyPlusFixture, ForwardReverseTranslatorActuator_EMS) {
   Model model;
@@ -530,7 +520,6 @@ TEST_F(EnergyPlusFixture, ForwardReverseTranslatorActuator_EMS) {
   ReverseTranslator reverseTranslator;
   Model modelT = reverseTranslator.translateWorkspace(workspace);
   // modelT.save(toPath("./EMS_exampleT.osm"), true);
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorWeatherActuator_EMS) {
@@ -633,7 +622,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_Space_EMS) {
   space.setGasEquipmentPower(10, gasEquip);
 
   // add actuator
-  std::string ControlType = "Gas Power Level";
+  std::string ControlType = "NaturalGas Rate";
   std::string ComponentType = "GasEquipment";
   EnergyManagementSystemActuator fanActuator(gasEquip, ComponentType, ControlType);
   std::string actName = "Gas Equip Actuator";
@@ -645,7 +634,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_Space_EMS) {
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
   WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
-
 
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
   EXPECT_EQ("Gas_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
@@ -682,7 +670,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType_EMS) {
   gasEquip.setSpaceType(spaceType);
 
   // add actuator
-  std::string ControlType = "Gas Power Level";
+  std::string ControlType = "NaturalGas Rate";
   std::string ComponentType = "GasEquipment";
   EnergyManagementSystemActuator fanActuator(gasEquip, ComponentType, ControlType);
   std::string actName = "Gas Equip Actuator";
@@ -694,7 +682,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType_EMS) {
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
   WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
-
 
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
   EXPECT_EQ("Gas_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
@@ -741,7 +728,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_Space2_EMS) {
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
   WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
-
 
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
   EXPECT_EQ("Electric_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
@@ -790,7 +776,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceType2_EMS) {
 
   WorkspaceObject object = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator)[0];
 
-
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::Name, false));
   EXPECT_EQ("Electric_Equip_Actuator", object.getString(EnergyManagementSystem_ActuatorFields::Name, false).get());
   ASSERT_TRUE(object.getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName, false));
@@ -824,7 +809,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad3_EMS) {
   //space.setGasEquipmentPower(10, gasEquip);
 
   // add actuator
-  std::string ControlType = "Gas Power Level";
+  std::string ControlType = "NaturalGas Rate";
   std::string ComponentType = "GasEquipment";
   EnergyManagementSystemActuator fanActuator(gasEquip, ComponentType, ControlType);
   std::string actName = "Gas Equip Actuator";
@@ -874,6 +859,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuatorSpaceLoad_SpaceTypes_EMS) {
   fanActuator.setName(actName);
 
   ForwardTranslator forwardTranslator;
+  forwardTranslator.setExcludeSpaceTranslation(true);
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
   //expect a warning since there are 2 spaces with the same spaceType
@@ -912,7 +898,7 @@ Model prepareProgram_EMS() {
   //add sensor
   EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor.setName("OATdb Sensor");
- // OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+  // OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   //add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
@@ -930,9 +916,13 @@ Model prepareProgram_EMS() {
   std::string programName = fan.name().get() + "Pressure Rise Program by Body";
   fan_program_1.setName(programName);
   //this body has /r/n in it
-  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle()) + " / 15.0 !- This is !nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment";
+  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle())
+                                   + " / 15.0 !- This is !nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n"
+                                   + "no comment\n" + "crap !comment!comment";
   //this is what the body should look like with 2 /n's and compare TRUE
-  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle()) + " / 15.0 !- This is !nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment\n";
+  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle())
+                                      + " / 15.0 !- This is !nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n"
+                                      + "no comment\n" + "crap !comment!comment\n";
   //the added lines should compare TRUE to below
   std::string line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle()) + " / 15.0 !- This is !nonsense\n";
   std::string line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
@@ -983,7 +973,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgram_EMS) {
   ReverseTranslator reverseTranslator;
   Model m = reverseTranslator.translateWorkspace(workspace);
   // m.save(toPath("./EMS_programT.osm"), true);
-
 }
 
 Model prepareSubroutine_EMS() {
@@ -1000,7 +989,7 @@ Model prepareSubroutine_EMS() {
   //add sensor
   EnergyManagementSystemSensor OATdbSensor(model, siteOutdoorAirDrybulbTemperature);
   OATdbSensor.setName("OATdb Sensor really really really really really long name");
- // OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
+  // OATdbSensor.setOutputVariable(siteOutdoorAirDrybulbTemperature);
 
   //add fan
   Schedule s = model.alwaysOnDiscreteSchedule();
@@ -1018,9 +1007,13 @@ Model prepareSubroutine_EMS() {
   std::string programName = fan.name().get() + "Pressure Rise Program by Body";
   fan_program_1.setName(programName);
   //this body has /r/n in it
-  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle()) + " extra!- This is !nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment";
+  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle())
+                                   + " extra!- This is !nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n"
+                                   + "no comment\n" + "crap !comment!comment";
   //this is what the body should look like with 2 /n's and compare TRUE
-  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle()) + " extra !- This is !nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n" + "no comment\n" + "crap !comment!comment\n";
+  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle())
+                                      + " extra !- This is !nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n"
+                                      + "no comment\n" + "crap !comment!comment\n";
   //the added lines should compare TRUE to below
   std::string line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " + " + toString(fanActuator.handle()) + " extra !- This is !nonsense\n";
   std::string line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
@@ -1104,9 +1097,11 @@ Model prepareCallingManager_EMS() {
   std::string programName = fan.name().get() + "Pressure Rise Program by Body";
   fan_program_1.setName(programName);
   //this body has /r/n in it
-  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\r\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense";
+  std::string fan_program_1_body = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\r\nSET "
+                                   + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense";
   //this is what the body should look like with 2 /n's and compare TRUE
-  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+  std::string fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET "
+                                      + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
   //the added lines should compare TRUE to below
   std::string line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
   std::string line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
@@ -1130,7 +1125,8 @@ Model prepareCallingManager_EMS() {
   fan_program_2.addLine(line2);
 
   //this is what the body should look like with 2 /n's and compare TRUE
-  fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+  fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle())
+                          + " = 250 * mult !- More nonsense\n";
   //the added lines should compare TRUE to below
   line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
   line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
@@ -1152,7 +1148,8 @@ Model prepareCallingManager_EMS() {
   fan_program_3.setLines(vectorOfLines);
 
   //this is what the body should look like with 2 /n's and compare TRUE
-  fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
+  fan_program_body_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\nSET " + toString(fanActuator.handle())
+                          + " = 250 * mult !- More nonsense\n";
   //the added lines should compare TRUE to below
   line1_test = "SET mult = " + toString(OATdbSensor.handle()) + " / 15.0 !- This is nonsense\n";
   line2_test = "SET " + toString(fanActuator.handle()) + " = 250 * mult !- More nonsense\n";
@@ -1215,7 +1212,6 @@ Model prepareCallingManager_EMS() {
   EXPECT_EQ(true, insert_result);
 
   return model;
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorProgramCallingManager_EMS) {
@@ -1245,7 +1241,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramCallingManager_EMS) {
   ReverseTranslator reverseTranslator;
   Model m = reverseTranslator.translateWorkspace(workspace);
   // m.save(toPath("./EMS_PCMT.osm"), true);
-
 }
 
 TEST_F(EnergyPlusFixture, noForwardTranslatorOutput_EMS) {
@@ -1289,7 +1284,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorOutput_EMS) {
   ReverseTranslator reverseTranslator;
   Model m = reverseTranslator.translateWorkspace(workspace);
   // m.save(toPath("./EMS_outputT.osm"), true);
-
 }
 
 Model prepareGlobalVariable_EMS() {
@@ -1333,7 +1327,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorGlobalVariable_EMS) {
   ReverseTranslator reverseTranslator;
   Model m = reverseTranslator.translateWorkspace(workspace);
   // m.save(toPath("./EMS_GlobalVariableT.osm"), true);
-
 }
 
 /*
@@ -1355,7 +1348,7 @@ Model prepareOutputVariable_EMS() {
   Model model;
 
   // add global variable
-  EnergyManagementSystemGlobalVariable var(model,"glob_var");
+  EnergyManagementSystemGlobalVariable var(model, "glob_var");
   EXPECT_EQ("glob_var", var.nameString());
 
   // add global variable
@@ -1484,9 +1477,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTrendVariable_EMS) {
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ReverseTranslator reverseTranslator;
-  Model m= reverseTranslator.translateWorkspace(workspace);
+  Model m = reverseTranslator.translateWorkspace(workspace);
   // m.save(toPath("./EMS_TrendVariableT.osm"), true);
-
 }
 
 Model prepareInternalVariable_EMS() {
@@ -1526,7 +1518,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorInternalVariable_EMS) {
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ReverseTranslator reverseTranslator;
-  Model m= reverseTranslator.translateWorkspace(workspace);
+  Model m = reverseTranslator.translateWorkspace(workspace);
   // m.save(toPath("./EMS_InternalVariableT.osm"), true);
 }
 
@@ -1600,10 +1592,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorConstructionIndexVariable_EMS) {
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ReverseTranslator reverseTranslator;
-  Model m= reverseTranslator.translateWorkspace(workspace);
+  Model m = reverseTranslator.translateWorkspace(workspace);
   // m.save(toPath("./EMS_constructiontestT.osm"), true);
-
-
 }
 
 Model prepareCurveOrTableIndexVariable_EMS() {
@@ -1642,9 +1632,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorCurveOrTableIndexVariable_EMS) {
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ReverseTranslator reverseTranslator;
-  Model m= reverseTranslator.translateWorkspace(workspace);
+  Model m = reverseTranslator.translateWorkspace(workspace);
   // m.save(toPath("./EMS_curvetestT.osm"), true);
-
 }
 
 Model prepareMeteredOutputVariable_EMS(bool withUID) {
@@ -1672,7 +1661,7 @@ Model prepareMeteredOutputVariable_EMS(bool withUID) {
   if (withUID) {
     // add metered output variable using UID
     _meteredoutvar = EnergyManagementSystemMeteredOutputVariable(model, toString(OATdbSensor.handle()));
-  } else  {
+  } else {
     // add metered output variable via name
     _meteredoutvar = EnergyManagementSystemMeteredOutputVariable(model, OATdbSensor.name().get());
   }
@@ -1691,7 +1680,7 @@ Model prepareMeteredOutputVariable_EMS(bool withUID) {
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable_EMS) {
 
-  Model model = prepareMeteredOutputVariable_EMS(false); // Via name and not UID
+  Model model = prepareMeteredOutputVariable_EMS(false);  // Via name and not UID
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -1720,7 +1709,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable_EMS) {
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable2_EMS) {
 
-  Model model = prepareMeteredOutputVariable_EMS(true); // Via UID (not name)
+  Model model = prepareMeteredOutputVariable_EMS(true);  // Via UID (not name)
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
@@ -1750,14 +1739,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorMeteredOutputVariable2_EMS) {
 
 TEST_F(EnergyPlusFixture, ReverseTranslatorMeteredOutputVariable_EMS) {
 
-  Model model = prepareMeteredOutputVariable_EMS(true); // Via UID (not name)
+  Model model = prepareMeteredOutputVariable_EMS(true);  // Via UID (not name)
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ReverseTranslator reverseTranslator;
-  Model m= reverseTranslator.translateWorkspace(workspace);
+  Model m = reverseTranslator.translateWorkspace(workspace);
   // m.save(toPath("./EMS_meteredoutvarT.osm"), true);
-
 }
 
 Model prepareTrendVariable2_EMS() {
@@ -1822,9 +1810,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorTrendVariable2_EMS) {
   Workspace workspace = forwardTranslator.translateModel(model);
 
   ReverseTranslator reverseTranslator;
-  Model m= reverseTranslator.translateWorkspace(workspace);
+  Model m = reverseTranslator.translateWorkspace(workspace);
   // m.save(toPath("./EMS_TrendVariable2T.osm"), true);
-
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorSensorDelete_EMS) {
@@ -1870,7 +1857,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorSensorDelete_EMS) {
 
   //model.save(toPath("./EMS_SensorDelete.osm"), true);
   //workspaceDelete.save(toPath("./EMS_SensorDelete.idf"), true);
-
 }
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
   //use spacetype with multiple spaces
@@ -1892,23 +1878,26 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
   //This is the EDD file for the spaceload actuators for this model so far
   /*
   EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 PEOPLE 1,People,Number of People,[each]
-  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 LIGHTS 1,Lights,Electric Power Level,[W]
-  EnergyManagementSystem:Actuator Available,PRINTER,ElectricEquipment,Electric Power Level,[W]
-  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 ELECTRIC EQUIPMENT 1,ElectricEquipment,Electric Power Level,[W]
+  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 LIGHTS 1,Lights,Electricity Rate,[W]
+  EnergyManagementSystem:Actuator Available,PRINTER,ElectricEquipment,Electricity Rate,[W]
+  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 ELECTRIC EQUIPMENT 1,ElectricEquipment,Electricity Rate,[W]
   */
 
   //actuator settings
   //std::string ComponentType = "ElectricEquipment";
   std::string ComponentType = "Lights";
-  std::string ControlType = "Electric Power Level";
+  std::string ControlType = "Electricity Rate";
   EnergyManagementSystemActuator lightsActuator(lights[0], ComponentType, ControlType, space4.get());
   EXPECT_EQ(space4.get().thermalZone().get().handle(), lightsActuator.zoneName().get().handle());
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
   //expect no warning since we are using the zoneName API
-  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings(),
+                               {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
+                                "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
+
   //expect 1 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
@@ -1929,7 +1918,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Lights_EMS) {
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
   //use spacetype with multiple spaces
   //this is the issue with spaceloads if there are multiple spaces using a spaceload defined in a spaceType
-  //the zonelist is created from the spaceType name, and the zones in the list are the space.thermalzone names
+  //the zonelist (or spaceList if m_excludeSpaceTranslation = false) is created from the spaceType name,
+  //and the zones in the list are the space.thermalzone names
 
   Model model = exampleModel();
   OutputEnergyManagementSystem oems = model.getUniqueModelObject<OutputEnergyManagementSystem>();
@@ -1946,38 +1936,68 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_exampleModel_Electric_EMS) {
   //This is the EDD file for the spaceload actuators for this model so far
   /*
   EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 PEOPLE 1,People,Number of People,[each]
-  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 LIGHTS 1,Lights,Electric Power Level,[W]
-  EnergyManagementSystem:Actuator Available,PRINTER,ElectricEquipment,Electric Power Level,[W]
-  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 ELECTRIC EQUIPMENT 1,ElectricEquipment,Electric Power Level,[W]
+  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 LIGHTS 1,Lights,Electricity Rate,[W]
+  EnergyManagementSystem:Actuator Available,PRINTER,ElectricEquipment,Electricity Rate,[W]
+  EnergyManagementSystem:Actuator Available,THERMAL ZONE 1 ELECTRIC EQUIPMENT 1,ElectricEquipment,Electricity Rate,[W]
   */
 
   //actuator settings
   std::string ComponentType = "ElectricEquipment";
-  std::string ControlType = "Electric Power Level";
+  std::string ControlType = "Electricity Rate";
   //actuator on first electricEquipment object
   EnergyManagementSystemActuator electricActuator0(electricEquipment[0], ComponentType, ControlType);
   //actuator on second electricEquipment object
   EnergyManagementSystemActuator electricActuator1(electricEquipment[1], ComponentType, ControlType);
 
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //expect no warning
-  EXPECT_EQ(0u, forwardTranslator.warnings().size());
-  //expect 2 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
-  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
-  std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
-  OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-  OptionalString name1 = objects[1].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
-  std::string test0 = "Printer";
-  std::string test1 = "Thermal Zone 1 Electric Equipment 1";
-  //EXPECT_EQ(name0.get(),test0);
-  //EXPECT_EQ(name1.get(), test1);
-  EXPECT_TRUE((name0.get() == test0) || (name0.get() == test1));
-  EXPECT_TRUE((name1.get() == test0) || (name1.get() == test1));
-  //model.save(toPath("./EMS_actuator_exampleModel_electric.osm"), true);
-  //workspace.save(toPath("./EMS_actuator_exampleModel_electric.idf"), true);
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
+    //expect no warning since we are using the zoneName API
+    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings()));
+    //expect 2 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+    OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
+    OptionalString name1 = objects[1].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
+    std::string test0 = "Printer";
+    std::string test1 = "Thermal Zone 1 Electric Equipment 1";
+    //EXPECT_EQ(name0.get(),test0);
+    //EXPECT_EQ(name1.get(), test1);
+    EXPECT_TRUE((name0.get() == test0) || (name0.get() == test1));
+    EXPECT_TRUE((name1.get() == test0) || (name1.get() == test1));
+    //model.save(toPath("./EMS_actuator_exampleModel_electric.osm"), true);
+    //workspace.save(toPath("./EMS_actuator_exampleModel_electric.idf"), true);
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    // TODO:
+    forwardTranslator.setExcludeSpaceTranslation(false);
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
+    //expect no warning since we are using the zoneName API
+    EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings(),
+                                 {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
+                                  "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
+    //expect 2 actuator since there are 4 spaces with the same spaceType but only 1 will get translated right now
+    EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
+
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator);
+    OptionalString name0 = objects[0].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
+    OptionalString name1 = objects[1].getString(EnergyManagementSystem_ActuatorFields::ActuatedComponentUniqueName);
+    std::string test0 = "Printer";
+    std::string test1 = "Thermal Zone 1 Electric Equipment 1";
+
+    EXPECT_TRUE((name0.get() == test0) || (name0.get() == test1));
+    EXPECT_TRUE((name1.get() == test0) || (name1.get() == test1));
+  }
 }
 TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API_EMS) {
   //use spacetype with multiple spaces
@@ -2004,25 +2024,25 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API_EMS) {
   spaces[2].setThermalZone(thermalZone3);
   spaces[3].setThermalZone(thermalZone4);
   //This is the EDD file for the spaceload actuators for this model so far
-/*
+  /*
 EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 PEOPLE 1, People, Number of People, [each]
 EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 PEOPLE 1, People, Number of People, [each]
 EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 PEOPLE 1, People, Number of People, [each]
 EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 PEOPLE 1, People, Number of People, [each]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
 */
 
-//actuator settings
+  //actuator settings
   std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
+  std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
   EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, spaces[2]);
   //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
@@ -2039,9 +2059,10 @@ EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //expect no warning since we are using the zoneNAme API
-  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
+  //expect no warning since we are using the zoneName API
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings()));
+
   //expect 2 actuators
   EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
@@ -2090,20 +2111,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API2_EMS) {
   EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 PEOPLE 1, People, Number of People, [each]
   EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 PEOPLE 1, People, Number of People, [each]
   EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 PEOPLE 1, People, Number of People, [each]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
   */
 
   //actuator settings
   std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
+  std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
   EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, thermalZone2);
   //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
@@ -2120,9 +2141,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API2_EMS) {
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //expect no warning since we are using the zoneNAme API
-  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
+  //expect no warning since we are using the zoneName API
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings()));
   //expect 2 actuators
   EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
 
@@ -2172,20 +2193,20 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 PEOPLE 1, People, Number of People, [each]
   EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 PEOPLE 1, People, Number of People, [each]
   EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 PEOPLE 1, People, Number of People, [each]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
-  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electric Power Level, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 LIGHTS 1, Lights, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, PRINTER, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 1 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 2 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 3 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
+  EnergyManagementSystem : Actuator Available, THERMAL ZONE 4 ELECTRIC EQUIPMENT 1, ElectricEquipment, Electricity Rate, [W]
   */
 
   //actuator settings
   std::string lightsComponentType = "Lights";
-  std::string lightsControlType = "Electric Power Level";
+  std::string lightsControlType = "Electricity Rate";
   //create actuator zone2
   EnergyManagementSystemActuator lightsActuator2(lights[0], lightsComponentType, lightsControlType, thermalZone2);
   //EXPECT_EQ(lightsControlType, lightsActuator2.actuatedComponentControlType());
@@ -2212,9 +2233,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
 
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
-  //expect no warning since we are using the zoneNAme API
-  EXPECT_EQ(0u, forwardTranslator.warnings().size());
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.errors()));
+  //expect no warning since we are using the zoneName API
+  EXPECT_TRUE(checkLogMessages(0, forwardTranslator.warnings(),
+                               {"Object of type 'OS:ThermalZone' and named 'Thermal Zone 1' has DaylightingControl Objects assigned. The interior "
+                                "walls between Spaces will be merged. Make sure these are correctly Matched!"}));
+
   //expect 2 actuators
   //ACTUATORS WILL STILL GET TRANSLATED WITH BLANK ZONENAME FIELD
   EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::EnergyManagementSystem_Actuator).size());
@@ -2227,7 +2251,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   std::string test3 = "Thermal Zone 3 Lights 1";
   std::string test4 = "Thermal Zone 4 Lights 1";
   //ONLY 1 TZ in model now so should default back to that
-  EXPECT_EQ(name0.get(),test1);
+  EXPECT_EQ(name0.get(), test1);
   EXPECT_EQ(name1.get(), test1);
   //EXPECT_TRUE((name0.get() == test1) || (name0.get() == test2) || (name0.get() == test3) || (name0.get() == test4));
   //EXPECT_TRUE((name1.get() == test1) || (name1.get() == test2) || (name1.get() == test3) || (name1.get() == test4));
@@ -2235,43 +2259,40 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorActuator_API3_EMS) {
   //workspace.save(toPath("./EMS_actuator_exampleModel2_electric.idf"), true);
 }
 
-
 TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
 
   // This is a dummy IDF snippet
   // Its goal is to test the various weird formatting pattern that would still work with E+
-  std::string emsSnippet(
-"  EnergyManagementSystem:ProgramCallingManager,\n"
-"    ProgCaller,              !- Name\n"
-"    EndOfZoneTimestepBeforeZoneReporting,  !- EnergyPlus Model Calling Point\n"
-"    DummyProg;               !- Program Name 1\n"
-"\n"
-"  EnergyManagementSystem:GlobalVariable,\n"
-"    Var1;                     !- Erl Variable 1 Name\n"
-"\n"
-"  EnergyManagementSystem:GlobalVariable,\n"
-"    Var2;                     !- Erl Variable 1 Name\n"
-"\n"
-"  EnergyManagementSystem:Subroutine,\n"
-"    DummySubRoutine,\n"
-"    Set Var2 = 10,\n"
-"    SET Var2 =Var2*10^4;\n"
-"\n"
-"  EnergyManagementSystem:Program,\n"
-"    DummyProg,                 !- Name\n"
-"    IF (Hour >= 6) &&(Hour <22),\n"
-"      SET  Var1= 1 *0.1* Hour,\n"
-"    ELSE,\n"
-"        SET Var1 = 2-0.1*Hour,\n"
-"    ENDIF,\n"
-"    RUN DummySubRoutine,\n"
-"    IF (Var1) >=2,\n"
-"        SeT Var2 = Var2,\n"
-"        Set Var2 =Var2* 2,\n"
-"    ELSE,\n"
-"        set Var2 = Var1,\n"
-"    ENDIF;\n"
-  );
+  std::string emsSnippet("  EnergyManagementSystem:ProgramCallingManager,\n"
+                         "    ProgCaller,              !- Name\n"
+                         "    EndOfZoneTimestepBeforeZoneReporting,  !- EnergyPlus Model Calling Point\n"
+                         "    DummyProg;               !- Program Name 1\n"
+                         "\n"
+                         "  EnergyManagementSystem:GlobalVariable,\n"
+                         "    Var1;                     !- Erl Variable 1 Name\n"
+                         "\n"
+                         "  EnergyManagementSystem:GlobalVariable,\n"
+                         "    Var2;                     !- Erl Variable 1 Name\n"
+                         "\n"
+                         "  EnergyManagementSystem:Subroutine,\n"
+                         "    DummySubRoutine,\n"
+                         "    Set Var2 = 10,\n"
+                         "    SET Var2 =Var2*10^4;\n"
+                         "\n"
+                         "  EnergyManagementSystem:Program,\n"
+                         "    DummyProg,                 !- Name\n"
+                         "    IF (Hour >= 6) &&(Hour <22),\n"
+                         "      SET  Var1= 1 *0.1* Hour,\n"
+                         "    ELSE,\n"
+                         "        SET Var1 = 2-0.1*Hour,\n"
+                         "    ENDIF,\n"
+                         "    RUN DummySubRoutine,\n"
+                         "    IF (Var1) >=2,\n"
+                         "        SeT Var2 = Var2,\n"
+                         "        Set Var2 =Var2* 2,\n"
+                         "    ELSE,\n"
+                         "        set Var2 = Var1,\n"
+                         "    ENDIF;\n");
 
   std::istringstream is(emsSnippet);
   OptionalIdfFile idfFile = IdfFile::load(is, IddFileType::EnergyPlus);
@@ -2283,7 +2304,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
   EXPECT_EQ(2u, model.getModelObjects<EnergyManagementSystemGlobalVariable>().size());
   EXPECT_EQ(1u, model.getModelObjects<EnergyManagementSystemProgramCallingManager>().size());
 
-    /**
+  /**
    * Test the EMS Program
    * */
   std::vector<EnergyManagementSystemProgram> emsProgs = model.getModelObjects<EnergyManagementSystemProgram>();
@@ -2296,7 +2317,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
 
   int n1(0), n2(0), n3(0), n0(0);
 
-  for (const ModelObject& refObj: refObjs) {
+  for (const ModelObject& refObj : refObjs) {
     std::string oname = refObj.name().get();
     if (oname == "Var1") {
       ++n1;
@@ -2317,7 +2338,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
   // Nothing Else
   EXPECT_EQ(0, n0);
 
-
   /**
    * Test the subroutine
    * */
@@ -2332,7 +2352,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
   n2 = 0;
   n0 = 0;
 
-  for (const ModelObject& refObj: refObjs) {
+  for (const ModelObject& refObj : refObjs) {
     std::string oname = refObj.name().get();
     if (oname == "Var2") {
       ++n2;
@@ -2348,5 +2368,4 @@ TEST_F(EnergyPlusFixture, ReverseTranslatorProgramWeirdFormatting_EMS) {
   // Save for Debug
   // inWorkspace.save(toPath("./EMS_WeirdFormat.idf"), true);
   // model.save(toPath("./EMS_WeirdFormat.osm"), true);
-
 }

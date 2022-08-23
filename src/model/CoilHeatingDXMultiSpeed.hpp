@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,157 +37,197 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Curve;
-class CoilHeatingDXMultiSpeedStageData;
-class AirflowNetworkEquivalentDuct;
+  class Schedule;
+  class Curve;
+  class CoilHeatingDXMultiSpeedStageData;
+  class AirflowNetworkEquivalentDuct;
 
-namespace detail {
+  namespace detail {
 
-  class CoilHeatingDXMultiSpeed_Impl;
+    class CoilHeatingDXMultiSpeed_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** CoilHeatingDXMultiSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:DX:MultiSpeed'. */
-class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** CoilHeatingDXMultiSpeed is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:DX:MultiSpeed'. */
+  class MODEL_API CoilHeatingDXMultiSpeed : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit CoilHeatingDXMultiSpeed(const Model& model);
+    explicit CoilHeatingDXMultiSpeed(const Model& model);
 
-  virtual ~CoilHeatingDXMultiSpeed() {}
+    virtual ~CoilHeatingDXMultiSpeed() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> defrostStrategyValues();
+    static std::vector<std::string> defrostStrategyValues();
 
-  static std::vector<std::string> defrostControlValues();
+    static std::vector<std::string> defrostControlValues();
 
-  static std::vector<std::string> fuelTypeValues();
+    static std::vector<std::string> fuelTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
+    double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-  boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor() const;
+    boost::optional<double> outdoorDryBulbTemperaturetoTurnOnCompressor() const;
 
-  double crankcaseHeaterCapacity() const;
+    double crankcaseHeaterCapacity() const;
 
-  double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
+    double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation() const;
 
-  boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
+    boost::optional<Curve> defrostEnergyInputRatioFunctionofTemperatureCurve() const;
 
-  double maximumOutdoorDryBulbTemperatureforDefrostOperation() const;
+    double maximumOutdoorDryBulbTemperatureforDefrostOperation() const;
 
-  std::string defrostStrategy() const;
+    std::string defrostStrategy() const;
 
-  std::string defrostControl() const;
+    std::string defrostControl() const;
 
-  double defrostTimePeriodFraction() const;
+    double defrostTimePeriodFraction() const;
 
-  boost::optional<double> resistiveDefrostHeaterCapacity() const;
+    boost::optional<double> resistiveDefrostHeaterCapacity() const;
 
-  bool isResistiveDefrostHeaterCapacityAutosized() const;
+    bool isResistiveDefrostHeaterCapacityAutosized() const;
 
-  bool applyPartLoadFractiontoSpeedsGreaterthan1() const;
+    bool applyPartLoadFractiontoSpeedsGreaterthan1() const;
 
-  std::string fuelType() const;
+    std::string fuelType() const;
 
-  int regionnumberforCalculatingHSPF() const;
+    int regionnumberforCalculatingHSPF() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
+    bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-  bool setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor);
+    bool setOutdoorDryBulbTemperaturetoTurnOnCompressor(double outdoorDryBulbTemperaturetoTurnOnCompressor);
 
-  void resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
+    void resetOutdoorDryBulbTemperaturetoTurnOnCompressor();
 
-  bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
+    bool setCrankcaseHeaterCapacity(double crankcaseHeaterCapacity);
 
-  bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
+    bool setMaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation(double maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation);
 
-  bool setDefrostEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
+    bool setDefrostEnergyInputRatioFunctionofTemperatureCurve(const Curve& curve);
 
-  void resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
+    void resetDefrostEnergyInputRatioFunctionofTemperatureCurve();
 
-  bool setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation);
+    bool setMaximumOutdoorDryBulbTemperatureforDefrostOperation(double maximumOutdoorDryBulbTemperatureforDefrostOperation);
 
-  bool setDefrostStrategy(std::string defrostStrategy);
+    bool setDefrostStrategy(std::string defrostStrategy);
 
-  bool setDefrostControl(std::string defrostControl);
+    bool setDefrostControl(std::string defrostControl);
 
-  bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
+    bool setDefrostTimePeriodFraction(double defrostTimePeriodFraction);
 
-  bool setResistiveDefrostHeaterCapacity(double resistiveDefrostHeaterCapacity);
+    bool setResistiveDefrostHeaterCapacity(double resistiveDefrostHeaterCapacity);
 
-  void autosizeResistiveDefrostHeaterCapacity();
+    void autosizeResistiveDefrostHeaterCapacity();
 
-  bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
+    bool setApplyPartLoadFractiontoSpeedsGreaterthan1(bool applyPartLoadFractiontoSpeedsGreaterthan1);
 
-  bool setFuelType(std::string fuelType);
+    bool setFuelType(std::string fuelType);
 
-  bool setRegionnumberforCalculatingHSPF(int regionnumberforCalculatingHSPF);
+    bool setRegionnumberforCalculatingHSPF(int regionnumberforCalculatingHSPF);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  /** Return the performance data for each stage. **/
-  std::vector<CoilHeatingDXMultiSpeedStageData> stages() const;
+    /** Return the performance data for each stage. **/
+    std::vector<CoilHeatingDXMultiSpeedStageData> stages() const;
 
-  /** Add a new stage after all of the existing stages **/
-  bool addStage(const CoilHeatingDXMultiSpeedStageData& stage);
+    unsigned numberOfStages() const;
 
-  /** Remove a stage **/
-  void removeStage(const CoilHeatingDXMultiSpeedStageData& stage);
+    /*
+   * Get the index of a given CoilHeatingDXMultiSpeedStageData (1-indexed)
+   */
+    boost::optional<unsigned> stageIndex(const CoilHeatingDXMultiSpeedStageData& stage) const;
 
-  /** Remove all stages **/
-  void removeAllStages();
+    /*
+   * Add a new stage after all of the existing stages.
+   */
+    bool addStage(const CoilHeatingDXMultiSpeedStageData& stage);
 
-  /** Creates a new equivalent duct object if an object is not already attached. */
-  AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
-  
-  /** Returns the attached equivalent duct object, if any. */
-  boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
+    /*
+   * Add a new CoilHeatingDXMultiSpeedStageData to the list which a given index (1 to x).
+   * Internally calls addStage then setStageIndex, see remarks there
+   */
+    bool addStage(const CoilHeatingDXMultiSpeedStageData& stage, unsigned index);
 
-  boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const ;
+    /*
+   * You can shuffle the priority of a given CoilHeatingDXMultiSpeedStageData after having added it
+   * If index is below 1, it's reset to 1.
+   * If index is greater than the number of stages, will reset to last
+   */
+    bool setStageIndex(const CoilHeatingDXMultiSpeedStageData& stage, unsigned index);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::CoilHeatingDXMultiSpeed_Impl ImplType;
+    /*
+   * Set all stages using a list of CoilHeatingDXMultiSpeedStageDatas
+   * Internally calls addStage, and will return the global status, but will continue trying if there are problems
+   * (eg: if you make a vector larger than the number of accepted stages, or a vector that has a stage from another model, the valid stages will be
+   * added indeed, but it'll eventually return false)
+   */
+    bool setStages(const std::vector<CoilHeatingDXMultiSpeedStageData>& stages);
 
-  explicit CoilHeatingDXMultiSpeed(std::shared_ptr<detail::CoilHeatingDXMultiSpeed_Impl> impl);
+    /*
+   * Removes all CoilHeatingDXMultiSpeedStageDatas in this object
+   */
+    void removeAllStages();
 
-  friend class detail::CoilHeatingDXMultiSpeed_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.CoilHeatingDXMultiSpeed");
-};
+    /*
+   * Remove the given CoilHeatingDXMultiSpeedStageData from this object's stages
+   */
+    bool removeStage(const CoilHeatingDXMultiSpeedStageData& stage);
 
-/** \relates CoilHeatingDXMultiSpeed*/
-typedef boost::optional<CoilHeatingDXMultiSpeed> OptionalCoilHeatingDXMultiSpeed;
+    /*
+   * Remove the CoilHeatingDXMultiSpeedStageData at the given index (1-indexed)
+   */
+    bool removeStage(unsigned index);
 
-/** \relates CoilHeatingDXMultiSpeed*/
-typedef std::vector<CoilHeatingDXMultiSpeed> CoilHeatingDXMultiSpeedVector;
+    /** Creates a new equivalent duct object if an object is not already attached. */
+    AirflowNetworkEquivalentDuct getAirflowNetworkEquivalentDuct(double length, double diameter);
 
-} // model
-} // openstudio
+    /** Returns the attached equivalent duct object, if any. */
+    boost::optional<AirflowNetworkEquivalentDuct> airflowNetworkEquivalentDuct() const;
 
-#endif // MODEL_COILHEATINGDXMULTISPEED_HPP
+    boost::optional<double> autosizedResistiveDefrostHeaterCapacity() const;
+
+    //@}
+   protected:
+    /// @cond
+    typedef detail::CoilHeatingDXMultiSpeed_Impl ImplType;
+
+    explicit CoilHeatingDXMultiSpeed(std::shared_ptr<detail::CoilHeatingDXMultiSpeed_Impl> impl);
+
+    friend class detail::CoilHeatingDXMultiSpeed_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.CoilHeatingDXMultiSpeed");
+  };
+
+  /** \relates CoilHeatingDXMultiSpeed*/
+  typedef boost::optional<CoilHeatingDXMultiSpeed> OptionalCoilHeatingDXMultiSpeed;
+
+  /** \relates CoilHeatingDXMultiSpeed*/
+  typedef std::vector<CoilHeatingDXMultiSpeed> CoilHeatingDXMultiSpeedVector;
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_COILHEATINGDXMULTISPEED_HPP

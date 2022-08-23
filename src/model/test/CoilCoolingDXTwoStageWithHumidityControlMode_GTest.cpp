@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,26 +37,23 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode)
-{
+TEST_F(ModelFixture, CoilCoolingDXTwoStageWithHumidityControlMode) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     CoilCoolingDXTwoStageWithHumidityControlMode coil(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      CoilCoolingDXTwoStageWithHumidityControlMode coil(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
 /* Verifies that the CoilPerformanceDXCooling objects are indeed cloned too
  * Address https://github.com/NREL/OpenStudio/issues/2253
  */
-TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode_CloneCoilPerf)
-{
+TEST_F(ModelFixture, CoilCoolingDXTwoStageWithHumidityControlMode_CloneCoilPerf) {
   Model m;
   Model m2;
 
@@ -81,7 +78,8 @@ TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode_CloneCoilPerf)
   ASSERT_EQ(coil.normalModeStage1CoilPerformance().get().handle(), coilClone.normalModeStage1CoilPerformance().get().handle());
   ASSERT_EQ(coil.normalModeStage1Plus2CoilPerformance().get().handle(), coilClone.normalModeStage1Plus2CoilPerformance().get().handle());
   ASSERT_EQ(coil.dehumidificationMode1Stage1CoilPerformance().get().handle(), coilClone.dehumidificationMode1Stage1CoilPerformance().get().handle());
-  ASSERT_EQ(coil.dehumidificationMode1Stage1Plus2CoilPerformance().get().handle(), coilClone.dehumidificationMode1Stage1Plus2CoilPerformance().get().handle());
+  ASSERT_EQ(coil.dehumidificationMode1Stage1Plus2CoilPerformance().get().handle(),
+            coilClone.dehumidificationMode1Stage1Plus2CoilPerformance().get().handle());
 
   // Clone in other model
   //
@@ -95,9 +93,23 @@ TEST_F(ModelFixture,CoilCoolingDXTwoStageWithHumidityControlMode_CloneCoilPerf)
   EXPECT_EQ(4u, m2.getModelObjects<CoilPerformanceDXCooling>().size());
 
   // Name comparison (can't do handle, not the same model, and actual clone)
-  ASSERT_EQ(coil.normalModeStage1CoilPerformance().get().name(), coilClone2.normalModeStage1CoilPerformance().get().name());
-  ASSERT_EQ(coil.normalModeStage1Plus2CoilPerformance().get().name(), coilClone2.normalModeStage1Plus2CoilPerformance().get().name());
-  ASSERT_EQ(coil.dehumidificationMode1Stage1CoilPerformance().get().name(), coilClone2.dehumidificationMode1Stage1CoilPerformance().get().name());
-  ASSERT_EQ(coil.dehumidificationMode1Stage1Plus2CoilPerformance().get().name(), coilClone2.dehumidificationMode1Stage1Plus2CoilPerformance().get().name());
+  ASSERT_EQ(coil.normalModeStage1CoilPerformance().get().nameString(), coilClone2.normalModeStage1CoilPerformance().get().nameString());
+  ASSERT_EQ(coil.normalModeStage1Plus2CoilPerformance().get().nameString(), coilClone2.normalModeStage1Plus2CoilPerformance().get().nameString());
+  ASSERT_EQ(coil.dehumidificationMode1Stage1CoilPerformance().get().nameString(),
+            coilClone2.dehumidificationMode1Stage1CoilPerformance().get().nameString());
+  ASSERT_EQ(coil.dehumidificationMode1Stage1Plus2CoilPerformance().get().nameString(),
+            coilClone2.dehumidificationMode1Stage1Plus2CoilPerformance().get().nameString());
+}
 
+TEST_F(ModelFixture, CoilCoolingDXTwoStageWithHumidityControlMode_MinOATCompressor) {
+  Model m;
+
+  CoilCoolingDXTwoStageWithHumidityControlMode coil(m);
+
+  // #3976 - Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  // IDD Default
+  EXPECT_EQ(-25.0, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
+  // There are no IDD limits, so everything should work
+  EXPECT_TRUE(coil.setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-5));
+  EXPECT_EQ(-5, coil.minimumOutdoorDryBulbTemperatureforCompressorOperation());
 }

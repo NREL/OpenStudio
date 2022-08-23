@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,41 +42,38 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateSetpointManagerSingleZoneOneStageCooling( SetpointManagerSingleZoneOneStageCooling & modelObject )
-{
-  std::string s;
-  double n;
-  boost::optional<Node> node;
+  boost::optional<IdfObject>
+    ForwardTranslator::translateSetpointManagerSingleZoneOneStageCooling(SetpointManagerSingleZoneOneStageCooling& modelObject) {
+    std::string s;
+    double n;
+    boost::optional<Node> node;
 
-  // Name
-  IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SingleZone_OneStageCooling, modelObject);
+    // Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SetpointManager_SingleZone_OneStageCooling, modelObject);
 
-  // CoolingStageOnSupplyAirSetpointTemperature
-  n = modelObject.coolingStageOnSupplyAirSetpointTemperature();
-  idfObject.setDouble(SetpointManager_SingleZone_OneStageCoolingFields::CoolingStageOnSupplyAirSetpointTemperature,n);
+    // CoolingStageOnSupplyAirSetpointTemperature
+    n = modelObject.coolingStageOnSupplyAirSetpointTemperature();
+    idfObject.setDouble(SetpointManager_SingleZone_OneStageCoolingFields::CoolingStageOnSupplyAirSetpointTemperature, n);
 
-  // CoolingStageOffSupplyAirSetpointTemperature
-  n = modelObject.coolingStageOffSupplyAirSetpointTemperature();
-  idfObject.setDouble(SetpointManager_SingleZone_OneStageCoolingFields::CoolingStageOffSupplyAirSetpointTemperature,n);
+    // CoolingStageOffSupplyAirSetpointTemperature
+    n = modelObject.coolingStageOffSupplyAirSetpointTemperature();
+    idfObject.setDouble(SetpointManager_SingleZone_OneStageCoolingFields::CoolingStageOffSupplyAirSetpointTemperature, n);
 
-  // ControlZoneName
-  boost::optional<ThermalZone> thermalZone = modelObject.controlZone();
-  if( thermalZone )
-  {
-    idfObject.setString(SetpointManager_SingleZone_OneStageCoolingFields::ControlZoneName,thermalZone->name().get());
+    // ControlZoneName
+    boost::optional<ThermalZone> thermalZone = modelObject.controlZone();
+    if (thermalZone) {
+      idfObject.setString(SetpointManager_SingleZone_OneStageCoolingFields::ControlZoneName, thermalZone->name().get());
+    }
+
+    // SetpointNodeorNodeListName
+    node = modelObject.setpointNode();
+    if (node) {
+      idfObject.setString(SetpointManager_SingleZone_OneStageCoolingFields::SetpointNodeorNodeListName, node->name().get());
+    }
+
+    return idfObject;
   }
 
-  // SetpointNodeorNodeListName
-  node = modelObject.setpointNode();
-  if( node )
-  {
-    idfObject.setString(SetpointManager_SingleZone_OneStageCoolingFields::SetpointNodeorNodeListName,node->name().get());
-  }
+}  // namespace energyplus
 
-  return idfObject;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

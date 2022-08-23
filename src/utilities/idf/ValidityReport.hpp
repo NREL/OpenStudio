@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,7 +39,8 @@
 
 namespace openstudio {
 
-class UTILITIES_API ValidityReport {
+class UTILITIES_API ValidityReport
+{
  public:
   /** @name Construction */
   //@{
@@ -48,7 +49,7 @@ class UTILITIES_API ValidityReport {
   ValidityReport(StrictnessLevel level);
 
   /** Object-level constructor. */
-  ValidityReport(StrictnessLevel level,const IdfObject& object);
+  ValidityReport(StrictnessLevel level, const IdfObject& object);
 
   /** Copy constructor. Resets .nextError() in the cloned report. */
   ValidityReport(const ValidityReport& other);
@@ -61,7 +62,7 @@ class UTILITIES_API ValidityReport {
   /** @name Inspection */
   //@{
 
-  /** The strictness level of the report. StrictnessLevel::None is for opening files,
+  /** The strictness level of the report. StrictnessLevel::Minimal is for opening files,
    *  StricnessLevel::Draft is for active modeling, and StrictnessLevel::Final is for models
    *  ready to simulate. */
   StrictnessLevel level() const;
@@ -92,13 +93,13 @@ class UTILITIES_API ValidityReport {
   Scope m_scope;
   boost::optional<IddObjectType> m_objectType;
   std::string m_objectName;
-  std::set<DataError,DataErrorLess> m_errors;
-  std::set<DataError,DataErrorLess>::const_iterator m_currentError;
+  std::set<DataError, DataErrorLess> m_errors;
+  std::set<DataError, DataErrorLess>::const_iterator m_currentError;
 };
 
 /** Ostream operator for ValidityReport. \relates ValidityReport */
-UTILITIES_API std::ostream& operator<<(std::ostream& os,const ValidityReport& report);
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const ValidityReport& report);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_VALIDITYREPORT_HPP
+#endif  // UTILITIES_IDF_VALIDITYREPORT_HPP

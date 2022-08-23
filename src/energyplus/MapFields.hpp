@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,18 +37,17 @@
 
 namespace openstudio {
 
-  class IdfObject;
+class IdfObject;
 
 namespace energyplus {
 
   // map fields directly from old object to new one, must have same exact fields
-  ENERGYPLUS_API  bool mapFields(const IdfObject& oldObject, IdfObject& newObject);
+  ENERGYPLUS_API bool mapFields(const IdfObject& oldObject, IdfObject& newObject);
 
   // map fields directly from old object to new one
-  ENERGYPLUS_API  bool mapFields(const IdfObject& oldObject, IdfObject& newObject, std::vector<std::pair<unsigned, unsigned> > fieldMap);
+  ENERGYPLUS_API bool mapFields(const IdfObject& oldObject, IdfObject& newObject, std::vector<std::pair<unsigned, unsigned>> fieldMap);
 
+}  // namespace energyplus
+}  // namespace openstudio
 
-} // energyplus
-} // openstudio
-
-#endif // ENERGYPLUS_MAPFIELDS_HPP
+#endif  // ENERGYPLUS_MAPFIELDS_HPP

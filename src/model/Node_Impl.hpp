@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,115 +36,111 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
-class SetpointManagerSingleZoneReheat;
-class SetpointManagerMixedAir;
-class SetpointManagerScheduled;
-class SetpointManagerFollowOutdoorAirTemperature;
-class SetpointManagerOutdoorAirReset;
-class SetpointManagerWarmest;
-class SetpointManager;
-class AirflowNetworkDistributionNode;
+  class Node;
+  class SetpointManagerSingleZoneReheat;
+  class SetpointManagerMixedAir;
+  class SetpointManagerScheduled;
+  class SetpointManagerFollowOutdoorAirTemperature;
+  class SetpointManagerOutdoorAirReset;
+  class SetpointManagerWarmest;
+  class SetpointManager;
+  class AirflowNetworkDistributionNode;
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API Node_Impl : public StraightComponent_Impl {
-   public:
+    class MODEL_API Node_Impl : public StraightComponent_Impl
+    {
+     public:
+      // constructor
+      Node_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // constructor
-    Node_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // construct from workspace
+      Node_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    Node_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-              Model_Impl* model,
-              bool keepHandle);
+      // copy constructor
+      Node_Impl(const Node_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // copy constructor
-    Node_Impl(const Node_Impl& other, Model_Impl* model, bool keepHandle);
+      // virtual destructor
+      virtual ~Node_Impl();
 
-    // virtual destructor
-    virtual ~Node_Impl();
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent>& prev) override;
 
-    virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent> & prev) override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      std::vector<SetpointManager> setpointManagers() const;
 
-    std::vector<SetpointManager> setpointManagers() const;
+      void removeSetpointManagers();
 
-    void removeSetpointManagers();
+      void addSetpointManager(SetpointManagerSingleZoneReheat& singleZoneReheat);
 
-    void addSetpointManager(SetpointManagerSingleZoneReheat & singleZoneReheat);
+      void removeSetpointManagerSingleZoneReheat();
 
-    void removeSetpointManagerSingleZoneReheat();
+      boost::optional<SetpointManagerSingleZoneReheat> getSetpointManagerSingleZoneReheat() const;
 
-    boost::optional<SetpointManagerSingleZoneReheat> getSetpointManagerSingleZoneReheat() const;
+      void addSetpointManager(SetpointManagerMixedAir& mixedAir);
 
-    void  addSetpointManager(SetpointManagerMixedAir & mixedAir);
+      void removeSetpointManagerMixedAir();
 
-    void removeSetpointManagerMixedAir();
+      boost::optional<SetpointManagerMixedAir> getSetpointManagerMixedAir() const;
 
-    boost::optional<SetpointManagerMixedAir> getSetpointManagerMixedAir() const;
+      boost::optional<SetpointManagerScheduled> setpointManagerScheduled() const;
 
-    boost::optional<SetpointManagerScheduled> setpointManagerScheduled() const;
+      void addSetpointManager(SetpointManagerScheduled& setPointManager);
 
-    void addSetpointManager( SetpointManagerScheduled & setPointManager );
+      void removeSetpointManagerScheduled();
 
-    void removeSetpointManagerScheduled();
+      boost::optional<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperature() const;
 
-    boost::optional<SetpointManagerFollowOutdoorAirTemperature> setpointManagerFollowOutdoorAirTemperature() const;
+      void addSetpointManager(SetpointManagerFollowOutdoorAirTemperature& setPointManager);
 
-    void addSetpointManager( SetpointManagerFollowOutdoorAirTemperature & setPointManager );
+      void removeSetpointManagerFollowOutdoorAirTemperature();
 
-    void removeSetpointManagerFollowOutdoorAirTemperature();
+      void addSetpointManager(SetpointManagerOutdoorAirReset& setPointManager);
 
-    void addSetpointManager( SetpointManagerOutdoorAirReset & setPointManager );
+      void removeSetpointManagerOutdoorAirReset();
 
-    void removeSetpointManagerOutdoorAirReset();
+      boost::optional<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirReset() const;
 
-    boost::optional<SetpointManagerOutdoorAirReset> setpointManagerOutdoorAirReset() const;
+      void addSetpointManagerWarmest(SetpointManagerWarmest& setPointManager);
 
-    void addSetpointManagerWarmest( SetpointManagerWarmest & setPointManager );
+      void removeSetpointManagerWarmest();
 
-    void removeSetpointManagerWarmest();
+      boost::optional<SetpointManagerWarmest> setpointManagerWarmest() const;
 
-    boost::optional<SetpointManagerWarmest> setpointManagerWarmest() const;
+      std::vector<ModelObject> children() const override;
 
-    std::vector<ModelObject> children() const override;
+      bool isRemovable() const override;
 
-    bool isRemovable() const override;
+      std::vector<IdfObject> remove() override;
 
-    std::vector<IdfObject> remove() override;
+      bool addToNode(Node& node) override;
 
-    bool addToNode(Node & node) override;
+      ModelObject clone(Model model) const override;
 
-    ModelObject clone(Model model) const override;
+      bool isConnected(const ModelObject& modelObject);
 
-    bool isConnected(const ModelObject & modelObject);
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
 
-    AirflowNetworkDistributionNode getAirflowNetworkDistributionNode();
+      boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
 
-    boost::optional<AirflowNetworkDistributionNode> airflowNetworkDistributionNode() const;
+     private:
+      REGISTER_LOGGER("openstudio.model.Node");
+    };
 
-   private:
+  }  // namespace detail
 
-    REGISTER_LOGGER("openstudio.model.Node");
+}  // namespace model
+}  // namespace openstudio
 
-  };
-
-} //close detail
-
-} //close model
-} //close OpenStudio
-
-#endif // MODEL_NODE_IMPL_HPP
+#endif  // MODEL_NODE_IMPL_HPP

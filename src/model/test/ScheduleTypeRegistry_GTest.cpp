@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,11 +51,9 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_ClassNames) {
   std::stringstream ss;
   for (const std::string& className : classesWithSchedules) {
     EXPECT_FALSE(ScheduleTypeRegistry::instance().getScheduleTypesByClassName(className).empty());
-    ss << "  " << className << std::endl;
+    ss << "  " << className << '\n';
   }
-  LOG(Trace,"The following ModelObject classes reference at least one schedule:"
-      << std::endl << ss.str());
-
+  LOG(Trace, "The following ModelObject classes reference at least one schedule:" << '\n' << ss.str());
 }
 
 TEST_F(ModelFixture, ScheduleTypeRegistry_UseInSetSchedule) {
@@ -78,8 +76,8 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_UseInSetSchedule) {
   EXPECT_FALSE(ok);
 
   // set Availablity schedule type limits
-  ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType("CoilCoolingDXSingleSpeed","Availability");
-  ScheduleTypeLimits availabilityLimits = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType,model);
+  ScheduleType scheduleType = ScheduleTypeRegistry::instance().getScheduleType("CoilCoolingDXSingleSpeed", "Availability");
+  ScheduleTypeLimits availabilityLimits = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
   ok = schedule.setScheduleTypeLimits(availabilityLimits);
   EXPECT_TRUE(ok);
 
@@ -112,15 +110,15 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_UseInSetSchedule) {
   EXPECT_TRUE(ok);
   ASSERT_TRUE(schedule.scheduleTypeLimits());
   ScheduleTypeLimits lightsLimits = schedule.scheduleTypeLimits().get();
-  EXPECT_EQ("Fractional",lightsLimits.name().get());
+  EXPECT_EQ("Fractional", lightsLimits.name().get());
   ASSERT_TRUE(lightsLimits.numericType());
-  EXPECT_EQ("Continuous",lightsLimits.numericType().get());
-  EXPECT_EQ("Dimensionless",lightsLimits.unitType());
+  EXPECT_EQ("Continuous", lightsLimits.numericType().get());
+  EXPECT_EQ("Dimensionless", lightsLimits.unitType());
   EXPECT_TRUE(lightsLimits.isUnitTypeDefaulted());
   ASSERT_TRUE(lightsLimits.lowerLimitValue());
-  EXPECT_DOUBLE_EQ(0.0,lightsLimits.lowerLimitValue().get());
+  EXPECT_DOUBLE_EQ(0.0, lightsLimits.lowerLimitValue().get());
   ASSERT_TRUE(lightsLimits.upperLimitValue());
-  EXPECT_DOUBLE_EQ(1.0,lightsLimits.upperLimitValue().get());
+  EXPECT_DOUBLE_EQ(1.0, lightsLimits.upperLimitValue().get());
 }
 
 TEST_F(ModelFixture, ScheduleTypeRegistry_GetOrCreateScheduleTypeLimits) {
@@ -194,18 +192,17 @@ TEST_F(ModelFixture, ScheduleTypeRegistry_GetOrCreateScheduleTypeLimits) {
 
   {
     Model model;
-    for (auto className : ScheduleTypeRegistry::instance().classNames()){
-      for (auto scheduleType : ScheduleTypeRegistry::instance().getScheduleTypesByClassName(className)){
+    for (auto className : ScheduleTypeRegistry::instance().classNames()) {
+      for (auto scheduleType : ScheduleTypeRegistry::instance().getScheduleTypesByClassName(className)) {
         ScheduleTypeLimits limits = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
         ScheduleTypeLimits limits2 = ScheduleTypeRegistry::instance().getOrCreateScheduleTypeLimits(scheduleType, model);
 
         EXPECT_EQ(limits.handle(), limits2.handle());
 
-        EXPECT_EQ(ScheduleTypeLimits::units(scheduleType.unitType, false), ScheduleTypeLimits::units(limits.unitType(), false));
+        EXPECT_EQ(ScheduleTypeLimits::units(scheduleType.unitType, false).get(), ScheduleTypeLimits::units(limits.unitType(), false).get());
 
         EXPECT_TRUE(isCompatible(scheduleType, limits));
       }
     }
   }
-
 }

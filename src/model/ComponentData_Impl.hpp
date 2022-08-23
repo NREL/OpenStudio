@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,98 +30,90 @@
 #ifndef MODEL_COMPONENTDATA_IMPL_HPP
 #define MODEL_COMPONENTDATA_IMPL_HPP
 
-
 #include "ComponentData.hpp"
 
-#include "ModelObject_Impl.hpp"
+#include "ResourceObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class MODEL_API ComponentData_Impl : public ModelObject_Impl {
+    class MODEL_API ComponentData_Impl : public ResourceObject_Impl
+    {
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      // constructor
+      ComponentData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
+      // construct from workspace
+      ComponentData_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
+      // copy constructor
+      ComponentData_Impl(const ComponentData_Impl& other, Model_Impl* model, bool keepHandle);
 
+      // virtual destructor
+      virtual ~ComponentData_Impl() {}
 
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    // constructor
-    ComponentData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      virtual IddObjectType iddObjectType() const override;
 
-    // construct from workspace
-    ComponentData_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                       Model_Impl* model,
-                       bool keepHandle);
+      //@}
+      /** @name Getters */
+      //@{
 
-    // copy constructor
-    ComponentData_Impl(const ComponentData_Impl& other, Model_Impl* model, bool keepHandle);
+      UUID uuid() const;
 
-    // virtual destructor
-    virtual ~ComponentData_Impl() {}
+      UUID versionUUID() const;
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      boost::optional<int> creationTimestamp() const;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      boost::optional<int> versionTimestamp() const;
 
-    virtual IddObjectType iddObjectType() const override;
+      /** Equivalent to getComponentObject(0). */
+      ModelObject primaryComponentObject() const;
 
-    //@}
-    /** @name Getters */
-    //@{
+      std::vector<ModelObject> componentObjects() const;
 
-    UUID uuid() const;
+      /** Throws if objectIndex >= numComponentObjects, or if ComponentData has been corrupted. */
+      ModelObject getComponentObject(unsigned objectIndex) const;
 
-    UUID versionUUID() const;
+      //@}
+      /** @name Setters */
+      //@{
 
-    boost::optional<int> creationTimestamp() const;
+      UUID createVersionUUID();
 
-    boost::optional<int> versionTimestamp() const;
-
-    /** Equivalent to getComponentObject(0). */
-    ModelObject primaryComponentObject() const;
-
-    std::vector<ModelObject> componentObjects() const;
-
-    /** Throws if objectIndex >= numComponentObjects, or if ComponentData has been corrupted. */
-    ModelObject getComponentObject(unsigned objectIndex) const;
-
-    //@}
-    /** @name Setters */
-    //@{
-
-    UUID createVersionUUID();
-
-    /** Pushes a new extensible group containing object's data. Not exposed in the public
+      /** Pushes a new extensible group containing object's data. Not exposed in the public
      *  interface. Use with care. */
-    bool registerObject(const ModelObject& object);
+      bool registerObject(const ModelObject& object);
 
-    //@}
-    /** @name Queries */
-    //@{
+      //@}
+      /** @name Queries */
+      //@{
 
-    /** Returns the number of objects in the Component described by this object. Must be >= 1. */
-    unsigned numComponentObjects() const;
+      /** Returns the number of objects in the Component described by this object. Must be >= 1. */
+      unsigned numComponentObjects() const;
 
-    //@}
-   private:
-    REGISTER_LOGGER("openstudio.model.ComponentData");
+      //@}
+     private:
+      REGISTER_LOGGER("openstudio.model.ComponentData");
 
-    boost::optional<ModelObject> primaryComponentObjectAsModelObject() const;
-  };
+      boost::optional<ModelObject> primaryComponentObjectAsModelObject() const;
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COMPONENTDATA_IMPL_HPP
+#endif  // MODEL_COMPONENTDATA_IMPL_HPP

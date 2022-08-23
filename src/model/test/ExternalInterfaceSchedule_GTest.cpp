@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,7 +53,7 @@ TEST_F(ModelFixture, ExternalInterfaceSchedule) {
   schedule.resetExportToBCVTB();
   EXPECT_TRUE(schedule.exportToBCVTB());
 
-  EXPECT_EQ(0.0,schedule.initialValue());
+  EXPECT_EQ(0.0, schedule.initialValue());
   schedule.setInitialValue(-0.1);
   EXPECT_EQ(-0.1, schedule.initialValue());
   EXPECT_TRUE(checkOrAssignScheduleTypeLimits("Lights", "Lighting", schedule));
@@ -74,14 +74,13 @@ TEST_F(ModelFixture, ExternalInterfaceSchedule2) {
   EXPECT_EQ("External Interface Schedule 2", schedule2.nameString());
   boost::optional<std::string> test = schedule2.setName("External Interface Schedule 1");
   //should be equal since the name setting should fail and return the original name
-  EXPECT_EQ(test.get(),schedule2.nameString());
+  EXPECT_EQ(test.get(), schedule2.nameString());
   schedule2.setName("External Interface Schedule 3");
   EXPECT_EQ("External Interface Schedule 3", schedule2.nameString());
 
-
   ScheduleTypeLimits stl(model);
   EXPECT_TRUE(schedule.setScheduleTypeLimits(stl));
-  EXPECT_EQ(stl, schedule.scheduleTypeLimits());
+  EXPECT_EQ(stl, schedule.scheduleTypeLimits().get());
   EXPECT_TRUE(schedule.resetScheduleTypeLimits());
   boost::optional<ScheduleTypeLimits> stl2 = schedule.scheduleTypeLimits();
   EXPECT_TRUE(!stl2.is_initialized());

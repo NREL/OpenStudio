@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,61 +36,61 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class InfraredTransparentMaterial_Impl;
+    class InfraredTransparentMaterial_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** InfraredTransparentMaterial is a ModelPartitionMaterial that wraps the OpenStudio IDD object 'OS:Material:InfraredTransparent'. */
-class MODEL_API InfraredTransparentMaterial : public ModelPartitionMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** InfraredTransparentMaterial is a ModelPartitionMaterial that wraps the OpenStudio IDD object 'OS:Material:InfraredTransparent'. */
+  class MODEL_API InfraredTransparentMaterial : public ModelPartitionMaterial
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit InfraredTransparentMaterial(const Model& model);
+    explicit InfraredTransparentMaterial(const Model& model);
 
-  virtual ~InfraredTransparentMaterial() {}
+    virtual ~InfraredTransparentMaterial() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::InfraredTransparentMaterial_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::InfraredTransparentMaterial_Impl ImplType;
 
-  explicit InfraredTransparentMaterial(std::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl);
+    explicit InfraredTransparentMaterial(std::shared_ptr<detail::InfraredTransparentMaterial_Impl> impl);
 
-  friend class detail::InfraredTransparentMaterial_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.InfraredTransparentMaterial");
-};
+    friend class detail::InfraredTransparentMaterial_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.InfraredTransparentMaterial");
+  };
 
-/** \relates InfraredTransparentMaterial*/
-typedef boost::optional<InfraredTransparentMaterial> OptionalInfraredTransparentMaterial;
+  /** \relates InfraredTransparentMaterial*/
+  typedef boost::optional<InfraredTransparentMaterial> OptionalInfraredTransparentMaterial;
 
-/** \relates InfraredTransparentMaterial*/
-typedef std::vector<InfraredTransparentMaterial> InfraredTransparentMaterialVector;
+  /** \relates InfraredTransparentMaterial*/
+  typedef std::vector<InfraredTransparentMaterial> InfraredTransparentMaterialVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_INFRAREDTRANSPARENTMATERIAL_HPP
-
+#endif  // MODEL_INFRAREDTRANSPARENTMATERIAL_HPP

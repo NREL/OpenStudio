@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,85 +36,84 @@
 namespace openstudio {
 namespace model {
 
-class RenderingColor;
-class Space;
+  class RenderingColor;
+  class Space;
 
-namespace detail {
+  namespace detail {
 
-  class LightingSimulationZone_Impl;
+    class LightingSimulationZone_Impl;
 
-} // detail
+  }  // namespace detail
 
-// ETH@20120328 Should LightingSimulationZone be parented by Building,
-// similar to ThermalZone?
+  // ETH@20120328 Should LightingSimulationZone be parented by Building,
+  // similar to ThermalZone?
 
-/** LightingSimulationZone is a ModelObject that wraps the OpenStudio IDD object 'OS_LightingSimulationZone'. */
-class MODEL_API LightingSimulationZone : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** LightingSimulationZone is a ModelObject that wraps the OpenStudio IDD object 'OS_LightingSimulationZone'. */
+  class MODEL_API LightingSimulationZone : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit LightingSimulationZone(const Model& model);
+    explicit LightingSimulationZone(const Model& model);
 
-  virtual ~LightingSimulationZone() {}
+    virtual ~LightingSimulationZone() {}
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
+    //@}
 
-  /// Returns the rendering color.
-  boost::optional<RenderingColor> renderingColor() const;
+    /// Returns the rendering color.
+    boost::optional<RenderingColor> renderingColor() const;
 
-  /// Sets the rendering color.
-  bool setRenderingColor(const RenderingColor& renderingColor);
+    /// Sets the rendering color.
+    bool setRenderingColor(const RenderingColor& renderingColor);
 
-  /// Resets the rendering color.
-  void resetRenderingColor();
+    /// Resets the rendering color.
+    void resetRenderingColor();
 
-  /// Returns all spaces in this lighting simulation zone.
-  std::vector<Space> spaces() const;
+    /// Returns all spaces in this lighting simulation zone.
+    std::vector<Space> spaces() const;
 
-  /// Adds a spaces to this lighting simulation zone.
-  bool addSpace(const Space& space);
+    /// Adds a spaces to this lighting simulation zone.
+    bool addSpace(const Space& space);
 
-  /// Resets spaces in this lighting simulation zone.
-  void resetSpaces();
+    /// Resets spaces in this lighting simulation zone.
+    void resetSpaces();
 
- protected:
-  /// @cond
-  typedef detail::LightingSimulationZone_Impl ImplType;
+   protected:
+    /// @cond
+    typedef detail::LightingSimulationZone_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  explicit LightingSimulationZone(std::shared_ptr<detail::LightingSimulationZone_Impl> impl);
+    explicit LightingSimulationZone(std::shared_ptr<detail::LightingSimulationZone_Impl> impl);
 
-  /// @endcond
- private:
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.LightingSimulationZone");
+  };
 
-  REGISTER_LOGGER("openstudio.model.LightingSimulationZone");
-};
+  /** \relates LightingSimulationZone*/
+  typedef boost::optional<LightingSimulationZone> OptionalLightingSimulationZone;
 
-/** \relates LightingSimulationZone*/
-typedef boost::optional<LightingSimulationZone> OptionalLightingSimulationZone;
+  /** \relates LightingSimulationZone*/
+  typedef std::vector<LightingSimulationZone> LightingSimulationZoneVector;
 
-/** \relates LightingSimulationZone*/
-typedef std::vector<LightingSimulationZone> LightingSimulationZoneVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_LIGHTINGSIMULATIONZONE_HPP
-
+#endif  // MODEL_LIGHTINGSIMULATIONZONE_HPP

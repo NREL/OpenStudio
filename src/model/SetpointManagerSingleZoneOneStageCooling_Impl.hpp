@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,89 +36,83 @@
 namespace openstudio {
 namespace model {
 
-class ThermalZone;
-class Node;
+  class ThermalZone;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** SetpointManagerSingleZoneOneStageCooling_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerSingleZoneOneStageCooling.*/
-  class MODEL_API SetpointManagerSingleZoneOneStageCooling_Impl : public SetpointManager_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** SetpointManagerSingleZoneOneStageCooling_Impl is a SetpointManager_Impl that is the implementation class for SetpointManagerSingleZoneOneStageCooling.*/
+    class MODEL_API SetpointManagerSingleZoneOneStageCooling_Impl : public SetpointManager_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SetpointManagerSingleZoneOneStageCooling_Impl(const IdfObject& idfObject,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      SetpointManagerSingleZoneOneStageCooling_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerSingleZoneOneStageCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      SetpointManagerSingleZoneOneStageCooling_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SetpointManagerSingleZoneOneStageCooling_Impl(const SetpointManagerSingleZoneOneStageCooling_Impl& other,
-                                                  Model_Impl* model,
-                                                  bool keepHandle);
+      SetpointManagerSingleZoneOneStageCooling_Impl(const SetpointManagerSingleZoneOneStageCooling_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SetpointManagerSingleZoneOneStageCooling_Impl() {}
+      virtual ~SetpointManagerSingleZoneOneStageCooling_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    virtual std::string controlVariable() const override;
+      virtual std::string controlVariable() const override;
 
-    double coolingStageOnSupplyAirSetpointTemperature() const;
+      double coolingStageOnSupplyAirSetpointTemperature() const;
 
-    double coolingStageOffSupplyAirSetpointTemperature() const;
+      double coolingStageOffSupplyAirSetpointTemperature() const;
 
-    boost::optional<ThermalZone> controlZone() const;
+      boost::optional<ThermalZone> controlZone() const;
 
-    virtual boost::optional<Node> setpointNode() const override;
+      virtual boost::optional<Node> setpointNode() const override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    virtual bool setControlVariable(const std::string& controlVariable) override;
+      virtual bool setControlVariable(const std::string& controlVariable) override;
 
-    bool setCoolingStageOnSupplyAirSetpointTemperature(double coolingStageOnSupplyAirSetpointTemperature);
+      bool setCoolingStageOnSupplyAirSetpointTemperature(double coolingStageOnSupplyAirSetpointTemperature);
 
-    bool setCoolingStageOffSupplyAirSetpointTemperature(double coolingStageOffSupplyAirSetpointTemperature);
+      bool setCoolingStageOffSupplyAirSetpointTemperature(double coolingStageOffSupplyAirSetpointTemperature);
 
-    bool setControlZone(const ThermalZone& thermalZone);
+      bool setControlZone(const ThermalZone& thermalZone);
 
-    void resetControlZone();
+      void resetControlZone();
 
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+     protected:
+     private:
+      virtual bool setSetpointNode(const Node& node) override;
 
-    //@}
-   protected:
-   private:
-    virtual bool setSetpointNode(const Node& node) override;
+      virtual void resetSetpointNode() override;
 
-    virtual void resetSetpointNode() override;
+      REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneOneStageCooling");
+    };
 
-    REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneOneStageCooling");
-  };
+  }  // namespace detail
 
-} // detail
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SETPOINTMANAGERSINGLEZONEONESTAGECOOLING_IMPL_HPP
+#endif  // MODEL_SETPOINTMANAGERSINGLEZONEONESTAGECOOLING_IMPL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,13 +36,13 @@
 namespace openstudio {
 namespace model {
 
-class SpaceLoadInstance;
+  class SpaceLoadInstance;
 
-namespace detail{
-  class SpaceLoadDefinition_Impl;
-}
+  namespace detail {
+    class SpaceLoadDefinition_Impl;
+  }
 
-/** SpaceLoadDefinition is an abstract class derived from ResourceObject. \link SpaceLoadDefinition
+  /** SpaceLoadDefinition is an abstract class derived from ResourceObject. \link SpaceLoadDefinition
  *  SpaceLoadDefinitions \endlink describe internal loads in a generic way that can be used by
  *  multiple \link Space Spaces \endlink or \link SpaceType SpaceTypes \endlink. For instance, a
  *  LightsDefinition might define the appropriate amount of task lighting for a workstation in
@@ -51,61 +51,59 @@ namespace detail{
  *  objects. (Different usage patterns of the same amount of task lighting, or different numbers of
  *  coffee makers, can be defined on a space-by-space basis, for instance.)
  */
-class MODEL_API SpaceLoadDefinition : public ResourceObject {
- public:
-  virtual ~SpaceLoadDefinition() {}
+  class MODEL_API SpaceLoadDefinition : public ResourceObject
+  {
+   public:
+    virtual ~SpaceLoadDefinition() {}
 
-  /** Returns all instances of this definition. */
-  std::vector<SpaceLoadInstance> instances() const;
+    /** Returns all instances of this definition. */
+    std::vector<SpaceLoadInstance> instances() const;
 
-  // ETH@20140113 - No units mark-up here. What is the pattern we are trying to move toward?
-  // (Programmatically available, but string-based, right?)
+    // ETH@20140113 - No units mark-up here. What is the pattern we are trying to move toward?
+    // (Programmatically available, but string-based, right?)
 
-  /** Returns the floor area associated with instances of this space load definition.
+    /** Returns the floor area associated with instances of this space load definition.
   If two instances are in the same space then that floor area will be double counted.
   If two instances used in the same space type then that floor area will be double counted.
   Space and SpaceLoadInstance multipliers are included in the result. **/
-  double floorArea() const;
+    double floorArea() const;
 
-  /** Returns the number of instances of this space load.
+    /** Returns the number of instances of this space load.
   Space and SpaceLoadInstance multipliers are included in the result **/
-  int quantity() const;
+    int quantity() const;
 
- protected:
+   protected:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /// Constructs a new SpaceLoadDefinition object in the model.
+    SpaceLoadDefinition(IddObjectType type, const Model& model);
 
-  /// Constructs a new SpaceLoadDefinition object in the model.
-  SpaceLoadDefinition(IddObjectType type,const Model& model);
+    //@}
 
-  //@}
+    /// @cond
 
-  /// @cond
+    typedef detail::SpaceLoadDefinition_Impl ImplType;
 
-  typedef detail::SpaceLoadDefinition_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::SpaceLoadDefinition_Impl;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::SpaceLoadDefinition_Impl;
+    explicit SpaceLoadDefinition(std::shared_ptr<detail::SpaceLoadDefinition_Impl> impl);
 
-  explicit SpaceLoadDefinition(std::shared_ptr<detail::SpaceLoadDefinition_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.SpaceLoadDefinition");
 
- private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.SpaceLoadDefinition");
+  /** \relates SpaceLoadDefinition */
+  typedef boost::optional<SpaceLoadDefinition> OptionalSpaceLoadDefinition;
 
-  /// @endcond
+  /** \relates SpaceLoadDefinition */
+  typedef std::vector<SpaceLoadDefinition> SpaceLoadDefinitionVector;
 
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates SpaceLoadDefinition */
-typedef boost::optional<SpaceLoadDefinition> OptionalSpaceLoadDefinition;
-
-/** \relates SpaceLoadDefinition */
-typedef std::vector<SpaceLoadDefinition> SpaceLoadDefinitionVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SPACELOADDEFINITION_HPP
+#endif  // MODEL_SPACELOADDEFINITION_HPP

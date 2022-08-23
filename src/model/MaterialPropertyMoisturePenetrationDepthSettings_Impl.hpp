@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,109 +37,110 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  class Material;
 
-  /** MaterialPropertyMoisturePenetrationDepthSettings_Impl is a ModelObject_Impl that is the implementation class for MaterialPropertyMoisturePenetrationDepthSettings.*/
-  class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings_Impl : public ModelObject_Impl {
+  namespace detail {
 
-   public:
+    /** MaterialPropertyMoisturePenetrationDepthSettings_Impl is a ModelObject_Impl that is the implementation class for MaterialPropertyMoisturePenetrationDepthSettings.*/
+    class MODEL_API MaterialPropertyMoisturePenetrationDepthSettings_Impl : public ModelObject_Impl
+    {
 
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    MaterialPropertyMoisturePenetrationDepthSettings_Impl(const IdfObject& idfObject,
-                                                          Model_Impl* model,
-                                                          bool keepHandle);
+      MaterialPropertyMoisturePenetrationDepthSettings_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    MaterialPropertyMoisturePenetrationDepthSettings_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                          Model_Impl* model,
-                                                          bool keepHandle);
+      MaterialPropertyMoisturePenetrationDepthSettings_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                            bool keepHandle);
 
-    MaterialPropertyMoisturePenetrationDepthSettings_Impl(const MaterialPropertyMoisturePenetrationDepthSettings_Impl& other,
-                                                          Model_Impl* model,
-                                                          bool keepHandle);
+      MaterialPropertyMoisturePenetrationDepthSettings_Impl(const MaterialPropertyMoisturePenetrationDepthSettings_Impl& other, Model_Impl* model,
+                                                            bool keepHandle);
 
-    virtual ~MaterialPropertyMoisturePenetrationDepthSettings_Impl() {}
+      virtual ~MaterialPropertyMoisturePenetrationDepthSettings_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string materialName() const;
+      std::string materialName() const;
 
-    double waterVaporDiffusionResistanceFactor() const;
+      Material material() const;
 
-    double moistureEquationCoefficientA() const;
+      double waterVaporDiffusionResistanceFactor() const;
 
-    double moistureEquationCoefficientB() const;
+      double moistureEquationCoefficientA() const;
 
-    double moistureEquationCoefficientC() const;
+      double moistureEquationCoefficientB() const;
 
-    double moistureEquationCoefficientD() const;
+      double moistureEquationCoefficientC() const;
 
-    std::vector<double> moistureEquationCoefficients() const;
+      double moistureEquationCoefficientD() const;
 
-    boost::optional<double> surfaceLayerPenetrationDepth();
+      std::vector<double> moistureEquationCoefficients() const;
 
-    bool isSurfaceLayerPenetrationDepthAutocalculated();
+      boost::optional<double> surfaceLayerPenetrationDepth();
 
-    boost::optional<double> deepLayerPenetrationDepth();
+      bool isSurfaceLayerPenetrationDepthAutocalculated();
 
-    bool isDeepLayerPenetrationDepthAutocalculated();
+      boost::optional<double> deepLayerPenetrationDepth();
 
-    double coatingLayerThickness() const;
+      bool isDeepLayerPenetrationDepthAutocalculated();
 
-    double coatingLayerWaterVaporDiffusionResistanceFactor() const;
+      double coatingLayerThickness() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      double coatingLayerWaterVaporDiffusionResistanceFactor() const;
 
-    bool setWaterVaporDiffusionResistanceFactor(double waterVaporDiffusionResistanceFactor);
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setMoistureEquationCoefficientA(double moistureEquationCoefficientA);
+      bool setWaterVaporDiffusionResistanceFactor(double waterVaporDiffusionResistanceFactor);
 
-    bool setMoistureEquationCoefficientB(double moistureEquationCoefficientB);
+      bool setMoistureEquationCoefficientA(double moistureEquationCoefficientA);
 
-    bool setMoistureEquationCoefficientC(double moistureEquationCoefficientC);
+      bool setMoistureEquationCoefficientB(double moistureEquationCoefficientB);
 
-    bool setMoistureEquationCoefficientD(double moistureEquationCoefficientD);
+      bool setMoistureEquationCoefficientC(double moistureEquationCoefficientC);
 
-    bool setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB, double moistureEquationCoefficientC, double moistureEquationCoefficientD);
+      bool setMoistureEquationCoefficientD(double moistureEquationCoefficientD);
 
-    bool setSurfaceLayerPenetrationDepth(double surfaceLayerPenetrationDepth);
+      bool setMoistureEquationCoefficients(double moistureEquationCoefficientA, double moistureEquationCoefficientB,
+                                           double moistureEquationCoefficientC, double moistureEquationCoefficientD);
 
-    void autocalculateSurfaceLayerPenetrationDepth();
+      bool setSurfaceLayerPenetrationDepth(double surfaceLayerPenetrationDepth);
 
-    bool setDeepLayerPenetrationDepth(double deepLayerPenetrationDepth);
+      void autocalculateSurfaceLayerPenetrationDepth();
 
-    void autocalculateDeepLayerPenetrationDepth();
+      bool setDeepLayerPenetrationDepth(double deepLayerPenetrationDepth);
 
-    bool setCoatingLayerThickness(double coatingLayerThickness);
+      void autocalculateDeepLayerPenetrationDepth();
 
-    bool setCoatingLayerWaterVaporDiffusionResistanceFactor(double coatingLayerWaterVaporDiffusionResistanceFactor);
+      bool setCoatingLayerThickness(double coatingLayerThickness);
 
-    //@}
-    /** @name Other */
-    //@{
+      bool setCoatingLayerWaterVaporDiffusionResistanceFactor(double coatingLayerWaterVaporDiffusionResistanceFactor);
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.MaterialPropertyMoisturePenetrationDepthSettings");
-  };
+      //@}
+      /** @name Other */
+      //@{
 
-} // detail
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.MaterialPropertyMoisturePenetrationDepthSettings");
+    };
 
-} // model
-} // openstudio
+  }  // namespace detail
 
-#endif // MODEL_MATERIALPROPERTYMOISTUREPENETRATIONDEPTHSETTINGS_IMPL_HPP
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_MATERIALPROPERTYMOISTUREPENETRATIONDEPTHSETTINGS_IMPL_HPP

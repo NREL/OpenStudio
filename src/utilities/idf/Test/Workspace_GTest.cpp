@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -67,16 +67,12 @@
 
 #include <resources.hxx>
 
-
-
-
 using namespace openstudio;
 
 #include <iostream>
 
-TEST_F(IdfFixture, IdfFile_Workspace_DefaultConstructor)
-{
-  Workspace workspaceNone(StrictnessLevel::None);
+TEST_F(IdfFixture, IdfFile_Workspace_DefaultConstructor) {
+  Workspace workspaceNone(StrictnessLevel::Minimal);
   EXPECT_TRUE(workspaceNone.isValid());
   // Make sure the default is IddFileType::EnergyPlus
   EXPECT_EQ(IddFileType::EnergyPlus, workspaceNone.iddFileType().value());
@@ -93,115 +89,116 @@ TEST_F(IdfFixture, IdfFile_Workspace_DefaultConstructor)
   EXPECT_ANY_THROW(Workspace workspaceFinal(StrictnessLevel::Final));
 }
 
-TEST_F(IdfFixture, IdfFile_Workspace_Roundtrip)
-{
+TEST_F(IdfFixture, IdfFile_Workspace_Roundtrip) {
   ASSERT_TRUE(epIdfFile.objects().size() > 0);
-  Workspace workspace(epIdfFile,StrictnessLevel::None);
+  Workspace workspace(epIdfFile, StrictnessLevel::Minimal);
 
   // make sure this also creates an IddFileType::EnergyPlus
   EXPECT_EQ(IddFileType::EnergyPlus, workspace.iddFileType().value());
 
   IdfFile copyOfIdfFile = workspace.toIdfFile();
   // until == available, print out for diff
-  openstudio::path outPath = outDir/toPath("passedThroughWorkspace.idf");
-  openstudio::filesystem::ofstream outFile(outPath); ASSERT_TRUE(outFile?true:false);
-  copyOfIdfFile.print(outFile); outFile.close();
+  openstudio::path outPath = outDir / toPath("passedThroughWorkspace.idf");
+  openstudio::filesystem::ofstream outFile(outPath);
+  ASSERT_TRUE(outFile ? true : false);
+  copyOfIdfFile.print(outFile);
+  outFile.close();
 }
 
-TEST_F(IdfFixture, ObjectHasURL)
-{
-  Workspace workspace(epIdfFile,StrictnessLevel::None);
+TEST_F(IdfFixture, ObjectHasURL) {
+  Workspace workspace(epIdfFile, StrictnessLevel::Minimal);
   workspace.addObject(IdfObject(IddObjectType::Schedule_File));
   workspace.addObject(IdfObject(IddObjectType::Zone));
 
-  std::vector<WorkspaceObject> urls  = workspace.objectsWithURLFields();
+  std::vector<WorkspaceObject> urls = workspace.objectsWithURLFields();
   ASSERT_EQ(static_cast<unsigned>(1), urls.size());
   EXPECT_EQ(IddObjectType::Schedule_File, urls[0].iddObject().type().value());
 }
 
-TEST_F(IdfFixture, ObjectGettersAndSetters_StrictnessNone)
-{
-  Workspace workspace(epIdfFile,StrictnessLevel::None);
-  workspace.setStrictnessLevel(StrictnessLevel::None);
+TEST_F(IdfFixture, ObjectGettersAndSetters_StrictnessMinimal) {
+  Workspace workspace(epIdfFile, StrictnessLevel::Minimal);
+  workspace.setStrictnessLevel(StrictnessLevel::Minimal);
 
   // getters before any modifications
   WorkspaceObjectVector result;
   WorkspaceObjectVector temp;
   // get all methods
   result = workspace.objects();
-  LOG(Info,"There are " << result.size() << " objects in the Workspace.");
+  LOG(Info, "There are " << result.size() << " objects in the Workspace.");
   // get matching methods
   result = workspace.getObjectsByName("C5-1");
   ASSERT_TRUE(result.size() > 0);
-  EXPECT_EQ(static_cast<unsigned>(1),result.size());
+  EXPECT_EQ(static_cast<unsigned>(1), result.size());
   EXPECT_TRUE(result[0].iddObject().type() == IddObjectType::BuildingSurface_Detailed);
   result = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
-  EXPECT_EQ(static_cast<unsigned>(22),result.size());
+  EXPECT_EQ(static_cast<unsigned>(22), result.size());
   result = workspace.getObjectsByReference("CustomMeterNames");
-  LOG(Info,"There are " << result.size() << " objects that can be accessed with \\object-list CustomMeterNames.");
-
+  LOG(Info, "There are " << result.size() << " objects that can be accessed with \\object-list CustomMeterNames.");
 }
 
-TEST_F(IdfFixture, Workspace_StateCheckingAndRepair_ValidityCheckingAndReports)
-{
+TEST_F(IdfFixture, Workspace_StateCheckingAndRepair_ValidityCheckingAndReports) {
   ASSERT_TRUE(epIdfFile.objects().size() > 0);
-  Workspace workspace(epIdfFile, StrictnessLevel::None);
+  Workspace workspace(epIdfFile, StrictnessLevel::Minimal);
 
-  ValidityReport report = workspace.validityReport(StrictnessLevel::None);
-  EXPECT_EQ(static_cast<unsigned>(0),report.numErrors());
-  EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
-  EXPECT_TRUE(workspace.setStrictnessLevel(StrictnessLevel::None));
-  EXPECT_EQ(StrictnessLevel::None, workspace.strictnessLevel().value());
+  ValidityReport report = workspace.validityReport(StrictnessLevel::Minimal);
+  EXPECT_EQ(static_cast<unsigned>(0), report.numErrors());
+  EXPECT_TRUE(workspace.isValid(StrictnessLevel::Minimal));
+  EXPECT_TRUE(workspace.setStrictnessLevel(StrictnessLevel::Minimal));
+  EXPECT_EQ(StrictnessLevel::Minimal, workspace.strictnessLevel().value());
 
   report = workspace.validityReport(StrictnessLevel::Draft);
-  EXPECT_EQ(static_cast<unsigned>(0),report.numErrors());
+  EXPECT_EQ(static_cast<unsigned>(0), report.numErrors());
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Draft));
   EXPECT_TRUE(workspace.setStrictnessLevel(StrictnessLevel::Draft));
   EXPECT_EQ(StrictnessLevel::Draft, workspace.strictnessLevel().value());
 
   report = workspace.validityReport(StrictnessLevel::Final);
-  EXPECT_EQ(static_cast<unsigned>(0),report.numErrors());
+  EXPECT_EQ(static_cast<unsigned>(0), report.numErrors());
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Final));
   EXPECT_TRUE(workspace.setStrictnessLevel(StrictnessLevel::Final));
   EXPECT_EQ(StrictnessLevel::Final, workspace.strictnessLevel().value());
 }
 
-TEST_F(IdfFixture, Workspace_StateCheckingAndRepair_ValidityCheckingAndReports_2)
-{
+TEST_F(IdfFixture, Workspace_StateCheckingAndRepair_ValidityCheckingAndReports_2) {
   ASSERT_TRUE(epIdfFile.objects().size() > 0);
-  Workspace workspace(epIdfFile, StrictnessLevel::None);
+  Workspace workspace(epIdfFile, StrictnessLevel::Minimal);
   ASSERT_TRUE(workspace.objects().size() > 0);
 
   ValidityReport report = workspace.validityReport(StrictnessLevel::Final);
-  EXPECT_EQ(static_cast<unsigned>(0),report.numErrors());
+  EXPECT_EQ(static_cast<unsigned>(0), report.numErrors());
   if (report.numErrors() > 0) {
-    LOG(Error,"ValidityCheckingAndReports_2 invalid at StrictnessLevel Final. The ValidityReport "
-        "follows." << std::endl << report);
+    LOG(Error, "ValidityCheckingAndReports_2 invalid at StrictnessLevel Final. The ValidityReport "
+               "follows."
+                 << '\n'
+                 << report);
   }
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Final));
   EXPECT_TRUE(workspace.setStrictnessLevel(StrictnessLevel::Final));
   EXPECT_EQ(StrictnessLevel::Final, workspace.strictnessLevel().value());
 
   report = workspace.validityReport(StrictnessLevel::Draft);
-  EXPECT_EQ(static_cast<unsigned>(0),report.numErrors());
+  EXPECT_EQ(static_cast<unsigned>(0), report.numErrors());
   if (report.numErrors() > 0) {
-    LOG(Error,"ValidityCheckingAndReports_2 invalid at StrictnessLevel Draft. The ValidityReport "
-        "follows." << std::endl << report);
+    LOG(Error, "ValidityCheckingAndReports_2 invalid at StrictnessLevel Draft. The ValidityReport "
+               "follows."
+                 << '\n'
+                 << report);
   }
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Draft));
   EXPECT_TRUE(workspace.setStrictnessLevel(StrictnessLevel::Draft));
   EXPECT_EQ(StrictnessLevel::Draft, workspace.strictnessLevel().value());
 
-  report = workspace.validityReport(StrictnessLevel::None);
-  EXPECT_EQ(static_cast<unsigned>(0),report.numErrors());
+  report = workspace.validityReport(StrictnessLevel::Minimal);
+  EXPECT_EQ(static_cast<unsigned>(0), report.numErrors());
   if (report.numErrors() > 0) {
-    LOG(Error,"ValidityCheckingAndReports_2 invalid at StrictnessLevel None. The ValidityReport "
-        "follows." << std::endl << report);
+    LOG(Error, "ValidityCheckingAndReports_2 invalid at StrictnessLevel None. The ValidityReport "
+               "follows."
+                 << '\n'
+                 << report);
   }
-  EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
-  EXPECT_TRUE(workspace.setStrictnessLevel(StrictnessLevel::None));
-  EXPECT_EQ(StrictnessLevel::None, workspace.strictnessLevel().value());
-
+  EXPECT_TRUE(workspace.isValid(StrictnessLevel::Minimal));
+  EXPECT_TRUE(workspace.setStrictnessLevel(StrictnessLevel::Minimal));
+  EXPECT_EQ(StrictnessLevel::Minimal, workspace.strictnessLevel().value());
 }
 
 TEST_F(IdfFixture, Workspace_ValidityCheckingAndReports_3) {
@@ -210,7 +207,7 @@ TEST_F(IdfFixture, Workspace_ValidityCheckingAndReports_3) {
   // remove the building object
   WorkspaceObjectVector buildingObjects = workspace.getObjectsByType(IddObjectType::Building);
   ASSERT_TRUE(buildingObjects.size() > 0);
-  EXPECT_EQ(static_cast<unsigned>(1),buildingObjects.size());
+  EXPECT_EQ(static_cast<unsigned>(1), buildingObjects.size());
   workspace.removeObject(buildingObjects[0].handle());
 
   ValidityReport report = workspace.validityReport(StrictnessLevel::Final);
@@ -219,10 +216,8 @@ TEST_F(IdfFixture, Workspace_ValidityCheckingAndReports_3) {
   OptionalDataError oError = report.nextError();
   while (oError) {
     DataError error = *oError;
-    if ((error.scope() == Scope::Collection) &&
-        (error.type() == DataErrorType::NullAndRequired) &&
-        (error.objectType()) &&
-        (error.objectType().get() == IddObjectType::Building)) {
+    if ((error.scope() == Scope::Collection) && (error.type() == DataErrorType::NullAndRequired) && (error.objectType())
+        && (error.objectType().get() == IddObjectType::Building)) {
       errorFound = true;
       break;
     }
@@ -243,32 +238,31 @@ TEST_F(IdfFixture, Workspace_FollowingPointers) {
   // forward (e.g. lights -> zone)
   WorkspaceObjectVector lights = workspace.getObjectsByType(IddObjectType::Lights);
   EXPECT_EQ(static_cast<size_t>(5), lights.size());
-  for (const WorkspaceObject& light : lights){
+  for (const WorkspaceObject& light : lights) {
 
     // check the light
     EXPECT_TRUE(light.canBeSource());
     EXPECT_TRUE(light.isSource());
 
     // get the zone
-    OptionalWorkspaceObject zone = light.getTarget(LightsFields::ZoneorZoneListName);
+    OptionalWorkspaceObject zone = light.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
     ASSERT_TRUE(zone);
     //EXPECT_TRUE(zone->canBeTarget());
     EXPECT_TRUE(zone->isTarget());
 
     // check that this light is in the zone's sources
     WorkspaceObjectVector sources = zone->sources();
-    WorkspaceObjectVector::const_iterator it = std::find(sources.begin(),sources.end(),light);
+    WorkspaceObjectVector::const_iterator it = std::find(sources.begin(), sources.end(), light);
     EXPECT_TRUE(it != sources.end());
     if (it == sources.end()) {
-      LOG(Warn,"Light object is not a source for its zone. Zone name = " << *(zone->name())
-          << ", and Zone has " << sources.size() << " sources.");
+      LOG(Warn, "Light object is not a source for its zone. Zone name = " << *(zone->name()) << ", and Zone has " << sources.size() << " sources.");
     }
   }
 
   // backward (e.g. zone -> lights)
   WorkspaceObjectVector zones = workspace.getObjectsByType(IddObjectType::Zone);
   EXPECT_EQ(static_cast<size_t>(6), zones.size());
-  for (const WorkspaceObject& zone : zones){
+  for (const WorkspaceObject& zone : zones) {
 
     // check the zone
     //EXPECT_TRUE(zone.canBeTarget());
@@ -280,16 +274,15 @@ TEST_F(IdfFixture, Workspace_FollowingPointers) {
     // all zones except plenum should have one lights object
     OptionalString zoneName = zone.getString(ZoneFields::Name);
     ASSERT_TRUE(zoneName);
-    if (istringEqual(*zoneName, "PLENUM-1")){
+    if (istringEqual(*zoneName, "PLENUM-1")) {
       EXPECT_EQ(static_cast<size_t>(0), zoneLights.size());
-    }else{
+    } else {
       if (zoneLights.size() != 1) {
-        LOG(Debug,"Unexpected number of Lights in Zone " << *zoneName << ". It has "
-            << zoneLights.size() << " Lights objects pointing to it.");
+        LOG(Debug, "Unexpected number of Lights in Zone " << *zoneName << ". It has " << zoneLights.size() << " Lights objects pointing to it.");
       }
       EXPECT_EQ(static_cast<unsigned>(1), zoneLights.size());
       if (!zoneLights.empty()) {
-        OptionalString lightsZoneName = zoneLights[0].getString(LightsFields::ZoneorZoneListName);
+        OptionalString lightsZoneName = zoneLights[0].getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
         ASSERT_TRUE(lightsZoneName);
         EXPECT_EQ(*zoneName, *lightsZoneName);
       }
@@ -311,47 +304,43 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
 
   // Add Lights schedule to workspace.
   std::stringstream ss;
-  ss << "ScheduleTypeLimits, " << std::endl
-     << "Any Number;              !- Name";
-  IdfObject scheduleTypeLimits = IdfObject::load(ss.str(),
-      *(IddFactory::instance().getObject(IddObjectType::ScheduleTypeLimits))).get();
+  ss << "ScheduleTypeLimits, " << '\n' << "Any Number;              !- Name";
+  IdfObject scheduleTypeLimits = IdfObject::load(ss.str(), *(IddFactory::instance().getObject(IddObjectType::ScheduleTypeLimits))).get();
   ss.str("");
-  ss << "Schedule:Compact, " << std::endl
-     << "LIT-SCHED-BldgAvg,       !- Name " << std::endl
-     << "Any Number,              !- Schedule Type Limits Name " << std::endl
-     << "Through: 12/31,          !- Field 1 " << std::endl
-     << "For: Weekdays SummerDesignDay, !- Field 2 " << std::endl
-     << "Until:  4:00,0.05,       !- Field 3 " << std::endl
-     << "Until:  5:00,0.1,        !- Field 5 " << std::endl
-     << "Until:  6:00,0.2,        !- Field 7 " << std::endl
-     << "Until:  7:00,0.4,        !- Field 9 " << std::endl
-     << "Until:  8:00,0.7,        !- Field 11 " << std::endl
-     << "Until:  9:00,0.8,        !- Field 13 " << std::endl
-     << "Until:  17:00,0.85,      !- Field 15 " << std::endl
-     << "Until:  18:00,0.8,       !- Field 17 " << std::endl
-     << "Until:  19:00,0.35,      !- Field 19 " << std::endl
-     << "Until: 24:00,0.1,        !- Field 21 " << std::endl
-     << "For: Saturday,           !- Field 23 " << std::endl
-     << "Until:  5:00,0.05,       !- Field 24 " << std::endl
-     << "Until:  6:00,0.1,        !- Field 26 " << std::endl
-     << "Until:  7:00,0.15,       !- Field 28 " << std::endl
-     << "Until:  9:00,0.21,       !- Field 30 " << std::endl
-     << "Until: 14:00,0.25,       !- Field 32 " << std::endl
-     << "Until: 17:00,0.2,        !- Field 34 " << std::endl
-     << "Until: 18:00,0.15,       !- Field 36 " << std::endl
-     << "Until: 24:00,0.1,        !- Field 38 " << std::endl
-     << "For: Sunday Holidays WinterDesignDay AllOtherDays, !- Field 40 " << std::endl
-     << "Until:  5:00,0.05,       !- Field 41 " << std::endl
-     << "Until:  7:00,0.1,        !- Field 43 " << std::endl
-     << "Until:  17:00,0.15,      !- Field 45 " << std::endl
-     << "Until:  20:00,0.1,       !- Field 47 " << std::endl
+  ss << "Schedule:Compact, " << '\n'
+     << "LIT-SCHED-BldgAvg,       !- Name " << '\n'
+     << "Any Number,              !- Schedule Type Limits Name " << '\n'
+     << "Through: 12/31,          !- Field 1 " << '\n'
+     << "For: Weekdays SummerDesignDay, !- Field 2 " << '\n'
+     << "Until:  4:00,0.05,       !- Field 3 " << '\n'
+     << "Until:  5:00,0.1,        !- Field 5 " << '\n'
+     << "Until:  6:00,0.2,        !- Field 7 " << '\n'
+     << "Until:  7:00,0.4,        !- Field 9 " << '\n'
+     << "Until:  8:00,0.7,        !- Field 11 " << '\n'
+     << "Until:  9:00,0.8,        !- Field 13 " << '\n'
+     << "Until:  17:00,0.85,      !- Field 15 " << '\n'
+     << "Until:  18:00,0.8,       !- Field 17 " << '\n'
+     << "Until:  19:00,0.35,      !- Field 19 " << '\n'
+     << "Until: 24:00,0.1,        !- Field 21 " << '\n'
+     << "For: Saturday,           !- Field 23 " << '\n'
+     << "Until:  5:00,0.05,       !- Field 24 " << '\n'
+     << "Until:  6:00,0.1,        !- Field 26 " << '\n'
+     << "Until:  7:00,0.15,       !- Field 28 " << '\n'
+     << "Until:  9:00,0.21,       !- Field 30 " << '\n'
+     << "Until: 14:00,0.25,       !- Field 32 " << '\n'
+     << "Until: 17:00,0.2,        !- Field 34 " << '\n'
+     << "Until: 18:00,0.15,       !- Field 36 " << '\n'
+     << "Until: 24:00,0.1,        !- Field 38 " << '\n'
+     << "For: Sunday Holidays WinterDesignDay AllOtherDays, !- Field 40 " << '\n'
+     << "Until:  5:00,0.05,       !- Field 41 " << '\n'
+     << "Until:  7:00,0.1,        !- Field 43 " << '\n'
+     << "Until:  17:00,0.15,      !- Field 45 " << '\n'
+     << "Until:  20:00,0.1,       !- Field 47 " << '\n'
      << "Until:  24:00,0.05;      !- Field 49";
-  IdfObject schedule = IdfObject::load(ss.str(),
-      *(IddFactory::instance().getObject(IddObjectType::Schedule_Compact))).get();
+  IdfObject schedule = IdfObject::load(ss.str(), *(IddFactory::instance().getObject(IddObjectType::Schedule_Compact))).get();
   ss.str("");
   IdfObjectVector idfObjectVector;
-  if (!workspace.getObjectByTypeAndName(IddObjectType::ScheduleTypeLimits,*(scheduleTypeLimits.name())))
-  {
+  if (!workspace.getObjectByTypeAndName(IddObjectType::ScheduleTypeLimits, *(scheduleTypeLimits.name()))) {
     idfObjectVector.push_back(scheduleTypeLimits);
   }
   idfObjectVector.push_back(schedule);
@@ -363,7 +352,7 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
   EXPECT_EQ(static_cast<size_t>(6), zones.size());
 
   // for each zone
-  for (const WorkspaceObject& zone : zones){
+  for (const WorkspaceObject& zone : zones) {
 
     // check zone name
     OptionalString zoneName = zone.getString(ZoneFields::Name);
@@ -371,11 +360,11 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
 
     // remove the current lights for this zone
     WorkspaceObjectVector zoneLights = zone.getSources(IddObjectType(IddObjectType::Lights));
-     if (istringEqual(*zoneName, "PLENUM-1")){
+    if (istringEqual(*zoneName, "PLENUM-1")) {
       EXPECT_EQ(static_cast<size_t>(0), zoneLights.size());
-      EXPECT_TRUE(workspace.removeObjects(getHandles<WorkspaceObject>(zoneLights))); // trivially is able to remove the objects
+      EXPECT_TRUE(workspace.removeObjects(getHandles<WorkspaceObject>(zoneLights)));  // trivially is able to remove the objects
       EXPECT_EQ(static_cast<size_t>(0), zone.getSources(IddObjectType(IddObjectType::Lights)).size());
-    }else{
+    } else {
       EXPECT_EQ(static_cast<size_t>(1), zoneLights.size());
       EXPECT_TRUE(workspace.removeObjects(getHandles<WorkspaceObject>(zoneLights)));
       EXPECT_EQ(static_cast<size_t>(0), zone.getSources(IddObjectType(IddObjectType::Lights)).size());
@@ -387,7 +376,7 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
     // make a new lights object with the correct lpd
     IdfObject newLights(IddObjectType::Lights);
     EXPECT_TRUE(newLights.setString(LightsFields::Name, *zoneName + "-Lights"));
-    EXPECT_TRUE(newLights.setString(LightsFields::ZoneorZoneListName, *zoneName));
+    EXPECT_TRUE(newLights.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, *zoneName));
     EXPECT_TRUE(newLights.setString(LightsFields::ScheduleName, schedule.name().get()));
     EXPECT_TRUE(newLights.setString(LightsFields::DesignLevelCalculationMethod, "Watts/Area"));
     EXPECT_TRUE(newLights.setDouble(LightsFields::WattsperZoneFloorArea, lpd));
@@ -404,13 +393,13 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
     ASSERT_TRUE(lightsName);
     EXPECT_TRUE(istringEqual(*zoneName + "-Lights", *lightsName));
 
-    OptionalString lightsZoneName = zoneLights[0].getString(LightsFields::ZoneorZoneListName);
+    OptionalString lightsZoneName = zoneLights[0].getString(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
     ASSERT_TRUE(lightsZoneName);
     EXPECT_EQ(*zoneName, *lightsZoneName);
 
     OptionalString lightsScheduleName = zoneLights[0].getString(LightsFields::ScheduleName);
     ASSERT_TRUE(lightsScheduleName);
-    EXPECT_EQ("LIT-SCHED-BldgAvg",*lightsScheduleName);
+    EXPECT_EQ("LIT-SCHED-BldgAvg", *lightsScheduleName);
 
     OptionalString designLevelCalculationMethod = zoneLights[0].getString(LightsFields::DesignLevelCalculationMethod);
     ASSERT_TRUE(designLevelCalculationMethod);
@@ -424,11 +413,9 @@ TEST_F(IdfFixture, Workspace_Alpha1) {
 
     EXPECT_FALSE(zoneLights[0].getDouble(LightsFields::WattsperPerson));
   }
-
 }
 
-TEST_F(IdfFixture, Workspace_RemoveObject)
-{
+TEST_F(IdfFixture, Workspace_RemoveObject) {
   Workspace workspace(epIdfFile, StrictnessLevel::Draft);
 
   ASSERT_TRUE(epIdfFile.objects().size() > 0);
@@ -443,8 +430,7 @@ TEST_F(IdfFixture, Workspace_RemoveObject)
   EXPECT_FALSE(object.isValid(workspace.strictnessLevel()));
 }
 
-TEST_F(IdfFixture, Workspace_RemoveObject2)
-{
+TEST_F(IdfFixture, Workspace_RemoveObject2) {
   Workspace workspace(epIdfFile, StrictnessLevel::Draft);
 
   ASSERT_TRUE(epIdfFile.objects().size() > 0);
@@ -472,14 +458,13 @@ TEST_F(IdfFixture, Workspace_RemoveObject2)
 }
 
 // remove all zones and make sure no crash
-TEST_F(IdfFixture, Workspace_RemoveAllZones)
-{
+TEST_F(IdfFixture, Workspace_RemoveAllZones) {
   Workspace workspace(epIdfFile, StrictnessLevel::Draft);
 
   WorkspaceObjectVector zones = workspace.getObjectsByType(IddObjectType::Zone);
   EXPECT_EQ(static_cast<size_t>(6), zones.size());
 
-  for (unsigned i = 0; i < zones.size(); ++i){
+  for (unsigned i = 0; i < zones.size(); ++i) {
     EXPECT_TRUE(workspace.removeObject(zones[i].handle()));
   }
 
@@ -487,8 +472,7 @@ TEST_F(IdfFixture, Workspace_RemoveAllZones)
   EXPECT_EQ(static_cast<size_t>(0), zones.size());
 }
 
-TEST_F(IdfFixture, Workspace_SameNameNotReference)
-{
+TEST_F(IdfFixture, Workspace_SameNameNotReference) {
   Workspace workspace(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
   OptionalWorkspaceObject w1 = workspace.addObject(IdfObject(IddObjectType::Output_Meter));
@@ -498,10 +482,10 @@ TEST_F(IdfFixture, Workspace_SameNameNotReference)
 
   OptionalWorkspaceObject w2 = workspace.addObject(IdfObject(IddObjectType::Output_Meter));
   ASSERT_TRUE(w2);
-  OptionalWorkspaceObject object2 = workspace.getObject(w2->handle ());
+  OptionalWorkspaceObject object2 = workspace.getObject(w2->handle());
   ASSERT_TRUE(object2);
 
-  EXPECT_TRUE(w1->handle () != w2->handle ());
+  EXPECT_TRUE(w1->handle() != w2->handle());
 
   ASSERT_TRUE(object1->getString(Output_MeterFields::KeyName));
   EXPECT_EQ("", object1->getString(Output_MeterFields::KeyName).get());
@@ -509,22 +493,21 @@ TEST_F(IdfFixture, Workspace_SameNameNotReference)
   ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
   EXPECT_EQ("", object2->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object1->setString(Output_MeterFields::KeyName, "Gas:Facility"));
+  EXPECT_TRUE(object1->setString(Output_MeterFields::KeyName, "NaturalGas:Facility"));
   ASSERT_TRUE(object1->getString(Output_MeterFields::KeyName));
-  EXPECT_EQ("Gas:Facility", object1->getString(Output_MeterFields::KeyName).get());
+  EXPECT_EQ("NaturalGas:Facility", object1->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "Gas:Building"));
+  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "NaturalGas:Building"));
   ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
-  EXPECT_EQ("Gas:Building", object2->getString(Output_MeterFields::KeyName).get());
+  EXPECT_EQ("NaturalGas:Building", object2->getString(Output_MeterFields::KeyName).get());
 
-  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "Gas:Facility"));
+  EXPECT_TRUE(object2->setString(Output_MeterFields::KeyName, "NaturalGas:Facility"));
   ASSERT_TRUE(object2->getString(Output_MeterFields::KeyName));
-  EXPECT_EQ("Gas:Facility", object2->getString(Output_MeterFields::KeyName).get());
-
+  EXPECT_EQ("NaturalGas:Facility", object2->getString(Output_MeterFields::KeyName).get());
 }
 
 TEST_F(IdfFixture, Workspace_Clone) {
-  Workspace workspace(epIdfFile,StrictnessLevel::None);
+  Workspace workspace(epIdfFile, StrictnessLevel::Minimal);
   Workspace clone = workspace.clone();
   WorkspaceObjectVector wsObjects, cloneObjects;
 
@@ -533,15 +516,15 @@ TEST_F(IdfFixture, Workspace_Clone) {
   cloneObjects = clone.getObjectsByType(IddObjectType::Building);
   ASSERT_TRUE(cloneObjects.size() > static_cast<unsigned>(0));
   cloneObjects[0].setName("MyNewBuildingName");
-  OptionalWorkspaceObject optObject = workspace.getObjectByTypeAndName(IddObjectType::Building,"MyNewBuildingName");
+  OptionalWorkspaceObject optObject = workspace.getObjectByTypeAndName(IddObjectType::Building, "MyNewBuildingName");
   EXPECT_FALSE(optObject);
-  optObject = clone.getObjectByTypeAndName(IddObjectType::Building,"MyNewBuildingName");
+  optObject = clone.getObjectByTypeAndName(IddObjectType::Building, "MyNewBuildingName");
   EXPECT_TRUE(optObject);
 
   HandleVector wsHandles, cloneHandles;
   wsHandles = workspace.handles();
   cloneHandles = clone.handles();
-  EXPECT_EQ(wsHandles.size(),cloneHandles.size());
+  EXPECT_EQ(wsHandles.size(), cloneHandles.size());
   EXPECT_FALSE(cloneHandles == wsHandles);
   HandleVector newOrder;
   for (int i = cloneHandles.size() - 1; i >= 0; --i) {
@@ -552,8 +535,8 @@ TEST_F(IdfFixture, Workspace_Clone) {
   EXPECT_FALSE(cloneHandles == wsHandles);
 }
 
-TEST_F(IdfFixture,Workspace_Insert) {
-  Workspace workspace(epIdfFile,StrictnessLevel::None);
+TEST_F(IdfFixture, Workspace_Insert) {
+  Workspace workspace(epIdfFile, StrictnessLevel::Minimal);
   unsigned n = workspace.handles().size();
 
   // create IdfFile to insert
@@ -566,30 +549,29 @@ TEST_F(IdfFixture,Workspace_Insert) {
   Handle typeLimitsHandle = wsTargets[0].handle();
   IdfObject object = wsTargets[0].idfObject();
   file.addObject(object);
-  EXPECT_EQ(1u,file.numObjects());
+  EXPECT_EQ(1u, file.numObjects());
   object = wsObjects[0].idfObject();
   file.addObject(object);
-  EXPECT_EQ(2u,file.numObjects());
+  EXPECT_EQ(2u, file.numObjects());
   IdfObject clone = object.clone();
   clone.setName("SameScheduleNewName");
   file.addObject(clone);
-  EXPECT_EQ(3u,file.numObjects());
+  EXPECT_EQ(3u, file.numObjects());
 
   // insert. should have one new schedule.
   EXPECT_FALSE(workspace.insertObjects(file.objects()).empty());
-  EXPECT_EQ(n+1,workspace.handles().size());
+  EXPECT_EQ(n + 1, workspace.handles().size());
   OptionalWorkspaceObject clonedSchedule;
-  clonedSchedule = workspace.getObjectByTypeAndName(IddObjectType::Schedule_Compact,"SameScheduleNewName");
+  clonedSchedule = workspace.getObjectByTypeAndName(IddObjectType::Schedule_Compact, "SameScheduleNewName");
   ASSERT_TRUE(clonedSchedule);
   WorkspaceObjectVector targets = clonedSchedule->targets();
-  ASSERT_EQ(static_cast<unsigned>(1),targets.size());
+  ASSERT_EQ(static_cast<unsigned>(1), targets.size());
   EXPECT_TRUE(targets[0].handle() == typeLimitsHandle);
-
 }
 
-#if 0 //Need to rewrite.
+#if 0  //Need to rewrite.
 TEST_F(IdfFixture,Workspace_CloneSubset) {
-  Workspace workspace(epIdfFile,StrictnessLevel::None);
+  Workspace workspace(epIdfFile,StrictnessLevel::Minimal);
 
   WorkspaceObjectVector wsObjects = workspace.getObjectsByType(IddObjectType::Schedule_Compact,true);
   unsigned n = wsObjects.size();
@@ -611,8 +593,8 @@ TEST_F(IdfFixture,Workspace_CloneSubset) {
 }
 #endif
 
-TEST_F(IdfFixture,Workspace_CloneAndRemove) {
-  Workspace workspace(StrictnessLevel::None);
+TEST_F(IdfFixture, Workspace_CloneAndRemove) {
+  Workspace workspace(StrictnessLevel::Minimal);
   IdfObject globalGeometryRules(IddObjectType::GlobalGeometryRules);
   workspace.addObject(globalGeometryRules);
   WorkspaceObjectVector objects = workspace.objects();
@@ -634,11 +616,9 @@ TEST_F(IdfFixture,Workspace_CloneAndRemove) {
   cloneRemoveHandles.push_back(cloneObjects[0].handle());
   EXPECT_TRUE(clone.removeObjects(cloneRemoveHandles));
   EXPECT_EQ(static_cast<unsigned>(0), clone.objects().size());
-
 }
 
-
-TEST_F(IdfFixture,Workspace_BadObjects) {
+TEST_F(IdfFixture, Workspace_BadObjects) {
   std::stringstream ss;
 
   ss << "SimulationControl, \n\
@@ -692,6 +672,7 @@ TEST_F(IdfFixture,Workspace_BadObjects) {
     Wall,                    !- Surface Type \n\
     Wall,                    !- Construction Name \n\
     Zone,                    !- Zone Name \n\
+    ,                        !- Space Name \n\
     Outdoors,                !- Outside Boundary Condition \n\
     ,                        !- Outside Boundary Condition Object \n\
     SunExposed,              !- Sun Exposure \n\
@@ -704,7 +685,7 @@ TEST_F(IdfFixture,Workspace_BadObjects) {
     10.0,0.0,1.;  !- X,Y,Z ==> Vertex 4 {m} \n";
 
   IdfFile idfFile;
-  OptionalIdfFile oif = IdfFile::load(ss,IddFileType(IddFileType::EnergyPlus));
+  OptionalIdfFile oif = IdfFile::load(ss, IddFileType(IddFileType::EnergyPlus));
   ASSERT_TRUE(oif);
   idfFile = *oif;
   ASSERT_EQ(static_cast<unsigned>(7), idfFile.objects().size());
@@ -713,7 +694,7 @@ TEST_F(IdfFixture,Workspace_BadObjects) {
   ASSERT_EQ(static_cast<unsigned>(7), workspace.objects().size());
 }
 
-TEST_F(IdfFixture,Workspace_SwapObjects) {
+TEST_F(IdfFixture, Workspace_SwapObjects) {
   std::stringstream original;
   original << "Zone, \n\
   Zone;                    !- Name \n\
@@ -721,6 +702,7 @@ Wall:Exterior, \n\
   Wall,                    !- Name \n\
   ,                        !- Construction Name \n\
   Zone,                    !- Zone Name \n\
+  ,                        !- Space Name \n\
   270,                     !- Azimuth Angle {deg} \n\
   90,                      !- Tilt Angle {deg} \n\
   0,                       !- Starting X Coordinate {m} \n\
@@ -740,7 +722,7 @@ Window, \n\
   1,                      !- Length {m} \n\
   2;                      !- Height {m}";
 
-  IdfFile idfFile = IdfFile::load(original,IddFileType(IddFileType::EnergyPlus)).get();
+  IdfFile idfFile = IdfFile::load(original, IddFileType(IddFileType::EnergyPlus)).get();
   Workspace workspace(idfFile);
 
   OptionalWorkspaceObject zone = workspace.getObjectByTypeAndName(IddObjectType::Zone, "Zone");
@@ -774,6 +756,7 @@ Window, \n\
   Wall,        !- Surface Type \n\
   ,            !- Construction Name \n\
   Zone,        !- Zone Name \n\
+  ,            !- Space Name \n\
   Outdoors,    !- Outside Boundary Condition \n\
   ,            !- Outside Boundary Condition Object \n\
   SunExposed,  !- Sun Exposure \n\
@@ -791,17 +774,18 @@ Window, \n\
   0.000000,    !- Vertex 3 Z-coordinate {m} \n\
   30.000000,   !- Vertex 4 X-coordinate {m} \n\
   40.000000,   !- Vertex 4 Y-coordinate {m} \n\
-  4.000000;    !- Vertex 4 Z-coordinate {m}").get();
+  4.000000;    !- Vertex 4 Z-coordinate {m}")
+                          .get();
 
   // should not be able to swap with window
-  bool ok = workspace.swap(*window,newObject,true);
+  bool ok = workspace.swap(*window, newObject, true);
   EXPECT_FALSE(ok);
   ASSERT_TRUE(window);
   EXPECT_TRUE(newObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
   EXPECT_TRUE(window->iddObject().type() == IddObjectType::Window);
 
   // should be able to swap with wall
-  ok = workspace.swap(*wall,newObject,true);
+  ok = workspace.swap(*wall, newObject, true);
   EXPECT_TRUE(ok);
   ASSERT_TRUE(wall);
   EXPECT_TRUE(wall->iddObject().type() == IddObjectType::BuildingSurface_Detailed);
@@ -831,7 +815,7 @@ Window, \n\
 // 'Wall:Adiabatic' is not a member of the 'OutFaceEnvNames' reference group
 // I have temporarily modified our EnergyPlus idd so this test will pass, however we need to reconcile
 // with the real EnergyPlus idd at some point and remove 'OutFaceEnvNames' from 'Wall:Adiabatic' reference groups
-TEST_F(IdfFixture,Workspace_SwapObjects2) {
+TEST_F(IdfFixture, Workspace_SwapObjects2) {
   std::stringstream original;
   original << "Zone, \n\
   Zone;                    !- Name \n\
@@ -839,6 +823,7 @@ Wall:Adiabatic, \n\
   Wall,                    !- Name \n\
   ,                        !- Construction Name \n\
   Zone,                    !- Zone Name \n\
+  ,                        !- Space Name \n\
   270,                     !- Azimuth Angle {deg} \n\
   90,                      !- Tilt Angle {deg} \n\
   0,                       !- Starting X Coordinate {m} \n\
@@ -858,7 +843,7 @@ Window, \n\
   1,                      !- Length {m} \n\
   2;                      !- Height {m}";
 
-  IdfFile idfFile = IdfFile::load(original,IddFileType::EnergyPlus).get();
+  IdfFile idfFile = IdfFile::load(original, IddFileType::EnergyPlus).get();
   Workspace workspace(idfFile);
 
   OptionalWorkspaceObject zone = workspace.getObjectByTypeAndName(IddObjectType::Zone, "Zone");
@@ -892,6 +877,7 @@ Window, \n\
   Wall,        !- Surface Type \n\
   ,            !- Construction Name \n\
   Zone,        !- Zone Name \n\
+  ,            !- Space Name \n\
   Adiabatic,   !- Outside Boundary Condition \n\
   ,            !- Outside Boundary Condition Object \n\
   NoSun,       !- Sun Exposure \n\
@@ -909,17 +895,18 @@ Window, \n\
   0.000000,    !- Vertex 3 Z-coordinate {m} \n\
   30.000000,   !- Vertex 4 X-coordinate {m} \n\
   40.000000,   !- Vertex 4 Y-coordinate {m} \n\
-  4.000000;    !- Vertex 4 Z-coordinate {m}").get();
+  4.000000;    !- Vertex 4 Z-coordinate {m}")
+                          .get();
 
   // should not be able to swap with window
-  bool ok = workspace.swap(*window,newObject,true);
+  bool ok = workspace.swap(*window, newObject, true);
   EXPECT_FALSE(ok);
   ASSERT_TRUE(window);
   EXPECT_TRUE(newObject.iddObject().type() == IddObjectType::BuildingSurface_Detailed);
   EXPECT_TRUE(window->iddObject().type() == IddObjectType::Window);
 
   // should be able to swap with wall
-  ok = workspace.swap(*wall,newObject,true);
+  ok = workspace.swap(*wall, newObject, true);
   EXPECT_TRUE(ok);
   ASSERT_TRUE(wall);
   EXPECT_TRUE(wall->iddObject().type() == IddObjectType::BuildingSurface_Detailed);
@@ -945,9 +932,8 @@ Window, \n\
   EXPECT_EQ("Wall", window->getTarget(WindowFields::BuildingSurfaceName)->name().get());
 }
 
-
 // bad objects
-TEST_F(IdfFixture,Workspace_ObjectsNotInIdd) {
+TEST_F(IdfFixture, Workspace_ObjectsNotInIdd) {
 
   // bad object names, NotAWindow is not a class
   std::stringstream original;
@@ -957,6 +943,7 @@ Wall:Adiabatic, \n\
   Wall,                    !- Name \n\
   ,                        !- Construction Name \n\
   Zone,                    !- Zone Name \n\
+  ,                        !- Space Name \n\
   270,                     !- Azimuth Angle {deg} \n\
   90,                      !- Tilt Angle {deg} \n\
   0,                       !- Starting X Coordinate {m} \n\
@@ -979,18 +966,20 @@ NotAWindow, \n\
   IdfFile idfFile = IdfFile::load(original, IddFileType::EnergyPlus).get();
   EXPECT_EQ(static_cast<unsigned>(3), idfFile.objects().size());
   EXPECT_TRUE(idfFile.isValid(StrictnessLevel::None));
+  EXPECT_TRUE(idfFile.isValid(StrictnessLevel::Minimal));
   EXPECT_FALSE(idfFile.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(idfFile.isValid(StrictnessLevel::Final));
 
-  Workspace workspace(idfFile, StrictnessLevel::None);
+  Workspace workspace(idfFile, StrictnessLevel::Minimal);
   EXPECT_EQ(static_cast<unsigned>(3), workspace.objects().size());
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
+  EXPECT_TRUE(workspace.isValid(StrictnessLevel::Minimal));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Draft));
   EXPECT_FALSE(workspace.isValid(StrictnessLevel::Final));
 
   // example of how to fix the file
   ValidityReport report = idfFile.validityReport(StrictnessLevel::Draft);
-  ASSERT_EQ(static_cast<unsigned>(1),report.numErrors());
+  ASSERT_EQ(static_cast<unsigned>(1), report.numErrors());
   DataError error = report.nextError().get();
   ASSERT_TRUE(error.scope() == Scope::Object);
   ASSERT_TRUE(error.type() == DataErrorType::NoIdd);
@@ -998,16 +987,16 @@ NotAWindow, \n\
   OptionalIdfObject oObject = idfFile.getObject(error.objectIdentifier());
   IdfObject notAWindow = *oObject;
   EXPECT_TRUE(notAWindow.iddObject().type() == IddObjectType::Catchall);
-  EXPECT_EQ("NotAWindow",notAWindow.getString(0).get()); // mistyped type saved in first field
+  EXPECT_EQ("NotAWindow", notAWindow.getString(0).get());  // mistyped type saved in first field
   IdfObject isAWindow(IddObjectType::Window);
   for (unsigned i = 1, n = notAWindow.numFields(); i < n; ++i) {
-    EXPECT_TRUE(isAWindow.setString(i-1,notAWindow.getString(i).get()));
+    EXPECT_TRUE(isAWindow.setString(i - 1, notAWindow.getString(i).get()));
   }
   /// \todo add idfFile.swap method
 }
 
-TEST_F(IdfFixture,HospitalBaseline) {
-  openstudio::path p = resourcesPath()/toPath("energyplus/HospitalBaseline/in.idf");
+TEST_F(IdfFixture, HospitalBaseline) {
+  openstudio::path p = resourcesPath() / toPath("energyplus/HospitalBaseline/in.idf");
 
   // open as IdfFile. time.
   openstudio::Time start = openstudio::Time::currentTime();
@@ -1020,8 +1009,7 @@ TEST_F(IdfFixture,HospitalBaseline) {
   EXPECT_TRUE(idfFile.iddFileType() == IddFileType::EnergyPlus);
 
   // report on IdfFile
-  LOG(Info,"Loaded HosptitalBaseline/in.idf into an IdfFile in " << timingResult
-      << " s. The file has " << idfFile.objects().size() << " objects.");
+  LOG(Info, "Loaded HosptitalBaseline/in.idf into an IdfFile in " << timingResult << " s. The file has " << idfFile.objects().size() << " objects.");
 
   // construct workspace. time.
   start = openstudio::Time::currentTime();
@@ -1032,18 +1020,15 @@ TEST_F(IdfFixture,HospitalBaseline) {
   ValidityReport report = ws.validityReport(StrictnessLevel::Draft);
 
   // report on file
-  LOG(Info,"Created Workspace for HospitalBaseline/in.idf in " << timingResult << " s.");
+  LOG(Info, "Created Workspace for HospitalBaseline/in.idf in " << timingResult << " s.");
   if (report.numErrors() > 0) {
-    LOG(Info,"HospitalBaseline/in.idf is invalid at draft level. The ValidityReport follows."
-        << std::endl << report);
+    LOG(Info, "HospitalBaseline/in.idf is invalid at draft level. The ValidityReport follows." << '\n' << report);
+  } else {
+    LOG(Info, "HospitalBaseline/in.idf is valid to draft level.");
   }
-  else {
-    LOG(Info,"HospitalBaseline/in.idf is valid to draft level.");
-  }
-
 }
 
-TEST_F(IdfFixture,Workspace_InsertDifferentObjectSameName) {
+TEST_F(IdfFixture, Workspace_InsertDifferentObjectSameName) {
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
   // two constructions with same name
@@ -1062,20 +1047,20 @@ TEST_F(IdfFixture,Workspace_InsertDifferentObjectSameName) {
 
   IdfExtensibleGroup layer = construction1.pushExtensibleGroup();
   ASSERT_FALSE(layer.empty());
-  ASSERT_TRUE(layer.setString(ConstructionExtensibleFields::Layer,material1.name().get()));
+  ASSERT_TRUE(layer.setString(ConstructionExtensibleFields::Layer, material1.name().get()));
   layer = construction1.pushExtensibleGroup();
   ASSERT_FALSE(layer.empty());
-  ASSERT_TRUE(layer.setString(ConstructionExtensibleFields::Layer,material2.name().get()));
+  ASSERT_TRUE(layer.setString(ConstructionExtensibleFields::Layer, material2.name().get()));
   layer = construction1.pushExtensibleGroup();
   ASSERT_FALSE(layer.empty());
-  ASSERT_TRUE(layer.setString(ConstructionExtensibleFields::Layer,material1.name().get()));
-  ASSERT_EQ(static_cast<unsigned>(3),construction1.numExtensibleGroups());
+  ASSERT_TRUE(layer.setString(ConstructionExtensibleFields::Layer, material1.name().get()));
+  ASSERT_EQ(static_cast<unsigned>(3), construction1.numExtensibleGroups());
 
   layer = construction2.pushExtensibleGroup();
   ASSERT_FALSE(layer.empty());
-  ASSERT_TRUE(layer.setString(ConstructionExtensibleFields::Layer,material3.name().get()));
-  ASSERT_EQ(static_cast<unsigned>(3),construction1.numExtensibleGroups());
-  ASSERT_EQ(static_cast<unsigned>(1),construction2.numExtensibleGroups());
+  ASSERT_TRUE(layer.setString(ConstructionExtensibleFields::Layer, material3.name().get()));
+  ASSERT_EQ(static_cast<unsigned>(3), construction1.numExtensibleGroups());
+  ASSERT_EQ(static_cast<unsigned>(1), construction2.numExtensibleGroups());
 
   ASSERT_FALSE(construction1 == construction2);
 
@@ -1093,43 +1078,42 @@ TEST_F(IdfFixture,Workspace_InsertDifferentObjectSameName) {
   firstConstructionAdded = ws.sort(firstConstructionAdded);
   firstConstructionInserted = ws.sort(firstConstructionInserted);
   EXPECT_TRUE(firstConstructionAdded == firstConstructionInserted);
-  EXPECT_EQ(objects.size(),ws.numObjects());
+  EXPECT_EQ(objects.size(), ws.numObjects());
 
   // insert second should either fail or rename construction2 to avoid name conflict
   objects.clear();
   objects.push_back(construction2);
   objects.push_back(material3);
   WorkspaceObjectVector secondConstructionAdded = ws.insertObjects(objects);
-  EXPECT_TRUE(secondConstructionAdded.empty() ||
-              (secondConstructionAdded[0].name().get() != construction1.name().get()));
+  EXPECT_TRUE(secondConstructionAdded.empty() || (secondConstructionAdded[0].name().get() != construction1.name().get()));
 }
 
-TEST_F(IdfFixture,Workspace_DefaultNames) {
+TEST_F(IdfFixture, Workspace_DefaultNames) {
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
   OptionalWorkspaceObject oObject = ws.addObject(IdfObject(IddObjectType::Building));
   ASSERT_TRUE(oObject);
   WorkspaceObject building = *oObject;
   ASSERT_TRUE(building.name());
-  EXPECT_EQ("",building.name().get());
+  EXPECT_EQ("", building.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   WorkspaceObject zone = *oObject;
   ASSERT_TRUE(zone.name());
-  EXPECT_EQ("Zone 1",zone.name().get());
+  EXPECT_EQ("Zone 1", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   ASSERT_TRUE(zone.name());
-  EXPECT_EQ("Zone 2",zone.name().get());
+  EXPECT_EQ("Zone 2", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   ASSERT_TRUE(zone.name());
-  EXPECT_EQ("Zone 3",zone.name().get());
+  EXPECT_EQ("Zone 3", zone.name().get());
 
   EXPECT_TRUE(zone.setName("My Room"));
 
@@ -1137,7 +1121,7 @@ TEST_F(IdfFixture,Workspace_DefaultNames) {
   ASSERT_TRUE(oObject);
   zone = *oObject;
   ASSERT_TRUE(zone.name());
-  EXPECT_EQ("Zone 3",zone.name().get());
+  EXPECT_EQ("Zone 3", zone.name().get());
 
   zone.setName("Zone 352");
 
@@ -1145,49 +1129,49 @@ TEST_F(IdfFixture,Workspace_DefaultNames) {
   ASSERT_TRUE(oObject);
   zone = *oObject;
   ASSERT_TRUE(zone.name());
-  EXPECT_EQ("Zone 3",zone.name().get());
+  EXPECT_EQ("Zone 3", zone.name().get());
 
-  EXPECT_EQ(static_cast<unsigned>(5),ws.numObjectsOfType(IddObjectType::Zone));
+  EXPECT_EQ(static_cast<unsigned>(5), ws.numObjectsOfType(IddObjectType::Zone));
 }
 
-TEST_F(IdfFixture,Workspace_ComplexNames) {
+TEST_F(IdfFixture, Workspace_ComplexNames) {
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
   OptionalWorkspaceObject oObject = ws.addObject(IdfObject(IddObjectType::Building));
   ASSERT_TRUE(oObject);
   WorkspaceObject building = *oObject;
   ASSERT_TRUE(building.name());
-  EXPECT_EQ("",building.name().get());
+  EXPECT_EQ("", building.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   WorkspaceObject zone = *oObject;
   EXPECT_TRUE(zone.setName("My (least) favorite zone"));
-  EXPECT_EQ("My (least) favorite zone",zone.name().get());
+  EXPECT_EQ("My (least) favorite zone", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("My (least) favorite zone"));
-  EXPECT_EQ("My (least) favorite zone 1",zone.name().get());
+  EXPECT_EQ("My (least) favorite zone 1", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("My (least) favorite zone"));
-  EXPECT_EQ("My (least) favorite zone 2",zone.name().get());
+  EXPECT_EQ("My (least) favorite zone 2", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone"));
-  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone",zone.name().get());
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone"));
-  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 1",zone.name().get());
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 1", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
@@ -1199,13 +1183,13 @@ TEST_F(IdfFixture,Workspace_ComplexNames) {
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
-  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone            ",zone.name().get());
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone            ", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
-  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone             1",zone.name().get());
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone             1", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
@@ -1217,51 +1201,51 @@ TEST_F(IdfFixture,Workspace_ComplexNames) {
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
-  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone            ",zone.name().get());
+  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone            ", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            "));
-  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone             1",zone.name().get());
+  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone             1", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            1"));
-  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone            1",zone.name().get());
+  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone            1", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("            My (!@#$^&*()least)(*&^$#@!) favorite zone            1"));
-  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone            2",zone.name().get());
+  EXPECT_EQ("            My (!@#$^&*()least)(*&^$#@!) favorite zone            2", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone 1 "));
-  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 1 ",zone.name().get());
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 1 ", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone 1 "));
-  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 1  1",zone.name().get());
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone 1  1", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone "));
-  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone ",zone.name().get());
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone ", zone.name().get());
 
   oObject = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oObject);
   zone = *oObject;
   EXPECT_TRUE(zone.setName("My (!@#$^&*()least)(*&^$#@!) favorite zone "));
-  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone  1",zone.name().get());
+  EXPECT_EQ("My (!@#$^&*()least)(*&^$#@!) favorite zone  1", zone.name().get());
 
-  EXPECT_EQ(static_cast<unsigned>(17),ws.numObjectsOfType(IddObjectType::Zone));
+  EXPECT_EQ(static_cast<unsigned>(17), ws.numObjectsOfType(IddObjectType::Zone));
 }
 
 TEST_F(IdfFixture, Workspace_SpecialNames) {
@@ -1294,23 +1278,23 @@ TEST_F(IdfFixture, Workspace_SpecialNames) {
   objects = ws.getObjectsByName("Office, Hallway, and Other Lights", exactMatch);
   ASSERT_EQ(2u, objects.size());
 
-  EXPECT_TRUE(lights1.setString(LightsFields::ZoneorZoneListName, "Office, Hallway, and Other Zone"));
-  ASSERT_TRUE(lights1.getTarget(LightsFields::ZoneorZoneListName));
-  EXPECT_EQ(zone.handle(), lights1.getTarget(LightsFields::ZoneorZoneListName).get().handle());
+  EXPECT_TRUE(lights1.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, "Office, Hallway, and Other Zone"));
+  ASSERT_TRUE(lights1.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+  EXPECT_EQ(zone.handle(), lights1.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName).get().handle());
 
-  EXPECT_TRUE(lights2.setString(LightsFields::ZoneorZoneListName, "Office, Hallway, and Other Zone"));
-  ASSERT_TRUE(lights2.getTarget(LightsFields::ZoneorZoneListName));
-  EXPECT_EQ(zone.handle(), lights2.getTarget(LightsFields::ZoneorZoneListName).get().handle());
+  EXPECT_TRUE(lights2.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, "Office, Hallway, and Other Zone"));
+  ASSERT_TRUE(lights2.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+  EXPECT_EQ(zone.handle(), lights2.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName).get().handle());
 }
 
-TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObject) {
+TEST_F(IdfFixture, Workspace_AvoidingNameClashes_IdfObject) {
   // create workspace with one object
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
   OptionalWorkspaceObject oZone = ws.addObject(IdfObject(IddObjectType::Zone));
   ASSERT_TRUE(oZone);
   ASSERT_TRUE(oZone->name());
-  EXPECT_EQ("Zone 1",oZone->name().get());
+  EXPECT_EQ("Zone 1", oZone->name().get());
 
   // add IdfObject with name clash
   IdfObject newZone(IddObjectType::Zone);
@@ -1320,24 +1304,24 @@ TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObject) {
   ASSERT_TRUE(oZone->name());
 
   // observe name change
-  EXPECT_EQ("Zone 2",oZone->name().get());
+  EXPECT_EQ("Zone 2", oZone->name().get());
 }
 
-TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObjects) {
+TEST_F(IdfFixture, Workspace_AvoidingNameClashes_IdfObjects) {
   // create workspace with one construction
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
   OptionalWorkspaceObject owo = ws.addObject(IdfObject(IddObjectType::Construction));
   ASSERT_TRUE(owo);
   WorkspaceObject construction = *owo;
-  EXPECT_EQ("Construction 1",construction.name().get());
+  EXPECT_EQ("Construction 1", construction.name().get());
   StringVector layer(1);
   owo = ws.addObject(IdfObject(IddObjectType::Material));
   ASSERT_TRUE(owo);
   WorkspaceObject material_1 = *owo;
-  EXPECT_EQ("Material 1",material_1.name().get());
+  EXPECT_EQ("Material 1", material_1.name().get());
   layer[0] = material_1.name().get();
-  EXPECT_EQ(static_cast<unsigned>(0),construction.numExtensibleGroups());
+  EXPECT_EQ(static_cast<unsigned>(0), construction.numExtensibleGroups());
   IdfExtensibleGroup eg = construction.pushExtensibleGroup(layer);
   ASSERT_FALSE(eg.empty());
 
@@ -1349,7 +1333,7 @@ TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObjects) {
   EXPECT_TRUE(idfObjects[0].setName("Construction 1"));
   EXPECT_TRUE(idfObjects[1].setName("Material 1"));
   EXPECT_TRUE(idfObjects[2].setName("Material 2"));
-  EXPECT_EQ(static_cast<unsigned>(0),idfObjects[0].numExtensibleGroups());
+  EXPECT_EQ(static_cast<unsigned>(0), idfObjects[0].numExtensibleGroups());
   eg = idfObjects[0].pushExtensibleGroup(layer);
   ASSERT_FALSE(eg.empty());
   layer[0] = "Material 2";
@@ -1361,10 +1345,10 @@ TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObjects) {
   ASSERT_TRUE(newObjects.size() == idfObjects.size());
 
   // observe name changes and preservation of relationships
-  EXPECT_EQ("Construction 2",newObjects[0].name().get());
-  EXPECT_EQ("Material 3",newObjects[1].name().get());
-  EXPECT_EQ("Material 2",newObjects[2].name().get());
-  EXPECT_EQ(static_cast<unsigned>(2),newObjects[0].numExtensibleGroups());
+  EXPECT_EQ("Construction 2", newObjects[0].name().get());
+  EXPECT_EQ("Material 3", newObjects[1].name().get());
+  EXPECT_EQ("Material 2", newObjects[2].name().get());
+  EXPECT_EQ(static_cast<unsigned>(2), newObjects[0].numExtensibleGroups());
   eg = newObjects[0].getExtensibleGroup(0);
   ASSERT_FALSE(eg.empty());
   WorkspaceExtensibleGroup weg = eg.cast<WorkspaceExtensibleGroup>();
@@ -1379,7 +1363,7 @@ TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObjects) {
   EXPECT_TRUE(*owo == newObjects[2]);
 
   // check original construction
-  EXPECT_EQ(static_cast<unsigned>(1),construction.numExtensibleGroups());
+  EXPECT_EQ(static_cast<unsigned>(1), construction.numExtensibleGroups());
   eg = construction.getExtensibleGroup(0);
   ASSERT_FALSE(eg.empty());
   weg = eg.cast<WorkspaceExtensibleGroup>();
@@ -1388,7 +1372,7 @@ TEST_F(IdfFixture,Workspace_AvoidingNameClashes_IdfObjects) {
   EXPECT_TRUE(*owo == material_1);
 }
 
-TEST_F(IdfFixture,Workspace_AvoidingNameClashes_Insert) {
+TEST_F(IdfFixture, Workspace_AvoidingNameClashes_Insert) {
   // create workspace with one construction that has one layer
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
@@ -1396,52 +1380,52 @@ TEST_F(IdfFixture,Workspace_AvoidingNameClashes_Insert) {
   OptionalWorkspaceObject owo = ws.addObject(IdfObject(IddObjectType::Construction));
   ASSERT_TRUE(owo);
   WorkspaceObject construction = *owo;
-  EXPECT_EQ("Construction 1",construction.name().get());
+  EXPECT_EQ("Construction 1", construction.name().get());
   StringVector layer(1);
   owo = ws.addObject(IdfObject(IddObjectType::Material));
   ASSERT_TRUE(owo);
   WorkspaceObject material_1 = *owo;
-  EXPECT_EQ("Material 1",material_1.name().get());
+  EXPECT_EQ("Material 1", material_1.name().get());
   layer[0] = material_1.name().get();
-  EXPECT_EQ(static_cast<unsigned>(0),construction.numExtensibleGroups());
+  EXPECT_EQ(static_cast<unsigned>(0), construction.numExtensibleGroups());
   IdfExtensibleGroup eg = construction.pushExtensibleGroup(layer);
   ASSERT_FALSE(eg.empty());
 
   // create workspace with one construction that has two layers
   Workspace toInsert = ws.clone();
   WorkspaceObjectVector constructions = toInsert.getObjectsByType(IddObjectType::Construction);
-  ASSERT_EQ(static_cast<unsigned>(1),constructions.size());
+  ASSERT_EQ(static_cast<unsigned>(1), constructions.size());
   owo = toInsert.addObject(IdfObject(IddObjectType::Material));
   ASSERT_TRUE(owo);
-  EXPECT_EQ("Material 2",owo->name().get());
+  EXPECT_EQ("Material 2", owo->name().get());
   layer[0] = owo->name().get();
-  EXPECT_EQ(static_cast<unsigned>(1),constructions[0].numExtensibleGroups());
+  EXPECT_EQ(static_cast<unsigned>(1), constructions[0].numExtensibleGroups());
   eg = constructions[0].pushExtensibleGroup(layer);
   ASSERT_FALSE(eg.empty());
 
   // insert workspace. expect material 1 merged, material 2 added, construction renamed
   WorkspaceObjectVector insertedObjects = ws.insertObjects(toInsert.objects(true));
-  ASSERT_EQ(static_cast<unsigned>(3),insertedObjects.size());
-  EXPECT_EQ("Construction 2",insertedObjects[0].name().get());
+  ASSERT_EQ(static_cast<unsigned>(3), insertedObjects.size());
+  EXPECT_EQ("Construction 2", insertedObjects[0].name().get());
   EXPECT_FALSE(insertedObjects[0] == construction);
-  EXPECT_EQ("Material 1",insertedObjects[1].name().get());
+  EXPECT_EQ("Material 1", insertedObjects[1].name().get());
   EXPECT_TRUE(insertedObjects[1] == material_1);
-  EXPECT_EQ("Material 2",insertedObjects[2].name().get());
-  ASSERT_EQ(static_cast<unsigned>(1),construction.numExtensibleGroups());
-  ASSERT_EQ(static_cast<unsigned>(2),insertedObjects[0].numExtensibleGroups());
+  EXPECT_EQ("Material 2", insertedObjects[2].name().get());
+  ASSERT_EQ(static_cast<unsigned>(1), construction.numExtensibleGroups());
+  ASSERT_EQ(static_cast<unsigned>(2), insertedObjects[0].numExtensibleGroups());
 }
 
-TEST_F(IdfFixture,Workspace_AddAndInsertIdfObjects) {
+TEST_F(IdfFixture, Workspace_AddAndInsertIdfObjects) {
   // base workspace
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
   OptionalWorkspaceObject owo = ws.addObject(IdfObject(IddObjectType::Construction));
   ASSERT_TRUE(owo);
-  EXPECT_EQ("Construction 1",owo->name().get());
+  EXPECT_EQ("Construction 1", owo->name().get());
   owo = ws.addObject(IdfObject(IddObjectType::Construction));
   ASSERT_TRUE(owo);
-  EXPECT_EQ("Construction 2",owo->name().get());
-  EXPECT_EQ(2u,ws.numObjects());
+  EXPECT_EQ("Construction 2", owo->name().get());
+  EXPECT_EQ(2u, ws.numObjects());
 
   // objects to add and insert
   IdfObjectVector toAdd;
@@ -1451,15 +1435,15 @@ TEST_F(IdfFixture,Workspace_AddAndInsertIdfObjects) {
   toInsert.push_back(IdfObject(IddObjectType::Construction));
   toInsert[0].setName("Construction 2");
 
-  WorkspaceObjectVector result = ws.addAndInsertObjects(toAdd,toInsert);
-  EXPECT_EQ(3u,ws.numObjects());
-  ASSERT_EQ(2u,result.size());
-  EXPECT_EQ("Construction 3",result[0].name().get());
-  EXPECT_EQ("Construction 2",result[1].name().get());
+  WorkspaceObjectVector result = ws.addAndInsertObjects(toAdd, toInsert);
+  EXPECT_EQ(3u, ws.numObjects());
+  ASSERT_EQ(2u, result.size());
+  EXPECT_EQ("Construction 3", result[0].name().get());
+  EXPECT_EQ("Construction 2", result[1].name().get());
   EXPECT_TRUE(result[1] == *owo);
 }
 
-TEST_F(IdfFixture,Workspace_AddAndInsertWorkspaceObjects) {
+TEST_F(IdfFixture, Workspace_AddAndInsertWorkspaceObjects) {
   // base workspace
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
@@ -1469,15 +1453,15 @@ TEST_F(IdfFixture,Workspace_AddAndInsertWorkspaceObjects) {
   owo = ws.addObject(IdfObject(IddObjectType::Schedule_Compact));
   ASSERT_TRUE(owo);
   WorkspaceObject originalSchedule = *owo;
-  originalLights.setPointer(LightsFields::ScheduleName,originalSchedule.handle());
+  originalLights.setPointer(LightsFields::ScheduleName, originalSchedule.handle());
 
   // model object-style clone into base
-  WorkspaceObjectVector toAdd(1u,originalLights);
-  WorkspaceObjectVector toInsert(1u,originalSchedule);
-  WorkspaceObjectVector result = ws.addAndInsertObjects(toAdd,toInsert);
-  ASSERT_EQ(2u,result.size());
+  WorkspaceObjectVector toAdd(1u, originalLights);
+  WorkspaceObjectVector toInsert(1u, originalSchedule);
+  WorkspaceObjectVector result = ws.addAndInsertObjects(toAdd, toInsert);
+  ASSERT_EQ(2u, result.size());
   EXPECT_FALSE(result[0] == originalLights);
-  EXPECT_EQ("Lights 2",result[0].name().get());
+  EXPECT_EQ("Lights 2", result[0].name().get());
   EXPECT_TRUE(result[1] == originalSchedule);
 }
 
@@ -1545,7 +1529,6 @@ TEST_F(IdfFixture, Workspace_GiveNames1) {
   ASSERT_TRUE(idfObjects[1].name());
   EXPECT_NE(idfObjects[0].name().get(), idfObjects[1].name().get());
   EXPECT_EQ(idf->header(), idf2.header());
-
 }
 
 TEST_F(IdfFixture, Workspace_GiveNames2) {
@@ -1614,7 +1597,6 @@ TEST_F(IdfFixture, Workspace_GiveNames2) {
   EXPECT_EQ("Core_ZN Water Equipment", idfConnections[0].name().get());
   ASSERT_TRUE(idfEquipment[0].name());
   EXPECT_EQ("Core_ZN Water Equipment", idfEquipment[0].name().get());
-
 }
 
 TEST_F(IdfFixture, Workspace_GiveNames3) {
@@ -1735,11 +1717,10 @@ TEST_F(IdfFixture, Workspace_GiveNames3) {
   EXPECT_EQ(0u, workspace.objects().size());
 }
 
-
 TEST_F(IdfFixture, Workspace_GiveNames4) {
 
   // two objects, same name
-  Workspace workspace(StrictnessLevel::None, IddFileType::EnergyPlus);
+  Workspace workspace(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
   IdfObjectVector idfObjects;
   idfObjects.push_back(IdfObject(IddObjectType::Zone));
   idfObjects.push_back(IdfObject(IddObjectType::Zone));
@@ -1756,13 +1737,13 @@ TEST_F(IdfFixture, Workspace_GiveNames4) {
   ASSERT_TRUE(workspace.objects()[1].name());
   EXPECT_EQ("My Zone 1", workspace.objects()[1].name().get());
 
-  EXPECT_TRUE(workspace.isValid(StrictnessLevel::None));
+  EXPECT_TRUE(workspace.isValid(StrictnessLevel::Minimal));
   EXPECT_TRUE(workspace.isValid(StrictnessLevel::Draft));
 }
 
 TEST_F(IdfFixture, Workspace_AddObjects) {
 
-std::string text = "\
+  std::string text = "\
   Construction,\n\
     Window Non-res Fixed,     !- Name\n\
     NonRes Fixed Assembly Window;  !- Outside Layer\n\
@@ -1788,13 +1769,13 @@ std::string text = "\
             workspace1.getObjectsByType(IddObjectType::Construction)[0].getTarget(1)->handle());
 
   std::vector<IdfObject> idfObjects;
-  for (WorkspaceObject workspaceObject : workspace1.objects()){
+  for (WorkspaceObject workspaceObject : workspace1.objects()) {
     idfObjects.push_back(workspaceObject.idfObject());
   }
 
   // add workspace objects to workspace of none strictness
   {
-    Workspace workspace2(StrictnessLevel::None, IddFileType::EnergyPlus);
+    Workspace workspace2(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
     WorkspaceObjectVector workspaceObjects = workspace1.objects();
     workspace2.addObjects(workspaceObjects);
     EXPECT_EQ(2u, workspace2.objects().size());
@@ -1820,7 +1801,7 @@ std::string text = "\
 
   // add idf objects to workspace of none strictness
   {
-    Workspace workspace3(StrictnessLevel::None, IddFileType::EnergyPlus);
+    Workspace workspace3(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
     workspace3.addObjects(idfObjects);
     EXPECT_EQ(2u, workspace3.objects().size());
     ASSERT_EQ(1u, workspace3.getObjectsByType(IddObjectType::Construction).size());
@@ -1919,15 +1900,13 @@ TEST_F(IdfFixture, Workspace_AddObjects3) {
   EXPECT_EQ(1u, sink.logMessages().size());
 }
 
-
-TEST_F(IdfFixture, Workspace_Signals)
-{
+TEST_F(IdfFixture, Workspace_Signals) {
   IdfFile idfFile(IddFileType::EnergyPlus);
   Workspace workspace(idfFile);
 
   WorkspaceReciever* reciever = nullptr;
 
-  ASSERT_NO_THROW( reciever = new WorkspaceReciever(workspace) );
+  ASSERT_NO_THROW(reciever = new WorkspaceReciever(workspace));
 
   EXPECT_FALSE(reciever->m_objectImpl);
   EXPECT_FALSE(reciever->m_iddObjectType);
@@ -1959,22 +1938,21 @@ TEST_F(IdfFixture, Workspace_Signals)
   delete reciever;
 }
 
-TEST_F(IdfFixture,Workspace_Swap) {
+TEST_F(IdfFixture, Workspace_Swap) {
   Workspace ws1, ws2;
   ws1.addObject(IdfObject(IddObjectType::OS_Building));
   ws2.addObject(IdfObject(IddObjectType::OS_Lights_Definition));
 
   ws1.swap(ws2);
 
-  ASSERT_EQ(1u,ws1.objects().size());
-  ASSERT_EQ(1u,ws2.objects().size());
+  ASSERT_EQ(1u, ws1.objects().size());
+  ASSERT_EQ(1u, ws2.objects().size());
 
-  EXPECT_EQ(IddObjectType(IddObjectType::OS_Lights_Definition),ws1.objects()[0].iddObject().type());
-  EXPECT_EQ(IddObjectType(IddObjectType::OS_Building),ws2.objects()[0].iddObject().type());
+  EXPECT_EQ(IddObjectType(IddObjectType::OS_Lights_Definition), ws1.objects()[0].iddObject().type());
+  EXPECT_EQ(IddObjectType(IddObjectType::OS_Building), ws2.objects()[0].iddObject().type());
 }
 
-TEST_F(IdfFixture, Workspace_DaylightingControlsZoneName)
-{
+TEST_F(IdfFixture, Workspace_DaylightingControlsZoneName) {
   // DaylightingControls is an odd object with field 0 not being a name field
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
@@ -1985,22 +1963,20 @@ TEST_F(IdfFixture, Workspace_DaylightingControlsZoneName)
   ASSERT_TRUE(daylightingControl);
 
   zone->setName("Zone 1");
-  EXPECT_FALSE(daylightingControl->getString(1,false,true));
+  EXPECT_FALSE(daylightingControl->getString(1, false, true));
   EXPECT_TRUE(daylightingControl->setPointer(1, zone->handle()));
-  ASSERT_TRUE(daylightingControl->getString(1,false,true));
-  EXPECT_EQ("Zone 1", daylightingControl->getString(1,false,true).get());
+  ASSERT_TRUE(daylightingControl->getString(1, false, true));
+  EXPECT_EQ("Zone 1", daylightingControl->getString(1, false, true).get());
 
   EXPECT_TRUE(daylightingControl->setString(1, ""));
-  EXPECT_FALSE(daylightingControl->getString(1,false,true));
+  EXPECT_FALSE(daylightingControl->getString(1, false, true));
 
   EXPECT_TRUE(daylightingControl->setString(1, "Zone 1"));
-  ASSERT_TRUE(daylightingControl->getString(1,false,true));
-  EXPECT_EQ("Zone 1", daylightingControl->getString(1,false,true).get());
-
+  ASSERT_TRUE(daylightingControl->getString(1, false, true));
+  EXPECT_EQ("Zone 1", daylightingControl->getString(1, false, true).get());
 }
 
-TEST_F(IdfFixture, Workspace_NextName)
-{
+TEST_F(IdfFixture, Workspace_NextName) {
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
   EXPECT_EQ("Zone 1", ws.nextName(IddObjectType::Zone, false));
@@ -2036,8 +2012,7 @@ TEST_F(IdfFixture, Workspace_NextName)
   EXPECT_EQ("Zone 2", ws.nextName(IddObjectType::Zone, true));
 }
 
-TEST_F(IdfFixture, Workspace_GetObjectsByNameUUID)
-{
+TEST_F(IdfFixture, Workspace_GetObjectsByNameUUID) {
   Workspace ws(StrictnessLevel::Draft, IddFileType::EnergyPlus);
 
   boost::optional<WorkspaceObject> zone = ws.addObject(IdfObject(IddObjectType::Zone));
@@ -2127,7 +2102,7 @@ TEST_F(IdfFixture, Workspace_getObjects_Type_StringOverload) {
 
   // And check with a bad std::string, that it throws, and that we get an informative message (#1741)
   ASSERT_THROW(workspace.getObjectsByType("BadEnum"), std::runtime_error);
-  std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'BADENUM'");
+  std::string expectedErrorMessage("Unknown OpenStudio Enum Value 'BADENUM' for Enum IddObjectType");
   try {
     workspace.getObjectsByType("BadEnum");
   } catch (std::runtime_error& e) {
@@ -2147,5 +2122,4 @@ TEST_F(IdfFixture, Workspace_getObjects_Type_StringOverload) {
   } catch (std::runtime_error& e) {
     EXPECT_EQ(expectedErrorMessage, std::string(e.what()));
   }
-
 }

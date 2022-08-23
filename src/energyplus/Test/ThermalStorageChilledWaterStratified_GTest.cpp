@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,24 +45,23 @@ using namespace openstudio;
 
 /* Gtest for https://github.com/NREL/OpenStudio/issues/2373 */
 TEST_F(EnergyPlusFixture, ForwardTranslator_ThermalStorageChilledWaterStratified_NumNodesAndTankTime) {
-    Model model;
+  Model model;
 
-    ThermalStorageChilledWaterStratified t(model);
+  ThermalStorageChilledWaterStratified t(model);
 
-    ASSERT_TRUE(t.setTankRecoveryTime(4.25));
-    ASSERT_TRUE(t.setNumberofNodes(7));
+  ASSERT_TRUE(t.setTankRecoveryTime(4.25));
+  ASSERT_TRUE(t.setNumberofNodes(7));
 
-    PlantLoop p(model);
-    ASSERT_TRUE(p.addSupplyBranchForComponent(t));
+  PlantLoop p(model);
+  ASSERT_TRUE(p.addSupplyBranchForComponent(t));
 
-    ForwardTranslator forwardTranslator;
-    Workspace workspace = forwardTranslator.translateModel(model);
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(model);
 
-    WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ThermalStorage_ChilledWater_Stratified));
-    EXPECT_EQ(1u, idfObjs.size());
-    WorkspaceObject idf_t(idfObjs[0]);
+  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ThermalStorage_ChilledWater_Stratified));
+  EXPECT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_t(idfObjs[0]);
 
-    EXPECT_DOUBLE_EQ(4.25, *idf_t.getDouble(ThermalStorage_ChilledWater_StratifiedFields::TankRecoveryTime));
-    EXPECT_EQ(7, *idf_t.getInt(ThermalStorage_ChilledWater_StratifiedFields::NumberofNodes));
-
+  EXPECT_DOUBLE_EQ(4.25, *idf_t.getDouble(ThermalStorage_ChilledWater_StratifiedFields::TankRecoveryTime));
+  EXPECT_EQ(7, *idf_t.getInt(ThermalStorage_ChilledWater_StratifiedFields::NumberofNodes));
 }

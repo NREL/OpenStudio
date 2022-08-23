@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -31,110 +31,116 @@
 #define MODEL_AIRLOOPHVAC_IMPL_HPP
 
 #include "Loop_Impl.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 namespace openstudio {
 namespace model {
 
-class AirLoopHVAC;
-class Node;
-class AirLoopHVACOutdoorAirSystem;
-class AirLoopHVACZoneSplitter;
-class AirLoopHVACZoneMixer;
-class AirLoopHVACSupplyPlenum;
-class AirLoopHVACReturnPlenum;
-class ThermalZone;
-class PlantLoop;
-class SizingSystem;
-class StraightComponent;
-class AvailabilityManagerScheduled;
-class AvailabilityManager;
-class AvailabilityManagerAssignmentList;
+  class AirLoopHVAC;
+  class Node;
+  class AirLoopHVACOutdoorAirSystem;
+  class AirLoopHVACDedicatedOutdoorAirSystem;
+  class AirLoopHVACZoneSplitter;
+  class AirLoopHVACZoneMixer;
+  class AirLoopHVACSupplyPlenum;
+  class AirLoopHVACReturnPlenum;
+  class ThermalZone;
+  class PlantLoop;
+  class SizingSystem;
+  class StraightComponent;
+  class AvailabilityManagerScheduled;
+  class AvailabilityManager;
+  class AvailabilityManagerAssignmentList;
 
-namespace detail {
+  namespace detail {
 
-class Model_Impl;
+    class Model_Impl;
 
-class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
+    class MODEL_API AirLoopHVAC_Impl : public Loop_Impl
+    {
 
- public:
+     public:
+      AirLoopHVAC_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  AirLoopHVAC_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      AirLoopHVAC_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  AirLoopHVAC_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                   Model_Impl* model,
-                   bool keepHandle);
+      AirLoopHVAC_Impl(const AirLoopHVAC_Impl& other, Model_Impl* model, bool keepHandle);
 
-  AirLoopHVAC_Impl(const AirLoopHVAC_Impl& other, Model_Impl* model, bool keepHandle);
+      virtual ~AirLoopHVAC_Impl() {}
 
-  virtual ~AirLoopHVAC_Impl() {}
+      boost::optional<double> designSupplyAirFlowRate() const;
 
-  boost::optional<double> designSupplyAirFlowRate() const;
+      bool isDesignSupplyAirFlowRateAutosized() const;
 
-  bool isDesignSupplyAirFlowRateAutosized() const;
+      bool setDesignSupplyAirFlowRate(boost::optional<double> designSupplyAirFlowRate);
 
-  bool setDesignSupplyAirFlowRate(boost::optional<double> designSupplyAirFlowRate);
+      void resetDesignSupplyAirFlowRate();
 
-  void resetDesignSupplyAirFlowRate();
+      void autosizeDesignSupplyAirFlowRate();
 
-  void autosizeDesignSupplyAirFlowRate();
+      double designReturnAirFlowFractionofSupplyAirFlow() const;
 
-  Node supplyInletNode() const override;
+      bool setDesignReturnAirFlowFractionofSupplyAirFlow(double designReturnAirFlowFractionofSupplyAirFlow);
 
-  Node supplyOutletNode() const override;
+      virtual Node supplyInletNode() const override;
 
-  std::vector<Node> supplyOutletNodes() const override;
+      virtual Node supplyOutletNode() const override;
 
-  Node demandInletNode() const override;
+      virtual std::vector<Node> supplyOutletNodes() const override;
 
-  std::vector<Node> demandInletNodes() const override;
+      virtual Node demandInletNode() const override;
 
-  Node demandOutletNode() const override;
+      virtual std::vector<Node> demandInletNodes() const override;
 
-  boost::optional<Node> outdoorAirNode() const;
+      virtual Node demandOutletNode() const override;
 
-  boost::optional<Node> reliefAirNode() const;
+      boost::optional<Node> outdoorAirNode() const;
 
-  boost::optional<Node> mixedAirNode() const;
+      boost::optional<Node> reliefAirNode() const;
 
-  boost::optional<Node> returnAirNode() const;
+      boost::optional<Node> mixedAirNode() const;
 
-  std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
+      boost::optional<Node> returnAirNode() const;
 
-  std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) override;
+      std::vector<ModelObject> oaComponents(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall"));
 
-  boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
+      virtual std::vector<ModelObject> components(openstudio::IddObjectType type = openstudio::IddObjectType("Catchall")) override;
 
-  boost::optional<Splitter> supplySplitter() const;
+      boost::optional<AirLoopHVACOutdoorAirSystem> airLoopHVACOutdoorAirSystem() const;
 
-  bool setSupplySplitter(Splitter const & splitter);
+      boost::optional<AirLoopHVACDedicatedOutdoorAirSystem> airLoopHVACDedicatedOutdoorAirSystem() const;
 
-  void resetSupplySplitter();
+      boost::optional<Splitter> supplySplitter() const;
 
-  bool removeSupplySplitter();
+      bool setSupplySplitter(Splitter const& splitter);
 
-  bool removeSupplySplitter(HVACComponent & hvacComponent);
+      void resetSupplySplitter();
 
-  boost::optional<Node> supplySplitterInletNode() const;
+      bool removeSupplySplitter();
 
-  std::vector<Node> supplySplitterOutletNodes() const;
+      bool removeSupplySplitter(HVACComponent& hvacComponent);
 
-  AirLoopHVACZoneMixer zoneMixer() const;
+      boost::optional<Node> supplySplitterInletNode() const;
 
-  bool setZoneMixer(Mixer const & mixer);
+      std::vector<Node> supplySplitterOutletNodes() const;
 
-  AirLoopHVACZoneSplitter zoneSplitter() const;
+      AirLoopHVACZoneMixer zoneMixer() const;
 
-  bool setZoneSplitter(Splitter const & splitter, int path);
+      bool setZoneMixer(Mixer const& mixer);
 
-  void resetZoneSplitter(int path);
+      AirLoopHVACZoneSplitter zoneSplitter() const;
 
-  std::vector<AirLoopHVACZoneSplitter> zoneSplitters() const;
+      bool setZoneSplitter(Splitter const& splitter, int path);
 
-  bool removeBranchForZone(openstudio::model::ThermalZone & thermalZone);
+      void resetZoneSplitter(int path);
 
-  virtual std::vector<openstudio::IdfObject> remove() override;
+      std::vector<AirLoopHVACZoneSplitter> zoneSplitters() const;
 
-  /**
+      bool removeBranchForZone(openstudio::model::ThermalZone& thermalZone);
+
+      virtual std::vector<openstudio::IdfObject> remove() override;
+
+      /**
    * This method will clone an AirLoopHVAC with the following rationale:
    * - Handle all non-branch components from both the supply and the demand side
    * - On the demand side branches, place one terminal of each IddObjectType that is present on the original AirLoopHVAC
@@ -142,137 +148,129 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
    * - If the supply component that is cloned is connected to a PlantLoop,
    *   we try to the connect the clone to the same PlantLoop by adding a demand branch
    */
-  virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-  virtual Splitter demandSplitter() const override;
+      virtual Splitter demandSplitter() const override;
 
-  virtual Mixer demandMixer() const override;
+      virtual Mixer demandMixer() const override;
 
-  boost::optional<HVACComponent> supplyFan() const;
+      boost::optional<HVACComponent> supplyFan() const;
 
-  boost::optional<HVACComponent> returnFan() const;
+      boost::optional<HVACComponent> returnFan() const;
 
-  boost::optional<HVACComponent> reliefFan() const;
+      boost::optional<HVACComponent> reliefFan() const;
 
-  bool multiAddBranchForZone(ThermalZone & thermalZone);
+      // Helper to enforce that an ATU type (Single or Dual Duct) matches the AirLoopHVAC Type
+      bool isTerminalTypeValid(const HVACComponent& airTerminal);
 
-  bool multiAddBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal);
+      bool multiAddBranchForZone(ThermalZone& thermalZone);
 
-  bool addBranchForZone(openstudio::model::ThermalZone & thermalZone);
+      bool multiAddBranchForZone(ThermalZone& thermalZone, HVACComponent& airTerminal);
 
-  bool addBranchForZone(ThermalZone & thermalZone, HVACComponent & airTerminal);
+      bool addBranchForZone(openstudio::model::ThermalZone& thermalZone);
 
-  bool addBranchForZone(ThermalZone & thermalZone,
-                        Splitter & splitter,
-                        Mixer & mixer,
-                        HVACComponent & airTerminal);
+      bool addBranchForZone(ThermalZone& thermalZone, HVACComponent& airTerminal);
 
-  bool addBranchForZone(ThermalZone & thermalZone,
-                        Splitter & splitter,
-                        Mixer & mixer);
+      bool addBranchForZone(ThermalZone& thermalZone, Splitter& splitter, Mixer& mixer, HVACComponent& airTerminal);
 
-  // TODO: remove?
-  //bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone,
-  //                          boost::optional<StraightComponent> & optAirTerminal);
+      bool addBranchForZone(ThermalZone& thermalZone, Splitter& splitter, Mixer& mixer);
 
-  //bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone,
-  //                          boost::optional<HVACComponent> & optAirTerminal);
+      // TODO: remove?
+      //bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone,
+      //                          boost::optional<StraightComponent> & optAirTerminal);
 
-  bool moveBranchForZone(ThermalZone & thermalZone,
-                         Splitter & newSplitter);
+      //bool addBranchForZoneImpl(openstudio::model::ThermalZone & thermalZone,
+      //                          boost::optional<HVACComponent> & optAirTerminal);
 
-  bool moveBranchForZone(ThermalZone & thermalZone,
-                         Mixer & newMixer);
+      bool moveBranchForZone(ThermalZone& thermalZone, Splitter& newSplitter);
 
-  bool addBranchForHVACComponent(HVACComponent airTerminal);
+      bool moveBranchForZone(ThermalZone& thermalZone, Mixer& newMixer);
 
-  SizingSystem sizingSystem() const;
+      bool addBranchForHVACComponent(HVACComponent& airTerminal);
 
-  std::vector<ThermalZone> thermalZones() const;
+      SizingSystem sizingSystem() const;
 
-  std::vector<ModelObject> children() const override;
+      std::vector<ThermalZone> thermalZones() const;
 
-  Schedule availabilitySchedule() const;
+      virtual std::vector<ModelObject> children() const override;
 
-  bool setAvailabilitySchedule(Schedule & schedule);
+      Schedule availabilitySchedule() const;
 
-  bool setNightCycleControlType(std::string const & nightCycle);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-  std::string nightCycleControlType() const;
+      bool setNightCycleControlType(std::string const& nightCycle);
 
-  // boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule() const;
+      std::string nightCycleControlType() const;
 
-  // bool setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule);
+      // boost::optional<Schedule> returnAirBypassFlowTemperatureSetpointSchedule() const;
 
-  // void resetReturnAirBypassFlowTemperatureSetpointSchedule();
+      // bool setReturnAirBypassFlowTemperatureSetpointSchedule(Schedule & temperatureSetpointSchedule);
 
-  static bool addBranchForZoneImpl(ThermalZone & thermalZone,
-                                   AirLoopHVAC & airLoopHVAC,
-                                   Splitter & splitter,
-                                   Mixer & mixer,
-                                   bool removeCurrentZones,
-                                   boost::optional<HVACComponent> & optAirTerminal);
+      // void resetReturnAirBypassFlowTemperatureSetpointSchedule();
 
-  static boost::optional<ThermalZone> zoneForLastBranch(Mixer & mixer);
+      static bool addBranchForZoneImpl(ThermalZone& thermalZone, AirLoopHVAC& airLoopHVAC, Splitter& splitter, Mixer& mixer, bool removeCurrentZones,
+                                       boost::optional<HVACComponent>& optAirTerminal);
 
-  static boost::optional<HVACComponent> terminalForLastBranch(Mixer & mixer);
+      static boost::optional<ThermalZone> zoneForLastBranch(Mixer& mixer);
 
-  static boost::optional<PlantLoop> plantForAirTerminal( HVACComponent & airTerminal );
+      static boost::optional<HVACComponent> terminalForLastBranch(Mixer& mixer);
 
-  static bool setPlantForAirTerminal( HVACComponent & airTerminal, PlantLoop & plantLoop );
+      static boost::optional<PlantLoop> plantForAirTerminal(HVACComponent& airTerminal);
 
-  unsigned supplyOutletPortA() const;
+      static bool setPlantForAirTerminal(HVACComponent& airTerminal, PlantLoop& plantLoop);
 
-  unsigned supplyOutletPortB() const;
+      unsigned supplyOutletPortA() const;
 
-  unsigned supplyInletPort() const;
+      unsigned supplyOutletPortB() const;
 
-  unsigned demandInletPortA() const;
+      unsigned supplyInletPort() const;
 
-  unsigned demandInletPortB() const;
+      unsigned demandInletPortA() const;
 
-  unsigned demandOutletPort() const;
+      unsigned demandInletPortB() const;
 
-  static bool addDualDuctTerminalToNode(HVACComponent & terminal, const unsigned inletPortA, const unsigned inletPortB, const unsigned outletPort, Node & node);
+      unsigned demandOutletPort() const;
 
-  static bool removeDualDuctTerminalFromAirLoopHVAC(HVACComponent & terminal, const unsigned inletPortA, const unsigned inletPortB, const unsigned outletPort);
+      static bool addDualDuctTerminalToNode(HVACComponent& terminal, const unsigned inletPortA, const unsigned inletPortB, const unsigned outletPort,
+                                            Node& node);
 
-  bool isDualDuct() const;
+      static bool removeDualDuctTerminalFromAirLoopHVAC(HVACComponent& terminal, const unsigned inletPortA, const unsigned inletPortB,
+                                                        const unsigned outletPort);
 
+      bool isDualDuct() const;
 
-  // AVM
-  // Impl_only
-  virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const override;
+      // AVM
+      // Impl_only
+      virtual AvailabilityManagerAssignmentList availabilityManagerAssignmentList() const override;
 
+      std::vector<AvailabilityManager> availabilityManagers() const;
+      bool setAvailabilityManagers(const std::vector<AvailabilityManager>& avms);
+      void resetAvailabilityManagers();
 
-  std::vector<AvailabilityManager> availabilityManagers() const;
-  bool setAvailabilityManagers(const std::vector<AvailabilityManager> & avms);
-  void resetAvailabilityManagers();
+      bool addAvailabilityManager(const AvailabilityManager& availabilityManager);
+      bool addAvailabilityManager(const AvailabilityManager& availabilityManager, unsigned priority);
 
-  bool addAvailabilityManager(const AvailabilityManager & availabilityManager);
-  bool addAvailabilityManager(const AvailabilityManager & availabilityManager, unsigned priority);
+      unsigned availabilityManagerPriority(const AvailabilityManager& availabilityManager) const;
+      bool setAvailabilityManagerPriority(const AvailabilityManager& availabilityManager, unsigned priority);
 
-  unsigned availabilityManagerPriority(const AvailabilityManager & availabilityManager) const;
-  bool setAvailabilityManagerPriority(const AvailabilityManager & availabilityManager, unsigned priority);
+      bool removeAvailabilityManager(const AvailabilityManager& avm);
+      bool removeAvailabilityManager(unsigned priority);
 
-  bool removeAvailabilityManager(const AvailabilityManager& avm);
-  bool removeAvailabilityManager(unsigned priority);
+      boost::optional<double> autosizedDesignSupplyAirFlowRate() const;
 
-  boost::optional<double> autosizedDesignSupplyAirFlowRate() const ;
+      virtual void autosize() override;
 
-  virtual void autosize() override;
+      virtual void applySizingValues() override;
 
-  virtual void applySizingValues() override;
+      std::vector<HVACComponent> terminals() const;
 
-  std::vector<HVACComponent> terminals() const;
-
-  /**
+      /**
    * This method creates the basic, barebone, AirLoopHVAC topology:
    * - Supply inlet & oulet nodes,
    * - Demand inlet & outlet nodes,
@@ -280,29 +278,28 @@ class MODEL_API AirLoopHVAC_Impl : public Loop_Impl {
    * - A demand branch with a node
    * - A Demand branch with a node (Branch Node)
    */
-  virtual void createTopology() override;
+      virtual void createTopology() override;
 
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-  virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-  private:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirLoopHVAC");
 
-  REGISTER_LOGGER("openstudio.model.AirLoopHVAC");
+      // TODO: Make these const.
+      std::vector<ModelObject> supplyOutletNodesAsModelObjects();
+      std::vector<ModelObject> demandInletNodesAsModelObjects();
+      boost::optional<ModelObject> demandOutletNodeAsModelObject();
+      boost::optional<ModelObject> reliefAirNodeAsModelObject();
+      boost::optional<ModelObject> zoneMixerAsModelObject();
+      boost::optional<ModelObject> zoneSplitterAsModelObject();
+    };
 
-  // TODO: Make these const.
-  std::vector<ModelObject> supplyOutletNodesAsModelObjects();
-  std::vector<ModelObject> demandInletNodesAsModelObjects();
-  boost::optional<ModelObject> demandOutletNodeAsModelObject();
-  boost::optional<ModelObject> reliefAirNodeAsModelObject();
-  boost::optional<ModelObject> zoneMixerAsModelObject();
-  boost::optional<ModelObject> zoneSplitterAsModelObject();
-};
+  }  // namespace detail
 
-} // detail
+}  // namespace model
 
-} // model
-
-} // openstudio
+}  // namespace openstudio
 
 #endif

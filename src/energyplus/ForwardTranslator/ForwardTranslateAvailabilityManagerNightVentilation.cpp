@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -55,72 +55,70 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightVentilation(
-    AvailabilityManagerNightVentilation & modelObject)
-{
-  IdfObject idfObject(IddObjectType::AvailabilityManager_NightVentilation);
-  m_idfObjects.push_back(idfObject);
+  boost::optional<IdfObject> ForwardTranslator::translateAvailabilityManagerNightVentilation(AvailabilityManagerNightVentilation& modelObject) {
+    IdfObject idfObject(IddObjectType::AvailabilityManager_NightVentilation);
+    m_idfObjects.push_back(idfObject);
 
-  boost::optional<AirLoopHVAC> airLoopHVAC;
-  if( auto loop = modelObject.loop() ) {
-    airLoopHVAC = loop->optionalCast<model::AirLoopHVAC>();
-  }
+    boost::optional<AirLoopHVAC> airLoopHVAC;
+    if (auto loop = modelObject.loop()) {
+      airLoopHVAC = loop->optionalCast<model::AirLoopHVAC>();
+    }
 
-  // Name
-  if( auto s = modelObject.name() ) {
-    idfObject.setName(*s);
-  }
+    // Name
+    if (auto s = modelObject.name()) {
+      idfObject.setName(*s);
+    }
 
-  // ApplicabilityScheduleName
-  {
-    auto schedule = modelObject.applicabilitySchedule();
-    idfObject.setString(AvailabilityManager_NightVentilationFields::ApplicabilityScheduleName,schedule.name().get());
-  }
+    // ApplicabilityScheduleName
+    {
+      auto schedule = modelObject.applicabilitySchedule();
+      idfObject.setString(AvailabilityManager_NightVentilationFields::ApplicabilityScheduleName, schedule.name().get());
+    }
 
-  if( airLoopHVAC ) {
-    // Fan schedules are set to match the availabilitySchedule in the translator
-    idfObject.setString(AvailabilityManager_NightVentilationFields::FanScheduleName,airLoopHVAC->availabilitySchedule().name().get());
-  }
+    if (airLoopHVAC) {
+      // Fan schedules are set to match the availabilitySchedule in the translator
+      idfObject.setString(AvailabilityManager_NightVentilationFields::FanScheduleName, airLoopHVAC->availabilitySchedule().name().get());
+    }
 
-  // VentilationTemperatureScheduleName
-  if( auto schedule = modelObject.ventilationTemperatureSchedule() ) {
-    idfObject.setString(AvailabilityManager_NightVentilationFields::VentilationTemperatureScheduleName,schedule->name().get());
-  }
+    // VentilationTemperatureScheduleName
+    if (auto schedule = modelObject.ventilationTemperatureSchedule()) {
+      idfObject.setString(AvailabilityManager_NightVentilationFields::VentilationTemperatureScheduleName, schedule->name().get());
+    }
 
-  // VentilationTemperatureDifference
-  {
-    auto value = modelObject.ventilationTemperatureDifference();
-    idfObject.setDouble(AvailabilityManager_NightVentilationFields::VentilationTemperatureDifference,value);
-  }
+    // VentilationTemperatureDifference
+    {
+      auto value = modelObject.ventilationTemperatureDifference();
+      idfObject.setDouble(AvailabilityManager_NightVentilationFields::VentilationTemperatureDifference, value);
+    }
 
-  // VentilationTemperatureLowLimit
-  {
-    auto value = modelObject.ventilationTemperatureLowLimit();
-    idfObject.setDouble(AvailabilityManager_NightVentilationFields::VentilationTemperatureLowLimit,value);
-  }
+    // VentilationTemperatureLowLimit
+    {
+      auto value = modelObject.ventilationTemperatureLowLimit();
+      idfObject.setDouble(AvailabilityManager_NightVentilationFields::VentilationTemperatureLowLimit, value);
+    }
 
-  // NightVentingFlowFraction
-  {
-    auto value = modelObject.nightVentingFlowFraction();
-    idfObject.setDouble(AvailabilityManager_NightVentilationFields::NightVentingFlowFraction,value);
-  }
+    // NightVentingFlowFraction
+    {
+      auto value = modelObject.nightVentingFlowFraction();
+      idfObject.setDouble(AvailabilityManager_NightVentilationFields::NightVentingFlowFraction, value);
+    }
 
-  // ControlZoneName
-  if( auto zone = modelObject.controlZone() ) {
-    idfObject.setString(AvailabilityManager_NightVentilationFields::ControlZoneName,zone->name().get());
-  } else {
-    if( airLoopHVAC ) {
-      auto zones = airLoopHVAC->thermalZones();
-      if( ! zones.empty() ) {
-        auto default_zone = zones.front();
-        LOG(Info,modelObject.briefDescription() << " is missing Control Zone Name, defaulting to " << default_zone.briefDescription() << ".");
-        idfObject.setString(AvailabilityManager_NightVentilationFields::ControlZoneName,default_zone.name().get());
+    // ControlZoneName
+    if (auto zone = modelObject.controlZone()) {
+      idfObject.setString(AvailabilityManager_NightVentilationFields::ControlZoneName, zone->name().get());
+    } else {
+      if (airLoopHVAC) {
+        auto zones = airLoopHVAC->thermalZones();
+        if (!zones.empty()) {
+          auto default_zone = zones.front();
+          LOG(Info, modelObject.briefDescription() << " is missing Control Zone Name, defaulting to " << default_zone.briefDescription() << ".");
+          idfObject.setString(AvailabilityManager_NightVentilationFields::ControlZoneName, default_zone.name().get());
+        }
       }
     }
+
+    return idfObject;
   }
 
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

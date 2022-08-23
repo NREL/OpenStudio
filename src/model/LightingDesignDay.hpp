@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,94 +41,90 @@ class Time;
 
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class LightingDesignDay_Impl;
+    class LightingDesignDay_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** LightingDesignDay is a ModelObject that wraps the OpenStudio IDD object 'OS_LightingDesignDay'. */
-class MODEL_API LightingDesignDay : public ModelObject {
- public:
+  /** LightingDesignDay is a ModelObject that wraps the OpenStudio IDD object 'OS_LightingDesignDay'. */
+  class MODEL_API LightingDesignDay : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    LightingDesignDay(const std::string& cieSkyModel, const openstudio::Date& date, const Model& model);
 
-  LightingDesignDay(const std::string& cieSkyModel,
-                    const openstudio::Date& date,
-                    const Model& model);
+    virtual ~LightingDesignDay() {}
 
-  virtual ~LightingDesignDay() {}
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    static std::vector<std::string> validCIESkyModelValues();
 
-  static std::vector<std::string> validCIESkyModelValues();
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    std::string cieSkyModel() const;
 
-  std::string cieSkyModel() const;
+    int snowIndicator() const;
 
-  int snowIndicator() const;
+    bool isSnowIndicatorDefaulted() const;
 
-  bool isSnowIndicatorDefaulted() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setCIESkyModel(std::string cIESkyModel);
 
-  bool setCIESkyModel(std::string cIESkyModel);
+    bool setSnowIndicator(int snowIndicator);
 
-  bool setSnowIndicator(int snowIndicator);
+    void resetSnowIndicator();
 
-  void resetSnowIndicator();
+    //@}
 
-  //@}
+    openstudio::Date date() const;
 
-  openstudio::Date date() const;
+    bool setDate(const openstudio::Date& date);
 
-  bool setDate(const openstudio::Date& date);
+    std::vector<openstudio::Time> simulationTimes() const;
 
-  std::vector<openstudio::Time> simulationTimes() const;
+    std::vector<openstudio::DateTime> simulationDateTimes() const;
 
-  std::vector<openstudio::DateTime> simulationDateTimes() const;
+    bool addSimulationTime(const openstudio::Time& time);
 
-  bool addSimulationTime(const openstudio::Time& time);
+    void clearSimulationTimes();
 
-  void clearSimulationTimes();
+    // ensure that this object does not contain the date 2/29
+    void ensureNoLeapDays();
 
-  // ensure that this object does not contain the date 2/29
-  void ensureNoLeapDays();
+   protected:
+    /// @cond
+    typedef detail::LightingDesignDay_Impl ImplType;
 
- protected:
-  /// @cond
-  typedef detail::LightingDesignDay_Impl ImplType;
+    friend class detail::LightingDesignDay_Impl;
+    friend class Model;
+    friend class IdfObject;
 
-  friend class detail::LightingDesignDay_Impl;
-  friend class Model;
-  friend class IdfObject;
+    explicit LightingDesignDay(std::shared_ptr<detail::LightingDesignDay_Impl> impl);
 
-  explicit LightingDesignDay(std::shared_ptr<detail::LightingDesignDay_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.LightingDesignDay");
+  };
 
-  /// @endcond
- private:
+  /** \relates LightingDesignDay*/
+  typedef boost::optional<LightingDesignDay> OptionalLightingDesignDay;
 
-  REGISTER_LOGGER("openstudio.model.LightingDesignDay");
-};
+  /** \relates LightingDesignDay*/
+  typedef std::vector<LightingDesignDay> LightingDesignDayVector;
 
-/** \relates LightingDesignDay*/
-typedef boost::optional<LightingDesignDay> OptionalLightingDesignDay;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates LightingDesignDay*/
-typedef std::vector<LightingDesignDay> LightingDesignDayVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_LIGHTINGDESIGNDAY_HPP
-
+#endif  // MODEL_LIGHTINGDESIGNDAY_HPP

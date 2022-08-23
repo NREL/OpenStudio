@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,12 +44,13 @@ class Quantity;
  *  Unit. Optionally contains a value. The constructors and assignment operator ensure that this
  *  class behaves as "plain old data" (POD) by cloning any units information (to avoid multiple
  *  objects pointing to the exact same unit data). */
-class UTILITIES_API OSOptionalQuantity {
+class UTILITIES_API OSOptionalQuantity
+{
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  explicit OSOptionalQuantity(const UnitSystem& sys=UnitSystem::Mixed);
+  explicit OSOptionalQuantity(const UnitSystem& sys = UnitSystem::Mixed);
 
   explicit OSOptionalQuantity(const Unit& units);
 
@@ -81,6 +82,6 @@ class UTILITIES_API OSOptionalQuantity {
   Unit m_units;
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_OSOPTIONALQUANTITY_HPP
+#endif  // UTILITIES_UNITS_OSOPTIONALQUANTITY_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,88 +40,89 @@ namespace detail {
 
 namespace model {
 
-class ComponentData;
+  class ComponentData;
 
-namespace detail {
-  class Component_Impl;
-  class ModelObject_Impl;
-  class ParentObject_Impl;
-} // detail
+  namespace detail {
+    class Component_Impl;
+    class ModelObject_Impl;
+    class ParentObject_Impl;
+  }  // namespace detail
 
-/** Component is a Model that contains exactly one ComponentData object. All objects other than
+  /** Component is a Model that contains exactly one ComponentData object. All objects other than
  *  the ComponentData object and the version object are the Component contents. There is a
  *  primary ModelObject that provides the Component's type. There are no public constructors,
  *  as Components are to be constructed through the ModelObject method \link
  *  ModelObject::createComponent createComponent\endlink. Similarly, Model-level object addition
  *  and removal, and SqlFile functionality, has been disabled. */
-class MODEL_API Component : public Model {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API Component : public Model
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** Construct from an IdfFile. Must contain exactly one ComponentData object, and contents
+    /** Construct from an IdfFile. Must contain exactly one ComponentData object, and contents
    *  list in ComponentData must exactly match the contents of idfFile. */
-  explicit Component(const openstudio::IdfFile& idfFile);
+    explicit Component(const openstudio::IdfFile& idfFile);
 
-  virtual ~Component();
+    virtual ~Component();
 
-  //@}
-  /** @name Getters */
-  //@{
+    //@}
+    /** @name Getters */
+    //@{
 
-  /** Returns the object that contains the contents list, unique identifiers, and timestamps
+    /** Returns the object that contains the contents list, unique identifiers, and timestamps
    *  for this Component. */
-  ComponentData componentData() const;
+    ComponentData componentData() const;
 
-  /** Returns the primary ModelObject of this Component. Can be used to access the Component
+    /** Returns the primary ModelObject of this Component. Can be used to access the Component
    *  type by using .optionalCast or iddObjectType(). */
-  ModelObject primaryObject() const;
+    ModelObject primaryObject() const;
 
-  //@}
-  /** @name Serialization */
-  //@{
+    //@}
+    /** @name Serialization */
+    //@{
 
-  /** Load Component from path p, if possible. */
-  static boost::optional<Component> load(const path& p);
+    /** Load Component from path p, if possible. */
+    static boost::optional<Component> load(const path& p);
 
-  /** Save Component to path p. Will construct the parent folder if its parent folder exists.
+    /** Save Component to path p. Will construct the parent folder if its parent folder exists.
    *  An existing file will only be overwritten if if overwrite==true. If no extension is provided,
    *  componentFileExtension() will be used. */
-  virtual bool save(const openstudio::path& p, bool overwrite=false);
+    virtual bool save(const openstudio::path& p, bool overwrite = false);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::Component_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::Component_Impl ImplType;
 
-  friend class openstudio::Workspace;
-  friend class openstudio::detail::Workspace_Impl;
-  friend class detail::Component_Impl;
-  friend class detail::ModelObject_Impl;
-  friend class detail::ParentObject_Impl;
+    friend class openstudio::Workspace;
+    friend class openstudio::detail::Workspace_Impl;
+    friend class detail::Component_Impl;
+    friend class detail::ModelObject_Impl;
+    friend class detail::ParentObject_Impl;
 
-  /** Protected constructor from impl. */
-  Component(std::shared_ptr<detail::Component_Impl> impl);
+    /** Protected constructor from impl. */
+    Component(std::shared_ptr<detail::Component_Impl> impl);
 
-  /// @endcond
+    /// @endcond
 
-  /** Construct from a vector of ModelObjects, all in the same .model(). The primary object
+    /** Construct from a vector of ModelObjects, all in the same .model(). The primary object
    *  must be listed first. Throws if contents.empty() or if more than one .model() is found.
    *  StrictnessLevel is always set to Draft. Not for general use; used by
    *  ModelObject::createComponent. */
-  Component(const std::vector<ModelObject>& contents);
+    Component(const std::vector<ModelObject>& contents);
 
- private:
-  REGISTER_LOGGER("openstudio.model.Component");
-};
+   private:
+    REGISTER_LOGGER("openstudio.model.Component");
+  };
 
-/** \relates Component */
-typedef boost::optional<Component> OptionalComponent;
+  /** \relates Component */
+  typedef boost::optional<Component> OptionalComponent;
 
-/** \relates Component */
-typedef std::vector<Component> ComponentVector;
+  /** \relates Component */
+  typedef std::vector<Component> ComponentVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_COMPONENT_HPP
+#endif  // MODEL_COMPONENT_HPP

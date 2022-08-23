@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,81 +36,81 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class ScheduleVariableInterval_Impl;
+    class ScheduleVariableInterval_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ScheduleVariableInterval is a ScheduleInterval that wraps the OpenStudio IDD object
+  /** ScheduleVariableInterval is a ScheduleInterval that wraps the OpenStudio IDD object
  *  'OS_Schedule_VariableInterval'. */
-class MODEL_API ScheduleVariableInterval : public ScheduleInterval {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ScheduleVariableInterval : public ScheduleInterval
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ScheduleVariableInterval(const Model& model);
+    explicit ScheduleVariableInterval(const Model& model);
 
-  virtual ~ScheduleVariableInterval() {}
+    virtual ~ScheduleVariableInterval() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  bool interpolatetoTimestep() const;
+    bool interpolatetoTimestep() const;
 
-  bool isInterpolatetoTimestepDefaulted() const;
+    bool isInterpolatetoTimestepDefaulted() const;
 
-  double outOfRangeValue() const;
+    double outOfRangeValue() const;
 
-  bool isOutOfRangeValueDefaulted() const;
+    bool isOutOfRangeValueDefaulted() const;
 
-  int startMonth() const;
+    int startMonth() const;
 
-  int startDay() const;
+    int startDay() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setInterpolatetoTimestep(bool interpolatetoTimestep);
+    bool setInterpolatetoTimestep(bool interpolatetoTimestep);
 
-  void resetInterpolatetoTimestep();
+    void resetInterpolatetoTimestep();
 
-  bool setOutOfRangeValue(double outOfRangeValue);
+    bool setOutOfRangeValue(double outOfRangeValue);
 
-  void resetOutOfRangeValue();
+    void resetOutOfRangeValue();
 
-  bool setStartMonth(int startMonth);
+    bool setStartMonth(int startMonth);
 
-  bool setStartDay(int startDay);
+    bool setStartDay(int startDay);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ScheduleVariableInterval_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ScheduleVariableInterval_Impl ImplType;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::ScheduleVariableInterval_Impl;
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::ScheduleVariableInterval_Impl;
 
-  explicit ScheduleVariableInterval(std::shared_ptr<detail::ScheduleVariableInterval_Impl> impl);
-  /// @endcond
- private:
+    explicit ScheduleVariableInterval(std::shared_ptr<detail::ScheduleVariableInterval_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ScheduleVariableInterval");
+  };
 
-  REGISTER_LOGGER("openstudio.model.ScheduleVariableInterval");
-};
+  /** \relates ScheduleVariableInterval*/
+  typedef boost::optional<ScheduleVariableInterval> OptionalScheduleVariableInterval;
 
-/** \relates ScheduleVariableInterval*/
-typedef boost::optional<ScheduleVariableInterval> OptionalScheduleVariableInterval;
+  /** \relates ScheduleVariableInterval*/
+  typedef std::vector<ScheduleVariableInterval> ScheduleVariableIntervalVector;
 
-/** \relates ScheduleVariableInterval*/
-typedef std::vector<ScheduleVariableInterval> ScheduleVariableIntervalVector;
+}  // namespace model
+}  // namespace openstudio
 
-} // model
-} // openstudio
-
-#endif // MODEL_SCHEDULEVARIABLEINTERVAL_HPP
+#endif  // MODEL_SCHEDULEVARIABLEINTERVAL_HPP

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -135,6 +135,4 @@ TEST_F(ModelFixture, ElectricLoadCenterInverterLookUpTable_Instantiate) {
   EXPECT_EQ(electricLoadCenterInverterLookUpTable.efficiencyAt100PowerAndNominalVoltage().get(), value);
   electricLoadCenterInverterLookUpTable.resetEfficiencyAt100PowerAndNominalVoltage();
   EXPECT_FALSE(electricLoadCenterInverterLookUpTable.efficiencyAt100PowerAndNominalVoltage());
-
 }
-

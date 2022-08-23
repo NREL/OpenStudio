@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,79 +37,75 @@
 namespace openstudio {
 namespace model {
 
-class AirLoopHVAC;
-class AirflowNetworkEquivalentDuct;
+  class AirLoopHVAC;
+  class AirflowNetworkEquivalentDuct;
 
-namespace detail{
-  class StraightComponent_Impl;
-}
+  namespace detail {
+    class StraightComponent_Impl;
+  }
 
-/** StraightComponent is the base class for HVACComponent objects which have precisely one inlet port and one outlet port.
+  /** StraightComponent is the base class for HVACComponent objects which have precisely one inlet port and one outlet port.
  *
  *  A StraighComponent may appear on either an AirLoopHVAC or a PlantLoop.
  */
-class MODEL_API StraightComponent : public HVACComponent {
+  class MODEL_API StraightComponent : public HVACComponent
+  {
 
-  public:
+   public:
+    StraightComponent(IddObjectType type, const Model& model);
 
-  StraightComponent(IddObjectType type,const Model& model);
+    virtual ~StraightComponent() {}
 
-  virtual ~StraightComponent() {}
+    std::vector<openstudio::IdfObject> remove();
 
-  std::vector<openstudio::IdfObject> remove();
+    bool removeFromLoop();
 
-  bool removeFromLoop();
+    /** Returns the inlet port. **/
+    unsigned inletPort() const;
 
-  /** Returns the inlet port. **/
-   unsigned inletPort() const;
+    /** Returns the outlet port. **/
+    unsigned outletPort() const;
 
-  /** Returns the outlet port. **/
-   unsigned outletPort() const;
+    /** Returns the optional ModelObject connected to the inlet port. **/
+    boost::optional<ModelObject> inletModelObject() const;
 
-  /** Returns the optional ModelObject connected to the inlet port. **/
-   boost::optional<ModelObject> inletModelObject() const;
+    /** Returns the optional ModelObject connected to the outlet port. **/
+    boost::optional<ModelObject> outletModelObject() const;
 
-  /** Returns the optional ModelObject connected to the outlet port. **/
-   boost::optional<ModelObject> outletModelObject() const;
-
-  /** Returns the optional AirLoopHVAC object that this AirToAirComponent is attached to.
+    /** Returns the optional AirLoopHVAC object that this AirToAirComponent is attached to.
    *
    *  Reimplemented from HVACComponent.
    */
-  boost::optional<AirLoopHVAC> airLoopHVAC() const;
+    boost::optional<AirLoopHVAC> airLoopHVAC() const;
 
-  bool addToNode(Node & node);
+    bool addToNode(Node& node);
 
-  ModelObject clone(Model model) const;
+    ModelObject clone(Model model) const;
 
-  void disconnect();
+    void disconnect();
 
-  protected:
+   protected:
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    /// @cond
 
-  /// @cond
+    typedef detail::StraightComponent_Impl ImplType;
 
-  typedef detail::StraightComponent_Impl ImplType;
+    explicit StraightComponent(std::shared_ptr<detail::StraightComponent_Impl> impl);
 
-  explicit StraightComponent(std::shared_ptr<detail::StraightComponent_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.StraightComponent");
 
-  private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.StraightComponent");
+  typedef boost::optional<StraightComponent> OptionalStraightComponent;
 
-  /// @endcond
+  typedef std::vector<StraightComponent> StraightComponentVector;
 
-};
+}  // namespace model
+}  // namespace openstudio
 
-typedef boost::optional<StraightComponent> OptionalStraightComponent;
-
-typedef std::vector<StraightComponent> StraightComponentVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_STRAIGHTCOMPONENT_HPP
-
+#endif  // MODEL_STRAIGHTCOMPONENT_HPP

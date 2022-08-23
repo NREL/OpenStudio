@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,9 +41,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-
-TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
-{
+TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic) {
   Model m;
 
   ThermalZone z(m);
@@ -72,7 +70,6 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
   // Shouldn't be able to get/set anything for an equipment that isn't part of the ZoneEqList
   EXPECT_FALSE(z.setHeatingPriority(bwrong, 3));
   EXPECT_FALSE(z.setCoolingPriority(bwrong, 3));
-
 
   // Can't set/get the Sequential Fraction if:
 
@@ -114,16 +111,15 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
   EXPECT_TRUE(scheduleCooling.setValue(0.9));
   EXPECT_TRUE(z.setSequentialCoolingFractionSchedule(b2, scheduleCooling));
   ASSERT_TRUE(z.sequentialCoolingFraction(b2));
-  EXPECT_EQ(0.9, z.sequentialCoolingFraction(b2));
+  EXPECT_EQ(0.9, z.sequentialCoolingFraction(b2).get());
   ASSERT_TRUE(z.sequentialCoolingFractionSchedule(b2));
 
   ScheduleConstant scheduleHeating(m);
   EXPECT_TRUE(scheduleHeating.setValue(0.33));
   EXPECT_TRUE(z.setSequentialHeatingFractionSchedule(b2, scheduleHeating));
   ASSERT_TRUE(z.sequentialHeatingFraction(b2));
-  EXPECT_EQ(0.33, z.sequentialHeatingFraction(b2));
+  EXPECT_EQ(0.33, z.sequentialHeatingFraction(b2).get());
   ASSERT_TRUE(z.sequentialHeatingFractionSchedule(b2));
-
 
   // Setting a priority to zero should reset the corresponding Sequential Fraction
   // TODO
@@ -135,8 +131,7 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
 
   // TODO
   // EXPECT_FALSE(z.sequentialCoolingFraction(b2)); // reset
-  EXPECT_TRUE(z.sequentialHeatingFraction(b2)); // untouched
-
+  EXPECT_TRUE(z.sequentialHeatingFraction(b2));  // untouched
 
   // Setting the Load Distribution Scheme to something else should reset all sequential fractions
   EXPECT_TRUE(z.setLoadDistributionScheme("UniformLoad"));
@@ -148,15 +143,12 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_Logic)
   EXPECT_FALSE(z.sequentialHeatingFractionSchedule(b1));
   EXPECT_FALSE(z.sequentialHeatingFraction(b2));
   EXPECT_FALSE(z.sequentialHeatingFractionSchedule(b2));
-
 }
 
-TEST_F(ModelFixture, ZoneHVACEquipmentList_ScheduleTypeLimits)
-{
+TEST_F(ModelFixture, ZoneHVACEquipmentList_ScheduleTypeLimits) {
   Model m;
 
   ThermalZone z(m);
-
 
   EXPECT_TRUE(z.setLoadDistributionScheme("SequentialLoad"));
 
@@ -174,5 +166,4 @@ TEST_F(ModelFixture, ZoneHVACEquipmentList_ScheduleTypeLimits)
   boost::optional<ScheduleTypeLimits> _sch_lim = _sch->scheduleTypeLimits();
   ASSERT_TRUE(_sch_lim);
   EXPECT_EQ("Dimensionless", _sch_lim->unitType());
-
 }

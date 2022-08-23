@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,18 +38,19 @@
 namespace openstudio {
 
 class EpwFile;
+class DayOfWeek;
 
 namespace model {
 
-class Site;
+  class Site;
 
-namespace detail {
+  namespace detail {
 
-  class WeatherFile_Impl;
+    class WeatherFile_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** WeatherFile derives from ModelObject and is an interface to the OpenStudio IDD object named "OS:WeatherFile".
+  /** WeatherFile derives from ModelObject and is an interface to the OpenStudio IDD object named "OS:WeatherFile".
  *
  *  WeatherFile is a unique object which references an EPW format weather file to use for EnergyPlus simulation.
  *  EnergyPlus requires the weather file for simulation be named in.epw and located in the same directory as the input IDF file.
@@ -59,133 +60,135 @@ namespace detail {
  *  To get the WeatherFile object for a Model or create one if it does not yet exist use model.getUniqueObject<WeatherFile>().
  *  To get the WeatherFile object for a Model but not create one if it does not yet exist use model.getOptionalUniqueObject<WeatherFile>().
  */
-class MODEL_API WeatherFile : public ModelObject {
- public:
+  class MODEL_API WeatherFile : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
+    virtual ~WeatherFile() {}
 
-   /** @name Constructors and Destructors */
-  //@{
-  virtual ~WeatherFile() {}
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    static IddObjectType iddObjectType();
 
-  static IddObjectType iddObjectType();
+    /// Sets WeatherFile in the Model based on EpwFile input.
+    static boost::optional<WeatherFile> setWeatherFile(Model& model, const openstudio::EpwFile& epwFile);
 
-  /// Sets WeatherFile in the Model based on EpwFile input.
-  static boost::optional<WeatherFile> setWeatherFile(Model& model, const openstudio::EpwFile& epwFile);
+    //@}
+    /** @name Getters */
+    //@{
 
-  //@}
-  /** @name Getters */
-  //@{
+    std::string city() const;
 
-  std::string city() const;
+    std::string stateProvinceRegion() const;
 
-  std::string stateProvinceRegion() const;
+    std::string country() const;
 
-  std::string country() const;
+    std::string dataSource() const;
 
-  std::string dataSource() const;
+    std::string wMONumber() const;
 
-  std::string wMONumber() const;
+    double latitude() const;
 
-  double latitude() const;
+    double longitude() const;
 
-  double longitude() const;
+    double timeZone() const;
 
-  double timeZone() const;
+    double elevation() const;
 
-  double elevation() const;
+    bool isElevationDefaulted() const;
 
-  bool isElevationDefaulted() const;
+    boost::optional<std::string> url() const;
 
-  boost::optional<std::string> url() const;
+    boost::optional<openstudio::path> path() const;
 
-  boost::optional<openstudio::path> path() const;
+    boost::optional<std::string> checksum() const;
 
-  boost::optional<std::string> checksum() const;
+    boost::optional<int> startDateActualYear() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    boost::optional<DayOfWeek> startDayOfWeek() const;
 
-  bool setCity(std::string city);
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setStateProvinceRegion(std::string stateProvinceRegion);
+    bool setCity(std::string city);
 
-  bool setCountry(std::string country);
+    bool setStateProvinceRegion(std::string stateProvinceRegion);
 
-  bool setDataSource(std::string dataSource);
+    bool setCountry(std::string country);
 
-  bool setWMONumber(std::string wMONumber);
+    bool setDataSource(std::string dataSource);
 
-  bool setLatitude(double latitude);
+    bool setWMONumber(std::string wMONumber);
 
-  bool setLongitude(double longitude);
+    bool setLatitude(double latitude);
 
-  bool setTimeZone(double timeZone);
+    bool setLongitude(double longitude);
 
-  bool setElevation(double elevation);
+    bool setTimeZone(double timeZone);
 
-  void resetElevation();
+    bool setElevation(double elevation);
 
-  //bool setUrl(boost::optional<std::string> url);
+    void resetElevation();
 
-  //bool setUrl(std::string url);
+    //bool setUrl(boost::optional<std::string> url);
 
-  //void resetUrl();
+    //bool setUrl(std::string url);
 
-  //bool setChecksum(boost::optional<std::string> checksum);
+    //void resetUrl();
 
-  //bool setChecksum(std::string checksum);
+    //bool setChecksum(boost::optional<std::string> checksum);
 
-  //void resetChecksum();
+    //bool setChecksum(std::string checksum);
 
-  //@}
+    //void resetChecksum();
 
-  // Returns the parent Site.
-  boost::optional<Site> site() const;
+    //@}
 
-  /** Load and return the EpwFile.  Optional argument dir can be used as a base path
+    // Returns the parent Site.
+    boost::optional<Site> site() const;
+
+    /** Load and return the EpwFile.  Optional argument dir can be used as a base path
   if url field is relative. */
-  boost::optional<EpwFile> file(const openstudio::path& dir=openstudio::path()) const;
+    boost::optional<EpwFile> file(const openstudio::path& dir = openstudio::path()) const;
 
-  /** Save the url as relative to basePath, or just keep the file name and extension if
+    /** Save the url as relative to basePath, or just keep the file name and extension if
   *  basePath.empty(). */
-  bool makeUrlRelative(const openstudio::path& basePath=openstudio::path());
+    bool makeUrlRelative(const openstudio::path& basePath = openstudio::path());
 
-  /** Search for file and save the absolute url if successful. */
-  bool makeUrlAbsolute(const openstudio::path& searchDirectory);
+    /** Search for file and save the absolute url if successful. */
+    bool makeUrlAbsolute(const openstudio::path& searchDirectory);
 
-  // Returns the environment name used if the RunPeriod object has no name,
-  // environmentName = "City StateProvinceRegion Country DataSource WMO#=WMONumber"
-  boost::optional<std::string> environmentName() const;
+    // Returns the environment name used if the RunPeriod object has no name,
+    // environmentName = "City StateProvinceRegion Country DataSource WMO#=WMONumber"
+    boost::optional<std::string> environmentName() const;
 
-protected:
+   protected:
+    explicit WeatherFile(Model& model);
 
-  explicit WeatherFile(Model& model);
+    /// @cond
+    typedef detail::WeatherFile_Impl ImplType;
 
-  /// @cond
-  typedef detail::WeatherFile_Impl ImplType;
+    friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class Model;
-  friend class openstudio::IdfObject;
+    explicit WeatherFile(std::shared_ptr<detail::WeatherFile_Impl> impl);
 
-  explicit WeatherFile(std::shared_ptr<detail::WeatherFile_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.WeatherFile");
+  };
 
-  /// @endcond
- private:
+  /** \relates WeatherFile*/
+  typedef boost::optional<WeatherFile> OptionalWeatherFile;
 
-  REGISTER_LOGGER("openstudio.model.WeatherFile");
-};
+  /** \relates WeatherFile*/
+  typedef std::vector<WeatherFile> WeatherFileVector;
 
-/** \relates WeatherFile*/
-typedef boost::optional<WeatherFile> OptionalWeatherFile;
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates WeatherFile*/
-typedef std::vector<WeatherFile> WeatherFileVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_WEATHERFILE_HPP
+#endif  // MODEL_WEATHERFILE_HPP

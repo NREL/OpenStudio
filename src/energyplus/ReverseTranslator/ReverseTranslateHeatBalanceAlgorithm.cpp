@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,35 +44,33 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<model::ModelObject> ReverseTranslator::translateHeatBalanceAlgorithm(
-    const WorkspaceObject& workspaceObject)
-{
-  OS_ASSERT(workspaceObject.iddObject().type() == IddObjectType::HeatBalanceAlgorithm);
+  boost::optional<model::ModelObject> ReverseTranslator::translateHeatBalanceAlgorithm(const WorkspaceObject& workspaceObject) {
+    OS_ASSERT(workspaceObject.iddObject().type() == IddObjectType::HeatBalanceAlgorithm);
 
-  HeatBalanceAlgorithm heatBalanceAlgorithm = m_model.getUniqueModelObject<HeatBalanceAlgorithm>();
+    HeatBalanceAlgorithm heatBalanceAlgorithm = m_model.getUniqueModelObject<HeatBalanceAlgorithm>();
 
-  OptionalString s = workspaceObject.getString(HeatBalanceAlgorithmFields::Algorithm,false,true);
-  if (s) {
-    heatBalanceAlgorithm.setAlgorithm(*s);
+    OptionalString s = workspaceObject.getString(HeatBalanceAlgorithmFields::Algorithm, false, true);
+    if (s) {
+      heatBalanceAlgorithm.setAlgorithm(*s);
+    }
+
+    OptionalDouble d = workspaceObject.getDouble(HeatBalanceAlgorithmFields::SurfaceTemperatureUpperLimit);
+    if (d) {
+      heatBalanceAlgorithm.setSurfaceTemperatureUpperLimit(*d);
+    }
+
+    d = workspaceObject.getDouble(HeatBalanceAlgorithmFields::MinimumSurfaceConvectionHeatTransferCoefficientValue);
+    if (d) {
+      heatBalanceAlgorithm.setMinimumSurfaceConvectionHeatTransferCoefficientValue(*d);
+    }
+
+    d = workspaceObject.getDouble(HeatBalanceAlgorithmFields::MaximumSurfaceConvectionHeatTransferCoefficientValue);
+    if (d) {
+      heatBalanceAlgorithm.setMaximumSurfaceConvectionHeatTransferCoefficientValue(*d);
+    }
+
+    return heatBalanceAlgorithm.cast<ModelObject>();
   }
 
-  OptionalDouble d = workspaceObject.getDouble(HeatBalanceAlgorithmFields::SurfaceTemperatureUpperLimit);
-  if (d) {
-    heatBalanceAlgorithm.setSurfaceTemperatureUpperLimit(*d);
-  }
-
-  d = workspaceObject.getDouble(HeatBalanceAlgorithmFields::MinimumSurfaceConvectionHeatTransferCoefficientValue);
-  if (d) {
-    heatBalanceAlgorithm.setMinimumSurfaceConvectionHeatTransferCoefficientValue(*d);
-  }
-
-  d = workspaceObject.getDouble(HeatBalanceAlgorithmFields::MaximumSurfaceConvectionHeatTransferCoefficientValue);
-  if (d) {
-    heatBalanceAlgorithm.setMaximumSurfaceConvectionHeatTransferCoefficientValue(*d);
-  }
-
-  return heatBalanceAlgorithm.cast<ModelObject>();
-}
-
-} // energyplus
-} // openstudio
+}  // namespace energyplus
+}  // namespace openstudio

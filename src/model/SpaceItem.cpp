@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,108 +42,87 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  SpaceItem_Impl::SpaceItem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-    : ModelObject_Impl(idfObject, model, keepHandle)
-  {}
+    SpaceItem_Impl::SpaceItem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle) : ModelObject_Impl(idfObject, model, keepHandle) {}
 
-  SpaceItem_Impl::SpaceItem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-    : ModelObject_Impl(other, model, keepHandle)
-  {}
+    SpaceItem_Impl::SpaceItem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
 
-  SpaceItem_Impl::SpaceItem_Impl(const SpaceItem_Impl& other,
-                                           Model_Impl* model,
-                                           bool keepHandle)
-    : ModelObject_Impl(other, model, keepHandle)
-  {}
+    SpaceItem_Impl::SpaceItem_Impl(const SpaceItem_Impl& other, Model_Impl* model, bool keepHandle) : ModelObject_Impl(other, model, keepHandle) {}
 
-  boost::optional<ParentObject> SpaceItem_Impl::parent() const
-  {
-    return boost::optional<ParentObject>(this->space());
-  }
-
-  bool SpaceItem_Impl::setParent(ParentObject& newParent)
-  {
-    bool result = false;
-    if (newParent.optionalCast<Space>()){
-      result = this->setSpace(newParent.cast<Space>());
+    boost::optional<ParentObject> SpaceItem_Impl::parent() const {
+      return boost::optional<ParentObject>(this->space());
     }
-    return result;
-  }
 
-  boost::optional<Space> SpaceItem_Impl::space() const
-  {
-    boost::optional<Space> result;
-    OptionalWorkspaceObject space = getTarget(this->spaceIndex());
-    if (space){
-      result = space->optionalCast<Space>();
+    bool SpaceItem_Impl::setParent(ParentObject& newParent) {
+      bool result = false;
+      if (newParent.optionalCast<Space>()) {
+        result = this->setSpace(newParent.cast<Space>());
+      }
+      return result;
     }
-    return result;
-  }
 
-  bool SpaceItem_Impl::setSpace(const Space& space)
-  {
-    return setPointer(this->spaceIndex(), space.handle());
-  }
-
-  void SpaceItem_Impl::resetSpace() {
-    bool ok = setString(this->spaceIndex(),"");
-    OS_ASSERT(ok);
-  }
-
-  boost::optional<ModelObject> SpaceItem_Impl::spaceAsModelObject() const {
-    OptionalModelObject result;
-    OptionalSpace intermediate = space();
-    if (intermediate) {
-      result = *intermediate;
+    boost::optional<Space> SpaceItem_Impl::space() const {
+      boost::optional<Space> result;
+      OptionalWorkspaceObject space = getTarget(this->spaceIndex());
+      if (space) {
+        result = space->optionalCast<Space>();
+      }
+      return result;
     }
-    return result;
-  }
 
-  bool SpaceItem_Impl::setSpaceAsModelObject(const boost::optional<ModelObject>& modelObject) {
-    if (modelObject) {
-      OptionalSpace intermediate = modelObject->optionalCast<Space>();
+    bool SpaceItem_Impl::setSpace(const Space& space) {
+      return setPointer(this->spaceIndex(), space.handle());
+    }
+
+    void SpaceItem_Impl::resetSpace() {
+      bool ok = setString(this->spaceIndex(), "");
+      OS_ASSERT(ok);
+    }
+
+    boost::optional<ModelObject> SpaceItem_Impl::spaceAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSpace intermediate = space();
       if (intermediate) {
-        return setSpace(*intermediate);
+        result = *intermediate;
       }
-      else {
-        return false;
+      return result;
+    }
+
+    bool SpaceItem_Impl::setSpaceAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSpace intermediate = modelObject->optionalCast<Space>();
+        if (intermediate) {
+          return setSpace(*intermediate);
+        } else {
+          return false;
+        }
+      } else {
+        resetSpace();
       }
+      return true;
     }
-    else {
-      resetSpace();
-    }
-    return true;
+
+  }  // namespace detail
+
+  SpaceItem::SpaceItem(IddObjectType type, const Model& model) : ModelObject(type, model) {
+    OS_ASSERT(getImpl<detail::SpaceItem_Impl>());
   }
 
-} // detail
+  SpaceItem::SpaceItem(std::shared_ptr<detail::SpaceItem_Impl> impl) : ModelObject(std::move(impl)) {}
 
-SpaceItem::SpaceItem(IddObjectType type,const Model& model)
-  : ModelObject(type,model)
-{
-  OS_ASSERT(getImpl<detail::SpaceItem_Impl>());
-}
+  boost::optional<Space> SpaceItem::space() const {
+    return getImpl<detail::SpaceItem_Impl>()->space();
+  }
 
-SpaceItem::SpaceItem(std::shared_ptr<detail::SpaceItem_Impl> impl)
-  : ModelObject(std::move(impl))
-{}
+  bool SpaceItem::setSpace(const Space& space) {
+    return getImpl<detail::SpaceItem_Impl>()->setSpace(space);
+  }
 
-boost::optional<Space> SpaceItem::space() const
-{
-  return getImpl<detail::SpaceItem_Impl>()->space();
-}
+  void SpaceItem::resetSpace() {
+    return getImpl<detail::SpaceItem_Impl>()->resetSpace();
+  }
 
-bool SpaceItem::setSpace(const Space& space)
-{
-  return getImpl<detail::SpaceItem_Impl>()->setSpace(space);
-}
-
-void SpaceItem::resetSpace() {
-  return getImpl<detail::SpaceItem_Impl>()->resetSpace();
-}
-
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio

@@ -11,11 +11,13 @@ target_link_libraries(
  openstudio_airflow
  openstudio_model
  openstudio_energyplus
+ openstudio_epjson
  openstudio_measure
  openstudio_osversion
  openstudio_sdd
  openstudio_isomodel
  openstudio_gbxml
+ openstudio_gltf
  openstudio_radiance
 )
 
@@ -27,6 +29,9 @@ target_link_libraries(
  CONAN_PKG::cpprestsdk
  CONAN_PKG::openssl
  CONAN_PKG::pugixml
+ CONAN_PKG::libxml2
+ # CONAN_PKG::libxslt
+ # CONAN_PKG::tinygltf  # TODO: needed?
 )
 
 target_compile_definitions(openstudiolib INTERFACE "-DSHARED_OS_LIBS")

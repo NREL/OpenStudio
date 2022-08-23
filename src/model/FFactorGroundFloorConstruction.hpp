@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,65 +36,61 @@
 namespace openstudio {
 namespace model {
 
-namespace detail{
-  class FFactorGroundFloorConstruction_Impl;
-}
+  namespace detail {
+    class FFactorGroundFloorConstruction_Impl;
+  }
 
-/** FFactorGroundFloorConstruction is a ConstructionBase that wraps EnergyPlus IDD object
+  /** FFactorGroundFloorConstruction is a ConstructionBase that wraps EnergyPlus IDD object
  *  'Construction:FfactorGroundFloor'. This is a simple, unlayered construction object that may
  *  be applied to a Surface (typically a ground floor). */
-class MODEL_API FFactorGroundFloorConstruction : public ConstructionBase {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API FFactorGroundFloorConstruction : public ConstructionBase
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit FFactorGroundFloorConstruction(const Model& model,
-    double fFactor = 0.1,
-    double area = 0.1,
-    double perimeterExposed = 0.1);
+    explicit FFactorGroundFloorConstruction(const Model& model, double fFactor = 0.1, double area = 0.1, double perimeterExposed = 0.1);
 
-  virtual ~FFactorGroundFloorConstruction() {}
+    virtual ~FFactorGroundFloorConstruction() {}
 
-  /** Attribute Name: 'fFactor' */
-  virtual double fFactor() const;
-  virtual bool setFFactor(double fFactor);
-  /** Attribute Name: 'area' */
-  virtual double area() const;
-  virtual bool setArea(double area);
-  /** Attribute Name: 'perimeterExposed' */
-  virtual double perimeterExposed() const;
-  virtual bool setPerimeterExposed(double perimeterExposed);
+    double fFactor() const;
+    bool setFFactor(double fFactor);
 
-  //@}
-  /** @name Static Methods */
-  //@{
+    double area() const;
+    bool setArea(double area);
 
-  static IddObjectType iddObjectType();
+    double perimeterExposed() const;
+    bool setPerimeterExposed(double perimeterExposed);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::FFactorGroundFloorConstruction_Impl ImplType;
+    //@}
+    /** @name Static Methods */
+    //@{
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::FFactorGroundFloorConstruction_Impl;
+    static IddObjectType iddObjectType();
 
-  explicit FFactorGroundFloorConstruction(
-      std::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl);
+    //@}
+   protected:
+    /// @cond
+    typedef detail::FFactorGroundFloorConstruction_Impl ImplType;
 
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.FFactorGroundFloorConstruction");
-};
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::FFactorGroundFloorConstruction_Impl;
 
-/** \relates FFactorGroundFloorConstruction */
-typedef boost::optional<FFactorGroundFloorConstruction> OptionalFFactorGroundFloorConstruction;
+    explicit FFactorGroundFloorConstruction(std::shared_ptr<detail::FFactorGroundFloorConstruction_Impl> impl);
 
-/** \relates FFactorGroundFloorConstruction */
-typedef std::vector<FFactorGroundFloorConstruction> FFactorGroundFloorConstructionVector;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.FFactorGroundFloorConstruction");
+  };
 
-} // model
-} // openstudio
+  /** \relates FFactorGroundFloorConstruction */
+  typedef boost::optional<FFactorGroundFloorConstruction> OptionalFFactorGroundFloorConstruction;
 
-#endif // MODEL_FFACTORGROUNDFLOORCONSTRUCTION_HPP
+  /** \relates FFactorGroundFloorConstruction */
+  typedef std::vector<FFactorGroundFloorConstruction> FFactorGroundFloorConstructionVector;
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_FFACTORGROUNDFLOORCONSTRUCTION_HPP

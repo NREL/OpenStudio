@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,165 +36,156 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Curve;
-class AirflowNetworkFan;
+  class Schedule;
+  class Curve;
+  class AirflowNetworkFan;
 
-namespace detail {
+  namespace detail {
 
-  /** FanOnOff_Impl is a StraightComponent_Impl that is the implementation class for FanOnOff.*/
-  class MODEL_API FanOnOff_Impl : public StraightComponent_Impl
-  {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** FanOnOff_Impl is a StraightComponent_Impl that is the implementation class for FanOnOff.*/
+    class MODEL_API FanOnOff_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    FanOnOff_Impl(const IdfObject& idfObject,
-                  Model_Impl* model,
-                  bool keepHandle);
+      FanOnOff_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    FanOnOff_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                  Model_Impl* model,
-                  bool keepHandle);
+      FanOnOff_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    FanOnOff_Impl(const FanOnOff_Impl& other,
-                  Model_Impl* model,
-                  bool keepHandle);
+      FanOnOff_Impl(const FanOnOff_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~FanOnOff_Impl() {}
+      virtual ~FanOnOff_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    virtual std::vector<openstudio::IdfObject> remove() override;
+      virtual std::vector<openstudio::IdfObject> remove() override;
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    //@}
-    /** @name Getters and Setters */
-    //@{
+      //@}
+      /** @name Getters and Setters */
+      //@{
 
-    // Field Availability Schedule Name
+      // Field Availability Schedule Name
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    // Field Fan Efficiency
+      // Field Fan Efficiency
 
-    double fanTotalEfficiency() const;
+      double fanTotalEfficiency() const;
 
-    bool isFanTotalEfficiencyDefaulted() const;
+      bool isFanTotalEfficiencyDefaulted() const;
 
-    bool setFanTotalEfficiency(double fanTotalEfficiency);
+      bool setFanTotalEfficiency(double fanTotalEfficiency);
 
-    void resetFanTotalEfficiency();
+      void resetFanTotalEfficiency();
 
-    // Field Pressure Rise
+      // Field Pressure Rise
 
-    double pressureRise() const;
+      double pressureRise() const;
 
-    bool setPressureRise(double pressureRise);
+      bool setPressureRise(double pressureRise);
 
-    // Field Maximum Flow Rate
+      // Field Maximum Flow Rate
 
-    boost::optional<double> maximumFlowRate() const;
+      boost::optional<double> maximumFlowRate() const;
 
-    bool isMaximumFlowRateAutosized() const;
+      bool isMaximumFlowRateAutosized() const;
 
-    bool setMaximumFlowRate(boost::optional<double> maximumFlowRate);
+      bool setMaximumFlowRate(boost::optional<double> maximumFlowRate);
 
-    void resetMaximumFlowRate();
+      void resetMaximumFlowRate();
 
-    void autosizeMaximumFlowRate();
+      void autosizeMaximumFlowRate();
 
-    // Field Motor Efficiency
+      // Field Motor Efficiency
 
-    double motorEfficiency() const;
+      double motorEfficiency() const;
 
-    bool isMotorEfficiencyDefaulted() const;
+      bool isMotorEfficiencyDefaulted() const;
 
-    bool setMotorEfficiency(double motorEfficiency);
+      bool setMotorEfficiency(double motorEfficiency);
 
-    void resetMotorEfficiency();
+      void resetMotorEfficiency();
 
-    // Field Motor In Airstream Fraction
+      // Field Motor In Airstream Fraction
 
-    boost::optional<double> motorInAirstreamFraction() const;
+      boost::optional<double> motorInAirstreamFraction() const;
 
-    bool setMotorInAirstreamFraction(boost::optional<double> motorInAirstreamFraction);
+      bool setMotorInAirstreamFraction(boost::optional<double> motorInAirstreamFraction);
 
-    void resetMotorInAirstreamFraction();
+      void resetMotorInAirstreamFraction();
 
-    // Field End-Use Subcategory
+      // Field End-Use Subcategory
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    bool isEndUseSubcategoryDefaulted() const;
+      bool isEndUseSubcategoryDefaulted() const;
 
-    bool setEndUseSubcategory(std::string endUseSubcategory);
+      bool setEndUseSubcategory(std::string endUseSubcategory);
 
-    void resetEndUseSubcategory();
+      void resetEndUseSubcategory();
 
-    //@}
-    /** @name Curves */
-    //@{
+      //@}
+      /** @name Curves */
+      //@{
 
-    Curve fanPowerRatioFunctionofSpeedRatioCurve() const;
-    bool setFanPowerRatioFunctionofSpeedRatioCurve( const Curve& curve );
+      Curve fanPowerRatioFunctionofSpeedRatioCurve() const;
+      bool setFanPowerRatioFunctionofSpeedRatioCurve(const Curve& curve);
 
-    Curve fanEfficiencyRatioFunctionofSpeedRatioCurve() const;
-    bool setFanEfficiencyRatioFunctionofSpeedRatioCurve( const Curve& curve );
+      Curve fanEfficiencyRatioFunctionofSpeedRatioCurve() const;
+      bool setFanEfficiencyRatioFunctionofSpeedRatioCurve(const Curve& curve);
 
-  boost::optional<double> autosizedMaximumFlowRate() const ;
+      boost::optional<double> autosizedMaximumFlowRate() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-  virtual std::vector<std::string> emsInternalVariableNames() const override;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    //@}
+      //@}
 
-    AirflowNetworkFan getAirflowNetworkFan();
-    boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
+      AirflowNetworkFan getAirflowNetworkFan();
+      boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
 
-   //protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.FanOnOff");
+      //protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.FanOnOff");
 
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+    };
 
-  };
+  }  // namespace detail
 
+}  // namespace model
+}  // namespace openstudio
 
-
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_FANONOFF_IMPL_HPP
+#endif  // MODEL_FANONOFF_IMPL_HPP

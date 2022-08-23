@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,89 +37,90 @@
 namespace openstudio {
 namespace model {
 
-// TODO: Check the following class names against object getters and setters.
-class AirflowNetworkNode;
-class AirflowNetworkDistributionNode;
-class AirflowNetworkFan;
-class AirflowNetworkComponent;
-class ThermalZone;
+  // TODO: Check the following class names against object getters and setters.
+  class AirflowNetworkNode;
+  class AirflowNetworkDistributionNode;
+  class AirflowNetworkFan;
+  class AirflowNetworkComponent;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class AirflowNetworkDistributionLinkage_Impl;
+    class AirflowNetworkDistributionLinkage_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirflowNetworkDistributionLinkage is a AirflowNetworkLinkage that wraps the OpenStudio IDD object 'OS:AirflowNetworkDistributionLinkage'. */
-class MODEL_API AirflowNetworkDistributionLinkage : public AirflowNetworkLinkage {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirflowNetworkDistributionLinkage is a AirflowNetworkLinkage that wraps the OpenStudio IDD object 'OS:AirflowNetworkDistributionLinkage'. */
+  class MODEL_API AirflowNetworkDistributionLinkage : public AirflowNetworkLinkage
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  AirflowNetworkDistributionLinkage(const Model& model, const AirflowNetworkNode &node1, const AirflowNetworkNode &node2, const AirflowNetworkComponent &component);
+    AirflowNetworkDistributionLinkage(const Model& model, const AirflowNetworkNode& node1, const AirflowNetworkNode& node2,
+                                      const AirflowNetworkComponent& component);
 
-  virtual ~AirflowNetworkDistributionLinkage() {}
+    virtual ~AirflowNetworkDistributionLinkage() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  // TODO: Check return type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
-  AirflowNetworkNode node1() const;
+    // TODO: Check return type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
+    AirflowNetworkNode node1() const;
 
-  // TODO: Check return type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
-  AirflowNetworkNode node2() const;
+    // TODO: Check return type. From object lists, some candidates are: AirflowNetworkNodeAndZone.
+    AirflowNetworkNode node2() const;
 
-  // TODO: Check return type. From object lists, some candidates are: AirflowNetworkComponent.
-  AirflowNetworkComponent component() const;
+    // TODO: Check return type. From object lists, some candidates are: AirflowNetworkComponent.
+    AirflowNetworkComponent component() const;
 
-  boost::optional<ThermalZone> thermalZone() const;
+    boost::optional<ThermalZone> thermalZone() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setNode1(const AirflowNetworkNode& airflowNetworkNodeAndZone);
+    bool setNode1(const AirflowNetworkNode& airflowNetworkNode);
 
-  bool setNode2(const AirflowNetworkNode& airflowNetworkNodeAndZone);
+    bool setNode2(const AirflowNetworkNode& airflowNetworkNode);
 
-  bool setComponent(const AirflowNetworkComponent &airflowNetworkComponent);
+    bool setComponent(const AirflowNetworkComponent& airflowNetworkComponent);
 
-  bool setThermalZone(const ThermalZone& zone);
+    bool setThermalZone(const ThermalZone& zone);
 
-  void resetThermalZone();
+    void resetThermalZone();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirflowNetworkDistributionLinkage_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirflowNetworkDistributionLinkage_Impl ImplType;
 
-  explicit AirflowNetworkDistributionLinkage(std::shared_ptr<detail::AirflowNetworkDistributionLinkage_Impl> impl);
+    explicit AirflowNetworkDistributionLinkage(std::shared_ptr<detail::AirflowNetworkDistributionLinkage_Impl> impl);
 
-  friend class detail::AirflowNetworkDistributionLinkage_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkDistributionLinkage");
-};
+    friend class detail::AirflowNetworkDistributionLinkage_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkDistributionLinkage");
+  };
 
-/** \relates AirflowNetworkDistributionLinkage*/
-typedef boost::optional<AirflowNetworkDistributionLinkage> OptionalAirflowNetworkDistributionLinkage;
+  /** \relates AirflowNetworkDistributionLinkage*/
+  typedef boost::optional<AirflowNetworkDistributionLinkage> OptionalAirflowNetworkDistributionLinkage;
 
-/** \relates AirflowNetworkDistributionLinkage*/
-typedef std::vector<AirflowNetworkDistributionLinkage> AirflowNetworkDistributionLinkageVector;
+  /** \relates AirflowNetworkDistributionLinkage*/
+  typedef std::vector<AirflowNetworkDistributionLinkage> AirflowNetworkDistributionLinkageVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKDISTRIBUTIONLINKAGE_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKDISTRIBUTIONLINKAGE_HPP

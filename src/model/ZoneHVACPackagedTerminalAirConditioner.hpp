@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,195 +36,188 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class HVACComponent;
+  class Schedule;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneHVACPackagedTerminalAirConditioner_Impl;
+    class ZoneHVACPackagedTerminalAirConditioner_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneHVACPackagedTerminalAirConditioner is a ZoneHVACComponent that wraps the
+  /** ZoneHVACPackagedTerminalAirConditioner is a ZoneHVACComponent that wraps the
  *  OpenStudio IDD object 'OS:ZoneHVAC:PackagedTerminalAirConditioner'. */
-class MODEL_API ZoneHVACPackagedTerminalAirConditioner : public ZoneHVACComponent
-{
-  public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API ZoneHVACPackagedTerminalAirConditioner : public ZoneHVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  ZoneHVACPackagedTerminalAirConditioner( const Model& model,
-                                          Schedule & availabilitySchedule,
-                                          HVACComponent & supplyAirFan,
-                                          HVACComponent & heatingCoil,
-                                          HVACComponent & coolingCoil );
+    ZoneHVACPackagedTerminalAirConditioner(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan,
+                                           HVACComponent& heatingCoil, HVACComponent& coolingCoil);
 
-  virtual ~ZoneHVACPackagedTerminalAirConditioner() {}
+    virtual ~ZoneHVACPackagedTerminalAirConditioner() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
+    static std::vector<std::string> outdoorAirMixerObjectTypeValues();
 
-  static std::vector<std::string> outdoorAirMixerObjectTypeValues();
+    /** \deprecated */
+    static std::vector<std::string> validOutdoorAirMixerObjectTypeValues();
 
-  /** \deprecated */
-  static std::vector<std::string> validOutdoorAirMixerObjectTypeValues();
+    static std::vector<std::string> fanPlacementValues();
 
-  static std::vector<std::string> fanPlacementValues();
+    /** \deprecated */
+    static std::vector<std::string> validFanPlacementValues();
 
-  /** \deprecated */
-  static std::vector<std::string> validFanPlacementValues();
+    /** @name Getters */
+    //@{
 
-  /** @name Getters */
-  //@{
+    Schedule availabilitySchedule() const;
 
-  Schedule availabilitySchedule() const;
+    std::string outdoorAirMixerObjectType() const;
 
-  std::string outdoorAirMixerObjectType() const;
+    std::string outdoorAirMixerName() const;
 
-  std::string outdoorAirMixerName() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
+    boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Supply Air Flow Rate" **/
-  boost::optional<double> supplyAirFlowRateDuringCoolingOperation() const;
+    bool isSupplyAirFlowRateDuringCoolingOperationAutosized() const;
 
-  bool isSupplyAirFlowRateDuringCoolingOperationAutosized() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate" **/
+    boost::optional<double> supplyAirFlowRateDuringHeatingOperation() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Supply Air Flow Rate" **/
-  boost::optional<double> supplyAirFlowRateDuringHeatingOperation() const;
+    bool isSupplyAirFlowRateDuringHeatingOperationAutosized() const;
 
-  bool isSupplyAirFlowRateDuringHeatingOperationAutosized() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate" **/
+    boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Supply Air Flow Rate" **/
-  boost::optional<double> supplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
+    bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
 
-  bool isSupplyAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Outdoor Air Flow Rate" **/
+    boost::optional<double> outdoorAirFlowRateDuringCoolingOperation() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Cooling Outdoor Air Flow Rate" **/
-  boost::optional<double> outdoorAirFlowRateDuringCoolingOperation() const;
+    bool isOutdoorAirFlowRateDuringCoolingOperationAutosized() const;
 
-  bool isOutdoorAirFlowRateDuringCoolingOperationAutosized() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Outdoor Air Flow Rate" **/
+    boost::optional<double> outdoorAirFlowRateDuringHeatingOperation() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Heating Outdoor Air Flow Rate" **/
-  boost::optional<double> outdoorAirFlowRateDuringHeatingOperation() const;
+    bool isOutdoorAirFlowRateDuringHeatingOperationAutosized() const;
 
-  bool isOutdoorAirFlowRateDuringHeatingOperationAutosized() const;
+    /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Outdoor Air Flow Rate" **/
+    boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "No Load Outdoor Air Flow Rate" **/
-  boost::optional<double> outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
+    bool isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
 
-  bool isOutdoorAirFlowRateWhenNoCoolingorHeatingisNeededAutosized() const;
+    HVACComponent supplyAirFan() const;
 
-  HVACComponent supplyAirFan() const;
+    HVACComponent heatingCoil() const;
 
-  HVACComponent heatingCoil() const;
+    HVACComponent coolingCoil() const;
 
-  HVACComponent coolingCoil() const;
+    std::string fanPlacement() const;
 
-  std::string fanPlacement() const;
+    bool isFanPlacementDefaulted() const;
 
-  bool isFanPlacementDefaulted() const;
+    boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
 
-  boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  bool setAvailabilitySchedule(Schedule& schedule );
+    bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
 
-  bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
+    bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
 
-  bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
+    bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
 
-  bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
+    void autosizeSupplyAirFlowRateDuringCoolingOperation();
 
-  void autosizeSupplyAirFlowRateDuringCoolingOperation();
+    bool setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation);
 
-  bool setSupplyAirFlowRateDuringHeatingOperation(double supplyAirFlowRateDuringHeatingOperation);
+    void autosizeSupplyAirFlowRateDuringHeatingOperation();
 
-  void autosizeSupplyAirFlowRateDuringHeatingOperation();
+    bool setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(double supplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
 
-  bool setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(double supplyAirFlowRateWhenNoCoolingorHeatingisNeeded);
+    void resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void resetSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void autosizeSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    bool setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation);
 
-  bool setOutdoorAirFlowRateDuringCoolingOperation(double outdoorAirFlowRateDuringCoolingOperation);
+    void autosizeOutdoorAirFlowRateDuringCoolingOperation();
 
-  void autosizeOutdoorAirFlowRateDuringCoolingOperation();
+    bool setOutdoorAirFlowRateDuringHeatingOperation(double outdoorAirFlowRateDuringHeatingOperation);
 
-  bool setOutdoorAirFlowRateDuringHeatingOperation(double outdoorAirFlowRateDuringHeatingOperation);
+    void autosizeOutdoorAirFlowRateDuringHeatingOperation();
 
-  void autosizeOutdoorAirFlowRateDuringHeatingOperation();
+    bool setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(double outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded);
 
-  bool setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(double outdoorAirFlowRateWhenNoCoolingorHeatingisNeeded);
+    void resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void resetOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    void autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
 
-  void autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
+    bool setSupplyAirFan(HVACComponent& fan);
 
-  bool setSupplyAirFan( HVACComponent & fan );
+    bool setHeatingCoil(HVACComponent& heatingCoil);
 
-  bool setHeatingCoil( HVACComponent & heatingCoil );
+    bool setCoolingCoil(HVACComponent& coolingCoil);
 
-  bool setCoolingCoil( HVACComponent & coolingCoil );
+    bool setFanPlacement(std::string fanPlacement);
 
-  bool setFanPlacement(std::string fanPlacement);
+    void resetFanPlacement();
 
-  void resetFanPlacement();
-
-  /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan
+    /** Sets the supply air fan operating mode schedule. Values of zero indicate that the fan
    *  cycles on and off with the active (heating or cooling) coil. Other values operate the
    *  fan continuously. */
-  bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
+    bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
 
-  void resetSupplyAirFanOperatingModeSchedule();
+    void resetSupplyAirFanOperatingModeSchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+    boost::optional<double> autosizedSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const ;
+    boost::optional<double> autosizedOutdoorAirFlowRateDuringCoolingOperation() const;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const ;
+    boost::optional<double> autosizedOutdoorAirFlowRateDuringHeatingOperation() const;
 
-  boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const ;
+    boost::optional<double> autosizedOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded() const;
 
+    //@}
+   protected:
+    /// @cond
+    typedef detail::ZoneHVACPackagedTerminalAirConditioner_Impl ImplType;
 
+    explicit ZoneHVACPackagedTerminalAirConditioner(std::shared_ptr<detail::ZoneHVACPackagedTerminalAirConditioner_Impl> impl);
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::ZoneHVACPackagedTerminalAirConditioner_Impl ImplType;
+    friend class detail::ZoneHVACPackagedTerminalAirConditioner_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
 
-  explicit ZoneHVACPackagedTerminalAirConditioner(std::shared_ptr<detail::ZoneHVACPackagedTerminalAirConditioner_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneHVACPackagedTerminalAirConditioner");
+  };
 
-  friend class detail::ZoneHVACPackagedTerminalAirConditioner_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
+  /** \relates ZoneHVACPackagedTerminalAirConditioner*/
+  typedef boost::optional<ZoneHVACPackagedTerminalAirConditioner> OptionalZoneHVACPackagedTerminalAirConditioner;
 
-  /// @endcond
- private:
+  /** \relates ZoneHVACPackagedTerminalAirConditioner*/
+  typedef std::vector<ZoneHVACPackagedTerminalAirConditioner> ZoneHVACPackagedTerminalAirConditionerVector;
 
-  REGISTER_LOGGER("openstudio.model.ZoneHVACPackagedTerminalAirConditioner");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates ZoneHVACPackagedTerminalAirConditioner*/
-typedef boost::optional<ZoneHVACPackagedTerminalAirConditioner> OptionalZoneHVACPackagedTerminalAirConditioner;
-
-/** \relates ZoneHVACPackagedTerminalAirConditioner*/
-typedef std::vector<ZoneHVACPackagedTerminalAirConditioner> ZoneHVACPackagedTerminalAirConditionerVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEHVACPACKAGEDTERMINALAIRCONDITIONER_HPP
+#endif  // MODEL_ZONEHVACPACKAGEDTERMINALAIRCONDITIONER_HPP

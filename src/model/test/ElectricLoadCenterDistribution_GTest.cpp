@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,6 +37,7 @@
 #include "../ElectricLoadCenterInverterSimple.hpp"
 #include "../ElectricLoadCenterInverterLookUpTable.hpp"
 #include "../ElectricLoadCenterStorageSimple.hpp"
+#include "../ElectricLoadCenterStorageLiIonNMCBattery.hpp"
 #include "../ElectricLoadCenterTransformer.hpp"
 
 using namespace openstudio::model;
@@ -252,7 +253,6 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   EXPECT_TRUE(elcd.addGenerator(panel1));
   EXPECT_FALSE(elcd.addGenerator(panel1));
 
-
   // Demand Limit Scheme Purchased Electric Demand Limit, Optional
   EXPECT_FALSE(elcd.demandLimitSchemePurchasedElectricDemandLimit());
   EXPECT_TRUE(elcd.setDemandLimitSchemePurchasedElectricDemandLimit(100500));
@@ -287,8 +287,6 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   elcd.resetElectricalBussType();
   ASSERT_TRUE(elcd.isElectricalBussTypeDefaulted());
 
-
-
   // Test inverter
   ElectricLoadCenterInverterSimple inverter(model);
   EXPECT_TRUE(inverter.name());
@@ -298,13 +296,23 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
   elcd.resetInverter();
   ASSERT_FALSE(elcd.inverter());
 
-  // Test Storage
+  // Test Storage Simple
   ElectricLoadCenterStorageSimple battery(model);
   ASSERT_FALSE(elcd.electricalStorage());
   EXPECT_TRUE(battery.name());
   EXPECT_TRUE(elcd.setElectricalStorage(battery));
   ASSERT_TRUE(elcd.electricalStorage());
   EXPECT_EQ(battery.handle(), elcd.electricalStorage()->handle());
+  elcd.resetElectricalStorage();
+  ASSERT_FALSE(elcd.electricalStorage());
+
+  // Test Storage LiIonNMCBattery
+  ElectricLoadCenterStorageLiIonNMCBattery battery2(model, 139, 25, 342, 4.26);
+  ASSERT_FALSE(elcd.electricalStorage());
+  EXPECT_TRUE(battery2.name());
+  EXPECT_TRUE(elcd.setElectricalStorage(battery2));
+  ASSERT_TRUE(elcd.electricalStorage());
+  EXPECT_EQ(battery2.handle(), elcd.electricalStorage()->handle());
   elcd.resetElectricalStorage();
   ASSERT_FALSE(elcd.electricalStorage());
 
@@ -336,25 +344,23 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
 
   // Storage Converter: not yet
 
-
   // Maximum Storage State of Charge Fraction, defaults
-  EXPECT_TRUE( elcd.isMaximumStorageStateofChargeFractionDefaulted() );
+  EXPECT_TRUE(elcd.isMaximumStorageStateofChargeFractionDefaulted());
   EXPECT_EQ(1.0, elcd.maximumStorageStateofChargeFraction());
   ASSERT_TRUE(elcd.setMaximumStorageStateofChargeFraction(0.85));
-  ASSERT_FALSE( elcd.isMaximumStorageStateofChargeFractionDefaulted() );
+  ASSERT_FALSE(elcd.isMaximumStorageStateofChargeFractionDefaulted());
   ASSERT_EQ(0.85, elcd.maximumStorageStateofChargeFraction());
   elcd.resetMaximumStorageStateofChargeFraction();
-  ASSERT_TRUE( elcd.isMaximumStorageStateofChargeFractionDefaulted() );
+  ASSERT_TRUE(elcd.isMaximumStorageStateofChargeFractionDefaulted());
 
   // Minimum Storage State of Charge Fraction, defaults
-  EXPECT_TRUE( elcd.isMinimumStorageStateofChargeFractionDefaulted() );
+  EXPECT_TRUE(elcd.isMinimumStorageStateofChargeFractionDefaulted());
   EXPECT_EQ(0.0, elcd.minimumStorageStateofChargeFraction());
   ASSERT_TRUE(elcd.setMinimumStorageStateofChargeFraction(0.05));
-  ASSERT_FALSE( elcd.isMinimumStorageStateofChargeFractionDefaulted() );
+  ASSERT_FALSE(elcd.isMinimumStorageStateofChargeFractionDefaulted());
   ASSERT_EQ(0.05, elcd.minimumStorageStateofChargeFraction());
   elcd.resetMinimumStorageStateofChargeFraction();
-  ASSERT_TRUE( elcd.isMinimumStorageStateofChargeFractionDefaulted() );
-
+  ASSERT_TRUE(elcd.isMinimumStorageStateofChargeFractionDefaulted());
 
   // Design Storage Control Charge Power, Optional Double
   EXPECT_FALSE(elcd.designStorageControlChargePower());
@@ -400,15 +406,13 @@ TEST_F(ModelFixture, ElectricLoadCenterDistribution_newFields) {
 
   // Storage Control Utility Demand Target Fraction Schedule, defaults to alwaysOnDiscrete
   ScheduleCompact schSControl = ScheduleCompact(model);
-  EXPECT_TRUE( elcd.isStorageControlUtilityDemandTargetFractionScheduleDefaulted() );
+  EXPECT_TRUE(elcd.isStorageControlUtilityDemandTargetFractionScheduleDefaulted());
   EXPECT_EQ(model.alwaysOnDiscreteSchedule().handle(), elcd.storageControlUtilityDemandTargetFractionSchedule().handle());
   EXPECT_TRUE(elcd.setStorageControlUtilityDemandTargetFractionSchedule(schSControl));
-  ASSERT_FALSE( elcd.isStorageControlUtilityDemandTargetFractionScheduleDefaulted() );
+  ASSERT_FALSE(elcd.isStorageControlUtilityDemandTargetFractionScheduleDefaulted());
   EXPECT_EQ(schSControl.handle(), elcd.storageControlUtilityDemandTargetFractionSchedule().handle());
   elcd.resetStorageControlUtilityDemandTargetFractionSchedule();
-  ASSERT_TRUE( elcd.isStorageControlUtilityDemandTargetFractionScheduleDefaulted() );
-
-
+  ASSERT_TRUE(elcd.isStorageControlUtilityDemandTargetFractionScheduleDefaulted());
 }
 TEST_F(ModelFixture, ElectricLoadCenterDistribution_TransformerDelete) {
   Model model;

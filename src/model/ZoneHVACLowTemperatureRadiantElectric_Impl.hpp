@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,128 +38,129 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class HVACComponent;
+  class Schedule;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  /** ZoneHVACLowTemperatureRadiantElectric_Impl is a ZoneHVAC_Impl that is the implementation class for ZoneHVACLowTemperatureRadiantElectric.*/
-  class MODEL_API ZoneHVACLowTemperatureRadiantElectric_Impl : public ZoneHVACComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
+    /** ZoneHVACLowTemperatureRadiantElectric_Impl is a ZoneHVAC_Impl that is the implementation class for ZoneHVACLowTemperatureRadiantElectric.*/
+    class MODEL_API ZoneHVACLowTemperatureRadiantElectric_Impl : public ZoneHVACComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
 
-    ZoneHVACLowTemperatureRadiantElectric_Impl(const IdfObject& idfObject,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      ZoneHVACLowTemperatureRadiantElectric_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ZoneHVACLowTemperatureRadiantElectric_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      ZoneHVACLowTemperatureRadiantElectric_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ZoneHVACLowTemperatureRadiantElectric_Impl(const ZoneHVACLowTemperatureRadiantElectric_Impl& other,
-                                               Model_Impl* model,
-                                               bool keepHandle);
+      ZoneHVACLowTemperatureRadiantElectric_Impl(const ZoneHVACLowTemperatureRadiantElectric_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ZoneHVACLowTemperatureRadiantElectric_Impl() {}
+      virtual ~ZoneHVACLowTemperatureRadiantElectric_Impl() {}
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    /** @name Virtual Methods */
+      /** @name Virtual Methods */
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    /** @name Getters */
+      /** @name Getters */
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    Schedule heatingSetpointTemperatureSchedule() const;
+      Schedule heatingSetpointTemperatureSchedule() const;
 
-    boost::optional<std::string> radiantSurfaceType() const;
+      boost::optional<std::string> radiantSurfaceType() const;
 
-    std::vector<Surface> surfaces() const;
+      std::vector<Surface> surfaces() const;
 
-    boost::optional<double> maximumElectricalPowertoPanel() const;
+      boost::optional<double> maximumElectricalPowertoPanel() const;
 
-    bool isMaximumElectricalPowertoPanelDefaulted() const;
+      bool isMaximumElectricalPowertoPanelDefaulted() const;
 
-    bool isMaximumElectricalPowertoPanelAutosized() const;
+      bool isMaximumElectricalPowertoPanelAutosized() const;
 
-    std::string temperatureControlType() const;
+      std::string temperatureControlType() const;
 
-    bool isTemperatureControlTypeDefaulted() const;
+      bool isTemperatureControlTypeDefaulted() const;
 
-    double heatingThrottlingRange() const;
+      std::string setpointControlType() const;
 
-    bool isHeatingThrottlingRangeDefaulted() const;
+      bool isSetpointControlTypeDefaulted() const;
 
-  boost::optional<double> autosizedMaximumElectricalPowertoPanel() const ;
+      double heatingThrottlingRange() const;
 
-  virtual void autosize() override;
+      bool isHeatingThrottlingRangeDefaulted() const;
 
-  virtual void applySizingValues() override;
+      boost::optional<double> autosizedMaximumElectricalPowertoPanel() const;
 
-    /** @name Setters */
+      virtual void autosize() override;
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      virtual void applySizingValues() override;
 
-    bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
+      /** @name Setters */
 
-    bool setRadiantSurfaceType(boost::optional<std::string> radiantSurfaceType);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    void resetRadiantSurfaceType();
+      bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
 
-    bool setMaximumElectricalPowertoPanel(boost::optional<double> maximumElectricalPowertoPanel);
+      bool setRadiantSurfaceType(boost::optional<std::string> radiantSurfaceType);
 
-    void resetMaximumElectricalPowertoPanel();
+      void resetRadiantSurfaceType();
 
-    void autosizeMaximumElectricalPowertoPanel();
+      bool setMaximumElectricalPowertoPanel(boost::optional<double> maximumElectricalPowertoPanel);
 
-    bool setTemperatureControlType(std::string temperatureControlType);
+      void resetMaximumElectricalPowertoPanel();
 
-    void resetTemperatureControlType();
+      void autosizeMaximumElectricalPowertoPanel();
 
-    bool setHeatingThrottlingRange(double heatingThrottlingRange);
+      bool setTemperatureControlType(const std::string& temperatureControlType);
 
-    void resetHeatingThrottlingRange();
+      void resetTemperatureControlType();
 
-    boost::optional<ThermalZone> thermalZone() const override;
+      bool setSetpointControlType(const std::string& setpointControlType);
 
-    bool addToThermalZone(ThermalZone & thermalZone) override;
+      void resetSetpointControlType();
 
-    void removeFromThermalZone() override;
+      bool setHeatingThrottlingRange(double heatingThrottlingRange);
 
-    //@}
-    /** @name Other */
-    //@{
+      void resetHeatingThrottlingRange();
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ZoneHVACLowTemperatureRadiantElectric");
+      boost::optional<ThermalZone> thermalZone() const override;
 
-    // Optional getters for use by methods like children() so can remove() if the constructor fails.
-    // There are other ways for the public versions of these getters to fail--perhaps all required
-    // objects should be returned as boost::optionals
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    boost::optional<Schedule> optionalHeatingSetpointTemperatureSchedule() const;
+      bool addToThermalZone(ThermalZone& thermalZone) override;
 
-    std::vector<std::string> radiantSurfaceTypeValues() const;
-    std::vector<std::string> temperatureControlTypeValues() const;
+      void removeFromThermalZone() override;
 
-  };
+      //@}
+      /** @name Other */
+      //@{
 
-} // detail
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZoneHVACLowTemperatureRadiantElectric");
 
-} // model
-} // openstudio
+      // Optional getters for use by methods like children() so can remove() if the constructor fails.
+      // There are other ways for the public versions of these getters to fail--perhaps all required
+      // objects should be returned as boost::optionals
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<Schedule> optionalHeatingSetpointTemperatureSchedule() const;
 
-#endif // MODEL_ZONEHVACLOWTEMPERATURERADIANTELECTRIC_IMPL_HPP
+      std::vector<std::string> radiantSurfaceTypeValues() const;
+      std::vector<std::string> temperatureControlTypeValues() const;
+    };
 
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_ZONEHVACLOWTEMPERATURERADIANTELECTRIC_IMPL_HPP

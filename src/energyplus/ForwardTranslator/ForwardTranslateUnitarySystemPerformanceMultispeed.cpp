@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -57,61 +57,60 @@ using namespace openstudio::model;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateUnitarySystemPerformanceMultispeed( UnitarySystemPerformanceMultispeed & modelObject )
-{
-  boost::optional<std::string> s;
-  boost::optional<double> d;
+  boost::optional<IdfObject> ForwardTranslator::translateUnitarySystemPerformanceMultispeed(UnitarySystemPerformanceMultispeed& modelObject) {
+    boost::optional<std::string> s;
+    boost::optional<double> d;
 
-  // Name
-  IdfObject sysPerf = createRegisterAndNameIdfObject(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed, modelObject);
+    // Name
+    IdfObject sysPerf = createRegisterAndNameIdfObject(openstudio::IddObjectType::UnitarySystemPerformance_Multispeed, modelObject);
 
-  // Find the associated AirLoopHVACUnitarySystem
-  std::vector<AirLoopHVACUnitarySystem> unitarySystems = modelObject.getModelObjectSources<AirLoopHVACUnitarySystem>();
-  if (unitarySystems.size() != 1) {
-    LOG(Error, "OS:UnitarySystemPerformance:Multispeed should be referenced by one and only one OS:AirLoopHVAC:UnitarySystem, " << modelObject.name() << " is referenced by " << unitarySystems.size() << ".")
-    return boost::none;
-  }
-  AirLoopHVACUnitarySystem &unitarySystem = unitarySystems[0];
-
-  // Number of speeds for heating
-  boost::optional<HVACComponent> heatingCoil = unitarySystem.heatingCoil();
-  if (heatingCoil) {
-    if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_DX_MultiSpeed ) {
-      CoilHeatingDXMultiSpeed heatingCoilDXMultispeed = heatingCoil->cast<CoilHeatingDXMultiSpeed>();
-      sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilDXMultispeed.stages().size());
-    } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_Gas_MultiStage) {
-      CoilHeatingGasMultiStage heatingCoilGasMultiStage = heatingCoil->cast<CoilHeatingGasMultiStage>();
-      sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilGasMultiStage.stages().size());
-    } else {
-      sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);
+    // Find the associated AirLoopHVACUnitarySystem
+    std::vector<AirLoopHVACUnitarySystem> unitarySystems = modelObject.getModelObjectSources<AirLoopHVACUnitarySystem>();
+    if (unitarySystems.size() != 1) {
+      LOG(Error, "OS:UnitarySystemPerformance:Multispeed should be referenced by one and only one OS:AirLoopHVAC:UnitarySystem, "
+                   << modelObject.nameString() << " is referenced by " << unitarySystems.size() << ".")
+      return boost::none;
     }
-  } else {
-    sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 0);
-  }
+    AirLoopHVACUnitarySystem& unitarySystem = unitarySystems[0];
 
-  // Number of speeds for cooling
-  boost::optional<HVACComponent> coolingCoil = unitarySystem.coolingCoil();
-  if (coolingCoil) {
-    if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_MultiSpeed) {
-      CoilCoolingDXMultiSpeed coolingCoilDXMultispeed = coolingCoil->cast<CoilCoolingDXMultiSpeed>();
-      sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXMultispeed.stages().size());
+    // Number of speeds for heating
+    boost::optional<HVACComponent> heatingCoil = unitarySystem.heatingCoil();
+    if (heatingCoil) {
+      if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_DX_MultiSpeed) {
+        CoilHeatingDXMultiSpeed heatingCoilDXMultispeed = heatingCoil->cast<CoilHeatingDXMultiSpeed>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilDXMultispeed.stages().size());
+      } else if (heatingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Heating_Gas_MultiStage) {
+        CoilHeatingGasMultiStage heatingCoilGasMultiStage = heatingCoil->cast<CoilHeatingGasMultiStage>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, heatingCoilGasMultiStage.stages().size());
+      } else {
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 1);
+      }
     } else {
-      sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);
+      sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforHeating, 0);
     }
-  } else {
-    sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 0);
+
+    // Number of speeds for cooling
+    boost::optional<HVACComponent> coolingCoil = unitarySystem.coolingCoil();
+    if (coolingCoil) {
+      if (coolingCoil->iddObjectType() == openstudio::IddObjectType::OS_Coil_Cooling_DX_MultiSpeed) {
+        CoilCoolingDXMultiSpeed coolingCoilDXMultispeed = coolingCoil->cast<CoilCoolingDXMultiSpeed>();
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, coolingCoilDXMultispeed.stages().size());
+      } else {
+        sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 1);
+      }
+    } else {
+      sysPerf.setInt(UnitarySystemPerformance_MultispeedFields::NumberofSpeedsforCooling, 0);
+    }
+
+    // Single mode operation
+    sysPerf.setString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation, modelObject.singleModeOperation() ? "Yes" : "No");
+
+    for (const auto& airflowRatioField : modelObject.supplyAirflowRatioFields()) {
+      sysPerf.pushExtensibleGroup(airflowRatioField.getHeatingCoolingRatiosAsStrings());
+    }
+
+    return sysPerf;
   }
 
-  // Single mode operation
-  sysPerf.setString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation, modelObject.singleModeOperation() ? "Yes" : "No");
-
-  for (const auto & airflowRatioField : modelObject.supplyAirflowRatioFields()) {
-    sysPerf.pushExtensibleGroup(airflowRatioField.getHeatingCoolingRatiosAsStrings());
-  }
-
-  return sysPerf;
-
-}
-
-} //openstudio
-} //energyplus
+}  // namespace energyplus
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,84 +36,84 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Node;
+  class Schedule;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerScheduledDualSetpoint_Impl;
+    class SetpointManagerScheduledDualSetpoint_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerScheduledDualSetpoint is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:Scheduled:DualSetpoint'. */
-class MODEL_API SetpointManagerScheduledDualSetpoint : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SetpointManagerScheduledDualSetpoint is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:Scheduled:DualSetpoint'. */
+  class MODEL_API SetpointManagerScheduledDualSetpoint : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SetpointManagerScheduledDualSetpoint(const Model& model);
+    explicit SetpointManagerScheduledDualSetpoint(const Model& model);
 
-  virtual ~SetpointManagerScheduledDualSetpoint() {}
+    virtual ~SetpointManagerScheduledDualSetpoint() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlVariableValues();
+    static std::vector<std::string> controlVariableValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  boost::optional<Schedule> highSetpointSchedule() const;
+    boost::optional<Schedule> highSetpointSchedule() const;
 
-  boost::optional<Schedule> lowSetpointSchedule() const;
+    boost::optional<Schedule> lowSetpointSchedule() const;
 
-  boost::optional<Node> setpointNode() const;
+    boost::optional<Node> setpointNode() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setControlVariable(const std::string& controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
-  bool setHighSetpointSchedule(Schedule& schedule);
+    bool setHighSetpointSchedule(Schedule& schedule);
 
-  void resetHighSetpointSchedule();
+    void resetHighSetpointSchedule();
 
-  bool setLowSetpointSchedule(Schedule& schedule);
+    bool setLowSetpointSchedule(Schedule& schedule);
 
-  void resetLowSetpointSchedule();
+    void resetLowSetpointSchedule();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerScheduledDualSetpoint_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerScheduledDualSetpoint_Impl ImplType;
 
-  explicit SetpointManagerScheduledDualSetpoint(std::shared_ptr<detail::SetpointManagerScheduledDualSetpoint_Impl> impl);
+    explicit SetpointManagerScheduledDualSetpoint(std::shared_ptr<detail::SetpointManagerScheduledDualSetpoint_Impl> impl);
 
-  friend class detail::SetpointManagerScheduledDualSetpoint_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerScheduledDualSetpoint");
-};
+    friend class detail::SetpointManagerScheduledDualSetpoint_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerScheduledDualSetpoint");
+  };
 
-/** \relates SetpointManagerScheduledDualSetpoint*/
-typedef boost::optional<SetpointManagerScheduledDualSetpoint> OptionalSetpointManagerScheduledDualSetpoint;
+  /** \relates SetpointManagerScheduledDualSetpoint*/
+  typedef boost::optional<SetpointManagerScheduledDualSetpoint> OptionalSetpointManagerScheduledDualSetpoint;
 
-/** \relates SetpointManagerScheduledDualSetpoint*/
-typedef std::vector<SetpointManagerScheduledDualSetpoint> SetpointManagerScheduledDualSetpointVector;
+  /** \relates SetpointManagerScheduledDualSetpoint*/
+  typedef std::vector<SetpointManagerScheduledDualSetpoint> SetpointManagerScheduledDualSetpointVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERSCHEDULEDDUALSETPOINT_HPP
-
+#endif  // MODEL_SETPOINTMANAGERSCHEDULEDDUALSETPOINT_HPP

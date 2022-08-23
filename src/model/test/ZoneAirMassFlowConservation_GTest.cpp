@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,14 +37,17 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, ZoneAirMassFlowConservation)
-{
+TEST_F(ModelFixture, ZoneAirMassFlowConservation) {
   Model model;
 
   EXPECT_FALSE(model.getOptionalUniqueModelObject<ZoneAirMassFlowConservation>());
 
   ZoneAirMassFlowConservation zamfc = model.getUniqueModelObject<ZoneAirMassFlowConservation>();
 
+  EXPECT_EQ("None", zamfc.adjustZoneMixingandReturnForAirMassFlowBalance());
+  EXPECT_TRUE(zamfc.isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted());
+
+  // deprecated
   EXPECT_FALSE(zamfc.adjustZoneMixingForZoneAirMassFlowBalance());
   EXPECT_TRUE(zamfc.isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted());
 
@@ -54,7 +57,14 @@ TEST_F(ModelFixture, ZoneAirMassFlowConservation)
   EXPECT_EQ("MixingSourceZonesOnly", zamfc.infiltrationBalancingZones());
   EXPECT_TRUE(zamfc.isInfiltrationBalancingZonesDefaulted());
 
+  EXPECT_TRUE(zamfc.setAdjustZoneMixingandReturnForAirMassFlowBalance("AdjustReturnThenMixing"));
+  EXPECT_EQ("AdjustReturnThenMixing", zamfc.adjustZoneMixingandReturnForAirMassFlowBalance());
+  EXPECT_FALSE(zamfc.isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted());
+
+  // deprecated
+  EXPECT_FALSE(zamfc.isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted());
   zamfc.setAdjustZoneMixingForZoneAirMassFlowBalance(true);
+  EXPECT_EQ("AdjustMixingOnly", zamfc.adjustZoneMixingandReturnForAirMassFlowBalance());
   EXPECT_TRUE(zamfc.adjustZoneMixingForZoneAirMassFlowBalance());
   EXPECT_FALSE(zamfc.isAdjustZoneMixingForZoneAirMassFlowBalanceDefaulted());
 

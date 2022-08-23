@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,272 +37,280 @@ namespace openstudio {
 
 namespace model {
 
-class AirLoopHVAC;
+  class AirLoopHVAC;
 
-namespace detail {
+  namespace detail {
 
-/** SizingSystem_Impl is a ModelObject_Impl that is the implementation class for SizingSystem.*/
-class MODEL_API SizingSystem_Impl : public ModelObject_Impl
-{
+    /** SizingSystem_Impl is a ModelObject_Impl that is the implementation class for SizingSystem.*/
+    class MODEL_API SizingSystem_Impl : public ModelObject_Impl
+    {
 
-  public:
+     public:
+      SizingSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-  SizingSystem_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      SizingSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-  SizingSystem_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                    Model_Impl* model,
-                    bool keepHandle);
+      SizingSystem_Impl(const SizingSystem_Impl& other, Model_Impl* model, bool keepHandle);
 
-  SizingSystem_Impl(const SizingSystem_Impl& other,
-                    Model_Impl* model,
-                    bool keepHandle);
+      virtual ~SizingSystem_Impl() {}
 
-  virtual ~SizingSystem_Impl() {}
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-  virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-  virtual IddObjectType iddObjectType() const override;
+      virtual bool setParent(ParentObject& newParent) override;
 
-  virtual bool setParent(ParentObject& newParent) override;
+      std::string typeofLoadtoSizeOn() const;
 
+      bool isTypeofLoadtoSizeOnDefaulted() const;
 
-  std::string typeofLoadtoSizeOn() const;
+      boost::optional<double> designOutdoorAirFlowRate() const;
 
-  bool isTypeofLoadtoSizeOnDefaulted() const;
+      bool isDesignOutdoorAirFlowRateDefaulted() const;
 
-  boost::optional<double> designOutdoorAirFlowRate() const;
+      bool isDesignOutdoorAirFlowRateAutosized() const;
 
-  bool isDesignOutdoorAirFlowRateDefaulted() const;
+      boost::optional<double> centralHeatingMaximumSystemAirFlowRatio() const;
 
-  bool isDesignOutdoorAirFlowRateAutosized() const;
+      bool isCentralHeatingMaximumSystemAirFlowRatioDefaulted() const;
 
-  double preheatDesignTemperature() const;
+      bool isCentralHeatingMaximumSystemAirFlowRatioAutosized() const;
 
-  double preheatDesignHumidityRatio() const;
+      double preheatDesignTemperature() const;
 
-  double precoolDesignTemperature() const;
+      double preheatDesignHumidityRatio() const;
 
-  double precoolDesignHumidityRatio() const;
+      double precoolDesignTemperature() const;
 
-  double centralCoolingDesignSupplyAirTemperature() const;
+      double precoolDesignHumidityRatio() const;
 
-  double centralHeatingDesignSupplyAirTemperature() const;
+      double centralCoolingDesignSupplyAirTemperature() const;
 
-  std::string sizingOption() const;
+      double centralHeatingDesignSupplyAirTemperature() const;
 
-  bool isSizingOptionDefaulted() const;
+      std::string sizingOption() const;
 
-  bool allOutdoorAirinCooling() const;
+      bool isSizingOptionDefaulted() const;
 
-  bool isAllOutdoorAirinCoolingDefaulted() const;
+      bool allOutdoorAirinCooling() const;
 
-  bool allOutdoorAirinHeating() const;
+      bool isAllOutdoorAirinCoolingDefaulted() const;
 
-  bool isAllOutdoorAirinHeatingDefaulted() const;
+      bool allOutdoorAirinHeating() const;
 
-  double centralCoolingDesignSupplyAirHumidityRatio() const;
+      bool isAllOutdoorAirinHeatingDefaulted() const;
 
-  bool isCentralCoolingDesignSupplyAirHumidityRatioDefaulted() const;
+      double centralCoolingDesignSupplyAirHumidityRatio() const;
 
-  double centralHeatingDesignSupplyAirHumidityRatio() const;
+      bool isCentralCoolingDesignSupplyAirHumidityRatioDefaulted() const;
 
-  bool isCentralHeatingDesignSupplyAirHumidityRatioDefaulted() const;
+      double centralHeatingDesignSupplyAirHumidityRatio() const;
 
-  std::string coolingDesignAirFlowMethod() const;
+      bool isCentralHeatingDesignSupplyAirHumidityRatioDefaulted() const;
 
-  bool isCoolingDesignAirFlowMethodDefaulted() const;
+      std::string coolingDesignAirFlowMethod() const;
 
-  double coolingDesignAirFlowRate() const;
+      bool isCoolingDesignAirFlowMethodDefaulted() const;
 
-  bool isCoolingDesignAirFlowRateDefaulted() const;
+      double coolingDesignAirFlowRate() const;
 
-  std::string heatingDesignAirFlowMethod() const;
+      bool isCoolingDesignAirFlowRateDefaulted() const;
 
-  bool isHeatingDesignAirFlowMethodDefaulted() const;
+      std::string heatingDesignAirFlowMethod() const;
 
-  double heatingDesignAirFlowRate() const;
+      bool isHeatingDesignAirFlowMethodDefaulted() const;
 
-  bool isHeatingDesignAirFlowRateDefaulted() const;
+      double heatingDesignAirFlowRate() const;
 
-  std::string systemOutdoorAirMethod() const;
+      bool isHeatingDesignAirFlowRateDefaulted() const;
 
-  bool isSystemOutdoorAirMethodDefaulted() const;
+      std::string systemOutdoorAirMethod() const;
 
-  double zoneMaximumOutdoorAirFraction() const;
+      bool isSystemOutdoorAirMethodDefaulted() const;
 
-  double coolingSupplyAirFlowRatePerFloorArea() const;
+      double zoneMaximumOutdoorAirFraction() const;
 
-  double coolingFractionofAutosizedCoolingSupplyAirFlowRate() const;
+      double coolingSupplyAirFlowRatePerFloorArea() const;
 
-  double coolingSupplyAirFlowRatePerUnitCoolingCapacity() const;
+      double coolingFractionofAutosizedCoolingSupplyAirFlowRate() const;
 
-  double heatingSupplyAirFlowRatePerFloorArea() const;
+      double coolingSupplyAirFlowRatePerUnitCoolingCapacity() const;
 
-  double heatingFractionofAutosizedHeatingSupplyAirFlowRate() const;
+      double heatingSupplyAirFlowRatePerFloorArea() const;
 
-  double heatingFractionofAutosizedCoolingSupplyAirFlowRate() const;
+      double heatingFractionofAutosizedHeatingSupplyAirFlowRate() const;
 
-  double heatingSupplyAirFlowRatePerUnitHeatingCapacity() const;
+      double heatingFractionofAutosizedCoolingSupplyAirFlowRate() const;
 
-  std::string coolingDesignCapacityMethod() const;
+      double heatingSupplyAirFlowRatePerUnitHeatingCapacity() const;
 
-  boost::optional<double> coolingDesignCapacity() const;
+      std::string coolingDesignCapacityMethod() const;
 
-  bool isCoolingDesignCapacityAutosized() const;
+      boost::optional<double> coolingDesignCapacity() const;
 
-  double coolingDesignCapacityPerFloorArea() const;
+      bool isCoolingDesignCapacityAutosized() const;
 
-  double fractionofAutosizedCoolingDesignCapacity() const;
+      double coolingDesignCapacityPerFloorArea() const;
 
-  std::string heatingDesignCapacityMethod() const;
+      double fractionofAutosizedCoolingDesignCapacity() const;
 
-  boost::optional<double> heatingDesignCapacity() const;
+      std::string heatingDesignCapacityMethod() const;
 
-  bool isHeatingDesignCapacityAutosized() const;
+      boost::optional<double> heatingDesignCapacity() const;
 
-  double heatingDesignCapacityPerFloorArea() const;
+      bool isHeatingDesignCapacityAutosized() const;
 
-  double fractionofAutosizedHeatingDesignCapacity() const;
+      double heatingDesignCapacityPerFloorArea() const;
 
-  std::string centralCoolingCapacityControlMethod() const;
+      double fractionofAutosizedHeatingDesignCapacity() const;
 
-  bool setTypeofLoadtoSizeOn(std::string typeofLoadtoSizeOn);
+      std::string centralCoolingCapacityControlMethod() const;
 
-  void resetTypeofLoadtoSizeOn();
+      boost::optional<double> occupantDiversity() const;
 
-  bool setDesignOutdoorAirFlowRate(boost::optional<double> designOutdoorAirFlowRate);
+      bool isOccupantDiversityAutosized() const;
 
-  void resetDesignOutdoorAirFlowRate();
+      bool setTypeofLoadtoSizeOn(std::string typeofLoadtoSizeOn);
 
-  void autosizeDesignOutdoorAirFlowRate();
+      void resetTypeofLoadtoSizeOn();
 
-  bool setPreheatDesignTemperature(double preheatDesignTemperature);
+      bool setDesignOutdoorAirFlowRate(boost::optional<double> designOutdoorAirFlowRate);
 
-  bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
+      void resetDesignOutdoorAirFlowRate();
 
-  bool setPrecoolDesignTemperature(double precoolDesignTemperature);
+      void autosizeDesignOutdoorAirFlowRate();
 
-  bool setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
+      bool setCentralHeatingMaximumSystemAirFlowRatio(boost::optional<double> centralHeatingMaximumSystemAirFlowRatio);
 
-  bool setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature);
+      void resetCentralHeatingMaximumSystemAirFlowRatio();
 
-  bool setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature);
+      void autosizeCentralHeatingMaximumSystemAirFlowRatio();
 
-  bool setSizingOption(std::string sizingOption);
+      bool setPreheatDesignTemperature(double preheatDesignTemperature);
 
-  void resetSizingOption();
+      bool setPreheatDesignHumidityRatio(double preheatDesignHumidityRatio);
 
-  bool setAllOutdoorAirinCooling(bool allOutdoorAirinCooling);
+      bool setPrecoolDesignTemperature(double precoolDesignTemperature);
 
-  void resetAllOutdoorAirinCooling();
+      bool setPrecoolDesignHumidityRatio(double precoolDesignHumidityRatio);
 
-  bool setAllOutdoorAirinHeating(bool allOutdoorAirinHeating);
+      bool setCentralCoolingDesignSupplyAirTemperature(double centralCoolingDesignSupplyAirTemperature);
 
-  void resetAllOutdoorAirinHeating();
+      bool setCentralHeatingDesignSupplyAirTemperature(double centralHeatingDesignSupplyAirTemperature);
 
-  bool setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio);
+      bool setSizingOption(std::string sizingOption);
 
-  void resetCentralCoolingDesignSupplyAirHumidityRatio();
+      void resetSizingOption();
 
-  bool setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio);
+      bool setAllOutdoorAirinCooling(bool allOutdoorAirinCooling);
 
-  void resetCentralHeatingDesignSupplyAirHumidityRatio();
+      void resetAllOutdoorAirinCooling();
 
-  bool setCoolingDesignAirFlowMethod(std::string coolingDesignAirFlowMethod);
+      bool setAllOutdoorAirinHeating(bool allOutdoorAirinHeating);
 
-  void resetCoolingDesignAirFlowMethod();
+      void resetAllOutdoorAirinHeating();
 
-  bool setCoolingDesignAirFlowRate(double coolingDesignAirFlowRate);
+      bool setCentralCoolingDesignSupplyAirHumidityRatio(double centralCoolingDesignSupplyAirHumidityRatio);
 
-  void resetCoolingDesignAirFlowRate();
+      void resetCentralCoolingDesignSupplyAirHumidityRatio();
 
-  bool setHeatingDesignAirFlowMethod(std::string heatingDesignAirFlowMethod);
+      bool setCentralHeatingDesignSupplyAirHumidityRatio(double centralHeatingDesignSupplyAirHumidityRatio);
 
-  void resetHeatingDesignAirFlowMethod();
+      void resetCentralHeatingDesignSupplyAirHumidityRatio();
 
-  bool setHeatingDesignAirFlowRate(double heatingDesignAirFlowRate);
+      bool setCoolingDesignAirFlowMethod(std::string coolingDesignAirFlowMethod);
 
-  void resetHeatingDesignAirFlowRate();
+      void resetCoolingDesignAirFlowMethod();
 
-  bool setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod);
+      bool setCoolingDesignAirFlowRate(double coolingDesignAirFlowRate);
 
-  void resetSystemOutdoorAirMethod();
+      void resetCoolingDesignAirFlowRate();
 
-  bool setZoneMaximumOutdoorAirFraction(double zoneMaximumOutdoorAirFraction);
+      bool setHeatingDesignAirFlowMethod(std::string heatingDesignAirFlowMethod);
 
-  bool setCoolingSupplyAirFlowRatePerFloorArea(double coolingSupplyAirFlowRatePerFloorArea);
+      void resetHeatingDesignAirFlowMethod();
 
-  bool setCoolingFractionofAutosizedCoolingSupplyAirFlowRate(double coolingFractionofAutosizedCoolingSupplyAirFlowRate);
+      bool setHeatingDesignAirFlowRate(double heatingDesignAirFlowRate);
 
-  bool setCoolingSupplyAirFlowRatePerUnitCoolingCapacity(double coolingSupplyAirFlowRatePerUnitCoolingCapacity);
+      void resetHeatingDesignAirFlowRate();
 
-  bool setHeatingSupplyAirFlowRatePerFloorArea(double heatingSupplyAirFlowRatePerFloorArea);
+      bool setSystemOutdoorAirMethod(std::string systemOutdoorAirMethod);
 
-  bool setHeatingFractionofAutosizedHeatingSupplyAirFlowRate(double heatingFractionofAutosizedHeatingSupplyAirFlowRate);
+      void resetSystemOutdoorAirMethod();
 
-  bool setHeatingFractionofAutosizedCoolingSupplyAirFlowRate(double heatingFractionofAutosizedCoolingSupplyAirFlowRate);
+      bool setZoneMaximumOutdoorAirFraction(double zoneMaximumOutdoorAirFraction);
 
-  bool setHeatingSupplyAirFlowRatePerUnitHeatingCapacity(double heatingSupplyAirFlowRatePerUnitHeatingCapacity);
+      bool setCoolingSupplyAirFlowRatePerFloorArea(double coolingSupplyAirFlowRatePerFloorArea);
 
-  bool setCoolingDesignCapacityMethod(std::string coolingDesignCapacityMethod);
+      bool setCoolingFractionofAutosizedCoolingSupplyAirFlowRate(double coolingFractionofAutosizedCoolingSupplyAirFlowRate);
 
-  bool setCoolingDesignCapacity(boost::optional<double> coolingDesignCapacity);
+      bool setCoolingSupplyAirFlowRatePerUnitCoolingCapacity(double coolingSupplyAirFlowRatePerUnitCoolingCapacity);
 
-  void autosizeCoolingDesignCapacity();
+      bool setHeatingSupplyAirFlowRatePerFloorArea(double heatingSupplyAirFlowRatePerFloorArea);
 
-  bool setCoolingDesignCapacityPerFloorArea(double coolingDesignCapacityPerFloorArea);
+      bool setHeatingFractionofAutosizedHeatingSupplyAirFlowRate(double heatingFractionofAutosizedHeatingSupplyAirFlowRate);
 
-  bool setFractionofAutosizedCoolingDesignCapacity(double fractionofAutosizedCoolingDesignCapacity);
+      bool setHeatingFractionofAutosizedCoolingSupplyAirFlowRate(double heatingFractionofAutosizedCoolingSupplyAirFlowRate);
 
-  bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
+      bool setHeatingSupplyAirFlowRatePerUnitHeatingCapacity(double heatingSupplyAirFlowRatePerUnitHeatingCapacity);
 
-  bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
+      bool setCoolingDesignCapacityMethod(std::string coolingDesignCapacityMethod);
 
-  void autosizeHeatingDesignCapacity();
+      bool setCoolingDesignCapacity(boost::optional<double> coolingDesignCapacity);
 
-  bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
+      void autosizeCoolingDesignCapacity();
 
-  bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
+      bool setCoolingDesignCapacityPerFloorArea(double coolingDesignCapacityPerFloorArea);
 
-  bool setCentralCoolingCapacityControlMethod(std::string centralCoolingCapacityControlMethod);
+      bool setFractionofAutosizedCoolingDesignCapacity(double fractionofAutosizedCoolingDesignCapacity);
 
-  AirLoopHVAC airLoopHVAC() const;
+      bool setHeatingDesignCapacityMethod(std::string heatingDesignCapacityMethod);
 
-  bool setAirLoopHVAC(const AirLoopHVAC & airLoopHVAC);
+      bool setHeatingDesignCapacity(boost::optional<double> heatingDesignCapacity);
 
+      void autosizeHeatingDesignCapacity();
 
-  boost::optional<double> centralHeatingMaximumSystemAirFlowRatio() const;
-  bool isCentralHeatingMaximumSystemAirFlowRatioAutosized() const;
-  bool setCentralHeatingMaximumSystemAirFlowRatio(double centralHeatingMaximumSystemAirFlowRatio);
-  void autosizeCentralHeatingMaximumSystemAirFlowRatio();
+      bool setHeatingDesignCapacityPerFloorArea(double heatingDesignCapacityPerFloorArea);
 
-  boost::optional<double> autosizedDesignOutdoorAirFlowRate() const ;
+      bool setFractionofAutosizedHeatingDesignCapacity(double fractionofAutosizedHeatingDesignCapacity);
 
-  boost::optional<double> autosizedCentralHeatingMaximumSystemAirFlowRatio() const;
+      bool setCentralCoolingCapacityControlMethod(std::string centralCoolingCapacityControlMethod);
 
-  boost::optional<double> autosizedCoolingDesignCapacity() const ;
+      bool setOccupantDiversity(double occupantDiversity);
 
-  boost::optional<double> autosizedHeatingDesignCapacity() const ;
+      void autosizeOccupantDiversity();
 
-  void autosize();
+      AirLoopHVAC airLoopHVAC() const;
 
-  void applySizingValues();
+      bool setAirLoopHVAC(const AirLoopHVAC& airLoopHVAC);
 
-  virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      boost::optional<double> autosizedDesignOutdoorAirFlowRate() const;
 
-  virtual std::vector<std::string> emsInternalVariableNames() const override;
+      boost::optional<double> autosizedCentralHeatingMaximumSystemAirFlowRatio() const;
 
-  protected:
+      boost::optional<double> autosizedCoolingDesignCapacity() const;
 
-  private:
+      boost::optional<double> autosizedHeatingDesignCapacity() const;
 
-  REGISTER_LOGGER("openstudio.model.SizingSystem");
-};
+      boost::optional<double> autosizedOccupantDiversity() const;
 
-} // detail
+      void autosize();
 
-} // model
+      void applySizingValues();
 
-} // openstudio
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-#endif // MODEL_SIZINGSYSTEM_IMPL_HPP
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
+
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SizingSystem");
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+
+}  // namespace openstudio
+
+#endif  // MODEL_SIZINGSYSTEM_IMPL_HPP

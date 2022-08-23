@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -30,50 +30,46 @@
 #ifndef GENERATEIDDFACTORY_GENERATEIDDFACTORYOUTFILES_HPP
 #define GENERATEIDDFACTORY_GENERATEIDDFACTORYOUTFILES_HPP
 
-#include <map>
-#include <vector>
 #include "../utilities/core/Filesystem.hpp"
+
+#include <map>
+#include <memory>
+#include <vector>
 
 namespace openstudio {
 
-typedef openstudio::filesystem::path path;
+using path = openstudio::filesystem::path;
 
 class IddFileFactoryData;
 
-struct IddFactoryOutFile {
+struct IddFactoryOutFile
+{
   std::string filename;
   openstudio::path finalPath;
   openstudio::path tempPath;
   openstudio::filesystem::ofstream tempFile;
 
-  IddFactoryOutFile(const std::string& filename,
-                    const openstudio::path& outPath,
-                    const std::string& outFileHeader);
+  IddFactoryOutFile(const std::string& filename, const openstudio::path& outPath, const std::string& outFileHeader);
 
-  IddFactoryOutFile(const IddFactoryOutFile& other) {
-    throw std::runtime_error("Cannot copy IddFactoryOutFiles.");
-  }
-
-  IddFactoryOutFile operator=(const IddFactoryOutFile& other) {
-    throw std::runtime_error("Cannot copy IddFactoryOutFiles.");
-  }
+  // Prevent copy and assignment
+  IddFactoryOutFile(const IddFactoryOutFile&) = delete;
+  IddFactoryOutFile operator=(const IddFactoryOutFile&) = delete;
 
   std::string finalize(const std::string& oldChecksum);
 };
 
 /** Structure to hold GenerateIddFactory's output files as they are being written. */
-struct GenerateIddFactoryOutFiles {
+struct GenerateIddFactoryOutFiles
+{
   IddFactoryOutFile iddEnumsHxx;
   IddFactoryOutFile iddFieldEnumsHxx;
   IddFactoryOutFile iddFieldEnumsIxx;
   IddFactoryOutFile iddFactoryHxx;
   IddFactoryOutFile iddFactoryCxx;
-  std::vector< std::shared_ptr<IddFactoryOutFile> > iddFactoryIddFileCxxs;
-  std::map<std::string,std::pair<std::string,bool> > checksumMap; // filename, (checksum, encountered)
+  std::vector<std::shared_ptr<IddFactoryOutFile>> iddFactoryIddFileCxxs;
+  std::map<std::string, std::pair<std::string, bool>> checksumMap;  // filename, (checksum, encountered)
 
-  GenerateIddFactoryOutFiles(const path& outPath,
-                             const std::string& outFileHeader,
-                             const std::vector<IddFileFactoryData>& iddFiles);
+  GenerateIddFactoryOutFiles(const path& outPath, const std::string& outFileHeader, const std::vector<IddFileFactoryData>& iddFiles);
 
   void finalize();
 
@@ -85,6 +81,6 @@ struct GenerateIddFactoryOutFiles {
   void writeIddFactoryFileIndex();
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // GENERATEIDDFACTORY_GENERATEIDDFACTORYOUTFILES_HPP
+#endif  // GENERATEIDDFACTORY_GENERATEIDDFACTORYOUTFILES_HPP

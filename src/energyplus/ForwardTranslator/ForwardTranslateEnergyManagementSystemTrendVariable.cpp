@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,7 +39,6 @@
 #include "../../model/EnergyManagementSystemTrendVariable.hpp"
 #include "../../model/EnergyManagementSystemTrendVariable_Impl.hpp"
 
-
 #include <utilities/idd/EnergyManagementSystem_TrendVariable_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -52,31 +51,29 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemTrendVariable(EnergyManagementSystemTrendVariable & modelObject)
-{
-  boost::optional<int> i;
-  boost::optional<std::string> s;
+  boost::optional<IdfObject> ForwardTranslator::translateEnergyManagementSystemTrendVariable(EnergyManagementSystemTrendVariable& modelObject) {
+    boost::optional<int> i;
+    boost::optional<std::string> s;
 
-  IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_TrendVariable);
-  m_idfObjects.push_back(idfObject);
-  //Name
-  s = modelObject.name();
-  if (s) {
-    idfObject.setName(*s);
+    IdfObject idfObject(openstudio::IddObjectType::EnergyManagementSystem_TrendVariable);
+    m_idfObjects.push_back(idfObject);
+    //Name
+    s = modelObject.name();
+    if (s) {
+      idfObject.setName(*s);
+    }
+    s = modelObject.emsVariableName();
+    if (s) {
+      idfObject.setString(EnergyManagementSystem_TrendVariableFields::EMSVariableName, s.get());
+    }
+    i = modelObject.numberOfTimestepsToBeLogged();
+    if (i.is_initialized()) {
+      idfObject.setInt(EnergyManagementSystem_TrendVariableFields::NumberofTimestepstobeLogged, i.get());
+    }
+
+    return idfObject;
   }
-  s = modelObject.emsVariableName();
-  if (s) {
-    idfObject.setString(EnergyManagementSystem_TrendVariableFields::EMSVariableName, s.get());
-  }
-  i = modelObject.numberOfTimestepsToBeLogged();
-  if (i.is_initialized()) {
-    idfObject.setInt(EnergyManagementSystem_TrendVariableFields::NumberofTimestepstobeLogged, i.get());
-  }
 
-  return idfObject;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

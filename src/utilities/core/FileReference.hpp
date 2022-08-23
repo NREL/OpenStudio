@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -44,35 +44,43 @@
 
 namespace openstudio {
 
+// clang-format off
+
 /** \class FileReferenceType
  *  \brief Type of files we expect to handle with FileReference.
  *  \details See the OPENSTUDIO_ENUM documentation in utilities/core/Enum.hpp. The actual macro
  *  call is:
  *  \code
-OPENSTUDIO_ENUM( FileReferenceType,
-    ((Unknown)(unknown))
-    ((CSV)(csv))
-    ((EPW)(epw))
-    ((IDF)(idf))
-    ((OSC)(osc))
-    ((OSM)(osm))
-    ((RB)(rb))
-    ((SQL)(sql))
-    ((XML)(xml)) );
+OPENSTUDIO_ENUM(FileReferenceType,
+  ((Unknown)(unknown))
+  ((CSV)(csv))
+  ((EPW)(epw))
+  ((IDF)(idf))
+  ((OSC)(osc))
+  ((OSM)(osm))
+  ((RB)(rb))
+  ((SQL)(sql))
+  ((XML)(xml))
+  ((OSSR)(ossr))
+);
  *  \endcode */
-OPENSTUDIO_ENUM( FileReferenceType,
-    ((Unknown)(unknown))
-    ((CSV)(csv))
-    ((EPW)(epw))
-    ((IDF)(idf))
-    ((OSC)(osc))
-    ((OSM)(osm))
-    ((RB)(rb))
-    ((SQL)(sql))
-    ((XML)(xml))
-    ((OSSR)(ossr)) );
+OPENSTUDIO_ENUM(FileReferenceType,
+  ((Unknown)(unknown))
+  ((CSV)(csv))
+  ((EPW)(epw))
+  ((IDF)(idf))
+  ((OSC)(osc))
+  ((OSM)(osm))
+  ((RB)(rb))
+  ((SQL)(sql))
+  ((XML)(xml))
+  ((OSSR)(ossr))
+);
 
-class UTILITIES_API FileReference {
+// clang-format on
+
+class UTILITIES_API FileReference
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -80,16 +88,9 @@ class UTILITIES_API FileReference {
   explicit FileReference(const openstudio::path& p);
 
   /** De-serialization constructor. Not for general use. */
-  FileReference(const openstudio::UUID& uuid,
-                const openstudio::UUID& versionUUID,
-                const std::string& name,
-                const std::string& displayName,
-                const std::string& description,
-                const openstudio::path& p,
-                const FileReferenceType& fileType,
-                const DateTime& timestampLast,
-                const std::string& checksumCreate,
-                const std::string& checksumLast);
+  FileReference(const openstudio::UUID& uuid, const openstudio::UUID& versionUUID, const std::string& name, const std::string& displayName,
+                const std::string& description, const openstudio::path& p, const FileReferenceType& fileType, const DateTime& timestampLast,
+                const std::string& checksumCreate, const std::string& checksumLast);
 
   virtual ~FileReference() {}
 
@@ -112,7 +113,6 @@ class UTILITIES_API FileReference {
   openstudio::path path() const;
 
   FileReferenceType fileType() const;
-
 
   /** Last modified time of this file, or time object was created if path
    *  does not actually exist on the file system. */
@@ -140,7 +140,7 @@ class UTILITIES_API FileReference {
 
   /** Save the path as relative to basePath, or just keep the file name and extension if
    *  basePath.empty(). */
-  bool makePathRelative(const openstudio::path& basePath=openstudio::path());
+  bool makePathRelative(const openstudio::path& basePath = openstudio::path());
 
   /** Returns true and updates timestampLast and checksumLast if file is located. */
   bool update(const openstudio::path& searchDirectory);
@@ -159,7 +159,6 @@ class UTILITIES_API FileReference {
   std::string m_checksumLast;
 
   REGISTER_LOGGER("openstudio.utilities.FileReference");
-
 };
 
 /** \relates FileReference*/
@@ -168,7 +167,6 @@ typedef boost::optional<FileReference> OptionalFileReference;
 /** \relates FileReference*/
 typedef std::vector<FileReference> FileReferenceVector;
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_CORE_FILEREFERENCE_HPP
-
+#endif  // UTILITIES_CORE_FILEREFERENCE_HPP

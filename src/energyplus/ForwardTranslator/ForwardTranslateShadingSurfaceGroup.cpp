@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,19 +45,17 @@ namespace openstudio {
 
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateShadingSurfaceGroup( model::ShadingSurfaceGroup & modelObject )
-{
+  boost::optional<IdfObject> ForwardTranslator::translateShadingSurfaceGroup(model::ShadingSurfaceGroup& modelObject) {
 
-  ShadingSurfaceVector shadingSurfaces = modelObject.shadingSurfaces();
-  std::sort(shadingSurfaces.begin(), shadingSurfaces.end(), WorkspaceObjectNameLess());
-  for (ShadingSurface& shadingSurface : shadingSurfaces){
-    translateAndMapModelObject(shadingSurface);
+    ShadingSurfaceVector shadingSurfaces = modelObject.shadingSurfaces();
+    std::sort(shadingSurfaces.begin(), shadingSurfaces.end(), WorkspaceObjectNameLess());
+    for (ShadingSurface& shadingSurface : shadingSurfaces) {
+      translateAndMapModelObject(shadingSurface);
+    }
+
+    return boost::none;
   }
 
-  return boost::none;
-}
+}  // namespace energyplus
 
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

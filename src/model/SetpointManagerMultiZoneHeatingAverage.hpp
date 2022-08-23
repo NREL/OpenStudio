@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,79 +37,79 @@ namespace openstudio {
 
 namespace model {
 
-class Node;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerMultiZoneHeatingAverage_Impl;
+    class SetpointManagerMultiZoneHeatingAverage_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerMultiZoneHeatingAverage is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:MultiZone:Heating:Average'. */
-class MODEL_API SetpointManagerMultiZoneHeatingAverage : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SetpointManagerMultiZoneHeatingAverage is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:MultiZone:Heating:Average'. */
+  class MODEL_API SetpointManagerMultiZoneHeatingAverage : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SetpointManagerMultiZoneHeatingAverage(const Model& model);
+    explicit SetpointManagerMultiZoneHeatingAverage(const Model& model);
 
-  virtual ~SetpointManagerMultiZoneHeatingAverage() {}
+    virtual ~SetpointManagerMultiZoneHeatingAverage() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlVariableValues();
+    static std::vector<std::string> controlVariableValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  double minimumSetpointTemperature() const;
+    double minimumSetpointTemperature() const;
 
-  double maximumSetpointTemperature() const;
+    double maximumSetpointTemperature() const;
 
-  boost::optional<Node> setpointNode() const;
+    boost::optional<Node> setpointNode() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setControlVariable(const std::string& controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
-  bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
+    bool setMinimumSetpointTemperature(double minimumSetpointTemperature);
 
-  bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
+    bool setMaximumSetpointTemperature(double maximumSetpointTemperature);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerMultiZoneHeatingAverage_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerMultiZoneHeatingAverage_Impl ImplType;
 
-  explicit SetpointManagerMultiZoneHeatingAverage(std::shared_ptr<detail::SetpointManagerMultiZoneHeatingAverage_Impl> impl);
+    explicit SetpointManagerMultiZoneHeatingAverage(std::shared_ptr<detail::SetpointManagerMultiZoneHeatingAverage_Impl> impl);
 
-  friend class detail::SetpointManagerMultiZoneHeatingAverage_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneHeatingAverage");
-};
+    friend class detail::SetpointManagerMultiZoneHeatingAverage_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerMultiZoneHeatingAverage");
+  };
 
-/** \relates SetpointManagerMultiZoneHeatingAverage*/
-typedef boost::optional<SetpointManagerMultiZoneHeatingAverage> OptionalSetpointManagerMultiZoneHeatingAverage;
+  /** \relates SetpointManagerMultiZoneHeatingAverage*/
+  typedef boost::optional<SetpointManagerMultiZoneHeatingAverage> OptionalSetpointManagerMultiZoneHeatingAverage;
 
-/** \relates SetpointManagerMultiZoneHeatingAverage*/
-typedef std::vector<SetpointManagerMultiZoneHeatingAverage> SetpointManagerMultiZoneHeatingAverageVector;
+  /** \relates SetpointManagerMultiZoneHeatingAverage*/
+  typedef std::vector<SetpointManagerMultiZoneHeatingAverage> SetpointManagerMultiZoneHeatingAverageVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERMULTIZONEHEATINGAVERAGE_HPP
-
+#endif  // MODEL_SETPOINTMANAGERMULTIZONEHEATINGAVERAGE_HPP

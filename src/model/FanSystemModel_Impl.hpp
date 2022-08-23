@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,202 +36,197 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Curve;
-class ThermalZone;
-class FanSystemModelSpeed;
-class AirflowNetworkFan;
+  class Schedule;
+  class Curve;
+  class ThermalZone;
+  class FanSystemModelSpeed;
+  class AirflowNetworkFan;
 
-namespace detail {
+  namespace detail {
 
-  /** FanSystemModel_Impl is a StraightComponent_Impl that is the implementation class for FanSystemModel.*/
-  class MODEL_API FanSystemModel_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** FanSystemModel_Impl is a StraightComponent_Impl that is the implementation class for FanSystemModel.*/
+    class MODEL_API FanSystemModel_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    FanSystemModel_Impl(const IdfObject& idfObject,
-                        Model_Impl* model,
-                        bool keepHandle);
+      FanSystemModel_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    FanSystemModel_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      FanSystemModel_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    FanSystemModel_Impl(const FanSystemModel_Impl& other,
-                        Model_Impl* model,
-                        bool keepHandle);
+      FanSystemModel_Impl(const FanSystemModel_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~FanSystemModel_Impl() {}
+      virtual ~FanSystemModel_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    virtual bool addToNode(Node & node) override;
+      virtual bool addToNode(Node& node) override;
 
-    virtual void autosize() override;
+      virtual void autosize() override;
 
-    virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    boost::optional<double> designMaximumAirFlowRate() const;
+      boost::optional<double> designMaximumAirFlowRate() const;
 
-    bool isDesignMaximumAirFlowRateAutosized() const;
+      bool isDesignMaximumAirFlowRateAutosized() const;
 
-    boost::optional <double> autosizedDesignMaximumAirFlowRate();
+      boost::optional<double> autosizedDesignMaximumAirFlowRate();
 
-    std::string speedControlMethod() const;
+      std::string speedControlMethod() const;
 
-    double electricPowerMinimumFlowRateFraction() const;
+      double electricPowerMinimumFlowRateFraction() const;
 
-    double designPressureRise() const;
+      double designPressureRise() const;
 
-    double motorEfficiency() const;
+      double motorEfficiency() const;
 
-    double motorInAirStreamFraction() const;
+      double motorInAirStreamFraction() const;
 
-    boost::optional<double> designElectricPowerConsumption() const;
+      boost::optional<double> designElectricPowerConsumption() const;
 
-    bool isDesignElectricPowerConsumptionAutosized() const;
+      bool isDesignElectricPowerConsumptionAutosized() const;
 
-    boost::optional <double> autosizedDesignElectricPowerConsumption();
+      boost::optional<double> autosizedDesignElectricPowerConsumption();
 
-    std::string designPowerSizingMethod() const;
+      std::string designPowerSizingMethod() const;
 
-    double electricPowerPerUnitFlowRate() const;
+      double electricPowerPerUnitFlowRate() const;
 
-    double electricPowerPerUnitFlowRatePerUnitPressure() const;
+      double electricPowerPerUnitFlowRatePerUnitPressure() const;
 
-    double fanTotalEfficiency() const;
+      double fanTotalEfficiency() const;
 
-    boost::optional<Curve> electricPowerFunctionofFlowFractionCurve() const;
+      boost::optional<Curve> electricPowerFunctionofFlowFractionCurve() const;
 
-    boost::optional<double> nightVentilationModePressureRise() const;
+      boost::optional<double> nightVentilationModePressureRise() const;
 
-    boost::optional<double> nightVentilationModeFlowFraction() const;
+      boost::optional<double> nightVentilationModeFlowFraction() const;
 
-    boost::optional<ThermalZone> motorLossZone() const;
+      boost::optional<ThermalZone> motorLossZone() const;
 
-    double motorLossRadiativeFraction() const;
+      double motorLossRadiativeFraction() const;
 
-    std::string endUseSubcategory() const;
+      std::string endUseSubcategory() const;
 
-    unsigned numberofSpeeds() const;
-    std::vector<FanSystemModelSpeed> speeds() const;
+      unsigned numberofSpeeds() const;
+      std::vector<FanSystemModelSpeed> speeds() const;
 
-    /** Find a given speed by the flowFraction (key) */
-    boost::optional<unsigned> speedIndex(const FanSystemModelSpeed& speed) const;
+      /** Find a given speed by the flowFraction (key) */
+      boost::optional<unsigned> speedIndex(const FanSystemModelSpeed& speed) const;
 
-    boost::optional<FanSystemModelSpeed> getSpeed(unsigned speedIndex) const;
+      boost::optional<FanSystemModelSpeed> getSpeed(unsigned speedIndex) const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    /** If a speed group is already present (= the flowFraction already exists) (cf `speedIndex()`), it will Warn and override the electricPowerFraction value */
-    bool addSpeed(const FanSystemModelSpeed& speed);
+      /** If a speed group is already present (= the flowFraction already exists) (cf `speedIndex()`), it will Warn and override the electricPowerFraction value */
+      bool addSpeed(const FanSystemModelSpeed& speed);
 
-    // Overloads, it creates a FanSystemModelSpeed wrapper, then call `addSpeed(const FanSystemModelSpeed&)`
-    bool addSpeed(double flowFraction, double electricPowerFraction);
+      // Overloads, it creates a FanSystemModelSpeed wrapper, then call `addSpeed(const FanSystemModelSpeed&)`
+      bool addSpeed(double flowFraction);
+      bool addSpeed(double flowFraction, double electricPowerFraction);
 
-    bool removeSpeed(unsigned speedIndex);
+      bool removeSpeed(unsigned speedIndex);
 
-    void removeAllSpeeds();
+      void removeAllSpeeds();
 
-    // Directly set the speeds from a vector, will delete any existing speeds
-    bool setSpeeds(const std::vector<FanSystemModelSpeed>& speeds);
+      // Directly set the speeds from a vector, will delete any existing speeds
+      bool setSpeeds(const std::vector<FanSystemModelSpeed>& speeds);
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setDesignMaximumAirFlowRate(double designMaximumAirFlowRate);
+      bool setDesignMaximumAirFlowRate(double designMaximumAirFlowRate);
 
-    void autosizeDesignMaximumAirFlowRate();
+      void autosizeDesignMaximumAirFlowRate();
 
-    bool setSpeedControlMethod(const std::string& speedControlMethod);
+      bool setSpeedControlMethod(const std::string& speedControlMethod);
 
-    bool setElectricPowerMinimumFlowRateFraction(double electricPowerMinimumFlowRateFraction);
+      bool setElectricPowerMinimumFlowRateFraction(double electricPowerMinimumFlowRateFraction);
 
-    bool setDesignPressureRise(double designPressureRise);
+      bool setDesignPressureRise(double designPressureRise);
 
-    bool setMotorEfficiency(double motorEfficiency);
+      bool setMotorEfficiency(double motorEfficiency);
 
-    bool setMotorInAirStreamFraction(double motorInAirStreamFraction);
+      bool setMotorInAirStreamFraction(double motorInAirStreamFraction);
 
-    bool setDesignElectricPowerConsumption(double designElectricPowerConsumption);
+      bool setDesignElectricPowerConsumption(double designElectricPowerConsumption);
 
-    void autosizeDesignElectricPowerConsumption();
+      void autosizeDesignElectricPowerConsumption();
 
-    bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
+      bool setDesignPowerSizingMethod(const std::string& designPowerSizingMethod);
 
-    bool setElectricPowerPerUnitFlowRate(double electricPowerPerUnitFlowRate);
+      bool setElectricPowerPerUnitFlowRate(double electricPowerPerUnitFlowRate);
 
-    bool setElectricPowerPerUnitFlowRatePerUnitPressure(double electricPowerPerUnitFlowRatePerUnitPressure);
+      bool setElectricPowerPerUnitFlowRatePerUnitPressure(double electricPowerPerUnitFlowRatePerUnitPressure);
 
-    bool setFanTotalEfficiency(double fanTotalEfficiency);
+      bool setFanTotalEfficiency(double fanTotalEfficiency);
 
-    bool setElectricPowerFunctionofFlowFractionCurve(const Curve& univariateFunctions);
+      bool setElectricPowerFunctionofFlowFractionCurve(const Curve& univariateFunctions);
 
-    void resetElectricPowerFunctionofFlowFractionCurve();
+      void resetElectricPowerFunctionofFlowFractionCurve();
 
-    bool setNightVentilationModePressureRise(double nightVentilationModePressureRise);
+      bool setNightVentilationModePressureRise(double nightVentilationModePressureRise);
 
-    void resetNightVentilationModePressureRise();
+      void resetNightVentilationModePressureRise();
 
-    bool setNightVentilationModeFlowFraction(double nightVentilationModeFlowFraction);
+      bool setNightVentilationModeFlowFraction(double nightVentilationModeFlowFraction);
 
-    void resetNightVentilationModeFlowFraction();
+      void resetNightVentilationModeFlowFraction();
 
-    bool setMotorLossZone(const ThermalZone& thermalZone);
+      bool setMotorLossZone(const ThermalZone& thermalZone);
 
-    void resetMotorLossZone();
+      void resetMotorLossZone();
 
-    bool setMotorLossRadiativeFraction(double motorLossRadiativeFraction);
+      bool setMotorLossRadiativeFraction(double motorLossRadiativeFraction);
 
-    bool setEndUseSubcategory(const std::string& endUseSubcategory);
+      bool setEndUseSubcategory(const std::string& endUseSubcategory);
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    AirflowNetworkFan getAirflowNetworkFan();
-    boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
+      AirflowNetworkFan getAirflowNetworkFan();
+      boost::optional<AirflowNetworkFan> airflowNetworkFan() const;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.FanSystemModel");
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.FanSystemModel");
 
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
 
-    virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
+      virtual boost::optional<ZoneHVACComponent> containingZoneHVACComponent() const override;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
 
-    bool addSpeedPrivate(double flowFraction, double electricPowerFraction);
-  };
+      bool addSpeedPrivate(double flowFraction, boost::optional<double> electricPowerFraction);
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_FANSYSTEMMODEL_IMPL_HPP
-
+#endif  // MODEL_FANSYSTEMMODEL_IMPL_HPP

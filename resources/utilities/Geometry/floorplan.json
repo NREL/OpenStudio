@@ -74,7 +74,7 @@
 		"config": {
 			"units": "ft",
 			"language": "EN-US",
-			"north_axis": 0
+			"north_axis": 30
 		},
 		"grid": {
 			"visible": true,
@@ -92,10 +92,10 @@
 		},
 		"map": {
 			"visible": false,
-			"latitude": 39.7653,
-			"longitude": -104.9863,
+			"latitude": 40.0,
+			"longitude": -104.0,
 			"zoom": 18,
-			"elevation": 0
+			"elevation": 5280
 		}
 	},
 	"stories": [

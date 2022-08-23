@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,141 +38,143 @@
 namespace openstudio {
 
 class EpwFile;
+class DayOfWeek;
 
 namespace model {
 
-class Site;
-class WeatherFile;
+  class Site;
+  class WeatherFile;
 
-namespace detail {
+  namespace detail {
 
-  /** WeatherFile_Impl is a ModelObject_Impl that is the implementation class for WeatherFile.*/
-  class MODEL_API WeatherFile_Impl : public ModelObject_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** WeatherFile_Impl is a ModelObject_Impl that is the implementation class for WeatherFile.*/
+    class MODEL_API WeatherFile_Impl : public ModelObject_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    WeatherFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      WeatherFile_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    WeatherFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      WeatherFile_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    WeatherFile_Impl(const WeatherFile_Impl& other,
-                     Model_Impl* model,
-                     bool keepHandle);
+      WeatherFile_Impl(const WeatherFile_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~WeatherFile_Impl() {}
+      virtual ~WeatherFile_Impl() {}
 
-    //@}
+      //@}
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      // set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    /** @name Getters */
-    //@{
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    std::string city() const;
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    std::string stateProvinceRegion() const;
+      /** @name Getters */
+      //@{
 
-    std::string country() const;
+      std::string city() const;
 
-    std::string dataSource() const;
+      std::string stateProvinceRegion() const;
 
-    std::string wMONumber() const;
+      std::string country() const;
 
-    double latitude() const;
+      std::string dataSource() const;
 
-    double longitude() const;
+      std::string wMONumber() const;
 
-    double timeZone() const;
+      double latitude() const;
 
-    double elevation() const;
+      double longitude() const;
 
-    bool isElevationDefaulted() const;
+      double timeZone() const;
 
-    boost::optional<std::string> url() const;
+      double elevation() const;
 
-    boost::optional<openstudio::path> path() const;
+      bool isElevationDefaulted() const;
 
-    boost::optional<std::string> checksum() const;
+      boost::optional<std::string> url() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      boost::optional<openstudio::path> path() const;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      boost::optional<std::string> checksum() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      boost::optional<int> startDateActualYear() const;
 
-    bool setCity(std::string city);
+      boost::optional<DayOfWeek> startDayOfWeek() const;
 
-    bool setStateProvinceRegion(std::string stateProvinceRegion);
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setCountry(std::string country);
+      bool setCity(std::string city);
 
-    bool setDataSource(std::string dataSource);
+      bool setStateProvinceRegion(std::string stateProvinceRegion);
 
-    bool setWMONumber(std::string wMONumber);
+      bool setCountry(std::string country);
 
-    bool setLatitude(double latitude);
+      bool setDataSource(std::string dataSource);
 
-    bool setLongitude(double longitude);
+      bool setWMONumber(std::string wMONumber);
 
-    bool setTimeZone(double timeZone);
+      bool setLatitude(double latitude);
 
-    bool setElevation(double elevation);
+      bool setLongitude(double longitude);
 
-    void resetElevation();
+      bool setTimeZone(double timeZone);
 
-    //bool setUrl(boost::optional<std::string> url);
+      bool setElevation(double elevation);
 
-    //bool setUrl(std::string url);
+      void resetElevation();
 
-    //void resetUrl();
+      //bool setUrl(boost::optional<std::string> url);
 
-    //bool setChecksum(boost::optional<std::string> checksum);
+      //bool setUrl(std::string url);
 
-    //bool setChecksum(std::string checksum);
+      //void resetUrl();
 
-    //void resetChecksum();
+      //bool setChecksum(boost::optional<std::string> checksum);
 
-    //@}
+      //bool setChecksum(std::string checksum);
 
-    // get the site
-    boost::optional<Site> site() const;
+      //void resetChecksum();
 
-    /** Load and return the EpwFile, if it can be located. */
-    boost::optional<EpwFile> file(const openstudio::path& dir=openstudio::path()) const;
+      //@}
 
-    /** Save the url as relative to basePath, or just keep the file name and extension if
+      // get the site
+      boost::optional<Site> site() const;
+
+      /** Load and return the EpwFile, if it can be located. */
+      boost::optional<EpwFile> file(const openstudio::path& dir = openstudio::path()) const;
+
+      /** Save the url as relative to basePath, or just keep the file name and extension if
     *  basePath.empty(). */
-    bool makeUrlRelative(const openstudio::path& basePath=openstudio::path());
+      bool makeUrlRelative(const openstudio::path& basePath = openstudio::path());
 
-    /** Search for file and save the absolute url if successful. */
-    bool makeUrlAbsolute(const openstudio::path& searchDirectory);
+      /** Search for file and save the absolute url if successful. */
+      bool makeUrlAbsolute(const openstudio::path& searchDirectory);
 
-    // get environment name as reported in the sql file
-    // environment name = "City StateProvinceRegion Country DataSource WMO#=WMONumber"
-    boost::optional<std::string> environmentName() const;
+      // get environment name as reported in the sql file
+      // environment name = "City StateProvinceRegion Country DataSource WMO#=WMONumber"
+      boost::optional<std::string> environmentName() const;
 
-protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.WeatherFile");
-  };
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.WeatherFile");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_WEATHERFILE_IMPL_HPP
+#endif  // MODEL_WEATHERFILE_IMPL_HPP

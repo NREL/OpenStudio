@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -41,14 +41,13 @@ using namespace std;
 using namespace boost;
 using namespace openstudio;
 
-TEST_F(IdfFixture,WorkspaceWatcher_ObjectChanges)
-{
+TEST_F(IdfFixture, WorkspaceWatcher_ObjectChanges) {
   Workspace workspace(epIdfFile);
   WorkspaceWatcher watcher(workspace);
 
   WorkspaceObjectVector result = workspace.getObjectsByName("C5-1");
   ASSERT_TRUE(result.size() > 0);
-  EXPECT_EQ(static_cast<unsigned>(1),result.size());
+  EXPECT_EQ(static_cast<unsigned>(1), result.size());
   EXPECT_TRUE(result[0].iddObject().type() == IddObjectType::BuildingSurface_Detailed);
   EXPECT_FALSE(watcher.dirty());
 
@@ -60,7 +59,7 @@ TEST_F(IdfFixture,WorkspaceWatcher_ObjectChanges)
   watcher.clearState();
   EXPECT_FALSE(watcher.dirty());
 
-  EXPECT_TRUE(eg.setDouble(0,4.3));
+  EXPECT_TRUE(eg.setDouble(0, 4.3));
   EXPECT_TRUE(watcher.dirty());
   EXPECT_FALSE(watcher.objectAdded());
   EXPECT_FALSE(watcher.objectRemoved());
@@ -68,8 +67,7 @@ TEST_F(IdfFixture,WorkspaceWatcher_ObjectChanges)
   EXPECT_FALSE(watcher.dirty());
 }
 
-TEST_F(IdfFixture,WorkspaceWatcher_AddObjects)
-{
+TEST_F(IdfFixture, WorkspaceWatcher_AddObjects) {
   Workspace workspace(epIdfFile);
   WorkspaceWatcher watcher(workspace);
 
@@ -82,15 +80,14 @@ TEST_F(IdfFixture,WorkspaceWatcher_AddObjects)
   watcher.clearState();
 }
 
-TEST_F(IdfFixture,WorkspaceWatcher_RemoveObjects)
-{
+TEST_F(IdfFixture, WorkspaceWatcher_RemoveObjects) {
   Workspace workspace(epIdfFile);
   WorkspaceWatcher watcher(workspace);
 
   EXPECT_FALSE(watcher.dirty());
   WorkspaceObjectVector result = workspace.getObjectsByName("C5-1");
   ASSERT_TRUE(result.size() > 0);
-  EXPECT_EQ(static_cast<unsigned>(1),result.size());
+  EXPECT_EQ(static_cast<unsigned>(1), result.size());
   workspace.removeObject(result[0].handle());
   EXPECT_TRUE(watcher.dirty());
   EXPECT_FALSE(watcher.objectAdded());
@@ -100,4 +97,3 @@ TEST_F(IdfFixture,WorkspaceWatcher_RemoveObjects)
   EXPECT_FALSE(result[0].initialized());
   EXPECT_TRUE(result[0].handle().isNull());
 }
-

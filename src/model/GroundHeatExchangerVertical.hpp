@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,180 +35,169 @@
 
 namespace openstudio {
 namespace model {
-namespace detail {
+  namespace detail {
 
-  class GroundHeatExchangerVertical_Impl;
+    class GroundHeatExchangerVertical_Impl;
 
-} // detail
+  }  // namespace detail
 
+  class MODEL_API GFunction
+  {
 
-class MODEL_API GFunction {
+   public:
+    GFunction(double lnValue, double gValue);
+    double lnValue() const;
+    double gValue() const;
 
-public:
-  GFunction(double lnValue, double gValue);
-  double lnValue() const;
-  double gValue() const;
+   private:
+    double m_lnValue;
+    double m_gValue;
+  };
 
-private:
-  double m_lnValue;
-  double m_gValue;
+  /** GroundHeatExchangerVertical is a StraightComponent that wraps the OpenStudio IDD object 'OS:GroundHeatExchanger:Vertical'. */
+  class MODEL_API GroundHeatExchangerVertical : public StraightComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-};
+    explicit GroundHeatExchangerVertical(const Model& model);
 
-/** GroundHeatExchangerVertical is a StraightComponent that wraps the OpenStudio IDD object 'OS:GroundHeatExchanger:Vertical'. */
-class MODEL_API GroundHeatExchangerVertical : public StraightComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+    virtual ~GroundHeatExchangerVertical() {}
 
-  explicit GroundHeatExchangerVertical(const Model& model);
+    //@}
 
-  virtual ~GroundHeatExchangerVertical() {}
+    static IddObjectType iddObjectType();
 
-  //@}
+    bool addGFunction(double gFunctionLN, double gFunctionGValue);
 
-  static IddObjectType iddObjectType();
+    bool addGFunction(GFunction gFunc);
 
-  bool addGFunction(double gFunctionLN, double gFunctionGValue);
+    void removeGFunction(int groupIndex);
 
-  bool addGFunction(GFunction gFunc);
+    void removeAllGFunctions();
 
-  void removeGFunction(int groupIndex);
+    std::vector<GFunction> gFunctions();
 
-  void removeAllGFunctions();
+    /** @name Getters */
+    //@{
 
-  std::vector< GFunction > gFunctions();
+    boost::optional<double> designFlowRate() const;
 
-  /** @name Getters */
-  //@{
+    boost::optional<int> numberofBoreHoles() const;
 
-  /** In EnergyPlus 8.3.0 and above this property maps to the EnergyPlus field "Design Flow Rate" **/
-  boost::optional<double> maximumFlowRate() const;
+    boost::optional<double> boreHoleLength() const;
 
-  boost::optional<int> numberofBoreHoles() const;
+    boost::optional<double> boreHoleRadius() const;
 
-  boost::optional<double> boreHoleLength() const;
+    boost::optional<double> groundThermalConductivity() const;
 
-  boost::optional<double> boreHoleRadius() const;
+    boost::optional<double> groundThermalHeatCapacity() const;
 
-  boost::optional<double> groundThermalConductivity() const;
+    boost::optional<double> groundTemperature() const;
 
-  boost::optional<double> groundThermalHeatCapacity() const;
+    boost::optional<double> groutThermalConductivity() const;
 
-  boost::optional<double> groundTemperature() const;
+    boost::optional<double> pipeThermalConductivity() const;
 
-  /** In EnergyPlus 8.3.0 and above this property is not used. **/
-  boost::optional<double> designFlowRate() const;
+    boost::optional<double> pipeOutDiameter() const;
 
-  boost::optional<double> groutThermalConductivity() const;
+    boost::optional<double> uTubeDistance() const;
 
-  boost::optional<double> pipeThermalConductivity() const;
+    boost::optional<double> pipeThickness() const;
 
-  boost::optional<double> pipeOutDiameter() const;
+    boost::optional<double> maximumLengthofSimulation() const;
 
-  boost::optional<double> uTubeDistance() const;
+    double gFunctionReferenceRatio() const;
 
-  boost::optional<double> pipeThickness() const;
+    bool isGFunctionReferenceRatioDefaulted() const;
 
-  boost::optional<double> maximumLengthofSimulation() const;
+    //@}
+    /** @name Setters */
 
-  double gFunctionReferenceRatio() const;
+    //@{
 
-  bool isGFunctionReferenceRatioDefaulted() const;
+    bool setDesignFlowRate(double designFlowRate);
 
-  //@}
-  /** @name Setters */
+    bool setNumberofBoreHoles(int numberofBoreHoles);
 
-  //@{
+    void resetNumberofBoreHoles();
 
-  bool setMaximumFlowRate(double maximumFlowRate);
+    bool setBoreHoleLength(double boreHoleLength);
 
-  void resetMaximumFlowRate();
+    void resetBoreHoleLength();
 
-  bool setNumberofBoreHoles(int numberofBoreHoles);
+    bool setBoreHoleRadius(double boreHoleRadius);
 
-  void resetNumberofBoreHoles();
+    void resetBoreHoleRadius();
 
-  bool setBoreHoleLength(double boreHoleLength);
+    bool setGroundThermalConductivity(double groundThermalConductivity);
 
-  void resetBoreHoleLength();
+    void resetGroundThermalConductivity();
 
-  bool setBoreHoleRadius(double boreHoleRadius);
+    bool setGroundThermalHeatCapacity(double groundThermalHeatCapacity);
 
-  void resetBoreHoleRadius();
+    void resetGroundThermalHeatCapacity();
 
-  bool setGroundThermalConductivity(double groundThermalConductivity);
+    bool setGroundTemperature(double groundTemperature);
 
-  void resetGroundThermalConductivity();
+    void resetGroundTemperature();
 
-  bool setGroundThermalHeatCapacity(double groundThermalHeatCapacity);
+    bool setGroutThermalConductivity(double groutThermalConductivity);
 
-  void resetGroundThermalHeatCapacity();
+    void resetGroutThermalConductivity();
 
-  bool setGroundTemperature(double groundTemperature);
+    bool setPipeThermalConductivity(double pipeThermalConductivity);
 
-  void resetGroundTemperature();
+    void resetPipeThermalConductivity();
 
-  bool setDesignFlowRate(double designFlowRate);
+    bool setPipeOutDiameter(double pipeOutDiameter);
 
-  void resetDesignFlowRate();
+    void resetPipeOutDiameter();
 
-  bool setGroutThermalConductivity(double groutThermalConductivity);
+    bool setUTubeDistance(double uTubeDistance);
 
-  void resetGroutThermalConductivity();
+    void resetUTubeDistance();
 
-  bool setPipeThermalConductivity(double pipeThermalConductivity);
+    bool setPipeThickness(double pipeThickness);
 
-  void resetPipeThermalConductivity();
+    void resetPipeThickness();
 
-  bool setPipeOutDiameter(double pipeOutDiameter);
+    bool setMaximumLengthofSimulation(double maximumLengthofSimulation);
 
-  void resetPipeOutDiameter();
+    void resetMaximumLengthofSimulation();
 
-  bool setUTubeDistance(double uTubeDistance);
+    bool setGFunctionReferenceRatio(double gFunctionReferenceRatio);
 
-  void resetUTubeDistance();
+    void resetGFunctionReferenceRatio();
 
-  bool setPipeThickness(double pipeThickness);
+    //@}
+    /** @name Other */
+    //@{
 
-  void resetPipeThickness();
+    //@}
+   protected:
+    /// @cond
+    typedef detail::GroundHeatExchangerVertical_Impl ImplType;
 
-  bool setMaximumLengthofSimulation(double maximumLengthofSimulation);
+    explicit GroundHeatExchangerVertical(std::shared_ptr<detail::GroundHeatExchangerVertical_Impl> impl);
 
-  void resetMaximumLengthofSimulation();
+    friend class detail::GroundHeatExchangerVertical_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.GroundHeatExchangerVertical");
+  };
 
-  bool setGFunctionReferenceRatio(double gFunctionReferenceRatio);
+  /** \relates GroundHeatExchangerVertical*/
+  typedef boost::optional<GroundHeatExchangerVertical> OptionalGroundHeatExchangerVertical;
 
-  void resetGFunctionReferenceRatio();
+  /** \relates GroundHeatExchangerVertical*/
+  typedef std::vector<GroundHeatExchangerVertical> GroundHeatExchangerVerticalVector;
 
-  //@}
-  /** @name Other */
-  //@{
+}  // namespace model
+}  // namespace openstudio
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::GroundHeatExchangerVertical_Impl ImplType;
-
-  explicit GroundHeatExchangerVertical(std::shared_ptr<detail::GroundHeatExchangerVertical_Impl> impl);
-
-  friend class detail::GroundHeatExchangerVertical_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.GroundHeatExchangerVertical");
-};
-
-/** \relates GroundHeatExchangerVertical*/
-typedef boost::optional<GroundHeatExchangerVertical> OptionalGroundHeatExchangerVertical;
-
-/** \relates GroundHeatExchangerVertical*/
-typedef std::vector<GroundHeatExchangerVertical> GroundHeatExchangerVerticalVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_GROUNDHEATEXCHANGERVERTICAL_HPP
-
+#endif  // MODEL_GROUNDHEATEXCHANGERVERTICAL_HPP

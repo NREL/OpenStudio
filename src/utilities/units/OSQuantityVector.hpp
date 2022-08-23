@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,14 +45,15 @@ class Quantity;
  *  The constructors and assignment operator ensure that this class behaves as "plain
  *  old data" (POD) by cloning any units information (to avoid multiple objects
  *  pointing to the exact same unit data). */
-class UTILITIES_API OSQuantityVector {
+class UTILITIES_API OSQuantityVector
+{
  public:
   /** @name Constructors and Destructors */
   //@{
 
-  explicit OSQuantityVector(const Unit& units=Unit());
+  explicit OSQuantityVector(const Unit& units = Unit());
 
-  OSQuantityVector(const Unit& units, unsigned n, double value=0.0);
+  OSQuantityVector(const Unit& units, unsigned n, double value = 0.0);
 
   OSQuantityVector(const Unit& units, const std::vector<double>& values);
 
@@ -107,7 +108,7 @@ class UTILITIES_API OSQuantityVector {
 
   /** Changes the size of this OSQuantityVector to n, using value to fill in any newly
    *  created elements as necessary. \post{size() == n} */
-  void resize(unsigned n, double value=0.0);
+  void resize(unsigned n, double value = 0.0);
 
   /** Empties all values out of this OSQuantityVector. \post{size() == 0u} \post{empty()} */
   void clear();
@@ -191,47 +192,37 @@ class UTILITIES_API OSQuantityVector {
 UTILITIES_API OSQuantityVector operator-(const OSQuantityVector& rVector);
 
 /** \relates OSQuantityVector */
-UTILITIES_API OSQuantityVector operator+(const OSQuantityVector& lVector,
-                                         const OSQuantityVector& rVector);
+UTILITIES_API OSQuantityVector operator+(const OSQuantityVector& lVector, const OSQuantityVector& rVector);
 
 /** \relates OSQuantityVector */
-UTILITIES_API OSQuantityVector operator+(const OSQuantityVector& lVector,
-                                         const Quantity& rQuantity);
+UTILITIES_API OSQuantityVector operator+(const OSQuantityVector& lVector, const Quantity& rQuantity);
 
 /** \relates OSQuantityVector */
-UTILITIES_API OSQuantityVector operator+(const Quantity& lQuantity,
-                                         const OSQuantityVector& rVector);
+UTILITIES_API OSQuantityVector operator+(const Quantity& lQuantity, const OSQuantityVector& rVector);
 
 /** \relates OSQuantityVector */
-UTILITIES_API OSQuantityVector operator-(const OSQuantityVector& lVector,
-                                         const OSQuantityVector& rVector);
+UTILITIES_API OSQuantityVector operator-(const OSQuantityVector& lVector, const OSQuantityVector& rVector);
 
 /** \relates OSQuantityVector */
-UTILITIES_API OSQuantityVector operator-(const OSQuantityVector& lVector,
-                                         const Quantity& rQuantity);
+UTILITIES_API OSQuantityVector operator-(const OSQuantityVector& lVector, const Quantity& rQuantity);
 
 /** \relates OSQuantityVector */
-UTILITIES_API OSQuantityVector operator-(const Quantity& lQuantity,
-                                         const OSQuantityVector& rVector);
+UTILITIES_API OSQuantityVector operator-(const Quantity& lQuantity, const OSQuantityVector& rVector);
 
 /** \relates OSQuantityVector */
-UTILITIES_API OSQuantityVector operator*(const OSQuantityVector& lVector,
-                                         const Quantity& rQuantity);
+UTILITIES_API OSQuantityVector operator*(const OSQuantityVector& lVector, const Quantity& rQuantity);
 
 /** \relates OSQuantityVector */
 UTILITIES_API OSQuantityVector operator*(const OSQuantityVector& lVector, double d);
 
 /** \relates OSQuantityVector */
-UTILITIES_API OSQuantityVector operator*(const Quantity& lQuantity,
-                                         const OSQuantityVector& rVector);
+UTILITIES_API OSQuantityVector operator*(const Quantity& lQuantity, const OSQuantityVector& rVector);
 
 /** \relates OSQuantityVector */
-UTILITIES_API OSQuantityVector operator*(double d,
-                                         const OSQuantityVector& rVector);
+UTILITIES_API OSQuantityVector operator*(double d, const OSQuantityVector& rVector);
 
 /** \relates OSQuantityVector */
-UTILITIES_API OSQuantityVector operator/(const OSQuantityVector& lVector,
-                                         const Quantity& rQuantity);
+UTILITIES_API OSQuantityVector operator/(const OSQuantityVector& lVector, const Quantity& rQuantity);
 
 /** \relates OSQuantityVector */
 UTILITIES_API OSQuantityVector operator/(const OSQuantityVector& lVector, double d);
@@ -240,12 +231,11 @@ UTILITIES_API OSQuantityVector operator/(const OSQuantityVector& lVector, double
 UTILITIES_API Quantity dot(OSQuantityVector lVector, const OSQuantityVector& rVector);
 
 /** \relates OSQuantityVector */
-UTILITIES_API bool operator==(const OSQuantityVector& lVector,const OSQuantityVector& rVector);
+UTILITIES_API bool operator==(const OSQuantityVector& lVector, const OSQuantityVector& rVector);
 
 /** \relates OSQuantityVector */
-UTILITIES_API bool operator!=(const OSQuantityVector& lVector,const OSQuantityVector& rVector);
+UTILITIES_API bool operator!=(const OSQuantityVector& lVector, const OSQuantityVector& rVector);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_OSQUANTITYVECTOR_HPP
-
+#endif  // UTILITIES_UNITS_OSQUANTITYVECTOR_HPP

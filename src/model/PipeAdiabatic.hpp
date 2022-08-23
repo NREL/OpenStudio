@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,60 +38,56 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
-  class PipeAdiabatic_Impl;
-} // detail
+  namespace detail {
+    class PipeAdiabatic_Impl;
+  }  // namespace detail
 
-/** PipeAdiabatic is an interface to the IDD object named "OS:Pipe:Adiabatic"
+  /** PipeAdiabatic is an interface to the IDD object named "OS:Pipe:Adiabatic"
  *
  *  The purpose of this class is to simplify the construction and manipulation
  *  Pipe:Adiabatic objects in energyplus.
  */
-class MODEL_API PipeAdiabatic : public StraightComponent {
+  class MODEL_API PipeAdiabatic : public StraightComponent
+  {
 
- public:
-
-  /** Constructs a new PipeAdiabatic object and places it inside the
+   public:
+    /** Constructs a new PipeAdiabatic object and places it inside the
    *  model.  The object is fully initialized with all companion objects.
    */
-  explicit PipeAdiabatic(const Model& model);
+    explicit PipeAdiabatic(const Model& model);
 
-  virtual ~PipeAdiabatic() {}
+    virtual ~PipeAdiabatic() {}
 
-  unsigned inletPort() const;
+    unsigned inletPort() const;
 
-  unsigned outletPort() const;
+    unsigned outletPort() const;
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
- protected:
+   protected:
+    friend class Model;
 
-  friend class Model;
+    friend class openstudio::IdfObject;
 
-  friend class openstudio::IdfObject;
+    /// @cond
 
-  /// @cond
+    typedef detail::PipeAdiabatic_Impl ImplType;
 
-  typedef detail::PipeAdiabatic_Impl ImplType;
+    explicit PipeAdiabatic(std::shared_ptr<detail::PipeAdiabatic_Impl> impl);
 
-  explicit PipeAdiabatic(std::shared_ptr<detail::PipeAdiabatic_Impl> impl);
+   private:
+    REGISTER_LOGGER("openstudio.model.PipeAdiabatic");
 
- private:
+    /// @endcond
+  };
 
-  REGISTER_LOGGER("openstudio.model.PipeAdiabatic");
+  /** \relates PipeAdiabatic */
+  typedef boost::optional<PipeAdiabatic> OptionalPipeAdiabatic;
 
-  /// @endcond
+  /** \relates PipeAdiabatic */
+  typedef std::vector<PipeAdiabatic> PipeAdiabaticVector;
 
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates PipeAdiabatic */
-typedef boost::optional<PipeAdiabatic> OptionalPipeAdiabatic;
-
-/** \relates PipeAdiabatic */
-typedef std::vector<PipeAdiabatic> PipeAdiabaticVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_PIPEADIABATIC_HPP
-
+#endif  // MODEL_PIPEADIABATIC_HPP

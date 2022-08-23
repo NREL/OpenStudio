@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,18 +37,19 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class ThermalZone;
+  class Schedule;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class ElectricLoadCenterStorageSimple_Impl;
+    class ElectricLoadCenterStorageSimple_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ElectricLoadCenterStorageSimple is a ElectricalStorage that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Storage:Simple'. */
-class MODEL_API ElectricLoadCenterStorageSimple : public ElectricalStorage {
-  public:
+  /** ElectricLoadCenterStorageSimple is a ElectricalStorage that wraps the OpenStudio IDD object 'OS:ElectricLoadCenter:Storage:Simple'. */
+  class MODEL_API ElectricLoadCenterStorageSimple : public ElectricalStorage
+  {
+   public:
     /** @name Constructors and Destructors */
     //@{
 
@@ -127,7 +128,7 @@ class MODEL_API ElectricLoadCenterStorageSimple : public ElectricalStorage {
     //@{
 
     //@}
-  protected:
+   protected:
     /// @cond
     typedef detail::ElectricLoadCenterStorageSimple_Impl ImplType;
 
@@ -138,18 +139,17 @@ class MODEL_API ElectricLoadCenterStorageSimple : public ElectricalStorage {
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
     /// @endcond
-  private:
+   private:
     REGISTER_LOGGER("openstudio.model.ElectricLoadCenterStorageSimple");
-};
+  };
 
-/** \relates ElectricLoadCenterStorageSimple*/
-typedef boost::optional<ElectricLoadCenterStorageSimple> OptionalElectricLoadCenterStorageSimple;
+  /** \relates ElectricLoadCenterStorageSimple*/
+  typedef boost::optional<ElectricLoadCenterStorageSimple> OptionalElectricLoadCenterStorageSimple;
 
-/** \relates ElectricLoadCenterStorageSimple*/
-typedef std::vector<ElectricLoadCenterStorageSimple> ElectricLoadCenterStorageSimpleVector;
+  /** \relates ElectricLoadCenterStorageSimple*/
+  typedef std::vector<ElectricLoadCenterStorageSimple> ElectricLoadCenterStorageSimpleVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ELECTRICLOADCENTERSTORAGESIMPLE_HPP
-
+#endif  // MODEL_ELECTRICLOADCENTERSTORAGESIMPLE_HPP

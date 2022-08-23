@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -51,472 +51,440 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  ZoneHVACHighTemperatureRadiant_Impl::ZoneHVACHighTemperatureRadiant_Impl(const IdfObject& idfObject,
-                                                                           Model_Impl* model,
-                                                                           bool keepHandle)
-    : ZoneHVACComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == ZoneHVACHighTemperatureRadiant::iddObjectType());
-  }
-
-  ZoneHVACHighTemperatureRadiant_Impl::ZoneHVACHighTemperatureRadiant_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                           Model_Impl* model,
-                                                                           bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == ZoneHVACHighTemperatureRadiant::iddObjectType());
-  }
-
-  ZoneHVACHighTemperatureRadiant_Impl::ZoneHVACHighTemperatureRadiant_Impl(const ZoneHVACHighTemperatureRadiant_Impl& other,
-                                                                           Model_Impl* model,
-                                                                           bool keepHandle)
-    : ZoneHVACComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& ZoneHVACHighTemperatureRadiant_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result{
-      "Zone Radiant HVAC Heating Rate",
-      "Zone Radiant HVAC Heating Energy",
-      "Zone Radiant HVAC Gas Rate",
-      "Zone Radiant HVAC Gas Energy",
-      "Zone Radiant HVAC Electric Power",
-      "Zone Radiant HVAC Electric Energy"
-    };
-    return result;
-  }
-
-  IddObjectType ZoneHVACHighTemperatureRadiant_Impl::iddObjectType() const {
-    return ZoneHVACHighTemperatureRadiant::iddObjectType();
-  }
-
-  std::vector<ScheduleTypeKey> ZoneHVACHighTemperatureRadiant_Impl::getScheduleTypeKeys(const Schedule& schedule) const
-  {
-    std::vector<ScheduleTypeKey> result;
-    UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-    UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-    if (std::find(b,e,OS_ZoneHVAC_HighTemperatureRadiantFields::AvailabilityScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneHVACHighTemperatureRadiant","Availability"));
+    ZoneHVACHighTemperatureRadiant_Impl::ZoneHVACHighTemperatureRadiant_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ZoneHVACComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == ZoneHVACHighTemperatureRadiant::iddObjectType());
     }
-    if (std::find(b,e,OS_ZoneHVAC_HighTemperatureRadiantFields::HeatingSetpointTemperatureScheduleName) != e)
-    {
-      result.push_back(ScheduleTypeKey("ZoneHVACHighTemperatureRadiant","Heating Setpoint Temperature"));
+
+    ZoneHVACHighTemperatureRadiant_Impl::ZoneHVACHighTemperatureRadiant_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                             bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == ZoneHVACHighTemperatureRadiant::iddObjectType());
     }
-    return result;
-  }
 
-  boost::optional<Schedule> ZoneHVACHighTemperatureRadiant_Impl::availabilitySchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_HighTemperatureRadiantFields::AvailabilityScheduleName);
-  }
+    ZoneHVACHighTemperatureRadiant_Impl::ZoneHVACHighTemperatureRadiant_Impl(const ZoneHVACHighTemperatureRadiant_Impl& other, Model_Impl* model,
+                                                                             bool keepHandle)
+      : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
-  boost::optional<double> ZoneHVACHighTemperatureRadiant_Impl::maximumPowerInput() const {
-    return getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::MaximumPowerInput,true);
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::isMaximumPowerInputAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_HighTemperatureRadiantFields::MaximumPowerInput, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    const std::vector<std::string>& ZoneHVACHighTemperatureRadiant_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{"Zone Radiant HVAC Heating Rate",     "Zone Radiant HVAC Heating Energy",
+                                                   "Zone Radiant HVAC NaturalGas Rate",  "Zone Radiant HVAC NaturalGas Energy",
+                                                   "Zone Radiant HVAC Electricity Rate", "Zone Radiant HVAC Electricity Energy"};
+      return result;
     }
-    return result;
-  }
 
-  std::string ZoneHVACHighTemperatureRadiant_Impl::fuelType() const {
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_HighTemperatureRadiantFields::FuelType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double ZoneHVACHighTemperatureRadiant_Impl::combustionEfficiency() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::CombustionEfficiency,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double ZoneHVACHighTemperatureRadiant_Impl::fractionofInputConvertedtoRadiantEnergy() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofInputConvertedtoRadiantEnergy,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double ZoneHVACHighTemperatureRadiant_Impl::fractionofInputConvertedtoLatentEnergy() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofInputConvertedtoLatentEnergy,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double ZoneHVACHighTemperatureRadiant_Impl::fractionofInputthatIsLost() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofInputthatIsLost,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  std::string ZoneHVACHighTemperatureRadiant_Impl::temperatureControlType() const {
-    boost::optional<std::string> value = getString(OS_ZoneHVAC_HighTemperatureRadiantFields::TemperatureControlType,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  double ZoneHVACHighTemperatureRadiant_Impl::heatingThrottlingRange() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::HeatingThrottlingRange,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  boost::optional<Schedule> ZoneHVACHighTemperatureRadiant_Impl::heatingSetpointTemperatureSchedule() const {
-    return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_HighTemperatureRadiantFields::HeatingSetpointTemperatureScheduleName);
-  }
-
-  double ZoneHVACHighTemperatureRadiant_Impl::fractionofRadiantEnergyIncidentonPeople() const {
-    boost::optional<double> value = getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofRadiantEnergyIncidentonPeople,true);
-    OS_ASSERT(value);
-    return value.get();
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::setAvailabilitySchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneHVAC_HighTemperatureRadiantFields::AvailabilityScheduleName,
-                              "ZoneHVACHighTemperatureRadiant",
-                              "Availability",
-                              schedule);
-    return result;
-  }
-
-  void ZoneHVACHighTemperatureRadiant_Impl::resetAvailabilitySchedule() {
-    bool result = setString(OS_ZoneHVAC_HighTemperatureRadiantFields::AvailabilityScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::setMaximumPowerInput(boost::optional<double> maximumPowerInput) {
-    bool result(false);
-    if (maximumPowerInput) {
-      result = setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::MaximumPowerInput, maximumPowerInput.get());
+    IddObjectType ZoneHVACHighTemperatureRadiant_Impl::iddObjectType() const {
+      return ZoneHVACHighTemperatureRadiant::iddObjectType();
     }
-    return result;
-  }
 
-  void ZoneHVACHighTemperatureRadiant_Impl::autosizeMaximumPowerInput() {
-    bool result = setString(OS_ZoneHVAC_HighTemperatureRadiantFields::MaximumPowerInput, "autosize");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::setFuelType(std::string fuelType) {
-    bool result = setString(OS_ZoneHVAC_HighTemperatureRadiantFields::FuelType, fuelType);
-    return result;
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::setCombustionEfficiency(double combustionEfficiency) {
-    bool result = setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::CombustionEfficiency, combustionEfficiency);
-    return result;
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::setFractionofInputConvertedtoRadiantEnergy(double fractionofInputConvertedtoRadiantEnergy) {
-    bool result = setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofInputConvertedtoRadiantEnergy, fractionofInputConvertedtoRadiantEnergy);
-    return result;
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::setFractionofInputConvertedtoLatentEnergy(double fractionofInputConvertedtoLatentEnergy) {
-    bool result = setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofInputConvertedtoLatentEnergy, fractionofInputConvertedtoLatentEnergy);
-    return result;
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::setFractionofInputthatIsLost(double fractionofInputthatIsLost) {
-    bool result = setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofInputthatIsLost, fractionofInputthatIsLost);
-    return result;
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::setTemperatureControlType(std::string temperatureControlType) {
-    bool result = setString(OS_ZoneHVAC_HighTemperatureRadiantFields::TemperatureControlType, temperatureControlType);
-    return result;
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::setHeatingThrottlingRange(double heatingThrottlingRange) {
-    bool result = setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::HeatingThrottlingRange, heatingThrottlingRange);
-    return result;
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::setHeatingSetpointTemperatureSchedule(Schedule& schedule) {
-    bool result = setSchedule(OS_ZoneHVAC_HighTemperatureRadiantFields::HeatingSetpointTemperatureScheduleName,
-                              "ZoneHVACHighTemperatureRadiant",
-                              "Heating Setpoint Temperature",
-                              schedule);
-    return result;
-  }
-
-  void ZoneHVACHighTemperatureRadiant_Impl::resetHeatingSetpointTemperatureSchedule() {
-    bool result = setString(OS_ZoneHVAC_HighTemperatureRadiantFields::HeatingSetpointTemperatureScheduleName, "");
-    OS_ASSERT(result);
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople) {
-    bool result = setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofRadiantEnergyIncidentonPeople, fractionofRadiantEnergyIncidentonPeople);
-    return result;
-  }
-
-  unsigned ZoneHVACHighTemperatureRadiant_Impl::inletPort() const
-  {
-    return 0; // this object has no inlet or outlet node
-  }
-
-  unsigned ZoneHVACHighTemperatureRadiant_Impl::outletPort() const
-  {
-    return 0; // this object has no inlet or outlet node
-  }
-
-  boost::optional<ThermalZone> ZoneHVACHighTemperatureRadiant_Impl::thermalZone() const
-  {
-    ModelObject thisObject = this->getObject<ModelObject>();
-    std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
-    for( const auto & thermalZone : thermalZones )
-    {
-      std::vector<ModelObject> equipment = thermalZone.equipment();
-
-      if( std::find(equipment.begin(),equipment.end(),thisObject) != equipment.end() )
-      {
-        return thermalZone;
+    std::vector<ScheduleTypeKey> ZoneHVACHighTemperatureRadiant_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      if (std::find(b, e, OS_ZoneHVAC_HighTemperatureRadiantFields::AvailabilityScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneHVACHighTemperatureRadiant", "Availability"));
       }
-    }
-    return boost::none;
-  }
-
-  bool ZoneHVACHighTemperatureRadiant_Impl::addToThermalZone(ThermalZone & thermalZone)
-  {
-    Model m = this->model();
-
-    if( thermalZone.model() != m )
-    {
-      return false;
+      if (std::find(b, e, OS_ZoneHVAC_HighTemperatureRadiantFields::HeatingSetpointTemperatureScheduleName) != e) {
+        result.push_back(ScheduleTypeKey("ZoneHVACHighTemperatureRadiant", "Heating Setpoint Temperature"));
+      }
+      return result;
     }
 
-    if( thermalZone.isPlenum() )
-    {
-      return false;
+    boost::optional<Schedule> ZoneHVACHighTemperatureRadiant_Impl::availabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_HighTemperatureRadiantFields::AvailabilityScheduleName);
     }
 
-    removeFromThermalZone();
-
-    thermalZone.setUseIdealAirLoads(false);
-
-    thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
-
-    return true;
-  }
-
-  void ZoneHVACHighTemperatureRadiant_Impl::removeFromThermalZone()
-  {
-    if ( boost::optional<ThermalZone> thermalZone = this->thermalZone() ) {
-      thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
+    boost::optional<double> ZoneHVACHighTemperatureRadiant_Impl::maximumPowerInput() const {
+      return getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::MaximumPowerInput, true);
     }
-  }
 
-  std::vector<Surface> ZoneHVACHighTemperatureRadiant_Impl::surfaces() const {
+    bool ZoneHVACHighTemperatureRadiant_Impl::isMaximumPowerInputAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_HighTemperatureRadiantFields::MaximumPowerInput, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
 
-    //vector to hold all of the surfaces that this radiant system is attached to
-    std::vector<Surface> surfaces;
+    std::string ZoneHVACHighTemperatureRadiant_Impl::fuelType() const {
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_HighTemperatureRadiantFields::FuelType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-    //get the thermal zone this equipment belongs to
-    if (boost::optional<ThermalZone> thermalZone = this->thermalZone()) {
+    double ZoneHVACHighTemperatureRadiant_Impl::combustionEfficiency() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::CombustionEfficiency, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-      //loop through all the spaces in this zone
-      for (const Space& space : thermalZone->spaces()){
+    double ZoneHVACHighTemperatureRadiant_Impl::fractionofInputConvertedtoRadiantEnergy() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofInputConvertedtoRadiantEnergy, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
 
-        //loop through all the surfaces in this space
-        for (const Surface& surface : space.surfaces()){
-          surfaces.push_back(surface);
+    double ZoneHVACHighTemperatureRadiant_Impl::fractionofInputConvertedtoLatentEnergy() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofInputConvertedtoLatentEnergy, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double ZoneHVACHighTemperatureRadiant_Impl::fractionofInputthatIsLost() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofInputthatIsLost, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string ZoneHVACHighTemperatureRadiant_Impl::temperatureControlType() const {
+      boost::optional<std::string> value = getString(OS_ZoneHVAC_HighTemperatureRadiantFields::TemperatureControlType, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double ZoneHVACHighTemperatureRadiant_Impl::heatingThrottlingRange() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::HeatingThrottlingRange, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<Schedule> ZoneHVACHighTemperatureRadiant_Impl::heatingSetpointTemperatureSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_ZoneHVAC_HighTemperatureRadiantFields::HeatingSetpointTemperatureScheduleName);
+    }
+
+    double ZoneHVACHighTemperatureRadiant_Impl::fractionofRadiantEnergyIncidentonPeople() const {
+      boost::optional<double> value = getDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofRadiantEnergyIncidentonPeople, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool ZoneHVACHighTemperatureRadiant_Impl::setAvailabilitySchedule(Schedule& schedule) {
+      bool result =
+        setSchedule(OS_ZoneHVAC_HighTemperatureRadiantFields::AvailabilityScheduleName, "ZoneHVACHighTemperatureRadiant", "Availability", schedule);
+      return result;
+    }
+
+    void ZoneHVACHighTemperatureRadiant_Impl::resetAvailabilitySchedule() {
+      bool result = setString(OS_ZoneHVAC_HighTemperatureRadiantFields::AvailabilityScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACHighTemperatureRadiant_Impl::setMaximumPowerInput(boost::optional<double> maximumPowerInput) {
+      bool result(false);
+      if (maximumPowerInput) {
+        result = setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::MaximumPowerInput, maximumPowerInput.get());
+      }
+      return result;
+    }
+
+    void ZoneHVACHighTemperatureRadiant_Impl::autosizeMaximumPowerInput() {
+      bool result = setString(OS_ZoneHVAC_HighTemperatureRadiantFields::MaximumPowerInput, "autosize");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACHighTemperatureRadiant_Impl::setFuelType(std::string fuelType) {
+      bool result = setString(OS_ZoneHVAC_HighTemperatureRadiantFields::FuelType, fuelType);
+      return result;
+    }
+
+    bool ZoneHVACHighTemperatureRadiant_Impl::setCombustionEfficiency(double combustionEfficiency) {
+      bool result = setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::CombustionEfficiency, combustionEfficiency);
+      return result;
+    }
+
+    bool ZoneHVACHighTemperatureRadiant_Impl::setFractionofInputConvertedtoRadiantEnergy(double fractionofInputConvertedtoRadiantEnergy) {
+      bool result =
+        setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofInputConvertedtoRadiantEnergy, fractionofInputConvertedtoRadiantEnergy);
+      return result;
+    }
+
+    bool ZoneHVACHighTemperatureRadiant_Impl::setFractionofInputConvertedtoLatentEnergy(double fractionofInputConvertedtoLatentEnergy) {
+      bool result =
+        setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofInputConvertedtoLatentEnergy, fractionofInputConvertedtoLatentEnergy);
+      return result;
+    }
+
+    bool ZoneHVACHighTemperatureRadiant_Impl::setFractionofInputthatIsLost(double fractionofInputthatIsLost) {
+      bool result = setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofInputthatIsLost, fractionofInputthatIsLost);
+      return result;
+    }
+
+    bool ZoneHVACHighTemperatureRadiant_Impl::setTemperatureControlType(std::string temperatureControlType) {
+      bool result = setString(OS_ZoneHVAC_HighTemperatureRadiantFields::TemperatureControlType, temperatureControlType);
+      return result;
+    }
+
+    bool ZoneHVACHighTemperatureRadiant_Impl::setHeatingThrottlingRange(double heatingThrottlingRange) {
+      bool result = setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::HeatingThrottlingRange, heatingThrottlingRange);
+      return result;
+    }
+
+    bool ZoneHVACHighTemperatureRadiant_Impl::setHeatingSetpointTemperatureSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_ZoneHVAC_HighTemperatureRadiantFields::HeatingSetpointTemperatureScheduleName, "ZoneHVACHighTemperatureRadiant",
+                                "Heating Setpoint Temperature", schedule);
+      return result;
+    }
+
+    void ZoneHVACHighTemperatureRadiant_Impl::resetHeatingSetpointTemperatureSchedule() {
+      bool result = setString(OS_ZoneHVAC_HighTemperatureRadiantFields::HeatingSetpointTemperatureScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    bool ZoneHVACHighTemperatureRadiant_Impl::setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople) {
+      bool result =
+        setDouble(OS_ZoneHVAC_HighTemperatureRadiantFields::FractionofRadiantEnergyIncidentonPeople, fractionofRadiantEnergyIncidentonPeople);
+      return result;
+    }
+
+    unsigned ZoneHVACHighTemperatureRadiant_Impl::inletPort() const {
+      return 0;  // this object has no inlet or outlet node
+    }
+
+    unsigned ZoneHVACHighTemperatureRadiant_Impl::outletPort() const {
+      return 0;  // this object has no inlet or outlet node
+    }
+
+    boost::optional<ThermalZone> ZoneHVACHighTemperatureRadiant_Impl::thermalZone() const {
+      ModelObject thisObject = this->getObject<ModelObject>();
+      std::vector<ThermalZone> thermalZones = this->model().getConcreteModelObjects<ThermalZone>();
+      for (const auto& thermalZone : thermalZones) {
+        std::vector<ModelObject> equipment = thermalZone.equipment();
+
+        if (std::find(equipment.begin(), equipment.end(), thisObject) != equipment.end()) {
+          return thermalZone;
         }
       }
+      return boost::none;
     }
 
-    return surfaces;
-  }
+    bool ZoneHVACHighTemperatureRadiant_Impl::addToThermalZone(ThermalZone& thermalZone) {
+      Model m = this->model();
 
-  boost::optional<double> ZoneHVACHighTemperatureRadiant_Impl::autosizedMaximumPowerInput() const {
-    boost::optional<double> result;
-    result = getAutosizedValue("Design Size Heating Design Capacity", "W");
-    // E+ 9.0.0 wrongly returns as User-Specified
-    if (!result) {
-      result = getAutosizedValue("User-Specified Heating Design Capacity", "W");
+      if (thermalZone.model() != m) {
+        return false;
+      }
+
+      if (thermalZone.isPlenum()) {
+        return false;
+      }
+
+      removeFromThermalZone();
+
+      thermalZone.setUseIdealAirLoads(false);
+
+      thermalZone.addEquipment(this->getObject<ZoneHVACComponent>());
+
+      return true;
     }
-    return result;
-  }
 
-  void ZoneHVACHighTemperatureRadiant_Impl::autosize() {
+    void ZoneHVACHighTemperatureRadiant_Impl::removeFromThermalZone() {
+      if (boost::optional<ThermalZone> thermalZone = this->thermalZone()) {
+        thermalZone->removeEquipment(this->getObject<ZoneHVACComponent>());
+      }
+    }
+
+    std::vector<Surface> ZoneHVACHighTemperatureRadiant_Impl::surfaces() const {
+
+      //vector to hold all of the surfaces that this radiant system is attached to
+      std::vector<Surface> surfaces;
+
+      //get the thermal zone this equipment belongs to
+      if (boost::optional<ThermalZone> thermalZone = this->thermalZone()) {
+
+        //loop through all the spaces in this zone
+        for (const Space& space : thermalZone->spaces()) {
+
+          //loop through all the surfaces in this space
+          for (const Surface& surface : space.surfaces()) {
+            surfaces.push_back(surface);
+          }
+        }
+      }
+
+      return surfaces;
+    }
+
+    boost::optional<double> ZoneHVACHighTemperatureRadiant_Impl::autosizedMaximumPowerInput() const {
+      boost::optional<double> result;
+      result = getAutosizedValue("Design Size Heating Design Capacity", "W");
+      // E+ 9.0.0 wrongly returns as User-Specified
+      if (!result) {
+        result = getAutosizedValue("User-Specified Heating Design Capacity", "W");
+      }
+      return result;
+    }
+
+    void ZoneHVACHighTemperatureRadiant_Impl::autosize() {
+      autosizeMaximumPowerInput();
+    }
+
+    void ZoneHVACHighTemperatureRadiant_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedMaximumPowerInput();
+      if (val) {
+        setMaximumPowerInput(val.get());
+      }
+    }
+
+  }  // namespace detail
+
+  ZoneHVACHighTemperatureRadiant::ZoneHVACHighTemperatureRadiant(const Model& model)
+    : ZoneHVACComponent(ZoneHVACHighTemperatureRadiant::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>());
+
     autosizeMaximumPowerInput();
+    setFuelType("NaturalGas");
+    setCombustionEfficiency(0.90);
+    setFractionofInputConvertedtoRadiantEnergy(0.70);
+    setFractionofInputConvertedtoLatentEnergy(0.00);
+    setFractionofInputthatIsLost(0.00);
+    setTemperatureControlType("OperativeTemperature");
+    setHeatingThrottlingRange(2.0);
+    setFractionofRadiantEnergyIncidentonPeople(0.04);
   }
 
-  void ZoneHVACHighTemperatureRadiant_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedMaximumPowerInput();
-    if (val) {
-      setMaximumPowerInput(val.get());
-    }
-
+  IddObjectType ZoneHVACHighTemperatureRadiant::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant);
   }
 
-} // detail
+  std::vector<std::string> ZoneHVACHighTemperatureRadiant::fuelTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_ZoneHVAC_HighTemperatureRadiantFields::FuelType);
+  }
 
-ZoneHVACHighTemperatureRadiant::ZoneHVACHighTemperatureRadiant(const Model& model)
-  : ZoneHVACComponent(ZoneHVACHighTemperatureRadiant::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>());
+  std::vector<std::string> ZoneHVACHighTemperatureRadiant::temperatureControlTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_ZoneHVAC_HighTemperatureRadiantFields::TemperatureControlType);
+  }
 
-  autosizeMaximumPowerInput();
-  setFuelType("NaturalGas");
-  setCombustionEfficiency(0.90);
-  setFractionofInputConvertedtoRadiantEnergy(0.70);
-  setFractionofInputConvertedtoLatentEnergy(0.00);
-  setFractionofInputthatIsLost(0.00);
-  setTemperatureControlType("OperativeTemperature");
-  setHeatingThrottlingRange(2.0);
-  setFractionofRadiantEnergyIncidentonPeople(0.04);
-}
+  boost::optional<Schedule> ZoneHVACHighTemperatureRadiant::availabilitySchedule() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->availabilitySchedule();
+  }
 
-IddObjectType ZoneHVACHighTemperatureRadiant::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_ZoneHVAC_HighTemperatureRadiant);
-}
+  boost::optional<double> ZoneHVACHighTemperatureRadiant::maximumPowerInput() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->maximumPowerInput();
+  }
 
-std::vector<std::string> ZoneHVACHighTemperatureRadiant::fuelTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneHVAC_HighTemperatureRadiantFields::FuelType);
-}
+  bool ZoneHVACHighTemperatureRadiant::isMaximumPowerInputAutosized() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->isMaximumPowerInputAutosized();
+  }
 
-std::vector<std::string> ZoneHVACHighTemperatureRadiant::temperatureControlTypeValues() {
-  return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
-                        OS_ZoneHVAC_HighTemperatureRadiantFields::TemperatureControlType);
-}
+  std::string ZoneHVACHighTemperatureRadiant::fuelType() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->fuelType();
+  }
 
-boost::optional<Schedule> ZoneHVACHighTemperatureRadiant::availabilitySchedule() const {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->availabilitySchedule();
-}
+  double ZoneHVACHighTemperatureRadiant::combustionEfficiency() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->combustionEfficiency();
+  }
 
-boost::optional<double> ZoneHVACHighTemperatureRadiant::maximumPowerInput() const {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->maximumPowerInput();
-}
+  double ZoneHVACHighTemperatureRadiant::fractionofInputConvertedtoRadiantEnergy() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->fractionofInputConvertedtoRadiantEnergy();
+  }
 
-bool ZoneHVACHighTemperatureRadiant::isMaximumPowerInputAutosized() const {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->isMaximumPowerInputAutosized();
-}
+  double ZoneHVACHighTemperatureRadiant::fractionofInputConvertedtoLatentEnergy() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->fractionofInputConvertedtoLatentEnergy();
+  }
 
-std::string ZoneHVACHighTemperatureRadiant::fuelType() const {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->fuelType();
-}
+  double ZoneHVACHighTemperatureRadiant::fractionofInputthatIsLost() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->fractionofInputthatIsLost();
+  }
 
-double ZoneHVACHighTemperatureRadiant::combustionEfficiency() const {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->combustionEfficiency();
-}
+  std::string ZoneHVACHighTemperatureRadiant::temperatureControlType() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->temperatureControlType();
+  }
 
-double ZoneHVACHighTemperatureRadiant::fractionofInputConvertedtoRadiantEnergy() const {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->fractionofInputConvertedtoRadiantEnergy();
-}
+  double ZoneHVACHighTemperatureRadiant::heatingThrottlingRange() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->heatingThrottlingRange();
+  }
 
-double ZoneHVACHighTemperatureRadiant::fractionofInputConvertedtoLatentEnergy() const {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->fractionofInputConvertedtoLatentEnergy();
-}
+  boost::optional<Schedule> ZoneHVACHighTemperatureRadiant::heatingSetpointTemperatureSchedule() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->heatingSetpointTemperatureSchedule();
+  }
 
-double ZoneHVACHighTemperatureRadiant::fractionofInputthatIsLost() const {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->fractionofInputthatIsLost();
-}
+  double ZoneHVACHighTemperatureRadiant::fractionofRadiantEnergyIncidentonPeople() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->fractionofRadiantEnergyIncidentonPeople();
+  }
 
-std::string ZoneHVACHighTemperatureRadiant::temperatureControlType() const {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->temperatureControlType();
-}
+  bool ZoneHVACHighTemperatureRadiant::setAvailabilitySchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setAvailabilitySchedule(schedule);
+  }
 
-double ZoneHVACHighTemperatureRadiant::heatingThrottlingRange() const {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->heatingThrottlingRange();
-}
+  void ZoneHVACHighTemperatureRadiant::resetAvailabilitySchedule() {
+    getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->resetAvailabilitySchedule();
+  }
 
-boost::optional<Schedule> ZoneHVACHighTemperatureRadiant::heatingSetpointTemperatureSchedule() const {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->heatingSetpointTemperatureSchedule();
-}
+  bool ZoneHVACHighTemperatureRadiant::setMaximumPowerInput(double maximumPowerInput) {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setMaximumPowerInput(maximumPowerInput);
+  }
 
-double ZoneHVACHighTemperatureRadiant::fractionofRadiantEnergyIncidentonPeople() const {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->fractionofRadiantEnergyIncidentonPeople();
-}
+  void ZoneHVACHighTemperatureRadiant::autosizeMaximumPowerInput() {
+    getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->autosizeMaximumPowerInput();
+  }
 
-bool ZoneHVACHighTemperatureRadiant::setAvailabilitySchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setAvailabilitySchedule(schedule);
-}
+  bool ZoneHVACHighTemperatureRadiant::setFuelType(std::string fuelType) {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setFuelType(fuelType);
+  }
 
-void ZoneHVACHighTemperatureRadiant::resetAvailabilitySchedule() {
-  getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->resetAvailabilitySchedule();
-}
+  bool ZoneHVACHighTemperatureRadiant::setCombustionEfficiency(double combustionEfficiency) {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setCombustionEfficiency(combustionEfficiency);
+  }
 
-bool ZoneHVACHighTemperatureRadiant::setMaximumPowerInput(double maximumPowerInput) {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setMaximumPowerInput(maximumPowerInput);
-}
+  bool ZoneHVACHighTemperatureRadiant::setFractionofInputConvertedtoRadiantEnergy(double fractionofInputConvertedtoRadiantEnergy) {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setFractionofInputConvertedtoRadiantEnergy(
+      fractionofInputConvertedtoRadiantEnergy);
+  }
 
-void ZoneHVACHighTemperatureRadiant::autosizeMaximumPowerInput() {
-  getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->autosizeMaximumPowerInput();
-}
+  bool ZoneHVACHighTemperatureRadiant::setFractionofInputConvertedtoLatentEnergy(double fractionofInputConvertedtoLatentEnergy) {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setFractionofInputConvertedtoLatentEnergy(fractionofInputConvertedtoLatentEnergy);
+  }
 
-bool ZoneHVACHighTemperatureRadiant::setFuelType(std::string fuelType) {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setFuelType(fuelType);
-}
+  bool ZoneHVACHighTemperatureRadiant::setFractionofInputthatIsLost(double fractionofInputthatIsLost) {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setFractionofInputthatIsLost(fractionofInputthatIsLost);
+  }
 
-bool ZoneHVACHighTemperatureRadiant::setCombustionEfficiency(double combustionEfficiency) {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setCombustionEfficiency(combustionEfficiency);
-}
+  bool ZoneHVACHighTemperatureRadiant::setTemperatureControlType(std::string temperatureControlType) {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setTemperatureControlType(temperatureControlType);
+  }
 
-bool ZoneHVACHighTemperatureRadiant::setFractionofInputConvertedtoRadiantEnergy(double fractionofInputConvertedtoRadiantEnergy) {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setFractionofInputConvertedtoRadiantEnergy(fractionofInputConvertedtoRadiantEnergy);
-}
+  bool ZoneHVACHighTemperatureRadiant::setHeatingThrottlingRange(double heatingThrottlingRange) {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setHeatingThrottlingRange(heatingThrottlingRange);
+  }
 
-bool ZoneHVACHighTemperatureRadiant::setFractionofInputConvertedtoLatentEnergy(double fractionofInputConvertedtoLatentEnergy) {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setFractionofInputConvertedtoLatentEnergy(fractionofInputConvertedtoLatentEnergy);
-}
+  bool ZoneHVACHighTemperatureRadiant::setHeatingSetpointTemperatureSchedule(Schedule& schedule) {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setHeatingSetpointTemperatureSchedule(schedule);
+  }
 
-bool ZoneHVACHighTemperatureRadiant::setFractionofInputthatIsLost(double fractionofInputthatIsLost) {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setFractionofInputthatIsLost(fractionofInputthatIsLost);
-}
+  void ZoneHVACHighTemperatureRadiant::resetHeatingSetpointTemperatureSchedule() {
+    getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->resetHeatingSetpointTemperatureSchedule();
+  }
 
-bool ZoneHVACHighTemperatureRadiant::setTemperatureControlType(std::string temperatureControlType) {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setTemperatureControlType(temperatureControlType);
-}
+  bool ZoneHVACHighTemperatureRadiant::setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople) {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setFractionofRadiantEnergyIncidentonPeople(
+      fractionofRadiantEnergyIncidentonPeople);
+  }
 
-bool ZoneHVACHighTemperatureRadiant::setHeatingThrottlingRange(double heatingThrottlingRange) {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setHeatingThrottlingRange(heatingThrottlingRange);
-}
+  boost::optional<ThermalZone> ZoneHVACHighTemperatureRadiant::thermalZone() const {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->thermalZone();
+  }
 
-bool ZoneHVACHighTemperatureRadiant::setHeatingSetpointTemperatureSchedule(Schedule& schedule) {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setHeatingSetpointTemperatureSchedule(schedule);
-}
+  bool ZoneHVACHighTemperatureRadiant::addToThermalZone(ThermalZone& thermalZone) {
+    return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->addToThermalZone(thermalZone);
+  }
 
-void ZoneHVACHighTemperatureRadiant::resetHeatingSetpointTemperatureSchedule() {
-  getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->resetHeatingSetpointTemperatureSchedule();
-}
+  void ZoneHVACHighTemperatureRadiant::removeFromThermalZone() {
+    getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->removeFromThermalZone();
+  }
 
-bool ZoneHVACHighTemperatureRadiant::setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople) {
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->setFractionofRadiantEnergyIncidentonPeople(fractionofRadiantEnergyIncidentonPeople);
-}
-
-boost::optional<ThermalZone> ZoneHVACHighTemperatureRadiant::thermalZone() const
-{
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->thermalZone();
-}
-
-bool ZoneHVACHighTemperatureRadiant::addToThermalZone(ThermalZone & thermalZone)
-{
-  return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->addToThermalZone(thermalZone);
-}
-
-void ZoneHVACHighTemperatureRadiant::removeFromThermalZone()
-{
-  getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->removeFromThermalZone();
-}
-
-/// @cond
-ZoneHVACHighTemperatureRadiant::ZoneHVACHighTemperatureRadiant(std::shared_ptr<detail::ZoneHVACHighTemperatureRadiant_Impl> impl)
-  : ZoneHVACComponent(std::move(impl))
-{}
-/// @endcond
+  /// @cond
+  ZoneHVACHighTemperatureRadiant::ZoneHVACHighTemperatureRadiant(std::shared_ptr<detail::ZoneHVACHighTemperatureRadiant_Impl> impl)
+    : ZoneHVACComponent(std::move(impl)) {}
+  /// @endcond
 
   boost::optional<double> ZoneHVACHighTemperatureRadiant::autosizedMaximumPowerInput() const {
     return getImpl<detail::ZoneHVACHighTemperatureRadiant_Impl>()->autosizedMaximumPowerInput();
   }
 
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

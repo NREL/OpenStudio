@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,83 +36,75 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  /** ZoneAirHeatBalanceAlgorithm_Impl is a ModelObject_Impl that is the implementation class for ZoneAirHeatBalanceAlgorithm.*/
-  class MODEL_API ZoneAirHeatBalanceAlgorithm_Impl : public ModelObject_Impl {
+    /** ZoneAirHeatBalanceAlgorithm_Impl is a ModelObject_Impl that is the implementation class for ZoneAirHeatBalanceAlgorithm.*/
+    class MODEL_API ZoneAirHeatBalanceAlgorithm_Impl : public ModelObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    // constructor
-    ZoneAirHeatBalanceAlgorithm_Impl(const IdfObject& idfObject,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      // constructor
+      ZoneAirHeatBalanceAlgorithm_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    ZoneAirHeatBalanceAlgorithm_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      // construct from workspace
+      ZoneAirHeatBalanceAlgorithm_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // clone copy constructor
-    ZoneAirHeatBalanceAlgorithm_Impl(const ZoneAirHeatBalanceAlgorithm_Impl& other,
-                                     Model_Impl* model,
-                                     bool keepHandle);
+      // clone copy constructor
+      ZoneAirHeatBalanceAlgorithm_Impl(const ZoneAirHeatBalanceAlgorithm_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // virtual destructor
-    virtual ~ZoneAirHeatBalanceAlgorithm_Impl() {}
+      // virtual destructor
+      virtual ~ZoneAirHeatBalanceAlgorithm_Impl() {}
 
-    //@}
+      //@}
 
-    /** @name Virtual Methods */
-    //@{
+      /** @name Virtual Methods */
+      //@{
 
-    // return the parent object in the hierarchy
-    virtual boost::optional<ParentObject> parent() const override;
+      // return the parent object in the hierarchy
+      virtual boost::optional<ParentObject> parent() const override;
 
-    // set the parent, child may have to call methods on the parent
-    virtual bool setParent(ParentObject& newParent) override;
+      // set the parent, child may have to call methods on the parent
+      virtual bool setParent(ParentObject& newParent) override;
 
-    // Get all output variable names that could be associated with this object.
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      // Get all output variable names that could be associated with this object.
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    std::string algorithm() const;
+      std::string algorithm() const;
 
-    bool isAlgorithmDefaulted() const;
+      bool isAlgorithmDefaulted() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setAlgorithm(std::string algorithm);
+      bool setAlgorithm(std::string algorithm);
 
-    void resetAlgorithm();
+      void resetAlgorithm();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZoneAirHeatBalanceAlgorithm");
 
-   private:
+      std::vector<std::string> validAlgorithmValues() const;
+    };
 
-    REGISTER_LOGGER("openstudio.model.ZoneAirHeatBalanceAlgorithm");
+  }  // namespace detail
 
-    std::vector<std::string> validAlgorithmValues() const;
-  };
+}  // namespace model
+}  // namespace openstudio
 
-} // detail
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEAIRHEATBALANCEALGORITHM_IMPL_HPP
-
+#endif  // MODEL_ZONEAIRHEATBALANCEALGORITHM_IMPL_HPP

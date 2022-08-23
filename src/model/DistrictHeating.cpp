@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -40,157 +40,129 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  DistrictHeating_Impl::DistrictHeating_Impl(const IdfObject& idfObject,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : StraightComponent_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == DistrictHeating::iddObjectType());
-  }
-
-  DistrictHeating_Impl::DistrictHeating_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == DistrictHeating::iddObjectType());
-  }
-
-  DistrictHeating_Impl::DistrictHeating_Impl(const DistrictHeating_Impl& other,
-                                             Model_Impl* model,
-                                             bool keepHandle)
-    : StraightComponent_Impl(other,model,keepHandle)
-  {}
-
-  const std::vector<std::string>& DistrictHeating_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result{
-      "District Heating Hot Water Rate",
-      "District Heating Hot Water Energy",
-      "District Heating Rate",
-      "District Heating Inlet Temperature",
-      "District Heating Outlet Temperature",
-      "District Heating Mass Flow Rate"
-    };
-    return result;
-  }
-
-  IddObjectType DistrictHeating_Impl::iddObjectType() const {
-    return DistrictHeating::iddObjectType();
-  }
-
-  boost::optional<double> DistrictHeating_Impl::nominalCapacity() const {
-    return getDouble(OS_DistrictHeatingFields::NominalCapacity,true);
-  }
-
-  bool DistrictHeating_Impl::isNominalCapacityAutosized() const {
-    bool result = false;
-    boost::optional<std::string> value = getString(OS_DistrictHeatingFields::NominalCapacity, true);
-    if (value) {
-      result = openstudio::istringEqual(value.get(), "autosize");
+    DistrictHeating_Impl::DistrictHeating_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == DistrictHeating::iddObjectType());
     }
-    return result;
-  }
 
-  bool DistrictHeating_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
-    bool result(false);
-    if (nominalCapacity) {
-      result = setDouble(OS_DistrictHeatingFields::NominalCapacity, nominalCapacity.get());
+    DistrictHeating_Impl::DistrictHeating_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == DistrictHeating::iddObjectType());
     }
-    return result;
-  }
 
-  void DistrictHeating_Impl::autosizeNominalCapacity() {
-    bool result = setString(OS_DistrictHeatingFields::NominalCapacity, "autosize");
-    OS_ASSERT(result);
-  }
+    DistrictHeating_Impl::DistrictHeating_Impl(const DistrictHeating_Impl& other, Model_Impl* model, bool keepHandle)
+      : StraightComponent_Impl(other, model, keepHandle) {}
 
-  unsigned DistrictHeating_Impl::inletPort() const
-  {
-    return OS_DistrictHeatingFields::HotWaterInletNodeName;
-  }
+    const std::vector<std::string>& DistrictHeating_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result{
+        "District Heating Hot Water Rate",    "District Heating Hot Water Energy",   "District Heating Rate",
+        "District Heating Inlet Temperature", "District Heating Outlet Temperature", "District Heating Mass Flow Rate"};
+      return result;
+    }
 
-  unsigned DistrictHeating_Impl::outletPort() const
-  {
-    return OS_DistrictHeatingFields::HotWaterOutletNodeName;
-  }
+    IddObjectType DistrictHeating_Impl::iddObjectType() const {
+      return DistrictHeating::iddObjectType();
+    }
 
-  bool DistrictHeating_Impl::addToNode(Node & node)
-  {
-    if( boost::optional<PlantLoop> plant = node.plantLoop() )
-    {
-      if( plant->supplyComponent(node.handle()) )
-      {
-        return StraightComponent_Impl::addToNode(node);
+    boost::optional<double> DistrictHeating_Impl::nominalCapacity() const {
+      return getDouble(OS_DistrictHeatingFields::NominalCapacity, true);
+    }
+
+    bool DistrictHeating_Impl::isNominalCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_DistrictHeatingFields::NominalCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
+    bool DistrictHeating_Impl::setNominalCapacity(boost::optional<double> nominalCapacity) {
+      bool result(false);
+      if (nominalCapacity) {
+        result = setDouble(OS_DistrictHeatingFields::NominalCapacity, nominalCapacity.get());
+      }
+      return result;
+    }
+
+    void DistrictHeating_Impl::autosizeNominalCapacity() {
+      bool result = setString(OS_DistrictHeatingFields::NominalCapacity, "autosize");
+      OS_ASSERT(result);
+    }
+
+    unsigned DistrictHeating_Impl::inletPort() const {
+      return OS_DistrictHeatingFields::HotWaterInletNodeName;
+    }
+
+    unsigned DistrictHeating_Impl::outletPort() const {
+      return OS_DistrictHeatingFields::HotWaterOutletNodeName;
+    }
+
+    bool DistrictHeating_Impl::addToNode(Node& node) {
+      if (boost::optional<PlantLoop> plant = node.plantLoop()) {
+        if (plant->supplyComponent(node.handle())) {
+          return StraightComponent_Impl::addToNode(node);
+        }
+      }
+
+      return false;
+    }
+
+    boost::optional<double> DistrictHeating_Impl::autosizedNominalCapacity() const {
+      return getAutosizedValue("Design Size Nominal Capacity", "W");
+    }
+
+    void DistrictHeating_Impl::autosize() {
+      autosizeNominalCapacity();
+    }
+
+    void DistrictHeating_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedNominalCapacity();
+      if (val) {
+        setNominalCapacity(val.get());
       }
     }
 
-    return false;
-  }
+  }  // namespace detail
 
-  boost::optional<double> DistrictHeating_Impl::autosizedNominalCapacity() const {
-    return getAutosizedValue("Design Size Nominal Capacity", "W");
-  }
-
-  void DistrictHeating_Impl::autosize() {
+  DistrictHeating::DistrictHeating(const Model& model) : StraightComponent(DistrictHeating::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::DistrictHeating_Impl>());
     autosizeNominalCapacity();
   }
 
-  void DistrictHeating_Impl::applySizingValues() {
-    boost::optional<double> val;
-    val = autosizedNominalCapacity();
-    if (val) {
-      setNominalCapacity(val.get());
-    }
-
+  IddObjectType DistrictHeating::iddObjectType() {
+    IddObjectType result(IddObjectType::OS_DistrictHeating);
+    return result;
   }
 
-} // detail
+  boost::optional<double> DistrictHeating::nominalCapacity() const {
+    return getImpl<detail::DistrictHeating_Impl>()->nominalCapacity();
+  }
 
-DistrictHeating::DistrictHeating(const Model& model)
-  : StraightComponent(DistrictHeating::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::DistrictHeating_Impl>());
-  autosizeNominalCapacity();
-}
+  bool DistrictHeating::isNominalCapacityAutosized() const {
+    return getImpl<detail::DistrictHeating_Impl>()->isNominalCapacityAutosized();
+  }
 
-IddObjectType DistrictHeating::iddObjectType() {
-  IddObjectType result(IddObjectType::OS_DistrictHeating);
-  return result;
-}
+  bool DistrictHeating::setNominalCapacity(double nominalCapacity) {
+    return getImpl<detail::DistrictHeating_Impl>()->setNominalCapacity(nominalCapacity);
+  }
 
-boost::optional<double> DistrictHeating::nominalCapacity() const {
-  return getImpl<detail::DistrictHeating_Impl>()->nominalCapacity();
-}
+  void DistrictHeating::autosizeNominalCapacity() {
+    getImpl<detail::DistrictHeating_Impl>()->autosizeNominalCapacity();
+  }
 
-bool DistrictHeating::isNominalCapacityAutosized() const {
-  return getImpl<detail::DistrictHeating_Impl>()->isNominalCapacityAutosized();
-}
+  /// @cond
 
-bool DistrictHeating::setNominalCapacity(double nominalCapacity) {
-  return getImpl<detail::DistrictHeating_Impl>()->setNominalCapacity(nominalCapacity);
-}
-
-void DistrictHeating::autosizeNominalCapacity() {
-  getImpl<detail::DistrictHeating_Impl>()->autosizeNominalCapacity();
-}
-
-/// @cond
-
-DistrictHeating::DistrictHeating(std::shared_ptr<detail::DistrictHeating_Impl> impl)
-  : StraightComponent(std::move(impl))
-{}
-/// @endcond
-
+  DistrictHeating::DistrictHeating(std::shared_ptr<detail::DistrictHeating_Impl> impl) : StraightComponent(std::move(impl)) {}
+  /// @endcond
 
   boost::optional<double> DistrictHeating::autosizedNominalCapacity() const {
     return getImpl<detail::DistrictHeating_Impl>()->autosizedNominalCapacity();
   }
 
-} // model
+}  // namespace model
 
-} // openstudio
-
-
+}  // namespace openstudio

@@ -26,20 +26,53 @@
   %ignore openstudio::model::AccessPolicyStore;
 
   // ignore simulation objects for now, add back in with partial classes in ModelSimulation.i
+  %ignore openstudio::model::Model::runPeriod; // Special case, it behaves like a Unique ModelObject
+  %ignore openstudio::model::Model::climateZones;
+  %ignore openstudio::model::Model::convergenceLimits;
+  %ignore openstudio::model::Model::environmentalImpactFactors;
   %ignore openstudio::model::Model::foundationKivaSettings;
-  %ignore openstudio::model::Model::runPeriod;
+  %ignore openstudio::model::Model::heatBalanceAlgorithm;
+  %ignore openstudio::model::Model::insideSurfaceConvectionAlgorithm;
+  %ignore openstudio::model::Model::lightingSimulationControl;
+  %ignore openstudio::model::Model::outputControlFiles;
+  %ignore openstudio::model::Model::outputControlReportingTolerances;
+  %ignore openstudio::model::Model::outputControlTableStyle;
+  %ignore openstudio::model::Model::outputDebuggingData;
+  %ignore openstudio::model::Model::outputDiagnostics;
+  %ignore openstudio::model::Model::outputJSON;
+  %ignore openstudio::model::Model::outputSQLite;
+  %ignore openstudio::model::Model::outputTableSummaryReports;
+  %ignore openstudio::model::Model::outsideSurfaceConvectionAlgorithm;
+  %ignore openstudio::model::Model::performancePrecisionTradeoffs;
+  %ignore openstudio::model::Model::runPeriodControlDaylightSavingTime;
+  %ignore openstudio::model::Model::shadowCalculation;
+  %ignore openstudio::model::Model::simulationControl;
+  %ignore openstudio::model::Model::siteGroundReflectance;
+  %ignore openstudio::model::Model::siteGroundTemperatureBuildingSurface;
+  %ignore openstudio::model::Model::siteGroundTemperatureDeep;
+  %ignore openstudio::model::Model::siteGroundTemperatureFCfactorMethod;
+  %ignore openstudio::model::Model::siteGroundTemperatureShallow;
+  %ignore openstudio::model::Model::siteWaterMainsTemperature;
+  %ignore openstudio::model::Model::sizingParameters;
+  %ignore openstudio::model::Model::timestep;
   %ignore openstudio::model::Model::weatherFile;
   %ignore openstudio::model::Model::yearDescription;
-  %ignore openstudio::model::Model::performancePrecisionTradeoffs;
+  %ignore openstudio::model::Model::zoneAirContaminantBalance;
+  %ignore openstudio::model::Model::zoneAirHeatBalanceAlgorithm;
+  %ignore openstudio::model::Model::zoneAirMassFlowConservation;
+  %ignore openstudio::model::Model::zoneCapacitanceMultiplierResearchSpecial;
 
   // ignore geometry objects for now, add back in with partial classes in ModelGeometry.i
   %ignore openstudio::model::Model::building;
+  %ignore openstudio::model::Model::facility;
+  %ignore openstudio::model::Model::site;
   %ignore openstudio::model::Model::plenumSpaceType;
 
   // Ignore hvac objects for now, add back in with partial classes in ModelHVAC.i
   %ignore openstudio::model::Model::outdoorAirNode;
 
-
+  // Ignore hvac objects for now, add back in with partial classes in ModelAirflow.i
+  %ignore openstudio::model::Model::airflowNetworkSimulationControl;
 
   // EnergyManagementSystemActuator: depends on Space (ModelGeometry.i),
   %ignore openstudio::model::EnergyManagementSystemActuator::EnergyManagementSystemActuator(const ModelObject& modelObject,
@@ -64,6 +97,10 @@
   %ignore openstudio::model::EnergyManagementSystemCurveOrTableIndexVariable::EnergyManagementSystemCurveOrTableIndexVariable(const Model& model, const Curve& curve);
   %ignore openstudio::model::EnergyManagementSystemCurveOrTableIndexVariable::setCurveOrTableObject;
   // getter curveOrTableObject doesn't need to be ignored and reimplemented because it returns a ModelObject
+
+  // Overload resolution: prefer std::string over char const *
+  %ignore openstudio::model::AdditionalProperties::setFeature(std::string const&, char const*);
+
 
   // should be able to do something here as C# supports partial classes
   // http://www.swig.org/Doc1.3/CSharp.html#csharp_extending_proxy_class
@@ -97,6 +134,13 @@
   %rename(loadComponent) openstudio::model::Component::load;
   %ignore openstudio::model::Meter::name;
   %ignore openstudio::model::Meter::setName;
+
+#elif defined SWIGPYTHON
+  // This is the only module where this isn't needed, since we ARE in openstudiomodelcore so Model already exists
+  // %pythoncode %{
+  //  Model = openstudiomodelcore.Model
+  // %}
+
 #else
 
 #endif
@@ -157,8 +201,6 @@ class Construction;
 %template(ModelObjectSet) std::set<openstudio::model::ModelObject>;
 %template(OptionalModelObject)boost::optional<openstudio::model::ModelObject>;
 %template(getModelObjectHandles) openstudio::getHandles<openstudio::model::ModelObject>;
-%template(ScheduleTypeKey) std::pair<std::string,std::string>;
-%template(ScheduleTypeKeyVector) std::vector< std::pair<std::string,std::string> >;
 
 // include initial objects
 %include <model/ModelObject.hpp>
@@ -212,6 +254,7 @@ namespace model {
 };
 
 //MODELOBJECT_TEMPLATES(ModelObject); // swig preprocessor did not seem to see these for other objects so these are defined above
+MODELOBJECT_TEMPLATES(ScheduleTypeKey);
 MODELOBJECT_TEMPLATES(EMSActuatorNames);
 MODELEXTENSIBLEGROUP_TEMPLATES(ModelExtensibleGroup);
 MODELOBJECT_TEMPLATES(ParentObject);

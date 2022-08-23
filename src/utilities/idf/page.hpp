@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -103,7 +103,7 @@ namespace openstudio {
  *
  * Both IdfFile and Workspace contain member functions for helping users modify their data so it
  * complies with the underlying IDD. \link IdfFile IdfFiles\endlink only maintain their data to
- * StrictnessLevel::None; users can set the StrictnessLevel of their \link Workspace
+ * StrictnessLevel::Minimal; users can set the StrictnessLevel of their \link Workspace
  * Workspaces\endlink. IdfFile does provide a method for generating \link ValidityReport
  * ValidityReports\endlink for higher levels of strictness. Most work should be done in Workspace,
  * whose default StrictnessLevel is Draft. IDF should typically be brought up to
@@ -203,4 +203,4 @@ namespace openstudio {
  * Workspace::removeObject
  * \endcode
  */
-} // openstudio
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,92 +38,90 @@ namespace model {
 
   class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  class SiteWaterMainsTemperature_Impl;
+    class SiteWaterMainsTemperature_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SiteWaterMainsTemperature is a ModelObject that wraps the OpenStudio IDD object
+  /** SiteWaterMainsTemperature is a ModelObject that wraps the OpenStudio IDD object
  *  'OS:Site:WaterMainsTemperature'. */
-class MODEL_API SiteWaterMainsTemperature : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  class MODEL_API SiteWaterMainsTemperature : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~SiteWaterMainsTemperature() {}
+    virtual ~SiteWaterMainsTemperature() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> calculationMethodValues();
+    static std::vector<std::string> calculationMethodValues();
 
-  /** \deprecated */
-  static std::vector<std::string> validCalculationMethodValues();
+    /** \deprecated */
+    static std::vector<std::string> validCalculationMethodValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string calculationMethod() const;
+    std::string calculationMethod() const;
 
-  boost::optional<Schedule> temperatureSchedule() const;
+    boost::optional<Schedule> temperatureSchedule() const;
 
-  boost::optional<double> annualAverageOutdoorAirTemperature() const;
+    boost::optional<double> annualAverageOutdoorAirTemperature() const;
 
-  boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures() const;
+    boost::optional<double> maximumDifferenceInMonthlyAverageOutdoorAirTemperatures() const;
 
+    //@}
+    /** @name Setters */
+    //@{
 
-  //@}
-  /** @name Setters */
-  //@{
+    bool setCalculationMethod(std::string calculationMethod);
 
-  bool setCalculationMethod(std::string calculationMethod);
+    /** Also sets calculation method to 'Schedule'. */
+    bool setTemperatureSchedule(Schedule& schedule);
 
-  /** Also sets calculation method to 'Schedule'. */
-  bool setTemperatureSchedule(Schedule& schedule);
+    void resetTemperatureSchedule();
 
-  void resetTemperatureSchedule();
+    /** Also sets calculation method to 'Correlation'. */
+    bool setAnnualAverageOutdoorAirTemperature(double annualAverageOutdoorAirTemperature);
 
-  /** Also sets calculation method to 'Correlation'. */
-  bool setAnnualAverageOutdoorAirTemperature(double annualAverageOutdoorAirTemperature);
+    /** Also sets calculation method to 'Correlation'. */
+    void resetAnnualAverageOutdoorAirTemperature();
 
-  /** Also sets calculation method to 'Correlation'. */
-  void resetAnnualAverageOutdoorAirTemperature();
+    /** Also sets calculation method to 'Correlation'. */
+    bool setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(double maximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
 
-  /** Also sets calculation method to 'Correlation'. */
-  bool setMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures(double maximumDifferenceInMonthlyAverageOutdoorAirTemperatures);
+    /** Also sets calculation method to 'Correlation'. */
+    void resetMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures();
 
-  /** Also sets calculation method to 'Correlation'. */
-  void resetMaximumDifferenceInMonthlyAverageOutdoorAirTemperatures();
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SiteWaterMainsTemperature_Impl ImplType;
 
-  //@}
- protected:
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::SiteWaterMainsTemperature_Impl;
 
-  /// @cond
-  typedef detail::SiteWaterMainsTemperature_Impl ImplType;
+    explicit SiteWaterMainsTemperature(std::shared_ptr<detail::SiteWaterMainsTemperature_Impl> impl);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::SiteWaterMainsTemperature_Impl;
+    explicit SiteWaterMainsTemperature(const Model& model);
 
-  explicit SiteWaterMainsTemperature(std::shared_ptr<detail::SiteWaterMainsTemperature_Impl> impl);
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SiteWaterMainsTemperature");
+  };
 
-  explicit SiteWaterMainsTemperature(const Model& model);
+  /** \relates SiteWaterMainsTemperature*/
+  typedef boost::optional<SiteWaterMainsTemperature> OptionalSiteWaterMainsTemperature;
 
-  /// @endcond
- private:
+  /** \relates SiteWaterMainsTemperature*/
+  typedef std::vector<SiteWaterMainsTemperature> SiteWaterMainsTemperatureVector;
 
-  REGISTER_LOGGER("openstudio.model.SiteWaterMainsTemperature");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates SiteWaterMainsTemperature*/
-typedef boost::optional<SiteWaterMainsTemperature> OptionalSiteWaterMainsTemperature;
-
-/** \relates SiteWaterMainsTemperature*/
-typedef std::vector<SiteWaterMainsTemperature> SiteWaterMainsTemperatureVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SITEWATERMAINSTEMPERATURE_HPP
+#endif  // MODEL_SITEWATERMAINSTEMPERATURE_HPP

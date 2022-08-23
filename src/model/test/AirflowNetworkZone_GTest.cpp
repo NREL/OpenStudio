@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -53,8 +53,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, AirflowNetwork_Zone_Basic)
-{
+TEST_F(ModelFixture, AirflowNetwork_Zone_Basic) {
   Model model;
   ThermalZone thermalZone(model);
   Space space1(model);
@@ -101,11 +100,9 @@ TEST_F(ModelFixture, AirflowNetwork_Zone_Basic)
   EXPECT_EQ(50.0, optzone.get().facadeWidth());
   ASSERT_TRUE(optzone.get().occupantVentilationControl());
   EXPECT_EQ(ovc, optzone.get().occupantVentilationControl().get());
-
 }
 
-TEST_F(ModelFixture, AirflowNetwork_Zone_Linking)
-{
+TEST_F(ModelFixture, AirflowNetwork_Zone_Linking) {
   Model model;
   ThermalZone thermalZone(model);
 
@@ -123,6 +120,4 @@ TEST_F(ModelFixture, AirflowNetwork_Zone_Linking)
 
   EXPECT_EQ(node_afn, link.node1());
   EXPECT_EQ(zone, link.node2());
-
 }
-

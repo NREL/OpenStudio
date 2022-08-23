@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,92 +39,88 @@
 
 #include <shared_mutex>
 
-namespace openstudio{
+namespace openstudio {
 
+namespace detail {
 
-  namespace detail {
+  /// LogSink is a class for managing sinks for log messages, e.g. files, streams, etc.
+  class UTILITIES_API LogSink_Impl
+  {
+   public:
+    /// destructor
+    virtual ~LogSink_Impl();
 
-    /// LogSink is a class for managing sinks for log messages, e.g. files, streams, etc.
-    class UTILITIES_API LogSink_Impl
-    {
-      public:
+    /// is the sink enabled
+    bool isEnabled() const;
 
-      /// destructor
-      virtual ~LogSink_Impl();
+    /// enable the sink
+    void enable();
 
-      /// is the sink enabled
-      bool isEnabled() const;
+    /// disable the sink
+    void disable();
 
-      /// enable the sink
-      void enable();
+    /// get the logging level
+    boost::optional<LogLevel> logLevel() const;
 
-      /// disable the sink
-      void disable();
+    /// set the logging level
+    void setLogLevel(LogLevel logLevel);
 
-      /// get the logging level
-      boost::optional<LogLevel> logLevel() const;
+    /// reset the core logging level
+    void resetLogLevel();
 
-      /// set the logging level
-      void setLogLevel(LogLevel logLevel);
+    /// get the regular expression to match log channels
+    boost::optional<boost::regex> channelRegex() const;
 
-      /// reset the core logging level
-      void resetLogLevel();
+    /// set the regular expression to match log channels
+    void setChannelRegex(const boost::regex& channelRegex);
 
-      /// get the regular expression to match log channels
-      boost::optional<boost::regex> channelRegex() const;
+    /// set the regular expression to match log channels
+    void setChannelRegex(const std::string& channelRegex);
 
-      /// set the regular expression to match log channels
-      void setChannelRegex(const boost::regex& filter);
+    /// reset the regular expression to match log channels
+    void resetChannelRegex();
 
-      /// set the regular expression to match log channels
-      void setChannelRegex(const std::string& filter);
+    /// get if messages are automatically flushed
+    bool autoFlush() const;
 
-      /// reset the regular expression to match log channels
-      void resetChannelRegex();
+    /// set if messages are automatically flushed
+    void setAutoFlush(bool autoFlush);
 
-      /// get if messages are automatically flushed
-      bool autoFlush() const;
+    /// get the thread id that messages are filtered by
+    std::thread::id threadId() const;
 
-      /// set if messages are automatically flushed
-      void setAutoFlush(bool autoFlush);
+    /// set the thread id that messages are filtered by
+    void setThreadId(std::thread::id threadId);
 
-      /// get the thread id that messages are filtered by
-      std::thread::id threadId() const;
+    /// reset the thread id that messages are filtered by
+    void resetThreadId();
 
-      /// set the thread id that messages are filtered by
-      void setThreadId(std::thread::id threadId);
+   protected:
+    friend class openstudio::LogSink;
 
-      /// reset the thread id that messages are filtered by
-      void resetThreadId();
+    // does not register in the global logger
+    LogSink_Impl();
 
-    protected:
+    // must be set in the constructor
+    void setStream(boost::shared_ptr<std::ostream> os);
 
-      friend class openstudio::LogSink;
+    // for adding cout and cerr sinks to logger
+    boost::shared_ptr<LogSinkBackend> sink() const;
 
-      // does not register in the global logger
-      LogSink_Impl();
+    mutable std::shared_mutex m_mutex;
 
-      // must be set in the constructor
-      void setStream(boost::shared_ptr<std::ostream> os);
+   private:
+    void updateFilter(const std::unique_lock<std::shared_mutex>& l);
 
-      // for adding cout and cerr sinks to logger
-      boost::shared_ptr<LogSinkBackend> sink() const;
+    boost::optional<LogLevel> m_logLevel;
+    boost::optional<boost::regex> m_channelRegex;
+    bool m_autoFlush = false;
+    std::thread::id m_threadId;
+    boost::shared_ptr<LogSinkBackend> m_sink;
+  };
 
-      mutable std::shared_mutex m_mutex;
+}  // namespace detail
 
-    private:
+}  // namespace openstudio
 
-      void updateFilter(const std::unique_lock<std::shared_mutex>& l);
-
-      boost::optional<LogLevel> m_logLevel;
-      boost::optional<boost::regex> m_channelRegex;
-      bool m_autoFlush;
-      std::thread::id m_threadId;
-      boost::shared_ptr<LogSinkBackend> m_sink;
-    };
-
-  } // detail
-
-} // openstudio
-
-#endif // UTILITIES_CORE_LOGSINK_IMPL_HPP
+#endif  // UTILITIES_CORE_LOGSINK_IMPL_HPP

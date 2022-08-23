@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,251 +35,265 @@
 namespace openstudio {
 namespace model {
 
-class Curve;
-class Information;
-class Schedule;
+  class Curve;
+  class Information;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  // derive CoilCoolingDXTwoSpeed_Impl from ModelObject_Impl to override virtual methods
-  class MODEL_API CoilCoolingDXTwoSpeed_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    // derive CoilCoolingDXTwoSpeed_Impl from ModelObject_Impl to override virtual methods
+    class MODEL_API CoilCoolingDXTwoSpeed_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    // constructor
-    CoilCoolingDXTwoSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      // constructor
+      CoilCoolingDXTwoSpeed_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // construct from workspace
-    CoilCoolingDXTwoSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                               Model_Impl* model,
-                               bool keepHandle);
+      // construct from workspace
+      CoilCoolingDXTwoSpeed_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // copy constructor
-    CoilCoolingDXTwoSpeed_Impl(const CoilCoolingDXTwoSpeed_Impl& other, Model_Impl* model, bool keepHandle);
+      // copy constructor
+      CoilCoolingDXTwoSpeed_Impl(const CoilCoolingDXTwoSpeed_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~CoilCoolingDXTwoSpeed_Impl(){}
+      virtual ~CoilCoolingDXTwoSpeed_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::vector<IddObjectType> allowableChildTypes() const override;
+      virtual std::vector<IddObjectType> allowableChildTypes() const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      virtual bool addToNode(Node& node) override;
 
-    Schedule availabilitySchedule() const;
+      virtual void autosize() override;
 
-    boost::optional<double> ratedHighSpeedTotalCoolingCapacity() const;
+      virtual void applySizingValues() override;
 
-    boost::optional<double> ratedHighSpeedSensibleHeatRatio() const;
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<double> ratedHighSpeedCOP() const;
+      Schedule availabilitySchedule() const;
 
-    boost::optional<double> ratedHighSpeedAirFlowRate() const;
+      boost::optional<double> ratedHighSpeedTotalCoolingCapacity() const;
 
-    Curve totalCoolingCapacityFunctionOfTemperatureCurve() const;
+      boost::optional<double> ratedHighSpeedSensibleHeatRatio() const;
 
-    Curve totalCoolingCapacityFunctionOfFlowFractionCurve() const;
+      boost::optional<double> ratedHighSpeedCOP() const;
 
-    Curve energyInputRatioFunctionOfTemperatureCurve()const;
+      boost::optional<double> ratedHighSpeedAirFlowRate() const;
 
-    Curve energyInputRatioFunctionOfFlowFractionCurve()const;
+      Curve totalCoolingCapacityFunctionOfTemperatureCurve() const;
 
-    Curve partLoadFractionCorrelationCurve()const;
+      Curve totalCoolingCapacityFunctionOfFlowFractionCurve() const;
 
-    boost::optional<double> ratedLowSpeedTotalCoolingCapacity() const;
+      Curve energyInputRatioFunctionOfTemperatureCurve() const;
 
-    boost::optional<double> ratedLowSpeedSensibleHeatRatio() const;
+      Curve energyInputRatioFunctionOfFlowFractionCurve() const;
 
-    boost::optional<double> ratedLowSpeedCOP() const;
+      Curve partLoadFractionCorrelationCurve() const;
 
-    boost::optional<double> ratedLowSpeedAirFlowRate() const;
+      boost::optional<double> ratedLowSpeedTotalCoolingCapacity() const;
 
-    Curve lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve()const;
+      boost::optional<double> ratedLowSpeedSensibleHeatRatio() const;
 
-    Curve lowSpeedEnergyInputRatioFunctionOfTemperatureCurve()const;
+      boost::optional<double> ratedLowSpeedCOP() const;
 
-    boost::optional<std::string> condenserAirInletNodeName()const;
+      boost::optional<double> ratedLowSpeedAirFlowRate() const;
 
-    std::string condenserType()const;
+      Curve lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve() const;
 
-    boost::optional<double> highSpeedEvaporativeCondenserEffectiveness()const;
+      Curve lowSpeedEnergyInputRatioFunctionOfTemperatureCurve() const;
 
-    boost::optional<double> highSpeedEvaporativeCondenserAirFlowRate()const;
+      boost::optional<std::string> condenserAirInletNodeName() const;
 
-    boost::optional<double> highSpeedEvaporativeCondenserPumpRatedPowerConsumption()const;
+      std::string condenserType() const;
 
-    boost::optional<double> lowSpeedEvaporativeCondenserEffectiveness()const;
+      boost::optional<double> highSpeedEvaporativeCondenserEffectiveness() const;
 
-    boost::optional<double> lowSpeedEvaporativeCondenserAirFlowRate()const;
+      boost::optional<double> highSpeedEvaporativeCondenserAirFlowRate() const;
 
-    boost::optional<double> lowSpeedEvaporativeCondenserPumpRatedPowerConsumption()const;
+      boost::optional<double> highSpeedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
-    boost::optional<double> basinHeaterCapacity()const;
+      boost::optional<double> lowSpeedEvaporativeCondenserEffectiveness() const;
 
-    boost::optional<double> basinHeaterSetpointTemperature()const;
+      boost::optional<double> lowSpeedEvaporativeCondenserAirFlowRate() const;
 
-    boost::optional<Schedule> basinHeaterOperatingSchedule()const;
+      boost::optional<double> lowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
-  boost::optional<double> autosizedRatedHighSpeedTotalCoolingCapacity() const ;
+      boost::optional<double> basinHeaterCapacity() const;
 
-  boost::optional<double> autosizedRatedHighSpeedSensibleHeatRatio() const ;
+      boost::optional<double> basinHeaterSetpointTemperature() const;
 
-  boost::optional<double> autosizedRatedHighSpeedAirFlowRate() const ;
+      boost::optional<Schedule> basinHeaterOperatingSchedule() const;
 
-  boost::optional<double> autosizedRatedLowSpeedTotalCoolingCapacity() const ;
+      double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
-  boost::optional<double> autosizedRatedLowSpeedSensibleHeatRatio() const ;
+      double unitInternalStaticAirPressure() const;
 
-  boost::optional<double> autosizedRatedLowSpeedAirFlowRate() const ;
+      //@}
+      /** @name Setters */
+      //@{
 
-  boost::optional<double> autosizedHighSpeedEvaporativeCondenserAirFlowRate() const ;
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-  boost::optional<double> autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+      bool setRatedHighSpeedTotalCoolingCapacity(boost::optional<double> value);
 
-  boost::optional<double> autosizedLowSpeedEvaporativeCondenserAirFlowRate() const ;
+      bool setRatedHighSpeedTotalCoolingCapacity(double value);
 
-  boost::optional<double> autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const ;
+      bool setRatedHighSpeedSensibleHeatRatio(boost::optional<double> value);
 
-  virtual void autosize() override;
+      bool setRatedHighSpeedSensibleHeatRatio(double value);
 
-  virtual void applySizingValues() override;
+      bool setRatedHighSpeedCOP(double value);
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool setRatedHighSpeedAirFlowRate(boost::optional<double> value);
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      bool setRatedHighSpeedAirFlowRate(double value);
 
-    bool setRatedHighSpeedTotalCoolingCapacity( boost::optional<double> value );
+      bool setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
 
-    bool setRatedHighSpeedTotalCoolingCapacity( double value );
+      bool setTotalCoolingCapacityFunctionOfFlowFractionCurve(const Curve& curve);
 
-    bool setRatedHighSpeedSensibleHeatRatio( boost::optional<double> value );
+      bool setEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve);
 
-    bool setRatedHighSpeedSensibleHeatRatio( double value );
+      bool setEnergyInputRatioFunctionOfFlowFractionCurve(const Curve& curve);
 
-    bool setRatedHighSpeedCOP( double value );
+      bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
-    bool setRatedHighSpeedAirFlowRate( boost::optional<double> value );
+      bool setRatedLowSpeedTotalCoolingCapacity(boost::optional<double> value);
 
-    bool setRatedHighSpeedAirFlowRate( double value );
+      bool setRatedLowSpeedTotalCoolingCapacity(double value);
 
-    bool setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve );
+      bool setRatedLowSpeedSensibleHeatRatio(boost::optional<double> value);
 
-    bool setTotalCoolingCapacityFunctionOfFlowFractionCurve(const Curve& curve );
+      bool setRatedLowSpeedSensibleHeatRatio(double value);
 
-    bool setEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve );
+      bool setRatedLowSpeedCOP(double value);
 
-    bool setEnergyInputRatioFunctionOfFlowFractionCurve(const Curve& curve );
+      bool setRatedLowSpeedAirFlowRate(boost::optional<double> value);
 
-    bool setPartLoadFractionCorrelationCurve(const Curve& curve );
+      bool setRatedLowSpeedAirFlowRate(double value);
 
-    bool setRatedLowSpeedTotalCoolingCapacity( boost::optional<double> value );
+      bool setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
 
-    bool setRatedLowSpeedTotalCoolingCapacity( double value );
+      bool setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve);
 
-    bool setRatedLowSpeedSensibleHeatRatio( boost::optional<double> value );
+      bool setCondenserAirInletNodeName(const std::string& value);
 
-    bool setRatedLowSpeedSensibleHeatRatio( double value );
+      bool setCondenserType(const std::string& value);
 
-    bool setRatedLowSpeedCOP( double value );
+      bool setHighSpeedEvaporativeCondenserEffectiveness(double value);
 
-    bool setRatedLowSpeedAirFlowRate( boost::optional<double> value );
+      bool setHighSpeedEvaporativeCondenserAirFlowRate(boost::optional<double> value);
 
-    bool setRatedLowSpeedAirFlowRate( double value );
+      bool setHighSpeedEvaporativeCondenserAirFlowRate(double value);
 
-    bool setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve );
+      bool setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(boost::optional<double> value);
 
-    bool setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(const Curve& curve );
+      bool setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(double value);
 
-    bool setCondenserAirInletNodeName( const std::string& value );
+      bool setLowSpeedEvaporativeCondenserEffectiveness(double value);
 
-    bool setCondenserType( const std::string& value );
+      bool setLowSpeedEvaporativeCondenserAirFlowRate(boost::optional<double> value);
 
-    bool setHighSpeedEvaporativeCondenserEffectiveness( double value );
+      bool setLowSpeedEvaporativeCondenserAirFlowRate(double value);
 
-    bool setHighSpeedEvaporativeCondenserAirFlowRate( boost::optional<double> value );
+      bool setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(boost::optional<double> value);
 
-    bool setHighSpeedEvaporativeCondenserAirFlowRate( double value );
+      bool setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(double value);
 
-    bool setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
+      //TODO
+      // A14, \field Supply Water Storage Tank Name
+      // supplyWaterStorageTankName
+      // setSupplyWaterStorageTankName
 
-    bool setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value );
+      //TODO
+      // A15, \field Condensate Collection Water Storage Tank Name
+      // getCondensateCollectionWaterStorageTankName
+      // setCondensateCollectionWaterStorageTankName
 
-    bool setLowSpeedEvaporativeCondenserEffectiveness( double value );
+      bool setBasinHeaterCapacity(double value);
 
-    bool setLowSpeedEvaporativeCondenserAirFlowRate( boost::optional<double> value );
+      bool setBasinHeaterSetpointTemperature(double value);
 
-    bool setLowSpeedEvaporativeCondenserAirFlowRate( double value );
+      bool setBasinHeaterOperatingSchedule(Schedule& schedule);
 
-    bool setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( boost::optional<double> value );
+      void resetBasinHeaterOperatingSchedule();
 
-    bool setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption( double value );
+      bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 
-    //TODO
-    // A14, \field Supply Water Storage Tank Name
-    // supplyWaterStorageTankName
-    // setSupplyWaterStorageTankName
+      bool setUnitInternalStaticAirPressure(double unitInternalStaticAirPressure);
 
-    //TODO
-    // A15, \field Condensate Collection Water Storage Tank Name
-    // getCondensateCollectionWaterStorageTankName
-    // setCondensateCollectionWaterStorageTankName
+      //@}
+      /** @name Other */
+      //@{
 
-    bool setBasinHeaterCapacity( double value );
+      // Autosize methods
 
-    bool setBasinHeaterSetpointTemperature( double value );
+      boost::optional<double> autosizedRatedHighSpeedTotalCoolingCapacity() const;
 
-    bool setBasinHeaterOperatingSchedule(Schedule& schedule);
+      boost::optional<double> autosizedRatedHighSpeedSensibleHeatRatio() const;
 
-    void resetBasinHeaterOperatingSchedule();
+      boost::optional<double> autosizedRatedHighSpeedAirFlowRate() const;
 
-    bool addToNode(Node & node) override;
+      boost::optional<double> autosizedRatedLowSpeedTotalCoolingCapacity() const;
 
-    //@}
-  private:
-    REGISTER_LOGGER("openstudio.model.CoilCoolingDXTwoSpeed");
+      boost::optional<double> autosizedRatedLowSpeedSensibleHeatRatio() const;
 
-    // optional getters for children so can remove() if constructor fails
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    boost::optional<Curve> optionalTotalCoolingCapacityFunctionOfTemperatureCurve() const;
-    boost::optional<Curve> optionalTotalCoolingCapacityFunctionOfFlowFractionCurve() const;
-    boost::optional<Curve> optionalEnergyInputRatioFunctionOfTemperatureCurve() const;
-    boost::optional<Curve> optionalEnergyInputRatioFunctionOfFlowFractionCurve() const;
-    boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
-    boost::optional<Curve> optionalLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve() const;
-    boost::optional<Curve> optionalLowSpeedEnergyInputRatioFunctionOfTemperatureCurve() const;
+      boost::optional<double> autosizedRatedLowSpeedAirFlowRate() const;
 
-    boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
-    boost::optional<ModelObject> basinHeaterOperatingScheduleAsModelObject() const;
+      boost::optional<double> autosizedHighSpeedEvaporativeCondenserAirFlowRate() const;
 
-    bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
-    bool setBasinHeaterOperatingScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      boost::optional<double> autosizedHighSpeedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
-    virtual boost::optional<HVACComponent> containingHVACComponent() const override;
-  };
+      boost::optional<double> autosizedLowSpeedEvaporativeCondenserAirFlowRate() const;
 
-} // detail
+      boost::optional<double> autosizedLowSpeedEvaporativeCondenserPumpRatedPowerConsumption() const;
 
-} // model
-} // openstudio
+      //@}
 
-#endif // MODEL_COILCOOLINGDXTWOSPEED_IMPL_HPP
+     private:
+      REGISTER_LOGGER("openstudio.model.CoilCoolingDXTwoSpeed");
+
+      // optional getters for children so can remove() if constructor fails
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<Curve> optionalTotalCoolingCapacityFunctionOfTemperatureCurve() const;
+      boost::optional<Curve> optionalTotalCoolingCapacityFunctionOfFlowFractionCurve() const;
+      boost::optional<Curve> optionalEnergyInputRatioFunctionOfTemperatureCurve() const;
+      boost::optional<Curve> optionalEnergyInputRatioFunctionOfFlowFractionCurve() const;
+      boost::optional<Curve> optionalPartLoadFractionCorrelationCurve() const;
+      boost::optional<Curve> optionalLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve() const;
+      boost::optional<Curve> optionalLowSpeedEnergyInputRatioFunctionOfTemperatureCurve() const;
+
+      boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
+      boost::optional<ModelObject> basinHeaterOperatingScheduleAsModelObject() const;
+
+      bool setAvailabilityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setBasinHeaterOperatingScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+
+      virtual boost::optional<HVACComponent> containingHVACComponent() const override;
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_COILCOOLINGDXTWOSPEED_IMPL_HPP

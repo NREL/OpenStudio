@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,9 +39,9 @@
 namespace openstudio {
 namespace detail {
 
-  class UTILITIES_API IdfObjectDiff_Impl {
-  public:
-
+  class UTILITIES_API IdfObjectDiff_Impl
+  {
+   public:
     IdfObjectDiff_Impl();
 
     IdfObjectDiff_Impl(boost::optional<unsigned> index, boost::optional<std::string> oldValue, boost::optional<std::string> newValue);
@@ -60,15 +60,13 @@ namespace detail {
     /// get the new value, uninitialized optional means that the field no longer exists
     boost::optional<std::string> newValue() const;
 
-  private:
-
+   private:
     boost::optional<unsigned> m_index;
     boost::optional<std::string> m_oldValue;
     boost::optional<std::string> m_newValue;
-
   };
 
-} // detail
-} // openstudio
+}  // namespace detail
+}  // namespace openstudio
 
-#endif // UTILITIES_IDF_IDFOBJECTDIFF_IMPL_HPP
+#endif  // UTILITIES_IDF_IDFOBJECTDIFF_IMPL_HPP

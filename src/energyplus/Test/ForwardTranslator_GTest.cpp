@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -134,20 +134,19 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Zone)
   EXPECT_TRUE(zoneHandle == lightsObject.getTarget(openstudio::LightsFields::ZoneorZoneListName)->handle());
 }
 */
-TEST_F(EnergyPlusFixture,ForwardTranslator_ExampleModel) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_ExampleModel) {
   Model model = exampleModel();
   EXPECT_TRUE(model.getOptionalUniqueModelObject<Version>()) << "Example model does not include a Version object.";
   ForwardTranslator forwardTranslator;
   Workspace workspace = forwardTranslator.translateModel(model);
   EXPECT_EQ(0u, forwardTranslator.errors().size());
-  EXPECT_EQ(1u,workspace.getObjectsByType(IddObjectType::Version).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Version).size());
 
   // model.save(toPath("./example.osm"), true);
   // workspace.save(toPath("./example.idf"), true);
 }
 
-
-TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateAirLoopHVAC) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateAirLoopHVAC) {
   openstudio::model::Model model;
   EXPECT_TRUE(model.getOptionalUniqueModelObject<Version>()) << "Blank model does not include a Version object.";
 
@@ -163,39 +162,38 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateAirLoopHVAC) {
   ForwardTranslator trans;
 
   openstudio::Workspace workspace = trans.translateModel(model);
-  EXPECT_EQ(1u,workspace.getObjectsByType(IddObjectType::Version).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Version).size());
 
-  ASSERT_NE(unsigned(0),workspace.objects().size());
+  ASSERT_NE(unsigned(0), workspace.objects().size());
 
   openstudio::path outDir = resourcesPath() / openstudio::toPath("airLoopHVAC.idf");
   openstudio::filesystem::ofstream ofs(outDir);
   workspace.toIdfFile().print(ofs);
   ofs.close();
 }
-TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateCoolingCoil)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateCoolingCoil) {
   Model model;
   ScheduleCompact scheduleCompact(model);
   scheduleCompact.setName("Daytime Ventilation For Cooling Coil Test");
-  scheduleCompact.setString(1,"Fraction");
-  scheduleCompact.setString(2,"Through: 12/31");
-  scheduleCompact.setString(3,"For: Weekdays SummerDesignDay");
-  scheduleCompact.setString(4,"Until: 08:00");
-  scheduleCompact.setString(5,"0.0");
-  scheduleCompact.setString(6,"Until: 18:00");
-  scheduleCompact.setString(7,"1.0");
-  scheduleCompact.setString(8,"Until: 24:00");
-  scheduleCompact.setString(9,"0.0");
-  scheduleCompact.setString(10,"For: Weekends WinterDesignDay");
-  scheduleCompact.setString(11,"Until: 10:00");
-  scheduleCompact.setString(12,"0.0");
-  scheduleCompact.setString(13,"Until: 16:00");
-  scheduleCompact.setString(14,"1.0");
-  scheduleCompact.setString(15,"Until: 24:00");
-  scheduleCompact.setString(16,"0.0");
-  scheduleCompact.setString(17,"For: Holidays AllOtherDays");
-  scheduleCompact.setString(18,"Until: 24:00");
-  scheduleCompact.setString(19,"0.0");
+  scheduleCompact.setString(1, "Fraction");
+  scheduleCompact.setString(2, "Through: 12/31");
+  scheduleCompact.setString(3, "For: Weekdays SummerDesignDay");
+  scheduleCompact.setString(4, "Until: 08:00");
+  scheduleCompact.setString(5, "0.0");
+  scheduleCompact.setString(6, "Until: 18:00");
+  scheduleCompact.setString(7, "1.0");
+  scheduleCompact.setString(8, "Until: 24:00");
+  scheduleCompact.setString(9, "0.0");
+  scheduleCompact.setString(10, "For: Weekends WinterDesignDay");
+  scheduleCompact.setString(11, "Until: 10:00");
+  scheduleCompact.setString(12, "0.0");
+  scheduleCompact.setString(13, "Until: 16:00");
+  scheduleCompact.setString(14, "1.0");
+  scheduleCompact.setString(15, "Until: 24:00");
+  scheduleCompact.setString(16, "0.0");
+  scheduleCompact.setString(17, "For: Holidays AllOtherDays");
+  scheduleCompact.setString(18, "Until: 24:00");
+  scheduleCompact.setString(19, "0.0");
 
   CurveBiquadratic ccFofT(model);
   CurveBiquadratic eirFofT(model);
@@ -231,22 +229,16 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateCoolingCoil)
   plf.setCoefficient2x(55.50);
   plf.setCoefficient3xPOW2(23.50);
 
-  CoilCoolingDXSingleSpeed cool(model,
-                                scheduleCompact,
-                                ccFofT,
-                                ccFofF,
-                                eirFofT,
-                                eirFofF,
-                                plf);
+  CoilCoolingDXSingleSpeed cool(model, scheduleCompact, ccFofT, ccFofF, eirFofT, eirFofF, plf);
 
   ForwardTranslator trans;
   Workspace workspace = trans.translateModel(model);
 
-  EXPECT_EQ(1u,workspace.getObjectsByType(IddObjectType::Version).size());
-  EXPECT_EQ(1u,workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed).size());
-  EXPECT_EQ(1u,workspace.getObjectsByType(IddObjectType::Schedule_Compact).size());
-  EXPECT_EQ(2u,workspace.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
-  EXPECT_EQ(3u,workspace.getObjectsByType(IddObjectType::Curve_Quadratic).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Version).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX_SingleSpeed).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Schedule_Compact).size());
+  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Curve_Biquadratic).size());
+  EXPECT_EQ(3u, workspace.getObjectsByType(IddObjectType::Curve_Quadratic).size());
 
   path outDir = resourcesPath() / openstudio::toPath("CoolingCoilDXSingleSpeed.idf");
   openstudio::filesystem::ofstream ofs(outDir);
@@ -261,36 +253,35 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateCoolingCoil)
   // Get the Model by calling the translator
   ReverseTranslator trans2;
   ASSERT_NO_THROW(trans2.translateWorkspace(inWorkspace));
-  Model model2 =  trans2.translateWorkspace(inWorkspace);
+  Model model2 = trans2.translateWorkspace(inWorkspace);
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateScheduleCompact) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateScheduleCompact) {
   openstudio::model::Model model;
 
   openstudio::model::ScheduleCompact scheduleCompact(model);
 
   scheduleCompact.setName("Daytime Ventilation");
 
-  scheduleCompact.setString(2,"Fraction");
-  scheduleCompact.setString(3,"Through: 12/31");
-  scheduleCompact.setString(4,"For: Weekdays SummerDesignDay");
-  scheduleCompact.setString(5,"Until: 08:00");
-  scheduleCompact.setString(6,"0.0");
-  scheduleCompact.setString(7,"Until: 18:00");
-  scheduleCompact.setString(8,"1.0");
-  scheduleCompact.setString(9,"Until: 24:00");
-  scheduleCompact.setString(10,"0.0");
-  scheduleCompact.setString(11,"For: Weekends WinterDesignDay");
-  scheduleCompact.setString(12,"Until: 10:00");
-  scheduleCompact.setString(13,"0.0");
-  scheduleCompact.setString(14,"Until: 16:00");
-  scheduleCompact.setString(15,"1.0");
-  scheduleCompact.setString(16,"Until: 24:00");
-  scheduleCompact.setString(17,"0.0");
-  scheduleCompact.setString(18,"For: Holidays AllOtherDays");
-  scheduleCompact.setString(19,"Until: 24:00");
-  scheduleCompact.setString(20,"0.0");
-
+  scheduleCompact.setString(2, "Fraction");
+  scheduleCompact.setString(3, "Through: 12/31");
+  scheduleCompact.setString(4, "For: Weekdays SummerDesignDay");
+  scheduleCompact.setString(5, "Until: 08:00");
+  scheduleCompact.setString(6, "0.0");
+  scheduleCompact.setString(7, "Until: 18:00");
+  scheduleCompact.setString(8, "1.0");
+  scheduleCompact.setString(9, "Until: 24:00");
+  scheduleCompact.setString(10, "0.0");
+  scheduleCompact.setString(11, "For: Weekends WinterDesignDay");
+  scheduleCompact.setString(12, "Until: 10:00");
+  scheduleCompact.setString(13, "0.0");
+  scheduleCompact.setString(14, "Until: 16:00");
+  scheduleCompact.setString(15, "1.0");
+  scheduleCompact.setString(16, "Until: 24:00");
+  scheduleCompact.setString(17, "0.0");
+  scheduleCompact.setString(18, "For: Holidays AllOtherDays");
+  scheduleCompact.setString(19, "Until: 24:00");
+  scheduleCompact.setString(20, "0.0");
 
   ForwardTranslator trans;
   Workspace workspace = trans.translateModelObject(scheduleCompact);
@@ -298,28 +289,27 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateScheduleCompact) {
 
   openstudio::IdfObject scheduleCompactIdf = workspace.getObjectsByType(IddObjectType::Schedule_Compact)[0];
 
-  EXPECT_EQ(20u,scheduleCompactIdf.numFields());
-  EXPECT_EQ(21u,scheduleCompact.numFields());
+  EXPECT_EQ(20u, scheduleCompactIdf.numFields());
+  EXPECT_EQ(21u, scheduleCompact.numFields());
 
-  ASSERT_EQ(scheduleCompactIdf.numFields() + 1,scheduleCompact.numFields());
+  ASSERT_EQ(scheduleCompactIdf.numFields() + 1, scheduleCompact.numFields());
 
   ASSERT_TRUE(scheduleCompact.name());
   ASSERT_TRUE(scheduleCompactIdf.name());
-  EXPECT_EQ(scheduleCompact.name().get(),scheduleCompactIdf.name().get());
+  EXPECT_EQ(scheduleCompact.name().get(), scheduleCompactIdf.name().get());
 
-  for( size_t i = OS_Schedule_CompactFields::getValues().size(); i < scheduleCompact.numFields(); i++ )
-  {
-    boost::optional<std::string> s1 = scheduleCompactIdf.getString((int)i-1);
+  for (size_t i = OS_Schedule_CompactFields::getValues().size(); i < scheduleCompact.numFields(); i++) {
+    boost::optional<std::string> s1 = scheduleCompactIdf.getString((int)i - 1);
     boost::optional<std::string> s2 = scheduleCompact.getString((int)i);
 
     ASSERT_TRUE(s1);
     ASSERT_TRUE(s2);
 
-    EXPECT_EQ(s1.get(),s2.get());
+    EXPECT_EQ(s1.get(), s2.get());
   }
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateStandardOpaqueMaterial) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateStandardOpaqueMaterial) {
   openstudio::model::Model model;
   openstudio::model::StandardOpaqueMaterial mat(model);
 
@@ -333,7 +323,6 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateStandardOpaqueMaterial) 
   mat.setSolarAbsorptance(0.7);
   mat.setVisibleAbsorptance(0.7);
 
-
   ForwardTranslator trans;
   Workspace workspace = trans.translateModelObject(mat);
 
@@ -343,18 +332,18 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateStandardOpaqueMaterial) 
 
   EXPECT_EQ(unsigned(9), matIdf.numFields());
 
-  EXPECT_EQ( "Test Material", *(matIdf.name()) );
-  EXPECT_EQ( "Rough", *(matIdf.getString(1)) );
-  EXPECT_EQ( 0.0125, *(matIdf.getDouble(2)) );
-  EXPECT_EQ( 0.5, *(matIdf.getDouble(3)) );
-  EXPECT_EQ( 3.5, *(matIdf.getDouble(4)) );
-  EXPECT_EQ( 1400.0, *(matIdf.getDouble(5)) );
-  EXPECT_EQ( 0.9, *(matIdf.getDouble(6)) );
-  EXPECT_EQ( 0.7, *(matIdf.getDouble(7)) );
-  EXPECT_EQ( 0.7, *(matIdf.getDouble(8)) );
+  EXPECT_EQ("Test Material", *(matIdf.name()));
+  EXPECT_EQ("Rough", *(matIdf.getString(1)));
+  EXPECT_EQ(0.0125, *(matIdf.getDouble(2)));
+  EXPECT_EQ(0.5, *(matIdf.getDouble(3)));
+  EXPECT_EQ(3.5, *(matIdf.getDouble(4)));
+  EXPECT_EQ(1400.0, *(matIdf.getDouble(5)));
+  EXPECT_EQ(0.9, *(matIdf.getDouble(6)));
+  EXPECT_EQ(0.7, *(matIdf.getDouble(7)));
+  EXPECT_EQ(0.7, *(matIdf.getDouble(8)));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateConstruction) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateConstruction) {
   openstudio::model::Model model;
 
   openstudio::model::StandardOpaqueMaterial mat1(model);
@@ -385,12 +374,12 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateConstruction) {
   IdfObject constructionIdf = workspace.getObjectsByType(IddObjectType::Construction)[0];
 
   EXPECT_EQ(unsigned(3), constructionIdf.numFields());
-  EXPECT_EQ("test construction", *(constructionIdf.name()) );
-  EXPECT_EQ("test layer0", *(constructionIdf.getString(1)) );
-  EXPECT_EQ("test layer1", *(constructionIdf.getString(2)) );
+  EXPECT_EQ("test construction", *(constructionIdf.name()));
+  EXPECT_EQ("test layer0", *(constructionIdf.getString(1)));
+  EXPECT_EQ("test layer1", *(constructionIdf.getString(2)));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSite) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSite) {
   openstudio::model::Model model;
   openstudio::model::Site site = model.getUniqueModelObject<openstudio::model::Site>();
 
@@ -407,14 +396,14 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSite) {
   IdfObject siteIdf = workspace.getObjectsByType(IddObjectType::Site_Location)[0];
   EXPECT_EQ(unsigned(5), siteIdf.numFields());
 
-  EXPECT_EQ( "Test Site", *(siteIdf.name()) );
-  EXPECT_EQ( 39.6, *(siteIdf.getDouble(1)) );
-  EXPECT_EQ( 105.2, *(siteIdf.getDouble(2)) );
-  EXPECT_EQ( -7.0, *(siteIdf.getDouble(3)) );
-  EXPECT_EQ( 1729.74, *(siteIdf.getDouble(4)) );
+  EXPECT_EQ("Test Site", *(siteIdf.name()));
+  EXPECT_EQ(39.6, *(siteIdf.getDouble(1)));
+  EXPECT_EQ(105.2, *(siteIdf.getDouble(2)));
+  EXPECT_EQ(-7.0, *(siteIdf.getDouble(3)));
+  EXPECT_EQ(1729.74, *(siteIdf.getDouble(4)));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSiteGroundReflectance) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundReflectance) {
   openstudio::model::Model model;
   openstudio::model::SiteGroundReflectance groundreflect = model.getUniqueModelObject<openstudio::model::SiteGroundReflectance>();
 
@@ -438,23 +427,24 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSiteGroundReflectance) {
   IdfObject groundreflectIdf = workspace.getObjectsByType(IddObjectType::Site_GroundReflectance)[0];
   EXPECT_EQ(unsigned(12), groundreflectIdf.numFields());
 
-  EXPECT_EQ( 0.11, *(groundreflectIdf.getDouble(0)) );
-  EXPECT_EQ( 0.12, *(groundreflectIdf.getDouble(1)) );
-  EXPECT_EQ( 0.13, *(groundreflectIdf.getDouble(2)) );
-  EXPECT_EQ( 0.14, *(groundreflectIdf.getDouble(3)) );
-  EXPECT_EQ( 0.15, *(groundreflectIdf.getDouble(4)) );
-  EXPECT_EQ( 0.16, *(groundreflectIdf.getDouble(5)) );
-  EXPECT_EQ( 0.17, *(groundreflectIdf.getDouble(6)) );
-  EXPECT_EQ( 0.18, *(groundreflectIdf.getDouble(7)) );
-  EXPECT_EQ( 0.19, *(groundreflectIdf.getDouble(8)) );
-  EXPECT_EQ( 0.20, *(groundreflectIdf.getDouble(9)) );
-  EXPECT_EQ( 0.21, *(groundreflectIdf.getDouble(10)) );
-  EXPECT_EQ( 0.22, *(groundreflectIdf.getDouble(11)) );
+  EXPECT_EQ(0.11, *(groundreflectIdf.getDouble(0)));
+  EXPECT_EQ(0.12, *(groundreflectIdf.getDouble(1)));
+  EXPECT_EQ(0.13, *(groundreflectIdf.getDouble(2)));
+  EXPECT_EQ(0.14, *(groundreflectIdf.getDouble(3)));
+  EXPECT_EQ(0.15, *(groundreflectIdf.getDouble(4)));
+  EXPECT_EQ(0.16, *(groundreflectIdf.getDouble(5)));
+  EXPECT_EQ(0.17, *(groundreflectIdf.getDouble(6)));
+  EXPECT_EQ(0.18, *(groundreflectIdf.getDouble(7)));
+  EXPECT_EQ(0.19, *(groundreflectIdf.getDouble(8)));
+  EXPECT_EQ(0.20, *(groundreflectIdf.getDouble(9)));
+  EXPECT_EQ(0.21, *(groundreflectIdf.getDouble(10)));
+  EXPECT_EQ(0.22, *(groundreflectIdf.getDouble(11)));
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSiteGroundTemperatureBuildingSurface) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureBuildingSurface) {
   openstudio::model::Model model;
-  openstudio::model::SiteGroundTemperatureBuildingSurface groundtemp = model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureBuildingSurface>();
+  openstudio::model::SiteGroundTemperatureBuildingSurface groundtemp =
+    model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureBuildingSurface>();
 
   groundtemp.setJanuaryGroundTemperature(19.527);
   groundtemp.setFebruaryGroundTemperature(19.502);
@@ -476,18 +466,18 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSiteGroundTemperatureBui
   IdfObject groundtempIdf = workspace.getObjectsByType(IddObjectType::Site_GroundTemperature_BuildingSurface)[0];
   EXPECT_EQ(unsigned(12), groundtempIdf.numFields());
 
-  EXPECT_EQ( 19.527, *(groundtempIdf.getDouble(0)) );
-  EXPECT_EQ( 19.502, *(groundtempIdf.getDouble(1)) );
-  EXPECT_EQ( 19.536, *(groundtempIdf.getDouble(2)) );
-  EXPECT_EQ( 19.598, *(groundtempIdf.getDouble(3)) );
-  EXPECT_EQ( 20.002, *(groundtempIdf.getDouble(4)) );
-  EXPECT_EQ( 21.64, *(groundtempIdf.getDouble(5)) );
-  EXPECT_EQ( 22.225, *(groundtempIdf.getDouble(6)) );
-  EXPECT_EQ( 22.375, *(groundtempIdf.getDouble(7)) );
-  EXPECT_EQ( 21.449, *(groundtempIdf.getDouble(8)) );
-  EXPECT_EQ( 20.121, *(groundtempIdf.getDouble(9)) );
-  EXPECT_EQ( 19.802, *(groundtempIdf.getDouble(10)) );
-  EXPECT_EQ( 19.633, *(groundtempIdf.getDouble(11)) );
+  EXPECT_EQ(19.527, *(groundtempIdf.getDouble(0)));
+  EXPECT_EQ(19.502, *(groundtempIdf.getDouble(1)));
+  EXPECT_EQ(19.536, *(groundtempIdf.getDouble(2)));
+  EXPECT_EQ(19.598, *(groundtempIdf.getDouble(3)));
+  EXPECT_EQ(20.002, *(groundtempIdf.getDouble(4)));
+  EXPECT_EQ(21.64, *(groundtempIdf.getDouble(5)));
+  EXPECT_EQ(22.225, *(groundtempIdf.getDouble(6)));
+  EXPECT_EQ(22.375, *(groundtempIdf.getDouble(7)));
+  EXPECT_EQ(21.449, *(groundtempIdf.getDouble(8)));
+  EXPECT_EQ(20.121, *(groundtempIdf.getDouble(9)));
+  EXPECT_EQ(19.802, *(groundtempIdf.getDouble(10)));
+  EXPECT_EQ(19.633, *(groundtempIdf.getDouble(11)));
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureDeep) {
@@ -504,14 +494,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureDe
   IdfObject groundtempIdf = workspace.getObjectsByType(IddObjectType::Site_GroundTemperature_Deep)[0];
   EXPECT_EQ(unsigned(12), groundtempIdf.numFields());
 
-  for (int i=0; i < 12; ++i) {
+  for (int i = 0; i < 12; ++i) {
     ASSERT_NEAR(monthly_temps[i], *groundtempIdf.getDouble(i), 0.001);
   }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureFCfactorMethod) {
   openstudio::model::Model model;
-  openstudio::model::SiteGroundTemperatureFCfactorMethod groundtemp = model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureFCfactorMethod>();
+  openstudio::model::SiteGroundTemperatureFCfactorMethod groundtemp =
+    model.getUniqueModelObject<openstudio::model::SiteGroundTemperatureFCfactorMethod>();
 
   std::vector<double> monthly_temps = {19.527, 19.502, 19.536, 19.598, 20.002, 21.64, 22.225, 22.375, 21.449, 20.121, 19.802, 19.633};
   groundtemp.setAllMonthlyTemperatures(monthly_temps);
@@ -523,7 +514,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureFC
   IdfObject groundtempIdf = workspace.getObjectsByType(IddObjectType::Site_GroundTemperature_FCfactorMethod)[0];
   EXPECT_EQ(unsigned(12), groundtempIdf.numFields());
 
-  for (int i=0; i < 12; ++i) {
+  for (int i = 0; i < 12; ++i) {
     ASSERT_NEAR(monthly_temps[i], *groundtempIdf.getDouble(i), 0.001);
   }
 }
@@ -542,13 +533,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteGroundTemperatureSh
   IdfObject groundtempIdf = workspace.getObjectsByType(IddObjectType::Site_GroundTemperature_Shallow)[0];
   EXPECT_EQ(unsigned(12), groundtempIdf.numFields());
 
-  for (int i=0; i < 12; ++i) {
+  for (int i = 0; i < 12; ++i) {
     ASSERT_NEAR(monthly_temps[i], *groundtempIdf.getDouble(i), 0.001);
   }
 }
 
-
-TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSiteWaterMainsTemperature) {
+TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateSiteWaterMainsTemperature) {
   openstudio::model::Model model;
   openstudio::model::SiteWaterMainsTemperature watertemp = model.getUniqueModelObject<openstudio::model::SiteWaterMainsTemperature>();
 
@@ -562,10 +552,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_TranslateSiteWaterMainsTemperatur
   IdfObject watertempIdf = workspace.getObjectsByType(IddObjectType::Site_WaterMainsTemperature)[0];
   EXPECT_EQ(unsigned(4), watertempIdf.numFields());
 
-  EXPECT_EQ( "Correlation", *(watertempIdf.getString(0)) );
-  EXPECT_EQ( "", *(watertempIdf.getString(1)) );
-  EXPECT_EQ( 9.69, *(watertempIdf.getDouble(2)) );
-  EXPECT_EQ( 28.1, *(watertempIdf.getDouble(3)) );
+  EXPECT_EQ("Correlation", *(watertempIdf.getString(0)));
+  EXPECT_EQ("", *(watertempIdf.getString(1)));
+  EXPECT_EQ(9.69, *(watertempIdf.getDouble(2)));
+  EXPECT_EQ(28.1, *(watertempIdf.getDouble(3)));
 }
 
 /*
@@ -592,6 +582,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_AllObjects) {
   // look at log to see errors, warnings, info.
 }
 */
+
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultipleTranslatorsInScope) {
   Model model;
@@ -640,42 +631,38 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultipleTranslatorsInScope) {
   // (see .setChannelRegex)
 }
 
+// This thread calls forward translator, this is not a good example of threading
+// just used for testing
+class ForwardTranslatorThread
+{
+ public:
+  boost::optional<Workspace> workspace;
+  ForwardTranslator translator;
+  Model model;
+
+  ForwardTranslatorThread(Model _model) : model(_model) {}
+
+  void start() {
+    future = std::async(std::launch::async, [&] { return translator.translateModel(model); });
+  }
+
+  void wait() {
+    if (future.valid()) {
+      workspace = future.get();
+    }
+  }
+
+ private:
+  std::future<Workspace> future;
+};
+
+
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
-
-  // This thread calls forward translator, this is not a good example of threading
-  // just used for testing
-  class ForwardTranslatorThread {
-  public:
-
-    boost::optional<Workspace> workspace;
-    ForwardTranslator translator;
-    Model model;
-
-    ForwardTranslatorThread(Model _model)
-      : model(_model)
-    {}
-
-    void start() {
-      future = std::async(std::launch::async, [&]{
-          return translator.translateModel(model);
-        });
-    }
-
-    void wait() {
-      if (future.valid()) {
-        workspace = future.get();
-      }
-    }
-
-
-  private:
-    std::future<Workspace> future;
-  };
 
   // Logger::instance().standardOutLogger().enable();
 
   Model model;
-  Space space(model); // not in thermal zone will generate a warning
+  Space space(model);  // not in thermal zone will generate a warning
 
   // run in current thread
   size_t numWarnings = 0;
@@ -685,6 +672,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
     ASSERT_TRUE(workspace);
     numWarnings = translator.warnings().size();
     EXPECT_NE(0, numWarnings);
+  }
+
+  // run in single thread with 2 in scope
+  {
+    ForwardTranslator translator;
+    boost::optional<Workspace> workspace = translator.translateModel(model);
+    ASSERT_TRUE(workspace);
+    //  EXPECT_EQ(numWarnings, translator.warnings().size());
+
+    ForwardTranslator translator2;
+    boost::optional<Workspace> workspace2 = translator2.translateModel(model);
+    ASSERT_TRUE(workspace2);
+    EXPECT_EQ(numWarnings, translator2.warnings().size());
   }
 
   // run single thread
@@ -746,7 +746,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultiThreadedLogMessages) {
 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateZoneCapacitanceMultiplierResearchSpecial) {
   openstudio::model::Model model;
-  openstudio::model::ZoneCapacitanceMultiplierResearchSpecial zcm = model.getUniqueModelObject<openstudio::model::ZoneCapacitanceMultiplierResearchSpecial>();
+  openstudio::model::ZoneCapacitanceMultiplierResearchSpecial zcm =
+    model.getUniqueModelObject<openstudio::model::ZoneCapacitanceMultiplierResearchSpecial>();
 
   zcm.setTemperatureCapacityMultiplier(2.0);
   zcm.setHumidityCapacityMultiplier(3.0);
@@ -762,9 +763,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_TranslateZoneCapacitanceMultipli
   EXPECT_DOUBLE_EQ(zcmidf.getDouble(ZoneCapacitanceMultiplier_ResearchSpecialFields::CarbonDioxideCapacityMultiplier).get(), 4.0);
 }
 
-
-TEST_F(EnergyPlusFixture, BadVariableName)
-{
+TEST_F(EnergyPlusFixture, BadVariableName) {
   // this test checks that string values are properly escaped through translation
 
   Model model;
@@ -786,7 +785,7 @@ TEST_F(EnergyPlusFixture, BadVariableName)
     model2.addObjects(idf->objects());
 
     ASSERT_EQ(2u, model2.getConcreteModelObjects<OutputVariable>().size());
-    for (auto outputVariable : model2.getConcreteModelObjects<OutputVariable>()){
+    for (auto outputVariable : model2.getConcreteModelObjects<OutputVariable>()) {
       std::string s = outputVariable.variableName();
       EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
     }
@@ -796,7 +795,7 @@ TEST_F(EnergyPlusFixture, BadVariableName)
   Workspace workspace = trans.translateModel(model);
 
   ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Output_Variable).size());
-  for (auto object : workspace.getObjectsByType(IddObjectType::Output_Variable)){
+  for (auto object : workspace.getObjectsByType(IddObjectType::Output_Variable)) {
     ASSERT_TRUE(object.getString(Output_VariableFields::VariableName)) << object;
     std::string s = object.getString(Output_VariableFields::VariableName).get();
     EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
@@ -810,7 +809,7 @@ TEST_F(EnergyPlusFixture, BadVariableName)
 
   Workspace workspace2(idf2.get());
   ASSERT_EQ(2u, workspace2.getObjectsByType(IddObjectType::Output_Variable).size());
-  for (auto object : workspace2.getObjectsByType(IddObjectType::Output_Variable)){
+  for (auto object : workspace2.getObjectsByType(IddObjectType::Output_Variable)) {
     ASSERT_TRUE(object.getString(Output_VariableFields::VariableName)) << object;
     std::string s = object.getString(Output_VariableFields::VariableName).get();
     EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
@@ -820,8 +819,168 @@ TEST_F(EnergyPlusFixture, BadVariableName)
   boost::optional<Model> model2 = rt.translateWorkspace(workspace2);
   ASSERT_TRUE(model2);
   ASSERT_EQ(2u, model2->getConcreteModelObjects<OutputVariable>().size());
-  for (auto outputVariable : model2->getConcreteModelObjects<OutputVariable>()){
+  for (auto outputVariable : model2->getConcreteModelObjects<OutputVariable>()) {
     std::string s = outputVariable.variableName();
     EXPECT_TRUE(s == "Good Name" || s == "Bad, !Name") << s;
+  }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslation_Options) {
+
+  Model m;
+  ForwardTranslator ft;
+
+  // Defaults
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(5u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("None", obj.getString(1, true).get());  // Return default
+    EXPECT_FALSE(obj.getString(1, false, true));      // not initialized
+  }
+
+  ft.setExcludeLCCObjects(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("None", obj.getString(1, true).get());  // Return default
+    EXPECT_FALSE(obj.getString(1, false, true));      // not initialized
+  }
+
+  ft.setExcludeVariableDictionary(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("None", obj.getString(1, true).get());  // Return default
+    EXPECT_FALSE(obj.getString(1, false, true));      // not initialized
+  }
+
+  ft.setExcludeSQliteOutputReport(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("None", obj.getString(1, true).get());  // Return default
+    EXPECT_FALSE(obj.getString(1, false, true));      // not initialized
+  }
+
+  ft.setIPTabularOutput(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_NonrecurringCost));
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(1u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    auto objs = w.getObjectsByType(IddObjectType::OutputControl_Table_Style);
+    ASSERT_EQ(1, objs.size());
+    auto obj = objs[0];
+    EXPECT_EQ("HTML", obj.getString(0).get());
+    EXPECT_EQ("InchPound", obj.getString(1, false, true).get());
+  }
+
+  ft.setExcludeHTMLOutputReport(true);
+  {
+    Workspace w = ft.translateModel(m);
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_Parameters));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_UsePriceEscalation));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::LifeCycleCost_RecurringCosts));
+
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_VariableDictionary));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_SQLite));
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::Output_Table_SummaryReports));
+
+    // This also turns off the OutputControl:Table:Style
+    EXPECT_EQ(0u, w.numObjectsOfType(IddObjectType::OutputControl_Table_Style));
+  }
+}
+
+TEST_F(EnergyPlusFixture, Ensure_Name_Unicity_ZoneAndZoneListAndSpaceAndSpaceListNames) {
+  // Starting in 9.6.0, Space and SpaceList are supported.
+  // Zone, ZoneList, Space, SpaceList all need to be unique names
+
+  Workspace w(StrictnessLevel::Draft, IddFileType::EnergyPlus);
+  EXPECT_TRUE(w.addObject(IdfObject(IddObjectType::Zone)));
+  EXPECT_TRUE(w.addObject(IdfObject(IddObjectType::ZoneList)));
+  EXPECT_TRUE(w.addObject(IdfObject(IddObjectType::Space)));
+  EXPECT_TRUE(w.addObject(IdfObject(IddObjectType::SpaceList)));
+
+  std::vector<WorkspaceObject> wos = w.objects();
+
+  EXPECT_EQ(4, wos.size());
+  EXPECT_EQ(4, w.getObjectsByReference("ZoneAndZoneListAndSpaceAndSpaceListNames").size());
+
+  std::vector<std::pair<size_t, size_t>> combinations{{0, 1}, {0, 2}, {0, 3}, {1, 2}, {1, 3}, {2, 3}};
+
+  auto resetNames = [&wos]() {
+    for (auto& wo : wos) {
+      wo.setName(wo.iddObject().name());
+    }
+  };
+
+  std::string name = "A Name";
+  for (auto& [i1, i2] : combinations) {
+    resetNames();  // Starting point: all names are unique
+    // We set two names: first one should work
+    auto s1_ = wos[i1].setName(name);
+    ASSERT_TRUE(s1_);
+    EXPECT_EQ(name, s1_.get());
+    // Second should be wodified to keep unicity of names
+    auto s2_ = wos[i2].setName(name);
+    ASSERT_TRUE(s2_);
+    EXPECT_NE(name, s2_.get());
+    EXPECT_NE(s1_.get(), s2_.get());
+    EXPECT_NE(wos[i1].nameString(), wos[i2].nameString());
   }
 }

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,78 +36,78 @@
 namespace openstudio {
 namespace model {
 
-class FanZoneExhaust;
-class AirflowNetworkCrack;
+  class FanZoneExhaust;
+  class AirflowNetworkCrack;
 
-namespace detail {
+  namespace detail {
 
-  class FanZoneExhaust_Impl;
-  class AirflowNetworkZoneExhaustFan_Impl;
+    class FanZoneExhaust_Impl;
+    class AirflowNetworkZoneExhaustFan_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** AirflowNetworkZoneExhaustFan is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkZoneExhaustFan'. */
-class MODEL_API AirflowNetworkZoneExhaustFan : public ModelObject {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** AirflowNetworkZoneExhaustFan is a ModelObject that wraps the OpenStudio IDD object 'OS:AirflowNetworkZoneExhaustFan'. */
+  class MODEL_API AirflowNetworkZoneExhaustFan : public ModelObject
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  virtual ~AirflowNetworkZoneExhaustFan() {}
+    virtual ~AirflowNetworkZoneExhaustFan() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  /** Returns the FanZoneExhaust object associated with this object, if any */
-  boost::optional<FanZoneExhaust> fanZoneExhaust() const;
-  /** Returns the AirflowNetworkCrack object associated with this object, if any */
-  boost::optional<AirflowNetworkCrack> crack() const;
+    /** Returns the FanZoneExhaust object associated with this object, if any */
+    boost::optional<FanZoneExhaust> fanZoneExhaust() const;
+    /** Returns the AirflowNetworkCrack object associated with this object, if any */
+    boost::optional<AirflowNetworkCrack> crack() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  /** Sets the AirflowNetworkCrack object associated with this object. */
-  bool setCrack(const AirflowNetworkCrack& crack);
-  /** Resets the AirflowNetworkCrack object for this object. */
-  void resetCrack();
+    /** Sets the AirflowNetworkCrack object associated with this object. */
+    bool setCrack(const AirflowNetworkCrack& crack);
+    /** Resets the AirflowNetworkCrack object for this object. */
+    void resetCrack();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::AirflowNetworkZoneExhaustFan_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::AirflowNetworkZoneExhaustFan_Impl ImplType;
 
-  AirflowNetworkZoneExhaustFan(const Model& model, const AirflowNetworkCrack &crack, const Handle &handle);
+    AirflowNetworkZoneExhaustFan(const Model& model, const AirflowNetworkCrack& crack, const Handle& handle);
 
-  explicit AirflowNetworkZoneExhaustFan(std::shared_ptr<detail::AirflowNetworkZoneExhaustFan_Impl> impl);
+    explicit AirflowNetworkZoneExhaustFan(std::shared_ptr<detail::AirflowNetworkZoneExhaustFan_Impl> impl);
 
-  void resetFanZoneExhaust();
+    void resetFanZoneExhaust();
 
-  friend class detail::FanZoneExhaust_Impl;
-  friend class detail::AirflowNetworkZoneExhaustFan_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.AirflowNetworkZoneExhaustFan");
-};
+    friend class detail::FanZoneExhaust_Impl;
+    friend class detail::AirflowNetworkZoneExhaustFan_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.AirflowNetworkZoneExhaustFan");
+  };
 
-/** \relates AirflowNetworkZoneExhaustFan*/
-typedef boost::optional<AirflowNetworkZoneExhaustFan> OptionalAirflowNetworkZoneExhaustFan;
+  /** \relates AirflowNetworkZoneExhaustFan*/
+  typedef boost::optional<AirflowNetworkZoneExhaustFan> OptionalAirflowNetworkZoneExhaustFan;
 
-/** \relates AirflowNetworkZoneExhaustFan*/
-typedef std::vector<AirflowNetworkZoneExhaustFan> AirflowNetworkZoneExhaustFanVector;
+  /** \relates AirflowNetworkZoneExhaustFan*/
+  typedef std::vector<AirflowNetworkZoneExhaustFan> AirflowNetworkZoneExhaustFanVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_AIRFLOWNETWORKZONEEXHAUSTFAN_HPP
-
+#endif  // MODEL_AIRFLOWNETWORKZONEEXHAUSTFAN_HPP

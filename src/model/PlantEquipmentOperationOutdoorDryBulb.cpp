@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,68 +36,57 @@
 namespace openstudio {
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  PlantEquipmentOperationOutdoorDryBulb_Impl::PlantEquipmentOperationOutdoorDryBulb_Impl(const IdfObject& idfObject,
-                                                                                         Model_Impl* model,
-                                                                                         bool keepHandle)
-    : PlantEquipmentOperationRangeBasedScheme_Impl(idfObject,model,keepHandle)
-  {
-    OS_ASSERT(idfObject.iddObject().type() == PlantEquipmentOperationOutdoorDryBulb::iddObjectType());
+    PlantEquipmentOperationOutdoorDryBulb_Impl::PlantEquipmentOperationOutdoorDryBulb_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                           bool keepHandle)
+      : PlantEquipmentOperationRangeBasedScheme_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == PlantEquipmentOperationOutdoorDryBulb::iddObjectType());
+    }
+
+    PlantEquipmentOperationOutdoorDryBulb_Impl::PlantEquipmentOperationOutdoorDryBulb_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                           Model_Impl* model, bool keepHandle)
+      : PlantEquipmentOperationRangeBasedScheme_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == PlantEquipmentOperationOutdoorDryBulb::iddObjectType());
+    }
+
+    PlantEquipmentOperationOutdoorDryBulb_Impl::PlantEquipmentOperationOutdoorDryBulb_Impl(const PlantEquipmentOperationOutdoorDryBulb_Impl& other,
+                                                                                           Model_Impl* model, bool keepHandle)
+      : PlantEquipmentOperationRangeBasedScheme_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& PlantEquipmentOperationOutdoorDryBulb_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType PlantEquipmentOperationOutdoorDryBulb_Impl::iddObjectType() const {
+      return PlantEquipmentOperationOutdoorDryBulb::iddObjectType();
+    }
+
+    double PlantEquipmentOperationOutdoorDryBulb_Impl::maximumUpperLimit() const {
+      return 70.0;
+    }
+
+    double PlantEquipmentOperationOutdoorDryBulb_Impl::minimumLowerLimit() const {
+      return -70.0;
+    }
+
+  }  // namespace detail
+
+  PlantEquipmentOperationOutdoorDryBulb::PlantEquipmentOperationOutdoorDryBulb(const Model& model)
+    : PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationOutdoorDryBulb::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::PlantEquipmentOperationOutdoorDryBulb_Impl>());
   }
 
-  PlantEquipmentOperationOutdoorDryBulb_Impl::PlantEquipmentOperationOutdoorDryBulb_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                         Model_Impl* model,
-                                                                                         bool keepHandle)
-    : PlantEquipmentOperationRangeBasedScheme_Impl(other,model,keepHandle)
-  {
-    OS_ASSERT(other.iddObject().type() == PlantEquipmentOperationOutdoorDryBulb::iddObjectType());
+  IddObjectType PlantEquipmentOperationOutdoorDryBulb::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_OutdoorDryBulb);
   }
 
-  PlantEquipmentOperationOutdoorDryBulb_Impl::PlantEquipmentOperationOutdoorDryBulb_Impl(const PlantEquipmentOperationOutdoorDryBulb_Impl& other,
-                                                                                         Model_Impl* model,
-                                                                                         bool keepHandle)
-    : PlantEquipmentOperationRangeBasedScheme_Impl(other,model,keepHandle)
-  {}
+  /// @cond
+  PlantEquipmentOperationOutdoorDryBulb::PlantEquipmentOperationOutdoorDryBulb(
+    std::shared_ptr<detail::PlantEquipmentOperationOutdoorDryBulb_Impl> impl)
+    : PlantEquipmentOperationRangeBasedScheme(std::move(impl)) {}
+  /// @endcond
 
-  const std::vector<std::string>& PlantEquipmentOperationOutdoorDryBulb_Impl::outputVariableNames() const
-  {
-    static std::vector<std::string> result;
-    return result;
-  }
-
-  IddObjectType PlantEquipmentOperationOutdoorDryBulb_Impl::iddObjectType() const {
-    return PlantEquipmentOperationOutdoorDryBulb::iddObjectType();
-  }
-
-  double PlantEquipmentOperationOutdoorDryBulb_Impl::maximumUpperLimit() const
-  {
-    return 70.0;
-  }
-
-  double PlantEquipmentOperationOutdoorDryBulb_Impl::minimumLowerLimit() const
-  {
-    return -70.0;
-  }
-
-} // detail
-
-PlantEquipmentOperationOutdoorDryBulb::PlantEquipmentOperationOutdoorDryBulb(const Model& model)
-  : PlantEquipmentOperationRangeBasedScheme(PlantEquipmentOperationOutdoorDryBulb::iddObjectType(),model)
-{
-  OS_ASSERT(getImpl<detail::PlantEquipmentOperationOutdoorDryBulb_Impl>());
-}
-
-IddObjectType PlantEquipmentOperationOutdoorDryBulb::iddObjectType() {
-  return IddObjectType(IddObjectType::OS_PlantEquipmentOperation_OutdoorDryBulb);
-}
-
-/// @cond
-PlantEquipmentOperationOutdoorDryBulb::PlantEquipmentOperationOutdoorDryBulb(std::shared_ptr<detail::PlantEquipmentOperationOutdoorDryBulb_Impl> impl)
-  : PlantEquipmentOperationRangeBasedScheme(std::move(impl))
-{}
-/// @endcond
-
-} // model
-} // openstudio
-
+}  // namespace model
+}  // namespace openstudio

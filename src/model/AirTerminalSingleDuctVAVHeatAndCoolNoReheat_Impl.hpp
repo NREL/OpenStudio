@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,104 +36,109 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class Node;
+  class Schedule;
+  class Node;
 
-namespace detail {
+  namespace detail {
 
-  /** AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctVAVHeatAndCoolNoReheat.*/
-  class MODEL_API AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl : public StraightComponent_Impl {
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+    /** AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl is a StraightComponent_Impl that is the implementation class for AirTerminalSingleDuctVAVHeatAndCoolNoReheat.*/
+    class MODEL_API AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl : public StraightComponent_Impl
+    {
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const IdfObject& idfObject,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl& other,
-                                                     Model_Impl* model,
-                                                     bool keepHandle);
+      AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl(const AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl& other, Model_Impl* model,
+                                                       bool keepHandle);
 
-    virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl() {}
+      virtual ~AirTerminalSingleDuctVAVHeatAndCoolNoReheat_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+      boost::optional<Schedule> availabilitySchedule() const;
 
-    std::string airOutlet() const;
+      std::string airOutlet() const;
 
-    std::string airInlet() const;
+      std::string airInlet() const;
 
-    boost::optional<double> maximumAirFlowRate() const;
+      boost::optional<double> maximumAirFlowRate() const;
 
-    bool isMaximumAirFlowRateAutosized() const;
+      bool isMaximumAirFlowRateAutosized() const;
 
-    double zoneMinimumAirFlowFraction() const;
+      double zoneMinimumAirFlowFraction() const;
 
-  boost::optional<double> autosizedMaximumAirFlowRate() const ;
+      boost::optional<double> autosizedMaximumAirFlowRate() const;
 
-  virtual void autosize() override;
+      virtual void autosize() override;
 
-  virtual void applySizingValues() override;
+      virtual void applySizingValues() override;
 
-    //@}
-    /** @name Setters */
-    //@{
+      boost::optional<Schedule> minimumAirFlowTurndownSchedule() const;
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      //@}
+      /** @name Setters */
+      //@{
 
-    void resetAvailabilitySchedule();
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    // bool setAirOutlet(std::string airOutlet);
-    // bool setAirInlet(std::string airInlet);
+      void resetAvailabilitySchedule();
 
-    bool setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate);
+      // bool setAirOutlet(std::string airOutlet);
+      // bool setAirInlet(std::string airInlet);
 
-    void autosizeMaximumAirFlowRate();
+      bool setMaximumAirFlowRate(boost::optional<double> maximumAirFlowRate);
 
-    bool setZoneMinimumAirFlowFraction(double zoneMinimumAirFlowFraction);
+      void autosizeMaximumAirFlowRate();
 
-    //@}
-    /** @name Other */
-    //@{
+      bool setZoneMinimumAirFlowFraction(double zoneMinimumAirFlowFraction);
 
-    virtual unsigned inletPort() const override;
+      bool setMinimumAirFlowTurndownSchedule(Schedule& schedule);
 
-    virtual unsigned outletPort() const override;
+      void resetMinimumAirFlowTurndownSchedule();
 
-    bool addToNode(Node & node) override;
+      //@}
+      /** @name Other */
+      //@{
 
-    std::vector<IdfObject> remove() override;
+      virtual unsigned inletPort() const override;
 
-    bool isRemovable() const override;
+      virtual unsigned outletPort() const override;
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVHeatAndCoolNoReheat");
-  };
+      bool addToNode(Node& node) override;
 
-} // detail
+      std::vector<IdfObject> remove() override;
 
-} // model
-} // openstudio
+      bool isRemovable() const override;
 
-#endif // MODEL_AIRTERMINALSINGLEDUCTVAVHEATANDCOOLNOREHEAT_IMPL_HPP
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.AirTerminalSingleDuctVAVHeatAndCoolNoReheat");
 
+      boost::optional<ModelObject> minimumAirFlowTurndownScheduleAsModelObject() const;
+
+      bool setMinimumAirFlowTurndownScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_AIRTERMINALSINGLEDUCTVAVHEATANDCOOLNOREHEAT_IMPL_HPP

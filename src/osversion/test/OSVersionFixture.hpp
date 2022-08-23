@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,12 +38,13 @@
 #include <boost/optional.hpp>
 
 namespace openstudio {
-  class VersionString;
-}
+class VersionString;
+class IddFile;
+}  // namespace openstudio
 
-class OSVersionFixture : public ::testing::Test {
+class OSVersionFixture : public ::testing::Test
+{
  protected:
-
   /// initialize for each test
   virtual void SetUp() override;
 
@@ -64,12 +65,12 @@ class OSVersionFixture : public ::testing::Test {
 
   static openstudio::path iddPath(const openstudio::VersionString& version);
 
+  static openstudio::IddFile getOpenStudioIddFileForVersion(const openstudio::VersionString& version);
+
   REGISTER_LOGGER("OSVersionFixture");
 
   // static variables
   static boost::optional<openstudio::FileLogSink> logFile;
-
 };
 
-#endif // OSVERSION_TEST_OSVERSIONFIXTURE_HPP
-
+#endif  // OSVERSION_TEST_OSVERSIONFIXTURE_HPP

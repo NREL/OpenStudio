@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -71,7 +71,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_FanVariableVolume_EndUseSubCategory)
   boost::optional<std::string> _idfEndUse = idf_fan.getString(Fan_VariableVolumeFields::EndUseSubcategory);
   ASSERT_TRUE(_idfEndUse);
   EXPECT_EQ(endUse, _idfEndUse.get());
-
 }
 
 // The Forward Translator should not translate fan if not used (by an AirLoopHVAC, or a ZoneHVACComponent )

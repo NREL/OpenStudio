@@ -14,6 +14,7 @@
 %import <utilities/UtilitiesIdf.i>
 %import <utilities/UtilitiesTime.i>
 %import <utilities/UtilitiesData.i>
+%import <utilities/UtilitiesBCL.i>
 
 
 %include <utilities/filetypes/Filetypes.i>

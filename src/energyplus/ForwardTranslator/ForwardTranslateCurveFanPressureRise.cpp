@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -43,37 +43,35 @@ using namespace std;
 namespace openstudio {
 namespace energyplus {
 
-boost::optional<IdfObject> ForwardTranslator::translateCurveFanPressureRise(CurveFanPressureRise& modelObject)
-{
-  IdfObject idfObject(IddObjectType::Curve_FanPressureRise);
+  boost::optional<IdfObject> ForwardTranslator::translateCurveFanPressureRise(CurveFanPressureRise& modelObject) {
+    IdfObject idfObject(IddObjectType::Curve_FanPressureRise);
 
-  m_idfObjects.push_back(idfObject);
+    m_idfObjects.push_back(idfObject);
 
-  OptionalString s;
-  OptionalDouble d;
+    OptionalString s;
+    OptionalDouble d;
 
-  if((s = modelObject.name())) {
-    idfObject.setName(*s);
+    if ((s = modelObject.name())) {
+      idfObject.setName(*s);
+    }
+
+    idfObject.setDouble(Curve_FanPressureRiseFields::Coefficient1C1, modelObject.coefficient1C1());
+    idfObject.setDouble(Curve_FanPressureRiseFields::Coefficient2C2, modelObject.coefficient2C2());
+    idfObject.setDouble(Curve_FanPressureRiseFields::Coefficient3C3, modelObject.coefficient3C3());
+    idfObject.setDouble(Curve_FanPressureRiseFields::Coefficient4C4, modelObject.coefficient4C4());
+    idfObject.setDouble(Curve_FanPressureRiseFields::MinimumValueofQfan, modelObject.minimumValueofQfan());
+    idfObject.setDouble(Curve_FanPressureRiseFields::MaximumValueofQfan, modelObject.maximumValueofQfan());
+    idfObject.setDouble(Curve_FanPressureRiseFields::MinimumValueofPsm, modelObject.minimumValueofPsm());
+    idfObject.setDouble(Curve_FanPressureRiseFields::MaximumValueofPsm, modelObject.maximumValueofPsm());
+    if ((d = modelObject.minimumCurveOutput())) {
+      idfObject.setDouble(Curve_FanPressureRiseFields::MinimumCurveOutput, *d);
+    }
+    if ((d = modelObject.maximumCurveOutput())) {
+      idfObject.setDouble(Curve_FanPressureRiseFields::MaximumCurveOutput, *d);
+    }
+
+    return idfObject;
   }
 
-  idfObject.setDouble(Curve_FanPressureRiseFields::Coefficient1C1,modelObject.coefficient1C1());
-  idfObject.setDouble(Curve_FanPressureRiseFields::Coefficient2C2,modelObject.coefficient2C2());
-  idfObject.setDouble(Curve_FanPressureRiseFields::Coefficient3C3,modelObject.coefficient3C3());
-  idfObject.setDouble(Curve_FanPressureRiseFields::Coefficient4C4,modelObject.coefficient4C4());
-  idfObject.setDouble(Curve_FanPressureRiseFields::MinimumValueofQfan,modelObject.minimumValueofQfan());
-  idfObject.setDouble(Curve_FanPressureRiseFields::MaximumValueofQfan,modelObject.maximumValueofQfan());
-  idfObject.setDouble(Curve_FanPressureRiseFields::MinimumValueofPsm,modelObject.minimumValueofPsm());
-  idfObject.setDouble(Curve_FanPressureRiseFields::MaximumValueofPsm,modelObject.maximumValueofPsm());
-  if ((d = modelObject.minimumCurveOutput())) {
-    idfObject.setDouble(Curve_FanPressureRiseFields::MinimumCurveOutput,*d);
-  }
-  if ((d = modelObject.maximumCurveOutput())) {
-    idfObject.setDouble(Curve_FanPressureRiseFields::MaximumCurveOutput,*d);
-  }
-
-  return idfObject;
-}
-
-} // energyplus
-} // openstudio
-
+}  // namespace energyplus
+}  // namespace openstudio

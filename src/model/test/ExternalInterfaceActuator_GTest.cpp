@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -86,7 +86,7 @@ TEST_F(ModelFixture, ExternalInterfaceActuator) {
 
   EXPECT_FALSE(fanActuator.optionalInitialValue());
   fanActuator.setOptionalInitialValue(1);
-  EXPECT_EQ(1.0, fanActuator.optionalInitialValue());
+  EXPECT_EQ(1.0, fanActuator.optionalInitialValue().get());
   fanActuator.resetOptionalInitialValue();
   EXPECT_FALSE(fanActuator.optionalInitialValue());
 
@@ -94,7 +94,7 @@ TEST_F(ModelFixture, ExternalInterfaceActuator) {
   ElectricEquipmentDefinition definition(model);
   ElectricEquipment electricEquipment(definition);
   ComponentType = "ElectricEquipment";
-  std::string equipControlType = "Electric Power Level";
+  std::string equipControlType = "Electricity Rate";
   ExternalInterfaceActuator equipActuator(electricEquipment, ComponentType, equipControlType);
   EXPECT_EQ(equipControlType, equipActuator.actuatedComponentControlType());
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
@@ -116,6 +116,4 @@ TEST_F(ModelFixture, ExternalInterfaceActuator) {
 
   equipActuator.setActuatedComponentType(ComponentType);
   EXPECT_EQ(ComponentType, equipActuator.actuatedComponentType());
-
 }
-

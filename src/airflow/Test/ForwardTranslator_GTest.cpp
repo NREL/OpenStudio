@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -63,8 +63,7 @@
 
 #include <sstream>
 
-TEST_F(AirflowFixture, ForwardTranslator_exampleModel)
-{
+TEST_F(AirflowFixture, ForwardTranslator_exampleModel) {
   openstudio::model::Model model = openstudio::model::exampleModel();
 
   openstudio::path p = openstudio::toPath("exampleModel.prj");
@@ -74,8 +73,7 @@ TEST_F(AirflowFixture, ForwardTranslator_exampleModel)
   EXPECT_TRUE(test);
 }
 
-TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
-{
+TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012) {
   openstudio::path modelPath = (resourcesPath() / openstudio::toPath("contam") / openstudio::toPath("CONTAMTemplate.osm"));
   openstudio::osversion::VersionTranslator vt;
   boost::optional<openstudio::model::Model> optionalModel = vt.loadModel(modelPath);
@@ -97,45 +95,45 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
   ASSERT_TRUE(prjModel);
 
   // 6 Zones
-  EXPECT_EQ(6,prjModel->zones().size());
-  int systemZoneCount=0;
-  int interiorZoneCount=0;
-  for(const openstudio::contam::Zone& zone : prjModel->zones()) {
-    if(zone.system()) {
+  EXPECT_EQ(6, prjModel->zones().size());
+  int systemZoneCount = 0;
+  int interiorZoneCount = 0;
+  for (const openstudio::contam::Zone& zone : prjModel->zones()) {
+    if (zone.system()) {
       systemZoneCount++;
-    } else if(zone.variablePressure() && zone.variableContaminants()) {
+    } else if (zone.variablePressure() && zone.variableContaminants()) {
       interiorZoneCount++;
     }
   }
-  EXPECT_EQ(2,systemZoneCount);
-  EXPECT_EQ(4,interiorZoneCount);
+  EXPECT_EQ(2, systemZoneCount);
+  EXPECT_EQ(4, interiorZoneCount);
   // 26 Paths
-  std::vector<double> interiorMult({ 9, 21, 30 });
-  std::vector<double> exteriorRoofMult({ 30, 70, 136 });
-  std::vector<double> exteriorWallMult({ 9, 21, 24, 30, 51 });
-  EXPECT_EQ(26,prjModel->airflowPaths().size());
-  int exhaustPathCount=0;
-  int systemPathCount=0;
-  int windPressurePathCount=0;
-  int outsideAirPathCount=0;
-  int recirculationPathCount=0;
-  int plainPathCount=0;
-  for(openstudio::contam::AirflowPath afp : prjModel->airflowPaths()) {
-    if(afp.system()) {
+  std::vector<double> interiorMult({9, 21, 30});
+  std::vector<double> exteriorRoofMult({30, 70, 136});
+  std::vector<double> exteriorWallMult({9, 21, 24, 30, 51});
+  EXPECT_EQ(26, prjModel->airflowPaths().size());
+  int exhaustPathCount = 0;
+  int systemPathCount = 0;
+  int windPressurePathCount = 0;
+  int outsideAirPathCount = 0;
+  int recirculationPathCount = 0;
+  int plainPathCount = 0;
+  for (openstudio::contam::AirflowPath afp : prjModel->airflowPaths()) {
+    if (afp.system()) {
       systemPathCount++;
-    } else if(afp.windPressure()) {
+    } else if (afp.windPressure()) {
       // This should be an exterior flow path
-      if(afp.pe() == 5) {
+      if (afp.pe() == 5) {
         EXPECT_FALSE(std::find(exteriorWallMult.begin(), exteriorWallMult.end(), afp.mult()) == exteriorWallMult.end());
       } else {
         EXPECT_FALSE(std::find(exteriorRoofMult.begin(), exteriorRoofMult.end(), afp.mult()) == exteriorRoofMult.end());
       }
       windPressurePathCount++;
-    } else if(afp.exhaust()) {
+    } else if (afp.exhaust()) {
       exhaustPathCount++;
-    } else if(afp.outsideAir()) {
+    } else if (afp.outsideAir()) {
       outsideAirPathCount++;
-    } else if(afp.recirculation()) {
+    } else if (afp.recirculation()) {
       recirculationPathCount++;
     } else {
       // This is an interior flow path
@@ -143,45 +141,44 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012)
       plainPathCount++;
     }
   }
-  EXPECT_EQ(6,systemPathCount);
-  EXPECT_EQ(12,windPressurePathCount);
-  EXPECT_EQ(5,plainPathCount);
-  EXPECT_EQ(1,recirculationPathCount);
-  EXPECT_EQ(1,outsideAirPathCount);
-  EXPECT_EQ(1,exhaustPathCount);
+  EXPECT_EQ(6, systemPathCount);
+  EXPECT_EQ(12, windPressurePathCount);
+  EXPECT_EQ(5, plainPathCount);
+  EXPECT_EQ(1, recirculationPathCount);
+  EXPECT_EQ(1, outsideAirPathCount);
+  EXPECT_EQ(1, exhaustPathCount);
 
   // Check out the zones using the zone map
-  std::vector<std::string> zoneNames({ "Library Zone", "Office 1 Zone", "Office 2 Zone", "Hallway Zone" });
-  std::map<std::string,int> exteriorWallCount;
+  std::vector<std::string> zoneNames({"Library Zone", "Office 1 Zone", "Office 2 Zone", "Hallway Zone"});
+  std::map<std::string, int> exteriorWallCount;
   exteriorWallCount["Library Zone"] = 4;
   exteriorWallCount["Office 1 Zone"] = 3;
   exteriorWallCount["Office 2 Zone"] = 3;
   exteriorWallCount["Hallway Zone"] = 2;
 
-  std::map <openstudio::Handle, int> zoneMap = translator.zoneMap();
-  EXPECT_EQ(4,zoneMap.size());
+  std::map<openstudio::Handle, int> zoneMap = translator.zoneMap();
+  EXPECT_EQ(4, zoneMap.size());
 
-  std::vector<std::vector<int> > exteriorFlowPaths = prjModel->zoneExteriorFlowPaths();
-  EXPECT_EQ(6,exteriorFlowPaths.size());
+  std::vector<std::vector<int>> exteriorFlowPaths = prjModel->zoneExteriorFlowPaths();
+  EXPECT_EQ(6, exteriorFlowPaths.size());
 
-  for(const openstudio::model::ThermalZone& thermalZone : model.getConcreteModelObjects<openstudio::model::ThermalZone>()) {
+  for (const openstudio::model::ThermalZone& thermalZone : model.getConcreteModelObjects<openstudio::model::ThermalZone>()) {
     ASSERT_FALSE(std::find(zoneNames.begin(), zoneNames.end(), thermalZone.name().get()) == zoneNames.end());
     unsigned zoneNumber = zoneMap[thermalZone.handle()];
     ASSERT_TRUE(zoneNumber > 0);
     ASSERT_TRUE(zoneNumber <= prjModel->zones().size());
-    int zoneExteriorWallCount = exteriorFlowPaths[zoneNumber-1].size();
-    EXPECT_EQ(exteriorWallCount[thermalZone.name().get()],zoneExteriorWallCount);
+    int zoneExteriorWallCount = exteriorFlowPaths[zoneNumber - 1].size();
+    EXPECT_EQ(exteriorWallCount[thermalZone.name().get()], zoneExteriorWallCount);
   }
 
   // Try setting some values to make sure things work
   EXPECT_TRUE(prjModel->setDef_T(297.15));
   EXPECT_TRUE(prjModel->setDef_T("297.15"));
   EXPECT_FALSE(prjModel->setDef_T("twoninetysevenpointonefive"));
-  EXPECT_EQ(297.15,prjModel->def_T());
+  EXPECT_EQ(297.15, prjModel->def_T());
 }
 
-TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012_BadStories)
-{
+TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012_BadStories) {
   openstudio::path modelPath = (resourcesPath() / openstudio::toPath("contam") / openstudio::toPath("CONTAMTemplate.osm"));
   openstudio::osversion::VersionTranslator vt;
   boost::optional<openstudio::model::Model> optionalModel = vt.loadModel(modelPath);
@@ -211,11 +208,9 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2012_BadStories)
   stories[0].remove();
   prjModel = translator.translateModel(demoModel.get());
   EXPECT_FALSE(prjModel);
-
 }
 
-TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2014)
-{
+TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2014) {
   openstudio::path modelPath = (resourcesPath() / openstudio::toPath("contam") / openstudio::toPath("CONTAMTemplate.osm"));
   openstudio::osversion::VersionTranslator vt;
   boost::optional<openstudio::model::Model> optionalModel = vt.loadModel(modelPath);
@@ -230,13 +225,12 @@ TEST_F(AirflowFixture, ForwardTranslator_DemoModel_2014)
   openstudio::path outPath("CONTAMDemo2014.osm");
   EXPECT_TRUE(demoModel->save(outPath, true));
 
-  openstudio::contam::PlrLeak2 window(OPNG, "WNOO6C_CMX", "Operable window, Building C, maximum (from C&IMisc.lb3)",
-    "4.98716e-008", "0.00039745", "0.65", "1", "4", "0.000346");
+  openstudio::contam::PlrLeak2 window(OPNG, "WNOO6C_CMX", "Operable window, Building C, maximum (from C&IMisc.lb3)", "4.98716e-008", "0.00039745",
+                                      "0.65", "1", "4", "0.000346");
 
   openstudio::contam::ForwardTranslator translator;
 
   boost::optional<openstudio::contam::IndexModel> prjModel = translator.translateModel(demoModel.get());
 
   ASSERT_TRUE(prjModel);
-
 }

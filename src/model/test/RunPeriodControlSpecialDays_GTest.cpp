@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,13 +39,15 @@
 
 #include "../../utilities/time/Date.hpp"
 
+// Unusual, but here I'm interested in finding out the actual string it stored for the Start Date
+#include <utilities/idd/OS_RunPeriodControl_SpecialDays_FieldEnums.hxx>
+
 #include <iostream>
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, RunPeriodControlSpecialDays)
-{
+TEST_F(ModelFixture, RunPeriodControlSpecialDays) {
   Model model;
   model::YearDescription yd = model.getUniqueModelObject<model::YearDescription>();
   yd.setCalendarYear(2008);
@@ -76,6 +78,7 @@ TEST_F(ModelFixture, RunPeriodControlSpecialDays)
   EXPECT_EQ(25u, day.startDate().dayOfMonth());
   EXPECT_EQ(MonthOfYear::Feb, day.startDate().monthOfYear().value());
   EXPECT_EQ(DayOfWeek::Monday, day.startDate().dayOfWeek().value());
+  EXPECT_EQ("4th Monday in February", day.getString(OS_RunPeriodControl_SpecialDaysFields::StartDate).get());
 
   // there is no fifth monday, this will return the last
   day = RunPeriodControlSpecialDays(NthDayOfWeekInMonth::fifth, DayOfWeek::Monday, MonthOfYear::Feb, model);

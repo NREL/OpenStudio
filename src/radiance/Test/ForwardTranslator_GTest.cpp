@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -60,34 +60,33 @@ using namespace openstudio;
 using namespace openstudio::model;
 using namespace openstudio::radiance;
 
-std::string printPaths(const std::vector<path>& paths){
+std::string printPaths(const std::vector<path>& paths) {
   std::stringstream result;
-  for (auto path : paths){
-    result << toString(path) << std::endl;
+  for (auto path : paths) {
+    result << toString(path) << '\n';
   }
   return result.str();
 }
 
-std::string printLogMessages(const std::vector<LogMessage>& messages){
+std::string printLogMessages(const std::vector<LogMessage>& messages) {
   std::stringstream result;
-  for (auto message : messages){
-    result << message.logMessage() << std::endl;
+  for (auto message : messages) {
+    result << message.logMessage() << '\n';
   }
   return result.str();
 }
 
-TEST(Radiance, ForwardTranslator_SurfaceOnlyOnGround)
-{
+TEST(Radiance, ForwardTranslator_SurfaceOnlyOnGround) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
 
   Space space(model);
 
   Point3dVector vertices;
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(1,1,0));
-  vertices.push_back(Point3d(0,1,0));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 1, 0));
+  vertices.push_back(Point3d(0, 1, 0));
   Surface surface(vertices, model);
 
   surface.setSpace(space);
@@ -108,18 +107,17 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnGround)
   EXPECT_NEAR(1.0, area, 0.0001);
 }
 
-TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ)
-{
+TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
 
   Space space(model);
 
   Point3dVector vertices;
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(1,0,1));
-  vertices.push_back(Point3d(0,0,1));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 0, 1));
+  vertices.push_back(Point3d(0, 0, 1));
   Surface surface(vertices, model);
   surface.setSpace(space);
 
@@ -139,26 +137,25 @@ TEST(Radiance, ForwardTranslator_SurfaceOnlyOnXZ)
   EXPECT_NEAR(1.0, area, 0.0001);
 }
 
-TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround)
-{
+TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
 
   Space space(model);
 
   Point3dVector vertices;
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(1,1,0));
-  vertices.push_back(Point3d(0,1,0));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 1, 0));
+  vertices.push_back(Point3d(0, 1, 0));
   Surface surface(vertices, model);
   surface.setSpace(space);
 
   vertices.clear();
-  vertices.push_back(Point3d(0.25,0.25,0));
-  vertices.push_back(Point3d(0.75,0.25,0));
-  vertices.push_back(Point3d(0.75,0.75,0));
-  vertices.push_back(Point3d(0.25,0.75,0));
+  vertices.push_back(Point3d(0.25, 0.25, 0));
+  vertices.push_back(Point3d(0.75, 0.25, 0));
+  vertices.push_back(Point3d(0.75, 0.75, 0));
+  vertices.push_back(Point3d(0.25, 0.75, 0));
   SubSurface subSurface(vertices, model);
   subSurface.setSurface(surface);
 
@@ -177,26 +174,25 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnGround)
   EXPECT_NEAR(0.75, area, 0.0001);
 }
 
-TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ)
-{
+TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ) {
   Model model;
   Building building = model.getUniqueModelObject<Building>();
 
   Space space(model);
 
   Point3dVector vertices;
-  vertices.push_back(Point3d(0,0,0));
-  vertices.push_back(Point3d(1,0,0));
-  vertices.push_back(Point3d(1,0,1));
-  vertices.push_back(Point3d(0,0,1));
+  vertices.push_back(Point3d(0, 0, 0));
+  vertices.push_back(Point3d(1, 0, 0));
+  vertices.push_back(Point3d(1, 0, 1));
+  vertices.push_back(Point3d(0, 0, 1));
   Surface surface(vertices, model);
   surface.setSpace(space);
 
   vertices.clear();
-  vertices.push_back(Point3d(0.25,0,0.25));
-  vertices.push_back(Point3d(0.75,0,0.25));
-  vertices.push_back(Point3d(0.75,0,0.75));
-  vertices.push_back(Point3d(0.25,0,0.75));
+  vertices.push_back(Point3d(0.25, 0, 0.25));
+  vertices.push_back(Point3d(0.75, 0, 0.25));
+  vertices.push_back(Point3d(0.75, 0, 0.75));
+  vertices.push_back(Point3d(0.25, 0, 0.75));
   SubSurface subSurface(vertices, model);
   subSurface.setSurface(surface);
 
@@ -215,9 +211,7 @@ TEST(Radiance, ForwardTranslator_SurfaceWithHoleOnXZ)
   EXPECT_NEAR(0.75, area, 0.0001);
 }
 
-
-TEST(Radiance, ForwardTranslator_ExampleModel)
-{
+TEST(Radiance, ForwardTranslator_ExampleModel) {
   Model model = exampleModel();
 
   openstudio::path outpath = toPath("./ForwardTranslator_ExampleModel");
@@ -232,16 +226,13 @@ TEST(Radiance, ForwardTranslator_ExampleModel)
   EXPECT_TRUE(ft.warnings().empty());
 }
 
-
-TEST(Radiance, ForwardTranslator_ExampleModelWithShadingControl)
-{
+TEST(Radiance, ForwardTranslator_ExampleModelWithShadingControl) {
   Model model = exampleModel();
   Construction shadedConstruction(model);
 
   model::ShadingControl shadingControl(shadedConstruction);
-  for (auto & subSurface : model.getConcreteModelObjects<model::SubSurface>()){
-    if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") ||
-        istringEqual(subSurface.subSurfaceType(), "OperableWindow")){
+  for (auto& subSurface : model.getConcreteModelObjects<model::SubSurface>()) {
+    if (istringEqual(subSurface.subSurfaceType(), "FixedWindow") || istringEqual(subSurface.subSurfaceType(), "OperableWindow")) {
       subSurface.setShadingControl(shadingControl);
     }
   }
@@ -258,12 +249,10 @@ TEST(Radiance, ForwardTranslator_ExampleModelWithShadingControl)
   EXPECT_TRUE(ft.warnings().empty()) << printLogMessages(ft.warnings());
 }
 
-
-TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
-{
+TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps) {
   Model model = exampleModel();
 
-  for (IlluminanceMap illuminanceMap : model.getModelObjects<IlluminanceMap>()){
+  for (IlluminanceMap illuminanceMap : model.getModelObjects<IlluminanceMap>()) {
     illuminanceMap.remove();
   }
 
@@ -279,11 +268,10 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoIllumMaps)
   EXPECT_TRUE(ft.warnings().empty());
 }
 
-TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
-{
+TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls) {
   Model model = exampleModel();
 
-  for (DaylightingControl daylightingControl : model.getModelObjects<DaylightingControl>()){
+  for (DaylightingControl daylightingControl : model.getModelObjects<DaylightingControl>()) {
     daylightingControl.remove();
   }
 
@@ -299,11 +287,10 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoDaylightingControls)
   EXPECT_TRUE(ft.warnings().empty());
 }
 
-TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
-{
+TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors) {
   Model model = exampleModel();
 
-  for (GlareSensor glareSensor : model.getModelObjects<GlareSensor>()){
+  for (GlareSensor glareSensor : model.getModelObjects<GlareSensor>()) {
     glareSensor.remove();
   }
 
@@ -319,11 +306,10 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoGlareSensors)
   EXPECT_FALSE(ft.warnings().empty());
 }
 
-TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
-{
+TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks) {
   Model model = exampleModel();
 
-  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()){
+  for (ThermalZone thermalZone : model.getModelObjects<ThermalZone>()) {
     thermalZone.resetSecondaryDaylightingControl();
     thermalZone.resetPrimaryDaylightingControl();
     thermalZone.resetIlluminanceMap();
@@ -339,11 +325,9 @@ TEST(Radiance, ForwardTranslator_ExampleModel_NoThermalZoneLinks)
   EXPECT_TRUE(outpaths.empty());
   EXPECT_FALSE(ft.errors().empty());
   EXPECT_FALSE(ft.warnings().empty());
-
 }
 
-TEST(Radiance, ForwardTranslator_formatString)
-{
+TEST(Radiance, ForwardTranslator_formatString) {
   EXPECT_EQ("44", formatString(44.12345, 0));
   EXPECT_EQ("44.1", formatString(44.12345, 1));
   EXPECT_EQ("44.12", formatString(44.12345, 2));

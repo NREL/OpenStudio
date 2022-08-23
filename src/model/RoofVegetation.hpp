@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -35,238 +35,237 @@
 
 namespace openstudio {
 
-
 namespace model {
 
-namespace detail {
+  namespace detail {
 
-  class RoofVegetation_Impl;
+    class RoofVegetation_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** RoofVegetation is a OpaqueMaterial that wraps the OpenStudio IDD object 'OS:Material:RoofVegetation'. */
-class MODEL_API RoofVegetation : public OpaqueMaterial {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** RoofVegetation is a OpaqueMaterial that wraps the OpenStudio IDD object 'OS:Material:RoofVegetation'. */
+  class MODEL_API RoofVegetation : public OpaqueMaterial
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit RoofVegetation(const Model& model,
-                          std::string roughness = "Smooth");
+    explicit RoofVegetation(const Model& model, const std::string& roughness = "Smooth");
 
-  virtual ~RoofVegetation() {}
+    virtual ~RoofVegetation() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> roughnessValues();
+    static std::vector<std::string> roughnessValues();
 
-  static std::vector<std::string> moistureDiffusionCalculationMethodValues();
+    static std::vector<std::string> moistureDiffusionCalculationMethodValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  double heightofPlants() const;
+    double heightofPlants() const;
 
-  bool isHeightofPlantsDefaulted() const;
+    bool isHeightofPlantsDefaulted() const;
 
-  double leafAreaIndex() const;
+    double leafAreaIndex() const;
 
-  bool isLeafAreaIndexDefaulted() const;
+    bool isLeafAreaIndexDefaulted() const;
 
-  double leafReflectivity() const;
+    double leafReflectivity() const;
 
-  bool isLeafReflectivityDefaulted() const;
+    bool isLeafReflectivityDefaulted() const;
 
-  double leafEmissivity() const;
+    double leafEmissivity() const;
 
-  bool isLeafEmissivityDefaulted() const;
+    bool isLeafEmissivityDefaulted() const;
 
-  double minimumStomatalResistance() const;
+    double minimumStomatalResistance() const;
 
-  bool isMinimumStomatalResistanceDefaulted() const;
+    bool isMinimumStomatalResistanceDefaulted() const;
 
-  std::string soilLayerName() const;
+    std::string soilLayerName() const;
 
-  bool isSoilLayerNameDefaulted() const;
+    bool isSoilLayerNameDefaulted() const;
 
-  std::string roughness() const;
+    std::string roughness() const;
 
-  /** Density of dry soil (kg/m^3). */
-  double density() const;
+    /** Density of dry soil (kg/m^3). */
+    double density() const;
 
-  /** Specific heat of dry soil (J/kg*K). */
-  double specificHeat() const;
+    /** Specific heat of dry soil (J/kg*K). */
+    double specificHeat() const;
 
-  /** Maximum moisture content of the soil layer by volume fraction. */
-  double saturationVolumetricMoistureContent() const;
+    /** Maximum moisture content of the soil layer by volume fraction. */
+    double saturationVolumetricMoistureContent() const;
 
-  double residualVolumetricMoistureContent() const;
+    double residualVolumetricMoistureContent() const;
 
-  double initialVolumetricMoistureContent() const;
+    double initialVolumetricMoistureContent() const;
 
-  bool isRoughnessDefaulted() const;
+    bool isRoughnessDefaulted() const;
 
-  double thickness() const;
+    double thickness() const;
 
-  bool isThicknessDefaulted() const;
+    bool isThicknessDefaulted() const;
 
-  double conductivityofDrySoil() const;
+    double conductivityofDrySoil() const;
 
-  bool isConductivityofDrySoilDefaulted() const;
+    bool isConductivityofDrySoilDefaulted() const;
 
-  double densityofDrySoil() const;
+    double densityofDrySoil() const;
 
-  bool isDensityofDrySoilDefaulted() const;
+    bool isDensityofDrySoilDefaulted() const;
 
-  double specificHeatofDrySoil() const;
+    double specificHeatofDrySoil() const;
 
-  bool isSpecificHeatofDrySoilDefaulted() const;
+    bool isSpecificHeatofDrySoilDefaulted() const;
 
-  boost::optional<double> thermalAbsorptance() const;
+    boost::optional<double> thermalAbsorptance() const;
 
-  bool isThermalAbsorptanceDefaulted() const;
+    bool isThermalAbsorptanceDefaulted() const;
 
-  boost::optional<double> solarAbsorptance() const;
+    boost::optional<double> solarAbsorptance() const;
 
-  bool isSolarAbsorptanceDefaulted() const;
+    bool isSolarAbsorptanceDefaulted() const;
 
-  boost::optional<double> visibleAbsorptance() const;
+    boost::optional<double> visibleAbsorptance() const;
 
-  bool isVisibleAbsorptanceDefaulted() const;
+    bool isVisibleAbsorptanceDefaulted() const;
 
-  double saturationVolumetricMoistureContentoftheSoilLayer() const;
+    double saturationVolumetricMoistureContentoftheSoilLayer() const;
 
-  bool isSaturationVolumetricMoistureContentoftheSoilLayerDefaulted() const;
+    bool isSaturationVolumetricMoistureContentoftheSoilLayerDefaulted() const;
 
-  double residualVolumetricMoistureContentoftheSoilLayer() const;
+    double residualVolumetricMoistureContentoftheSoilLayer() const;
 
-  bool isResidualVolumetricMoistureContentoftheSoilLayerDefaulted() const;
+    bool isResidualVolumetricMoistureContentoftheSoilLayerDefaulted() const;
 
-  double initialVolumetricMoistureContentoftheSoilLayer() const;
+    double initialVolumetricMoistureContentoftheSoilLayer() const;
 
-  bool isInitialVolumetricMoistureContentoftheSoilLayerDefaulted() const;
+    bool isInitialVolumetricMoistureContentoftheSoilLayerDefaulted() const;
 
-  std::string moistureDiffusionCalculationMethod() const;
+    std::string moistureDiffusionCalculationMethod() const;
 
-  bool isMoistureDiffusionCalculationMethodDefaulted() const;
+    bool isMoistureDiffusionCalculationMethodDefaulted() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setLeafAreaIndex(double value);
+    bool setLeafAreaIndex(double leafAreaIndex);
 
-  bool setLeafReflectivity(double value);
+    bool setLeafReflectivity(double leafReflectivity);
 
-  bool setLeafEmissivity(double value);
+    bool setLeafEmissivity(double leafEmissivity);
 
-  bool setMinimumStomatalResistance(double value);
+    bool setMinimumStomatalResistance(double value);
 
-  bool setSoilLayerName(const std::string& name);
+    bool setSoilLayerName(const std::string& name);
 
-  bool setRoughness(const std::string& value);
+    bool setRoughness(const std::string& value);
 
-  /** Set density of dry soil (kg/m^3). */
-  bool setDensity(double value);
+    /** Set density of dry soil (kg/m^3). */
+    bool setDensity(double value);
 
-  /** Set specific heat of dry soil (J/kg*K). */
-  bool setSpecificHeat(double value);
+    /** Set specific heat of dry soil (J/kg*K). */
+    bool setSpecificHeat(double value);
 
-  /** Set the maximum moisture content of the soil layer by volume fraction. */
-  bool setSaturationVolumetricMoistureContent(double value);
+    /** Set the maximum moisture content of the soil layer by volume fraction. */
+    bool setSaturationVolumetricMoistureContent(double value);
 
-  bool setResidualVolumetricMoistureContent(double value);
+    bool setResidualVolumetricMoistureContent(double value);
 
-  bool setInitialVolumetricMoistureConent(double value);
+    bool setInitialVolumetricMoistureConent(double value);
 
-  bool setMoistureDiffusionCalculationMethod(const std::string& value);
+    bool setMoistureDiffusionCalculationMethod(const std::string& value);
 
-  bool setHeightofPlants(double heightofPlants);
+    bool setHeightofPlants(double heightofPlants);
 
-  void resetHeightofPlants();
+    void resetHeightofPlants();
 
-  void resetLeafAreaIndex();
+    void resetLeafAreaIndex();
 
-  void resetLeafReflectivity();
+    void resetLeafReflectivity();
 
-  void resetLeafEmissivity();
+    void resetLeafEmissivity();
 
-  void resetMinimumStomatalResistance();
+    void resetMinimumStomatalResistance();
 
-  void resetSoilLayerName();
+    void resetSoilLayerName();
 
-  void resetRoughness();
+    void resetRoughness();
 
-  bool setThickness(double thickness);
+    bool setThickness(double thickness);
 
-  void resetThickness();
+    void resetThickness();
 
-  bool setConductivityofDrySoil(double conductivityofDrySoil);
+    bool setConductivityofDrySoil(double conductivityofDrySoil);
 
-  void resetConductivityofDrySoil();
+    void resetConductivityofDrySoil();
 
-  bool setDensityofDrySoil(double densityofDrySoil);
+    bool setDensityofDrySoil(double densityofDrySoil);
 
-  void resetDensityofDrySoil();
+    void resetDensityofDrySoil();
 
-  bool setSpecificHeatofDrySoil(double specificHeatofDrySoil);
+    bool setSpecificHeatofDrySoil(double specificHeatofDrySoil);
 
-  void resetSpecificHeatofDrySoil();
+    void resetSpecificHeatofDrySoil();
 
-  bool setThermalAbsorptance(double thermalAbsorptance);
+    bool setThermalAbsorptance(double thermalAbsorptance);
 
-  void resetThermalAbsorptance();
+    void resetThermalAbsorptance();
 
-  bool setSolarAbsorptance(double solarAbsorptance);
+    bool setSolarAbsorptance(double solarAbsorptance);
 
-  void resetSolarAbsorptance();
+    void resetSolarAbsorptance();
 
-  bool setVisibleAbsorptance(double visibleAbsorptance);
+    bool setVisibleAbsorptance(double visibleAbsorptance);
 
-  void resetVisibleAbsorptance();
+    void resetVisibleAbsorptance();
 
-  bool setSaturationVolumetricMoistureContentoftheSoilLayer(double saturationVolumetricMoistureContentoftheSoilLayer);
+    bool setSaturationVolumetricMoistureContentoftheSoilLayer(double saturationVolumetricMoistureContentoftheSoilLayer);
 
-  void resetSaturationVolumetricMoistureContentoftheSoilLayer();
+    void resetSaturationVolumetricMoistureContentoftheSoilLayer();
 
-  bool setResidualVolumetricMoistureContentoftheSoilLayer(double residualVolumetricMoistureContentoftheSoilLayer);
+    bool setResidualVolumetricMoistureContentoftheSoilLayer(double residualVolumetricMoistureContentoftheSoilLayer);
 
-  void resetResidualVolumetricMoistureContentoftheSoilLayer();
+    void resetResidualVolumetricMoistureContentoftheSoilLayer();
 
-  bool setInitialVolumetricMoistureContentoftheSoilLayer(double initialVolumetricMoistureContentoftheSoilLayer);
+    bool setInitialVolumetricMoistureContentoftheSoilLayer(double initialVolumetricMoistureContentoftheSoilLayer);
 
-  void resetInitialVolumetricMoistureContentoftheSoilLayer();
+    void resetInitialVolumetricMoistureContentoftheSoilLayer();
 
-  void resetMoistureDiffusionCalculationMethod();
+    void resetMoistureDiffusionCalculationMethod();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::RoofVegetation_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::RoofVegetation_Impl ImplType;
 
-  explicit RoofVegetation(std::shared_ptr<detail::RoofVegetation_Impl> impl);
+    explicit RoofVegetation(std::shared_ptr<detail::RoofVegetation_Impl> impl);
 
-  friend class detail::RoofVegetation_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.RoofVegetation");
-};
+    friend class detail::RoofVegetation_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.RoofVegetation");
+  };
 
-/** \relates RoofVegetation*/
-typedef boost::optional<RoofVegetation> OptionalRoofVegetation;
+  /** \relates RoofVegetation*/
+  typedef boost::optional<RoofVegetation> OptionalRoofVegetation;
 
-/** \relates RoofVegetation*/
-typedef std::vector<RoofVegetation> RoofVegetationVector;
+  /** \relates RoofVegetation*/
+  typedef std::vector<RoofVegetation> RoofVegetationVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_ROOFVEGETATION_HPP
+#endif  // MODEL_ROOFVEGETATION_HPP

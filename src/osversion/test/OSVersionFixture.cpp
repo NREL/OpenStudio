@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -61,30 +61,26 @@ void OSVersionFixture::SetUpTestSuite() {
   // ETH@20120514 Eventually this cpp file should be configured by CMake so OpenStudio.idd can be
   // directly copied over, and so all these items can be copied back into source.
   model::Model model = openstudio::model::exampleModel();
-  model.save(thisVersionPath / toPath("example.osm"),true);
+  model.save(thisVersionPath / toPath("example.osm"), true);
   model::Component component = model.getConcreteModelObjects<model::Construction>()[0].createComponent();
-  component.save(thisVersionPath / toPath("example.osc"),true);
+  component.save(thisVersionPath / toPath("example.osc"), true);
   IddFile iddFile = IddFactory::instance().getIddFile(IddFileType::OpenStudio);
-  iddFile.save(thisVersionPath / toPath("OpenStudio.idd"),true);
+  iddFile.save(thisVersionPath / toPath("OpenStudio.idd"), true);
 }
 
 void OSVersionFixture::TearDownTestSuite() {
   logFile->disable();
 }
 
-openstudio::path OSVersionFixture::versionResourcesPath(const openstudio::VersionString& version)
-{
-  return resourcesPath() / toPath("osversion") /
-         toPath(boost::regex_replace(version.str(),boost::regex("\\."),"_"));
+openstudio::path OSVersionFixture::versionResourcesPath(const openstudio::VersionString& version) {
+  return resourcesPath() / toPath("osversion") / toPath(boost::regex_replace(version.str(), boost::regex("\\."), "_"));
 }
 
-openstudio::path OSVersionFixture::exampleModelPath(const openstudio::VersionString& version)
-{
+openstudio::path OSVersionFixture::exampleModelPath(const openstudio::VersionString& version) {
   return versionResourcesPath(version) / toPath("example.osm");
 }
 
-openstudio::path OSVersionFixture::exampleComponentPath(const openstudio::VersionString& version)
-{
+openstudio::path OSVersionFixture::exampleComponentPath(const openstudio::VersionString& version) {
   return versionResourcesPath(version) / toPath("example.osc");
 }
 
@@ -92,6 +88,13 @@ openstudio::path OSVersionFixture::iddPath(const openstudio::VersionString& vers
   return versionResourcesPath(version) / toPath("OpenStudio.idd");
 }
 
+openstudio::IddFile OSVersionFixture::getOpenStudioIddFileForVersion(const VersionString& version) {
+  OptionalIddFile iddFile = IddFactory::instance().getIddFile(IddFileType::OpenStudio, version);
+  if (!iddFile) {
+    LOG_AND_THROW("Unable to retrieve OpenStudio Version " << version.str() << " IDD from the IddFactory.");
+  }
+  return iddFile.get();
+}
+
 // static variables
 boost::optional<openstudio::FileLogSink> OSVersionFixture::logFile;
-

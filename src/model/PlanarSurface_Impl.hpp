@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,177 +36,158 @@
 #include "../utilities/geometry/Point3d.hpp"
 #include "../utilities/geometry/Vector3d.hpp"
 
-#include <nano/nano_signal_slot.hpp> // Signal-Slot replacement
+#include <nano/nano_signal_slot.hpp>  // Signal-Slot replacement
 
 namespace openstudio {
 
 namespace model {
 
-class PlanarSurfaceGroup;
-class PlanarSurface;
-class Space;
-class ConstructionBase;
-class GeneratorPhotovoltaic;
-class SurfacePropertyConvectionCoefficients;
+  class PlanarSurfaceGroup;
+  class PlanarSurface;
+  class Space;
+  class ConstructionBase;
+  class GeneratorPhotovoltaic;
+  class SurfacePropertyConvectionCoefficients;
 
-namespace detail {
+  namespace detail {
 
-  // derive PlanarSurface_Impl from ParentObject_Impl to override virtual methods
-  class MODEL_API PlanarSurface_Impl : public ParentObject_Impl {
+    // derive PlanarSurface_Impl from ParentObject_Impl to override virtual methods
+    class MODEL_API PlanarSurface_Impl : public ParentObject_Impl
+    {
 
+      // includes film coefficients. may require simulation results.
 
+      // does not include film coefficients. may require simulation results.
 
+      // may require simulation results.
 
+      // may require simulation results.
 
-    // includes film coefficients. may require simulation results.
+      // may require simulation results.
 
-    // does not include film coefficients. may require simulation results.
+      // relationships
 
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
+      // constructor
+      PlanarSurface_Impl(IddObjectType type, Model_Impl* model);
 
+      // constructor
+      PlanarSurface_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    // may require simulation results.
+      // construct from workspace
+      PlanarSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // may require simulation results.
+      // clone copy constructor
+      PlanarSurface_Impl(const PlanarSurface_Impl& other, Model_Impl* model, bool keepHandle);
 
-    // may require simulation results.
+      virtual ~PlanarSurface_Impl() {}
 
+      //@}
+      /** @name Getters */
+      //@{
 
-    // relationships
+      virtual boost::optional<ConstructionBase> construction() const;
 
+      virtual boost::optional<std::pair<ConstructionBase, int>> constructionWithSearchDistance() const = 0;
 
+      virtual bool isConstructionDefaulted() const = 0;
 
-   public:
+      virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const = 0;
 
-    /** @name Constructors and Destructors */
-    //@{
+      virtual boost::optional<Space> space() const = 0;
 
-    // constructor
-    PlanarSurface_Impl(IddObjectType type,
-                       Model_Impl* model);
+      std::vector<Point3d> vertices() const;
 
-    // constructor
-    PlanarSurface_Impl(const IdfObject& idfObject,
-                       Model_Impl* model,
-                       bool keepHandle);
+      //@}
+      /** @name Setters */
 
-    // construct from workspace
-    PlanarSurface_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                       Model_Impl* model,
-                       bool keepHandle);
+      virtual bool setVertices(const std::vector<Point3d>& vertices);
 
-    // clone copy constructor
-    PlanarSurface_Impl(const PlanarSurface_Impl& other, Model_Impl* model, bool keepHandle);
+      virtual bool setConstruction(const ConstructionBase& construction) = 0;
 
-    virtual ~PlanarSurface_Impl() {}
+      virtual void resetConstruction() = 0;
 
-    //@}
-    /** @name Getters */
-    //@{
+      virtual bool setUFactor(double value);
 
-    virtual boost::optional<ConstructionBase> construction() const;
+      bool setUFactor(boost::optional<double> value);
 
-    virtual boost::optional<std::pair<ConstructionBase, int> > constructionWithSearchDistance() const = 0;
+      virtual bool setThermalConductance(double value);
 
-    virtual bool isConstructionDefaulted() const = 0;
+      bool setThermalConductance(boost::optional<double> value);
 
-    virtual boost::optional<PlanarSurfaceGroup> planarSurfaceGroup() const = 0;
+      //@}
+      /** @name Queries */
+      //@{
 
-    virtual boost::optional<Space> space() const = 0;
+      bool isAirWall() const;
 
-    std::vector<Point3d> vertices() const;
+      double grossArea() const;
 
-    //@}
-    /** @name Setters */
+      virtual bool subtractFromGrossArea() const = 0;
 
-    virtual bool setVertices(const std::vector<Point3d>& vertices);
+      double netArea() const;
 
-    virtual bool setConstruction(const ConstructionBase& construction) = 0;
+      Vector3d outwardNormal() const;
 
-    virtual void resetConstruction() = 0;
+      double tilt() const;
 
-    virtual bool setUFactor(double value);
+      double azimuth() const;
 
-    bool setUFactor(boost::optional<double> value);
+      virtual boost::optional<double> uFactor() const;
 
-    virtual bool setThermalConductance(double value);
+      virtual boost::optional<double> thermalConductance() const;
 
-    bool setThermalConductance(boost::optional<double> value);
+      boost::optional<double> heatCapacity() const;
 
-    //@}
-    /** @name Queries */
-    //@{
+      boost::optional<double> interiorVisibleAbsorptance() const;
 
-    bool isAirWall() const;
+      boost::optional<double> exteriorVisibleAbsorptance() const;
 
-    double grossArea() const;
+      boost::optional<double> visibleTransmittance() const;
 
-    virtual bool subtractFromGrossArea() const = 0;
+      bool equalVertices(const PlanarSurface& other) const;
 
-    double netArea() const;
+      bool reverseEqualVertices(const PlanarSurface& other) const;
 
-    Vector3d outwardNormal() const;
+      Plane plane() const;
 
-    double tilt() const;
+      std::vector<std::vector<Point3d>> triangulation() const;
 
-    double azimuth() const;
+      Point3d centroid() const;
 
-    virtual boost::optional<double> uFactor() const;
+      std::vector<ModelObject> solarCollectors() const;
 
-    virtual boost::optional<double> thermalConductance() const;
+      std::vector<GeneratorPhotovoltaic> generatorPhotovoltaics() const;
 
-    boost::optional<double> heatCapacity() const;
+      std::vector<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
-    boost::optional<double> interiorVisibleAbsorptance() const;
+      //@}
+     protected:
+      boost::optional<ModelObject> spaceAsModelObject() const;
 
-    boost::optional<double> exteriorVisibleAbsorptance() const;
+      //private slots:
+     private:
+      void clearCachedVariables();
 
-    boost::optional<double> visibleTransmittance() const;
+     private:
+      REGISTER_LOGGER("openstudio.model.PlanarSurface");
 
-    bool equalVertices(const PlanarSurface& other) const;
+      boost::optional<ModelObject> constructionAsModelObject() const;
+      boost::optional<ModelObject> planarSurfaceGroupAsModelObject() const;
 
-    bool reverseEqualVertices(const PlanarSurface& other) const;
+      bool setConstructionAsModelObject(boost::optional<ModelObject> modelObject);
 
-    Plane plane() const;
+      mutable boost::optional<std::vector<Point3d>> m_cachedVertices;
+      mutable boost::optional<Plane> m_cachedPlane;
+      mutable boost::optional<Vector3d> m_cachedOutwardNormal;
+      mutable std::vector<std::vector<Point3d>> m_cachedTriangulation;
+    };
 
-    std::vector<std::vector<Point3d> > triangulation() const;
-
-    Point3d centroid() const;
-
-    std::vector<ModelObject> solarCollectors() const;
-
-    std::vector<GeneratorPhotovoltaic> generatorPhotovoltaics() const;
-
-    std::vector<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
-
-    //@}
-   protected:
-
-    boost::optional<ModelObject> spaceAsModelObject() const;
-
-   //private slots:
-   private:
-
-    void clearCachedVariables();
-
-   private:
-
-    REGISTER_LOGGER("openstudio.model.PlanarSurface");
-
-    boost::optional<ModelObject> constructionAsModelObject() const;
-    boost::optional<ModelObject> planarSurfaceGroupAsModelObject() const;
-
-    bool setConstructionAsModelObject(boost::optional<ModelObject> modelObject);
-
-    mutable boost::optional<std::vector<Point3d> > m_cachedVertices;
-    mutable boost::optional<Plane> m_cachedPlane;
-    mutable boost::optional<Vector3d> m_cachedOutwardNormal;
-    mutable std::vector<std::vector<Point3d> > m_cachedTriangulation;
-
-  };
-
-} // detail
-} // model
-} // openstudio
+  }  // namespace detail
+}  // namespace model
+}  // namespace openstudio
 
 #endif

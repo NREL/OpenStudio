@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,153 +38,187 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
-class HVACComponent;
+  class Schedule;
+  class HVACComponent;
 
-namespace detail {
+  namespace detail {
 
-  /** ZoneHVACLowTempRadiantVarFlow_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACLowTempRadiantVarFlow.*/
-  class MODEL_API ZoneHVACLowTempRadiantVarFlow_Impl : public ZoneHVACComponent_Impl {
+    /** ZoneHVACLowTempRadiantVarFlow_Impl is a ZoneHVACComponent_Impl that is the implementation class for ZoneHVACLowTempRadiantVarFlow.*/
+    class MODEL_API ZoneHVACLowTempRadiantVarFlow_Impl : public ZoneHVACComponent_Impl
+    {
 
-  public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    ZoneHVACLowTempRadiantVarFlow_Impl(const IdfObject& idfObject,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      ZoneHVACLowTempRadiantVarFlow_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    ZoneHVACLowTempRadiantVarFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      ZoneHVACLowTempRadiantVarFlow_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    ZoneHVACLowTempRadiantVarFlow_Impl(const ZoneHVACLowTempRadiantVarFlow_Impl& other,
-                                       Model_Impl* model,
-                                       bool keepHandle);
+      ZoneHVACLowTempRadiantVarFlow_Impl(const ZoneHVACLowTempRadiantVarFlow_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~ZoneHVACLowTempRadiantVarFlow_Impl() {}
+      virtual ~ZoneHVACLowTempRadiantVarFlow_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual ModelObject clone(Model model) const override;
+      virtual ModelObject clone(Model model) const override;
 
-    virtual std::vector<IdfObject> remove() override;
+      virtual std::vector<IdfObject> remove() override;
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    virtual std::vector<ModelObject> children() const override;
+      virtual std::vector<ModelObject> children() const override;
 
-    virtual unsigned inletPort() const override;
+      virtual unsigned inletPort() const override;
 
-    virtual unsigned outletPort() const override;
+      virtual unsigned outletPort() const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    Schedule availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
-    HVACComponent heatingCoil() const;
+      boost::optional<HVACComponent> heatingCoil() const;
 
-    HVACComponent coolingCoil() const;
+      boost::optional<HVACComponent> coolingCoil() const;
 
-    boost::optional<std::string> radiantSurfaceType() const;
+      boost::optional<std::string> radiantSurfaceType() const;
 
-    std::vector<Surface> surfaces() const;
+      std::vector<Surface> surfaces() const;
 
-    double hydronicTubingInsideDiameter() const;
+      std::string fluidtoRadiantSurfaceHeatTransferModel() const;
 
-    bool isHydronicTubingInsideDiameterDefaulted() const;
+      bool isFluidtoRadiantSurfaceHeatTransferModelDefaulted() const;
 
-    boost::optional<double> hydronicTubingLength() const;
+      double hydronicTubingInsideDiameter() const;
 
-    bool isHydronicTubingLengthDefaulted() const;
+      bool isHydronicTubingInsideDiameterDefaulted() const;
 
-    bool isHydronicTubingLengthAutosized() const;
+      double hydronicTubingOutsideDiameter() const;
 
-    std::string temperatureControlType() const;
+      bool isHydronicTubingOutsideDiameterDefaulted() const;
 
-    bool isTemperatureControlTypeDefaulted() const;
+      boost::optional<double> hydronicTubingLength() const;
 
-    std::string numberofCircuits() const;
+      bool isHydronicTubingLengthDefaulted() const;
 
-    double circuitLength() const;
+      bool isHydronicTubingLengthAutosized() const;
 
-    boost::optional<double> autosizedHydronicTubingLength() const ;
+      double hydronicTubingConductivity() const;
 
-    virtual void autosize() override;
+      bool isHydronicTubingConductivityDefaulted() const;
 
-    virtual void applySizingValues() override;
+      std::string temperatureControlType() const;
 
-    virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
+      bool isTemperatureControlTypeDefaulted() const;
 
-    virtual std::vector<std::string> emsInternalVariableNames() const override;
+      std::string setpointControlType() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      bool isSetpointControlTypeDefaulted() const;
 
-    bool setAvailabilitySchedule(Schedule& schedule);
+      std::string numberofCircuits() const;
 
-    bool setHeatingCoil(HVACComponent& heatingCoil);
+      double circuitLength() const;
 
-    bool setCoolingCoil(HVACComponent& coolingCoil);
+      boost::optional<Schedule> changeoverDelayTimePeriodSchedule() const;
 
-    bool setRadiantSurfaceType(boost::optional<std::string> radiantSurfaceType);
+      boost::optional<double> autosizedHydronicTubingLength() const;
 
-    void resetRadiantSurfaceType();
+      virtual void autosize() override;
 
-    bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
+      virtual void applySizingValues() override;
 
-    void resetHydronicTubingInsideDiameter();
+      virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
-    bool setHydronicTubingLength(boost::optional<double> hydronicTubingLength);
+      virtual std::vector<std::string> emsInternalVariableNames() const override;
 
-    void resetHydronicTubingLength();
+      //@}
+      /** @name Setters */
+      //@{
 
-    void autosizeHydronicTubingLength();
+      bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setTemperatureControlType(std::string temperatureControlType);
+      bool setHeatingCoil(HVACComponent& heatingCoil);
+      void resetHeatingCoil();
 
-    void resetTemperatureControlType();
+      bool setCoolingCoil(HVACComponent& coolingCoil);
+      void resetCoolingCoil();
 
-    bool setNumberofCircuits(std::string numberofCircuits);
+      bool setRadiantSurfaceType(boost::optional<std::string> radiantSurfaceType);
 
-    bool setCircuitLength(double circuitLength);
+      void resetRadiantSurfaceType();
 
-    boost::optional<ThermalZone> thermalZone() const override;
+      bool setFluidtoRadiantSurfaceHeatTransferModel(const std::string& fluidtoRadiantSurfaceHeatTransferModel);
 
-    bool addToThermalZone(ThermalZone & thermalZone) override;
+      void resetFluidtoRadiantSurfaceHeatTransferModel();
 
-    void removeFromThermalZone() override;
+      bool setHydronicTubingInsideDiameter(double hydronicTubingInsideDiameter);
 
-    //@}
-    /** @name Other */
-    //@{
+      void resetHydronicTubingInsideDiameter();
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.ZoneHVACLowTempRadiantVarFlow");
+      bool setHydronicTubingOutsideDiameter(double hydronicTubingOutsideDiameter);
 
-    boost::optional<Schedule> optionalAvailabilitySchedule() const;
-    boost::optional<HVACComponent> optionalHeatingCoil() const;
-    boost::optional<HVACComponent> optionalCoolingCoil() const;
+      void resetHydronicTubingOutsideDiameter();
 
-    std::vector<std::string> radiantSurfaceTypeValues() const;
-    std::vector<std::string> temperatureControlTypeValues() const;
+      bool setHydronicTubingLength(boost::optional<double> hydronicTubingLength);
 
-  };
+      void resetHydronicTubingLength();
 
-} // detail
+      void autosizeHydronicTubingLength();
 
-} // model
-} // openstudio
+      bool setHydronicTubingConductivity(double hydronicTubingConductivity);
 
-#endif // MODEL_ZONEHVACLOWTEMPRADIANTVARFLOW_IMPL_HPP
+      void resetHydronicTubingConductivity();
+
+      bool setTemperatureControlType(const std::string& temperatureControlType);
+
+      void resetTemperatureControlType();
+
+      bool setSetpointControlType(const std::string& setpointControlType);
+
+      void resetSetpointControlType();
+
+      bool setNumberofCircuits(const std::string& numberofCircuits);
+
+      bool setCircuitLength(double circuitLength);
+
+      bool setChangeoverDelayTimePeriodSchedule(Schedule& schedule);
+
+      void resetChangeoverDelayTimePeriodSchedule();
+
+      boost::optional<ThermalZone> thermalZone() const override;
+
+      bool addToThermalZone(ThermalZone& thermalZone) override;
+
+      void removeFromThermalZone() override;
+
+      //@}
+      /** @name Other */
+      //@{
+
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.ZoneHVACLowTempRadiantVarFlow");
+
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      boost::optional<HVACComponent> optionalHeatingCoil() const;
+      boost::optional<HVACComponent> optionalCoolingCoil() const;
+
+      std::vector<std::string> radiantSurfaceTypeValues() const;
+      std::vector<std::string> temperatureControlTypeValues() const;
+    };
+
+  }  // namespace detail
+
+}  // namespace model
+}  // namespace openstudio
+
+#endif  // MODEL_ZONEHVACLOWTEMPRADIANTVARFLOW_IMPL_HPP

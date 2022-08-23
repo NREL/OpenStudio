@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -39,39 +39,37 @@
 
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,PumpVariableSpeed_PumpVariableSpeed)
-{
+TEST_F(ModelFixture, PumpVariableSpeed_PumpVariableSpeed) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     PumpVariableSpeed pump(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      PumpVariableSpeed pump(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 }
 
-TEST_F(ModelFixture,PumpVariableSpeed_connections)
-{
+TEST_F(ModelFixture, PumpVariableSpeed_connections) {
   Model m;
   PumpVariableSpeed pump(m);
 
   Node inletNode(m);
   Node outletNode(m);
 
-  m.connect(inletNode,inletNode.outletPort(),pump,pump.inletPort());
-  m.connect(pump,pump.outletPort(),outletNode,outletNode.inletPort());
+  m.connect(inletNode, inletNode.outletPort(), pump, pump.inletPort());
+  m.connect(pump, pump.outletPort(), outletNode, outletNode.inletPort());
 
-  ASSERT_TRUE( pump.inletModelObject() );
-  ASSERT_TRUE( pump.outletModelObject() );
+  ASSERT_TRUE(pump.inletModelObject());
+  ASSERT_TRUE(pump.outletModelObject());
 
-  EXPECT_EQ( inletNode.handle(), pump.inletModelObject()->handle() );
-  EXPECT_EQ( outletNode.handle(), pump.outletModelObject()->handle() );
+  EXPECT_EQ(inletNode.handle(), pump.inletModelObject()->handle());
+  EXPECT_EQ(outletNode.handle(), pump.outletModelObject()->handle());
 }
 
-TEST_F(ModelFixture,PumpVariableSpeed_addToNode) {
+TEST_F(ModelFixture, PumpVariableSpeed_addToNode) {
   Model m;
   PumpVariableSpeed testObject(m);
 
@@ -80,7 +78,7 @@ TEST_F(ModelFixture,PumpVariableSpeed_addToNode) {
   Node supplyOutletNode = airLoop.supplyOutletNode();
 
   EXPECT_FALSE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
 
   Node inletNode = airLoop.zoneSplitter().lastOutletModelObject()->cast<Node>();
 
@@ -90,25 +88,25 @@ TEST_F(ModelFixture,PumpVariableSpeed_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_TRUE(testObject.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 
   Node demandOutletNode = plantLoop.demandOutletNode();
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
 
   PumpVariableSpeed testObject2(m);
 
   EXPECT_TRUE(testObject2.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)9, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)9, plantLoop.demandComponents().size());
 
   PlantLoop plantLoop2(m);
   demandOutletNode = plantLoop2.demandOutletNode();
   EXPECT_TRUE(testObject.addToNode(demandOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop2.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop2.demandComponents().size());
 
   PumpVariableSpeed testObjectClone = testObject.clone(m).cast<PumpVariableSpeed>();
   supplyOutletNode = plantLoop.supplyOutletNode();
 
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)7, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.supplyComponents().size());
 }

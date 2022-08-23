@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,159 +36,153 @@
 namespace openstudio {
 namespace model {
 
-class Schedule;
+  class Schedule;
 
-namespace detail {
+  namespace detail {
 
-  /** SurfacePropertyOtherSideCoefficients_Impl is a ResourceObject_Impl that is the implementation class for SurfacePropertyOtherSideCoefficients.*/
-  class MODEL_API SurfacePropertyOtherSideCoefficients_Impl : public ResourceObject_Impl {
+    /** SurfacePropertyOtherSideCoefficients_Impl is a ResourceObject_Impl that is the implementation class for SurfacePropertyOtherSideCoefficients.*/
+    class MODEL_API SurfacePropertyOtherSideCoefficients_Impl : public ResourceObject_Impl
+    {
 
-   public:
-    /** @name Constructors and Destructors */
-    //@{
+     public:
+      /** @name Constructors and Destructors */
+      //@{
 
-    SurfacePropertyOtherSideCoefficients_Impl(const IdfObject& idfObject,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      SurfacePropertyOtherSideCoefficients_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-    SurfacePropertyOtherSideCoefficients_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      SurfacePropertyOtherSideCoefficients_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-    SurfacePropertyOtherSideCoefficients_Impl(const SurfacePropertyOtherSideCoefficients_Impl& other,
-                                              Model_Impl* model,
-                                              bool keepHandle);
+      SurfacePropertyOtherSideCoefficients_Impl(const SurfacePropertyOtherSideCoefficients_Impl& other, Model_Impl* model, bool keepHandle);
 
-    virtual ~SurfacePropertyOtherSideCoefficients_Impl() {}
+      virtual ~SurfacePropertyOtherSideCoefficients_Impl() {}
 
-    //@}
-    /** @name Virtual Methods */
-    //@{
+      //@}
+      /** @name Virtual Methods */
+      //@{
 
-    virtual const std::vector<std::string>& outputVariableNames() const override;
+      virtual const std::vector<std::string>& outputVariableNames() const override;
 
-    virtual IddObjectType iddObjectType() const override;
+      virtual IddObjectType iddObjectType() const override;
 
-    virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
-    //@}
-    /** @name Getters */
-    //@{
+      //@}
+      /** @name Getters */
+      //@{
 
-    boost::optional<double> combinedConvectiveRadiativeFilmCoefficient() const;
+      boost::optional<double> combinedConvectiveRadiativeFilmCoefficient() const;
 
-    double constantTemperature() const;
+      double constantTemperature() const;
 
-    bool isConstantTemperatureDefaulted() const;
+      bool isConstantTemperatureDefaulted() const;
 
-    double constantTemperatureCoefficient() const;
+      double constantTemperatureCoefficient() const;
 
-    bool isConstantTemperatureCoefficientDefaulted() const;
+      bool isConstantTemperatureCoefficientDefaulted() const;
 
-    double externalDryBulbTemperatureCoefficient() const;
+      double externalDryBulbTemperatureCoefficient() const;
 
-    bool isExternalDryBulbTemperatureCoefficientDefaulted() const;
+      bool isExternalDryBulbTemperatureCoefficientDefaulted() const;
 
-    double groundTemperatureCoefficient() const;
+      double groundTemperatureCoefficient() const;
 
-    bool isGroundTemperatureCoefficientDefaulted() const;
+      bool isGroundTemperatureCoefficientDefaulted() const;
 
-    double windSpeedCoefficient() const;
+      double windSpeedCoefficient() const;
 
-    bool isWindSpeedCoefficientDefaulted() const;
+      bool isWindSpeedCoefficientDefaulted() const;
 
-    double zoneAirTemperatureCoefficient() const;
+      double zoneAirTemperatureCoefficient() const;
 
-    bool isZoneAirTemperatureCoefficientDefaulted() const;
+      bool isZoneAirTemperatureCoefficientDefaulted() const;
 
-    boost::optional<Schedule> constantTemperatureSchedule() const;
+      boost::optional<Schedule> constantTemperatureSchedule() const;
 
-    bool sinusoidalVariationofConstantTemperatureCoefficient() const;
+      bool sinusoidalVariationofConstantTemperatureCoefficient() const;
 
-    bool isSinusoidalVariationofConstantTemperatureCoefficientDefaulted() const;
+      bool isSinusoidalVariationofConstantTemperatureCoefficientDefaulted() const;
 
-    double periodofSinusoidalVariation() const;
+      double periodofSinusoidalVariation() const;
 
-    bool isPeriodofSinusoidalVariationDefaulted() const;
+      bool isPeriodofSinusoidalVariationDefaulted() const;
 
-    double previousOtherSideTemperatureCoefficient() const;
+      double previousOtherSideTemperatureCoefficient() const;
 
-    bool isPreviousOtherSideTemperatureCoefficientDefaulted() const;
+      bool isPreviousOtherSideTemperatureCoefficientDefaulted() const;
 
-    boost::optional<double> minimumOtherSideTemperatureLimit() const;
+      boost::optional<double> minimumOtherSideTemperatureLimit() const;
 
-    boost::optional<double> maximumOtherSideTemperatureLimit() const;
+      boost::optional<double> maximumOtherSideTemperatureLimit() const;
 
-    //@}
-    /** @name Setters */
-    //@{
+      //@}
+      /** @name Setters */
+      //@{
 
-    bool setCombinedConvectiveRadiativeFilmCoefficient(double combinedConvectiveRadiativeFilmCoefficient);
+      bool setCombinedConvectiveRadiativeFilmCoefficient(double combinedConvectiveRadiativeFilmCoefficient);
 
-    void resetCombinedConvectiveRadiativeFilmCoefficient();
+      void resetCombinedConvectiveRadiativeFilmCoefficient();
 
-    bool setConstantTemperature(double constantTemperature);
+      bool setConstantTemperature(double constantTemperature);
 
-    void resetConstantTemperature();
+      void resetConstantTemperature();
 
-    bool setConstantTemperatureCoefficient(double constantTemperatureCoefficient);
+      bool setConstantTemperatureCoefficient(double constantTemperatureCoefficient);
 
-    void resetConstantTemperatureCoefficient();
+      void resetConstantTemperatureCoefficient();
 
-    bool setExternalDryBulbTemperatureCoefficient(double externalDryBulbTemperatureCoefficient);
+      bool setExternalDryBulbTemperatureCoefficient(double externalDryBulbTemperatureCoefficient);
 
-    void resetExternalDryBulbTemperatureCoefficient();
+      void resetExternalDryBulbTemperatureCoefficient();
 
-    bool setGroundTemperatureCoefficient(double groundTemperatureCoefficient);
+      bool setGroundTemperatureCoefficient(double groundTemperatureCoefficient);
 
-    void resetGroundTemperatureCoefficient();
+      void resetGroundTemperatureCoefficient();
 
-    bool setWindSpeedCoefficient(double windSpeedCoefficient);
+      bool setWindSpeedCoefficient(double windSpeedCoefficient);
 
-    void resetWindSpeedCoefficient();
+      void resetWindSpeedCoefficient();
 
-    bool setZoneAirTemperatureCoefficient(double zoneAirTemperatureCoefficient);
+      bool setZoneAirTemperatureCoefficient(double zoneAirTemperatureCoefficient);
 
-    void resetZoneAirTemperatureCoefficient();
+      void resetZoneAirTemperatureCoefficient();
 
-    bool setConstantTemperatureSchedule(Schedule& schedule);
+      bool setConstantTemperatureSchedule(Schedule& schedule);
 
-    void resetConstantTemperatureSchedule();
+      void resetConstantTemperatureSchedule();
 
-    bool setSinusoidalVariationofConstantTemperatureCoefficient(bool sinusoidalVariationofConstantTemperatureCoefficient);
+      bool setSinusoidalVariationofConstantTemperatureCoefficient(bool sinusoidalVariationofConstantTemperatureCoefficient);
 
-    void resetSinusoidalVariationofConstantTemperatureCoefficient();
+      void resetSinusoidalVariationofConstantTemperatureCoefficient();
 
-    bool setPeriodofSinusoidalVariation(double periodofSinusoidalVariation);
+      bool setPeriodofSinusoidalVariation(double periodofSinusoidalVariation);
 
-    void resetPeriodofSinusoidalVariation();
+      void resetPeriodofSinusoidalVariation();
 
-    bool setPreviousOtherSideTemperatureCoefficient(double previousOtherSideTemperatureCoefficient);
+      bool setPreviousOtherSideTemperatureCoefficient(double previousOtherSideTemperatureCoefficient);
 
-    void resetPreviousOtherSideTemperatureCoefficient();
+      void resetPreviousOtherSideTemperatureCoefficient();
 
-    bool setMinimumOtherSideTemperatureLimit(double minimumOtherSideTemperatureLimit);
+      bool setMinimumOtherSideTemperatureLimit(double minimumOtherSideTemperatureLimit);
 
-    void resetMinimumOtherSideTemperatureLimit();
+      void resetMinimumOtherSideTemperatureLimit();
 
-    bool setMaximumOtherSideTemperatureLimit(double maximumOtherSideTemperatureLimit);
+      bool setMaximumOtherSideTemperatureLimit(double maximumOtherSideTemperatureLimit);
 
-    void resetMaximumOtherSideTemperatureLimit();
+      void resetMaximumOtherSideTemperatureLimit();
 
-    //@}
-    /** @name Other */
-    //@{
+      //@}
+      /** @name Other */
+      //@{
 
-    //@}
-   protected:
-   private:
-    REGISTER_LOGGER("openstudio.model.SurfacePropertyOtherSideCoefficients");
-  };
+      //@}
+     protected:
+     private:
+      REGISTER_LOGGER("openstudio.model.SurfacePropertyOtherSideCoefficients");
+    };
 
-} // detail
+  }  // namespace detail
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SURFACEPROPERTYOTHERSIDECOEFFICIENTS_IMPL_HPP
-
+#endif  // MODEL_SURFACEPROPERTYOTHERSIDECOEFFICIENTS_IMPL_HPP

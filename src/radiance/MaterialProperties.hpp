@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -34,19 +34,20 @@
 
 #include <vector>
 
-namespace openstudio{
-  namespace radiance{
+namespace openstudio {
+namespace radiance {
 
-    /** MaterialProperties represents the color, texture, transmittance, reflectance of opaque and glazing materials.
+  /** MaterialProperties represents the color, texture, transmittance, reflectance of opaque and glazing materials.
     */
-    class RADIANCE_API MaterialProperties{
-      public:
-    };
+  class RADIANCE_API MaterialProperties
+  {
+   public:
+  };
 
-    // vector of MaterialProperties
-    typedef std::vector<MaterialProperties> LMaterialPropertiesVector;
+  // vector of MaterialProperties
+  typedef std::vector<MaterialProperties> LMaterialPropertiesVector;
 
-  } // radiance
-} // openstudio
+}  // namespace radiance
+}  // namespace openstudio
 
-#endif //RADIANCE_MATERIALPROPERTIES_HPP
+#endif  //RADIANCE_MATERIALPROPERTIES_HPP

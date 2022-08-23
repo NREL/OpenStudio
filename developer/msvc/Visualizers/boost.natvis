@@ -82,8 +82,8 @@
 </Type>
 
 <Type Name="boost::any">
-    <DisplayString Condition="content == 0">empty</DisplayString>
-    <DisplayString Condition="content != 0">any {*content}</DisplayString>
+    <DisplayString Condition="content == 0">[empty]</DisplayString>
+    <DisplayString Condition="content != 0">{*content}</DisplayString>
     <Expand>
         <Item Name="[holder]" Condition="content != 0">*content</Item>
     </Expand>
@@ -105,34 +105,30 @@
 
 <Type Name="boost::optional&lt;*&gt;" Priority="Medium">
     <AlternativeType Name="boost::optional_detail::optional_base&lt;*&gt;" />
-    <DisplayString Condition="m_initialized">{m_storage}</DisplayString>
+    <Intrinsic Name="has_value" Expression="m_initialized"/>
+    <Intrinsic Name="value" Expression="m_storage"/>
+    <DisplayString Condition="!has_value()">nullopt</DisplayString>
+    <DisplayString Condition="has_value()">{value()}</DisplayString>
     <Expand>
-        <Item Condition="m_initialized" Name="value">m_storage</Item>
+        <Item Condition="has_value()" Name="value">value()</Item>
     </Expand>
 </Type>
 
 <Type Name="boost::optional&lt;*&gt;" Priority="MediumLow">
     <AlternativeType Name="boost::optional_detail::optional_base&lt;*&gt;" />
-    <DisplayString Condition="ptr_ == 0">empty</DisplayString>
+    <DisplayString Condition="ptr_ == 0">nullopt</DisplayString>
     <DisplayString Condition="ptr_ != 0">{*ptr_}</DisplayString>
     <Expand>
         <Item Condition="ptr_ != 0" Name="value">*ptr_</Item>
     </Expand>
 </Type>
 
-<!--Copyright Filip Konvieka 2008. Use, modification and distribution are subject to-->
-<!--the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt-->
-<!--or copy at http://www.boost.org/LICENSE_1_0.txt)-->
-<!--@version  1.0-->
-<!--@author   Filip Konvieka-->
-<!--@email    filip dot konvicka at logis dot cz-->
-<!--Usage-->
-<Type Name="boost::interprocess::offset_ptr&lt;*&gt;">
-    <DisplayString Condition="m_offset == 1">null</DisplayString>
-    <DisplayString Condition="m_offset != 1">non-null</DisplayString>
-    <DisplayString>#if(m_offset==1) (#("null")) #else (#("non-null"))</DisplayString>
+<Type Name="boost::interprocess::offset_ptr&lt;*,*,*,*&gt;">
+    <SmartPointer Usage="Minimal">($T1*)((($T3)this)+internal.m_offset),na</SmartPointer>
+    <DisplayString Condition="internal.m_offset == 1">empty</DisplayString>
+    <DisplayString Condition="internal.m_offset != 1">offset_ptr {*($T1*)((($T3)this)+internal.m_offset)}</DisplayString>
     <Expand>
-        <Item Name="[ptr]" Condition="m_offset != 1">($T1*)(((char*)(void*)this)+m_offset)</Item>
+        <Item Condition="internal.m_offset != 1" Name="[ptr]">($T1*)((($T3)this)+internal.m_offset)</Item>
     </Expand>
 </Type>
 
@@ -238,8 +234,8 @@
 
 <Type Name="boost::basic_string_view&lt;*&gt;">
     <AlternativeType Name="boost::basic_string_ref&lt;*&gt;" />
-    <DisplayString>{ptr_,[len_]}</DisplayString>
-    <StringView>ptr_,[len_]</StringView>
+    <DisplayString>{ptr_,[len_]na}</DisplayString>
+    <StringView>ptr_,[len_]na</StringView>
     <Expand>
         <Item Name="[size]" ExcludeView="simple">len_</Item>
         <ArrayItems>

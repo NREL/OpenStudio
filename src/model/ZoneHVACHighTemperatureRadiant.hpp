@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -37,132 +37,129 @@ namespace openstudio {
 
 namespace model {
 
-class Schedule;
-class Surface;
+  class Schedule;
+  class Surface;
 
-namespace detail {
+  namespace detail {
 
-  class ZoneHVACHighTemperatureRadiant_Impl;
+    class ZoneHVACHighTemperatureRadiant_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** ZoneHVACHighTemperatureRadiant is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:HighTemperatureRadiant'. */
-class MODEL_API ZoneHVACHighTemperatureRadiant : public ZoneHVACComponent {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** ZoneHVACHighTemperatureRadiant is a ZoneHVACComponent that wraps the OpenStudio IDD object 'OS:ZoneHVAC:HighTemperatureRadiant'. */
+  class MODEL_API ZoneHVACHighTemperatureRadiant : public ZoneHVACComponent
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit ZoneHVACHighTemperatureRadiant(const Model& model);
+    explicit ZoneHVACHighTemperatureRadiant(const Model& model);
 
-  virtual ~ZoneHVACHighTemperatureRadiant() {}
+    virtual ~ZoneHVACHighTemperatureRadiant() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> fuelTypeValues();
+    static std::vector<std::string> fuelTypeValues();
 
-  static std::vector<std::string> temperatureControlTypeValues();
+    static std::vector<std::string> temperatureControlTypeValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  boost::optional<Schedule> availabilitySchedule() const;
+    boost::optional<Schedule> availabilitySchedule() const;
 
-  /** In EnergyPlus 8.2.0 and above this property maps to the EnergyPlus field "Heating Design Capacity" **/
-  boost::optional<double> maximumPowerInput() const;
+    /** In EnergyPlus 8.2.0 and above this property maps to the EnergyPlus field "Heating Design Capacity" **/
+    boost::optional<double> maximumPowerInput() const;
 
-  bool isMaximumPowerInputAutosized() const;
+    bool isMaximumPowerInputAutosized() const;
 
-  std::string fuelType() const;
+    std::string fuelType() const;
 
-  double combustionEfficiency() const;
+    double combustionEfficiency() const;
 
-  double fractionofInputConvertedtoRadiantEnergy() const;
+    double fractionofInputConvertedtoRadiantEnergy() const;
 
-  double fractionofInputConvertedtoLatentEnergy() const;
+    double fractionofInputConvertedtoLatentEnergy() const;
 
-  double fractionofInputthatIsLost() const;
+    double fractionofInputthatIsLost() const;
 
-  std::string temperatureControlType() const;
+    std::string temperatureControlType() const;
 
-  double heatingThrottlingRange() const;
+    double heatingThrottlingRange() const;
 
-  boost::optional<Schedule> heatingSetpointTemperatureSchedule() const;
+    boost::optional<Schedule> heatingSetpointTemperatureSchedule() const;
 
-  double fractionofRadiantEnergyIncidentonPeople() const;
+    double fractionofRadiantEnergyIncidentonPeople() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setAvailabilitySchedule(Schedule& schedule);
+    bool setAvailabilitySchedule(Schedule& schedule);
 
-  void resetAvailabilitySchedule();
+    void resetAvailabilitySchedule();
 
-  bool setMaximumPowerInput(double maximumPowerInput);
+    bool setMaximumPowerInput(double maximumPowerInput);
 
-  void autosizeMaximumPowerInput();
+    void autosizeMaximumPowerInput();
 
-  bool setFuelType(std::string fuelType);
+    bool setFuelType(std::string fuelType);
 
-  bool setCombustionEfficiency(double combustionEfficiency);
+    bool setCombustionEfficiency(double combustionEfficiency);
 
-  bool setFractionofInputConvertedtoRadiantEnergy(double fractionofInputConvertedtoRadiantEnergy);
+    bool setFractionofInputConvertedtoRadiantEnergy(double fractionofInputConvertedtoRadiantEnergy);
 
-  bool setFractionofInputConvertedtoLatentEnergy(double fractionofInputConvertedtoLatentEnergy);
+    bool setFractionofInputConvertedtoLatentEnergy(double fractionofInputConvertedtoLatentEnergy);
 
-  bool setFractionofInputthatIsLost(double fractionofInputthatIsLost);
+    bool setFractionofInputthatIsLost(double fractionofInputthatIsLost);
 
-  bool setTemperatureControlType(std::string temperatureControlType);
+    bool setTemperatureControlType(std::string temperatureControlType);
 
-  bool setHeatingThrottlingRange(double heatingThrottlingRange);
+    bool setHeatingThrottlingRange(double heatingThrottlingRange);
 
-  bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
+    bool setHeatingSetpointTemperatureSchedule(Schedule& schedule);
 
-  void resetHeatingSetpointTemperatureSchedule();
+    void resetHeatingSetpointTemperatureSchedule();
 
-  bool setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople);
+    bool setFractionofRadiantEnergyIncidentonPeople(double fractionofRadiantEnergyIncidentonPeople);
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  boost::optional<ThermalZone> thermalZone() const override;
+    boost::optional<ThermalZone> thermalZone() const override;
 
-  bool addToThermalZone(ThermalZone & thermalZone);
+    bool addToThermalZone(ThermalZone& thermalZone);
 
-  void removeFromThermalZone();
-  //@}
+    void removeFromThermalZone();
+    //@}
 
-  boost::optional<double> autosizedMaximumPowerInput() const ;
+    boost::optional<double> autosizedMaximumPowerInput() const;
 
+   protected:
+    /// @cond
+    typedef detail::ZoneHVACHighTemperatureRadiant_Impl ImplType;
 
+    explicit ZoneHVACHighTemperatureRadiant(std::shared_ptr<detail::ZoneHVACHighTemperatureRadiant_Impl> impl);
 
- protected:
+    friend class detail::ZoneHVACHighTemperatureRadiant_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.ZoneHVACHighTemperatureRadiant");
+  };
 
-  /// @cond
-  typedef detail::ZoneHVACHighTemperatureRadiant_Impl ImplType;
+  /** \relates ZoneHVACHighTemperatureRadiant*/
+  typedef boost::optional<ZoneHVACHighTemperatureRadiant> OptionalZoneHVACHighTemperatureRadiant;
 
-  explicit ZoneHVACHighTemperatureRadiant(std::shared_ptr<detail::ZoneHVACHighTemperatureRadiant_Impl> impl);
+  /** \relates ZoneHVACHighTemperatureRadiant*/
+  typedef std::vector<ZoneHVACHighTemperatureRadiant> ZoneHVACHighTemperatureRadiantVector;
 
-  friend class detail::ZoneHVACHighTemperatureRadiant_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.ZoneHVACHighTemperatureRadiant");
-};
+}  // namespace model
+}  // namespace openstudio
 
-/** \relates ZoneHVACHighTemperatureRadiant*/
-typedef boost::optional<ZoneHVACHighTemperatureRadiant> OptionalZoneHVACHighTemperatureRadiant;
-
-/** \relates ZoneHVACHighTemperatureRadiant*/
-typedef std::vector<ZoneHVACHighTemperatureRadiant> ZoneHVACHighTemperatureRadiantVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_ZONEHVACHIGHTEMPERATURERADIANT_HPP
-
+#endif  // MODEL_ZONEHVACHIGHTEMPERATURERADIANT_HPP

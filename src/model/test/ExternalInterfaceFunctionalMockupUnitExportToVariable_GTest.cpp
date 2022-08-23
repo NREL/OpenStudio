@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -48,5 +48,4 @@ TEST_F(ModelFixture, ExternalInterfaceFunctionalMockupUnitExportToVariable) {
   EXPECT_EQ("FMU name", variable.fMUVariableName());
   variable.setFMUVariableName("test 2");
   EXPECT_EQ("test 2", variable.fMUVariableName());
-
 }

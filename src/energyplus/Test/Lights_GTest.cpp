@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -60,6 +60,7 @@
 #include <utilities/idd/Lights_FieldEnums.hxx>
 #include <utilities/idd/Zone_FieldEnums.hxx>
 #include <utilities/idd/ZoneList_FieldEnums.hxx>
+#include <utilities/idd/SpaceList_FieldEnums.hxx>
 #include <utilities/idd/ComponentCost_LineItem_FieldEnums.hxx>
 #include <utilities/idd/LifeCycleCost_NonrecurringCost_FieldEnums.hxx>
 #include <utilities/idd/LifeCycleCost_RecurringCosts_FieldEnums.hxx>
@@ -73,9 +74,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-
-TEST_F(EnergyPlusFixture,ForwardTranslator_LightsDefinition)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_LightsDefinition) {
   Model model;
   LightsDefinition definition(model);
 
@@ -83,13 +82,13 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LightsDefinition)
   Workspace workspace = forwardTranslator.translateModel(model);
 
   std::string errors;
-  for (const LogMessage& error : forwardTranslator.errors()){
+  for (const LogMessage& error : forwardTranslator.errors()) {
     errors += error.logMessage() + "\n";
   }
   EXPECT_EQ(0u, forwardTranslator.errors().size()) << errors;
 
   std::string warnings;
-  for (const LogMessage& warning : forwardTranslator.warnings()){
+  for (const LogMessage& warning : forwardTranslator.warnings()) {
     warnings += warning.logMessage() + "\n";
   }
   EXPECT_EQ(0u, forwardTranslator.warnings().size()) << warnings;
@@ -97,8 +96,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_LightsDefinition)
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Lights).size());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_NoSpace)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_NoSpace) {
   Model model;
   LightsDefinition definition(model);
   Lights lights(definition);
@@ -109,8 +107,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_NoSpace)
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Lights).size());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Space)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Space) {
   Model model;
 
   ThermalZone thermalZone(model);
@@ -122,20 +119,41 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Space)
   lights.setSpace(space);
 
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
 
-  WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
-  WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListName));
-  EXPECT_EQ(zoneObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListName)->handle());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Lights).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Zone).size());
+
+    WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
+    WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
+
+    ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+    EXPECT_EQ(zoneObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName)->handle());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Lights).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Space).size());
+
+    WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
+    WorkspaceObject spaceObject = workspace.getObjectsByType(IddObjectType::Space)[0];
+
+    ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+    EXPECT_EQ(spaceObject, lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName).get());
+  }
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_SpaceType)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_SpaceType) {
   Model model;
 
   SpaceType spaceType(model);
@@ -150,26 +168,56 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_SpaceType)
   lights.setSpaceType(spaceType);
 
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
-  WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
-  WorkspaceObject zoneListObject = workspace.getObjectsByType(IddObjectType::ZoneList)[0];
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Lights).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    ASSERT_EQ(0, workspace.getObjectsByType(IddObjectType::SpaceList).size());
+    ASSERT_EQ(0, workspace.getObjectsByType(IddObjectType::Space).size());
 
-  ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListName));
-  EXPECT_EQ(zoneListObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListName)->handle());
+    WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
+    WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
+    WorkspaceObject zoneListObject = workspace.getObjectsByType(IddObjectType::ZoneList)[0];
 
-  ASSERT_EQ(1u, zoneListObject.extensibleGroups().size());
-  ASSERT_TRUE(zoneListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0));
-  EXPECT_EQ(zoneObject.handle(), zoneListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0)->handle());
+    ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+    EXPECT_EQ(zoneListObject, lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName).get());
+
+    ASSERT_EQ(1, zoneListObject.extensibleGroups().size());
+    ASSERT_TRUE(zoneListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0));
+    EXPECT_EQ(zoneObject, zoneListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0).get());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Lights).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(0, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::SpaceList).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Space).size());
+
+    WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
+    WorkspaceObject spaceObject = workspace.getObjectsByType(IddObjectType::Space)[0];
+    WorkspaceObject spaceListObject = workspace.getObjectsByType(IddObjectType::SpaceList)[0];
+
+    ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+    EXPECT_EQ(spaceListObject, lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName).get());
+
+    ASSERT_EQ(1, spaceListObject.extensibleGroups().size());
+    ASSERT_TRUE(spaceListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0));
+    EXPECT_EQ(spaceObject, spaceListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0).get());
+  }
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_OneSpaceType_OneThermalZone)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_OneSpaceType_OneThermalZone) {
   Model model;
 
   // 2 W/m^2
@@ -182,12 +230,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_OneSpaceType_OneThermalZone)
   ThermalZone thermalZone(model);
 
   // 100 m^2
-  std::vector<Point3d> points;
-  points.push_back(Point3d(0,10,0));
-  points.push_back(Point3d(10,10,0));
-  points.push_back(Point3d(10,0,0));
-  points.push_back(Point3d(0,0,0));
-
+  std::vector<Point3d> points{{0, 10, 0}, {10, 10, 0}, {10, 0, 0}, {0, 0, 0}};
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 3, model);
   ASSERT_TRUE(space1);
   space1->setSpaceType(spaceType);
@@ -205,32 +248,84 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_OneSpaceType_OneThermalZone)
   EXPECT_EQ(200.0, space2->lightingPower());
 
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
 
-  WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
-  WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
-  WorkspaceObject zoneListObject = workspace.getObjectsByType(IddObjectType::ZoneList)[0];
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_TRUE(lightsObject.getString(LightsFields::DesignLevelCalculationMethod, false));
-  EXPECT_EQ("Watts/Area", lightsObject.getString(LightsFields::DesignLevelCalculationMethod, false).get());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Lights).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    ASSERT_EQ(0, workspace.getObjectsByType(IddObjectType::SpaceList).size());
+    ASSERT_EQ(0, workspace.getObjectsByType(IddObjectType::Space).size());
 
-  ASSERT_TRUE(lightsObject.getDouble(LightsFields::WattsperZoneFloorArea, false));
-  EXPECT_EQ(2.0, lightsObject.getDouble(LightsFields::WattsperZoneFloorArea, false).get());
+    WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
+    WorkspaceObject zoneObject = workspace.getObjectsByType(IddObjectType::Zone)[0];
+    WorkspaceObject zoneListObject = workspace.getObjectsByType(IddObjectType::ZoneList)[0];
 
-  ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListName));
-  EXPECT_EQ(zoneListObject.handle(), lightsObject.getTarget(LightsFields::ZoneorZoneListName)->handle());
+    ASSERT_TRUE(lightsObject.getString(LightsFields::DesignLevelCalculationMethod, false));
+    EXPECT_EQ("Watts/Area", lightsObject.getString(LightsFields::DesignLevelCalculationMethod, false).get());
 
-  ASSERT_EQ(1u, zoneListObject.extensibleGroups().size());
-  ASSERT_TRUE(zoneListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0));
-  EXPECT_EQ(zoneObject.handle(), zoneListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0)->handle());
+    ASSERT_TRUE(lightsObject.getDouble(LightsFields::WattsperZoneFloorArea, false));
+    EXPECT_EQ(2.0, lightsObject.getDouble(LightsFields::WattsperZoneFloorArea, false).get());
+
+    ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+    EXPECT_EQ(zoneListObject, lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName).get());
+
+    ASSERT_EQ(1, zoneListObject.extensibleGroups().size());
+    ASSERT_TRUE(zoneListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0));
+    EXPECT_EQ(zoneObject, zoneListObject.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>().getTarget(0).get());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Lights).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(0, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::SpaceList).size());
+    ASSERT_EQ(2, workspace.getObjectsByType(IddObjectType::Space).size());
+
+    WorkspaceObject lightsObject = workspace.getObjectsByType(IddObjectType::Lights)[0];
+    WorkspaceObject spaceListObject = workspace.getObjectsByType(IddObjectType::SpaceList)[0];
+
+    auto idf_space1_ = workspace.getObjectByTypeAndName(IddObjectType::Space, space1->nameString());
+    ASSERT_TRUE(idf_space1_);
+    auto idf_space2_ = workspace.getObjectByTypeAndName(IddObjectType::Space, space2->nameString());
+    ASSERT_TRUE(idf_space2_);
+
+    ASSERT_TRUE(lightsObject.getString(LightsFields::DesignLevelCalculationMethod, false));
+    EXPECT_EQ("Watts/Area", lightsObject.getString(LightsFields::DesignLevelCalculationMethod, false).get());
+
+    ASSERT_TRUE(lightsObject.getDouble(LightsFields::WattsperZoneFloorArea, false));
+    EXPECT_EQ(2.0, lightsObject.getDouble(LightsFields::WattsperZoneFloorArea, false).get());
+
+    ASSERT_TRUE(lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName));
+    EXPECT_EQ(spaceListObject, lightsObject.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName).get());
+
+    ASSERT_EQ(2, spaceListObject.extensibleGroups().size());
+    bool foundSpace1 = false;
+    bool foundSpace2 = false;
+    for (const auto& idf_eg : spaceListObject.extensibleGroups()) {
+      auto weg = idf_eg.cast<WorkspaceExtensibleGroup>();
+      ASSERT_TRUE(weg.getTarget(0));
+      if (idf_space1_.get() == weg.getTarget(0).get()) {
+        foundSpace1 = true;
+      } else if (idf_space2_.get() == weg.getTarget(0).get()) {
+        foundSpace2 = true;
+      }
+    }
+    ASSERT_TRUE(foundSpace1);
+    ASSERT_TRUE(foundSpace2);
+  }
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone) {
   Model model;
 
   // 1 W/m^2
@@ -250,11 +345,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone)
   ThermalZone thermalZone(model);
 
   // 100 m^2
-  std::vector<Point3d> points;
-  points.push_back(Point3d(0,10,0));
-  points.push_back(Point3d(10,10,0));
-  points.push_back(Point3d(10,0,0));
-  points.push_back(Point3d(0,0,0));
+  std::vector<Point3d> points{{0, 10, 0}, {10, 10, 0}, {10, 0, 0}, {0, 0, 0}};
 
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 3, model);
   ASSERT_TRUE(space1);
@@ -273,34 +364,77 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone)
   EXPECT_EQ(200.0, space2->lightingPower());
 
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Lights).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  bool foundLightingPower100 = false;
-  bool foundLightingPower200 = false;
-  for (int i = 0; i < 2; ++i){
-    ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false));
-    EXPECT_EQ("LightingLevel", workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false).get());
+    ASSERT_EQ(2, workspace.getObjectsByType(IddObjectType::Lights).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::SpaceList).size());
+    EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::Space).size());
 
-    ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::LightingLevel, false));
-    double lightingLevel = workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::LightingLevel, false).get();
+    bool foundLightingPower100 = false;
+    bool foundLightingPower200 = false;
+    for (int i = 0; i < 2; ++i) {
+      ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false));
+      EXPECT_EQ("LightingLevel",
+                workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false).get());
 
-    if (lightingLevel == 100.0){
-      foundLightingPower100 = true;
-    }else if (lightingLevel == 200.0){
-      foundLightingPower200 = true;
+      ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::LightingLevel, false));
+      double lightingLevel = workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::LightingLevel, false).get();
+
+      if (lightingLevel == 100.0) {
+        foundLightingPower100 = true;
+      } else if (lightingLevel == 200.0) {
+        foundLightingPower200 = true;
+      }
     }
+
+    EXPECT_TRUE(foundLightingPower100);
+    EXPECT_TRUE(foundLightingPower200);
   }
 
-  EXPECT_TRUE(foundLightingPower100);
-  EXPECT_TRUE(foundLightingPower200);
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    ASSERT_EQ(2, workspace.getObjectsByType(IddObjectType::Lights).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(2, workspace.getObjectsByType(IddObjectType::SpaceList).size());  // One per space type
+    EXPECT_EQ(2, workspace.getObjectsByType(IddObjectType::Space).size());
+
+    bool foundLightingPower1 = false;
+    bool foundLightingPower2 = false;
+    for (int i = 0; i < 2; ++i) {
+      auto lights = workspace.getObjectsByType(IddObjectType::Lights)[i];
+      // There's no need to force convert both to a DesignLevel, instead we keep a Watts/area here
+      ASSERT_TRUE(lights.getString(LightsFields::DesignLevelCalculationMethod, false));
+      EXPECT_EQ("Watts/Area", lights.getString(LightsFields::DesignLevelCalculationMethod, false).get());
+
+      EXPECT_TRUE(lights.isEmpty(LightsFields::LightingLevel));
+
+      ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::WattsperZoneFloorArea, false));
+      double wattsperZoneFloorArea = workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::WattsperZoneFloorArea, false).get();
+
+      if (wattsperZoneFloorArea == 1.0) {
+        foundLightingPower1 = true;
+      } else if (wattsperZoneFloorArea == 2.0) {
+        foundLightingPower2 = true;
+      }
+    }
+
+    EXPECT_TRUE(foundLightingPower1);
+    EXPECT_TRUE(foundLightingPower2);
+  }
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_Building)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_Building) {
   Model model;
 
   // 1 W/m^2
@@ -323,11 +457,7 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_B
   ThermalZone thermalZone(model);
 
   // 100 m^2
-  std::vector<Point3d> points;
-  points.push_back(Point3d(0,10,0));
-  points.push_back(Point3d(10,10,0));
-  points.push_back(Point3d(10,0,0));
-  points.push_back(Point3d(0,0,0));
+  std::vector<Point3d> points{{0, 10, 0}, {10, 10, 0}, {10, 0, 0}, {0, 0, 0}};
 
   boost::optional<Space> space1 = Space::fromFloorPrint(points, 3, model);
   ASSERT_TRUE(space1);
@@ -346,30 +476,80 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_TwoSpaceTypes_OneThermalZone_B
   EXPECT_EQ(200.0, space2->lightingPower());
 
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
 
-  ASSERT_EQ(2u, workspace.getObjectsByType(IddObjectType::Lights).size());
-  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
+    Workspace workspace = forwardTranslator.translateModel(model);
 
-  bool foundLightingPower100 = false;
-  bool foundLightingPower200 = false;
-  for (int i = 0; i < 2; ++i){
-    ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false));
-    EXPECT_EQ("LightingLevel", workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false).get());
+    ASSERT_EQ(2, workspace.getObjectsByType(IddObjectType::Lights).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::SpaceList).size());
+    EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::Space).size());
 
-    ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::LightingLevel, false));
-    double lightingLevel = workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::LightingLevel, false).get();
+    bool foundLightingPower100 = false;
+    bool foundLightingPower200 = false;
+    for (int i = 0; i < 2; ++i) {
+      ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false));
+      EXPECT_EQ("LightingLevel",
+                workspace.getObjectsByType(IddObjectType::Lights)[i].getString(LightsFields::DesignLevelCalculationMethod, false).get());
 
-    if (lightingLevel == 100.0){
-      foundLightingPower100 = true;
-    }else if (lightingLevel == 200.0){
-      foundLightingPower200 = true;
+      ASSERT_TRUE(workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::LightingLevel, false));
+      double lightingLevel = workspace.getObjectsByType(IddObjectType::Lights)[i].getDouble(LightsFields::LightingLevel, false).get();
+
+      if (lightingLevel == 100.0) {
+        foundLightingPower100 = true;
+      } else if (lightingLevel == 200.0) {
+        foundLightingPower200 = true;
+      }
     }
+
+    EXPECT_TRUE(foundLightingPower100);
+    EXPECT_TRUE(foundLightingPower200);
   }
 
-  EXPECT_TRUE(foundLightingPower100);
-  EXPECT_TRUE(foundLightingPower200);
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+
+    Workspace workspace = forwardTranslator.translateModel(model);
+
+    ASSERT_EQ(2, workspace.getObjectsByType(IddObjectType::Lights).size());
+    ASSERT_EQ(1, workspace.getObjectsByType(IddObjectType::Zone).size());
+    EXPECT_EQ(0, workspace.getObjectsByType(IddObjectType::ZoneList).size());
+    EXPECT_EQ(2, workspace.getObjectsByType(IddObjectType::SpaceList).size());  // One per space type
+    EXPECT_EQ(2, workspace.getObjectsByType(IddObjectType::Space).size());
+
+    std::vector<WorkspaceObject> lightss = workspace.getObjectsByType(IddObjectType::Lights);
+    ASSERT_EQ(2, lightss.size());
+    for (const auto& lights : lightss) {
+
+      boost::optional<WorkspaceObject> target_ = lights.getTarget(LightsFields::ZoneorZoneListorSpaceorSpaceListName);
+      ASSERT_TRUE(target_);
+      ASSERT_EQ(target_->iddObject().type(), IddObjectType::SpaceList);
+      EXPECT_EQ(1, target_->numExtensibleGroups());
+      auto eg = target_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+      auto spaceTarget_ = eg.getTarget(SpaceListExtensibleFields::SpaceName);
+      ASSERT_TRUE(spaceTarget_);
+
+      // Ok so here it differs from the historical behavior, where it would (have to) combine the densities to a design level
+
+      if (lights.nameString() == lights1.nameString()) {
+        // electricEquipment1 is in SpaceType1 which has Space1, density of 1.0 W/m2
+        EXPECT_EQ(space1->nameString(), spaceTarget_->nameString());
+        EXPECT_EQ(1.0, lights.getDouble(LightsFields::WattsperZoneFloorArea, true).get());
+
+      } else {
+        // electricEquipment2 is in SpaceType2 which has Space2, density of 1.0 W/m2 but with a multiplier of 2
+        EXPECT_EQ(space2->nameString(), spaceTarget_->nameString());
+        EXPECT_EQ(2.0, lights.getDouble(LightsFields::WattsperZoneFloorArea, true).get());
+      }
+
+      EXPECT_TRUE(lights.isEmpty(LightsFields::LightingLevel));
+      EXPECT_EQ("Watts/Area", lights.getString(LightsFields::DesignLevelCalculationMethod, true).get());
+    }
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ExampleModel_Lights) {
@@ -382,7 +562,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExampleModel_Lights) {
   ThermalZone thermalZone = model.getModelObjects<ThermalZone>()[0];
 
   EXPECT_EQ(4u, model.getModelObjects<Space>().size());
-  for (const Space& space : model.getModelObjects<Space>()){
+  for (const Space& space : model.getModelObjects<Space>()) {
     ASSERT_TRUE(space.spaceType());
     EXPECT_EQ(spaceType.handle(), space.spaceType()->handle());
     ASSERT_TRUE(space.thermalZone());
@@ -401,11 +581,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ExampleModel_Lights) {
 
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Lights).size());
   ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Zone).size());
-
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Building_Schedule)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Building_Schedule) {
   Model model;
 
   ScheduleCompact schedule1(model);
@@ -442,16 +620,10 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Building_Schedule)
   EXPECT_EQ(schedule2.name().get(), workspace.getObjectsByType(IddObjectType::Lights)[0].getString(LightsFields::ScheduleName, false).get());
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Bug983)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Bug983) {
   Model model;
 
-  std::vector<Point3d> vertices;
-  vertices.push_back(Point3d(0,  10, 0));
-  vertices.push_back(Point3d(10, 10, 0));
-  vertices.push_back(Point3d(10, 0,  0));
-  vertices.push_back(Point3d(0,  0,  0));
-
+  std::vector<Point3d> vertices{{0, 10, 0}, {10, 10, 0}, {10, 0, 0}, {0, 0, 0}};
   SpaceType spaceType(model);
 
   LightsDefinition lightsDefinition(model);
@@ -493,26 +665,51 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Bug983)
   EXPECT_DOUBLE_EQ(1000.00, space2.lightingPower());
 
   ForwardTranslator forwardTranslator;
-  Workspace workspace = forwardTranslator.translateModel(model);
-  EXPECT_EQ(0u, forwardTranslator.errors().size());
 
-  std::vector<WorkspaceObject> idfLights = workspace.getObjectsByType(IddObjectType::Lights);
-  ASSERT_EQ(2u, idfLights.size());
+  // When excluding space translation (historical behavior)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(true);
 
-  ASSERT_TRUE(idfLights[0].getString(LightsFields::DesignLevelCalculationMethod));
-  EXPECT_EQ("LightingLevel", idfLights[0].getString(LightsFields::DesignLevelCalculationMethod).get());
-  ASSERT_TRUE(idfLights[0].getDouble(LightsFields::LightingLevel));
-  EXPECT_DOUBLE_EQ(1000.0, idfLights[0].getDouble(LightsFields::LightingLevel).get());
+    Workspace workspace = forwardTranslator.translateModel(model);
+    EXPECT_EQ(0, forwardTranslator.errors().size());
 
-  ASSERT_TRUE(idfLights[1].getString(LightsFields::DesignLevelCalculationMethod));
-  EXPECT_EQ("LightingLevel", idfLights[1].getString(LightsFields::DesignLevelCalculationMethod).get());
-  ASSERT_TRUE(idfLights[1].getDouble(LightsFields::LightingLevel));
-  EXPECT_DOUBLE_EQ(1000.0, idfLights[1].getDouble(LightsFields::LightingLevel).get());
+    std::vector<WorkspaceObject> idfLights = workspace.getObjectsByType(IddObjectType::Lights);
+    ASSERT_EQ(2, idfLights.size());
 
+    ASSERT_TRUE(idfLights[0].getString(LightsFields::DesignLevelCalculationMethod));
+    EXPECT_EQ("LightingLevel", idfLights[0].getString(LightsFields::DesignLevelCalculationMethod).get());
+    ASSERT_TRUE(idfLights[0].getDouble(LightsFields::LightingLevel));
+    EXPECT_DOUBLE_EQ(1000.0, idfLights[0].getDouble(LightsFields::LightingLevel).get());
+
+    ASSERT_TRUE(idfLights[1].getString(LightsFields::DesignLevelCalculationMethod));
+    EXPECT_EQ("LightingLevel", idfLights[1].getString(LightsFields::DesignLevelCalculationMethod).get());
+    ASSERT_TRUE(idfLights[1].getDouble(LightsFields::LightingLevel));
+    EXPECT_DOUBLE_EQ(1000.0, idfLights[1].getDouble(LightsFields::LightingLevel).get());
+  }
+
+  // When including Space translation (new E+ 9.6.0)
+  {
+    forwardTranslator.setExcludeSpaceTranslation(false);
+
+    Workspace workspace = forwardTranslator.translateModel(model);
+    EXPECT_EQ(0, forwardTranslator.errors().size());
+
+    std::vector<WorkspaceObject> idfLights = workspace.getObjectsByType(IddObjectType::Lights);
+    ASSERT_EQ(2, idfLights.size());
+
+    ASSERT_TRUE(idfLights[0].getString(LightsFields::DesignLevelCalculationMethod));
+    EXPECT_EQ("Watts/Area", idfLights[0].getString(LightsFields::DesignLevelCalculationMethod).get());
+    ASSERT_TRUE(idfLights[0].getDouble(LightsFields::WattsperZoneFloorArea));
+    EXPECT_DOUBLE_EQ(10.0, idfLights[0].getDouble(LightsFields::WattsperZoneFloorArea).get());
+
+    ASSERT_TRUE(idfLights[1].getString(LightsFields::DesignLevelCalculationMethod));
+    EXPECT_EQ("Watts/Area", idfLights[1].getString(LightsFields::DesignLevelCalculationMethod).get());
+    ASSERT_TRUE(idfLights[1].getDouble(LightsFields::WattsperZoneFloorArea));
+    EXPECT_DOUBLE_EQ(10.0, idfLights[1].getDouble(LightsFields::WattsperZoneFloorArea).get());
+  }
 }
 
-TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Costs)
-{
+TEST_F(EnergyPlusFixture, ForwardTranslator_Lights_Costs) {
   Model model;
 
   ThermalZone zone1(model);
@@ -588,4 +785,3 @@ TEST_F(EnergyPlusFixture,ForwardTranslator_Lights_Costs)
   EXPECT_FALSE(idfObjects[0].getInt(LifeCycleCost_RecurringCostsFields::RepeatPeriodMonths));
   EXPECT_FALSE(idfObjects[0].getDouble(LifeCycleCost_RecurringCostsFields::Annualescalationrate));
 }
-

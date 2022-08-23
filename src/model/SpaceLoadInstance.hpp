@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,81 +36,78 @@
 namespace openstudio {
 namespace model {
 
-class SpaceLoadDefinition;
+  class SpaceLoadDefinition;
 
-namespace detail{
-  class SpaceLoadInstance_Impl;
-}
+  namespace detail {
+    class SpaceLoadInstance_Impl;
+  }
 
-/** SpaceLoadInstance is an abstract class derived from SpaceLoad. \link SpaceLoadInstance
+  /** SpaceLoadInstance is an abstract class derived from SpaceLoad. \link SpaceLoadInstance
  *  SpaceLoadInstances \endlink instantiate a given SpaceLoadDefinition in a Space or SpaceType
  *  by defining a multiplier and a schedule.
  */
-class MODEL_API SpaceLoadInstance : public SpaceLoad {
- public:
-  virtual ~SpaceLoadInstance() {}
+  class MODEL_API SpaceLoadInstance : public SpaceLoad
+  {
+   public:
+    virtual ~SpaceLoadInstance() {}
 
-  /** Returns the definition of this instance. **/
-  SpaceLoadDefinition definition() const;
+    /** Returns the definition of this instance. **/
+    SpaceLoadDefinition definition() const;
 
-  /** Sets the definition of this instance. **/
-  bool setDefinition(const SpaceLoadDefinition& definition);
+    /** Sets the definition of this instance. **/
+    bool setDefinition(const SpaceLoadDefinition& definition);
 
-  /** Ensures that no other instances share this instances definition. **/
-  void makeUnique();
+    /** Ensures that no other instances share this instances definition. **/
+    void makeUnique();
 
-  /** Gets the multiplier for this space instance, defaults to 1. **/
-  double multiplier() const;
+    /** Gets the multiplier for this space instance, defaults to 1. **/
+    double multiplier() const;
 
-  /** Returns true if the multiplier is defaulted. **/
-  bool isMultiplierDefaulted() const;
+    /** Returns true if the multiplier is defaulted. **/
+    bool isMultiplierDefaulted() const;
 
-  /** Returns the floor area associated with this space load instance.
+    /** Returns the floor area associated with this space load instance.
   If this space load is associated with a single space then that space's floor area is returned.
   If this space load is associated with a space type then the sum of all space floor area in that space type is returned.
   Space and SpaceLoadInstance multipliers are included in the result **/
-  double floorArea() const;
+    double floorArea() const;
 
-  /** Returns the number of instances this space load instance represents.
+    /** Returns the number of instances this space load instance represents.
   Space and SpaceLoadInstance multipliers are included in the result **/
-  int quantity() const;
+    int quantity() const;
 
- protected:
+   protected:
+    /** @name Constructors and Destructors */
+    //@{
 
-  /** @name Constructors and Destructors */
-  //@{
+    /// Constructs a new SpaceLoadInstance object in the model.
+    SpaceLoadInstance(IddObjectType type, const SpaceLoadDefinition& definition);
 
-  /// Constructs a new SpaceLoadInstance object in the model.
-  SpaceLoadInstance(IddObjectType type, const SpaceLoadDefinition& definition);
+    //@}
 
+    /// @cond
 
-  //@}
+    typedef detail::SpaceLoadInstance_Impl ImplType;
 
-  /// @cond
+    friend class Model;
+    friend class openstudio::IdfObject;
+    friend class detail::SpaceLoadInstance_Impl;
 
-  typedef detail::SpaceLoadInstance_Impl ImplType;
+    explicit SpaceLoadInstance(std::shared_ptr<detail::SpaceLoadInstance_Impl> impl);
 
-  friend class Model;
-  friend class openstudio::IdfObject;
-  friend class detail::SpaceLoadInstance_Impl;
+   private:
+    REGISTER_LOGGER("openstudio.model.SpaceLoadInstance");
 
-  explicit SpaceLoadInstance(std::shared_ptr<detail::SpaceLoadInstance_Impl> impl);
+    /// @endcond
+  };
 
- private:
+  /** \relates SpaceLoadInstance */
+  typedef boost::optional<SpaceLoadInstance> OptionalSpaceLoadInstance;
 
-  REGISTER_LOGGER("openstudio.model.SpaceLoadInstance");
+  /** \relates SpaceLoadInstance */
+  typedef std::vector<SpaceLoadInstance> SpaceLoadInstanceVector;
 
-  /// @endcond
+}  // namespace model
+}  // namespace openstudio
 
-};
-
-/** \relates SpaceLoadInstance */
-typedef boost::optional<SpaceLoadInstance> OptionalSpaceLoadInstance;
-
-/** \relates SpaceLoadInstance */
-typedef std::vector<SpaceLoadInstance> SpaceLoadInstanceVector;
-
-} // model
-} // openstudio
-
-#endif // MODEL_SPACELOADINSTANCE_HPP
+#endif  // MODEL_SPACELOADINSTANCE_HPP

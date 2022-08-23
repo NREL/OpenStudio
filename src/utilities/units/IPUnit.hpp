@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -38,24 +38,14 @@ namespace detail {
 
   class IPUnit_Impl;
 
-} // detail
+}  // namespace detail
 
 /** Structure to hold IPUnit exponents needed for IPUnit construction. \relates IPUnit */
-struct UTILITIES_API IPExpnt {
+struct UTILITIES_API IPExpnt
+{
  public:
-  IPExpnt(int lbm=0,
-          int ft=0,
-          int s=0,
-          int R=0,
-          int A=0,
-          int cd=0,
-          int lbmol=0,
-          int lbf=0,
-          int deg=0,
-          int sr=0,
-          int people=0,
-          int cycle=0,
-          int dollar=0)
+  IPExpnt(int lbm = 0, int ft = 0, int s = 0, int R = 0, int A = 0, int cd = 0, int lbmol = 0, int lbf = 0, int deg = 0, int sr = 0, int people = 0,
+          int cycle = 0, int dollar = 0)
     : m_lbm(lbm),
       m_ft(ft),
       m_s(s),
@@ -68,8 +58,8 @@ struct UTILITIES_API IPExpnt {
       m_sr(sr),
       m_people(people),
       m_cycle(cycle),
-      m_dollar(dollar)
-  {}
+      m_dollar(dollar) {}
+
  private:
   int m_lbm;
   int m_ft;
@@ -91,7 +81,8 @@ struct UTILITIES_API IPExpnt {
 /** IPUnit is a Unit with baseUnits fixed by its constructors, see IPExpnt. setBaseUnitExponent
  *  throws an exception if any other string is passed in as a baseUnit. IPUnit.hpp declares
  *  related operators and UnitFactory callback functions. */
-class UTILITIES_API IPUnit : public Unit {
+class UTILITIES_API IPUnit : public Unit
+{
  public:
   /** @name Constructors and Destructors */
   //@{
@@ -103,9 +94,7 @@ class UTILITIES_API IPUnit : public Unit {
    *  \param[in] exponents holds the exponents for each base unit.
    *  \param[in] scaleExponent exponent for scale. For instance 3 for kilo.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  IPUnit(const IPExpnt& exponents=IPExpnt(),
-         int scaleExponent=0,
-         const std::string& prettyString="");
+  IPUnit(const IPExpnt& exponents = IPExpnt(), int scaleExponent = 0, const std::string& prettyString = "");
 
   /** Alternate constructor. Specify the abbreviation of the scale, rather than its
    *  exponent.
@@ -114,9 +103,7 @@ class UTILITIES_API IPUnit : public Unit {
    *    "k" for kilo.
    *  \param[in] exponents holds the exponents for each base unit.
    *  \param[in] prettyString optional string to use in place of standardString. */
-  IPUnit(const std::string& scaleAbbreviation,
-         const IPExpnt& exponents=IPExpnt(),
-         const std::string& prettyString="");
+  IPUnit(const std::string& scaleAbbreviation, const IPExpnt& exponents = IPExpnt(), const std::string& prettyString = "");
 
   virtual ~IPUnit() {}
 
@@ -145,7 +132,6 @@ class UTILITIES_API IPUnit : public Unit {
 
   /// @endcond
  private:
-
   REGISTER_LOGGER("openstudio.units.IPUnit");
 };
 
@@ -205,7 +191,6 @@ UTILITIES_API IPUnit createIPFrequency();
 
 //@}
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // UTILITIES_UNITS_IPUNIT_HPP
-
+#endif  // UTILITIES_UNITS_IPUNIT_HPP

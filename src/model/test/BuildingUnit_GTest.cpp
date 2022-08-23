@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -50,8 +50,7 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, BuildingUnit_RenderingColor)
-{
+TEST_F(ModelFixture, BuildingUnit_RenderingColor) {
 
   Model model;
   BuildingUnit buildingUnit(model);
@@ -76,11 +75,9 @@ TEST_F(ModelFixture, BuildingUnit_RenderingColor)
 
   buildingUnit.resetRenderingColor();
   ASSERT_FALSE(buildingUnit.renderingColor());
-
 }
 
-TEST_F(ModelFixture, BuildingUnit_BuildingUnitType)
-{
+TEST_F(ModelFixture, BuildingUnit_BuildingUnitType) {
   Model model;
   BuildingUnit bldgUnit(model);
 
@@ -110,11 +107,9 @@ TEST_F(ModelFixture, BuildingUnit_BuildingUnitType)
   EXPECT_FALSE(bldgUnit.setBuildingUnitType("Bogus"));
   bldgUnitType = bldgUnit.buildingUnitType();
   EXPECT_EQ(bldgUnitType, "NonResidential");
-
 }
 
-TEST_F(ModelFixture, BuildingUnit_Spaces)
-{
+TEST_F(ModelFixture, BuildingUnit_Spaces) {
   Model model;
   BuildingUnit bldgUnit(model);
   bldgUnit.setName("Building Unit 1");
@@ -162,11 +157,9 @@ TEST_F(ModelFixture, BuildingUnit_Spaces)
   spaces = bldgUnit.spaces();
   EXPECT_EQ(spaces.size(), 1);
   EXPECT_EQ(spaces.at(0), space2);
-
 }
 
-TEST_F(ModelFixture, BuildingUnit_Features)
-{
+TEST_F(ModelFixture, BuildingUnit_Features) {
   Model model;
   BuildingUnit bldgUnit(model);
 
@@ -248,5 +241,4 @@ TEST_F(ModelFixture, BuildingUnit_Features)
   ASSERT_NE(std::find(suggestedFeatures.begin(), suggestedFeatures.end(), "NumberOfBedrooms"), suggestedFeatures.end());
   ASSERT_NE(std::find(suggestedFeatures.begin(), suggestedFeatures.end(), "NumberOfBathrooms"), suggestedFeatures.end());
   ASSERT_NE(std::find(suggestedFeatures.begin(), suggestedFeatures.end(), "MyUniqueFeature"), suggestedFeatures.end());
-
 }

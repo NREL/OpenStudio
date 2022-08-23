@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -33,51 +33,50 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
 
-namespace openstudio{
+namespace openstudio {
 
-  LogMessage::LogMessage(LogLevel logLevel, const LogChannel& logChannel, const std::string& logMessage)
-    : m_logLevel(logLevel), m_logChannel(logChannel), m_logMessage(logMessage)
-  {}
+LogMessage::LogMessage(LogLevel logLevel, const LogChannel& logChannel, const std::string& logMessage)
+  : m_logLevel(logLevel), m_logChannel(logChannel), m_logMessage(logMessage) {}
 
-  std::vector<LogMessage> LogMessage::parseLogText(const std::string& logText)
-  {
-    std::vector<LogMessage> result;
+std::vector<LogMessage> LogMessage::parseLogText(const std::string& logText) {
+  std::vector<LogMessage> result;
 
-    std::string text = logText;
+  std::string text = logText;
 
-    // get preceding comments
-    boost::smatch matches;
-    boost::regex messageRegex("\\[([^\\]]*)\\]\\s*<([\\-0-9]+)>([^\\[]*)(.*)");
-    while(boost::regex_search(text, matches, messageRegex)){
-      std::string channel(matches[1].first, matches[1].second); boost::trim(channel);
-      std::string levelString(matches[2].first, matches[2].second); boost::trim(levelString);
-      std::string message(matches[3].first, matches[3].second); boost::trim(message);
-      std::string remainingText(matches[4].first, matches[4].second); boost::trim(remainingText);
+  // get preceding comments
+  boost::smatch matches;
+  boost::regex messageRegex("\\[([^\\]]*)\\]\\s*<([\\-0-9]+)>([^\\[]*)(.*)");
+  while (boost::regex_search(text, matches, messageRegex)) {
+    std::string channel(matches[1].first, matches[1].second);
+    boost::trim(channel);
+    std::string levelString(matches[2].first, matches[2].second);
+    boost::trim(levelString);
+    std::string message(matches[3].first, matches[3].second);
+    boost::trim(message);
+    std::string remainingText(matches[4].first, matches[4].second);
+    boost::trim(remainingText);
 
-      int level = boost::lexical_cast<int>(levelString);
+    int level = boost::lexical_cast<int>(levelString);
 
-      result.push_back(LogMessage((LogLevel)level, channel, message));
+    result.push_back(LogMessage((LogLevel)level, channel, message));
 
-      // reduce the parsed text
-      text = remainingText;
-    }
-
-    return result;
+    // reduce the parsed text
+    text = remainingText;
   }
 
-  LogLevel LogMessage::logLevel() const
-  {
-    return m_logLevel;
-  }
+  return result;
+}
 
-  LogChannel LogMessage::logChannel() const
-  {
-    return m_logChannel;
-  }
+LogLevel LogMessage::logLevel() const {
+  return m_logLevel;
+}
 
-  std::string LogMessage::logMessage() const
-  {
-    return m_logMessage;
-  }
+LogChannel LogMessage::logChannel() const {
+  return m_logChannel;
+}
 
-} // openstudio
+std::string LogMessage::logMessage() const {
+  return m_logMessage;
+}
+
+}  // namespace openstudio

@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -36,78 +36,78 @@
 namespace openstudio {
 namespace model {
 
-class Node;
-class ThermalZone;
+  class Node;
+  class ThermalZone;
 
-namespace detail {
+  namespace detail {
 
-  class SetpointManagerSingleZoneHumidityMinimum_Impl;
+    class SetpointManagerSingleZoneHumidityMinimum_Impl;
 
-} // detail
+  }  // namespace detail
 
-/** SetpointManagerSingleZoneHumidityMinimum is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SingleZone:Humidity:Minimum'. */
-class MODEL_API SetpointManagerSingleZoneHumidityMinimum : public SetpointManager {
- public:
-  /** @name Constructors and Destructors */
-  //@{
+  /** SetpointManagerSingleZoneHumidityMinimum is a SetpointManager that wraps the OpenStudio IDD object 'OS:SetpointManager:SingleZone:Humidity:Minimum'. */
+  class MODEL_API SetpointManagerSingleZoneHumidityMinimum : public SetpointManager
+  {
+   public:
+    /** @name Constructors and Destructors */
+    //@{
 
-  explicit SetpointManagerSingleZoneHumidityMinimum(const Model& model);
+    explicit SetpointManagerSingleZoneHumidityMinimum(const Model& model);
 
-  virtual ~SetpointManagerSingleZoneHumidityMinimum() {}
+    virtual ~SetpointManagerSingleZoneHumidityMinimum() {}
 
-  //@}
+    //@}
 
-  static IddObjectType iddObjectType();
+    static IddObjectType iddObjectType();
 
-  static std::vector<std::string> controlVariableValues();
+    static std::vector<std::string> controlVariableValues();
 
-  /** @name Getters */
-  //@{
+    /** @name Getters */
+    //@{
 
-  std::string controlVariable() const;
+    std::string controlVariable() const;
 
-  boost::optional<Node> setpointNode() const;
+    boost::optional<Node> setpointNode() const;
 
-  boost::optional<ThermalZone> controlZone() const;
+    boost::optional<ThermalZone> controlZone() const;
 
-  //@}
-  /** @name Setters */
-  //@{
+    //@}
+    /** @name Setters */
+    //@{
 
-  bool setControlVariable(const std::string& controlVariable);
+    bool setControlVariable(const std::string& controlVariable);
 
-  bool setControlZone(const ThermalZone& thermalZone);
+    bool setControlZone(const ThermalZone& thermalZone);
 
-  void resetControlZone();
+    void resetControlZone();
 
-  //@}
-  /** @name Other */
-  //@{
+    //@}
+    /** @name Other */
+    //@{
 
-  //@}
- protected:
-  /// @cond
-  typedef detail::SetpointManagerSingleZoneHumidityMinimum_Impl ImplType;
+    //@}
+   protected:
+    /// @cond
+    typedef detail::SetpointManagerSingleZoneHumidityMinimum_Impl ImplType;
 
-  explicit SetpointManagerSingleZoneHumidityMinimum(std::shared_ptr<detail::SetpointManagerSingleZoneHumidityMinimum_Impl> impl);
+    explicit SetpointManagerSingleZoneHumidityMinimum(std::shared_ptr<detail::SetpointManagerSingleZoneHumidityMinimum_Impl> impl);
 
-  friend class detail::SetpointManagerSingleZoneHumidityMinimum_Impl;
-  friend class Model;
-  friend class IdfObject;
-  friend class openstudio::detail::IdfObject_Impl;
-  /// @endcond
- private:
-  REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneHumidityMinimum");
-};
+    friend class detail::SetpointManagerSingleZoneHumidityMinimum_Impl;
+    friend class Model;
+    friend class IdfObject;
+    friend class openstudio::detail::IdfObject_Impl;
+    /// @endcond
+   private:
+    REGISTER_LOGGER("openstudio.model.SetpointManagerSingleZoneHumidityMinimum");
+  };
 
-/** \relates SetpointManagerSingleZoneHumidityMinimum*/
-typedef boost::optional<SetpointManagerSingleZoneHumidityMinimum> OptionalSetpointManagerSingleZoneHumidityMinimum;
+  /** \relates SetpointManagerSingleZoneHumidityMinimum*/
+  typedef boost::optional<SetpointManagerSingleZoneHumidityMinimum> OptionalSetpointManagerSingleZoneHumidityMinimum;
 
-/** \relates SetpointManagerSingleZoneHumidityMinimum*/
-typedef std::vector<SetpointManagerSingleZoneHumidityMinimum> SetpointManagerSingleZoneHumidityMinimumVector;
+  /** \relates SetpointManagerSingleZoneHumidityMinimum*/
+  typedef std::vector<SetpointManagerSingleZoneHumidityMinimum> SetpointManagerSingleZoneHumidityMinimumVector;
 
-} // model
-} // openstudio
+}  // namespace model
+}  // namespace openstudio
 
-#endif // MODEL_SETPOINTMANAGERSINGLEZONEHUMIDITYMINIMUM_HPP
-
+#endif  // MODEL_SETPOINTMANAGERSINGLEZONEHUMIDITYMINIMUM_HPP

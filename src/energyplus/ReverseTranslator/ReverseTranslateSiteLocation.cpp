@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -42,43 +42,41 @@ namespace openstudio {
 
 namespace energyplus {
 
-OptionalModelObject ReverseTranslator::translateSiteLocation( const WorkspaceObject & workspaceObject )
-{
- if( workspaceObject.iddObject().type() != IddObjectType::Site_Location ){
-   LOG(Error, "WorkspaceObject is not IddObjectType: Site:Location");
-    return boost::none;
+  OptionalModelObject ReverseTranslator::translateSiteLocation(const WorkspaceObject& workspaceObject) {
+    if (workspaceObject.iddObject().type() != IddObjectType::Site_Location) {
+      LOG(Error, "WorkspaceObject is not IddObjectType: Site:Location");
+      return boost::none;
+    }
+
+    Site site = m_model.getUniqueModelObject<Site>();
+    OptionalString optS = workspaceObject.name();
+    if (optS) {
+      site.setName(*optS);
+    }
+
+    OptionalDouble od = workspaceObject.getDouble(Site_LocationFields::Latitude);
+    if (od) {
+      site.setLatitude(*od);
+    }
+
+    od = workspaceObject.getDouble(Site_LocationFields::Longitude);
+    if (od) {
+      site.setLongitude(*od);
+    }
+
+    od = workspaceObject.getDouble(Site_LocationFields::TimeZone);
+    if (od) {
+      site.setTimeZone(*od);
+    }
+
+    od = workspaceObject.getDouble(Site_LocationFields::Elevation);
+    if (od) {
+      site.setElevation(*od);
+    }
+
+    return site;
   }
 
-  Site site = m_model.getUniqueModelObject<Site>();
-  OptionalString optS = workspaceObject.name();
-  if(optS) {
-    site.setName(*optS);
-  }
+}  // namespace energyplus
 
-  OptionalDouble od = workspaceObject.getDouble(Site_LocationFields::Latitude);
-  if(od) {
-    site.setLatitude(*od);
-  }
-
-  od = workspaceObject.getDouble(Site_LocationFields::Longitude);
-  if(od) {
-    site.setLongitude(*od);
-  }
-
-  od = workspaceObject.getDouble(Site_LocationFields::TimeZone);
-  if(od) {
-    site.setTimeZone(*od);
-  }
-
-  od = workspaceObject.getDouble(Site_LocationFields::Elevation);
-  if(od) {
-    site.setElevation(*od);
-  }
-
-  return site;
-}
-
-} // energyplus
-
-} // openstudio
-
+}  // namespace openstudio

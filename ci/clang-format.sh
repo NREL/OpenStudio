@@ -1,9 +1,16 @@
 #!/bin/bash
 
-# This script compares two branches (eg. pr-bugfix - <> develop )
-# and finds files of types cpp, hpp, c, h
+# This script compares two branches (eg. pr-bugfix - <> develop )# and finds files of types cpp, hpp, c, h
 # that have changed between branches and processes each of these files using clang-format.
-# The default behavior of clang-format is to auto change the file and format according to the style guide (.clang-format).  If these files change the CI will alert fail and alert the user to correct the changes. The user should run this script locally and accept the auto changes proposed by clang-format.
+# The default behavior of clang-format is to auto change the file and format according to the style guide (.clang-format). 
+# If these files change the CI will alert fail and alert the user to correct the changes. 
+# The user should run this script locally and accept the auto changes proposed by clang-format.
+#
+# You can also run the clang-format on the entire /src directory if desired. To do that can use the following: 
+# using find on for Mac osx 
+# find -E ./src -regex '.*\.(cpp|hpp|c|h)$'  | xargs clang-format -style=file -i -fallback-style=none
+# using find on linux 
+# find ./src -regextype posix-extended -regex '.*\.(cpp|hpp|c|h)$' | xargs clang-format -style=file -i -fallback-style=none
 
 display_usage() {
   echo -e "\nUsage:\ PR_BRANCH_NAME TARGET_BRANCH_NAME \n"
@@ -17,6 +24,12 @@ fi
 
 PR_BRANCH_NAME=$1
 TARGET_BRANCH_NAME=$2
+
+# If pointing at HEAD, then also include uncommited changes, but only the cached (=staged for next commit) so we can use it as a precommit script
+if [ $PR_BRANCH_NAME == "HEAD" ]
+then
+  PR_BRANCH_NAME="--cached "
+fi
 
 # first find if any files changed
 num=$(git diff $PR_BRANCH_NAME $TARGET_BRANCH_NAME --name-only | grep '.*\.\(cpp\|c\|hpp\|h\)$' | wc -l | tr -d '[:space:]')

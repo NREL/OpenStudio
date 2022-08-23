@@ -1,5 +1,5 @@
 /***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2019, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
 *
 *  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
 *  following conditions are met:
@@ -45,24 +45,22 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
-{
+TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlow) {
   ::testing::FLAGS_gtest_death_test_style = "threadsafe";
 
-  ASSERT_EXIT (
-  {
-     Model m;
-     AirConditionerVariableRefrigerantFlow vrf(m);
+  ASSERT_EXIT(
+    {
+      Model m;
+      AirConditionerVariableRefrigerantFlow vrf(m);
 
-     exit(0);
-  } ,
-    ::testing::ExitedWithCode(0), "" );
+      exit(0);
+    },
+    ::testing::ExitedWithCode(0), "");
 
-   Model m;
-   AirConditionerVariableRefrigerantFlow vrf(m);
+  Model m;
+  AirConditionerVariableRefrigerantFlow vrf(m);
 
-  for( int i = 0; i != 5; i++ )
-  {
+  for (int i = 0; i != 5; i++) {
     ThermalZone zone(m);
 
     ZoneHVACTerminalUnitVariableRefrigerantFlow vrfTerminal(m);
@@ -72,7 +70,7 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
     vrf.addTerminal(vrfTerminal);
   }
 
-  ASSERT_EQ(5u,vrf.terminals().size());
+  ASSERT_EQ(5u, vrf.terminals().size());
 
   Model m2;
 
@@ -101,13 +99,12 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow)
   ASSERT_TRUE(vrfClone->heatingPartLoadFractionCorrelationCurve());
   ASSERT_TRUE(vrfClone->pipingCorrectionFactorforLengthinCoolingModeCurve());
 
-
   ASSERT_TRUE(vrfClone->terminals().empty());
 
-  ASSERT_TRUE(! vrfClone->remove().empty());
+  ASSERT_TRUE(!vrfClone->remove().empty());
 }
 
-TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow_addToNode) {
+TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlow_addToNode) {
   Model m;
   AirConditionerVariableRefrigerantFlow vrf(m);
 
@@ -135,7 +132,7 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow_addToNode) {
   AirLoopHVAC airLoop(m);
   Node supplyOutletNode = airLoop.supplyOutletNode();
   EXPECT_FALSE(vrf.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)2, airLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)2, airLoop.supplyComponents().size());
   EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
   EXPECT_EQ("AirCooled", vrf.condenserType());
 
@@ -150,13 +147,13 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow_addToNode) {
   PlantLoop plantLoop(m);
   supplyOutletNode = plantLoop.supplyOutletNode();
   EXPECT_FALSE(vrf.addToNode(supplyOutletNode));
-  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
   EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
   EXPECT_EQ("AirCooled", vrf.condenserType());
 
   // Demand side should be allowed
   EXPECT_TRUE(plantLoop.addDemandBranchForComponent(vrf));
-  EXPECT_EQ( (unsigned)7, plantLoop.demandComponents().size() );
+  EXPECT_EQ((unsigned)7, plantLoop.demandComponents().size());
   // This should have switched the **default** Condenser Type to 'WaterCooled'
   EXPECT_TRUE(vrf.isCondenserTypeDefaulted());
   EXPECT_EQ("WaterCooled", vrf.condenserType());
@@ -174,7 +171,7 @@ TEST_F(ModelFixture,AirConditionerVariableRefrigerantFlow_addToNode) {
   // Note: do not use removeDemandBranchWithComponent here, it would delete the VRF itself
   vrf.disconnect();
   EXPECT_FALSE(vrf.plantLoop());
-  EXPECT_EQ( (unsigned)5, plantLoop.supplyComponents().size() );
+  EXPECT_EQ((unsigned)5, plantLoop.supplyComponents().size());
   EXPECT_FALSE(vrf.isCondenserTypeDefaulted());
   EXPECT_EQ("EvaporativelyCooled", vrf.condenserType());
 
