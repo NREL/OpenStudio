@@ -1,4 +1,4 @@
-!IDD_Version 3.4.1
+!IDD_Version 3.5.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -3503,8 +3503,8 @@ OS:Construction:InternalSource,
        \type real
        \default 0.154
        \units m
-       \minimum 0.0
-       \maximum< 1.0
+       \minimum 0.01
+       \maximum 1.0
   N5 , \field Two-Dimensional Temperature Calculation Position
        \minimum 0.0
        \maximum 1.0
@@ -4103,6 +4103,7 @@ OS:ElectricEquipment:ITE:AirCooled:Definition,
        \key A4
        \key B
        \key C
+       \key H1
        \default None
   A9, \field Air Inlet Connection Type
        \note Specifies the type of connection between the zone and the ITE air inlet node.
@@ -5723,6 +5724,14 @@ OS:ShadingControl,
        \key OnIfHighOutdoorAirTempAndHighHorizontalSolar
        \key OnIfHighZoneAirTempAndHighSolarOnWindow
        \key OnIfHighZoneAirTempAndHighHorizontalSolar
+       \note The following three control types require that both Setpoint and Setpoint2 be specified
+       \note Setpoint corresponds to solar radiation incident (W/m2)
+       \note Setpoint2 corresponds to luminance (cd/m2)
+       \note They can only be used in zones with daylighting controls.
+       \note They are applicable to any Shading Type except ExteriorScreen.
+       \key OnIfHighSolarOrHighLuminanceTillMidnight
+       \key OnIfHighSolarOrHighLuminanceTillSunset
+       \key OnIfHighSolarOrHighLuminanceTillNextMorning
        \default OnIfHighSolarOnWindow
   A7 , \field Schedule Name
        \type object-list
@@ -5769,10 +5778,14 @@ OS:ShadingControl,
        \note Required if Type of Slat Angle Control for Blinds = ScheduledSlatAngle
        \note Schedule values should be degrees (0 minimum, 180 maximum)
   N2 , \field Setpoint 2
-       \note W/m2 for solar-based controls, deg C for temperature-based controls.
+       \units W/m2, deg C or cd/m2
+       \note W/m2 for solar-based controls, deg C for temperature-based controls,
+       \note cd/m2 for luminance based controls.
        \note Used only as the second setpoint for the following two-setpoint control types:
        \note OnIfHighOutdoorAirTempAndHighSolarOnWindow, OnIfHighOutdoorAirTempAndHighHorizontalSolar,
-       \note OnIfHighZoneAirTempAndHighSolarOnWindow, and OnIfHighZoneAirTempAndHighHorizontalSolar
+       \note OnIfHighZoneAirTempAndHighSolarOnWindow, OnIfHighZoneAirTempAndHighHorizontalSolar,
+       \note OnIfHighSolarOrHighLuminanceTillMidnight, OnIfHighSolarOrHighLuminanceTillSunset,
+       \note and OnIfHighSolarOrHighLuminanceTillNextMorning.
        \type real
        \ip-units unknown
   A12, \field Multiple Surface Control Type
