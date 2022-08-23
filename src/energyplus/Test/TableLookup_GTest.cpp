@@ -35,6 +35,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/TableLookup.hpp"
 #include "../../model/TableLookup_Impl.hpp"
+#include "../../model/TableIndependentVariable.hpp"
+#include "../../model/TableIndependentVariable_Impl.hpp"
 
 #include <utilities/idd/Table_Lookup_FieldEnums.hxx>
 #include <utilities/idd/Table_IndependentVariableList_FieldEnums.hxx>
@@ -51,8 +53,24 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup) {
-  {
-    Model m;
-    TableLookup table(m);
-  }
+  Model m;
+  TableLookup tableLookup(m);
+  TableIndependentVariable independentVariable(m);
+  tableLookup.addIndependentVariable(independentVariable);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(m);
+
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Table_Lookup).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Table_IndependentVariableList).size());
+  ASSERT_EQ(1u, workspace.getObjectsByType(IddObjectType::Table_IndependentVariable).size());
+
+  WorkspaceObject lookupIdf = workspace.getObjectsByType(IddObjectType::Table_Lookup)[0];
+  WorkspaceObject independentVariableListIdf = workspace.getObjectsByType(IddObjectType::Table_IndependentVariableList)[0];
+  WorkspaceObject independentVariableIdf = workspace.getObjectsByType(IddObjectType::Table_IndependenVariable)[0];
+
+  EXPECT_EQ(independentVariableListIdf.nameString(), lookup.getString(Table_LookupFields::IndependentVariableListName));
+  ASSERT_EQ(1u, independentVariableListIdf.extensibleGroups().size());
+  WorkspaceExtensibleGroup w_eg = independentVariableListIdf.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  EXPECT_EQ(independentVariableIdf.nameString(), w_eg.getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName, false).get());
 }

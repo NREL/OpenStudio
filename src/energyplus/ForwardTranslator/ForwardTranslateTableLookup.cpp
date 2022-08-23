@@ -52,7 +52,7 @@ namespace energyplus {
     OptionalDouble d;
     OptionalModelObject temp;
 
-    std::vector<TableIndependentVariables> independentVariables = modelObject.independentVariables();
+    std::vector<TableIndependentVariable> independentVariables = modelObject.independentVariables();
 
     // If the TableLookup doesn't have at least one TableIndependentVariable, then it shouldn't be translated
     if (independentVariables.empty()) {
@@ -71,13 +71,13 @@ namespace energyplus {
     idfObject.setString(Table_LookupFields::IndependentVariableListName, tableIndependentVariableList.nameString());
 
     // Table:IndependentVariable
-    for (auto independentVariable : independentVariables) {
+    for (auto& independentVariable : independentVariables) {
       IdfObject tableIndependentVariable(IddObjectType::Table_IndependentVariable);
       tableIndependentVariable.setName(independentVariable.nameString());
       m_idfObjects.push_back(tableIndependentVariable);
 
-      auto eg = tableIndependentVariableList.pushExtensibleGroup();
-      eg.setString(Table_IndependentVariableListExtensibleFields::IndependentVariableName, independentVariable.nameString());
+      IdfExtensibleGroup independentVariableGroup = tableIndependentVariableList.pushExtensibleGroup();
+      independentVariableGroup.setString(Table_IndependentVariableListExtensibleFields::IndependentVariableName, independentVariable.nameString());
     }
 
     return idfObject;
