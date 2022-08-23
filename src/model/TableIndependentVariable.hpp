@@ -31,9 +31,10 @@
 #define MODEL_TABLEINDEPENDENTVARIABLE_HPP
 
 #include "ModelAPI.hpp"
-#include "ParentObject.hpp"
+#include "ResourceObject.hpp"
 
 namespace openstudio {
+
 namespace model {
 
   class TableLookup;
@@ -44,8 +45,8 @@ namespace model {
 
   }  // namespace detail
 
-  /** TableIndependentVariable is a ParentObject that wraps the OpenStudio IDD object 'OS:Table:IndependentVariable'. */
-  class MODEL_API TableIndependentVariable : public ParentObject
+  /** TableIndependentVariable is a ResourceObject that wraps the OpenStudio IDD object 'OS:Table:IndependentVariable'. */
+  class MODEL_API TableIndependentVariable : public ResourceObject
   {
    public:
     /** @name Constructors and Destructors */

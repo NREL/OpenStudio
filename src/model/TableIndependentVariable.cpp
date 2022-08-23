@@ -46,38 +46,28 @@ namespace model {
   namespace detail {
 
     TableIndependentVariable_Impl::TableIndependentVariable_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-      : ParentObject_Impl(idfObject, model, keepHandle) {
+      : ResourceObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == TableIndependentVariable::iddObjectType());
     }
 
     TableIndependentVariable_Impl::TableIndependentVariable_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
                                                                  bool keepHandle)
-      : ParentObject_Impl(other, model, keepHandle) {
+      : ResourceObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == TableIndependentVariable::iddObjectType());
     }
 
     TableIndependentVariable_Impl::TableIndependentVariable_Impl(const TableIndependentVariable_Impl& other, Model_Impl* model, bool keepHandle)
-      : ParentObject_Impl(other, model, keepHandle) {}
+      : ResourceObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& TableIndependentVariable_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
+      if (result.empty()) {
+      }
       return result;
     }
 
     IddObjectType TableIndependentVariable_Impl::iddObjectType() const {
       return TableIndependentVariable::iddObjectType();
-    }
-
-    ModelObject TableIndependentVariable_Impl::clone(Model model) const {
-      auto t_clone = ParentObject_Impl::clone(model).cast<TableIndependentVariable>();
-
-      return t_clone;
-    }
-
-    std::vector<ModelObject> TableIndependentVariable_Impl::children() const {
-      std::vector<ModelObject> children;
-
-      return children;
     }
 
   }  // namespace detail
