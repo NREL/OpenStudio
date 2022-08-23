@@ -44,6 +44,10 @@
 #include <utilities/idd/IddEnums.hxx>
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
+#include <utilities/idd/IddFactory.hxx>
 
 #include <resources.hxx>
 #include <sstream>
@@ -67,7 +71,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup) {
 
   WorkspaceObject lookupIdf = workspace.getObjectsByType(IddObjectType::Table_Lookup)[0];
   WorkspaceObject independentVariableListIdf = workspace.getObjectsByType(IddObjectType::Table_IndependentVariableList)[0];
-  WorkspaceObject independentVariableIdf = workspace.getObjectsByType(IddObjectType::Table_IndependenVariable)[0];
+  WorkspaceObject independentVariableIdf = workspace.getObjectsByType(IddObjectType::Table_IndependentVariable)[0];
 
   EXPECT_EQ(independentVariableListIdf.nameString(), lookup.getString(Table_LookupFields::IndependentVariableListName));
   ASSERT_EQ(1u, independentVariableListIdf.extensibleGroups().size());
