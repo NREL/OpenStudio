@@ -33,6 +33,8 @@
 
 #include "../TableLookup.hpp"
 #include "../TableLookup_Impl.hpp"
+#include "../TableIndependentVariable.hpp"
+#include "../TableIndependentVariable_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -43,14 +45,19 @@ TEST_F(ModelFixture, TableLookup) {
   ASSERT_EXIT(
     {
       Model m;
-      TableLookup table(m);
+      TableLookup tableLookup(m);
 
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
 
-  {
-    Model m;
-    TableLookup table(m);
-  }
+  Model m;
+  TableLookup tableLookup(m);
+
+  TableIndependentVariable independentVariable(m);
+
+  EXPECT_EQ(0u, independentVariable.tableLookups().size());
+  EXPECT_TRUE(tableLookup.addIndependentVariable(independentVariable));
+  EXPECT_EQ(1u, tableLookup.independentVariables().size());
+  EXPECT_EQ(1u, independentVariable.tableLookups().size());
 }

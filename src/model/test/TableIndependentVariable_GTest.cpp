@@ -41,9 +41,14 @@ TEST_F(ModelFixture, TableIndependentVariable) {
   ASSERT_EXIT(
     {
       Model m;
-      TableIndependentVariable table(m);
+      TableIndependentVariable independentVariable(m);
 
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  Model m;
+  TableIndependentVariable independentVariable(m);
+
+  EXPECT_EQ(0u, independentVariable.tableLookups().size());
 }
