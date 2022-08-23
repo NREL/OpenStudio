@@ -154,6 +154,13 @@ namespace model {
 
   TableLookup::TableLookup(const Model& model) : Curve(TableLookup::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::TableLookup_Impl>());
+
+    // TODO
+
+    auto tableIndependentVariableList = ModelObjectList(model);
+    tableIndependentVariableList.setName(this->name().get() + " Independent Variable List");
+    ok = getImpl<detail::TableLookup_Impl>()->setIndependentVariableList(tableIndependentVariableList);
+    OS_ASSERT(ok);
   }
 
   IddObjectType TableLookup::iddObjectType() {

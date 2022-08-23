@@ -72,7 +72,7 @@ namespace model {
 
   }  // namespace detail
 
-  TableIndependentVariable::TableIndependentVariable(const Model& model) : ParentObject(TableIndependentVariable::iddObjectType(), model) {
+  TableIndependentVariable::TableIndependentVariable(const Model& model) : ResourceObject(TableIndependentVariable::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::TableIndependentVariable_Impl>());
 
     bool ok = true;
@@ -85,7 +85,7 @@ namespace model {
   }
 
   /// @cond
-  TableIndependentVariable::TableIndependentVariable(std::shared_ptr<detail::TableIndependentVariable_Impl> impl) : ParentObject(std::move(impl)) {}
+  TableIndependentVariable::TableIndependentVariable(std::shared_ptr<detail::TableIndependentVariable_Impl> impl) : ResourceObject(std::move(impl)) {}
   /// @endcond
 
 }  // namespace model
