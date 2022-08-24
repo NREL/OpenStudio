@@ -73,7 +73,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup) {
   WorkspaceObject independentVariableListIdf = workspace.getObjectsByType(IddObjectType::Table_IndependentVariableList)[0];
   WorkspaceObject independentVariableIdf = workspace.getObjectsByType(IddObjectType::Table_IndependentVariable)[0];
 
-  EXPECT_EQ(independentVariableListIdf.nameString(), lookup.getString(Table_LookupFields::IndependentVariableListName));
+  EXPECT_EQ(independentVariableListIdf.nameString(), lookupIdf.getString(Table_LookupFields::IndependentVariableListName));
   ASSERT_EQ(1u, independentVariableListIdf.extensibleGroups().size());
   WorkspaceExtensibleGroup w_eg = independentVariableListIdf.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
   EXPECT_EQ(independentVariableIdf.nameString(), w_eg.getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName, false).get());
