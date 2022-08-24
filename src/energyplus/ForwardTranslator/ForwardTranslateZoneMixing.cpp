@@ -56,7 +56,7 @@ namespace energyplus {
 
     boost::optional<double> value;
 
-    // ZoneName
+    // ZoneorSpaceName
     ThermalZone zone = modelObject.zone();
     translateAndMapModelObject(zone);
     idfObject.setString(ZoneMixingFields::ZoneorSpaceName, zone.name().get());
@@ -75,7 +75,7 @@ namespace energyplus {
       idfObject.setDouble(ZoneMixingFields::DesignFlowRate, *value);
     }
 
-    // FlowRateperZoneFloorArea
+    // FlowRateperFloorArea
     value = modelObject.flowRateperZoneFloorArea();
     if (value) {
       idfObject.setDouble(ZoneMixingFields::FlowRateperFloorArea, *value);
@@ -93,7 +93,7 @@ namespace energyplus {
       idfObject.setDouble(ZoneMixingFields::AirChangesperHour, *value);
     }
 
-    // SourceZone
+    // SourceZoneorSpaceName
     boost::optional<ThermalZone> sourceZone = modelObject.sourceZone();
     if (sourceZone) {
       // DLM: do not translate source zone now, it will be translated at the right time
