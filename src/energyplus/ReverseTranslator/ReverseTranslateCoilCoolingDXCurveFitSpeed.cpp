@@ -154,7 +154,7 @@ namespace energyplus {
       speed.setActiveFractionofCoilFaceArea(*d);
     }
 
-    d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate);
+    d = workspaceObject.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017);
     if (d) {
       speed.setRatedEvaporatorFanPowerPerVolumeFlowRate(*d);
     }
