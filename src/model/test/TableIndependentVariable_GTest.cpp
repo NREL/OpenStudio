@@ -31,6 +31,8 @@
 #include "ModelFixture.hpp"
 #include "../TableIndependentVariable.hpp"
 #include "../TableIndependentVariable_Impl.hpp"
+#include "../TableLookup.hpp"
+#include "../TableLookup_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -50,5 +52,25 @@ TEST_F(ModelFixture, TableIndependentVariable) {
   Model m;
   TableIndependentVariable independentVariable(m);
 
+  EXPECT_EQ("Linear", independentVariable.interpolationMethod());
+  EXPECT_EQ("Constant", independentVariable.extrapolationMethod());
+  EXPECT_EQ("Dimensionless", independentVariable.unitType());
   EXPECT_EQ(0u, independentVariable.tableLookups().size());
+
+  EXPECT_TRUE(independentVariable.setInterpolationMethod("Cubic"));
+  EXPECT_TRUE(independentVariable.setExtrapolationMethod("Linear"));
+  EXPECT_TRUE(independentVariable.setUnitType("Temperature"));
+  TableLookup tableLookup1(m);
+  EXPECT_TRUE(tableLookup1.addIndependentVariable(independentVariable));
+
+  EXPECT_EQ("Cubic", independentVariable.interpolationMethod());
+  EXPECT_EQ("Linear", independentVariable.extrapolationMethod());
+  EXPECT_EQ("Temperature", independentVariable.unitType());
+  EXPECT_EQ(1u, independentVariable.tableLookups().size());
+
+  TableLookup tableLookup2(m);
+  EXPECT_TRUE(tableLookup2.addIndependentVariable(independentVariable));
+  TableLookup tableLookup3(m);
+  EXPECT_TRUE(tableLookup3.addIndependentVariable(independentVariable));
+  EXPECT_EQ(3u, independentVariable.tableLookups().size());
 }
