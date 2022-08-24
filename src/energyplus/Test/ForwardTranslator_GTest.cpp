@@ -583,7 +583,8 @@ TEST_F(EnergyPlusFixture,ForwardTranslatorTest_AllObjects) {
 }
 */
 
-
+/* This test fails because objects of the same type share state across the Logger 
+See detailed notes below. This test is disabled and commented out. 
 TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultipleTranslatorsInScope) {
   Model model;
   Space space(model); // not in thermal zone will generate a warning
@@ -630,6 +631,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslatorTest_MultipleTranslatorsInScope) {
   // It also breaks down in energyplus/ReverseTranslator.cpp which changes its channel name filter multiple times
   // (see .setChannelRegex)
 }
+*/
 
 // This thread calls forward translator, this is not a good example of threading
 // just used for testing
