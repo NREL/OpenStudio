@@ -65,11 +65,11 @@ namespace energyplus {
       // Note: this can't be mapped to a Space, in E+ it's ZoneInfiltration:FlowCoefficient (so no need to check m_excludeSpaceTranslation)
       boost::optional<ThermalZone> thermalZone = space->thermalZone();
       if (thermalZone) {
-        idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneName, thermalZone->nameString());
+        idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName, thermalZone->nameString());
       }
     } else if (spaceType) {
       // TODO: This field is called 'ZoneName' and not 'ZoneorZoneListName'. It **DOES NOT** accept a Zone List
-      idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneName, zoneListNameForSpaceType(spaceType.get()));
+      idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName, zoneListNameForSpaceType(spaceType.get()));
       OS_ASSERT(false);
     } else {
       // Note: a warning will be issued higher up already

@@ -59,7 +59,7 @@ namespace energyplus {
     // ZoneName
     ThermalZone zone = modelObject.zone();
     translateAndMapModelObject(zone);
-    idfObject.setString(ZoneMixingFields::ZoneName, zone.name().get());
+    idfObject.setString(ZoneMixingFields::ZoneorSpaceName, zone.name().get());
 
     // ScheduleName
     Schedule schedule = modelObject.schedule();
@@ -78,7 +78,7 @@ namespace energyplus {
     // FlowRateperZoneFloorArea
     value = modelObject.flowRateperZoneFloorArea();
     if (value) {
-      idfObject.setDouble(ZoneMixingFields::FlowRateperZoneFloorArea, *value);
+      idfObject.setDouble(ZoneMixingFields::FlowRateperFloorArea, *value);
     }
 
     // FlowRateperPerson
@@ -97,7 +97,7 @@ namespace energyplus {
     boost::optional<ThermalZone> sourceZone = modelObject.sourceZone();
     if (sourceZone) {
       // DLM: do not translate source zone now, it will be translated at the right time
-      idfObject.setString(ZoneMixingFields::SourceZoneName, sourceZone->name().get());
+      idfObject.setString(ZoneMixingFields::SourceZoneorSpaceName, sourceZone->name().get());
     }
 
     // DeltaTemperature
@@ -113,32 +113,32 @@ namespace energyplus {
       idfObject.setString(ZoneMixingFields::DeltaTemperatureScheduleName, optSchedule->name().get());
     }
 
-    // MinimumZoneTemperatureScheduleName
+    // MinimumReceivingTemperatureScheduleName
     optSchedule = modelObject.minimumZoneTemperatureSchedule();
     if (optSchedule) {
       translateAndMapModelObject(*optSchedule);
-      idfObject.setString(ZoneMixingFields::MinimumZoneTemperatureScheduleName, optSchedule->name().get());
+      idfObject.setString(ZoneMixingFields::MinimumReceivigTemperatureScheduleName, optSchedule->name().get());
     }
 
-    // MaximumZoneTemperatureScheduleName
+    // MaximumReceivingTemperatureScheduleName
     optSchedule = modelObject.maximumZoneTemperatureSchedule();
     if (optSchedule) {
       translateAndMapModelObject(*optSchedule);
-      idfObject.setString(ZoneMixingFields::MaximumZoneTemperatureScheduleName, optSchedule->name().get());
+      idfObject.setString(ZoneMixingFields::MaximumReceivingTemperatureScheduleName, optSchedule->name().get());
     }
 
-    // MinimumSourceZoneTemperatureScheduleName
+    // MinimumSourceTemperatureScheduleName
     optSchedule = modelObject.minimumSourceZoneTemperatureSchedule();
     if (optSchedule) {
       translateAndMapModelObject(*optSchedule);
-      idfObject.setString(ZoneMixingFields::MinimumSourceZoneTemperatureScheduleName, optSchedule->name().get());
+      idfObject.setString(ZoneMixingFields::MinimumSourceTemperatureScheduleName, optSchedule->name().get());
     }
 
-    // MaximumSourceZoneTemperatureScheduleName
+    // MaximumSourceTemperatureScheduleName
     optSchedule = modelObject.maximumSourceZoneTemperatureSchedule();
     if (optSchedule) {
       translateAndMapModelObject(*optSchedule);
-      idfObject.setString(ZoneMixingFields::MaximumSourceZoneTemperatureScheduleName, optSchedule->name().get());
+      idfObject.setString(ZoneMixingFields::MaximumSourceTemperatureScheduleName, optSchedule->name().get());
     }
 
     // MinimumOutdoorTemperatureScheduleName

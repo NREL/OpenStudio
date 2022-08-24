@@ -126,10 +126,10 @@ namespace energyplus {
       idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedAirFlowRate, value.get());
     }
 
-    // Rated Supply Fan Power Per Volume Flow Rate
+    // Rated Supply Fan Power Per Volume Flow Rate 2017
 
     if ((value = modelObject.ratedSupplyFanPowerPerVolumeFlowRate())) {
-      idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate, value.get());
+      idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate2017, value.get());
     }
 
     // TotalHeatingCapacityFunctionofTemperatureCurveName

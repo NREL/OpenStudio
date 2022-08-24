@@ -117,7 +117,7 @@ namespace energyplus {
 
     d = modelObject.getRatedEvaporatorFanPowerPerVolumeFlowRate();
     if (d) {
-      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate, *d);
+      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017, *d);
     }
 
     OptionalModelObject omo = modelObject.inletModelObject();

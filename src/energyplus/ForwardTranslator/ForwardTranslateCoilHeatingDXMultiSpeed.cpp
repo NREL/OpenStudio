@@ -170,9 +170,9 @@ namespace energyplus {
         eg.setDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedAirFlowRate, value.get());
       }
 
-      // RatedSupplyAirFanPowerPerVolumeFlowRate
+      // RatedSupplyAirFanPowerPerVolumeFlowRate2017
       if ((value = stage.ratedSupplyAirFanPowerPerVolumeFlowRate())) {
-        eg.setDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedSupplyAirFanPowerPerVolumeFlowRate, value.get());
+        eg.setDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedSupplyAirFanPowerPerVolumeFlowRate2017, value.get());
       }
 
       // HeatingCapacityFunctionofTemperatureCurveName

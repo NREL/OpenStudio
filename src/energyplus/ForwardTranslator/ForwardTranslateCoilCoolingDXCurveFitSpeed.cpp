@@ -79,8 +79,8 @@ namespace energyplus {
     // ActiveFractionofCoilFaceArea
     idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::ActiveFractionofCoilFaceArea, modelObject.activeFractionofCoilFaceArea());
 
-    // RatedEvaporatorFanPowerPerVolumeFlowRate
-    idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate,
+    // RatedEvaporatorFanPowerPerVolumeFlowRate2017
+    idfObject.setDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017,
                         modelObject.ratedEvaporatorFanPowerPerVolumeFlowRate());
 
     // EvaporativeCondenserPumpPowerFraction

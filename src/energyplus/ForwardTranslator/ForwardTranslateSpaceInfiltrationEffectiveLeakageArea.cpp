@@ -66,11 +66,11 @@ namespace energyplus {
       // Note: this can't be mapped to a Space, in E+ it's ZoneInfiltration:EffectiveLeakageArea (so no need to check m_excludeSpaceTranslation)
       boost::optional<ThermalZone> thermalZone = space->thermalZone();
       if (thermalZone) {
-        idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName, thermalZone->name().get());
+        idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneorSpaceName, thermalZone->name().get());
       }
     } else if (spaceType) {
       // TODO: This field is called 'ZoneName' and not 'ZoneorZoneListName'. It **DOES NOT** accept a Zone List
-      idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName, zoneListNameForSpaceType(spaceType.get()));
+      idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneorSpaceName, zoneListNameForSpaceType(spaceType.get()));
       OS_ASSERT(false);
     } else {
       // Note: a warning will be issued higher up already

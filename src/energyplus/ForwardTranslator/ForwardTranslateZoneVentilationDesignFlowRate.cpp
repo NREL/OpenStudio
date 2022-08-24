@@ -56,7 +56,7 @@ namespace energyplus {
     auto idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneVentilation_DesignFlowRate, modelObject);
 
     if (auto value = modelObject.thermalZone()) {
-      idfObject.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, value->name().get());
+      idfObject.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName, value->name().get());
     }
 
     {
@@ -76,7 +76,7 @@ namespace energyplus {
 
     {
       auto value = modelObject.flowRateperZoneFloorArea();
-      idfObject.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, value);
+      idfObject.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperFloorArea, value);
     }
 
     {

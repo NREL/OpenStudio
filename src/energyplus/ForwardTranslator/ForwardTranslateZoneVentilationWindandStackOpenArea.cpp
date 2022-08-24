@@ -50,7 +50,7 @@ namespace energyplus {
 
     // Note: no need to really handle the case where it doesn't exist since ThermalZone is the one calling this translation to begin with
     if (boost::optional<ThermalZone> value = modelObject.thermalZone()) {
-      idfObject.setString(ZoneVentilation_WindandStackOpenAreaFields::ZoneName, value->name().get());
+      idfObject.setString(ZoneVentilation_WindandStackOpenAreaFields::ZoneorSpaceName, value->name().get());
     }
 
     {

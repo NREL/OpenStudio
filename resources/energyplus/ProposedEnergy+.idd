@@ -29951,7 +29951,7 @@ Coil:Cooling:DX:CurveFit:Speed,
        \minimum> 0.0
        \maximum 1.0
        \default 1.0
-   N7, \field 2017 Rated Evaporator Fan Power Per Volume Flow Rate
+   N7, \field Rated Evaporator Fan Power Per Volume Flow Rate 2017
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -29963,7 +29963,7 @@ Coil:Cooling:DX:CurveFit:Speed,
        \minimum 0.0
        \maximum 1250.0
        \default 773.3
-   N8, \field 2023 Rated Evaporator Fan Power Per Volume Flow Rate
+   N8, \field Rated Evaporator Fan Power Per Volume Flow Rate 2023
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -30102,7 +30102,7 @@ Coil:Cooling:DX:SingleSpeed,
        \autosizable
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR and Rated COP
        \note should be between 0.00004027 m3/s and .00006041 m3/s per watt of rated total cooling capacity
-  N5 , \field 2017 Rated Evaporator Fan Power Per Volume Flow Rate
+  N5 , \field Rated Evaporator Fan Power Per Volume Flow Rate 2017
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -30115,7 +30115,7 @@ Coil:Cooling:DX:SingleSpeed,
        \minimum 0.0
        \maximum 1250.0
        \default 773.3
-  N6 , \field 2023 Rated Evaporator Fan Power Per Volume Flow Rate
+  N6 , \field Rated Evaporator Fan Power Per Volume Flow Rate 2023
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -30718,7 +30718,7 @@ Coil:Cooling:DX:MultiSpeed,
        \note Flow rate corresponding to rated total cooling capacity, rated SHR and rated
        \note COP should be between 0.00004027 m3/s and .00006041 m3/s per watt of rated total
        \note cooling capacity
-  N11, \field 2017 Speed 1 Rated Evaporator Fan Power Per Volume Flow Rate
+  N11, \field Speed 1 Rated Evaporator Fan Power Per Volume Flow Rate 2017
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -30730,7 +30730,7 @@ Coil:Cooling:DX:MultiSpeed,
        \minimum 0.0
        \maximum 1250.0
        \default 773.3
-  N12, \field 2023 Speed 1 Rated Evaporator Fan Power Per Volume Flow Rate
+  N12, \field Speed 1 Rated Evaporator Fan Power Per Volume Flow Rate 2023
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
        \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on total cooling capacity.
@@ -31996,7 +31996,7 @@ Coil:Heating:DX:SingleSpeed,
        \autosizable
        \note Flow rate corresponding to rated total capacity
        \note should be between 0.00004027 m3/s and .00006041 m3/s per watt of rated heating capacity
-  N4 , \field 2017 Rated Supply Fan Power Per Volume Flow Rate
+  N4 , \field Rated Supply Fan Power Per Volume Flow Rate 2017
        \note Enter the supply fan power per air volume flow rate at the rated test conditions.
        \note as defined in the 2017 version of ANSI/AHRI Standard 210/240. 
        \note The test conditions vary external static pressure based on heating capacity.
@@ -32007,7 +32007,7 @@ Coil:Heating:DX:SingleSpeed,
        \minimum 0.0
        \maximum 1250.0
        \default 773.3
-  N5 , \field 2023 Rated Supply Fan Power Per Volume Flow Rate
+  N5 , \field Rated Supply Fan Power Per Volume Flow Rate 2023
        \note Enter the supply fan power per air volume flow rate at the rated test conditions.
        \note as defined in the 2017 version of ANSI/AHRI Standard 210/240. 
        \note The test conditions vary external static pressure based on heating capacity.
@@ -32341,7 +32341,7 @@ Coil:Heating:DX:MultiSpeed,
        \note Flow rate corresponding to rated total capacity
        \note should be between 0.00004027 m3/s and .00006041 m3/s per watt of rated total
        \note heating capacity
-  N13, \field 2017 Speed 1 Rated Supply Air Fan Power Per Volume Flow Rate
+  N13, \field Speed 1 Rated Supply Air Fan Power Per Volume Flow Rate 2017
        \note Enter the supply air fan power per air volume flow rate at the rated speed 1 test conditions
        \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on heating capacity. This value
@@ -32352,7 +32352,7 @@ Coil:Heating:DX:MultiSpeed,
        \minimum 0.0
        \maximum 1250.0
        \default 773.3
-  N14, \field 2023 Speed 1 Rated Supply Air Fan Power Per Volume Flow Rate
+  N14, \field Speed 1 Rated Supply Air Fan Power Per Volume Flow Rate 2023
        \note Enter the supply air fan power per air volume flow rate at the rated speed 1 test conditions
        \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on heating capacity. This value

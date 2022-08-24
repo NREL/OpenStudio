@@ -66,12 +66,12 @@ namespace energyplus {
       // Note: this can't be mapped to a Space, in E+ it's ZoneInfiltration:DesignFlowRate (so no need to check m_excludeSpaceTranslation)
       boost::optional<ThermalZone> thermalZone = space->thermalZone();
       if (thermalZone) {
-        idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName, thermalZone->name().get());
+        idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName, thermalZone->name().get());
       }
     } else if (spaceType) {
       // This is a weird one... we need a ZoneList, not a SpaceList, even if we do translate to E+ spaces. Use the helper to figure the out right name
       // We shouldn't get in there, we have hard applied them to the Spaces early in translateModelPrivate
-      idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName, zoneListNameForSpaceType(spaceType.get()));
+      idfObject.setString(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName, zoneListNameForSpaceType(spaceType.get()));
       if (!m_excludeSpaceTranslation) {
         OS_ASSERT(false);
       }
@@ -100,17 +100,17 @@ namespace energyplus {
 
     d = modelObject.flowperSpaceFloorArea();
     if (d) {
-      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperZoneFloorArea, *d);
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperFloorArea, *d);
     }
 
     d = modelObject.flowperExteriorSurfaceArea();
     if (d) {
-      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, *d);
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea, *d);
     }
 
     d = modelObject.flowperExteriorWallArea();
     if (d) {
-      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea, *d);
+      idfObject.setDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea, *d);
     }
 
     d = modelObject.airChangesperHour();
