@@ -61,14 +61,30 @@ namespace energyplus {
     }
 
     // Table:Lookup
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Table_Lookup, modelObject);
+    IdfObject tableLookup = createRegisterAndNameIdfObject(openstudio::IddObjectType::Table_Lookup, modelObject);
+
+    // NormalizationMethod
+    if ((s = modelObject.normalizationMethod())) {
+      tableLookup.setString(Table_LookupFields::NormalizationMethod, s.get());
+    }
+
+    // NormalizationDivisor
+    if ((d = modelObject.normalizationDivisor())) {
+      tableLookup.setDouble(Table_LookupFields::NormalizationDivisor, d.get());
+    }
+
+    // OutputUnitType
+    if ((s = modelObject.outputUnitType())) {
+      tableLookup.setString(Table_LookupFields::OutputUnitType, s.get());
+    }
 
     // Table:IndependentVariableList
     IdfObject tableIndependentVariableList(IddObjectType::Table_IndependentVariableList);
     tableIndependentVariableList.setName(modelObject.nameString() + " Independent Variable List");
     m_idfObjects.push_back(tableIndependentVariableList);
 
-    idfObject.setString(Table_LookupFields::IndependentVariableListName, tableIndependentVariableList.nameString());
+    // IndependentVariableListName
+    tableLookup.setString(Table_LookupFields::IndependentVariableListName, tableIndependentVariableList.nameString());
 
     // Table:IndependentVariable
     for (auto& independentVariable : independentVariables) {
@@ -78,9 +94,24 @@ namespace energyplus {
 
       IdfExtensibleGroup independentVariableGroup = tableIndependentVariableList.pushExtensibleGroup();
       independentVariableGroup.setString(Table_IndependentVariableListExtensibleFields::IndependentVariableName, independentVariable.nameString());
+
+      // InterpolationMethod
+      if ((s = independentVariable.interpolationMethod())) {
+        tableLookup.setString(Table_IndependentVariableFields::InterpolationMethod, s.get());
+      }
+
+      // ExtrapolationMethod
+      if ((s = independentVariable.extrapolationMethod())) {
+        tableLookup.setString(Table_IndependentVariableFields::ExtrapolationMethod, s.get());
+      }
+
+      // UnitType
+      if ((s = independentVariable.unitType())) {
+        tableLookup.setString(Table_IndependentVariableFields::UnitType, s.get());
+      }
     }
 
-    return idfObject;
+    return tableLookup;
   }
 
 }  // namespace energyplus
