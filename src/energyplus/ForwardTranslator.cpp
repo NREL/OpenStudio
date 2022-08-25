@@ -314,6 +314,13 @@ namespace energyplus {
       tableLookup.addIndependentVariable(tableIndependentVariable);
       // TODO
 
+      for (WorkspaceObject source : tableMulti.sources()) {
+        for (unsigned index : source.getSourceIndices(tableMulti.handle())) {
+          bool test = source.setPointer(index, tableLookup.handle());
+          OS_ASSERT(test);
+        }
+      }
+
       LOG(Warn,
           "TableMultiVariableLookup '" << tableMulti.nameString() << "' has been converted to TableLookup '" << tableLookup.nameString() << "'.");
       tableMulti.remove();
