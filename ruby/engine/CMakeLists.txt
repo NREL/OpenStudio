@@ -1,16 +1,17 @@
 # This defines a list of import targets for the native extensions: ruby_extension_libs
 include("${OPENSTUDIO_GEMS_DIR}/export-extensions.cmake")
 
+# This had been broken for a long time (was using a wrong variable name for the list, so InitMacros.hxx is empty) and it still worked fine. TODO: remove?
 set(INIT_CALLS "")
 set(INIT_DECLARATIONS "")
-foreach(LIB ${EXTENSION_LIBS_LIST})
+foreach(LIB ${ruby_extension_libs})
   get_filename_component(LIB_NAME ${LIB} NAME_WE)
-  list (FIND LIBS "${LIB_NAME}" _index)
-  if( ${_index} GREATER -1 )
-    set(INIT_DECLARATIONS "${INIT_DECLARATIONS}  void Init_${LIB_NAME}();\\\n" )
-    set(INIT_CALLS "${INIT_CALLS}  Init_${LIB_NAME}();\\\n" )
-    set(INIT_CALLS "${INIT_CALLS}  rb_provide(\"${LIB_NAME}.so\");\\\n" )
-  endif()
+  #list (FIND LIBS "${LIB_NAME}" _index)
+  #if( ${_index} GREATER -1 )
+  set(INIT_DECLARATIONS "${INIT_DECLARATIONS}  void Init_${LIB_NAME}();\\\n" )
+  set(INIT_CALLS "${INIT_CALLS}  Init_${LIB_NAME}();\\\n" )
+  set(INIT_CALLS "${INIT_CALLS}  rb_provide(\"${LIB_NAME}.so\");\\\n" )
+  #endif()
 endforeach()
 
 CONFIGURE_FILE_WITH_CHECKSUM("InitMacros.hxx.in" "${CMAKE_CURRENT_BINARY_DIR}/InitMacros.hxx")
