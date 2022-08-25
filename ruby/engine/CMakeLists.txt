@@ -1,3 +1,4 @@
+# This defines a list of import targets for the native extensions: ruby_extension_libs
 include("${OPENSTUDIO_GEMS_DIR}/export-extensions.cmake")
 
 set(INIT_CALLS "")
@@ -253,8 +254,7 @@ if( WIN32 )
   )
 else()
   target_link_libraries(rubyengine
-    PRIVATE 
-    rubybindings 
+    PRIVATE
     scriptengine
     rubyinterpreter
     openstudio_utilities
@@ -270,6 +270,7 @@ else()
     openstudio_gltf
     openstudio_radiance
     rubybindings
+    ${ruby_extension_libs}
     ${ALL_RUBY_BINDING_TARGETS}
   )
 endif()
