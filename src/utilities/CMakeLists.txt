@@ -226,6 +226,13 @@ foreach(_FILE ${XLST_TRANSFORM_FILES})
   list(APPEND E_PATHS ${LOCATION})
 endforeach()
 
+file(GLOB_RECURSE XSD_SCHEMA_FILES  FOLLOW_SYMLINKS "${CMAKE_CURRENT_SOURCE_DIR}/xml/resources/*.xsd")
+foreach(_FILE ${XSD_SCHEMA_FILES})
+  file(RELATIVE_PATH LOCATION "${CMAKE_CURRENT_SOURCE_DIR}" ${_FILE})
+  list(APPEND E_FILES ${_FILE})
+  list(APPEND E_PATHS ${LOCATION})
+endforeach()
+
 include("${PROJECT_SOURCE_DIR}/embedded/EmbedFiles.cmake")
 embed_files("${E_FILES}" "${E_PATHS}" EMBEDDED_OUTPUT openstudio)
 
