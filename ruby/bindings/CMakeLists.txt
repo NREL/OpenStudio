@@ -11,5 +11,5 @@ if(MSVC)
   set_target_properties(rubybindings PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
 elseif (UNIX)
   # Disable register warnings
-  set_target_properties(rubybindings PROPERTIES COMPILE_FLAGS " -Wno-error=register -Wno-register -Wno-deprecated-volatile")
+  set_target_properties(rubybindings PROPERTIES COMPILE_FLAGS " -Wno-error=register -Wno-register -Wno-deprecated-volatile -Wno-volatile")
 endif()
