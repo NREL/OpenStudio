@@ -4,7 +4,7 @@ add_library( rubybindings OBJECT
 )
 
 target_include_directories(rubybindings PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(rubybindings PUBLIC ${ALL_RUBY_BINDING_TARGETS} rubyinterpreter-delcarations)
+target_link_libraries(rubybindings PUBLIC ${ALL_RUBY_BINDING_TARGETS} rubyinterpreter-declarations)
 
 if(MSVC)
   # wd4996=no deprecated warnings ; wd5033=register
