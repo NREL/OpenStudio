@@ -41,7 +41,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     # The os is still Linux, the compiler is still GCC. But the GLIBC used is **way older**
     conan_add_remote(NAME openstudio-centos INDEX 0
       URL https://conan.openstudio.net/artifactory/api/conan/openstudio-centos)
- 
+
     # Pass `-D_GLIBCXX_USE_CXX11_ABI=0` to make sure it detects libstdc++ and not libstdc++1
     add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
     # Centos uses a different channel recipe for ruby
@@ -51,7 +51,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     endif()
 
   else()
-    conan_add_remote(NAME nrel INDEX 0 
+    conan_add_remote(NAME nrel INDEX 0
       URL https://conan.openstudio.net/artifactory/api/conan/openstudio)
 
     if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
@@ -83,6 +83,11 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   endif()
 
   # TODO:  list(APPEND CONAN_OPTIONS "fmt:header_only=True")
+
+  if(APPLE)
+    # #4120 - global is the 'default' visibility in gcc/clang
+    list(APPEND CONAN_OPTIONS "boost:visibility=global")
+  endif()
 
   # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
   # bump the actual package version when we make changes) than the binaries were built with
