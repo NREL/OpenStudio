@@ -35,9 +35,13 @@
 #include "Model.hpp"
 #include "Model_Impl.hpp"
 
-#include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/OS_Table_IndependentVariable_FieldEnums.hxx>
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
+#include <utilities/idd/IddFactory.hxx>
 
+#include <utilities/idd/OS_Table_IndependentVariable_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include "../utilities/core/Assert.hpp"
 
 namespace openstudio {
@@ -100,6 +104,16 @@ namespace model {
       return result;
     }
 
+    std::vector<double> TableIndependentVariable_Impl::values() const {
+      std::vector<double> result;
+      for (const auto& eg : extensibleGroups()) {
+        auto _d = eg.getDouble(OS_Table_IndependentVariableExtensibleFields::Value);
+        OS_ASSERT(_d);
+        result.push_back(_d.get());
+      }
+      return result;
+    }
+
     bool TableIndependentVariable_Impl::setInterpolationMethod(std::string interpolationMethod) {
       bool result = setString(OS_Table_IndependentVariableFields::InterpolationMethod, interpolationMethod);
       return result;
@@ -112,6 +126,16 @@ namespace model {
 
     bool TableIndependentVariable_Impl::setUnitType(std::string unitType) {
       bool result = setString(OS_Table_IndependentVariableFields::UnitType, unitType);
+      return result;
+    }
+
+    bool TableIndependentVariable_Impl::addValue(double value) {
+      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      bool result = eg.setDouble(OS_Table_IndependentVariableExtensibleFields::Value, value);
+      if (!result) {
+        getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      }
+
       return result;
     }
 
@@ -149,6 +173,10 @@ namespace model {
     return getImpl<detail::TableIndependentVariable_Impl>()->tableLookups();
   }
 
+  std::vector<double> TableIndependentVariable::values() const {
+    return getImpl<detail::TableIndependentVariable_Impl>()->values();
+  }
+
   bool TableIndependentVariable::setInterpolationMethod(std::string interpolationMethod) {
     return getImpl<detail::TableIndependentVariable_Impl>()->setInterpolationMethod(interpolationMethod);
   }
@@ -159,6 +187,10 @@ namespace model {
 
   bool TableIndependentVariable::setUnitType(std::string unitType) {
     return getImpl<detail::TableIndependentVariable_Impl>()->setUnitType(unitType);
+  }
+
+  bool TableIndependentVariable::addValue(double value) {
+    return getImpl<detail::TableIndependentVariable_Impl>()->addValue(value);
   }
 
   /// @cond

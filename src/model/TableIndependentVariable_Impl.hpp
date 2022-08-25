@@ -75,6 +75,8 @@ namespace model {
 
       std::vector<TableLookup> tableLookups() const;
 
+      std::vector<double> values() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -84,6 +86,8 @@ namespace model {
       bool setExtrapolationMethod(std::string extrapolationMethod);
 
       bool setUnitType(std::string unitType);
+
+      bool addValue(double value);
 
       //@}
       /** @name Other */

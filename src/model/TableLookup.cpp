@@ -45,6 +45,7 @@
 
 #include "../utilities/units/Unit.hpp"
 
+#include "../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include "../utilities/core/Assert.hpp"
 
 #include <algorithm>
@@ -106,6 +107,16 @@ namespace model {
       return value.get();
     }
 
+    std::vector<double> TableLookup_Impl::outputValues() const {
+      std::vector<double> result;
+      for (const auto& eg : extensibleGroups()) {
+        auto _d = eg.getDouble(OS_Table_LookupExtensibleFields::OutputValue);
+        OS_ASSERT(_d);
+        result.push_back(_d.get());
+      }
+      return result;
+    }
+
     bool TableLookup_Impl::setNormalizationMethod(std::string normalizationMethod) {
       bool result = setString(OS_Table_LookupFields::NormalizationMethod, normalizationMethod);
       return result;
@@ -118,6 +129,16 @@ namespace model {
 
     bool TableLookup_Impl::setOutputUnitType(std::string outputUnitType) {
       bool result = setString(OS_Table_LookupFields::OutputUnitType, outputUnitType);
+      return result;
+    }
+
+    bool TableLookup_Impl::addOutputValue(double outputValue) {
+      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      bool result = eg.setDouble(OS_Table_LookupExtensibleFields::OutputValue, outputValue);
+      if (!result) {
+        getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
+      }
+
       return result;
     }
 
@@ -218,6 +239,10 @@ namespace model {
     return getImpl<detail::TableLookup_Impl>()->outputUnitType();
   }
 
+  std::vector<double> TableLookup::outputValues() const {
+    return getImpl<detail::TableLookup_Impl>()->outputValues();
+  }
+
   bool TableLookup::setNormalizationMethod(std::string normalizationMethod) {
     return getImpl<detail::TableLookup_Impl>()->setNormalizationMethod(normalizationMethod);
   }
@@ -228,6 +253,10 @@ namespace model {
 
   bool TableLookup::setOutputUnitType(std::string outputUnitType) {
     return getImpl<detail::TableLookup_Impl>()->setOutputUnitType(outputUnitType);
+  }
+
+  bool TableLookup::addOutputValue(double outputValue) {
+    return getImpl<detail::TableLookup_Impl>()->addOutputValue(outputValue);
   }
 
   bool TableLookup::addIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {

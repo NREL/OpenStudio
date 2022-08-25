@@ -80,6 +80,8 @@ namespace model {
 
       std::string outputUnitType() const;
 
+      std::vector<double> outputValues() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -89,6 +91,8 @@ namespace model {
       bool setNormalizationDivisor(double normalizationDivisior);
 
       bool setOutputUnitType(std::string outputUnitType);
+
+      bool addOutputValue(double outputValue);
 
       //@}
       /** @name Other */
