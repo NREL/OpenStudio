@@ -313,6 +313,7 @@ namespace energyplus {
       TableIndependentVariable tableIndependentVariable(model);
       tableLookup.addIndependentVariable(tableIndependentVariable);
       // TODO
+
       LOG(Warn,
           "TableMultiVariableLookup '" << tableMulti.nameString() << "' has been converted to TableLookup '" << tableLookup.nameString() << "'.");
       tableMulti.remove();

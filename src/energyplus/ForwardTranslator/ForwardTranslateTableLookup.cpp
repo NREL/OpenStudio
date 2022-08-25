@@ -78,6 +78,12 @@ namespace energyplus {
       tableLookup.setString(Table_LookupFields::OutputUnitType, s.get());
     }
 
+    // OutputValue
+    for (const double& outputValue : modelObject.outputValues()) {
+      IdfExtensibleGroup eg = tableLookup.pushExtensibleGroup();
+      eg.setDouble(Table_LookupExtensibleFields::OutputValue, outputValue);
+    }
+
     // Table:IndependentVariableList
     IdfObject tableIndependentVariableList(IddObjectType::Table_IndependentVariableList);
     tableIndependentVariableList.setName(modelObject.nameString() + " Independent Variable List");
@@ -97,17 +103,23 @@ namespace energyplus {
 
       // InterpolationMethod
       if ((s = independentVariable.interpolationMethod())) {
-        tableLookup.setString(Table_IndependentVariableFields::InterpolationMethod, s.get());
+        tableIndependentVariable.setString(Table_IndependentVariableFields::InterpolationMethod, s.get());
       }
 
       // ExtrapolationMethod
       if ((s = independentVariable.extrapolationMethod())) {
-        tableLookup.setString(Table_IndependentVariableFields::ExtrapolationMethod, s.get());
+        tableIndependentVariable.setString(Table_IndependentVariableFields::ExtrapolationMethod, s.get());
       }
 
       // UnitType
       if ((s = independentVariable.unitType())) {
-        tableLookup.setString(Table_IndependentVariableFields::UnitType, s.get());
+        tableIndependentVariable.setString(Table_IndependentVariableFields::UnitType, s.get());
+      }
+
+      // Value
+      for (const double& value : independentVariable.values()) {
+        IdfExtensibleGroup eg = tableIndependentVariable.pushExtensibleGroup();
+        eg.setDouble(Table_IndependentVariableExtensibleFields::Value, value);
       }
     }
 
