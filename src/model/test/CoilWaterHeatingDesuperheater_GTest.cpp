@@ -67,6 +67,13 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_DefaultConstructor) {
       exit(0);
     },
     ::testing::ExitedWithCode(0), "");
+
+  // Passing an incompatible schedule: we expect the Ctor to throw, and no object to be created
+  Model model;
+  EXPECT_EQ(0, model.getConcreteModelObjects<CoilWaterHeatingDesuperheater>().size());
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  EXPECT_ANY_THROW(CoilWaterHeatingDesuperheater(model, alwaysOn));
+  EXPECT_EQ(0, model.getConcreteModelObjects<CoilWaterHeatingDesuperheater>().size());
 }
 
 TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_Remove1) {
@@ -294,7 +301,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneModelWithDefaultData) {
   auto testObjectClone = testObject.clone(model).cast<CoilWaterHeatingDesuperheater>();
 
   EXPECT_DOUBLE_EQ(5.0, testObjectClone.deadBandTemperatureDifference());
-  EXPECT_DOUBLE_EQ(0.8, testObjectClone.ratedHeatReclaimRecoveryEfficiency().get());
+  EXPECT_FALSE(testObjectClone.ratedHeatReclaimRecoveryEfficiency());
   EXPECT_DOUBLE_EQ(50.0, testObjectClone.ratedInletWaterTemperature());
   EXPECT_DOUBLE_EQ(35.0, testObjectClone.ratedOutdoorAirTemperature());
   EXPECT_DOUBLE_EQ(60.0, testObjectClone.maximumInletWaterTemperatureforHeatReclaim());
@@ -314,7 +321,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneModelWithCustomData) {
   CurveBiquadratic curve = CurveBiquadratic(model);
 
   EXPECT_TRUE(testObject.setDeadBandTemperatureDifference(20.0));
-  EXPECT_TRUE(testObject.setRatedHeatReclaimRecoveryEfficiency(0.99));
+  EXPECT_TRUE(testObject.setRatedHeatReclaimRecoveryEfficiency(0.89));
   EXPECT_TRUE(testObject.setRatedInletWaterTemperature(999.0));
   EXPECT_TRUE(testObject.setRatedOutdoorAirTemperature(999.0));
   EXPECT_TRUE(testObject.setMaximumInletWaterTemperatureforHeatReclaim(999.0));
@@ -330,7 +337,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneModelWithCustomData) {
   auto testObjectClone = testObject.clone(model).cast<CoilWaterHeatingDesuperheater>();
 
   EXPECT_DOUBLE_EQ(20.0, testObjectClone.deadBandTemperatureDifference());
-  EXPECT_DOUBLE_EQ(0.99, testObjectClone.ratedHeatReclaimRecoveryEfficiency().get());
+  EXPECT_DOUBLE_EQ(0.89, testObjectClone.ratedHeatReclaimRecoveryEfficiency().get());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedInletWaterTemperature());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.ratedOutdoorAirTemperature());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone.maximumInletWaterTemperatureforHeatReclaim());
@@ -354,7 +361,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneTwoModelWithCustomData) 
   CurveBiquadratic curve = CurveBiquadratic(model);
 
   EXPECT_TRUE(testObject.setDeadBandTemperatureDifference(20.0));
-  EXPECT_TRUE(testObject.setRatedHeatReclaimRecoveryEfficiency(0.99));
+  EXPECT_TRUE(testObject.setRatedHeatReclaimRecoveryEfficiency(0.89));
   EXPECT_TRUE(testObject.setRatedInletWaterTemperature(999.0));
   EXPECT_TRUE(testObject.setRatedOutdoorAirTemperature(999.0));
   EXPECT_TRUE(testObject.setMaximumInletWaterTemperatureforHeatReclaim(999.0));
@@ -373,7 +380,7 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneTwoModelWithCustomData) 
   auto testObjectClone2 = testObject.clone(model2).cast<CoilWaterHeatingDesuperheater>();
 
   EXPECT_DOUBLE_EQ(20.0, testObjectClone2.deadBandTemperatureDifference());
-  EXPECT_DOUBLE_EQ(0.99, testObjectClone2.ratedHeatReclaimRecoveryEfficiency().get());
+  EXPECT_DOUBLE_EQ(0.89, testObjectClone2.ratedHeatReclaimRecoveryEfficiency().get());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone2.ratedInletWaterTemperature());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone2.ratedOutdoorAirTemperature());
   EXPECT_DOUBLE_EQ(999.0, testObjectClone2.maximumInletWaterTemperatureforHeatReclaim());
@@ -388,4 +395,40 @@ TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_CloneTwoModelWithCustomData) 
   EXPECT_NE(curve, testObjectClone2.heatReclaimEfficiencyFunctionofTemperatureCurve().get());
   EXPECT_NE(testObjectClone2, testObjectClone);
   EXPECT_NE(testObjectClone, testObject);
+}
+
+TEST_F(ModelFixture, CoilWaterHeatingDesuperheater_HeatReclaimEfficiency) {
+  Model model;
+  ScheduleCompact schedule = ScheduleCompact(model);
+  CoilWaterHeatingDesuperheater c = CoilWaterHeatingDesuperheater(model, schedule);
+
+  // Ctor doesn't initialize it
+  EXPECT_FALSE(c.ratedHeatReclaimRecoveryEfficiency());
+
+  // No heating source type yet: max Rated Heat Reclaim Efficiency is per IDD at 0.9
+  EXPECT_FALSE(c.heatingSource());
+  EXPECT_TRUE(c.setRatedHeatReclaimRecoveryEfficiency(0.9));
+  EXPECT_EQ(0.9, c.ratedHeatReclaimRecoveryEfficiency().get());
+  EXPECT_FALSE(c.setRatedHeatReclaimRecoveryEfficiency(0.95));
+  EXPECT_EQ(0.90, c.ratedHeatReclaimRecoveryEfficiency().get());
+
+  // Adding a Heating Source of Refrigeration type: limit should be 0.9
+  RefrigerationCondenserAirCooled condenser = RefrigerationCondenserAirCooled(model);
+  EXPECT_TRUE(c.setHeatingSource(condenser));
+  EXPECT_EQ(0.90, c.ratedHeatReclaimRecoveryEfficiency().get());
+  // It should also enforce on the setter
+  EXPECT_TRUE(c.setRatedHeatReclaimRecoveryEfficiency(0.85));
+  EXPECT_EQ(0.85, c.ratedHeatReclaimRecoveryEfficiency().get());
+  EXPECT_FALSE(c.setRatedHeatReclaimRecoveryEfficiency(0.95));
+  EXPECT_EQ(0.85, c.ratedHeatReclaimRecoveryEfficiency().get());
+
+  // Now add a Heating Source of non refrigeration type: limit should be 0.3, and it should reset to default of 0.25
+  CoilCoolingDXMultiSpeed dxCoil = CoilCoolingDXMultiSpeed(model);
+  EXPECT_TRUE(c.setHeatingSource(dxCoil));
+  EXPECT_EQ(0.25, c.ratedHeatReclaimRecoveryEfficiency().get()) << c;
+  // It should also enforce on the setter
+  EXPECT_TRUE(c.setRatedHeatReclaimRecoveryEfficiency(0.3));
+  EXPECT_EQ(0.3, c.ratedHeatReclaimRecoveryEfficiency().get());
+  EXPECT_FALSE(c.setRatedHeatReclaimRecoveryEfficiency(0.35));
+  EXPECT_EQ(0.3, c.ratedHeatReclaimRecoveryEfficiency().get());
 }

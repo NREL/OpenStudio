@@ -145,7 +145,7 @@ namespace model {
 
       void resetDeadBandTemperatureDifference();
 
-      bool setRatedHeatReclaimRecoveryEfficiency(boost::optional<double> ratedHeatReclaimRecoveryEfficiency);
+      bool setRatedHeatReclaimRecoveryEfficiency(double ratedHeatReclaimRecoveryEfficiency);
 
       void resetRatedHeatReclaimRecoveryEfficiency();
 
@@ -155,13 +155,13 @@ namespace model {
 
       bool setMaximumInletWaterTemperatureforHeatReclaim(double maximumInletWaterTemperatureforHeatReclaim);
 
-      bool setHeatReclaimEfficiencyFunctionofTemperatureCurve(const boost::optional<CurveBiquadratic>& curveBiquadratic);
+      bool setHeatReclaimEfficiencyFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic);
 
       void resetHeatReclaimEfficiencyFunctionofTemperatureCurve();
 
       // bool setTank(const HVACComponent& waterHeater);
 
-      bool setHeatingSource(const boost::optional<ModelObject>& heatingSource);
+      bool setHeatingSource(const ModelObject& heatingSource);
 
       void resetHeatingSource();
 
@@ -197,7 +197,6 @@ namespace model {
       // objects should be returned as boost::optionals
       boost::optional<Schedule> optionalSetpointTemperatureSchedule() const;
       // boost::optional<HVACComponent> optionalTank() const;
-      // boost::optional<ModelObject> optionalHeatingSource() const;
     };
 
   }  // namespace detail

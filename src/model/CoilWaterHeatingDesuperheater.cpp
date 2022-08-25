@@ -101,10 +101,10 @@ namespace model {
       UnsignedVector::const_iterator b(fieldIndices.begin());
       UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_WaterHeating_DesuperheaterFields::AvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("CoilWaterHeatingDesuperheater", "Availability"));
+        result.emplace_back("CoilWaterHeatingDesuperheater", "Availability");
       }
       if (std::find(b, e, OS_Coil_WaterHeating_DesuperheaterFields::SetpointTemperatureScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("CoilWaterHeatingDesuperheater", "Setpoint Temperature"));
+        result.emplace_back("CoilWaterHeatingDesuperheater", "Setpoint Temperature");
       }
       return result;
     }
@@ -118,7 +118,7 @@ namespace model {
     }
 
     ModelObject CoilWaterHeatingDesuperheater_Impl::clone(Model model) const {
-      auto modelObjectClone = ModelObject_Impl::clone(model).cast<CoilWaterHeatingDesuperheater>();
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<CoilWaterHeatingDesuperheater>();  // NOLINT
 
       modelObjectClone.resetHeatingSource();
 
@@ -126,9 +126,7 @@ namespace model {
     }
 
     std::vector<IddObjectType> CoilWaterHeatingDesuperheater_Impl::allowableChildTypes() const {
-      std::vector<IddObjectType> result;
-      result.push_back(IddObjectType::OS_Curve_Biquadratic);
-      return result;
+      return {IddObjectType::OS_Curve_Biquadratic};
     }
 
     std::vector<ModelObject> CoilWaterHeatingDesuperheater_Impl::children() const {
@@ -272,22 +270,8 @@ namespace model {
         OS_Coil_WaterHeating_DesuperheaterFields::HeatReclaimEfficiencyFunctionofTemperatureCurveName);
     }
 
-    // boost::optional<HVACComponent> CoilWaterHeatingDesuperheater_Impl::tank() const {
-    //   return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_Coil_WaterHeating_DesuperheaterFields::TankName);
-    // boost::optional<HVACComponent> value = optionalTank();
-    // if (!value) {
-    //   LOG_AND_THROW(briefDescription() << " does not have an Tank attached.");
-    // }
-    // return value.get();
-    // }
-
     boost::optional<ModelObject> CoilWaterHeatingDesuperheater_Impl::heatingSource() const {
       return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_Coil_WaterHeating_DesuperheaterFields::HeatingSourceName);
-      // boost::optional<ModelObject> value = optionalHeatingSource();
-      // if (!value) {
-      //   LOG_AND_THROW(briefDescription() << " does not have an Heating Source attached.");
-      // }
-      // return value.get();
     }
 
     double CoilWaterHeatingDesuperheater_Impl::waterFlowRate() const {
@@ -363,22 +347,6 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilWaterHeatingDesuperheater_Impl::setRatedHeatReclaimRecoveryEfficiency(boost::optional<double> ratedHeatReclaimRecoveryEfficiency) {
-      bool result(false);
-      if (ratedHeatReclaimRecoveryEfficiency) {
-        result = setDouble(OS_Coil_WaterHeating_DesuperheaterFields::RatedHeatReclaimRecoveryEfficiency, ratedHeatReclaimRecoveryEfficiency.get());
-      } else {
-        resetRatedHeatReclaimRecoveryEfficiency();
-        result = true;
-      }
-      return result;
-    }
-
-    void CoilWaterHeatingDesuperheater_Impl::resetRatedHeatReclaimRecoveryEfficiency() {
-      bool result = setString(OS_Coil_WaterHeating_DesuperheaterFields::RatedHeatReclaimRecoveryEfficiency, "");
-      OS_ASSERT(result);
-    }
-
     bool CoilWaterHeatingDesuperheater_Impl::setRatedInletWaterTemperature(double ratedInletWaterTemperature) {
       bool result = setDouble(OS_Coil_WaterHeating_DesuperheaterFields::RatedInletWaterTemperature, ratedInletWaterTemperature);
       OS_ASSERT(result);
@@ -398,16 +366,9 @@ namespace model {
       return result;
     }
 
-    bool CoilWaterHeatingDesuperheater_Impl::setHeatReclaimEfficiencyFunctionofTemperatureCurve(
-      const boost::optional<CurveBiquadratic>& curveBiquadratic) {
-      bool result(false);
-      if (curveBiquadratic) {
-        result =
-          setPointer(OS_Coil_WaterHeating_DesuperheaterFields::HeatReclaimEfficiencyFunctionofTemperatureCurveName, curveBiquadratic.get().handle());
-      } else {
-        resetHeatReclaimEfficiencyFunctionofTemperatureCurve();
-        result = true;
-      }
+    bool CoilWaterHeatingDesuperheater_Impl::setHeatReclaimEfficiencyFunctionofTemperatureCurve(const CurveBiquadratic& curveBiquadratic) {
+      bool result =
+        setPointer(OS_Coil_WaterHeating_DesuperheaterFields::HeatReclaimEfficiencyFunctionofTemperatureCurveName, curveBiquadratic.handle());
       return result;
     }
 
@@ -416,20 +377,64 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    // bool CoilWaterHeatingDesuperheater_Impl::setTank(const HVACComponent& waterHeater) {
-    //   bool result = setPointer(OS_Coil_WaterHeating_DesuperheaterFields::TankName, waterHeater.handle());
-    //   if (result) addToWaterHeater(waterHeater);
-    //   return result;
-    // }
+    bool CoilWaterHeatingDesuperheater_Impl::setRatedHeatReclaimRecoveryEfficiency(double ratedHeatReclaimRecoveryEfficiency) {
 
-    bool CoilWaterHeatingDesuperheater_Impl::setHeatingSource(const boost::optional<ModelObject>& heatingSource) {
-      bool result(false);
-      if (heatingSource) {
-        result = setPointer(OS_Coil_WaterHeating_DesuperheaterFields::HeatingSourceName, heatingSource.get().handle());
-      } else {
-        resetHeatingSource();
-        result = true;
+      if (auto heatingSource_ = heatingSource()) {
+
+        auto heatingSourceIddObjectType = heatingSource_->iddObjectType();
+        if ((heatingSourceIddObjectType == IddObjectType::OS_Refrigeration_Condenser_AirCooled)
+            || (heatingSourceIddObjectType == IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled)
+            || (heatingSourceIddObjectType == IddObjectType::OS_Refrigeration_Condenser_WaterCooled)) {
+          if (ratedHeatReclaimRecoveryEfficiency > 0.9) {
+            LOG(Error, briefDescription() << ": Rated Heat Reclaim Recovery Efficiency must be"
+                                          << " <= 0.9 when Heating Source Object Type = " << heatingSourceIddObjectType.valueDescription() << ".");
+            return false;
+          }
+        } else {
+          if (ratedHeatReclaimRecoveryEfficiency > 0.3) {
+            LOG(Error, briefDescription() << ": Rated Heat Reclaim Recovery Efficiency must be"
+                                          << " <= 0.3 when Heating Source Object Type = " << heatingSourceIddObjectType.valueDescription() << ".");
+            return false;
+          }
+        }
       }
+
+      bool result = setDouble(OS_Coil_WaterHeating_DesuperheaterFields::RatedHeatReclaimRecoveryEfficiency, ratedHeatReclaimRecoveryEfficiency);
+      return result;
+    }
+
+    void CoilWaterHeatingDesuperheater_Impl::resetRatedHeatReclaimRecoveryEfficiency() {
+      bool result = setString(OS_Coil_WaterHeating_DesuperheaterFields::RatedHeatReclaimRecoveryEfficiency, "");
+      OS_ASSERT(result);
+    }
+
+    bool CoilWaterHeatingDesuperheater_Impl::setHeatingSource(const ModelObject& heatingSource) {
+      bool result = setPointer(OS_Coil_WaterHeating_DesuperheaterFields::HeatingSourceName, heatingSource.handle());
+
+      if (boost::optional<double> ratedHeatReclaimRecoveryEfficiency_ = this->ratedHeatReclaimRecoveryEfficiency()) {
+        auto heatingSourceIddObjectType = heatingSource.iddObjectType();
+        if ((heatingSourceIddObjectType == IddObjectType::OS_Refrigeration_Condenser_AirCooled)
+            || (heatingSourceIddObjectType == IddObjectType::OS_Refrigeration_Condenser_EvaporativeCooled)
+            || (heatingSourceIddObjectType == IddObjectType::OS_Refrigeration_Condenser_WaterCooled)) {
+          if (ratedHeatReclaimRecoveryEfficiency_.get() > 0.9) {
+            LOG(Error, briefDescription() << ": Rated Heat Reclaim Recovery Efficiency must be"
+                                          << " <= 0.9 when Heating Source Object Type = " << heatingSourceIddObjectType.valueDescription()
+                                          << ". Resetting it to the default of 0.8.");
+            // setDouble to avoid a double check
+            // setRatedHeatReclaimRecoveryEfficiency(0.8);
+            setDouble(OS_Coil_WaterHeating_DesuperheaterFields::RatedHeatReclaimRecoveryEfficiency, 0.8);
+          }
+        } else {
+          if (ratedHeatReclaimRecoveryEfficiency_.get() > 0.3) {
+            LOG(Error, briefDescription() << ": Rated Heat Reclaim Recovery Efficiency must be"
+                                          << " <= 0.3 when Heating Source Object Type = " << heatingSourceIddObjectType.valueDescription()
+                                          << ". Resetting it to the default of 0.25.");
+            // setRatedHeatReclaimRecoveryEfficiency(0.25);
+            setDouble(OS_Coil_WaterHeating_DesuperheaterFields::RatedHeatReclaimRecoveryEfficiency, 0.25);
+          }
+        }
+      }
+
       return result;
     }
 
@@ -487,12 +492,23 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_WaterHeating_DesuperheaterFields::SetpointTemperatureScheduleName);
     }
 
+    // boost::optional<HVACComponent> CoilWaterHeatingDesuperheater_Impl::tank() const {
+    //   return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_Coil_WaterHeating_DesuperheaterFields::TankName);
+    // boost::optional<HVACComponent> value = optionalTank();
+    // if (!value) {
+    //   LOG_AND_THROW(briefDescription() << " does not have an Tank attached.");
+    // }
+    // return value.get();
+    // }
+
     // boost::optional<HVACComponent> CoilWaterHeatingDesuperheater_Impl::optionalTank() const {
     //   return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_Coil_WaterHeating_DesuperheaterFields::TankName);
     // }
 
-    // boost::optional<ModelObject> CoilWaterHeatingDesuperheater_Impl::optionalHeatingSource() const {
-    //   return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_Coil_WaterHeating_DesuperheaterFields::HeatingSourceName);
+    // bool CoilWaterHeatingDesuperheater_Impl::setTank(const HVACComponent& waterHeater) {
+    //   bool result = setPointer(OS_Coil_WaterHeating_DesuperheaterFields::TankName, waterHeater.handle());
+    //   if (result) addToWaterHeater(waterHeater);
+    //   return result;
     // }
 
   }  // namespace detail
@@ -501,14 +517,19 @@ namespace model {
     : StraightComponent(CoilWaterHeatingDesuperheater::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilWaterHeatingDesuperheater_Impl>());
 
+    // That's the only bit that's user-specified and could be expected to really throw
+    bool ok = setSetpointTemperatureSchedule(setpointTemperatureSchedule);
+    if (!ok) {
+      remove();
+      LOG_AND_THROW("Unable to set " << briefDescription() << "'s Setpoint Temperature Schedule to " << setpointTemperatureSchedule.briefDescription()
+                                     << ".");
+    }
+
+    // All of the below is expected to work so an OS_ASSERT is good enough
     Schedule availabilitySchedule = model.alwaysOnDiscreteSchedule();
-    bool ok = setAvailabilitySchedule(availabilitySchedule);
-    OS_ASSERT(ok);
-    ok = setSetpointTemperatureSchedule(setpointTemperatureSchedule);
+    ok = setAvailabilitySchedule(availabilitySchedule);
     OS_ASSERT(ok);
     ok = setDeadBandTemperatureDifference(5.0);
-    OS_ASSERT(ok);
-    ok = setRatedHeatReclaimRecoveryEfficiency(0.8);
     OS_ASSERT(ok);
     setRatedInletWaterTemperature(50.0);
     setRatedOutdoorAirTemperature(35.0);
