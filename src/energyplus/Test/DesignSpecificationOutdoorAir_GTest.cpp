@@ -360,7 +360,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
         return openstudio::istringEqual(method, zv.getString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
       });
       ASSERT_NE(zvs.cend(), it) << "Cannot find the ZoneVentilation:DesignFlowRate object with method '" << method << "'.";
-      ASSERT_EQ(zoneName, it->getString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName).get());
+      ASSERT_EQ(zoneName, it->getString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName).get());
       ASSERT_TRUE(it->getDouble(index));
       EXPECT_DOUBLE_EQ(value, it->getDouble(index).get()) << "Failed for " << method;
     };
@@ -535,7 +535,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
         return openstudio::istringEqual(method, zv.getString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
       });
       ASSERT_NE(zvs.cend(), it) << "Cannot find the ZoneVentilation:DesignFlowRate object with method '" << method << "'.";
-      ASSERT_EQ(zoneName, it->getString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName).get());
+      ASSERT_EQ(zoneName, it->getString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName).get());
       ASSERT_TRUE(it->getDouble(index));
       EXPECT_DOUBLE_EQ(value, it->getDouble(index).get()) << "Failed for " << method;
     };
