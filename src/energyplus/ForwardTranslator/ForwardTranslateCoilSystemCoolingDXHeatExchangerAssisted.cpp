@@ -34,13 +34,18 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../model/HeatExchangerAirToAirSensibleAndLatent.hpp"
 #include "../../model/HeatExchangerAirToAirSensibleAndLatent_Impl.hpp"
+#include "../../model/CoilCoolingDX.hpp"
+#include "../../model/CoilCoolingDX_Impl.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed_Impl.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed.hpp"
+#include "../../model/CoilCoolingDXVariableSpeed_Impl.hpp"
 #include "../../model/Model.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/CoilSystem_Cooling_DX_HeatExchangerAssisted_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_AirToAir_SensibleAndLatent_FieldEnums.hxx>
 #include <utilities/idd/HeatExchanger_Desiccant_BalancedFlow_FieldEnums.hxx>
+#include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -120,8 +125,11 @@ namespace energyplus {
         } else if (idf->iddObject().type() == IddObjectType::Coil_Cooling_DX_VariableSpeed) {
           idf->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirInletNodeName, hxSupplyAirOutletNodeName);
           idf->setString(Coil_Cooling_DX_VariableSpeedFields::IndoorAirOutletNodeName, hxExhaustAirInletNodeName);
+        } else if (idf->iddObject().type() == IddObjectType::Coil_Cooling_DX) {
+          idf->setString(Coil_Cooling_DXFields::EvaporatorInletNodeName, hxSupplyAirOutletNodeName);
+          idf->setString(Coil_Cooling_DXFields::EvaporatorOutletNodeName, hxExhaustAirInletNodeName);
         } else {
-          // Shouldn't happen, accepts only Coil:Cooling:DX:SingleSpeed or Coil:Cooling:DX:VariableSpeed
+          // Shouldn't happen, accepts only Coil:Cooling:DX or Coil:Cooling:DX:SingleSpeed or Coil:Cooling:DX:VariableSpeed
           LOG(Fatal, modelObject.briefDescription()
                        << " appears to have a cooling coil that shouldn't have been accepted: " << coolingCoil.briefDescription());
           OS_ASSERT(false);
