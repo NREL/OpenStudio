@@ -115,9 +115,9 @@ namespace model {
     void resetPartofTotalFloorArea();
 
     bool setCeilingHeight(double ceilingHeight);
-    
+
     void autocalculateCeilingHeight();
-    
+
     void resetCeilingHeight();
 
     bool setVolume(double volume);
@@ -127,9 +127,9 @@ namespace model {
     void resetVolume();
 
     bool setFloorArea(double floorArea);
-    
+
     void autocalculateFloorArea();
-    
+
     void resetFloorArea();
 
     //@}

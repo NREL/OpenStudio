@@ -167,9 +167,9 @@ namespace model {
       void resetPartofTotalFloorArea();
 
       bool setCeilingHeight(double ceilingHeight);
-      
+
       void autocalculateCeilingHeight();
-      
+
       void resetCeilingHeight();
 
       bool setVolume(double volume);
@@ -179,9 +179,9 @@ namespace model {
       void resetVolume();
 
       bool setFloorArea(double floorArea);
-      
+
       void autocalculateFloorArea();
-      
+
       void resetFloorArea();
 
       //@}
@@ -338,9 +338,9 @@ namespace model {
       double exteriorWallArea() const;
 
       double ceilingHeight() const;
-      
+
       bool isCeilingHeightDefaulted() const;
-      
+
       bool isCeilingHeightAutocalculated() const;
 
       double volume() const;
@@ -352,7 +352,7 @@ namespace model {
       double floorArea() const;
 
       bool isFloorAreaDefaulted() const;
-      
+
       bool isFloorAreaAutocalculated() const;
 
       double numberOfPeople() const;

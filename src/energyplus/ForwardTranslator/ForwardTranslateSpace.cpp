@@ -88,7 +88,7 @@ namespace energyplus {
 
     // CeilingHeight
     idfObject.setDouble(SpaceFields::CeilingHeight, modelObject.ceilingHeight());
-    
+
     // Volume
     idfObject.setDouble(SpaceFields::Volume, modelObject.volume());
 

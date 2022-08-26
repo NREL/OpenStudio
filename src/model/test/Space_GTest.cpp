@@ -2841,7 +2841,7 @@ TEST_F(ModelFixture, Space_setVolumeAndCeilingHeightAndFloorArea) {
   EXPECT_DOUBLE_EQ(3.6, space.ceilingHeight());
   EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
   EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
-  
+
   // CEILING HEIGHT
 
   // set

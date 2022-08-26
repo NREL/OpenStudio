@@ -946,7 +946,7 @@ namespace model {
       if (value) {
         return value.get();
       }
-      
+
       double result = 0;
 
       // TODO: need a better method
