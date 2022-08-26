@@ -1,11 +1,14 @@
 !  Version,
 !    9.1;                    !- Version Identifier
 
+!  Version,
+!    22.2;                   !- Version Identifier
+
   Building,
     Building1,               !- Name
     Big,                     !- North Axis {deg}
     Suburbs,                 !- Terrain
-    .04,                     !- Loads Convergence Tolerance Value
+    .04,                     !- Loads Convergence Tolerance Value {W}
     .4,                      !- Temperature Convergence Tolerance Value {deltaC}
     FullExterior,            !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
@@ -15,7 +18,7 @@
     Building2,               !- Name
     Small,                   !- North Axis {deg}
     Suburbs,                 !- Terrain
-    .04,                     !- Loads Convergence Tolerance Value
+    .04,                     !- Loads Convergence Tolerance Value {W}
     .4,                      !- Temperature Convergence Tolerance Value {deltaC}
     FullExterior,            !- Solar Distribution
     25,                      !- Maximum Number of Warmup Days
