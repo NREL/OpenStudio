@@ -338,7 +338,8 @@
     PTAC HW Htg Coil,        !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PTAC 1 Spd DX Clg Coil,  !- Cooling Coil Name
-    DrawThrough;             !- Fan Placement
+    DrawThrough,             !- Fan Placement
+    Always On Discrete 1;    !- Supply Air Fan Operating Mode Schedule Name
 
   Schedule:Constant,Always On Discrete 1,Schedule Type Limits 1,1;
 
@@ -720,7 +721,7 @@
     Autosize,                !- Maximum Supply Air Temperature from Supplemental Heater {C}
     21,                      !- Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
     DrawThrough,             !- Fan Placement
-    ;                        !- Supply Air Fan Operating Mode Schedule Name
+    Always On Discrete 1;    !- Supply Air Fan Operating Mode Schedule Name
 
   OutdoorAir:Mixer,
     PTHP OA Mixer,           !- Name
