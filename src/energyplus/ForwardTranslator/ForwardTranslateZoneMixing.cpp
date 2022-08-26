@@ -117,7 +117,7 @@ namespace energyplus {
     optSchedule = modelObject.minimumZoneTemperatureSchedule();
     if (optSchedule) {
       translateAndMapModelObject(*optSchedule);
-      idfObject.setString(ZoneMixingFields::MinimumReceivigTemperatureScheduleName, optSchedule->name().get());
+      idfObject.setString(ZoneMixingFields::MinimumReceivingTemperatureScheduleName, optSchedule->name().get());
     }
 
     // MaximumReceivingTemperatureScheduleName

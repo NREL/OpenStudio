@@ -1097,7 +1097,7 @@ namespace energyplus {
           if (!allPeople.empty()) {
             auto& zoneVentilation = m_idfObjects.emplace_back(IddObjectType::ZoneVentilation_DesignFlowRate);
             zoneVentilation.setName(tzName + " Ventilation per Person");
-            zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
+            zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName, tzName);
             if (peopleSchedule) {
               zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, peopleSchedule->nameString());
             }
@@ -1111,16 +1111,16 @@ namespace energyplus {
         if (zvRateForArea > 0) {
           auto& zoneVentilation = m_idfObjects.emplace_back(IddObjectType::ZoneVentilation_DesignFlowRate);
           zoneVentilation.setName(tzName + " Ventilation per Floor Area");
-          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName, tzName);
           zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().nameString());
           zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Area");
-          zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, zvRateForArea / modelObject.floorArea());
+          zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::FlowRateperFloorArea, zvRateForArea / modelObject.floorArea());
         }
 
         if (zvRate > 0) {
           auto& zoneVentilation = m_idfObjects.emplace_back(IddObjectType::ZoneVentilation_DesignFlowRate);
           zoneVentilation.setName(tzName + " Ventilation Rate");
-          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName, tzName);
           zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().nameString());
           zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "Flow/Zone");
           zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::DesignFlowRate, zvRate);
@@ -1129,7 +1129,7 @@ namespace energyplus {
         if (zvRateForVolume > 0) {
           auto& zoneVentilation = m_idfObjects.emplace_back(IddObjectType::ZoneVentilation_DesignFlowRate);
           zoneVentilation.setName(tzName + " Ventilation Air Changes per Hour");
-          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListName, tzName);
+          zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName, tzName);
           zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::ScheduleName, this->alwaysOnSchedule().nameString());
           zoneVentilation.setString(ZoneVentilation_DesignFlowRateFields::DesignFlowRateCalculationMethod, "AirChanges/Hour");
           zoneVentilation.setDouble(ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 3600.0 * zvRateForVolume / totVolume);

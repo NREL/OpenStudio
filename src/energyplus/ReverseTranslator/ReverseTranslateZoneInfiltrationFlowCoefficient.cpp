@@ -58,7 +58,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    OptionalWorkspaceObject zoneTarget = workspaceObject.getTarget(ZoneInfiltration_FlowCoefficientFields::ZoneName);
+    OptionalWorkspaceObject zoneTarget = workspaceObject.getTarget(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName);
     if (!zoneTarget) {
       LOG(Error, "WorkspaceObject " << workspaceObject.briefDescription() << " has no Zone Name assigned, not ReverseTranslating it.");
       return boost::none;

@@ -54,7 +54,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::ZoneName);
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::ZoneorSpaceName);
     OptionalThermalZone zone;
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
@@ -67,7 +67,7 @@ namespace energyplus {
       return boost::none;
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::SourceZoneName);
+    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::SourceZoneorSpaceName);
     OptionalThermalZone sourceZone;
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
@@ -119,7 +119,7 @@ namespace energyplus {
         LOG(Error, "Flow/Zone value not found for workspace object " << workspaceObject);
       }
     } else if (istringEqual("Flow/Area", *s)) {
-      d = workspaceObject.getDouble(openstudio::ZoneCrossMixingFields::FlowRateperZoneFloorArea);
+      d = workspaceObject.getDouble(openstudio::ZoneCrossMixingFields::FlowRateperFloor);
       if (d) {
         mixing.setFlowRateperZoneFloorArea(*d);
         reverseMixing.setFlowRateperZoneFloorArea(*d);
@@ -163,7 +163,7 @@ namespace energyplus {
       }
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MinimumZoneTemperatureScheduleName);
+    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MinimumReceivingTemperatureScheduleName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
@@ -174,7 +174,7 @@ namespace energyplus {
       }
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MaximumZoneTemperatureScheduleName);
+    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MaximumReceivingTemperatureScheduleName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
@@ -185,7 +185,7 @@ namespace energyplus {
       }
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MinimumSourceZoneTemperatureScheduleName);
+    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MinimumSourceTemperatureScheduleName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
@@ -196,7 +196,7 @@ namespace energyplus {
       }
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MaximumSourceZoneTemperatureScheduleName);
+    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MaximumSourceTemperatureScheduleName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
