@@ -17129,6 +17129,7 @@ OS:CoilSystem:Cooling:DX:HeatExchangerAssisted,
   A6 ; \field Cooling Coil
        \required-field
        \type object-list
+       \object-list CoilCoolingDX
        \object-list CoolingCoilsDXSingleSpeed
        \object-list CoolingCoilsDXVariableSpeed
 
@@ -26904,6 +26905,7 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \note Needs to match in the DX Cooling Coil object.
        \type object-list
        \required-field
+       \object-list CoilCoolingDX
        \object-list CoolingCoilsDXSingleSpeed
        \object-list CoolingCoilsDXVariableSpeed
   N9, \field Cooling Convergence Tolerance
@@ -27041,6 +27043,7 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \note Needs to match a DX cooling coil object.
        \type object-list
        \required-field
+       \object-list CoilCoolingDX
        \object-list CoolingCoilsDXSingleSpeed
        \object-list CoolingCoilsDXVariableSpeed
   A11, \field Fan Placement
