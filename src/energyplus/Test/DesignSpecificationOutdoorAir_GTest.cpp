@@ -352,7 +352,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_DesignSpecificationOutdoorAir) {
     std::vector<std::tuple<std::string, unsigned int, double>> expectedZvs{
       {"AirChanges/Hour", ZoneVentilation_DesignFlowRateFields::AirChangesperHour, 0.125},
       {"Flow/Zone", ZoneVentilation_DesignFlowRateFields::DesignFlowRate, 1.35},
-      {"Flow/Area", ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea, 0.001},
+      {"Flow/Area", ZoneVentilation_DesignFlowRateFields::FlowRateperFloorArea, 0.001},
       {"Flow/Person", ZoneVentilation_DesignFlowRateFields::FlowRateperPerson, 0.01}};
     auto checkZv = [&zvs, zoneName = z.nameString()](const std::string& method, unsigned int index, double value) -> void {
       auto it = std::find_if(zvs.cbegin(), zvs.cend(), [&method](const auto& zv) -> bool {

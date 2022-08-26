@@ -96,7 +96,7 @@ namespace energyplus {
       LOG(Error, "Flow/Zone value not found for workspace object " << workspaceObject);
     }
   }else if(istringEqual("Flow/Area", *s)){
-    d = workspaceObject.getDouble(openstudio::ZoneVentilation_DesignFlowRateFields::FlowRateperZoneFloorArea);
+    d = workspaceObject.getDouble(openstudio::ZoneVentilation_DesignFlowRateFields::FlowRateperFloorArea);
     if (d){
       ventilation.setFlowRateperSpaceFloorArea(*d);
     }else{
