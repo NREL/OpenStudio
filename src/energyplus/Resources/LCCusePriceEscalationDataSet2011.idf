@@ -1463,7 +1463,7 @@
     1.4750,                  !- <none>
     1.4799,                  !- <none>
     1.4847,                  !- <none>
-    1.422.1;                 !- <none>
+    1.4903;                  !- <none>
 
   LifeCycleCost:UsePriceEscalation,
     South  Industrial-Natural gas,  !- LCC Price Escalation Name
