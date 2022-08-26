@@ -51,7 +51,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX(model::CoilCoolingDX& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXWithoutUnitary(model::CoilCoolingDX& modelObject) {
     boost::optional<std::string> s;
     boost::optional<double> value;
 
@@ -115,6 +115,58 @@ namespace energyplus {
 
     return boost::optional<IdfObject>(idfObject);
   }  // End of translate function
+
+  boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX(CoilCoolingDX& modelObject) {
+    IdfObject coilSystemCoolingDXIdf(IddObjectType::CoilSystem_Cooling_DX);
+
+    m_idfObjects.push_back(coilSystemCoolingDXIdf);
+
+    boost::optional<IdfObject> oIdfObject = translateCoilCoolingDXWithoutUnitary(modelObject);
+
+    if (!oIdfObject) {
+      return boost::none;
+    }
+
+    IdfObject idfObject = oIdfObject.get();
+
+    OptionalString s;
+
+    s = modelObject.name();
+    if (s) {
+      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType, idfObject.iddObject().name());
+
+      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilName, *s);
+
+      coilSystemCoolingDXIdf.setName(*s + " CoilSystem");
+    }
+
+    Schedule sched = modelObject.getAvailabilitySchedule();
+    translateAndMapModelObject(sched);
+
+    coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::AvailabilityScheduleName, sched.name().get());
+
+    OptionalModelObject omo = modelObject.inletModelObject();
+    if (omo) {
+      translateAndMapModelObject(*omo);
+      s = omo->name();
+      if (s) {
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemInletNodeName, *s);
+      }
+    }
+
+    omo = modelObject.outletModelObject();
+    if (omo) {
+      translateAndMapModelObject(*omo);
+      s = omo->name();
+      if (s) {
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemOutletNodeName, *s);
+
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemSensorNodeName, *s);
+      }
+    }
+
+    return coilSystemCoolingDXIdf;
+  }
 
 }  // end namespace energyplus
 }  // end namespace openstudio
