@@ -330,7 +330,7 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
           fieldNames.push_back(fieldName);
         } else {
           // strip out numbers
-          fieldName = boost::regex_replace(fieldName, boost::regex("\\s?[0-9]+"), "");
+          fieldName = boost::regex_replace(fieldName, boost::regex("\\s?[0-9]+"), "", boost::format_first_only);
           boost::trim(fieldName);
           extensibleFieldNames.push_back(fieldName);
         }
@@ -348,7 +348,7 @@ void IddFileFactoryData::parseFile(const path& outPath, const std::string& outFi
         // cppcheck-suppress containerOutOfBounds
         fieldName = fieldNames.back();
         // strip out numbers and transfer from fieldNames to extensibleFieldNames
-        fieldName = boost::regex_replace(fieldName, boost::regex("\\s?[0-9]+"), "");
+        fieldName = boost::regex_replace(fieldName, boost::regex("\\s?[0-9]+"), "", boost::format_first_only);
         boost::trim(fieldName);
         extensibleFieldNames.push_back(fieldName);
         fieldNames.pop_back();
