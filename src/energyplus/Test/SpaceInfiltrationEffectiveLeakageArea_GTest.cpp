@@ -213,7 +213,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationEffectiveLeakageAre
     double totalInfiltration = 0.0;  // cm2
     for (const auto& infil : infils) {
       auto name = infil.nameString();
-      auto z_ = infil.getTarget(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName);
+      auto z_ = infil.getTarget(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneorSpaceName);
       ASSERT_TRUE(z_);
       EXPECT_EQ(zone, z_.get());
       double i = infil.getDouble(ZoneInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea).get();
@@ -257,7 +257,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationEffectiveLeakageAre
     double totalInfiltration = 0.0;  // cm2
     for (const auto& infil : infils) {
       auto name = infil.nameString();
-      auto z_ = infil.getTarget(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneName);
+      auto z_ = infil.getTarget(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneorSpaceName);
       ASSERT_TRUE(z_);
       EXPECT_EQ(zone, z_.get());
       double i = infil.getDouble(ZoneInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea).get();
