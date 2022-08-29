@@ -73,6 +73,16 @@ namespace energyplus {
       tableLookup.setDouble(Table_LookupFields::NormalizationDivisor, d.get());
     }
 
+    // MinimumOutput
+    if ((d = modelObject.minimumOutput())) {
+      tableLookup.setDouble(Table_LookupFields::MinimumOutput, d.get());
+    }
+
+    // MaximumOutput
+    if ((d = modelObject.maximumOutput())) {
+      tableLookup.setDouble(Table_LookupFields::MaximumOutput, d.get());
+    }
+
     // OutputUnitType
     if ((s = modelObject.outputUnitType())) {
       tableLookup.setString(Table_LookupFields::OutputUnitType, s.get());
@@ -109,6 +119,21 @@ namespace energyplus {
       // ExtrapolationMethod
       if ((s = independentVariable.extrapolationMethod())) {
         tableIndependentVariable.setString(Table_IndependentVariableFields::ExtrapolationMethod, s.get());
+      }
+
+      // MinimumValue
+      if ((d = independentVariable.minimumValue())) {
+        tableIndependentVariable.setDouble(Table_IndependentVariableFields::MinimumValue, d.get());
+      }
+
+      // MaximumValue
+      if ((d = independentVariable.maximumValue())) {
+        tableIndependentVariable.setDouble(Table_IndependentVariableFields::MaximumValue, d.get());
+      }
+
+      // NormalizationReferenceValue
+      if ((d = independentVariable.normalizationReferenceValue())) {
+        tableIndependentVariable.setDouble(Table_IndependentVariableFields::NormalizationReferenceValue, d.get());
       }
 
       // UnitType

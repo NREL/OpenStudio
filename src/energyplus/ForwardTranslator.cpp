@@ -313,8 +313,11 @@ namespace energyplus {
       OptionalDouble d;
 
       TableLookup tableLookup(model);
-      TableIndependentVariable tableIndependentVariable(model);
-      tableLookup.addIndependentVariable(tableIndependentVariable);
+
+      // Name
+      if (s = tableMulti.name()) {
+        tableLookup.setName(*s);
+      }
 
       for (WorkspaceObject source : tableMulti.sources()) {
         for (unsigned index : source.getSourceIndices(tableMulti.handle())) {
@@ -323,10 +326,64 @@ namespace energyplus {
         }
       }
 
-      // Name
-      s = tableMulti.name();
-      if (s) {
-        tableLookup.setName(*s);
+      // TableIndependentVariable
+      std::string interpolationMethod = tableMulti.interpolationMethod();
+      int numberofIndependentVariables = tableMulti.numberofIndependentVariables();
+      unsigned expectedNumberOfValues = 1;
+      for (int i = 0; i < numberofIndependentVariables; ++i) {
+        auto xValues = tableMulti.xValues(i);
+        auto sizeX = xValues.size();
+
+        // expect a full grid of values
+        expectedNumberOfValues *= sizeX;
+
+        TableIndependentVariable tableIndependentVariable(model);
+
+        // InterpolationMethod / ExtrapolationMethod
+        // there is not a straightforward mapping of the old interpolation methods to new ones, e.g. there is no "None" option for extrapolation
+        if (istringEqual(interpolationMethod, "LagrangeInterpolationLinearExtrapolation")) {
+          tableIndependentVariable.setInterpolationMethod("Cubic");
+          tableIndependentVariable.setExtrapolationMethod("Linear");
+        } else if (istringEqual(interpolationMethod, "LinearInterpolationOfTable")) {
+          tableIndependentVariable.setInterpolationMethod("Linear");
+          tableIndependentVariable.setExtrapolationMethod("Constant");
+        } else if (istringEqual(interpolationMethod, "EvaluateCurveToLimits")) {
+          tableIndependentVariable.setInterpolationMethod("Cubic");
+          tableIndependentVariable.setExtrapolationMethod("Constant");
+        }
+
+        // MinimumValue / MaximumValue
+        // these values should be unique and sorted in ascending order
+        tableIndependentVariable.setMinimumValue(xValues[0]);
+        tableIndependentVariable.setMaximumValue(xValues[sizeX - 1]);
+
+        // UnitType
+        switch (i) {
+          case 0:
+            tableIndependentVariable.setUnitType(tableMulti.inputUnitTypeforX1());
+            break;
+          case 1:
+            tableIndependentVariable.setUnitType(tableMulti.inputUnitTypeforX2());
+            break;
+          case 2:
+            tableIndependentVariable.setUnitType(tableMulti.inputUnitTypeforX3());
+            break;
+          case 3:
+            tableIndependentVariable.setUnitType(tableMulti.inputUnitTypeforX4());
+            break;
+          case 4:
+            tableIndependentVariable.setUnitType(tableMulti.inputUnitTypeforX5());
+            break;
+          default:
+            break;
+        }
+
+        // add the values
+        for (const auto& xValue : xValues) {
+          tableIndependentVariable.addValue(xValue);
+        }
+
+        tableLookup.addIndependentVariable(tableIndependentVariable);
       }
 
       // NormalizationReference
@@ -353,18 +410,25 @@ namespace energyplus {
       // ExternalFileName
       // Not supported
 
+      // check that we have the correct number of points
       auto points = tableMulti.points();
+      if (expectedNumberOfValues != points.size()) {
+        LOG(Error, "Expected " << expectedNumberOfValues << " points but found " << points.size() << " in object " << tableMulti.briefDescription()
+                               << ". Object not translated");
+        tableLookup.remove();
+      } else {
+        LOG(Warn,
+            "TableMultiVariableLookup '" << tableMulti.nameString() << "' has been converted to TableLookup '" << tableLookup.nameString() << "'.");
 
-      // important to sort points in order expected by EnergyPlus
-      std::sort(points.begin(), points.end());
+        // important to sort points in order expected by EnergyPlus
+        std::sort(points.begin(), points.end());
 
-      // add the sorted values
-      for (const auto& point : points) {
-        tableLookup.addOutputValue(point.y());
+        // add the sorted values
+        for (const auto& point : points) {
+          tableLookup.addOutputValue(point.y());
+        }
       }
 
-      LOG(Warn,
-          "TableMultiVariableLookup '" << tableMulti.nameString() << "' has been converted to TableLookup '" << tableLookup.nameString() << "'.");
       tableMulti.remove();
     }
 
