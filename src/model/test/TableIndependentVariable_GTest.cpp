@@ -54,19 +54,42 @@ TEST_F(ModelFixture, TableIndependentVariable) {
 
   EXPECT_EQ("Linear", independentVariable.interpolationMethod());
   EXPECT_EQ("Constant", independentVariable.extrapolationMethod());
+  EXPECT_FALSE(independentVariable.minimumValue());
+  EXPECT_FALSE(independentVariable.maximumValue());
+  EXPECT_FALSE(independentVariable.normalizationReferenceValue());
   EXPECT_EQ("Dimensionless", independentVariable.unitType());
   EXPECT_EQ(0u, independentVariable.tableLookups().size());
 
   EXPECT_TRUE(independentVariable.setInterpolationMethod("Cubic"));
   EXPECT_TRUE(independentVariable.setExtrapolationMethod("Linear"));
+  EXPECT_TRUE(independentVariable.setMinimumValue(10));
+  EXPECT_TRUE(independentVariable.setMaximumValue(20));
+  EXPECT_TRUE(independentVariable.setNormalizationReferenceValue(30));
   EXPECT_TRUE(independentVariable.setUnitType("Temperature"));
+  EXPECT_TRUE(independentVariable.addValue(50));
+  EXPECT_TRUE(independentVariable.addValue(100));
+  EXPECT_TRUE(independentVariable.addValue(150));
   TableLookup tableLookup1(m);
   EXPECT_TRUE(tableLookup1.addIndependentVariable(independentVariable));
 
   EXPECT_EQ("Cubic", independentVariable.interpolationMethod());
   EXPECT_EQ("Linear", independentVariable.extrapolationMethod());
+  ASSERT_TRUE(independentVariable.minimumValue());
+  EXPECT_EQ(10, independentVariable.minimumValue().get());
+  ASSERT_TRUE(independentVariable.maximumValue());
+  EXPECT_EQ(20, independentVariable.maximumValue().get());
+  ASSERT_TRUE(independentVariable.normalizationReferenceValue());
+  EXPECT_EQ(30, independentVariable.normalizationReferenceValue().get());
   EXPECT_EQ("Temperature", independentVariable.unitType());
+  EXPECT_EQ(3u, independentVariable.values().size()
+  EXPECT_EQ(3u, independentVariable.numberofValues());
   EXPECT_EQ(1u, independentVariable.tableLookups().size());
+
+  EXPECT_TRUE(independentVariable.removeValue(1));
+  EXPECT_EQ(2u, independentVariable.values().size());
+  independentVariable.removeAllValues();
+  EXPECT_EQ(0u, independentVariable.values().size());
+  EXPECT_EQ(0u, independentVariable.numberofValues());
 
   TableLookup tableLookup2(m);
   EXPECT_TRUE(tableLookup2.addIndependentVariable(independentVariable));

@@ -56,19 +56,46 @@ TEST_F(ModelFixture, TableLookup) {
 
   EXPECT_EQ("None", tableLookup.normalizationMethod());
   EXPECT_EQ(1.0, tableLookup.normalizationDivisor());
+  EXPECT_FALSE(tableLookup.minimumOutput());
+  EXPECT_FALSE(tableLookup.maximumOutput());
   EXPECT_EQ("Dimensionless", tableLookup.outputUnitType());
+  EXPECT_EQ(0y, tableLookup.outputValues().size());
   EXPECT_EQ(0u, tableLookup.independentVariables().size());
 
   EXPECT_TRUE(tableLookup.setNormalizationMethod("DivisorOnly"));
   EXPECT_TRUE(tableLookup.setNormalizationDivisor(0.9));
+  EXPECT_TRUE(tableLookup.setMinimumOutput(1));
+  EXPECT_TRUE(tableLookup.setMaximumOutput(2));
   EXPECT_TRUE(tableLookup.setOutputUnitType("Capacity"));
+  EXPECT_TRUE(tableLookup.addOutputValue(5));
   TableIndependentVariable independentVariable1(m);
   EXPECT_TRUE(tableLookup.addIndependentVariable(independentVariable1));
 
   EXPECT_EQ("DivisorOnly", tableLookup.normalizationMethod());
   EXPECT_EQ(0.9, tableLookup.normalizationDivisor());
+  ASSERT_TRUE(tableLookup.minimumOutput());
+  EXPECT_EQ(1, tableLookup.minimumOutput().get());
+  ASSERT_TRUE(tableLookup.maximumOutput());
+  EXPECT_EQ(2, tableLookup.maximumOutput().get());
   EXPECT_EQ("Capacity", tableLookup.outputUnitType());
+  EXPECT_EQ(1u, tableLookup.outputValues().size());
   EXPECT_EQ(1u, tableLookup.independentVariables().size());
+
+  tableLookup.resetMinimumOutput();
+  tableLookup.resetMaximumOutput();
+  EXPECT_FALSE(tableLookup.minimumOutput());
+  EXPECT_FALSE(tableLookup.maximumOutput());
+
+  EXPECT_TRUE(tableLookup.addOutputValue(10));
+  EXPECT_TRUE(tableLookup.addOutputValue(20));
+  EXPECT_EQ(3u, tableLookup.outputValues().size())
+  EXPECT_EQ(3u, tableLookup.numberofOutputValues());
+
+  EXPECT_TRUE(tableLookup.removeOutputValue(1));
+  EXPECT_EQ(2u, tableLookup.outputValues().size());
+  tableLookup.removeAllOutputValues();
+  EXPECT_EQ(0u, tableLookup.outputValues().size());
+  EXPECT_EQ(0u, tableLookup.numberofOutputValues());
 
   TableIndependentVariable independentVariable2(m);
   EXPECT_TRUE(tableLookup.addIndependentVariable(independentVariable2));
@@ -76,7 +103,7 @@ TEST_F(ModelFixture, TableLookup) {
   EXPECT_TRUE(tableLookup.addIndependentVariable(independentVariable3));
   EXPECT_EQ(3u, tableLookup.independentVariables().size());
 
-  tableLookup.removeIndependentVariable(independentVariable2);
+  EXPECT_TRUE(tableLookup.removeIndependentVariable(independentVariable2));
   EXPECT_EQ(2u, tableLookup.independentVariables().size());
   tableLookup.removeAllIndependentVariables();
   EXPECT_EQ(0u, tableLookup.independentVariables().size());
