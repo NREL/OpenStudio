@@ -311,7 +311,7 @@ namespace energyplus {
     for (TableMultiVariableLookup tableMulti : model.getModelObjects<TableMultiVariableLookup>()) {
       OptionalString s;
       OptionalDouble d;
-      
+
       TableLookup tableLookup(model);
       TableIndependentVariable tableIndependentVariable(model);
       tableLookup.addIndependentVariable(tableIndependentVariable);

@@ -79,7 +79,7 @@ namespace model {
       double normalizationDivisor() const;
 
       double minimumOutput() const;
-      
+
       double maximumOutput() const;
 
       std::string outputUnitType() const;
@@ -93,11 +93,11 @@ namespace model {
       bool setNormalizationDivisor(double normalizationDivisior);
 
       bool setMinimumOutput(double minimumOutput);
-      
+
       void resetMinimumOutput();
-      
+
       bool setMaximumOutput(double maximumOutput);
-      
+
       void resetMaximumOutput();
 
       bool setOutputUnitType(std::string outputUnitType);
