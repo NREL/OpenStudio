@@ -309,16 +309,58 @@ namespace energyplus {
 
     // replace old TableMultiVariableLookup with TableLookup
     for (TableMultiVariableLookup tableMulti : model.getModelObjects<TableMultiVariableLookup>()) {
+      OptionalString s;
+      OptionalDouble d;
+      
       TableLookup tableLookup(model);
       TableIndependentVariable tableIndependentVariable(model);
       tableLookup.addIndependentVariable(tableIndependentVariable);
-      // TODO
 
       for (WorkspaceObject source : tableMulti.sources()) {
         for (unsigned index : source.getSourceIndices(tableMulti.handle())) {
           bool test = source.setPointer(index, tableLookup.handle());
           OS_ASSERT(test);
         }
+      }
+
+      // Name
+      s = tableMulti.name();
+      if (s) {
+        tableLookup.setName(*s);
+      }
+
+      // NormalizationReference
+      if ((d = tableMulti.normalizationReference())) {
+        tableLookup.setNormalizationMethod("DivisorOnly");
+        tableLookup.setNormalizationDivisor(d.get());
+      }
+
+      // MinimumTableOutput
+      if ((d = tableMulti.minimumTableOutput())) {
+        tableLookup.setMinimumOutput(d.get());
+      }
+
+      // MaximumTableOutput
+      if ((d = tableMulti.maximumTableOutput())) {
+        tableLookup.setMaximumOutput(d.get());
+      }
+
+      // OutputUnitType
+      if ((s = tableMulti.outputUnitType())) {
+        tableLookup.setOutputUnitType(s.get());
+      }
+
+      // ExternalFileName
+      // Not supported
+
+      auto points = tableMulti.points();
+
+      // important to sort points in order expected by EnergyPlus
+      std::sort(points.begin(), points.end());
+
+      // add the sorted values
+      for (const auto& point : points) {
+        tableLookup.addOutputValue(point.y());
       }
 
       LOG(Warn,

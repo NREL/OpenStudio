@@ -21151,10 +21151,10 @@ OS:Table:Lookup,
        \required-field
   N2,  \field Minimum Output
        \type real
-       \unitsBasedOnField A4
+       \unitsBasedOnField A5
   N3,  \field Maximum Output
        \type real
-       \unitsBasedOnField A4
+       \unitsBasedOnField A5
   A5,  \field Output Unit Type
        \type choice
        \key Dimensionless
