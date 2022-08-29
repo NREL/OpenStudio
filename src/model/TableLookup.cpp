@@ -101,16 +101,12 @@ namespace model {
       return value.get();
     }
 
-    double TableLookup_Impl::minimumOutput() const {
-      boost::optional<double> value = getDouble(OS_Table_LookupFields::MinimumOutput, true);
-      OS_ASSERT(value);
-      return value.get();
+    boost::optional<double> TableLookup_Impl::minimumOutput() const {
+      return getDouble(OS_Table_LookupFields::MinimumOutput, true);
     }
 
-    double TableLookup_Impl::maximumOutput() const {
-      boost::optional<double> value = getDouble(OS_Table_LookupFields::MaximumOutput, true);
-      OS_ASSERT(value);
-      return value.get();
+    boost::optional<double> TableLookup_Impl::maximumOutput() const {
+      return getDouble(OS_Table_LookupFields::MaximumOutput, true);
     }
 
     std::string TableLookup_Impl::outputUnitType() const {
@@ -291,11 +287,11 @@ namespace model {
     return getImpl<detail::TableLookup_Impl>()->normalizationDivisor();
   }
 
-  double TableLookup::minimumOutput() const {
+  boost::optional<double> TableLookup::minimumOutput() const {
     return getImpl<detail::TableLookup_Impl>()->minimumOutput();
   }
 
-  double TableLookup::maximumOutput() const {
+  boost::optional<double> TableLookup::maximumOutput() const {
     return getImpl<detail::TableLookup_Impl>()->maximumOutput();
   }
 
@@ -316,7 +312,7 @@ namespace model {
   }
 
   void TableLookup::resetMinimumOutput() {
-    return getImpl<detail::TableLookup_Impl>()->resetMinimumOutput();
+    getImpl<detail::TableLookup_Impl>()->resetMinimumOutput();
   }
 
   bool TableLookup::setMaximumOutput(double maximumOutput) {
@@ -324,7 +320,7 @@ namespace model {
   }
 
   void TableLookup::resetMaximumOutput() {
-    return getImpl<detail::TableLookup_Impl>()->resetMaximumOutput();
+    getImpl<detail::TableLookup_Impl>()->resetMaximumOutput();
   }
 
   bool TableLookup::setOutputUnitType(std::string outputUnitType) {

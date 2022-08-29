@@ -71,11 +71,15 @@ namespace model {
 
       std::string extrapolationMethod() const;
 
+      boost::optional<double> minimumValue() const;
+
+      boost::optional<double> maximumValue() const;
+
+      boost::optional<double> normalizationReferenceValue() const;
+
       std::string unitType() const;
 
       std::vector<TableLookup> tableLookups() const;
-
-      std::vector<double> values() const;
 
       //@}
       /** @name Setters */
@@ -85,13 +89,33 @@ namespace model {
 
       bool setExtrapolationMethod(std::string extrapolationMethod);
 
-      bool setUnitType(std::string unitType);
+      bool setMinimumValue(double minimumValue);
 
-      bool addValue(double value);
+      void resetMinimumValue();
+
+      bool setMaximumValue(double maximumValue);
+
+      void resetMaximumValue();
+
+      bool setNormalizationReferenceValue(double normalizationReferenceValue);
+
+      void resetNormalizationReferenceValue();
+
+      bool setUnitType(std::string unitType);
 
       //@}
       /** @name Other */
       //@{
+
+      bool addValue(double value);
+
+      bool removeValue(unsigned groupIndex);
+
+      void removeAllValues();
+
+      std::vector<double> values() const;
+
+      unsigned int numberofValues() const;
 
       //@}
      protected:

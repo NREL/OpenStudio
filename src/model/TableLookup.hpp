@@ -70,9 +70,9 @@ namespace model {
 
     double normalizationDivisor() const;
 
-    double minimumOutput() const;
+    boost::optional<double> minimumOutput() const;
 
-    double maximumOutput() const;
+    boost::optional<double> maximumOutput() const;
 
     std::string outputUnitType() const;
 

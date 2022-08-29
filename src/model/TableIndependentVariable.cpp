@@ -86,6 +86,18 @@ namespace model {
       return value.get();
     }
 
+    boost::optional<double> TableIndependentVariable_Impl::minimumValue() const {
+      return getDouble(OS_Table_IndependentVariableFields::MinimumValue, true);
+    }
+
+    boost::optional<double> TableIndependentVariable_Impl::maximumValue() const {
+      return getDouble(OS_Table_IndependentVariableFields::MaximumValue, true);
+    }
+
+    boost::optional<double> TableIndependentVariable_Impl::normalizationReferenceValue() const {
+      return getDouble(OS_Table_IndependentVariableFields::NormalizationReferenceValue, true);
+    }
+
     std::string TableIndependentVariable_Impl::unitType() const {
       boost::optional<std::string> value = getString(OS_Table_IndependentVariableFields::UnitType, true);
       OS_ASSERT(value);
@@ -104,16 +116,6 @@ namespace model {
       return result;
     }
 
-    std::vector<double> TableIndependentVariable_Impl::values() const {
-      std::vector<double> result;
-      for (const auto& eg : extensibleGroups()) {
-        auto _d = eg.getDouble(OS_Table_IndependentVariableExtensibleFields::Value);
-        OS_ASSERT(_d);
-        result.push_back(_d.get());
-      }
-      return result;
-    }
-
     bool TableIndependentVariable_Impl::setInterpolationMethod(std::string interpolationMethod) {
       bool result = setString(OS_Table_IndependentVariableFields::InterpolationMethod, interpolationMethod);
       return result;
@@ -122,6 +124,36 @@ namespace model {
     bool TableIndependentVariable_Impl::setExtrapolationMethod(std::string extrapolationMethod) {
       bool result = setString(OS_Table_IndependentVariableFields::ExtrapolationMethod, extrapolationMethod);
       return result;
+    }
+
+    bool TableIndependentVariable_Impl::setMinimumValue(double minimumValue) {
+      bool result = setDouble(OS_Table_IndependentVariableFields::MinimumValue, minimumValue);
+      return result;
+    }
+
+    void TableIndependentVariable_Impl::resetMinimumValue() {
+      bool result = setString(OS_Table_IndependentVariableFields::MinimumValue, "");
+      OS_ASSERT(result);
+    }
+
+    bool TableIndependentVariable_Impl::setMaximumValue(double maximumValue) {
+      bool result = setDouble(OS_Table_IndependentVariableFields::MaximumValue, maximumValue);
+      return result;
+    }
+
+    void TableIndependentVariable_Impl::resetMaximumValue() {
+      bool result = setString(OS_Table_IndependentVariableFields::MaximumValue, "");
+      OS_ASSERT(result);
+    }
+
+    bool TableIndependentVariable_Impl::setNormalizationReferenceValue(double normalizationReferenceValue) {
+      bool result = setDouble(OS_Table_IndependentVariableFields::NormalizationReferenceValue, normalizationReferenceValue);
+      return result;
+    }
+
+    void TableIndependentVariable_Impl::resetNormalizationReferenceValue() {
+      bool result = setString(OS_Table_IndependentVariableFields::NormalizationReferenceValue, "");
+      OS_ASSERT(result);
     }
 
     bool TableIndependentVariable_Impl::setUnitType(std::string unitType) {
@@ -137,6 +169,37 @@ namespace model {
       }
 
       return result;
+    }
+
+    bool TableIndependentVariable_Impl::removeValue(unsigned groupIndex) {
+      bool result;
+
+      unsigned int num = numberofValues();
+      if (groupIndex < num) {
+        getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+        result = true;
+      } else {
+        result = false;
+      }
+      return result;
+    }
+
+    void TableIndependentVariable_Impl::removeAllValues() {
+      getObject<ModelObject>().clearExtensibleGroups();
+    }
+
+    std::vector<double> TableIndependentVariable_Impl::values() const {
+      std::vector<double> result;
+      for (const auto& eg : extensibleGroups()) {
+        auto _d = eg.getDouble(OS_Table_IndependentVariableExtensibleFields::Value);
+        OS_ASSERT(_d);
+        result.push_back(_d.get());
+      }
+      return result;
+    }
+
+    unsigned int TableIndependentVariable_Impl::numberofValues() const {
+      return numExtensibleGroups();
     }
 
   }  // namespace detail
@@ -165,16 +228,24 @@ namespace model {
     return getImpl<detail::TableIndependentVariable_Impl>()->extrapolationMethod();
   }
 
+  boost::optional<double> TableIndependentVariable::minimumValue() const {
+    return getImpl<detail::TableIndependentVariable_Impl>()->minimumValue();
+  }
+
+  boost::optional<double> TableIndependentVariable::maximumValue() const {
+    return getImpl<detail::TableIndependentVariable_Impl>()->maximumValue();
+  }
+
+  boost::optional<double> TableIndependentVariable::normalizationReferenceValue() const {
+    return getImpl<detail::TableIndependentVariable_Impl>()->normalizationReferenceValue();
+  }
+
   std::string TableIndependentVariable::unitType() const {
     return getImpl<detail::TableIndependentVariable_Impl>()->unitType();
   }
 
   std::vector<TableLookup> TableIndependentVariable::tableLookups() const {
     return getImpl<detail::TableIndependentVariable_Impl>()->tableLookups();
-  }
-
-  std::vector<double> TableIndependentVariable::values() const {
-    return getImpl<detail::TableIndependentVariable_Impl>()->values();
   }
 
   bool TableIndependentVariable::setInterpolationMethod(std::string interpolationMethod) {
@@ -185,12 +256,52 @@ namespace model {
     return getImpl<detail::TableIndependentVariable_Impl>()->setExtrapolationMethod(extrapolationMethod);
   }
 
+  bool TableIndependentVariable::setMinimumValue(double minimumValue) {
+    return getImpl<detail::TableIndependentVariable_Impl>()->setMinimumValue(minimumValue);
+  }
+
+  void TableIndependentVariable::resetMinimumValue() {
+    getImpl<detail::TableIndependentVariable_Impl>()->resetMinimumValue();
+  }
+
+  bool TableIndependentVariable::setMaximumValue(double maximumValue) {
+    return getImpl<detail::TableIndependentVariable_Impl>()->setMaximumValue(maximumValue);
+  }
+
+  void TableIndependentVariable::resetMaximumValue() {
+    getImpl<detail::TableIndependentVariable_Impl>()->resetMaximumValue();
+  }
+
+  bool TableIndependentVariable::setNormalizationReferenceValue(double normalizationReferenceValue) {
+    return getImpl<detail::TableIndependentVariable_Impl>()->setNormalizationReferenceValue(normalizationReferenceValue);
+  }
+
+  void TableIndependentVariable::resetNormalizationReferenceValue() {
+    getImpl<detail::TableIndependentVariable_Impl>()->resetNormalizationReferenceValue();
+  }
+
   bool TableIndependentVariable::setUnitType(std::string unitType) {
     return getImpl<detail::TableIndependentVariable_Impl>()->setUnitType(unitType);
   }
 
   bool TableIndependentVariable::addValue(double value) {
     return getImpl<detail::TableIndependentVariable_Impl>()->addValue(value);
+  }
+
+  bool TableIndependentVariable::removeValue(unsigned groupIndex) {
+    return getImpl<detail::TableIndependentVariable_Impl>()->removeValue(groupIndex);
+  }
+
+  void TableIndependentVariable::removeAllValues() {
+    getImpl<detail::TableIndependentVariable_Impl>()->removeAllValues();
+  }
+
+  std::vector<double> TableIndependentVariable::values() const {
+    return getImpl<detail::TableIndependentVariable_Impl>()->values();
+  }
+
+  unsigned int TableIndependentVariable::numberofValues() const {
+    return getImpl<detail::TableIndependentVariable_Impl>()->numberofValues();
   }
 
   /// @cond
