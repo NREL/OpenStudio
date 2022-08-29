@@ -21085,13 +21085,13 @@ OS:Table:IndependentVariable,
        \required-field
   N1,  \field Minimum Value
        \type real
-       \unitsBasedOnField A4
+       \unitsBasedOnField A5
   N2,  \field Maximum Value
        \type real
-       \unitsBasedOnField A4
+       \unitsBasedOnField A5
   N3,  \field Normalization Reference Value
        \type real
-       \unitsBasedOnField A4
+       \unitsBasedOnField A5
   A5,  \field Unit Type
        \type choice
        \key Dimensionless
@@ -21172,7 +21172,7 @@ OS:Table:Lookup,
        \minimum 1
   N6;  \field Output Value
        \type real
-       \unitsBasedOnField A4
+       \unitsBasedOnField A5
        \begin-extensible
 
 OS:DesignSpecification:OutdoorAir,
