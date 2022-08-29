@@ -101,20 +101,22 @@ namespace model {
       return value.get();
     }
 
-    std::string TableLookup_Impl::outputUnitType() const {
-      boost::optional<std::string> value = getString(OS_Table_LookupFields::OutputUnitType, true);
+    double TableLookup_Impl::minimumOutput() const {
+      boost::optional<double> value = getDouble(OS_Table_LookupFields::MinimumOutput, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    std::vector<double> TableLookup_Impl::outputValues() const {
-      std::vector<double> result;
-      for (const auto& eg : extensibleGroups()) {
-        auto _d = eg.getDouble(OS_Table_LookupExtensibleFields::OutputValue);
-        OS_ASSERT(_d);
-        result.push_back(_d.get());
-      }
-      return result;
+    double TableLookup_Impl::maximumOutput() const {
+      boost::optional<double> value = getDouble(OS_Table_LookupFields::MaximumOutput, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    std::string TableLookup_Impl::outputUnitType() const {
+      boost::optional<std::string> value = getString(OS_Table_LookupFields::OutputUnitType, true);
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool TableLookup_Impl::setNormalizationMethod(std::string normalizationMethod) {
@@ -125,6 +127,26 @@ namespace model {
     bool TableLookup_Impl::setNormalizationDivisor(double normalizationDivisior) {
       bool result = setDouble(OS_Table_LookupFields::NormalizationDivisor, normalizationDivisior);
       return result;
+    }
+
+    bool TableLookup_Impl::setMinimumOutput(double minimumOutput) {
+      bool result = setDouble(OS_Table_LookupFields::MinimumOutput, minimumOutput);
+      return result;
+    }
+
+    void TableLookup_Impl::resetMinimumOutput() {
+      bool result = setString(OS_Table_LookupFields::MinimumOutput, "");
+      OS_ASSERT(result);
+    }
+
+    bool TableLookup_Impl::setMaximumOutput(double maximumOutput) {
+      bool result = setDouble(OS_Table_LookupFields::MaximumOutput, maximumOutput);
+      return result;
+    }
+
+    void TableLookup_Impl::resetMaximumOutput() {
+      bool result = setString(OS_Table_LookupFields::MaximumOutput, "");
+      OS_ASSERT(result);
     }
 
     bool TableLookup_Impl::setOutputUnitType(std::string outputUnitType) {
@@ -142,6 +164,37 @@ namespace model {
       return result;
     }
 
+    bool TableLookup_Impl::removeOutputValue(unsigned groupIndex) {
+      bool result;
+
+      unsigned int num = numberofOutputValues();
+      if (groupIndex < num) {
+        getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
+        result = true;
+      } else {
+        result = false;
+      }
+      return result;
+    }
+
+    void TableLookup_Impl::removeAllOutputValues() {
+      getObject<ModelObject>().clearExtensibleGroups();
+    }
+
+    std::vector<double> TableLookup_Impl::outputValues() const {
+      std::vector<double> result;
+      for (const auto& eg : extensibleGroups()) {
+        auto _d = eg.getDouble(OS_Table_LookupExtensibleFields::OutputValue);
+        OS_ASSERT(_d);
+        result.push_back(_d.get());
+      }
+      return result;
+    }
+
+    unsigned int TableLookup_Impl::numberofOutputValues() const {
+      return numExtensibleGroups();
+    }
+
     bool TableLookup_Impl::addIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
       bool result = false;
       auto modelObjectList = independentVariableList();
@@ -151,11 +204,14 @@ namespace model {
       return result;
     }
 
-    void TableLookup_Impl::removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
+    bool TableLookup_Impl::removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
+      bool result = false;
       auto modelObjectList = independentVariableList();
       if (modelObjectList) {
         modelObjectList->removeModelObject(tableIndependentVariable);
+        result = true;
       }
+      return result;
     }
 
     void TableLookup_Impl::removeAllIndependentVariables() {
@@ -235,12 +291,16 @@ namespace model {
     return getImpl<detail::TableLookup_Impl>()->normalizationDivisor();
   }
 
-  std::string TableLookup::outputUnitType() const {
-    return getImpl<detail::TableLookup_Impl>()->outputUnitType();
+  double TableLookup::minimumOutput() const {
+    return getImpl<detail::TableLookup_Impl>()->minimumOutput();
   }
 
-  std::vector<double> TableLookup::outputValues() const {
-    return getImpl<detail::TableLookup_Impl>()->outputValues();
+  double TableLookup::maximumOutput() const {
+    return getImpl<detail::TableLookup_Impl>()->maximumOutput();
+  }
+
+  std::string TableLookup::outputUnitType() const {
+    return getImpl<detail::TableLookup_Impl>()->outputUnitType();
   }
 
   bool TableLookup::setNormalizationMethod(std::string normalizationMethod) {
@@ -251,6 +311,22 @@ namespace model {
     return getImpl<detail::TableLookup_Impl>()->setNormalizationDivisor(normalizationDivisior);
   }
 
+  bool TableLookup::setMinimumOutput(double minimumOutput) {
+    return getImpl<detail::TableLookup_Impl>()->setMinimumOutput(minimumOutput);
+  }
+
+  bool TableLookup::resetMinimumOutput() {
+    return getImpl<detail::TableLookup_Impl>()->resetMinimumOutput();
+  }
+
+  bool TableLookup::setMaximumOutput(double maximumOutput) {
+    return getImpl<detail::TableLookup_Impl>()->setMaximumOutput(maximumOutput);
+  }
+
+  bool TableLookup::resetMaximumOutput() {
+    return getImpl<detail::TableLookup_Impl>()->resetMaximumOutput();
+  }
+
   bool TableLookup::setOutputUnitType(std::string outputUnitType) {
     return getImpl<detail::TableLookup_Impl>()->setOutputUnitType(outputUnitType);
   }
@@ -259,11 +335,27 @@ namespace model {
     return getImpl<detail::TableLookup_Impl>()->addOutputValue(outputValue);
   }
 
+  bool TableLookup::removeOutputValue(unsigned groupIndex) {
+    getImpl<detail::TableLookup_Impl>()->removeOutputValue(groupIndex);
+  }
+
+  void TableLookup::removeAllOutputValues() {
+    getImpl<detail::TableLookup_Impl>()->removeAllOutputValues();
+  }
+
+  std::vector<double> TableLookup::outputValues() const {
+    return getImpl<detail::TableLookup_Impl>()->outputValues();
+  }
+
+  unsigned int TableLookup::numberofOutputValues() const {
+    return getImpl<detail::TableLookup_Impl>()->numberofOutputValues();
+  }
+
   bool TableLookup::addIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
     return getImpl<detail::TableLookup_Impl>()->addIndependentVariable(tableIndependentVariable);
   }
 
-  void TableLookup::removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
+  bool TableLookup::removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
     getImpl<detail::TableLookup_Impl>()->removeIndependentVariable(tableIndependentVariable);
   }
 

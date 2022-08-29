@@ -78,9 +78,11 @@ namespace model {
 
       double normalizationDivisor() const;
 
-      std::string outputUnitType() const;
+      double minimumOutput() const;
+      
+      double maximumOutput() const;
 
-      std::vector<double> outputValues() const;
+      std::string outputUnitType() const;
 
       //@}
       /** @name Setters */
@@ -90,17 +92,33 @@ namespace model {
 
       bool setNormalizationDivisor(double normalizationDivisior);
 
-      bool setOutputUnitType(std::string outputUnitType);
+      bool setMinimumOutput(double minimumOutput);
+      
+      void resetMinimumOutput();
+      
+      bool setMaximumOutput(double maximumOutput);
+      
+      void resetMaximumOutput();
 
-      bool addOutputValue(double outputValue);
+      bool setOutputUnitType(std::string outputUnitType);
 
       //@}
       /** @name Other */
       //@{
 
+      bool addOutputValue(double outputValue);
+
+      bool removeOutputValue(unsigned groupIndex);
+
+      void removeAllOutputValues();
+
+      std::vector<double> outputValues() const;
+
+      unsigned int numberofOutputValues() const;
+
       bool addIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
 
-      void removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
+      bool removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
 
       void removeAllIndependentVariables();
 
