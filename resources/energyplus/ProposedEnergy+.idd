@@ -30578,9 +30578,9 @@ Coil:Cooling:DX:MultiSpeed,
        \memo fan operation. Requires two to four sets of performance data and will interpolate
        \memo between speeds. Modeled as a single coil (multi-speed compressor or multiple
        \memo compressors with row split or intertwined coil).
-       \extensible:19
-       \min-fields 95
-       \max-fields 133
+       \extensible:20
+       \min-fields 58
+       \max-fields 98
   A1 , \field Name
        \required-field
        \type alpha
@@ -32202,8 +32202,8 @@ Coil:Heating:DX:MultiSpeed,
        \memo (includes electric or engine-driven compressor and outdoor fan), multi-speed
        \memo (or variable-speed), with defrost controls. Requires two to four sets
        \memo of performance data and will interpolate between speeds.
-       \extensible:11
-       \min-fields 44
+       \extensible:12
+       \min-fields 42
        \max-fields 66
   A1 , \field Name
        \required-field
