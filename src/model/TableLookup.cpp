@@ -315,7 +315,7 @@ namespace model {
     return getImpl<detail::TableLookup_Impl>()->setMinimumOutput(minimumOutput);
   }
 
-  bool TableLookup::resetMinimumOutput() {
+  void TableLookup::resetMinimumOutput() {
     return getImpl<detail::TableLookup_Impl>()->resetMinimumOutput();
   }
 
@@ -323,7 +323,7 @@ namespace model {
     return getImpl<detail::TableLookup_Impl>()->setMaximumOutput(maximumOutput);
   }
 
-  bool TableLookup::resetMaximumOutput() {
+  void TableLookup::resetMaximumOutput() {
     return getImpl<detail::TableLookup_Impl>()->resetMaximumOutput();
   }
 
