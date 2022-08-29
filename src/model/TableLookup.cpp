@@ -336,7 +336,7 @@ namespace model {
   }
 
   bool TableLookup::removeOutputValue(unsigned groupIndex) {
-    getImpl<detail::TableLookup_Impl>()->removeOutputValue(groupIndex);
+    return getImpl<detail::TableLookup_Impl>()->removeOutputValue(groupIndex);
   }
 
   void TableLookup::removeAllOutputValues() {
@@ -356,7 +356,7 @@ namespace model {
   }
 
   bool TableLookup::removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
-    getImpl<detail::TableLookup_Impl>()->removeIndependentVariable(tableIndependentVariable);
+    return getImpl<detail::TableLookup_Impl>()->removeIndependentVariable(tableIndependentVariable);
   }
 
   void TableLookup::removeAllIndependentVariables() {
