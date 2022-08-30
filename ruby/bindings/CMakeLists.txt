@@ -3,8 +3,11 @@ add_library( rubybindings OBJECT
   InitRubyBindings.cpp
 )
 
-target_include_directories(rubybindings PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(rubybindings PUBLIC ${ALL_RUBY_BINDING_TARGETS} rubyinterpreter-declarations)
+target_include_directories(rubybindings PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include/openstudio>  # <prefix>/include/openstudio
+)
+target_link_libraries(rubybindings PRIVATE ${ALL_RUBY_BINDING_TARGETS} rubyinterpreter-declarations)
 
 # wd4996=no deprecated warnings ; wd5033=register
 target_compile_options(rubybindings PRIVATE
@@ -12,4 +15,11 @@ target_compile_options(rubybindings PRIVATE
   $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Wno-error=register -Wno-register>
   $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Wno-deprecated-volatile>
   $<$<CXX_COMPILER_ID:GNU>:-Wno-volatile>
+)
+
+install(TARGETS rubybindings
+  EXPORT openstudio
+  DESTINATION Ruby
+  COMPONENT "RubyAPI"
+  INCLUDES DESTINATION include include/openstudio
 )

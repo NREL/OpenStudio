@@ -2,7 +2,11 @@
 # but don't want to link to libruby.
 add_library(rubyinterpreter-declarations INTERFACE)
 get_target_property(RUBY_INCLUDE_DIRS CONAN_PKG::openstudio_ruby INTERFACE_INCLUDE_DIRECTORIES)
-target_include_directories(rubyinterpreter-declarations INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} ${RUBY_INCLUDE_DIRS})
+target_include_directories(rubyinterpreter-declarations INTERFACE
+  # ${CMAKE_CURRENT_SOURCE_DIR} ${RUBY_INCLUDE_DIRS}
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:include/openstudio>  # <prefix>/include/openstudio
+)
 
 # Must call CMake itself in order to set the SWIG_LIB env var for add_custom_command
 add_custom_command(
@@ -23,3 +27,10 @@ add_library(rubyinterpreter INTERFACE
 
 target_include_directories(rubyinterpreter INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(rubyinterpreter INTERFACE CONAN_PKG::openstudio_ruby)
+
+install(TARGETS rubyinterpreter-declarations # rubyinterpreter
+ EXPORT openstudio
+ DESTINATION Ruby
+ COMPONENT "RubyAPI"
+ INCLUDES DESTINATION include include/openstudio
+)

@@ -89,8 +89,7 @@ if (APPLE)
   )
 endif()
 
-
-install(TARGETS openstudio_rb
+install(TARGETS openstudio_rb  ${ALL_RUBY_BINDING_TARGETS}
   EXPORT openstudio
   DESTINATION Ruby
   COMPONENT "RubyAPI"
