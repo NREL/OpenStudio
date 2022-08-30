@@ -81,7 +81,7 @@ TEST_F(ModelFixture, TableIndependentVariable) {
   ASSERT_TRUE(independentVariable.normalizationReferenceValue());
   EXPECT_EQ(30, independentVariable.normalizationReferenceValue().get());
   EXPECT_EQ("Temperature", independentVariable.unitType());
-  EXPECT_EQ(3u, independentVariable.values().size()
+  EXPECT_EQ(3u, independentVariable.values().size());
   EXPECT_EQ(3u, independentVariable.numberofValues());
   EXPECT_EQ(1u, independentVariable.tableLookups().size());
 

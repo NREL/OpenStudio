@@ -151,8 +151,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup) {
     tableLookup.addOutputValue(313);
     tableLookup.addOutputValue(314);
     tableLookup.addOutputValue(321);
+    tableLookup.addOutputValue(322);
     tableLookup.addOutputValue(323);
-    tableLookup.addOutputValue(324);
     tableLookup.addOutputValue(324);
 
     TableIndependentVariable independentVariable1(m);
@@ -160,6 +160,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup) {
     independentVariable1.setExtrapolationMethod("Linear");
     independentVariable1.setMinimumValue(1);
     independentVariable1.setMaximumValue(3);
+    independentVariable1.addValue(1);
+    independentVariable1.addValue(2);
+    independentVariable1.addValue(3);
     tableLookup.addIndependentVariable(independentVariable1);
 
     TableIndependentVariable independentVariable2(m);
@@ -167,6 +170,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup) {
     independentVariable2.setExtrapolationMethod("Linear");
     independentVariable2.setMinimumValue(1);
     independentVariable2.setMaximumValue(2);
+    independentVariable2.addValue(1);
+    independentVariable2.addValue(2);
     tableLookup.addIndependentVariable(independentVariable2);
 
     TableIndependentVariable independentVariable3(m);
@@ -174,6 +179,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup) {
     independentVariable3.setExtrapolationMethod("Linear");
     independentVariable3.setMinimumValue(1);
     independentVariable3.setMaximumValue(4);
+    independentVariable3.addValue(1);
+    independentVariable3.addValue(2);
+    independentVariable3.addValue(3);
+    independentVariable3.addValue(4);
     tableLookup.addIndependentVariable(independentVariable3);
 
     ForwardTranslator ft;
@@ -282,6 +291,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup) {
   {
     Model m;
     TableLookup tableLookup(m);
+    tableLookup.setNormalizationMethod("DivisorOnly");
+    tableLookup.setNormalizationDivisor(0.9);
     tableLookup.addOutputValue(0.1);
     tableLookup.addOutputValue(0.3);
     tableLookup.addOutputValue(0.5);
@@ -289,7 +300,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup) {
     tableLookup.addOutputValue(0.9);
 
     TableIndependentVariable independentVariable(m);
-    independentVariable.setNormalizationReferenceValue(0.9);
+    independentVariable.setInterpolationMethod("Cubic");
+    independentVariable.setExtrapolationMethod("Linear");
+    independentVariable.setMinimumValue(70);
+    independentVariable.setMaximumValue(78);
+    independentVariable.addValue(70);
+    independentVariable.addValue(72);
+    independentVariable.addValue(74);
+    independentVariable.addValue(76);
+    independentVariable.addValue(78);
     tableLookup.addIndependentVariable(independentVariable);
 
     ForwardTranslator ft;
@@ -308,7 +327,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup) {
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(3).getDouble(Table_LookupExtensibleFields::OutputValue).get(), 0.7);
     ASSERT_DOUBLE_EQ(idfTable.getExtensibleGroup(4).getDouble(Table_LookupExtensibleFields::OutputValue).get(), 0.9);
 
-    // Normallization reference should be filled in TableLookup
+    // Normalization reference should be filled in TableLookup
     ASSERT_TRUE(idfTable.getString(Table_LookupFields::NormalizationMethod));
     EXPECT_EQ(idfTable.getString(Table_LookupFields::NormalizationMethod).get(), "DivisorOnly");
     ASSERT_TRUE(idfTable.getDouble(Table_LookupFields::NormalizationDivisor));
