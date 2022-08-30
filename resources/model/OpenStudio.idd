@@ -5778,7 +5778,6 @@ OS:ShadingControl,
        \note Required if Type of Slat Angle Control for Blinds = ScheduledSlatAngle
        \note Schedule values should be degrees (0 minimum, 180 maximum)
   N2 , \field Setpoint 2
-       \units W/m2, deg C or cd/m2
        \note W/m2 for solar-based controls, deg C for temperature-based controls,
        \note cd/m2 for luminance based controls.
        \note Used only as the second setpoint for the following two-setpoint control types:
