@@ -1823,3 +1823,20 @@ TEST_F(OSVersionFixture, update_3_3_0_to_3_4_0_CoilHeatingDXMultiSpeed) {
   ASSERT_EQ(4u, model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed:StageData").size());
   ASSERT_EQ(0u, model->getObjectsByType("OS:ModelObjectList").size());
 }
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingDXSingleSpeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingDXSingleSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingDXSingleSpeed_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:SingleSpeed");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+  
+  EXPECT_EQ(773.3, coil.getString(6).get());  // Rated Supply Fan Power Per Volume Flow Rate 2017
+  EXPECT_EQ(934.4, coil.getString(7).get());  // Rated Supply Fan Power Per Volume Flow Rate 2023
+}
