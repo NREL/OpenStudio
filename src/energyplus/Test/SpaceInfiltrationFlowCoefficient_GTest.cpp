@@ -117,7 +117,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationFlowCoefficient) {
     WorkspaceObject idfObject(idfObjs[0]);
 
     EXPECT_EQ("My Infiltration", idfObject.getString(ZoneInfiltration_FlowCoefficientFields::Name).get());
-    EXPECT_EQ("Zone1", idfObject.getString(ZoneInfiltration_FlowCoefficientFields::ZoneName).get());
+    EXPECT_EQ("Zone1", idfObject.getString(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName).get());
 
     EXPECT_FALSE(infiltration.schedule());
     EXPECT_EQ("Always On Discrete", idfObject.getString(ZoneInfiltration_FlowCoefficientFields::ScheduleName).get());
@@ -197,7 +197,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SpaceInfiltrationFlowCoefficient) {
     ASSERT_TRUE(_i_zone);
     _i_zone->setName("Zone1");
 
-    EXPECT_TRUE(_i_infiltration->setPointer(ZoneInfiltration_FlowCoefficientFields::ZoneName, _i_zone->handle()));
+    EXPECT_TRUE(_i_infiltration->setPointer(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName, _i_zone->handle()));
 
     ASSERT_NO_THROW(rt.translateWorkspace(w));
     Model model = rt.translateWorkspace(w);
@@ -365,7 +365,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationFlowCoefficient_Spa
 
     for (const auto& infil : infils) {
       auto name = infil.nameString();
-      auto z_ = infil.getTarget(ZoneInfiltration_FlowCoefficientFields::ZoneName);
+      auto z_ = infil.getTarget(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName);
       ASSERT_TRUE(z_);
       EXPECT_EQ(zone, z_.get());
       if (name.find(infilSpace1.nameString()) != std::string::npos) {
@@ -416,7 +416,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationFlowCoefficient_Spa
 
     for (const auto& infil : infils) {
       auto name = infil.nameString();
-      auto z_ = infil.getTarget(ZoneInfiltration_FlowCoefficientFields::ZoneName);
+      auto z_ = infil.getTarget(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName);
       ASSERT_TRUE(z_);
       EXPECT_EQ(zone, z_.get());
       if (name.find(infilSpace1.nameString()) != std::string::npos) {
