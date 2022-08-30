@@ -140,7 +140,7 @@ namespace energyplus {
       coilSystemCoolingDXIdf.setName(*s + " CoilSystem");
     }
 
-    Schedule sched = modelObject.getAvailabilitySchedule();
+    Schedule sched = modelObject.availabilitySchedule();
     translateAndMapModelObject(sched);
 
     coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::AvailabilityScheduleName, sched.name().get());
