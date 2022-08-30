@@ -617,7 +617,8 @@ namespace model {
     }
 
     bool CoilHeatingDXSingleSpeed_Impl::setRatedSupplyFanPowerPerVolumeFlowRate2017(double ratedSupplyFanPowerPerVolumeFlowRate2017) {
-      bool result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate2017, ratedSupplyFanPowerPerVolumeFlowRate2017);
+      bool result =
+        setDouble(OS_Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate2017, ratedSupplyFanPowerPerVolumeFlowRate2017);
       return result;
     }
 
@@ -628,7 +629,8 @@ namespace model {
     }
 
     bool CoilHeatingDXSingleSpeed_Impl::setRatedSupplyFanPowerPerVolumeFlowRate2023(double ratedSupplyFanPowerPerVolumeFlowRate2023) {
-      bool result = setDouble(OS_Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate2023, ratedSupplyFanPowerPerVolumeFlowRate2023);
+      bool result =
+        setDouble(OS_Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate2023, ratedSupplyFanPowerPerVolumeFlowRate2023);
       return result;
     }
 
@@ -721,7 +723,7 @@ namespace model {
     autosizeRatedAirFlowRate();
 
     setRatedSupplyFanPowerPerVolumeFlowRate2017(773.3);
-    
+
     setRatedSupplyFanPowerPerVolumeFlowRate2023(934.4);
 
     setRatedCOP(5.0);
@@ -794,7 +796,7 @@ namespace model {
     autosizeRatedAirFlowRate();
 
     setRatedSupplyFanPowerPerVolumeFlowRate2017(773.3);
-    
+
     setRatedSupplyFanPowerPerVolumeFlowRate2023(934.4);
 
     setRatedCOP(5.0);

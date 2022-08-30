@@ -1836,7 +1836,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingDXSingleSpeed) {
   std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:SingleSpeed");
   ASSERT_EQ(1u, coils.size());
   WorkspaceObject coil = coils[0];
-  
+
   EXPECT_EQ(773.3, coil.getString(6).get());  // Rated Supply Fan Power Per Volume Flow Rate 2017
   EXPECT_EQ(934.4, coil.getString(7).get());  // Rated Supply Fan Power Per Volume Flow Rate 2023
 }
