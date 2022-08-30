@@ -128,8 +128,14 @@ namespace energyplus {
 
     // Rated Supply Fan Power Per Volume Flow Rate 2017
 
-    if ((value = modelObject.ratedSupplyFanPowerPerVolumeFlowRate())) {
+    if ((value = modelObject.ratedSupplyFanPowerPerVolumeFlowRate2017())) {
       idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate2017, value.get());
+    }
+
+    // Rated Supply Fan Power Per Volume Flow Rate 2023
+
+    if ((value = modelObject.ratedSupplyFanPowerPerVolumeFlowRate2023())) {
+      idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate2023, value.get());
     }
 
     // TotalHeatingCapacityFunctionofTemperatureCurveName

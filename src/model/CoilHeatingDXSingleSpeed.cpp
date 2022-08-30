@@ -1073,7 +1073,7 @@ namespace model {
   }
 
   bool CoilHeatingDXSingleSpeed::setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate) {
-    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setRatedSupplyFanPowerPerVolumeFlowRate2017(ratedSupplyFanPowerPerVolumeFlowRate2017);
+    return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setRatedSupplyFanPowerPerVolumeFlowRate2017(ratedSupplyFanPowerPerVolumeFlowRate);
   }
 
   double CoilHeatingDXSingleSpeed::ratedSupplyFanPowerPerVolumeFlowRate2017() const {
