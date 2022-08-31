@@ -43,6 +43,9 @@
 #include <utilities/idd/Table_IndependentVariable_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
+#include <algorithm>  // For sort, unique
+#include <iterator>   // For distance
+
 using namespace openstudio::model;
 
 namespace openstudio {
@@ -59,15 +62,20 @@ namespace energyplus {
       return boost::none;
     }
 
+    unsigned independentVariableGridSize = 1;
     std::vector<double> outputValues = modelObject.outputValues();
     unsigned outValueSize = outputValues.size();
     for (const auto& independentVariable : independentVariables) {
-      unsigned numVal = independentVariable.numberofValues();
-      if (numVal != outValueSize) {
-        LOG(Warn, "Not translating " << modelObject.briefDescription() << ", it has a mismatch between number of outputValues (=" << outValueSize
-                                     << ") and the number of values (=" << numVal << ") in " << independentVariable.briefDescription());
-        return boost::none;
-      }
+      auto v = independentVariable.values();
+      std::sort(v.begin(), v.end());
+      unsigned uniqueCount = std::distance(v.begin(), std::unique(v.begin(), v.end()));
+      independentVariableGridSize *= uniqueCount;
+    }
+
+    if (independentVariableGridSize != outValueSize) {
+      LOG(Warn, "Not translating " << modelObject.briefDescription() << ", it has a mismatch between number of outputValues (=" << outValueSize
+                                   << ") and the grid size of the TableIndependentVariable(s) (=" << independentVariableGridSize << ").");
+      return boost::none;
     }
 
     // Table:Lookup
