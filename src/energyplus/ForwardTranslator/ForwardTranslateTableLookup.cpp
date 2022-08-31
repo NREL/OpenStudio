@@ -32,10 +32,12 @@
 #include "../../model/TableLookup.hpp"
 #include "../../model/TableLookup_Impl.hpp"
 #include "../../model/TableIndependentVariable.hpp"
+
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/Workspace.hpp"
 #include "../../utilities/idf/WorkspaceObjectOrder.hpp"
 #include "../../utilities/core/Logger.hpp"
+
 #include <utilities/idd/Table_Lookup_FieldEnums.hxx>
 #include <utilities/idd/Table_IndependentVariableList_FieldEnums.hxx>
 #include <utilities/idd/Table_IndependentVariable_FieldEnums.hxx>
@@ -48,9 +50,6 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateTableLookup(TableLookup& modelObject) {
-    OptionalString s;
-    OptionalDouble d;
-    OptionalModelObject temp;
 
     std::vector<TableIndependentVariable> independentVariables = modelObject.independentVariables();
 
@@ -60,37 +59,42 @@ namespace energyplus {
       return boost::none;
     }
 
+    std::vector<double> outputValues = modelObject.outputValues();
+    unsigned outValueSize = outputValues.size();
+    for (const auto& independentVariable : independentVariables) {
+      unsigned numVal = independentVariable.numberofValues();
+      if (numVal != outValueSize) {
+        LOG(Warn, "Not translating " << modelObject.briefDescription() << ", it has a mismatch between number of outputValues (=" << outValueSize
+                                     << ") and the number of values (=" << numVal << ") in " << independentVariable.briefDescription());
+        return boost::none;
+      }
+    }
+
     // Table:Lookup
-    IdfObject tableLookup = createRegisterAndNameIdfObject(openstudio::IddObjectType::Table_Lookup, modelObject);
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Table_Lookup, modelObject);
 
-    // NormalizationMethod
-    if ((s = modelObject.normalizationMethod())) {
-      tableLookup.setString(Table_LookupFields::NormalizationMethod, s.get());
+    // Normalization Method: String
+    idfObject.setString(Table_LookupFields::NormalizationMethod, modelObject.normalizationMethod());
+
+    // Normalization Divisor: Double
+    idfObject.setDouble(Table_LookupFields::NormalizationDivisor, modelObject.normalizationDivisor());
+
+    // Minimum Output: boost::optional<double>
+    if (boost::optional<double> minimumOutput_ = modelObject.minimumOutput()) {
+      idfObject.setDouble(Table_LookupFields::MinimumOutput, minimumOutput_.get());
     }
 
-    // NormalizationDivisor
-    if ((d = modelObject.normalizationDivisor())) {
-      tableLookup.setDouble(Table_LookupFields::NormalizationDivisor, d.get());
+    // Maximum Output: boost::optional<double>
+    if (boost::optional<double> maximumOutput_ = modelObject.maximumOutput()) {
+      idfObject.setDouble(Table_LookupFields::MaximumOutput, maximumOutput_.get());
     }
 
-    // MinimumOutput
-    if ((d = modelObject.minimumOutput())) {
-      tableLookup.setDouble(Table_LookupFields::MinimumOutput, d.get());
-    }
-
-    // MaximumOutput
-    if ((d = modelObject.maximumOutput())) {
-      tableLookup.setDouble(Table_LookupFields::MaximumOutput, d.get());
-    }
-
-    // OutputUnitType
-    if ((s = modelObject.outputUnitType())) {
-      tableLookup.setString(Table_LookupFields::OutputUnitType, s.get());
-    }
+    // Output Unit Type: String
+    idfObject.setString(Table_LookupFields::OutputUnitType, modelObject.outputUnitType());
 
     // OutputValue
-    for (const double& outputValue : modelObject.outputValues()) {
-      IdfExtensibleGroup eg = tableLookup.pushExtensibleGroup();
+    for (const double& outputValue : outputValues) {
+      IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
       eg.setDouble(Table_LookupExtensibleFields::OutputValue, outputValue);
     }
 
@@ -100,55 +104,16 @@ namespace energyplus {
     m_idfObjects.push_back(tableIndependentVariableList);
 
     // IndependentVariableListName
-    tableLookup.setString(Table_LookupFields::IndependentVariableListName, tableIndependentVariableList.nameString());
+    idfObject.setString(Table_LookupFields::IndependentVariableListName, tableIndependentVariableList.nameString());
 
     // Table:IndependentVariable
     for (auto& independentVariable : independentVariables) {
-      IdfObject tableIndependentVariable(IddObjectType::Table_IndependentVariable);
-      tableIndependentVariable.setName(independentVariable.nameString());
-      m_idfObjects.push_back(tableIndependentVariable);
-
-      IdfExtensibleGroup independentVariableGroup = tableIndependentVariableList.pushExtensibleGroup();
-      independentVariableGroup.setString(Table_IndependentVariableListExtensibleFields::IndependentVariableName, independentVariable.nameString());
-
-      // InterpolationMethod
-      if ((s = independentVariable.interpolationMethod())) {
-        tableIndependentVariable.setString(Table_IndependentVariableFields::InterpolationMethod, s.get());
-      }
-
-      // ExtrapolationMethod
-      if ((s = independentVariable.extrapolationMethod())) {
-        tableIndependentVariable.setString(Table_IndependentVariableFields::ExtrapolationMethod, s.get());
-      }
-
-      // MinimumValue
-      if ((d = independentVariable.minimumValue())) {
-        tableIndependentVariable.setDouble(Table_IndependentVariableFields::MinimumValue, d.get());
-      }
-
-      // MaximumValue
-      if ((d = independentVariable.maximumValue())) {
-        tableIndependentVariable.setDouble(Table_IndependentVariableFields::MaximumValue, d.get());
-      }
-
-      // NormalizationReferenceValue
-      if ((d = independentVariable.normalizationReferenceValue())) {
-        tableIndependentVariable.setDouble(Table_IndependentVariableFields::NormalizationReferenceValue, d.get());
-      }
-
-      // UnitType
-      if ((s = independentVariable.unitType())) {
-        tableIndependentVariable.setString(Table_IndependentVariableFields::UnitType, s.get());
-      }
-
-      // Value
-      for (const double& value : independentVariable.values()) {
-        IdfExtensibleGroup eg = tableIndependentVariable.pushExtensibleGroup();
-        eg.setDouble(Table_IndependentVariableExtensibleFields::Value, value);
+      if (auto tableIndependentVariable_ = translateAndMapModelObject(independentVariable)) {
+        IdfExtensibleGroup independentVariableGroup = tableIndependentVariableList.pushExtensibleGroup({tableIndependentVariable_->nameString()});
       }
     }
 
-    return tableLookup;
+    return idfObject;
   }
 
 }  // namespace energyplus

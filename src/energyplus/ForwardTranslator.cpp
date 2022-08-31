@@ -3047,8 +3047,13 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_Table_Lookup: {
-        model::TableLookup table = modelObject.cast<TableLookup>();
+        auto table = modelObject.cast<TableLookup>();
         retVal = translateTableLookup(table);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Table_IndependentVariable: {
+        auto tableIndependentVariable = modelObject.cast<TableIndependentVariable>();
+        retVal = translateTableIndependentVariable(tableIndependentVariable);
         break;
       }
       case openstudio::IddObjectType::OS_TemperingValve: {
