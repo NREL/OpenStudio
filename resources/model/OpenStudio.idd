@@ -16154,7 +16154,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \type real
        \units W/W
        \minimum> 0
-       \default 3.0
+       \required-field
   N4, \field Rated Air Flow Rate
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR and Rated COP
        \note should be between 0.00004027 m3/s and .00006041 m3/s per watt of rated total cooling capacity
@@ -16174,7 +16174,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \units W/(m3/s)
        \minimum 0
        \maximum 1250
-       \default 773.3
+       \required-field
   A4, \field Air Inlet Node Name
        \type object-list
        \required-field
@@ -16232,7 +16232,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \units s
        \minimum 0
        \maximum 3000
-       \default 0.0
+       \required-field
   N8, \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
        \note Ratio of the initial moisture evaporation rate from the cooling coil (when
        \note the compressor first turns off) and the coil's steady state latent capacity
@@ -16242,7 +16242,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \units dimensionless
        \minimum 0
        \maximum 5
-       \default 0.0
+       \required-field
   N9, \field Maximum Cycling Rate
        \note The maximum on-off cycling Rate for the compressor, which occurs at 50% run time
        \note fraction. Suggested value is 3; zero value means latent degradation model is disabled.
@@ -16250,7 +16250,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \units cycles/hr
        \minimum 0
        \maximum 5
-       \default 0.0
+       \required-field
   N10, \field Latent Capacity Time Constant
        \note Time constant for the cooling coil's latent capacity to reach steady state after
        \note startup. Suggested value is 45; zero value means latent degradation model is disabled.
@@ -16258,14 +16258,14 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \units s
        \minimum 0
        \maximum 500
-       \default 0.0
+       \required-field
   A11, \field Condenser Air Inlet Node Name
        \note Enter the name of an outdoor air node. This node name is also specified in
        \note an OutdoorAir:Node or OutdoorAir:NodeList object.
        \type alpha
   A12, \field Condenser Type
        \type choice
-       \default AirCooled
+       \required-field
        \key AirCooled
        \key EvaporativelyCooled
   N11, \field Evaporative Condenser Effectiveness
@@ -16273,7 +16273,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \units dimensionless
        \minimum 0
        \maximum 1
-       \default 0.9
+       \required-field
   N12, \field Evaporative Condenser Air Flow Rate
        \note Used to calculate evaporative condenser water use
        \type real
@@ -16292,12 +16292,12 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \units W
        \ip-units Btu/h
        \minimum 0
-       \default 0.0
+       \required-field
   N15, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \units C
        \minimum 0
-       \default 10.0
+       \required-field
   A13, \field Supply Water Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
@@ -16313,14 +16313,14 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \type real
        \units W/K
        \minimum 0
-       \default 0.0
+       \required-field
   N17, \field Basin Heater Setpoint Temperature
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Enter the outdoor dry-bulb temperature when the basin heater turns on.
        \type real
        \units C
        \minimum 2
-       \default 2.0
+       \required-field
   A15; \field Basin Heater Operating Schedule Name
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Schedule values greater than 0 allow the basin heater to operate whenever the outdoor
@@ -16853,7 +16853,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type real
        \units W/W
        \minimum> 0
-       \default 3.0
+       \required-field
   N4, \field Rated High Speed Air Flow Rate
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR
        \note and Rated COP. Should be between 0.00004027 m3/s and .00006041 m3/s per watt
@@ -16939,7 +16939,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type real
        \units W/W
        \minimum> 0
-       \default 3.0
+       \required-field
   N9, \field Rated Low Speed Air Flow Rate
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR
        \note and Rated COP. Should be between 0.00004027 m3/s and .00006041 m3/s per watt
@@ -16981,7 +16981,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \units dimensionless
        \minimum 0
        \maximum 1
-       \default 0.9
+       \required-field
   N12, \field High Speed Evaporative Condenser Air Flow Rate
        \note Used to calculate evaporative condenser water use
        \type real
@@ -17000,7 +17000,7 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \units dimensionless
        \minimum 0
        \maximum 1
-       \default 0.9
+       \required-field
   N15, \field Low Speed Evaporative Condenser Air Flow Rate
        \note Used to calculate evaporative condenser water use
        \type real
@@ -17029,14 +17029,14 @@ OS:Coil:Cooling:DX:TwoSpeed,
        \type real
        \units W/K
        \minimum 0
-       \default 0.0
+       \required-field
   N18, \field Basin Heater Setpoint Temperature
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Enter the outdoor dry-bulb temperature when the basin heater turns on.
        \type real
        \units C
        \minimum 2
-       \default 2.0
+       \required-field
   A17; \field Basin Heater Operating Schedule Name
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Schedule values greater than 0 allow the basin heater to operate whenever the outdoor
