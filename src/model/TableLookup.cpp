@@ -91,6 +91,58 @@ namespace model {
       return -9999.0;
     }
 
+    ModelObject TableLookup_Impl::clone(Model model) const {
+
+      // Call the ModelObject_Impl instead of ParentObject_Impl because we deal with the ModelObjectList ourselves
+      auto modelObjectClone = ModelObject_Impl::clone(model).cast<TableLookup>();  // NOLINT
+
+      // ModelObjectList is kinda dumb, cloning it also clones the underlying objects regardless of whether they are resourceObjects or not
+      // We don't want that, so we make a new one, and populate it like the original
+      auto newVarList = ModelObjectList(model);
+      newVarList.setName(modelObjectClone.name().get() + "  Independent Variable List");
+      bool ok = modelObjectClone.getImpl<detail::TableLookup_Impl>()->setIndependentVariableList(newVarList);
+      OS_ASSERT(ok);
+
+      // Now, the matter is to repopulate it.
+      for (const TableIndependentVariable& var : this->independentVariables()) {
+        if (model != this->model()) {
+          auto varClone = var.clone(model).cast<TableIndependentVariable>();
+          modelObjectClone.addIndependentVariable(varClone);
+        } else {
+          // Add that to the new object
+          modelObjectClone.addIndependentVariable(var);
+        }
+      }
+      return modelObjectClone;
+    }
+
+    std::vector<IdfObject> TableLookup_Impl::remove() {
+      std::vector<IdfObject> result;
+
+      // ModelObjectList is kinda dumb, it removes all the modelObjects it has, which we don't want
+      // Instead we look at the independent variables listed, if they are used only once => delete them
+      // Then clear the modelObjectList, and remove it
+      if (boost::optional<ModelObjectList> varList = this->independentVariableList()) {
+        auto vars = castVector<ResourceObject>(varList->modelObjects());
+
+        for (auto& var : vars) {
+          if (var.directUseCount() == 1) {
+            std::vector<IdfObject> removedModelObject = var.remove();
+            result.insert(result.end(), removedModelObject.begin(), removedModelObject.end());
+          }
+        }
+
+        varList->clearExtensibleGroups();  // Clearer than removeAllModelObjects (which does the same thing, but could mean delete all objects)
+        std::vector<IdfObject> removedVarList = varList->remove();
+        result.insert(result.end(), removedVarList.begin(), removedVarList.end());
+      }
+
+      std::vector<IdfObject> removedObject = Curve_Impl::remove();
+      result.insert(result.end(), removedObject.begin(), removedObject.end());
+
+      return result;
+    }
+
     boost::optional<ModelObjectList> TableLookup_Impl::independentVariableList() const {
       return getObject<ModelObject>().getModelObjectTarget<ModelObjectList>(OS_Table_LookupFields::IndependentVariableListName);
     }

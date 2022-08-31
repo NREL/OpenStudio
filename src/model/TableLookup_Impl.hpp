@@ -68,6 +68,10 @@ namespace model {
 
       virtual double evaluate(const std::vector<double>& independentVariables) const override;
 
+      virtual ModelObject clone(Model model) const override;
+
+      virtual std::vector<openstudio::IdfObject> remove() override;
+
       //@}
       /** @name Getters */
       //@{
