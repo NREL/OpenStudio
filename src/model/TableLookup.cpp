@@ -174,7 +174,7 @@ namespace model {
     }
 
     void TableLookup_Impl::removeAllOutputValues() {
-      getObject<ModelObject>().clearExtensibleGroups();
+      this->clearExtensibleGroups();
     }
 
     std::vector<double> TableLookup_Impl::outputValues() const {
@@ -189,6 +189,16 @@ namespace model {
 
     unsigned TableLookup_Impl::numberofOutputValues() const {
       return numExtensibleGroups();
+    }
+
+    bool TableLookup_Impl::setOutputValues(const std::vector<double>& outputValues) {
+      bool result = true;
+
+      this->clearExtensibleGroups();
+      for (const auto& val : outputValues) {
+        result &= addOutputValue(val);
+      }
+      return result;
     }
 
     bool TableLookup_Impl::addIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {
@@ -361,6 +371,10 @@ namespace model {
 
   unsigned TableLookup::numberofOutputValues() const {
     return getImpl<detail::TableLookup_Impl>()->numberofOutputValues();
+  }
+
+  bool TableLookup::setOutputValues(const std::vector<double>& outputValues) {
+    return getImpl<detail::TableLookup_Impl>()->setOutputValues(outputValues);
   }
 
   bool TableLookup::addIndependentVariable(const TableIndependentVariable& tableIndependentVariable) {

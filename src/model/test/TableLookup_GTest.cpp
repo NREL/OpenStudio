@@ -35,25 +35,17 @@
 #include "../TableLookup_Impl.hpp"
 #include "../TableIndependentVariable.hpp"
 #include "../TableIndependentVariable_Impl.hpp"
+#include "../ModelObjectList.hpp"
+#include "../ModelObjectList_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, TableLookup) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT(
-    {
-      Model m;
-      TableLookup tableLookup(m);
-
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0), "");
-
+TEST_F(ModelFixture, TableLookup_GettersSetters) {
   Model m;
   TableLookup tableLookup(m);
 
+  // Defaults
   EXPECT_EQ("None", tableLookup.normalizationMethod());
   EXPECT_EQ(1.0, tableLookup.normalizationDivisor());
   EXPECT_FALSE(tableLookup.minimumOutput());
@@ -62,40 +54,83 @@ TEST_F(ModelFixture, TableLookup) {
   EXPECT_EQ(0u, tableLookup.outputValues().size());
   EXPECT_EQ(0u, tableLookup.independentVariables().size());
 
+  // Normalization Method: Required String
   EXPECT_TRUE(tableLookup.setNormalizationMethod("DivisorOnly"));
-  EXPECT_TRUE(tableLookup.setNormalizationDivisor(0.9));
-  EXPECT_TRUE(tableLookup.setMinimumOutput(1));
-  EXPECT_TRUE(tableLookup.setMaximumOutput(2));
-  EXPECT_TRUE(tableLookup.setOutputUnitType("Capacity"));
-  EXPECT_TRUE(tableLookup.addOutputValue(5));
-  TableIndependentVariable independentVariable1(m);
-  EXPECT_TRUE(tableLookup.addIndependentVariable(independentVariable1));
-
   EXPECT_EQ("DivisorOnly", tableLookup.normalizationMethod());
-  EXPECT_EQ(0.9, tableLookup.normalizationDivisor());
-  ASSERT_TRUE(tableLookup.minimumOutput());
-  EXPECT_EQ(1, tableLookup.minimumOutput().get());
-  ASSERT_TRUE(tableLookup.maximumOutput());
-  EXPECT_EQ(2, tableLookup.maximumOutput().get());
-  EXPECT_EQ("Capacity", tableLookup.outputUnitType());
-  EXPECT_EQ(1u, tableLookup.outputValues().size());
-  EXPECT_EQ(1u, tableLookup.independentVariables().size());
+  // Bad Value
+  EXPECT_FALSE(tableLookup.setNormalizationMethod("BADENUM"));
+  EXPECT_EQ("DivisorOnly", tableLookup.normalizationMethod());
 
+  // Normalization Divisor: Required Double
+  EXPECT_TRUE(tableLookup.setNormalizationDivisor(0.5));
+  EXPECT_EQ(0.5, tableLookup.normalizationDivisor());
+
+  // Minimum Output: Optional Double
+  EXPECT_TRUE(tableLookup.setMinimumOutput(0.6));
+  ASSERT_TRUE(tableLookup.minimumOutput());
+  EXPECT_EQ(0.6, tableLookup.minimumOutput().get());
   tableLookup.resetMinimumOutput();
-  tableLookup.resetMaximumOutput();
   EXPECT_FALSE(tableLookup.minimumOutput());
+
+  // Maximum Output: Optional Double
+  EXPECT_TRUE(tableLookup.setMaximumOutput(0.7));
+  ASSERT_TRUE(tableLookup.maximumOutput());
+  EXPECT_EQ(0.7, tableLookup.maximumOutput().get());
+  tableLookup.resetMaximumOutput();
   EXPECT_FALSE(tableLookup.maximumOutput());
 
-  EXPECT_TRUE(tableLookup.addOutputValue(10));
-  EXPECT_TRUE(tableLookup.addOutputValue(20));
-  EXPECT_EQ(3u, tableLookup.outputValues().size());
+  // Output Unit Type: Required String
+  EXPECT_TRUE(tableLookup.setOutputUnitType("Capacity"));
+  EXPECT_EQ("Capacity", tableLookup.outputUnitType());
+  // Bad Value
+  EXPECT_FALSE(tableLookup.setOutputUnitType("BADENUM"));
+  EXPECT_EQ("Capacity", tableLookup.outputUnitType());
+
+  // OutputValues
+  EXPECT_TRUE(tableLookup.addOutputValue(1.0));
+  EXPECT_EQ(1u, tableLookup.outputValues().size());
+  EXPECT_TRUE(tableLookup.addOutputValue(2.0));
+  EXPECT_TRUE(tableLookup.addOutputValue(3.0));
   EXPECT_EQ(3u, tableLookup.numberofOutputValues());
+  {
+    std::vector<double> outputValues = tableLookup.outputValues();
+    ASSERT_EQ(3u, outputValues.size());
+    EXPECT_EQ(1.0, outputValues[0]);
+    EXPECT_EQ(2.0, outputValues[1]);
+    EXPECT_EQ(3.0, outputValues[2]);
+  }
 
   EXPECT_TRUE(tableLookup.removeOutputValue(1));
-  EXPECT_EQ(2u, tableLookup.outputValues().size());
+  {
+    std::vector<double> outputValues = tableLookup.outputValues();
+    ASSERT_EQ(2, outputValues.size());
+    EXPECT_EQ(1.0, outputValues[0]);
+    EXPECT_EQ(3.0, outputValues[1]);
+  }
+
   tableLookup.removeAllOutputValues();
   EXPECT_EQ(0u, tableLookup.outputValues().size());
   EXPECT_EQ(0u, tableLookup.numberofOutputValues());
+
+  EXPECT_TRUE(tableLookup.addOutputValue(10.0));
+  EXPECT_EQ(1u, tableLookup.outputValues().size());
+
+  // Clears any existing values first
+  EXPECT_TRUE(tableLookup.setOutputValues({1.0, 2.0, 3.0, 4.0}));
+  EXPECT_EQ(4u, tableLookup.numberofOutputValues());
+  {
+    std::vector<double> outputValues = tableLookup.outputValues();
+    ASSERT_EQ(4u, outputValues.size());
+    EXPECT_EQ(1.0, outputValues[0]);
+    EXPECT_EQ(2.0, outputValues[1]);
+    EXPECT_EQ(3.0, outputValues[2]);
+    EXPECT_EQ(4.0, outputValues[3]);
+  }
+
+  // IndependentVariables
+  TableIndependentVariable independentVariable1(m);
+  EXPECT_TRUE(tableLookup.addIndependentVariable(independentVariable1));
+  EXPECT_EQ(1u, tableLookup.independentVariables().size());
 
   TableIndependentVariable independentVariable2(m);
   EXPECT_TRUE(tableLookup.addIndependentVariable(independentVariable2));

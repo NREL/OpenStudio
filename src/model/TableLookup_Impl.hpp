@@ -108,6 +108,7 @@ namespace model {
       bool removeOutputValue(unsigned groupIndex);
       void removeAllOutputValues();
       std::vector<double> outputValues() const;
+      bool setOutputValues(const std::vector<double>& outputValues);
       unsigned numberofOutputValues() const;
 
       bool addIndependentVariable(const TableIndependentVariable& tableIndependentVariable);

@@ -107,6 +107,8 @@ namespace model {
     void removeAllOutputValues();
     std::vector<double> outputValues() const;
     unsigned numberofOutputValues() const;
+    // Directly set the Output Values from a vector, will delete any existing Output Values
+    bool setOutputValues(const std::vector<double>& outputValues);
 
     bool addIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
     bool removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
