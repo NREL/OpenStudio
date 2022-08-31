@@ -41,7 +41,8 @@
 
 // For Ctor default curves
 #include "CurveLinear.hpp"
-#include "TableMultiVariableLookup.hpp"
+#include "TableLookup.hpp"
+#include "TableIndependentVariable.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_Heating_FourPipeBeam_FieldEnums.hxx>
@@ -333,20 +334,23 @@ namespace model {
     // Beam Heating Capacity Air Flow Modification Factor Curve Name
     // HeatCapModFuncOfSAFlow: Table:OneIndependentVariable,
 
-    TableMultiVariableLookup heatCapModFuncOfSAFlow(model, 1);
-    heatCapModFuncOfSAFlow.setName("HeatCapModFuncOfSAFlow");
-    heatCapModFuncOfSAFlow.setCurveType("Quadratic");
-    heatCapModFuncOfSAFlow.setInterpolationMethod("EvaluateCurveToLimits");
-    heatCapModFuncOfSAFlow.setMinimumValueofX1(0.714);
-    heatCapModFuncOfSAFlow.setMaximumValueofX1(1.2857);
-    heatCapModFuncOfSAFlow.setMinimumTableOutput(0.8234);
-    heatCapModFuncOfSAFlow.setMaximumTableOutput(1.0778);
-    heatCapModFuncOfSAFlow.setInputUnitTypeforX1("Dimensionless");
-    heatCapModFuncOfSAFlow.setOutputUnitType("Dimensionless");
+    TableLookup heatCapModFuncOfSAFlow(model);
+    {
+      heatCapModFuncOfSAFlow.setName("HeatCapModFuncOfSAFlow");
+      heatCapModFuncOfSAFlow.setMinimumOutput(0.8234);
+      heatCapModFuncOfSAFlow.setMaximumOutput(1.0778);
+      heatCapModFuncOfSAFlow.setOutputUnitType("Dimensionless");
+      heatCapModFuncOfSAFlow.setOutputValues({0.8554, 1.0, 1.0778});
 
-    heatCapModFuncOfSAFlow.addPoint(0.714286, 0.8554);
-    heatCapModFuncOfSAFlow.addPoint(1.0, 1.0);
-    heatCapModFuncOfSAFlow.addPoint(1.2857, 1.0778);
+      TableIndependentVariable heatCapModFuncOfSAFlowVar1(model);
+      heatCapModFuncOfSAFlowVar1.setName("HeatCapModFuncOfWaterFlow_IndependentVariable1");
+      heatCapModFuncOfSAFlowVar1.setInterpolationMethod("Cubic");
+      heatCapModFuncOfSAFlowVar1.setExtrapolationMethod("Constant");
+      heatCapModFuncOfSAFlowVar1.setMinimumValue(0.714);
+      heatCapModFuncOfSAFlowVar1.setMaximumValue(1.2857);
+      heatCapModFuncOfSAFlowVar1.setUnitType("Dimensionless");
+      heatCapModFuncOfSAFlowVar1.setValues({0.714286, 1.0, 1.2857});
+    }
 
     ok = setBeamHeatingCapacityAirFlowModificationFactorCurve(heatCapModFuncOfSAFlow);
     OS_ASSERT(ok);
@@ -354,25 +358,23 @@ namespace model {
     // Beam Heating Capacity Hot Water Flow Modification Factor Curve
     // CapModFuncOfWaterFlow: Table:OneIndependentVariable
 
-    TableMultiVariableLookup capModFuncOfWaterFlow(model, 1);
-    capModFuncOfWaterFlow.setName("CapModFuncOfWaterFlow");
-    capModFuncOfWaterFlow.setCurveType("Quadratic");
-    capModFuncOfWaterFlow.setInterpolationMethod("EvaluateCurveToLimits");
-    capModFuncOfWaterFlow.setMinimumValueofX1(0);
-    capModFuncOfWaterFlow.setMaximumValueofX1(1.33);
-    capModFuncOfWaterFlow.setMinimumTableOutput(0.0);
-    capModFuncOfWaterFlow.setMaximumTableOutput(1.04);
-    capModFuncOfWaterFlow.setInputUnitTypeforX1("Dimensionless");
-    capModFuncOfWaterFlow.setOutputUnitType("Dimensionless");
+    TableLookup capModFuncOfWaterFlow(model);
+    {
+      capModFuncOfWaterFlow.setName("HeatCapModFuncOfWaterFlow");
+      capModFuncOfWaterFlow.setMinimumOutput(0.0);
+      capModFuncOfWaterFlow.setMaximumOutput(1.04);
+      capModFuncOfWaterFlow.setOutputUnitType("Dimensionless");
+      capModFuncOfWaterFlow.setOutputValues({0.0, 0.001, 0.71, 0.85, 0.92, 0.97, 1.0, 1.04});
 
-    capModFuncOfWaterFlow.addPoint(0.0, 0.0);
-    capModFuncOfWaterFlow.addPoint(0.05, 0.001);
-    capModFuncOfWaterFlow.addPoint(0.33333, 0.71);
-    capModFuncOfWaterFlow.addPoint(0.5, 0.85);
-    capModFuncOfWaterFlow.addPoint(0.666667, 0.92);
-    capModFuncOfWaterFlow.addPoint(0.833333, 0.97);
-    capModFuncOfWaterFlow.addPoint(1.0, 1.0);
-    capModFuncOfWaterFlow.addPoint(1.333333, 1.04);
+      TableIndependentVariable capModFuncOfWaterFlowVar1(model);
+      capModFuncOfWaterFlowVar1.setName("HeatCapModFuncOfWaterFlow_IndependentVariable1");
+      capModFuncOfWaterFlowVar1.setInterpolationMethod("Cubic");
+      capModFuncOfWaterFlowVar1.setExtrapolationMethod("Constant");
+      capModFuncOfWaterFlowVar1.setMinimumValue(0.0);
+      capModFuncOfWaterFlowVar1.setMaximumValue(1.33);
+      capModFuncOfWaterFlowVar1.setUnitType("Dimensionless");
+      capModFuncOfWaterFlowVar1.setValues({0.0, 0.05, 0.33333, 0.5, 0.666667, 0.833333, 1.0, 1.333333});
+    }
 
     ok = setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(capModFuncOfWaterFlow);
     OS_ASSERT(ok);
