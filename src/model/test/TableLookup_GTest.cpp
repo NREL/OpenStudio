@@ -143,3 +143,107 @@ TEST_F(ModelFixture, TableLookup_GettersSetters) {
   tableLookup.removeAllIndependentVariables();
   EXPECT_EQ(0u, tableLookup.independentVariables().size());
 }
+
+TEST_F(ModelFixture, TableLookup_Clone) {
+  // Test cloning the TableLookup, make sure the relationship with TableIndependentVariable is sane
+  Model m;
+
+  TableLookup tableLookup(m);
+  TableIndependentVariable independentVariable1(m);
+  EXPECT_TRUE(tableLookup.addIndependentVariable(independentVariable1));
+
+  EXPECT_EQ(1u, m.getModelObjects<TableLookup>().size());
+  EXPECT_EQ(1u, m.getModelObjects<ModelObjectList>().size());
+  EXPECT_EQ(1u, m.getModelObjects<TableIndependentVariable>().size());
+  EXPECT_EQ(1u, tableLookup.independentVariables().size());
+
+  // Clone into the same model
+  {
+    auto tableLookupClone = tableLookup.clone(m).cast<TableLookup>();
+    EXPECT_EQ(2u, m.getModelObjects<TableLookup>().size());
+    EXPECT_EQ(2u, m.getModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1u, m.getModelObjects<TableIndependentVariable>().size());
+
+    ASSERT_EQ(1u, tableLookup.independentVariables().size());
+    EXPECT_EQ(independentVariable1, tableLookup.independentVariables().front());
+
+    ASSERT_EQ(1u, tableLookupClone.independentVariables().size());
+    EXPECT_EQ(independentVariable1, tableLookupClone.independentVariables().front());
+  }
+
+  // Clone into another model
+  {
+    Model m2;
+    auto tableLookupClone2 = tableLookup.clone(m2).cast<TableLookup>();
+
+    // Check original model is unaffected
+    EXPECT_EQ(2u, m.getModelObjects<TableLookup>().size());
+    EXPECT_EQ(2u, m.getModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1u, m.getModelObjects<TableIndependentVariable>().size());
+
+    ASSERT_EQ(1u, tableLookup.independentVariables().size());
+    EXPECT_EQ(independentVariable1, tableLookup.independentVariables().front());
+
+    // Check that the TableLookup and TableLookupIndependentVariable are carried into new model
+    EXPECT_EQ(1u, m2.getModelObjects<TableLookup>().size());
+    EXPECT_EQ(1u, m2.getModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1u, m2.getModelObjects<TableIndependentVariable>().size());
+
+    ASSERT_EQ(1u, tableLookupClone2.independentVariables().size());
+    EXPECT_NE(independentVariable1, tableLookupClone2.independentVariables().front());
+  }
+}
+
+TEST_F(ModelFixture, TableLookup_Remove) {
+  // Make sure the relationship with TableIndependentVariable is sane
+
+  {
+    // Removing a TableLookup that is the sole owner of a TableIndependentVariable: should delete all
+    Model m;
+
+    TableLookup tableLookup(m);
+    TableIndependentVariable independentVariable1(m);
+    EXPECT_TRUE(tableLookup.addIndependentVariable(independentVariable1));
+
+    EXPECT_EQ(1u, m.getModelObjects<TableLookup>().size());
+    EXPECT_EQ(1u, m.getModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1u, m.getModelObjects<TableIndependentVariable>().size());
+    ASSERT_EQ(1u, tableLookup.independentVariables().size());
+    EXPECT_EQ(independentVariable1, tableLookup.independentVariables().front());
+
+    tableLookup.remove();
+    EXPECT_EQ(0u, m.getModelObjects<TableLookup>().size());
+    EXPECT_EQ(0u, m.getModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(0u, m.getModelObjects<TableIndependentVariable>().size());
+  }
+
+  {
+    // Two TableLookups sharing a single TableIndependentVariable: remove one shouldn't affect the other
+    Model m;
+
+    TableIndependentVariable independentVariable1(m);
+
+    TableLookup tableLookup1(m);
+    EXPECT_TRUE(tableLookup1.addIndependentVariable(independentVariable1));
+
+    TableLookup tableLookup2(m);
+    EXPECT_TRUE(tableLookup2.addIndependentVariable(independentVariable1));
+
+    EXPECT_EQ(2u, m.getModelObjects<TableLookup>().size());
+    EXPECT_EQ(2u, m.getModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1u, m.getModelObjects<TableIndependentVariable>().size());
+
+    ASSERT_EQ(1u, tableLookup1.independentVariables().size());
+    EXPECT_EQ(independentVariable1, tableLookup1.independentVariables().front());
+    ASSERT_EQ(1u, tableLookup2.independentVariables().size());
+    EXPECT_EQ(independentVariable1, tableLookup2.independentVariables().front());
+
+    tableLookup1.remove();
+    EXPECT_EQ(1u, m.getModelObjects<TableLookup>().size());
+    EXPECT_EQ(1u, m.getModelObjects<ModelObjectList>().size());
+    EXPECT_EQ(1u, m.getModelObjects<TableIndependentVariable>().size());
+
+    ASSERT_EQ(1u, tableLookup2.independentVariables().size());
+    EXPECT_EQ(independentVariable1, tableLookup2.independentVariables().front());
+  }
+}
