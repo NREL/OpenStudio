@@ -1837,6 +1837,6 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingDXSingleSpeed) {
   ASSERT_EQ(1u, coils.size());
   WorkspaceObject coil = coils[0];
 
-  EXPECT_EQ(773.3, coil.getString(6).get());  // Rated Supply Fan Power Per Volume Flow Rate 2017
-  EXPECT_EQ(934.4, coil.getString(7).get());  // Rated Supply Fan Power Per Volume Flow Rate 2023
+  EXPECT_EQ(773.3, coil.getDouble(6).get());  // Rated Supply Fan Power Per Volume Flow Rate 2017
+  EXPECT_EQ(934.4, coil.getDouble(7).get());  // Rated Supply Fan Power Per Volume Flow Rate 2023
 }

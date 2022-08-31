@@ -305,8 +305,7 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.2.1"));
     m_startVersions.push_back(VersionString("3.3.0"));
     m_startVersions.push_back(VersionString("3.4.0"));
-    m_startVersions.push_back(VersionString("3.5.0"));
-    //m_startVersions.push_back(VersionString("3.5.1"));
+    //m_startVersions.push_back(VersionString("3.5.0"));
   }
 
   boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, ProgressBar* progressBar) {
@@ -6924,7 +6923,7 @@ namespace osversion {
     for (const IdfObject& object : idf_3_4_0.objects()) {
       auto iddname = object.iddObject().name();
 
-      if (iddname == "OS:Coling:Heating:DX:SingleSpeed") {
+      if (iddname == "OS:Coil:Heating:DX:SingleSpeed") {
 
         // Fields that have been added from 3.4.0 to 3.5.0:
         // ------------------------------------------------
@@ -6942,6 +6941,9 @@ namespace osversion {
             }
           }
         }
+
+        // Rated Supply Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(7, 934.4);
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
