@@ -123,6 +123,37 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup_Basic) {
     independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
 }
 
+TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup_MistmatchedGridSize) {
+  Model m;
+  TableLookup tableLookup(m);
+  tableLookup.addOutputValue(0.1);
+  tableLookup.addOutputValue(0.3);
+  tableLookup.addOutputValue(0.5);
+  tableLookup.addOutputValue(0.7);
+  tableLookup.addOutputValue(0.9);
+
+  TableIndependentVariable independentVariable1(m);
+  independentVariable1.addValue(74);
+  independentVariable1.addValue(76);
+  tableLookup.addIndependentVariable(independentVariable1);
+
+  TableIndependentVariable independentVariable2(m);
+  independentVariable2.addValue(14);
+  independentVariable2.addValue(16);
+  tableLookup.addIndependentVariable(independentVariable2);
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(m);
+
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Table_Lookup).size());
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::Table_IndependentVariable).size());
+
+  ASSERT_EQ(1, ft.warnings().size());
+  EXPECT_EQ("Not translating Object of type 'OS:Table:Lookup' and named 'Table Lookup 1', it has a mismatch between number of outputValues (=5) and "
+            "the grid size of the TableIndependentVariable(s) (=4).",
+            ft.warnings().front().logMessage());
+}
+
 TEST_F(EnergyPlusFixture, ForwardTranslator_1TableLookup_3independentVariables) {
 
   Model m;
@@ -281,6 +312,49 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_1TableLookup_3independentVariables) 
   EXPECT_EQ(
     independentVariableObjects[2].nameString(),
     independentVariableListObject.getExtensibleGroup(2).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_2TableLookup_SameIndependentVariable) {
+
+  Model m;
+
+  TableIndependentVariable independentVariable1(m);
+  independentVariable1.setName("MyVar");
+  independentVariable1.setInterpolationMethod("Cubic");
+  independentVariable1.setExtrapolationMethod("Linear");
+  independentVariable1.setMinimumValue(1);
+  independentVariable1.setMaximumValue(3);
+  independentVariable1.addValue(1);
+  independentVariable1.addValue(2);
+  independentVariable1.addValue(3);
+
+  TableLookup tableLookup1(m);
+  tableLookup1.addOutputValue(1.0);
+  tableLookup1.addOutputValue(0.9);
+  tableLookup1.addOutputValue(0.8);
+  tableLookup1.addIndependentVariable(independentVariable1);
+
+  TableLookup tableLookup2(m);
+  tableLookup2.addOutputValue(1.0);
+  tableLookup2.addOutputValue(0.9);
+  tableLookup2.addOutputValue(0.8);
+  tableLookup2.addIndependentVariable(independentVariable1);
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(m);
+
+  std::vector<WorkspaceObject> tableObjects = workspace.getObjectsByType(IddObjectType::Table_Lookup);
+  ASSERT_EQ(2u, tableObjects.size());
+  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Table_IndependentVariableList).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Table_IndependentVariable).size());
+
+  for (const auto& tableObject : tableObjects) {
+    auto varList_ = tableObject.getTarget(Table_LookupFields::IndependentVariableListName);
+    ASSERT_TRUE(varList_);
+    ASSERT_EQ(1, varList_->numExtensibleGroups());
+    EXPECT_EQ(independentVariable1.nameString(),
+              varList_->getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup_NormalizationReference) {
