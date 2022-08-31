@@ -322,9 +322,7 @@ namespace energyplus {
       TableLookup tableLookup(model);
 
       // Name
-      if (s = tableMulti.nameString()) {
-        tableLookup.setName(*s);
-      }
+      tableLookup.setName(tableMulti.nameString());
 
       for (WorkspaceObject source : tableMulti.sources()) {
         for (unsigned index : source.getSourceIndices(tableMulti.handle())) {
