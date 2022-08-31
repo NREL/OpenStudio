@@ -1840,3 +1840,71 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingDXSingleSpeed) {
   EXPECT_EQ(773.3, coil.getDouble(6).get());  // Rated Supply Fan Power Per Volume Flow Rate 2017
   EXPECT_EQ(934.4, coil.getDouble(7).get());  // Rated Supply Fan Power Per Volume Flow Rate 2023
 }
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXSingleSpeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXSingleSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXSingleSpeed_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_EQ(773.3, coil.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
+  EXPECT_EQ(934.4, coil.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingDXMultiSpeedStageData) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingDXMultiSpeedStageData.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingDXMultiSpeedStageData_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed:StageData");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_EQ(773.3, coil.getDouble(5).get());  // Rated Supply Air Fan Power Per Volume Flow Rate 2017
+  EXPECT_EQ(934.4, coil.getDouble(6).get());  // Rated Supply Air Fan Power Per Volume Flow Rate 2023
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXMultiSpeedStageData) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXMultiSpeedStageData.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXMultiSpeedStageData_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:MultiSpeed:StageData");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_EQ(773.3, coil.getDouble(6).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
+  EXPECT_EQ(934.4, coil.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXCurveFitSpeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXCurveFitSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXCurveFitSpeed_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:CurveFit:Speed");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_EQ(773.3, coil.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
+  EXPECT_EQ(934.4, coil.getDouble(9).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
+}

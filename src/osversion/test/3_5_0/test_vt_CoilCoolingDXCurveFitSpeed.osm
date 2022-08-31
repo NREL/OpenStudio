@@ -1,0 +1,24 @@
+
+OS:Version,
+  {421de4eb-f75b-4b00-96d3-1e00f2e30ef1}, !- Handle
+  3.4.0;                                  !- Version Identifier
+
+OS:Coil:Cooling:DX:CurveFit:Speed,
+  {e85ad45a-e5bd-4880-95ec-22ab959167c8}, !- Handle
+  Coil Cooling DX Curve Fit Speed 1,      !- Name
+  1,                                      !- Gross Total Cooling Capacity Fraction
+  1,                                      !- Evaporator Air Flow Rate Fraction
+  1,                                      !- Condenser Air Flow Rate Fraction
+  autosize,                               !- Gross Sensible Heat Ratio
+  3,                                      !- Gross Cooling COP {W/W}
+  1,                                      !- Active Fraction of Coil Face Area
+  773.3,                                  !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+  1,                                      !- Evaporative Condenser Pump Power Fraction
+  0.9,                                    !- Evaporative Condenser Effectiveness {dimensionless}
+  ,                                       !- Total Cooling Capacity Modifier Function of Temperature Curve
+  ,                                       !- Total Cooling Capacity Modifier Function of Air Flow Fraction Curve
+  ,                                       !- Energy Input Ratio Modifier Function of Temperature Curve
+  ,                                       !- Energy Input Ratio Modifier Function of Air Flow Fraction Curve
+  ,                                       !- Part Load Fraction Correlation Curve
+  0.2;                                    !- Rated Waste Heat Fraction of Power Input {dimensionless}
+
