@@ -200,6 +200,16 @@ namespace model {
       return numExtensibleGroups();
     }
 
+    bool TableIndependentVariable_Impl::setValues(const std::vector<double>& values) {
+      bool result = true;
+
+      this->clearExtensibleGroups();
+      for (const auto& val : values) {
+        result &= addValue(val);
+      }
+      return result;
+    }
+
   }  // namespace detail
 
   TableIndependentVariable::TableIndependentVariable(const Model& model) : ResourceObject(TableIndependentVariable::iddObjectType(), model) {
@@ -324,6 +334,10 @@ namespace model {
 
   unsigned TableIndependentVariable::numberofValues() const {
     return getImpl<detail::TableIndependentVariable_Impl>()->numberofValues();
+  }
+
+  bool TableIndependentVariable::setValues(const std::vector<double>& values) {
+    return getImpl<detail::TableIndependentVariable_Impl>()->setValues(values);
   }
 
   /// @cond

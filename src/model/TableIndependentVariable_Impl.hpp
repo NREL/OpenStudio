@@ -108,6 +108,7 @@ namespace model {
       bool removeValue(unsigned groupIndex);
       void removeAllValues();
       std::vector<double> values() const;
+      bool setValues(const std::vector<double>& values);
       unsigned numberofValues() const;
 
       //@}

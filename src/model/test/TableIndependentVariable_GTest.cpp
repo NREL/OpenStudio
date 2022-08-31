@@ -37,63 +37,112 @@
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, TableIndependentVariable) {
-  ::testing::FLAGS_gtest_death_test_style = "threadsafe";
-
-  ASSERT_EXIT(
-    {
-      Model m;
-      TableIndependentVariable independentVariable(m);
-
-      exit(0);
-    },
-    ::testing::ExitedWithCode(0), "");
+TEST_F(ModelFixture, TableIndependentVariable_GettersSetters) {
 
   Model m;
-  TableIndependentVariable independentVariable(m);
+  TableIndependentVariable tableIndependentVariable(m);
 
-  EXPECT_EQ("Linear", independentVariable.interpolationMethod());
-  EXPECT_EQ("Constant", independentVariable.extrapolationMethod());
-  EXPECT_FALSE(independentVariable.minimumValue());
-  EXPECT_FALSE(independentVariable.maximumValue());
-  EXPECT_FALSE(independentVariable.normalizationReferenceValue());
-  EXPECT_EQ("Dimensionless", independentVariable.unitType());
-  EXPECT_EQ(0u, independentVariable.tableLookups().size());
+  // Defaults
+  EXPECT_EQ("Linear", tableIndependentVariable.interpolationMethod());
+  EXPECT_EQ("Constant", tableIndependentVariable.extrapolationMethod());
+  EXPECT_FALSE(tableIndependentVariable.minimumValue());
+  EXPECT_FALSE(tableIndependentVariable.maximumValue());
+  EXPECT_FALSE(tableIndependentVariable.normalizationReferenceValue());
+  EXPECT_EQ("Dimensionless", tableIndependentVariable.unitType());
+  EXPECT_EQ(0u, tableIndependentVariable.tableLookups().size());
 
-  EXPECT_TRUE(independentVariable.setInterpolationMethod("Cubic"));
-  EXPECT_TRUE(independentVariable.setExtrapolationMethod("Linear"));
-  EXPECT_TRUE(independentVariable.setMinimumValue(10));
-  EXPECT_TRUE(independentVariable.setMaximumValue(20));
-  EXPECT_TRUE(independentVariable.setNormalizationReferenceValue(30));
-  EXPECT_TRUE(independentVariable.setUnitType("Temperature"));
-  EXPECT_TRUE(independentVariable.addValue(50));
-  EXPECT_TRUE(independentVariable.addValue(100));
-  EXPECT_TRUE(independentVariable.addValue(150));
+  // Interpolation Method: Required String
+  EXPECT_TRUE(tableIndependentVariable.setInterpolationMethod("Cubic"));
+  EXPECT_EQ("Cubic", tableIndependentVariable.interpolationMethod());
+  // Bad Value
+  EXPECT_FALSE(tableIndependentVariable.setInterpolationMethod("BADENUM"));
+  EXPECT_EQ("Cubic", tableIndependentVariable.interpolationMethod());
+
+  // Extrapolation Method: Required String
+  EXPECT_TRUE(tableIndependentVariable.setExtrapolationMethod("Linear"));
+  EXPECT_EQ("Linear", tableIndependentVariable.extrapolationMethod());
+  // Bad Value
+  EXPECT_FALSE(tableIndependentVariable.setExtrapolationMethod("BADENUM"));
+  EXPECT_EQ("Linear", tableIndependentVariable.extrapolationMethod());
+
+  // Minimum Value: Optional Double
+  EXPECT_TRUE(tableIndependentVariable.setMinimumValue(0.5));
+  ASSERT_TRUE(tableIndependentVariable.minimumValue());
+  EXPECT_EQ(0.5, tableIndependentVariable.minimumValue().get());
+  tableIndependentVariable.resetMinimumValue();
+  EXPECT_FALSE(tableIndependentVariable.minimumValue());
+
+  // Maximum Value: Optional Double
+  EXPECT_TRUE(tableIndependentVariable.setMaximumValue(0.6));
+  ASSERT_TRUE(tableIndependentVariable.maximumValue());
+  EXPECT_EQ(0.6, tableIndependentVariable.maximumValue().get());
+  tableIndependentVariable.resetMaximumValue();
+  EXPECT_FALSE(tableIndependentVariable.maximumValue());
+
+  // Normalization Reference Value: Optional Double
+  EXPECT_TRUE(tableIndependentVariable.setNormalizationReferenceValue(0.7));
+  ASSERT_TRUE(tableIndependentVariable.normalizationReferenceValue());
+  EXPECT_EQ(0.7, tableIndependentVariable.normalizationReferenceValue().get());
+  tableIndependentVariable.resetNormalizationReferenceValue();
+  EXPECT_FALSE(tableIndependentVariable.normalizationReferenceValue());
+
+  // Unit Type: Required String
+  EXPECT_TRUE(tableIndependentVariable.setUnitType("Temperature"));
+  EXPECT_EQ("Temperature", tableIndependentVariable.unitType());
+  // Bad Value
+  EXPECT_FALSE(tableIndependentVariable.setUnitType("BADENUM"));
+  EXPECT_EQ("Temperature", tableIndependentVariable.unitType());
+
+  // Values
+  EXPECT_TRUE(tableIndependentVariable.addValue(1.0));
+  EXPECT_EQ(1u, tableIndependentVariable.values().size());
+  EXPECT_EQ(1u, tableIndependentVariable.numberofValues());
+  EXPECT_TRUE(tableIndependentVariable.addValue(2.0));
+  EXPECT_TRUE(tableIndependentVariable.addValue(3.0));
+  EXPECT_EQ(3u, tableIndependentVariable.numberofValues());
+  {
+    std::vector<double> values = tableIndependentVariable.values();
+    ASSERT_EQ(3u, values.size());
+    EXPECT_EQ(1.0, values[0]);
+    EXPECT_EQ(2.0, values[1]);
+    EXPECT_EQ(3.0, values[2]);
+  }
+
+  EXPECT_TRUE(tableIndependentVariable.removeValue(1));
+  {
+    std::vector<double> values = tableIndependentVariable.values();
+    ASSERT_EQ(2, values.size());
+    EXPECT_EQ(1.0, values[0]);
+    EXPECT_EQ(3.0, values[1]);
+  }
+
+  tableIndependentVariable.removeAllValues();
+  EXPECT_EQ(0u, tableIndependentVariable.values().size());
+  EXPECT_EQ(0u, tableIndependentVariable.numberofValues());
+
+  EXPECT_TRUE(tableIndependentVariable.addValue(10.0));
+  EXPECT_EQ(1u, tableIndependentVariable.values().size());
+
+  // Clears any existing values first
+  EXPECT_TRUE(tableIndependentVariable.setValues({1.0, 2.0, 3.0, 4.0}));
+  EXPECT_EQ(4u, tableIndependentVariable.numberofValues());
+  {
+    std::vector<double> values = tableIndependentVariable.values();
+    ASSERT_EQ(4u, values.size());
+    EXPECT_EQ(1.0, values[0]);
+    EXPECT_EQ(2.0, values[1]);
+    EXPECT_EQ(3.0, values[2]);
+    EXPECT_EQ(4.0, values[3]);
+  }
+
+  // Convenience method to get parent TableLookup(s)
   TableLookup tableLookup1(m);
-  EXPECT_TRUE(tableLookup1.addIndependentVariable(independentVariable));
-
-  EXPECT_EQ("Cubic", independentVariable.interpolationMethod());
-  EXPECT_EQ("Linear", independentVariable.extrapolationMethod());
-  ASSERT_TRUE(independentVariable.minimumValue());
-  EXPECT_EQ(10, independentVariable.minimumValue().get());
-  ASSERT_TRUE(independentVariable.maximumValue());
-  EXPECT_EQ(20, independentVariable.maximumValue().get());
-  ASSERT_TRUE(independentVariable.normalizationReferenceValue());
-  EXPECT_EQ(30, independentVariable.normalizationReferenceValue().get());
-  EXPECT_EQ("Temperature", independentVariable.unitType());
-  EXPECT_EQ(3u, independentVariable.values().size());
-  EXPECT_EQ(3u, independentVariable.numberofValues());
-  EXPECT_EQ(1u, independentVariable.tableLookups().size());
-
-  EXPECT_TRUE(independentVariable.removeValue(1));
-  EXPECT_EQ(2u, independentVariable.values().size());
-  independentVariable.removeAllValues();
-  EXPECT_EQ(0u, independentVariable.values().size());
-  EXPECT_EQ(0u, independentVariable.numberofValues());
+  EXPECT_TRUE(tableLookup1.addIndependentVariable(tableIndependentVariable));
+  EXPECT_EQ(1u, tableIndependentVariable.tableLookups().size());
 
   TableLookup tableLookup2(m);
-  EXPECT_TRUE(tableLookup2.addIndependentVariable(independentVariable));
+  EXPECT_TRUE(tableLookup2.addIndependentVariable(tableIndependentVariable));
   TableLookup tableLookup3(m);
-  EXPECT_TRUE(tableLookup3.addIndependentVariable(independentVariable));
-  EXPECT_EQ(3u, independentVariable.tableLookups().size());
+  EXPECT_TRUE(tableLookup3.addIndependentVariable(tableIndependentVariable));
+  EXPECT_EQ(3u, tableIndependentVariable.tableLookups().size());
 }
