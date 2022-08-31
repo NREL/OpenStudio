@@ -67,12 +67,12 @@ namespace energyplus {
     }
 
     //  A2 , \field Availability Schedule Name
-    Schedule sched = modelObject.getAvailabilitySchedule();
+    Schedule sched = modelObject.availabilitySchedule();
     translateAndMapModelObject(sched);
     idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::AvailabilityScheduleName, sched.name().get());
 
     //  N1 , \field Rated High Speed Total Cooling Capacity
-    d = modelObject.getRatedHighSpeedTotalCoolingCapacity();
+    d = modelObject.ratedHighSpeedTotalCoolingCapacity();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedGrossRatedTotalCoolingCapacity, *d);
     } else {
@@ -80,7 +80,7 @@ namespace energyplus {
     }
 
     //  N2 , \field Rated High Speed Sensible Heat Ratio
-    d = modelObject.getRatedHighSpeedSensibleHeatRatio();
+    d = modelObject.ratedHighSpeedSensibleHeatRatio();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedRatedSensibleHeatRatio, *d);
     } else {
@@ -88,13 +88,13 @@ namespace energyplus {
     }
 
     //  N3 , \field Rated High Speed COP
-    d = modelObject.getRatedHighSpeedCOP();
+    d = modelObject.ratedHighSpeedCOP();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedGrossRatedCoolingCOP, *d);
     }
 
     //  N4 , \field Rated High Speed Air Flow Rate
-    d = modelObject.getRatedHighSpeedAirFlowRate();
+    d = modelObject.ratedHighSpeedAirFlowRate();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedRatedAirFlowRate, *d);
     } else {
@@ -128,32 +128,32 @@ namespace energyplus {
     }
 
     //  A5 , \field Total Cooling Capacity Function of Temperature Curve Name
-    Curve cb = modelObject.getTotalCoolingCapacityFunctionOfTemperatureCurve();
+    Curve cb = modelObject.totalCoolingCapacityFunctionOfTemperatureCurve();
     translateAndMapModelObject(cb);
     idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofTemperatureCurveName, cb.name().get());
 
     //  A6 , \field Total Cooling Capacity Function of Flow Fraction Curve Name
-    cb = modelObject.getTotalCoolingCapacityFunctionOfFlowFractionCurve();
+    cb = modelObject.totalCoolingCapacityFunctionOfFlowFractionCurve();
     translateAndMapModelObject(cb);
     idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::TotalCoolingCapacityFunctionofFlowFractionCurveName, cb.name().get());
 
     //  A7 , \field Energy Input Ratio Function of Temperature Curve Name
-    cb = modelObject.getEnergyInputRatioFunctionOfTemperatureCurve();
+    cb = modelObject.energyInputRatioFunctionOfTemperatureCurve();
     translateAndMapModelObject(cb);
     idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofTemperatureCurveName, cb.name().get());
 
     //  A8 , \field Energy Input Ratio Function of Flow Fraction Curve Name
-    Curve cq = modelObject.getEnergyInputRatioFunctionOfFlowFractionCurve();
+    Curve cq = modelObject.energyInputRatioFunctionOfFlowFractionCurve();
     translateAndMapModelObject(cq);
     idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::EnergyInputRatioFunctionofFlowFractionCurveName, cq.name().get());
 
     //  A9 , \field Part Load Fraction Correlation Curve Name
-    cq = modelObject.getPartLoadFractionCorrelationCurve();
+    cq = modelObject.partLoadFractionCorrelationCurve();
     translateAndMapModelObject(cq);
     idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::PartLoadFractionCorrelationCurveName, cq.name().get());
 
     //  N5 , \field Rated Low Speed Total Cooling Capacity
-    d = modelObject.getRatedLowSpeedTotalCoolingCapacity();
+    d = modelObject.ratedLowSpeedTotalCoolingCapacity();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedGrossRatedTotalCoolingCapacity, *d);
     } else {
@@ -161,7 +161,7 @@ namespace energyplus {
     }
 
     //  N6 , \field Rated Low Speed Sensible Heat Ratio
-    d = modelObject.getRatedLowSpeedSensibleHeatRatio();
+    d = modelObject.ratedLowSpeedSensibleHeatRatio();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedGrossRatedSensibleHeatRatio, *d);
     } else {
@@ -169,13 +169,13 @@ namespace energyplus {
     }
 
     //  N7 , \field Rated Low Speed COP
-    d = modelObject.getRatedLowSpeedCOP();
+    d = modelObject.ratedLowSpeedCOP();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedGrossRatedCoolingCOP, *d);
     }
 
     //  N8 , \field Rated Low Speed Air Flow Rate
-    d = modelObject.getRatedLowSpeedAirFlowRate();
+    d = modelObject.ratedLowSpeedAirFlowRate();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedRatedAirFlowRate, *d);
     } else {
@@ -183,23 +183,23 @@ namespace energyplus {
     }
 
     //  A10, \field Low Speed Total Cooling Capacity Function of Temperature Curve Name
-    cq = modelObject.getLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve();
+    cq = modelObject.lowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve();
     translateAndMapModelObject(cq);
     idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::LowSpeedTotalCoolingCapacityFunctionofTemperatureCurveName, cq.name().get());
 
     //  A11, \field Low Speed Energy Input Ratio Function of Temperature Curve Name
-    cq = modelObject.getLowSpeedEnergyInputRatioFunctionOfTemperatureCurve();
+    cq = modelObject.lowSpeedEnergyInputRatioFunctionOfTemperatureCurve();
     translateAndMapModelObject(cq);
     idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::LowSpeedEnergyInputRatioFunctionofTemperatureCurveName, cq.name().get());
 
     //  A12, \field Condenser Air Inlet Node Name
-    s = modelObject.getCondenserAirInletNodeName();
+    s = modelObject.condenserAirInletNodeName();
     if (s) {
       idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::CondenserAirInletNodeName, *s);
     }
 
     //  A13, \field Condenser Type
-    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::CondenserType, modelObject.getCondenserType());
+    idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::CondenserType, modelObject.condenserType());
 
     // Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
     {
@@ -208,13 +208,13 @@ namespace energyplus {
     }
 
     //   N9, \field High Speed Evaporative Condenser Effectiveness
-    d = modelObject.getHighSpeedEvaporativeCondenserEffectiveness();
+    d = modelObject.highSpeedEvaporativeCondenserEffectiveness();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserEffectiveness, *d);
     }
 
     //  N10, \field High Speed Evaporative Condenser Air Flow Rate
-    d = modelObject.getHighSpeedEvaporativeCondenserAirFlowRate();
+    d = modelObject.highSpeedEvaporativeCondenserAirFlowRate();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserAirFlowRate, *d);
     } else {
@@ -222,7 +222,7 @@ namespace energyplus {
     }
 
     //  N11, \field High Speed Evaporative Condenser Pump Rated Power Consumption
-    d = modelObject.getHighSpeedEvaporativeCondenserPumpRatedPowerConsumption();
+    d = modelObject.highSpeedEvaporativeCondenserPumpRatedPowerConsumption();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::HighSpeedEvaporativeCondenserPumpRatedPowerConsumption, *d);
     } else {
@@ -230,13 +230,13 @@ namespace energyplus {
     }
 
     //  N12, \field Low Speed Evaporative Condenser Effectiveness
-    d = modelObject.getLowSpeedEvaporativeCondenserEffectiveness();
+    d = modelObject.lowSpeedEvaporativeCondenserEffectiveness();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserEffectiveness, *d);
     }
 
     //  N13, \field Low Speed Evaporative Condenser Air Flow Rate
-    d = modelObject.getLowSpeedEvaporativeCondenserAirFlowRate();
+    d = modelObject.lowSpeedEvaporativeCondenserAirFlowRate();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserAirFlowRate, *d);
     } else {
@@ -244,7 +244,7 @@ namespace energyplus {
     }
 
     //  N14, \field Low Speed Evaporative Condenser Pump Rated Power Consumption
-    d = modelObject.getLowSpeedEvaporativeCondenserPumpRatedPowerConsumption();
+    d = modelObject.lowSpeedEvaporativeCondenserPumpRatedPowerConsumption();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::LowSpeedEvaporativeCondenserPumpRatedPowerConsumption, *d);
     } else {
@@ -260,19 +260,19 @@ namespace energyplus {
     //getCondensateCollectionWaterStorageTankName
 
     //  N15, \field Basin Heater Capacity
-    d = modelObject.getBasinHeaterCapacity();
+    d = modelObject.basinHeaterCapacity();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::BasinHeaterCapacity, *d);
     }
 
     //  N16, \field Basin Heater Setpoint Temperature
-    d = modelObject.getBasinHeaterSetpointTemperature();
+    d = modelObject.basinHeaterSetpointTemperature();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_TwoSpeedFields::BasinHeaterSetpointTemperature, *d);
     }
 
     //  A16; \field Basin Heater Operating Schedule Name
-    OptionalSchedule os = modelObject.getBasinHeaterOperatingSchedule();
+    OptionalSchedule os = modelObject.basinHeaterOperatingSchedule();
     if (os) {
       translateAndMapModelObject(*os);
       idfObject.setString(Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName, os->name().get());
@@ -305,7 +305,7 @@ namespace energyplus {
       coilSystemCoolingDXIdf.setName(*s + " CoilSystem");
     }
 
-    Schedule sched = modelObject.getAvailabilitySchedule();
+    Schedule sched = modelObject.availabilitySchedule();
     translateAndMapModelObject(sched);
 
     coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::AvailabilityScheduleName, sched.name().get());
