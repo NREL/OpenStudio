@@ -65,8 +65,6 @@ namespace model {
 
     const std::vector<std::string>& TableIndependentVariable_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
-      if (result.empty()) {
-      }
       return result;
     }
 

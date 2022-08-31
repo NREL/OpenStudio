@@ -68,7 +68,13 @@ namespace model {
     TableLookup_Impl::TableLookup_Impl(const TableLookup_Impl& other, Model_Impl* model, bool keepHandle) : Curve_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& TableLookup_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result;
+      // Technically this is dependent on the actual number of independent variables used, but this is a staic one, and it's not worth the hassle
+      // (we could just mutate the static vector (and not make it const), still returning a const reference to it)
+      static const std::vector<std::string> result{
+        "Performance Curve Output Value",           "Performance Curve Input Variable 1 Value", "Performance Curve Input Variable 2 Value",
+        "Performance Curve Input Variable 3 Value", "Performance Curve Input Variable 4 Value", "Performance Curve Input Variable 5 Value",
+      };
+
       return result;
     }
 
@@ -77,10 +83,10 @@ namespace model {
     }
 
     int TableLookup_Impl::numVariables() const {
-      return 1;
+      return independentVariables().size();
     }
 
-    double TableLookup_Impl::evaluate(const std::vector<double>& independentVariables) const {
+    double TableLookup_Impl::evaluate(const std::vector<double>& /*independentVariables*/) const {
       LOG(Warn, "Curve evaluation isn't implemented for TableLookup");
       return -9999.0;
     }
