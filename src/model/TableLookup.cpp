@@ -115,7 +115,7 @@ namespace model {
       return value.get();
     }
 
-    bool TableLookup_Impl::setNormalizationMethod(std::string normalizationMethod) {
+    bool TableLookup_Impl::setNormalizationMethod(const std::string& normalizationMethod) {
       bool result = setString(OS_Table_LookupFields::NormalizationMethod, normalizationMethod);
       return result;
     }
@@ -145,7 +145,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool TableLookup_Impl::setOutputUnitType(std::string outputUnitType) {
+    bool TableLookup_Impl::setOutputUnitType(const std::string& outputUnitType) {
       bool result = setString(OS_Table_LookupFields::OutputUnitType, outputUnitType);
       return result;
     }
@@ -163,7 +163,7 @@ namespace model {
     bool TableLookup_Impl::removeOutputValue(unsigned groupIndex) {
       bool result;
 
-      unsigned int num = numberofOutputValues();
+      unsigned num = numberofOutputValues();
       if (groupIndex < num) {
         getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
         result = true;
@@ -187,7 +187,7 @@ namespace model {
       return result;
     }
 
-    unsigned int TableLookup_Impl::numberofOutputValues() const {
+    unsigned TableLookup_Impl::numberofOutputValues() const {
       return numExtensibleGroups();
     }
 
@@ -276,7 +276,23 @@ namespace model {
   }
 
   IddObjectType TableLookup::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Table_Lookup);
+    return {IddObjectType::OS_Table_Lookup};
+  }
+
+  std::vector<std::string> TableLookup::normalizationMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Table_LookupFields::NormalizationMethod);
+  }
+
+  std::vector<std::string> TableLookup::validNormalizationMethodValues() {
+    return normalizationMethodValues();
+  }
+
+  std::vector<std::string> TableLookup::outputUnitTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Table_LookupFields::OutputUnitType);
+  }
+
+  std::vector<std::string> TableLookup::validOutputUnitTypeValues() {
+    return outputUnitTypeValues();
   }
 
   std::string TableLookup::normalizationMethod() const {
@@ -299,7 +315,7 @@ namespace model {
     return getImpl<detail::TableLookup_Impl>()->outputUnitType();
   }
 
-  bool TableLookup::setNormalizationMethod(std::string normalizationMethod) {
+  bool TableLookup::setNormalizationMethod(const std::string& normalizationMethod) {
     return getImpl<detail::TableLookup_Impl>()->setNormalizationMethod(normalizationMethod);
   }
 
@@ -323,7 +339,7 @@ namespace model {
     getImpl<detail::TableLookup_Impl>()->resetMaximumOutput();
   }
 
-  bool TableLookup::setOutputUnitType(std::string outputUnitType) {
+  bool TableLookup::setOutputUnitType(const std::string& outputUnitType) {
     return getImpl<detail::TableLookup_Impl>()->setOutputUnitType(outputUnitType);
   }
 
@@ -343,7 +359,7 @@ namespace model {
     return getImpl<detail::TableLookup_Impl>()->outputValues();
   }
 
-  unsigned int TableLookup::numberofOutputValues() const {
+  unsigned TableLookup::numberofOutputValues() const {
     return getImpl<detail::TableLookup_Impl>()->numberofOutputValues();
   }
 

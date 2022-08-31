@@ -54,7 +54,7 @@ namespace model {
 
       TableLookup_Impl(const TableLookup_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~TableLookup_Impl() {}
+      virtual ~TableLookup_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -88,44 +88,34 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setNormalizationMethod(std::string normalizationMethod);
+      bool setNormalizationMethod(const std::string& normalizationMethod);
 
       bool setNormalizationDivisor(double normalizationDivisior);
 
       bool setMinimumOutput(double minimumOutput);
-
       void resetMinimumOutput();
 
       bool setMaximumOutput(double maximumOutput);
-
       void resetMaximumOutput();
 
-      bool setOutputUnitType(std::string outputUnitType);
+      bool setOutputUnitType(const std::string& outputUnitType);
 
       //@}
       /** @name Other */
       //@{
 
       bool addOutputValue(double outputValue);
-
       bool removeOutputValue(unsigned groupIndex);
-
       void removeAllOutputValues();
-
       std::vector<double> outputValues() const;
-
-      unsigned int numberofOutputValues() const;
+      unsigned numberofOutputValues() const;
 
       bool addIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
-
       bool removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
-
       void removeAllIndependentVariables();
-
       std::vector<TableIndependentVariable> independentVariables() const;
 
       bool setIndependentVariableList(const boost::optional<ModelObjectList>& modelObjectList);
-
       void resetIndependentVariableList();
 
       //@}

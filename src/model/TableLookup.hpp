@@ -57,11 +57,17 @@ namespace model {
     */
     explicit TableLookup(const Model& model);
 
-    virtual ~TableLookup() {}
+    virtual ~TableLookup() = default;
 
     //@}
 
     static IddObjectType iddObjectType();
+
+    static std::vector<std::string> normalizationMethodValues();
+    static std::vector<std::string> validNormalizationMethodValues();
+
+    static std::vector<std::string> outputUnitTypeValues();
+    static std::vector<std::string> validOutputUnitTypeValues();
 
     /** @name Getters */
     //@{
@@ -80,46 +86,37 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setNormalizationMethod(std::string normalizationMethod);
+    bool setNormalizationMethod(const std::string& normalizationMethod);
 
     bool setNormalizationDivisor(double normalizationDivisior);
 
     bool setMinimumOutput(double minimumOutput);
-
     void resetMinimumOutput();
 
     bool setMaximumOutput(double maximumOutput);
-
     void resetMaximumOutput();
 
-    bool setOutputUnitType(std::string outputUnitType);
+    bool setOutputUnitType(const std::string& outputUnitType);
 
     //@}
     /** @name Other */
     //@{
 
     bool addOutputValue(double outputValue);
-
     bool removeOutputValue(unsigned groupIndex);
-
     void removeAllOutputValues();
-
     std::vector<double> outputValues() const;
-
-    unsigned int numberofOutputValues() const;
+    unsigned numberofOutputValues() const;
 
     bool addIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
-
     bool removeIndependentVariable(const TableIndependentVariable& tableIndependentVariable);
-
     void removeAllIndependentVariables();
-
     std::vector<TableIndependentVariable> independentVariables() const;
 
     //@}
    protected:
     /// @cond
-    typedef detail::TableLookup_Impl ImplType;
+    using ImplType = detail::TableLookup_Impl;
 
     explicit TableLookup(std::shared_ptr<detail::TableLookup_Impl> impl);
 
@@ -133,10 +130,10 @@ namespace model {
   };
 
   /** \relates TableLookup*/
-  typedef boost::optional<TableLookup> OptionalTableLookup;
+  using OptionalTableLookup = boost::optional<TableLookup>;
 
   /** \relates TableLookup*/
-  typedef std::vector<TableLookup> TableLookupVector;
+  using TableLookupVector = std::vector<TableLookup>;
 
 }  // namespace model
 }  // namespace openstudio
