@@ -307,7 +307,14 @@ namespace energyplus {
       airWall.remove();
     }
 
-    // replace old TableMultiVariableLookup with TableLookup
+// replace old TableMultiVariableLookup with TableLookup
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
     for (TableMultiVariableLookup tableMulti : model.getModelObjects<TableMultiVariableLookup>()) {
       OptionalString s;
       OptionalDouble d;
@@ -315,7 +322,7 @@ namespace energyplus {
       TableLookup tableLookup(model);
 
       // Name
-      if (s = tableMulti.name()) {
+      if (s = tableMulti.nameString()) {
         tableLookup.setName(*s);
       }
 
@@ -431,6 +438,11 @@ namespace energyplus {
 
       tableMulti.remove();
     }
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
 
     // check for spaces not in a thermal zone
     for (Space space : model.getConcreteModelObjects<Space>()) {
@@ -3041,11 +3053,24 @@ namespace energyplus {
         retVal = translateSwimmingPoolIndoor(obj);
         break;
       }
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
       case openstudio::IddObjectType::OS_Table_MultiVariableLookup: {
         model::TableMultiVariableLookup table = modelObject.cast<TableMultiVariableLookup>();
         retVal = translateTableMultiVariableLookup(table);
         break;
       }
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
+
       case openstudio::IddObjectType::OS_Table_Lookup: {
         auto table = modelObject.cast<TableLookup>();
         retVal = translateTableLookup(table);
