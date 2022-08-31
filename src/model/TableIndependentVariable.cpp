@@ -116,12 +116,12 @@ namespace model {
       return result;
     }
 
-    bool TableIndependentVariable_Impl::setInterpolationMethod(std::string interpolationMethod) {
+    bool TableIndependentVariable_Impl::setInterpolationMethod(const std::string& interpolationMethod) {
       bool result = setString(OS_Table_IndependentVariableFields::InterpolationMethod, interpolationMethod);
       return result;
     }
 
-    bool TableIndependentVariable_Impl::setExtrapolationMethod(std::string extrapolationMethod) {
+    bool TableIndependentVariable_Impl::setExtrapolationMethod(const std::string& extrapolationMethod) {
       bool result = setString(OS_Table_IndependentVariableFields::ExtrapolationMethod, extrapolationMethod);
       return result;
     }
@@ -156,13 +156,13 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool TableIndependentVariable_Impl::setUnitType(std::string unitType) {
+    bool TableIndependentVariable_Impl::setUnitType(const std::string& unitType) {
       bool result = setString(OS_Table_IndependentVariableFields::UnitType, unitType);
       return result;
     }
 
     bool TableIndependentVariable_Impl::addValue(double value) {
-      WorkspaceExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      IdfExtensibleGroup eg = getObject<ModelObject>().pushExtensibleGroup();
       bool result = eg.setDouble(OS_Table_IndependentVariableExtensibleFields::Value, value);
       if (!result) {
         getObject<ModelObject>().eraseExtensibleGroup(eg.groupIndex());
@@ -172,14 +172,12 @@ namespace model {
     }
 
     bool TableIndependentVariable_Impl::removeValue(unsigned groupIndex) {
-      bool result;
+      bool result = false;
 
-      unsigned int num = numberofValues();
+      unsigned num = numberofValues();
       if (groupIndex < num) {
         getObject<ModelObject>().eraseExtensibleGroup(groupIndex);
         result = true;
-      } else {
-        result = false;
       }
       return result;
     }
@@ -198,7 +196,7 @@ namespace model {
       return result;
     }
 
-    unsigned int TableIndependentVariable_Impl::numberofValues() const {
+    unsigned TableIndependentVariable_Impl::numberofValues() const {
       return numExtensibleGroups();
     }
 
@@ -217,7 +215,31 @@ namespace model {
   }
 
   IddObjectType TableIndependentVariable::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Table_IndependentVariable);
+    return {IddObjectType::OS_Table_IndependentVariable};
+  }
+
+  std::vector<std::string> TableIndependentVariable::interpolationMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Table_IndependentVariableFields::InterpolationMethod);
+  }
+
+  std::vector<std::string> TableIndependentVariable::validInterpolationMethodValues() {
+    return interpolationMethodValues();
+  }
+
+  std::vector<std::string> TableIndependentVariable::extrapolationMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Table_IndependentVariableFields::ExtrapolationMethod);
+  }
+
+  std::vector<std::string> TableIndependentVariable::validExtrapolationMethodValues() {
+    return extrapolationMethodValues();
+  }
+
+  std::vector<std::string> TableIndependentVariable::unitTypeValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Table_IndependentVariableFields::UnitType);
+  }
+
+  std::vector<std::string> TableIndependentVariable::validUnitTypeValues() {
+    return unitTypeValues();
   }
 
   std::string TableIndependentVariable::interpolationMethod() const {
@@ -248,11 +270,11 @@ namespace model {
     return getImpl<detail::TableIndependentVariable_Impl>()->tableLookups();
   }
 
-  bool TableIndependentVariable::setInterpolationMethod(std::string interpolationMethod) {
+  bool TableIndependentVariable::setInterpolationMethod(const std::string& interpolationMethod) {
     return getImpl<detail::TableIndependentVariable_Impl>()->setInterpolationMethod(interpolationMethod);
   }
 
-  bool TableIndependentVariable::setExtrapolationMethod(std::string extrapolationMethod) {
+  bool TableIndependentVariable::setExtrapolationMethod(const std::string& extrapolationMethod) {
     return getImpl<detail::TableIndependentVariable_Impl>()->setExtrapolationMethod(extrapolationMethod);
   }
 
@@ -280,7 +302,7 @@ namespace model {
     getImpl<detail::TableIndependentVariable_Impl>()->resetNormalizationReferenceValue();
   }
 
-  bool TableIndependentVariable::setUnitType(std::string unitType) {
+  bool TableIndependentVariable::setUnitType(const std::string& unitType) {
     return getImpl<detail::TableIndependentVariable_Impl>()->setUnitType(unitType);
   }
 
@@ -300,7 +322,7 @@ namespace model {
     return getImpl<detail::TableIndependentVariable_Impl>()->values();
   }
 
-  unsigned int TableIndependentVariable::numberofValues() const {
+  unsigned TableIndependentVariable::numberofValues() const {
     return getImpl<detail::TableIndependentVariable_Impl>()->numberofValues();
   }
 

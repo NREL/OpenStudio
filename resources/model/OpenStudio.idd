@@ -21103,8 +21103,8 @@ OS:Table:IndependentVariable,
        \key Angle
        \required-field
   A6,  \field External File Name
-       \type alpha
-       \retaincase
+       \type object-list
+       \object-list ExternalFileNames
   N4,  \field External File Column Number
        \type integer
        \minimum 1

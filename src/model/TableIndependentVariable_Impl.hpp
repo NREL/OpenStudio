@@ -53,7 +53,7 @@ namespace model {
 
       TableIndependentVariable_Impl(const TableIndependentVariable_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~TableIndependentVariable_Impl() {}
+      virtual ~TableIndependentVariable_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -79,43 +79,36 @@ namespace model {
 
       std::string unitType() const;
 
-      std::vector<TableLookup> tableLookups() const;
-
       //@}
       /** @name Setters */
       //@{
 
-      bool setInterpolationMethod(std::string interpolationMethod);
+      bool setInterpolationMethod(const std::string& interpolationMethod);
 
-      bool setExtrapolationMethod(std::string extrapolationMethod);
+      bool setExtrapolationMethod(const std::string& extrapolationMethod);
 
       bool setMinimumValue(double minimumValue);
-
       void resetMinimumValue();
 
       bool setMaximumValue(double maximumValue);
-
       void resetMaximumValue();
 
       bool setNormalizationReferenceValue(double normalizationReferenceValue);
-
       void resetNormalizationReferenceValue();
 
-      bool setUnitType(std::string unitType);
+      bool setUnitType(const std::string& unitType);
 
       //@}
       /** @name Other */
       //@{
 
+      std::vector<TableLookup> tableLookups() const;
+
       bool addValue(double value);
-
       bool removeValue(unsigned groupIndex);
-
       void removeAllValues();
-
       std::vector<double> values() const;
-
-      unsigned int numberofValues() const;
+      unsigned numberofValues() const;
 
       //@}
      protected:

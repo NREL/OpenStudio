@@ -54,11 +54,20 @@ namespace model {
 
     explicit TableIndependentVariable(const Model& model);
 
-    virtual ~TableIndependentVariable() {}
+    virtual ~TableIndependentVariable() = default;
 
     //@}
 
     static IddObjectType iddObjectType();
+
+    static std::vector<std::string> interpolationMethodValues();
+    static std::vector<std::string> validInterpolationMethodValues();
+
+    static std::vector<std::string> extrapolationMethodValues();
+    static std::vector<std::string> validExtrapolationMethodValues();
+
+    static std::vector<std::string> unitTypeValues();
+    static std::vector<std::string> validUnitTypeValues();
 
     /** @name Getters */
     //@{
@@ -75,48 +84,42 @@ namespace model {
 
     std::string unitType() const;
 
-    std::vector<TableLookup> tableLookups() const;
-
     //@}
     /** @name Setters */
     //@{
 
-    bool setInterpolationMethod(std::string interpolationMethod);
+    bool setInterpolationMethod(const std::string& interpolationMethod);
 
-    bool setExtrapolationMethod(std::string extrapolationMethod);
+    bool setExtrapolationMethod(const std::string& extrapolationMethod);
 
     bool setMinimumValue(double minimumValue);
-
     void resetMinimumValue();
 
     bool setMaximumValue(double maximumValue);
-
     void resetMaximumValue();
 
     bool setNormalizationReferenceValue(double normalizationReferenceValue);
-
     void resetNormalizationReferenceValue();
 
-    bool setUnitType(std::string unitType);
+    bool setUnitType(const std::string& unitType);
 
     //@}
     /** @name Other */
     //@{
 
+    // Convenience method to return TableLookup objects that point to this TableIndependentVariable
+    std::vector<TableLookup> tableLookups() const;
+
     bool addValue(double value);
-
     bool removeValue(unsigned groupIndex);
-
     void removeAllValues();
-
     std::vector<double> values() const;
-
-    unsigned int numberofValues() const;
+    unsigned numberofValues() const;
 
     //@}
    protected:
     /// @cond
-    typedef detail::TableIndependentVariable_Impl ImplType;
+    using ImplType = detail::TableIndependentVariable_Impl;
 
     explicit TableIndependentVariable(std::shared_ptr<detail::TableIndependentVariable_Impl> impl);
 
@@ -130,10 +133,10 @@ namespace model {
   };
 
   /** \relates TableIndependentVariable*/
-  typedef boost::optional<TableIndependentVariable> OptionalTableIndependentVariable;
+  using OptionalTableIndependentVariable = boost::optional<TableIndependentVariable>;
 
   /** \relates TableIndependentVariable*/
-  typedef std::vector<TableIndependentVariable> TableIndependentVariableVector;
+  using TableIndependentVariableVector = std::vector<TableIndependentVariable>;
 
 }  // namespace model
 }  // namespace openstudio
