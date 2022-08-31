@@ -146,7 +146,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.2.1")] = &VersionTranslator::update_3_2_0_to_3_2_1;
     m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
     m_updateMethods[VersionString("3.4.0")] = &VersionTranslator::update_3_3_0_to_3_4_0;
-    m_updateMethods[VersionString("3.4.1")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.4.1")] = &VersionTranslator::update_3_4_0_to_3_4_1;
+    // m_updateMethods[VersionString("3.5.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -304,7 +305,7 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.2.1"));
     m_startVersions.push_back(VersionString("3.3.0"));
     m_startVersions.push_back(VersionString("3.4.0"));
-    //m_startVersions.push_back(VersionString("3.4.1"));
+    // m_startVersions.push_back(VersionString("3.4.1"));
   }
 
   boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, ProgressBar* progressBar) {
@@ -6911,9 +6912,139 @@ namespace osversion {
 
   }  // end update_3_3_0_to_3_4_0
 
-  /*   std::string VersionTranslator::update_3_4_0_to_3_4_1(const IdfFile& idf_3_4_0, const IddFileAndFactoryWrapper& idd_3_4_1) {
+  std::string VersionTranslator::update_3_4_0_to_3_4_1(const IdfFile& idf_3_4_0, const IddFileAndFactoryWrapper& idd_3_4_1) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
 
-  }  // end update_3_4_0_to_3_4_1 */
+    ss << idf_3_4_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_4_1.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_4_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:Table:MultiVariableLookup") {
+
+        // Stage Data List becomes extensible list (Stage 1, Stage 2, etc.)
+        // ModelObjectList gets removed
+
+        IdfObject tableObject(idd_3_4_1.getObject("OS:Table:LookUp").get());
+
+        // Handle and name are copied
+        for (size_t i = 0; i < 2; ++i) {
+          if ((value = object.getString(i))) {
+            tableObject.setString(i, value.get());
+          }
+        }
+
+        std::string oriInterpMethod = object.getString(2, true).get();
+        std::string newInterpMethod = "Cubic";
+        std::string newExtrapMethod = "Constant";
+        if (openstudio::istringEqual(oriInterpMethod, "LagrangeInterpolationLinearExtrapolation")) {
+          newInterpMethod = "Cubic";
+          newExtrapMethod = "Linear";
+        } else if (istringEqual(oriInterpMethod, "LinearInterpolationOfTable")) {
+          newInterpMethod = "Linear";
+          newExtrapMethod = "Constant";
+        }
+
+        unsigned numIndVars = object.getInt(28).get();
+        unsigned numPoints = object.numExtensibleGroups() / (numIndVars + 1);
+
+        IdfObject varList(idd_3_4_1.getObject("OS:ModelObjectList").get());
+        std::string varListHandle = toString(createUUID());
+        varList.setString(0, varListHandle);
+        varList.setString(1, object.nameString() + "_IndependentVariableList");
+        tableObject.setString(2, varListHandle);
+
+        // If Normalization Reference is supplied
+        if (boost::optional<double> normref_ = object.getDouble(9)) {
+          tableObject.setString(3, "DivisorOnly");
+          tableObject.setDouble(4, normref_.get());
+        }
+
+        // Min/Maximum OutputValue
+        if (boost::optional<double> minVal_ = object.getDouble(20)) {
+          tableObject.setDouble(5, minVal_.get());
+        }
+        if (boost::optional<double> minVal_ = object.getDouble(21)) {
+          tableObject.setDouble(6, minVal_.get());
+        }
+
+        // Output Unit Type
+        tableObject.setString(7, object.getString(27, true).get());
+
+        // 8, 9, 10 are External File stuff, left blank
+
+        // Now extensible Output Values
+        for (unsigned k = 0; k < numPoints; ++k) {
+          tableObject.pushExtensibleGroup({object.getExtensibleGroup(numIndVars + (k * (numIndVars + 1))).getString(0).get()});
+        }
+
+        std::vector<IdfObject> varsAdded;
+
+        for (unsigned i = 0; i < numIndVars; ++i) {
+          IdfObject& var = varsAdded.emplace_back(idd_3_4_1.getObject("OS:Table:IndependentVariable").get());
+          std::string varHandle = toString(createUUID());
+          var.setString(0, varHandle);
+          varList.pushExtensibleGroup({varHandle});
+          var.setName(object.nameString() + "_IndependentVariable_" + std::to_string(i));
+
+          var.setString(2, newInterpMethod);
+          var.setString(3, newExtrapMethod);
+
+          // Min Max
+          if (auto minVal_ = object.getDouble(10 + 2 * i)) {
+            var.setDouble(4, minVal_.get());
+          }
+          if (auto maxVal_ = object.getDouble(11 + 2 * i)) {
+            var.setDouble(5, maxVal_.get());
+          }
+
+          // 6 - Normalization Reference Value is left blank
+
+          // 7 - Unit Type
+          var.setString(7, object.getString(22 + i, true).get());
+
+          // 8, 9, 10 are External File stuff, left blank
+
+          // Now extensible values: keep only unique, and sorted
+          std::vector<double> xValues;
+          for (unsigned k = 0; k < numPoints; ++k) {
+            xValues.push_back(object.getExtensibleGroup(i + (k * (numIndVars + 1))).getDouble(0).get());
+          }
+
+          std::sort(xValues.begin(), xValues.end());
+          xValues.erase(std::unique(xValues.begin(), xValues.end()), xValues.end());
+
+          for (auto& val : xValues) {
+            var.pushExtensibleGroup().setDouble(0, val);
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, tableObject));
+        m_new.push_back(varList);
+
+        ss << tableObject;
+        ss << varList;
+
+        for (auto&& varAdded : varsAdded) {
+          ss << varAdded;
+          m_new.emplace_back(std::move(varAdded));
+        }
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+  }  // end update_3_4_0_to_3_4_1
+
+  /*   std::string VersionTranslator::update_3_4_1_to_3_5_0(const IdfFile& idf_3_4_1, const IddFileAndFactoryWrapper& idd_3_5_0) {
+
+  }  // end update_3_4_1_to_3_5_0 */
 
 }  // namespace osversion
 }  // namespace openstudio
