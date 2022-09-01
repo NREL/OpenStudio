@@ -148,12 +148,12 @@ namespace model {
 
     boost::optional<HVACComponent> CoilHeatingElectricMultiStage_Impl::containingHVACComponent() const {
       // AirLoopHVACUnitarySystem
-      std::vector<AirLoopHVACUnitarySystem> airLoopUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+      std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-      for (const auto& airLoopUnitarySystem : airLoopUnitarySystems) {
+      for (const auto& airLoopHVACUnitarySystem : airLoopHVACUnitarySystems) {
         if (boost::optional<HVACComponent> heatingCoil = airLoopHVACUnitarySystem.heatingCoil()) {
           if (heatingCoil.handle() == this->handle()) {
-            return airLoopUnitarySystem;
+            return airLoopHVACUnitarySystem;
           }
         }
         if (boost::optional<HVACComponent> suppHeatingCoil = airLoopHVACUnitarySystem.supplementalHeatingCoil()) {
@@ -164,13 +164,13 @@ namespace model {
       }
 
       // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
-      std::vector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> airLoopUnitaryHeatPumpAirToAirMultiSpeeds =
+      std::vector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> airLoopHVACUnitaryHeatPumpAirToAirMultiSpeeds =
         this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
 
-      for (const auto& airLoopUnitaryHeatPumpAirToAirMultiSpeed : airLoopUnitaryHeatPumpAirToAirMultiSpeeds) {
-        if (boost::optional<HVACComponent> heatingCoil = airLoopUnitaryHeatPumpAirToAirMultiSpeed.heatingCoil()) {
+      for (const auto& airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : airLoopHVACUnitaryHeatPumpAirToAirMultiSpeeds) {
+        if (boost::optional<HVACComponent> heatingCoil = airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.heatingCoil()) {
           if (heatingCoil.handle() == this->handle()) {
-            return airLoopUnitaryHeatPumpAirToAirMultiSpeed;
+            return airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed;
           }
         }
       }
