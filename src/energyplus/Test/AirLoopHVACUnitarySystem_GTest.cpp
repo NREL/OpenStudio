@@ -41,6 +41,8 @@
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../../model/FanConstantVolume.hpp"
 #include "../../model/CoilHeatingDesuperheater.hpp"
+#include "../../model/CoilHeatingGasMultiStage.hpp"
+#include "../../model/CoilHeatingElectricMultiStage.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -50,6 +52,8 @@
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Desuperheater_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Electric_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
@@ -165,20 +169,6 @@ std::vector<std::string> getSuppHeatingCoilNodes(const Workspace& workspace) {
   return {
     idfSuppHeatingCoil.getString(Coil_Heating_DesuperheaterFields::AirInletNodeName).get(),
     idfSuppHeatingCoil.getString(Coil_Heating_DesuperheaterFields::AirOutletNodeName).get(),
-  };
-}
-
-std::vector<std::string> getSuppHeatingCoilNodes2(const Workspace& workspace) {
-  WorkspaceObjectVector idfSuppHeatingCoils(workspace.getObjectsByType(IddObjectType::Coil_Heating_Electric_MultiStage));
-  if (idfSuppHeatingCoils.empty()) {
-    return {};
-  }
-
-  auto& idfSuppHeatingCoil = idfSuppHeatingCoils[0];
-
-  return {
-    idfSuppHeatingCoil.getString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName).get(),
-    idfSuppHeatingCoil.getString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName).get(),
   };
 }
 
@@ -672,278 +662,54 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_Nodes) {
   }
 }
 
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeatingGasMultiStage) {
+  Model m;
+
+  CoilCoolingDXSingleSpeed c(m);
+  CoilHeatingGasMultiStage h(m);
+  FanConstantVolume f(m);
+
+  AirLoopHVACUnitarySystem unitary(m);
+  unitary.setCoolingCoil(c);
+  unitary.setHeatingCoil(h);
+  unitary.setSupplyFan(f);
+  unitary.setFanPlacement(fanPlacement);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(m);
+
+  // TODO
+}
+}
+
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeatingElectricMultiStage) {
-  for (std::string fanPlacement : {"BlowThrough", "DrawThrough"}) {
+  Model m;
 
-    // supp heating coil
-    {
-      Model m;
+  CoilCoolingDXSingleSpeed c(m);
+  CoilHeatingElectricMultiStage h(m);
+  FanConstantVolume f(m);
+  CoilHeatingElectricMultiStage s(m);
 
-      CoilHeatingElectricMultiStage s(m);
+  AirLoopHVACUnitarySystem unitary(m);
+  unitary.setCoolingCoil(c);
+  unitary.setHeatingCoil(h);
+  unitary.setSupplyFan(f);
+  unitary.setSupplementalHeatingCoil(s);
+  unitary.setFanPlacement(fanPlacement);
 
-      AirLoopHVACUnitarySystem unitary(m);
-      unitary.setSupplementalHeatingCoil(s);
-      unitary.setFanPlacement(fanPlacement);
+  AirLoopHVAC airLoop(m);
 
-      AirLoopHVAC airLoop(m);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
 
-      Node supplyOutletNode = airLoop.supplyOutletNode();
-      unitary.addToNode(supplyOutletNode);
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(m);
 
-      ForwardTranslator ft;
-      Workspace workspace = ft.translateModel(m);
-
-      std::vector<std::string> unitaryNodes = getUnitaryNodes(workspace);
-      std::vector<std::string> suppHeatingCoilNodes = getSuppHeatingCoilNodes2(workspace);
-
-      EXPECT_EQ(unitaryNodes[0], suppHeatingCoilNodes[0]);
-      EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-    }
-
-    // cooling coil, supp heating coil
-    // Test for #4509 - Bad nodes created for AirLoopHVAC:UnitarySystem with only cooling coil and supplemental heating coil
-    {
-      Model m;
-
-      CoilCoolingDXSingleSpeed c(m);
-      CoilHeatingElectricMultiStage s(m);
-
-      AirLoopHVACUnitarySystem unitary(m);
-      unitary.setCoolingCoil(c);
-      unitary.setSupplementalHeatingCoil(s);
-      unitary.setFanPlacement(fanPlacement);
-
-      AirLoopHVAC airLoop(m);
-
-      Node supplyOutletNode = airLoop.supplyOutletNode();
-      unitary.addToNode(supplyOutletNode);
-
-      ForwardTranslator ft;
-      Workspace workspace = ft.translateModel(m);
-
-      std::vector<std::string> unitaryNodes = getUnitaryNodes(workspace);
-      std::vector<std::string> coolingCoilNodes = getCoolingCoilNodes(workspace);
-      std::vector<std::string> suppHeatingCoilNodes = getSuppHeatingCoilNodes2(workspace);
-
-      EXPECT_EQ(unitaryNodes[0], coolingCoilNodes[0]);
-      EXPECT_EQ(coolingCoilNodes[1], suppHeatingCoilNodes[0]);
-      EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-    }
-
-    // heating coil, supp heating coil
-    {
-      Model m;
-
-      CoilHeatingDXSingleSpeed h(m);
-      CoilHeatingElectricMultiStage s(m);
-
-      AirLoopHVACUnitarySystem unitary(m);
-      unitary.setHeatingCoil(h);
-      unitary.setSupplementalHeatingCoil(s);
-      unitary.setFanPlacement(fanPlacement);
-
-      AirLoopHVAC airLoop(m);
-
-      Node supplyOutletNode = airLoop.supplyOutletNode();
-      unitary.addToNode(supplyOutletNode);
-
-      ForwardTranslator ft;
-      Workspace workspace = ft.translateModel(m);
-
-      std::vector<std::string> unitaryNodes = getUnitaryNodes(workspace);
-      std::vector<std::string> heatingCoilNodes = getHeatingCoilNodes(workspace);
-      std::vector<std::string> suppHeatingCoilNodes = getSuppHeatingCoilNodes2(workspace);
-
-      EXPECT_EQ(unitaryNodes[0], heatingCoilNodes[0]);
-      EXPECT_EQ(heatingCoilNodes[1], suppHeatingCoilNodes[0]);
-      EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-    }
-
-    // fan, supp heating coil
-    {
-      Model m;
-
-      FanConstantVolume f(m);
-      CoilHeatingElectricMultiStage s(m);
-
-      AirLoopHVACUnitarySystem unitary(m);
-      unitary.setSupplyFan(f);
-      unitary.setSupplementalHeatingCoil(s);
-      unitary.setFanPlacement(fanPlacement);
-
-      AirLoopHVAC airLoop(m);
-
-      Node supplyOutletNode = airLoop.supplyOutletNode();
-      unitary.addToNode(supplyOutletNode);
-
-      ForwardTranslator ft;
-      Workspace workspace = ft.translateModel(m);
-
-      std::vector<std::string> unitaryNodes = getUnitaryNodes(workspace);
-      std::vector<std::string> fanNodes = getFanNodes(workspace);
-      std::vector<std::string> suppHeatingCoilNodes = getSuppHeatingCoilNodes2(workspace);
-
-      EXPECT_EQ(unitaryNodes[0], fanNodes[0]);
-      EXPECT_EQ(fanNodes[1], suppHeatingCoilNodes[0]);
-      EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-    }
-
-    // cooling coil, heating coil, supp heating coil
-    {
-      Model m;
-
-      CoilCoolingDXSingleSpeed c(m);
-      CoilHeatingDXSingleSpeed h(m);
-      CoilHeatingElectricMultiStage s(m);
-
-      AirLoopHVACUnitarySystem unitary(m);
-      unitary.setCoolingCoil(c);
-      unitary.setHeatingCoil(h);
-      unitary.setSupplementalHeatingCoil(s);
-      unitary.setFanPlacement(fanPlacement);
-
-      AirLoopHVAC airLoop(m);
-
-      Node supplyOutletNode = airLoop.supplyOutletNode();
-      unitary.addToNode(supplyOutletNode);
-
-      ForwardTranslator ft;
-      Workspace workspace = ft.translateModel(m);
-
-      std::vector<std::string> unitaryNodes = getUnitaryNodes(workspace);
-      std::vector<std::string> coolingCoilNodes = getCoolingCoilNodes(workspace);
-      std::vector<std::string> heatingCoilNodes = getHeatingCoilNodes(workspace);
-      std::vector<std::string> suppHeatingCoilNodes = getSuppHeatingCoilNodes2(workspace);
-
-      EXPECT_EQ(unitaryNodes[0], coolingCoilNodes[0]);
-      EXPECT_EQ(coolingCoilNodes[1], heatingCoilNodes[0]);
-      EXPECT_EQ(heatingCoilNodes[1], suppHeatingCoilNodes[0]);
-      EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-    }
-
-    // cooling coil, fan, supp heating coil
-    {
-      Model m;
-
-      CoilCoolingDXSingleSpeed c(m);
-      FanConstantVolume f(m);
-      CoilHeatingElectricMultiStage s(m);
-
-      AirLoopHVACUnitarySystem unitary(m);
-      unitary.setCoolingCoil(c);
-      unitary.setSupplyFan(f);
-      unitary.setSupplementalHeatingCoil(s);
-      unitary.setFanPlacement(fanPlacement);
-
-      AirLoopHVAC airLoop(m);
-
-      Node supplyOutletNode = airLoop.supplyOutletNode();
-      unitary.addToNode(supplyOutletNode);
-
-      ForwardTranslator ft;
-      Workspace workspace = ft.translateModel(m);
-
-      std::vector<std::string> unitaryNodes = getUnitaryNodes(workspace);
-      std::vector<std::string> coolingCoilNodes = getCoolingCoilNodes(workspace);
-      std::vector<std::string> fanNodes = getFanNodes(workspace);
-      std::vector<std::string> suppHeatingCoilNodes = getSuppHeatingCoilNodes2(workspace);
-
-      if (fanPlacement == "BlowThrough") {
-        EXPECT_EQ(unitaryNodes[0], fanNodes[0]);
-        EXPECT_EQ(fanNodes[1], coolingCoilNodes[0]);
-        EXPECT_EQ(coolingCoilNodes[1], suppHeatingCoilNodes[0]);
-        EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-      } else if (fanPlacement == "DrawThrough") {
-        EXPECT_EQ(unitaryNodes[0], coolingCoilNodes[0]);
-        EXPECT_EQ(coolingCoilNodes[1], fanNodes[0]);
-        EXPECT_EQ(fanNodes[1], suppHeatingCoilNodes[0]);
-        EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-      }
-    }
-
-    // heating coil, fan, supp heating coil
-    {
-      Model m;
-
-      CoilHeatingDXSingleSpeed h(m);
-      FanConstantVolume f(m);
-      CoilHeatingElectricMultiStage s(m);
-
-      AirLoopHVACUnitarySystem unitary(m);
-      unitary.setHeatingCoil(h);
-      unitary.setSupplyFan(f);
-      unitary.setSupplementalHeatingCoil(s);
-      unitary.setFanPlacement(fanPlacement);
-
-      AirLoopHVAC airLoop(m);
-
-      Node supplyOutletNode = airLoop.supplyOutletNode();
-      unitary.addToNode(supplyOutletNode);
-
-      ForwardTranslator ft;
-      Workspace workspace = ft.translateModel(m);
-
-      std::vector<std::string> unitaryNodes = getUnitaryNodes(workspace);
-      std::vector<std::string> heatingCoilNodes = getHeatingCoilNodes(workspace);
-      std::vector<std::string> fanNodes = getFanNodes(workspace);
-      std::vector<std::string> suppHeatingCoilNodes = getSuppHeatingCoilNodes2(workspace);
-
-      if (fanPlacement == "BlowThrough") {
-        EXPECT_EQ(unitaryNodes[0], fanNodes[0]);
-        EXPECT_EQ(fanNodes[1], heatingCoilNodes[0]);
-        EXPECT_EQ(heatingCoilNodes[1], suppHeatingCoilNodes[0]);
-        EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-      } else if (fanPlacement == "DrawThrough") {
-        EXPECT_EQ(unitaryNodes[0], heatingCoilNodes[0]);
-        EXPECT_EQ(heatingCoilNodes[1], fanNodes[0]);
-        EXPECT_EQ(fanNodes[1], suppHeatingCoilNodes[0]);
-        EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-      }
-    }
-
-    // cooling coil, heating coil, fan, supp heating coil
-    {
-      Model m;
-
-      CoilCoolingDXSingleSpeed c(m);
-      CoilHeatingDXSingleSpeed h(m);
-      FanConstantVolume f(m);
-      CoilHeatingElectricMultiStage s(m);
-
-      AirLoopHVACUnitarySystem unitary(m);
-      unitary.setCoolingCoil(c);
-      unitary.setHeatingCoil(h);
-      unitary.setSupplyFan(f);
-      unitary.setSupplementalHeatingCoil(s);
-      unitary.setFanPlacement(fanPlacement);
-
-      AirLoopHVAC airLoop(m);
-
-      Node supplyOutletNode = airLoop.supplyOutletNode();
-      unitary.addToNode(supplyOutletNode);
-
-      ForwardTranslator ft;
-      Workspace workspace = ft.translateModel(m);
-
-      std::vector<std::string> unitaryNodes = getUnitaryNodes(workspace);
-      std::vector<std::string> coolingCoilNodes = getCoolingCoilNodes(workspace);
-      std::vector<std::string> heatingCoilNodes = getHeatingCoilNodes(workspace);
-      std::vector<std::string> fanNodes = getFanNodes(workspace);
-      std::vector<std::string> suppHeatingCoilNodes = getSuppHeatingCoilNodes2(workspace);
-
-      if (fanPlacement == "BlowThrough") {
-        EXPECT_EQ(unitaryNodes[0], fanNodes[0]);
-        EXPECT_EQ(fanNodes[1], coolingCoilNodes[0]);
-        EXPECT_EQ(coolingCoilNodes[1], heatingCoilNodes[0]);
-        EXPECT_EQ(heatingCoilNodes[1], suppHeatingCoilNodes[0]);
-        EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-      } else if (fanPlacement == "DrawThrough") {
-        EXPECT_EQ(unitaryNodes[0], coolingCoilNodes[0]);
-        EXPECT_EQ(coolingCoilNodes[1], heatingCoilNodes[0]);
-        EXPECT_EQ(heatingCoilNodes[1], fanNodes[0]);
-        EXPECT_EQ(fanNodes[1], suppHeatingCoilNodes[0]);
-        EXPECT_EQ(suppHeatingCoilNodes[1], unitaryNodes[1]);
-      }
-    }
-  }
+  // TODO
+}
 }
