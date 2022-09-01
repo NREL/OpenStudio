@@ -31,10 +31,13 @@
 
 #include "ModelFixture.hpp"
 
-#include "../../utilities/core/Deprecated.hpp"
-
-DISABLE_WARNING_PUSH
-DISABLE_WARNING_DEPRECATED
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
 
 #include "../TableMultiVariableLookup.hpp"
 #include "../TableMultiVariableLookup_Impl.hpp"
@@ -335,4 +338,8 @@ TEST_F(ModelFixture, TableMultiVariablePointOrder2) {
   EXPECT_EQ(324, points[23].y());
 }
 
-DISABLE_WARNING_POP
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif

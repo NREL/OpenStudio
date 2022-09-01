@@ -2919,14 +2919,23 @@ namespace energyplus {
         break;
       }
 
-        DISABLE_WARNING_PUSH
-        DISABLE_WARNING_DEPRECATED
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
       case openstudio::IddObjectType::OS_Table_MultiVariableLookup: {
         model::TableMultiVariableLookup table = modelObject.cast<TableMultiVariableLookup>();
         retVal = translateTableMultiVariableLookup(table);
         break;
       }
-        DISABLE_WARNING_POP
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
 
       case openstudio::IddObjectType::OS_Table_Lookup: {
         auto table = modelObject.cast<TableLookup>();
