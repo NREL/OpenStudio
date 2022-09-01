@@ -8682,7 +8682,7 @@ namespace sdd {
     // DXEER
     if (auto cop = coil.ratedCOP()) {
       auto r = 0.12;
-      auto eer = (cop.get() * (1 - r) - r) * 3.413;
+      auto eer = (cop * (1 - r) - r) * 3.413;
 
       auto dxEERElement = result.append_child("DXEER");
       dxEERElement.text() = openstudio::string_conversions::number(eer).c_str();
