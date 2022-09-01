@@ -344,6 +344,7 @@ namespace model {
       coolCapModFuncOfSAFlow.setOutputValues({0.823403, 1.0, 1.1256});
 
       TableIndependentVariable coolCapModFuncOfSAFlowVar1(model);
+      coolCapModFuncOfSAFlow.addIndependentVariable(coolCapModFuncOfSAFlowVar1);
       coolCapModFuncOfSAFlowVar1.setName("CoolCapModFuncOfWaterFlow_IndependentVariable1");
       coolCapModFuncOfSAFlowVar1.setInterpolationMethod("Cubic");
       coolCapModFuncOfSAFlowVar1.setExtrapolationMethod("Constant");
@@ -368,6 +369,7 @@ namespace model {
       capModFuncOfWaterFlow.setOutputValues({0.0, 0.001, 0.71, 0.85, 0.92, 0.97, 1.0, 1.04});
 
       TableIndependentVariable capModFuncOfWaterFlowVar1(model);
+      capModFuncOfWaterFlow.addIndependentVariable(capModFuncOfWaterFlowVar1);
       capModFuncOfWaterFlowVar1.setName("CoolCapModFuncOfWaterFlow_IndependentVariable1");
       capModFuncOfWaterFlowVar1.setInterpolationMethod("Cubic");
       capModFuncOfWaterFlowVar1.setExtrapolationMethod("Constant");
