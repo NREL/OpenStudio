@@ -59,12 +59,14 @@ namespace energyplus {
     }
 
     // Interpolation Method: Optional String
-    if (boost::optional<std::string> _interpolationMethod = workspaceObject.getString(Table_IndependentVariableFields::InterpolationMethod)) {
+    if (boost::optional<std::string> _interpolationMethod =
+          workspaceObject.getString(Table_IndependentVariableFields::InterpolationMethod, false, true)) {
       modelObject.setInterpolationMethod(_interpolationMethod.get());
     }
 
     // Extrapolation Method: Optional String
-    if (boost::optional<std::string> _extrapolationMethod = workspaceObject.getString(Table_IndependentVariableFields::ExtrapolationMethod)) {
+    if (boost::optional<std::string> _extrapolationMethod =
+          workspaceObject.getString(Table_IndependentVariableFields::ExtrapolationMethod, false, true)) {
       modelObject.setExtrapolationMethod(_extrapolationMethod.get());
     }
 
@@ -85,7 +87,7 @@ namespace energyplus {
     }
 
     // Unit Type: Optional String
-    if (boost::optional<std::string> _unitType = workspaceObject.getString(Table_IndependentVariableFields::UnitType)) {
+    if (boost::optional<std::string> _unitType = workspaceObject.getString(Table_IndependentVariableFields::UnitType, false, true)) {
       modelObject.setUnitType(_unitType.get());
     }
 

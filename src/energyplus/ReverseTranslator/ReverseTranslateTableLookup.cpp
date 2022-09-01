@@ -95,7 +95,7 @@ namespace energyplus {
     }
 
     // Normalization Method: Optional String
-    if (boost::optional<std::string> _normalizationMethod = workspaceObject.getString(Table_LookupFields::NormalizationMethod)) {
+    if (boost::optional<std::string> _normalizationMethod = workspaceObject.getString(Table_LookupFields::NormalizationMethod, false, true)) {
       modelObject.setNormalizationMethod(_normalizationMethod.get());
     }
 
@@ -115,7 +115,7 @@ namespace energyplus {
     }
 
     // Output Unit Type: Optional String
-    if (boost::optional<std::string> _outputUnitType = workspaceObject.getString(Table_LookupFields::OutputUnitType)) {
+    if (boost::optional<std::string> _outputUnitType = workspaceObject.getString(Table_LookupFields::OutputUnitType, false, true)) {
       modelObject.setOutputUnitType(_outputUnitType.get());
     }
 
