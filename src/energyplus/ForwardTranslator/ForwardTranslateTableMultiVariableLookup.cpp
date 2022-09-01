@@ -165,6 +165,9 @@ namespace energyplus {
     if ((d = modelObject.normalizationReference())) {
       tableLookup.setString(Table_LookupFields::NormalizationMethod, "DivisorOnly");
       tableLookup.setDouble(Table_LookupFields::NormalizationDivisor, d.get());
+    } else {
+      tableLookup.setString(Table_LookupFields::NormalizationMethod, "None");
+      tableLookup.setDouble(Table_LookupFields::NormalizationDivisor, 1.0);
     }
 
     // MinimumTableOutput
