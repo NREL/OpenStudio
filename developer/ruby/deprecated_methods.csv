@@ -1,15 +1,15 @@
 Namespace,Class Name,Method,Deprecated Since,Commit SHA,Replace With,Removed In
 measure,OSMeasure,registerWithSketchUp,,,None,
 measure,OSMeasure,registerWithApplication,,,None,
-model,AvailabilityManagerNightCycle,controlThermalZone,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b7,controlThermalZones,
-model,AvailabilityManagerNightCycle,setControlThermalZone,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b8,setControlThermalZones,
-model,AvailabilityManagerNightCycle,resetControlThermalZone,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b9,resetControlThermalZones,
-model,AirLoopHVAC,availabilityManager,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b10,availabilityManagers,
-model,AirLoopHVAC,setAvailabilityManager,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b11,"addAvailabilityManager, setAvailabilityManagers",
-model,AirLoopHVAC,resetAvailabilityManager,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b12,resetAvailabilityManagers,
-model,PlantLoop,availabilityManager,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b13,availabilityManagers,
-model,PlantLoop,setAvailabilityManager,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b14,"addAvailabilityManager, setAvailabilityManagers",
-model,PlantLoop,resetAvailabilityManager,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b15,resetAvailabilityManagers,
+model,AvailabilityManagerNightCycle,controlThermalZone,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b7,controlThermalZones,3.4.1
+model,AvailabilityManagerNightCycle,setControlThermalZone,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b8,setControlThermalZones,3.4.1
+model,AvailabilityManagerNightCycle,resetControlThermalZone,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b9,resetControlThermalZones,3.4.1
+model,AirLoopHVAC,availabilityManager,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b10,availabilityManagers,3.4.1
+model,AirLoopHVAC,setAvailabilityManager,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b11,"addAvailabilityManager, setAvailabilityManagers",3.4.1
+model,AirLoopHVAC,resetAvailabilityManager,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b12,resetAvailabilityManagers,3.4.1
+model,PlantLoop,availabilityManager,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b13,availabilityManagers,3.4.1
+model,PlantLoop,setAvailabilityManager,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b14,"addAvailabilityManager, setAvailabilityManagers",3.4.1
+model,PlantLoop,resetAvailabilityManager,2.3.1,3578590b7e63a68bedb7e43bef21f50552e0c6b15,resetAvailabilityManagers,3.4.1
 model,Node,addSetpointManager,1.13.0,40c19546076be456f110ca542cd70ce711541961,SetpointManagerXXX::addToNode,3.4.1
 model,Node,addSetpointManagerWarmest,1.13.0,40c19546076be456f110ca542cd70ce711541962,SetpointManagerWarmest::addToNode,3.4.1
 model,Node,getSetpointManagerSingleZoneReheat,1.13.0,40c19546076be456f110ca542cd70ce711541963,Node::setpointManagers,3.4.1
@@ -24,4 +24,4 @@ model,Node,removeSetpointManagerOutdoorAirReset,1.13.0,40c19546076be456f110ca542
 model,Node,removeSetpointManagerFollowOutdoorAirTemperature,1.13.0,40c19546076be456f110ca542cd70ce711541972,SetpointManagerFollowOutdoorAirTemperature::remove,3.4.1
 model,Node,removeSetpointManagerScheduled,1.13.0,40c19546076be456f110ca542cd70ce711541973,SetpointManagerScheduled::remove,3.4.1
 model,Node,removeSetpointManagerMixedAir,1.13.0,40c19546076be456f110ca542cd70ce711541974,SetpointManagerMixedAir::remove,3.4.1
-model,ZoneVentilationDesignFlowRate,setDesignFlowRateCalculationMethod,2.3.1,9ee9be2d0da3ed954a1e98cc3ab39ec7debffa92,"Done when calling setDesignFlowRate, setFlowRateperZoneFloorArea, setAirChangesperHour",
+model,ZoneVentilationDesignFlowRate,setDesignFlowRateCalculationMethod,2.3.1,9ee9be2d0da3ed954a1e98cc3ab39ec7debffa92,"Done when calling setDesignFlowRate, setFlowRateperZoneFloorArea, setAirChangesperHour",3.4.1
