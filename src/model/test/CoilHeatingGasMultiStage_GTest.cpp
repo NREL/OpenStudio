@@ -33,6 +33,54 @@
 
 #include "../CoilHeatingGasMultiStage.hpp"
 #include "../CoilHeatingGasMultiStage_Impl.hpp"
+#include "../CoilHeatingGasMultiStageStageData.hpp"
+#include "../CoilHeatingGasMultiStageStageData_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
+#include "../CurveQuadratic.hpp"
+#include "../CurveQuadratic_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture, CoilHeatingGasMultiStage_GettersSetters) {
+  Model m;
+  CoilHeatingGasMultiStage coil(m);
+  
+  EXPECT_FALSE(coil.availabilitySchedule());
+  EXPECT_FALSE(coil.partLoadFractionCorrelationCurve());
+  EXPECT_FALSE(coil.parasiticGasLoad());
+  EXPECT_EQ(0u, coil.stages().size());
+
+  ScheduleConstant scheduleConstant(m);
+  EXPECT_TRUE(coil.setAvailabilitySchedule(scheduleConstant));
+  CurveQuadratic curveQuadratic(m);
+  EXPECT_TRUE(coil.setPartLoadFractionCorrelationCurve(curveQuadratic));
+  EXPECT_TRUE(coil.setParasiticGasLoad(100.0));
+  
+  ASSERT_TRUE(coil.availabilitySchedule());
+  EXPECT_EQ(scheduleConstant.handle(), coil.availabilitySchedule().get().handle());
+  ASSERT_TRUE(coil.partLoadFractionCorrelationCurve());
+  EXPECT_EQ(curveQuadratic.handle(), coil.partLoadFractionCorrelationCurve().get().handle());
+  ASSERT_TRUE(coil.parasiticGasLoad());
+  EXPECT_EQ(100.0, coil.parasiticGasLoad().get());
+  
+  coil.resetAvailabilitySchedule();
+  coil.resetPartLoadFractionCorrelationCurve();
+  coil.resetParasiticGasLoad();
+  
+  EXPECT_FALSE(coil.availabilitySchedule());
+  EXPECT_FALSE(coil.partLoadFractionCorrelationCurve());
+  EXPECT_FALSE(coil.parasiticGasLoad());
+  EXPECT_EQ(0u, coil.stages().size());
+}
+
+TEST_F(ModelFixture, CoilHeatingGasMultiStage_Remove) {
+  Model m;
+  CoilHeatingGasMultiStage coil(m);
+  CoilHeatingGasMultiStageStageData stage(m);
+  coil.addStage(stage);
+  coil.remove();
+  
+  EXPECT_EQ(0u, m.modelObjects().size());
+}

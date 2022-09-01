@@ -69,7 +69,7 @@ namespace model {
     }
 
     double CoilHeatingElectricMultiStageStageData_Impl::efficiency() const {
-      boost::optional<double> value = getDouble(OS_Coil_Heating_Electric_MultiStage_StageDataFields::rEfficiency, true);
+      boost::optional<double> value = getDouble(OS_Coil_Heating_Electric_MultiStage_StageDataFields::Efficiency, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -87,7 +87,7 @@ namespace model {
       return result;
     }
 
-    bool CoilHeatingElectricMultiStageStageData_Impl::setEfficiency(double rEfficiency) {
+    bool CoilHeatingElectricMultiStageStageData_Impl::setEfficiency(double Efficiency) {
       bool result = setDouble(OS_Coil_Heating_Electric_MultiStage_StageDataFields::Efficiency, Efficiency);
       return result;
     }

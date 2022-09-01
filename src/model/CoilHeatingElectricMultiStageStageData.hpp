@@ -74,7 +74,7 @@ namespace model {
 
     bool setEfficiency(double StageEfficiency);
 
-    bool setNominalCapacity(boost::optional<double> StageNominalCapacity);
+    bool setNominalCapacity(double StageNominalCapacity);
 
     void autosizeNominalCapacity();
 

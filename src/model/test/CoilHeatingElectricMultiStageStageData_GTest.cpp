@@ -33,6 +33,52 @@
 
 #include "../CoilHeatingElectricMultiStageStageData.hpp"
 #include "../CoilHeatingElectricMultiStageStageData_Impl.hpp"
+#include "../CoilHeatingElectricMultiStage.hpp"
+#include "../CoilHeatingElectricMultiStage_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture, CoilHeatingElectricMultiStageStageData_GettersSetters) {
+  Model m;
+  CoilHeatingElectricMultiStage coil(m);
+  CoilHeatingElectricMultiStageStageData stageData1(m);
+  CoilHeatingElectricMultiStageStageData stageData2(m);
+
+  EXPECT_EQ(0u, coil.stages().size());
+  EXPECT_FALSE(stageData1.parentCoil());
+  EXPECT_TRUE(coil.addStage(stageData1));
+  EXPECT_TRUE(coil.addStage(stageData2));
+  EXPECT_TRUE(stageData1.parentCoil());
+  EXPECT_EQ(2u, coil.stages().size());
+
+  EXPECT_EQ(0.8, stageData1.efficiency());
+  EXPECT_FALSE(stageData1.nominalCapacity());
+  EXPECT_TRUE(stageData1.isNominalCapacityAutosized());
+
+  EXPECT_TRUE(stageData1.setEfficiency(0.75));
+  EXPECT_TRUE(stageData1.setNominalCapacity(1000.0));
+
+  EXPECT_EQ(0.75, stageData1.gasEfficiency());
+  ASSERT_TRUE(stageData1.nominalCapacity());
+  EXPECT_EQ(1000.0, stageData1.nominalCapacity().get());
+  EXPECT_FALSE(stageData1.isNominalCapacityAutosized());
+
+  stageData1.autosizeNominalCapacity();
+  EXPECT_FALSE(stageData1.nominalCapacity());
+  EXPECT_TRUE(stageData1.isNominalCapacityAutosized());
+}
+
+TEST_F(ModelFixture, CoilHeatingElectricMultiStageStageData_Remove) {
+  Model m;
+  CoilHeatingElectricMultiStage coil(m);
+  CoilHeatingElectricMultiStageStageData stageData1(m);
+  CoilHeatingElectricMultiStageStageData stageData2(m);
+
+  EXPECT_TRUE(coil.addStage(stageData1));
+  EXPECT_TRUE(coil.addStage(stageData2));
+
+  stageData1.remove();
+
+  EXPECT_EQ(1u, coil.stages().size());
+}

@@ -39,8 +39,8 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
-#include "AirLoopHVACOutdoorAirSystem.hpp"
-#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACUnitarySystem.hpp"
+#include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 

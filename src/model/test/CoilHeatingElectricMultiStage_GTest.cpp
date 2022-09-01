@@ -33,6 +33,38 @@
 
 #include "../CoilHeatingElectricMultiStage.hpp"
 #include "../CoilHeatingElectricMultiStage_Impl.hpp"
+#include "../CoilHeatingElectricMultiStageStageData.hpp"
+#include "../CoilHeatingElectricMultiStageStageData_Impl.hpp"
+#include "../ScheduleConstant.hpp"
+#include "../ScheduleConstant_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
+
+TEST_F(ModelFixture, CoilHeatingElectricMultiStage_GettersSetters) {
+  Model m;
+  CoilHeatingElectricMultiStage coil(m);
+
+  EXPECT_FALSE(coil.availabilitySchedule());
+  EXPECT_EQ(0u, coil.stages().size());
+
+  ScheduleConstant scheduleConstant(m);
+  EXPECT_TRUE(coil.setAvailabilitySchedule(scheduleConstant));
+
+  ASSERT_TRUE(coil.availabilitySchedule());
+  EXPECT_EQ(scheduleConstant.handle(), coil.availabilitySchedule().get().handle());
+
+  coil.resetAvailabilitySchedule();
+
+  EXPECT_FALSE(coil.availabilitySchedule());
+}
+
+TEST_F(ModelFixture, CoilHeatingElectricMultiStage_Remove) {
+  Model m;
+  CoilHeatingElectricMultiStage coil(m);
+  CoilHeatingElectricMultiStageStageData stage(m);
+  coil.addStage(stage);
+  coil.remove();
+
+  EXPECT_EQ(0u, m.modelObjects().size());
+}
