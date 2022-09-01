@@ -77,8 +77,8 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [#4632](https://github.com/NREL/OpenStudio/pull/4632) - Remove deprecated methods for AirWallMaterial, Node, SizingSystem, ZoneAirMassFlowConservation
     * Removes the deprecated `AirWallMaterial` class completely, in favor of `ConstructionAirBoundary`
     * Removes functions in `Node` that have been deprecated for 9+ years
-    * Removes deprecated methods in the `SizingSystem` class
-    * Removes deprecated methods in the `ZoneAirMassFlowConservation` class
+    * Removes deprecated methods in the `SizingSystem`, `ZoneAirMassFlowConservation`, `PlantLoop` & `AirLoopHVAC`, `AvailablilityManagerNightCycle`, `ZoneVentilationDesignFlowRate` classes
+    * Refer to the CSV file at [developer/ruby/deprecated_methods.csv](https://github.com/NREL/OpenStudio/blob/develop/developer/ruby/deprecated_methods.csv) for more information
 
 
 ## Minor changes and bug fixes
