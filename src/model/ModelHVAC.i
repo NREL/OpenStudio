@@ -176,6 +176,7 @@ MODELOBJECT_TEMPLATES(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeed
 MODELOBJECT_TEMPLATES(CoilHeatingDXMultiSpeedStageData);
 MODELOBJECT_TEMPLATES(CoilHeatingDXVariableRefrigerantFlow);
 MODELOBJECT_TEMPLATES(CoilHeatingGasMultiStageStageData);
+MODELOBJECT_TEMPLATES(CoilHeatingElectricMultiStageStageData);
 MODELOBJECT_TEMPLATES(CoilHeatingDXVariableSpeedSpeedData);
 MODELOBJECT_TEMPLATES(CoilHeatingWater);
 MODELOBJECT_TEMPLATES(CoilHeatingWaterToAirHeatPumpEquationFit);
@@ -297,6 +298,7 @@ SWIG_MODELOBJECT(CoilCoolingWaterToAirHeatPumpVariableSpeedEquationFitSpeedData,
 SWIG_MODELOBJECT(CoilHeatingDXMultiSpeedStageData, 1);
 SWIG_MODELOBJECT(CoilHeatingDXVariableRefrigerantFlow, 1);
 SWIG_MODELOBJECT(CoilHeatingGasMultiStageStageData, 1);
+SWIG_MODELOBJECT(CoilHeatingElectricMultiStageStageData, 1);
 SWIG_MODELOBJECT(CoilHeatingDXVariableSpeedSpeedData, 1);
 SWIG_MODELOBJECT(CoilHeatingWater, 1);
 SWIG_MODELOBJECT(CoilHeatingWaterToAirHeatPumpEquationFit, 1);

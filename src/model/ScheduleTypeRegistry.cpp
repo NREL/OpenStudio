@@ -208,6 +208,7 @@ namespace model {
       {"CoilHeatingDXSingleSpeed", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilHeatingDXVariableRefrigerantFlow", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilHeatingElectric", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
+      {"CoilHeatingElectricMultiStage", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilHeatingGas", "Availability", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilHeatingGasMultiStage", "Availability Schedule", "availabilitySchedule", false, "Availability", 0.0, 1.0},
       {"CoilHeatingLowTempRadiantConstFlow", "Heating High Water Temperature", "heatingHighWaterTemperatureSchedule", true, "Temperature",

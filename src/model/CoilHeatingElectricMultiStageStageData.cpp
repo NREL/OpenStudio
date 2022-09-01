@@ -1,0 +1,150 @@
+/***********************************************************************************************************************
+*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
+*  following conditions are met:
+*
+*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
+*  disclaimer.
+*
+*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
+*  disclaimer in the documentation and/or other materials provided with the distribution.
+*
+*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
+*  derived from this software without specific prior written permission from the respective party.
+*
+*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
+*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
+*  written permission from Alliance for Sustainable Energy, LLC.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
+*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+***********************************************************************************************************************/
+
+#include "CoilHeatingElectricMultiStageStageData.hpp"
+#include "CoilHeatingElectricMultiStageStageData_Impl.hpp"
+#include "../model/CoilHeatingElectricMultiStage.hpp"
+#include "../model/CoilHeatingElectricMultiStage_Impl.hpp"
+#include "../model/Model.hpp"
+#include "../model/Model_Impl.hpp"
+#include <utilities/idd/OS_Coil_Heating_Electric_MultiStage_StageData_FieldEnums.hxx>
+#include <utilities/idd/IddEnums.hxx>
+#include "../utilities/units/Unit.hpp"
+#include "../utilities/core/Assert.hpp"
+
+namespace openstudio {
+namespace model {
+
+  namespace detail {
+
+    CoilHeatingElectricMultiStageStageData_Impl::CoilHeatingElectricMultiStageStageData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(idfObject, model, keepHandle) {
+      OS_ASSERT(idfObject.iddObject().type() == CoilHeatingElectricMultiStageStageData::iddObjectType());
+    }
+
+    CoilHeatingElectricMultiStageStageData_Impl::CoilHeatingElectricMultiStageStageData_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                   Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {
+      OS_ASSERT(other.iddObject().type() == CoilHeatingElectricMultiStageStageData::iddObjectType());
+    }
+
+    CoilHeatingElectricMultiStageStageData_Impl::CoilHeatingElectricMultiStageStageData_Impl(const CoilHeatingElectricMultiStageStageData_Impl& other,
+                                                                                   Model_Impl* model, bool keepHandle)
+      : ModelObject_Impl(other, model, keepHandle) {}
+
+    const std::vector<std::string>& CoilHeatingElectricMultiStageStageData_Impl::outputVariableNames() const {
+      static const std::vector<std::string> result;
+      return result;
+    }
+
+    IddObjectType CoilHeatingElectricMultiStageStageData_Impl::iddObjectType() const {
+      return CoilHeatingElectricMultiStageStageData::iddObjectType();
+    }
+
+
+
+    boost::optional<std::tuple<int, CoilHeatingElectricMultiStage>> CoilHeatingElectricMultiStageStageData_Impl::stageIndexAndParentCoil() const {
+
+      boost::optional<std::tuple<int, CoilHeatingElectricMultiStage>> result;
+
+      // This coil performance object can only be found in a CoilHeatingElectricMultiStage
+      // Check all CoilHeatingElectricMultiStages in the model, seeing if this is inside of one of them.
+      boost::optional<int> stageIndex;
+      boost::optional<CoilHeatingElectricMultiStage> parentCoil;
+      auto coilHeatingElectricMultiStages = this->model().getConcreteModelObjects<CoilHeatingElectricMultiStage>();
+      for (const auto& coilInModel : coilHeatingElectricMultiStages) {
+        // Check the coil performance objects in this coil to see if one of them is this object
+        std::vector<CoilHeatingElectricMultiStageStageData> perfStages = coilInModel.stages();
+        int i = 1;
+        for (auto perfStage : perfStages) {
+          if (perfStage.handle() == this->handle()) {
+            stageIndex = i;
+            parentCoil = coilInModel;
+            break;
+          }
+          i++;
+        }
+      }
+
+      // Warn if this coil performance object was not found inside a coil
+      if (!parentCoil) {
+        LOG(Warn, name().get() + " was not found inside a CoilCoolingDXMultiSpeed in the model, cannot retrieve the autosized value.");
+        return result;
+      }
+
+      return std::make_tuple(stageIndex.get(), parentCoil.get());
+    }
+
+    void CoilHeatingElectricMultiStageStageData_Impl::autosize() {
+      autosizeNominalCapacity();
+    }
+
+    void CoilHeatingElectricMultiStageStageData_Impl::applySizingValues() {
+      boost::optional<double> val;
+      val = autosizedNominalCapacity();
+      if (val) {
+        setNominalCapacity(val.get());
+      }
+    }
+
+  }  // namespace detail
+
+  CoilHeatingElectricMultiStageStageData::CoilHeatingElectricMultiStageStageData(const Model& model)
+    : ModelObject(CoilHeatingElectricMultiStageStageData::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>());
+
+    // TODO
+  }
+
+  IddObjectType CoilHeatingElectricMultiStageStageData::iddObjectType() {
+    return IddObjectType(IddObjectType::OS_Coil_Heating_Electric_MultiStage_StageData);
+  }
+
+
+  /// @cond
+  CoilHeatingElectricMultiStageStageData::CoilHeatingElectricMultiStageStageData(std::shared_ptr<detail::CoilHeatingElectricMultiStageStageData_Impl> impl)
+    : ModelObject(std::move(impl)) {}
+  /// @endcond
+
+
+
+  void CoilHeatingElectricMultiStageStageData::autosize() {
+    return getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>()->autosize();
+  }
+
+  void CoilHeatingElectricMultiStageStageData::applySizingValues() {
+    return getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>()->applySizingValues();
+  }
+
+  boost::optional<std::tuple<int, CoilHeatingElectricMultiStage>> CoilHeatingElectricMultiStageStageData::stageIndexAndParentCoil() const {
+    return getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>()->stageIndexAndParentCoil();
+  }
+
+}  // namespace model
+}  // namespace openstudio
