@@ -305,8 +305,7 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.2.1"));
     m_startVersions.push_back(VersionString("3.3.0"));
     m_startVersions.push_back(VersionString("3.4.0"));
-    m_startVersions.push_back(VersionString("3.4.1"));
-    //m_startVersions.push_back(VersionString("3.5.0"));
+    // m_startVersions.push_back(VersionString("3.4.1"));
   }
 
   boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, ProgressBar* progressBar) {
@@ -6933,33 +6932,32 @@ namespace osversion {
 
         bool isAirWall = false;
         if (object.numExtensibleGroups() == 1u) {
-          for (const IdfExtensibleGroup& eg : object.extensibleGroups()) {
-            if (boost::optional<IdfObject> layer = idf_3_4_0.getObject(toUUID(eg.getString(0).get()))) {
-              auto layeriddname = layer->iddObject().name();
-              if (layeriddname == "OS:Material:AirWall") {
+          const IdfExtensibleGroup eg = object.extensibleGroups()[0];
+          if (boost::optional<IdfObject> layer = idf_3_4_0.getObject(toUUID(eg.getString(0).get()))) {
+            auto layeriddname = layer->iddObject().name();
+            if (layeriddname == "OS:Material:AirWall") {
 
-                auto iddObject = idd_3_4_1.getObject("OS:Construction:AirBoundary");
-                IdfObject newObject(iddObject.get());
+              auto iddObject = idd_3_4_1.getObject("OS:Construction:AirBoundary");
+              IdfObject newObject(iddObject.get());
 
-                // Handle
-                if (auto value = object.getString(0)) {
-                  newObject.setString(0, value.get());
-                }
-
-                // Name
-                if (auto value = object.getString(1)) {
-                  newObject.setString(1, value.get());
-                }
-
-                // Simple Mixing Air Changes per Hour
-                // Set ACH to 0.0, to match the old style Material:AirWall (same as the ConstructionAirBoundary Ctor)
-                newObject.setDouble(3, 0.0);
-
-                m_refactored.push_back(RefactoredObjectData(object, newObject));
-                ss << newObject;
-
-                isAirWall = true;
+              // Handle
+              if (auto value = object.getString(0)) {
+                newObject.setString(0, value.get());
               }
+
+              // Name
+              if (auto value = object.getString(1)) {
+                newObject.setString(1, value.get());
+              }
+
+              // Simple Mixing Air Changes per Hour
+              // Set ACH to 0.0, to match the old style Material:AirWall (same as the ConstructionAirBoundary Ctor)
+              newObject.setDouble(3, 0.0);
+
+              m_refactored.push_back(RefactoredObjectData(object, newObject));
+              ss << newObject;
+
+              isAirWall = true;
             }
           }
         }
