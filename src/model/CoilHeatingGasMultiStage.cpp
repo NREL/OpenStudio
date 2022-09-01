@@ -37,10 +37,13 @@
 #include "Curve_Impl.hpp"
 #include "CoilHeatingGasMultiStageStageData.hpp"
 #include "CoilHeatingGasMultiStageStageData_Impl.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+
 #include <utilities/idd/OS_Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -204,7 +207,8 @@ namespace model {
       }
 
       // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
-      std::vector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> airLoopUnitaryHeatPumpAirToAirMultiSpeeds = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+      std::vector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> airLoopUnitaryHeatPumpAirToAirMultiSpeeds =
+        this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
 
       for (const auto& airLoopUnitaryHeatPumpAirToAirMultiSpeed : airLoopUnitaryHeatPumpAirToAirMultiSpeeds) {
         if (boost::optional<HVACComponent> heatingCoil = airLoopUnitaryHeatPumpAirToAirMultiSpeed.heatingCoil()) {

@@ -39,6 +39,11 @@
 #include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
+#include "AirLoopHVACOutdoorAirSystem.hpp"
+#include "AirLoopHVACOutdoorAirSystem_Impl.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
+#include "AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_Impl.hpp"
+
 #include <utilities/idd/OS_Coil_Heating_Electric_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/units/Unit.hpp"
