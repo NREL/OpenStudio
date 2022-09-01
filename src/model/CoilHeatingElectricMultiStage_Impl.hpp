@@ -72,8 +72,6 @@ namespace model {
 
       boost::optional<Schedule> availabilitySchedule() const;
 
-
-
       //@}
       /** @name Setters */
       //@{
@@ -81,8 +79,6 @@ namespace model {
       bool setAvailabilitySchedule(Schedule& schedule);
 
       void resetAvailabilitySchedule();
-
-
 
       //@}
       /** @name Other */

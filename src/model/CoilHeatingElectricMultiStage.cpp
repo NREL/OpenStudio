@@ -56,12 +56,13 @@ namespace model {
     }
 
     CoilHeatingElectricMultiStage_Impl::CoilHeatingElectricMultiStage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
-                                                                 bool keepHandle)
+                                                                           bool keepHandle)
       : StraightComponent_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == CoilHeatingElectricMultiStage::iddObjectType());
     }
 
-    CoilHeatingElectricMultiStage_Impl::CoilHeatingElectricMultiStage_Impl(const CoilHeatingElectricMultiStage_Impl& other, Model_Impl* model, bool keepHandle)
+    CoilHeatingElectricMultiStage_Impl::CoilHeatingElectricMultiStage_Impl(const CoilHeatingElectricMultiStage_Impl& other, Model_Impl* model,
+                                                                           bool keepHandle)
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilHeatingElectricMultiStage_Impl::outputVariableNames() const {
@@ -87,11 +88,9 @@ namespace model {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule);
     }
 
-
-
     bool CoilHeatingElectricMultiStage_Impl::setAvailabilitySchedule(Schedule& schedule) {
-      bool result =
-        setSchedule(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule, "CoilHeatingElectricMultiStage", "Availability Schedule", schedule);
+      bool result = setSchedule(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule, "CoilHeatingElectricMultiStage",
+                                "Availability Schedule", schedule);
       return result;
     }
 
@@ -99,8 +98,6 @@ namespace model {
       bool result = setString(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule, "");
       OS_ASSERT(result);
     }
-
-
 
     unsigned CoilHeatingElectricMultiStage_Impl::inletPort() const {
       return OS_Coil_Heating_Electric_MultiStageFields::AirInletNode;
@@ -156,7 +153,8 @@ namespace model {
 
   }  // namespace detail
 
-  CoilHeatingElectricMultiStage::CoilHeatingElectricMultiStage(const Model& model) : StraightComponent(CoilHeatingElectricMultiStage::iddObjectType(), model) {
+  CoilHeatingElectricMultiStage::CoilHeatingElectricMultiStage(const Model& model)
+    : StraightComponent(CoilHeatingElectricMultiStage::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingElectricMultiStage_Impl>());
   }
 
@@ -168,8 +166,6 @@ namespace model {
     return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->availabilitySchedule();
   }
 
-
-
   bool CoilHeatingElectricMultiStage::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->setAvailabilitySchedule(schedule);
   }
@@ -177,8 +173,6 @@ namespace model {
   void CoilHeatingElectricMultiStage::resetAvailabilitySchedule() {
     getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->resetAvailabilitySchedule();
   }
-
-
 
   std::vector<CoilHeatingElectricMultiStageStageData> CoilHeatingElectricMultiStage::stages() const {
     return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->stages();

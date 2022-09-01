@@ -75,8 +75,6 @@ namespace energyplus {
       idfObject.setString(Coil_Heating_Electric_MultiStageFields::TemperatureSetpointNodeName, node->name().get());
     }
 
-
-
     // NumberofStages
     {
       auto num = modelObject.stages().size();
@@ -85,8 +83,6 @@ namespace energyplus {
 
     for (auto stage : modelObject.stages()) {
       auto eg = idfObject.pushExtensibleGroup();
-
-
     }
 
     return idfObject;

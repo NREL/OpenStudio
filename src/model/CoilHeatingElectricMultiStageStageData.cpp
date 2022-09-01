@@ -43,19 +43,20 @@ namespace model {
 
   namespace detail {
 
-    CoilHeatingElectricMultiStageStageData_Impl::CoilHeatingElectricMultiStageStageData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
+    CoilHeatingElectricMultiStageStageData_Impl::CoilHeatingElectricMultiStageStageData_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                             bool keepHandle)
       : ModelObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == CoilHeatingElectricMultiStageStageData::iddObjectType());
     }
 
     CoilHeatingElectricMultiStageStageData_Impl::CoilHeatingElectricMultiStageStageData_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                                   Model_Impl* model, bool keepHandle)
+                                                                                             Model_Impl* model, bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == CoilHeatingElectricMultiStageStageData::iddObjectType());
     }
 
     CoilHeatingElectricMultiStageStageData_Impl::CoilHeatingElectricMultiStageStageData_Impl(const CoilHeatingElectricMultiStageStageData_Impl& other,
-                                                                                   Model_Impl* model, bool keepHandle)
+                                                                                             Model_Impl* model, bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilHeatingElectricMultiStageStageData_Impl::outputVariableNames() const {
@@ -66,8 +67,6 @@ namespace model {
     IddObjectType CoilHeatingElectricMultiStageStageData_Impl::iddObjectType() const {
       return CoilHeatingElectricMultiStageStageData::iddObjectType();
     }
-
-
 
     boost::optional<std::tuple<int, CoilHeatingElectricMultiStage>> CoilHeatingElectricMultiStageStageData_Impl::stageIndexAndParentCoil() const {
 
@@ -126,13 +125,11 @@ namespace model {
     return IddObjectType(IddObjectType::OS_Coil_Heating_Electric_MultiStage_StageData);
   }
 
-
   /// @cond
-  CoilHeatingElectricMultiStageStageData::CoilHeatingElectricMultiStageStageData(std::shared_ptr<detail::CoilHeatingElectricMultiStageStageData_Impl> impl)
+  CoilHeatingElectricMultiStageStageData::CoilHeatingElectricMultiStageStageData(
+    std::shared_ptr<detail::CoilHeatingElectricMultiStageStageData_Impl> impl)
     : ModelObject(std::move(impl)) {}
   /// @endcond
-
-
 
   void CoilHeatingElectricMultiStageStageData::autosize() {
     return getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>()->autosize();

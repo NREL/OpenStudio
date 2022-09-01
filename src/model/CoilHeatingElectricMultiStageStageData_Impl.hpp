@@ -66,8 +66,6 @@ namespace model {
       /** @name Getters */
       //@{
 
-
-
       void autosize();
 
       void applySizingValues();
@@ -75,7 +73,6 @@ namespace model {
       //@}
       /** @name Setters */
       //@{
-
 
       //@}
       /** @name Other */
