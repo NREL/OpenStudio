@@ -62,9 +62,21 @@ namespace model {
     /** @name Getters */
     //@{
 
+    double efficiency() const;
+
+    boost::optional<double> nominalCapacity() const;
+
+    bool isNominalCapacityAutosized() const;
+
     //@}
     /** @name Setters */
     //@{
+
+    bool setEfficiency(double StageEfficiency);
+
+    bool setNominalCapacity(boost::optional<double> StageNominalCapacity);
+
+    void autosizeNominalCapacity();
 
     //@}
     /** @name Other */

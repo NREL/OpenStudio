@@ -68,6 +68,43 @@ namespace model {
       return CoilHeatingElectricMultiStageStageData::iddObjectType();
     }
 
+    double CoilHeatingElectricMultiStageStageData_Impl::efficiency() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_Electric_MultiStage_StageDataFields::rEfficiency, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    boost::optional<double> CoilHeatingElectricMultiStageStageData_Impl::nominalCapacity() const {
+      return getDouble(OS_Coil_Heating_Electric_MultiStage_StageDataFields::NominalCapacity, true);
+    }
+
+    bool CoilHeatingElectricMultiStageStageData_Impl::isNominalCapacityAutosized() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_Coil_Heating_Electric_MultiStage_StageDataFields::NominalCapacity, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "autosize");
+      }
+      return result;
+    }
+
+    bool CoilHeatingElectricMultiStageStageData_Impl::setEfficiency(double rEfficiency) {
+      bool result = setDouble(OS_Coil_Heating_Electric_MultiStage_StageDataFields::Efficiency, Efficiency);
+      return result;
+    }
+
+    bool CoilHeatingElectricMultiStageStageData_Impl::setNominalCapacity(boost::optional<double> NominalCapacity) {
+      bool result(false);
+      if (NominalCapacity) {
+        result = setDouble(OS_Coil_Heating_Electric_MultiStage_StageDataFields::NominalCapacity, NominalCapacity.get());
+      }
+      return result;
+    }
+
+    void CoilHeatingElectricMultiStageStageData_Impl::autosizeNominalCapacity() {
+      bool result = setString(OS_Coil_Heating_Electric_MultiStage_StageDataFields::NominalCapacity, "autosize");
+      OS_ASSERT(result);
+    }
+
     boost::optional<std::tuple<int, CoilHeatingElectricMultiStage>> CoilHeatingElectricMultiStageStageData_Impl::stageIndexAndParentCoil() const {
 
       boost::optional<std::tuple<int, CoilHeatingElectricMultiStage>> result;
@@ -100,6 +137,20 @@ namespace model {
       return std::make_tuple(stageIndex.get(), parentCoil.get());
     }
 
+    boost::optional<double> CoilHeatingElectricMultiStageStageData_Impl::autosizedNominalCapacity() const {
+      auto indexAndNameOpt = stageIndexAndParentCoil();
+      boost::optional<double> result;
+      if (!indexAndNameOpt) {
+        return result;
+      }
+      auto indexAndName = indexAndNameOpt.get();
+      int index = std::get<0>(indexAndName);
+      CoilHeatingElectricMultiStage parentCoil = std::get<1>(indexAndName);
+      std::string sqlField = "Design Size Stage " + std::to_string(index) + " Nominal Capacity";
+
+      return parentCoil.getAutosizedValue(sqlField, "W");
+    }
+
     void CoilHeatingElectricMultiStageStageData_Impl::autosize() {
       autosizeNominalCapacity();
     }
@@ -118,11 +169,36 @@ namespace model {
     : ModelObject(CoilHeatingElectricMultiStageStageData::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>());
 
-    // TODO
+    setEfficiency(1.0);
+    autosizeNominalCapacity();
   }
 
   IddObjectType CoilHeatingElectricMultiStageStageData::iddObjectType() {
     return IddObjectType(IddObjectType::OS_Coil_Heating_Electric_MultiStage_StageData);
+  }
+
+  double CoilHeatingElectricMultiStageStageData::efficiency() const {
+    return getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>()->efficiency();
+  }
+
+  boost::optional<double> CoilHeatingElectricMultiStageStageData::nominalCapacity() const {
+    return getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>()->nominalCapacity();
+  }
+
+  bool CoilHeatingElectricMultiStageStageData::isNominalCapacityAutosized() const {
+    return getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>()->isNominalCapacityAutosized();
+  }
+
+  bool CoilHeatingElectricMultiStageStageData::setEfficiency(double Efficiency) {
+    return getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>()->setEfficiency(Efficiency);
+  }
+
+  bool CoilHeatingElectricMultiStageStageData::setNominalCapacity(double NominalCapacity) {
+    return getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>()->setNominalCapacity(NominalCapacity);
+  }
+
+  void CoilHeatingElectricMultiStageStageData::autosizeNominalCapacity() {
+    getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>()->autosizeNominalCapacity();
   }
 
   /// @cond
@@ -130,6 +206,10 @@ namespace model {
     std::shared_ptr<detail::CoilHeatingElectricMultiStageStageData_Impl> impl)
     : ModelObject(std::move(impl)) {}
   /// @endcond
+
+  boost::optional<double> CoilHeatingElectricMultiStageStageData::autosizedNominalCapacity() const {
+    return getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>()->autosizedNominalCapacity();
+  }
 
   void CoilHeatingElectricMultiStageStageData::autosize() {
     return getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>()->autosize();

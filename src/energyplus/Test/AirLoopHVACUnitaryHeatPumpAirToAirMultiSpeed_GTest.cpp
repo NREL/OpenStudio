@@ -39,8 +39,7 @@
 
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/FanConstantVolume.hpp"
-#include "../../model/CoilHeatingGasMultiStage.hpp"
-#include "../../model/CoilHeatingElectricMultiStage.hpp"
+#include "../../model/CoilHeatingElectric.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -61,47 +60,47 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeatingGasMultiStage) {
-    Model m;
+  Model m;
 
-    CoilCoolingDXSingleSpeed c(m);
-    CoilHeatingGasMultiStage h(m);
-    FanConstantVolume f(m);
-    CoilHeatingGasMultiStage s(m);
+  CoilCoolingDXSingleSpeed c(m);
+  CoilHeatingGasMultiStage h(m);
+  FanConstantVolume f(m);
+  CoilHeatingElectric s(m);
 
-    AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed unitary(m, f, h, c, s);
-    unitary.setFanPlacement(fanPlacement);
+  AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed unitary(m, f, h, c, s);
+  unitary.setFanPlacement(fanPlacement);
 
-    AirLoopHVAC airLoop(m);
+  AirLoopHVAC airLoop(m);
 
-    Node supplyOutletNode = airLoop.supplyOutletNode();
-    unitary.addToNode(supplyOutletNode);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
 
-    ForwardTranslator ft;
-    Workspace workspace = ft.translateModel(m);
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(m);
 
-    // TODO
-  }
+  // TODO
+}
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeatingElectricMultiStage) {
-    Model m;
+  Model m;
 
-    CoilCoolingDXSingleSpeed c(m);
-    CoilHeatingElectricMultiStage h(m);
-    FanConstantVolume f(m);
-    CoilHeatingElectricMultiStage s(m);
+  CoilCoolingDXSingleSpeed c(m);
+  CoilHeatingElectricMultiStage h(m);
+  FanConstantVolume f(m);
+  CoilHeatingElectric s(m);
 
-    AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed unitary(m, f, h, c, s);
-    unitary.setFanPlacement(fanPlacement);
+  AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed unitary(m, f, h, c, s);
+  unitary.setFanPlacement(fanPlacement);
 
-    AirLoopHVAC airLoop(m);
+  AirLoopHVAC airLoop(m);
 
-    Node supplyOutletNode = airLoop.supplyOutletNode();
-    unitary.addToNode(supplyOutletNode);
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
 
-    ForwardTranslator ft;
-    Workspace workspace = ft.translateModel(m);
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(m);
 
-    // TODO
-  }
+  // TODO
+}
 }

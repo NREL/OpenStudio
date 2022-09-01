@@ -192,14 +192,24 @@ namespace model {
     }
 
     boost::optional<HVACComponent> CoilHeatingGasMultiStage_Impl::containingHVACComponent() const {
-      // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
-      {
-        auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+      // AirLoopHVACUnitarySystem
+      std::vector<AirLoopHVACUnitarySystem> airLoopUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-        for (const auto& system : systems) {
-          auto coolingCoil = system.coolingCoil();
-          if (coolingCoil.handle() == this->handle()) {
-            return system;
+      for (const auto& airLoopUnitarySystem : airLoopUnitarySystems) {
+        if (boost::optional<HVACComponent> heatingCoil = airLoopHVACUnitarySystem.heatingCoil()) {
+          if (heatingCoil.handle() == this->handle()) {
+            return airLoopUnitarySystem;
+          }
+        }
+      }
+
+      // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
+      std::vector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> airLoopUnitaryHeatPumpAirToAirMultiSpeeds = this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+
+      for (const auto& airLoopUnitaryHeatPumpAirToAirMultiSpeed : airLoopUnitaryHeatPumpAirToAirMultiSpeeds) {
+        if (boost::optional<HVACComponent> heatingCoil = airLoopUnitaryHeatPumpAirToAirMultiSpeed.heatingCoil()) {
+          if (heatingCoil.handle() == this->handle()) {
+            return airLoopUnitaryHeatPumpAirToAirMultiSpeed;
           }
         }
       }

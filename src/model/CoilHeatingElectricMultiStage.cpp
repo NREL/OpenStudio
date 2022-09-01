@@ -142,7 +142,33 @@ namespace model {
     }
 
     boost::optional<HVACComponent> CoilHeatingElectricMultiStage_Impl::containingHVACComponent() const {
-      // TODO
+      // AirLoopHVACUnitarySystem
+      std::vector<AirLoopHVACUnitarySystem> airLoopUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+
+      for (const auto& airLoopUnitarySystem : airLoopUnitarySystems) {
+        if (boost::optional<HVACComponent> heatingCoil = airLoopHVACUnitarySystem.heatingCoil()) {
+          if (heatingCoil.handle() == this->handle()) {
+            return airLoopUnitarySystem;
+          }
+        }
+        if (boost::optional<HVACComponent> suppHeatingCoil = airLoopHVACUnitarySystem.supplementalHeatingCoil()) {
+          if (suppHeatingCoil->handle() == this->handle()) {
+            return airLoopHVACUnitarySystem;
+          }
+        }
+      }
+
+      // AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed
+      std::vector<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed> airLoopUnitaryHeatPumpAirToAirMultiSpeeds =
+        this->model().getConcreteModelObjects<AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed>();
+
+      for (const auto& airLoopUnitaryHeatPumpAirToAirMultiSpeed : airLoopUnitaryHeatPumpAirToAirMultiSpeeds) {
+        if (boost::optional<HVACComponent> heatingCoil = airLoopUnitaryHeatPumpAirToAirMultiSpeed.heatingCoil()) {
+          if (heatingCoil.handle() == this->handle()) {
+            return airLoopUnitaryHeatPumpAirToAirMultiSpeed;
+          }
+        }
+      }
 
       return boost::none;
     }

@@ -66,6 +66,14 @@ namespace model {
       /** @name Getters */
       //@{
 
+      double efficiency() const;
+
+      boost::optional<double> nominalCapacity() const;
+
+      bool isNominalCapacityAutosized() const;
+
+      boost::optional<double> autosizedNominalCapacity() const;
+
       void autosize();
 
       void applySizingValues();
@@ -73,6 +81,12 @@ namespace model {
       //@}
       /** @name Setters */
       //@{
+
+      bool setEfficiency(double StageEfficiency);
+
+      bool setNominalCapacity(boost::optional<double> StageNominalCapacity);
+
+      void autosizeNominalCapacity();
 
       //@}
       /** @name Other */
