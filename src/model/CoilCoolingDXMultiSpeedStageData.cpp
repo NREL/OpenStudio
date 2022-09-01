@@ -289,14 +289,14 @@ namespace model {
     }
 
     bool CoilCoolingDXMultiSpeedStageData_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017) {
-      bool result =
-        setDouble(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017, ratedEvaporatorFanPowerPerVolumeFlowRate2017);
+      bool result = setDouble(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017,
+                              ratedEvaporatorFanPowerPerVolumeFlowRate2017);
       return result;
     }
 
     bool CoilCoolingDXMultiSpeedStageData_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedEvaporatorFanPowerPerVolumeFlowRate2023) {
-      bool result =
-        setDouble(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023, ratedEvaporatorFanPowerPerVolumeFlowRate2023);
+      bool result = setDouble(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023,
+                              ratedEvaporatorFanPowerPerVolumeFlowRate2023);
       return result;
     }
 

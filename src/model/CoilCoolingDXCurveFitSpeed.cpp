@@ -274,14 +274,14 @@ namespace model {
     }
 
     bool CoilCoolingDXCurveFitSpeed_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017) {
-      bool result =
-        setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017, ratedEvaporatorFanPowerPerVolumeFlowRate2017);
+      bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017,
+                              ratedEvaporatorFanPowerPerVolumeFlowRate2017);
       return result;
     }
 
     bool CoilCoolingDXCurveFitSpeed_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedEvaporatorFanPowerPerVolumeFlowRate2023) {
-      bool result =
-        setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023, ratedEvaporatorFanPowerPerVolumeFlowRate2023);
+      bool result = setDouble(OS_Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023,
+                              ratedEvaporatorFanPowerPerVolumeFlowRate2023);
       return result;
     }
 
@@ -606,15 +606,18 @@ namespace model {
   }
 
   bool CoilCoolingDXCurveFitSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(ratedEvaporatorFanPowerPerVolumeFlowRate);
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(
+      ratedEvaporatorFanPowerPerVolumeFlowRate);
   }
 
   bool CoilCoolingDXCurveFitSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017) {
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(ratedEvaporatorFanPowerPerVolumeFlowRate2017);
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(
+      ratedEvaporatorFanPowerPerVolumeFlowRate2017);
   }
 
   bool CoilCoolingDXCurveFitSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedEvaporatorFanPowerPerVolumeFlowRate2023) {
-    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2023(ratedEvaporatorFanPowerPerVolumeFlowRate2023);
+    return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2023(
+      ratedEvaporatorFanPowerPerVolumeFlowRate2023);
   }
 
   bool CoilCoolingDXCurveFitSpeed::setEvaporativeCondenserPumpPowerFraction(double evaporativeCondenserPumpPowerFraction) {
