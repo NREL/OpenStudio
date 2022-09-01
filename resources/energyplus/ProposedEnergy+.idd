@@ -5682,7 +5682,7 @@ Space,
        \memo named <Zone Name>-Remainder will be created.
        \memo Input references to Space Names must have a matching Space object
        \memo (default space names may not be referenced except in output variable keys).
-       \min-fields 6
+       \min-fields 5
        \extensible:1
   A1,  \field Name
        \note Name of the Space.
@@ -11315,7 +11315,7 @@ People,
    \memo be named with the Space Name plus this Object Name.
    \extensible:1
    \min-fields 10
-   \max-fields 29
+   \max-fields 27
   A1 , \field Name
        \required-field
        \type alpha
@@ -22078,7 +22078,7 @@ Sizing:Zone,
       \memo The calculation is done for every sizing period included in the input. The maximum
       \memo cooling and heating load and cooling, heating, and ventilation air flows are then saved
       \memo for system level and zone component design calculations.
-  \min-fields 34
+  \min-fields 18
   A1, \field Zone or ZoneList Name
       \required-field
       \type object-list
