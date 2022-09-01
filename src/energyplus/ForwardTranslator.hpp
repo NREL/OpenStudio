@@ -142,6 +142,7 @@ namespace model {
   class CoilHeatingDXVariableRefrigerantFlow;
   class CoilHeatingDXVariableSpeed;
   class CoilHeatingElectric;
+  class CoilHeatingElectricMultiStage;
   class CoilHeatingGas;
   class CoilHeatingGasMultiStage;
   class CoilHeatingWater;
@@ -803,6 +804,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateCoilHeatingDXVariableSpeedWithoutUnitary(model::CoilHeatingDXVariableSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilHeatingElectric(model::CoilHeatingElectric& modelObject);
+
+    boost::optional<IdfObject> translateCoilHeatingElectricMultiStage(model::CoilHeatingElectricMultiStage& modelObject);
 
     boost::optional<IdfObject> translateCoilHeatingGas(model::CoilHeatingGas& modelObject);
 
