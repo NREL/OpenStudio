@@ -480,7 +480,7 @@ namespace model {
     autosizeRatedAirFlowRate();
     ok = setRatedSupplyAirFanPowerPerVolumeFlowRate2017(773.3);
     OS_ASSERT(ok);
-    ok = setRatedSupplyAirFanPowerPerVolumeFlowRate2024(934.4);
+    ok = setRatedSupplyAirFanPowerPerVolumeFlowRate2023(934.4);
     OS_ASSERT(ok);
     ok = setHeatingCapacityFunctionofTemperatureCurve(heatingCapacityFunctionofTemperature);
     OS_ASSERT(ok);
