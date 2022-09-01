@@ -92,7 +92,9 @@ namespace model {
 
       double ratedCOP() const;
 
-      double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+      double ratedEvaporatorFanPowerPerVolumeFlowRate2017() const;
+
+      double ratedEvaporatorFanPowerPerVolumeFlowRate2023() const;
 
       Curve totalCoolingCapacityFunctionOfTemperatureCurve() const;
 
@@ -160,9 +162,13 @@ namespace model {
 
       bool setRatedCOP(double value);
 
-      bool setRatedEvaporatorFanPowerPerVolumeFlowRate(boost::optional<double> value);
+      bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(boost::optional<double> value);
 
-      bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double value);
+      bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double value);
+
+      bool setRatedEvaporatorFanPowerPerVolumeFlowRate2023(boost::optional<double> value);
+
+      bool setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double value);
 
       bool setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);
 

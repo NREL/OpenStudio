@@ -171,8 +171,13 @@ namespace energyplus {
       }
 
       // RatedSupplyAirFanPowerPerVolumeFlowRate2017
-      if ((value = stage.ratedSupplyAirFanPowerPerVolumeFlowRate())) {
+      if ((value = stage.ratedSupplyAirFanPowerPerVolumeFlowRate2017())) {
         eg.setDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedSupplyAirFanPowerPerVolumeFlowRate2017, value.get());
+      }
+
+      // RatedSupplyAirFanPowerPerVolumeFlowRate2023
+      if ((value = stage.ratedSupplyAirFanPowerPerVolumeFlowRate2023())) {
+        eg.setDouble(Coil_Heating_DX_MultiSpeedExtensibleFields::SpeedRatedSupplyAirFanPowerPerVolumeFlowRate2023, value.get());
       }
 
       // HeatingCapacityFunctionofTemperatureCurveName

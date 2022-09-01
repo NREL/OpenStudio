@@ -35,6 +35,7 @@
 #include "ModelObject.hpp"
 #include "StraightComponent.hpp"
 #include "Connection.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 namespace model {
@@ -93,7 +94,13 @@ namespace model {
     double ratedCOP() const;
 
     /** Returns the value of the RatedEvaporatorFanPowerPerVolumeFlowRate field. **/
-    double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+    OS_DEPRECATED double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+
+    /** Returns the value of the RatedEvaporatorFanPowerPerVolumeFlowRate2017 field. **/
+    double ratedEvaporatorFanPowerPerVolumeFlowRate2017() const;
+
+    /** Returns the value of the RatedEvaporatorFanPowerPerVolumeFlowRate2023 field. **/
+    double ratedEvaporatorFanPowerPerVolumeFlowRate2023() const;
 
     /** Returns the CurveBiquadratic referred to by the TotalCoolingCapacityFunctionOfTemperatureCurveName field. **/
     Curve totalCoolingCapacityFunctionOfTemperatureCurve() const;
@@ -170,9 +177,19 @@ namespace model {
     bool setRatedCOP(double value);
 
     /** Sets the value of the RatedEvaporatorFanPowerPerVolumeFlowRate field. **/
-    bool setRatedEvaporatorFanPowerPerVolumeFlowRate(boost::optional<double> value);
+    OS_DEPRECATED bool setRatedEvaporatorFanPowerPerVolumeFlowRate(boost::optional<double> value);
 
-    bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double value);
+    /** Sets the value of the RatedEvaporatorFanPowerPerVolumeFlowRate2017 field. **/
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(boost::optional<double> value);
+
+    /** Sets the value of the RatedEvaporatorFanPowerPerVolumeFlowRate2023 field. **/
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate2023(boost::optional<double> value);
+
+    OS_DEPRECATED bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double value);
+
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double value);
+
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double value);
 
     /** Sets the CurveBiquadratic referred to by the TotalCoolingCapacityFunctionOfTemperatureCurveName field. **/
     bool setTotalCoolingCapacityFunctionOfTemperatureCurve(const Curve& curve);

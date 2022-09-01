@@ -33,6 +33,7 @@
 #include "ModelAPI.hpp"
 #include "ParentObject.hpp"
 #include "../model/CoilCoolingDXMultiSpeed.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -84,7 +85,11 @@ namespace model {
 
     bool isRatedAirFlowRateAutosized() const;
 
-    double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+    OS_DEPRECATED double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+
+    double ratedEvaporatorFanPowerPerVolumeFlowRate2017() const;
+
+    double ratedEvaporatorFanPowerPerVolumeFlowRate2023() const;
 
     Curve totalCoolingCapacityFunctionofTemperatureCurve() const;
 
@@ -136,7 +141,11 @@ namespace model {
 
     void autosizeRatedAirFlowRate();
 
-    bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate);
+    OS_DEPRECATED bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate);
+
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017);
+
+    bool setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedEvaporatorFanPowerPerVolumeFlowRate2023);
 
     bool setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
 

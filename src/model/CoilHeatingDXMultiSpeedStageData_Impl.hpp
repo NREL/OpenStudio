@@ -85,7 +85,9 @@ namespace model {
 
       bool isRatedAirFlowRateAutosized() const;
 
-      double ratedSupplyAirFanPowerPerVolumeFlowRate() const;
+      double ratedSupplyAirFanPowerPerVolumeFlowRate2017() const;
+
+      double ratedSupplyAirFanPowerPerVolumeFlowRate2023() const;
 
       Curve heatingCapacityFunctionofTemperatureCurve() const;
 
@@ -115,7 +117,9 @@ namespace model {
 
       void autosizeRatedAirFlowRate();
 
-      bool setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate);
+      bool setRatedSupplyAirFanPowerPerVolumeFlowRate2017(double ratedSupplyAirFanPowerPerVolumeFlowRate2017);
+
+      bool setRatedSupplyAirFanPowerPerVolumeFlowRate2023(double ratedSupplyAirFanPowerPerVolumeFlowRate2023);
 
       bool setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve);
 

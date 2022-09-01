@@ -115,9 +115,14 @@ namespace energyplus {
       idfObject.setString(Coil_Cooling_DX_SingleSpeedFields::RatedAirFlowRate, "Autosize");
     }
 
-    d = modelObject.ratedEvaporatorFanPowerPerVolumeFlowRate();
+    d = modelObject.ratedEvaporatorFanPowerPerVolumeFlowRate2017();
     if (d) {
       idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017, *d);
+    }
+
+    d = modelObject.ratedEvaporatorFanPowerPerVolumeFlowRate2023();
+    if (d) {
+      idfObject.setDouble(Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023, *d);
     }
 
     OptionalModelObject omo = modelObject.inletModelObject();
