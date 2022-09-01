@@ -1911,9 +1911,10 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_TableMultiVariableLookup_twoDims)
   auto& tableLookUp = tableLookUps.front();
   EXPECT_EQ("Table With 2 dims", tableLookUp.nameString());
 
-  // We don't have a normalization reference originally, so both of these are empty
-  EXPECT_TRUE(tableLookUp.isEmpty(3));  // Normalization Method
-  EXPECT_TRUE(tableLookUp.isEmpty(4));  // Normalization Divisor
+  // We don't have a normalization reference originally, so "None" and 1.0 to match the ctor
+
+  EXPECT_EQ("None", tableLookUp.getString(3).get());  // Normalization Method
+  EXPECT_EQ(1.0, tableLookUp.getDouble(4).get());     // Normalization Divisor
 
   EXPECT_EQ(0.05, tableLookUp.getDouble(5).get());             // Minimum Output
   EXPECT_EQ(1.25, tableLookUp.getDouble(6).get());             // Maximum Output

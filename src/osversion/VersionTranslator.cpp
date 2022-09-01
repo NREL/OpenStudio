@@ -6961,6 +6961,10 @@ namespace osversion {
         if (boost::optional<double> normref_ = object.getDouble(9)) {
           tableObject.setString(3, "DivisorOnly");
           tableObject.setDouble(4, normref_.get());
+        } else {
+          // Same as Ctor for these required-fields
+          tableObject.setString(3, "None");
+          tableObject.setDouble(4, 1.0);
         }
 
         // Min/Maximum OutputValue
@@ -6971,7 +6975,7 @@ namespace osversion {
           tableObject.setDouble(6, minVal_.get());
         }
 
-        // Output Unit Type
+        // Output Unit Type (will pull "Dimensionless" as default if not set, which matches the Ctor)
         tableObject.setString(7, object.getString(27, true).get());
 
         // 8, 9, 10 are External File stuff, left blank
