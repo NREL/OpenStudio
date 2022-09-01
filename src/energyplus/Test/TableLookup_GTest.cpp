@@ -31,6 +31,7 @@
 #include "EnergyPlusFixture.hpp"
 
 #include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
 #include "../../model/Model.hpp"
 #include "../../model/TableLookup.hpp"
@@ -38,14 +39,16 @@
 #include "../../model/TableIndependentVariable.hpp"
 #include "../../model/TableIndependentVariable_Impl.hpp"
 
-#include <utilities/idd/Table_Lookup_FieldEnums.hxx>
-#include <utilities/idd/Table_IndependentVariableList_FieldEnums.hxx>
-#include <utilities/idd/Table_IndependentVariable_FieldEnums.hxx>
-#include <utilities/idd/IddEnums.hxx>
-
+#include "../../utilities/idf/IdfFile.hpp"
+#include "../../utilities/idf/Workspace.hpp"
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
+#include <utilities/idd/Table_Lookup_FieldEnums.hxx>
+#include <utilities/idd/Table_IndependentVariableList_FieldEnums.hxx>
+#include <utilities/idd/Table_IndependentVariable_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 
@@ -436,4 +439,90 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_TableLookup_NormalizationReference) 
       independentVariableObject.nameString(),
       independentVariableListObject.getExtensibleGroup(0).getString(Table_IndependentVariableListExtensibleFields::IndependentVariableName).get());
   }
+}
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_TableLookup) {
+
+  ReverseTranslator rt;
+
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
+
+  std::vector<double> y{0.823403, 1.0, 1.1256};
+  std::vector<double> x1{0.714286, 1.0, 1.2857};
+
+  OptionalWorkspaceObject _i_tableLookup = w.addObject(IdfObject(IddObjectType::Table_Lookup));
+  ASSERT_TRUE(_i_tableLookup);
+
+  EXPECT_TRUE(_i_tableLookup->setString(Table_LookupFields::Name, "CoolCapModFuncOfSAFlow"));
+  EXPECT_TRUE(_i_tableLookup->setString(Table_LookupFields::NormalizationMethod, "None"));
+  EXPECT_TRUE(_i_tableLookup->setDouble(Table_LookupFields::NormalizationDivisor, 1.0));
+  EXPECT_TRUE(_i_tableLookup->setDouble(Table_LookupFields::MinimumOutput, 0.8234));
+  EXPECT_TRUE(_i_tableLookup->setDouble(Table_LookupFields::MaximumOutput, 1.1256));
+  EXPECT_TRUE(_i_tableLookup->setString(Table_LookupFields::OutputUnitType, "Dimensionless"));
+  EXPECT_TRUE(_i_tableLookup->setString(Table_LookupFields::ExternalFileName, ""));
+  EXPECT_TRUE(_i_tableLookup->setDouble(Table_LookupFields::ExternalFileColumnNumber, 0));
+  EXPECT_TRUE(_i_tableLookup->setDouble(Table_LookupFields::ExternalFileStartingRowNumber, 0));
+  for (double val : y) {
+    auto eg = _i_tableLookup->pushExtensibleGroup();
+    EXPECT_TRUE(eg.setDouble(Table_LookupExtensibleFields::OutputValue, val));
+  }
+
+  OptionalWorkspaceObject _i_varList = w.addObject(IdfObject(IddObjectType::Table_IndependentVariableList));
+  ASSERT_TRUE(_i_varList);
+  EXPECT_TRUE(_i_tableLookup->setPointer(Table_LookupFields::IndependentVariableListName, _i_varList->handle()));
+
+  OptionalWorkspaceObject _i_var1 = w.addObject(IdfObject(IddObjectType::Table_IndependentVariable));
+  ASSERT_TRUE(_i_var1);
+  {
+    auto weg = _i_varList->pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+    EXPECT_TRUE(weg.setPointer(Table_IndependentVariableListExtensibleFields::IndependentVariableName, _i_var1->handle()));
+  }
+
+  EXPECT_TRUE(_i_var1->setString(Table_IndependentVariableFields::Name, "CoolCapModFuncOfWaterFlow_IndependentVariable1"));
+  EXPECT_TRUE(_i_var1->setString(Table_IndependentVariableFields::InterpolationMethod, "Cubic"));
+  EXPECT_TRUE(_i_var1->setString(Table_IndependentVariableFields::ExtrapolationMethod, "Constant"));
+  EXPECT_TRUE(_i_var1->setDouble(Table_IndependentVariableFields::MinimumValue, 0.714));
+  EXPECT_TRUE(_i_var1->setDouble(Table_IndependentVariableFields::MaximumValue, 1.2857));
+  EXPECT_TRUE(_i_var1->setString(Table_IndependentVariableFields::NormalizationReferenceValue, ""));
+  EXPECT_TRUE(_i_var1->setString(Table_IndependentVariableFields::UnitType, "Dimensionless"));
+  EXPECT_TRUE(_i_var1->setString(Table_IndependentVariableFields::ExternalFileName, ""));
+  for (double val : x1) {
+    auto eg = _i_var1->pushExtensibleGroup();
+    EXPECT_TRUE(eg.setDouble(Table_IndependentVariableExtensibleFields::Value, val));
+  }
+
+  // Not there, Model shouldn't have it either
+  Model m = rt.translateWorkspace(w);
+
+  ASSERT_EQ(1, m.getConcreteModelObjects<TableLookup>().size());
+  ASSERT_EQ(1, m.getConcreteModelObjects<TableIndependentVariable>().size());
+
+  TableLookup tableLookup = m.getConcreteModelObjects<TableLookup>()[0];
+
+  EXPECT_EQ("CoolCapModFuncOfSAFlow", tableLookup.nameString());
+  EXPECT_EQ("None", tableLookup.normalizationMethod());
+  EXPECT_EQ(1.0, tableLookup.normalizationDivisor());
+  ASSERT_TRUE(tableLookup.minimumOutput());
+  EXPECT_EQ(0.8234, tableLookup.minimumOutput().get());
+  ASSERT_TRUE(tableLookup.maximumOutput());
+  EXPECT_EQ(1.1256, tableLookup.maximumOutput().get());
+  EXPECT_EQ("Dimensionless", tableLookup.outputUnitType());
+  EXPECT_EQ(y.size(), tableLookup.outputValues().size());
+  EXPECT_EQ(y, tableLookup.outputValues());
+
+  ASSERT_EQ(1, tableLookup.independentVariables().size());
+  TableIndependentVariable var1 = tableLookup.independentVariables()[0];
+
+  EXPECT_EQ("CoolCapModFuncOfWaterFlow_IndependentVariable1", var1.nameString());
+  EXPECT_EQ("Cubic", var1.interpolationMethod());
+  EXPECT_EQ("Constant", var1.extrapolationMethod());
+  ASSERT_TRUE(var1.minimumValue());
+  EXPECT_EQ(0.714, var1.minimumValue().get());
+  ASSERT_TRUE(var1.maximumValue());
+  EXPECT_EQ(1.2857, var1.maximumValue().get());
+  EXPECT_FALSE(var1.normalizationReferenceValue());
+
+  EXPECT_EQ("Dimensionless", var1.unitType());
+  EXPECT_EQ(x1.size(), var1.values().size());
+  EXPECT_EQ(x1, var1.values());
 }

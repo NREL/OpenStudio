@@ -590,6 +590,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSurfacePropertyLocalEnvironment.cpp
   ReverseTranslator/ReverseTranslateSurfacePropertySurroundingSurfaces.cpp
   ReverseTranslator/ReverseTranslateSwimmingPoolIndoor.cpp
+  ReverseTranslator/ReverseTranslateTableLookup.cpp
+  ReverseTranslator/ReverseTranslateTableIndependentVariable.cpp
   ReverseTranslator/ReverseTranslateThermostatSetpointDualSetpoint.cpp
   ReverseTranslator/ReverseTranslateTimestep.cpp
   ReverseTranslator/ReverseTranslateVersion.cpp
