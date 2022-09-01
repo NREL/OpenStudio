@@ -47,6 +47,7 @@
 
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/PathHelpers.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 #include "../utilities/idd/IddEnums.hpp"
 #include "../utilities/idd/IddObject_Impl.hpp"
@@ -4259,19 +4260,12 @@ namespace model {
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
     REGISTER_CONSTRUCTOR(SurfacePropertySurroundingSurfaces);
     REGISTER_CONSTRUCTOR(SwimmingPoolIndoor);
-#if defined(_MSC_VER)
-#  pragma warning(push)
-#  pragma warning(disable : 4996)
-#elif (defined(__GNUC__))
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
+
+    DISABLE_WARNING_PUSH
+    DISABLE_WARNING_DEPRECATED
     REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
-#if defined(_MSC_VER)
-#  pragma warning(pop)
-#elif (defined(__GNUC__))
-#  pragma GCC diagnostic pop
-#endif
+    DISABLE_WARNING_POP
+
     REGISTER_CONSTRUCTOR(TableLookup);
     REGISTER_CONSTRUCTOR(TableIndependentVariable);
     REGISTER_CONSTRUCTOR(TemperingValve);
@@ -4812,19 +4806,12 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertySurroundingSurfaces);
     REGISTER_COPYCONSTRUCTORS(SwimmingPoolIndoor);
-#if defined(_MSC_VER)
-#  pragma warning(push)
-#  pragma warning(disable : 4996)
-#elif (defined(__GNUC__))
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
+
+    DISABLE_WARNING_PUSH
+    DISABLE_WARNING_DEPRECATED
     REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);
-#if defined(_MSC_VER)
-#  pragma warning(pop)
-#elif (defined(__GNUC__))
-#  pragma GCC diagnostic pop
-#endif
+    DISABLE_WARNING_POP
+
     REGISTER_COPYCONSTRUCTORS(TableLookup);
     REGISTER_COPYCONSTRUCTORS(TableIndependentVariable);
     REGISTER_COPYCONSTRUCTORS(TemperingValve);

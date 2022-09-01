@@ -39,6 +39,8 @@
 #include "../utilities/core/StringStreamLogSink.hpp"
 #include "../utilities/time/Time.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 #include <iostream>
 
 namespace openstudio {
@@ -1432,7 +1434,7 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateSwimmingPoolIndoor(model::SwimmingPoolIndoor& modelObject);
 
-    boost::optional<IdfObject> translateTableMultiVariableLookup(model::TableMultiVariableLookup& modelObject);
+    OS_DEPRECATED boost::optional<IdfObject> translateTableMultiVariableLookup(model::TableMultiVariableLookup& modelObject);
 
     boost::optional<IdfObject> translateTableLookup(model::TableLookup& modelObject);
 

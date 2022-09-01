@@ -340,13 +340,8 @@ namespace model {
     REGISTER_LOGGER("openstudio.model.TableMultiVariableLookup");
   };
 
-#if defined(_MSC_VER)
-#  pragma warning(push)
-#  pragma warning(disable : 4996)
-#elif (defined(__GNUC__))
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
+  DISABLE_WARNING_PUSH
+  DISABLE_WARNING_DEPRECATED
 
   /** \relates TableMultiVariableLookup*/
   using OptionalTableMultiVariableLookup = boost::optional<TableMultiVariableLookup>;
@@ -356,11 +351,8 @@ namespace model {
 
   /** \relates TableMultiVariableLookupPoint*/
   using TableMultiVariableLookupPointVector = std::vector<TableMultiVariableLookupPoint>;
-#if defined(_MSC_VER)
-#  pragma warning(pop)
-#elif (defined(__GNUC__))
-#  pragma GCC diagnostic pop
-#endif
+
+  DISABLE_WARNING_POP
 
 }  // namespace model
 }  // namespace openstudio

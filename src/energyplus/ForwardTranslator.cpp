@@ -100,6 +100,8 @@
 
 #include "../utilities/idd/IddEnums.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 #include <algorithm>
 #include <sstream>
 #include <thread>
@@ -306,141 +308,6 @@ namespace energyplus {
       LOG(Warn, "Removing AirWallMaterial '" << airWall.nameString() << "'.");
       airWall.remove();
     }
-
-// replace old TableMultiVariableLookup with TableLookup
-#if defined(_MSC_VER)
-#  pragma warning(push)
-#  pragma warning(disable : 4996)
-#elif (defined(__GNUC__))
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
-    for (TableMultiVariableLookup tableMulti : model.getModelObjects<TableMultiVariableLookup>()) {
-      OptionalString s;
-      OptionalDouble d;
-
-      TableLookup tableLookup(model);
-
-      // Name
-      tableLookup.setName(tableMulti.nameString());
-
-      for (WorkspaceObject source : tableMulti.sources()) {
-        for (unsigned index : source.getSourceIndices(tableMulti.handle())) {
-          bool test = source.setPointer(index, tableLookup.handle());
-          OS_ASSERT(test);
-        }
-      }
-
-      // TableIndependentVariable
-      std::string interpolationMethod = tableMulti.interpolationMethod();
-      int numberofIndependentVariables = tableMulti.numberofIndependentVariables();
-      unsigned expectedNumberOfValues = 1;
-      for (int i = 0; i < numberofIndependentVariables; ++i) {
-        auto xValues = tableMulti.xValues(i);
-        auto sizeX = xValues.size();
-
-        // expect a full grid of values
-        expectedNumberOfValues *= sizeX;
-
-        TableIndependentVariable tableIndependentVariable(model);
-
-        // InterpolationMethod / ExtrapolationMethod
-        // there is not a straightforward mapping of the old interpolation methods to new ones, e.g. there is no "None" option for extrapolation
-        if (istringEqual(interpolationMethod, "LagrangeInterpolationLinearExtrapolation")) {
-          tableIndependentVariable.setInterpolationMethod("Cubic");
-          tableIndependentVariable.setExtrapolationMethod("Linear");
-        } else if (istringEqual(interpolationMethod, "LinearInterpolationOfTable")) {
-          tableIndependentVariable.setInterpolationMethod("Linear");
-          tableIndependentVariable.setExtrapolationMethod("Constant");
-        } else if (istringEqual(interpolationMethod, "EvaluateCurveToLimits")) {
-          tableIndependentVariable.setInterpolationMethod("Cubic");
-          tableIndependentVariable.setExtrapolationMethod("Constant");
-        }
-
-        // MinimumValue / MaximumValue
-        // these values should be unique and sorted in ascending order
-        tableIndependentVariable.setMinimumValue(xValues[0]);
-        tableIndependentVariable.setMaximumValue(xValues[sizeX - 1]);
-
-        // UnitType
-        switch (i) {
-          case 0:
-            tableIndependentVariable.setUnitType(tableMulti.inputUnitTypeforX1());
-            break;
-          case 1:
-            tableIndependentVariable.setUnitType(tableMulti.inputUnitTypeforX2());
-            break;
-          case 2:
-            tableIndependentVariable.setUnitType(tableMulti.inputUnitTypeforX3());
-            break;
-          case 3:
-            tableIndependentVariable.setUnitType(tableMulti.inputUnitTypeforX4());
-            break;
-          case 4:
-            tableIndependentVariable.setUnitType(tableMulti.inputUnitTypeforX5());
-            break;
-          default:
-            break;
-        }
-
-        // add the values
-        for (const auto& xValue : xValues) {
-          tableIndependentVariable.addValue(xValue);
-        }
-
-        tableLookup.addIndependentVariable(tableIndependentVariable);
-      }
-
-      // NormalizationReference
-      if ((d = tableMulti.normalizationReference())) {
-        tableLookup.setNormalizationMethod("DivisorOnly");
-        tableLookup.setNormalizationDivisor(d.get());
-      }
-
-      // MinimumTableOutput
-      if ((d = tableMulti.minimumTableOutput())) {
-        tableLookup.setMinimumOutput(d.get());
-      }
-
-      // MaximumTableOutput
-      if ((d = tableMulti.maximumTableOutput())) {
-        tableLookup.setMaximumOutput(d.get());
-      }
-
-      // OutputUnitType
-      if ((s = tableMulti.outputUnitType())) {
-        tableLookup.setOutputUnitType(s.get());
-      }
-
-      // ExternalFileName
-      // Not supported
-
-      // check that we have the correct number of points
-      auto points = tableMulti.points();
-      if (expectedNumberOfValues != points.size()) {
-        LOG(Error, "Expected " << expectedNumberOfValues << " points but found " << points.size() << " in object " << tableMulti.briefDescription()
-                               << ". Object not translated");
-        tableLookup.remove();
-      } else {
-        LOG(Warn,
-            "TableMultiVariableLookup '" << tableMulti.nameString() << "' has been converted to TableLookup '" << tableLookup.nameString() << "'.");
-
-        // important to sort points in order expected by EnergyPlus
-        std::sort(points.begin(), points.end());
-
-        // add the sorted values
-        for (const auto& point : points) {
-          tableLookup.addOutputValue(point.y());
-        }
-      }
-
-      tableMulti.remove();
-    }
-#if defined(_MSC_VER)
-#  pragma warning(pop)
-#elif (defined(__GNUC__))
-#  pragma GCC diagnostic pop
-#endif
 
     // check for spaces not in a thermal zone
     for (Space space : model.getConcreteModelObjects<Space>()) {
@@ -3051,23 +2918,15 @@ namespace energyplus {
         retVal = translateSwimmingPoolIndoor(obj);
         break;
       }
-#if defined(_MSC_VER)
-#  pragma warning(push)
-#  pragma warning(disable : 4996)
-#elif (defined(__GNUC__))
-#  pragma GCC diagnostic push
-#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-#endif
+
+        DISABLE_WARNING_PUSH
+        DISABLE_WARNING_DEPRECATED
       case openstudio::IddObjectType::OS_Table_MultiVariableLookup: {
         model::TableMultiVariableLookup table = modelObject.cast<TableMultiVariableLookup>();
         retVal = translateTableMultiVariableLookup(table);
         break;
       }
-#if defined(_MSC_VER)
-#  pragma warning(pop)
-#elif (defined(__GNUC__))
-#  pragma GCC diagnostic pop
-#endif
+        DISABLE_WARNING_POP
 
       case openstudio::IddObjectType::OS_Table_Lookup: {
         auto table = modelObject.cast<TableLookup>();
