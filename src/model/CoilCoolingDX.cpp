@@ -44,6 +44,12 @@
 #include "AirLoopHVACUnitarySystem_Impl.hpp"
 #include "AirflowNetworkEquivalentDuct.hpp"
 #include "AirflowNetworkEquivalentDuct_Impl.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "CoilSystemCoolingDXHeatExchangerAssisted_Impl.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "ZoneHVACPackagedTerminalAirConditioner_Impl.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/IddEnums.hxx>
