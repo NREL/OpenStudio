@@ -46,5 +46,30 @@ using namespace openstudio::model;
 using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage) {
-  Model model;
+  Model m;
+
+  CoilCoolingDXSingleSpeed c(m);
+  CoilHeatingGasMultiStage h(m);
+  CoilHeatingGasMultiStageStageData stageData(m);
+  h.addStage(stageData);
+  FanConstantVolume f(m);
+
+  AirLoopHVACUnitarySystem unitary(m);
+  unitary.setCoolingCoil(c);
+  unitary.setHeatingCoil(h);
+  unitary.setSupplyFan(f);
+  unitary.setFanPlacement(fanPlacement);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(m);
+
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Heating_Gas_MultiStage).size());
+
+  idf_unitary = workspace.getObjectsByType(IddObjectType::Coil_Heating_Gas_MultiStage)[0];
 }
