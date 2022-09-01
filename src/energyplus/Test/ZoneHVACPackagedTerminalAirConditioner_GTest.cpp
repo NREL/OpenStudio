@@ -37,6 +37,8 @@
 #include "../../model/Space.hpp"
 #include "../../model/CoilWaterHeatingDesuperheater.hpp"
 #include "../../model/CoilCoolingDX.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
@@ -153,7 +155,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalAirCondition
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(m);
-  CoilCoolingDX cc(m);
+  CoilCoolingDXCurveFitOperatingMode operatingMode(m);
+  CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
+  CoilCoolingDX cc(m, performance);
   CoilHeatingElectric hc(m);
 
   ZoneHVACPackagedTerminalAirConditioner ptac(m, sch, fan, hc, cc);
@@ -172,8 +176,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalAirCondition
   WorkspaceObject idf_ptac(idfObjs[0]);
 
   // Check that the DX coil ends up directly onto the object, and NOT a CoilSystem:Cooling:DX wrapper|
-  EXPECT_EQ("Coil:Cooling:DX",
-            idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilObjectType).get());
+  EXPECT_EQ("Coil:Cooling:DX", idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilObjectType).get());
   EXPECT_EQ(cc.nameString(), idf_ptac.getString(ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName).get());
 
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());

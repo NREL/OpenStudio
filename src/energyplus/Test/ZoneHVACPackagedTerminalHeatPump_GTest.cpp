@@ -38,6 +38,8 @@
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
 #include "../../model/CoilCoolingDX.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
@@ -166,7 +168,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_Coi
   Schedule sch = m.alwaysOnDiscreteSchedule();
   FanConstantVolume fan(m, sch);
   CoilHeatingDXVariableSpeed hc(m);
-  CoilCoolingDX cc(m);
+  CoilCoolingDXCurveFitOperatingMode operatingMode(m);
+  CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
+  CoilCoolingDX cc(m, performance);
   CoilHeatingElectric shc(m);
 
   ZoneHVACPackagedTerminalHeatPump pthp(m, sch, fan, hc, cc, shc);
