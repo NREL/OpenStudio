@@ -109,10 +109,10 @@ TEST_F(ModelFixture, CoilHeatingDXMultiSpeedStageData_2017and2023) {
   Model model;
 
   CoilHeatingDXMultiSpeedStageData speed(model);
-  
+
   EXPECT_EQ(773.3, speed.ratedSupplyAirFanPowerPerVolumeFlowRate2017());
   EXPECT_EQ(934.4, speed.ratedSupplyAirFanPowerPerVolumeFlowRate2023());
-  
+
   EXPECT_TRUE(speed.setRatedSupplyAirFanPowerPerVolumeFlowRate2017(8.0));
   EXPECT_TRUE(speed.setRatedSupplyAirFanPowerPerVolumeFlowRate2023(9.0));
 

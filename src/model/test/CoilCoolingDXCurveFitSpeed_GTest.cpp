@@ -252,10 +252,10 @@ TEST_F(ModelFixture, CoilCoolingDXCurveFitSpeed_2017and2023) {
   Model model;
 
   CoilCoolingDXCurveFitSpeed speed(model);
-  
+
   EXPECT_EQ(773.3, speed.ratedEvaporatorFanPowerPerVolumeFlowRate2017());
   EXPECT_EQ(934.4, speed.ratedEvaporatorFanPowerPerVolumeFlowRate2023());
-  
+
   EXPECT_TRUE(speed.setRatedEvaporatorFanPowerPerVolumeFlowRate2017(8.0));
   EXPECT_TRUE(speed.setRatedEvaporatorFanPowerPerVolumeFlowRate2023(9.0));
 
