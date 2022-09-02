@@ -11313,9 +11313,7 @@ People,
    \memo If a ZoneList, SpaceList, or a Zone comprised of more than one Space is specified
    \memo then this definition applies to all applicable spaces, and each instance will
    \memo be named with the Space Name plus this Object Name.
-   \extensible:1
    \min-fields 10
-   \max-fields 27
   A1 , \field Name
        \required-field
        \type alpha
