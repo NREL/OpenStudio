@@ -225,7 +225,7 @@ namespace model {
       return isEmpty(OS_AvailabilityManager_NightCycleFields::CyclingRunTime);
     }
 
-    bool AvailabilityManagerNightCycle_Impl::setControlType(std::string controlType) {
+    bool AvailabilityManagerNightCycle_Impl::setControlType(const std::string& controlType) {
       bool result = setString(OS_AvailabilityManager_NightCycleFields::ControlType, controlType);
       return result;
     }
@@ -274,7 +274,7 @@ namespace model {
       return isEmpty(OS_AvailabilityManager_NightCycleFields::CyclingRunTimeControlType);
     }
 
-    bool AvailabilityManagerNightCycle_Impl::setCyclingRunTimeControlType(std::string cyclingRunTimeControlType) {
+    bool AvailabilityManagerNightCycle_Impl::setCyclingRunTimeControlType(const std::string& cyclingRunTimeControlType) {
       bool result = setString(OS_AvailabilityManager_NightCycleFields::CyclingRunTimeControlType, cyclingRunTimeControlType);
       return result;
     }
@@ -540,7 +540,7 @@ namespace model {
   }
 
   IddObjectType AvailabilityManagerNightCycle::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_AvailabilityManager_NightCycle);
+    return {IddObjectType::OS_AvailabilityManager_NightCycle};
   }
 
   std::vector<std::string> AvailabilityManagerNightCycle::controlTypeValues() {
@@ -571,7 +571,7 @@ namespace model {
     return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->isCyclingRunTimeDefaulted();
   }
 
-  bool AvailabilityManagerNightCycle::setControlType(std::string controlType) {
+  bool AvailabilityManagerNightCycle::setControlType(const std::string& controlType) {
     return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setControlType(controlType);
   }
 
@@ -593,40 +593,6 @@ namespace model {
 
   void AvailabilityManagerNightCycle::resetCyclingRunTime() {
     getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetCyclingRunTime();
-  }
-
-  // Deprecated
-  boost::optional<ThermalZone> AvailabilityManagerNightCycle::controlThermalZone() const {
-    LOG(Warn, "AvailabilityManagerNightCycle::controlThermalZone has been deprecated and will be removed in a future release, "
-              "please use AvailabilityManagerNightCycle::controlThermalZones instead");
-
-    boost::optional<ThermalZone> result;
-
-    std::vector<ThermalZone> zones = getImpl<detail::AvailabilityManagerNightCycle_Impl>()->controlThermalZones();
-    if (zones.size() > 1) {
-      LOG(Warn, "Multiple thermalZones are assigned, returning the first found");
-      result = zones[0];
-    } else if (zones.size() == 1) {
-      result = zones[0];
-    }
-
-    return result;
-  }
-  // Deprecated
-  bool AvailabilityManagerNightCycle::setControlThermalZone(const ThermalZone& thermalZone) {
-    LOG(Warn, "AvailabilityManagerNightCycle::setControlThermalZone has been deprecated and will be removed in a future release, "
-              "please use AvailabilityManagerNightCycle::setControlThermalZones instead");
-
-    std::vector<ThermalZone> thermalZones;
-    thermalZones.push_back(thermalZone);
-
-    return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setControlThermalZones(thermalZones);
-  }
-  // Deprecated
-  void AvailabilityManagerNightCycle::resetControlThermalZone() {
-    LOG(Warn, "AvailabilityManagerNightCycle::resetControlThermalZone has been deprecated and will be removed in a future release, "
-              "please use AvailabilityManagerNightCycle::resetControlThermalZones instead");
-    getImpl<detail::AvailabilityManagerNightCycle_Impl>()->resetControlThermalZones();
   }
 
   std::vector<ThermalZone> AvailabilityManagerNightCycle::controlThermalZones() const {
@@ -683,7 +649,7 @@ namespace model {
     return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->isCyclingRunTimeControlTypeDefaulted();
   }
 
-  bool AvailabilityManagerNightCycle::setCyclingRunTimeControlType(std::string cyclingRunTimeControlType) {
+  bool AvailabilityManagerNightCycle::setCyclingRunTimeControlType(const std::string& cyclingRunTimeControlType) {
     return getImpl<detail::AvailabilityManagerNightCycle_Impl>()->setCyclingRunTimeControlType(cyclingRunTimeControlType);
   }
 

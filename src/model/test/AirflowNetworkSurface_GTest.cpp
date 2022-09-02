@@ -57,8 +57,6 @@
 #include "../Material_Impl.hpp"
 #include "../AirGap.hpp"
 #include "../AirGap_Impl.hpp"
-#include "../AirWallMaterial.hpp"
-#include "../AirWallMaterial_Impl.hpp"
 #include "../StandardOpaqueMaterial.hpp"
 #include "../StandardOpaqueMaterial_Impl.hpp"
 #include "../DefaultConstructionSet.hpp"

@@ -127,7 +127,7 @@ namespace model {
 
       bool setSchedule(Schedule& schedule);
 
-      bool setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod);
+      bool setDesignFlowRateCalculationMethod(const std::string& designFlowRateCalculationMethod);
 
       bool setDesignFlowRate(double designFlowRate);
 
@@ -139,7 +139,7 @@ namespace model {
 
       bool setAirChangesperHour(double airChangesperHour);
 
-      bool setVentilationType(std::string ventilationType);
+      bool setVentilationType(const std::string& ventilationType);
 
       bool setFanPressureRise(double fanPressureRise);
 

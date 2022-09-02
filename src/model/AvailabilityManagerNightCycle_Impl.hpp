@@ -80,7 +80,7 @@ namespace model {
 
       std::string controlType() const;
       bool isControlTypeDefaulted() const;
-      bool setControlType(std::string controlType);
+      bool setControlType(const std::string& controlType);
       void resetControlType();
 
       double thermostatTolerance() const;
@@ -90,7 +90,7 @@ namespace model {
 
       std::string cyclingRunTimeControlType() const;
       bool isCyclingRunTimeControlTypeDefaulted() const;
-      bool setCyclingRunTimeControlType(std::string cyclingRunTimeControlType);
+      bool setCyclingRunTimeControlType(const std::string& cyclingRunTimeControlType);
       void resetCyclingRunTimeControlType();
 
       double cyclingRunTime() const;
