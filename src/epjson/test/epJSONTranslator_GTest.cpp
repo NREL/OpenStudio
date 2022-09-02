@@ -55,345 +55,129 @@
 #include <resources.hxx>
 #include <algorithm>
 
-openstudio::path setupIdftoEPJSONTest(const openstudio::path& location) {
-  const auto basename = openstudio::toPath(openstudio::filesystem::basename(location));
-  const auto working_directory = openstudio::filesystem::complete(openstudio::toPath("epjson_tests") / basename);
-  const auto idf_path = working_directory / openstudio::toPath("eplus.idf");
-  openstudio::filesystem::create_directories(working_directory);
-  openstudio::filesystem::copy_file(location, idf_path, openstudio::filesystem::copy_option::overwrite_if_exists);
-  return idf_path;
-}
-
-Json::Value translateIdfToEPJSONWithEP(const openstudio::path& location) {
-
-  // In case for some reason the energyplus CLI cannot do the conversion, we do not want to pick up an old artifact
-  const auto epJSONFile = openstudio::setFileExtension(location, "epJSON", true);
-  if (openstudio::filesystem::exists(epJSONFile)) {
-    openstudio::filesystem::remove(epJSONFile);
-  }
-
-  std::string cmd = fmt::format("{} --output-directory {} --convert-only {}", openstudio::toString(openstudio::getEnergyPlusExecutable().native()),
-                                openstudio::toString(location.parent_path().native()), openstudio::toString(location.native()));
-
-  [[maybe_unused]] auto result = std::system(cmd.c_str());
-  if (!openstudio::filesystem::exists(epJSONFile)) {
-    throw openstudio::Exception(
-      fmt::format("Error during the E+ CLI call, epJSON wasn't created at {}\ncmd = '{}'\n", openstudio::toString(epJSONFile), cmd));
-  }
-
-  const auto root = openstudio::epJSON::loadJSON(epJSONFile);
-
-  const auto outputLocation = location.parent_path() / openstudio::toPath("eplus-rewritten.epJSON");
-  std::ofstream ofs(openstudio::toString(outputLocation), std::ofstream::trunc);
-  ofs << root.toStyledString() << '\n';
-
-  return root;
-}
-
-openstudio::path completeIDFPath(const openstudio::path& idf) {
-  return openstudio::getEnergyPlusDirectory() / openstudio::toPath("ExampleFiles") / idf;
-}
-
-Json::Value translateIdfToEPJSONWithOS(const openstudio::path& location) {
-  auto idf = openstudio::IdfFile::load(location);
-
-  if (!idf) {
-    return Json::Value{};
-  }
-
-  auto result = openstudio::epJSON::toJSON(*idf);
-
-  const auto outputLocation = location.parent_path() / openstudio::toPath("os.epJSON");
-  std::ofstream ofs(openstudio::toString(outputLocation), std::ofstream::trunc);
-  ofs << result.toStyledString() << '\n';
-  return result;
-}
-
-void makeDoubles(Json::Value& value) {
-  if (value.isNumeric()) {
-    value = value.asDouble();
-  } else {
-    for (auto& child : value) {
-      makeDoubles(child);
-    }
-  }
-}
-
-bool equal(const Json::Value& lhs, const Json::Value& rhs) {
-  auto doubledLhs = lhs;
-  makeDoubles(doubledLhs);
-
-  auto doubledRhs = rhs;
-  makeDoubles(doubledRhs);
-
-  return doubledLhs == doubledRhs;
-}
-
-std::pair<Json::Value, Json::Value> doEPJSONTranslations(const std::string& idfname) {
-
-  const auto setupIdf = setupIdftoEPJSONTest(completeIDFPath(openstudio::toString(idfname)));
-  return {translateIdfToEPJSONWithEP(setupIdf), translateIdfToEPJSONWithOS(setupIdf)};
-}
-
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgMediumOfficeNew2004_Chicago) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgMediumOfficeNew2004_Chicago.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("RefBldgMediumOfficeNew2004_Chicago.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_1ZoneEvapCooler) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("1ZoneEvapCooler.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("1ZoneEvapCooler.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_WCE_DoubleClear_BSDF) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("WCE_DoubleClear_BSDF.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("WCE_DoubleClear_BSDF.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_SupermarketSecondary) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("SupermarketSecondary.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("SupermarketSecondary.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_5ZoneWaterLoopHeatPump) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("5ZoneWaterLoopHeatPump.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("5ZoneWaterLoopHeatPump.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_ZoneCoupledGroundHTSlabInGrade) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ZoneCoupledGroundHTSlabInGrade.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("ZoneCoupledGroundHTSlabInGrade.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_MeasuredDeflectionAndShading) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_MeasuredDeflectionAndShading.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("CmplxGlz_MeasuredDeflectionAndShading.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_HospitalLowEnergy) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("HospitalLowEnergy.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("HospitalLowEnergy.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_HospitalBaselineReheatReportEMS) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("HospitalBaselineReheatReportEMS.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("HospitalBaselineReheatReportEMS.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_HospitalBaseline) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("HospitalBaseline.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("HospitalBaseline.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_Daylighting_SouthVB45deg) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_Daylighting_SouthVB45deg.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("CmplxGlz_Daylighting_SouthVB45deg.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_Daylighting_SouthVerticalVB45deg) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_Daylighting_SouthVerticalVB45deg.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("CmplxGlz_Daylighting_SouthVerticalVB45deg.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_InShadeGasMix) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_InShadeGasMix.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("CmplxGlz_InShadeGasMix.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_SchedSurfGains) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_SchedSurfGains.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("CmplxGlz_SchedSurfGains.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_ApartmentHighRise_STD2019_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_ApartmentHighRise_STD2019_Denver.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("ASHRAE901_ApartmentHighRise_STD2019_Denver.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_OutPatientHealthCare_STD2019_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_OutPatientHealthCare_STD2019_Denver.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("ASHRAE901_OutPatientHealthCare_STD2019_Denver.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgOutPatientNew2004_Chicago) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgOutPatientNew2004_Chicago.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("RefBldgOutPatientNew2004_Chicago.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_SchoolSecondary_STD2019_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_SchoolSecondary_STD2019_Denver.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("ASHRAE901_SchoolSecondary_STD2019_Denver.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_Hospital_STD2019_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_Hospital_STD2019_Denver.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("ASHRAE901_Hospital_STD2019_Denver.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_UnitaryHybridAC_DedicatedOutsideAir) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("UnitaryHybridAC_DedicatedOutsideAir.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("UnitaryHybridAC_DedicatedOutsideAir.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgSmallHotelNew2004_Chicago) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgSmallHotelNew2004_Chicago.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("RefBldgSmallHotelNew2004_Chicago.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgHospitalNew2004_Chicago) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgHospitalNew2004_Chicago.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("RefBldgHospitalNew2004_Chicago.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgSecondarySchoolNew2004_Chicago) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgSecondarySchoolNew2004_Chicago.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("RefBldgSecondarySchoolNew2004_Chicago.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_SchoolPrimary_STD2019_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_SchoolPrimary_STD2019_Denver.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("ASHRAE901_SchoolPrimary_STD2019_Denver.idf");
 }
 
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_OfficeLarge_STD2019_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_OfficeLarge_STD2019_Denver.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("ASHRAE901_OfficeLarge_STD2019_Denver.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_HotelLarge_STD2019_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_HotelLarge_STD2019_Denver.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("ASHRAE901_HotelLarge_STD2019_Denver.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_ApartmentMidRise_STD2019_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_ApartmentMidRise_STD2019_Denver.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("ASHRAE901_ApartmentMidRise_STD2019_Denver.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgMidriseApartmentNew2004_Chicago) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgMidriseApartmentNew2004_Chicago.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("RefBldgMidriseApartmentNew2004_Chicago.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefrigeratedWarehouse) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefrigeratedWarehouse.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("RefrigeratedWarehouse.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_CmplxGlz_SmOff_IntExtShading) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("CmplxGlz_SmOff_IntExtShading.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("CmplxGlz_SmOff_IntExtShading.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgPrimarySchoolNew2004_Chicago) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgPrimarySchoolNew2004_Chicago.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("RefBldgPrimarySchoolNew2004_Chicago.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_ASHRAE901_RetailStripmall_STD2019_Denver) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("ASHRAE901_RetailStripmall_STD2019_Denver.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("ASHRAE901_RetailStripmall_STD2019_Denver.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_RefBldgLargeHotelNew2004_Chicago) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("RefBldgLargeHotelNew2004_Chicago.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("RefBldgLargeHotelNew2004_Chicago.idf");
 }
 TEST_F(epJSONFixture, TranslateIDFToEPJSON_EMSDemandManager_LargeOffice) {
-  const auto [epTranslation, osTranslation] = doEPJSONTranslations("EMSDemandManager_LargeOffice.idf");
-  ASSERT_TRUE(epTranslation);
-  ASSERT_TRUE(osTranslation);
-
-  EXPECT_TRUE(equal(epTranslation, osTranslation));
+  compareEPJSONTranslations("EMSDemandManager_LargeOffice.idf");
 }
 
 TEST_F(epJSONFixture, toStringUilityWorksAsExpected) {
 
-  const auto location = completeIDFPath("RefBldgMediumOfficeNew2004_Chicago.idf");
+  const auto location = epJSONFixture::completeIDFPath("RefBldgMediumOfficeNew2004_Chicago.idf");
   auto idf = openstudio::IdfFile::load(location);
 
   ASSERT_TRUE(idf);
