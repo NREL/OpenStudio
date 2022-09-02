@@ -109,6 +109,14 @@ namespace model {
       /** Returns the air velocity schedule. */
       boost::optional<Schedule> airVelocitySchedule() const;
 
+      boost::optional<Schedule> ankleLevelAirVelocitySchedule() const;
+
+      double coldStressTemperatureThreshold() const;
+      bool isColdStressTemperatureThresholdDefaulted() const;
+
+      double heatStressTemperatureThreshold() const;
+      bool isHeatStressTemperatureThresholdDefaulted() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -155,6 +163,15 @@ namespace model {
 
       void resetMultiplier();
 
+      bool setAnkleLevelAirVelocitySchedule(Schedule& schedule);
+      void resetAnkleLevelAirVelocitySchedule();
+
+      bool setColdStressTemperatureThreshold(double coldStressTemperatureThreshold);
+      void resetColdStressTemperatureThreshold();
+
+      bool setHeatStressTemperatureThreshold(double heatStressTemperatureThreshold);
+      void resetHeatStressTemperatureThreshold();
+
       //@}
       /** @name Other */
       //@{
@@ -195,6 +212,7 @@ namespace model {
       boost::optional<ModelObject> workEfficiencyScheduleAsModelObject() const;
       boost::optional<ModelObject> clothingInsulationScheduleAsModelObject() const;
       boost::optional<ModelObject> airVelocityScheduleAsModelObject() const;
+      boost::optional<ModelObject> ankleLevelAirVelocityScheduleAsModelObject() const;
 
       bool setPeopleDefinitionAsModelObject(const boost::optional<ModelObject>& modelObject);
       bool setNumberofPeopleScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
@@ -202,6 +220,7 @@ namespace model {
       bool setWorkEfficiencyScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
       bool setClothingInsulationScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
       bool setAirVelocityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
+      bool setAnkleLevelAirVelocityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject);
     };
 
   }  // namespace detail

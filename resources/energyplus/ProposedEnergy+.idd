@@ -11313,9 +11313,7 @@ People,
    \memo If a ZoneList, SpaceList, or a Zone comprised of more than one Space is specified
    \memo then this definition applies to all applicable spaces, and each instance will
    \memo be named with the Space Name plus this Object Name.
-   \extensible:1
    \min-fields 10
-   \max-fields 27
   A1 , \field Name
        \required-field
        \type alpha
@@ -11422,23 +11420,7 @@ People,
        \object-list ScheduleNames
        \note units in the schedule are m/s
        \note optional (only required for runs of thermal comfort models: Fanger, Pierce, KSU, CoolingEffectASH55 and AnkleDraftASH55)
-  A14, \field Ankle Level Air Velocity Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note units in the schedule are m/s
-       \note this is the schedule of the air speed at the 0.1 m above the floor
-       \note optional (only required for runs of thermal comfort models AnkleDraftASH55)
-  N7 , \field Cold Stress Temperature Threshold
-       \type real
-       \units C
-       \note this is the indoor safe temperature threshold for cold stress
-       \default 15.56
-  N8 , \field Heat Stress Temperature Threshold
-       \type real
-       \units C
-       \note this is the indoor safe temperature threshold for heat stress
-       \default 30
-  A15; \field Thermal Comfort Model 1 Type
+  A14, \field Thermal Comfort Model 1 Type
        \type choice
        \key Fanger
        \key Pierce
@@ -11448,7 +11430,82 @@ People,
        \key CoolingEffectASH55
        \key AnkleDraftASH55
        \note optional (only needed for people thermal comfort results reporting)
-       \begin-extensible
+  A15, \field Thermal Comfort Model 2 Type
+       \type choice
+       \key Fanger
+       \key Pierce
+       \key KSU
+       \key AdaptiveASH55
+       \key AdaptiveCEN15251
+       \key CoolingEffectASH55
+       \key AnkleDraftASH55
+       \note optional (second type of thermal comfort model and results reporting)
+  A16, \field Thermal Comfort Model 3 Type
+       \type choice
+       \key Fanger
+       \key Pierce
+       \key KSU
+       \key AdaptiveASH55
+       \key AdaptiveCEN15251
+       \key CoolingEffectASH55
+       \key AnkleDraftASH55
+       \note optional (third thermal comfort model and report type)
+  A17, \field Thermal Comfort Model 4 Type
+       \type choice
+       \key Fanger
+       \key Pierce
+       \key KSU
+       \key AdaptiveASH55
+       \key AdaptiveCEN15251
+       \key CoolingEffectASH55
+       \key AnkleDraftASH55
+       \note optional (fourth thermal comfort model and report type)
+  A18, \field Thermal Comfort Model 5 Type
+       \type choice
+       \key Fanger
+       \key Pierce
+       \key KSU
+       \key AdaptiveASH55
+       \key AdaptiveCEN15251
+       \key CoolingEffectASH55
+       \key AnkleDraftASH55
+       \note optional (fifth thermal comfort model and report type)
+  A19, \field Thermal Comfort Model 6 Type
+       \type choice
+       \key Fanger
+       \key Pierce
+       \key KSU
+       \key AdaptiveASH55
+       \key AdaptiveCEN15251
+       \key CoolingEffectASH55
+       \key AnkleDraftASH55
+       \note optional (sixth thermal comfort model and report type)
+  A20, \field Thermal Comfort Model 7 Type
+       \type choice
+       \key Fanger
+       \key Pierce
+       \key KSU
+       \key AdaptiveASH55
+       \key AdaptiveCEN15251
+       \key CoolingEffectASH55
+       \key AnkleDraftASH55
+       \note optional (seventh thermal comfort model and report type)
+  A21, \field Ankle Level Air Velocity Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note units in the schedule are m/s
+       \note this is the schedule of the air speed at the 0.1 m above the floor
+       \note optional (only required for runs of thermal comfort models AnkleDraftASH55)
+  N7,  \field Cold Stress Temperature Threshold
+       \type real
+       \units C
+       \note this is the indoor safe temperature threshold for cold stress
+       \default 15.56
+  N8;  \field Heat Stress Temperature Threshold
+       \type real
+       \units C
+       \note this is the indoor safe temperature threshold for heat stress
+       \default 30
 
 ComfortViewFactorAngles,
        \memo Used to specify radiant view factors for thermal comfort calculations.
@@ -22262,7 +22319,7 @@ Sizing:Zone,
       \note Use SupplyAirHumidityRatio to enter the humidity ratio when zone dehumidification
       \note is required. The supply air humidity ratio should be less than the zone humidity
       \note ratio at the zone thermostat and humidistat set point condition.
-      \note Use HumidityRatioDifference to enter the difference in humidity ratio from the 
+      \note Use HumidityRatioDifference to enter the difference in humidity ratio from the
       \note zone thermostat and humidistat set point condition.
       \type choice
       \key SupplyAirHumidityRatio
@@ -22281,7 +22338,7 @@ Sizing:Zone,
       \note Zone Latent Cooling Design Supply Air Humidity Ratio Input Method = HumidityRatioDifference.
       \note This input is a positive value and defines the difference between the zone humidity
       \note ratio at the thermostat and humidistat set point condition and the supply air
-      \note humidity ratio entering the zone. 
+      \note humidity ratio entering the zone.
       \minimum> 0.0
       \type real
       \default 0.005
@@ -22290,7 +22347,7 @@ Sizing:Zone,
       \note Use SupplyAirHumidityRatio to enter the humidity ratio when zone humidification
       \note is required. The supply air humidity ratio should be greater than the zone humidity
       \note ratio at the zone thermostat and humidistat set point condition.
-      \note Use HumidityRatioDifference to enter the difference in humidity ratio from the 
+      \note Use HumidityRatioDifference to enter the difference in humidity ratio from the
       \note zone thermostat and humidistat set point condition.
       \type choice
       \key SupplyAirHumidityRatio
@@ -22309,7 +22366,7 @@ Sizing:Zone,
       \note Heating Design Supply Air Humidity Ratio Input Method = HumidityRatioDifference.
       \note This input is a positive value and defines the difference between the zone humidity
       \note ratio at the thermostat and humidistat set point condition and the supply air
-      \note humidity ratio entering the zone. 
+      \note humidity ratio entering the zone.
       \minimum 0.0
       \type real
       \default 0.005
@@ -28504,13 +28561,13 @@ ZoneHVAC:AirDistributionUnit,
        \object-list DesignSpecificationAirTerminalSizingName
 
 ZoneHVAC:ExhaustControl,
-       \memo Defines a controlled exhaust flow from a zone which finally feeds into 
+       \memo Defines a controlled exhaust flow from a zone which finally feeds into
        \memo one of AirLoopHVAC:ZoneMixer's inlets, which are part of an AirLoopHVAC:ExhaustSystem.
   A1 , \field Name
        \required-field
   A2 , \field Availability Schedule Name
        \note Availability schedule name for this exhaust system. Schedule value > 0 means it is available.
-       \note If this field is blank, the exhaust system is always available. If the attached 
+       \note If this field is blank, the exhaust system is always available. If the attached
        \note AirLoopHVAC:ExhaustSystem is off, then the flow will be zero.
        \type object-list
        \object-list ScheduleNames
@@ -31998,7 +32055,7 @@ Coil:Heating:DX:SingleSpeed,
        \note should be between 0.00004027 m3/s and .00006041 m3/s per watt of rated heating capacity
   N4 , \field Rated Supply Fan Power Per Volume Flow Rate 2017
        \note Enter the supply fan power per air volume flow rate at the rated test conditions.
-       \note as defined in the 2017 version of ANSI/AHRI Standard 210/240. 
+       \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on heating capacity.
        \note This value is only used to calculate Heating Seasonal Performance Factor(HSPF).
        \note This value is not used for modeling the supply (condenser) fan during simulations.
@@ -32009,7 +32066,7 @@ Coil:Heating:DX:SingleSpeed,
        \default 773.3
   N5 , \field Rated Supply Fan Power Per Volume Flow Rate 2023
        \note Enter the supply fan power per air volume flow rate at the rated test conditions.
-       \note as defined in the 2017 version of ANSI/AHRI Standard 210/240. 
+       \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on heating capacity.
        \note This value is only used to calculate Heating Seasonal Performance Factor(HSPF).
        \note This value is not used for modeling the supply (condenser) fan during simulations.
@@ -33237,7 +33294,7 @@ Coil:Heating:WaterToAirHeatPump:EquationFit,
    N7,  \field Ratio of Rated Heating Capacity to Rated Cooling Capacity
         \note Ratio of rated heating capacity to rated cooling capacity. This
         \note input is used to calculate the heating or cooling capacity when autosizing.
-        \note This input is only used if a companion cooling coil of the same type 
+        \note This input is only used if a companion cooling coil of the same type
         \note (Coil:Cooling:WaterToAirHeatPump:EquationFit) is used. This input is only
         \note used when a sizing run for the system which uses this object is requested
         \note and when the coil capacity is autosized.

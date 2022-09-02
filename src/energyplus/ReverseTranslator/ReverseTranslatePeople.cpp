@@ -131,12 +131,12 @@ namespace energyplus {
       LOG(Error, "SurfaceName_AngleFactorListName not currently imported");
     }
 
-    for (unsigned i = 0, n = workspaceObject.numExtensibleGroups(); i < n; ++i) {
-      IdfExtensibleGroup eg = workspaceObject.getExtensibleGroup(i);
-      OS_ASSERT(!eg.empty());
-      s = eg.getString(openstudio::PeopleExtensibleFields::ThermalComfortModelType);
+    // As of 22.2.0, this is no longer possible to make this an extensible field
+    // because E+ added 3 regular fields at the end (eg: Ankle Level Velocity Schedule Name)
+    for (unsigned i = PeopleFields::ThermalComfortModel1Type, k = 0; i <= PeopleFields::ThermalComfortModel7Type; ++i) {
+      s = workspaceObject.getString(i, false, true);
       if (s) {
-        definition.setThermalComfortModelType(i, *s);
+        definition.setThermalComfortModelType(k++, *s);
       }
     }
 
@@ -233,6 +233,31 @@ namespace energyplus {
           }
         }
       }
+    }
+
+    target = workspaceObject.getTarget(openstudio::PeopleFields::AnkleLevelAirVelocityScheduleName);
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (modelObject) {
+        if (OptionalSchedule intermediate = modelObject->optionalCast<Schedule>()) {
+          Schedule schedule(*intermediate);
+          bool ok = people.setAnkleLevelAirVelocitySchedule(schedule);
+          if (!ok) {
+            LOG(Error, "Unable to set " << people.briefDescription() << "'s Ankle Level Air Velocity schedule to " << schedule.briefDescription()
+                                        << ", likely because of a ScheduleTypeLimits conflict.");
+          }
+        }
+      }
+    }
+
+    d = workspaceObject.getDouble(openstudio::PeopleFields::ColdStressTemperatureThreshold);
+    if (d) {
+      people.setColdStressTemperatureThreshold(*d);
+    }
+
+    d = workspaceObject.getDouble(openstudio::PeopleFields::HeatStressTemperatureThreshold);
+    if (d) {
+      people.setHeatStressTemperatureThreshold(*d);
     }
 
     return people;

@@ -6842,10 +6842,26 @@ OS:People,
        \note optional (only required for thermal comfort runs)
        \type object-list
        \object-list ScheduleNames
-  N1; \field Multiplier
+  N1,  \field Multiplier
        \type real
        \minimum 0.0
        \default 1.0
+  A11, \field Ankle Level Air Velocity Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note units in the schedule are m/s
+       \note this is the schedule of the air speed at the 0.1 m above the floor
+       \note optional (only required for runs of thermal comfort models AnkleDraftASH55)
+  N2,  \field Cold Stress Temperature Threshold
+       \type real
+       \units C
+       \note this is the indoor safe temperature threshold for cold stress
+       \default 15.56
+  N3;  \field Heat Stress Temperature Threshold
+       \type real
+       \units C
+       \note this is the indoor safe temperature threshold for heat stress
+       \default 30
 
 OS:Lights,
        \min-fields 1

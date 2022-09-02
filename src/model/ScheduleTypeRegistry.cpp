@@ -327,6 +327,7 @@ namespace model {
       {"People", "Work Efficiency", "workEfficiencySchedule", true, "", 0.0, 1.0},
       {"People", "Clothing Insulation", "clothingInsulationSchedule", true, "ClothingInsulation", 0.0, OptionalDouble()},
       {"People", "Air Velocity", "airVelocitySchedule", true, "Velocity", 0.0, OptionalDouble()},
+      {"People", "Ankle Level Air Velocity", "ankleLevelAirVelocitySchedule", true, "Velocity", 0.0, OptionalDouble()},
       {"PhotovoltaicPerformanceSimple", "Efficiency", "efficiencySchedule", true, "", 0.0, 1.0},
       {"PlantComponentTemperatureSource", "Source Temperature", "sourceTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble()},
       {"PipeIndoor", "Ambient Temperature", "ambientTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble()},
