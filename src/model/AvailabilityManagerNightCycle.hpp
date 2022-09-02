@@ -32,7 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "AvailabilityManager.hpp"
-#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -69,7 +68,7 @@ namespace model {
     boost::optional<Schedule> fanSchedule() const;
 
     std::string controlType() const;
-    bool setControlType(std::string controlType);
+    bool setControlType(const std::string& controlType);
     void resetControlType();
     bool isControlTypeDefaulted() const;
 
@@ -86,20 +85,8 @@ namespace model {
     static std::vector<std::string> cyclingRunTimeControlTypeValues();
     std::string cyclingRunTimeControlType() const;
     bool isCyclingRunTimeControlTypeDefaulted() const;
-    bool setCyclingRunTimeControlType(std::string cyclingRunTimeControlType);
+    bool setCyclingRunTimeControlType(const std::string& cyclingRunTimeControlType);
     void resetCyclingRunTimeControlType();
-
-    /** \deprecated AvailabilityManagerNightCycle::controlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::controlThermalZones\n
-    * Get the controlThermalZone if it's unique, otherwise returns the first one found and issues a warning. **/
-    OS_DEPRECATED boost::optional<ThermalZone> controlThermalZone() const;
-
-    /** \deprecated AvailabilityManagerNightCycle::setControlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::setControlThermalZones\n
-  * sets the list of controlThermalZones by calling setControlThermalZones([thermalZone]) **/
-    OS_DEPRECATED bool setControlThermalZone(const ThermalZone& thermalZone);
-
-    /** \deprecated AvailabilityManagerNightCycle::resetControlThermalZone has been deprecated and will be removed in a future release, please use AvailabilityManagerNightCycle::resetControlThermalZones\n
-  * Resets the list of controlThermalZones **/
-    OS_DEPRECATED void resetControlThermalZone();
 
     std::vector<ThermalZone> controlThermalZones() const;
     bool setControlThermalZones(const std::vector<ThermalZone>& thermalZones);
@@ -119,7 +106,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::AvailabilityManagerNightCycle_Impl ImplType;
+    using ImplType = detail::AvailabilityManagerNightCycle_Impl;
 
     explicit AvailabilityManagerNightCycle(std::shared_ptr<detail::AvailabilityManagerNightCycle_Impl> impl);
 
@@ -135,10 +122,10 @@ namespace model {
   };
 
   /** \relates AvailabilityManagerNightCycle*/
-  typedef boost::optional<AvailabilityManagerNightCycle> OptionalAvailabilityManagerNightCycle;
+  using OptionalAvailabilityManagerNightCycle = boost::optional<AvailabilityManagerNightCycle>;
 
   /** \relates AvailabilityManagerNightCycle*/
-  typedef std::vector<AvailabilityManagerNightCycle> AvailabilityManagerNightCycleVector;
+  using AvailabilityManagerNightCycleVector = std::vector<AvailabilityManagerNightCycle>;
 
 }  // namespace model
 }  // namespace openstudio

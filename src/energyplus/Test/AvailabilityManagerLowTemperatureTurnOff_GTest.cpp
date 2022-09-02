@@ -62,7 +62,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
 
   // Assign it to a plant loop
   PlantLoop p(m);
-  p.setAvailabilityManager(avm);
+  p.addAvailabilityManager(avm);
 
   // ForwardTranslate
   ForwardTranslator forwardTranslator;
@@ -95,7 +95,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AvailabilityManagerLowTemperatureTur
 
   // Assign it to a plant loop (otherwise it's purely not translated anyways...)
   PlantLoop p(m);
-  p.setAvailabilityManager(avm);
+  p.addAvailabilityManager(avm);
 
   // ForwardTranslate
   ForwardTranslator forwardTranslator;

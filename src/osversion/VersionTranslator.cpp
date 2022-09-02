@@ -146,7 +146,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.2.1")] = &VersionTranslator::update_3_2_0_to_3_2_1;
     m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
     m_updateMethods[VersionString("3.4.0")] = &VersionTranslator::update_3_3_0_to_3_4_0;
-    m_updateMethods[VersionString("3.4.1")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.4.1")] = &VersionTranslator::update_3_4_0_to_3_4_1;
+    //m_updateMethods[VersionString("3.5.0")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for
@@ -304,7 +305,7 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.2.1"));
     m_startVersions.push_back(VersionString("3.3.0"));
     m_startVersions.push_back(VersionString("3.4.0"));
-    //m_startVersions.push_back(VersionString("3.4.1"));
+    // m_startVersions.push_back(VersionString("3.4.1"));
   }
 
   boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, ProgressBar* progressBar) {
@@ -6911,9 +6912,72 @@ namespace osversion {
 
   }  // end update_3_3_0_to_3_4_0
 
-  /*   std::string VersionTranslator::update_3_4_0_to_3_4_1(const IdfFile& idf_3_4_0, const IddFileAndFactoryWrapper& idd_3_4_1) {
+  std::string VersionTranslator::update_3_4_0_to_3_4_1(const IdfFile& idf_3_4_0, const IddFileAndFactoryWrapper& idd_3_4_1) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
 
-  }  // end update_3_4_0_to_3_4_1 */
+    ss << idf_3_4_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_4_1.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_4_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:Construction") {
+
+        // Remove Construction with Material:AirWall layer
+        // Replace with Construction:AirBoundary
+
+        auto iddObject = idd_3_4_1.getObject(iddname);
+
+        bool isAirWall = false;
+        if (object.numExtensibleGroups() == 1u) {
+          const IdfExtensibleGroup eg = object.extensibleGroups()[0];
+          if (boost::optional<IdfObject> layer = idf_3_4_0.getObject(toUUID(eg.getString(0).get()))) {
+            auto layeriddname = layer->iddObject().name();
+            if (layeriddname == "OS:Material:AirWall") {
+
+              auto iddObject = idd_3_4_1.getObject("OS:Construction:AirBoundary");
+              IdfObject newObject(iddObject.get());
+
+              // Handle
+              if (auto value = object.getString(0)) {
+                newObject.setString(0, value.get());
+              }
+
+              // Name
+              if (auto value = object.getString(1)) {
+                newObject.setString(1, value.get());
+              }
+
+              // Simple Mixing Air Changes per Hour
+              // Set ACH to 0.0, to match the old style Material:AirWall (same as the ConstructionAirBoundary Ctor)
+              newObject.setDouble(3, 0.0);
+
+              m_refactored.push_back(RefactoredObjectData(object, newObject));
+              ss << newObject;
+
+              isAirWall = true;
+            }
+          }
+        }
+
+        if (!isAirWall) {
+          ss << object;
+        }
+
+      } else if (iddname == "OS:Material:AirWall") {
+        m_untranslated.push_back(object);
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_4_0_to_3_4_1
 
 }  // namespace osversion
 }  // namespace openstudio

@@ -60,8 +60,6 @@
 #include "../Material_Impl.hpp"
 #include "../AirGap.hpp"
 #include "../AirGap_Impl.hpp"
-#include "../AirWallMaterial.hpp"
-#include "../AirWallMaterial_Impl.hpp"
 #include "../StandardOpaqueMaterial.hpp"
 #include "../StandardOpaqueMaterial_Impl.hpp"
 #include "../DefaultConstructionSet.hpp"
@@ -427,7 +425,7 @@ TEST_F(ModelFixture, Surface_BuildingComponentLibraryRoofConstruction)
       << "roofs.");
 }
 */
-TEST_F(ModelFixture, AirWall) {
+TEST_F(ModelFixture, MaterialTypes) {
   Model model;
 
   // triangle with unit area
@@ -438,7 +436,6 @@ TEST_F(ModelFixture, AirWall) {
 
   AirGap materialAirGap(model);
   StandardOpaqueMaterial material(model);
-  AirWallMaterial materialAirWall(model);
   Construction construction(model);
   std::vector<Material> layers;
 
@@ -476,10 +473,6 @@ TEST_F(ModelFixture, AirWall) {
   layers.push_back(materialAirGap);
   EXPECT_TRUE(construction.setLayers(layers));
   EXPECT_FALSE(surface.isAirWall());
-
-  // materialAirWall
-  EXPECT_TRUE(construction.setLayer(materialAirWall));
-  EXPECT_TRUE(surface.isAirWall());
 }
 
 TEST_F(ModelFixture, 0_Vertex_Surface) {
