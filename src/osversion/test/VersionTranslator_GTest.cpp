@@ -758,20 +758,28 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCo
   WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed")[0];
 
   // Field before insertion point is a curve, should still be
+  ASSERT_TRUE(c.getTarget(11));
+  EXPECT_EQ("Curve Biquadratic 1", c.getTarget(11)->nameString());  // Total Cooling Capacity Function of Temperature Curve Name
+  ASSERT_TRUE(c.getTarget(12));
+  EXPECT_EQ("Curve Quadratic 1", c.getTarget(12)->nameString());  // Total Cooling Capacity Function of Flow Fraction Curve Name
+  ASSERT_TRUE(c.getTarget(13));
+  EXPECT_EQ("Curve Biquadratic 2", c.getTarget(13)->nameString());  // Energy Input Ratio Function of Temperature Curve Name
   ASSERT_TRUE(c.getTarget(14));
-  EXPECT_EQ("CC DX SingleSpeed PartLoadFrac Correlation Curve", c.getTarget(14)->nameString());
+  EXPECT_EQ("Curve Quadratic 2", c.getTarget(14)->nameString());  // Energy Input Ratio Function of Flow Fraction Curve Name
+  ASSERT_TRUE(c.getTarget(15));
+  EXPECT_EQ("CC DX SingleSpeed PartLoadFrac Correlation Curve", c.getTarget(15)->nameString());  // Part Load Fraction Correlation Curve Name
 
-  // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
-  ASSERT_TRUE(c.getDouble(15));
-  EXPECT_EQ(-25.0, c.getDouble(15).get());
+  // Insertion point is at index 15 (but then gets shifted down 1 more in 3_4_0_to_3_5_0), and is set to -25 (same as model Ctor and E+ IDD default)
+  ASSERT_TRUE(c.getDouble(16));
+  EXPECT_EQ(-25.0, c.getDouble(16).get());
 
   // After should be 1000.0
-  ASSERT_TRUE(c.getDouble(16));
-  EXPECT_EQ(1000.0, c.getDouble(16).get());
+  ASSERT_TRUE(c.getDouble(17));
+  EXPECT_EQ(1000.0, c.getDouble(17).get());
 
   // Last field
-  ASSERT_TRUE(c.getTarget(31));
-  EXPECT_EQ("Always Off Discrete", c.getTarget(31)->nameString());
+  ASSERT_TRUE(c.getTarget(32));
+  EXPECT_EQ("Always Off Discrete", c.getTarget(32)->nameString());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidityControlMode_minOATCompressor) {
