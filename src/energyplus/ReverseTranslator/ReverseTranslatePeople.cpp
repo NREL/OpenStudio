@@ -134,7 +134,7 @@ namespace energyplus {
     // As of 22.2.0, this is no longer possible to make this an extensible field
     // because E+ added 3 regular fields at the end (eg: Ankle Level Velocity Schedule Name)
     for (unsigned i = PeopleFields::ThermalComfortModel1Type, k = 0; i <= PeopleFields::ThermalComfortModel7Type; ++i) {
-      s = workspaceObject.getString(i);
+      s = workspaceObject.getString(i, false, true);
       if (s) {
         definition.setThermalComfortModelType(k++, *s);
       }

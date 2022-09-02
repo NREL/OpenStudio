@@ -154,3 +154,101 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_People) {
   EXPECT_EQ(15.0, peopleObject.getDouble(PeopleFields::ColdStressTemperatureThreshold).get());
   EXPECT_EQ(31.0, peopleObject.getDouble(PeopleFields::HeatStressTemperatureThreshold).get());
 }
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_People) {
+
+  ReverseTranslator rt;
+
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
+
+  OptionalWorkspaceObject _i_zone = w.addObject(IdfObject(IddObjectType::Zone));
+  ASSERT_TRUE(_i_zone);
+  _i_zone->setName("Space1");
+
+  OptionalWorkspaceObject _i_people = w.addObject(IdfObject(IddObjectType::People));
+  ASSERT_TRUE(_i_people);
+
+  EXPECT_TRUE(_i_people->setPointer(PeopleFields::ZoneorZoneListorSpaceorSpaceListName, _i_zone->handle()));
+
+  auto assignSchedule = [&_i_people, &w](unsigned index, const std::string& scheduleName) {
+    OptionalWorkspaceObject _i_sch = w.addObject(IdfObject(IddObjectType::Schedule_Constant));
+    ASSERT_TRUE(_i_sch);
+
+    _i_sch->setName(scheduleName);
+    EXPECT_TRUE(_i_people->setPointer(index, _i_sch->handle()));
+  };
+
+  assignSchedule(PeopleFields::NumberofPeopleScheduleName, "NumberofPeopleSchedule");
+  EXPECT_TRUE(_i_people->setString(PeopleFields::NumberofPeopleCalculationMethod, "Area/Person"));
+  EXPECT_TRUE(_i_people->setDouble(PeopleFields::NumberofPeople, 0.0));
+  EXPECT_TRUE(_i_people->setDouble(PeopleFields::PeopleperFloorArea, 0.0));
+  EXPECT_TRUE(_i_people->setDouble(PeopleFields::FloorAreaperPerson, 10.0));
+  EXPECT_TRUE(_i_people->setDouble(PeopleFields::FractionRadiant, 0.35));
+  EXPECT_TRUE(_i_people->setDouble(PeopleFields::SensibleHeatFraction, 0.2));
+
+  assignSchedule(PeopleFields::ActivityLevelScheduleName, "ActivitySchedule");
+  EXPECT_TRUE(_i_people->setDouble(PeopleFields::CarbonDioxideGenerationRate, 3.6e-08));
+  EXPECT_TRUE(_i_people->setString(PeopleFields::EnableASHRAE55ComfortWarnings, "Yes"));
+  EXPECT_TRUE(_i_people->setString(PeopleFields::MeanRadiantTemperatureCalculationType, "SurfaceWeighted"));
+  EXPECT_TRUE(_i_people->setString(PeopleFields::SurfaceName_AngleFactorListName, ""));
+  assignSchedule(PeopleFields::WorkEfficiencyScheduleName, "WorkEfficiencySchedule");
+  EXPECT_TRUE(_i_people->setString(PeopleFields::ClothingInsulationCalculationMethod, ""));
+  EXPECT_TRUE(_i_people->setString(PeopleFields::ClothingInsulationCalculationMethodScheduleName, ""));
+  assignSchedule(PeopleFields::ClothingInsulationScheduleName, "ClothingInsulationSchedule");
+  assignSchedule(PeopleFields::AirVelocityScheduleName, "AirVelocitySchedule");
+  EXPECT_TRUE(_i_people->setString(PeopleFields::ThermalComfortModel1Type, "Fanger"));
+  EXPECT_TRUE(_i_people->setString(PeopleFields::ThermalComfortModel2Type, "Pierce"));
+  EXPECT_TRUE(_i_people->setString(PeopleFields::ThermalComfortModel3Type, ""));
+  EXPECT_TRUE(_i_people->setString(PeopleFields::ThermalComfortModel4Type, ""));
+  EXPECT_TRUE(_i_people->setString(PeopleFields::ThermalComfortModel5Type, ""));
+  EXPECT_TRUE(_i_people->setString(PeopleFields::ThermalComfortModel6Type, ""));
+  EXPECT_TRUE(_i_people->setString(PeopleFields::ThermalComfortModel7Type, ""));
+  assignSchedule(PeopleFields::AnkleLevelAirVelocityScheduleName, "AnkleLevelAirVelocitySchedule");
+  EXPECT_TRUE(_i_people->setDouble(PeopleFields::ColdStressTemperatureThreshold, 15.0));
+  EXPECT_TRUE(_i_people->setDouble(PeopleFields::HeatStressTemperatureThreshold, 31.0));
+
+  Model m = rt.translateWorkspace(w);
+
+  ASSERT_EQ(1, m.getConcreteModelObjects<People>().size());
+  ASSERT_EQ(1, m.getConcreteModelObjects<PeopleDefinition>().size());
+
+  auto p = m.getConcreteModelObjects<People>()[0];
+
+  EXPECT_EQ("People 1", p.nameString());
+  ASSERT_TRUE(p.space());
+  ASSERT_TRUE(p.numberofPeopleSchedule());
+  EXPECT_EQ("NumberofPeopleSchedule", p.numberofPeopleSchedule()->nameString());
+  ASSERT_TRUE(p.activityLevelSchedule());
+  EXPECT_EQ("ActivitySchedule", p.activityLevelSchedule()->nameString());
+  ASSERT_TRUE(p.workEfficiencySchedule());
+  EXPECT_EQ("WorkEfficiencySchedule", p.workEfficiencySchedule()->nameString());
+  ASSERT_TRUE(p.clothingInsulationSchedule());
+  EXPECT_EQ("ClothingInsulationSchedule", p.clothingInsulationSchedule()->nameString());
+  ASSERT_TRUE(p.airVelocitySchedule());
+  EXPECT_EQ("AirVelocitySchedule", p.airVelocitySchedule()->nameString());
+
+  // E+ object doesn't have one
+  EXPECT_EQ(1.0, p.multiplier());
+  ASSERT_TRUE(p.ankleLevelAirVelocitySchedule());
+  EXPECT_EQ("AnkleLevelAirVelocitySchedule", p.ankleLevelAirVelocitySchedule()->nameString());
+  EXPECT_EQ(15.0, p.coldStressTemperatureThreshold());
+  EXPECT_EQ(31.0, p.heatStressTemperatureThreshold());
+
+  auto pd = p.definition().cast<PeopleDefinition>();
+  EXPECT_EQ("Area/Person", pd.numberofPeopleCalculationMethod());
+  EXPECT_FALSE(pd.numberofPeople());
+  EXPECT_FALSE(pd.peopleperSpaceFloorArea());
+  ASSERT_TRUE(pd.spaceFloorAreaperPerson());
+  EXPECT_EQ(10.0, pd.spaceFloorAreaperPerson().get());
+  EXPECT_EQ(0.35, pd.fractionRadiant());
+  ASSERT_TRUE(pd.sensibleHeatFraction());
+  EXPECT_EQ(0.2, pd.sensibleHeatFraction().get());
+  EXPECT_EQ(3.6e-08, pd.carbonDioxideGenerationRate());
+  EXPECT_TRUE(pd.enableASHRAE55ComfortWarnings());
+  EXPECT_EQ("SurfaceWeighted", pd.meanRadiantTemperatureCalculationType());
+
+  ASSERT_EQ(2, pd.numThermalComfortModelTypes());
+  ASSERT_EQ(2, pd.numExtensibleGroups());
+  EXPECT_EQ("Fanger", pd.getThermalComfortModelType(0).get());
+  EXPECT_EQ("Pierce", pd.getThermalComfortModelType(1).get());
+}
