@@ -32,7 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "ZoneHVACComponent.hpp"
-#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -122,11 +121,6 @@ namespace model {
 
     bool setSchedule(Schedule& schedule);
 
-    /** \deprecated ZoneVentilationDesignFlowRate::setDesignFlowRateCalculationMethod has been deprecated and will be removed in a future release, \n
-   *  the design flow rate calculation method is set during the call to setDesignFlowRate, setFlowRateperZoneFloorArea, setAirChangesperHour, etc
-   **/
-    OS_DEPRECATED bool setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod);
-
     bool setDesignFlowRate(double designFlowRate);
 
     bool setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea);
@@ -135,7 +129,7 @@ namespace model {
 
     bool setAirChangesperHour(double airChangesperHour);
 
-    bool setVentilationType(std::string ventilationType);
+    bool setVentilationType(const std::string& ventilationType);
 
     bool setFanPressureRise(double fanPressureRise);
 
@@ -188,7 +182,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneVentilationDesignFlowRate_Impl ImplType;
+    using ImplType = detail::ZoneVentilationDesignFlowRate_Impl;
 
     explicit ZoneVentilationDesignFlowRate(std::shared_ptr<detail::ZoneVentilationDesignFlowRate_Impl> impl);
 
@@ -202,10 +196,10 @@ namespace model {
   };
 
   /** \relates ZoneVentilationDesignFlowRate*/
-  typedef boost::optional<ZoneVentilationDesignFlowRate> OptionalZoneVentilationDesignFlowRate;
+  using OptionalZoneVentilationDesignFlowRate = boost::optional<ZoneVentilationDesignFlowRate>;
 
   /** \relates ZoneVentilationDesignFlowRate*/
-  typedef std::vector<ZoneVentilationDesignFlowRate> ZoneVentilationDesignFlowRateVector;
+  using ZoneVentilationDesignFlowRateVector = std::vector<ZoneVentilationDesignFlowRate>;
 
 }  // namespace model
 }  // namespace openstudio

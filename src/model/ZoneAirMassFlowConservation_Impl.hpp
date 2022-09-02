@@ -69,10 +69,6 @@ namespace model {
 
       bool isAdjustZoneMixingandReturnForAirMassFlowBalanceDefaulted() const;
 
-      std::string sourceZoneInfiltrationTreatment() const;
-
-      bool isSourceZoneInfiltrationTreatmentDefaulted() const;
-
       std::string infiltrationBalancingMethod() const;
 
       bool isInfiltrationBalancingMethodDefaulted() const;
@@ -88,10 +84,6 @@ namespace model {
       bool setAdjustZoneMixingandReturnForAirMassFlowBalance(const std::string& adjustZoneMixingandReturnForAirMassFlowBalance);
 
       void resetAdjustZoneMixingandReturnForAirMassFlowBalance();
-
-      bool setSourceZoneInfiltrationTreatment(const std::string& sourceZoneInfiltrationTreatment);
-
-      void resetSourceZoneInfiltrationTreatment();
 
       bool setInfiltrationBalancingMethod(const std::string& infiltrationBalancingMethod);
 

@@ -758,28 +758,20 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCo
   WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed")[0];
 
   // Field before insertion point is a curve, should still be
-  ASSERT_TRUE(c.getTarget(11));
-  EXPECT_EQ("Curve Biquadratic 1", c.getTarget(11)->nameString());  // Total Cooling Capacity Function of Temperature Curve Name
-  ASSERT_TRUE(c.getTarget(12));
-  EXPECT_EQ("Curve Quadratic 1", c.getTarget(12)->nameString());  // Total Cooling Capacity Function of Flow Fraction Curve Name
-  ASSERT_TRUE(c.getTarget(13));
-  EXPECT_EQ("Curve Biquadratic 2", c.getTarget(13)->nameString());  // Energy Input Ratio Function of Temperature Curve Name
   ASSERT_TRUE(c.getTarget(14));
-  EXPECT_EQ("Curve Quadratic 2", c.getTarget(14)->nameString());  // Energy Input Ratio Function of Flow Fraction Curve Name
-  ASSERT_TRUE(c.getTarget(15));
-  EXPECT_EQ("CC DX SingleSpeed PartLoadFrac Correlation Curve", c.getTarget(15)->nameString());  // Part Load Fraction Correlation Curve Name
+  EXPECT_EQ("CC DX SingleSpeed PartLoadFrac Correlation Curve", c.getTarget(14)->nameString());
 
-  // Insertion point is at index 15 (but then gets shifted down 1 more in 3_4_0_to_3_5_0), and is set to -25 (same as model Ctor and E+ IDD default)
-  ASSERT_TRUE(c.getDouble(16));
-  EXPECT_EQ(-25.0, c.getDouble(16).get());
+  // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
+  ASSERT_TRUE(c.getDouble(15));
+  EXPECT_EQ(-25.0, c.getDouble(15).get());
 
   // After should be 1000.0
-  ASSERT_TRUE(c.getDouble(17));
-  EXPECT_EQ(1000.0, c.getDouble(17).get());
+  ASSERT_TRUE(c.getDouble(16));
+  EXPECT_EQ(1000.0, c.getDouble(16).get());
 
   // Last field
-  ASSERT_TRUE(c.getTarget(32));
-  EXPECT_EQ("Always Off Discrete", c.getTarget(32)->nameString());
+  ASSERT_TRUE(c.getTarget(31));
+  EXPECT_EQ("Always Off Discrete", c.getTarget(31)->nameString());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidityControlMode_minOATCompressor) {
@@ -1830,6 +1822,38 @@ TEST_F(OSVersionFixture, update_3_3_0_to_3_4_0_CoilHeatingDXMultiSpeed) {
 
   ASSERT_EQ(4u, model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed:StageData").size());
   ASSERT_EQ(0u, model->getObjectsByType("OS:ModelObjectList").size());
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_AirWallMaterial.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_AirWallMaterial_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(2u, model->numObjects());
+
+  std::vector<WorkspaceObject> constrs = model->getObjectsByType("OS:Construction");
+  ASSERT_EQ(0u, constrs.size());
+
+  std::vector<WorkspaceObject> constrAirBoundarys = model->getObjectsByType("OS:Construction:AirBoundary");
+  ASSERT_EQ(1u, constrAirBoundarys.size());
+  WorkspaceObject constrAirBoundary = constrAirBoundarys[0];
+
+  EXPECT_EQ("Construction 1", constrAirBoundary.getString(1).get());  // Name
+  EXPECT_EQ("", constrAirBoundary.getString(2).get());                // Air Exchange Method
+  EXPECT_EQ(0.0, constrAirBoundary.getDouble(3).get());               // Simple Mixing Air Changes Per Hour
+  EXPECT_EQ("", constrAirBoundary.getString(4).get());                // Simple Mixing Schedule Name
+  EXPECT_EQ("", constrAirBoundary.getString(5).get());                // Surface Rendering Name
+
+  std::vector<WorkspaceObject> surfaces = model->getObjectsByType("OS:Surface");
+  ASSERT_EQ(1u, surfaces.size());
+  WorkspaceObject surface = surfaces[0];
+  ASSERT_TRUE(surface.getTarget(3));  // Construction Name
+  EXPECT_EQ("OS:Construction:AirBoundary", surface.getTarget(3).get().iddObject().name());
+  EXPECT_EQ("Construction 1", surface.getTarget(3).get().nameString());  // Construction Name
 }
 
 TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingDXSingleSpeed) {

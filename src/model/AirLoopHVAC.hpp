@@ -32,7 +32,6 @@
 
 #include "ModelAPI.hpp"
 #include "Loop.hpp"
-#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -361,23 +360,6 @@ namespace model {
    */
     unsigned availabilityManagerPriority(const AvailabilityManager& availabilityManager) const;
 
-    // TODO: DEPRECATED SECTION Remove in the future (deprecated around 2.3.0)
-    /*
-   * Returns the first availability Manager used
-   */
-    OS_DEPRECATED boost::optional<AvailabilityManager> availabilityManager() const;
-
-    /* Deprecated, kept for backward compatibility with existing scripts, will be removed in a future version
-   * Behavior is that it will remove all AVMs assigned to this loop, and replace it with the one passed as argument
-   */
-    OS_DEPRECATED bool setAvailabilityManager(const AvailabilityManager& availabilityManager);
-
-    /*
-   * Clears all AVMs (forwards to resetAvailabilabilityManagers
-   **/
-    OS_DEPRECATED void resetAvailabilityManager();
-    // END DEPRECATED
-
     std::vector<openstudio::IdfObject> remove() override;
 
     ModelObject clone(Model model) const override;
@@ -394,7 +376,7 @@ namespace model {
 
     /// @cond
 
-    typedef detail::AirLoopHVAC_Impl ImplType;
+    using ImplType = detail::AirLoopHVAC_Impl;
 
     explicit AirLoopHVAC(std::shared_ptr<ImplType> impl);
 
@@ -405,10 +387,10 @@ namespace model {
   };
 
   // optional AirLoopHVAC
-  typedef boost::optional<AirLoopHVAC> OptionalAirLoopHVAC;
+  using OptionalAirLoopHVAC = boost::optional<AirLoopHVAC>;
 
   // vector of AirLoopHVAC
-  typedef std::vector<AirLoopHVAC> AirLoopHVACVector;
+  using AirLoopHVACVector = std::vector<AirLoopHVAC>;
 
 }  // namespace model
 
