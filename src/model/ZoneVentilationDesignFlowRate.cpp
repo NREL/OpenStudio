@@ -258,7 +258,7 @@ namespace model {
       return result;
     }
 
-    bool ZoneVentilationDesignFlowRate_Impl::setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod) {
+    bool ZoneVentilationDesignFlowRate_Impl::setDesignFlowRateCalculationMethod(const std::string& designFlowRateCalculationMethod) {
       LOG(Warn,
           "ZoneVentilationDesignFlowRate::setDesignFlowRateCalculationMethod has been deprecated and will be removed in a future release, the design "
           "flow rate calculation method is set during the call to setDesignFlowRate, setFlowRateperZoneFloorArea, setAirChangesperHour, etc");
@@ -347,7 +347,7 @@ namespace model {
       return result;
     }
 
-    bool ZoneVentilationDesignFlowRate_Impl::setVentilationType(std::string ventilationType) {
+    bool ZoneVentilationDesignFlowRate_Impl::setVentilationType(const std::string& ventilationType) {
       bool result = setString(OS_ZoneVentilation_DesignFlowRateFields::VentilationType, ventilationType);
       return result;
     }
@@ -671,10 +671,6 @@ namespace model {
     return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setSchedule(schedule);
   }
 
-  bool ZoneVentilationDesignFlowRate::setDesignFlowRateCalculationMethod(std::string designFlowRateCalculationMethod) {
-    return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setDesignFlowRateCalculationMethod(designFlowRateCalculationMethod);
-  }
-
   bool ZoneVentilationDesignFlowRate::setDesignFlowRate(double designFlowRate) {
     return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setDesignFlowRate(designFlowRate);
   }
@@ -691,7 +687,7 @@ namespace model {
     return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setAirChangesperHour(airChangesperHour);
   }
 
-  bool ZoneVentilationDesignFlowRate::setVentilationType(std::string ventilationType) {
+  bool ZoneVentilationDesignFlowRate::setVentilationType(const std::string& ventilationType) {
     return getImpl<detail::ZoneVentilationDesignFlowRate_Impl>()->setVentilationType(ventilationType);
   }
 
