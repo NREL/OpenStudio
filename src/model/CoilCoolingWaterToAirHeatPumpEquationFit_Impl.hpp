@@ -112,9 +112,9 @@ namespace model {
       bool isRatedCoolingCoefficientofPerformanceDefaulted() const;
 
       double ratedEnteringWaterTemperature() const;
-      
+
       double ratedEnteringAirDryBulbTemperature() const;
-      
+
       double ratedEnteringAirWetBulbTemperature() const;
 
       CurveQuadLinear totalCoolingCapacityCurve() const;
@@ -174,9 +174,9 @@ namespace model {
       bool setRatedCoolingCoefficientofPerformance(double ratedCoolingCoefficientofPerformance);
 
       bool setRatedEnteringWaterTemperature(double ratedEnteringAirDryBulbTemperature);
-      
+
       bool setRatedEnteringAirDryBulbTemperature(double ratedEnteringAirDryBulbTemperature);
-      
+
       bool setRatedEnteringAirWetBulbTemperature(double ratedEnteringAirWetBulbTemperature);
 
       bool setTotalCoolingCapacityCurve(const CurveQuadLinear& totalCoolingCapacityCurve);

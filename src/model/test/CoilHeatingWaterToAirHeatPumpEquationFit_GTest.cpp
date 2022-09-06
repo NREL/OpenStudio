@@ -88,7 +88,7 @@ TEST_F(ModelFixture, CoilHeatingWaterToAirHeatPumpEquationFit_Test) {
   coilHeatingWaterToAirHPEquationFit.resetRatedHeatingCoefficientofPerformance();
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.ratedHeatingCoefficientofPerformance());
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.isRatedHeatingCoefficientofPerformanceDefaulted());
-  
+
   // test rated entering water temperature
   EXPECT_EQ(20, coilHeatingWaterToAirHPEquationFit.ratedEnteringWaterTemperature());
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setRatedEnteringWaterTemperature(25));

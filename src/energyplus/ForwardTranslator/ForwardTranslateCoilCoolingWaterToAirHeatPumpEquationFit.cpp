@@ -144,7 +144,7 @@ namespace energyplus {
     if (value = modelObject.ratedEnteringWaterTemperature()) {
       idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature, *value);
     }
-    
+
     // Rated Entering Air Dry-Bulb Temperature
     if (value = modelObject.ratedEnteringAirDryBulbTemperature()) {
       idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirDryBulbTemperature, *value);

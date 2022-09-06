@@ -126,12 +126,12 @@ namespace energyplus {
     if ((value = modelObject.ratedEnteringWaterTemperature())) {
       idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature, value.get());
     }
-    
+
     // Rated Entering Air Dry-Bulb Temperature
     if ((value = modelObject.ratedEnteringAirDryBulbTemperature())) {
       idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirDryBulbTemperature, value.get());
     }
-    
+
     // Ratio of Rated Heating Capacity to Rated Cooling Capacity
     if ((value = modelObject.ratioofRatedHeatingCapacitytoRatedCoolingCapacity())) {
       idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatioofRatedHeatingCapacitytoRatedCoolingCapacity, value.get());
