@@ -39,7 +39,9 @@
 
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/FanConstantVolume.hpp"
+#include "../../model/CoilHeatingGasMultiStage.hpp"
 #include "../../model/CoilHeatingElectric.hpp"
+#include "../../model/CoilHeatingElectricMultiStage.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
