@@ -68,7 +68,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeating
   CoilHeatingElectric s(m);
 
   AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed unitary(m, f, h, c, s);
-  unitary.setFanPlacement(fanPlacement);
 
   AirLoopHVAC airLoop(m);
 
@@ -91,7 +90,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeating
   CoilHeatingElectric s(m);
 
   AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed unitary(m, f, h, c, s);
-  unitary.setFanPlacement(fanPlacement);
 
   AirLoopHVAC airLoop(m);
 

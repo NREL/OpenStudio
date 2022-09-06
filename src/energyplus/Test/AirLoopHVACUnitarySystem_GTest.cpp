@@ -673,7 +673,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeating
   unitary.setCoolingCoil(c);
   unitary.setHeatingCoil(h);
   unitary.setSupplyFan(f);
-  unitary.setFanPlacement(fanPlacement);
 
   AirLoopHVAC airLoop(m);
 
@@ -700,7 +699,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeating
   unitary.setHeatingCoil(h);
   unitary.setSupplyFan(f);
   unitary.setSupplementalHeatingCoil(s);
-  unitary.setFanPlacement(fanPlacement);
 
   AirLoopHVAC airLoop(m);
 
