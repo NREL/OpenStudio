@@ -200,7 +200,7 @@ namespace model {
 
       for (const auto& airLoopHVACUnitarySystem : airLoopHVACUnitarySystems) {
         if (boost::optional<HVACComponent> heatingCoil = airLoopHVACUnitarySystem.heatingCoil()) {
-          if (heatingCoil.handle() == this->handle()) {
+          if (heatingCoil->handle() == this->handle()) {
             return airLoopHVACUnitarySystem;
           }
         }
@@ -212,7 +212,7 @@ namespace model {
 
       for (const auto& airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed : airLoopHVACUnitaryHeatPumpAirToAirMultiSpeeds) {
         if (boost::optional<HVACComponent> heatingCoil = airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.heatingCoil()) {
-          if (heatingCoil.handle() == this->handle()) {
+          if (heatingCoil->handle() == this->handle()) {
             return airLoopHVACUnitaryHeatPumpAirToAirMultiSpeed;
           }
         }
