@@ -144,12 +144,14 @@ namespace model {
 
     boost::optional<HVACComponent> CoilCoolingDX_Impl::containingHVACComponent() const {
       // AirLoopHVACUnitarySystem
-      std::vector<AirLoopHVACUnitarySystem> airLoopHVACUnitarySystems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
+      {
+        auto systems = this->model().getConcreteModelObjects<AirLoopHVACUnitarySystem>();
 
-      for (const auto& airLoopHVACUnitarySystem : airLoopHVACUnitarySystems) {
-        if (boost::optional<HVACComponent> coolingCoil = airLoopHVACUnitarySystem.coolingCoil()) {
-          if (coolingCoil->handle() == this->handle()) {
-            return airLoopHVACUnitarySystem;
+        for (auto const& system : systems) {
+          if (auto coolingCoil = system.coolingCoil()) {
+            if (coolingCoil->handle() == this->handle()) {
+              return system;
+            }
           }
         }
       }

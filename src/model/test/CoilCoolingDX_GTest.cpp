@@ -48,6 +48,14 @@
 #include "../AirLoopHVACUnitarySystem_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../Node.hpp"
+#include "../CoilSystemCoolingDXHeatExchangerAssisted.hpp"
+#include "../ZoneHVACPackagedTerminalAirConditioner.hpp"
+#include "../ZoneHVACPackagedTerminalHeatPump.hpp"
+#include "../ScheduleCompact.hpp"
+#include "../CoilHeatingDXSingleSpeed.hpp"
+#include "../FanConstantVolume.hpp"
+#include "../CoilHeatingElectric.hpp"
+#include "../CoilHeatingWater.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -152,32 +160,105 @@ TEST_F(ModelFixture, CoilCoolingDX_GettersSetters) {
 }
 
 TEST_F(ModelFixture, CoilCoolingDX_containingHVACComponent) {
+  {  // AirLoopHVACUnitarySystem
+    Model model;
 
-  Model model;
+    CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+    CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+    CoilCoolingDX dx(model, performance);
+    EXPECT_TRUE(dx.isRemovable());
 
-  CoilCoolingDXCurveFitOperatingMode operatingMode(model);
-  CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
-  CoilCoolingDX dx(model, performance);
-  EXPECT_TRUE(dx.isRemovable());
+    AirLoopHVACUnitarySystem unitary(model);
+    EXPECT_TRUE(unitary.setCoolingCoil(dx));
+    ASSERT_TRUE(unitary.coolingCoil());
+    EXPECT_EQ(dx, unitary.coolingCoil().get());
 
-  AirLoopHVACUnitarySystem unitary(model);
-  EXPECT_TRUE(unitary.setCoolingCoil(dx));
-  ASSERT_TRUE(unitary.coolingCoil());
-  EXPECT_EQ(dx, unitary.coolingCoil().get());
+    ASSERT_TRUE(dx.containingHVACComponent());
+    EXPECT_EQ(unitary, dx.containingHVACComponent().get());
 
-  ASSERT_TRUE(dx.containingHVACComponent());
-  EXPECT_EQ(unitary, dx.containingHVACComponent().get());
+    // Shouldn't be able to remove DX since it's contained in a HVAC Component
+    EXPECT_FALSE(dx.isRemovable());
+    auto rmed = dx.remove();
+    EXPECT_EQ(0u, rmed.size());
+    ASSERT_TRUE(unitary.coolingCoil());
+    EXPECT_EQ(dx, unitary.coolingCoil().get());
+  }
 
-  // Shouldn't be able to remove DX since it's contained in a HVAC Component
-  EXPECT_FALSE(dx.isRemovable());
-  auto rmed = dx.remove();
-  EXPECT_EQ(0u, rmed.size());
-  ASSERT_TRUE(unitary.coolingCoil());
-  EXPECT_EQ(dx, unitary.coolingCoil().get());
+  {  // CoilSystemCoolingDXHeatExchangerAssisted
+    Model model;
+
+    CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+    CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+    CoilCoolingDX dx(model, performance);
+    EXPECT_TRUE(dx.isRemovable());
+
+    CoilSystemCoolingDXHeatExchangerAssisted hx(model);
+    EXPECT_TRUE(hx.setCoolingCoil(dx));
+    EXPECT_EQ(dx, hx.coolingCoil());
+
+    ASSERT_TRUE(dx.containingHVACComponent());
+    EXPECT_EQ(hx, dx.containingHVACComponent().get());
+
+    // Shouldn't be able to remove DX since it's contained in a HVAC Component
+    EXPECT_FALSE(dx.isRemovable());
+    auto rmed = dx.remove();
+    EXPECT_EQ(0u, rmed.size());
+    EXPECT_EQ(dx, hx.coolingCoil());
+  }
+}
+
+TEST_F(ModelFixture, CoilCoolingDX_containingZoneHVACComponent) {
+  {  // ZoneHVACPackagedTerminalAirConditioner
+    Model model;
+
+    CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+    CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+    CoilCoolingDX dx(model, performance);
+    EXPECT_TRUE(dx.isRemovable());
+    ScheduleCompact availabilitySchedule(model);
+    FanConstantVolume fan(model, availabilitySchedule);
+    CoilHeatingWater heatingCoil(model, availabilitySchedule);
+
+    ZoneHVACPackagedTerminalAirConditioner ptac(model, availabilitySchedule, fan, heatingCoil, dx);
+    EXPECT_EQ(dx, ptac.coolingCoil());
+
+    ASSERT_TRUE(dx.containingZoneHVACComponent());
+    EXPECT_EQ(ptac, dx.containingZoneHVACComponent().get());
+
+    // Shouldn't be able to remove DX since it's contained in a HVAC Component
+    EXPECT_FALSE(dx.isRemovable());
+    auto rmed = dx.remove();
+    EXPECT_EQ(0u, rmed.size());
+    EXPECT_EQ(dx, ptac.coolingCoil());
+  }
+
+  {  // ZoneHVACPackagedTerminalHeatPump
+    Model model;
+
+    CoilCoolingDXCurveFitOperatingMode operatingMode(model);
+    CoilCoolingDXCurveFitPerformance performance(model, operatingMode);
+    CoilCoolingDX dx(model, performance);
+    EXPECT_TRUE(dx.isRemovable());
+    ScheduleCompact availabilitySchedule(model);
+    FanConstantVolume fan(model, availabilitySchedule);
+    CoilHeatingDXSingleSpeed heatingCoil(model);
+    CoilHeatingElectric supplementalHeatingCoil(model, availabilitySchedule);
+
+    ZoneHVACPackagedTerminalHeatPump pthp(model, availabilitySchedule, fan, heatingCoil, dx, supplementalHeatingCoil);
+    EXPECT_EQ(dx, pthp.coolingCoil());
+
+    ASSERT_TRUE(dx.containingZoneHVACComponent());
+    EXPECT_EQ(pthp, dx.containingZoneHVACComponent().get());
+
+    // Shouldn't be able to remove DX since it's contained in a HVAC Component
+    EXPECT_FALSE(dx.isRemovable());
+    auto rmed = dx.remove();
+    EXPECT_EQ(0u, rmed.size());
+    EXPECT_EQ(dx, pthp.coolingCoil());
+  }
 }
 
 TEST_F(ModelFixture, CoilCoolingDX_addToNode) {
-  // Should not be allowed, only meant to be inside a Unitary
   Model model;
 
   CoilCoolingDXCurveFitOperatingMode operatingMode(model);
@@ -186,7 +267,7 @@ TEST_F(ModelFixture, CoilCoolingDX_addToNode) {
 
   AirLoopHVAC a(model);
   Node supplyOutlet = a.supplyOutletNode();
-  EXPECT_FALSE(dx.addToNode(supplyOutlet));
+  EXPECT_TRUE(dx.addToNode(supplyOutlet));
 }
 
 TEST_F(ModelFixture, CoilCoolingDX_performanceObject) {
