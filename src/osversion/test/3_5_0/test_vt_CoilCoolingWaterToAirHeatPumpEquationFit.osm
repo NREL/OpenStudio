@@ -1,0 +1,77 @@
+
+OS:Version,
+  {5e239450-9777-465b-b188-ac931373642f}, !- Handle
+  3.4.0;                                  !- Version Identifier
+
+OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
+  {49f0b93d-e54e-42f4-ae66-16060ef93e1e}, !- Handle
+  Coil Cooling Water To Air Heat Pump Equation Fit 1, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Rated Water Flow Rate {m3/s}
+  ,                                       !- Rated Total Cooling Capacity {W}
+  ,                                       !- Rated Sensible Cooling Capacity {W}
+  ,                                       !- Rated Cooling Coefficient of Performance {W/W}
+  {88c5ef9e-f97b-4a0a-8028-ef6d418d7635}, !- Total Cooling Capacity Curve Name
+  {3cfae2f4-8ac2-4dfc-9ced-08c224c8a3f1}, !- Sensible Cooling Capacity Curve Name
+  {cb515806-7299-42e5-91ec-994aaa91ae37}, !- Cooling Power Consumption Curve Name
+  ,                                       !- Nominal Time for Condensate Removal to Begin {s}
+  ;                                       !- Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity {dimensionless}
+
+OS:Curve:QuadLinear,
+  {88c5ef9e-f97b-4a0a-8028-ef6d418d7635}, !- Handle
+  TotCoolCapCurve,                        !- Name
+  -0.68126221,                            !- Coefficient1 Constant
+  1.99529297,                             !- Coefficient2 w
+  -0.93611888,                            !- Coefficient3 x
+  0.02081177,                             !- Coefficient4 y
+  0.008438868,                            !- Coefficient5 z
+  -100,                                   !- Minimum Value of w {BasedOnField A2}
+  100,                                    !- Maximum Value of w {BasedOnField A2}
+  -100,                                   !- Minimum Value of x {BasedOnField A3}
+  100,                                    !- Maximum Value of x {BasedOnField A3}
+  0,                                      !- Minimum Value of y {BasedOnField A4}
+  100,                                    !- Maximum Value of y {BasedOnField A4}
+  0,                                      !- Minimum Value of z {BasedOnField A5}
+  100;                                    !- Maximum Value of z {BasedOnField A5}
+
+OS:Curve:QuintLinear,
+  {3cfae2f4-8ac2-4dfc-9ced-08c224c8a3f1}, !- Handle
+  Curve Quint Linear 1,                   !- Name
+  2.24209455,                             !- Coefficient1 Constant
+  7.28913391,                             !- Coefficient2 v
+  -9.06079896,                            !- Coefficient3 w
+  -0.36729404,                            !- Coefficient4 x
+  0.218826161,                            !- Coefficient5 y
+  0.00901534,                             !- Coefficient6 z
+  -100,                                   !- Minimum Value of v {BasedOnField A2}
+  100,                                    !- Maximum Value of v {BasedOnField A2}
+  -100,                                   !- Minimum Value of w {BasedOnField A2}
+  100,                                    !- Maximum Value of w {BasedOnField A2}
+  -100,                                   !- Minimum Value of x {BasedOnField A3}
+  100,                                    !- Maximum Value of x {BasedOnField A3}
+  0,                                      !- Minimum Value of y {BasedOnField A4}
+  100,                                    !- Maximum Value of y {BasedOnField A4}
+  0,                                      !- Minimum Value of z {BasedOnField A5}
+  100;                                    !- Maximum Value of z {BasedOnField A5}
+
+OS:Curve:QuadLinear,
+  {cb515806-7299-42e5-91ec-994aaa91ae37}, !- Handle
+  Curve Quad Linear 1,                    !- Name
+  -3.20456384,                            !- Coefficient1 Constant
+  0.47656454,                             !- Coefficient2 w
+  3.16734236,                             !- Coefficient3 x
+  0.10244637,                             !- Coefficient4 y
+  -0.038132556,                           !- Coefficient5 z
+  -100,                                   !- Minimum Value of w {BasedOnField A2}
+  100,                                    !- Maximum Value of w {BasedOnField A2}
+  -100,                                   !- Minimum Value of x {BasedOnField A3}
+  100,                                    !- Maximum Value of x {BasedOnField A3}
+  0,                                      !- Minimum Value of y {BasedOnField A4}
+  100,                                    !- Maximum Value of y {BasedOnField A4}
+  0,                                      !- Minimum Value of z {BasedOnField A5}
+  100;                                    !- Maximum Value of z {BasedOnField A5}
+

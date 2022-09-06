@@ -1,0 +1,53 @@
+
+OS:Version,
+  {17b436f0-e1e5-4fcb-a077-ac1e20ff3e1e}, !- Handle
+  3.4.0;                                  !- Version Identifier
+
+OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
+  {475386b1-8e5b-4997-a347-64b3e7327bc0}, !- Handle
+  Coil Heating Water To Air Heat Pump Equation Fit 1, !- Name
+  ,                                       !- Water Inlet Node Name
+  ,                                       !- Water Outlet Node Name
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  ,                                       !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Rated Water Flow Rate {m3/s}
+  ,                                       !- Rated Heating Capacity {W}
+  ,                                       !- Rated Heating Coefficient of Performance {W/W}
+  {25a5aeb1-b534-48fe-bcc6-5364385b9280}, !- Heating Capacity Curve Name
+  {83b26ab1-9da5-42a1-bb76-fcf0769f1cae}; !- Heating Power Consumption Curve Name
+
+OS:Curve:QuadLinear,
+  {25a5aeb1-b534-48fe-bcc6-5364385b9280}, !- Handle
+  Curve Quad Linear 1,                    !- Name
+  -5.50102734,                            !- Coefficient1 Constant
+  -0.96688754,                            !- Coefficient2 w
+  7.70755007,                             !- Coefficient3 x
+  0.031928881,                            !- Coefficient4 y
+  0.028112522,                            !- Coefficient5 z
+  -100,                                   !- Minimum Value of w {BasedOnField A2}
+  100,                                    !- Maximum Value of w {BasedOnField A2}
+  -100,                                   !- Minimum Value of x {BasedOnField A3}
+  100,                                    !- Maximum Value of x {BasedOnField A3}
+  0,                                      !- Minimum Value of y {BasedOnField A4}
+  100,                                    !- Maximum Value of y {BasedOnField A4}
+  0,                                      !- Minimum Value of z {BasedOnField A5}
+  100;                                    !- Maximum Value of z {BasedOnField A5}
+
+OS:Curve:QuadLinear,
+  {83b26ab1-9da5-42a1-bb76-fcf0769f1cae}, !- Handle
+  Curve Quad Linear 2,                    !- Name
+  -7.47517858,                            !- Coefficient1 Constant
+  6.40876653,                             !- Coefficient2 w
+  1.99711665,                             !- Coefficient3 x
+  -0.050682973,                           !- Coefficient4 y
+  0.011385145,                            !- Coefficient5 z
+  -100,                                   !- Minimum Value of w {BasedOnField A2}
+  100,                                    !- Maximum Value of w {BasedOnField A2}
+  -100,                                   !- Minimum Value of x {BasedOnField A3}
+  100,                                    !- Maximum Value of x {BasedOnField A3}
+  0,                                      !- Minimum Value of y {BasedOnField A4}
+  100,                                    !- Maximum Value of y {BasedOnField A4}
+  0,                                      !- Minimum Value of z {BasedOnField A5}
+  100;                                    !- Maximum Value of z {BasedOnField A5}
+

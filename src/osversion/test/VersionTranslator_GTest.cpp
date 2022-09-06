@@ -1855,3 +1855,39 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
   EXPECT_EQ("OS:Construction:AirBoundary", surface.getTarget(3).get().iddObject().name());
   EXPECT_EQ("Construction 1", surface.getTarget(3).get().nameString());  // Construction Name
 }
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingWaterToAirHeatPumpEquationFit) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:WaterToAirHeatPump:EquationFit");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_EQ(20, coil.getDouble(10).get());  // Rated Entering Water Temperature
+  EXPECT_EQ(20, coil.getDouble(11).get());  // Rated Entering Air Dry-Bulb Temperature
+  EXPECT_EQ(1.0, coil.getDouble(12).get());  // Ratio of Rated Heating Capacity to Rated Cooling Capacity
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingWaterToAirHeatPumpEquationFit) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingWaterToAirHeatPumpEquationFit.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingWaterToAirHeatPumpEquationFit_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:WaterToAirHeatPump:EquationFit");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_EQ(30, coil.getDouble(11).get());  // Rated Entering Water Temperature
+  EXPECT_EQ(27, coil.getDouble(12).get());  // Rated Entering Air Dry-Bulb Temperature
+  EXPECT_EQ(19.0, coil.getDouble(13).get());  // Rated Entering Air Wet-Bulb Temperature
+}
