@@ -370,7 +370,7 @@ namespace model {
     }
 
     bool CoilCoolingWaterToAirHeatPumpEquationFit_Impl::setRatedEnteringWaterTemperature(double ratedEnteringWaterTemperature) {
-      bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::setRatedEnteringWaterTemperature, ratedEnteringWaterTemperature);
+      bool result = setDouble(OS_Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature, ratedEnteringWaterTemperature);
       return result;
     }
 
