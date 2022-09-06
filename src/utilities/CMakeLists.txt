@@ -468,6 +468,44 @@ if(HAVE_UNISTD_H)
   target_compile_definitions(${target_name} PUBLIC "-DHAVE_UNISTD_H")
 endif()
 
+# To be used by the main cli program, this target
+# is the most minimal thing that provides Path, and Filesystem
+# capabilities, which the cli requires.
+add_library(openstudio_utilities_minimal
+  OBJECT
+  core/ApplicationPathHelpers.hpp
+  ${CMAKE_CURRENT_BINARY_DIR}/core/ApplicationPathHelpers.cxx
+  core/DynamicLibrary.hpp
+  core/DynamicLibraryPOSIX.hpp
+  core/DynamicLibraryWindows.hpp
+  core/Filesystem.hpp
+  core/Filesystem.cpp
+  core/FilesystemHelpers.hpp
+  core/FilesystemHelpers.cpp
+  core/Logger.hpp
+  core/Logger.cpp
+  core/LogMessage.hpp
+  core/LogMessage.cpp
+  core/LogSink.hpp
+  core/LogSink_Impl.hpp
+  core/LogSink.cpp
+  core/Path.hpp
+  core/Path.cpp
+  core/PathHelpers.hpp
+  core/PathHelpers.cpp
+  core/String.hpp
+  core/String.cpp
+  core/StringHelpers.hpp
+  core/StringHelpers.cpp
+  core/StringStreamLogSink.hpp
+  core/StringStreamLogSink_Impl.hpp
+  core/StringStreamLogSink.cpp
+)
+target_link_libraries(openstudio_utilities_minimal PUBLIC ${${target_name}_depends})
+
+if(HAVE_UNISTD_H)
+  target_compile_definitions(openstudio_utilities_minimal PUBLIC "-DHAVE_UNISTD_H")
+endif()
 
 if(BUILD_TESTING)
   CREATE_TEST_TARGETS(${target_name} "${${target_name}_test_src}" openstudiolib)

@@ -25,7 +25,7 @@ endif()
 
 target_link_libraries(openstudio
  PRIVATE
- openstudio_utilities
+ openstudio_utilities_minimal
  CONAN_PKG::cli11
 )
 
