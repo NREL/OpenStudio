@@ -15760,6 +15760,7 @@ OS:Coil:Cooling:DX,
        \type alpha
        \reference CoilCoolingDX
        \reference AFNCoilNames
+       \reference DesuperHeatingCoilSources
        \reference ConnectionObject
   A3, \field Evaporator Inlet Node
        \type object-list
@@ -18097,6 +18098,7 @@ OS:Coil:WaterHeating:Desuperheater,
   A8,  \field Heating Source Name
        \required-field
        \type object-list
+       \object-list CoilCoolingDX
        \object-list DesuperHeatingCoilSources
        \object-list DesuperHeatingWaterOnlySources
        \note The name of the DX system used for heat reclaim.
