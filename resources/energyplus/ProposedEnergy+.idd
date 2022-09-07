@@ -31779,6 +31779,7 @@ Coil:Heating:Electric:MultiStage,
        \note capacity and Efficiency.
   N2, \field Stage 1 Efficiency
        \required-field
+       \begin-extensible
        \type real
        \units W/W
        \minimum> 0.0
