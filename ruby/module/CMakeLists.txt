@@ -89,11 +89,13 @@ if (APPLE)
   )
 endif()
 
-install(TARGETS openstudio_rb  ${ALL_RUBY_BINDING_TARGETS}
+install(TARGETS openstudio_rb
   EXPORT openstudio
   DESTINATION Ruby
   COMPONENT "RubyAPI"
-  INCLUDES DESTINATION include include/openstudio
 )
 install(FILES openstudio.rb DESTINATION Ruby COMPONENT "RubyAPI")
+# Is anyone using these in standalone ruby bindings?
+#install(FILES measure_manager.rb DESTINATION Ruby COMPONENT "RubyAPI")
+#install(FILES measure_manager_server.rb DESTINATION Ruby COMPONENT "RubyAPI")
 install(DIRECTORY openstudio DESTINATION Ruby COMPONENT "RubyAPI")

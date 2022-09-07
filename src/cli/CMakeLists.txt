@@ -35,10 +35,7 @@ if( APPLE )
   target_link_libraries(openstudio PRIVATE ${COREFOUNDATION_LIBRARY})
 endif()
 
-install(TARGETS openstudio EXPORT openstudio DESTINATION bin COMPONENT "CLI")
-###install(FILES openstudio_cli.rb DESTINATION Ruby COMPONENT "RubyAPI")
-###install(FILES measure_manager.rb DESTINATION Ruby COMPONENT "RubyAPI")
-###install(FILES measure_manager_server.rb DESTINATION Ruby COMPONENT "RubyAPI")
+install(TARGETS openstudio EXPORT openstudio COMPONENT "CLI")
 
 if( BUILD_PAT )
   if( APPLE )

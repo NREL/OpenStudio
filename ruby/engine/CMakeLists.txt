@@ -217,7 +217,7 @@ set_source_files_properties(${EMBED_SOURCE_FILES} PROPERTIES HEADER_FILE_ONLY TR
 source_group(embedded_files FILES ${OUTPUT})
 
 add_library(rubyengine
-  SHARED
+  MODULE
   RubyEngine.hpp
   RubyEngine.cpp
   InitRubyEngine.cpp
@@ -240,7 +240,6 @@ endif()
 #add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
 get_target_property(SCRIPT_ENGINE_INCLUDE_DIRS scriptengine INTERFACE_INCLUDE_DIRECTORIES)
-message("SCRIPT_ENGINE_INCLUDE_DIRS: ${SCRIPT_ENGINE_INCLUDE_DIRS}")
 
 #target_link_libraries(rubyengine PRIVATE osrubyinit CONAN_PKG::openstudio_ruby ${ALL_RUBY_BINDING_TARGETS})
 
@@ -275,3 +274,5 @@ else()
     ${ALL_RUBY_BINDING_TARGETS}
   )
 endif()
+
+install(TARGETS rubyengine EXPORT openstudio DESTINATION bin COMPONENT "CLI")
