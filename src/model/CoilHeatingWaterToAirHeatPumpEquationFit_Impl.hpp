@@ -152,11 +152,11 @@ namespace model {
 
       void resetRatedHeatingCoefficientofPerformance();
 
-      bool setRatedEnteringWaterTemperature(double ratedEnteringWaterTemperature) const;
+      bool setRatedEnteringWaterTemperature(double ratedEnteringWaterTemperature);
 
-      bool setRatedEnteringAirDryBulbTemperature(double ratedEnteringAirDryBulbTemperature) const;
+      bool setRatedEnteringAirDryBulbTemperature(double ratedEnteringAirDryBulbTemperature);
 
-      bool setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(double ratioofRatedHeatingCapacitytoRatedCoolingCapacity) const;
+      bool setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(double ratioofRatedHeatingCapacitytoRatedCoolingCapacity);
 
       bool setHeatingCapacityCurve(const CurveQuadLinear& heatingCapacityCurve);
 
