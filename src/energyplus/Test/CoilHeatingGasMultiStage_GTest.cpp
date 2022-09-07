@@ -33,12 +33,20 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVACUnitarySystem.hpp"
+#include "../../model/Node.hpp"
 #include "../../model/CoilHeatingGasMultiStage.hpp"
 #include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData.hpp"
 #include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/FanConstantVolume.hpp"
+
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -72,7 +80,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage) {
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Heating_Gas_MultiStage).size());
 
-  idf_coil = workspace.getObjectsByType(IddObjectType::Coil_Heating_Gas_MultiStage)[0];
+  IdfObject idf_coil = workspace.getObjectsByType(IddObjectType::Coil_Heating_Gas_MultiStage)[0];
 
   EXPECT_EQ("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::AvailabilityScheduleName, false).get());
   EXPECT_NE("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::AirInletNodeName, false).get());
@@ -83,7 +91,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage) {
   EXPECT_EQ(1, idf_coil.getInt(Coil_Heating_Gas_MultiStageFields::NumberofStages, false).get());
   ASSERT_EQ(1, idf_coil.numExtensibleGroups());
   auto egs = idf_coil.extensibleGroups();
-  auto stages = s.stages();
+  auto stages = h.stages();
   for (size_t i = 0; i < idf_coil.extensibleGroups().size(); ++i) {
     const IdfExtensibleGroup& eg = egs[i];
     const auto stage = stages[i];

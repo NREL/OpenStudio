@@ -33,6 +33,9 @@
 #include "../ForwardTranslator.hpp"
 
 #include "../../model/Model.hpp"
+#include "../../model/AirLoopHVAC.hpp"
+#include "../../model/AirLoopHVACUnitarySystem.hpp"
+#include "../../model/Node.hpp"
 #include "../../model/CoilHeatingElectricMultiStage.hpp"
 #include "../../model/CoilHeatingElectricMultiStage_Impl.hpp"
 #include "../../model/CoilHeatingElectricMultiStageStageData.hpp"
@@ -40,6 +43,11 @@
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/FanConstantVolume.hpp"
+
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/Coil_Heating_Electric_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -75,7 +83,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage) {
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Heating_Electric_MultiStage).size());
 
-  idf_coil = workspace.getObjectsByType(IddObjectType::Coil_Heating_Electric_MultiStage)[0];
+  IdfObject idf_coil = workspace.getObjectsByType(IddObjectType::Coil_Heating_Electric_MultiStage)[0];
 
   EXPECT_EQ("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AvailabilityScheduleName, false).get());
   EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, false).get());
