@@ -7035,20 +7035,18 @@ namespace osversion {
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
+
+        // No-op
+      } else {
+        ss << object;
       }
-
-      // No-op
     }
-    else {
-      ss << object;
-    }
-  }
 
-  return ss.str();
+    return ss.str();
 
-}  // end update_3_4_0_to_3_5_0
+  }  // end update_3_4_0_to_3_5_0
 
-/*   std::string VersionTranslator::update_3_5_0_to_3_5_1(const IdfFile& idf_3_5_0, const IddFileAndFactoryWrapper& idd_3_5_1) {
+  /*   std::string VersionTranslator::update_3_5_0_to_3_5_1(const IdfFile& idf_3_5_0, const IddFileAndFactoryWrapper& idd_3_5_1) {
 
   }  // end update_3_5_0_to_3_5_1 */
 
