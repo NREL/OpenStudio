@@ -1824,13 +1824,13 @@ TEST_F(OSVersionFixture, update_3_3_0_to_3_4_0_CoilHeatingDXMultiSpeed) {
   ASSERT_EQ(0u, model->getObjectsByType("OS:ModelObjectList").size());
 }
 
-TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_AirWallMaterial.osm");
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_AirWallMaterial) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_AirWallMaterial.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_AirWallMaterial_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_AirWallMaterial_updated.osm");
   model->save(outPath, true);
 
   ASSERT_EQ(2u, model->numObjects());
