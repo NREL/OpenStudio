@@ -83,6 +83,18 @@ namespace energyplus {
 
     for (auto stage : modelObject.stages()) {
       auto eg = idfObject.pushExtensibleGroup();
+
+      // Stage1Efficiency
+      if ((value = stage.efficiency())) {
+        eg.setDouble(Coil_Heating_Electric_MultiStageExtensibleFields::StageEfficiency, value.get());
+      }
+
+      // Stage1NominalCapacity
+      if (stage.isNominalCapacityAutosized()) {
+        eg.setString(Coil_Heating_Electric_MultiStageExtensibleFields::StageNominalCapacity, "AutoSize");
+      } else if ((value = stage.nominalCapacity())) {
+        eg.setDouble(Coil_Heating_Electric_MultiStageExtensibleFields::StageNominalCapacity, value.get());
+      }
     }
 
     return idfObject;

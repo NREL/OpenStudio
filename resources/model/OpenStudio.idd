@@ -17966,7 +17966,7 @@ OS:Coil:Heating:Gas,
        \default NaturalGas
 
 OS:Coil:Heating:Gas:MultiStage,
-       \extensible:1
+      \extensible:1
   A1, \field Handle
       \type handle
       \required-field
