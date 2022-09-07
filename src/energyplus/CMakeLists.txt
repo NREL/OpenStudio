@@ -41,7 +41,6 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctInletSideMixer.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVHeatAndCoolNoReheat.cpp
   ForwardTranslator/ForwardTranslateAirTerminalSingleDuctVAVHeatAndCoolReheat.cpp
-  ForwardTranslator/ForwardTranslateAirWallMaterial.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerAssignmentList.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerScheduled.cpp
   ForwardTranslator/ForwardTranslateAvailabilityManagerScheduledOn.cpp
@@ -640,7 +639,6 @@ set(${target_name}_test_src
   Test/AirTerminalSingleDuctVAVReheat_GTest.cpp
   Test/AirTerminalSingleDuctVAVHeatAndCoolNoReheat_GTest.cpp
   Test/AirTerminalSingleDuctVAVHeatAndCoolReheat_GTest.cpp
-  Test/AirWallMaterial_GTest.cpp
 
   Test/AirLoopHVAC_GTest.cpp
   Test/AirLoopHVACDedicatedOutdoorAirSystem_GTest.cpp

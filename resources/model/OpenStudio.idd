@@ -2130,16 +2130,6 @@ OS:Material:AirGap,
        \units m2-K/W
        \minimum> 0
 
-OS:Material:AirWall,
-       \min-fields 1
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2; \field Name
-       \type alpha
-       \required-field
-       \reference MaterialNames
-
 OS:Material:InfraredTransparent,
        \memo Special infrared transparent material.  Similar to a Material:Nomass with low thermal resistance.
        \memo High absorptance in both wavelengths.

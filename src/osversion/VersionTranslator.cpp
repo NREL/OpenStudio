@@ -6923,7 +6923,53 @@ namespace osversion {
     for (const IdfObject& object : idf_3_4_0.objects()) {
       auto iddname = object.iddObject().name();
 
-      if (iddname == "OS:Table:MultiVariableLookup") {
+      if (iddname == "OS:Construction") {
+
+        // Remove Construction with Material:AirWall layer
+        // Replace with Construction:AirBoundary
+
+        auto iddObject = idd_3_4_1.getObject(iddname);
+
+        bool isAirWall = false;
+        if (object.numExtensibleGroups() == 1u) {
+          const IdfExtensibleGroup eg = object.extensibleGroups()[0];
+          if (boost::optional<IdfObject> layer = idf_3_4_0.getObject(toUUID(eg.getString(0).get()))) {
+            auto layeriddname = layer->iddObject().name();
+            if (layeriddname == "OS:Material:AirWall") {
+
+              auto iddObject = idd_3_4_1.getObject("OS:Construction:AirBoundary");
+              IdfObject newObject(iddObject.get());
+
+              // Handle
+              if (auto value = object.getString(0)) {
+                newObject.setString(0, value.get());
+              }
+
+              // Name
+              if (auto value = object.getString(1)) {
+                newObject.setString(1, value.get());
+              }
+
+              // Simple Mixing Air Changes per Hour
+              // Set ACH to 0.0, to match the old style Material:AirWall (same as the ConstructionAirBoundary Ctor)
+              newObject.setDouble(3, 0.0);
+
+              m_refactored.push_back(RefactoredObjectData(object, newObject));
+              ss << newObject;
+
+              isAirWall = true;
+            }
+          }
+        }
+
+        if (!isAirWall) {
+          ss << object;
+        }
+
+      } else if (iddname == "OS:Material:AirWall") {
+        m_untranslated.push_back(object);
+
+      } else if (iddname == "OS:Table:MultiVariableLookup") {
 
         // Stage Data List becomes extensible list (Stage 1, Stage 2, etc.)
         // ModelObjectList gets removed
@@ -7044,6 +7090,7 @@ namespace osversion {
     }
 
     return ss.str();
+
   }  // end update_3_4_0_to_3_4_1
 
   /*   std::string VersionTranslator::update_3_4_1_to_3_5_0(const IdfFile& idf_3_4_1, const IddFileAndFactoryWrapper& idd_3_5_0) {

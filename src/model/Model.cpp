@@ -3849,7 +3849,6 @@ namespace model {
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVNoReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
     REGISTER_CONSTRUCTOR(AirTerminalSingleDuctVAVHeatAndCoolReheat);
-    REGISTER_CONSTRUCTOR(AirWallMaterial);
     REGISTER_CONSTRUCTOR(AvailabilityManagerAssignmentList);
     REGISTER_CONSTRUCTOR(AvailabilityManagerNightCycle);
     REGISTER_CONSTRUCTOR(AvailabilityManagerOptimumStart);
@@ -4402,7 +4401,6 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVNoReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVHeatAndCoolNoReheat);
     REGISTER_COPYCONSTRUCTORS(AirTerminalSingleDuctVAVHeatAndCoolReheat);
-    REGISTER_COPYCONSTRUCTORS(AirWallMaterial);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerAssignmentList);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerNightCycle);
     REGISTER_COPYCONSTRUCTORS(AvailabilityManagerOptimumStart);

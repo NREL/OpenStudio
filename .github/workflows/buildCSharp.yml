@@ -1,0 +1,334 @@
+name: buildCSharpSDK
+
+on: 
+  push:
+    branches: [ develop ]
+
+jobs:
+  build-csharp:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
+      fail-fast: false
+      matrix:
+        name: [Ubuntu, macOS, Windows64, Windows32]
+        include:
+        - name: Ubuntu
+          os: ubuntu-18.04
+        - name: macOS
+          os: macos-10.15
+        - name: Windows64
+          os: windows-2019
+        - name: Windows32
+          os: windows-2019
+
+    steps:
+      - name: "Checkout develop Branch"
+        uses: actions/checkout@v2
+        with:
+          ref: develop
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8.x'
+
+
+
+      - name: Install conan
+        run: |
+          python --version
+          pip install conan
+          conan --version
+          echo "Enabling conan revisions and setting parallel_download"
+          conan config set general.revisions_enabled=True
+          conan config set general.parallel_download=8
+
+
+      - name: Compile Ubuntu
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -x
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release \
+                -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF \
+                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF \
+                -DBUILD_PACKAGE=OFF \
+                ../
+          
+          make -j2
+
+
+      - name: Compile macOS
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          set -x
+          export CC=clang
+          export CMAKE_OSX_ARCHITECTURES=x86_64
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release \
+                -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF \
+                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF \
+                -DBUILD_PACKAGE=OFF \
+                ../
+
+          make -j3
+
+      - name: Compile Windows 64
+        if: matrix.name == 'Windows64'
+        uses: lukka/run-cmake@v2
+        with:
+          cmakeGenerator: VS16Win64
+          cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+          cmakeListsTxtPath: ${{ github.workspace }}/CMakeLists.txt
+          cmakeBuildType: Release
+          cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF'
+          buildWithCMakeArgs: "--config Release -j2"
+          buildDirectory: ${{ github.workspace }}/build
+          buildWithCMake: true
+
+      - name: Compile Windows 32
+        if: matrix.name == 'Windows32'
+        uses: lukka/run-cmake@v2
+        with:
+          cmakeGenerator: VS16Win32
+          cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
+          cmakeListsTxtPath: ${{ github.workspace }}/CMakeLists.txt
+          cmakeBuildType: Release
+          cmakeAppendedArgs: '-A Win32 -DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF'
+          buildWithCMakeArgs: "--config Release -j2"
+          buildDirectory: ${{ github.workspace }}/build
+          buildWithCMake: true
+
+
+      - name: build nuget for Windows
+        if: runner.os == 'Windows'
+        run: |
+          dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/
+          
+      - name: build nuget for Linux
+        if: runner.os == 'Linux'
+        run: |
+          cp ./csharp/*.targets ./build/Products
+          ls ./build/Products
+          dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/
+
+      - name: Fix dylib and build nuget for Mac
+        if: runner.os == 'macOS'
+        run: |
+          sudo install_name_tool -add_rpath "@loader_path/." ./build/Products/libopenstudio_csharp.dylib
+          sudo install_name_tool -delete_rpath "/Users/runner/work/OpenStudio/OpenStudio/build/Products"  ./build/Products/libopenstudio_csharp.dylib
+
+          sudo install_name_tool -add_rpath "@loader_path/." ./build/Products/libopenstudio_model_csharp.dylib
+          sudo install_name_tool -delete_rpath "/Users/runner/work/OpenStudio/OpenStudio/build/Products"  ./build/Products/libopenstudio_model_csharp.dylib
+
+          sudo install_name_tool -add_rpath "@loader_path/." ./build/Products/libopenstudio_translators_csharp.dylib
+          sudo install_name_tool -delete_rpath "/Users/runner/work/OpenStudio/OpenStudio/build/Products"  ./build/Products/libopenstudio_translators_csharp.dylib
+
+          cp ./csharp/*.targets ./build/Products
+          ls ./build/Products
+          dotnet pack ./build/csharp_wrapper/OpenStudio.csproj -o ./build/Products/csharp/Release/
+          
+
+      - name: list files
+        run: |
+          echo "Listing the top directory=========================================="
+          ls
+
+          echo "Listing ./build/=========================================="
+          ls ./build/
+
+          echo "Listing ./build/Products/=========================================="
+          ls -R ./build/Products
+
+
+      - name: Tests on Windows for x64
+        if: matrix.name == 'Windows64'
+        run: |
+          cd csharp/examples/OpenStudio.Tests/
+          dotnet remove package OpenStudio 
+          dotnet restore OpenStudio.Tests.csproj
+          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
+          echo "Testing for both Net5 and Net45"
+          dotnet test OpenStudio.Tests.csproj /p:Platform=x64
+
+      - name: Tests on Windows for x32
+        if: matrix.name == 'Windows32'
+        run: |
+          cd csharp/examples/OpenStudio.Tests/
+          dotnet remove package OpenStudio 
+          dotnet restore OpenStudio.Tests.csproj
+          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
+          echo "Testing for both Net5 and Net45"
+          dotnet test OpenStudio.Tests.csproj /p:Platform=x86
+
+
+      - name: Tests dotnet 5 on Mac and Linux
+        if: runner.os != 'Windows'
+        run: |
+          cd csharp/examples/OpenStudio.Tests/
+          dotnet remove package OpenStudio 
+          dotnet restore OpenStudio.Tests.csproj
+          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
+          dotnet test OpenStudio.Tests.csproj -f NET5 /p:Platform=x64
+
+      - name: Zip Build/Source Artifact
+        if: runner.os != 'Windows'
+        run: |
+          zip -r CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release/*.nupkg
+          zip -r CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
+          
+
+      - name: Zip Build/Source Artifact
+        if: runner.os == 'Windows'
+        run: |
+          7z a CSharp_${{ matrix.name }}.zip ./build/Products/csharp/Release/*.nupkg
+          7z a CSharp_${{ matrix.name }}_Src.zip ./build/csharp_wrapper/generated_sources ./build/csharp_wrapper/OpenStudio.csproj
+          
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: CSharp_${{ matrix.name }}
+          path: CSharp_${{ matrix.name }}.zip
+
+      - name: Upload artifact generated_sources
+        uses: actions/upload-artifact@v2
+        with:
+          name: CSharp_${{ matrix.name }}_Src
+          path: CSharp_${{ matrix.name }}_Src.zip
+
+      - name: Upload artifact (if failed)
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.name }}_Failed
+          path: |
+            ./build/csharp_wrapper/
+            ./build/Products/
+
+
+  Test_Windows:
+    name: "Merge x86 and x64 nuget packages for windows"
+    runs-on: windows-latest
+    timeout-minutes: 20
+    needs: build-csharp
+
+    steps:
+      - name: "Checkout Master Branch"
+        uses: actions/checkout@v2
+      
+      - name: Download CSharp_Windows32
+        uses: actions/download-artifact@v2
+        with:
+          name: CSharp_Windows32
+
+      - name: Download CSharp_Windows64
+        uses: actions/download-artifact@v2
+        with:
+          name: CSharp_Windows64
+
+      - name: unzip artifacts
+        run: |
+          Expand-Archive CSharp_Windows32.zip -DestinationPath x86
+          Expand-Archive CSharp_Windows64.zip -DestinationPath x64
+          
+          Expand-Archive x86\*.nupkg -DestinationPath x86\package
+          Expand-Archive x64\*.nupkg -DestinationPath x64\package
+          ls -R
+          
+      - name: merge x86 into x64
+        run: |
+          cp x64\package x64x86 -r
+          mv x64x86\lib x64x86\build
+
+          mkdir x64x86\build\netstandard2.0\x64
+          mkdir x64x86\build\net45\x64
+          mkdir x64x86\build\netstandard2.0\x86
+          mkdir x64x86\build\net45\x86
+
+          mv x64x86\build\netstandard2.0\*.dll x64x86\build\netstandard2.0\x64
+          mv x64x86\build\net45\*.dll x64x86\build\net45\x64 
+
+          mv x86\package\lib\netstandard2.0\* x64x86\build\netstandard2.0\x86
+          mv x86\package\lib\net45\* x64x86\build\net45\x86
+
+
+          cp csharp\OpenStudio.targets x64x86\build\netstandard2.0\
+          cp csharp\OpenStudio.targets x64x86\build\net45\
+          cd x64x86
+          ls -R
+
+      - name: make a new nupkg for Windows 
+        run: |
+          $VERSION = (Get-Item x64x86\build\netstandard2.0\x64\OpenStudio.dll).VersionInfo.FileVersion
+          echo $VERSION
+          Compress-Archive -U -Path x64x86\* -DestinationPath OpenStudio.$VERSION.nupkg
+          cp *.nupkg x64x86\OpenStudio.nupkg
+          ls
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: nugetPackage
+          path: x64x86\OpenStudio.nupkg
+
+      - name: Tests on Windows
+        run: |
+          cd csharp/examples/OpenStudio.Tests/
+          dotnet remove package OpenStudio 
+          dotnet restore OpenStudio.Tests.csproj
+          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../"
+
+
+          dotnet test OpenStudio.Tests.csproj /p:Platform=x64
+          dotnet clean
+          dotnet test OpenStudio.Tests.csproj /p:Platform=x86
+
+  Test_Mac_ubuntu:
+    name: "Test x64 nuget packages for macos and ubuntu"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # fail-fast: Default is true, switch to false to allow one platform to fail and still run others
+      fail-fast: false
+      matrix:
+        name: [Ubuntu, macOS]
+        include:
+        - name: Ubuntu
+          os: ubuntu-18.04
+        - name: macOS
+          os: macos-10.15
+    timeout-minutes: 20
+    needs: build-csharp
+
+    steps:
+      - name: "Checkout Master Branch"
+        uses: actions/checkout@v2
+      
+      - name: Download nuget
+        uses: actions/download-artifact@v2
+        with:
+          name: CSharp_${{ matrix.name }}
+
+      - name: unzip artifacts
+        run: |
+          unzip CSharp_${{ matrix.name }}.zip -d ./nuget
+          mv ./nuget/build/Products/csharp/Release/*.nupkg ./nuget/
+          ls -R
+          
+      - name: Tests
+        run: |
+          cd csharp/examples/OpenStudio.Tests/
+          dotnet remove package OpenStudio 
+          dotnet restore OpenStudio.Tests.csproj
+          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../nuget"
+
+          dotnet clean
+          dotnet test OpenStudio.Tests.csproj -f NET5 /p:Platform=x64
+
+        
+          

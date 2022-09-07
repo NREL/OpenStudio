@@ -1824,6 +1824,38 @@ TEST_F(OSVersionFixture, update_3_3_0_to_3_4_0_CoilHeatingDXMultiSpeed) {
   ASSERT_EQ(0u, model->getObjectsByType("OS:ModelObjectList").size());
 }
 
+TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_AirWallMaterial.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_AirWallMaterial_updated.osm");
+  model->save(outPath, true);
+
+  ASSERT_EQ(2u, model->numObjects());
+
+  std::vector<WorkspaceObject> constrs = model->getObjectsByType("OS:Construction");
+  ASSERT_EQ(0u, constrs.size());
+
+  std::vector<WorkspaceObject> constrAirBoundarys = model->getObjectsByType("OS:Construction:AirBoundary");
+  ASSERT_EQ(1u, constrAirBoundarys.size());
+  WorkspaceObject constrAirBoundary = constrAirBoundarys[0];
+
+  EXPECT_EQ("Construction 1", constrAirBoundary.getString(1).get());  // Name
+  EXPECT_EQ("", constrAirBoundary.getString(2).get());                // Air Exchange Method
+  EXPECT_EQ(0.0, constrAirBoundary.getDouble(3).get());               // Simple Mixing Air Changes Per Hour
+  EXPECT_EQ("", constrAirBoundary.getString(4).get());                // Simple Mixing Schedule Name
+  EXPECT_EQ("", constrAirBoundary.getString(5).get());                // Surface Rendering Name
+
+  std::vector<WorkspaceObject> surfaces = model->getObjectsByType("OS:Surface");
+  ASSERT_EQ(1u, surfaces.size());
+  WorkspaceObject surface = surfaces[0];
+  ASSERT_TRUE(surface.getTarget(3));  // Construction Name
+  EXPECT_EQ("OS:Construction:AirBoundary", surface.getTarget(3).get().iddObject().name());
+  EXPECT_EQ("Construction 1", surface.getTarget(3).get().nameString());  // Construction Name
+}
+
 TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_TableMultiVariableLookup_oneDim) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_oneDim.osm");
   osversion::VersionTranslator vt;
