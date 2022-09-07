@@ -61,7 +61,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeatingGasMultiStage) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_CoilHeatingGasMultiStage) {
   Model m;
 
   CoilCoolingDXSingleSpeed c(m);
@@ -83,7 +83,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeating
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Heating_Gas_MultiStage).size());
 }
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeatingElectricMultiStage) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_CoilHeatingElectricMultiStage) {
   Model m;
 
   CoilCoolingDXSingleSpeed c(m);
