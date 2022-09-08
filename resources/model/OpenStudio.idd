@@ -21135,6 +21135,119 @@ OS:Table:MultiVariableLookup,
        \type real
        \begin-extensible
 
+OS:Table:IndependentVariable,
+       \memo An independent variable representing a single dimension of a Table:Lookup
+       \memo object.
+       \extensible:1
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference IndependentVariableName
+       \type alpha
+  A3,  \field Interpolation Method
+       \type choice
+       \key Linear
+       \key Cubic
+       \required-field
+  A4,  \field Extrapolation Method
+       \type choice
+       \key Constant
+       \key Linear
+       \required-field
+  N1,  \field Minimum Value
+       \type real
+       \unitsBasedOnField A5
+  N2,  \field Maximum Value
+       \type real
+       \unitsBasedOnField A5
+  N3,  \field Normalization Reference Value
+       \type real
+       \unitsBasedOnField A5
+  A5,  \field Unit Type
+       \type choice
+       \key Dimensionless
+       \key Temperature
+       \key VolumetricFlow
+       \key MassFlow
+       \key Power
+       \key Distance
+       \key Angle
+       \required-field
+  A6,  \field External File Name
+       \type object-list
+       \object-list ExternalFileNames
+  N4,  \field External File Column Number
+       \type integer
+       \minimum 1
+  N5,  \field External File Starting Row Number
+       \type integer
+       \minimum 1
+  N6;  \field Value
+       \type real
+       \begin-extensible
+
+OS:Table:Lookup,
+       \memo Lookup tables are used in place of curves and can represent any number
+       \memo of independent variables (defined as Table:IndependentVariable objects
+       \memo in a Table:IndependentVariableList). Output values are interpolated
+       \memo within the bounds defined by each independent variable and extrapolated
+       \memo beyond the bounds according to the interpolation/extrapolation methods
+       \memo defined by each independent variable.
+       \extensible:1
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference UnivariateFunctions
+       \reference BivariateFunctions
+       \reference TrivariateFunctions
+       \reference QuadvariateFunctions
+       \reference QuintvariateFunctions
+       \reference MultivariateFunctions
+       \reference AllCurves
+       \type alpha
+  A3,  \field Independent Variable List Name
+       \required-field
+       \type object-list
+       \object-list ModelObjectLists
+  A4,  \field Normalization Method
+       \type choice
+       \key None
+       \key DivisorOnly
+       \key AutomaticWithDivisor
+       \required-field
+  N1,  \field Normalization Divisor
+       \type real
+       \required-field
+  N2,  \field Minimum Output
+       \type real
+       \unitsBasedOnField A5
+  N3,  \field Maximum Output
+       \type real
+       \unitsBasedOnField A5
+  A5,  \field Output Unit Type
+       \type choice
+       \key Dimensionless
+       \key Capacity
+       \key Power
+       \required-field
+  A6,  \field External File Name
+       \type object-list
+       \object-list ExternalFileNames
+  N4,  \field External File Column Number
+       \type integer
+       \minimum 1
+  N5,  \field External File Starting Row Number
+       \type integer
+       \minimum 1
+  N6;  \field Output Value
+       \type real
+       \unitsBasedOnField A5
+       \begin-extensible
+
 OS:DesignSpecification:OutdoorAir,
        \memo This object is used to describe general outdoor air requirements which
        \memo are referenced by other objects.

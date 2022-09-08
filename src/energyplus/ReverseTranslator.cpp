@@ -909,6 +909,18 @@ namespace energyplus {
         //modelObject = translateSwimmingPoolIndoor(workspaceObject);
         //break;
         //}
+
+      case openstudio::IddObjectType::Table_Lookup: {
+        modelObject = translateTableLookup(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::Table_IndependentVariableList: {
+        break;  // Done via translateTableLookup
+      }
+      case openstudio::IddObjectType::Table_IndependentVariable: {
+        break;  // Done via translateTableLookup
+      }
+
       case openstudio::IddObjectType::ThermostatSetpoint_DualSetpoint: {
         modelObject = translateThermostatSetpointDualSetpoint(workspaceObject);
         break;
