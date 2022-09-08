@@ -4258,7 +4258,21 @@ namespace model {
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
     REGISTER_CONSTRUCTOR(SurfacePropertySurroundingSurfaces);
     REGISTER_CONSTRUCTOR(SwimmingPoolIndoor);
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
     REGISTER_CONSTRUCTOR(TableMultiVariableLookup);
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
+    REGISTER_CONSTRUCTOR(TableLookup);
+    REGISTER_CONSTRUCTOR(TableIndependentVariable);
     REGISTER_CONSTRUCTOR(TemperingValve);
     REGISTER_CONSTRUCTOR(ThermochromicGlazing);
     REGISTER_CONSTRUCTOR(ThermostatSetpointDualSetpoint);
@@ -4796,7 +4810,21 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertySurroundingSurfaces);
     REGISTER_COPYCONSTRUCTORS(SwimmingPoolIndoor);
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
     REGISTER_COPYCONSTRUCTORS(TableMultiVariableLookup);
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
+    REGISTER_COPYCONSTRUCTORS(TableLookup);
+    REGISTER_COPYCONSTRUCTORS(TableIndependentVariable);
     REGISTER_COPYCONSTRUCTORS(TemperingValve);
     REGISTER_COPYCONSTRUCTORS(ThermochromicGlazing);
     REGISTER_COPYCONSTRUCTORS(ThermostatSetpointDualSetpoint);

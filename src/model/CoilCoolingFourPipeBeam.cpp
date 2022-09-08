@@ -41,7 +41,8 @@
 
 // For Ctor default curves
 #include "CurveLinear.hpp"
-#include "TableMultiVariableLookup.hpp"
+#include "TableLookup.hpp"
+#include "TableIndependentVariable.hpp"
 
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/OS_Coil_Cooling_FourPipeBeam_FieldEnums.hxx>
@@ -334,22 +335,24 @@ namespace model {
     OS_ASSERT(ok);
 
     // Beam Cooling Capacity Air Flow Modification Factor Curve Name
-    // CoolCapModFuncOfSAFlow: Table:OneIndependentVariable,
+    TableLookup coolCapModFuncOfSAFlow(model);
+    {
+      coolCapModFuncOfSAFlow.setName("CoolCapModFuncOfSAFlow");
+      coolCapModFuncOfSAFlow.setMinimumOutput(0.8234);
+      coolCapModFuncOfSAFlow.setMaximumOutput(1.1256);
+      coolCapModFuncOfSAFlow.setOutputUnitType("Dimensionless");
+      coolCapModFuncOfSAFlow.setOutputValues({0.823403, 1.0, 1.1256});
 
-    TableMultiVariableLookup coolCapModFuncOfSAFlow(model, 1);
-    coolCapModFuncOfSAFlow.setName("CoolCapModFuncOfSAFlow");
-    coolCapModFuncOfSAFlow.setCurveType("Quadratic");
-    coolCapModFuncOfSAFlow.setInterpolationMethod("EvaluateCurveToLimits");
-    coolCapModFuncOfSAFlow.setMinimumValueofX1(0.714);
-    coolCapModFuncOfSAFlow.setMaximumValueofX1(1.2857);
-    coolCapModFuncOfSAFlow.setMinimumTableOutput(0.8234);
-    coolCapModFuncOfSAFlow.setMaximumTableOutput(1.1256);
-    coolCapModFuncOfSAFlow.setInputUnitTypeforX1("Dimensionless");
-    coolCapModFuncOfSAFlow.setOutputUnitType("Dimensionless");
-
-    coolCapModFuncOfSAFlow.addPoint(0.714286, 0.823403);
-    coolCapModFuncOfSAFlow.addPoint(1.0, 1.0);
-    coolCapModFuncOfSAFlow.addPoint(1.2857, 1.1256);
+      TableIndependentVariable coolCapModFuncOfSAFlowVar1(model);
+      coolCapModFuncOfSAFlow.addIndependentVariable(coolCapModFuncOfSAFlowVar1);
+      coolCapModFuncOfSAFlowVar1.setName("CoolCapModFuncOfWaterFlow_IndependentVariable1");
+      coolCapModFuncOfSAFlowVar1.setInterpolationMethod("Cubic");
+      coolCapModFuncOfSAFlowVar1.setExtrapolationMethod("Constant");
+      coolCapModFuncOfSAFlowVar1.setMinimumValue(0.714);
+      coolCapModFuncOfSAFlowVar1.setMaximumValue(1.2857);
+      coolCapModFuncOfSAFlowVar1.setUnitType("Dimensionless");
+      coolCapModFuncOfSAFlowVar1.setValues({0.714286, 1.0, 1.2857});
+    }
 
     ok = setBeamCoolingCapacityAirFlowModificationFactorCurve(coolCapModFuncOfSAFlow);
     OS_ASSERT(ok);
@@ -357,25 +360,24 @@ namespace model {
     // Beam Cooling Capacity Chilled Water Flow Modification Factor Curve
     // CapModFuncOfWaterFlow: Table:OneIndependentVariable
 
-    TableMultiVariableLookup capModFuncOfWaterFlow(model, 1);
-    capModFuncOfWaterFlow.setName("CapModFuncOfWaterFlow");
-    capModFuncOfWaterFlow.setCurveType("Quadratic");
-    capModFuncOfWaterFlow.setInterpolationMethod("EvaluateCurveToLimits");
-    capModFuncOfWaterFlow.setMinimumValueofX1(0);
-    capModFuncOfWaterFlow.setMaximumValueofX1(1.33);
-    capModFuncOfWaterFlow.setMinimumTableOutput(0.0);
-    capModFuncOfWaterFlow.setMaximumTableOutput(1.04);
-    capModFuncOfWaterFlow.setInputUnitTypeforX1("Dimensionless");
-    capModFuncOfWaterFlow.setOutputUnitType("Dimensionless");
+    TableLookup capModFuncOfWaterFlow(model);
+    {
+      capModFuncOfWaterFlow.setName("CoolCapModFuncOfWaterFlow");
+      capModFuncOfWaterFlow.setMinimumOutput(0.0);
+      capModFuncOfWaterFlow.setMaximumOutput(1.04);
+      capModFuncOfWaterFlow.setOutputUnitType("Dimensionless");
+      capModFuncOfWaterFlow.setOutputValues({0.0, 0.001, 0.71, 0.85, 0.92, 0.97, 1.0, 1.04});
 
-    capModFuncOfWaterFlow.addPoint(0.0, 0.0);
-    capModFuncOfWaterFlow.addPoint(0.05, 0.001);
-    capModFuncOfWaterFlow.addPoint(0.33333, 0.71);
-    capModFuncOfWaterFlow.addPoint(0.5, 0.85);
-    capModFuncOfWaterFlow.addPoint(0.666667, 0.92);
-    capModFuncOfWaterFlow.addPoint(0.833333, 0.97);
-    capModFuncOfWaterFlow.addPoint(1.0, 1.0);
-    capModFuncOfWaterFlow.addPoint(1.333333, 1.04);
+      TableIndependentVariable capModFuncOfWaterFlowVar1(model);
+      capModFuncOfWaterFlow.addIndependentVariable(capModFuncOfWaterFlowVar1);
+      capModFuncOfWaterFlowVar1.setName("CoolCapModFuncOfWaterFlow_IndependentVariable1");
+      capModFuncOfWaterFlowVar1.setInterpolationMethod("Cubic");
+      capModFuncOfWaterFlowVar1.setExtrapolationMethod("Constant");
+      capModFuncOfWaterFlowVar1.setMinimumValue(0.0);
+      capModFuncOfWaterFlowVar1.setMaximumValue(1.33);
+      capModFuncOfWaterFlowVar1.setUnitType("Dimensionless");
+      capModFuncOfWaterFlowVar1.setValues({0.0, 0.05, 0.33333, 0.5, 0.666667, 0.833333, 1.0, 1.333333});
+    }
 
     ok = setBeamCoolingCapacityChilledWaterFlowModificationFactorCurve(capModFuncOfWaterFlow);
     OS_ASSERT(ok);
