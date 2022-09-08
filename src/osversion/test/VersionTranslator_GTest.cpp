@@ -1856,6 +1856,163 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_AirWallMaterial) {
   EXPECT_EQ("Construction 1", surface.getTarget(3).get().nameString());  // Construction Name
 }
 
+TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_TableMultiVariableLookup_oneDim) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_oneDim.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_oneDim_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> tableLookUps = model->getObjectsByType("OS:Table:Lookup");
+  ASSERT_EQ(1u, tableLookUps.size());
+  ASSERT_EQ(1u, model->getObjectsByType("OS:Table:IndependentVariable").size());
+  ASSERT_EQ(1u, model->getObjectsByType("OS:ModelObjectList").size());
+
+  double norm_ref = 2.4;
+  std::vector<double> x1{0.0, 0.05, 0.33333, 0.5, 0.666667, 0.833333, 1.0, 1.333333};
+  std::vector<double> y{0.0, 0.0024, 1.704, 2.04, 2.208, 2.328, 2.4, 2.496};
+
+  auto& tableLookUp = tableLookUps.front();
+  EXPECT_EQ("CapModFuncOfWaterFlow", tableLookUp.nameString());
+
+  // We have a normalization reference originally, so it's DivisorOnly
+  EXPECT_EQ("DivisorOnly", tableLookUp.getString(3).get());    // Normalization Method
+  EXPECT_EQ(norm_ref, tableLookUp.getDouble(4).get());         // Normalization Divisor
+  EXPECT_EQ(0.0, tableLookUp.getDouble(5).get());              // Minimum Output
+  EXPECT_EQ(1.04 * norm_ref, tableLookUp.getDouble(6).get());  // Maximum Output
+  EXPECT_EQ("Dimensionless", tableLookUp.getString(7).get());  // Output Unit Type
+  EXPECT_TRUE(tableLookUp.isEmpty(8));                         // External File Name
+  EXPECT_TRUE(tableLookUp.isEmpty(9));                         // External File Column Number
+  EXPECT_TRUE(tableLookUp.isEmpty(10));                        // External File Starting Row Number
+  // Output Values
+  ASSERT_EQ(y.size(), tableLookUp.numExtensibleGroups());
+  for (size_t i = 0; auto& eg : tableLookUp.extensibleGroups()) {
+    EXPECT_EQ(y[i], eg.getDouble(0).get());
+    ++i;
+  }
+
+  auto varList_ = tableLookUp.getTarget(2);
+  ASSERT_TRUE(varList_);
+  EXPECT_EQ("CapModFuncOfWaterFlow_IndependentVariableList", varList_->nameString());
+  ASSERT_EQ(1, varList_->numExtensibleGroups());
+  auto var_ = varList_->extensibleGroups().front().cast<WorkspaceExtensibleGroup>().getTarget(0);
+  ASSERT_TRUE(var_);
+  EXPECT_EQ("CapModFuncOfWaterFlow_IndependentVariable_0", var_->nameString());
+
+  // Interpolation = EvaluateCurveToLimits maps to Cubic/Constant
+  EXPECT_EQ("Cubic", var_->getString(2).get());          // Interpolation Method
+  EXPECT_EQ("Constant", var_->getString(3).get());       // Extrapolation Method
+  EXPECT_EQ(0.0, var_->getDouble(4).get());              // Minimum Value
+  EXPECT_EQ(1.33, var_->getDouble(5).get());             // Maximum Value
+  EXPECT_TRUE(var_->isEmpty(6));                         // Normalization Reference Value
+  EXPECT_EQ("Dimensionless", var_->getString(7).get());  // Unit Type
+  EXPECT_TRUE(var_->isEmpty(8));                         // External File Name
+  EXPECT_TRUE(var_->isEmpty(9));                         // External File Column Number
+  EXPECT_TRUE(var_->isEmpty(10));                        // External File Starting Row Number
+
+  // Values
+  ASSERT_EQ(x1.size(), var_->numExtensibleGroups());
+  for (size_t i = 0; auto& eg : var_->extensibleGroups()) {
+    EXPECT_EQ(x1[i], eg.getDouble(0).get());
+    ++i;
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_TableMultiVariableLookup_twoDims) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_twoDims.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_twoDims_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> tableLookUps = model->getObjectsByType("OS:Table:Lookup");
+  ASSERT_EQ(1u, tableLookUps.size());
+  ASSERT_EQ(2u, model->getObjectsByType("OS:Table:IndependentVariable").size());
+  ASSERT_EQ(1u, model->getObjectsByType("OS:ModelObjectList").size());
+
+  std::vector<double> x1{70.0, 72.0, 74.0, 76.0, 78.0};
+  std::vector<double> x2{32.0, 45.0, 68.0, 81.0, 94.0, 107.0};
+
+  std::vector<double> y{0.1, 0.3, 0.5, 0.7, 0.9, 0.2, 0.4, 0.6, 0.8, 1.0, 0.3, 0.5, 0.7, 0.9, 1.1,
+                        0.4, 0.6, 0.8, 1.0, 1.2, 0.5, 0.7, 0.9, 1.1, 1.3, 0.6, 0.8, 1.0, 1.2, 1.4};
+
+  auto& tableLookUp = tableLookUps.front();
+  EXPECT_EQ("Table With 2 dims", tableLookUp.nameString());
+
+  // We don't have a normalization reference originally, so "None" and 1.0 to match the ctor
+
+  EXPECT_EQ("None", tableLookUp.getString(3).get());  // Normalization Method
+  EXPECT_EQ(1.0, tableLookUp.getDouble(4).get());     // Normalization Divisor
+
+  EXPECT_EQ(0.05, tableLookUp.getDouble(5).get());             // Minimum Output
+  EXPECT_EQ(1.25, tableLookUp.getDouble(6).get());             // Maximum Output
+  EXPECT_EQ("Dimensionless", tableLookUp.getString(7).get());  // Output Unit Type
+  EXPECT_TRUE(tableLookUp.isEmpty(8));                         // External File Name
+  EXPECT_TRUE(tableLookUp.isEmpty(9));                         // External File Column Number
+  EXPECT_TRUE(tableLookUp.isEmpty(10));                        // External File Starting Row Number
+  // Output Values
+  ASSERT_EQ(y.size(), tableLookUp.numExtensibleGroups());
+  for (size_t i = 0; auto& eg : tableLookUp.extensibleGroups()) {
+    EXPECT_EQ(y[i], eg.getDouble(0).get());
+    ++i;
+  }
+
+  auto varList_ = tableLookUp.getTarget(2);
+  ASSERT_TRUE(varList_);
+  EXPECT_EQ("Table With 2 dims_IndependentVariableList", varList_->nameString());
+  ASSERT_EQ(2, varList_->numExtensibleGroups());
+  {
+    auto var_ = varList_->extensibleGroups().front().cast<WorkspaceExtensibleGroup>().getTarget(0);
+    ASSERT_TRUE(var_);
+    EXPECT_EQ("Table With 2 dims_IndependentVariable_0", var_->nameString());
+
+    // LagrangeInterpolationLinearExtrapolation = EvaluateCurveToLimits maps to Cubic/Linear
+    EXPECT_EQ("Cubic", var_->getString(2).get());        // Interpolation Method
+    EXPECT_EQ("Linear", var_->getString(3).get());       // Extrapolation Method
+    EXPECT_EQ(60.0, var_->getDouble(4).get());           // Minimum Value
+    EXPECT_EQ(80.0, var_->getDouble(5).get());           // Maximum Value
+    EXPECT_TRUE(var_->isEmpty(6));                       // Normalization Reference Value
+    EXPECT_EQ("Temperature", var_->getString(7).get());  // Unit Type
+    EXPECT_TRUE(var_->isEmpty(8));                       // External File Name
+    EXPECT_TRUE(var_->isEmpty(9));                       // External File Column Number
+    EXPECT_TRUE(var_->isEmpty(10));                      // External File Starting Row Number
+
+    // Values
+    ASSERT_EQ(x1.size(), var_->numExtensibleGroups());
+    for (size_t i = 0; auto& eg : var_->extensibleGroups()) {
+      EXPECT_EQ(x1[i], eg.getDouble(0).get());
+      ++i;
+    }
+  }
+  {
+    auto var_ = varList_->extensibleGroups().back().cast<WorkspaceExtensibleGroup>().getTarget(0);
+    ASSERT_TRUE(var_);
+    EXPECT_EQ("Table With 2 dims_IndependentVariable_1", var_->nameString());
+
+    // LagrangeInterpolationLinearExtrapolation = EvaluateCurveToLimits maps to Cubic/Linear
+    EXPECT_EQ("Cubic", var_->getString(2).get());        // Interpolation Method
+    EXPECT_EQ("Linear", var_->getString(3).get());       // Extrapolation Method
+    EXPECT_EQ(30, var_->getDouble(4).get());             // Minimum Value
+    EXPECT_EQ(100.0, var_->getDouble(5).get());          // Maximum Value
+    EXPECT_TRUE(var_->isEmpty(6));                       // Normalization Reference Value
+    EXPECT_EQ("Temperature", var_->getString(7).get());  // Unit Type
+    EXPECT_TRUE(var_->isEmpty(8));                       // External File Name
+    EXPECT_TRUE(var_->isEmpty(9));                       // External File Column Number
+    EXPECT_TRUE(var_->isEmpty(10));                      // External File Starting Row Number
+
+    // Values
+    ASSERT_EQ(x2.size(), var_->numExtensibleGroups());
+    for (size_t i = 0; auto& eg : var_->extensibleGroups()) {
+      EXPECT_EQ(x2[i], eg.getDouble(0).get());
+      ++i;
+    }
+  }
+}
+
 TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingWaterToAirHeatPumpEquationFit) {
   openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit.osm");
   osversion::VersionTranslator vt;

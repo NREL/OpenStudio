@@ -27,6 +27,14 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
+
 #include "TableMultiVariableLookup.hpp"
 #include "TableMultiVariableLookup_Impl.hpp"
 
@@ -906,6 +914,8 @@ namespace model {
     : Curve(TableMultiVariableLookup::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::TableMultiVariableLookup_Impl>());
 
+    LOG(Warn, "TableMultiVariableLookup is deprecated.  Use TableLookup instead.");
+
     // Check if numberofIndependentVariables between 1 and 5 included, otherwise THROW
     bool ok = getImpl<detail::TableMultiVariableLookup_Impl>()->setNumberofIndependentVariables(numberofIndependentVariables);
     if (!ok) {
@@ -1341,3 +1351,9 @@ namespace model {
 
 }  // namespace model
 }  // namespace openstudio
+
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
