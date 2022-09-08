@@ -365,7 +365,7 @@ cppPublicClass << methodGenerator.cppPublicClassConstructors
 
 # VIRTUAL DESTRUCTORS
 
-hpp << "  virtual ~" << className << "() {}\n\n"
+hpp << "  virtual ~" << className << "() = default;\n\n"
 hpp << "  //@}\n\n"
 
 if pImpl

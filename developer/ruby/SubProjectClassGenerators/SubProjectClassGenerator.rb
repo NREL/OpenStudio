@@ -220,7 +220,7 @@ class SubProjectClassGenerator
       if @baseClassName.empty?
         result << "  : m_impl(impl)\n"
       else
-        result << "  : " << baseClassName << "(impl)\n"
+        result << "  : " << baseClassName << "(std::move(impl))\n"
       end
       result << "{}\n"
     end

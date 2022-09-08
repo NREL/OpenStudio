@@ -4257,6 +4257,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
     REGISTER_CONSTRUCTOR(SurfacePropertySurroundingSurfaces);
+    REGISTER_CONSTRUCTOR(SurfacePropertyGroundSurfaces);
+    REGISTER_CONSTRUCTOR(SurfacePropertyIncidentSolarMultiplier);
     REGISTER_CONSTRUCTOR(SwimmingPoolIndoor);
 #if defined(_MSC_VER)
 #  pragma warning(push)
@@ -4809,6 +4811,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertySurroundingSurfaces);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyGroundSurfaces);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyIncidentSolarMultiplier);
     REGISTER_COPYCONSTRUCTORS(SwimmingPoolIndoor);
 #if defined(_MSC_VER)
 #  pragma warning(push)

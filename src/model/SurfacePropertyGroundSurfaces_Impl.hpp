@@ -27,39 +27,35 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_SURFACEPROPERTYLOCALENVIRONMENT_IMPL_HPP
-#define MODEL_SURFACEPROPERTYLOCALENVIRONMENT_IMPL_HPP
+#ifndef MODEL_SURFACEPROPERTYGROUNDSURFACES_IMPL_HPP
+#define MODEL_SURFACEPROPERTYGROUNDSURFACES_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject_Impl.hpp"
+#include "Schedule.hpp"
 
 namespace openstudio {
 namespace model {
 
-  class PlanarSurface;
-  class Surface;
-  class SubSurface;
-  class Schedule;
-  class SurfacePropertySurroundingSurfaces;
-  class SurfacePropertyGroundSurfaces;
-  // class OutdoorAirNode;
+  class GroundSurfaceGroup;
+  class SurfacePropertyLocalEnvironment;
 
   namespace detail {
 
-    /** SurfacePropertyLocalEnvironment_Impl is a ModelObject_Impl that is the implementation class for SurfacePropertyLocalEnvironment.*/
-    class MODEL_API SurfacePropertyLocalEnvironment_Impl : public ModelObject_Impl
+    /** SurfacePropertyGroundSurfaces_Impl is a ModelObject_Impl that is the implementation class for SurfacePropertyGroundSurfaces.*/
+    class MODEL_API SurfacePropertyGroundSurfaces_Impl : public ModelObject_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      SurfacePropertyLocalEnvironment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      SurfacePropertyGroundSurfaces_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      SurfacePropertyLocalEnvironment_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      SurfacePropertyGroundSurfaces_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      SurfacePropertyLocalEnvironment_Impl(const SurfacePropertyLocalEnvironment_Impl& other, Model_Impl* model, bool keepHandle);
+      SurfacePropertyGroundSurfaces_Impl(const SurfacePropertyGroundSurfaces_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertyLocalEnvironment_Impl() {}
+      virtual ~SurfacePropertyGroundSurfaces_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -75,46 +71,43 @@ namespace model {
       /** @name Getters */
       //@{
 
-      PlanarSurface exteriorSurface() const;
-      boost::optional<Surface> exteriorSurfaceAsSurface() const;
-      boost::optional<SubSurface> exteriorSurfaceAsSubSurface() const;
-
-      boost::optional<Schedule> externalShadingFractionSchedule() const;
-
-      boost::optional<SurfacePropertySurroundingSurfaces> surfacePropertySurroundingSurfaces() const;
-
-      boost::optional<SurfacePropertyGroundSurfaces> surfacePropertyGroundSurfaces() const;
-
-      // boost::optional<OutdoorAirNode> outdoorAirNode() const;
-
       //@}
       /** @name Setters */
       //@{
-
-      bool setExteriorSurface(const PlanarSurface& surface);
-
-      bool setExternalShadingFractionSchedule(Schedule& schedule);
-      void resetExternalShadingFractionSchedule();
-
-      bool setSurfacePropertySurroundingSurfaces(const SurfacePropertySurroundingSurfaces& surfacePropertySurroundingSurfaces);
-      void resetSurfacePropertySurroundingSurfaces();
-
-      bool setSurfacePropertyGroundSurfaces(const SurfacePropertyGroundSurfaces& surfacePropertyGroundSurfaces);
-      void resetSurfacePropertyGroundSurfaces();
-
-      // bool setOutdoorAirNode(const OutdoorAirNode& outdoorAirNode);
-      // void resetOutdoorAirNode();
 
       //@}
       /** @name Other */
       //@{
 
+      boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;
+
+      std::vector<GroundSurfaceGroup> groundSurfaceGroups() const;
+
+      unsigned int numberofGroundSurfaceGroups() const;
+
+      /** Looks up by Surface Name (case-insensitive)  */
+      boost::optional<unsigned> groundSurfaceGroupIndex(const GroundSurfaceGroup& groundSurfaceGroup) const;
+      boost::optional<unsigned> groundSurfaceGroupIndex(const std::string& groundSurfaceName) const;
+
+      boost::optional<GroundSurfaceGroup> getGroundSurfaceGroup(unsigned groupIndex) const;
+
+      /** If a groundSurfaceGroup group is already present (cf `groundSurfaceGroupIndex()`), it will Warn and override the groundSurfaceGroup value */
+      bool addGroundSurfaceGroup(const GroundSurfaceGroup& groundSurfaceGroup);
+
+      // Overloads, it creates a GroundSurfaceGroup wrapper, then call `addGroundSurfaceGroup(const GroundSurfaceGroup& groundSurfaceGroup)`
+      bool addGroundSurfaceGroup(const std::string& groundSurfaceName, double viewFactor, boost::optional<Schedule> temperatureSchedule = boost::none,
+                                 boost::optional<Schedule> reflectanceSchedule = boost::none);
+
+      bool addGroundSurfaceGroups(const std::vector<GroundSurfaceGroup>& groundSurfaceGroups);
+
+      bool removeGroundSurfaceGroup(unsigned groupIndex);
+
+      void removeAllGroundSurfaceGroups();
+
       //@}
      protected:
      private:
-      REGISTER_LOGGER("openstudio.model.SurfacePropertyLocalEnvironment");
-
-      boost::optional<PlanarSurface> optionalExteriorSurface() const;
+      REGISTER_LOGGER("openstudio.model.SurfacePropertyGroundSurfaces");
     };
 
   }  // namespace detail
@@ -122,4 +115,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_SURFACEPROPERTYLOCALENVIRONMENT_IMPL_HPP
+#endif  // MODEL_SURFACEPROPERTYGROUNDSURFACES_IMPL_HPP

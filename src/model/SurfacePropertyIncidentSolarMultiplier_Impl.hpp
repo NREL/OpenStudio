@@ -27,8 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_SURFACEPROPERTYLOCALENVIRONMENT_IMPL_HPP
-#define MODEL_SURFACEPROPERTYLOCALENVIRONMENT_IMPL_HPP
+#ifndef MODEL_SURFACEPROPERTYINCIDENTSOLARMULTIPLIER_IMPL_HPP
+#define MODEL_SURFACEPROPERTYINCIDENTSOLARMULTIPLIER_IMPL_HPP
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject_Impl.hpp"
@@ -36,30 +36,25 @@
 namespace openstudio {
 namespace model {
 
-  class PlanarSurface;
-  class Surface;
   class SubSurface;
   class Schedule;
-  class SurfacePropertySurroundingSurfaces;
-  class SurfacePropertyGroundSurfaces;
-  // class OutdoorAirNode;
 
   namespace detail {
 
-    /** SurfacePropertyLocalEnvironment_Impl is a ModelObject_Impl that is the implementation class for SurfacePropertyLocalEnvironment.*/
-    class MODEL_API SurfacePropertyLocalEnvironment_Impl : public ModelObject_Impl
+    /** SurfacePropertyIncidentSolarMultiplier_Impl is a ModelObject_Impl that is the implementation class for SurfacePropertyIncidentSolarMultiplier.*/
+    class MODEL_API SurfacePropertyIncidentSolarMultiplier_Impl : public ModelObject_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      SurfacePropertyLocalEnvironment_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      SurfacePropertyIncidentSolarMultiplier_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      SurfacePropertyLocalEnvironment_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      SurfacePropertyIncidentSolarMultiplier_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      SurfacePropertyLocalEnvironment_Impl(const SurfacePropertyLocalEnvironment_Impl& other, Model_Impl* model, bool keepHandle);
+      SurfacePropertyIncidentSolarMultiplier_Impl(const SurfacePropertyIncidentSolarMultiplier_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~SurfacePropertyLocalEnvironment_Impl() {}
+      virtual ~SurfacePropertyIncidentSolarMultiplier_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -75,35 +70,23 @@ namespace model {
       /** @name Getters */
       //@{
 
-      PlanarSurface exteriorSurface() const;
-      boost::optional<Surface> exteriorSurfaceAsSurface() const;
-      boost::optional<SubSurface> exteriorSurfaceAsSubSurface() const;
+      SubSurface subSurface() const;
 
-      boost::optional<Schedule> externalShadingFractionSchedule() const;
+      double incidentSolarMultiplier() const;
 
-      boost::optional<SurfacePropertySurroundingSurfaces> surfacePropertySurroundingSurfaces() const;
-
-      boost::optional<SurfacePropertyGroundSurfaces> surfacePropertyGroundSurfaces() const;
-
-      // boost::optional<OutdoorAirNode> outdoorAirNode() const;
+      boost::optional<Schedule> incidentSolarMultiplierSchedule() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      bool setExteriorSurface(const PlanarSurface& surface);
+      bool setSubSurface(const SubSurface& subSurface);
 
-      bool setExternalShadingFractionSchedule(Schedule& schedule);
-      void resetExternalShadingFractionSchedule();
+      bool setIncidentSolarMultiplier(double incidentSolarMultiplier);
 
-      bool setSurfacePropertySurroundingSurfaces(const SurfacePropertySurroundingSurfaces& surfacePropertySurroundingSurfaces);
-      void resetSurfacePropertySurroundingSurfaces();
+      bool setIncidentSolarMultiplierSchedule(Schedule& schedule);
 
-      bool setSurfacePropertyGroundSurfaces(const SurfacePropertyGroundSurfaces& surfacePropertyGroundSurfaces);
-      void resetSurfacePropertyGroundSurfaces();
-
-      // bool setOutdoorAirNode(const OutdoorAirNode& outdoorAirNode);
-      // void resetOutdoorAirNode();
+      void resetIncidentSolarMultiplierSchedule();
 
       //@}
       /** @name Other */
@@ -112,9 +95,9 @@ namespace model {
       //@}
      protected:
      private:
-      REGISTER_LOGGER("openstudio.model.SurfacePropertyLocalEnvironment");
+      REGISTER_LOGGER("openstudio.model.SurfacePropertyIncidentSolarMultiplier");
 
-      boost::optional<PlanarSurface> optionalExteriorSurface() const;
+      boost::optional<SubSurface> optionalSubSurface() const;
     };
 
   }  // namespace detail
@@ -122,4 +105,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_SURFACEPROPERTYLOCALENVIRONMENT_IMPL_HPP
+#endif  // MODEL_SURFACEPROPERTYINCIDENTSOLARMULTIPLIER_IMPL_HPP

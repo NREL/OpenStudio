@@ -42,6 +42,8 @@
 
 #include "SurfacePropertySurroundingSurfaces.hpp"
 #include "SurfacePropertySurroundingSurfaces_Impl.hpp"
+#include "SurfacePropertyGroundSurfaces.hpp"
+#include "SurfacePropertyGroundSurfaces_Impl.hpp"
 //#include "OutdoorAirNode.hpp"
 // #include "OutdoorAirNode_Impl.hpp"
 #include "ScheduleTypeLimits.hpp"
@@ -126,6 +128,11 @@ namespace model {
         OS_SurfaceProperty_LocalEnvironmentFields::SurroundingSurfacesObjectName);
     }
 
+    boost::optional<SurfacePropertyGroundSurfaces> SurfacePropertyLocalEnvironment_Impl::surfacePropertyGroundSurfaces() const {
+      return getObject<ModelObject>().getModelObjectTarget<SurfacePropertyGroundSurfaces>(
+        OS_SurfaceProperty_LocalEnvironmentFields::GroundSurfacesObjectName);
+    }
+
     bool SurfacePropertyLocalEnvironment_Impl::setExteriorSurface(const PlanarSurface& surface) {
 
       boost::optional<SurfacePropertyLocalEnvironment> currentLocalEnv;
@@ -169,6 +176,16 @@ namespace model {
 
     void SurfacePropertyLocalEnvironment_Impl::resetSurfacePropertySurroundingSurfaces() {
       bool result = setString(OS_SurfaceProperty_LocalEnvironmentFields::SurroundingSurfacesObjectName, "");
+      OS_ASSERT(result);
+    }
+
+    bool SurfacePropertyLocalEnvironment_Impl::setSurfacePropertyGroundSurfaces(const SurfacePropertyGroundSurfaces& surfacePropertyGroundSurfaces) {
+      bool result = setPointer(OS_SurfaceProperty_LocalEnvironmentFields::GroundSurfacesObjectName, surfacePropertyGroundSurfaces.handle());
+      return result;
+    }
+
+    void SurfacePropertyLocalEnvironment_Impl::resetSurfacePropertyGroundSurfaces() {
+      bool result = setString(OS_SurfaceProperty_LocalEnvironmentFields::GroundSurfacesObjectName, "");
       OS_ASSERT(result);
     }
 
@@ -234,6 +251,10 @@ namespace model {
     return getImpl<detail::SurfacePropertyLocalEnvironment_Impl>()->surfacePropertySurroundingSurfaces();
   }
 
+  boost::optional<SurfacePropertyGroundSurfaces> SurfacePropertyLocalEnvironment::surfacePropertyGroundSurfaces() const {
+    return getImpl<detail::SurfacePropertyLocalEnvironment_Impl>()->surfacePropertyGroundSurfaces();
+  }
+
   bool SurfacePropertyLocalEnvironment::setExteriorSurface(const PlanarSurface& surface) {
     return getImpl<detail::SurfacePropertyLocalEnvironment_Impl>()->setExteriorSurface(surface);
   }
@@ -253,6 +274,14 @@ namespace model {
 
   void SurfacePropertyLocalEnvironment::resetSurfacePropertySurroundingSurfaces() {
     getImpl<detail::SurfacePropertyLocalEnvironment_Impl>()->resetSurfacePropertySurroundingSurfaces();
+  }
+
+  bool SurfacePropertyLocalEnvironment::setSurfacePropertyGroundSurfaces(const SurfacePropertyGroundSurfaces& surfacePropertyGroundSurfaces) {
+    return getImpl<detail::SurfacePropertyLocalEnvironment_Impl>()->setSurfacePropertyGroundSurfaces(surfacePropertyGroundSurfaces);
+  }
+
+  void SurfacePropertyLocalEnvironment::resetSurfacePropertyGroundSurfaces() {
+    getImpl<detail::SurfacePropertyLocalEnvironment_Impl>()->resetSurfacePropertyGroundSurfaces();
   }
 
   //boost::optional<OutdoorAirNode> SurfacePropertyLocalEnvironment::outdoorAirNode() const {
