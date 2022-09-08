@@ -117,14 +117,38 @@ namespace model {
 
     std::vector<ScheduleTypeKey> SurfacePropertySurroundingSurfaces_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
-      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
-      if (std::find(b, e, OS_SurfaceProperty_SurroundingSurfacesFields::SkyTemperatureScheduleName) != e) {
-        result.emplace_back("SurfacePropertySurroundingSurfaces", "Sky Temperature");
+
+      {
+        UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+        UnsignedVector::const_iterator b(fieldIndices.begin());
+        UnsignedVector::const_iterator e(fieldIndices.end());
+        if (std::find(b, e, OS_SurfaceProperty_SurroundingSurfacesFields::SkyTemperatureScheduleName) != e) {
+          result.emplace_back("SurfacePropertySurroundingSurfaces", "Sky Temperature");
+        }
+        if (std::find(b, e, OS_SurfaceProperty_SurroundingSurfacesFields::GroundTemperatureScheduleName) != e) {
+          result.emplace_back("SurfacePropertySurroundingSurfaces", "Ground Temperature");
+        }
       }
-      if (std::find(b, e, OS_SurfaceProperty_SurroundingSurfacesFields::GroundTemperatureScheduleName) != e) {
-        result.emplace_back("SurfacePropertySurroundingSurfaces", "Ground Temperature");
+
+      {
+        // This is unusual, but there is also a schedule in the Extensible Fields
+        UnsignedVector fieldIndices;
+        for (const ModelExtensibleGroup& group : castVector<ModelExtensibleGroup>(extensibleGroups())) {
+          UnsignedVector thisFieldIndices = group.getSourceFieldIndices(schedule.handle());
+          fieldIndices.insert(fieldIndices.end(), thisFieldIndices.begin(), thisFieldIndices.end());
+        }
+
+        // Make unique, have to sort before calling unique, unique only works on consecutive elements
+        std::sort(fieldIndices.begin(), fieldIndices.end());
+        fieldIndices.erase(std::unique(fieldIndices.begin(), fieldIndices.end()), fieldIndices.end());
+
+        UnsignedVector::const_iterator b(fieldIndices.begin());
+        UnsignedVector::const_iterator e(fieldIndices.end());
+        if (std::find(b, e, OS_SurfaceProperty_SurroundingSurfacesExtensibleFields::SurroundingSurfaceTemperatureScheduleName) != e) {
+          result.emplace_back("SurfacePropertySurroundingSurfaces", "Surrounding Surface Temperature Schedule");
+        }
       }
+
       return result;
     }
 

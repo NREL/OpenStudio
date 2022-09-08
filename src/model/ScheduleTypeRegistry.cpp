@@ -399,6 +399,8 @@ namespace model {
       {"SurfacePropertySurroundingSurfaces", "Sky Temperature", "skyTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble()},
       {"SurfacePropertySurroundingSurfaces", "Ground Temperature", "groundTemperatureSchedule", true, "Temperature", OptionalDouble(),
        OptionalDouble()},
+      {"SurfacePropertySurroundingSurfaces", "Surrounding Surface Temperature Schedule", "surroundingSurfaceTemperatureSchedule", true, "Temperature",
+       OptionalDouble(), OptionalDouble()},
       {"SurfacePropertyGroundSurfaces", "Ground Surface Temperature Schedule", "groundSurfaceTemperatureSchedule", true, "Temperature",
        OptionalDouble(), OptionalDouble()},
       {"SurfacePropertyGroundSurfaces", "Ground Surface Reflectance Schedule", "groundSurfaceReflectanceSchedule", true, "", 0.0, 1.0},
