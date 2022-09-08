@@ -251,31 +251,56 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationEffectiveLeakageAre
     EXPECT_EQ(2, w.getObjectsByType(IddObjectType::SpaceList).size());
 
     auto infils = w.getObjectsByType(IddObjectType::ZoneInfiltration_EffectiveLeakageArea);
-    // I expect infilSpace1, infilSpace3, two infilOffice and two infilBuilding, so 6 total
+    // I expect infilSpace1, infilSpace3, two infilOffice and two infilBuilding, so 6 total. All pointing to a Space
     ASSERT_EQ(6, infils.size());
+
+    bool foundOfficeSpace1 = false;
+    bool foundOfficeSpace2 = false;
+    bool foundBuildingSpace3 = false;
+    bool foundBuildingSpace4 = false;
 
     double totalInfiltration = 0.0;  // cm2
     for (const auto& infil : infils) {
       auto name = infil.nameString();
-      auto z_ = infil.getTarget(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneorSpaceName);
-      ASSERT_TRUE(z_);
-      EXPECT_EQ(zone, z_.get());
+      auto target_ = infil.getTarget(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneorSpaceName);
+      ASSERT_TRUE(target_);
       double i = infil.getDouble(ZoneInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea).get();
       totalInfiltration += i;
       if (name.find(infilSpace1.nameString()) != std::string::npos) {
+        EXPECT_EQ(target_->iddObject().type(), IddObjectType::Space);
+        EXPECT_EQ(space1.nameString(), target_->nameString());
         EXPECT_EQ(0.1, i);
         EXPECT_EQ(infilSpace1.effectiveAirLeakageArea(), i);
       } else if (name.find(infilSpace3.nameString()) != std::string::npos) {
+        EXPECT_EQ(target_->iddObject().type(), IddObjectType::Space);
+        EXPECT_EQ(space3.nameString(), target_->nameString());
         EXPECT_DOUBLE_EQ(0.2, i);
         EXPECT_DOUBLE_EQ(infilSpace3.effectiveAirLeakageArea(), i);
       } else if (name.find(infilOffice.nameString()) != std::string::npos) {
+        EXPECT_EQ(target_->iddObject().type(), IddObjectType::Space);
+        if (space1.nameString() == target_->nameString()) {
+          foundOfficeSpace1 = true;
+        } else if (space2.nameString() == target_->nameString()) {
+          foundOfficeSpace2 = true;
+        }
         EXPECT_EQ(0.3, i);
         EXPECT_EQ(infilOffice.effectiveAirLeakageArea(), i);
       } else if (name.find(infilBuilding.nameString()) != std::string::npos) {
+        EXPECT_EQ(target_->iddObject().type(), IddObjectType::Space);
+        if (space3.nameString() == target_->nameString()) {
+          foundBuildingSpace3 = true;
+        } else if (space4.nameString() == target_->nameString()) {
+          foundBuildingSpace4 = true;
+        }
         EXPECT_EQ(0.4, i);
         EXPECT_EQ(infilBuilding.effectiveAirLeakageArea(), i);
       }
     }
+
+    EXPECT_TRUE(foundOfficeSpace1);
+    EXPECT_TRUE(foundOfficeSpace2);
+    EXPECT_TRUE(foundBuildingSpace3);
+    EXPECT_TRUE(foundBuildingSpace4);
 
     EXPECT_DOUBLE_EQ(1.7, totalInfiltration);
   }
