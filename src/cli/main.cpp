@@ -34,6 +34,8 @@ int rubyCLI(int argc, char* argv[]) {
 }
 
 int main(int argc, char* argv[]) {
+  int result = 0;
+
   if ((argc > 1) && (std::string_view(argv[1]) == "experimental")) {
     CLI::App app{"openstudio"};
 
@@ -41,9 +43,12 @@ int main(int argc, char* argv[]) {
     [[maybe_unused]] const auto runCommand = experimentalApp->add_subcommand("run");
 
     CLI11_PARSE(app, argc, argv);
-
-    return 0;
   } else {
-    return rubyCLI(argc, argv);
+    result = rubyCLI(argc, argv);
   }
+
+  // Important to destroy RubyEngine and finalize Ruby at the right time
+  // After the main function returns it is (apparently) too late
+  openstudio::rubyEngine.reset();
+  return result;
 }
