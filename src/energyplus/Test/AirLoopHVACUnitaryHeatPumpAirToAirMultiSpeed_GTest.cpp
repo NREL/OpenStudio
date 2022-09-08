@@ -37,7 +37,7 @@
 #include "../../model/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed.hpp"
 #include "../../model/Node.hpp"
 
-#include "../../model/CoilCoolingDXSingleSpeed.hpp"
+#include "../../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../../model/FanConstantVolume.hpp"
 #include "../../model/CoilHeatingGasMultiStage.hpp"
 #include "../../model/CoilHeatingElectric.hpp"
@@ -64,7 +64,7 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_CoilHeatingGasMultiStage) {
   Model m;
 
-  CoilCoolingDXSingleSpeed c(m);
+  CoilCoolingDXMultiSpeed c(m);
   CoilHeatingGasMultiStage h(m);
   FanConstantVolume f(m);
   CoilHeatingElectric s(m);
@@ -86,7 +86,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatPumpAirToAirMu
 TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_CoilHeatingElectricMultiStage) {
   Model m;
 
-  CoilCoolingDXSingleSpeed c(m);
+  CoilCoolingDXMultiSpeed c(m);
   CoilHeatingElectricMultiStage h(m);
   FanConstantVolume f(m);
   CoilHeatingElectric s(m);
