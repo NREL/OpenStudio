@@ -147,6 +147,13 @@ namespace model {
     ok = setSubSurface(subSurface);
     OS_ASSERT(ok);
 
+    // TODO: default to alwaysOnContinous? Or leave as optional?
+    // {
+    //   auto schedule = subSurface.model().alwaysOnContinuousSchedule();
+    //   ok = setIncidentSolarMultiplierSchedule(schedule);
+    //   OS_ASSERT(ok);
+    // }
+
     ok = setIncidentSolarMultiplier(1.0);
     OS_ASSERT(ok);
   }
