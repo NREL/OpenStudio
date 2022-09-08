@@ -56,7 +56,7 @@ namespace energyplus {
 
     LightsDefinition definition = modelObject.lightsDefinition();
 
-    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
     idfObject.setString(LightsFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
     if (boost::optional<Schedule> schedule = modelObject.schedule()) {

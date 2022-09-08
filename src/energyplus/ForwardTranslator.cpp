@@ -60,7 +60,6 @@
 #include "../model/ConcreteModelObjects.hpp"
 #include "../model/SpaceLoad.hpp"
 #include "../model/SpaceLoad_Impl.hpp"
-#include "../model/SpaceLoadInstance.hpp"
 #include "../model/SpaceType.hpp"
 #include "../model/SpaceInfiltrationDesignFlowRate.hpp"
 #include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
@@ -226,7 +225,7 @@ namespace energyplus {
   //     * m_excludeSpaceTranslation = false: translate and return the IdfObject for Space
   // * If the load is assigned to a spaceType:
   //     * translateAndMapModelObjec(spaceType) (which will return a ZoneList if m_excludeSpaceTranslation is true, SpaceList otherwise)
-  IdfObject ForwardTranslator::getSpaceLoadInstanceParent(model::SpaceLoadInstance& sp, bool allowSpaceType) {
+  IdfObject ForwardTranslator::getSpaceLoadParent(const model::SpaceLoad& sp, bool allowSpaceType) {
 
     OptionalIdfObject relatedIdfObject;
 

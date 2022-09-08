@@ -68,7 +68,7 @@ namespace energyplus {
 
     idfObject.setString(SteamEquipmentFields::Name, modelObject.name().get());
 
-    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
     idfObject.setString(SteamEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
     if (boost::optional<Schedule> schedule = modelObject.schedule()) {

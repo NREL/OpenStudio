@@ -111,7 +111,7 @@ namespace energyplus {
     // cf https://github.com/NREL/OpenStudio/blob/bf4ffc49d5947f74b139efa5fb1dffec9b1fb013/src/energyplus/ForwardTranslator.cpp#L323-L341
 
     // Assign object to Zone/Space
-    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject, false);  // We do not allow spaceType!
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject, false);  // We do not allow spaceType!
     idfObject.setString(ElectricEquipment_ITE_AirCooledFields::ZoneorSpaceName, parentIdfObject.nameString());
 
     // attach the supply air node to zone if there is an available supply air node

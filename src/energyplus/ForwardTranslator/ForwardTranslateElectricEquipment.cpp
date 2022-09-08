@@ -64,7 +64,7 @@ namespace energyplus {
 
     ElectricEquipmentDefinition definition = modelObject.electricEquipmentDefinition();
 
-    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
     idfObject.setString(ElectricEquipmentFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
     if (boost::optional<Schedule> schedule = modelObject.schedule()) {
