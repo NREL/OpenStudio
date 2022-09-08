@@ -6754,7 +6754,6 @@ OS:SurfaceProperty:LocalEnvironment,
    A7; \field Ground Surfaces Object Name
        \type object-list
        \object-list GroundSurfacesNames
-       \note Enter the name of a SurfaceProperty:GroundSurfaces object
 
 OS:SurfaceProperty:GroundSurfaces,
        \min-fields 4
@@ -6776,8 +6775,8 @@ OS:SurfaceProperty:GroundSurfaces,
        \units dimensionless
        \minimum 0.0
        \maximum 1.0
+       \autocalculatable
    A4, \field Ground Surface 1 Temperature Schedule Name
-       \type alpha
        \type object-list
        \object-list ScheduleNames
        \note Schedule values are real numbers, -100.0 to 100.0, units C
@@ -6794,7 +6793,7 @@ OS:SurfaceProperty:IncidentSolarMultiplier,
    A2, \field Surface Name
        \required-field
        \type object-list
-       \object-list SurfaceNames
+       \object-list GlazedExtSubSurfNames
        \note Enter the name of an exterior window outside surface object
    N1, \field Incident Solar Multiplier
        \note a constant multiplier for window solar transmittance
@@ -6804,7 +6803,7 @@ OS:SurfaceProperty:IncidentSolarMultiplier,
        \units dimensionless
        \minimum 0
        \maximum 1
-       \default 1.0
+       \required-field
    A3; \field Incident Solar Multiplier Schedule Name
        \note The schedule values should be greater than or equal
        \note to 0 and less than or equal to 1.

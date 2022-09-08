@@ -9833,90 +9833,10 @@ SurfaceProperty:GroundSurfaces,
        \type object-list
        \object-list ScheduleNames
        \note Schedule values are real numbers, -100.0 to 100.0, units C
-   A4, \field Ground Surface 1 Reflectance Schedule Name
+   A4; \field Ground Surface 1 Reflectance Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note Schedule values are fraction, 0.0 to 1.0, units dimensionless
-   A5, \field Ground Surface 2 Name
-       \type alpha
-       \note optional
-   N2, \field Ground Surface 2 View Factor
-       \type real
-       \units dimensionless
-       \minimum 0.0
-       \maximum 1.0
-       \default 0.0
-       \note optional
-   A6, \field Ground Surface 2 Temperature Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note Schedule values are real numbers, -100.0 to 100.0, units C
-       \note optional
-   A7, \field Ground Surface 2 Reflectance Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note Schedule values are fraction, 0.0 to 1.0, units dimensionless
-       \note optional
-   A8, \field Ground Surface 3 Name
-       \type alpha
-       \note optional
-   N3, \field Ground Surface 3 View Factor
-       \type real
-       \units dimensionless
-       \minimum 0.0
-       \maximum 1.0
-       \default 0.0
-       \note optional
-   A9, \field Ground Surface 3 Temperature Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note Schedule values are real numbers, -100.0 to 100.0, units C
-       \note optional
-  A10, \field Ground Surface 3 Reflectance Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note Schedule values are fraction, 0.0 to 1.0, units dimensionless
-       \note optional
-  A11, \field Ground Surface 4 Name
-       \type alpha
-       \note optional
-   N4, \field Ground Surface 4 View Factor
-       \type real
-       \units dimensionless
-       \minimum 0.0
-       \maximum 1.0
-       \default 0.0
-       \note optional
-  A12, \field Ground Surface 4 Temperature Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note Schedule values are real numbers, -100.0 to 100.0, units C
-       \note optional
-  A13, \field Ground Surface 4 Reflectance Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note Schedule values are fraction, 0.0 to 1.0, units dimensionless
-       \note optional
-  A14, \field Ground Surface 5 Name
-       \type alpha
-       \note optional
-   N5, \field Ground Surface 5 View Factor
-       \type real
-       \units dimensionless
-       \minimum 0.0
-       \maximum 1.0
-       \default 0.0
-       \note optional
-  A15, \field Ground Surface 5 Temperature Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note Schedule values are real numbers, -100.0 to 100.0, units C
-       \note optional
-  A16; \field Ground Surface 5 Reflectance Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note Schedule values are fraction, 0.0 to 1.0, units dimensionless
-       \note optional
 
 ComplexFenestrationProperty:SolarAbsorbedLayers,
        \memo Used to provide solar radiation absorbed in fenestration layers. References surface-construction pair
