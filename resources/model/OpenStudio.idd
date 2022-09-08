@@ -17885,7 +17885,7 @@ OS:Coil:Heating:Electric:MultiStage:StageData,
        \type real
        \units W/W
        \minimum> 0.0
-  N2,  \field Nominal Capacity
+  N2;  \field Nominal Capacity
        \required-field
        \type real
        \units W
