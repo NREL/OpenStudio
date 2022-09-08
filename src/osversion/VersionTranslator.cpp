@@ -150,8 +150,7 @@ namespace osversion {
     // m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
-    //   - To increment the translator, add an entry for the version just released (branched for
-    //     release).
+    //   - To increment the translator, add an entry for the version just released (branched for release).
     m_startVersions.push_back(VersionString("0.7.0"));
     m_startVersions.push_back(VersionString("0.7.1"));
     m_startVersions.push_back(VersionString("0.7.2"));
@@ -306,6 +305,7 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.3.0"));
     m_startVersions.push_back(VersionString("3.4.0"));
     // m_startVersions.push_back(VersionString("3.5.0"));
+    // Note: do **not** include the **current** version in m_startVersions, stop at the previous release
   }
 
   boost::optional<model::Model> VersionTranslator::loadModel(const openstudio::path& pathToOldOsm, ProgressBar* progressBar) {
