@@ -55,6 +55,7 @@ if( WIN32 )
     openstudio_rb
     PUBLIC
     openstudiolib
+    PRIVATE
     rubybindings
     ${ALL_RUBY_BINDING_TARGETS}
   )
