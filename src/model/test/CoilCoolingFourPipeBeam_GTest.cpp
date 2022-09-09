@@ -34,7 +34,7 @@
 #include "../CoilCoolingFourPipeBeam.hpp"
 #include "../CoilCoolingFourPipeBeam_Impl.hpp"
 #include "../CurveLinear.hpp"
-#include "../TableMultiVariableLookup.hpp"
+#include "../TableLookup.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
 
@@ -85,12 +85,12 @@ TEST_F(ModelFixture, CoilCoolingFourPipeBeam_Getters_Setters) {
   EXPECT_EQ(capModFuncOfTempDiff.handle(), coil.beamCoolingCapacityTemperatureDifferenceModificationFactorCurve().handle());
 
   // A6: Beam Cooling Capacity Air Flow Modification Factor Curve Name (UniVariateCurves // UniVariateTables)
-  TableMultiVariableLookup coolCapModFuncOfSAFlow(m, 1);
+  TableLookup coolCapModFuncOfSAFlow(m);
   EXPECT_TRUE(coil.setBeamCoolingCapacityAirFlowModificationFactorCurve(coolCapModFuncOfSAFlow));
   EXPECT_EQ(coolCapModFuncOfSAFlow.handle(), coil.beamCoolingCapacityAirFlowModificationFactorCurve().handle());
 
   // A7: Beam Cooling Capacity Chilled Water Flow Modification Factor Curve Name (UniVariateCurves // UniVariateTables)
-  TableMultiVariableLookup capModFuncOfWaterFlow(m, 1);
+  TableLookup capModFuncOfWaterFlow(m);
   EXPECT_TRUE(coil.setBeamCoolingCapacityChilledWaterFlowModificationFactorCurve(capModFuncOfWaterFlow));
   EXPECT_EQ(capModFuncOfWaterFlow.handle(), coil.beamCoolingCapacityChilledWaterFlowModificationFactorCurve().handle());
 }
