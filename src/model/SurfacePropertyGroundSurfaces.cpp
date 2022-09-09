@@ -79,7 +79,7 @@ namespace model {
   }
 
   boost::optional<Schedule> GroundSurfaceGroup::temperatureSchedule() const {
-    return m_reflectanceSch;
+    return m_temperatureSch;
   }
 
   boost::optional<Schedule> GroundSurfaceGroup::reflectanceSchedule() const {
@@ -203,17 +203,19 @@ namespace model {
       boost::optional<Schedule> tempSch_ =
         group.getModelObjectTarget<Schedule>(OS_SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceTemperatureScheduleName);
 
+      boost::optional<Schedule> reflectanceSch_ =
+        group.getModelObjectTarget<Schedule>(OS_SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceReflectanceScheduleName);
+
       if (!surfaceName_) {
         LOG(Error, "Could not retrieve GroundSurfaceName for extensible group " << group.groupIndex() << ".");
       }
       if (!viewFactor_) {
         LOG(Error, "Could not retrieve GroundSurfaceViewFactor for extensible group " << group.groupIndex() << ".");
       }
-      if (!tempSch_) {
-        LOG(Error, "Could not retrieve GroundSurfaceTemperatureScheduleName for extensible group " << group.groupIndex() << ".");
-      }
 
-      result = GroundSurfaceGroup(surfaceName_.get(), viewFactor_.get(), tempSch_.get());
+      // Schedules are optional
+
+      result = GroundSurfaceGroup(surfaceName_.get(), viewFactor_.get(), tempSch_, reflectanceSch_);
 
       return result;
     }
@@ -246,16 +248,30 @@ namespace model {
 
       bool viewFactorOk = eg.setDouble(OS_SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceViewFactor, groundSurfaceGroup.viewFactor());
 
-      bool schOk = true;
-      if (auto sch_ = groundSurfaceGroup.reflectanceSchedule()) {
-        eg.setPointer(OS_SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceTemperatureScheduleName, sch_->handle(), false);
-        if (!schOk) {
-          LOG(Error, "Unable to add View Factor which has an incompatible toSurface object to " << briefDescription());
+      bool schTempOk = true;
+      if (auto sch_ = groundSurfaceGroup.temperatureSchedule()) {
+        schTempOk = eg.setPointer(OS_SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceTemperatureScheduleName, sch_->handle(), false);
+        if (!schTempOk) {
+          LOG(Error, "Unable to add Ground Surface Group which has an incompatible Temperature Schedule to " << briefDescription());
           OS_ASSERT(false);
         }
+      } else {
+        eg.setString(OS_SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceTemperatureScheduleName, "");
       }
 
-      if (surfaceNameOk && viewFactorOk && schOk) {
+      bool schRefOk = true;
+      if (auto sch_ = groundSurfaceGroup.reflectanceSchedule()) {
+        schRefOk = eg.setPointer(OS_SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceReflectanceScheduleName, sch_->handle(), false);
+        if (!schRefOk) {
+          LOG(Error, "Unable to add Ground Surface Group which has an incompatible Reflectance Schedule to " << briefDescription());
+
+          OS_ASSERT(false);
+        }
+      } else {
+        eg.setString(OS_SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceReflectanceScheduleName, "");
+      }
+
+      if (surfaceNameOk && viewFactorOk && schTempOk && schRefOk) {
         result = true;
       } else {
         // Something went wrong
