@@ -57,7 +57,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDesuperheater) {
   CoilCoolingDXCurveFitOperatingMode operatingMode(m);
   CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
 
-  std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m), CoilCoolingDXTwoSpeed(m), CoilCoolingDXTwoStageWithHumidityControlMode(m), CoilCoolingDX(m, performance)};
+  std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m), CoilCoolingDXTwoSpeed(m), CoilCoolingDXTwoStageWithHumidityControlMode(m),
+                                          CoilCoolingDX(m, performance)};
 
   ForwardTranslator forwardTranslator;
 

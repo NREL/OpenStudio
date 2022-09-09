@@ -73,7 +73,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_DXCoil
   CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
 
   // DX Coils that will be wrapped in CoilSystem:Cooling:DX
-  std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m), CoilCoolingDXTwoSpeed(m), CoilCoolingDXTwoStageWithHumidityControlMode(m),
+  std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m),   CoilCoolingDXTwoSpeed(m),   CoilCoolingDXTwoStageWithHumidityControlMode(m),
                                           CoilCoolingDXVariableSpeed(m), CoilCoolingDXMultiSpeed(m), CoilCoolingDX(m, performance)};
 
   ForwardTranslator forwardTranslator;
