@@ -394,6 +394,10 @@ namespace model {
     getImpl<detail::SurfacePropertyGroundSurfaces_Impl>()->removeAllGroundSurfaceGroups();
   }
 
+  boost::optional<SurfacePropertyLocalEnvironment> SurfacePropertyGroundSurfaces::surfacePropertyLocalEnvironment() const {
+    return getImpl<detail::SurfacePropertyGroundSurfaces_Impl>()->surfacePropertyLocalEnvironment();
+  }
+
   /// @cond
   SurfacePropertyGroundSurfaces::SurfacePropertyGroundSurfaces(std::shared_ptr<detail::SurfacePropertyGroundSurfaces_Impl> impl)
     : ModelObject(std::move(impl)) {}
