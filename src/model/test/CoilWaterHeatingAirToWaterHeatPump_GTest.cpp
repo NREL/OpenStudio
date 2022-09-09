@@ -32,9 +32,7 @@
 #include "../CoilWaterHeatingAirToWaterHeatPump.hpp"
 #include "../CoilWaterHeatingAirToWaterHeatPump_Impl.hpp"
 #include "../Curve.hpp"
-#include "../Curve_Impl.hpp"
-#include "../TableMultiVariableLookup.hpp"
-#include "../TableMultiVariableLookup_Impl.hpp"
+#include "../TableLookup.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -94,13 +92,13 @@ TEST_F(ModelFixture, CoilWaterHeatingAirToWaterHeatPump) {
   {
     Model m;
 
-    TableMultiVariableLookup heatingCapacityFunctionofTemperatureCurve(m, 1);
-    TableMultiVariableLookup heatingCapacityFunctionofAirFlowFractionCurve(m, 1);
-    TableMultiVariableLookup heatingCapacityFunctionofWaterFlowFractionCurve(m, 1);
-    TableMultiVariableLookup heatingCOPFunctionofTemperatureCurve(m, 1);
-    TableMultiVariableLookup heatingCOPFunctionofAirFlowFractionCurve(m, 1);
-    TableMultiVariableLookup heatingCOPFunctionofWaterFlowFractionCurve(m, 1);
-    TableMultiVariableLookup partLoadFractionCorrelationCurve(m, 1);
+    TableLookup heatingCapacityFunctionofTemperatureCurve(m);
+    TableLookup heatingCapacityFunctionofAirFlowFractionCurve(m);
+    TableLookup heatingCapacityFunctionofWaterFlowFractionCurve(m);
+    TableLookup heatingCOPFunctionofTemperatureCurve(m);
+    TableLookup heatingCOPFunctionofAirFlowFractionCurve(m);
+    TableLookup heatingCOPFunctionofWaterFlowFractionCurve(m);
+    TableLookup partLoadFractionCorrelationCurve(m);
 
     CoilWaterHeatingAirToWaterHeatPump coil(m, heatingCapacityFunctionofTemperatureCurve, heatingCapacityFunctionofAirFlowFractionCurve,
                                             heatingCapacityFunctionofWaterFlowFractionCurve, heatingCOPFunctionofTemperatureCurve,

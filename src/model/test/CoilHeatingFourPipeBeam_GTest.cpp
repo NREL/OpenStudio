@@ -34,7 +34,7 @@
 #include "../CoilHeatingFourPipeBeam.hpp"
 #include "../CoilHeatingFourPipeBeam_Impl.hpp"
 #include "../CurveLinear.hpp"
-#include "../TableMultiVariableLookup.hpp"
+#include "../TableLookup.hpp"
 #include "../PlantLoop.hpp"
 #include "../Node.hpp"
 
@@ -85,12 +85,12 @@ TEST_F(ModelFixture, CoilHeatingFourPipeBeam_Getters_Setters) {
   EXPECT_EQ(capModFuncOfTempDiff.handle(), coil.beamHeatingCapacityTemperatureDifferenceModificationFactorCurve().handle());
 
   // A6: Beam Heating Capacity Air Flow Modification Factor Curve Name (UniVariateCurves // UniVariateTables)
-  TableMultiVariableLookup heatCapModFuncOfSAFlow(m, 1);
+  TableLookup heatCapModFuncOfSAFlow(m);
   EXPECT_TRUE(coil.setBeamHeatingCapacityAirFlowModificationFactorCurve(heatCapModFuncOfSAFlow));
   EXPECT_EQ(heatCapModFuncOfSAFlow.handle(), coil.beamHeatingCapacityAirFlowModificationFactorCurve().handle());
 
   // A7: Beam Heating Capacity Hot Water Flow Modification Factor Curve Name (UniVariateCurves // UniVariateTables)
-  TableMultiVariableLookup capModFuncOfWaterFlow(m, 1);
+  TableLookup capModFuncOfWaterFlow(m);
   EXPECT_TRUE(coil.setBeamHeatingCapacityHotWaterFlowModificationFactorCurve(capModFuncOfWaterFlow));
   EXPECT_EQ(capModFuncOfWaterFlow.handle(), coil.beamHeatingCapacityHotWaterFlowModificationFactorCurve().handle());
 }

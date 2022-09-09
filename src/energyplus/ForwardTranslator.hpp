@@ -39,6 +39,8 @@
 #include "../utilities/core/StringStreamLogSink.hpp"
 #include "../utilities/time/Time.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 #include <iostream>
 
 namespace openstudio {
@@ -448,6 +450,8 @@ namespace model {
   class SurfacePropertySurroundingSurfaces;
   class SwimmingPoolIndoor;
   class TableMultiVariableLookup;
+  class TableLookup;
+  class TableIndependentVariable;
   class TemperingValve;
   class ThermalZone;
   class ThermalStorageIceDetailed;
@@ -1429,7 +1433,11 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateSwimmingPoolIndoor(model::SwimmingPoolIndoor& modelObject);
 
-    boost::optional<IdfObject> translateTableMultiVariableLookup(model::TableMultiVariableLookup& modelObject);
+    OS_DEPRECATED boost::optional<IdfObject> translateTableMultiVariableLookup(model::TableMultiVariableLookup& modelObject);
+
+    boost::optional<IdfObject> translateTableLookup(model::TableLookup& modelObject);
+
+    boost::optional<IdfObject> translateTableIndependentVariable(model::TableIndependentVariable& modelObject);
 
     boost::optional<IdfObject> translateTemperingValve(model::TemperingValve& modelObject);
 

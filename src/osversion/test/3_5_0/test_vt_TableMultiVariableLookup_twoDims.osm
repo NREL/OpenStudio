@@ -1,0 +1,126 @@
+
+OS:Version,
+  {19f53ed8-1e1d-4dd6-9e2d-e1048e692620}, !- Handle
+  3.4.0;                                  !- Version Identifier
+
+OS:Table:MultiVariableLookup,
+  {e4cb2274-f39d-45fe-b680-be44bdaaa861}, !- Handle
+  Table With 2 dims,                      !- Name
+  LagrangeInterpolationLinearExtrapolation, !- Interpolation Method
+  3,                                      !- Number of Interpolation Points
+  Biquadratic,                            !- Curve Type
+  ,                                       !- Table Data Format
+  ,                                       !- External File Name
+  ,                                       !- X1 Sort Order
+  ,                                       !- X2 Sort Order
+  ,                                       !- Normalization Reference
+  60,                                     !- Minimum Value of X1
+  80,                                     !- Maximum Value of X1
+  30,                                     !- Minimum Value of X2
+  100,                                    !- Maximum Value of X2
+  ,                                       !- Minimum Value of X3
+  ,                                       !- Maximum Value of X3
+  ,                                       !- Minimum Value of X4
+  ,                                       !- Maximum Value of X4
+  ,                                       !- Minimum Value of X5
+  ,                                       !- Maximum Value of X5
+  0.05,                                   !- Minimum Table Output
+  1.25,                                   !- Maximum Table Output
+  Temperature,                            !- Input Unit Type for X1
+  Temperature,                            !- Input Unit Type for X2
+  ,                                       !- Input Unit Type for X3
+  ,                                       !- Input Unit Type for X4
+  ,                                       !- Input Unit Type for X5
+  Dimensionless,                          !- Output Unit Type
+  2,                                      !- Number of Independent Variables
+  70,                                     !- Data 1
+  32,                                     !- Data 2
+  0.1,                                    !- Data 3
+  72,                                     !- Data 4
+  32,                                     !- Data 5
+  0.3,                                    !- Data 6
+  74,                                     !- Data 7
+  32,                                     !- Data 8
+  0.5,                                    !- Data 9
+  76,                                     !- Data 10
+  32,                                     !- Data 11
+  0.7,                                    !- Data 12
+  78,                                     !- Data 13
+  32,                                     !- Data 14
+  0.9,                                    !- Data 15
+  70,                                     !- Data 16
+  45,                                     !- Data 17
+  0.2,                                    !- Data 18
+  72,                                     !- Data 19
+  45,                                     !- Data 20
+  0.4,                                    !- Data 21
+  74,                                     !- Data 22
+  45,                                     !- Data 23
+  0.6,                                    !- Data 24
+  76,                                     !- Data 25
+  45,                                     !- Data 26
+  0.8,                                    !- Data 27
+  78,                                     !- Data 28
+  45,                                     !- Data 29
+  1,                                      !- Data 30
+  70,                                     !- Data 31
+  68,                                     !- Data 32
+  0.3,                                    !- Data 33
+  72,                                     !- Data 34
+  68,                                     !- Data 35
+  0.5,                                    !- Data 36
+  74,                                     !- Data 37
+  68,                                     !- Data 38
+  0.7,                                    !- Data 39
+  76,                                     !- Data 40
+  68,                                     !- Data 41
+  0.9,                                    !- Data 42
+  78,                                     !- Data 43
+  68,                                     !- Data 44
+  1.1,                                    !- Data 45
+  70,                                     !- Data 46
+  81,                                     !- Data 47
+  0.4,                                    !- Data 48
+  72,                                     !- Data 49
+  81,                                     !- Data 50
+  0.6,                                    !- Data 51
+  74,                                     !- Data 52
+  81,                                     !- Data 53
+  0.8,                                    !- Data 54
+  76,                                     !- Data 55
+  81,                                     !- Data 56
+  1,                                      !- Data 57
+  78,                                     !- Data 58
+  81,                                     !- Data 59
+  1.2,                                    !- Data 60
+  70,                                     !- Data 61
+  94,                                     !- Data 62
+  0.5,                                    !- Data 63
+  72,                                     !- Data 64
+  94,                                     !- Data 65
+  0.7,                                    !- Data 66
+  74,                                     !- Data 67
+  94,                                     !- Data 68
+  0.9,                                    !- Data 69
+  76,                                     !- Data 70
+  94,                                     !- Data 71
+  1.1,                                    !- Data 72
+  78,                                     !- Data 73
+  94,                                     !- Data 74
+  1.3,                                    !- Data 75
+  70,                                     !- Data 76
+  107,                                    !- Data 77
+  0.6,                                    !- Data 78
+  72,                                     !- Data 79
+  107,                                    !- Data 80
+  0.8,                                    !- Data 81
+  74,                                     !- Data 82
+  107,                                    !- Data 83
+  1,                                      !- Data 84
+  76,                                     !- Data 85
+  107,                                    !- Data 86
+  1.2,                                    !- Data 87
+  78,                                     !- Data 88
+  107,                                    !- Data 89
+  1.4;                                    !- Data 90
+

@@ -100,6 +100,8 @@
 
 #include "../utilities/idd/IddEnums.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 #include <algorithm>
 #include <sstream>
 #include <thread>
@@ -2884,9 +2886,33 @@ namespace energyplus {
         retVal = translateSwimmingPoolIndoor(obj);
         break;
       }
+
+#if defined(_MSC_VER)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#endif
       case openstudio::IddObjectType::OS_Table_MultiVariableLookup: {
         model::TableMultiVariableLookup table = modelObject.cast<TableMultiVariableLookup>();
         retVal = translateTableMultiVariableLookup(table);
+        break;
+      }
+#if defined(_MSC_VER)
+#  pragma warning(pop)
+#elif (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
+
+      case openstudio::IddObjectType::OS_Table_Lookup: {
+        auto table = modelObject.cast<TableLookup>();
+        retVal = translateTableLookup(table);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Table_IndependentVariable: {
+        auto tableIndependentVariable = modelObject.cast<TableIndependentVariable>();
+        retVal = translateTableIndependentVariable(tableIndependentVariable);
         break;
       }
       case openstudio::IddObjectType::OS_TemperingValve: {
@@ -3418,6 +3444,7 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Curve_Sigmoid);
     result.push_back(IddObjectType::OS_Curve_Triquadratic);
     result.push_back(IddObjectType::OS_Table_MultiVariableLookup);
+    result.push_back(IddObjectType::OS_Table_Lookup);
     result.push_back(IddObjectType::OS_DistrictCooling);
     result.push_back(IddObjectType::OS_DistrictHeating);
     result.push_back(IddObjectType::OS_EvaporativeCooler_Direct_ResearchSpecial);
