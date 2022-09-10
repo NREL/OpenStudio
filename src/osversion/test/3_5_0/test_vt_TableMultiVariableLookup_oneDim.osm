@@ -1,0 +1,52 @@
+
+OS:Version,
+  {d58d8bd0-c70c-4043-9c2b-6c92c87ac66f}, !- Handle
+  3.4.0;                                  !- Version Identifier
+
+OS:Table:MultiVariableLookup,
+  {729a4fd9-b42b-4b63-b5fb-82895ea9897f}, !- Handle
+  CapModFuncOfWaterFlow,                  !- Name
+  EvaluateCurveToLimits,                  !- Interpolation Method
+  ,                                       !- Number of Interpolation Points
+  Quadratic,                              !- Curve Type
+  ,                                       !- Table Data Format
+  ,                                       !- External File Name
+  ,                                       !- X1 Sort Order
+  ,                                       !- X2 Sort Order
+  2.4,                                    !- Normalization Reference
+  0,                                      !- Minimum Value of X1
+  1.33,                                   !- Maximum Value of X1
+  ,                                       !- Minimum Value of X2
+  ,                                       !- Maximum Value of X2
+  ,                                       !- Minimum Value of X3
+  ,                                       !- Maximum Value of X3
+  ,                                       !- Minimum Value of X4
+  ,                                       !- Maximum Value of X4
+  ,                                       !- Minimum Value of X5
+  ,                                       !- Maximum Value of X5
+  0,                                      !- Minimum Table Output
+  2.496,                                  !- Maximum Table Output
+  Dimensionless,                          !- Input Unit Type for X1
+  ,                                       !- Input Unit Type for X2
+  ,                                       !- Input Unit Type for X3
+  ,                                       !- Input Unit Type for X4
+  ,                                       !- Input Unit Type for X5
+  Dimensionless,                          !- Output Unit Type
+  1,                                      !- Number of Independent Variables
+  0,                                      !- Data 1
+  0,                                      !- Data 2
+  0.05,                                   !- Data 3
+  0.0024,                                 !- Data 4
+  0.33333,                                !- Data 5
+  1.704,                                  !- Data 6
+  0.5,                                    !- Data 7
+  2.04,                                   !- Data 8
+  0.666667,                               !- Data 9
+  2.208,                                  !- Data 10
+  0.833333,                               !- Data 11
+  2.328,                                  !- Data 12
+  1,                                      !- Data 13
+  2.4,                                    !- Data 14
+  1.333333,                               !- Data 15
+  2.496;                                  !- Data 16
+
