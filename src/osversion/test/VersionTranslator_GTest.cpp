@@ -757,21 +757,23 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCo
   ASSERT_EQ(1u, model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed").size());
   WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed")[0];
 
+  // 3.4.0 to 3.5.0: (1) field added
+
   // Field before insertion point is a curve, should still be
-  ASSERT_TRUE(c.getTarget(14));
-  EXPECT_EQ("CC DX SingleSpeed PartLoadFrac Correlation Curve", c.getTarget(14)->nameString());
+  ASSERT_TRUE(c.getTarget(15));
+  EXPECT_EQ("CC DX SingleSpeed PartLoadFrac Correlation Curve", c.getTarget(15)->nameString());
 
   // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
-  ASSERT_TRUE(c.getDouble(15));
-  EXPECT_EQ(-25.0, c.getDouble(15).get());
+  ASSERT_TRUE(c.getDouble(16));
+  EXPECT_EQ(-25.0, c.getDouble(16).get());
 
   // After should be 1000.0
-  ASSERT_TRUE(c.getDouble(16));
-  EXPECT_EQ(1000.0, c.getDouble(16).get());
+  ASSERT_TRUE(c.getDouble(17));
+  EXPECT_EQ(1000.0, c.getDouble(17).get());
 
   // Last field
-  ASSERT_TRUE(c.getTarget(31));
-  EXPECT_EQ("Always Off Discrete", c.getTarget(31)->nameString());
+  ASSERT_TRUE(c.getTarget(32));
+  EXPECT_EQ("Always Off Discrete", c.getTarget(32)->nameString());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidityControlMode_minOATCompressor) {
