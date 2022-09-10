@@ -7138,13 +7138,13 @@ namespace osversion {
         }
 
         // Rated Entering Water Temperature
-        newObject.setDouble(10, 30);
+        newObject.setDouble(11, 30);
 
         // Rated Entering Air Dry-Bulb Temperature
-        newObject.setDouble(11, 27);
+        newObject.setDouble(12, 27);
 
         // Rated Entering Air Wet-Bulb Temperature
-        newObject.setDouble(12, 19.0);
+        newObject.setDouble(13, 19.0);
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;

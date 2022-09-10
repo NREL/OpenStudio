@@ -1397,10 +1397,12 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   // Field before: Rated COP
   EXPECT_EQ(4.2, coil.getDouble(10).get());
 
+  // 3.5.0 to 3.5.0: (3) fields added
+
   // Curves
   {
-    ASSERT_TRUE(coil.getTarget(11));
-    WorkspaceObject totalCoolingCapacityCurve = coil.getTarget(11).get();
+    ASSERT_TRUE(coil.getTarget(14));
+    WorkspaceObject totalCoolingCapacityCurve = coil.getTarget(14).get();
     EXPECT_EQ(coil.nameString() + " TotCoolCapCurve", totalCoolingCapacityCurve.nameString());
 
     EXPECT_EQ(-0.68126221, totalCoolingCapacityCurve.getDouble(2).get());
@@ -1419,8 +1421,8 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   }
 
   {
-    ASSERT_TRUE(coil.getTarget(12));
-    WorkspaceObject sensibleCoolingCapacityCurve = coil.getTarget(12).get();
+    ASSERT_TRUE(coil.getTarget(15));
+    WorkspaceObject sensibleCoolingCapacityCurve = coil.getTarget(15).get();
     // This is a CurveQuintLinear
     EXPECT_EQ(coil.nameString() + " SensCoolCapCurve", sensibleCoolingCapacityCurve.nameString());
     EXPECT_EQ(2.24209455, sensibleCoolingCapacityCurve.getDouble(2).get());
@@ -1442,8 +1444,8 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   }
 
   {
-    ASSERT_TRUE(coil.getTarget(13));
-    WorkspaceObject coolingPowerConsumptionCurve = coil.getTarget(13).get();
+    ASSERT_TRUE(coil.getTarget(16));
+    WorkspaceObject coolingPowerConsumptionCurve = coil.getTarget(16).get();
     EXPECT_EQ(coil.nameString() + " CoolPowCurve", coolingPowerConsumptionCurve.nameString());
     EXPECT_EQ(-3.20456384, coolingPowerConsumptionCurve.getDouble(2).get());
     EXPECT_EQ(0.47656454, coolingPowerConsumptionCurve.getDouble(3).get());
@@ -1461,10 +1463,10 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   }
 
   // Field after: Nominal Time for Condensate Removal to Begin
-  EXPECT_EQ(360.0, coil.getDouble(14).get());
+  EXPECT_EQ(360.0, coil.getDouble(17).get());
 
   // Last field
-  EXPECT_EQ(0.1, coil.getDouble(15).get());
+  EXPECT_EQ(0.1, coil.getDouble(18).get());
 }
 
 TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilHeatingWaterToAirHeatPumpEquationFit) {
@@ -1483,10 +1485,12 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilHeatingWaterToAirHeatPumpEqua
   // Field before: Rated COP
   EXPECT_EQ(4.5, coil.getDouble(9).get());
 
+  // 3.5.0 to 3.5.0: (3) fields added
+
   // Curves
   {
-    ASSERT_TRUE(coil.getTarget(10));
-    WorkspaceObject heatingCapacityCurve = coil.getTarget(10).get();
+    ASSERT_TRUE(coil.getTarget(13));
+    WorkspaceObject heatingCapacityCurve = coil.getTarget(13).get();
     EXPECT_EQ(coil.nameString() + " HeatCapCurve", heatingCapacityCurve.nameString());
     EXPECT_EQ(-5.50102734, heatingCapacityCurve.getDouble(2).get());
     EXPECT_EQ(-0.96688754, heatingCapacityCurve.getDouble(3).get());
@@ -1504,11 +1508,9 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilHeatingWaterToAirHeatPumpEqua
   }
 
   {
-    ASSERT_TRUE(coil.getTarget(11));
-    WorkspaceObject heatingPowerConsumptionCurve = coil.getTarget(11).get();
-
+    ASSERT_TRUE(coil.getTarget(14));
+    WorkspaceObject heatingPowerConsumptionCurve = coil.getTarget(14).get();
     EXPECT_EQ(coil.nameString() + " HeatPowCurve", heatingPowerConsumptionCurve.nameString());
-
     EXPECT_EQ(-7.47517858, heatingPowerConsumptionCurve.getDouble(2).get());
     EXPECT_EQ(6.40876653, heatingPowerConsumptionCurve.getDouble(3).get());
     EXPECT_EQ(1.99711665, heatingPowerConsumptionCurve.getDouble(4).get());
