@@ -60,6 +60,8 @@ TEST_F(ModelFixture, SurfacePropertyIncidentSolarMultiplier_GettersSetters) {
   SubSurface ss2(vertices, m);
   EXPECT_TRUE(sp.setSubSurface(ss2));
   EXPECT_EQ(ss2, sp.subSurface());
+  ASSERT_TRUE(ss2.surfacePropertyIncidentSolarMultiplier());
+  EXPECT_EQ(sp, ss2.surfacePropertyIncidentSolarMultiplier().get());
 
   // Incident Solar Multiplier: Required Double
   EXPECT_TRUE(sp.setIncidentSolarMultiplier(0.75));

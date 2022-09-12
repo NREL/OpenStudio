@@ -49,6 +49,7 @@ namespace model {
   class SurfacePropertyOtherSideConditionsModel;
   class SurfacePropertyConvectionCoefficients;
   class SurfacePropertyLocalEnvironment;
+  class SurfacePropertyIncidentSolarMultiplier;
   class AirflowNetworkSurface;
   class AirflowNetworkDetailedOpening;
   class AirflowNetworkSimpleOpening;
@@ -198,6 +199,9 @@ namespace model {
 
     /** Returns the SurfacePropertyLocalEnvironment, if it exists. */
     boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;
+
+    /** Return the SurfacePropertyIncidentSolarMultiplier that points to this surface if any */
+    boost::optional<SurfacePropertyIncidentSolarMultiplier> surfacePropertyIncidentSolarMultiplier() const;
 
     /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
     boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;

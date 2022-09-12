@@ -62,6 +62,8 @@
 #include "SurfacePropertyConvectionCoefficients_Impl.hpp"
 #include "SurfacePropertyLocalEnvironment.hpp"
 #include "SurfacePropertyLocalEnvironment_Impl.hpp"
+#include "SurfacePropertyIncidentSolarMultiplier.hpp"
+#include "SurfacePropertyIncidentSolarMultiplier_Impl.hpp"
 #include "AirflowNetworkSurface.hpp"
 #include "AirflowNetworkSurface_Impl.hpp"
 #include "AirflowNetworkDetailedOpening.hpp"
@@ -916,6 +918,24 @@ namespace model {
       }
     }
 
+    boost::optional<SurfacePropertyIncidentSolarMultiplier> SubSurface_Impl::surfacePropertyIncidentSolarMultiplier() const {
+      std::vector<SurfacePropertyIncidentSolarMultiplier> allspism(model().getConcreteModelObjects<SurfacePropertyIncidentSolarMultiplier>());
+      std::vector<SurfacePropertyIncidentSolarMultiplier> spism;
+      for (auto& spcc : allspism) {
+        if (spcc.subSurface().handle() == handle()) {
+          spism.push_back(spcc);
+        }
+      }
+      if (spism.empty()) {
+        return boost::none;
+      } else if (spism.size() == 1) {
+        return spism.at(0);
+      } else {
+        LOG(Error, "More than one SurfacePropertyIncidentSolarMultiplier points to this SubSurface");
+        return boost::none;
+      }
+    }
+
     boost::optional<SurfacePropertyOtherSideCoefficients> SubSurface_Impl::surfacePropertyOtherSideCoefficients() const {
       return getObject<SubSurface>().getModelObjectTarget<SurfacePropertyOtherSideCoefficients>(OS_SubSurfaceFields::OutsideBoundaryConditionObject);
     }
@@ -1562,6 +1582,10 @@ namespace model {
 
   boost::optional<SurfacePropertyLocalEnvironment> SubSurface::surfacePropertyLocalEnvironment() const {
     return getImpl<detail::SubSurface_Impl>()->surfacePropertyLocalEnvironment();
+  }
+
+  boost::optional<SurfacePropertyIncidentSolarMultiplier> SubSurface::surfacePropertyIncidentSolarMultiplier() const {
+    return getImpl<detail::SubSurface_Impl>()->surfacePropertyIncidentSolarMultiplier();
   }
 
   boost::optional<SurfacePropertyOtherSideCoefficients> SubSurface::surfacePropertyOtherSideCoefficients() const {
