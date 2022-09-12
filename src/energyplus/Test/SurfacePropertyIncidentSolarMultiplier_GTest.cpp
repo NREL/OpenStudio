@@ -90,8 +90,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyIncidentSolarMultipli
   ScheduleConstant sch(m);
   EXPECT_TRUE(sp.setIncidentSolarMultiplierSchedule(sch));
 
-  m.save("SurfacePropertyIncidentSolarMultiplier_FT.osm", true);
-
   // Only assigned the groups here
   Workspace w = ft.translateModel(m);
 
