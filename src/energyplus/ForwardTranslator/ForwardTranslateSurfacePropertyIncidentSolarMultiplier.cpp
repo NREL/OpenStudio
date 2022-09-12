@@ -32,9 +32,8 @@
 
 #include "../../model/SurfacePropertyIncidentSolarMultiplier.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "../../model/Surface.hpp"
-#include "../../model/Surface_Impl.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
 
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
@@ -51,29 +50,18 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translateSurfacePropertyIncidentSolarMultiplier(model::SurfacePropertyIncidentSolarMultiplier& modelObject) {
-    boost::optional<IdfObject> result;
-    boost::optional<WorkspaceObject> _wo;
-    boost::optional<ModelObject> _mo;
 
     // Instantiate an IdfObject of the class to store the values
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_IncidentSolarMultiplier, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject( openstudio::IddObjectType::SurfaceProperty_IncidentSolarMultiplier );
-    // m_idfObjects.push_back(idfObject);
-
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::SurfaceProperty_IncidentSolarMultiplier, modelObject);
 
     // Surface Name: Required Object
-    Surface surface = modelObject.surface();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(surface)) {
+    SubSurface subSurface = modelObject.subSurface();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(subSurface)) {
       idfObject.setString(SurfaceProperty_IncidentSolarMultiplierFields::SurfaceName, _owo->nameString());
     }
 
     // Incident Solar Multiplier: Optional Double
-    double incidentSolarMultiplier = modelObject.incidentSolarMultiplier();
-    idfObject.setDouble(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplier, incidentSolarMultiplier);
+    idfObject.setDouble(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplier, modelObject.incidentSolarMultiplier());
 
     // Incident Solar Multiplier Schedule Name: Optional Object
     if (boost::optional<Schedule> _incidentSolarMultiplierSchedule = modelObject.incidentSolarMultiplierSchedule()) {

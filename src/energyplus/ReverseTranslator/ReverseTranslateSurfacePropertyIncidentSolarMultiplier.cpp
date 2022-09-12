@@ -31,9 +31,8 @@
 
 #include "../../model/SurfacePropertyIncidentSolarMultiplier.hpp"
 
-// TODO: Check the following class names against object getters and setters.
-#include "../../model/Surface.hpp"
-#include "../../model/Surface_Impl.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
 
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
@@ -48,36 +47,30 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<ModelObject> ReverseTranslator::translateSurfacePropertyIncidentSolarMultiplier(const WorkspaceObject& workspaceObject) {
-    boost::optional<ModelObject> result;
-    boost::optional<WorkspaceObject> _wo;
-    boost::optional<ModelObject> _mo;
 
-    // Instantiate an object of the class to store the values,
-    // but we don't return it until we know it's ok
-    // TODO: check constructor, it might need other objects
-    openstudio::model::SurfacePropertyIncidentSolarMultiplier modelObject(m_model);
-
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    boost::optional<SubSurface> subSurface_;
 
     // Surface Name: Required Object
-    if ((_wo = workspaceObject.getTarget(SurfaceProperty_IncidentSolarMultiplierFields::SurfaceName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Surface> _surface = _mo->optionalCast<Surface>()) {
-          modelObject.setSurface(_surface.get());
+    if (auto wo_ = workspaceObject.getTarget(SurfaceProperty_IncidentSolarMultiplierFields::SurfaceName)) {
+      if (auto mo_ = translateAndMapWorkspaceObject(wo_.get())) {
+
+        if (auto ss_ = mo_->optionalCast<SubSurface>()) {
+          subSurface_ = ss_;
         } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Surface Name'");
+          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Surface Name', cannot reverse translate.");
+          return boost::none;
         }
       } else {
         LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Surface Name'");
-        return result;
+        return boost::none;
       }
     } else {
       LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Surface Name'");
-      return result;
+      return boost::none;
     }
+
+    openstudio::model::SurfacePropertyIncidentSolarMultiplier modelObject(subSurface_.get());
+
     // Incident Solar Multiplier: Optional Double
     if (boost::optional<double> _incidentSolarMultiplier =
           workspaceObject.getDouble(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplier)) {
@@ -85,18 +78,17 @@ namespace energyplus {
     }
 
     // Incident Solar Multiplier Schedule Name: Optional Object
-    if ((_wo = workspaceObject.getTarget(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplierScheduleName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Schedule> _incidentSolarMultiplierSchedule = _mo->optionalCast<Schedule>()) {
+    if (auto wo_ = workspaceObject.getTarget(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplierScheduleName)) {
+      if (auto mo_ = translateAndMapWorkspaceObject(wo_.get())) {
+        if (boost::optional<Schedule> _incidentSolarMultiplierSchedule = mo_->optionalCast<Schedule>()) {
           modelObject.setIncidentSolarMultiplierSchedule(_incidentSolarMultiplierSchedule.get());
         } else {
           LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Incident Solar Multiplier Schedule Name'");
         }
       }
     }
-    result = modelObject;
-    return result;
+
+    return modelObject;
   }  // End of translate function
 
 }  // end namespace energyplus

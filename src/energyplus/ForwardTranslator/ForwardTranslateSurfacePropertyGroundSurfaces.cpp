@@ -31,6 +31,9 @@
 #include "../../model/Model.hpp"
 
 #include "../../model/SurfacePropertyGroundSurfaces.hpp"
+#include "../../model/Schedule.hpp"
+
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
 #include <utilities/idd/SurfaceProperty_GroundSurfaces_FieldEnums.hxx>
 // #include "../../utilities/idd/IddEnums.hpp"
@@ -47,19 +50,22 @@ namespace energyplus {
 
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_GroundSurfaces, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject( openstudio::IddObjectType::SurfaceProperty_GroundSurfaces );
-    // m_idfObjects.push_back(idfObject);
 
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
+    for (const auto& group : modelObject.groundSurfaceGroups()) {
 
-    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-    // But in some cases, you'll want to handle failure without pushing to the map
-    // Name
-    if (boost::optional<std::string> moName = modelObject.name()) {
-      idfObject.setName(*moName);
+      IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
+      eg.setString(SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceName, group.groundSurfaceName());
+      eg.setDouble(SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceViewFactor, group.viewFactor());
+      if (auto sch_ = group.temperatureSchedule()) {
+        if (boost::optional<IdfObject> _owo = translateAndMapModelObject(sch_.get())) {
+          eg.setString(SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceTemperatureScheduleName, _owo->nameString());
+        }  // TODO: handle failure?
+      }
+      if (auto sch_ = group.reflectanceSchedule()) {
+        if (boost::optional<IdfObject> _owo = translateAndMapModelObject(sch_.get())) {
+          eg.setString(SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceReflectanceScheduleName, _owo->nameString());
+        }  // TODO: handle failure?
+      }
     }
 
     return idfObject;

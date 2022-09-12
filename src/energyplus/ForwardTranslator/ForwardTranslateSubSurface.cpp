@@ -42,6 +42,7 @@
 #include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../../model/SurfacePropertyConvectionCoefficients.hpp"
 #include "../../model/SurfacePropertyLocalEnvironment.hpp"
+#include "../../model/SurfacePropertyIncidentSolarMultiplier.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -168,7 +169,13 @@ namespace energyplus {
       group.setDouble(2, newPoint.z());
     }
 
+    // Register and emplace into m_map, so that the translateSurfacePropertyIncidentSolarMultiplier can retrieve the subsurface namestring
     m_idfObjects.push_back(idfObject);
+    m_map.insert(std::make_pair(modelObject.handle(), idfObject));
+
+    if (boost::optional<SurfacePropertyIncidentSolarMultiplier> spMult_ = modelObject.surfacePropertyIncidentSolarMultiplier()) {
+      translateAndMapModelObject(spMult_.get());
+    }
 
     return idfObject;
   }
