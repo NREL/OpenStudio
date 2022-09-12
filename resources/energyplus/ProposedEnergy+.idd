@@ -9708,7 +9708,7 @@ SurfaceProperty:IncidentSolarMultiplier,
   A1, \field Surface Name
       \required-field
       \type object-list
-      \object-list SurfaceNames
+      \object-list GlazedExtSubSurfNames
       \note Enter the name of an exterior window outside surface object
   N1, \field Incident Solar Multiplier
       \note a constant multiplier for window solar transmittance
