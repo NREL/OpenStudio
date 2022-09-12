@@ -80,6 +80,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyIncidentSolarMultipli
   std::vector<Point3d> ssPoints{{0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {1, 0, 1}};
 
   SubSurface ss(ssPoints, m);
+  ss.setName("SubSurface1");
   ss.setSurface(surface);
 
   SurfacePropertyIncidentSolarMultiplier sp(ss);
@@ -97,7 +98,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyIncidentSolarMultipli
   ASSERT_EQ(1, woSps.size());
   auto& woSp = woSps.front();
 
+  ASSERT_EQ(1, w.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+  ASSERT_EQ(1, w.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
+
   EXPECT_EQ(ss.nameString(), woSp.getTarget(SurfaceProperty_IncidentSolarMultiplierFields::SurfaceName)->nameString());
+  EXPECT_EQ("SubSurface1", woSp.getTarget(SurfaceProperty_IncidentSolarMultiplierFields::SurfaceName)->nameString());
   EXPECT_EQ(sp.incidentSolarMultiplier(), woSp.getDouble(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplier).get());
   EXPECT_EQ(sch.nameString(), woSp.getString(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplierScheduleName).get());
 }
