@@ -81,6 +81,8 @@
 #include "../model/CurveCubic_Impl.hpp"
 #include "../model/CurveQuadratic.hpp"
 #include "../model/CurveQuadratic_Impl.hpp"
+#include "../model/CurveQuadraticLinear.hpp"
+#include "../model/CurveQuadraticLinear_Impl.hpp"
 #include "../model/Curve.hpp"
 #include "../model/Curve_Impl.hpp"
 #include "../model/TableMultiVariableLookup.hpp"
@@ -90,6 +92,9 @@
 #include "../model/ScheduleConstant.hpp"
 #include "../model/ScheduleConstant_Impl.hpp"
 #include "../model/ScheduleRuleset.hpp"
+#include "../model/ScheduleRuleset_Impl.hpp"
+#include "../model/ScheduleRule.hpp"
+#include "../model/ScheduleRule_Impl.hpp"
 #include "../model/ScheduleDay.hpp"
 #include "../model/ScheduleDay_Impl.hpp"
 #include "../model/ScheduleYear.hpp"
@@ -106,6 +111,8 @@
 #include "../model/Space_Impl.hpp"
 #include "../model/AirConditionerVariableRefrigerantFlow.hpp"
 #include "../model/AirConditionerVariableRefrigerantFlow_Impl.hpp"
+#include "../model/AvailabilityManagerLowTemperatureTurnOff.hpp"
+#include "../model/AvailabilityManagerLowTemperatureTurnOff_Impl.hpp"
 #include "../model/AvailabilityManagerOptimumStart.hpp"
 #include "../model/AvailabilityManagerOptimumStart_Impl.hpp"
 #include "../model/AvailabilityManagerNightCycle.hpp"
@@ -150,6 +157,8 @@
 #include "../model/SetpointManagerScheduledDualSetpoint_Impl.hpp"
 #include "../model/ThermalZone.hpp"
 #include "../model/ThermalZone_Impl.hpp"
+#include "../model/ThermalStorageIceDetailed.hpp"
+#include "../model/ThermalStorageIceDetailed_Impl.hpp"
 #include "../model/ThermalStorageChilledWaterStratified.hpp"
 #include "../model/ThermalStorageChilledWaterStratified_Impl.hpp"
 #include "../model/AirTerminalSingleDuctConstantVolumeCooledBeam.hpp"
@@ -5671,54 +5680,191 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   }
 
   // ThrmlEngyStor
-  auto thrmlEngyStorElement = fluidSysElement.child("ThrmlEngyStor");
-  boost::optional<model::ThermalStorageChilledWaterStratified> thermalStorage;
+  const auto thrmlEngyStorElement = fluidSysElement.child("ThrmlEngyStor");
+  const auto thrmlEngyStorType = thrmlEngyStorElement.child("Type").text().as_string();
+
+  // These values will be used later when chilled water storage controls are setup for the plant
+  boost::optional<model::ThermalStorageChilledWaterStratified> chilledWaterStorage;
   std::string thermalStorageDischargePriority;
   boost::optional<model::ScheduleRuleset> tesSchedule;
-  // Note: this variable will be used un-initialized in case the "TankSetptTemp" child key is ill-formed (not present or, doesn't cast to double)
-  // Setting to a default of 7.5 per E+ example 5ZoneVAV-ChilledWaterStorage-Stratified.idf
   double thermalStorageTankSetptTemp = 7.5;
-  if( auto mo = translateThrmlEngyStor(thrmlEngyStorElement, model) ) {
-    thermalStorage = mo->cast<model::ThermalStorageChilledWaterStratified>();
-    plantLoop.addSupplyBranchForComponent(thermalStorage.get());
-    addBranchPump(thermalStorage->supplyInletModelObject(),thrmlEngyStorElement);
-    plantLoop.addDemandBranchForComponent(thermalStorage.get());
 
-    thermalStorageDischargePriority = thrmlEngyStorElement.child("DischrgPriority").text().as_string();
-    pugi::xml_node tankSetptTempElement = thrmlEngyStorElement.child("TankSetptTemp");
-    boost::optional<double> _tankSetptTemp = lexicalCastToDouble(tankSetptTempElement);
-    if (_tankSetptTemp) {
-      thermalStorageTankSetptTemp = unitToUnit(_tankSetptTemp.get(),"F","C").get();
-    } else {
-      LOG(Warn, "Missing TankSetptTemp (or bad cast to double) for '" << thermalStorage->briefDescription()
-             << ", defaulting to " << thermalStorageTankSetptTemp << " C.");
-    }
+  // These values will be used later when ice storage controls are setup for the plant
+  boost::optional<model::ThermalStorageIceDetailed> iceStorage;
+  boost::optional<std::string> iceStorageChlrRef;
+  double iceChilledWaterTemp = 7.5;
+  double iceChargeTemp = -5.0;
+  boost::optional<model::Schedule> iceAvailabilityLowTempTurnOff;
+  boost::optional<model::Schedule> iceTankAvailabilitySchedule;
+  boost::optional<model::Schedule> icePrimaryChillerSetpointSchedule;
+  boost::optional<model::Schedule> iceChargingChillerSetpointSchedule;
 
-    // charging scheme, which is a component setpoint scheme so we add SPMs
-    tesSchedule = model::ScheduleRuleset(model);
-    tesSchedule->setName(plantLoop.nameString() + "TES SPM Schedule");
-    tesSchedule->defaultDaySchedule().addValue(Time(1.0),thermalStorageTankSetptTemp);
+  if (istringEqual(thrmlEngyStorType, "Ice")) {
+    if( auto mo = translateIceThrmlEngyStor(thrmlEngyStorElement, model) ) {
+      iceStorage = mo->cast<model::ThermalStorageIceDetailed>();
+      iceStorageChlrRef = thrmlEngyStorElement.child("ChlrRef").text().as_string();
 
-    thermalStorage->setSetpointTemperatureSchedule(tesSchedule.get());
+      plantLoop.setGlycolConcentration(40);
 
-    {
-      auto schRef = thrmlEngyStorElement.child("ChlrOnlySchRef").text().as_string();
-      if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
-        plantLoop.setPlantEquipmentOperationCoolingLoadSchedule(sch.get());
+      const auto inletTempElement = thrmlEngyStorElement.child("InletTemp");
+      if (inletTempElement) {
+        iceChargeTemp = unitToUnit(inletTempElement.text().as_double(), "F", "C").get();
+      }
+
+      const auto outletTempElement = thrmlEngyStorElement.child("OutletTemp");
+      if (outletTempElement) {
+        iceChilledWaterTemp = unitToUnit(outletTempElement.text().as_double(), "F", "C").get();
+      }
+
+      // Build key schedules
+      // first parse time inputs
+      double startTime = 9.0; 
+      int startMonth = 5; 
+      int startDayOfMonth = 15;
+      double stopTime = 22.0; 
+      int stopMonth = 9;
+      int stopDayOfMonth = 30; 
+
+      const auto startTimeElement = thrmlEngyStorElement.child("StartTime");
+      if (startTimeElement) {
+        startTime = startTimeElement.text().as_double();
+      }
+
+      const auto startDateElement = thrmlEngyStorElement.child("StartDate");
+      if (startDateElement) {
+        const std::string startDateString = startDateElement.text().as_string();
+        const auto splitPosition = startDateString.find("/");
+        const std::string startMonthString = startDateString.substr(0, splitPosition);
+        const std::string startDayOfMonthString = startDateString.substr(splitPosition + 1);
+        startMonth = stoi(startMonthString);
+        startDayOfMonth= stoi(startDayOfMonthString);
+      }
+
+      const auto stopTimeElement = thrmlEngyStorElement.child("StopTime");
+      if (stopTimeElement) {
+        stopTime = stopTimeElement.text().as_double();
+      }
+
+      const auto stopDateElement = thrmlEngyStorElement.child("StopDate");
+      if (stopDateElement) {
+        const std::string stopDateString = stopDateElement.text().as_string();
+        const auto splitPosition = stopDateString.find("/");
+        const std::string stopMonthString = stopDateString.substr(0, splitPosition);
+        const std::string stopDayOfMonthString = stopDateString.substr(splitPosition + 1);
+        stopMonth = stoi(stopMonthString);
+        stopDayOfMonth= stoi(stopDayOfMonthString);
+      }
+
+      // AvailabilityManagerLowTemperatureTurnOff schedule for ice storage
+      {
+        model::ScheduleRuleset schedule(model);
+        schedule.setName(plantLoop.nameString() + " Low Temp TurnOff");
+        auto defaultOff = schedule.defaultDaySchedule();
+        schedule.defaultDaySchedule().addValue(Time(1, 0), 0.0);
+
+        model::ScheduleRule rule(schedule);
+        rule.setApplyAllDays(false);
+        rule.setApplyWeekdays(true);
+        auto daySchedule = rule.daySchedule();
+        daySchedule.addValue(Time(0, startTime), 1.0);
+        daySchedule.addValue(Time(0, stopTime), 0.0);
+        daySchedule.addValue(Time(1, 0), 1.0);
+
+        schedule.setSummerDesignDaySchedule(daySchedule);
+
+        iceAvailabilityLowTempTurnOff = schedule;
+      }
+
+      // Ice Tank Availability
+      {
+        model::ScheduleRuleset schedule(model);
+        schedule.setName(plantLoop.nameString() + " Ice Tank Availability");
+        schedule.defaultDaySchedule().addValue(Time(1, 0), 0.0);
+
+        model::ScheduleRule rule(schedule);
+        rule.setStartDate(Date(startMonth, startDayOfMonth));
+        rule.setStartDate(Date(stopMonth, stopDayOfMonth));
+        rule.daySchedule().addValue(Time(1, 0), 1.0);
+
+        iceTankAvailabilitySchedule = schedule;
+        iceStorage->setAvailabilitySchedule(schedule);
+      }
+
+      // Main chiller setpoint schedule
+      {
+        model::ScheduleRuleset schedule(model);
+        schedule.setName(plantLoop.nameString() + " Chiller Setpoint");
+        schedule.defaultDaySchedule().addValue(Time(1, 0), iceChilledWaterTemp);
+
+        model::ScheduleRule rule(schedule);
+        rule.setStartDate(Date(startMonth, startDayOfMonth));
+        rule.setStartDate(Date(stopMonth, stopDayOfMonth));
+        rule.daySchedule().addValue(Time(0, startTime), 98.9);
+        rule.daySchedule().addValue(Time(0, stopTime), iceChilledWaterTemp);
+        rule.daySchedule().addValue(Time(1, 0), 98.9);
+
+        icePrimaryChillerSetpointSchedule = schedule;
+      }
+
+      // Charging chiller setpoint schedule
+      {
+        model::ScheduleRuleset schedule(model);
+        schedule.setName(plantLoop.nameString() + " Charging Setpoint");
+        schedule.defaultDaySchedule().addValue(Time(1, 0), 98.9);
+
+        model::ScheduleRule rule(schedule);
+        rule.setStartDate(Date(startMonth, startDayOfMonth));
+        rule.setStartDate(Date(stopMonth, stopDayOfMonth));
+        rule.daySchedule().addValue(Time(0, startTime), iceChargeTemp);
+        rule.daySchedule().addValue(Time(0, stopTime), 98.9);
+        rule.daySchedule().addValue(Time(1, 0), iceChargeTemp);
+
+        iceChargingChillerSetpointSchedule = schedule;
       }
     }
+  } else {
+    if( auto mo = translateChilledWaterThrmlEngyStor(thrmlEngyStorElement, model) ) {
+      chilledWaterStorage = mo->cast<model::ThermalStorageChilledWaterStratified>();
+      plantLoop.addSupplyBranchForComponent(chilledWaterStorage.get());
+      addBranchPump(chilledWaterStorage->supplyInletModelObject(),thrmlEngyStorElement);
+      plantLoop.addDemandBranchForComponent(chilledWaterStorage.get());
 
-    {
-      auto schRef = thrmlEngyStorElement.child("DischrgSchRef").text().as_string();
-      if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
-        plantLoop.setPrimaryPlantEquipmentOperationSchemeSchedule(sch.get());
+      thermalStorageDischargePriority = thrmlEngyStorElement.child("DischrgPriority").text().as_string();
+      pugi::xml_node tankSetptTempElement = thrmlEngyStorElement.child("TankSetptTemp");
+      boost::optional<double> _tankSetptTemp = lexicalCastToDouble(tankSetptTempElement);
+      if (_tankSetptTemp) {
+        thermalStorageTankSetptTemp = unitToUnit(_tankSetptTemp.get(),"F","C").get();
+      } else {
+        LOG(Warn, "Missing TankSetptTemp (or bad cast to double) for '" << chilledWaterStorage->briefDescription()
+               << ", defaulting to " << thermalStorageTankSetptTemp << " C.");
       }
-    }
 
-    {
-      auto schRef = thrmlEngyStorElement.child("ChrgSchRef").text().as_string();
-      if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
-        plantLoop.setComponentSetpointOperationSchemeSchedule(sch.get());
+      // charging scheme, which is a component setpoint scheme so we add SPMs
+      tesSchedule = model::ScheduleRuleset(model);
+      tesSchedule->setName(plantLoop.nameString() + "TES SPM Schedule");
+      tesSchedule->defaultDaySchedule().addValue(Time(1.0),thermalStorageTankSetptTemp);
+
+      chilledWaterStorage->setSetpointTemperatureSchedule(tesSchedule.get());
+
+      {
+        auto schRef = thrmlEngyStorElement.child("ChlrOnlySchRef").text().as_string();
+        if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
+          plantLoop.setPlantEquipmentOperationCoolingLoadSchedule(sch.get());
+        }
+      }
+
+      {
+        auto schRef = thrmlEngyStorElement.child("DischrgSchRef").text().as_string();
+        if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
+          plantLoop.setPrimaryPlantEquipmentOperationSchemeSchedule(sch.get());
+        }
+      }
+
+      {
+        auto schRef = thrmlEngyStorElement.child("ChrgSchRef").text().as_string();
+        if( auto sch = model.getModelObjectByName<model::Schedule>(schRef) ) {
+          plantLoop.setComponentSetpointOperationSchemeSchedule(sch.get());
+        }
       }
     }
   }
@@ -5742,7 +5888,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
         bypass = true;
       }
 
-      if( thermalStorage ) {
+      if( chilledWaterStorage ) {
         if( chillerElement.child("EnableOnThrmlEngyStorDischrg").text().as_int() == 1 ) {
           enableOnThrmlEngyStorDischargeMap.push_back(std::make_pair(chiller,true));
         } else {
@@ -6113,8 +6259,8 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
   }
 
-  // Thermal Energy Storage needs special operation schemes
-  if( thermalStorage ) {
+  // Chilled Water Thermal Energy Storage needs special operation schemes
+  if( chilledWaterStorage ) {
     // The end result should be three operations schemes
     // charging and standby, discharging, charging
 
@@ -6145,11 +6291,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     }
 
     if( istringEqual(thermalStorageDischargePriority,"Chiller") ) {
-      dischargingScheme.addEquipment(thermalStorage.get());
+      dischargingScheme.addEquipment(chilledWaterStorage.get());
     } else {
       auto upperLimit = dischargingScheme.maximumUpperLimit();
       auto equipment = dischargingScheme.equipment(upperLimit);
-      equipment.insert(equipment.begin(),thermalStorage.get());
+      equipment.insert(equipment.begin(),chilledWaterStorage.get());
       dischargingScheme.replaceEquipment(upperLimit,equipment);
     }
 
@@ -6505,6 +6651,52 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     LOG(Error,plantLoop.name().get() << " does not have a setpoint.");
   }
 
+  // Ice Thermal Energy Storage needs special treatment
+  if (iceStorage && iceStorageChlrRef) {
+    // First, add it to the loop topology
+    auto iceStorageChlr = model.getModelObjectByName<model::WaterToWaterComponent>(iceStorageChlrRef.get());
+    if (iceStorageChlr) {
+      auto node = iceStorageChlr->supplyOutletModelObject()->cast<model::Node>();
+      iceStorage->addToNode(node);
+    }
+
+    // Second, apply control logic
+    // Setpoint managers for all chillers and the ice storage
+    // The charging chiller follows a different (colder) schedule
+    // Other chillers will follow the plant supply outlet temperature
+    const auto chargingChiller = model.getModelObjectByName<model::ChillerElectricEIR>(iceStorageChlrRef.get());
+    const auto chillers = subsetCastVector<model::ChillerElectricEIR>(plantLoop.supplyComponents(model::ChillerElectricEIR::iddObjectType()));
+
+    if (icePrimaryChillerSetpointSchedule) {
+      for (const auto chiller: chillers) {
+        if (chargingChiller && (chargingChiller.get() == chiller)) {
+          continue;
+        }
+        auto node = chiller.supplyOutletModelObject()->cast<model::Node>();
+        if (node.setpointManagers().empty()) {
+          model::SetpointManagerScheduled spm(model,icePrimaryChillerSetpointSchedule.get());
+          spm.addToNode(node);
+        }
+      }
+
+      auto iceOutletNode = iceStorage->outletModelObject()->cast<model::Node>();
+      model::SetpointManagerScheduled spm(model,icePrimaryChillerSetpointSchedule.get());
+      spm.addToNode(iceOutletNode);
+    }
+
+
+    if (chargingChiller && iceChargingChillerSetpointSchedule) {
+      auto chargeNode = chargingChiller->supplyOutletModelObject()->cast<model::Node>();
+      model::SetpointManagerScheduled spm(model,iceChargingChillerSetpointSchedule.get());
+      spm.addToNode(chargeNode);
+    }
+
+    // Third, apply an Availability Manager
+    model::AvailabilityManagerLowTemperatureTurnOff avm(model);
+    avm.setTemperature(-4.0);
+    plantLoop.addAvailabilityManager(avm, 1u);
+    avm.setApplicabilitySchedule(iceAvailabilityLowTempTurnOff.get());
+  }
 
   return plantLoop;
 }
@@ -7500,21 +7692,72 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateHX(
 
   return result;
 }
-boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateThrmlEngyStor(
+
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateIceThrmlEngyStor(
                                                   const pugi::xml_node& tesElement,
                                                   openstudio::model::Model& model )
 {
   boost::optional<openstudio::model::ModelObject> result;
+  std::string name = tesElement.child("Name").text().as_string();
+  model::ThermalStorageIceDetailed tes(model);
+  result = tes;
+  tes.setName(name);
 
-  if( ! istringEqual(tesElement.name(),"ThrmlEngyStor") ) {
-    return result;
+  const auto capRtdSimElement = lexicalCastToDouble(tesElement.child("CapRtdSim"));
+  if (capRtdSimElement) {
+    const double capRtdSim = unitToUnit(capRtdSimElement.get(),"Btu/h","W").get();
+    tes.setCapacity(capRtdSim);
   }
 
-  std::string name = tesElement.child("Name").text().as_string();
+  const auto dischrgCrvVarSpec = tesElement.child("DischrgCrvVarSpec").text().as_string();
+  tes.setDischargingCurveVariableSpecifications(dischrgCrvVarSpec);
 
+  auto dischargingCurve = tes.dischargingCurve().cast<model::CurveQuadraticLinear>();
+  dischargingCurve.setName(name + " DischargeCurve");
+  dischargingCurve.setCoefficient1Constant(0.0);
+  dischargingCurve.setCoefficient2x(0.09);
+  dischargingCurve.setCoefficient3xPOW2(-0.15);
+  dischargingCurve.setCoefficient4y(0.612);
+  dischargingCurve.setCoefficient5xTIMESY(-0.324);
+  dischargingCurve.setCoefficient6xPOW2TIMESY(-0.216);
+  dischargingCurve.setMinimumValueofx(0.0);
+  dischargingCurve.setMaximumValueofx(1.0);
+  dischargingCurve.setMinimumValueofy(0.0);
+  dischargingCurve.setMaximumValueofy(9.9);
+
+  const auto chrgCrvVarSpec = tesElement.child("ChrgCrvVarSpec").text().as_string();
+  tes.setChargingCurveVariableSpecifications(chrgCrvVarSpec);
+
+  auto chargingCurve = tes.chargingCurve().cast<model::CurveQuadraticLinear>();
+  chargingCurve.setName(name + " ChargeCurve");
+  chargingCurve.setCoefficient1Constant(0.0);
+  chargingCurve.setCoefficient2x(0.09);
+  chargingCurve.setCoefficient3xPOW2(-0.15);
+  chargingCurve.setCoefficient4y(0.612);
+  chargingCurve.setCoefficient5xTIMESY(-0.324);
+  chargingCurve.setCoefficient6xPOW2TIMESY(-0.216);
+  chargingCurve.setMinimumValueofx(0.0);
+  chargingCurve.setMaximumValueofx(1.0);
+  chargingCurve.setMinimumValueofy(0.0);
+  chargingCurve.setMaximumValueofy(9.9);
+
+  tes.setTimestepoftheCurveData(1.0);
+  tes.setParasiticElectricLoadDuringDischarging(0.0001);
+  tes.setParasiticElectricLoadDuringCharging(0.0002);
+  tes.setTankLossCoefficient(0.0003);
+  tes.setFreezingTemperatureofStorageMedium(0.0);
+
+  return result;
+}
+
+boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateChilledWaterThrmlEngyStor(
+                                                  const pugi::xml_node& tesElement,
+                                                  openstudio::model::Model& model )
+{
+  boost::optional<openstudio::model::ModelObject> result;
+  std::string name = tesElement.child("Name").text().as_string();
   model::ThermalStorageChilledWaterStratified tes(model);
   result = tes;
-
   tes.setName(name);
 
   pugi::xml_node storCapElement = tesElement.child("StorCapSim");
