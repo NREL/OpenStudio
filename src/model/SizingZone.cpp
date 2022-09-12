@@ -33,6 +33,8 @@
 #include "ThermalZone_Impl.hpp"
 #include "Model.hpp"
 #include "Model_Impl.hpp"
+#include "Schedule.hpp"
+#include "Schedule_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 
 #include <utilities/idd/OS_Sizing_Zone_FieldEnums.hxx>
@@ -65,6 +67,20 @@ namespace model {
 
     IddObjectType SizingZone_Impl::iddObjectType() const {
       return SizingZone::iddObjectType();
+    }
+
+    std::vector<ScheduleTypeKey> SizingZone_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
+      std::vector<ScheduleTypeKey> result;
+      UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
+      if (std::find(b, e, OS_Sizing_ZoneFields::ZoneHumidistatDehumidificationSetPointScheduleName) != e) {
+        result.emplace_back("SizingZone", "Zone Humidistat Dehumidification Set Point");
+      }
+      if (std::find(b, e, OS_Sizing_ZoneFields::ZoneHumidistatHumidificationSetPointScheduleName) != e) {
+        result.emplace_back("SizingZone", "Zone Humidistat Humidification Set Point");
+      }
+      return result;
     }
 
     ThermalZone SizingZone_Impl::thermalZone() const {
@@ -568,6 +584,172 @@ namespace model {
       return result;
     }
 
+    std::string SizingZone_Impl::zoneLoadSizingMethod() const {
+      boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::ZoneLoadSizingMethod, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SizingZone_Impl::isZoneLoadSizingMethodDefaulted() const {
+      return isEmpty(OS_Sizing_ZoneFields::ZoneLoadSizingMethod);
+    }
+
+    bool SizingZone_Impl::setZoneLoadSizingMethod(const std::string& zoneLoadSizingMethod) {
+      bool result = setString(OS_Sizing_ZoneFields::ZoneLoadSizingMethod, zoneLoadSizingMethod);
+      return result;
+    }
+
+    void SizingZone_Impl::resetZoneLoadSizingMethod() {
+      bool result = setString(OS_Sizing_ZoneFields::ZoneLoadSizingMethod, "");
+      OS_ASSERT(result);
+    }
+
+    std::string SizingZone_Impl::zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod() const {
+      boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::ZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SizingZone_Impl::isZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethodDefaulted() const {
+      return isEmpty(OS_Sizing_ZoneFields::ZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod);
+    }
+
+    bool SizingZone_Impl::setZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod(
+      const std::string& zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod) {
+      bool result = setString(OS_Sizing_ZoneFields::ZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod,
+                              zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod);
+      return result;
+    }
+
+    void SizingZone_Impl::resetZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod() {
+      bool result = setString(OS_Sizing_ZoneFields::ZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<double> SizingZone_Impl::zoneDehumidificationDesignSupplyAirHumidityRatio() const {
+      return getDouble(OS_Sizing_ZoneFields::ZoneDehumidificationDesignSupplyAirHumidityRatio, true);
+    }
+
+    bool SizingZone_Impl::setZoneDehumidificationDesignSupplyAirHumidityRatio(double zoneDehumidificationDesignSupplyAirHumidityRatio) {
+      bool result =
+        setDouble(OS_Sizing_ZoneFields::ZoneDehumidificationDesignSupplyAirHumidityRatio, zoneDehumidificationDesignSupplyAirHumidityRatio);
+      return result;
+    }
+
+    void SizingZone_Impl::resetZoneDehumidificationDesignSupplyAirHumidityRatio() {
+      bool result = setString(OS_Sizing_ZoneFields::ZoneDehumidificationDesignSupplyAirHumidityRatio, "");
+      OS_ASSERT(result);
+    }
+
+    double SizingZone_Impl::zoneCoolingDesignSupplyAirHumidityRatioDifference() const {
+      boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirHumidityRatioDifference, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SizingZone_Impl::isZoneCoolingDesignSupplyAirHumidityRatioDifferenceDefaulted() const {
+      return isEmpty(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirHumidityRatioDifference);
+    }
+
+    bool SizingZone_Impl::setZoneCoolingDesignSupplyAirHumidityRatioDifference(double zoneCoolingDesignSupplyAirHumidityRatioDifference) {
+      bool result =
+        setDouble(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirHumidityRatioDifference, zoneCoolingDesignSupplyAirHumidityRatioDifference);
+      return result;
+    }
+
+    void SizingZone_Impl::resetZoneCoolingDesignSupplyAirHumidityRatioDifference() {
+      bool result = setString(OS_Sizing_ZoneFields::ZoneCoolingDesignSupplyAirHumidityRatioDifference, "");
+      OS_ASSERT(result);
+    }
+
+    std::string SizingZone_Impl::zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod() const {
+      boost::optional<std::string> value = getString(OS_Sizing_ZoneFields::ZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SizingZone_Impl::isZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethodDefaulted() const {
+      return isEmpty(OS_Sizing_ZoneFields::ZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod);
+    }
+
+    bool SizingZone_Impl::setZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod(
+      const std::string& zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod) {
+      bool result = setString(OS_Sizing_ZoneFields::ZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod,
+                              zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod);
+      return result;
+    }
+
+    void SizingZone_Impl::resetZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod() {
+      bool result = setString(OS_Sizing_ZoneFields::ZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<double> SizingZone_Impl::zoneHumidificationDesignSupplyAirHumidityRatio() const {
+      return getDouble(OS_Sizing_ZoneFields::ZoneHumidificationDesignSupplyAirHumidityRatio, true);
+    }
+
+    bool SizingZone_Impl::setZoneHumidificationDesignSupplyAirHumidityRatio(double zoneHumidificationDesignSupplyAirHumidityRatio) {
+      bool result = setDouble(OS_Sizing_ZoneFields::ZoneHumidificationDesignSupplyAirHumidityRatio, zoneHumidificationDesignSupplyAirHumidityRatio);
+      return result;
+    }
+
+    void SizingZone_Impl::resetZoneHumidificationDesignSupplyAirHumidityRatio() {
+      bool result = setString(OS_Sizing_ZoneFields::ZoneHumidificationDesignSupplyAirHumidityRatio, "");
+      OS_ASSERT(result);
+    }
+
+    double SizingZone_Impl::zoneHumidificationDesignSupplyAirHumidityRatioDifference() const {
+      boost::optional<double> value = getDouble(OS_Sizing_ZoneFields::ZoneHumidificationDesignSupplyAirHumidityRatioDifference, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool SizingZone_Impl::isZoneHumidificationDesignSupplyAirHumidityRatioDifferenceDefaulted() const {
+      return isEmpty(OS_Sizing_ZoneFields::ZoneHumidificationDesignSupplyAirHumidityRatioDifference);
+    }
+
+    bool
+      SizingZone_Impl::setZoneHumidificationDesignSupplyAirHumidityRatioDifference(double zoneHumidificationDesignSupplyAirHumidityRatioDifference) {
+      bool result = setDouble(OS_Sizing_ZoneFields::ZoneHumidificationDesignSupplyAirHumidityRatioDifference,
+                              zoneHumidificationDesignSupplyAirHumidityRatioDifference);
+      return result;
+    }
+
+    void SizingZone_Impl::resetZoneHumidificationDesignSupplyAirHumidityRatioDifference() {
+      bool result = setString(OS_Sizing_ZoneFields::ZoneHumidificationDesignSupplyAirHumidityRatioDifference, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Schedule> SizingZone_Impl::zoneHumidistatDehumidificationSetPointSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Sizing_ZoneFields::ZoneHumidistatDehumidificationSetPointScheduleName);
+    }
+
+    bool SizingZone_Impl::setZoneHumidistatDehumidificationSetPointSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_Sizing_ZoneFields::ZoneHumidistatDehumidificationSetPointScheduleName, "SizingZone",
+                                "Zone Humidistat Dehumidification Set Point", schedule);
+      return result;
+    }
+
+    void SizingZone_Impl::resetZoneHumidistatDehumidificationSetPointSchedule() {
+      bool result = setString(OS_Sizing_ZoneFields::ZoneHumidistatDehumidificationSetPointScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<Schedule> SizingZone_Impl::zoneHumidistatHumidificationSetPointSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Sizing_ZoneFields::ZoneHumidistatHumidificationSetPointScheduleName);
+    }
+
+    bool SizingZone_Impl::setZoneHumidistatHumidificationSetPointSchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_Sizing_ZoneFields::ZoneHumidistatHumidificationSetPointScheduleName, "SizingZone",
+                                "Zone Humidistat Humidification Set Point", schedule);
+      return result;
+    }
+
+    void SizingZone_Impl::resetZoneHumidistatHumidificationSetPointSchedule() {
+      bool result = setString(OS_Sizing_ZoneFields::ZoneHumidistatHumidificationSetPointScheduleName, "");
+      OS_ASSERT(result);
+    }
+
     bool SizingZone_Impl::setDedicatedOutdoorAirLowSetpointTemperatureforDesign(
       boost::optional<double> dedicatedOutdoorAirLowSetpointTemperatureforDesign) {
       bool result(false);
@@ -817,7 +999,7 @@ namespace model {
   }
 
   IddObjectType SizingZone::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Sizing_Zone);
+    return {IddObjectType::OS_Sizing_Zone};
   }
 
   std::vector<std::string> SizingZone::coolingDesignAirFlowMethodValues() {
@@ -836,6 +1018,18 @@ namespace model {
   std::vector<std::string> SizingZone::zoneHeatingDesignSupplyAirTemperatureInputMethodValues() {
     return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
                           OS_Sizing_ZoneFields::ZoneHeatingDesignSupplyAirTemperatureInputMethod);
+  }
+
+  std::vector<std::string> SizingZone::zoneLoadSizingMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Sizing_ZoneFields::ZoneLoadSizingMethod);
+  }
+  std::vector<std::string> SizingZone::zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_Sizing_ZoneFields::ZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod);
+  }
+  std::vector<std::string> SizingZone::zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethodValues() {
+    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(),
+                          OS_Sizing_ZoneFields::ZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod);
   }
 
   ThermalZone SizingZone::thermalZone() const {
@@ -1208,6 +1402,140 @@ namespace model {
 
   void SizingZone::autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign() {
     getImpl<detail::SizingZone_Impl>()->autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
+  }
+
+  std::string SizingZone::zoneLoadSizingMethod() const {
+    return getImpl<detail::SizingZone_Impl>()->zoneLoadSizingMethod();
+  }
+
+  bool SizingZone::isZoneLoadSizingMethodDefaulted() const {
+    return getImpl<detail::SizingZone_Impl>()->isZoneLoadSizingMethodDefaulted();
+  }
+
+  bool SizingZone::setZoneLoadSizingMethod(const std::string& zoneLoadSizingMethod) {
+    return getImpl<detail::SizingZone_Impl>()->setZoneLoadSizingMethod(zoneLoadSizingMethod);
+  }
+
+  void SizingZone::resetZoneLoadSizingMethod() {
+    getImpl<detail::SizingZone_Impl>()->resetZoneLoadSizingMethod();
+  }
+
+  std::string SizingZone::zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod() const {
+    return getImpl<detail::SizingZone_Impl>()->zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod();
+  }
+
+  bool SizingZone::isZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethodDefaulted() const {
+    return getImpl<detail::SizingZone_Impl>()->isZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethodDefaulted();
+  }
+
+  bool SizingZone::setZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod(
+    const std::string& zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod) {
+    return getImpl<detail::SizingZone_Impl>()->setZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod(
+      zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod);
+  }
+
+  void SizingZone::resetZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod() {
+    getImpl<detail::SizingZone_Impl>()->resetZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod();
+  }
+
+  boost::optional<double> SizingZone::zoneDehumidificationDesignSupplyAirHumidityRatio() const {
+    return getImpl<detail::SizingZone_Impl>()->zoneDehumidificationDesignSupplyAirHumidityRatio();
+  }
+
+  bool SizingZone::setZoneDehumidificationDesignSupplyAirHumidityRatio(double zoneDehumidificationDesignSupplyAirHumidityRatio) {
+    return getImpl<detail::SizingZone_Impl>()->setZoneDehumidificationDesignSupplyAirHumidityRatio(zoneDehumidificationDesignSupplyAirHumidityRatio);
+  }
+
+  void SizingZone::resetZoneDehumidificationDesignSupplyAirHumidityRatio() {
+    getImpl<detail::SizingZone_Impl>()->resetZoneDehumidificationDesignSupplyAirHumidityRatio();
+  }
+
+  double SizingZone::zoneCoolingDesignSupplyAirHumidityRatioDifference() const {
+    return getImpl<detail::SizingZone_Impl>()->zoneCoolingDesignSupplyAirHumidityRatioDifference();
+  }
+
+  bool SizingZone::isZoneCoolingDesignSupplyAirHumidityRatioDifferenceDefaulted() const {
+    return getImpl<detail::SizingZone_Impl>()->isZoneCoolingDesignSupplyAirHumidityRatioDifferenceDefaulted();
+  }
+
+  bool SizingZone::setZoneCoolingDesignSupplyAirHumidityRatioDifference(double zoneCoolingDesignSupplyAirHumidityRatioDifference) {
+    return getImpl<detail::SizingZone_Impl>()->setZoneCoolingDesignSupplyAirHumidityRatioDifference(
+      zoneCoolingDesignSupplyAirHumidityRatioDifference);
+  }
+
+  void SizingZone::resetZoneCoolingDesignSupplyAirHumidityRatioDifference() {
+    getImpl<detail::SizingZone_Impl>()->resetZoneCoolingDesignSupplyAirHumidityRatioDifference();
+  }
+
+  std::string SizingZone::zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod() const {
+    return getImpl<detail::SizingZone_Impl>()->zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod();
+  }
+
+  bool SizingZone::isZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethodDefaulted() const {
+    return getImpl<detail::SizingZone_Impl>()->isZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethodDefaulted();
+  }
+
+  bool SizingZone::setZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod(
+    const std::string& zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod) {
+    return getImpl<detail::SizingZone_Impl>()->setZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod(
+      zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod);
+  }
+
+  void SizingZone::resetZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod() {
+    getImpl<detail::SizingZone_Impl>()->resetZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod();
+  }
+
+  boost::optional<double> SizingZone::zoneHumidificationDesignSupplyAirHumidityRatio() const {
+    return getImpl<detail::SizingZone_Impl>()->zoneHumidificationDesignSupplyAirHumidityRatio();
+  }
+
+  bool SizingZone::setZoneHumidificationDesignSupplyAirHumidityRatio(double zoneHumidificationDesignSupplyAirHumidityRatio) {
+    return getImpl<detail::SizingZone_Impl>()->setZoneHumidificationDesignSupplyAirHumidityRatio(zoneHumidificationDesignSupplyAirHumidityRatio);
+  }
+
+  void SizingZone::resetZoneHumidificationDesignSupplyAirHumidityRatio() {
+    getImpl<detail::SizingZone_Impl>()->resetZoneHumidificationDesignSupplyAirHumidityRatio();
+  }
+
+  double SizingZone::zoneHumidificationDesignSupplyAirHumidityRatioDifference() const {
+    return getImpl<detail::SizingZone_Impl>()->zoneHumidificationDesignSupplyAirHumidityRatioDifference();
+  }
+
+  bool SizingZone::isZoneHumidificationDesignSupplyAirHumidityRatioDifferenceDefaulted() const {
+    return getImpl<detail::SizingZone_Impl>()->isZoneHumidificationDesignSupplyAirHumidityRatioDifferenceDefaulted();
+  }
+
+  bool SizingZone::setZoneHumidificationDesignSupplyAirHumidityRatioDifference(double zoneHumidificationDesignSupplyAirHumidityRatioDifference) {
+    return getImpl<detail::SizingZone_Impl>()->setZoneHumidificationDesignSupplyAirHumidityRatioDifference(
+      zoneHumidificationDesignSupplyAirHumidityRatioDifference);
+  }
+
+  void SizingZone::resetZoneHumidificationDesignSupplyAirHumidityRatioDifference() {
+    getImpl<detail::SizingZone_Impl>()->resetZoneHumidificationDesignSupplyAirHumidityRatioDifference();
+  }
+
+  boost::optional<Schedule> SizingZone::zoneHumidistatDehumidificationSetPointSchedule() const {
+    return getImpl<detail::SizingZone_Impl>()->zoneHumidistatDehumidificationSetPointSchedule();
+  }
+
+  bool SizingZone::setZoneHumidistatDehumidificationSetPointSchedule(Schedule& schedule) {
+    return getImpl<detail::SizingZone_Impl>()->setZoneHumidistatDehumidificationSetPointSchedule(schedule);
+  }
+
+  void SizingZone::resetZoneHumidistatDehumidificationSetPointSchedule() {
+    getImpl<detail::SizingZone_Impl>()->resetZoneHumidistatDehumidificationSetPointSchedule();
+  }
+
+  boost::optional<Schedule> SizingZone::zoneHumidistatHumidificationSetPointSchedule() const {
+    return getImpl<detail::SizingZone_Impl>()->zoneHumidistatHumidificationSetPointSchedule();
+  }
+
+  bool SizingZone::setZoneHumidistatHumidificationSetPointSchedule(Schedule& schedule) {
+    return getImpl<detail::SizingZone_Impl>()->setZoneHumidistatHumidificationSetPointSchedule(schedule);
+  }
+
+  void SizingZone::resetZoneHumidistatHumidificationSetPointSchedule() {
+    getImpl<detail::SizingZone_Impl>()->resetZoneHumidistatHumidificationSetPointSchedule();
   }
 
   /// @cond
