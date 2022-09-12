@@ -285,7 +285,6 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SizingZone) {
   EXPECT_TRUE(wo_humSch.setDouble(Schedule_ConstantFields::HourlyValue, 40.0));
   EXPECT_TRUE(wo_sz.setPointer(Sizing_ZoneFields::ZoneHumidistatHumidificationSetPointScheduleName, wo_humSch.handle()));
 
-  w.save("SizingZone_RT.idf", true);
   // RT
   Model m = rt.translateWorkspace(w);
 
