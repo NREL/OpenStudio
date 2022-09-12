@@ -284,13 +284,17 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_validValues) {
   ElectricEquipmentITEAirCooledDefinition definition(model);
 
   std::vector<std::string> validAirFlowCalculationMethods(definition.validAirFlowCalculationMethodValues());
-  EXPECT_NE(std::find(validAirFlowCalculationMethods.begin(), validAirFlowCalculationMethods.end(), "FlowFromSystem"), validAirFlowCalculationMethods.end());
-  EXPECT_NE(std::find(validAirFlowCalculationMethods.begin(), validAirFlowCalculationMethods.end(), "FlowControlWithApproachTemperatures"), validAirFlowCalculationMethods.end());
+  EXPECT_NE(std::find(validAirFlowCalculationMethods.begin(), validAirFlowCalculationMethods.end(), "FlowFromSystem"),
+            validAirFlowCalculationMethods.end());
+  EXPECT_NE(std::find(validAirFlowCalculationMethods.begin(), validAirFlowCalculationMethods.end(), "FlowControlWithApproachTemperatures"),
+            validAirFlowCalculationMethods.end());
   EXPECT_EQ(validAirFlowCalculationMethods.size(), 2);
 
   std::vector<std::string> validDesignPowerInputCalculationMethods(definition.validDesignPowerInputCalculationMethodValues());
-  EXPECT_NE(std::find(validDesignPowerInputCalculationMethods.begin(), validDesignPowerInputCalculationMethods.end(), "Watts/Unit"), validDesignPowerInputCalculationMethods.end());
-  EXPECT_NE(std::find(validDesignPowerInputCalculationMethods.begin(), validDesignPowerInputCalculationMethods.end(), "Watts/Area"), validDesignPowerInputCalculationMethods.end());
+  EXPECT_NE(std::find(validDesignPowerInputCalculationMethods.begin(), validDesignPowerInputCalculationMethods.end(), "Watts/Unit"),
+            validDesignPowerInputCalculationMethods.end());
+  EXPECT_NE(std::find(validDesignPowerInputCalculationMethods.begin(), validDesignPowerInputCalculationMethods.end(), "Watts/Area"),
+            validDesignPowerInputCalculationMethods.end());
   EXPECT_EQ(validDesignPowerInputCalculationMethods.size(), 2);
 
   std::vector<std::string> validEnvironmentalClasses(definition.validEnvironmentalClassValues());
@@ -305,7 +309,8 @@ TEST_F(ModelFixture, ElectricEquipmentITEAirCooled_validValues) {
   EXPECT_EQ(validEnvironmentalClasses.size(), 8);
 
   std::vector<std::string> validAirInletConnectionTypes(definition.validAirInletConnectionTypeValues());
-  EXPECT_NE(std::find(validAirInletConnectionTypes.begin(), validAirInletConnectionTypes.end(), "AdjustedSupply"), validAirInletConnectionTypes.end());
+  EXPECT_NE(std::find(validAirInletConnectionTypes.begin(), validAirInletConnectionTypes.end(), "AdjustedSupply"),
+            validAirInletConnectionTypes.end());
   EXPECT_NE(std::find(validAirInletConnectionTypes.begin(), validAirInletConnectionTypes.end(), "ZoneAirNode"), validAirInletConnectionTypes.end());
   EXPECT_EQ(validAirInletConnectionTypes.size(), 2);
 }
