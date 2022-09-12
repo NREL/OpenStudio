@@ -43,6 +43,8 @@
 #include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Schedule.hpp"
+
 #include "../../utilities/core/Logger.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
@@ -52,6 +54,7 @@
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "utilities/core/Compare.hpp"
 
 using namespace openstudio::model;
 
@@ -319,6 +322,74 @@ namespace energyplus {
       }
     } else {
       idfObject.setString(Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem, "No");
+    }
+
+    // Zone Load Sizing Method: Optional String
+    std::string zoneLoadSizingMethod = modelObject.zoneLoadSizingMethod();
+    idfObject.setString(Sizing_ZoneFields::ZoneLoadSizingMethod, zoneLoadSizingMethod);
+
+    // Zone Latent Cooling Design Supply Air Humidity Ratio Input Method: Optional String
+    std::string zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod = modelObject.zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod();
+    idfObject.setString(Sizing_ZoneFields::ZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod,
+                        zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod);
+    if (openstudio::istringEqual(zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod, "SupplyAirHumidityRatio")) {
+
+      // Zone Dehumidification Design Supply Air Humidity Ratio: boost::optional<double>
+      if (boost::optional<double> _zoneDehumidificationDesignSupplyAirHumidityRatio =
+            modelObject.zoneDehumidificationDesignSupplyAirHumidityRatio()) {
+        idfObject.setDouble(Sizing_ZoneFields::ZoneDehumidificationDesignSupplyAirHumidityRatio,
+                            _zoneDehumidificationDesignSupplyAirHumidityRatio.get());
+      } else {
+        LOG(Error, "For " << modelObject.briefDescription()
+                          << ", when 'Zone Latent Cooling Design Supply Air Humidity Ratio Input Method' is 'SupplyAirHumidityRatio', you must enter "
+                             "a 'Zone Dehumidification Design Supply Air Humidity Ratio'.");
+      }
+    } else if (openstudio::istringEqual(zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod, "HumidityRatioDifference")) {
+      // Zone Cooling Design Supply Air Humidity Ratio Difference: Optional Double
+      double zoneCoolingDesignSupplyAirHumidityRatioDifference = modelObject.zoneCoolingDesignSupplyAirHumidityRatioDifference();
+      idfObject.setDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirHumidityRatioDifference, zoneCoolingDesignSupplyAirHumidityRatioDifference);
+    } else {
+      OS_ASSERT(false);
+    }
+
+    // Zone Latent Heating Design Supply Air Humidity Ratio Input Method: Optional String
+    std::string zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod = modelObject.zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod();
+    idfObject.setString(Sizing_ZoneFields::ZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod,
+                        zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod);
+
+    if (openstudio::istringEqual(zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod, "SupplyAirHumidityRatio")) {
+
+      // Zone Humidification Design Supply Air Humidity Ratio: boost::optional<double>
+      if (boost::optional<double> d_ = modelObject.zoneHumidificationDesignSupplyAirHumidityRatio()) {
+        idfObject.setDouble(Sizing_ZoneFields::ZoneHumidificationDesignSupplyAirHumidityRatio, d_.get());
+      } else {
+        LOG(Error, "For " << modelObject.briefDescription()
+                          << ", when 'Zone Latent Heating Design Supply Air Humidity Ratio Input Method' is 'SupplyAirHumidityRatio', you must enter "
+                             "a 'Zone Dehumidification Design Supply Air Humidity Ratio'.");
+      }
+    } else if (openstudio::istringEqual(zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod, "HumidityRatioDifference")) {
+      // Zone Humidification Design Supply Air Humidity Ratio Difference: Optional Double
+      idfObject.setDouble(Sizing_ZoneFields::ZoneHumidificationDesignSupplyAirHumidityRatioDifference,
+                          modelObject.zoneHumidificationDesignSupplyAirHumidityRatioDifference());
+    } else {
+      OS_ASSERT(false);
+    }
+
+    if (!openstudio::istringEqual(zoneLoadSizingMethod, "Sensible Load Only No Latent Load")) {
+      // Zone Humidistat Dehumidification Set Point Schedule Name
+      if (boost::optional<Schedule> sch_ = modelObject.zoneHumidistatDehumidificationSetPointSchedule()) {
+        if (auto idf_sch_ = translateAndMapModelObject(sch_.get())) {
+          idfObject.setString(Sizing_ZoneFields::ZoneHumidistatDehumidificationSetPointScheduleName, idf_sch_->nameString());
+        }
+      }
+
+      // Zone Humidistat Humidification Set Point Schedule Name
+      if (boost::optional<Schedule> sch_ = modelObject.zoneHumidistatHumidificationSetPointSchedule()) {
+        if (auto idf_sch_ = translateAndMapModelObject(sch_.get())) {
+
+          idfObject.setString(Sizing_ZoneFields::ZoneHumidistatHumidificationSetPointScheduleName, idf_sch_->nameString());
+        }
+      }
     }
 
     return idfObject;
