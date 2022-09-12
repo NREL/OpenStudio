@@ -25622,7 +25622,7 @@ OS:Sizing:Zone,
        \key Sensible And Latent Load
        \key Sensible Load Only No Latent Load
        \default Sensible Load Only No Latent Load
-  A9, \field Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+  A9,  \field Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
        \note Use SupplyAirHumidityRatio to enter the humidity ratio when zone dehumidification
        \note is required. The supply air humidity ratio should be less than the zone humidity
        \note ratio at the zone thermostat and humidistat set point condition.
@@ -25686,8 +25686,8 @@ OS:Sizing:Zone,
        \note Only No Latent Load or a zone humidistat is present.
        \note A default of 50.0 will be used if no schedule is provided and
        \note no humidistat is associated with this zone.
-       \type alpha
-       \units percent
+       \type object-list
+       \object-list ScheduleNames
   A12, \field Zone Humidistat Humidification Set Point Schedule Name
        \note Enter the zone relative humidity schedule used for zone latent
        \note heating calculations.
@@ -25696,8 +25696,8 @@ OS:Sizing:Zone,
        \note Only No Latent Load or a zone humidistat is present.
        \note A default of 50.0 will be used if no schedule is provided and
        \note no humidistat is associated with this zone.
-       \type alpha
-       \units percent
+       \type object-list
+       \object-list ScheduleNames
   N23, \field Design Zone Air Distribution Effectiveness in Cooling Mode
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
