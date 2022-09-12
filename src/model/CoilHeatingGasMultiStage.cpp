@@ -70,8 +70,8 @@ namespace model {
       : StraightComponent_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilHeatingGasMultiStage_Impl::outputVariableNames() const {
-      static const std::vector<std::string> result{"Heating Coil Energy",
-                                                   "Heating Coil Rate",
+      static const std::vector<std::string> result{"Heating Coil Heating Energy",
+                                                   "Heating Coil Heating Rate",
                                                    "Heating Coil Gas Consumption",
                                                    "Heating Coil Gas Consumption Rate",
                                                    "Heating Coil Electric Consumption",
