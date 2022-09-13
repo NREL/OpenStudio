@@ -267,8 +267,6 @@ else()
   set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-unused-variable" )
 endif()
 
-add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
-
 # We are setting up a set of artificial dependencies here so that
 # cmake knows how to order the libraries properly
 #
