@@ -83,10 +83,23 @@ const std::string& toJSONFieldName(std::map<std::string, std::string>& fieldName
 
   using namespace std::literals::string_view_literals;
 
-  static constexpr std::array<std::pair<std::string_view, std::string_view>, 3> manualFixPairs{{
+  static constexpr std::array<std::pair<std::string_view, std::string_view>, 13> manualFixPairs{{
     {"poissons_ratio"sv, "poisson_s_ratio"sv},
     {"youngs_modulus"sv, "young_s_modulus"sv},
     {"g_function_lnt_ts_value"sv, "g_function_ln_t_ts_value"sv},
+    // E+ 22.2.0 introduced fields in coils like `2017 Rated Evaporator Fan Power per volume Flow Rate`
+    // We CANNOT leave a field starting with `<number> xxxx` in the IDD, because an enum (or a variable) in C++ cannot start with a number
+    // so a manual fix here is needed
+    {"rated_evaporator_fan_power_per_volume_flow_rate_2017", "2017_rated_evaporator_fan_power_per_volume_flow_rate"},
+    {"rated_evaporator_fan_power_per_volume_flow_rate_2023", "2023_rated_evaporator_fan_power_per_volume_flow_rate"},
+    {"speed_1_rated_evaporator_fan_power_per_volume_flow_rate_2017", "2017_speed_1_rated_evaporator_fan_power_per_volume_flow_rate"},
+    {"speed_2_rated_evaporator_fan_power_per_volume_flow_rate_2017", "2017_speed_2_rated_evaporator_fan_power_per_volume_flow_rate"},
+    {"speed_3_rated_evaporator_fan_power_per_volume_flow_rate_2017", "2017_speed_3_rated_evaporator_fan_power_per_volume_flow_rate"},
+    {"speed_4_rated_evaporator_fan_power_per_volume_flow_rate_2017", "2017_speed_4_rated_evaporator_fan_power_per_volume_flow_rate"},
+    {"speed_1_rated_evaporator_fan_power_per_volume_flow_rate_2023", "2023_speed_1_rated_evaporator_fan_power_per_volume_flow_rate"},
+    {"speed_2_rated_evaporator_fan_power_per_volume_flow_rate_2023", "2023_speed_2_rated_evaporator_fan_power_per_volume_flow_rate"},
+    {"speed_3_rated_evaporator_fan_power_per_volume_flow_rate_2023", "2023_speed_3_rated_evaporator_fan_power_per_volume_flow_rate"},
+    {"speed_4_rated_evaporator_fan_power_per_volume_flow_rate_2023", "2023_speed_4_rated_evaporator_fan_power_per_volume_flow_rate"},
   }};
 
   if (auto it = std::find_if(manualFixPairs.cbegin(), manualFixPairs.cend(), [&fieldName](const auto& p) { return p.first == fieldName; });

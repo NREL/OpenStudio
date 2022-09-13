@@ -381,5 +381,10 @@ namespace iddRegex {
     return result;
   }
 
+  const boost::regex& numberAndPrecedingSpace() {
+    static const boost::regex result("\\s?[0-9]+");
+    return result;
+  }
+
 }  // namespace iddRegex
 }  // namespace openstudio
