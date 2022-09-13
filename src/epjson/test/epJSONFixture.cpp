@@ -168,8 +168,8 @@ Json::Value translateIdfToEPJSONWithEP(const openstudio::path& location) {
 
   [[maybe_unused]] auto result = std::system(cmd.c_str());
   if (!openstudio::filesystem::exists(epJSONFile)) {
-    throw openstudio::Exception(
-      fmt::format("Error during the E+ CLI call, epJSON wasn't created at {}\ncmd = '{}'\n", openstudio::toString(epJSONFile), cmd));
+    throw openstudio::Exception(fmt::format("Error during the E+ CLI call (return code {}), epJSON wasn't created at {}\ncmd = '{}'\n", result,
+                                            openstudio::toString(epJSONFile), cmd));
   }
 
   auto root = openstudio::epJSON::loadJSON(epJSONFile);
@@ -207,7 +207,7 @@ std::pair<Json::Value, Json::Value> epJSONFixture::doEPJSONTranslations(const st
 }
 
 void epJSONFixture::compareEPJSONTranslations(const std::string& idfname) {
-  const auto [epTranslation, osTranslation] = epJSONFixture::doEPJSONTranslations("WCE_DoubleClear_BSDF.idf");
+  const auto [epTranslation, osTranslation] = epJSONFixture::doEPJSONTranslations(idfname);
   ASSERT_TRUE(epTranslation) << "E+ translation failed for " << idfname;
   ASSERT_TRUE(osTranslation) << "OS translation failed for " << idfname;
 
