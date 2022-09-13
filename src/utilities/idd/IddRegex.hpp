@@ -238,6 +238,9 @@ namespace iddRegex {
   /// Match IDD names that correspond to a Version object.
   UTILITIES_API const boost::regex& versionObjectName();
 
+  /// Match IDD fields that contain a number and takes up the space before if any
+  UTILITIES_API const boost::regex& numberAndPrecedingSpace();
+
 }  // namespace iddRegex
 }  // namespace openstudio
 
