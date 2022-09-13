@@ -77,6 +77,7 @@
 #include "../SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../PlanarSurface.hpp"
 
+#include "../../energyplus/ReverseTranslator.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceWatcher.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
