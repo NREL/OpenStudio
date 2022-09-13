@@ -1567,7 +1567,7 @@ TEST_F(ModelFixture, 4403_FenestrationAssembly) {
   EXPECT_EQ(0.440, subSurface->assemblyVisibleTransmittance().get());
 }
 
-TEST_F(ModelFixture, 4678_GlassUFactorSqlError) {
+TEST_F(ModelFixture, 4678_SubSurfaceGlassUFactorSqlError) {
   // Test for #4678 - Glass U Factor sql error
 
   // This one has fenestration that includes WindowProperty:FrameAndDivider

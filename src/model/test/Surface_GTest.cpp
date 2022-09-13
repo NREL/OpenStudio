@@ -3801,7 +3801,7 @@ TEST_F(ModelFixture, Issue_4374) {
   }
 }
 
-TEST_F(ModelFixture, 4678_GlassUFactorSqlError) {
+TEST_F(ModelFixture, 4678_SurfaceGlassUFactorSqlError) {
   // Test for #4678 - Glass U Factor sql error
 
   // This one has fenestration that includes WindowProperty:FrameAndDivider
