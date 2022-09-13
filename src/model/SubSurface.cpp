@@ -374,7 +374,7 @@ namespace model {
             std::string query = R"(SELECT Value from TabularDataWithStrings
                                       WHERE ReportName = 'EnvelopeSummary'
                                         AND ReportForString = 'Entire Facility'
-                                        AND TableName = 'Exterior Fenestration
+                                        AND TableName = 'Exterior Fenestration'
                                         AND ColumnName = 'Glass U-Factor'
                                         AND Units='W/m2-K'
                                         AND RowId = ?;)";
@@ -447,7 +447,7 @@ namespace model {
             std::string query = R"(SELECT Value from TabularDataWithStrings
                                       WHERE ReportName = 'EnvelopeSummary'
                                         AND ReportForString = 'Entire Facility'
-                                        AND TableName = 'Exterior Fenestration
+                                        AND TableName = 'Exterior Fenestration'
                                         AND ColumnName = 'Glass U-Factor'
                                         AND Units='W/m2-K'
                                         AND RowId = ?;)";
