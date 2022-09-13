@@ -5699,11 +5699,12 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
   boost::optional<model::Schedule> icePrimaryChillerSetpointSchedule;
   boost::optional<model::Schedule> iceChargingChillerSetpointSchedule;
 
-  if (istringEqual(thrmlEngyStorType, "Ice")) {
+  if (thrmlEngyStorElement && istringEqual(thrmlEngyStorType, "Ice")) {
     if( auto mo = translateIceThrmlEngyStor(thrmlEngyStorElement, model) ) {
       iceStorage = mo->cast<model::ThermalStorageIceDetailed>();
       iceStorageChlrRef = thrmlEngyStorElement.child("ChlrRef").text().as_string();
 
+      plantLoop.setFluidType("EthyleneGlycol");
       plantLoop.setGlycolConcentration(40);
 
       const auto inletTempElement = thrmlEngyStorElement.child("InletTemp");
@@ -5822,7 +5823,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
         iceChargingChillerSetpointSchedule = schedule;
       }
     }
-  } else {
+  } else if (thrmlEngyStorElement) {
     if( auto mo = translateChilledWaterThrmlEngyStor(thrmlEngyStorElement, model) ) {
       chilledWaterStorage = mo->cast<model::ThermalStorageChilledWaterStratified>();
       plantLoop.addSupplyBranchForComponent(chilledWaterStorage.get());
@@ -6696,6 +6697,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     avm.setTemperature(-4.0);
     plantLoop.addAvailabilityManager(avm, 1u);
     avm.setApplicabilitySchedule(iceAvailabilityLowTempTurnOff.get());
+
+    auto iceOutletNode = iceStorage->outletModelObject()->cast<model::Node>();
+    avm.setSensorNode(iceOutletNode);
   }
 
   return plantLoop;
