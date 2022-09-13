@@ -17,12 +17,22 @@ add_custom_command(
 )
 
 # Link to rubyinterpreter when you need to link to OpenStudio's flavor of the Ruby interpreter
-add_library(rubyinterpreter INTERFACE
-  RubyInterpreter.hpp
-  RubyEval.hpp
-  RubyException.hpp
-  "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
-)
+if (CMAKE_VERSION VERSION_LESS 3.19.0)
+  add_library(rubyinterpreter INTERFACE)
+  target_sources(rubyinterpreter INTERFACE
+    RubyInterpreter.hpp
+    RubyEval.hpp
+    RubyException.hpp
+    "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
+  )
+else()
+  add_library(rubyinterpreter INTERFACE
+    RubyInterpreter.hpp
+    RubyEval.hpp
+    RubyException.hpp
+    "${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
+  )
+endif()
 
 target_include_directories(rubyinterpreter INTERFACE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(rubyinterpreter INTERFACE CONAN_PKG::openstudio_ruby)
