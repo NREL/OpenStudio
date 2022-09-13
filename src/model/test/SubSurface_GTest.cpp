@@ -1594,7 +1594,7 @@ TEST_F(ModelFixture, 4678_GlassUFactorSqlError) {
   double interiorResistance = PlanarSurface::stillAirFilmResistance(subSurface->tilt());
   double exteriorResistance = PlanarSurface::filmResistance(FilmResistanceType::MovingAir_15mph);
   double filmResistance = interiorResistance + exteriorResistance;
-  double thermalConductance = 1.0 / (1.0 / (2.559 - filmResistance);
+  double thermalConductance = 1.0 / (1.0 / (2.559 - filmResistance));
   ASSERT_TRUE(subSurface->thermalConductance());
   EXPECT_EQ(thermalConductance, subSurface->thermalConductance().get());
 }
