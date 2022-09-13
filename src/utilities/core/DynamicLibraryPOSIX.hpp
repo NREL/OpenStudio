@@ -2,9 +2,13 @@
 #define dynamiclibrary_posix_hpp_INCLUDED
 
 #include "Path.hpp"
-#include <dlfcn.h>
-#include <fmt/format.h>
+
+#include <stdexcept>
 #include <string>
+
+#include <dlfcn.h>
+
+#include <fmt/format.h>
 
 namespace openstudio {
 
@@ -13,7 +17,7 @@ struct DynamicLibrary
   template <typename Signature>
   [[nodiscard]] Signature* load_symbol(const std::string& name) {
     // reinterpret_cast is necessary here
-    const auto symbol = reinterpret_cast<Signature*>(dlsym(m_handle.get(), name.c_str()));
+    const auto symbol = reinterpret_cast<Signature*>(dlsym(m_handle.get(), name.c_str()));  // NOLINT
 
     if (symbol == nullptr) {
       throw std::runtime_error(fmt::format("Unable to load symbol: '{}', reason: '{}'", name, dlerror()));

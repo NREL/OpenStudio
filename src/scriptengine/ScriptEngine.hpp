@@ -22,7 +22,7 @@ struct ScriptObject
 };
 }  // namespace openstudio
 
-typedef openstudio::ScriptEngine* ScriptEngineFactoryType(int argc, char* argv[]);
+using ScriptEngineFactoryType = openstudio::ScriptEngine*(int, char**);
 
 namespace openstudio {
 

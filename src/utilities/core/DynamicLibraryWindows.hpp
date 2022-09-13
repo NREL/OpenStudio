@@ -1,11 +1,21 @@
-#ifndef sdynamiclibrary_windows_hpp_INCLUDED
-#define sdynamiclibrary_windows_hpp_INCLUDED
+#ifndef dynamiclibrary_windows_hpp_INCLUDED
+#define dynamiclibrary_windows_hpp_INCLUDED
 
 #include "Path.hpp"
-#include <fmt/format.h>
-#include <string>
+
+#include <stdexcept>
 #include <filesystem>
-#include <Windows.h>
+#include <string>
+
+#if !defined(WIN32_LEAN_AND_MEAN)
+#  define WIN32_LEAN_AND_MEAN
+#  include <windows.h>
+#  undef WIN32_LEAN_AND_MEAN
+#else
+#  include <windows.h>
+#endif
+
+#include <fmt/format.h>
 
 namespace openstudio {
 
@@ -100,4 +110,4 @@ struct DynamicLibrary
 };
 
 }  // namespace openstudio
-#endif
+#endif  // dynamiclibrary_windows_hpp_INCLUDED
