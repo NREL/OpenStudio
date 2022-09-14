@@ -340,7 +340,7 @@ namespace model {
         OptionalDouble outputResult;
         // opaque exterior
         if (sqlFile && constructionName && oConstruction->isOpaque()) {
-          std::string query = R"(SELECT RowId from TabularDataWithStrings
+          std::string query = R"(SELECT TabularDataIndex from TabularDataWithStrings
                                       WHERE ReportName = 'EnvelopeSummary'
                                         AND ReportForString = 'Entire Facility'
                                         AND TableName = 'Opaque Exterior'
@@ -355,14 +355,14 @@ namespace model {
                                         AND TableName = 'Opaque Exterior'
                                         AND ColumnName = 'U-Factor with Film'
                                         AND Units='W/m2-K'
-                                        AND RowId = ?;)";
+                                        AND TabularDataIndex = ?;)";
             outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
           }
         }
 
         // fenestration
         if (sqlFile && constructionName && oConstruction->isFenestration()) {
-          std::string query = R"(SELECT RowId from TabularDataWithStrings
+          std::string query = R"(SELECT TabularDataIndex from TabularDataWithStrings
                                       WHERE ReportName = 'EnvelopeSummary'
                                         AND ReportForString = 'Entire Facility'
                                         AND TableName = 'Exterior Fenestration'
@@ -377,7 +377,7 @@ namespace model {
                                         AND TableName = 'Exterior Fenestration'
                                         AND ColumnName = 'Glass U-Factor'
                                         AND Units='W/m2-K'
-                                        AND RowId = ?;)";
+                                        AND TabularDataIndex = ?;)";
             outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
           }
         }
@@ -410,7 +410,7 @@ namespace model {
         OptionalDouble outputResult;
         // opaque exterior
         if (sqlFile && constructionName && oConstruction->isOpaque()) {
-          std::string query = R"(SELECT RowId from TabularDataWithStrings
+          std::string query = R"(SELECT TabularDataIndex from TabularDataWithStrings
                                       WHERE ReportName = 'EnvelopeSummary'
                                         AND ReportForString = 'Entire Facility'
                                         AND TableName = 'Opaque Exterior'
@@ -425,7 +425,7 @@ namespace model {
                                         AND TableName = 'Opaque Exterior'
                                         AND ColumnName = 'U-Factor no Film'
                                         AND Units='W/m2-K'
-                                        AND RowId = ?;)";
+                                        AND TabularDataIndex = ?;)";
             outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
           }
         }
@@ -435,7 +435,7 @@ namespace model {
 
           // get u-factor, then subtract film coefficients
 
-          std::string query = R"(SELECT RowId from TabularDataWithStrings
+          std::string query = R"(SELECT TabularDataIndex from TabularDataWithStrings
                                       WHERE ReportName = 'EnvelopeSummary'
                                         AND ReportForString = 'Entire Facility'
                                         AND TableName = 'Exterior Fenestration'
@@ -450,7 +450,7 @@ namespace model {
                                         AND TableName = 'Exterior Fenestration'
                                         AND ColumnName = 'Glass U-Factor'
                                         AND Units='W/m2-K'
-                                        AND RowId = ?;)";
+                                        AND TabularDataIndex = ?;)";
             outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
           }
 
