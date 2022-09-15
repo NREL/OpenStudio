@@ -41,7 +41,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     # The os is still Linux, the compiler is still GCC. But the GLIBC used is **way older**
     conan_add_remote(NAME openstudio-centos INDEX 0
       URL https://conan.openstudio.net/artifactory/api/conan/openstudio-centos)
- 
+
     # Pass `-D_GLIBCXX_USE_CXX11_ABI=0` to make sure it detects libstdc++ and not libstdc++1
     add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
     # Centos uses a different channel recipe for ruby
@@ -51,12 +51,13 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     endif()
 
   else()
-    conan_add_remote(NAME nrel INDEX 0 
+    conan_add_remote(NAME nrel INDEX 0
       URL https://conan.openstudio.net/artifactory/api/conan/openstudio)
 
     if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
       # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
-      set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/stable#ae043c41b4bec82e98ca765ce8b32a11")
+      # TODO: temp, revert to stable soon
+      set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#8ff0c0247d60babd7fa66a41de85cca9")
      endif()
   endif()
 
