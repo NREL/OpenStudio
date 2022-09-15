@@ -1856,13 +1856,13 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_AirWallMaterial) {
   EXPECT_EQ("Construction 1", surface.getTarget(3).get().nameString());  // Construction Name
 }
 
-TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_TableMultiVariableLookup_oneDim) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_oneDim.osm");
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_TableMultiVariableLookup_oneDim) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_TableMultiVariableLookup_oneDim.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_oneDim_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_TableMultiVariableLookup_oneDim_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> tableLookUps = model->getObjectsByType("OS:Table:Lookup");
@@ -1920,13 +1920,13 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_TableMultiVariableLookup_oneDim) 
   }
 }
 
-TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_TableMultiVariableLookup_twoDims) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_twoDims.osm");
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_TableMultiVariableLookup_twoDims) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_TableMultiVariableLookup_twoDims.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_twoDims_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_TableMultiVariableLookup_twoDims_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> tableLookUps = model->getObjectsByType("OS:Table:Lookup");

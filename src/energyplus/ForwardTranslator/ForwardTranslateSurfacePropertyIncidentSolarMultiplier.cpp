@@ -28,69 +28,50 @@
 ***********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
-
 #include "../../model/Model.hpp"
-#include "../../model/SpaceInfiltrationFlowCoefficient.hpp"
-#include "../../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
-#include "../../model/Space.hpp"
-#include "../../model/Space_Impl.hpp"
-#include "../../model/ThermalZone.hpp"
-#include "../../model/ThermalZone_Impl.hpp"
-#include "../../model/SpaceType.hpp"
-#include "../../model/SpaceType_Impl.hpp"
+
+#include "../../model/SurfacePropertyIncidentSolarMultiplier.hpp"
+
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
-#include <utilities/idd/ZoneInfiltration_FlowCoefficient_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/SurfaceProperty_IncidentSolarMultiplier_FieldEnums.hxx>
+// #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFactory.hxx>
 
 using namespace openstudio::model;
-
-using namespace std;
 
 namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateSpaceInfiltrationFlowCoefficient(SpaceInfiltrationFlowCoefficient& modelObject) {
+  boost::optional<IdfObject>
+    ForwardTranslator::translateSurfacePropertyIncidentSolarMultiplier(model::SurfacePropertyIncidentSolarMultiplier& modelObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneInfiltration_FlowCoefficient, modelObject);
-    IdfObject parentIdfObject = getSpaceLoadParent(modelObject, false);  // We do not allow spaceType!
-    idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName, parentIdfObject.nameString());
+    // Instantiate an IdfObject of the class to store the values
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::SurfaceProperty_IncidentSolarMultiplier, modelObject);
 
-    boost::optional<Schedule> schedule_ = modelObject.schedule();
-    if (!schedule_) {
-      schedule_ = modelObject.model().alwaysOnDiscreteSchedule();
-    }
-    if (auto idf_sch_ = translateAndMapModelObject(schedule_.get())) {
-      idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ScheduleName, idf_sch_->nameString());
+    // Surface Name: Required Object
+    SubSurface subSurface = modelObject.subSurface();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(subSurface)) {
+      idfObject.setString(SurfaceProperty_IncidentSolarMultiplierFields::SurfaceName, _owo->nameString());
     }
 
-    // Flow Coefficient: Required Double
-    double flowCoefficient = modelObject.flowCoefficient();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::FlowCoefficient, flowCoefficient);
+    // Incident Solar Multiplier: Optional Double
+    idfObject.setDouble(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplier, modelObject.incidentSolarMultiplier());
 
-    // Stack Coefficient: Required Double
-    double stackCoefficient = modelObject.stackCoefficient();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::StackCoefficient, stackCoefficient);
-
-    // Pressure Exponent: Optional Double
-    double pressureExponent = modelObject.pressureExponent();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::PressureExponent, pressureExponent);
-
-    // Wind Coefficient: Required Double
-    double windCoefficient = modelObject.windCoefficient();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::WindCoefficient, windCoefficient);
-
-    // Shelter Factor: Required Double
-    double shelterFactor = modelObject.shelterFactor();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::ShelterFactor, shelterFactor);
+    // Incident Solar Multiplier Schedule Name: Optional Object
+    if (boost::optional<Schedule> _incidentSolarMultiplierSchedule = modelObject.incidentSolarMultiplierSchedule()) {
+      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_incidentSolarMultiplierSchedule.get())) {
+        idfObject.setString(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplierScheduleName, _owo->nameString());
+      }
+    }
 
     return idfObject;
-  }
+  }  // End of translate function
 
-}  // namespace energyplus
-
-}  // namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

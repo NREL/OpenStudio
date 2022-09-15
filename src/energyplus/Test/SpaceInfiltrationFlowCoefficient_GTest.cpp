@@ -100,12 +100,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationFlowCoefficient) {
     EXPECT_EQ(0u, w.getObjectsByType(IddObjectType::ZoneInfiltration_FlowCoefficient).size());
   }
 
-  {
-    ThermalZone zone(model);
-    zone.setName("Zone1");
-    Space space(model);
-    space.setThermalZone(zone);
-    infiltration.setSpace(space);
+  ThermalZone zone(model);
+  zone.setName("Zone1");
+  Space space(model);
+  space.setName("Space1");
+  space.setThermalZone(zone);
+  infiltration.setSpace(space);
+
+  for (bool excludeSpaceTranslation : {true, false}) {
+    ft.setExcludeSpaceTranslation(excludeSpaceTranslation);
 
     Workspace w = ft.translateModel(model);
     EXPECT_EQ(0u, ft.errors().size());
@@ -117,7 +120,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationFlowCoefficient) {
     WorkspaceObject idfObject(idfObjs[0]);
 
     EXPECT_EQ("My Infiltration", idfObject.getString(ZoneInfiltration_FlowCoefficientFields::Name).get());
-    EXPECT_EQ("Zone1", idfObject.getString(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName).get());
+    if (excludeSpaceTranslation) {
+      EXPECT_EQ("Zone1", idfObject.getString(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName).get());
+    } else {
+      EXPECT_EQ("Space1", idfObject.getString(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName).get());
+    }
 
     EXPECT_FALSE(infiltration.schedule());
     EXPECT_EQ("Always On Discrete", idfObject.getString(ZoneInfiltration_FlowCoefficientFields::ScheduleName).get());
@@ -411,33 +418,55 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationFlowCoefficient_Spa
     EXPECT_EQ(2, w.getObjectsByType(IddObjectType::SpaceList).size());
 
     auto infils = w.getObjectsByType(IddObjectType::ZoneInfiltration_FlowCoefficient);
-    // I expect infilSpace1, infilSpace3, two infilOffice and two infilBuilding, so 6 total
+    // I expect infilSpace1, infilSpace3, two infilOffice and two infilBuilding, so 6 total, all pointing to a Space
     ASSERT_EQ(6, infils.size());
+
+    bool foundOfficeSpace1 = false;
+    bool foundOfficeSpace2 = false;
+    bool foundBuildingSpace3 = false;
+    bool foundBuildingSpace4 = false;
 
     for (const auto& infil : infils) {
       auto name = infil.nameString();
-      auto z_ = infil.getTarget(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName);
-      ASSERT_TRUE(z_);
-      EXPECT_EQ(zone, z_.get());
+      auto target_ = infil.getTarget(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName);
+      ASSERT_TRUE(target_);
       if (name.find(infilSpace1.nameString()) != std::string::npos) {
+        EXPECT_EQ(target_->iddObject().type(), IddObjectType::Space);
+        EXPECT_EQ(space1.nameString(), target_->nameString());
+
         EXPECT_EQ(infilSpace1.flowCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::FlowCoefficient).get());
         EXPECT_EQ(infilSpace1.stackCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::StackCoefficient).get());
         EXPECT_EQ(infilSpace1.pressureExponent(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::PressureExponent).get());
         EXPECT_EQ(infilSpace1.windCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::WindCoefficient).get());
         EXPECT_EQ(infilSpace1.shelterFactor(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::ShelterFactor).get());
       } else if (name.find(infilSpace3.nameString()) != std::string::npos) {
+        EXPECT_EQ(target_->iddObject().type(), IddObjectType::Space);
+        EXPECT_EQ(space3.nameString(), target_->nameString());
+
         EXPECT_EQ(infilSpace3.flowCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::FlowCoefficient).get());
         EXPECT_EQ(infilSpace3.stackCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::StackCoefficient).get());
         EXPECT_EQ(infilSpace3.pressureExponent(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::PressureExponent).get());
         EXPECT_EQ(infilSpace3.windCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::WindCoefficient).get());
         EXPECT_EQ(infilSpace3.shelterFactor(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::ShelterFactor).get());
       } else if (name.find(infilOffice.nameString()) != std::string::npos) {
+        if (space1.nameString() == target_->nameString()) {
+          foundOfficeSpace1 = true;
+        } else if (space2.nameString() == target_->nameString()) {
+          foundOfficeSpace2 = true;
+        }
+
         EXPECT_EQ(infilOffice.flowCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::FlowCoefficient).get());
         EXPECT_EQ(infilOffice.stackCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::StackCoefficient).get());
         EXPECT_EQ(infilOffice.pressureExponent(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::PressureExponent).get());
         EXPECT_EQ(infilOffice.windCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::WindCoefficient).get());
         EXPECT_EQ(infilOffice.shelterFactor(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::ShelterFactor).get());
       } else if (name.find(infilBuilding.nameString()) != std::string::npos) {
+        if (space3.nameString() == target_->nameString()) {
+          foundBuildingSpace3 = true;
+        } else if (space4.nameString() == target_->nameString()) {
+          foundBuildingSpace4 = true;
+        }
+
         EXPECT_EQ(infilBuilding.flowCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::FlowCoefficient).get());
         EXPECT_EQ(infilBuilding.stackCoefficient(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::StackCoefficient).get());
         EXPECT_EQ(infilBuilding.pressureExponent(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::PressureExponent).get());
@@ -445,5 +474,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationFlowCoefficient_Spa
         EXPECT_EQ(infilBuilding.shelterFactor(), infil.getDouble(ZoneInfiltration_FlowCoefficientFields::ShelterFactor).get());
       }
     }
+
+    EXPECT_TRUE(foundOfficeSpace1);
+    EXPECT_TRUE(foundOfficeSpace2);
+    EXPECT_TRUE(foundBuildingSpace3);
+    EXPECT_TRUE(foundBuildingSpace4);
   }
 }

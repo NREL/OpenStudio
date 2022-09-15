@@ -406,7 +406,7 @@ namespace model {
   class SizingPlant;
   class SizingSystem;
   class SizingZone;
-  class SpaceLoadInstance;
+  class SpaceLoad;
   class StandardGlazing;
   class StandardOpaqueMaterial;
   class SimpleGlazing;
@@ -448,6 +448,8 @@ namespace model {
   class SurfacePropertyOtherSideCoefficients;
   class SurfacePropertyOtherSideConditionsModel;
   class SurfacePropertySurroundingSurfaces;
+  class SurfacePropertyGroundSurfaces;
+  class SurfacePropertyIncidentSolarMultiplier;
   class SwimmingPoolIndoor;
   class TableMultiVariableLookup;
   class TableLookup;
@@ -593,9 +595,8 @@ namespace energyplus {
    */
     Workspace translateModelPrivate(model::Model& model, bool fullModelTranslation);
 
-    // TODO: restrict to SpaceLoadInstance or SpaceLoad?
-    // Pick up the Zone, ZoneList, Space or SpaceList (if allowSpaceType is true) object for a given SpaceLoadInstance
-    IdfObject getSpaceLoadInstanceParent(model::SpaceLoadInstance& sp, bool allowSpaceType = true);
+    // Pick up the Zone, ZoneList, Space or SpaceList (if allowSpaceType is true) object for a given SpaceLoad (or SpaceLoadInstance)
+    IdfObject getSpaceLoadParent(const model::SpaceLoad& sp, bool allowSpaceType = true);
 
     boost::optional<IdfObject> translateAndMapModelObject(model::ModelObject& modelObject);
 
@@ -1430,6 +1431,10 @@ namespace energyplus {
     boost::optional<IdfObject> translateSurfacePropertyLocalEnvironment(model::SurfacePropertyLocalEnvironment& modelObject);
 
     boost::optional<IdfObject> translateSurfacePropertySurroundingSurfaces(model::SurfacePropertySurroundingSurfaces& modelObject);
+
+    boost::optional<IdfObject> translateSurfacePropertyGroundSurfaces(model::SurfacePropertyGroundSurfaces& modelObject);
+
+    boost::optional<IdfObject> translateSurfacePropertyIncidentSolarMultiplier(model::SurfacePropertyIncidentSolarMultiplier& modelObject);
 
     boost::optional<IdfObject> translateSwimmingPoolIndoor(model::SwimmingPoolIndoor& modelObject);
 

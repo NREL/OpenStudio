@@ -122,6 +122,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyLocalEnvironment) {
     // Assigned to a Surface
     Workspace w = ft.translateModel(m);
 
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
+
     std::vector<WorkspaceObject> idfObjs = w.getObjectsByType(IddObjectType::SurfaceProperty_LocalEnvironment);
     ASSERT_EQ(1, idfObjs.size());
     auto& wo_localEnv = idfObjs[0];
@@ -147,6 +150,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SurfacePropertyLocalEnvironment) {
   {
     // Assigned to a SubSurface
     Workspace w = ft.translateModel(m);
+
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::BuildingSurface_Detailed).size());
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::FenestrationSurface_Detailed).size());
 
     std::vector<WorkspaceObject> idfObjs = w.getObjectsByType(IddObjectType::SurfaceProperty_LocalEnvironment);
     ASSERT_EQ(1, idfObjs.size());

@@ -2782,7 +2782,7 @@ TEST_F(ModelFixture, ExposedPerimeter) {
   }
 }
 
-TEST_F(ModelFixture, Space_setVolume) {
+TEST_F(ModelFixture, Space_setVolumeAndCeilingHeightAndFloorArea) {
   // create from floor print
   Model model;
   Point3dVector floorPrint;
@@ -2797,30 +2797,39 @@ TEST_F(ModelFixture, Space_setVolume) {
   // check dimensions
   EXPECT_TRUE(space.isVolumeAutocalculated());
   EXPECT_TRUE(space.isVolumeDefaulted());
+  EXPECT_TRUE(space.isCeilingHeightAutocalculated());
+  EXPECT_TRUE(space.isCeilingHeightDefaulted());
+  EXPECT_TRUE(space.isFloorAreaAutocalculated());
+  EXPECT_TRUE(space.isFloorAreaDefaulted());
   EXPECT_DOUBLE_EQ(100.0, space.floorArea());
   EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(3.6, space.ceilingHeight());
   EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
   EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
 
-  // set volume
+  // VOLUME
+
+  // set
   EXPECT_TRUE(space.setVolume(365.0));
   EXPECT_FALSE(space.isVolumeAutocalculated());
   EXPECT_FALSE(space.isVolumeDefaulted());
   EXPECT_DOUBLE_EQ(100.0, space.floorArea());
   EXPECT_DOUBLE_EQ(365.0, space.volume());
+  EXPECT_DOUBLE_EQ(3.6, space.ceilingHeight());
   EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
   EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
 
-  // reset volume
+  // reset
   space.resetVolume();
   EXPECT_TRUE(space.isVolumeAutocalculated());
   EXPECT_TRUE(space.isVolumeDefaulted());
   EXPECT_DOUBLE_EQ(100.0, space.floorArea());
   EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(3.6, space.ceilingHeight());
   EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
   EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
 
-  // autocalculate volume
+  // autocalculate
   EXPECT_TRUE(space.setVolume(370.0));
   EXPECT_FALSE(space.isVolumeAutocalculated());
   EXPECT_FALSE(space.isVolumeDefaulted());
@@ -2829,6 +2838,77 @@ TEST_F(ModelFixture, Space_setVolume) {
   EXPECT_FALSE(space.isVolumeDefaulted());
   EXPECT_DOUBLE_EQ(100.0, space.floorArea());
   EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(3.6, space.ceilingHeight());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // CEILING HEIGHT
+
+  // set
+  EXPECT_TRUE(space.setCeilingHeight(8.0));
+  EXPECT_FALSE(space.isCeilingHeightAutocalculated());
+  EXPECT_FALSE(space.isCeilingHeightDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(8.0, space.ceilingHeight());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // reset
+  space.resetCeilingHeight();
+  EXPECT_TRUE(space.isCeilingHeightAutocalculated());
+  EXPECT_TRUE(space.isCeilingHeightDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(3.6, space.ceilingHeight());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // autocalculate
+  EXPECT_TRUE(space.setCeilingHeight(9.0));
+  EXPECT_FALSE(space.isCeilingHeightAutocalculated());
+  EXPECT_FALSE(space.isCeilingHeightDefaulted());
+  space.autocalculateCeilingHeight();
+  EXPECT_TRUE(space.isCeilingHeightAutocalculated());
+  EXPECT_FALSE(space.isCeilingHeightDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(3.6, space.ceilingHeight());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // FLOOR AREA
+
+  // set
+  EXPECT_TRUE(space.setFloorArea(400.0));
+  EXPECT_FALSE(space.isFloorAreaAutocalculated());
+  EXPECT_FALSE(space.isFloorAreaDefaulted());
+  EXPECT_DOUBLE_EQ(400.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(3.6, space.ceilingHeight());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // reset
+  space.resetFloorArea();
+  EXPECT_TRUE(space.isFloorAreaAutocalculated());
+  EXPECT_TRUE(space.isFloorAreaDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(3.6, space.ceilingHeight());
+  EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
+  EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
+
+  // autocalculate
+  EXPECT_TRUE(space.setFloorArea(500.0));
+  EXPECT_FALSE(space.isFloorAreaAutocalculated());
+  EXPECT_FALSE(space.isFloorAreaDefaulted());
+  space.autocalculateFloorArea();
+  EXPECT_TRUE(space.isFloorAreaAutocalculated());
+  EXPECT_FALSE(space.isFloorAreaDefaulted());
+  EXPECT_DOUBLE_EQ(100.0, space.floorArea());
+  EXPECT_DOUBLE_EQ(360.0, space.volume());
+  EXPECT_DOUBLE_EQ(3.6, space.ceilingHeight());
   EXPECT_DOUBLE_EQ(144.0, space.exteriorWallArea());
   EXPECT_DOUBLE_EQ(244.0, space.exteriorArea());  // ground does not count
 }

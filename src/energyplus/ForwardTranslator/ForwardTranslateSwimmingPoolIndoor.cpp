@@ -86,9 +86,6 @@ namespace energyplus {
     Schedule makeupWaterSupplySchedule = modelObject.makeupWaterSupplySchedule();
     if (auto _sch = translateAndMapModelObject(makeupWaterSupplySchedule)) {
       idfObject.setString(SwimmingPool_IndoorFields::MakeupWaterSupplyScheduleName, _sch->nameString());
-    } else {
-      LOG(Error, "Missing required 'Make-up Water Supply Schedule Name' for " << modelObject.briefDescription());
-      return boost::none;
     }
 
     // Cover Schedule Name: Required Object

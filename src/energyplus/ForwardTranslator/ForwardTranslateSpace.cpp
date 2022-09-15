@@ -81,12 +81,21 @@ namespace energyplus {
     // Space
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Space, modelObject);
 
+    // ZoneName
     if (boost::optional<ThermalZone> thermalZone = modelObject.thermalZone()) {
       idfObject.setString(SpaceFields::ZoneName, thermalZone->name().get());
     }
 
+    // CeilingHeight
+    idfObject.setDouble(SpaceFields::CeilingHeight, modelObject.ceilingHeight());
+
+    // Volume
+    idfObject.setDouble(SpaceFields::Volume, modelObject.volume());
+
+    // FloorArea
     idfObject.setDouble(SpaceFields::FloorArea, modelObject.floorArea());
 
+    // SpaceType
     if (boost::optional<SpaceType> spaceType_ = modelObject.spaceType()) {
       if (auto idf_spaceType_ = translateAndMapModelObject(spaceType_.get())) {
         idfObject.setString(SpaceFields::SpaceType, idf_spaceType_->nameString());

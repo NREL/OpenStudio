@@ -28,69 +28,48 @@
 ***********************************************************************************************************************/
 
 #include "../ForwardTranslator.hpp"
-
 #include "../../model/Model.hpp"
-#include "../../model/SpaceInfiltrationFlowCoefficient.hpp"
-#include "../../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
-#include "../../model/Space.hpp"
-#include "../../model/Space_Impl.hpp"
-#include "../../model/ThermalZone.hpp"
-#include "../../model/ThermalZone_Impl.hpp"
-#include "../../model/SpaceType.hpp"
-#include "../../model/SpaceType_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
 
-#include <utilities/idd/ZoneInfiltration_FlowCoefficient_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
+#include "../../model/SurfacePropertyGroundSurfaces.hpp"
+#include "../../model/Schedule.hpp"
+
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+
+#include <utilities/idd/SurfaceProperty_GroundSurfaces_FieldEnums.hxx>
+// #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFactory.hxx>
 
 using namespace openstudio::model;
-
-using namespace std;
 
 namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateSpaceInfiltrationFlowCoefficient(SpaceInfiltrationFlowCoefficient& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyGroundSurfaces(model::SurfacePropertyGroundSurfaces& modelObject) {
+    boost::optional<IdfObject> result;
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneInfiltration_FlowCoefficient, modelObject);
-    IdfObject parentIdfObject = getSpaceLoadParent(modelObject, false);  // We do not allow spaceType!
-    idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName, parentIdfObject.nameString());
+    // Instantiate an IdfObject of the class to store the values
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_GroundSurfaces, modelObject);
 
-    boost::optional<Schedule> schedule_ = modelObject.schedule();
-    if (!schedule_) {
-      schedule_ = modelObject.model().alwaysOnDiscreteSchedule();
+    for (const auto& group : modelObject.groundSurfaceGroups()) {
+
+      IdfExtensibleGroup eg = idfObject.pushExtensibleGroup();
+      eg.setString(SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceName, group.groundSurfaceName());
+      eg.setDouble(SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceViewFactor, group.viewFactor());
+      if (auto sch_ = group.temperatureSchedule()) {
+        if (boost::optional<IdfObject> _owo = translateAndMapModelObject(sch_.get())) {
+          eg.setString(SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceTemperatureScheduleName, _owo->nameString());
+        }  // TODO: handle failure?
+      }
+      if (auto sch_ = group.reflectanceSchedule()) {
+        if (boost::optional<IdfObject> _owo = translateAndMapModelObject(sch_.get())) {
+          eg.setString(SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceReflectanceScheduleName, _owo->nameString());
+        }  // TODO: handle failure?
+      }
     }
-    if (auto idf_sch_ = translateAndMapModelObject(schedule_.get())) {
-      idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ScheduleName, idf_sch_->nameString());
-    }
-
-    // Flow Coefficient: Required Double
-    double flowCoefficient = modelObject.flowCoefficient();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::FlowCoefficient, flowCoefficient);
-
-    // Stack Coefficient: Required Double
-    double stackCoefficient = modelObject.stackCoefficient();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::StackCoefficient, stackCoefficient);
-
-    // Pressure Exponent: Optional Double
-    double pressureExponent = modelObject.pressureExponent();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::PressureExponent, pressureExponent);
-
-    // Wind Coefficient: Required Double
-    double windCoefficient = modelObject.windCoefficient();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::WindCoefficient, windCoefficient);
-
-    // Shelter Factor: Required Double
-    double shelterFactor = modelObject.shelterFactor();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::ShelterFactor, shelterFactor);
 
     return idfObject;
-  }
+  }  // End of translate function
 
-}  // namespace energyplus
-
-}  // namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

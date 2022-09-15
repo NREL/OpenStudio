@@ -27,70 +27,69 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ForwardTranslator.hpp"
+#include "../ReverseTranslator.hpp"
 
-#include "../../model/Model.hpp"
-#include "../../model/SpaceInfiltrationFlowCoefficient.hpp"
-#include "../../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
-#include "../../model/Space.hpp"
-#include "../../model/Space_Impl.hpp"
-#include "../../model/ThermalZone.hpp"
-#include "../../model/ThermalZone_Impl.hpp"
-#include "../../model/SpaceType.hpp"
-#include "../../model/SpaceType_Impl.hpp"
+#include "../../model/SurfacePropertyIncidentSolarMultiplier.hpp"
+
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
+
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
-#include <utilities/idd/ZoneInfiltration_FlowCoefficient_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
+#include <utilities/idd/SurfaceProperty_IncidentSolarMultiplier_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFactory.hxx>
 
 using namespace openstudio::model;
-
-using namespace std;
 
 namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateSpaceInfiltrationFlowCoefficient(SpaceInfiltrationFlowCoefficient& modelObject) {
+  boost::optional<ModelObject> ReverseTranslator::translateSurfacePropertyIncidentSolarMultiplier(const WorkspaceObject& workspaceObject) {
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneInfiltration_FlowCoefficient, modelObject);
-    IdfObject parentIdfObject = getSpaceLoadParent(modelObject, false);  // We do not allow spaceType!
-    idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ZoneorSpaceName, parentIdfObject.nameString());
+    boost::optional<SubSurface> subSurface_;
 
-    boost::optional<Schedule> schedule_ = modelObject.schedule();
-    if (!schedule_) {
-      schedule_ = modelObject.model().alwaysOnDiscreteSchedule();
+    // Surface Name: Required Object
+    if (auto wo_ = workspaceObject.getTarget(SurfaceProperty_IncidentSolarMultiplierFields::SurfaceName)) {
+      if (auto mo_ = translateAndMapWorkspaceObject(wo_.get())) {
+
+        if (auto ss_ = mo_->optionalCast<SubSurface>()) {
+          subSurface_ = ss_;
+        } else {
+          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Surface Name', cannot reverse translate.");
+          return boost::none;
+        }
+      } else {
+        LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Surface Name'");
+        return boost::none;
+      }
+    } else {
+      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Surface Name'");
+      return boost::none;
     }
-    if (auto idf_sch_ = translateAndMapModelObject(schedule_.get())) {
-      idfObject.setString(ZoneInfiltration_FlowCoefficientFields::ScheduleName, idf_sch_->nameString());
+
+    openstudio::model::SurfacePropertyIncidentSolarMultiplier modelObject(subSurface_.get());
+
+    // Incident Solar Multiplier: Optional Double
+    if (boost::optional<double> _incidentSolarMultiplier =
+          workspaceObject.getDouble(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplier)) {
+      modelObject.setIncidentSolarMultiplier(_incidentSolarMultiplier.get());
     }
 
-    // Flow Coefficient: Required Double
-    double flowCoefficient = modelObject.flowCoefficient();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::FlowCoefficient, flowCoefficient);
+    // Incident Solar Multiplier Schedule Name: Optional Object
+    if (auto wo_ = workspaceObject.getTarget(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplierScheduleName)) {
+      if (auto mo_ = translateAndMapWorkspaceObject(wo_.get())) {
+        if (boost::optional<Schedule> _incidentSolarMultiplierSchedule = mo_->optionalCast<Schedule>()) {
+          modelObject.setIncidentSolarMultiplierSchedule(_incidentSolarMultiplierSchedule.get());
+        } else {
+          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Incident Solar Multiplier Schedule Name'");
+        }
+      }
+    }
 
-    // Stack Coefficient: Required Double
-    double stackCoefficient = modelObject.stackCoefficient();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::StackCoefficient, stackCoefficient);
+    return modelObject;
+  }  // End of translate function
 
-    // Pressure Exponent: Optional Double
-    double pressureExponent = modelObject.pressureExponent();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::PressureExponent, pressureExponent);
-
-    // Wind Coefficient: Required Double
-    double windCoefficient = modelObject.windCoefficient();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::WindCoefficient, windCoefficient);
-
-    // Shelter Factor: Required Double
-    double shelterFactor = modelObject.shelterFactor();
-    idfObject.setDouble(ZoneInfiltration_FlowCoefficientFields::ShelterFactor, shelterFactor);
-
-    return idfObject;
-  }
-
-}  // namespace energyplus
-
-}  // namespace openstudio
+}  // end namespace energyplus
+}  // end namespace openstudio

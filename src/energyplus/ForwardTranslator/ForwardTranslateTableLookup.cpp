@@ -62,13 +62,13 @@ namespace energyplus {
       return boost::none;
     }
 
-    unsigned independentVariableGridSize = 1;
+    size_t independentVariableGridSize = 1;
     std::vector<double> outputValues = modelObject.outputValues();
-    unsigned outValueSize = outputValues.size();
+    size_t outValueSize = outputValues.size();
     for (const auto& independentVariable : independentVariables) {
       auto v = independentVariable.values();
       std::sort(v.begin(), v.end());
-      unsigned uniqueCount = std::distance(v.begin(), std::unique(v.begin(), v.end()));
+      size_t uniqueCount = std::distance(v.begin(), std::unique(v.begin(), v.end()));
       independentVariableGridSize *= uniqueCount;
     }
 
