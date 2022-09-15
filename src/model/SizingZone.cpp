@@ -626,11 +626,11 @@ namespace model {
         return result;
       }
 
-      // Query the Intialization Summary -> Zone Sizing DOAS Inputs Information table to get
+      // Query the InitializationSummary -> Zone Sizing DOAS Inputs Information table to get
       // the row names that contains information for this component.
       std::string rowsQuery = R"(
       SELECT RowName FROM TabularDataWithStrings
-        WHERE ReportName = 'Initialization Summary'
+        WHERE ReportName = 'InitializationSummary'
         AND ReportForString = 'Entire Facility'
         AND TableName = 'Zone Sizing DOAS Inputs'
         AND Value = ?;)";
@@ -641,16 +641,16 @@ namespace model {
 
       // Warn if the query failed
       if (!rowNames) {
-        LOG(Debug, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Zone Sizing DOAS Inputs table.");
+        LOG(Debug, "Could not find a component called '" + sqlName + "' in any rows of the InitializationSummary Zone Sizing DOAS Inputs table.");
         return result;
       }
 
-      // Query each row of the Intialization Summary -> Zone Sizing DOAS Inputs table
+      // Query each row of the InitializationSummary -> Zone Sizing DOAS Inputs table
       // that contains this component to get the desired value.
       for (std::string rowName : rowNames.get()) {
         std::string valQuery = R"(
         SELECT Value FROM TabularDataWithStrings
-          WHERE ReportName = 'Initialization Summary'
+          WHERE ReportName = 'InitializationSummary'
           AND ReportForString = 'Entire Facility'
           AND TableName = 'Zone Sizing DOAS Inputs'
           AND RowName = ?
@@ -699,11 +699,11 @@ namespace model {
         return result;
       }
 
-      // Query the Intialization Summary -> Zone Sizing DOAS Inputs Information table to get
+      // Query the InitializationSummary -> Zone Sizing DOAS Inputs Information table to get
       // the row names that contains information for this component.
       std::string rowsQuery = R"(
       SELECT RowName FROM TabularDataWithStrings
-        WHERE ReportName = 'Initialization Summary'
+        WHERE ReportName = 'InitializationSummary'
         AND ReportForString = 'Entire Facility'
         AND TableName = 'Zone Sizing DOAS Inputs'
         AND Value = ?;)";
@@ -714,16 +714,16 @@ namespace model {
 
       // Warn if the query failed
       if (!rowNames) {
-        LOG(Debug, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Zone Sizing DOAS Inputs table.");
+        LOG(Debug, "Could not find a component called '" + sqlName + "' in any rows of the InitializationSummary Zone Sizing DOAS Inputs table.");
         return result;
       }
 
-      // Query each row of the Intialization Summary -> Zone Sizing DOAS Inputs table
+      // Query each row of the InitializationSummary -> Zone Sizing DOAS Inputs table
       // that contains this component to get the desired value.
       for (std::string rowName : rowNames.get()) {
         std::string valQuery = R"(
         SELECT Value FROM TabularDataWithStrings
-          WHERE ReportName = 'Initialization Summary'
+          WHERE ReportName = 'InitializationSummary'
           AND ReportForString = 'Entire Facility'
           AND TableName = 'Zone Sizing DOAS Inputs'
           AND RowName = ?

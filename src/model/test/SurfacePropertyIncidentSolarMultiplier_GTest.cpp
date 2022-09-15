@@ -27,62 +27,52 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "../ForwardTranslator.hpp"
+#include "ModelFixture.hpp"
 
-#include "../../model/Model.hpp"
-#include "../../model/SpaceInfiltrationEffectiveLeakageArea.hpp"
-#include "../../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
-#include "../../model/Space.hpp"
-#include "../../model/Space_Impl.hpp"
-#include "../../model/ThermalZone.hpp"
-#include "../../model/ThermalZone_Impl.hpp"
-#include "../../model/SpaceType.hpp"
-#include "../../model/SpaceType_Impl.hpp"
-#include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
+#include "../SurfacePropertyIncidentSolarMultiplier.hpp"
+#include "../SurfacePropertyIncidentSolarMultiplier_Impl.hpp"
 
-#include <utilities/idd/ZoneInfiltration_EffectiveLeakageArea_FieldEnums.hxx>
-#include "../../utilities/idd/IddEnums.hpp"
-#include <utilities/idd/IddEnums.hxx>
-#include <utilities/idd/IddFactory.hxx>
+#include "../SubSurface.hpp"
 
+#include "../Schedule.hpp"
+#include "../ScheduleConstant.hpp"
+
+#include "../../utilities/geometry/Point3d.hpp"
+
+using namespace openstudio;
 using namespace openstudio::model;
 
-using namespace std;
+TEST_F(ModelFixture, SurfacePropertyIncidentSolarMultiplier_GettersSetters) {
+  Model m;
 
-namespace openstudio {
+  std::vector<Point3d> vertices{{0, 0, 1}, {0, 0, 0}, {1, 0, 0}, {1, 0, 1}};
 
-namespace energyplus {
+  SubSurface ss(vertices, m);
 
-  boost::optional<IdfObject> ForwardTranslator::translateSpaceInfiltrationEffectiveLeakageArea(SpaceInfiltrationEffectiveLeakageArea& modelObject) {
+  SurfacePropertyIncidentSolarMultiplier sp(ss);
 
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::ZoneInfiltration_EffectiveLeakageArea, modelObject);
-    IdfObject parentIdfObject = getSpaceLoadParent(modelObject, false);  // We do not allow spaceType!
-    idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ZoneorSpaceName, parentIdfObject.nameString());
+  EXPECT_EQ(1, sp.incidentSolarMultiplier());
+  EXPECT_FALSE(sp.incidentSolarMultiplierSchedule());
+  EXPECT_EQ(ss, sp.subSurface());
+  Schedule alwaysOnContinuous = m.alwaysOnContinuousSchedule();
 
-    boost::optional<Schedule> schedule = modelObject.schedule();
-    if (schedule) {
-      idfObject.setString(ZoneInfiltration_EffectiveLeakageAreaFields::ScheduleName, schedule->name().get());
-    }
+  // Surface Name: Required Object
+  SubSurface ss2(vertices, m);
+  EXPECT_TRUE(sp.setSubSurface(ss2));
+  EXPECT_EQ(ss2, sp.subSurface());
+  ASSERT_TRUE(ss2.surfacePropertyIncidentSolarMultiplier());
+  EXPECT_EQ(sp, ss2.surfacePropertyIncidentSolarMultiplier().get());
 
-    OptionalDouble d = modelObject.effectiveAirLeakageArea();
-    if (d) {
-      idfObject.setDouble(ZoneInfiltration_EffectiveLeakageAreaFields::EffectiveAirLeakageArea, *d);
-    }
+  // Incident Solar Multiplier: Required Double
+  EXPECT_TRUE(sp.setIncidentSolarMultiplier(0.75));
+  EXPECT_EQ(0.75, sp.incidentSolarMultiplier());
+  // Bad Value
+  EXPECT_FALSE(sp.setIncidentSolarMultiplier(-10.0));
+  EXPECT_EQ(0.75, sp.incidentSolarMultiplier());
 
-    d = modelObject.stackCoefficient();
-    if (d) {
-      idfObject.setDouble(ZoneInfiltration_EffectiveLeakageAreaFields::StackCoefficient, *d);
-    }
-
-    d = modelObject.windCoefficient();
-    if (d) {
-      idfObject.setDouble(ZoneInfiltration_EffectiveLeakageAreaFields::WindCoefficient, *d);
-    }
-
-    return idfObject;
-  }
-
-}  // namespace energyplus
-
-}  // namespace openstudio
+  // Incident Solar Multiplier Schedule Name: Optional Object
+  ScheduleConstant sch(m);
+  EXPECT_TRUE(sp.setIncidentSolarMultiplierSchedule(sch));
+  ASSERT_TRUE(sp.incidentSolarMultiplierSchedule());
+  EXPECT_EQ(sch, sp.incidentSolarMultiplierSchedule().get());
+}

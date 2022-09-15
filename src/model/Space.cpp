@@ -497,6 +497,22 @@ namespace model {
       OS_ASSERT(result);
     }
 
+    bool Space_Impl::setCeilingHeight(double ceilingHeight) {
+      bool result = setDouble(OS_SpaceFields::CeilingHeight, ceilingHeight);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void Space_Impl::autocalculateCeilingHeight() {
+      bool result = setString(OS_SpaceFields::CeilingHeight, "Autocalculate");
+      OS_ASSERT(result);
+    }
+
+    void Space_Impl::resetCeilingHeight() {
+      bool result = setString(OS_SpaceFields::CeilingHeight, "");
+      OS_ASSERT(result);
+    }
+
     bool Space_Impl::setVolume(double volume) {
       bool result = setDouble(OS_SpaceFields::Volume, volume);
       OS_ASSERT(result);
@@ -510,6 +526,22 @@ namespace model {
 
     void Space_Impl::resetVolume() {
       bool result = setString(OS_SpaceFields::Volume, "");
+      OS_ASSERT(result);
+    }
+
+    bool Space_Impl::setFloorArea(double floorArea) {
+      bool result = setDouble(OS_SpaceFields::FloorArea, floorArea);
+      OS_ASSERT(result);
+      return result;
+    }
+
+    void Space_Impl::autocalculateFloorArea() {
+      bool result = setString(OS_SpaceFields::FloorArea, "Autocalculate");
+      OS_ASSERT(result);
+    }
+
+    void Space_Impl::resetFloorArea() {
+      bool result = setString(OS_SpaceFields::FloorArea, "");
       OS_ASSERT(result);
     }
 
@@ -867,19 +899,6 @@ namespace model {
       return result;
     }
 
-    double Space_Impl::floorArea() const {
-      double result = 0;
-      for (const Surface& surface : this->surfaces()) {
-        if (istringEqual(surface.surfaceType(), "Floor")) {
-          if (surface.isAirWall()) {
-            continue;
-          }
-          result += surface.grossArea();
-        }
-      }
-      return result;
-    }
-
     double Space_Impl::exteriorArea() const {
       double result = 0;
       for (const Surface& surface : this->surfaces()) {
@@ -922,21 +941,11 @@ namespace model {
       return isVolEnclosed;
     }
 
-    double Space_Impl::volume() const {
-      boost::optional<double> value = getDouble(OS_SpaceFields::Volume, true);
+    double Space_Impl::ceilingHeight() const {
+      boost::optional<double> value = getDouble(OS_SpaceFields::CeilingHeight, true);
       if (value) {
         return value.get();
       }
-
-      auto volumePoly = this->polyhedron();
-
-      auto [isVolEnclosed, edgesNot2] = volumePoly.isEnclosedVolume();
-      if (isVolEnclosed) {
-        return volumePoly.calcPolyhedronVolume();
-      }
-
-      LOG(Warn, briefDescription() << " is not enclosed, there are " << edgesNot2.size()
-                                   << " edges that aren't used exactly twice. Volume calculation will be potentially inaccurate");
 
       double result = 0;
 
@@ -962,8 +971,44 @@ namespace model {
       if ((numRoof > 0) && (numFloor > 0)) {
         roofHeight /= numRoof;
         floorHeight /= numFloor;
-        result = (roofHeight - floorHeight) * this->floorArea();
+        result = roofHeight - floorHeight;
       }
+
+      return result;
+    }
+
+    bool Space_Impl::isCeilingHeightDefaulted() const {
+      return isEmpty(OS_SpaceFields::CeilingHeight);
+    }
+
+    bool Space_Impl::isCeilingHeightAutocalculated() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_SpaceFields::CeilingHeight, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
+      }
+      return result;
+    }
+
+    double Space_Impl::volume() const {
+      boost::optional<double> value = getDouble(OS_SpaceFields::Volume, true);
+      if (value) {
+        return value.get();
+      }
+
+      auto volumePoly = this->polyhedron();
+
+      auto [isVolEnclosed, edgesNot2] = volumePoly.isEnclosedVolume();
+      if (isVolEnclosed) {
+        return volumePoly.calcPolyhedronVolume();
+      }
+
+      LOG(Warn, briefDescription() << " is not enclosed, there are " << edgesNot2.size()
+                                   << " edges that aren't used exactly twice. Volume calculation will be potentially inaccurate");
+
+      double result = 0;
+
+      result = this->ceilingHeight() * this->floorArea();
 
       return result;
     }
@@ -975,6 +1020,37 @@ namespace model {
     bool Space_Impl::isVolumeAutocalculated() const {
       bool result = false;
       boost::optional<std::string> value = getString(OS_SpaceFields::Volume, true);
+      if (value) {
+        result = openstudio::istringEqual(value.get(), "Autocalculate");
+      }
+      return result;
+    }
+
+    double Space_Impl::floorArea() const {
+      boost::optional<double> value = getDouble(OS_SpaceFields::FloorArea, true);
+      if (value) {
+        return value.get();
+      }
+
+      double result = 0;
+      for (const Surface& surface : this->surfaces()) {
+        if (istringEqual(surface.surfaceType(), "Floor")) {
+          if (surface.isAirWall()) {
+            continue;
+          }
+          result += surface.grossArea();
+        }
+      }
+      return result;
+    }
+
+    bool Space_Impl::isFloorAreaDefaulted() const {
+      return isEmpty(OS_SpaceFields::FloorArea);
+    }
+
+    bool Space_Impl::isFloorAreaAutocalculated() const {
+      bool result = false;
+      boost::optional<std::string> value = getString(OS_SpaceFields::FloorArea, true);
       if (value) {
         result = openstudio::istringEqual(value.get(), "Autocalculate");
       }
@@ -2928,6 +3004,18 @@ namespace model {
     getImpl<detail::Space_Impl>()->resetPartofTotalFloorArea();
   }
 
+  bool Space::setCeilingHeight(double ceilingHeight) {
+    return getImpl<detail::Space_Impl>()->setCeilingHeight(ceilingHeight);
+  }
+
+  void Space::autocalculateCeilingHeight() {
+    getImpl<detail::Space_Impl>()->autocalculateCeilingHeight();
+  }
+
+  void Space::resetCeilingHeight() {
+    getImpl<detail::Space_Impl>()->resetCeilingHeight();
+  }
+
   bool Space::setVolume(double volume) {
     return getImpl<detail::Space_Impl>()->setVolume(volume);
   }
@@ -2938,6 +3026,18 @@ namespace model {
 
   void Space::resetVolume() {
     getImpl<detail::Space_Impl>()->resetVolume();
+  }
+
+  bool Space::setFloorArea(double floorArea) {
+    return getImpl<detail::Space_Impl>()->setFloorArea(floorArea);
+  }
+
+  void Space::autocalculateFloorArea() {
+    getImpl<detail::Space_Impl>()->autocalculateFloorArea();
+  }
+
+  void Space::resetFloorArea() {
+    getImpl<detail::Space_Impl>()->resetFloorArea();
   }
 
   boost::optional<SpaceType> Space::spaceType() const {
@@ -3128,16 +3228,24 @@ namespace model {
     return getImpl<detail::Space_Impl>()->multiplier();
   }
 
-  double Space::floorArea() const {
-    return getImpl<detail::Space_Impl>()->floorArea();
-  }
-
   double Space::exteriorArea() const {
     return getImpl<detail::Space_Impl>()->exteriorArea();
   }
 
   double Space::exteriorWallArea() const {
     return getImpl<detail::Space_Impl>()->exteriorWallArea();
+  }
+
+  double Space::ceilingHeight() const {
+    return getImpl<detail::Space_Impl>()->ceilingHeight();
+  }
+
+  bool Space::isCeilingHeightDefaulted() const {
+    return getImpl<detail::Space_Impl>()->isCeilingHeightDefaulted();
+  }
+
+  bool Space::isCeilingHeightAutocalculated() const {
+    return getImpl<detail::Space_Impl>()->isCeilingHeightAutocalculated();
   }
 
   double Space::volume() const {
@@ -3150,6 +3258,18 @@ namespace model {
 
   bool Space::isVolumeAutocalculated() const {
     return getImpl<detail::Space_Impl>()->isVolumeAutocalculated();
+  }
+
+  double Space::floorArea() const {
+    return getImpl<detail::Space_Impl>()->floorArea();
+  }
+
+  bool Space::isFloorAreaDefaulted() const {
+    return getImpl<detail::Space_Impl>()->isFloorAreaDefaulted();
+  }
+
+  bool Space::isFloorAreaAutocalculated() const {
+    return getImpl<detail::Space_Impl>()->isFloorAreaAutocalculated();
   }
 
   double Space::numberOfPeople() const {
