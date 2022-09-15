@@ -120,9 +120,8 @@ namespace model {
       : ModelObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& SurfacePropertyGroundSurfaces_Impl::outputVariableNames() const {
-      static std::vector<std::string> result;
-      if (result.empty()) {
-      }
+      static const std::vector<std::string> result{"Surfaces Property Ground Surfaces Average Temperature",
+                                                   "Surfaces Property Ground Surfaces Average Reflectance"};
       return result;
     }
 
