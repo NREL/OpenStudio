@@ -171,6 +171,7 @@ namespace model {
       {"AvailabilityManagerScheduledOff", "Availability Manager Scheduled Off", "schedule", false, "Availability", 0.0, 1.0},
       {"CentralHeatPumpSystem", "Ancillary Operation", "ancillaryOperationSchedule", false, "Availability", 0.0, 1.0},
       {"CentralHeatPumpSystemModule", "Chiller Heater Modules Control", "chillerHeaterModulesControlSchedule", false, "Availability", 0.0, 1.0},
+      {"ChillerElectricASHRAE205", "Ambient Temperature", "ambientTemperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble()},
       {"ChillerElectricEIR", "Basin Heater Operating", "basinHeaterSchedule", false, "Availability", 0.0, 1.0},
       {"ChillerElectricEIR", "Heat Recovery Inlet High Temperature Limit", "heatRecoveryInletHighTemperatureLimitSchedule", true, "Temperature",
        OptionalDouble(), OptionalDouble()},

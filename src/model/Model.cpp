@@ -3873,6 +3873,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(CFactorUndergroundWallConstruction);
     REGISTER_CONSTRUCTOR(ChillerAbsorption);
     REGISTER_CONSTRUCTOR(ChillerAbsorptionIndirect);
+    REGISTER_CONSTRUCTOR(ChillerElectricASHRAE205);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
     REGISTER_CONSTRUCTOR(ChillerElectricReformulatedEIR);
     REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
@@ -4428,6 +4429,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ClimateZones);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorption);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorptionIndirect);
+    REGISTER_COPYCONSTRUCTORS(ChillerElectricASHRAE205);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricReformulatedEIR);
     REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);

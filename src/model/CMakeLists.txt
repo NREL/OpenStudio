@@ -281,6 +281,9 @@ set(${target_name}_src
   ChillerAbsorptionIndirect.hpp
   ChillerAbsorptionIndirect_Impl.hpp
   ChillerAbsorptionIndirect.cpp
+  ChillerElectricASHRAE205.hpp
+  ChillerElectricASHRAE205_Impl.hpp
+  ChillerElectricASHRAE205.cpp
   ChillerElectricEIR.hpp
   ChillerElectricEIR_Impl.hpp
   ChillerElectricEIR.cpp
@@ -1891,6 +1894,7 @@ set(${target_name}_test_src
   # test/CentralHeatPumpSystemModule_GTest.cpp => Included in the above
   test/ChillerAbsorption_GTest.cpp
   test/ChillerAbsorptionIndirect_GTest.cpp
+  test/ChillerElectricASHRAE205_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
   test/ChillerElectricReformulatedEIR_GTest.cpp
   test/ChillerHeaterPerformanceElectricEIR_GTest.cpp

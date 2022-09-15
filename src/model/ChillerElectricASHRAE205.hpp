@@ -37,21 +37,10 @@ namespace openstudio {
 
 namespace model {
 
-  // TODO: Check the following class names against object getters and setters.
   class ExternalFile;
-  class Schedule;
+  class Node;
   class ThermalZone;
-  class Connection;
-  class Connection;
-  class Connection;
-  class Connection;
-  class Connection;
-  class Connection;
-  class Connection;
-  class Connection;
-  class Connection;
-  class Connection;
-  class Connection;
+  class Schedule;
 
   namespace detail {
 
@@ -66,7 +55,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit ChillerElectricASHRAE205(const Model& model);
+    explicit ChillerElectricASHRAE205(const ExternalFile& representationFile);
 
     virtual ~ChillerElectricASHRAE205() = default;
 
@@ -83,186 +72,117 @@ namespace model {
     /** @name Getters */
     //@{
 
-    // TODO: Check return type. From object lists, some candidates are: ExternalFile.
     ExternalFile representationFile() const;
 
     std::string performanceInterpolationMethod() const;
 
     boost::optional<double> ratedCapacity() const;
-
     bool isRatedCapacityAutosized() const;
-
-    boost::optional<double> autosizedRatedCapacity();
 
     double sizingFactor() const;
 
     std::string ambientTemperatureIndicator() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Schedule.
     boost::optional<Schedule> ambientTemperatureSchedule() const;
 
-    // TODO: Check return type. From object lists, some candidates are: ThermalZone.
     boost::optional<ThermalZone> ambientTemperatureZone() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> ambientTemperatureOutdoorAirNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection chilledWaterInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    Connection chilledWaterOutletNode() const;
+    boost::optional<std::string> ambientTemperatureOutdoorAirNodeName() const;
 
     boost::optional<double> chilledWaterMaximumRequestedFlowRate() const;
-
     bool isChilledWaterMaximumRequestedFlowRateAutosized() const;
 
-    boost::optional<double> autosizedChilledWaterMaximumRequestedFlowRate();
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> condenserInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> condenserOutletNode() const;
-
     boost::optional<double> condenserMaximumRequestedFlowRate() const;
-
     bool isCondenserMaximumRequestedFlowRateAutosized() const;
-
-    boost::optional<double> autosizedCondenserMaximumRequestedFlowRate();
 
     std::string chillerFlowMode() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> oilCoolerInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> oilCoolerOutletNode() const;
-
     boost::optional<double> oilCoolerDesignFlowRate() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> auxiliaryInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> auxiliaryOutletNode() const;
 
     boost::optional<double> auxiliaryCoolingDesignFlowRate() const;
 
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> heatRecoveryInletNode() const;
-
-    // TODO: Check return type. From object lists, some candidates are: Connection.
-    boost::optional<Connection> heatRecoveryOutletNode() const;
-
     std::string endUseSubcategory() const;
-
     bool isEndUseSubcategoryDefaulted() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // TODO: Check argument type. From object lists, some candidates are: ExternalFile.
     bool setRepresentationFile(const ExternalFile& externalFile);
 
     bool setPerformanceInterpolationMethod(const std::string& performanceInterpolationMethod);
 
     bool setRatedCapacity(double ratedCapacity);
-
     void autosizeRatedCapacity();
 
     bool setSizingFactor(double sizingFactor);
 
     bool setAmbientTemperatureIndicator(const std::string& ambientTemperatureIndicator);
 
-    // TODO: Check argument type. From object lists, some candidates are: Schedule.
-    // Note Schedules are passed by reference, not const reference.
+    /** This will make the Ambient Temperature Indicator = 'Schedule' */
     bool setAmbientTemperatureSchedule(Schedule& schedule);
-
+    /** This will reset the Ambient Temperature Indicator = 'Outdoors' */
     void resetAmbientTemperatureSchedule();
 
-    // TODO: Check argument type. From object lists, some candidates are: ThermalZone.
+    /** This will make the Ambient Temperature Indicator = 'Zone' */
     bool setAmbientTemperatureZone(const ThermalZone& thermalZone);
-
+    /** This will reset the Ambient Temperature Indicator = 'Outdoors' */
     void resetAmbientTemperatureZone();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAmbientTemperatureOutdoorAirNode(const Connection& connection);
-
-    void resetAmbientTemperatureOutdoorAirNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setChilledWaterInletNode(const Connection& connection);
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setChilledWaterOutletNode(const Connection& connection);
+    /** This will make the Ambient Temperature Indicator = 'Outdoors' */
+    bool setAmbientTemperatureOutdoorAirNodeName(const std::string& ambientTemperatureOutdoorAirNodeName);
+    /** This will reset the Ambient Temperature Indicator = 'Outdoors'. A default Outdoor Air Node Name will be used in the ForwardTranslator */
+    void resetAmbientTemperatureOutdoorAirNodeName();
 
     bool setChilledWaterMaximumRequestedFlowRate(double chilledWaterMaximumRequestedFlowRate);
-
     void autosizeChilledWaterMaximumRequestedFlowRate();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setCondenserInletNode(const Connection& connection);
-
-    void resetCondenserInletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setCondenserOutletNode(const Connection& connection);
-
-    void resetCondenserOutletNode();
-
     bool setCondenserMaximumRequestedFlowRate(double condenserMaximumRequestedFlowRate);
-
     void autosizeCondenserMaximumRequestedFlowRate();
 
     bool setChillerFlowMode(const std::string& chillerFlowMode);
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setOilCoolerInletNode(const Connection& connection);
-
-    void resetOilCoolerInletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setOilCoolerOutletNode(const Connection& connection);
-
-    void resetOilCoolerOutletNode();
-
     bool setOilCoolerDesignFlowRate(double oilCoolerDesignFlowRate);
-
     void resetOilCoolerDesignFlowRate();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAuxiliaryInletNode(const Connection& connection);
-
-    void resetAuxiliaryInletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setAuxiliaryOutletNode(const Connection& connection);
-
-    void resetAuxiliaryOutletNode();
-
     bool setAuxiliaryCoolingDesignFlowRate(double auxiliaryCoolingDesignFlowRate);
-
     void resetAuxiliaryCoolingDesignFlowRate();
 
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setHeatRecoveryInletNode(const Connection& connection);
-
-    void resetHeatRecoveryInletNode();
-
-    // TODO: Check argument type. From object lists, some candidates are: Connection.
-    bool setHeatRecoveryOutletNode(const Connection& connection);
-
-    void resetHeatRecoveryOutletNode();
-
     bool setEndUseSubcategory(const std::string& endUseSubcategory);
-
     void resetEndUseSubcategory();
 
     //@}
     /** @name Other */
     //@{
+
+    boost::optional<double> autosizedRatedCapacity();
+
+    boost::optional<double> autosizedChilledWaterMaximumRequestedFlowRate();
+
+    boost::optional<double> autosizedCondenserMaximumRequestedFlowRate();
+
+    /** Convenience Function to return the Chilled Water Loop (chiller on supply) **/
+    boost::optional<PlantLoop> chilledWaterLoop() const;
+    // Same as supplyInletModelObject, but cast to a Node
+    boost::optional<Node> chilledWaterInletNode() const;
+    boost::optional<Node> chilledWaterOutletNode() const;
+
+    /** Convenience Function to return the Condenser Water Loop (chiller on demand side) **/
+    boost::optional<PlantLoop> condenserWaterLoop() const;
+    boost::optional<Node> condenserInletNode() const;
+    boost::optional<Node> condenserOutletNode() const;
+
+    // Not implemented in E+ 22.2.0, but reserved as a Tertiary Loop for now
+    boost::optional<PlantLoop> heatRecoveryLoop() const;
+    boost::optional<Node> heatRecoveryInletNode() const;
+    boost::optional<Node> heatRecoveryOutletNode() const;
+
+    // TODO: how to deal with these? That's 5 plant loop total in the end
+    boost::optional<Node> oilCoolerInletNode() const;
+    boost::optional<Node> oilCoolerOutletNode() const;
+
+    boost::optional<Node> auxiliaryInletNode() const;
+    boost::optional<Node> auxiliaryOutletNode() const;
 
     //@}
    protected:
@@ -290,3 +210,4 @@ namespace model {
 }  // namespace openstudio
 
 #endif  // MODEL_CHILLERELECTRICASHRAE205_HPP
+
