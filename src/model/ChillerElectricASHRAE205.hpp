@@ -117,7 +117,8 @@ namespace model {
 
     bool setSizingFactor(double sizingFactor);
 
-    bool setAmbientTemperatureIndicator(const std::string& ambientTemperatureIndicator);
+    // This is done via the setAmbientXXX methods
+    // bool setAmbientTemperatureIndicator(const std::string& ambientTemperatureIndicator);
 
     /** This will make the Ambient Temperature Indicator = 'Schedule' */
     bool setAmbientTemperatureSchedule(Schedule& schedule);
@@ -177,10 +178,13 @@ namespace model {
     boost::optional<Node> heatRecoveryInletNode() const;
     boost::optional<Node> heatRecoveryOutletNode() const;
 
-    // TODO: how to deal with these? That's 5 plant loop total in the end
+    boost::optional<PlantLoop> oilCoolerLoop() const;
+    bool addToOilCoolerLoopNode(Node& node);
     boost::optional<Node> oilCoolerInletNode() const;
     boost::optional<Node> oilCoolerOutletNode() const;
 
+    bool addToAuxiliaryLoopNode(Node& node);
+    boost::optional<PlantLoop> auxiliaryLoop() const;
     boost::optional<Node> auxiliaryInletNode() const;
     boost::optional<Node> auxiliaryOutletNode() const;
 
@@ -210,4 +214,3 @@ namespace model {
 }  // namespace openstudio
 
 #endif  // MODEL_CHILLERELECTRICASHRAE205_HPP
-

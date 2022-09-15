@@ -41,6 +41,7 @@ namespace model {
 
   class ScheduleFile;
   class PythonPluginInstance;
+  class ChillerElectricASHRAE205;
 
   namespace detail {
 
@@ -93,6 +94,8 @@ namespace model {
     std::vector<ScheduleFile> scheduleFiles() const;
 
     std::vector<PythonPluginInstance> pythonPluginInstances() const;
+
+    std::vector<ChillerElectricASHRAE205> chillerElectricASHRAE205s() const;
 
     //@}
    protected:

@@ -32,239 +32,349 @@
 #include "../ChillerElectricASHRAE205.hpp"
 #include "../ChillerElectricASHRAE205_Impl.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "../ExternalFile.hpp"
 #include "../ExternalFile_Impl.hpp"
 
-#include "../Schedule.hpp"
-#include "../Schedule_Impl.hpp"
-
 #include "../ThermalZone.hpp"
 #include "../ThermalZone_Impl.hpp"
+#include "../PlantLoop.hpp"
+#include "../PlantLoop_Impl.hpp"
+#include "../Node.hpp"
+#include "../Node_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../ScheduleConstant.hpp"
 
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
-
-#include "../Connection.hpp"
-#include "../Connection_Impl.hpp"
+#include "../../utilities/core/PathHelpers.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
 TEST_F(ModelFixture, ChillerElectricASHRAE205_GettersSetters) {
   Model m;
-  // TODO: Check regular Ctor arguments
-  ChillerElectricASHRAE205 chillerElectricASHRAE205(m);
-  // TODO: Or if a UniqueModelObject (and make sure _Impl is included)
-  // ChillerElectricASHRAE205 chillerElectricASHRAE205 = m.getUniqueModelObject<ChillerElectricASHRAE205>();
 
-  chillerElectricASHRAE205.setName("My ChillerElectricASHRAE205");
+  EXPECT_EQ(0u, m.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
+
+  openstudio::path p = resourcesPath() / toPath("model/A205ExampleChiller.RS0001.a205.cbor");
+  EXPECT_TRUE(exists(p));
+
+  openstudio::path expectedDestDir;
+  std::vector<openstudio::path> absoluteFilePaths = m.workflowJSON().absoluteFilePaths();
+  if (absoluteFilePaths.empty()) {
+    expectedDestDir = m.workflowJSON().absoluteRootDir();
+  } else {
+    expectedDestDir = absoluteFilePaths[0];
+  }
+
+  if (exists(expectedDestDir)) {
+    removeDirectory(expectedDestDir);
+  }
+  ASSERT_FALSE(exists(expectedDestDir));
+
+  boost::optional<ExternalFile> representationFile = ExternalFile::getExternalFile(m, openstudio::toString(p));
+  ASSERT_TRUE(representationFile);
+  EXPECT_EQ(1u, m.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0u, representationFile->chillerElectricASHRAE205s().size());
+  EXPECT_EQ(openstudio::toString(p.filename()), representationFile->fileName());
+  EXPECT_TRUE(equivalent(expectedDestDir / representationFile->fileName(), representationFile->filePath()));
+  EXPECT_TRUE(exists(representationFile->filePath()));
+  EXPECT_NE(p, representationFile->filePath());
+
+  ChillerElectricASHRAE205 ch(representationFile.get());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
+  EXPECT_EQ(1u, representationFile->chillerElectricASHRAE205s().size());
+  EXPECT_EQ(representationFile->handle(), ch.representationFile().handle());
 
   // Representation File Name: Required Object
-  ExternalFile obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setRepresentationFile(obj));
-  EXPECT_EQ(obj, chillerElectricASHRAE205.representationFile());
+  // ExternalFile obj(m);
+  // EXPECT_TRUE(ch.setRepresentationFile(obj));
+  // EXPECT_EQ(obj, ch.representationFile());
 
   // Performance Interpolation Method: Required String
-  EXPECT_TRUE(chillerElectricASHRAE205.setPerformanceInterpolationMethod("Linear"));
-  EXPECT_EQ("Linear", chillerElectricASHRAE205.performanceInterpolationMethod());
+  // Ctor default
+  EXPECT_EQ("Linear", ch.performanceInterpolationMethod());
+  EXPECT_TRUE(ch.setPerformanceInterpolationMethod("Cubic"));
+  EXPECT_EQ("Cubic", ch.performanceInterpolationMethod());
   // Bad Value
-  EXPECT_FALSE(chillerElectricASHRAE205.setPerformanceInterpolationMethod("BADENUM"));
-  EXPECT_EQ("Linear", chillerElectricASHRAE205.performanceInterpolationMethod());
+  EXPECT_FALSE(ch.setPerformanceInterpolationMethod("BADENUM"));
+  EXPECT_EQ("Cubic", ch.performanceInterpolationMethod());
 
   // Rated Capacity: Required Double
   // Autosize
-  chillerElectricASHRAE205.autosizeRatedCapacity();
-  EXPECT_TRUE(chillerElectricASHRAE205.isRatedCapacityAutosized());
+  ch.autosizeRatedCapacity();
+  EXPECT_TRUE(ch.isRatedCapacityAutosized());
   // Set
-  EXPECT_TRUE(chillerElectricASHRAE205.setRatedCapacity(0.5));
-  ASSERT_TRUE(chillerElectricASHRAE205.ratedCapacity());
-  EXPECT_EQ(0.5, chillerElectricASHRAE205.ratedCapacity().get());
+  EXPECT_TRUE(ch.setRatedCapacity(0.5));
+  ASSERT_TRUE(ch.ratedCapacity());
+  EXPECT_EQ(0.5, ch.ratedCapacity().get());
+  EXPECT_FALSE(ch.isRatedCapacityAutosized());
   // Bad Value
-  EXPECT_FALSE(chillerElectricASHRAE205.setRatedCapacity(-10.0));
-  ASSERT_TRUE(chillerElectricASHRAE205.ratedCapacity());
-  EXPECT_EQ(0.5, chillerElectricASHRAE205.ratedCapacity().get());
-  EXPECT_FALSE(chillerElectricASHRAE205.isRatedCapacityAutosized());
+  EXPECT_FALSE(ch.setRatedCapacity(-10.0));
+  ASSERT_TRUE(ch.ratedCapacity());
+  EXPECT_EQ(0.5, ch.ratedCapacity().get());
+  EXPECT_FALSE(ch.isRatedCapacityAutosized());
 
   // Sizing Factor: Required Double
-  EXPECT_TRUE(chillerElectricASHRAE205.setSizingFactor(0.6));
-  EXPECT_EQ(0.6, chillerElectricASHRAE205.sizingFactor());
+  // Ctor default
+  EXPECT_EQ(1.0, ch.sizingFactor());
+  EXPECT_TRUE(ch.setSizingFactor(0.6));
+  EXPECT_EQ(0.6, ch.sizingFactor());
   // Bad Value
-  EXPECT_FALSE(chillerElectricASHRAE205.setSizingFactor(-10.0));
-  EXPECT_EQ(0.6, chillerElectricASHRAE205.sizingFactor());
+  EXPECT_FALSE(ch.setSizingFactor(-10.0));
+  EXPECT_EQ(0.6, ch.sizingFactor());
 
   // Ambient Temperature Indicator: Required String
-  EXPECT_TRUE(chillerElectricASHRAE205.setAmbientTemperatureIndicator("Schedule"));
-  EXPECT_EQ("Schedule", chillerElectricASHRAE205.ambientTemperatureIndicator());
-  // Bad Value
-  EXPECT_FALSE(chillerElectricASHRAE205.setAmbientTemperatureIndicator("BADENUM"));
-  EXPECT_EQ("Schedule", chillerElectricASHRAE205.ambientTemperatureIndicator());
+  EXPECT_EQ("Outdoors", ch.ambientTemperatureIndicator());
+
+  // EXPECT_TRUE(ch.setAmbientTemperatureIndicator("Schedule"));
+  // EXPECT_EQ("Schedule", ch.ambientTemperatureIndicator());
+  // // Bad Value
+  // EXPECT_FALSE(ch.setAmbientTemperatureIndicator("BADENUM"));
+  // EXPECT_EQ("Schedule", ch.ambientTemperatureIndicator());
 
   // Ambient Temperature Schedule Name: Optional Object
-  boost::optional<Schedule> obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setAmbientTemperatureSchedule(obj));
-  ASSERT_TRUE(chillerElectricASHRAE205.ambientTemperatureSchedule());
-  EXPECT_EQ(obj, chillerElectricASHRAE205.ambientTemperatureSchedule().get());
+  ScheduleConstant tempSch(m);
+  EXPECT_TRUE(ch.setAmbientTemperatureSchedule(tempSch));
+  ASSERT_TRUE(ch.ambientTemperatureSchedule());
+  EXPECT_EQ(tempSch, ch.ambientTemperatureSchedule().get());
+  EXPECT_EQ("Schedule", ch.ambientTemperatureIndicator());
+  ch.resetAmbientTemperatureOutdoorAirNodeName();
+  EXPECT_EQ("Schedule", ch.ambientTemperatureIndicator());
+  ch.resetAmbientTemperatureSchedule();
+  EXPECT_EQ("Outdoors", ch.ambientTemperatureIndicator());
 
   // Ambient Temperature Zone Name: Optional Object
-  boost::optional<ThermalZone> obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setAmbientTemperatureZone(obj));
-  ASSERT_TRUE(chillerElectricASHRAE205.ambientTemperatureZone());
-  EXPECT_EQ(obj, chillerElectricASHRAE205.ambientTemperatureZone().get());
+  ThermalZone z(m);
+  EXPECT_TRUE(ch.setAmbientTemperatureZone(z));
+  ASSERT_TRUE(ch.ambientTemperatureZone());
+  EXPECT_EQ(z, ch.ambientTemperatureZone().get());
+  EXPECT_EQ("Zone", ch.ambientTemperatureIndicator());
+  ch.resetAmbientTemperatureSchedule();
+  EXPECT_EQ("Zone", ch.ambientTemperatureIndicator());
+  ch.resetAmbientTemperatureZone();
+  EXPECT_EQ("Outdoors", ch.ambientTemperatureIndicator());
+
+  EXPECT_TRUE(ch.setAmbientTemperatureZone(z));
+  EXPECT_EQ("Zone", ch.ambientTemperatureIndicator());
+  ch.resetAmbientTemperatureOutdoorAirNodeName();
+  EXPECT_EQ("Zone", ch.ambientTemperatureIndicator());
 
   // Ambient Temperature Outdoor Air Node Name: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setAmbientTemperatureOutdoorAirNode(obj));
-  ASSERT_TRUE(chillerElectricASHRAE205.ambientTemperatureOutdoorAirNode());
-  EXPECT_EQ(obj, chillerElectricASHRAE205.ambientTemperatureOutdoorAirNode().get());
-
-  // Chilled Water Inlet Node Name: Required Object
-  Connection obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setChilledWaterInletNode(obj));
-  EXPECT_EQ(obj, chillerElectricASHRAE205.chilledWaterInletNode());
-
-  // Chilled Water Outlet Node Name: Required Object
-  Connection obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setChilledWaterOutletNode(obj));
-  EXPECT_EQ(obj, chillerElectricASHRAE205.chilledWaterOutletNode());
+  EXPECT_TRUE(ch.setAmbientTemperatureOutdoorAirNodeName("My Outdoor Air Node Name"));
+  ASSERT_TRUE(ch.ambientTemperatureOutdoorAirNodeName());
+  EXPECT_EQ("My Outdoor Air Node Name", ch.ambientTemperatureOutdoorAirNodeName().get());
+  EXPECT_EQ("Outdoors", ch.ambientTemperatureIndicator());
 
   // Chilled Water Maximum Requested Flow Rate: Required Double
-  // Autosize
-  chillerElectricASHRAE205.autosizeChilledWaterMaximumRequestedFlowRate();
-  EXPECT_TRUE(chillerElectricASHRAE205.isChilledWaterMaximumRequestedFlowRateAutosized());
+  // Ctor default
+  EXPECT_TRUE(ch.isChilledWaterMaximumRequestedFlowRateAutosized());
   // Set
-  EXPECT_TRUE(chillerElectricASHRAE205.setChilledWaterMaximumRequestedFlowRate(1.3));
-  ASSERT_TRUE(chillerElectricASHRAE205.chilledWaterMaximumRequestedFlowRate());
-  EXPECT_EQ(1.3, chillerElectricASHRAE205.chilledWaterMaximumRequestedFlowRate().get());
+  EXPECT_TRUE(ch.setChilledWaterMaximumRequestedFlowRate(1.3));
+  ASSERT_TRUE(ch.chilledWaterMaximumRequestedFlowRate());
+  EXPECT_EQ(1.3, ch.chilledWaterMaximumRequestedFlowRate().get());
   // Bad Value
-  EXPECT_FALSE(chillerElectricASHRAE205.setChilledWaterMaximumRequestedFlowRate(-10.0));
-  ASSERT_TRUE(chillerElectricASHRAE205.chilledWaterMaximumRequestedFlowRate());
-  EXPECT_EQ(1.3, chillerElectricASHRAE205.chilledWaterMaximumRequestedFlowRate().get());
-  EXPECT_FALSE(chillerElectricASHRAE205.isChilledWaterMaximumRequestedFlowRateAutosized());
-
-  // Condenser Inlet Node Name: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setCondenserInletNode(obj));
-  ASSERT_TRUE(chillerElectricASHRAE205.condenserInletNode());
-  EXPECT_EQ(obj, chillerElectricASHRAE205.condenserInletNode().get());
-
-  // Condenser Outlet Node Name: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setCondenserOutletNode(obj));
-  ASSERT_TRUE(chillerElectricASHRAE205.condenserOutletNode());
-  EXPECT_EQ(obj, chillerElectricASHRAE205.condenserOutletNode().get());
+  EXPECT_FALSE(ch.setChilledWaterMaximumRequestedFlowRate(-10.0));
+  ASSERT_TRUE(ch.chilledWaterMaximumRequestedFlowRate());
+  EXPECT_EQ(1.3, ch.chilledWaterMaximumRequestedFlowRate().get());
+  EXPECT_FALSE(ch.isChilledWaterMaximumRequestedFlowRateAutosized());
+  // Autosize
+  ch.autosizeChilledWaterMaximumRequestedFlowRate();
+  EXPECT_TRUE(ch.isChilledWaterMaximumRequestedFlowRateAutosized());
 
   // Condenser Maximum Requested Flow Rate: Required Double
-  // Autosize
-  chillerElectricASHRAE205.autosizeCondenserMaximumRequestedFlowRate();
-  EXPECT_TRUE(chillerElectricASHRAE205.isCondenserMaximumRequestedFlowRateAutosized());
+  // Ctor default
+  EXPECT_TRUE(ch.isCondenserMaximumRequestedFlowRateAutosized());
   // Set
-  EXPECT_TRUE(chillerElectricASHRAE205.setCondenserMaximumRequestedFlowRate(1.6));
-  ASSERT_TRUE(chillerElectricASHRAE205.condenserMaximumRequestedFlowRate());
-  EXPECT_EQ(1.6, chillerElectricASHRAE205.condenserMaximumRequestedFlowRate().get());
+  EXPECT_TRUE(ch.setCondenserMaximumRequestedFlowRate(1.6));
+  ASSERT_TRUE(ch.condenserMaximumRequestedFlowRate());
+  EXPECT_EQ(1.6, ch.condenserMaximumRequestedFlowRate().get());
   // Bad Value
-  EXPECT_FALSE(chillerElectricASHRAE205.setCondenserMaximumRequestedFlowRate(-10.0));
-  ASSERT_TRUE(chillerElectricASHRAE205.condenserMaximumRequestedFlowRate());
-  EXPECT_EQ(1.6, chillerElectricASHRAE205.condenserMaximumRequestedFlowRate().get());
-  EXPECT_FALSE(chillerElectricASHRAE205.isCondenserMaximumRequestedFlowRateAutosized());
+  EXPECT_FALSE(ch.setCondenserMaximumRequestedFlowRate(-10.0));
+  ASSERT_TRUE(ch.condenserMaximumRequestedFlowRate());
+  EXPECT_EQ(1.6, ch.condenserMaximumRequestedFlowRate().get());
+  EXPECT_FALSE(ch.isCondenserMaximumRequestedFlowRateAutosized());
+  // Autosize
+  ch.autosizeCondenserMaximumRequestedFlowRate();
+  EXPECT_TRUE(ch.isCondenserMaximumRequestedFlowRateAutosized());
 
   // Chiller Flow Mode: Required String
-  EXPECT_TRUE(chillerElectricASHRAE205.setChillerFlowMode("ConstantFlow"));
-  EXPECT_EQ("ConstantFlow", chillerElectricASHRAE205.chillerFlowMode());
+  EXPECT_TRUE(ch.setChillerFlowMode("ConstantFlow"));
+  EXPECT_EQ("ConstantFlow", ch.chillerFlowMode());
   // Bad Value
-  EXPECT_FALSE(chillerElectricASHRAE205.setChillerFlowMode("BADENUM"));
-  EXPECT_EQ("ConstantFlow", chillerElectricASHRAE205.chillerFlowMode());
-
-  // Oil Cooler Inlet Node Name: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setOilCoolerInletNode(obj));
-  ASSERT_TRUE(chillerElectricASHRAE205.oilCoolerInletNode());
-  EXPECT_EQ(obj, chillerElectricASHRAE205.oilCoolerInletNode().get());
-
-  // Oil Cooler Outlet Node Name: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setOilCoolerOutletNode(obj));
-  ASSERT_TRUE(chillerElectricASHRAE205.oilCoolerOutletNode());
-  EXPECT_EQ(obj, chillerElectricASHRAE205.oilCoolerOutletNode().get());
+  EXPECT_FALSE(ch.setChillerFlowMode("BADENUM"));
+  EXPECT_EQ("ConstantFlow", ch.chillerFlowMode());
 
   // Oil Cooler Design Flow Rate: Optional Double
-  EXPECT_TRUE(chillerElectricASHRAE205.setOilCoolerDesignFlowRate(2.0));
-  ASSERT_TRUE(chillerElectricASHRAE205.oilCoolerDesignFlowRate());
-  EXPECT_EQ(2.0, chillerElectricASHRAE205.oilCoolerDesignFlowRate().get());
+  EXPECT_TRUE(ch.setOilCoolerDesignFlowRate(2.0));
+  ASSERT_TRUE(ch.oilCoolerDesignFlowRate());
+  EXPECT_EQ(2.0, ch.oilCoolerDesignFlowRate().get());
   // Bad Value
-  EXPECT_FALSE(chillerElectricASHRAE205.setOilCoolerDesignFlowRate(-10.0));
-  ASSERT_TRUE(chillerElectricASHRAE205.oilCoolerDesignFlowRate());
-  EXPECT_EQ(2.0, chillerElectricASHRAE205.oilCoolerDesignFlowRate().get());
-
-  // Auxiliary Inlet Node Name: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setAuxiliaryInletNode(obj));
-  ASSERT_TRUE(chillerElectricASHRAE205.auxiliaryInletNode());
-  EXPECT_EQ(obj, chillerElectricASHRAE205.auxiliaryInletNode().get());
-
-  // Auxiliary Outlet Node Name: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setAuxiliaryOutletNode(obj));
-  ASSERT_TRUE(chillerElectricASHRAE205.auxiliaryOutletNode());
-  EXPECT_EQ(obj, chillerElectricASHRAE205.auxiliaryOutletNode().get());
+  EXPECT_FALSE(ch.setOilCoolerDesignFlowRate(-10.0));
+  ASSERT_TRUE(ch.oilCoolerDesignFlowRate());
+  EXPECT_EQ(2.0, ch.oilCoolerDesignFlowRate().get());
 
   // Auxiliary Cooling Design Flow Rate: Optional Double
-  EXPECT_TRUE(chillerElectricASHRAE205.setAuxiliaryCoolingDesignFlowRate(2.3));
-  ASSERT_TRUE(chillerElectricASHRAE205.auxiliaryCoolingDesignFlowRate());
-  EXPECT_EQ(2.3, chillerElectricASHRAE205.auxiliaryCoolingDesignFlowRate().get());
+  EXPECT_TRUE(ch.setAuxiliaryCoolingDesignFlowRate(2.3));
+  ASSERT_TRUE(ch.auxiliaryCoolingDesignFlowRate());
+  EXPECT_EQ(2.3, ch.auxiliaryCoolingDesignFlowRate().get());
   // Bad Value
-  EXPECT_FALSE(chillerElectricASHRAE205.setAuxiliaryCoolingDesignFlowRate(-10.0));
-  ASSERT_TRUE(chillerElectricASHRAE205.auxiliaryCoolingDesignFlowRate());
-  EXPECT_EQ(2.3, chillerElectricASHRAE205.auxiliaryCoolingDesignFlowRate().get());
-
-  // Heat Recovery Inlet Node Name: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setHeatRecoveryInletNode(obj));
-  ASSERT_TRUE(chillerElectricASHRAE205.heatRecoveryInletNode());
-  EXPECT_EQ(obj, chillerElectricASHRAE205.heatRecoveryInletNode().get());
-
-  // Heat Recovery Outlet Node Name: Optional Object
-  boost::optional<Connection> obj(m);
-  EXPECT_TRUE(chillerElectricASHRAE205.setHeatRecoveryOutletNode(obj));
-  ASSERT_TRUE(chillerElectricASHRAE205.heatRecoveryOutletNode());
-  EXPECT_EQ(obj, chillerElectricASHRAE205.heatRecoveryOutletNode().get());
+  EXPECT_FALSE(ch.setAuxiliaryCoolingDesignFlowRate(-10.0));
+  ASSERT_TRUE(ch.auxiliaryCoolingDesignFlowRate());
+  EXPECT_EQ(2.3, ch.auxiliaryCoolingDesignFlowRate().get());
 
   // End-Use Subcategory: Optional String
   // Default value from IDD
-  EXPECT_TRUE(chillerElectricASHRAE205.isEndUseSubcategoryDefaulted());
-  EXPECT_EQ("General", chillerElectricASHRAE205.endUseSubcategory());
+  EXPECT_EQ("General", ch.endUseSubcategory());
   // Set
-  EXPECT_TRUE(chillerElectricASHRAE205.setEndUseSubcategory());
-  EXPECT_EQ(, chillerElectricASHRAE205.endUseSubcategory());
-  EXPECT_FALSE(chillerElectricASHRAE205.isEndUseSubcategoryDefaulted());
+  EXPECT_TRUE(ch.setEndUseSubcategory("Chiller"));
+  EXPECT_EQ("Chiller", ch.endUseSubcategory());
+  EXPECT_FALSE(ch.isEndUseSubcategoryDefaulted());
   // Reset
-  chillerElectricASHRAE205.resetEndUseSubcategory();
-  EXPECT_TRUE(chillerElectricASHRAE205.isEndUseSubcategoryDefaulted());
+  ch.resetEndUseSubcategory();
+  EXPECT_TRUE(ch.isEndUseSubcategoryDefaulted());
+  EXPECT_EQ("General", ch.endUseSubcategory());
+}
+
+TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
+  Model m;
+
+  EXPECT_EQ(0u, m.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
+
+  openstudio::path p = resourcesPath() / toPath("model/A205ExampleChiller.RS0001.a205.cbor");
+  EXPECT_TRUE(exists(p));
+
+  openstudio::path expectedDestDir;
+  std::vector<openstudio::path> absoluteFilePaths = m.workflowJSON().absoluteFilePaths();
+  if (absoluteFilePaths.empty()) {
+    expectedDestDir = m.workflowJSON().absoluteRootDir();
+  } else {
+    expectedDestDir = absoluteFilePaths[0];
+  }
+
+  if (exists(expectedDestDir)) {
+    removeDirectory(expectedDestDir);
+  }
+  ASSERT_FALSE(exists(expectedDestDir));
+
+  boost::optional<ExternalFile> representationFile = ExternalFile::getExternalFile(m, openstudio::toString(p));
+  ASSERT_TRUE(representationFile);
+  EXPECT_EQ(1u, m.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0u, representationFile->chillerElectricASHRAE205s().size());
+  EXPECT_EQ(openstudio::toString(p.filename()), representationFile->fileName());
+  EXPECT_TRUE(equivalent(expectedDestDir / representationFile->fileName(), representationFile->filePath()));
+  EXPECT_TRUE(exists(representationFile->filePath()));
+  EXPECT_NE(p, representationFile->filePath());
+
+  ChillerElectricASHRAE205 ch(representationFile.get());
+  EXPECT_FALSE(ch.chilledWaterLoop());
+  EXPECT_FALSE(ch.chilledWaterInletNode());
+  EXPECT_FALSE(ch.chilledWaterOutletNode());
+
+  EXPECT_FALSE(ch.condenserWaterLoop());
+  EXPECT_FALSE(ch.condenserInletNode());
+  EXPECT_FALSE(ch.condenserOutletNode());
+
+  EXPECT_FALSE(ch.heatRecoveryLoop());
+  EXPECT_FALSE(ch.heatRecoveryInletNode());
+  EXPECT_FALSE(ch.heatRecoveryOutletNode());
+
+  EXPECT_FALSE(ch.oilCoolerLoop());
+  EXPECT_FALSE(ch.oilCoolerInletNode());
+  EXPECT_FALSE(ch.oilCoolerOutletNode());
+
+  EXPECT_FALSE(ch.auxiliaryLoop());
+  EXPECT_FALSE(ch.auxiliaryInletNode());
+  EXPECT_FALSE(ch.auxiliaryOutletNode());
+
+  PlantLoop chwLoop(m);
+  PlantLoop cndLoop(m);
+  PlantLoop hrLoop(m);
+  PlantLoop ocLoop(m);
+  PlantLoop auxLoop(m);
+
+  // Chilled Water Inlet Node Name: Required Object
+
+  EXPECT_TRUE(chwLoop.addSupplyBranchForComponent(ch));
+  ASSERT_TRUE(ch.chilledWaterLoop());
+  ASSERT_EQ(chwLoop, ch.chilledWaterLoop().get());
+  EXPECT_TRUE(ch.chilledWaterInletNode());
+  EXPECT_TRUE(ch.chilledWaterOutletNode());
+
+  EXPECT_FALSE(ch.condenserWaterLoop());
+  EXPECT_FALSE(ch.condenserInletNode());
+  EXPECT_FALSE(ch.condenserOutletNode());
+
+  EXPECT_FALSE(ch.heatRecoveryLoop());
+  EXPECT_FALSE(ch.heatRecoveryInletNode());
+  EXPECT_FALSE(ch.heatRecoveryOutletNode());
+
+  EXPECT_FALSE(ch.oilCoolerLoop());
+  EXPECT_FALSE(ch.oilCoolerInletNode());
+  EXPECT_FALSE(ch.oilCoolerOutletNode());
+
+  EXPECT_FALSE(ch.auxiliaryLoop());
+  EXPECT_FALSE(ch.auxiliaryInletNode());
+  EXPECT_FALSE(ch.auxiliaryOutletNode());
+
+  // Condenser
+  EXPECT_TRUE(cndLoop.addDemandBranchForComponent(ch));
+  ASSERT_TRUE(ch.chilledWaterLoop());
+  EXPECT_EQ(chwLoop, ch.chilledWaterLoop().get());
+  EXPECT_TRUE(ch.chilledWaterInletNode());
+  EXPECT_EQ(ch.supplyInletModelObject()->handle(), ch.chilledWaterInletNode()->handle());
+  EXPECT_TRUE(ch.chilledWaterOutletNode());
+  EXPECT_EQ(ch.supplyOutletModelObject()->handle(), ch.chilledWaterOutletNode()->handle());
+
+  ASSERT_TRUE(ch.condenserWaterLoop());
+  EXPECT_EQ(cndLoop, ch.condenserWaterLoop().get());
+  ASSERT_TRUE(ch.condenserInletNode());
+  EXPECT_EQ(ch.demandInletModelObject()->handle(), ch.condenserInletNode()->handle());
+  ASSERT_TRUE(ch.condenserOutletNode());
+  EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
+
+  EXPECT_FALSE(ch.heatRecoveryLoop());
+  EXPECT_FALSE(ch.heatRecoveryInletNode());
+  EXPECT_FALSE(ch.heatRecoveryOutletNode());
+
+  EXPECT_FALSE(ch.oilCoolerLoop());
+  EXPECT_FALSE(ch.oilCoolerInletNode());
+  EXPECT_FALSE(ch.oilCoolerOutletNode());
+
+  EXPECT_FALSE(ch.auxiliaryLoop());
+  EXPECT_FALSE(ch.auxiliaryInletNode());
+  EXPECT_FALSE(ch.auxiliaryOutletNode());
+
+  // Heat Recovery
+  EXPECT_TRUE(hrLoop.addDemandBranchForComponent(ch));
+
+  ASSERT_TRUE(ch.chilledWaterLoop());
+  ASSERT_EQ(chwLoop, ch.chilledWaterLoop().get());
+  EXPECT_TRUE(ch.chilledWaterInletNode());
+  EXPECT_EQ(ch.supplyInletModelObject()->handle(), ch.chilledWaterInletNode()->handle());
+  EXPECT_TRUE(ch.chilledWaterOutletNode());
+  EXPECT_EQ(ch.supplyOutletModelObject()->handle(), ch.chilledWaterOutletNode()->handle());
+
+  ASSERT_TRUE(ch.condenserWaterLoop());
+  EXPECT_EQ(cndLoop, ch.condenserWaterLoop().get());
+  ASSERT_TRUE(ch.condenserInletNode());
+  EXPECT_EQ(ch.demandInletModelObject()->handle(), ch.condenserInletNode()->handle());
+  ASSERT_TRUE(ch.condenserOutletNode());
+  EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
+
+  ASSERT_TRUE(ch.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
+  ASSERT_TRUE(ch.heatRecoveryInletNode());
+  EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
+  ASSERT_TRUE(ch.heatRecoveryOutletNode());
+  EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+
+  // TODO
+  EXPECT_FALSE(ch.oilCoolerLoop());
+  EXPECT_FALSE(ch.oilCoolerInletNode());
+  EXPECT_FALSE(ch.oilCoolerOutletNode());
+
+  EXPECT_FALSE(ch.auxiliaryLoop());
+  EXPECT_FALSE(ch.auxiliaryInletNode());
+  EXPECT_FALSE(ch.auxiliaryOutletNode());
 }
