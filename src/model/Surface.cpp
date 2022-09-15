@@ -620,48 +620,30 @@ namespace model {
         OptionalSqlFile sqlFile = model().sqlFile();
         OptionalString constructionName = oConstruction->name();
         OptionalDouble outputResult;
+        OptionalString surfaceName = name();
+
         // opaque exterior
         if (sqlFile && constructionName && oConstruction->isOpaque()) {
-          std::string query = R"(SELECT TabularDataIndex from TabularDataWithStrings
-                                      WHERE ReportName = 'EnvelopeSummary'
-                                        AND ReportForString = 'Entire Facility'
-                                        AND TableName = 'Opaque Exterior'
-                                        AND ColumnName = 'Construction'
-                                        AND Value = ?;)";
-          OptionalInt rowId = sqlFile->execAndReturnFirstInt(query, to_upper_copy(*constructionName));
-
-          if (rowId) {
-            std::string query = R"(SELECT Value from TabularDataWithStrings
-                                      WHERE ReportName = 'EnvelopeSummary'
-                                        AND ReportForString = 'Entire Facility'
-                                        AND TableName = 'Opaque Exterior'
-                                        AND ColumnName = 'U-Factor with Film'
-                                        AND Units='W/m2-K'
-                                        AND TabularDataIndex = ?;)";
-            outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
-          }
+          std::string query = R"(SELECT Value from TabularDataWithStrings
+                                    WHERE ReportName = 'EnvelopeSummary'
+                                      AND ReportForString = 'Entire Facility'
+                                      AND TableName = 'Opaque Exterior'
+                                      AND ColumnName = 'U-Factor with Film'
+                                      AND Units='W/m2-K'
+                                      AND RowName = ?;)";
+          outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*surfaceName));
         }
 
         // fenestration
         if (sqlFile && constructionName && oConstruction->isFenestration()) {
-          std::string query = R"(SELECT TabularDataIndex from TabularDataWithStrings
-                                      WHERE ReportName = 'EnvelopeSummary'
-                                        AND ReportForString = 'Entire Facility'
-                                        AND TableName = 'Exterior Fenestration'
-                                        AND ColumnName = 'Construction'
-                                        AND Value = ?;)";
-          OptionalInt rowId = sqlFile->execAndReturnFirstInt(query, to_upper_copy(*constructionName));
-
-          if (rowId) {
-            std::string query = R"(SELECT Value from TabularDataWithStrings
-                                      WHERE ReportName = 'EnvelopeSummary'
-                                        AND ReportForString = 'Entire Facility'
-                                        AND TableName = 'Exterior Fenestration'
-                                        AND ColumnName = 'Glass U-Factor'
-                                        AND Units='W/m2-K'
-                                        AND TabularDataIndex = ?;)";
-            outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
-          }
+          std::string query = R"(SELECT Value from TabularDataWithStrings
+                                    WHERE ReportName = 'EnvelopeSummary'
+                                      AND ReportForString = 'Entire Facility'
+                                      AND TableName = 'Exterior Fenestration'
+                                      AND ColumnName = 'Glass U-Factor'
+                                      AND Units='W/m2-K'
+                                      AND RowName = ?;)";
+          outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*surfaceName));
         }
 
         if (inputResult) {
@@ -689,52 +671,32 @@ namespace model {
         OptionalSqlFile sqlFile = model().sqlFile();
         OptionalString constructionName = oConstruction->name();
         OptionalDouble outputResult;
+        OptionalString surfaceName = name();
+
         // opaque exterior
         if (sqlFile && constructionName && oConstruction->isOpaque()) {
-          std::string query = R"(SELECT TabularDataIndex from TabularDataWithStrings
-                                      WHERE ReportName = 'EnvelopeSummary'
-                                        AND ReportForString = 'Entire Facility'
-                                        AND TableName = 'Opaque Exterior'
-                                        AND ColumnName = 'Construction'
-                                        AND Value = ?;)";
-          OptionalInt rowId = sqlFile->execAndReturnFirstInt(query, to_upper_copy(*constructionName));
-
-          if (rowId) {
-            std::string query = R"(SELECT Value from TabularDataWithStrings
-                                      WHERE ReportName = 'EnvelopeSummary'
-                                        AND ReportForString = 'Entire Facility'
-                                        AND TableName = 'Opaque Exterior'
-                                        AND ColumnName = 'U-Factor no Film'
-                                        AND Units='W/m2-K'
-                                        AND TabularDataIndex = ?;)";
-            outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
-          }
+          std::string query = R"(SELECT Value from TabularDataWithStrings
+                                    WHERE ReportName = 'EnvelopeSummary'
+                                      AND ReportForString = 'Entire Facility'
+                                      AND TableName = 'Opaque Exterior'
+                                      AND ColumnName = 'U-Factor no Film'
+                                      AND Units='W/m2-K'
+                                      AND RowName = ?;)";
+          outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*surfaceName));
         }
 
         // fenestration
         if (sqlFile && constructionName && oConstruction->isFenestration()) {
 
           // get u-factor, then subtract film coefficients
-
-          std::string query = R"(SELECT TabularDataIndex from TabularDataWithStrings
-                                      WHERE ReportName = 'EnvelopeSummary'
-                                        AND ReportForString = 'Entire Facility'
-                                        AND TableName = 'Exterior Fenestration'
-                                        AND ColumnName = 'Construction'
-                                        AND Value = ?;)";
-          OptionalInt rowId = sqlFile->execAndReturnFirstInt(query, to_upper_copy(*constructionName));
-
-          if (rowId) {
-            // TODO: this is exactly the same as the uFactor one
-            std::string query = R"(SELECT Value from TabularDataWithStrings
-                                      WHERE ReportName = 'EnvelopeSummary'
-                                        AND ReportForString = 'Entire Facility'
-                                        AND TableName = 'Exterior Fenestration'
-                                        AND ColumnName = 'Glass U-Factor'
-                                        AND Units='W/m2-K'
-                                        AND TabularDataIndex = ?;)";
-            outputResult = sqlFile->execAndReturnFirstDouble(query, *rowId);
-          }
+          std::string query = R"(SELECT Value from TabularDataWithStrings
+                                    WHERE ReportName = 'EnvelopeSummary'
+                                      AND ReportForString = 'Entire Facility'
+                                      AND TableName = 'Exterior Fenestration'
+                                      AND ColumnName = 'Glass U-Factor'
+                                      AND Units='W/m2-K'
+                                      AND RowName = ?;)";
+          outputResult = sqlFile->execAndReturnFirstDouble(query, to_upper_copy(*surfaceName));
 
           if (outputResult) {
             outputResult = 1.0 / (1.0 / (*outputResult) - filmResistance());
