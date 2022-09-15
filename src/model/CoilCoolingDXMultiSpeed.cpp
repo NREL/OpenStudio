@@ -285,6 +285,8 @@ namespace model {
     ModelObject CoilCoolingDXMultiSpeed_Impl::clone(Model model) const {
       auto t_clone = StraightComponent_Impl::clone(model).cast<CoilCoolingDXMultiSpeed>();
 
+      // Deal with the stages: we want them cloned, so first clear and then clone + assign each
+      t_clone.removeAllStages();
       for (const auto& stage : stages()) {
         auto stageClone = stage.clone(model).cast<CoilCoolingDXMultiSpeedStageData>();
         t_clone.addStage(stageClone);
