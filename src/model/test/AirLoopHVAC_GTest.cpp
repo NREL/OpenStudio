@@ -1560,6 +1560,8 @@ TEST_F(ModelFixture, AirLoopHVAC_singleDuct_Clone_WithComponents) {
   EXPECT_TRUE(a.addBranchForZone(z, atu));
 
   EXPECT_EQ(2, m.getConcreteModelObjects<PlantLoop>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilCoolingWater>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilHeatingWater>().size());
   EXPECT_EQ(23, m.getConcreteModelObjects<Node>().size());
   EXPECT_EQ(7, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
   EXPECT_EQ(7, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
@@ -1567,7 +1569,10 @@ TEST_F(ModelFixture, AirLoopHVAC_singleDuct_Clone_WithComponents) {
   EXPECT_EQ(1, a.supplyOutletNodes().size());
   EXPECT_EQ(5, a.supplyComponents().size());  // o----CC----o----HC----o
   EXPECT_EQ(9, a.demandComponents().size());  // o----Splitter-----o----ATU----o---Zone----o --- mixer ----o
-
+  ASSERT_TRUE(coolingCoil.plantLoop());
+  EXPECT_EQ(chw_loop, coolingCoil.plantLoop().get());
+  ASSERT_TRUE(heatingCoil.plantLoop());
+  EXPECT_EQ(hw_loop, heatingCoil.plantLoop().get());
   {
     Model m2;
     // PlantLoops aren't taken with
@@ -1577,6 +1582,8 @@ TEST_F(ModelFixture, AirLoopHVAC_singleDuct_Clone_WithComponents) {
     EXPECT_EQ(0, m2.getConcreteModelObjects<PlantLoop>().size());
     EXPECT_EQ(1, m2.getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeNoReheat>().size());
     EXPECT_EQ(0, m2.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<CoilCoolingWater>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<CoilHeatingWater>().size());
 
     EXPECT_EQ(7, m2.getConcreteModelObjects<Node>().size());
 
@@ -1601,14 +1608,26 @@ TEST_F(ModelFixture, AirLoopHVAC_singleDuct_Clone_WithComponents) {
     EXPECT_EQ(5, a2.supplyComponents().size());  // o----CC----o----HC----o
     EXPECT_EQ(9, a2.demandComponents().size());  // o----Splitter-----o----ATU----o---Zone----o --- mixer ----o
     EXPECT_EQ(1, z2.equipment().size());
+
+    ASSERT_EQ(1, a2.components(openstudio::IddObjectType::OS_Coil_Cooling_Water).size());
+    auto coolingCoil2 = a2.components(openstudio::IddObjectType::OS_Coil_Cooling_Water)[0].cast<CoilCoolingWater>();
+    EXPECT_FALSE(coolingCoil2.plantLoop());
+
+    ASSERT_EQ(1, a2.components(openstudio::IddObjectType::OS_Coil_Heating_Water).size());
+    auto heatingCoil2 = a2.components(openstudio::IddObjectType::OS_Coil_Heating_Water)[0].cast<CoilHeatingWater>();
+    EXPECT_FALSE(heatingCoil2.plantLoop());
   }
 
   {
     // Same model
     auto a2 = a.clone(m).cast<AirLoopHVAC>();
+
     EXPECT_EQ(2, m.getConcreteModelObjects<AirLoopHVAC>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<PlantLoop>().size());
     EXPECT_EQ(2, m.getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeNoReheat>().size());
     EXPECT_EQ(1, m.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<CoilCoolingWater>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<CoilHeatingWater>().size());
 
     // 23 + 7 (new loop) + 2 loops x 2 nodes
     EXPECT_EQ(34, m.getConcreteModelObjects<Node>().size());
@@ -1639,6 +1658,17 @@ TEST_F(ModelFixture, AirLoopHVAC_singleDuct_Clone_WithComponents) {
     EXPECT_EQ(9, a2.demandComponents().size());  // o----Splitter-----o----ATU----o---Zone----o --- mixer ----o
     EXPECT_EQ(1, z.equipment().size());
     EXPECT_EQ(1, z2.equipment().size());
+
+    // Coils are also reconnected to plant loops
+    ASSERT_EQ(1, a2.components(openstudio::IddObjectType::OS_Coil_Cooling_Water).size());
+    auto coolingCoil2 = a2.components(openstudio::IddObjectType::OS_Coil_Cooling_Water)[0].cast<CoilCoolingWater>();
+    ASSERT_TRUE(coolingCoil2.plantLoop());
+    EXPECT_EQ(chw_loop, coolingCoil2.plantLoop().get());
+
+    ASSERT_EQ(1, a2.components(openstudio::IddObjectType::OS_Coil_Heating_Water).size());
+    auto heatingCoil2 = a2.components(openstudio::IddObjectType::OS_Coil_Heating_Water)[0].cast<CoilHeatingWater>();
+    ASSERT_TRUE(heatingCoil2.plantLoop());
+    EXPECT_EQ(hw_loop, heatingCoil2.plantLoop().get());
   }
 }
 
