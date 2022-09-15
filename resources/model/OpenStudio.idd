@@ -13824,14 +13824,11 @@ OS:Chiller:Electric:ASHRAE205,
        \type alpha
        \reference Chillers
        \required-field
-       \reference-class-name validPlantEquipmentTypes
-       \reference validPlantEquipmentNames
-       \reference-class-name validBranchEquipmentTypes
-       \reference validBranchEquipmentNames
+       \reference ConnectionObject
   A3,  \field Representation File Name
        \note The name of the ASHRAE205 RS0001 (chiller) representation file
-       \type alpha
-       \retaincase
+       \type object-list
+       \object-list ExternalFileNames
        \required-field
   A4,  \field Performance Interpolation Method
        \type choice
@@ -13864,15 +13861,18 @@ OS:Chiller:Electric:ASHRAE205,
   A7, \field Ambient Temperature Zone Name
        \note Any energy imbalance on the chiller results in heat added to this zone.
        \type object-list
-       \object-list ZoneNames
+       \object-list ThermalZoneNames
   A8, \field Ambient Temperature Outdoor Air Node Name
-       \type node
+       \type object-list
+       \object-list ConnectionNames
        \note required for Ambient Temperature Indicator=Outdoors
   A9,  \field Chilled Water Inlet Node Name
-       \type node
+       \type object-list
+       \object-list ConnectionNames
        \required-field
   A10, \field Chilled Water Outlet Node Name
-       \type node
+       \type object-list
+       \object-list ConnectionNames
        \required-field
   A11, \field Chilled Water Maximum Requested Flow Rate
        \type real
@@ -13882,9 +13882,11 @@ OS:Chiller:Electric:ASHRAE205,
        \ip-units gal/min
        \default autosize
   A12, \field Condenser Inlet Node Name
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A13, \field Condenser Outlet Node Name
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A14, \field Condenser Maximum Requested Flow Rate
        \type real
        \units m3/s
@@ -13906,9 +13908,11 @@ OS:Chiller:Electric:ASHRAE205,
   A16, \field Oil Cooler Inlet Node Name
        \note Use if the oil cooler uses an external cooling loop, otherwise the oil cooler will add
        \note heat to the ambient conditions (i.e., it is air cooled).
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A17, \field Oil Cooler Outlet Node Name
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A18, \field Oil Cooler Design Flow Rate
        \type real
        \units m3/s
@@ -13917,9 +13921,11 @@ OS:Chiller:Electric:ASHRAE205,
   A19, \field Auxiliary Inlet Node Name
        \note Use if the auxiliary components of the chiller use an external cooling loop, otherwise
        \note the auxiliary components will add heat to the ambient conditions (i.e., they are air cooled).
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A20, \field Auxiliary Outlet Node Name
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A21, \field Auxiliary Cooling Design Flow Rate
        \type real
        \units m3/s
@@ -13927,10 +13933,12 @@ OS:Chiller:Electric:ASHRAE205,
        \ip-units gal/min
   A22, \field Heat Recovery Inlet Node Name
        \note Not yet implemented / reserved for future use. Heat recovery is not yet within scope of ASHRAE Stanard 205.
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A22, \field Heat Recovery Outlet Node Name
        \note Not yet implemented / reserved for future use. Heat recovery is not yet within scope of ASHRAE Stanard 205.
-       \type node
+       \type object-list
+       \object-list ConnectionNames
   A24; \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
