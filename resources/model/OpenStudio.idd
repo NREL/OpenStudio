@@ -13834,7 +13834,7 @@ OS:Chiller:Electric:ASHRAE205,
        \type choice
        \key Linear
        \key Cubic
-       \default Linear
+       \required-field
   N1,  \field Rated Capacity
        \note Not yet implemented / reserved for future use. Full load capacity at AHRI 550/590 test conditions.
        \note Used to scale representation data.
@@ -13842,12 +13842,12 @@ OS:Chiller:Electric:ASHRAE205,
        \units W
        \minimum> 0.0
        \autosizable
-       \default autosize
+       \required-field
   N2,  \field Sizing Factor
        \note Multiplies the autosized flow rates.
        \type real
        \minimum> 0.0
-       \default 1.0
+       \required-field
   A5 , \field Ambient Temperature Indicator
        \note Used to determine standby losses
        \required-field
@@ -13880,7 +13880,7 @@ OS:Chiller:Electric:ASHRAE205,
        \minimum> 0
        \autosizable
        \ip-units gal/min
-       \default autosize
+       \required-field
   A12, \field Condenser Inlet Node Name
        \type object-list
        \object-list ConnectionNames
@@ -13893,7 +13893,7 @@ OS:Chiller:Electric:ASHRAE205,
        \minimum> 0
        \autosizable
        \ip-units gal/min
-       \default autosize
+       \required-field
   A15, \field Chiller Flow Mode
        \note Select operating mode for fluid flow through the chiller. "NotModulated" is for
        \note either variable or constant pumping with flow controlled by the external plant system.
@@ -13904,7 +13904,7 @@ OS:Chiller:Electric:ASHRAE205,
        \key ConstantFlow
        \key LeavingSetpointModulated
        \key NotModulated
-       \default NotModulated
+       \required-field
   A16, \field Oil Cooler Inlet Node Name
        \note Use if the oil cooler uses an external cooling loop, otherwise the oil cooler will add
        \note heat to the ambient conditions (i.e., it is air cooled).
