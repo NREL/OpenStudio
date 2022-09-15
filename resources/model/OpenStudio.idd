@@ -5422,9 +5422,19 @@ OS:Space,
   A10, \field Building Unit Name
        \type object-list
        \object-list BuildingUnitNames
-  N5; \field Volume
+  N5, \field Volume
        \type real
        \units m3
+       \autocalculatable
+       \default autocalculate
+  N6, \field Ceiling Height
+       \type real
+       \units m
+       \autocalculatable
+       \default autocalculate
+  N7; \field Floor Area
+       \type real
+       \units m2
        \autocalculatable
        \default autocalculate
 
