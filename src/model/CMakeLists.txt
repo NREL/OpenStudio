@@ -1549,6 +1549,12 @@ set(${target_name}_src
   SurfacePropertySurroundingSurfaces.cpp
   SurfacePropertySurroundingSurfaces.hpp
   SurfacePropertySurroundingSurfaces_Impl.hpp
+  SurfacePropertyGroundSurfaces.cpp
+  SurfacePropertyGroundSurfaces.hpp
+  SurfacePropertyGroundSurfaces_Impl.hpp
+  SurfacePropertyIncidentSolarMultiplier.cpp
+  SurfacePropertyIncidentSolarMultiplier.hpp
+  SurfacePropertyIncidentSolarMultiplier_Impl.hpp
   SwimmingPoolIndoor.cpp
   SwimmingPoolIndoor.hpp
   SwimmingPoolIndoor_Impl.hpp
@@ -2249,6 +2255,8 @@ set(${target_name}_test_src
   test/SurfacePropertyOtherSideCoefficients_GTest.cpp
   test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
   test/SurfacePropertySurroundingSurfaces_GTest.cpp
+  test/SurfacePropertyGroundSurfaces_GTest.cpp
+  test/SurfacePropertyIncidentSolarMultiplier_GTest.cpp
   test/SwimmingPoolIndoor_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/TableLookup_GTest.cpp

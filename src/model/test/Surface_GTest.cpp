@@ -75,7 +75,9 @@
 #include "../ShadingSurfaceGroup.hpp"
 #include "../SurfacePropertyOtherSideCoefficients.hpp"
 #include "../SurfacePropertyOtherSideConditionsModel.hpp"
+#include "../PlanarSurface.hpp"
 
+#include "../../energyplus/ReverseTranslator.hpp"
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceWatcher.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
@@ -3797,4 +3799,41 @@ TEST_F(ModelFixture, Issue_4374) {
     // Each surface should have no more than one sub surface
     EXPECT_TRUE(surface.subSurfaces().size() <= 1);
   }
+}
+
+TEST_F(ModelFixture, 4678_SurfaceGlassUFactorSqlError) {
+  // Test for #4678 - Glass U Factor sql error
+
+  // This one has fenestration that includes WindowProperty:FrameAndDivider
+  openstudio::path idfPath = resourcesPath() / toPath("energyplus/FrameAndDivider/in.idf");
+  energyplus::ReverseTranslator reverseTranslator;
+  ASSERT_NO_THROW(reverseTranslator.loadModel(idfPath));
+  OptionalModel _model = reverseTranslator.loadModel(idfPath);
+  ASSERT_TRUE(_model);
+  Model model = _model.get();
+
+  openstudio::path sqlPath = resourcesPath() / toPath("energyplus/FrameAndDivider/eplusout.sql");
+  openstudio::SqlFile sqlFile = openstudio::SqlFile(sqlPath);
+  ASSERT_TRUE(sqlFile.connectionOpen());
+
+  model.setSqlFile(sqlFile);
+  ASSERT_TRUE(model.sqlFile());
+
+  OptionalSurface surface = model.getModelObjectByName<Surface>("Story 1 Core Space Exterior Wall");
+  ASSERT_TRUE(surface);
+
+  OptionalConstructionBase oConstruction = surface->construction();
+
+  ASSERT_TRUE(oConstruction);
+
+  EXPECT_TRUE(oConstruction->isOpaque());
+  EXPECT_FALSE(oConstruction->isFenestration());
+
+  ASSERT_TRUE(surface->uFactor());
+  double uFactor = surface->uFactor().get();
+  EXPECT_NEAR(0.310, uFactor, 1E-03);
+
+  ASSERT_TRUE(surface->thermalConductance());
+  double thermalConductance = surface->thermalConductance().get();
+  EXPECT_NEAR(0.325, thermalConductance, 1E-03);
 }
