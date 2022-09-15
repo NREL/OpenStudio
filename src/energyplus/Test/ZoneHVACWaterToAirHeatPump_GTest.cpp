@@ -128,7 +128,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingWaterToAirHeatPumpEquatio
   EXPECT_EQ(0, idf_hc.getDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatioofRatedHeatingCapacitytoRatedCoolingCapacity).get());
   EXPECT_EQ("", idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName).get());
   EXPECT_EQ("", idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName).get());
-  
+
   EXPECT_EQ(clg_coil.nameString(), idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::Name).get());
   EXPECT_EQ("", idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName).get());
   EXPECT_EQ("", idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName).get());
@@ -146,5 +146,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingWaterToAirHeatPumpEquatio
   EXPECT_EQ("", idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCurveName).get());
   EXPECT_EQ("", idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCurveName).get());
   EXPECT_EQ(0, idf_cc.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::NominalTimeforCondensateRemovaltoBegin).get());
-  EXPECT_EQ(0, idf_cc.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity).get());
+  EXPECT_EQ(
+    0, idf_cc.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity).get());
 }
