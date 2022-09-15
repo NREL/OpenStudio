@@ -904,6 +904,14 @@ namespace energyplus {
         modelObject = translateSurfacePropertySurroundingSurfaces(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::SurfaceProperty_GroundSurfaces: {
+        modelObject = translateSurfacePropertyGroundSurfaces(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SurfaceProperty_IncidentSolarMultiplier: {
+        modelObject = translateSurfacePropertyIncidentSolarMultiplier(workspaceObject);
+        break;
+      }
         //case openstudio::IddObjectType::SwimmingPool_Indoor :
         //{
         //modelObject = translateSwimmingPoolIndoor(workspaceObject);

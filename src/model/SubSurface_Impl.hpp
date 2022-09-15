@@ -51,6 +51,7 @@ namespace model {
   class SurfacePropertyOtherSideConditionsModel;
   class SurfacePropertyConvectionCoefficients;
   class SurfacePropertyLocalEnvironment;
+  class SurfacePropertyIncidentSolarMultiplier;
 
   namespace detail {
 
@@ -236,6 +237,8 @@ namespace model {
       boost::optional<SurfacePropertyConvectionCoefficients> surfacePropertyConvectionCoefficients() const;
 
       boost::optional<SurfacePropertyLocalEnvironment> surfacePropertyLocalEnvironment() const;
+
+      boost::optional<SurfacePropertyIncidentSolarMultiplier> surfacePropertyIncidentSolarMultiplier() const;
 
       /** Returns the adjacent SurfaceSurfacePropertyOtherSideCoefficients, if it exists. */
       boost::optional<SurfacePropertyOtherSideCoefficients> surfacePropertyOtherSideCoefficients() const;

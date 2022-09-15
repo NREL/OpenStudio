@@ -27,40 +27,35 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_SURFACEPROPERTYLOCALENVIRONMENT_HPP
-#define MODEL_SURFACEPROPERTYLOCALENVIRONMENT_HPP
+#ifndef MODEL_SURFACEPROPERTYINCIDENTSOLARMULTIPLIER_HPP
+#define MODEL_SURFACEPROPERTYINCIDENTSOLARMULTIPLIER_HPP
 
 #include <model/ModelAPI.hpp>
 #include "ModelObject.hpp"
 
 namespace openstudio {
+
 namespace model {
 
-  class Surface;
   class SubSurface;
-  class PlanarSurface;
   class Schedule;
-  class SurfacePropertySurroundingSurfaces;
-  class SurfacePropertyGroundSurfaces;
-  // class OutdoorAirNode;
 
   namespace detail {
 
-    class SurfacePropertyLocalEnvironment_Impl;
+    class SurfacePropertyIncidentSolarMultiplier_Impl;
 
   }  // namespace detail
 
-  /** SurfacePropertyLocalEnvironment is a ModelObject that wraps the OpenStudio IDD object 'OS:SurfaceProperty:LocalEnvironment'. */
-  class MODEL_API SurfacePropertyLocalEnvironment : public ModelObject
+  /** SurfacePropertyIncidentSolarMultiplier is a ModelObject that wraps the OpenStudio IDD object 'OS:SurfaceProperty:IncidentSolarMultiplier'. */
+  class MODEL_API SurfacePropertyIncidentSolarMultiplier : public ModelObject
   {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    explicit SurfacePropertyLocalEnvironment(const Surface& surface);
-    explicit SurfacePropertyLocalEnvironment(const SubSurface& surface);
+    explicit SurfacePropertyIncidentSolarMultiplier(const SubSurface& subSurface);
 
-    virtual ~SurfacePropertyLocalEnvironment() {}
+    virtual ~SurfacePropertyIncidentSolarMultiplier() = default;
 
     //@}
 
@@ -69,37 +64,23 @@ namespace model {
     /** @name Getters */
     //@{
 
-    PlanarSurface exteriorSurface() const;
-    boost::optional<Surface> exteriorSurfaceAsSurface() const;
-    boost::optional<SubSurface> exteriorSurfaceAsSubSurface() const;
+    SubSurface subSurface() const;
 
-    boost::optional<Schedule> externalShadingFractionSchedule() const;
+    double incidentSolarMultiplier() const;
 
-    boost::optional<SurfacePropertySurroundingSurfaces> surfacePropertySurroundingSurfaces() const;
-
-    boost::optional<SurfacePropertyGroundSurfaces> surfacePropertyGroundSurfaces() const;
-
-    // boost::optional<OutdoorAirNode> outdoorAirNode() const;
+    boost::optional<Schedule> incidentSolarMultiplierSchedule() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    // Note that unicity is enforced: if the surface to point to already has a SurfacePropertyLocalEnvironment object attached, it will be removed
-    // first
-    bool setExteriorSurface(const PlanarSurface& surface);
+    bool setSubSurface(const SubSurface& subSurface);
 
-    bool setExternalShadingFractionSchedule(Schedule& schedule);
-    void resetExternalShadingFractionSchedule();
+    bool setIncidentSolarMultiplier(double incidentSolarMultiplier);
 
-    bool setSurfacePropertySurroundingSurfaces(const SurfacePropertySurroundingSurfaces& surfacePropertySurroundingSurfaces);
-    void resetSurfacePropertySurroundingSurfaces();
+    bool setIncidentSolarMultiplierSchedule(Schedule& schedule);
 
-    bool setSurfacePropertyGroundSurfaces(const SurfacePropertyGroundSurfaces& surfacePropertyGroundSurfaces);
-    void resetSurfacePropertyGroundSurfaces();
-
-    // bool setOutdoorAirNode(const OutdoorAirNode& outdoorAirNode);
-    // void resetOutdoorAirNode();
+    void resetIncidentSolarMultiplierSchedule();
 
     //@}
     /** @name Other */
@@ -108,26 +89,26 @@ namespace model {
     //@}
    protected:
     /// @cond
-    using ImplType = detail::SurfacePropertyLocalEnvironment_Impl;
+    using ImplType = detail::SurfacePropertyIncidentSolarMultiplier_Impl;
 
-    explicit SurfacePropertyLocalEnvironment(std::shared_ptr<detail::SurfacePropertyLocalEnvironment_Impl> impl);
+    explicit SurfacePropertyIncidentSolarMultiplier(std::shared_ptr<detail::SurfacePropertyIncidentSolarMultiplier_Impl> impl);
 
-    friend class detail::SurfacePropertyLocalEnvironment_Impl;
+    friend class detail::SurfacePropertyIncidentSolarMultiplier_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
     /// @endcond
    private:
-    REGISTER_LOGGER("openstudio.model.SurfacePropertyLocalEnvironment");
+    REGISTER_LOGGER("openstudio.model.SurfacePropertyIncidentSolarMultiplier");
   };
 
-  /** \relates SurfacePropertyLocalEnvironment*/
-  using OptionalSurfacePropertyLocalEnvironment = boost::optional<SurfacePropertyLocalEnvironment>;
+  /** \relates SurfacePropertyIncidentSolarMultiplier*/
+  using OptionalSurfacePropertyIncidentSolarMultiplier = boost::optional<SurfacePropertyIncidentSolarMultiplier>;
 
-  /** \relates SurfacePropertyLocalEnvironment*/
-  using SurfacePropertyLocalEnvironmentVector = std::vector<SurfacePropertyLocalEnvironment>;
+  /** \relates SurfacePropertyIncidentSolarMultiplier*/
+  using SurfacePropertyIncidentSolarMultiplierVector = std::vector<SurfacePropertyIncidentSolarMultiplier>;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_SURFACEPROPERTYLOCALENVIRONMENT_HPP
+#endif  // MODEL_SURFACEPROPERTYINCIDENTSOLARMULTIPLIER_HPP

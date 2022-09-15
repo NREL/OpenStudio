@@ -53,6 +53,7 @@
 #include "../ShadingControl.hpp"
 #include "../Model_Impl.hpp"
 #include "../ThermalZone.hpp"
+#include "../PlanarSurface.hpp"
 
 #include "../../energyplus/ReverseTranslator.hpp"
 #include "../../utilities/sql/SqlFile.hpp"
@@ -1564,4 +1565,44 @@ TEST_F(ModelFixture, 4403_FenestrationAssembly) {
 
   ASSERT_TRUE(subSurface->assemblyVisibleTransmittance());
   EXPECT_EQ(0.440, subSurface->assemblyVisibleTransmittance().get());
+}
+
+TEST_F(ModelFixture, 4678_SubSurfaceGlassUFactorSqlError) {
+  // Test for #4678 - Glass U Factor sql error
+
+  // This one has fenestration that includes WindowProperty:FrameAndDivider
+  openstudio::path idfPath = resourcesPath() / toPath("energyplus/FrameAndDivider/in.idf");
+  energyplus::ReverseTranslator reverseTranslator;
+  ASSERT_NO_THROW(reverseTranslator.loadModel(idfPath));
+  OptionalModel _model = reverseTranslator.loadModel(idfPath);
+  ASSERT_TRUE(_model);
+  Model model = _model.get();
+
+  openstudio::path sqlPath = resourcesPath() / toPath("energyplus/FrameAndDivider/eplusout.sql");
+  openstudio::SqlFile sqlFile = openstudio::SqlFile(sqlPath);
+  ASSERT_TRUE(sqlFile.connectionOpen());
+
+  model.setSqlFile(sqlFile);
+  ASSERT_TRUE(model.sqlFile());
+
+  OptionalSubSurface subSurface = model.getModelObjectByName<SubSurface>("Story 1 Core Space Exterior Wall Window");
+  ASSERT_TRUE(subSurface);
+
+  OptionalConstructionBase oConstruction = subSurface->construction();
+  OptionalSurface oSurface = subSurface->surface();
+
+  ASSERT_TRUE(oConstruction);
+  ASSERT_TRUE(oSurface);
+
+  EXPECT_FALSE(oConstruction->isOpaque());
+  EXPECT_TRUE(oConstruction->isFenestration());
+
+  ASSERT_TRUE(subSurface->uFactor());
+  double uFactor = subSurface->uFactor().get();
+  EXPECT_DOUBLE_EQ(2.559, uFactor);
+
+  double filmResistance = oSurface->filmResistance();
+  double thermalConductance = 1.0 / (1.0 / (uFactor)-filmResistance);
+  ASSERT_TRUE(subSurface->thermalConductance());
+  EXPECT_DOUBLE_EQ(thermalConductance, subSurface->thermalConductance().get());
 }

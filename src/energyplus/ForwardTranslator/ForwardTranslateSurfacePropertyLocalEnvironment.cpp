@@ -35,7 +35,7 @@
 #include "../../model/PlanarSurface.hpp"
 
 #include "../../model/SurfacePropertySurroundingSurfaces.hpp"
-#include "../../model/SurfacePropertySurroundingSurfaces_Impl.hpp"
+#include "../../model/SurfacePropertyGroundSurfaces.hpp"
 
 //#include "../../model/OutdoorAirNode.hpp"
 //#include "../../model/OutdoorAirNode_Impl.hpp"
@@ -72,6 +72,13 @@ namespace energyplus {
     if (boost::optional<SurfacePropertySurroundingSurfaces> sp_ = modelObject.surfacePropertySurroundingSurfaces()) {
       if (boost::optional<IdfObject> _owo = translateAndMapModelObject(sp_.get())) {
         idfObject.setString(SurfaceProperty_LocalEnvironmentFields::SurroundingSurfacesObjectName, _owo->nameString());
+      }
+    }
+
+    // Ground Surfaces Object Name: Optional Object
+    if (boost::optional<SurfacePropertyGroundSurfaces> sp_ = modelObject.surfacePropertyGroundSurfaces()) {
+      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(sp_.get())) {
+        idfObject.setString(SurfaceProperty_LocalEnvironmentFields::GroundSurfacesObjectName, _owo->nameString());
       }
     }
 
