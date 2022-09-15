@@ -1588,13 +1588,21 @@ TEST_F(ModelFixture, 4678_SubSurfaceGlassUFactorSqlError) {
   OptionalSubSurface subSurface = model.getModelObjectByName<SubSurface>("Story 1 Core Space Exterior Wall Window");
   ASSERT_TRUE(subSurface);
 
-  ASSERT_TRUE(subSurface->uFactor());
-  EXPECT_EQ(2.559, subSurface->uFactor().get());
+  OptionalConstructionBase oConstruction = subSurface->construction();
+  OptionalSurface oSurface = subSurface->surface();
 
-  double interiorResistance = PlanarSurface::stillAirFilmResistance(subSurface->tilt());
-  double exteriorResistance = PlanarSurface::filmResistance(FilmResistanceType::MovingAir_15mph);
-  double filmResistance = interiorResistance + exteriorResistance;
-  double thermalConductance = 1.0 / (1.0 / (2.559 - filmResistance));
+  ASSERT_TRUE(oConstruction);
+  ASSERT_TRUE(oSurface);
+
+  EXPECT_FALSE(oConstruction->isOpaque());
+  EXPECT_TRUE(oConstruction->isFenestration());
+
+  ASSERT_TRUE(subSurface->uFactor());
+  double uFactor = subSurface->uFactor().get();
+  EXPECT_DOUBLE_EQ(2.559, uFactor);
+
+  double filmResistance = oSurface->filmResistance();
+  double thermalConductance = 1.0 / (1.0 / (uFactor)-filmResistance);
   ASSERT_TRUE(subSurface->thermalConductance());
-  EXPECT_EQ(thermalConductance, subSurface->thermalConductance().get());
+  EXPECT_DOUBLE_EQ(thermalConductance, subSurface->thermalConductance().get());
 }
