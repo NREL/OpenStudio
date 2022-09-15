@@ -6697,7 +6697,7 @@ OS:SurfaceProperty:SurroundingSurfaces,
        \type object-list
        \object-list ScheduleNames
        \note Schedule values are real numbers, -100.0 to 100.0, units C
-       \note If the field is left blank the global sky temperature is be used
+       \note If the field is left blank the global sky temperature is used
    N2, \field Ground View Factor
        \minimum 0.0
        \maximum 1.0
@@ -6747,10 +6747,68 @@ OS:SurfaceProperty:LocalEnvironment,
        \type object-list
        \object-list SurroundingSurfacesNames
        \note Enter the name of a SurfaceProperty:SurroundingSurfaces object
-   A6; \field Outdoor Air Node Name
+   A6, \field Outdoor Air Node Name
        \type object-list
        \object-list OutdoorAirNodeNames
        \note Enter the name of an OutdoorAir:Node object
+   A7; \field Ground Surfaces Object Name
+       \type object-list
+       \object-list GroundSurfacesNames
+
+OS:SurfaceProperty:GroundSurfaces,
+       \min-fields 4
+       \memo This object defines a list of ground surfaces for use with an exterior surface.
+       \extensible:4 -- duplicate last set of ground surface properties (the last four fields), remembering to remove ; from "inner" fields.
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Name
+       \required-field
+       \type alpha
+       \reference GroundSurfacesNames
+   A3, \field Ground Surface 1 Name
+       \begin-extensible
+       \required-field
+       \type alpha
+   N1, \field Ground Surface 1 View Factor
+       \type real
+       \units dimensionless
+       \minimum 0.0
+       \maximum 1.0
+       \autocalculatable
+   A4, \field Ground Surface 1 Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values are real numbers, -100.0 to 100.0, units C
+   A5; \field Ground Surface 1 Reflectance Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+       \note Schedule values are fraction, 0.0 to 1.0, units dimensionless
+
+OS:SurfaceProperty:IncidentSolarMultiplier,
+       \min-fields 4
+   A1, \field Handle
+       \type handle
+       \required-field
+   A2, \field Surface Name
+       \required-field
+       \type object-list
+       \object-list GlazedExtSubSurfNames
+       \note Enter the name of an exterior window outside surface object
+   N1, \field Incident Solar Multiplier
+       \note a constant multiplier for window solar transmittance
+       \note and visible transmittance. If the Shading Multiplier Schedule Name is
+       \note defined, the product of these two will be the final shading multiplier.
+       \type real
+       \units dimensionless
+       \minimum 0
+       \maximum 1
+       \required-field
+   A3; \field Incident Solar Multiplier Schedule Name
+       \note The schedule values should be greater than or equal
+       \note to 0 and less than or equal to 1.
+       \type object-list
+       \object-list ScheduleNames
 
 \group OpenStudio Space Loads
 

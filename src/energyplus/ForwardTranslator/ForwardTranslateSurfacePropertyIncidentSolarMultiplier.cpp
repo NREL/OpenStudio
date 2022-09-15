@@ -30,17 +30,16 @@
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
 
-#include "../../model/SurfacePropertyLocalEnvironment.hpp"
+#include "../../model/SurfacePropertyIncidentSolarMultiplier.hpp"
 
-#include "../../model/PlanarSurface.hpp"
+#include "../../model/SubSurface.hpp"
+#include "../../model/SubSurface_Impl.hpp"
 
-#include "../../model/SurfacePropertySurroundingSurfaces.hpp"
-#include "../../model/SurfacePropertyGroundSurfaces.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
-//#include "../../model/OutdoorAirNode.hpp"
-//#include "../../model/OutdoorAirNode_Impl.hpp"
-
-#include <utilities/idd/SurfaceProperty_LocalEnvironment_FieldEnums.hxx>
+#include <utilities/idd/SurfaceProperty_IncidentSolarMultiplier_FieldEnums.hxx>
+// #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -49,45 +48,27 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateSurfacePropertyLocalEnvironment(model::SurfacePropertyLocalEnvironment& modelObject) {
+  boost::optional<IdfObject>
+    ForwardTranslator::translateSurfacePropertyIncidentSolarMultiplier(model::SurfacePropertyIncidentSolarMultiplier& modelObject) {
 
-    // Instantiate an IdfObject of the class to store the values,
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::SurfaceProperty_LocalEnvironment, modelObject);
+    // Instantiate an IdfObject of the class to store the values
+    IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::SurfaceProperty_IncidentSolarMultiplier, modelObject);
 
-    // Exterior Surface Name: Optional Object
-    if (boost::optional<PlanarSurface> _exteriorSurface = modelObject.exteriorSurface()) {
-      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_exteriorSurface.get())) {
-        idfObject.setString(SurfaceProperty_LocalEnvironmentFields::ExteriorSurfaceName, _owo->nameString());
-      }
+    // Surface Name: Required Object
+    SubSurface subSurface = modelObject.subSurface();
+    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(subSurface)) {
+      idfObject.setString(SurfaceProperty_IncidentSolarMultiplierFields::SurfaceName, _owo->nameString());
     }
 
-    // External Shading Fraction Schedule Name: Optional Object
-    if (boost::optional<Schedule> _externalShadingFractionSchedule = modelObject.externalShadingFractionSchedule()) {
-      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_externalShadingFractionSchedule.get())) {
-        idfObject.setString(SurfaceProperty_LocalEnvironmentFields::ExternalShadingFractionScheduleName, _owo->nameString());
+    // Incident Solar Multiplier: Optional Double
+    idfObject.setDouble(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplier, modelObject.incidentSolarMultiplier());
+
+    // Incident Solar Multiplier Schedule Name: Optional Object
+    if (boost::optional<Schedule> _incidentSolarMultiplierSchedule = modelObject.incidentSolarMultiplierSchedule()) {
+      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_incidentSolarMultiplierSchedule.get())) {
+        idfObject.setString(SurfaceProperty_IncidentSolarMultiplierFields::IncidentSolarMultiplierScheduleName, _owo->nameString());
       }
     }
-
-    // Surrounding Surfaces Object Name: Optional Object
-    if (boost::optional<SurfacePropertySurroundingSurfaces> sp_ = modelObject.surfacePropertySurroundingSurfaces()) {
-      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(sp_.get())) {
-        idfObject.setString(SurfaceProperty_LocalEnvironmentFields::SurroundingSurfacesObjectName, _owo->nameString());
-      }
-    }
-
-    // Ground Surfaces Object Name: Optional Object
-    if (boost::optional<SurfacePropertyGroundSurfaces> sp_ = modelObject.surfacePropertyGroundSurfaces()) {
-      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(sp_.get())) {
-        idfObject.setString(SurfaceProperty_LocalEnvironmentFields::GroundSurfacesObjectName, _owo->nameString());
-      }
-    }
-
-    // Outdoor Air Node Name: Optional Object
-    // if (boost::optional<OutdoorAirNode> _outdoorAirNode = modelObject.outdoorAirNode()) {
-    //   if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_outdoorAirNode.get())) {
-    //     idfObject.setString(SurfaceProperty_LocalEnvironmentFields::OutdoorAirNodeName, _owo->nameString());
-    //   }
-    // }
 
     return idfObject;
   }  // End of translate function

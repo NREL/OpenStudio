@@ -448,6 +448,8 @@ namespace model {
   class SurfacePropertyOtherSideCoefficients;
   class SurfacePropertyOtherSideConditionsModel;
   class SurfacePropertySurroundingSurfaces;
+  class SurfacePropertyGroundSurfaces;
+  class SurfacePropertyIncidentSolarMultiplier;
   class SwimmingPoolIndoor;
   class TableMultiVariableLookup;
   class TableLookup;
@@ -1427,6 +1429,10 @@ namespace energyplus {
     boost::optional<IdfObject> translateSurfacePropertyLocalEnvironment(model::SurfacePropertyLocalEnvironment& modelObject);
 
     boost::optional<IdfObject> translateSurfacePropertySurroundingSurfaces(model::SurfacePropertySurroundingSurfaces& modelObject);
+
+    boost::optional<IdfObject> translateSurfacePropertyGroundSurfaces(model::SurfacePropertyGroundSurfaces& modelObject);
+
+    boost::optional<IdfObject> translateSurfacePropertyIncidentSolarMultiplier(model::SurfacePropertyIncidentSolarMultiplier& modelObject);
 
     boost::optional<IdfObject> translateSwimmingPoolIndoor(model::SwimmingPoolIndoor& modelObject);
 

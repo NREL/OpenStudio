@@ -2853,6 +2853,16 @@ namespace energyplus {
         retVal = translateSurfacePropertySurroundingSurfaces(obj);
         break;
       }
+      case openstudio::IddObjectType::OS_SurfaceProperty_GroundSurfaces: {
+        model::SurfacePropertyGroundSurfaces obj = modelObject.cast<SurfacePropertyGroundSurfaces>();
+        retVal = translateSurfacePropertyGroundSurfaces(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_SurfaceProperty_IncidentSolarMultiplier: {
+        model::SurfacePropertyIncidentSolarMultiplier obj = modelObject.cast<SurfacePropertyIncidentSolarMultiplier>();
+        retVal = translateSurfacePropertyIncidentSolarMultiplier(obj);
+        break;
+      }
       case openstudio::IddObjectType::OS_SubSurface: {
         model::SubSurface subSurface = modelObject.cast<SubSurface>();
         retVal = translateSubSurface(subSurface);
