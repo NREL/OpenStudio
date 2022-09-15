@@ -13863,8 +13863,7 @@ OS:Chiller:Electric:ASHRAE205,
        \type object-list
        \object-list ThermalZoneNames
   A8, \field Ambient Temperature Outdoor Air Node Name
-       \type object-list
-       \object-list ConnectionNames
+       \type alpha
        \note required for Ambient Temperature Indicator=Outdoors
   A9,  \field Chilled Water Inlet Node Name
        \type object-list
