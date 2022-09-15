@@ -148,9 +148,9 @@ namespace model {
       UnsignedVector::const_iterator b(fieldIndices.begin());
       UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceTemperatureScheduleName) != e) {
-        result.emplace_back("SurfacePropertyGroundSurfaces", "Ground Surface Temperature Schedule");
+        result.emplace_back("SurfacePropertyGroundSurfaces", "Ground Surface Temperature");
       } else if (std::find(b, e, OS_SurfaceProperty_GroundSurfacesExtensibleFields::GroundSurfaceReflectanceScheduleName) != e) {
-        result.emplace_back("SurfacePropertyGroundSurfaces", "Ground Surface Reflectance Schedule");
+        result.emplace_back("SurfacePropertyGroundSurfaces", "Ground Surface Reflectance");
       }
 
       return result;
