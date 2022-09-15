@@ -3831,9 +3831,9 @@ TEST_F(ModelFixture, 4678_SurfaceGlassUFactorSqlError) {
 
   ASSERT_TRUE(surface->uFactor());
   double uFactor = surface->uFactor().get();
-  EXPECT_TRUE(openstudio::equal(0.310, uFactor, 1.0E-3));
+  EXPECT_NEAR(0.310, uFactor, 1E-03);
 
   ASSERT_TRUE(surface->thermalConductance());
   double thermalConductance = surface->thermalConductance().get();
-  EXPECT_TRUE(openstudio::equal(0.325, thermalConductance, 1.0E-3));
+  EXPECT_NEAR(0.325, thermalConductance, 1E-03);
 }
