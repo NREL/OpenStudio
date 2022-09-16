@@ -175,6 +175,15 @@ namespace energyplus {
       idfObject.setString(Chiller_Electric_ASHRAE205Fields::AuxiliaryOutletNodeName, node_->nameString());
     }
 
+    if (modelObject.isChilledWaterMaximumRequestedFlowRateAutosized()) {
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::ChilledWaterMaximumRequestedFlowRate, "AutoSize");
+    } else {
+      // ChilledWater Maximum Requested Flow Rate: boost::optional<double>
+      if (boost::optional<double> _chilledWaterMaximumRequestedFlowRate = modelObject.chilledWaterMaximumRequestedFlowRate()) {
+        idfObject.setDouble(Chiller_Electric_ASHRAE205Fields::ChilledWaterMaximumRequestedFlowRate, _chilledWaterMaximumRequestedFlowRate.get());
+      }
+    }
+
     if (modelObject.isCondenserMaximumRequestedFlowRateAutosized()) {
       idfObject.setString(Chiller_Electric_ASHRAE205Fields::CondenserMaximumRequestedFlowRate, "AutoSize");
     } else {

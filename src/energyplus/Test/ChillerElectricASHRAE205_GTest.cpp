@@ -173,7 +173,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
     auto& woCh = woChs.front();
 
     EXPECT_EQ(ch.nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::Name).get());
-    EXPECT_EQ(representationFile->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::RepresentationFileName).get());
+    EXPECT_EQ("A205ExampleChiller.RS0001.a205.cbor", woCh.getString(Chiller_Electric_ASHRAE205Fields::RepresentationFileName).get());
     EXPECT_EQ("Cubic", woCh.getString(Chiller_Electric_ASHRAE205Fields::PerformanceInterpolationMethod).get());
     EXPECT_EQ("AutoSize", woCh.getString(Chiller_Electric_ASHRAE205Fields::RatedCapacity).get());
     EXPECT_EQ(1.1, woCh.getDouble(Chiller_Electric_ASHRAE205Fields::SizingFactor).get());
