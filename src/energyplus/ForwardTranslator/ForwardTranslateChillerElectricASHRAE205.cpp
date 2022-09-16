@@ -32,12 +32,9 @@
 
 #include "../../model/ChillerElectricASHRAE205.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "../../model/Schedule.hpp"
-#include "../../model/Schedule_Impl.hpp"
-
-#include "../../model/Zone.hpp"
-#include "../../model/Zone_Impl.hpp"
+#include "../../model/ExternalFile.hpp"
+#include "../../model/ThermalZone.hpp"
 
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
@@ -53,107 +50,133 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateChillerElectricASHRAE205(model::ChillerElectricASHRAE205& modelObject) {
-    boost::optional<IdfObject> result;
-    boost::optional<WorkspaceObject> _wo;
-    boost::optional<ModelObject> _mo;
+
+    path filePath = modelObject.representationFile().filePath();
+    if (!openstudio::filesystem::exists(filePath)) {
+      LOG(Warn, modelObject.briefDescription() << "will not be translated, cannot find the representation file '" << filePath << "'");
+      return boost::none;
+    }
+
+    // make the path correct for this system
+    filePath = openstudio::filesystem::system_complete(filePath);
+
+    if (!modelObject.chilledWaterLoop()) {
+      LOG(Warn, modelObject.briefDescription() << "will not be translated, it not on a Chilled Water Loop.");
+      return boost::none;
+    }
 
     // Instantiate an IdfObject of the class to store the values
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Chiller_Electric_ASHRAE205, modelObject);
-    // If it doesn't have a name, or if you aren't sure you are going to want to return it
-    // IdfObject idfObject( openstudio::IddObjectType::Chiller_Electric_ASHRAE205 );
-    // m_idfObjects.push_back(idfObject);
-
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ForwardTranslator generator script is meant to facilitate your work, not get you 100% of the way
-
-    // TODO: If you keep createRegisterAndNameIdfObject above, you don't need this.
-    // But in some cases, you'll want to handle failure without pushing to the map
-    // Name
-    if (boost::optional<std::string> moName = modelObject.name()) {
-      idfObject.setName(*moName);
-    }
 
     // Representation File Name: Required String
-    std::string representationFileName = modelObject.representationFileName();
-    idfObject.setString(Chiller_Electric_ASHRAE205Fields::RepresentationFileName, representationFileName);
+    idfObject.setString(Chiller_Electric_ASHRAE205Fields::RepresentationFileName, openstudio::toString(filePath.filename()));
 
-    // Performance Interpolation Method: Optional String
+    // Performance Interpolation Method
     std::string performanceInterpolationMethod = modelObject.performanceInterpolationMethod();
     idfObject.setString(Chiller_Electric_ASHRAE205Fields::PerformanceInterpolationMethod, performanceInterpolationMethod);
 
     if (modelObject.isRatedCapacityAutosized()) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::RatedCapacity, "Autosize");
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::RatedCapacity, "AutoSize");
     } else {
-      // Rated Capacity: boost::optional<double>
-      if (boost::optional<double> _ratedCapacity = modelObject.ratedCapacity()) {
-        idfObject.setDouble(Chiller_Electric_ASHRAE205Fields::RatedCapacity, _ratedCapacity.get());
-      }
+      idfObject.setDouble(Chiller_Electric_ASHRAE205Fields::RatedCapacity, modelObject.ratedCapacity().get());
     }
 
     // Sizing Factor: Optional Double
-    double sizingFactor = modelObject.sizingFactor();
-    idfObject.setDouble(Chiller_Electric_ASHRAE205Fields::SizingFactor, sizingFactor);
+    idfObject.setDouble(Chiller_Electric_ASHRAE205Fields::SizingFactor, modelObject.sizingFactor());
 
     // Ambient Temperature Indicator: Required String
     std::string ambientTemperatureIndicator = modelObject.ambientTemperatureIndicator();
+    bool ambientTempOk = false;
+
+    if (openstudio::istringEqual("Schedule", ambientTemperatureIndicator)) {
+      // Ambient Temperature Schedule Name: Optional Object
+      if (boost::optional<Schedule> _ambientTemperatureSchedule = modelObject.ambientTemperatureSchedule()) {
+        if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_ambientTemperatureSchedule.get())) {
+          idfObject.setString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureScheduleName, _owo->nameString());
+          ambientTempOk = true;
+        }
+      }
+    } else if (openstudio::istringEqual("Zone", ambientTemperatureIndicator)) {
+      // Ambient Temperature Zone Name: Optional Object
+      if (boost::optional<ThermalZone> _ambientTemperatureZone = modelObject.ambientTemperatureZone()) {
+        if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_ambientTemperatureZone.get())) {
+          idfObject.setString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureZoneName, _owo->nameString());
+          ambientTempOk = true;
+        }
+      }
+    } else if (openstudio::istringEqual("Outdoors", ambientTemperatureIndicator)) {
+      ambientTempOk = true;
+    }
+    if (!ambientTempOk) {
+      LOG(Warn, "For " << modelObject.briefDescription() << " the Ambient Temperature Indicator is " << ambientTemperatureIndicator
+                       << " but the required objects don't match. Falling back to 'Outdoors'");
+      ambientTemperatureIndicator = "Outdoors";
+    }
+
     idfObject.setString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureIndicator, ambientTemperatureIndicator);
 
-    // Ambient Temperature Schedule Name: Optional Object
-    if (boost::optional<Schedule> _ambientTemperatureSchedule = modelObject.ambientTemperatureSchedule()) {
-      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_ambientTemperatureSchedule.get())) {
-        idfObject.setString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureScheduleName, _owo->nameString());
+    if (openstudio::istringEqual("Outdoors", ambientTemperatureIndicator)) {
+      std::string oaNodeName = modelObject.nameString() + " OA Node";
+      if (boost::optional<std::string> s_ = modelObject.ambientTemperatureOutdoorAirNodeName()) {
+        oaNodeName = s_.get();
       }
+
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureOutdoorAirNodeName, oaNodeName);
+
+      IdfObject _oaNodeList(openstudio::IddObjectType::OutdoorAir_NodeList);
+      _oaNodeList.setString(0, oaNodeName);
+      m_idfObjects.push_back(_oaNodeList);
     }
 
-    // Ambient Temperature Zone Name: Optional Object
-    if (boost::optional<Zone> _ambientTemperatureZone = modelObject.ambientTemperatureZone()) {
-      if (boost::optional<IdfObject> _owo = translateAndMapModelObject(_ambientTemperatureZone.get())) {
-        idfObject.setString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureZoneName, _owo->nameString());
-      }
+    // Chilled Water Node Names: Required Nodes
+    if (auto node_ = modelObject.chilledWaterInletNode()) {
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::ChilledWaterInletNodeName, node_->nameString());
     }
 
-    // Ambient Temperature Outdoor Air Node Name: Optional Node
-    Node ambientTemperatureOutdoorAirNodeName = modelObject.ambientTemperatureOutdoorAirNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(ambientTemperatureOutdoorAirNodeName)) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureOutdoorAirNodeName, _owo->nameString());
+    if (auto node_ = modelObject.chilledWaterOutletNode()) {
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::ChilledWaterOutletNodeName, node_->nameString());
     }
 
-    // Chilled Water Inlet Node Name: Required Node
-    Node chilledWaterInletNodeName = modelObject.chilledWaterInletNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(chilledWaterInletNodeName)) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::ChilledWaterInletNodeName, _owo->nameString());
+    // Optional Nodes
+
+    // Condenser
+    if (auto node_ = modelObject.condenserInletNode()) {
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::CondenserInletNodeName, node_->nameString());
     }
 
-    // Chilled Water Outlet Node Name: Required Node
-    Node chilledWaterOutletNodeName = modelObject.chilledWaterOutletNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(chilledWaterOutletNodeName)) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::ChilledWaterOutletNodeName, _owo->nameString());
+    if (auto node_ = modelObject.condenserOutletNode()) {
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::CondenserOutletNodeName, node_->nameString());
     }
 
-    if (modelObject.isChilledWaterMaximumRequestedFlowRateAutosized()) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::ChilledWaterMaximumRequestedFlowRate, "Autosize");
-    } else {
-      // Chilled Water Maximum Requested Flow Rate: boost::optional<double>
-      if (boost::optional<double> _chilledWaterMaximumRequestedFlowRate = modelObject.chilledWaterMaximumRequestedFlowRate()) {
-        idfObject.setDouble(Chiller_Electric_ASHRAE205Fields::ChilledWaterMaximumRequestedFlowRate, _chilledWaterMaximumRequestedFlowRate.get());
-      }
+    // Heat Recovery
+    if (auto node_ = modelObject.heatRecoveryInletNode()) {
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryInletNodeName, node_->nameString());
     }
 
-    // Condenser Inlet Node Name: Optional Node
-    Node condenserInletNodeName = modelObject.condenserInletNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(condenserInletNodeName)) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::CondenserInletNodeName, _owo->nameString());
+    if (auto node_ = modelObject.heatRecoveryOutletNode()) {
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryOutletNodeName, node_->nameString());
     }
 
-    // Condenser Outlet Node Name: Optional Node
-    Node condenserOutletNodeName = modelObject.condenserOutletNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(condenserOutletNodeName)) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::CondenserOutletNodeName, _owo->nameString());
+    // Oil Cooler
+    if (auto node_ = modelObject.oilCoolerInletNode()) {
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::OilCoolerInletNodeName, node_->nameString());
+    }
+
+    if (auto node_ = modelObject.oilCoolerOutletNode()) {
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::OilCoolerOutletNodeName, node_->nameString());
+    }
+
+    // Auxiliary
+    if (auto node_ = modelObject.auxiliaryInletNode()) {
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::AuxiliaryInletNodeName, node_->nameString());
+    }
+
+    if (auto node_ = modelObject.auxiliaryOutletNode()) {
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::AuxiliaryOutletNodeName, node_->nameString());
     }
 
     if (modelObject.isCondenserMaximumRequestedFlowRateAutosized()) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::CondenserMaximumRequestedFlowRate, "Autosize");
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::CondenserMaximumRequestedFlowRate, "AutoSize");
     } else {
       // Condenser Maximum Requested Flow Rate: boost::optional<double>
       if (boost::optional<double> _condenserMaximumRequestedFlowRate = modelObject.condenserMaximumRequestedFlowRate()) {
@@ -162,36 +185,11 @@ namespace energyplus {
     }
 
     // Chiller Flow Mode: Optional String
-    std::string chillerFlowMode = modelObject.chillerFlowMode();
-    idfObject.setString(Chiller_Electric_ASHRAE205Fields::ChillerFlowMode, chillerFlowMode);
-
-    // Oil Cooler Inlet Node Name: Optional Node
-    Node oilCoolerInletNodeName = modelObject.oilCoolerInletNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(oilCoolerInletNodeName)) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::OilCoolerInletNodeName, _owo->nameString());
-    }
-
-    // Oil Cooler Outlet Node Name: Optional Node
-    Node oilCoolerOutletNodeName = modelObject.oilCoolerOutletNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(oilCoolerOutletNodeName)) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::OilCoolerOutletNodeName, _owo->nameString());
-    }
+    idfObject.setString(Chiller_Electric_ASHRAE205Fields::ChillerFlowMode, modelObject.chillerFlowMode());
 
     // Oil Cooler Design Flow Rate: boost::optional<double>
     if (boost::optional<double> _oilCoolerDesignFlowRate = modelObject.oilCoolerDesignFlowRate()) {
       idfObject.setDouble(Chiller_Electric_ASHRAE205Fields::OilCoolerDesignFlowRate, _oilCoolerDesignFlowRate.get());
-    }
-
-    // Auxiliary Inlet Node Name: Optional Node
-    Node auxiliaryInletNodeName = modelObject.auxiliaryInletNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(auxiliaryInletNodeName)) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::AuxiliaryInletNodeName, _owo->nameString());
-    }
-
-    // Auxiliary Outlet Node Name: Optional Node
-    Node auxiliaryOutletNodeName = modelObject.auxiliaryOutletNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(auxiliaryOutletNodeName)) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::AuxiliaryOutletNodeName, _owo->nameString());
     }
 
     // Auxiliary Cooling Design Flow Rate: boost::optional<double>
@@ -199,21 +197,10 @@ namespace energyplus {
       idfObject.setDouble(Chiller_Electric_ASHRAE205Fields::AuxiliaryCoolingDesignFlowRate, _auxiliaryCoolingDesignFlowRate.get());
     }
 
-    // Heat Recovery Inlet Node Name: Optional Node
-    Node heatRecoveryInletNodeName = modelObject.heatRecoveryInletNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(heatRecoveryInletNodeName)) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryInletNodeName, _owo->nameString());
-    }
-
-    // Heat Recovery Outlet Node Name: Optional Node
-    Node heatRecoveryOutletNodeName = modelObject.heatRecoveryOutletNodeName();
-    if (boost::optional<IdfObject> _owo = translateAndMapModelObject(heatRecoveryOutletNodeName)) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryOutletNodeName, _owo->nameString());
-    }
-
     // End-Use Subcategory: Optional String
-    std::string endUseSubcategory = modelObject.endUseSubcategory();
-    idfObject.setString(Chiller_Electric_ASHRAE205Fields::EndUseSubcategory, endUseSubcategory);
+    if (!modelObject.isEndUseSubcategoryDefaulted()) {
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::EndUseSubcategory, modelObject.endUseSubcategory());
+    }
 
     return idfObject;
   }  // End of translate function

@@ -937,6 +937,11 @@ namespace energyplus {
         retVal = translateChillerAbsorptionIndirect(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_Chiller_Electric_ASHRAE205: {
+        auto mo = modelObject.cast<ChillerElectricASHRAE205>();
+        retVal = translateChillerElectricASHRAE205(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR: {
         model::ChillerElectricEIR chiller = modelObject.cast<ChillerElectricEIR>();
         retVal = translateChillerElectricEIR(chiller);

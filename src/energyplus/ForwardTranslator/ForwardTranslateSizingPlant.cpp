@@ -68,6 +68,9 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_DistrictHeating: {
         return PlantSizingType::HOTWATER;
       }
+      case openstudio::IddObjectType::OS_Chiller_Electric_ASHRAE205: {
+        return PlantSizingType::CHILLEDWATER;
+      }
       case openstudio::IddObjectType::OS_Chiller_Electric_EIR: {
         return PlantSizingType::CHILLEDWATER;
       }

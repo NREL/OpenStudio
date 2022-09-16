@@ -121,6 +121,7 @@ namespace model {
   class CFactorUndergroundWallConstruction;
   class ChillerAbsorption;
   class ChillerAbsorptionIndirect;
+  class ChillerElectricASHRAE205;
   class ChillerElectricEIR;
   class ChillerElectricReformulatedEIR;
   class ChillerHeaterPerformanceElectricEIR;
@@ -746,6 +747,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateChillerAbsorption(model::ChillerAbsorption& modelObject);
 
     boost::optional<IdfObject> translateChillerAbsorptionIndirect(model::ChillerAbsorptionIndirect& modelObject);
+
+    boost::optional<IdfObject> translateChillerElectricASHRAE205(model::ChillerElectricASHRAE205& modelObject);
 
     boost::optional<IdfObject> translateChillerElectricEIR(model::ChillerElectricEIR& modelObject);
 

@@ -54,6 +54,8 @@
 #include "../../model/BoilerHotWater_Impl.hpp"
 #include "../../model/CentralHeatPumpSystem.hpp"
 #include "../../model/CentralHeatPumpSystem_Impl.hpp"
+#include "../../model/ChillerElectricASHRAE205.hpp"
+#include "../../model/ChillerElectricASHRAE205_Impl.hpp"
 #include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ChillerElectricEIR_Impl.hpp"
 #include "../../model/ChillerElectricReformulatedEIR.hpp"
@@ -334,19 +336,39 @@ namespace energyplus {
             auto sourceLoop = central_hp->sourcePlantLoop();
 
             // supply = cooling Loop
-            if (loop.handle() == coolingLoop->handle()) {
+            if (coolingLoop && loop.handle() == coolingLoop->handle()) {
               inletNode = waterToWaterComponent->supplyInletModelObject()->optionalCast<Node>();
               outletNode = waterToWaterComponent->supplyOutletModelObject()->optionalCast<Node>();
 
               // tertiary = heating loop
-            } else if (loop.handle() == heatingLoop->handle()) {
+            } else if (heatingLoop && loop.handle() == heatingLoop->handle()) {
               inletNode = waterToWaterComponent->tertiaryInletModelObject()->optionalCast<Node>();
               outletNode = waterToWaterComponent->tertiaryOutletModelObject()->optionalCast<Node>();
 
               // demand = source loop
-            } else if (loop.handle() == sourceLoop->handle()) {
+            } else if (sourceLoop && loop.handle() == sourceLoop->handle()) {
               inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
               outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
+            }
+
+          } else if (auto ch = modelObject.optionalCast<ChillerElectricASHRAE205>()) {
+            // This one has **FIVE** loops
+
+            if (ch->chilledWaterLoop() && loop.handle() == ch->chilledWaterLoop()->handle()) {
+              inletNode = ch->chilledWaterInletNode();
+              outletNode = ch->chilledWaterOutletNode();
+            } else if (ch->condenserWaterLoop() && loop.handle() == ch->condenserWaterLoop()->handle()) {
+              inletNode = ch->condenserInletNode();
+              outletNode = ch->condenserOutletNode();
+            } else if (ch->heatRecoveryLoop() && loop.handle() == ch->heatRecoveryLoop()->handle()) {
+              inletNode = ch->heatRecoveryInletNode();
+              outletNode = ch->heatRecoveryOutletNode();
+            } else if (ch->oilCoolerLoop() && loop.handle() == ch->oilCoolerLoop()->handle()) {
+              inletNode = ch->oilCoolerInletNode();
+              outletNode = ch->oilCoolerOutletNode();
+            } else if (ch->auxiliaryLoop() && loop.handle() == ch->auxiliaryLoop()->handle()) {
+              inletNode = ch->auxiliaryInletNode();
+              outletNode = ch->auxiliaryOutletNode();
             }
 
             // Regular case
