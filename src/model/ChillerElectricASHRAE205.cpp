@@ -476,17 +476,17 @@ namespace model {
     bool ChillerElectricASHRAE205_Impl::addToNode(Node& node) {
       boost::optional<PlantLoop> t_plantLoop = node.plantLoop();
 
-      // If trying to add to a node that is on the supply side of a plant loop
+      // If trying to add to a node that is on the demand side of a plant loop
       if (t_plantLoop) {
-        if (t_plantLoop->supplyComponent(node.handle())) {
-          // If there is already a cooling Plant Loop
-          boost::optional<PlantLoop> coolingPlant = this->chilledWaterLoop();
-          if (coolingPlant) {
+        if (t_plantLoop->demandComponent(node.handle())) {
+          // If there is already a another loop where it's on the demand side (condenser Plant Loop)
+          boost::optional<PlantLoop> cndLoop_ = this->condenserWaterLoop();
+          if (cndLoop_) {
             // And it's not the same as the node's loop
-            if (t_plantLoop.get() != coolingPlant.get()) {
+            if (t_plantLoop.get() != cndLoop_.get()) {
               // And if there is no Heat Recovery (tertiary)
-              boost::optional<PlantLoop> heatingPlant = this->heatRecoveryLoop();
-              if (!heatingPlant) {
+              if (!this->heatRecoveryLoop().is_initialized()) {
+                ;
                 // Then try to add it to the tertiary one
                 LOG(Warn, "Calling addToTertiaryNode to connect it to the tertiary (=Heat Recovery) loop for " << briefDescription());
                 return this->addToTertiaryNode(node);
@@ -568,6 +568,8 @@ namespace model {
       remove();
       LOG_AND_THROW("External file must have a .cbor extension, got externalfile='" << filePath << "'.");
     }
+    ok = setPointer(OS_Chiller_Electric_ASHRAE205Fields::RepresentationFileName, representationFile.handle());
+    OS_ASSERT(ok);
 
     setPerformanceInterpolationMethod("Linear");
     autosizeRatedCapacity();

@@ -52,8 +52,8 @@ using namespace openstudio::model;
 TEST_F(ModelFixture, ChillerElectricASHRAE205_GettersSetters) {
   Model m;
 
-  EXPECT_EQ(0u, m.getConcreteModelObjects<ExternalFile>().size());
-  EXPECT_EQ(0u, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
 
   openstudio::path p = resourcesPath() / toPath("model/A205ExampleChiller.RS0001.a205.cbor");
   EXPECT_TRUE(exists(p));
@@ -70,19 +70,21 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_GettersSetters) {
     removeDirectory(expectedDestDir);
   }
   ASSERT_FALSE(exists(expectedDestDir));
+  EXPECT_TRUE(exists(p));
 
   boost::optional<ExternalFile> representationFile = ExternalFile::getExternalFile(m, openstudio::toString(p));
   ASSERT_TRUE(representationFile);
-  EXPECT_EQ(1u, m.getConcreteModelObjects<ExternalFile>().size());
-  EXPECT_EQ(0u, representationFile->chillerElectricASHRAE205s().size());
+
+  EXPECT_EQ(1, m.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0, representationFile->chillerElectricASHRAE205s().size());
   EXPECT_EQ(openstudio::toString(p.filename()), representationFile->fileName());
   EXPECT_TRUE(equivalent(expectedDestDir / representationFile->fileName(), representationFile->filePath()));
   EXPECT_TRUE(exists(representationFile->filePath()));
   EXPECT_NE(p, representationFile->filePath());
 
   ChillerElectricASHRAE205 ch(representationFile.get());
-  EXPECT_EQ(1u, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
-  EXPECT_EQ(1u, representationFile->chillerElectricASHRAE205s().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
+  EXPECT_EQ(1, representationFile->chillerElectricASHRAE205s().size());
   EXPECT_EQ(representationFile->handle(), ch.representationFile().handle());
 
   // Representation File Name: Required Object
@@ -233,13 +235,25 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_GettersSetters) {
   ch.resetEndUseSubcategory();
   EXPECT_TRUE(ch.isEndUseSubcategoryDefaulted());
   EXPECT_EQ("General", ch.endUseSubcategory());
+
+  // Removing the ExternalFile removes the Chiller
+  openstudio::path dstPath = representationFile->filePath();
+  EXPECT_TRUE(exists(p));
+  EXPECT_TRUE(exists(dstPath));
+
+  representationFile->remove();
+  EXPECT_EQ(0, m.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
+
+  EXPECT_TRUE(exists(p));
+  EXPECT_FALSE(exists(dstPath));
 }
 
 TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
   Model m;
 
-  EXPECT_EQ(0u, m.getConcreteModelObjects<ExternalFile>().size());
-  EXPECT_EQ(0u, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
 
   openstudio::path p = resourcesPath() / toPath("model/A205ExampleChiller.RS0001.a205.cbor");
   EXPECT_TRUE(exists(p));
@@ -256,11 +270,13 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
     removeDirectory(expectedDestDir);
   }
   ASSERT_FALSE(exists(expectedDestDir));
+  EXPECT_TRUE(exists(p));
 
   boost::optional<ExternalFile> representationFile = ExternalFile::getExternalFile(m, openstudio::toString(p));
   ASSERT_TRUE(representationFile);
-  EXPECT_EQ(1u, m.getConcreteModelObjects<ExternalFile>().size());
-  EXPECT_EQ(0u, representationFile->chillerElectricASHRAE205s().size());
+
+  EXPECT_EQ(1, m.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0, representationFile->chillerElectricASHRAE205s().size());
   EXPECT_EQ(openstudio::toString(p.filename()), representationFile->fileName());
   EXPECT_TRUE(equivalent(expectedDestDir / representationFile->fileName(), representationFile->filePath()));
   EXPECT_TRUE(exists(representationFile->filePath()));
@@ -377,4 +393,82 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
   EXPECT_FALSE(ch.auxiliaryLoop());
   EXPECT_FALSE(ch.auxiliaryInletNode());
   EXPECT_FALSE(ch.auxiliaryOutletNode());
+
+  // Removing the Chiller doesn't remove the ExternalFile
+  openstudio::path dstPath = representationFile->filePath();
+  EXPECT_TRUE(exists(p));
+  EXPECT_TRUE(exists(dstPath));
+
+  ch.remove();
+  EXPECT_EQ(1, m.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
+
+  EXPECT_TRUE(exists(p));
+  EXPECT_TRUE(exists(dstPath));
+}
+
+TEST_F(ModelFixture, ChillerElectricASHRAE205_NotCBORFile) {
+  Model model;
+
+  path p = resourcesPath() / toPath("model/7-7_Windows_Complete.osm");
+  EXPECT_TRUE(exists(p));
+
+  boost::optional<ExternalFile> representationFile = ExternalFile::getExternalFile(model, openstudio::toString(p));
+  ASSERT_TRUE(representationFile);
+
+  ASSERT_THROW(ChillerElectricASHRAE205{representationFile.get()}, openstudio::Exception);
+}
+
+TEST_F(ModelFixture, ChillerElectricASHRAE205_Clone) {
+  Model m;
+
+  openstudio::path p = resourcesPath() / toPath("model/A205ExampleChiller.RS0001.a205.cbor");
+  EXPECT_TRUE(exists(p));
+
+  openstudio::path expectedDestDir;
+  std::vector<openstudio::path> absoluteFilePaths = m.workflowJSON().absoluteFilePaths();
+  if (absoluteFilePaths.empty()) {
+    expectedDestDir = m.workflowJSON().absoluteRootDir();
+  } else {
+    expectedDestDir = absoluteFilePaths[0];
+  }
+
+  if (exists(expectedDestDir)) {
+    removeDirectory(expectedDestDir);
+  }
+  ASSERT_FALSE(exists(expectedDestDir));
+  EXPECT_TRUE(exists(p));
+
+  boost::optional<ExternalFile> representationFile = ExternalFile::getExternalFile(m, openstudio::toString(p));
+  ASSERT_TRUE(representationFile);
+
+  ChillerElectricASHRAE205 ch(representationFile.get());
+
+  EXPECT_EQ(1, m.getConcreteModelObjects<ExternalFile>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
+  EXPECT_EQ(representationFile->handle(), ch.representationFile().handle());
+  EXPECT_EQ(1, representationFile->chillerElectricASHRAE205s().size());
+
+  {
+    // Another model first, so we don't mess the original one
+    Model m2;
+    auto ch2 = ch.clone(m2).cast<ChillerElectricASHRAE205>();
+
+    ASSERT_EQ(1, m2.getConcreteModelObjects<ExternalFile>().size());
+    auto representationFile2 = m2.getConcreteModelObjects<ExternalFile>().front();
+    EXPECT_EQ(1, m2.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
+    EXPECT_EQ(representationFile2.handle(), ch2.representationFile().handle());
+    EXPECT_NE(representationFile->handle(), ch2.representationFile().handle());
+    EXPECT_EQ(1, representationFile2.chillerElectricASHRAE205s().size());
+  }
+
+  {
+    // Same Model, should point to the same ExternaFile
+    auto ch2 = ch.clone(m).cast<ChillerElectricASHRAE205>();
+    EXPECT_EQ(1, m.getConcreteModelObjects<ExternalFile>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<ChillerElectricASHRAE205>().size());
+    EXPECT_EQ(representationFile->handle(), ch.representationFile().handle());
+    EXPECT_EQ(representationFile->handle(), ch2.representationFile().handle());
+    EXPECT_EQ(2, representationFile->chillerElectricASHRAE205s().size());
+  }
 }
