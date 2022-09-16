@@ -83,6 +83,8 @@ namespace model {
       virtual unsigned tertiaryInletPort() const override;
       virtual unsigned tertiaryOutletPort() const override;
 
+      virtual std::vector<HVACComponent> edges(const boost::optional<HVACComponent>& prev) override;
+
       /** This function will perform a check if trying to add it to a node that is on the demand side of a plant loop.
        * If:
        *     - the node is on the demand side of a loop
@@ -221,6 +223,7 @@ namespace model {
       boost::optional<ModelObject> auxiliaryInletModelObject() const;
       /*static*/ unsigned auxiliaryOutletPort() const;
       boost::optional<ModelObject> auxiliaryOutletModelObject() const;
+      bool addDemandBranchOnAuxiliaryLoop(PlantLoop& plantLoop);
       bool addToAuxiliaryLoopNode(Node& node);
       bool removeFromAuxiliaryLoop();
       boost::optional<PlantLoop> auxiliaryLoop() const;

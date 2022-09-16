@@ -195,6 +195,7 @@ namespace model {
     unsigned auxiliaryOutletPort() const;
     boost::optional<ModelObject> auxiliaryOutletModelObject() const;
     boost::optional<Node> auxiliaryOutletNode() const;
+    bool addDemandBranchOnAuxiliaryLoop(PlantLoop& plantLoop);
     bool addToAuxiliaryLoopNode(Node& node);
     bool removeFromAuxiliaryLoop();
     boost::optional<PlantLoop> auxiliaryLoop() const;

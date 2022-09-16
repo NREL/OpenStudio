@@ -519,6 +519,48 @@ namespace model {
       return false;
     }
 
+    std::vector<HVACComponent> ChillerElectricASHRAE205_Impl::edges(const boost::optional<HVACComponent>& prev) {
+      // This handles supply, demand, and tertiary connections
+      std::vector<HVACComponent> edges = WaterToWaterComponent_Impl::edges(prev);
+
+      auto pushOilCoolerOutletModelObject = [&]() {
+        if (auto edgeModelObject = oilCoolerOutletModelObject()) {
+          auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
+          OS_ASSERT(edgeHVACComponent);
+          edges.push_back(edgeHVACComponent.get());
+        }
+      };
+
+      auto pushAuxiliaryOutletModelObject = [&]() {
+        if (auto edgeModelObject = auxiliaryOutletModelObject()) {
+          auto edgeHVACComponent = edgeModelObject->optionalCast<HVACComponent>();
+          OS_ASSERT(edgeHVACComponent);
+          edges.push_back(edgeHVACComponent.get());
+        }
+      };
+
+      if (prev) {
+        if (auto inletModelObject = oilCoolerInletModelObject()) {
+          if (prev.get() == inletModelObject.get()) {
+            pushOilCoolerOutletModelObject();
+            return edges;
+          }
+        }
+        if (auto inletModelObject = auxiliaryInletModelObject()) {
+          if (prev.get() == inletModelObject.get()) {
+            pushAuxiliaryOutletModelObject();
+            return edges;
+          }
+        }
+      } else {
+        pushOilCoolerOutletModelObject();
+        pushAuxiliaryOutletModelObject();
+        return edges;
+      }
+
+      return edges;
+    }
+
     boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::plantLoop() const {
       if (boost::optional<ModelObject> mo_ = supplyOutletModelObject()) {
         if (boost::optional<Node> n_ = mo_->optionalCast<Node>()) {
@@ -703,6 +745,46 @@ namespace model {
       if (auto plant = auxiliaryLoop()) {
         return HVACComponent_Impl::removeFromLoop(plant->demandInletNode(), plant->demandOutletNode(), auxiliaryInletPort(), auxiliaryOutletPort());
       }
+
+      return false;
+    }
+
+    bool ChillerElectricASHRAE205_Impl::addDemandBranchOnAuxiliaryLoop(PlantLoop& plantLoop) {
+      Model _model = this->model();
+
+      if (plantLoop.model() != _model) {
+        return false;
+      }
+
+      Splitter splitter = plantLoop.demandSplitter();
+      Mixer mixer = plantLoop.demandMixer();
+
+      if (splitter.outletModelObjects().size() == 1u) {
+        if (boost::optional<ModelObject> mo = splitter.lastOutletModelObject()) {
+          if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+            if ((node->outletModelObject().get() == mixer) && (node->inletModelObject().get() == splitter)) {
+
+              return addToAuxiliaryLoopNode(node.get());
+            }
+          }
+        }
+      }
+
+      unsigned nextOutletPort = splitter.nextOutletPort();
+      unsigned nextInletPort = mixer.nextInletPort();
+
+      Node node(_model);
+
+      _model.connect(splitter, nextOutletPort, node, node.inletPort());
+      _model.connect(node, node.outletPort(), mixer, nextInletPort);
+
+      if (addToAuxiliaryLoopNode(node)) {
+        return true;
+      }
+
+      _model.disconnect(node, node.outletPort());
+      _model.disconnect(node, node.inletPort());
+      node.remove();
 
       return false;
     }
@@ -1062,6 +1144,10 @@ namespace model {
 
   boost::optional<PlantLoop> ChillerElectricASHRAE205::auxiliaryLoop() const {
     return getImpl<detail::ChillerElectricASHRAE205_Impl>()->auxiliaryLoop();
+  }
+
+  bool ChillerElectricASHRAE205::addDemandBranchOnAuxiliaryLoop(PlantLoop& plantLoop) {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->addDemandBranchOnAuxiliaryLoop(plantLoop);
   }
 
   bool ChillerElectricASHRAE205::addToAuxiliaryLoopNode(Node& node) {

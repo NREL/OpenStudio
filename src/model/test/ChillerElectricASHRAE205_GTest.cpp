@@ -410,10 +410,80 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
   EXPECT_FALSE(ch.auxiliaryOutletNode());
 
   // Oil Cooler Loop
-  auto ocDemandConnectionNodes = ocLoop.supplyComponents(ocLoop.demandSplitter(), ocLoop.demandMixer(), IddObjectType::OS_Node);
+  auto ocDemandConnectionNodes = ocLoop.demandComponents(ocLoop.demandSplitter(), ocLoop.demandMixer(), IddObjectType::OS_Node);
   ASSERT_EQ(1, ocDemandConnectionNodes.size());
   auto ocDemandConnectionNode = ocDemandConnectionNodes[0].cast<Node>();
+  EXPECT_EQ(5, ocLoop.demandComponents().size());
   EXPECT_TRUE(ch.addToOilCoolerLoopNode(ocDemandConnectionNode));
+  EXPECT_EQ(7, ocLoop.demandComponents().size());
+
+  ASSERT_TRUE(ch.chilledWaterLoop());
+  ASSERT_EQ(chwLoop, ch.chilledWaterLoop().get());
+  EXPECT_TRUE(ch.chilledWaterInletNode());
+  EXPECT_EQ(ch.supplyInletModelObject()->handle(), ch.chilledWaterInletNode()->handle());
+  EXPECT_TRUE(ch.chilledWaterOutletNode());
+  EXPECT_EQ(ch.supplyOutletModelObject()->handle(), ch.chilledWaterOutletNode()->handle());
+
+  ASSERT_TRUE(ch.condenserWaterLoop());
+  EXPECT_EQ(cndLoop, ch.condenserWaterLoop().get());
+  ASSERT_TRUE(ch.condenserInletNode());
+  EXPECT_EQ(ch.demandInletModelObject()->handle(), ch.condenserInletNode()->handle());
+  ASSERT_TRUE(ch.condenserOutletNode());
+  EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
+
+  ASSERT_TRUE(ch.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
+  ASSERT_TRUE(ch.heatRecoveryInletNode());
+  EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
+  ASSERT_TRUE(ch.heatRecoveryOutletNode());
+  EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+
+  ASSERT_TRUE(ch.oilCoolerLoop());
+  EXPECT_EQ(ocLoop, ch.oilCoolerLoop().get());
+  ASSERT_TRUE(ch.oilCoolerInletNode());
+  EXPECT_EQ(ch.oilCoolerInletModelObject()->handle(), ch.oilCoolerInletNode()->handle());
+  ASSERT_TRUE(ch.oilCoolerOutletNode());
+  EXPECT_EQ(ch.oilCoolerOutletModelObject()->handle(), ch.oilCoolerOutletNode()->handle());
+
+  EXPECT_FALSE(ch.auxiliaryLoop());
+  EXPECT_FALSE(ch.auxiliaryInletNode());
+  EXPECT_FALSE(ch.auxiliaryOutletNode());
+
+  // Try removeFromLoop
+  ch.removeFromOilCoolerLoop();
+  ASSERT_TRUE(ch.chilledWaterLoop());
+  ASSERT_EQ(chwLoop, ch.chilledWaterLoop().get());
+  EXPECT_TRUE(ch.chilledWaterInletNode());
+  EXPECT_EQ(ch.supplyInletModelObject()->handle(), ch.chilledWaterInletNode()->handle());
+  EXPECT_TRUE(ch.chilledWaterOutletNode());
+  EXPECT_EQ(ch.supplyOutletModelObject()->handle(), ch.chilledWaterOutletNode()->handle());
+
+  ASSERT_TRUE(ch.condenserWaterLoop());
+  EXPECT_EQ(cndLoop, ch.condenserWaterLoop().get());
+  ASSERT_TRUE(ch.condenserInletNode());
+  EXPECT_EQ(ch.demandInletModelObject()->handle(), ch.condenserInletNode()->handle());
+  ASSERT_TRUE(ch.condenserOutletNode());
+  EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
+
+  ASSERT_TRUE(ch.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
+  ASSERT_TRUE(ch.heatRecoveryInletNode());
+  EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
+  ASSERT_TRUE(ch.heatRecoveryOutletNode());
+  EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+
+  EXPECT_FALSE(ch.oilCoolerLoop());
+  EXPECT_FALSE(ch.oilCoolerInletNode());
+  EXPECT_FALSE(ch.oilCoolerOutletNode());
+
+  EXPECT_FALSE(ch.auxiliaryLoop());
+  EXPECT_FALSE(ch.auxiliaryInletNode());
+  EXPECT_FALSE(ch.auxiliaryOutletNode());
+
+  // Try addDemandBranchOnLoop
+  EXPECT_EQ(5, ocLoop.demandComponents().size());
+  ch.addDemandBranchOnOilCoolerLoop(ocLoop);
+  EXPECT_EQ(7, ocLoop.demandComponents().size());
 
   ASSERT_TRUE(ch.chilledWaterLoop());
   ASSERT_EQ(chwLoop, ch.chilledWaterLoop().get());
@@ -448,10 +518,85 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
   EXPECT_FALSE(ch.auxiliaryOutletNode());
 
   // Auxiliary Loop
-  auto auxDemandConnectionNodes = ocLoop.supplyComponents(auxLoop.demandSplitter(), auxLoop.demandMixer(), IddObjectType::OS_Node);
+  auto auxDemandConnectionNodes = auxLoop.demandComponents(auxLoop.demandSplitter(), auxLoop.demandMixer(), IddObjectType::OS_Node);
   ASSERT_EQ(1, auxDemandConnectionNodes.size());
   auto auxDemandConnectionNode = auxDemandConnectionNodes[0].cast<Node>();
+  EXPECT_EQ(5, auxLoop.demandComponents().size());
   EXPECT_TRUE(ch.addToAuxiliaryLoopNode(auxDemandConnectionNode));
+  EXPECT_EQ(7, auxLoop.demandComponents().size());
+
+  ASSERT_TRUE(ch.chilledWaterLoop());
+  ASSERT_EQ(chwLoop, ch.chilledWaterLoop().get());
+  ASSERT_TRUE(ch.plantLoop());
+  ASSERT_EQ(chwLoop, ch.plantLoop().get());
+  EXPECT_TRUE(ch.chilledWaterInletNode());
+  EXPECT_EQ(ch.supplyInletModelObject()->handle(), ch.chilledWaterInletNode()->handle());
+  EXPECT_TRUE(ch.chilledWaterOutletNode());
+  EXPECT_EQ(ch.supplyOutletModelObject()->handle(), ch.chilledWaterOutletNode()->handle());
+
+  ASSERT_TRUE(ch.condenserWaterLoop());
+  EXPECT_EQ(cndLoop, ch.condenserWaterLoop().get());
+  ASSERT_TRUE(ch.secondaryPlantLoop());
+  ASSERT_EQ(cndLoop, ch.secondaryPlantLoop().get());
+  ASSERT_TRUE(ch.condenserInletNode());
+  EXPECT_EQ(ch.demandInletModelObject()->handle(), ch.condenserInletNode()->handle());
+  ASSERT_TRUE(ch.condenserOutletNode());
+  EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
+
+  ASSERT_TRUE(ch.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
+  ASSERT_TRUE(ch.heatRecoveryInletNode());
+  EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
+  ASSERT_TRUE(ch.heatRecoveryOutletNode());
+  EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+
+  ASSERT_TRUE(ch.oilCoolerLoop());
+  EXPECT_EQ(ocLoop, ch.oilCoolerLoop().get());
+  ASSERT_TRUE(ch.oilCoolerInletNode());
+  EXPECT_EQ(ch.oilCoolerInletModelObject()->handle(), ch.oilCoolerInletNode()->handle());
+  ASSERT_TRUE(ch.oilCoolerOutletNode());
+  EXPECT_EQ(ch.oilCoolerOutletModelObject()->handle(), ch.oilCoolerOutletNode()->handle());
+
+  // Try removeFromLoop
+  ch.removeFromAuxiliaryLoop();
+  EXPECT_EQ(5, auxLoop.demandComponents().size());
+
+  ASSERT_TRUE(ch.chilledWaterLoop());
+  ASSERT_EQ(chwLoop, ch.chilledWaterLoop().get());
+  EXPECT_TRUE(ch.chilledWaterInletNode());
+  EXPECT_EQ(ch.supplyInletModelObject()->handle(), ch.chilledWaterInletNode()->handle());
+  EXPECT_TRUE(ch.chilledWaterOutletNode());
+  EXPECT_EQ(ch.supplyOutletModelObject()->handle(), ch.chilledWaterOutletNode()->handle());
+
+  ASSERT_TRUE(ch.condenserWaterLoop());
+  EXPECT_EQ(cndLoop, ch.condenserWaterLoop().get());
+  ASSERT_TRUE(ch.condenserInletNode());
+  EXPECT_EQ(ch.demandInletModelObject()->handle(), ch.condenserInletNode()->handle());
+  ASSERT_TRUE(ch.condenserOutletNode());
+  EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
+
+  ASSERT_TRUE(ch.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
+  ASSERT_TRUE(ch.heatRecoveryInletNode());
+  EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
+  ASSERT_TRUE(ch.heatRecoveryOutletNode());
+  EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+
+  ASSERT_TRUE(ch.oilCoolerLoop());
+  EXPECT_EQ(ocLoop, ch.oilCoolerLoop().get());
+  ASSERT_TRUE(ch.oilCoolerInletNode());
+  EXPECT_EQ(ch.oilCoolerInletModelObject()->handle(), ch.oilCoolerInletNode()->handle());
+  ASSERT_TRUE(ch.oilCoolerOutletNode());
+  EXPECT_EQ(ch.oilCoolerOutletModelObject()->handle(), ch.oilCoolerOutletNode()->handle());
+
+  EXPECT_FALSE(ch.auxiliaryLoop());
+  EXPECT_FALSE(ch.auxiliaryInletNode());
+  EXPECT_FALSE(ch.auxiliaryOutletNode());
+
+  // Try addDemandBranchOnLoop
+  EXPECT_EQ(5, auxLoop.demandComponents().size());
+  ch.addDemandBranchOnAuxiliaryLoop(ocLoop);
+  EXPECT_EQ(7, auxLoop.demandComponents().size());
 
   ASSERT_TRUE(ch.chilledWaterLoop());
   ASSERT_EQ(chwLoop, ch.chilledWaterLoop().get());
