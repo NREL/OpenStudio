@@ -41,10 +41,10 @@ TEST_F(ModelFixture, OutputConstructions_GettersSetters) {
 
   EXPECT_TRUE(mo.constructions());
   EXPECT_FALSE(mo.materials());
-  
+
   EXPECT_TRUE(mo.setConstructions(false));
   EXPECT_TRUE(mo.setMaterials(true));
-  
+
   EXPECT_FALSE(mo.constructions());
   EXPECT_TRUE(mo.materials());
 }  // End of Getter_Setters test

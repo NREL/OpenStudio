@@ -61,22 +61,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputConstructions) {
 
   {
     EXPECT_TRUE(outputConstructions.setConstructions(false));
-    
+
     Workspace w = ft.translateModel(m);
 
     WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_Constructions);
     EXPECT_EQ(0u, idfObjs.size());
   }
-  
+
   {
     EXPECT_TRUE(outputConstructions.setMaterials(true));
-    
+
     Workspace w = ft.translateModel(m);
 
     WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_Constructions);
     EXPECT_EQ(1u, idfObjs.size());
     WorkspaceObject idf_constructions(idfObjs[0]);
-    
+
     EXPECT_EQ("Constructions", idf_constructions.getString(Output_ConstructionsFields::DetailsType1).get());
     EXPECT_EQ("Materials", idf_constructions.getString(Output_SchedulesFields::DetailsType2).get());
   }
@@ -94,6 +94,4 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputConstructions) {
 
   OptionalWorkspaceObject _i_outputConstructions = w.addObject(IdfObject(IddObjectType::Output_Constructions));
   ASSERT_TRUE(_i_outputConstructions);
-
-
 }

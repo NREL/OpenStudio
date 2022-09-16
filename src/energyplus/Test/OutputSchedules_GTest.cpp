@@ -64,7 +64,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputSchedules) {
   WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_Schedules);
   EXPECT_EQ(1u, idfObjs.size());
   WorkspaceObject idf_schedules(idfObjs[0]);
-  
+
   EXPECT_EQ("Hourly", idf_schedules.getString(Output_SchedulesFields::KeyField).get());
 }
 
@@ -80,7 +80,5 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputSchedules) {
 
   OptionalWorkspaceObject _i_outputSchedules = w.addObject(IdfObject(IddObjectType::Output_Schedules));
   ASSERT_TRUE(_i_outputSchedules);
-
-
-  }
+}
 }

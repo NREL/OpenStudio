@@ -40,10 +40,10 @@ TEST_F(ModelFixture, OutputSchedules_GettersSetters) {
   OutputSchedules mo = m.getUniqueModelObject<OutputSchedules>();
 
   EXPECT_EQ("Hourly", mo.keyField());
-  
+
   EXPECT_TRUE(mo.setKeyField("Timestep"));
   EXPECT_EQ("Timestep", mo.keyField());
-  
+
   EXPECT_FALSE(mo.setKeyField("Invalid"));
   EXPECT_EQ("Timestep", mo.keyField());
 }  // End of Getter_Setters test
