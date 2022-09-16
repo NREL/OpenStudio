@@ -34636,14 +34636,16 @@ OS:Output:Constructions,
   A1,  \field Handle
        \type handle
        \required-field
-  A2,  \field Details Type 1
+  A2,  \field Constructions
        \type choice
-       \key Constructions
-       \key Materials
-  A3;  \field Details Type 2
+       \required-field
+       \key No
+       \key Yes
+  A3;  \field Materials
        \type choice
-       \key Constructions
-       \key Materials
+       \required-field
+       \key No
+       \key Yes
 
 OS:OutputControl:Files,
        \memo Conditionally turn on/off output from EnergyPlus.
