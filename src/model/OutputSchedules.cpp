@@ -74,7 +74,7 @@ namespace model {
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     bool OutputSchedules_Impl::setKeyField(std::string keyField) {
       bool result = setString(OS_Output_SchedulesFields::KeyField, keyField);
       return result;
@@ -84,7 +84,7 @@ namespace model {
 
   OutputSchedules::OutputSchedules(Model& model) : ModelObject(OutputSchedules::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::OutputSchedules_Impl>());
-    
+
     bool ok = setKeyField("Hourly");
     OS_ASSERT(ok);
   }
@@ -104,7 +104,7 @@ namespace model {
   std::string OutputSchedules::keyField() const {
     return getImpl<detail::OutputSchedules_Impl>()->keyField();
   }
-  
+
   bool OutputSchedules::setKeyField(std::string keyField) {
     return getImpl<detail::OutputSchedules_Impl>()->setKeyField(keyField);
   }

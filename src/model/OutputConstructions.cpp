@@ -80,7 +80,7 @@ namespace model {
       OS_ASSERT(value);
       return value.get();
     }
-    
+
     bool OutputConstructions_Impl::setDetailsType1(std::string detailsType1) {
       bool result = setString(OS_Output_ConstructionsFields::DetailsType1, detailsType1);
       return result;
@@ -116,7 +116,7 @@ namespace model {
   std::string OutputConstructions::detailsType1() const {
     return getImpl<detail::OutputConstructions_Impl>()->detailsType1();
   }
-  
+
   bool OutputConstructions::setDetailsType1(std::string detailsType1) {
     return getImpl<detail::OutputConstructions_Impl>()->setDetailsType1(detailsType1);
   }
@@ -124,7 +124,7 @@ namespace model {
   std::string OutputConstructions::detailsType2() const {
     return getImpl<detail::OutputConstructions_Impl>()->detailsType2();
   }
-  
+
   bool OutputConstructions::setDetailsType2(std::string detailsType2) {
     return getImpl<detail::OutputConstructions_Impl>()->setDetailsType2(detailsType2);
   }

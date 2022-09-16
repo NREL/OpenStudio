@@ -66,7 +66,7 @@ namespace model {
       //@{
 
       std::string detailsType1() const;
-      
+
       std::string detailsType2() const;
 
       //@}
@@ -74,7 +74,7 @@ namespace model {
       //@{
 
       bool setDetailsType1(std::string detailsType1);
-      
+
       bool setDetailsType2(std::string detailsType2);
 
       //@}
