@@ -259,6 +259,10 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateOutputSQLite(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateOutputSchedules(const WorkspaceObject& workspaceObject);
+
+    boost::optional<model::ModelObject> translateOutputConstructions(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateOutputEnvironmentalImpactFactors(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateEnvironmentalImpactFactors(const WorkspaceObject& workspaceObject);
