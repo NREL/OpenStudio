@@ -1081,6 +1081,12 @@ set(${target_name}_src
   OutputTableSummaryReports.hpp
   OutputTableSummaryReports_Impl.hpp
   OutputTableSummaryReports.cpp
+  OutputSchedules.hpp
+  OutputSchedules_Impl.hpp
+  OutputSchedules.cpp
+  OutputConstructions.hpp
+  OutputConstructions_Impl.hpp
+  OutputConstructions.cpp
   OutsideSurfaceConvectionAlgorithm.hpp
   OutsideSurfaceConvectionAlgorithm_Impl.hpp
   OutsideSurfaceConvectionAlgorithm.cpp

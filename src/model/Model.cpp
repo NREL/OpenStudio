@@ -403,6 +403,40 @@ namespace model {
       return m_cachedOutputTableSummaryReports;
     }
 
+    boost::optional<OutputSchedules> Model_Impl::outputSchedules() const {
+      if (m_cachedOutputSchedules) {
+        return m_cachedOutputSchedules;
+      }
+
+      boost::optional<OutputSchedules> result = this->model().getOptionalUniqueModelObject<OutputSchedules>();
+      if (result) {
+        m_cachedOutputSchedules = result;
+        result->getImpl<OutputSchedules_Impl>()
+          .get()
+          ->OutputSchedules_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputSchedules>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedOutputSchedules;
+    }
+
+    boost::optional<OutputConstructions> Model_Impl::outputConstructions() const {
+      if (m_cachedOutputConstructions) {
+        return m_cachedOutputConstructions;
+      }
+
+      boost::optional<OutputConstructions> result = this->model().getOptionalUniqueModelObject<OutputConstructions>();
+      if (result) {
+        m_cachedOutputConstructions = result;
+        result->getImpl<OutputConstructions_Impl>()
+          .get()
+          ->OutputConstructions_Impl::onRemoveFromWorkspace.connect<Model_Impl, &Model_Impl::clearCachedOutputConstructions>(
+            const_cast<openstudio::model::detail::Model_Impl*>(this));
+      }
+
+      return m_cachedOutputConstructions;
+    }
+
     boost::optional<PerformancePrecisionTradeoffs> Model_Impl::performancePrecisionTradeoffs() const {
       if (m_cachedPerformancePrecisionTradeoffs) {
         return m_cachedPerformancePrecisionTradeoffs;
@@ -1517,6 +1551,8 @@ namespace model {
       clearCachedOutputSQLite(dummy);
       clearCachedOutputEnergyManagementSystem(dummy);
       clearCachedOutputTableSummaryReports(dummy);
+      clearCachedOutputSchedules(dummy);
+      clearCachedOutputConstructions(dummy);
       clearCachedPerformancePrecisionTradeoffs(dummy);
       clearCachedLifeCycleCostParameters(dummy);
       clearCachedSizingParameters(dummy);
@@ -1593,6 +1629,14 @@ namespace model {
 
     void Model_Impl::clearCachedOutputTableSummaryReports(const Handle&) {
       m_cachedOutputTableSummaryReports.reset();
+    }
+
+    void Model_Impl::clearCachedOutputSchedules(const Handle&) {
+      m_cachedOutputSchedules.reset();
+    }
+
+    void Model_Impl::clearCachedOutputConstructions(const Handle&) {
+      m_cachedOutputConstructions.reset();
     }
 
     void Model_Impl::clearCachedPerformancePrecisionTradeoffs(const Handle&) {
@@ -1918,6 +1962,14 @@ namespace model {
 
   boost::optional<OutputTableSummaryReports> Model::outputTableSummaryReports() const {
     return getImpl<detail::Model_Impl>()->outputTableSummaryReports();
+  }
+
+  boost::optional<OutputSchedules> Model::outputSchedules() const {
+    return getImpl<detail::Model_Impl>()->outputSchedules();
+  }
+
+  boost::optional<OutputConstructions> Model::outputConstructions() const {
+    return getImpl<detail::Model_Impl>()->outputConstructions();
   }
 
   boost::optional<PerformancePrecisionTradeoffs> Model::performancePrecisionTradeoffs() const {
@@ -3486,6 +3538,24 @@ namespace model {
   }
 
   template <>
+  OutputSchedules Model::getUniqueModelObject<OutputSchedules>() {
+    if (boost::optional<OutputSchedules> _b = outputSchedules()) {
+      return _b.get();
+    } else {
+      return OutputSchedules(*this);
+    }
+  }
+
+  template <>
+  OutputConstructions Model::getUniqueModelObject<OutputConstructions>() {
+    if (boost::optional<OutputConstructions> _b = outputConstructions()) {
+      return _b.get();
+    } else {
+      return OutputConstructions(*this);
+    }
+  }
+
+  template <>
   PerformancePrecisionTradeoffs Model::getUniqueModelObject<PerformancePrecisionTradeoffs>() {
     if (boost::optional<PerformancePrecisionTradeoffs> _p = performancePrecisionTradeoffs()) {
       return _p.get();
@@ -4121,6 +4191,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(OutputJSON);
     REGISTER_CONSTRUCTOR(OutputSQLite);
     REGISTER_CONSTRUCTOR(OutputEnvironmentalImpactFactors);
+    REGISTER_CONSTRUCTOR(OutputSchedules);
+    REGISTER_CONSTRUCTOR(OutputConstructions);
     REGISTER_CONSTRUCTOR(EnvironmentalImpactFactors);
     REGISTER_CONSTRUCTOR(FuelFactors);
     REGISTER_CONSTRUCTOR(OutputMeter);
@@ -4678,6 +4750,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(OutputJSON);
     REGISTER_COPYCONSTRUCTORS(OutputSQLite);
     REGISTER_COPYCONSTRUCTORS(OutputEnvironmentalImpactFactors);
+    REGISTER_COPYCONSTRUCTORS(OutputSchedules);
+    REGISTER_COPYCONSTRUCTORS(OutputConstructions);
     REGISTER_COPYCONSTRUCTORS(EnvironmentalImpactFactors);
     REGISTER_COPYCONSTRUCTORS(FuelFactors);
     REGISTER_COPYCONSTRUCTORS(OutputMeter);
