@@ -43,8 +43,11 @@
 #include "../Node_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../ScheduleConstant.hpp"
+#include "../Mixer.hpp"
+#include "../Splitter.hpp"
 
 #include "../../utilities/core/PathHelpers.hpp"
+#include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -303,11 +306,24 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
   EXPECT_FALSE(ch.auxiliaryInletNode());
   EXPECT_FALSE(ch.auxiliaryOutletNode());
 
-  PlantLoop chwLoop(m);
-  PlantLoop cndLoop(m);
-  PlantLoop hrLoop(m);
-  PlantLoop ocLoop(m);
-  PlantLoop auxLoop(m);
+  auto createLoop = [&m](const std::string& prefix) {
+    PlantLoop p(m);
+    static constexpr std::array<std::string_view, 10> compNames = {
+      "Supply Inlet", "Supply Splitter", "Supply Connection Node", "Supply Mixer", "Supply Outlet",
+      "Demand Inlet", "Demand Splitter", "Demand Connection Node", "Demand Mixer", "Demand Outlet",
+    };
+    p.setName(prefix);
+    for (size_t i = 0; auto& comp : p.components()) {
+      comp.setName(prefix + " " + std::string{compNames[i++]});
+    }
+    return p;
+  };
+
+  auto chwLoop = createLoop("chwLoop");
+  auto cndLoop = createLoop("cndLoop");
+  auto hrLoop = createLoop("hrLoop");
+  auto ocLoop = createLoop("ocLoop");
+  auto auxLoop = createLoop("auxLoop");
 
   // Chilled Water Inlet Node Name: Required Object
 
@@ -385,7 +401,6 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
   ASSERT_TRUE(ch.heatRecoveryOutletNode());
   EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
 
-  // TODO
   EXPECT_FALSE(ch.oilCoolerLoop());
   EXPECT_FALSE(ch.oilCoolerInletNode());
   EXPECT_FALSE(ch.oilCoolerOutletNode());
@@ -393,6 +408,82 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
   EXPECT_FALSE(ch.auxiliaryLoop());
   EXPECT_FALSE(ch.auxiliaryInletNode());
   EXPECT_FALSE(ch.auxiliaryOutletNode());
+
+  // Oil Cooler Loop
+  auto ocDemandConnectionNodes = ocLoop.supplyComponents(ocLoop.demandSplitter(), ocLoop.demandMixer(), IddObjectType::OS_Node);
+  ASSERT_EQ(1, ocDemandConnectionNodes.size());
+  auto ocDemandConnectionNode = ocDemandConnectionNodes[0].cast<Node>();
+  EXPECT_TRUE(ch.addToOilCoolerLoopNode(ocDemandConnectionNode));
+
+  ASSERT_TRUE(ch.chilledWaterLoop());
+  ASSERT_EQ(chwLoop, ch.chilledWaterLoop().get());
+  EXPECT_TRUE(ch.chilledWaterInletNode());
+  EXPECT_EQ(ch.supplyInletModelObject()->handle(), ch.chilledWaterInletNode()->handle());
+  EXPECT_TRUE(ch.chilledWaterOutletNode());
+  EXPECT_EQ(ch.supplyOutletModelObject()->handle(), ch.chilledWaterOutletNode()->handle());
+
+  ASSERT_TRUE(ch.condenserWaterLoop());
+  EXPECT_EQ(cndLoop, ch.condenserWaterLoop().get());
+  ASSERT_TRUE(ch.condenserInletNode());
+  EXPECT_EQ(ch.demandInletModelObject()->handle(), ch.condenserInletNode()->handle());
+  ASSERT_TRUE(ch.condenserOutletNode());
+  EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
+
+  ASSERT_TRUE(ch.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
+  ASSERT_TRUE(ch.heatRecoveryInletNode());
+  EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
+  ASSERT_TRUE(ch.heatRecoveryOutletNode());
+  EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+
+  ASSERT_TRUE(ch.oilCoolerLoop());
+  EXPECT_EQ(ocLoop, ch.oilCoolerLoop().get());
+  ASSERT_TRUE(ch.oilCoolerInletNode());
+  EXPECT_EQ(ch.oilCoolerInletModelObject()->handle(), ch.oilCoolerInletNode()->handle());
+  ASSERT_TRUE(ch.oilCoolerOutletNode());
+  EXPECT_EQ(ch.oilCoolerOutletModelObject()->handle(), ch.oilCoolerOutletNode()->handle());
+
+  EXPECT_FALSE(ch.auxiliaryLoop());
+  EXPECT_FALSE(ch.auxiliaryInletNode());
+  EXPECT_FALSE(ch.auxiliaryOutletNode());
+
+  // Auxiliary Loop
+  auto auxDemandConnectionNodes = ocLoop.supplyComponents(auxLoop.demandSplitter(), auxLoop.demandMixer(), IddObjectType::OS_Node);
+  ASSERT_EQ(1, auxDemandConnectionNodes.size());
+  auto auxDemandConnectionNode = auxDemandConnectionNodes[0].cast<Node>();
+  EXPECT_TRUE(ch.addToAuxiliaryLoopNode(auxDemandConnectionNode));
+
+  ASSERT_TRUE(ch.chilledWaterLoop());
+  ASSERT_EQ(chwLoop, ch.chilledWaterLoop().get());
+  ASSERT_TRUE(ch.plantLoop());
+  ASSERT_EQ(chwLoop, ch.plantLoop().get());
+  EXPECT_TRUE(ch.chilledWaterInletNode());
+  EXPECT_EQ(ch.supplyInletModelObject()->handle(), ch.chilledWaterInletNode()->handle());
+  EXPECT_TRUE(ch.chilledWaterOutletNode());
+  EXPECT_EQ(ch.supplyOutletModelObject()->handle(), ch.chilledWaterOutletNode()->handle());
+
+  ASSERT_TRUE(ch.condenserWaterLoop());
+  EXPECT_EQ(cndLoop, ch.condenserWaterLoop().get());
+  ASSERT_TRUE(ch.secondaryPlantLoop());
+  ASSERT_EQ(cndLoop, ch.secondaryPlantLoop().get());
+  ASSERT_TRUE(ch.condenserInletNode());
+  EXPECT_EQ(ch.demandInletModelObject()->handle(), ch.condenserInletNode()->handle());
+  ASSERT_TRUE(ch.condenserOutletNode());
+  EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
+
+  ASSERT_TRUE(ch.heatRecoveryLoop());
+  EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
+  ASSERT_TRUE(ch.heatRecoveryInletNode());
+  EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
+  ASSERT_TRUE(ch.heatRecoveryOutletNode());
+  EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+
+  ASSERT_TRUE(ch.oilCoolerLoop());
+  EXPECT_EQ(ocLoop, ch.oilCoolerLoop().get());
+  ASSERT_TRUE(ch.oilCoolerInletNode());
+  EXPECT_EQ(ch.oilCoolerInletModelObject()->handle(), ch.oilCoolerInletNode()->handle());
+  ASSERT_TRUE(ch.oilCoolerOutletNode());
+  EXPECT_EQ(ch.oilCoolerOutletModelObject()->handle(), ch.oilCoolerOutletNode()->handle());
 
   // Removing the Chiller doesn't remove the ExternalFile
   openstudio::path dstPath = representationFile->filePath();

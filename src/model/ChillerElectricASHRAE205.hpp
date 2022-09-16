@@ -178,15 +178,25 @@ namespace model {
     boost::optional<Node> heatRecoveryInletNode() const;
     boost::optional<Node> heatRecoveryOutletNode() const;
 
+    unsigned oilCoolerInletPort() const;
+    boost::optional<ModelObject> oilCoolerInletModelObject() const;
+    boost::optional<Node> oilCoolerInletNode() const;
+    unsigned oilCoolerOutletPort() const;
+    boost::optional<ModelObject> oilCoolerOutletModelObject() const;
+    boost::optional<Node> oilCoolerOutletNode() const;
     boost::optional<PlantLoop> oilCoolerLoop() const;
     bool addToOilCoolerLoopNode(Node& node);
-    boost::optional<Node> oilCoolerInletNode() const;
-    boost::optional<Node> oilCoolerOutletNode() const;
+    bool removeFromOilCoolerLoop();
 
-    bool addToAuxiliaryLoopNode(Node& node);
-    boost::optional<PlantLoop> auxiliaryLoop() const;
+    unsigned auxiliaryInletPort() const;
+    boost::optional<ModelObject> auxiliaryInletModelObject() const;
     boost::optional<Node> auxiliaryInletNode() const;
+    unsigned auxiliaryOutletPort() const;
+    boost::optional<ModelObject> auxiliaryOutletModelObject() const;
     boost::optional<Node> auxiliaryOutletNode() const;
+    bool addToAuxiliaryLoopNode(Node& node);
+    bool removeFromAuxiliaryLoop();
+    boost::optional<PlantLoop> auxiliaryLoop() const;
 
     //@}
    protected:

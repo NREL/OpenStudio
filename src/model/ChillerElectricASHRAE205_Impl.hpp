@@ -69,14 +69,17 @@ namespace model {
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
       // chilledWaterLoop
+      virtual boost::optional<PlantLoop> plantLoop() const override;
       virtual unsigned supplyInletPort() const override;
       virtual unsigned supplyOutletPort() const override;
 
       // condenserWaterLoop
+      virtual boost::optional<PlantLoop> secondaryPlantLoop() const override;
       virtual unsigned demandInletPort() const override;
       virtual unsigned demandOutletPort() const override;
 
       // heatRecoveryLoop
+      virtual boost::optional<PlantLoop> tertiaryPlantLoop() const override;
       virtual unsigned tertiaryInletPort() const override;
       virtual unsigned tertiaryOutletPort() const override;
 
@@ -201,12 +204,22 @@ namespace model {
       boost::optional<Node> heatRecoveryInletNode() const;
       boost::optional<Node> heatRecoveryOutletNode() const;
 
+      /*static*/ unsigned oilCoolerInletPort() const;
+      boost::optional<ModelObject> oilCoolerInletModelObject() const;
+      /*static*/ unsigned oilCoolerOutletPort() const;
+      boost::optional<ModelObject> oilCoolerOutletModelObject() const;
       boost::optional<PlantLoop> oilCoolerLoop() const;
       bool addToOilCoolerLoopNode(Node& node);
+      bool removeFromOilCoolerLoop();
       boost::optional<Node> oilCoolerInletNode() const;
       boost::optional<Node> oilCoolerOutletNode() const;
 
+      /*static*/ unsigned auxiliaryInletPort() const;
+      boost::optional<ModelObject> auxiliaryInletModelObject() const;
+      /*static*/ unsigned auxiliaryOutletPort() const;
+      boost::optional<ModelObject> auxiliaryOutletModelObject() const;
       bool addToAuxiliaryLoopNode(Node& node);
+      bool removeFromAuxiliaryLoop();
       boost::optional<PlantLoop> auxiliaryLoop() const;
       boost::optional<Node> auxiliaryInletNode() const;
       boost::optional<Node> auxiliaryOutletNode() const;

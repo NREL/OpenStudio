@@ -501,7 +501,6 @@ namespace model {
     }
 
     bool ChillerElectricASHRAE205_Impl::addToTertiaryNode(Node& node) {
-      auto _model = node.model();
       auto t_plantLoop = node.plantLoop();
 
       // Only accept adding to a node that is on a demand side of a plant loop
@@ -518,42 +517,177 @@ namespace model {
       return false;
     }
 
-    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::oilCoolerLoop() const {
-      if (boost::optional<Node> n_ = oilCoolerInletNode()) {
-        return n_->plantLoop();
+    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::plantLoop() const {
+      if (boost::optional<ModelObject> mo_ = supplyOutletModelObject()) {
+        if (boost::optional<Node> n_ = mo_->optionalCast<Node>()) {
+          return n_->plantLoop();
+        }
       }
       return boost::none;
     }
 
-    bool ChillerElectricASHRAE205_Impl::addToOilCoolerLoopNode(Node& node) {
-      LOG_AND_THROW("NOT IMPLEMENTED YET");
+    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::secondaryPlantLoop() const {
+      if (boost::optional<ModelObject> mo_ = demandOutletModelObject()) {
+        if (boost::optional<Node> n_ = mo_->optionalCast<Node>()) {
+          return n_->plantLoop();
+        }
+      }
+      return boost::none;
+    }
+
+    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::tertiaryPlantLoop() const {
+      if (boost::optional<ModelObject> mo_ = tertiaryOutletModelObject()) {
+        if (boost::optional<Node> n_ = mo_->optionalCast<Node>()) {
+          return n_->plantLoop();
+        }
+      }
+      return boost::none;
+    }
+
+    // Extra loops
+
+    /// Oil Cooler Loop
+
+    unsigned ChillerElectricASHRAE205_Impl::oilCoolerInletPort() const {
+      return OS_Chiller_Electric_ASHRAE205Fields::OilCoolerInletNodeName;
+    }
+
+    OptionalModelObject ChillerElectricASHRAE205_Impl::oilCoolerInletModelObject() const {
+      return connectedObject(ChillerElectricASHRAE205_Impl::oilCoolerInletPort());
     }
 
     boost::optional<Node> ChillerElectricASHRAE205_Impl::oilCoolerInletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Chiller_Electric_ASHRAE205Fields::OilCoolerInletNodeName);
+      if (auto mo_ = oilCoolerInletModelObject()) {
+        return mo_->optionalCast<Node>();
+      }
+      return boost::none;
+    }
+
+    unsigned ChillerElectricASHRAE205_Impl::oilCoolerOutletPort() const {
+      return OS_Chiller_Electric_ASHRAE205Fields::OilCoolerOutletNodeName;
+    }
+
+    OptionalModelObject ChillerElectricASHRAE205_Impl::oilCoolerOutletModelObject() const {
+      return connectedObject(ChillerElectricASHRAE205_Impl::oilCoolerOutletPort());
     }
 
     boost::optional<Node> ChillerElectricASHRAE205_Impl::oilCoolerOutletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Chiller_Electric_ASHRAE205Fields::OilCoolerOutletNodeName);
+      if (auto mo_ = oilCoolerOutletModelObject()) {
+        return mo_->optionalCast<Node>();
+      }
+      return boost::none;
     }
 
-    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::auxiliaryLoop() const {
-      if (boost::optional<Node> n_ = auxiliaryInletNode()) {
+    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::oilCoolerLoop() const {
+      if (boost::optional<Node> n_ = oilCoolerOutletNode()) {
         return n_->plantLoop();
       }
       return boost::none;
     }
 
-    bool ChillerElectricASHRAE205_Impl::addToAuxiliaryLoopNode(Node& node) {
-      LOG_AND_THROW("NOT IMPLEMENTED YET");
+    bool ChillerElectricASHRAE205_Impl::removeFromOilCoolerLoop() {
+      if (auto plant = oilCoolerLoop()) {
+        return HVACComponent_Impl::removeFromLoop(plant->demandInletNode(), plant->demandOutletNode(), oilCoolerInletPort(), oilCoolerOutletPort());
+      }
+
+      return false;
+    }
+
+    bool ChillerElectricASHRAE205_Impl::addToOilCoolerLoopNode(Node& node) {
+
+      if (node.getImpl<Node_Impl>()->isConnected(getObject<ModelObject>())) {
+        return false;
+      }
+
+      auto plantLoop_ = node.plantLoop();
+      if (!plantLoop_) {
+        LOG(Warn, "For " << briefDescription() << ", Oil Cooler Loop can only be connected to a PlantLoop");
+        return false;
+      }
+
+      if (!plantLoop_->demandComponent(node.handle())) {
+        LOG(Warn, "For " << briefDescription() << ", Oil Cooler Loop can only be connected to a PlantLoop on the demand side");
+        return false;
+      }
+
+      HVACComponent systemStartComponent = plantLoop_->demandInletNode();
+      HVACComponent systemEndComponent = plantLoop_->demandOutletNode();
+
+      removeFromOilCoolerLoop();
+
+      return HVACComponent_Impl::addToNode(node, systemStartComponent, systemEndComponent, oilCoolerInletPort(), oilCoolerOutletPort());
+    }
+
+    /// Auxiliary Loop
+
+    unsigned ChillerElectricASHRAE205_Impl::auxiliaryInletPort() const {
+      return OS_Chiller_Electric_ASHRAE205Fields::AuxiliaryInletNodeName;
+    }
+
+    OptionalModelObject ChillerElectricASHRAE205_Impl::auxiliaryInletModelObject() const {
+      return connectedObject(ChillerElectricASHRAE205_Impl::auxiliaryInletPort());
     }
 
     boost::optional<Node> ChillerElectricASHRAE205_Impl::auxiliaryInletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Chiller_Electric_ASHRAE205Fields::AuxiliaryInletNodeName);
+      if (auto mo_ = auxiliaryInletModelObject()) {
+        return mo_->optionalCast<Node>();
+      }
+      return boost::none;
+    }
+
+    unsigned ChillerElectricASHRAE205_Impl::auxiliaryOutletPort() const {
+      return OS_Chiller_Electric_ASHRAE205Fields::AuxiliaryOutletNodeName;
+    }
+
+    OptionalModelObject ChillerElectricASHRAE205_Impl::auxiliaryOutletModelObject() const {
+      return connectedObject(ChillerElectricASHRAE205_Impl::auxiliaryOutletPort());
     }
 
     boost::optional<Node> ChillerElectricASHRAE205_Impl::auxiliaryOutletNode() const {
-      return getObject<ModelObject>().getModelObjectTarget<Node>(OS_Chiller_Electric_ASHRAE205Fields::AuxiliaryOutletNodeName);
+      if (auto mo_ = auxiliaryOutletModelObject()) {
+        return mo_->optionalCast<Node>();
+      }
+      return boost::none;
+    }
+
+    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::auxiliaryLoop() const {
+      if (boost::optional<Node> n_ = auxiliaryOutletNode()) {
+        return n_->plantLoop();
+      }
+      return boost::none;
+    }
+
+    bool ChillerElectricASHRAE205_Impl::removeFromAuxiliaryLoop() {
+      if (auto plant = auxiliaryLoop()) {
+        return HVACComponent_Impl::removeFromLoop(plant->demandInletNode(), plant->demandOutletNode(), auxiliaryInletPort(), auxiliaryOutletPort());
+      }
+
+      return false;
+    }
+
+    bool ChillerElectricASHRAE205_Impl::addToAuxiliaryLoopNode(Node& node) {
+
+      if (node.getImpl<Node_Impl>()->isConnected(getObject<ModelObject>())) {
+        return false;
+      }
+
+      auto plantLoop_ = node.plantLoop();
+      if (!plantLoop_) {
+        LOG(Warn, "For " << briefDescription() << ", Oil Cooler Loop can only be connected to a PlantLoop");
+        return false;
+      }
+
+      if (!plantLoop_->demandComponent(node.handle())) {
+        LOG(Warn, "For " << briefDescription() << ", Oil Cooler Loop can only be connected to a PlantLoop on the demand side");
+        return false;
+      }
+
+      HVACComponent systemStartComponent = plantLoop_->demandInletNode();
+      HVACComponent systemEndComponent = plantLoop_->demandOutletNode();
+
+      removeFromAuxiliaryLoop();
+
+      return HVACComponent_Impl::addToNode(node, systemStartComponent, systemEndComponent, auxiliaryInletPort(), auxiliaryOutletPort());
     }
 
   }  // namespace detail
@@ -813,6 +947,28 @@ namespace model {
     return getImpl<detail::ChillerElectricASHRAE205_Impl>()->heatRecoveryOutletNode();
   }
 
+  // Oil Cooler Loop
+
+  unsigned ChillerElectricASHRAE205::oilCoolerInletPort() const {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->oilCoolerInletPort();
+  }
+  boost::optional<ModelObject> ChillerElectricASHRAE205::oilCoolerInletModelObject() const {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->oilCoolerInletModelObject();
+  }
+  boost::optional<Node> ChillerElectricASHRAE205::oilCoolerInletNode() const {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->oilCoolerInletNode();
+  }
+
+  unsigned ChillerElectricASHRAE205::oilCoolerOutletPort() const {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->oilCoolerOutletPort();
+  }
+  boost::optional<ModelObject> ChillerElectricASHRAE205::oilCoolerOutletModelObject() const {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->oilCoolerOutletModelObject();
+  }
+  boost::optional<Node> ChillerElectricASHRAE205::oilCoolerOutletNode() const {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->oilCoolerOutletNode();
+  }
+
   boost::optional<PlantLoop> ChillerElectricASHRAE205::oilCoolerLoop() const {
     return getImpl<detail::ChillerElectricASHRAE205_Impl>()->oilCoolerLoop();
   }
@@ -821,12 +977,30 @@ namespace model {
     return getImpl<detail::ChillerElectricASHRAE205_Impl>()->addToOilCoolerLoopNode(node);
   }
 
-  boost::optional<Node> ChillerElectricASHRAE205::oilCoolerInletNode() const {
-    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->oilCoolerInletNode();
+  bool ChillerElectricASHRAE205::removeFromOilCoolerLoop() {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->removeFromOilCoolerLoop();
   }
 
-  boost::optional<Node> ChillerElectricASHRAE205::oilCoolerOutletNode() const {
-    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->oilCoolerOutletNode();
+  // Auxiliary Loop
+
+  unsigned ChillerElectricASHRAE205::auxiliaryInletPort() const {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->auxiliaryInletPort();
+  }
+  boost::optional<ModelObject> ChillerElectricASHRAE205::auxiliaryInletModelObject() const {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->auxiliaryInletModelObject();
+  }
+  boost::optional<Node> ChillerElectricASHRAE205::auxiliaryInletNode() const {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->auxiliaryInletNode();
+  }
+
+  unsigned ChillerElectricASHRAE205::auxiliaryOutletPort() const {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->auxiliaryOutletPort();
+  }
+  boost::optional<ModelObject> ChillerElectricASHRAE205::auxiliaryOutletModelObject() const {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->auxiliaryOutletModelObject();
+  }
+  boost::optional<Node> ChillerElectricASHRAE205::auxiliaryOutletNode() const {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->auxiliaryOutletNode();
   }
 
   boost::optional<PlantLoop> ChillerElectricASHRAE205::auxiliaryLoop() const {
@@ -837,12 +1011,8 @@ namespace model {
     return getImpl<detail::ChillerElectricASHRAE205_Impl>()->addToAuxiliaryLoopNode(node);
   }
 
-  boost::optional<Node> ChillerElectricASHRAE205::auxiliaryInletNode() const {
-    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->auxiliaryInletNode();
-  }
-
-  boost::optional<Node> ChillerElectricASHRAE205::auxiliaryOutletNode() const {
-    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->auxiliaryOutletNode();
+  bool ChillerElectricASHRAE205::removeFromAuxiliaryLoop() {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->removeFromAuxiliaryLoop();
   }
 
   /// @cond
