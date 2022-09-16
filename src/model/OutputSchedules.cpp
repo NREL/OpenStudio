@@ -82,13 +82,6 @@ namespace model {
 
   }  // namespace detail
 
-  OutputSchedules::OutputSchedules(Model& model) : ModelObject(OutputSchedules::iddObjectType(), model) {
-    OS_ASSERT(getImpl<detail::OutputSchedules_Impl>());
-
-    bool ok = setKeyField("Hourly");
-    OS_ASSERT(ok);
-  }
-
   IddObjectType OutputSchedules::iddObjectType() {
     return IddObjectType(IddObjectType::OS_Output_Schedules);
   }
@@ -111,6 +104,11 @@ namespace model {
 
   /// @cond
   OutputSchedules::OutputSchedules(std::shared_ptr<detail::OutputSchedules_Impl> impl) : ModelObject(impl) {}
+  OutputSchedules::OutputSchedules(Model& model) : ModelObject(OutputSchedules::iddObjectType(), model) {
+    bool ok = setKeyField("Hourly");
+    OS_ASSERT(ok);
+  }
+
   /// @endcond
 
 }  // namespace model

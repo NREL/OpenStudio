@@ -87,29 +87,19 @@ namespace model {
 
   }  // namespace detail
 
-  OutputConstructions::OutputConstructions(Model& model) : ModelObject(OutputConstructions::iddObjectType(), model) {
-    OS_ASSERT(getImpl<detail::OutputConstructions_Impl>());
-
-    bool ok = true;
-    ok = setConstructions(true);
-    OS_ASSERT(ok);
-    ok = setMaterials(false);
-    OS_ASSERT(ok);
-  }
-
   IddObjectType OutputConstructions::iddObjectType() {
     return IddObjectType(IddObjectType::OS_Output_Constructions);
   }
 
   bool OutputConstructions::constructions() const {
-    return getImpl<detail::OutputConstructions_Impl>()->detailsType1();
+    return getImpl<detail::OutputConstructions_Impl>()->constructions();
   }
 
-  bool OutputConstructions::materials() {
-    return getImpl<detail::OutputConstructions_Impl>()->setDetailsType1(detailsType1);
+  bool OutputConstructions::materials() const {
+    return getImpl<detail::OutputConstructions_Impl>()->materials();
   }
 
-  bool OutputConstructions::setConstructions(bool constructions) const {
+  bool OutputConstructions::setConstructions(bool constructions) {
     return getImpl<detail::OutputConstructions_Impl>()->setConstructions(constructions);
   }
 
@@ -119,6 +109,12 @@ namespace model {
 
   /// @cond
   OutputConstructions::OutputConstructions(std::shared_ptr<detail::OutputConstructions_Impl> impl) : ModelObject(impl) {}
+  OutputConstructions::OutputConstructions(Model& model) : ModelObject(OutputConstructions::iddObjectType(), model) {
+    bool ok = setConstructions(true);
+    OS_ASSERT(ok);
+    ok = setMaterials(false);
+    OS_ASSERT(ok);
+  }
 
   /// @endcond
 
