@@ -31,15 +31,13 @@
 
 #include "../../model/ChillerElectricASHRAE205.hpp"
 
-// TODO: Check the following class names against object getters and setters.
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
-#include "../../model/Zone.hpp"
-#include "../../model/Zone_Impl.hpp"
+#include "../../model/ThermalZone.hpp"
+#include "../../model/ThermalZone_Impl.hpp"
 
-#include "../../model/Node.hpp"
-#include "../../model/Node_Impl.hpp"
+#include "../../model/ExternalFile.hpp"
 
 #include <utilities/idd/Chiller_Electric_ASHRAE205_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -51,14 +49,23 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<ModelObject> ReverseTranslator::translateChillerElectricASHRAE205(const WorkspaceObject& workspaceObject) {
-    boost::optional<ModelObject> result;
-    boost::optional<WorkspaceObject> _wo;
-    boost::optional<ModelObject> _mo;
 
-    // Instantiate an object of the class to store the values,
-    // but we don't return it until we know it's ok
-    // TODO: check constructor, it might need other objects
-    openstudio::model::ChillerElectricASHRAE205 modelObject(m_model);
+    std::string fileName = workspaceObject.getString(Chiller_Electric_ASHRAE205Fields::RepresentationFileName).get();
+    boost::optional<ExternalFile> extfile = ExternalFile::getExternalFile(m_model, fileName);
+
+    if (!extfile) {
+      LOG(Error, "Could not translate " << workspaceObject.briefDescription() << ", cannot find Representation File \"" << fileName << "\"");
+      return boost::none;
+    }
+
+    boost::optional<std::string> ambientTemperatureIndicator_ =
+      workspaceObject.getString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureIndicator);
+    if (!ambientTemperatureIndicator_) {
+      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Ambient Temperature Indicator'");
+      return boost::none;
+    }
+
+    openstudio::model::ChillerElectricASHRAE205 modelObject(extfile.get());
 
     // TODO: Note JM 2018-10-17
     // You are responsible for implementing any additional logic based on choice fields, etc.
@@ -67,14 +74,6 @@ namespace energyplus {
     // Name
     if (boost::optional<std::string> _name = workspaceObject.name()) {
       modelObject.setName(_name.get());
-    }
-
-    // Representation File Name: Required String
-    if (boost::optional<std::string> _representationFileName = workspaceObject.getString(Chiller_Electric_ASHRAE205Fields::RepresentationFileName)) {
-      modelObject.setRepresentationFileName(_representationFileName.get());
-    } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Representation File Name'");
-      return result;
     }
 
     // Performance Interpolation Method: Optional String
@@ -94,109 +93,47 @@ namespace energyplus {
     }
 
     // Ambient Temperature Indicator: Required String
-    if (boost::optional<std::string> _ambientTemperatureIndicator =
-          workspaceObject.getString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureIndicator)) {
-      modelObject.setAmbientTemperatureIndicator(_ambientTemperatureIndicator.get());
+    if (openstudio::istringEqual("Schedule", ambientTemperatureIndicator_.get())) {
+
+      // Ambient Temperature Schedule Name: Optional Object
+      if (auto wo_sch_ = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureScheduleName)) {
+        if (auto mo_sch_ = translateAndMapWorkspaceObject(wo_sch_.get())) {
+          if (boost::optional<Schedule> sch_ = mo_sch_->optionalCast<Schedule>()) {
+            modelObject.setAmbientTemperatureSchedule(sch_.get());
+          } else {
+            LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Ambient Temperature Schedule Name'");
+          }
+        }
+      } else {
+        LOG(Warn, workspaceObject.briefDescription()
+                    << " has an Ambient Temperature Indicator of type Schedule, but no Schedule. Falling back to 'Outdoors'");
+      }
+    } else if (openstudio::istringEqual("Zone", ambientTemperatureIndicator_.get())) {
+
+      // Ambient Temperature Zone Name: Optional Object
+      if (auto wo_z_ = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureZoneName)) {
+        if (auto mo_z_ = translateAndMapWorkspaceObject(wo_z_.get())) {
+          // TODO: check return types
+          if (boost::optional<ThermalZone> z_ = mo_z_->optionalCast<ThermalZone>()) {
+            modelObject.setAmbientTemperatureZone(z_.get());
+          } else {
+            LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Ambient Temperature Zone Name'");
+          }
+        }
+      }
     } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required property 'Ambient Temperature Indicator'");
-      return result;
+      // Ambient Temperature Outdoor Air Node Name: Optional Node
+      if (boost::optional<std::string> s_ = workspaceObject.getString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureOutdoorAirNodeName)) {
+        modelObject.setAmbientTemperatureOutdoorAirNodeName(s_.get());
+      }
     }
 
-    // Ambient Temperature Schedule Name: Optional Object
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureScheduleName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Schedule> _ambientTemperatureSchedule = _mo->optionalCast<Schedule>()) {
-          modelObject.setAmbientTemperatureSchedule(_ambientTemperatureSchedule.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Ambient Temperature Schedule Name'");
-        }
-      }
-    }
-    // Ambient Temperature Zone Name: Optional Object
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureZoneName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Zone> _ambientTemperatureZone = _mo->optionalCast<Zone>()) {
-          modelObject.setAmbientTemperatureZone(_ambientTemperatureZone.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Ambient Temperature Zone Name'");
-        }
-      }
-    }
-    // Ambient Temperature Outdoor Air Node Name: Optional Node
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureOutdoorAirNodeName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _ambientTemperatureOutdoorAirNodeName = _mo->optionalCast<Node>()) {
-          modelObject.setAmbientTemperatureOutdoorAirNodeName(_ambientTemperatureOutdoorAirNodeName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Ambient Temperature Outdoor Air Node Name'");
-        }
-      }
-    }
-    // Chilled Water Inlet Node Name: Required Node
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::ChilledWaterInletNodeName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _chilledWaterInletNodeName = _mo->optionalCast<Node>()) {
-          modelObject.setChilledWaterInletNodeName(_chilledWaterInletNodeName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Chilled Water Inlet Node Name'");
-        }
-      } else {
-        LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Chilled Water Inlet Node Name'");
-        return result;
-      }
-    } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Chilled Water Inlet Node Name'");
-      return result;
-    }
-    // Chilled Water Outlet Node Name: Required Node
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::ChilledWaterOutletNodeName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _chilledWaterOutletNodeName = _mo->optionalCast<Node>()) {
-          modelObject.setChilledWaterOutletNodeName(_chilledWaterOutletNodeName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Chilled Water Outlet Node Name'");
-        }
-      } else {
-        LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot reverse translate required object 'Chilled Water Outlet Node Name'");
-        return result;
-      }
-    } else {
-      LOG(Error, "For " << workspaceObject.briefDescription() << ", cannot find required object 'Chilled Water Outlet Node Name'");
-      return result;
-    }
     // Chilled Water Maximum Requested Flow Rate: Optional Double
     if (boost::optional<double> _chilledWaterMaximumRequestedFlowRate =
           workspaceObject.getDouble(Chiller_Electric_ASHRAE205Fields::ChilledWaterMaximumRequestedFlowRate)) {
       modelObject.setChilledWaterMaximumRequestedFlowRate(_chilledWaterMaximumRequestedFlowRate.get());
     }
 
-    // Condenser Inlet Node Name: Optional Node
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::CondenserInletNodeName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _condenserInletNodeName = _mo->optionalCast<Node>()) {
-          modelObject.setCondenserInletNodeName(_condenserInletNodeName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Condenser Inlet Node Name'");
-        }
-      }
-    }
-    // Condenser Outlet Node Name: Optional Node
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::CondenserOutletNodeName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _condenserOutletNodeName = _mo->optionalCast<Node>()) {
-          modelObject.setCondenserOutletNodeName(_condenserOutletNodeName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Condenser Outlet Node Name'");
-        }
-      }
-    }
     // Condenser Maximum Requested Flow Rate: Optional Double
     if (boost::optional<double> _condenserMaximumRequestedFlowRate =
           workspaceObject.getDouble(Chiller_Electric_ASHRAE205Fields::CondenserMaximumRequestedFlowRate)) {
@@ -208,90 +145,35 @@ namespace energyplus {
       modelObject.setChillerFlowMode(_chillerFlowMode.get());
     }
 
-    // Oil Cooler Inlet Node Name: Optional Node
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::OilCoolerInletNodeName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _oilCoolerInletNodeName = _mo->optionalCast<Node>()) {
-          modelObject.setOilCoolerInletNodeName(_oilCoolerInletNodeName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Oil Cooler Inlet Node Name'");
-        }
-      }
-    }
-    // Oil Cooler Outlet Node Name: Optional Node
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::OilCoolerOutletNodeName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _oilCoolerOutletNodeName = _mo->optionalCast<Node>()) {
-          modelObject.setOilCoolerOutletNodeName(_oilCoolerOutletNodeName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Oil Cooler Outlet Node Name'");
-        }
-      }
-    }
-    // Oil Cooler Design Flow Rate: Optional Double
     if (boost::optional<double> _oilCoolerDesignFlowRate = workspaceObject.getDouble(Chiller_Electric_ASHRAE205Fields::OilCoolerDesignFlowRate)) {
       modelObject.setOilCoolerDesignFlowRate(_oilCoolerDesignFlowRate.get());
     }
 
-    // Auxiliary Inlet Node Name: Optional Node
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::AuxiliaryInletNodeName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _auxiliaryInletNodeName = _mo->optionalCast<Node>()) {
-          modelObject.setAuxiliaryInletNodeName(_auxiliaryInletNodeName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Auxiliary Inlet Node Name'");
-        }
-      }
-    }
-    // Auxiliary Outlet Node Name: Optional Node
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::AuxiliaryOutletNodeName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _auxiliaryOutletNodeName = _mo->optionalCast<Node>()) {
-          modelObject.setAuxiliaryOutletNodeName(_auxiliaryOutletNodeName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Auxiliary Outlet Node Name'");
-        }
-      }
-    }
     // Auxiliary Cooling Design Flow Rate: Optional Double
     if (boost::optional<double> _auxiliaryCoolingDesignFlowRate =
           workspaceObject.getDouble(Chiller_Electric_ASHRAE205Fields::AuxiliaryCoolingDesignFlowRate)) {
       modelObject.setAuxiliaryCoolingDesignFlowRate(_auxiliaryCoolingDesignFlowRate.get());
     }
 
-    // Heat Recovery Inlet Node Name: Optional Node
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::HeatRecoveryInletNodeName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _heatRecoveryInletNodeName = _mo->optionalCast<Node>()) {
-          modelObject.setHeatRecoveryInletNodeName(_heatRecoveryInletNodeName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Heat Recovery Inlet Node Name'");
-        }
-      }
-    }
-    // Heat Recovery Outlet Node Name: Optional Node
-    if ((_wo = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::HeatRecoveryOutletNodeName))) {
-      if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        // TODO: check return types
-        if (boost::optional<Node> _heatRecoveryOutletNodeName = _mo->optionalCast<Node>()) {
-          modelObject.setHeatRecoveryOutletNodeName(_heatRecoveryOutletNodeName.get());
-        } else {
-          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Heat Recovery Outlet Node Name'");
-        }
-      }
-    }
     // End-Use Subcategory: Optional String
     if (boost::optional<std::string> _endUseSubcategory = workspaceObject.getString(Chiller_Electric_ASHRAE205Fields::EndUseSubcategory)) {
       modelObject.setEndUseSubcategory(_endUseSubcategory.get());
     }
 
-    result = modelObject;
-    return result;
+    if (workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::ChilledWaterInletNodeName)
+        || workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::ChilledWaterOutletNodeName)
+        || workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::CondenserInletNodeName)
+        || workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::CondenserOutletNodeName)
+        || workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::HeatRecoveryInletNodeName)
+        || workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::HeatRecoveryOutletNodeName)
+        || workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::OilCoolerInletNodeName)
+        || workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::OilCoolerOutletNodeName)
+        || workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::AuxiliaryInletNodeName)
+        || workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::AuxiliaryOutletNodeName)) {
+      LOG(Warn, "For " << workspaceObject.briefDescription() << " Loop Connections are NOT ReverseTranslated.");
+    }
+
+    return modelObject;
   }  // End of translate function
 
 }  // end namespace energyplus

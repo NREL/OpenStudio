@@ -458,6 +458,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateBuilding.cpp
   ReverseTranslator/ReverseTranslateBuildingSurfaceDetailed.cpp
   ReverseTranslator/ReverseTranslateControllerOutdoorAir.cpp
+  ReverseTranslator/ReverseTranslateChillerElectricASHRAE205.cpp
   ReverseTranslator/ReverseTranslateCoilCoolingDX.cpp
   ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitPerformance.cpp
   ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitOperatingMode.cpp
