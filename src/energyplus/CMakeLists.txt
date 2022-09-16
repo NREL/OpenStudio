@@ -259,6 +259,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateOutputJSON.cpp
   ForwardTranslator/ForwardTranslateOutputSQLite.cpp
   ForwardTranslator/ForwardTranslateOutputEnvironmentalImpactFactors.cpp
+  ForwardTranslator/ForwardTranslateOutputSchedules.cpp
+  ForwardTranslator/ForwardTranslateOutputConstructions.cpp
   ForwardTranslator/ForwardTranslateEnvironmentalImpactFactors.cpp
   ForwardTranslator/ForwardTranslateFuelFactors.cpp
   ForwardTranslator/ForwardTranslateOutputTableSummaryReports.cpp
@@ -543,6 +545,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateOutputJSON.cpp
   ReverseTranslator/ReverseTranslateOutputSQLite.cpp
   ReverseTranslator/ReverseTranslateOutputEnvironmentalImpactFactors.cpp
+  ReverseTranslator/ReverseTranslateOutputSchedules.cpp
+  ReverseTranslator/ReverseTranslateOutputConstructions.cpp
   ReverseTranslator/ReverseTranslateEnvironmentalImpactFactors.cpp
   ReverseTranslator/ReverseTranslateFuelFactors.cpp
   ReverseTranslator/ReverseTranslateOutputIlluminanceMap.cpp
@@ -738,6 +742,8 @@ set(${target_name}_test_src
   Test/OutputSQLite_GTest.cpp
   Test/OutputEnvironmentalImpactFactors_GTest.cpp
   Test/OutputTableSummaryReports_GTest.cpp
+  Test/OutputSchedules_GTest.cpp
+  Test/OutputConstructions_GTest.cpp
   Test/People_GTest.cpp
   Test/PhotovoltaicPerformanceSandia_GTest.cpp
   Test/PerformancePrecisionTradeoffs_GTest.cpp
