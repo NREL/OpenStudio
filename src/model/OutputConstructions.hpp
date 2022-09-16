@@ -55,26 +55,20 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
-    static std::vector<std::string> detailsType1Values();
-    static std::vector<std::string> validDetailesType1Values();
-
-    static std::vector<std::string> detailsType2Values();
-    static std::vector<std::string> validDetailesType2Values();
-
     /** @name Getters */
     //@{
 
-    std::string detailsType1() const;
+    bool constructions() const;
 
-    std::string detailsType2() const;
+    bool materials() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setDetailsType1(std::string detailsType1);
+    bool setConstructions(bool constructions);
 
-    bool setDetailsType2(std::string detailsType2);
+    bool setMaterials(bool materials);
 
     //@}
     /** @name Other */

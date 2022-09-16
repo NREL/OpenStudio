@@ -26,70 +26,25 @@
 *  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
+#include <gtest/gtest.h>
 
-#ifndef MODEL_OUTPUTCONSTRUCTIONS_IMPL_HPP
-#define MODEL_OUTPUTCONSTRUCTIONS_IMPL_HPP
+#include "ModelFixture.hpp"
+#include "../OutputConstructions.hpp"
+#include "../OutputConstructions_Impl.hpp"
 
-#include <model/ModelAPI.hpp>
-#include "ModelObject_Impl.hpp"
+using namespace openstudio;
+using namespace openstudio::model;
 
-namespace openstudio {
-namespace model {
+TEST_F(ModelFixture, OutputConstructions_GettersSetters) {
+  Model m;
+  OutputConstructions mo = m.getUniqueModelObject<OutputConstructions>();
 
-  namespace detail {
-
-    /** OutputConstructions_Impl is a ModelObject_Impl that is the implementation class for OutputConstructions.*/
-    class MODEL_API OutputConstructions_Impl : public ModelObject_Impl
-    {
-     public:
-      /** @name Constructors and Destructors */
-      //@{
-
-      OutputConstructions_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
-
-      OutputConstructions_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
-
-      OutputConstructions_Impl(const OutputConstructions_Impl& other, Model_Impl* model, bool keepHandle);
-
-      virtual ~OutputConstructions_Impl() {}
-
-      //@}
-      /** @name Virtual Methods */
-      //@{
-
-      virtual const std::vector<std::string>& outputVariableNames() const override;
-
-      virtual IddObjectType iddObjectType() const override;
-
-      //@}
-      /** @name Getters */
-      //@{
-
-      bool constructions() const;
-
-      bool materials() const;
-
-      //@}
-      /** @name Setters */
-      //@{
-
-      bool setConstructions(bool constructions);
-
-      bool setMaterials(bool materials);
-
-      //@}
-      /** @name Other */
-      //@{
-
-      //@}
-     protected:
-     private:
-      REGISTER_LOGGER("openstudio.model.OutputConstructions");
-    };
-
-  }  // namespace detail
-
-}  // namespace model
-}  // namespace openstudio
-
-#endif  // MODEL_OUTPUTCONSTRUCTIONS_IMPL_HPP
+  EXPECT_TRUE(mo.constructions());
+  EXPECT_FALSE(mo.materials());
+  
+  EXPECT_TRUE(mo.setConstructions(false));
+  EXPECT_TRUE(mo.setMaterials(true));
+  
+  EXPECT_FALSE(mo.constructions());
+  EXPECT_TRUE(mo.materials());
+}  // End of Getter_Setters test

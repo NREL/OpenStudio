@@ -69,69 +69,56 @@ namespace model {
       return OutputConstructions::iddObjectType();
     }
 
-    std::string OutputConstructions_Impl::detailsType1() const {
-      boost::optional<std::string> value = getString(OS_Output_ConstructionsFields::DetailsType1, true);
-      OS_ASSERT(value);
-      return value.get();
+    bool OutputConstructions_Impl::constructions() const {
+      return getBooleanFieldValue(OS_Output_ConstructionsFields::Constructions);
     }
 
-    std::string OutputConstructions_Impl::detailsType2() const {
-      boost::optional<std::string> value = getString(OS_Output_ConstructionsFields::DetailsType2, true);
-      OS_ASSERT(value);
-      return value.get();
+    bool OutputConstructions_Impl::materials() const {
+      return getBooleanFieldValue(OS_Output_ConstructionsFields::Materials);
     }
 
-    bool OutputConstructions_Impl::setDetailsType1(std::string detailsType1) {
-      bool result = setString(OS_Output_ConstructionsFields::DetailsType1, detailsType1);
-      return result;
+    bool OutputConstructions_Impl::setConstructions(bool constructions) {
+      return setBooleanFieldValue(OS_Output_ConstructionsFields::Constructions, constructions);
     }
 
-    bool OutputConstructions_Impl::setDetailsType2(std::string detailsType2) {
-      bool result = setString(OS_Output_ConstructionsFields::DetailsType2, detailsType2);
-      return result;
+    bool OutputConstructions_Impl::setMaterials(bool materials) {
+      return setBooleanFieldValue(OS_Output_ConstructionsFields::Materials, materials);
     }
 
   }  // namespace detail
+
+  OutputConstructions::OutputConstructions(Model& model) : ModelObject(OutputConstructions::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::OutputConstructions_Impl>());
+
+    bool ok = true;
+    ok = setConstructions(true);
+    OS_ASSERT(ok);
+    ok = setMaterials(false);
+    OS_ASSERT(ok);
+  }
 
   IddObjectType OutputConstructions::iddObjectType() {
     return IddObjectType(IddObjectType::OS_Output_Constructions);
   }
 
-  std::vector<std::string> OutputConstructions::detailsType1Values() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Output_ConstructionsFields::DetailsType1);
-  }
-
-  std::vector<std::string> OutputConstructions::validDetailsType1Values() {
-    return detailsType1Values();
-  }
-
-  std::vector<std::string> OutputConstructions::detailsType2Values() {
-    return getIddKeyNames(IddFactory::instance().getObject(iddObjectType()).get(), OS_Output_ConstructionsFields::DetailsType2);
-  }
-
-  std::vector<std::string> OutputConstructions::validDetailsType2Values() {
-    return detailsType2Values();
-  }
-
-  std::string OutputConstructions::detailsType1() const {
+  bool OutputConstructions::constructions() const {
     return getImpl<detail::OutputConstructions_Impl>()->detailsType1();
   }
 
-  bool OutputConstructions::setDetailsType1(std::string detailsType1) {
+  bool OutputConstructions::materials() {
     return getImpl<detail::OutputConstructions_Impl>()->setDetailsType1(detailsType1);
   }
 
-  std::string OutputConstructions::detailsType2() const {
-    return getImpl<detail::OutputConstructions_Impl>()->detailsType2();
+  bool OutputConstructions::setConstructions(bool constructions) const {
+    return getImpl<detail::OutputConstructions_Impl>()->setConstructions(constructions);
   }
 
-  bool OutputConstructions::setDetailsType2(std::string detailsType2) {
-    return getImpl<detail::OutputConstructions_Impl>()->setDetailsType2(detailsType2);
+  bool OutputConstructions::setMaterials(bool materials) {
+    return getImpl<detail::OutputConstructions_Impl>()->setMaterials(materials);
   }
 
   /// @cond
   OutputConstructions::OutputConstructions(std::shared_ptr<detail::OutputConstructions_Impl> impl) : ModelObject(impl) {}
-  OutputConstructions::OutputConstructions(Model& model) : ModelObject(OutputConstructions::iddObjectType(), model) {}
 
   /// @endcond
 

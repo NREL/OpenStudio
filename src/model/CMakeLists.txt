@@ -2144,6 +2144,8 @@ set(${target_name}_test_src
   test/OutputMeter_GTest.cpp
   test/OutputVariable_GTest.cpp
   test/OutputTableSummaryReports_GTest.cpp
+  test/OutputSchedules_GTest.cpp
+  test/OutputConstructions_GTest.cpp
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp
   test/PeopleDefinition_GTest.cpp
