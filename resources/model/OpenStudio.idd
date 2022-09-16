@@ -34612,6 +34612,39 @@ OS:UtilityCost:Computation,
 
 \group OpenStudio Output Requests
 
+OS:Output:Schedules,
+       \memo Produces a condensed reporting that illustrates the full range of schedule values in
+       \memo the eio output file. In the style of input: DaySchedule,  WeekSchedule, and
+       \memo Annual Schedule.
+       \format singleLine
+       \unique-object
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2;  \field Key Field
+       \required-field
+       \type choice
+       \key Hourly
+       \key Timestep
+
+OS:Output:Constructions,
+       \memo Adds a report to the eio output file which shows details for each construction,
+       \memo including overall properties, a list of material layers, and calculated results
+       \memo related to conduction transfer functions.
+       \format singleLine
+       \unique-object
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Details Type 1
+       \type choice
+       \key Constructions
+       \key Materials
+  A3;  \field Details Type 2
+       \type choice
+       \key Constructions
+       \key Materials
+
 OS:OutputControl:Files,
        \memo Conditionally turn on/off output from EnergyPlus.
        \unique-object
