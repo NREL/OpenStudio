@@ -255,6 +255,37 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
       ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), ch.nameString());
       ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(), e.inletNodeName);
       ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(), e.outletNodeName);
+
+      WorkspaceObject idf_plant_op = p_->getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
+      if (e.isSupply) {
+        // Should have created a Cooling Load one only
+        ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+        auto w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+        ASSERT_EQ("PlantEquipmentOperation:CoolingLoad",
+                  w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
+
+        // Get the Operation Scheme
+        auto op_scheme_ = w_eg.getTarget(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeName);
+        ASSERT_TRUE(op_scheme_);
+
+        // Get the Plant Equipment List of this CoolingLoad scheme
+        // There should only be one Load Range
+        ASSERT_EQ(1u, op_scheme_->extensibleGroups().size());
+
+        // Load range 1
+        w_eg = op_scheme_->extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+        auto peq_list_ = w_eg.getTarget(PlantEquipmentOperation_HeatingLoadExtensibleFields::RangeEquipmentListName);
+        ASSERT_TRUE(peq_list_);
+
+        // Should have one equipment on it: CentralHeatPumpSystem
+        auto peqs = peq_list_->extensibleGroups();
+        ASSERT_EQ(1u, peqs.size());
+        ASSERT_EQ("Chiller:Electric:ASHRAE205", peqs.front().getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
+        ASSERT_EQ(ch.nameString(), peqs.front().getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
+
+      } else {
+        EXPECT_EQ(1u, idf_plant_op.extensibleGroups().size());
+      }
     }
   }
 
