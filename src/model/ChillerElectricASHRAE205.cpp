@@ -402,10 +402,6 @@ namespace model {
       return OS_Chiller_Electric_ASHRAE205Fields::ChilledWaterOutletNodeName;
     }
 
-    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::chilledWaterLoop() const {
-      return WaterToWaterComponent_Impl::plantLoop();
-    }
-
     boost::optional<Node> ChillerElectricASHRAE205_Impl::chilledWaterInletNode() const {
       if (auto mo_ = supplyInletModelObject()) {
         return mo_->optionalCast<Node>();
@@ -430,10 +426,6 @@ namespace model {
       return OS_Chiller_Electric_ASHRAE205Fields::CondenserOutletNodeName;
     }
 
-    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::condenserWaterLoop() const {
-      return WaterToWaterComponent_Impl::secondaryPlantLoop();
-    }
-
     boost::optional<Node> ChillerElectricASHRAE205_Impl::condenserInletNode() const {
       if (auto mo_ = demandInletModelObject()) {
         return mo_->optionalCast<Node>();
@@ -455,10 +447,6 @@ namespace model {
 
     unsigned ChillerElectricASHRAE205_Impl::tertiaryOutletPort() const {
       return OS_Chiller_Electric_ASHRAE205Fields::HeatRecoveryOutletNodeName;
-    }
-
-    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::heatRecoveryLoop() const {
-      return WaterToWaterComponent_Impl::tertiaryPlantLoop();
     }
 
     boost::optional<Node> ChillerElectricASHRAE205_Impl::heatRecoveryInletNode() const {
@@ -586,6 +574,17 @@ namespace model {
         }
       }
       return boost::none;
+    }
+
+    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::chilledWaterLoop() const {
+      return plantLoop();
+    }
+
+    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::condenserWaterLoop() const {
+      return secondaryPlantLoop();
+    }
+    boost::optional<PlantLoop> ChillerElectricASHRAE205_Impl::heatRecoveryLoop() const {
+      return tertiaryPlantLoop();
     }
 
     // Extra loops
