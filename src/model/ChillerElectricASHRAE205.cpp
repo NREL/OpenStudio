@@ -40,6 +40,8 @@
 #include "ThermalZone.hpp"
 #include "ThermalZone_Impl.hpp"
 #include "Model.hpp"
+#include "Mixer.hpp"
+#include "Splitter.hpp"
 
 #include "ScheduleTypeLimits.hpp"
 #include "ScheduleTypeRegistry.hpp"
@@ -593,6 +595,46 @@ namespace model {
       return false;
     }
 
+    bool ChillerElectricASHRAE205_Impl::addDemandBranchOnOilCoolerLoop(PlantLoop& plantLoop) {
+      Model _model = this->model();
+
+      if (plantLoop.model() != _model) {
+        return false;
+      }
+
+      Splitter splitter = plantLoop.demandSplitter();
+      Mixer mixer = plantLoop.demandMixer();
+
+      if (splitter.outletModelObjects().size() == 1u) {
+        if (boost::optional<ModelObject> mo = splitter.lastOutletModelObject()) {
+          if (boost::optional<Node> node = mo->optionalCast<Node>()) {
+            if ((node->outletModelObject().get() == mixer) && (node->inletModelObject().get() == splitter)) {
+
+              return addToOilCoolerLoopNode(node.get());
+            }
+          }
+        }
+      }
+
+      unsigned nextOutletPort = splitter.nextOutletPort();
+      unsigned nextInletPort = mixer.nextInletPort();
+
+      Node node(_model);
+
+      _model.connect(splitter, nextOutletPort, node, node.inletPort());
+      _model.connect(node, node.outletPort(), mixer, nextInletPort);
+
+      if (addToOilCoolerLoopNode(node)) {
+        return true;
+      }
+
+      _model.disconnect(node, node.outletPort());
+      _model.disconnect(node, node.inletPort());
+      node.remove();
+
+      return false;
+    }
+
     bool ChillerElectricASHRAE205_Impl::addToOilCoolerLoopNode(Node& node) {
 
       if (node.getImpl<Node_Impl>()->isConnected(getObject<ModelObject>())) {
@@ -688,6 +730,17 @@ namespace model {
       removeFromAuxiliaryLoop();
 
       return HVACComponent_Impl::addToNode(node, systemStartComponent, systemEndComponent, auxiliaryInletPort(), auxiliaryOutletPort());
+    }
+
+    ModelObject ChillerElectricASHRAE205_Impl::clone(Model model) const {
+      // WaterToWaterComponent resets the supply, demand and tertiary ports
+      auto mo = WaterToWaterComponent_Impl::clone(model);
+
+      mo.setString(oilCoolerInletPort(), "");
+      mo.setString(oilCoolerOutletPort(), "");
+      mo.setString(auxiliaryInletPort(), "");
+      mo.setString(auxiliaryOutletPort(), "");
+      return mo;
     }
 
   }  // namespace detail
@@ -971,6 +1024,10 @@ namespace model {
 
   boost::optional<PlantLoop> ChillerElectricASHRAE205::oilCoolerLoop() const {
     return getImpl<detail::ChillerElectricASHRAE205_Impl>()->oilCoolerLoop();
+  }
+
+  bool ChillerElectricASHRAE205::addDemandBranchOnOilCoolerLoop(PlantLoop& plantLoop) {
+    return getImpl<detail::ChillerElectricASHRAE205_Impl>()->addDemandBranchOnOilCoolerLoop(plantLoop);
   }
 
   bool ChillerElectricASHRAE205::addToOilCoolerLoopNode(Node& node) {

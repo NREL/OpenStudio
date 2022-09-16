@@ -97,6 +97,8 @@ namespace model {
       /* Restricts addToTertiaryNode to a node that is on the demand side of a plant loop (tertiary = Heat Recovery Loop) */
       virtual bool addToTertiaryNode(Node& node) override;
 
+      virtual ModelObject clone(Model model) const override;
+
       virtual void autosize() override;
 
       virtual void applySizingValues() override;
@@ -209,6 +211,7 @@ namespace model {
       /*static*/ unsigned oilCoolerOutletPort() const;
       boost::optional<ModelObject> oilCoolerOutletModelObject() const;
       boost::optional<PlantLoop> oilCoolerLoop() const;
+      bool addDemandBranchOnOilCoolerLoop(PlantLoop& plantLoop);
       bool addToOilCoolerLoopNode(Node& node);
       bool removeFromOilCoolerLoop();
       boost::optional<Node> oilCoolerInletNode() const;

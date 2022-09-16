@@ -185,6 +185,7 @@ namespace model {
     boost::optional<ModelObject> oilCoolerOutletModelObject() const;
     boost::optional<Node> oilCoolerOutletNode() const;
     boost::optional<PlantLoop> oilCoolerLoop() const;
+    bool addDemandBranchOnOilCoolerLoop(PlantLoop& plantLoop);
     bool addToOilCoolerLoopNode(Node& node);
     bool removeFromOilCoolerLoop();
 
