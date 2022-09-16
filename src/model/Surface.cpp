@@ -341,14 +341,16 @@ namespace model {
     bool Surface_Impl::isGroundSurface() const {
       std::string outsideBoundaryCondition = this->outsideBoundaryCondition();
 
-      if (istringEqual("Ground", outsideBoundaryCondition) || istringEqual("GroundFCfactorMethod", outsideBoundaryCondition)
-          || istringEqual("GroundSlabPreprocessorAverage", outsideBoundaryCondition)
-          || istringEqual("GroundSlabPreprocessorCore", outsideBoundaryCondition)
-          || istringEqual("GroundSlabPreprocessorPerimeter", outsideBoundaryCondition)
-          || istringEqual("GroundBasementPreprocessorAverageWall", outsideBoundaryCondition)
-          || istringEqual("GroundBasementPreprocessorAverageFloor", outsideBoundaryCondition)
-          || istringEqual("GroundBasementPreprocessorUpperWall", outsideBoundaryCondition)
-          || istringEqual("GroundBasementPreprocessorLowerWall", outsideBoundaryCondition) || istringEqual("Foundation", outsideBoundaryCondition)) {
+      if (istringEqual("Ground", outsideBoundaryCondition) ||
+          istringEqual("GroundFCfactorMethod", outsideBoundaryCondition) ||
+          istringEqual("GroundSlabPreprocessorAverage", outsideBoundaryCondition) ||
+          istringEqual("GroundSlabPreprocessorCore", outsideBoundaryCondition) ||
+          istringEqual("GroundSlabPreprocessorPerimeter", outsideBoundaryCondition) ||
+          istringEqual("GroundBasementPreprocessorAverageWall", outsideBoundaryCondition) ||
+          istringEqual("GroundBasementPreprocessorAverageFloor", outsideBoundaryCondition) ||
+          istringEqual("GroundBasementPreprocessorUpperWall", outsideBoundaryCondition) ||
+          istringEqual("GroundBasementPreprocessorLowerWall", outsideBoundaryCondition) ||
+          istringEqual("Foundation", outsideBoundaryCondition)) {
         return true;
       }
 
