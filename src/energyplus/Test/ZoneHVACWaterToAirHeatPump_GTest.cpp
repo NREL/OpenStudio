@@ -90,17 +90,36 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
   EXPECT_EQ(1u, idf_hcs.size());
   WorkspaceObject idf_hc(idf_hcs[0]);
 
+  WorkspaceObjectVector idf_fans(w.getObjectsByType(IddObjectType::Fan_OnOff));
+  EXPECT_EQ(1u, idf_fans.size());
+  WorkspaceObject idf_fan(idf_fans[0]);
+
+  WorkspaceObjectVector idf_supHCs(w.getObjectsByType(IddObjectType::Coil_Heating_Electric));
+  EXPECT_EQ(1u, idf_supHCs.size());
+  WorkspaceObject idf_supHC(idf_supHCs[0]);
+
   // Check Node Connections
+  // --- CC --- HC --- Fan --- supHC
   EXPECT_EQ("", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AirInletNodeName).get());
   EXPECT_EQ("", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AirOutletNodeName).get());
 
+  EXPECT_EQ("Zone HVAC Water To Air Heat Pump 1 Fan Outlet Node",
+            idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirInletNodeName).get());
   EXPECT_EQ("Zone HVAC Water To Air Heat Pump 1 Cooling Coil Outlet Node",
+            idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get());
+
+  EXPECT_EQ(idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get(),
             idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirInletNodeName).get());
   EXPECT_EQ("Zone HVAC Water To Air Heat Pump 1 Heating Coil Outlet Node",
             idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get());
 
-  EXPECT_EQ("", idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirInletNodeName).get());
-  EXPECT_EQ("", idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get());
+  EXPECT_EQ(idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get(),
+            idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
+  EXPECT_EQ("", idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get());
+
+  EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(),
+            idf_supHC.getString(Coil_Heating_ElectricFields::AirInletNodeName).get(),
+  EXPECT_EQ("", idf_supHC.getString(Coil_Heating_ElectricFields::AirOutletNodeName).get());
 
   EXPECT_EQ(hp.nameString(), idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::Name).get());
   EXPECT_EQ(sch.nameString(), idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AvailabilityScheduleName).get());
