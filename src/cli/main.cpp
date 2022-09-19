@@ -37,6 +37,12 @@ int main(int argc, char* argv[]) {
   int result = 0;
 
   if ((argc > 1) && (std::string_view(argv[1]) == "experimental")) {
+    openstudio::pythonEngine = openstudio::loadScriptEngine("pythonengine", argc - 1, argv + 1);
+    openstudio::rubyEngine = openstudio::loadScriptEngine("rubyengine", argc - 1, argv + 1);
+
+    openstudio::pythonEngine->exec("print('PythonEngine is running')");
+    openstudio::rubyEngine->exec("puts 'RubyEngine is running'");
+
     CLI::App app{"openstudio"};
 
     const auto experimentalApp = app.add_subcommand("experimental");
