@@ -36,6 +36,8 @@
 
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 
 #include "../../model/ExternalFile.hpp"
 
@@ -66,10 +68,6 @@ namespace energyplus {
     }
 
     openstudio::model::ChillerElectricASHRAE205 modelObject(extfile.get());
-
-    // TODO: Note JM 2018-10-17
-    // You are responsible for implementing any additional logic based on choice fields, etc.
-    // The ReverseTranslator generator script is meant to facilitate your work, not get you 100% of the way
 
     // Name
     if (boost::optional<std::string> _name = workspaceObject.name()) {
@@ -106,20 +104,25 @@ namespace energyplus {
         }
       } else {
         LOG(Warn, workspaceObject.briefDescription()
-                    << " has an Ambient Temperature Indicator of type Schedule, but no Schedule. Falling back to 'Outdoors'");
+                    << " has an Ambient Temperature Indicator of type 'Schedule', but no Schedule assigned. Falling back to 'Outdoors'");
       }
     } else if (openstudio::istringEqual("Zone", ambientTemperatureIndicator_.get())) {
 
       // Ambient Temperature Zone Name: Optional Object
       if (auto wo_z_ = workspaceObject.getTarget(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureZoneName)) {
-        if (auto mo_z_ = translateAndMapWorkspaceObject(wo_z_.get())) {
-          // TODO: check return types
-          if (boost::optional<ThermalZone> z_ = mo_z_->optionalCast<ThermalZone>()) {
-            modelObject.setAmbientTemperatureZone(z_.get());
+        if (auto mo_ = translateAndMapWorkspaceObject(wo_z_.get())) {
+          // Zone is translated, and a Space is returned instead
+          if (boost::optional<Space> space_ = mo_->optionalCast<Space>()) {
+            if (auto z_ = space_->thermalZone()) {
+              modelObject.setAmbientTemperatureZone(z_.get());
+            }
           } else {
             LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Ambient Temperature Zone Name'");
           }
         }
+      } else {
+        LOG(Warn, workspaceObject.briefDescription()
+                    << " has an Ambient Temperature Indicator of type 'Zone', but no Zone assigned. Falling back to 'Outdoors'");
       }
     } else {
       // Ambient Temperature Outdoor Air Node Name: Optional Node

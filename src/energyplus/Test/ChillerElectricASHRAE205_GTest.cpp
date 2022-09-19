@@ -299,3 +299,97 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
     EXPECT_EQ(0, w.getObjectsByType(IddObjectType::Chiller_Electric_ASHRAE205).size());
   }
 }
+
+TEST_F(EnergyPlusFixture, ReverseTranslator_ChillerElectricASHRAE205) {
+
+  ReverseTranslator rt;
+
+  Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
+
+  auto wo_zone = w.addObject(IdfObject(IddObjectType::Zone)).get();
+  wo_zone.setName("Basement");
+
+  auto woCh = w.addObject(IdfObject(IddObjectType::Chiller_Electric_ASHRAE205)).get();
+  woCh.setName("Chiller ASHRAE205");
+
+  openstudio::path p = resourcesPath() / toPath("model/A205ExampleChiller.RS0001.a205.cbor");
+  EXPECT_TRUE(exists(p));
+
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::RepresentationFileName, openstudio::toString(p)));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::PerformanceInterpolationMethod, "Cubic"));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::RatedCapacity, ""));  // Defaults to AutoSize
+  EXPECT_TRUE(woCh.setDouble(Chiller_Electric_ASHRAE205Fields::SizingFactor, 1.1));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureIndicator, "Zone"));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureScheduleName, ""));
+  EXPECT_TRUE(woCh.setPointer(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureZoneName, wo_zone.handle()));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureOutdoorAirNodeName, ""));
+  EXPECT_TRUE(woCh.setDouble(Chiller_Electric_ASHRAE205Fields::ChilledWaterMaximumRequestedFlowRate, 0.0428));
+  EXPECT_TRUE(woCh.setDouble(Chiller_Electric_ASHRAE205Fields::CondenserMaximumRequestedFlowRate, 0.0552));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::ChillerFlowMode, "ConstantFlow"));
+  EXPECT_TRUE(woCh.setDouble(Chiller_Electric_ASHRAE205Fields::OilCoolerDesignFlowRate, 0.001));
+  EXPECT_TRUE(woCh.setDouble(Chiller_Electric_ASHRAE205Fields::AuxiliaryCoolingDesignFlowRate, 0.002));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::EndUseSubcategory, "Chiller"));
+
+  // Nodes not RT'ed
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::ChilledWaterInletNodeName, "ChilledWater Inlet Node"));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::ChilledWaterOutletNodeName, "ChilledWater Outlet Node"));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::CondenserInletNodeName, "Condenser Inlet Node"));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::CondenserOutletNodeName, "Condenser Outlet Node"));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::OilCoolerInletNodeName, "OilCooler Inlet Node"));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::OilCoolerOutletNodeName, "OilCooler Outlet Node"));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::AuxiliaryInletNodeName, "Auxiliary Inlet Node"));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::AuxiliaryOutletNodeName, "Auxiliary Outlet Node"));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryInletNodeName, "HeatRecovery Inlet Node"));
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryOutletNodeName, "HeatRecovery Outlet Node"));
+
+  Model m = rt.translateWorkspace(w);
+
+  auto chs = m.getConcreteModelObjects<ChillerElectricASHRAE205>();
+  ASSERT_EQ(1, chs.size());
+  auto& ch = chs.front();
+
+  ASSERT_TRUE(ch.name());
+  EXPECT_EQ("Chiller ASHRAE205", ch.nameString());
+  EXPECT_EQ("A205ExampleChiller.RS0001.a205.cbor", ch.representationFile().fileName());
+  EXPECT_EQ("Cubic", ch.performanceInterpolationMethod());
+  EXPECT_TRUE(ch.isRatedCapacityAutosized());
+  EXPECT_EQ(1.1, ch.sizingFactor());
+  EXPECT_EQ("Zone", ch.ambientTemperatureIndicator());
+  EXPECT_FALSE(ch.ambientTemperatureSchedule());
+  ASSERT_TRUE(ch.ambientTemperatureZone());
+  EXPECT_EQ("Basement", ch.ambientTemperatureZone()->nameString());
+  EXPECT_FALSE(ch.ambientTemperatureOutdoorAirNodeName());
+
+  EXPECT_FALSE(ch.isChilledWaterMaximumRequestedFlowRateAutosized());
+  ASSERT_TRUE(ch.chilledWaterMaximumRequestedFlowRate());
+  EXPECT_EQ(0.0428, ch.chilledWaterMaximumRequestedFlowRate().get());
+
+  EXPECT_FALSE(ch.isCondenserMaximumRequestedFlowRateAutosized());
+  ASSERT_TRUE(ch.condenserMaximumRequestedFlowRate());
+  EXPECT_EQ(0.0552, ch.condenserMaximumRequestedFlowRate().get());
+
+  EXPECT_EQ("ConstantFlow", ch.chillerFlowMode());
+
+  ASSERT_TRUE(ch.oilCoolerDesignFlowRate());
+  EXPECT_EQ(0.001, ch.oilCoolerDesignFlowRate().get());
+  ASSERT_TRUE(ch.auxiliaryCoolingDesignFlowRate());
+  EXPECT_EQ(0.002, ch.auxiliaryCoolingDesignFlowRate().get());
+
+  EXPECT_EQ("Chiller", ch.endUseSubcategory());
+
+  EXPECT_FALSE(ch.chilledWaterLoop());
+  EXPECT_FALSE(ch.condenserWaterLoop());
+  EXPECT_FALSE(ch.heatRecoveryLoop());
+  EXPECT_FALSE(ch.oilCoolerLoop());
+  EXPECT_FALSE(ch.auxiliaryLoop());
+  EXPECT_FALSE(ch.chilledWaterInletNode());
+  EXPECT_FALSE(ch.chilledWaterOutletNode());
+  EXPECT_FALSE(ch.condenserInletNode());
+  EXPECT_FALSE(ch.condenserOutletNode());
+  EXPECT_FALSE(ch.heatRecoveryInletNode());
+  EXPECT_FALSE(ch.heatRecoveryOutletNode());
+  EXPECT_FALSE(ch.oilCoolerInletNode());
+  EXPECT_FALSE(ch.oilCoolerOutletNode());
+  EXPECT_FALSE(ch.auxiliaryInletNode());
+  EXPECT_FALSE(ch.auxiliaryOutletNode());
+}
