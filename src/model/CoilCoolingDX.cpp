@@ -172,9 +172,8 @@ namespace model {
     boost::optional<ZoneHVACComponent> CoilCoolingDX_Impl::containingZoneHVACComponent() const {
       // ZoneHVACPackagedTerminalAirConditioner
 
-      std::vector<ZoneHVACPackagedTerminalAirConditioner> zoneHVACPackagedTerminalAirConditioners;
-
-      zoneHVACPackagedTerminalAirConditioners = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
+      std::vector<ZoneHVACPackagedTerminalAirConditioner> zoneHVACPackagedTerminalAirConditioners =
+        this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalAirConditioner>();
 
       for (const auto& zoneHVACPackagedTerminalAirConditioner : zoneHVACPackagedTerminalAirConditioners) {
         if (boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalAirConditioner.coolingCoil()) {
@@ -186,9 +185,8 @@ namespace model {
 
       // ZoneHVACPackagedTerminalHeatPump
 
-      std::vector<ZoneHVACPackagedTerminalHeatPump> zoneHVACPackagedTerminalHeatPumps;
-
-      zoneHVACPackagedTerminalHeatPumps = this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
+      std::vector<ZoneHVACPackagedTerminalHeatPump> zoneHVACPackagedTerminalHeatPumps =
+        this->model().getConcreteModelObjects<ZoneHVACPackagedTerminalHeatPump>();
 
       for (const auto& zoneHVACPackagedTerminalHeatPump : zoneHVACPackagedTerminalHeatPumps) {
         if (boost::optional<HVACComponent> coil = zoneHVACPackagedTerminalHeatPump.coolingCoil()) {
