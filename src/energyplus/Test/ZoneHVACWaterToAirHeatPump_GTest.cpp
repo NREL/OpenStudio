@@ -92,8 +92,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
 
   EXPECT_EQ(hp.nameString(), idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::Name).get());
   EXPECT_EQ(sch.nameString(), idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AvailabilityScheduleName).get());
-  EXPECT_FALSE("", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AirInletNodeName).get());
-  EXPECT_FALSE("", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AirOutletNodeName).get());
+  EXPECT_EQ("", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AirInletNodeName).get());
+  EXPECT_EQ("", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AirOutletNodeName).get());
   EXPECT_EQ("OutdoorAir:Mixer", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirMixerObjectType, false).get());
   boost::optional<WorkspaceObject> woMixer(idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirMixerName));
   ASSERT_TRUE(woMixer);
@@ -128,8 +128,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
   EXPECT_EQ(htg_coil.nameString(), idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::Name).get());
   EXPECT_TRUE(idf_hc.isEmpty(Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName));
   EXPECT_TRUE(idf_hc.isEmpty(Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName));
-  EXPECT_FALSE("", idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirInletNodeName).get());
-  EXPECT_FALSE("", idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get());
+  EXPECT_EQ("", idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirInletNodeName).get());
+  EXPECT_EQ("", idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get());
   EXPECT_EQ("Autosize", idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, false).get());
   EXPECT_EQ("Autosize", idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, false).get());
   EXPECT_EQ("Autosize", idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::GrossRatedHeatingCapacity, false).get());
