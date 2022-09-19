@@ -146,7 +146,7 @@ namespace energyplus {
       }
 
       // SpeedGrossRatedCoolingCOP
-      eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedGrossRatedCoolingCOP, tage.grossRatedCoolingCOP());
+      eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedGrossRatedCoolingCOP, stage.grossRatedCoolingCOP());
 
       // SpeedRatedAirFlowRate
       if (stage.isRatedAirFlowRateAutosized()) {
