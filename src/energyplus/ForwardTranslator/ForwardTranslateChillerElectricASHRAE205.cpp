@@ -69,7 +69,7 @@ namespace energyplus {
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Chiller_Electric_ASHRAE205, modelObject);
 
     // Representation File Name: Required String
-    idfObject.setString(Chiller_Electric_ASHRAE205Fields::RepresentationFileName, openstudio::toString(filePath.filename()));
+    idfObject.setString(Chiller_Electric_ASHRAE205Fields::RepresentationFileName, openstudio::toString(filePath));
 
     // Performance Interpolation Method
     std::string performanceInterpolationMethod = modelObject.performanceInterpolationMethod();
