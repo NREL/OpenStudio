@@ -146,7 +146,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
   EXPECT_TRUE(ch.setOilCoolerDesignFlowRate(0.001));
 
   auto auxLoop = createLoop("auxLoop");
-  EXPECT_TRUE(ch.addDemandBranchOnAuxiliaryLoop(ocLoop));
+  EXPECT_TRUE(ch.addDemandBranchOnAuxiliaryLoop(auxLoop));
   EXPECT_TRUE(ch.setAuxiliaryCoolingDesignFlowRate(0.002));
 
   auto hrLoop = createLoop("hrLoop");
@@ -242,14 +242,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
       unsigned index = e.isSupply ? PlantLoopFields::PlantSideBranchListName : PlantLoopFields::DemandSideBranchListName;
       WorkspaceObject idf_brlist = idf_plant.getTarget(index).get();
 
-      // Should have three branches: supply inlet, the one with the centralHP, supply outlet
-      ASSERT_EQ(3u, idf_brlist.extensibleGroups().size());
+      // Should have at least three branches: supply inlet, the one with the Chiller, supply outlet.
+      // On the demand side, there's also a bypass branch that is added by the FT by default
+      ASSERT_EQ(e.isSupply ? 3 : 4, idf_brlist.extensibleGroups().size()) << "Failed for " << e.plantName;
       // Get the Chiller one
       auto w_eg = idf_brlist.extensibleGroups()[1].cast<WorkspaceExtensibleGroup>();
       WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
 
       // There should be only one equipment on the branch
-      ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
+      ASSERT_EQ(1, idf_branch.extensibleGroups().size());
       auto w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
 
       ASSERT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentName).get(), ch.nameString());
@@ -259,7 +260,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
       WorkspaceObject idf_plant_op = p_->getTarget(PlantLoopFields::PlantEquipmentOperationSchemeName).get();
       if (e.isSupply) {
         // Should have created a Cooling Load one only
-        ASSERT_EQ(1u, idf_plant_op.extensibleGroups().size());
+        ASSERT_EQ(1, idf_plant_op.extensibleGroups().size());
         auto w_eg = idf_plant_op.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
         ASSERT_EQ("PlantEquipmentOperation:CoolingLoad",
                   w_eg.getString(PlantEquipmentOperationSchemesExtensibleFields::ControlSchemeObjectType).get());
@@ -279,12 +280,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
 
         // Should have one equipment on it: CentralHeatPumpSystem
         auto peqs = peq_list_->extensibleGroups();
-        ASSERT_EQ(1u, peqs.size());
+        ASSERT_EQ(1, peqs.size());
         ASSERT_EQ("Chiller:Electric:ASHRAE205", peqs.front().getString(PlantEquipmentListExtensibleFields::EquipmentObjectType).get());
         ASSERT_EQ(ch.nameString(), peqs.front().getString(PlantEquipmentListExtensibleFields::EquipmentName).get());
 
       } else {
-        EXPECT_EQ(1u, idf_plant_op.extensibleGroups().size());
+        EXPECT_EQ(0, idf_plant_op.extensibleGroups().size());
       }
     }
   }
