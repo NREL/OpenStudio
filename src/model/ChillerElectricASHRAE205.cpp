@@ -151,7 +151,7 @@ namespace model {
       bool result = false;
       boost::optional<std::string> value = getString(OS_Chiller_Electric_ASHRAE205Fields::RatedCapacity, true);
       if (value) {
-        result = openstudio::istringEqual(value.get(), "AutoSize");
+        result = openstudio::istringEqual(value.get(), "Autosize");
       }
       return result;
     }
@@ -162,7 +162,7 @@ namespace model {
     }
 
     void ChillerElectricASHRAE205_Impl::autosizeRatedCapacity() {
-      bool result = setString(OS_Chiller_Electric_ASHRAE205Fields::RatedCapacity, "AutoSize");
+      bool result = setString(OS_Chiller_Electric_ASHRAE205Fields::RatedCapacity, "Autosize");
       OS_ASSERT(result);
     }
 
@@ -259,7 +259,7 @@ namespace model {
       bool result = false;
       boost::optional<std::string> value = getString(OS_Chiller_Electric_ASHRAE205Fields::ChilledWaterMaximumRequestedFlowRate, true);
       if (value) {
-        result = openstudio::istringEqual(value.get(), "AutoSize");
+        result = openstudio::istringEqual(value.get(), "Autosize");
       }
       return result;
     }
@@ -270,7 +270,7 @@ namespace model {
     }
 
     void ChillerElectricASHRAE205_Impl::autosizeChilledWaterMaximumRequestedFlowRate() {
-      bool result = setString(OS_Chiller_Electric_ASHRAE205Fields::ChilledWaterMaximumRequestedFlowRate, "AutoSize");
+      bool result = setString(OS_Chiller_Electric_ASHRAE205Fields::ChilledWaterMaximumRequestedFlowRate, "Autosize");
       OS_ASSERT(result);
     }
 
@@ -282,7 +282,7 @@ namespace model {
       bool result = false;
       boost::optional<std::string> value = getString(OS_Chiller_Electric_ASHRAE205Fields::CondenserMaximumRequestedFlowRate, true);
       if (value) {
-        result = openstudio::istringEqual(value.get(), "AutoSize");
+        result = openstudio::istringEqual(value.get(), "Autosize");
       }
       return result;
     }
@@ -293,7 +293,7 @@ namespace model {
     }
 
     void ChillerElectricASHRAE205_Impl::autosizeCondenserMaximumRequestedFlowRate() {
-      bool result = setString(OS_Chiller_Electric_ASHRAE205Fields::CondenserMaximumRequestedFlowRate, "AutoSize");
+      bool result = setString(OS_Chiller_Electric_ASHRAE205Fields::CondenserMaximumRequestedFlowRate, "Autosize");
       OS_ASSERT(result);
     }
 

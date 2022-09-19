@@ -76,7 +76,7 @@ namespace energyplus {
     idfObject.setString(Chiller_Electric_ASHRAE205Fields::PerformanceInterpolationMethod, performanceInterpolationMethod);
 
     if (modelObject.isRatedCapacityAutosized()) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::RatedCapacity, "AutoSize");
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::RatedCapacity, "Autosize");
     } else {
       idfObject.setDouble(Chiller_Electric_ASHRAE205Fields::RatedCapacity, modelObject.ratedCapacity().get());
     }
@@ -176,7 +176,7 @@ namespace energyplus {
     }
 
     if (modelObject.isChilledWaterMaximumRequestedFlowRateAutosized()) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::ChilledWaterMaximumRequestedFlowRate, "AutoSize");
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::ChilledWaterMaximumRequestedFlowRate, "Autosize");
     } else {
       // ChilledWater Maximum Requested Flow Rate: boost::optional<double>
       if (boost::optional<double> _chilledWaterMaximumRequestedFlowRate = modelObject.chilledWaterMaximumRequestedFlowRate()) {
@@ -185,7 +185,7 @@ namespace energyplus {
     }
 
     if (modelObject.isCondenserMaximumRequestedFlowRateAutosized()) {
-      idfObject.setString(Chiller_Electric_ASHRAE205Fields::CondenserMaximumRequestedFlowRate, "AutoSize");
+      idfObject.setString(Chiller_Electric_ASHRAE205Fields::CondenserMaximumRequestedFlowRate, "Autosize");
     } else {
       // Condenser Maximum Requested Flow Rate: boost::optional<double>
       if (boost::optional<double> _condenserMaximumRequestedFlowRate = modelObject.condenserMaximumRequestedFlowRate()) {

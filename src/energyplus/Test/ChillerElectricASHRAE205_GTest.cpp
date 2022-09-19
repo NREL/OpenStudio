@@ -175,7 +175,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
     EXPECT_EQ(ch.nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::Name).get());
     EXPECT_EQ(representationFile->filePath(), woCh.getString(Chiller_Electric_ASHRAE205Fields::RepresentationFileName).get());
     EXPECT_EQ("Cubic", woCh.getString(Chiller_Electric_ASHRAE205Fields::PerformanceInterpolationMethod).get());
-    EXPECT_EQ("AutoSize", woCh.getString(Chiller_Electric_ASHRAE205Fields::RatedCapacity).get());
+    EXPECT_EQ("Autosize", woCh.getString(Chiller_Electric_ASHRAE205Fields::RatedCapacity).get());
     EXPECT_EQ(1.1, woCh.getDouble(Chiller_Electric_ASHRAE205Fields::SizingFactor).get());
 
     EXPECT_EQ("Zone", woCh.getString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureIndicator).get());
@@ -317,7 +317,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_ChillerElectricASHRAE205) {
 
   EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::RepresentationFileName, openstudio::toString(p)));
   EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::PerformanceInterpolationMethod, "Cubic"));
-  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::RatedCapacity, ""));  // Defaults to AutoSize
+  EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::RatedCapacity, ""));  // Defaults to Autosize
   EXPECT_TRUE(woCh.setDouble(Chiller_Electric_ASHRAE205Fields::SizingFactor, 1.1));
   EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureIndicator, "Zone"));
   EXPECT_TRUE(woCh.setString(Chiller_Electric_ASHRAE205Fields::AmbientTemperatureScheduleName, ""));
