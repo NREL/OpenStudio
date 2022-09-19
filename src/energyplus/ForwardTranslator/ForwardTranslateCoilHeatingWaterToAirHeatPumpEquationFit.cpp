@@ -118,24 +118,19 @@ namespace energyplus {
     }
 
     // Heating Coefficient of Performance
-    if ((value = modelObject.ratedHeatingCoefficientofPerformance())) {
-      idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::GrossRatedHeatingCOP, value.get());
-    }
+    idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::GrossRatedHeatingCOP, modelObject.ratedHeatingCoefficientofPerformance());
 
     // Rated Entering Water Temperature
-    if ((value = modelObject.ratedEnteringWaterTemperature())) {
-      idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature, value.get());
-    }
+    idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature,
+                        modelObject.ratedEnteringWaterTemperature());
 
     // Rated Entering Air Dry-Bulb Temperature
-    if ((value = modelObject.ratedEnteringAirDryBulbTemperature())) {
-      idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirDryBulbTemperature, value.get());
-    }
+    idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirDryBulbTemperature,
+                        modelObject.ratedEnteringAirDryBulbTemperature());
 
     // Ratio of Rated Heating Capacity to Rated Cooling Capacity
-    if ((value = modelObject.ratioofRatedHeatingCapacitytoRatedCoolingCapacity())) {
-      idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatioofRatedHeatingCapacitytoRatedCoolingCapacity, value.get());
-    }
+    idfObject.setDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatioofRatedHeatingCapacitytoRatedCoolingCapacity,
+                        modelObject.ratioofRatedHeatingCapacitytoRatedCoolingCapacity());
 
     // Heating Capacity Curve Name
     {

@@ -126,24 +126,19 @@ namespace energyplus {
     }
 
     // Rated Cooling Coefficient of Performance
-    if ((value = modelObject.ratedCoolingCoefficientofPerformance())) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedCoolingCOP, *value);
-    }
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedCoolingCOP, modelObject.ratedCoolingCoefficientofPerformance());
 
     // Rated Entering Water Temperature
-    if ((value = modelObject.ratedEnteringWaterTemperature())) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature, *value);
-    }
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature,
+                        modelObject.ratedEnteringWaterTemperature());
 
     // Rated Entering Air Dry-Bulb Temperature
-    if ((value = modelObject.ratedEnteringAirDryBulbTemperature())) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirDryBulbTemperature, *value);
-    }
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirDryBulbTemperature,
+                        modelObject.ratedEnteringAirDryBulbTemperature());
 
     // Rated Entering Air Wet-Bulb Temperature
-    if ((value = modelObject.ratedEnteringAirWetBulbTemperature())) {
-      idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirWetBulbTemperature, *value);
-    }
+    idfObject.setDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirWetBulbTemperature,
+                        modelObject.ratedEnteringAirWetBulbTemperature());
 
     // Total Cooling Capacity Curve Name
     {
