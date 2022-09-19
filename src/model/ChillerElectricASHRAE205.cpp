@@ -678,7 +678,11 @@ namespace model {
 
     bool ChillerElectricASHRAE205_Impl::addToOilCoolerLoopNode(Node& node) {
 
+      // One of the example files actually has the Oil Coiler and Auxiliary nodes in series on the same branch...
+      // But this would require a bunch of changes to allow a component to be twice on the same branch, so I'm not allowing it
       if (node.getImpl<Node_Impl>()->isConnected(getObject<ModelObject>())) {
+        // if ((oilCoolerInletNode() && (node.handle() == oilCoolerInletNode()->handle()))
+        //     || (oilCoolerOutletNode() && (node.handle() == oilCoolerOutletNode()->handle()))) {
         return false;
       }
 
@@ -790,7 +794,11 @@ namespace model {
 
     bool ChillerElectricASHRAE205_Impl::addToAuxiliaryLoopNode(Node& node) {
 
+      // One of the example files actually has the Oil Coiler and Auxiliary nodes in series on the same branch...
+      // But this would require a bunch of changes to allow a component to be twice on the same branch, so I'm not allowing it
       if (node.getImpl<Node_Impl>()->isConnected(getObject<ModelObject>())) {
+        // if ((auxiliaryInletNode() && (node.handle() == auxiliaryInletNode()->handle()))
+        //     || (auxiliaryOutletNode() && (node.handle() == auxiliaryOutletNode()->handle()))) {
         return false;
       }
 
