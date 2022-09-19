@@ -518,6 +518,7 @@ namespace model {
   }
 
   double CoilCoolingDXCurveFitSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
+    LOG(Warn, "As of 3.5.0, ratedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use ratedEvaporatorFanPowerPerVolumeFlowRate2017 instead. It will be removed within three releases.");
     return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
   }
 
@@ -606,6 +607,7 @@ namespace model {
   }
 
   bool CoilCoolingDXCurveFitSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
+    LOG(Warn, "As of 3.5.0, setRatedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead. It will be removed within three releases.");
     return getImpl<detail::CoilCoolingDXCurveFitSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(
       ratedEvaporatorFanPowerPerVolumeFlowRate);
   }

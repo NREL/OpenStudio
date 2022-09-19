@@ -1021,6 +1021,7 @@ namespace model {
   }
 
   double CoilCoolingDXSingleSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
+    LOG(Warn, "As of 3.5.0, ratedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use ratedSupplyFanPowerPerVolumeFlowRate2017 instead. It will be removed within three releases.");
     return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
   }
 
@@ -1033,10 +1034,12 @@ namespace model {
   }
 
   bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(boost::optional<double> value) {
+    LOG(Warn, "As of 3.5.0, setRatedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead. It will be removed within three releases.");
     return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(value);
   }
 
   bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(double value) {
+    LOG(Warn, "As of 3.5.0, setRatedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead. It will be removed within three releases.");
     return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(value);
   }
 
