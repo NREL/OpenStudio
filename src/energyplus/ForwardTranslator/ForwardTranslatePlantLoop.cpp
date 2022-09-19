@@ -154,6 +154,8 @@ namespace energyplus {
     if (modelObjects.size() > 0) {
       int i = 0;
 
+      boost::optional<Node> prevNode_;
+
       for (auto& modelObject : modelObjects) {
         boost::optional<Node> inletNode;
         boost::optional<Node> outletNode;
@@ -169,6 +171,7 @@ namespace energyplus {
 
         if (modelObject.optionalCast<Node>()) {
           // Skip nodes we don't want them showing up on branches
+          prevNode_ = modelObject.cast<Node>();
           continue;
         }
 
@@ -352,21 +355,25 @@ namespace energyplus {
             }
 
           } else if (auto ch = modelObject.optionalCast<ChillerElectricASHRAE205>()) {
-            // This one has **FIVE** loops
+            // This one has **FIVE** loops and can be potentially several time on the same loop (demand side, eg: Condenser + Oil Cooler + Auxiliary)
 
-            if (ch->chilledWaterLoop() && loop.handle() == ch->chilledWaterLoop()->handle()) {
+            // Doing this: `if (ch->chilledWaterLoop() && loop.handle() == ch->chilledWaterLoop()->handle())` isn't enough because we could be on the
+            // same loop, so we rely on prevNode_ instead
+            OS_ASSERT(prevNode_);
+
+            if (ch->chilledWaterInletNode() && ch->chilledWaterInletNode()->handle() == prevNode_->handle()) {
               inletNode = ch->chilledWaterInletNode();
               outletNode = ch->chilledWaterOutletNode();
-            } else if (ch->condenserWaterLoop() && loop.handle() == ch->condenserWaterLoop()->handle()) {
+            } else if (ch->condenserInletNode() && ch->condenserInletNode()->handle() == prevNode_->handle()) {
               inletNode = ch->condenserInletNode();
               outletNode = ch->condenserOutletNode();
-            } else if (ch->heatRecoveryLoop() && loop.handle() == ch->heatRecoveryLoop()->handle()) {
+            } else if (ch->heatRecoveryInletNode() && ch->heatRecoveryInletNode()->handle() == prevNode_->handle()) {
               inletNode = ch->heatRecoveryInletNode();
               outletNode = ch->heatRecoveryOutletNode();
-            } else if (ch->oilCoolerLoop() && loop.handle() == ch->oilCoolerLoop()->handle()) {
+            } else if (ch->oilCoolerInletNode() && ch->oilCoolerInletNode()->handle() == prevNode_->handle()) {
               inletNode = ch->oilCoolerInletNode();
               outletNode = ch->oilCoolerOutletNode();
-            } else if (ch->auxiliaryLoop() && loop.handle() == ch->auxiliaryLoop()->handle()) {
+            } else if (ch->auxiliaryInletNode() && ch->auxiliaryInletNode()->handle() == prevNode_->handle()) {
               inletNode = ch->auxiliaryInletNode();
               outletNode = ch->auxiliaryOutletNode();
             }
