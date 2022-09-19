@@ -149,21 +149,24 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
   EXPECT_TRUE(ch.addDemandBranchOnAuxiliaryLoop(auxLoop));
   EXPECT_TRUE(ch.setAuxiliaryCoolingDesignFlowRate(0.002));
 
-  auto hrLoop = createLoop("hrLoop");
-  EXPECT_TRUE(hrLoop.addDemandBranchForComponent(ch, true));
-
   EXPECT_TRUE(ch.setEndUseSubcategory("Chiller"));
 
   ch.chilledWaterInletNode()->setName("ChilledWater Inlet Node");
   ch.chilledWaterOutletNode()->setName("ChilledWater Outlet Node");
   ch.condenserInletNode()->setName("Condenser Inlet Node");
   ch.condenserOutletNode()->setName("Condenser Outlet Node");
-  ch.heatRecoveryInletNode()->setName("HeatRecovery Inlet Node");
-  ch.heatRecoveryOutletNode()->setName("HeatRecovery Outlet Node");
+
   ch.oilCoolerInletNode()->setName("OilCooler Inlet Node");
   ch.oilCoolerOutletNode()->setName("OilCooler Outlet Node");
   ch.auxiliaryInletNode()->setName("Auxiliary Inlet Node");
   ch.auxiliaryOutletNode()->setName("Auxiliary Outlet Node");
+
+  if constexpr (ChillerElectricASHRAE205::isHeatRecoverySupportedByEnergyplus) {
+    auto hrLoop = createLoop("hrLoop");
+    EXPECT_TRUE(hrLoop.addDemandBranchForComponent(ch, true));
+    ch.heatRecoveryInletNode()->setName("HeatRecovery Inlet Node");
+    ch.heatRecoveryOutletNode()->setName("HeatRecovery Outlet Node");
+  }
 
   {
     Workspace w = ft.translateModel(m);
@@ -197,25 +200,30 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
 
     EXPECT_EQ("ChilledWater Inlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::ChilledWaterInletNodeName).get());
     EXPECT_EQ("ChilledWater Outlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::ChilledWaterOutletNodeName).get());
-    EXPECT_EQ("Condenser Inlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::CondenserInletNodeName).get());
-    EXPECT_EQ("Condenser Outlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::CondenserOutletNodeName).get());
-    EXPECT_EQ("HeatRecovery Inlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryInletNodeName).get());
-    EXPECT_EQ("HeatRecovery Outlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryOutletNodeName).get());
-    EXPECT_EQ("OilCooler Inlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::OilCoolerInletNodeName).get());
-    EXPECT_EQ("OilCooler Outlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::OilCoolerOutletNodeName).get());
-    EXPECT_EQ("Auxiliary Inlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::AuxiliaryInletNodeName).get());
-    EXPECT_EQ("Auxiliary Outlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::AuxiliaryOutletNodeName).get());
-
     EXPECT_EQ(ch.chilledWaterInletNode()->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::ChilledWaterInletNodeName).get());
     EXPECT_EQ(ch.chilledWaterOutletNode()->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::ChilledWaterOutletNodeName).get());
+
+    EXPECT_EQ("Condenser Inlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::CondenserInletNodeName).get());
+    EXPECT_EQ("Condenser Outlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::CondenserOutletNodeName).get());
     EXPECT_EQ(ch.condenserInletNode()->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::CondenserInletNodeName).get());
     EXPECT_EQ(ch.condenserOutletNode()->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::CondenserOutletNodeName).get());
-    EXPECT_EQ(ch.heatRecoveryInletNode()->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryInletNodeName).get());
-    EXPECT_EQ(ch.heatRecoveryOutletNode()->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryOutletNodeName).get());
+
+    EXPECT_EQ("OilCooler Inlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::OilCoolerInletNodeName).get());
+    EXPECT_EQ("OilCooler Outlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::OilCoolerOutletNodeName).get());
     EXPECT_EQ(ch.oilCoolerInletNode()->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::OilCoolerInletNodeName).get());
     EXPECT_EQ(ch.oilCoolerOutletNode()->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::OilCoolerOutletNodeName).get());
+
+    EXPECT_EQ("Auxiliary Inlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::AuxiliaryInletNodeName).get());
+    EXPECT_EQ("Auxiliary Outlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::AuxiliaryOutletNodeName).get());
     EXPECT_EQ(ch.auxiliaryInletNode()->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::AuxiliaryInletNodeName).get());
     EXPECT_EQ(ch.auxiliaryOutletNode()->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::AuxiliaryOutletNodeName).get());
+
+    if constexpr (ChillerElectricASHRAE205::isHeatRecoverySupportedByEnergyplus) {
+      EXPECT_EQ("HeatRecovery Inlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryInletNodeName).get());
+      EXPECT_EQ("HeatRecovery Outlet Node", woCh.getString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryOutletNodeName).get());
+      EXPECT_EQ(ch.heatRecoveryInletNode()->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryInletNodeName).get());
+      EXPECT_EQ(ch.heatRecoveryOutletNode()->nameString(), woCh.getString(Chiller_Electric_ASHRAE205Fields::HeatRecoveryOutletNodeName).get());
+    }
 
     // Check node names on supply/demand branches
     // Checks that the special case implemented in ForwardTranslatePlantLoop::populateBranch does the right job
@@ -231,10 +239,15 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
     std::vector<Expected> expecteds = {
       {true, ch.chilledWaterLoop()->nameString(), ch.chilledWaterInletNode()->nameString(), ch.chilledWaterOutletNode()->nameString()},
       {false, ch.condenserWaterLoop()->nameString(), ch.condenserInletNode()->nameString(), ch.condenserOutletNode()->nameString()},
-      {false, ch.heatRecoveryLoop()->nameString(), ch.heatRecoveryInletNode()->nameString(), ch.heatRecoveryOutletNode()->nameString()},
       {false, ch.oilCoolerLoop()->nameString(), ch.oilCoolerInletNode()->nameString(), ch.oilCoolerOutletNode()->nameString()},
       {false, ch.auxiliaryLoop()->nameString(), ch.auxiliaryInletNode()->nameString(), ch.auxiliaryOutletNode()->nameString()},
     };
+
+    if constexpr (ChillerElectricASHRAE205::isHeatRecoverySupportedByEnergyplus) {
+      expecteds.emplace_back(false, ch.heatRecoveryLoop()->nameString(), ch.heatRecoveryInletNode()->nameString(),
+                             ch.heatRecoveryOutletNode()->nameString());
+    }
+
     for (const auto& e : expecteds) {
       auto p_ = w.getObjectByTypeAndName(IddObjectType::PlantLoop, e.plantName);
       ASSERT_TRUE(p_.is_initialized()) << "Cannot find PlantLoop named " << e.plantName;

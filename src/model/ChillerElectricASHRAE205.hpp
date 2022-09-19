@@ -59,6 +59,9 @@ namespace model {
 
     virtual ~ChillerElectricASHRAE205() = default;
 
+    // TODO: once supported by E+, re-enable
+    static constexpr bool isHeatRecoverySupportedByEnergyplus = false;
+
     //@}
 
     static IddObjectType iddObjectType();

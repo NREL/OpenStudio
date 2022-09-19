@@ -476,7 +476,6 @@ namespace model {
             if (t_plantLoop.get() != cndLoop_.get()) {
               // And if there is no Heat Recovery (tertiary)
               if (!this->heatRecoveryLoop().is_initialized()) {
-                ;
                 // Then try to add it to the tertiary one
                 LOG(Warn, "Calling addToTertiaryNode to connect it to the tertiary (=Heat Recovery) loop for " << briefDescription());
                 return this->addToTertiaryNode(node);
@@ -491,6 +490,12 @@ namespace model {
     }
 
     bool ChillerElectricASHRAE205_Impl::addToTertiaryNode(Node& node) {
+
+      if constexpr (!ChillerElectricASHRAE205::isHeatRecoverySupportedByEnergyplus) {
+        LOG(Warn, "For " << briefDescription() << ", Heat Recovery isn't implemented by EnergyPlus yet, so tertiary connection is disabled.");
+        return false;
+      }
+
       auto t_plantLoop = node.plantLoop();
 
       // Only accept adding to a node that is on a demand side of a plant loop

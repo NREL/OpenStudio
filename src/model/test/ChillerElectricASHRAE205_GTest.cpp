@@ -381,9 +381,29 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
     EXPECT_FALSE(ch.auxiliaryOutletNode());
   }
 
+  auto checkHeatRecoveryLoop = [&ch, &hrLoop]() {
+    if constexpr (ChillerElectricASHRAE205::isHeatRecoverySupportedByEnergyplus) {
+
+      ASSERT_TRUE(ch.heatRecoveryLoop());
+      EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
+      ASSERT_TRUE(ch.heatRecoveryInletNode());
+      EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
+      ASSERT_TRUE(ch.heatRecoveryOutletNode());
+      EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+    } else {
+      EXPECT_FALSE(ch.heatRecoveryLoop());
+      EXPECT_FALSE(ch.heatRecoveryInletNode());
+      EXPECT_FALSE(ch.heatRecoveryOutletNode());
+    }
+  };
+
   // Heat Recovery
   {
-    EXPECT_TRUE(hrLoop.addDemandBranchForComponent(ch));
+    if constexpr (ChillerElectricASHRAE205::isHeatRecoverySupportedByEnergyplus) {
+      EXPECT_TRUE(hrLoop.addDemandBranchForComponent(ch));
+    } else {
+      EXPECT_FALSE(hrLoop.addDemandBranchForComponent(ch));
+    }
 
     ASSERT_TRUE(ch.chilledWaterLoop());
     ASSERT_EQ(chwLoop, ch.chilledWaterLoop().get());
@@ -399,12 +419,7 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
     ASSERT_TRUE(ch.condenserOutletNode());
     EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
 
-    ASSERT_TRUE(ch.heatRecoveryLoop());
-    EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
-    ASSERT_TRUE(ch.heatRecoveryInletNode());
-    EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
-    ASSERT_TRUE(ch.heatRecoveryOutletNode());
-    EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+    checkHeatRecoveryLoop();
 
     EXPECT_FALSE(ch.oilCoolerLoop());
     EXPECT_FALSE(ch.oilCoolerInletNode());
@@ -441,12 +456,7 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
       ASSERT_TRUE(ch.condenserOutletNode());
       EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
 
-      ASSERT_TRUE(ch.heatRecoveryLoop());
-      EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
-      ASSERT_TRUE(ch.heatRecoveryInletNode());
-      EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
-      ASSERT_TRUE(ch.heatRecoveryOutletNode());
-      EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+      checkHeatRecoveryLoop();
 
       ASSERT_TRUE(ch.oilCoolerLoop());
       EXPECT_EQ(ocLoop, ch.oilCoolerLoop().get());
@@ -477,12 +487,7 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
       ASSERT_TRUE(ch.condenserOutletNode());
       EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
 
-      ASSERT_TRUE(ch.heatRecoveryLoop());
-      EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
-      ASSERT_TRUE(ch.heatRecoveryInletNode());
-      EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
-      ASSERT_TRUE(ch.heatRecoveryOutletNode());
-      EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+      checkHeatRecoveryLoop();
 
       EXPECT_FALSE(ch.oilCoolerLoop());
       EXPECT_FALSE(ch.oilCoolerInletNode());
@@ -514,12 +519,7 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
       ASSERT_TRUE(ch.condenserOutletNode());
       EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
 
-      ASSERT_TRUE(ch.heatRecoveryLoop());
-      EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
-      ASSERT_TRUE(ch.heatRecoveryInletNode());
-      EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
-      ASSERT_TRUE(ch.heatRecoveryOutletNode());
-      EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+      checkHeatRecoveryLoop();
 
       ASSERT_TRUE(ch.oilCoolerLoop());
       EXPECT_EQ(ocLoop, ch.oilCoolerLoop().get());
@@ -563,12 +563,7 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
       ASSERT_TRUE(ch.condenserOutletNode());
       EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
 
-      ASSERT_TRUE(ch.heatRecoveryLoop());
-      EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
-      ASSERT_TRUE(ch.heatRecoveryInletNode());
-      EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
-      ASSERT_TRUE(ch.heatRecoveryOutletNode());
-      EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+      checkHeatRecoveryLoop();
 
       ASSERT_TRUE(ch.oilCoolerLoop());
       EXPECT_EQ(ocLoop, ch.oilCoolerLoop().get());
@@ -596,12 +591,7 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
       ASSERT_TRUE(ch.condenserOutletNode());
       EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
 
-      ASSERT_TRUE(ch.heatRecoveryLoop());
-      EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
-      ASSERT_TRUE(ch.heatRecoveryInletNode());
-      EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
-      ASSERT_TRUE(ch.heatRecoveryOutletNode());
-      EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+      checkHeatRecoveryLoop();
 
       ASSERT_TRUE(ch.oilCoolerLoop());
       EXPECT_EQ(ocLoop, ch.oilCoolerLoop().get());
@@ -639,12 +629,7 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
       ASSERT_TRUE(ch.condenserOutletNode());
       EXPECT_EQ(ch.demandOutletModelObject()->handle(), ch.condenserOutletNode()->handle());
 
-      ASSERT_TRUE(ch.heatRecoveryLoop());
-      EXPECT_EQ(hrLoop, ch.heatRecoveryLoop().get());
-      ASSERT_TRUE(ch.heatRecoveryInletNode());
-      EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
-      ASSERT_TRUE(ch.heatRecoveryOutletNode());
-      EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+      checkHeatRecoveryLoop();
 
       ASSERT_TRUE(ch.oilCoolerLoop());
       EXPECT_EQ(ocLoop, ch.oilCoolerLoop().get());
