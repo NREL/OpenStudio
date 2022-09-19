@@ -227,6 +227,9 @@ add_library(rubyengine
   #"${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
 )
 
+include(GenerateExportHeader)
+generate_export_header(rubyengine)
+
 # -Wno-deprecated-declaration, /wd4996: suppresses deprecated warning
 # -Wno-register, /wd5033: ISO C++1z does not allow register storage class specifier
 if(MSVC)
@@ -244,19 +247,23 @@ get_target_property(SCRIPT_ENGINE_INCLUDE_DIRS scriptengine INTERFACE_INCLUDE_DI
 #target_link_libraries(rubyengine PRIVATE osrubyinit CONAN_PKG::openstudio_ruby ${ALL_RUBY_BINDING_TARGETS})
 
 if( WIN32 )
-  # Dynamically link to openstudiolib.dll on Windows only
   target_link_libraries(rubyengine
     PRIVATE
+    scriptengine
     openstudiolib
     rubybindings
+    rubyinterpreter
+    CONAN_PKG::fmt
+    ${ruby_extension_libs}
     ${ALL_RUBY_BINDING_TARGETS}
-    ${RUBY_MINGW_STUB_LIB}
+    wsock32 ws2_32 Dbghelp Shlwapi Iphlpapi
   )
+
+  set_target_properties(rubyengine PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
 else()
   target_link_libraries(rubyengine
     PRIVATE
     scriptengine
-    rubyinterpreter
     openstudio_utilities
     openstudio_airflow
     openstudio_model
@@ -270,6 +277,8 @@ else()
     openstudio_gltf
     openstudio_radiance
     rubybindings
+    rubyinterpreter
+    CONAN_PKG::fmt
     ${ruby_extension_libs}
     ${ALL_RUBY_BINDING_TARGETS}
   )

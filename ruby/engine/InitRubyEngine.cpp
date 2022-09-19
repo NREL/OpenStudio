@@ -2,7 +2,7 @@
 #include "./InitRubyEngine.hpp"
 #include "./GC_Value.hpp"
 #include <RubyInterpreter.hpp>
-#include <InitRubyBindings.hpp>
+#include <iostream>
 #include <embedded_files.hxx>
 
 namespace openstudio {
@@ -34,9 +34,6 @@ void RubyEngine::initRubyEngine() {
 
     swig::GC_VALUE::lshift_id = rb_intern("<<");
     swig::GC_VALUE::rshift_id = rb_intern(">>");
-
-    // in case any further init methods try to require files, init this first
-    //Init_EmbeddedScripting();
 
     // Need embedded_help for requiring files out of the embedded system
     auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
@@ -248,9 +245,12 @@ void RubyEngine::initRubyEngine() {
     rb_provide("fiddle");
     rb_provide("fiddle.so");
 
+// TODO: Fix this
+#ifndef _WIN32
     Init_generator();
     rb_provide("json/ext/generator");
     rb_provide("json/ext/generator.so");
+#endif
 
     Init_md5();
     rb_provide("md5");
@@ -278,17 +278,23 @@ void RubyEngine::initRubyEngine() {
     rb_provide("objspace");
     rb_provide("objspace.so");
 
+// TODO: Fix this
+#ifndef _WIN32
     Init_parser();
     rb_provide("json/ext/parser");
     rb_provide("json/ext/parser.so");
+#endif
 
     Init_pathname();
     rb_provide("pathname");
     rb_provide("pathname.so");
 
+// TODO: Fix this
+#ifndef _WIN32
     Init_psych();
     rb_provide("psych");
     rb_provide("psych.so");
+#endif
 
     Init_ripper();
     rb_provide("ripper");
@@ -376,12 +382,6 @@ void RubyEngine::initRubyEngine() {
     rb_provide("syslog");
     rb_provide("syslog.so");
 #endif
-
-    // openstudio
-    //init_openstudio_internal_basic();
-
-    //auto module = rb_define_module("OpenStudio");
-    //rb_define_module_function(module, "init_rest_of_openstudio", init_rest_of_openstudio, 0);
 }
 
 } // namespace openstudio

@@ -1,8 +1,7 @@
 #include "RubyEngine.hpp"
 #include "InitRubyBindings.hpp"
-#include "RubyEval.hpp"
 #include <embedded_files.hxx>
-#include <iostream>
+#include <rubyengine_export.h>
 #include <signal.h>
 #include <stdexcept>
 #include <string>
@@ -18,12 +17,16 @@
 #pragma GCC diagnostic pop
 #endif
 
+static int argc = 0;
+static char **argv = nullptr;
+
 unsigned init() {
+  ruby_sysinit(&argc, &argv);
   ruby_setup();
-  return 0;
+  return 0u;
 }
 
-static auto i = init();
+static unsigned i = init();
 
 extern "C" {
 void Init_EmbeddedScripting(void);
@@ -39,6 +42,7 @@ VALUE initRestOfOpenStudio(...) {
 RubyEngine::RubyEngine(int argc, char *argv[]) : ScriptEngine(argc, argv) {
   Init_EmbeddedScripting();
   initRubyEngine();
+
   openstudio::ruby::initBasicRubyBindings();
 
   auto rubymodule = rb_define_module("OpenStudio");
@@ -91,7 +95,7 @@ void *RubyEngine::getAs_impl(ScriptObject &obj, const std::type_info &ti) {
 } // namespace openstudio
 
 extern "C" {
-openstudio::ScriptEngine *makeScriptEngine(int argc, char *argv[]) { return new openstudio::RubyEngine(argc, argv); }
+RUBYENGINE_EXPORT openstudio::ScriptEngine *makeScriptEngine(int argc, char *argv[]) { return new openstudio::RubyEngine(argc, argv); }
 
 int rb_hasFile(const char *t_filename) {
   // TODO Consider expanding this to use the path which we have artificially defined in embedded_help.rb
