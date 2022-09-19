@@ -5719,16 +5719,16 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
       // Build key schedules
       // first parse time inputs
-      double startTime = 9.0; 
+      int startTime = 9; 
       int startMonth = 5; 
       int startDayOfMonth = 15;
-      double stopTime = 22.0; 
+      int stopTime = 22; 
       int stopMonth = 9;
       int stopDayOfMonth = 30; 
 
       const auto startTimeElement = thrmlEngyStorElement.child("StartTime");
       if (startTimeElement) {
-        startTime = startTimeElement.text().as_double();
+        startTime = startTimeElement.text().as_int();
       }
 
       const auto startDateElement = thrmlEngyStorElement.child("StartDate");
@@ -5743,7 +5743,7 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
 
       const auto stopTimeElement = thrmlEngyStorElement.child("StopTime");
       if (stopTimeElement) {
-        stopTime = stopTimeElement.text().as_double();
+        stopTime = stopTimeElement.text().as_int();
       }
 
       const auto stopDateElement = thrmlEngyStorElement.child("StopDate");
