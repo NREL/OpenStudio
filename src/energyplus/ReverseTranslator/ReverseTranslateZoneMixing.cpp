@@ -33,6 +33,8 @@
 #include "../../model/ZoneMixing_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
@@ -57,9 +59,15 @@ namespace energyplus {
     OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneMixingFields::ZoneorSpaceName);
     OptionalThermalZone zone;
     if (target) {
-      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-      if (modelObject) {
-        zone = modelObject->optionalCast<ThermalZone>();
+      if (OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target)) {
+        if (target->iddObject().type() == IddObjectType::Zone) {
+          // Zone maps to Space in RT
+          if (auto s_ = modelObject->optionalCast<Space>()) {
+            zone = s_->thermalZone();
+          }
+        } else {
+          // It's a space, but we don't allow mapping to a space in model SDK for now, and we don't have a Space RT... so we'll never get here
+        }
       }
     }
 
@@ -67,7 +75,26 @@ namespace energyplus {
       return boost::none;
     }
 
+    target = workspaceObject.getTarget(openstudio::ZoneMixingFields::SourceZoneorSpaceName);
+    OptionalThermalZone sourceZone;
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (target->iddObject().type() == IddObjectType::Zone) {
+        // Zone maps to Space in RT
+        if (auto s_ = modelObject->optionalCast<Space>()) {
+          sourceZone = s_->thermalZone();
+        }
+      } else {
+        // It's a space, but we don't allow mapping to a space in model SDK for now, and we don't have a Space RT... so we'll never get here
+      }
+    }
+
+    if (!sourceZone) {
+      return boost::none;
+    }
+
     openstudio::model::ZoneMixing mixing(*zone);
+    mixing.setSourceZone(sourceZone.get());
 
     OptionalString s = workspaceObject.name();
     if (s) {
@@ -118,16 +145,6 @@ namespace energyplus {
       }
     } else {
       LOG(Error, "Unknown DesignFlowRateCalculationMethod value for workspace object" << workspaceObject);
-    }
-
-    target = workspaceObject.getTarget(openstudio::ZoneMixingFields::SourceZoneorSpaceName);
-    if (target) {
-      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-      if (modelObject) {
-        if (modelObject->optionalCast<ThermalZone>()) {
-          mixing.setSourceZone(modelObject->cast<ThermalZone>());
-        }
-      }
     }
 
     d = workspaceObject.getDouble(openstudio::ZoneMixingFields::DeltaTemperature);
