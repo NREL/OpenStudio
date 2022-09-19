@@ -1069,12 +1069,14 @@ namespace model {
   }
 
   double CoilHeatingDXSingleSpeed::ratedSupplyFanPowerPerVolumeFlowRate() const {
-    LOG(Warn, "As of 3.5.0, ratedSupplyFanPowerPerVolumeFlowRate is deprecated. Use ratedSupplyFanPowerPerVolumeFlowRate2017 instead. It will be removed within three releases.");
+    LOG(Warn, "As of 3.5.0, ratedSupplyFanPowerPerVolumeFlowRate is deprecated. Use ratedSupplyFanPowerPerVolumeFlowRate2017 instead. It will be "
+              "removed within three releases.");
     return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->ratedSupplyFanPowerPerVolumeFlowRate2017();
   }
 
   bool CoilHeatingDXSingleSpeed::setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate) {
-    LOG(Warn, "As of 3.5.0, setRatedSupplyFanPowerPerVolumeFlowRate is deprecated. Use setRatedSupplyFanPowerPerVolumeFlowRate2017 instead. It will be removed within three releases.");
+    LOG(Warn, "As of 3.5.0, setRatedSupplyFanPowerPerVolumeFlowRate is deprecated. Use setRatedSupplyFanPowerPerVolumeFlowRate2017 instead. It will "
+              "be removed within three releases.");
     return getImpl<detail::CoilHeatingDXSingleSpeed_Impl>()->setRatedSupplyFanPowerPerVolumeFlowRate2017(ratedSupplyFanPowerPerVolumeFlowRate);
   }
 

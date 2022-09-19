@@ -523,7 +523,8 @@ namespace model {
   }
 
   double CoilHeatingDXMultiSpeedStageData::ratedSupplyAirFanPowerPerVolumeFlowRate() const {
-    LOG(Warn, "As of 3.5.0, ratedSupplyAirFanPowerPerVolumeFlowRate is deprecated. Use ratedSupplyAirFanPowerPerVolumeFlowRate2017 instead. It will be removed within three releases.")
+    LOG(Warn, "As of 3.5.0, ratedSupplyAirFanPowerPerVolumeFlowRate is deprecated. Use ratedSupplyAirFanPowerPerVolumeFlowRate2017 instead. It will "
+              "be removed within three releases.")
     return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratedSupplyAirFanPowerPerVolumeFlowRate2017();
   }
 
@@ -584,7 +585,8 @@ namespace model {
   }
 
   bool CoilHeatingDXMultiSpeedStageData::setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate) {
-    LOG(Warn, "As of 3.5.0, setRatedSupplyAirFanPowerPerVolumeFlowRate is deprecated. Use setRatedSupplyAirFanPowerPerVolumeFlowRate2017 instead. It will be removed within three releases.");
+    LOG(Warn, "As of 3.5.0, setRatedSupplyAirFanPowerPerVolumeFlowRate is deprecated. Use setRatedSupplyAirFanPowerPerVolumeFlowRate2017 instead. It "
+              "will be removed within three releases.");
     return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatedSupplyAirFanPowerPerVolumeFlowRate2017(
       ratedSupplyAirFanPowerPerVolumeFlowRate);
   }
