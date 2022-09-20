@@ -31,7 +31,7 @@
 #define MODEL_COILHEATINGGASMULTISTAGESTAGEDATA_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject.hpp"
+#include "ParentObject.hpp"
 #include "../model/CoilHeatingGasMultiStage.hpp"
 
 namespace openstudio {
@@ -44,8 +44,8 @@ namespace model {
 
   }  // namespace detail
 
-  /** CoilHeatingGasMultiStageStageData is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:Heating:Gas:MultiStage:StageData'. */
-  class MODEL_API CoilHeatingGasMultiStageStageData : public ModelObject
+  /** CoilHeatingGasMultiStageStageData is a ParentObject that wraps the OpenStudio IDD object 'OS:Coil:Heating:Gas:MultiStage:StageData'. */
+  class MODEL_API CoilHeatingGasMultiStageStageData : public ParentObject
   {
    public:
     /** @name Constructors and Destructors */

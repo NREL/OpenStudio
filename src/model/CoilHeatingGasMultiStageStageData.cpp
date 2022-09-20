@@ -44,19 +44,19 @@ namespace model {
   namespace detail {
 
     CoilHeatingGasMultiStageStageData_Impl::CoilHeatingGasMultiStageStageData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-      : ModelObject_Impl(idfObject, model, keepHandle) {
+      : ParentObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == CoilHeatingGasMultiStageStageData::iddObjectType());
     }
 
     CoilHeatingGasMultiStageStageData_Impl::CoilHeatingGasMultiStageStageData_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                    Model_Impl* model, bool keepHandle)
-      : ModelObject_Impl(other, model, keepHandle) {
+      : ParentObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == CoilHeatingGasMultiStageStageData::iddObjectType());
     }
 
     CoilHeatingGasMultiStageStageData_Impl::CoilHeatingGasMultiStageStageData_Impl(const CoilHeatingGasMultiStageStageData_Impl& other,
                                                                                    Model_Impl* model, bool keepHandle)
-      : ModelObject_Impl(other, model, keepHandle) {}
+      : ParentObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilHeatingGasMultiStageStageData_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;

@@ -31,16 +31,17 @@
 #define MODEL_COILHEATINGGASMULTISTAGESTAGEDATA_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ModelObject_Impl.hpp"
-#include "../model/CoilHeatingGasMultiStage.hpp"
+#include "ParentObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
+  class CoilHeatingGasMultiStage;
+
   namespace detail {
 
-    /** CoilHeatingGasMultiStageStageData_Impl is a ModelObject_Impl that is the implementation class for CoilHeatingGasMultiStageStageData.*/
-    class MODEL_API CoilHeatingGasMultiStageStageData_Impl : public ModelObject_Impl
+    /** CoilHeatingGasMultiStageStageData_Impl is a ParentObject_Impl that is the implementation class for CoilHeatingGasMultiStageStageData.*/
+    class MODEL_API CoilHeatingGasMultiStageStageData_Impl : public ParentObject_Impl
     {
      public:
       /** @name Constructors and Destructors */

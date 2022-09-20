@@ -47,7 +47,7 @@ namespace model {
 
   }  // namespace detail
 
-  /** CoilCoolingDXMultiSpeedStageData is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:MultiSpeed:StageData'. */
+  /** CoilCoolingDXMultiSpeedStageData is a ParentObject that wraps the OpenStudio IDD object 'OS:Coil:Cooling:DX:MultiSpeed:StageData'. */
   class MODEL_API CoilCoolingDXMultiSpeedStageData : public ParentObject
   {
    public:
