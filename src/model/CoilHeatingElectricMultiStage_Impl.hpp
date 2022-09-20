@@ -66,6 +66,18 @@ namespace model {
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      virtual unsigned inletPort() const override;
+
+      virtual unsigned outletPort() const override;
+
+      ModelObject clone(Model model) const override;
+
+      std::vector<ModelObject> children() const override;
+
+      boost::optional<HVACComponent> containingHVACComponent() const override;
+
+      bool addToNode(Node& node) override;
+
       //@}
       /** @name Getters */
       //@{
@@ -84,21 +96,17 @@ namespace model {
       /** @name Other */
       //@{
 
-      virtual unsigned inletPort() const override;
-
-      virtual unsigned outletPort() const override;
-
-      ModelObject clone(Model model) const override;
-
-      std::vector<ModelObject> children() const override;
-
       std::vector<CoilHeatingElectricMultiStageStageData> stages() const;
+      unsigned numberOfStages() const;
+      boost::optional<unsigned> stageIndex(const CoilHeatingElectricMultiStageStageData& stage) const;
 
-      void addStage(CoilHeatingElectricMultiStageStageData& stage);
-
-      boost::optional<HVACComponent> containingHVACComponent() const override;
-
-      bool addToNode(Node& node) override;
+      bool addStage(const CoilHeatingElectricMultiStageStageData& stage);
+      bool addStage(const CoilHeatingElectricMultiStageStageData& stage, unsigned index);
+      bool setStageIndex(const CoilHeatingElectricMultiStageStageData& stage, unsigned index);
+      bool setStages(const std::vector<CoilHeatingElectricMultiStageStageData>& stages);
+      void removeAllStages();
+      bool removeStage(const CoilHeatingElectricMultiStageStageData& stage);
+      bool removeStage(unsigned index);
 
       //@}
      protected:

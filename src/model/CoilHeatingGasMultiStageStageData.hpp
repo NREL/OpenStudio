@@ -86,6 +86,9 @@ namespace model {
     /** @name Other */
     //@{
 
+    // Returns the CoilHeatingGasMultiStage that references it if any
+    boost::optional<CoilHeatingGasMultiStage> parentCoil() const;
+
     boost::optional<double> autosizedNominalCapacity() const;
 
     void autosize();

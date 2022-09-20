@@ -17997,6 +17997,7 @@ OS:Coil:Heating:Electric:MultiStage,
        \memo within another component such as an air terminal unit, zone HVAC equipment, or unitary
        \memo system, then the coil is controlled by the parent component and the setpoint node name
        \memo is not entered.
+       \max-fields 9
        \extensible:1
   A1,  \field Handle
        \type handle
@@ -18011,6 +18012,7 @@ OS:Coil:Heating:Electric:MultiStage,
        \note If this field is blank, the system is always available.
        \type object-list
        \object-list ScheduleNames
+       \required-field
   A4 , \field Air Inlet Node
        \type object-list
        \required-field
@@ -18025,6 +18027,7 @@ OS:Coil:Heating:Electric:MultiStage,
        \object-list CoilHeatingElectricMultiStageStageData
 
 OS:Coil:Heating:Electric:MultiStage:StageData,
+       \min-fields 4
   A1,  \field Handle
        \type handle
        \required-field
@@ -18118,6 +18121,13 @@ OS:Coil:Heating:Gas,
        \default NaturalGas
 
 OS:Coil:Heating:Gas:MultiStage,
+      \memo Gas heating coil, multi-stage. If the coil is located directly in an air loop
+      \memo branch or outdoor air equipment list, then it is controlled on leaving air temperature
+      \memo and the Temperature Setpoint Node Name must be specified. If the coil is contained
+      \memo within another component such as an air terminal unit, zone HVAC equipment, or unitary
+      \memo system, then the coil is controlled by the parent component and the setpoint node name
+      \memo is not entered.
+      \max-fields 11
       \extensible:1
   A1, \field Handle
       \type handle
@@ -18130,6 +18140,7 @@ OS:Coil:Heating:Gas:MultiStage,
   A3, \field Availability Schedule
       \type object-list
       \object-list ScheduleNames
+      \required-field
   A4, \field Air Inlet Node
       \type object-list
       \required-field
@@ -18149,7 +18160,8 @@ OS:Coil:Heating:Gas:MultiStage,
       \object-list CoilHeatingGasMultiStageStageData
 
 OS:Coil:Heating:Gas:MultiStage:StageData,
-  A1, \field Handle
+       \min-fields 5
+  A1,  \field Handle
        \type handle
        \required-field
   A2 , \field Name

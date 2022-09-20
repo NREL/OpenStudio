@@ -62,6 +62,13 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
+      virtual std::vector<ModelObject> children() const override;
+
+      virtual ModelObject clone(Model model) const override;
+
+      // If this object is used by any CoilHeatingGasMultiStage, remove the corresponding extensible group to avoid having 'blanks'
+      virtual std::vector<IdfObject> remove() override;
+
       //@}
       /** @name Getters */
       //@{
@@ -75,10 +82,6 @@ namespace model {
       double parasiticElectricLoad() const;
 
       boost::optional<double> autosizedNominalCapacity() const;
-
-      void autosize();
-
-      void applySizingValues();
 
       //@}
       /** @name Setters */
@@ -95,6 +98,13 @@ namespace model {
       //@}
       /** @name Other */
       //@{
+
+      void autosize();
+
+      void applySizingValues();
+
+      // Returns the CoilHeatingGasMultiStage that references it if any
+      boost::optional<CoilHeatingGasMultiStage> parentCoil() const;
 
       // Used to determine the index of this performance data in the
       // list of stages in the parent object.

@@ -88,21 +88,6 @@ namespace model {
       return result;
     }
 
-    boost::optional<Schedule> CoilHeatingElectricMultiStage_Impl::availabilitySchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule);
-    }
-
-    bool CoilHeatingElectricMultiStage_Impl::setAvailabilitySchedule(Schedule& schedule) {
-      bool result = setSchedule(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule, "CoilHeatingElectricMultiStage",
-                                "Availability Schedule", schedule);
-      return result;
-    }
-
-    void CoilHeatingElectricMultiStage_Impl::resetAvailabilitySchedule() {
-      bool result = setString(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule, "");
-      OS_ASSERT(result);
-    }
-
     unsigned CoilHeatingElectricMultiStage_Impl::inletPort() const {
       return OS_Coil_Heating_Electric_MultiStageFields::AirInletNode;
     }
@@ -114,8 +99,7 @@ namespace model {
     ModelObject CoilHeatingElectricMultiStage_Impl::clone(Model model) const {
       auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingElectricMultiStage>();
 
-      auto t_stages = stages();
-      for (auto stage : t_stages) {
+      for (const auto& stage : stages()) {
         auto stageClone = stage.clone(model).cast<CoilHeatingElectricMultiStageStageData>();
         t_clone.addStage(stageClone);
       }
@@ -124,25 +108,6 @@ namespace model {
 
     std::vector<ModelObject> CoilHeatingElectricMultiStage_Impl::children() const {
       return subsetCastVector<ModelObject>(stages());
-    }
-
-    std::vector<CoilHeatingElectricMultiStageStageData> CoilHeatingElectricMultiStage_Impl::stages() const {
-      std::vector<CoilHeatingElectricMultiStageStageData> result;
-      auto groups = extensibleGroups();
-      for (auto group : groups) {
-        auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Heating_Electric_MultiStageExtensibleFields::Stage);
-        if (target) {
-          if (auto stage = target->optionalCast<CoilHeatingElectricMultiStageStageData>()) {
-            result.push_back(stage.get());
-          }
-        }
-      }
-      return result;
-    }
-
-    void CoilHeatingElectricMultiStage_Impl::addStage(CoilHeatingElectricMultiStageStageData& stage) {
-      auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
-      group.setPointer(OS_Coil_Heating_Electric_MultiStageExtensibleFields::Stage, stage.handle());
     }
 
     boost::optional<HVACComponent> CoilHeatingElectricMultiStage_Impl::containingHVACComponent() const {
@@ -181,11 +146,152 @@ namespace model {
       return false;
     }
 
+    boost::optional<Schedule> CoilHeatingElectricMultiStage_Impl::availabilitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule);
+    }
+
+    bool CoilHeatingElectricMultiStage_Impl::setAvailabilitySchedule(Schedule& schedule) {
+      bool result = setSchedule(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule, "CoilHeatingElectricMultiStage",
+                                "Availability Schedule", schedule);
+      return result;
+    }
+
+    void CoilHeatingElectricMultiStage_Impl::resetAvailabilitySchedule() {
+      bool result = setString(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule, "");
+      OS_ASSERT(result);
+    }
+
+    std::vector<CoilHeatingElectricMultiStageStageData> CoilHeatingElectricMultiStage_Impl::stages() const {
+      std::vector<CoilHeatingElectricMultiStageStageData> result;
+      for (const auto& group : extensibleGroups()) {
+        if (auto target = group.cast<WorkspaceExtensibleGroup>().getTarget(OS_Coil_Heating_Electric_MultiStageExtensibleFields::Stage)) {
+          if (auto stage = target->optionalCast<CoilHeatingElectricMultiStageStageData>()) {
+            result.push_back(stage.get());
+          }
+        }
+      }
+      return result;
+    }
+
+    boost::optional<unsigned> CoilHeatingElectricMultiStage_Impl::stageIndex(const CoilHeatingElectricMultiStageStageData& stage) const {
+
+      boost::optional<unsigned> result;
+
+      auto egs = castVector<WorkspaceExtensibleGroup>(extensibleGroups());
+      auto h = openstudio::toString(stage.handle());
+      auto it = std::find_if(egs.begin(), egs.end(), [&](const WorkspaceExtensibleGroup& eg) {
+        return (eg.getField(OS_Coil_Heating_Electric_MultiStageExtensibleFields::Stage).get() == h);
+      });
+
+      // If found, we compute the index by using std::distance between the start of vector and the iterator returned by std::find_if
+      if (it != egs.end()) {
+        result = std::distance(egs.begin(), it) + 1;
+      }
+
+      return result;
+    }
+
+    bool CoilHeatingElectricMultiStage_Impl::addStage(const CoilHeatingElectricMultiStageStageData& stage) {
+      if (auto _c = stage.parentCoil()) {
+        if (this->handle() == _c->handle()) {
+          return true;  // already the case
+        } else {
+          LOG(Error, "For " << briefDescription() << " cannot add " << stage.briefDescription()
+                            << " since this Stage is already in use by another coil ('" << _c->nameString() << "').");
+          return false;
+        }
+      }
+      auto group = getObject<ModelObject>().pushExtensibleGroup().cast<WorkspaceExtensibleGroup>();
+      if (group.empty()) {
+        LOG(Error, "You have reached the maximum number of stages (=" << numberOfStages() << "), occurred for " << briefDescription() << ".");
+        return false;
+      }
+      bool result = group.setPointer(OS_Coil_Heating_Electric_MultiStageExtensibleFields::Stage, stage.handle());
+      if (!result) {
+        // Something went wrong, so erase the new extensible group
+        getObject<ModelObject>().eraseExtensibleGroup(group.groupIndex());
+      }
+      return result;
+    }
+
+    bool CoilHeatingElectricMultiStage_Impl::setStageIndex(const CoilHeatingElectricMultiStageStageData& stage, unsigned index) {
+      boost::optional<unsigned> idx = stageIndex(stage);
+      if (!idx) {
+        LOG(Warn, "For " << briefDescription() << " cannot set the index of stage " << stage.briefDescription() << " since it is not part of it.");
+        return false;
+      }
+
+      // TODO: we could just set via string instead of doing a ton of typechecking below...
+
+      std::vector<CoilHeatingElectricMultiStageStageData> stageVector = stages();
+
+      if (index > stageVector.size()) {
+        LOG(Warn, "Requested a stage index of " << index << " to be assigned to " << stage.briefDescription() << ", but " << briefDescription()
+                                                << " only has " << stageVector.size() << " stages, resetting to that.");
+        index = stageVector.size();
+      } else if (index < 1) {
+        LOG(Warn, "Requested a stage index of " << index << " < 1 to be assigned to " << stage.briefDescription() << ", resetting to 1");
+        index = 1;
+      }
+
+      stageVector.erase(stageVector.begin() + idx.get() - 1);  // stageIndex is 1-indexed, and vector is 0-indexed
+
+      stageVector.insert(stageVector.begin() + (index - 1), stage);
+
+      return setStages(stageVector);
+    }
+
+    bool CoilHeatingElectricMultiStage_Impl::addStage(const CoilHeatingElectricMultiStageStageData& stage, unsigned index) {
+      bool ok = addStage(stage);
+      if (!ok) {
+        return false;
+      }
+      ok = setStageIndex(stage, index);
+      return ok;
+    }
+
+    bool CoilHeatingElectricMultiStage_Impl::setStages(const std::vector<CoilHeatingElectricMultiStageStageData>& stages) {
+      // Clear the extensible groups, and redo them
+      bool ok = true;
+      clearExtensibleGroups();
+      for (const CoilHeatingElectricMultiStageStageData& s : stages) {
+        ok &= addStage(s);
+      }
+      return ok;
+    }
+
+    void CoilHeatingElectricMultiStage_Impl::removeAllStages() {
+      clearExtensibleGroups();
+    }
+
+    bool CoilHeatingElectricMultiStage_Impl::removeStage(const CoilHeatingElectricMultiStageStageData& stage) {
+      boost::optional<unsigned> idx = stageIndex(stage);
+      if (!idx) {
+        LOG(Warn, "For " << briefDescription() << " cannot remove stage " << stage.briefDescription() << " since it is not part of it.");
+        return false;
+      }
+
+      return removeStage(idx.get());
+    }
+
+    bool CoilHeatingElectricMultiStage_Impl::removeStage(unsigned index) {
+      bool result = false;
+      if ((index > 0) && (index <= numberOfStages())) {
+        getObject<ModelObject>().eraseExtensibleGroup(index - 1);
+        result = true;
+      }
+      return result;
+    }
+
   }  // namespace detail
 
   CoilHeatingElectricMultiStage::CoilHeatingElectricMultiStage(const Model& model)
     : StraightComponent(CoilHeatingElectricMultiStage::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingElectricMultiStage_Impl>());
+
+    auto always_on = model.alwaysOnDiscreteSchedule();
+    bool ok = setAvailabilitySchedule(always_on);
+    OS_ASSERT(ok);
   }
 
   IddObjectType CoilHeatingElectricMultiStage::iddObjectType() {
@@ -204,12 +310,44 @@ namespace model {
     getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->resetAvailabilitySchedule();
   }
 
+  unsigned CoilHeatingElectricMultiStage::numberOfStages() const {
+    return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->numberOfStages();
+  }
+
+  boost::optional<unsigned> CoilHeatingElectricMultiStage::stageIndex(const CoilHeatingElectricMultiStageStageData& stage) const {
+    return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->stageIndex(stage);
+  }
+
   std::vector<CoilHeatingElectricMultiStageStageData> CoilHeatingElectricMultiStage::stages() const {
     return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->stages();
   }
 
-  void CoilHeatingElectricMultiStage::addStage(CoilHeatingElectricMultiStageStageData& stage) {
-    getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->addStage(stage);
+  bool CoilHeatingElectricMultiStage::addStage(const CoilHeatingElectricMultiStageStageData& stage) {
+    return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->addStage(stage);
+  }
+
+  bool CoilHeatingElectricMultiStage::addStage(const CoilHeatingElectricMultiStageStageData& stage, unsigned index) {
+    return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->addStage(stage, index);
+  }
+
+  bool CoilHeatingElectricMultiStage::setStageIndex(const CoilHeatingElectricMultiStageStageData& stage, unsigned index) {
+    return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->setStageIndex(stage, index);
+  }
+
+  bool CoilHeatingElectricMultiStage::setStages(const std::vector<CoilHeatingElectricMultiStageStageData>& stages) {
+    return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->setStages(stages);
+  }
+
+  void CoilHeatingElectricMultiStage::removeAllStages() {
+    getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->removeAllStages();
+  }
+
+  bool CoilHeatingElectricMultiStage::removeStage(const CoilHeatingElectricMultiStageStageData& stage) {
+    return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->removeStage(stage);
+  }
+
+  bool CoilHeatingElectricMultiStage::removeStage(unsigned index) {
+    return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->removeStage(index);
   }
 
   /// @cond

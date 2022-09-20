@@ -31799,6 +31799,7 @@ Coil:Heating:Electric:MultiStage,
        \memo system, then the coil is controlled by the parent component and the setpoint node name
        \memo is not entered.
        \min-fields 6
+       \max-fields 14
        \extensible:2
   A1 , \field Name
        \type alpha
@@ -31917,6 +31918,7 @@ Coil:Heating:Gas:MultiStage,
        \memo system, then the coil is controlled by the parent component and the setpoint node name
        \memo is not entered.
        \min-fields 8
+       \max-fields 20
        \extensible:3
   A1 , \field Name
        \required-field
