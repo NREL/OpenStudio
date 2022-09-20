@@ -35,10 +35,14 @@
 #include "../CoilHeatingGasMultiStage_Impl.hpp"
 #include "../CoilHeatingGasMultiStageStageData.hpp"
 #include "../CoilHeatingGasMultiStageStageData_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../Node.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -47,7 +51,8 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_GettersSetters) {
   Model m;
   CoilHeatingGasMultiStage coil(m);
 
-  EXPECT_FALSE(coil.availabilitySchedule());
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  EXPECT_EQ(alwaysOn, coil.availabilitySchedule());
   EXPECT_FALSE(coil.partLoadFractionCorrelationCurve());
   EXPECT_FALSE(coil.parasiticGasLoad());
   EXPECT_EQ(0u, coil.stages().size());
@@ -58,18 +63,15 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_GettersSetters) {
   EXPECT_TRUE(coil.setPartLoadFractionCorrelationCurve(curveQuadratic));
   EXPECT_TRUE(coil.setParasiticGasLoad(100.0));
 
-  ASSERT_TRUE(coil.availabilitySchedule());
-  EXPECT_EQ(scheduleConstant.handle(), coil.availabilitySchedule().get().handle());
+  EXPECT_EQ(scheduleConstant, coil.availabilitySchedule());
   ASSERT_TRUE(coil.partLoadFractionCorrelationCurve());
   EXPECT_EQ(curveQuadratic.handle(), coil.partLoadFractionCorrelationCurve().get().handle());
   ASSERT_TRUE(coil.parasiticGasLoad());
   EXPECT_EQ(100.0, coil.parasiticGasLoad().get());
 
-  coil.resetAvailabilitySchedule();
   coil.resetPartLoadFractionCorrelationCurve();
   coil.resetParasiticGasLoad();
 
-  EXPECT_FALSE(coil.availabilitySchedule());
   EXPECT_FALSE(coil.partLoadFractionCorrelationCurve());
   EXPECT_FALSE(coil.parasiticGasLoad());
   EXPECT_EQ(0u, coil.stages().size());
@@ -83,4 +85,34 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Remove) {
   coil.remove();
 
   EXPECT_EQ(0u, m.modelObjects().size());
+}
+
+TEST_F(ModelFixture, CoilHeatingGasMultiStage_addToNode) {
+  // Should not be allowed, only meant to be inside a Unitary
+  Model m;
+
+  CoilHeatingGasMultiStage h(m);
+  CoilHeatingGasMultiStageStageData stageData(m);
+
+  AirLoopHVAC a(m);
+  Node supplyOutlet = a.supplyOutletNode();
+  EXPECT_FALSE(h.addToNode(supplyOutlet));
+}
+
+TEST_F(ModelFixture, CoilHeatingGasMultiStage_clone) {
+  Model m;
+
+  CoilHeatingGasMultiStage h(m);
+  CoilHeatingGasMultiStageStageData stageData(m);
+
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
+
+  auto hClone = h.clone(m).cast<CoilHeatingGasMultiStage>();
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
+
+  h.remove();
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
+
+  hClone.remove();
+  EXPECT_EQ(0u, m.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
 }

@@ -35,6 +35,8 @@
 #include "../CoilHeatingElectricMultiStage_Impl.hpp"
 #include "../CoilHeatingElectricMultiStageStageData.hpp"
 #include "../CoilHeatingElectricMultiStageStageData_Impl.hpp"
+#include "../Schedule.hpp"
+#include "../Schedule_Impl.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
@@ -47,18 +49,14 @@ TEST_F(ModelFixture, CoilHeatingElectricMultiStage_GettersSetters) {
   Model m;
   CoilHeatingElectricMultiStage coil(m);
 
-  EXPECT_FALSE(coil.availabilitySchedule());
+  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  EXPECT_EQ(alwaysOn, coil.availabilitySchedule());
   EXPECT_EQ(0u, coil.stages().size());
 
   ScheduleConstant scheduleConstant(m);
   EXPECT_TRUE(coil.setAvailabilitySchedule(scheduleConstant));
 
-  ASSERT_TRUE(coil.availabilitySchedule());
-  EXPECT_EQ(scheduleConstant.handle(), coil.availabilitySchedule().get().handle());
-
-  coil.resetAvailabilitySchedule();
-
-  EXPECT_FALSE(coil.availabilitySchedule());
+  EXPECT_EQ(scheduleConstant, coil.availabilitySchedule());
 }
 
 TEST_F(ModelFixture, CoilHeatingElectricMultiStage_Remove) {
@@ -78,7 +76,7 @@ TEST_F(ModelFixture, CoilHeatingElectricMultiStage_addToNode) {
   CoilHeatingElectricMultiStage h(m);
   CoilHeatingElectricMultiStageStageData stageData(m);
 
-  AirLoopHVAC a(model);
+  AirLoopHVAC a(m);
   Node supplyOutlet = a.supplyOutletNode();
   EXPECT_FALSE(h.addToNode(supplyOutlet));
 }
@@ -95,8 +93,8 @@ TEST_F(ModelFixture, CoilHeatingElectricMultiStage_clone) {
   EXPECT_EQ(2u, m.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
 
   h.remove();
-  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
 
   hClone.remove();
-  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+  EXPECT_EQ(0u, m.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
 }
