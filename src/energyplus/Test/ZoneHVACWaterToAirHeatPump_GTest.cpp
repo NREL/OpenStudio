@@ -41,10 +41,16 @@
 #include "../../model/FanOnOff.hpp"
 #include "../../model/CoilHeatingElectric.hpp"
 #include "../../model/ScheduleConstant.hpp"
+#include "../../model/PortList.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/PlantLoop.hpp"
 
 #include <utilities/idd/ZoneHVAC_WaterToAirHeatPump_FieldEnums.hxx>
-#include <utilities/idd/Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_WaterToAirHeatPump_EquationFit_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
+#include <utilities/idd/Fan_OnOff_FieldEnums.hxx>
+#include <utilities/idd/OutdoorAir_Mixer_FieldEnums.hxx>
 
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/idf/IdfObject.hpp"
@@ -59,140 +65,295 @@ using namespace openstudio;
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACWaterToAirHeatPump) {
 
+  openstudio::energyplus::ForwardTranslator ft;
+
   Model m;
 
   Schedule sch = m.alwaysOnDiscreteSchedule();
+  sch.setName("HP AvailSch");
   CoilHeatingWaterToAirHeatPumpEquationFit htg_coil(m);
+  htg_coil.setName("HP HC");
   CoilCoolingWaterToAirHeatPumpEquationFit clg_coil(m);
+  clg_coil.setName("HP CC");
   FanOnOff fan(m);
+  fan.setName("HP FanOnOff");
   CoilHeatingElectric supp_htg_coil(m);
+  supp_htg_coil.setName("HP SupHC");
 
   ZoneHVACWaterToAirHeatPump hp(m, sch, fan, htg_coil, clg_coil, supp_htg_coil);
 
-  // Need to be in a thermal zone to be translated, and TZ needs at least one space
+  EXPECT_TRUE(hp.setSupplyAirFlowRateDuringCoolingOperation(1.1));
+  EXPECT_TRUE(hp.setSupplyAirFlowRateDuringHeatingOperation(1.2));
+  EXPECT_TRUE(hp.setSupplyAirFlowRateWhenNoCoolingorHeatingisNeeded(0.5));
+
+  EXPECT_TRUE(hp.setOutdoorAirFlowRateDuringCoolingOperation(0.3));
+  EXPECT_TRUE(hp.setOutdoorAirFlowRateDuringHeatingOperation(0.4));
+  EXPECT_TRUE(hp.setOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded(0.2));
+
+  EXPECT_TRUE(hp.setMaximumCyclingRate(2.6));
+  EXPECT_TRUE(hp.setHeatPumpTimeConstant(60.1));
+  EXPECT_TRUE(hp.setFractionofOnCyclePowerUse(0.02));
+  EXPECT_TRUE(hp.setHeatPumpFanDelayTime(60.2));
+  EXPECT_TRUE(hp.setMaximumSupplyAirTemperaturefromSupplementalHeater(30.0));
+
+  EXPECT_TRUE(hp.setMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation(15.0));
+
+  ScheduleConstant supplyAirFanSch(m);
+  supplyAirFanSch.setName("supplyAirFanSch");
+  EXPECT_TRUE(hp.setSupplyAirFanOperatingModeSchedule(supplyAirFanSch));
+  EXPECT_TRUE(hp.setHeatPumpCoilWaterFlowMode("ConstantOnDemand"));
+
+  PlantLoop p(m);
+  EXPECT_TRUE(p.addDemandBranchForComponent(htg_coil));
+  htg_coil.waterInletModelObject()->setName("HP HC Water Inlet Node");
+  htg_coil.waterOutletModelObject()->setName("HP HC Water Outlet Node");
+  htg_coil.autosizeRatedAirFlowRate();
+  EXPECT_TRUE(htg_coil.setRatedWaterFlowRate(0.005));
+  EXPECT_TRUE(htg_coil.setRatedHeatingCapacity(8000.0));
+  EXPECT_TRUE(htg_coil.setRatedHeatingCoefficientofPerformance(3.2));
+  EXPECT_TRUE(htg_coil.setRatedEnteringWaterTemperature(21.0));
+  EXPECT_TRUE(htg_coil.setRatedEnteringAirDryBulbTemperature(19.0));
+  EXPECT_TRUE(htg_coil.setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(1.1));
+
+  EXPECT_TRUE(p.addDemandBranchForComponent(clg_coil));
+  clg_coil.waterInletModelObject()->setName("HP CC Water Inlet Node");
+  clg_coil.waterOutletModelObject()->setName("HP CC Water Outlet Node");
+  EXPECT_TRUE(clg_coil.setRatedAirFlowRate(1.1));
+  EXPECT_TRUE(clg_coil.setRatedWaterFlowRate(0.004));
+  EXPECT_TRUE(clg_coil.setRatedTotalCoolingCapacity(7000.0));
+  clg_coil.autosizeRatedSensibleCoolingCapacity();
+  EXPECT_TRUE(clg_coil.setRatedCoolingCoefficientofPerformance(3.5));
+  EXPECT_TRUE(clg_coil.setRatedEnteringWaterTemperature(31.0));
+  EXPECT_TRUE(clg_coil.setRatedEnteringAirDryBulbTemperature(26.0));
+  EXPECT_TRUE(clg_coil.setRatedEnteringAirWetBulbTemperature(20.1));
+
   ThermalZone z(m);
-  hp.addToThermalZone(z);
   Space s(m);
   s.setThermalZone(z);
 
-  openstudio::energyplus::ForwardTranslator ft;
-  Workspace w = ft.translateModel(m);
+  {
+    // Not attached to a zone: not translated
+    Workspace w = ft.translateModel(m);
 
-  WorkspaceObjectVector idf_hps(w.getObjectsByType(IddObjectType::ZoneHVAC_WaterToAirHeatPump));
-  EXPECT_EQ(1u, idf_hps.size());
-  WorkspaceObject idf_hp(idf_hps[0]);
+    EXPECT_EQ(0, w.getObjectsByType(IddObjectType::ZoneHVAC_WaterToAirHeatPump).size());
+  }
 
-  WorkspaceObjectVector idf_ccs(w.getObjectsByType(IddObjectType::Coil_Cooling_WaterToAirHeatPump_EquationFit));
-  EXPECT_EQ(1u, idf_ccs.size());
-  WorkspaceObject idf_cc(idf_ccs[0]);
+  // Need to be in a thermal zone to be translated, and TZ needs at least one space
+  hp.addToThermalZone(z);
+  z.inletPortList().modelObjects()[0].setName("Zone Air Inlet Node");
+  z.exhaustPortList().modelObjects()[0].setName("Zone Air Exhaust Node");
+  z.zoneAirNode().setName("Zone Air Node");
 
-  WorkspaceObjectVector idf_hcs(w.getObjectsByType(IddObjectType::Coil_Heating_WaterToAirHeatPump_EquationFit));
-  EXPECT_EQ(1u, idf_hcs.size());
-  WorkspaceObject idf_hc(idf_hcs[0]);
+  auto getObjects =
+    [](const Workspace& w) -> std::tuple<WorkspaceObject, WorkspaceObject, WorkspaceObject, WorkspaceObject, WorkspaceObject, WorkspaceObject> {
+    WorkspaceObjectVector idf_hps(w.getObjectsByType(IddObjectType::ZoneHVAC_WaterToAirHeatPump));
+    EXPECT_EQ(1, idf_hps.size());
+    WorkspaceObject idf_hp(idf_hps[0]);
 
-  WorkspaceObjectVector idf_fans(w.getObjectsByType(IddObjectType::Fan_OnOff));
-  EXPECT_EQ(1u, idf_fans.size());
-  WorkspaceObject idf_fan(idf_fans[0]);
+    auto idf_heatingCoil_ = idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName);
 
-  WorkspaceObjectVector idf_supHCs(w.getObjectsByType(IddObjectType::Coil_Heating_Electric));
-  EXPECT_EQ(1u, idf_supHCs.size());
-  WorkspaceObject idf_supHC(idf_supHCs[0]);
+    auto idf_coolingCoil_ = idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName);
 
-  // Check Node Connections
-  // --- CC --- HC --- Fan --- supHC
-  EXPECT_EQ("", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AirInletNodeName).get());
-  EXPECT_EQ("", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AirOutletNodeName).get());
+    auto idf_oamixer_ = idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirMixerName);
 
-  EXPECT_EQ("Zone HVAC Water To Air Heat Pump 1 Fan Outlet Node",
-            idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirInletNodeName).get());
-  EXPECT_EQ("Zone HVAC Water To Air Heat Pump 1 Cooling Coil Outlet Node",
-            idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get());
+    auto idf_fan_ = idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanName);
 
-  EXPECT_EQ(idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get(),
-            idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirInletNodeName).get());
-  EXPECT_EQ("Zone HVAC Water To Air Heat Pump 1 Heating Coil Outlet Node",
-            idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get());
+    auto idf_suppHC_ = idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::SupplementalHeatingCoilName);
 
-  EXPECT_EQ(idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get(),
-            idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get());
-  EXPECT_EQ("", idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get());
+    return {idf_hp, idf_oamixer_.get(), idf_coolingCoil_.get(), idf_heatingCoil_.get(), idf_fan_.get(), idf_suppHC_.get()};
+  };
 
-  EXPECT_EQ(idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get(),
-            idf_supHC.getString(Coil_Heating_ElectricFields::AirInletNodeName).get(),
-  EXPECT_EQ("", idf_supHC.getString(Coil_Heating_ElectricFields::AirOutletNodeName).get());
+  struct NodeNames
+  {
+    std::string zvInlet;
+    std::string zvOutlet;
+    std::string oaMixerReturnAir;
+    std::string oaMixerOutlet;
+    std::string coolingCoilInlet;
+    std::string coolingCoilOutlet;
+    std::string heatingCoilInlet;
+    std::string heatingCoilOutlet;
+    std::string fanInlet;
+    std::string fanOutlet;
+    std::string suppHeatingCoilInlet;
+    std::string suppHeatingCoilOutlet;
+  };
 
-  EXPECT_EQ(hp.nameString(), idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::Name).get());
-  EXPECT_EQ(sch.nameString(), idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AvailabilityScheduleName).get());
-  EXPECT_EQ("OutdoorAir:Mixer", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirMixerObjectType, false).get());
-  boost::optional<WorkspaceObject> woMixer(idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirMixerName));
-  ASSERT_TRUE(woMixer);
-  EXPECT_EQ(woMixer->iddObject().type(), IddObjectType::OutdoorAir_Mixer);
-  EXPECT_EQ("Autosize", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::CoolingSupplyAirFlowRate, false).get());
-  EXPECT_EQ("Autosize", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::HeatingSupplyAirFlowRate, false).get());
-  EXPECT_EQ("Autosize", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadSupplyAirFlowRate, false).get());
-  EXPECT_EQ("Autosize", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::CoolingOutdoorAirFlowRate, false).get());
-  EXPECT_EQ("Autosize", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::HeatingOutdoorAirFlowRate, false).get());
-  EXPECT_EQ("Autosize", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadOutdoorAirFlowRate, false).get());
-  EXPECT_EQ("Fan:OnOff", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanObjectType, false).get());
-  EXPECT_EQ(fan.nameString(), idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanName).get());
-  EXPECT_EQ("Coil:Heating:WaterToAirHeatPump:EquationFit", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilObjectType, false).get());
-  EXPECT_EQ(htg_coil.nameString(), idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName).get());
-  EXPECT_EQ("Coil:Cooling:WaterToAirHeatPump:EquationFit", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilObjectType, false).get());
-  EXPECT_EQ(clg_coil.nameString(), idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName).get());
-  EXPECT_EQ(2.5, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate, false).get());
-  EXPECT_EQ(60.0, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpTimeConstant, false).get());
-  EXPECT_EQ(0.01, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse, false).get());
-  EXPECT_EQ(60.0, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime, false).get());
-  EXPECT_EQ("Coil:Heating:Electric", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::SupplementalHeatingCoilObjectType, false).get());
-  EXPECT_EQ(supp_htg_coil.nameString(), idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::SupplementalHeatingCoilName).get());
-  EXPECT_EQ("Autosize", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater, false).get());
-  EXPECT_EQ(21.0, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation, false).get());
-  EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorDryBulbTemperatureSensorNodeName));
-  EXPECT_EQ("BlowThrough", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::FanPlacement, false).get());
-  EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanOperatingModeScheduleName));
-  EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::AvailabilityManagerListName));
-  EXPECT_EQ("Cycling", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode, false).get());
-  EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationZoneHVACSizingObjectName));
+  auto getNodeNames = [&getObjects](const Workspace& w) {
+    auto [idf_hp, idf_oamixer, idf_coolingCoil, idf_heatingCoil, idf_fan, idf_suppHC] = getObjects(w);
 
-  EXPECT_EQ(htg_coil.nameString(), idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::Name).get());
-  EXPECT_TRUE(idf_hc.isEmpty(Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName));
-  EXPECT_TRUE(idf_hc.isEmpty(Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName));
-  EXPECT_EQ("Autosize", idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, false).get());
-  EXPECT_EQ("Autosize", idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, false).get());
-  EXPECT_EQ("Autosize", idf_hc.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::GrossRatedHeatingCapacity, false).get());
-  EXPECT_EQ(3.0, idf_hc.getDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::GrossRatedHeatingCOP, false).get());
-  EXPECT_EQ(20.0, idf_hc.getDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature, false).get());
-  EXPECT_EQ(20.0, idf_hc.getDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirDryBulbTemperature, false).get());
-  EXPECT_EQ(1.0, idf_hc.getDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatioofRatedHeatingCapacitytoRatedCoolingCapacity, false).get());
-  boost::optional<WorkspaceObject> woCurve1(idf_hc.getTarget(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName));
-  ASSERT_TRUE(woCurve1);
-  EXPECT_EQ(woCurve1->iddObject().type(), IddObjectType::Curve_QuadLinear);
-  boost::optional<WorkspaceObject> woCurve2(idf_hc.getTarget(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName));
-  ASSERT_TRUE(woCurve2);
-  EXPECT_EQ(woCurve2->iddObject().type(), IddObjectType::Curve_QuadLinear);
+    EXPECT_EQ(idf_heatingCoil.iddObject().type(), IddObjectType::Coil_Heating_WaterToAirHeatPump_EquationFit);
+    EXPECT_EQ(idf_coolingCoil.iddObject().type(), IddObjectType::Coil_Cooling_WaterToAirHeatPump_EquationFit);
+    EXPECT_EQ(idf_fan.iddObject().type(), IddObjectType::Fan_OnOff);
 
-  EXPECT_EQ(clg_coil.nameString(), idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::Name).get());
-  EXPECT_TRUE(idf_cc.isEmpty(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName));
-  EXPECT_TRUE(idf_cc.isEmpty(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName));
-  EXPECT_EQ("Autosize", idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, false).get());
-  EXPECT_EQ("Autosize", idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, false).get());
-  EXPECT_EQ("Autosize", idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedTotalCoolingCapacity, false).get());
-  EXPECT_EQ("Autosize", idf_cc.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedSensibleCoolingCapacity, false).get());
-  EXPECT_EQ(3.0, idf_cc.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedCoolingCOP, false).get());
-  EXPECT_EQ(30.0, idf_cc.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature, false).get());
-  EXPECT_EQ(27.0, idf_cc.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirDryBulbTemperature, false).get());
-  EXPECT_EQ(19.0, idf_cc.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirWetBulbTemperature, false).get());
-  boost::optional<WorkspaceObject> woCurve3(idf_cc.getTarget(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCurveName));
-  ASSERT_TRUE(woCurve3);
-  EXPECT_EQ(woCurve3->iddObject().type(), IddObjectType::Curve_QuadLinear);
-  boost::optional<WorkspaceObject> woCurve4(idf_cc.getTarget(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCurveName));
-  ASSERT_TRUE(woCurve4);
-  EXPECT_EQ(woCurve4->iddObject().type(), IddObjectType::Curve_QuintLinear);
-  boost::optional<WorkspaceObject> woCurve5(idf_cc.getTarget(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCurveName));
-  ASSERT_TRUE(woCurve5);
-  EXPECT_EQ(woCurve5->iddObject().type(), IddObjectType::Curve_QuadLinear);
-  EXPECT_EQ(0, idf_cc.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::NominalTimeforCondensateRemovaltoBegin, false).get());
-  EXPECT_EQ(
-    0.0,
-    idf_cc.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity).get());
+    NodeNames n;
+    n.zvInlet = idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AirInletNodeName).get();
+    n.zvOutlet = idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AirOutletNodeName).get();
+    n.oaMixerReturnAir = idf_oamixer.getString(OutdoorAir_MixerFields::ReturnAirStreamNodeName).get();
+    n.oaMixerOutlet = idf_oamixer.getString(OutdoorAir_MixerFields::MixedAirNodeName).get();
+    n.coolingCoilInlet = idf_coolingCoil.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirInletNodeName).get();
+    n.coolingCoilOutlet = idf_coolingCoil.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get();
+    n.heatingCoilInlet = idf_heatingCoil.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirInletNodeName).get();
+    n.heatingCoilOutlet = idf_heatingCoil.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::AirOutletNodeName).get();
+    n.fanInlet = idf_fan.getString(Fan_OnOffFields::AirInletNodeName).get();
+    n.fanOutlet = idf_fan.getString(Fan_OnOffFields::AirOutletNodeName).get();
+    n.suppHeatingCoilInlet = idf_suppHC.getString(Coil_Heating_ElectricFields::AirInletNodeName).get();
+    n.suppHeatingCoilOutlet = idf_suppHC.getString(Coil_Heating_ElectricFields::AirOutletNodeName).get();
+    return n;
+  };
+
+  auto validateNodeMatch = [&getNodeNames](const Workspace& w, const std::string& testName = "", bool drawThrough = true) {
+    NodeNames n = getNodeNames(w);
+    EXPECT_FALSE(n.zvInlet.empty());
+    EXPECT_FALSE(n.zvOutlet.empty());
+    EXPECT_FALSE(n.oaMixerOutlet.empty());
+    EXPECT_FALSE(n.coolingCoilInlet.empty());
+    EXPECT_FALSE(n.coolingCoilOutlet.empty());
+    EXPECT_FALSE(n.heatingCoilInlet.empty());
+    EXPECT_FALSE(n.heatingCoilOutlet.empty());
+    EXPECT_FALSE(n.fanInlet.empty());
+
+    EXPECT_EQ(n.oaMixerReturnAir, n.zvInlet) << testName << " [drawThrough=" << std::boolalpha << drawThrough
+                                             << "]: OA Mixer Return Air Strem doesn't match WAHP Inlet";
+    EXPECT_EQ("Zone Air Exhaust Node", n.zvInlet) << testName << " [drawThrough=" << std::boolalpha << drawThrough << "]: WAHP Inlet wrong name";
+    EXPECT_EQ(n.suppHeatingCoilOutlet, n.zvOutlet) << testName << " [drawThrough=" << std::boolalpha << drawThrough
+                                                   << "]: SuppHC Outlet doesn't match WAHP Outlet";
+    EXPECT_EQ("Zone Air Inlet Node", n.zvOutlet) << testName << " [drawThrough=" << std::boolalpha << drawThrough << "]: WAHP Onlet wrong name";
+
+    if (drawThrough) {
+      // o---- OA ---- CC ---- HC ---- Fan --- supHC -----o
+      EXPECT_EQ(n.oaMixerOutlet, n.coolingCoilInlet)
+        << testName << " [drawThrough=" << std::boolalpha << drawThrough << "]: OA Mixer Outlet doesn't match Cooling Coil Inlet";
+      EXPECT_EQ(n.coolingCoilOutlet, n.heatingCoilInlet)
+        << testName << " [drawThrough=" << std::boolalpha << drawThrough << "]: Cooling Outlet doesn't match Heating Coil Inlet";
+      EXPECT_EQ(n.heatingCoilOutlet, n.fanInlet) << testName << " [drawThrough=" << std::boolalpha << drawThrough
+                                                 << "]: Heating Outlet doesn't match Fan Inlet";
+      EXPECT_EQ(n.fanOutlet, n.suppHeatingCoilInlet)
+        << testName << " [drawThrough=" << std::boolalpha << drawThrough << "]: Fan Outlet doesn't match SuppHC Inlet";
+
+    } else {  // BlowThrough
+      // o---- OA ---- Fan ----- CC ---- HC ---- supHC -----o
+      EXPECT_EQ(n.oaMixerOutlet, n.fanInlet) << testName << " [drawThrough=" << std::boolalpha << drawThrough
+                                             << "]: OA Mixer Outlet doesn't match Fan Inlet";
+      EXPECT_EQ(n.fanOutlet, n.coolingCoilInlet) << testName << " [drawThrough=" << std::boolalpha << drawThrough
+                                                 << "]: Fan Outlet doesn't match Cooling Coil Inlet";
+      EXPECT_EQ(n.coolingCoilOutlet, n.heatingCoilInlet)
+        << testName << " [drawThrough=" << std::boolalpha << drawThrough << "]: Cooling Outlet doesn't match Heating Coil Inlet";
+      EXPECT_EQ(n.heatingCoilOutlet, n.suppHeatingCoilInlet)
+        << testName << " [drawThrough=" << std::boolalpha << drawThrough << "]: Heating Coil Outlet doesn't match SuppHC Inlet";
+    }
+  };
+
+  for (bool drawThrough : {true, false}) {
+
+    std::string fanPlacement = drawThrough ? "DrawThrough" : "BlowThrough";
+    EXPECT_TRUE(hp.setFanPlacement(fanPlacement));
+
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idf_hps(w.getObjectsByType(IddObjectType::ZoneHVAC_WaterToAirHeatPump));
+    EXPECT_EQ(1, idf_hps.size());
+    WorkspaceObject& idf_hp = idf_hps.front();
+
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Coil_Cooling_WaterToAirHeatPump_EquationFit).size());
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Coil_Heating_WaterToAirHeatPump_EquationFit).size());
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Fan_OnOff).size());
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Coil_Heating_Electric).size());
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::Zone).size());
+    ASSERT_EQ(1, w.getObjectsByType(IddObjectType::ZoneHVAC_EquipmentList).size());
+
+    validateNodeMatch(w, "", drawThrough);
+
+    EXPECT_EQ("HP AvailSch", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::AvailabilityScheduleName).get());
+    EXPECT_EQ("OutdoorAir:Mixer", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirMixerObjectType).get());
+    EXPECT_EQ("Zone HVAC Water To Air Heat Pump 1 OA Mixer", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorAirMixerName).get());
+    EXPECT_EQ(1.1, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::CoolingSupplyAirFlowRate).get());
+    EXPECT_EQ(1.2, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatingSupplyAirFlowRate).get());
+    EXPECT_EQ(0.5, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadSupplyAirFlowRate).get());
+    EXPECT_EQ(0.3, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::CoolingOutdoorAirFlowRate).get());
+    EXPECT_EQ(0.4, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatingOutdoorAirFlowRate).get());
+    EXPECT_EQ(0.2, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::NoLoadOutdoorAirFlowRate).get());
+    EXPECT_EQ("Fan:OnOff", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanObjectType).get());
+    EXPECT_EQ("HP FanOnOff", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanName).get());
+    EXPECT_EQ("Coil:Heating:WaterToAirHeatPump:EquationFit", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilObjectType).get());
+    EXPECT_EQ("HP HC", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName).get());
+    EXPECT_EQ("Coil:Cooling:WaterToAirHeatPump:EquationFit", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilObjectType).get());
+    EXPECT_EQ("HP CC", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName).get());
+    EXPECT_EQ(2.6, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::MaximumCyclingRate).get());
+    EXPECT_EQ(60.1, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpTimeConstant).get());
+    EXPECT_EQ(0.02, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::FractionofOnCyclePowerUse).get());
+    EXPECT_EQ(60.2, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpFanDelayTime).get());
+    EXPECT_EQ("Coil:Heating:Electric", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::SupplementalHeatingCoilObjectType).get());
+    EXPECT_EQ("HP SupHC", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::SupplementalHeatingCoilName).get());
+    EXPECT_EQ(30.0, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::MaximumSupplyAirTemperaturefromSupplementalHeater).get());
+    EXPECT_EQ(15.0, idf_hp.getDouble(ZoneHVAC_WaterToAirHeatPumpFields::MaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation).get());
+    EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::OutdoorDryBulbTemperatureSensorNodeName));
+    EXPECT_EQ(fanPlacement, idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::FanPlacement).get());
+    EXPECT_EQ("supplyAirFanSch", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::SupplyAirFanOperatingModeScheduleName).get());
+    EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::AvailabilityManagerListName));
+    EXPECT_EQ("ConstantOnDemand", idf_hp.getString(ZoneHVAC_WaterToAirHeatPumpFields::HeatPumpCoilWaterFlowMode).get());
+    EXPECT_TRUE(idf_hp.isEmpty(ZoneHVAC_WaterToAirHeatPumpFields::DesignSpecificationZoneHVACSizingObjectName));
+
+    {
+      ASSERT_TRUE(idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName));
+      auto idf_heatingCoil = idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName).get();
+
+      EXPECT_EQ(htg_coil.nameString(), idf_heatingCoil.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::Name).get());
+      EXPECT_EQ("HP HC Water Inlet Node", idf_heatingCoil.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName).get());
+      EXPECT_EQ("HP HC Water Outlet Node", idf_heatingCoil.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName).get());
+      EXPECT_EQ("Autosize", idf_heatingCoil.getString(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, false).get());
+      EXPECT_EQ(0.005, idf_heatingCoil.getDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, false).get());
+      EXPECT_EQ(8000.0, idf_heatingCoil.getDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::GrossRatedHeatingCapacity, false).get());
+      EXPECT_EQ(3.2, idf_heatingCoil.getDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::GrossRatedHeatingCOP, false).get());
+      EXPECT_EQ(21.0, idf_heatingCoil.getDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature, false).get());
+      EXPECT_EQ(19.0, idf_heatingCoil.getDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirDryBulbTemperature, false).get());
+      EXPECT_EQ(
+        1.1,
+        idf_heatingCoil.getDouble(Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatioofRatedHeatingCapacitytoRatedCoolingCapacity, false).get());
+      boost::optional<WorkspaceObject> woCurve1(
+        idf_heatingCoil.getTarget(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingCapacityCurveName));
+      ASSERT_TRUE(woCurve1);
+      EXPECT_EQ(woCurve1->iddObject().type(), IddObjectType::Curve_QuadLinear);
+      boost::optional<WorkspaceObject> woCurve2(
+        idf_heatingCoil.getTarget(Coil_Heating_WaterToAirHeatPump_EquationFitFields::HeatingPowerConsumptionCurveName));
+      ASSERT_TRUE(woCurve2);
+      EXPECT_EQ(woCurve2->iddObject().type(), IddObjectType::Curve_QuadLinear);
+    }
+
+    {
+      ASSERT_TRUE(idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::HeatingCoilName));
+      auto idf_coolingCoil = idf_hp.getTarget(ZoneHVAC_WaterToAirHeatPumpFields::CoolingCoilName).get();
+
+      EXPECT_EQ(clg_coil.nameString(), idf_coolingCoil.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::Name).get());
+      EXPECT_EQ("HP CC Water Inlet Node", idf_coolingCoil.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::WaterInletNodeName).get());
+      EXPECT_EQ("HP CC Water Outlet Node", idf_coolingCoil.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::WaterOutletNodeName).get());
+      EXPECT_EQ(1.1, idf_coolingCoil.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedAirFlowRate, false).get());
+      EXPECT_EQ(0.004, idf_coolingCoil.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedWaterFlowRate, false).get());
+      EXPECT_EQ(7000.0, idf_coolingCoil.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedTotalCoolingCapacity, false).get());
+      EXPECT_EQ("Autosize",
+                idf_coolingCoil.getString(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedSensibleCoolingCapacity, false).get());
+      EXPECT_EQ(3.5, idf_coolingCoil.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::GrossRatedCoolingCOP, false).get());
+
+      EXPECT_EQ(31.0, idf_coolingCoil.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature, false).get());
+      EXPECT_EQ(26.0, idf_coolingCoil.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirDryBulbTemperature, false).get());
+      EXPECT_EQ(20.1, idf_coolingCoil.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirWetBulbTemperature, false).get());
+      boost::optional<WorkspaceObject> woCurve3(
+        idf_coolingCoil.getTarget(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::TotalCoolingCapacityCurveName));
+      ASSERT_TRUE(woCurve3);
+      EXPECT_EQ(woCurve3->iddObject().type(), IddObjectType::Curve_QuadLinear);
+      boost::optional<WorkspaceObject> woCurve4(
+        idf_coolingCoil.getTarget(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::SensibleCoolingCapacityCurveName));
+      ASSERT_TRUE(woCurve4);
+      EXPECT_EQ(woCurve4->iddObject().type(), IddObjectType::Curve_QuintLinear);
+      boost::optional<WorkspaceObject> woCurve5(
+        idf_coolingCoil.getTarget(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::CoolingPowerConsumptionCurveName));
+      ASSERT_TRUE(woCurve5);
+      EXPECT_EQ(woCurve5->iddObject().type(), IddObjectType::Curve_QuadLinear);
+      EXPECT_EQ(0, idf_coolingCoil.getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::NominalTimeforCondensateRemovaltoBegin, false).get());
+      EXPECT_EQ(0.0,
+                idf_coolingCoil
+                  .getDouble(Coil_Cooling_WaterToAirHeatPump_EquationFitFields::RatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity)
+                  .get());
+    }
+  }
 }
