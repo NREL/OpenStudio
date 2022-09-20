@@ -345,13 +345,11 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_SizingZone) {
 
   EXPECT_EQ("HumidityRatioDifference", sz.zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod());
   EXPECT_FALSE(sz.zoneDehumidificationDesignSupplyAirHumidityRatio());
-  EXPECT_FALSE(sz.isZoneCoolingDesignSupplyAirHumidityRatioDifferenceDefaulted());
   EXPECT_EQ(0.0051, sz.zoneCoolingDesignSupplyAirHumidityRatioDifference());
 
   EXPECT_EQ("SupplyAirHumidityRatio", sz.zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod());
   ASSERT_TRUE(sz.zoneHumidificationDesignSupplyAirHumidityRatio());
   EXPECT_EQ(0.004, sz.zoneHumidificationDesignSupplyAirHumidityRatio().get());
-  EXPECT_TRUE(sz.isZoneHumidificationDesignSupplyAirHumidityRatioDifferenceDefaulted());
 
   ASSERT_TRUE(sz.zoneHumidistatDehumidificationSetPointSchedule());
   EXPECT_EQ("dehumSch", sz.zoneHumidistatDehumidificationSetPointSchedule()->nameString());
