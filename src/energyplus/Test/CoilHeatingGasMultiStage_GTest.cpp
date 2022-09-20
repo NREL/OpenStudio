@@ -47,6 +47,8 @@
 #include "../../model/FanConstantVolume.hpp"
 #include "../../model/CurveQuadratic.hpp"
 #include "../../model/CurveQuadratic_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -107,7 +109,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
 
     EXPECT_EQ("HP FanConstantVol", idf_hp.getString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplyAirFanName, false).get());
     EXPECT_EQ("Coil:Heating:Gas:MultiStage",
-              idf_unitary.getString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingCoilObjectType, false).get());
+              idf_hp.getString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingCoilObjectType, false).get());
     EXPECT_EQ("HP HC", idf_hp.getString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingCoilName, false).get());
     EXPECT_EQ("HP CC", idf_hp.getString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::CoolingCoilName, false).get());
     EXPECT_EQ("HP SupHC", idf_hp.getString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoilName, false).get());
@@ -140,7 +142,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
     CoilHeatingGasMultiStage h(m);
     h.setName("HP HC");
     FanConstantVolume f(m);
-    fan.setName("HP FanConstantVol");
+    f.setName("HP FanConstantVol");
 
     auto alwaysOn = m.alwaysOnDiscreteSchedule();
     alwaysOn.setName("HP HC AvailSch");

@@ -46,6 +46,8 @@
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../../model/CoilHeatingElectric.hpp"
 #include "../../model/FanConstantVolume.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"

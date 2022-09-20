@@ -51,7 +51,7 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_GettersSetters) {
   Model m;
   CoilHeatingGasMultiStage coil(m);
 
-  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
   EXPECT_EQ(alwaysOn, coil.availabilitySchedule());
   EXPECT_FALSE(coil.partLoadFractionCorrelationCurve());
   EXPECT_FALSE(coil.parasiticGasLoad());

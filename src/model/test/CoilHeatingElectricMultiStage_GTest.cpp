@@ -49,7 +49,7 @@ TEST_F(ModelFixture, CoilHeatingElectricMultiStage_GettersSetters) {
   Model m;
   CoilHeatingElectricMultiStage coil(m);
 
-  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
   EXPECT_EQ(alwaysOn, coil.availabilitySchedule());
   EXPECT_EQ(0u, coil.stages().size());
 
