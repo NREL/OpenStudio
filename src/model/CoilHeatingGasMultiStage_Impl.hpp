@@ -109,7 +109,7 @@ namespace model {
 
       std::vector<CoilHeatingGasMultiStageStageData> stages() const;
       unsigned numberOfStages() const;
-      boost::optional<unsigned> stageIndex(const CoilHeatingGasMultiStageStageData& stage) const;      
+      boost::optional<unsigned> stageIndex(const CoilHeatingGasMultiStageStageData& stage) const;
 
       bool addStage(const CoilHeatingGasMultiStageStageData& stage);
       bool addStage(const CoilHeatingGasMultiStageStageData& stage, unsigned index);
@@ -117,13 +117,13 @@ namespace model {
       bool setStages(const std::vector<CoilHeatingGasMultiStageStageData>& stages);
       void removeAllStages();
       bool removeStage(const CoilHeatingGasMultiStageStageData& stage);
-      bool removeStage(unsigned index);    
+      bool removeStage(unsigned index);
 
       //@}
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStage");
-      
+
       boost::optional<Schedule> optionalAvailabilitySchedule() const;
     };
 

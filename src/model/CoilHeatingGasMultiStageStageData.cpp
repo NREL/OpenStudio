@@ -254,7 +254,6 @@ namespace model {
     return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->parentCoil();
   }
 
-
   boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> CoilHeatingGasMultiStageStageData::stageIndexAndParentCoil() const {
     return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->stageIndexAndParentCoil();
   }

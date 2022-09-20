@@ -85,10 +85,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage_Heatin
 
     IdfObject idf_coil = workspace.getObjectsByType(IddObjectType::Coil_Heating_Electric_MultiStage)[0];
 
-    EXPECT_EQ("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AvailabilityScheduleName, false).get());
+    EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AvailabilityScheduleName, false).get());
     EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, false).get());
     EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, false).get());
-    EXPECT_EQ("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::TemperatureSetpointNodeName, false).get());
+    EXPECT_TRUE(idf_coil.isEmpty(Coil_Heating_Electric_MultiStageFields::TemperatureSetpointNodeName));
     EXPECT_EQ(1, idf_coil.getInt(Coil_Heating_Electric_MultiStageFields::NumberofStages, false).get());
     ASSERT_EQ(1, idf_coil.numExtensibleGroups());
     auto egs = idf_coil.extensibleGroups();
@@ -136,10 +136,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage_Heatin
 
     IdfObject idf_coil = workspace.getObjectsByType(IddObjectType::Coil_Heating_Electric_MultiStage)[0];
 
-    EXPECT_EQ("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AvailabilityScheduleName, false).get());
+    EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AvailabilityScheduleName, false).get());
     EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, false).get());
     EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, false).get());
-    EXPECT_EQ("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::TemperatureSetpointNodeName, false).get());
+    EXPECT_TRUE(idf_coil.isEmpty(Coil_Heating_Electric_MultiStageFields::TemperatureSetpointNodeName));
     EXPECT_EQ(1, idf_coil.getInt(Coil_Heating_Electric_MultiStageFields::NumberofStages, false).get());
     ASSERT_EQ(1, idf_coil.numExtensibleGroups());
     auto egs = idf_coil.extensibleGroups();
@@ -188,10 +188,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage_SuppHe
 
   IdfObject idf_coil = workspace.getObjectsByType(IddObjectType::Coil_Heating_Electric_MultiStage)[0];
 
-  EXPECT_EQ("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AvailabilityScheduleName, false).get());
+  EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AvailabilityScheduleName, false).get());
   EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, false).get());
   EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, false).get());
-  EXPECT_EQ("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::TemperatureSetpointNodeName, false).get());
+  EXPECT_TRUE(idf_coil.isEmpty(Coil_Heating_Electric_MultiStageFields::TemperatureSetpointNodeName));
   EXPECT_EQ(1, idf_coil.getInt(Coil_Heating_Electric_MultiStageFields::NumberofStages, false).get());
   ASSERT_EQ(1, idf_coil.numExtensibleGroups());
   auto egs = idf_coil.extensibleGroups();

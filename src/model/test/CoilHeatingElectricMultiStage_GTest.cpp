@@ -37,6 +37,8 @@
 #include "../CoilHeatingElectricMultiStageStageData_Impl.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
+#include "../AirLoopHVAC.hpp"
+#include "../Node.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -67,4 +69,34 @@ TEST_F(ModelFixture, CoilHeatingElectricMultiStage_Remove) {
   coil.remove();
 
   EXPECT_EQ(0u, m.modelObjects().size());
+}
+
+TEST_F(ModelFixture, CoilHeatingElectricMultiStage_addToNode) {
+  // Should not be allowed, only meant to be inside a Unitary
+  Model m;
+
+  CoilHeatingElectricMultiStage h(m);
+  CoilHeatingElectricMultiStageStageData stageData(m);
+
+  AirLoopHVAC a(model);
+  Node supplyOutlet = a.supplyOutletNode();
+  EXPECT_FALSE(h.addToNode(supplyOutlet));
+}
+
+TEST_F(ModelFixture, CoilHeatingElectricMultiStage_clone) {
+  Model m;
+
+  CoilHeatingElectricMultiStage h(m);
+  CoilHeatingElectricMultiStageStageData stageData(m);
+
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+
+  auto hClone = h.clone(m).cast<CoilHeatingElectricMultiStage>();
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+
+  h.remove();
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+
+  hClone.remove();
+  EXPECT_EQ(0u, model.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
 }
