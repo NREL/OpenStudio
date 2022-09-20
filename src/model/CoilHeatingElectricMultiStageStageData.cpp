@@ -112,14 +112,14 @@ namespace model {
     }
 
     ModelObject CoilHeatingElectricMultiStageStageData_Impl::clone(Model model) const {
-      auto t_clone = ModelObject_Impl::clone(model).cast<CoilHeatingGasMultiStageStageData>();
+      auto t_clone = ModelObject_Impl::clone(model).cast<CoilHeatingElectricMultiStageStageData>();
 
       return t_clone;
     }
 
     std::vector<IdfObject> CoilHeatingElectricMultiStageStageData_Impl::remove() {
       if (auto _coil = parentCoil()) {
-        _coil->removeStage(getObject<CoilHeatingGasMultiStageStageData>());
+        _coil->removeStage(getObject<CoilHeatingElectricMultiStageStageData>());
       }
       return ParentObject_Impl::remove();
     }
@@ -130,7 +130,7 @@ namespace model {
       if (count == 1) {
         return coils[0];
       } else if (count > 1) {
-        LOG(Error, briefDescription() << " is referenced by more than one CoilHeatingGasElectricMultiStage, returning the first");
+        LOG(Error, briefDescription() << " is referenced by more than one CoilHeatingElectricMultiStage, returning the first");
         return coils[0];
       }
       return boost::none;
@@ -178,7 +178,7 @@ namespace model {
   }  // namespace detail
 
   CoilHeatingElectricMultiStageStageData::CoilHeatingElectricMultiStageStageData(const Model& model)
-    : ModelObject(CoilHeatingElectricMultiStageStageData::iddObjectType(), model) {
+    : ParentObject(CoilHeatingElectricMultiStageStageData::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>());
 
     setEfficiency(1.0);
@@ -216,7 +216,7 @@ namespace model {
   /// @cond
   CoilHeatingElectricMultiStageStageData::CoilHeatingElectricMultiStageStageData(
     std::shared_ptr<detail::CoilHeatingElectricMultiStageStageData_Impl> impl)
-    : ModelObject(std::move(impl)) {}
+    : ParentObject(std::move(impl)) {}
   /// @endcond
 
   boost::optional<double> CoilHeatingElectricMultiStageStageData::autosizedNominalCapacity() const {

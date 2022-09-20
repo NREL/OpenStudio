@@ -141,7 +141,7 @@ namespace model {
       if (count == 1) {
         return coils[0];
       } else if (count > 1) {
-        LOG(Error, briefDescription() << " is referenced by more than one CoilHeatingGasElectricMultiStage, returning the first");
+        LOG(Error, briefDescription() << " is referenced by more than one CoilHeatingGasMultiStage, returning the first");
         return coils[0];
       }
       return boost::none;
@@ -189,7 +189,7 @@ namespace model {
   }  // namespace detail
 
   CoilHeatingGasMultiStageStageData::CoilHeatingGasMultiStageStageData(const Model& model)
-    : ModelObject(CoilHeatingGasMultiStageStageData::iddObjectType(), model) {
+    : ParentObject(CoilHeatingGasMultiStageStageData::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>());
 
     setGasBurnerEfficiency(0.80);
@@ -235,7 +235,7 @@ namespace model {
 
   /// @cond
   CoilHeatingGasMultiStageStageData::CoilHeatingGasMultiStageStageData(std::shared_ptr<detail::CoilHeatingGasMultiStageStageData_Impl> impl)
-    : ModelObject(std::move(impl)) {}
+    : ParentObject(std::move(impl)) {}
   /// @endcond
 
   boost::optional<double> CoilHeatingGasMultiStageStageData::autosizedNominalCapacity() const {

@@ -115,8 +115,13 @@ namespace model {
     }
 
     std::vector<ModelObject> CoilHeatingGasMultiStage_Impl::children() const {
-      std::vector<ModelObject> result = subsetCastVectorsubsetCastVector<ModelObject>(stages());
-      result.push_back(partLoadFractionCorrelationCurve());
+      std::vector<ModelObject> result = subsetCastVector<ModelObject>(stages());
+
+      if (auto const curve = partLoadFractionCorrelationCurve()) {
+        result.push_back(curve.get());
+      }
+
+      return result;
     }
 
     boost::optional<HVACComponent> CoilHeatingGasMultiStage_Impl::containingHVACComponent() const {
@@ -352,7 +357,7 @@ namespace model {
     return IddObjectType(IddObjectType::OS_Coil_Heating_Gas_MultiStage);
   }
 
-  boost::optional<Schedule> CoilHeatingGasMultiStage::availabilitySchedule() const {
+  Schedule CoilHeatingGasMultiStage::availabilitySchedule() const {
     return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->availabilitySchedule();
   }
 
@@ -366,10 +371,6 @@ namespace model {
 
   bool CoilHeatingGasMultiStage::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::CoilHeatingGasMultiStage_Impl>()->setAvailabilitySchedule(schedule);
-  }
-
-  void CoilHeatingGasMultiStage::resetAvailabilitySchedule() {
-    getImpl<detail::CoilHeatingGasMultiStage_Impl>()->resetAvailabilitySchedule();
   }
 
   bool CoilHeatingGasMultiStage::setPartLoadFractionCorrelationCurve(const Curve& curve) {

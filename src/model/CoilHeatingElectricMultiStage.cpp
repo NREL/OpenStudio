@@ -308,16 +308,12 @@ namespace model {
     return IddObjectType(IddObjectType::OS_Coil_Heating_Electric_MultiStage);
   }
 
-  boost::optional<Schedule> CoilHeatingElectricMultiStage::availabilitySchedule() const {
+  Schedule CoilHeatingElectricMultiStage::availabilitySchedule() const {
     return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->availabilitySchedule();
   }
 
   bool CoilHeatingElectricMultiStage::setAvailabilitySchedule(Schedule& schedule) {
     return getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->setAvailabilitySchedule(schedule);
-  }
-
-  void CoilHeatingElectricMultiStage::resetAvailabilitySchedule() {
-    getImpl<detail::CoilHeatingElectricMultiStage_Impl>()->resetAvailabilitySchedule();
   }
 
   unsigned CoilHeatingElectricMultiStage::numberOfStages() const {
