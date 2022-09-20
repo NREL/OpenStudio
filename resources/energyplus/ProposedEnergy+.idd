@@ -22428,8 +22428,8 @@ Sizing:Zone,
       \note Only No Latent Load or a zone humidistat is present.
       \note A default of 50.0 will be used if no schedule is provided and
       \note no humidistat is associated with this zone.
-      \type alpha
-      \units percent
+      \type object-list
+      \object-list ScheduleNames
   A14;\field Zone Humidistat Humidification Set Point Schedule Name
       \note Enter the zone relative humidity schedule used for zone latent
       \note heating calculations.
@@ -22438,8 +22438,8 @@ Sizing:Zone,
       \note Only No Latent Load or a zone humidistat is present.
       \note A default of 50.0 will be used if no schedule is provided and
       \note no humidistat is associated with this zone.
-      \type alpha
-      \units percent
+      \type object-list
+      \object-list ScheduleNames
 
 DesignSpecification:ZoneHVAC:Sizing,
   \min-fields 1

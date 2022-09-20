@@ -378,6 +378,8 @@ namespace model {
       {"SetpointManagerOutdoorAirReset", "Setpoint Manager Outdoor Air Reset", "schedule", true, "", 0.0, OptionalDouble()},
       {"ShadingSurface", "Transmittance", "transmittanceSchedule", true, "", 0.0, 1.0},
       {"SiteWaterMainsTemperature", "Temperature", "temperatureSchedule", true, "Temperature", OptionalDouble(), OptionalDouble()},
+      {"SizingZone", "Zone Humidistat Dehumidification Set Point", "zoneHumidistatDehumidificationSetPointSchedule", true, "Percent", 0.0, 100.0},
+      {"SizingZone", "Zone Humidistat Humidification Set Point", "zoneHumidistatHumidificationSetPointSchedule", true, "Percent", 0.0, 100.0},
       {"SurfaceControlMovableInsulation", "Resistance Modifier Fraction", "schedule", true, "", 0.0, 1.0},
       {"SolarCollectorPerformancePhotovoltaicThermalSimple", "Thermal Conversion Efficiency", "thermalConversionEfficiencySchedule", true, "", 0.0,
        1.0},

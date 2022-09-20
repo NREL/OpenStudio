@@ -105,8 +105,14 @@ namespace model {
       return result;
     }
 
-    double CoilHeatingDXMultiSpeedStageData_Impl::ratedSupplyAirFanPowerPerVolumeFlowRate() const {
-      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedSupplyAirFanPowerPerVolumeFlowRate, true);
+    double CoilHeatingDXMultiSpeedStageData_Impl::ratedSupplyAirFanPowerPerVolumeFlowRate2017() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedSupplyAirFanPowerPerVolumeFlowRate2017, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double CoilHeatingDXMultiSpeedStageData_Impl::ratedSupplyAirFanPowerPerVolumeFlowRate2023() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedSupplyAirFanPowerPerVolumeFlowRate2023, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -196,9 +202,15 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilHeatingDXMultiSpeedStageData_Impl::setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate) {
-      bool result =
-        setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedSupplyAirFanPowerPerVolumeFlowRate, ratedSupplyAirFanPowerPerVolumeFlowRate);
+    bool CoilHeatingDXMultiSpeedStageData_Impl::setRatedSupplyAirFanPowerPerVolumeFlowRate2017(double ratedSupplyAirFanPowerPerVolumeFlowRate2017) {
+      bool result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedSupplyAirFanPowerPerVolumeFlowRate2017,
+                              ratedSupplyAirFanPowerPerVolumeFlowRate2017);
+      return result;
+    }
+
+    bool CoilHeatingDXMultiSpeedStageData_Impl::setRatedSupplyAirFanPowerPerVolumeFlowRate2023(double ratedSupplyAirFanPowerPerVolumeFlowRate2023) {
+      bool result = setDouble(OS_Coil_Heating_DX_MultiSpeed_StageDataFields::RatedSupplyAirFanPowerPerVolumeFlowRate2023,
+                              ratedSupplyAirFanPowerPerVolumeFlowRate2023);
       return result;
     }
 
@@ -432,7 +444,9 @@ namespace model {
     ok = setGrossRatedHeatingCOP(2.75);
     OS_ASSERT(ok);
     autosizeRatedAirFlowRate();
-    ok = setRatedSupplyAirFanPowerPerVolumeFlowRate(773.3);
+    ok = setRatedSupplyAirFanPowerPerVolumeFlowRate2017(773.3);
+    OS_ASSERT(ok);
+    ok = setRatedSupplyAirFanPowerPerVolumeFlowRate2023(934.4);
     OS_ASSERT(ok);
     ok = setHeatingCapacityFunctionofTemperatureCurve(heating_curve_1);
     OS_ASSERT(ok);
@@ -464,7 +478,9 @@ namespace model {
     ok = setGrossRatedHeatingCOP(2.75);
     OS_ASSERT(ok);
     autosizeRatedAirFlowRate();
-    ok = setRatedSupplyAirFanPowerPerVolumeFlowRate(773.3);
+    ok = setRatedSupplyAirFanPowerPerVolumeFlowRate2017(773.3);
+    OS_ASSERT(ok);
+    ok = setRatedSupplyAirFanPowerPerVolumeFlowRate2023(934.4);
     OS_ASSERT(ok);
     ok = setHeatingCapacityFunctionofTemperatureCurve(heatingCapacityFunctionofTemperature);
     OS_ASSERT(ok);
@@ -507,7 +523,17 @@ namespace model {
   }
 
   double CoilHeatingDXMultiSpeedStageData::ratedSupplyAirFanPowerPerVolumeFlowRate() const {
-    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratedSupplyAirFanPowerPerVolumeFlowRate();
+    LOG(Warn, "As of 3.5.0, ratedSupplyAirFanPowerPerVolumeFlowRate is deprecated. Use ratedSupplyAirFanPowerPerVolumeFlowRate2017 instead. It will "
+              "be removed within three releases.")
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratedSupplyAirFanPowerPerVolumeFlowRate2017();
+  }
+
+  double CoilHeatingDXMultiSpeedStageData::ratedSupplyAirFanPowerPerVolumeFlowRate2017() const {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratedSupplyAirFanPowerPerVolumeFlowRate2017();
+  }
+
+  double CoilHeatingDXMultiSpeedStageData::ratedSupplyAirFanPowerPerVolumeFlowRate2023() const {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->ratedSupplyAirFanPowerPerVolumeFlowRate2023();
   }
 
   Curve CoilHeatingDXMultiSpeedStageData::heatingCapacityFunctionofTemperatureCurve() const {
@@ -559,8 +585,20 @@ namespace model {
   }
 
   bool CoilHeatingDXMultiSpeedStageData::setRatedSupplyAirFanPowerPerVolumeFlowRate(double ratedSupplyAirFanPowerPerVolumeFlowRate) {
-    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatedSupplyAirFanPowerPerVolumeFlowRate(
+    LOG(Warn, "As of 3.5.0, setRatedSupplyAirFanPowerPerVolumeFlowRate is deprecated. Use setRatedSupplyAirFanPowerPerVolumeFlowRate2017 instead. It "
+              "will be removed within three releases.");
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatedSupplyAirFanPowerPerVolumeFlowRate2017(
       ratedSupplyAirFanPowerPerVolumeFlowRate);
+  }
+
+  bool CoilHeatingDXMultiSpeedStageData::setRatedSupplyAirFanPowerPerVolumeFlowRate2017(double ratedSupplyAirFanPowerPerVolumeFlowRate2017) {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatedSupplyAirFanPowerPerVolumeFlowRate2017(
+      ratedSupplyAirFanPowerPerVolumeFlowRate2017);
+  }
+
+  bool CoilHeatingDXMultiSpeedStageData::setRatedSupplyAirFanPowerPerVolumeFlowRate2023(double ratedSupplyAirFanPowerPerVolumeFlowRate2023) {
+    return getImpl<detail::CoilHeatingDXMultiSpeedStageData_Impl>()->setRatedSupplyAirFanPowerPerVolumeFlowRate2023(
+      ratedSupplyAirFanPowerPerVolumeFlowRate2023);
   }
 
   bool CoilHeatingDXMultiSpeedStageData::setHeatingCapacityFunctionofTemperatureCurve(const Curve& curve) {

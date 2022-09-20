@@ -114,9 +114,7 @@ namespace energyplus {
 
     // RatedCOP
 
-    if ((value = modelObject.ratedCOP())) {
-      idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::GrossRatedHeatingCOP, value.get());
-    }
+    idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::GrossRatedHeatingCOP, modelObject.ratedCOP());
 
     // RatedAirFlowRate
 
@@ -128,9 +126,13 @@ namespace energyplus {
 
     // Rated Supply Fan Power Per Volume Flow Rate 2017
 
-    if ((value = modelObject.ratedSupplyFanPowerPerVolumeFlowRate())) {
-      idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate2017, value.get());
-    }
+    idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate2017,
+                        modelObject.ratedSupplyFanPowerPerVolumeFlowRate2017());
+
+    // Rated Supply Fan Power Per Volume Flow Rate 2023
+
+    idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::RatedSupplyFanPowerPerVolumeFlowRate2023,
+                        modelObject.ratedSupplyFanPowerPerVolumeFlowRate2023());
 
     // TotalHeatingCapacityFunctionofTemperatureCurveName
 
@@ -182,21 +184,17 @@ namespace energyplus {
 
     // MinimumOutdoorDryBulbTemperatureforCompressorOperation
 
-    if ((value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation())) {
-      idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, value.get());
-    }
+    idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
+                        modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation());
 
     // MaximumOutdoorDryBulbTemperatureforDefrostOperation
 
-    if ((value = modelObject.maximumOutdoorDryBulbTemperatureforDefrostOperation())) {
-      idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::MaximumOutdoorDryBulbTemperatureforDefrostOperation, value.get());
-    }
+    idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::MaximumOutdoorDryBulbTemperatureforDefrostOperation,
+                        modelObject.maximumOutdoorDryBulbTemperatureforDefrostOperation());
 
     // CrankcaseHeaterCapacity
 
-    if ((value = modelObject.crankcaseHeaterCapacity())) {
-      idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::CrankcaseHeaterCapacity, value.get());
-    }
+    idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::CrankcaseHeaterCapacity, modelObject.crankcaseHeaterCapacity());
 
     // MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation
 
@@ -206,21 +204,15 @@ namespace energyplus {
 
     // DefrostStrategy
 
-    if ((s = modelObject.defrostStrategy())) {
-      idfObject.setString(Coil_Heating_DX_SingleSpeedFields::DefrostStrategy, s.get());
-    }
+    idfObject.setString(Coil_Heating_DX_SingleSpeedFields::DefrostStrategy, modelObject.defrostStrategy());
 
     // DefrostControl
 
-    if ((s = modelObject.defrostControl())) {
-      idfObject.setString(Coil_Heating_DX_SingleSpeedFields::DefrostControl, s.get());
-    }
+    idfObject.setString(Coil_Heating_DX_SingleSpeedFields::DefrostControl, modelObject.defrostControl());
 
     // DefrostTimePeriodFraction
 
-    if ((value = modelObject.defrostTimePeriodFraction())) {
-      idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::DefrostTimePeriodFraction, value.get());
-    }
+    idfObject.setDouble(Coil_Heating_DX_SingleSpeedFields::DefrostTimePeriodFraction, modelObject.defrostTimePeriodFraction());
 
     // ResistiveDefrostHeaterCapacity
 

@@ -7083,6 +7083,229 @@ namespace osversion {
           m_new.emplace_back(std::move(varAdded));
         }
 
+      } else if (iddname == "OS:Coil:Heating:DX:SingleSpeed") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Supply Fan Power Per Volume Flow Rate 2023 * 7
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 7) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Rated Supply Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(7, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Cooling:DX:SingleSpeed") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 * 8
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 8) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Rated Supply Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(8, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Heating:DX:MultiSpeed:StageData") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Supply Air Fan Power Per Volume Flow Rate 2023 * 6
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 6) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Rated Supply Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(6, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Cooling:DX:MultiSpeed:StageData") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 * 7
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 7) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Rated Supply Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(7, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Cooling:DX:CurveFit:Speed") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 * 9
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 9) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Rated Supply Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(9, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Heating:WaterToAirHeatPump:EquationFit") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Entering Water Temperature * 10
+        // * Rated Entering Air Dry-Bulb Temperature * 11
+        // * Ratio of Rated Heating Capacity to Rated Cooling Capacity * 12
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 10) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 3, value.get());
+            }
+          }
+        }
+
+        // Rated Entering Water Temperature
+        newObject.setDouble(10, 20);
+
+        // Rated Entering Air Dry-Bulb Temperature
+        newObject.setDouble(11, 20);
+
+        // Ratio of Rated Heating Capacity to Rated Cooling Capacity
+        newObject.setDouble(12, 1.0);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Cooling:WaterToAirHeatPump:EquationFit") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Entering Water Temperature * 11
+        // * Rated Entering Air Dry-Bulb Temperature * 12
+        // * Rated Entering Air Wet-Bulb Temperature * 13
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 11) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 3, value.get());
+            }
+          }
+        }
+
+        // Rated Entering Water Temperature
+        newObject.setDouble(11, 30);
+
+        // Rated Entering Air Dry-Bulb Temperature
+        newObject.setDouble(12, 27);
+
+        // Rated Entering Air Wet-Bulb Temperature
+        newObject.setDouble(13, 19.0);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Sizing:Zone") {
+
+        // 9 Fields have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Zone Load Sizing Method * 26
+        // * Zone Latent Cooling Design Supply Air Humidity Ratio Input Method * 27
+        // * Zone Dehumidification Design Supply Air Humidity Ratio * 28
+        // * Zone Cooling Design Supply Air Humidity Ratio Difference * 29
+        // * Zone Latent Heating Design Supply Air Humidity Ratio Input Method * 30
+        // * Zone Humidification Design Supply Air Humidity Ratio * 31
+        // * Zone Humidification Design Supply Air Humidity Ratio Difference * 32
+        // * Zone Humidistat Dehumidification Set Point Schedule Name * 33
+        // * Zone Humidistat Humidification Set Point Schedule Name * 34
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          auto value = object.getString(i);
+          if (value) {
+            if (i < 26) {
+              // Handle
+              newObject.setString(i, value.get());
+            } else {
+              // Every other is shifted by 9 fields
+              newObject.setString(i + 9, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
         // No-op
       } else {
         ss << object;

@@ -16074,33 +16074,33 @@ OS:Coil:Cooling:DX:CurveFit:OperatingMode,
 
 OS:Coil:Cooling:DX:CurveFit:Speed,
        \memo DX cooling coil performance for a single speed within a single operating mode.
-       \min-fields 16
-  A1, \field Handle
+       \min-fields 17
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \required-field
        \type alpha
        \reference DXCoolingSpeedNames
-  N1, \field Gross Total Cooling Capacity Fraction
+  N1,  \field Gross Total Cooling Capacity Fraction
        \note Ratio of capacity at this speed to the
        \note operating mode Rated Gross Total Cooling Capacity
        \required-field
        \type real
        \minimum> 0.0
-  N2, \field Evaporator Air Flow Rate Fraction
+  N2,  \field Evaporator Air Flow Rate Fraction
        \note Ratio of capacity at this speed to the
        \note operating mode Rated Evaporator Air Flow Rate
        \required-field
        \type real
        \minimum> 0.0
-  N3, \field Condenser Air Flow Rate Fraction
+  N3,  \field Condenser Air Flow Rate Fraction
        \note Ratio of condenser air flow at this speed to the
        \note operating mode Rated Condenser Air Flow Rate
        \required-field
        \type real
        \minimum> 0.0
-  N4, \field Gross Sensible Heat Ratio
+  N4,  \field Gross Sensible Heat Ratio
        \note Rated sensible heat ratio (gross sensible capacity/gross total capacity)
        \note sensible and total capacities do not include supply fan heat
        \required-field
@@ -16108,7 +16108,7 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \minimum 0.1
        \maximum 1.0
        \autosizable
-  N5, \field Gross Cooling COP
+  N5,  \field Gross Cooling COP
        \note Gross cooling capacity divided by power input to the compressor and condenser fan.
        \note Does not include supply fan heat or supply fan electrical energy input.
        \type real
@@ -16122,7 +16122,7 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \minimum> 0.0
        \maximum 1.0
        \required-field
-  N7, \field Rated Evaporator Fan Power Per Volume Flow Rate
+  N7,  \field Rated Evaporator Fan Power Per Volume Flow Rate 2017
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions.
        \note The test conditions vary external static pressure based on total cooling capacity.
        \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER), and the
@@ -16133,19 +16133,31 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \minimum 0.0
        \maximum 1250.0
        \required-field
-  N8, \field Evaporative Condenser Pump Power Fraction
+   N8, \field Rated Evaporator Fan Power Per Volume Flow Rate 2023
+       \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
+       \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
+       \note The test conditions vary external static pressure based on total cooling capacity.
+       \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER2), and the
+       \note Standard Rating (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file.
+       \note This value is not used for modeling the evaporator fan during simulations.
+       \type real
+       \units W/(m3/s)
+       \minimum 0.0
+       \maximum 1505.0
+       \required-field
+  N9,  \field Evaporative Condenser Pump Power Fraction
        \note Ratio of evaporative condenser pump power at this speed to the
        \note operating mode Nominal Evaporative Condenser Pump Power
        \type real
        \minimum> 0.0
        \required-field
-  N9, \field Evaporative Condenser Effectiveness
+  N10, \field Evaporative Condenser Effectiveness
        \type real
        \units dimensionless
        \minimum 0.0
        \maximum 1.0
        \required-field
-  A3, \field Total Cooling Capacity Modifier Function of Temperature Curve
+  A3,  \field Total Cooling Capacity Modifier Function of Temperature Curve
        \note biquadratic curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
        \note quadratic curve = a + b*edb + c*edb**2
        \note wb = entering wet-bulb temperature (C)
@@ -16153,45 +16165,45 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \type object-list
        \object-list UnivariateFunctions
        \object-list BivariateFunctions
-  A4, \field Total Cooling Capacity Modifier Function of Air Flow Fraction Curve
+  A4,  \field Total Cooling Capacity Modifier Function of Air Flow Fraction Curve
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load flow
        \type object-list
        \object-list UnivariateFunctions
-  A5, \field Energy Input Ratio Modifier Function of Temperature Curve
+  A5,  \field Energy Input Ratio Modifier Function of Temperature Curve
        \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
        \note wb = entering wet-bulb temperature (C)
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
        \object-list UnivariateFunctions
        \object-list BivariateFunctions
-  A6, \field Energy Input Ratio Modifier Function of Air Flow Fraction Curve
+  A6,  \field Energy Input Ratio Modifier Function of Air Flow Fraction Curve
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load flow
        \type object-list
        \object-list UnivariateFunctions
-  A7, \field Part Load Fraction Correlation Curve
+  A7,  \field Part Load Fraction Correlation Curve
        \note quadratic curve = a + b*PLR + c*PLR**2
        \note cubic curve = a + b*PLR + c*PLR**2 + d*PLR**3
        \note PLR = part load ratio (cooling load/steady state capacity)
        \type object-list
        \object-list UnivariateFunctions
-  N10,\field Rated Waste Heat Fraction of Power Input
+  N11, \field Rated Waste Heat Fraction of Power Input
        \note Recoverable waste heat at full load and rated conditions
        \required-field
        \type real
        \units dimensionless
        \minimum> 0.0
        \maximum 1.0
-  A8, \field Waste Heat Modifier Function of Temperature Curve
+  A8,  \field Waste Heat Modifier Function of Temperature Curve
        \note curve = a + b*cdb + c*cdb**2 + d*edb + e*edb**2 + f*cdb*edb
        \note cdb = entering condenser dry-bulb temperature (C)
        \note edb = entering coil dry-bulb temperature (C)
        \type object-list
        \object-list BivariateFunctions
-  A9, \field Sensible Heat Ratio Modifier Function of Temperature Curve
+  A9,  \field Sensible Heat Ratio Modifier Function of Temperature Curve
        \note curve = a + b*wb + c*wb**2 + d*db + e*db**2 + f*wb*db
        \note wb = entering wet-bulb temperature seen by the DX cooling coil (C)
        \note db = entering dry-bulb temperature seen by the DX cooling coil (C)
@@ -16210,11 +16222,11 @@ OS:Coil:Cooling:DX:CurveFit:Speed,
        \object-list UnivariateFunctions
 
 OS:Coil:Cooling:DX:SingleSpeed,
-       \min-fields 15
-  A1, \field Handle
+       \min-fields 16
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference CoolingCoilsDX
@@ -16224,11 +16236,11 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \reference DesuperHeatingCoilSources
        \reference AFNCoilNames
        \reference ConnectionObject
-  A3, \field Availability Schedule Name
+  A3,  \field Availability Schedule Name
        \type object-list
        \required-field
        \object-list ScheduleNames
-  N1, \field Rated Total Cooling Capacity
+  N1,  \field Rated Total Cooling Capacity
        \note gross capacity excluding supply air fan heat
        \note rating point: air entering the cooling coil at 26.7 C dry-bulb/19.4 C wet-bulb, and
        \note air entering the outdoor condenser coil at 35 C dry-bulb/23.9 C wet-bulb
@@ -16237,7 +16249,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \autosizable
        \units W
        \minimum> 0
-  N2, \field Rated Sensible Heat Ratio
+  N2,  \field Rated Sensible Heat Ratio
        \note Rated sensible heat ratio (gross sensible capacity/gross total capacity)
        \note sensible and total capacities do not include supply fan heat
        \type real
@@ -16245,14 +16257,14 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \autosizable
        \minimum 0.5
        \maximum 1
-  N3, \field Rated COP
+  N3,  \field Rated COP
        \note Gross cooling capacity divided by power input to the compressor and outdoor fan,
        \note does not include supply fan heat or supply fan electrical energy input
        \type real
        \units W/W
        \minimum> 0
        \required-field
-  N4, \field Rated Air Flow Rate
+  N4,  \field Rated Air Flow Rate
        \note Flow rate corresponding to rated total cooling capacity, Rated SHR and Rated COP
        \note should be between 0.00004027 m3/s and .00006041 m3/s per watt of rated total cooling capacity
        \type real
@@ -16260,7 +16272,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \autosizable
        \units m3/s
        \minimum> 0
-  N5, \field Rated Evaporator Fan Power Per Volume Flow Rate
+  N5,  \field Rated Evaporator Fan Power Per Volume Flow Rate 2017
        \note Enter the evaporator fan power per air volume flow rate at the rated test conditions.
        \note The test conditions vary external static pressure based on total cooling capacity.
        \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER), Energy
@@ -16272,36 +16284,50 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \minimum 0
        \maximum 1250
        \required-field
-  A4, \field Air Inlet Node Name
+  N6 , \field Rated Evaporator Fan Power Per Volume Flow Rate 2023
+       \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
+       \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
+       \note The test conditions vary external static pressure based on total cooling capacity.
+       \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER2), Energy
+       \note Efficiency Ratio (EER), Integrated Energy Efficiency Ratio (IEER), and the Standard Rating
+       \note (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file. This value is not
+       \note used for modeling the evaporator fan during simulations.
+       \type real
+       \units W/(m3/s)
+       \minimum 0.0
+       \maximum 1505.0
+       \required-field
+  A4,  \field Air Inlet Node Name
+       \required-field
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A5, \field Air Outlet Node Name
+  A5,  \field Air Outlet Node Name
        \type object-list
        \required-field
        \object-list ConnectionNames
-  A6, \field Total Cooling Capacity Function of Temperature Curve Name
+  A6,  \field Total Cooling Capacity Function of Temperature Curve Name
        \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
        \note wb = entering wet-bulb temperature (C)
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
        \required-field
        \object-list BivariateFunctions
-  A7, \field Total Cooling Capacity Function of Flow Fraction Curve Name
+  A7,  \field Total Cooling Capacity Function of Flow Fraction Curve Name
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load flow
        \type object-list
        \required-field
        \object-list UnivariateFunctions
-  A8, \field Energy Input Ratio Function of Temperature Curve Name
+  A8,  \field Energy Input Ratio Function of Temperature Curve Name
        \note curve = a + b*wb + c*wb**2 + d*edb + e*edb**2 + f*wb*edb
        \note wb = entering wet-bulb temperature (C)
        \note edb = dry-bulb temperature seen by the condenser (C)
        \type object-list
        \required-field
        \object-list BivariateFunctions
-  A9, \field Energy Input Ratio Function of Flow Fraction Curve Name
+  A9,  \field Energy Input Ratio Function of Flow Fraction Curve Name
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = Fraction of the full load flow
@@ -16315,11 +16341,11 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \type object-list
        \required-field
        \object-list UnivariateFunctions
-  N6 , \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  N7,  \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \required-field
        \units C
-  N7, \field Nominal Time for Condensate Removal to Begin
+  N8,  \field Nominal Time for Condensate Removal to Begin
        \note The nominal time for condensate to begin leaving the coil's condensate
        \note drain line at the coil's rated air flow rate and temperature conditions.
        \note Nominal time is equal to the ratio of the energy of the coil's maximum
@@ -16330,7 +16356,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \minimum 0
        \maximum 3000
        \required-field
-  N8, \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+  N9,  \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
        \note Ratio of the initial moisture evaporation rate from the cooling coil (when
        \note the compressor first turns off) and the coil's steady state latent capacity
        \note at rated air flow rate and temperature conditions. Suggested value is 1.5; zero value
@@ -16340,7 +16366,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \minimum 0
        \maximum 5
        \required-field
-  N9, \field Maximum Cycling Rate
+  N10, \field Maximum Cycling Rate
        \note The maximum on-off cycling Rate for the compressor, which occurs at 50% run time
        \note fraction. Suggested value is 3; zero value means latent degradation model is disabled.
        \type real
@@ -16348,7 +16374,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \minimum 0
        \maximum 5
        \required-field
-  N10, \field Latent Capacity Time Constant
+  N11, \field Latent Capacity Time Constant
        \note Time constant for the cooling coil's latent capacity to reach steady state after
        \note startup. Suggested value is 45; zero value means latent degradation model is disabled.
        \type real
@@ -16365,32 +16391,32 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \required-field
        \key AirCooled
        \key EvaporativelyCooled
-  N11, \field Evaporative Condenser Effectiveness
+  N12, \field Evaporative Condenser Effectiveness
        \type real
        \units dimensionless
        \minimum 0
        \maximum 1
        \required-field
-  N12, \field Evaporative Condenser Air Flow Rate
+  N13, \field Evaporative Condenser Air Flow Rate
        \note Used to calculate evaporative condenser water use
        \type real
        \autosizable
        \units m3/s
        \minimum> 0
-  N13, \field Evaporative Condenser Pump Rated Power Consumption
+  N14, \field Evaporative Condenser Pump Rated Power Consumption
        \note Rated power consumed by the evaporative condenser's water pump
        \type real
        \autosizable
        \units W
        \minimum 0
        \default 0.0
-  N14, \field Crankcase Heater Capacity
+  N15, \field Crankcase Heater Capacity
        \type real
        \units W
        \ip-units Btu/h
        \minimum 0
        \required-field
-  N15, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
+  N16, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \units C
        \minimum 0
@@ -16401,7 +16427,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
   A14, \field Condensate Collection Water Storage Tank Name
        \type object-list
        \object-list WaterStorageTankNames
-  N16, \field Basin Heater Capacity
+  N17, \field Basin Heater Capacity
        \note This field is only used for Condenser Type = EvaporativelyCooled and for periods
        \note when the basin heater is available (field Basin Heater Operating Schedule Name).
        \note For this situation, the heater maintains the basin water temperature at the basin heater
@@ -16411,7 +16437,7 @@ OS:Coil:Cooling:DX:SingleSpeed,
        \units W/K
        \minimum 0
        \required-field
-  N17, \field Basin Heater Setpoint Temperature
+  N18, \field Basin Heater Setpoint Temperature
        \note This field is only used for Condenser Type = EvaporativelyCooled.
        \note Enter the outdoor dry-bulb temperature when the basin heater turns on.
        \type real
@@ -16832,11 +16858,29 @@ OS:Coil:Cooling:DX:MultiSpeed:StageData,
        \units m3/s
        \minimum> 0.0
        \autosizable
-  N5, \field Rated Evaporator Fan Power Per Volume Flow Rate
+  N5,  \field Rated Evaporator Fan Power Per Volume Flow Rate 2017
+       \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
+       \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
+       \note The test conditions vary external static pressure based on total cooling capacity.
+       \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER), and the
+       \note Standard Rating (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file.
+       \note This value is not used for modeling the evaporator fan during simulations.
        \type real
        \units W/(m3/s)
        \minimum 0.0
        \maximum 1250.0
+       \required-field
+  N6,  \field Rated Evaporator Fan Power Per Volume Flow Rate 2023
+       \note Enter the evaporator fan power per air volume flow rate at the rated test conditions
+       \note as defined in the 2023 version of ANSI/AHRI Standard 210/240.
+       \note The test conditions vary external static pressure based on total cooling capacity.
+       \note This value is only used to calculate Seasonal Energy Efficiency Ratio (SEER2), and the
+       \note Standard Rating (Net) Cooling Capacity which will be outputs in the EnergyPlus eio file.
+       \note This value is not used for modeling the evaporator fan during simulations.
+       \type real
+       \units W/(m3/s)
+       \minimum 0.0
+       \maximum 1505.0
        \required-field
   A3, \field Total Cooling Capacity Function of Temperature Curve
        \required-field
@@ -16858,31 +16902,31 @@ OS:Coil:Cooling:DX:MultiSpeed:StageData,
        \required-field
        \type object-list
        \object-list UnivariateFunctions
-  N6, \field Nominal Time for Condensate Removal to Begin
+  N7,  \field Nominal Time for Condensate Removal to Begin
        \type real
        \units s
        \minimum 0.0
        \maximum 3000.0
        \required-field
-  N7, \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+  N8,  \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
        \type real
        \units dimensionless
        \minimum 0.0
        \maximum 5.0
        \required-field
-  N8, \field Maximum Cycling Rate
+  N9,  \field Maximum Cycling Rate
        \type real
        \units cycles/hr
        \minimum 0.0
        \maximum 5.0
        \required-field
-  N9, \field Latent Capacity Time Constant
+  N10, \field Latent Capacity Time Constant
        \type real
        \units s
        \minimum 0.0
        \maximum 500.0
        \required-field
-  N10, \field Rated Waste Heat Fraction of Power Input
+  N11, \field Rated Waste Heat Fraction of Power Input
        \required-field
        \type real
        \units dimensionless
@@ -16892,19 +16936,19 @@ OS:Coil:Cooling:DX:MultiSpeed:StageData,
        \required-field
        \type object-list
        \object-list BivariateFunctions
-  N11, \field Evaporative Condenser Effectiveness
+  N12, \field Evaporative Condenser Effectiveness
        \type real
        \units dimensionless
        \minimum 0.0
        \maximum 1.0
        \required-field
-  N12, \field Evaporative Condenser Air Flow Rate
+  N13, \field Evaporative Condenser Air Flow Rate
        \type real
        \units m3/s
        \minimum> 0.0
        \autosizable
        \required-field
-  N13; \field Rated Evaporative Condenser Pump Power Consumption
+  N14; \field Rated Evaporative Condenser Pump Power Consumption
        \type real
        \units W
        \ip-units W
@@ -17572,7 +17616,10 @@ OS:Coil:Cooling:Water,
        \key CounterFlow
 
 OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
-       \Min-fields 29
+       \memo Direct expansion (DX) cooling coil for water-to-air heat pump (includes electric
+       \memo compressor), single-speed, equation-fit model. Optional inputs for moisture
+       \memo evaporation from wet coil when compressor cycles off with continuous fan operation.
+       \memo Equation-fit model uses normalized curves to describe the heat pump performance.
   A1,  \field Handle
        \type handle
        \required-field
@@ -17612,6 +17659,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \autosizable
        \default Autosize
   N3,  \field Rated Total Cooling Capacity
+       \note Total cooling capacity at rated conditions not accounting for the effect of supply air fan heat
        \type real
        \minimum> 0.0
        \units W
@@ -17624,10 +17672,35 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \autosizable
        \default Autosize
   N5,  \field Rated Cooling Coefficient of Performance
+       \note Gross cooling COP at rated conditions
        \type real
        \units W/W
        \minimum> 0.0
        \default 3.0
+  N6,  \field Rated Entering Water Temperature
+       \note Rated entering water temperature corresponding to the water-to
+       \note -air application for which this coil is used. For example: for water loop
+       \note applications, the rated temperature is 30 degree Celsius
+       \units C
+       \type real
+       \minimum> 0
+       \required-field
+  N7,  \field Rated Entering Air Dry-Bulb Temperature
+       \note Rated entering air dry-bulb temperature corresponding to the
+       \note water-to-air application for which this coil is used. For example: for
+       \note water loop applications, the rated temperature is 27 degree Celsius
+       \units C
+       \type real
+       \required-field
+       \minimum> 0
+  N8,  \field Rated Entering Air Wet-Bulb Temperature
+       \note Rated entering air wet-bulb temperature corresponding to the
+       \note water-to-air application for which this coil is used. For example: for
+       \note water loop applications, the rated temperature is 19 degree Celsius
+       \units C
+       \type real
+       \required-field
+       \minimum> 0
   A7,  \field Total Cooling Capacity Curve Name
        \required-field
        \type object-list
@@ -17640,7 +17713,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \required-field
        \type object-list
        \object-list QuadvariateFunctions
-  N6,  \field Nominal Time for Condensate Removal to Begin
+  N9,  \field Nominal Time for Condensate Removal to Begin
        \type real
        \units s
        \minimum 0.0
@@ -17651,7 +17724,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \note Nominal time is equal to the ratio of the energy of the coil's maximum
        \note condensate holding capacity (J) to the coil's steady state latent capacity (W).
        \note Suggested value is 1000; zero value means latent degradation model is disabled.
-  N7;  \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+  N10; \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
        \type real
        \units dimensionless
        \minimum 0.0
@@ -17663,11 +17736,11 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \note means latent degradation model is disabled.
 
 OS:Coil:Heating:DX:SingleSpeed,
-       \min-fields 22
-  A1, \field Handle
+       \min-fields 23
+  A1,  \field Handle
        \type handle
        \required-field
-  A2, \field Name
+  A2,  \field Name
        \type alpha
        \required-field
        \reference HeatingCoilsDX
@@ -17675,11 +17748,11 @@ OS:Coil:Heating:DX:SingleSpeed,
        \reference HeatingCoilsDXSingleSpeed
        \reference AFNCoilNames
        \reference ConnectionObject
-  A3, \field Availability Schedule Name
+  A3,  \field Availability Schedule Name
        \type object-list
        \required-field
        \object-list ScheduleNames
-  N1, \field Rated Total Heating Capacity
+  N1,  \field Rated Total Heating Capacity
        \note capacity excluding supply air fan heat
        \note rating point outdoor dry-bulb temp 8.33 C, outdoor wet-bulb temp 6.11 C
        \note rating point heating coil entering air dry-bulb 21.11 C, coil entering wet-bulb 15.55 C
@@ -17688,14 +17761,14 @@ OS:Coil:Heating:DX:SingleSpeed,
        \autosizable
        \units W
        \minimum> 0
-  N2, \field Rated COP
+  N2,  \field Rated COP
        \note Rated heating capacity divided by power input to the compressor and outdoor fan,
        \note does not include supply air fan heat or supply air fan electrical energy
        \type real
        \required-field
        \units W/W
        \minimum> 0
-  N3, \field Rated Air Flow Rate
+  N3,  \field Rated Air Flow Rate
        \note Flow rate corresponding to rated total capacity
        \note should be between 0.00004027 m3/s and .00006041 m3/s per watt of rated total heating capacity
        \type real
@@ -17703,7 +17776,7 @@ OS:Coil:Heating:DX:SingleSpeed,
        \autosizable
        \units m3/s
        \minimum> 0
-  N4 , \field Rated Supply Fan Power Per Volume Flow Rate
+  N4 , \field Rated Supply Fan Power Per Volume Flow Rate 2017
        \note Enter the supply fan power per air volume flow rate at the rated test conditions.
        \note The test conditions vary external static pressure based on heating capacity.
        \note This value is only used to calculate Heating Seasonal Performance Factor(HSPF). This value is not
@@ -17713,13 +17786,24 @@ OS:Coil:Heating:DX:SingleSpeed,
        \minimum 0.0
        \maximum 1250.0
        \required-field
-  A4, \field Air Inlet Node Name
+  N5 , \field Rated Supply Fan Power Per Volume Flow Rate 2023
+       \note Enter the supply fan power per air volume flow rate at the rated test conditions.
+       \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
+       \note The test conditions vary external static pressure based on heating capacity.
+       \note This value is only used to calculate Heating Seasonal Performance Factor(HSPF).
+       \note This value is not used for modeling the supply (condenser) fan during simulations.
+       \type real
+       \units W/(m3/s)
+       \minimum 0.0
+       \maximum 1505.0
+       \required-field
+  A4,  \field Air Inlet Node Name
        \type object-list
        \object-list ConnectionNames
-  A5, \field Air Outlet Node Name
+  A5,  \field Air Outlet Node Name
        \type object-list
        \object-list ConnectionNames
-  A6, \field Total Heating Capacity Function of Temperature Curve Name
+  A6,  \field Total Heating Capacity Function of Temperature Curve Name
        \note quadratic curve = a + b*oat + c*oat**2
        \note cubic curve = a + b*oat + c*oat**2 + d*oat**3
        \note biquadratic curve = a + b*iat + c*iat**2 + d*oat + e*oat**2 + f*iat*oat
@@ -17731,14 +17815,14 @@ OS:Coil:Heating:DX:SingleSpeed,
        \required-field
        \object-list UnivariateFunctions
        \object-list BivariateFunctions
-  A7, \field Total Heating Capacity Function of Flow Fraction Curve Name
+  A7,  \field Total Heating Capacity Function of Flow Fraction Curve Name
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = fraction of the full load flow
        \type object-list
        \required-field
        \object-list UnivariateFunctions
-  A8, \field Energy Input Ratio Function of Temperature Curve Name
+  A8,  \field Energy Input Ratio Function of Temperature Curve Name
        \note quadratic curve = a + b*oat + c*oat**2
        \note cubic curve = a + b*oat + c*oat**2 + d*oat**3
        \note biquadratic curve = a + b*iat + c*iat**2 + d*oat + e*oat**2 + f*iat*oat
@@ -17750,7 +17834,7 @@ OS:Coil:Heating:DX:SingleSpeed,
        \required-field
        \object-list UnivariateFunctions
        \object-list BivariateFunctions
-  A9, \field Energy Input Ratio Function of Flow Fraction Curve Name
+  A9,  \field Energy Input Ratio Function of Flow Fraction Curve Name
        \note quadratic curve = a + b*ff + c*ff**2
        \note cubic curve = a + b*ff + c*ff**2 + d*ff**3
        \note ff = fraction of the full load flow
@@ -17771,23 +17855,23 @@ OS:Coil:Heating:DX:SingleSpeed,
        \note only required if ReverseCycle defrost strategy is specified
        \type object-list
        \object-list BivariateFunctions
-  N5, \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
+  N6,  \field Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
        \type real
        \units C
        \default -8.0
-  N6, \field Maximum Outdoor Dry-Bulb Temperature for Defrost Operation
+  N7,  \field Maximum Outdoor Dry-Bulb Temperature for Defrost Operation
        \type real
        \units C
        \minimum 0
        \maximum 7.22
        \default 5.0
-  N7, \field Crankcase Heater Capacity
+  N8,  \field Crankcase Heater Capacity
        \type real
        \units W
        \ip-units Btu/h
        \minimum 0
        \default 0.0
-  N8, \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
+  N9,  \field Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation
        \type real
        \units C
        \minimum 0
@@ -17802,13 +17886,13 @@ OS:Coil:Heating:DX:SingleSpeed,
        \default Timed
        \key Timed
        \key OnDemand
-  N9, \field Defrost Time Period Fraction
+  N10, \field Defrost Time Period Fraction
        \note Fraction of time in defrost mode
        \note only applicable if timed defrost control is specified
        \type real
        \minimum 0
        \default 0.058333
-  N10; \field Resistive Defrost Heater Capacity
+  N11; \field Resistive Defrost Heater Capacity
        \note only applicable if resistive defrost strategy is specified
        \type real
        \autosizable
@@ -18571,7 +18655,9 @@ OS:Coil:Heating:Water:Baseboard:Radiant,
       \minimum> 0.0
 
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
-       \Min-fields 20
+       \memo Direct expansion (DX) heating coil for water-to-air heat pump (includes electric
+       \memo compressor), single-speed, equation-fit model. Equation-fit model uses normalized
+       \memo curves to describe the heat pump performance.
   A1,  \field Handle
        \type handle
        \required-field
@@ -18610,16 +18696,43 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \autosizable
        \default Autosize
   N3,  \field Rated Heating Capacity
+       \note Heating capacity at rated conditions not accounting for the effect of supply air fan heat
        \type real
        \minimum> 0.0
        \units W
        \autosizable
        \default Autosize
   N4,  \field Rated Heating Coefficient of Performance
+       \note Gross heating COP at rated conditions
        \type real
        \minimum> 0.0
        \units W/W
        \default 3.0
+  N5,  \field Rated Entering Water Temperature
+       \note Rated entering water temperature corresponding to the water-to
+       \note -air application for which this coil is used. For example: for water loop
+       \note applications, the rated temperature is 20 degree Celsius.
+       \units C
+       \type real
+       \required-field
+  N6,  \field Rated Entering Air Dry-Bulb Temperature
+       \note Rated entering air dry-bulb temperature corresponding to the
+       \note water-to-air application for which this coil is used. For example: for
+       \note water loop applications, the rated temperature is 20 degree Celsius.
+       \units C
+       \type real
+       \required-field
+       \minimum> 0
+  N7,  \field Ratio of Rated Heating Capacity to Rated Cooling Capacity
+       \note Ratio of rated heating capacity to rated cooling capacity. This
+       \note input is used to calculate the heating or cooling capacity when autosizing.
+       \note This input is only used if a companion cooling coil of the same type
+       \note (Coil:Cooling:WaterToAirHeatPump:EquationFit) is used. This input is only
+       \note used when a sizing run for the system which uses this object is requested
+       \note and when the coil capacity is autosized.
+       \type real
+       \minimum> 0
+       \required-field
   A7,  \field Heating Capacity Curve Name
        \required-field
        \type object-list
@@ -18732,7 +18845,7 @@ OS:Coil:Heating:DX:MultiSpeed,
        \object-list CoilHeatingDXMultiSpeedStageData
 
 OS:Coil:Heating:DX:MultiSpeed:StageData,
-       \min-fields 13
+       \min-fields 14
   A1 , \field Handle
        \type handle
        \required-field
@@ -18758,12 +18871,18 @@ OS:Coil:Heating:DX:MultiSpeed:StageData,
        \units m3/s
        \minimum> 0.0
        \autosizable
-  N4 , \field Rated Supply Air Fan Power Per Volume Flow Rate
+  N4 , \field Rated Supply Air Fan Power Per Volume Flow Rate 2017
        \required-field
        \type real
        \units W/(m3/s)
        \minimum 0.0
        \maximum 1250.0
+  N5 , \field Rated Supply Air Fan Power Per Volume Flow Rate 2023
+       \required-field
+       \type real
+       \units W/(m3/s)
+       \minimum 0.0
+       \maximum 1505.0
   A3 , \field Heating Capacity Function of Temperature Curve Name
        \required-field
        \type object-list
@@ -18786,7 +18905,7 @@ OS:Coil:Heating:DX:MultiSpeed:StageData,
        \required-field
        \type object-list
        \object-list UnivariateFunctions
-  N5 , \field Rated Waste Heat Fraction of Power Input
+  N6 , \field Rated Waste Heat Fraction of Power Input
        \required-field
        \type real
        \units dimensionless
@@ -25699,47 +25818,145 @@ OS:Sizing:Zone,
        \type real
        \minimum 0
        \default 0.3
-  A6, \field Account for Dedicated Outdoor Air System
-      \note account for effect of dedicated outdoor air system supplying air directly to the zone
-      \type choice
-      \key Yes
-      \key No
+  A6,  \field Account for Dedicated Outdoor Air System
+       \note account for effect of dedicated outdoor air system supplying air directly to the zone
+       \type choice
+       \key Yes
+       \key No
        \required-field
-  A7, \field Dedicated Outdoor Air System Control Strategy
-      \note 1)supply neutral ventilation air; 2)supply neutral dehumidified and reheated
-      \note ventilation air; 3)supply cold ventilation air
-      \type choice
-      \key NeutralSupplyAir
-      \key NeutralDehumidifiedSupplyAir
-      \key ColdSupplyAir
+  A7,  \field Dedicated Outdoor Air System Control Strategy
+       \note 1)supply neutral ventilation air; 2)supply neutral dehumidified and reheated
+       \note ventilation air; 3)supply cold ventilation air
+       \type choice
+       \key NeutralSupplyAir
+       \key NeutralDehumidifiedSupplyAir
+       \key ColdSupplyAir
        \required-field
-  N17,\field Dedicated Outdoor Air Low Setpoint Temperature for Design
-      \type real
-      \units C
-      \autosizable
+  N17, \field Dedicated Outdoor Air Low Setpoint Temperature for Design
+       \type real
+       \units C
+       \autosizable
        \required-field
-  N18,\field Dedicated Outdoor Air High Setpoint Temperature for Design
-      \type real
-      \units C
-      \autosizable
+  N18, \field Dedicated Outdoor Air High Setpoint Temperature for Design
+       \type real
+       \units C
+       \autosizable
        \required-field
-  N19, \field Design Zone Air Distribution Effectiveness in Cooling Mode
+  A8,  \field Zone Load Sizing Method
+       \note Specifies the basis for sizing the zone supply air flow rate.
+       \note Zone latent loads will not be used during sizing only when
+       \note Zone Load Sizing Method = Sensible Load Only No Latent Load.
+       \note For this case the zone humidity level will float according to
+       \note the fields Cooling and Heating Design Supply Air Humidity Ratio.
+       \note For all other choices the zone humidity level will be controlled.
+       \note Sensible Load will use zone sensible air flow rate for zone
+       \note component sizing. Latent loads will also be reported during sizing.
+       \note Latent Load will use zone latent air flow rate for zone
+       \note component sizing. Sensible loads will also be reported during sizing.
+       \note Sensible and Latent Load will use the larger of sensible and
+       \note latent load to choose air flow rate for zone component sizing.
+       \note Sensible Load Only No Latent Load or leaving this field blank
+       \note will disable zone latent sizing and reporting. Latent loads will
+       \note not be reported during sizing (reported as 0's).
+       \type choice
+       \key Sensible Load
+       \key Latent Load
+       \key Sensible And Latent Load
+       \key Sensible Load Only No Latent Load
+       \required-field
+  A9,  \field Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+       \note Use SupplyAirHumidityRatio to enter the humidity ratio when zone dehumidification
+       \note is required. The supply air humidity ratio should be less than the zone humidity
+       \note ratio at the zone thermostat and humidistat set point condition.
+       \note Use HumidityRatioDifference to enter the difference in humidity ratio from the
+       \note zone thermostat and humidistat set point condition.
+       \type choice
+       \key SupplyAirHumidityRatio
+       \key HumidityRatioDifference
+       \required-field
+  N19, \field Zone Dehumidification Design Supply Air Humidity Ratio
+       \note Zone Dehumidification Design Supply Air Humidity Ratio is only used when Zone Latent
+       \note Cooling Design Supply Air Humidity Ratio Input Method = SupplyAirHumidityRatio.
+       \note This input must be less than the zone humidity ratio at the
+       \note humidistat set point so that dehumidification can occur.
+       \minimum> 0.0
+       \type real
+       \units kgWater/kgDryAir
+  N20, \field Zone Cooling Design Supply Air Humidity Ratio Difference
+       \note Zone Dehumidification Design Supply Air Humidity Ratio Difference is only used when
+       \note Zone Latent Cooling Design Supply Air Humidity Ratio Input Method = HumidityRatioDifference.
+       \note This input is a positive value and defines the difference between the zone humidity
+       \note ratio at the thermostat and humidistat set point condition and the supply air
+       \note humidity ratio entering the zone.
+       \minimum> 0.0
+       \type real
+       \required-field
+       \units kgWater/kgDryAir
+  A10, \field Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+       \note Use SupplyAirHumidityRatio to enter the humidity ratio when zone humidification
+       \note is required. The supply air humidity ratio should be greater than the zone humidity
+       \note ratio at the zone thermostat and humidistat set point condition.
+       \note Use HumidityRatioDifference to enter the difference in humidity ratio from the
+       \note zone thermostat and humidistat set point condition.
+       \type choice
+       \key SupplyAirHumidityRatio
+       \key HumidityRatioDifference
+       \required-field
+  N21, \field Zone Humidification Design Supply Air Humidity Ratio
+       \note Zone Humidification Design Supply Air Humidity Ratio is only used when Zone Latent
+       \note Heating Design Supply Air Humidity Ratio Input Method = SupplyAirHumidityRatio.
+       \note This input must be greater than the zone humidity ratio at the
+       \note humidistat set point so that humidification can occur.
+       \minimum> 0.0
+       \type real
+       \units kgWater/kgDryAir
+  N22, \field Zone Humidification Design Supply Air Humidity Ratio Difference
+       \note Zone Humidification Design Supply Air Humidity Ratio is only used when Zone Latent
+       \note Heating Design Supply Air Humidity Ratio Input Method = HumidityRatioDifference.
+       \note This input is a positive value and defines the difference between the zone humidity
+       \note ratio at the thermostat and humidistat set point condition and the supply air
+       \note humidity ratio entering the zone.
+       \minimum 0.0
+       \type real
+       \required-field
+       \units kgWater/kgDryAir
+  A11, \field Zone Humidistat Dehumidification Set Point Schedule Name
+       \note Enter the zone relative humidity schedule used for zone latent
+       \note cooling calculations.
+       \note A zone humidistat will take priority over this input.
+       \note This field is not used if Zone Load Sizing Method = Sensible Load
+       \note Only No Latent Load or a zone humidistat is present.
+       \note A default of 50.0 will be used if no schedule is provided and
+       \note no humidistat is associated with this zone.
+       \type object-list
+       \object-list ScheduleNames
+  A12, \field Zone Humidistat Humidification Set Point Schedule Name
+       \note Enter the zone relative humidity schedule used for zone latent
+       \note heating calculations.
+       \note A zone humidistat will take priority over this input.
+       \note This field is not used if Zone Load Sizing Method = Sensible Load
+       \note Only No Latent Load or a zone humidistat is present.
+       \note A default of 50.0 will be used if no schedule is provided and
+       \note no humidistat is associated with this zone.
+       \type object-list
+       \object-list ScheduleNames
+  N23, \field Design Zone Air Distribution Effectiveness in Cooling Mode
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \minimum> 0
        \default 1.0
-  N20, \field Design Zone Air Distribution Effectiveness in Heating Mode
+  N24, \field Design Zone Air Distribution Effectiveness in Heating Mode
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \minimum> 0
        \default 1.0
-  N21,\field Design Zone Secondary Recirculation Fraction
+  N25, \field Design Zone Secondary Recirculation Fraction
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \default 0.0
        \minimum 0.0
        \units dimensionless
-  N22;\field Design Minimum Zone Ventilation Efficiency
+  N26; \field Design Minimum Zone Ventilation Efficiency
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \default 0.0

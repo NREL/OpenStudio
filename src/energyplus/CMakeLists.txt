@@ -790,6 +790,7 @@ set(${target_name}_test_src
   Test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   Test/ZoneHVACTerminalUnitVariableRefrigerantFlow_GTest.cpp
   Test/ZoneHVACUnitHeater_GTest.cpp
+  Test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   Test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   Test/ZoneVentilationWindandStackOpenArea_GTest.cpp
 )
