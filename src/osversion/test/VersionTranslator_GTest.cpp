@@ -1399,10 +1399,12 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   // Field before: Rated COP
   EXPECT_EQ(4.2, coil.getDouble(10).get());
 
+  // 3.4.0 to 3.5.0: (3) fields added
+
   // Curves
   {
-    ASSERT_TRUE(coil.getTarget(11));
-    WorkspaceObject totalCoolingCapacityCurve = coil.getTarget(11).get();
+    ASSERT_TRUE(coil.getTarget(14));
+    WorkspaceObject totalCoolingCapacityCurve = coil.getTarget(14).get();
     EXPECT_EQ(coil.nameString() + " TotCoolCapCurve", totalCoolingCapacityCurve.nameString());
 
     EXPECT_EQ(-0.68126221, totalCoolingCapacityCurve.getDouble(2).get());
@@ -1421,8 +1423,8 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   }
 
   {
-    ASSERT_TRUE(coil.getTarget(12));
-    WorkspaceObject sensibleCoolingCapacityCurve = coil.getTarget(12).get();
+    ASSERT_TRUE(coil.getTarget(15));
+    WorkspaceObject sensibleCoolingCapacityCurve = coil.getTarget(15).get();
     // This is a CurveQuintLinear
     EXPECT_EQ(coil.nameString() + " SensCoolCapCurve", sensibleCoolingCapacityCurve.nameString());
     EXPECT_EQ(2.24209455, sensibleCoolingCapacityCurve.getDouble(2).get());
@@ -1444,8 +1446,8 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   }
 
   {
-    ASSERT_TRUE(coil.getTarget(13));
-    WorkspaceObject coolingPowerConsumptionCurve = coil.getTarget(13).get();
+    ASSERT_TRUE(coil.getTarget(16));
+    WorkspaceObject coolingPowerConsumptionCurve = coil.getTarget(16).get();
     EXPECT_EQ(coil.nameString() + " CoolPowCurve", coolingPowerConsumptionCurve.nameString());
     EXPECT_EQ(-3.20456384, coolingPowerConsumptionCurve.getDouble(2).get());
     EXPECT_EQ(0.47656454, coolingPowerConsumptionCurve.getDouble(3).get());
@@ -1463,10 +1465,10 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   }
 
   // Field after: Nominal Time for Condensate Removal to Begin
-  EXPECT_EQ(360.0, coil.getDouble(14).get());
+  EXPECT_EQ(360.0, coil.getDouble(17).get());
 
   // Last field
-  EXPECT_EQ(0.1, coil.getDouble(15).get());
+  EXPECT_EQ(0.1, coil.getDouble(18).get());
 }
 
 TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilHeatingWaterToAirHeatPumpEquationFit) {
@@ -1485,10 +1487,12 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilHeatingWaterToAirHeatPumpEqua
   // Field before: Rated COP
   EXPECT_EQ(4.5, coil.getDouble(9).get());
 
+  // 3.5.0 to 3.5.0: (3) fields added
+
   // Curves
   {
-    ASSERT_TRUE(coil.getTarget(10));
-    WorkspaceObject heatingCapacityCurve = coil.getTarget(10).get();
+    ASSERT_TRUE(coil.getTarget(13));
+    WorkspaceObject heatingCapacityCurve = coil.getTarget(13).get();
     EXPECT_EQ(coil.nameString() + " HeatCapCurve", heatingCapacityCurve.nameString());
     EXPECT_EQ(-5.50102734, heatingCapacityCurve.getDouble(2).get());
     EXPECT_EQ(-0.96688754, heatingCapacityCurve.getDouble(3).get());
@@ -1506,11 +1510,9 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilHeatingWaterToAirHeatPumpEqua
   }
 
   {
-    ASSERT_TRUE(coil.getTarget(11));
-    WorkspaceObject heatingPowerConsumptionCurve = coil.getTarget(11).get();
-
+    ASSERT_TRUE(coil.getTarget(14));
+    WorkspaceObject heatingPowerConsumptionCurve = coil.getTarget(14).get();
     EXPECT_EQ(coil.nameString() + " HeatPowCurve", heatingPowerConsumptionCurve.nameString());
-
     EXPECT_EQ(-7.47517858, heatingPowerConsumptionCurve.getDouble(2).get());
     EXPECT_EQ(6.40876653, heatingPowerConsumptionCurve.getDouble(3).get());
     EXPECT_EQ(1.99711665, heatingPowerConsumptionCurve.getDouble(4).get());
@@ -2098,4 +2100,45 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXCurveFitSpeed) {
 
   EXPECT_EQ(773.3, coil.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
   EXPECT_EQ(934.4, coil.getDouble(9).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingWaterToAirHeatPumpEquationFit) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:WaterToAirHeatPump:EquationFit");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_TRUE(coil.isEmpty(9));              // Rated Heating Coefficient of Performance
+  EXPECT_EQ(20, coil.getDouble(10).get());   // Rated Entering Water Temperature
+  EXPECT_EQ(20, coil.getDouble(11).get());   // Rated Entering Air Dry-Bulb Temperature
+  EXPECT_EQ(1.0, coil.getDouble(12).get());  // Ratio of Rated Heating Capacity to Rated Cooling Capacity
+  ASSERT_TRUE(coil.getTarget(14));           // Heating Power Consumption Curve Name
+  EXPECT_EQ("Curve Quad Linear 2", coil.getTarget(14)->nameString());
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingWaterToAirHeatPumpEquationFit) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingWaterToAirHeatPumpEquationFit.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingWaterToAirHeatPumpEquationFit_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:WaterToAirHeatPump:EquationFit");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_TRUE(coil.isEmpty(10));              // Rated Cooling Coefficient of Performance
+  EXPECT_EQ(30, coil.getDouble(11).get());    // Rated Entering Water Temperature
+  EXPECT_EQ(27, coil.getDouble(12).get());    // Rated Entering Air Dry-Bulb Temperature
+  EXPECT_EQ(19.0, coil.getDouble(13).get());  // Rated Entering Air Wet-Bulb Temperature
+  EXPECT_TRUE(coil.isEmpty(18));              // Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
 }

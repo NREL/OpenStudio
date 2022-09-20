@@ -17615,7 +17615,10 @@ OS:Coil:Cooling:Water,
        \key CounterFlow
 
 OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
-       \Min-fields 29
+       \memo Direct expansion (DX) cooling coil for water-to-air heat pump (includes electric
+       \memo compressor), single-speed, equation-fit model. Optional inputs for moisture
+       \memo evaporation from wet coil when compressor cycles off with continuous fan operation.
+       \memo Equation-fit model uses normalized curves to describe the heat pump performance.
   A1,  \field Handle
        \type handle
        \required-field
@@ -17655,6 +17658,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \autosizable
        \default Autosize
   N3,  \field Rated Total Cooling Capacity
+       \note Total cooling capacity at rated conditions not accounting for the effect of supply air fan heat
        \type real
        \minimum> 0.0
        \units W
@@ -17667,10 +17671,35 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \autosizable
        \default Autosize
   N5,  \field Rated Cooling Coefficient of Performance
+       \note Gross cooling COP at rated conditions
        \type real
        \units W/W
        \minimum> 0.0
        \default 3.0
+  N6,  \field Rated Entering Water Temperature
+       \note Rated entering water temperature corresponding to the water-to
+       \note -air application for which this coil is used. For example: for water loop
+       \note applications, the rated temperature is 30 degree Celsius
+       \units C
+       \type real
+       \minimum> 0
+       \required-field
+  N7,  \field Rated Entering Air Dry-Bulb Temperature
+       \note Rated entering air dry-bulb temperature corresponding to the
+       \note water-to-air application for which this coil is used. For example: for
+       \note water loop applications, the rated temperature is 27 degree Celsius
+       \units C
+       \type real
+       \required-field
+       \minimum> 0
+  N8,  \field Rated Entering Air Wet-Bulb Temperature
+       \note Rated entering air wet-bulb temperature corresponding to the
+       \note water-to-air application for which this coil is used. For example: for
+       \note water loop applications, the rated temperature is 19 degree Celsius
+       \units C
+       \type real
+       \required-field
+       \minimum> 0
   A7,  \field Total Cooling Capacity Curve Name
        \required-field
        \type object-list
@@ -17683,7 +17712,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \required-field
        \type object-list
        \object-list QuadvariateFunctions
-  N6,  \field Nominal Time for Condensate Removal to Begin
+  N9,  \field Nominal Time for Condensate Removal to Begin
        \type real
        \units s
        \minimum 0.0
@@ -17694,7 +17723,7 @@ OS:Coil:Cooling:WaterToAirHeatPump:EquationFit,
        \note Nominal time is equal to the ratio of the energy of the coil's maximum
        \note condensate holding capacity (J) to the coil's steady state latent capacity (W).
        \note Suggested value is 1000; zero value means latent degradation model is disabled.
-  N7;  \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+  N10; \field Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
        \type real
        \units dimensionless
        \minimum 0.0
@@ -18571,7 +18600,9 @@ OS:Coil:Heating:Water:Baseboard:Radiant,
       \minimum> 0.0
 
 OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
-       \Min-fields 20
+       \memo Direct expansion (DX) heating coil for water-to-air heat pump (includes electric
+       \memo compressor), single-speed, equation-fit model. Equation-fit model uses normalized
+       \memo curves to describe the heat pump performance.
   A1,  \field Handle
        \type handle
        \required-field
@@ -18610,16 +18641,43 @@ OS:Coil:Heating:WaterToAirHeatPump:EquationFit,
        \autosizable
        \default Autosize
   N3,  \field Rated Heating Capacity
+       \note Heating capacity at rated conditions not accounting for the effect of supply air fan heat
        \type real
        \minimum> 0.0
        \units W
        \autosizable
        \default Autosize
   N4,  \field Rated Heating Coefficient of Performance
+       \note Gross heating COP at rated conditions
        \type real
        \minimum> 0.0
        \units W/W
        \default 3.0
+  N5,  \field Rated Entering Water Temperature
+       \note Rated entering water temperature corresponding to the water-to
+       \note -air application for which this coil is used. For example: for water loop
+       \note applications, the rated temperature is 20 degree Celsius.
+       \units C
+       \type real
+       \required-field
+  N6,  \field Rated Entering Air Dry-Bulb Temperature
+       \note Rated entering air dry-bulb temperature corresponding to the
+       \note water-to-air application for which this coil is used. For example: for
+       \note water loop applications, the rated temperature is 20 degree Celsius.
+       \units C
+       \type real
+       \required-field
+       \minimum> 0
+  N7,  \field Ratio of Rated Heating Capacity to Rated Cooling Capacity
+       \note Ratio of rated heating capacity to rated cooling capacity. This
+       \note input is used to calculate the heating or cooling capacity when autosizing.
+       \note This input is only used if a companion cooling coil of the same type
+       \note (Coil:Cooling:WaterToAirHeatPump:EquationFit) is used. This input is only
+       \note used when a sizing run for the system which uses this object is requested
+       \note and when the coil capacity is autosized.
+       \type real
+       \minimum> 0
+       \required-field
   A7,  \field Heating Capacity Curve Name
        \required-field
        \type object-list

@@ -88,4 +88,19 @@ TEST_F(ModelFixture, CoilHeatingWaterToAirHeatPumpEquationFit_Test) {
   coilHeatingWaterToAirHPEquationFit.resetRatedHeatingCoefficientofPerformance();
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.ratedHeatingCoefficientofPerformance());
   EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.isRatedHeatingCoefficientofPerformanceDefaulted());
+
+  // test rated entering water temperature
+  EXPECT_EQ(20, coilHeatingWaterToAirHPEquationFit.ratedEnteringWaterTemperature());
+  EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setRatedEnteringWaterTemperature(25));
+  EXPECT_EQ(25, coilHeatingWaterToAirHPEquationFit.ratedEnteringWaterTemperature());
+
+  // test rated entering air dry bulb temperature
+  EXPECT_EQ(20, coilHeatingWaterToAirHPEquationFit.ratedEnteringAirDryBulbTemperature());
+  EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setRatedEnteringAirDryBulbTemperature(26));
+  EXPECT_EQ(26, coilHeatingWaterToAirHPEquationFit.ratedEnteringAirDryBulbTemperature());
+
+  // test ratio of rated heating capacity to rated cooling capacity
+  EXPECT_EQ(1.0, coilHeatingWaterToAirHPEquationFit.ratioofRatedHeatingCapacitytoRatedCoolingCapacity());
+  EXPECT_TRUE(coilHeatingWaterToAirHPEquationFit.setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(1.2));
+  EXPECT_EQ(1.2, coilHeatingWaterToAirHPEquationFit.ratioofRatedHeatingCapacitytoRatedCoolingCapacity());
 }

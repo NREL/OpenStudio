@@ -7208,6 +7208,72 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if (iddname == "OS:Coil:Heating:WaterToAirHeatPump:EquationFit") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Entering Water Temperature * 10
+        // * Rated Entering Air Dry-Bulb Temperature * 11
+        // * Ratio of Rated Heating Capacity to Rated Cooling Capacity * 12
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 10) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 3, value.get());
+            }
+          }
+        }
+
+        // Rated Entering Water Temperature
+        newObject.setDouble(10, 20);
+
+        // Rated Entering Air Dry-Bulb Temperature
+        newObject.setDouble(11, 20);
+
+        // Ratio of Rated Heating Capacity to Rated Cooling Capacity
+        newObject.setDouble(12, 1.0);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Cooling:WaterToAirHeatPump:EquationFit") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Entering Water Temperature * 11
+        // * Rated Entering Air Dry-Bulb Temperature * 12
+        // * Rated Entering Air Wet-Bulb Temperature * 13
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 11) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 3, value.get());
+            }
+          }
+        }
+
+        // Rated Entering Water Temperature
+        newObject.setDouble(11, 30);
+
+        // Rated Entering Air Dry-Bulb Temperature
+        newObject.setDouble(12, 27);
+
+        // Rated Entering Air Wet-Bulb Temperature
+        newObject.setDouble(13, 19.0);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
         // No-op
       } else {
         ss << object;
