@@ -281,7 +281,7 @@ namespace energyplus {
           // DesignSpecificationOutdoorAir
           std::vector<model::Space> spaces = thermalZone.spaces();
 
-          if (spaces.size() > 0) {
+          if (!spaces.empty()) {
             if (boost::optional<model::DesignSpecificationOutdoorAir> designOASpec = spaces.front().designSpecificationOutdoorAir()) {
               if (boost::optional<IdfObject> _designOASpec = translateAndMapModelObject(designOASpec.get())) {
                 eg.setString(Controller_MechanicalVentilationExtensibleFields::DesignSpecificationOutdoorAirObjectName, _designOASpec->name().get());

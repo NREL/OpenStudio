@@ -345,37 +345,30 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   sz.autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
   EXPECT_TRUE(sz.isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized());
 
-  // Zone Load Sizing Method: Optional String
-  // Default value from IDD
-  EXPECT_TRUE(sz.isZoneLoadSizingMethodDefaulted());
+  // Zone Load Sizing Method: String
+  // Default value from IDD, set in Ctor
   EXPECT_EQ("Sensible Load Only No Latent Load", sz.zoneLoadSizingMethod());
   // Set
   EXPECT_TRUE(sz.setZoneLoadSizingMethod("Sensible Load"));
   EXPECT_EQ("Sensible Load", sz.zoneLoadSizingMethod());
-  EXPECT_FALSE(sz.isZoneLoadSizingMethodDefaulted());
   // Bad Value
   EXPECT_FALSE(sz.setZoneLoadSizingMethod("BADENUM"));
   EXPECT_EQ("Sensible Load", sz.zoneLoadSizingMethod());
-  // Reset
-  sz.resetZoneLoadSizingMethod();
-  EXPECT_TRUE(sz.isZoneLoadSizingMethodDefaulted());
 
-  // Zone Latent Cooling Design Supply Air Humidity Ratio Input Method: Optional String
-  // Default value from IDD
-  EXPECT_TRUE(sz.isZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethodDefaulted());
+  // Zone Latent Cooling Design Supply Air Humidity Ratio Input Method: String
+  // Default value from IDD, set in Ctor
   EXPECT_EQ("HumidityRatioDifference", sz.zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod());
   // Set
   EXPECT_TRUE(sz.setZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod("SupplyAirHumidityRatio"));
   EXPECT_EQ("SupplyAirHumidityRatio", sz.zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod());
-  EXPECT_FALSE(sz.isZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethodDefaulted());
   // Bad Value
   EXPECT_FALSE(sz.setZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod("BADENUM"));
   EXPECT_EQ("SupplyAirHumidityRatio", sz.zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod());
-  // Reset
-  sz.resetZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod();
-  EXPECT_TRUE(sz.isZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethodDefaulted());
 
   // Zone Dehumidification Design Supply Air Humidity Ratio: Optional Double
+  // IDD has no default, I don't have a good one, so empty...
+  EXPECT_FALSE(sz.zoneDehumidificationDesignSupplyAirHumidityRatio());
+  // Set
   EXPECT_TRUE(sz.setZoneDehumidificationDesignSupplyAirHumidityRatio(2.9));
   ASSERT_TRUE(sz.zoneDehumidificationDesignSupplyAirHumidityRatio());
   EXPECT_EQ(2.9, sz.zoneDehumidificationDesignSupplyAirHumidityRatio().get());
@@ -384,36 +377,30 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   ASSERT_TRUE(sz.zoneDehumidificationDesignSupplyAirHumidityRatio());
   EXPECT_EQ(2.9, sz.zoneDehumidificationDesignSupplyAirHumidityRatio().get());
 
-  // Zone Cooling Design Supply Air Humidity Ratio Difference: Optional Double
-  // Default value from IDD
-  EXPECT_TRUE(sz.isZoneCoolingDesignSupplyAirHumidityRatioDifferenceDefaulted());
+  // Zone Cooling Design Supply Air Humidity Ratio Difference: Double
+  // Default value from IDD, set in Ctor
+  EXPECT_EQ(0.005, sz.zoneCoolingDesignSupplyAirHumidityRatioDifference());
   // Set
   EXPECT_TRUE(sz.setZoneCoolingDesignSupplyAirHumidityRatioDifference(3.0));
   EXPECT_EQ(3.0, sz.zoneCoolingDesignSupplyAirHumidityRatioDifference());
-  EXPECT_FALSE(sz.isZoneCoolingDesignSupplyAirHumidityRatioDifferenceDefaulted());
   // Bad Value
   EXPECT_FALSE(sz.setZoneCoolingDesignSupplyAirHumidityRatioDifference(-10.0));
   EXPECT_EQ(3.0, sz.zoneCoolingDesignSupplyAirHumidityRatioDifference());
-  // Reset
-  sz.resetZoneCoolingDesignSupplyAirHumidityRatioDifference();
-  EXPECT_TRUE(sz.isZoneCoolingDesignSupplyAirHumidityRatioDifferenceDefaulted());
 
   // Zone Latent Heating Design Supply Air Humidity Ratio Input Method: Optional String
-  // Default value from IDD
-  EXPECT_TRUE(sz.isZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethodDefaulted());
+  // Default value from IDD, set in IDD
   EXPECT_EQ("HumidityRatioDifference", sz.zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod());
   // Set
   EXPECT_TRUE(sz.setZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod("SupplyAirHumidityRatio"));
   EXPECT_EQ("SupplyAirHumidityRatio", sz.zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod());
-  EXPECT_FALSE(sz.isZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethodDefaulted());
   // Bad Value
   EXPECT_FALSE(sz.setZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod("BADENUM"));
   EXPECT_EQ("SupplyAirHumidityRatio", sz.zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod());
-  // Reset
-  sz.resetZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod();
-  EXPECT_TRUE(sz.isZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethodDefaulted());
 
   // Zone Humidification Design Supply Air Humidity Ratio: Optional Double
+  // IDD has no default, I don't have a good one, so empty...
+  EXPECT_FALSE(sz.zoneHumidificationDesignSupplyAirHumidityRatio());
+  // Set
   EXPECT_TRUE(sz.setZoneHumidificationDesignSupplyAirHumidityRatio(3.2));
   ASSERT_TRUE(sz.zoneHumidificationDesignSupplyAirHumidityRatio());
   EXPECT_EQ(3.2, sz.zoneHumidificationDesignSupplyAirHumidityRatio().get());
@@ -422,19 +409,15 @@ TEST_F(ModelFixture, SizingZone_GettersSetters) {
   ASSERT_TRUE(sz.zoneHumidificationDesignSupplyAirHumidityRatio());
   EXPECT_EQ(3.2, sz.zoneHumidificationDesignSupplyAirHumidityRatio().get());
 
-  // Zone Humidification Design Supply Air Humidity Ratio Difference: Optional Double
-  // Default value from IDD
-  EXPECT_TRUE(sz.isZoneHumidificationDesignSupplyAirHumidityRatioDifferenceDefaulted());
+  // Zone Humidification Design Supply Air Humidity Ratio Difference: Double
+  // Default value from IDD, set in Ctor
+  EXPECT_EQ(0.005, sz.zoneHumidificationDesignSupplyAirHumidityRatioDifference());
   // Set
   EXPECT_TRUE(sz.setZoneHumidificationDesignSupplyAirHumidityRatioDifference(3.3));
   EXPECT_EQ(3.3, sz.zoneHumidificationDesignSupplyAirHumidityRatioDifference());
-  EXPECT_FALSE(sz.isZoneHumidificationDesignSupplyAirHumidityRatioDifferenceDefaulted());
   // Bad Value
   EXPECT_FALSE(sz.setZoneHumidificationDesignSupplyAirHumidityRatioDifference(-10.0));
   EXPECT_EQ(3.3, sz.zoneHumidificationDesignSupplyAirHumidityRatioDifference());
-  // Reset
-  sz.resetZoneHumidificationDesignSupplyAirHumidityRatioDifference();
-  EXPECT_TRUE(sz.isZoneHumidificationDesignSupplyAirHumidityRatioDifferenceDefaulted());
 
   // Zone Humidistat Dehumidification Set Point Schedule Name: Optional Object
   ScheduleConstant dehumSch(m);

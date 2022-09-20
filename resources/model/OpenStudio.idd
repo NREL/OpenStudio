@@ -17787,7 +17787,7 @@ OS:Coil:Heating:DX:SingleSpeed,
        \required-field
   N5 , \field Rated Supply Fan Power Per Volume Flow Rate 2023
        \note Enter the supply fan power per air volume flow rate at the rated test conditions.
-       \note as defined in the 2017 version of ANSI/AHRI Standard 210/240. 
+       \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on heating capacity.
        \note This value is only used to calculate Heating Seasonal Performance Factor(HSPF).
        \note This value is not used for modeling the supply (condenser) fan during simulations.
@@ -25808,7 +25808,7 @@ OS:Sizing:Zone,
        \key Latent Load
        \key Sensible And Latent Load
        \key Sensible Load Only No Latent Load
-       \default Sensible Load Only No Latent Load
+       \required-field
   A9,  \field Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
        \note Use SupplyAirHumidityRatio to enter the humidity ratio when zone dehumidification
        \note is required. The supply air humidity ratio should be less than the zone humidity
@@ -25818,7 +25818,7 @@ OS:Sizing:Zone,
        \type choice
        \key SupplyAirHumidityRatio
        \key HumidityRatioDifference
-       \default HumidityRatioDifference
+       \required-field
   N19, \field Zone Dehumidification Design Supply Air Humidity Ratio
        \note Zone Dehumidification Design Supply Air Humidity Ratio is only used when Zone Latent
        \note Cooling Design Supply Air Humidity Ratio Input Method = SupplyAirHumidityRatio.
@@ -25835,7 +25835,7 @@ OS:Sizing:Zone,
        \note humidity ratio entering the zone.
        \minimum> 0.0
        \type real
-       \default 0.005
+       \required-field
        \units kgWater/kgDryAir
   A10, \field Zone Latent Heating Design Supply Air Humidity Ratio Input Method
        \note Use SupplyAirHumidityRatio to enter the humidity ratio when zone humidification
@@ -25846,7 +25846,7 @@ OS:Sizing:Zone,
        \type choice
        \key SupplyAirHumidityRatio
        \key HumidityRatioDifference
-       \default HumidityRatioDifference
+       \required-field
   N21, \field Zone Humidification Design Supply Air Humidity Ratio
        \note Zone Humidification Design Supply Air Humidity Ratio is only used when Zone Latent
        \note Heating Design Supply Air Humidity Ratio Input Method = SupplyAirHumidityRatio.
@@ -25863,7 +25863,7 @@ OS:Sizing:Zone,
        \note humidity ratio entering the zone.
        \minimum 0.0
        \type real
-       \default 0.005
+       \required-field
        \units kgWater/kgDryAir
   A11, \field Zone Humidistat Dehumidification Set Point Schedule Name
        \note Enter the zone relative humidity schedule used for zone latent
