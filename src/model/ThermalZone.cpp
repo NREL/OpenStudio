@@ -2471,7 +2471,8 @@ namespace model {
       std::vector<ZoneMixing> result = this->zoneMixing();
 
       Handle handle = this->handle();
-      auto new_end = std::remove_if(result.begin(), result.end(), [&](const ZoneMixing& mixing) { return (mixing.zone().handle() != handle); });
+      auto new_end =
+        std::remove_if(result.begin(), result.end(), [&](const ZoneMixing& mixing) { return (mixing.zoneOrSpace().handle() != handle); });
 
       result.erase(new_end, result.end());
       return result;
@@ -2481,8 +2482,9 @@ namespace model {
       std::vector<ZoneMixing> result = this->zoneMixing();
 
       Handle handle = this->handle();
-      auto new_end = std::remove_if(result.begin(), result.end(),
-                                    [&](const ZoneMixing& mixing) { return (!mixing.sourceZone() || (mixing.sourceZone()->handle() != handle)); });
+      auto new_end = std::remove_if(result.begin(), result.end(), [&](const ZoneMixing& mixing) {
+        return (!mixing.sourceZoneOrSpace() || (mixing.sourceZoneOrSpace()->handle() != handle));
+      });
 
       result.erase(new_end, result.end());
       return result;

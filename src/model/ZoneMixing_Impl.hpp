@@ -36,8 +36,9 @@
 namespace openstudio {
 namespace model {
 
-  class ThermalZone;
   class Schedule;
+  class Space;
+  class ThermalZone;
 
   namespace detail {
 
@@ -55,7 +56,7 @@ namespace model {
 
       ZoneMixing_Impl(const ZoneMixing_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneMixing_Impl() {}
+      virtual ~ZoneMixing_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -71,7 +72,9 @@ namespace model {
       /** @name Getters */
       //@{
 
-      ThermalZone zone() const;
+      boost::optional<ThermalZone> zone() const;
+      boost::optional<Space> space() const;
+      ModelObject zoneOrSpace() const;
 
       Schedule schedule() const;
 
@@ -79,25 +82,27 @@ namespace model {
 
       boost::optional<double> designFlowRate() const;
 
-      boost::optional<double> flowRateperZoneFloorArea() const;
+      boost::optional<double> flowRateperFloorArea() const;
 
       boost::optional<double> flowRateperPerson() const;
 
       boost::optional<double> airChangesperHour() const;
 
       boost::optional<ThermalZone> sourceZone() const;
+      boost::optional<Space> sourceSpace() const;
+      boost::optional<ModelObject> sourceZoneOrSpace() const;
 
       boost::optional<double> deltaTemperature() const;
 
       boost::optional<Schedule> deltaTemperatureSchedule() const;
 
-      boost::optional<Schedule> minimumZoneTemperatureSchedule() const;
+      boost::optional<Schedule> minimumReceivingTemperatureSchedule() const;
 
-      boost::optional<Schedule> maximumZoneTemperatureSchedule() const;
+      boost::optional<Schedule> maximumReceivingTemperatureSchedule() const;
 
-      boost::optional<Schedule> minimumSourceZoneTemperatureSchedule() const;
+      boost::optional<Schedule> minimumSourceTemperatureSchedule() const;
 
-      boost::optional<Schedule> maximumSourceZoneTemperatureSchedule() const;
+      boost::optional<Schedule> maximumSourceTemperatureSchedule() const;
 
       boost::optional<Schedule> minimumOutdoorTemperatureSchedule() const;
 
@@ -115,15 +120,15 @@ namespace model {
 
       bool setDesignFlowRate(double designFlowRate);
 
-      bool setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea);
+      bool setFlowRateperFloorArea(double flowRateperFloorArea);
 
       bool setFlowRateperPerson(double flowRateperPerson);
 
       bool setAirChangesperHour(double airChangesperHour);
 
       bool setSourceZone(const ThermalZone& zone);
-
-      void resetSourceZone();
+      bool setSourceSpace(const Space& space);
+      void resetSourceZoneOrSpace();
 
       bool setDeltaTemperature(double deltaTemperature);
 
@@ -133,21 +138,21 @@ namespace model {
 
       void resetDeltaTemperatureSchedule();
 
-      bool setMinimumZoneTemperatureSchedule(Schedule& schedule);
+      bool setMinimumReceivingTemperatureSchedule(Schedule& schedule);
 
-      void resetMinimumZoneTemperatureSchedule();
+      void resetMinimumReceivingTemperatureSchedule();
 
-      bool setMaximumZoneTemperatureSchedule(Schedule& schedule);
+      bool setMaximumReceivingTemperatureSchedule(Schedule& schedule);
 
-      void resetMaximumZoneTemperatureSchedule();
+      void resetMaximumReceivingTemperatureSchedule();
 
-      bool setMinimumSourceZoneTemperatureSchedule(Schedule& schedule);
+      bool setMinimumSourceTemperatureSchedule(Schedule& schedule);
 
-      void resetMinimumSourceZoneTemperatureSchedule();
+      void resetMinimumSourceTemperatureSchedule();
 
-      bool setMaximumSourceZoneTemperatureSchedule(Schedule& schedule);
+      bool setMaximumSourceTemperatureSchedule(Schedule& schedule);
 
-      void resetMaximumSourceZoneTemperatureSchedule();
+      void resetMaximumSourceTemperatureSchedule();
 
       bool setMinimumOutdoorTemperatureSchedule(Schedule& schedule);
 

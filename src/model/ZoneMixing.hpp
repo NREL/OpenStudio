@@ -33,12 +33,15 @@
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
 
+#include "../utilities/core/Deprecated.hpp"
+
 namespace openstudio {
 
 namespace model {
 
-  class ThermalZone;
   class Schedule;
+  class Space;
+  class ThermalZone;
 
   namespace detail {
 
@@ -54,8 +57,9 @@ namespace model {
     //@{
 
     explicit ZoneMixing(const ThermalZone& thermalZone);
+    explicit ZoneMixing(const Space& space);
 
-    virtual ~ZoneMixing() {}
+    virtual ~ZoneMixing() = default;
 
     //@}
 
@@ -65,7 +69,9 @@ namespace model {
     //@{
 
     /// Returns the ThermalZone which receives air from this mixing object.
-    ThermalZone zone() const;
+    boost::optional<ThermalZone> zone() const;
+    boost::optional<Space> space() const;
+    ModelObject zoneOrSpace() const;
 
     /// Returns fractional schedule which moderates amount of air flow from the design level.
     Schedule schedule() const;
@@ -74,7 +80,8 @@ namespace model {
 
     boost::optional<double> designFlowRate() const;
 
-    boost::optional<double> flowRateperZoneFloorArea() const;
+    OS_DEPRECATED boost::optional<double> flowRateperZoneFloorArea() const;
+    boost::optional<double> flowRateperFloorArea() const;
 
     boost::optional<double> flowRateperPerson() const;
 
@@ -82,6 +89,8 @@ namespace model {
 
     /// Returns the ThermalZone which supplies air to this mixing object.
     boost::optional<ThermalZone> sourceZone() const;
+    boost::optional<Space> sourceSpace() const;
+    boost::optional<ModelObject> sourceZoneOrSpace() const;
 
     /// Returns the constant temperature differential between source and receiving zones below which mixing is shutoff.
     // DLM: is this a signed difference or absolute?
@@ -90,17 +99,21 @@ namespace model {
     /// Returns the temperature schedule containing the differential between source and receiving zones versus time below which mixing is shutoff.
     boost::optional<Schedule> deltaTemperatureSchedule() const;
 
-    /// Returns the temperature schedule containing the receiving zone dry-bulb temperature below which mixing is shutoff.
-    boost::optional<Schedule> minimumZoneTemperatureSchedule() const;
+    /// Returns the temperature schedule containing the receiving zone or space dry-bulb temperature below which mixing is shutoff.
+    boost::optional<Schedule> minimumReceivingTemperatureSchedule() const;
+    OS_DEPRECATED boost::optional<Schedule> minimumZoneTemperatureSchedule() const;
 
-    /// Returns the temperature schedule containing the receiving zone dry-bulb temperature above which mixing is shutoff.
-    boost::optional<Schedule> maximumZoneTemperatureSchedule() const;
+    /// Returns the temperature schedule containing the receiving zone or space dry-bulb temperature above which mixing is shutoff.
+    boost::optional<Schedule> maximumReceivingTemperatureSchedule() const;
+    OS_DEPRECATED boost::optional<Schedule> maximumZoneTemperatureSchedule() const;
 
-    /// Returns the temperature schedule containing the source zone dry-bulb temperature below which mixing is shutoff.
-    boost::optional<Schedule> minimumSourceZoneTemperatureSchedule() const;
+    /// Returns the temperature schedule containing the source zone or space dry-bulb temperature below which mixing is shutoff.
+    boost::optional<Schedule> minimumSourceTemperatureSchedule() const;
+    OS_DEPRECATED boost::optional<Schedule> minimumSourceZoneTemperatureSchedule() const;
 
-    /// Returns the temperature schedule containing the source zone dry-bulb temperature above which mixing is shutoff.
-    boost::optional<Schedule> maximumSourceZoneTemperatureSchedule() const;
+    /// Returns the temperature schedule containing the source zone or space dry-bulb temperature above which mixing is shutoff.
+    boost::optional<Schedule> maximumSourceTemperatureSchedule() const;
+    OS_DEPRECATED boost::optional<Schedule> maximumSourceZoneTemperatureSchedule() const;
 
     /// Returns the temperature schedule containing the outdoor temperature below which mixing is shutoff.
     boost::optional<Schedule> minimumOutdoorTemperatureSchedule() const;
@@ -117,7 +130,8 @@ namespace model {
 
     bool setDesignFlowRate(double designFlowRate);
 
-    bool setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea);
+    bool setFlowRateperFloorArea(double flowRateperFloorArea);
+    OS_DEPRECATED bool setFlowRateperZoneFloorArea(double flowRateperZoneFloorArea);
 
     bool setFlowRateperPerson(double flowRateperPerson);
 
@@ -125,8 +139,10 @@ namespace model {
 
     /// Sets the ThermalZone which supplies air to this mixing object.
     bool setSourceZone(const ThermalZone& zone);
+    OS_DEPRECATED void resetSourceZone();
 
-    void resetSourceZone();
+    bool setSourceSpace(const Space& space);
+    void resetSourceZoneOrSpace();
 
     /// Sets the constant temperature differential between source and receiving zones below which mixing is shutoff.
     bool setDeltaTemperature(double deltaTemperature);
@@ -139,24 +155,32 @@ namespace model {
     void resetDeltaTemperatureSchedule();
 
     /// Sets the temperature schedule containing the receiving zone dry-bulb temperature below which mixing is shutoff.
-    bool setMinimumZoneTemperatureSchedule(Schedule& schedule);
+    bool setMinimumReceivingTemperatureSchedule(Schedule& schedule);
+    void resetMinimumReceivingTemperatureSchedule();
 
-    void resetMinimumZoneTemperatureSchedule();
+    OS_DEPRECATED bool setMinimumZoneTemperatureSchedule(Schedule& schedule);
+    OS_DEPRECATED void resetMinimumZoneTemperatureSchedule();
 
     /// Sets the temperature schedule containing the receiving zone dry-bulb temperature above which mixing is shutoff.
-    bool setMaximumZoneTemperatureSchedule(Schedule& schedule);
+    bool setMaximumReceivingTemperatureSchedule(Schedule& schedule);
+    void resetMaximumReceivingTemperatureSchedule();
 
-    void resetMaximumZoneTemperatureSchedule();
+    OS_DEPRECATED bool setMaximumZoneTemperatureSchedule(Schedule& schedule);
+    OS_DEPRECATED void resetMaximumZoneTemperatureSchedule();
 
     /// Sets the temperature schedule containing the source zone dry-bulb temperature below which mixing is shutoff.
-    bool setMinimumSourceZoneTemperatureSchedule(Schedule& schedule);
+    bool setMinimumSourceTemperatureSchedule(Schedule& schedule);
+    void resetMinimumSourceTemperatureSchedule();
 
-    void resetMinimumSourceZoneTemperatureSchedule();
+    OS_DEPRECATED bool setMinimumSourceZoneTemperatureSchedule(Schedule& schedule);
+    OS_DEPRECATED void resetMinimumSourceZoneTemperatureSchedule();
 
     /// Sets the temperature schedule containing the source zone dry-bulb temperature above which mixing is shutoff.
-    bool setMaximumSourceZoneTemperatureSchedule(Schedule& schedule);
+    bool setMaximumSourceTemperatureSchedule(Schedule& schedule);
+    void resetMaximumSourceTemperatureSchedule();
 
-    void resetMaximumSourceZoneTemperatureSchedule();
+    OS_DEPRECATED bool setMaximumSourceZoneTemperatureSchedule(Schedule& schedule);
+    OS_DEPRECATED void resetMaximumSourceZoneTemperatureSchedule();
 
     /// Returns the temperature schedule containing the outdoor temperature below which mixing is shutoff.
     bool setMinimumOutdoorTemperatureSchedule(Schedule& schedule);
@@ -176,7 +200,7 @@ namespace model {
 
    protected:
     /// @cond
-    typedef detail::ZoneMixing_Impl ImplType;
+    using ImplType = detail::ZoneMixing_Impl;
 
     explicit ZoneMixing(std::shared_ptr<detail::ZoneMixing_Impl> impl);
 
@@ -190,10 +214,10 @@ namespace model {
   };
 
   /** \relates ZoneMixing*/
-  typedef boost::optional<ZoneMixing> OptionalZoneMixing;
+  using OptionalZoneMixing = boost::optional<ZoneMixing>;
 
   /** \relates ZoneMixing*/
-  typedef std::vector<ZoneMixing> ZoneMixingVector;
+  using ZoneMixingVector = std::vector<ZoneMixing>;
 
 }  // namespace model
 }  // namespace openstudio

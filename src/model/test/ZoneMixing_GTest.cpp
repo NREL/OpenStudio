@@ -49,7 +49,7 @@ TEST_F(ModelFixture, ZoneMixing) {
   ThermalZone zone1(model);
   ThermalZone zone2(model);
   ZoneMixing mixing(zone1);
-  EXPECT_EQ(zone1.handle(), mixing.zone().handle());
+  EXPECT_EQ(zone1.handle(), mixing.zoneOrSpace().handle());
   EXPECT_EQ(model.alwaysOnContinuousSchedule().handle(), mixing.schedule().handle());
   EXPECT_FALSE(mixing.sourceZone());
 
