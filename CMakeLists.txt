@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Do not enable compiler specific extensions, for eg on GCC use -std=c++1z (=c++17) and not -std=gnu++17
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Use ccache if available, has to be before "project()"
+# Use ccache is available, has to be before "project()"
 find_program(CCACHE_PROGRAM ccache)
 if(CCACHE_PROGRAM)
   # Support Unix Makefiles and Ninja
@@ -275,14 +275,6 @@ option(BUILD_DOCUMENTATION "Build Documentation" OFF)
 option(BUILD_CSHARP_BINDINGS "Build CSharp bindings" OFF)
 option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 
-# Build Java bindings
-# Requires: SWIG
-option(BUILD_JAVA_BINDINGS "Build Java bindings" OFF)
-
-# Build V8 Node bindings
-# Requires: SWIG, Node
-option(BUILD_V8_BINDINGS "Build Node V8 bindings" OFF)
-
 # Build Python bindings
 # Requires: SWIG Python
 option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
@@ -369,10 +361,6 @@ if(WIN32)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /OPT:REF /OPT:NOICF")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zi")
   endif()
-endif()
-
-if(BUILD_V8_BINDINGS)
-  option(BUILD_NODE_MODULES "Build V8 Bindings as Node Modules" ON)
 endif()
 
 option(USE_LTO "Use Link-Time-Optimization" OFF)
@@ -795,20 +783,20 @@ if(BUILD_CLI)
          set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220420-darwin_arm64.tar.gz")
          set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "abc2798729434f8835f824300a5fd420")
        else()
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220419-darwin.tar.gz")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "cbf547ad374fbe938349834a1fdcfbf1")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220901-darwin.tar.gz ")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "1c4a738e36bd34e7626aef7116bf5076")
        endif()
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220419-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "e0a5ea1e96b9ee5d34152dd1a34dfa99")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220831-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b515d50b81fae65389b44f73456d4e65")
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
        endif()
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220420-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "7eb94b4b1cbd1bdf0d4afa22415e3f70")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220831-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c45f2a323d654a0a1536c6076bf4dcc4")
     if (USE_OPENSTUDIO_GEMS_PR)
       set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
     endif()
@@ -917,15 +905,6 @@ if(BUILD_CSHARP_BINDINGS)
   set(ALL_CSHARP_WRAPPER_FILES "") # global list of generated wrapper cxx files
   set(ALL_CSHARP_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
 endif()
-
-# JAVA
-if(BUILD_JAVA_BINDINGS)
-  find_package(JNI)
-  find_package(Java)
-  set(ALL_JAVA_BINDING_TARGETS "") # global list
-  set(ALL_JAVA_SRC_DIRECTORIES "") # global list
-endif()
-
 
 if(BUILD_NODE_MODULES)
   add_definitions(-DBUILD_NODE_MODULE)
@@ -1052,19 +1031,9 @@ if(BUILD_CSHARP_BINDINGS)
   add_subdirectory(csharp)
 endif()
 
-# java, after loading projects
-if(BUILD_JAVA_BINDINGS)
-  add_subdirectory(java)
-endif()
-
 # python, after loading projects
 if(BUILD_PYTHON_BINDINGS)
   add_subdirectory(python)
-endif()
-
-# v8-node
-if(BUILD_NODE_MODULES)
-  add_subdirectory(v8-node)
 endif()
 
 ###############################################################################
@@ -1087,17 +1056,6 @@ if(BUILD_CSHARP_BINDINGS)
   add_dependencies(ALL_CSHARP_BINDINGS csharp_sdk ${ALL_CSHARP_BINDING_TARGETS})
 endif()
 
-
-if(BUILD_JAVA_BINDINGS)
-  add_custom_target(ALL_JAVA_BINDINGS)
-  #add_dependencies(ALL_JAVA_BINDINGS java_sdk ${ALL_JAVA_BINDING_TARGETS})
-endif()
-
-
-if(BUILD_V8_BINDINGS)
-  add_custom_target(ALL_V8_BINDINGS)
-  add_dependencies(ALL_V8_BINDINGS ${ALL_V8_BINDING_TARGETS})
-endif()
 
 set(MAXIMIZE_CPU_USAGE OFF CACHE BOOL "Attempt to fully load the CPU during builds")
 mark_as_advanced(MAXIMIZE_CPU_USAGE)

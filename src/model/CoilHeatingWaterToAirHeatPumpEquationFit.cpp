@@ -171,6 +171,25 @@ namespace model {
       return isEmpty(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedHeatingCoefficientofPerformance);
     }
 
+    double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::ratedEnteringWaterTemperature() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::ratedEnteringAirDryBulbTemperature() const {
+      boost::optional<double> value = getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirDryBulbTemperature, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double CoilHeatingWaterToAirHeatPumpEquationFit_Impl::ratioofRatedHeatingCapacitytoRatedCoolingCapacity() const {
+      boost::optional<double> value =
+        getDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatioofRatedHeatingCapacitytoRatedCoolingCapacity, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
     bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setRatedAirFlowRate(boost::optional<double> ratedAirFlowRate) {
       bool result(false);
       if (ratedAirFlowRate) {
@@ -255,6 +274,24 @@ namespace model {
     void CoilHeatingWaterToAirHeatPumpEquationFit_Impl::resetRatedHeatingCoefficientofPerformance() {
       bool result = setString(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedHeatingCoefficientofPerformance, "");
       OS_ASSERT(result);
+    }
+
+    bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setRatedEnteringWaterTemperature(double ratedEnteringWaterTemperature) {
+      bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringWaterTemperature, ratedEnteringWaterTemperature);
+      return result;
+    }
+
+    bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setRatedEnteringAirDryBulbTemperature(double ratedEnteringAirDryBulbTemperature) {
+      bool result =
+        setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatedEnteringAirDryBulbTemperature, ratedEnteringAirDryBulbTemperature);
+      return result;
+    }
+
+    bool CoilHeatingWaterToAirHeatPumpEquationFit_Impl::setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(
+      double ratioofRatedHeatingCapacitytoRatedCoolingCapacity) {
+      bool result = setDouble(OS_Coil_Heating_WaterToAirHeatPump_EquationFitFields::RatioofRatedHeatingCapacitytoRatedCoolingCapacity,
+                              ratioofRatedHeatingCapacitytoRatedCoolingCapacity);
+      return result;
     }
 
     boost::optional<HVACComponent> CoilHeatingWaterToAirHeatPumpEquationFit_Impl::containingHVACComponent() const {
@@ -354,7 +391,16 @@ namespace model {
     : WaterToAirComponent(CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>());
 
-    bool ok = setHeatingCapacityCurve(heatingCapacityCurve);
+    bool ok = setRatedEnteringWaterTemperature(20);
+    OS_ASSERT(ok);
+
+    ok = setRatedEnteringAirDryBulbTemperature(20);
+    OS_ASSERT(ok);
+
+    ok = setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(1.0);
+    OS_ASSERT(ok);
+
+    ok = setHeatingCapacityCurve(heatingCapacityCurve);
     OS_ASSERT(ok);
 
     ok = setHeatingPowerConsumptionCurve(heatingPowerConsumptionCurve);
@@ -366,6 +412,15 @@ namespace model {
     : WaterToAirComponent(CoilHeatingWaterToAirHeatPumpEquationFit::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>());
 
+    bool ok = setRatedEnteringWaterTemperature(20);
+    OS_ASSERT(ok);
+
+    ok = setRatedEnteringAirDryBulbTemperature(20);
+    OS_ASSERT(ok);
+
+    ok = setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(1.0);
+    OS_ASSERT(ok);
+
     CurveQuadLinear heatingCapacityCurve(model);
     heatingCapacityCurve.setCoefficient1Constant(-5.50102734);
     heatingCapacityCurve.setCoefficient2w(-0.96688754);
@@ -373,7 +428,7 @@ namespace model {
     heatingCapacityCurve.setCoefficient4y(0.031928881);
     heatingCapacityCurve.setCoefficient5z(0.028112522);
 
-    bool ok = setHeatingCapacityCurve(heatingCapacityCurve);
+    ok = setHeatingCapacityCurve(heatingCapacityCurve);
     OS_ASSERT(ok);
 
     CurveQuadLinear heatingPowerConsumptionCurve(model);
@@ -434,6 +489,18 @@ namespace model {
     return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->isRatedHeatingCoefficientofPerformanceDefaulted();
   }
 
+  double CoilHeatingWaterToAirHeatPumpEquationFit::ratedEnteringWaterTemperature() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->ratedEnteringWaterTemperature();
+  }
+
+  double CoilHeatingWaterToAirHeatPumpEquationFit::ratedEnteringAirDryBulbTemperature() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->ratedEnteringAirDryBulbTemperature();
+  }
+
+  double CoilHeatingWaterToAirHeatPumpEquationFit::ratioofRatedHeatingCapacitytoRatedCoolingCapacity() const {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->ratioofRatedHeatingCapacitytoRatedCoolingCapacity();
+  }
+
   bool CoilHeatingWaterToAirHeatPumpEquationFit::setRatedAirFlowRate(OptionalDouble ratedAirFlowRate) {
     return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setRatedAirFlowRate(ratedAirFlowRate);
   }
@@ -489,6 +556,21 @@ namespace model {
 
   void CoilHeatingWaterToAirHeatPumpEquationFit::resetRatedHeatingCoefficientofPerformance() {
     getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->resetRatedHeatingCoefficientofPerformance();
+  }
+
+  bool CoilHeatingWaterToAirHeatPumpEquationFit::setRatedEnteringWaterTemperature(double ratedEnteringWaterTemperature) {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setRatedEnteringWaterTemperature(ratedEnteringWaterTemperature);
+  }
+
+  bool CoilHeatingWaterToAirHeatPumpEquationFit::setRatedEnteringAirDryBulbTemperature(double ratedEnteringAirDryBulbTemperature) {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setRatedEnteringAirDryBulbTemperature(
+      ratedEnteringAirDryBulbTemperature);
+  }
+
+  bool CoilHeatingWaterToAirHeatPumpEquationFit::setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(
+    double ratioofRatedHeatingCapacitytoRatedCoolingCapacity) {
+    return getImpl<detail::CoilHeatingWaterToAirHeatPumpEquationFit_Impl>()->setRatioofRatedHeatingCapacitytoRatedCoolingCapacity(
+      ratioofRatedHeatingCapacitytoRatedCoolingCapacity);
   }
 
   boost::optional<double> CoilHeatingWaterToAirHeatPumpEquationFit::autosizedRatedAirFlowRate() const {

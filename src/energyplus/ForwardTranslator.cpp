@@ -60,7 +60,6 @@
 #include "../model/ConcreteModelObjects.hpp"
 #include "../model/SpaceLoad.hpp"
 #include "../model/SpaceLoad_Impl.hpp"
-#include "../model/SpaceLoadInstance.hpp"
 #include "../model/SpaceType.hpp"
 #include "../model/SpaceInfiltrationDesignFlowRate.hpp"
 #include "../model/SpaceInfiltrationDesignFlowRate_Impl.hpp"
@@ -226,7 +225,7 @@ namespace energyplus {
   //     * m_excludeSpaceTranslation = false: translate and return the IdfObject for Space
   // * If the load is assigned to a spaceType:
   //     * translateAndMapModelObjec(spaceType) (which will return a ZoneList if m_excludeSpaceTranslation is true, SpaceList otherwise)
-  IdfObject ForwardTranslator::getSpaceLoadInstanceParent(model::SpaceLoadInstance& sp, bool allowSpaceType) {
+  IdfObject ForwardTranslator::getSpaceLoadParent(const model::SpaceLoad& sp, bool allowSpaceType) {
 
     OptionalIdfObject relatedIdfObject;
 
@@ -316,48 +315,30 @@ namespace energyplus {
         thermalZone.combineSpaces();
       }
     } else {
-      // We're going to have a bunch of troubles with the SpaceInfiltration objects as they cannot live on a Space in E+, they are on the zone
-      // So we do the same as combineSpaces but only for those infiltration objects: we hard apply them to each individual space, then remove the
-      // spacetype ones to be safe (make 100% sure they won't get translated)
-      // TODO: Technically we could just find a smart way to convert the SpaceInfiltration:DesignFlowRate object to a Flow / Zone and use a ZoneList,
-      // but it gets complicated with little benefit, so not doing it for now
+
+      // The SpaceInfiltration:EffectiveLeakageAreas and FlowCoefficients (unlike the SpaceInfiltration:DesignFlowRate),
+      // and the ElectricEquipment:ITE:AirCooled only accept a Zone or a Space, not a ZoneList nor a SpaceList
+      // So we need to put them on the spaces to avoid problems. But we do not need to hardSize() them (they end up going on a Space).
+      // then remove the spacetype ones to be safe (make 100% sure they won't get translated)
+
       for (auto& sp : model.getConcreteModelObjects<SpaceType>()) {
-        auto spi = sp.spaceInfiltrationDesignFlowRates();
+        // auto spi = sp.spaceInfiltrationDesignFlowRates();
         auto spiel = sp.spaceInfiltrationEffectiveLeakageAreas();
         auto spifc = sp.spaceInfiltrationFlowCoefficients();
-        std::vector<SpaceLoad> infiltrations;
-        infiltrations.reserve(spi.size() + spiel.size() + spifc.size());
-        infiltrations.insert(infiltrations.end(), spi.begin(), spi.end());
-        infiltrations.insert(infiltrations.end(), spiel.begin(), spiel.end());
-        infiltrations.insert(infiltrations.end(), spifc.begin(), spifc.end());
-        for (auto& infil : infiltrations) {
-          for (auto& space : sp.spaces()) {
-            auto infilClone = infil.clone(model).cast<SpaceLoad>();
-            infilClone.setParent(space);
-          }
-          infil.remove();
-        }
+        auto ites = sp.electricEquipmentITEAirCooled();
+        std::vector<SpaceLoad> loads;
+        loads.reserve(spiel.size() + spifc.size() + ites.size());
+        loads.insert(loads.end(), spiel.begin(), spiel.end());
+        loads.insert(loads.end(), spifc.begin(), spifc.end());
+        loads.insert(loads.end(), ites.begin(), ites.end());
 
-        // The ElectricEquipment:ITE:AirCooled only accepts a Zone or a Space, not a ZoneList nor a SpaceList
-        // So similarly, we need to put them on the spaces to avoid problems. But we do not need to hardSize() them
-        for (auto& ite : sp.electricEquipmentITEAirCooled()) {
-          std::string name = ite.nameString();
-          for (auto& space : sp.spaces()) {
-            auto iteClone = ite.clone(model).cast<SpaceLoad>();
-            iteClone.setParent(space);
-          }
-          ite.remove();
-        }
-      }
-
-      // We also convert all SpaceInfiltrationDesignFlowRate objects to Flow/Space (Flow/Zone) because these may not be absolute
-      // That includes the Space ones too.
-      // SpaceInfiltrationEffectiveLeakageAreas and SpaceInfiltrationFlowCoefficients don't need it, they are always absolute
-      for (auto& infil : model.getConcreteModelObjects<SpaceInfiltrationDesignFlowRate>()) {
-        // technically we only need to hardsize if the space it's assigned to is part of a thermalzone with more than one space
-        if (!openstudio::istringEqual("Flow/Space", infil.designFlowRateCalculationMethod())) {
-          if (infil.space() && infil.space()->thermalZone() && infil.space()->thermalZone()->spaces().size() > 1) {
-            infil.hardSize();  // translates to Flow/Zone
+        for (auto& infil : loads) {
+          if (infil.spaceType()) {
+            for (auto& space : sp.spaces()) {
+              auto infilClone = infil.clone(model).cast<SpaceLoad>();
+              infilClone.setParent(space);
+            }
+            infil.remove();
           }
         }
       }
@@ -2870,6 +2851,16 @@ namespace energyplus {
       case openstudio::IddObjectType::OS_SurfaceProperty_SurroundingSurfaces: {
         model::SurfacePropertySurroundingSurfaces obj = modelObject.cast<SurfacePropertySurroundingSurfaces>();
         retVal = translateSurfacePropertySurroundingSurfaces(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_SurfaceProperty_GroundSurfaces: {
+        model::SurfacePropertyGroundSurfaces obj = modelObject.cast<SurfacePropertyGroundSurfaces>();
+        retVal = translateSurfacePropertyGroundSurfaces(obj);
+        break;
+      }
+      case openstudio::IddObjectType::OS_SurfaceProperty_IncidentSolarMultiplier: {
+        model::SurfacePropertyIncidentSolarMultiplier obj = modelObject.cast<SurfacePropertyIncidentSolarMultiplier>();
+        retVal = translateSurfacePropertyIncidentSolarMultiplier(obj);
         break;
       }
       case openstudio::IddObjectType::OS_SubSurface: {

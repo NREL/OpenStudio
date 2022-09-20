@@ -42,6 +42,7 @@
 #include "../../model/SurfacePropertyOtherSideConditionsModel.hpp"
 #include "../../model/SurfacePropertyConvectionCoefficients.hpp"
 #include "../../model/SurfacePropertyLocalEnvironment.hpp"
+#include "../../model/SurfacePropertyIncidentSolarMultiplier.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -66,10 +67,31 @@ namespace energyplus {
 
     idfObject.setString(FenestrationSurface_DetailedFields::Name, modelObject.name().get());
 
+    openstudio::Vector3d offset(0, 0, 0);
+    idfObject.clearExtensibleGroups();
+    for (const Point3d& point : modelObject.vertices()) {
+      IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
+      if (group.empty()) {
+        LOG(Error,
+            "Currently unable to translate " << modelObject.briefDescription() << ", because it has more vertices than allowed by EnergyPlus.");
+        return boost::none;
+      }
+
+      Point3d newPoint = point + offset;
+
+      group.setDouble(0, newPoint.x());
+      group.setDouble(1, newPoint.y());
+      group.setDouble(2, newPoint.z());
+    }
+
+    // Register and emplace into m_map, so that any child object such as translateSurfacePropertyIncidentSolarMultiplier
+    // can retrieve the subsurface namestring and we don't risk duplicating the subsurface when that child also calls
+    // translateAndMapModelObject(subSurface)
+    m_idfObjects.push_back(idfObject);
+    m_map.insert(std::make_pair(modelObject.handle(), idfObject));
+
     std::string subSurfaceType = modelObject.subSurfaceType();
-    if (istringEqual("FixedWindow", subSurfaceType)) {
-      subSurfaceType = "Window";
-    } else if (istringEqual("OperableWindow", subSurfaceType)) {
+    if (istringEqual("FixedWindow", subSurfaceType) || istringEqual("OperableWindow", subSurfaceType)) {
       subSurfaceType = "Window";
     } else if (istringEqual("OverheadDoor", subSurfaceType)) {
       subSurfaceType = "Door";
@@ -140,7 +162,6 @@ namespace energyplus {
     }
 
     boost::optional<WindowPropertyFrameAndDivider> frameAndDivider = modelObject.windowPropertyFrameAndDivider();
-    openstudio::Vector3d offset(0, 0, 0);
     if (frameAndDivider) {
       if (!frameAndDivider->isOutsideRevealDepthDefaulted()) {
         offset = -frameAndDivider->outsideRevealDepth() * modelObject.outwardNormal();
@@ -152,23 +173,9 @@ namespace energyplus {
       idfObject.setDouble(FenestrationSurface_DetailedFields::Multiplier, modelObject.multiplier());
     }
 
-    idfObject.clearExtensibleGroups();
-    for (const Point3d& point : modelObject.vertices()) {
-      IdfExtensibleGroup group = idfObject.pushExtensibleGroup();
-      if (group.empty()) {
-        LOG(Error,
-            "Currently unable to translate " << modelObject.briefDescription() << ", because it has more vertices than allowed by EnergyPlus.");
-        return boost::none;
-      }
-
-      Point3d newPoint = point + offset;
-
-      group.setDouble(0, newPoint.x());
-      group.setDouble(1, newPoint.y());
-      group.setDouble(2, newPoint.z());
+    if (boost::optional<SurfacePropertyIncidentSolarMultiplier> spMult_ = modelObject.surfacePropertyIncidentSolarMultiplier()) {
+      translateAndMapModelObject(spMult_.get());
     }
-
-    m_idfObjects.push_back(idfObject);
 
     return idfObject;
   }

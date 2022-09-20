@@ -73,9 +73,7 @@ namespace energyplus {
     // CondenserAirInletNodeName: stays blank so we get condition from weather file
 
     // CondenserType
-    if ((s = modelObject.condenserType())) {
-      idfObject.setString(Coil_Cooling_DX_MultiSpeedFields::CondenserType, s.get());
-    }
+    idfObject.setString(Coil_Cooling_DX_MultiSpeedFields::CondenserType, modelObject.condenserType());
 
     // SupplyWaterStorageTankName
 
@@ -97,29 +95,21 @@ namespace energyplus {
     }
 
     // Minimum Outdoor Dry-Bulb Temperature for Compressor Operation
-    if ((value = modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation())) {
-      idfObject.setDouble(Coil_Cooling_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation, value.get());
-    }
+    idfObject.setDouble(Coil_Cooling_DX_MultiSpeedFields::MinimumOutdoorDryBulbTemperatureforCompressorOperation,
+                        modelObject.minimumOutdoorDryBulbTemperatureforCompressorOperation());
 
     // CrankcaseHeaterCapacity
-    if ((value = modelObject.crankcaseHeaterCapacity())) {
-      idfObject.setDouble(Coil_Cooling_DX_MultiSpeedFields::CrankcaseHeaterCapacity, value.get());
-    }
+    idfObject.setDouble(Coil_Cooling_DX_MultiSpeedFields::CrankcaseHeaterCapacity, modelObject.crankcaseHeaterCapacity());
 
     // MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation
-    if ((value = modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation())) {
-      idfObject.setDouble(Coil_Cooling_DX_MultiSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation, value.get());
-    }
+    idfObject.setDouble(Coil_Cooling_DX_MultiSpeedFields::MaximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation,
+                        modelObject.maximumOutdoorDryBulbTemperatureforCrankcaseHeaterOperation());
 
     // BasinHeaterCapacity
-    if ((value = modelObject.basinHeaterCapacity())) {
-      idfObject.setDouble(Coil_Cooling_DX_MultiSpeedFields::BasinHeaterCapacity, value.get());
-    }
+    idfObject.setDouble(Coil_Cooling_DX_MultiSpeedFields::BasinHeaterCapacity, modelObject.basinHeaterCapacity());
 
     // BasinHeaterSetpointTemperature
-    if ((value = modelObject.basinHeaterSetpointTemperature())) {
-      idfObject.setDouble(Coil_Cooling_DX_MultiSpeedFields::BasinHeaterSetpointTemperature, value.get());
-    }
+    idfObject.setDouble(Coil_Cooling_DX_MultiSpeedFields::BasinHeaterSetpointTemperature, modelObject.basinHeaterSetpointTemperature());
 
     // BasinHeaterOperatingScheduleName
     if (auto schedule = modelObject.basinHeaterOperatingSchedule()) {
@@ -129,9 +119,7 @@ namespace energyplus {
     }
 
     // FuelType
-    if ((s = modelObject.fuelType())) {
-      idfObject.setString(Coil_Cooling_DX_MultiSpeedFields::FuelType, s.get());
-    }
+    idfObject.setString(Coil_Cooling_DX_MultiSpeedFields::FuelType, modelObject.fuelType());
 
     const auto stages = modelObject.stages();
 
@@ -158,9 +146,7 @@ namespace energyplus {
       }
 
       // SpeedGrossRatedCoolingCOP
-      if ((value = stage.grossRatedCoolingCOP())) {
-        eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedGrossRatedCoolingCOP, value.get());
-      }
+      eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedGrossRatedCoolingCOP, stage.grossRatedCoolingCOP());
 
       // SpeedRatedAirFlowRate
       if (stage.isRatedAirFlowRateAutosized()) {
@@ -170,9 +156,12 @@ namespace energyplus {
       }
 
       // RatedEvaporatorFanPowerPerVolumeFlowRate2017
-      if ((value = stage.ratedEvaporatorFanPowerPerVolumeFlowRate())) {
-        eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedRatedEvaporatorFanPowerPerVolumeFlowRate2017, value.get());
-      }
+      eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedRatedEvaporatorFanPowerPerVolumeFlowRate2017,
+                   stage.ratedEvaporatorFanPowerPerVolumeFlowRate2017());
+
+      // RatedEvaporatorFanPowerPerVolumeFlowRate2023
+      eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedRatedEvaporatorFanPowerPerVolumeFlowRate2023,
+                   stage.ratedEvaporatorFanPowerPerVolumeFlowRate2023());
 
       // SpeedTotalCoolingCapacityFunctionofTemperatureCurveName
       {
@@ -220,24 +209,17 @@ namespace energyplus {
       }
 
       // SpeedRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity
-      if ((value = stage.ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity())) {
-        eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity, value.get());
-      }
+      eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedRatioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity,
+                   stage.ratioofInitialMoistureEvaporationRateandSteadyStateLatentCapacity());
 
       // SpeedMaximumCyclingRate
-      if ((value = stage.maximumCyclingRate())) {
-        eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedMaximumCyclingRate, value.get());
-      }
+      eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedMaximumCyclingRate, stage.maximumCyclingRate());
 
       // SpeedLatentCapacityTimeConstant
-      if ((value = stage.latentCapacityTimeConstant())) {
-        eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedLatentCapacityTimeConstant, value.get());
-      }
+      eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedLatentCapacityTimeConstant, stage.latentCapacityTimeConstant());
 
       // SpeedRatedWasteHeatFractionofPowerInput
-      if ((value = stage.ratedWasteHeatFractionofPowerInput())) {
-        eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedRatedWasteHeatFractionofPowerInput, value.get());
-      }
+      eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedRatedWasteHeatFractionofPowerInput, stage.ratedWasteHeatFractionofPowerInput());
 
       // SpeedWasteHeatFunctionofTemperatureCurveName
       {
@@ -248,9 +230,7 @@ namespace energyplus {
       }
 
       // SpeedEvaporativeCondenserEffectiveness
-      if ((value = stage.evaporativeCondenserEffectiveness())) {
-        eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedEvaporativeCondenserEffectiveness, value.get());
-      }
+      eg.setDouble(Coil_Cooling_DX_MultiSpeedExtensibleFields::SpeedEvaporativeCondenserEffectiveness, stage.evaporativeCondenserEffectiveness());
 
       // SpeedEvaporativeCondenserAirFlowRate
       if (stage.isEvaporativeCondenserAirFlowRateAutosized()) {

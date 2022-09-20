@@ -375,7 +375,7 @@ bool copyDirectory(const path& source, const path& destination) {
   for (const auto& file : openstudio::filesystem::recursive_directory_files(source)) {
     try {
       openstudio::filesystem::create_directories((destination / file).parent_path());
-      openstudio::filesystem::copy_file(source / file, destination / file);
+      openstudio::filesystem::copy_file(source / file, destination / file, openstudio::filesystem::copy_option::overwrite_if_exists);
     } catch (const std::exception&) {
       return false;
     }

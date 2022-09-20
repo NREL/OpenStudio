@@ -388,6 +388,8 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideCoefficients.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertyOtherSideConditionsModel.cpp
   ForwardTranslator/ForwardTranslateSurfacePropertySurroundingSurfaces.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyGroundSurfaces.cpp
+  ForwardTranslator/ForwardTranslateSurfacePropertyIncidentSolarMultiplier.cpp
   ForwardTranslator/ForwardTranslateSwimmingPoolIndoor.cpp
   ForwardTranslator/ForwardTranslateTableMultiVariableLookup.cpp
   ForwardTranslator/ForwardTranslateTableLookup.cpp
@@ -588,6 +590,8 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateSurfacePropertyExposedFoundationPerimeter.cpp
   ReverseTranslator/ReverseTranslateSurfacePropertyLocalEnvironment.cpp
   ReverseTranslator/ReverseTranslateSurfacePropertySurroundingSurfaces.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertyGroundSurfaces.cpp
+  ReverseTranslator/ReverseTranslateSurfacePropertyIncidentSolarMultiplier.cpp
   ReverseTranslator/ReverseTranslateSwimmingPoolIndoor.cpp
   ReverseTranslator/ReverseTranslateTableLookup.cpp
   ReverseTranslator/ReverseTranslateTableIndependentVariable.cpp
@@ -761,6 +765,8 @@ set(${target_name}_test_src
   Test/SurfacePropertyConvectionCoefficients_GTest.cpp
   Test/SurfacePropertyLocalEnvironment_GTest.cpp
   Test/SurfacePropertySurroundingSurfaces_GTest.cpp
+  Test/SurfacePropertyGroundSurfaces_GTest.cpp
+  Test/SurfacePropertyIncidentSolarMultiplier_GTest.cpp
   Test/SwimmingPoolIndoor_GTest.cpp
   Test/TableMultiVariableLookup_GTest.cpp
   Test/TableLookup_GTest.cpp
@@ -780,6 +786,7 @@ set(${target_name}_test_src
   Test/ZoneHVACPackagedTerminalHeatPump_GTest.cpp
   Test/ZoneHVACTerminalUnitVariableRefrigerantFlow_GTest.cpp
   Test/ZoneHVACUnitHeater_GTest.cpp
+  Test/ZoneHVACWaterToAirHeatPump_GTest.cpp
   Test/ZonePropertyUserViewFactorsBySurfaceName_GTest.cpp
   Test/ZoneVentilationWindandStackOpenArea_GTest.cpp
 )

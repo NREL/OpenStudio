@@ -119,8 +119,14 @@ namespace model {
       return result;
     }
 
-    double CoilCoolingDXMultiSpeedStageData_Impl::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate, true);
+    double CoilCoolingDXMultiSpeedStageData_Impl::ratedEvaporatorFanPowerPerVolumeFlowRate2017() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    double CoilCoolingDXMultiSpeedStageData_Impl::ratedEvaporatorFanPowerPerVolumeFlowRate2023() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023, true);
       OS_ASSERT(value);
       return value.get();
     }
@@ -282,9 +288,15 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool CoilCoolingDXMultiSpeedStageData_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
-      bool result =
-        setDouble(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate, ratedEvaporatorFanPowerPerVolumeFlowRate);
+    bool CoilCoolingDXMultiSpeedStageData_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017) {
+      bool result = setDouble(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017,
+                              ratedEvaporatorFanPowerPerVolumeFlowRate2017);
+      return result;
+    }
+
+    bool CoilCoolingDXMultiSpeedStageData_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedEvaporatorFanPowerPerVolumeFlowRate2023) {
+      bool result = setDouble(OS_Coil_Cooling_DX_MultiSpeed_StageDataFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023,
+                              ratedEvaporatorFanPowerPerVolumeFlowRate2023);
       return result;
     }
 
@@ -643,7 +655,9 @@ namespace model {
     OS_ASSERT(ok);
     autosizeEvaporativeCondenserAirFlowRate();
     autosizeRatedEvaporativeCondenserPumpPowerConsumption();
-    ok = setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
+    ok = setRatedEvaporatorFanPowerPerVolumeFlowRate2017(773.3);
+    OS_ASSERT(ok);
+    ok = setRatedEvaporatorFanPowerPerVolumeFlowRate2023(934.4);
     OS_ASSERT(ok);
     ok = setTotalCoolingCapacityFunctionofTemperatureCurve(coolingCapacityFunctionofTemperature);
     OS_ASSERT(ok);
@@ -688,7 +702,9 @@ namespace model {
     OS_ASSERT(ok);
     autosizeEvaporativeCondenserAirFlowRate();
     autosizeRatedEvaporativeCondenserPumpPowerConsumption();
-    ok = setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
+    ok = setRatedEvaporatorFanPowerPerVolumeFlowRate2017(773.3);
+    OS_ASSERT(ok);
+    ok = setRatedEvaporatorFanPowerPerVolumeFlowRate2023(934.4);
     OS_ASSERT(ok);
     ok = setTotalCoolingCapacityFunctionofTemperatureCurve(coolingCapacityFunctionofTemperature);
     OS_ASSERT(ok);
@@ -737,7 +753,17 @@ namespace model {
   }
 
   double CoilCoolingDXMultiSpeedStageData::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
-    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate();
+    LOG(Warn, "As of 3.5.0, ratedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use ratedEvaporatorFanPowerPerVolumeFlowRate2017 instead. It "
+              "will be removed within three releases.");
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
+  }
+
+  double CoilCoolingDXMultiSpeedStageData::ratedEvaporatorFanPowerPerVolumeFlowRate2017() const {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
+  }
+
+  double CoilCoolingDXMultiSpeedStageData::ratedEvaporatorFanPowerPerVolumeFlowRate2023() const {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2023();
   }
 
   Curve CoilCoolingDXMultiSpeedStageData::totalCoolingCapacityFunctionofTemperatureCurve() const {
@@ -833,8 +859,20 @@ namespace model {
   }
 
   bool CoilCoolingDXMultiSpeedStageData::setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate) {
-    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate(
+    LOG(Warn, "As of 3.5.0, setRatedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead. "
+              "It will be removed within three releases.");
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(
       ratedEvaporatorFanPowerPerVolumeFlowRate);
+  }
+
+  bool CoilCoolingDXMultiSpeedStageData::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017) {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(
+      ratedEvaporatorFanPowerPerVolumeFlowRate2017);
+  }
+
+  bool CoilCoolingDXMultiSpeedStageData::setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedEvaporatorFanPowerPerVolumeFlowRate2023) {
+    return getImpl<detail::CoilCoolingDXMultiSpeedStageData_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2023(
+      ratedEvaporatorFanPowerPerVolumeFlowRate2023);
   }
 
   bool CoilCoolingDXMultiSpeedStageData::setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve) {

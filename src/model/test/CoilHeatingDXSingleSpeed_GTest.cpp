@@ -138,3 +138,18 @@ TEST_F(ModelFixture, CoilHeatingDXSingleSpeed_addToNode) {
   EXPECT_TRUE(testObjectClone.addToNode(supplyOutletNode));
   EXPECT_EQ((unsigned)7, airLoop.supplyComponents().size());
 }
+
+TEST_F(ModelFixture, CoilHeatingDXSingleSpeed_2017and2023) {
+  Model model;
+
+  CoilHeatingDXSingleSpeed speed(model);
+
+  EXPECT_EQ(773.3, speed.ratedSupplyFanPowerPerVolumeFlowRate2017());
+  EXPECT_EQ(934.4, speed.ratedSupplyFanPowerPerVolumeFlowRate2023());
+
+  EXPECT_TRUE(speed.setRatedSupplyFanPowerPerVolumeFlowRate2017(8.0));
+  EXPECT_TRUE(speed.setRatedSupplyFanPowerPerVolumeFlowRate2023(9.0));
+
+  EXPECT_EQ(8.0, speed.ratedSupplyFanPowerPerVolumeFlowRate2017());
+  EXPECT_EQ(9.0, speed.ratedSupplyFanPowerPerVolumeFlowRate2023());
+}

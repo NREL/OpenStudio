@@ -1,9 +1,0 @@
-if "%WindowsSDKVersion%"== "" (
-  call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\VC\Auxiliary\Build\vcvarsall.bat" amd64
-)
-if "%WindowsSDKVersion%"== "" (
-  echo "Must install Windows SDK version 10 or higher"
-  exit
-)
-
-call .\configure.bat -platform win32-msvc -debug-and-release -opensource -static -mp -openssl-linked OPENSSL_LIBS="-llibcrypto -llibssl" -I "${OPENSSL_ROOT_DIR}/include" -L "${OPENSSL_ROOT_DIR}/lib/" -opengl dynamic -no-ssse3 -sql-sqlite -plugin-sql-sqlite -qt-pcre -qt-libpng -qt-libjpeg -qt-freetype -qt-harfbuzz -skip enginio -skip qtconnectivity -skip qtlocation -skip qtmultimedia -skip qtpurchasing -skip qtsensors -skip qtwayland  -no-compile-examples -nomake examples -nomake tests -nomake tools -confirm-license -prefix "${CMAKE_BINARY_DIR}/Qt-prefix/src/Qt-static-install" 
