@@ -171,6 +171,10 @@ namespace model {
       return result;
     }
 
+    unsigned CoilHeatingElectricMultiStage_Impl::numberOfStages() const {
+      return numExtensibleGroups();
+    }
+
     std::vector<CoilHeatingElectricMultiStageStageData> CoilHeatingElectricMultiStage_Impl::stages() const {
       std::vector<CoilHeatingElectricMultiStageStageData> result;
       for (const auto& group : extensibleGroups()) {

@@ -53,6 +53,8 @@
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/Coil_Heating_Electric_MultiStage_FieldEnums.hxx>
+#include <utilities/idd/AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed_FieldEnums.hxx>
+#include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
@@ -68,11 +70,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage_Heatin
     CoilHeatingElectricMultiStage h(m);
     h.setName("HP HC");
     FanConstantVolume f(m);
-    fan.setName("HP FanConstantVol");
+    f.setName("HP FanConstantVol");
     CoilHeatingElectric s(m);
     s.setName("HP SupHC");
 
-    auto alwaysOn = model.alwaysOnDiscreteSchedule();
+    auto alwaysOn = m.alwaysOnDiscreteSchedule();
     alwaysOn.setName("HP HC AvailSch");
     h.setAvailabilitySchedule(alwaysOn);
 
@@ -129,11 +131,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage_Heatin
     CoilHeatingElectricMultiStage h(m);
     h.setName("HP HC");
     FanConstantVolume f(m);
-    fan.setName("HP FanConstantVol");
+    f.setName("HP FanConstantVol");
     CoilHeatingElectric s(m);
     s.setName("HP SupHC");
 
-    auto alwaysOn = model.alwaysOnDiscreteSchedule();
+    auto alwaysOn = m.alwaysOnDiscreteSchedule();
     alwaysOn.setName("HP HC AvailSch");
     h.setAvailabilitySchedule(alwaysOn);
 
@@ -194,11 +196,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage_SuppHe
   CoilHeatingDXSingleSpeed h(m);
   h.setName("HP HC");
   FanConstantVolume f(m);
-  fan.setName("HP FanConstantVol");
+  f.setName("HP FanConstantVol");
   CoilHeatingElectricMultiStage s(m);
   s.setName("HP SupHC");
 
-  auto alwaysOn = model.alwaysOnDiscreteSchedule();
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
   alwaysOn.setName("HP SupHC AvailSch");
   s.setAvailabilitySchedule(alwaysOn);
 

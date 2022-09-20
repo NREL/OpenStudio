@@ -45,6 +45,8 @@
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
 #include "../../model/CoilHeatingElectric.hpp"
 #include "../../model/FanConstantVolume.hpp"
+#include "../../model/CurveQuadratic.hpp"
+#include "../../model/CurveQuadratic_Impl.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -52,6 +54,8 @@
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
 #include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
+#include <utilities/idd/AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed_FieldEnums.hxx>
+#include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::energyplus;
@@ -67,11 +71,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
     CoilHeatingGasMultiStage h(m);
     h.setName("HP HC");
     FanConstantVolume f(m);
-    fan.setName("HP FanConstantVol");
+    f.setName("HP FanConstantVol");
     CoilHeatingElectric s(m);
     s.setName("HP SupHC");
 
-    auto alwaysOn = model.alwaysOnDiscreteSchedule();
+    auto alwaysOn = m.alwaysOnDiscreteSchedule();
     alwaysOn.setName("HP HC AvailSch");
     h.setAvailabilitySchedule(alwaysOn);
     CurveQuadratic curve(m);
@@ -80,7 +84,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
     h.setParasiticGasLoad(10.0);
 
     CoilHeatingGasMultiStageStageData stageData(m);
-    stageData.setGasEfficiency(2.5);
+    stageData.setGasBurnerEfficiency(2.5);
     stageData.setNominalCapacity(2000.0);
     stageData.setParasiticElectricLoad(15.0);
     h.addStage(stageData);
@@ -138,7 +142,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
     FanConstantVolume f(m);
     fan.setName("HP FanConstantVol");
 
-    auto alwaysOn = model.alwaysOnDiscreteSchedule();
+    auto alwaysOn = m.alwaysOnDiscreteSchedule();
     alwaysOn.setName("HP HC AvailSch");
     h.setAvailabilitySchedule(alwaysOn);
     CurveQuadratic curve(m);
@@ -147,7 +151,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
     h.setParasiticGasLoad(10.0);
 
     CoilHeatingGasMultiStageStageData stageData(m);
-    stageData.setGasEfficiency(2.5);
+    stageData.setGasBurnerEfficiency(2.5);
     stageData.setNominalCapacity(2000.0);
     stageData.setParasiticElectricLoad(15.0);
     h.addStage(stageData);
