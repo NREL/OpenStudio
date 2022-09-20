@@ -150,8 +150,23 @@ namespace model {
       return false;
     }
 
-    boost::optional<Schedule> CoilHeatingGasMultiStage_Impl::availabilitySchedule() const {
+    boost::optional<Schedule> CoilHeatingGasMultiStage_Impl::optionalAvailabilitySchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule);
+    }
+
+    Schedule CoilHeatingGasMultiStage_Impl::availabilitySchedule() const {
+      boost::optional<Schedule> value = optionalAvailabilitySchedule();
+      if (!value) {
+        // it is an error if we get here, however we don't want to crash
+        // so we hook up to global always on schedule
+        LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
+        value = this->model().alwaysOnDiscreteSchedule();
+        OS_ASSERT(value);
+        const_cast<CoilHeatingGasMultiStage_Impl*>(this)->setAvailabilitySchedule(*value);
+        value = optionalAvailabilitySchedule();
+      }
+      OS_ASSERT(value);
+      return value.get();
     }
 
     boost::optional<Curve> CoilHeatingGasMultiStage_Impl::partLoadFractionCorrelationCurve() const {
@@ -166,11 +181,6 @@ namespace model {
       bool result =
         setSchedule(OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule, "CoilHeatingGasMultiStage", "Availability Schedule", schedule);
       return result;
-    }
-
-    void CoilHeatingGasMultiStage_Impl::resetAvailabilitySchedule() {
-      bool result = setString(OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule, "");
-      OS_ASSERT(result);
     }
 
     bool CoilHeatingGasMultiStage_Impl::setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& curve) {

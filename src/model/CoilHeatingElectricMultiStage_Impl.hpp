@@ -82,15 +82,13 @@ namespace model {
       /** @name Getters */
       //@{
 
-      boost::optional<Schedule> availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
       //@}
       /** @name Setters */
       //@{
 
       bool setAvailabilitySchedule(Schedule& schedule);
-
-      void resetAvailabilitySchedule();
 
       //@}
       /** @name Other */
@@ -112,6 +110,8 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilHeatingElectricMultiStage");
+      
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
     };
 
   }  // namespace detail

@@ -83,7 +83,7 @@ namespace model {
       /** @name Getters */
       //@{
 
-      boost::optional<Schedule> availabilitySchedule() const;
+      Schedule availabilitySchedule() const;
 
       boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
@@ -94,8 +94,6 @@ namespace model {
       //@{
 
       bool setAvailabilitySchedule(Schedule& schedule);
-
-      void resetAvailabilitySchedule();
 
       bool setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& curve);
 
@@ -125,6 +123,8 @@ namespace model {
      protected:
      private:
       REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStage");
+      
+      boost::optional<Schedule> optionalAvailabilitySchedule() const;
     };
 
   }  // namespace detail

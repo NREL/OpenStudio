@@ -65,15 +65,13 @@ namespace model {
     /** @name Getters */
     //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
     //@}
     /** @name Setters */
     //@{
 
     bool setAvailabilitySchedule(Schedule& schedule);
-
-    void resetAvailabilitySchedule();
 
     //@}
     /** @name Other */

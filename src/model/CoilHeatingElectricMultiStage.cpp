@@ -146,19 +146,29 @@ namespace model {
       return false;
     }
 
-    boost::optional<Schedule> CoilHeatingElectricMultiStage_Impl::availabilitySchedule() const {
+    boost::optional<Schedule> CoilHeatingElectricMultiStage_Impl::optionalAvailabilitySchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule);
+    }
+
+    Schedule CoilHeatingElectricMultiStage_Impl::availabilitySchedule() const {
+      boost::optional<Schedule> value = optionalAvailabilitySchedule();
+      if (!value) {
+        // it is an error if we get here, however we don't want to crash
+        // so we hook up to global always on schedule
+        LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
+        value = this->model().alwaysOnDiscreteSchedule();
+        OS_ASSERT(value);
+        const_cast<CoilHeatingElectricMultiStage_Impl*>(this)->setAvailabilitySchedule(*value);
+        value = optionalAvailabilitySchedule();
+      }
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool CoilHeatingElectricMultiStage_Impl::setAvailabilitySchedule(Schedule& schedule) {
       bool result = setSchedule(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule, "CoilHeatingElectricMultiStage",
                                 "Availability Schedule", schedule);
       return result;
-    }
-
-    void CoilHeatingElectricMultiStage_Impl::resetAvailabilitySchedule() {
-      bool result = setString(OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule, "");
-      OS_ASSERT(result);
     }
 
     std::vector<CoilHeatingElectricMultiStageStageData> CoilHeatingElectricMultiStage_Impl::stages() const {

@@ -66,7 +66,7 @@ namespace model {
     /** @name Getters */
     //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
     boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
@@ -77,8 +77,6 @@ namespace model {
     //@{
 
     bool setAvailabilitySchedule(Schedule& schedule);
-
-    void resetAvailabilitySchedule();
 
     bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
