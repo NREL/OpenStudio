@@ -17787,7 +17787,7 @@ OS:Coil:Heating:DX:SingleSpeed,
        \required-field
   N5 , \field Rated Supply Fan Power Per Volume Flow Rate 2023
        \note Enter the supply fan power per air volume flow rate at the rated test conditions.
-       \note as defined in the 2017 version of ANSI/AHRI Standard 210/240. 
+       \note as defined in the 2017 version of ANSI/AHRI Standard 210/240.
        \note The test conditions vary external static pressure based on heating capacity.
        \note This value is only used to calculate Heating Seasonal Performance Factor(HSPF).
        \note This value is not used for modeling the supply (condenser) fan during simulations.
@@ -25763,47 +25763,145 @@ OS:Sizing:Zone,
        \type real
        \minimum 0
        \default 0.3
-  A6, \field Account for Dedicated Outdoor Air System
-      \note account for effect of dedicated outdoor air system supplying air directly to the zone
-      \type choice
-      \key Yes
-      \key No
+  A6,  \field Account for Dedicated Outdoor Air System
+       \note account for effect of dedicated outdoor air system supplying air directly to the zone
+       \type choice
+       \key Yes
+       \key No
        \required-field
-  A7, \field Dedicated Outdoor Air System Control Strategy
-      \note 1)supply neutral ventilation air; 2)supply neutral dehumidified and reheated
-      \note ventilation air; 3)supply cold ventilation air
-      \type choice
-      \key NeutralSupplyAir
-      \key NeutralDehumidifiedSupplyAir
-      \key ColdSupplyAir
+  A7,  \field Dedicated Outdoor Air System Control Strategy
+       \note 1)supply neutral ventilation air; 2)supply neutral dehumidified and reheated
+       \note ventilation air; 3)supply cold ventilation air
+       \type choice
+       \key NeutralSupplyAir
+       \key NeutralDehumidifiedSupplyAir
+       \key ColdSupplyAir
        \required-field
-  N17,\field Dedicated Outdoor Air Low Setpoint Temperature for Design
-      \type real
-      \units C
-      \autosizable
+  N17, \field Dedicated Outdoor Air Low Setpoint Temperature for Design
+       \type real
+       \units C
+       \autosizable
        \required-field
-  N18,\field Dedicated Outdoor Air High Setpoint Temperature for Design
-      \type real
-      \units C
-      \autosizable
+  N18, \field Dedicated Outdoor Air High Setpoint Temperature for Design
+       \type real
+       \units C
+       \autosizable
        \required-field
-  N19, \field Design Zone Air Distribution Effectiveness in Cooling Mode
+  A8,  \field Zone Load Sizing Method
+       \note Specifies the basis for sizing the zone supply air flow rate.
+       \note Zone latent loads will not be used during sizing only when
+       \note Zone Load Sizing Method = Sensible Load Only No Latent Load.
+       \note For this case the zone humidity level will float according to
+       \note the fields Cooling and Heating Design Supply Air Humidity Ratio.
+       \note For all other choices the zone humidity level will be controlled.
+       \note Sensible Load will use zone sensible air flow rate for zone
+       \note component sizing. Latent loads will also be reported during sizing.
+       \note Latent Load will use zone latent air flow rate for zone
+       \note component sizing. Sensible loads will also be reported during sizing.
+       \note Sensible and Latent Load will use the larger of sensible and
+       \note latent load to choose air flow rate for zone component sizing.
+       \note Sensible Load Only No Latent Load or leaving this field blank
+       \note will disable zone latent sizing and reporting. Latent loads will
+       \note not be reported during sizing (reported as 0's).
+       \type choice
+       \key Sensible Load
+       \key Latent Load
+       \key Sensible And Latent Load
+       \key Sensible Load Only No Latent Load
+       \required-field
+  A9,  \field Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+       \note Use SupplyAirHumidityRatio to enter the humidity ratio when zone dehumidification
+       \note is required. The supply air humidity ratio should be less than the zone humidity
+       \note ratio at the zone thermostat and humidistat set point condition.
+       \note Use HumidityRatioDifference to enter the difference in humidity ratio from the
+       \note zone thermostat and humidistat set point condition.
+       \type choice
+       \key SupplyAirHumidityRatio
+       \key HumidityRatioDifference
+       \required-field
+  N19, \field Zone Dehumidification Design Supply Air Humidity Ratio
+       \note Zone Dehumidification Design Supply Air Humidity Ratio is only used when Zone Latent
+       \note Cooling Design Supply Air Humidity Ratio Input Method = SupplyAirHumidityRatio.
+       \note This input must be less than the zone humidity ratio at the
+       \note humidistat set point so that dehumidification can occur.
+       \minimum> 0.0
+       \type real
+       \units kgWater/kgDryAir
+  N20, \field Zone Cooling Design Supply Air Humidity Ratio Difference
+       \note Zone Dehumidification Design Supply Air Humidity Ratio Difference is only used when
+       \note Zone Latent Cooling Design Supply Air Humidity Ratio Input Method = HumidityRatioDifference.
+       \note This input is a positive value and defines the difference between the zone humidity
+       \note ratio at the thermostat and humidistat set point condition and the supply air
+       \note humidity ratio entering the zone.
+       \minimum> 0.0
+       \type real
+       \required-field
+       \units kgWater/kgDryAir
+  A10, \field Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+       \note Use SupplyAirHumidityRatio to enter the humidity ratio when zone humidification
+       \note is required. The supply air humidity ratio should be greater than the zone humidity
+       \note ratio at the zone thermostat and humidistat set point condition.
+       \note Use HumidityRatioDifference to enter the difference in humidity ratio from the
+       \note zone thermostat and humidistat set point condition.
+       \type choice
+       \key SupplyAirHumidityRatio
+       \key HumidityRatioDifference
+       \required-field
+  N21, \field Zone Humidification Design Supply Air Humidity Ratio
+       \note Zone Humidification Design Supply Air Humidity Ratio is only used when Zone Latent
+       \note Heating Design Supply Air Humidity Ratio Input Method = SupplyAirHumidityRatio.
+       \note This input must be greater than the zone humidity ratio at the
+       \note humidistat set point so that humidification can occur.
+       \minimum> 0.0
+       \type real
+       \units kgWater/kgDryAir
+  N22, \field Zone Humidification Design Supply Air Humidity Ratio Difference
+       \note Zone Humidification Design Supply Air Humidity Ratio is only used when Zone Latent
+       \note Heating Design Supply Air Humidity Ratio Input Method = HumidityRatioDifference.
+       \note This input is a positive value and defines the difference between the zone humidity
+       \note ratio at the thermostat and humidistat set point condition and the supply air
+       \note humidity ratio entering the zone.
+       \minimum 0.0
+       \type real
+       \required-field
+       \units kgWater/kgDryAir
+  A11, \field Zone Humidistat Dehumidification Set Point Schedule Name
+       \note Enter the zone relative humidity schedule used for zone latent
+       \note cooling calculations.
+       \note A zone humidistat will take priority over this input.
+       \note This field is not used if Zone Load Sizing Method = Sensible Load
+       \note Only No Latent Load or a zone humidistat is present.
+       \note A default of 50.0 will be used if no schedule is provided and
+       \note no humidistat is associated with this zone.
+       \type object-list
+       \object-list ScheduleNames
+  A12, \field Zone Humidistat Humidification Set Point Schedule Name
+       \note Enter the zone relative humidity schedule used for zone latent
+       \note heating calculations.
+       \note A zone humidistat will take priority over this input.
+       \note This field is not used if Zone Load Sizing Method = Sensible Load
+       \note Only No Latent Load or a zone humidistat is present.
+       \note A default of 50.0 will be used if no schedule is provided and
+       \note no humidistat is associated with this zone.
+       \type object-list
+       \object-list ScheduleNames
+  N23, \field Design Zone Air Distribution Effectiveness in Cooling Mode
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \minimum> 0
        \default 1.0
-  N20, \field Design Zone Air Distribution Effectiveness in Heating Mode
+  N24, \field Design Zone Air Distribution Effectiveness in Heating Mode
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \minimum> 0
        \default 1.0
-  N21,\field Design Zone Secondary Recirculation Fraction
+  N25, \field Design Zone Secondary Recirculation Fraction
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \default 0.0
        \minimum 0.0
        \units dimensionless
-  N22;\field Design Minimum Zone Ventilation Efficiency
+  N26; \field Design Minimum Zone Ventilation Efficiency
        \note this field is from the DesignSpecification:ZoneAirDistribution
        \type real
        \default 0.0

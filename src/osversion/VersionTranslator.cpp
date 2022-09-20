@@ -7274,6 +7274,38 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if (iddname == "OS:Sizing:Zone") {
+
+        // 9 Fields have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Zone Load Sizing Method * 26
+        // * Zone Latent Cooling Design Supply Air Humidity Ratio Input Method * 27
+        // * Zone Dehumidification Design Supply Air Humidity Ratio * 28
+        // * Zone Cooling Design Supply Air Humidity Ratio Difference * 29
+        // * Zone Latent Heating Design Supply Air Humidity Ratio Input Method * 30
+        // * Zone Humidification Design Supply Air Humidity Ratio * 31
+        // * Zone Humidification Design Supply Air Humidity Ratio Difference * 32
+        // * Zone Humidistat Dehumidification Set Point Schedule Name * 33
+        // * Zone Humidistat Humidification Set Point Schedule Name * 34
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          auto value = object.getString(i);
+          if (value) {
+            if (i < 26) {
+              // Handle
+              newObject.setString(i, value.get());
+            } else {
+              // Every other is shifted by 9 fields
+              newObject.setString(i + 9, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
         // No-op
       } else {
         ss << object;
