@@ -59,8 +59,9 @@ namespace energyplus {
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Heating_Gas_MultiStage, modelObject);
 
     // AvailabilityScheduleName
-    if (auto schedule = modelObject.availabilitySchedule()) {
-      if (auto _schedule = translateAndMapModelObject(schedule.get())) {
+    {
+      auto schedule = modelObject.availabilitySchedule();
+      if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule)) {
         idfObject.setString(Coil_Heating_Gas_MultiStageFields::AvailabilityScheduleName, _schedule->name().get());
       }
     }
