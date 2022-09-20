@@ -63,11 +63,27 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
     Model m;
 
     CoilCoolingDXMultiSpeed c(m);
+    c.setName("HP CC");
     CoilHeatingGasMultiStage h(m);
-    CoilHeatingGasMultiStageStageData stageData(m);
-    h.addStage(stageData);
+    h.setName("HP HC");
     FanConstantVolume f(m);
+    fan.setName("HP FanConstantVol");
     CoilHeatingElectric s(m);
+    s.setName("HP SupHC");
+
+    auto alwaysOn = model.alwaysOnDiscreteSchedule();
+    alwaysOn.setName("HP HC AvailSch");
+    h.setAvailabilitySchedule(alwaysOn);
+    CurveQuadratic curve(m);
+    curve.setName("HP HC Curve");
+    h.setPartLoadFractionCorrelationCurve(curve);
+    h.setParasiticGasLoad(10.0);
+
+    CoilHeatingGasMultiStageStageData stageData(m);
+    stageData.setGasEfficiency(2.5);
+    stageData.setNominalCapacity(2000.0);
+    stageData.setParasiticElectricLoad(15.0);
+    h.addStage(stageData);
 
     AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed unitary(m, f, h, c, s);
 
@@ -82,14 +98,22 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
     EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed).size());
     EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Heating_Gas_MultiStage).size());
 
+    IdfObject idf_hp = workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeed)[0];
     IdfObject idf_coil = workspace.getObjectsByType(IddObjectType::Coil_Heating_Gas_MultiStage)[0];
 
-    EXPECT_EQ("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::AvailabilityScheduleName, false).get());
+    EXPECT_EQ("HP FanConstantVol", idf_hp.getString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplyAirFanName, false).get());
+    EXPECT_EQ("Coil:Heating:Gas:MultiStage",
+              idf_unitary.getString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingCoilObjectType, false).get());
+    EXPECT_EQ("HP HC", idf_hp.getString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::HeatingCoilName, false).get());
+    EXPECT_EQ("HP CC", idf_hp.getString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::CoolingCoilName, false).get());
+    EXPECT_EQ("HP SupHC", idf_hp.getString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoilName, false).get());
+
+    EXPECT_EQ("HP HC AvailSch", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::AvailabilityScheduleName, false).get());
     EXPECT_NE("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::AirInletNodeName, false).get());
     EXPECT_NE("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::AirOutletNodeName, false).get());
-    EXPECT_EQ("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::TemperatureSetpointNodeName, false).get());
-    EXPECT_EQ("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurveName, false).get());
-    EXPECT_EQ("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, false).get());
+    EXPECT_TRUE(idf_coil.isEmpty(Coil_Heating_Gas_MultiStageFields::TemperatureSetpointNodeName));
+    EXPECT_EQ("HP HC Curve", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurveName, false).get());
+    EXPECT_EQ(10.0, idf_coil.getDouble(Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, false).get());
     EXPECT_EQ(1, idf_coil.getInt(Coil_Heating_Gas_MultiStageFields::NumberofStages, false).get());
     ASSERT_EQ(1, idf_coil.numExtensibleGroups());
     auto egs = idf_coil.extensibleGroups();
@@ -98,15 +122,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
       const IdfExtensibleGroup& eg = egs[i];
       const auto stage = stages[i];
 
-      EXPECT_EQ(stage.gasBurnerEfficiency(), eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageGasBurnerEfficiency).get());
-
-      if (stage.isNominalCapacityAutosized()) {
-        EXPECT_TRUE(openstudio::istringEqual("Autosize", eg.getString(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity).get()));
-      } else {
-        EXPECT_EQ(stage.nominalCapacity().get(), eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity).get());
-      }
-
-      EXPECT_EQ(stage.parasiticElectricLoad(), eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageParasiticElectricLoad).get());
+      EXPECT_EQ(2.5, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageGasBurnerEfficiency).get());
+      EXPECT_EQ(2000.0, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity).get());
+      EXPECT_EQ(15.0, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageParasiticElectricLoad).get());
     }
   }
 
@@ -114,10 +132,25 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
     Model m;
 
     CoilCoolingDXSingleSpeed c(m);
+    c.setName("HP CC");
     CoilHeatingGasMultiStage h(m);
-    CoilHeatingGasMultiStageStageData stageData(m);
-    h.addStage(stageData);
+    h.setName("HP HC");
     FanConstantVolume f(m);
+    fan.setName("HP FanConstantVol");
+
+    auto alwaysOn = model.alwaysOnDiscreteSchedule();
+    alwaysOn.setName("HP HC AvailSch");
+    h.setAvailabilitySchedule(alwaysOn);
+    CurveQuadratic curve(m);
+    curve.setName("HP HC Curve");
+    h.setPartLoadFractionCorrelationCurve(curve);
+    h.setParasiticGasLoad(10.0);
+
+    CoilHeatingGasMultiStageStageData stageData(m);
+    stageData.setGasEfficiency(2.5);
+    stageData.setNominalCapacity(2000.0);
+    stageData.setParasiticElectricLoad(15.0);
+    h.addStage(stageData);
 
     AirLoopHVACUnitarySystem unitary(m);
     EXPECT_TRUE(unitary.setCoolingCoil(c));
@@ -135,14 +168,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
     EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
     EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Heating_Gas_MultiStage).size());
 
+    IdfObject idf_unitary = workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem)[0];
     IdfObject idf_coil = workspace.getObjectsByType(IddObjectType::Coil_Heating_Gas_MultiStage)[0];
 
-    EXPECT_EQ("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::AvailabilityScheduleName, false).get());
+    EXPECT_EQ("HP FanConstantVol", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::SupplyFanName, false).get());
+    EXPECT_EQ("Coil:Heating:Gas:MultiStage", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::HeatingCoilObjectType, false).get());
+    EXPECT_EQ("HP HC", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::HeatingCoilName, false).get());
+    EXPECT_EQ("HP CC", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::CoolingCoilName, false).get());
+    EXPECT_TRUE(idf_unitary.isEmpty(AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName));
+
+    EXPECT_EQ("HP HC AvailSch", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::AvailabilityScheduleName, false).get());
     EXPECT_NE("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::AirInletNodeName, false).get());
     EXPECT_NE("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::AirOutletNodeName, false).get());
-    EXPECT_EQ("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::TemperatureSetpointNodeName, false).get());
-    EXPECT_EQ("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurveName, false).get());
-    EXPECT_EQ("", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, false).get());
+    EXPECT_TRUE(idf_coil.isEmpty(Coil_Heating_Gas_MultiStageFields::TemperatureSetpointNodeName));
+    EXPECT_EQ("HP HC Curve", idf_coil.getString(Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurveName, false).get());
+    EXPECT_EQ(10.0, idf_coil.getDouble(Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, false).get());
     EXPECT_EQ(1, idf_coil.getInt(Coil_Heating_Gas_MultiStageFields::NumberofStages, false).get());
     ASSERT_EQ(1, idf_coil.numExtensibleGroups());
     auto egs = idf_coil.extensibleGroups();
@@ -151,15 +191,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingGasMultiStage_HeatingCoil
       const IdfExtensibleGroup& eg = egs[i];
       const auto stage = stages[i];
 
-      EXPECT_EQ(stage.gasBurnerEfficiency(), eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageGasBurnerEfficiency).get());
-
-      if (stage.isNominalCapacityAutosized()) {
-        EXPECT_TRUE(openstudio::istringEqual("Autosize", eg.getString(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity).get()));
-      } else {
-        EXPECT_EQ(stage.nominalCapacity().get(), eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity).get());
-      }
-
-      EXPECT_EQ(stage.parasiticElectricLoad(), eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageParasiticElectricLoad).get());
+      EXPECT_EQ(2.5, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageGasBurnerEfficiency).get());
+      EXPECT_EQ(2000.0, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity).get());
+      EXPECT_EQ(15.0, eg.getDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageParasiticElectricLoad).get());
     }
   }
 }
