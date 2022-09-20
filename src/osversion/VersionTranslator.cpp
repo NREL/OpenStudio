@@ -7083,6 +7083,131 @@ namespace osversion {
           m_new.emplace_back(std::move(varAdded));
         }
 
+      } else if (iddname == "OS:Coil:Heating:DX:SingleSpeed") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Supply Fan Power Per Volume Flow Rate 2023 * 7
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 7) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Rated Supply Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(7, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Cooling:DX:SingleSpeed") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 * 8
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 8) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Rated Supply Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(8, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Heating:DX:MultiSpeed:StageData") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Supply Air Fan Power Per Volume Flow Rate 2023 * 6
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 6) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Rated Supply Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(6, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Cooling:DX:MultiSpeed:StageData") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 * 7
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 7) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Rated Supply Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(7, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+      } else if (iddname == "OS:Coil:Cooling:DX:CurveFit:Speed") {
+
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 * 9
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 9) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Rated Supply Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(9, 934.4);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
         // No-op
       } else {
         ss << object;
