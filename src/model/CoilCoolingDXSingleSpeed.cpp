@@ -934,7 +934,7 @@ namespace model {
     setCrankcaseHeaterCapacity(0.0);
     setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(10.0);
     setBasinHeaterCapacity(0.0);
-    setBasinHeaterSetpointTemperature(10.0);
+    setBasinHeaterSetpointTemperature(2.0);
 
     auto schedule = model.alwaysOnDiscreteSchedule();
     setAvailabilitySchedule(schedule);
@@ -973,7 +973,7 @@ namespace model {
     setCrankcaseHeaterCapacity(0.0);
     setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(10.0);
     setBasinHeaterCapacity(0.0);
-    setBasinHeaterSetpointTemperature(10.0);
+    setBasinHeaterSetpointTemperature(2.0);
   }
 
   CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> p) : StraightComponent(std::move(p)) {}
