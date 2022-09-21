@@ -181,7 +181,7 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
         <h2>Basic HTML</h2>
         <p>Measure Name = {self.name()}<br/>
            Building Name = {model.getBuilding().nameString()}<br/>
-           Floor Area = {model.getBuilding().floorArea():.0f} m^2<br/>
+           Floor Area = {model.getBuilding().floorArea():.0f} m<sup>2</sup><br/>
            Net Site Energy = {sql_file.netSiteEnergy().get():.2f} GJ<br/>
         </p>
       </div>
@@ -210,7 +210,7 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
             <tr>
               <th scope="row">Floor Area</th>
               <td>{model.getBuilding().floorArea():.0f}</td>
-              <td>m^2</td>
+              <td>m<sup>2</sup></td>
             </tr>
             <tr>
               <th scope="row">Net Site Energy</th>

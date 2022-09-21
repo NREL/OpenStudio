@@ -256,11 +256,16 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
     templateClassName = "UtilityMeasureName";
 
   } else if (measureType == MeasureType::ReportingMeasure) {
-    measureTemplate = ":/templates/ReportingMeasure/measure.rb";
-    testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_test.rb";
+    if (measureLanguage == MeasureLanguage::Ruby) {
+      measureTemplate = ":/templates/ReportingMeasure/measure.rb";
+      testTemplate = ":/templates/ReportingMeasure/tests/reporting_measure_test.rb";
+      resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
+    } else if (measureLanguage == MeasureLanguage::Python) {
+      measureTemplate = ":/templates/ReportingMeasure/measure.py";
+      testTemplate = ":/templates/ReportingMeasure/tests/test_reporting_measure.py";
+    }
     testOSM = ":/templates/ReportingMeasure/tests/example_model.osm";
     testEPW = ":/templates/ReportingMeasure/tests/USA_CO_Golden-NREL.724666_TMY3.epw";
-    resourceFile = ":/templates/ReportingMeasure/resources/report.html.in";
     templateClassName = "ReportingMeasureName";
 
     testOSMRelativePath = toPath("tests/example_model.osm");
