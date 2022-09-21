@@ -76,19 +76,18 @@ namespace energyplus {
       idfObject.setString(Coil_Heating_Electric_MultiStageFields::TemperatureSetpointNodeName, node->name().get());
     }
 
+    const auto stages = modelObject.stages();
+
     // NumberofStages
-    {
-      auto num = modelObject.stages().size();
-      idfObject.setInt(Coil_Heating_Electric_MultiStageFields::NumberofStages, num);
+    if (!stages.empty()) {
+      idfObject.setInt(Coil_Heating_Electric_MultiStageFields::NumberofStages, stages.size());
     }
 
-    for (auto stage : modelObject.stages()) {
+    for (const auto& stage : stages) {
       auto eg = idfObject.pushExtensibleGroup();
 
       // Stage1Efficiency
-      if ((value = stage.efficiency())) {
-        eg.setDouble(Coil_Heating_Electric_MultiStageExtensibleFields::StageEfficiency, value.get());
-      }
+      eg.setDouble(Coil_Heating_Electric_MultiStageExtensibleFields::StageEfficiency, stage.efficiency());
 
       // Stage1NominalCapacity
       if (stage.isNominalCapacityAutosized()) {

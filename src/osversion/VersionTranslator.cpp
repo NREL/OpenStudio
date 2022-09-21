@@ -7316,7 +7316,7 @@ namespace osversion {
         IdfObject newObject(iddObject.get());
 
         if (object.isEmpty(2)) {
-           // Add an always on discrete schedule if one does not already exist
+          // Add an always on discrete schedule if one does not already exist
           boost::optional<IdfObject> alwaysOnSchedule;
           for (const IdfObject& object : idf_3_4_0.objects()) {
             if (object.iddObject().name() == "OS:Schedule:Constant") {
@@ -7350,7 +7350,7 @@ namespace osversion {
             m_new.push_back(alwaysOnSchedule.get());
             m_new.push_back(typeLimits);
           }
-          
+
           newObject.setString(2, alwaysOnSchedule->getString(0).get());
         }
 
