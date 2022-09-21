@@ -20,11 +20,14 @@
 
 namespace openstudio {
 
-static constexpr auto importScript = R"(
-import sys
-sys.path.insert(0, '{}')
-import {}
-)";
+void PythonEngine::import(const std::string &importName, const std::string &includePath) {
+  PyObject* sys = PyImport_ImportModule("sys");
+  PyObject* sysPath = PyObject_GetAttrString(sys, "path");
+  PyObject* unicodeIncludePath = PyUnicode_FromString(includePath.c_str());
+  PyList_Append(sysPath, unicodeIncludePath);
+
+  PyImport_ImportModule(importName.c_str());
+}
 
 PythonEngine::PythonEngine(int argc, char *argv[])
     : ScriptEngine(argc, argv), program(Py_DecodeLocale(pythonProgramName, nullptr)) {
@@ -44,10 +47,10 @@ PythonEngine::~PythonEngine() {
 void PythonEngine::importOpenStudio() {
   if (moduleIsRunningFromBuildDirectory()) {
     const auto bindingsDir = getOpenStudioModuleDirectory();
-    exec(fmt::format(importScript, bindingsDir.string(), "openstudiodev"));
+    import("openstudiodev", bindingsDir.string());
   } else {
     const auto bindingsDir = getOpenStudioModuleDirectory() / "../Python";
-    exec(fmt::format(importScript, bindingsDir.string(), "openstudio"));
+    import("openstudio", bindingsDir.string());
   }
 }
 
