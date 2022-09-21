@@ -9,6 +9,7 @@
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
 
+#include <PythonConfig.hxx>
 #include <Python.h>
 #include <SWIGPythonRuntime.hxx>
 
@@ -26,7 +27,7 @@ import {}
 )";
 
 PythonEngine::PythonEngine(int argc, char *argv[])
-    : ScriptEngine(argc, argv), program(Py_DecodeLocale("python3.8", nullptr)) {
+    : ScriptEngine(argc, argv), program(Py_DecodeLocale(pythonProgramName, nullptr)) {
   Py_SetProgramName(program); // optional but recommended
 
   Py_Initialize();

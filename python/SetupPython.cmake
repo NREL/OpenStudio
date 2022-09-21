@@ -8,6 +8,8 @@ else()
   find_package(Python COMPONENTS Interpreter Development REQUIRED)
 endif()
 
+get_filename_component(Python_PROGRAM_NAME ${Python_EXECUTABLE} NAME)
+
 include_directories(SYSTEM ${Python_INCLUDE_DIRS})
 set(ALL_PYTHON_BINDING_TARGETS "") # global list of python bindings
 set(ALL_PYTHON_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files

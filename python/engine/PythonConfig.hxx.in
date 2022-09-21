@@ -1,0 +1,12 @@
+#ifndef PythonConfig_Included
+#define PythonConfig_Included
+
+#include <string>
+
+namespace openstudio {
+
+constexpr auto pythonProgramName = "${Python_PROGRAM_NAME}";
+
+} // namespace openstudio
+
+#endif // PythonConfig_Included

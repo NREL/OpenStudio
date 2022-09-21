@@ -7,6 +7,8 @@ add_custom_command(
           -external-runtime "${CMAKE_CURRENT_BINARY_DIR}/SWIGPythonRuntime.hxx"
 )
 
+configure_file(PythonConfig.hxx.in PythonConfig.hxx)
+
 add_library(
   pythonengine
   MODULE

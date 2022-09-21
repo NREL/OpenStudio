@@ -1,7 +1,6 @@
 #ifndef PYTHONENGINE_included
 #define PYTHONENGINE_included
 
-#include <memory>
 #include <ScriptEngine.hpp>
 
 namespace openstudio {
