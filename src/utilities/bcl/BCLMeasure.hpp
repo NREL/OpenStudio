@@ -72,6 +72,11 @@ OPENSTUDIO_ENUM( MeasureBadgeType,
   ((OSMeasure))
 );
 
+OPENSTUDIO_ENUM( MeasureLanguage,
+  ((Ruby))
+  ((Python))
+);
+
 // clang-format on
 
 /** BCLMeasure is a class for managing the contents of a BCL Measure directory including the xml description file.
@@ -86,7 +91,8 @@ class UTILITIES_API BCLMeasure
   /// Will throw exception unless dir is a directory that does not exist or an empty directory.
   /// A template measure will be created, including a blank user script.
   BCLMeasure(const std::string& name, const std::string& className, const openstudio::path& dir, const std::string& taxonomyTag,
-             MeasureType measureType, const std::string& description, const std::string& modelerDescription);
+             MeasureType measureType, const std::string& description, const std::string& modelerDescription,
+             MeasureLanguage measureLanguage = MeasureLanguage::Ruby);
 
   /// Constructor for downloaded measures, path is to directory containing "measure.xml" file
   /// Will throw exception if directory does not exist or does not represent a valid measure.
@@ -201,8 +207,12 @@ class UTILITIES_API BCLMeasure
   /// Returns value of the "Measure Type" attribute
   MeasureType measureType() const;
 
+  MeasureLanguage measureLanguage() const;
+
   /// Sets value of the "Measure Type" attribute
   void setMeasureType(const MeasureType& measureType);
+
+  void setMeasureLanguage(const MeasureLanguage& measureLanguage);
 
   /// Returns values of any "Intended Software Tool" attributes
   std::vector<std::string> intendedSoftwareTools() const;
@@ -274,9 +284,9 @@ class UTILITIES_API BCLMeasure
 
   /// Update's the ruby measure script to have this new information
   // cppcheck-suppress functionConst
-  bool updateMeasureScript(const MeasureType& oldMeasureType, const MeasureType& newMeasureType, const std::string& oldClassName,
-                           const std::string& newClassName, const std::string& name, const std::string& description,
-                           const std::string& modelerDescription);
+  bool updateMeasureScript(const MeasureType& oldMeasureType, const MeasureType& newMeasureType, const MeasureLanguage& oldMeasureLanguage,
+                           const MeasureLanguage& newMeasureLanguage, const std::string& oldClassName, const std::string& newClassName,
+                           const std::string& name, const std::string& description, const std::string& modelerDescription);
 
   /// Update's the ruby measure tests to have this new information
   // cppcheck-suppress functionConst

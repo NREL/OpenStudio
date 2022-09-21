@@ -86,6 +86,7 @@
 %template(PugixmldocPtr) std::shared_ptr<pugi::xml_document>;
 
 %template(OptionalMeasureType) boost::optional<openstudio::MeasureType>;
+%template(OptionalMeasureLanguage) boost::optional<openstudio::MeasureLanguage>;
 
 %include <utilities/bcl/BCLFileReference.hpp>
 %include <utilities/bcl/BCLComponent.hpp>
