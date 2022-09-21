@@ -2012,3 +2012,48 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_TableMultiVariableLookup_twoDims)
     }
   }
 }
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_CoilCoolingDXSingleSpeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_CoilCoolingDXSingleSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_CoilCoolingDXSingleSpeed_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> ccs = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed");
+  ASSERT_EQ(2, ccs.size());
+
+  {
+    auto cc = model->getObjectByTypeAndName("OS:Coil:Cooling:DX:SingleSpeed", "CC with numbers").get();
+    EXPECT_EQ(15, cc.getDouble(15).get());
+    EXPECT_EQ(16, cc.getDouble(16).get());
+    EXPECT_EQ(0.17, cc.getDouble(17).get());
+    EXPECT_EQ(0.18, cc.getDouble(18).get());
+    EXPECT_EQ(0.19, cc.getDouble(19).get());
+
+    EXPECT_EQ("EvaporativelyCooled", cc.getString(21).get());
+    EXPECT_EQ(0.22, cc.getDouble(22).get());
+    EXPECT_EQ("Autosize", cc.getString(23).get());
+    EXPECT_EQ("Autosize", cc.getString(24).get());
+    EXPECT_EQ(25, cc.getDouble(25).get());
+    EXPECT_EQ(26, cc.getDouble(26).get());
+  }
+
+  {
+    auto cc = model->getObjectByTypeAndName("OS:Coil:Cooling:DX:SingleSpeed", "CC with blanks").get();
+    EXPECT_EQ(-25, cc.getDouble(15).get());
+    EXPECT_EQ(0, cc.getDouble(16).get());
+    EXPECT_EQ(0, cc.getDouble(17).get());
+    EXPECT_EQ(0, cc.getDouble(18).get());
+    EXPECT_EQ(0, cc.getDouble(19).get());
+
+    EXPECT_EQ("AirCooled", cc.getString(21).get());
+    EXPECT_EQ(0.9, cc.getDouble(22).get());
+    EXPECT_EQ("Autosize", cc.getString(23).get());
+    EXPECT_EQ("Autosize", cc.getString(24).get());
+    EXPECT_EQ(0, cc.getDouble(25).get());
+    EXPECT_EQ(10, cc.getDouble(26).get());
+  }
+}
