@@ -39,6 +39,8 @@
 #include "../Schedule_Impl.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
+#include "../ScheduleTypeLimits.hpp"
+#include "../ScheduleTypeLimits_Impl.hpp"
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
@@ -84,7 +86,9 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Remove) {
   coil.addStage(stage);
   coil.remove();
 
-  EXPECT_EQ(0u, m.modelObjects().size());
+  auto schedules = m.getModelObjects<model::ScheduleConstant>();
+  auto limits = m.getModelObjects<model::ScheduleTypeLimits>();
+  EXPECT_EQ(schedules.size() + limits.size(), m.modelObjects().size());
 }
 
 TEST_F(ModelFixture, CoilHeatingGasMultiStage_addToNode) {
