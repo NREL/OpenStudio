@@ -2048,18 +2048,18 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXSingleSpeed) {
 
   {
     auto cc = model->getObjectByTypeAndName("OS:Coil:Cooling:DX:SingleSpeed", "CC with numbers").get();
-    EXPECT_EQ(15, cc.getDouble(16).get());
-    EXPECT_EQ(16, cc.getDouble(17).get());
-    EXPECT_EQ(0.17, cc.getDouble(18).get());
-    EXPECT_EQ(0.18, cc.getDouble(19).get());
-    EXPECT_EQ(19, cc.getDouble(20).get());
+    EXPECT_EQ(16, cc.getDouble(16).get());
+    EXPECT_EQ(17, cc.getDouble(17).get());
+    EXPECT_EQ(0.18, cc.getDouble(18).get());
+    EXPECT_EQ(0.19, cc.getDouble(19).get());
+    EXPECT_EQ(20, cc.getDouble(20).get());
 
     EXPECT_EQ("EvaporativelyCooled", cc.getString(22).get());
-    EXPECT_EQ(0.22, cc.getDouble(23).get());
+    EXPECT_EQ(0.23, cc.getDouble(23).get());
     EXPECT_EQ("Autosize", cc.getString(24).get());
     EXPECT_EQ("Autosize", cc.getString(25).get());
-    EXPECT_EQ(25, cc.getDouble(26).get());
-    EXPECT_EQ(26, cc.getDouble(27).get());
+    EXPECT_EQ(26, cc.getDouble(26).get());
+    EXPECT_EQ(27, cc.getDouble(27).get());
 
     EXPECT_EQ(773.3, cc.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
     EXPECT_EQ(934.4, cc.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023

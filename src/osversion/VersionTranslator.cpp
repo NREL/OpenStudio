@@ -7113,6 +7113,23 @@ namespace osversion {
         auto iddObject = idd_3_5_0.getObject(iddname);
         IdfObject newObject(iddObject.get());
 
+        // Fields that have been added from 3.4.0 to 3.5.0:
+        // ------------------------------------------------
+        // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 * 8
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 8) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        // Rated Supply Fan Power Per Volume Flow Rate 2023
+        newObject.setDouble(8, 934.4);
+
         // New defaults
         // ------------------------------------------------
 
@@ -7132,16 +7149,6 @@ namespace osversion {
 
         for (size_t i = 0; i < object.numFields(); ++i) {
           if ((value = object.getString(i, false, true))) {
-            newObject.setString(i, value.get());
-          }
-        }
-
-        // Fields that have been added from 3.4.0 to 3.5.0:
-        // ------------------------------------------------
-        // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 * 8
-
-        for (size_t i = 0; i < object.numFields(); ++i) {
-          if ((value = object.getString(i))) {
             if (i < 8) {
               newObject.setString(i, value.get());
             } else {
@@ -7149,9 +7156,6 @@ namespace osversion {
             }
           }
         }
-
-        // Rated Supply Fan Power Per Volume Flow Rate 2023
-        newObject.setDouble(8, 934.4);
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
