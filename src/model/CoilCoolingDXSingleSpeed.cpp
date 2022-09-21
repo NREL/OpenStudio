@@ -937,11 +937,8 @@ namespace model {
     setEnergyInputRatioFunctionOfTemperatureCurve(energyInputRatioFofTemp);
     setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow);
     setPartLoadFractionCorrelationCurve(partLoadFraction);
-    setEvaporativeCondenserEffectiveness(0.0);
-    autosizeEvaporativeCondenserAirFlowRate();                //autosize
-    autosizeEvaporativeCondenserPumpRatedPowerConsumption();  //autosize
-    setCrankcaseHeaterCapacity(0.0);
-    setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(0.0);
+    autosizeEvaporativeCondenserAirFlowRate();                         //autosize
+    autosizeEvaporativeCondenserPumpRatedPowerConsumption();           //autosize
     setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
     setNominalTimeForCondensateRemovalToBegin(0.0);
     setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity(0.0);
@@ -952,7 +949,7 @@ namespace model {
     setCrankcaseHeaterCapacity(0.0);
     setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(10.0);
     setBasinHeaterCapacity(0.0);
-    setBasinHeaterSetpointTemperature(10.0);
+    setBasinHeaterSetpointTemperature(2.0);
 
     auto schedule = model.alwaysOnDiscreteSchedule();
     setAvailabilitySchedule(schedule);
@@ -980,11 +977,8 @@ namespace model {
     setEnergyInputRatioFunctionOfTemperatureCurve(energyInputRatioFofTemp);
     setEnergyInputRatioFunctionOfFlowFractionCurve(energyInputRatioFofFlow);
     setPartLoadFractionCorrelationCurve(partLoadFraction);
-    setEvaporativeCondenserEffectiveness(0.0);
-    autosizeEvaporativeCondenserAirFlowRate();                //autosize
-    autosizeEvaporativeCondenserPumpRatedPowerConsumption();  //autosize
-    setCrankcaseHeaterCapacity(0.0);
-    setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(0.0);
+    autosizeEvaporativeCondenserAirFlowRate();                         //autosize
+    autosizeEvaporativeCondenserPumpRatedPowerConsumption();           //autosize
     setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
     setNominalTimeForCondensateRemovalToBegin(0.0);
     setRatioOfInitialMoistureEvaporationRateAndSteadyStateLatentCapacity(0.0);
@@ -995,7 +989,7 @@ namespace model {
     setCrankcaseHeaterCapacity(0.0);
     setMaximumOutdoorDryBulbTemperatureForCrankcaseHeaterOperation(10.0);
     setBasinHeaterCapacity(0.0);
-    setBasinHeaterSetpointTemperature(10.0);
+    setBasinHeaterSetpointTemperature(2.0);
   }
 
   CoilCoolingDXSingleSpeed::CoilCoolingDXSingleSpeed(std::shared_ptr<detail::CoilCoolingDXSingleSpeed_Impl> p) : StraightComponent(std::move(p)) {}

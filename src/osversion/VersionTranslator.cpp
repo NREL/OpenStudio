@@ -7110,12 +7110,35 @@ namespace osversion {
 
       } else if (iddname == "OS:Coil:Cooling:DX:SingleSpeed") {
 
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        // New defaults
+        // ------------------------------------------------
+
+        // From blank to zero:
+        // * Nominal Time for Condensate Removal to Begin * 17,
+        // * Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity * 18
+        // * Maximum Cycling Rate * 19
+        // * Latent Capacity Time Constant * 20
+        for (size_t i = 17; i <= 20; ++i) {
+          newObject.setDouble(i, 0.0);
+        }
+
+        // * Evaporative Condenser Effectiveness * 23 (from 0.0 to 0.9),
+        // * Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation * 27 (from 0.0 to 10.0)
+        newObject.setDouble(23, 0.9);
+        newObject.setDouble(27, 10.0);
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i, false, true))) {
+            newObject.setString(i, value.get());
+          }
+        }
+
         // Fields that have been added from 3.4.0 to 3.5.0:
         // ------------------------------------------------
         // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 * 8
-
-        auto iddObject = idd_3_5_0.getObject(iddname);
-        IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
           if ((value = object.getString(i))) {
