@@ -2031,7 +2031,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_CoilCoolingDXSingleSpeed) {
     EXPECT_EQ(16, cc.getDouble(16).get());
     EXPECT_EQ(0.17, cc.getDouble(17).get());
     EXPECT_EQ(0.18, cc.getDouble(18).get());
-    EXPECT_EQ(0.19, cc.getDouble(19).get());
+    EXPECT_EQ(19, cc.getDouble(19).get());
 
     EXPECT_EQ("EvaporativelyCooled", cc.getString(21).get());
     EXPECT_EQ(0.22, cc.getDouble(22).get());
@@ -2044,16 +2044,16 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_CoilCoolingDXSingleSpeed) {
   {
     auto cc = model->getObjectByTypeAndName("OS:Coil:Cooling:DX:SingleSpeed", "CC with blanks").get();
     EXPECT_EQ(-25, cc.getDouble(15).get());
-    EXPECT_EQ(0, cc.getDouble(16).get());
-    EXPECT_EQ(0, cc.getDouble(17).get());
-    EXPECT_EQ(0, cc.getDouble(18).get());
-    EXPECT_EQ(0, cc.getDouble(19).get());
+    EXPECT_EQ(0, cc.getInt(16).get());
+    EXPECT_EQ(0, cc.getInt(17).get());
+    EXPECT_EQ(0, cc.getInt(18).get());
+    EXPECT_EQ(0, cc.getInt(19).get());
 
     EXPECT_EQ("AirCooled", cc.getString(21).get());
-    EXPECT_EQ(0.9, cc.getDouble(22).get());
+    EXPECT_EQ(0.0, cc.getInt(22).get());
     EXPECT_EQ("Autosize", cc.getString(23).get());
     EXPECT_EQ("Autosize", cc.getString(24).get());
-    EXPECT_EQ(0, cc.getDouble(25).get());
-    EXPECT_EQ(10, cc.getDouble(26).get());
+    EXPECT_EQ(0, cc.getInt(25).get());
+    EXPECT_EQ(0, cc.getInt(26).get());
   }
 }

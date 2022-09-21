@@ -7107,7 +7107,7 @@ namespace osversion {
         newObject.setDouble(26, 10.0);
 
         for (size_t i = 0; i < object.numFields(); ++i) {
-          if ((value = object.getString(i))) {
+          if ((value = object.getString(i, false, true))) {
             newObject.setString(i, value.get());
           }
         }
