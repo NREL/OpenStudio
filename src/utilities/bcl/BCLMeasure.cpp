@@ -215,7 +215,7 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
     if (measureLanguage == MeasureLanguage::Ruby) {
       measureTemplate = ":/templates/ModelMeasure/measure.rb";
       testTemplate = ":/templates/ModelMeasure/tests/model_measure_test.rb";
-    } else if (measureLanguage == MeasureLanguage::Ruby) {
+    } else if (measureLanguage == MeasureLanguage::Python) {
       measureTemplate = ":/templates/ModelMeasure/measure.py";
       testTemplate = ":/templates/ModelMeasure/tests/test_model_measure_test.py";
     }
@@ -233,8 +233,13 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
     arguments.push_back(arg);
 
   } else if (measureType == MeasureType::EnergyPlusMeasure) {
-    measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
-    testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_test.rb";
+    if (measureLanguage == MeasureLanguage::Ruby) {
+      measureTemplate = ":/templates/EnergyPlusMeasure/measure.rb";
+      testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_test.rb";
+    } else if (measureLanguage == MeasureLanguage::Python) {
+      measureTemplate = ":/templates/EnergyPlusMeasure/measure.py";
+      testTemplate = ":/templates/EnergyPlusMeasure/tests/test_energyplus_measure_test.py";
+    }
     templateClassName = "EnergyPlusMeasureName";
 
     std::string argName("zone_name");
