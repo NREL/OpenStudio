@@ -7083,6 +7083,40 @@ namespace osversion {
           m_new.emplace_back(std::move(varAdded));
         }
 
+      } else if (iddname == "OS:Coil:Cooling:DX:SingleSpeed") {
+
+        // Remove Construction with Material:AirWall layer
+        // Replace with Construction:AirBoundary
+
+        auto iddObject = idd_3_4_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        // new defaults
+        // From blank to zero
+        // "Nominal Time for Condensate Removal to Begin"=>16 (blank => 0),
+        // "Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity"=>17,
+        // "Maximum Cycling Rate"=>18,
+        // "Latent Capacity Time Constant"=>19,
+        for (size_t i = 16; i <= 19; ++i) {
+          newObject.setDouble(i, 0.0);
+        }
+
+        // "Evaporative Condenser Effectiveness"=>22 (from 0.0 to 0.9),
+        // "Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation"=>26 (from 0.0 to 10.0)
+        newObject.setDouble(22, 0.9);
+        newObject.setDouble(26, 10.0);
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if ((i != 22 && i != 26) || value.get() != 0.0) {
+              newObject.setString(i, value.get());
+            }
+          }
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
         // No-op
       } else {
         ss << object;
