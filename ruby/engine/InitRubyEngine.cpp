@@ -246,11 +246,11 @@ void RubyEngine::initRubyEngine() {
     rb_provide("fiddle.so");
 
 // TODO: Fix this
-#ifndef _WIN32
+// #ifndef _WIN32
     Init_generator();
     rb_provide("json/ext/generator");
     rb_provide("json/ext/generator.so");
-#endif
+// #endif
 
     Init_md5();
     rb_provide("md5");
@@ -279,22 +279,22 @@ void RubyEngine::initRubyEngine() {
     rb_provide("objspace.so");
 
 // TODO: Fix this
-#ifndef _WIN32
+// #ifndef _WIN32
     Init_parser();
     rb_provide("json/ext/parser");
     rb_provide("json/ext/parser.so");
-#endif
+// #endif
 
     Init_pathname();
     rb_provide("pathname");
     rb_provide("pathname.so");
 
 // TODO: Fix this
-#ifndef _WIN32
+// #ifndef _WIN32
     Init_psych();
     rb_provide("psych");
     rb_provide("psych.so");
-#endif
+// #endif
 
     Init_ripper();
     rb_provide("ripper");

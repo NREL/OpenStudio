@@ -23,6 +23,8 @@ class EnergyPlusMeasureNameTest < Minitest::Test
     arguments = measure.arguments(workspace)
     assert_equal(1, arguments.size)
     assert_equal('zone_name', arguments[0].name)
+    assert(arguments[0].required)
+    assert_equal('String', arguments[0].type.valueName)
   end
 
   def test_bad_argument_values
