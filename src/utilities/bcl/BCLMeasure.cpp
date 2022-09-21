@@ -217,7 +217,7 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
       testTemplate = ":/templates/ModelMeasure/tests/model_measure_test.rb";
     } else if (measureLanguage == MeasureLanguage::Python) {
       measureTemplate = ":/templates/ModelMeasure/measure.py";
-      testTemplate = ":/templates/ModelMeasure/tests/test_model_measure_test.py";
+      testTemplate = ":/templates/ModelMeasure/tests/test_model_measure.py";
     }
     testOSM = ":/templates/ModelMeasure/tests/example_model.osm";
     templateClassName = "ModelMeasureName";
@@ -238,7 +238,7 @@ BCLMeasure::BCLMeasure(const std::string& name, const std::string& className, co
       testTemplate = ":/templates/EnergyPlusMeasure/tests/energyplus_measure_test.rb";
     } else if (measureLanguage == MeasureLanguage::Python) {
       measureTemplate = ":/templates/EnergyPlusMeasure/measure.py";
-      testTemplate = ":/templates/EnergyPlusMeasure/tests/test_energyplus_measure_test.py";
+      testTemplate = ":/templates/EnergyPlusMeasure/tests/test_energyplus_measure.py";
     }
     templateClassName = "EnergyPlusMeasureName";
 
