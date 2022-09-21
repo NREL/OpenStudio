@@ -7306,6 +7306,57 @@ namespace osversion {
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
+      } else if (iddname == "OS:Coil:Heating:Gas:MultiStage") {
+
+        // 1 Field was made required:
+        // ------------------------------------------------
+        // * Availability Schedule * 2
+
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        if (object.isEmpty(2)) {
+           // Add an always on discrete schedule if one does not already exist
+          boost::optional<IdfObject> alwaysOnSchedule;
+          for (const IdfObject& object : idf_3_4_0.objects()) {
+            if (object.iddObject().name() == "OS:Schedule:Constant") {
+              if (boost::optional<std::string> name = object.getString(1)) {
+                if (istringEqual(name.get(), "Always On Discrete")) {
+                  if (boost::optional<double> value = object.getDouble(3)) {
+                    if (equal<double>(value.get(), 1.0)) {
+                      alwaysOnSchedule = object;
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          if (!alwaysOnSchedule) {
+            alwaysOnSchedule = IdfObject(idd_3_5_0.getObject("OS:Schedule:Constant").get());
+            alwaysOnSchedule->setString(0, toString(createUUID()));
+            alwaysOnSchedule->setString(1, "Always On Discrete");
+            alwaysOnSchedule->setDouble(3, 1.0);
+            IdfObject typeLimits(idd_3_5_0.getObject("OS:ScheduleTypeLimits").get());
+            typeLimits.setString(0, toString(createUUID()));
+            typeLimits.setString(1, "Always On Discrete Limits");
+            typeLimits.setDouble(2, 0.0);
+            typeLimits.setDouble(3, 1.0);
+            typeLimits.setString(4, "Discrete");
+            typeLimits.setString(5, "Availability");
+            alwaysOnSchedule->setString(2, typeLimits.getString(0).get());
+            ss << alwaysOnSchedule.get();
+            ss << typeLimits;
+            m_new.push_back(alwaysOnSchedule.get());
+            m_new.push_back(typeLimits);
+          }
+          
+          newObject.setString(2, alwaysOnSchedule->getString(0).get());
+        }
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
         // No-op
       } else {
         ss << object;
