@@ -7108,9 +7108,7 @@ namespace osversion {
 
         for (size_t i = 0; i < object.numFields(); ++i) {
           if ((value = object.getString(i))) {
-            if ((i != 22 && i != 26) || value.get() != 0.0) {
-              newObject.setString(i, value.get());
-            }
+            newObject.setString(i, value.get());
           }
         }
 
