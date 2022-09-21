@@ -863,13 +863,13 @@ namespace model {
     //  A13, \field Condenser Type
     setCondenserType("AirCooled");
     //   N9, \field High Speed Evaporative Condenser Effectiveness
-    setHighSpeedEvaporativeCondenserEffectiveness(0.0);
+    setHighSpeedEvaporativeCondenserEffectiveness(0.9);
     //  N10, \field High Speed Evaporative Condenser Air Flow Rate
     setHighSpeedEvaporativeCondenserAirFlowRate(boost::none);  //autosize
     //  N11, \field High Speed Evaporative Condenser Pump Rated Power Consumption
     setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(boost::none);  //autosize
     //  N12, \field Low Speed Evaporative Condenser Effectiveness
-    setLowSpeedEvaporativeCondenserEffectiveness(0.0);
+    setLowSpeedEvaporativeCondenserEffectiveness(0.9);
     //  N13, \field Low Speed Evaporative Condenser Air Flow Rate
     setLowSpeedEvaporativeCondenserAirFlowRate(boost::none);  //autosize
     //  N14, \field Low Speed Evaporative Condenser Pump Rated Power Consumption
@@ -881,7 +881,7 @@ namespace model {
     //  N15, \field Basin Heater Capacity
     setBasinHeaterCapacity(0.0);
     //  N16, \field Basin Heater Setpoint Temperature
-    setBasinHeaterSetpointTemperature(10.0);
+    setBasinHeaterSetpointTemperature(2.0);
     //  A16; \field Basin Heater Operating Schedule Name
     setString(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName, "");
     setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default
@@ -979,13 +979,13 @@ namespace model {
     setLowSpeedTotalCoolingCapacityFunctionOfTemperatureCurve(coolingLowSpdCurveFofTemp);
     setLowSpeedEnergyInputRatioFunctionOfTemperatureCurve(energyLowSpdInputRatioFofTemp);
     setCondenserType("AirCooled");
-    setHighSpeedEvaporativeCondenserEffectiveness(0.0);
+    setHighSpeedEvaporativeCondenserEffectiveness(0.9);
     setHighSpeedEvaporativeCondenserAirFlowRate(boost::none);                //autosize
     setHighSpeedEvaporativeCondenserPumpRatedPowerConsumption(boost::none);  //autosize
-    setLowSpeedEvaporativeCondenserEffectiveness(0.0);
+    setLowSpeedEvaporativeCondenserEffectiveness(0.9);
     setLowSpeedEvaporativeCondenserAirFlowRate(boost::none);                //autosize
     setLowSpeedEvaporativeCondenserPumpRatedPowerConsumption(boost::none);  //autosize
-    setBasinHeaterCapacity(10.0);
+    setBasinHeaterCapacity(0.0);
     setBasinHeaterSetpointTemperature(2.0);
     setString(OS_Coil_Cooling_DX_TwoSpeedFields::BasinHeaterOperatingScheduleName, "");
     setMinimumOutdoorDryBulbTemperatureforCompressorOperation(-25.0);  // Per E+ IDD default

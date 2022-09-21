@@ -85,6 +85,11 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
 
   # TODO:  list(APPEND CONAN_OPTIONS "fmt:header_only=True")
 
+  if(APPLE)
+    # #4120 - global is the 'default' visibility in gcc/clang
+    list(APPEND CONAN_OPTIONS "boost:visibility=global")
+  endif()
+
   # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
   # bump the actual package version when we make changes) than the binaries were built with
   # 'outdated' also acts like 'missing': if no binary, will build them.
