@@ -70,9 +70,27 @@ namespace energyplus {
     // PerformanceObjectName
     idfObject.setString(Coil_Cooling_DXFields::PerformanceObjectName, s.get());
 
-    // Evaporator Nodes are handled in the FT for AirLoopHVACUnitarySystem
+    // Evaporator Nodes are handled in the FT for AirLoopHVACUnitarySystem when inside a Unitary, but we set them here in case it's NOT inside a
+    // unitary (yet, we'll put it on a CoilSystem:Cooling:DX)
     // EvaporatorInletNodeName
     // EvaporatorOutletNodeName
+    OptionalModelObject omo = modelObject.inletModelObject();
+    if (omo) {
+      translateAndMapModelObject(*omo);
+      s = omo->name();
+      if (s) {
+        idfObject.setString(Coil_Cooling_DXFields::EvaporatorInletNodeName, *s);
+      }
+    }
+
+    omo = modelObject.outletModelObject();
+    if (omo) {
+      translateAndMapModelObject(*omo);
+      s = omo->name();
+      if (s) {
+        idfObject.setString(Coil_Cooling_DXFields::EvaporatorOutletNodeName, *s);
+      }
+    }
 
     // AvailabilityScheduleName
     {
