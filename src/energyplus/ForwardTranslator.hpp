@@ -755,7 +755,11 @@ namespace energyplus {
 
     boost::optional<IdfObject> translateCoilCoolingDXSingleSpeed(model::CoilCoolingDXSingleSpeed& modelObject);
 
+    boost::optional<IdfObject> translateCoilCoolingDXSingleSpeedWithoutUnitary(model::CoilCoolingDXSingleSpeed& modelObject);
+
     boost::optional<IdfObject> translateCoilCoolingDX(model::CoilCoolingDX& modelObject);
+
+    boost::optional<IdfObject> translateCoilCoolingDXWithoutUnitary(model::CoilCoolingDX& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXCurveFitPerformance(model::CoilCoolingDXCurveFitPerformance& modelObject);
 
@@ -764,8 +768,6 @@ namespace energyplus {
     boost::optional<IdfObject> translateCoilCoolingDXCurveFitSpeed(model::CoilCoolingDXCurveFitSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXMultiSpeed(model::CoilCoolingDXMultiSpeed& modelObject);
-
-    boost::optional<IdfObject> translateCoilCoolingDXSingleSpeedWithoutUnitary(model::CoilCoolingDXSingleSpeed& modelObject);
 
     boost::optional<IdfObject> translateCoilCoolingDXTwoSpeed(model::CoilCoolingDXTwoSpeed& modelObject);
 

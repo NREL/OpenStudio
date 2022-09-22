@@ -15828,6 +15828,7 @@ OS:Coil:Cooling:DX,
        \type alpha
        \reference CoilCoolingDX
        \reference AFNCoilNames
+       \reference DesuperHeatingCoilSources
        \reference ConnectionObject
   A3, \field Evaporator Inlet Node
        \type object-list
@@ -17246,6 +17247,7 @@ OS:CoilSystem:Cooling:DX:HeatExchangerAssisted,
   A6 ; \field Cooling Coil
        \required-field
        \type object-list
+       \object-list CoilCoolingDX
        \object-list CoolingCoilsDXSingleSpeed
        \object-list CoolingCoilsDXVariableSpeed
 
@@ -18248,6 +18250,7 @@ OS:Coil:WaterHeating:Desuperheater,
   A8,  \field Heating Source Name
        \required-field
        \type object-list
+       \object-list CoilCoolingDX
        \object-list DesuperHeatingCoilSources
        \object-list DesuperHeatingWaterOnlySources
        \note The name of the DX system used for heat reclaim.
@@ -27307,6 +27310,7 @@ OS:ZoneHVAC:PackagedTerminalHeatPump,
        \note Needs to match in the DX Cooling Coil object.
        \type object-list
        \required-field
+       \object-list CoilCoolingDX
        \object-list CoolingCoilsDXSingleSpeed
        \object-list CoolingCoilsDXVariableSpeed
   N9, \field Cooling Convergence Tolerance
@@ -27444,6 +27448,7 @@ OS:ZoneHVAC:PackagedTerminalAirConditioner,
        \note Needs to match a DX cooling coil object.
        \type object-list
        \required-field
+       \object-list CoilCoolingDX
        \object-list CoolingCoilsDXSingleSpeed
        \object-list CoolingCoilsDXVariableSpeed
   A11, \field Fan Placement

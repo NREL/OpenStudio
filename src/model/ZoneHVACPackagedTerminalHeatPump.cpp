@@ -549,7 +549,8 @@ namespace model {
 
       if ((hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed)
           || (hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_VariableSpeed)
-          || (hvacComponent.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted)) {
+          || (hvacComponent.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted)
+          || (hvacComponent.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX)) {
         isAllowedType = true;
       }
 
@@ -557,7 +558,7 @@ namespace model {
         return setPointer(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilName, hvacComponent.handle());
       } else {
         LOG(Warn, "Invalid Cooling Coil Type (expected CoilCoolingDXSingleSpeed or CoilSystemCoolingDXHeatExchangerAssisted or "
-                  "CoilCoolingDXVariableSpeed, not '"
+                  "CoilCoolingDXVariableSpeed or CoilCoolingDX, not '"
                     << hvacComponent.iddObjectType().valueName() << "') for " << briefDescription());
         return false;
       }

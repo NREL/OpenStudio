@@ -37,6 +37,9 @@
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXTwoSpeed.hpp"
 #include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
+#include "../../model/CoilCoolingDX.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
 
 #include <utilities/idd/IddObject.hpp>
 #include <utilities/idd/Coil_Heating_Desuperheater_FieldEnums.hxx>
@@ -51,7 +54,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingDesuperheater) {
 
   CoilHeatingDesuperheater desuperheater(m);
 
-  std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m), CoilCoolingDXTwoSpeed(m), CoilCoolingDXTwoStageWithHumidityControlMode(m)};
+  CoilCoolingDXCurveFitOperatingMode operatingMode(m);
+  CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
+
+  std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m), CoilCoolingDXTwoSpeed(m), CoilCoolingDXTwoStageWithHumidityControlMode(m),
+                                          CoilCoolingDX(m, performance)};
 
   ForwardTranslator forwardTranslator;
 

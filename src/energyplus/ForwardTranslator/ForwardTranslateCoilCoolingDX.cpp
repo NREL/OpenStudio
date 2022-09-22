@@ -40,7 +40,7 @@
 #include "../../model/ThermalZone_Impl.hpp"
 #include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
 #include "../../model/CoilCoolingDXCurveFitPerformance_Impl.hpp"
-
+#include <utilities/idd/CoilSystem_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
 // #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
@@ -51,7 +51,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX(model::CoilCoolingDX& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDXWithoutUnitary(model::CoilCoolingDX& modelObject) {
     boost::optional<std::string> s;
     boost::optional<double> value;
 
@@ -70,9 +70,27 @@ namespace energyplus {
     // PerformanceObjectName
     idfObject.setString(Coil_Cooling_DXFields::PerformanceObjectName, s.get());
 
-    // Evaporator Nodes are handled in the FT for AirLoopHVACUnitarySystem
+    // Evaporator Nodes are handled in the FT for AirLoopHVACUnitarySystem when inside a Unitary, but we set them here in case it's NOT inside a
+    // unitary (yet, we'll put it on a CoilSystem:Cooling:DX)
     // EvaporatorInletNodeName
     // EvaporatorOutletNodeName
+    OptionalModelObject omo = modelObject.inletModelObject();
+    if (omo) {
+      translateAndMapModelObject(*omo);
+      s = omo->name();
+      if (s) {
+        idfObject.setString(Coil_Cooling_DXFields::EvaporatorInletNodeName, *s);
+      }
+    }
+
+    omo = modelObject.outletModelObject();
+    if (omo) {
+      translateAndMapModelObject(*omo);
+      s = omo->name();
+      if (s) {
+        idfObject.setString(Coil_Cooling_DXFields::EvaporatorOutletNodeName, *s);
+      }
+    }
 
     // AvailabilityScheduleName
     {
@@ -115,6 +133,58 @@ namespace energyplus {
 
     return boost::optional<IdfObject>(idfObject);
   }  // End of translate function
+
+  boost::optional<IdfObject> ForwardTranslator::translateCoilCoolingDX(CoilCoolingDX& modelObject) {
+    IdfObject coilSystemCoolingDXIdf(IddObjectType::CoilSystem_Cooling_DX);
+
+    m_idfObjects.push_back(coilSystemCoolingDXIdf);
+
+    boost::optional<IdfObject> oIdfObject = translateCoilCoolingDXWithoutUnitary(modelObject);
+
+    if (!oIdfObject) {
+      return boost::none;
+    }
+
+    IdfObject idfObject = oIdfObject.get();
+
+    OptionalString s;
+
+    s = modelObject.name();
+    if (s) {
+      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType, idfObject.iddObject().name());
+
+      coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::CoolingCoilName, *s);
+
+      coilSystemCoolingDXIdf.setName(*s + " CoilSystem");
+    }
+
+    Schedule sched = modelObject.availabilitySchedule();
+    translateAndMapModelObject(sched);
+
+    coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::AvailabilityScheduleName, sched.name().get());
+
+    OptionalModelObject omo = modelObject.inletModelObject();
+    if (omo) {
+      translateAndMapModelObject(*omo);
+      s = omo->name();
+      if (s) {
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemInletNodeName, *s);
+      }
+    }
+
+    omo = modelObject.outletModelObject();
+    if (omo) {
+      translateAndMapModelObject(*omo);
+      s = omo->name();
+      if (s) {
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemOutletNodeName, *s);
+
+        coilSystemCoolingDXIdf.setString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemSensorNodeName, *s);
+      }
+    }
+
+    return coilSystemCoolingDXIdf;
+  }
 
 }  // end namespace energyplus
 }  // end namespace openstudio

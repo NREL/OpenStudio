@@ -24121,6 +24121,7 @@ ZoneHVAC:PackagedTerminalAirConditioner,
    A12, \field Cooling Coil Name
         \required-field
         \type object-list
+        \object-list CoilCoolingDX
         \object-list CoolingCoilsDXSingleSpeed
         \object-list CoolingCoilsDXVariableSpeed
         \note Needs to match a DX cooling coil object.
@@ -24303,6 +24304,7 @@ ZoneHVAC:PackagedTerminalHeatPump,
    A12, \field Cooling Coil Name
         \required-field
         \type object-list
+        \object-list CoilCoolingDX
         \object-list CoolingCoilsDXSingleSpeed
         \object-list CoolingCoilsDXVariableSpeed
         \note Needs to match in the DX Cooling Coil object.
