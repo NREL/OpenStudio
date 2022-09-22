@@ -7130,30 +7130,16 @@ namespace osversion {
         // Rated Supply Fan Power Per Volume Flow Rate 2023
         newObject.setDouble(8, 934.4);
 
-        // New defaults
+        // New defaults (now required-field, before = optional)
         // ------------------------------------------------
-
         // From blank to zero:
         // * Nominal Time for Condensate Removal to Begin * 17,
         // * Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity * 18
         // * Maximum Cycling Rate * 19
         // * Latent Capacity Time Constant * 20
         for (size_t i = 17; i <= 20; ++i) {
-          newObject.setDouble(i, 0.0);
-        }
-
-        // * Evaporative Condenser Effectiveness * 23 (from 0.0 to 0.9),
-        // * Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation * 27 (from 0.0 to 10.0)
-        newObject.setDouble(23, 0.9);
-        newObject.setDouble(27, 10.0);
-
-        for (size_t i = 0; i < object.numFields(); ++i) {
-          if ((value = object.getString(i, false, true))) {
-            if (i < 8) {
-              newObject.setString(i, value.get());
-            } else {
-              newObject.setString(i + 1, value.get());
-            }
+          if (newObject.isEmpty(i)) {
+            newObject.setDouble(i, 0.0);
           }
         }
 
