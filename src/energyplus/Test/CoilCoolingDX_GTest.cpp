@@ -44,8 +44,19 @@
 #include "../../model/AirLoopHVACUnitarySystem.hpp"
 #include "../../model/Node.hpp"
 
+#include "../../utilities/idf/IdfObject.hpp"
+#include "../../utilities/idf/IdfObject_Impl.hpp"
+#include "../../utilities/idf/WorkspaceObject.hpp"
+#include "../../utilities/idf/WorkspaceObject_Impl.hpp"
+#include "../../utilities/idf/IdfExtensibleGroup.hpp"
+#include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
+
 #include <utilities/idd/Coil_Cooling_DX_FieldEnums.hxx>
 #include <utilities/idd/Coil_Cooling_DX_CurveFit_Performance_FieldEnums.hxx>
+#include <utilities/idd/CoilSystem_Cooling_DX_FieldEnums.hxx>
+#include <utilities/idd/AirLoopHVAC_FieldEnums.hxx>
+#include <utilities/idd/BranchList_FieldEnums.hxx>
+#include <utilities/idd/Branch_FieldEnums.hxx>
 #include <utilities/idd/AirLoopHVAC_UnitarySystem_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
@@ -53,7 +64,7 @@ using namespace openstudio::energyplus;
 using namespace openstudio::model;
 using namespace openstudio;
 
-TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
+TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX_Unitary) {
   Model m;
   CoilCoolingDXCurveFitOperatingMode operatingMode(m);
   CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
@@ -81,6 +92,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
   WorkspaceObjectVector idfDXs(w.getObjectsByType(IddObjectType::Coil_Cooling_DX));
   ASSERT_EQ(1u, idfDXs.size());
   WorkspaceObject idfDX(idfDXs[0]);
+
+  // No CoilSystem:Cooling:DX wrapper needed, it's inside a unitary
+  EXPECT_EQ(0, w.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
 
   // Check that the Unitary ends up with the CoilCoolingDX
   EXPECT_EQ("Coil:Cooling:DX", idfUnitary.getString(AirLoopHVAC_UnitarySystemFields::CoolingCoilObjectType).get());
@@ -137,4 +151,63 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX) {
   WorkspaceObject idfOperatingMode(idfOperatingModes[0]);
 
   EXPECT_EQ(woBaseOperatingMode.get(), idfOperatingMode);
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDX_AirLoopHVAC) {
+
+  ForwardTranslator ft;
+
+  Model m;
+  CoilCoolingDXCurveFitOperatingMode operatingMode(m);
+  CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
+  CoilCoolingDX dx(m, performance);
+  dx.setName("CoilCoolingDX");
+
+  AirLoopHVAC a(m);
+  Node supplyOutletNode = a.supplyOutletNode();
+  EXPECT_TRUE(dx.addToNode(supplyOutletNode));
+
+  Workspace w = ft.translateModel(m);
+  WorkspaceObjectVector idf_dxs = w.getObjectsByType(IddObjectType::Coil_Cooling_DX);
+  ASSERT_EQ(1u, idf_dxs.size());
+  WorkspaceObject idf_dx(idf_dxs[0]);
+
+  EXPECT_EQ(idf_dx.getString(Coil_Cooling_DXFields::EvaporatorInletNodeName).get(), dx.inletModelObject().get().nameString());
+  EXPECT_EQ(idf_dx.getString(Coil_Cooling_DXFields::EvaporatorOutletNodeName).get(), dx.outletModelObject().get().nameString());
+
+  EXPECT_EQ(1, w.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
+
+  // Go from AirLoopHVAC to BranchList to Branch
+  WorkspaceObjectVector idf_airloops = w.getObjectsByType(IddObjectType::AirLoopHVAC);
+  ASSERT_EQ(1u, idf_airloops.size());
+
+  WorkspaceObject& idf_airLoopHVAC = idf_airloops.front();
+  WorkspaceObject idf_brlist = idf_airLoopHVAC.getTarget(AirLoopHVACFields::BranchListName).get();
+
+  // Should have one branch only
+  ASSERT_EQ(1u, idf_brlist.extensibleGroups().size());
+  auto w_eg = idf_brlist.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+  WorkspaceObject idf_branch = w_eg.getTarget(BranchListExtensibleFields::BranchName).get();
+
+  // There should be only one equipment on the branch
+  ASSERT_EQ(1u, idf_branch.extensibleGroups().size());
+  auto w_eg2 = idf_branch.extensibleGroups()[0].cast<WorkspaceExtensibleGroup>();
+
+  EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentInletNodeName).get(), dx.inletModelObject().get().nameString());
+  EXPECT_EQ(w_eg2.getString(BranchExtensibleFields::ComponentOutletNodeName).get(), dx.outletModelObject().get().nameString());
+
+  EXPECT_EQ("CoilSystem:Cooling:DX", w_eg2.getString(BranchExtensibleFields::ComponentObjectType).get());
+  auto idf_coilSystem = w_eg2.getTarget(BranchExtensibleFields::ComponentName).get();
+  // CoilSystem:Cooling:DX wrapper needed, it's not inside a unitary
+  EXPECT_EQ(1, w.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
+
+  EXPECT_EQ("Always On Discrete", idf_coilSystem.getString(CoilSystem_Cooling_DXFields::AvailabilityScheduleName).get());
+  EXPECT_EQ(dx.inletModelObject().get().nameString(), idf_coilSystem.getString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemInletNodeName).get());
+  EXPECT_EQ(dx.outletModelObject().get().nameString(),
+            idf_coilSystem.getString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemOutletNodeName).get());
+  EXPECT_EQ(dx.outletModelObject().get().nameString(),
+            idf_coilSystem.getString(CoilSystem_Cooling_DXFields::DXCoolingCoilSystemSensorNodeName).get());
+  EXPECT_EQ("Coil:Cooling:DX", idf_coilSystem.getString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType).get());
+  EXPECT_EQ(dx.nameString(), idf_coilSystem.getString(CoilSystem_Cooling_DXFields::CoolingCoilName).get());
+  EXPECT_EQ(idf_dx, idf_coilSystem.getTarget(CoilSystem_Cooling_DXFields::CoolingCoilName).get());
 }
