@@ -100,7 +100,7 @@ namespace energyplus {
       if (_heatingSource) {
 
         // Note JM 2019-03-14:
-        // If the coil in question is a DX coil (CoilCoolingDXSingleSpeed, CoilCoolingDXTwoSpeed, CoilCoolingDXTwoStageWithHumidityControlMode)
+        // If the coil in question is a DX coil (CoilCoolingDXSingleSpeed, CoilCoolingDXTwoSpeed, CoilCoolingDXTwoStageWithHumidityControlMode, CoilCoolingDX)
         // and this DX coil isn't already wrapped in a Unitary, then the FT will wrap it into a CoilSystem:Cooling:DX object and return that, but we
         // need the DX coil here and not the wrapper.
         //
@@ -111,7 +111,7 @@ namespace energyplus {
         std::string objectName;
 
         if (_heatingSource->iddObject().type() == IddObjectType::CoilSystem_Cooling_DX) {
-          // We have retrieve the coil itself, not the wrapper
+          // We must retrieve the coil itself, not the wrapper
           objectType = _heatingSource->getString(CoilSystem_Cooling_DXFields::CoolingCoilObjectType).get();
           objectName = _heatingSource->getString(CoilSystem_Cooling_DXFields::CoolingCoilName).get();
         } else {

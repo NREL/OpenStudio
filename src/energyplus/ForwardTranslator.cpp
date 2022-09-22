@@ -979,8 +979,12 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX: {
-        model::CoilCoolingDX dx = modelObject.cast<CoilCoolingDX>();
-        retVal = translateCoilCoolingDX(dx);
+        model::CoilCoolingDX coil = modelObject.cast<CoilCoolingDX>();
+        if (this->isHVACComponentWithinUnitary(coil)) {
+          retVal = translateCoilCoolingDXWithoutUnitary(coil);
+        } else {
+          retVal = translateCoilCoolingDX(coil);
+        }
         break;
       }
       case openstudio::IddObjectType::OS_Coil_Cooling_DX_CurveFit_Performance: {

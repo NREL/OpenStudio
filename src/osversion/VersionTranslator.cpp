@@ -7110,12 +7110,12 @@ namespace osversion {
 
       } else if (iddname == "OS:Coil:Cooling:DX:SingleSpeed") {
 
+        auto iddObject = idd_3_5_0.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
         // Fields that have been added from 3.4.0 to 3.5.0:
         // ------------------------------------------------
         // * Rated Evaporator Fan Power Per Volume Flow Rate 2023 * 8
-
-        auto iddObject = idd_3_5_0.getObject(iddname);
-        IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
           if ((value = object.getString(i))) {
@@ -7129,6 +7129,19 @@ namespace osversion {
 
         // Rated Supply Fan Power Per Volume Flow Rate 2023
         newObject.setDouble(8, 934.4);
+
+        // New defaults (now required-field, before = optional)
+        // ------------------------------------------------
+        // From blank to zero:
+        // * Nominal Time for Condensate Removal to Begin * 17,
+        // * Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity * 18
+        // * Maximum Cycling Rate * 19
+        // * Latent Capacity Time Constant * 20
+        for (size_t i = 17; i <= 20; ++i) {
+          if (newObject.isEmpty(i)) {
+            newObject.setDouble(i, 0.0);
+          }
+        }
 
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;

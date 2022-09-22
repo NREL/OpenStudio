@@ -2043,12 +2043,46 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXSingleSpeed) {
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXSingleSpeed_updated.osm");
   model->save(outPath, true);
 
-  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed");
-  ASSERT_EQ(1u, coils.size());
-  WorkspaceObject coil = coils[0];
+  std::vector<WorkspaceObject> ccs = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed");
+  ASSERT_EQ(2, ccs.size());
 
-  EXPECT_EQ(773.3, coil.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
-  EXPECT_EQ(934.4, coil.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
+  {
+    auto cc = model->getObjectByTypeAndName("OS:Coil:Cooling:DX:SingleSpeed", "CC with numbers").get();
+    EXPECT_EQ(16, cc.getDouble(16).get());
+    EXPECT_EQ(17, cc.getDouble(17).get());
+    EXPECT_EQ(0.18, cc.getDouble(18).get());
+    EXPECT_EQ(0.19, cc.getDouble(19).get());
+    EXPECT_EQ(20, cc.getDouble(20).get());
+
+    EXPECT_EQ("EvaporativelyCooled", cc.getString(22).get());
+    EXPECT_EQ(0.23, cc.getDouble(23).get());
+    EXPECT_EQ("Autosize", cc.getString(24).get());
+    EXPECT_EQ("Autosize", cc.getString(25).get());
+    EXPECT_EQ(26, cc.getDouble(26).get());
+    EXPECT_EQ(27, cc.getDouble(27).get());
+
+    EXPECT_EQ(773.3, cc.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, cc.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
+  }
+
+  {
+    auto cc = model->getObjectByTypeAndName("OS:Coil:Cooling:DX:SingleSpeed", "CC with blanks").get();
+    EXPECT_EQ(-25, cc.getDouble(16).get());
+    EXPECT_EQ(0, cc.getInt(17).get());
+    EXPECT_EQ(0, cc.getInt(18).get());
+    EXPECT_EQ(0, cc.getInt(19).get());
+    EXPECT_EQ(0, cc.getInt(20).get());
+
+    EXPECT_EQ("AirCooled", cc.getString(22).get());
+    EXPECT_EQ(0.0, cc.getInt(23).get());
+    EXPECT_EQ("Autosize", cc.getString(24).get());
+    EXPECT_EQ("Autosize", cc.getString(25).get());
+    EXPECT_EQ(0, cc.getInt(26).get());
+    EXPECT_EQ(0, cc.getInt(27).get());
+
+    EXPECT_EQ(773.3, cc.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, cc.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
+  }
 }
 
 TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingDXMultiSpeedStageData) {
