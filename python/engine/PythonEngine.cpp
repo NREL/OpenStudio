@@ -19,12 +19,13 @@
 
 namespace openstudio {
 
-void PythonEngine::import(const std::string& importName, const std::string& includePath) {
-  PyObject* sys = PyImport_ImportModule("sys");
-  PyObject* sysPath = PyObject_GetAttrString(sys, "path");
-  PyObject* unicodeIncludePath = PyUnicode_FromString(includePath.c_str());
-  PyList_Append(sysPath, unicodeIncludePath);
-
+void PythonEngine::pyimport(const std::string& importName, const std::string& includePath) {
+  if (!includePath.empty()) {
+    PyObject* sys = PyImport_ImportModule("sys");
+    PyObject* sysPath = PyObject_GetAttrString(sys, "path");
+    PyObject* unicodeIncludePath = PyUnicode_FromString(includePath.c_str());
+    PyList_Append(sysPath, unicodeIncludePath);
+  }
   PyImport_ImportModule(importName.c_str());
 }
 
@@ -32,6 +33,14 @@ PythonEngine::PythonEngine(int argc, char* argv[]) : ScriptEngine(argc, argv), p
   Py_SetProgramName(program);  // optional but recommended
 
   Py_Initialize();
+  PyObject* m = PyImport_AddModule("__main__");
+  if (m == nullptr) {
+    throw std::runtime_error("Unable to add module __main__ for python script execution");
+  }
+  m_globalDict = PyModule_GetDict(m);
+
+  PyRun_SimpleString("from time import time,ctime\n"
+                     "print('Today is', ctime(time()))\n");
   importOpenStudio();
 }
 
@@ -44,7 +53,7 @@ PythonEngine::~PythonEngine() {
 
 void PythonEngine::importOpenStudio() {
   if (moduleIsRunningFromBuildDirectory()) {
-    const auto bindingsDir = getOpenStudioModuleDirectory();
+    const auto bindingsDir = getOpenStudioModuleDirectory() / "python_package";
     pyimport("openstudio", bindingsDir.string());
   } else {
     const auto bindingsDir = getOpenStudioModuleDirectory() / "../Python";
@@ -107,14 +116,8 @@ struct PythonObject
 void PythonEngine::exec(std::string_view sv) {
   std::string command{sv};
 
-  PyObject* m = PyImport_AddModule("__main__");
-  if (m == nullptr) {
-    throw std::runtime_error("Unable to add module __main__ for python script execution");
-  }
-
-  PyObject* globalDict = PyModule_GetDict(m);
-
-  PyObject* v = PyRun_String(command.c_str(), Py_file_input, globalDict, globalDict);
+  PyObject* v = PyRun_String(command.c_str(), Py_file_input, m_globalDict, m_globalDict);
+  // PyObject* v = PyRun_SimpleString(command.c_str());
   if (v == nullptr) {
     PyErr_Print();
     throw std::runtime_error("Error executing Python code");
@@ -126,14 +129,8 @@ void PythonEngine::exec(std::string_view sv) {
 ScriptObject PythonEngine::eval(std::string_view sv) {
   std::string command{sv};
 
-  PyObject* m = PyImport_AddModule("__main__");
-  if (m == nullptr) {
-    throw std::runtime_error("Unable to add module __main__ for python script execution");
-  }
+  PyObject* v = PyRun_String(command.c_str(), Py_eval_input, m_globalDict, m_globalDict);
 
-  PyObject* d = PyModule_GetDict(m);
-
-  PyObject* v = PyRun_String(command.c_str(), Py_eval_input, d, d);
   if (v == nullptr) {
     PyErr_Print();
     throw std::runtime_error("Error executing Python code");
