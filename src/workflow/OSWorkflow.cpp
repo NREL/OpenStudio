@@ -143,8 +143,15 @@ void OSWorkflow::run() {
       // place measureDirPath in sys.path; do from measure import MeasureName
       // I think this can't work without a "as xxx" otherwise we'll repeatedly try to import a module named 'measure'
       // pythonEngine->pyimport("measure", openstudio::toString(measureDirPath.get()));
-      auto importCmd =
-        fmt::format("import sys; sys.path.insert(0, '{}'); from measure import {}", openstudio::toString(scriptPath_->parent_path()), className);
+      auto importCmd = fmt::format(R"python(
+import sys
+sys.path.insert(0, '{0}')
+from measure import {1}
+print(sys.path)
+measure = {1}()
+print(measure.name())
+)python",
+                                   openstudio::toString(scriptPath_->parent_path()), className);
       fmt::print("{}\n", importCmd);
       pythonEngine->exec(importCmd);
       auto pythonMeasure = pythonEngine->eval(fmt::format("{}()", className));
@@ -155,6 +162,8 @@ void OSWorkflow::run() {
     }
     // Initialize arguments which may be model dependent, don't allow arguments method access to real model in case it changes something
     std::vector<measure::OSArgument> arguments;
+
+    fmt::print("Calling modelMeasurePtr->name()= '{}'\n", modelMeasurePtr->name());
 
     if (measureType == MeasureType::ModelMeasure) {
       arguments = modelMeasurePtr->arguments(modelClone);
