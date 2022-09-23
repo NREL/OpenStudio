@@ -33,7 +33,11 @@ target_link_libraries(
   PRIVATE
   openstudio_scriptengine
   CONAN_PKG::fmt
+  CONAN_PKG::boost   # TODO: consider porting ApplicationPathHelpers to use std::filesystem instead
   Python::Python
 )
+
+# tp_print is deprecated at of 3.8.
+target_compile_options(pythonengine PRIVATE "-Wno-deprecated-declarations")
 
 install(TARGETS pythonengine EXPORT openstudio DESTINATION bin COMPONENT "CLI")
