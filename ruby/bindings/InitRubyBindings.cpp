@@ -378,5 +378,5 @@ void initRubyBindings() {
   initExtendedRubyBindings();
 }
 
-} // namespace ruby
-} // namespace openstudio
+}  // namespace ruby
+}  // namespace openstudio

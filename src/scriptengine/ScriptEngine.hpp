@@ -15,8 +15,8 @@
 namespace openstudio {
 
 namespace measure {
-class ModelMeasure;
-} // measure
+  class ModelMeasure;
+}  // namespace measure
 
 class ScriptEngine;
 
@@ -42,7 +42,9 @@ class ScriptEngine
   ScriptEngine(ScriptEngine&&) = delete;
   ScriptEngine& operator=(const ScriptEngine&) = delete;
   ScriptEngine& operator=(ScriptEngine&&) = delete;
-  ScriptEngine* operator->() { return this; }
+  ScriptEngine* operator->() {
+    return this;
+  }
 
   virtual ScriptObject eval(std::string_view sv) = 0;
 
@@ -101,10 +103,10 @@ inline std::unique_ptr<openstudio::ScriptEngine> loadScriptEngine(std::string_vi
 
 // The purpose of this class is to delay creating the scripting engine
 // until it is needed, while still initializing with argc and argv
-class ScriptEngineInstance {
+class ScriptEngineInstance
+{
  public:
-  ScriptEngineInstance(std::string_view libraryBaseName, int argc, char *argv[])
-    : libraryName(libraryBaseName), args(argv, argv + argc) {}
+  ScriptEngineInstance(std::string_view libraryBaseName, int argc, char* argv[]) : libraryName(libraryBaseName), args(argv, argv + argc) {}
 
   ScriptEngineInstance(const ScriptEngineInstance&) = default;
   ScriptEngineInstance(ScriptEngineInstance&&) = delete;
@@ -115,17 +117,20 @@ class ScriptEngineInstance {
     if (instance) {
       return *(instance.get());
     } else {
-      std::vector<char *> argv;
-  
-      std::transform(args.begin(), args.end(), std::back_inserter(argv),
-                     [](const std::string &item) { return const_cast<char *>(item.c_str()); });
-  
+      std::vector<char*> argv;
+
+      std::transform(args.begin(), args.end(), std::back_inserter(argv), [](const std::string& item) { return const_cast<char*>(item.c_str()); });
+
       instance = openstudio::loadScriptEngine(libraryName, args.size(), argv.data());
       return *instance;
     }
   }
-  explicit operator bool() { return (bool)instance; }
-  void reset() { instance.reset(); }
+  explicit operator bool() {
+    return (bool)instance;
+  }
+  void reset() {
+    instance.reset();
+  }
 
  private:
   std::string libraryName;
@@ -133,6 +138,6 @@ class ScriptEngineInstance {
   std::shared_ptr<openstudio::ScriptEngine> instance;
 };
 
-} // namespace openstudio
+}  // namespace openstudio
 
 #endif

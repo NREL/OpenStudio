@@ -5,12 +5,8 @@
 
 namespace openstudio {
 
-OSWorkflow::OSWorkflow(
-  const filesystem::path &oswPath,
-  const ScriptEngineInstance &ruby,
-  const ScriptEngineInstance &python
-) : rubyEngine(ruby), pythonEngine(python), workflowJSON(oswPath)
-{}
+OSWorkflow::OSWorkflow(const filesystem::path& oswPath, const ScriptEngineInstance& ruby, const ScriptEngineInstance& python)
+  : rubyEngine(ruby), pythonEngine(python), workflowJSON(oswPath) {}
 
 void OSWorkflow::run() {
   rubyEngine->exec("puts 'Hello from Ruby'");
@@ -20,7 +16,7 @@ void OSWorkflow::run() {
 
   const auto modelSteps = workflowJSON.getMeasureSteps(openstudio::MeasureType::ModelMeasure);
 
-  for(const auto& step : modelSteps) {
+  for (const auto& step : modelSteps) {
     const auto measureName = step.measureDirName();
     const auto measurePath = workflowJSON.findMeasure(measureName);
     if (measurePath) {
@@ -38,4 +34,4 @@ void OSWorkflow::run() {
   }
 }
 
-} // namespace openstudio
+}  // namespace openstudio

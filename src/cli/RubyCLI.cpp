@@ -4,7 +4,7 @@
 
 namespace openstudio {
 
-int rubyCLI(ScriptEngineInstance &rubyEngine) {
+int rubyCLI(ScriptEngineInstance& rubyEngine) {
   try {
     rubyEngine->exec(R"(
        begin
@@ -31,4 +31,4 @@ int rubyCLI(ScriptEngineInstance &rubyEngine) {
   return 0;
 }
 
-} // openstudio
+}  // namespace openstudio

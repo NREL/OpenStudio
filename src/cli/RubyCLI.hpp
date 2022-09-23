@@ -7,8 +7,8 @@ namespace openstudio {
 
 class ScriptEngineInstance;
 
-int rubyCLI(ScriptEngineInstance &rubyEngine);
+int rubyCLI(ScriptEngineInstance& rubyEngine);
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // RUBY_CLI_included
+#endif  // RUBY_CLI_included

@@ -20,10 +20,9 @@ class PythonEngine final : public ScriptEngine
   void exec(std::string_view sv) override;
 
  protected:
-
   void* getAs_impl(ScriptObject& obj, const std::type_info&) override;
   void importOpenStudio();
-  void import(const std::string &importName, const std::string &includePath);
+  void import(const std::string& importName, const std::string& includePath);
 
  private:
   wchar_t* program;
@@ -31,11 +30,11 @@ class PythonEngine final : public ScriptEngine
 
 }  // namespace openstudio
 
-extern "C" {
-openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]) {
-  return new openstudio::PythonEngine(argc, argv);
-}
-
+extern "C"
+{
+  openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]) {
+    return new openstudio::PythonEngine(argc, argv);
+  }
 }
 
 #endif

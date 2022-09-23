@@ -11,11 +11,7 @@ namespace openstudio {
 class OSWorkflow
 {
  public:
-  OSWorkflow(
-    const filesystem::path &oswPath,
-    const ScriptEngineInstance &ruby,
-    const ScriptEngineInstance &python
-  );
+  OSWorkflow(const filesystem::path& oswPath, const ScriptEngineInstance& ruby, const ScriptEngineInstance& python);
 
   void run();
 
@@ -26,6 +22,6 @@ class OSWorkflow
   measure::OSRunner runner{workflowJSON};
 };
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // WORKFLOW_OSWORKFLOW_HPP
+#endif  // WORKFLOW_OSWORKFLOW_HPP

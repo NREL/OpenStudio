@@ -1,10 +1,10 @@
-  //void Init_EmbeddedScripting(void);
-  //INIT_DECLARATIONS;
+//void Init_EmbeddedScripting(void);
+//INIT_DECLARATIONS;
 
-  //VALUE init_rest_of_openstudio(...) {
-  //  init_openstudio_internal_extended();
-  //  return Qtrue;
-  //}
+//VALUE init_rest_of_openstudio(...) {
+//  init_openstudio_internal_extended();
+//  return Qtrue;
+//}
 
 extern "C"
 {
