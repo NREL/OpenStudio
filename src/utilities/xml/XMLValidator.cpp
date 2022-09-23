@@ -49,7 +49,6 @@
 #include <libxml/xpathInternals.h>  // BAD_CAST
 
 #include <src/utilities/embedded_files.hxx>
-#include <src/gbxml/embedded_files.hxx>
 
 #include <fmt/format.h>
 
