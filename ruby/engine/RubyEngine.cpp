@@ -2,10 +2,10 @@
 #include "InitRubyBindings.hpp"
 #include <embedded_files.hxx>
 #include <rubyengine_export.h>
-#include <signal.h>
+#include <csignal>
 #include <stdexcept>
 #include <string>
-#include <time.h>
+#include <ctime>
 
 #ifdef __GNUC__
 #  pragma GCC diagnostic push
