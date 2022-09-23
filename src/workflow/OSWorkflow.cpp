@@ -57,6 +57,9 @@ void OSWorkflow::run() {
   rubyEngine->exec("puts 'Hello from Ruby'");
   pythonEngine->exec("print('Hello from Python')");
 
+  rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
+  pythonEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
+
   // -1: gotta init the rest of OpenStudio in ruby, so that Ruleset and co are defined
   fmt::print("here's a model from Ruby:\n");
   rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");

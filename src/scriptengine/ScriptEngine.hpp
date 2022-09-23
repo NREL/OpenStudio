@@ -34,7 +34,7 @@ class ScriptEngine
 {
  public:
   ScriptEngine([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) {
-    registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
+    // registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
   }
 
   virtual ~ScriptEngine() = default;
