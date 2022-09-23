@@ -57,7 +57,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     if(BUILD_RUBY_BINDINGS OR BUILD_CLI)
       # Track NREL/stable in general, on a feature branch this could be temporarily switched to NREL/testing
       # TODO: temp, revert to stable soon
-      set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#8ff0c0247d60babd7fa66a41de85cca9")
+      set(CONAN_RUBY "openstudio_ruby/2.7.2@nrel/testing#d66e3b66568b13acf3b16d866bec68d0")
      endif()
   endif()
 
@@ -84,6 +84,11 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   endif()
 
   # TODO:  list(APPEND CONAN_OPTIONS "fmt:header_only=True")
+
+  if(APPLE)
+    # #4120 - global is the 'default' visibility in gcc/clang
+    list(APPEND CONAN_OPTIONS "boost:visibility=global")
+  endif()
 
   # You do want to rebuild packages if there's a newer recipe in the remote (which applies mostly to our own openstudio_ruby where we don't
   # bump the actual package version when we make changes) than the binaries were built with
