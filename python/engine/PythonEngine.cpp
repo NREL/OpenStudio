@@ -45,10 +45,10 @@ PythonEngine::~PythonEngine() {
 void PythonEngine::importOpenStudio() {
   if (moduleIsRunningFromBuildDirectory()) {
     const auto bindingsDir = getOpenStudioModuleDirectory();
-    import("openstudiodev", bindingsDir.string());
+    pyimport("openstudio", bindingsDir.string());
   } else {
     const auto bindingsDir = getOpenStudioModuleDirectory() / "../Python";
-    import("openstudio", bindingsDir.string());
+    pyimport("openstudio", bindingsDir.string());
   }
 }
 

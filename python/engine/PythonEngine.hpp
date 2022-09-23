@@ -22,7 +22,7 @@ class PythonEngine final : public ScriptEngine
  protected:
   void* getAs_impl(ScriptObject& obj, const std::type_info&) override;
   void importOpenStudio();
-  void import(const std::string& importName, const std::string& includePath);
+  void pyimport(const std::string& importName, const std::string& includePath);
 
  private:
   wchar_t* program;
