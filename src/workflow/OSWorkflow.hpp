@@ -8,6 +8,13 @@
 
 namespace openstudio {
 
+class Variant;
+
+namespace measure {
+  class OSArgument;
+  using OSArgumentMap = std::map<std::string, OSArgument>;
+}  // namespace measure
+
 class OSWorkflow
 {
  public:
@@ -16,10 +23,13 @@ class OSWorkflow
   void run();
 
  private:
+  // TODO: add a Logger
   ScriptEngineInstance rubyEngine;
   ScriptEngineInstance pythonEngine;
   WorkflowJSON workflowJSON;
   measure::OSRunner runner{workflowJSON};
+
+  static void applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue);
 };
 
 }  // namespace openstudio
