@@ -31,19 +31,9 @@ target_include_directories(pythonengine
 target_link_libraries(
   pythonengine
   PRIVATE
-  openstudio_utilities
-  openstudio_airflow
-  openstudio_model
-  openstudio_energyplus
-  openstudio_epjson
-  openstudio_measure
-  openstudio_osversion
-  openstudio_sdd
-  openstudio_isomodel
-  openstudio_gbxml
-  openstudio_gltf
-  openstudio_radiance
-  scriptengine  Python::Python CONAN_PKG::zlib
+  openstudio_scriptengine
+  CONAN_PKG::fmt
+  Python::Python
 )
 
 install(TARGETS pythonengine EXPORT openstudio DESTINATION bin COMPONENT "CLI")

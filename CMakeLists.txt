@@ -307,6 +307,12 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
 endif()
 
+include(CheckIncludeFile)
+check_include_file("unistd.h" HAVE_UNISTD_H)
+if(HAVE_UNISTD_H)
+  add_definitions(-DHAVE_UNISTD_H)
+endif()
+
 # Enable runtime checking features
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
 
@@ -978,6 +984,7 @@ set(project_directories
   lib
   install_utility
   scriptengine
+  workflow
 )
 
 # resources must be added after find EnergyPlus
