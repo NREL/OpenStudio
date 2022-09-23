@@ -90,7 +90,6 @@ namespace model {
     }
 
     std::vector<ScheduleTypeKey> ZoneMixing_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
-      // TODO: Check schedule display names.
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
       UnsignedVector::const_iterator b(fieldIndices.begin());
@@ -122,6 +121,16 @@ namespace model {
       return result;
     }
 
+    bool ZoneMixing_Impl::setParent(ParentObject& newParent) {
+      bool result = false;
+      if (auto mo_ = newParent.optionalCast<Space>()) {
+        result = this->setSpace(mo_.get());
+        // } else if (auto mo_ = newParent.optionalCast<ThermalZone>()) {
+        //   result = this->setZone(mo_.get());
+      }
+      return result;
+    }
+
     ModelObject ZoneMixing_Impl::zoneOrSpace() const {
       boost::optional<ModelObject> value = getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ZoneMixingFields::ZoneorSpaceName);
       if (!value) {
@@ -138,6 +147,14 @@ namespace model {
       return zoneOrSpace().optionalCast<Space>();
     }
 
+    bool ZoneMixing_Impl::setZone(const ThermalZone& zone) {
+      return setPointer(OS_ZoneMixingFields::ZoneorSpaceName, zone.handle());
+    }
+
+    bool ZoneMixing_Impl::setSpace(const Space& space) {
+      return setPointer(OS_ZoneMixingFields::ZoneorSpaceName, space.handle());
+    }
+
     boost::optional<ModelObject> ZoneMixing_Impl::sourceZoneOrSpace() const {
       return getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_ZoneMixingFields::SourceZoneorSpaceName);
     }
@@ -148,6 +165,42 @@ namespace model {
 
     boost::optional<Space> ZoneMixing_Impl::sourceSpace() const {
       return getObject<ModelObject>().getModelObjectTarget<Space>(OS_ZoneMixingFields::SourceZoneorSpaceName);
+    }
+
+    bool ZoneMixing_Impl::setSourceZone(const ThermalZone& zone) {
+
+      auto receiving = this->zoneOrSpace();
+      // source zone cannot be the same as this zone
+      if (zone.handle() == receiving.handle()) {
+        LOG(Warn, "For " << briefDescription() << ", Source Zone cannot be the same as the Receiving Zone '" << zone.nameString() << "'.");
+        return false;
+      }
+      if (receiving.iddObjectType() != IddObjectType::OS_ThermalZone) {
+        LOG(Warn, "For " << briefDescription() << ", Receiving is a Space, so you cannot set Source as a Zone.");
+        return false;
+      }
+
+      return setPointer(OS_ZoneMixingFields::SourceZoneorSpaceName, zone.handle());
+    }
+
+    bool ZoneMixing_Impl::setSourceSpace(const Space& space) {
+      auto receiving = this->zoneOrSpace();
+      // source zone cannot be the same as this zone
+      if (space.handle() == receiving.handle()) {
+        LOG(Warn, "For " << briefDescription() << ", Source Space cannot be the same as the Receiving Space '" << space.nameString() << "'.");
+        return false;
+      }
+      if (receiving.iddObjectType() != IddObjectType::OS_Space) {
+        LOG(Warn, "For " << briefDescription() << ", Receiving is a Zone, so you cannot set Source as a Space.");
+        return false;
+      }
+
+      return setPointer(OS_ZoneMixingFields::SourceZoneorSpaceName, space.handle());
+    }
+
+    void ZoneMixing_Impl::resetSourceZoneOrSpace() {
+      bool result = setString(OS_ZoneMixingFields::SourceZoneorSpaceName, "");
+      OS_ASSERT(result);
     }
 
     Schedule ZoneMixing_Impl::schedule() const {
@@ -289,29 +342,29 @@ namespace model {
       return result;
     }
 
-    bool ZoneMixing_Impl::setSourceZone(const ThermalZone& zone) {
-      bool result(false);
-
-      // source zone cannot be the same as this zone
-      if (zone.handle() != this->zoneOrSpace().handle()) {
-        result = setPointer(OS_ZoneMixingFields::SourceZoneorSpaceName, zone.handle());
+    bool ZoneMixing_Impl::hardSize() {
+      boost::optional<Space> space = this->space();
+      if (!space) {
+        return false;
       }
-      return result;
-    }
 
-    bool ZoneMixing_Impl::setSourceSpace(const Space& space) {
-      bool result(false);
-
-      // source zone cannot be the same as this zone
-      if (space.handle() != this->zoneOrSpace().handle()) {
-        result = setPointer(OS_ZoneMixingFields::SourceZoneorSpaceName, space.handle());
+      if (this->designFlowRate()) {
+        return true;
       }
-      return result;
-    }
 
-    void ZoneMixing_Impl::resetSourceZoneOrSpace() {
-      bool result = setString(OS_ZoneMixingFields::SourceZoneorSpaceName, "");
-      OS_ASSERT(result);
+      if (boost::optional<double> flowRateperFloorArea = this->flowRateperFloorArea()) {
+        return this->setDesignFlowRate(*flowRateperFloorArea * space->floorArea());
+      }
+
+      if (boost::optional<double> flowRateperPerson = this->flowRateperPerson()) {
+        return this->setDesignFlowRate(*flowRateperPerson * space->numberOfPeople());
+      }
+
+      if (boost::optional<double> airChangesperHour = this->airChangesperHour()) {
+        return this->setDesignFlowRate(*airChangesperHour * space->volume() / 3600.0);
+      }
+
+      return false;
     }
 
     bool ZoneMixing_Impl::setDeltaTemperature(double deltaTemperature) {
@@ -444,6 +497,10 @@ namespace model {
 
   IddObjectType ZoneMixing::iddObjectType() {
     return {IddObjectType::OS_ZoneMixing};
+  }
+
+  bool ZoneMixing::hardSize() {
+    return getImpl<detail::ZoneMixing_Impl>()->hardSize();
   }
 
   boost::optional<ThermalZone> ZoneMixing::zone() const {

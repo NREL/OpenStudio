@@ -38,6 +38,10 @@
 #include "../ScheduleTypeLimits.hpp"
 #include "../Model.hpp"
 #include "../Model_Impl.hpp"
+#include "../Space.hpp"
+#include "../Space_Impl.hpp"
+
+#include "../../utilities/geometry/Point3d.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -63,7 +67,7 @@ TEST_F(ModelFixture, ZoneMixing) {
   EXPECT_EQ("Flow/Zone", mixing.designFlowRateCalculationMethod());
   ASSERT_TRUE(mixing.designFlowRate());
   EXPECT_EQ(0.0, mixing.designFlowRate().get());
-  EXPECT_FALSE(mixing.flowRateperZoneFloorArea());
+  EXPECT_FALSE(mixing.flowRateperFloorArea());
   EXPECT_FALSE(mixing.flowRateperPerson());
   EXPECT_FALSE(mixing.airChangesperHour());
 
@@ -71,22 +75,22 @@ TEST_F(ModelFixture, ZoneMixing) {
   EXPECT_EQ("Flow/Zone", mixing.designFlowRateCalculationMethod());
   ASSERT_TRUE(mixing.designFlowRate());
   EXPECT_EQ(100.0, mixing.designFlowRate().get());
-  EXPECT_FALSE(mixing.flowRateperZoneFloorArea());
+  EXPECT_FALSE(mixing.flowRateperFloorArea());
   EXPECT_FALSE(mixing.flowRateperPerson());
   EXPECT_FALSE(mixing.airChangesperHour());
 
-  EXPECT_TRUE(mixing.setFlowRateperZoneFloorArea(100.0));
+  EXPECT_TRUE(mixing.setFlowRateperFloorArea(100.0));
   EXPECT_EQ("Flow/Area", mixing.designFlowRateCalculationMethod());
   EXPECT_FALSE(mixing.designFlowRate());
-  ASSERT_TRUE(mixing.flowRateperZoneFloorArea());
-  EXPECT_EQ(100.0, mixing.flowRateperZoneFloorArea().get());
+  ASSERT_TRUE(mixing.flowRateperFloorArea());
+  EXPECT_EQ(100.0, mixing.flowRateperFloorArea().get());
   EXPECT_FALSE(mixing.flowRateperPerson());
   EXPECT_FALSE(mixing.airChangesperHour());
 
   EXPECT_TRUE(mixing.setFlowRateperPerson(100.0));
   EXPECT_EQ("Flow/Person", mixing.designFlowRateCalculationMethod());
   EXPECT_FALSE(mixing.designFlowRate());
-  EXPECT_FALSE(mixing.flowRateperZoneFloorArea());
+  EXPECT_FALSE(mixing.flowRateperFloorArea());
   ASSERT_TRUE(mixing.flowRateperPerson());
   EXPECT_EQ(100.0, mixing.flowRateperPerson().get());
   EXPECT_FALSE(mixing.airChangesperHour());
@@ -94,7 +98,7 @@ TEST_F(ModelFixture, ZoneMixing) {
   EXPECT_TRUE(mixing.setAirChangesperHour(100.0));
   EXPECT_EQ("AirChanges/Hour", mixing.designFlowRateCalculationMethod());
   EXPECT_FALSE(mixing.designFlowRate());
-  EXPECT_FALSE(mixing.flowRateperZoneFloorArea());
+  EXPECT_FALSE(mixing.flowRateperFloorArea());
   EXPECT_FALSE(mixing.flowRateperPerson());
   ASSERT_TRUE(mixing.airChangesperHour());
   EXPECT_EQ(100.0, mixing.airChangesperHour().get());
@@ -112,10 +116,10 @@ TEST_F(ModelFixture, ZoneMixing) {
 
   EXPECT_FALSE(mixing.deltaTemperature());
   EXPECT_FALSE(mixing.deltaTemperatureSchedule());
-  EXPECT_FALSE(mixing.minimumZoneTemperatureSchedule());
-  EXPECT_FALSE(mixing.maximumZoneTemperatureSchedule());
-  EXPECT_FALSE(mixing.minimumSourceZoneTemperatureSchedule());
-  EXPECT_FALSE(mixing.maximumSourceZoneTemperatureSchedule());
+  EXPECT_FALSE(mixing.minimumReceivingTemperatureSchedule());
+  EXPECT_FALSE(mixing.maximumReceivingTemperatureSchedule());
+  EXPECT_FALSE(mixing.minimumSourceTemperatureSchedule());
+  EXPECT_FALSE(mixing.maximumSourceTemperatureSchedule());
   EXPECT_FALSE(mixing.minimumOutdoorTemperatureSchedule());
   EXPECT_FALSE(mixing.maximumOutdoorTemperatureSchedule());
 
@@ -157,12 +161,12 @@ TEST_F(ModelFixture, ZoneMixing) {
   EXPECT_EQ(-10.0, mixing.deltaTemperature().get());
   EXPECT_FALSE(mixing.deltaTemperatureSchedule());
 
-  EXPECT_FALSE(mixing.maximumZoneTemperatureSchedule());
-  EXPECT_FALSE(mixing.setMaximumZoneTemperatureSchedule(fractionalSchedule));
-  EXPECT_FALSE(mixing.setMaximumZoneTemperatureSchedule(deltaTemperatureSchedule));
-  EXPECT_TRUE(mixing.setMaximumZoneTemperatureSchedule(temperatureSchedule));
-  ASSERT_TRUE(mixing.maximumZoneTemperatureSchedule());
-  EXPECT_EQ(temperatureSchedule.handle(), mixing.maximumZoneTemperatureSchedule().get().handle());
+  EXPECT_FALSE(mixing.maximumReceivingTemperatureSchedule());
+  EXPECT_FALSE(mixing.setMaximumReceivingTemperatureSchedule(fractionalSchedule));
+  EXPECT_FALSE(mixing.setMaximumReceivingTemperatureSchedule(deltaTemperatureSchedule));
+  EXPECT_TRUE(mixing.setMaximumReceivingTemperatureSchedule(temperatureSchedule));
+  ASSERT_TRUE(mixing.maximumReceivingTemperatureSchedule());
+  EXPECT_EQ(temperatureSchedule.handle(), mixing.maximumReceivingTemperatureSchedule().get().handle());
 }
 
 TEST_F(ModelFixture, ZoneMixing_SameZone) {
@@ -203,5 +207,75 @@ TEST_F(ModelFixture, ZoneMixing_ZoneRemove) {
     EXPECT_EQ(1u, model.getModelObjects<ZoneMixing>().size());
     zone2.remove();
     EXPECT_EQ(0u, model.getModelObjects<ZoneMixing>().size());
+  }
+}
+
+TEST_F(ModelFixture, ZoneMixing_CantMixSpacesAndZones) {
+
+  Model m;
+
+  constexpr double width = 10.0;
+  constexpr double height = 3.6;  // It's convenient for ACH, since 3600 s/hr
+  // constexpr double spaceFloorArea = width * width;
+  // constexpr double spaceVolume = spaceFloorArea * height;
+  // constexpr double oneWallArea = width * height;
+
+  //            y (=North)
+  //   ▲
+  //   │                  building height = 3m
+  // 10├────────┼────────┼────────┤
+  //   │        │        │        │
+  //   │ Zone 1 │ Zone 1 │ Zone 2 │
+  //   │ Space 1│ Space 2│ Space 3│
+  //   │        │        │        │
+  //   └────────┴────────┴────────┴─────► x
+  //  0        10       20        30
+
+  // Counterclockwise points
+  std::vector<Point3d> floorPointsSpace1{{0.0, 0.0, 0.0}, {0.0, width, 0.0}, {width, width, 0.0}, {width, 0.0, 0.0}};
+
+  auto space1 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  auto space2 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  space2.setXOrigin(width);
+  auto space3 = Space::fromFloorPrint(floorPointsSpace1, height, m).get();
+  space3.setXOrigin(width * 2);
+
+  ThermalZone z1(m);
+  space1.setThermalZone(z1);
+  space2.setThermalZone(z1);
+
+  ThermalZone z2(m);
+  space3.setThermalZone(z2);
+
+  {
+    ZoneMixing zm(space1);
+    // Can't mix Spaces and Zones
+    EXPECT_FALSE(zm.setSourceZone(z1));
+    EXPECT_FALSE(zm.sourceZoneOrSpace());
+    EXPECT_FALSE(zm.sourceZone());
+    EXPECT_FALSE(zm.sourceSpace());
+
+    EXPECT_TRUE(zm.setSourceSpace(space3));
+    ASSERT_TRUE(zm.sourceZoneOrSpace());
+    EXPECT_EQ(space3, zm.sourceZoneOrSpace().get());
+    ASSERT_TRUE(zm.sourceSpace());
+    EXPECT_EQ(space3, zm.sourceSpace().get());
+    EXPECT_FALSE(zm.sourceZone());
+  }
+
+  {
+    ZoneMixing zm(z1);
+    // Can't mix Spaces and Zones
+    EXPECT_FALSE(zm.setSourceSpace(space1));
+    EXPECT_FALSE(zm.sourceZoneOrSpace());
+    EXPECT_FALSE(zm.sourceZone());
+    EXPECT_FALSE(zm.sourceSpace());
+
+    EXPECT_TRUE(zm.setSourceZone(z2));
+    ASSERT_TRUE(zm.sourceZoneOrSpace());
+    EXPECT_EQ(z2, zm.sourceZoneOrSpace().get());
+    ASSERT_TRUE(zm.sourceZone());
+    EXPECT_EQ(z2, zm.sourceZone().get());
+    EXPECT_FALSE(zm.sourceSpace());
   }
 }

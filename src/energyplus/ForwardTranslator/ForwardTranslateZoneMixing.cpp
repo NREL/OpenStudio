@@ -37,6 +37,8 @@
 #include "../../model/ZoneMixing_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 
 #include <utilities/idd/ZoneMixing_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
@@ -50,6 +52,43 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateZoneMixing(ZoneMixing& modelObject) {
+
+    ModelObject zoneOrSpace = modelObject.zoneOrSpace();
+    boost::optional<ModelObject> sourceZoneOrSpace = modelObject.sourceZoneOrSpace();
+
+    auto getParentObjectName = [this](const ModelObject& mo) {
+      if (!m_excludeSpaceTranslation) {
+        return mo.nameString();
+      }
+
+      if (auto space_ = mo.optionalCast<Space>()) {
+        if (auto thermalZone_ = space_->thermalZone()) {
+          return thermalZone_->nameString();
+        } else {
+          OS_ASSERT(false);  // This shouldn't happen, since we removed all orphaned spaces earlier in the FT
+        }
+      }
+
+      return mo.nameString();
+    };
+
+    if (!sourceZoneOrSpace) {
+      LOG(Warn, modelObject.briefDescription() << " doesn't have a Source Zone or Space, it will not be translated.");
+      return boost::none;
+    }
+
+    if (zoneOrSpace == sourceZoneOrSpace.get()) {
+
+      LOG(Warn, modelObject.briefDescription() << " has the same Receiving and Source Zone or Space, it will not be translated.");
+      if (!m_excludeSpaceTranslation) {
+        // We don't allow this at model time, the only reason we expect this to happen is when m_excludeSpaceTranslation is true, we call
+        // combineSpaces, and if the user has a ZoneMixing pointing to two spaces from the same ThermalZone, you end up with matching Receiving and
+        // Source Spaces
+        OS_ASSERT(false);
+      }
+      return boost::none;
+    }
+
     // Makes sure the modelObject gets put in the map, and that the new idfObject gets put in
     // the final file. Also set's the idfObject's name.
     IdfObject idfObject = createRegisterAndNameIdfObject(IddObjectType::ZoneMixing, modelObject);
@@ -57,9 +96,8 @@ namespace energyplus {
     boost::optional<double> value;
 
     // ZoneorSpaceName
-    auto zoneorSpace = modelObject.zoneOrSpace();
-    translateAndMapModelObject(zoneorSpace);
-    idfObject.setString(ZoneMixingFields::ZoneorSpaceName, zoneorSpace.nameString());
+    translateAndMapModelObject(zoneOrSpace);
+    idfObject.setString(ZoneMixingFields::ZoneorSpaceName, getParentObjectName(zoneOrSpace));
 
     // ScheduleName
     Schedule schedule = modelObject.schedule();
@@ -94,10 +132,8 @@ namespace energyplus {
     }
 
     // SourceZoneorSpaceName
-    if (boost::optional<ModelObject> sourceZoneOrSpace = modelObject.sourceZoneOrSpace()) {
-      // DLM: do not translate source zone now, it will be translated at the right time
-      idfObject.setString(ZoneMixingFields::SourceZoneorSpaceName, sourceZoneOrSpace->nameString());
-    }
+    // DLM: do not translate source zone now, it will be translated at the right time
+    idfObject.setString(ZoneMixingFields::SourceZoneorSpaceName, getParentObjectName(sourceZoneOrSpace.get()));
 
     // DeltaTemperature
     value = modelObject.deltaTemperature();

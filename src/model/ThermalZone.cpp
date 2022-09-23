@@ -1459,10 +1459,20 @@ namespace model {
         // first hard size any space loads, do this before removing surfaces as
         // hard sizing may require space geometry
         for (ModelObject child : children) {
-          if (child.optionalCast<SpaceLoad>()) {
-            child.cast<SpaceLoad>().hardSize();
-            child.cast<SpaceLoad>().hardApplySchedules();
+          if (auto sp_ = child.optionalCast<SpaceLoad>()) {
+            sp_->hardSize();
+            sp_->hardApplySchedules();
           }
+        }
+
+        for (ZoneMixing& zm : space.supplyZoneMixing()) {
+          zm.hardSize();
+          zm.setParent(newSpace);
+        }
+
+        for (ZoneMixing& zm : space.exhaustZoneMixing()) {
+          zm.hardSize();
+          zm.setSourceSpace(newSpace);
         }
 
         // now move costs over to the new space

@@ -68,6 +68,10 @@ namespace model {
 
       virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
+      virtual bool setParent(ParentObject& newParent) override;
+
+      bool hardSize();
+
       //@}
       /** @name Getters */
       //@{
@@ -115,6 +119,9 @@ namespace model {
       //@}
       /** @name Setters */
       //@{
+
+      bool setZone(const ThermalZone& zone);
+      bool setSpace(const Space& space);
 
       bool setSchedule(Schedule& schedule);
 

@@ -65,6 +65,8 @@ namespace model {
 
     static IddObjectType iddObjectType();
 
+    bool hardSize();
+
     /** @name Getters */
     //@{
 

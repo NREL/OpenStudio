@@ -76,6 +76,7 @@ namespace model {
   class SpaceInfiltrationFlowCoefficient;
   class DesignSpecificationOutdoorAir;
   class Space;
+  class ZoneMixing;
 
   namespace detail {
 
@@ -506,6 +507,10 @@ namespace model {
 
       Polyhedron polyhedron() const;
       bool isEnclosedVolume() const;
+
+      std::vector<ZoneMixing> zoneMixing() const;
+      std::vector<ZoneMixing> supplyZoneMixing() const;
+      std::vector<ZoneMixing> exhaustZoneMixing() const;
 
      private:
       REGISTER_LOGGER("openstudio.model.Space");
