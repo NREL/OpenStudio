@@ -2,6 +2,8 @@ import openstudio
 import typing
 
 class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.ModelMeasure):
+    def __init__(self):
+        openstudio.measure.ModelMeasure.__init__(self)
 
     def name(self):
         """
@@ -43,6 +45,7 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
         """
         define what happens when the measure is run
         """
+        super().run(model,runner,user_arguments)
 
         if not(runner.validateUserArguments(self.arguments(model),
                                             user_arguments)):

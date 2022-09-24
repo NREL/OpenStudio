@@ -3,6 +3,7 @@
 #include <fmt/format.h>
 #include <stdexcept>
 #include <string>
+#include <iostream>
 
 #ifdef __GNUC__
 #  pragma GCC diagnostic push
@@ -39,8 +40,8 @@ PythonEngine::PythonEngine(int argc, char* argv[]) : ScriptEngine(argc, argv), p
   }
   m_globalDict = PyModule_GetDict(m);
 
-  PyRun_SimpleString("from time import time,ctime\n"
-                     "print('Today is', ctime(time()))\n");
+  //PyRun_SimpleString("from time import time,ctime\n"
+  //                   "print('Today is', ctime(time()))\n");
   importOpenStudio();
 }
 
@@ -53,8 +54,8 @@ PythonEngine::~PythonEngine() {
 
 void PythonEngine::importOpenStudio() {
   if (moduleIsRunningFromBuildDirectory()) {
-    const auto bindingsDir = getOpenStudioModuleDirectory() / "python_package";
-    pyimport("openstudio", bindingsDir.string());
+    const auto bindingsDir = getOpenStudioModuleDirectory();
+    pyimport("openstudiodev", bindingsDir.string());
   } else {
     const auto bindingsDir = getOpenStudioModuleDirectory() / "../Python";
     pyimport("openstudio", bindingsDir.string());

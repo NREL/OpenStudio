@@ -2,7 +2,7 @@
 #define MEASURE_I
 
 #ifdef SWIGPYTHON
-%module openstudiomeasure
+%module(directors="1") openstudiomeasure
 #endif
 
 

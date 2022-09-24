@@ -32,9 +32,7 @@ target_link_libraries(
   pythonengine
   PRIVATE
   openstudio_scriptengine
-  openstudio_utilities
   CONAN_PKG::fmt
-  # CONAN_PKG::boost   # TODO: consider porting ApplicationPathHelpers to use std::filesystem instead
   Python::Python
 )
 
