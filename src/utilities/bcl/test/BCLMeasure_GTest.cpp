@@ -803,7 +803,7 @@ TEST_F(BCLFixture, 4156_TweakXML) {
   boost::optional<BCLMeasure> measure = BCLMeasure::load(srcDir);
   ASSERT_TRUE(measure);
   EXPECT_EQ(numFiles + addedUntrackedFiles, measure->files().size());
-  EXPECT_EQ(MeasureLanguage::Ruby, measure->measureLanguage());
+  EXPECT_EQ(MeasureLanguage(MeasureLanguage::Ruby), measure->measureLanguage());
 
   // Call CheckUpdateFiles(), it should detect the files that aren't allowed
   EXPECT_TRUE(measure->checkForUpdatesFiles());
@@ -974,7 +974,7 @@ TEST_F(BCLFixture, BCLMeasure_Ctor_PythonModelMeasure) {
   boost::optional<BCLMeasure> measure = BCLMeasure::load(srcDir);
   ASSERT_TRUE(measure);
   EXPECT_EQ(MeasureType::ModelMeasure, measure->measureType());
-  EXPECT_EQ(MeasureLanguage::Python, measure->measureLanguage());
+  EXPECT_EQ(MeasureLanguage(MeasureLanguage::Python), measure->measureLanguage());
   auto files = measure->files();
   size_t numFiles = files.size();
 
@@ -1030,7 +1030,7 @@ TEST_F(BCLFixture, BCLMeasure_Ctor_PythonEnergyPlusMeasure) {
   boost::optional<BCLMeasure> measure = BCLMeasure::load(srcDir);
   ASSERT_TRUE(measure);
   EXPECT_EQ(MeasureType::EnergyPlusMeasure, measure->measureType());
-  EXPECT_EQ(MeasureLanguage::Python, measure->measureLanguage());
+  EXPECT_EQ(MeasureLanguage(MeasureLanguage::Python), measure->measureLanguage());
   auto files = measure->files();
   size_t numFiles = files.size();
 
@@ -1085,7 +1085,7 @@ TEST_F(BCLFixture, BCLMeasure_Ctor_PythonReportingMeasure) {
   boost::optional<BCLMeasure> measure = BCLMeasure::load(srcDir);
   ASSERT_TRUE(measure);
   EXPECT_EQ(MeasureType::ReportingMeasure, measure->measureType());
-  EXPECT_EQ(MeasureLanguage::Python, measure->measureLanguage());
+  EXPECT_EQ(MeasureLanguage(MeasureLanguage::Python), measure->measureLanguage());
   auto files = measure->files();
   size_t numFiles = files.size();
 
