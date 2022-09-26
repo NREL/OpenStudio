@@ -98,10 +98,10 @@ TEST_F(ModelFixture, CoilCoolingDXTwoSpeed_CoilCoolingDXTwoSpeed) {
   //ASSERT_EQ("Autosize",coil.getRatedHighSpeedTotalCoolingCapacity().get());
   ASSERT_EQ(3, coil.ratedHighSpeedCOP());
   ASSERT_EQ(3, coil.ratedLowSpeedCOP());
-  ASSERT_EQ(0, coil.highSpeedEvaporativeCondenserEffectiveness());
-  ASSERT_EQ(0, coil.lowSpeedEvaporativeCondenserEffectiveness());
+  ASSERT_EQ(0.9, coil.highSpeedEvaporativeCondenserEffectiveness());
+  ASSERT_EQ(0.9, coil.lowSpeedEvaporativeCondenserEffectiveness());
   ASSERT_EQ(0, coil.basinHeaterCapacity());
-  ASSERT_EQ(10, coil.basinHeaterSetpointTemperature());
+  ASSERT_EQ(2, coil.basinHeaterSetpointTemperature());
   ASSERT_EQ("AirCooled", coil.condenserType());
 }
 
