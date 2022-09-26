@@ -278,7 +278,8 @@ option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 
 # Build Python bindings
 # Requires: SWIG Python
-option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
+mark_as_advanced(BUILD_PYTHON_BINDINGS)
 
 # Build ctest testing
 # Requires: EnergyPlus
@@ -353,7 +354,6 @@ if(APPLE)
   # Without this, cmake will give "Module" libraries the ".so" extension on Apple
   # This appears to be a legacy choice by the cmake developers, and seems out of place,
   # so the OpenStudio project will use the library suffix ".dylib"
-  #set(CMAKE_SHARED_MODULE_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
   find_library(COREFOUNDATION_LIBRARY CoreFoundation)
   add_definitions(-D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
   #add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
