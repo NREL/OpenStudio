@@ -69,7 +69,7 @@ void OSWorkflow::run() {
   // 1. Instantiate seed model
 
   auto runInitialization = [this]() -> openstudio::model::Model {
-    fmt::print("Debug: Finding and loading the seed file");
+    fmt::print("Debug: Finding and loading the seed file\n");
     auto seedPath_ = workflowJSON.seedFile();
     if (!seedPath_) {
       return openstudio::model::Model{};
@@ -96,6 +96,14 @@ void OSWorkflow::run() {
   const auto modelSteps = workflowJSON.getMeasureSteps(openstudio::MeasureType::ModelMeasure);
 
   for (const auto& step : modelSteps) {
+    unsigned stepIndex = workflowJSON.currentStepIndex();
+    fmt::print("\n\nRunning step {}\n", stepIndex);
+
+    //  measure_run_dir = File.join(run_dir, "#{step_index.to_s.rjust(3,'0')}_#{measure_dir_name}")
+    //  logger.debug "Creating run directory for measure in #{measure_run_dir}"
+    //  FileUtils.mkdir_p measure_run_dir
+    //  Dir.chdir measure_run_dir
+
     const auto measureDirName = step.measureDirName();
     const auto measureDirPath_ = workflowJSON.findMeasure(measureDirName);
     if (!measureDirPath_) {
@@ -118,10 +126,10 @@ void OSWorkflow::run() {
     auto modelClone = model.clone(true).cast<model::Model>();
 
     // TODO: will add a Logger later
-    //fmt::print("Class Name: {}\n", className);
-    //fmt::print("Measure Script Path: {}\n", openstudio::toString(scriptPath_.get()));
-    //fmt::print("Measure Type: {}\n", bclMeasure.measureType().valueName());
-    //fmt::print("Measure Language: {}\n", measureLanguage.valueName());
+    fmt::print("Class Name: {}\n", className);
+    fmt::print("Measure Script Path: {}\n", openstudio::toString(scriptPath_.get()));
+    fmt::print("Measure Type: {}\n", bclMeasure.measureType().valueName());
+    fmt::print("Measure Language: {}\n", measureLanguage.valueName());
 
     //openstudio::measure::ModelMeasure* modelMeasurePtr = nullptr;
     // TODO: probably want to do that ultimately, then static_cast appropriately
@@ -160,6 +168,8 @@ void OSWorkflow::run() {
             applyArguments(argumentMap, argumentName, argumentValue);
           }
         }
+
+        // TODO: handling of SKIP is incomplete here, will need to increment the runner and co, and not process the measure
       }
 
       return argumentMap;
@@ -172,7 +182,7 @@ void OSWorkflow::run() {
       auto rubyMeasure = rubyEngine->eval(fmt::format("{}.new()", className));
       openstudio::measure::ModelMeasure* measure = rubyEngine->getAs<openstudio::measure::ModelMeasure*>(rubyMeasure);
       const auto argmap = getArguments(measure);
-      //measure->run(model, runner, argmap);
+      measure->run(model, runner, argmap);
     } else if (measureLanguage == MeasureLanguage::Python) {
       // place measureDirPath in sys.path; do from measure import MeasureName
       // I think this can't work without a "as xxx" otherwise we'll repeatedly try to import a module named 'measure'
@@ -191,8 +201,29 @@ import measure
       const auto argmap = getArguments(measure);
       // There is a bug. I can run one measure but not two. The one measure can be either python or ruby
       // I think it might have to do with the operations that must be done to the runner to reset state. maybe?
-      //measure->run(model, runner, argmap);
+      measure->run(model, runner, argmap);
     }
-  }
+
+    WorkflowStepResult result = runner.result();
+    if (auto stepResult_ = result.stepResult()) {
+      fmt::print("Step Result: {}\n", stepResult_->valueName());
+    }
+    // incrementStep must be called after run
+    runner.incrementStep();
+    if (auto errors = result.stepErrors(); !errors.empty()) {
+      throw std::runtime_error(fmt::format("Measure {} reported an error with [{}]\n", measureDirName, fmt::join(errors, "\n")));
+    }
+
+    if (measureType == MeasureType::ModelMeasure) {
+      if (auto weatherFile_ = model.weatherFile()) {
+        if (auto p_ = weatherFile_->path()) {
+          // Probably a workflowJSON.findFile() call...
+          // m_epwPath_ = p_;
+        } else {
+          fmt::print("Weather file object found in model but no path is given\n");
+        }
+      }
+    }
+  }  // End for (const auto& step : modelSteps)
 }
 }  // namespace openstudio
