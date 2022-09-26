@@ -26,6 +26,12 @@
   %ignore openstudio::measure::OSArgument::setDefaultValue(char const*);
 #endif
 
+#if defined(SWIGPYTHON)
+  // Avoid triggering a SWIG warning: 'print' is a python keyword
+  %rename(toString) openstudio::measure::OSArgument::print;
+  %rename(toString) openstudio::measure::OSOutput::print;
+#endif
+
 %{
   #include <measure/OSArgument.hpp>
   #include <measure/OSOutput.hpp>
