@@ -29,7 +29,6 @@ target_link_libraries(openstudio
   PRIVATE
   openstudiolib
   openstudio_workflow
-  openstudio_measure
   CONAN_PKG::cli11
 )
 
