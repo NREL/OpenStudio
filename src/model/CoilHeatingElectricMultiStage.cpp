@@ -81,9 +81,10 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilHeatingElectricMultiStage_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Heating_Electric_MultiStageFields::AvailabilitySchedule) != e) {
-        result.push_back(ScheduleTypeKey("CoilHeatingElectricMultiStage", "Availability Schedule"));
+        result.emplace_back("CoilHeatingElectricMultiStage", "Availability Schedule");
       }
       return result;
     }
@@ -98,6 +99,9 @@ namespace model {
 
     ModelObject CoilHeatingElectricMultiStage_Impl::clone(Model model) const {
       auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingElectricMultiStage>();
+
+      // Deal with the stages: we want them cloned, so first clear and then clone + assign each
+      t_clone.removeAllStages();
 
       for (const auto& stage : stages()) {
         auto stageClone = stage.clone(model).cast<CoilHeatingElectricMultiStageStageData>();
