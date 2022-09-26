@@ -1928,6 +1928,7 @@ set(${target_name}_test_src
   test/CoilHeatingDXVariableSpeedSpeedData_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
   test/CoilHeatingElectricMultiStage_GTest.cpp
+  test/CoilHeatingElectricMultiStageStageData_GTest.cpp
   test/CoilHeatingFourPipeBeam_GTest.cpp
   test/CoilHeatingGas_GTest.cpp
   test/CoilHeatingGasMultiStage_GTest.cpp

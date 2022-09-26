@@ -142,7 +142,7 @@ namespace model {
       return boost::none;
     }
 
-    bool CoilHeatingElectricMultiStage_Impl::addToNode(Node& node) {
+    bool CoilHeatingElectricMultiStage_Impl::addToNode(Node& /*node*/) {
       return false;
     }
 
