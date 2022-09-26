@@ -86,9 +86,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage_Heatin
     h.addStage(stageData);
 
     AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed unitary(m, f, h, c, s);
+    unitary.setName("UnitarySys");
 
     AirLoopHVAC airLoop(m);
-
     Node supplyOutletNode = airLoop.supplyOutletNode();
     unitary.addToNode(supplyOutletNode);
 
@@ -109,8 +109,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage_Heatin
     EXPECT_EQ("HP SupHC", idf_hp.getString(AirLoopHVAC_UnitaryHeatPump_AirToAir_MultiSpeedFields::SupplementalHeatingCoilName, false).get());
 
     EXPECT_EQ("HP HC AvailSch", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AvailabilityScheduleName, false).get());
-    EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, false).get());
-    EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, false).get());
+    EXPECT_EQ("UnitarySys Cool Coil Outlet", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, false).get());
+    EXPECT_EQ("UnitarySys Heat Coil Outlet", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, false).get());
     EXPECT_TRUE(idf_coil.isEmpty(Coil_Heating_Electric_MultiStageFields::TemperatureSetpointNodeName));
     EXPECT_EQ(1, idf_coil.getInt(Coil_Heating_Electric_MultiStageFields::NumberofStages, false).get());
     ASSERT_EQ(1, idf_coil.numExtensibleGroups());
@@ -147,13 +147,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage_Heatin
     h.addStage(stageData);
 
     AirLoopHVACUnitarySystem unitary(m);
+    unitary.setName("UnitarySys");
     EXPECT_TRUE(unitary.setCoolingCoil(c));
     EXPECT_TRUE(unitary.setHeatingCoil(h));
     EXPECT_TRUE(unitary.setSupplyFan(f));
     EXPECT_TRUE(unitary.setSupplementalHeatingCoil(s));
 
     AirLoopHVAC airLoop(m);
-
     Node supplyOutletNode = airLoop.supplyOutletNode();
     unitary.addToNode(supplyOutletNode);
 
@@ -173,8 +173,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage_Heatin
     EXPECT_EQ("HP SupHC", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName, false).get());
 
     EXPECT_EQ("HP HC AvailSch", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AvailabilityScheduleName, false).get());
-    EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, false).get());
-    EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, false).get());
+    EXPECT_EQ("UnitarySys Cooling Coil - Heating Coil Node",
+              idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, false).get());
+    EXPECT_EQ("UnitarySys Heating Coil - Fan Node", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, false).get());
     EXPECT_TRUE(idf_coil.isEmpty(Coil_Heating_Electric_MultiStageFields::TemperatureSetpointNodeName));
     EXPECT_EQ(1, idf_coil.getInt(Coil_Heating_Electric_MultiStageFields::NumberofStages, false).get());
     ASSERT_EQ(1, idf_coil.numExtensibleGroups());
@@ -212,15 +213,19 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage_SuppHe
   s.addStage(stageData);
 
   AirLoopHVACUnitarySystem unitary(m);
+  unitary.setName("UnitarySys");
   EXPECT_TRUE(unitary.setCoolingCoil(c));
   EXPECT_TRUE(unitary.setHeatingCoil(h));
   EXPECT_TRUE(unitary.setSupplyFan(f));
   EXPECT_TRUE(unitary.setSupplementalHeatingCoil(s));
 
   AirLoopHVAC airLoop(m);
-
   Node supplyOutletNode = airLoop.supplyOutletNode();
   unitary.addToNode(supplyOutletNode);
+  ASSERT_TRUE(unitary.inletNode());
+  EXPECT_TRUE(unitary.inletNode()->setName("UnitarySys Inlet Node"));
+  ASSERT_TRUE(unitary.outletNode());
+  EXPECT_TRUE(unitary.outletNode()->setName("UnitarySys Outlet Node"));
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(m);
@@ -239,8 +244,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilHeatingElectricMultiStage_SuppHe
   EXPECT_EQ("HP SupHC", idf_unitary.getString(AirLoopHVAC_UnitarySystemFields::SupplementalHeatingCoilName, false).get());
 
   EXPECT_EQ("HP SupHC AvailSch", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AvailabilityScheduleName, false).get());
-  EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, false).get());
-  EXPECT_NE("", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, false).get());
+  EXPECT_EQ("UnitarySys Fan - Supplemental Coil Node", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, false).get());
+  EXPECT_EQ("UnitarySys Outlet Node", idf_coil.getString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, false).get());
   EXPECT_TRUE(idf_coil.isEmpty(Coil_Heating_Electric_MultiStageFields::TemperatureSetpointNodeName));
   EXPECT_EQ(1, idf_coil.getInt(Coil_Heating_Electric_MultiStageFields::NumberofStages, false).get());
   ASSERT_EQ(1, idf_coil.numExtensibleGroups());
