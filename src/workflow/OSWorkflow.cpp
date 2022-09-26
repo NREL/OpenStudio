@@ -28,7 +28,7 @@ void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::
   //   fmt::print("Warn: Value for argument '{}' not set in argument list therefore will use default\n", argumentName);
   //   return;
   // }
-  if (argumentMap.contains(argumentName)) {
+  if (!argumentMap.contains(argumentName)) {
     throw std::runtime_error(fmt::format("Could not find argument '{}' in argument_map\n", argumentName));
   }
 
@@ -159,9 +159,12 @@ void OSWorkflow::run() {
 
         //  logger.debug "Iterating over arguments for workflow item '#{measure_dir_name}'"
         auto stepArgs = step.arguments();
+        fmt::print("Current step has {} arguments\n", stepArgs.size());
         // handle skip first
         if (!stepArgs.empty() && stepArgs.contains("__SKIP__")) {
+          // TODO: handling of SKIP is incomplete here, will need to increment the runner and co, and not process the measure
 
+        } else {
           // TODO: I've copied workflow-gem here, but it's wrong. It's trying to issue a warning if an argument is not set, so it should loop on
           // argumentMap instead...
           for (auto const& [argumentName, argumentValue] : stepArgs) {
