@@ -2,6 +2,12 @@ if (APPLE)
    find_library(COREFOUNDATION_LIBRARY CoreFoundation )
 endif (APPLE)
 
+set(CLI_SRC
+  main.cpp
+  RubyCLI.hpp
+  RubyCLI.cpp
+)
+
 if(WIN32)
   CONFIGURE_FILE_WITH_CHECKSUM(openstudio.rc.in "${CMAKE_CURRENT_BINARY_DIR}/openstudio.rc")
 
@@ -10,26 +16,30 @@ if(WIN32)
   remove_definitions(/bigobj)
 
   add_executable(openstudio
-    main.cpp
-    ScriptEngineGlobals.hpp
-    ScriptEngineGlobals.cpp
+    ${CLI_SRC}
     "${CMAKE_CURRENT_BINARY_DIR}/openstudio.rc"
   )
 else()
   add_executable(openstudio
-    main.cpp
-    ScriptEngineGlobals.hpp
-    ScriptEngineGlobals.cpp
+    ${CLI_SRC}
   )
 endif()
 
 target_link_libraries(openstudio
- PRIVATE
- openstudio_utilities_minimal
- CONAN_PKG::cli11
+  PRIVATE
+  openstudiolib
+  openstudio_workflow
+  openstudio_measure
+  CONAN_PKG::cli11
 )
 
-add_dependencies(openstudio rubyengine)
+if(BUILD_RUBY_BINDINGS)
+  add_dependencies(openstudio rubyengine)
+endif()
+
+if(BUILD_PYTHON_BINDINGS)
+  add_dependencies(openstudio pythonengine)
+endif()
 
 if( APPLE )
   target_link_libraries(openstudio PRIVATE ${COREFOUNDATION_LIBRARY})

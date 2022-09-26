@@ -6,6 +6,7 @@ foreach(p ${ALL_PYTHON_BINDING_TARGETS})
   target_link_libraries(${p}
     PRIVATE
     openstudiolib
+    openstudio_measure
     Python::Python
   )
 endforeach()

@@ -3,6 +3,11 @@
 
 #include <ScriptEngine.hpp>
 
+#ifndef PyObject_HEAD
+struct _object;
+typedef _object PyObject;
+#endif
+
 namespace openstudio {
 
 class PythonEngine final : public ScriptEngine
@@ -20,22 +25,23 @@ class PythonEngine final : public ScriptEngine
   void exec(std::string_view sv) override;
 
  protected:
-
   void* getAs_impl(ScriptObject& obj, const std::type_info&) override;
   void importOpenStudio();
-  void import(const std::string &importName, const std::string &includePath);
+  void pyimport(const std::string& importName, const std::string& includePath);
 
  private:
   wchar_t* program;
+  PyObject* m_globalDict;
 };
 
 }  // namespace openstudio
 
-extern "C" {
-openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]) {
-  return new openstudio::PythonEngine(argc, argv);
-}
-
+extern "C"
+{
+  // clang-tidy warns https://clang.llvm.org/extra/clang-tidy/checks/misc/definitions-in-headers.html
+  openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]) {
+    return new openstudio::PythonEngine(argc, argv);
+  }
 }
 
 #endif

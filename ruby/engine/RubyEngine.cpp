@@ -2,23 +2,23 @@
 #include "InitRubyBindings.hpp"
 #include <embedded_files.hxx>
 #include <rubyengine_export.h>
-#include <signal.h>
+#include <csignal>
 #include <stdexcept>
 #include <string>
-#include <time.h>
+#include <ctime>
 
 #ifdef __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wregister"
-#pragma GCC diagnostic ignored "-Wunused-parameter"
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wregister"
+#  pragma GCC diagnostic ignored "-Wunused-parameter"
 #endif
 
 #ifdef __GNUC__
-#pragma GCC diagnostic pop
+#  pragma GCC diagnostic pop
 #endif
 
 static int argc = 0;
-static char **argv = nullptr;
+static char** argv = nullptr;
 
 unsigned init() {
   ruby_sysinit(&argc, &argv);
@@ -28,8 +28,9 @@ unsigned init() {
 
 static unsigned i = init();
 
-extern "C" {
-void Init_EmbeddedScripting(void);
+extern "C"
+{
+  void Init_EmbeddedScripting(void);
 }
 
 namespace openstudio {
@@ -39,7 +40,7 @@ VALUE initRestOfOpenStudio(...) {
   return Qtrue;
 };
 
-RubyEngine::RubyEngine(int argc, char *argv[]) : ScriptEngine(argc, argv) {
+RubyEngine::RubyEngine(int argc, char* argv[]) : ScriptEngine(argc, argv) {
   Init_EmbeddedScripting();
   initRubyEngine();
 
@@ -56,7 +57,9 @@ RubyEngine::RubyEngine(int argc, char *argv[]) : ScriptEngine(argc, argv) {
   rb_enc_set_default_external(rb_enc_from_encoding(rb_utf8_encoding()));
 }
 
-RubyEngine::~RubyEngine() { ruby_finalize(); }
+RubyEngine::~RubyEngine() {
+  ruby_finalize();
+}
 
 ScriptObject RubyEngine::eval(std::string_view sv) {
   std::string str{sv};
@@ -70,14 +73,14 @@ void RubyEngine::exec(std::string_view sv) {
 
 // convert the underlying object to the correct type, then return it as a void *
 // so the above template function can provide it back to the caller.
-void *RubyEngine::getAs_impl(ScriptObject &obj, const std::type_info &ti) {
+void* RubyEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
   auto val = std::any_cast<VALUE>(obj.object);
 
-  const auto &type_name = getRegisteredTypeName(ti);
+  const auto& type_name = getRegisteredTypeName(ti);
 
-  void *return_value = nullptr;
+  void* return_value = nullptr;
 
-  auto *type = SWIG_TypeQuery(type_name.c_str());
+  auto* type = SWIG_TypeQuery(type_name.c_str());
 
   if (!type) {
     throw std::runtime_error("Unable to find type in SWIG");
@@ -92,20 +95,23 @@ void *RubyEngine::getAs_impl(ScriptObject &obj, const std::type_info &ti) {
   return return_value;
 }
 
-} // namespace openstudio
+}  // namespace openstudio
 
-extern "C" {
-RUBYENGINE_EXPORT openstudio::ScriptEngine *makeScriptEngine(int argc, char *argv[]) { return new openstudio::RubyEngine(argc, argv); }
+extern "C"
+{
+  RUBYENGINE_EXPORT openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]) {
+    return new openstudio::RubyEngine(argc, argv);
+  }
 
-int rb_hasFile(const char *t_filename) {
-  // TODO Consider expanding this to use the path which we have artificially defined in embedded_help.rb
-  std::string expandedName = std::string(":/ruby/2.7.0/") + std::string(t_filename) + ".rb";
-  return embedded_files::hasFile(expandedName);
-}
+  int rb_hasFile(const char* t_filename) {
+    // TODO Consider expanding this to use the path which we have artificially defined in embedded_help.rb
+    std::string expandedName = std::string(":/ruby/2.7.0/") + std::string(t_filename) + ".rb";
+    return embedded_files::hasFile(expandedName);
+  }
 
-int rb_require_embedded(const char *t_filename) {
-  std::string require_script = R"(require ')" + std::string(t_filename) + R"(')";
-  openstudio::evalString(require_script);
-  return 0;
-}
+  int rb_require_embedded(const char* t_filename) {
+    std::string require_script = R"(require ')" + std::string(t_filename) + R"(')";
+    openstudio::evalString(require_script);
+    return 0;
+  }
 }

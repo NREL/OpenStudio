@@ -1,7 +1,7 @@
 require 'erb'
 
 #start the measure
-class StandardReports < OpenStudio::Ruleset::ReportingUserScript
+class StandardReports < OpenStudio::Measure::ReportingMeasure
 
   #define the name that a user will see, this method may be deprecated as
   #the display name in PAT comes from the name field in measure.xml
@@ -11,7 +11,7 @@ class StandardReports < OpenStudio::Ruleset::ReportingUserScript
 
   #define the arguments that the user will input
   def arguments()
-    args = OpenStudio::Ruleset::OSArgumentVector.new
+    args = OpenStudio::Measure::OSArgumentVector.new
 
     return args
   end #end the arguments method

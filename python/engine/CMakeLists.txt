@@ -31,19 +31,13 @@ target_include_directories(pythonengine
 target_link_libraries(
   pythonengine
   PRIVATE
-  openstudio_utilities
-  openstudio_airflow
-  openstudio_model
-  openstudio_energyplus
-  openstudio_epjson
-  openstudio_measure
-  openstudio_osversion
-  openstudio_sdd
-  openstudio_isomodel
-  openstudio_gbxml
-  openstudio_gltf
-  openstudio_radiance
-  scriptengine  Python::Python CONAN_PKG::zlib
+  openstudio_scriptengine
+  openstudio_utilities_minimal
+  CONAN_PKG::fmt
+  Python::Python
 )
+
+# tp_print is deprecated at of 3.8.
+target_compile_options(pythonengine PRIVATE "-Wno-deprecated-declarations")
 
 install(TARGETS pythonengine EXPORT openstudio DESTINATION bin COMPONENT "CLI")

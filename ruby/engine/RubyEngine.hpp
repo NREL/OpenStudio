@@ -30,6 +30,6 @@ class RubyEngine final : public ScriptEngine
   RubyInterpreter rubyInterpreter{includePaths};
 };
 
-} // namespace openstudio
+}  // namespace openstudio
 
 #endif

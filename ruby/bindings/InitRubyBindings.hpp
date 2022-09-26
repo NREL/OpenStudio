@@ -8,7 +8,7 @@ void initRubyBindings();
 void initBasicRubyBindings();
 void initExtendedRubyBindings();
 
-} // namespace ruby
-} // namespace openstudio
+}  // namespace ruby
+}  // namespace openstudio
 
-#endif // INITRUBYBINDINGS_HPP
+#endif  // INITRUBYBINDINGS_HPP

@@ -468,16 +468,16 @@ namespace openstudio {
     return openstudio::path();
   }
 
-  std::string_view getSharedLibrarySuffix() {
-    return "${CMAKE_SHARED_LIBRARY_SUFFIX}";
+  std::string_view getSharedModuleSuffix() {
+    return "${CMAKE_SHARED_MODULE_SUFFIX}";
   }
   
-  std::string_view getSharedLibraryPrefix() {
-    return "${CMAKE_SHARED_LIBRARY_PREFIX}";
+  std::string_view getSharedModulePrefix() {
+    return "${CMAKE_SHARED_MODULE_PREFIX}";
   }
 
-  std::string getSharedLibraryName(std::string_view basename) {
-    return fmt::format("{}{}{}", getSharedLibraryPrefix(), basename, getSharedLibrarySuffix());
+  std::string getSharedModuleName(std::string_view basename) {
+    return fmt::format("{}{}{}", getSharedModulePrefix(), basename, getSharedModuleSuffix());
   }
 
 } // openstudio

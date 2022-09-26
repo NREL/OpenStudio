@@ -30,8 +30,7 @@ target_link_libraries(
  CONAN_PKG::openssl
  CONAN_PKG::pugixml
  CONAN_PKG::libxml2
- # CONAN_PKG::libxslt
- # CONAN_PKG::tinygltf  # TODO: needed?
+ CONAN_PKG::fmt
 )
 
 target_compile_definitions(openstudiolib INTERFACE "-DSHARED_OS_LIBS")

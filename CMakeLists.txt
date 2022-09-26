@@ -278,7 +278,8 @@ option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 
 # Build Python bindings
 # Requires: SWIG Python
-option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
+mark_as_advanced(BUILD_PYTHON_BINDINGS)
 
 # Build ctest testing
 # Requires: EnergyPlus
@@ -305,6 +306,12 @@ set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Con
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
+endif()
+
+include(CheckIncludeFile)
+check_include_file("unistd.h" HAVE_UNISTD_H)
+if(HAVE_UNISTD_H)
+  add_definitions(-DHAVE_UNISTD_H)
 endif()
 
 # Enable runtime checking features
@@ -347,7 +354,6 @@ if(APPLE)
   # Without this, cmake will give "Module" libraries the ".so" extension on Apple
   # This appears to be a legacy choice by the cmake developers, and seems out of place,
   # so the OpenStudio project will use the library suffix ".dylib"
-  set(CMAKE_SHARED_MODULE_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
   find_library(COREFOUNDATION_LIBRARY CoreFoundation)
   add_definitions(-D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
   #add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
@@ -978,6 +984,7 @@ set(project_directories
   lib
   install_utility
   scriptengine
+  workflow
 )
 
 # resources must be added after find EnergyPlus

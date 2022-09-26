@@ -111,6 +111,6 @@ extern "C"
   void Init_syslog(void);
 #endif
 
-} // extern C
+}  // extern C
 
-#endif // INITRUBYENGINE_included
+#endif  // INITRUBYENGINE_included

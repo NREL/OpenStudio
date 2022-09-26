@@ -762,13 +762,17 @@ boost::optional<openstudio::path> BCLMeasure::primaryRubyScriptPath() const {
   return boost::none;
 }
 
-// boost::optional<openstudio::path> BCLMeasure::primaryPythonScriptPath() const {
-//   openstudio::path result = m_directory / toPath("measure.py");
-//   if (exists(result) && is_regular_file(result)) {
-//     return result;
-//   }
-//   return boost::none;
-// }
+boost::optional<openstudio::path> BCLMeasure::primaryPythonScriptPath() const {
+  openstudio::path result = m_directory / toPath("measure.py");
+  if (exists(result) && is_regular_file(result)) {
+    return result;
+  }
+  return boost::none;
+}
+
+boost::optional<openstudio::path> BCLMeasure::primaryScriptPath() const {
+  return (measureLanguage() == MeasureLanguage::Ruby) ? primaryRubyScriptPath() : primaryPythonScriptPath();
+}
 
 FileReferenceType BCLMeasure::inputFileType() const {
   FileReferenceType result = FileReferenceType::Unknown;
