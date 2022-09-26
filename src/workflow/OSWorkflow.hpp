@@ -18,14 +18,14 @@ namespace measure {
 class OSWorkflow
 {
  public:
-  OSWorkflow(const filesystem::path& oswPath, const ScriptEngineInstance& ruby, const ScriptEngineInstance& python);
+  OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ruby, ScriptEngineInstance& python);
 
   void run();
 
  private:
   // TODO: add a Logger
-  ScriptEngineInstance rubyEngine;
-  ScriptEngineInstance pythonEngine;
+  ScriptEngineInstance& rubyEngine;
+  ScriptEngineInstance& pythonEngine;
   WorkflowJSON workflowJSON;
   measure::OSRunner runner{workflowJSON};
 

@@ -18,7 +18,7 @@
 
 namespace openstudio {
 
-OSWorkflow::OSWorkflow(const filesystem::path& oswPath, const ScriptEngineInstance& ruby, const ScriptEngineInstance& python)
+OSWorkflow::OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ruby, ScriptEngineInstance& python)
   : rubyEngine(ruby), pythonEngine(python), workflowJSON(oswPath) {}
 
 void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue) {
@@ -189,7 +189,7 @@ import measure
       // After that, dereferencing the measure pointer will crash the program
       openstudio::measure::ModelMeasure* measure = pythonEngine->getAs<openstudio::measure::ModelMeasure*>(pythonMeasure);
       const auto argmap = getArguments(measure);
-      // There is a bug. I can run one measure but not two.
+      // There is a bug. I can run one measure but not two. The one measure can be either python or ruby
       // I think it might have to do with the operations that must be done to the runner to reset state. maybe?
       //measure->run(model, runner, argmap);
     }

@@ -99,7 +99,7 @@ class ScriptEngineInstance
  public:
   ScriptEngineInstance(std::string_view libraryBaseName, int argc, char* argv[]) : libraryName(libraryBaseName), args(argv, argv + argc) {}
 
-  ScriptEngineInstance(const ScriptEngineInstance&) = default;
+  ScriptEngineInstance(const ScriptEngineInstance&) = delete;
   ScriptEngineInstance(ScriptEngineInstance&&) = delete;
   ScriptEngineInstance& operator=(const ScriptEngineInstance&) = delete;
   ScriptEngineInstance& operator=(ScriptEngineInstance&&) = delete;
@@ -112,9 +112,11 @@ class ScriptEngineInstance
       std::transform(args.begin(), args.end(), std::back_inserter(argv), [](const std::string& item) { return const_cast<char*>(item.c_str()); });
 
       const auto enginePath = getOpenStudioModuleDirectory() / openstudio::getSharedLibraryName(libraryName);
-      engineLib = std::make_shared<DynamicLibrary>(enginePath);
+      // DynamicLibrary will perform dlopen on construction and dlclose on destruction
+      // Don't create the DynamicLibrary until it is going to be used
+      engineLib = std::unique_ptr<DynamicLibrary>(new DynamicLibrary(enginePath));
       const auto factory = engineLib->load_symbol<ScriptEngineFactoryType>("makeScriptEngine");
-      instance = std::shared_ptr<ScriptEngine>(factory(args.size(), argv.data()));
+      instance = std::unique_ptr<ScriptEngine>(factory(args.size(), argv.data()));
 
       return *instance;
     }
@@ -130,8 +132,8 @@ class ScriptEngineInstance
  private:
   std::string libraryName;
   std::vector<std::string> args;
-  std::shared_ptr<ScriptEngine> instance;
-  std::shared_ptr<DynamicLibrary> engineLib;
+  std::unique_ptr<ScriptEngine> instance;
+  std::unique_ptr<DynamicLibrary> engineLib;
 };
 
 }  // namespace openstudio
