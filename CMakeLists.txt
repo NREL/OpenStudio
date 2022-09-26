@@ -193,7 +193,6 @@ set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
 set(ENERGYPLUS_BUILD_SHA "1d22b9a61f")
 
-
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
 set(ENERGYPLUS_RELEASE_NAME "v22.2.0-RC1")
@@ -580,7 +579,7 @@ endif()
 if(UNIX)
   if(APPLE)
     if (ARCH MATCHES "arm64")
-      set(ENERGYPLUS_EXPECTED_HASH 4704fcc75312792fc9c4f5a9359fb3eb)
+      set(ENERGYPLUS_EXPECTED_HASH 1faddd434694d18712147048444cb92c)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS12.1-arm64")
     else()
       set(ENERGYPLUS_EXPECTED_HASH d3b3bac13523e32baa2e753d6197c435)
