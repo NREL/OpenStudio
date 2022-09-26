@@ -60,9 +60,10 @@ void OSWorkflow::run() {
   rubyEngine->exec("puts 'Hello from Ruby'");
   pythonEngine->exec("print('Hello from Python')");
 
-  // rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
+  rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
   rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
-  pythonEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
+  pythonEngine->registerType<openstudio::measure::PythonModelMeasure*>("openstudio::measure::PythonModelMeasure *");
+  pythonEngine->registerType<openstudio::measure::PythonReportingMeasure*>("openstudio::measure::PythonReportingMeasure *");
 
   // -1: gotta init the rest of OpenStudio in ruby, so that Ruleset and co are defined
   rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
@@ -145,25 +146,38 @@ void OSWorkflow::run() {
       ScriptObject measureScriptObject;
       openstudio::measure::OSMeasure* measurePtr = nullptr;
 
-      auto getArguments = [&model, &workspace_, &measureType, &scriptPath_, &step](measure::OSMeasure* measure) -> measure::OSArgumentMap {
-        if (!measure) {
+      auto getArguments = [&model, &workspace_, &measureType, &scriptPath_, &step,
+                           &measureLanguage](openstudio::measure::OSMeasure* measurePtr) -> measure::OSArgumentMap {
+        if (!measurePtr) {
           throw std::runtime_error(fmt::format("Could not load measure at '{}'", openstudio::toString(scriptPath_.get())));
         }
         // Initialize arguments which may be model dependent, don't allow arguments method access to real model in case it changes something
         std::vector<measure::OSArgument> arguments;
 
-        fmt::print("measure->name()= '{}'\n", measure->name());
+        fmt::print("measure->name()= '{}'\n", measurePtr->name());
 
         if (measureType == MeasureType::ModelMeasure) {
           // For computing arguments
           auto modelClone = model.clone(true).cast<model::Model>();
-          arguments = static_cast<openstudio::measure::ModelMeasure*>(measure)->arguments(modelClone);
+          if (measureLanguage == MeasureLanguage::Ruby) {
+            arguments = static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
+          } else if (measureLanguage == MeasureLanguage::Python) {
+            arguments = static_cast<openstudio::measure::PythonModelMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
+          }
         } else if (measureType == MeasureType::EnergyPlusMeasure) {
           auto workspaceClone = workspace_->clone(true).cast<openstudio::Workspace>();
-          arguments = static_cast<openstudio::measure::EnergyPlusMeasure*>(measure)->arguments(workspaceClone);
+          if (measureLanguage == MeasureLanguage::Ruby) {
+            arguments = static_cast<openstudio::measure::EnergyPlusMeasure*>(measurePtr)->arguments(workspaceClone);  // NOLINT
+          } else if (measureLanguage == MeasureLanguage::Python) {
+            arguments = static_cast<openstudio::measure::PythonEnergyPlusMeasure*>(measurePtr)->arguments(workspaceClone);  // NOLINT
+          }
         } else if (measureType == MeasureType::ReportingMeasure) {
           auto modelClone = model.clone(true).cast<model::Model>();
-          arguments = static_cast<openstudio::measure::ReportingMeasure*>(measure)->arguments(modelClone);
+          if (measureLanguage == MeasureLanguage::Ruby) {
+            arguments = static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
+          } else if (measureLanguage == MeasureLanguage::Python) {
+            arguments = static_cast<openstudio::measure::PythonReportingMeasure*>(measurePtr)->arguments(modelClone);  // NOLINT
+          }
         }
 
         measure::OSArgumentMap argumentMap;
@@ -216,22 +230,46 @@ import measure
       // This pointer will only be valid for as long as the above PythonMeasure is in scope
       // After that, dereferencing the measure pointer will crash the program
       if (measureType == MeasureType::ModelMeasure) {
-        measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+        if (measureLanguage == MeasureLanguage::Ruby) {
+          measurePtr = (*thisEngine)->getAs<openstudio::measure::ModelMeasure*>(measureScriptObject);
+        } else if (measureLanguage == MeasureLanguage::Python) {
+          measurePtr = (*thisEngine)->getAs<openstudio::measure::PythonModelMeasure*>(measureScriptObject);
+        }
       } else if (measureType == MeasureType::EnergyPlusMeasure) {
-        measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
+        if (measureLanguage == MeasureLanguage::Ruby) {
+          measurePtr = (*thisEngine)->getAs<openstudio::measure::EnergyPlusMeasure*>(measureScriptObject);
+        } else if (measureLanguage == MeasureLanguage::Python) {
+          measurePtr = (*thisEngine)->getAs<openstudio::measure::PythonEnergyPlusMeasure*>(measureScriptObject);
+        }
       } else if (measureType == MeasureType::ReportingMeasure) {
-        measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
+        if (measureLanguage == MeasureLanguage::Ruby) {
+          measurePtr = (*thisEngine)->getAs<openstudio::measure::ReportingMeasure*>(measureScriptObject);
+        } else if (measureLanguage == MeasureLanguage::Python) {
+          measurePtr = (*thisEngine)->getAs<openstudio::measure::PythonReportingMeasure*>(measureScriptObject);
+        }
       }
 
       const auto argmap = getArguments(measurePtr);
       // There is a bug. I can run one measure but not two. The one measure can be either python or ruby
       // I think it might have to do with the operations that must be done to the runner to reset state. maybe?
       if (measureType == MeasureType::ModelMeasure) {
-        static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->run(model, runner, argmap);
+        if (measureLanguage == MeasureLanguage::Ruby) {
+          static_cast<openstudio::measure::ModelMeasure*>(measurePtr)->run(model, runner, argmap);
+        } else if (measureLanguage == MeasureLanguage::Python) {
+          static_cast<openstudio::measure::PythonModelMeasure*>(measurePtr)->run(model, runner, argmap);
+        }
       } else if (measureType == MeasureType::EnergyPlusMeasure) {
-        static_cast<openstudio::measure::EnergyPlusMeasure*>(measurePtr)->run(workspace_.get(), runner, argmap);
+        if (measureLanguage == MeasureLanguage::Ruby) {
+          static_cast<openstudio::measure::EnergyPlusMeasure*>(measurePtr)->run(workspace_.get(), runner, argmap);
+        } else if (measureLanguage == MeasureLanguage::Python) {
+          static_cast<openstudio::measure::PythonEnergyPlusMeasure*>(measurePtr)->run(workspace_.get(), runner, argmap);
+        }
       } else if (measureType == MeasureType::ReportingMeasure) {
-        static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->run(runner, argmap);
+        if (measureLanguage == MeasureLanguage::Ruby) {
+          static_cast<openstudio::measure::ReportingMeasure*>(measurePtr)->run(runner, argmap);
+        } else if (measureLanguage == MeasureLanguage::Python) {
+          static_cast<openstudio::measure::PythonReportingMeasure*>(measurePtr)->run(runner, argmap);
+        }
       }
 
       WorkflowStepResult result = runner.result();

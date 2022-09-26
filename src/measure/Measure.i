@@ -24,12 +24,18 @@
   // Help in overload resolution preferring std::string over char const *
   %ignore openstudio::measure::OSArgument::setValue(char const*);
   %ignore openstudio::measure::OSArgument::setDefaultValue(char const*);
-#endif
-
-#if defined(SWIGPYTHON)
+#elif defined(SWIGRUBY)
+  %ignore openstudio::measure::PythonModelMeasure;
+  %ignore openstudio::measure::PythonReportingMeasure;
+  %ignore openstudio::measure::PythonEnergyPlusMeasure;
+#elif defined(SWIGPYTHON)
   // Avoid triggering a SWIG warning: 'print' is a python keyword
   %rename(toString) openstudio::measure::OSArgument::print;
   %rename(toString) openstudio::measure::OSOutput::print;
+
+  %ignore openstudio::measure::ModelMeasure;
+  %ignore openstudio::measure::ReportingMeasure;
+  %ignore openstudio::measure::EnergyPlusMeasure;
 #endif
 
 %{
@@ -55,24 +61,30 @@
 %}
 
 
-
 %ignore std::vector<openstudio::measure::OSOutput>::vector(size_type);
 %ignore std::vector<openstudio::measure::OSOutput>::resize(size_type);
 %template(OSOutputVector) std::vector<openstudio::measure::OSOutput>;
 %template(OptionalOSOutput) boost::optional<openstudio::measure::OSOutput>;
 
 %feature("director") OSMeasure;
+
+#if defined(SWIGPYTHON)
+%feature("director") PythonModelMeasure;
+%feature("director") PythonEnergyPlusMeasure;
+%feature("director") PythonReportingMeasure;
+#else
 %feature("director") ModelMeasure;
 %feature("director") EnergyPlusMeasure;
 %feature("director") ReportingMeasure;
+#endif
 %feature("director") OSRunner;
 %feature("director") OSArgument;
 
 #if defined(SWIGPYTHON)
 // When SWIG'ing to Python, rename "Measure" to "PythonMeasure" so that we don't have SwigDirector_Measure name clashing
-%rename (PythonModelMeasure) ModelMeasure;
-%rename (PythonEnergyPlusMeasure) EnergyPlusMeasure;
-%rename (PythonReportingMeasure) ReportingMeasure;
+// %rename (PythonModelMeasure) ModelMeasure;
+// %rename (PythonEnergyPlusMeasure) EnergyPlusMeasure;
+// %rename (PythonReportingMeasure) ReportingMeasure;
 %rename (PythonOSArgument) OSArgument;
 
 %template(PythonOSArgumentVector) std::vector<openstudio::measure::OSArgument>;
