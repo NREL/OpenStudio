@@ -2,7 +2,7 @@ import openstudio
 import typing
 
 
-class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.ModelMeasure):
+class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.PythonModelMeasure):
 
     def name(self):
         """
@@ -27,9 +27,9 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
         """
         define what happens when the measure is run
         """
-        args = openstudio.measure.OSArgumentVector()
+        args = openstudio.measure.PythonOSArgumentVector()
 
-        r_value = openstudio.measure.OSArgument.makeDoubleArgument("r_value", True)
+        r_value = openstudio.measure.PythonOSArgument.makeDoubleArgument("r_value", True)
         r_value.setDisplayName("Percentage Increase of R-value for Roof Insulation.")
         r_value.setDefaultValue(30.0)
 
@@ -40,7 +40,7 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
     def run(self,
             model: openstudio.model.Model,
             runner: openstudio.measure.OSRunner,
-            user_arguments: openstudio.measure.OSArgumentMap):
+            user_arguments: openstudio.measure.PythonOSArgumentMap):
         """
         define what happens when the measure is run
         """

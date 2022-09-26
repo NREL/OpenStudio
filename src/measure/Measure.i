@@ -54,10 +54,7 @@
   using namespace openstudio::measure;
 %}
 
-//user scripts
-%template(OSArgumentVector) std::vector<openstudio::measure::OSArgument>;
-%template(OptionalOSArgument) boost::optional<openstudio::measure::OSArgument>;
-%template(OSArgumentMap) std::map<std::string, openstudio::measure::OSArgument>;
+
 
 %ignore std::vector<openstudio::measure::OSOutput>::vector(size_type);
 %ignore std::vector<openstudio::measure::OSOutput>::resize(size_type);
@@ -69,6 +66,24 @@
 %feature("director") EnergyPlusMeasure;
 %feature("director") ReportingMeasure;
 %feature("director") OSRunner;
+%feature("director") OSArgument;
+
+#if defined(SWIGPYTHON)
+// When SWIG'ing to Python, rename "Measure" to "PythonMeasure" so that we don't have SwigDirector_Measure name clashing
+%rename (PythonModelMeasure) ModelMeasure;
+%rename (PythonEnergyPlusMeasure) EnergyPlusMeasure;
+%rename (PythonReportingMeasure) ReportingMeasure;
+%rename (PythonOSArgument) OSArgument;
+
+%template(PythonOSArgumentVector) std::vector<openstudio::measure::OSArgument>;
+%template(OptionalPythonOSArgument) boost::optional<openstudio::measure::OSArgument>;
+%template(PythonOSArgumentMap) std::map<std::string, openstudio::measure::OSArgument>;
+#else
+//user scripts
+%template(OSArgumentVector) std::vector<openstudio::measure::OSArgument>;
+%template(OptionalOSArgument) boost::optional<openstudio::measure::OSArgument>;
+%template(OSArgumentMap) std::map<std::string, openstudio::measure::OSArgument>;
+#endif
 
 %include <measure/OSArgument.hpp>
 %include <measure/OSOutput.hpp>

@@ -60,7 +60,7 @@ void OSWorkflow::run() {
   rubyEngine->exec("puts 'Hello from Ruby'");
   pythonEngine->exec("print('Hello from Python')");
 
-  rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
+  // rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
   rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
   pythonEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
 
@@ -145,7 +145,7 @@ void OSWorkflow::run() {
       ScriptObject measureScriptObject;
       openstudio::measure::OSMeasure* measurePtr = nullptr;
 
-      auto getArguments = [&](measure::OSMeasure* measure) -> measure::OSArgumentMap {
+      auto getArguments = [&model, &workspace_, &measureType, &scriptPath_, &step](measure::OSMeasure* measure) -> measure::OSArgumentMap {
         if (!measure) {
           throw std::runtime_error(fmt::format("Could not load measure at '{}'", openstudio::toString(scriptPath_.get())));
         }
