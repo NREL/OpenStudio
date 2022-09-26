@@ -92,15 +92,6 @@ class ScriptEngine
   std::map<std::reference_wrapper<const std::type_info>, std::string, Compare> types;
 };
 
-inline std::unique_ptr<openstudio::ScriptEngine> loadScriptEngine(std::string_view libraryBaseName, int argc, char* argv[]) {
-  auto enginePath = openstudio::getOpenStudioModuleDirectory() / openstudio::getSharedLibraryName(libraryBaseName);
-  openstudio::DynamicLibrary engineLib(enginePath);
-
-  const std::function<ScriptEngineFactoryType> factory = engineLib.load_symbol<ScriptEngineFactoryType>("makeScriptEngine");
-
-  return std::unique_ptr<openstudio::ScriptEngine>(factory(argc, argv));
-}
-
 // The purpose of this class is to delay creating the scripting engine
 // until it is needed, while still initializing with argc and argv
 class ScriptEngineInstance
@@ -118,10 +109,13 @@ class ScriptEngineInstance
       return *(instance.get());
     } else {
       std::vector<char*> argv;
-
       std::transform(args.begin(), args.end(), std::back_inserter(argv), [](const std::string& item) { return const_cast<char*>(item.c_str()); });
 
-      instance = openstudio::loadScriptEngine(libraryName, args.size(), argv.data());
+      const auto enginePath = getOpenStudioModuleDirectory() / openstudio::getSharedLibraryName(libraryName);
+      engineLib = std::make_shared<DynamicLibrary>(enginePath);
+      const auto factory = engineLib->load_symbol<ScriptEngineFactoryType>("makeScriptEngine");
+      instance = std::shared_ptr<ScriptEngine>(factory(args.size(), argv.data()));
+
       return *instance;
     }
   }
@@ -130,12 +124,14 @@ class ScriptEngineInstance
   }
   void reset() {
     instance.reset();
+    engineLib.reset();
   }
 
  private:
   std::string libraryName;
   std::vector<std::string> args;
-  std::shared_ptr<openstudio::ScriptEngine> instance;
+  std::shared_ptr<ScriptEngine> instance;
+  std::shared_ptr<DynamicLibrary> engineLib;
 };
 
 }  // namespace openstudio
