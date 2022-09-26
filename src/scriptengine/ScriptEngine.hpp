@@ -111,7 +111,7 @@ class ScriptEngineInstance
       std::vector<char*> argv;
       std::transform(args.begin(), args.end(), std::back_inserter(argv), [](const std::string& item) { return const_cast<char*>(item.c_str()); });
 
-      const auto enginePath = getOpenStudioModuleDirectory() / openstudio::getSharedLibraryName(libraryName);
+      const auto enginePath = getOpenStudioModuleDirectory() / openstudio::getSharedModuleName(libraryName);
       // DynamicLibrary will perform dlopen on construction and dlclose on destruction
       // Don't create the DynamicLibrary until it is going to be used
       engineLib = std::unique_ptr<DynamicLibrary>(new DynamicLibrary(enginePath));
