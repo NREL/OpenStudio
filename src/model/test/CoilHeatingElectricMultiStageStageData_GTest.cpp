@@ -69,17 +69,54 @@ TEST_F(ModelFixture, CoilHeatingElectricMultiStageStageData_GettersSetters) {
   EXPECT_TRUE(stageData1.isNominalCapacityAutosized());
 }
 
-TEST_F(ModelFixture, CoilHeatingElectricMultiStageStageData_Remove) {
-  Model m;
-  CoilHeatingElectricMultiStage coil(m);
-  CoilHeatingElectricMultiStageStageData stageData1(m);
-  CoilHeatingElectricMultiStageStageData stageData2(m);
+TEST_F(ModelFixture, CoilHeatingElectricMultiStageStageData_remove) {
+  // If we remove a stage, we would like any CoilHeatingElectricMultiStage that use it to have their extensible groups adjusted
+  Model model;
 
-  EXPECT_TRUE(coil.addStage(stageData1));
-  EXPECT_TRUE(coil.addStage(stageData2));
+  CoilHeatingElectricMultiStageStageData stage1(model);
+  CoilHeatingElectricMultiStageStageData stage2(model);
 
-  stageData1.remove();
+  CoilHeatingElectricMultiStage coil(model);
+  EXPECT_TRUE(coil.addStage(stage1));
+  EXPECT_TRUE(coil.addStage(stage2));
 
-  ASSERT_EQ(1u, coil.stages().size());
-  EXPECT_EQ(stageData2, coil.stages().front());
+  EXPECT_EQ(2, coil.numExtensibleGroups());
+  EXPECT_EQ(2, coil.numberOfStages());
+  EXPECT_EQ(2, coil.stages().size());
+
+  EXPECT_EQ(2, model.getConcreteModelObjects<CoilHeatingElectricMultiStageStageData>().size());
+
+  stage1.remove();
+
+  EXPECT_EQ(1, model.getConcreteModelObjects<CoilHeatingElectricMultiStageStageData>().size());
+
+  EXPECT_EQ(1, coil.numExtensibleGroups());
+  EXPECT_EQ(1, coil.numberOfStages());
+  EXPECT_EQ(1, coil.stages().size());
+
+  EXPECT_EQ(stage2, coil.stages().front());
+}
+
+TEST_F(ModelFixture, CoilHeatingElectricMultiStageStageData_Unicity) {
+  Model model;
+
+  CoilHeatingElectricMultiStageStageData stage(model);
+  EXPECT_FALSE(stage.parentCoil());
+
+  CoilHeatingElectricMultiStage coil1(model);
+  EXPECT_TRUE(coil1.addStage(stage));
+  ASSERT_TRUE(stage.parentCoil());
+  EXPECT_EQ(coil1, stage.parentCoil().get());
+
+  // StageData is already used, so refuse
+  CoilHeatingElectricMultiStage coil2(model);
+  EXPECT_FALSE(coil2.addStage(stage));
+  EXPECT_EQ(1u, model.getConcreteModelObjects<CoilHeatingElectricMultiStageStageData>().size());
+
+  EXPECT_EQ(1u, coil1.numExtensibleGroups());
+  EXPECT_EQ(1u, coil1.numberOfStages());
+  EXPECT_EQ(1u, coil1.stages().size());
+  EXPECT_EQ(0u, coil2.numExtensibleGroups());
+  EXPECT_EQ(0u, coil2.numberOfStages());
+  EXPECT_EQ(0u, coil2.stages().size());
 }
