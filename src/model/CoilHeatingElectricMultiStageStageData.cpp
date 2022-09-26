@@ -45,19 +45,19 @@ namespace model {
 
     CoilHeatingElectricMultiStageStageData_Impl::CoilHeatingElectricMultiStageStageData_Impl(const IdfObject& idfObject, Model_Impl* model,
                                                                                              bool keepHandle)
-      : ParentObject_Impl(idfObject, model, keepHandle) {
+      : ModelObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == CoilHeatingElectricMultiStageStageData::iddObjectType());
     }
 
     CoilHeatingElectricMultiStageStageData_Impl::CoilHeatingElectricMultiStageStageData_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                              Model_Impl* model, bool keepHandle)
-      : ParentObject_Impl(other, model, keepHandle) {
+      : ModelObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == CoilHeatingElectricMultiStageStageData::iddObjectType());
     }
 
     CoilHeatingElectricMultiStageStageData_Impl::CoilHeatingElectricMultiStageStageData_Impl(const CoilHeatingElectricMultiStageStageData_Impl& other,
                                                                                              Model_Impl* model, bool keepHandle)
-      : ParentObject_Impl(other, model, keepHandle) {}
+      : ModelObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilHeatingElectricMultiStageStageData_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
@@ -105,23 +105,11 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    std::vector<ModelObject> CoilHeatingElectricMultiStageStageData_Impl::children() const {
-      std::vector<ModelObject> result;
-
-      return result;
-    }
-
-    ModelObject CoilHeatingElectricMultiStageStageData_Impl::clone(Model model) const {
-      auto t_clone = ModelObject_Impl::clone(model).cast<CoilHeatingElectricMultiStageStageData>();
-
-      return t_clone;
-    }
-
     std::vector<IdfObject> CoilHeatingElectricMultiStageStageData_Impl::remove() {
       if (auto _coil = parentCoil()) {
         _coil->removeStage(getObject<CoilHeatingElectricMultiStageStageData>());
       }
-      return ParentObject_Impl::remove();
+      return ModelObject_Impl::remove();
     }
 
     boost::optional<CoilHeatingElectricMultiStage> CoilHeatingElectricMultiStageStageData_Impl::parentCoil() const {
@@ -178,7 +166,7 @@ namespace model {
   }  // namespace detail
 
   CoilHeatingElectricMultiStageStageData::CoilHeatingElectricMultiStageStageData(const Model& model)
-    : ParentObject(CoilHeatingElectricMultiStageStageData::iddObjectType(), model) {
+    : ModelObject(CoilHeatingElectricMultiStageStageData::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingElectricMultiStageStageData_Impl>());
 
     setEfficiency(1.0);
@@ -186,7 +174,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingElectricMultiStageStageData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_Electric_MultiStage_StageData);
+    return {IddObjectType::OS_Coil_Heating_Electric_MultiStage_StageData};
   }
 
   double CoilHeatingElectricMultiStageStageData::efficiency() const {
@@ -216,7 +204,7 @@ namespace model {
   /// @cond
   CoilHeatingElectricMultiStageStageData::CoilHeatingElectricMultiStageStageData(
     std::shared_ptr<detail::CoilHeatingElectricMultiStageStageData_Impl> impl)
-    : ParentObject(std::move(impl)) {}
+    : ModelObject(std::move(impl)) {}
   /// @endcond
 
   boost::optional<double> CoilHeatingElectricMultiStageStageData::autosizedNominalCapacity() const {

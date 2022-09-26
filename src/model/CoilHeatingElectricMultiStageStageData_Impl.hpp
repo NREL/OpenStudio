@@ -31,7 +31,7 @@
 #define MODEL_COILHEATINGELECTRICMULTISTAGESTAGEDATA_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "ParentObject_Impl.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
@@ -40,8 +40,8 @@ namespace model {
 
   namespace detail {
 
-    /** CoilHeatingElectricMultiStageStageData_Impl is a ParentObject_Impl that is the implementation class for CoilHeatingElectricMultiStageStageData.*/
-    class MODEL_API CoilHeatingElectricMultiStageStageData_Impl : public ParentObject_Impl
+    /** CoilHeatingElectricMultiStageStageData_Impl is a ModelObject_Impl that is the implementation class for CoilHeatingElectricMultiStageStageData.*/
+    class MODEL_API CoilHeatingElectricMultiStageStageData_Impl : public ModelObject_Impl
     {
      public:
       /** @name Constructors and Destructors */
@@ -53,7 +53,7 @@ namespace model {
 
       CoilHeatingElectricMultiStageStageData_Impl(const CoilHeatingElectricMultiStageStageData_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingElectricMultiStageStageData_Impl() {}
+      virtual ~CoilHeatingElectricMultiStageStageData_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -62,10 +62,6 @@ namespace model {
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
-
-      virtual std::vector<ModelObject> children() const override;
-
-      virtual ModelObject clone(Model model) const override;
 
       // If this object is used by any CoilHeatingElectricMultiStage, remove the corresponding extensible group to avoid having 'blanks'
       virtual std::vector<IdfObject> remove() override;

@@ -44,19 +44,19 @@ namespace model {
   namespace detail {
 
     CoilHeatingGasMultiStageStageData_Impl::CoilHeatingGasMultiStageStageData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle)
-      : ParentObject_Impl(idfObject, model, keepHandle) {
+      : ModelObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == CoilHeatingGasMultiStageStageData::iddObjectType());
     }
 
     CoilHeatingGasMultiStageStageData_Impl::CoilHeatingGasMultiStageStageData_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
                                                                                    Model_Impl* model, bool keepHandle)
-      : ParentObject_Impl(other, model, keepHandle) {
+      : ModelObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == CoilHeatingGasMultiStageStageData::iddObjectType());
     }
 
     CoilHeatingGasMultiStageStageData_Impl::CoilHeatingGasMultiStageStageData_Impl(const CoilHeatingGasMultiStageStageData_Impl& other,
                                                                                    Model_Impl* model, bool keepHandle)
-      : ParentObject_Impl(other, model, keepHandle) {}
+      : ModelObject_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& CoilHeatingGasMultiStageStageData_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
@@ -116,23 +116,11 @@ namespace model {
       return result;
     }
 
-    std::vector<ModelObject> CoilHeatingGasMultiStageStageData_Impl::children() const {
-      std::vector<ModelObject> result;
-
-      return result;
-    }
-
-    ModelObject CoilHeatingGasMultiStageStageData_Impl::clone(Model model) const {
-      auto t_clone = ModelObject_Impl::clone(model).cast<CoilHeatingGasMultiStageStageData>();
-
-      return t_clone;
-    }
-
     std::vector<IdfObject> CoilHeatingGasMultiStageStageData_Impl::remove() {
       if (auto _coil = parentCoil()) {
         _coil->removeStage(getObject<CoilHeatingGasMultiStageStageData>());
       }
-      return ParentObject_Impl::remove();
+      return ModelObject_Impl::remove();
     }
 
     boost::optional<CoilHeatingGasMultiStage> CoilHeatingGasMultiStageStageData_Impl::parentCoil() const {
@@ -189,7 +177,7 @@ namespace model {
   }  // namespace detail
 
   CoilHeatingGasMultiStageStageData::CoilHeatingGasMultiStageStageData(const Model& model)
-    : ParentObject(CoilHeatingGasMultiStageStageData::iddObjectType(), model) {
+    : ModelObject(CoilHeatingGasMultiStageStageData::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>());
 
     setGasBurnerEfficiency(0.80);
@@ -198,7 +186,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingGasMultiStageStageData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_Gas_MultiStage_StageData);
+    return {IddObjectType::OS_Coil_Heating_Gas_MultiStage_StageData};
   }
 
   double CoilHeatingGasMultiStageStageData::gasBurnerEfficiency() const {
@@ -235,7 +223,7 @@ namespace model {
 
   /// @cond
   CoilHeatingGasMultiStageStageData::CoilHeatingGasMultiStageStageData(std::shared_ptr<detail::CoilHeatingGasMultiStageStageData_Impl> impl)
-    : ParentObject(std::move(impl)) {}
+    : ModelObject(std::move(impl)) {}
   /// @endcond
 
   boost::optional<double> CoilHeatingGasMultiStageStageData::autosizedNominalCapacity() const {
