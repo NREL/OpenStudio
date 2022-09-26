@@ -89,9 +89,10 @@ namespace model {
     std::vector<ScheduleTypeKey> CoilHeatingGasMultiStage_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_Coil_Heating_Gas_MultiStageFields::AvailabilitySchedule) != e) {
-        result.push_back(ScheduleTypeKey("CoilHeatingGasMultiStage", "Availability Schedule"));
+        result.emplace_back("CoilHeatingGasMultiStage", "Availability Schedule");
       }
       return result;
     }
@@ -106,6 +107,9 @@ namespace model {
 
     ModelObject CoilHeatingGasMultiStage_Impl::clone(Model model) const {
       auto t_clone = StraightComponent_Impl::clone(model).cast<CoilHeatingGasMultiStage>();
+
+      // Deal with the stages: we want them cloned, so first clear and then clone + assign each
+      t_clone.removeAllStages();
 
       for (const auto& stage : stages()) {
         auto stageClone = stage.clone(model).cast<CoilHeatingGasMultiStageStageData>();
@@ -358,7 +362,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingGasMultiStage::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_Gas_MultiStage);
+    return {IddObjectType::OS_Coil_Heating_Gas_MultiStage};
   }
 
   Schedule CoilHeatingGasMultiStage::availabilitySchedule() const {
