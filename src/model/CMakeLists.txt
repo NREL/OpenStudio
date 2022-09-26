@@ -374,6 +374,12 @@ set(${target_name}_src
   CoilHeatingElectric.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingElectric.cpp
+  CoilHeatingElectricMultiStage.hpp
+  CoilHeatingElectricMultiStage_Impl.hpp
+  CoilHeatingElectricMultiStage.cpp
+  CoilHeatingElectricMultiStageStageData.hpp
+  CoilHeatingElectricMultiStageStageData_Impl.hpp
+  CoilHeatingElectricMultiStageStageData.cpp
   CoilHeatingFourPipeBeam.hpp
   CoilHeatingFourPipeBeam_Impl.hpp
   CoilHeatingFourPipeBeam.cpp
@@ -1921,6 +1927,8 @@ set(${target_name}_test_src
   test/CoilHeatingDXVariableSpeed_GTest.cpp
   test/CoilHeatingDXVariableSpeedSpeedData_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
+  test/CoilHeatingElectricMultiStage_GTest.cpp
+  test/CoilHeatingElectricMultiStageStageData_GTest.cpp
   test/CoilHeatingFourPipeBeam_GTest.cpp
   test/CoilHeatingGas_GTest.cpp
   test/CoilHeatingGasMultiStage_GTest.cpp

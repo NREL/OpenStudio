@@ -29,17 +29,15 @@
 
 #include "../ForwardTranslator.hpp"
 #include "../../model/Model.hpp"
-#include "../../model/CoilHeatingGasMultiStage.hpp"
-#include "../../model/CoilHeatingGasMultiStage_Impl.hpp"
-#include "../../model/CoilHeatingGasMultiStageStageData.hpp"
-#include "../../model/CoilHeatingGasMultiStageStageData_Impl.hpp"
+#include "../../model/CoilHeatingElectricMultiStage.hpp"
+#include "../../model/CoilHeatingElectricMultiStage_Impl.hpp"
+#include "../../model/CoilHeatingElectricMultiStageStageData.hpp"
+#include "../../model/CoilHeatingElectricMultiStageStageData_Impl.hpp"
 #include "../../model/Node.hpp"
 #include "../../model/Node_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
-#include "../../model/Curve.hpp"
-#include "../../model/Curve_Impl.hpp"
-#include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Electric_MultiStage_FieldEnums.hxx>
 #include "../../utilities/idd/IddEnums.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <utilities/idd/IddFactory.hxx>
@@ -51,67 +49,52 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingGasMultiStage(CoilHeatingGasMultiStage& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateCoilHeatingElectricMultiStage(CoilHeatingElectricMultiStage& modelObject) {
     boost::optional<std::string> s;
     boost::optional<double> value;
 
     // Name
-    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Heating_Gas_MultiStage, modelObject);
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Coil_Heating_Electric_MultiStage, modelObject);
 
     // AvailabilityScheduleName
     {
       auto schedule = modelObject.availabilitySchedule();
       if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule)) {
-        idfObject.setString(Coil_Heating_Gas_MultiStageFields::AvailabilityScheduleName, _schedule->name().get());
+        idfObject.setString(Coil_Heating_Electric_MultiStageFields::AvailabilityScheduleName, _schedule->name().get());
       }
     }
 
     // AirInletNodeName
     if (auto node = modelObject.inletModelObject()) {
-      idfObject.setString(Coil_Heating_Gas_MultiStageFields::AirInletNodeName, node->name().get());
+      idfObject.setString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, node->name().get());
     }
 
     // AirOutletNodeName
     // TemperatureSetpointNodeName
     if (auto node = modelObject.outletModelObject()) {
-      idfObject.setString(Coil_Heating_Gas_MultiStageFields::AirOutletNodeName, node->name().get());
-      idfObject.setString(Coil_Heating_Gas_MultiStageFields::TemperatureSetpointNodeName, node->name().get());
-    }
-
-    // PartLoadFractionCorrelationCurveName
-    if (auto curve = modelObject.partLoadFractionCorrelationCurve()) {
-      if (auto _curve = translateAndMapModelObject(curve.get())) {
-        idfObject.setString(Coil_Heating_Gas_MultiStageFields::PartLoadFractionCorrelationCurveName, _curve->name().get());
-      }
-    }
-
-    // ParasiticGasLoad
-    if ((value = modelObject.parasiticGasLoad())) {
-      idfObject.setDouble(Coil_Heating_Gas_MultiStageFields::ParasiticGasLoad, value.get());
+      idfObject.setString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, node->name().get());
+      idfObject.setString(Coil_Heating_Electric_MultiStageFields::TemperatureSetpointNodeName, node->name().get());
     }
 
     const auto stages = modelObject.stages();
 
     // NumberofStages
     if (!stages.empty()) {
-      idfObject.setInt(Coil_Heating_Gas_MultiStageFields::NumberofStages, stages.size());
+      idfObject.setInt(Coil_Heating_Electric_MultiStageFields::NumberofStages, stages.size());
     }
 
     for (const auto& stage : stages) {
       auto eg = idfObject.pushExtensibleGroup();
 
-      // Stage1GasBurnerEfficiency
-      eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageGasBurnerEfficiency, stage.gasBurnerEfficiency());
+      // Stage1Efficiency
+      eg.setDouble(Coil_Heating_Electric_MultiStageExtensibleFields::StageEfficiency, stage.efficiency());
 
       // Stage1NominalCapacity
       if (stage.isNominalCapacityAutosized()) {
-        eg.setString(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity, "AutoSize");
+        eg.setString(Coil_Heating_Electric_MultiStageExtensibleFields::StageNominalCapacity, "AutoSize");
       } else if ((value = stage.nominalCapacity())) {
-        eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageNominalCapacity, value.get());
+        eg.setDouble(Coil_Heating_Electric_MultiStageExtensibleFields::StageNominalCapacity, value.get());
       }
-
-      // Stage1ParasiticElectricLoad
-      eg.setDouble(Coil_Heating_Gas_MultiStageExtensibleFields::StageParasiticElectricLoad, stage.parasiticElectricLoad());
     }
 
     return idfObject;

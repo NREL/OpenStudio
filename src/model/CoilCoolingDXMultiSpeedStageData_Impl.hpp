@@ -41,7 +41,7 @@ namespace model {
 
   namespace detail {
 
-    /** CoilCoolingDXMultiSpeedStageData_Impl is a ModelObject_Impl that is the implementation class for CoilCoolingDXMultiSpeedStageData.*/
+    /** CoilCoolingDXMultiSpeedStageData_Impl is a ParentObject_Impl that is the implementation class for CoilCoolingDXMultiSpeedStageData.*/
     class MODEL_API CoilCoolingDXMultiSpeedStageData_Impl : public ParentObject_Impl
     {
      public:

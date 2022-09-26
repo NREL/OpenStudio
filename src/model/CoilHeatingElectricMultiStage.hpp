@@ -27,8 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_COILHEATINGGASMULTISTAGE_HPP
-#define MODEL_COILHEATINGGASMULTISTAGE_HPP
+#ifndef MODEL_COILHEATINGELECTRICMULTISTAGE_HPP
+#define MODEL_COILHEATINGELECTRICMULTISTAGE_HPP
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
@@ -38,26 +38,25 @@ namespace openstudio {
 namespace model {
 
   class Schedule;
-  class CoilHeatingGasMultiStageStageData;
-  class Curve;
+  class CoilHeatingElectricMultiStageStageData;
 
   namespace detail {
 
-    class CoilHeatingGasMultiStage_Impl;
+    class CoilHeatingElectricMultiStage_Impl;
 
   }  // namespace detail
 
-  /** CoilHeatingGasMultiStage is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:Gas:MultiStage'.
- * Performance data for each stage is contained in a separate ModelObject called OS:Coil:Heating:Gas:MultiStage:StageData **/
-  class MODEL_API CoilHeatingGasMultiStage : public StraightComponent
+  /** CoilHeatingElectricMultiStage is a StraightComponent that wraps the OpenStudio IDD object 'OS:Coil:Heating:Electric:MultiStage'.
+ * Performance data for each stage is contained in a separate ModelObject called OS:Coil:Heating:Electric:MultiStage:StageData **/
+  class MODEL_API CoilHeatingElectricMultiStage : public StraightComponent
   {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    explicit CoilHeatingGasMultiStage(const Model& model);
+    explicit CoilHeatingElectricMultiStage(const Model& model);
 
-    virtual ~CoilHeatingGasMultiStage() {}
+    virtual ~CoilHeatingElectricMultiStage() {}
 
     //@}
 
@@ -68,102 +67,90 @@ namespace model {
 
     Schedule availabilitySchedule() const;
 
-    boost::optional<Curve> partLoadFractionCorrelationCurve() const;
-
-    boost::optional<double> parasiticGasLoad() const;
-
     //@}
     /** @name Setters */
     //@{
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setPartLoadFractionCorrelationCurve(const Curve& curve);
-
-    void resetPartLoadFractionCorrelationCurve();
-
-    bool setParasiticGasLoad(double parasiticGasLoad);
-
-    void resetParasiticGasLoad();
-
     //@}
     /** @name Other */
     //@{
 
     /** Return the performance data for each stage. **/
-    std::vector<CoilHeatingGasMultiStageStageData> stages() const;
+    std::vector<CoilHeatingElectricMultiStageStageData> stages() const;
 
     unsigned numberOfStages() const;
 
     /*
-   * Get the index of a given CoilHeatingGasMultiStageStageData (1-indexed)
+   * Get the index of a given CoilHeatingElectricMultiStageStageData (1-indexed)
    */
-    boost::optional<unsigned> stageIndex(const CoilHeatingGasMultiStageStageData& stage) const;
+    boost::optional<unsigned> stageIndex(const CoilHeatingElectricMultiStageStageData& stage) const;
 
     /*
    * Add a new stage after all of the existing stages.
    */
-    bool addStage(const CoilHeatingGasMultiStageStageData& stage);
+    bool addStage(const CoilHeatingElectricMultiStageStageData& stage);
 
     /*
-   * Add a new CoilHeatingGasMultiStageStageData to the list which a given index (1 to x).
+   * Add a new CoilHeatingElectricMultiStageStageData to the list which a given index (1 to x).
    * Internally calls addStage then setStageIndex, see remarks there
    */
-    bool addStage(const CoilHeatingGasMultiStageStageData& stage, unsigned index);
+    bool addStage(const CoilHeatingElectricMultiStageStageData& stage, unsigned index);
 
     /*
-   * You can shuffle the priority of a given CoilHeatingGasMultiStageStageData after having added it
+   * You can shuffle the priority of a given CoilHeatingElectricMultiStageStageData after having added it
    * If index is below 1, it's reset to 1.
    * If index is greater than the number of stages, will reset to last
    */
-    bool setStageIndex(const CoilHeatingGasMultiStageStageData& stage, unsigned index);
+    bool setStageIndex(const CoilHeatingElectricMultiStageStageData& stage, unsigned index);
 
     /*
-   * Set all stages using a list of CoilHeatingGasMultiStageStageDatas
+   * Set all stages using a list of CoilHeatingElectricMultiStageStageDatas
    * Internally calls addStage, and will return the global status, but will continue trying if there are problems
    * (eg: if you make a vector larger than the number of accepted stages, or a vector that has a stage from another model, the valid stages will be
    * added indeed, but it'll eventually return false)
    */
-    bool setStages(const std::vector<CoilHeatingGasMultiStageStageData>& stages);
+    bool setStages(const std::vector<CoilHeatingElectricMultiStageStageData>& stages);
 
     /*
-   * Removes all CoilHeatingGasMultiStageStageDatas in this object
+   * Removes all CoilHeatingElectricMultiStageStageDatas in this object
    */
     void removeAllStages();
 
     /*
-   * Remove the given CoilHeatingGasMultiStageStageData from this object's stages
+   * Remove the given CoilHeatingElectricMultiStageStageData from this object's stages
    */
-    bool removeStage(const CoilHeatingGasMultiStageStageData& stage);
+    bool removeStage(const CoilHeatingElectricMultiStageStageData& stage);
 
     /*
-   * Remove the CoilHeatingGasMultiStageStageData at the given index (1-indexed)
+   * Remove the CoilHeatingElectricMultiStageStageData at the given index (1-indexed)
    */
     bool removeStage(unsigned index);
 
     //@}
    protected:
     /// @cond
-    typedef detail::CoilHeatingGasMultiStage_Impl ImplType;
+    typedef detail::CoilHeatingElectricMultiStage_Impl ImplType;
 
-    explicit CoilHeatingGasMultiStage(std::shared_ptr<detail::CoilHeatingGasMultiStage_Impl> impl);
+    explicit CoilHeatingElectricMultiStage(std::shared_ptr<detail::CoilHeatingElectricMultiStage_Impl> impl);
 
-    friend class detail::CoilHeatingGasMultiStage_Impl;
+    friend class detail::CoilHeatingElectricMultiStage_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
     /// @endcond
    private:
-    REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStage");
+    REGISTER_LOGGER("openstudio.model.CoilHeatingElectricMultiStage");
   };
 
-  /** \relates CoilHeatingGasMultiStage*/
-  typedef boost::optional<CoilHeatingGasMultiStage> OptionalCoilHeatingGasMultiStage;
+  /** \relates CoilHeatingElectricMultiStage*/
+  typedef boost::optional<CoilHeatingElectricMultiStage> OptionalCoilHeatingElectricMultiStage;
 
-  /** \relates CoilHeatingGasMultiStage*/
-  typedef std::vector<CoilHeatingGasMultiStage> CoilHeatingGasMultiStageVector;
+  /** \relates CoilHeatingElectricMultiStage*/
+  typedef std::vector<CoilHeatingElectricMultiStage> CoilHeatingElectricMultiStageVector;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_COILHEATINGGASMULTISTAGE_HPP
+#endif  // MODEL_COILHEATINGELECTRICMULTISTAGE_HPP

@@ -11096,6 +11096,7 @@ OS:AirLoopHVAC:UnitarySystem,
   A16, \field Supplemental Heating Coil Name
        \type object-list
        \object-list HeatingCoilName
+       \object-list HeatingCoilsElectricMultiStage
        \object-list HeatingCoilsDesuperheater
        \object-list UserDefinedCoil
        \note Enter the name of the supplemental heating coil if included in the unitary system.
@@ -17991,6 +17992,63 @@ OS:Coil:Heating:Electric,
        \type object-list
        \object-list Node
 
+OS:Coil:Heating:Electric:MultiStage,
+       \memo Electric heating coil, multi-stage. If the coil is located directly in an air loop
+       \memo branch or outdoor air equipment list, then it is controlled on leaving air temperature
+       \memo and the Temperature Setpoint Node Name must be specified. If the coil is contained
+       \memo within another component such as an air terminal unit, zone HVAC equipment, or unitary
+       \memo system, then the coil is controlled by the parent component and the setpoint node name
+       \memo is not entered.
+       \max-fields 9
+       \extensible:1
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \type alpha
+       \required-field
+       \reference HeatingCoilsElectricMultiStage
+       \reference ConnectionObject
+  A3 , \field Availability Schedule
+       \note Availability schedule name for this system. Schedule value > 0 means the system is available.
+       \note If this field is blank, the system is always available.
+       \type object-list
+       \object-list ScheduleNames
+       \required-field
+  A4 , \field Air Inlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A5 , \field Air Outlet Node
+       \type object-list
+       \required-field
+       \object-list ConnectionNames
+  A7;  \field Stage 1
+       \begin-extensible
+       \type object-list
+       \object-list CoilHeatingElectricMultiStageStageData
+
+OS:Coil:Heating:Electric:MultiStage:StageData,
+       \min-fields 4
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2 , \field Name
+       \required-field
+       \reference CoilHeatingElectricMultiStageStageData
+       \type alpha
+  N1,  \field Efficiency
+       \required-field
+       \type real
+       \units W/W
+       \minimum> 0.0
+  N2;  \field Nominal Capacity
+       \required-field
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+
 OS:Coil:Heating:Gas,
        \min-fields 1
   A1, \field Handle
@@ -18065,7 +18123,14 @@ OS:Coil:Heating:Gas,
        \default NaturalGas
 
 OS:Coil:Heating:Gas:MultiStage,
-       \extensible:1
+      \memo Gas heating coil, multi-stage. If the coil is located directly in an air loop
+      \memo branch or outdoor air equipment list, then it is controlled on leaving air temperature
+      \memo and the Temperature Setpoint Node Name must be specified. If the coil is contained
+      \memo within another component such as an air terminal unit, zone HVAC equipment, or unitary
+      \memo system, then the coil is controlled by the parent component and the setpoint node name
+      \memo is not entered.
+      \max-fields 11
+      \extensible:1
   A1, \field Handle
       \type handle
       \required-field
@@ -18077,6 +18142,7 @@ OS:Coil:Heating:Gas:MultiStage,
   A3, \field Availability Schedule
       \type object-list
       \object-list ScheduleNames
+      \required-field
   A4, \field Air Inlet Node
       \type object-list
       \required-field
@@ -18096,7 +18162,8 @@ OS:Coil:Heating:Gas:MultiStage,
       \object-list CoilHeatingGasMultiStageStageData
 
 OS:Coil:Heating:Gas:MultiStage:StageData,
-  A1, \field Handle
+       \min-fields 5
+  A1,  \field Handle
        \type handle
        \required-field
   A2 , \field Name

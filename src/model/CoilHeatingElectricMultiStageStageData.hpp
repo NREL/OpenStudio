@@ -27,12 +27,12 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_COILHEATINGGASMULTISTAGESTAGEDATA_HPP
-#define MODEL_COILHEATINGGASMULTISTAGESTAGEDATA_HPP
+#ifndef MODEL_COILHEATINGELECTRICMULTISTAGESTAGEDATA_HPP
+#define MODEL_COILHEATINGELECTRICMULTISTAGESTAGEDATA_HPP
 
 #include "ModelAPI.hpp"
 #include "ModelObject.hpp"
-#include "../model/CoilHeatingGasMultiStage.hpp"
+#include "../model/CoilHeatingElectricMultiStage.hpp"
 
 namespace openstudio {
 
@@ -40,20 +40,20 @@ namespace model {
 
   namespace detail {
 
-    class CoilHeatingGasMultiStageStageData_Impl;
+    class CoilHeatingElectricMultiStageStageData_Impl;
 
   }  // namespace detail
 
-  /** CoilHeatingGasMultiStageStageData is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:Heating:Gas:MultiStage:StageData'. */
-  class MODEL_API CoilHeatingGasMultiStageStageData : public ModelObject
+  /** CoilHeatingElectricMultiStageStageData is a ModelObject that wraps the OpenStudio IDD object 'OS:Coil:Heating:Electric:MultiStage:StageData'. */
+  class MODEL_API CoilHeatingElectricMultiStageStageData : public ModelObject
   {
    public:
     /** @name Constructors and Destructors */
     //@{
 
-    explicit CoilHeatingGasMultiStageStageData(const Model& model);
+    explicit CoilHeatingElectricMultiStageStageData(const Model& model);
 
-    virtual ~CoilHeatingGasMultiStageStageData() = default;
+    virtual ~CoilHeatingElectricMultiStageStageData() = default;
 
     //@}
 
@@ -62,32 +62,28 @@ namespace model {
     /** @name Getters */
     //@{
 
-    double gasBurnerEfficiency() const;
+    double efficiency() const;
 
     boost::optional<double> nominalCapacity() const;
 
     bool isNominalCapacityAutosized() const;
 
-    double parasiticElectricLoad() const;
-
     //@}
     /** @name Setters */
     //@{
 
-    bool setGasBurnerEfficiency(double GasBurnerEfficiency);
+    bool setEfficiency(double StageEfficiency);
 
     bool setNominalCapacity(double StageNominalCapacity);
 
     void autosizeNominalCapacity();
 
-    bool setParasiticElectricLoad(double StageParasiticElectricLoad);
-
     //@}
     /** @name Other */
     //@{
 
-    // Returns the CoilHeatingGasMultiStage that references it if any
-    boost::optional<CoilHeatingGasMultiStage> parentCoil() const;
+    // Returns the CoilHeatingElectricMultiStage that references it if any
+    boost::optional<CoilHeatingElectricMultiStage> parentCoil() const;
 
     boost::optional<double> autosizedNominalCapacity() const;
 
@@ -98,30 +94,30 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::CoilHeatingGasMultiStageStageData_Impl ImplType;
+    typedef detail::CoilHeatingElectricMultiStageStageData_Impl ImplType;
 
-    explicit CoilHeatingGasMultiStageStageData(std::shared_ptr<detail::CoilHeatingGasMultiStageStageData_Impl> impl);
+    explicit CoilHeatingElectricMultiStageStageData(std::shared_ptr<detail::CoilHeatingElectricMultiStageStageData_Impl> impl);
 
-    friend class detail::CoilHeatingGasMultiStageStageData_Impl;
+    friend class detail::CoilHeatingElectricMultiStageStageData_Impl;
     friend class Model;
     friend class IdfObject;
     friend class openstudio::detail::IdfObject_Impl;
     /// @endcond
    private:
-    REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStageStageData");
+    REGISTER_LOGGER("openstudio.model.CoilHeatingElectricMultiStageStageData");
 
     // Used to determine the index of this performance data in the
     // list of stages in the parent object.
-    boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> stageIndexAndParentCoil() const;
+    boost::optional<std::tuple<int, CoilHeatingElectricMultiStage>> stageIndexAndParentCoil() const;
   };
 
-  /** \relates CoilHeatingGasMultiStageStageData*/
-  typedef boost::optional<CoilHeatingGasMultiStageStageData> OptionalCoilHeatingGasMultiStageStageData;
+  /** \relates CoilHeatingElectricMultiStageStageData*/
+  typedef boost::optional<CoilHeatingElectricMultiStageStageData> OptionalCoilHeatingElectricMultiStageStageData;
 
-  /** \relates CoilHeatingGasMultiStageStageData*/
-  typedef std::vector<CoilHeatingGasMultiStageStageData> CoilHeatingGasMultiStageStageDataVector;
+  /** \relates CoilHeatingElectricMultiStageStageData*/
+  typedef std::vector<CoilHeatingElectricMultiStageStageData> CoilHeatingElectricMultiStageStageDataVector;
 
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_COILHEATINGGASMULTISTAGESTAGEDATA_HPP
+#endif  // MODEL_COILHEATINGELECTRICMULTISTAGESTAGEDATA_HPP

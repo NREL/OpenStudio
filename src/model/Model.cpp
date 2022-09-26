@@ -1749,6 +1749,8 @@ namespace model {
           modelObj->autosize();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
           modelObj->autosize();
+        } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingElectricMultiStageStageData>()) {  // CoilHeatingElectricMultiStageStageData
+          modelObj->autosize();
         } else if (auto modelObj =
                      optModelObj.optionalCast<
                        HeatExchangerDesiccantBalancedFlowPerformanceDataType1>()) {  // HeatExchangerDesiccantBalancedFlowPerformanceDataType1
@@ -1783,6 +1785,8 @@ namespace model {
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) {  // CoilHeatingDXMultiSpeedStageData
           modelObj->applySizingValues();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
+          modelObj->applySizingValues();
+        } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingElectricMultiStageStageData>()) {  // CoilHeatingElectricMultiStageStageData
           modelObj->applySizingValues();
         } else if (auto modelObj =
                      optModelObj.optionalCast<
@@ -3904,6 +3908,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilHeatingDXSingleSpeed);
     REGISTER_CONSTRUCTOR(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(CoilHeatingElectric);
+    REGISTER_CONSTRUCTOR(CoilHeatingElectricMultiStage);
+    REGISTER_CONSTRUCTOR(CoilHeatingElectricMultiStageStageData);
     REGISTER_CONSTRUCTOR(CoilHeatingFourPipeBeam);
     REGISTER_CONSTRUCTOR(CoilHeatingGas);
     REGISTER_CONSTRUCTOR(CoilHeatingGasMultiStage);
@@ -4458,6 +4464,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectric);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingElectricMultiStage);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingElectricMultiStageStageData);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingFourPipeBeam);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingGas);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingGasMultiStage);

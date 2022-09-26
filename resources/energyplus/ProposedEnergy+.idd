@@ -31800,6 +31800,9 @@ Coil:Heating:Electric:MultiStage,
        \memo within another component such as an air terminal unit, zone HVAC equipment, or unitary
        \memo system, then the coil is controlled by the parent component and the setpoint node name
        \memo is not entered.
+       \min-fields 6
+       \max-fields 14
+       \extensible:2
   A1 , \field Name
        \type alpha
        \required-field
@@ -31828,38 +31831,12 @@ Coil:Heating:Electric:MultiStage,
        \note capacity and Efficiency.
   N2, \field Stage 1 Efficiency
        \required-field
+       \begin-extensible
        \type real
        \units W/W
        \minimum> 0.0
-  N3, \field Stage 1 Nominal Capacity
+  N3; \field Stage 1 Nominal Capacity
        \required-field
-       \type real
-       \units W
-       \minimum> 0.0
-       \autosizable
-  N4, \field Stage 2 Efficiency
-       \type real
-       \units W/W
-       \minimum> 0.0
-  N5, \field Stage 2 Nominal Capacity
-       \type real
-       \units W
-       \minimum> 0.0
-       \autosizable
-  N6, \field Stage 3 Efficiency
-       \type real
-       \units W/W
-       \minimum> 0.0
-  N7, \field Stage 3 Nominal Capacity
-       \type real
-       \units W
-       \minimum> 0.0
-       \autosizable
-  N8, \field Stage 4 Efficiency
-       \type real
-       \units W/W
-       \minimum> 0.0
-  N9; \field Stage 4 Nominal Capacity
        \type real
        \units W
        \minimum> 0.0
@@ -31943,6 +31920,7 @@ Coil:Heating:Gas:MultiStage,
        \memo system, then the coil is controlled by the parent component and the setpoint node name
        \memo is not entered.
        \min-fields 8
+       \max-fields 20
        \extensible:3
   A1 , \field Name
        \required-field

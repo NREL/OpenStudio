@@ -27,35 +27,33 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_COILHEATINGGASMULTISTAGE_IMPL_HPP
-#define MODEL_COILHEATINGGASMULTISTAGE_IMPL_HPP
+#ifndef MODEL_COILHEATINGELECTRICMULTISTAGESTAGEDATA_IMPL_HPP
+#define MODEL_COILHEATINGELECTRICMULTISTAGESTAGEDATA_IMPL_HPP
 
 #include "ModelAPI.hpp"
-#include "StraightComponent_Impl.hpp"
+#include "ModelObject_Impl.hpp"
 
 namespace openstudio {
 namespace model {
 
-  class Schedule;
-  class Curve;
-  class CoilHeatingGasMultiStageStageData;
+  class CoilHeatingElectricMultiStage;
 
   namespace detail {
 
-    /** CoilHeatingGasMultiStage_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingGasMultiStage.*/
-    class MODEL_API CoilHeatingGasMultiStage_Impl : public StraightComponent_Impl
+    /** CoilHeatingElectricMultiStageStageData_Impl is a ModelObject_Impl that is the implementation class for CoilHeatingElectricMultiStageStageData.*/
+    class MODEL_API CoilHeatingElectricMultiStageStageData_Impl : public ModelObject_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      CoilHeatingGasMultiStage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      CoilHeatingElectricMultiStageStageData_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      CoilHeatingGasMultiStage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      CoilHeatingElectricMultiStageStageData_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      CoilHeatingGasMultiStage_Impl(const CoilHeatingGasMultiStage_Impl& other, Model_Impl* model, bool keepHandle);
+      CoilHeatingElectricMultiStageStageData_Impl(const CoilHeatingElectricMultiStageStageData_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingGasMultiStage_Impl() {}
+      virtual ~CoilHeatingElectricMultiStageStageData_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -65,66 +63,50 @@ namespace model {
 
       virtual IddObjectType iddObjectType() const override;
 
-      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
-
-      virtual unsigned inletPort() const override;
-
-      virtual unsigned outletPort() const override;
-
-      ModelObject clone(Model model) const override;
-
-      std::vector<ModelObject> children() const override;
-
-      boost::optional<HVACComponent> containingHVACComponent() const override;
-
-      bool addToNode(Node& node) override;
+      // If this object is used by any CoilHeatingElectricMultiStage, remove the corresponding extensible group to avoid having 'blanks'
+      virtual std::vector<IdfObject> remove() override;
 
       //@}
       /** @name Getters */
       //@{
 
-      Schedule availabilitySchedule() const;
+      double efficiency() const;
 
-      boost::optional<Curve> partLoadFractionCorrelationCurve() const;
+      boost::optional<double> nominalCapacity() const;
 
-      boost::optional<double> parasiticGasLoad() const;
+      bool isNominalCapacityAutosized() const;
 
       //@}
       /** @name Setters */
       //@{
 
-      bool setAvailabilitySchedule(Schedule& schedule);
+      bool setEfficiency(double StageEfficiency);
 
-      bool setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& curve);
+      bool setNominalCapacity(boost::optional<double> StageNominalCapacity);
 
-      void resetPartLoadFractionCorrelationCurve();
-
-      bool setParasiticGasLoad(boost::optional<double> parasiticGasLoad);
-
-      void resetParasiticGasLoad();
+      void autosizeNominalCapacity();
 
       //@}
       /** @name Other */
       //@{
 
-      std::vector<CoilHeatingGasMultiStageStageData> stages() const;
-      unsigned numberOfStages() const;
-      boost::optional<unsigned> stageIndex(const CoilHeatingGasMultiStageStageData& stage) const;
+      boost::optional<double> autosizedNominalCapacity() const;
 
-      bool addStage(const CoilHeatingGasMultiStageStageData& stage);
-      bool addStage(const CoilHeatingGasMultiStageStageData& stage, unsigned index);
-      bool setStageIndex(const CoilHeatingGasMultiStageStageData& stage, unsigned index);
-      bool setStages(const std::vector<CoilHeatingGasMultiStageStageData>& stages);
-      void removeAllStages();
-      bool removeStage(const CoilHeatingGasMultiStageStageData& stage);
-      bool removeStage(unsigned index);
+      void autosize();
+
+      void applySizingValues();
+
+      // Returns the CoilHeatingElectricMultiStage that references it if any
+      boost::optional<CoilHeatingElectricMultiStage> parentCoil() const;
+
+      // Used to determine the index of this performance data in the
+      // list of stages in the parent object.
+      boost::optional<std::tuple<int, CoilHeatingElectricMultiStage>> stageIndexAndParentCoil() const;
 
       //@}
      protected:
      private:
-      REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStage");
-
-      boost::optional<Schedule> optionalAvailabilitySchedule() const;
+      REGISTER_LOGGER("openstudio.model.CoilHeatingElectricMultiStageStageData");
     };
 
   }  // namespace detail
@@ -132,4 +114,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_COILHEATINGGASMULTISTAGE_IMPL_HPP
+#endif  // MODEL_COILHEATINGELECTRICMULTISTAGESTAGEDATA_IMPL_HPP

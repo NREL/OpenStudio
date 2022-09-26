@@ -1122,6 +1122,15 @@ namespace energyplus {
         retVal = translateCoilHeatingElectric(coil);
         break;
       }
+      case openstudio::IddObjectType::OS_Coil_Heating_Electric_MultiStage: {
+        model::CoilHeatingElectricMultiStage coil = modelObject.cast<CoilHeatingElectricMultiStage>();
+        retVal = translateCoilHeatingElectricMultiStage(coil);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Coil_Heating_Electric_MultiStage_StageData: {
+        // no-op
+        return retVal;
+      }
       case openstudio::IddObjectType::OS_Coil_Heating_Gas: {
         model::CoilHeatingGas coil = modelObject.cast<CoilHeatingGas>();
         retVal = translateCoilHeatingGas(coil);

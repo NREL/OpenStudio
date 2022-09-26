@@ -2205,3 +2205,20 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_SizingZone) {
   EXPECT_EQ(0.6, sz.getDouble(37).get());
   EXPECT_EQ(0.5, sz.getDouble(38).get());
 }
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingGasMultiStage) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingGasMultiStage.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingGasMultiStage_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:Gas:MultiStage");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  ASSERT_TRUE(coil.getTarget(2));
+  EXPECT_EQ("Always On Discrete", coil.getTarget(2)->nameString());
+}

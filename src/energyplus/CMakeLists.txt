@@ -84,6 +84,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCoilHeatingDXVariableRefrigerantFlow.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingDXVariableSpeed.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingElectric.cpp
+  ForwardTranslator/ForwardTranslateCoilHeatingElectricMultiStage.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingGas.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingGasMultiStage.cpp
   ForwardTranslator/ForwardTranslateCoilHeatingWater.cpp
@@ -633,6 +634,7 @@ set(${target_name}_test_src
   Test/AirflowNetwork_GTest.cpp
 
   Test/AirLoopHVACUnitarySystem_GTest.cpp
+  Test/AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed_GTest.cpp
   Test/AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass_GTest.cpp
   Test/AirTerminalDualDuctConstantVolume_GTest.cpp
   Test/AirTerminalDualDuctVAV_GTest.cpp
@@ -670,7 +672,9 @@ set(${target_name}_test_src
   Test/CoilCoolingDXTwoStageWithHumidityControlMode_GTest.cpp
   Test/CoilCoolingDXVariableSpeed_GTest.cpp
   Test/CoilHeatingDXMultiSpeed_GTest.cpp
+  Test/CoilHeatingElectricMultiStage_GTest.cpp
   Test/CoilHeatingGas_GTest.cpp
+  Test/CoilHeatingGasMultiStage_GTest.cpp
   Test/CoilSystemIntegratedHeatPumpAirSource_GTest.cpp
   Test/CoilWaterHeatingAirToWaterHeatPumpVariableSpeed_GTest.cpp
   Test/CoilWaterHeatingDesuperheater_GTest.cpp

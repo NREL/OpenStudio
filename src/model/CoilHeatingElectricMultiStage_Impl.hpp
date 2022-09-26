@@ -27,8 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef MODEL_COILHEATINGGASMULTISTAGE_IMPL_HPP
-#define MODEL_COILHEATINGGASMULTISTAGE_IMPL_HPP
+#ifndef MODEL_COILHEATINGELECTRICMULTISTAGE_IMPL_HPP
+#define MODEL_COILHEATINGELECTRICMULTISTAGE_IMPL_HPP
 
 #include "ModelAPI.hpp"
 #include "StraightComponent_Impl.hpp"
@@ -37,25 +37,24 @@ namespace openstudio {
 namespace model {
 
   class Schedule;
-  class Curve;
-  class CoilHeatingGasMultiStageStageData;
+  class CoilHeatingElectricMultiStageStageData;
 
   namespace detail {
 
-    /** CoilHeatingGasMultiStage_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingGasMultiStage.*/
-    class MODEL_API CoilHeatingGasMultiStage_Impl : public StraightComponent_Impl
+    /** CoilHeatingElectricMultiStage_Impl is a StraightComponent_Impl that is the implementation class for CoilHeatingElectricMultiStage.*/
+    class MODEL_API CoilHeatingElectricMultiStage_Impl : public StraightComponent_Impl
     {
      public:
       /** @name Constructors and Destructors */
       //@{
 
-      CoilHeatingGasMultiStage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
+      CoilHeatingElectricMultiStage_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      CoilHeatingGasMultiStage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      CoilHeatingElectricMultiStage_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      CoilHeatingGasMultiStage_Impl(const CoilHeatingGasMultiStage_Impl& other, Model_Impl* model, bool keepHandle);
+      CoilHeatingElectricMultiStage_Impl(const CoilHeatingElectricMultiStage_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingGasMultiStage_Impl() {}
+      virtual ~CoilHeatingElectricMultiStage_Impl() {}
 
       //@}
       /** @name Virtual Methods */
@@ -85,44 +84,32 @@ namespace model {
 
       Schedule availabilitySchedule() const;
 
-      boost::optional<Curve> partLoadFractionCorrelationCurve() const;
-
-      boost::optional<double> parasiticGasLoad() const;
-
       //@}
       /** @name Setters */
       //@{
 
       bool setAvailabilitySchedule(Schedule& schedule);
 
-      bool setPartLoadFractionCorrelationCurve(const boost::optional<Curve>& curve);
-
-      void resetPartLoadFractionCorrelationCurve();
-
-      bool setParasiticGasLoad(boost::optional<double> parasiticGasLoad);
-
-      void resetParasiticGasLoad();
-
       //@}
       /** @name Other */
       //@{
 
-      std::vector<CoilHeatingGasMultiStageStageData> stages() const;
+      std::vector<CoilHeatingElectricMultiStageStageData> stages() const;
       unsigned numberOfStages() const;
-      boost::optional<unsigned> stageIndex(const CoilHeatingGasMultiStageStageData& stage) const;
+      boost::optional<unsigned> stageIndex(const CoilHeatingElectricMultiStageStageData& stage) const;
 
-      bool addStage(const CoilHeatingGasMultiStageStageData& stage);
-      bool addStage(const CoilHeatingGasMultiStageStageData& stage, unsigned index);
-      bool setStageIndex(const CoilHeatingGasMultiStageStageData& stage, unsigned index);
-      bool setStages(const std::vector<CoilHeatingGasMultiStageStageData>& stages);
+      bool addStage(const CoilHeatingElectricMultiStageStageData& stage);
+      bool addStage(const CoilHeatingElectricMultiStageStageData& stage, unsigned index);
+      bool setStageIndex(const CoilHeatingElectricMultiStageStageData& stage, unsigned index);
+      bool setStages(const std::vector<CoilHeatingElectricMultiStageStageData>& stages);
       void removeAllStages();
-      bool removeStage(const CoilHeatingGasMultiStageStageData& stage);
+      bool removeStage(const CoilHeatingElectricMultiStageStageData& stage);
       bool removeStage(unsigned index);
 
       //@}
      protected:
      private:
-      REGISTER_LOGGER("openstudio.model.CoilHeatingGasMultiStage");
+      REGISTER_LOGGER("openstudio.model.CoilHeatingElectricMultiStage");
 
       boost::optional<Schedule> optionalAvailabilitySchedule() const;
     };
@@ -132,4 +119,4 @@ namespace model {
 }  // namespace model
 }  // namespace openstudio
 
-#endif  // MODEL_COILHEATINGGASMULTISTAGE_IMPL_HPP
+#endif  // MODEL_COILHEATINGELECTRICMULTISTAGE_IMPL_HPP

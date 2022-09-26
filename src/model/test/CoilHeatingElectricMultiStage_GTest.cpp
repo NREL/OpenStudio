@@ -31,73 +31,55 @@
 
 #include "ModelFixture.hpp"
 
-#include "../CoilHeatingGasMultiStage.hpp"
-#include "../CoilHeatingGasMultiStage_Impl.hpp"
-#include "../CoilHeatingGasMultiStageStageData.hpp"
-#include "../CoilHeatingGasMultiStageStageData_Impl.hpp"
+#include "../CoilHeatingElectricMultiStage.hpp"
+#include "../CoilHeatingElectricMultiStage_Impl.hpp"
+#include "../CoilHeatingElectricMultiStageStageData.hpp"
+#include "../CoilHeatingElectricMultiStageStageData_Impl.hpp"
 #include "../Schedule.hpp"
 #include "../Schedule_Impl.hpp"
 #include "../ScheduleConstant.hpp"
 #include "../ScheduleConstant_Impl.hpp"
 #include "../ScheduleTypeLimits.hpp"
 #include "../ScheduleTypeLimits_Impl.hpp"
-#include "../CurveQuadratic.hpp"
-#include "../CurveQuadratic_Impl.hpp"
 #include "../AirLoopHVAC.hpp"
 #include "../Node.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
 
-TEST_F(ModelFixture, CoilHeatingGasMultiStage_GettersSetters) {
+TEST_F(ModelFixture, CoilHeatingElectricMultiStage_GettersSetters) {
   Model m;
-  CoilHeatingGasMultiStage coil(m);
+  CoilHeatingElectricMultiStage coil(m);
 
   auto alwaysOn = m.alwaysOnDiscreteSchedule();
   EXPECT_EQ(alwaysOn, coil.availabilitySchedule());
-  EXPECT_FALSE(coil.partLoadFractionCorrelationCurve());
-  EXPECT_FALSE(coil.parasiticGasLoad());
-  EXPECT_EQ(0u, coil.stages().size());
+  EXPECT_EQ(0, coil.stages().size());
 
   ScheduleConstant scheduleConstant(m);
   EXPECT_TRUE(coil.setAvailabilitySchedule(scheduleConstant));
-  CurveQuadratic curveQuadratic(m);
-  EXPECT_TRUE(coil.setPartLoadFractionCorrelationCurve(curveQuadratic));
-  EXPECT_TRUE(coil.setParasiticGasLoad(100.0));
 
   EXPECT_EQ(scheduleConstant, coil.availabilitySchedule());
-  ASSERT_TRUE(coil.partLoadFractionCorrelationCurve());
-  EXPECT_EQ(curveQuadratic.handle(), coil.partLoadFractionCorrelationCurve().get().handle());
-  ASSERT_TRUE(coil.parasiticGasLoad());
-  EXPECT_EQ(100.0, coil.parasiticGasLoad().get());
-
-  coil.resetPartLoadFractionCorrelationCurve();
-  coil.resetParasiticGasLoad();
-
-  EXPECT_FALSE(coil.partLoadFractionCorrelationCurve());
-  EXPECT_FALSE(coil.parasiticGasLoad());
-  EXPECT_EQ(0u, coil.stages().size());
 }
 
-TEST_F(ModelFixture, CoilHeatingGasMultiStage_addToNode) {
+TEST_F(ModelFixture, CoilHeatingElectricMultiStage_addToNode) {
   // Should not be allowed, only meant to be inside a Unitary
   Model m;
 
-  CoilHeatingGasMultiStage h(m);
-  CoilHeatingGasMultiStageStageData stageData(m);
+  CoilHeatingElectricMultiStage h(m);
+  CoilHeatingElectricMultiStageStageData stageData(m);
 
   AirLoopHVAC a(m);
   Node supplyOutlet = a.supplyOutletNode();
   EXPECT_FALSE(h.addToNode(supplyOutlet));
 }
 
-TEST_F(ModelFixture, CoilHeatingGasMultiStage_Stages) {
+TEST_F(ModelFixture, CoilHeatingElectricMultiStage_Stages) {
   Model model;
-  CoilHeatingGasMultiStage coil(model);
+  CoilHeatingElectricMultiStage coil(model);
 
-  std::vector<CoilHeatingGasMultiStageStageData> stages;
+  std::vector<CoilHeatingElectricMultiStageStageData> stages;
   for (unsigned i = 1; i <= 4; ++i) {
-    CoilHeatingGasMultiStageStageData stage(model);
+    CoilHeatingElectricMultiStageStageData stage(model);
     stage.setName("Stage " + std::to_string(i));
     stages.push_back(stage);
     EXPECT_TRUE(coil.addStage(stage));
@@ -106,7 +88,7 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Stages) {
   }
 
   // Can't add more than 4 Stages;
-  CoilHeatingGasMultiStageStageData anotherStage(model);
+  CoilHeatingElectricMultiStageStageData anotherStage(model);
   EXPECT_FALSE(coil.addStage(anotherStage));
   EXPECT_EQ(4, coil.numberOfStages());
   EXPECT_EQ(stages, coil.stages());
@@ -118,7 +100,7 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Stages) {
 
   {
     int stageIndex = 3;
-    std::vector<CoilHeatingGasMultiStageStageData> thisStages = coil.stages();
+    std::vector<CoilHeatingElectricMultiStageStageData> thisStages = coil.stages();
     const auto& stageAtIndex = thisStages[stageIndex - 1];
     EXPECT_TRUE(std::find(thisStages.begin(), thisStages.end(), stageAtIndex) != thisStages.end());
     auto optIndex = coil.stageIndex(stageAtIndex);
@@ -135,7 +117,7 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Stages) {
 
   {
     int stageIndex = 2;
-    std::vector<CoilHeatingGasMultiStageStageData> thisStages = coil.stages();
+    std::vector<CoilHeatingElectricMultiStageStageData> thisStages = coil.stages();
     const auto& stageAtIndex = thisStages[stageIndex - 1];
     EXPECT_TRUE(std::find(thisStages.begin(), thisStages.end(), stageAtIndex) != thisStages.end());
     auto optIndex = coil.stageIndex(stageAtIndex);
@@ -158,7 +140,7 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Stages) {
   EXPECT_EQ(stages, coil.stages());
 
   for (unsigned i = 5; i <= 7; ++i) {
-    CoilHeatingGasMultiStageStageData stage(model);
+    CoilHeatingElectricMultiStageStageData stage(model);
     coil.setName("Stage " + std::to_string(i));
     stages.push_back(stage);
   }
@@ -170,7 +152,7 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Stages) {
   EXPECT_FALSE(coil.setStages(stages));
   EXPECT_EQ(4, coil.numberOfStages());
   {
-    std::vector<CoilHeatingGasMultiStageStageData> thisStages = coil.stages();
+    std::vector<CoilHeatingElectricMultiStageStageData> thisStages = coil.stages();
     for (unsigned i = 0; i < 4; ++i) {
       EXPECT_EQ(stages[i], thisStages[i]);
     }
@@ -185,7 +167,7 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Stages) {
     EXPECT_EQ(coil.numberOfStages(), optIndex.get());
 
     EXPECT_TRUE(coil.setStageIndex(stageAtEnd, 2));
-    std::vector<CoilHeatingGasMultiStageStageData> thisStages = coil.stages();
+    std::vector<CoilHeatingElectricMultiStageStageData> thisStages = coil.stages();
     optIndex = coil.stageIndex(stageAtEnd);
     ASSERT_TRUE(optIndex);
     EXPECT_EQ(2, optIndex.get());
@@ -206,78 +188,78 @@ TEST_F(ModelFixture, CoilHeatingGasMultiStage_Stages) {
 
   // Test that added a stage from another model will fail but not add a blank extensible group
   Model model2;
-  CoilHeatingGasMultiStageStageData stageFromAnotherModel(model2);
+  CoilHeatingElectricMultiStageStageData stageFromAnotherModel(model2);
   EXPECT_FALSE(coil.addStage(stageFromAnotherModel));
   EXPECT_EQ(0u, coil.numExtensibleGroups());
   EXPECT_EQ(0u, coil.numberOfStages());
   EXPECT_EQ(0u, coil.stages().size());
 }
 
-TEST_F(ModelFixture, CoilHeatingGasMultiStage_Remove) {
+TEST_F(ModelFixture, CoilHeatingElectricMultiStage_Remove) {
   Model m;
 
-  CoilHeatingGasMultiStage coil(m);
-  CoilHeatingGasMultiStageStageData stage(m);
+  CoilHeatingElectricMultiStage coil(m);
+  CoilHeatingElectricMultiStageStageData stage(m);
   EXPECT_TRUE(coil.addStage(stage));
-  EXPECT_EQ(1, m.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
-  EXPECT_EQ(1, m.getConcreteModelObjects<CoilHeatingGasMultiStageStageData>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilHeatingElectricMultiStageStageData>().size());
   coil.remove();
 
-  EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
-  EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingGasMultiStageStageData>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+  EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingElectricMultiStageStageData>().size());
   auto schedules = m.getModelObjects<model::ScheduleConstant>();
   auto limits = m.getModelObjects<model::ScheduleTypeLimits>();
   EXPECT_EQ(schedules.size() + limits.size(), m.modelObjects().size());
 }
 
-TEST_F(ModelFixture, CoilHeatingGasMultiStage_Clone) {
+TEST_F(ModelFixture, CoilHeatingElectricMultiStage_Clone) {
   // Ref #4663
   Model m;
-  CoilHeatingGasMultiStage coil(m);
+  CoilHeatingElectricMultiStage coil(m);
 
-  std::vector<CoilHeatingGasMultiStageStageData> stages{CoilHeatingGasMultiStageStageData{m}, CoilHeatingGasMultiStageStageData{m}};
+  std::vector<CoilHeatingElectricMultiStageStageData> stages{CoilHeatingElectricMultiStageStageData{m}, CoilHeatingElectricMultiStageStageData{m}};
   EXPECT_TRUE(coil.setStages(stages));
 
   EXPECT_EQ(2, coil.stages().size());
   EXPECT_EQ(2, coil.numberOfStages());
-  EXPECT_EQ(1, m.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
-  EXPECT_EQ(2, m.getConcreteModelObjects<CoilHeatingGasMultiStageStageData>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+  EXPECT_EQ(2, m.getConcreteModelObjects<CoilHeatingElectricMultiStageStageData>().size());
 
   {
     // Clone in another model first, so we don't affect the original one. Cloning also clones the stages
     Model m2;
-    auto coilClone = coil.clone(m2).cast<CoilHeatingGasMultiStage>();
-    std::vector<CoilHeatingGasMultiStageStageData> stages2 = coilClone.stages();
+    auto coilClone = coil.clone(m2).cast<CoilHeatingElectricMultiStage>();
+    std::vector<CoilHeatingElectricMultiStageStageData> stages2 = coilClone.stages();
     EXPECT_EQ(2, stages2.size());
-    EXPECT_EQ(1, m2.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
-    EXPECT_EQ(2, m2.getConcreteModelObjects<CoilHeatingGasMultiStageStageData>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+    EXPECT_EQ(2, m2.getConcreteModelObjects<CoilHeatingElectricMultiStageStageData>().size());
     for (auto& stage : stages) {
       EXPECT_TRUE(std::find_if(stages2.cbegin(), stages2.cend(), [&stage](const auto& s) { return s.handle() == stage.handle(); }) == stages2.cend())
-        << "Did not expect to find, in the cloned Coil, the CoilHeatingGasMultiStageStageData '" << stage.nameString() << "'";
+        << "Did not expect to find, in the cloned Coil, the CoilHeatingElectricMultiStageStageData '" << stage.nameString() << "'";
     }
 
     coilClone.remove();
-    EXPECT_EQ(0, m2.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
-    EXPECT_EQ(0, m2.getConcreteModelObjects<CoilHeatingGasMultiStageStageData>().size());
+    EXPECT_EQ(0, m2.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+    EXPECT_EQ(0, m2.getConcreteModelObjects<CoilHeatingElectricMultiStageStageData>().size());
   }
 
   {
     // Same model: we expect stages to be cloned and reassigned to the clone
-    auto coilClone = coil.clone(m).cast<CoilHeatingGasMultiStage>();
-    std::vector<CoilHeatingGasMultiStageStageData> stages2 = coilClone.stages();
+    auto coilClone = coil.clone(m).cast<CoilHeatingElectricMultiStage>();
+    std::vector<CoilHeatingElectricMultiStageStageData> stages2 = coilClone.stages();
     EXPECT_EQ(2, stages2.size());
-    EXPECT_EQ(2, m.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
-    EXPECT_EQ(4, m.getConcreteModelObjects<CoilHeatingGasMultiStageStageData>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+    EXPECT_EQ(4, m.getConcreteModelObjects<CoilHeatingElectricMultiStageStageData>().size());
     for (auto& stage : stages) {
       EXPECT_TRUE(std::find_if(stages2.cbegin(), stages2.cend(), [&stage](const auto& s) { return s.handle() == stage.handle(); }) == stages2.cend())
-        << "Did not expect to find, in the cloned Coil, the CoilHeatingGasMultiStageStageData '" << stage.nameString() << "'";
+        << "Did not expect to find, in the cloned Coil, the CoilHeatingElectricMultiStageStageData '" << stage.nameString() << "'";
     }
     coil.remove();
-    EXPECT_EQ(1, m.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
-    EXPECT_EQ(2, m.getConcreteModelObjects<CoilHeatingGasMultiStageStageData>().size());
+    EXPECT_EQ(1, m.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<CoilHeatingElectricMultiStageStageData>().size());
 
     coilClone.remove();
-    EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingGasMultiStage>().size());
-    EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingGasMultiStageStageData>().size());
+    EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingElectricMultiStage>().size());
+    EXPECT_EQ(0, m.getConcreteModelObjects<CoilHeatingElectricMultiStageStageData>().size());
   }
 }

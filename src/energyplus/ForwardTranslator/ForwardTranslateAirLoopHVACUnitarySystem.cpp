@@ -91,6 +91,7 @@
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_DX_VariableSpeed_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Electric_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Electric_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Fuel_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Water_FieldEnums.hxx>
@@ -775,6 +776,9 @@ namespace energyplus {
       } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric) {
         _heatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName, inletNodeName);
         _heatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName, outletNodeName);
+      } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric_MultiStage) {
+        _heatingCoil->setString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, inletNodeName);
+        _heatingCoil->setString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, outletNodeName);
       } else if (_heatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel) {
         _heatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName, inletNodeName);
         _heatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName, outletNodeName);
@@ -822,6 +826,9 @@ namespace energyplus {
       if (_supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric) {
         _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirInletNodeName, inletNodeName);
         _supplementalHeatingCoil->setString(Coil_Heating_ElectricFields::AirOutletNodeName, airOutletNodeName.get());
+      } else if (_supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Electric_MultiStage) {
+        _supplementalHeatingCoil->setString(Coil_Heating_Electric_MultiStageFields::AirInletNodeName, inletNodeName);
+        _supplementalHeatingCoil->setString(Coil_Heating_Electric_MultiStageFields::AirOutletNodeName, airOutletNodeName.get());
       } else if (_supplementalHeatingCoil->iddObject().type() == IddObjectType::Coil_Heating_Fuel) {
         _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirInletNodeName, inletNodeName);
         _supplementalHeatingCoil->setString(Coil_Heating_FuelFields::AirOutletNodeName, airOutletNodeName.get());

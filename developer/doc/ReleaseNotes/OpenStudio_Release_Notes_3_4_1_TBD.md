@@ -82,6 +82,8 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [#4665](https://github.com/NREL/OpenStudio/pull/4665) - Deprecate methods on Coil DX objects
     * `Coil:Cooling:DX:SingleSpeed`, `Coil:Cooling:DX:MultiSpeed:StageData`, and `Coil:Cooling:DX:CurveFit:Speed`: `ratedEvaporatorFanPowerPerVolumeFlowRate` and `setRatedEvaporatorFanPowerPerVolumeFlowRate` in favor of `ratedEvaporatorFanPowerPerVolumeFlowRate2017` and `setRatedEvaporatorFanPowerPerVolumeFlowRate2017`
     * `Coil:Heating:DX:SingleSpeed` and `Coil:Heating:DX:MultiSpeed:StageData`: `ratedSupplyFanPowerPerVolumeFlowRate` and `setRatedSupplyFanPowerPerVolumeFlowRate` in favor of `ratedSupplyFanPowerPerVolumeFlowRate2017` and `setRatedSupplyFanPowerPerVolumeFlowRate2017`
+* [#4666](https://github.com/NREL/OpenStudio/pull/4666) - Changes related to availability schedule methods
+    * `Coil:Heating:Gas:MultiStage` has an API-breaking change related to its `availabilitySchedule` getter. It is now a required field that returns `Schedule` instead of `boost::optional<Schedule>`. Method `resetAvailabilitySchedule` is also removed.     
 
 
 ## Minor changes and bug fixes
