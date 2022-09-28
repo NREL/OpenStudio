@@ -43,18 +43,28 @@ namespace energyplus {
 
   boost::optional<ModelObject> ReverseTranslator::translateOutputConstructions(const WorkspaceObject& workspaceObject) {
 
-    // This is a Unique ModelObject
-    openstudio::model::OutputConstructions modelObject = m_model.getUniqueModelObject<OutputConstructions>();
+    bool reportForConstructions = false;
+    bool reportForMaterials = false;
 
     for (unsigned index : {Output_ConstructionsFields::DetailsType1, Output_ConstructionsFields::DetailsType2}) {
       if (boost::optional<std::string> detailsType_ = workspaceObject.getString(index, true, false)) {
         if (istringEqual("Constructions", detailsType_.get())) {
-          modelObject.setConstructions(true);
+          reportForConstructions = true;
         } else if (istringEqual("Materials", detailsType_.get())) {
-          modelObject.setMaterials(true);
+          reportForMaterials = true;
         }
       }
     }
+
+    if (!reportForConstructions && !reportForMaterials) {
+      return boost::none;
+    }
+
+    // This is a Unique ModelObject
+    openstudio::model::OutputConstructions modelObject = m_model.getUniqueModelObject<OutputConstructions>();
+
+    modelObject.setConstructions(reportForConstructions);
+    modelObject.setMaterials(reportForMaterials);
 
     return modelObject;
 

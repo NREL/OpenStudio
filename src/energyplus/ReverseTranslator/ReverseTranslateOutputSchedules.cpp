@@ -44,14 +44,13 @@ namespace energyplus {
   boost::optional<ModelObject> ReverseTranslator::translateOutputSchedules(const WorkspaceObject& workspaceObject) {
     boost::optional<ModelObject> result;
 
-    // This is a Unique ModelObject
-    openstudio::model::OutputSchedules modelObject = m_model.getUniqueModelObject<OutputSchedules>();
-
-    if (boost::optional<std::string> _keyField = workspaceObject.getString(Output_SchedulesFields::KeyField, true)) {
-      modelObject.setKeyField(_keyField.get());
+    if (boost::optional<std::string> keyField_ = workspaceObject.getString(Output_SchedulesFields::KeyField, false, true)) {
+      // This is a Unique ModelObject
+      auto modelObject = m_model.getUniqueModelObject<OutputSchedules>();
+      modelObject.setKeyField(keyField_.get());
+      result = modelObject;
     }
 
-    result = modelObject;
     return result;
 
   }  // End of translate function

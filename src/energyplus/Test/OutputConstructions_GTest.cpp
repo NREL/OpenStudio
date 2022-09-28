@@ -57,7 +57,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputConstructions) {
   Model m;
 
   // Get the unique object
-  OutputConstructions outputConstructions = m.getUniqueModelObject<OutputConstructions>();
+  auto outputConstructions = m.getUniqueModelObject<OutputConstructions>();
 
   {
     EXPECT_TRUE(outputConstructions.setConstructions(false));
@@ -77,8 +77,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputConstructions) {
     EXPECT_EQ(1u, idfObjs.size());
     WorkspaceObject idf_constructions(idfObjs[0]);
 
+    EXPECT_EQ("Materials", idf_constructions.getString(Output_ConstructionsFields::DetailsType1).get());
+    EXPECT_TRUE(idf_constructions.isEmpty(Output_ConstructionsFields::DetailsType2));
+  }
+
+  {
+    EXPECT_TRUE(outputConstructions.setConstructions(true));
+
+    Workspace w = ft.translateModel(m);
+
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_Constructions);
+    EXPECT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_constructions(idfObjs[0]);
+
     EXPECT_EQ("Constructions", idf_constructions.getString(Output_ConstructionsFields::DetailsType1).get());
-    EXPECT_EQ("Materials", idf_constructions.getString(Output_SchedulesFields::DetailsType2).get());
+    EXPECT_EQ("Materials", idf_constructions.getString(Output_ConstructionsFields::DetailsType2).get());
   }
 }
 
@@ -89,9 +102,36 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputConstructions) {
   Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   // Not there, Model shouldn't have it either
-  Model m = rt.translateWorkspace(w);
-  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputConstructions>());
+  {
+    Model m = rt.translateWorkspace(w);
+    EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputConstructions>());
+  }
 
   OptionalWorkspaceObject _i_outputConstructions = w.addObject(IdfObject(IddObjectType::Output_Constructions));
   ASSERT_TRUE(_i_outputConstructions);
+
+  // There but no keys, Model shouldn't have it either
+  {
+    Model m = rt.translateWorkspace(w);
+    EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputConstructions>());
+  }
+
+  _i_outputConstructions->setString(Output_ConstructionsFields::DetailsType1, "Materials");
+
+  {
+    Model m = rt.translateWorkspace(w);
+    ASSERT_TRUE(m.getOptionalUniqueModelObject<OutputConstructions>());
+    auto outputConstructions = m.getUniqueModelObject<OutputConstructions>();
+    EXPECT_FALSE(outputConstructions.constructions());
+    EXPECT_TRUE(outputConstructions.materials());
+  }
+
+  _i_outputConstructions->setString(Output_ConstructionsFields::DetailsType2, "Constructions");
+  {
+    Model m = rt.translateWorkspace(w);
+    ASSERT_TRUE(m.getOptionalUniqueModelObject<OutputConstructions>());
+    auto outputConstructions = m.getUniqueModelObject<OutputConstructions>();
+    EXPECT_TRUE(outputConstructions.constructions());
+    EXPECT_TRUE(outputConstructions.materials());
+  }
 }

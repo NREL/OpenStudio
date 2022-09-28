@@ -58,14 +58,26 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputSchedules) {
 
   // Get the unique object
   OutputSchedules outputSchedules = m.getUniqueModelObject<OutputSchedules>();
+  EXPECT_EQ("Hourly", outputSchedules.keyField());
+  {
+    Workspace w = ft.translateModel(m);
 
-  Workspace w = ft.translateModel(m);
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_Schedules);
+    EXPECT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_schedules(idfObjs[0]);
 
-  WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_Schedules);
-  EXPECT_EQ(1u, idfObjs.size());
-  WorkspaceObject idf_schedules(idfObjs[0]);
+    EXPECT_EQ("Hourly", idf_schedules.getString(Output_SchedulesFields::KeyField).get());
+  }
+  {
+    EXPECT_TRUE(outputSchedules.setKeyField("Timestep"));
+    Workspace w = ft.translateModel(m);
 
-  EXPECT_EQ("Hourly", idf_schedules.getString(Output_SchedulesFields::KeyField).get());
+    WorkspaceObjectVector idfObjs = w.getObjectsByType(IddObjectType::Output_Schedules);
+    EXPECT_EQ(1u, idfObjs.size());
+    WorkspaceObject idf_schedules(idfObjs[0]);
+
+    EXPECT_EQ("Timestep", idf_schedules.getString(Output_SchedulesFields::KeyField).get());
+  }
 }
 
 TEST_F(EnergyPlusFixture, ReverseTranslator_OutputSchedules) {
@@ -75,10 +87,34 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputSchedules) {
   Workspace w(StrictnessLevel::Minimal, IddFileType::EnergyPlus);
 
   // Not there, Model shouldn't have it either
-  Model m = rt.translateWorkspace(w);
-  EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputSchedules>());
+  {
+    Model m = rt.translateWorkspace(w);
+    EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputSchedules>());
+  }
 
   OptionalWorkspaceObject _i_outputSchedules = w.addObject(IdfObject(IddObjectType::Output_Schedules));
   ASSERT_TRUE(_i_outputSchedules);
-}
+
+  // There but no keys, Model shouldn't have it either
+  {
+    Model m = rt.translateWorkspace(w);
+    EXPECT_FALSE(m.getOptionalUniqueModelObject<OutputSchedules>());
+  }
+
+  _i_outputSchedules->setString(Output_SchedulesFields::KeyField, "Hourly");
+
+  {
+    Model m = rt.translateWorkspace(w);
+    ASSERT_TRUE(m.getOptionalUniqueModelObject<OutputSchedules>());
+    auto outputSchedules = m.getUniqueModelObject<OutputSchedules>();
+    EXPECT_EQ("Hourly", outputSchedules.keyField());
+  }
+
+  _i_outputSchedules->setString(Output_SchedulesFields::KeyField, "Timestep");
+  {
+    Model m = rt.translateWorkspace(w);
+    ASSERT_TRUE(m.getOptionalUniqueModelObject<OutputSchedules>());
+    auto outputSchedules = m.getUniqueModelObject<OutputSchedules>();
+    EXPECT_EQ("Timestep", outputSchedules.keyField());
+  }
 }
