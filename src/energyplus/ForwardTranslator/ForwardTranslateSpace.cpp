@@ -90,18 +90,18 @@ namespace energyplus {
     // for CeilingHeight, Volume, FloorArea: only FT if hard set (same logic as for ThermalZone)
 
     // CeilingHeight
-    if (modelObject.getDouble(OS_SpaceFields::CeilingHeight)) {
-      idfObject.setDouble(SpaceFields::CeilingHeight, modelObject.getDouble(SpaceFields::CeilingHeight).get());
+    if (!modelObject.isCeilingHeightDefaulted()) {
+      idfObject.setDouble(SpaceFields::CeilingHeight, modelObject.ceilingHeight());
     }
 
     // Volume
-    if (modelObject.getDouble(OS_SpaceFields::Volume)) {
-      idfObject.setDouble(SpaceFields::Volume, modelObject.getDouble(OS_SpaceFields::Volume).get());
+    if (!modelObject.isVolumeDefaulted()) {
+      idfObject.setDouble(SpaceFields::Volume, modelObject.volume());
     }
 
     // FloorArea
-    if (modelObject.getDouble(OS_SpaceFields::FloorArea)) {
-      idfObject.setDouble(SpaceFields::FloorArea, modelObject.getDouble(OS_SpaceFields::FloorArea).get());
+    if (!modelObject.isFloorAreaDefaulted()) {
+      idfObject.setDouble(SpaceFields::FloorArea, modelObject.floorArea());
     }
 
     // SpaceType
