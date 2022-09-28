@@ -42,29 +42,21 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<ModelObject> ReverseTranslator::translateOutputConstructions(const WorkspaceObject& workspaceObject) {
-    boost::optional<ModelObject> result;
 
     // This is a Unique ModelObject
     openstudio::model::OutputConstructions modelObject = m_model.getUniqueModelObject<OutputConstructions>();
 
-    if (boost::optional<std::string> _detailsType1 = workspaceObject.getString(Output_ConstructionsFields::DetailsType1, true)) {
-      if (istringEqual("Constructions", _detailsType1.get())) {
-        modelObject.setConstructions(true);
-      } else if (istringEqual("Materials", _detailsType1.get()) {
-        modelObject.setMaterials(true);
+    for (unsigned index : {Output_ConstructionsFields::DetailsType1, Output_ConstructionsFields::DetailsType2}) {
+      if (boost::optional<std::string> detailsType_ = workspaceObject.getString(index, true, false)) {
+        if (istringEqual("Constructions", detailsType_.get())) {
+          modelObject.setConstructions(true);
+        } else if (istringEqual("Materials", detailsType_.get())) {
+          modelObject.setMaterials(true);
+        }
       }
     }
 
-    if (boost::optional<std::string> _detailsType2 = workspaceObject.getString(Output_ConstructionsFields::DetailsType2, true)) {
-      if (istringEqual("Constructions", _detailsType2.get())) {
-        modelObject.setConstructions(true);
-      } else if (istringEqual("Materials", _detailsType2.get()) {
-        modelObject.setMaterials(true);
-      }
-    }
-
-    result = modelObject;
-    return result;
+    return modelObject;
 
   }  // End of translate function
 
