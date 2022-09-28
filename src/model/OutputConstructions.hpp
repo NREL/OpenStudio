@@ -58,17 +58,17 @@ namespace model {
     /** @name Getters */
     //@{
 
-    bool constructions() const;
+    bool reportConstructions() const;
 
-    bool materials() const;
+    bool reportMaterials() const;
 
     //@}
     /** @name Setters */
     //@{
 
-    bool setConstructions(bool constructions);
+    bool setReportConstructions(bool reportConstructions);
 
-    bool setMaterials(bool materials);
+    bool setReportMaterials(bool reportMaterials);
 
     //@}
     /** @name Other */

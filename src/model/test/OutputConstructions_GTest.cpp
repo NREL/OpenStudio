@@ -39,12 +39,12 @@ TEST_F(ModelFixture, OutputConstructions_GettersSetters) {
   Model m;
   OutputConstructions mo = m.getUniqueModelObject<OutputConstructions>();
 
-  EXPECT_TRUE(mo.constructions());
-  EXPECT_FALSE(mo.materials());
+  EXPECT_TRUE(mo.reportConstructions());
+  EXPECT_FALSE(mo.reportMaterials());
 
-  EXPECT_TRUE(mo.setConstructions(false));
-  EXPECT_TRUE(mo.setMaterials(true));
+  EXPECT_TRUE(mo.setReportConstructions(false));
+  EXPECT_TRUE(mo.setReportMaterials(true));
 
-  EXPECT_FALSE(mo.constructions());
-  EXPECT_TRUE(mo.materials());
+  EXPECT_FALSE(mo.reportConstructions());
+  EXPECT_TRUE(mo.reportMaterials());
 }  // End of Getter_Setters test

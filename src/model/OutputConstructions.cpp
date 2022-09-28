@@ -67,20 +67,20 @@ namespace model {
       return OutputConstructions::iddObjectType();
     }
 
-    bool OutputConstructions_Impl::constructions() const {
-      return getBooleanFieldValue(OS_Output_ConstructionsFields::Constructions);
+    bool OutputConstructions_Impl::reportConstructions() const {
+      return getBooleanFieldValue(OS_Output_ConstructionsFields::ReportConstructions);
     }
 
-    bool OutputConstructions_Impl::materials() const {
-      return getBooleanFieldValue(OS_Output_ConstructionsFields::Materials);
+    bool OutputConstructions_Impl::reportMaterials() const {
+      return getBooleanFieldValue(OS_Output_ConstructionsFields::ReportMaterials);
     }
 
-    bool OutputConstructions_Impl::setConstructions(bool constructions) {
-      return setBooleanFieldValue(OS_Output_ConstructionsFields::Constructions, constructions);
+    bool OutputConstructions_Impl::setReportConstructions(bool reportConstructions) {
+      return setBooleanFieldValue(OS_Output_ConstructionsFields::ReportConstructions, reportConstructions);
     }
 
-    bool OutputConstructions_Impl::setMaterials(bool materials) {
-      return setBooleanFieldValue(OS_Output_ConstructionsFields::Materials, materials);
+    bool OutputConstructions_Impl::setReportMaterials(bool reportMaterials) {
+      return setBooleanFieldValue(OS_Output_ConstructionsFields::ReportMaterials, reportMaterials);
     }
 
   }  // namespace detail
@@ -89,28 +89,28 @@ namespace model {
     return {IddObjectType::OS_Output_Constructions};
   }
 
-  bool OutputConstructions::constructions() const {
-    return getImpl<detail::OutputConstructions_Impl>()->constructions();
+  bool OutputConstructions::reportConstructions() const {
+    return getImpl<detail::OutputConstructions_Impl>()->reportConstructions();
   }
 
-  bool OutputConstructions::materials() const {
-    return getImpl<detail::OutputConstructions_Impl>()->materials();
+  bool OutputConstructions::reportMaterials() const {
+    return getImpl<detail::OutputConstructions_Impl>()->reportMaterials();
   }
 
-  bool OutputConstructions::setConstructions(bool constructions) {
-    return getImpl<detail::OutputConstructions_Impl>()->setConstructions(constructions);
+  bool OutputConstructions::setReportConstructions(bool reportConstructions) {
+    return getImpl<detail::OutputConstructions_Impl>()->setReportConstructions(reportConstructions);
   }
 
-  bool OutputConstructions::setMaterials(bool materials) {
-    return getImpl<detail::OutputConstructions_Impl>()->setMaterials(materials);
+  bool OutputConstructions::setReportMaterials(bool reportMaterials) {
+    return getImpl<detail::OutputConstructions_Impl>()->setReportMaterials(reportMaterials);
   }
 
   /// @cond
   OutputConstructions::OutputConstructions(std::shared_ptr<detail::OutputConstructions_Impl> impl) : ModelObject(std::move(impl)) {}
   OutputConstructions::OutputConstructions(Model& model) : ModelObject(OutputConstructions::iddObjectType(), model) {
-    bool ok = setConstructions(true);
+    bool ok = setReportConstructions(true);
     OS_ASSERT(ok);
-    ok = setMaterials(false);
+    ok = setReportMaterials(false);
     OS_ASSERT(ok);
   }
 

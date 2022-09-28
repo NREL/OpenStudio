@@ -44,20 +44,20 @@ namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateOutputConstructions(OutputConstructions& modelObject) {
     // If nothing to write, don't
-    bool reportForConstructions = modelObject.constructions();
-    bool reportForMaterials = modelObject.materials();
-    if (!reportForConstructions && !reportForMaterials) {
+    bool reportConstructions = modelObject.reportConstructions();
+    bool reportMaterials = modelObject.reportMaterials();
+    if (!reportConstructions && !reportMaterials) {
       return boost::none;
     }
 
     IdfObject idfObject = createAndRegisterIdfObject(openstudio::IddObjectType::Output_Constructions, modelObject);
 
-    if (reportForConstructions) {
+    if (reportConstructions) {
       idfObject.setString(Output_ConstructionsFields::DetailsType1, "Constructions");
-      if (reportForMaterials) {
+      if (reportMaterials) {
         idfObject.setString(Output_ConstructionsFields::DetailsType2, "Materials");
       }
-    } else if (reportForMaterials) {
+    } else if (reportMaterials) {
       idfObject.setString(Output_ConstructionsFields::DetailsType1, "Materials");
     }
 

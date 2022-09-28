@@ -60,7 +60,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputConstructions) {
   auto outputConstructions = m.getUniqueModelObject<OutputConstructions>();
 
   {
-    EXPECT_TRUE(outputConstructions.setConstructions(false));
+    EXPECT_TRUE(outputConstructions.setReportConstructions(false));
 
     Workspace w = ft.translateModel(m);
 
@@ -69,7 +69,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputConstructions) {
   }
 
   {
-    EXPECT_TRUE(outputConstructions.setMaterials(true));
+    EXPECT_TRUE(outputConstructions.setReportMaterials(true));
 
     Workspace w = ft.translateModel(m);
 
@@ -82,7 +82,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_OutputConstructions) {
   }
 
   {
-    EXPECT_TRUE(outputConstructions.setConstructions(true));
+    EXPECT_TRUE(outputConstructions.setReportConstructions(true));
 
     Workspace w = ft.translateModel(m);
 
@@ -122,8 +122,8 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputConstructions) {
     Model m = rt.translateWorkspace(w);
     ASSERT_TRUE(m.getOptionalUniqueModelObject<OutputConstructions>());
     auto outputConstructions = m.getUniqueModelObject<OutputConstructions>();
-    EXPECT_FALSE(outputConstructions.constructions());
-    EXPECT_TRUE(outputConstructions.materials());
+    EXPECT_FALSE(outputConstructions.reportConstructions());
+    EXPECT_TRUE(outputConstructions.reportMaterials());
   }
 
   _i_outputConstructions->setString(Output_ConstructionsFields::DetailsType2, "Constructions");
@@ -131,7 +131,7 @@ TEST_F(EnergyPlusFixture, ReverseTranslator_OutputConstructions) {
     Model m = rt.translateWorkspace(w);
     ASSERT_TRUE(m.getOptionalUniqueModelObject<OutputConstructions>());
     auto outputConstructions = m.getUniqueModelObject<OutputConstructions>();
-    EXPECT_TRUE(outputConstructions.constructions());
-    EXPECT_TRUE(outputConstructions.materials());
+    EXPECT_TRUE(outputConstructions.reportConstructions());
+    EXPECT_TRUE(outputConstructions.reportMaterials());
   }
 }

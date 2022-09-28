@@ -34636,12 +34636,12 @@ OS:Output:Constructions,
   A1,  \field Handle
        \type handle
        \required-field
-  A2,  \field Constructions
+  A2,  \field Report Constructions
        \type choice
        \required-field
        \key No
        \key Yes
-  A3;  \field Materials
+  A3;  \field Report Materials
        \type choice
        \required-field
        \key No
