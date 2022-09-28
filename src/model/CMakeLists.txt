@@ -1081,6 +1081,12 @@ set(${target_name}_src
   OutputTableSummaryReports.hpp
   OutputTableSummaryReports_Impl.hpp
   OutputTableSummaryReports.cpp
+  OutputSchedules.hpp
+  OutputSchedules_Impl.hpp
+  OutputSchedules.cpp
+  OutputConstructions.hpp
+  OutputConstructions_Impl.hpp
+  OutputConstructions.cpp
   OutsideSurfaceConvectionAlgorithm.hpp
   OutsideSurfaceConvectionAlgorithm_Impl.hpp
   OutsideSurfaceConvectionAlgorithm.cpp
@@ -2138,6 +2144,8 @@ set(${target_name}_test_src
   test/OutputMeter_GTest.cpp
   test/OutputVariable_GTest.cpp
   test/OutputTableSummaryReports_GTest.cpp
+  test/OutputSchedules_GTest.cpp
+  test/OutputConstructions_GTest.cpp
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp
   test/PeopleDefinition_GTest.cpp

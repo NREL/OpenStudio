@@ -2293,6 +2293,16 @@ namespace energyplus {
         retVal = translateOutputSQLite(mo);
         break;
       }
+      case openstudio::IddObjectType::OS_Output_Schedules: {
+        auto mo = modelObject.cast<OutputSchedules>();
+        retVal = translateOutputSchedules(mo);
+        break;
+      }
+      case openstudio::IddObjectType::OS_Output_Constructions: {
+        auto mo = modelObject.cast<OutputConstructions>();
+        retVal = translateOutputConstructions(mo);
+        break;
+      }
       case openstudio::IddObjectType::OS_Output_EnvironmentalImpactFactors: {
         auto mo = modelObject.cast<OutputEnvironmentalImpactFactors>();
         retVal = translateOutputEnvironmentalImpactFactors(mo);
@@ -3306,6 +3316,8 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_Output_Diagnostics);
     result.push_back(IddObjectType::OS_Output_JSON);
     result.push_back(IddObjectType::OS_Output_SQLite);
+    result.push_back(IddObjectType::OS_Output_Schedules);
+    result.push_back(IddObjectType::OS_Output_Constructions);
 
     // Note: we just always translate Output:EnvironmentalImpactFactors, and in there (it exists), then trigger translatation of the two others
     result.push_back(IddObjectType::OS_Output_EnvironmentalImpactFactors);
