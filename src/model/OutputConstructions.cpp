@@ -60,8 +60,6 @@ namespace model {
 
     const std::vector<std::string>& OutputConstructions_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
-      if (result.empty()) {
-      }
       return result;
     }
 
@@ -88,7 +86,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType OutputConstructions::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Output_Constructions);
+    return {IddObjectType::OS_Output_Constructions};
   }
 
   bool OutputConstructions::constructions() const {
@@ -108,7 +106,7 @@ namespace model {
   }
 
   /// @cond
-  OutputConstructions::OutputConstructions(std::shared_ptr<detail::OutputConstructions_Impl> impl) : ModelObject(impl) {}
+  OutputConstructions::OutputConstructions(std::shared_ptr<detail::OutputConstructions_Impl> impl) : ModelObject(std::move(impl)) {}
   OutputConstructions::OutputConstructions(Model& model) : ModelObject(OutputConstructions::iddObjectType(), model) {
     bool ok = setConstructions(true);
     OS_ASSERT(ok);

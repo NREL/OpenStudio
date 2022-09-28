@@ -49,7 +49,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputConstructions() {}
+    virtual ~OutputConstructions() = default;
 
     //@}
 
@@ -77,7 +77,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputConstructions_Impl ImplType;
+    using ImplType = detail::OutputConstructions_Impl;
 
     explicit OutputConstructions(std::shared_ptr<detail::OutputConstructions_Impl> impl);
 
@@ -93,10 +93,10 @@ namespace model {
   };
 
   /** \relates OutputConstructions*/
-  typedef boost::optional<OutputConstructions> OptionalOutputConstructions;
+  using OptionalOutputConstructions = boost::optional<OutputConstructions>;
 
   /** \relates OutputConstructions*/
-  typedef std::vector<OutputConstructions> OutputConstructionsVector;
+  using OutputConstructionsVector = std::vector<OutputConstructions>;
 
 }  // namespace model
 }  // namespace openstudio

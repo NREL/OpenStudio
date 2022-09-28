@@ -51,7 +51,7 @@ namespace model {
 
       OutputSchedules_Impl(const OutputSchedules_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~OutputSchedules_Impl() {}
+      virtual ~OutputSchedules_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -71,7 +71,7 @@ namespace model {
       /** @name Setters */
       //@{
 
-      bool setKeyField(std::string keyField);
+      bool setKeyField(const std::string& keyField);
 
       //@}
       /** @name Other */

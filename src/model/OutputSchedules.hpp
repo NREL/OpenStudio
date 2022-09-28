@@ -49,7 +49,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    virtual ~OutputSchedules() {}
+    virtual ~OutputSchedules() = default;
 
     //@}
 
@@ -67,7 +67,7 @@ namespace model {
     /** @name Setters */
     //@{
 
-    bool setKeyField(std::string keyField);
+    bool setKeyField(const std::string& keyField);
 
     //@}
     /** @name Other */
@@ -76,7 +76,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::OutputSchedules_Impl ImplType;
+    using ImplType = detail::OutputSchedules_Impl;
 
     explicit OutputSchedules(std::shared_ptr<detail::OutputSchedules_Impl> impl);
 
@@ -92,10 +92,10 @@ namespace model {
   };
 
   /** \relates OutputSchedules*/
-  typedef boost::optional<OutputSchedules> OptionalOutputSchedules;
+  using OptionalOutputSchedules = boost::optional<OutputSchedules>;
 
   /** \relates OutputSchedules*/
-  typedef std::vector<OutputSchedules> OutputSchedulesVector;
+  using OutputSchedulesVector = std::vector<OutputSchedules>;
 
 }  // namespace model
 }  // namespace openstudio

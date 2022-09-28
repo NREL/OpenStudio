@@ -60,8 +60,6 @@ namespace model {
 
     const std::vector<std::string>& OutputSchedules_Impl::outputVariableNames() const {
       static const std::vector<std::string> result;
-      if (result.empty()) {
-      }
       return result;
     }
 
@@ -75,7 +73,7 @@ namespace model {
       return value.get();
     }
 
-    bool OutputSchedules_Impl::setKeyField(std::string keyField) {
+    bool OutputSchedules_Impl::setKeyField(const std::string& keyField) {
       bool result = setString(OS_Output_SchedulesFields::KeyField, keyField);
       return result;
     }
@@ -83,7 +81,7 @@ namespace model {
   }  // namespace detail
 
   IddObjectType OutputSchedules::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Output_Schedules);
+    return {IddObjectType::OS_Output_Schedules};
   }
 
   std::vector<std::string> OutputSchedules::keyFieldValues() {
@@ -98,7 +96,7 @@ namespace model {
     return getImpl<detail::OutputSchedules_Impl>()->keyField();
   }
 
-  bool OutputSchedules::setKeyField(std::string keyField) {
+  bool OutputSchedules::setKeyField(const std::string& keyField) {
     return getImpl<detail::OutputSchedules_Impl>()->setKeyField(keyField);
   }
 
