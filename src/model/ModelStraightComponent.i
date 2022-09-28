@@ -300,11 +300,11 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
           return stage.parentCoil();
         }
 
-        OptionalCoilHeatingGasMultiStage parentCoil(const openstudio::model::OptionalCoilHeatingGasMultiStageStageData& stage){
+        OptionalCoilHeatingGasMultiStage parentCoil(const openstudio::model::CoilHeatingGasMultiStageStageData& stage){
           return stage.parentCoil();
         }
 
-        OptionalCoilHeatingElectricMultiStage parentCoil(const openstudio::model::OptionalCoilHeatingElectricMultiStageStageData& stage){
+        OptionalCoilHeatingElectricMultiStage parentCoil(const openstudio::model::CoilHeatingElectricMultiStageStageData& stage){
           return stage.parentCoil();
         }
       }
@@ -347,14 +347,14 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
       }
     }
 
-    public partial class CoilHeatingGasMultiStage : ParentObject
+    public partial class CoilHeatingGasMultiStage : ModelObject
     {
       public OptionalCoilHeatingGasMultiStage parentCoil() {
         return OpenStudio.OpenStudioModelStraightComponent.parentCoil(this);
       }
     }
 
-    public partial class CoilHeatingElectricMultiStage : ParentObject
+    public partial class CoilHeatingElectricMultiStage : ModelObject
     {
       public OptionalCoilHeatingElectricMultiStage parentCoil() {
         return OpenStudio.OpenStudioModelStraightComponent.parentCoil(this);
