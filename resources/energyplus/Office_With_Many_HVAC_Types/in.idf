@@ -332,16 +332,17 @@
     Autosize,                !- Cooling Outdoor Air Flow Rate {m3/s}
     Autosize,                !- Heating Outdoor Air Flow Rate {m3/s}
     Autosize,                !- No Load Outdoor Air Flow Rate {m3/s}
-    Fan:ConstantVolume,      !- Supply Air Fan Object Type
+    Fan:OnOff,      !- Supply Air Fan Object Type
     PTAC Fan,                !- Supply Air Fan Name
     Coil:Heating:Water,      !- Heating Coil Object Type
     PTAC HW Htg Coil,        !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PTAC 1 Spd DX Clg Coil,  !- Cooling Coil Name
     DrawThrough,             !- Fan Placement
-    Always On Discrete 1;    !- Supply Air Fan Operating Mode Schedule Name
+    Always Off Discrete;     !- Supply Air Fan Operating Mode Schedule Name
 
   Schedule:Constant,Always On Discrete 1,Schedule Type Limits 1,1;
+  Schedule:Constant,Always Off Discrete,Schedule Type Limits 1,0;
 
   OutdoorAir:Mixer,
     PTAC DX Clg HW Htg OA Mixer,  !- Name
@@ -353,16 +354,36 @@
   OutdoorAir:NodeList,
     PTAC DX Clg HW Htg OA Node;  !- Node or NodeList Name 1
 
-  Fan:ConstantVolume,
-    PTAC Fan,                !- Name
-    Always On Discrete 1,    !- Availability Schedule Name
-    0.7,                     !- Fan Total Efficiency
-    250,                     !- Pressure Rise {Pa}
-    AutoSize,                !- Maximum Flow Rate {m3/s}
-    0.9,                     !- Motor Efficiency
-    1,                       !- Motor In Airstream Fraction
-    PTAC DX Clg HW Htg Heating Coil Outlet Node,  !- Air Inlet Node Name
-    Node 17;                 !- Air Outlet Node Name
+  Fan:OnOff,
+    PTAC Fan,                               !- Name
+    Always On Discrete 1,                   !- Availability Schedule Name
+    0.7,                                    !- Fan Total Efficiency
+    250,                                    !- Pressure Rise {Pa}
+    Autosize,                               !- Maximum Flow Rate {m3/s}
+    0.9,                                    !- Motor Efficiency
+    1,                                      !- Motor In Airstream Fraction
+    PTAC DX Clg HW Htg Heating Coil Outlet Node, !- Air Inlet Node Name
+    Node 17,                                !- Air Outlet Node Name
+    Fan On Off Power Curve,                 !- Fan Power Ratio Function of Speed Ratio Curve Name
+    Fan On Off Efficiency Curve,            !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+    General;                                !- End-Use Subcategory
+
+  Curve:Exponent,
+    Fan On Off Power Curve,                 !- Name
+    1,                                      !- Coefficient1 Constant
+    0,                                      !- Coefficient2 Constant
+    0,                                      !- Coefficient3 Constant
+    0,                                      !- Minimum Value of x {BasedOnField A2}
+    1;                                      !- Maximum Value of x {BasedOnField A2}
+
+  Curve:Cubic,
+    Fan On Off Efficiency Curve,            !- Name
+    1,                                      !- Coefficient1 Constant
+    0,                                      !- Coefficient2 x
+    0,                                      !- Coefficient3 x**2
+    0,                                      !- Coefficient4 x**3
+    0,                                      !- Minimum Value of x {BasedOnField A2}
+    1;                                      !- Maximum Value of x {BasedOnField A2}
 
   Coil:Heating:Water,
     PTAC HW Htg Coil,        !- Name
@@ -708,8 +729,8 @@
     Autosize,                !- Cooling Outdoor Air Flow Rate {m3/s}
     Autosize,                !- Heating Outdoor Air Flow Rate {m3/s}
     Autosize,                !- No Load Outdoor Air Flow Rate {m3/s}
-    Fan:ConstantVolume,      !- Supply Air Fan Object Type
-    PTHP CV Fan,             !- Supply Air Fan Name
+    Fan:OnOff,               !- Supply Air Fan Object Type
+    PTHP Fan,                !- Supply Air Fan Name
     Coil:Heating:DX:SingleSpeed,  !- Heating Coil Object Type
     PTHP 1 Spd DX Htg Coil,  !- Heating Coil Name
     0.001,                   !- Heating Convergence Tolerance {dimensionless}
@@ -721,7 +742,7 @@
     Autosize,                !- Maximum Supply Air Temperature from Supplemental Heater {C}
     21,                      !- Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
     DrawThrough,             !- Fan Placement
-    Always On Discrete 1;    !- Supply Air Fan Operating Mode Schedule Name
+    Always Off Discrete;     !- Supply Air Fan Operating Mode Schedule Name
 
   OutdoorAir:Mixer,
     PTHP OA Mixer,           !- Name
@@ -733,16 +754,19 @@
   OutdoorAir:NodeList,
     PTHP OA Node;            !- Node or NodeList Name 1
 
-  Fan:ConstantVolume,
-    PTHP CV Fan,             !- Name
-    Always On Discrete 1,    !- Availability Schedule Name
-    0.7,                     !- Fan Total Efficiency
-    250,                     !- Pressure Rise {Pa}
-    AutoSize,                !- Maximum Flow Rate {m3/s}
-    0.9,                     !- Motor Efficiency
-    1,                       !- Motor In Airstream Fraction
-    PTHP Heating Coil Outlet Node,  !- Air Inlet Node Name
-    PTHP Fan Outlet Node;    !- Air Outlet Node Name
+  Fan:OnOff,
+    PTHP Fan,                      !- Name
+    Always On Discrete 1,          !- Availability Schedule Name
+    0.7,                           !- Fan Total Efficiency
+    250,                           !- Pressure Rise {Pa}
+    Autosize,                      !- Maximum Flow Rate {m3/s}
+    0.9,                           !- Motor Efficiency
+    1,                             !- Motor In Airstream Fraction
+    PTHP Heating Coil Outlet Node, !- Air Inlet Node Name
+    PTHP Fan Outlet Node,          !- Air Outlet Node Name
+    Fan On Off Power Curve,        !- Fan Power Ratio Function of Speed Ratio Curve Name
+    Fan On Off Efficiency Curve,   !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+    General;                       !- End-Use Subcategory
 
   Coil:Heating:DX:SingleSpeed,
     PTHP 1 Spd DX Htg Coil,  !- Name
