@@ -390,10 +390,12 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
       EXPECT_EQ(ch.tertiaryInletModelObject()->handle(), ch.heatRecoveryInletNode()->handle());
       ASSERT_TRUE(ch.heatRecoveryOutletNode());
       EXPECT_EQ(ch.tertiaryOutletModelObject()->handle(), ch.heatRecoveryOutletNode()->handle());
+      EXPECT_EQ(7, hrLoop.demandComponents().size());
     } else {
       EXPECT_FALSE(ch.heatRecoveryLoop());
       EXPECT_FALSE(ch.heatRecoveryInletNode());
       EXPECT_FALSE(ch.heatRecoveryOutletNode());
+      EXPECT_EQ(5, hrLoop.demandComponents().size());
     }
   };
 
