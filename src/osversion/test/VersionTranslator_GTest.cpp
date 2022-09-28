@@ -2192,14 +2192,18 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_SizingZone) {
   ASSERT_EQ(1u, szs.size());
   auto& sz = szs.front();
 
-  // 9 new fields inserted at position 26, without any harcoding
+  // 9 new fields inserted at position 26, with some harcoding
   // Field Before
   EXPECT_EQ(18.0, sz.getDouble(24).get());
   EXPECT_EQ(19.0, sz.getDouble(25).get());
 
-  for (unsigned i = 26; i < 35; ++i) {
-    EXPECT_TRUE(sz.isEmpty(i));
-  }
+  EXPECT_EQ("Sensible Load Only No Latent Load", sz.getString(26).get());
+  EXPECT_EQ("HumidityRatioDifference", sz.getString(27).get());
+  EXPECT_TRUE(sz.isEmpty(28));
+  EXPECT_EQ(0.005, sz.getDouble(29).get());
+  EXPECT_EQ("HumidityRatioDifference", sz.getString(30).get());
+  EXPECT_TRUE(sz.isEmpty(31));
+  EXPECT_EQ(0.005, sz.getDouble(32).get());
 
   // Field after
   EXPECT_EQ(0.8, sz.getDouble(35).get());

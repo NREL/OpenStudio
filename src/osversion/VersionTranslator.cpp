@@ -7321,6 +7321,15 @@ namespace osversion {
           }
         }
 
+        // New E+ 22.2.0 fields, IDD defaults for required fields set in Ctor
+        newObject.setString(26, "Sensible Load Only No Latent Load");
+        newObject.setString(27, "HumidityRatioDifference");
+        // newObject.setString(28, "");
+        newObject.setDouble(29, 0.005);
+        newObject.setString(30, "HumidityRatioDifference");
+        // newObject.setString(31, "");
+        newObject.setDouble(32, 0.005);
+
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
 
