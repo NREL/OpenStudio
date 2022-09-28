@@ -1837,7 +1837,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_AirWallMaterial) {
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_AirWallMaterial_updated.osm");
   model->save(outPath, true);
 
-  ASSERT_EQ(2u, model->numObjects());
+  ASSERT_EQ(3u, model->numObjects());  // Surface, Construction, RenderingColor
 
   std::vector<WorkspaceObject> constrs = model->getObjectsByType("OS:Construction");
   ASSERT_EQ(0u, constrs.size());
@@ -1850,7 +1850,9 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_AirWallMaterial) {
   EXPECT_EQ("", constrAirBoundary.getString(2).get());                // Air Exchange Method
   EXPECT_EQ(0.0, constrAirBoundary.getDouble(3).get());               // Simple Mixing Air Changes Per Hour
   EXPECT_EQ("", constrAirBoundary.getString(4).get());                // Simple Mixing Schedule Name
-  EXPECT_EQ("", constrAirBoundary.getString(5).get());                // Surface Rendering Name
+  //  Surface Rendering Name
+  ASSERT_TRUE(constrAirBoundary.getTarget(5));
+  EXPECT_EQ("AirWall RenderingColor", constrAirBoundary.getTarget(5)->nameString());
 
   std::vector<WorkspaceObject> surfaces = model->getObjectsByType("OS:Surface");
   ASSERT_EQ(1u, surfaces.size());

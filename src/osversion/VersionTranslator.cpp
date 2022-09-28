@@ -6950,6 +6950,11 @@ namespace osversion {
                 newObject.setString(1, value.get());
               }
 
+              // Surface Rendering Name (Rendering Color)
+              if (auto value = object.getString(2)) {
+                newObject.setString(5, value.get());
+              }
+
               // Simple Mixing Air Changes per Hour
               // Set ACH to 0.0, to match the old style Material:AirWall (same as the ConstructionAirBoundary Ctor)
               newObject.setDouble(3, 0.0);

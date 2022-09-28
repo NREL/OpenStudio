@@ -1,23 +1,30 @@
 
 OS:Version,
-  {a69b4712-6b39-4c54-bf12-f5a8e6a831a9}, !- Handle
+  {f05829be-a9a4-40ac-8152-75e2c07f97ad}, !- Handle
   3.4.0;                                  !- Version Identifier
 
 OS:Material:AirWall,
-  {9b235ef8-4eff-49bb-9593-12fd9fe7c319}, !- Handle
+  {d5d02138-7c1d-4606-9d33-a70aee97ab22}, !- Handle
   Material Air Wall 1;                    !- Name
 
 OS:Construction,
-  {0d4c90f4-ae6c-4f3d-801c-ccc2f8db6d35}, !- Handle
+  {5b71bee9-5d64-4c6f-bc6d-8cd3ad4b1114}, !- Handle
   Construction 1,                         !- Name
-  ,                                       !- Surface Rendering Name
-  {9b235ef8-4eff-49bb-9593-12fd9fe7c319}; !- Layer 1
+  {f89cf85d-7e07-4782-9958-6be719e44b25}, !- Surface Rendering Name
+  {d5d02138-7c1d-4606-9d33-a70aee97ab22}; !- Layer 1
+
+OS:Rendering:Color,
+  {f89cf85d-7e07-4782-9958-6be719e44b25}, !- Handle
+  AirWall RenderingColor,                 !- Name
+  0,                                      !- Rendering Red Value
+  127,                                    !- Rendering Green Value
+  255;                                    !- Rendering Blue Value
 
 OS:Surface,
-  {f5be472e-b18e-4450-90cc-1edb75fd8f14}, !- Handle
+  {e63296c4-2c28-4365-a9b8-b27379e13170}, !- Handle
   Surface 1,                              !- Name
   RoofCeiling,                            !- Surface Type
-  {0d4c90f4-ae6c-4f3d-801c-ccc2f8db6d35}, !- Construction Name
+  {5b71bee9-5d64-4c6f-bc6d-8cd3ad4b1114}, !- Construction Name
   ,                                       !- Space Name
   Outdoors,                               !- Outside Boundary Condition
   ,                                       !- Outside Boundary Condition Object
