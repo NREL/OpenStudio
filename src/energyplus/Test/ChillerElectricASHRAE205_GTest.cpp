@@ -110,6 +110,13 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ChillerElectricASHRAE205) {
   openstudio::path p = resourcesPath() / toPath("model/A205ExampleChiller.RS0001.a205.cbor");
   EXPECT_TRUE(exists(p));
 
+  // Work in a temp dir so we don't mess everything up when running tests in parallel
+  openstudio::path expectedDestDir = openstudio::tempDir() / openstudio::toPath("ForwardTranslator_ChillerElectricASHRAE205");
+  if (exists(expectedDestDir)) {
+    removeDirectory(expectedDestDir);
+  }
+  EXPECT_TRUE(m.workflowJSON().addFilePath(expectedDestDir));
+
   boost::optional<ExternalFile> representationFile = ExternalFile::getExternalFile(m, openstudio::toString(p));
   ASSERT_TRUE(representationFile);
 

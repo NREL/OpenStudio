@@ -46,6 +46,7 @@
 #include "../Mixer.hpp"
 #include "../Splitter.hpp"
 
+#include "../../utilities/core/Path.hpp"
 #include "../../utilities/core/PathHelpers.hpp"
 #include <utilities/idd/IddEnums.hxx>
 #include <resources.hxx>
@@ -62,19 +63,12 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_GettersSetters) {
   openstudio::path p = resourcesPath() / toPath("model/A205ExampleChiller.RS0001.a205.cbor");
   EXPECT_TRUE(exists(p));
 
-  openstudio::path expectedDestDir;
-  std::vector<openstudio::path> absoluteFilePaths = m.workflowJSON().absoluteFilePaths();
-  if (absoluteFilePaths.empty()) {
-    expectedDestDir = m.workflowJSON().absoluteRootDir();
-  } else {
-    expectedDestDir = absoluteFilePaths[0];
-  }
-
+  // Work in a temp dir so we don't mess everything up when running tests in parallel
+  openstudio::path expectedDestDir = openstudio::tempDir() / openstudio::toPath("ChillerElectricASHRAE205_GettersSetters");
   if (exists(expectedDestDir)) {
     removeDirectory(expectedDestDir);
   }
-  ASSERT_FALSE(exists(expectedDestDir));
-  EXPECT_TRUE(exists(p));
+  EXPECT_TRUE(m.workflowJSON().addFilePath(expectedDestDir));
 
   boost::optional<ExternalFile> representationFile = ExternalFile::getExternalFile(m, openstudio::toString(p));
   ASSERT_TRUE(representationFile);
@@ -262,19 +256,12 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
   openstudio::path p = resourcesPath() / toPath("model/A205ExampleChiller.RS0001.a205.cbor");
   EXPECT_TRUE(exists(p));
 
-  openstudio::path expectedDestDir;
-  std::vector<openstudio::path> absoluteFilePaths = m.workflowJSON().absoluteFilePaths();
-  if (absoluteFilePaths.empty()) {
-    expectedDestDir = m.workflowJSON().absoluteRootDir();
-  } else {
-    expectedDestDir = absoluteFilePaths[0];
-  }
-
+  // Work in a temp dir so we don't mess everything up when running tests in parallel
+  openstudio::path expectedDestDir = openstudio::tempDir() / openstudio::toPath("ChillerElectricASHRAE205_Loops");
   if (exists(expectedDestDir)) {
     removeDirectory(expectedDestDir);
   }
-  ASSERT_FALSE(exists(expectedDestDir));
-  EXPECT_TRUE(exists(p));
+  EXPECT_TRUE(m.workflowJSON().addFilePath(expectedDestDir));
 
   boost::optional<ExternalFile> representationFile = ExternalFile::getExternalFile(m, openstudio::toString(p));
   ASSERT_TRUE(representationFile);
@@ -644,8 +631,8 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Loops) {
 
   // Removing the Chiller doesn't remove the ExternalFile
   openstudio::path dstPath = representationFile->filePath();
-  EXPECT_TRUE(exists(p));
-  EXPECT_TRUE(exists(dstPath));
+  EXPECT_TRUE(exists(p)) << p;
+  EXPECT_TRUE(exists(dstPath)) << dstPath;
 
   ch.remove();
   EXPECT_EQ(1, m.getConcreteModelObjects<ExternalFile>().size());
@@ -673,19 +660,13 @@ TEST_F(ModelFixture, ChillerElectricASHRAE205_Clone) {
   openstudio::path p = resourcesPath() / toPath("model/A205ExampleChiller.RS0001.a205.cbor");
   EXPECT_TRUE(exists(p));
 
-  openstudio::path expectedDestDir;
-  std::vector<openstudio::path> absoluteFilePaths = m.workflowJSON().absoluteFilePaths();
-  if (absoluteFilePaths.empty()) {
-    expectedDestDir = m.workflowJSON().absoluteRootDir();
-  } else {
-    expectedDestDir = absoluteFilePaths[0];
-  }
-
+  // Work in a temp dir so we don't mess everything up when running tests in parallel
+  // Work in a temp dir so we don't mess everything up when running tests in parallel
+  openstudio::path expectedDestDir = openstudio::tempDir() / openstudio::toPath("ChillerElectricASHRAE205_Clone");
   if (exists(expectedDestDir)) {
     removeDirectory(expectedDestDir);
   }
-  ASSERT_FALSE(exists(expectedDestDir));
-  EXPECT_TRUE(exists(p));
+  EXPECT_TRUE(m.workflowJSON().addFilePath(expectedDestDir));
 
   boost::optional<ExternalFile> representationFile = ExternalFile::getExternalFile(m, openstudio::toString(p));
   ASSERT_TRUE(representationFile);

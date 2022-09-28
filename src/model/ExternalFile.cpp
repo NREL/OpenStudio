@@ -266,6 +266,11 @@ namespace model {
 
       try {
         makeParentFolder(dest, path(), true);
+      } catch (std::exception&) {
+        this->remove();
+        LOG_AND_THROW("Failed to created parent folder at \"" << dest << "\"");
+      }
+      try {
         boost::filesystem::copy(p, dest);
       } catch (std::exception&) {
         this->remove();
