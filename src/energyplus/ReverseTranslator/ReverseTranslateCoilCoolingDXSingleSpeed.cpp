@@ -192,9 +192,14 @@ namespace energyplus {
         coil.setRatedAirFlowRate(*d);
       }
 
-      d = workspaceObject.getDouble(Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate);
+      d = workspaceObject.getDouble(Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017);
       if (d) {
-        coil.setRatedEvaporatorFanPowerPerVolumeFlowRate(*d);
+        coil.setRatedEvaporatorFanPowerPerVolumeFlowRate2017(*d);
+      }
+
+      d = workspaceObject.getDouble(Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023);
+      if (d) {
+        coil.setRatedEvaporatorFanPowerPerVolumeFlowRate2023(*d);
       }
 
       d = workspaceObject.getDouble(Coil_Cooling_DX_SingleSpeedFields::NominalTimeforCondensateRemovaltoBegin);

@@ -757,21 +757,23 @@ TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXSingleSpeed_minOATCo
   ASSERT_EQ(1u, model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed").size());
   WorkspaceObject c = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed")[0];
 
+  // 3.4.0 to 3.5.0: (1) field added
+
   // Field before insertion point is a curve, should still be
-  ASSERT_TRUE(c.getTarget(14));
-  EXPECT_EQ("CC DX SingleSpeed PartLoadFrac Correlation Curve", c.getTarget(14)->nameString());
+  ASSERT_TRUE(c.getTarget(15));
+  EXPECT_EQ("CC DX SingleSpeed PartLoadFrac Correlation Curve", c.getTarget(15)->nameString());
 
   // Insertion point is at index 15, and is set to -25 (same as model Ctor and E+ IDD default)
-  ASSERT_TRUE(c.getDouble(15));
-  EXPECT_EQ(-25.0, c.getDouble(15).get());
+  ASSERT_TRUE(c.getDouble(16));
+  EXPECT_EQ(-25.0, c.getDouble(16).get());
 
   // After should be 1000.0
-  ASSERT_TRUE(c.getDouble(16));
-  EXPECT_EQ(1000.0, c.getDouble(16).get());
+  ASSERT_TRUE(c.getDouble(17));
+  EXPECT_EQ(1000.0, c.getDouble(17).get());
 
   // Last field
-  ASSERT_TRUE(c.getTarget(31));
-  EXPECT_EQ("Always Off Discrete", c.getTarget(31)->nameString());
+  ASSERT_TRUE(c.getTarget(32));
+  EXPECT_EQ("Always Off Discrete", c.getTarget(32)->nameString());
 }
 
 TEST_F(OSVersionFixture, update_3_0_0_to_3_0_1_CoilCoolingDXTwoStageWithHumidityControlMode_minOATCompressor) {
@@ -1397,10 +1399,12 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   // Field before: Rated COP
   EXPECT_EQ(4.2, coil.getDouble(10).get());
 
+  // 3.4.0 to 3.5.0: (3) fields added
+
   // Curves
   {
-    ASSERT_TRUE(coil.getTarget(11));
-    WorkspaceObject totalCoolingCapacityCurve = coil.getTarget(11).get();
+    ASSERT_TRUE(coil.getTarget(14));
+    WorkspaceObject totalCoolingCapacityCurve = coil.getTarget(14).get();
     EXPECT_EQ(coil.nameString() + " TotCoolCapCurve", totalCoolingCapacityCurve.nameString());
 
     EXPECT_EQ(-0.68126221, totalCoolingCapacityCurve.getDouble(2).get());
@@ -1419,8 +1423,8 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   }
 
   {
-    ASSERT_TRUE(coil.getTarget(12));
-    WorkspaceObject sensibleCoolingCapacityCurve = coil.getTarget(12).get();
+    ASSERT_TRUE(coil.getTarget(15));
+    WorkspaceObject sensibleCoolingCapacityCurve = coil.getTarget(15).get();
     // This is a CurveQuintLinear
     EXPECT_EQ(coil.nameString() + " SensCoolCapCurve", sensibleCoolingCapacityCurve.nameString());
     EXPECT_EQ(2.24209455, sensibleCoolingCapacityCurve.getDouble(2).get());
@@ -1442,8 +1446,8 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   }
 
   {
-    ASSERT_TRUE(coil.getTarget(13));
-    WorkspaceObject coolingPowerConsumptionCurve = coil.getTarget(13).get();
+    ASSERT_TRUE(coil.getTarget(16));
+    WorkspaceObject coolingPowerConsumptionCurve = coil.getTarget(16).get();
     EXPECT_EQ(coil.nameString() + " CoolPowCurve", coolingPowerConsumptionCurve.nameString());
     EXPECT_EQ(-3.20456384, coolingPowerConsumptionCurve.getDouble(2).get());
     EXPECT_EQ(0.47656454, coolingPowerConsumptionCurve.getDouble(3).get());
@@ -1461,10 +1465,10 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilCoolingWaterToAirHeatPumpEqua
   }
 
   // Field after: Nominal Time for Condensate Removal to Begin
-  EXPECT_EQ(360.0, coil.getDouble(14).get());
+  EXPECT_EQ(360.0, coil.getDouble(17).get());
 
   // Last field
-  EXPECT_EQ(0.1, coil.getDouble(15).get());
+  EXPECT_EQ(0.1, coil.getDouble(18).get());
 }
 
 TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilHeatingWaterToAirHeatPumpEquationFit) {
@@ -1483,10 +1487,12 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilHeatingWaterToAirHeatPumpEqua
   // Field before: Rated COP
   EXPECT_EQ(4.5, coil.getDouble(9).get());
 
+  // 3.5.0 to 3.5.0: (3) fields added
+
   // Curves
   {
-    ASSERT_TRUE(coil.getTarget(10));
-    WorkspaceObject heatingCapacityCurve = coil.getTarget(10).get();
+    ASSERT_TRUE(coil.getTarget(13));
+    WorkspaceObject heatingCapacityCurve = coil.getTarget(13).get();
     EXPECT_EQ(coil.nameString() + " HeatCapCurve", heatingCapacityCurve.nameString());
     EXPECT_EQ(-5.50102734, heatingCapacityCurve.getDouble(2).get());
     EXPECT_EQ(-0.96688754, heatingCapacityCurve.getDouble(3).get());
@@ -1504,11 +1510,9 @@ TEST_F(OSVersionFixture, update_3_1_0_to_3_2_0_CoilHeatingWaterToAirHeatPumpEqua
   }
 
   {
-    ASSERT_TRUE(coil.getTarget(11));
-    WorkspaceObject heatingPowerConsumptionCurve = coil.getTarget(11).get();
-
+    ASSERT_TRUE(coil.getTarget(14));
+    WorkspaceObject heatingPowerConsumptionCurve = coil.getTarget(14).get();
     EXPECT_EQ(coil.nameString() + " HeatPowCurve", heatingPowerConsumptionCurve.nameString());
-
     EXPECT_EQ(-7.47517858, heatingPowerConsumptionCurve.getDouble(2).get());
     EXPECT_EQ(6.40876653, heatingPowerConsumptionCurve.getDouble(3).get());
     EXPECT_EQ(1.99711665, heatingPowerConsumptionCurve.getDouble(4).get());
@@ -1824,16 +1828,16 @@ TEST_F(OSVersionFixture, update_3_3_0_to_3_4_0_CoilHeatingDXMultiSpeed) {
   ASSERT_EQ(0u, model->getObjectsByType("OS:ModelObjectList").size());
 }
 
-TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_AirWallMaterial.osm");
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_AirWallMaterial) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_AirWallMaterial.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_AirWallMaterial_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_AirWallMaterial_updated.osm");
   model->save(outPath, true);
 
-  ASSERT_EQ(2u, model->numObjects());
+  ASSERT_EQ(3u, model->numObjects());  // Surface, Construction, RenderingColor
 
   std::vector<WorkspaceObject> constrs = model->getObjectsByType("OS:Construction");
   ASSERT_EQ(0u, constrs.size());
@@ -1846,7 +1850,9 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
   EXPECT_EQ("", constrAirBoundary.getString(2).get());                // Air Exchange Method
   EXPECT_EQ(0.0, constrAirBoundary.getDouble(3).get());               // Simple Mixing Air Changes Per Hour
   EXPECT_EQ("", constrAirBoundary.getString(4).get());                // Simple Mixing Schedule Name
-  EXPECT_EQ("", constrAirBoundary.getString(5).get());                // Surface Rendering Name
+  //  Surface Rendering Name
+  ASSERT_TRUE(constrAirBoundary.getTarget(5));
+  EXPECT_EQ("AirWall RenderingColor", constrAirBoundary.getTarget(5)->nameString());
 
   std::vector<WorkspaceObject> surfaces = model->getObjectsByType("OS:Surface");
   ASSERT_EQ(1u, surfaces.size());
@@ -1856,13 +1862,13 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_AirWallMaterial) {
   EXPECT_EQ("Construction 1", surface.getTarget(3).get().nameString());  // Construction Name
 }
 
-TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_TableMultiVariableLookup_oneDim) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_oneDim.osm");
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_TableMultiVariableLookup_oneDim) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_TableMultiVariableLookup_oneDim.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_oneDim_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_TableMultiVariableLookup_oneDim_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> tableLookUps = model->getObjectsByType("OS:Table:Lookup");
@@ -1920,13 +1926,13 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_TableMultiVariableLookup_oneDim) 
   }
 }
 
-TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_TableMultiVariableLookup_twoDims) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_twoDims.osm");
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_TableMultiVariableLookup_twoDims) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_TableMultiVariableLookup_twoDims.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_TableMultiVariableLookup_twoDims_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_TableMultiVariableLookup_twoDims_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> tableLookUps = model->getObjectsByType("OS:Table:Lookup");
@@ -2013,13 +2019,30 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_TableMultiVariableLookup_twoDims)
   }
 }
 
-TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_CoilCoolingDXSingleSpeed) {
-  openstudio::path path = resourcesPath() / toPath("osversion/3_4_1/test_vt_CoilCoolingDXSingleSpeed.osm");
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingDXSingleSpeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingDXSingleSpeed.osm");
   osversion::VersionTranslator vt;
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_4_1/test_vt_CoilCoolingDXSingleSpeed_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingDXSingleSpeed_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:SingleSpeed");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_EQ(773.3, coil.getDouble(6).get());  // Rated Supply Fan Power Per Volume Flow Rate 2017
+  EXPECT_EQ(934.4, coil.getDouble(7).get());  // Rated Supply Fan Power Per Volume Flow Rate 2023
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXSingleSpeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXSingleSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXSingleSpeed_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> ccs = model->getObjectsByType("OS:Coil:Cooling:DX:SingleSpeed");
@@ -2027,33 +2050,177 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_4_1_CoilCoolingDXSingleSpeed) {
 
   {
     auto cc = model->getObjectByTypeAndName("OS:Coil:Cooling:DX:SingleSpeed", "CC with numbers").get();
-    EXPECT_EQ(15, cc.getDouble(15).get());
     EXPECT_EQ(16, cc.getDouble(16).get());
-    EXPECT_EQ(0.17, cc.getDouble(17).get());
+    EXPECT_EQ(17, cc.getDouble(17).get());
     EXPECT_EQ(0.18, cc.getDouble(18).get());
-    EXPECT_EQ(19, cc.getDouble(19).get());
+    EXPECT_EQ(0.19, cc.getDouble(19).get());
+    EXPECT_EQ(20, cc.getDouble(20).get());
 
-    EXPECT_EQ("EvaporativelyCooled", cc.getString(21).get());
-    EXPECT_EQ(0.22, cc.getDouble(22).get());
-    EXPECT_EQ("Autosize", cc.getString(23).get());
+    EXPECT_EQ("EvaporativelyCooled", cc.getString(22).get());
+    EXPECT_EQ(0.23, cc.getDouble(23).get());
     EXPECT_EQ("Autosize", cc.getString(24).get());
-    EXPECT_EQ(25, cc.getDouble(25).get());
+    EXPECT_EQ("Autosize", cc.getString(25).get());
     EXPECT_EQ(26, cc.getDouble(26).get());
+    EXPECT_EQ(27, cc.getDouble(27).get());
+
+    EXPECT_EQ(773.3, cc.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, cc.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
   }
 
   {
     auto cc = model->getObjectByTypeAndName("OS:Coil:Cooling:DX:SingleSpeed", "CC with blanks").get();
-    EXPECT_EQ(-25, cc.getDouble(15).get());
-    EXPECT_EQ(0, cc.getInt(16).get());
+    EXPECT_EQ(-25, cc.getDouble(16).get());
     EXPECT_EQ(0, cc.getInt(17).get());
     EXPECT_EQ(0, cc.getInt(18).get());
     EXPECT_EQ(0, cc.getInt(19).get());
+    EXPECT_EQ(0, cc.getInt(20).get());
 
-    EXPECT_EQ("AirCooled", cc.getString(21).get());
-    EXPECT_EQ(0.0, cc.getInt(22).get());
-    EXPECT_EQ("Autosize", cc.getString(23).get());
+    EXPECT_EQ("AirCooled", cc.getString(22).get());
+    EXPECT_EQ(0.0, cc.getInt(23).get());
     EXPECT_EQ("Autosize", cc.getString(24).get());
-    EXPECT_EQ(0, cc.getInt(25).get());
+    EXPECT_EQ("Autosize", cc.getString(25).get());
     EXPECT_EQ(0, cc.getInt(26).get());
+    EXPECT_EQ(0, cc.getInt(27).get());
+
+    EXPECT_EQ(773.3, cc.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
+    EXPECT_EQ(934.4, cc.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
   }
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingDXMultiSpeedStageData) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingDXMultiSpeedStageData.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingDXMultiSpeedStageData_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:DX:MultiSpeed:StageData");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_EQ(773.3, coil.getDouble(5).get());  // Rated Supply Air Fan Power Per Volume Flow Rate 2017
+  EXPECT_EQ(934.4, coil.getDouble(6).get());  // Rated Supply Air Fan Power Per Volume Flow Rate 2023
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXMultiSpeedStageData) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXMultiSpeedStageData.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXMultiSpeedStageData_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:MultiSpeed:StageData");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_EQ(773.3, coil.getDouble(6).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
+  EXPECT_EQ(934.4, coil.getDouble(7).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingDXCurveFitSpeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXCurveFitSpeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingDXCurveFitSpeed_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:DX:CurveFit:Speed");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_EQ(773.3, coil.getDouble(8).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2017
+  EXPECT_EQ(934.4, coil.getDouble(9).get());  // Rated Evaporator Fan Power Per Volume Flow Rate 2023
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingWaterToAirHeatPumpEquationFit) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingWaterToAirHeatPumpEquationFit_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:WaterToAirHeatPump:EquationFit");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_TRUE(coil.isEmpty(9));              // Rated Heating Coefficient of Performance
+  EXPECT_EQ(20, coil.getDouble(10).get());   // Rated Entering Water Temperature
+  EXPECT_EQ(20, coil.getDouble(11).get());   // Rated Entering Air Dry-Bulb Temperature
+  EXPECT_EQ(1.0, coil.getDouble(12).get());  // Ratio of Rated Heating Capacity to Rated Cooling Capacity
+  ASSERT_TRUE(coil.getTarget(14));           // Heating Power Consumption Curve Name
+  EXPECT_EQ("Curve Quad Linear 2", coil.getTarget(14)->nameString());
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilCoolingWaterToAirHeatPumpEquationFit) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingWaterToAirHeatPumpEquationFit.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilCoolingWaterToAirHeatPumpEquationFit_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Cooling:WaterToAirHeatPump:EquationFit");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  EXPECT_TRUE(coil.isEmpty(10));              // Rated Cooling Coefficient of Performance
+  EXPECT_EQ(30, coil.getDouble(11).get());    // Rated Entering Water Temperature
+  EXPECT_EQ(27, coil.getDouble(12).get());    // Rated Entering Air Dry-Bulb Temperature
+  EXPECT_EQ(19.0, coil.getDouble(13).get());  // Rated Entering Air Wet-Bulb Temperature
+  EXPECT_TRUE(coil.isEmpty(18));              // Ratio of Initial Moisture Evaporation Rate and Steady State Latent Capacity
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_SizingZone) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_SizingZone.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_SizingZone_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> szs = model->getObjectsByType("OS:Sizing:Zone");
+  ASSERT_EQ(1u, szs.size());
+  auto& sz = szs.front();
+
+  // 9 new fields inserted at position 26, without any harcoding
+  // Field Before
+  EXPECT_EQ(18.0, sz.getDouble(24).get());
+  EXPECT_EQ(19.0, sz.getDouble(25).get());
+
+  for (unsigned i = 26; i < 35; ++i) {
+    EXPECT_TRUE(sz.isEmpty(i));
+  }
+
+  // Field after
+  EXPECT_EQ(0.8, sz.getDouble(35).get());
+  EXPECT_EQ(0.7, sz.getDouble(36).get());
+  EXPECT_EQ(0.6, sz.getDouble(37).get());
+  EXPECT_EQ(0.5, sz.getDouble(38).get());
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingGasMultiStage) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingGasMultiStage.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_CoilHeatingGasMultiStage_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> coils = model->getObjectsByType("OS:Coil:Heating:Gas:MultiStage");
+  ASSERT_EQ(1u, coils.size());
+  WorkspaceObject coil = coils[0];
+
+  ASSERT_TRUE(coil.getTarget(2));
+  EXPECT_EQ("Always On Discrete", coil.getTarget(2)->nameString());
 }

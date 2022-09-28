@@ -54,6 +54,8 @@
 #include "../../model/BoilerHotWater_Impl.hpp"
 #include "../../model/CentralHeatPumpSystem.hpp"
 #include "../../model/CentralHeatPumpSystem_Impl.hpp"
+#include "../../model/ChillerElectricASHRAE205.hpp"
+#include "../../model/ChillerElectricASHRAE205_Impl.hpp"
 #include "../../model/ChillerElectricEIR.hpp"
 #include "../../model/ChillerElectricEIR_Impl.hpp"
 #include "../../model/ChillerElectricReformulatedEIR.hpp"
@@ -152,6 +154,8 @@ namespace energyplus {
     if (modelObjects.size() > 0) {
       int i = 0;
 
+      boost::optional<Node> prevNode_;
+
       for (auto& modelObject : modelObjects) {
         boost::optional<Node> inletNode;
         boost::optional<Node> outletNode;
@@ -167,6 +171,7 @@ namespace energyplus {
 
         if (modelObject.optionalCast<Node>()) {
           // Skip nodes we don't want them showing up on branches
+          prevNode_ = modelObject.cast<Node>();
           continue;
         }
 
@@ -334,19 +339,43 @@ namespace energyplus {
             auto sourceLoop = central_hp->sourcePlantLoop();
 
             // supply = cooling Loop
-            if (loop.handle() == coolingLoop->handle()) {
+            if (coolingLoop && loop.handle() == coolingLoop->handle()) {
               inletNode = waterToWaterComponent->supplyInletModelObject()->optionalCast<Node>();
               outletNode = waterToWaterComponent->supplyOutletModelObject()->optionalCast<Node>();
 
               // tertiary = heating loop
-            } else if (loop.handle() == heatingLoop->handle()) {
+            } else if (heatingLoop && loop.handle() == heatingLoop->handle()) {
               inletNode = waterToWaterComponent->tertiaryInletModelObject()->optionalCast<Node>();
               outletNode = waterToWaterComponent->tertiaryOutletModelObject()->optionalCast<Node>();
 
               // demand = source loop
-            } else if (loop.handle() == sourceLoop->handle()) {
+            } else if (sourceLoop && loop.handle() == sourceLoop->handle()) {
               inletNode = waterToWaterComponent->demandInletModelObject()->optionalCast<Node>();
               outletNode = waterToWaterComponent->demandOutletModelObject()->optionalCast<Node>();
+            }
+
+          } else if (auto ch = modelObject.optionalCast<ChillerElectricASHRAE205>()) {
+            // This one has **FIVE** loops and can be potentially several time on the same loop (demand side, eg: Condenser + Oil Cooler + Auxiliary)
+
+            // Doing this: `if (ch->chilledWaterLoop() && loop.handle() == ch->chilledWaterLoop()->handle())` isn't enough because we could be on the
+            // same loop, so we rely on prevNode_ instead
+            OS_ASSERT(prevNode_);
+
+            if (ch->chilledWaterInletNode() && ch->chilledWaterInletNode()->handle() == prevNode_->handle()) {
+              inletNode = ch->chilledWaterInletNode();
+              outletNode = ch->chilledWaterOutletNode();
+            } else if (ch->condenserInletNode() && ch->condenserInletNode()->handle() == prevNode_->handle()) {
+              inletNode = ch->condenserInletNode();
+              outletNode = ch->condenserOutletNode();
+            } else if (ch->heatRecoveryInletNode() && ch->heatRecoveryInletNode()->handle() == prevNode_->handle()) {
+              inletNode = ch->heatRecoveryInletNode();
+              outletNode = ch->heatRecoveryOutletNode();
+            } else if (ch->oilCoolerInletNode() && ch->oilCoolerInletNode()->handle() == prevNode_->handle()) {
+              inletNode = ch->oilCoolerInletNode();
+              outletNode = ch->oilCoolerOutletNode();
+            } else if (ch->auxiliaryInletNode() && ch->auxiliaryInletNode()->handle() == prevNode_->handle()) {
+              inletNode = ch->auxiliaryInletNode();
+              outletNode = ch->auxiliaryOutletNode();
             }
 
             // Regular case

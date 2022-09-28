@@ -116,36 +116,36 @@ namespace model {
       return result;
     }
 
+    std::vector<IdfObject> CoilHeatingGasMultiStageStageData_Impl::remove() {
+      if (auto _coil = parentCoil()) {
+        _coil->removeStage(getObject<CoilHeatingGasMultiStageStageData>());
+      }
+      return ModelObject_Impl::remove();
+    }
+
+    boost::optional<CoilHeatingGasMultiStage> CoilHeatingGasMultiStageStageData_Impl::parentCoil() const {
+      auto coils = getObject<ModelObject>().getModelObjectSources<CoilHeatingGasMultiStage>(CoilHeatingGasMultiStage::iddObjectType());
+      auto count = coils.size();
+      if (count == 1) {
+        return coils[0];
+      } else if (count > 1) {
+        LOG(Error, briefDescription() << " is referenced by more than one CoilHeatingGasMultiStage, returning the first");
+        return coils[0];
+      }
+      return boost::none;
+    }
+
     boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> CoilHeatingGasMultiStageStageData_Impl::stageIndexAndParentCoil() const {
 
       boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> result;
 
-      // This coil performance object can only be found in a CoilHeatingGasMultiStage
-      // Check all CoilHeatingGasMultiStages in the model, seeing if this is inside of one of them.
-      boost::optional<int> stageIndex;
-      boost::optional<CoilHeatingGasMultiStage> parentCoil;
-      auto coilHeatingGasMultiStages = this->model().getConcreteModelObjects<CoilHeatingGasMultiStage>();
-      for (const auto& coilInModel : coilHeatingGasMultiStages) {
-        // Check the coil performance objects in this coil to see if one of them is this object
-        std::vector<CoilHeatingGasMultiStageStageData> perfStages = coilInModel.stages();
-        int i = 1;
-        for (auto perfStage : perfStages) {
-          if (perfStage.handle() == this->handle()) {
-            stageIndex = i;
-            parentCoil = coilInModel;
-            break;
-          }
-          i++;
-        }
+      if (auto _coil = parentCoil()) {
+        result = std::make_tuple(_coil->stageIndex(getObject<CoilHeatingGasMultiStageStageData>()).get(), _coil.get());
+      } else {
+        LOG(Warn, name().get() + " was not found inside a CoilHeatingGasMultiStage in the model, cannot retrieve the autosized value.");
       }
 
-      // Warn if this coil performance object was not found inside a coil
-      if (!parentCoil) {
-        LOG(Warn, name().get() + " was not found inside a CoilCoolingDXMultiSpeed in the model, cannot retrieve the autosized value.");
-        return result;
-      }
-
-      return std::make_tuple(stageIndex.get(), parentCoil.get());
+      return result;
     }
 
     boost::optional<double> CoilHeatingGasMultiStageStageData_Impl::autosizedNominalCapacity() const {
@@ -186,7 +186,7 @@ namespace model {
   }
 
   IddObjectType CoilHeatingGasMultiStageStageData::iddObjectType() {
-    return IddObjectType(IddObjectType::OS_Coil_Heating_Gas_MultiStage_StageData);
+    return {IddObjectType::OS_Coil_Heating_Gas_MultiStage_StageData};
   }
 
   double CoilHeatingGasMultiStageStageData::gasBurnerEfficiency() const {
@@ -236,6 +236,10 @@ namespace model {
 
   void CoilHeatingGasMultiStageStageData::applySizingValues() {
     return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->applySizingValues();
+  }
+
+  boost::optional<CoilHeatingGasMultiStage> CoilHeatingGasMultiStageStageData::parentCoil() const {
+    return getImpl<detail::CoilHeatingGasMultiStageStageData_Impl>()->parentCoil();
   }
 
   boost::optional<std::tuple<int, CoilHeatingGasMultiStage>> CoilHeatingGasMultiStageStageData::stageIndexAndParentCoil() const {

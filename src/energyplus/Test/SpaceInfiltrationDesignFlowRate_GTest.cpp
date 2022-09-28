@@ -84,9 +84,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate) {
   ASSERT_TRUE(objects[0].getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod));
   EXPECT_EQ("Flow/ExteriorWallArea", objects[0].getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
   EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate));
-  EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowperZoneFloorArea));
-  ASSERT_TRUE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea));
-  EXPECT_EQ(1.0, objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea).get());
+  EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperFloorArea));
+  ASSERT_TRUE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea));
+  EXPECT_EQ(1.0, objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea).get());
   EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour));
 }
 
@@ -111,8 +111,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate_Spac
   ASSERT_TRUE(objects[0].getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod));
   EXPECT_EQ("AirChanges/Hour", objects[0].getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
   EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate));
-  EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowperZoneFloorArea));
-  EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea));
+  EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperFloorArea));
+  EXPECT_FALSE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea));
   ASSERT_TRUE(objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour));
   EXPECT_EQ(0.1, objects[0].getDouble(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour).get());
 }
@@ -248,7 +248,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate_Spac
     double totalInfiltration = 0.0;  // m3/s
     for (const auto& infil : infils) {
       auto name = infil.nameString();
-      auto z_ = infil.getTarget(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName);
+      auto z_ = infil.getTarget(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName);
       ASSERT_TRUE(z_);
       EXPECT_EQ(zone, z_.get());
       EXPECT_EQ("Flow/Zone", infil.getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
@@ -286,34 +286,69 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SpaceInfiltrationDesignFlowRate_Spac
     EXPECT_EQ(4, w.getObjectsByType(IddObjectType::Space).size());
     EXPECT_EQ(2, w.getObjectsByType(IddObjectType::SpaceList).size());
 
-    auto infils = w.getObjectsByType(IddObjectType::ZoneInfiltration_DesignFlowRate);
-    // I expect infilSpace1, infilSpace3, two infilOffice and two infilBuilding, so 6 total
-    ASSERT_EQ(6, infils.size());
+    w.getObjectByTypeAndName(IddObjectType::SpaceList, buildingSpaceType.nameString());
 
-    double totalInfiltration = 0.0;  // m3/s
+    auto infils = w.getObjectsByType(IddObjectType::ZoneInfiltration_DesignFlowRate);
+    // I expect infilSpace1, infilSpace3 which are on the space, and infilOffice and infilBuilding which use SpaceList
+    ASSERT_EQ(4, infils.size());
+
     for (const auto& infil : infils) {
       auto name = infil.nameString();
-      auto z_ = infil.getTarget(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName);
-      ASSERT_TRUE(z_);
-      EXPECT_EQ(zone, z_.get());
-      EXPECT_EQ("Flow/Zone", infil.getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
-      double i = infil.getDouble(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate).get();
-      totalInfiltration += i;
+      auto target_ = infil.getTarget(ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName);
+      ASSERT_TRUE(target_);
+
       if (name.find(infilBuilding.nameString()) != std::string::npos) {
-        EXPECT_EQ(0.05, i);
-        EXPECT_EQ(infilBuilding.airChangesperHour().get() * spaceVolume / 3600.0, i);
+        EXPECT_EQ(target_->iddObject().type(), IddObjectType::SpaceList);
+        EXPECT_EQ(buildingSpaceType.nameString(), target_->nameString());
+        EXPECT_EQ("AirChanges/Hour", infil.getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate));
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::FlowRateperFloorArea));
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea));
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate));
+
+        ASSERT_FALSE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour));
+        EXPECT_EQ(infilBuilding.airChangesperHour().get(), infil.getDouble(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour).get());
+
       } else if (name.find(infilOffice.nameString()) != std::string::npos) {
-        EXPECT_EQ(0.2, i);
-        EXPECT_EQ(infilOffice.flowperSpaceFloorArea().get() * spaceFloorArea, i);
+        EXPECT_EQ(target_->iddObject().type(), IddObjectType::SpaceList);
+        EXPECT_EQ(officeSpaceType.nameString(), target_->nameString());
+
+        EXPECT_EQ("Flow/Area", infil.getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate));
+
+        ASSERT_FALSE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::FlowRateperFloorArea));
+        EXPECT_EQ(infilOffice.flowperSpaceFloorArea().get(), infil.getDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperFloorArea).get());
+
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea));
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour));
+
       } else if (name.find(infilSpace1.nameString()) != std::string::npos) {
-        EXPECT_EQ(0.015, i);
-        EXPECT_EQ(infilSpace1.designFlowRate().get(), i);
+        EXPECT_EQ(target_->iddObject().type(), IddObjectType::Space);
+        EXPECT_EQ(space1.nameString(), target_->nameString());
+
+        EXPECT_EQ("Flow/Zone", infil.getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
+
+        ASSERT_FALSE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate));
+        EXPECT_EQ(infilSpace1.designFlowRate().get(), infil.getDouble(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate).get());
+
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::FlowRateperFloorArea));
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea));
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour));
+
       } else if (name.find(infilSpace3.nameString()) != std::string::npos) {
-        EXPECT_DOUBLE_EQ(0.172, i);
-        EXPECT_DOUBLE_EQ(infilSpace3.flowperExteriorSurfaceArea().get() * innerSpaceExteriorSurfaceArea, i);
+        EXPECT_EQ(target_->iddObject().type(), IddObjectType::Space);
+        EXPECT_EQ(space3.nameString(), target_->nameString());
+
+        EXPECT_EQ("Flow/ExteriorArea", infil.getString(ZoneInfiltration_DesignFlowRateFields::DesignFlowRateCalculationMethod).get());
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::DesignFlowRate));
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::FlowRateperFloorArea));
+
+        ASSERT_FALSE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea));
+        EXPECT_EQ(infilSpace3.flowperExteriorSurfaceArea().get(),
+                  infil.getDouble(ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea).get());
+
+        EXPECT_TRUE(infil.isEmpty(ZoneInfiltration_DesignFlowRateFields::AirChangesperHour));
       }
     }
-
-    EXPECT_DOUBLE_EQ(0.687, totalInfiltration);
   }
 }

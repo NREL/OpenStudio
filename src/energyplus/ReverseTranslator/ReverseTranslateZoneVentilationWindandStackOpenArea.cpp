@@ -55,7 +55,7 @@ namespace energyplus {
 
     // Start by checking if the WorkspaceObject has a ThermalZone before you even initialize a ModelObject
     boost::optional<ThermalZone> _zone;
-    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::ZoneName);
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneVentilation_WindandStackOpenAreaFields::ZoneorSpaceName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {

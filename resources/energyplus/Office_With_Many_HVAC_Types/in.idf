@@ -1,4 +1,4 @@
-  Version,22.1;
+  Version,22.2;
 
   Building,
     Building 1,              !- Name
@@ -332,15 +332,17 @@
     Autosize,                !- Cooling Outdoor Air Flow Rate {m3/s}
     Autosize,                !- Heating Outdoor Air Flow Rate {m3/s}
     Autosize,                !- No Load Outdoor Air Flow Rate {m3/s}
-    Fan:ConstantVolume,      !- Supply Air Fan Object Type
+    Fan:OnOff,      !- Supply Air Fan Object Type
     PTAC Fan,                !- Supply Air Fan Name
     Coil:Heating:Water,      !- Heating Coil Object Type
     PTAC HW Htg Coil,        !- Heating Coil Name
     Coil:Cooling:DX:SingleSpeed,  !- Cooling Coil Object Type
     PTAC 1 Spd DX Clg Coil,  !- Cooling Coil Name
-    DrawThrough;             !- Fan Placement
+    DrawThrough,             !- Fan Placement
+    Always Off Discrete;     !- Supply Air Fan Operating Mode Schedule Name
 
   Schedule:Constant,Always On Discrete 1,Schedule Type Limits 1,1;
+  Schedule:Constant,Always Off Discrete,Schedule Type Limits 1,0;
 
   OutdoorAir:Mixer,
     PTAC DX Clg HW Htg OA Mixer,  !- Name
@@ -352,16 +354,36 @@
   OutdoorAir:NodeList,
     PTAC DX Clg HW Htg OA Node;  !- Node or NodeList Name 1
 
-  Fan:ConstantVolume,
-    PTAC Fan,                !- Name
-    Always On Discrete 1,    !- Availability Schedule Name
-    0.7,                     !- Fan Total Efficiency
-    250,                     !- Pressure Rise {Pa}
-    AutoSize,                !- Maximum Flow Rate {m3/s}
-    0.9,                     !- Motor Efficiency
-    1,                       !- Motor In Airstream Fraction
-    PTAC DX Clg HW Htg Heating Coil Outlet Node,  !- Air Inlet Node Name
-    Node 17;                 !- Air Outlet Node Name
+  Fan:OnOff,
+    PTAC Fan,                               !- Name
+    Always On Discrete 1,                   !- Availability Schedule Name
+    0.7,                                    !- Fan Total Efficiency
+    250,                                    !- Pressure Rise {Pa}
+    Autosize,                               !- Maximum Flow Rate {m3/s}
+    0.9,                                    !- Motor Efficiency
+    1,                                      !- Motor In Airstream Fraction
+    PTAC DX Clg HW Htg Heating Coil Outlet Node, !- Air Inlet Node Name
+    Node 17,                                !- Air Outlet Node Name
+    Fan On Off Power Curve,                 !- Fan Power Ratio Function of Speed Ratio Curve Name
+    Fan On Off Efficiency Curve,            !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+    General;                                !- End-Use Subcategory
+
+  Curve:Exponent,
+    Fan On Off Power Curve,                 !- Name
+    1,                                      !- Coefficient1 Constant
+    0,                                      !- Coefficient2 Constant
+    0,                                      !- Coefficient3 Constant
+    0,                                      !- Minimum Value of x {BasedOnField A2}
+    1;                                      !- Maximum Value of x {BasedOnField A2}
+
+  Curve:Cubic,
+    Fan On Off Efficiency Curve,            !- Name
+    1,                                      !- Coefficient1 Constant
+    0,                                      !- Coefficient2 x
+    0,                                      !- Coefficient3 x**2
+    0,                                      !- Coefficient4 x**3
+    0,                                      !- Minimum Value of x {BasedOnField A2}
+    1;                                      !- Maximum Value of x {BasedOnField A2}
 
   Coil:Heating:Water,
     PTAC HW Htg Coil,        !- Name
@@ -437,7 +459,8 @@
     Autosize,                !- Gross Rated Sensible Heat Ratio
     3,                       !- Gross Rated Cooling COP {W/W}
     Autosize,                !- Rated Air Flow Rate {m3/s}
-    773.3,                   !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    773.3,                   !- 2017 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- 2023 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     PTAC DX Clg HW Htg Mixed Air Node,  !- Air Inlet Node Name
     PTAC DX Clg HW Htg Cooling Coil Outlet Node,  !- Air Outlet Node Name
     OS:Curve:Biquadratic 13, !- Total Cooling Capacity Function of Temperature Curve Name
@@ -499,7 +522,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 1 Core Space Design Spec Zone Air Dist,  !- Name
@@ -699,8 +729,8 @@
     Autosize,                !- Cooling Outdoor Air Flow Rate {m3/s}
     Autosize,                !- Heating Outdoor Air Flow Rate {m3/s}
     Autosize,                !- No Load Outdoor Air Flow Rate {m3/s}
-    Fan:ConstantVolume,      !- Supply Air Fan Object Type
-    PTHP CV Fan,             !- Supply Air Fan Name
+    Fan:OnOff,               !- Supply Air Fan Object Type
+    PTHP Fan,                !- Supply Air Fan Name
     Coil:Heating:DX:SingleSpeed,  !- Heating Coil Object Type
     PTHP 1 Spd DX Htg Coil,  !- Heating Coil Name
     0.001,                   !- Heating Convergence Tolerance {dimensionless}
@@ -712,7 +742,7 @@
     Autosize,                !- Maximum Supply Air Temperature from Supplemental Heater {C}
     21,                      !- Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
     DrawThrough,             !- Fan Placement
-    ;                        !- Supply Air Fan Operating Mode Schedule Name
+    Always Off Discrete;     !- Supply Air Fan Operating Mode Schedule Name
 
   OutdoorAir:Mixer,
     PTHP OA Mixer,           !- Name
@@ -724,16 +754,19 @@
   OutdoorAir:NodeList,
     PTHP OA Node;            !- Node or NodeList Name 1
 
-  Fan:ConstantVolume,
-    PTHP CV Fan,             !- Name
-    Always On Discrete 1,    !- Availability Schedule Name
-    0.7,                     !- Fan Total Efficiency
-    250,                     !- Pressure Rise {Pa}
-    AutoSize,                !- Maximum Flow Rate {m3/s}
-    0.9,                     !- Motor Efficiency
-    1,                       !- Motor In Airstream Fraction
-    PTHP Heating Coil Outlet Node,  !- Air Inlet Node Name
-    PTHP Fan Outlet Node;    !- Air Outlet Node Name
+  Fan:OnOff,
+    PTHP Fan,                      !- Name
+    Always On Discrete 1,          !- Availability Schedule Name
+    0.7,                           !- Fan Total Efficiency
+    250,                           !- Pressure Rise {Pa}
+    Autosize,                      !- Maximum Flow Rate {m3/s}
+    0.9,                           !- Motor Efficiency
+    1,                             !- Motor In Airstream Fraction
+    PTHP Heating Coil Outlet Node, !- Air Inlet Node Name
+    PTHP Fan Outlet Node,          !- Air Outlet Node Name
+    Fan On Off Power Curve,        !- Fan Power Ratio Function of Speed Ratio Curve Name
+    Fan On Off Efficiency Curve,   !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+    General;                       !- End-Use Subcategory
 
   Coil:Heating:DX:SingleSpeed,
     PTHP 1 Spd DX Htg Coil,  !- Name
@@ -741,7 +774,8 @@
     Autosize,                !- Gross Rated Heating Capacity {W}
     5,                       !- Gross Rated Heating COP {W/W}
     Autosize,                !- Rated Air Flow Rate {m3/s}
-    773.3,                   !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- 2017 Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+    773.3,                   !- 2023 Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
     PTHP Cooling Coil Outlet Node,  !- Air Inlet Node Name
     PTHP Heating Coil Outlet Node,  !- Air Outlet Node Name
     OS:Curve:Biquadratic 11, !- Heating Capacity Function of Temperature Curve Name
@@ -867,7 +901,8 @@
     Autosize,                !- Gross Rated Sensible Heat Ratio
     3,                       !- Gross Rated Cooling COP {W/W}
     Autosize,                !- Rated Air Flow Rate {m3/s}
-    773.3,                   !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    773.3,                   !- 2017 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- 2023 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     PTHP Mixed Air Node,     !- Air Inlet Node Name
     PTHP Cooling Coil Outlet Node,  !- Air Outlet Node Name
     OS:Curve:Biquadratic 9,  !- Total Cooling Capacity Function of Temperature Curve Name
@@ -937,7 +972,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 1 East Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -1167,7 +1209,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 1 North Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -1409,7 +1458,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 1 South Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -1652,7 +1708,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 1 West Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -1893,7 +1956,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 2 Core Space Design Spec Zone Air Dist,  !- Name
@@ -2162,7 +2232,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 2 East Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -2392,7 +2469,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 2 North Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -2668,7 +2752,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 2 South Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -2947,7 +3038,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 2 West Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -3188,7 +3286,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 3 Core Space Design Spec Zone Air Dist,  !- Name
@@ -3460,7 +3565,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 3 East Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -3724,7 +3836,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 3 North Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -3990,7 +4109,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 3 South Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -4269,7 +4395,14 @@
     No,                      !- Account for Dedicated Outdoor Air System
     NeutralSupplyAir,        !- Dedicated Outdoor Air System Control Strategy
     autosize,                !- Dedicated Outdoor Air Low Setpoint Temperature for Design {C}
-    autosize;                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    autosize,                !- Dedicated Outdoor Air High Setpoint Temperature for Design {C}
+    Sensible Load Only No Latent Load,  !- Zone Load Sizing Method
+    HumidityRatioDifference, !- Zone Latent Cooling Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Dehumidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005,                   !- Zone Cooling Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
+    HumidityRatioDifference, !- Zone Latent Heating Design Supply Air Humidity Ratio Input Method
+    ,                        !- Zone Humidification Design Supply Air Humidity Ratio {kgWater/kgDryAir}
+    0.005;                   !- Zone Humidification Design Supply Air Humidity Ratio Difference {kgWater/kgDryAir}
 
   DesignSpecification:ZoneAirDistribution,
     Thermal Zone: Story 3 West Perimeter Space Design Spec Zone Air Dist,  !- Name
@@ -6532,7 +6665,8 @@
     Autosize,                !- Gross Rated Sensible Heat Ratio
     3,                       !- Gross Rated Cooling COP {W/W}
     Autosize,                !- Rated Air Flow Rate {m3/s}
-    773.3,                   !- Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    773.3,                   !- 2017 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
+    ,                        !- 2023 Rated Evaporator Fan Power Per Volume Flow Rate {W/(m3/s)}
     Node 27,                 !- Air Inlet Node Name
     Node 28,                 !- Air Outlet Node Name
     Curve Biquadratic 1,     !- Total Cooling Capacity Function of Temperature Curve Name
@@ -9418,12 +9552,12 @@
 
   ZoneInfiltration:DesignFlowRate,
     90.1-2007 - Office - Corridor Infiltration,  !- Name
-    90.1-2007 - Office - Corridor,  !- Zone or ZoneList Name
+    90.1-2007 - Office - Corridor,  !- Zone or ZoneList or Space or SpaceList Name
     Medium Office Infil Quarter On,  !- Schedule Name
     Flow/ExteriorArea,       !- Design Flow Rate Calculation Method
     ,                        !- Design Flow Rate {m3/s}
-    ,                        !- Flow per Zone Floor Area {m3/s-m2}
-    0.000226568,             !- Flow per Exterior Surface Area {m3/s-m2}
+    ,                        !- Flow Rate per Floor Area {m3/s-m2}
+    0.000226568,             !- Flow Rate per Exterior Surface Area {m3/s-m2}
     ,                        !- Air Changes per Hour {1/hr}
     1,                       !- Constant Term Coefficient
     0,                       !- Temperature Term Coefficient
@@ -9486,12 +9620,12 @@
 
   ZoneInfiltration:DesignFlowRate,
     90.1-2007 - Office - OpenOffice Infiltration,  !- Name
-    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList Name
+    90.1-2007 - Office - OpenOffice,  !- Zone or ZoneList or Space or SpaceList Name
     Medium Office Infil Quarter On,  !- Schedule Name
     Flow/ExteriorArea,       !- Design Flow Rate Calculation Method
     ,                        !- Design Flow Rate {m3/s}
-    ,                        !- Flow per Zone Floor Area {m3/s-m2}
-    0.000226568,             !- Flow per Exterior Surface Area {m3/s-m2}
+    ,                        !- Flow Rate per Floor Area {m3/s-m2}
+    0.000226568,             !- Flow Rate per Exterior Surface Area {m3/s-m2}
     ,                        !- Air Changes per Hour {1/hr}
     1,                       !- Constant Term Coefficient
     0,                       !- Temperature Term Coefficient

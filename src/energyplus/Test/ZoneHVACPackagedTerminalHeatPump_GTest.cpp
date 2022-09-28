@@ -37,6 +37,9 @@
 #include "../../model/Space.hpp"
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../../model/CoilHeatingDXVariableSpeed.hpp"
+#include "../../model/CoilCoolingDX.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
 #include "../../model/CoilCoolingDXSingleSpeed.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/CoilSystemCoolingDXHeatExchangerAssisted.hpp"
@@ -156,4 +159,42 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_Coi
 
   EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
   EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX_HeatExchangerAssisted).size());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ZoneHVACPackagedTerminalHeatPump_CoilCoolingDX) {
+
+  Model m;
+
+  Schedule sch = m.alwaysOnDiscreteSchedule();
+  FanConstantVolume fan(m, sch);
+  CoilHeatingDXVariableSpeed hc(m);
+  CoilCoolingDXCurveFitOperatingMode operatingMode(m);
+  CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
+  CoilCoolingDX cc(m, performance);
+  CoilHeatingElectric shc(m);
+
+  ZoneHVACPackagedTerminalHeatPump pthp(m, sch, fan, hc, cc, shc);
+
+  // Need to be in a thermal zone to be translated, with at least one space
+  ThermalZone z(m);
+  pthp.addToThermalZone(z);
+  Space s(m);
+  s.setThermalZone(z);
+
+  ForwardTranslator forwardTranslator;
+  Workspace workspace = forwardTranslator.translateModel(m);
+
+  WorkspaceObjectVector idfObjs(workspace.getObjectsByType(IddObjectType::ZoneHVAC_PackagedTerminalHeatPump));
+  ASSERT_EQ(1u, idfObjs.size());
+  WorkspaceObject idf_pthp(idfObjs[0]);
+
+  EXPECT_EQ("Coil:Heating:DX:VariableSpeed", idf_pthp.getString(ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingCoilObjectType).get());
+  EXPECT_EQ(hc.nameString(), idf_pthp.getString(ZoneHVAC_PackagedTerminalHeatPumpFields::HeatingCoilName).get());
+
+  // Check that the DX coil ends up directly onto the object, and NOT a CoilSystem:Cooling:DX wrapper|
+  EXPECT_EQ("Coil:Cooling:DX", idf_pthp.getString(ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilObjectType).get());
+  EXPECT_EQ(cc.nameString(), idf_pthp.getString(ZoneHVAC_PackagedTerminalHeatPumpFields::CoolingCoilName).get());
+
+  EXPECT_EQ(0u, workspace.getObjectsByType(IddObjectType::CoilSystem_Cooling_DX).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Cooling_DX).size());
 }

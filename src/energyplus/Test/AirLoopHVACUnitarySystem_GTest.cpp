@@ -41,6 +41,8 @@
 #include "../../model/CoilHeatingDXSingleSpeed.hpp"
 #include "../../model/FanConstantVolume.hpp"
 #include "../../model/CoilHeatingDesuperheater.hpp"
+#include "../../model/CoilHeatingGasMultiStage.hpp"
+#include "../../model/CoilHeatingElectricMultiStage.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
@@ -50,6 +52,8 @@
 #include <utilities/idd/Coil_Heating_DX_SingleSpeed_FieldEnums.hxx>
 #include <utilities/idd/Fan_ConstantVolume_FieldEnums.hxx>
 #include <utilities/idd/Coil_Heating_Desuperheater_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Gas_MultiStage_FieldEnums.hxx>
+#include <utilities/idd/Coil_Heating_Electric_MultiStage_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <resources.hxx>
@@ -656,4 +660,54 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_Nodes) {
       }
     }
   }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeatingGasMultiStage) {
+  Model m;
+
+  CoilCoolingDXSingleSpeed c(m);
+  CoilHeatingGasMultiStage h(m);
+  FanConstantVolume f(m);
+
+  AirLoopHVACUnitarySystem unitary(m);
+  unitary.setCoolingCoil(c);
+  unitary.setHeatingCoil(h);
+  unitary.setSupplyFan(f);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(m);
+
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::Coil_Heating_Gas_MultiStage).size());
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_AirLoopHVACUnitarySystem_CoilHeatingElectricMultiStage) {
+  Model m;
+
+  CoilCoolingDXSingleSpeed c(m);
+  CoilHeatingElectricMultiStage h(m);
+  FanConstantVolume f(m);
+  CoilHeatingElectricMultiStage s(m);
+
+  AirLoopHVACUnitarySystem unitary(m);
+  unitary.setCoolingCoil(c);
+  unitary.setHeatingCoil(h);
+  unitary.setSupplyFan(f);
+  unitary.setSupplementalHeatingCoil(s);
+
+  AirLoopHVAC airLoop(m);
+
+  Node supplyOutletNode = airLoop.supplyOutletNode();
+  unitary.addToNode(supplyOutletNode);
+
+  ForwardTranslator ft;
+  Workspace workspace = ft.translateModel(m);
+
+  EXPECT_EQ(1u, workspace.getObjectsByType(IddObjectType::AirLoopHVAC_UnitarySystem).size());
+  EXPECT_EQ(2u, workspace.getObjectsByType(IddObjectType::Coil_Heating_Electric_MultiStage).size());
 }

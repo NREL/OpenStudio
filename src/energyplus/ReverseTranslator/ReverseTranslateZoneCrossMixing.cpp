@@ -33,6 +33,8 @@
 #include "../../model/ZoneMixing_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
@@ -54,12 +56,18 @@ namespace energyplus {
       return boost::none;
     }
 
-    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::ZoneName);
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::ZoneorSpaceName);
     OptionalThermalZone zone;
     if (target) {
-      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-      if (modelObject) {
-        zone = modelObject->optionalCast<ThermalZone>();
+      if (OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target)) {
+        if (target->iddObject().type() == IddObjectType::Zone) {
+          // Zone maps to Space in RT
+          if (auto s_ = modelObject->optionalCast<Space>()) {
+            zone = s_->thermalZone();
+          }
+        } else {
+          // It's a space, but we don't allow mapping to a space in model SDK for now, and we don't have a Space RT... so we'll never get here
+        }
       }
     }
 
@@ -67,12 +75,17 @@ namespace energyplus {
       return boost::none;
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::SourceZoneName);
+    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::SourceZoneorSpaceName);
     OptionalThermalZone sourceZone;
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-      if (modelObject) {
-        sourceZone = modelObject->optionalCast<ThermalZone>();
+      if (target->iddObject().type() == IddObjectType::Zone) {
+        // Zone maps to Space in RT
+        if (auto s_ = modelObject->optionalCast<Space>()) {
+          sourceZone = s_->thermalZone();
+        }
+      } else {
+        // It's a space, but we don't allow mapping to a space in model SDK for now, and we don't have a Space RT... so we'll never get here
       }
     }
 
@@ -119,7 +132,7 @@ namespace energyplus {
         LOG(Error, "Flow/Zone value not found for workspace object " << workspaceObject);
       }
     } else if (istringEqual("Flow/Area", *s)) {
-      d = workspaceObject.getDouble(openstudio::ZoneCrossMixingFields::FlowRateperZoneFloorArea);
+      d = workspaceObject.getDouble(openstudio::ZoneCrossMixingFields::FlowRateperFloor);
       if (d) {
         mixing.setFlowRateperZoneFloorArea(*d);
         reverseMixing.setFlowRateperZoneFloorArea(*d);
@@ -163,7 +176,7 @@ namespace energyplus {
       }
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MinimumZoneTemperatureScheduleName);
+    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MinimumReceivingTemperatureScheduleName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
@@ -174,7 +187,7 @@ namespace energyplus {
       }
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MaximumZoneTemperatureScheduleName);
+    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MaximumReceivingTemperatureScheduleName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
@@ -185,7 +198,7 @@ namespace energyplus {
       }
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MinimumSourceZoneTemperatureScheduleName);
+    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MinimumSourceTemperatureScheduleName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
@@ -196,7 +209,7 @@ namespace energyplus {
       }
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MaximumSourceZoneTemperatureScheduleName);
+    target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::MaximumSourceTemperatureScheduleName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {

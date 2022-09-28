@@ -32,10 +32,11 @@
 
 #include "ModelAPI.hpp"
 #include "ModelObject_Impl.hpp"
-#include "../model/CoilHeatingGasMultiStage.hpp"
 
 namespace openstudio {
 namespace model {
+
+  class CoilHeatingGasMultiStage;
 
   namespace detail {
 
@@ -52,7 +53,7 @@ namespace model {
 
       CoilHeatingGasMultiStageStageData_Impl(const CoilHeatingGasMultiStageStageData_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~CoilHeatingGasMultiStageStageData_Impl() {}
+      virtual ~CoilHeatingGasMultiStageStageData_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -61,6 +62,9 @@ namespace model {
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
+
+      // If this object is used by any CoilHeatingGasMultiStage, remove the corresponding extensible group to avoid having 'blanks'
+      virtual std::vector<IdfObject> remove() override;
 
       //@}
       /** @name Getters */
@@ -75,10 +79,6 @@ namespace model {
       double parasiticElectricLoad() const;
 
       boost::optional<double> autosizedNominalCapacity() const;
-
-      void autosize();
-
-      void applySizingValues();
 
       //@}
       /** @name Setters */
@@ -95,6 +95,13 @@ namespace model {
       //@}
       /** @name Other */
       //@{
+
+      void autosize();
+
+      void applySizingValues();
+
+      // Returns the CoilHeatingGasMultiStage that references it if any
+      boost::optional<CoilHeatingGasMultiStage> parentCoil() const;
 
       // Used to determine the index of this performance data in the
       // list of stages in the parent object.

@@ -215,18 +215,32 @@ namespace model {
       return setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedCOP, value);
     }
 
-    double CoilCoolingDXSingleSpeed_Impl::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
-      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate);
+    double CoilCoolingDXSingleSpeed_Impl::ratedEvaporatorFanPowerPerVolumeFlowRate2017() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017);
       OS_ASSERT(value);
       return value.get();
     }
 
-    bool CoilCoolingDXSingleSpeed_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate(boost::optional<double> value) {
-      return setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate, value.get());
+    double CoilCoolingDXSingleSpeed_Impl::ratedEvaporatorFanPowerPerVolumeFlowRate2023() const {
+      boost::optional<double> value = getDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023);
+      OS_ASSERT(value);
+      return value.get();
     }
 
-    bool CoilCoolingDXSingleSpeed_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate(double value) {
-      return setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate, value);
+    bool CoilCoolingDXSingleSpeed_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(boost::optional<double> value) {
+      return setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017, value.get());
+    }
+
+    bool CoilCoolingDXSingleSpeed_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double value) {
+      return setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017, value);
+    }
+
+    bool CoilCoolingDXSingleSpeed_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate2023(boost::optional<double> value) {
+      return setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023, value.get());
+    }
+
+    bool CoilCoolingDXSingleSpeed_Impl::setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double value) {
+      return setDouble(OS_Coil_Cooling_DX_SingleSpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023, value);
     }
 
     Curve CoilCoolingDXSingleSpeed_Impl::totalCoolingCapacityFunctionOfTemperatureCurve() const {
@@ -916,7 +930,8 @@ namespace model {
     autosizeRatedSensibleHeatRatio();     //autosize
     autosizeRatedAirFlowRate();           //autosize
     setRatedCOP(3.0);
-    setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
+    setRatedEvaporatorFanPowerPerVolumeFlowRate2017(773.3);
+    setRatedEvaporatorFanPowerPerVolumeFlowRate2023(934.4);
     setTotalCoolingCapacityFunctionOfTemperatureCurve(coolingCurveFofTemp);
     setTotalCoolingCapacityFunctionOfFlowFractionCurve(coolingCurveFofFlow);
     setEnergyInputRatioFunctionOfTemperatureCurve(energyInputRatioFofTemp);
@@ -955,7 +970,8 @@ namespace model {
     autosizeRatedSensibleHeatRatio();     //autosize
     autosizeRatedAirFlowRate();           //autosize
     setRatedCOP(3.0);
-    setRatedEvaporatorFanPowerPerVolumeFlowRate(773.3);
+    setRatedEvaporatorFanPowerPerVolumeFlowRate2017(773.3);
+    setRatedEvaporatorFanPowerPerVolumeFlowRate2023(934.4);
     setTotalCoolingCapacityFunctionOfTemperatureCurve(coolingCurveFofTemp);
     setTotalCoolingCapacityFunctionOfFlowFractionCurve(coolingCurveFofFlow);
     setEnergyInputRatioFunctionOfTemperatureCurve(energyInputRatioFofTemp);
@@ -999,15 +1015,45 @@ namespace model {
   }
 
   double CoilCoolingDXSingleSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate() const {
-    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate();
+    LOG(Warn, "As of 3.5.0, ratedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use ratedSupplyFanPowerPerVolumeFlowRate2017 instead. It will be "
+              "removed within three releases.");
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
+  }
+
+  double CoilCoolingDXSingleSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate2017() const {
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2017();
+  }
+
+  double CoilCoolingDXSingleSpeed::ratedEvaporatorFanPowerPerVolumeFlowRate2023() const {
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->ratedEvaporatorFanPowerPerVolumeFlowRate2023();
   }
 
   bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(boost::optional<double> value) {
-    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate(value);
+    LOG(Warn, "As of 3.5.0, setRatedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead. "
+              "It will be removed within three releases.");
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(value);
   }
 
   bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate(double value) {
-    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate(value);
+    LOG(Warn, "As of 3.5.0, setRatedEvaporatorFanPowerPerVolumeFlowRate is deprecated. Use setRatedEvaporatorFanPowerPerVolumeFlowRate2017 instead. "
+              "It will be removed within three releases.");
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(value);
+  }
+
+  bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(boost::optional<double> value) {
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(value);
+  }
+
+  bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double value) {
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2017(value);
+  }
+
+  bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate2023(boost::optional<double> value) {
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2023(value);
+  }
+
+  bool CoilCoolingDXSingleSpeed::setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double value) {
+    return getImpl<detail::CoilCoolingDXSingleSpeed_Impl>()->setRatedEvaporatorFanPowerPerVolumeFlowRate2023(value);
   }
 
   Curve CoilCoolingDXSingleSpeed::totalCoolingCapacityFunctionOfTemperatureCurve() const {

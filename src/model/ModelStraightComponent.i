@@ -131,6 +131,7 @@ MODELOBJECT_TEMPLATES(CoilHeatingDXMultiSpeed);
 MODELOBJECT_TEMPLATES(CoilHeatingDXSingleSpeed);
 MODELOBJECT_TEMPLATES(CoilHeatingDXVariableSpeed);
 MODELOBJECT_TEMPLATES(CoilHeatingElectric);
+MODELOBJECT_TEMPLATES(CoilHeatingElectricMultiStage);
 MODELOBJECT_TEMPLATES(CoilHeatingFourPipeBeam);
 MODELOBJECT_TEMPLATES(CoilHeatingGas);
 MODELOBJECT_TEMPLATES(CoilHeatingGasMultiStage);
@@ -214,6 +215,7 @@ SWIG_MODELOBJECT(CoilHeatingDXMultiSpeed,1);
 SWIG_MODELOBJECT(CoilHeatingDXSingleSpeed,1);
 SWIG_MODELOBJECT(CoilHeatingDXVariableSpeed,1);
 SWIG_MODELOBJECT(CoilHeatingElectric,1);
+SWIG_MODELOBJECT(CoilHeatingElectricMultiStage,1);
 SWIG_MODELOBJECT(CoilHeatingFourPipeBeam, 1);
 SWIG_MODELOBJECT(CoilHeatingGas,1);
 SWIG_MODELOBJECT(CoilHeatingGasMultiStage,1);
@@ -297,6 +299,14 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
         OptionalCoilHeatingDXMultiSpeed parentCoil(const openstudio::model::CoilHeatingDXMultiSpeedStageData& stage){
           return stage.parentCoil();
         }
+
+        OptionalCoilHeatingGasMultiStage parentCoil(const openstudio::model::CoilHeatingGasMultiStageStageData& stage){
+          return stage.parentCoil();
+        }
+
+        OptionalCoilHeatingElectricMultiStage parentCoil(const openstudio::model::CoilHeatingElectricMultiStageStageData& stage){
+          return stage.parentCoil();
+        }
       }
     }
   }
@@ -333,6 +343,20 @@ SWIG_MODELOBJECT(WaterUseConnections,1);
     public partial class CoilHeatingDXMultiSpeedStageData : ParentObject
     {
       public OptionalCoilHeatingDXMultiSpeed parentCoil() {
+        return OpenStudio.OpenStudioModelStraightComponent.parentCoil(this);
+      }
+    }
+
+    public partial class CoilHeatingGasMultiStage : ModelObject
+    {
+      public OptionalCoilHeatingGasMultiStage parentCoil() {
+        return OpenStudio.OpenStudioModelStraightComponent.parentCoil(this);
+      }
+    }
+
+    public partial class CoilHeatingElectricMultiStage : ModelObject
+    {
+      public OptionalCoilHeatingElectricMultiStage parentCoil() {
         return OpenStudio.OpenStudioModelStraightComponent.parentCoil(this);
       }
     }

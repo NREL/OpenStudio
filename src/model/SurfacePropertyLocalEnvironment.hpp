@@ -41,6 +41,7 @@ namespace model {
   class PlanarSurface;
   class Schedule;
   class SurfacePropertySurroundingSurfaces;
+  class SurfacePropertyGroundSurfaces;
   // class OutdoorAirNode;
 
   namespace detail {
@@ -76,6 +77,8 @@ namespace model {
 
     boost::optional<SurfacePropertySurroundingSurfaces> surfacePropertySurroundingSurfaces() const;
 
+    boost::optional<SurfacePropertyGroundSurfaces> surfacePropertyGroundSurfaces() const;
+
     // boost::optional<OutdoorAirNode> outdoorAirNode() const;
 
     //@}
@@ -91,6 +94,9 @@ namespace model {
 
     bool setSurfacePropertySurroundingSurfaces(const SurfacePropertySurroundingSurfaces& surfacePropertySurroundingSurfaces);
     void resetSurfacePropertySurroundingSurfaces();
+
+    bool setSurfacePropertyGroundSurfaces(const SurfacePropertyGroundSurfaces& surfacePropertyGroundSurfaces);
+    void resetSurfacePropertyGroundSurfaces();
 
     // bool setOutdoorAirNode(const OutdoorAirNode& outdoorAirNode);
     // void resetOutdoorAirNode();

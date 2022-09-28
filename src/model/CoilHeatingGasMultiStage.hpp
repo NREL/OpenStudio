@@ -66,7 +66,7 @@ namespace model {
     /** @name Getters */
     //@{
 
-    boost::optional<Schedule> availabilitySchedule() const;
+    Schedule availabilitySchedule() const;
 
     boost::optional<Curve> partLoadFractionCorrelationCurve() const;
 
@@ -77,8 +77,6 @@ namespace model {
     //@{
 
     bool setAvailabilitySchedule(Schedule& schedule);
-
-    void resetAvailabilitySchedule();
 
     bool setPartLoadFractionCorrelationCurve(const Curve& curve);
 
@@ -92,9 +90,56 @@ namespace model {
     /** @name Other */
     //@{
 
+    /** Return the performance data for each stage. **/
     std::vector<CoilHeatingGasMultiStageStageData> stages() const;
 
-    void addStage(CoilHeatingGasMultiStageStageData& stage);
+    unsigned numberOfStages() const;
+
+    /*
+   * Get the index of a given CoilHeatingGasMultiStageStageData (1-indexed)
+   */
+    boost::optional<unsigned> stageIndex(const CoilHeatingGasMultiStageStageData& stage) const;
+
+    /*
+   * Add a new stage after all of the existing stages.
+   */
+    bool addStage(const CoilHeatingGasMultiStageStageData& stage);
+
+    /*
+   * Add a new CoilHeatingGasMultiStageStageData to the list which a given index (1 to x).
+   * Internally calls addStage then setStageIndex, see remarks there
+   */
+    bool addStage(const CoilHeatingGasMultiStageStageData& stage, unsigned index);
+
+    /*
+   * You can shuffle the priority of a given CoilHeatingGasMultiStageStageData after having added it
+   * If index is below 1, it's reset to 1.
+   * If index is greater than the number of stages, will reset to last
+   */
+    bool setStageIndex(const CoilHeatingGasMultiStageStageData& stage, unsigned index);
+
+    /*
+   * Set all stages using a list of CoilHeatingGasMultiStageStageDatas
+   * Internally calls addStage, and will return the global status, but will continue trying if there are problems
+   * (eg: if you make a vector larger than the number of accepted stages, or a vector that has a stage from another model, the valid stages will be
+   * added indeed, but it'll eventually return false)
+   */
+    bool setStages(const std::vector<CoilHeatingGasMultiStageStageData>& stages);
+
+    /*
+   * Removes all CoilHeatingGasMultiStageStageDatas in this object
+   */
+    void removeAllStages();
+
+    /*
+   * Remove the given CoilHeatingGasMultiStageStageData from this object's stages
+   */
+    bool removeStage(const CoilHeatingGasMultiStageStageData& stage);
+
+    /*
+   * Remove the CoilHeatingGasMultiStageStageData at the given index (1-indexed)
+   */
+    bool removeStage(unsigned index);
 
     //@}
    protected:

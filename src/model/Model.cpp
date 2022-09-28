@@ -1749,6 +1749,8 @@ namespace model {
           modelObj->autosize();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
           modelObj->autosize();
+        } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingElectricMultiStageStageData>()) {  // CoilHeatingElectricMultiStageStageData
+          modelObj->autosize();
         } else if (auto modelObj =
                      optModelObj.optionalCast<
                        HeatExchangerDesiccantBalancedFlowPerformanceDataType1>()) {  // HeatExchangerDesiccantBalancedFlowPerformanceDataType1
@@ -1783,6 +1785,8 @@ namespace model {
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingDXMultiSpeedStageData>()) {  // CoilHeatingDXMultiSpeedStageData
           modelObj->applySizingValues();
         } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingGasMultiStageStageData>()) {  // CoilHeatingGasMultiStageStageData
+          modelObj->applySizingValues();
+        } else if (auto modelObj = optModelObj.optionalCast<CoilHeatingElectricMultiStageStageData>()) {  // CoilHeatingElectricMultiStageStageData
           modelObj->applySizingValues();
         } else if (auto modelObj =
                      optModelObj.optionalCast<
@@ -3873,6 +3877,7 @@ namespace model {
     REGISTER_CONSTRUCTOR(CFactorUndergroundWallConstruction);
     REGISTER_CONSTRUCTOR(ChillerAbsorption);
     REGISTER_CONSTRUCTOR(ChillerAbsorptionIndirect);
+    REGISTER_CONSTRUCTOR(ChillerElectricASHRAE205);
     REGISTER_CONSTRUCTOR(ChillerElectricEIR);
     REGISTER_CONSTRUCTOR(ChillerElectricReformulatedEIR);
     REGISTER_CONSTRUCTOR(ChillerHeaterPerformanceElectricEIR);
@@ -3904,6 +3909,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(CoilHeatingDXSingleSpeed);
     REGISTER_CONSTRUCTOR(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_CONSTRUCTOR(CoilHeatingElectric);
+    REGISTER_CONSTRUCTOR(CoilHeatingElectricMultiStage);
+    REGISTER_CONSTRUCTOR(CoilHeatingElectricMultiStageStageData);
     REGISTER_CONSTRUCTOR(CoilHeatingFourPipeBeam);
     REGISTER_CONSTRUCTOR(CoilHeatingGas);
     REGISTER_CONSTRUCTOR(CoilHeatingGasMultiStage);
@@ -4257,6 +4264,8 @@ namespace model {
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideCoefficients);
     REGISTER_CONSTRUCTOR(SurfacePropertyOtherSideConditionsModel);
     REGISTER_CONSTRUCTOR(SurfacePropertySurroundingSurfaces);
+    REGISTER_CONSTRUCTOR(SurfacePropertyGroundSurfaces);
+    REGISTER_CONSTRUCTOR(SurfacePropertyIncidentSolarMultiplier);
     REGISTER_CONSTRUCTOR(SwimmingPoolIndoor);
 #if defined(_MSC_VER)
 #  pragma warning(push)
@@ -4426,6 +4435,7 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(ClimateZones);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorption);
     REGISTER_COPYCONSTRUCTORS(ChillerAbsorptionIndirect);
+    REGISTER_COPYCONSTRUCTORS(ChillerElectricASHRAE205);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricEIR);
     REGISTER_COPYCONSTRUCTORS(ChillerElectricReformulatedEIR);
     REGISTER_COPYCONSTRUCTORS(ChillerHeaterPerformanceElectricEIR);
@@ -4456,6 +4466,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXSingleSpeed);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingDXVariableRefrigerantFlow);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingElectric);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingElectricMultiStage);
+    REGISTER_COPYCONSTRUCTORS(CoilHeatingElectricMultiStageStageData);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingFourPipeBeam);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingGas);
     REGISTER_COPYCONSTRUCTORS(CoilHeatingGasMultiStage);
@@ -4809,6 +4821,8 @@ namespace model {
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideCoefficients);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertyOtherSideConditionsModel);
     REGISTER_COPYCONSTRUCTORS(SurfacePropertySurroundingSurfaces);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyGroundSurfaces);
+    REGISTER_COPYCONSTRUCTORS(SurfacePropertyIncidentSolarMultiplier);
     REGISTER_COPYCONSTRUCTORS(SwimmingPoolIndoor);
 #if defined(_MSC_VER)
 #  pragma warning(push)

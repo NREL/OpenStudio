@@ -41,7 +41,7 @@ namespace model {
 
   namespace detail {
 
-    /** CoilCoolingDXMultiSpeedStageData_Impl is a ModelObject_Impl that is the implementation class for CoilCoolingDXMultiSpeedStageData.*/
+    /** CoilCoolingDXMultiSpeedStageData_Impl is a ParentObject_Impl that is the implementation class for CoilCoolingDXMultiSpeedStageData.*/
     class MODEL_API CoilCoolingDXMultiSpeedStageData_Impl : public ParentObject_Impl
     {
      public:
@@ -89,7 +89,9 @@ namespace model {
 
       bool isRatedAirFlowRateAutosized() const;
 
-      double ratedEvaporatorFanPowerPerVolumeFlowRate() const;
+      double ratedEvaporatorFanPowerPerVolumeFlowRate2017() const;
+
+      double ratedEvaporatorFanPowerPerVolumeFlowRate2023() const;
 
       Curve totalCoolingCapacityFunctionofTemperatureCurve() const;
 
@@ -141,7 +143,9 @@ namespace model {
 
       void autosizeRatedAirFlowRate();
 
-      bool setRatedEvaporatorFanPowerPerVolumeFlowRate(double ratedEvaporatorFanPowerPerVolumeFlowRate);
+      bool setRatedEvaporatorFanPowerPerVolumeFlowRate2017(double ratedEvaporatorFanPowerPerVolumeFlowRate2017);
+
+      bool setRatedEvaporatorFanPowerPerVolumeFlowRate2023(double ratedEvaporatorFanPowerPerVolumeFlowRate2023);
 
       bool setTotalCoolingCapacityFunctionofTemperatureCurve(const Curve& curve);
 

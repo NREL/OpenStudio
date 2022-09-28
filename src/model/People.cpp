@@ -116,21 +116,25 @@ namespace model {
     std::vector<ScheduleTypeKey> People_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_PeopleFields::NumberofPeopleScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("People", "Number of People"));
+        result.emplace_back("People", "Number of People");
       }
       if (std::find(b, e, OS_PeopleFields::ActivityLevelScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("People", "Activity Level"));
+        result.emplace_back("People", "Activity Level");
       }
       if (std::find(b, e, OS_PeopleFields::WorkEfficiencyScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("People", "Work Efficiency"));
+        result.emplace_back("People", "Work Efficiency");
       }
       if (std::find(b, e, OS_PeopleFields::ClothingInsulationScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("People", "Clothing Insulation"));
+        result.emplace_back("People", "Clothing Insulation");
       }
       if (std::find(b, e, OS_PeopleFields::AirVelocityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("People", "Air Velocity"));
+        result.emplace_back("People", "Air Velocity");
+      }
+      if (std::find(b, e, OS_PeopleFields::AnkleLevelAirVelocityScheduleName) != e) {
+        result.emplace_back("People", "Ankle Level Air Velocity");
       }
       return result;
     }
@@ -187,23 +191,30 @@ namespace model {
         result = false;
       }
 
-      // optional in EnergyPlus
-      schedule = this->workEfficiencySchedule();
-      if (schedule) {
-        this->setWorkEfficiencySchedule(*schedule);
-      }
+      // None of these are part of the DefaultScheduleSet
+      // // optional in EnergyPlus
+      // schedule = this->workEfficiencySchedule();
+      // if (schedule) {
+      //   this->setWorkEfficiencySchedule(*schedule);
+      // }
 
-      // optional in EnergyPlus
-      schedule = this->clothingInsulationSchedule();
-      if (schedule) {
-        this->setClothingInsulationSchedule(*schedule);
-      }
+      // // optional in EnergyPlus
+      // schedule = this->clothingInsulationSchedule();
+      // if (schedule) {
+      //   this->setClothingInsulationSchedule(*schedule);
+      // }
 
-      // optional in EnergyPlus
-      schedule = this->airVelocitySchedule();
-      if (schedule) {
-        this->setAirVelocitySchedule(*schedule);
-      }
+      // // optional in EnergyPlus
+      // schedule = this->airVelocitySchedule();
+      // if (schedule) {
+      //   this->setAirVelocitySchedule(*schedule);
+      // }
+
+      // // optional in EnergyPlus
+      // schedule = this->ankleLevelAirVelocitySchedule();
+      // if (schedule) {
+      //   this->setAnkleLevelAirVelocitySchedule(*schedule);
+      // }
 
       return result;
     }
@@ -540,6 +551,83 @@ namespace model {
       return types;
     }
 
+    boost::optional<Schedule> People_Impl::ankleLevelAirVelocitySchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_PeopleFields::AnkleLevelAirVelocityScheduleName);
+    }
+
+    bool People_Impl::setAnkleLevelAirVelocitySchedule(Schedule& schedule) {
+      return setSchedule(OS_PeopleFields::AnkleLevelAirVelocityScheduleName, "People", "Air Velocity", schedule);
+    }
+
+    void People_Impl::resetAnkleLevelAirVelocitySchedule() {
+      bool result = setString(OS_PeopleFields::AnkleLevelAirVelocityScheduleName, "");
+      OS_ASSERT(result);
+    }
+
+    boost::optional<ModelObject> People_Impl::ankleLevelAirVelocityScheduleAsModelObject() const {
+      OptionalModelObject result;
+      OptionalSchedule intermediate = ankleLevelAirVelocitySchedule();
+      if (intermediate) {
+        result = *intermediate;
+      }
+      return result;
+    }
+
+    bool People_Impl::setAnkleLevelAirVelocityScheduleAsModelObject(const boost::optional<ModelObject>& modelObject) {
+      if (modelObject) {
+        OptionalSchedule intermediate = modelObject->optionalCast<Schedule>();
+        if (intermediate) {
+          Schedule schedule(*intermediate);
+          return setAnkleLevelAirVelocitySchedule(schedule);
+        } else {
+          return false;
+        }
+      } else {
+        resetAnkleLevelAirVelocitySchedule();
+      }
+      return true;
+    }
+
+    double People_Impl::coldStressTemperatureThreshold() const {
+      boost::optional<double> value = getDouble(OS_PeopleFields::ColdStressTemperatureThreshold, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool People_Impl::isColdStressTemperatureThresholdDefaulted() const {
+      return isEmpty(OS_PeopleFields::ColdStressTemperatureThreshold);
+    }
+
+    bool People_Impl::setColdStressTemperatureThreshold(double coldStressTemperatureThreshold) {
+      bool result = setDouble(OS_PeopleFields::ColdStressTemperatureThreshold, coldStressTemperatureThreshold);
+      return result;
+    }
+
+    void People_Impl::resetColdStressTemperatureThreshold() {
+      bool result = setString(OS_PeopleFields::ColdStressTemperatureThreshold, "");
+      OS_ASSERT(result);
+    }
+
+    double People_Impl::heatStressTemperatureThreshold() const {
+      boost::optional<double> value = getDouble(OS_PeopleFields::HeatStressTemperatureThreshold, true);
+      OS_ASSERT(value);
+      return value.get();
+    }
+
+    bool People_Impl::isHeatStressTemperatureThresholdDefaulted() const {
+      return isEmpty(OS_PeopleFields::HeatStressTemperatureThreshold);
+    }
+
+    bool People_Impl::setHeatStressTemperatureThreshold(double heatStressTemperatureThreshold) {
+      bool result = setDouble(OS_PeopleFields::HeatStressTemperatureThreshold, heatStressTemperatureThreshold);
+      return result;
+    }
+
+    void People_Impl::resetHeatStressTemperatureThreshold() {
+      bool result = setString(OS_PeopleFields::HeatStressTemperatureThreshold, "");
+      OS_ASSERT(result);
+    }
+
   }  // namespace detail
 
   People::People(const PeopleDefinition& peopleDefinition) : SpaceLoadInstance(People::iddObjectType(), peopleDefinition) {
@@ -660,6 +748,50 @@ namespace model {
 
   double People::getFloorAreaPerPerson(double floorArea) const {
     return getImpl<detail::People_Impl>()->getFloorAreaPerPerson(floorArea);
+  }
+
+  boost::optional<Schedule> People::ankleLevelAirVelocitySchedule() const {
+    return getImpl<detail::People_Impl>()->ankleLevelAirVelocitySchedule();
+  }
+
+  bool People::setAnkleLevelAirVelocitySchedule(Schedule& schedule) {
+    return getImpl<detail::People_Impl>()->setAnkleLevelAirVelocitySchedule(schedule);
+  }
+
+  void People::resetAnkleLevelAirVelocitySchedule() {
+    getImpl<detail::People_Impl>()->resetAnkleLevelAirVelocitySchedule();
+  }
+
+  double People::coldStressTemperatureThreshold() const {
+    return getImpl<detail::People_Impl>()->coldStressTemperatureThreshold();
+  }
+
+  bool People::isColdStressTemperatureThresholdDefaulted() const {
+    return getImpl<detail::People_Impl>()->isColdStressTemperatureThresholdDefaulted();
+  }
+
+  bool People::setColdStressTemperatureThreshold(double coldStressTemperatureThreshold) {
+    return getImpl<detail::People_Impl>()->setColdStressTemperatureThreshold(coldStressTemperatureThreshold);
+  }
+
+  void People::resetColdStressTemperatureThreshold() {
+    getImpl<detail::People_Impl>()->resetColdStressTemperatureThreshold();
+  }
+
+  double People::heatStressTemperatureThreshold() const {
+    return getImpl<detail::People_Impl>()->heatStressTemperatureThreshold();
+  }
+
+  bool People::isHeatStressTemperatureThresholdDefaulted() const {
+    return getImpl<detail::People_Impl>()->isHeatStressTemperatureThresholdDefaulted();
+  }
+
+  bool People::setHeatStressTemperatureThreshold(double heatStressTemperatureThreshold) {
+    return getImpl<detail::People_Impl>()->setHeatStressTemperatureThreshold(heatStressTemperatureThreshold);
+  }
+
+  void People::resetHeatStressTemperatureThreshold() {
+    getImpl<detail::People_Impl>()->resetHeatStressTemperatureThreshold();
   }
 
   /// @cond

@@ -63,7 +63,8 @@ namespace energyplus {
       infiltration.setName(*s);
     }
 
-    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListName);
+    OptionalWorkspaceObject target =
+      workspaceObject.getTarget(openstudio::ZoneInfiltration_DesignFlowRateFields::ZoneorZoneListorSpaceorSpaceListName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
@@ -98,21 +99,21 @@ namespace energyplus {
         LOG(Error, "Flow/Zone value not found for workspace object " << workspaceObject);
       }
     } else if (istringEqual("Flow/Area", *s)) {
-      d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::FlowperZoneFloorArea);
+      d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::FlowRateperFloorArea);
       if (d) {
         infiltration.setFlowperSpaceFloorArea(*d);
       } else {
         LOG(Error, "Flow/Area value not found for workspace object " << workspaceObject);
       }
     } else if (istringEqual("Flow/ExteriorArea", *s)) {
-      d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea);
+      d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea);
       if (d) {
         infiltration.setFlowperExteriorSurfaceArea(*d);
       } else {
         LOG(Error, "Flow/ExteriorArea value not found for workspace object " << workspaceObject);
       }
     } else if (istringEqual("Flow/ExteriorWallArea", *s)) {
-      d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::FlowperExteriorSurfaceArea);
+      d = workspaceObject.getDouble(openstudio::ZoneInfiltration_DesignFlowRateFields::FlowRateperExteriorSurfaceArea);
       if (d) {
         infiltration.setFlowperExteriorWallArea(*d);
       } else {

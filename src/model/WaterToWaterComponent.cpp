@@ -256,8 +256,8 @@ namespace model {
       if (m_secondaryPlantLoop) {
         return m_secondaryPlantLoop;
       } else {
-        // JM: Same comment as for plantLoop() above, though as of 2018-01-03 I can't think of an actual object
-        // that could be on the demand side of two plant loops
+        // JM: Same comment as for plantLoop() above
+        // Any WaterToWaterComponent that has an Heat Recovery loop could be on the demand side of two plant loops
         boost::optional<PlantLoop> tertiaryPlantLoop = this->tertiaryPlantLoop();
 
         std::vector<PlantLoop> plantLoops = this->model().getConcreteModelObjects<PlantLoop>();
