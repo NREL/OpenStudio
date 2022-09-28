@@ -38,6 +38,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
 #include "../../model/CoilCoolingDXCurveFitPerformance_Impl.hpp"
 
@@ -90,10 +92,14 @@ namespace energyplus {
     }
 
     if ((target = workspaceObject.getTarget(openstudio::Coil_Cooling_DXFields::CondenserZoneName))) {
-      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-      if (modelObject) {
-        if (auto optZ = modelObject->optionalCast<ThermalZone>()) {
-          dx.setCondenserZone(optZ.get());
+      if (auto mo_ = translateAndMapWorkspaceObject(*target)) {
+        // Zone is translated, and a Space is returned instead
+        if (boost::optional<Space> space_ = mo_->optionalCast<Space>()) {
+          if (auto z_ = space_->thermalZone()) {
+            dx.setCondenserZone(z_.get());
+          }
+        } else {
+          LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Condenser Zone Name'");
         }
       }
     }

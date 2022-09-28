@@ -109,7 +109,7 @@ namespace model {
   * This method checks for presence of the WaterToWaterComponent on either the supply or demand side of plantLoops
   * and does an extra check for actual node: the tertiaryOutletModelObject has to be on the plant loop too
   */
-      boost::optional<PlantLoop> tertiaryPlantLoop() const;
+      virtual boost::optional<PlantLoop> tertiaryPlantLoop() const;
 
       virtual bool removeFromTertiaryPlantLoop();
 

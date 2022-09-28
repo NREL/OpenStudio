@@ -36,6 +36,8 @@
 #include "../../model/Schedule_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/Curve.hpp"
 #include "../../model/Curve_Impl.hpp"
 
@@ -53,7 +55,7 @@ namespace energyplus {
 
   OptionalModelObject ReverseTranslator::translateElectricLoadCenterStorageConverter(const WorkspaceObject& workspaceObject) {
 
-    OptionalModelObject result, omo;
+    OptionalModelObject omo;
     OptionalDouble optD;
     boost::optional<WorkspaceObject> owo;
     OptionalString optS;
@@ -116,9 +118,12 @@ namespace energyplus {
 
     // ZoneName
     if ((owo = workspaceObject.getTarget(ElectricLoadCenter_Storage_ConverterFields::ZoneName))) {
-      if ((omo = translateAndMapWorkspaceObject(owo.get()))) {
-        if (boost::optional<ThermalZone> thermalZone = omo->optionalCast<ThermalZone>()) {
-          elcConv.setThermalZone(thermalZone.get());
+      if (boost::optional<ModelObject> mo = translateAndMapWorkspaceObject(owo.get())) {
+        // Zone is translated, and a Space is returned instead
+        if (boost::optional<Space> space_ = mo->optionalCast<Space>()) {
+          if (auto z_ = space_->thermalZone()) {
+            elcConv.setThermalZone(z_.get());
+          }
         }
       }
     }
@@ -129,8 +134,7 @@ namespace energyplus {
       elcConv.setRadiativeFraction(*optD);
     }
 
-    result = elcConv;
-    return result;
+    return elcConv;
   }
 
 }  // namespace energyplus

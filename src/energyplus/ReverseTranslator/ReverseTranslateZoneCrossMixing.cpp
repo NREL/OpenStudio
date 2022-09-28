@@ -33,6 +33,8 @@
 #include "../../model/ZoneMixing_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
@@ -57,9 +59,15 @@ namespace energyplus {
     OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneCrossMixingFields::ZoneorSpaceName);
     OptionalThermalZone zone;
     if (target) {
-      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-      if (modelObject) {
-        zone = modelObject->optionalCast<ThermalZone>();
+      if (OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target)) {
+        if (target->iddObject().type() == IddObjectType::Zone) {
+          // Zone maps to Space in RT
+          if (auto s_ = modelObject->optionalCast<Space>()) {
+            zone = s_->thermalZone();
+          }
+        } else {
+          // It's a space, but we don't allow mapping to a space in model SDK for now, and we don't have a Space RT... so we'll never get here
+        }
       }
     }
 
@@ -71,8 +79,13 @@ namespace energyplus {
     OptionalThermalZone sourceZone;
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-      if (modelObject) {
-        sourceZone = modelObject->optionalCast<ThermalZone>();
+      if (target->iddObject().type() == IddObjectType::Zone) {
+        // Zone maps to Space in RT
+        if (auto s_ = modelObject->optionalCast<Space>()) {
+          sourceZone = s_->thermalZone();
+        }
+      } else {
+        // It's a space, but we don't allow mapping to a space in model SDK for now, and we don't have a Space RT... so we'll never get here
       }
     }
 

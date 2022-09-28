@@ -95,6 +95,8 @@ namespace energyplus {
 
     boost::optional<model::ModelObject> translateBuildingSurfaceDetailed(const WorkspaceObject& workspaceObject);
 
+    boost::optional<model::ModelObject> translateChillerElectricASHRAE205(const WorkspaceObject& workspaceObject);
+
     boost::optional<model::ModelObject> translateControllerOutdoorAir(const WorkspaceObject& workspaceObject);
 
     boost::optional<model::ModelObject> translateCoilHeatingGas(const WorkspaceObject& workspaceObject);

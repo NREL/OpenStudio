@@ -162,6 +162,7 @@ set(model_resources_src
   model/offset_tests.osm
   model/ParkUnder_Retail_Office_C2.osm
   model/ASHRAECourthouse.osm
+  model/A205ExampleChiller.RS0001.a205.cbor
 )
 
 

@@ -13814,6 +13814,137 @@ OS:Chiller:Electric:ReformulatedEIR,
        \retaincase
        \default General
 
+OS:Chiller:Electric:ASHRAE205,
+   \min-fields 12
+   \memo This chiller model utilizes ASHRAE Standard 205 compliant representations
+   \memo for chillers (Representation Specification RS0001).
+  A1,  \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \type alpha
+       \reference Chillers
+       \required-field
+       \reference ConnectionObject
+  A3,  \field Representation File Name
+       \note The name of the ASHRAE205 RS0001 (chiller) representation file
+       \type object-list
+       \object-list ExternalFileNames
+       \required-field
+  A4,  \field Performance Interpolation Method
+       \type choice
+       \key Linear
+       \key Cubic
+       \required-field
+  N1,  \field Rated Capacity
+       \note Not yet implemented / reserved for future use. Full load capacity at AHRI 550/590 test conditions.
+       \note Used to scale representation data.
+       \type real
+       \units W
+       \minimum> 0.0
+       \autosizable
+       \required-field
+  N2,  \field Sizing Factor
+       \note Multiplies the autosized flow rates.
+       \type real
+       \minimum> 0.0
+       \required-field
+  A5 , \field Ambient Temperature Indicator
+       \note Used to determine standby losses
+       \required-field
+       \type choice
+       \key Schedule
+       \key Zone
+       \key Outdoors
+  A6 , \field Ambient Temperature Schedule Name
+       \type object-list
+       \object-list ScheduleNames
+  A7, \field Ambient Temperature Zone Name
+       \note Any energy imbalance on the chiller results in heat added to this zone.
+       \type object-list
+       \object-list ThermalZoneNames
+  A8, \field Ambient Temperature Outdoor Air Node Name
+       \type alpha
+       \note required for Ambient Temperature Indicator=Outdoors
+  A9,  \field Chilled Water Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \required-field
+  A10, \field Chilled Water Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+       \required-field
+  A11, \field Chilled Water Maximum Requested Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0
+       \autosizable
+       \ip-units gal/min
+       \required-field
+  A12, \field Condenser Inlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A13, \field Condenser Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A14, \field Condenser Maximum Requested Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0
+       \autosizable
+       \ip-units gal/min
+       \required-field
+  A15, \field Chiller Flow Mode
+       \note Select operating mode for fluid flow through the chiller. "NotModulated" is for
+       \note either variable or constant pumping with flow controlled by the external plant system.
+       \note "ConstantFlow" is for constant pumping with flow controlled by chiller to operate at
+       \note full design flow rate. "LeavingSetpointModulated" is for variable pumping with flow
+       \note controlled by chiller to vary flow to target a leaving temperature setpoint.
+       \type choice
+       \key ConstantFlow
+       \key LeavingSetpointModulated
+       \key NotModulated
+       \required-field
+  A16, \field Oil Cooler Inlet Node Name
+       \note Use if the oil cooler uses an external cooling loop, otherwise the oil cooler will add
+       \note heat to the ambient conditions (i.e., it is air cooled).
+       \type object-list
+       \object-list ConnectionNames
+  A17, \field Oil Cooler Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A18, \field Oil Cooler Design Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0
+       \ip-units gal/min
+  A19, \field Auxiliary Inlet Node Name
+       \note Use if the auxiliary components of the chiller use an external cooling loop, otherwise
+       \note the auxiliary components will add heat to the ambient conditions (i.e., they are air cooled).
+       \type object-list
+       \object-list ConnectionNames
+  A20, \field Auxiliary Outlet Node Name
+       \type object-list
+       \object-list ConnectionNames
+  A21, \field Auxiliary Cooling Design Flow Rate
+       \type real
+       \units m3/s
+       \minimum> 0
+       \ip-units gal/min
+  A22, \field Heat Recovery Inlet Node Name
+       \note Not yet implemented / reserved for future use. Heat recovery is not yet within scope of ASHRAE Stanard 205.
+       \type object-list
+       \object-list ConnectionNames
+  A22, \field Heat Recovery Outlet Node Name
+       \note Not yet implemented / reserved for future use. Heat recovery is not yet within scope of ASHRAE Stanard 205.
+       \type object-list
+       \object-list ConnectionNames
+  A24; \field End-Use Subcategory
+       \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
+       \type alpha
+       \retaincase
+       \default General
+
 OS:CentralHeatPumpSystem,
   A1,  \field Handle
        \type handle

@@ -39,6 +39,8 @@
 #include "Splitter_Impl.hpp"
 #include "Mixer.hpp"
 #include "Mixer_Impl.hpp"
+#include "HVACComponent.hpp"
+#include "HVACComponent_Impl.hpp"
 #include "StraightComponent.hpp"
 #include "StraightComponent_Impl.hpp"
 #include "WaterToAirComponent.hpp"
@@ -106,7 +108,9 @@ namespace model {
       }
 
       boost::optional<HVACComponent> prev;
-      if (visited.size() >= 2u) prev = visited.rbegin()[1];
+      if (visited.size() >= 2u) {
+        prev = visited.rbegin()[1];
+      }
 
       std::vector<HVACComponent> nodes = hvacComponent.getImpl<HVACComponent_Impl>()->edges(prev);
 
@@ -200,7 +204,9 @@ namespace model {
     void findModelObjects(const HVACComponent& sink, std::vector<HVACComponent>& visited, std::vector<HVACComponent>& paths,
                           bool isDemandComponents) {
       boost::optional<HVACComponent> prev;
-      if (visited.size() >= 2u) prev = visited.rbegin()[1];
+      if (visited.size() >= 2u) {
+        prev = visited.rbegin()[1];
+      }
 
       std::vector<HVACComponent> nodes = visited.back().getImpl<HVACComponent_Impl>()->edges(prev);
 

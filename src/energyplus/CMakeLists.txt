@@ -62,6 +62,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateCFactorUndergroundWallConstruction.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorption.cpp
   ForwardTranslator/ForwardTranslateChillerAbsorptionIndirect.cpp
+  ForwardTranslator/ForwardTranslateChillerElectricASHRAE205.cpp
   ForwardTranslator/ForwardTranslateChillerElectricEIR.cpp
   ForwardTranslator/ForwardTranslateChillerElectricReformulatedEIR.cpp
   ForwardTranslator/ForwardTranslateChillerHeaterPerformanceElectricEIR.cpp
@@ -458,6 +459,7 @@ set(${target_name}_src
   ReverseTranslator/ReverseTranslateBuilding.cpp
   ReverseTranslator/ReverseTranslateBuildingSurfaceDetailed.cpp
   ReverseTranslator/ReverseTranslateControllerOutdoorAir.cpp
+  ReverseTranslator/ReverseTranslateChillerElectricASHRAE205.cpp
   ReverseTranslator/ReverseTranslateCoilCoolingDX.cpp
   ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitPerformance.cpp
   ReverseTranslator/ReverseTranslateCoilCoolingDXCurveFitOperatingMode.cpp
@@ -661,6 +663,7 @@ set(${target_name}_test_src
   Test/AvailabilityManagerNightCycle_GTest.cpp
   Test/AvailabilityManagerHybridVentilation_GTest.cpp
   Test/Building_GTest.cpp
+  Test/ChillerElectricASHRAE205_GTest.cpp
   Test/CentralHeatPumpSystem_GTest.cpp
   Test/CoilCoolingDX_GTest.cpp
   Test/CoilCoolingDXCurveFitPerformance_GTest.cpp

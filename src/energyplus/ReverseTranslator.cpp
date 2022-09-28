@@ -338,6 +338,10 @@ namespace energyplus {
         modelObject = translateBuilding(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Chiller_Electric_ASHRAE205: {
+        modelObject = translateChillerElectricASHRAE205(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Coil_Heating_Fuel: {
         //modelObject = translateCoilHeatingGas(workspaceObject );
         break;
