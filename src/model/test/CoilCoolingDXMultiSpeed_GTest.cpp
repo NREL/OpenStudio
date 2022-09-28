@@ -38,6 +38,8 @@
 #include "../CurveQuadratic.hpp"
 #include "../CurveQuadratic_Impl.hpp"
 
+#include <algorithm>
+
 using namespace openstudio;
 using namespace openstudio::model;
 
@@ -269,4 +271,39 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Remove) {
 
   auto curves = m.getModelObjects<model::Curve>();
   EXPECT_EQ(curves.size(), m.modelObjects().size());
+}
+
+TEST_F(ModelFixture, CoilCoolingDXMultiSpeed_Clone) {
+  // Ref #4663
+  Model m;
+  CoilCoolingDXMultiSpeed cc(m);
+
+  std::vector<CoilCoolingDXMultiSpeedStageData> stages{CoilCoolingDXMultiSpeedStageData{m}, CoilCoolingDXMultiSpeedStageData{m}};
+  EXPECT_TRUE(cc.setStages(stages));
+
+  EXPECT_EQ(2u, cc.stages().size());
+  EXPECT_EQ(1u, m.getConcreteModelObjects<CoilCoolingDXMultiSpeed>().size());
+  EXPECT_EQ(2u, m.getConcreteModelObjects<CoilCoolingDXMultiSpeedStageData>().size());
+
+  {
+    // Clone in another model first, so we don't affect the original one
+    Model m2;
+    auto cc2 = cc.clone(m2).cast<CoilCoolingDXMultiSpeed>();
+    EXPECT_EQ(2u, cc2.stages().size());
+    EXPECT_EQ(1u, m2.getConcreteModelObjects<CoilCoolingDXMultiSpeed>().size());
+    EXPECT_EQ(2u, m2.getConcreteModelObjects<CoilCoolingDXMultiSpeedStageData>().size());
+  }
+
+  {
+    // Same model: we expect stages to be cloned and reassigned to the clone
+    auto cc2 = cc.clone(m).cast<CoilCoolingDXMultiSpeed>();
+    std::vector<CoilCoolingDXMultiSpeedStageData> stages2 = cc2.stages();
+    EXPECT_EQ(2u, stages2.size());
+    EXPECT_EQ(2u, m.getConcreteModelObjects<CoilCoolingDXMultiSpeed>().size());
+    EXPECT_EQ(4u, m.getConcreteModelObjects<CoilCoolingDXMultiSpeedStageData>().size());
+    for (auto& stage : stages) {
+      EXPECT_TRUE(std::find_if(stages2.cbegin(), stages2.cend(), [&stage](const auto& s) { return s.handle() == stage.handle(); }) == stages2.cend())
+        << "Did not expect to find, in the cloned Coil, the CoilCoolingDXMultiSpeedStageData '" << stage.nameString() << "'";
+    }
+  }
 }
