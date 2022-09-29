@@ -53,6 +53,7 @@
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 
+#include <utilities/idd/OS_Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/OS_Connection_FieldEnums.hxx>
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
@@ -2227,4 +2228,94 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_CoilHeatingGasMultiStage) {
 
   ASSERT_TRUE(coil.getTarget(2));
   EXPECT_EQ("Always On Discrete", coil.getTarget(2)->nameString());
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_ZoneHVACPackaged) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_0/test_vt_ZoneHVACPackaged.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_ZoneHVACPackaged_updated.osm");
+  model->save(outPath, true);
+
+  EXPECT_EQ(2, model->getObjectsByType("OS:Fan:SystemModel").size());
+  {
+    std::vector<WorkspaceObject> ptacs = model->getObjectsByType("OS:ZoneHVAC:PackagedTerminalAirConditioner");
+    ASSERT_EQ(1u, ptacs.size());
+    auto& ptac = ptacs.front();
+
+    // Check the Supply Air Fan Operating Mode Schedule
+    ASSERT_TRUE(ptac.getTarget(17));
+    WorkspaceObject fanOpSch = ptac.getTarget(17).get();
+    EXPECT_EQ("Always Off Discrete", fanOpSch.nameString());
+    EXPECT_EQ(0.0, fanOpSch.getDouble(3).get());
+
+    // Check the Fan, converted from Fan:ConstantVolume to Fan:SystemModel
+    ASSERT_TRUE(ptac.getTarget(13));
+    WorkspaceObject fan = ptac.getTarget(13).get();
+
+    EXPECT_EQ(IddObjectType::OS_Fan_SystemModel, fan.iddObject().type());
+    EXPECT_EQ("PTAC Fan", fan.getString(OS_Fan_SystemModelFields::Name).get());
+    EXPECT_EQ("Always On Discrete", fan.getString(OS_Fan_SystemModelFields::AvailabilityScheduleName).get());
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirInletNodeName));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirOutletNodeName));
+    EXPECT_EQ(0.5, fan.getDouble(OS_Fan_SystemModelFields::DesignMaximumAirFlowRate).get());
+    EXPECT_EQ("Discrete", fan.getString(OS_Fan_SystemModelFields::SpeedControlMethod).get());
+    EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerMinimumFlowRateFraction).get());
+    EXPECT_EQ(265.0, fan.getDouble(OS_Fan_SystemModelFields::DesignPressureRise).get());
+    EXPECT_EQ(0.89, fan.getDouble(OS_Fan_SystemModelFields::MotorEfficiency).get());
+    EXPECT_EQ(0.92, fan.getDouble(OS_Fan_SystemModelFields::MotorInAirStreamFraction).get());
+    EXPECT_EQ("Autosize", fan.getString(OS_Fan_SystemModelFields::DesignElectricPowerConsumption).get());
+    EXPECT_EQ("TotalEfficiencyAndPressure", fan.getString(OS_Fan_SystemModelFields::DesignPowerSizingMethod).get());
+    EXPECT_EQ(840.0, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRate).get());
+    EXPECT_EQ(1.66667, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRatePerUnitPressure).get());
+    EXPECT_EQ(0.75, fan.getDouble(OS_Fan_SystemModelFields::FanTotalEfficiency).get());
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::NightVentilationModePressureRise));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::NightVentilationModeFlowFraction));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::MotorLossZoneName));
+    EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::MotorLossRadiativeFraction).get());
+    EXPECT_EQ("PTAC Fans", fan.getString(OS_Fan_SystemModelFields::EndUseSubcategory).get());
+  }
+
+  {
+    std::vector<WorkspaceObject> pthps = model->getObjectsByType("OS:ZoneHVAC:PackagedTerminalHeatPump");
+    ASSERT_EQ(1u, pthps.size());
+    auto& pthp = pthps.front();
+
+    // Check the Supply Air Fan Operating Mode Schedule
+    ASSERT_TRUE(pthp.getTarget(23));
+    WorkspaceObject fanOpSch = pthp.getTarget(23).get();
+    EXPECT_EQ("Always Off Discrete", fanOpSch.nameString());
+    EXPECT_EQ(0.0, fanOpSch.getDouble(3).get());
+
+    // Check the Fan, converted from Fan:ConstantVolume to Fan:SystemModel
+    ASSERT_TRUE(pthp.getTarget(13));
+    WorkspaceObject fan = pthp.getTarget(13).get();
+
+    // This one is all defaulted, ensure we get the SAME values
+    EXPECT_EQ(IddObjectType::OS_Fan_SystemModel, fan.iddObject().type());
+    EXPECT_EQ("PTHP Fan", fan.getString(OS_Fan_SystemModelFields::Name).get());
+    EXPECT_EQ("Always On Discrete", fan.getString(OS_Fan_SystemModelFields::AvailabilityScheduleName).get());
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirInletNodeName));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirOutletNodeName));
+    EXPECT_EQ("AutoSize", fan.getString(OS_Fan_SystemModelFields::DesignMaximumAirFlowRate).get());
+    EXPECT_EQ("Discrete", fan.getString(OS_Fan_SystemModelFields::SpeedControlMethod).get());
+    EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerMinimumFlowRateFraction).get());
+    EXPECT_EQ(250.0, fan.getDouble(OS_Fan_SystemModelFields::DesignPressureRise).get());
+    EXPECT_EQ(0.9, fan.getDouble(OS_Fan_SystemModelFields::MotorEfficiency).get());
+    EXPECT_EQ(1.0, fan.getDouble(OS_Fan_SystemModelFields::MotorInAirStreamFraction).get());
+    EXPECT_EQ("Autosize", fan.getString(OS_Fan_SystemModelFields::DesignElectricPowerConsumption).get());
+    EXPECT_EQ("TotalEfficiencyAndPressure", fan.getString(OS_Fan_SystemModelFields::DesignPowerSizingMethod).get());
+    EXPECT_EQ(840.0, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRate).get());
+    EXPECT_EQ(1.66667, fan.getDouble(OS_Fan_SystemModelFields::ElectricPowerPerUnitFlowRatePerUnitPressure).get());
+    EXPECT_EQ(0.7, fan.getDouble(OS_Fan_SystemModelFields::FanTotalEfficiency).get());
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::ElectricPowerFunctionofFlowFractionCurveName));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::NightVentilationModePressureRise));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::NightVentilationModeFlowFraction));
+    EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::MotorLossZoneName));
+    EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::MotorLossRadiativeFraction).get());
+    EXPECT_EQ("General", fan.getString(OS_Fan_SystemModelFields::EndUseSubcategory).get());
+  }
 }
