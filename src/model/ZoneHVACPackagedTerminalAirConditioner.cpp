@@ -301,9 +301,19 @@ namespace model {
       return isEmpty(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::FanPlacement);
     }
 
-    boost::optional<Schedule> ZoneHVACPackagedTerminalAirConditioner_Impl::supplyAirFanOperatingModeSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
-        OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFanOperatingModeScheduleName);
+    Schedule ZoneHVACPackagedTerminalAirConditioner_Impl::supplyAirFanOperatingModeSchedule() const {
+      boost::optional<Schedule> value = optionalSupplyAirFanOperatingModeSchedule();
+      if (!value) {
+        // it is an error if we get here, however we don't want to crash
+        // so we hook up to global always on schedule
+        LOG(Error, "Required availability schedule not set, using 'Always Off' schedule");
+        value = this->model().alwaysOffDiscreteSchedule();
+        OS_ASSERT(value);
+        const_cast<ZoneHVACPackagedTerminalAirConditioner_Impl*>(this)->setSupplyAirFanOperatingModeSchedule(*value);  // NOLINT
+        value = optionalSupplyAirFanOperatingModeSchedule();
+      }
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool ZoneHVACPackagedTerminalAirConditioner_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -502,11 +512,6 @@ namespace model {
       return result;
     }
 
-    void ZoneHVACPackagedTerminalAirConditioner_Impl::resetSupplyAirFanOperatingModeSchedule() {
-      bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFanOperatingModeScheduleName, "");
-      OS_ASSERT(result);
-    }
-
     boost::optional<Schedule> ZoneHVACPackagedTerminalAirConditioner_Impl::optionalAvailabilitySchedule() const {
       return getObject<ModelObject>().getModelObjectTarget<Schedule>(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::AvailabilityScheduleName);
     }
@@ -518,6 +523,11 @@ namespace model {
     }
     boost::optional<HVACComponent> ZoneHVACPackagedTerminalAirConditioner_Impl::optionalCoolingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::CoolingCoilName);
+    }
+
+    boost::optional<Schedule> ZoneHVACPackagedTerminalAirConditioner_Impl::optionalSupplyAirFanOperatingModeSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFanOperatingModeScheduleName);
     }
 
     boost::optional<ModelObject> ZoneHVACPackagedTerminalAirConditioner_Impl::availabilityScheduleAsModelObject() const {
@@ -600,13 +610,9 @@ namespace model {
         if (intermediate) {
           Schedule schedule(*intermediate);
           return setSupplyAirFanOperatingModeSchedule(schedule);
-        } else {
-          return false;
         }
-      } else {
-        resetSupplyAirFanOperatingModeSchedule();
       }
-      return true;
+      return false;
     }
 
     boost::optional<double> ZoneHVACPackagedTerminalAirConditioner_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
@@ -693,7 +699,10 @@ namespace model {
     setHeatingCoil(heatingCoil);
     setCoolingCoil(coolingCoil);
     setFanPlacement("DrawThrough");
-    resetSupplyAirFanOperatingModeSchedule();
+    // When Blank, E+ defaults to 0 (cycling)
+    auto alwaysOff = model.alwaysOffDiscreteSchedule();
+    ok = setSupplyAirFanOperatingModeSchedule(alwaysOff);
+    OS_ASSERT(ok);
 
     autosizeSupplyAirFlowRateDuringCoolingOperation();
     autosizeSupplyAirFlowRateDuringHeatingOperation();
@@ -873,16 +882,12 @@ namespace model {
     std::shared_ptr<detail::ZoneHVACPackagedTerminalAirConditioner_Impl> impl)
     : ZoneHVACComponent(std::move(impl)) {}
 
-  boost::optional<Schedule> ZoneHVACPackagedTerminalAirConditioner::supplyAirFanOperatingModeSchedule() const {
+  Schedule ZoneHVACPackagedTerminalAirConditioner::supplyAirFanOperatingModeSchedule() const {
     return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->supplyAirFanOperatingModeSchedule();
   }
 
   bool ZoneHVACPackagedTerminalAirConditioner::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
     return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setSupplyAirFanOperatingModeSchedule(schedule);
-  }
-
-  void ZoneHVACPackagedTerminalAirConditioner::resetSupplyAirFanOperatingModeSchedule() {
-    getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->resetSupplyAirFanOperatingModeSchedule();
   }
 
   Schedule ZoneHVACPackagedTerminalAirConditioner::availabilitySchedule() const {

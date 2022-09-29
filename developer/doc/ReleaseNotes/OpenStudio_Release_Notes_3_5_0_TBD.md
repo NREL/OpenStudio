@@ -84,6 +84,9 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
     * `Coil:Heating:DX:SingleSpeed` and `Coil:Heating:DX:MultiSpeed:StageData`: `ratedSupplyFanPowerPerVolumeFlowRate` and `setRatedSupplyFanPowerPerVolumeFlowRate` in favor of `ratedSupplyFanPowerPerVolumeFlowRate2017` and `setRatedSupplyFanPowerPerVolumeFlowRate2017`
 * [#4666](https://github.com/NREL/OpenStudio/pull/4666) - Changes related to availability schedule methods
     * `Coil:Heating:Gas:MultiStage` has an API-breaking change related to its `availabilitySchedule` getter. It is now a required field that returns `Schedule` instead of `boost::optional<Schedule>`. Method `resetAvailabilitySchedule` is also removed.
+* [#4701](https://github.com/NREL/OpenStudio/pull/4701) - `ZoneHVACPackagedTerminalAirConditioner` and `ZoneHVACPackagedTerminalHeatPump`
+    * `ZoneHVACPackagedTerminalAirConditioner` and `ZoneHVACPackagedTerminalHeatPump` have an API-breaking change related to its `supplyAirFanOperatingModeSchedule` getter. It is now a required field that returns `Schedule` instead of `boost::optional<Schedule>`. Method `resetSupplyAirFanOperatingModeSchedule` is also removed. It is set to `alwaysOffDiscreteSchedule` (=Cycling) in the Constructor
+    * There are unusual VersionTranslation Rules for Packaged Systems (PTAC or PTHP) that use a `FanConstantVolum` and that do not have a `Supply Air Fan Operating Mode Schedule`. In 22.1.0 this would effectively, and mistakenly, function as a cycling fan, but this is now disallowed in E+ 22.2.0. In order to retain a similar functionality and energy usage, the `FanConstantVolume` will be replaced by a `FanSystemModel` with an Always Off Schedule (=cycling fan, similar to a `Fan:OnOff`)
 
 
 ## Minor changes and bug fixes
