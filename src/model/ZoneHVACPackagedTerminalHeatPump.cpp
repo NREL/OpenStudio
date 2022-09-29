@@ -67,19 +67,19 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACPackagedTerminalHeatPump_Impl::clone(Model model) const {
-      ZoneHVACPackagedTerminalHeatPump pthpClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACPackagedTerminalHeatPump>();
+      auto pthpClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACPackagedTerminalHeatPump>();
 
       //Schedule scheduleClone = this->availabilitySchedule().clone(model).cast<Schedule>();
 
-      HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      auto supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
       auto t_heatingCoil = heatingCoil();
-      HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
+      auto heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
       auto t_coolingCoil = coolingCoil();
-      HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
+      auto coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
 
-      HVACComponent supplementalHeatingCoilClone = this->supplementalHeatingCoil().clone(model).cast<HVACComponent>();
+      auto supplementalHeatingCoilClone = this->supplementalHeatingCoil().clone(model).cast<HVACComponent>();
 
       //pthpClone.setAvailabilitySchedule(scheduleClone);
 
@@ -128,12 +128,13 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACPackagedTerminalHeatPump_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ZoneHVACPackagedTerminalHeatPump", "Availability"));
+        result.emplace_back("ZoneHVACPackagedTerminalHeatPump", "Availability");
       }
       if (std::find(b, e, OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ZoneHVACPackagedTerminalHeatPump", "Supply Air Fan Operating Mode"));
+        result.emplace_back("ZoneHVACPackagedTerminalHeatPump", "Supply Air Fan Operating Mode");
       }
       return result;
     }
@@ -171,7 +172,7 @@ namespace model {
         LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
         value = this->model().alwaysOnDiscreteSchedule();
         OS_ASSERT(value);
-        const_cast<ZoneHVACPackagedTerminalHeatPump_Impl*>(this)->setAvailabilitySchedule(*value);
+        const_cast<ZoneHVACPackagedTerminalHeatPump_Impl*>(this)->setAvailabilitySchedule(*value);  // NOLINT
         value = optionalAvailabilitySchedule();
       }
       OS_ASSERT(value);
@@ -381,12 +382,12 @@ namespace model {
       return result;
     }
 
-    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType) {
       bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerObjectType, outdoorAirMixerObjectType);
       return result;
     }
 
-    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerName(const std::string& outdoorAirMixerName) {
       bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerName, outdoorAirMixerName);
       OS_ASSERT(result);
       return result;
@@ -619,7 +620,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACPackagedTerminalHeatPump_Impl::setFanPlacement(std::string fanPlacement) {
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setFanPlacement(const std::string& fanPlacement) {
       bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement, fanPlacement);
       return result;
     }
@@ -990,11 +991,11 @@ namespace model {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isFanPlacementDefaulted();
   }
 
-  bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
+  bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType) {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirMixerObjectType(outdoorAirMixerObjectType);
   }
 
-  bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerName(const std::string& outdoorAirMixerName) {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
   }
 
@@ -1107,7 +1108,7 @@ namespace model {
     getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
   }
 
-  bool ZoneHVACPackagedTerminalHeatPump::setFanPlacement(std::string fanPlacement) {
+  bool ZoneHVACPackagedTerminalHeatPump::setFanPlacement(const std::string& fanPlacement) {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setFanPlacement(fanPlacement);
   }
 

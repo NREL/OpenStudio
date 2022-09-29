@@ -69,15 +69,15 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACPackagedTerminalAirConditioner_Impl::clone(Model model) const {
-      ZoneHVACPackagedTerminalAirConditioner ptacClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACPackagedTerminalAirConditioner>();
+      auto ptacClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACPackagedTerminalAirConditioner>();
 
-      HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      auto supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
       auto t_heatingCoil = heatingCoil();
-      HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
+      auto heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
       auto t_coolingCoil = coolingCoil();
-      HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
+      auto coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
 
       ptacClone.setSupplyAirFan(supplyFanClone);
 
@@ -132,12 +132,13 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACPackagedTerminalAirConditioner_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_PackagedTerminalAirConditionerFields::AvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ZoneHVACPackagedTerminalAirConditioner", "Availability"));
+        result.emplace_back("ZoneHVACPackagedTerminalAirConditioner", "Availability");
       }
       if (std::find(b, e, OS_ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFanOperatingModeScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ZoneHVACPackagedTerminalAirConditioner", "Supply Air Fan Operating Mode"));
+        result.emplace_back("ZoneHVACPackagedTerminalAirConditioner", "Supply Air Fan Operating Mode");
       }
       return result;
     }
@@ -172,7 +173,7 @@ namespace model {
         LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
         value = this->model().alwaysOnDiscreteSchedule();
         OS_ASSERT(value);
-        const_cast<ZoneHVACPackagedTerminalAirConditioner_Impl*>(this)->setAvailabilitySchedule(*value);
+        const_cast<ZoneHVACPackagedTerminalAirConditioner_Impl*>(this)->setAvailabilitySchedule(*value);  // NOLINT
         value = optionalAvailabilitySchedule();
       }
       OS_ASSERT(value);
@@ -322,12 +323,12 @@ namespace model {
       return result;
     }
 
-    bool ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
+    bool ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType) {
       bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerObjectType, outdoorAirMixerObjectType);
       return result;
     }
 
-    bool ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+    bool ZoneHVACPackagedTerminalAirConditioner_Impl::setOutdoorAirMixerName(const std::string& outdoorAirMixerName) {
       bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::OutdoorAirMixerName, outdoorAirMixerName);
       OS_ASSERT(result);
       return result;
@@ -459,11 +460,9 @@ namespace model {
     bool ZoneHVACPackagedTerminalAirConditioner_Impl::setHeatingCoil(HVACComponent& heatingCoil) {
       bool isAllowedType = false;
 
-      if (heatingCoil.iddObjectType() == IddObjectType::OS_Coil_Heating_Gas) {
-        isAllowedType = true;
-      } else if (heatingCoil.iddObjectType() == IddObjectType::OS_Coil_Heating_Electric) {
-        isAllowedType = true;
-      } else if (heatingCoil.iddObjectType() == IddObjectType::OS_Coil_Heating_Water) {
+      auto iddObjectType = heatingCoil.iddObjectType();
+      if ((iddObjectType == IddObjectType::OS_Coil_Heating_Gas) || (iddObjectType == IddObjectType::OS_Coil_Heating_Electric)
+          || (iddObjectType == IddObjectType::OS_Coil_Heating_Water)) {
         isAllowedType = true;
       }
 
@@ -479,10 +478,10 @@ namespace model {
     bool ZoneHVACPackagedTerminalAirConditioner_Impl::setCoolingCoil(HVACComponent& coolingCoil) {
       bool isAllowedType = false;
 
-      if ((coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed)
-          || (coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX_VariableSpeed)
-          || (coolingCoil.iddObjectType() == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted)
-          || (coolingCoil.iddObjectType() == IddObjectType::OS_Coil_Cooling_DX)) {
+      auto iddObjectType = coolingCoil.iddObjectType();
+      if ((iddObjectType == IddObjectType::OS_Coil_Cooling_DX_SingleSpeed) || (iddObjectType == IddObjectType::OS_Coil_Cooling_DX_VariableSpeed)
+          || (iddObjectType == IddObjectType::OS_CoilSystem_Cooling_DX_HeatExchangerAssisted)
+          || (iddObjectType == IddObjectType::OS_Coil_Cooling_DX)) {
         isAllowedType = true;
       }
 
@@ -496,7 +495,7 @@ namespace model {
       }
     }
 
-    bool ZoneHVACPackagedTerminalAirConditioner_Impl::setFanPlacement(std::string fanPlacement) {
+    bool ZoneHVACPackagedTerminalAirConditioner_Impl::setFanPlacement(const std::string& fanPlacement) {
       bool result = setString(OS_ZoneHVAC_PackagedTerminalAirConditionerFields::FanPlacement, fanPlacement);
       return result;
     }
@@ -713,8 +712,7 @@ namespace model {
   }
 
   IddObjectType ZoneHVACPackagedTerminalAirConditioner::iddObjectType() {
-    IddObjectType result(IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner);
-    return result;
+    return IddObjectType::OS_ZoneHVAC_PackagedTerminalAirConditioner;
   }
 
   std::vector<std::string> ZoneHVACPackagedTerminalAirConditioner::outdoorAirMixerObjectTypeValues() {
@@ -798,11 +796,11 @@ namespace model {
     return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->isFanPlacementDefaulted();
   }
 
-  bool ZoneHVACPackagedTerminalAirConditioner::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
+  bool ZoneHVACPackagedTerminalAirConditioner::setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType) {
     return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setOutdoorAirMixerObjectType(outdoorAirMixerObjectType);
   }
 
-  bool ZoneHVACPackagedTerminalAirConditioner::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  bool ZoneHVACPackagedTerminalAirConditioner::setOutdoorAirMixerName(const std::string& outdoorAirMixerName) {
     return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
   }
 
@@ -870,7 +868,7 @@ namespace model {
     getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->autosizeOutdoorAirFlowRateWhenNoCoolingorHeatingisNeeded();
   }
 
-  bool ZoneHVACPackagedTerminalAirConditioner::setFanPlacement(std::string fanPlacement) {
+  bool ZoneHVACPackagedTerminalAirConditioner::setFanPlacement(const std::string& fanPlacement) {
     return getImpl<detail::ZoneHVACPackagedTerminalAirConditioner_Impl>()->setFanPlacement(fanPlacement);
   }
 
