@@ -7707,9 +7707,9 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateIceT
   result = tes;
   tes.setName(name);
 
-  const auto capRtdSimElement = lexicalCastToDouble(tesElement.child("CapRtdSim"));
+  const auto capRtdSimElement = lexicalCastToDouble(tesElement.child("IceStorCapSim"));
   if (capRtdSimElement) {
-    const double capRtdSim = unitToUnit(capRtdSimElement.get(),"Btu/h","W").get();
+    const double capRtdSim = unitToUnit(capRtdSimElement.get(),"Btu","GJ").get();
     tes.setCapacity(capRtdSim);
   }
 
