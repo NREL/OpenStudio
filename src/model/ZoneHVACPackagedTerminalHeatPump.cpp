@@ -851,10 +851,16 @@ namespace model {
     setHeatingCoil(heatingCoil);
     setCoolingCoil(coolingCoil);
     setSupplementalHeatingCoil(supplementalHeatingCoil);
-    // When Blank, E+ defaults to 0 (cycling)
-    auto alwaysOff = model.alwaysOffDiscreteSchedule();
-    ok = setSupplyAirFanOperatingModeSchedule(alwaysOff);
-    OS_ASSERT(ok);
+    // When Blank, E+ defaults to 0 (cycling). If it's a FanConstantVolume though, you must provide an always On or E+ will Fatal.
+    if (supplyAirFan.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) {
+      auto alwaysOn = model.alwaysOnDiscreteSchedule();
+      ok = setSupplyAirFanOperatingModeSchedule(alwaysOn);
+      OS_ASSERT(ok);
+    } else {
+      auto alwaysOff = model.alwaysOffDiscreteSchedule();
+      ok = setSupplyAirFanOperatingModeSchedule(alwaysOff);
+      OS_ASSERT(ok);
+    }
 
     autosizeSupplyAirFlowRateDuringCoolingOperation();
     autosizeSupplyAirFlowRateDuringHeatingOperation();
