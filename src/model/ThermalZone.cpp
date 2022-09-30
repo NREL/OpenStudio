@@ -1471,7 +1471,7 @@ namespace model {
         }
 
         for (ZoneMixing& zm : space.exhaustZoneMixing()) {
-          zm.hardSize();
+          // We only need to hardSize when it's the RECEIVING zone
           zm.setSourceSpace(newSpace);
         }
 
