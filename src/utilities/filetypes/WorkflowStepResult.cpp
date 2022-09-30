@@ -34,6 +34,8 @@
 
 #include <json/json.h>
 
+#include <utility>
+
 namespace openstudio {
 namespace detail {
 
@@ -129,7 +131,7 @@ namespace detail {
     m_units.reset();
   }
 
-  WorkflowStepResult_Impl::WorkflowStepResult_Impl() {}
+  WorkflowStepResult_Impl::WorkflowStepResult_Impl() = default;
 
   std::string WorkflowStepResult_Impl::string() const {
     Json::Value value(Json::objectValue);
@@ -196,7 +198,7 @@ namespace detail {
       value["step_final_condition"] = stepFinalCondition().get();
     }
 
-    if (complete || (stepErrors().size() > 0)) {
+    if (complete || (!stepErrors().empty())) {
       Json::Value errors(Json::arrayValue);
       for (const auto& stepError : stepErrors()) {
         errors.append(stepError);
@@ -204,7 +206,7 @@ namespace detail {
       value["step_errors"] = errors;
     }
 
-    if (complete || (stepWarnings().size() > 0)) {
+    if (complete || (!stepWarnings().empty())) {
       Json::Value warnings(Json::arrayValue);
       for (const auto& stepWarning : stepWarnings()) {
         warnings.append(stepWarning);
@@ -212,7 +214,7 @@ namespace detail {
       value["step_warnings"] = warnings;
     }
 
-    if (complete || (stepInfo().size() > 0)) {
+    if (complete || (!stepInfo().empty())) {
       Json::Value info(Json::arrayValue);
       for (const auto& stepI : stepInfo()) {
         info.append(stepI);
@@ -220,7 +222,7 @@ namespace detail {
       value["step_info"] = info;
     }
 
-    if (complete || (stepValues().size() > 0)) {
+    if (complete || (!stepValues().empty())) {
       Json::Value values(Json::arrayValue);
       for (const auto& stepValue : stepValues()) {
 
@@ -240,7 +242,7 @@ namespace detail {
       value["step_values"] = values;
     }
 
-    if (complete || (stepFiles().size() > 0)) {
+    if (complete || (!stepFiles().empty())) {
       Json::Value files(Json::arrayValue);
       for (const auto& stepFile : stepFiles()) {
         files.append(toString(stepFile));
@@ -379,7 +381,7 @@ namespace detail {
     LOG(Debug, "WorkflowStepResult::errors is deprecated, use stepErrors instead");
     std::vector<LogMessage> result;
     for (const auto& stepError : stepErrors()) {
-      result.push_back(LogMessage(Error, "", stepError));
+      result.emplace_back(Error, "", stepError);
     }
     return result;
   }
@@ -388,7 +390,7 @@ namespace detail {
     LOG(Debug, "WorkflowStepResult::warnings is deprecated, use stepWarnings instead");
     std::vector<LogMessage> result;
     for (const auto& stepWarning : stepWarnings()) {
-      result.push_back(LogMessage(Warn, "", stepWarning));
+      result.emplace_back(Warn, "", stepWarning);
     }
     return result;
   }
@@ -397,7 +399,7 @@ namespace detail {
     LOG(Debug, "WorkflowStepResult::info is deprecated, use stepInfo instead");
     std::vector<LogMessage> result;
     for (const auto& info : stepInfo()) {
-      result.push_back(LogMessage(Info, "", info));
+      result.emplace_back(Info, "", info);
     }
     return result;
   }
@@ -781,7 +783,7 @@ WorkflowStepResult::WorkflowStepResult() : m_impl(std::shared_ptr<detail::Workfl
 
 WorkflowStepResult::WorkflowStepResult(const WorkflowStepResult& other) : m_impl(other.m_impl) {}
 
-WorkflowStepResult::WorkflowStepResult(std::shared_ptr<detail::WorkflowStepResult_Impl> impl) : m_impl(impl) {}
+WorkflowStepResult::WorkflowStepResult(std::shared_ptr<detail::WorkflowStepResult_Impl> impl) : m_impl(std::move(impl)) {}
 
 boost::optional<WorkflowStepResult> WorkflowStepResult::fromString(const std::string& s) {
   // We let it fail with a warning message
