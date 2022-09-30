@@ -22,7 +22,15 @@
 namespace openstudio {
 
 OSWorkflow::OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ruby, ScriptEngineInstance& python)
-  : rubyEngine(ruby), pythonEngine(python), workflowJSON(oswPath) {}
+  :
+#if USE_RUBY_ENGINE
+    rubyEngine(ruby),
+#endif
+#if USE_PYTHON_ENGINE
+    pythonEngine(python),
+#endif
+    workflowJSON(oswPath) {
+}
 
 void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue) {
   fmt::print("Info: Setting argument value '{}' to '{}'\n", argumentName, argumentValue);
@@ -57,16 +65,18 @@ void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::
 }
 
 void OSWorkflow::run() {
+#if USE_RUBY_ENGINE
   rubyEngine->exec("puts 'Hello from Ruby'");
-  pythonEngine->exec("print('Hello from Python')");
-
   rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
   rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
-  pythonEngine->registerType<openstudio::measure::PythonModelMeasure*>("openstudio::measure::PythonModelMeasure *");
-  pythonEngine->registerType<openstudio::measure::PythonReportingMeasure*>("openstudio::measure::PythonReportingMeasure *");
-
   // -1: gotta init the rest of OpenStudio in ruby, so that Ruleset and co are defined
   rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
+#endif
+#if USE_PYTHON_ENGINE
+  pythonEngine->exec("print('Hello from Python')");
+  pythonEngine->registerType<openstudio::measure::PythonModelMeasure*>("openstudio::measure::PythonModelMeasure *");
+  pythonEngine->registerType<openstudio::measure::PythonReportingMeasure*>("openstudio::measure::PythonReportingMeasure *");
+#endif
 
   //// O. Need to apply measure steps IN ORDER. (eg: OpenStudio Measures before Eplus measures etc)
   //// https://github.com/NREL/OpenStudio-workflow-gem/blob/develop/lib/openstudio/workflow/util/measure.rb
@@ -208,11 +218,16 @@ void OSWorkflow::run() {
 
       if (measureLanguage == MeasureLanguage::Ruby) {
         // TODO: probably need to do path formatting properly for windows
+#if USE_RUBY_ENGINE
         auto importCmd = fmt::format("require '{}'", openstudio::toString(scriptPath_.get()));
         rubyEngine->exec(importCmd);
         measureScriptObject = rubyEngine->eval(fmt::format("{}.new()", className));
         thisEngine = &rubyEngine;
+#else
+        throw std::runtime_error("Cannot run a Ruby measure when RubyEngine isn't enabled");
+#endif
       } else if (measureLanguage == MeasureLanguage::Python) {
+#if USE_PYTHON_ENGINE
         // place measureDirPath in sys.path; do from measure import MeasureName
         // I think this can't work without a "as xxx" otherwise we'll repeatedly try to import a module named 'measure'
         // pythonEngine->pyimport("measure", openstudio::toString(measureDirPath.get()));
@@ -225,6 +240,9 @@ import measure
         pythonEngine->exec(importCmd);
         measureScriptObject = pythonEngine->eval(fmt::format("measure.{}()", className));
         thisEngine = &pythonEngine;
+#else
+        throw std::runtime_error("Cannot run a Python measure when PythonEngine isn't enabled");
+#endif
       }
 
       // This pointer will only be valid for as long as the above PythonMeasure is in scope
