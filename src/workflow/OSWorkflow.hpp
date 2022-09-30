@@ -6,6 +6,9 @@
 #include "../utilities/core/Filesystem.hpp"
 #include "../utilities/filetypes/WorkflowJSON.hpp"
 
+#define USE_RUBY_ENGINE 1
+#define USE_PYTHON_ENGINE 1
+
 namespace openstudio {
 
 class Variant;
@@ -24,8 +27,12 @@ class OSWorkflow
 
  private:
   // TODO: add a Logger
+#if USE_RUBY_ENGINE
   ScriptEngineInstance& rubyEngine;
+#endif
+#if USE_PYTHON_ENGINE
   ScriptEngineInstance& pythonEngine;
+#endif
   WorkflowJSON workflowJSON;
   measure::OSRunner runner{workflowJSON};
 

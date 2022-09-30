@@ -24,6 +24,18 @@
   // Help in overload resolution preferring std::string over char const *
   %ignore openstudio::measure::OSArgument::setValue(char const*);
   %ignore openstudio::measure::OSArgument::setDefaultValue(char const*);
+#elif defined(SWIGRUBY)
+  %ignore openstudio::measure::PythonModelMeasure;
+  %ignore openstudio::measure::PythonEnergyPlusMeasure;
+  %ignore openstudio::measure::PythonReportingMeasure;
+#elif defined(SWIGPYTHON)
+  // Avoid triggering a SWIG warning: 'print' is a python keyword
+  %rename(toString) openstudio::measure::OSArgument::print;
+  %rename(toString) openstudio::measure::OSOutput::print;
+
+  %ignore openstudio::measure::ModelMeasure;
+  %ignore openstudio::measure::EnergyPlusMeasure;
+  %ignore openstudio::measure::ReportingMeasure;
 #endif
 
 %{
@@ -48,10 +60,6 @@
   using namespace openstudio::measure;
 %}
 
-//user scripts
-%template(OSArgumentVector) std::vector<openstudio::measure::OSArgument>;
-%template(OptionalOSArgument) boost::optional<openstudio::measure::OSArgument>;
-%template(OSArgumentMap) std::map<std::string, openstudio::measure::OSArgument>;
 
 %ignore std::vector<openstudio::measure::OSOutput>::vector(size_type);
 %ignore std::vector<openstudio::measure::OSOutput>::resize(size_type);
@@ -59,10 +67,26 @@
 %template(OptionalOSOutput) boost::optional<openstudio::measure::OSOutput>;
 
 %feature("director") OSMeasure;
-%feature("director") ModelMeasure;
-%feature("director") EnergyPlusMeasure;
-%feature("director") ReportingMeasure;
+
+#if defined(SWIGPYTHON)
+  %feature("director") PythonModelMeasure;
+  %feature("director") PythonEnergyPlusMeasure;
+  %feature("director") PythonReportingMeasure;
+  %rename (ModelMeasure) openstudio::measure::PythonModelMeasure;
+  %rename (EnergyPlusMeasure) openstudio::measure::PythonEnergyPlusMeasure;
+  %rename (ReportingMeasure) openstudio::measure::PythonReportingMeasure;
+#else
+  %feature("director") ModelMeasure;
+  %feature("director") EnergyPlusMeasure;
+  %feature("director") ReportingMeasure;
+#endif
 %feature("director") OSRunner;
+%feature("director") OSArgument;
+
+//user scripts
+%template(OSArgumentVector) std::vector<openstudio::measure::OSArgument>;
+%template(OptionalOSArgument) boost::optional<openstudio::measure::OSArgument>;
+%template(OSArgumentMap) std::map<std::string, openstudio::measure::OSArgument>;
 
 %include <measure/OSArgument.hpp>
 %include <measure/OSOutput.hpp>

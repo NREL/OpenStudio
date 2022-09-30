@@ -32,7 +32,7 @@
 namespace openstudio {
 namespace measure {
 
-  OSMeasure::~OSMeasure() {}
+  OSMeasure::~OSMeasure() = default;
 
   std::string OSMeasure::name() const {
     return "";
