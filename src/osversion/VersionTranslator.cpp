@@ -7434,15 +7434,22 @@ namespace osversion {
         // ------------------------------------------------
         // * Availability Schedule * 2
 
-        auto iddObject = idd_3_5_0.getObject(iddname);
-        IdfObject newObject(iddObject.get());
+        if (!object.isEmpty(2)) {
+          ss << object;
+        } else {
 
-        if (object.isEmpty(2)) {
+          auto iddObject = idd_3_5_0.getObject(iddname);
+          IdfObject newObject(iddObject.get());
+          for (size_t i = 0; i < object.numFields(); ++i) {
+            if ((value = object.getString(i))) {
+              newObject.setString(i, value.get());
+            }
+          }
           newObject.setString(2, getOrCreateAlwaysDiscreteScheduleHandleStr(true));
-        }
 
-        m_refactored.push_back(RefactoredObjectData(object, newObject));
-        ss << newObject;
+          m_refactored.push_back(RefactoredObjectData(object, newObject));
+          ss << newObject;
+        }
 
       } else if (iddname == "OS:ZoneHVAC:PackagedTerminalHeatPump") {
 
