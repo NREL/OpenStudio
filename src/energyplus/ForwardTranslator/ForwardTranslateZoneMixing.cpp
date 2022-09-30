@@ -73,12 +73,19 @@ namespace energyplus {
     };
 
     if (!sourceZoneOrSpace) {
-      LOG(Warn, modelObject.briefDescription() << " doesn't have a Source Zone or Space, it will not be translated.");
+      if (m_excludeSpaceTranslation && modelObject.space()) {
+        LOG(Warn, modelObject.briefDescription()
+                    << " doesn't have a Source Zone or Space, it will not be translated. As you were using Space-Level ZoneMixing, and you are not "
+                       "translating to Spaces, it's possible it was pointing to two spaces inside the same zone");
+      } else {
+        LOG(Warn, modelObject.briefDescription() << " doesn't have a Source Zone or Space, it will not be translated.");
+      }
       return boost::none;
     }
 
     if (zoneOrSpace == sourceZoneOrSpace.get()) {
-
+      // This isn't going to happen, because zm.setSourceSpace(newSpace) in ThermalZone::combineSpaces will be rejected
+      // Let's play it safe though
       LOG(Warn, modelObject.briefDescription() << " has the same Receiving and Source Zone or Space, it will not be translated.");
       if (!m_excludeSpaceTranslation) {
         // We don't allow this at model time, the only reason we expect this to happen is when m_excludeSpaceTranslation is true, we call
