@@ -2255,7 +2255,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_ZoneHVACPackaged) {
     ASSERT_TRUE(ptac.getTarget(13));
     WorkspaceObject fan = ptac.getTarget(13).get();
 
-    EXPECT_EQ(IddObjectType::OS_Fan_SystemModel, fan.iddObject().type());
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_Fan_SystemModel), fan.iddObject().type());
     EXPECT_EQ("PTAC Fan", fan.getString(OS_Fan_SystemModelFields::Name).get());
     EXPECT_EQ("Always On Discrete", fan.getString(OS_Fan_SystemModelFields::AvailabilityScheduleName).get());
     EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirInletNodeName));
@@ -2295,7 +2295,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_ZoneHVACPackaged) {
     WorkspaceObject fan = pthp.getTarget(13).get();
 
     // This one is all defaulted, ensure we get the SAME values
-    EXPECT_EQ(IddObjectType::OS_Fan_SystemModel, fan.iddObject().type());
+    EXPECT_EQ(IddObjectType(IddObjectType::OS_Fan_SystemModel), fan.iddObject().type());
     EXPECT_EQ("PTHP Fan", fan.getString(OS_Fan_SystemModelFields::Name).get());
     EXPECT_EQ("Always On Discrete", fan.getString(OS_Fan_SystemModelFields::AvailabilityScheduleName).get());
     EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::AirInletNodeName));
