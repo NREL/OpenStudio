@@ -1459,10 +1459,20 @@ namespace model {
         // first hard size any space loads, do this before removing surfaces as
         // hard sizing may require space geometry
         for (ModelObject child : children) {
-          if (child.optionalCast<SpaceLoad>()) {
-            child.cast<SpaceLoad>().hardSize();
-            child.cast<SpaceLoad>().hardApplySchedules();
+          if (auto sp_ = child.optionalCast<SpaceLoad>()) {
+            sp_->hardSize();
+            sp_->hardApplySchedules();
           }
+        }
+
+        for (ZoneMixing& zm : space.supplyZoneMixing()) {
+          zm.hardSize();
+          zm.setParent(newSpace);
+        }
+
+        for (ZoneMixing& zm : space.exhaustZoneMixing()) {
+          // We only need to hardSize when it's the RECEIVING zone
+          zm.setSourceSpace(newSpace);
         }
 
         // now move costs over to the new space
@@ -2471,7 +2481,8 @@ namespace model {
       std::vector<ZoneMixing> result = this->zoneMixing();
 
       Handle handle = this->handle();
-      auto new_end = std::remove_if(result.begin(), result.end(), [&](const ZoneMixing& mixing) { return (mixing.zone().handle() != handle); });
+      auto new_end =
+        std::remove_if(result.begin(), result.end(), [&](const ZoneMixing& mixing) { return (mixing.zoneOrSpace().handle() != handle); });
 
       result.erase(new_end, result.end());
       return result;
@@ -2481,8 +2492,9 @@ namespace model {
       std::vector<ZoneMixing> result = this->zoneMixing();
 
       Handle handle = this->handle();
-      auto new_end = std::remove_if(result.begin(), result.end(),
-                                    [&](const ZoneMixing& mixing) { return (!mixing.sourceZone() || (mixing.sourceZone()->handle() != handle)); });
+      auto new_end = std::remove_if(result.begin(), result.end(), [&](const ZoneMixing& mixing) {
+        return (!mixing.sourceZoneOrSpace() || (mixing.sourceZoneOrSpace()->handle() != handle));
+      });
 
       result.erase(new_end, result.end());
       return result;

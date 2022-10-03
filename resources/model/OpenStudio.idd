@@ -28483,8 +28483,8 @@ OS:ZoneHVAC:CoolingPanel:RadiantConvective:Water,
        \maximum 1
 
 OS:ZoneMixing,
-       \memo ZoneMixing is a simple air exchange from one zone to another. Note that this statement
-       \memo only affects the energy balance of the "receiving" zone and will not produce
+       \memo ZoneMixing is a simple air exchange from one zone or space to another. Note that this statement
+       \memo only affects the energy balance of the "receiving" zone or space and will not produce
        \memo any effect on the "source" zone. Mixing statements can be complementary and include
        \memo multiple zones, but the balancing of flows between zones is left to the user's
        \memo discretion.
@@ -28495,11 +28495,12 @@ OS:ZoneMixing,
   A2 , \field Name
        \required-field
        \type alpha
-  A3 , \field Zone Name
-       \note This is the receiving zone
+  A3 , \field Zone or Space Name
+       \note This is the receiving zone or space
        \required-field
        \type object-list
        \object-list ThermalZoneNames
+       \object-list SpaceNames
   A4 , \field Schedule Name
        \required-field
        \type object-list
@@ -28522,7 +28523,7 @@ OS:ZoneMixing,
        \units m3/s
        \type real
        \minimum 0
-  N2 , \field Flow Rate per Zone Floor Area
+  N2 , \field Flow Rate per Floor Area
        \type real
        \minimum 0
        \units m3/s-m2
@@ -28534,38 +28535,43 @@ OS:ZoneMixing,
        \units 1/hr
        \type real
        \minimum 0
-  A6 , \field Source Zone Name
+  A6 , \field Source Zone or Space Name
        \type object-list
        \object-list ThermalZoneNames
+       \object-list SpaceNames
   N5 , \field Delta Temperature
        \units deltaC
        \type real
        \note This field contains the constant temperature differential between source and
-       \note receiving zones below which mixing is shutoff.
+       \note receiving zone or space below which mixing is shutoff. If a source zone is
+       \note specified and it contains more than one space, the average source zone temperature
+       \note will be used for control.
   A7 , \field Delta Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
-       \note This schedule contains the temperature differential between source and receiving
-       \note zones versus time below which mixing is shutoff.
-  A8 , \field Minimum Zone Temperature Schedule Name
+       \note This schedule contains the temperature differential between source and
+       \note receiving zone or space below which mixing is shutoff. If a source zone is
+       \note specified and it contains more than one space, the average source zone temperature
+       \note will be used for control.
+  A8 , \field Minimum Receiving Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
-       \note This schedule contains the zone dry-bulb temperature versus time below which
+       \note This schedule contains the receiving zone or space temperature versus time below which
        \note mixing is shutoff.
-  A9 , \field Maximum Zone Temperature Schedule Name
+  A9 , \field Maximum Receiving Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
-       \note This schedule contains the zone dry-bulb temperature versus time above which
+       \note This schedule contains the receiving zone or space  temperature versus time above which
        \note mixing is shutoff.
-  A10 , \field Minimum Source Zone Temperature Schedule Name
+  A10 , \field Minimum Source Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
-       \note This schedule contains the source zone dry-bulb temperature versus time below
+       \note This schedule contains the source zone or space temperature versus time below
        \note which mixing is shutoff.
-  A11, \field Maximum Source Zone Temperature Schedule Name
+  A11, \field Maximum Source Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
-       \note This schedule contains the source zone dry-bulb temperature versus time above
+       \note This schedule contains the source zone or space temperature versus time above
        \note which mixing is shutoff.
   A12, \field Minimum Outdoor Temperature Schedule Name
        \type object-list
