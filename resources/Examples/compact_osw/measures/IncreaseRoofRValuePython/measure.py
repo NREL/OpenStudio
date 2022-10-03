@@ -44,7 +44,7 @@ class IncreaseInsulationRValueForRoofsByPercentagePython(openstudio.measure.Mode
         """
         define what happens when the measure is run
         """
-        super().run(model, runner, user_arguments)
+        super().run(model, runner, user_arguments)  # Do **NOT** remove this line
 
         if not(runner.validateUserArguments(self.arguments(model),
                                             user_arguments)):

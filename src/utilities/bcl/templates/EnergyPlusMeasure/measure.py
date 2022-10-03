@@ -61,7 +61,7 @@ class EnergyPlusMeasureName(openstudio.measure.EnergyPlusMeasure):
         user_arguments: openstudio.measure.OSArgumentMap,
     ):
         """Defines what happens when the measure is run."""
-        super().run(workspace, runner, user_arguments)
+        super().run(workspace, runner, user_arguments)  # Do **NOT** remove this line
 
         if not (runner.validateUserArguments(self.arguments(workspace), user_arguments)):
             return False

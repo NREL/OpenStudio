@@ -49,7 +49,7 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
   # return a vector of IdfObject's to request EnergyPlus objects needed by the run method
   # Warning: Do not change the name of this method to be snake_case. The method must be lowerCamelCase.
   def energyPlusOutputRequests(runner, user_arguments)
-    super(runner, user_arguments)
+    super(runner, user_arguments)  # Do **NOT** remove this line
 
     result = OpenStudio::IdfObjectVector.new
 

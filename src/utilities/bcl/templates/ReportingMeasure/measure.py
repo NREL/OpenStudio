@@ -70,7 +70,7 @@ class ReportingMeasureName(openstudio.measure.ReportingMeasure):
         user_arguments: openstudio.measure.OSArgumentMap
     ):
         """Returns a vector of IdfObject's to request EnergyPlus objects needed by the run method."""
-        super().energyPlusOutputRequests(runner, user_arguments)
+        super().energyPlusOutputRequests(runner, user_arguments)  # Do **NOT** remove this line
 
         result = openstudio.IdfObjectVector()
 
