@@ -24,7 +24,7 @@ class ReportingMeasureName < OpenStudio::Measure::ReportingMeasure
   end
 
   # define the arguments that the user will input
-  def arguments(model)
+  def arguments(model = nil)
     args = OpenStudio::Measure::OSArgumentVector.new
 
     # bool argument to report report_drybulb_temp
