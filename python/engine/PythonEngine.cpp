@@ -169,3 +169,10 @@ void* PythonEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
   return return_value;
 }
 }  // namespace openstudio
+
+extern "C"
+{
+  openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]) {
+    return new openstudio::PythonEngine(argc, argv);
+  }
+}

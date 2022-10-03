@@ -39,9 +39,7 @@ class PythonEngine final : public ScriptEngine
 extern "C"
 {
   // clang-tidy warns https://clang.llvm.org/extra/clang-tidy/checks/misc/definitions-in-headers.html
-  openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]) {
-    return new openstudio::PythonEngine(argc, argv);
-  }
+  __declspec(dllexport) openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]);
 }
 
 #endif

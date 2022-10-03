@@ -99,7 +99,7 @@ void* RubyEngine::getAs_impl(ScriptObject& obj, const std::type_info& ti) {
 
 extern "C"
 {
-  RUBYENGINE_EXPORT openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]) {
+  openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]) {
     return new openstudio::RubyEngine(argc, argv);
   }
 

@@ -32,4 +32,9 @@ class RubyEngine final : public ScriptEngine
 
 }  // namespace openstudio
 
+extern "C"
+{
+  __declspec(dllexport) openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]);
+}
+
 #endif
