@@ -1,4 +1,3 @@
-
 add_custom_command(
   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/SWIGPythonRuntime.hxx"
   COMMAND ${CMAKE_COMMAND} -E env SWIG_LIB="${SWIG_LIB}"
@@ -17,8 +16,8 @@ add_library(
   ${CMAKE_CURRENT_BINARY_DIR}/SWIGPythonRuntime.hxx
 )
 
-file(
-  GENERATE OUTPUT $<TARGET_FILE_DIR:pythonengine>/openstudiodev.py
+file(GENERATE
+  OUTPUT $<TARGET_FILE_DIR:pythonengine>/openstudiodev.py
   INPUT openstudiodev.py.in
 )
 
@@ -38,6 +37,9 @@ target_link_libraries(
 )
 
 # tp_print is deprecated at of 3.8.
-target_compile_options(pythonengine PRIVATE "-Wno-deprecated-declarations")
+target_compile_options(pythonengine PRIVATE
+  "$<${is_msvc_genex}:/wd4996>"
+  "$<${is_gnu_or_clang_genex}:-Wno-deprecated-declarations>"
+)
 
 install(TARGETS pythonengine EXPORT openstudio DESTINATION bin COMPONENT "CLI")
