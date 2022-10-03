@@ -82,7 +82,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilCoolingDXCurveFitSpeed) {
     EXPECT_EQ("Autosize", idfSpeed.getString(Coil_Cooling_DX_CurveFit_SpeedFields::GrossSensibleHeatRatio, false).get());
     EXPECT_EQ(3.0, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::GrossCoolingCOP, false).get());
     EXPECT_EQ(1.0, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::ActiveFractionofCoilFaceArea, false).get());
-    EXPECT_EQ(773.3, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate, false).get());
+    EXPECT_EQ(773.3, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2017, false).get());
+    EXPECT_EQ(934.4, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedEvaporatorFanPowerPerVolumeFlowRate2023, false).get());
     EXPECT_EQ(1.0, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserPumpPowerFraction, false).get());
     EXPECT_EQ(0.9, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::EvaporativeCondenserEffectiveness, false).get());
     EXPECT_EQ(0.2, idfSpeed.getDouble(Coil_Cooling_DX_CurveFit_SpeedFields::RatedWasteHeatFractionofPowerInput, false).get());

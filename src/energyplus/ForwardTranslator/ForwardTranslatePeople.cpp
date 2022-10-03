@@ -70,7 +70,7 @@ namespace energyplus {
 
     idfObject.setString(PeopleFields::Name, modelObject.name().get());
 
-    IdfObject parentIdfObject = getSpaceLoadInstanceParent(modelObject);
+    IdfObject parentIdfObject = getSpaceLoadParent(modelObject);
     idfObject.setString(PeopleFields::ZoneorZoneListorSpaceorSpaceListName, parentIdfObject.nameString());
 
     if (boost::optional<Schedule> schedule = modelObject.numberofPeopleSchedule()) {
@@ -150,11 +150,33 @@ namespace energyplus {
       }
     }
 
-    for (int i = 0, n = definition.numThermalComfortModelTypes(); i < n; ++i) {
+    // As of 22.2.0, this is no longer possible to make this an extensible field
+    // because E+ added 3 regular fields at the end (eg: Ankle Level Velocity Schedule Name)
+    for (int i = 0, numComfortModelTypes = 0; i < definition.numThermalComfortModelTypes(); ++i) {
       OptionalString s = definition.getThermalComfortModelType(i);
       if (s) {
-        idfObject.pushExtensibleGroup(StringVector(1U, *s));
+        ++numComfortModelTypes;
+        if (numComfortModelTypes > 7) {
+          LOG(Warn, "For " << definition.briefDescription() << ", only 7 Thermal Confort Model Types are supported by EnergyPlus, number "
+                           << numComfortModelTypes << " [=" << *s << "] will be ignored.");
+        } else {
+          idfObject.setString(PeopleFields::ThermalComfortModel1Type + i, *s);
+        }
       }
+    }
+
+    if (boost::optional<Schedule> schedule_ = modelObject.ankleLevelAirVelocitySchedule()) {
+      if (auto idf_schedule_ = translateAndMapModelObject(schedule_.get())) {
+        idfObject.setString(PeopleFields::AnkleLevelAirVelocityScheduleName, idf_schedule_->nameString());
+      }
+    }
+
+    if (!modelObject.isColdStressTemperatureThresholdDefaulted()) {
+      idfObject.setDouble(PeopleFields::ColdStressTemperatureThreshold, modelObject.coldStressTemperatureThreshold());
+    }
+
+    if (!modelObject.isHeatStressTemperatureThresholdDefaulted()) {
+      idfObject.setDouble(PeopleFields::HeatStressTemperatureThreshold, modelObject.heatStressTemperatureThreshold());
     }
 
     return idfObject;

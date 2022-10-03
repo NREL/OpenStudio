@@ -42,6 +42,8 @@
   %ignore openstudio::model::Model::outputJSON;
   %ignore openstudio::model::Model::outputSQLite;
   %ignore openstudio::model::Model::outputTableSummaryReports;
+  %ignore openstudio::model::Model::outputSchedules;
+  %ignore openstudio::model::Model::outputConstructions;
   %ignore openstudio::model::Model::outsideSurfaceConvectionAlgorithm;
   %ignore openstudio::model::Model::performancePrecisionTradeoffs;
   %ignore openstudio::model::Model::runPeriodControlDaylightSavingTime;

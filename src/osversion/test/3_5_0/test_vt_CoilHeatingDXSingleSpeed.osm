@@ -1,0 +1,92 @@
+
+OS:Version,
+  {a4a9e097-2600-43d1-8668-7d7af50553d3}, !- Handle
+  3.4.0;                                  !- Version Identifier
+
+OS:Coil:Heating:DX:SingleSpeed,
+  {71808c08-0363-416d-a8c8-bb0c44defeee}, !- Handle
+  Coil Heating DX Single Speed 1,         !- Name
+  {41687696-2494-4d4e-b339-9f593abac3c5}, !- Availability Schedule Name
+  Autosize,                               !- Rated Total Heating Capacity {W}
+  5,                                      !- Rated COP {W/W}
+  Autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Fan Power Per Volume Flow Rate {W/(m3/s)}
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {f2119b59-715e-43e6-b9fc-c5a350c48fff}, !- Total Heating Capacity Function of Temperature Curve Name
+  {60ec47a1-077f-4a27-8f7d-6092ab09e6a2}, !- Total Heating Capacity Function of Flow Fraction Curve Name
+  {699a5e53-eb35-48b0-8620-4f1b1346f653}, !- Energy Input Ratio Function of Temperature Curve Name
+  {a0d7501f-d3f1-4138-a730-0cd146ed26f2}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {04786164-65c6-4bfb-8a48-256f8d6806e2}, !- Part Load Fraction Correlation Curve Name
+  ,                                       !- Defrost Energy Input Ratio Function of Temperature Curve Name
+  ,                                       !- Minimum Outdoor Dry-Bulb Temperature for Compressor Operation {C}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Defrost Operation {C}
+  ,                                       !- Crankcase Heater Capacity {W}
+  ,                                       !- Maximum Outdoor Dry-Bulb Temperature for Crankcase Heater Operation {C}
+  Resistive,                              !- Defrost Strategy
+  Timed,                                  !- Defrost Control
+  0.166667,                               !- Defrost Time Period Fraction
+  2000;                                   !- Resistive Defrost Heater Capacity {W}
+
+OS:Schedule:Constant,
+  {41687696-2494-4d4e-b339-9f593abac3c5}, !- Handle
+  Always On Discrete,                     !- Name
+  {09653d54-13c7-4e90-a853-4d91bb952f9d}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {09653d54-13c7-4e90-a853-4d91bb952f9d}, !- Handle
+  OnOff,                                  !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Curve:Cubic,
+  {f2119b59-715e-43e6-b9fc-c5a350c48fff}, !- Handle
+  Curve Cubic 1,                          !- Name
+  0.758746,                               !- Coefficient1 Constant
+  0.027626,                               !- Coefficient2 x
+  0.000148716,                            !- Coefficient3 x**2
+  3.4992e-06,                             !- Coefficient4 x**3
+  -20,                                    !- Minimum Value of x
+  20;                                     !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {60ec47a1-077f-4a27-8f7d-6092ab09e6a2}, !- Handle
+  Curve Cubic 2,                          !- Name
+  0.84,                                   !- Coefficient1 Constant
+  0.16,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {699a5e53-eb35-48b0-8620-4f1b1346f653}, !- Handle
+  Curve Cubic 3,                          !- Name
+  1.19248,                                !- Coefficient1 Constant
+  -0.0300438,                             !- Coefficient2 x
+  0.00103745,                             !- Coefficient3 x**2
+  -2.3328e-05,                            !- Coefficient4 x**3
+  -20,                                    !- Minimum Value of x
+  20;                                     !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {a0d7501f-d3f1-4138-a730-0cd146ed26f2}, !- Handle
+  Curve Quadratic 1,                      !- Name
+  1.3824,                                 !- Coefficient1 Constant
+  -0.4336,                                !- Coefficient2 x
+  0.0512,                                 !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {04786164-65c6-4bfb-8a48-256f8d6806e2}, !- Handle
+  Curve Quadratic 2,                      !- Name
+  0.75,                                   !- Coefficient1 Constant
+  0.25,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+

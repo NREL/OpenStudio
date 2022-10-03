@@ -37,8 +37,17 @@
 
 #include <boost/optional.hpp>
 
+namespace Json {
+class Value;
+}
+
 class epJSONFixture : public ::testing::Test
 {
+ public:
+  void compareEPJSONTranslations(const std::string& idfname);
+  static openstudio::path completeIDFPath(const openstudio::path& idf);
+  static void makeDoubles(Json::Value& value);
+
  protected:
   /// initialize for each test
   virtual void SetUp() override;
@@ -56,6 +65,13 @@ class epJSONFixture : public ::testing::Test
 
   // static variables
   static boost::optional<openstudio::FileLogSink> logFile;
+
+ private:
+  void compareJSONS(const Json::Value& lhs, const Json::Value& rhs);
+
+  void compareJSONS_detailed(Json::Value& lhs, Json::Value& rhs, const std::string& currentPath);
+
+  static std::pair<Json::Value, Json::Value> doEPJSONTranslations(const std::string& idfname);
 };
 
 #endif  // EPJSON_TEST_EPJSONFIXTURE_HPP

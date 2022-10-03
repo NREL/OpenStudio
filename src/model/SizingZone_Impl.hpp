@@ -37,6 +37,7 @@ namespace openstudio {
 namespace model {
 
   class ThermalZone;
+  class Schedule;
 
   namespace detail {
 
@@ -64,6 +65,8 @@ namespace model {
       virtual const std::vector<std::string>& outputVariableNames() const override;
 
       virtual IddObjectType iddObjectType() const override;
+
+      virtual std::vector<ScheduleTypeKey> getScheduleTypeKeys(const Schedule& schedule) const override;
 
       virtual std::vector<EMSActuatorNames> emsActuatorNames() const override;
 
@@ -146,6 +149,24 @@ namespace model {
       boost::optional<double> dedicatedOutdoorAirHighSetpointTemperatureforDesign() const;
 
       bool isDedicatedOutdoorAirHighSetpointTemperatureforDesignAutosized() const;
+
+      std::string zoneLoadSizingMethod() const;
+
+      std::string zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod() const;
+
+      boost::optional<double> zoneDehumidificationDesignSupplyAirHumidityRatio() const;
+
+      double zoneCoolingDesignSupplyAirHumidityRatioDifference() const;
+
+      std::string zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod() const;
+
+      boost::optional<double> zoneHumidificationDesignSupplyAirHumidityRatio() const;
+
+      double zoneHumidificationDesignSupplyAirHumidityRatioDifference() const;
+
+      boost::optional<Schedule> zoneHumidistatDehumidificationSetPointSchedule() const;
+
+      boost::optional<Schedule> zoneHumidistatHumidificationSetPointSchedule() const;
 
       // Fields from DesignSpecification:ZoneAirDistribution
 
@@ -246,6 +267,28 @@ namespace model {
       bool setDedicatedOutdoorAirHighSetpointTemperatureforDesign(boost::optional<double> dedicatedOutdoorAirHighSetpointTemperatureforDesign);
 
       void autosizeDedicatedOutdoorAirHighSetpointTemperatureforDesign();
+
+      bool setZoneLoadSizingMethod(const std::string& zoneLoadSizingMethod);
+
+      bool setZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod(const std::string& zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod);
+
+      bool setZoneDehumidificationDesignSupplyAirHumidityRatio(double zoneDehumidificationDesignSupplyAirHumidityRatio);
+      void resetZoneDehumidificationDesignSupplyAirHumidityRatio();
+
+      bool setZoneCoolingDesignSupplyAirHumidityRatioDifference(double zoneCoolingDesignSupplyAirHumidityRatioDifference);
+
+      bool setZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod(const std::string& zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod);
+
+      bool setZoneHumidificationDesignSupplyAirHumidityRatio(double zoneHumidificationDesignSupplyAirHumidityRatio);
+      void resetZoneHumidificationDesignSupplyAirHumidityRatio();
+
+      bool setZoneHumidificationDesignSupplyAirHumidityRatioDifference(double zoneHumidificationDesignSupplyAirHumidityRatioDifference);
+
+      bool setZoneHumidistatDehumidificationSetPointSchedule(Schedule& schedule);
+      void resetZoneHumidistatDehumidificationSetPointSchedule();
+
+      bool setZoneHumidistatHumidificationSetPointSchedule(Schedule& schedule);
+      void resetZoneHumidistatHumidificationSetPointSchedule();
 
       // Fields from DesignSpecification:ZoneAirDistribution
 

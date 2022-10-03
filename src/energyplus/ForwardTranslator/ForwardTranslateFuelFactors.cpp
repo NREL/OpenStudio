@@ -54,10 +54,6 @@ namespace energyplus {
     // Existing Fuel Resource Name
     idfObject.setString(FuelFactorsFields::ExistingFuelResourceName, modelObject.existingFuelResourceName());
 
-    // Units of Measure: never used in E+
-
-    // Energy per Unit Factor: never used in E+
-
     // Source Energy Factor
     idfObject.setDouble(FuelFactorsFields::SourceEnergyFactor, modelObject.sourceEnergyFactor());
 

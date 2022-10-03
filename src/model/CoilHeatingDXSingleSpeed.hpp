@@ -32,6 +32,7 @@
 
 #include "ModelAPI.hpp"
 #include "StraightComponent.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -86,7 +87,11 @@ namespace model {
 
     bool isRatedAirFlowRateAutosized() const;
 
-    double ratedSupplyFanPowerPerVolumeFlowRate() const;
+    OS_DEPRECATED double ratedSupplyFanPowerPerVolumeFlowRate() const;
+
+    double ratedSupplyFanPowerPerVolumeFlowRate2017() const;
+
+    double ratedSupplyFanPowerPerVolumeFlowRate2023() const;
 
     double minimumOutdoorDryBulbTemperatureforCompressorOperation() const;
 
@@ -138,7 +143,11 @@ namespace model {
 
     void autosizeRatedAirFlowRate();
 
-    bool setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate);
+    OS_DEPRECATED bool setRatedSupplyFanPowerPerVolumeFlowRate(double ratedSupplyFanPowerPerVolumeFlowRate);
+
+    bool setRatedSupplyFanPowerPerVolumeFlowRate2017(double ratedSupplyFanPowerPerVolumeFlowRate2017);
+
+    bool setRatedSupplyFanPowerPerVolumeFlowRate2023(double ratedSupplyFanPowerPerVolumeFlowRate2023);
 
     bool setMinimumOutdoorDryBulbTemperatureforCompressorOperation(double minimumOutdoorDryBulbTemperatureforCompressorOperation);
 

@@ -308,11 +308,11 @@ namespace model {
         return result;
       }
 
-      // Query the Initialization Summary -> Component Sizing table to get
+      // Query the InitializationSummary -> Component Sizing table to get
       // the row names that contains information for this component.
       std::string rowsQuery = R"(
       SELECT RowName FROM TabularDataWithStrings
-        WHERE ReportName = 'Initialization Summary'
+        WHERE ReportName = 'InitializationSummary'
         AND ReportForString = 'Entire Facility'
         AND TableName = 'Component Sizing Information'
         AND Value = ?;)";
@@ -323,11 +323,11 @@ namespace model {
 
       // Warn if the query failed
       if (!rowNames) {
-        LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the Initialization Summary Component Sizing table.");
+        LOG(Warn, "Could not find a component called '" + sqlName + "' in any rows of the InitializationSummary Component Sizing table.");
         return result;
       }
 
-      // Query each row of the Intialization Summary -> Component Sizing table
+      // Query each row of the InitializationSummary -> Component Sizing table
       // that contains this component to get the desired value.
       std::string valueNameAndUnits = valueName + std::string(" [") + units + std::string("]");
       if (units == "") {
@@ -339,7 +339,7 @@ namespace model {
       for (std::string rowName : rowNames.get()) {
         std::string rowCheckQuery = R"(
         SELECT Value FROM TabularDataWithStrings
-          WHERE ReportName = 'Initialization Summary'
+          WHERE ReportName = 'InitializationSummary'
           AND ReportForString = 'Entire Facility'
           AND TableName = 'Component Sizing Information'
           AND RowName = ?
@@ -354,7 +354,7 @@ namespace model {
         // This is the right row
         std::string valQuery = R"(
         SELECT Value FROM TabularDataWithStrings
-          WHERE ReportName = 'Initialization Summary'
+          WHERE ReportName = 'InitializationSummary'
           AND ReportForString = 'Entire Facility'
           AND TableName = 'Component Sizing Information'
           AND ColumnName='Value'

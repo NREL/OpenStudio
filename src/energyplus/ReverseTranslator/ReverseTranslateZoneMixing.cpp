@@ -33,6 +33,8 @@
 #include "../../model/ZoneMixing_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 #include "../../model/Schedule.hpp"
 #include "../../model/Schedule_Impl.hpp"
 
@@ -54,12 +56,18 @@ namespace energyplus {
       return boost::none;
     }
 
-    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneMixingFields::ZoneName);
+    OptionalWorkspaceObject target = workspaceObject.getTarget(openstudio::ZoneMixingFields::ZoneorSpaceName);
     OptionalThermalZone zone;
     if (target) {
-      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-      if (modelObject) {
-        zone = modelObject->optionalCast<ThermalZone>();
+      if (OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target)) {
+        if (target->iddObject().type() == IddObjectType::Zone) {
+          // Zone maps to Space in RT
+          if (auto s_ = modelObject->optionalCast<Space>()) {
+            zone = s_->thermalZone();
+          }
+        } else {
+          // It's a space, but we don't allow mapping to a space in model SDK for now, and we don't have a Space RT... so we'll never get here
+        }
       }
     }
 
@@ -67,7 +75,26 @@ namespace energyplus {
       return boost::none;
     }
 
+    target = workspaceObject.getTarget(openstudio::ZoneMixingFields::SourceZoneorSpaceName);
+    OptionalThermalZone sourceZone;
+    if (target) {
+      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
+      if (target->iddObject().type() == IddObjectType::Zone) {
+        // Zone maps to Space in RT
+        if (auto s_ = modelObject->optionalCast<Space>()) {
+          sourceZone = s_->thermalZone();
+        }
+      } else {
+        // It's a space, but we don't allow mapping to a space in model SDK for now, and we don't have a Space RT... so we'll never get here
+      }
+    }
+
+    if (!sourceZone) {
+      return boost::none;
+    }
+
     openstudio::model::ZoneMixing mixing(*zone);
+    mixing.setSourceZone(sourceZone.get());
 
     OptionalString s = workspaceObject.name();
     if (s) {
@@ -96,9 +123,9 @@ namespace energyplus {
         LOG(Error, "Flow/Zone value not found for workspace object " << workspaceObject);
       }
     } else if (istringEqual("Flow/Area", *s)) {
-      d = workspaceObject.getDouble(openstudio::ZoneMixingFields::FlowRateperZoneFloorArea);
+      d = workspaceObject.getDouble(openstudio::ZoneMixingFields::FlowRateperFloorArea);
       if (d) {
-        mixing.setFlowRateperZoneFloorArea(*d);
+        mixing.setFlowRateperFloorArea(*d);
       } else {
         LOG(Error, "Flow/Area value not found for workspace object " << workspaceObject);
       }
@@ -120,16 +147,6 @@ namespace energyplus {
       LOG(Error, "Unknown DesignFlowRateCalculationMethod value for workspace object" << workspaceObject);
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneMixingFields::SourceZoneName);
-    if (target) {
-      OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
-      if (modelObject) {
-        if (modelObject->optionalCast<ThermalZone>()) {
-          mixing.setSourceZone(modelObject->cast<ThermalZone>());
-        }
-      }
-    }
-
     d = workspaceObject.getDouble(openstudio::ZoneMixingFields::DeltaTemperature);
     if (d) {
       mixing.setDeltaTemperature(*d);
@@ -145,42 +162,42 @@ namespace energyplus {
       }
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MinimumZoneTemperatureScheduleName);
+    target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MinimumReceivingTemperatureScheduleName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
         if (auto s = modelObject->optionalCast<Schedule>()) {
-          mixing.setMinimumZoneTemperatureSchedule(s.get());
+          mixing.setMinimumReceivingTemperatureSchedule(s.get());
         }
       }
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MaximumZoneTemperatureScheduleName);
+    target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MaximumReceivingTemperatureScheduleName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
         if (auto s = modelObject->optionalCast<Schedule>()) {
-          mixing.setMaximumZoneTemperatureSchedule(s.get());
+          mixing.setMaximumReceivingTemperatureSchedule(s.get());
         }
       }
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MinimumSourceZoneTemperatureScheduleName);
+    target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MinimumSourceTemperatureScheduleName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
         if (auto s = modelObject->optionalCast<Schedule>()) {
-          mixing.setMinimumSourceZoneTemperatureSchedule(s.get());
+          mixing.setMinimumSourceTemperatureSchedule(s.get());
         }
       }
     }
 
-    target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MaximumSourceZoneTemperatureScheduleName);
+    target = workspaceObject.getTarget(openstudio::ZoneMixingFields::MaximumSourceTemperatureScheduleName);
     if (target) {
       OptionalModelObject modelObject = translateAndMapWorkspaceObject(*target);
       if (modelObject) {
         if (auto s = modelObject->optionalCast<Schedule>()) {
-          mixing.setMaximumSourceZoneTemperatureSchedule(s.get());
+          mixing.setMaximumSourceTemperatureSchedule(s.get());
         }
       }
     }

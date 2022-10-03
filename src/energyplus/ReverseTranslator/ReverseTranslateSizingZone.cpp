@@ -36,6 +36,8 @@
 #include "../../model/Space_Impl.hpp"
 #include "../../model/DesignSpecificationOutdoorAir.hpp"
 #include "../../model/DesignSpecificationOutdoorAir_Impl.hpp"
+#include "../../model/Schedule.hpp"
+#include "../../model/Schedule_Impl.hpp"
 
 #include "../../utilities/idf/WorkspaceExtensibleGroup.hpp"
 #include <utilities/idd/Sizing_Zone_FieldEnums.hxx>
@@ -281,6 +283,11 @@ namespace energyplus {
           sizingZone.setDesignZoneAirDistributionEffectivenessinHeatingMode(value.get());
         }
 
+        value = _designSpecification->getDouble(DesignSpecification_ZoneAirDistributionFields::ZoneSecondaryRecirculationFraction);
+        if (value) {
+          sizingZone.setDesignZoneSecondaryRecirculationFraction(value.get());
+        }
+
         // MinimumZoneVentilationEfficiency
 
         value = _designSpecification->getDouble(DesignSpecification_ZoneAirDistributionFields::MinimumZoneVentilationEfficiency);
@@ -294,6 +301,97 @@ namespace energyplus {
         if (s && !s->empty()) {
           LOG(Warn, _designSpecification->nameString()
                       << ", field Zone Air Distribution Effectiveness Schedule Name (='" << s.get() << "') isn't translated back to OS:Sizing:Zone");
+        }
+      }
+
+      // Account for Dedicated Outdoor Air System: Optional Boolean
+      if (boost::optional<std::string> _accountforDedicatedOutdoorAirSystem =
+            workspaceObject.getString(Sizing_ZoneFields::AccountforDedicatedOutdoorAirSystem, true)) {
+        if (istringEqual("Yes", _accountforDedicatedOutdoorAirSystem.get())) {
+          sizingZone.setAccountforDedicatedOutdoorAirSystem(true);
+        } else {
+          sizingZone.setAccountforDedicatedOutdoorAirSystem(false);
+        }
+      }
+
+      // Dedicated Outdoor Air System Control Strategy: Optional String
+      if (boost::optional<std::string> _dedicatedOutdoorAirSystemControlStrategy =
+            workspaceObject.getString(Sizing_ZoneFields::DedicatedOutdoorAirSystemControlStrategy)) {
+        sizingZone.setDedicatedOutdoorAirSystemControlStrategy(_dedicatedOutdoorAirSystemControlStrategy.get());
+      }
+
+      // Dedicated Outdoor Air Low Setpoint Temperature for Design: Optional Double
+      if (boost::optional<double> _dedicatedOutdoorAirLowSetpointTemperatureforDesign =
+            workspaceObject.getDouble(Sizing_ZoneFields::DedicatedOutdoorAirLowSetpointTemperatureforDesign)) {
+        sizingZone.setDedicatedOutdoorAirLowSetpointTemperatureforDesign(_dedicatedOutdoorAirLowSetpointTemperatureforDesign.get());
+      }
+
+      // Dedicated Outdoor Air High Setpoint Temperature for Design: Optional Double
+      if (boost::optional<double> _dedicatedOutdoorAirHighSetpointTemperatureforDesign =
+            workspaceObject.getDouble(Sizing_ZoneFields::DedicatedOutdoorAirHighSetpointTemperatureforDesign)) {
+        sizingZone.setDedicatedOutdoorAirHighSetpointTemperatureforDesign(_dedicatedOutdoorAirHighSetpointTemperatureforDesign.get());
+      }
+
+      // Zone Load Sizing Method: Optional String
+      if (boost::optional<std::string> _zoneLoadSizingMethod = workspaceObject.getString(Sizing_ZoneFields::ZoneLoadSizingMethod)) {
+        sizingZone.setZoneLoadSizingMethod(_zoneLoadSizingMethod.get());
+      }
+
+      // Zone Latent Cooling Design Supply Air Humidity Ratio Input Method: Optional String
+      if (boost::optional<std::string> _zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod =
+            workspaceObject.getString(Sizing_ZoneFields::ZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod)) {
+        sizingZone.setZoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod(_zoneLatentCoolingDesignSupplyAirHumidityRatioInputMethod.get());
+      }
+
+      // Zone Dehumidification Design Supply Air Humidity Ratio: Optional Double
+      if (boost::optional<double> _zoneDehumidificationDesignSupplyAirHumidityRatio =
+            workspaceObject.getDouble(Sizing_ZoneFields::ZoneDehumidificationDesignSupplyAirHumidityRatio)) {
+        sizingZone.setZoneDehumidificationDesignSupplyAirHumidityRatio(_zoneDehumidificationDesignSupplyAirHumidityRatio.get());
+      }
+
+      // Zone Cooling Design Supply Air Humidity Ratio Difference: Optional Double
+      if (boost::optional<double> _zoneCoolingDesignSupplyAirHumidityRatioDifference =
+            workspaceObject.getDouble(Sizing_ZoneFields::ZoneCoolingDesignSupplyAirHumidityRatioDifference)) {
+        sizingZone.setZoneCoolingDesignSupplyAirHumidityRatioDifference(_zoneCoolingDesignSupplyAirHumidityRatioDifference.get());
+      }
+
+      // Zone Latent Heating Design Supply Air Humidity Ratio Input Method: Optional String
+      if (boost::optional<std::string> _zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod =
+            workspaceObject.getString(Sizing_ZoneFields::ZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod)) {
+        sizingZone.setZoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod(_zoneLatentHeatingDesignSupplyAirHumidityRatioInputMethod.get());
+      }
+
+      // Zone Humidification Design Supply Air Humidity Ratio: Optional Double
+      if (boost::optional<double> _zoneHumidificationDesignSupplyAirHumidityRatio =
+            workspaceObject.getDouble(Sizing_ZoneFields::ZoneHumidificationDesignSupplyAirHumidityRatio)) {
+        sizingZone.setZoneHumidificationDesignSupplyAirHumidityRatio(_zoneHumidificationDesignSupplyAirHumidityRatio.get());
+      }
+
+      // Zone Humidification Design Supply Air Humidity Ratio Difference: Optional Double
+      if (boost::optional<double> _zoneHumidificationDesignSupplyAirHumidityRatioDifference =
+            workspaceObject.getDouble(Sizing_ZoneFields::ZoneHumidificationDesignSupplyAirHumidityRatioDifference)) {
+        sizingZone.setZoneHumidificationDesignSupplyAirHumidityRatioDifference(_zoneHumidificationDesignSupplyAirHumidityRatioDifference.get());
+      }
+
+      // Zone Humidistat Dehumidification Set Point Schedule Name: Optional String
+      if (auto _wo = workspaceObject.getTarget(Sizing_ZoneFields::ZoneHumidistatDehumidificationSetPointScheduleName)) {
+        if (auto _mo = translateAndMapWorkspaceObject(_wo.get())) {
+          if (auto sch_ = _mo->optionalCast<Schedule>()) {
+            sizingZone.setZoneHumidistatDehumidificationSetPointSchedule(sch_.get());
+          } else {
+            LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Zone Humidistat Dehumidification Set Point Schedule Name'");
+          }
+        }
+      }
+
+      // Zone Humidistat Humidification Set Point Schedule Name: Optional String
+      if (auto _wo = workspaceObject.getTarget(Sizing_ZoneFields::ZoneHumidistatHumidificationSetPointScheduleName)) {
+        if (auto _mo = translateAndMapWorkspaceObject(_wo.get())) {
+          if (auto sch_ = _mo->optionalCast<Schedule>()) {
+            sizingZone.setZoneHumidistatHumidificationSetPointSchedule(sch_.get());
+          } else {
+            LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Zone Humidistat Huumidification Set Point Schedule Name'");
+          }
         }
       }
     }

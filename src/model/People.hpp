@@ -91,6 +91,15 @@ namespace model {
     /** Returns the air velocity schedule. */
     boost::optional<Schedule> airVelocitySchedule() const;
 
+    /** Returns the ankle-level air velocity schedule. */
+    boost::optional<Schedule> ankleLevelAirVelocitySchedule() const;
+
+    double coldStressTemperatureThreshold() const;
+    bool isColdStressTemperatureThresholdDefaulted() const;
+
+    double heatStressTemperatureThreshold() const;
+    bool isHeatStressTemperatureThresholdDefaulted() const;
+
     //@}
     /** @name Setters */
     //@{
@@ -142,6 +151,15 @@ namespace model {
 
     void resetMultiplier();
 
+    bool setAnkleLevelAirVelocitySchedule(Schedule& schedule);
+    void resetAnkleLevelAirVelocitySchedule();
+
+    bool setColdStressTemperatureThreshold(double coldStressTemperatureThreshold);
+    void resetColdStressTemperatureThreshold();
+
+    bool setHeatStressTemperatureThreshold(double heatStressTemperatureThreshold);
+    void resetHeatStressTemperatureThreshold();
+
     //@}
     /** @name Other */
     //@{
@@ -170,7 +188,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::People_Impl ImplType;
+    using ImplType = detail::People_Impl;
 
     friend class Model;
     friend class openstudio::IdfObject;
@@ -183,10 +201,10 @@ namespace model {
   };
 
   /** \relates People*/
-  typedef boost::optional<People> OptionalPeople;
+  using OptionalPeople = boost::optional<People>;
 
   /** \relates People*/
-  typedef std::vector<People> PeopleVector;
+  using PeopleVector = std::vector<People>;
 
 }  // namespace model
 }  // namespace openstudio

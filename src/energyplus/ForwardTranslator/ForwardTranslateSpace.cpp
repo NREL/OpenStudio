@@ -55,6 +55,7 @@
 #include "../../model/InteriorPartitionSurfaceGroup.hpp"
 #include "../../model/Surface.hpp"
 
+#include <utilities/idd/OS_Space_FieldEnums.hxx>
 #include <utilities/idd/Space_FieldEnums.hxx>
 
 #include "../../utilities/idd/IddEnums.hpp"
@@ -81,12 +82,29 @@ namespace energyplus {
     // Space
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Space, modelObject);
 
+    // ZoneName
     if (boost::optional<ThermalZone> thermalZone = modelObject.thermalZone()) {
       idfObject.setString(SpaceFields::ZoneName, thermalZone->name().get());
     }
 
-    idfObject.setDouble(SpaceFields::FloorArea, modelObject.floorArea());
+    // for CeilingHeight, Volume, FloorArea: only FT if hard set (same logic as for ThermalZone)
 
+    // CeilingHeight
+    if (!modelObject.isCeilingHeightDefaulted()) {
+      idfObject.setDouble(SpaceFields::CeilingHeight, modelObject.ceilingHeight());
+    }
+
+    // Volume
+    if (!modelObject.isVolumeDefaulted()) {
+      idfObject.setDouble(SpaceFields::Volume, modelObject.volume());
+    }
+
+    // FloorArea
+    if (!modelObject.isFloorAreaDefaulted()) {
+      idfObject.setDouble(SpaceFields::FloorArea, modelObject.floorArea());
+    }
+
+    // SpaceType
     if (boost::optional<SpaceType> spaceType_ = modelObject.spaceType()) {
       if (auto idf_spaceType_ = translateAndMapModelObject(spaceType_.get())) {
         idfObject.setString(SpaceFields::SpaceType, idf_spaceType_->nameString());

@@ -1,0 +1,89 @@
+
+OS:Version,
+  {0b47095c-71d3-47cd-b125-4d2e9cb5971e}, !- Handle
+  3.4.0;                                  !- Version Identifier
+
+OS:Coil:Heating:DX:MultiSpeed:StageData,
+  {37dc189e-68eb-42e1-80e1-de5399af7cba}, !- Handle
+  Coil Heating DX Multi Speed Stage Data 1, !- Name
+  autosize,                               !- Gross Rated Heating Capacity {W}
+  2.75,                                   !- Gross Rated Heating COP {W/W}
+  autosize,                               !- Rated Air Flow Rate {m3/s}
+  773.3,                                  !- Rated Supply Air Fan Power Per Volume Flow Rate {W/(m3/s)}
+  {b2fb23a2-74cb-4665-948f-80e11340e89b}, !- Heating Capacity Function of Temperature Curve Name
+  {71c2c4e1-65e3-4d7c-94b7-da72bf9d3fdd}, !- Heating Capacity Function of Flow Fraction Curve Name
+  {dc14ed30-4edb-4ffd-8a01-e9e01c4e141c}, !- Energy Input Ratio Function of Temperature Curve Name
+  {3771d178-9d59-44c8-9f14-9e53ff50ea03}, !- Energy Input Ratio Function of Flow Fraction Curve Name
+  {22442d7c-e17e-4500-bd1c-4b464030ce28}, !- Part Load Fraction Correlation Curve Name
+  0.2,                                    !- Rated Waste Heat Fraction of Power Input {dimensionless}
+  {cbe67139-acee-43fd-a15a-a8b3f0919870}; !- Waste Heat Function of Temperature Curve Name
+
+OS:Curve:Biquadratic,
+  {b2fb23a2-74cb-4665-948f-80e11340e89b}, !- Handle
+  Curve Biquadratic 1,                    !- Name
+  0.760523473,                            !- Coefficient1 Constant
+  0.007531702,                            !- Coefficient2 x
+  -0.000288398,                           !- Coefficient3 x**2
+  0.021653033,                            !- Coefficient4 y
+  3.29133e-05,                            !- Coefficient5 y**2
+  0.00014862,                             !- Coefficient6 x*y
+  18.33333,                               !- Minimum Value of x
+  23.88889,                               !- Maximum Value of x
+  -13.88889,                              !- Minimum Value of y
+  19.44444;                               !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {71c2c4e1-65e3-4d7c-94b7-da72bf9d3fdd}, !- Handle
+  Curve Quadratic 1,                      !- Name
+  0.752130847,                            !- Coefficient1 Constant
+  0.437552514,                            !- Coefficient2 x
+  -0.189683361,                           !- Coefficient3 x**2
+  0.7,                                    !- Minimum Value of x
+  1.1;                                    !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {dc14ed30-4edb-4ffd-8a01-e9e01c4e141c}, !- Handle
+  Curve Biquadratic 2,                    !- Name
+  0.750128109,                            !- Coefficient1 Constant
+  0.002298944,                            !- Coefficient2 x
+  0.000953927,                            !- Coefficient3 x**2
+  -0.008327043,                           !- Coefficient4 y
+  0.001016058,                            !- Coefficient5 y**2
+  -0.001433855,                           !- Coefficient6 x*y
+  18.33333,                               !- Minimum Value of x
+  23.88889,                               !- Maximum Value of x
+  -13.88889,                              !- Minimum Value of y
+  19.44444;                               !- Maximum Value of y
+
+OS:Curve:Quadratic,
+  {3771d178-9d59-44c8-9f14-9e53ff50ea03}, !- Handle
+  Curve Quadratic 2,                      !- Name
+  1.853909301,                            !- Coefficient1 Constant
+  -1.411203778,                           !- Coefficient2 x
+  0.557294478,                            !- Coefficient3 x**2
+  0.7,                                    !- Minimum Value of x
+  1.1;                                    !- Maximum Value of x
+
+OS:Curve:Quadratic,
+  {22442d7c-e17e-4500-bd1c-4b464030ce28}, !- Handle
+  Curve Quadratic 3,                      !- Name
+  0.85,                                   !- Coefficient1 Constant
+  0.15,                                   !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Biquadratic,
+  {cbe67139-acee-43fd-a15a-a8b3f0919870}, !- Handle
+  Curve Biquadratic 3,                    !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 y
+  0,                                      !- Coefficient5 y**2
+  0,                                      !- Coefficient6 x*y
+  0,                                      !- Minimum Value of x
+  50,                                     !- Maximum Value of x
+  0,                                      !- Minimum Value of y
+  50;                                     !- Maximum Value of y
+

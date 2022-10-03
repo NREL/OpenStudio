@@ -136,7 +136,9 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_Space2) {
   Surface floor2(points2, model);
 
   Space space1(model);
+  EXPECT_TRUE(space1.setFloorArea(1));
   Space space2(model);
+  EXPECT_TRUE(space2.setFloorArea(4));
   floor1.setParent(space1);
   floor2.setParent(space2);
 
@@ -329,8 +331,8 @@ TEST_F(EnergyPlusFixture, Space_exampleModel_Loads) {
         std::find_if(spaceNames.begin(), spaceNames.end(), [&i_space](const auto& s) { return openstudio::istringEqual(s, i_space.nameString()); });
       EXPECT_NE(spaceNames.end(), it);
 
-      // TODO: should we actually write the floor area in this simple case or let E+ figure it out?
-      EXPECT_EQ(100.0, i_space.getDouble(SpaceFields::FloorArea).get());
+      // let E+ figure it out
+      EXPECT_TRUE(i_space.isEmpty(SpaceFields::FloorArea));
     }
 
     // There's one SpaceList corresponding to the SpaceType (for load attribution) and it does have the 4 spaces in there

@@ -204,14 +204,14 @@ TEST_F(IddFixture, IddFactory_RoomAir_TemperaturePattern_TwoGradient) {
 
 TEST_F(IddFixture, IddFactory_Units) {
   std::vector<boost::regex> unsupported;
-  unsupported.push_back(boost::regex("\\$"));
-  unsupported.push_back(boost::regex("eV"));
-  unsupported.push_back(boost::regex("hh:mm"));
-  unsupported.push_back(boost::regex("percent"));
-  unsupported.push_back(boost::regex("ppm"));
-  unsupported.push_back(boost::regex("W/\\(\\(m3/s\\)-Pa\\)"));
-  unsupported.push_back(boost::regex("W/m2 or deg C"));
-  unsupported.push_back(boost::regex("W/m2, W or deg C"));
+  unsupported.emplace_back("\\$");
+  unsupported.emplace_back("eV");
+  unsupported.emplace_back("hh:mm");
+  unsupported.emplace_back("percent");
+  unsupported.emplace_back("ppm");
+  unsupported.emplace_back("W/\\(\\(m3/s\\)-Pa\\)");
+  unsupported.emplace_back("W/m2, deg C or cd/m2");
+  unsupported.emplace_back("W/m2, W or deg C");
 
   IddObjectVector objects = IddFactory::instance().getObjects(IddFileType(IddFileType::WholeFactory));
   StringSet goodUnits;

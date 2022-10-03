@@ -338,6 +338,10 @@ namespace energyplus {
         modelObject = translateBuilding(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Chiller_Electric_ASHRAE205: {
+        modelObject = translateChillerElectricASHRAE205(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::Coil_Heating_Fuel: {
         //modelObject = translateCoilHeatingGas(workspaceObject );
         break;
@@ -740,6 +744,14 @@ namespace energyplus {
         modelObject = translateOutputControlTableStyle(workspaceObject);
         break;
       }
+      case openstudio::IddObjectType::Output_Schedules: {
+        modelObject = translateOutputSchedules(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::Output_Constructions: {
+        modelObject = translateOutputConstructions(workspaceObject);
+        break;
+      }
       case openstudio::IddObjectType::People: {
         modelObject = translatePeople(workspaceObject);
         break;
@@ -902,6 +914,14 @@ namespace energyplus {
       }
       case openstudio::IddObjectType::SurfaceProperty_SurroundingSurfaces: {
         modelObject = translateSurfacePropertySurroundingSurfaces(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SurfaceProperty_GroundSurfaces: {
+        modelObject = translateSurfacePropertyGroundSurfaces(workspaceObject);
+        break;
+      }
+      case openstudio::IddObjectType::SurfaceProperty_IncidentSolarMultiplier: {
+        modelObject = translateSurfacePropertyIncidentSolarMultiplier(workspaceObject);
         break;
       }
         //case openstudio::IddObjectType::SwimmingPool_Indoor :

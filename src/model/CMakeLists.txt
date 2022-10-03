@@ -281,6 +281,9 @@ set(${target_name}_src
   ChillerAbsorptionIndirect.hpp
   ChillerAbsorptionIndirect_Impl.hpp
   ChillerAbsorptionIndirect.cpp
+  ChillerElectricASHRAE205.hpp
+  ChillerElectricASHRAE205_Impl.hpp
+  ChillerElectricASHRAE205.cpp
   ChillerElectricEIR.hpp
   ChillerElectricEIR_Impl.hpp
   ChillerElectricEIR.cpp
@@ -374,6 +377,12 @@ set(${target_name}_src
   CoilHeatingElectric.hpp
   CoilHeatingElectric_Impl.hpp
   CoilHeatingElectric.cpp
+  CoilHeatingElectricMultiStage.hpp
+  CoilHeatingElectricMultiStage_Impl.hpp
+  CoilHeatingElectricMultiStage.cpp
+  CoilHeatingElectricMultiStageStageData.hpp
+  CoilHeatingElectricMultiStageStageData_Impl.hpp
+  CoilHeatingElectricMultiStageStageData.cpp
   CoilHeatingFourPipeBeam.hpp
   CoilHeatingFourPipeBeam_Impl.hpp
   CoilHeatingFourPipeBeam.cpp
@@ -1072,6 +1081,12 @@ set(${target_name}_src
   OutputTableSummaryReports.hpp
   OutputTableSummaryReports_Impl.hpp
   OutputTableSummaryReports.cpp
+  OutputSchedules.hpp
+  OutputSchedules_Impl.hpp
+  OutputSchedules.cpp
+  OutputConstructions.hpp
+  OutputConstructions_Impl.hpp
+  OutputConstructions.cpp
   OutsideSurfaceConvectionAlgorithm.hpp
   OutsideSurfaceConvectionAlgorithm_Impl.hpp
   OutsideSurfaceConvectionAlgorithm.cpp
@@ -1543,6 +1558,12 @@ set(${target_name}_src
   SurfacePropertySurroundingSurfaces.cpp
   SurfacePropertySurroundingSurfaces.hpp
   SurfacePropertySurroundingSurfaces_Impl.hpp
+  SurfacePropertyGroundSurfaces.cpp
+  SurfacePropertyGroundSurfaces.hpp
+  SurfacePropertyGroundSurfaces_Impl.hpp
+  SurfacePropertyIncidentSolarMultiplier.cpp
+  SurfacePropertyIncidentSolarMultiplier.hpp
+  SurfacePropertyIncidentSolarMultiplier_Impl.hpp
   SwimmingPoolIndoor.cpp
   SwimmingPoolIndoor.hpp
   SwimmingPoolIndoor_Impl.hpp
@@ -1885,6 +1906,7 @@ set(${target_name}_test_src
   # test/CentralHeatPumpSystemModule_GTest.cpp => Included in the above
   test/ChillerAbsorption_GTest.cpp
   test/ChillerAbsorptionIndirect_GTest.cpp
+  test/ChillerElectricASHRAE205_GTest.cpp
   test/ChillerElectricEIR_GTest.cpp
   test/ChillerElectricReformulatedEIR_GTest.cpp
   test/ChillerHeaterPerformanceElectricEIR_GTest.cpp
@@ -1915,6 +1937,8 @@ set(${target_name}_test_src
   test/CoilHeatingDXVariableSpeed_GTest.cpp
   test/CoilHeatingDXVariableSpeedSpeedData_GTest.cpp
   test/CoilHeatingElectric_GTest.cpp
+  test/CoilHeatingElectricMultiStage_GTest.cpp
+  test/CoilHeatingElectricMultiStageStageData_GTest.cpp
   test/CoilHeatingFourPipeBeam_GTest.cpp
   test/CoilHeatingGas_GTest.cpp
   test/CoilHeatingGasMultiStage_GTest.cpp
@@ -2120,6 +2144,8 @@ set(${target_name}_test_src
   test/OutputMeter_GTest.cpp
   test/OutputVariable_GTest.cpp
   test/OutputTableSummaryReports_GTest.cpp
+  test/OutputSchedules_GTest.cpp
+  test/OutputConstructions_GTest.cpp
   test/ParentObject_GTest.cpp
   test/People_GTest.cpp
   test/PeopleDefinition_GTest.cpp
@@ -2242,6 +2268,8 @@ set(${target_name}_test_src
   test/SurfacePropertyOtherSideCoefficients_GTest.cpp
   test/SurfacePropertyExposedFoundationPerimeter_GTest.cpp
   test/SurfacePropertySurroundingSurfaces_GTest.cpp
+  test/SurfacePropertyGroundSurfaces_GTest.cpp
+  test/SurfacePropertyIncidentSolarMultiplier_GTest.cpp
   test/SwimmingPoolIndoor_GTest.cpp
   test/TableMultiVariableLookup_GTest.cpp
   test/TableLookup_GTest.cpp

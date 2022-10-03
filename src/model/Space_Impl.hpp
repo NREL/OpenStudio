@@ -76,6 +76,7 @@ namespace model {
   class SpaceInfiltrationFlowCoefficient;
   class DesignSpecificationOutdoorAir;
   class Space;
+  class ZoneMixing;
 
   namespace detail {
 
@@ -166,11 +167,23 @@ namespace model {
 
       void resetPartofTotalFloorArea();
 
+      bool setCeilingHeight(double ceilingHeight);
+
+      void autocalculateCeilingHeight();
+
+      void resetCeilingHeight();
+
       bool setVolume(double volume);
 
       void autocalculateVolume();
 
       void resetVolume();
+
+      bool setFloorArea(double floorArea);
+
+      void autocalculateFloorArea();
+
+      void resetFloorArea();
 
       //@}
 
@@ -321,17 +334,27 @@ namespace model {
       /// Returns the multiplier for this space, comes from thermal zone, defaults to 1.
       int multiplier() const;
 
-      double floorArea() const;
-
       double exteriorArea() const;
 
       double exteriorWallArea() const;
+
+      double ceilingHeight() const;
+
+      bool isCeilingHeightDefaulted() const;
+
+      bool isCeilingHeightAutocalculated() const;
 
       double volume() const;
 
       bool isVolumeDefaulted() const;
 
       bool isVolumeAutocalculated() const;
+
+      double floorArea() const;
+
+      bool isFloorAreaDefaulted() const;
+
+      bool isFloorAreaAutocalculated() const;
 
       double numberOfPeople() const;
 
@@ -484,6 +507,10 @@ namespace model {
 
       Polyhedron polyhedron() const;
       bool isEnclosedVolume() const;
+
+      std::vector<ZoneMixing> zoneMixing() const;
+      std::vector<ZoneMixing> supplyZoneMixing() const;
+      std::vector<ZoneMixing> exhaustZoneMixing() const;
 
      private:
       REGISTER_LOGGER("openstudio.model.Space");

@@ -104,3 +104,18 @@ TEST_F(ModelFixture, CoilCoolingDXMultiSpeedStageData_remove) {
 
   EXPECT_EQ(stage2, dx1.stages()[0]);
 }
+
+TEST_F(ModelFixture, CoilCoolingDXMultiSpeedStageData_2017and2023) {
+  Model model;
+
+  CoilCoolingDXMultiSpeedStageData speed(model);
+
+  EXPECT_EQ(773.3, speed.ratedEvaporatorFanPowerPerVolumeFlowRate2017());
+  EXPECT_EQ(934.4, speed.ratedEvaporatorFanPowerPerVolumeFlowRate2023());
+
+  EXPECT_TRUE(speed.setRatedEvaporatorFanPowerPerVolumeFlowRate2017(8.0));
+  EXPECT_TRUE(speed.setRatedEvaporatorFanPowerPerVolumeFlowRate2023(9.0));
+
+  EXPECT_EQ(8.0, speed.ratedEvaporatorFanPowerPerVolumeFlowRate2017());
+  EXPECT_EQ(9.0, speed.ratedEvaporatorFanPowerPerVolumeFlowRate2023());
+}

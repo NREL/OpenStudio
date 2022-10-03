@@ -48,6 +48,7 @@
 #include "../AirTerminalSingleDuctConstantVolumeNoReheat_Impl.hpp"
 
 #include "../PlantLoop.hpp"
+#include "../PlantLoop_Impl.hpp"
 #include "../CoilCoolingWater.hpp"
 #include "../CoilCoolingWater_Impl.hpp"
 #include "../CoilHeatingWater.hpp"
@@ -72,6 +73,7 @@
 #include "../AirTerminalDualDuctConstantVolume.hpp"
 
 #include "../ThermalZone.hpp"
+#include "../ThermalZone_Impl.hpp"
 #include "../ScheduleCompact.hpp"
 #include "../ScheduleTypeLimits.hpp"
 #include "../ScheduleRuleset.hpp"
@@ -1476,6 +1478,198 @@ TEST_F(ModelFixture, AirLoopHVAC_singleDuct_Clone) {
   EXPECT_EQ(2u, a.supplyComponents().size());
   EXPECT_EQ(1u, aClone.supplyOutletNodes().size());
   EXPECT_EQ(2u, aClone.supplyComponents().size());
+}
+
+TEST_F(ModelFixture, AirLoopHVAC_singleDuct_Clone_WithComponents) {
+  Model m;
+
+  PlantLoop hw_loop(m);
+  PlantLoop chw_loop(m);
+
+  EXPECT_EQ(12, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(4, m.getModelObjects<Splitter>().size());
+  EXPECT_EQ(4, m.getModelObjects<Mixer>().size());
+
+  EXPECT_EQ(6, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(6, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+
+  AirLoopHVAC a(m, false);
+  EXPECT_FALSE(a.isDualDuct());
+
+  EXPECT_EQ(1, a.supplyOutletNodes().size());
+  EXPECT_EQ(2, a.supplyComponents().size());
+
+  EXPECT_EQ(0, a.supplySplitterOutletNodes().size());
+  EXPECT_FALSE(a.supplySplitterInletNode());
+  EXPECT_FALSE(a.supplySplitter());
+
+  EXPECT_EQ(5, a.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(17, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(5, m.getModelObjects<Splitter>().size());
+  EXPECT_EQ(5, m.getModelObjects<Mixer>().size());
+
+  auto supplyOutletNode = a.supplyOutletNode();
+
+  CoilCoolingWater coolingCoil(m);
+  EXPECT_TRUE(coolingCoil.addToNode(supplyOutletNode));
+  EXPECT_EQ(17, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(6, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(6, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(5, a.components(openstudio::IddObjectType::OS_Node).size());
+  {
+    auto mo = coolingCoil.airOutletModelObject();
+    ASSERT_TRUE(mo);
+    auto node = mo->optionalCast<Node>();
+    ASSERT_TRUE(node);
+    ASSERT_EQ(supplyOutletNode, node.get());
+    EXPECT_TRUE(chw_loop.addDemandBranchForComponent(coolingCoil));
+    EXPECT_EQ(18, m.getConcreteModelObjects<Node>().size());
+    EXPECT_EQ(7, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(6, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(5, a.components(openstudio::IddObjectType::OS_Node).size());
+  }
+
+  CoilHeatingWater heatingCoil(m);
+  EXPECT_TRUE(heatingCoil.addToNode(supplyOutletNode));
+  EXPECT_EQ(19, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(7, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(6, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(6, a.components(openstudio::IddObjectType::OS_Node).size());
+  {
+    auto mo = heatingCoil.airOutletModelObject();
+    ASSERT_TRUE(mo);
+    auto node = mo->optionalCast<Node>();
+    ASSERT_TRUE(node);
+    ASSERT_EQ(supplyOutletNode, node.get());
+    EXPECT_TRUE(hw_loop.addDemandBranchForComponent(heatingCoil));
+    EXPECT_EQ(20, m.getConcreteModelObjects<Node>().size());
+    EXPECT_EQ(7, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(7, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(6, a.components(openstudio::IddObjectType::OS_Node).size());
+  }
+
+  EXPECT_EQ(1, a.supplyOutletNodes().size());
+  EXPECT_EQ(5, a.supplyComponents().size());  // o----CC----o----HC----o
+  EXPECT_EQ(5, a.demandComponents().size());  // 3 nodes, one splitter, one mixer
+
+  EXPECT_FALSE(a.supplySplitter());
+
+  ThermalZone z(m);
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
+  AirTerminalSingleDuctConstantVolumeNoReheat atu(m, alwaysOn);
+  EXPECT_TRUE(a.addBranchForZone(z, atu));
+
+  EXPECT_EQ(2, m.getConcreteModelObjects<PlantLoop>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilCoolingWater>().size());
+  EXPECT_EQ(1, m.getConcreteModelObjects<CoilHeatingWater>().size());
+  EXPECT_EQ(23, m.getConcreteModelObjects<Node>().size());
+  EXPECT_EQ(7, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(7, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(8, a.components(openstudio::IddObjectType::OS_Node).size());
+  EXPECT_EQ(1, a.supplyOutletNodes().size());
+  EXPECT_EQ(5, a.supplyComponents().size());  // o----CC----o----HC----o
+  EXPECT_EQ(9, a.demandComponents().size());  // o----Splitter-----o----ATU----o---Zone----o --- mixer ----o
+  ASSERT_TRUE(coolingCoil.plantLoop());
+  EXPECT_EQ(chw_loop, coolingCoil.plantLoop().get());
+  ASSERT_TRUE(heatingCoil.plantLoop());
+  EXPECT_EQ(hw_loop, heatingCoil.plantLoop().get());
+  {
+    Model m2;
+    // PlantLoops aren't taken with
+    auto a2 = a.clone(m2).cast<AirLoopHVAC>();
+
+    EXPECT_EQ(1, m2.getConcreteModelObjects<AirLoopHVAC>().size());
+    EXPECT_EQ(0, m2.getConcreteModelObjects<PlantLoop>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeNoReheat>().size());
+    EXPECT_EQ(0, m2.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<CoilCoolingWater>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<CoilHeatingWater>().size());
+
+    EXPECT_EQ(7, m2.getConcreteModelObjects<Node>().size());
+
+    EXPECT_EQ(7, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(7, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(7, a2.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(1, a2.supplyOutletNodes().size());
+    EXPECT_EQ(5, a2.supplyComponents().size());  // o----CC----o----HC----o
+    EXPECT_EQ(7, a2.demandComponents().size());  // o----Splitter-----o----ATU----o --- mixer ----o
+
+    // Ensure the ATU is connectable (cf #4663)
+    auto z2 = z.clone(m2).cast<ThermalZone>();
+    EXPECT_EQ(8, m2.getConcreteModelObjects<Node>().size());
+    EXPECT_EQ(1, m2.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(0, z2.equipment().size());
+
+    EXPECT_TRUE(a2.addBranchForZone(z2));
+
+    EXPECT_EQ(9, m2.getConcreteModelObjects<Node>().size());
+    EXPECT_EQ(8, a2.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(1, a2.supplyOutletNodes().size());
+    EXPECT_EQ(5, a2.supplyComponents().size());  // o----CC----o----HC----o
+    EXPECT_EQ(9, a2.demandComponents().size());  // o----Splitter-----o----ATU----o---Zone----o --- mixer ----o
+    EXPECT_EQ(1, z2.equipment().size());
+
+    ASSERT_EQ(1, a2.components(openstudio::IddObjectType::OS_Coil_Cooling_Water).size());
+    auto coolingCoil2 = a2.components(openstudio::IddObjectType::OS_Coil_Cooling_Water)[0].cast<CoilCoolingWater>();
+    EXPECT_FALSE(coolingCoil2.plantLoop());
+
+    ASSERT_EQ(1, a2.components(openstudio::IddObjectType::OS_Coil_Heating_Water).size());
+    auto heatingCoil2 = a2.components(openstudio::IddObjectType::OS_Coil_Heating_Water)[0].cast<CoilHeatingWater>();
+    EXPECT_FALSE(heatingCoil2.plantLoop());
+  }
+
+  {
+    // Same model
+    auto a2 = a.clone(m).cast<AirLoopHVAC>();
+
+    EXPECT_EQ(2, m.getConcreteModelObjects<AirLoopHVAC>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<PlantLoop>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<AirTerminalSingleDuctConstantVolumeNoReheat>().size());
+    EXPECT_EQ(1, m.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<CoilCoolingWater>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<CoilHeatingWater>().size());
+
+    // 23 + 7 (new loop) + 2 loops x 2 nodes
+    EXPECT_EQ(34, m.getConcreteModelObjects<Node>().size());
+    EXPECT_EQ(9, chw_loop.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(9, hw_loop.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(8, a.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(1, a.supplyOutletNodes().size());
+    EXPECT_EQ(5, a.supplyComponents().size());  // o----CC----o----HC----o
+    EXPECT_EQ(9, a.demandComponents().size());  // o----Splitter-----o----ATU----o---Zone----o --- mixer ----o
+    EXPECT_EQ(7, a2.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(1, a2.supplyOutletNodes().size());
+    EXPECT_EQ(5, a2.supplyComponents().size());  // o----CC----o----HC----o
+    EXPECT_EQ(7, a2.demandComponents().size());  // o----Splitter-----o----ATU----o --- mixer ----o
+
+    // Ensure the ATU is connectable (cf #4663)
+    auto z2 = z.clone(m).cast<ThermalZone>();
+    EXPECT_EQ(35, m.getConcreteModelObjects<Node>().size());
+    EXPECT_EQ(2, m.getConcreteModelObjects<ThermalZone>().size());
+    EXPECT_EQ(1, z.equipment().size());
+    EXPECT_EQ(0, z2.equipment().size());
+
+    EXPECT_TRUE(a2.addBranchForZone(z2));
+
+    EXPECT_EQ(36, m.getConcreteModelObjects<Node>().size());
+    EXPECT_EQ(8, a2.components(openstudio::IddObjectType::OS_Node).size());
+    EXPECT_EQ(1, a2.supplyOutletNodes().size());
+    EXPECT_EQ(5, a2.supplyComponents().size());  // o----CC----o----HC----o
+    EXPECT_EQ(9, a2.demandComponents().size());  // o----Splitter-----o----ATU----o---Zone----o --- mixer ----o
+    EXPECT_EQ(1, z.equipment().size());
+    EXPECT_EQ(1, z2.equipment().size());
+
+    // Coils are also reconnected to plant loops
+    ASSERT_EQ(1, a2.components(openstudio::IddObjectType::OS_Coil_Cooling_Water).size());
+    auto coolingCoil2 = a2.components(openstudio::IddObjectType::OS_Coil_Cooling_Water)[0].cast<CoilCoolingWater>();
+    ASSERT_TRUE(coolingCoil2.plantLoop());
+    EXPECT_EQ(chw_loop, coolingCoil2.plantLoop().get());
+
+    ASSERT_EQ(1, a2.components(openstudio::IddObjectType::OS_Coil_Heating_Water).size());
+    auto heatingCoil2 = a2.components(openstudio::IddObjectType::OS_Coil_Heating_Water)[0].cast<CoilHeatingWater>();
+    ASSERT_TRUE(heatingCoil2.plantLoop());
+    EXPECT_EQ(hw_loop, heatingCoil2.plantLoop().get());
+  }
 }
 
 TEST_F(ModelFixture, AirLoopHVAC_dualDuct_Clone) {

@@ -168,6 +168,19 @@ TEST_F(ModelFixture, CoilCoolingWaterToAirHeatPumpEquationFit_Check_Getters_and_
   boost::optional<double> testRatedCoolingCoefficientofPerformance = coilCoolingWaterToAirHeatPumpEquationFit.ratedCoolingCoefficientofPerformance();
   EXPECT_EQ((*testRatedCoolingCoefficientofPerformance), 100);
 
+  // Test Rated Entering Water, Air Dry-Bulb, Air Wet-Bulb Temperature
+  EXPECT_EQ(30, coilCoolingWaterToAirHeatPumpEquationFit.ratedEnteringWaterTemperature());
+  EXPECT_TRUE(coilCoolingWaterToAirHeatPumpEquationFit.setRatedEnteringWaterTemperature(35));
+  EXPECT_EQ(35, coilCoolingWaterToAirHeatPumpEquationFit.ratedEnteringWaterTemperature());
+
+  EXPECT_EQ(27, coilCoolingWaterToAirHeatPumpEquationFit.ratedEnteringAirDryBulbTemperature());
+  EXPECT_TRUE(coilCoolingWaterToAirHeatPumpEquationFit.setRatedEnteringAirDryBulbTemperature(22));
+  EXPECT_EQ(22, coilCoolingWaterToAirHeatPumpEquationFit.ratedEnteringAirDryBulbTemperature());
+
+  EXPECT_EQ(19.0, coilCoolingWaterToAirHeatPumpEquationFit.ratedEnteringAirWetBulbTemperature());
+  EXPECT_TRUE(coilCoolingWaterToAirHeatPumpEquationFit.setRatedEnteringAirWetBulbTemperature(18.6));
+  EXPECT_EQ(18.6, coilCoolingWaterToAirHeatPumpEquationFit.ratedEnteringAirWetBulbTemperature());
+
   // Fields N6 - N10 Check set Cooling Capacity Coefficients
   coilCoolingWaterToAirHeatPumpEquationFit.setTotalCoolingCapacityCoefficient1(1);
   double testTotalCoolingCapacityCoefficient1 = coilCoolingWaterToAirHeatPumpEquationFit.totalCoolingCapacityCoefficient1();

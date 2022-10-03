@@ -41,6 +41,9 @@
 #include "../../model/CoilCoolingDXTwoStageWithHumidityControlMode.hpp"
 #include "../../model/CoilCoolingDXVariableSpeed.hpp"
 #include "../../model/CoilCoolingDXMultiSpeed.hpp"
+#include "../../model/CoilCoolingDX.hpp"
+#include "../../model/CoilCoolingDXCurveFitOperatingMode.hpp"
+#include "../../model/CoilCoolingDXCurveFitPerformance.hpp"
 
 // Not DX
 #include "../../model/CoilCoolingWaterToAirHeatPumpEquationFit.hpp"
@@ -66,9 +69,12 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_CoilWaterHeatingDesuperheater_DXCoil
   CoilWaterHeatingDesuperheater desuperheater(m, temperatureSetpointSchedule);
   desuperheater.setRatedHeatReclaimRecoveryEfficiency(0.25);
 
+  CoilCoolingDXCurveFitOperatingMode operatingMode(m);
+  CoilCoolingDXCurveFitPerformance performance(m, operatingMode);
+
   // DX Coils that will be wrapped in CoilSystem:Cooling:DX
-  std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m), CoilCoolingDXTwoSpeed(m), CoilCoolingDXTwoStageWithHumidityControlMode(m),
-                                          CoilCoolingDXVariableSpeed(m), CoilCoolingDXMultiSpeed(m)};
+  std::vector<HVACComponent> testCoils = {CoilCoolingDXSingleSpeed(m),   CoilCoolingDXTwoSpeed(m),   CoilCoolingDXTwoStageWithHumidityControlMode(m),
+                                          CoilCoolingDXVariableSpeed(m), CoilCoolingDXMultiSpeed(m), CoilCoolingDX(m, performance)};
 
   ForwardTranslator forwardTranslator;
 

@@ -516,14 +516,13 @@ namespace detail {
     m_fields.resize(extensibleBegin - m_fields.begin());
 
     // regexs that match extensible fields
-    boost::regex find("\\s?[0-9]+");
-    string replace("");
+    std::string replace;
 
     // replace names of extensible fields so they do not contain numbers
     // e.g. "Vertex 1 X-coordinate" -> "Vertex X-coordinate"
     for (IddField& extensibleField : m_extensibleFields) {
       std::string extensibleFieldName = extensibleField.name();
-      extensibleFieldName = regex_replace(extensibleFieldName, find, replace);
+      extensibleFieldName = regex_replace(extensibleFieldName, iddRegex::numberAndPrecedingSpace(), replace, boost::format_first_only);
       openstudio::ascii_trim(extensibleFieldName);
       extensibleField.setName(extensibleFieldName);
     }

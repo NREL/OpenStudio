@@ -39,6 +39,8 @@
 #include "../../model/Curve_Impl.hpp"
 #include "../../model/ThermalZone.hpp"
 #include "../../model/ThermalZone_Impl.hpp"
+#include "../../model/Space.hpp"
+#include "../../model/Space_Impl.hpp"
 
 #include "../../utilities/idf/IdfExtensibleGroup.hpp"
 
@@ -170,13 +172,17 @@ namespace energyplus {
     // Motor Loss Zone Name: Optional Object
     if ((_wo = workspaceObject.getTarget(Fan_SystemModelFields::MotorLossZoneName))) {
       if ((_mo = translateAndMapWorkspaceObject(_wo.get()))) {
-        if (boost::optional<ThermalZone> _motorLossZone = _mo->optionalCast<ThermalZone>()) {
-          modelObject.setMotorLossZone(_motorLossZone.get());
+        // Zone is translated, and a Space is returned instead
+        if (boost::optional<Space> space_ = _mo->optionalCast<Space>()) {
+          if (auto z_ = space_->thermalZone()) {
+            modelObject.setMotorLossZone(z_.get());
+          }
         } else {
           LOG(Warn, workspaceObject.briefDescription() << " has a wrong type for 'Motor Loss Zone Name'");
         }
       }
     }
+
     // Motor Loss Radiative Fraction: Optional Double
     if (boost::optional<double> _motorLossRadiativeFraction = workspaceObject.getDouble(Fan_SystemModelFields::MotorLossRadiativeFraction)) {
       modelObject.setMotorLossRadiativeFraction(_motorLossRadiativeFraction.get());

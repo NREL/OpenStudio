@@ -53,7 +53,7 @@ namespace model {
 
     explicit CoilHeatingGasMultiStageStageData(const Model& model);
 
-    virtual ~CoilHeatingGasMultiStageStageData() {}
+    virtual ~CoilHeatingGasMultiStageStageData() = default;
 
     //@}
 
@@ -85,6 +85,9 @@ namespace model {
     //@}
     /** @name Other */
     //@{
+
+    // Returns the CoilHeatingGasMultiStage that references it if any
+    boost::optional<CoilHeatingGasMultiStage> parentCoil() const;
 
     boost::optional<double> autosizedNominalCapacity() const;
 
