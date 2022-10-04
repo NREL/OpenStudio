@@ -2,10 +2,11 @@
 #define PYTHONENGINE_included
 
 #include <ScriptEngine.hpp>
+#include <ScriptEngineAPI.hpp>
 
 #ifndef PyObject_HEAD
 struct _object;
-typedef _object PyObject;
+using PyObject = _object;
 #endif
 
 namespace openstudio {
@@ -38,8 +39,7 @@ class PythonEngine final : public ScriptEngine
 
 extern "C"
 {
-  // clang-tidy warns https://clang.llvm.org/extra/clang-tidy/checks/misc/definitions-in-headers.html
-  __declspec(dllexport) openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]);
+  SCRIPTENGINE_API openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]);
 }
 
 #endif

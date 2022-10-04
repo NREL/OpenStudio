@@ -267,4 +267,6 @@ if( WIN32 )
   target_link_options(rubyengine PRIVATE $<$<CONFIG:Debug>:/NODEFAULTLIB:MSVCRT>)
 endif()
 
+target_compile_definitions(rubyengine PRIVATE openstudio_scriptengine_EXPORTS SHARED_OS_LIBS)
+
 install(TARGETS rubyengine EXPORT openstudio DESTINATION bin COMPONENT "CLI")

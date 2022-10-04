@@ -42,4 +42,6 @@ target_compile_options(pythonengine PRIVATE
   "$<${is_gnu_or_clang_genex}:-Wno-deprecated-declarations>"
 )
 
+target_compile_definitions(pythonengine PRIVATE openstudio_scriptengine_EXPORTS SHARED_OS_LIBS)
+
 install(TARGETS pythonengine EXPORT openstudio DESTINATION bin COMPONENT "CLI")

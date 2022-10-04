@@ -2,6 +2,7 @@
 #define RUBYENGINE_included
 
 #include <ScriptEngine.hpp>
+#include <ScriptEngineAPI.hpp>
 #include <RubyInterpreter.hpp>
 
 namespace openstudio {
@@ -34,7 +35,7 @@ class RubyEngine final : public ScriptEngine
 
 extern "C"
 {
-  __declspec(dllexport) openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]);
+  SCRIPTENGINE_API openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]);
 }
 
 #endif
