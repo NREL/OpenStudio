@@ -27,101 +27,21 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
-#define UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
+#ifndef CLI_RUNCOMMAND_HPP
+#define CLI_RUNCOMMAND_HPP
 
-#include "../UtilitiesAPI.hpp"
-
-#include "../core/Logger.hpp"
-#include "../core/Path.hpp"
-#include "../data/Variant.hpp"
-
-#include <json/json.h>
-
-#include <nano/nano_signal_slot.hpp>
+#include <CLI/App.hpp>
 
 namespace openstudio {
-namespace detail {
 
-  class FtOptions
-  {
-   public:
-    bool runcontrolspecialdays = true;
-    bool ip_tabular_output = false;
-    bool no_lifecyclecosts = false;
-    bool no_sqlite_output = false;
-    bool no_html_output = false;
-    bool no_variable_dictionary = false;
-    bool no_space_translation = false;
-  };
+class ScriptEngineInstance;
 
-  class UTILITIES_API RunOptions_Impl
-  {
-   public:
-    RunOptions_Impl();
+namespace cli {
 
-    virtual ~RunOptions_Impl();
+  void setupRunOptions(CLI::App* parentApp, ScriptEngineInstance& ruby, ScriptEngineInstance& python);
+  // void setupRunFtOptions(CLI::App* app, FtOptions& ftOptions);
 
-    std::string string() const;
-
-    bool debug() const;
-    bool setDebug(bool debug);
-    void resetDebug();
-
-    bool epjson() const;
-    bool setEpjson(bool epjson);
-    void resetEpjson();
-
-    bool fast() const;
-    bool setFast(bool fast);
-    void resetFast();
-
-    bool preserveRunDir() const;
-    bool setPreserveRunDir(bool preserve);
-    void resetPreserveRunDir();
-
-    bool skipExpandObjects() const;
-    bool setSkipExpandObjects(bool skip);
-    void resetSkipExpandObjects();
-
-    bool skipEnergyPlusPreprocess() const;
-    bool setSkipEnergyPlusPreprocess(bool skip);
-    void resetSkipEnergyPlusPreprocess();
-
-    bool cleanup() const;
-    bool setCleanup(bool cleanup);
-    void resetCleanup();
-
-    boost::optional<CustomOutputAdapter> customOutputAdapter() const;
-    bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
-    void resetCustomOutputAdapter();
-
-    std::string forwardTranslateOptions() const;
-    bool setForwardTranslateOptions(const std::string& options);
-    void resetForwardTranslateOptions();
-
-    // Emitted on any change
-    Nano::Signal<void()> onChange;
-
-   protected:
-    void onUpdate();
-
-   private:
-    // configure logging
-    REGISTER_LOGGER("openstudio.RunOptions");
-
-    bool m_debug;
-    bool m_epjson;
-    bool m_fast;
-    bool m_preserveRunDir;
-    bool m_skipExpandObjects;
-    bool m_skipEnergyPlusPreprocess;
-    bool m_cleanup;
-    std::string m_forwardTranslateOptions;
-    boost::optional<CustomOutputAdapter> m_customOutputAdapter;
-  };
-
-}  // namespace detail
+}  // namespace cli
 }  // namespace openstudio
 
-#endif  //UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
+#endif  // CLI_RUNCOMMAND_HPP

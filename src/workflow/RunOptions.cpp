@@ -27,101 +27,38 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
-#define UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
+#include "RunOptions.hpp"
 
-#include "../UtilitiesAPI.hpp"
-
-#include "../core/Logger.hpp"
-#include "../core/Path.hpp"
-#include "../data/Variant.hpp"
-
-#include <json/json.h>
-
-#include <nano/nano_signal_slot.hpp>
+#include <fmt/format.h>
 
 namespace openstudio {
-namespace detail {
 
-  class FtOptions
-  {
-   public:
-    bool runcontrolspecialdays = true;
-    bool ip_tabular_output = false;
-    bool no_lifecyclecosts = false;
-    bool no_sqlite_output = false;
-    bool no_html_output = false;
-    bool no_variable_dictionary = false;
-    bool no_space_translation = false;
-  };
+void WorkflowRunOptions::debug_print() const {
+  fmt::print("\nRunOptions:\n");
+  fmt::print("osw_path={}\n", this->osw_path.string());
+  fmt::print("debug={}\n", this->debug);
+  fmt::print("no_simulation={}\n", this->no_simulation);
+  fmt::print("post_process={}\n", this->post_process);
+  fmt::print("ep_json={}\n", this->ep_json);
+  fmt::print("show_stdout={}\n", this->show_stdout);
+  fmt::print("add_timings={}\n", this->add_timings);
+  fmt::print("style_stdout={}\n", this->style_stdout);
 
-  class UTILITIES_API RunOptions_Impl
-  {
-   public:
-    RunOptions_Impl();
+  fmt::print("socket_port={}\n", this->socket_port);
 
-    virtual ~RunOptions_Impl();
+  this->ft_options.debug_print();
 
-    std::string string() const;
+  fmt::print("\n\n");
+}
 
-    bool debug() const;
-    bool setDebug(bool debug);
-    void resetDebug();
+void FtOptions::debug_print() const {
+  fmt::print("FtOptions:\n");
+  fmt::print("  * runcontrolspecialdays={}\n", runcontrolspecialdays);
+  fmt::print("  * ip_tabular_output={}\n", ip_tabular_output);
+  fmt::print("  * no_lifecyclecosts={}\n", no_lifecyclecosts);
+  fmt::print("  * no_sqlite_output={}\n", no_sqlite_output);
+  fmt::print("  * no_html_output={}\n", no_html_output);
+  fmt::print("  * no_space_translation={}\n", no_space_translation);
+}
 
-    bool epjson() const;
-    bool setEpjson(bool epjson);
-    void resetEpjson();
-
-    bool fast() const;
-    bool setFast(bool fast);
-    void resetFast();
-
-    bool preserveRunDir() const;
-    bool setPreserveRunDir(bool preserve);
-    void resetPreserveRunDir();
-
-    bool skipExpandObjects() const;
-    bool setSkipExpandObjects(bool skip);
-    void resetSkipExpandObjects();
-
-    bool skipEnergyPlusPreprocess() const;
-    bool setSkipEnergyPlusPreprocess(bool skip);
-    void resetSkipEnergyPlusPreprocess();
-
-    bool cleanup() const;
-    bool setCleanup(bool cleanup);
-    void resetCleanup();
-
-    boost::optional<CustomOutputAdapter> customOutputAdapter() const;
-    bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
-    void resetCustomOutputAdapter();
-
-    std::string forwardTranslateOptions() const;
-    bool setForwardTranslateOptions(const std::string& options);
-    void resetForwardTranslateOptions();
-
-    // Emitted on any change
-    Nano::Signal<void()> onChange;
-
-   protected:
-    void onUpdate();
-
-   private:
-    // configure logging
-    REGISTER_LOGGER("openstudio.RunOptions");
-
-    bool m_debug;
-    bool m_epjson;
-    bool m_fast;
-    bool m_preserveRunDir;
-    bool m_skipExpandObjects;
-    bool m_skipEnergyPlusPreprocess;
-    bool m_cleanup;
-    std::string m_forwardTranslateOptions;
-    boost::optional<CustomOutputAdapter> m_customOutputAdapter;
-  };
-
-}  // namespace detail
 }  // namespace openstudio
-
-#endif  //UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP

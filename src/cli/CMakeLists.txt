@@ -6,6 +6,10 @@ set(CLI_SRC
   main.cpp
   RubyCLI.hpp
   RubyCLI.cpp
+  RunCommand.hpp
+  RunCommand.cpp
+  UpdateCommand.hpp
+  UpdateCommand.cpp
 )
 
 if(WIN32)

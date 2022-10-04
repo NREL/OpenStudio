@@ -14,6 +14,7 @@
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/data/Variant.hpp"
 #include "../energyplus/ForwardTranslator.hpp"
+#include "utilities/core/Logger.hpp"
 
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -30,6 +31,18 @@ OSWorkflow::OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ru
     pythonEngine(python),
 #endif
     workflowJSON(oswPath) {
+}
+
+OSWorkflow::OSWorkflow(WorkflowRunOptions t_runOptions, ScriptEngineInstance& ruby, ScriptEngineInstance& python)
+  :
+#if USE_RUBY_ENGINE
+    rubyEngine(ruby),
+#endif
+#if USE_PYTHON_ENGINE
+    pythonEngine(python),
+#endif
+    workflowJSON(t_runOptions.osw_path),
+    runOptions(std::move(t_runOptions)) {
 }
 
 void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue) {
@@ -65,6 +78,10 @@ void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::
 }
 
 void OSWorkflow::run() {
+  if (runOptions.debug) {
+    openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
+  }
+
 #if USE_RUBY_ENGINE
   rubyEngine->exec("puts 'Hello from Ruby'");
   rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
@@ -77,6 +94,14 @@ void OSWorkflow::run() {
   pythonEngine->registerType<openstudio::measure::PythonModelMeasure*>("openstudio::measure::PythonModelMeasure *");
   pythonEngine->registerType<openstudio::measure::PythonReportingMeasure*>("openstudio::measure::PythonReportingMeasure *");
 #endif
+
+  // bool no_simulation = false;
+  // bool post_process = false;
+  // bool ep_json = false;
+  // bool show_stdout = false;
+  // bool add_timings = false;
+  // bool style_stdout = false;
+  // unsigned socket_port = 0;
 
   //// O. Need to apply measure steps IN ORDER. (eg: OpenStudio Measures before Eplus measures etc)
   //// https://github.com/NREL/OpenStudio-workflow-gem/blob/develop/lib/openstudio/workflow/util/measure.rb
@@ -114,6 +139,13 @@ void OSWorkflow::run() {
     const auto modelSteps = workflowJSON.getMeasureSteps(stepType);
     if (stepType == MeasureType::EnergyPlusMeasure) {
       openstudio::energyplus::ForwardTranslator ft;
+      auto& ftOptions = runOptions.ft_options;
+      ft.setKeepRunControlSpecialDays(ftOptions.runcontrolspecialdays);
+      ft.setIPTabularOutput(ftOptions.ip_tabular_output);
+      ft.setExcludeLCCObjects(ftOptions.no_lifecyclecosts);
+      ft.setExcludeSQliteOutputReport(ftOptions.no_sqlite_output);
+      ft.setExcludeHTMLOutputReport(ftOptions.no_html_output);
+      ft.setExcludeSpaceTranslation(ftOptions.no_space_translation);
       workspace_ = ft.translateModel(model);
     }
 

@@ -27,101 +27,48 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
-#define UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
+#ifndef WORKFLOW_RUNOPTIONS_HPP
+#define WORKFLOW_RUNOPTIONS_HPP
 
-#include "../UtilitiesAPI.hpp"
-
-#include "../core/Logger.hpp"
-#include "../core/Path.hpp"
-#include "../data/Variant.hpp"
-
-#include <json/json.h>
-
-#include <nano/nano_signal_slot.hpp>
+#include "../utilities/core/Filesystem.hpp"
 
 namespace openstudio {
-namespace detail {
 
-  class FtOptions
-  {
-   public:
-    bool runcontrolspecialdays = true;
-    bool ip_tabular_output = false;
-    bool no_lifecyclecosts = false;
-    bool no_sqlite_output = false;
-    bool no_html_output = false;
-    bool no_variable_dictionary = false;
-    bool no_space_translation = false;
-  };
+struct FtOptions
+{
+ public:
+  bool runcontrolspecialdays = true;
+  bool ip_tabular_output = false;
+  bool no_lifecyclecosts = false;
+  bool no_sqlite_output = false;
+  bool no_html_output = false;
+  bool no_variable_dictionary = false;
+  bool no_space_translation = false;
 
-  class UTILITIES_API RunOptions_Impl
-  {
-   public:
-    RunOptions_Impl();
+  void debug_print() const;
 
-    virtual ~RunOptions_Impl();
+  static constexpr auto group_name = "Forward Translator Options";
+};
 
-    std::string string() const;
+struct WorkflowRunOptions
+{
+ public:
+  void debug_print() const;
 
-    bool debug() const;
-    bool setDebug(bool debug);
-    void resetDebug();
+  bool debug = false;
+  bool no_simulation = false;
+  bool post_process = false;
+  bool ep_json = false;
+  bool show_stdout = false;
+  bool add_timings = false;
+  bool style_stdout = false;
+  unsigned socket_port = 0;
+  openstudio::path osw_path = "./workflow.osw";
 
-    bool epjson() const;
-    bool setEpjson(bool epjson);
-    void resetEpjson();
+  FtOptions ft_options;
+};
 
-    bool fast() const;
-    bool setFast(bool fast);
-    void resetFast();
-
-    bool preserveRunDir() const;
-    bool setPreserveRunDir(bool preserve);
-    void resetPreserveRunDir();
-
-    bool skipExpandObjects() const;
-    bool setSkipExpandObjects(bool skip);
-    void resetSkipExpandObjects();
-
-    bool skipEnergyPlusPreprocess() const;
-    bool setSkipEnergyPlusPreprocess(bool skip);
-    void resetSkipEnergyPlusPreprocess();
-
-    bool cleanup() const;
-    bool setCleanup(bool cleanup);
-    void resetCleanup();
-
-    boost::optional<CustomOutputAdapter> customOutputAdapter() const;
-    bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
-    void resetCustomOutputAdapter();
-
-    std::string forwardTranslateOptions() const;
-    bool setForwardTranslateOptions(const std::string& options);
-    void resetForwardTranslateOptions();
-
-    // Emitted on any change
-    Nano::Signal<void()> onChange;
-
-   protected:
-    void onUpdate();
-
-   private:
-    // configure logging
-    REGISTER_LOGGER("openstudio.RunOptions");
-
-    bool m_debug;
-    bool m_epjson;
-    bool m_fast;
-    bool m_preserveRunDir;
-    bool m_skipExpandObjects;
-    bool m_skipEnergyPlusPreprocess;
-    bool m_cleanup;
-    std::string m_forwardTranslateOptions;
-    boost::optional<CustomOutputAdapter> m_customOutputAdapter;
-  };
-
-}  // namespace detail
 }  // namespace openstudio
 
-#endif  //UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
+#endif  // WORKFLOW_RUNOPTIONS_HPP
+
