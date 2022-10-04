@@ -24,8 +24,9 @@ void PythonEngine::pyimport(const std::string& importName, const std::string& in
   if (!includePath.empty()) {
     PyObject* sys = PyImport_ImportModule("sys");
     PyObject* sysPath = PyObject_GetAttrString(sys, "path");
+    // fmt::print("Prepending '{}' to sys.path\n", includePath);
     PyObject* unicodeIncludePath = PyUnicode_FromString(includePath.c_str());
-    PyList_Append(sysPath, unicodeIncludePath);
+    PyList_Insert(sysPath, 0, unicodeIncludePath);
   }
   PyImport_ImportModule(importName.c_str());
 }
@@ -53,12 +54,13 @@ PythonEngine::~PythonEngine() {
 }
 
 void PythonEngine::importOpenStudio() {
+  // generic_string() converts to a POSIX path, with forward slashes, so that pyimport doesn't choke on backslashes understood as escape sequence
   if (moduleIsRunningFromBuildDirectory()) {
     const auto bindingsDir = getOpenStudioModuleDirectory();
-    pyimport("openstudiodev", bindingsDir.string());
+    pyimport("openstudiodev", bindingsDir.generic_string());
   } else {
     const auto bindingsDir = getOpenStudioModuleDirectory() / "../Python";
-    pyimport("openstudio", bindingsDir.string());
+    pyimport("openstudio", bindingsDir.generic_string());
   }
 }
 
