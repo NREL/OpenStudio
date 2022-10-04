@@ -66,18 +66,23 @@ if(BUILD_TESTING)
     COMMAND $<TARGET_FILE:openstudio> --help
   )
 
-  add_test(NAME OpenStudioCLI.run_compact_osw
-    COMMAND $<TARGET_FILE:openstudio> run -w compact.osw
+  add_test(NAME OpenStudioCLI.run_compact_ruby_only_osw
+    COMMAND $<TARGET_FILE:openstudio> run -w compact_ruby_only.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.run_compact_osw
-    COMMAND $<TARGET_FILE:openstudio> labs run compact.osw
+  add_test(NAME OpenStudioCLI.Labs.run_compact_ruby_only_osw
+    COMMAND $<TARGET_FILE:openstudio> labs run compact_ruby_only.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
 
-  add_test(NAME OpenStudioCLI.Labs.run_compact_osw_python
-    COMMAND $<TARGET_FILE:openstudio> labs run compact_python.osw
+  add_test(NAME OpenStudioCLI.Labs.run_compact_osw_python_only_osw
+    COMMAND $<TARGET_FILE:openstudio> labs run compact_python_only.osw
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.run_compact_ruby_and_python_osw
+    COMMAND $<TARGET_FILE:openstudio> labs run compact_ruby_and_python.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
 
