@@ -265,20 +265,28 @@ void OSWorkflow::run() {
         // place measureDirPath in sys.path; do from measure import MeasureName
         // I think this can't work without a "as xxx" otherwise we'll repeatedly try to import a module named 'measure'
         // pythonEngine->pyimport("measure", openstudio::toString(measureDirPath.get()));
+        //         auto importCmd = fmt::format(R"python(
+        // import sys
+        // sys.path.insert(0, r'{}')
+        // force_reload = 'measure' in sys.modules
+        // import measure
+        // if force_reload:
+        //     # print("force reload measure")
+        //     import importlib
+        //     importlib.reload(measure)
+        // )python",
+        //                                      scriptPath_->parent_path().generic_string());
         auto importCmd = fmt::format(R"python(
-import sys
-sys.path.insert(0, r'{}')
-force_reload = 'measure' in sys.modules
-import measure
-if force_reload:
-    # print("force reload measure")
-    import importlib
-    importlib.reload(measure)
+import importlib
+spec = importlib.util.spec_from_file_location('{}', r'{}')
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
 )python",
-                                     scriptPath_->parent_path().generic_string());
+                                     className, scriptPath_->generic_string());
         // fmt::print("\nimportCmd:\n{}\n", importCmd);
         pythonEngine->exec(importCmd);
-        measureScriptObject = pythonEngine->eval(fmt::format("measure.{}()", className));
+        // measureScriptObject = pythonEngine->eval(fmt::format("measure.{}()", className));
+        measureScriptObject = pythonEngine->eval(fmt::format("module.{}()", className));
 
         thisEngine = &pythonEngine;
 #else
