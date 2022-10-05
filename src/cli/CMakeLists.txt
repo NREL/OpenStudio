@@ -85,6 +85,11 @@ if(BUILD_TESTING)
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
 
+  add_test(NAME OpenStudioCLI.Labs.Run_RubyPythonOnly_TwoMeasure
+    COMMAND $<TARGET_FILE:openstudio> labs run compact_python_only_twomeasures.osw
+    WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
+  )
+
   add_test(NAME OpenStudioCLI.Labs.Run_RubyPython
     COMMAND $<TARGET_FILE:openstudio> labs run compact_ruby_and_python.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"

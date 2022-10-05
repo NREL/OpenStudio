@@ -71,4 +71,3 @@ struct WorkflowRunOptions
 }  // namespace openstudio
 
 #endif  // WORKFLOW_RUNOPTIONS_HPP
-
