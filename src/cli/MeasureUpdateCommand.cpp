@@ -185,6 +185,38 @@ server.start)ruby",
 
         throw std::runtime_error("compute_arguments_model not implemented yet");
 
+        // TODO: THIS IS IS INTERESTING! WE CANNOT LOAD THE EMBEDDED GEMS! I suppose we need to do something like embedded_help.rb
+        rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
+
+        auto runTestCmd = fmt::format(
+          R"ruby(
+# load openstudio_measure_tester gem
+#begin
+  require 'minitest'
+  require 'minitest/reporters'
+
+  # Minitest Reports use a plugin that is normally found by Minitest::load_plugins using Gem.find
+  # until Gem.find is overloaded to find embedded gems, we will manually load the plugin here
+  require 'minitest/minitest_reporter_plugin'
+  Minitest.extensions << 'minitest_reporter'
+
+  require 'openstudio_measure_tester'
+#rescue LoadError
+  #puts "Cannot load 'openstudio_measure_tester'"
+  #return 1
+#end
+
+runner = OpenStudioMeasureTester::Runner.new('{}')
+result = runner.run_all(Dir.pwd)    # <--------------- TODO: this is problematic?
+
+if result != 0
+  $logger.error("Measure tester returned errors")
+  return 1
+end
+)ruby",
+          opt.directoryPath.generic_string());
+        rubyEngine->exec(runTestCmd);
+
       } else if (measure_->measureLanguage() == MeasureLanguage::Python) {
       }
 
