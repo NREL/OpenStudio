@@ -131,8 +131,13 @@ sys.argv.append("{}")
     for (const auto& arg : arguments) {
       cmd += fmt::format("sys.argv.append(\"{}\")\n", arg);
     }
-    cmd += "from pathlib import Path\n";
-    cmd += fmt::format("exec(Path(r'{}').read_text())\n", pythonScriptPath.generic_string());
+    cmd += fmt::format(R"python(
+import importlib
+spec = importlib.util.spec_from_file_location('__main__', r'{}')
+module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(module)
+)python",
+                       pythonScriptPath.generic_string());
     fmt::print("{}\n", cmd);
     pythonEngine->exec(cmd);
   }

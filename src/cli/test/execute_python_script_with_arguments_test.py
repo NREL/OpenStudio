@@ -1,10 +1,11 @@
 import sys
 from pathlib import Path
 
-# TODO: __file__ not working yet, since I just exec the content of the file
+argv0 = sys.argv[0]
+thisFile = Path(__file__)
 # In Python, argv[0] is the name of the program
-# if sys.argv[0] != Path(__file__).name:
-#    raise ValueError("Wrong sys.argv[0] / program name")
+if argv0 != thisFile.name:
+    raise ValueError(f"Wrong sys.argv[0] / program name:  sys.argv[0]={argv0}, __file__={thisFile}")
 
 if len(sys.argv) != 3:
     raise ValueError("You must supply two arguments to this script")
