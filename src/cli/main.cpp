@@ -6,6 +6,7 @@
 #include "../utilities/bcl/BCLMeasure.hpp"
 
 #include "RunCommand.hpp"
+#include "MeasureUpdateCommand.hpp"
 
 #include <OpenStudio.hxx>
 
@@ -100,7 +101,6 @@ int main(int argc, char* argv[]) {
 
     [[maybe_unused]] auto* gem_listCommand = experimentalApp->add_subcommand("gem_list", "Lists the set gems available to openstudio");
     [[maybe_unused]] auto* list_commandsCommand = experimentalApp->add_subcommand("list_commands", "Lists the entire set of available commands");
-    [[maybe_unused]] auto* measureCommand = experimentalApp->add_subcommand("measure", "Updates measures and compute arguments");
     [[maybe_unused]] auto* openstudio_versionCommand =
       experimentalApp->add_subcommand("openstudio_version", "Returns the OpenStudio version used by the CLI")->callback([]() {
         fmt::print("{}\n", openStudioLongVersion());
@@ -117,21 +117,25 @@ int main(int argc, char* argv[]) {
     // run command
     openstudio::cli::setupRunOptions(experimentalApp, rubyEngine, pythonEngine);
 
-    // update command
+    // update (model) command
     // openstudio::cli::setupUpdateCommand(experimentalApp);
-    bool keep = false;
-    [[maybe_unused]] auto* updateCommand = experimentalApp->add_subcommand("update", "Updates OpenStudio Models to the current version");
-    updateCommand->add_flag("-k,--keep", keep, "Keep original files");
+    {
+      bool keep = false;
+      auto* updateCommand = experimentalApp->add_subcommand("update", "Updates OpenStudio Models to the current version");
+      updateCommand->add_flag("-k,--keep", keep, "Keep original files");
 
-    openstudio::filesystem::path updateOsmPath;
-    updateCommand->add_option("path", updateOsmPath, "Path to OSM or directory containing osms")->required(true);
+      openstudio::filesystem::path updateOsmPath;
+      updateCommand->add_option("path", updateOsmPath, "Path to OSM or directory containing osms")->required(true);
 
-    updateCommand->callback([&keep, &updateOsmPath] {
-      bool result = openstudio::cli::runModelUpdateCommand(updateOsmPath, keep);
-      if (!result) {
-        throw std::runtime_error("Failed to update some models");
-      }
-    });
+      updateCommand->callback([&keep, &updateOsmPath] {
+        bool result = openstudio::cli::runModelUpdateCommand(updateOsmPath, keep);
+        if (!result) {
+          throw std::runtime_error("Failed to update some models");
+        }
+      });
+    }
+
+    openstudio::cli::MeasureUpdateOptions::setupMeasureUpdateOptions(experimentalApp, rubyEngine);
 
     CLI11_PARSE(app, argc, argv);
 
