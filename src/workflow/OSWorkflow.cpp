@@ -137,6 +137,14 @@ void OSWorkflow::run() {
   // 4. instantiate measure
   // 5. run measure
 
+  // TODO: need to add the ReportingMeasure to the Mix
+  // TODO: need to run the idf through EnergyPlus
+  // TODO: need to create subdirectories for steps
+  // TODO: need to do some cleanup, like removing old sim files, maybe reports, etc
+  // TODO: need to implement some of the options/flags like --postprocess_only
+  // TODO: need to merge workflowJSON flags with flags from command line (eg: FT options)
+  // TODO: need to modify utilities/RunOptions.hpp instead of duplicating some of that work in workflow
+
   for (openstudio::MeasureType stepType : {openstudio::MeasureType::ModelMeasure, openstudio::MeasureType::EnergyPlusMeasure}) {
     const auto modelSteps = workflowJSON.getMeasureSteps(stepType);
     if (stepType == MeasureType::EnergyPlusMeasure) {
