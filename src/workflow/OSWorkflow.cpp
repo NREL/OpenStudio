@@ -86,12 +86,14 @@ void OSWorkflow::run() {
   rubyEngine->exec("puts 'Hello from Ruby'");
   rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
   rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
+  rubyEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
   // -1: gotta init the rest of OpenStudio in ruby, so that Ruleset and co are defined
   rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
 #endif
 #if USE_PYTHON_ENGINE
   pythonEngine->exec("print('Hello from Python')");
   pythonEngine->registerType<openstudio::measure::PythonModelMeasure*>("openstudio::measure::PythonModelMeasure *");
+  pythonEngine->registerType<openstudio::measure::PythonEnergyPlusMeasure*>("openstudio::measure::PythonEnergyPlusMeasure *");
   pythonEngine->registerType<openstudio::measure::PythonReportingMeasure*>("openstudio::measure::PythonReportingMeasure *");
 #endif
 
@@ -265,12 +267,19 @@ void OSWorkflow::run() {
         // pythonEngine->pyimport("measure", openstudio::toString(measureDirPath.get()));
         auto importCmd = fmt::format(R"python(
 import sys
-sys.path.insert(0, '{0}')
+sys.path.insert(0, r'{}')
+force_reload = 'measure' in sys.modules
 import measure
+if force_reload:
+    # print("force reload measure")
+    import importlib
+    importlib.reload(measure)
 )python",
-                                     openstudio::toString(scriptPath_->parent_path()), className);
+                                     scriptPath_->parent_path().generic_string());
+        // fmt::print("\nimportCmd:\n{}\n", importCmd);
         pythonEngine->exec(importCmd);
         measureScriptObject = pythonEngine->eval(fmt::format("measure.{}()", className));
+
         thisEngine = &pythonEngine;
 #else
         throw std::runtime_error("Cannot run a Python measure when PythonEngine isn't enabled");
