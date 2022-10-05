@@ -72,10 +72,31 @@ int main(int argc, char* argv[]) {
         fmt::print("{}+{}\n", energyPlusVersion(), energyPlusBuildSHA());
       });
 
-    auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
-    openstudio::filesystem::path rubyScriptPath;
-    execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true);
-    execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine] { openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine); });
+    {
+      auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
+      openstudio::filesystem::path rubyScriptPath;
+      execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true);
+      std::vector<std::string> executeRubyScriptCommandArgs;
+      execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
+        ->required(false)
+        ->option_text("args");
+      execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &executeRubyScriptCommandArgs] {
+        openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, executeRubyScriptCommandArgs);
+      });
+    }
+
+    {
+      auto* execute_python_scriptCommand = experimentalApp->add_subcommand("execute_python_script", "Executes a python file");
+      openstudio::filesystem::path pythonScriptPath;
+      execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to python file")->required(true);
+      std::vector<std::string> executePythonScriptCommandArgs;
+      execute_python_scriptCommand->add_option("arguments", executePythonScriptCommandArgs, "Arguments to pass to the python file")
+        ->required(false)
+        ->option_text("args");
+      execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &executePythonScriptCommandArgs] {
+        openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, executePythonScriptCommandArgs);
+      });
+    }
 
     [[maybe_unused]] auto* gem_listCommand = experimentalApp->add_subcommand("gem_list", "Lists the set gems available to openstudio");
     [[maybe_unused]] auto* list_commandsCommand = experimentalApp->add_subcommand("list_commands", "Lists the entire set of available commands");

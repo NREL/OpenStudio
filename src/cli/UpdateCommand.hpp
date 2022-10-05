@@ -42,7 +42,8 @@ namespace cli {
   void setupUpdateCommand(CLI::App* parentApp);
   bool runModelUpdateCommand(const openstudio::path& p, bool keep);
 
-  void executeRubyScriptCommand(openstudio::path rubyScriptPath, ScriptEngineInstance& rubyEngine);
+  void executeRubyScriptCommand(openstudio::path rubyScriptPath, ScriptEngineInstance& rubyEngine, const std::vector<std::string>& arguments);
+  void executePythonScriptCommand(openstudio::path pythonScriptPath, ScriptEngineInstance& pythonEngine, const std::vector<std::string>& arguments);
 
 }  // namespace cli
 }  // namespace openstudio

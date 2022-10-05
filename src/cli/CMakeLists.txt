@@ -99,6 +99,14 @@ if(BUILD_TESTING)
     COMMAND $<TARGET_FILE:openstudio> labs -c "print(openstudio.model.Model())"
   )
 
+  add_test(NAME OpenStudioCLI.Labs.execute_ruby_script
+    COMMAND $<TARGET_FILE:openstudio> labs execute_ruby_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_ruby_script_with_arguments_test.rb OpenStudioLabs "National Renewable Energy Laboratory"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.execute_python_script
+    COMMAND $<TARGET_FILE:openstudio> labs execute_python_script ${CMAKE_CURRENT_SOURCE_DIR}/test/execute_python_script_with_arguments_test.py OpenStudioLabs "National Renewable Energy Laboratory"
+  )
+
   add_test(NAME OpenStudioCLI.Labs.Run_RubyOnly
     COMMAND $<TARGET_FILE:openstudio> labs run -w compact_ruby_only.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"

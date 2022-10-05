@@ -100,16 +100,41 @@ namespace cli {
     return result;
   }
 
-  void executeRubyScriptCommand(openstudio::path rubyScriptPath, ScriptEngineInstance& rubyEngine) {
+  void executeRubyScriptCommand(openstudio::path rubyScriptPath, ScriptEngineInstance& rubyEngine, const std::vector<std::string>& arguments) {
     rubyScriptPath = openstudio::filesystem::system_complete(rubyScriptPath);
     LOG_FREE(Debug, "executeRubyScriptCommand", "Path for the file to run: " << rubyScriptPath);
     if (!openstudio::filesystem::is_regular_file(rubyScriptPath)) {
       throw std::runtime_error(fmt::format("Unable to find the file '{}' on the filesystem", rubyScriptPath.string()));
     }
     rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
-    // TODO: forward ARGV
-    rubyEngine->exec(fmt::format("require '{}'", rubyScriptPath.generic_string()));
+
+    std::string cmd = "ARGV.clear\n";
+    for (const auto& arg : arguments) {
+      cmd += fmt::format("ARGV << \"{}\"\n", arg);
+    }
+    cmd += fmt::format("require '{}'", rubyScriptPath.generic_string());
+    rubyEngine->exec(cmd);
   }
 
+  void executePythonScriptCommand(openstudio::path pythonScriptPath, ScriptEngineInstance& pythonEngine, const std::vector<std::string>& arguments) {
+    pythonScriptPath = openstudio::filesystem::system_complete(pythonScriptPath);
+    LOG_FREE(Debug, "executePythonScriptCommand", "Path for the file to run: " << pythonScriptPath);
+    if (!openstudio::filesystem::is_regular_file(pythonScriptPath)) {
+      throw std::runtime_error(fmt::format("Unable to find the file '{}' on the filesystem", pythonScriptPath.string()));
+    }
+    // There's probably better to be done, like instantiating the pythonEngine with the argc/argv then calling PyRun_SimpleFile but whatever
+    std::string cmd = fmt::format(R"python(import sys
+sys.argv.clear()
+sys.argv.append("{}")
+)python",
+                                  pythonScriptPath.filename().string());
+    for (const auto& arg : arguments) {
+      cmd += fmt::format("sys.argv.append(\"{}\")\n", arg);
+    }
+    cmd += "from pathlib import Path\n";
+    cmd += fmt::format("exec(Path(r'{}').read_text())\n", pythonScriptPath.generic_string());
+    fmt::print("{}\n", cmd);
+    pythonEngine->exec(cmd);
+  }
 }  // namespace cli
 }  // namespace openstudio
