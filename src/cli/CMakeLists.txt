@@ -75,23 +75,47 @@ if(BUILD_TESTING)
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
 
+  add_test(NAME OpenStudioCLI.Labs.openstudio_version
+    COMMAND $<TARGET_FILE:openstudio> labs openstudio_version
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.energyplus_version
+    COMMAND $<TARGET_FILE:openstudio> labs energyplus_version
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.ruby_version
+    COMMAND $<TARGET_FILE:openstudio> labs ruby_version
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.python_version
+    COMMAND $<TARGET_FILE:openstudio> labs python_version
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.ruby_execute_line
+    COMMAND $<TARGET_FILE:openstudio> labs -e "puts(OpenStudio::Model::Model.new())"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.python_execute_line
+    COMMAND $<TARGET_FILE:openstudio> labs -c "print(openstudio.model.Model())"
+  )
+
   add_test(NAME OpenStudioCLI.Labs.Run_RubyOnly
-    COMMAND $<TARGET_FILE:openstudio> labs run compact.osw
+    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_ruby_only.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
 
   add_test(NAME OpenStudioCLI.Labs.Run_PythonOnly
-    COMMAND $<TARGET_FILE:openstudio> labs run compact_python_only.osw
+    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_python_only.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
 
   add_test(NAME OpenStudioCLI.Labs.Run_RubyPythonOnly_TwoMeasure
-    COMMAND $<TARGET_FILE:openstudio> labs run compact_python_only_twomeasures.osw
+    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_python_only_twomeasures.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
 
   add_test(NAME OpenStudioCLI.Labs.Run_RubyPython
-    COMMAND $<TARGET_FILE:openstudio> labs run compact_ruby_and_python.osw
+    COMMAND $<TARGET_FILE:openstudio> labs run -w compact_ruby_and_python.osw
     WORKING_DIRECTORY "${PROJECT_BINARY_DIR}/resources/Examples/compact_osw/"
   )
 

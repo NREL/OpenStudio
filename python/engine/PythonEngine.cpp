@@ -62,6 +62,8 @@ void PythonEngine::importOpenStudio() {
     const auto bindingsDir = getOpenStudioModuleDirectory() / "../Python";
     pyimport("openstudio", bindingsDir.generic_string());
   }
+  // Somehow that doesn't suffice to register it...
+  exec("import openstudio");
 }
 
 struct PythonObject

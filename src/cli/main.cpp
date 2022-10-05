@@ -23,21 +23,7 @@ int main(int argc, char* argv[]) {
   if ((argc > 1) && (std::string_view(argv[1]) == "labs")) {
     CLI::App app{"openstudio"};
 
-    auto* const labsCommand = app.add_subcommand("labs");
-    auto* const runCommand = labsCommand->add_subcommand("run");
-    openstudio::filesystem::path oswPath;
-    runCommand->add_option("osw", oswPath);
-
-    CLI11_PARSE(app, argc, argv);
-
-    if (runCommand->parsed()) {
-      openstudio::OSWorkflow workflow(oswPath, rubyEngine, pythonEngine);
-      workflow.run();
-    }
-  } else if ((argc > 1) && (std::string_view(argv[1]) == "experimental")) {
-    CLI::App app{"openstudio"};
-
-    auto* const experimentalApp = app.add_subcommand("experimental");
+    auto* const experimentalApp = app.add_subcommand("labs");
 
     experimentalApp->add_flag_function(
       "--verbose",
@@ -57,10 +43,17 @@ int main(int argc, char* argv[]) {
       ->add_option("-I,--include", includeDirs, "Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)")
       ->option_text("DIR");
 
-    std::vector<std::string> executeCmds;
-    CLI::Option* execOption =
+    std::vector<std::string> executeRubyCmds;
+    CLI::Option* execRubyOption = experimentalApp
+                                    ->add_option("-e,--execute", executeRubyCmds,
+                                                 "Execute one line of Ruby script (may be used more than once). Returns after executing commands.")
+                                    ->option_text("CMD");
+
+    std::vector<std::string> executePythonCmds;
+    CLI::Option* execPythonOption =
       experimentalApp
-        ->add_option("-e,--execute", executeCmds, "Execute one line of script (may be used more than once). Returns after executing commands.")
+        ->add_option("-c,--pyexecute", executePythonCmds,
+                     "Execute one line of Python script (may be used more than once). Returns after executing commands.")
         ->option_text("CMD");
 
     std::vector<std::string> gemPathDirs;
@@ -121,18 +114,24 @@ int main(int argc, char* argv[]) {
 
     CLI11_PARSE(app, argc, argv);
 
-    if (*execOption) {
-      fmt::print("--execute Flag received {} times.\n", execOption->count());
+    if (*execRubyOption) {
+      fmt::print("--execute Flag received {} times.\n", execRubyOption->count());
       rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
-      for (auto& cmd : executeCmds) {
+      for (auto& cmd : executeRubyCmds) {
         fmt::print("{}\n", cmd);
         rubyEngine->exec(cmd);
       }
     }
-    fmt::print("includeDirs={}\n", fmt::join(includeDirs, ","));
-
-    fmt::print("gemPathDirs={}\n", fmt::join(gemPathDirs, ","));
-    fmt::print("gemHomeDir={}\n", gemHomeDir);
+    if (*execPythonOption) {
+      fmt::print("--pyexecute Flag received {} times.\n", execPythonOption->count());
+      for (auto& cmd : executePythonCmds) {
+        fmt::print("{}\n", cmd);
+        pythonEngine->exec(cmd);
+      }
+    }
+    // fmt::print("includeDirs={}\n", fmt::join(includeDirs, ","));
+    // fmt::print("gemPathDirs={}\n", fmt::join(gemPathDirs, ","));
+    // fmt::print("gemHomeDir={}\n", gemHomeDir);
   } else {
     result = openstudio::rubyCLI(rubyEngine);
   }
