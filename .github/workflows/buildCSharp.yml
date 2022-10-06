@@ -157,10 +157,10 @@ jobs:
           dotnet test OpenStudio.Tests.csproj /p:Platform=x64
 
       - name: Tests on Windows for x32
+        if: matrix.name == 'Windows32'
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '5.0.17' 
-        if: matrix.name == 'Windows32'
         run: |
           cd csharp/examples/OpenStudio.Tests/
           dotnet remove package OpenStudio 
