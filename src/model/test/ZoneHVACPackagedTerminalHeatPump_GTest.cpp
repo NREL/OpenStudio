@@ -55,6 +55,9 @@
 #include "../ZoneHVACPackagedTerminalHeatPump.hpp"
 #include "../ZoneHVACPackagedTerminalHeatPump_Impl.hpp"
 #include "../ScheduleCompact.hpp"
+#include "../FanOnOff.hpp"
+#include "../FanSystemModel.hpp"
+
 #include <utilities/idd/OS_Curve_Biquadratic_FieldEnums.hxx>
 
 using namespace openstudio;
@@ -309,4 +312,25 @@ TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_CoilSystemCoolingDXHeatExc
   model::CoilHeatingElectric supplementalHeatingCoil(m, availabilitySchedule);
 
   model::ZoneHVACPackagedTerminalHeatPump pthp(m, availabilitySchedule, fan, heatingCoil, coolingCoil, supplementalHeatingCoil);
+}
+
+TEST_F(ModelFixture, ZoneHVACPackagedTerminalHeatPump_SupplyAirFanOpSch) {
+  model::Model m;
+  model::CoilHeatingDXVariableSpeed heatingCoil(m);
+  model::CoilCoolingDXVariableSpeed coolingCoil(m);
+  model::CoilHeatingElectric supplementalHeatingCoil(m);
+  model::FanConstantVolume fanCV(m);
+  model::FanSystemModel fanSystemModel(m);
+  model::FanOnOff fanOnOff(m);
+  auto alwaysOn = m.alwaysOnDiscreteSchedule();
+  auto alwaysOff = m.alwaysOffDiscreteSchedule();
+
+  model::ZoneHVACPackagedTerminalHeatPump pthpCV(m, alwaysOn, fanCV, heatingCoil, coolingCoil, supplementalHeatingCoil);
+  EXPECT_EQ(alwaysOn, pthpCV.supplyAirFanOperatingModeSchedule());
+
+  model::ZoneHVACPackagedTerminalHeatPump pthpSystemModel(m, alwaysOn, fanSystemModel, heatingCoil, coolingCoil, supplementalHeatingCoil);
+  EXPECT_EQ(alwaysOff, pthpSystemModel.supplyAirFanOperatingModeSchedule());
+
+  model::ZoneHVACPackagedTerminalHeatPump pthpOnOff(m, alwaysOn, fanOnOff, heatingCoil, coolingCoil, supplementalHeatingCoil);
+  EXPECT_EQ(alwaysOff, pthpOnOff.supplyAirFanOperatingModeSchedule());
 }

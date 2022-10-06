@@ -67,19 +67,19 @@ namespace model {
       : ZoneHVACComponent_Impl(other, model, keepHandle) {}
 
     ModelObject ZoneHVACPackagedTerminalHeatPump_Impl::clone(Model model) const {
-      ZoneHVACPackagedTerminalHeatPump pthpClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACPackagedTerminalHeatPump>();
+      auto pthpClone = ZoneHVACComponent_Impl::clone(model).cast<ZoneHVACPackagedTerminalHeatPump>();
 
       //Schedule scheduleClone = this->availabilitySchedule().clone(model).cast<Schedule>();
 
-      HVACComponent supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
+      auto supplyFanClone = this->supplyAirFan().clone(model).cast<HVACComponent>();
 
       auto t_heatingCoil = heatingCoil();
-      HVACComponent heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
+      auto heatingCoilClone = t_heatingCoil.clone(model).cast<HVACComponent>();
 
       auto t_coolingCoil = coolingCoil();
-      HVACComponent coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
+      auto coolingCoilClone = t_coolingCoil.clone(model).cast<HVACComponent>();
 
-      HVACComponent supplementalHeatingCoilClone = this->supplementalHeatingCoil().clone(model).cast<HVACComponent>();
+      auto supplementalHeatingCoilClone = this->supplementalHeatingCoil().clone(model).cast<HVACComponent>();
 
       //pthpClone.setAvailabilitySchedule(scheduleClone);
 
@@ -128,12 +128,13 @@ namespace model {
     std::vector<ScheduleTypeKey> ZoneHVACPackagedTerminalHeatPump_Impl::getScheduleTypeKeys(const Schedule& schedule) const {
       std::vector<ScheduleTypeKey> result;
       UnsignedVector fieldIndices = getSourceIndices(schedule.handle());
-      UnsignedVector::const_iterator b(fieldIndices.begin()), e(fieldIndices.end());
+      UnsignedVector::const_iterator b(fieldIndices.begin());
+      UnsignedVector::const_iterator e(fieldIndices.end());
       if (std::find(b, e, OS_ZoneHVAC_PackagedTerminalHeatPumpFields::AvailabilityScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ZoneHVACPackagedTerminalHeatPump", "Availability"));
+        result.emplace_back("ZoneHVACPackagedTerminalHeatPump", "Availability");
       }
       if (std::find(b, e, OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName) != e) {
-        result.push_back(ScheduleTypeKey("ZoneHVACPackagedTerminalHeatPump", "Supply Air Fan Operating Mode"));
+        result.emplace_back("ZoneHVACPackagedTerminalHeatPump", "Supply Air Fan Operating Mode");
       }
       return result;
     }
@@ -171,7 +172,7 @@ namespace model {
         LOG(Error, "Required availability schedule not set, using 'Always On' schedule");
         value = this->model().alwaysOnDiscreteSchedule();
         OS_ASSERT(value);
-        const_cast<ZoneHVACPackagedTerminalHeatPump_Impl*>(this)->setAvailabilitySchedule(*value);
+        const_cast<ZoneHVACPackagedTerminalHeatPump_Impl*>(this)->setAvailabilitySchedule(*value);  // NOLINT
         value = optionalAvailabilitySchedule();
       }
       OS_ASSERT(value);
@@ -360,9 +361,19 @@ namespace model {
       return isEmpty(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement);
     }
 
-    boost::optional<Schedule> ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFanOperatingModeSchedule() const {
-      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
-        OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName);
+    Schedule ZoneHVACPackagedTerminalHeatPump_Impl::supplyAirFanOperatingModeSchedule() const {
+      boost::optional<Schedule> value = optionalSupplyAirFanOperatingModeSchedule();
+      if (!value) {
+        // it is an error if we get here, however we don't want to crash
+        // so we hook up to global always on schedule
+        LOG(Error, "Required availability schedule not set, using 'Always Off' schedule");
+        value = this->model().alwaysOffDiscreteSchedule();
+        OS_ASSERT(value);
+        const_cast<ZoneHVACPackagedTerminalHeatPump_Impl*>(this)->setSupplyAirFanOperatingModeSchedule(*value);  // NOLINT
+        value = optionalSupplyAirFanOperatingModeSchedule();
+      }
+      OS_ASSERT(value);
+      return value.get();
     }
 
     bool ZoneHVACPackagedTerminalHeatPump_Impl::setAvailabilitySchedule(Schedule& schedule) {
@@ -371,12 +382,12 @@ namespace model {
       return result;
     }
 
-    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType) {
       bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerObjectType, outdoorAirMixerObjectType);
       return result;
     }
 
-    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setOutdoorAirMixerName(const std::string& outdoorAirMixerName) {
       bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::OutdoorAirMixerName, outdoorAirMixerName);
       OS_ASSERT(result);
       return result;
@@ -609,7 +620,7 @@ namespace model {
       OS_ASSERT(result);
     }
 
-    bool ZoneHVACPackagedTerminalHeatPump_Impl::setFanPlacement(std::string fanPlacement) {
+    bool ZoneHVACPackagedTerminalHeatPump_Impl::setFanPlacement(const std::string& fanPlacement) {
       bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::FanPlacement, fanPlacement);
       return result;
     }
@@ -623,11 +634,6 @@ namespace model {
       bool result = setSchedule(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName, "ZoneHVACPackagedTerminalHeatPump",
                                 "Supply Air Fan Operating Mode", schedule);
       return result;
-    }
-
-    void ZoneHVACPackagedTerminalHeatPump_Impl::resetSupplyAirFanOperatingModeSchedule() {
-      bool result = setString(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName, "");
-      OS_ASSERT(result);
     }
 
     boost::optional<Schedule> ZoneHVACPackagedTerminalHeatPump_Impl::optionalAvailabilitySchedule() const {
@@ -644,6 +650,11 @@ namespace model {
     }
     boost::optional<HVACComponent> ZoneHVACPackagedTerminalHeatPump_Impl::optionalSupplementalHeatingCoil() const {
       return getObject<ModelObject>().getModelObjectTarget<HVACComponent>(OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplementalHeatingCoilName);
+    }
+
+    boost::optional<Schedule> ZoneHVACPackagedTerminalHeatPump_Impl::optionalSupplyAirFanOperatingModeSchedule() const {
+      return getObject<ModelObject>().getModelObjectTarget<Schedule>(
+        OS_ZoneHVAC_PackagedTerminalHeatPumpFields::SupplyAirFanOperatingModeScheduleName);
     }
 
     boost::optional<ModelObject> ZoneHVACPackagedTerminalHeatPump_Impl::availabilityScheduleAsModelObject() const {
@@ -741,13 +752,9 @@ namespace model {
         if (intermediate) {
           Schedule schedule(*intermediate);
           return setSupplyAirFanOperatingModeSchedule(schedule);
-        } else {
-          return false;
         }
-      } else {
-        resetSupplyAirFanOperatingModeSchedule();
       }
-      return true;
+      return false;
     }
 
     boost::optional<double> ZoneHVACPackagedTerminalHeatPump_Impl::autosizedSupplyAirFlowRateDuringCoolingOperation() const {
@@ -844,6 +851,16 @@ namespace model {
     setHeatingCoil(heatingCoil);
     setCoolingCoil(coolingCoil);
     setSupplementalHeatingCoil(supplementalHeatingCoil);
+    // When Blank, E+ defaults to 0 (cycling). If it's a FanConstantVolume though, you must provide an always On or E+ will Fatal.
+    if (supplyAirFan.iddObjectType() == IddObjectType::OS_Fan_ConstantVolume) {
+      auto alwaysOn = model.alwaysOnDiscreteSchedule();
+      ok = setSupplyAirFanOperatingModeSchedule(alwaysOn);
+      OS_ASSERT(ok);
+    } else {
+      auto alwaysOff = model.alwaysOffDiscreteSchedule();
+      ok = setSupplyAirFanOperatingModeSchedule(alwaysOff);
+      OS_ASSERT(ok);
+    }
 
     autosizeSupplyAirFlowRateDuringCoolingOperation();
     autosizeSupplyAirFlowRateDuringHeatingOperation();
@@ -980,11 +997,11 @@ namespace model {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->isFanPlacementDefaulted();
   }
 
-  bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType) {
+  bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType) {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirMixerObjectType(outdoorAirMixerObjectType);
   }
 
-  bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerName(std::string outdoorAirMixerName) {
+  bool ZoneHVACPackagedTerminalHeatPump::setOutdoorAirMixerName(const std::string& outdoorAirMixerName) {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setOutdoorAirMixerName(outdoorAirMixerName);
   }
 
@@ -1097,7 +1114,7 @@ namespace model {
     getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetMaximumOutdoorDryBulbTemperatureforSupplementalHeaterOperation();
   }
 
-  bool ZoneHVACPackagedTerminalHeatPump::setFanPlacement(std::string fanPlacement) {
+  bool ZoneHVACPackagedTerminalHeatPump::setFanPlacement(const std::string& fanPlacement) {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setFanPlacement(fanPlacement);
   }
 
@@ -1111,10 +1128,6 @@ namespace model {
 
   bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFanOperatingModeSchedule(Schedule& schedule) {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->setSupplyAirFanOperatingModeSchedule(schedule);
-  }
-
-  void ZoneHVACPackagedTerminalHeatPump::resetSupplyAirFanOperatingModeSchedule() {
-    getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->resetSupplyAirFanOperatingModeSchedule();
   }
 
   bool ZoneHVACPackagedTerminalHeatPump::setSupplyAirFan(HVACComponent& hvacComponent) {
@@ -1137,7 +1150,7 @@ namespace model {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->availabilitySchedule();
   }
 
-  boost::optional<Schedule> ZoneHVACPackagedTerminalHeatPump::supplyAirFanOperatingModeSchedule() const {
+  Schedule ZoneHVACPackagedTerminalHeatPump::supplyAirFanOperatingModeSchedule() const {
     return getImpl<detail::ZoneHVACPackagedTerminalHeatPump_Impl>()->supplyAirFanOperatingModeSchedule();
   }
 
