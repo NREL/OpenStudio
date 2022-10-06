@@ -590,7 +590,7 @@ if(UNIX)
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH ebf23ac4f54a6c4f9ac0da561de4196e)   # TODO: not updated yet
+    set(ENERGYPLUS_EXPECTED_HASH f70fb18cc613f129e5e22e790d191f8c)   # TODO: not updated yet
     set(ENERGYPLUS_PLATFORM "Centos7-x86_64")
   else()
     if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
