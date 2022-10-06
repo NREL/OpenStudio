@@ -97,6 +97,14 @@ if(BUILD_TESTING)
     COMMAND $<TARGET_FILE:openstudio> labs -e "puts(OpenStudio::Model::Model.new())"
   )
 
+  add_test(NAME OpenStudioCLI.Labs.ruby_execute_line.embedded_gem
+    COMMAND $<TARGET_FILE:openstudio> labs -e "require 'minitest'"
+  )
+
+  add_test(NAME OpenStudioCLI.Labs.ruby_execute_line.embedded_native_gem
+    COMMAND $<TARGET_FILE:openstudio> labs -e "require 'oga'"
+  )
+
   add_test(NAME OpenStudioCLI.Labs.python_execute_line
     COMMAND $<TARGET_FILE:openstudio> labs -c "print(openstudio.model.Model())"
   )
