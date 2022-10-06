@@ -2,7 +2,7 @@ name: buildCSharpSDK
 
 on: 
   push:
-    branches: [ develop ]
+    branches: [ develop, fix_csharp ]
 
 jobs:
   build-csharp:
@@ -15,7 +15,7 @@ jobs:
         name: [Ubuntu, macOS, Windows64, Windows32]
         include:
         - name: Ubuntu
-          os: ubuntu-18.04
+          os: ubuntu-20.04
         - name: macOS
           os: macos-10.15
         - name: Windows64
@@ -157,6 +157,9 @@ jobs:
           dotnet test OpenStudio.Tests.csproj /p:Platform=x64
 
       - name: Tests on Windows for x32
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.17' 
         if: matrix.name == 'Windows32'
         run: |
           cd csharp/examples/OpenStudio.Tests/
@@ -299,7 +302,7 @@ jobs:
         name: [Ubuntu, macOS]
         include:
         - name: Ubuntu
-          os: ubuntu-18.04
+          os: ubuntu-20.04
         - name: macOS
           os: macos-10.15
     timeout-minutes: 20
