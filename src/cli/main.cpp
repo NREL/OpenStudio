@@ -16,6 +16,10 @@
 #include <CLI/CLI.hpp>
 
 int main(int argc, char* argv[]) {
+
+  constexpr auto rubySpecificOptionsGroupName = "Ruby Options";
+  constexpr auto pythonSpecificOptionsGroupName = "Python Options";
+
   int result = 0;
 
   // ScriptEngineInstance will delay load the engines
@@ -24,6 +28,8 @@ int main(int argc, char* argv[]) {
 
   if ((argc > 1) && (std::string_view(argv[1]) == "labs")) {
     CLI::App app{"openstudio"};
+
+    app.get_formatter()->column_width(35);
 
     auto* const experimentalApp = app.add_subcommand("labs");
 
@@ -53,25 +59,34 @@ int main(int argc, char* argv[]) {
                      "Execute one line of Python script (may be used more than once). Returns after executing commands.")
         ->option_text("CMD");
 
+    // ========================== R U B Y    O P T I O N S ==========================
     std::vector<openstudio::path> includeDirs;
     experimentalApp
       ->add_option("-I,--include", includeDirs, "Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)")
-      ->option_text("DIR");
+      ->option_text("DIR")
+      ->group(rubySpecificOptionsGroupName);
 
     std::vector<openstudio::path> gemPathDirs;
     experimentalApp
       ->add_option("--gem_path", gemPathDirs,
                    "Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)")
-      ->option_text("DIR");
+      ->option_text("DIR")
+      ->group(rubySpecificOptionsGroupName);
 
     openstudio::path gemHomeDir;
-    experimentalApp->add_option("--gem_home", gemHomeDir, "Set GEM_HOME environment variable")->option_text("DIR");
+    experimentalApp->add_option("--gem_home", gemHomeDir, "Set GEM_HOME environment variable")
+      ->option_text("DIR")
+      ->group(rubySpecificOptionsGroupName);
 
     openstudio::path bundleGemFilePath;
-    experimentalApp->add_option("--bundle", bundleGemFilePath, "Use bundler for GEMFILE")->option_text("GEMFILE");
+    experimentalApp->add_option("--bundle", bundleGemFilePath, "Use bundler for GEMFILE")
+      ->option_text("GEMFILE")
+      ->group(rubySpecificOptionsGroupName);
 
     openstudio::path bundleGemDirPath;
-    experimentalApp->add_option("--bundle_path", bundleGemDirPath, "Use bundler installed gems in BUNDLE_PATH")->option_text("BUNDLE_PATH");
+    experimentalApp->add_option("--bundle_path", bundleGemDirPath, "Use bundler installed gems in BUNDLE_PATH")
+      ->option_text("BUNDLE_PATH")
+      ->group(rubySpecificOptionsGroupName);
 
     // std::vector<std::string>
     std::string bundleWithoutGroups;
@@ -79,21 +94,27 @@ int main(int argc, char* argv[]) {
       ->add_option(
         "--bundle_without", bundleWithoutGroups,
         "Space separated list of groups for bundler to exclude in WITHOUT_GROUPS.  Surround multiple groups with quotes like \"test development\"")
-      ->option_text("WITHOUT_GROUPS");  // ->delimiter(' ');
+      ->option_text("WITHOUT_GROUPS")
+      ->group(rubySpecificOptionsGroupName);  // ->delimiter(' ');
 
     std::function<void()> runSetupEmbeddedGems = [&rubyEngine, &includeDirs, &gemPathDirs, &gemHomeDir, &bundleGemFilePath, &bundleGemDirPath,
                                                   &bundleWithoutGroups]() {
       rubyEngine->setupEmbeddedGems(includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePath, bundleGemDirPath, bundleWithoutGroups);
     };
 
+    // ========================== P Y T H O N    O P T I O N S ==========================
+
     std::vector<openstudio::path> pythonPathDirs;
     experimentalApp
       ->add_option("--python_path", pythonPathDirs,
                    "Add additional directory to add to front of PYTHONPATH environment variable (may be used more than once)")
-      ->option_text("DIR");
+      ->option_text("DIR")
+      ->group(pythonSpecificOptionsGroupName);
 
     openstudio::path pythonHomeDir;
-    experimentalApp->add_option("--python_home", pythonHomeDir, "Set PYTHONHOME environment variable")->option_text("DIR");
+    experimentalApp->add_option("--python_home", pythonHomeDir, "Set PYTHONHOME environment variable")
+      ->option_text("DIR")
+      ->group(pythonSpecificOptionsGroupName);
 
     std::function<void()> runSetupPythonPath = [&pythonEngine, &pythonPathDirs, &pythonHomeDir]() {
       pythonEngine->setupPythonPath(pythonPathDirs, pythonHomeDir);
