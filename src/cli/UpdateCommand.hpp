@@ -45,6 +45,8 @@ namespace cli {
   void executeRubyScriptCommand(openstudio::path rubyScriptPath, ScriptEngineInstance& rubyEngine, const std::vector<std::string>& arguments);
   void executePythonScriptCommand(openstudio::path pythonScriptPath, ScriptEngineInstance& pythonEngine, const std::vector<std::string>& arguments);
 
+  void executeGemListCommand(ScriptEngineInstance& rubyEngine);
+
 }  // namespace cli
 }  // namespace openstudio
 

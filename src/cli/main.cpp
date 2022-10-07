@@ -20,6 +20,9 @@ int main(int argc, char* argv[]) {
   constexpr auto rubySpecificOptionsGroupName = "Ruby Options";
   constexpr auto pythonSpecificOptionsGroupName = "Python Options";
 
+  // constexpr auto executeGroupName = "Script Execution";
+  constexpr auto versionGroupname = "Version Info";
+
   int result = 0;
 
   // ScriptEngineInstance will delay load the engines
@@ -120,11 +123,6 @@ int main(int argc, char* argv[]) {
       pythonEngine->setupPythonPath(pythonPathDirs, pythonHomeDir);
     };
 
-    [[maybe_unused]] auto* energyplus_versionCommand =
-      experimentalApp->add_subcommand("energyplus_version", "Returns the EnergyPlus version used by the CLI")->callback([]() {
-        fmt::print("{}+{}\n", energyPlusVersion(), energyPlusBuildSHA());
-      });
-
     {
       auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
       openstudio::filesystem::path rubyScriptPath;
@@ -153,20 +151,14 @@ int main(int argc, char* argv[]) {
       });
     }
 
-    [[maybe_unused]] auto* gem_listCommand = experimentalApp->add_subcommand("gem_list", "Lists the set gems available to openstudio");
-    [[maybe_unused]] auto* list_commandsCommand = experimentalApp->add_subcommand("list_commands", "Lists the entire set of available commands");
-    [[maybe_unused]] auto* openstudio_versionCommand =
-      experimentalApp->add_subcommand("openstudio_version", "Returns the OpenStudio version used by the CLI")->callback([]() {
-        fmt::print("{}\n", openStudioLongVersion());
+    [[maybe_unused]] auto* gem_listCommand =
+      experimentalApp->add_subcommand("gem_list", "Lists the set gems available to openstudio")->callback([&rubyEngine, &runSetupEmbeddedGems]() {
+        runSetupEmbeddedGems();
+        openstudio::cli::executeGemListCommand(rubyEngine);
       });
-    [[maybe_unused]] auto* ruby_versionCommand =
-      experimentalApp->add_subcommand("ruby_version", "Returns the Ruby version used by the CLI")->callback([&rubyEngine]() {
-        rubyEngine->exec("puts RUBY_VERSION");
-      });
-    [[maybe_unused]] auto* python_versionCommand =
-      experimentalApp->add_subcommand("python_version", "Returns the Ruby version used by the CLI")->callback([&pythonEngine]() {
-        pythonEngine->exec("import sys; print(sys.version)");
-      });
+
+    // Not hidding any commands right now
+    // [[maybe_unused]] auto* list_commandsCommand = experimentalApp->add_subcommand("list_commands", "Lists the entire set of available commands");
 
     // run command
     openstudio::cli::setupRunOptions(experimentalApp, rubyEngine, pythonEngine, runSetupEmbeddedGems, runSetupPythonPath);
@@ -190,6 +182,26 @@ int main(int argc, char* argv[]) {
     }
 
     openstudio::cli::MeasureUpdateOptions::setupMeasureUpdateOptions(experimentalApp, rubyEngine);
+
+    // ==========================  V E R S I O N ==========================
+    [[maybe_unused]] auto* openstudio_versionCommand =
+      experimentalApp->add_subcommand("openstudio_version", "Returns the OpenStudio version used by the CLI")
+        ->group(versionGroupname)
+        ->callback([]() { fmt::print("{}\n", openStudioLongVersion()); });
+
+    [[maybe_unused]] auto* energyplus_versionCommand =
+      experimentalApp->add_subcommand("energyplus_version", "Returns the EnergyPlus version used by the CLI")
+        ->group(versionGroupname)
+        ->callback([]() { fmt::print("{}+{}\n", energyPlusVersion(), energyPlusBuildSHA()); });
+    [[maybe_unused]] auto* ruby_versionCommand =
+      experimentalApp->add_subcommand("ruby_version", "Returns the Ruby version used by the CLI")->group(versionGroupname)->callback([&rubyEngine]() {
+        rubyEngine->exec("puts RUBY_VERSION");
+      });
+    [[maybe_unused]] auto* python_versionCommand = experimentalApp->add_subcommand("python_version", "Returns the Ruby version used by the CLI")
+                                                     ->group(versionGroupname)
+                                                     ->callback([&pythonEngine]() { pythonEngine->exec("import sys; print(sys.version)"); });
+
+    // ====================================================================
 
     CLI11_PARSE(app, argc, argv);
 

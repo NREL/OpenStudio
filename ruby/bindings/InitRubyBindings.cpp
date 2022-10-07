@@ -394,6 +394,26 @@ end # module OpenStudio
 void initEmbeddedGems() {
 
   std::string initScript = R"ruby(
+# This is the save puts to use to catch EPIPE. Uses `puts` on the given IO object and safely ignores any Errno::EPIPE
+#
+# @param [String] message Message to output
+# @param [Hash] opts Options hash
+#
+def safe_puts(message=nil, opts=nil)
+  message ||= ''
+  opts = {
+      io: $stdout,
+      printer: :puts
+  }.merge(opts || {})
+
+  begin
+    opts[:io].send(opts[:printer], message)
+  rescue Errno::EPIPE
+    # This is what makes this a `safe` puts
+    return
+  end
+end
+
 require 'logger'
 require 'rbconfig'
 

@@ -141,5 +141,36 @@ spec.loader.exec_module(module)
     fmt::print("{}\n", cmd);
     pythonEngine->exec(cmd);
   }
+
+  void executeGemListCommand(ScriptEngineInstance& rubyEngine) {
+
+    std::string cmd = R"ruby(
+begin
+  embedded = []
+  user = []
+  Gem::Specification.find_all.each do |spec|
+    if spec.gem_dir.chars.first == ':'
+      embedded << spec
+    else
+      user << spec
+    end
+  end
+
+  embedded.each do |spec|
+    safe_puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
+  end
+
+  user.each do |spec|
+    safe_puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
+  end
+
+rescue => e
+  $logger.error "Error listing gems: #{e.message} in #{e.backtrace.join("\n")}"
+  exit e.exit_code
+end
+    )ruby";
+    rubyEngine->exec(cmd);
+  }
+
 }  // namespace cli
 }  // namespace openstudio
