@@ -1,6 +1,9 @@
 #ifndef RUBYENGINE_included
 #define RUBYENGINE_included
 
+// TODO:
+// #include <rubyengine_export.h>  // from generate_export_header(rubyengine)
+
 #include <ScriptEngine.hpp>
 #include <ScriptEngineAPI.hpp>
 #include <RubyInterpreter.hpp>
@@ -20,6 +23,10 @@ class RubyEngine final : public ScriptEngine
 
   ScriptObject eval(std::string_view sv) override;
   void exec(std::string_view sv) override;
+
+  virtual void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const std::vector<openstudio::path>& gemPathDirs,
+                                 const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath,
+                                 const openstudio::path& bundleGemDirPath, const std::string& bundleWithoutGroups) override;
 
  protected:
   // convert the underlying object to the correct type, then return it as a void *

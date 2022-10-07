@@ -41,7 +41,8 @@ namespace cli {
 
   void setupRunFtOptions(CLI::App* app, FtOptions& ftOptions);
 
-  void setupRunOptions(CLI::App* parentApp, ScriptEngineInstance& ruby, ScriptEngineInstance& python) {
+  void setupRunOptions(CLI::App* parentApp, ScriptEngineInstance& ruby, ScriptEngineInstance& python, std::function<void()>& runSetupEmbeddedGems,
+                       std::function<void()>& runSetupPythonPath) {
     /// Set up a subcommand and capture a shared_ptr to a struct that holds all its options.
     /// The variables of the struct are bound to the CLI options.
     /// We use a shared ptr so that the addresses of the variables remain for binding,
@@ -83,7 +84,11 @@ namespace cli {
     // FT options
     setupRunFtOptions(app, opt->ft_options);
 
-    app->callback([opt, &ruby, &python] {
+    app->callback([opt, &ruby, &python, &runSetupEmbeddedGems, &runSetupPythonPath] {
+      // TODO: eventually we want to delay the call to runSetupEmbeddedGems until we KNOW we need ruby measures, so probably want to forward to
+      // OSWorkflow and deal with it there. Same for runSetupPythonPath
+      runSetupEmbeddedGems();
+      runSetupPythonPath();
       openstudio::OSWorkflow workflow(*opt, ruby, python);
       workflow.run();
     });

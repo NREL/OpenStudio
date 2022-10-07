@@ -10,7 +10,8 @@
 
 #include <OpenStudio.hxx>
 
-#include <iostream>
+#include <fmt/format.h>
+#include <string_view>
 
 #include <CLI/CLI.hpp>
 
@@ -39,11 +40,6 @@ int main(int argc, char* argv[]) {
       },
       "Print the full log to STDOUT");
 
-    std::vector<std::string> includeDirs;
-    experimentalApp
-      ->add_option("-I,--include", includeDirs, "Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)")
-      ->option_text("DIR");
-
     std::vector<std::string> executeRubyCmds;
     CLI::Option* execRubyOption = experimentalApp
                                     ->add_option("-e,--execute", executeRubyCmds,
@@ -57,16 +53,51 @@ int main(int argc, char* argv[]) {
                      "Execute one line of Python script (may be used more than once). Returns after executing commands.")
         ->option_text("CMD");
 
-    std::vector<std::string> gemPathDirs;
-    app
-      .add_option("--gem_path", gemPathDirs, "Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)")
+    std::vector<openstudio::path> includeDirs;
+    experimentalApp
+      ->add_option("-I,--include", includeDirs, "Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)")
       ->option_text("DIR");
 
-    std::string gemHomeDir;
+    std::vector<openstudio::path> gemPathDirs;
+    experimentalApp
+      ->add_option("--gem_path", gemPathDirs,
+                   "Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)")
+      ->option_text("DIR");
+
+    openstudio::path gemHomeDir;
     experimentalApp->add_option("--gem_home", gemHomeDir, "Set GEM_HOME environment variable")->option_text("DIR");
 
-    std::string gemFile;
-    experimentalApp->add_option("--bundle", gemFile, "Use bundler for GEMFILE'")->option_text("GEMFILE");
+    openstudio::path bundleGemFilePath;
+    experimentalApp->add_option("--bundle", bundleGemFilePath, "Use bundler for GEMFILE")->option_text("GEMFILE");
+
+    openstudio::path bundleGemDirPath;
+    experimentalApp->add_option("--bundle_path", bundleGemDirPath, "Use bundler installed gems in BUNDLE_PATH")->option_text("BUNDLE_PATH");
+
+    // std::vector<std::string>
+    std::string bundleWithoutGroups;
+    experimentalApp
+      ->add_option(
+        "--bundle_without", bundleWithoutGroups,
+        "Space separated list of groups for bundler to exclude in WITHOUT_GROUPS.  Surround multiple groups with quotes like \"test development\"")
+      ->option_text("WITHOUT_GROUPS");  // ->delimiter(' ');
+
+    std::function<void()> runSetupEmbeddedGems = [&rubyEngine, &includeDirs, &gemPathDirs, &gemHomeDir, &bundleGemFilePath, &bundleGemDirPath,
+                                                  &bundleWithoutGroups]() {
+      rubyEngine->setupEmbeddedGems(includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePath, bundleGemDirPath, bundleWithoutGroups);
+    };
+
+    std::vector<openstudio::path> pythonPathDirs;
+    experimentalApp
+      ->add_option("--python_path", pythonPathDirs,
+                   "Add additional directory to add to front of PYTHONPATH environment variable (may be used more than once)")
+      ->option_text("DIR");
+
+    openstudio::path pythonHomeDir;
+    experimentalApp->add_option("--python_home", pythonHomeDir, "Set PYTHONHOME environment variable")->option_text("DIR");
+
+    std::function<void()> runSetupPythonPath = [&pythonEngine, &pythonPathDirs, &pythonHomeDir]() {
+      pythonEngine->setupPythonPath(pythonPathDirs, pythonHomeDir);
+    };
 
     [[maybe_unused]] auto* energyplus_versionCommand =
       experimentalApp->add_subcommand("energyplus_version", "Returns the EnergyPlus version used by the CLI")->callback([]() {
@@ -81,7 +112,8 @@ int main(int argc, char* argv[]) {
       execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
         ->required(false)
         ->option_text("args");
-      execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &executeRubyScriptCommandArgs] {
+      execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &executeRubyScriptCommandArgs, &runSetupEmbeddedGems] {
+        runSetupEmbeddedGems();
         openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, executeRubyScriptCommandArgs);
       });
     }
@@ -94,7 +126,8 @@ int main(int argc, char* argv[]) {
       execute_python_scriptCommand->add_option("arguments", executePythonScriptCommandArgs, "Arguments to pass to the python file")
         ->required(false)
         ->option_text("args");
-      execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &executePythonScriptCommandArgs] {
+      execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &executePythonScriptCommandArgs, &runSetupPythonPath] {
+        runSetupPythonPath();
         openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, executePythonScriptCommandArgs);
       });
     }
@@ -115,7 +148,7 @@ int main(int argc, char* argv[]) {
       });
 
     // run command
-    openstudio::cli::setupRunOptions(experimentalApp, rubyEngine, pythonEngine);
+    openstudio::cli::setupRunOptions(experimentalApp, rubyEngine, pythonEngine, runSetupEmbeddedGems, runSetupPythonPath);
 
     // update (model) command
     // openstudio::cli::setupUpdateCommand(experimentalApp);
@@ -141,6 +174,7 @@ int main(int argc, char* argv[]) {
 
     if (*execRubyOption) {
       fmt::print("--execute Flag received {} times.\n", execRubyOption->count());
+      runSetupEmbeddedGems();
       rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
       for (auto& cmd : executeRubyCmds) {
         fmt::print("{}\n", cmd);
@@ -149,6 +183,7 @@ int main(int argc, char* argv[]) {
     }
     if (*execPythonOption) {
       fmt::print("--pyexecute Flag received {} times.\n", execPythonOption->count());
+      runSetupPythonPath();
       for (auto& cmd : executePythonCmds) {
         fmt::print("{}\n", cmd);
         pythonEngine->exec(cmd);
