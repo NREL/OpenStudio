@@ -43,27 +43,6 @@
 namespace openstudio {
 namespace cli {
 
-  void setupMeasureCommand(CLI::App* parentApp) {
-    [[maybe_unused]] auto* measureCommand = parentApp->add_subcommand("measure", "Updates measures and compute arguments");
-  }
-
-  void setupUpdateCommand(CLI::App* parentApp) {
-
-    bool keep = false;
-    [[maybe_unused]] auto* updateCommand = parentApp->add_subcommand("update", "Updates OpenStudio Models to the current version");
-    updateCommand->add_flag("--keep", keep, "Keep original files");
-
-    openstudio::filesystem::path p;
-    updateCommand->add_option("path", p, "Path to OSM or directory containing osms")->required(true);
-
-    updateCommand->callback([&keep, &p] {
-      bool result = runModelUpdateCommand(p, keep);
-      if (!result) {
-        throw std::runtime_error("Failed to update some models");
-      }
-    });
-  }
-
   bool runModelUpdateCommand(const openstudio::path& p, bool keep) {
     std::vector<openstudio::path> osmPaths;
 
