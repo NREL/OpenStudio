@@ -44,4 +44,15 @@ target_compile_options(pythonengine PRIVATE
 
 target_compile_definitions(pythonengine PRIVATE openstudio_scriptengine_EXPORTS SHARED_OS_LIBS)
 
-install(TARGETS pythonengine EXPORT openstudio DESTINATION bin COMPONENT "CLI")
+# it goes into lib/ and we want to find:
+# ../EnergyPlus/libpython3.8.dylib
+if(APPLE)
+  set_target_properties(pythonengine PROPERTIES
+    MACOSX_RPATH ON
+    INSTALL_RPATH "@loader_path;@loader_path/../EnergyPlus/")
+elseif(UNIX)
+  set_target_properties(pythonengine PROPERTIES
+    INSTALL_RPATH "$ORIGIN:$ORIGIN/../EnergyPlus/")
+endif()
+
+install(TARGETS pythonengine EXPORT openstudio DESTINATION lib COMPONENT "CLI")

@@ -269,4 +269,5 @@ endif()
 
 target_compile_definitions(rubyengine PRIVATE openstudio_scriptengine_EXPORTS SHARED_OS_LIBS)
 
-install(TARGETS rubyengine EXPORT openstudio DESTINATION bin COMPONENT "CLI")
+# This is statically linked to libruby.a, so no need to tweak the rpath stuff
+install(TARGETS rubyengine EXPORT openstudio DESTINATION lib COMPONENT "CLI")
