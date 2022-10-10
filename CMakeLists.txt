@@ -262,11 +262,6 @@ endif()
 ###############################################################################
 # Build options
 
-if(UNIX AND NOT APPLE)
-  # the RPATH to be used when installing
-  set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-endif()
-
 # TODO: should this be only in OpenStudioApplication?
 option(BUILD_PAT "Build PAT" OFF)
 
@@ -943,13 +938,6 @@ include_directories("${PROJECT_SOURCE_DIR}/src/")
 # Project binary directory
 include_directories("${PROJECT_BINARY_DIR}/src/")
 
-###############################################################################
-
-###############################################################################
-# RPATH settings
-# Conan set this to true, which is not the cmake default and not what we want
-# for the openstudio targets
-set(CMAKE_SKIP_RPATH FALSE)
 ###############################################################################
 
 ###############################################################################
