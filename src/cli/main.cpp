@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
 
     experimentalApp->add_flag_function(
       "--verbose",
-      [](int count) {
+      [](auto count) {
         if (count == 1) {
           fmt::print("Setting log Level to Debug\n");
           openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Debug);
