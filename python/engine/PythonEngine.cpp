@@ -1,5 +1,6 @@
 #include "PythonEngine.hpp"
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include "../../src/utilities/core/Filesystem.hpp"
 #include <fmt/format.h>
 #include <stdexcept>
 #include <string>
@@ -25,7 +26,7 @@ void addToPythonPath(const openstudio::path& includePath) {
     PyObject* sys = PyImport_ImportModule("sys");
     PyObject* sysPath = PyObject_GetAttrString(sys, "path");
     // fmt::print("Prepending '{}' to sys.path\n", includePath);
-    PyObject* unicodeIncludePath = PyUnicode_FromString(includePath.c_str());
+    PyObject* unicodeIncludePath = PyUnicode_FromString(includePath.string().c_str());
     PyList_Insert(sysPath, 0, unicodeIncludePath);
   }
 }
@@ -52,7 +53,7 @@ PythonEngine::PythonEngine(int argc, char* argv[]) : ScriptEngine(argc, argv), p
   // Set the PYTHONPATH / PYTHONHOME to the E+ shipped standard library
   // I think we need to set the python path before initializing the library
   auto pathToPythonPackages = getEnergyPlusDirectory() / "python_standard_lib";
-  wchar_t* a = Py_DecodeLocale(pathToPythonPackages.make_preferred().c_str(), nullptr);
+  wchar_t* a = Py_DecodeLocale(pathToPythonPackages.make_preferred().string().c_str(), nullptr);
   Py_SetPath(a);
   Py_SetPythonHome(a);
 
