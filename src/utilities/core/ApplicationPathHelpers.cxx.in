@@ -122,7 +122,7 @@ bool applicationIsRunningFromBuildDirectory() {
 #endif
 
   bool isInsideCpackDir = openstudio::toString(runDir).find(package_dir) != std::string::npos;
-  LOG_FREE(Error, "ApplicationPathHelpers", "buildDir=" << buildDir << ", runDir=" << runDir << ", isInsideCpackDir=" << isInsideCpackDir);
+  // LOG_FREE(Debug, "ApplicationPathHelpers", "buildDir=" << buildDir << ", runDir=" << runDir << ", isInsideCpackDir=" << isInsideCpackDir);
   return pathBeginsWith(buildDir, runDir) && !isInsideCpackDir;
 }
 
@@ -189,7 +189,7 @@ bool moduleIsRunningFromBuildDirectory() {
 #endif
 
   bool isInsideCpackDir = openstudio::toString(runDir).find(package_dir) != std::string::npos;
-  LOG_FREE(Error, "ApplicationPathHelpers", "buildDir=" << buildDir << ", runDir=" << runDir << ", isInsideCpackDir=" << isInsideCpackDir);
+  // LOG_FREE(Debug, "ApplicationPathHelpers", "buildDir=" << buildDir << ", runDir=" << runDir << ", isInsideCpackDir=" << isInsideCpackDir);
   return pathBeginsWith(buildDir, runDir) && !isInsideCpackDir;
 }
 
