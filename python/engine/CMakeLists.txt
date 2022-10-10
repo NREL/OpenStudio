@@ -63,6 +63,8 @@ elseif(UNIX)
 elseif(WIN32)
   # Windows does not have RPATH handling, so just copy the DLL to the lib folder
   install(IMPORTED_RUNTIME_ARTIFACTS Python::Python LIBRARY DESTINATION lib)
+  # TODO: We also need it in the Python subfolder (probably?)
+  install(IMPORTED_RUNTIME_ARTIFACTS Python::Python LIBRARY DESTINATION Python)
 endif()
 
 install(TARGETS pythonengine EXPORT openstudio DESTINATION lib COMPONENT "CLI")
