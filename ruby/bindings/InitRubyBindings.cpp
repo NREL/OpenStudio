@@ -35,6 +35,7 @@
 #undef int128_t
 #undef uint128_t
 #undef isfinite
+#undef memcpy
 #include "../../src/utilities/core/Filesystem.hpp"
 
 // You can't use fmt when you include ruby, awesome!

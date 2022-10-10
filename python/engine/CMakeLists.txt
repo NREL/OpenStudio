@@ -49,7 +49,8 @@ target_compile_definitions(pythonengine PRIVATE openstudio_scriptengine_EXPORTS 
 if(APPLE)
   set_target_properties(pythonengine PROPERTIES
     MACOSX_RPATH ON
-    INSTALL_RPATH "@loader_path;@loader_path/../EnergyPlus/")
+    INSTALL_RPATH "@loader_path;@loader_path/../EnergyPlus/"
+  )
 
   install(CODE [[
     execute_process(COMMAND "install_name_tool" -change "$<TARGET_FILE:Python::Python>" "@rpath/$<TARGET_FILE_NAME:Python::Python>" "$<TARGET_FILE:pythonengine>")
@@ -57,7 +58,8 @@ if(APPLE)
 
 elseif(UNIX)
   set_target_properties(pythonengine PROPERTIES
-    INSTALL_RPATH "$ORIGIN:$ORIGIN/../EnergyPlus/")
+    INSTALL_RPATH "$ORIGIN:$ORIGIN/../EnergyPlus/"
+  )
 elseif(WIN32)
   # Windows does not have RPATH handling, so just copy the DLL to the lib folder
   install(IMPORTED_RUNTIME_ARTIFACTS Python::Python LIBRARY DESTINATION lib)

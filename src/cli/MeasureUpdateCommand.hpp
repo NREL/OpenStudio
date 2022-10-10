@@ -63,4 +63,3 @@ namespace cli {
 }  // namespace openstudio
 
 #endif  // CLI_MEASUREUPDATECOMMAND_HPP
-

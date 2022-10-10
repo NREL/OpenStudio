@@ -269,5 +269,15 @@ endif()
 
 target_compile_definitions(rubyengine PRIVATE openstudio_scriptengine_EXPORTS SHARED_OS_LIBS)
 
-# This is statically linked to libruby.a, so no need to tweak the rpath stuff
+# This is statically linked to libruby.a, so no need to tweak the rpath stuff for that, but we still need to add $ORIGIN so that it finds libopenstudiolib
+if(APPLE)
+  set_target_properties(rubyengine PROPERTIES
+    INSTALL_RPATH "@loader_path"
+  )
+elseif(UNIX)
+  set_target_properties(rubyengine PROPERTIES
+    INSTALL_RPATH "$ORIGIN"
+  )
+endif()
+
 install(TARGETS rubyengine EXPORT openstudio DESTINATION lib COMPONENT "CLI")
