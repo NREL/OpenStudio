@@ -30,16 +30,16 @@
 #include "InitRubyBindings.hpp"
 #include "RubyEval.hpp"
 
-#define HAVE_ISFINITE 1
+// #define HAVE_ISFINITE 1
 #include <ruby.h>
-#undef int128_t
-#undef uint128_t
-#undef isfinite
-#undef memcpy
+// #undef int128_t
+// #undef uint128_t
+// #undef isfinite
+// #undef memcpy
 #include "../../src/utilities/core/Filesystem.hpp"
 
 // You can't use fmt when you include ruby, awesome!
-#include <fmt/format.h>
+// #include <fmt/format.h>
 // <conan_fmt>/include/fmt/core.h:405:7: error: expected unqualified-id
 // using int128_t = __int128_t;
 //       ^
@@ -48,7 +48,9 @@
 
 // #include <ranges>
 #include <boost/range/adaptor/reversed.hpp>
+#include <iostream>
 #include <string>
+#include <sstream>
 #include <string_view>
 #include <vector>
 
@@ -618,14 +620,18 @@ void setRubyEnvVarStr(std::string_view name, std::string_view val) {
   if (val.empty()) {
     return;
   }
-  const auto envVarCmd = fmt::format(
-    R"ruby(
-$logger.info "Setting {0} to {1}"
-ENV['{0}'] = '{1}'
-)ruby",
-    name, val);
 
-  openstudio::evalString(envVarCmd);
+//   const auto envVarCmd = fmt::format(
+//     R"ruby(
+// $logger.info "Setting {0} to {1}"
+// ENV['{0}'] = '{1}'
+// )ruby",
+//     name, val);
+
+  std::stringstream ss;
+  ss << "$logger.info \"Setting " << name << " to " << val << "\"\n"
+    <<  "ENV['" << name << "'] = '" << val << "'\n";
+  openstudio::evalString(ss.str());
 }
 
 void setRubyEnvVarPath(std::string_view name, const openstudio::path& p) {
@@ -645,7 +651,7 @@ void setGemPathDir(const std::vector<openstudio::path>& gemPathDirs) {
   std::string result;
   for (const auto& gemDirPath : gemPathDirs) {
     const auto& s = gemDirPath.generic_string();
-    result += result.empty() ? s : openstudio::path::preferred_separator + s;
+    result += result.empty() ? s : std::string{openstudio::path::preferred_separator} + s;
   }
   setRubyEnvVarStr("GEM_PATH", result);
 }
@@ -885,16 +891,14 @@ void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const s
     setRubyEnvVarPath("BUNDLE_PATH", bundleGemDirPath);
   } else if (use_bundler) {
     // bundle was requested but bundle_path was not provided
-    fmt::print("Warn: Bundle activated but ENV['BUNDLE_PATH'] is not set");
-    fmt::print("Info: Setting BUNDLE_PATH to ':/ruby/2.7.0/'");
+    std::cout << "Warn: Bundle activated but ENV['BUNDLE_PATH'] is not set" << '\n' << "Info: Setting BUNDLE_PATH to ':/ruby/2.7.0/'" << std::endl;
   }
 
   if (!bundleWithoutGroups.empty()) {
     setRubyEnvVarPath("BUNDLE_WITHOUT", bundleWithoutGroups);
   } else if (use_bundler) {
     // bundle was requested but bundle_path was not provided
-    fmt::print("Warn: Bundle activated but ENV['BUNDLE_WITHOUT'] is not set");
-    fmt::print("Info: Setting BUNDLE_WITHOUT to 'test'");
+    std::cout << "Warn: Bundle activated but ENV['BUNDLE_WITHOUT'] is not set" << '\n' << "Info: Setting BUNDLE_WITHOUT to 'test'" << std::endl;
     setRubyEnvVarPath("BUNDLE_WITHOUT", "test");
   }
 
