@@ -194,11 +194,14 @@ set(ENERGYPLUS_VERSION_MINOR 2)
 set(ENERGYPLUS_VERSION_PATCH 0)
 set(ENERGYPLUS_VERSION "${ENERGYPLUS_VERSION_MAJOR}.${ENERGYPLUS_VERSION_MINOR}.${ENERGYPLUS_VERSION_PATCH}")
 # Build SHA is not required to have a value, but if it does OpenStudio will require this build.
-set(ENERGYPLUS_BUILD_SHA "c249759bad")
+set(ENERGYPLUS_BUILD_SHA "aa78da9668")
 
 # ENERGYPLUS_RELEASE_NAME is used to locate the E+ download
 # from the github releases
-set(ENERGYPLUS_RELEASE_NAME "v22.2.0")
+set(ENERGYPLUS_RELEASE_NAME "v22.2.0-WithIHGFix")
+
+# TODO: Temporary change to a fork until a patched release is issued on NREL's
+set(ENERGYPLUS_REPO "jmarrec")
 
 # Radiance
 set(RADIANCE_VERSION "5.0.a.12")
@@ -593,21 +596,21 @@ endif()
 if(UNIX)
   if(APPLE)
     if (ARCH MATCHES "arm64")
-      set(ENERGYPLUS_EXPECTED_HASH 48af06ee5b4b0393444e6e57f4adadd5)
+      set(ENERGYPLUS_EXPECTED_HASH 35ba21891e7059987391f1ab59958025)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS12.1-arm64")
     else()
-      set(ENERGYPLUS_EXPECTED_HASH 92a76c5d60cf91536bdeacbe780d135a)
+      set(ENERGYPLUS_EXPECTED_HASH 481fafde9496735d809e810bd95b720f)
       set(ENERGYPLUS_PLATFORM "Darwin-macOS10.15-x86_64")
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH ebf23ac4f54a6c4f9ac0da561de4196e)
+    set(ENERGYPLUS_EXPECTED_HASH f70fb18cc613f129e5e22e790d191f8c)   # TODO: not updated yet
     set(ENERGYPLUS_PLATFORM "Centos7-x86_64")
   else()
     if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
-      set(ENERGYPLUS_EXPECTED_HASH f8a45aa0a01523b5f904d5c2ae8302f8)
+      set(ENERGYPLUS_EXPECTED_HASH fd2b9e55a15227f872601e9e57ffe819)
     else() # 18.04
-      set(ENERGYPLUS_EXPECTED_HASH 58b8397f55c2a1ede7ed08c5892e62ed)
+      set(ENERGYPLUS_EXPECTED_HASH 05a97ef513fa3f2ac7678bd9eef026db)
     endif()
     set(ENERGYPLUS_PLATFORM "Linux${ENERGYPLUS_SYSTEM_VERSION}-x86_64")
   endif()
@@ -617,7 +620,7 @@ if(UNIX)
   endif()
   if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_PLATFORM})")
-    message(STATUS "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz") # TODO: Temp: custom build on my fork
+    message(STATUS "https://github.com/${ENERGYPLUS_REPO}/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz")
 
     if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
       file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
@@ -625,7 +628,7 @@ if(UNIX)
            SHOW_PROGRESS
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
     else()
-      file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+      file(DOWNLOAD "https://github.com/${ENERGYPLUS_REPO}/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
            INACTIVITY_TIMEOUT 300 # 5-min timeout
            SHOW_PROGRESS
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
@@ -639,11 +642,11 @@ elseif(WIN32)
   if(CMAKE_SIZEOF_VOID_P EQUAL 8) # 64 bit
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-x86_64")
     set(ENERGYPLUS_ARCH 64)
-    set(ENERGYPLUS_EXPECTED_HASH c6d296be45420d6e497f33727f044676)
+    set(ENERGYPLUS_EXPECTED_HASH 8611314c5056abedca59144627e79078)
   else()
     set(ENERGYPLUS_PATH "EnergyPlus-${ENERGYPLUS_VERSION}-${ENERGYPLUS_BUILD_SHA}-Windows-i386")
     set(ENERGYPLUS_ARCH 32)
-    set(ENERGYPLUS_EXPECTED_HASH 68108677fceb17bd58be1c9c7a68f418)
+    set(ENERGYPLUS_EXPECTED_HASH 76afec50c80fc4b53f2f4da572573688)
   endif()
   if(EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip")
     file(MD5 "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" ENERGYPLUS_HASH)
@@ -651,7 +654,7 @@ elseif(WIN32)
   if(NOT EXISTS "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip" OR NOT "${ENERGYPLUS_HASH}" MATCHES "${ENERGYPLUS_EXPECTED_HASH}")
     message(STATUS "Downloading EnergyPlus ${ENERGYPLUS_VERSION} (${ENERGYPLUS_ARCH}-bit)")
 
-    file(DOWNLOAD "https://github.com/NREL/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip"
+    file(DOWNLOAD "https://github.com/${ENERGYPLUS_REPO}/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.zip" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.zip"
          INACTIVITY_TIMEOUT 300 # 5 minute timeout
          SHOW_PROGRESS
          EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
@@ -797,20 +800,20 @@ if(BUILD_CLI)
          set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220420-darwin_arm64.tar.gz")
          set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "abc2798729434f8835f824300a5fd420")
        else()
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220901-darwin.tar.gz ")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "1c4a738e36bd34e7626aef7116bf5076")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20221007-darwin.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "f1f9cb50a4ef36899fd22251a3efb80d")
        endif()
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220831-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b515d50b81fae65389b44f73456d4e65")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20221007-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "2d53f66f68f17db32ffde75b5d6f97db")
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
        endif()
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220831-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c45f2a323d654a0a1536c6076bf4dcc4")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20221007-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "2c55f2dbf78453e30ea365d5a9a36a98")
     if (USE_OPENSTUDIO_GEMS_PR)
       set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
     endif()

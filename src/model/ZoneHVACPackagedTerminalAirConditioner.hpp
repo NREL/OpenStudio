@@ -56,7 +56,7 @@ namespace model {
     ZoneHVACPackagedTerminalAirConditioner(const Model& model, Schedule& availabilitySchedule, HVACComponent& supplyAirFan,
                                            HVACComponent& heatingCoil, HVACComponent& coolingCoil);
 
-    virtual ~ZoneHVACPackagedTerminalAirConditioner() {}
+    virtual ~ZoneHVACPackagedTerminalAirConditioner() = default;
 
     //@}
 
@@ -121,7 +121,7 @@ namespace model {
 
     bool isFanPlacementDefaulted() const;
 
-    boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
+    Schedule supplyAirFanOperatingModeSchedule() const;
 
     //@}
     /** @name Setters */
@@ -129,9 +129,9 @@ namespace model {
 
     bool setAvailabilitySchedule(Schedule& schedule);
 
-    bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
+    bool setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType);
 
-    bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
+    bool setOutdoorAirMixerName(const std::string& outdoorAirMixerName);
 
     bool setSupplyAirFlowRateDuringCoolingOperation(double supplyAirFlowRateDuringCoolingOperation);
 
@@ -167,7 +167,7 @@ namespace model {
 
     bool setCoolingCoil(HVACComponent& coolingCoil);
 
-    bool setFanPlacement(std::string fanPlacement);
+    bool setFanPlacement(const std::string& fanPlacement);
 
     void resetFanPlacement();
 
@@ -175,8 +175,6 @@ namespace model {
    *  cycles on and off with the active (heating or cooling) coil. Other values operate the
    *  fan continuously. */
     bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
-
-    void resetSupplyAirFanOperatingModeSchedule();
 
     //@}
     /** @name Other */
@@ -197,7 +195,7 @@ namespace model {
     //@}
    protected:
     /// @cond
-    typedef detail::ZoneHVACPackagedTerminalAirConditioner_Impl ImplType;
+    using ImplType = detail::ZoneHVACPackagedTerminalAirConditioner_Impl;
 
     explicit ZoneHVACPackagedTerminalAirConditioner(std::shared_ptr<detail::ZoneHVACPackagedTerminalAirConditioner_Impl> impl);
 
@@ -212,10 +210,10 @@ namespace model {
   };
 
   /** \relates ZoneHVACPackagedTerminalAirConditioner*/
-  typedef boost::optional<ZoneHVACPackagedTerminalAirConditioner> OptionalZoneHVACPackagedTerminalAirConditioner;
+  using OptionalZoneHVACPackagedTerminalAirConditioner = boost::optional<ZoneHVACPackagedTerminalAirConditioner>;
 
   /** \relates ZoneHVACPackagedTerminalAirConditioner*/
-  typedef std::vector<ZoneHVACPackagedTerminalAirConditioner> ZoneHVACPackagedTerminalAirConditionerVector;
+  using ZoneHVACPackagedTerminalAirConditionerVector = std::vector<ZoneHVACPackagedTerminalAirConditioner>;
 
 }  // namespace model
 }  // namespace openstudio
