@@ -280,4 +280,4 @@ elseif(UNIX)
   )
 endif()
 
-install(TARGETS rubyengine EXPORT openstudio DESTINATION lib COMPONENT "CLI")
+install(TARGETS rubyengine EXPORT openstudio DESTINATION ${LIB_DESTINATION_DIR} COMPONENT "CLI")
