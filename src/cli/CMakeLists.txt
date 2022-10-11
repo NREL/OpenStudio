@@ -110,6 +110,9 @@ if(BUILD_TESTING)
   add_test(NAME OpenStudioCLI.Labs.python_version
     COMMAND $<TARGET_FILE:openstudio> labs python_version
   )
+  set_tests_properties(OpenStudioCLI.Labs.python_version PROPERTIES
+    PASS_REGULAR_EXPRESSION "3\.8\.1[0-9]"
+  )
 
   add_test(NAME OpenStudioCLI.Labs.ruby_execute_line
     COMMAND $<TARGET_FILE:openstudio> labs -e "puts(OpenStudio::Model::Model.new())"
