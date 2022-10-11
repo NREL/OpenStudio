@@ -55,7 +55,9 @@ if(APPLE)
 
   install(CODE [[
     execute_process(COMMAND "install_name_tool" -change "$<TARGET_FILE:Python::Python>" "@rpath/$<TARGET_FILE_NAME:Python::Python>" "${CMAKE_INSTALL_PREFIX}/lib/$<TARGET_FILE_NAME:pythonengine>")
-  ]])
+  ]]
+    COMPONENT "CLI"
+  )
 
 elseif(UNIX)
   set_target_properties(pythonengine PROPERTIES
@@ -63,6 +65,6 @@ elseif(UNIX)
   )
 elseif(WIN32)
   # Windows does not have RPATH handling, so just copy the DLL to the bin folder
-  install(IMPORTED_RUNTIME_ARTIFACTS Python::Python LIBRARY DESTINATION ${LIB_DESTINATION_DIR})
+  install(IMPORTED_RUNTIME_ARTIFACTS Python::Python LIBRARY DESTINATION ${LIB_DESTINATION_DIR} COMPONENT "CLI")
 endif()
 
