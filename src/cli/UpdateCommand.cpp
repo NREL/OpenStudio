@@ -111,7 +111,7 @@ sys.argv.append("{}")
       cmd += fmt::format("sys.argv.append(\"{}\")\n", arg);
     }
     cmd += fmt::format(R"python(
-import importlib
+import importlib.util
 spec = importlib.util.spec_from_file_location('__main__', r'{}')
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
