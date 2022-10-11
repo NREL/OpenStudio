@@ -44,6 +44,8 @@ target_compile_options(pythonengine PRIVATE
 
 target_compile_definitions(pythonengine PRIVATE openstudio_scriptengine_EXPORTS SHARED_OS_LIBS)
 
+install(TARGETS pythonengine EXPORT openstudio DESTINATION ${LIB_DESTINATION_DIR} COMPONENT "CLI")
+
 # it goes into lib/ and we want to find:
 # ../EnergyPlus/libpython3.8.dylib
 if(APPLE)
@@ -52,7 +54,7 @@ if(APPLE)
   )
 
   install(CODE [[
-    execute_process(COMMAND "install_name_tool" -change "$<TARGET_FILE:Python::Python>" "@rpath/$<TARGET_FILE_NAME:Python::Python>" "$<TARGET_FILE:pythonengine>")
+    execute_process(COMMAND "install_name_tool" -change "$<TARGET_FILE:Python::Python>" "@rpath/$<TARGET_FILE_NAME:Python::Python>" "${CMAKE_INSTALL_PREFIX}/lib/$<TARGET_FILE_NAME:pythonengine>")
   ]])
 
 elseif(UNIX)
@@ -64,4 +66,3 @@ elseif(WIN32)
   install(IMPORTED_RUNTIME_ARTIFACTS Python::Python LIBRARY DESTINATION ${LIB_DESTINATION_DIR})
 endif()
 
-install(TARGETS pythonengine EXPORT openstudio DESTINATION ${LIB_DESTINATION_DIR} COMPONENT "CLI")
