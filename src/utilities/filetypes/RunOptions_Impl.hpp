@@ -43,6 +43,18 @@
 namespace openstudio {
 namespace detail {
 
+  class FtOptions
+  {
+   public:
+    bool runcontrolspecialdays = true;
+    bool ip_tabular_output = false;
+    bool no_lifecyclecosts = false;
+    bool no_sqlite_output = false;
+    bool no_html_output = false;
+    bool no_variable_dictionary = false;
+    bool no_space_translation = false;
+  };
+
   class UTILITIES_API RunOptions_Impl
   {
    public:

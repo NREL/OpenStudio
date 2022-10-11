@@ -117,7 +117,7 @@ class UTILITIES_API Workspace
    *  If the Workspace so constructed is not valid at the specified StrictnessLevel, all of the
    *  newly created objects are removed, and the constructor returns an empty Workspace with
    *  StrictnessLevel None. Problems may be diagnosed by calling idfFile.validityReport(level). */
-  Workspace(const IdfFile& idfFile, StrictnessLevel level = StrictnessLevel::Minimal);
+  Workspace(const IdfFile& idfFile, StrictnessLevel level = openstudio::StrictnessLevel::Minimal);
 
   /** Copy constructor, shares data with other Workspace. */
   Workspace(const Workspace& other);
@@ -140,7 +140,8 @@ class UTILITIES_API Workspace
   /** Clone just the objects referenced by handles into a new Workspace. All non-object data is
    *  also cloned. If keepHandles, then new handles will not be assigned to the cloned objects.
    *  Virtual implementation, and similar usage to clone. */
-  Workspace cloneSubset(const std::vector<Handle>& handles, bool keepHandles = false, StrictnessLevel level = StrictnessLevel::Draft) const;
+  Workspace cloneSubset(const std::vector<Handle>& handles, bool keepHandles = false,
+                        StrictnessLevel level = openstudio::StrictnessLevel::Draft) const;
 
   /** Swaps underlying data between this workspace and other. Throws if other and this
    *  are not of the same type (must both be plain Workspaces, model::Models, or

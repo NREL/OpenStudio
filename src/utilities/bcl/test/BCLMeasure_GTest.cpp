@@ -803,6 +803,7 @@ TEST_F(BCLFixture, 4156_TweakXML) {
   boost::optional<BCLMeasure> measure = BCLMeasure::load(srcDir);
   ASSERT_TRUE(measure);
   EXPECT_EQ(numFiles + addedUntrackedFiles, measure->files().size());
+  EXPECT_EQ(MeasureLanguage(MeasureLanguage::Ruby), measure->measureLanguage());
 
   // Call CheckUpdateFiles(), it should detect the files that aren't allowed
   EXPECT_TRUE(measure->checkForUpdatesFiles());
@@ -951,4 +952,178 @@ TEST_F(BCLFixture, 4156_TestRecursive_OutdatedXML) {
 
   // Save, so we can inspect the measure.xml
   measure2->save();
+}
+
+TEST_F(BCLFixture, BCLMeasure_Ctor_PythonModelMeasure) {
+
+  openstudio::path testDir = openstudio::filesystem::system_complete(getApplicationBuildDirectory() / toPath("Testing"));
+  openstudio::path srcDir = testDir / toPath("TestPythonModelMeasure");
+  openstudio::path destDir = testDir / toPath("TestPythonModelMeasureClone");
+
+  for (const auto& dir : {srcDir, destDir}) {
+    if (exists(dir)) {
+      removeDirectory(dir);
+    }
+    ASSERT_FALSE(fs::exists(dir));
+  }
+
+  BCLMeasure{"My Python Measure",   "MyPythonMeasure",      srcDir, "Envelope.Fenestration", MeasureType::ModelMeasure, "Description",
+             "Modeler Description", MeasureLanguage::Python};
+  ASSERT_TRUE(exists(srcDir));
+
+  boost::optional<BCLMeasure> measure = BCLMeasure::load(srcDir);
+  ASSERT_TRUE(measure);
+  EXPECT_EQ(MeasureType(MeasureType::ModelMeasure), measure->measureType());
+  EXPECT_EQ(MeasureLanguage(MeasureLanguage::Python), measure->measureLanguage());
+  auto files = measure->files();
+  size_t numFiles = files.size();
+
+  // .
+  // ├── ./docs
+  // │   └── ./docs/.gitkeep
+  // ├── ./LICENSE.md
+  // ├── ./measure.py
+  // ├── ./measure.xml
+  // └── ./tests
+  //     ├── ./tests/test_my_python_measure.py
+  //     └── ./tests/example_model.osm
+  std::vector<fs::path> expectedInitialPaths = {
+    "docs/.gitkeep", "LICENSE.md", "measure.py", "tests/test_my_python_measure.py", "tests/example_model.osm",
+    // "measure.xml": it's not included in itself!
+  };
+
+  {
+
+    EXPECT_EQ(numFiles, expectedInitialPaths.size());
+    std::vector<fs::path> expectedInitialAbsolutePaths;
+    expectedInitialAbsolutePaths.reserve(expectedInitialPaths.size());
+    std::transform(expectedInitialPaths.cbegin(), expectedInitialPaths.cend(), std::back_inserter(expectedInitialAbsolutePaths),
+                   [&srcDir](const auto& p) { return srcDir / p; });
+    std::sort(expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end());
+
+    std::vector<fs::path> initialPaths;
+    initialPaths.reserve(files.size());
+    std::transform(files.cbegin(), files.cend(), std::back_inserter(initialPaths), [](const auto& fileRef) { return fileRef.path(); });
+    std::sort(initialPaths.begin(), initialPaths.end());
+
+    EXPECT_TRUE(std::equal(initialPaths.begin(), initialPaths.end(), expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end()));
+  }
+}
+
+TEST_F(BCLFixture, BCLMeasure_Ctor_PythonEnergyPlusMeasure) {
+
+  openstudio::path testDir = openstudio::filesystem::system_complete(getApplicationBuildDirectory() / toPath("Testing"));
+  openstudio::path srcDir = testDir / toPath("TestPythonEnergyPlusMeasure");
+  openstudio::path destDir = testDir / toPath("TestPythonEnergyPlusMeasureClone");
+
+  for (const auto& dir : {srcDir, destDir}) {
+    if (exists(dir)) {
+      removeDirectory(dir);
+    }
+    ASSERT_FALSE(fs::exists(dir));
+  }
+
+  BCLMeasure{"My Python Measure",   "MyPythonMeasure",      srcDir, "Envelope.Fenestration", MeasureType::EnergyPlusMeasure, "Description",
+             "Modeler Description", MeasureLanguage::Python};
+  ASSERT_TRUE(exists(srcDir));
+
+  boost::optional<BCLMeasure> measure = BCLMeasure::load(srcDir);
+  ASSERT_TRUE(measure);
+  EXPECT_EQ(MeasureType(MeasureType::EnergyPlusMeasure), measure->measureType());
+  EXPECT_EQ(MeasureLanguage(MeasureLanguage::Python), measure->measureLanguage());
+  auto files = measure->files();
+  size_t numFiles = files.size();
+
+  // .
+  // ├── ./docs
+  // │   └── ./docs/.gitkeep
+  // ├── ./LICENSE.md
+  // ├── ./measure.py
+  // ├── ./measure.xml
+  // └── ./tests
+  //     └── ./tests/test_my_python_measure.py
+  std::vector<fs::path> expectedInitialPaths = {
+    "docs/.gitkeep", "LICENSE.md", "measure.py", "tests/test_my_python_measure.py",
+    // "measure.xml": it's not included in itself!
+  };
+
+  {
+
+    EXPECT_EQ(numFiles, expectedInitialPaths.size());
+    std::vector<fs::path> expectedInitialAbsolutePaths;
+    expectedInitialAbsolutePaths.reserve(expectedInitialPaths.size());
+    std::transform(expectedInitialPaths.cbegin(), expectedInitialPaths.cend(), std::back_inserter(expectedInitialAbsolutePaths),
+                   [&srcDir](const auto& p) { return srcDir / p; });
+    std::sort(expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end());
+
+    std::vector<fs::path> initialPaths;
+    initialPaths.reserve(files.size());
+    std::transform(files.cbegin(), files.cend(), std::back_inserter(initialPaths), [](const auto& fileRef) { return fileRef.path(); });
+    std::sort(initialPaths.begin(), initialPaths.end());
+
+    EXPECT_TRUE(std::equal(initialPaths.begin(), initialPaths.end(), expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end()));
+  }
+}
+
+TEST_F(BCLFixture, BCLMeasure_Ctor_PythonReportingMeasure) {
+
+  openstudio::path testDir = openstudio::filesystem::system_complete(getApplicationBuildDirectory() / toPath("Testing"));
+  openstudio::path srcDir = testDir / toPath("TestPythonReportingMeasure");
+  openstudio::path destDir = testDir / toPath("TestPythonReportingMeasureClone");
+
+  for (const auto& dir : {srcDir, destDir}) {
+    if (exists(dir)) {
+      removeDirectory(dir);
+    }
+    ASSERT_FALSE(fs::exists(dir));
+  }
+
+  BCLMeasure{"My Python Measure",   "MyPythonMeasure",      srcDir, "Envelope.Fenestration", MeasureType::ReportingMeasure, "Description",
+             "Modeler Description", MeasureLanguage::Python};
+  ASSERT_TRUE(exists(srcDir));
+
+  boost::optional<BCLMeasure> measure = BCLMeasure::load(srcDir);
+  ASSERT_TRUE(measure);
+  EXPECT_EQ(MeasureType(MeasureType::ReportingMeasure), measure->measureType());
+  EXPECT_EQ(MeasureLanguage(MeasureLanguage::Python), measure->measureLanguage());
+  auto files = measure->files();
+  size_t numFiles = files.size();
+
+  // .
+  // ├── ./docs
+  // │   └── ./docs/.gitkeep
+  // ├── ./LICENSE.md
+  // ├── ./measure.py
+  // ├── ./measure.xml
+  // ├── resources
+  // └── ./tests
+  //     ├── ./tests/test_my_python_measure.py
+  //     ├── ./tests/example_model.osm
+  //     └── USA_CO_Golden-NREL.724666_TMY3.epw
+  std::vector<fs::path> expectedInitialPaths = {
+    "docs/.gitkeep",
+    "LICENSE.md",
+    "measure.py",
+    "tests/test_my_python_measure.py",
+    "tests/example_model.osm",
+    "tests/USA_CO_Golden-NREL.724666_TMY3.epw",
+    // "measure.xml": it's not included in itself!
+  };
+
+  {
+
+    EXPECT_EQ(numFiles, expectedInitialPaths.size());
+    std::vector<fs::path> expectedInitialAbsolutePaths;
+    expectedInitialAbsolutePaths.reserve(expectedInitialPaths.size());
+    std::transform(expectedInitialPaths.cbegin(), expectedInitialPaths.cend(), std::back_inserter(expectedInitialAbsolutePaths),
+                   [&srcDir](const auto& p) { return srcDir / p; });
+    std::sort(expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end());
+
+    std::vector<fs::path> initialPaths;
+    initialPaths.reserve(files.size());
+    std::transform(files.cbegin(), files.cend(), std::back_inserter(initialPaths), [](const auto& fileRef) { return fileRef.path(); });
+    std::sort(initialPaths.begin(), initialPaths.end());
+
+    EXPECT_TRUE(std::equal(initialPaths.begin(), initialPaths.end(), expectedInitialAbsolutePaths.begin(), expectedInitialAbsolutePaths.end()));
+  }
 }

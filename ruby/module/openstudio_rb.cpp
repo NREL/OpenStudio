@@ -32,12 +32,11 @@
 #include <iostream>
 #include <ruby.h>
 
-extern "C" {
+extern "C"
+{
 
-RUBY_API void Init_openstudio(void) {
+  RUBY_API void Init_openstudio(void) {
 
-  openstudio::ruby::initRubyBindings();
-
-}
-
+    openstudio::ruby::initRubyBindings();
+  }
 }

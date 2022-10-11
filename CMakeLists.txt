@@ -18,6 +18,8 @@ endif()
 # Project macro can only take digits in the version, it splits these out to specific variables
 project(OpenStudio VERSION 3.5.0)
 
+include(CMake/compiler_flags.cmake)
+
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
 
@@ -263,11 +265,6 @@ endif()
 ###############################################################################
 # Build options
 
-if(UNIX AND NOT APPLE)
-  # the RPATH to be used when installing
-  set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-endif()
-
 # TODO: should this be only in OpenStudioApplication?
 option(BUILD_PAT "Build PAT" OFF)
 
@@ -281,7 +278,8 @@ option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 
 # Build Python bindings
 # Requires: SWIG Python
-option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
+mark_as_advanced(BUILD_PYTHON_BINDINGS)
 
 # Build ctest testing
 # Requires: EnergyPlus
@@ -308,6 +306,12 @@ set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Con
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
+endif()
+
+include(CheckIncludeFile)
+check_include_file("unistd.h" HAVE_UNISTD_H)
+if(HAVE_UNISTD_H)
+  add_definitions(-DHAVE_UNISTD_H)
 endif()
 
 # Enable runtime checking features
@@ -350,7 +354,6 @@ if(APPLE)
   # Without this, cmake will give "Module" libraries the ".so" extension on Apple
   # This appears to be a legacy choice by the cmake developers, and seems out of place,
   # so the OpenStudio project will use the library suffix ".dylib"
-  set(CMAKE_SHARED_MODULE_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
   find_library(COREFOUNDATION_LIBRARY CoreFoundation)
   add_definitions(-D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
   #add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
@@ -451,6 +454,12 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
 
 set(LIBRARY_SEARCH_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Release" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug")
+
+set(LIB_DESTINATION_DIR lib)
+if(WIN32)
+  # Windows does not have RPATH handling, so we just put everything next to the CLI in the bin/ folder
+  set(LIB_DESTINATION_DIR bin)
+endif()
 
 # TODO: move App macros to a local ProjectMacros.cmake
 # Include project specific macros
@@ -919,40 +928,7 @@ if(BUILD_NODE_MODULES)
 endif()
 
 if(BUILD_PYTHON_BINDINGS)
-  option(BUILD_PYTHON_PIP_PACKAGE "Prepare a folder to build a pip module" OFF)
-
-  # find_package(Python) has the problem that on github actions in particular it'll pick up the most recent python (eg 3.9) from the tool cache
-  # even if you have used the setup-python action and set it to 3.8
-  if (PYTHON_VERSION)
-    find_package(Python ${PYTHON_VERSION} EXACT COMPONENTS Interpreter Development REQUIRED)
-  else()
-    find_package(Python COMPONENTS Interpreter Development REQUIRED)
-  endif()
-
-  include_directories(SYSTEM ${Python_INCLUDE_DIRS})
-  set(ALL_PYTHON_BINDING_TARGETS "") # global list of python bindings
-  set(ALL_PYTHON_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
-  set(ALL_PYTHON_WRAPPER_FILES "") # global list of generated wrapper cxx files
-  set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
-  set(ALL_PYTHON_GENERATED_SRCS "") # global list of generated .py files
-
-  if(BUILD_PYTHON_PIP_PACKAGE)
-
-    set(PipRepositoryValues "testpypi;pypi" CACHE INTERNAL
-      "List of possible values for which repository to upload to")
-    set(PYTHON_PIP_REPOSITORY "testpypi" CACHE STRING "Which pip repository to use for upload")
-    set_property(CACHE PYTHON_PIP_REPOSITORY PROPERTY STRINGS ${PipRepositoryValues})
-
-    if(NOT PYTHON_PIP_REPOSITORY IN_LIST PipRepositoryValues)
-      message(FATAL_ERROR "PYTHON_PIP_REPOSITORY must be one of ${PipRepositoryValues}")
-    endif()
-
-    set(PYTHON_PACKAGE_FOLDER "${PROJECT_BINARY_DIR}/Products/python_package")
-    file(MAKE_DIRECTORY "${PYTHON_PACKAGE_FOLDER}")
-    set(ALL_PYTHON_PACKAGE_TARGETS "") # global list of python bindings
-    set(ALL_PYTHON_PACKAGE_GENERATED_SRCS "") # global list of generated .py files for pyhton_package
-
-  endif()
+  include(python/SetupPython.cmake)
 endif()
 
 # Threading library
@@ -971,13 +947,6 @@ include_directories("${PROJECT_SOURCE_DIR}/src/")
 # Project binary directory
 include_directories("${PROJECT_BINARY_DIR}/src/")
 
-###############################################################################
-
-###############################################################################
-# RPATH settings
-# Conan set this to true, which is not the cmake default and not what we want
-# for the openstudio targets
-set(CMAKE_SKIP_RPATH FALSE)
 ###############################################################################
 
 ###############################################################################
@@ -1014,6 +983,7 @@ set(project_directories
   lib
   install_utility
   scriptengine
+  workflow
 )
 
 # resources must be added after find EnergyPlus

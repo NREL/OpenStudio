@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>python_example_energyplus_measure</name>
+  <uid>5a5d3f23-10eb-43ec-b845-176bd294410c</uid>
+  <version_id>1743a20a-eb23-42ce-aed9-f03bfaeac803</version_id>
+  <version_modified>20221005T143511Z</version_modified>
+  <xml_checksum>00000000</xml_checksum>
+  <class_name>PythonExampleEnergyPlusMeasure</class_name>
+  <display_name>Python Example EnergyPlus Measure</display_name>
+  <description>This is just a sample</description>
+  <modeler_description>it uses python</modeler_description>
+  <arguments>
+    <argument>
+      <name>zone_name</name>
+      <display_name>New zone name</display_name>
+      <description>This name will be used as the name of the new zone.</description>
+      <type>String</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+  </arguments>
+  <outputs />
+  <provenances />
+  <tags>
+    <tag>Envelope.Infiltration</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Measure Type</name>
+      <value>EnergyPlusMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Language</name>
+      <value>Python</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>3.5.0</identifier>
+      </version>
+      <filename>measure.py</filename>
+      <filetype>py</filetype>
+      <usage_type>script</usage_type>
+      <checksum>DD7219EB</checksum>
+    </file>
+    <file>
+      <filename>LICENSE.md</filename>
+      <filetype>md</filetype>
+      <usage_type>license</usage_type>
+      <checksum>CD7F5672</checksum>
+    </file>
+  </files>
+</measure>

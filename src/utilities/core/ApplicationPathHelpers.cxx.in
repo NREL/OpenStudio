@@ -41,443 +41,441 @@
 #include <iostream>
 
 #if defined _WIN32
-#include <windows.h>
+#  include <windows.h>
 #else
-#include <stdio.h>
-#include <dlfcn.h>
+#  include <stdio.h>
+#  include <dlfcn.h>
 #endif
-
 
 namespace openstudio {
 
-  openstudio::path getApplicationSourceDirectory() {
-    return openstudio::toPath("${CMAKE_SOURCE_DIR}");
+openstudio::path getApplicationSourceDirectory() {
+  return openstudio::toPath("${CMAKE_SOURCE_DIR}");
+}
+
+openstudio::path getApplicationBuildDirectory() {
+  return openstudio::toPath("${CMAKE_BINARY_DIR}");
+}
+
+openstudio::path getApplicationPath() {
+  openstudio::path path;
+#if defined _WIN32
+  TCHAR szPath[MAX_PATH];
+  if (GetModuleFileName(nullptr, szPath, MAX_PATH)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, szPath = '" << szPath << "'");
+    path = toPath(szPath);
   }
-
-  openstudio::path getApplicationBuildDirectory() {
-    return openstudio::toPath("${CMAKE_BINARY_DIR}");
-  }
-
-  openstudio::path getApplicationPath() {
-    openstudio::path path;
-    #if defined _WIN32
-      TCHAR szPath[MAX_PATH];
-      if( GetModuleFileName( nullptr, szPath, MAX_PATH ) ) {
-        LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, szPath = '" << szPath << "'");
-        path = toPath(szPath);
-      }
-    #else
-      Dl_info info;
-      if (dladdr("main", &info)) {
-        LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, info.dli_fname = '" << info.dli_fname << "'");
-        path = toPath(info.dli_fname);
-      }
-    #endif
-
-    // Note JM 2019-04-24:
-    // Let's call assume the GetModuleFileName (windows, though that doesn't really happen)
-    // or (more likely) dladdr (Unix) returns just 'OpenStudioApplicationSymlink' (and not '/path/to/OpenStudioApplicationSymlink' or './OpenStudioApplicationSymlink')
-    // You first try to locate that OpenStudioApplicationSymlink in the current directory
-
-    // (Another option would be to always start by calling findInSystemPath and modify the findInSystemPath to prepend the PATH list with '.')
-
-    openstudio::path applicationPath = completeAndNormalize(path);
-    if( !openstudio::filesystem::exists( applicationPath ) || openstudio::filesystem::is_directory( applicationPath ) ) {
-        // It that didn't work, it means it's in the system PATH. So you have to look for it in your PATH by calling findInSystemPath
-        // There's no way around it IMHO.
-        // Note: This wouldn't be a concern unless you are launching a symlink that lives in your PATH, and outside the directory where the symlink is
-        // * ./OpenStudioApplicationSymlink will work
-        // * /home/OpenStudioApplicationSymlink will work
-        // * OpenStudioApplicationSymlink itself will not work (if you aren't in the same folder as the symlink)
-
-
-        LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath failed as is, trying in to locate in systemPath");
-        path = findInSystemPath(path);
-        applicationPath = completeAndNormalize(path);
-    }
-    if( !openstudio::filesystem::exists( applicationPath ) || openstudio::filesystem::is_directory( applicationPath ) ) {
-        LOG_FREE_AND_THROW("ApplicationPathHelpers", "getApplicationPath failed!");
-    }
-
-    LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, found '" << applicationPath << "'");
-
-    return applicationPath;
-  }
-
-  openstudio::path getApplicationDirectory() {
-    openstudio::path p = getApplicationPath();
-    if (!p.empty()){
-      return p.parent_path();
-    }
-    return openstudio::path();
-  }
-
-  bool applicationIsRunningFromBuildDirectory()
-  {
-#ifdef _WIN32
-    openstudio::path buildDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationBuildDirectory())));
-    openstudio::path runDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationDirectory())));
 #else
-    openstudio::path buildDir = getApplicationBuildDirectory();
-    openstudio::path runDir = getApplicationDirectory();
+  Dl_info info;
+  if (dladdr("main", &info)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, info.dli_fname = '" << info.dli_fname << "'");
+    path = toPath(info.dli_fname);
+  }
 #endif
 
-    return pathBeginsWith(buildDir, runDir);
+  // Note JM 2019-04-24:
+  // Let's call assume the GetModuleFileName (windows, though that doesn't really happen)
+  // or (more likely) dladdr (Unix) returns just 'OpenStudioApplicationSymlink' (and not '/path/to/OpenStudioApplicationSymlink' or './OpenStudioApplicationSymlink')
+  // You first try to locate that OpenStudioApplicationSymlink in the current directory
+
+  // (Another option would be to always start by calling findInSystemPath and modify the findInSystemPath to prepend the PATH list with '.')
+
+  openstudio::path applicationPath = completeAndNormalize(path);
+  if (!openstudio::filesystem::exists(applicationPath) || openstudio::filesystem::is_directory(applicationPath)) {
+    // It that didn't work, it means it's in the system PATH. So you have to look for it in your PATH by calling findInSystemPath
+    // There's no way around it IMHO.
+    // Note: This wouldn't be a concern unless you are launching a symlink that lives in your PATH, and outside the directory where the symlink is
+    // * ./OpenStudioApplicationSymlink will work
+    // * /home/OpenStudioApplicationSymlink will work
+    // * OpenStudioApplicationSymlink itself will not work (if you aren't in the same folder as the symlink)
+
+    LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath failed as is, trying in to locate in systemPath");
+    path = findInSystemPath(path);
+    applicationPath = completeAndNormalize(path);
+  }
+  if (!openstudio::filesystem::exists(applicationPath) || openstudio::filesystem::is_directory(applicationPath)) {
+    LOG_FREE_AND_THROW("ApplicationPathHelpers", "getApplicationPath failed!");
   }
 
-  openstudio::path getEnergyPlusDirectory() {
-    return getEnergyPlusExecutable().parent_path();
-  }
+  LOG_FREE(Debug, "ApplicationPathHelpers", "getApplicationPath, found '" << applicationPath << "'");
 
-  // define the function GetCurrentModule so we can get its address
-  #if defined _WIN32
-  HMODULE GetCurrentModule()
-  {
-      HMODULE hModule = NULL;
-      // hModule is NULL if GetModuleHandleEx fails.
-      GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS
-                          | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
-                          (LPCTSTR)GetCurrentModule, &hModule);
-      return hModule;
-  }
-  #else
-  bool GetCurrentModule()
-  {
-    return true;
-  }
-  #endif
+  return applicationPath;
+}
 
-  openstudio::path getOpenStudioModule()
-  {
-    openstudio::path path;
-    #if defined _WIN32
-      TCHAR szPath[MAX_PATH];
-      if( GetModuleFileName( GetCurrentModule(), szPath, MAX_PATH ) ) {
-        LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, szPath = '" << szPath << "'");
-        path = toPath(szPath);
-      }
-    #else
-      Dl_info info;
-      if (dladdr("GetCurrentModule", &info)) {
-        LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, info.dli_fname = '" << info.dli_fname << "'");
-        path = toPath(info.dli_fname);
-      }
-    #endif
-    openstudio::path openstudioPath = completeAndNormalize(path);
-    if( !openstudio::filesystem::exists( openstudioPath ) || openstudio::filesystem::is_directory( openstudioPath ) ) {
-        LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule failed as is, trying in to locate in systemPath");
-        path = findInSystemPath(path);
-        openstudioPath = completeAndNormalize(path);
-    }
-    if( !openstudio::filesystem::exists( openstudioPath ) || openstudio::filesystem::is_directory( openstudioPath ) ) {
-        LOG_FREE_AND_THROW("ApplicationPathHelpers", "getOpenStudioModule failed!");
-    }
-
-    LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, found '" << openstudioPath << "'");
-    return openstudioPath;
+openstudio::path getApplicationDirectory() {
+  openstudio::path p = getApplicationPath();
+  if (!p.empty()) {
+    return p.parent_path();
   }
+  return openstudio::path();
+}
 
-  openstudio::path getOpenStudioModuleDirectory()
-  {
-    return getOpenStudioModule().parent_path();
-  }
-
-  bool moduleIsRunningFromBuildDirectory()
-  {
+bool applicationIsRunningFromBuildDirectory() {
 #ifdef _WIN32
-    openstudio::path buildDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationBuildDirectory())));
-    openstudio::path runDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getOpenStudioModuleDirectory())));
+  openstudio::path buildDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationBuildDirectory())));
+  openstudio::path runDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationDirectory())));
+  std::string package_dir = "_CPACK_PACKAGES";
 #else
-    openstudio::path buildDir = getApplicationBuildDirectory();
-    openstudio::path runDir = getOpenStudioModuleDirectory();
+  openstudio::path buildDir = getApplicationBuildDirectory();
+  openstudio::path runDir = getApplicationDirectory();
+  std::string package_dir = "_CPack_Packages";
 #endif
 
-    return pathBeginsWith(buildDir, runDir);
-  }
+  bool isInsideCpackDir = openstudio::toString(runDir).find(package_dir) != std::string::npos;
+  // LOG_FREE(Debug, "ApplicationPathHelpers", "buildDir=" << buildDir << ", runDir=" << runDir << ", isInsideCpackDir=" << isInsideCpackDir);
+  return pathBeginsWith(buildDir, runDir) && !isInsideCpackDir;
+}
 
-  openstudio::path getOpenStudioCLI(){
-    openstudio::path cliPath;
-    #if defined _WIN32
+openstudio::path getEnergyPlusDirectory() {
+  return getEnergyPlusExecutable().parent_path();
+}
 
-      // Windows
-      // . ( build )
-      // ├── Products
-      // │   ├── ruby
-      // │   │   ├── Debug
-      // │   │   │   └── openstudio.lib
-      // │   │   └── Release
-      // │   │       └── openstudio.lib
-      // │   ├── Debug
-      // │   │   └── openstudio.exe *
-      // │   ├── Release
-      // │   │   └── openstudio.exe *
-
-      cliPath = getOpenStudioModuleDirectory() / toPath("openstudio.exe");
-      if (!openstudio::filesystem::exists(cliPath)) {
-        // Assume it's the ruby one
-        #if _DEBUG
-          cliPath = getOpenStudioModuleDirectory() / toPath("../../Debug/openstudio.exe");
-        #else
-          cliPath = getOpenStudioModuleDirectory() / toPath("../../Release/openstudio.exe");
-        #endif
-      }
-    #else
-
-      // Unix
-      // . ( build )
-      // ├── Products
-      // │   ├── ruby
-      // │   │   ├── openstudio.so
-      // │   └── openstudio *
-
-      cliPath = getOpenStudioModuleDirectory() / toPath("openstudio");
-      // If it doesn't exist or it's a directory, try one level above
-      if (!openstudio::filesystem::exists(cliPath) || openstudio::filesystem::is_directory(cliPath)) {
-        cliPath = getOpenStudioModuleDirectory() / toPath("../openstudio");
-      }
-    #endif
-
-    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for CLI in '" << cliPath << "'");
-    if( openstudio::filesystem::exists(cliPath) && !openstudio::filesystem::is_directory(cliPath) ){
-      LOG_FREE(Debug, "ApplicationPathHelpers", "Found CLI at '" << completeAndNormalize(cliPath) << "'");
-      return completeAndNormalize(cliPath);
-    }
-
-    // Regardless of platform, this is the installed structure
-    // . (installed)
-    // ├── bin
-    // │   ├── openstudio
-    // ├── Ruby
-    // │   └── openstudio.so
-
-    // If at this point we still haven't found it, assume it's the installed ruby that's used
-    #if defined _WIN32
-      cliPath = getOpenStudioModuleDirectory() / toPath("../bin/openstudio.exe");
-    #else
-      cliPath = getOpenStudioModuleDirectory() / toPath("../bin/openstudio");
-    #endif
-
-    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for CLI in '" << cliPath << "'");
-    if( openstudio::filesystem::exists(cliPath) && !openstudio::filesystem::is_directory(cliPath) ){
-      LOG_FREE(Debug, "ApplicationPathHelpers", "Found CLI at '" << completeAndNormalize(cliPath) << "'");
-      return completeAndNormalize(cliPath);
-    }
-
-    return openstudio::path();
-  }
-
-  openstudio::path getEnergyPlusExecutable() {
-
-    openstudio::path cmakeEnergyPlusPath = openstudio::toPath("${ENERGYPLUS_EXE}");
-    openstudio::path cmakeEnergyPlusDirectory = cmakeEnergyPlusPath.parent_path();
-
-    // handle developer case first
-    if (moduleIsRunningFromBuildDirectory()){
-      LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << cmakeEnergyPlusPath << "'");
-      if( openstudio::filesystem::exists(cmakeEnergyPlusPath) ){
-        LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(cmakeEnergyPlusPath) << "'");
-        return completeAndNormalize(cmakeEnergyPlusPath);
-      }
-    }
-
-    // next check environment variable
-    auto envPathString = std::getenv("ENERGYPLUS_EXE_PATH");
-    if( envPathString ) {
-      openstudio::path envPath = openstudio::toPath(envPathString);
-
-      LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << envPath << "'");
-      if( openstudio::filesystem::exists(envPath) ) {
-        LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(envPath) << "'");
-        return completeAndNormalize(envPath);
-      }
-    }
-
-    // next check for installed energyplus
-#ifdef _WIN32
-    openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../EnergyPlus/energyplus.exe");
+// define the function GetCurrentModule so we can get its address
+#if defined _WIN32
+HMODULE GetCurrentModule() {
+  HMODULE hModule = NULL;
+  // hModule is NULL if GetModuleHandleEx fails.
+  GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, (LPCTSTR)GetCurrentModule, &hModule);
+  return hModule;
+}
 #else
-    openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../EnergyPlus/energyplus");
+bool GetCurrentModule() {
+  return true;
+}
 #endif
 
-    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << installPath << "'");
-    if( openstudio::filesystem::exists(installPath) && !openstudio::filesystem::is_directory(installPath) ) {
-      LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(installPath) << "'");
-      return completeAndNormalize(installPath);
+openstudio::path getOpenStudioModule() {
+  openstudio::path path;
+#if defined _WIN32
+  TCHAR szPath[MAX_PATH];
+  if (GetModuleFileName(GetCurrentModule(), szPath, MAX_PATH)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, szPath = '" << szPath << "'");
+    path = toPath(szPath);
+  }
+#else
+  Dl_info info;
+  if (dladdr("GetCurrentModule", &info)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, info.dli_fname = '" << info.dli_fname << "'");
+    path = toPath(info.dli_fname);
+  }
+#endif
+  openstudio::path openstudioPath = completeAndNormalize(path);
+  if (!openstudio::filesystem::exists(openstudioPath) || openstudio::filesystem::is_directory(openstudioPath)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule failed as is, trying in to locate in systemPath");
+    path = findInSystemPath(path);
+    openstudioPath = completeAndNormalize(path);
+  }
+  if (!openstudio::filesystem::exists(openstudioPath) || openstudio::filesystem::is_directory(openstudioPath)) {
+    LOG_FREE_AND_THROW("ApplicationPathHelpers", "getOpenStudioModule failed!");
+  }
+
+  LOG_FREE(Debug, "ApplicationPathHelpers", "getOpenStudioModule, found '" << openstudioPath << "'");
+  return openstudioPath;
+}
+
+openstudio::path getOpenStudioModuleDirectory() {
+  return getOpenStudioModule().parent_path();
+}
+
+bool moduleIsRunningFromBuildDirectory() {
+#ifdef _WIN32
+  openstudio::path buildDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getApplicationBuildDirectory())));
+  openstudio::path runDir = openstudio::toPath(boost::algorithm::to_upper_copy(openstudio::toString(getOpenStudioModuleDirectory())));
+  std::string package_dir = "_CPACK_PACKAGES";
+#else
+  openstudio::path buildDir = getApplicationBuildDirectory();
+  openstudio::path runDir = getOpenStudioModuleDirectory();
+  std::string package_dir = "_CPack_Packages";
+#endif
+
+  bool isInsideCpackDir = openstudio::toString(runDir).find(package_dir) != std::string::npos;
+  // LOG_FREE(Debug, "ApplicationPathHelpers", "buildDir=" << buildDir << ", runDir=" << runDir << ", isInsideCpackDir=" << isInsideCpackDir);
+  return pathBeginsWith(buildDir, runDir) && !isInsideCpackDir;
+}
+
+openstudio::path getOpenStudioCLI() {
+  openstudio::path cliPath;
+#if defined _WIN32
+
+  // Windows
+  // . ( build )
+  // ├── Products
+  // │   ├── ruby
+  // │   │   ├── Debug
+  // │   │   │   └── openstudio.lib
+  // │   │   └── Release
+  // │   │       └── openstudio.lib
+  // │   ├── Debug
+  // │   │   └── openstudio.exe *
+  // │   ├── Release
+  // │   │   └── openstudio.exe *
+
+  cliPath = getOpenStudioModuleDirectory() / toPath("openstudio.exe");
+  if (!openstudio::filesystem::exists(cliPath)) {
+// Assume it's the ruby one
+#  if _DEBUG
+    cliPath = getOpenStudioModuleDirectory() / toPath("../../Debug/openstudio.exe");
+#  else
+    cliPath = getOpenStudioModuleDirectory() / toPath("../../Release/openstudio.exe");
+#  endif
+  }
+#else
+
+  // Unix
+  // . ( build )
+  // ├── Products
+  // │   ├── ruby
+  // │   │   ├── openstudio.so
+  // │   └── openstudio *
+
+  cliPath = getOpenStudioModuleDirectory() / toPath("openstudio");
+  // If it doesn't exist or it's a directory, try one level above
+  if (!openstudio::filesystem::exists(cliPath) || openstudio::filesystem::is_directory(cliPath)) {
+    cliPath = getOpenStudioModuleDirectory() / toPath("../openstudio");
+  }
+#endif
+
+  LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for CLI in '" << cliPath << "'");
+  if (openstudio::filesystem::exists(cliPath) && !openstudio::filesystem::is_directory(cliPath)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Found CLI at '" << completeAndNormalize(cliPath) << "'");
+    return completeAndNormalize(cliPath);
+  }
+
+// Regardless of platform, this is the installed structure
+// . (installed)
+// ├── bin
+// │   ├── openstudio
+// ├── Ruby
+// │   └── openstudio.so
+
+// If at this point we still haven't found it, assume it's the installed ruby that's used
+#if defined _WIN32
+  cliPath = getOpenStudioModuleDirectory() / toPath("../bin/openstudio.exe");
+#else
+  cliPath = getOpenStudioModuleDirectory() / toPath("../bin/openstudio");
+#endif
+
+  LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for CLI in '" << cliPath << "'");
+  if (openstudio::filesystem::exists(cliPath) && !openstudio::filesystem::is_directory(cliPath)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Found CLI at '" << completeAndNormalize(cliPath) << "'");
+    return completeAndNormalize(cliPath);
+  }
+
+  return openstudio::path();
+}
+
+openstudio::path getEnergyPlusExecutable() {
+
+  openstudio::path cmakeEnergyPlusPath = openstudio::toPath("${ENERGYPLUS_EXE}");
+  openstudio::path cmakeEnergyPlusDirectory = cmakeEnergyPlusPath.parent_path();
+
+  // handle developer case first
+  if (moduleIsRunningFromBuildDirectory()) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << cmakeEnergyPlusPath << "'");
+    if (openstudio::filesystem::exists(cmakeEnergyPlusPath)) {
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(cmakeEnergyPlusPath) << "'");
+      return completeAndNormalize(cmakeEnergyPlusPath);
     }
+  }
 
-    // next check default location
-    openstudio::path energyPlusExeName = cmakeEnergyPlusPath.filename();
-    openstudio::path energyPlusDirectoryName = cmakeEnergyPlusDirectory.filename();
+  // next check environment variable
+  auto envPathString = std::getenv("ENERGYPLUS_EXE_PATH");
+  if (envPathString) {
+    openstudio::path envPath = openstudio::toPath(envPathString);
 
-    #ifdef Q_OS_LINUX
-      auto systemPath = openstudio::toPath("/usr/local") / energyPlusDirectoryName / energyPlusExeName;
-    #elif defined(Q_OS_MAC)
-      auto systemPath = openstudio::toPath("/Applications") / energyPlusDirectoryName / energyPlusExeName;
-    #else
-      auto systemPath = openstudio::toPath("C:/") / energyPlusDirectoryName / energyPlusExeName;
-    #endif
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << envPath << "'");
+    if (openstudio::filesystem::exists(envPath)) {
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(envPath) << "'");
+      return completeAndNormalize(envPath);
+    }
+  }
+
+  // next check for installed energyplus
+#ifdef _WIN32
+  openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../EnergyPlus/energyplus.exe");
+#else
+  openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../EnergyPlus/energyplus");
+#endif
+
+  LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << installPath << "'");
+  if (openstudio::filesystem::exists(installPath) && !openstudio::filesystem::is_directory(installPath)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(installPath) << "'");
+    return completeAndNormalize(installPath);
+  }
+
+  // next check default location
+  openstudio::path energyPlusExeName = cmakeEnergyPlusPath.filename();
+  openstudio::path energyPlusDirectoryName = cmakeEnergyPlusDirectory.filename();
+
+#ifdef Q_OS_LINUX
+  auto systemPath = openstudio::toPath("/usr/local") / energyPlusDirectoryName / energyPlusExeName;
+#elif defined(Q_OS_MAC)
+  auto systemPath = openstudio::toPath("/Applications") / energyPlusDirectoryName / energyPlusExeName;
+#else
+  auto systemPath = openstudio::toPath("C:/") / energyPlusDirectoryName / energyPlusExeName;
+#endif
+
+  LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << systemPath << "'");
+  if (openstudio::filesystem::exists(systemPath) && !openstudio::filesystem::is_directory(systemPath)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(systemPath) << "'");
+    return completeAndNormalize(systemPath);
+  }
+
+  std::string energyPlusDirectoryNameStr = toString(energyPlusDirectoryName);
+  std::string energyPlusDirectoryNameStr2 = boost::replace_first_copy(energyPlusDirectoryNameStr, "EnergyPlus-", "EnergyPlusV");
+  if (energyPlusDirectoryNameStr != energyPlusDirectoryNameStr2) {
+#ifdef Q_OS_LINUX
+    systemPath = openstudio::toPath("/usr/local") / toPath(energyPlusDirectoryNameStr2) / energyPlusExeName;
+#elif defined(Q_OS_MAC)
+    systemPath = openstudio::toPath("/Applications") / toPath(energyPlusDirectoryNameStr2) / energyPlusExeName;
+#else
+    systemPath = openstudio::toPath("C:/") / toPath(energyPlusDirectoryNameStr2) / energyPlusExeName;
+#endif
 
     LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << systemPath << "'");
-    if( openstudio::filesystem::exists(systemPath) && !openstudio::filesystem::is_directory(systemPath) ) {
+    if (openstudio::filesystem::exists(systemPath) && !openstudio::filesystem::is_directory(systemPath)) {
       LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(systemPath) << "'");
       return completeAndNormalize(systemPath);
     }
+  }
 
-    std::string energyPlusDirectoryNameStr = toString(energyPlusDirectoryName);
-    std::string energyPlusDirectoryNameStr2 = boost::replace_first_copy(energyPlusDirectoryNameStr,"EnergyPlus-","EnergyPlusV");
-    if (energyPlusDirectoryNameStr != energyPlusDirectoryNameStr2){
-      #ifdef Q_OS_LINUX
-       systemPath = openstudio::toPath("/usr/local") / toPath(energyPlusDirectoryNameStr2) / energyPlusExeName;
-      #elif defined(Q_OS_MAC)
-        systemPath = openstudio::toPath("/Applications") / toPath(energyPlusDirectoryNameStr2) / energyPlusExeName;
-      #else
-        systemPath = openstudio::toPath("C:/") / toPath(energyPlusDirectoryNameStr2) / energyPlusExeName;
-      #endif
+  // next check user path
+  //QString userPath = QStandardPaths::findExecutable("energyplus");
+  //if (!userPath.isEmpty()){
+  //  openstudio::path path = openstudio::toPath(userPath);
+  //  if( openstudio::filesystem::exists(path) ) {
+  //    return path;
+  //  }
+  //}
 
-      LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for EnergyPlus in '" << systemPath << "'");
-      if( openstudio::filesystem::exists(systemPath) && !openstudio::filesystem::is_directory(systemPath) ) {
-        LOG_FREE(Debug, "ApplicationPathHelpers", "Found EnergyPlus at '" << completeAndNormalize(systemPath) << "'");
-        return completeAndNormalize(systemPath);
-      }
+  return openstudio::path();
+}
+
+openstudio::path getRadianceDirectory() {
+  // handle developer case first
+  if (moduleIsRunningFromBuildDirectory()) {
+    openstudio::path cmakeRadianceDirectory = openstudio::toPath("${RADIANCE_LOCATION}");
+    if (openstudio::filesystem::exists(cmakeRadianceDirectory)) {
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found Radiance at '" << completeAndNormalize(cmakeRadianceDirectory) << "'");
+      return cmakeRadianceDirectory;
     }
-
-    // next check user path
-    //QString userPath = QStandardPaths::findExecutable("energyplus");
-    //if (!userPath.isEmpty()){
-    //  openstudio::path path = openstudio::toPath(userPath);
-    //  if( openstudio::filesystem::exists(path) ) {
-    //    return path;
-    //  }
-    //}
-
-    return openstudio::path();
   }
 
-  openstudio::path getRadianceDirectory() {
-    // handle developer case first
-    if (moduleIsRunningFromBuildDirectory()){
-      openstudio::path cmakeRadianceDirectory = openstudio::toPath("${RADIANCE_LOCATION}");
-      if( openstudio::filesystem::exists(cmakeRadianceDirectory) ){
-        LOG_FREE(Debug, "ApplicationPathHelpers", "Found Radiance at '" << completeAndNormalize(cmakeRadianceDirectory) << "'");
-        return cmakeRadianceDirectory;
-      }
+  // next check environment variable
+  auto envPathString = std::getenv("OS_RAYPATH");
+  if (envPathString) {
+    openstudio::path envPath = openstudio::toPath(envPathString);
+    if (openstudio::filesystem::exists(envPath)) {
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found Radiance at '" << completeAndNormalize(envPath) << "'");
+      return completeAndNormalize(envPath);
     }
+  }
 
-    // next check environment variable
-    auto envPathString = std::getenv("OS_RAYPATH");
-    if( envPathString ) {
-      openstudio::path envPath = openstudio::toPath(envPathString);
-      if( openstudio::filesystem::exists(envPath) ) {
-        LOG_FREE(Debug, "ApplicationPathHelpers", "Found Radiance at '" << completeAndNormalize(envPath) << "'");
-        return completeAndNormalize(envPath);
-      }
+  // next check for installed radiance
+  openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../Radiance");
+
+  LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Radiance in '" << installPath << "'");
+  if (openstudio::filesystem::exists(installPath)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Found Radiance at '" << completeAndNormalize(installPath) << "'");
+    return completeAndNormalize(installPath);
+  }
+
+// next check default location
+#ifdef Q_OS_LINUX
+  auto systemPath = openstudio::toPath("/usr/local/radiance");
+#elif defined(Q_OS_MAC)
+  auto systemPath = openstudio::toPath("/usr/local/radiance");
+#else
+  auto systemPath = openstudio::toPath("C:/Program Files/radiance");
+#endif
+
+  LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Radiance in '" << systemPath << "'");
+  if (openstudio::filesystem::exists(systemPath)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Found Radiance at '" << completeAndNormalize(systemPath) << "'");
+    return completeAndNormalize(systemPath);
+  }
+
+  return openstudio::path();
+}
+
+openstudio::path getPerlExecutable() {
+#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+  // check environment variable
+  auto envPathString = std::getenv("PERL_EXE_PATH");
+  if (envPathString) {
+    openstudio::path envPath = openstudio::toPath(envPathString);
+
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << envPath << "'");
+    if (openstudio::filesystem::exists(envPath)) {
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(envPath) << "'");
+      return envPath;
     }
+  }
 
-    // next check for installed radiance
-    openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../Radiance");
+  // next check for system perl
+  openstudio::path systemPath = toPath("/usr/bin/perl");
 
-    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Radiance in '" << installPath << "'");
-    if( openstudio::filesystem::exists(installPath) ) {
-      LOG_FREE(Debug, "ApplicationPathHelpers", "Found Radiance at '" << completeAndNormalize(installPath) << "'");
-      return completeAndNormalize(installPath);
+  LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << systemPath << "'");
+  if (openstudio::filesystem::exists(systemPath)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(systemPath) << "'");
+    return completeAndNormalize(systemPath);
+  }
+#else
+  // handle developer case first
+  if (moduleIsRunningFromBuildDirectory()) {
+    openstudio::path cmakePerlPath = openstudio::toPath("${PERL_EXE}");
+
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << cmakePerlPath << "'");
+    if (openstudio::filesystem::exists(cmakePerlPath)) {
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(cmakePerlPath) << "'");
+      return completeAndNormalize(cmakePerlPath);
     }
+  }
 
-    // next check default location
-    #ifdef Q_OS_LINUX
-      auto systemPath = openstudio::toPath("/usr/local/radiance");
-    #elif defined(Q_OS_MAC)
-      auto systemPath = openstudio::toPath("/usr/local/radiance");
-    #else
-      auto systemPath = openstudio::toPath("C:/Program Files/radiance");
-    #endif
+  // next check environment variable
+  auto envPathString = std::getenv("PERL_EXE_PATH");
+  if (envPathString) {
+    openstudio::path envPath = openstudio::toPath(envPathString);
 
-    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Radiance in '" << systemPath << "'");
-    if( openstudio::filesystem::exists(systemPath) ) {
-      LOG_FREE(Debug, "ApplicationPathHelpers", "Found Radiance at '" << completeAndNormalize(systemPath) << "'");
-      return completeAndNormalize(systemPath);
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << envPath << "'");
+    if (openstudio::filesystem::exists(envPath)) {
+      LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(envPath) << "'");
+      return completeAndNormalize(envPath);
     }
-
-    return openstudio::path();
   }
 
-  openstudio::path getPerlExecutable() {
-    #if defined (Q_OS_LINUX) || defined (Q_OS_MAC)
-      // check environment variable
-      auto envPathString = std::getenv("PERL_EXE_PATH");
-      if( envPathString ) {
-        openstudio::path envPath = openstudio::toPath(envPathString);
+  // next check for installed perl
+  openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../Perl/bin/perl.exe");
 
-        LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << envPath << "'");
-        if( openstudio::filesystem::exists(envPath) ) {
-          LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(envPath) << "'");
-          return envPath;
-        }
-      }
-
-      // next check for system perl
-      openstudio::path systemPath = toPath("/usr/bin/perl");
-
-      LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << systemPath << "'");
-      if( openstudio::filesystem::exists(systemPath) ) {
-        LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(systemPath) << "'");
-        return completeAndNormalize(systemPath);
-      }
-    #else
-      // handle developer case first
-      if (moduleIsRunningFromBuildDirectory()){
-        openstudio::path cmakePerlPath = openstudio::toPath("${PERL_EXE}");
-
-        LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << cmakePerlPath << "'");
-        if( openstudio::filesystem::exists(cmakePerlPath) ){
-          LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(cmakePerlPath) << "'");
-          return completeAndNormalize(cmakePerlPath);
-        }
-      }
-
-      // next check environment variable
-      auto envPathString = std::getenv("PERL_EXE_PATH");
-      if( envPathString ) {
-        openstudio::path envPath = openstudio::toPath(envPathString);
-
-        LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << envPath << "'");
-        if( openstudio::filesystem::exists(envPath) ) {
-          LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(envPath) << "'");
-          return completeAndNormalize(envPath);
-        }
-      }
-
-      // next check for installed perl
-      openstudio::path installPath = getOpenStudioModuleDirectory() / toPath("/../Perl/bin/perl.exe");
-
-      LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << installPath << "'");
-      if( openstudio::filesystem::exists(installPath) ) {
-        LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(installPath) << "'");
-        return completeAndNormalize(installPath);
-      }
-
-      // alternate install location (to be removed)
-      installPath = getOpenStudioModuleDirectory() / toPath("/../Perl/perl/bin/perl.exe");
-
-      LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << installPath << "'");
-      if( openstudio::filesystem::exists(installPath) ) {
-        LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(installPath) << "'");
-        return completeAndNormalize(installPath);
-      }
-    #endif
-
-    return openstudio::path();
+  LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << installPath << "'");
+  if (openstudio::filesystem::exists(installPath)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(installPath) << "'");
+    return completeAndNormalize(installPath);
   }
 
-  std::string_view getSharedLibrarySuffix() {
-    return "${CMAKE_SHARED_LIBRARY_SUFFIX}";
-  }
-  
-  std::string_view getSharedLibraryPrefix() {
-    return "${CMAKE_SHARED_LIBRARY_PREFIX}";
-  }
+  // alternate install location (to be removed)
+  installPath = getOpenStudioModuleDirectory() / toPath("/../Perl/perl/bin/perl.exe");
 
-  std::string getSharedLibraryName(std::string_view basename) {
-    return fmt::format("{}{}{}", getSharedLibraryPrefix(), basename, getSharedLibrarySuffix());
+  LOG_FREE(Debug, "ApplicationPathHelpers", "Searching for Perl in '" << installPath << "'");
+  if (openstudio::filesystem::exists(installPath)) {
+    LOG_FREE(Debug, "ApplicationPathHelpers", "Found Perl at '" << completeAndNormalize(installPath) << "'");
+    return completeAndNormalize(installPath);
   }
+#endif
 
-} // openstudio
+  return openstudio::path();
+}
+
+std::string_view getSharedModuleSuffix() {
+  return "${CMAKE_SHARED_MODULE_SUFFIX}";
+}
+
+std::string_view getSharedModulePrefix() {
+  return "${CMAKE_SHARED_MODULE_PREFIX}";
+}
+
+std::string getSharedModuleName(std::string_view basename) {
+  return fmt::format("{}{}{}", getSharedModulePrefix(), basename, getSharedModuleSuffix());
+}
+
+}  // namespace openstudio

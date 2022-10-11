@@ -1,5 +1,5 @@
 #start the measure
-class IncreaseInsulationRValueForExteriorWallsByPercentage < OpenStudio::Ruleset::ModelUserScript
+class IncreaseInsulationRValueForExteriorWallsByPercentage < OpenStudio::Measure::ModelMeasure
 
   #define the name that a user will see
   def name
@@ -8,10 +8,10 @@ class IncreaseInsulationRValueForExteriorWallsByPercentage < OpenStudio::Ruleset
 
   #define the arguments that the user will input
   def arguments(model)
-    args = OpenStudio::Ruleset::OSArgumentVector.new
+    args = OpenStudio::Measure::OSArgumentVector.new
 
     #make an argument insulation R-value
-    r_value = OpenStudio::Ruleset::OSArgument::makeDoubleArgument("r_value",true)
+    r_value = OpenStudio::Measure::OSArgument::makeDoubleArgument("r_value",true)
     r_value.setDisplayName("Percentage Increase of R-value for Exterior Wall Insulation.")
     r_value.setDefaultValue(30.0)
     args << r_value
