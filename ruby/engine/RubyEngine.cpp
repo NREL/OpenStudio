@@ -18,6 +18,7 @@
 
 #include <fmt/format.h>
 
+// TODO: We need to revisit this static initialization stuff
 static int argc = 0;
 static char** argv = nullptr;
 
@@ -42,7 +43,8 @@ VALUE initRestOfOpenStudio(...) {
 };
 
 RubyEngine::RubyEngine(int argc, char* argv[]) : ScriptEngine(argc, argv) {
-  ruby_sysinit(&argc, &argv);
+
+  ruby_set_argv(argc, argv);
   Init_EmbeddedScripting();
 
   initRubyEngine();
