@@ -75,6 +75,18 @@ UTILITIES_API openstudio::path getRadianceDirectory();
 /// \returns The path to the Perl executable if it exists.
 UTILITIES_API openstudio::path getPerlExecutable();
 
+/// \returns The platform specific suffix for shared libraries.
+/// "dll" on Windows, ".so" on Linux, etc.
+UTILITIES_API std::string_view getSharedLibrarySuffix();
+
+/// \returns The platform specific file prefix for shared libraries.
+/// "lib" on Linux.
+UTILITIES_API std::string_view getSharedLibraryPrefix();
+
+/// \returns The platform specific shared library name,
+/// concatenates the prefix and suffix to the given basename
+UTILITIES_API std::string getSharedLibraryName(std::string_view basename);
+
 }  // namespace openstudio
 
 #endif  //UTILITIES_CORE_PATHHELPERS_HPP

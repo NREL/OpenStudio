@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.14.0)
+message(STATUS "Using CMake ${CMAKE_VERSION}")
+cmake_minimum_required(VERSION 3.19.0)
 cmake_policy(SET CMP0048 NEW)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -346,6 +347,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clan
 endif()
 
 if(APPLE)
+  # Without this, cmake will give "Module" libraries the ".so" extension on Apple
+  # This appears to be a legacy choice by the cmake developers, and seems out of place,
+  # so the OpenStudio project will use the library suffix ".dylib"
+  set(CMAKE_SHARED_MODULE_SUFFIX ${CMAKE_SHARED_LIBRARY_SUFFIX})
   find_library(COREFOUNDATION_LIBRARY CoreFoundation)
   add_definitions(-D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
   #add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
@@ -1008,6 +1013,7 @@ set(project_directories
   sdd
   lib
   install_utility
+  scriptengine
 )
 
 # resources must be added after find EnergyPlus

@@ -27,7 +27,8 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "init_openstudio.hpp"
+#include "InitRubyBindings.hpp"
+#include "RubyEval.hpp"
 #include <ruby.h>
 #include <stdexcept>
 #include <iostream>
@@ -74,7 +75,10 @@ extern "C"
   ////void Init_openstudiomodeleditor(void); # happens separately in openstudio.so only, for SketchUp plug-in
 }
 
-void init_openstudio_internal_basic() {
+namespace openstudio {
+namespace ruby {
+
+void initBasicRubyBindings() {
   rb_provide("openstudio");
   rb_provide("openstudio.so");
 
@@ -119,7 +123,7 @@ void init_openstudio_internal_basic() {
   rb_provide("openstudioutilities.so");
 }
 
-void init_openstudio_internal_extended() {
+void initExtendedRubyBindings() {
   Init_openstudiomodel();
   rb_provide("openstudiomodel");
   rb_provide("openstudiomodel.so");
@@ -366,49 +370,13 @@ end # module OpenStudio
 
 )END";
 
-  evalString(ruby_typedef_script);
+  openstudio::evalString(ruby_typedef_script);
 }
 
-void init_openstudio_internal() {
-  init_openstudio_internal_basic();
-  init_openstudio_internal_extended();
+void initRubyBindings() {
+  initBasicRubyBindings();
+  initExtendedRubyBindings();
 }
 
-class RubyException : public std::runtime_error
-{
- public:
-  RubyException(const std::string& msg, const std::string& location) : std::runtime_error(msg), m_location(location) {}
-
-  virtual ~RubyException() throw() {}
-
-  std::string location() const {
-    return m_location;
-  }
-
- private:
-  std::string m_location;
-};
-
-static VALUE evaluateSimpleImpl(VALUE arg) {
-  return rb_eval_string(StringValuePtr(arg));
-}
-
-void evalString(const std::string& t_str) {
-
-  VALUE val = rb_str_new2(t_str.c_str());
-  int error;
-
-  rb_protect(evaluateSimpleImpl, val, &error);
-
-  if (error != 0) {
-    VALUE errval = rb_eval_string("$!.to_s");
-    char* str = StringValuePtr(errval);
-    std::string err(str);
-
-    VALUE locval = rb_eval_string("$@.to_s");
-    str = StringValuePtr(locval);
-    std::string loc(str);
-
-    throw RubyException(err, loc);
-  }
-}
+} // namespace ruby
+} // namespace openstudio

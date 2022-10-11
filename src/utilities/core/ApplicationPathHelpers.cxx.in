@@ -33,6 +33,7 @@
 
 #include <OpenStudio.hxx>
 
+#include <fmt/format.h>
 #include <sstream>
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
@@ -465,6 +466,18 @@ namespace openstudio {
     #endif
 
     return openstudio::path();
+  }
+
+  std::string_view getSharedLibrarySuffix() {
+    return "${CMAKE_SHARED_LIBRARY_SUFFIX}";
+  }
+  
+  std::string_view getSharedLibraryPrefix() {
+    return "${CMAKE_SHARED_LIBRARY_PREFIX}";
+  }
+
+  std::string getSharedLibraryName(std::string_view basename) {
+    return fmt::format("{}{}{}", getSharedLibraryPrefix(), basename, getSharedLibrarySuffix());
   }
 
 } // openstudio
