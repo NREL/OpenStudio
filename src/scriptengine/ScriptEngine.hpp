@@ -51,6 +51,13 @@ class ScriptEngine
   // execute string without expecting a return value
   virtual void exec(std::string_view sv) = 0;
 
+  // TODO: this is totally the wrong place to put it, but I'm trying to see if it works
+  virtual void setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const std::vector<openstudio::path>& gemPathDirs,
+                                 const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath,
+                                 const openstudio::path& bundleGemDirPath, const std::string& bundleWithoutGroups){};
+
+  virtual void setupPythonPath(const std::vector<openstudio::path>& includeDirs, const openstudio::path& pythonHomeDir){};
+
   template <typename T>
   T getAs(ScriptObject& obj) {
     void* result = getAs_impl(obj, typeid(T));

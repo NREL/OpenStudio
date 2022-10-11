@@ -56,7 +56,7 @@ namespace model {
 
       ZoneHVACPackagedTerminalAirConditioner_Impl(const ZoneHVACPackagedTerminalAirConditioner_Impl& other, Model_Impl* model, bool keepHandle);
 
-      virtual ~ZoneHVACPackagedTerminalAirConditioner_Impl() {}
+      virtual ~ZoneHVACPackagedTerminalAirConditioner_Impl() = default;
 
       //@}
       /** @name Virtual Methods */
@@ -122,7 +122,7 @@ namespace model {
 
       bool isFanPlacementDefaulted() const;
 
-      boost::optional<Schedule> supplyAirFanOperatingModeSchedule() const;
+      Schedule supplyAirFanOperatingModeSchedule() const;
 
       boost::optional<double> autosizedSupplyAirFlowRateDuringCoolingOperation() const;
 
@@ -146,9 +146,9 @@ namespace model {
 
       bool setAvailabilitySchedule(Schedule& schedule);
 
-      bool setOutdoorAirMixerObjectType(std::string outdoorAirMixerObjectType);
+      bool setOutdoorAirMixerObjectType(const std::string& outdoorAirMixerObjectType);
 
-      bool setOutdoorAirMixerName(std::string outdoorAirMixerName);
+      bool setOutdoorAirMixerName(const std::string& outdoorAirMixerName);
 
       bool setSupplyAirFlowRateDuringCoolingOperation(boost::optional<double> supplyAirFlowRateDuringCoolingOperation);
 
@@ -184,13 +184,11 @@ namespace model {
 
       bool setCoolingCoil(HVACComponent& coolingCoil);
 
-      bool setFanPlacement(std::string fanPlacement);
+      bool setFanPlacement(const std::string& fanPlacement);
 
       void resetFanPlacement();
 
       bool setSupplyAirFanOperatingModeSchedule(Schedule& schedule);
-
-      void resetSupplyAirFanOperatingModeSchedule();
 
       //@}
       /** @name Other */
@@ -206,6 +204,7 @@ namespace model {
       boost::optional<HVACComponent> optionalSupplyAirFan() const;
       boost::optional<HVACComponent> optionalHeatingCoil() const;
       boost::optional<HVACComponent> optionalCoolingCoil() const;
+      boost::optional<Schedule> optionalSupplyAirFanOperatingModeSchedule() const;
 
       boost::optional<ModelObject> availabilityScheduleAsModelObject() const;
       boost::optional<ModelObject> supplyAirFanAsModelObject() const;

@@ -1,5 +1,6 @@
 #include "PythonEngine.hpp"
 #include <utilities/core/ApplicationPathHelpers.hpp>
+#include "../../src/utilities/core/Filesystem.hpp"
 #include <fmt/format.h>
 #include <stdexcept>
 #include <string>
@@ -20,18 +21,42 @@
 
 namespace openstudio {
 
-void PythonEngine::pyimport(const std::string& importName, const std::string& includePath) {
+void addToPythonPath(const openstudio::path& includePath) {
   if (!includePath.empty()) {
     PyObject* sys = PyImport_ImportModule("sys");
     PyObject* sysPath = PyObject_GetAttrString(sys, "path");
     // fmt::print("Prepending '{}' to sys.path\n", includePath);
-    PyObject* unicodeIncludePath = PyUnicode_FromString(includePath.c_str());
+    PyObject* unicodeIncludePath = PyUnicode_FromString(includePath.string().c_str());
     PyList_Insert(sysPath, 0, unicodeIncludePath);
   }
+}
+
+void PythonEngine::pyimport(const std::string& importName, const std::string& includePath) {
+  addToPythonPath(includePath);
   PyImport_ImportModule(importName.c_str());
 }
 
+void PythonEngine::setupPythonPath(const std::vector<openstudio::path>& includeDirs, const openstudio::path& pythonHomeDir) {
+  for (const auto& includeDir : includeDirs) {
+    addToPythonPath(includeDir);
+  }
+  if (!pythonHomeDir.empty()) {
+    wchar_t* a = Py_DecodeLocale(pythonHomeDir.generic_string().c_str(), nullptr);
+    Py_SetPythonHome(a);
+  }
+}
+
 PythonEngine::PythonEngine(int argc, char* argv[]) : ScriptEngine(argc, argv), program(Py_DecodeLocale(pythonProgramName, nullptr)) {
+  // this frozen flag tells Python that the package and library have been frozen for embedding, so it shouldn't warn about missing prefixes
+  Py_FrozenFlag = 1;
+
+  // Set the PYTHONPATH / PYTHONHOME to the E+ shipped standard library
+  // I think we need to set the python path before initializing the library
+  auto pathToPythonPackages = getEnergyPlusDirectory() / "python_standard_lib";
+  wchar_t* a = Py_DecodeLocale(pathToPythonPackages.make_preferred().string().c_str(), nullptr);
+  Py_SetPath(a);
+  Py_SetPythonHome(a);
+
   Py_SetProgramName(program);  // optional but recommended
 
   Py_Initialize();

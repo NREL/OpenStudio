@@ -1,8 +1,8 @@
-# OpenStudio Version 3.4.1 (TDB)
+# OpenStudio Version 3.5.0 (TDB)
 
 _Release Notes_ -  _TDB_
 
-These release notes describe version 3.4.1 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
+These release notes describe version 3.5.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
 -  Overview
 -  Where to Find OpenStudio Documentation
@@ -15,7 +15,7 @@ As of April 2020, development and distribution of the OpenStudioApplication and 
 
 Below is the list of components that is included in this SDK installer:
 
-__**OpenStudio SDK 3.4.1**__
+__**OpenStudio SDK 3.5.0**__
 - EnergyPlus
 - Command Line Interface (CLI)
 - Radiance
@@ -33,11 +33,11 @@ __**OpenStudio SDK 3.4.1**__
 
 # Installation Notes
 
-OpenStudio SDK 3.4.1 is supported on 64-bit Windows 7 – 10, OS X 10.15, and Ubuntu 18.04, 20.04
+OpenStudio SDK 3.5.0 is supported on 64-bit Windows 7 – 10, OS X 10.15, and Ubuntu 18.04, 20.04
 
-OpenStudio SDK 3.4.1 supports [EnergyPlus Release 22.1.0](https://github.com/NREL/EnergyPlus/releases/tag/v22.1.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK 3.4.1.
+OpenStudio SDK 3.5.0 supports [EnergyPlus Release 22.1.0](https://github.com/NREL/EnergyPlus/releases/tag/v22.1.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK 3.5.0.
 
-OpenStudio SDK 3.4.1 supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio SDK 3.4.1.
+OpenStudio SDK 3.5.0 supports Radiance 5.0.a.12, which is bundled with the OpenStudio installer; users no longer must install Radiance separately, and OpenStudio will use the included Radiance version regardless of any other versions that may be installed on the system. Other builds of Radiance are not supported by OpenStudio SDK 3.5.0.
 
 As usual, you can refer to the **[OpenStudio SDK Compatibility Matrix](https://github.com/NREL/OpenStudio/wiki/OpenStudio-SDK-Version-Compatibility-Matrix)** for more information.
 
@@ -52,7 +52,7 @@ For help with common installation problems please visit, http://nrel.github.io/O
 
 # OpenStudio SDK: Changelog
 
-The 3.4.1 is a minor release. This update includes several new features, performance improvements, and bug fixes.
+The 3.5.0 is a minor release. This update includes several new features, performance improvements, and bug fixes.
 You can find the list of Pull Requests that got into this release (**NEEDS UPDATE**) [here](https://github.com/NREL/OpenStudio/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aclosed+created%3A2021-04-27..2022-09-26+).
 
 
@@ -60,7 +60,7 @@ You can find the list of Pull Requests that got into this release (**NEEDS UPDAT
 
 As of OpenStudio SDK 3.2.0, Python bindings are officially supported and distributed through Python Package Index (PyPI). To install, users will need to have Python3 installed along with pip and simply run the following command in a terminal window.
 
-`pip install openstudio==3.4.1`
+`pip install openstudio==3.5.0`
 
 Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for further instructions on how to install. Users can also visit the test channel at [openstudio on TestPyPi](https://test.pypi.org/project/openstudio/) to install development bindings.
 
@@ -83,7 +83,12 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
     * `Coil:Cooling:DX:SingleSpeed`, `Coil:Cooling:DX:MultiSpeed:StageData`, and `Coil:Cooling:DX:CurveFit:Speed`: `ratedEvaporatorFanPowerPerVolumeFlowRate` and `setRatedEvaporatorFanPowerPerVolumeFlowRate` in favor of `ratedEvaporatorFanPowerPerVolumeFlowRate2017` and `setRatedEvaporatorFanPowerPerVolumeFlowRate2017`
     * `Coil:Heating:DX:SingleSpeed` and `Coil:Heating:DX:MultiSpeed:StageData`: `ratedSupplyFanPowerPerVolumeFlowRate` and `setRatedSupplyFanPowerPerVolumeFlowRate` in favor of `ratedSupplyFanPowerPerVolumeFlowRate2017` and `setRatedSupplyFanPowerPerVolumeFlowRate2017`
 * [#4666](https://github.com/NREL/OpenStudio/pull/4666) - Changes related to availability schedule methods
-    * `Coil:Heating:Gas:MultiStage` has an API-breaking change related to its `availabilitySchedule` getter. It is now a required field that returns `Schedule` instead of `boost::optional<Schedule>`. Method `resetAvailabilitySchedule` is also removed.     
+    * `Coil:Heating:Gas:MultiStage` has an API-breaking change related to its `availabilitySchedule` getter. It is now a required field that returns `Schedule` instead of `boost::optional<Schedule>`. Method `resetAvailabilitySchedule` is also removed.
+* [#4701](https://github.com/NREL/OpenStudio/pull/4701) - `ZoneHVACPackagedTerminalAirConditioner` and `ZoneHVACPackagedTerminalHeatPump`
+    * `ZoneHVACPackagedTerminalAirConditioner` and `ZoneHVACPackagedTerminalHeatPump` have an API-breaking change related to its `supplyAirFanOperatingModeSchedule` getter. It is now a required field that returns `Schedule` instead of `boost::optional<Schedule>`. Method `resetSupplyAirFanOperatingModeSchedule` is also removed.
+        * It is set to `alwaysOnDiscreteSchedule` (=Constant) in the Constructor if you provide a `FanConstantVolume` (This is **required** by E+)
+        * It is set to `alwaysOffDiscreteSchedule` (=Cycling) in the Constructor if you provide any other fan types (E+ treats a blank schedule as always off)
+    * There are unusual `VersionTranslator` Rules for Packaged Systems (PTAC or PTHP) that use a `FanConstantVolume` and that do not have a `Supply Air Fan Operating Mode Schedule`. In 22.1.0 this would effectively, and mistakenly, function as a cycling fan, but this is now disallowed in E+ 22.2.0. In order to retain a similar functionality and energy usage, the `FanConstantVolume` will be replaced by a `FanSystemModel` with an Always Off Schedule (=cycling fan, similar to a `Fan:OnOff`), mapping inputs such as pressure rise and efficiency appropriately.
 
 
 ## Minor changes and bug fixes

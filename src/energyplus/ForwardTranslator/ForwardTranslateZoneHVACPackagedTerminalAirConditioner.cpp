@@ -359,10 +359,9 @@ namespace energyplus {
 
     // SupplyAirFanOperatingModeScheduleName
 
-    if (boost::optional<Schedule> schedule = modelObject.supplyAirFanOperatingModeSchedule()) {
-      if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
-        idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFanOperatingModeScheduleName, _schedule->name().get());
-      }
+    Schedule fanOpSchedule = modelObject.supplyAirFanOperatingModeSchedule();
+    if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(fanOpSchedule)) {
+      idfObject.setString(ZoneHVAC_PackagedTerminalAirConditionerFields::SupplyAirFanOperatingModeScheduleName, _schedule->name().get());
     }
 
     return idfObject;
