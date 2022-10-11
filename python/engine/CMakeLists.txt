@@ -48,7 +48,6 @@ target_compile_definitions(pythonengine PRIVATE openstudio_scriptengine_EXPORTS 
 # ../EnergyPlus/libpython3.8.dylib
 if(APPLE)
   set_target_properties(pythonengine PROPERTIES
-    MACOSX_RPATH ON
     INSTALL_RPATH "@loader_path;@loader_path/../EnergyPlus/"
   )
 
