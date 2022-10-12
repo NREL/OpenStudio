@@ -44,4 +44,27 @@ target_compile_options(pythonengine PRIVATE
 
 target_compile_definitions(pythonengine PRIVATE openstudio_scriptengine_EXPORTS SHARED_OS_LIBS)
 
-install(TARGETS pythonengine EXPORT openstudio DESTINATION bin COMPONENT "CLI")
+install(TARGETS pythonengine EXPORT openstudio DESTINATION ${LIB_DESTINATION_DIR} COMPONENT "CLI")
+
+# it goes into lib/ and we want to find:
+# ../EnergyPlus/libpython3.8.dylib
+if(APPLE)
+  set_target_properties(pythonengine PROPERTIES
+    INSTALL_RPATH "@loader_path;@loader_path/../EnergyPlus/"
+  )
+
+  install(CODE [[
+    execute_process(COMMAND "install_name_tool" -change "$<TARGET_FILE:Python::Python>" "@rpath/$<TARGET_FILE_NAME:Python::Python>" "${CMAKE_INSTALL_PREFIX}/lib/$<TARGET_FILE_NAME:pythonengine>")
+  ]]
+    COMPONENT "CLI"
+  )
+
+elseif(UNIX)
+  set_target_properties(pythonengine PROPERTIES
+    INSTALL_RPATH "$ORIGIN:$ORIGIN/../EnergyPlus/"
+  )
+elseif(WIN32)
+  # Windows does not have RPATH handling, so just copy the DLL to the bin folder
+  install(IMPORTED_RUNTIME_ARTIFACTS Python::Python LIBRARY DESTINATION ${LIB_DESTINATION_DIR} COMPONENT "CLI")
+endif()
+

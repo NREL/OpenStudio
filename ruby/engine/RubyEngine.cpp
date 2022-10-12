@@ -1,7 +1,6 @@
 #include "RubyEngine.hpp"
 #include "InitRubyBindings.hpp"
 #include <embedded_files.hxx>
-#include <rubyengine_export.h>
 #include <csignal>
 #include <stdexcept>
 #include <string>
@@ -17,6 +16,9 @@
 #  pragma GCC diagnostic pop
 #endif
 
+#include <fmt/format.h>
+
+// TODO: We need to revisit this static initialization stuff
 static int argc = 0;
 static char** argv = nullptr;
 
@@ -41,7 +43,10 @@ VALUE initRestOfOpenStudio(...) {
 };
 
 RubyEngine::RubyEngine(int argc, char* argv[]) : ScriptEngine(argc, argv) {
+
+  ruby_set_argv(argc, argv);
   Init_EmbeddedScripting();
+
   initRubyEngine();
 
   openstudio::ruby::initBasicRubyBindings();
@@ -55,6 +60,12 @@ RubyEngine::RubyEngine(int argc, char* argv[]) : ScriptEngine(argc, argv) {
   // can we be smarter and detect the correct encoding? use wmain on windows to get utf-16?
   // or we might want to follow ruby and allow '--external-encoding=UTF-8' as an input argument?
   rb_enc_set_default_external(rb_enc_from_encoding(rb_utf8_encoding()));
+}
+
+void RubyEngine::setupEmbeddedGems(const std::vector<openstudio::path>& includeDirs, const std::vector<openstudio::path>& gemPathDirs,
+                                   const openstudio::path& gemHomeDir, const openstudio::path& bundleGemFilePath,
+                                   const openstudio::path& bundleGemDirPath, const std::string& bundleWithoutGroups) {
+  openstudio::ruby::setupEmbeddedGems(includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePath, bundleGemDirPath, bundleWithoutGroups);
 }
 
 RubyEngine::~RubyEngine() {
@@ -105,12 +116,12 @@ extern "C"
 
   int rb_hasFile(const char* t_filename) {
     // TODO Consider expanding this to use the path which we have artificially defined in embedded_help.rb
-    std::string expandedName = std::string(":/ruby/2.7.0/") + std::string(t_filename) + ".rb";
-    return embedded_files::hasFile(expandedName);
+    std::string expandedName = fmt::format(":/ruby/2.7.0/{}.rb", t_filename);
+    return embedded_files::hasFile(expandedName) ? 1 : 0;
   }
 
   int rb_require_embedded(const char* t_filename) {
-    std::string require_script = R"(require ')" + std::string(t_filename) + R"(')";
+    std::string require_script = fmt::format("require '{}'", t_filename);
     openstudio::evalString(require_script);
     return 0;
   }

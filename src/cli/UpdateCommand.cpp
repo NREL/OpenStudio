@@ -43,27 +43,6 @@
 namespace openstudio {
 namespace cli {
 
-  void setupMeasureCommand(CLI::App* parentApp) {
-    [[maybe_unused]] auto* measureCommand = parentApp->add_subcommand("measure", "Updates measures and compute arguments");
-  }
-
-  void setupUpdateCommand(CLI::App* parentApp) {
-
-    bool keep = false;
-    [[maybe_unused]] auto* updateCommand = parentApp->add_subcommand("update", "Updates OpenStudio Models to the current version");
-    updateCommand->add_flag("--keep", keep, "Keep original files");
-
-    openstudio::filesystem::path p;
-    updateCommand->add_option("path", p, "Path to OSM or directory containing osms")->required(true);
-
-    updateCommand->callback([&keep, &p] {
-      bool result = runModelUpdateCommand(p, keep);
-      if (!result) {
-        throw std::runtime_error("Failed to update some models");
-      }
-    });
-  }
-
   bool runModelUpdateCommand(const openstudio::path& p, bool keep) {
     std::vector<openstudio::path> osmPaths;
 
@@ -132,7 +111,7 @@ sys.argv.append("{}")
       cmd += fmt::format("sys.argv.append(\"{}\")\n", arg);
     }
     cmd += fmt::format(R"python(
-import importlib
+import importlib.util
 spec = importlib.util.spec_from_file_location('__main__', r'{}')
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
@@ -141,5 +120,36 @@ spec.loader.exec_module(module)
     fmt::print("{}\n", cmd);
     pythonEngine->exec(cmd);
   }
+
+  void executeGemListCommand(ScriptEngineInstance& rubyEngine) {
+
+    std::string cmd = R"ruby(
+begin
+  embedded = []
+  user = []
+  Gem::Specification.find_all.each do |spec|
+    if spec.gem_dir.chars.first == ':'
+      embedded << spec
+    else
+      user << spec
+    end
+  end
+
+  embedded.each do |spec|
+    safe_puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
+  end
+
+  user.each do |spec|
+    safe_puts "#{spec.name} (#{spec.version}) '#{spec.gem_dir}'"
+  end
+
+rescue => e
+  $logger.error "Error listing gems: #{e.message} in #{e.backtrace.join("\n")}"
+  exit e.exit_code
+end
+    )ruby";
+    rubyEngine->exec(cmd);
+  }
+
 }  // namespace cli
 }  // namespace openstudio

@@ -285,7 +285,7 @@ void OSWorkflow::run() {
         // )python",
         //                                      scriptPath_->parent_path().generic_string());
         auto importCmd = fmt::format(R"python(
-import importlib
+import importlib.util
 spec = importlib.util.spec_from_file_location('{}', r'{}')
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)

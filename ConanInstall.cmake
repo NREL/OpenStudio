@@ -211,7 +211,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # Loads the conanbuildinfo.cmake / conanbuildinfo_multi.cmake
   conan_load_buildinfo()
   # conan_basic_setup in the conanbuildinfo.cmake. TARGETS => set cmake targets, NO_OUTPUT_DIRS => Don't modify the BIN / LIB folders etc
-  conan_basic_setup(TARGETS NO_OUTPUT_DIRS)
+  conan_basic_setup(TARGETS NO_OUTPUT_DIRS KEEP_RPATHS)
 
   set(CONAN_OPENSTUDIO_ALREADY_RUN TRUE)
 
