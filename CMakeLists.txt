@@ -604,7 +604,7 @@ if(UNIX)
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH f70fb18cc613f129e5e22e790d191f8c)   # TODO: not updated yet
+    set(ENERGYPLUS_EXPECTED_HASH b331823d01fd06f691df7ab084ba21f6)
     set(ENERGYPLUS_PLATFORM "Centos7-x86_64")
   else()
     if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
@@ -623,7 +623,9 @@ if(UNIX)
     message(STATUS "https://github.com/${ENERGYPLUS_REPO}/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz")
 
     if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+      file(DOWNLOAD
+           "https://github.com/${ENERGYPLUS_REPO}/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+           # "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
            INACTIVITY_TIMEOUT 300 # 5-min timeout
            SHOW_PROGRESS
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
