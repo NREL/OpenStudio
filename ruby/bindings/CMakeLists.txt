@@ -13,5 +13,5 @@ target_compile_options(rubybindings PRIVATE
   $<$<CXX_COMPILER_ID:MSVC>:/bigobj /wd4996 /wd5033>
   $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>,$<CXX_COMPILER_ID:GNU>>:-Wno-error=register -Wno-register>
   $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-Wno-deprecated-volatile>
-  $<$<CXX_COMPILER_ID:GNU>:-Wno-volatile>
+  $<$<CXX_COMPILER_ID:GNU>:-Wno-deprecated-declarations -Wno-volatile>
 )

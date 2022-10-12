@@ -56,12 +56,7 @@ endif()
 # ../lib/libopenstudiolib.dylib
 if(APPLE)
   set_target_properties(openstudio PROPERTIES
-    # MACOSX_RPATH ON
-    SKIP_RPATH FALSE
-    SKIP_BUILD_RPATH FALSE
-    CMAKE_BUILD_WITH_INSTALL_RPATH FALSE
     INSTALL_RPATH "@executable_path;@executable_path/../lib/"
-    INSTALL_RPATH_USE_LINK_PATH FALSE
   )
 elseif(UNIX)
   set_target_properties(openstudio PROPERTIES
