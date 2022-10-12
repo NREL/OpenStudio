@@ -2,7 +2,7 @@
 #define UTILITIES_UTILITIES_I
 
 #ifdef SWIGPYTHON
-%module openstudioutilities
+%module(directors="1") openstudioutilities
 #endif
 
 

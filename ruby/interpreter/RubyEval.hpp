@@ -28,6 +28,6 @@ inline VALUE evalString(const std::string& t_str) {
   return result;
 }
 
-} // openstudio
+}  // namespace openstudio
 
-#endif // RUBYEVAL_included
+#endif  // RUBYEVAL_included

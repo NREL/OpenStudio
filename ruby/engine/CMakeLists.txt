@@ -224,64 +224,49 @@ add_library(rubyengine
   GC_Value.hpp
   ${OUTPUT}
   "${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
-  #"${CMAKE_CURRENT_BINARY_DIR}/SWIGRubyRuntime.hxx"
 )
 
 include(GenerateExportHeader)
 generate_export_header(rubyengine)
 
+target_compile_options(rubyengine PRIVATE
+  $<${is_msvc_genex}:/bigobj>
+)
 # -Wno-deprecated-declaration, /wd4996: suppresses deprecated warning
-# -Wno-register, /wd5033: ISO C++1z does not allow register storage class specifier
-if(MSVC)
-  set_target_properties(rubyengine PROPERTIES COMPILE_FLAGS "/bigobj /wd4996 /wd5033")
-  set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED" )
-else()
-  set_target_properties(rubyengine PROPERTIES COMPILE_FLAGS "-Wno-deprecated-declarations -Wno-register")
-  set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx" PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED -Wno-unused-variable" )
-endif()
+target_compile_options(rubyengine PRIVATE
+  $<${is_msvc_genex}:/wd4996>
+  $<${is_gnu_or_clang_genex}:-Wno-deprecated-declarations>
+)
+# -Wno-register, /wd5033: ISO C++1z does not allow "register" storage class specifier
+target_compile_options(rubyengine PRIVATE
+  $<${is_msvc_genex}:/wd5033>
+  $<${is_gnu_or_clang_genex}:-Wno-register>
+)
+set_source_files_properties("${CMAKE_CURRENT_BINARY_DIR}/embedded_scripting_wrap.cxx"
+  PROPERTIES COMPILE_FLAGS "-DRUBY_EMBEDDED $<${is_gnu_or_clang_genex}:-Wno-unused-variable>"
+)
 
 #add_definitions(-DRUBY_EXTCONF_H="osruby_config.h")
 
-get_target_property(SCRIPT_ENGINE_INCLUDE_DIRS scriptengine INTERFACE_INCLUDE_DIRECTORIES)
-
-#target_link_libraries(rubyengine PRIVATE osrubyinit CONAN_PKG::openstudio_ruby ${ALL_RUBY_BINDING_TARGETS})
+target_link_libraries(rubyengine
+  PRIVATE
+  openstudio_scriptengine
+  openstudiolib
+  rubybindings
+  rubyinterpreter
+  CONAN_PKG::fmt
+  ${ruby_extension_libs}
+  ${ALL_RUBY_BINDING_TARGETS}
+)
 
 if( WIN32 )
   target_link_libraries(rubyengine
     PRIVATE
-    scriptengine
-    openstudiolib
-    rubybindings
-    rubyinterpreter
-    CONAN_PKG::fmt
-    ${ruby_extension_libs}
-    ${ALL_RUBY_BINDING_TARGETS}
     wsock32 ws2_32 Dbghelp Shlwapi Iphlpapi
   )
-
-  set_target_properties(rubyengine PROPERTIES LINK_FLAGS_DEBUG "/NODEFAULTLIB:MSVCRT")
-else()
-  target_link_libraries(rubyengine
-    PRIVATE
-    scriptengine
-    openstudio_utilities
-    openstudio_airflow
-    openstudio_model
-    openstudio_energyplus
-    openstudio_epjson
-    openstudio_measure
-    openstudio_osversion
-    openstudio_sdd
-    openstudio_isomodel
-    openstudio_gbxml
-    openstudio_gltf
-    openstudio_radiance
-    rubybindings
-    rubyinterpreter
-    CONAN_PKG::fmt
-    ${ruby_extension_libs}
-    ${ALL_RUBY_BINDING_TARGETS}
-  )
+  target_link_options(rubyengine PRIVATE $<$<CONFIG:Debug>:/NODEFAULTLIB:MSVCRT>)
 endif()
+
+target_compile_definitions(rubyengine PRIVATE openstudio_scriptengine_EXPORTS SHARED_OS_LIBS)
 
 install(TARGETS rubyengine EXPORT openstudio DESTINATION bin COMPONENT "CLI")

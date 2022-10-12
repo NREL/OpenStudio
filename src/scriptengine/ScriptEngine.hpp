@@ -13,7 +13,11 @@
 #include <typeinfo>
 
 namespace openstudio {
-class Measure;
+
+namespace measure {
+  class ModelMeasure;
+}  // namespace measure
+
 class ScriptEngine;
 
 struct ScriptObject
@@ -30,7 +34,7 @@ class ScriptEngine
 {
  public:
   ScriptEngine([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) {
-    registerType<openstudio::Measure*>("openstudio::Measure *");
+    // registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
   }
 
   virtual ~ScriptEngine() = default;
@@ -38,6 +42,9 @@ class ScriptEngine
   ScriptEngine(ScriptEngine&&) = delete;
   ScriptEngine& operator=(const ScriptEngine&) = delete;
   ScriptEngine& operator=(ScriptEngine&&) = delete;
+  ScriptEngine* operator->() {
+    return this;
+  }
 
   virtual ScriptObject eval(std::string_view sv) = 0;
 
@@ -85,14 +92,49 @@ class ScriptEngine
   std::map<std::reference_wrapper<const std::type_info>, std::string, Compare> types;
 };
 
-inline std::unique_ptr<openstudio::ScriptEngine> loadScriptEngine(std::string_view libraryBaseName, int argc, char* argv[]) {
-  auto enginePath = openstudio::getOpenStudioModuleDirectory() / openstudio::getSharedLibraryName(libraryBaseName);
-  openstudio::DynamicLibrary engineLib(enginePath);
+// The purpose of this class is to delay creating the scripting engine
+// until it is needed, while still initializing with argc and argv
+class ScriptEngineInstance
+{
+ public:
+  ScriptEngineInstance(std::string_view libraryBaseName, int argc, char* argv[]) : libraryName(libraryBaseName), args(argv, argv + argc) {}
 
-  const std::function<ScriptEngineFactoryType> factory = engineLib.load_symbol<ScriptEngineFactoryType>("makeScriptEngine");
+  ScriptEngineInstance(const ScriptEngineInstance&) = delete;
+  ScriptEngineInstance(ScriptEngineInstance&&) = delete;
+  ScriptEngineInstance& operator=(const ScriptEngineInstance&) = delete;
+  ScriptEngineInstance& operator=(ScriptEngineInstance&&) = delete;
 
-  return std::unique_ptr<openstudio::ScriptEngine>(factory(argc, argv));
-}
+  openstudio::ScriptEngine& operator->() {
+    if (instance) {
+      return *(instance.get());
+    } else {
+      std::vector<char*> argv;
+      std::transform(args.begin(), args.end(), std::back_inserter(argv), [](const std::string& item) { return const_cast<char*>(item.c_str()); });
+
+      const auto enginePath = getOpenStudioModuleDirectory() / openstudio::getSharedModuleName(libraryName);
+      // DynamicLibrary will perform dlopen on construction and dlclose on destruction
+      // Don't create the DynamicLibrary until it is going to be used
+      engineLib = std::unique_ptr<DynamicLibrary>(new DynamicLibrary(enginePath));
+      const auto factory = engineLib->load_symbol<ScriptEngineFactoryType>("makeScriptEngine");
+      instance = std::unique_ptr<ScriptEngine>(factory(args.size(), argv.data()));
+
+      return *instance;
+    }
+  }
+  explicit operator bool() {
+    return (bool)instance;
+  }
+  void reset() {
+    instance.reset();
+    engineLib.reset();
+  }
+
+ private:
+  std::string libraryName;
+  std::vector<std::string> args;
+  std::unique_ptr<ScriptEngine> instance;
+  std::unique_ptr<DynamicLibrary> engineLib;
+};
 
 }  // namespace openstudio
 

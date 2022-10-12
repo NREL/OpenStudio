@@ -1,0 +1,12 @@
+{
+	"weather_file": "srrl_2013_amy.epw",
+	"seed_file": "seb.osm",
+	"steps": [
+		{
+			"measure_dir_name": "IncreaseRoofRValuePython",
+			"arguments": {
+				"r_value": 45
+			}
+		}
+	]
+}

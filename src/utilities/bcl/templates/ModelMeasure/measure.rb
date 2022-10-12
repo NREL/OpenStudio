@@ -36,7 +36,7 @@ class ModelMeasureName < OpenStudio::Measure::ModelMeasure
 
   # define what happens when the measure is run
   def run(model, runner, user_arguments)
-    super(model, runner, user_arguments)
+    super(model, runner, user_arguments)  # Do **NOT** remove this line
 
     # use the built-in error checking
     if !runner.validateUserArguments(arguments(model), user_arguments)

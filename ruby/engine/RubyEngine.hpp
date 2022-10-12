@@ -2,6 +2,7 @@
 #define RUBYENGINE_included
 
 #include <ScriptEngine.hpp>
+#include <ScriptEngineAPI.hpp>
 #include <RubyInterpreter.hpp>
 
 namespace openstudio {
@@ -30,6 +31,11 @@ class RubyEngine final : public ScriptEngine
   RubyInterpreter rubyInterpreter{includePaths};
 };
 
-} // namespace openstudio
+}  // namespace openstudio
+
+extern "C"
+{
+  SCRIPTENGINE_API openstudio::ScriptEngine* makeScriptEngine(int argc, char* argv[]);
+}
 
 #endif
