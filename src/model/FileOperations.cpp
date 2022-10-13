@@ -339,7 +339,7 @@ namespace model {
     openstudio::path srcPath = modelTempDir / osmPath.filename();
 
     try {
-      openstudio::filesystem::copy_file(srcPath, osmPath, openstudio::filesystem::copy_option::overwrite_if_exists);
+      openstudio::filesystem::copy_file(srcPath, osmPath, openstudio::filesystem::copy_options::overwrite_existing);
       test = true;
     } catch (const std::exception& e) {
       LOG_FREE(Error, "saveModelTempDir", "Could not copy osm from '" << toString(srcPath) << "' to '" << toString(osmPath) << "' error" << e.what());
