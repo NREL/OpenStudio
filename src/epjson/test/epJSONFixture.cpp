@@ -151,7 +151,7 @@ openstudio::path setupIdftoEPJSONTest(const openstudio::path& location) {
   const auto working_directory = openstudio::filesystem::complete(openstudio::toPath("epjson_tests") / basename);
   auto idf_path = working_directory / openstudio::toPath("eplus.idf");
   openstudio::filesystem::create_directories(working_directory);
-  openstudio::filesystem::copy_file(location, idf_path, openstudio::filesystem::copy_option::overwrite_if_exists);
+  openstudio::filesystem::copy_file(location, idf_path, openstudio::filesystem::copy_options::overwrite_existing);
   return idf_path;
 }
 

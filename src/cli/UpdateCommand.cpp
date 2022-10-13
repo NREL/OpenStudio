@@ -66,7 +66,7 @@ namespace cli {
       if (keep) {
         openstudio::path backupPath = osmPath;
         backupPath.replace_extension(openstudio::toPath(".osm.orig"));
-        openstudio::filesystem::copy_file(osmPath, backupPath, openstudio::filesystem::copy_option::overwrite_if_exists);
+        openstudio::filesystem::copy_file(osmPath, backupPath, openstudio::filesystem::copy_options::overwrite_existing);
       }
       if (auto model_ = vt.loadModel(osmPath)) {
         fmt::print("Updated '{}'\n", osmPath.string());

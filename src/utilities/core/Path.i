@@ -52,7 +52,7 @@
 
     // The contents and attributes of the file from_fp resolves to are copied to the file to_fp resolves to.
     void copy_file(const path& from_path, const path& to_path){
-      boost::filesystem::copy_file(from_path, to_path, boost::filesystem::copy_option::overwrite_if_exists);
+      boost::filesystem::copy_file(from_path, to_path, boost::filesystem::copy_options::overwrite_existing);
     }
 
     // complete the path and return an absolute path, behavior is portable
