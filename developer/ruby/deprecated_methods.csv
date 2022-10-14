@@ -25,3 +25,5 @@ model,Node,removeSetpointManagerFollowOutdoorAirTemperature,1.13.0,40c19546076be
 model,Node,removeSetpointManagerScheduled,1.13.0,40c19546076be456f110ca542cd70ce711541973,SetpointManagerScheduled::remove,3.4.1
 model,Node,removeSetpointManagerMixedAir,1.13.0,40c19546076be456f110ca542cd70ce711541974,SetpointManagerMixedAir::remove,3.4.1
 model,ZoneVentilationDesignFlowRate,setDesignFlowRateCalculationMethod,2.3.1,9ee9be2d0da3ed954a1e98cc3ab39ec7debffa92,"Done when calling setDesignFlowRate, setFlowRateperZoneFloorArea, setAirChangesperHour",3.4.1
+model,SizingSystem,minimumSystemAirFlowRatio,2.6.2,1e2f8592e45dc0eb5abca850d7c17a6155392626,centralHeatingMaximumSystemAirFlowRatio,3.5.0
+model,SizingSystem,setMinimumSystemAirFlowRatio,2.6.2,1e2f8592e45dc0eb5abca850d7c17a6155392626,setCentralHeatingMaximumSystemAirFlowRatio,3.5.0
