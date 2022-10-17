@@ -99,6 +99,7 @@ UNIQUEMODELOBJECT_TEMPLATES(SiteGroundTemperatureBuildingSurface);
 UNIQUEMODELOBJECT_TEMPLATES(SiteGroundTemperatureDeep);
 UNIQUEMODELOBJECT_TEMPLATES(SiteGroundTemperatureShallow);
 UNIQUEMODELOBJECT_TEMPLATES(SiteGroundTemperatureFCfactorMethod);
+MODELOBJECT_TEMPLATES(SiteGroundTemperatureUndisturbedKusudaAchenbach);
 UNIQUEMODELOBJECT_TEMPLATES(SiteWaterMainsTemperature);
 #ifndef SWIGCSHARP
   // Ignored for Csharp, use Model::setCalendarYear etc
@@ -151,6 +152,7 @@ SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureBuildingSurface);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureDeep);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureShallow);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureFCfactorMethod);
+SWIG_MODELOBJECT(SiteGroundTemperatureUndisturbedKusudaAchenbach);
 SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);
 #ifndef SWIGCSHARP
   SWIG_UNIQUEMODELOBJECT(YearDescription);

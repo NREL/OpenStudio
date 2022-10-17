@@ -1197,6 +1197,54 @@ OS:Site:GroundTemperature:Deep,
        \type real
        \default 16
 
+OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach,
+       \memo Undisturbed ground temperature object using the
+       \memo Kusuda-Achenbach 1965 correlation.
+       \min-fields 8
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference UndisturbedGroundTempModels
+  N1,  \field Soil Thermal Conductivity
+       \required-field
+       \type real
+       \units W/m-K
+       \minimum> 0.0
+  N2,  \field Soil Density
+       \required-field
+       \type real
+       \units kg/m3
+       \minimum> 0.0
+  N3,  \field Soil Specific Heat
+       \required-field
+       \type real
+       \units J/kg-K
+       \minimum> 0.0
+  N4,  \field Average Soil Surface Temperature
+       \type real
+       \units C
+       \note Annual average surface temperature
+       \note If left blank the Site:GroundTemperature:Shallow object must be included in the input
+       \note The soil temperature, amplitude, and phase shift must all be included or omitted together
+  N5,  \field Average Amplitude of Surface Temperature
+       \type real
+       \units deltaC
+       \minimum 0
+       \note Annual average surface temperature variation from average.
+       \note If left blank the Site:GroundTemperature:Shallow object must be included in the input
+       \note The soil temperature, amplitude, and phase shift must all be included or omitted together
+  N6;  \field Phase Shift of Minimum Surface Temperature
+       \type real
+       \units days
+       \minimum 0
+       \maximum< 365
+       \note The phase shift of minimum surface temperature, or the day
+       \note of the year when the minimum surface temperature occurs.
+       \note If left blank the Site:GroundTemperature:Shallow object must be included in the input
+       \note The soil temperature, amplitude, and phase shift must all be included or omitted together
+
 OS:Site:GroundReflectance,
   \unique-object
   \min-fields 13
@@ -15754,6 +15802,10 @@ OS:GroundHeatExchanger:HorizontalTrench,
         \type real
         \units days
         \required-field
+   A6,  \field Undisturbed Ground Temperature Model
+        \required-field
+        \type object-list
+        \object-list UndisturbedGroundTempModels
    N19; \field Evapotranspiration Ground Cover Parameter
         \type real
         \minimum 0
