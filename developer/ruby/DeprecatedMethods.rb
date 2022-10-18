@@ -51,7 +51,7 @@ def parse_new_deprecated(known_deprecated, os_version_str)
     next if deprecated_signatures.empty?
     deprecated_signatures.each do |method|
       found = known_deprecated.select{|h| (h['Class Name'] == class_name) && (h['Method'] == method)}
-      if found
+      if !found.empty?
         old_deprecated << found[0]
         next
       end
