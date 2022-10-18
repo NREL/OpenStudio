@@ -196,7 +196,8 @@ namespace model {
 
     ModelObject GroundHeatExchangerHorizontalTrench_Impl::undisturbedGroundTemperatureModel() const {
       boost::optional<ModelObject> modelObject;
-      modelObject = getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel);
+      modelObject =
+        getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel);
       OS_ASSERT(modelObject);
       return modelObject.get();
     }
@@ -317,7 +318,8 @@ namespace model {
     }
 
     bool GroundHeatExchangerHorizontalTrench_Impl::setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel) {
-      bool result = setPointer(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel, undisturbedGroundTemperatureModel.handle());
+      bool result =
+        setPointer(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel, undisturbedGroundTemperatureModel.handle());
     }
 
     unsigned GroundHeatExchangerHorizontalTrench_Impl::inletPort() const {
@@ -360,7 +362,7 @@ namespace model {
     setSoilMoistureContentPercent(30);
     setSoilMoistureContentPercentatSaturation(50);
     setEvapotranspirationGroundCoverParameter(0.408);
-    
+
     SiteGroundTemperatureUndisturbedKusudaAchenbach undisturbedGroundTemperatureModel(model);
     setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
   }
