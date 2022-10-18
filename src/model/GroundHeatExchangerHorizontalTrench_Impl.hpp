@@ -107,6 +107,8 @@ namespace model {
 
       double evapotranspirationGroundCoverParameter() const;
 
+      ModelObject undisturbedGroundTemperatureModel() const;
+
       //@}
       /** @name Setters */
       //@{
@@ -152,6 +154,8 @@ namespace model {
       bool setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(double kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
 
       bool setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter);
+
+      bool setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel);
 
       //@}
       /** @name Other */

@@ -65,13 +65,39 @@ namespace model {
     /** @name Getters */
     //@{
 
+    double soilThermalConductivity() const;
 
+    double soilDensity() const;
+
+    double soilSpecificHeat() const;
+
+    boost::optional<double> averageSoilSurfaceTemperature() const;
+
+    boost::optional<double> averageAmplitudeofSurfaceTemperature() const;
+
+    boost::optional<double> phaseShiftofMinimumSurfaceTemperature() const;
 
     //@}
     /** @name Setters */
     //@{
 
+    bool setSoilThermalConductivity(double soilThermalConductivity);
 
+    bool setSoilDensity(double soilDensity);
+
+    bool setSoilSpecificHeat(double soilSpecificHeat);
+
+    bool setAverageSoilSurfaceTemperature(double averageSoilSurfaceTemperature);
+
+    void resetAverageSoilSurfaceTemperature();
+
+    bool setAverageAmplitudeofSurfaceTemperature(double averageAmplitudeofSurfaceTemperature);
+
+    void resetAverageAmplitudeofSurfaceTemperature();
+
+    bool setPhaseShiftofMiniumSurfaceTemperature(double phaseShiftofMinimumSurfaceTemperature);
+
+    void resetPhaseShiftofMinimumSurfaceTemperature();
 
     //@}
    protected:

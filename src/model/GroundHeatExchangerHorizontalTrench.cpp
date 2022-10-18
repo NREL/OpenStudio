@@ -194,6 +194,13 @@ namespace model {
       return value.get();
     }
 
+    ModelObject GroundHeatExchangerHorizontalTrench_Impl::undisturbedGroundTemperatureModel() const {
+      boost::optional<ModelObject> modelObject;
+      modelObject = getObject<ModelObject>().getModelObjectTarget<ModelObject>(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel);
+      OS_ASSERT(modelObject);
+      return modelObject.get();
+    }
+
     bool GroundHeatExchangerHorizontalTrench_Impl::setDesignFlowRate(double designFlowRate) {
       bool result = setDouble(OS_GroundHeatExchanger_HorizontalTrenchFields::DesignFlowRate, designFlowRate);
       return result;
@@ -309,6 +316,10 @@ namespace model {
       return result;
     }
 
+    bool GroundHeatExchangerHorizontalTrench_Impl::setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel) {
+      bool result = setPointer(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel, undisturbedGroundTemperatureModel.handle());
+    }
+
     unsigned GroundHeatExchangerHorizontalTrench_Impl::inletPort() const {
       return OS_GroundHeatExchanger_HorizontalTrenchFields::InletNodeName;
     }
@@ -348,11 +359,33 @@ namespace model {
     setPipeSpecificHeat(2405);
     setSoilMoistureContentPercent(30);
     setSoilMoistureContentPercentatSaturation(50);
-    setKusudaAchenbachAverageSurfaceTemperature(15.5);
-    setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(12.8);
-    setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(17.3);
     setEvapotranspirationGroundCoverParameter(0.408);
-    setGroundTemperatureModel("KusudaAchenbach");
+    
+    SiteGroundTemperatureUndisturbedKusudaAchenbach undisturbedGroundTemperatureModel(model);
+    setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
+  }
+
+  GroundHeatExchangerHorizontalTrench::GroundHeatExchangerHorizontalTrench(const Model& model, const ModelObject& undisturbedGroundTemperatureModel)
+    : StraightComponent(GroundHeatExchangerHorizontalTrench::iddObjectType(), model) {
+    OS_ASSERT(getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>());
+
+    setDesignFlowRate(0.004);
+    setTrenchLengthinPipeAxialDirection(75);
+    setNumberofTrenches(2);
+    setHorizontalSpacingBetweenPipes(2.0);
+    setPipeInnerDiameter(0.016);
+    setPipeOuterDiameter(0.02667);
+    setBurialDepth(1.25);
+    setSoilThermalConductivity(1.08);
+    setSoilDensity(962);
+    setSoilSpecificHeat(2576);
+    setPipeThermalConductivity(0.3895);
+    setPipeDensity(641);
+    setPipeSpecificHeat(2405);
+    setSoilMoistureContentPercent(30);
+    setSoilMoistureContentPercentatSaturation(50);
+    setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
+    setEvapotranspirationGroundCoverParameter(0.408);
   }
 
   IddObjectType GroundHeatExchangerHorizontalTrench::iddObjectType() {
@@ -448,6 +481,10 @@ namespace model {
     return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->evapotranspirationGroundCoverParameter();
   }
 
+  ModelObject GroundHeatExchangerHorizontalTrench::undisturbedGroundTemperatureModel() const {
+    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->undisturbedGroundTemperatureModel();
+  }
+
   bool GroundHeatExchangerHorizontalTrench::setDesignFlowRate(double designFlowRate) {
     return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setDesignFlowRate(designFlowRate);
   }
@@ -537,6 +574,10 @@ namespace model {
   bool GroundHeatExchangerHorizontalTrench::setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter) {
     return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setEvapotranspirationGroundCoverParameter(
       evapotranspirationGroundCoverParameter);
+  }
+
+  bool GroundHeatExchangerHorizontalTrench::setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel) {
+    return getImpl<detail::GroundHeatExchangerHorizontalTrench_Impl>()->setUndisturbedGroundTemperatureModel(undisturbedGroundTemperatureModel);
   }
 
   /// @cond

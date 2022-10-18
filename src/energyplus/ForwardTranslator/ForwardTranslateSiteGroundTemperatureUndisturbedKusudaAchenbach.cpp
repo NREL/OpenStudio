@@ -44,11 +44,11 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateSiteGroundTemperatureUndisturbedKusudaAchenbach(SiteGroundTemperatureUndisturbedKusudaAchenbach& modelObject) {
+  boost::optional<IdfObject>
+    ForwardTranslator::translateSiteGroundTemperatureUndisturbedKusudaAchenbach(SiteGroundTemperatureUndisturbedKusudaAchenbach& modelObject) {
     IdfObject idfObject(openstudio::IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach);
 
     m_idfObjects.push_back(idfObject);
-
 
     return idfObject;
   }
