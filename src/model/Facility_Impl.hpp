@@ -36,6 +36,7 @@
 #include "../utilities/data/CalibrationResult.hpp"
 #include "../utilities/data/EndUses.hpp"
 #include "../utilities/data/DataEnums.hpp"
+#include "../utilities/core/Deprecated.hpp"
 
 namespace openstudio {
 
@@ -173,21 +174,38 @@ namespace model {
       boost::optional<double> naturalGasGenerators() const;
       boost::optional<double> naturalGasTotalEndUses() const;
 
-      boost::optional<double> otherFuelHeating() const;
-      boost::optional<double> otherFuelCooling() const;
-      boost::optional<double> otherFuelInteriorLighting() const;
-      boost::optional<double> otherFuelExteriorLighting() const;
-      boost::optional<double> otherFuelInteriorEquipment() const;
-      boost::optional<double> otherFuelExteriorEquipment() const;
-      boost::optional<double> otherFuelFans() const;
-      boost::optional<double> otherFuelPumps() const;
-      boost::optional<double> otherFuelHeatRejection() const;
-      boost::optional<double> otherFuelHumidification() const;
-      boost::optional<double> otherFuelHeatRecovery() const;
-      boost::optional<double> otherFuelWaterSystems() const;
-      boost::optional<double> otherFuelRefrigeration() const;
-      boost::optional<double> otherFuelGenerators() const;
-      boost::optional<double> otherFuelTotalEndUses() const;
+      boost::optional<double> gasolineHeating() const;
+      boost::optional<double> gasolineCooling() const;
+      boost::optional<double> gasolineInteriorLighting() const;
+      boost::optional<double> gasolineExteriorLighting() const;
+      boost::optional<double> gasolineInteriorEquipment() const;
+      boost::optional<double> gasolineExteriorEquipment() const;
+      boost::optional<double> gasolineFans() const;
+      boost::optional<double> gasolinePumps() const;
+      boost::optional<double> gasolineHeatRejection() const;
+      boost::optional<double> gasolineHumidification() const;
+      boost::optional<double> gasolineHeatRecovery() const;
+      boost::optional<double> gasolineWaterSystems() const;
+      boost::optional<double> gasolineRefrigeration() const;
+      boost::optional<double> gasolineGenerators() const;
+      boost::optional<double> gasolineTotalEndUses() const;
+
+      // deprecated otherfuel / additionalfuel  
+      OS_DEPRECATED boost::optional<double> otherFuelHeating() const;
+      OS_DEPRECATED boost::optional<double> otherFuelCooling() const;
+      OS_DEPRECATED boost::optional<double> otherFuelInteriorLighting() const;
+      OS_DEPRECATED boost::optional<double> otherFuelExteriorLighting() const;
+      OS_DEPRECATED boost::optional<double> otherFuelInteriorEquipment() const;
+      OS_DEPRECATED boost::optional<double> otherFuelExteriorEquipment() const;
+      OS_DEPRECATED boost::optional<double> otherFuelFans() const;
+      OS_DEPRECATED boost::optional<double> otherFuelPumps() const;
+      OS_DEPRECATED boost::optional<double> otherFuelHeatRejection() const;
+      OS_DEPRECATED boost::optional<double> otherFuelHumidification() const;
+      OS_DEPRECATED boost::optional<double> otherFuelHeatRecovery() const;
+      OS_DEPRECATED boost::optional<double> otherFuelWaterSystems() const;
+      OS_DEPRECATED boost::optional<double> otherFuelRefrigeration() const;
+      OS_DEPRECATED boost::optional<double> otherFuelGenerators() const;
+      OS_DEPRECATED boost::optional<double> otherFuelTotalEndUses() const;
 
       boost::optional<double> districtCoolingHeating() const;
       boost::optional<double> districtCoolingCooling() const;

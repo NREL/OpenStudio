@@ -596,6 +596,128 @@ namespace model {
       return OptionalDouble();
     }
 
+    // Gasoline
+    OptionalDouble Facility_Impl::gasolineHeating() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineHeating();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineCooling() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineCooling();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineInteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineInteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineExteriorLighting() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineExteriorLighting();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineInteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineInteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineExteriorEquipment() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineExteriorEquipment();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineFans() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineFans();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolinePumps() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolinePumps();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineHeatRejection() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineHeatRejection();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineHumidification() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineHumidification();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineHeatRecovery() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineHeatRecovery();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineWaterSystems() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineWaterSystems();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineRefrigeration() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineRefrigeration();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineGenerators() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineGenerators();
+      }
+      return OptionalDouble();
+    }
+
+    OptionalDouble Facility_Impl::gasolineTotalEndUses() const {
+      OptionalSqlFile mySqlFile = model().sqlFile();
+      if (mySqlFile && mySqlFile->connectionOpen()) {
+        return mySqlFile->gasolineTotalEndUses();
+      }
+      return OptionalDouble();
+    }
+
+    // deprecated section
     OptionalDouble Facility_Impl::otherFuelHeating() const {
       OptionalSqlFile mySqlFile = model().sqlFile();
       if (mySqlFile && mySqlFile->connectionOpen()) {
@@ -715,6 +837,7 @@ namespace model {
       }
       return OptionalDouble();
     }
+    // end deprecated section
 
     OptionalDouble Facility_Impl::districtCoolingHeating() const {
       OptionalSqlFile mySqlFile = model().sqlFile();

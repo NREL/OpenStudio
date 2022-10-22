@@ -47,6 +47,7 @@
 #include "../core/Path.hpp"
 #include "../core/Logger.hpp"
 #include "../core/Optional.hpp"
+#include "../core/Deprecated.hpp"
 
 #include <boost/optional.hpp>
 
@@ -306,65 +307,556 @@ class UTILITIES_API SqlFile
   /// Requires EnergyPlus simulation output to calculate.
   boost::optional<double> naturalGasTotalEndUses() const;
 
+  /// Gasoline
+  /// Returns the energy used for heating from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineHeating() const;
+
+  /// Returns the energy used for cooling from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineCooling() const;
+
+  /// Returns the energy used for interior lighting from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineInteriorLighting() const;
+
+  /// Returns the energy used for exterior lighting from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineExteriorLighting() const;
+
+  /// Returns the energy used for interior equipment from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineInteriorEquipment() const;
+
+  /// Returns the energy used for exterior equipment from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineExteriorEquipment() const;
+
+  /// Returns the energy used for fans from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineFans() const;
+
+  /// Returns the energy used for pumps from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolinePumps() const;
+
+  /// Returns the energy used for heat rejection from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineHeatRejection() const;
+
+  /// Returns the energy used for humidification from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineHumidification() const;
+
+  /// Returns the energy used for heat recovery from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineHeatRecovery() const;
+
+  /// Returns the energy used for water systems from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineWaterSystems() const;
+
+  /// Returns the energy used for refrigeration from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineRefrigeration() const;
+
+  /// Returns the energy used for generators from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineGenerators() const;
+
+  /// Returns the energy used for all end uses from gasoline in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> gasolineTotalEndUses() const;
+
+  /// Diesel
+  /// Returns the energy used for heating from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselHeating() const;
+
+  /// Returns the energy used for cooling from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselCooling() const;
+
+  /// Returns the energy used for interior lighting from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselInteriorLighting() const;
+
+  /// Returns the energy used for exterior lighting from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselExteriorLighting() const;
+
+  /// Returns the energy used for interior equipment from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselInteriorEquipment() const;
+
+  /// Returns the energy used for exterior equipment from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselExteriorEquipment() const;
+
+  /// Returns the energy used for fans from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselFans() const;
+
+  /// Returns the energy used for pumps from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselPumps() const;
+
+  /// Returns the energy used for heat rejection from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselHeatRejection() const;
+
+  /// Returns the energy used for humidification from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselHumidification() const;
+
+  /// Returns the energy used for heat recovery from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselHeatRecovery() const;
+
+  /// Returns the energy used for water systems from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselWaterSystems() const;
+
+  /// Returns the energy used for refrigeration from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselRefrigeration() const;
+
+  /// Returns the energy used for generators from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselGenerators() const;
+
+  /// Returns the energy used for all end uses from diesel in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> dieselTotalEndUses() const;
+
+  /// Coal
+  /// Returns the energy used for heating from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalHeating() const;
+
+  /// Returns the energy used for cooling from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalCooling() const;
+
+  /// Returns the energy used for interior lighting from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalInteriorLighting() const;
+
+  /// Returns the energy used for exterior lighting from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalExteriorLighting() const;
+
+  /// Returns the energy used for interior equipment from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalInteriorEquipment() const;
+
+  /// Returns the energy used for exterior equipment from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalExteriorEquipment() const;
+
+  /// Returns the energy used for fans from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalFans() const;
+
+  /// Returns the energy used for pumps from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalPumps() const;
+
+  /// Returns the energy used for heat rejection from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalHeatRejection() const;
+
+  /// Returns the energy used for humidification from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalHumidification() const;
+
+  /// Returns the energy used for heat recovery from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalHeatRecovery() const;
+
+  /// Returns the energy used for water systems from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalWaterSystems() const;
+
+  /// Returns the energy used for refrigeration from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalRefrigeration() const;
+
+  /// Returns the energy used for generators from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalGenerators() const;
+
+  /// Returns the energy used for all end uses from coal in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> coalTotalEndUses() const;
+
+  /// Fuel Oil No 1
+  /// Returns the energy used for heating from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1Heating() const;
+
+  /// Returns the energy used for cooling from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1Cooling() const;
+
+  /// Returns the energy used for interior lighting from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1InteriorLighting() const;
+
+  /// Returns the energy used for exterior lighting from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1ExteriorLighting() const;
+
+  /// Returns the energy used for interior equipment from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1InteriorEquipment() const;
+
+  /// Returns the energy used for exterior equipment from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1ExteriorEquipment() const;
+
+  /// Returns the energy used for fans from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1Fans() const;
+
+  /// Returns the energy used for pumps from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1Pumps() const;
+
+  /// Returns the energy used for heat rejection from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1HeatRejection() const;
+
+  /// Returns the energy used for humidification from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1Humidification() const;
+
+  /// Returns the energy used for heat recovery from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1HeatRecovery() const;
+
+  /// Returns the energy used for water systems from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1WaterSystems() const;
+
+  /// Returns the energy used for refrigeration from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1Refrigeration() const;
+
+  /// Returns the energy used for generators from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1Generators() const;
+
+  /// Returns the energy used for all end uses from fuelOilNo1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo1TotalEndUses() const;
+
+  /// Fuel Oil No 2
+  /// Returns the energy used for heating from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2Heating() const;
+
+  /// Returns the energy used for cooling from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2Cooling() const;
+
+  /// Returns the energy used for interior lighting from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2InteriorLighting() const;
+
+  /// Returns the energy used for exterior lighting from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2ExteriorLighting() const;
+
+  /// Returns the energy used for interior equipment from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2InteriorEquipment() const;
+
+  /// Returns the energy used for exterior equipment from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2ExteriorEquipment() const;
+
+  /// Returns the energy used for fans from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2Fans() const;
+
+  /// Returns the energy used for pumps from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2Pumps() const;
+
+  /// Returns the energy used for heat rejection from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2HeatRejection() const;
+
+  /// Returns the energy used for humidification from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2Humidification() const;
+
+  /// Returns the energy used for heat recovery from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2HeatRecovery() const;
+
+  /// Returns the energy used for water systems from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2WaterSystems() const;
+
+  /// Returns the energy used for refrigeration from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2Refrigeration() const;
+
+  /// Returns the energy used for generators from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2Generators() const;
+
+  /// Returns the energy used for all end uses from fuelOilNo2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> fuelOilNo2TotalEndUses() const;
+
+  /// Propane
+  /// Returns the energy used for heating from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneHeating() const;
+
+  /// Returns the energy used for cooling from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneCooling() const;
+
+  /// Returns the energy used for interior lighting from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneInteriorLighting() const;
+
+  /// Returns the energy used for exterior lighting from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneExteriorLighting() const;
+
+  /// Returns the energy used for interior equipment from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneInteriorEquipment() const;
+
+  /// Returns the energy used for exterior equipment from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneExteriorEquipment() const;
+
+  /// Returns the energy used for fans from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneFans() const;
+
+  /// Returns the energy used for pumps from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propanePumps() const;
+
+  /// Returns the energy used for heat rejection from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneHeatRejection() const;
+
+  /// Returns the energy used for humidification from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneHumidification() const;
+
+  /// Returns the energy used for heat recovery from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneHeatRecovery() const;
+
+  /// Returns the energy used for water systems from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneWaterSystems() const;
+
+  /// Returns the energy used for refrigeration from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneRefrigeration() const;
+
+  /// Returns the energy used for generators from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneGenerators() const;
+
+  /// Returns the energy used for all end uses from propane in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> propaneTotalEndUses() const;
+
+  /// Other Fuel 1
+  /// Returns the energy used for heating from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1Heating() const;
+
+  /// Returns the energy used for cooling from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1Cooling() const;
+
+  /// Returns the energy used for interior lighting from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1InteriorLighting() const;
+
+  /// Returns the energy used for exterior lighting from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1ExteriorLighting() const;
+
+  /// Returns the energy used for interior equipment from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1InteriorEquipment() const;
+
+  /// Returns the energy used for exterior equipment from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1ExteriorEquipment() const;
+
+  /// Returns the energy used for fans from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1Fans() const;
+
+  /// Returns the energy used for pumps from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1Pumps() const;
+
+  /// Returns the energy used for heat rejection from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1HeatRejection() const;
+
+  /// Returns the energy used for humidification from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1Humidification() const;
+
+  /// Returns the energy used for heat recovery from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1HeatRecovery() const;
+
+  /// Returns the energy used for water systems from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1WaterSystems() const;
+
+  /// Returns the energy used for refrigeration from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1Refrigeration() const;
+
+  /// Returns the energy used for generators from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1Generators() const;
+
+  /// Returns the energy used for all end uses from otherFuel1 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel1TotalEndUses() const;
+
+  /// Other Fuel 2
+  /// Returns the energy used for heating from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2Heating() const;
+
+  /// Returns the energy used for cooling from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2Cooling() const;
+
+  /// Returns the energy used for interior lighting from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2InteriorLighting() const;
+
+  /// Returns the energy used for exterior lighting from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2ExteriorLighting() const;
+
+  /// Returns the energy used for interior equipment from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2InteriorEquipment() const;
+
+  /// Returns the energy used for exterior equipment from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2ExteriorEquipment() const;
+
+  /// Returns the energy used for fans from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2Fans() const;
+
+  /// Returns the energy used for pumps from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2Pumps() const;
+
+  /// Returns the energy used for heat rejection from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2HeatRejection() const;
+
+  /// Returns the energy used for humidification from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2Humidification() const;
+
+  /// Returns the energy used for heat recovery from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2HeatRecovery() const;
+
+  /// Returns the energy used for water systems from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2WaterSystems() const;
+
+  /// Returns the energy used for refrigeration from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2Refrigeration() const;
+
+  /// Returns the energy used for generators from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2Generators() const;
+
+  /// Returns the energy used for all end uses from otherFuel2 in gigajoules.
+  /// Requires EnergyPlus simulation output to calculate.
+  boost::optional<double> otherFuel2TotalEndUses() const;
+
+  // Deprecated Section
+
   /// Returns the energy used for heating from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelHeating() const;
+  OS_DEPRECATED boost::optional<double> otherFuelHeating() const;
 
   /// Returns the energy used for cooling from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelCooling() const;
+  OS_DEPRECATED boost::optional<double> otherFuelCooling() const;
 
   /// Returns the energy used for interior lighting from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelInteriorLighting() const;
+  OS_DEPRECATED boost::optional<double> otherFuelInteriorLighting() const;
 
   /// Returns the energy used for exterior lighting from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelExteriorLighting() const;
+  OS_DEPRECATED boost::optional<double> otherFuelExteriorLighting() const;
 
   /// Returns the energy used for interior equipment from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelInteriorEquipment() const;
+  OS_DEPRECATED boost::optional<double> otherFuelInteriorEquipment() const;
 
   /// Returns the energy used for exterior equipment from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelExteriorEquipment() const;
+  OS_DEPRECATED boost::optional<double> otherFuelExteriorEquipment() const;
 
   /// Returns the energy used for fans from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelFans() const;
+  OS_DEPRECATED boost::optional<double> otherFuelFans() const;
 
   /// Returns the energy used for pumps from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelPumps() const;
+  OS_DEPRECATED boost::optional<double> otherFuelPumps() const;
 
   /// Returns the energy used for heat rejection from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelHeatRejection() const;
+  OS_DEPRECATED boost::optional<double> otherFuelHeatRejection() const;
 
   /// Returns the energy used for humidification from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelHumidification() const;
+  OS_DEPRECATED boost::optional<double> otherFuelHumidification() const;
 
   /// Returns the energy used for heat recovery from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelHeatRecovery() const;
+  OS_DEPRECATED boost::optional<double> otherFuelHeatRecovery() const;
 
   /// Returns the energy used for water systems from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelWaterSystems() const;
+  OS_DEPRECATED boost::optional<double> otherFuelWaterSystems() const;
 
   /// Returns the energy used for refrigeration from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelRefrigeration() const;
+  OS_DEPRECATED boost::optional<double> otherFuelRefrigeration() const;
 
   /// Returns the energy used for generators from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelGenerators() const;
+  OS_DEPRECATED boost::optional<double> otherFuelGenerators() const;
 
   /// Returns the energy used for all end uses from other fuel in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.
-  boost::optional<double> otherFuelTotalEndUses() const;
+  OS_DEPRECATED boost::optional<double> otherFuelTotalEndUses() const;
+  // end Deprecated
 
   /// Returns the district cooling energy used for heating in gigajoules.
   /// Requires EnergyPlus simulation output to calculate.

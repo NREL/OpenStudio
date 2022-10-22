@@ -464,7 +464,978 @@ boost::optional<double> SqlFile::naturalGasTotalEndUses() const {
   }
 }
 
+// Gasoline
+boost::optional<double> SqlFile::gasolineHeating() const {
+  if (m_impl) {
+    return m_impl->gasolineHeating();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineCooling() const {
+  if (m_impl) {
+    return m_impl->gasolineCooling();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineInteriorLighting() const {
+  if (m_impl) {
+    return m_impl->gasolineInteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineExteriorLighting() const {
+  if (m_impl) {
+    return m_impl->gasolineExteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineInteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->gasolineInteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineExteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->gasolineExteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineFans() const {
+  if (m_impl) {
+    return m_impl->gasolineFans();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolinePumps() const {
+  if (m_impl) {
+    return m_impl->gasolinePumps();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineHeatRejection() const {
+  if (m_impl) {
+    return m_impl->gasolineHeatRejection();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineHumidification() const {
+  if (m_impl) {
+    return m_impl->gasolineHumidification();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineHeatRecovery() const {
+  if (m_impl) {
+    return m_impl->gasolineHeatRecovery();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineWaterSystems() const {
+  if (m_impl) {
+    return m_impl->gasolineWaterSystems();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineRefrigeration() const {
+  if (m_impl) {
+    return m_impl->gasolineRefrigeration();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineGenerators() const {
+  if (m_impl) {
+    return m_impl->gasolineGenerators();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::gasolineTotalEndUses() const {
+  if (m_impl) {
+    return m_impl->gasolineTotalEndUses();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+// Diesel
+boost::optional<double> SqlFile::dieselHeating() const {
+  if (m_impl) {
+    return m_impl->dieselHeating();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselCooling() const {
+  if (m_impl) {
+    return m_impl->dieselCooling();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselInteriorLighting() const {
+  if (m_impl) {
+    return m_impl->dieselInteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselExteriorLighting() const {
+  if (m_impl) {
+    return m_impl->dieselExteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselInteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->dieselInteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselExteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->dieselExteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselFans() const {
+  if (m_impl) {
+    return m_impl->dieselFans();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselPumps() const {
+  if (m_impl) {
+    return m_impl->dieselPumps();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselHeatRejection() const {
+  if (m_impl) {
+    return m_impl->dieselHeatRejection();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselHumidification() const {
+  if (m_impl) {
+    return m_impl->dieselHumidification();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselHeatRecovery() const {
+  if (m_impl) {
+    return m_impl->dieselHeatRecovery();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselWaterSystems() const {
+  if (m_impl) {
+    return m_impl->dieselWaterSystems();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselRefrigeration() const {
+  if (m_impl) {
+    return m_impl->dieselRefrigeration();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselGenerators() const {
+  if (m_impl) {
+    return m_impl->dieselGenerators();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::dieselTotalEndUses() const {
+  if (m_impl) {
+    return m_impl->dieselTotalEndUses();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+// Coal
+boost::optional<double> SqlFile::coalHeating() const {
+  if (m_impl) {
+    return m_impl->coalHeating();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalCooling() const {
+  if (m_impl) {
+    return m_impl->coalCooling();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalInteriorLighting() const {
+  if (m_impl) {
+    return m_impl->coalInteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalExteriorLighting() const {
+  if (m_impl) {
+    return m_impl->coalExteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalInteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->coalInteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalExteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->coalExteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalFans() const {
+  if (m_impl) {
+    return m_impl->coalFans();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalPumps() const {
+  if (m_impl) {
+    return m_impl->coalPumps();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalHeatRejection() const {
+  if (m_impl) {
+    return m_impl->coalHeatRejection();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalHumidification() const {
+  if (m_impl) {
+    return m_impl->coalHumidification();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalHeatRecovery() const {
+  if (m_impl) {
+    return m_impl->coalHeatRecovery();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalWaterSystems() const {
+  if (m_impl) {
+    return m_impl->coalWaterSystems();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalRefrigeration() const {
+  if (m_impl) {
+    return m_impl->coalRefrigeration();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalGenerators() const {
+  if (m_impl) {
+    return m_impl->coalGenerators();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::coalTotalEndUses() const {
+  if (m_impl) {
+    return m_impl->coalTotalEndUses();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+// Fuel Oil No 1
+boost::optional<double> SqlFile::fuelOilNo1Heating() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1Heating();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1Cooling() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1Cooling();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1InteriorLighting() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1InteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1ExteriorLighting() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1ExteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1InteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1InteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1ExteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1ExteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1Fans() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1Fans();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1Pumps() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1Pumps();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1HeatRejection() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1HeatRejection();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1Humidification() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1Humidification();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1HeatRecovery() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1HeatRecovery();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1WaterSystems() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1WaterSystems();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1Refrigeration() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1Refrigeration();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1Generators() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1Generators();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo1TotalEndUses() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo1TotalEndUses();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+// Fuel Oil No 2
+boost::optional<double> SqlFile::fuelOilNo2Heating() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2Heating();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2Cooling() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2Cooling();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2InteriorLighting() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2InteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2ExteriorLighting() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2ExteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2InteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2InteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2ExteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2ExteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2Fans() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2Fans();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2Pumps() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2Pumps();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2HeatRejection() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2HeatRejection();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2Humidification() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2Humidification();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2HeatRecovery() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2HeatRecovery();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2WaterSystems() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2WaterSystems();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2Refrigeration() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2Refrigeration();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2Generators() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2Generators();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::fuelOilNo2TotalEndUses() const {
+  if (m_impl) {
+    return m_impl->fuelOilNo2TotalEndUses();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+// Propane
+boost::optional<double> SqlFile::propaneHeating() const {
+  if (m_impl) {
+    return m_impl->propaneHeating();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneCooling() const {
+  if (m_impl) {
+    return m_impl->propaneCooling();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneInteriorLighting() const {
+  if (m_impl) {
+    return m_impl->propaneInteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneExteriorLighting() const {
+  if (m_impl) {
+    return m_impl->propaneExteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneInteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->propaneInteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneExteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->propaneExteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneFans() const {
+  if (m_impl) {
+    return m_impl->propaneFans();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propanePumps() const {
+  if (m_impl) {
+    return m_impl->propanePumps();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneHeatRejection() const {
+  if (m_impl) {
+    return m_impl->propaneHeatRejection();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneHumidification() const {
+  if (m_impl) {
+    return m_impl->propaneHumidification();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneHeatRecovery() const {
+  if (m_impl) {
+    return m_impl->propaneHeatRecovery();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneWaterSystems() const {
+  if (m_impl) {
+    return m_impl->propaneWaterSystems();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneRefrigeration() const {
+  if (m_impl) {
+    return m_impl->propaneRefrigeration();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneGenerators() const {
+  if (m_impl) {
+    return m_impl->propaneGenerators();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::propaneTotalEndUses() const {
+  if (m_impl) {
+    return m_impl->propaneTotalEndUses();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+// Other Fuel 1
+boost::optional<double> SqlFile::otherFuel1Heating() const {
+  if (m_impl) {
+    return m_impl->otherFuel1Heating();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1Cooling() const {
+  if (m_impl) {
+    return m_impl->otherFuel1Cooling();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1InteriorLighting() const {
+  if (m_impl) {
+    return m_impl->otherFuel1InteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1ExteriorLighting() const {
+  if (m_impl) {
+    return m_impl->otherFuel1ExteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1InteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->otherFuel1InteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1ExteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->otherFuel1ExteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1Fans() const {
+  if (m_impl) {
+    return m_impl->otherFuel1Fans();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1Pumps() const {
+  if (m_impl) {
+    return m_impl->otherFuel1Pumps();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1HeatRejection() const {
+  if (m_impl) {
+    return m_impl->otherFuel1HeatRejection();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1Humidification() const {
+  if (m_impl) {
+    return m_impl->otherFuel1Humidification();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1HeatRecovery() const {
+  if (m_impl) {
+    return m_impl->otherFuel1HeatRecovery();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1WaterSystems() const {
+  if (m_impl) {
+    return m_impl->otherFuel1WaterSystems();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1Refrigeration() const {
+  if (m_impl) {
+    return m_impl->otherFuel1Refrigeration();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1Generators() const {
+  if (m_impl) {
+    return m_impl->otherFuel1Generators();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel1TotalEndUses() const {
+  if (m_impl) {
+    return m_impl->otherFuel1TotalEndUses();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+// Other Fuel 2
+boost::optional<double> SqlFile::otherFuel2Heating() const {
+  if (m_impl) {
+    return m_impl->otherFuel2Heating();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2Cooling() const {
+  if (m_impl) {
+    return m_impl->otherFuel2Cooling();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2InteriorLighting() const {
+  if (m_impl) {
+    return m_impl->otherFuel2InteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2ExteriorLighting() const {
+  if (m_impl) {
+    return m_impl->otherFuel2ExteriorLighting();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2InteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->otherFuel2InteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2ExteriorEquipment() const {
+  if (m_impl) {
+    return m_impl->otherFuel2ExteriorEquipment();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2Fans() const {
+  if (m_impl) {
+    return m_impl->otherFuel2Fans();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2Pumps() const {
+  if (m_impl) {
+    return m_impl->otherFuel2Pumps();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2HeatRejection() const {
+  if (m_impl) {
+    return m_impl->otherFuel2HeatRejection();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2Humidification() const {
+  if (m_impl) {
+    return m_impl->otherFuel2Humidification();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2HeatRecovery() const {
+  if (m_impl) {
+    return m_impl->otherFuel2HeatRecovery();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2WaterSystems() const {
+  if (m_impl) {
+    return m_impl->otherFuel2WaterSystems();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2Refrigeration() const {
+  if (m_impl) {
+    return m_impl->otherFuel2Refrigeration();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2Generators() const {
+  if (m_impl) {
+    return m_impl->otherFuel2Generators();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+boost::optional<double> SqlFile::otherFuel2TotalEndUses() const {
+  if (m_impl) {
+    return m_impl->otherFuel2TotalEndUses();
+  } else {
+    return boost::optional<double>();
+  }
+}
+
+// Deprecation Section for "Other Fuel / Additional Fuel queries"
 boost::optional<double> SqlFile::otherFuelHeating() const {
+  LOG(Warn, "As of 3.5.0, otherFuelHeating is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelHeating();
   } else {
@@ -473,6 +1444,8 @@ boost::optional<double> SqlFile::otherFuelHeating() const {
 }
 
 boost::optional<double> SqlFile::otherFuelCooling() const {
+  LOG(Warn, "As of 3.5.0, otherFuelCooling is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelCooling();
   } else {
@@ -481,6 +1454,8 @@ boost::optional<double> SqlFile::otherFuelCooling() const {
 }
 
 boost::optional<double> SqlFile::otherFuelInteriorLighting() const {
+  LOG(Warn, "As of 3.5.0, otherFuelInteriorLighting is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelInteriorLighting();
   } else {
@@ -489,6 +1464,8 @@ boost::optional<double> SqlFile::otherFuelInteriorLighting() const {
 }
 
 boost::optional<double> SqlFile::otherFuelExteriorLighting() const {
+  LOG(Warn, "As of 3.5.0, otherFuelExteriorLighting is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelExteriorLighting();
   } else {
@@ -497,6 +1474,8 @@ boost::optional<double> SqlFile::otherFuelExteriorLighting() const {
 }
 
 boost::optional<double> SqlFile::otherFuelInteriorEquipment() const {
+  LOG(Warn, "As of 3.5.0, otherFuelInteriorEquipment is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelInteriorEquipment();
   } else {
@@ -505,6 +1484,8 @@ boost::optional<double> SqlFile::otherFuelInteriorEquipment() const {
 }
 
 boost::optional<double> SqlFile::otherFuelExteriorEquipment() const {
+  LOG(Warn, "As of 3.5.0, otherFuelExteriorEquipment is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelExteriorEquipment();
   } else {
@@ -513,6 +1494,8 @@ boost::optional<double> SqlFile::otherFuelExteriorEquipment() const {
 }
 
 boost::optional<double> SqlFile::otherFuelFans() const {
+  LOG(Warn, "As of 3.5.0, otherFuelFans is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelFans();
   } else {
@@ -521,6 +1504,8 @@ boost::optional<double> SqlFile::otherFuelFans() const {
 }
 
 boost::optional<double> SqlFile::otherFuelPumps() const {
+  LOG(Warn, "As of 3.5.0, otherFuelPumps is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelPumps();
   } else {
@@ -529,6 +1514,8 @@ boost::optional<double> SqlFile::otherFuelPumps() const {
 }
 
 boost::optional<double> SqlFile::otherFuelHeatRejection() const {
+  LOG(Warn, "As of 3.5.0, otherFuelHeatRejection is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelHeatRejection();
   } else {
@@ -537,6 +1524,8 @@ boost::optional<double> SqlFile::otherFuelHeatRejection() const {
 }
 
 boost::optional<double> SqlFile::otherFuelHumidification() const {
+  LOG(Warn, "As of 3.5.0, otherFuelHumidification is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelHumidification();
   } else {
@@ -545,6 +1534,8 @@ boost::optional<double> SqlFile::otherFuelHumidification() const {
 }
 
 boost::optional<double> SqlFile::otherFuelHeatRecovery() const {
+  LOG(Warn, "As of 3.5.0, otherFuelHeatRecovery is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelHeatRecovery();
   } else {
@@ -553,6 +1544,8 @@ boost::optional<double> SqlFile::otherFuelHeatRecovery() const {
 }
 
 boost::optional<double> SqlFile::otherFuelWaterSystems() const {
+  LOG(Warn, "As of 3.5.0, otherFuelWaterSystems is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelWaterSystems();
   } else {
@@ -561,6 +1554,8 @@ boost::optional<double> SqlFile::otherFuelWaterSystems() const {
 }
 
 boost::optional<double> SqlFile::otherFuelRefrigeration() const {
+  LOG(Warn, "As of 3.5.0, otherFuelRefrigeration is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelRefrigeration();
   } else {
@@ -569,6 +1564,8 @@ boost::optional<double> SqlFile::otherFuelRefrigeration() const {
 }
 
 boost::optional<double> SqlFile::otherFuelGenerators() const {
+  LOG(Warn, "As of 3.5.0, otherFuelGenerators is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelGenerators();
   } else {
@@ -577,12 +1574,15 @@ boost::optional<double> SqlFile::otherFuelGenerators() const {
 }
 
 boost::optional<double> SqlFile::otherFuelTotalEndUses() const {
+  LOG(Warn, "As of 3.5.0, otherFuelTotalEndUses is deprecated. Use the specific fuel queries instead. This method will be "
+              "removed within three releases.");
   if (m_impl) {
     return m_impl->otherFuelTotalEndUses();
   } else {
     return boost::optional<double>();
   }
 }
+// end Deprecation Section
 
 boost::optional<double> SqlFile::districtCoolingHeating() const {
   if (m_impl) {
