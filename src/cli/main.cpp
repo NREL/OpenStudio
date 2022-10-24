@@ -25,11 +25,15 @@ int main(int argc, char* argv[]) {
 
   int result = 0;
 
-  // ScriptEngineInstance will delay load the engines
-  openstudio::ScriptEngineInstance rubyEngine("rubyengine", argc - 1, argv + 1);
-  openstudio::ScriptEngineInstance pythonEngine("pythonengine", argc - 1, argv + 1);
+  std::vector<std::string> args(argv, argv + argc);
+  // erase the first element
+  args.erase(args.begin());
 
-  if ((argc > 1) && (std::string_view(argv[1]) == "labs")) {
+  // ScriptEngineInstance will delay load the engines
+  openstudio::ScriptEngineInstance rubyEngine("rubyengine", args);
+  openstudio::ScriptEngineInstance pythonEngine("pythonengine", args);
+
+  if (!args.empty() && (std::string_view(args[0]) == "labs")) {
     CLI::App app{"openstudio"};
 
     app.get_formatter()->column_width(35);

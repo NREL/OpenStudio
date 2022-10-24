@@ -104,7 +104,7 @@ class ScriptEngine
 class ScriptEngineInstance
 {
  public:
-  ScriptEngineInstance(std::string_view libraryBaseName, int argc, char* argv[]) : libraryName(libraryBaseName), args(argv, argv + argc) {}
+  ScriptEngineInstance(std::string_view libraryBaseName, std::vector<std::string> t_args) : libraryName(libraryBaseName), args(std::move(t_args)) {}
 
   ScriptEngineInstance(const ScriptEngineInstance&) = delete;
   ScriptEngineInstance(ScriptEngineInstance&&) = delete;
