@@ -174,8 +174,7 @@ int main(int argc, char* argv[]) {
       updateCommand->add_option("path", updateOsmPath, "Path to OSM or directory containing osms")->required(true);
 
       updateCommand->callback([&keep, &updateOsmPath] {
-        bool result = openstudio::cli::runModelUpdateCommand(updateOsmPath, keep);
-        if (!result) {
+        if (!openstudio::cli::runModelUpdateCommand(updateOsmPath, keep)) {
           throw std::runtime_error("Failed to update some models");
         }
       });
@@ -206,19 +205,19 @@ int main(int argc, char* argv[]) {
     CLI11_PARSE(app, argc, argv);
 
     if (*execRubyOption) {
-      fmt::print("--execute Flag received {} times.\n", execRubyOption->count());
+      //  fmt::print("--execute Flag received {} times.\n", execRubyOption->count());
       runSetupEmbeddedGems();
       rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
       for (auto& cmd : executeRubyCmds) {
-        fmt::print("{}\n", cmd);
+        // fmt::print("{}\n", cmd);
         rubyEngine->exec(cmd);
       }
     }
     if (*execPythonOption) {
-      fmt::print("--pyexecute Flag received {} times.\n", execPythonOption->count());
+      // fmt::print("--pyexecute Flag received {} times.\n", execPythonOption->count());
       runSetupPythonPath();
       for (auto& cmd : executePythonCmds) {
-        fmt::print("{}\n", cmd);
+        // fmt::print("{}\n", cmd);
         pythonEngine->exec(cmd);
       }
     }
