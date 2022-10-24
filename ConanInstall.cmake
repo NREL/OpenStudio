@@ -177,6 +177,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
     "geographiclib/1.52#76536a9315a003ef3511919310b2fe37"
     "swig/4.0.2#9fcccb1e39eed9acd53a4363d8129be5"
     "tinygltf/2.5.0#c8b2aca9505e86312bb42aa0e1c639ec"
+    "cli11/2.2.0#33cd38722fa134b15ae308dfb4e6c942"
     ${CONAN_GTEST}
     ${CONAN_BENCHMARK}
     # Override to avoid dependency mismatches
@@ -210,7 +211,7 @@ if(NOT CONAN_OPENSTUDIO_ALREADY_RUN)
   # Loads the conanbuildinfo.cmake / conanbuildinfo_multi.cmake
   conan_load_buildinfo()
   # conan_basic_setup in the conanbuildinfo.cmake. TARGETS => set cmake targets, NO_OUTPUT_DIRS => Don't modify the BIN / LIB folders etc
-  conan_basic_setup(TARGETS NO_OUTPUT_DIRS)
+  conan_basic_setup(TARGETS NO_OUTPUT_DIRS KEEP_RPATHS)
 
   set(CONAN_OPENSTUDIO_ALREADY_RUN TRUE)
 

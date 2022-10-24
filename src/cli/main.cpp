@@ -1,611 +1,238 @@
-/***********************************************************************************************************************
-*  OpenStudio(R), Copyright (c) 2008-2022, Alliance for Sustainable Energy, LLC, and other contributors. All rights reserved.
-*
-*  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-*  following conditions are met:
-*
-*  (1) Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-*  disclaimer.
-*
-*  (2) Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following
-*  disclaimer in the documentation and/or other materials provided with the distribution.
-*
-*  (3) Neither the name of the copyright holder nor the names of any contributors may be used to endorse or promote products
-*  derived from this software without specific prior written permission from the respective party.
-*
-*  (4) Other than as required in clauses (1) and (2), distributions in any form of modifications or other derivative works
-*  may not use the "OpenStudio" trademark, "OS", "os", or any other confusingly similar designation without specific prior
-*  written permission from Alliance for Sustainable Energy, LLC.
-*
-*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER(S) AND ANY CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-*  INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-*  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER(S), ANY CONTRIBUTORS, THE UNITED STATES GOVERNMENT, OR THE UNITED
-*  STATES DEPARTMENT OF ENERGY, NOR ANY OF THEIR EMPLOYEES, BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-*  EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-*  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-*  STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
-*  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-***********************************************************************************************************************/
+#include "RubyCLI.hpp"
+#include "UpdateCommand.hpp"
+#include "../scriptengine/ScriptEngine.hpp"
+#include "../workflow/OSWorkflow.hpp"
+#include "../utilities/core/Logger.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
 
-#include "RubyInterpreter.hpp"
-#include "GC_Value.hpp"
-#include "InitMacros.hxx"
-#include "../../ruby/init_openstudio.hpp"
-#include <embedded_files.hxx>
+#include "RunCommand.hpp"
+#include "MeasureUpdateCommand.hpp"
 
-#include <iostream>
+#include <OpenStudio.hxx>
 
-#ifndef _MSC_VER
-#  include <dlfcn.h>
-#  include <dirent.h>
-#else
-#  include <windows.h>
-#  pragma warning(disable : 4930)
-#  pragma warning(disable : 4101)
-#endif
+#include <fmt/format.h>
+#include <string_view>
 
-extern "C"
-{
-  void Init_EmbeddedScripting(void);
-  INIT_DECLARATIONS;
-
-  void Init_encdb();
-
-  //void Init_ascii(); // this is not included in libenc
-  void Init_big5();
-  void Init_cesu_8();
-  void Init_cp949();
-  void Init_emacs_mule();
-  void Init_euc_jp();
-  void Init_euc_kr();
-  void Init_euc_tw();
-  void Init_gb18030();
-  void Init_gb2312();
-  void Init_gbk();
-  void Init_iso_8859_1();
-  void Init_iso_8859_10();
-  void Init_iso_8859_11();
-  void Init_iso_8859_13();
-  void Init_iso_8859_14();
-  void Init_iso_8859_15();
-  void Init_iso_8859_16();
-  void Init_iso_8859_2();
-  void Init_iso_8859_3();
-  void Init_iso_8859_4();
-  void Init_iso_8859_5();
-  void Init_iso_8859_6();
-  void Init_iso_8859_7();
-  void Init_iso_8859_8();
-  void Init_iso_8859_9();
-  void Init_koi8_r();
-  void Init_koi8_u();
-  void Init_shift_jis();
-  //void Init_unicode(); // this is not included in libenc
-  //void Init_us_ascii(); // this is not included in libenc
-  void Init_utf_16be();
-  void Init_utf_16le();
-  void Init_utf_32be();
-  void Init_utf_32le();
-  //void Init_utf_8(); // this is not included in libenc
-  void Init_windows_1250();
-  void Init_windows_1251();
-  void Init_windows_1252();
-  void Init_windows_1253();
-  void Init_windows_1254();
-  void Init_windows_1257();
-  void Init_windows_31j();
-
-  void Init_transdb();
-
-  void Init_trans_big5();
-  void Init_trans_cesu_8();
-  void Init_trans_chinese();
-  void Init_trans_ebcdic();
-  void Init_trans_emoji();
-  void Init_trans_emoji_iso2022_kddi();
-  void Init_trans_emoji_sjis_docomo();
-  void Init_trans_emoji_sjis_kddi();
-  void Init_trans_emoji_sjis_softbank();
-  void Init_trans_escape();
-  void Init_trans_gb18030();
-  void Init_trans_gbk();
-  void Init_trans_iso2022();
-  void Init_trans_japanese();
-  void Init_trans_japanese_euc();
-  void Init_trans_japanese_sjis();
-  void Init_trans_korean();
-  void Init_trans_single_byte();
-  void Init_trans_utf8_mac();
-  void Init_trans_utf_16_32();
-
-  void Init_bigdecimal();
-  void Init_bigdecimal(void);
-  void Init_continuation(void);
-  void Init_coverage(void);
-  void Init_cparse(void);
-  void Init_date_core(void);
-  void Init_digest(void);
-  void Init_escape(void);
-  void Init_etc(void);
-  void Init_fcntl(void);
-  void Init_fiber(void);
-  void Init_fiddle(void);
-  void Init_generator(void);
-  void Init_md5(void);
-  void Init_monitor(void);
-  void Init_nkf(void);
-  void Init_nonblock(void);
-  void Init_objspace(void);
-  void Init_parser(void);
-  void Init_pathname(void);
-  void Init_psych(void);
-  void Init_ripper(void);
-  void Init_rmd160(void);
-  void Init_sdbm(void);
-  void Init_sha1(void);
-  void Init_sha2(void);
-  void Init_sizeof(void);
-  void Init_socket(void);
-  void Init_stringio(void);
-  void Init_strscan(void);
-  void Init_wait(void);
-  void Init_zlib(void);
-
-  void Init_openssl(void);
-  void Init_ruby_description(void);
-
-#ifndef _WIN32
-  void Init_console(void);
-  void Init_dbm(void);
-  void Init_gdbm(void);
-  void Init_pty(void);
-  void Init_readline(void);
-  void Init_syslog(void);
-#endif
-
-  VALUE init_rest_of_openstudio(...) {
-    init_openstudio_internal_extended();
-    return Qtrue;
-  }
-}
-
-std::vector<std::string> paths;
-static RubyInterpreter rubyInterpreter(paths);  //(paths);
+#include <CLI/CLI.hpp>
 
 int main(int argc, char* argv[]) {
-  ruby_sysinit(&argc, &argv);
-  {
-    RUBY_INIT_STACK;
-    ruby_init();
 
-    swig::GC_VALUE::hash_id = rb_intern("hash");
-    swig::GC_VALUE::lt_id = rb_intern("<");
-    swig::GC_VALUE::gt_id = rb_intern(">");
-    swig::GC_VALUE::eq_id = rb_intern("==");
-    swig::GC_VALUE::le_id = rb_intern("<=");
-    swig::GC_VALUE::ge_id = rb_intern(">=");
+  constexpr auto rubySpecificOptionsGroupName = "Ruby Options";
+  constexpr auto pythonSpecificOptionsGroupName = "Python Options";
 
-    swig::GC_VALUE::pos_id = rb_intern("+@");
-    swig::GC_VALUE::neg_id = rb_intern("-@");
-    swig::GC_VALUE::inv_id = rb_intern("~");
+  // constexpr auto executeGroupName = "Script Execution";
+  constexpr auto versionGroupname = "Version Info";
 
-    swig::GC_VALUE::add_id = rb_intern("+");
-    swig::GC_VALUE::sub_id = rb_intern("-");
-    swig::GC_VALUE::mul_id = rb_intern("*");
-    swig::GC_VALUE::div_id = rb_intern("/");
-    swig::GC_VALUE::mod_id = rb_intern("%");
+  int result = 0;
 
-    swig::GC_VALUE::and_id = rb_intern("&");
-    swig::GC_VALUE::or_id = rb_intern("|");
-    swig::GC_VALUE::xor_id = rb_intern("^");
+  // ScriptEngineInstance will delay load the engines
+  openstudio::ScriptEngineInstance rubyEngine("rubyengine", argc - 1, argv + 1);
+  openstudio::ScriptEngineInstance pythonEngine("pythonengine", argc - 1, argv + 1);
 
-    swig::GC_VALUE::lshift_id = rb_intern("<<");
-    swig::GC_VALUE::rshift_id = rb_intern(">>");
+  if ((argc > 1) && (std::string_view(argv[1]) == "labs")) {
+    CLI::App app{"openstudio"};
 
-    INIT_CALLS;
+    app.get_formatter()->column_width(35);
 
-    // in case any further init methods try to require files, init this first
-    Init_EmbeddedScripting();
+    auto* const experimentalApp = app.add_subcommand("labs");
 
-    // Need embedded_help for requiring files out of the embedded system
-    auto embedded_extensions_string = embedded_files::getFileAsString(":/embedded_help.rb");
+    experimentalApp->add_flag_function(
+      "--verbose",
+      [](auto count) {
+        if (count == 1) {
+          fmt::print("Setting log Level to Debug\n");
+          openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Debug);
+        } else if (count == 2) {
+          fmt::print("Setting log Level to Trace\n");
+          openstudio::Logger::instance().standardOutLogger().setLogLevel(LogLevel::Trace);
+        }
+      },
+      "Print the full log to STDOUT");
 
-    try {
-      rubyInterpreter.evalString(embedded_extensions_string);
-    } catch (const std::exception& e) {
-      rubyInterpreter.evalString(R"(STDOUT.flush)");
-      std::cout << "Exception in embedded_help: " << e.what() << std::endl;  // endl will flush
-      return ruby_cleanup(1);
-    } catch (...) {
-      rubyInterpreter.evalString(R"(STDOUT.flush)");
-      std::cout << "Unknown Exception in embedded_help" << std::endl;  // endl will flush
-      return ruby_cleanup(1);
+    std::vector<std::string> executeRubyCmds;
+    CLI::Option* execRubyOption = experimentalApp
+                                    ->add_option("-e,--execute", executeRubyCmds,
+                                                 "Execute one line of Ruby script (may be used more than once). Returns after executing commands.")
+                                    ->option_text("CMD");
+
+    std::vector<std::string> executePythonCmds;
+    CLI::Option* execPythonOption =
+      experimentalApp
+        ->add_option("-c,--pyexecute", executePythonCmds,
+                     "Execute one line of Python script (may be used more than once). Returns after executing commands.")
+        ->option_text("CMD");
+
+    // ========================== R U B Y    O P T I O N S ==========================
+    std::vector<openstudio::path> includeDirs;
+    experimentalApp
+      ->add_option("-I,--include", includeDirs, "Add additional directory to add to front of Ruby $LOAD_PATH (may be used more than once)")
+      ->option_text("DIR")
+      ->group(rubySpecificOptionsGroupName);
+
+    std::vector<openstudio::path> gemPathDirs;
+    experimentalApp
+      ->add_option("--gem_path", gemPathDirs,
+                   "Add additional directory to add to front of GEM_PATH environment variable (may be used more than once)")
+      ->option_text("DIR")
+      ->group(rubySpecificOptionsGroupName);
+
+    openstudio::path gemHomeDir;
+    experimentalApp->add_option("--gem_home", gemHomeDir, "Set GEM_HOME environment variable")
+      ->option_text("DIR")
+      ->group(rubySpecificOptionsGroupName);
+
+    openstudio::path bundleGemFilePath;
+    experimentalApp->add_option("--bundle", bundleGemFilePath, "Use bundler for GEMFILE")
+      ->option_text("GEMFILE")
+      ->group(rubySpecificOptionsGroupName);
+
+    openstudio::path bundleGemDirPath;
+    experimentalApp->add_option("--bundle_path", bundleGemDirPath, "Use bundler installed gems in BUNDLE_PATH")
+      ->option_text("BUNDLE_PATH")
+      ->group(rubySpecificOptionsGroupName);
+
+    // std::vector<std::string>
+    std::string bundleWithoutGroups;
+    experimentalApp
+      ->add_option(
+        "--bundle_without", bundleWithoutGroups,
+        "Space separated list of groups for bundler to exclude in WITHOUT_GROUPS.  Surround multiple groups with quotes like \"test development\"")
+      ->option_text("WITHOUT_GROUPS")
+      ->group(rubySpecificOptionsGroupName);  // ->delimiter(' ');
+
+    std::function<void()> runSetupEmbeddedGems = [&rubyEngine, &includeDirs, &gemPathDirs, &gemHomeDir, &bundleGemFilePath, &bundleGemDirPath,
+                                                  &bundleWithoutGroups]() {
+      rubyEngine->setupEmbeddedGems(includeDirs, gemPathDirs, gemHomeDir, bundleGemFilePath, bundleGemDirPath, bundleWithoutGroups);
+    };
+
+    // ========================== P Y T H O N    O P T I O N S ==========================
+
+    std::vector<openstudio::path> pythonPathDirs;
+    experimentalApp
+      ->add_option("--python_path", pythonPathDirs,
+                   "Add additional directory to add to front of PYTHONPATH environment variable (may be used more than once)")
+      ->option_text("DIR")
+      ->group(pythonSpecificOptionsGroupName);
+
+    openstudio::path pythonHomeDir;
+    experimentalApp->add_option("--python_home", pythonHomeDir, "Set PYTHONHOME environment variable")
+      ->option_text("DIR")
+      ->group(pythonSpecificOptionsGroupName);
+
+    std::function<void()> runSetupPythonPath = [&pythonEngine, &pythonPathDirs, &pythonHomeDir]() {
+      pythonEngine->setupPythonPath(pythonPathDirs, pythonHomeDir);
+    };
+
+    {
+      auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
+      openstudio::filesystem::path rubyScriptPath;
+      execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true);
+      std::vector<std::string> executeRubyScriptCommandArgs;
+      execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
+        ->required(false)
+        ->option_text("args");
+      execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &executeRubyScriptCommandArgs, &runSetupEmbeddedGems] {
+        runSetupEmbeddedGems();
+        openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, executeRubyScriptCommandArgs);
+      });
     }
 
-    //// encodings
-    /// Get the symbols from: `DUMPBIN /ARCHIVEMEMBERS  C:\Users\julien\.conan\data\openstudio_ruby\2.7.2\nrel\testing\package\2fa339f0e9f8e459bd56b19a37be69734f2745f4\lib\enc\libenc.lib`
-    Init_encdb();
-    rb_provide("enc/encdb.so");
-    //Init_ascii();
-    //rb_provide("enc/ascii.so");
-    Init_big5();
-    rb_provide("enc/big5.so");
-    Init_cesu_8();
-    rb_provide("enc/cesu_8.so");
-    Init_cp949();
-    rb_provide("enc/cp949.so");
-    Init_emacs_mule();
-    rb_provide("enc/emacs_mule.so");
-    Init_euc_jp();
-    rb_provide("enc/euc_jp.so");
-    Init_euc_kr();
-    rb_provide("enc/euc_kr.so");
-    Init_euc_tw();
-    rb_provide("enc/euc_tw.so");
-    Init_gb18030();
-    rb_provide("enc/gb18030.so");
-    Init_gb2312();
-    rb_provide("enc/gb2312.so");
-    Init_gbk();
-    rb_provide("enc/gbk.so");
-    Init_iso_8859_1();
-    rb_provide("enc/iso_8859_1.so");
-    Init_iso_8859_10();
-    rb_provide("enc/iso_8859_10.so");
-    Init_iso_8859_11();
-    rb_provide("enc/iso_8859_11.so");
-    Init_iso_8859_13();
-    rb_provide("enc/iso_8859_13.so");
-    Init_iso_8859_14();
-    rb_provide("enc/iso_8859_14.so");
-    Init_iso_8859_15();
-    rb_provide("enc/iso_8859_15.so");
-    Init_iso_8859_16();
-    rb_provide("enc/iso_8859_16.so");
-    Init_iso_8859_2();
-    rb_provide("enc/iso_8859_2.so");
-    Init_iso_8859_3();
-    rb_provide("enc/iso_8859_3.so");
-    Init_iso_8859_4();
-    rb_provide("enc/iso_8859_4.so");
-    Init_iso_8859_5();
-    rb_provide("enc/iso_8859_5.so");
-    Init_iso_8859_6();
-    rb_provide("enc/iso_8859_6.so");
-    Init_iso_8859_7();
-    rb_provide("enc/iso_8859_7.so");
-    Init_iso_8859_8();
-    rb_provide("enc/iso_8859_8.so");
-    Init_iso_8859_9();
-    rb_provide("enc/iso_8859_9.so");
-    Init_koi8_r();
-    rb_provide("enc/koi8_r.so");
-    Init_koi8_u();
-    rb_provide("enc/koi8_u.so");
-    Init_shift_jis();
-    rb_provide("enc/shift_jis.so");
-    //Init_unicode();
-    //rb_provide("enc/unicode.so");
-    //Init_us_ascii();
-    //rb_provide("enc/us_ascii.so");
-    Init_utf_16be();
-    rb_provide("enc/utf_16be.so");
-    Init_utf_16le();
-    rb_provide("enc/utf_16le.so");
-    Init_utf_32be();
-    rb_provide("enc/utf_32be.so");
-    Init_utf_32le();
-    rb_provide("enc/utf_32le.so");
-    //Init_utf_8();
-    //rb_provide("enc/utf_8.so");
-    Init_windows_1250();
-    rb_provide("enc/windows_1250.so");
-    Init_windows_1251();
-    rb_provide("enc/windows_1251.so");
-    Init_windows_1252();
-    rb_provide("enc/windows_1252.so");
-    Init_windows_1253();
-    rb_provide("enc/windows_1253.so");
-    Init_windows_1254();
-    rb_provide("enc/windows_1254.so");
-    Init_windows_1257();
-    rb_provide("enc/windows_1257.so");
-    Init_windows_31j();
-    rb_provide("enc/windows_31j.so");
-
-    /// Get the symbols from: `DUMPBIN /ARCHIVEMEMBERS  C:\Users\julien\.conan\data\openstudio_ruby\2.7.2\nrel\testing\package\2fa339f0e9f8e459bd56b19a37be69734f2745f4\lib\enc\libtrans.lib`
-    Init_transdb();
-    rb_provide("enc/trans/transdb.so");
-
-    //Init_trans_big5();
-    //rb_provide("enc/trans/big5.so");
-    Init_trans_big5();
-    rb_provide("enc/trans/big5.so");
-
-    Init_trans_cesu_8();
-    rb_provide("enc/trans/cesu_8.so");
-
-    Init_trans_chinese();
-    rb_provide("enc/trans/chinese.so");
-
-    Init_trans_ebcdic();
-    rb_provide("enc/trans/ebcdic.so");
-
-    Init_trans_emoji();
-    rb_provide("enc/trans/emoji.so");
-
-    Init_trans_emoji_iso2022_kddi();
-    rb_provide("enc/trans/emoji_iso2022_kddi.so");
-
-    Init_trans_emoji_sjis_docomo();
-    rb_provide("enc/trans/emoji_sjis_docomo.so");
-
-    Init_trans_emoji_sjis_kddi();
-    rb_provide("enc/trans/emoji_sjis_kddi.so");
-
-    Init_trans_emoji_sjis_softbank();
-    rb_provide("enc/trans/emoji_sjis_softbank.so");
-
-    Init_trans_escape();
-    rb_provide("enc/trans/escape.so");
-
-    Init_trans_gb18030();
-    rb_provide("enc/trans/gb18030.so");
-
-    Init_trans_gbk();
-    rb_provide("enc/trans/gbk.so");
-
-    Init_trans_iso2022();
-    rb_provide("enc/trans/iso2022.so");
-
-    Init_trans_japanese();
-    rb_provide("enc/trans/japanese.so");
-
-    Init_trans_japanese_euc();
-    rb_provide("enc/trans/japanese_euc.so");
-
-    Init_trans_japanese_sjis();
-    rb_provide("enc/trans/japanese_sjis.so");
-
-    Init_trans_korean();
-    rb_provide("enc/trans/korean.so");
-
-    Init_trans_single_byte();
-    rb_provide("enc/trans/single_byte.so");
-
-    Init_trans_utf8_mac();
-    rb_provide("enc/trans/utf8_mac.so");
-
-    Init_trans_utf_16_32();
-    rb_provide("enc/trans/utf_16_32.so");
-
-    Init_bigdecimal();
-    rb_provide("bigdecimal");
-    rb_provide("bigdecimal.so");
-
-    Init_continuation();
-    rb_provide("continuation");
-    rb_provide("continuation.so");
-
-    Init_coverage();
-    rb_provide("coverage");
-    rb_provide("coverage.so");
-
-    Init_cparse();
-    rb_provide("cparse");
-    rb_provide("racc/cparse");
-    rb_provide("cparse.so");
-    rb_provide("racc/cparse.so");
-
-    Init_date_core();
-    rb_provide("date_core");
-    rb_provide("date_core.so");
-
-    Init_digest();
-    rb_provide("digest");
-    rb_provide("digest.so");
-
-    Init_escape();
-    rb_provide("escape");
-    rb_provide("escape.so");
-
-    Init_etc();
-    rb_provide("etc");
-    rb_provide("etc.so");
-
-    Init_fcntl();
-    rb_provide("fcntl");
-    rb_provide("fcntl.so");
-
-    Init_fiber();
-    rb_provide("fiber");
-    rb_provide("fiber.so");
-
-    Init_fiddle();
-    rb_provide("fiddle");
-    rb_provide("fiddle.so");
-
-    Init_generator();
-    rb_provide("json/ext/generator");
-    rb_provide("json/ext/generator.so");
-
-    Init_md5();
-    rb_provide("md5");
-    rb_provide("digest/md5");
-    rb_provide("md5.so");
-    rb_provide("digest/md5.so");
-
-    Init_monitor();
-    rb_provide("monitor");
-    rb_provide("monitor.so");
-
-    Init_nkf();
-    rb_provide("nkf");
-    rb_provide("nkf.so");
-
-    Init_nonblock();
-    rb_provide("nonblock");
-    rb_provide("nonblock.so");
-    rb_provide("io/nonblock");
-    rb_provide("io/nonblock.so");
-
-    Init_ruby_description();
-
-    Init_objspace();
-    rb_provide("objspace");
-    rb_provide("objspace.so");
-
-    Init_parser();
-    rb_provide("json/ext/parser");
-    rb_provide("json/ext/parser.so");
-
-    Init_pathname();
-    rb_provide("pathname");
-    rb_provide("pathname.so");
-
-    Init_psych();
-    rb_provide("psych");
-    rb_provide("psych.so");
-
-    Init_ripper();
-    rb_provide("ripper");
-    rb_provide("ripper.so");
-
-    Init_rmd160();
-    rb_provide("rmd160");
-    rb_provide("digest/rmd160");
-    rb_provide("rmd160.so");
-    rb_provide("digest/rmd160.so");
-
-    Init_sdbm();
-    rb_provide("sdbm");
-    rb_provide("sdbm.so");
-
-    Init_sha1();
-    rb_provide("sha1");
-    rb_provide("digest/sha1");
-    rb_provide("sha1.so");
-    rb_provide("digest/sha1.so");
-
-    Init_sha2();
-    rb_provide("sha2");
-    rb_provide("digest/sha2");
-    rb_provide("sha2.so");
-    rb_provide("digest/sha2.so");
-
-    Init_sizeof();
-    rb_provide("sizeof");
-    rb_provide("sizeof.so");
-
-    Init_socket();
-    rb_provide("socket");
-    rb_provide("socket.so");
-
-    Init_stringio();
-    rb_provide("stringio");
-    rb_provide("stringio.so");
-
-    Init_strscan();
-    rb_provide("strscan");
-    rb_provide("strscan.so");
-
-    Init_wait();
-    rb_provide("wait");
-    rb_provide("io/wait");
-    rb_provide("wait.so");
-    rb_provide("io/wait.so");
-
-    Init_zlib();
-    rb_provide("zlib");
-    rb_provide("zlib.so");
-
-    Init_openssl();
-    rb_provide("openssl");
-    rb_provide("openssl.so");
-
-    Init_nonblock();
-    rb_provide("io/nonblock");
-    rb_provide("io/nonblock.so");
-
-#ifndef _WIN32
-
-    // DLM: we have Init_console on Windows but crashes when try to init it, fails to load openssl
-    Init_console();
-    rb_provide("console");
-    rb_provide("console.so");
-
-    Init_dbm();
-    rb_provide("dbm");
-    rb_provide("dbm.so");
-
-    Init_gdbm();
-    rb_provide("gdbm");
-    rb_provide("gdbm.so");
-
-    Init_pty();
-    rb_provide("pty");
-    rb_provide("pty.so");
-
-    Init_readline();
-    rb_provide("readline");
-    rb_provide("readline.so");
-
-    Init_syslog();
-    rb_provide("syslog");
-    rb_provide("syslog.so");
-#endif
-
-    // openstudio
-    init_openstudio_internal_basic();
-
-    auto module = rb_define_module("OpenStudio");
-    rb_define_module_function(module, "init_rest_of_openstudio", init_rest_of_openstudio, 0);
+    {
+      auto* execute_python_scriptCommand = experimentalApp->add_subcommand("execute_python_script", "Executes a python file");
+      openstudio::filesystem::path pythonScriptPath;
+      execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to python file")->required(true);
+      std::vector<std::string> executePythonScriptCommandArgs;
+      execute_python_scriptCommand->add_option("arguments", executePythonScriptCommandArgs, "Arguments to pass to the python file")
+        ->required(false)
+        ->option_text("args");
+      execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &executePythonScriptCommandArgs, &runSetupPythonPath] {
+        runSetupPythonPath();
+        openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, executePythonScriptCommandArgs);
+      });
+    }
+
+    [[maybe_unused]] auto* gem_listCommand =
+      experimentalApp->add_subcommand("gem_list", "Lists the set gems available to openstudio")->callback([&rubyEngine, &runSetupEmbeddedGems]() {
+        runSetupEmbeddedGems();
+        openstudio::cli::executeGemListCommand(rubyEngine);
+      });
+
+    // Not hidding any commands right now
+    // [[maybe_unused]] auto* list_commandsCommand = experimentalApp->add_subcommand("list_commands", "Lists the entire set of available commands");
+
+    // run command
+    openstudio::cli::setupRunOptions(experimentalApp, rubyEngine, pythonEngine, runSetupEmbeddedGems, runSetupPythonPath);
+
+    // update (model) command
+    // openstudio::cli::setupUpdateCommand(experimentalApp);
+    {
+      bool keep = false;
+      auto* updateCommand = experimentalApp->add_subcommand("update", "Updates OpenStudio Models to the current version");
+      updateCommand->add_flag("-k,--keep", keep, "Keep original files");
+
+      openstudio::filesystem::path updateOsmPath;
+      updateCommand->add_option("path", updateOsmPath, "Path to OSM or directory containing osms")->required(true);
+
+      updateCommand->callback([&keep, &updateOsmPath] {
+        bool result = openstudio::cli::runModelUpdateCommand(updateOsmPath, keep);
+        if (!result) {
+          throw std::runtime_error("Failed to update some models");
+        }
+      });
+    }
+
+    openstudio::cli::MeasureUpdateOptions::setupMeasureUpdateOptions(experimentalApp, rubyEngine);
+
+    // ==========================  V E R S I O N ==========================
+    [[maybe_unused]] auto* openstudio_versionCommand =
+      experimentalApp->add_subcommand("openstudio_version", "Returns the OpenStudio version used by the CLI")
+        ->group(versionGroupname)
+        ->callback([]() { fmt::print("{}\n", openStudioLongVersion()); });
+
+    [[maybe_unused]] auto* energyplus_versionCommand =
+      experimentalApp->add_subcommand("energyplus_version", "Returns the EnergyPlus version used by the CLI")
+        ->group(versionGroupname)
+        ->callback([]() { fmt::print("{}+{}\n", energyPlusVersion(), energyPlusBuildSHA()); });
+    [[maybe_unused]] auto* ruby_versionCommand =
+      experimentalApp->add_subcommand("ruby_version", "Returns the Ruby version used by the CLI")->group(versionGroupname)->callback([&rubyEngine]() {
+        rubyEngine->exec("puts RUBY_VERSION");
+      });
+    [[maybe_unused]] auto* python_versionCommand = experimentalApp->add_subcommand("python_version", "Returns the Ruby version used by the CLI")
+                                                     ->group(versionGroupname)
+                                                     ->callback([&pythonEngine]() { pythonEngine->exec("import sys; print(sys.version)"); });
+
+    // ====================================================================
+
+    CLI11_PARSE(app, argc, argv);
+
+    if (*execRubyOption) {
+      fmt::print("--execute Flag received {} times.\n", execRubyOption->count());
+      runSetupEmbeddedGems();
+      rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
+      for (auto& cmd : executeRubyCmds) {
+        fmt::print("{}\n", cmd);
+        rubyEngine->exec(cmd);
+      }
+    }
+    if (*execPythonOption) {
+      fmt::print("--pyexecute Flag received {} times.\n", execPythonOption->count());
+      runSetupPythonPath();
+      for (auto& cmd : executePythonCmds) {
+        fmt::print("{}\n", cmd);
+        pythonEngine->exec(cmd);
+      }
+    }
+    // fmt::print("includeDirs={}\n", fmt::join(includeDirs, ","));
+    // fmt::print("gemPathDirs={}\n", fmt::join(gemPathDirs, ","));
+    // fmt::print("gemHomeDir={}\n", gemHomeDir);
+  } else {
+    result = openstudio::rubyCLI(rubyEngine);
   }
 
-  // DLM: this will interpret any strings passed on the command line as UTF-8
-  // can we be smarter and detect the correct encoding? use wmain on windows to get utf-16?
-  // or we might want to follow ruby and allow '--external-encoding=UTF-8' as an input argument?
-  rb_enc_set_default_external(rb_enc_from_encoding(rb_utf8_encoding()));
+  // Important to destroy RubyEngine and finalize Ruby at the right time
+  // After the main function returns it is (apparently) too late
+  rubyEngine.reset();
+  pythonEngine.reset();
 
-  // chop off the first argument which is the exe path/name
-  ruby_set_argv(argc - 1, argv + 1);
-
-  try {
-    rubyInterpreter.evalString(R"(
-       begin
-         require 'openstudio_cli'
-       rescue Exception => e
-         puts
-         puts "Error: #{e.message}"
-         puts "Backtrace:\n\t" + e.backtrace.join("\n\t")
-         raise
-       end
-     )");
-  } catch (const std::exception& e) {
-    rubyInterpreter.evalString(R"(STDOUT.flush)");
-    std::cout << "Exception: " << e.what() << std::endl;  // endl will flush
-    return ruby_cleanup(1);
-  } catch (...) {
-    rubyInterpreter.evalString(R"(STDOUT.flush)");
-    std::cout << "Unknown Exception" << std::endl;  // endl will flush
-    return ruby_cleanup(1);
-  }
-  rubyInterpreter.evalString(R"(STDOUT.flush)");
-  std::cout << std::flush;
-  return ruby_cleanup(0);
-}
-
-extern "C"
-{
-  int rb_hasFile(const char* t_filename) {
-    // TODO Consider expanding this to use the path which we have artificially defined in embedded_help.rb
-    std::string expandedName = std::string(":/ruby/2.7.0/") + std::string(t_filename) + ".rb";
-    return embedded_files::hasFile(expandedName);
-  }
-
-  int rb_require_embedded(const char* t_filename) {
-    std::string require_script = R"(require ')" + std::string(t_filename) + R"(')";
-    rubyInterpreter.evalString(require_script);
-    return 0;
-  }
+  return result;
 }

@@ -2,7 +2,7 @@
 #define MODEL_I
 
 #ifdef SWIGPYTHON
-  %module openstudiomodel
+  %module(directors="1") openstudiomodel
 
   // Inject every submodule into the openstudio.model namespace, so we can do like in Ruby
   // `fan = openstudio.model.FanVariableVolume(m)` (and not `openstudio.model.openstudiomodelstraightcomponent.FanVariableVolume(m)`)

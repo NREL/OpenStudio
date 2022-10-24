@@ -27,18 +27,16 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "init_openstudio.hpp"
+#include "InitRubyBindings.hpp"
 #include <RubyAPI.hpp>
 #include <iostream>
 #include <ruby.h>
 
-extern "C" {
+extern "C"
+{
 
-RUBY_API void Init_openstudio(void) {
+  RUBY_API void Init_openstudio(void) {
 
-  init_openstudio_internal();
-
+    openstudio::ruby::initRubyBindings();
+  }
 }
-
-}
-

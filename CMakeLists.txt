@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.14.0)
+message(STATUS "Using CMake ${CMAKE_VERSION}")
+cmake_minimum_required(VERSION 3.19.0)
 cmake_policy(SET CMP0048 NEW)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -16,6 +17,8 @@ endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
 project(OpenStudio VERSION 3.5.0)
+
+include(CMake/compiler_flags.cmake)
 
 # The RT Manifest file and C# SDK only support the digit portion of patch
 string(APPEND PROJECT_VERSION_PATCH_DIGIT ${PROJECT_VERSION_PATCH})
@@ -156,7 +159,7 @@ get_directory_property(hasParent PARENT_DIRECTORY)
 
 # TODO: Modify the more specific variables as needed to indicate prerelease, etc
 # Keep in beta in-between release cycles. Set to empty string (or comment out) for official)
-set(PROJECT_VERSION_PRERELEASE "alpha")
+set(PROJECT_VERSION_PRERELEASE "rc1")
 
 # OpenStudio version: Only include Major.Minor.Patch, eg "3.0.0", even if you have a prerelease tag
 set(OPENSTUDIO_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
@@ -262,11 +265,6 @@ endif()
 ###############################################################################
 # Build options
 
-if(UNIX AND NOT APPLE)
-  # the RPATH to be used when installing
-  set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
-endif()
-
 # TODO: should this be only in OpenStudioApplication?
 option(BUILD_PAT "Build PAT" OFF)
 
@@ -280,7 +278,8 @@ option(BUILD_NUGET_PACKAGE "Build NuGet Package" OFF)
 
 # Build Python bindings
 # Requires: SWIG Python
-option(BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
+option(BUILD_PYTHON_BINDINGS "Build Python bindings" ON)
+mark_as_advanced(BUILD_PYTHON_BINDINGS)
 
 # Build ctest testing
 # Requires: EnergyPlus
@@ -307,6 +306,12 @@ set(BUILD_WITH_OPENSSL ON CACHE INTERNAL "Build With OpenSSL Support For SSH Con
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   add_definitions(-Qunused-arguments)
+endif()
+
+include(CheckIncludeFile)
+check_include_file("unistd.h" HAVE_UNISTD_H)
+if(HAVE_UNISTD_H)
+  add_definitions(-DHAVE_UNISTD_H)
 endif()
 
 # Enable runtime checking features
@@ -346,6 +351,9 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clan
 endif()
 
 if(APPLE)
+  # Without this, cmake will give "Module" libraries the ".so" extension on Apple
+  # This appears to be a legacy choice by the cmake developers, and seems out of place,
+  # so the OpenStudio project will use the library suffix ".dylib"
   find_library(COREFOUNDATION_LIBRARY CoreFoundation)
   add_definitions(-D_LIBCPP_ENABLE_CXX17_REMOVED_AUTO_PTR)
   #add_definitions(-DBOOST_SYSTEM_NO_DEPRECATED)
@@ -446,6 +454,12 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/Products")
 
 set(LIBRARY_SEARCH_DIRECTORY "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Release" "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Debug")
+
+set(LIB_DESTINATION_DIR lib)
+if(WIN32)
+  # Windows does not have RPATH handling, so we just put everything next to the CLI in the bin/ folder
+  set(LIB_DESTINATION_DIR bin)
+endif()
 
 # TODO: move App macros to a local ProjectMacros.cmake
 # Include project specific macros
@@ -590,7 +604,7 @@ if(UNIX)
     endif()
   elseif(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
     # TODO: There aren't any redhat releases anymore, see PR #3145 too
-    set(ENERGYPLUS_EXPECTED_HASH f70fb18cc613f129e5e22e790d191f8c)   # TODO: not updated yet
+    set(ENERGYPLUS_EXPECTED_HASH b331823d01fd06f691df7ab084ba21f6)
     set(ENERGYPLUS_PLATFORM "Centos7-x86_64")
   else()
     if(LSB_RELEASE_VERSION_SHORT MATCHES "20.04")
@@ -609,7 +623,9 @@ if(UNIX)
     message(STATUS "https://github.com/${ENERGYPLUS_REPO}/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz")
 
     if(LSB_RELEASE_ID_SHORT MATCHES "CentOS")
-      file(DOWNLOAD "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+      file(DOWNLOAD
+           "https://github.com/${ENERGYPLUS_REPO}/EnergyPlus/releases/download/${ENERGYPLUS_RELEASE_NAME}/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
+           # "http://openstudio-resources.s3.amazonaws.com/dependencies/${ENERGYPLUS_PATH}.tar.gz" "${PROJECT_BINARY_DIR}/${ENERGYPLUS_PATH}.tar.gz"
            INACTIVITY_TIMEOUT 300 # 5-min timeout
            SHOW_PROGRESS
            EXPECTED_MD5 ${ENERGYPLUS_EXPECTED_HASH})
@@ -786,20 +802,20 @@ if(BUILD_CLI)
          set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220420-darwin_arm64.tar.gz")
          set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "abc2798729434f8835f824300a5fd420")
        else()
-         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220901-darwin.tar.gz ")
-         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "1c4a738e36bd34e7626aef7116bf5076")
+         set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20221021-darwin.tar.gz")
+         set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "ea090e4a5c176f0a4bdaae080513f9bc")
        endif()
      else()
-       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220831-linux.tar.gz")
-       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "b515d50b81fae65389b44f73456d4e65")
+       set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20221021-linux.tar.gz")
+       set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "9987bf3bd2b0f54f8eaefb1b48f81b70")
        if (USE_OPENSTUDIO_GEMS_PR)
          set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-linux/${OPENSTUDIO_GEMS_PR_NUMBER}")
        endif()
      endif()
   elseif(WIN32)
     # OpenStudio gems are only supported on 64 bit windows
-    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20220831-windows.tar.gz")
-    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "c45f2a323d654a0a1536c6076bf4dcc4")
+    set(OPENSTUDIO_GEMS_ZIP_FILENAME "openstudio3-gems-20221021-windows.tar.gz")
+    set(OPENSTUDIO_GEMS_ZIP_EXPECTED_MD5 "bdcdf72e5d0f746d18a1eeb5e6487ca9")
     if (USE_OPENSTUDIO_GEMS_PR)
       set(OPENSTUDIO_GEMS_BASEURL "${OPENSTUDIO_GEMS_BASEURL}/openstudio-gems-windows/${OPENSTUDIO_GEMS_PR_NUMBER}")
     endif()
@@ -914,40 +930,7 @@ if(BUILD_NODE_MODULES)
 endif()
 
 if(BUILD_PYTHON_BINDINGS)
-  option(BUILD_PYTHON_PIP_PACKAGE "Prepare a folder to build a pip module" OFF)
-
-  # find_package(Python) has the problem that on github actions in particular it'll pick up the most recent python (eg 3.9) from the tool cache
-  # even if you have used the setup-python action and set it to 3.8
-  if (PYTHON_VERSION)
-    find_package(Python ${PYTHON_VERSION} EXACT COMPONENTS Interpreter Development REQUIRED)
-  else()
-    find_package(Python COMPONENTS Interpreter Development REQUIRED)
-  endif()
-
-  include_directories(SYSTEM ${Python_INCLUDE_DIRS})
-  set(ALL_PYTHON_BINDING_TARGETS "") # global list of python bindings
-  set(ALL_PYTHON_BINDING_DEPENDS "") # global list of library dependencies of the generated wrapper cxx files
-  set(ALL_PYTHON_WRAPPER_FILES "") # global list of generated wrapper cxx files
-  set(ALL_PYTHON_WRAPPER_TARGETS "") # global list targets that build generated wrapper cxx files
-  set(ALL_PYTHON_GENERATED_SRCS "") # global list of generated .py files
-
-  if(BUILD_PYTHON_PIP_PACKAGE)
-
-    set(PipRepositoryValues "testpypi;pypi" CACHE INTERNAL
-      "List of possible values for which repository to upload to")
-    set(PYTHON_PIP_REPOSITORY "testpypi" CACHE STRING "Which pip repository to use for upload")
-    set_property(CACHE PYTHON_PIP_REPOSITORY PROPERTY STRINGS ${PipRepositoryValues})
-
-    if(NOT PYTHON_PIP_REPOSITORY IN_LIST PipRepositoryValues)
-      message(FATAL_ERROR "PYTHON_PIP_REPOSITORY must be one of ${PipRepositoryValues}")
-    endif()
-
-    set(PYTHON_PACKAGE_FOLDER "${PROJECT_BINARY_DIR}/Products/python_package")
-    file(MAKE_DIRECTORY "${PYTHON_PACKAGE_FOLDER}")
-    set(ALL_PYTHON_PACKAGE_TARGETS "") # global list of python bindings
-    set(ALL_PYTHON_PACKAGE_GENERATED_SRCS "") # global list of generated .py files for pyhton_package
-
-  endif()
+  include(python/SetupPython.cmake)
 endif()
 
 # Threading library
@@ -966,13 +949,6 @@ include_directories("${PROJECT_SOURCE_DIR}/src/")
 # Project binary directory
 include_directories("${PROJECT_BINARY_DIR}/src/")
 
-###############################################################################
-
-###############################################################################
-# RPATH settings
-# Conan set this to true, which is not the cmake default and not what we want
-# for the openstudio targets
-set(CMAKE_SKIP_RPATH FALSE)
 ###############################################################################
 
 ###############################################################################
@@ -1008,6 +984,8 @@ set(project_directories
   sdd
   lib
   install_utility
+  scriptengine
+  workflow
 )
 
 # resources must be added after find EnergyPlus

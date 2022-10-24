@@ -27,13 +27,24 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include <string>
+#ifndef CLI_RUNCOMMAND_HPP
+#define CLI_RUNCOMMAND_HPP
 
+#include <CLI/App.hpp>
 
-void init_openstudio_internal();
+#include <functional>
 
-void init_openstudio_internal_basic();
-void init_openstudio_internal_extended();
+namespace openstudio {
 
-void evalString(const std::string &t_str);
+class ScriptEngineInstance;
 
+namespace cli {
+
+  void setupRunOptions(CLI::App* parentApp, ScriptEngineInstance& ruby, ScriptEngineInstance& python, std::function<void()>& runSetupEmbeddedGems,
+                       std::function<void()>& runSetupPythonPath);
+  // void setupRunFtOptions(CLI::App* app, FtOptions& ftOptions);
+
+}  // namespace cli
+}  // namespace openstudio
+
+#endif  // CLI_RUNCOMMAND_HPP

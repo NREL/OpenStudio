@@ -5,7 +5,7 @@ from packaging import version
 import argparse
 from typing import List
 
-REPO_ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), '..')
+REPO_ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../..')
 
 
 def parse_pypi_version(pypi: bool = False):

@@ -27,11 +27,10 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef CLI_RUBYINTERPRETER_HPP
-#define CLI_RUBYINTERPRETER_HPP
+#ifndef RUBYINTERPRETER_HPP
+#define RUBYINTERPRETER_HPP
 
-#include "RubyException.hpp"
-
+#include "RubyEval.hpp"
 #include <vector>
 #include <string>
 #include <map>
@@ -686,16 +685,12 @@
 
 #include <ruby.h>
 #include <ruby/encoding.h>
+#include <SWIGRubyRuntime.hxx>
 
-#include <cli/SWIGRubyRuntime.hxx>
-
+// RubyInterpreter predates RubyEngine. It is possible that the two things should be merged into one.
 class RubyInterpreter
 {
  private:
-  // dummy arguments passed to ruby_options
-  // int m_argc;
-  // char** m_argv;
-
   static void addIncludePath(std::vector<std::string>& includePaths, const std::string& includePath) {
     includePaths.push_back("-I");
     includePaths.push_back(includePath);
@@ -703,33 +698,6 @@ class RubyInterpreter
 
  public:
   explicit RubyInterpreter(const std::vector<std::string>& t_includePaths) {
-
-    //// set load paths
-    //std::vector<std::string> rubyArgs;
-
-    //rubyArgs.emplace_back("-EUTF-8");
-
-    //for (const auto &p : t_includePaths) {
-    //  addIncludePath(rubyArgs, p);
-    //}
-
-    //// and now give the interpreter something to parse, so that it doesn't sit
-    //// waiting on stdin from us
-    //rubyArgs.emplace_back("-e");
-    //rubyArgs.emplace_back("");
-
-    //m_argc = static_cast<int>(rubyArgs.size());
-    //m_argv = new char*[m_argc];
-
-    //for (int i = 0; i < m_argc; ++i){
-    //  m_argv[i] = new char[rubyArgs[i].size() + 1];
-    //  strcpy(m_argv[i], rubyArgs[i].c_str());
-    //}
-
-    //// the return value of ruby_options is the parsed node of our "script"
-    //// from the -e "" we passed in. This could be used to actually parse / eval something if we wanted
-    //ruby_options(m_argc, m_argv);
-
     // register some default types that we want to pass in / out of the ruby system
     registerType<int>("int");
     registerType<long>("long");
@@ -737,17 +705,9 @@ class RubyInterpreter
     registerType<double>("double");
     registerType<std::string>("std::string");
     registerType<float>("float");
-
-    // set the script name if desired
-    //ruby_script("script_name");
   }
 
-  ~RubyInterpreter() {
-    //for (int i = 0; i < m_argc; i++){
-    //  delete[] m_argv[i];
-    //}
-    //delete[] m_argv;
-  }
+  ~RubyInterpreter() {}
 
   /// Register a type along with its vector versions so that it can be used
   /// from within the Ruby wrapper. These are necessary because there's no way to divine
@@ -765,26 +725,7 @@ class RubyInterpreter
   // TODO: should this be static?
   // cppcheck-suppress functionStatic
   void evalString(const std::string& t_str) {
-
-    VALUE val = rb_str_new2(t_str.c_str());
-    int error;
-
-    // save and restore the current working directory in case the call to ruby upsets it
-    //      const auto cwd = openstudio::filesystem::current_dir();
-    rb_protect(evaluateSimpleImpl, val, &error);
-    //      openstudio::filesystem::current_dir(cwd);
-
-    if (error != 0) {
-      VALUE errval = rb_eval_string("$!.to_s");
-      char* str = StringValuePtr(errval);
-      std::string err(str);
-
-      VALUE locval = rb_eval_string("$@.to_s");
-      str = StringValuePtr(locval);
-      std::string loc(str);
-
-      throw RubyException(err, loc);
-    }
+    openstudio::evalString(t_str);
   }
 
   /// Execute a function by name with 0 parameters and no return value
@@ -879,11 +820,6 @@ class RubyInterpreter
   RubyInterpreter(const RubyInterpreter&) = delete;
 
   std::map<std::string, std::string> m_types;
-
-  // Used for our rb_protect calls.
-  static VALUE evaluateSimpleImpl(VALUE arg) {
-    return rb_eval_string(StringValuePtr(arg));
-  }
 
   // Returns the swig_type_info for the templated type if it's been registered previously
   // with registerType
@@ -1518,4 +1454,4 @@ class RubyInterpreter
 #  endif
 #endif
 
-#endif  // CLI_RUBYINTERPRETER_HPP
+#endif  // RUBYINTERPRETER_HPP

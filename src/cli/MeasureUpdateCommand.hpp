@@ -27,19 +27,39 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef RUBYAPI_HPP
-#define RUBYAPI_HPP
+#ifndef CLI_MEASUREUPDATECOMMAND_HPP
+#define CLI_MEASUREUPDATECOMMAND_HPP
 
-  #if (_WIN32 || _MSC_VER)
-    #ifdef openstudio_rb_EXPORTS 
-      #define RUBY_API __declspec(dllexport)
-    #elif defined openstudio_modeleditor_rb_EXPORTS
-      #define RUBY_API __declspec(dllexport)
-    #else
-      #define RUBY_API __declspec(dllimport)
-    #endif
-  #else
-    #define RUBY_API
-  #endif
+#include <CLI/App.hpp>
+#include "../utilities/core/Filesystem.hpp"
 
-#endif
+namespace openstudio {
+
+class ScriptEngineInstance;
+
+namespace cli {
+
+  struct MeasureUpdateOptions
+  {
+   public:
+    static void setupMeasureUpdateOptions(CLI::App* parentApp, ScriptEngineInstance& rubyEngine);
+
+    static void execute(MeasureUpdateOptions const& opt, ScriptEngineInstance& rubyEngine);
+
+    void debug_print() const;
+
+    bool update = false;
+    bool update_all = false;
+
+    openstudio::path compute_arguments_model;
+    openstudio::path directoryPath;
+
+    bool run_tests = false;
+
+    unsigned server_port = 0;
+  };
+
+}  // namespace cli
+}  // namespace openstudio
+
+#endif  // CLI_MEASUREUPDATECOMMAND_HPP

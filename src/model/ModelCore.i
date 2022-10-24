@@ -3,7 +3,7 @@
 #define MODEL_CORE_I
 
 #ifdef SWIGPYTHON
-  %module openstudiomodelcore
+  %module(directors="1") openstudiomodelcore
 #endif
 
 %include <model/Model_Common_Include.i>
@@ -191,6 +191,8 @@ class Construction;
 %feature("valuewrapper") ThermalZone;
 %feature("valuewrapper") Curve;
 %feature("valuewrapper") Construction;
+
+%feature("director") Model;
 
 }
 }
