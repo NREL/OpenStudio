@@ -1245,6 +1245,54 @@ OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach,
        \note If left blank the Site:GroundTemperature:Shallow object must be included in the input
        \note The soil temperature, amplitude, and phase shift must all be included or omitted together
 
+OS:Site:GroundTemperature:Undisturbed:Xing,
+       \memo Undisturbed ground temperature object using the
+       \memo Xing 2014 2 harmonic parameter model.
+       \min-fields 10
+  A1, \field Handle
+       \type handle
+       \required-field
+  A2,  \field Name
+       \required-field
+       \reference UndisturbedGroundTempModels
+  N1,  \field Soil Thermal Conductivity
+       \required-field
+       \type real
+       \units W/m-K
+       \minimum> 0.0
+  N2,  \field Soil Density
+       \required-field
+       \type real
+       \units kg/m3
+       \minimum> 0.0
+  N3,  \field Soil Specific Heat
+       \required-field
+       \type real
+       \units J/kg-K
+       \minimum> 0.0
+  N4,  \field Average Soil Surface Tempeature
+       \required-field
+       \type real
+       \units C
+  N5,  \field Soil Surface Temperature Amplitude 1
+       \required-field
+       \type real
+       \units deltaC
+  N6,  \field Soil Surface Temperature Amplitude 2
+       \required-field
+       \type real
+       \units deltaC
+  N7,  \field Phase Shift of Temperature Amplitude 1
+       \required-field
+       \type real
+       \units days
+       \maximum< 365
+  N8;  \field Phase Shift of Temperature Amplitude 2
+       \required-field
+       \type real
+       \units days
+       \maximum< 365
+
 OS:Site:GroundReflectance,
   \unique-object
   \min-fields 13
