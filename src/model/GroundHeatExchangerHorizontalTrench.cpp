@@ -33,6 +33,8 @@
 #include "PlantLoop_Impl.hpp"
 #include "Node.hpp"
 #include "Node_Impl.hpp"
+#include "SiteGroundTemperatureUndisturbedKusudaAchenbach.hpp"
+#include "SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp"
 #include <utilities/idd/IddFactory.hxx>
 #include <utilities/idd/OS_GroundHeatExchanger_HorizontalTrench_FieldEnums.hxx>
 #include "../utilities/units/Unit.hpp"
@@ -320,6 +322,7 @@ namespace model {
     bool GroundHeatExchangerHorizontalTrench_Impl::setUndisturbedGroundTemperatureModel(const ModelObject& undisturbedGroundTemperatureModel) {
       bool result =
         setPointer(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel, undisturbedGroundTemperatureModel.handle());
+      return result;
     }
 
     unsigned GroundHeatExchangerHorizontalTrench_Impl::inletPort() const {

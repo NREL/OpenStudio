@@ -2245,6 +2245,7 @@ set(${target_name}_test_src
   test/SiteGroundTemperatureFCfactorMethod_GTest.cpp
   test/SiteGroundTemperatureShallow_GTest.cpp
   test/SiteGroundTemperatureBuildingSurface_GTest.cpp
+  test/SiteGroundTemperatureUndisturbedKusudaAchenbach_GTest.cpp
   test/SiteWaterMainsTemperature_GTest.cpp
   test/SizingPlant_GTest.cpp
   test/SizingSystem_GTest.cpp
