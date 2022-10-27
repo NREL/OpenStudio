@@ -46,9 +46,34 @@ namespace energyplus {
 
   boost::optional<IdfObject>
     ForwardTranslator::translateSiteGroundTemperatureUndisturbedKusudaAchenbach(SiteGroundTemperatureUndisturbedKusudaAchenbach& modelObject) {
-    IdfObject idfObject(openstudio::IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach);
+    boost::optional<double> value;
 
-    m_idfObjects.push_back(idfObject);
+    // Name
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach, modelObject);
+
+    // SoilThermalConductivity
+    idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity, modelObject.soilThermalConductivity());
+
+    // SoilDensity
+    idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity, modelObject.soilDensity());
+
+    // SoilSpecificHeat
+    idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat, modelObject.soilSpecificHeat());
+
+    // AverageSoilSurfaceTemperature
+    if (value = modelObject.averageSoilSurfaceTemperature()) {
+      idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature, value.get());
+    }
+
+    // AverageAmplitudeofSurfaceTemperature
+    if (value = modelObject.averageAmplitudeofSurfaceTemperature()) {
+      idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature, value.get());
+    }
+
+    // PhaseShiftofMinimumSurfaceTemperature
+    if (value = modelObject.phaseShiftofMinimumSurfaceTemperature()) {
+      idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature, value.get());
+    }
 
     return idfObject;
   }
