@@ -13599,7 +13599,7 @@ OS:Chiller:Electric:EIR,
        \note Using this triggers a model more suited to series bundle and chillers with higher temperature heat recovery
        \note If this field is not used, the bundles are modeled as being in parallel
        \type object-list
-       \object-list ConnectionNames
+       \object-list Node
   A17; \field End-Use Subcategory
        \note Any text may be used here to categorize the end-uses in the ABUPS End Uses by Subcategory table.
        \type alpha
