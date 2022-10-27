@@ -405,6 +405,7 @@ namespace model {
   class SiteGroundTemperatureDeep;
   class SiteGroundTemperatureFCfactorMethod;
   class SiteGroundTemperatureShallow;
+  class SiteGroundTemperatureUndisturbedKusudaAchenbach;
   class SiteWaterMainsTemperature;
   class SizingParameters;
   class SizingPlant;
@@ -1379,6 +1380,8 @@ namespace energyplus {
     boost::optional<IdfObject> translateSiteGroundTemperatureFCfactorMethod(model::SiteGroundTemperatureFCfactorMethod& modelObject);
 
     boost::optional<IdfObject> translateSiteGroundTemperatureShallow(model::SiteGroundTemperatureShallow& modelObject);
+    
+    boost::optional<IdfObject> translateSiteGroundTemperatureUndisturbedKusudaAchenbach(model::SiteGroundTemperatureUndisturbedKusudaAchenbach& modelObject);
 
     boost::optional<IdfObject> translateSiteWaterMainsTemperature(model::SiteWaterMainsTemperature& modelObject);
 

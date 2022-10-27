@@ -35,7 +35,7 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/GroundHeatExchanger_HorizontalTrench_FieldEnums.hxx>
-#include <utilities/idd/Site_GroundTemperature_Undisturbed_KusudaAchenbach_FieldEnums.hxx>
+/* #include <utilities/idd/Site_GroundTemperature_Undisturbed_KusudaAchenbach_FieldEnums.hxx> */
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -46,13 +46,26 @@ namespace openstudio {
 namespace energyplus {
 
   boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerHorizontalTrench(GroundHeatExchangerHorizontalTrench& modelObject) {
-    IdfObject idfObject(IddObjectType::GroundHeatExchanger_HorizontalTrench);
-    m_idfObjects.push_back(idfObject);
-
-    // Name
-    if (auto s = modelObject.name()) {
-      idfObject.setName(*s);
+    boost::optional<std::string> s;
+    boost::optional<double> value;
+    
+    // UndisturbedGroundTemperatureModelName, is required, so start by that
+    ModelObject undisturbedGroundTemperatureModel = modelObject.undisturbedGroundTemperatureModel();
+    if (boost::optional<IdfObject> _undisturbedGroundTemperatureModel = translateAndMapModelObject(undisturbedGroundTemperatureModel)) {
+      s = _undisturbedGroundTemperatureModel->name().get();
+    } else {
+      LOG(Warn, modelObject.briefDescription() << " cannot be translated as its undisturbed ground temperature model object cannot be translated: "
+                                               << undisturbedGroundTemperatureModel.briefDescription() << ".");
+      return boost::none;
     }
+    
+    IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::GroundHeatExchanger_HorizontalTrench, modelObject);
+    
+    // UndisturbedGroundTemperatureModelName
+    idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelName, s.get());
+
+    // UndisturbedGroundTemperatureModelType
+    idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelType, _undisturbedGroundTemperatureModel->iddObject().name());
 
     // InletNodeName
     if (auto mo = modelObject.inletModelObject()) {
@@ -158,7 +171,7 @@ namespace energyplus {
       idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilMoistureContentPercentatSaturation, value);
     }
 
-    if (istringEqual(modelObject.groundTemperatureModel(), "KusudaAchenbach")) {
+/*     if (istringEqual(modelObject.groundTemperatureModel(), "KusudaAchenbach")) {
       IdfObject groundModel(IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach);
       m_idfObjects.push_back(groundModel);
 
@@ -183,12 +196,12 @@ namespace energyplus {
         auto value = modelObject.kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature();
         groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature, value);
       }
+    } */    
 
-      // EvapotranspirationGroundCoverParameter
-      {
-        auto value = modelObject.evapotranspirationGroundCoverParameter();
-        idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::EvapotranspirationGroundCoverParameter, value);
-      }
+    // EvapotranspirationGroundCoverParameter
+    {
+      auto value = modelObject.evapotranspirationGroundCoverParameter();
+      idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::EvapotranspirationGroundCoverParameter, value);
     }
 
     return idfObject;
