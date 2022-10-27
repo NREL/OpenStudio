@@ -48,7 +48,7 @@ namespace energyplus {
   boost::optional<IdfObject> ForwardTranslator::translateGroundHeatExchangerHorizontalTrench(GroundHeatExchangerHorizontalTrench& modelObject) {
     boost::optional<std::string> s;
     boost::optional<double> value;
-    
+
     // UndisturbedGroundTemperatureModelName, is required, so start by that
     ModelObject undisturbedGroundTemperatureModel = modelObject.undisturbedGroundTemperatureModel();
     if (boost::optional<IdfObject> _undisturbedGroundTemperatureModel = translateAndMapModelObject(undisturbedGroundTemperatureModel)) {
@@ -58,14 +58,15 @@ namespace energyplus {
                                                << undisturbedGroundTemperatureModel.briefDescription() << ".");
       return boost::none;
     }
-    
+
     IdfObject idfObject = createRegisterAndNameIdfObject(openstudio::IddObjectType::GroundHeatExchanger_HorizontalTrench, modelObject);
-    
+
     // UndisturbedGroundTemperatureModelName
     idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelName, s.get());
 
     // UndisturbedGroundTemperatureModelType
-    idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelType, _undisturbedGroundTemperatureModel->iddObject().name());
+    idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelType,
+                        _undisturbedGroundTemperatureModel->iddObject().name());
 
     // InletNodeName
     if (auto mo = modelObject.inletModelObject()) {
@@ -171,7 +172,7 @@ namespace energyplus {
       idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilMoistureContentPercentatSaturation, value);
     }
 
-/*     if (istringEqual(modelObject.groundTemperatureModel(), "KusudaAchenbach")) {
+    /*     if (istringEqual(modelObject.groundTemperatureModel(), "KusudaAchenbach")) {
       IdfObject groundModel(IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach);
       m_idfObjects.push_back(groundModel);
 
@@ -196,7 +197,7 @@ namespace energyplus {
         auto value = modelObject.kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature();
         groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature, value);
       }
-    } */    
+    } */
 
     // EvapotranspirationGroundCoverParameter
     {

@@ -1380,8 +1380,9 @@ namespace energyplus {
     boost::optional<IdfObject> translateSiteGroundTemperatureFCfactorMethod(model::SiteGroundTemperatureFCfactorMethod& modelObject);
 
     boost::optional<IdfObject> translateSiteGroundTemperatureShallow(model::SiteGroundTemperatureShallow& modelObject);
-    
-    boost::optional<IdfObject> translateSiteGroundTemperatureUndisturbedKusudaAchenbach(model::SiteGroundTemperatureUndisturbedKusudaAchenbach& modelObject);
+
+    boost::optional<IdfObject>
+      translateSiteGroundTemperatureUndisturbedKusudaAchenbach(model::SiteGroundTemperatureUndisturbedKusudaAchenbach& modelObject);
 
     boost::optional<IdfObject> translateSiteWaterMainsTemperature(model::SiteWaterMainsTemperature& modelObject);
 
