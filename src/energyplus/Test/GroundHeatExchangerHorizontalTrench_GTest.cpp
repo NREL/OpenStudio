@@ -35,6 +35,8 @@
 #include "../../model/Model.hpp"
 #include "../../model/GroundHeatExchangerHorizontalTrench.hpp"
 #include "../../model/GroundHeatExchangerHorizontalTrench_Impl.hpp"
+#include "../../model/Node.hpp"
+#include "../../model/Node_Impl.hpp"
 
 #include "../../utilities/idf/IdfObject.hpp"
 #include "../../utilities/idf/WorkspaceObject.hpp"
@@ -50,6 +52,9 @@ using namespace openstudio;
 TEST_F(EnergyPlusFixture, ForwardTranslator_GroundHeatExchanger_HorizontalTrench) {
   Model m;
   GroundHeatExchangerHorizontalTrench gh(m);
+  PlantLoop pl(m);
+  Node son = pl.supplyOutletNode();
+  EXPECT_TRUE(gh.addToNode(son));
 
   ForwardTranslator ft;
   Workspace workspace = ft.translateModel(m);

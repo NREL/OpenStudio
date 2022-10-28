@@ -152,7 +152,7 @@ SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureBuildingSurface);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureDeep);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureShallow);
 SWIG_UNIQUEMODELOBJECT(SiteGroundTemperatureFCfactorMethod);
-SWIG_MODELOBJECT(SiteGroundTemperatureUndisturbedKusudaAchenbach);
+SWIG_MODELOBJECT(SiteGroundTemperatureUndisturbedKusudaAchenbach, 1);
 SWIG_UNIQUEMODELOBJECT(SiteWaterMainsTemperature);
 #ifndef SWIGCSHARP
   SWIG_UNIQUEMODELOBJECT(YearDescription);

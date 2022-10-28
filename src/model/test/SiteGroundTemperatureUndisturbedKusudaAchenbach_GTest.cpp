@@ -49,7 +49,7 @@ TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_SiteGroundT
 
   Model m;
   SiteGroundTemperatureUndisturbedKusudaAchenbach uka(m);
-  
+
   EXPECT_EQ(1.08, uka.soilThermalConductivity());
   EXPECT_EQ(962, uka.soilDensity());
   EXPECT_EQ(2576, uka.soilSpecificHeat());
@@ -61,14 +61,8 @@ TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_SiteGroundT
   EXPECT_EQ(17.3, uka.phaseShiftofMinimumSurfaceTemperature().get());
 }
 
-TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_SetGetFields) {
-  
-}
+TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_SetGetFields) {}
 
-TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_Clone) {
-  
-}
+TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_Clone) {}
 
-TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_Remove) {
-  
-}
+TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_Remove) {}

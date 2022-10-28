@@ -51,7 +51,7 @@ namespace model {
     /** @name Constructors and Destructors */
     //@{
 
-    explicit SiteGroundTemperatureUndisturbedKusudaAchenbach(Model& model);
+    explicit SiteGroundTemperatureUndisturbedKusudaAchenbach(const Model& model);
 
     virtual ~SiteGroundTemperatureUndisturbedKusudaAchenbach() {}
 
@@ -95,7 +95,7 @@ namespace model {
 
     void resetAverageAmplitudeofSurfaceTemperature();
 
-    bool setPhaseShiftofMiniumSurfaceTemperature(double phaseShiftofMinimumSurfaceTemperature);
+    bool setPhaseShiftofMinimumSurfaceTemperature(double phaseShiftofMinimumSurfaceTemperature);
 
     void resetPhaseShiftofMinimumSurfaceTemperature();
 

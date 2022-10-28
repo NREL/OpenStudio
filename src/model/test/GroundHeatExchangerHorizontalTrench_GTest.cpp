@@ -31,6 +31,8 @@
 #include "ModelFixture.hpp"
 #include "../GroundHeatExchangerHorizontalTrench.hpp"
 #include "../GroundHeatExchangerHorizontalTrench_Impl.hpp"
+#include "../SiteGroundTemperatureUndisturbedKusudaAchenbach.hpp"
+#include "../SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -50,7 +52,7 @@ TEST_F(ModelFixture, GroundHeatExchangerHorizontalTrench_GroundHeatExchangerHori
   {
     Model m;
     GroundHeatExchangerHorizontalTrench gh(m);
-    
+
     EXPECT_EQ(0.004, gh.designFlowRate());
     EXPECT_EQ(75, gh.trenchLengthinPipeAxialDirection());
     EXPECT_EQ(2, gh.numberofTrenches());
@@ -73,18 +75,19 @@ TEST_F(ModelFixture, GroundHeatExchangerHorizontalTrench_GroundHeatExchangerHori
     EXPECT_EQ(17.3, gh.kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature());
     EXPECT_EQ(0.408, gh.evapotranspirationGroundCoverParameter());
     ModelObject undisturbedGroundTemperatureModel = gh.undisturbedGroundTemperatureModel();
-    boost::optional<SiteGroundTemperatureUndisturbedKusudaAchenbach> uka = undisturbedGroundTemperatureModel.optionalCast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
+    boost::optional<SiteGroundTemperatureUndisturbedKusudaAchenbach> uka =
+      undisturbedGroundTemperatureModel.optionalCast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
     ASSERT_TRUE(uka);
   }
 
   {
     Model m;
     SiteGroundTemperatureUndisturbedKusudaAchenbach sgt(m);
-    sgt.setKusudaAchenbachAverageSurfaceTemperature(16.0);
-    sgt.setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(13.0);
-    sgt.setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(18.0);
+    sgt.setAverageSoilSurfaceTemperature(16.0);
+    sgt.setAverageAmplitudeofSurfaceTemperature(13.0);
+    sgt.setPhaseShiftofMinimumSurfaceTemperature(18.0);
     GroundHeatExchangerHorizontalTrench gh(m, sgt);
-    
+
     EXPECT_EQ(0.004, gh.designFlowRate());
     EXPECT_EQ(75, gh.trenchLengthinPipeAxialDirection());
     EXPECT_EQ(2, gh.numberofTrenches());
@@ -107,19 +110,14 @@ TEST_F(ModelFixture, GroundHeatExchangerHorizontalTrench_GroundHeatExchangerHori
     EXPECT_EQ(18.0, gh.kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature());
     EXPECT_EQ(0.408, gh.evapotranspirationGroundCoverParameter());
     ModelObject undisturbedGroundTemperatureModel = gh.undisturbedGroundTemperatureModel();
-    boost::optional<SiteGroundTemperatureUndisturbedKusudaAchenbach> uka = undisturbedGroundTemperatureModel.optionalCast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
+    boost::optional<SiteGroundTemperatureUndisturbedKusudaAchenbach> uka =
+      undisturbedGroundTemperatureModel.optionalCast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
     ASSERT_TRUE(uka);
   }
 }
 
-TEST_F(ModelFixture, GroundHeatExchangerHorizontalTrench_SetGetFields) {
-  
-}
+TEST_F(ModelFixture, GroundHeatExchangerHorizontalTrench_SetGetFields) {}
 
-TEST_F(ModelFixture, GroundHeatExchangerHorizontalTrench_Clone) {
-  
-}
+TEST_F(ModelFixture, GroundHeatExchangerHorizontalTrench_Clone) {}
 
-TEST_F(ModelFixture, GroundHeatExchangerHorizontalTrench_Remove) {
-  
-}
+TEST_F(ModelFixture, GroundHeatExchangerHorizontalTrench_Remove) {}

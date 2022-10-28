@@ -37,7 +37,7 @@
 #include "Site.hpp"
 #include "Site_Impl.hpp"
 
-#include <utilities/idd/OS_Site_GroundTemperature_UndisturbedKusudaAchenbach_FieldEnums.hxx>
+#include <utilities/idd/OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/time/Date.hpp"
@@ -114,7 +114,7 @@ namespace model {
     }
 
     bool SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl::setSoilDensity(double soilDensity) {
-      bool result = setDouble(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SetSoilDensity, setSoilDensity);
+      bool result = setDouble(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity, soilDensity);
       OS_ASSERT(result);
       return result;
     }
@@ -133,7 +133,7 @@ namespace model {
     }
 
     void SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl::resetAverageSoilSurfaceTemperature() {
-      bool result = setString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::ResetAverageSoilSurfaceTemperature, "");
+      bool result = setString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature, "");
       OS_ASSERT(result);
     }
 
@@ -145,11 +145,12 @@ namespace model {
     }
 
     void SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl::resetAverageAmplitudeofSurfaceTemperature() {
-      bool result = setString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::ResetAverageAmplitudeofSurfaceTemperature, "");
+      bool result = setString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature, "");
       OS_ASSERT(result);
     }
 
-    bool SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl::setPhaseShiftofMiniumSurfaceTemperature(double phaseShiftofMinimumSurfaceTemperature) {
+    bool
+      SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl::setPhaseShiftofMinimumSurfaceTemperature(double phaseShiftofMinimumSurfaceTemperature) {
       bool result = setDouble(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature,
                               phaseShiftofMinimumSurfaceTemperature);
       OS_ASSERT(result);
@@ -157,13 +158,13 @@ namespace model {
     }
 
     void SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl::resetPhaseShiftofMinimumSurfaceTemperature() {
-      bool result = setString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::ResetPhaseShiftofMinimumSurfaceTemperature, "");
+      bool result = setString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature, "");
       OS_ASSERT(result);
     }
 
   }  // namespace detail
 
-  SiteGroundTemperatureUndisturbedKusudaAchenbach::SiteGroundTemperatureUndisturbedKusudaAchenbach(Model& model)
+  SiteGroundTemperatureUndisturbedKusudaAchenbach::SiteGroundTemperatureUndisturbedKusudaAchenbach(const Model& model)
     : ModelObject(SiteGroundTemperatureUndisturbedKusudaAchenbach::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl>());
 
@@ -240,8 +241,8 @@ namespace model {
     getImpl<detail::SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl>()->resetAverageAmplitudeofSurfaceTemperature();
   }
 
-  bool SiteGroundTemperatureUndisturbedKusudaAchenbach::setPhaseShiftofMiniumSurfaceTemperature(double phaseShiftofMinimumSurfaceTemperature) {
-    return getImpl<detail::SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl>()->setPhaseShiftofMiniumSurfaceTemperature(
+  bool SiteGroundTemperatureUndisturbedKusudaAchenbach::setPhaseShiftofMinimumSurfaceTemperature(double phaseShiftofMinimumSurfaceTemperature) {
+    return getImpl<detail::SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl>()->setPhaseShiftofMinimumSurfaceTemperature(
       phaseShiftofMinimumSurfaceTemperature);
   }
 

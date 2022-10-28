@@ -35,7 +35,6 @@
 #include "../../model/Node_Impl.hpp"
 #include "../../utilities/core/Assert.hpp"
 #include <utilities/idd/GroundHeatExchanger_HorizontalTrench_FieldEnums.hxx>
-/* #include <utilities/idd/Site_GroundTemperature_Undisturbed_KusudaAchenbach_FieldEnums.hxx> */
 #include <utilities/idd/IddEnums.hxx>
 
 using namespace openstudio::model;
@@ -51,7 +50,8 @@ namespace energyplus {
 
     // UndisturbedGroundTemperatureModelName, is required, so start by that
     ModelObject undisturbedGroundTemperatureModel = modelObject.undisturbedGroundTemperatureModel();
-    if (boost::optional<IdfObject> _undisturbedGroundTemperatureModel = translateAndMapModelObject(undisturbedGroundTemperatureModel)) {
+    boost::optional<IdfObject> _undisturbedGroundTemperatureModel = translateAndMapModelObject(undisturbedGroundTemperatureModel);
+    if (_undisturbedGroundTemperatureModel) {
       s = _undisturbedGroundTemperatureModel->name().get();
     } else {
       LOG(Warn, modelObject.briefDescription() << " cannot be translated as its undisturbed ground temperature model object cannot be translated: "
@@ -171,33 +171,6 @@ namespace energyplus {
       auto value = modelObject.soilMoistureContentPercentatSaturation();
       idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilMoistureContentPercentatSaturation, value);
     }
-
-    /*     if (istringEqual(modelObject.groundTemperatureModel(), "KusudaAchenbach")) {
-      IdfObject groundModel(IddObjectType::Site_GroundTemperature_Undisturbed_KusudaAchenbach);
-      m_idfObjects.push_back(groundModel);
-
-      groundModel.setName(modelObject.name().get() + " Ground Model");
-
-      idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelName, groundModel.name().get());
-
-      // KusudaAchenbachAverageSurfaceTemperature
-      {
-        auto value = modelObject.kusudaAchenbachAverageSurfaceTemperature();
-        groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature, value);
-      }
-
-      // KusudaAchenbachAverageAmplitudeofSurfaceTemperature
-      {
-        auto value = modelObject.kusudaAchenbachAverageAmplitudeofSurfaceTemperature();
-        groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature, value);
-      }
-
-      // KusudaAchenbachPhaseShiftofMinimumSurfaceTemperature
-      {
-        auto value = modelObject.kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature();
-        groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature, value);
-      }
-    } */
 
     // EvapotranspirationGroundCoverParameter
     {

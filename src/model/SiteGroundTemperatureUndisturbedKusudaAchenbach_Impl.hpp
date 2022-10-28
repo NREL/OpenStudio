@@ -98,7 +98,7 @@ namespace model {
 
       void resetAverageAmplitudeofSurfaceTemperature();
 
-      bool setPhaseShiftofMiniumSurfaceTemperature(double phaseShiftofMinimumSurfaceTemperature);
+      bool setPhaseShiftofMinimumSurfaceTemperature(double phaseShiftofMinimumSurfaceTemperature);
 
       void resetPhaseShiftofMinimumSurfaceTemperature();
 
