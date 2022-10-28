@@ -167,7 +167,7 @@ jobs:
         run: |
           cd csharp/examples/OpenStudio.Tests/
           dotnet remove package OpenStudio 
-          dotnet restore OpenStudio.Tests.csproj
+          dotnet restore OpenStudio.Tests.csproj -s "./../../../build/Products/csharp/Release"
           dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
           echo "Testing for both Net5 and Net45"
           dotnet test OpenStudio.Tests.csproj /p:Platform=x86
