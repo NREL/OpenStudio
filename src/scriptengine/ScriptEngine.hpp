@@ -128,7 +128,7 @@ class ScriptEngineInstance
       return *instance;
     }
   }
-  explicit operator bool() {
+  explicit operator bool() const {
     return (bool)instance;
   }
   void reset() {
