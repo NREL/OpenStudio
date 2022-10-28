@@ -104,7 +104,7 @@ class ScriptEngine
 class ScriptEngineInstance
 {
  public:
-  ScriptEngineInstance(std::string_view libraryBaseName, int argc, char* argv[]) : libraryName(libraryBaseName), args(argv, argv + argc) {}
+  ScriptEngineInstance(std::string_view libraryBaseName, std::vector<std::string> t_args) : libraryName(libraryBaseName), args(std::move(t_args)) {}
 
   ScriptEngineInstance(const ScriptEngineInstance&) = delete;
   ScriptEngineInstance(ScriptEngineInstance&&) = delete;
@@ -113,7 +113,7 @@ class ScriptEngineInstance
 
   openstudio::ScriptEngine& operator->() {
     if (instance) {
-      return *(instance.get());
+      return *(instance);
     } else {
       std::vector<char*> argv;
       std::transform(args.begin(), args.end(), std::back_inserter(argv), [](const std::string& item) { return const_cast<char*>(item.c_str()); });
@@ -121,14 +121,14 @@ class ScriptEngineInstance
       const auto enginePath = getOpenStudioModuleDirectory() / openstudio::getSharedModuleName(libraryName);
       // DynamicLibrary will perform dlopen on construction and dlclose on destruction
       // Don't create the DynamicLibrary until it is going to be used
-      engineLib = std::unique_ptr<DynamicLibrary>(new DynamicLibrary(enginePath));
+      engineLib = std::make_unique<DynamicLibrary>(enginePath);
       const auto factory = engineLib->load_symbol<ScriptEngineFactoryType>("makeScriptEngine");
       instance = std::unique_ptr<ScriptEngine>(factory(args.size(), argv.data()));
 
       return *instance;
     }
   }
-  explicit operator bool() {
+  explicit operator bool() const {
     return (bool)instance;
   }
   void reset() {
