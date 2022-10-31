@@ -61,17 +61,17 @@ namespace energyplus {
     idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat, modelObject.soilSpecificHeat());
 
     // AverageSoilSurfaceTemperature
-    if (value = modelObject.averageSoilSurfaceTemperature()) {
+    if ((value = modelObject.averageSoilSurfaceTemperature())) {
       idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature, value.get());
     }
 
     // AverageAmplitudeofSurfaceTemperature
-    if (value = modelObject.averageAmplitudeofSurfaceTemperature()) {
+    if ((value = modelObject.averageAmplitudeofSurfaceTemperature())) {
       idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature, value.get());
     }
 
     // PhaseShiftofMinimumSurfaceTemperature
-    if (value = modelObject.phaseShiftofMinimumSurfaceTemperature()) {
+    if ((value = modelObject.phaseShiftofMinimumSurfaceTemperature())) {
       idfObject.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature, value.get());
     }
 
