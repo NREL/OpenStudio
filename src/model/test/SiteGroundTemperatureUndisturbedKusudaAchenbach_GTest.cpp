@@ -61,7 +61,35 @@ TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_SiteGroundT
   EXPECT_EQ(17.3, uka.phaseShiftofMinimumSurfaceTemperature().get());
 }
 
-TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_SetGetFields) {}
+TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_SetGetFields) {
+  Model m;
+  SiteGroundTemperatureUndisturbedKusudaAchenbach uka(m);
+
+  EXPECT_TRUE(uka.setSoilThermalConductivity(1.2));
+  EXPECT_TRUE(uka.setSoilDensity(970));
+  EXPECT_TRUE(uka.setSoilSpecificHeat(2700));
+  EXPECT_TRUE(uka.setAverageSoilSurfaceTemperature(17.0));
+  EXPECT_TRUE(uka.setAverageAmplitudeofSurfaceTemperature(14.0));
+  EXPECT_TRUE(uka.setPhaseShiftofMinimumSurfaceTemperature(19.0));
+
+  EXPECT_EQ(1.2, uka.soilThermalConductivity());
+  EXPECT_EQ(970, uka.soilDensity());
+  EXPECT_EQ(2700, uka.soilSpecificHeat());
+  ASSERT_TRUE(uka.averageSoilSurfaceTemperature());
+  EXPECT_EQ(17.0, uka.averageSoilSurfaceTemperature().get());
+  ASSERT_TRUE(uka.averageAmplitudeofSurfaceTemperature());
+  EXPECT_EQ(14.0, uka.averageAmplitudeofSurfaceTemperature().get());
+  ASSERT_TRUE(uka.phaseShiftofMinimumSurfaceTemperature());
+  EXPECT_EQ(19.0, uka.phaseShiftofMinimumSurfaceTemperature().get());
+
+  EXPECT_TRUE(uka.resetAverageSoilSurfaceTemperature());
+  EXPECT_TRUE(uka.resetAverageAmplitudeofSurfaceTemperature());
+  EXPECT_TRUE(uka.resetPhaseShiftofMinimumSurfaceTemperature());
+
+  EXPECT_FALSE(uka.averageSoilSurfaceTemperature());
+  EXPECT_FALSE(uka.averageAmplitudeofSurfaceTemperature());
+  EXPECT_FALSE(uka.phaseShiftofMinimumSurfaceTemperature());
+}
 
 TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_Clone) {}
 
