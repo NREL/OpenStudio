@@ -433,10 +433,7 @@ namespace model {
     if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
       LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
     }
-    return undisturbedGroundTemperatureModel()
-      .cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>()
-      .kusudaAchenbachAverageAmplitudeofSurfaceTemperature()
-      .get();
+    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().averageAmplitudeofSurfaceTemperature().get();
   }
 
   double GroundHeatExchangerHorizontalTrench::kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature() const {
@@ -445,10 +442,7 @@ namespace model {
     if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
       LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
     }
-    return undisturbedGroundTemperatureModel()
-      .cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>()
-      .kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature()
-      .get();
+    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().phaseShiftofMinimumSurfaceTemperature().get();
   }
 
   double GroundHeatExchangerHorizontalTrench::evapotranspirationGroundCoverParameter() const {
@@ -537,7 +531,7 @@ namespace model {
     if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
       LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
     }
-    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().setKusudaAchenbachAverageSurfaceTemperature(
+    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().setAverageSurfaceTemperature(
       kusudaAchenbachAverageSurfaceTemperature);
   }
 
@@ -548,9 +542,8 @@ namespace model {
     if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
       LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
     }
-    return undisturbedGroundTemperatureModel()
-      .cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>()
-      .setKusudaAchenbachAverageAmplitudeofSurfaceTemperature(kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
+    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().setAverageAmplitudeofSurfaceTemperature(
+      kusudaAchenbachAverageAmplitudeofSurfaceTemperature);
   }
 
   bool GroundHeatExchangerHorizontalTrench::setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(
@@ -560,9 +553,8 @@ namespace model {
     if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
       LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
     }
-    return undisturbedGroundTemperatureModel()
-      .cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>()
-      .setKusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
+    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().setPhaseShiftofMinimumSurfaceTemperature(
+      kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature);
   }
 
   bool GroundHeatExchangerHorizontalTrench::setEvapotranspirationGroundCoverParameter(double evapotranspirationGroundCoverParameter) {
