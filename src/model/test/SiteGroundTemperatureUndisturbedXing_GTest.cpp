@@ -63,14 +63,14 @@ TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedXing_SiteGroundTemperatureU
 TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedXing_SetGetFields) {
   Model m;
   SiteGroundTemperatureUndisturbedXing ux(m);
-  
+
   EXPECT_TRUE(ux.setSoilThermalConductivity(1.3));
   EXPECT_TRUE(ux.setSoilDensity(971));
   EXPECT_TRUE(ux.setSoilSpecificHeat(2701));
   EXPECT_TRUE(ux.setAverageSoilSurfaceTemperature(11.2));
-  EXPECT_TRUE(ux.setSoilSurfaceTemperatureAmplitude1(13.5));  
+  EXPECT_TRUE(ux.setSoilSurfaceTemperatureAmplitude1(13.5));
   EXPECT_TRUE(ux.setSoilSurfaceTemperatureAmplitude2(0.8));
-  EXPECT_TRUE(ux.setPhaseShiftofTemperatureAmplitude1(26));  
+  EXPECT_TRUE(ux.setPhaseShiftofTemperatureAmplitude1(26));
   EXPECT_TRUE(ux.setPhaseShiftofTemperatureAmplitude2(31));
 
   EXPECT_EQ(1.3, ux.soilThermalConductivity());

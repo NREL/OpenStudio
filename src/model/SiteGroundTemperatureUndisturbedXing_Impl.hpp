@@ -52,8 +52,7 @@ namespace model {
 
       SiteGroundTemperatureUndisturbedXing_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
 
-      SiteGroundTemperatureUndisturbedXing_Impl(const SiteGroundTemperatureUndisturbedXing_Impl& other, Model_Impl* model,
-                                                           bool keepHandle);
+      SiteGroundTemperatureUndisturbedXing_Impl(const SiteGroundTemperatureUndisturbedXing_Impl& other, Model_Impl* model, bool keepHandle);
 
       virtual ~SiteGroundTemperatureUndisturbedXing_Impl() {}
 
@@ -69,19 +68,19 @@ namespace model {
       //@{
 
       double soilThermalConductivity() const;
-      
+
       double soilDensity() const;
-      
+
       double soilSpecificHeat() const;
-      
+
       double averageSoilSurfaceTemperature() const;
-      
+
       double soilSurfaceTemperatureAmplitude1() const;
-      
+
       double soilSurfaceTemperatureAmplitude2() const;
-      
+
       double phaseShiftofTemperatureAmplitude1() const;
-      
+
       double phaseShiftofTemperatureAmplitude2() const;
 
       //@}
@@ -97,11 +96,11 @@ namespace model {
       bool setAverageSoilSurfaceTemperature(double averageSoilSurfaceTemperature);
 
       bool setSoilSurfaceTemperatureAmplitude1(double soilSurfaceTemperatureAmplitude1);
-      
+
       bool setSoilSurfaceTemperatureAmplitude2(double soilSurfaceTemperatureAmplitude2);
-      
+
       bool setPhaseShiftofTemperatureAmplitude1(double phaseShiftofTemperatureAmplitude1);
-      
+
       bool setPhaseShiftofTemperatureAmplitude2(double phaseShiftofTemperatureAmplitude2);
 
       //@}

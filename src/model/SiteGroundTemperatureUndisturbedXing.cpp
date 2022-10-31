@@ -47,20 +47,20 @@ namespace model {
 
   namespace detail {
 
-    SiteGroundTemperatureUndisturbedXing_Impl::SiteGroundTemperatureUndisturbedXing_Impl(const IdfObject& idfObject,
-                                                                                                               Model_Impl* model, bool keepHandle)
+    SiteGroundTemperatureUndisturbedXing_Impl::SiteGroundTemperatureUndisturbedXing_Impl(const IdfObject& idfObject, Model_Impl* model,
+                                                                                         bool keepHandle)
       : ModelObject_Impl(idfObject, model, keepHandle) {
       OS_ASSERT(idfObject.iddObject().type() == SiteGroundTemperatureUndisturbedXing::iddObjectType());
     }
 
-    SiteGroundTemperatureUndisturbedXing_Impl::SiteGroundTemperatureUndisturbedXing_Impl(
-      const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle)
+    SiteGroundTemperatureUndisturbedXing_Impl::SiteGroundTemperatureUndisturbedXing_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
+                                                                                         Model_Impl* model, bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == SiteGroundTemperatureUndisturbedXing::iddObjectType());
     }
 
-    SiteGroundTemperatureUndisturbedXing_Impl::SiteGroundTemperatureUndisturbedXing_Impl(
-      const SiteGroundTemperatureUndisturbedXing_Impl& other, Model_Impl* model, bool keepHandle)
+    SiteGroundTemperatureUndisturbedXing_Impl::SiteGroundTemperatureUndisturbedXing_Impl(const SiteGroundTemperatureUndisturbedXing_Impl& other,
+                                                                                         Model_Impl* model, bool keepHandle)
       : ModelObject_Impl(other, model, keepHandle) {}
 
     boost::optional<ParentObject> SiteGroundTemperatureUndisturbedXing_Impl::parent() const {
@@ -144,36 +144,31 @@ namespace model {
     }
 
     bool SiteGroundTemperatureUndisturbedXing_Impl::setAverageSoilSurfaceTemperature(double averageSoilSurfaceTemperature) {
-      bool result =
-        setDouble(OS_Site_GroundTemperature_Undisturbed_XingFields::AverageSoilSurfaceTemperature, averageSoilSurfaceTemperature);
+      bool result = setDouble(OS_Site_GroundTemperature_Undisturbed_XingFields::AverageSoilSurfaceTemperature, averageSoilSurfaceTemperature);
       OS_ASSERT(result);
       return result;
     }
 
     bool SiteGroundTemperatureUndisturbedXing_Impl::setSoilSurfaceTemperatureAmplitude1(double soilSurfaceTemperatureAmplitude1) {
-      bool result =
-        setDouble(OS_Site_GroundTemperature_Undisturbed_XingFields::SoilSurfaceTemperatureAmplitude1, soilSurfaceTemperatureAmplitude1);
+      bool result = setDouble(OS_Site_GroundTemperature_Undisturbed_XingFields::SoilSurfaceTemperatureAmplitude1, soilSurfaceTemperatureAmplitude1);
       OS_ASSERT(result);
       return result;
     }
 
     bool SiteGroundTemperatureUndisturbedXing_Impl::setSoilSurfaceTemperatureAmplitude2(double soilSurfaceTemperatureAmplitude2) {
-      bool result =
-        setDouble(OS_Site_GroundTemperature_Undisturbed_XingFields::SoilSurfaceTemperatureAmplitude2, soilSurfaceTemperatureAmplitude2);
+      bool result = setDouble(OS_Site_GroundTemperature_Undisturbed_XingFields::SoilSurfaceTemperatureAmplitude2, soilSurfaceTemperatureAmplitude2);
       OS_ASSERT(result);
       return result;
     }
 
     bool SiteGroundTemperatureUndisturbedXing_Impl::setPhaseShiftofTemperatureAmplitude1(double phaseShiftofTemperatureAmplitude1) {
-      bool result =
-        setDouble(OS_Site_GroundTemperature_Undisturbed_XingFields::PhaseShiftofTemperatureAmplitude1, phaseShiftofTemperatureAmplitude1);
+      bool result = setDouble(OS_Site_GroundTemperature_Undisturbed_XingFields::PhaseShiftofTemperatureAmplitude1, phaseShiftofTemperatureAmplitude1);
       OS_ASSERT(result);
       return result;
     }
 
     bool SiteGroundTemperatureUndisturbedXing_Impl::setPhaseShiftofTemperatureAmplitude2(double phaseShiftofTemperatureAmplitude2) {
-      bool result =
-        setDouble(OS_Site_GroundTemperature_Undisturbed_XingFields::PhaseShiftofTemperatureAmplitude2, phaseShiftofTemperatureAmplitude2);
+      bool result = setDouble(OS_Site_GroundTemperature_Undisturbed_XingFields::PhaseShiftofTemperatureAmplitude2, phaseShiftofTemperatureAmplitude2);
       OS_ASSERT(result);
       return result;
     }
@@ -227,15 +222,15 @@ namespace model {
   boost::optional<double> SiteGroundTemperatureUndisturbedXing::soilSurfaceTemperatureAmplitude1() const {
     return getImpl<detail::SiteGroundTemperatureUndisturbedXing_Impl>()->soilSurfaceTemperatureAmplitude1();
   }
-  
+
   boost::optional<double> SiteGroundTemperatureUndisturbedXing::soilSurfaceTemperatureAmplitude2() const {
     return getImpl<detail::SiteGroundTemperatureUndisturbedXing_Impl>()->soilSurfaceTemperatureAmplitude2();
   }
-  
+
   boost::optional<double> SiteGroundTemperatureUndisturbedXing::phaseShiftofTemperatureAmplitude1() const {
     return getImpl<detail::SiteGroundTemperatureUndisturbedXing_Impl>()->phaseShiftofTemperatureAmplitude1();
   }
-  
+
   boost::optional<double> SiteGroundTemperatureUndisturbedXing::phaseShiftofTemperatureAmplitude2() const {
     return getImpl<detail::SiteGroundTemperatureUndisturbedXing_Impl>()->phaseShiftofTemperatureAmplitude2();
   }
@@ -273,8 +268,7 @@ namespace model {
   }
 
   /// @cond
-  SiteGroundTemperatureUndisturbedXing::SiteGroundTemperatureUndisturbedXing(
-    std::shared_ptr<detail::SiteGroundTemperatureUndisturbedXing_Impl> impl)
+  SiteGroundTemperatureUndisturbedXing::SiteGroundTemperatureUndisturbedXing(std::shared_ptr<detail::SiteGroundTemperatureUndisturbedXing_Impl> impl)
     : ModelObject(std::move(impl)) {}
   /// @endcond
 

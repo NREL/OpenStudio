@@ -44,8 +44,7 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject>
-    ForwardTranslator::translateSiteGroundTemperatureUndisturbedXing(SiteGroundTemperatureUndisturbedXing& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateSiteGroundTemperatureUndisturbedXing(SiteGroundTemperatureUndisturbedXing& modelObject) {
     boost::optional<double> value;
 
     // Name
