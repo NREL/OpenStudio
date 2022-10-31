@@ -1270,7 +1270,7 @@ OS:Site:GroundTemperature:Undisturbed:Xing,
        \type real
        \units J/kg-K
        \minimum> 0.0
-  N4,  \field Average Soil Surface Tempeature
+  N4,  \field Average Soil Surface Temperature
        \required-field
        \type real
        \units C
