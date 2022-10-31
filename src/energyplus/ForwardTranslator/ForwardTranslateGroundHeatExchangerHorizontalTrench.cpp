@@ -130,7 +130,7 @@ namespace energyplus {
       idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilThermalConductivity, value);
     }
 
-    // SoilDensity`
+    // SoilDensity
     {
       auto value = modelObject.soilDensity();
       idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilDensity, value);
