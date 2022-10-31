@@ -1441,6 +1441,9 @@ set(${target_name}_src
   SiteGroundTemperatureUndisturbedKusudaAchenbach.hpp
   SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp
   SiteGroundTemperatureUndisturbedKusudaAchenbach.cpp
+  SiteGroundTemperatureUndisturbedXing.hpp
+  SiteGroundTemperatureUndisturbedXing_Impl.hpp
+  SiteGroundTemperatureUndisturbedXing.cpp
   SiteWaterMainsTemperature.hpp
   SiteWaterMainsTemperature_Impl.hpp
   SiteWaterMainsTemperature.cpp
@@ -2246,6 +2249,7 @@ set(${target_name}_test_src
   test/SiteGroundTemperatureShallow_GTest.cpp
   test/SiteGroundTemperatureBuildingSurface_GTest.cpp
   test/SiteGroundTemperatureUndisturbedKusudaAchenbach_GTest.cpp
+  test/SiteGroundTemperatureUndisturbedXing_GTest.cpp
   test/SiteWaterMainsTemperature_GTest.cpp
   test/SizingPlant_GTest.cpp
   test/SizingSystem_GTest.cpp

@@ -363,6 +363,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureFCfactorMethod.cpp
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureShallow.cpp
   ForwardTranslator/ForwardTranslateSiteGroundTemperatureUndisturbedKusudaAchenbach.cpp
+  ForwardTranslator/ForwardTranslateSiteGroundTemperatureUndisturbedXing.cpp
   ForwardTranslator/ForwardTranslateSiteWaterMainsTemperature.cpp
   ForwardTranslator/ForwardTranslateSkyTemperature.cpp
   ForwardTranslator/ForwardTranslateSizingParameters.cpp
