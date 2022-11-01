@@ -33,6 +33,8 @@
 #include "../GroundHeatExchangerHorizontalTrench_Impl.hpp"
 #include "../SiteGroundTemperatureUndisturbedKusudaAchenbach.hpp"
 #include "../SiteGroundTemperatureUndisturbedKusudaAchenbach_Impl.hpp"
+#include "../SiteGroundTemperatureUndisturbedXing.hpp"
+#include "../SiteGroundTemperatureUndisturbedXing_Impl.hpp"
 
 using namespace openstudio;
 using namespace openstudio::model;
@@ -156,19 +158,48 @@ TEST_F(ModelFixture, GroundHeatExchangerHorizontalTrench_SetGetFields) {
   EXPECT_EQ(0.4, gh.pipeThermalConductivity());
   EXPECT_EQ(650, gh.pipeDensity());
   EXPECT_EQ(2500, gh.pipeSpecificHeat());
-  EXPECT_EQ(34, gh.soilMoistureContentPercent());
+  EXPECT_EQ(40, gh.soilMoistureContentPercent());
   EXPECT_EQ(60, gh.soilMoistureContentPercentatSaturation());
   EXPECT_EQ("KusudaAchenbach", gh.groundTemperatureModel());
   EXPECT_FALSE(gh.isGroundTemperatureModelDefaulted());
-  EXPECT_EQ(16.0, gh.kusudaAchenbachAverageSurfaceTemperature());
-  EXPECT_EQ(13.0, gh.kusudaAchenbachAverageAmplitudeofSurfaceTemperature());
-  EXPECT_EQ(18.0, gh.kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature());
+  EXPECT_EQ(15.5, gh.kusudaAchenbachAverageSurfaceTemperature());
+  EXPECT_EQ(12.8, gh.kusudaAchenbachAverageAmplitudeofSurfaceTemperature());
+  EXPECT_EQ(17.3, gh.kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature());
   EXPECT_EQ(0.5, gh.evapotranspirationGroundCoverParameter());
   ModelObject undisturbedGroundTemperatureModel = gh.undisturbedGroundTemperatureModel();
   boost::optional<SiteGroundTemperatureUndisturbedKusudaAchenbach> uka =
     undisturbedGroundTemperatureModel.optionalCast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
   ASSERT_TRUE(uka);
   EXPECT_EQ(sgt, uka.get());
+
+  SiteGroundTemperatureUndisturbedXing sgt2(m);
+  EXPECT_TRUE(gh.setUndisturbedGroundTemperatureModel(sgt2));
+
+  EXPECT_EQ(0.005, gh.designFlowRate());
+  EXPECT_EQ(80, gh.trenchLengthinPipeAxialDirection());
+  EXPECT_EQ(3, gh.numberofTrenches());
+  EXPECT_EQ(3.0, gh.horizontalSpacingBetweenPipes());
+  EXPECT_EQ(0.02, gh.pipeInnerDiameter());
+  EXPECT_EQ(0.03, gh.pipeOuterDiameter());
+  EXPECT_EQ(1.3, gh.burialDepth());
+  EXPECT_EQ(1.1, gh.soilThermalConductivity());
+  EXPECT_EQ(965, gh.soilDensity());
+  EXPECT_EQ(2600, gh.soilSpecificHeat());
+  EXPECT_EQ(0.4, gh.pipeThermalConductivity());
+  EXPECT_EQ(650, gh.pipeDensity());
+  EXPECT_EQ(2500, gh.pipeSpecificHeat());
+  EXPECT_EQ(40, gh.soilMoistureContentPercent());
+  EXPECT_EQ(60, gh.soilMoistureContentPercentatSaturation());
+  EXPECT_EQ("SiteGroundTemperature", gh.groundTemperatureModel());
+  EXPECT_FALSE(gh.isGroundTemperatureModelDefaulted());
+  EXPECT_THROW(gh.kusudaAchenbachAverageSurfaceTemperature(), openstudio::Exception);
+  EXPECT_THROW(gh.kusudaAchenbachAverageAmplitudeofSurfaceTemperature(), openstudio::Exception);
+  EXPECT_THROW(gh.kusudaAchenbachPhaseShiftofMinimumSurfaceTemperature(), openstudio::Exception);
+  EXPECT_EQ(0.5, gh.evapotranspirationGroundCoverParameter());
+  ModelObject undisturbedGroundTemperatureModel2 = gh.undisturbedGroundTemperatureModel();
+  boost::optional<SiteGroundTemperatureUndisturbedXing> ux = undisturbedGroundTemperatureModel2.optionalCast<SiteGroundTemperatureUndisturbedXing>();
+  ASSERT_TRUE(ux);
+  EXPECT_EQ(sgt2, ux.get());
 }
 
 TEST_F(ModelFixture, GroundHeatExchangerHorizontalTrench_Clone) {}

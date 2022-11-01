@@ -102,7 +102,6 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SiteGroundTemperatureUndisturbedXing
   ASSERT_TRUE(idfObject.getTarget(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelName));
   const WorkspaceObject xing = idfObject.getTarget(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelName).get();
   EXPECT_EQ(IddObjectType{IddObjectType::Site_GroundTemperature_Undisturbed_Xing}, xing.iddObject().type());
-  EXPECT_EQ(0.358, idfObject.getDouble(GroundHeatExchanger_HorizontalTrenchFields::EvapotranspirationGroundCoverParameter).get());
 
   EXPECT_EQ(1.1, xing.getDouble(Site_GroundTemperature_Undisturbed_XingFields::SoilThermalConductivity).get());
   EXPECT_EQ(965.0, xing.getDouble(Site_GroundTemperature_Undisturbed_XingFields::SoilDensity).get());
