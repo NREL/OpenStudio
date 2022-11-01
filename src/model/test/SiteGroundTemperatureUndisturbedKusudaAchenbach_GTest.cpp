@@ -82,9 +82,9 @@ TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_SetGetField
   ASSERT_TRUE(uka.phaseShiftofMinimumSurfaceTemperature());
   EXPECT_EQ(19.0, uka.phaseShiftofMinimumSurfaceTemperature().get());
 
-  EXPECT_TRUE(uka.resetAverageSoilSurfaceTemperature());
-  EXPECT_TRUE(uka.resetAverageAmplitudeofSurfaceTemperature());
-  EXPECT_TRUE(uka.resetPhaseShiftofMinimumSurfaceTemperature());
+  uka.resetAverageSoilSurfaceTemperature();
+  uka.resetAverageAmplitudeofSurfaceTemperature();
+  uka.resetPhaseShiftofMinimumSurfaceTemperature();
 
   EXPECT_FALSE(uka.averageSoilSurfaceTemperature());
   EXPECT_FALSE(uka.averageAmplitudeofSurfaceTemperature());

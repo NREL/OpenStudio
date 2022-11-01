@@ -67,7 +67,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SiteGroundTemperatureUndisturbedXing
   EXPECT_TRUE(ux.setSoilThermalConductivity(1.1));
   EXPECT_TRUE(ux.setSoilDensity(965));
   EXPECT_TRUE(ux.setSoilSpecificHeat(2600));
-  EXPECT_TRUE(ux.setAverageSurfaceTemperature(16.5));
+  EXPECT_TRUE(ux.setAverageSoilSurfaceTemperature(16.5));
   EXPECT_TRUE(ux.setSoilSurfaceTemperatureAmplitude1(13.8));
   EXPECT_TRUE(ux.setSoilSurfaceTemperatureAmplitude2(0.8));
   EXPECT_TRUE(ux.setPhaseShiftofTemperatureAmplitude1(26));

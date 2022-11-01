@@ -83,6 +83,6 @@ TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedXing_SetGetFields) {
   EXPECT_EQ(31, ux.phaseShiftofTemperatureAmplitude2());
 }
 
-TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_Clone) {}
+TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedXing_Clone) {}
 
-TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_Remove) {}
+TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedXing_Remove) {}

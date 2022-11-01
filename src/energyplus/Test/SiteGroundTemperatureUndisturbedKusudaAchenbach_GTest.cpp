@@ -67,7 +67,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_SiteGroundTemperatureUndisturbedKusu
   EXPECT_TRUE(uka.setSoilThermalConductivity(1.1));
   EXPECT_TRUE(uka.setSoilDensity(965));
   EXPECT_TRUE(uka.setSoilSpecificHeat(2600));
-  EXPECT_TRUE(uka.setAverageSurfaceTemperature(16.5));
+  EXPECT_TRUE(uka.setAverageSoilSurfaceTemperature(16.5));
   EXPECT_TRUE(uka.setAverageAmplitudeofSurfaceTemperature(13.8));
   EXPECT_TRUE(uka.setPhaseShiftofMinimumSurfaceTemperature(18.3));
 

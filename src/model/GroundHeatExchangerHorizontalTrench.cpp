@@ -531,7 +531,7 @@ namespace model {
     if (undisturbedGroundTemperatureModel().iddObjectType() != IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach) {
       LOG_AND_THROW("Undisturbed ground temperature model is not KusudaAchenbach.");
     }
-    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().setAverageSurfaceTemperature(
+    return undisturbedGroundTemperatureModel().cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>().setAverageSoilSurfaceTemperature(
       kusudaAchenbachAverageSurfaceTemperature);
   }
 

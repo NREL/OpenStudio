@@ -215,23 +215,23 @@ namespace model {
     return getImpl<detail::SiteGroundTemperatureUndisturbedXing_Impl>()->soilSpecificHeat();
   }
 
-  boost::optional<double> SiteGroundTemperatureUndisturbedXing::averageSoilSurfaceTemperature() const {
+  double SiteGroundTemperatureUndisturbedXing::averageSoilSurfaceTemperature() const {
     return getImpl<detail::SiteGroundTemperatureUndisturbedXing_Impl>()->averageSoilSurfaceTemperature();
   }
 
-  boost::optional<double> SiteGroundTemperatureUndisturbedXing::soilSurfaceTemperatureAmplitude1() const {
+  double SiteGroundTemperatureUndisturbedXing::soilSurfaceTemperatureAmplitude1() const {
     return getImpl<detail::SiteGroundTemperatureUndisturbedXing_Impl>()->soilSurfaceTemperatureAmplitude1();
   }
 
-  boost::optional<double> SiteGroundTemperatureUndisturbedXing::soilSurfaceTemperatureAmplitude2() const {
+  double SiteGroundTemperatureUndisturbedXing::soilSurfaceTemperatureAmplitude2() const {
     return getImpl<detail::SiteGroundTemperatureUndisturbedXing_Impl>()->soilSurfaceTemperatureAmplitude2();
   }
 
-  boost::optional<double> SiteGroundTemperatureUndisturbedXing::phaseShiftofTemperatureAmplitude1() const {
+  double SiteGroundTemperatureUndisturbedXing::phaseShiftofTemperatureAmplitude1() const {
     return getImpl<detail::SiteGroundTemperatureUndisturbedXing_Impl>()->phaseShiftofTemperatureAmplitude1();
   }
 
-  boost::optional<double> SiteGroundTemperatureUndisturbedXing::phaseShiftofTemperatureAmplitude2() const {
+  double SiteGroundTemperatureUndisturbedXing::phaseShiftofTemperatureAmplitude2() const {
     return getImpl<detail::SiteGroundTemperatureUndisturbedXing_Impl>()->phaseShiftofTemperatureAmplitude2();
   }
 
