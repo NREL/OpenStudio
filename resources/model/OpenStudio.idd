@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.4.1
+       \default 3.5.0
   A3; \field Prerelease Identifier
        \type alpha
 
