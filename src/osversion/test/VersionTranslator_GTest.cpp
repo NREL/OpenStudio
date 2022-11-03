@@ -56,6 +56,8 @@
 #include <utilities/idd/OS_Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/OS_Connection_FieldEnums.hxx>
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
+#include <utilities/idd/OS_GroundHeatExchanger_HorizontalTrench_FieldEnums.hxx>
+#include <utilities/idd/OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/core/Compare.hpp"
 
@@ -2186,7 +2188,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_SizingZone) {
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_SizingZone_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_SizingZone_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> szs = model->getObjectsByType("OS:Sizing:Zone");
@@ -2236,7 +2238,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_ZoneHVACPackaged) {
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_ZoneHVACPackaged_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_ZoneHVACPackaged_updated.osm");
   model->save(outPath, true);
 
   EXPECT_EQ(2, model->getObjectsByType("OS:Fan:SystemModel").size());
@@ -2318,4 +2320,54 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_ZoneHVACPackaged) {
     EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::MotorLossRadiativeFraction).get());
     EXPECT_EQ("General", fan.getString(OS_Fan_SystemModelFields::EndUseSubcategory).get());
   }
+}
+
+TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_GroundHeatExchangerHorizontalTrench) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_1/test_vt_GroundHeatExchangerHorizontalTrench.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_1/test_vt_GroundHeatExchangerHorizontalTrench_updated.osm");
+  model->save(outPath, true);
+  
+  std::vector<WorkspaceObject> ghxs = model->getObjectsByType("OS:GroundHeatExchanger:HorizontalTrench");
+  ASSERT_EQ(1u, ghxs.size());
+  WorkspaceObject ghx = ghxs[0];
+  
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::Name).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::InletNodeName).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::OutletNodeName).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::DesignFlowRate).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::TrenchLengthinPipeAxialDirection).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::NumberofTrenches).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::HorizontalSpacingBetweenPipes).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::PipeInnerDiameter).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::PipeOuterDiameter).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::BurialDepth).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::SoilThermalConductivity).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::SoilDensity).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::SoilSpecificHeat).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::PipeThermalConductivity).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::PipeDensity).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::PipeSpecificHeat).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::SoilMoistureContentPercent).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::SoilMoistureContentPercentatSaturation).get());
+  EXPECT_NE("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel).get());
+  EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::EvapotranspirationGroundCoverParameter).get());
+  
+  std::vector<WorkspaceObject> ukas = model->getObjectsByType("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach");
+  ASSERT_EQ(1u, ukas.size());
+  
+  ASSERT_TRUE(ghx.getTarget(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel));
+  WorkspaceObject uka = ghx.getTarget(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel).get();
+  EXPECT_EQ(uka.nameString(), ghx.getTarget(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel)->nameString());
+  EXPECT_EQ(IddObjectType(IddObjectType::OS_Site_GroundTemperature_Undisturbed_KusudaAchenbach), uka.iddObject().type());
+  EXPECT_EQ("", uka.getString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::Name).get());
+  EXPECT_EQ("", uka.getString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity).get());
+  EXPECT_EQ("", uka.getString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity).get());
+  EXPECT_EQ("", uka.getString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat).get());
+  EXPECT_EQ("", uka.getString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageSoilSurfaceTemperature).get());
+  EXPECT_EQ("", uka.getString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::AverageAmplitudeofSurfaceTemperature).get());
+  EXPECT_EQ("", uka.getString(OS_Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::PhaseShiftofMinimumSurfaceTemperature).get());
 }
