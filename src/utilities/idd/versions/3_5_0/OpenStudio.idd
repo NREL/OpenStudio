@@ -1197,102 +1197,6 @@ OS:Site:GroundTemperature:Deep,
        \type real
        \default 16
 
-OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach,
-       \memo Undisturbed ground temperature object using the
-       \memo Kusuda-Achenbach 1965 correlation.
-       \min-fields 8
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2,  \field Name
-       \required-field
-       \reference UndisturbedGroundTempModels
-  N1,  \field Soil Thermal Conductivity
-       \required-field
-       \type real
-       \units W/m-K
-       \minimum> 0.0
-  N2,  \field Soil Density
-       \required-field
-       \type real
-       \units kg/m3
-       \minimum> 0.0
-  N3,  \field Soil Specific Heat
-       \required-field
-       \type real
-       \units J/kg-K
-       \minimum> 0.0
-  N4,  \field Average Soil Surface Temperature
-       \type real
-       \units C
-       \note Annual average surface temperature
-       \note If left blank the Site:GroundTemperature:Shallow object must be included in the input
-       \note The soil temperature, amplitude, and phase shift must all be included or omitted together
-  N5,  \field Average Amplitude of Surface Temperature
-       \type real
-       \units deltaC
-       \minimum 0
-       \note Annual average surface temperature variation from average.
-       \note If left blank the Site:GroundTemperature:Shallow object must be included in the input
-       \note The soil temperature, amplitude, and phase shift must all be included or omitted together
-  N6;  \field Phase Shift of Minimum Surface Temperature
-       \type real
-       \units days
-       \minimum 0
-       \maximum< 365
-       \note The phase shift of minimum surface temperature, or the day
-       \note of the year when the minimum surface temperature occurs.
-       \note If left blank the Site:GroundTemperature:Shallow object must be included in the input
-       \note The soil temperature, amplitude, and phase shift must all be included or omitted together
-
-OS:Site:GroundTemperature:Undisturbed:Xing,
-       \memo Undisturbed ground temperature object using the
-       \memo Xing 2014 2 harmonic parameter model.
-       \min-fields 10
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2,  \field Name
-       \required-field
-       \reference UndisturbedGroundTempModels
-  N1,  \field Soil Thermal Conductivity
-       \required-field
-       \type real
-       \units W/m-K
-       \minimum> 0.0
-  N2,  \field Soil Density
-       \required-field
-       \type real
-       \units kg/m3
-       \minimum> 0.0
-  N3,  \field Soil Specific Heat
-       \required-field
-       \type real
-       \units J/kg-K
-       \minimum> 0.0
-  N4,  \field Average Soil Surface Temperature
-       \required-field
-       \type real
-       \units C
-  N5,  \field Soil Surface Temperature Amplitude 1
-       \required-field
-       \type real
-       \units deltaC
-  N6,  \field Soil Surface Temperature Amplitude 2
-       \required-field
-       \type real
-       \units deltaC
-  N7,  \field Phase Shift of Temperature Amplitude 1
-       \required-field
-       \type real
-       \units days
-       \maximum< 365
-  N8;  \field Phase Shift of Temperature Amplitude 2
-       \required-field
-       \type real
-       \units days
-       \maximum< 365
-
 OS:Site:GroundReflectance,
   \unique-object
   \min-fields 13
@@ -15822,11 +15726,35 @@ OS:GroundHeatExchanger:HorizontalTrench,
         \minimum 0
         \maximum 100
         \required-field
-   A5,  \field Undisturbed Ground Temperature Model
+   A5, \field Ground Temperature Model
+       \type choice
+       \key SiteGroundTemperature
+       \key KusudaAchenbach
+   N16, \field Kusuda-Achenbach Average Surface Temperature
+        \note This is the parameter for average annual surface temperature
+        \note This is an optional input in that if it is missing, a
+        \note Site:GroundTemperature:Shallow object must be found in the input
+        \note The undisturbed ground temperature will be approximated from this object
+        \type real
+        \units C
         \required-field
-        \type object-list
-        \object-list UndisturbedGroundTempModels
-   N16; \field Evapotranspiration Ground Cover Parameter
+   N17, \field Kusuda-Achenbach Average Amplitude of Surface Temperature
+        \note This is the parameter for annual average amplitude from average surface temperature
+        \note This is an optional input in that if it is missing, a
+        \note Site:GroundTemperature:Shallow object must be found in the input
+        \note The undisturbed ground temperature will be approximated from this object
+        \type real
+        \units deltaC
+        \required-field
+   N18, \field Kusuda-Achenbach Phase Shift of Minimum Surface Temperature
+        \note This is the parameter for phase shift from minimum surface temperature
+        \note This is an optional input in that if it is missing, a
+        \note Site:GroundTemperature:Shallow object must be found in the input
+        \note The undisturbed ground temperature will be approximated from this object
+        \type real
+        \units days
+        \required-field
+   N19; \field Evapotranspiration Ground Cover Parameter
         \type real
         \minimum 0
         \maximum 1.5
@@ -37701,4 +37629,3 @@ OS:PlantComponent:UserDefined,
        \type object-list
        \object-list ThermalZoneNames
        \note Used for modeling device losses to surrounding zone
-
