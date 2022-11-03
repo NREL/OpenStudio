@@ -2330,11 +2330,11 @@ TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_GroundHeatExchangerHorizontalTren
 
   openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_1/test_vt_GroundHeatExchangerHorizontalTrench_updated.osm");
   model->save(outPath, true);
-  
+
   std::vector<WorkspaceObject> ghxs = model->getObjectsByType("OS:GroundHeatExchanger:HorizontalTrench");
   ASSERT_EQ(1u, ghxs.size());
   WorkspaceObject ghx = ghxs[0];
-  
+
   EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::Name).get());
   EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::InletNodeName).get());
   EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::OutletNodeName).get());
@@ -2355,10 +2355,10 @@ TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_GroundHeatExchangerHorizontalTren
   EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::SoilMoistureContentPercentatSaturation).get());
   EXPECT_NE("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel).get());
   EXPECT_EQ("", ghx.getString(OS_GroundHeatExchanger_HorizontalTrenchFields::EvapotranspirationGroundCoverParameter).get());
-  
+
   std::vector<WorkspaceObject> ukas = model->getObjectsByType("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach");
   ASSERT_EQ(1u, ukas.size());
-  
+
   ASSERT_TRUE(ghx.getTarget(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel));
   WorkspaceObject uka = ghx.getTarget(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel).get();
   EXPECT_EQ(uka.nameString(), ghx.getTarget(OS_GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModel)->nameString());

@@ -7622,13 +7622,13 @@ namespace osversion {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:GroundHeatExchanger:HorizontalTrench") {
-        
+
         // Kusuda fields get moved over to OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach
-        
+
         auto iddObject = idd_3_5_1.getObject(iddname);
         IdfObject ghxObject(iddObject.get());
         IdfObject kusudaObject(idd_3_5_1.getObject("OS:SiteGroundTemperature:Undisturbed:KusudaAchenbach").get());
-        
+
         for (size_t i = 0; i < 24; ++i) {
           if (i < 19) {
             if ((value = object.getString(i))) {
@@ -7638,7 +7638,7 @@ namespace osversion {
             // No-op
           } else if (i < 23) {  // Kusuda-Achenbach xxx
             if ((value = object.getString(i))) {
-              kusudaObject.setString(i - 15, value.get()); 
+              kusudaObject.setString(i - 15, value.get());
             }
           } else {  // Evapotranspiration Ground Cover Parameter
             if ((value = object.getString(i))) {
@@ -7648,7 +7648,7 @@ namespace osversion {
         }
 
         // Undisturbed Ground Temperature Model
-        ghxObject.setString(19, kusudaObject.getString(0).get()); 
+        ghxObject.setString(19, kusudaObject.getString(0).get());
 
         m_refactored.push_back(RefactoredObjectData(object, ghxObject));
         m_new.push_back(kusudaObject);
@@ -7661,7 +7661,7 @@ namespace osversion {
         ss << object;
       }
     }
-    
+
     return ss.str();
 
   }  // end update_3_5_0_to_3_5_1
