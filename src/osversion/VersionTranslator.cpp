@@ -149,7 +149,7 @@ namespace osversion {
     m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
     m_updateMethods[VersionString("3.4.0")] = &VersionTranslator::update_3_3_0_to_3_4_0;
     m_updateMethods[VersionString("3.5.0")] = &VersionTranslator::update_3_4_0_to_3_5_0;
-    // m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::update_3_5_0_to_3_5_1;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for release).
@@ -306,7 +306,7 @@ namespace osversion {
     m_startVersions.push_back(VersionString("3.2.1"));
     m_startVersions.push_back(VersionString("3.3.0"));
     m_startVersions.push_back(VersionString("3.4.0"));
-    // m_startVersions.push_back(VersionString("3.5.0"));
+    m_startVersions.push_back(VersionString("3.5.0"));
     // Note: do **not** include the **current** version in m_startVersions, stop at the previous release
   }
 
@@ -7610,9 +7610,61 @@ namespace osversion {
 
   }  // end update_3_4_0_to_3_5_0
 
-  /*   std::string VersionTranslator::update_3_5_0_to_3_5_1(const IdfFile& idf_3_5_0, const IddFileAndFactoryWrapper& idd_3_5_1) {
+  std::string VersionTranslator::update_3_5_0_to_3_5_1(const IdfFile& idf_3_5_0, const IddFileAndFactoryWrapper& idd_3_5_1) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
 
-  }  // end update_3_5_0_to_3_5_1 */
+    ss << idf_3_5_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_5_1.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_5_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:GroundHeatExchanger:HorizontalTrench") {
+        
+        // Kusuda fields get moved over to OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach
+        
+        auto iddObject = idd_3_5_1.getObject(iddname);
+        IdfObject ghxObject(iddObject.get());
+        IdfObject kusudaObject(idd_3_5_1.getObject("OS:SiteGroundTemperature:Undisturbed:KusudaAchenbach").get());
+        
+        for (size_t i = 0; i < 24; ++i) {
+          if (i < 19) {
+            if ((value = object.getString(i))) {
+              ghxObject.setString(i, value.get());
+            }
+          } else if (i == 19) {  // Ground Temperature Model
+            // No-op
+          } else if (i < 23) {  // Kusuda-Achenbach xxx
+            if ((value = object.getString(i))) {
+              kusudaObject.setString(i - 15, value.get()); 
+            }
+          } else {  // Evapotranspiration Ground Cover Parameter
+            if ((value = object.getString(i))) {
+              ghxObject.setString(20, value.get());
+            }
+          }
+        }
+
+        // Undisturbed Ground Temperature Model
+        ghxObject.setString(19, kusudaObject.getString(0).get()); 
+
+        m_refactored.push_back(RefactoredObjectData(object, ghxObject));
+        m_new.push_back(kusudaObject);
+
+        ss << ghxObject;
+        ss << kusudaObject;
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+    
+    return ss.str();
+
+  }  // end update_3_5_0_to_3_5_1
 
 }  // namespace osversion
 }  // namespace openstudio
