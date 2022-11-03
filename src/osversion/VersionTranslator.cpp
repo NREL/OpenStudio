@@ -7627,28 +7627,28 @@ namespace osversion {
 
         auto iddObject = idd_3_5_1.getObject(iddname);
         IdfObject ghxObject(iddObject.get());
-        IdfObject kusudaObject(idd_3_5_1.getObject("OS:SiteGroundTemperature:Undisturbed:KusudaAchenbach").get());
+        IdfObject kusudaObject(idd_3_5_1.getObject("OS:Site:GroundTemperature:Undisturbed:KusudaAchenbach").get());
 
-        for (size_t i = 0; i < 24; ++i) {
+        for (size_t i = 0; i < object.numFields(); ++i) {
           if (i < 19) {
             if ((value = object.getString(i))) {
               ghxObject.setString(i, value.get());
+              if (((i == 11) || (i == 12) || (i == 13))) {  // Soil xxx
+                kusudaObject.setString(i - 9, value.get());
+              }
             }
-          } else if (i == 19) {  // Ground Temperature Model
-            // No-op
+          } else if (i == 19) {  // Undisturbed Ground Temperature Model
+            ghxObject.setString(i, kusudaObject.getString(0).get());
           } else if (i < 23) {  // Kusuda-Achenbach xxx
             if ((value = object.getString(i))) {
               kusudaObject.setString(i - 15, value.get());
             }
-          } else {  // Evapotranspiration Ground Cover Parameter
+          } else if (i == 23) {  // Evapotranspiration Ground Cover Parameter
             if ((value = object.getString(i))) {
               ghxObject.setString(20, value.get());
             }
           }
         }
-
-        // Undisturbed Ground Temperature Model
-        ghxObject.setString(19, kusudaObject.getString(0).get());
 
         m_refactored.push_back(RefactoredObjectData(object, ghxObject));
         m_new.push_back(kusudaObject);
