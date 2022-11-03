@@ -83,6 +83,18 @@ TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedXing_SetGetFields) {
   EXPECT_EQ(31, ux.phaseShiftofTemperatureAmplitude2());
 }
 
-TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedXing_Clone) {}
+TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedXing_Clone) {
+  Model m;
+  SiteGroundTemperatureUndisturbedXing ux(m);
 
-TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedXing_Remove) {}
+  EXPECT_EQ(1u, m.getConcreteModelObjects<SiteGroundTemperatureUndisturbedXing>().size());
+
+  auto uxClone = ux.clone(m).cast<SiteGroundTemperatureUndisturbedXing>();
+  EXPECT_EQ(2u, m.getConcreteModelObjects<SiteGroundTemperatureUndisturbedXing>().size());
+
+  ux.remove();
+  EXPECT_EQ(1u, m.getConcreteModelObjects<SiteGroundTemperatureUndisturbedXing>().size());
+
+  uxClone.remove();
+  EXPECT_EQ(0u, m.getConcreteModelObjects<SiteGroundTemperatureUndisturbedXing>().size());
+}

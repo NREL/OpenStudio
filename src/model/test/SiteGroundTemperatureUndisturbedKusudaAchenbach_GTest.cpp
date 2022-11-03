@@ -91,6 +91,18 @@ TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_SetGetField
   EXPECT_FALSE(uka.phaseShiftofMinimumSurfaceTemperature());
 }
 
-TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_Clone) {}
+TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_clone) {
+  Model m;
+  SiteGroundTemperatureUndisturbedKusudaAchenbach uka(m);
 
-TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_Remove) {}
+  EXPECT_EQ(1u, m.getConcreteModelObjects<SiteGroundTemperatureUndisturbedKusudaAchenbach>().size());
+
+  auto ukaClone = uka.clone(m).cast<SiteGroundTemperatureUndisturbedKusudaAchenbach>();
+  EXPECT_EQ(2u, m.getConcreteModelObjects<SiteGroundTemperatureUndisturbedKusudaAchenbach>().size());
+
+  uka.remove();
+  EXPECT_EQ(1u, m.getConcreteModelObjects<SiteGroundTemperatureUndisturbedKusudaAchenbach>().size());
+
+  ukaClone.remove();
+  EXPECT_EQ(0u, m.getConcreteModelObjects<SiteGroundTemperatureUndisturbedKusudaAchenbach>().size());
+}
