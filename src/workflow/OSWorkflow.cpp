@@ -132,6 +132,8 @@ void OSWorkflow::run() {
   model::Model model = runInitialization();
   boost::optional<openstudio::Workspace> workspace_;
 
+  auto runDir = workflowJSON.absoluteRunDir();
+
   // 2. determine ruby or python
   // 3. import measure.(py|rb)
   // 4. instantiate measure
@@ -145,9 +147,10 @@ void OSWorkflow::run() {
   // TODO: need to merge workflowJSON flags with flags from command line (eg: FT options)
   // TODO: need to modify utilities/RunOptions.hpp instead of duplicating some of that work in workflow
 
-  for (openstudio::MeasureType stepType : {openstudio::MeasureType::ModelMeasure, openstudio::MeasureType::EnergyPlusMeasure}) {
+  for (const openstudio::MeasureType stepType : {openstudio::MeasureType::ModelMeasure, openstudio::MeasureType::EnergyPlusMeasure}) {
     const auto modelSteps = workflowJSON.getMeasureSteps(stepType);
     if (stepType == MeasureType::EnergyPlusMeasure) {
+      model.save(runDir / "in.osm");
       openstudio::energyplus::ForwardTranslator ft;
       auto& ftOptions = runOptions.ft_options;
       ft.setKeepRunControlSpecialDays(ftOptions.runcontrolspecialdays);
@@ -368,6 +371,8 @@ spec.loader.exec_module(module)
         }
       }
     }  // End for (const auto& step : modelSteps)
+
+    workspace_->save(runDir / "in.idf");
   }
 }
 }  // namespace openstudio
