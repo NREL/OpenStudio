@@ -34,6 +34,8 @@
 #include "../WorkflowStep.hpp"
 #include "../WorkflowStep_Impl.hpp"
 #include "../WorkflowStepResult.hpp"
+#include "../RunOptions.hpp"
+#include "../ForwardTranslatorOptions.hpp"
 
 #include "../../time/DateTime.hpp"
 

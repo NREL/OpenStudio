@@ -27,91 +27,67 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
-#define UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
-
-#include "ForwardTranslatorOptions.hpp"
+#ifndef UTILITIES_FILETYPES_FORWARDTRANSLATOROPTIONS_IMPL_HPP
+#define UTILITIES_FILETYPES_FORWARDTRANSLATOROPTIONS_IMPL_HPP
 
 #include "../UtilitiesAPI.hpp"
 
 #include "../core/Logger.hpp"
-#include "../core/Path.hpp"
-#include "../data/Variant.hpp"
 
-#include <json/json.h>
-
-#include <nano/nano_signal_slot.hpp>
+namespace Json {
+class Value;
+}
 
 namespace openstudio {
-class CustomOutputAdapter;
+class ForwardTranslatorOptions;
 
 namespace detail {
 
-  class UTILITIES_API RunOptions_Impl
+  // TODO: is the nano onChange signal really needed for RunOptions?! If so, I need to implement one for ForwardTranslatorOptions too
+  class UTILITIES_API ForwardTranslatorOptions_Impl
   {
    public:
-    RunOptions_Impl() = default;
+    ForwardTranslatorOptions_Impl() = default;
+
+    void reset();
 
     std::string string() const;
+    Json::Value json() const;
 
-    bool debug() const;
-    bool setDebug(bool debug);
-    void resetDebug();
+    bool keepRunControlSpecialDays() const;
+    void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
 
-    bool epjson() const;
-    bool setEpjson(bool epjson);
-    void resetEpjson();
+    bool iPTabularOutput() const;
+    void setIPTabularOutput(bool iPTabularOutput);
 
-    bool fast() const;
-    bool setFast(bool fast);
-    void resetFast();
+    bool excludeLCCObjects() const;
+    void setExcludeLCCObjects(bool excludeLCCObjects);
 
-    bool preserveRunDir() const;
-    bool setPreserveRunDir(bool preserve);
-    void resetPreserveRunDir();
+    bool excludeSQliteOutputReport() const;
+    void setExcludeSQliteOutputReport(bool excludeSQliteOutputReport);
 
-    bool skipExpandObjects() const;
-    bool setSkipExpandObjects(bool skip);
-    void resetSkipExpandObjects();
+    bool excludeHTMLOutputReport() const;
+    void setExcludeHTMLOutputReport(bool excludeHTMLOutputReport);
 
-    bool skipEnergyPlusPreprocess() const;
-    bool setSkipEnergyPlusPreprocess(bool skip);
-    void resetSkipEnergyPlusPreprocess();
+    bool excludeVariableDictionary() const;
+    void setExcludeVariableDictionary(bool excludeVariableDictionary);
 
-    bool cleanup() const;
-    bool setCleanup(bool cleanup);
-    void resetCleanup();
-
-    boost::optional<CustomOutputAdapter> customOutputAdapter() const;
-    bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
-    void resetCustomOutputAdapter();
-
-    ForwardTranslatorOptions forwardTranslatorOptions() const;
-    bool setForwardTranslatorOptions(const ForwardTranslatorOptions& options);
-    void resetForwardTranslatorOptions();
-
-    // Emitted on any change
-    Nano::Signal<void()> onChange;
-
-   protected:
-    void onUpdate();
+    bool excludeSpaceTranslation() const;
+    void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
 
    private:
     // configure logging
-    REGISTER_LOGGER("openstudio.RunOptions");
-
-    bool m_debug = false;
-    bool m_epjson = false;
-    bool m_fast = false;
-    bool m_preserveRunDir = false;
-    bool m_skipExpandObjects = false;
-    bool m_skipEnergyPlusPreprocess = false;
-    bool m_cleanup = true;
-    ForwardTranslatorOptions m_forwardTranslatorOptions;
-    boost::optional<CustomOutputAdapter> m_customOutputAdapter;
+    REGISTER_LOGGER("openstudio.ForwardTranslatorOptions");
+    bool m_runcontrolspecialdays = true;
+    bool m_ip_tabular_output = false;
+    bool m_no_lifecyclecosts = false;
+    bool m_no_sqlite_output = false;
+    bool m_no_html_output = false;
+    bool m_no_variable_dictionary = false;
+    bool m_no_space_translation = false;
   };
 
 }  // namespace detail
 }  // namespace openstudio
 
-#endif  //UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
+#endif  //UTILITIES_FILETYPES_FORWARDTRANSLATOROPTIONS_IMPL_HPP

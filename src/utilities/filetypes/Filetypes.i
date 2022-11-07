@@ -6,6 +6,7 @@
 
   // Avoid triggering a SWIG warning: 'string' is a C# keyword
   %rename(toString) openstudio::RunOptions::string;
+  %rename(toString) openstudio::ForwardTranslatorOptions::string;
   %rename(toString) openstudio::WorkflowStepValue::string;
   %rename(toString) openstudio::WorkflowStepResult::string;
   %rename(toString) openstudio::WorkflowStep::string;
@@ -30,6 +31,7 @@
   #include <utilities/filetypes/EpwFile.hpp>
   #include <utilities/filetypes/RunOptions.hpp>
   #include <utilities/filetypes/RunOptions_Impl.hpp>
+  #include <utilities/filetypes/ForwardTranslatorOptions.hpp>
   #include <utilities/filetypes/WorkflowStepResult.hpp>
   #include <utilities/filetypes/WorkflowStep.hpp>
   #include <utilities/filetypes/WorkflowStep_Impl.hpp>
@@ -82,6 +84,7 @@
 %template(OptionalCustomOutputAdapter) boost::optional<openstudio::CustomOutputAdapter>;
 
 %template(OptionalRunOptions) boost::optional<openstudio::RunOptions>;
+%template(OptionalForwardTranslatorOptions) boost::optional<openstudio::ForwardTranslatorOptions>;
 
 %template(OptionalStepResult) boost::optional<openstudio::StepResult>;
 
@@ -112,6 +115,7 @@
 %include <utilities/filetypes/CSVFile.hpp>
 %include <utilities/filetypes/EpwFile.hpp>
 %include <utilities/filetypes/RunOptions.hpp>
+%include <utilities/filetypes/ForwardTranslatorOptions.hpp>
 %include <utilities/filetypes/WorkflowStepResult.hpp>
 %include <utilities/filetypes/WorkflowStep.hpp>
 %include <utilities/filetypes/WorkflowJSON.hpp>
@@ -119,6 +123,14 @@
 
 // extend class
 %extend openstudio::RunOptions{
+  std::string __str__() {
+    std::ostringstream os;
+    os << *self;
+    return os.str();
+  }
+};
+
+%extend openstudio::ForwardTranslatorOptions{
   std::string __str__() {
     std::ostringstream os;
     os << *self;

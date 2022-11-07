@@ -27,91 +27,83 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#ifndef UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
-#define UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
-
-#include "ForwardTranslatorOptions.hpp"
+#ifndef UTILITIES_FILETYPES_FORWARDTRANSLATOROPTIONS_HPP
+#define UTILITIES_FILETYPES_FORWARDTRANSLATOROPTIONS_HPP
 
 #include "../UtilitiesAPI.hpp"
 
 #include "../core/Logger.hpp"
-#include "../core/Path.hpp"
-#include "../data/Variant.hpp"
 
-#include <json/json.h>
-
-#include <nano/nano_signal_slot.hpp>
+namespace Json {
+class Value;
+}
 
 namespace openstudio {
-class CustomOutputAdapter;
-
 namespace detail {
-
-  class UTILITIES_API RunOptions_Impl
-  {
-   public:
-    RunOptions_Impl() = default;
-
-    std::string string() const;
-
-    bool debug() const;
-    bool setDebug(bool debug);
-    void resetDebug();
-
-    bool epjson() const;
-    bool setEpjson(bool epjson);
-    void resetEpjson();
-
-    bool fast() const;
-    bool setFast(bool fast);
-    void resetFast();
-
-    bool preserveRunDir() const;
-    bool setPreserveRunDir(bool preserve);
-    void resetPreserveRunDir();
-
-    bool skipExpandObjects() const;
-    bool setSkipExpandObjects(bool skip);
-    void resetSkipExpandObjects();
-
-    bool skipEnergyPlusPreprocess() const;
-    bool setSkipEnergyPlusPreprocess(bool skip);
-    void resetSkipEnergyPlusPreprocess();
-
-    bool cleanup() const;
-    bool setCleanup(bool cleanup);
-    void resetCleanup();
-
-    boost::optional<CustomOutputAdapter> customOutputAdapter() const;
-    bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
-    void resetCustomOutputAdapter();
-
-    ForwardTranslatorOptions forwardTranslatorOptions() const;
-    bool setForwardTranslatorOptions(const ForwardTranslatorOptions& options);
-    void resetForwardTranslatorOptions();
-
-    // Emitted on any change
-    Nano::Signal<void()> onChange;
-
-   protected:
-    void onUpdate();
-
-   private:
-    // configure logging
-    REGISTER_LOGGER("openstudio.RunOptions");
-
-    bool m_debug = false;
-    bool m_epjson = false;
-    bool m_fast = false;
-    bool m_preserveRunDir = false;
-    bool m_skipExpandObjects = false;
-    bool m_skipEnergyPlusPreprocess = false;
-    bool m_cleanup = true;
-    ForwardTranslatorOptions m_forwardTranslatorOptions;
-    boost::optional<CustomOutputAdapter> m_customOutputAdapter;
-  };
-
+  class WorkflowJSON_Impl;
+  class RunOptions_Impl;
+  class ForwardTranslatorOptions_Impl;
 }  // namespace detail
+
+class UTILITIES_API ForwardTranslatorOptions
+{
+ public:
+  ForwardTranslatorOptions();
+
+  void reset();
+
+  /// Construct from JSON formatted string
+  static boost::optional<ForwardTranslatorOptions> fromString(const std::string& s);
+
+  /// Serialize to JSON formatted string
+  std::string string() const;
+
+  bool keepRunControlSpecialDays() const;
+  void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
+
+  bool iPTabularOutput() const;
+  void setIPTabularOutput(bool iPTabularOutput);
+
+  bool excludeLCCObjects() const;
+  void setExcludeLCCObjects(bool excludeLCCObjects);
+
+  bool excludeSQliteOutputReport() const;
+  void setExcludeSQliteOutputReport(bool excludeSQliteOutputReport);
+
+  bool excludeHTMLOutputReport() const;
+  void setExcludeHTMLOutputReport(bool excludeHTMLOutputReport);
+
+  bool excludeVariableDictionary() const;
+  void setExcludeVariableDictionary(bool excludeVariableDictionary);
+
+  bool excludeSpaceTranslation() const;
+  void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
+
+ protected:
+  Json::Value json() const;
+  static ForwardTranslatorOptions fromJSON(const Json::Value& value);
+
+  // get the impl
+  std::shared_ptr<detail::ForwardTranslatorOptions_Impl> getImpl() const {
+    return m_impl;
+  }
+
+  explicit ForwardTranslatorOptions(std::shared_ptr<detail::ForwardTranslatorOptions_Impl> impl);
+
+  friend class detail::ForwardTranslatorOptions_Impl;
+  friend class RunOptions;
+  friend class detail::RunOptions_Impl;
+
+ private:
+  // configure logging
+  REGISTER_LOGGER("openstudio.ForwardTranslatorOptions");
+
+  // pointer to implementation
+  std::shared_ptr<detail::ForwardTranslatorOptions_Impl> m_impl;
+};
+
+UTILITIES_API std::ostream& operator<<(std::ostream& os, const ForwardTranslatorOptions& forwardTranslatorOptions);
+
 }  // namespace openstudio
 
-#endif  //UTILITIES_FILETYPES_RUNOPTIONS_IMPL_HPP
+#endif  // UTILITIES_FILETYPES_FORWARDTRANSLATOROPTIONS_HPP

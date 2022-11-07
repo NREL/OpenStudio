@@ -40,6 +40,9 @@ class Value;
 }
 
 namespace openstudio {
+
+class ForwardTranslatorOptions;
+
 namespace detail {
   class WorkflowJSON_Impl;
   class RunOptions_Impl;
@@ -58,64 +61,6 @@ class UTILITIES_API CustomOutputAdapter
   std::string m_customFileName;
   std::string m_className;
   std::string m_options;
-};
-
-class UTILITIES_API ForwardTranslatorOptions
-{
- public:
-  ForwardTranslatorOptions();
-
-  void reset();
-
-  /// Construct from JSON formatted string
-  static boost::optional<ForwardTranslatorOptions> fromString(const std::string& s);
-
-  /// Serialize to JSON formatted string
-  std::string string() const;
-
-  bool keepRunControlSpecialDays() const;
-  void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
-
-  bool iPTabularOutput() const;
-  void setIPTabularOutput(bool iPTabularOutput);
-
-  bool excludeLCCObjects() const;
-  void setExcludeLCCObjects(bool excludeLCCObjects);
-
-  bool excludeSQliteOutputReport() const;
-  void setExcludeSQliteOutputReport(bool excludeSQliteOutputReport);
-
-  bool excludeHTMLOutputReport() const;
-  void setExcludeHTMLOutputReport(bool excludeHTMLOutputReport);
-
-  bool excludeVariableDictionary() const;
-  void setExcludeVariableDictionary(bool excludeVariableDictionary);
-
-  bool excludeSpaceTranslation() const;
-  void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
-
- protected:
-  Json::Value json() const;
-  static ForwardTranslatorOptions fromJSON(const Json::Value& value);
-
-  // get the impl
-  std::shared_ptr<detail::ForwardTranslatorOptions_Impl> getImpl() const {
-    return m_impl;
-  }
-
-  explicit ForwardTranslatorOptions(std::shared_ptr<detail::ForwardTranslatorOptions_Impl> impl);
-
-  friend class detail::ForwardTranslatorOptions_Impl;
-  friend class RunOptions;
-  friend class detail::RunOptions_Impl;
-  friend class detail::WorkflowJSON_Impl;
-
- private:
-  // configure logging
-  REGISTER_LOGGER("openstudio.ForwardTranslatorOptions");
-
-  // pointer to implementation
-  std::shared_ptr<detail::ForwardTranslatorOptions_Impl> m_impl;
 };
 
 /** Base class for defining a run options for a OpenStudio Workflow. */
