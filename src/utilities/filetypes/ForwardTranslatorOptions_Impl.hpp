@@ -78,13 +78,13 @@ namespace detail {
    private:
     // configure logging
     REGISTER_LOGGER("openstudio.ForwardTranslatorOptions");
-    bool m_runcontrolspecialdays = true;
+    bool m_runcontrolspecialdays = true;  // At 3.1.0 this was changed to true.
     bool m_ip_tabular_output = false;
     bool m_no_lifecyclecosts = false;
     bool m_no_sqlite_output = false;
     bool m_no_html_output = false;
     bool m_no_variable_dictionary = false;
-    bool m_no_space_translation = false;
+    bool m_no_space_translation = false;  // At 3.4.1, this was changed to false.
   };
 
 }  // namespace detail

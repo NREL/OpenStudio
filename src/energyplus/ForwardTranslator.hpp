@@ -37,6 +37,7 @@
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/StringStreamLogSink.hpp"
+#include "../utilities/filetypes/ForwardTranslatorOptions.hpp"
 #include "../utilities/time/Time.hpp"
 
 #include "../utilities/core/Deprecated.hpp"
@@ -514,14 +515,6 @@ namespace energyplus {
     struct ForwardTranslatorInitializer;
   };
 
-  struct ForwardTranslatorOptionKeyMethod
-  {
-    std::string json_name;
-    std::string ft_method_name;
-  };
-
-  ENERGYPLUS_API std::ostream& operator<<(std::ostream& out, const openstudio::energyplus::ForwardTranslatorOptionKeyMethod& opt);
-
 #define ENERGYPLUS_VERSION "22.2"
 
   class ENERGYPLUS_API ForwardTranslator
@@ -576,8 +569,6 @@ namespace energyplus {
     /** If excludeSpaceTranslation, do usual combineSpaces(), etc. Otherwise, translate space objects.
    *  Use this at your own risks */
     void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
-
-    static std::vector<ForwardTranslatorOptionKeyMethod> forwardTranslatorOptionKeyMethods();
 
    private:
     REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
@@ -1671,13 +1662,7 @@ namespace energyplus {
     ProgressBar* m_progressBar;
 
     // ForwardTranslator options
-    bool m_keepRunControlSpecialDays;
-    bool m_ipTabularOutput;
-    bool m_excludeLCCObjects;
-    bool m_excludeSQliteOutputReport;  // exclude Output:Sqlite
-    bool m_excludeHTMLOutputReport;    // exclude Output:Table:SummaryReports
-    bool m_excludeVariableDictionary;  // exclude Output:VariableDictionary
-    bool m_excludeSpaceTranslation;
+    ForwardTranslatorOptions m_forwardTranslatorOptions;
   };
 
 }  // namespace energyplus
