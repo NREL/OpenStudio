@@ -1,6 +1,6 @@
-# OpenStudio Version 3.5.0 (TDB)
+# OpenStudio Version 3.5.0
 
-_Release Notes_ -  _TDB_
+_Release Notes_ -  _11/10/2022_
 
 These release notes describe version 3.5.0 of the OpenStudio SDK developed by the National Renewable Energy Laboratory (NREL), Buildings and Thermal Sciences Center, Commercial Buildings Research Group, Tools Development Section, and associated collaborators. The notes are organized into the following sections:
 
@@ -33,7 +33,7 @@ __**OpenStudio SDK 3.5.0**__
 
 # Installation Notes
 
-OpenStudio SDK 3.5.0 is supported on 64-bit Windows 7 – 10, OS X 10.15, and Ubuntu 18.04, 20.04
+OpenStudio SDK 3.5.0 is supported on 64-bit Windows 7 – 11, OS X 10.15, Ubuntu 18.04, 20.04 and Centos7
 
 OpenStudio SDK 3.5.0 supports [EnergyPlus Release 22.1.0](https://github.com/NREL/EnergyPlus/releases/tag/v22.1.0), which is bundled with the OpenStudio installer. It is no longer necessary to download and install EnergyPlus separately. Other builds of EnergyPlus are not supported by OpenStudio SDK 3.5.0.
 
@@ -52,7 +52,7 @@ For help with common installation problems please visit, http://nrel.github.io/O
 
 # OpenStudio SDK: Changelog
 
-The 3.5.0 is a minor release. This update includes several new features, performance improvements, and bug fixes.
+The 3.5.0 is a major release. This update includes several new features, performance improvements, and bug fixes.
 You can find the list of Pull Requests that got into this release [here](https://github.com/NREL/OpenStudio/pulls?utf8=%E2%9C%93&q=is%3Apr+is%3Aclosed+created%3A2021-04-27..2022-09-26+).
 
 
@@ -67,6 +67,17 @@ Please see [openstudio on PyPi](https://pypi.org/project/openstudio/) for furthe
 You can also refer to the [OpenStudio SDK Python Binding Version Compatibility Matrix](https://github.com/NREL/OpenStudio/wiki/OpenStudio-SDK-Python-Binding-Version-Compatibility-Matrix) to see the list of supported platforms and python versions.
 
 ## New Features, Major Fixes and API-breaking changes
+
+* [4600](https://github.com/NREL/OpenStudio/pull/4600) - Phase 1 support to run Python EMS plugin using OpenStudio.
+* [4689](https://github.com/NREL/OpenStudio/pull/4689)[4702](https://github.com/NREL/OpenStudio/pull/4702)[4694](https://github.com/NREL/OpenStudio/pull/4694) - Phase 1 support to run Python based measures using OpenStudio. This functionality is phase 1 and experimental in this release. It can be accessed using the `labs` subcommand, such as: 
+
+`openstudio labs --help`
+
+Included are example workflow files that have Python based measure workflows that can be ran:  
+
+`openstudio run -w ./Examples/compact_osw/compact_python_only.osw` 
+
+For this release, only python or ruby can be ran and not both in the same workflow run. That functionality is planned for release in the phase 2 installment in 3.6.0
 
 * [#4616](https://github.com/NREL/OpenStudio/pull/4616) - Addresses #4611, allow non-Quadratic curves for the EIR-f-PLR for the Chiller:Electric:EIR object
     * `Chiller:Electric:EIR` has a few API-breaking changes related to its Curves. The types for the constructor, getters and setters used to be explicit (eg: `CurveBiquadratic`): it is now the base class, more generic, `Curve` type for added flexibility.
@@ -112,10 +123,8 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [4484](https://github.com/NREL/OpenStudio/pull/4484) Enable C++20
 * [4587](https://github.com/NREL/OpenStudio/pull/4587) XML schema validation 
 * [4619](https://github.com/NREL/OpenStudio/pull/4619) Fix #4543 - E+ 22.1.0: Wrap SetpointManager:SystemNodeReset:Temperature and SetpointManager:SystemNodeReset:Humidity by @jmarrec in 
-* [4600](https://github.com/NREL/OpenStudio/pull/4600) Python plugin by @joseph-robertson in 
 * [4610](https://github.com/NREL/OpenStudio/pull/4610) Addresses #4538, wrap phase change material properties by @joseph-robertson in 
 * [4622](https://github.com/NREL/OpenStudio/pull/4622) Addresses #4620, harmonize (remove?) max. material thickness limit by @joseph-robertson in 
-* [4616](https://github.com/NREL/OpenStudio/pull/4616) Addresses #4611, allow non-Quadratic curves for the EIR-f-PLR for the Chiller:Electric:EIR object by @joseph-robertson in 
 * [4625](https://github.com/NREL/OpenStudio/pull/4625) Addresses #4615, wrap OutputControl:Table:Style and Output:SQLite by @joseph-robertson in 
 * [4627](https://github.com/NREL/OpenStudio/pull/4627) Fix #4547 - FT always warns about missing Design Specification Outdoor Air for AirTerminalSingleDuctInletSideMixer by @jmarrec in 
 * [4640](https://github.com/NREL/OpenStudio/pull/4640) Fix python bindings github workflows with C++20 by @jmarrec in 
@@ -126,11 +135,8 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [4621](https://github.com/NREL/OpenStudio/pull/4621) #4551 - Add minimum/maximum values to numeric OSArguments and use it in validateUserArgument by @jmarrec in 
 * [4643](https://github.com/NREL/OpenStudio/pull/4643) Update docs for setThermalConductance and setThermalResistance changing thickness by @joseph-robertson in 
 * [4650](https://github.com/NREL/OpenStudio/pull/4650) Enable centos7 for c++20 by @tijcolem in
-* [4642](https://github.com/NREL/OpenStudio/pull/4642) Addresses #4575, API change for EvaporativeCoolerFluid:SingleSpeed by @joseph-robertson in 
 * [4629](https://github.com/NREL/OpenStudio/pull/4629) Addresses #3666, CoilWaterHeaterDesuperheater: Issue Error in ForwardTranslator if Heat Reclaim Efficiency is out of bounds by @joseph-robertson in 
-* [3912](https://github.com/NREL/OpenStudio/pull/3912) Add consistently failing test for warnings/errorsa and document by @lefticus in 
-* [4644](https://github.com/NREL/OpenStudio/pull/4644) Addresses #4575, API change for Coil:Cooling:DX:SingleSpeed and Coil:Cooling:DX:TwoSpeed by @joseph-robertson in 
-* [4632](https://github.com/NREL/OpenStudio/pull/4632) Remove deprecated methods for AirWallMaterial, Node, SizingSystem, ZoneAirMassFlowConservation by @joseph-robertson in 
+* [3912](https://github.com/NREL/OpenStudio/pull/3912) Add consistently failing test for warnings/errorsa and document
 * [4669]( https://github.com/NREL/OpenStudio/pull/4669) #4668 - Wrap E+ 22.2 new People fields by @jmarrec in
 * [4287](https://github.com/NREL/OpenStudio/pull/4287) Build and test CSharp bindings for Linux/Mac/Windows by @MingboPeng in 
 * [4652](https://github.com/NREL/OpenStudio/pull/4652) Addresses #4647, wrap the E+ Table:Lookup, Table:IndependentVariableList, and Table:IndependentVariable objects by @joseph-robertson in 
@@ -141,14 +147,11 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [4661](https://github.com/NREL/OpenStudio/pull/4661) Volume, CeilingHeight, FloorArea for Space object by @joseph-robertson in 
 * [4660](https://github.com/NREL/OpenStudio/pull/4660) Fix #4120 - set boost's visibility to global/default instead of hidden by @jmarrec in 
 * [4680](https://github.com/NREL/OpenStudio/pull/4680) update ruby gems including the new tbd gem by @tijcolem in 
-* [4686]() Addresses #4599, documentation for isGroundSurface() is missing an outside boundary condition by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4686
-* [4665](https://github.com/NREL/OpenStudio/pull/4665) New 2017 and 2023 flow rate fields by @joseph-robertson in 
+* [4686]() Addresses #4599, documentation for isGroundSurface() is missing an outside boundary condition by @joseph-robertson in https://github.com/NREL/OpenStudio/pull/4686 
 * [4671](https://github.com/NREL/OpenStudio/pull/4671) New Coil:*:WaterToAirHeatPump:EquationFit fields by @joseph-robertson in 
 * [4677](https://github.com/NREL/OpenStudio/pull/4677) Fix #4675 - E+ 22.2.0 - Sizing:Zone has new fields by @jmarrec in 
-* [4689](https://github.com/NREL/OpenStudio/pull/4689) 4653 python engine bcl by @jmarrec in 
 * [4691](https://github.com/NREL/OpenStudio/pull/4691) Followup to #4575 by @joseph-robertson in 
 * [4662](https://github.com/NREL/OpenStudio/pull/4662) Support CoilCoolingDX on ZoneHVAC, CoilSystem, Desuperheater by @joseph-robertson in 
-* [4666](https://github.com/NREL/OpenStudio/pull/4666) Addresses #4646, wrap E+ 22.2 new supplemental heating coil type for AirLoopHVAC:UnitarySystem object by @joseph-robertson in 
 * [4694](https://github.com/NREL/OpenStudio/pull/4694) 4638 python ruby workflow by @jmarrec in 
 * [4687](https://github.com/NREL/OpenStudio/pull/4687) Fix #4656 - E+ 22.2.0: Wrap Chiller:Electric:ASHRAE205 by @jmarrec in 
 * [4698](https://github.com/NREL/OpenStudio/pull/4698) Update EnergyPlus to v22.2.0 by @joseph-robertson in
@@ -158,7 +161,6 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [4685](https://github.com/NREL/OpenStudio/pull/4685) Address #4630, wrap Output:Schedules and Output:Constructions objects by @joseph-robertson in
 * [4702](https://github.com/NREL/OpenStudio/pull/4702) Mod to Python Engine by @jmarrec in 
 * [4700](https://github.com/NREL/OpenStudio/pull/4700) Fix #4673 - Allow setting ZoneMixing objects at Space level by @jmarrec in 
-* [4701](https://github.com/NREL/OpenStudio/pull/4701) Fix #4699 - E+ 22.2: ZoneHVAC:PackagedTerminal AirConditionner/HeatPump requires a supply air fan operating mode schedule by @jmarrec in 
 * [4710](https://github.com/NREL/OpenStudio/pull/4710) update gems for standard 0.2.17.rc1 by @tijcolem in 
 * [4674](https://github.com/NREL/OpenStudio/pull/4674) 4641 ruby shared lib by @kbenne in 
 * [4688](https://github.com/NREL/OpenStudio/pull/4688) 4653 python engine by @kbenne in
