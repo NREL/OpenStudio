@@ -40,6 +40,16 @@
 namespace openstudio {
 namespace detail {
 
+  void ForwardTranslatorOptions_Impl::reset() {
+    m_runcontrolspecialdays = true;
+    m_ip_tabular_output = false;
+    m_no_lifecyclecosts = false;
+    m_no_sqlite_output = false;
+    m_no_html_output = false;
+    m_no_variable_dictionary = false;
+    m_no_space_translation = false;
+  }
+
   bool ForwardTranslatorOptions_Impl::keepRunControlSpecialDays() const {
     return m_runcontrolspecialdays;
   }
@@ -98,6 +108,7 @@ namespace detail {
 
   Json::Value ForwardTranslatorOptions_Impl::json() const {
     Json::Value value;
+
     value["runcontrolspecialdays"] = m_runcontrolspecialdays;
     value["ip_tabular_output"] = m_ip_tabular_output;
     value["no_lifecyclecosts"] = m_no_lifecyclecosts;
@@ -105,6 +116,7 @@ namespace detail {
     value["no_html_output"] = m_no_html_output;
     value["no_variable_dictionary"] = m_no_variable_dictionary;
     value["no_space_translation"] = m_no_space_translation;
+
     return value;
   }
 
@@ -170,7 +182,7 @@ namespace detail {
       value["output_adapter"] = outputAdapter;
     }
 
-    value["ft_options"] = m_forwardTranslatorOptions->json();
+    value["ft_options"] = m_forwardTranslatorOptions.json();
 
     // Write to string
     Json::StreamWriterBuilder wbuilder;
@@ -302,17 +314,17 @@ namespace detail {
   }
 
   ForwardTranslatorOptions RunOptions_Impl::forwardTranslatorOptions() const {
-    return ForwardTranslatorOptions(m_forwardTranslatorOptions);
+    return m_forwardTranslatorOptions;
   }
 
   bool RunOptions_Impl::setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions) {
-    m_forwardTranslatorOptions = forwardTranslatorOptions.getImpl();
+    m_forwardTranslatorOptions = ForwardTranslatorOptions(forwardTranslatorOptions.getImpl());
     onUpdate();
     return true;
   }
 
   void RunOptions_Impl::resetForwardTranslatorOptions() {
-    m_forwardTranslatorOptions = std::make_shared<ForwardTranslatorOptions_Impl>();
+    m_forwardTranslatorOptions.reset();
     onUpdate();
   }
 
@@ -336,6 +348,10 @@ std::string CustomOutputAdapter::options() const {
 ForwardTranslatorOptions::ForwardTranslatorOptions(std::shared_ptr<detail::ForwardTranslatorOptions_Impl> impl) : m_impl(std::move(impl)) {}
 ForwardTranslatorOptions::ForwardTranslatorOptions() : m_impl(std::make_shared<detail::ForwardTranslatorOptions_Impl>()) {}
 
+void ForwardTranslatorOptions::reset() {
+  m_impl->reset();
+}
+
 boost::optional<ForwardTranslatorOptions> ForwardTranslatorOptions::fromString(const std::string& s) {
 
   // We let it fail with a warning message
@@ -345,9 +361,14 @@ boost::optional<ForwardTranslatorOptions> ForwardTranslatorOptions::fromString(c
   Json::Value value;
   bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
   if (!parsingSuccessful) {
-    LOG(Warn, "Couldn't parse RunOptions from string s='" << s << "'. Error: '" << formattedErrors << "'.");
+    LOG(Warn, "Couldn't parse ForwardTranslatorOptions from string s='" << s << "'. Error: '" << formattedErrors << "'.");
     return boost::none;
   }
+
+  return ForwardTranslatorOptions::fromJSON(value);
+}
+
+ForwardTranslatorOptions ForwardTranslatorOptions::fromJSON(const Json::Value& value) {
 
   ForwardTranslatorOptions result;
 
@@ -374,6 +395,10 @@ boost::optional<ForwardTranslatorOptions> ForwardTranslatorOptions::fromString(c
   }
 
   return result;
+}
+
+Json::Value ForwardTranslatorOptions::json() const {
+  return m_impl->json();
 }
 
 std::string ForwardTranslatorOptions::string() const {
@@ -498,10 +523,8 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
     }
   }
 
-  if (value.isMember("ft_options") && value["ft_options"].isString()) {
-    if (auto ftOptions_ = ForwardTranslatorOptions::fromString(value["ft_options"].asString())) {
-      result.setForwardTranslatorOptions(ftOptions_.get());
-    }
+  if (value.isMember("ft_options") && value["ft_options"].isObject()) {
+    result.setForwardTranslatorOptions(ForwardTranslatorOptions::fromJSON(value["ft_options"]));
   }
 
   return result;

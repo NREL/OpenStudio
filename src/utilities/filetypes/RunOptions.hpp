@@ -35,6 +35,10 @@
 #include "../core/Logger.hpp"
 #include "../core/Deprecated.hpp"
 
+namespace Json {
+class Value;
+}
+
 namespace openstudio {
 namespace detail {
   class WorkflowJSON_Impl;
@@ -60,6 +64,8 @@ class UTILITIES_API ForwardTranslatorOptions
 {
  public:
   ForwardTranslatorOptions();
+
+  void reset();
 
   /// Construct from JSON formatted string
   static boost::optional<ForwardTranslatorOptions> fromString(const std::string& s);
@@ -89,6 +95,9 @@ class UTILITIES_API ForwardTranslatorOptions
   void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
 
  protected:
+  Json::Value json() const;
+  static ForwardTranslatorOptions fromJSON(const Json::Value& value);
+
   // get the impl
   std::shared_ptr<detail::ForwardTranslatorOptions_Impl> getImpl() const {
     return m_impl;
@@ -97,6 +106,7 @@ class UTILITIES_API ForwardTranslatorOptions
   explicit ForwardTranslatorOptions(std::shared_ptr<detail::ForwardTranslatorOptions_Impl> impl);
 
   friend class detail::ForwardTranslatorOptions_Impl;
+  friend class RunOptions;
   friend class detail::RunOptions_Impl;
   friend class detail::WorkflowJSON_Impl;
 

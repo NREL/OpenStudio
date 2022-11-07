@@ -52,6 +52,8 @@ namespace detail {
    public:
     ForwardTranslatorOptions_Impl() = default;
 
+    void reset();
+
     std::string string() const;
     Json::Value json() const;
 
@@ -148,7 +150,7 @@ namespace detail {
     bool m_skipExpandObjects = false;
     bool m_skipEnergyPlusPreprocess = false;
     bool m_cleanup = true;
-    std::shared_ptr<ForwardTranslatorOptions_Impl> m_forwardTranslatorOptions;
+    ForwardTranslatorOptions m_forwardTranslatorOptions;
     boost::optional<CustomOutputAdapter> m_customOutputAdapter;
   };
 
