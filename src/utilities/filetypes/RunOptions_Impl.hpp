@@ -41,26 +41,57 @@
 #include <nano/nano_signal_slot.hpp>
 
 namespace openstudio {
+class CustomOutputAdapter;
+class ForwardTranslatorOptions;
+
 namespace detail {
 
-  class FtOptions
+  // TODO: is the nano onChange signal really needed for RunOptions?! If so, I need to implement one for ForwardTranslatorOptions too
+  class ForwardTranslatorOptions_Impl
   {
    public:
-    bool runcontrolspecialdays = true;
-    bool ip_tabular_output = false;
-    bool no_lifecyclecosts = false;
-    bool no_sqlite_output = false;
-    bool no_html_output = false;
-    bool no_variable_dictionary = false;
-    bool no_space_translation = false;
+    ForwardTranslatorOptions_Impl() = default;
+
+    std::string string() const;
+    Json::Value json() const;
+
+    bool keepRunControlSpecialDays() const;
+    void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
+
+    bool iPTabularOutput() const;
+    void setIPTabularOutput(bool iPTabularOutput);
+
+    bool excludeLCCObjects() const;
+    void setExcludeLCCObjects(bool excludeLCCObjects);
+
+    bool excludeSQliteOutputReport() const;
+    void setExcludeSQliteOutputReport(bool excludeSQliteOutputReport);
+
+    bool excludeHTMLOutputReport() const;
+    void setExcludeHTMLOutputReport(bool excludeHTMLOutputReport);
+
+    bool excludeVariableDictionary() const;
+    void setExcludeVariableDictionary(bool excludeVariableDictionary);
+
+    bool excludeSpaceTranslation() const;
+    void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
+
+   private:
+    // configure logging
+    REGISTER_LOGGER("openstudio.ForwardTranslatorOptions");
+    bool m_runcontrolspecialdays = true;
+    bool m_ip_tabular_output = false;
+    bool m_no_lifecyclecosts = false;
+    bool m_no_sqlite_output = false;
+    bool m_no_html_output = false;
+    bool m_no_variable_dictionary = false;
+    bool m_no_space_translation = false;
   };
 
   class UTILITIES_API RunOptions_Impl
   {
    public:
-    RunOptions_Impl();
-
-    virtual ~RunOptions_Impl();
+    RunOptions_Impl() = default;
 
     std::string string() const;
 
@@ -96,9 +127,9 @@ namespace detail {
     bool setCustomOutputAdapter(const CustomOutputAdapter& adapter);
     void resetCustomOutputAdapter();
 
-    std::string forwardTranslateOptions() const;
-    bool setForwardTranslateOptions(const std::string& options);
-    void resetForwardTranslateOptions();
+    ForwardTranslatorOptions forwardTranslatorOptions() const;
+    bool setForwardTranslatorOptions(const ForwardTranslatorOptions& options);
+    void resetForwardTranslatorOptions();
 
     // Emitted on any change
     Nano::Signal<void()> onChange;
@@ -110,14 +141,14 @@ namespace detail {
     // configure logging
     REGISTER_LOGGER("openstudio.RunOptions");
 
-    bool m_debug;
-    bool m_epjson;
-    bool m_fast;
-    bool m_preserveRunDir;
-    bool m_skipExpandObjects;
-    bool m_skipEnergyPlusPreprocess;
-    bool m_cleanup;
-    std::string m_forwardTranslateOptions;
+    bool m_debug = false;
+    bool m_epjson = false;
+    bool m_fast = false;
+    bool m_preserveRunDir = false;
+    bool m_skipExpandObjects = false;
+    bool m_skipEnergyPlusPreprocess = false;
+    bool m_cleanup = true;
+    std::shared_ptr<ForwardTranslatorOptions_Impl> m_forwardTranslatorOptions;
     boost::optional<CustomOutputAdapter> m_customOutputAdapter;
   };
 

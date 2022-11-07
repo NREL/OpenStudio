@@ -31,21 +31,93 @@
 #include "RunOptions_Impl.hpp"
 
 #include "../core/Assert.hpp"
+
 #include <json/json.h>
+
+#include <memory>
+#include <string>
 
 namespace openstudio {
 namespace detail {
 
-  RunOptions_Impl::RunOptions_Impl()
-    : m_debug(false),
-      m_epjson(false),
-      m_fast(false),
-      m_preserveRunDir(false),
-      m_skipExpandObjects(false),
-      m_skipEnergyPlusPreprocess(false),
-      m_cleanup(true) {}
+  bool ForwardTranslatorOptions_Impl::keepRunControlSpecialDays() const {
+    return m_runcontrolspecialdays;
+  }
 
-  RunOptions_Impl::~RunOptions_Impl() {}
+  void ForwardTranslatorOptions_Impl::setKeepRunControlSpecialDays(bool keepRunControlSpecialDays) {
+    m_runcontrolspecialdays = keepRunControlSpecialDays;
+  }
+
+  bool ForwardTranslatorOptions_Impl::iPTabularOutput() const {
+    return m_ip_tabular_output;
+  }
+
+  void ForwardTranslatorOptions_Impl::setIPTabularOutput(bool iPTabularOutput) {
+    m_ip_tabular_output = iPTabularOutput;
+  }
+
+  bool ForwardTranslatorOptions_Impl::excludeLCCObjects() const {
+    return m_no_lifecyclecosts;
+  }
+
+  void ForwardTranslatorOptions_Impl::setExcludeLCCObjects(bool excludeLCCObjects) {
+    m_no_lifecyclecosts = excludeLCCObjects;
+  }
+
+  bool ForwardTranslatorOptions_Impl::excludeSQliteOutputReport() const {
+    return m_no_sqlite_output;
+  }
+
+  void ForwardTranslatorOptions_Impl::setExcludeSQliteOutputReport(bool excludeSQliteOutputReport) {
+    m_no_sqlite_output = excludeSQliteOutputReport;
+  }
+
+  bool ForwardTranslatorOptions_Impl::excludeHTMLOutputReport() const {
+    return m_no_html_output;
+  }
+
+  void ForwardTranslatorOptions_Impl::setExcludeHTMLOutputReport(bool excludeHTMLOutputReport) {
+    m_no_html_output = excludeHTMLOutputReport;
+  }
+
+  bool ForwardTranslatorOptions_Impl::excludeVariableDictionary() const {
+    return m_no_variable_dictionary;
+  }
+
+  void ForwardTranslatorOptions_Impl::setExcludeVariableDictionary(bool excludeVariableDictionary) {
+    m_no_variable_dictionary = excludeVariableDictionary;
+  }
+
+  bool ForwardTranslatorOptions_Impl::excludeSpaceTranslation() const {
+    return m_no_space_translation;
+  }
+
+  void ForwardTranslatorOptions_Impl::setExcludeSpaceTranslation(bool excludeSpaceTranslation) {
+    m_no_space_translation = excludeSpaceTranslation;
+  }
+
+  Json::Value ForwardTranslatorOptions_Impl::json() const {
+    Json::Value value;
+    value["runcontrolspecialdays"] = m_runcontrolspecialdays;
+    value["ip_tabular_output"] = m_ip_tabular_output;
+    value["no_lifecyclecosts"] = m_no_lifecyclecosts;
+    value["no_sqlite_output"] = m_no_sqlite_output;
+    value["no_html_output"] = m_no_html_output;
+    value["no_variable_dictionary"] = m_no_variable_dictionary;
+    value["no_space_translation"] = m_no_space_translation;
+    return value;
+  }
+
+  std::string ForwardTranslatorOptions_Impl::string() const {
+
+    // Write to string
+    Json::StreamWriterBuilder wbuilder;
+    // mimic the old StyledWriter behavior:
+    wbuilder["indentation"] = "   ";
+    std::string result = Json::writeString(wbuilder, json());
+
+    return result;
+  }
 
   void RunOptions_Impl::onUpdate() {
     this->onChange.nano_emit();
@@ -54,6 +126,7 @@ namespace detail {
   std::string RunOptions_Impl::string() const {
     Json::Value value;
 
+    // TODO: Why is this only writing if not default? I find it weird
     if (m_debug) {
       value["debug"] = m_debug;
     }
@@ -97,18 +170,7 @@ namespace detail {
       value["output_adapter"] = outputAdapter;
     }
 
-    if (!m_forwardTranslateOptions.empty()) {
-      Json::Value options;
-      Json::CharReaderBuilder rbuilder;
-      std::istringstream ss(m_forwardTranslateOptions);
-      std::string formattedErrors;
-      bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &options, &formattedErrors);
-      if (parsingSuccessful) {
-        value["ft_options"] = options;
-      } else {
-        LOG(Warn, "Couldn't parse forwardTranslateOptions's options='" << m_forwardTranslateOptions << "'. Error: '" << formattedErrors << "'.");
-      }
-    }
+    value["ft_options"] = m_forwardTranslatorOptions->json();
 
     // Write to string
     Json::StreamWriterBuilder wbuilder;
@@ -239,18 +301,18 @@ namespace detail {
     onUpdate();
   }
 
-  std::string RunOptions_Impl::forwardTranslateOptions() const {
-    return m_forwardTranslateOptions;
+  ForwardTranslatorOptions RunOptions_Impl::forwardTranslatorOptions() const {
+    return ForwardTranslatorOptions(m_forwardTranslatorOptions);
   }
 
-  bool RunOptions_Impl::setForwardTranslateOptions(const std::string& options) {
-    m_forwardTranslateOptions = options;
+  bool RunOptions_Impl::setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions) {
+    m_forwardTranslatorOptions = forwardTranslatorOptions.getImpl();
     onUpdate();
     return true;
   }
 
-  void RunOptions_Impl::resetForwardTranslateOptions() {
-    m_forwardTranslateOptions.clear();
+  void RunOptions_Impl::resetForwardTranslatorOptions() {
+    m_forwardTranslatorOptions = std::make_shared<ForwardTranslatorOptions_Impl>();
     onUpdate();
   }
 
@@ -271,14 +333,10 @@ std::string CustomOutputAdapter::options() const {
   return m_options;
 }
 
-RunOptions::RunOptions() : m_impl(std::shared_ptr<detail::RunOptions_Impl>(new detail::RunOptions_Impl())) {
-  OS_ASSERT(getImpl<detail::RunOptions_Impl>());
-}
+ForwardTranslatorOptions::ForwardTranslatorOptions(std::shared_ptr<detail::ForwardTranslatorOptions_Impl> impl) : m_impl(std::move(impl)) {}
+ForwardTranslatorOptions::ForwardTranslatorOptions() : m_impl(std::make_shared<detail::ForwardTranslatorOptions_Impl>()) {}
 
-RunOptions::~RunOptions() {}
-
-boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
-  boost::optional<RunOptions> result;
+boost::optional<ForwardTranslatorOptions> ForwardTranslatorOptions::fromString(const std::string& s) {
 
   // We let it fail with a warning message
   Json::CharReaderBuilder rbuilder;
@@ -288,33 +346,139 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
   bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
   if (!parsingSuccessful) {
     LOG(Warn, "Couldn't parse RunOptions from string s='" << s << "'. Error: '" << formattedErrors << "'.");
-    return result;
+    return boost::none;
   }
 
-  result = RunOptions();
+  ForwardTranslatorOptions result;
+
+  if (value.isMember("runcontrolspecialdays") && value["runcontrolspecialdays"].isBool()) {
+    result.setKeepRunControlSpecialDays(value["runcontrolspecialdays"].asBool());
+  }
+  if (value.isMember("ip_tabular_output") && value["ip_tabular_output"].isBool()) {
+    result.setIPTabularOutput(value["ip_tabular_output"].asBool());
+  }
+  if (value.isMember("no_lifecyclecosts") && value["no_lifecyclecosts"].isBool()) {
+    result.setExcludeLCCObjects(value["no_lifecyclecosts"].asBool());
+  }
+  if (value.isMember("no_sqlite_output") && value["no_sqlite_output"].isBool()) {
+    result.setExcludeSQliteOutputReport(value["no_sqlite_output"].asBool());
+  }
+  if (value.isMember("no_html_output") && value["no_html_output"].isBool()) {
+    result.setExcludeHTMLOutputReport(value["no_html_output"].asBool());
+  }
+  if (value.isMember("no_variable_dictionary") && value["no_variable_dictionary"].isBool()) {
+    result.setExcludeVariableDictionary(value["no_variable_dictionary"].asBool());
+  }
+  if (value.isMember("no_space_translation") && value["no_space_translation"].isBool()) {
+    result.setExcludeSpaceTranslation(value["no_space_translation"].asBool());
+  }
+
+  return result;
+}
+
+std::string ForwardTranslatorOptions::string() const {
+  return m_impl->string();
+}
+
+bool ForwardTranslatorOptions::keepRunControlSpecialDays() const {
+  return m_impl->keepRunControlSpecialDays();
+}
+
+void ForwardTranslatorOptions::setKeepRunControlSpecialDays(bool keepRunControlSpecialDays) {
+  m_impl->setKeepRunControlSpecialDays(keepRunControlSpecialDays);
+}
+
+bool ForwardTranslatorOptions::iPTabularOutput() const {
+  return m_impl->iPTabularOutput();
+}
+
+void ForwardTranslatorOptions::setIPTabularOutput(bool iPTabularOutput) {
+  m_impl->setIPTabularOutput(iPTabularOutput);
+}
+
+bool ForwardTranslatorOptions::excludeLCCObjects() const {
+  return m_impl->excludeLCCObjects();
+}
+
+void ForwardTranslatorOptions::setExcludeLCCObjects(bool excludeLCCObjects) {
+  m_impl->setExcludeLCCObjects(excludeLCCObjects);
+}
+
+bool ForwardTranslatorOptions::excludeSQliteOutputReport() const {
+  return m_impl->excludeSQliteOutputReport();
+}
+
+void ForwardTranslatorOptions::setExcludeSQliteOutputReport(bool excludeSQliteOutputReport) {
+  m_impl->setExcludeSQliteOutputReport(excludeSQliteOutputReport);
+}
+
+bool ForwardTranslatorOptions::excludeHTMLOutputReport() const {
+  return m_impl->excludeHTMLOutputReport();
+}
+
+void ForwardTranslatorOptions::setExcludeHTMLOutputReport(bool excludeHTMLOutputReport) {
+  m_impl->setExcludeHTMLOutputReport(excludeHTMLOutputReport);
+}
+
+bool ForwardTranslatorOptions::excludeVariableDictionary() const {
+  return m_impl->excludeVariableDictionary();
+}
+
+void ForwardTranslatorOptions::setExcludeVariableDictionary(bool excludeVariableDictionary) {
+  m_impl->setExcludeVariableDictionary(excludeVariableDictionary);
+}
+
+bool ForwardTranslatorOptions::excludeSpaceTranslation() const {
+  return m_impl->excludeSpaceTranslation();
+}
+
+void ForwardTranslatorOptions::setExcludeSpaceTranslation(bool excludeSpaceTranslation) {
+  m_impl->setExcludeSpaceTranslation(excludeSpaceTranslation);
+}
+
+RunOptions::RunOptions() : m_impl(std::make_shared<detail::RunOptions_Impl>()) {
+  OS_ASSERT(getImpl<detail::RunOptions_Impl>());
+}
+
+RunOptions::~RunOptions() = default;
+
+boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
+
+  // We let it fail with a warning message
+  Json::CharReaderBuilder rbuilder;
+  std::istringstream ss(s);
+  std::string formattedErrors;
+  Json::Value value;
+  bool parsingSuccessful = Json::parseFromStream(rbuilder, ss, &value, &formattedErrors);
+  if (!parsingSuccessful) {
+    LOG(Warn, "Couldn't parse RunOptions from string s='" << s << "'. Error: '" << formattedErrors << "'.");
+    return boost::none;
+  }
+
+  RunOptions result;
 
   if (value.isMember("epjson") && value["epjson"].isBool()) {
-    result->setEpjson(value["epjson"].asBool());
+    result.setEpjson(value["epjson"].asBool());
   }
 
   if (value.isMember("debug") && value["debug"].isBool()) {
-    result->setDebug(value["debug"].asBool());
+    result.setDebug(value["debug"].asBool());
   }
 
   if (value.isMember("fast") && value["fast"].isBool()) {
-    result->setFast(value["fast"].asBool());
+    result.setFast(value["fast"].asBool());
   }
 
   if (value.isMember("preserve_run_dir") && value["preserve_run_dir"].isBool()) {
-    result->setPreserveRunDir(value["preserve_run_dir"].asBool());
+    result.setPreserveRunDir(value["preserve_run_dir"].asBool());
   }
 
   if (value.isMember("skip_expand_objects") && value["skip_expand_objects"].isBool()) {
-    result->setSkipExpandObjects(value["skip_expand_objects"].asBool());
+    result.setSkipExpandObjects(value["skip_expand_objects"].asBool());
   }
 
   if (value.isMember("skip_energyplus_preprocess") && value["skip_energyplus_preprocess"].isBool()) {
-    result->setSkipEnergyPlusPreprocess(value["skip_energyplus_preprocess"].asBool());
+    result.setSkipEnergyPlusPreprocess(value["skip_energyplus_preprocess"].asBool());
   }
 
   if (value.isMember("output_adapter")) {
@@ -330,28 +494,14 @@ boost::optional<RunOptions> RunOptions::fromString(const std::string& s) {
       std::string optionString = Json::writeString(wbuilder, options);
 
       CustomOutputAdapter coa(customFileName, className, optionString);
-      result->setCustomOutputAdapter(coa);
+      result.setCustomOutputAdapter(coa);
     }
   }
 
-  if (value.isMember("ft_options")) {
-    Json::Value options = value["ft_options"];
-
-    // Do some filtering to avoid passing bogus values to workflow-gem, and checking that it's correctly a boolean
-    Json::Value cleaned_options;
-    for (auto& known_opt : {"runcontrolspecialdays", "ip_tabular_output", "no_lifecyclecosts", "no_sqlite_output", "no_html_output",
-                            "no_variable_dictionary", "no_space_translation"}) {
-      if (options.isMember(known_opt) && options[known_opt].isBool()) {
-        cleaned_options[known_opt] = options[known_opt].asBool();
-      }
+  if (value.isMember("ft_options") && value["ft_options"].isString()) {
+    if (auto ftOptions_ = ForwardTranslatorOptions::fromString(value["ft_options"].asString())) {
+      result.setForwardTranslatorOptions(ftOptions_.get());
     }
-
-    Json::StreamWriterBuilder wbuilder;
-    // mimic the old StyledWriter behavior:
-    wbuilder["indentation"] = "   ";
-    std::string optionString = Json::writeString(wbuilder, cleaned_options);
-
-    result->setForwardTranslateOptions(optionString);
   }
 
   return result;
@@ -456,17 +606,43 @@ void RunOptions::resetCustomOutputAdapter() {
   getImpl<detail::RunOptions_Impl>()->resetCustomOutputAdapter();
 }
 
+ForwardTranslatorOptions RunOptions::forwardTranslatorOptions() const {
+  return getImpl<detail::RunOptions_Impl>()->forwardTranslatorOptions();
+}
+
+bool RunOptions::setForwardTranslatorOptions(const ForwardTranslatorOptions& forwardTranslatorOptions) {
+  return getImpl<detail::RunOptions_Impl>()->setForwardTranslatorOptions(forwardTranslatorOptions);
+}
+
+void RunOptions::resetForwardTranslatorOptions() {
+  getImpl<detail::RunOptions_Impl>()->resetForwardTranslatorOptions();
+}
+
+/// @cond
+
+// DEPRECATED
 std::string RunOptions::forwardTranslateOptions() const {
-  return getImpl<detail::RunOptions_Impl>()->forwardTranslateOptions();
+  LOG(Warn, "As of 3.5.1, (std::string) forwardTranslateOptions is deprecated. Use (ForwardTranslatorOptions) forwardTranslatorOptions instead. "
+            "It will be removed within three releases.");
+  return getImpl<detail::RunOptions_Impl>()->forwardTranslatorOptions().string();
 }
 
 bool RunOptions::setForwardTranslateOptions(const std::string& options) {
-  return getImpl<detail::RunOptions_Impl>()->setForwardTranslateOptions(options);
+  LOG(Warn, "As of 3.5.1, setForwardTranslateOptions(std::string) is deprecated. Use setForwardTranslatorOptions(ForwardTranslatorOptions) instead. "
+            "It will be removed within three releases.");
+  if (auto ftOptions_ = ForwardTranslatorOptions::fromString(options)) {
+    return getImpl<detail::RunOptions_Impl>()->setForwardTranslatorOptions(ftOptions_.get());
+  }
+  return false;
 }
 
 void RunOptions::resetForwardTranslateOptions() {
-  getImpl<detail::RunOptions_Impl>()->resetForwardTranslateOptions();
+  LOG(Warn, "As of 3.5.1, resetForwardTranslateOptions is deprecated. Use resetForwardTranslateOptions instead. "
+            "It will be removed within three releases.");
+  getImpl<detail::RunOptions_Impl>()->resetForwardTranslatorOptions();
 }
+
+/// @endcond
 
 std::ostream& operator<<(std::ostream& os, const RunOptions& runOptions) {
   os << runOptions.string();
