@@ -59,25 +59,42 @@ class UTILITIES_API ForwardTranslatorOptions
   std::string string() const;
 
   bool keepRunControlSpecialDays() const;
+  bool isKeepRunControlSpecialDaysDefaulted() const;
   void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
+  void resetKeepRunControlSpecialDays();
 
   bool iPTabularOutput() const;
+  bool isIPTabularOutputDefaulted() const;
   void setIPTabularOutput(bool iPTabularOutput);
+  void resetIPTabularOutput();
 
   bool excludeLCCObjects() const;
+  bool isExcludeLCCObjectsDefaulted() const;
   void setExcludeLCCObjects(bool excludeLCCObjects);
+  void resetExcludeLCCObjects();
 
   bool excludeSQliteOutputReport() const;
+  bool isExcludeSQliteOutputReportDefaulted() const;
   void setExcludeSQliteOutputReport(bool excludeSQliteOutputReport);
+  void resetExcludeSQliteOutputReport();
 
   bool excludeHTMLOutputReport() const;
+  bool isExcludeHTMLOutputReportDefaulted() const;
   void setExcludeHTMLOutputReport(bool excludeHTMLOutputReport);
+  void resetExcludeHTMLOutputReport();
 
   bool excludeVariableDictionary() const;
+  bool isExcludeVariableDictionaryDefaulted() const;
   void setExcludeVariableDictionary(bool excludeVariableDictionary);
+  void resetExcludeVariableDictionary();
 
   bool excludeSpaceTranslation() const;
+  bool isExcludeSpaceTranslationDefaulted() const;
   void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
+  void resetExcludeSpaceTranslation();
+
+  /* Any non-defaulted value from other is brought over */
+  void overrideValuesWith(const ForwardTranslatorOptions& other);
 
  protected:
   Json::Value json() const;

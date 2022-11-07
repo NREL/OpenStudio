@@ -39,81 +39,214 @@ namespace openstudio {
 namespace detail {
 
   void ForwardTranslatorOptions_Impl::reset() {
-    m_runcontrolspecialdays = true;
-    m_ip_tabular_output = false;
-    m_no_lifecyclecosts = false;
-    m_no_sqlite_output = false;
-    m_no_html_output = false;
-    m_no_variable_dictionary = false;
-    m_no_space_translation = false;
+    m_runcontrolspecialdays = DEFAULT_RUNCONTROLSPECIALDAYS;
+    m_is_runcontrolspecialdays_defaulted = true;
+
+    m_ip_tabular_output = DEFAULT_IP_TABULAR_OUTPUT;
+    m_is_ip_tabular_output_defaulted = true;
+
+    m_no_lifecyclecosts = DEFAULT_NO_LIFECYCLECOSTS;
+    m_is_no_lifecyclecosts_defaulted = true;
+
+    m_no_sqlite_output = DEFAULT_NO_SQLITE_OUTPUT;
+    m_is_no_sqlite_output_defaulted = true;
+
+    m_no_html_output = DEFAULT_NO_HTML_OUTPUT;
+    m_is_no_html_output_defaulted = true;
+
+    m_no_variable_dictionary = DEFAULT_NO_VARIABLE_DICTIONARY;
+    m_is_no_variable_dictionary_defaulted = true;
+
+    m_no_space_translation = DEFAULT_NO_SPACE_TRANSLATION;
+    m_is_no_space_translation_defaulted = true;
   }
 
   bool ForwardTranslatorOptions_Impl::keepRunControlSpecialDays() const {
     return m_runcontrolspecialdays;
   }
 
+  bool ForwardTranslatorOptions_Impl::isKeepRunControlSpecialDaysDefaulted() const {
+    return m_is_runcontrolspecialdays_defaulted;
+  }
+
   void ForwardTranslatorOptions_Impl::setKeepRunControlSpecialDays(bool keepRunControlSpecialDays) {
     m_runcontrolspecialdays = keepRunControlSpecialDays;
+    m_is_runcontrolspecialdays_defaulted = false;
+  }
+
+  void ForwardTranslatorOptions_Impl::resetKeepRunControlSpecialDays() {
+    m_runcontrolspecialdays = DEFAULT_RUNCONTROLSPECIALDAYS;
+    m_is_runcontrolspecialdays_defaulted = true;
   }
 
   bool ForwardTranslatorOptions_Impl::iPTabularOutput() const {
     return m_ip_tabular_output;
   }
 
+  bool ForwardTranslatorOptions_Impl::isIPTabularOutputDefaulted() const {
+    return m_is_ip_tabular_output_defaulted;
+  }
+
   void ForwardTranslatorOptions_Impl::setIPTabularOutput(bool iPTabularOutput) {
     m_ip_tabular_output = iPTabularOutput;
+    m_is_ip_tabular_output_defaulted = false;
+  }
+
+  void ForwardTranslatorOptions_Impl::resetIPTabularOutput() {
+    m_ip_tabular_output = DEFAULT_IP_TABULAR_OUTPUT;
+    m_is_ip_tabular_output_defaulted = true;
   }
 
   bool ForwardTranslatorOptions_Impl::excludeLCCObjects() const {
     return m_no_lifecyclecosts;
   }
 
+  bool ForwardTranslatorOptions_Impl::isExcludeLCCObjectsDefaulted() const {
+    return m_is_no_lifecyclecosts_defaulted;
+  }
+
   void ForwardTranslatorOptions_Impl::setExcludeLCCObjects(bool excludeLCCObjects) {
     m_no_lifecyclecosts = excludeLCCObjects;
+    m_is_no_lifecyclecosts_defaulted = false;
+  }
+
+  void ForwardTranslatorOptions_Impl::resetExcludeLCCObjects() {
+    m_no_lifecyclecosts = DEFAULT_NO_LIFECYCLECOSTS;
+    m_is_no_lifecyclecosts_defaulted = true;
   }
 
   bool ForwardTranslatorOptions_Impl::excludeSQliteOutputReport() const {
     return m_no_sqlite_output;
   }
 
+  bool ForwardTranslatorOptions_Impl::isExcludeSQliteOutputReportDefaulted() const {
+    return m_is_no_sqlite_output_defaulted;
+  }
+
   void ForwardTranslatorOptions_Impl::setExcludeSQliteOutputReport(bool excludeSQliteOutputReport) {
     m_no_sqlite_output = excludeSQliteOutputReport;
+    m_is_no_sqlite_output_defaulted = false;
+  }
+
+  void ForwardTranslatorOptions_Impl::resetExcludeSQliteOutputReport() {
+    m_no_sqlite_output = DEFAULT_NO_SQLITE_OUTPUT;
+    m_is_no_sqlite_output_defaulted = true;
   }
 
   bool ForwardTranslatorOptions_Impl::excludeHTMLOutputReport() const {
     return m_no_html_output;
   }
 
+  bool ForwardTranslatorOptions_Impl::isExcludeHTMLOutputReportDefaulted() const {
+    return m_is_no_html_output_defaulted;
+  }
+
   void ForwardTranslatorOptions_Impl::setExcludeHTMLOutputReport(bool excludeHTMLOutputReport) {
     m_no_html_output = excludeHTMLOutputReport;
+    m_is_no_html_output_defaulted = false;
+  }
+
+  void ForwardTranslatorOptions_Impl::resetExcludeHTMLOutputReport() {
+    m_no_html_output = DEFAULT_NO_HTML_OUTPUT;
+    m_is_no_html_output_defaulted = true;
   }
 
   bool ForwardTranslatorOptions_Impl::excludeVariableDictionary() const {
     return m_no_variable_dictionary;
   }
 
+  bool ForwardTranslatorOptions_Impl::isExcludeVariableDictionaryDefaulted() const {
+    return m_is_no_variable_dictionary_defaulted;
+  }
+
   void ForwardTranslatorOptions_Impl::setExcludeVariableDictionary(bool excludeVariableDictionary) {
     m_no_variable_dictionary = excludeVariableDictionary;
+    m_is_no_variable_dictionary_defaulted = false;
+  }
+
+  void ForwardTranslatorOptions_Impl::resetExcludeVariableDictionary() {
+    m_no_variable_dictionary = DEFAULT_NO_VARIABLE_DICTIONARY;
+    m_is_no_variable_dictionary_defaulted = true;
   }
 
   bool ForwardTranslatorOptions_Impl::excludeSpaceTranslation() const {
     return m_no_space_translation;
   }
 
+  bool ForwardTranslatorOptions_Impl::isExcludeSpaceTranslationDefaulted() const {
+    return m_is_no_space_translation_defaulted;
+  }
+
   void ForwardTranslatorOptions_Impl::setExcludeSpaceTranslation(bool excludeSpaceTranslation) {
     m_no_space_translation = excludeSpaceTranslation;
+    m_is_no_space_translation_defaulted = false;
+  }
+
+  void ForwardTranslatorOptions_Impl::resetExcludeSpaceTranslation() {
+    m_no_space_translation = DEFAULT_NO_SPACE_TRANSLATION;
+    m_is_no_space_translation_defaulted = true;
+  }
+
+  void ForwardTranslatorOptions_Impl::overrideValuesWith(const ForwardTranslatorOptions& other) {
+    if (!other.isKeepRunControlSpecialDaysDefaulted()) {
+      setKeepRunControlSpecialDays(other.keepRunControlSpecialDays());
+    }
+
+    if (!other.isIPTabularOutputDefaulted()) {
+      setIPTabularOutput(other.iPTabularOutput());
+    }
+
+    if (!other.isExcludeLCCObjectsDefaulted()) {
+      setExcludeLCCObjects(other.excludeLCCObjects());
+    }
+
+    if (!other.isExcludeSQliteOutputReportDefaulted()) {
+      setExcludeSQliteOutputReport(other.excludeSQliteOutputReport());
+    }
+
+    if (!other.isExcludeHTMLOutputReportDefaulted()) {
+      setExcludeHTMLOutputReport(other.excludeHTMLOutputReport());
+    }
+
+    if (!other.isExcludeVariableDictionaryDefaulted()) {
+      setExcludeVariableDictionary(other.excludeVariableDictionary());
+    }
+
+    if (!other.isExcludeSpaceTranslationDefaulted()) {
+      setExcludeSpaceTranslation(other.excludeSpaceTranslation());
+    }
   }
 
   Json::Value ForwardTranslatorOptions_Impl::json() const {
     Json::Value value;
 
-    value["runcontrolspecialdays"] = m_runcontrolspecialdays;
-    value["ip_tabular_output"] = m_ip_tabular_output;
-    value["no_lifecyclecosts"] = m_no_lifecyclecosts;
-    value["no_sqlite_output"] = m_no_sqlite_output;
-    value["no_html_output"] = m_no_html_output;
-    value["no_variable_dictionary"] = m_no_variable_dictionary;
-    value["no_space_translation"] = m_no_space_translation;
+    if (!m_is_runcontrolspecialdays_defaulted) {
+      value["runcontrolspecialdays"] = m_runcontrolspecialdays;
+    }
+
+    if (!m_is_ip_tabular_output_defaulted) {
+      value["ip_tabular_output"] = m_ip_tabular_output;
+    }
+
+    if (!m_is_no_lifecyclecosts_defaulted) {
+      value["no_lifecyclecosts"] = m_no_lifecyclecosts;
+    }
+
+    if (!m_is_no_sqlite_output_defaulted) {
+      value["no_sqlite_output"] = m_no_sqlite_output;
+    }
+
+    if (!m_is_no_html_output_defaulted) {
+      value["no_html_output"] = m_no_html_output;
+    }
+
+    if (!m_is_no_variable_dictionary_defaulted) {
+      value["no_variable_dictionary"] = m_no_variable_dictionary;
+    }
+
+    if (!m_is_no_space_translation_defaulted) {
+      value["no_space_translation"] = m_no_space_translation;
+    }
 
     return value;
   }
@@ -191,12 +324,24 @@ std::string ForwardTranslatorOptions::string() const {
   return m_impl->string();
 }
 
+bool ForwardTranslatorOptions::isKeepRunControlSpecialDaysDefaulted() const {
+  return m_impl->isKeepRunControlSpecialDaysDefaulted();
+}
+
 bool ForwardTranslatorOptions::keepRunControlSpecialDays() const {
   return m_impl->keepRunControlSpecialDays();
 }
 
 void ForwardTranslatorOptions::setKeepRunControlSpecialDays(bool keepRunControlSpecialDays) {
   m_impl->setKeepRunControlSpecialDays(keepRunControlSpecialDays);
+}
+
+void ForwardTranslatorOptions::resetKeepRunControlSpecialDays() {
+  m_impl->resetKeepRunControlSpecialDays();
+}
+
+bool ForwardTranslatorOptions::isIPTabularOutputDefaulted() const {
+  return m_impl->isIPTabularOutputDefaulted();
 }
 
 bool ForwardTranslatorOptions::iPTabularOutput() const {
@@ -207,12 +352,28 @@ void ForwardTranslatorOptions::setIPTabularOutput(bool iPTabularOutput) {
   m_impl->setIPTabularOutput(iPTabularOutput);
 }
 
+void ForwardTranslatorOptions::resetIPTabularOutput() {
+  m_impl->resetIPTabularOutput();
+}
+
+bool ForwardTranslatorOptions::isExcludeLCCObjectsDefaulted() const {
+  return m_impl->isExcludeLCCObjectsDefaulted();
+}
+
 bool ForwardTranslatorOptions::excludeLCCObjects() const {
   return m_impl->excludeLCCObjects();
 }
 
 void ForwardTranslatorOptions::setExcludeLCCObjects(bool excludeLCCObjects) {
   m_impl->setExcludeLCCObjects(excludeLCCObjects);
+}
+
+void ForwardTranslatorOptions::resetExcludeLCCObjects() {
+  m_impl->resetExcludeLCCObjects();
+}
+
+bool ForwardTranslatorOptions::isExcludeSQliteOutputReportDefaulted() const {
+  return m_impl->isExcludeSQliteOutputReportDefaulted();
 }
 
 bool ForwardTranslatorOptions::excludeSQliteOutputReport() const {
@@ -223,12 +384,28 @@ void ForwardTranslatorOptions::setExcludeSQliteOutputReport(bool excludeSQliteOu
   m_impl->setExcludeSQliteOutputReport(excludeSQliteOutputReport);
 }
 
+void ForwardTranslatorOptions::resetExcludeSQliteOutputReport() {
+  m_impl->resetExcludeSQliteOutputReport();
+}
+
+bool ForwardTranslatorOptions::isExcludeHTMLOutputReportDefaulted() const {
+  return m_impl->isExcludeHTMLOutputReportDefaulted();
+}
+
 bool ForwardTranslatorOptions::excludeHTMLOutputReport() const {
   return m_impl->excludeHTMLOutputReport();
 }
 
 void ForwardTranslatorOptions::setExcludeHTMLOutputReport(bool excludeHTMLOutputReport) {
   m_impl->setExcludeHTMLOutputReport(excludeHTMLOutputReport);
+}
+
+void ForwardTranslatorOptions::resetExcludeHTMLOutputReport() {
+  m_impl->resetExcludeHTMLOutputReport();
+}
+
+bool ForwardTranslatorOptions::isExcludeVariableDictionaryDefaulted() const {
+  return m_impl->isExcludeVariableDictionaryDefaulted();
 }
 
 bool ForwardTranslatorOptions::excludeVariableDictionary() const {
@@ -239,12 +416,28 @@ void ForwardTranslatorOptions::setExcludeVariableDictionary(bool excludeVariable
   m_impl->setExcludeVariableDictionary(excludeVariableDictionary);
 }
 
+void ForwardTranslatorOptions::resetExcludeVariableDictionary() {
+  m_impl->resetExcludeVariableDictionary();
+}
+
+bool ForwardTranslatorOptions::isExcludeSpaceTranslationDefaulted() const {
+  return m_impl->isExcludeSpaceTranslationDefaulted();
+}
+
 bool ForwardTranslatorOptions::excludeSpaceTranslation() const {
   return m_impl->excludeSpaceTranslation();
 }
 
 void ForwardTranslatorOptions::setExcludeSpaceTranslation(bool excludeSpaceTranslation) {
   m_impl->setExcludeSpaceTranslation(excludeSpaceTranslation);
+}
+
+void ForwardTranslatorOptions::resetExcludeSpaceTranslation() {
+  m_impl->resetExcludeSpaceTranslation();
+}
+
+void ForwardTranslatorOptions::overrideValuesWith(const ForwardTranslatorOptions& other) {
+  m_impl->overrideValuesWith(other);
 }
 
 std::ostream& operator<<(std::ostream& os, const ForwardTranslatorOptions& forwardTranslatorOptions) {
