@@ -92,7 +92,9 @@ namespace detail {
       value["output_adapter"] = outputAdapter;
     }
 
-    value["ft_options"] = m_forwardTranslatorOptions.json();
+    if (auto ft_opt = m_forwardTranslatorOptions.json()) {
+      value["ft_options"] = ft_opt;
+    }
 
     // Write to string
     Json::StreamWriterBuilder wbuilder;

@@ -106,7 +106,7 @@ namespace detail {
     bool m_preserveRunDir = false;
     bool m_skipExpandObjects = false;
     bool m_skipEnergyPlusPreprocess = false;
-    bool m_cleanup = true;
+    bool m_cleanup = true;  // TODO this does absolutely nothing in the workflow-gem currently
     ForwardTranslatorOptions m_forwardTranslatorOptions;
     boost::optional<CustomOutputAdapter> m_customOutputAdapter;
   };
