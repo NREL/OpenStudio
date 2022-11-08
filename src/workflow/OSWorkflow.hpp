@@ -3,6 +3,7 @@
 
 #include "../measure/OSRunner.hpp"
 #include "../scriptengine/ScriptEngine.hpp"
+#include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Filesystem.hpp"
 #include "../utilities/filetypes/WorkflowJSON.hpp"
 #include <memory>
@@ -29,7 +30,7 @@ class OSWorkflow
   void run();
 
  private:
-  // TODO: add a Logger
+  REGISTER_LOGGER("openstudio.workflow.OSWorkflow");
 #if USE_RUBY_ENGINE
   ScriptEngineInstance& rubyEngine;
 #endif
@@ -38,6 +39,8 @@ class OSWorkflow
 #endif
   WorkflowJSON workflowJSON;
   measure::OSRunner runner{workflowJSON};
+  model::Model model;
+  boost::optional<Workspace> workspace_;
 
   bool m_no_simulation = false;
   bool m_post_process_only = false;
@@ -46,6 +49,15 @@ class OSWorkflow
   bool m_show_stdout = false;
   bool m_add_timings = false;
   bool m_style_stdout = false;
+
+  /** @name Jobs */
+  //@{
+  // Jobs
+
+  // Wipes and creates directory, loads the seed/idf file
+  void runInitialization();
+
+  //@}
 
   static void applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue);
 };

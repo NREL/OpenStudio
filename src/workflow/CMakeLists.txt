@@ -4,6 +4,13 @@ add_library(openstudio_workflow
   OSWorkflow.cpp
   WorkflowRunOptions.hpp
   WorkflowRunOptions.cpp
+
+  # Jobs
+  RunInitialization.cpp
+
+  # Util
+  Util.hpp
+  Util.cpp
 )
 
 target_link_libraries(openstudio_workflow PRIVATE openstudiolib)

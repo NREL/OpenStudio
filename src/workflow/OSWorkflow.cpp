@@ -136,28 +136,7 @@ void OSWorkflow::run() {
   //// https://github.com/NREL/OpenStudio-workflow-gem/blob/develop/lib/openstudio/workflow/util/measure.rb
 
   // 1. Instantiate seed model
-
-  auto runInitialization = [this]() -> openstudio::model::Model {
-    fmt::print("Debug: Finding and loading the seed file\n");
-    auto seedPath_ = workflowJSON.seedFile();
-    if (!seedPath_) {
-      return openstudio::model::Model{};
-    }
-
-    auto modelFullPath_ = workflowJSON.findFile(seedPath_.get());
-    if (!modelFullPath_) {
-      throw std::runtime_error(fmt::format("Seed model {} specified in OSW cannot be found", seedPath_.get()));
-    }
-    openstudio::osversion::VersionTranslator vt;
-    auto m_ = vt.loadModel(modelFullPath_.get());
-    if (!m_) {
-      throw std::runtime_error(fmt::format("Failed to load OSM file {}\n", openstudio::toString(seedPath_.get())));
-    }
-    return m_.get();
-  };
-
-  model::Model model = runInitialization();
-  boost::optional<openstudio::Workspace> workspace_;
+  runInitialization();
 
   auto runDir = workflowJSON.absoluteRunDir();
   openstudio::filesystem::remove_all(runDir);
@@ -225,7 +204,7 @@ void OSWorkflow::run() {
       ScriptObject measureScriptObject;
       openstudio::measure::OSMeasure* measurePtr = nullptr;
 
-      auto getArguments = [&model, &workspace_, &measureType, &scriptPath_, &step,
+      auto getArguments = [this, &measureType, &scriptPath_, &step,
                            &measureLanguage](openstudio::measure::OSMeasure* measurePtr) -> measure::OSArgumentMap {
         if (!measurePtr) {
           throw std::runtime_error(fmt::format("Could not load measure at '{}'", openstudio::toString(scriptPath_.get())));
