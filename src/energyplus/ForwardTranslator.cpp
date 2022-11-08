@@ -120,6 +120,14 @@ namespace energyplus {
     createFluidPropertiesMap();
   }
 
+  ForwardTranslatorOptions ForwardTranslator::forwardTranslatorOptions() const {
+    return m_forwardTranslatorOptions;
+  }
+
+  void ForwardTranslator::setForwardTranslatorOptions(ForwardTranslatorOptions forwardTranslatorOptions) {
+    m_forwardTranslatorOptions = std::move(forwardTranslatorOptions);
+  }
+
   Workspace ForwardTranslator::translateModel(const Model& model, ProgressBar* progressBar) {
 
     // When m_forwardTranslatorOptions.excludeSpaceTranslation() is false, could we skip the (expensive) clone since we aren't combining spaces?

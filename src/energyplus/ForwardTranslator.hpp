@@ -538,6 +538,13 @@ namespace energyplus {
    */
     std::vector<LogMessage> errors() const;
 
+    ForwardTranslatorOptions forwardTranslatorOptions() const;
+
+    void setForwardTranslatorOptions(ForwardTranslatorOptions forwardTranslatorOptions);
+
+    /** @Convenience methods for ForwardTranslatorOptions (and for backward compatibility) */
+    //@{
+    //
     /** keepRunControlSpecialDays is enabled by default. You can use this method to NOT translate the holidays in the model.
    */
     void setKeepRunControlSpecialDays(bool keepRunControlSpecialDays);
@@ -569,6 +576,8 @@ namespace energyplus {
     /** If excludeSpaceTranslation, do usual combineSpaces(), etc. Otherwise, translate space objects.
    *  Use this at your own risks */
     void setExcludeSpaceTranslation(bool excludeSpaceTranslation);
+
+    //@}
 
    private:
     REGISTER_LOGGER("openstudio.energyplus.ForwardTranslator");
