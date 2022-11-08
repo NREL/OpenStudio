@@ -88,18 +88,12 @@ namespace cli {
 
     // FT options
     static constexpr auto ftGroupName = "Forward Translator Options";
-    // TODO: I've got major lifetime issues here! Can't do this, ftOptions will go out of scope. That's because 1) It's a getter, not a member with an
-    // accessor, and 2) because getter returns by val (not by ref)
-    // So the workaround is to declare a specific shared_ptr to the ftOptions, then I'll merge that back into the runOptions
-    // auto ftOptions = opt->runOptions.forwardTranslatorOptions();
-    auto ftOptions = std::make_shared<ForwardTranslatorOptions>();
-
     app
       ->add_flag(
         "--runcontrolspecialdays,!--no-runcontrolspecialdays",
-        [ftOptions](std::int64_t val) {
+        [opt](std::int64_t val) {
           if (val != 0) {
-            ftOptions->setKeepRunControlSpecialDays((val == 1));
+            opt->runOptions.forwardTranslatorOptions().setKeepRunControlSpecialDays((val == 1));
           }
         },
         "Include RunControlSpecialDays (Holidays) [Default: True]")
@@ -108,9 +102,9 @@ namespace cli {
     app
       ->add_flag(
         "--set-ip-tabular-output",
-        [ftOptions](std::int64_t val) {
+        [opt](std::int64_t val) {
           if (val != 0) {
-            ftOptions->setIPTabularOutput((val == 1));
+            opt->runOptions.forwardTranslatorOptions().setIPTabularOutput((val == 1));
           }
         },
         "Request IP units from E+ Tabular (HTML) Report [Default: False]")
@@ -119,9 +113,9 @@ namespace cli {
     app
       ->add_flag(
         "--lifecyclecosts,!--no-lifecyclecosts",
-        [ftOptions](std::int64_t val) {
+        [opt](std::int64_t val) {
           if (val != 0) {
-            ftOptions->setExcludeLCCObjects((val != 1));
+            opt->runOptions.forwardTranslatorOptions().setExcludeLCCObjects((val != 1));
           }
         },
         "Include LifeCycleCosts [Default: True]")
@@ -130,9 +124,9 @@ namespace cli {
     app
       ->add_flag(
         "--sqlite-output,!--no-sqlite-output",
-        [ftOptions](std::int64_t val) {
+        [opt](std::int64_t val) {
           if (val != 0) {
-            ftOptions->setExcludeSQliteOutputReport((val != 1));
+            opt->runOptions.forwardTranslatorOptions().setExcludeSQliteOutputReport((val != 1));
           }
         },
         "Request Output:SQLite from E+ [Default: True]")
@@ -141,9 +135,9 @@ namespace cli {
     app
       ->add_flag(
         "--html-output,!--no-html-output",
-        [ftOptions](std::int64_t val) {
+        [opt](std::int64_t val) {
           if (val != 0) {
-            ftOptions->setExcludeHTMLOutputReport((val != 1));
+            opt->runOptions.forwardTranslatorOptions().setExcludeHTMLOutputReport((val != 1));
           }
         },
         "Request Output:Table:SummaryReports from E+ [Default: True]")
@@ -152,21 +146,20 @@ namespace cli {
     app
       ->add_flag(
         "--space-translation,!--no-space-translation",
-        [ftOptions](std::int64_t val) {
+        [opt](std::int64_t val) {
           if (val != 0) {
-            ftOptions->setExcludeSpaceTranslation((val != 1));
+            opt->runOptions.forwardTranslatorOptions().setExcludeSpaceTranslation((val != 1));
           }
         },
         "Add individual E+ Space [Default: True]")
       ->group(ftGroupName);
 
     // Subcommand callback
-    app->callback([opt, ftOptions, &ruby, &python, &runSetupEmbeddedGems, &runSetupPythonPath] {
+    app->callback([opt, &ruby, &python, &runSetupEmbeddedGems, &runSetupPythonPath] {
       // TODO: eventually we want to delay the call to runSetupEmbeddedGems until we KNOW we need ruby measures, so probably want to forward to
       // OSWorkflow and deal with it there. Same for runSetupPythonPath
       runSetupEmbeddedGems();
       runSetupPythonPath();
-      opt->runOptions.setForwardTranslatorOptions(*ftOptions);
       openstudio::OSWorkflow workflow(*opt, ruby, python);
       workflow.run();
     });
