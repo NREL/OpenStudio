@@ -445,4 +445,19 @@ std::ostream& operator<<(std::ostream& os, const ForwardTranslatorOptions& forwa
   return os;
 }
 
+std::vector<ForwardTranslatorOptionKeyMethod> ForwardTranslatorOptions::forwardTranslatorOptionKeyMethods() {
+  return std::vector<ForwardTranslatorOptionKeyMethod>{{{"runcontrolspecialdays", "setKeepRunControlSpecialDays"},
+                                                        {"ip_tabular_output", "setIPTabularOutput"},
+                                                        {"no_lifecyclecosts", "setExcludeLCCObjects"},
+                                                        {"no_sqlite_output", "setExcludeSQliteOutputReport"},
+                                                        {"no_html_output", "setExcludeHTMLOutputReport"},
+                                                        {"no_variable_dictionary", "setExcludeVariableDictionary"},
+                                                        {"no_space_translation", "setExcludeSpaceTranslation"}}};
+}
+
+std::ostream& operator<<(std::ostream& out, const ForwardTranslatorOptionKeyMethod& opt) {
+  out << "(" << opt.json_name << ", " << opt.ft_method_name << ")";
+  return out;
+}
+
 }  // namespace openstudio

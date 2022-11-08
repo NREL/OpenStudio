@@ -45,6 +45,13 @@ namespace detail {
   class ForwardTranslatorOptions_Impl;
 }  // namespace detail
 
+struct ForwardTranslatorOptionKeyMethod
+{
+  std::string json_name;
+  std::string ft_method_name;
+};
+UTILITIES_API std::ostream& operator<<(std::ostream& out, const ForwardTranslatorOptionKeyMethod& opt);
+
 class UTILITIES_API ForwardTranslatorOptions
 {
  public:
@@ -95,6 +102,9 @@ class UTILITIES_API ForwardTranslatorOptions
 
   /* Any non-defaulted value from other is brought over */
   void overrideValuesWith(const ForwardTranslatorOptions& other);
+
+  // TODO: keep?
+  static std::vector<ForwardTranslatorOptionKeyMethod> forwardTranslatorOptionKeyMethods();
 
  protected:
   Json::Value json() const;

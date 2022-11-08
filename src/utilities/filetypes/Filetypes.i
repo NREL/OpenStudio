@@ -85,6 +85,7 @@
 
 %template(OptionalRunOptions) boost::optional<openstudio::RunOptions>;
 %template(OptionalForwardTranslatorOptions) boost::optional<openstudio::ForwardTranslatorOptions>;
+%template(ForwardTranslatorOptionKeyMethodVector) std::vector<openstudio::ForwardTranslatorOptionKeyMethod>;
 
 %template(OptionalStepResult) boost::optional<openstudio::StepResult>;
 
@@ -134,6 +135,15 @@
   std::string __str__() {
     std::ostringstream os;
     os << *self;
+    return os.str();
+  }
+};
+
+// extend classes
+%extend openstudio::ForwardTranslatorOptionKeyMethod {
+  std::string __str__() {
+    std::ostringstream os;
+    os << *$self;
     return os.str();
   }
 };
