@@ -12,6 +12,8 @@ add_library(openstudio_workflow
   # Util
   Util.hpp
   Util.cpp
+  Timer.hpp
+  Timer.cpp
 )
 
 target_link_libraries(openstudio_workflow PRIVATE openstudiolib)

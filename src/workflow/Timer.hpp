@@ -1,0 +1,60 @@
+#ifndef WORKFLOW_UTIL_TIMER_HPP
+#define WORKFLOW_UTIL_TIMER_HPP
+
+#include <chrono>
+#include <string>
+#include <vector>
+
+namespace openstudio::workflow::util {
+
+class Timer
+{
+ public:
+  // start is initialized to now() when ctor is called, end is not initialized
+  Timer(std::string message);
+
+  auto start() const;
+  auto end() const;
+
+  // Reset start to now, end to none
+  void tick();
+
+  // Capture end time
+  void tock();
+
+  std::string message() const;
+
+  auto duration() const;
+
+  std::string format() const;
+
+ private:
+  using DurationType = std::chrono::milliseconds;
+  using ClockType = std::chrono::system_clock;
+  using TimePointType = decltype(ClockType::now());
+
+  std::string m_message;
+  TimePointType m_start = ClockType::now();
+  TimePointType m_end;
+};
+
+class TimerCollection
+{
+ public:
+  TimerCollection() = default;
+  Timer& newTimer(std::string message);
+  void tockCurrentTimer();
+
+  // line_length is the maximum terminal width, fit = true will cause the table to be resized down as much as possible, fit = false means the table will take exactly line_length
+  std::string timeReport(int line_length = 80, bool fit = true) const;
+
+ private:
+  std::vector<Timer> m_timers;
+  size_t currentTimerIndex = -1;
+  size_t prevTimerIndex = -1;
+  mutable Timer m_totalTimer{"Total"};
+};
+
+}  // namespace openstudio::workflow::util
+
+#endif  // WORKFLOW_UTIL_TIMER_HPP
