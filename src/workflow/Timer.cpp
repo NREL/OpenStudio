@@ -4,6 +4,7 @@
 
 #include <fmt/format.h>
 #include <fmt/chrono.h>  // Formatting for std::chrono
+#include <fmt/color.h>   // For fmt::fg
 
 namespace openstudio::workflow::util {
 
@@ -78,7 +79,7 @@ std::string TimerCollection::timeReport(int line_length, bool fit) const {
   result +=
     fmt::format("| {3:^{0}} | {4:^{1}} | {5:^{1}} | {6:^{2}} |\n", message_len, timepoint_len, duration_len, "Timer", "start", "end", "duration");
   // result += fmt::format("|{0:─^{1}}|\n", "", total_len - 2);
-  result += fmt::format("|{3:-^{0}}|{3:-^{1}}|{3:-^{1}}|{3:-^{2}}|\n", message_len + 2, timepoint_len + 2, duration_len + 2, "");
+  result += fmt::format("|:{3:-^{0}}|:{3:-^{1}}:|:{3:-^{1}}:|:{3:-^{2}}:|\n", message_len + 1, timepoint_len, duration_len, "");
 
   for (const auto& timer : m_timers) {
     // result += fmt::format("{}\n", timer.format());
@@ -87,8 +88,8 @@ std::string TimerCollection::timeReport(int line_length, bool fit) const {
   }
 
   m_totalTimer.tock();
-  result += fmt::format("| {3:^{0}.{0}s} | {4:%T} | {5:%T} | {6:^{2}} |\n", message_len, timepoint_len, duration_len, m_totalTimer.message(),
-                        m_totalTimer.start(), m_totalTimer.end(), m_totalTimer.duration());
+  result += fmt::format(fmt::fg(fmt::color::red), "| {3:^{0}.{0}s} | {4:%T} | {5:%T} | {6:^{2}} |\n", message_len, timepoint_len, duration_len,
+                        m_totalTimer.message(), m_totalTimer.start(), m_totalTimer.end(), m_totalTimer.duration());
 
   return result;
 };

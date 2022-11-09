@@ -42,6 +42,9 @@ class TimerCollection
 {
  public:
   TimerCollection() = default;
+
+  // TODO: maybe it's a bad idea to return the Timer reference... code writer is responsible for ensuring they call tockCurrentTimer
+  // We could just return a size_t (currentTimerIndex) and have tockTimer(size_t index);
   Timer& newTimer(std::string message);
   void tockCurrentTimer();
 
@@ -50,9 +53,11 @@ class TimerCollection
 
  private:
   std::vector<Timer> m_timers;
+  mutable Timer m_totalTimer{"Total"};
+
+  // these two are so we can nest timings and detailed (sub) timings
   size_t currentTimerIndex = -1;
   size_t prevTimerIndex = -1;
-  mutable Timer m_totalTimer{"Total"};
 };
 
 }  // namespace openstudio::workflow::util
