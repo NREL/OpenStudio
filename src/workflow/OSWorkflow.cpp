@@ -50,10 +50,10 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
     m_add_timings(t_workflowRunOptions.add_timings),
     m_style_stdout(t_workflowRunOptions.style_stdout) {
 
-  fmt::print("Original workflowJSON={}\n", workflowJSON.string());
-
-  t_workflowRunOptions.debug_print();
-
+  if (t_workflowRunOptions.runOptions.debug() || (workflowJSON.runOptions() && workflowJSON.runOptions()->debug())) {
+    fmt::print("Original workflowJSON={}\n", workflowJSON.string());
+    t_workflowRunOptions.debug_print();
+  }
   auto runOpt_ = workflowJSON.runOptions();
   if (!runOpt_) {
     workflowJSON.setRunOptions(t_workflowRunOptions.runOptions);
@@ -65,7 +65,9 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
     workflowJSON.runOptions()->setForwardTranslatorOptions(ori_ftOptions);
   }
 
-  fmt::print("workflowJSON={}\n", workflowJSON.string());
+  if (workflowJSON.runOptions()->debug()) {
+    fmt::print("workflowJSON={}\n", workflowJSON.string());
+  }
 }
 
 void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue) {

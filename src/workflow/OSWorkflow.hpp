@@ -39,13 +39,13 @@ class OSWorkflow
   WorkflowJSON workflowJSON;
   measure::OSRunner runner{workflowJSON};
 
-  [[maybe_unused]] bool m_no_simulation = false;
-  [[maybe_unused]] bool m_post_process_only = false;
+  bool m_no_simulation = false;
+  bool m_post_process_only = false;
 
   // stdout stuff
-  [[maybe_unused]] bool m_show_stdout = false;
-  [[maybe_unused]] bool m_add_timings = false;
-  [[maybe_unused]] bool m_style_stdout = false;
+  bool m_show_stdout = false;
+  bool m_add_timings = false;
+  bool m_style_stdout = false;
 
   static void applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue);
 };
