@@ -14,8 +14,13 @@ namespace workflow {
 
   namespace util {
 
-    model::Model loadOSM(const openstudio::filesystem::path& osm_path);
-    Workspace loadIDF(const openstudio::filesystem::path& idf_path);
+    model::Model loadOSM(const openstudio::filesystem::path& osmPath);
+    Workspace loadIDF(const openstudio::filesystem::path& idfPath);
+
+    void gatherReports(const openstudio::filesystem::path& runDirPath, const openstudio::filesystem::path& rootDirPath);
+
+    // Cleans up the run directory (remove epw, .mtr)
+    void cleanup(const openstudio::filesystem::path& runDirPath);
 
   }  // namespace util
 }  // namespace workflow
