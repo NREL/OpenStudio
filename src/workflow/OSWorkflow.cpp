@@ -176,10 +176,15 @@ void OSWorkflow::run() {
   // TODO: need to merge workflowJSON flags with flags from command line (eg: FT options)
   // TODO: need to modify utilities/RunOptions.hpp instead of duplicating some of that work in workflow
 
-  for (const MeasureType stepType : {MeasureType::ModelMeasure, MeasureType::EnergyPlusMeasure}) {
+  for (const MeasureType stepType : {MeasureType::ModelMeasure, MeasureType::EnergyPlusMeasure, MeasureType::ReportingMeasure}) {
 
     if (stepType == MeasureType::EnergyPlusMeasure) {
       timeJob(&OSWorkflow::runTranslator, "Translator");
+    }
+
+    if (stepType == MeasureType::ReportingMeasure) {
+      timeJob(&OSWorkflow::runEnergyPlus, "E+ Simulation");
+      continue;
     }
 
     if (m_add_timings) {

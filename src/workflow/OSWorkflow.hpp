@@ -96,7 +96,14 @@ class OSWorkflow
 
   // Wipes and creates directory, loads the seed/idf file
   void runInitialization();
+  void runOpenStudioMeasures();
   void runTranslator();
+  void runEnergyPlusMeasures();
+  void runEnergyPlus();
+  void runReportingMeasures();
+  void runPostProcess();
+
+  void runCleanup();
 
   //@}
 

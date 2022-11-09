@@ -8,6 +8,7 @@ add_library(openstudio_workflow
   # Jobs
   RunInitialization.cpp
   RunTranslator.cpp
+  RunEnergyPlus.cpp
 
   # Util
   Util.hpp
