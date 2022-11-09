@@ -1,6 +1,4 @@
 #include "./OSWorkflow.hpp"
-#include "../utilities/filetypes/WorkflowStep.hpp"
-#include "../utilities/bcl/BCLMeasure.hpp"
 
 #include "../osversion/VersionTranslator.hpp"
 #include "../measure/OSMeasure.hpp"
@@ -11,10 +9,13 @@
 #include "../measure/OSRunner.hpp"
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
+#include "../utilities/filetypes/WorkflowStep.hpp"
+#include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/data/Variant.hpp"
+#include "../utilities/core/Filesystem.hpp"
+#include "../utilities/core/Logger.hpp"
 #include "../energyplus/ForwardTranslator.hpp"
-#include "utilities/core/Logger.hpp"
 
 #include <fmt/format.h>
 #include <fmt/ostream.h>
@@ -83,7 +84,7 @@ void OSWorkflow::run() {
   }
 
 #if USE_RUBY_ENGINE
-  rubyEngine->exec("puts 'Hello from Ruby'");
+  // rubyEngine->exec("puts 'Hello from Ruby'");
   rubyEngine->registerType<openstudio::measure::ModelMeasure*>("openstudio::measure::ModelMeasure *");
   rubyEngine->registerType<openstudio::measure::EnergyPlusMeasure*>("openstudio::measure::EnergyPlusMeasure *");
   rubyEngine->registerType<openstudio::measure::ReportingMeasure*>("openstudio::measure::ReportingMeasure *");
@@ -91,7 +92,7 @@ void OSWorkflow::run() {
   rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
 #endif
 #if USE_PYTHON_ENGINE
-  pythonEngine->exec("print('Hello from Python')");
+  // pythonEngine->exec("print('Hello from Python')");
   pythonEngine->registerType<openstudio::measure::PythonModelMeasure*>("openstudio::measure::PythonModelMeasure *");
   pythonEngine->registerType<openstudio::measure::PythonEnergyPlusMeasure*>("openstudio::measure::PythonEnergyPlusMeasure *");
   pythonEngine->registerType<openstudio::measure::PythonReportingMeasure*>("openstudio::measure::PythonReportingMeasure *");
@@ -132,6 +133,10 @@ void OSWorkflow::run() {
   model::Model model = runInitialization();
   boost::optional<openstudio::Workspace> workspace_;
 
+  auto runDir = workflowJSON.absoluteRunDir();
+  openstudio::filesystem::remove_all(runDir);
+  openstudio::filesystem::create_directory(runDir);
+
   // 2. determine ruby or python
   // 3. import measure.(py|rb)
   // 4. instantiate measure
@@ -145,9 +150,10 @@ void OSWorkflow::run() {
   // TODO: need to merge workflowJSON flags with flags from command line (eg: FT options)
   // TODO: need to modify utilities/RunOptions.hpp instead of duplicating some of that work in workflow
 
-  for (openstudio::MeasureType stepType : {openstudio::MeasureType::ModelMeasure, openstudio::MeasureType::EnergyPlusMeasure}) {
-    const auto modelSteps = workflowJSON.getMeasureSteps(stepType);
+  for (const auto stepType : {MeasureType::ModelMeasure, MeasureType::EnergyPlusMeasure}) {
     if (stepType == MeasureType::EnergyPlusMeasure) {
+      // Save final Model
+      model.save(runDir / "in.osm", true);
       openstudio::energyplus::ForwardTranslator ft;
       auto& ftOptions = runOptions.ft_options;
       ft.setKeepRunControlSpecialDays(ftOptions.runcontrolspecialdays);
@@ -159,6 +165,7 @@ void OSWorkflow::run() {
       workspace_ = ft.translateModel(model);
     }
 
+    const auto modelSteps = workflowJSON.getMeasureSteps(stepType);
     for (const auto& step : modelSteps) {
       unsigned stepIndex = workflowJSON.currentStepIndex();
       fmt::print("\n\nRunning step {}\n", stepIndex);
@@ -368,6 +375,9 @@ spec.loader.exec_module(module)
         }
       }
     }  // End for (const auto& step : modelSteps)
-  }
+  }    // End for StepType
+
+  // Save final IDF
+  workspace_->save(runDir / "in.idf");
 }
 }  // namespace openstudio

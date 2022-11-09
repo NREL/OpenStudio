@@ -139,7 +139,6 @@ namespace cli {
     opt.debug_print();
 
     if (opt.server_port > 0) {
-      // throw std::runtime_error("measure manager server not implemented yet");
       const auto measureManagerCmd = fmt::format(
         R"ruby(
 require 'measure_manager_server'
@@ -183,9 +182,6 @@ server.start)ruby",
       if (measure_->measureLanguage() == MeasureLanguage::Ruby) {
         // TODO: need to capture arguments and pass as ARGV
 
-        throw std::runtime_error("compute_arguments_model not implemented yet");
-
-        // TODO: THIS IS IS INTERESTING! WE CANNOT LOAD THE EMBEDDED GEMS! I suppose we need to do something like embedded_help.rb
         rubyEngine->exec("OpenStudio::init_rest_of_openstudio()");
 
         auto runTestCmd = fmt::format(
@@ -218,10 +214,9 @@ end
         rubyEngine->exec(runTestCmd);
 
       } else if (measure_->measureLanguage() == MeasureLanguage::Python) {
+        // TODO:
+        throw std::runtime_error("run_tests not implemented yet for python");
       }
-
-      // TODO:
-      throw std::runtime_error("run_tests not implemented yet");
     }
   }
 

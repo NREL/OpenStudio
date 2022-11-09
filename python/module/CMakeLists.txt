@@ -6,8 +6,13 @@ foreach(p ${ALL_PYTHON_BINDING_TARGETS})
   target_link_libraries(${p}
     PRIVATE
     openstudiolib
-    Python::Python
   )
+  if(UNIX AND NOT APPLE)
+    target_link_libraries(${p}
+      PRIVATE
+      Python::Python
+    )
+  endif()
 endforeach()
 
 # convenience target to build the SDK

@@ -32,12 +32,12 @@ jobs:
           allow_failure: false
           extra_cmake_args: "-DCONAN_FIRST_TIME_BUILD_ALL:BOOL=ON"
         - name: macOS
-          os: macos-10.15
+          os: macos-11
           python-version: 3.8
           allow_failure: false
           MACOSX_DEPLOYMENT_TARGET: 10.15
-          SDKROOT: /Applications/Xcode_11.7.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
-          DEVELOPER_DIR: /Applications/Xcode_11.7.app/Contents/Developer
+          SDKROOT: /Applications/Xcode_13.2.1.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk
+          DEVELOPER_DIR: /Applications/Xcode_13.2.1.app/Contents/Developer
           extra_cmake_args: ""
         - name: Windows_py37
           os: windows-2019
@@ -292,7 +292,7 @@ jobs:
           python-version: 3.8
           allow_failure: false
         - name: macOS
-          os: macos-10.15
+          os: macos-11
           python-version: 3.8
           allow_failure: false
         - name: Windows_py37

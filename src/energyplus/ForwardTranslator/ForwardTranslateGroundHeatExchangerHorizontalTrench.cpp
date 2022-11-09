@@ -116,7 +116,7 @@ namespace energyplus {
       idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilThermalConductivity, value);
     }
 
-    // SoilDensity`
+    // SoilDensity
     {
       auto value = modelObject.soilDensity();
       idfObject.setDouble(GroundHeatExchanger_HorizontalTrenchFields::SoilDensity, value);
@@ -164,7 +164,27 @@ namespace energyplus {
 
       groundModel.setName(modelObject.name().get() + " Ground Model");
 
+      idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelType,
+                          "Site:GroundTemperature:Undisturbed:KusudaAchenbach");
       idfObject.setString(GroundHeatExchanger_HorizontalTrenchFields::UndisturbedGroundTemperatureModelName, groundModel.name().get());
+
+      // SoilThermalConductivity
+      {
+        auto value = modelObject.soilThermalConductivity();
+        groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilThermalConductivity, value);
+      }
+
+      // SoilDensity
+      {
+        auto value = modelObject.soilDensity();
+        groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilDensity, value);
+      }
+
+      // SoilSpecificHeat
+      {
+        auto value = modelObject.soilSpecificHeat();
+        groundModel.setDouble(Site_GroundTemperature_Undisturbed_KusudaAchenbachFields::SoilSpecificHeat, value);
+      }
 
       // KusudaAchenbachAverageSurfaceTemperature
       {
