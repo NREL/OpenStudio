@@ -4,6 +4,7 @@
 
 #include "../model/Model.hpp"
 #include "../model/WeatherFile.hpp"
+#include "../model/FileOperations.hpp"
 
 #include "../utilities/filetypes/WorkflowJSON.hpp"
 #include "../utilities/filetypes/RunOptions.hpp"
@@ -16,7 +17,10 @@ void OSWorkflow::runInitialization() {
 
   state = State::Initialization;
 
-  detailedTimeBlock("Wiping directories", [this]() {
+  auto rootDir = workflowJSON.absoluteRootDir();
+  LOG(Debug, "The root_dir for the datapoint is " << rootDir);
+
+  detailedTimeBlock("Wiping directories", [this, &rootDir]() {
     if (!workflowJSON.runOptions()->preserveRunDir()) {
       // We don't have a run_dir argument anyways
       auto runDir = workflowJSON.absoluteRunDir();
@@ -28,7 +32,7 @@ void OSWorkflow::runInitialization() {
     }
 
     {
-      auto generatedFilesDir = workflowJSON.absoluteRootDir() / "generated_files";
+      auto generatedFilesDir = rootDir / "generated_files";
       if (openstudio::filesystem::is_directory(generatedFilesDir)) {
         LOG(Debug, "Removing existing generated files directory: " << generatedFilesDir);
         openstudio::filesystem::remove_all(generatedFilesDir);
@@ -44,7 +48,7 @@ void OSWorkflow::runInitialization() {
         workflowJSON.addFilePath(fp);
       }
 
-      auto reportsDir = workflowJSON.absoluteRootDir() / "reports";
+      auto reportsDir = rootDir / "reports";
       if (openstudio::filesystem::is_directory(reportsDir)) {
         LOG(Debug, "Removing existing reports directory: " << reportsDir);
         openstudio::filesystem::remove_all(reportsDir);
@@ -74,19 +78,50 @@ void OSWorkflow::runInitialization() {
 
     } else {
       detailedTimeBlock("Loading seed OSM", [this, &modelFullPath_] { model = openstudio::workflow::util::loadOSM(modelFullPath_.get()); });
-
-      // Initialize the weather file
-      if (auto epwPath_ = workflowJSON.weatherFile()) {
-        if (auto epwFile_ = openstudio::EpwFile::load(epwPath_.get())) {
-          model::WeatherFile::setWeatherFile(model, epwFile_.get());
-        } else {
-          LOG(Warn, "Could not load weather fle from " << epwPath_.get());
-        }
-      }
     }
   } else {
     model = openstudio::model::Model{};
+    openstudio::model::initializeModelObjects(model);
   }
+
+  LOG(Debug, "Getting the initial weather file");
+  // Initialize the weather file
+  auto epwPath_ = workflowJSON.weatherFile();
+  bool alreadySetInModel = false;
+  if (!epwPath_) {
+    LOG(Debug, "No weather file specified in OSW, looking in model");
+    if (auto epwFile_ = model.weatherFile()) {
+      epwPath_ = epwFile_->path();
+      alreadySetInModel = true;
+    }
+  }
+
+  if (epwPath_) {
+    LOG(Debug, "Search for weather file " << epwPath_.get());
+    auto epwFullPath_ = workflowJSON.findFile(epwPath_.get());
+    if (!epwFullPath_) {
+      auto epwFullPath_ = workflowJSON.findFile(epwPath_->filename());
+    }
+    if (!epwFullPath_) {
+      throw std::runtime_error(fmt::format("Weather file {} specified but cannot be found", epwPath_->string()));
+    }
+
+    epwPath = epwFullPath_.get();
+
+    if (!alreadySetInModel) {
+      if (auto epwFile_ = openstudio::EpwFile::load(epwPath)) {
+        model::WeatherFile::setWeatherFile(model, epwFile_.get());
+      } else {
+        LOG(Warn, "Could not load weather file from " << epwPath_.get());
+      }
+    }
+
+  } else {
+    LOG(Debug, "No valid weather file defined in either the osm or osw");
+  }
+
+  // Tell the workflowJSON we have started, it'll log the start time and reset the stepResults
+  workflowJSON.start();
 }
 
 }  // namespace openstudio

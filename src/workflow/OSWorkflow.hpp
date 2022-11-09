@@ -45,6 +45,7 @@ class OSWorkflow
   measure::OSRunner runner{workflowJSON};
   model::Model model;
   boost::optional<Workspace> workspace_;
+  openstudio::filesystem::path epwPath;
 
   // TODO: use a unique_ptr or an Instance?
   std::unique_ptr<workflow::util::TimerCollection> m_timers = nullptr;
