@@ -55,6 +55,7 @@ class OSWorkflow
   // stdout stuff
   bool m_show_stdout = false;
   bool m_add_timings = false;
+  bool m_detailed_timings = true;
   bool m_style_stdout = false;
 
   /** @name Jobs */
@@ -78,6 +79,19 @@ class OSWorkflow
   State state = State::Queued;
 
   using memJobFunPtr = void (OSWorkflow::*)();
+
+  // void timeJob(memJobFunPtr, std::string message);
+
+  template <class F, class... Args>
+  auto detailedTimeBlock(std::string message, F&& func, Args&&... args) {
+    if (m_add_timings && m_detailed_timings) {
+      m_timers->newTimer(message.insert(0, "--"));
+    }
+    std::invoke(std::forward<F>(func), std::forward<Args>(args)...);
+    if (m_add_timings && m_detailed_timings) {
+      m_timers->tockCurrentTimer();
+    }
+  }
 
   // Wipes and creates directory, loads the seed/idf file
   void runInitialization();
