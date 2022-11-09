@@ -61,6 +61,10 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
     m_add_timings(t_workflowRunOptions.add_timings),
     m_style_stdout(t_workflowRunOptions.style_stdout) {
 
+  if (m_add_timings) {
+    m_timers = std::make_unique<workflow::util::TimerCollection>();
+  }
+
   if (t_workflowRunOptions.runOptions.debug() || (workflowJSON.runOptions() && workflowJSON.runOptions()->debug())) {
     fmt::print("Original workflowJSON={}\n", workflowJSON.string());
     t_workflowRunOptions.debug_print();
@@ -146,12 +150,18 @@ void OSWorkflow::run() {
   //// O. Need to apply measure steps IN ORDER. (eg: OpenStudio Measures before Eplus measures etc)
   //// https://github.com/NREL/OpenStudio-workflow-gem/blob/develop/lib/openstudio/workflow/util/measure.rb
 
-  // 1. Instantiate seed model
-  runInitialization();
+  auto timeJob = [this](memJobFunPtr job, auto message) {
+    if (m_add_timings) {
+      m_timers->newTimer(message);
+    }
+    (this->*job)();
+    if (m_add_timings) {
+      m_timers->tockCurrentTimer();
+    }
+  };
 
-  auto runDir = workflowJSON.absoluteRunDir();
-  openstudio::filesystem::remove_all(runDir);
-  openstudio::filesystem::create_directory(runDir);
+  // 1. Instantiate seed model
+  timeJob(&OSWorkflow::runInitialization, "Initialization");
 
   // 2. determine ruby or python
   // 3. import measure.(py|rb)
@@ -169,9 +179,12 @@ void OSWorkflow::run() {
   for (const MeasureType stepType : {MeasureType::ModelMeasure, MeasureType::EnergyPlusMeasure}) {
 
     if (stepType == MeasureType::EnergyPlusMeasure) {
-      runTranslator();
+      timeJob(&OSWorkflow::runTranslator, "Translator");
     }
 
+    if (m_add_timings) {
+      m_timers->newTimer(stepType.valueName());
+    }
     const auto modelSteps = workflowJSON.getMeasureSteps(stepType);
     for (const auto& step : modelSteps) {
       unsigned stepIndex = workflowJSON.currentStepIndex();
@@ -382,9 +395,35 @@ spec.loader.exec_module(module)
         }
       }
     }  // End for (const auto& step : modelSteps)
-  }    // End for StepType
+
+    if (m_add_timings) {
+      m_timers->tockCurrentTimer();
+    }
+  }  // End for StepType
 
   // Save final IDF
-  workspace_->save(runDir / "in.idf");
+  if (m_add_timings) {
+    m_timers->newTimer("Save IDF");
+  }
+  workspace_->save(workflowJSON.absoluteRunDir() / "in.idf");
+  if (m_add_timings) {
+    m_timers->tockCurrentTimer();
+  }
+
+  // Save workflow
+  if (m_add_timings) {
+    m_timers->newTimer("Save workflow");
+  }
+  workflowJSON.saveAs(workflowJSON.absoluteOutPath());
+  if (workflowJSON.runOptions()->debug()) {
+    fmt::print("workflowJSON={}\n", workflowJSON.string());
+  }
+  if (m_add_timings) {
+    m_timers->tockCurrentTimer();
+  }
+
+  if (m_add_timings) {
+    fmt::print("\nTiming:\n\n{}\n", m_timers->timeReport());
+  }
 }
 }  // namespace openstudio

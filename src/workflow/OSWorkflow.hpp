@@ -1,11 +1,15 @@
 #ifndef WORKFLOW_OSWORKFLOW_HPP
 #define WORKFLOW_OSWORKFLOW_HPP
 
+#include "Timer.hpp"
+
 #include "../measure/OSRunner.hpp"
 #include "../scriptengine/ScriptEngine.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/core/Filesystem.hpp"
 #include "../utilities/filetypes/WorkflowJSON.hpp"
+
+#include <functional>
 #include <memory>
 
 #define USE_RUBY_ENGINE 1
@@ -42,6 +46,9 @@ class OSWorkflow
   model::Model model;
   boost::optional<Workspace> workspace_;
 
+  // TODO: use a unique_ptr or an Instance?
+  std::unique_ptr<workflow::util::TimerCollection> m_timers = nullptr;
+
   bool m_no_simulation = false;
   bool m_post_process_only = false;
 
@@ -69,6 +76,9 @@ class OSWorkflow
     PostProcess,
   };
   State state = State::Queued;
+
+  using memJobFunPtr = void (OSWorkflow::*)();
+
   // Wipes and creates directory, loads the seed/idf file
   void runInitialization();
   void runTranslator();
