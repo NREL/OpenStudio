@@ -16,8 +16,6 @@
 
 #include "../utilities/core/Filesystem.hpp"
 
-#include <chrono>
-
 namespace openstudio {
 
 void OSWorkflow::runTranslator() {
@@ -35,32 +33,33 @@ void OSWorkflow::runTranslator() {
   auto runDir = workflowJSON.absoluteRunDir();
   OS_ASSERT(openstudio::filesystem::is_directory(runDir));
 
-  // TODO: Copy in the weather file defined in the registry, or alternately in the options
+  // Copy in the weather file
+  if (!epwPath.empty()) {
+    openstudio::filesystem::copy_file(epwPath, runDir / "in.epw", openstudio::filesystem::copy_options::overwrite_existing);
+  } else {
+    LOG(Warn, "EPW file not found");
+  }
 
   // Translate the OSM to an IDF
   LOG(Info, "Beginning the translation to IDF")
-  auto start = std::chrono::system_clock::now();
-  // TimeLogger.start('Translating to EnergyPlus')
+  detailedTimeBlock("Translating to EnergyPlus IDF", [this]() {
+    openstudio::energyplus::ForwardTranslator ft;
+    ft.setForwardTranslatorOptions(workflowJSON.runOptions()->forwardTranslatorOptions());
+    workspace_ = ft.translateModel(model);
+  });
 
-  // ensure objects exist for reporting purposes
-  model.getUniqueModelObject<openstudio::model::Facility>();
-  model.getUniqueModelObject<openstudio::model::Building>();
-
-  openstudio::energyplus::ForwardTranslator ft;
-  ft.setForwardTranslatorOptions(workflowJSON.runOptions()->forwardTranslatorOptions());
-  workspace_ = ft.translateModel(model);
-  auto end = std::chrono::system_clock::now();
-
-  fmt::print("Translating OSM to EnergyPlus IDF took {}\n", std::chrono::duration_cast<std::chrono::seconds>(end - start).count());
+  LOG(Info, "Successfully translated to IDF");
 
   if (!workflowJSON.runOptions() && !workflowJSON.runOptions()->debug()) {
     return;
   }
 
-  LOG(Info, "Saving IDF")
+  LOG(Info, "Saving IDF to Root Directory");
   auto savePath = workflowJSON.absoluteRootDir() / "in.idf";
-  // TODO: workflow gem was actually serializating via model_idf.to_s for speed...
-  workspace_->save(savePath, true);
+  detailedTimeBlock("Saving IDF", [this, &savePath]() {
+    // TODO: workflow gem was actually serializating via model_idf.to_s for speed...
+    workspace_->save(savePath, true);
+  });
   LOG(Info, "Saved IDF as " << savePath);
 }
 

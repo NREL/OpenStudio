@@ -94,7 +94,7 @@ void gatherReports(const openstudio::filesystem::path& runDirPath, const openstu
 void cleanup(const openstudio::filesystem::path& runDirPath) {
   namespace fs = openstudio::filesystem;
 
-  static constexpr std::array<std::string_view, 2> removeExtensions{"*.mtr", "*.epw"};
+  static constexpr std::array<std::string_view, 2> removeExtensions{".mtr", ".epw"};
 
   for (const auto& dirEnt : openstudio::filesystem::directory_iterator{runDirPath}) {
 
