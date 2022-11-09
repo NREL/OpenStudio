@@ -85,7 +85,7 @@ class OSWorkflow
   template <class F, class... Args>
   auto detailedTimeBlock(std::string message, F&& func, Args&&... args) {
     if (m_add_timings && m_detailed_timings) {
-      m_timers->newTimer(message.insert(0, "--"));
+      m_timers->newTimer(std::move(message), true);
     }
     std::invoke(std::forward<F>(func), std::forward<Args>(args)...);
     if (m_add_timings && m_detailed_timings) {

@@ -8,7 +8,11 @@
 
 namespace openstudio::workflow::util {
 
-Timer::Timer(std::string message) : m_message(std::move(message)) {}
+Timer::Timer(std::string message, bool isDetailed) : m_message(std::move(message)), m_isDetailed(isDetailed) {}
+
+bool Timer::isDetailed() const {
+  return m_isDetailed;
+}
 
 auto Timer::start() const {
   return m_start;
@@ -44,10 +48,20 @@ std::string Timer::format() const {
   }
 }
 
-Timer& TimerCollection::newTimer(std::string message) {
+std::string Timer::formatRow(size_t message_len, size_t timepoint_len, size_t duration_len) const {
+  if (m_isDetailed) {
+    return fmt::format(fmt::fg(fmt::color::light_gray), "| o {3:<{0}.{0}s} | {4:%T} | {5:%T} | {6:^{2}} |\n", message_len - 2, timepoint_len,
+                       duration_len, m_message, m_start, m_end, duration());
+  } else {
+    return fmt::format("| {3:<{0}.{0}s} | {4:%T} | {5:%T} | {6:^{2}} |\n", message_len, timepoint_len, duration_len, m_message, m_start, m_end,
+                       duration());
+  }
+}
+
+Timer& TimerCollection::newTimer(std::string message, bool isDetailed) {
   prevTimerIndex = currentTimerIndex;
   currentTimerIndex = m_timers.size();
-  return m_timers.emplace_back(std::move(message));
+  return m_timers.emplace_back(std::move(message), isDetailed);
 }
 
 void TimerCollection::tockCurrentTimer() {
@@ -82,9 +96,7 @@ std::string TimerCollection::timeReport(int line_length, bool fit) const {
   result += fmt::format("|:{3:-^{0}}|:{3:-^{1}}:|:{3:-^{1}}:|:{3:-^{2}}:|\n", message_len + 1, timepoint_len, duration_len, "");
 
   for (const auto& timer : m_timers) {
-    // result += fmt::format("{}\n", timer.format());
-    result += fmt::format("| {3:<{0}.{0}s} | {4:%T} | {5:%T} | {6:^{2}} |\n", message_len, timepoint_len, duration_len, timer.message(),
-                          timer.start(), timer.end(), timer.duration());
+    result += timer.formatRow(message_len, timepoint_len, duration_len);
   }
 
   m_totalTimer.tock();

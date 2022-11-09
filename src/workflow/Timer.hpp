@@ -11,10 +11,12 @@ class Timer
 {
  public:
   // start is initialized to now() when ctor is called, end is not initialized
-  Timer(std::string message);
+  Timer(std::string message, bool isDetailed = false);
 
   auto start() const;
   auto end() const;
+
+  bool isDetailed() const;
 
   // Reset start to now, end to none
   void tick();
@@ -28,6 +30,8 @@ class Timer
 
   std::string format() const;
 
+  std::string formatRow(size_t message_len, size_t timepoint_len, size_t duration_len) const;
+
  private:
   using DurationType = std::chrono::milliseconds;
   using ClockType = std::chrono::system_clock;
@@ -36,6 +40,7 @@ class Timer
   std::string m_message;
   TimePointType m_start = ClockType::now();
   TimePointType m_end;
+  bool m_isDetailed;
 };
 
 class TimerCollection
@@ -45,7 +50,7 @@ class TimerCollection
 
   // TODO: maybe it's a bad idea to return the Timer reference... code writer is responsible for ensuring they call tockCurrentTimer
   // We could just return a size_t (currentTimerIndex) and have tockTimer(size_t index);
-  Timer& newTimer(std::string message);
+  Timer& newTimer(std::string message, bool isDetailed = false);
   void tockCurrentTimer();
 
   // line_length is the maximum terminal width, fit = true will cause the table to be resized down as much as possible, fit = false means the table will take exactly line_length
