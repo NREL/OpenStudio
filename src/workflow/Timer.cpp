@@ -70,8 +70,8 @@ std::string TimerCollection::timeReport(int line_length, bool fit) const {
     for (const auto& timer : m_timers) {
       max_message_len = std::max(max_message_len, timer.message().size());
     }
-    message_len = std::min(message_len, max_message_len);
-    fmt::print("line_length={}, message_len={}, max_message_len={}\n", line_length, message_len, max_message_len);
+    message_len = std::min(message_len, max_message_len + 4);
+    // fmt::print("line_length={}, message_len={}, max_message_len={}\n", line_length, message_len, max_message_len);
   }
 
   // Use │ or | ?
