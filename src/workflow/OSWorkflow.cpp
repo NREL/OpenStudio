@@ -22,6 +22,17 @@
 #include <fmt/ostream.h>
 #include <stdexcept>
 
+// TODO: this should really in Variant.hpp, but I'm getting pwned by the fact that ruby defines int128_t as a macro, no time to track it down
+template <>
+struct fmt::formatter<openstudio::Variant> : fmt::ostream_formatter
+{
+};
+
+template <>
+struct fmt::formatter<openstudio::path> : fmt::ostream_formatter
+{
+};
+
 namespace openstudio {
 
 OSWorkflow::OSWorkflow(const filesystem::path& oswPath, ScriptEngineInstance& ruby, ScriptEngineInstance& python)
