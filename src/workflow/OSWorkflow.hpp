@@ -54,8 +54,24 @@ class OSWorkflow
   //@{
   // Jobs
 
+  enum class State
+  {
+    Queued = -10,
+    Errored = -1,
+    Finished = 0,
+
+    Initialization = 1,
+    OSMeasures,
+    Translator,
+    EPMeasures,
+    PreProcess,
+    ReportingMeasures,
+    PostProcess,
+  };
+  State state = State::Queued;
   // Wipes and creates directory, loads the seed/idf file
   void runInitialization();
+  void runTranslator();
 
   //@}
 

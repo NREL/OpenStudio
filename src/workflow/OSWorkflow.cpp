@@ -166,13 +166,10 @@ void OSWorkflow::run() {
   // TODO: need to merge workflowJSON flags with flags from command line (eg: FT options)
   // TODO: need to modify utilities/RunOptions.hpp instead of duplicating some of that work in workflow
 
-  for (const auto stepType : {MeasureType::ModelMeasure, MeasureType::EnergyPlusMeasure}) {
+  for (const MeasureType stepType : {MeasureType::ModelMeasure, MeasureType::EnergyPlusMeasure}) {
+
     if (stepType == MeasureType::EnergyPlusMeasure) {
-      // Save final Model
-      model.save(runDir / "in.osm", true);
-      openstudio::energyplus::ForwardTranslator ft;
-      ft.setForwardTranslatorOptions(workflowJSON.runOptions()->forwardTranslatorOptions());
-      workspace_ = ft.translateModel(model);
+      runTranslator();
     }
 
     const auto modelSteps = workflowJSON.getMeasureSteps(stepType);
