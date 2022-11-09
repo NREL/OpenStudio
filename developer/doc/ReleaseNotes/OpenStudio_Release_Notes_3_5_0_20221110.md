@@ -103,7 +103,7 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [#4685](https://github.com/NREL/OpenStudio/pull/4685) - Address #4630, wrap Output:Schedules and Output:Constructions objects
 * [#4577](https://github.com/NREL/OpenStudio/pull/4577) - gbXML translation fixes and enhancements
 * [#4610](https://github.com/NREL/OpenStudio/pull/4610) - Addresses #4538, wrap phase change material properties
-* [#4625](https://github.com/NREL/OpenStudio/pull/4625) - Addresses #4615, wrap OutputControl:Table:Style and Output:SQLite 
+* [#4625](https://github.com/NREL/OpenStudio/pull/4625) - Addresses #4615, wrap OutputControl:Table:Style and Output:SQLite
 
 ## Minor changes and bug fixes
 
@@ -128,7 +128,6 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [#4640](https://github.com/NREL/OpenStudio/pull/4640) - Fix python bindings github workflows with C++20
 * [#4626](https://github.com/NREL/OpenStudio/pull/4626) - Fix #4601 - add some useful log messages when requested WWR is rejected
 * [#4592](https://github.com/NREL/OpenStudio/pull/4592) - Fix#127 - Fix volume calculation to match EnergyPlus
-
 * [#4621](https://github.com/NREL/OpenStudio/pull/4621) - Fox #4551 - Add minimum/maximum values to numeric OSArguments and use it in validateUserArgument
 * [#4643](https://github.com/NREL/OpenStudio/pull/4643) - Update docs for setThermalConductance and setThermalResistance changing thickness
 * [#4650](https://github.com/NREL/OpenStudio/pull/4650) - Enable centos7 for c++20 
@@ -153,12 +152,10 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [#4697](https://github.com/NREL/OpenStudio/pull/4697) - Volume, CeilingHeight, FloorArea for Space object
 * [#4658](https://github.com/NREL/OpenStudio/pull/4658) - Update to v22.2.0 
 * [#4683](https://github.com/NREL/OpenStudio/pull/4683) - Fix #4663 #4664 - Fix CoilCoolingDXMultiSpeed::clone and extend testing for AirLoopHVAC::clone
-
 * [#4702](https://github.com/NREL/OpenStudio/pull/4702) - Mod to Python Engine
 * [#4700](https://github.com/NREL/OpenStudio/pull/4700) - Fix #4673 - Allow setting ZoneMixing objects at Space level
 * [#4710](https://github.com/NREL/OpenStudio/pull/4710) - Update gems for standard 0.2.17.rc1
 * [#4712](https://github.com/NREL/OpenStudio/pull/4712) - Fix #4659 - Filesystem fixups
-
 
 **Deprecated methods removed**:
 * [#4713](https://github.com/NREL/OpenStudio/pull/4713) - Deprecated methods that date back to as early as v2.5.0 have been removed from this release. Moving forward, it is our goal to support deprecated methods for three release cycles and then remove them. If you run into errors (e.g. `undefined method`), please reference this [list](https://github.com/NREL/OpenStudio/blob/develop/developer/ruby/deprecated_methods.csv) for the suggested replacement. 
