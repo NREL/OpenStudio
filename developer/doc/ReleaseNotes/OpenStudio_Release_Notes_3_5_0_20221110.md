@@ -97,6 +97,13 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
         * It is set to `alwaysOnDiscreteSchedule` (=Constant) in the Constructor if you provide a `FanConstantVolume` (This is **required** by E+)
         * It is set to `alwaysOffDiscreteSchedule` (=Cycling) in the Constructor if you provide any other fan types (E+ treats a blank schedule as always off)
     * There are unusual `VersionTranslator` Rules for Packaged Systems (PTAC or PTHP) that use a `FanConstantVolume` and that do not have a `Supply Air Fan Operating Mode Schedule`. In 22.1.0 this would effectively, and mistakenly, function as a cycling fan, but this is now disallowed in E+ 22.2.0. In order to retain a similar functionality and energy usage, the `FanConstantVolume` will be replaced by a `FanSystemModel` with an Always Off Schedule (=cycling fan, similar to a `Fan:OnOff`), mapping inputs such as pressure rise and efficiency appropriately.
+* [#4484](https://github.com/NREL/OpenStudio/pull/4484) - Enable C++20
+* [#4671](https://github.com/NREL/OpenStudio/pull/4671) - New Coil:*:WaterToAirHeatPump:EquationFit fields
+* [#4698](https://github.com/NREL/OpenStudio/pull/4698) - Update EnergyPlus to v22.2.0
+* [#4685](https://github.com/NREL/OpenStudio/pull/4685) - Address #4630, wrap Output:Schedules and Output:Constructions objects
+* [#4577](https://github.com/NREL/OpenStudio/pull/4577) - gbXML translation fixes and enhancements
+* [#4610](https://github.com/NREL/OpenStudio/pull/4610) - Addresses #4538, wrap phase change material properties
+* [#4625](https://github.com/NREL/OpenStudio/pull/4625) - Addresses #4615, wrap OutputControl:Table:Style and Output:SQLite 
 
 ## Minor changes and bug fixes
 
@@ -115,21 +122,18 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [#4612](https://github.com/NREL/OpenStudio/pull/4612) - Fix build error due to GLTF refactor on Windows
 * [#4596](https://github.com/NREL/OpenStudio/pull/4596) - Bump conan dependencies (which will allow MSVC 2022 and C++20) and clang 13.1+ fixes
 * [#4614](https://github.com/NREL/OpenStudio/pull/4614) - Support Ubuntu 18.04 and Centos7
-* [#4484](https://github.com/NREL/OpenStudio/pull/4484) - Enable C++20
 * [#4619](https://github.com/NREL/OpenStudio/pull/4619) - Fix #4543 - E+ 22.1.0: Wrap SetpointManager:SystemNodeReset:Temperature and SetpointManager:SystemNodeReset:Humidity
-* [#4610](https://github.com/NREL/OpenStudio/pull/4610) - Addresses #4538, wrap phase change material properties
 * [#4622](https://github.com/NREL/OpenStudio/pull/4622) - Addresses #4620, harmonize (remove?) max. material thickness limit
-* [#4625](https://github.com/NREL/OpenStudio/pull/4625) - Addresses #4615, wrap OutputControl:Table:Style and Output:SQLite 
 * [#4627](https://github.com/NREL/OpenStudio/pull/4627) - Fix #4547 - FT always warns about missing Design Specification Outdoor Air for AirTerminalSingleDuctInletSideMixer
 * [#4640](https://github.com/NREL/OpenStudio/pull/4640) - Fix python bindings github workflows with C++20
 * [#4626](https://github.com/NREL/OpenStudio/pull/4626) - Fix #4601 - add some useful log messages when requested WWR is rejected
 * [#4592](https://github.com/NREL/OpenStudio/pull/4592) - Fix#127 - Fix volume calculation to match EnergyPlus
-* [#4577](https://github.com/NREL/OpenStudio/pull/4577) - gbXML translation fixes and enhancements
+
 * [#4621](https://github.com/NREL/OpenStudio/pull/4621) - Fox #4551 - Add minimum/maximum values to numeric OSArguments and use it in validateUserArgument
 * [#4643](https://github.com/NREL/OpenStudio/pull/4643) - Update docs for setThermalConductance and setThermalResistance changing thickness
 * [#4650](https://github.com/NREL/OpenStudio/pull/4650) - Enable centos7 for c++20 
 * [#4629](https://github.com/NREL/OpenStudio/pull/4629) - Addresses #3666, CoilWaterHeaterDesuperheater: Issue Error in ForwardTranslator if Heat Reclaim Efficiency is out of bounds 
-* [#3912](https://github.com/NREL/OpenStudio/pull/3912) - Add consistently failing test for warnings/errorsa and document
+* [#3912](https://github.com/NREL/OpenStudio/pull/3912) - Add consistently failing test for warnings/errors and document
 * [#4669](https://github.com/NREL/OpenStudio/pull/4669) - Fix #4668 - Wrap E+ 22.2 new People fields
 * [#4287](https://github.com/NREL/OpenStudio/pull/4287) - Build and test CSharp bindings for Linux/Mac/Windows
 * [#4652](https://github.com/NREL/OpenStudio/pull/4652) - Addresses #4647, wrap the E+ Table:Lookup, Table:IndependentVariableList, and Table:IndependentVariable objects 
@@ -141,30 +145,30 @@ You can also refer to the [OpenStudio SDK Python Binding Version Compatibility M
 * [#4660](https://github.com/NREL/OpenStudio/pull/4660) - Fix #4120 - set boost's visibility to global/default instead of hidden
 * [#4680](https://github.com/NREL/OpenStudio/pull/4680) - Update ruby gems including the new tbd gem
 * [#4686](https://github.com/NREL/OpenStudio/pull/4686) - Addresses #4599, documentation for isGroundSurface() is missing an outside boundary condition
-* [#4671](https://github.com/NREL/OpenStudio/pull/4671) - New Coil:*:WaterToAirHeatPump:EquationFit fields
 * [#4677](https://github.com/NREL/OpenStudio/pull/4677) - Fix #4675 - E+ 22.2.0 - Sizing:Zone has new fields 
 * [#4691](https://github.com/NREL/OpenStudio/pull/4691) - Followup to #4575 
 * [#4662](https://github.com/NREL/OpenStudio/pull/4662) - Support CoilCoolingDX on ZoneHVAC, CoilSystem, Desuperheater
 * [#4694](https://github.com/NREL/OpenStudio/pull/4694) - Fix #4638 python ruby workflow
 * [#4687](https://github.com/NREL/OpenStudio/pull/4687) - Fix #4656 - E+ 22.2.0: Wrap Chiller:Electric:ASHRAE205 
-* [#4698](https://github.com/NREL/OpenStudio/pull/4698) - Update EnergyPlus to v22.2.0
 * [#4697](https://github.com/NREL/OpenStudio/pull/4697) - Volume, CeilingHeight, FloorArea for Space object
 * [#4658](https://github.com/NREL/OpenStudio/pull/4658) - Update to v22.2.0 
 * [#4683](https://github.com/NREL/OpenStudio/pull/4683) - Fix #4663 #4664 - Fix CoilCoolingDXMultiSpeed::clone and extend testing for AirLoopHVAC::clone
-* [#4685](https://github.com/NREL/OpenStudio/pull/4685) - Address #4630, wrap Output:Schedules and Output:Constructions objects
+
 * [#4702](https://github.com/NREL/OpenStudio/pull/4702) - Mod to Python Engine
 * [#4700](https://github.com/NREL/OpenStudio/pull/4700) - Fix #4673 - Allow setting ZoneMixing objects at Space level
 * [#4710](https://github.com/NREL/OpenStudio/pull/4710) - Update gems for standard 0.2.17.rc1
 * [#4712](https://github.com/NREL/OpenStudio/pull/4712) - Fix #4659 - Filesystem fixups
-* [#4713](https://github.com/NREL/OpenStudio/pull/4713) - Deprecated methods csv 
+
+
+**Deprecated methods removed**:
+* [#4713](https://github.com/NREL/OpenStudio/pull/4713) - Deprecated methods that date back to as early as v2.5.0 have been removed from this release. Moving forward, it is our goal to support deprecated methods for three release cycles and then remove them. If you run into errors (e.g. `undefined method`), please reference this [list](https://github.com/NREL/OpenStudio/blob/develop/developer/ruby/deprecated_methods.csv) for the suggested replacement. 
+
+**Developer changes**:
+* [OpenStudio-benchmarks](https://github.com/NREL/OpenStudio-benchmarks) - Added additional performance benchmark tests to improve SDK performance.
 
 **Full Changelog**: https://github.com/NREL/OpenStudio/compare/v3.4.0-vcomp...v3.5.0-rc1
 
-**Developer changes**:
-
-* [OpenStudio-benchmarks](https://github.com/NREL/OpenStudio-benchmarks) - Added additional performance benchmark tests to improve SDK performance.
-
-## New Contributors
+**New Contributors**:
 * [#4287](https://github.com/NREL/OpenStudio/pull/4287) @MingboPeng made their first contribution in https://github.com/NREL/OpenStudio/pull/4287
 
 
