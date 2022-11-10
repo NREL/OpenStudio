@@ -18,6 +18,7 @@
 #include "../utilities/core/Logger.hpp"
 #include "../energyplus/ForwardTranslator.hpp"
 
+#include <fmt/color.h>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
 #include <stdexcept>
@@ -151,12 +152,23 @@ void OSWorkflow::run() {
   //// https://github.com/NREL/OpenStudio-workflow-gem/blob/develop/lib/openstudio/workflow/util/measure.rb
 
   auto timeJob = [this](memJobFunPtr job, auto message) {
+    if (m_style_stdout) {
+      fmt::print(fmt::fg(fmt::color::green),
+                 "\n"
+                 "┌{0:─^{2}}┐\n"
+                 "│{1: ^{2}}│\n"
+                 "└{0:─^{2}}┘\n",
+                 "", std::string("Starting State ") + message, 80);
+    }
     if (m_add_timings) {
       m_timers->newTimer(message);
     }
     (this->*job)();
     if (m_add_timings) {
       m_timers->tockCurrentTimer();
+    }
+    if (m_style_stdout) {
+      fmt::print(fmt::fg(fmt::color::green), "{0:#^80}\n", std::string("Returned from State ") + message);
     }
   };
 
