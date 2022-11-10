@@ -288,11 +288,11 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
   daily_wh_inlet_temperatures_c[3] = 9.86222222222222;
   daily_wh_inlet_temperatures_c[4] = 9.80444444444445;
   TimeSeries time_series_tmains(start_date, timestep_day, daily_wh_inlet_temperatures_c, "C");
-  
+
   boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(time_series_tmains, model);
   ASSERT_TRUE(scheduleInterval);
   EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
-  
+
   ScheduleFixedInterval scheduleFixedInterval(scheduleInterval->optionalCast<ScheduleFixedInterval>());
   EXPECT_EQ(1440, scheduleFixedInterval.intervalLength());  // one day in minutes
 
@@ -302,7 +302,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
 
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
   ASSERT_EQ(1u, objects.size());
-  
+
   EXPECT_EQ("Through: 01/02", objects[0].getString(2, true, false));
   EXPECT_EQ("For: AllDays", objects[0].getString(3, true, false));
   EXPECT_EQ("Until: 24:00", objects[0].getString(4, true, false));
