@@ -231,6 +231,11 @@ jobs:
     steps:
       - name: "Checkout Master Branch"
         uses: actions/checkout@v2
+
+      - name: Install dotnet 5 runtime
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '5.0.101'
       
       - name: Download CSharp_Windows32
         uses: actions/download-artifact@v2
