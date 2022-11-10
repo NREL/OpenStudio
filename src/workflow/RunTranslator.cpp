@@ -50,17 +50,7 @@ void OSWorkflow::runTranslator() {
 
   LOG(Info, "Successfully translated to IDF");
 
-  if (!workflowJSON.runOptions() && !workflowJSON.runOptions()->debug()) {
-    return;
-  }
-
-  LOG(Info, "Saving IDF to Root Directory");
-  auto savePath = workflowJSON.absoluteRootDir() / "in.idf";
-  detailedTimeBlock("Saving IDF", [this, &savePath]() {
-    // TODO: workflow gem was actually serializating via model_idf.to_s for speed...
-    workspace_->save(savePath, true);
-  });
-  LOG(Info, "Saved IDF as " << savePath);
+  saveIDFToRootDirIfDebug();
 }
 
 }  // namespace openstudio

@@ -46,6 +46,7 @@ class OSWorkflow
   model::Model model;
   boost::optional<Workspace> workspace_;
   openstudio::filesystem::path epwPath;
+  openstudio::filesystem::path sqlPath;
 
   // TODO: use a unique_ptr or an Instance?
   std::unique_ptr<workflow::util::TimerCollection> m_timers = nullptr;
@@ -99,6 +100,7 @@ class OSWorkflow
   void runOpenStudioMeasures();
   void runTranslator();
   void runEnergyPlusMeasures();
+  void runPreProcess();
   void runEnergyPlus();
   void runReportingMeasures();
   void runPostProcess();
@@ -108,6 +110,8 @@ class OSWorkflow
   //@}
 
   static void applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue);
+  void saveOSMToRootDirIfDebug();
+  void saveIDFToRootDirIfDebug();
 };
 
 }  // namespace openstudio

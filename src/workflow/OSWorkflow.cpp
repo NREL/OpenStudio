@@ -120,6 +120,33 @@ void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::
   }
 }
 
+void OSWorkflow::saveOSMToRootDirIfDebug() {
+  if (!workflowJSON.runOptions() || !workflowJSON.runOptions()->debug()) {
+    return;
+  }
+
+  LOG(Info, "Saving OSM to Root Directory");
+  auto savePath = workflowJSON.absoluteRootDir() / "in.osm";
+  detailedTimeBlock("Saving OSM", [this, &savePath]() {
+    // TODO: workflow gem was actually serializating via model.to_s for speed...
+    model.save(savePath, true);
+  });
+  LOG(Info, "Saved OSM as " << savePath);
+}
+
+void OSWorkflow::saveIDFToRootDirIfDebug() {
+  if (!workflowJSON.runOptions() || !workflowJSON.runOptions()->debug()) {
+    return;
+  }
+  LOG(Info, "Saving IDF to Root Directory");
+  auto savePath = workflowJSON.absoluteRootDir() / "in.idf";
+  detailedTimeBlock("Saving IDF", [this, &savePath]() {
+    // TODO: workflow gem was actually serializating via model.to_s for speed...
+    workspace_->save(savePath, true);
+  });
+  LOG(Info, "Saved IDF as " << savePath);
+}
+
 void OSWorkflow::run() {
   if (workflowJSON.runOptions()->debug()) {
     openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);

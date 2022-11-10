@@ -276,6 +276,14 @@ void OSWorkflow::runEnergyPlus() {
   } catch (const std::exception& e) {
     LOG_AND_THROW(e.what());
   }
+
+  // Set the SQL path
+  auto expectedSqlPath = workflowJSON.absoluteRunDir() / "eplusout.sql";
+  if (openstudio::filesystem::is_regular_file(expectedSqlPath)) {
+    sqlPath = expectedSqlPath;
+  } else {
+    LOG(Warn, "Unable to find sql file at " << expectedSqlPath);
+  }
 }
 
 }  // namespace openstudio
