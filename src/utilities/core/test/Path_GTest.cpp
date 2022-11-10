@@ -395,6 +395,10 @@ TEST_F(CoreFixture, Path_Conversions) {
 
   // from http://www.nubaria.com/en/blog/?p=289
 
+#if (defined(__GNUC__))
+#  pragma GCC diagnostic push
+#  pragma GCC diagnostic ignored "-Wnarrowing"
+#endif
   // Chinese characters for "zhongwen" ("Chinese language").
   const char kChineseSampleText[] = {-28, -72, -83, -26, -106, -121, 0};
 
@@ -403,6 +407,9 @@ TEST_F(CoreFixture, Path_Conversions) {
 
   // Spanish word "canon" with an "n" with "~" on top and an "o" with an acute accent.
   const char kSpanishSampleText[] = {99, 97, -61, -79, -61, -77, 110, 0};
+#if (defined(__GNUC__))
+#  pragma GCC diagnostic pop
+#endif
 
   std::string t;
 
