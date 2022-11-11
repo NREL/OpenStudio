@@ -294,6 +294,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
   EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
   ScheduleFixedInterval scheduleFixedInterval = scheduleInterval->optionalCast<ScheduleFixedInterval>().get();
   EXPECT_EQ(1440, scheduleFixedInterval.intervalLength());  // one day in minutes
+  EXPECT_EQ(1, scheduleFixedInterval.startMonth());
+  EXPECT_EQ(2, scheduleFixedInterval.startDay());  // unrelated to this test, but this should be fixed to be 1
 
   // Forward translate the schedule
   ForwardTranslator ft;
@@ -302,7 +304,8 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
   ASSERT_EQ(1u, objects.size());
 
-  EXPECT_EQ("Through: 01/02", objects[0].getString(2, false).get());
+  EXPECT_EQ("Through: 01/02",
+            objects[0].getString(2, false).get());  // this aligns with start day, but start day should be 1 (so this should be 01/01)
   EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
   EXPECT_EQ("Until: 24:00", objects[0].getString(4, false).get());
   EXPECT_EQ("10.0422222222222", objects[0].getString(5, false).get());
