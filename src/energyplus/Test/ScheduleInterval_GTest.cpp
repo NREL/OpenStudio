@@ -292,8 +292,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
   boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(time_series_tmains, model);
   ASSERT_TRUE(scheduleInterval);
   EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
-
-  ScheduleFixedInterval scheduleFixedInterval(scheduleInterval->optionalCast<ScheduleFixedInterval>());
+  ScheduleFixedInterval scheduleFixedInterval = scheduleInterval->optionalCast<ScheduleFixedInterval>().get();
   EXPECT_EQ(1440, scheduleFixedInterval.intervalLength());  // one day in minutes
 
   // Forward translate the schedule
@@ -303,10 +302,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
   ASSERT_EQ(1u, objects.size());
 
-  EXPECT_EQ("Through: 01/02", objects[0].getString(2, true, false));
-  EXPECT_EQ("For: AllDays", objects[0].getString(3, true, false));
-  EXPECT_EQ("Until: 24:00", objects[0].getString(4, true, false));
-  EXPECT_EQ("10.0422222222222", objects[0].getString(5, true, false));
+  EXPECT_EQ("Through: 01/02", objects[0].getString(2, false).get());
+  EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
+  EXPECT_EQ("Until: 24:00", objects[0].getString(4, false).get());
+  EXPECT_EQ("10.0422222222222", objects[0].getString(5, false).get());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_20hours) {
