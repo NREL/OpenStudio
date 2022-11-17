@@ -185,7 +185,7 @@ jobs:
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
         cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ^
               -DBUILD_PYTHON_BINDINGS:BOOL=ON -DBUILD_PYTHON_PIP_PACKAGE:BOOL=ON -DPYTHON_PIP_REPOSITORY:STRING=${{ env.PYTHON_PIP_REPOSITORY }} ^
-              -DPYTHON_VERSION:STRING=${{ matrix.python-version }} ^
+              -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} ^
               -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }} ../
         ninja
         ninja python_package
@@ -199,7 +199,7 @@ jobs:
         echo "Launching a build with BUILD_PYTHON_BINDINGS=ON and BUILD_PYTHON_PIP_PACKAGE=ON, turning off as many other things as possible to speed it up"
         cmake ${{ matrix.extra_cmake_args}} -DCMAKE_BUILD_TYPE:STRING=Release \
               -DBUILD_PYTHON_BINDINGS:BOOL=ON -DBUILD_PYTHON_PIP_PACKAGE:BOOL=ON -DPYTHON_PIP_REPOSITORY:STRING=${{ env.PYTHON_PIP_REPOSITORY }} \
-              -DPYTHON_VERSION:STRING=${{ matrix.python-version }} -DPython_ROOT_DIR:PATH=$RUNNER_TOOL_CACHE/Python/${{ steps.setup-python.outputs.python-version }}/x64/ \
+              -DPYTHON_VERSION:STRING=${{ steps.setup-python.outputs.python-version }} -DPython_ROOT_DIR:PATH=$RUNNER_TOOL_CACHE/Python/${{ steps.setup-python.outputs.python-version }}/x64/ \
               -DBUILD_TESTING:BOOL=OFF -DBUILD_RUBY_BINDINGS:BOOL=${{ env.BUILD_RUBY_BINDINGS }} -DBUILD_CLI:BOOL=${{ env.BUILD_CLI }} \
               ../
 
