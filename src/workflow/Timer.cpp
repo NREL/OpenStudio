@@ -8,10 +8,10 @@
 
 namespace openstudio::workflow::util {
 
-Timer::Timer(std::string message, bool isDetailed) : m_message(std::move(message)), m_isDetailed(isDetailed) {}
+Timer::Timer(std::string message, unsigned level) : m_message(std::move(message)), m_level(level) {}
 
-bool Timer::isDetailed() const {
-  return m_isDetailed;
+unsigned Timer::level() const {
+  return m_level;
 }
 
 auto Timer::start() const {
@@ -49,8 +49,11 @@ std::string Timer::format() const {
 }
 
 std::string Timer::formatRow(size_t message_len, size_t timepoint_len, size_t duration_len) const {
-  if (m_isDetailed) {
+  if (m_level == 1) {
     return fmt::format(fmt::fg(fmt::color::light_gray), "| o {3:<{0}.{0}s} | {4:%T} | {5:%T} | {6:^{2}} |\n", message_len - 2, timepoint_len,
+                       duration_len, m_message, m_start, m_end, duration());
+  } else if (m_level == 2) {
+    return fmt::format(fmt::fg(fmt::color::light_gray), "|   o {3:<{0}.{0}s} | {4:%T} | {5:%T} | {6:^{2}} |\n", message_len - 4, timepoint_len,
                        duration_len, m_message, m_start, m_end, duration());
   } else {
     return fmt::format("| {3:<{0}.{0}s} | {4:%T} | {5:%T} | {6:^{2}} |\n", message_len, timepoint_len, duration_len, m_message, m_start, m_end,
@@ -58,15 +61,14 @@ std::string Timer::formatRow(size_t message_len, size_t timepoint_len, size_t du
   }
 }
 
-Timer& TimerCollection::newTimer(std::string message, bool isDetailed) {
-  prevTimerIndex = currentTimerIndex;
-  currentTimerIndex = m_timers.size();
-  return m_timers.emplace_back(std::move(message), isDetailed);
+Timer& TimerCollection::newTimer(std::string message, unsigned level) {
+  m_timerIndices.push_back(m_timers.size());
+  return m_timers.emplace_back(std::move(message), level);
 }
 
 void TimerCollection::tockCurrentTimer() {
-  m_timers[currentTimerIndex].tock();
-  currentTimerIndex = prevTimerIndex;
+  m_timers[m_timerIndices.back()].tock();
+  m_timerIndices.pop_back();
 }
 
 // line_length is the maximum terminal width, fit = true will cause the table to be resized down as much as possible, fit = false means the table will take exactly line_length

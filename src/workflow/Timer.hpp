@@ -11,12 +11,12 @@ class Timer
 {
  public:
   // start is initialized to now() when ctor is called, end is not initialized
-  Timer(std::string message, bool isDetailed = false);
+  Timer(std::string message, unsigned level = 0);
 
   auto start() const;
   auto end() const;
 
-  bool isDetailed() const;
+  unsigned level() const;
 
   // Reset start to now, end to none
   void tick();
@@ -40,7 +40,7 @@ class Timer
   std::string m_message;
   TimePointType m_start = ClockType::now();
   TimePointType m_end;
-  bool m_isDetailed;
+  unsigned m_level;
 };
 
 class TimerCollection
@@ -50,7 +50,7 @@ class TimerCollection
 
   // TODO: maybe it's a bad idea to return the Timer reference... code writer is responsible for ensuring they call tockCurrentTimer
   // We could just return a size_t (currentTimerIndex) and have tockTimer(size_t index);
-  Timer& newTimer(std::string message, bool isDetailed = false);
+  Timer& newTimer(std::string message, unsigned level = 0);
   void tockCurrentTimer();
 
   // line_length is the maximum terminal width, fit = true will cause the table to be resized down as much as possible, fit = false means the table will take exactly line_length
@@ -60,9 +60,8 @@ class TimerCollection
   std::vector<Timer> m_timers;
   mutable Timer m_totalTimer{"Total"};
 
-  // these two are so we can nest timings and detailed (sub) timings
-  size_t currentTimerIndex = -1;
-  size_t prevTimerIndex = -1;
+  // this is so we can nest timings and detailed (sub) timings
+  std::vector<size_t> m_timerIndices;
 };
 
 }  // namespace openstudio::workflow::util
