@@ -8,6 +8,7 @@ namespace openstudio {
 namespace model {
   class Model;
 }
+class IdfObject;
 class Workspace;
 
 namespace workflow {
@@ -21,6 +22,9 @@ namespace workflow {
 
     // Cleans up the run directory (remove epw, .mtr)
     void cleanup(const openstudio::filesystem::path& runDirPath);
+
+    bool mergeOutputTableSummaryReports(IdfObject& existingObject, const IdfObject& newObject);
+    bool addEnergyPlusOutputRequest(Workspace& workspace, IdfObject& idfObject);
 
   }  // namespace util
 }  // namespace workflow

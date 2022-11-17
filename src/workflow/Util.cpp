@@ -8,13 +8,21 @@
 #include "../utilities/core/StringHelpers.hpp"
 #include "../utilities/bcl/BCLXML.hpp"
 #include "../utilities/idf/Workspace.hpp"
+#include "../utilities/idf/IdfFile.hpp"
+#include "../utilities/idf/IdfObject.hpp"
+#include "../utilities/idd/IddObject.hpp"
+#include "../utilities/idf/IdfExtensibleGroup.hpp"
+
+#include <utilities/idd/IddEnums.hxx>
 
 #include <boost/regex.hpp>
 #include <fmt/format.h>
 #include <fmt/std.h>     // Formatting for std::filesystem::path
 #include <fmt/chrono.h>  // Formatting for std::chrono
 
+#include <algorithm>
 #include <array>
+#include <iterator>
 #include <string_view>
 
 namespace openstudio::workflow::util {
@@ -112,6 +120,97 @@ void cleanup(const openstudio::filesystem::path& runDirPath) {
       fs::remove_all(dirPath);
     }
   }
+}
+
+/*****************************************************************************************************************************************************
+*                                                E N E R G Y P L U S    O U T P U T R E Q U E S T S                                                 *
+*****************************************************************************************************************************************************/
+
+bool mergeOutputTableSummaryReports(IdfObject& existingObject, const IdfObject& newObject) {
+
+  bool added = false;
+
+  // Merge
+  std::vector<std::string> reports;
+  {
+    auto existinEgs = existingObject.extensibleGroups();
+    reports.reserve(existinEgs.size());
+    std::transform(existinEgs.cbegin(), existinEgs.cend(), std::back_inserter(reports), [](const auto& eg) { return eg.getString(0).get(); });
+  }
+
+  std::vector<std::string> reportsToAdd;
+  {
+    auto newEgs = newObject.extensibleGroups();
+    std::transform(newEgs.cbegin(), newEgs.cend(), std::back_inserter(reportsToAdd), [](const auto& eg) { return eg.getString(0).get(); });
+  }
+
+  for (const auto& newReport : reportsToAdd) {
+    if (std::find(reports.cbegin(), reports.cend(), newReport) != reports.cend()) {
+      existingObject.pushExtensibleGroup({newReport});
+      added = true;
+    }
+  }
+
+  return added;
+}
+
+bool addEnergyPlusOutputRequest(Workspace& workspace, IdfObject& idfObject) {
+
+  static const std::vector<IddObjectType> allowedObjects{
+    IddObjectType::Output_Surfaces_List,
+    IddObjectType::Output_Surfaces_Drawing,
+    IddObjectType::Output_Schedules,
+    IddObjectType::Output_Constructions,
+    IddObjectType::Output_Table_TimeBins,
+    IddObjectType::Output_Table_Monthly,
+    IddObjectType::Output_Variable,
+    IddObjectType::Output_Meter,
+    IddObjectType::Output_Meter_MeterFileOnly,
+    IddObjectType::Output_Meter_Cumulative,
+    IddObjectType::Output_Meter_Cumulative_MeterFileOnly,
+    IddObjectType::Meter_Custom,
+    IddObjectType::Meter_CustomDecrement,
+    IddObjectType::EnergyManagementSystem_OutputVariable,
+  };
+
+  auto iddObjectType = idfObject.iddObject().type();
+
+  if (std::find(allowedObjects.cbegin(), allowedObjects.end(), iddObjectType) != allowedObjects.end()) {
+
+    // If already present, don't do it
+    for (const auto& wo : workspace.getObjectsByType(iddObjectType)) {
+      if (idfObject.dataFieldsEqual(wo)) {
+        return false;
+      }
+    }
+
+    workspace.addObject(idfObject);
+
+    return true;
+  }
+
+  //  static const std::vector<IddObjectType> allowedUniqueObjects{
+  //    // IddObjectType::Output_EnergyManagementSystem, // TODO: have to merge
+  //    // IddObjectType::OutputControl_SurfaceColorScheme, // TODO: have to merge
+  //    IddObjectType::Output_Table_SummaryReports,  // TODO: have to merge
+  //
+  //    // Not allowed
+  //    // IddObjectType::OutputControl_Table_Style,
+  //    // IddObjectType::OutputControl_ReportingTolerances,
+  //    // IddObjectType::Output_SQLite,
+  //  };
+
+  if (iddObjectType == IddObjectType::Output_Table_SummaryReports) {
+    auto summaryReports = workspace.getObjectsByType(iddObjectType);
+    if (summaryReports.empty()) {
+      workspace.addObject(idfObject);
+      return true;
+    } else {
+      mergeOutputTableSummaryReports(summaryReports.front(), idfObject);
+    }
+  }
+
+  return false;
 }
 
 }  // namespace openstudio::workflow::util
