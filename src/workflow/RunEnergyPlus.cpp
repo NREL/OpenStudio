@@ -120,6 +120,8 @@ struct PrepareRunDirResults
 
 void OSWorkflow::runEnergyPlus() {
 
+  state = State::EnergyPlus;
+
   constexpr bool useBoostProcess = true;
 
   if (runner.halted()) {

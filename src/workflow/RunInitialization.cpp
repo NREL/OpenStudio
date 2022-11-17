@@ -77,7 +77,8 @@ void OSWorkflow::runInitialization() {
       detailedTimeBlock("Loading seed IDF", [this, &modelFullPath_] { workspace_ = openstudio::workflow::util::loadIDF(modelFullPath_.get()); });
 
     } else {
-      detailedTimeBlock("Loading seed OSM", [this, &modelFullPath_] { model = openstudio::workflow::util::loadOSM(modelFullPath_.get()); });
+      detailedTimeBlock("Loading seed OSM (VersionTranslation)",
+                        [this, &modelFullPath_] { model = openstudio::workflow::util::loadOSM(modelFullPath_.get()); });
     }
   } else {
     model = openstudio::model::Model{};

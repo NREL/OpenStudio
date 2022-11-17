@@ -7,8 +7,16 @@ add_library(openstudio_workflow
 
   # Jobs
   RunInitialization.cpp
+  RunOpenStudioMeasures.cpp
   RunTranslator.cpp
+  RunEnergyPlusMeasures.cpp
+  RunPreProcess.cpp
   RunEnergyPlus.cpp
+  RunReportingMeasures.cpp
+  RunPostProcess.cpp
+  RunCleanup.cpp
+
+  ApplyMeasure.cpp
 
   # Util
   Util.hpp

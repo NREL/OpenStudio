@@ -71,12 +71,14 @@ class OSWorkflow
     Finished = 0,
 
     Initialization = 1,
-    OSMeasures,
+    OpenStudioMeasures,
     Translator,
-    EPMeasures,
+    EnergyPlusMeasures,
     PreProcess,
+    EnergyPlus,
     ReportingMeasures,
     PostProcess,
+    Cleanup,
   };
   State state = State::Queued;
 
@@ -87,7 +89,7 @@ class OSWorkflow
   template <class F, class... Args>
   auto detailedTimeBlock(std::string message, F&& func, Args&&... args) {
     if (m_add_timings && m_detailed_timings) {
-      m_timers->newTimer(std::move(message), true);
+      m_timers->newTimer(std::move(message), 1);
     }
     std::invoke(std::forward<F>(func), std::forward<Args>(args)...);
     if (m_add_timings && m_detailed_timings) {
@@ -109,6 +111,7 @@ class OSWorkflow
 
   //@}
 
+  void applyMeasures(MeasureType measureType, bool energyplus_output_requests = false);
   static void applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue);
   void saveOSMToRootDirIfDebug();
   void saveIDFToRootDirIfDebug();
