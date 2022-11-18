@@ -11,6 +11,7 @@
 #include <OpenStudio.hxx>
 
 #include <fmt/format.h>
+#include <fmt/color.h>
 #include <string_view>
 
 #include <CLI/CLI.hpp>
@@ -36,6 +37,12 @@ int main(int argc, char* argv[]) {
   if (!args.empty() && (std::string_view(args[0]) == "labs")) {
     CLI::App app{"openstudio"};
 
+    fmt::print(fmt::fg(fmt::color::red),
+               "┌{0:─^{2}}┐\n"
+               "│{1: ^{2}}│\n"
+               "└{0:─^{2}}┘\n",
+               "", "The `labs` command is experimental - Do not use in production", 80);
+    //
     app.get_formatter()->column_width(35);
 
     auto* const experimentalApp = app.add_subcommand("labs");
