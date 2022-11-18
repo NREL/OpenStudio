@@ -9,7 +9,10 @@
 #include "../utilities/filetypes/WorkflowJSON.hpp"
 #include "../utilities/filetypes/RunOptions.hpp"
 
+#include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Filesystem.hpp"
+
+#include <fmt/chrono.h>
 
 namespace openstudio {
 
@@ -29,6 +32,16 @@ void OSWorkflow::runInitialization() {
         openstudio::filesystem::remove_all(runDir);
       }
       openstudio::filesystem::create_directory(runDir);
+    }
+
+    // Communicate that the workflow has been started
+    LOG(Debug, "Registering that the workflow has started with the adapter");
+    {
+      // @output_adapter.communicate_started
+      openstudio::filesystem::ofstream file(workflowJSON.absoluteRunDir() / "started.job");
+      OS_ASSERT(file.is_open());
+      file << fmt::format("Started Workflow {}\n", std::chrono::system_clock::now());
+      file.close();
     }
 
     {

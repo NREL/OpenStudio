@@ -6,6 +6,7 @@
 #include "../utilities/core/Filesystem.hpp"
 #include "../utilities/core/FilesystemHelpers.hpp"
 #include "../utilities/core/StringHelpers.hpp"
+#include "../utilities/core/ZipFile.hpp"
 #include "../utilities/bcl/BCLXML.hpp"
 #include "../utilities/idf/Workspace.hpp"
 #include "../utilities/idf/IdfFile.hpp"
@@ -13,6 +14,7 @@
 #include "../utilities/idd/IddObject.hpp"
 #include "../utilities/idf/IdfExtensibleGroup.hpp"
 
+#include <boost/filesystem/operations.hpp>
 #include <utilities/idd/IddEnums.hxx>
 
 #include <boost/regex.hpp>
@@ -97,6 +99,15 @@ void gatherReports(const openstudio::filesystem::path& runDirPath, const openstu
       }
     }
   }
+
+  // Remove empty directories
+  for (const auto& dirEnt : fs::directory_iterator{runDirPath}) {
+    const auto& dirEntryPath = dirEnt.path();
+    if (fs::is_directory(dirEntryPath) && fs::is_empty(dirEntryPath)) {
+      LOG_FREE(Info, "openstudio.workflow.Util", "Removing empty directory " << dirEntryPath);
+      fs::remove(dirEntryPath);
+    }
+  }
 }
 
 void cleanup(const openstudio::filesystem::path& runDirPath) {
@@ -104,20 +115,12 @@ void cleanup(const openstudio::filesystem::path& runDirPath) {
 
   static constexpr std::array<std::string_view, 2> removeExtensions{".mtr", ".epw"};
 
-  for (const auto& dirEnt : openstudio::filesystem::directory_iterator{runDirPath}) {
-
+  for (const auto& dirEnt : fs::directory_iterator{runDirPath}) {
     const auto& dirEntryPath = dirEnt.path();
     if (fs::is_regular_file(dirEntryPath)) {
       if (std::find(removeExtensions.cbegin(), removeExtensions.cend(), dirEntryPath.extension().string()) != removeExtensions.cend()) {
         fs::remove(dirEntryPath);
       }
-    }
-  }
-
-  // Remove empty directories
-  for (const auto& dirPath : openstudio::filesystem::directory_directories(runDirPath)) {
-    if (boost::filesystem::is_empty(dirPath)) {
-      fs::remove_all(dirPath);
     }
   }
 }
@@ -211,6 +214,86 @@ bool addEnergyPlusOutputRequest(Workspace& workspace, IdfObject& idfObject) {
   }
 
   return false;
+}
+
+/*****************************************************************************************************************************************************
+*                                                           O U T P U T    A D A P T E R                                                            *
+*****************************************************************************************************************************************************/
+
+void zipDirectory(const openstudio::path& dirPath, const openstudio::path& zipFilePath) {
+
+  namespace fs = openstudio::filesystem;
+
+  if (fs::exists(zipFilePath)) {
+    fs::remove(zipFilePath);
+  }
+
+  {
+    openstudio::ZipFile zf(zipFilePath, false);  // Passing add = false means you create the zip, not append
+
+    static constexpr std::array<std::string_view, 3> filterOutDirNames{"seed", "measures", "weather"};
+
+    auto directorySize = [](const openstudio::path& dirPath) {
+      uintmax_t dirSize = 0;
+      for (const auto& dirEnt : fs::recursive_directory_iterator{dirPath}) {
+        const auto& dirEntryPath = dirEnt.path();
+        if (fs::is_regular_file(dirEntryPath)) {
+          dirSize += fs::file_size(dirEntryPath);
+        }
+      }
+      return dirSize;
+    };
+
+    for (const auto& dirEnt : fs::directory_iterator{dirPath}) {
+      const auto& dirEntryPath = dirEnt.path();
+      if (fs::is_directory(dirEntryPath)) {
+
+        // Skip a few directory that should not be zipped as they are inputs
+        if (std::find(filterOutDirNames.cbegin(), filterOutDirNames.cend(), dirEntryPath.extension().string()) != filterOutDirNames.cend()) {
+          continue;
+        }
+
+        auto dirSize = directorySize(dirEntryPath);
+        if (dirSize >= 15'000'000) {
+          LOG_FREE(Info, "openstudio.workflow.Util.zipDirectory", "Skipping too large directory " << dirEntryPath);
+          continue;
+        }
+
+        // TODO: do I need a helper like the workflow-gem was doing with add_directory_to_zip?
+        zf.addDirectory(dirEntryPath, fs::relative(dirEntryPath, dirPath));
+      } else {
+        auto ext = dirEntryPath.extension().string();
+        if ((ext.find(".zip") != std::string::npos) || (ext.find(".rb") != std::string::npos)) {
+          continue;
+        }
+
+        if ((ext != ".osm") && (ext != ".idf") && (fs::file_size(dirEntryPath) > 100'000'000)) {
+          continue;
+        }
+        zf.addFile(dirEntryPath, fs::relative(dirEntryPath, dirPath));
+      }
+    }
+  }
+
+  // chmod 644. TODO: is this necessary? 644 should be default already
+  boost::filesystem::permissions(zipFilePath, boost::filesystem::perms::owner_read | boost::filesystem::perms::owner_write
+                                                | boost::filesystem::perms::group_read | boost::filesystem::perms::others_read);
+}
+
+void zipResults(const openstudio::path& dirPath) {
+
+  namespace fs = openstudio::filesystem;
+
+  if (fs::exists(dirPath) && fs::is_directory(dirPath)) {
+    zipDirectory(dirPath, dirPath / "data_point.zip");
+  }
+
+  // TODO: the reports folder is not inside the run/ directory though?
+  // zip up only the reports folder
+  auto reportDirPath = dirPath / "reports";
+  if (fs::exists(reportDirPath) && fs::is_directory(reportDirPath)) {
+    zipDirectory(reportDirPath, dirPath / "data_point_reports.zip");
+  }
 }
 
 }  // namespace openstudio::workflow::util

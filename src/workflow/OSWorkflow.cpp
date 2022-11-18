@@ -10,17 +10,24 @@
 #include "../measure/OSRunner.hpp"
 #include "../model/Model.hpp"
 #include "../model/Model_Impl.hpp"
-#include "../utilities/filetypes/WorkflowStep.hpp"
 #include "../utilities/bcl/BCLMeasure.hpp"
-#include "../utilities/idf/Workspace.hpp"
-#include "../utilities/data/Variant.hpp"
+#include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Filesystem.hpp"
 #include "../utilities/core/Logger.hpp"
+#include "../utilities/data/Variant.hpp"
+#include "../utilities/filetypes/WorkflowStep.hpp"
+#include "../utilities/idf/Workspace.hpp"
 #include "../energyplus/ForwardTranslator.hpp"
+#include "workflow/Util.hpp"
 
 #include <fmt/color.h>
+#include <fmt/chrono.h>
 #include <fmt/format.h>
 #include <fmt/ostream.h>
+
+#include <array>
+#include <chrono>
+#include <string_view>
 #include <stdexcept>
 
 // TODO: this should really in Variant.hpp, but I'm getting pwned by the fact that ruby defines int128_t as a macro, no time to track it down
@@ -296,25 +303,64 @@ void OSWorkflow::run() {
   if (m_add_timings) {
     m_timers->newTimer("Save IDF");
   }
-  workspace_->save(workflowJSON.absoluteRunDir() / "in.idf");
+  workspace_->save(workflowJSON.absoluteRunDir() / "in.idf", true);  // TODO: Is this really necessary? Seems like it's done before already
   if (m_add_timings) {
     m_timers->tockCurrentTimer();
   }
 
-  // Save workflow
-  if (m_add_timings) {
-    m_timers->newTimer("Save workflow");
+  if (!workflowJSON.runOptions()->fast()) {
+    if (m_add_timings) {
+      m_timers->newTimer("Zip datapoint");
+    }
+    openstudio::workflow::util::zipResults(workflowJSON.absoluteRunDir());
+    if (m_add_timings) {
+      m_timers->tockCurrentTimer();
+    }
   }
-  workflowJSON.saveAs(workflowJSON.absoluteOutPath());
-  if (workflowJSON.runOptions()->debug()) {
-    fmt::print("workflowJSON={}\n", workflowJSON.string());
+
+  if (state == State::Errored) {
+    workflowJSON.setCompletedStatus("Fail");
+  } else {
+    // completed status will already be set if workflow was halted
+    if (!workflowJSON.completedStatus()) {
+      workflowJSON.setCompletedStatus("Success");
+    } else if (workflowJSON.completedStatus().get() == "Fail") {
+      state = State::Errored;
+    }
   }
-  if (m_add_timings) {
-    m_timers->tockCurrentTimer();
+
+  if (!workflowJSON.runOptions()->fast()) {
+    // Save workflow
+    if (m_add_timings) {
+      m_timers->newTimer("Save WorkflowJSON out.osw");
+    }
+    workflowJSON.saveAs(workflowJSON.absoluteOutPath());
+    if (workflowJSON.runOptions()->debug()) {
+      fmt::print("workflowJSON={}\n", workflowJSON.string());
+    }
+    if (m_add_timings) {
+      m_timers->tockCurrentTimer();
+    }
+  }
+
+  if (state == State::Errored) {
+    // TODO: communicate_failure
+    openstudio::filesystem::ofstream file(workflowJSON.absoluteRunDir() / "failed.job");
+    OS_ASSERT(file.is_open());
+    file << fmt::format("Failed Workflow {}\n", std::chrono::system_clock::now());
+    file.close();
+  } else {
+    // TODO: communicate_complete
+    openstudio::filesystem::ofstream file(workflowJSON.absoluteRunDir() / "finished.job");
+    OS_ASSERT(file.is_open());
+    file << fmt::format("Finished Workflow {}\n", std::chrono::system_clock::now());
+    file.close();
   }
 
   if (m_add_timings) {
     fmt::print("\nTiming:\n\n{}\n", m_timers->timeReport());
+
+    // TODO: create profile.json in the run folder
   }
 }
 }  // namespace openstudio

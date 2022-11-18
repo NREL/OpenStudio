@@ -26,6 +26,8 @@ namespace workflow {
     bool mergeOutputTableSummaryReports(IdfObject& existingObject, const IdfObject& newObject);
     bool addEnergyPlusOutputRequest(Workspace& workspace, IdfObject& idfObject);
 
+    void zipResults(const openstudio::path& dirPath);
+
   }  // namespace util
 }  // namespace workflow
 }  // namespace openstudio
