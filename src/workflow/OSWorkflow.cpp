@@ -146,7 +146,7 @@ void OSWorkflow::saveIDFToRootDirIfDebug() {
   }
   LOG(Info, "Saving IDF to Root Directory");
   auto savePath = workflowJSON.absoluteRootDir() / "in.idf";
-  detailedTimeBlock("Saving IDF", [this, &savePath]() {
+  detailedTimeBlock("Saving IDF To Root Directory (debug)", [this, &savePath]() {
     // TODO: workflow gem was actually serializating via model.to_s for speed...
     workspace_->save(savePath, true);
   });
