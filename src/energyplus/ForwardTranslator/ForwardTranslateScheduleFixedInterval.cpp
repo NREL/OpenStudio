@@ -160,7 +160,10 @@ namespace energyplus {
       int secondShift = firstReportDateTime.time().totalSeconds();
       unsigned int start = 0;
       if (secondShift == 0) {
-        start = 1;
+        // JJR: interval lengths of at least one day shouldn't shift the start of the loop, right? why would we ever start with the second element of the values vector?
+        if (modelObject.intervalLength() < 1440) {
+          start = 1;
+        }
       } else {
         for (unsigned int i = 0; i < secondsFromFirst.size(); i++) {
           secondsFromFirst[i] += secondShift;
