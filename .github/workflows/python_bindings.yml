@@ -332,7 +332,7 @@ jobs:
           python -m pip install --upgrade pip
           # Note: if we choose to do ALL or nothing, remove  setuptools wheel twine (not needed unless trying to upload within this step)
           pip install requests packaging setuptools wheel twine
-          bindings_v=$(python ./python/find_pypi_tag.py --current)
+          bindings_v=$(python ./python/module/find_pypi_tag.py --current)
           pip install -i https://test.pypi.org/simple/ openstudio==$bindings_v
           mkdir wheel
 
