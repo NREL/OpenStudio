@@ -278,24 +278,102 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
+  {
+    Model model;
+    Date start_date(MonthOfYear::Jan, 1, 2007);
+    Time timestep_day(1, 0);
+    Vector daily_wh_inlet_temperatures_c(5);
+    daily_wh_inlet_temperatures_c[0] = 10.0422222222222;
+    daily_wh_inlet_temperatures_c[1] = 9.98111111111111;
+    daily_wh_inlet_temperatures_c[2] = 9.92111111111111;
+    daily_wh_inlet_temperatures_c[3] = 9.86222222222222;
+    daily_wh_inlet_temperatures_c[4] = 9.80444444444445;
+    TimeSeries time_series_tmains(start_date, timestep_day, daily_wh_inlet_temperatures_c, "C");
+
+    boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(time_series_tmains, model);
+    ASSERT_TRUE(scheduleInterval);
+    EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
+    ScheduleFixedInterval scheduleFixedInterval = scheduleInterval->optionalCast<ScheduleFixedInterval>().get();
+    EXPECT_EQ(1440, scheduleFixedInterval.intervalLength());  // one day in minutes
+    EXPECT_EQ(1, scheduleFixedInterval.startMonth());
+    EXPECT_EQ(2, scheduleFixedInterval.startDay());  // unrelated to this test, but this should be fixed to be 1
+
+    // Forward translate the schedule
+    ForwardTranslator ft;
+    Workspace workspace = ft.translateModel(model);
+
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
+    ASSERT_EQ(1u, objects.size());
+
+    EXPECT_EQ("Through: 01/02",
+              objects[0].getString(2, false).get());  // this aligns with start day, but start day should be 1 (so this should be 01/01)
+    EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
+    EXPECT_EQ("Until: 24:00", objects[0].getString(4, false).get());
+    EXPECT_EQ("10.0422222222222", objects[0].getString(5, false).get());
+    EXPECT_EQ("Through: 01/03", objects[0].getString(6, false).get());
+    EXPECT_EQ("For: AllDays", objects[0].getString(7, false).get());
+    EXPECT_EQ("Until: 24:00", objects[0].getString(8, false).get());
+    EXPECT_EQ("9.98111111111111", objects[0].getString(9, false).get());
+  }
+
+  {
+    Model model;
+    Date start_date(MonthOfYear::Jan, 1, 2007);
+    Time timestep_2day(2, 0);
+    Vector daily_wh_inlet_temperatures_c(5);
+    daily_wh_inlet_temperatures_c[0] = 10.0422222222222;
+    daily_wh_inlet_temperatures_c[1] = 9.98111111111111;
+    daily_wh_inlet_temperatures_c[2] = 9.92111111111111;
+    daily_wh_inlet_temperatures_c[3] = 9.86222222222222;
+    daily_wh_inlet_temperatures_c[4] = 9.80444444444445;
+    TimeSeries time_series_tmains(start_date, timestep_2day, daily_wh_inlet_temperatures_c, "C");
+
+    boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(time_series_tmains, model);
+    ASSERT_TRUE(scheduleInterval);
+    EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
+    ScheduleFixedInterval scheduleFixedInterval = scheduleInterval->optionalCast<ScheduleFixedInterval>().get();
+    EXPECT_EQ(2880, scheduleFixedInterval.intervalLength());  // two days in minutes
+    EXPECT_EQ(1, scheduleFixedInterval.startMonth());
+    EXPECT_EQ(2, scheduleFixedInterval.startDay());  // unrelated to this test, but this should be fixed to be 1
+
+    // Forward translate the schedule
+    ForwardTranslator ft;
+    Workspace workspace = ft.translateModel(model);
+
+    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
+    ASSERT_EQ(1u, objects.size());
+
+    EXPECT_EQ("Through: 01/03",
+              objects[0].getString(2, false).get());  // this aligns with start day, but start day should be 1 (so this should be 01/02)
+    EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
+    EXPECT_EQ("Until: 24:00", objects[0].getString(4, false).get());
+    EXPECT_EQ("10.0422222222222", objects[0].getString(5, false).get());
+    EXPECT_EQ("Through: 01/05", objects[0].getString(6, false).get());
+    EXPECT_EQ("For: AllDays", objects[0].getString(7, false).get());
+    EXPECT_EQ("Until: 24:00", objects[0].getString(8, false).get());
+    EXPECT_EQ("9.98111111111111", objects[0].getString(9, false).get());
+  }
+}
+
+TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hours) {
   Model model;
   Date start_date(MonthOfYear::Jan, 1, 2007);
-  Time timestep_day(1, 0);
-  Vector daily_wh_inlet_temperatures_c(5);
-  daily_wh_inlet_temperatures_c[0] = 10.0422222222222;
-  daily_wh_inlet_temperatures_c[1] = 9.98111111111111;
-  daily_wh_inlet_temperatures_c[2] = 9.92111111111111;
-  daily_wh_inlet_temperatures_c[3] = 9.86222222222222;
-  daily_wh_inlet_temperatures_c[4] = 9.80444444444445;
-  TimeSeries time_series_tmains(start_date, timestep_day, daily_wh_inlet_temperatures_c, "C");
+  Time timestep_hour(0, 1);
+  Vector hourly_wh_inlet_temperatures_c(5);
+  hourly_wh_inlet_temperatures_c[0] = 10.0422222222222;
+  hourly_wh_inlet_temperatures_c[1] = 9.98111111111111;
+  hourly_wh_inlet_temperatures_c[2] = 9.92111111111111;
+  hourly_wh_inlet_temperatures_c[3] = 9.86222222222222;
+  hourly_wh_inlet_temperatures_c[4] = 9.80444444444445;
+  TimeSeries time_series_tmains(start_date, timestep_hour, hourly_wh_inlet_temperatures_c, "C");
 
   boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(time_series_tmains, model);
   ASSERT_TRUE(scheduleInterval);
   EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
   ScheduleFixedInterval scheduleFixedInterval = scheduleInterval->optionalCast<ScheduleFixedInterval>().get();
-  EXPECT_EQ(1440, scheduleFixedInterval.intervalLength());  // one day in minutes
+  EXPECT_EQ(60, scheduleFixedInterval.intervalLength());  // one hour in minutes
   EXPECT_EQ(1, scheduleFixedInterval.startMonth());
-  EXPECT_EQ(2, scheduleFixedInterval.startDay());  // unrelated to this test, but this should be fixed to be 1
+  EXPECT_EQ(1, scheduleFixedInterval.startDay());
 
   // Forward translate the schedule
   ForwardTranslator ft;
@@ -304,11 +382,14 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
   std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
   ASSERT_EQ(1u, objects.size());
 
-  EXPECT_EQ("Through: 01/02",
-            objects[0].getString(2, false).get());  // this aligns with start day, but start day should be 1 (so this should be 01/01)
+  EXPECT_EQ("Through: 01/01", objects[0].getString(2, false).get());
   EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
-  EXPECT_EQ("Until: 24:00", objects[0].getString(4, false).get());
+  EXPECT_EQ("Until: 01:00", objects[0].getString(4, false).get());
   EXPECT_EQ("10.0422222222222", objects[0].getString(5, false).get());
+  EXPECT_EQ("Through: 01/02", objects[0].getString(6, false).get());
+  EXPECT_EQ("For: AllDays", objects[0].getString(7, false).get());
+  EXPECT_EQ("Until: 02:00", objects[0].getString(8, false).get());
+  EXPECT_EQ("9.98111111111111", objects[0].getString(9, false).get());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_20hours) {
