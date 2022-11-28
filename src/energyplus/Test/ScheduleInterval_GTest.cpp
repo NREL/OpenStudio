@@ -278,6 +278,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hourly_Shifted
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
+  // timestep 1 day
   {
     Model model;
     Date start_date(MonthOfYear::Jan, 1, 2007);
@@ -314,8 +315,21 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
     EXPECT_EQ("For: AllDays", objects[0].getString(7, false).get());
     EXPECT_EQ("Until: 24:00", objects[0].getString(8, false).get());
     EXPECT_EQ("9.98111111111111", objects[0].getString(9, false).get());
+    EXPECT_EQ("Through: 01/04", objects[0].getString(10, false).get());
+    EXPECT_EQ("For: AllDays", objects[0].getString(11, false).get());
+    EXPECT_EQ("Until: 24:00", objects[0].getString(12, false).get());
+    EXPECT_EQ("9.92111111111111", objects[0].getString(13, false).get());
+    EXPECT_EQ("Through: 01/05", objects[0].getString(14, false).get());
+    EXPECT_EQ("For: AllDays", objects[0].getString(15, false).get());
+    EXPECT_EQ("Until: 24:00", objects[0].getString(16, false).get());
+    EXPECT_EQ("9.86222222222222", objects[0].getString(17, false).get());
+    EXPECT_EQ("Through: 01/06", objects[0].getString(18, false).get());
+    EXPECT_EQ("For: AllDays", objects[0].getString(19, false).get());
+    EXPECT_EQ("Until: 24:00", objects[0].getString(20, false).get());
+    EXPECT_EQ("9.80444444444445", objects[0].getString(21, false).get());
   }
 
+  // timestep 2 days
   {
     Model model;
     Date start_date(MonthOfYear::Jan, 1, 2007);
@@ -329,29 +343,7 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Days) {
     TimeSeries time_series_tmains(start_date, timestep_2day, daily_wh_inlet_temperatures_c, "C");
 
     boost::optional<ScheduleInterval> scheduleInterval = ScheduleInterval::fromTimeSeries(time_series_tmains, model);
-    ASSERT_TRUE(scheduleInterval);
-    EXPECT_TRUE(scheduleInterval->optionalCast<ScheduleFixedInterval>());
-    ScheduleFixedInterval scheduleFixedInterval = scheduleInterval->optionalCast<ScheduleFixedInterval>().get();
-    EXPECT_EQ(2880, scheduleFixedInterval.intervalLength());  // two days in minutes
-    EXPECT_EQ(1, scheduleFixedInterval.startMonth());
-    EXPECT_EQ(2, scheduleFixedInterval.startDay());  // unrelated to this test, but this should be fixed to be 1
-
-    // Forward translate the schedule
-    ForwardTranslator ft;
-    Workspace workspace = ft.translateModel(model);
-
-    std::vector<WorkspaceObject> objects = workspace.getObjectsByType(IddObjectType::Schedule_Compact);
-    ASSERT_EQ(1u, objects.size());
-
-    EXPECT_EQ("Through: 01/03",
-              objects[0].getString(2, false).get());  // this aligns with start day, but start day should be 1 (so this should be 01/02)
-    EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
-    EXPECT_EQ("Until: 24:00", objects[0].getString(4, false).get());
-    EXPECT_EQ("10.0422222222222", objects[0].getString(5, false).get());
-    EXPECT_EQ("Through: 01/05", objects[0].getString(6, false).get());
-    EXPECT_EQ("For: AllDays", objects[0].getString(7, false).get());
-    EXPECT_EQ("Until: 24:00", objects[0].getString(8, false).get());
-    EXPECT_EQ("9.98111111111111", objects[0].getString(9, false).get());
+    ASSERT_FALSE(scheduleInterval);
   }
 }
 
@@ -386,10 +378,10 @@ TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_Hours) {
   EXPECT_EQ("For: AllDays", objects[0].getString(3, false).get());
   EXPECT_EQ("Until: 01:00", objects[0].getString(4, false).get());
   EXPECT_EQ("10.0422222222222", objects[0].getString(5, false).get());
-  EXPECT_EQ("Through: 01/02", objects[0].getString(6, false).get());
-  EXPECT_EQ("For: AllDays", objects[0].getString(7, false).get());
-  EXPECT_EQ("Until: 02:00", objects[0].getString(8, false).get());
-  EXPECT_EQ("9.98111111111111", objects[0].getString(9, false).get());
+  EXPECT_EQ("Until: 02:00", objects[0].getString(6, false).get());
+  EXPECT_EQ("9.98111111111111", objects[0].getString(7, false).get());
+  EXPECT_EQ("Until: 03:00", objects[0].getString(8, false).get());
+  EXPECT_EQ("9.92111111111111", objects[0].getString(9, false).get());
 }
 
 TEST_F(EnergyPlusFixture, ForwardTranslator_ScheduleFixedInterval_20hours) {
