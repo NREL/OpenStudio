@@ -91,7 +91,7 @@ TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_SetGetField
   EXPECT_FALSE(uka.phaseShiftofMinimumSurfaceTemperature());
 }
 
-TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_clone) {
+TEST_F(ModelFixture, SiteGroundTemperatureUndisturbedKusudaAchenbach_Clone) {
   Model m;
   SiteGroundTemperatureUndisturbedKusudaAchenbach uka(m);
 
