@@ -80,14 +80,15 @@ namespace model {
       OS_ASSERT(setString(OS_UnitarySystemPerformance_MultispeedFields::SingleModeOperation, ""));
     }
 
-    bool UnitarySystemPerformanceMultispeed_Impl::noLoadSupplyAirFlowRateRatio() const {
-      boost::optional<std::string> value = getString(OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio, true);
+    double UnitarySystemPerformanceMultispeed_Impl::noLoadSupplyAirFlowRateRatio() const {
+      boost::optional<double> value = getDouble(OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    bool UnitarySystemPerformanceMultispeed_Impl::setNoLoadSupplyAirFlowRateRatio(bool noLoadSupplyAirFlowRateRatio) {
-      return setString(OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio, noLoadSupplyAirFlowRateRatio);
+    bool UnitarySystemPerformanceMultispeed_Impl::setNoLoadSupplyAirFlowRateRatio(double noLoadSupplyAirFlowRateRatio) {
+      bool result = setDouble(OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio, noLoadSupplyAirFlowRateRatio);
+      return result;
     }
 
     boost::optional<double> UnitarySystemPerformanceMultispeed_Impl::readDoubleFieldOrAutosize(unsigned fieldNum,
@@ -234,11 +235,11 @@ namespace model {
     getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->resetSingleModeOperation();
   }
 
-  bool UnitarySystemPerformanceMultispeed::noLoadSupplyAirFlowRateRatio() const {
+  double UnitarySystemPerformanceMultispeed::noLoadSupplyAirFlowRateRatio() const {
     return getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->noLoadSupplyAirFlowRateRatio();
   }
 
-  bool UnitarySystemPerformanceMultispeed::setNoLoadSupplyAirFlowRateRatio(bool noLoadSupplyAirFlowRateRatio) {
+  bool UnitarySystemPerformanceMultispeed::setNoLoadSupplyAirFlowRateRatio(double noLoadSupplyAirFlowRateRatio) {
     return getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->setNoLoadSupplyAirFlowRateRatio(noLoadSupplyAirFlowRateRatio);
   }
 
