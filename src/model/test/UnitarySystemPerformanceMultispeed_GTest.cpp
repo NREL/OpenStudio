@@ -66,6 +66,11 @@ TEST_F(ModelFixture, UnitarySystemPerformanceMultispeed_GetterSetters) {
   testObject.resetSingleModeOperation();
   EXPECT_FALSE(testObject.singleModeOperation());
 
+  // No Load
+  EXPECT_EQ(1.0, testObject.noLoadSupplyAirFlowRateRatio());
+  EXPECT_TRUE(testObject.setNoLoadSupplyAirFlowRateRatio(0.5));
+  EXPECT_EQ(0.5, testObject.noLoadSupplyAirFlowRateRatio());
+
   // Supply Airflow Ratios
   EXPECT_TRUE(testObject.addSupplyAirflowRatioField(1.0, 2.0));
   EXPECT_TRUE(testObject.addSupplyAirflowRatioField(SupplyAirflowRatioField::fromCoolingRatio(3.0)));

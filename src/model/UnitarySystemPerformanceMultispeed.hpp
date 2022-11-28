@@ -98,6 +98,8 @@ namespace model {
 
     bool singleModeOperation() const;
 
+    double noLoadSupplyAirFlowRateRatio() const;
+
     std::vector<SupplyAirflowRatioField> supplyAirflowRatioFields() const;
 
     //@}
@@ -107,6 +109,8 @@ namespace model {
     bool setSingleModeOperation(bool singleMode);
 
     void resetSingleModeOperation();
+
+    bool setNoLoadSupplyAirFlowRateRatio(double noLoadSupplyAirFlowRateRatio);
 
     bool setSupplyAirflowRatioFields(const std::vector<SupplyAirflowRatioField>& airflowRatioFields);
 
