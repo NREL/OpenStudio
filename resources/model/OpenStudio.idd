@@ -26444,7 +26444,7 @@ OS:SpaceVentilation:DesignFlowRate,
   A2,  \field Name
        \type alpha
        \required-field
-       \reference SpaceInfiltrationNames
+       \reference SpaceVentilationNames
        \reference SpaceItemNames
        \reference SpaceLoadNames
   A3,  \field Space or SpaceType Name
