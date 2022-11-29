@@ -106,7 +106,7 @@ namespace energyplus {
     sysPerf.setString(UnitarySystemPerformance_MultispeedFields::SingleModeOperation, modelObject.singleModeOperation() ? "Yes" : "No");
 
     // No Load Supply Air Flow Rate Ratio
-    sysPerf.setDouble(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio, modelObject.noLoadSupplyAirFlowRateRatio());
+    sysPerf.setDouble(UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio, modelObject.noLoadSupplyAirflowRateRatio());
 
     for (const auto& airflowRatioField : modelObject.supplyAirflowRatioFields()) {
       sysPerf.pushExtensibleGroup(airflowRatioField.getHeatingCoolingRatiosAsStrings());

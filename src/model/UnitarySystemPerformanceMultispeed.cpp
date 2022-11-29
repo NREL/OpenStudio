@@ -80,14 +80,14 @@ namespace model {
       OS_ASSERT(setString(OS_UnitarySystemPerformance_MultispeedFields::SingleModeOperation, ""));
     }
 
-    double UnitarySystemPerformanceMultispeed_Impl::noLoadSupplyAirFlowRateRatio() const {
+    double UnitarySystemPerformanceMultispeed_Impl::noLoadSupplyAirflowRateRatio() const {
       boost::optional<double> value = getDouble(OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio, true);
       OS_ASSERT(value);
       return value.get();
     }
 
-    bool UnitarySystemPerformanceMultispeed_Impl::setNoLoadSupplyAirFlowRateRatio(double noLoadSupplyAirFlowRateRatio) {
-      bool result = setDouble(OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio, noLoadSupplyAirFlowRateRatio);
+    bool UnitarySystemPerformanceMultispeed_Impl::setNoLoadSupplyAirflowRateRatio(double noLoadSupplyAirflowRateRatio) {
+      bool result = setDouble(OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio, noLoadSupplyAirflowRateRatio);
       return result;
     }
 
