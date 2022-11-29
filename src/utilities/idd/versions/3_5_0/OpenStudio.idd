@@ -1,4 +1,4 @@
-!IDD_Version 3.5.1
+!IDD_Version 3.5.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.5.1
+       \default 3.5.0
   A3; \field Prerelease Identifier
        \type alpha
 
@@ -11361,14 +11361,7 @@ OS:UnitarySystemPerformance:Multispeed,
        \note This choice does not apply to speed 1 operation.
        \note Yes = operate at the highest speed possible without exceeding the current load.
        \note No = allow operation at the average of two adjacent speeds to match the current load.
-  N1 , \field No Load Supply Air Flow Rate Ratio
-       \required-field
-       \type real
-       \minimum 0
-       \maximum 1
-       \note Used to define the no load operating air flow rate when the system fan
-       \note is specified to operate continuously.
-  N2 , \field Heating Speed 1 Supply Air Flow Ratio
+  N1 , \field Heating Speed 1 Supply Air Flow Ratio
        \required-field
        \type real
        \autosizable
@@ -11378,7 +11371,7 @@ OS:UnitarySystemPerformance:Multispeed,
        \note Enter the lowest operating supply air flow ratio during heating
        \note operation or specify autosize. This value is the ratio of air flow
        \note at this speed to the maximum air flow rate.
-  N3 ; \field Cooling Speed 1 Supply Air Flow Ratio
+  N2 ; \field Cooling Speed 1 Supply Air Flow Ratio
        \required-field
        \type real
        \autosizable
