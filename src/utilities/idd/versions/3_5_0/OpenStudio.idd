@@ -37629,3 +37629,7 @@ OS:PlantComponent:UserDefined,
        \type object-list
        \object-list ThermalZoneNames
        \note Used for modeling device losses to surrounding zone
+<<<<<<< HEAD
+=======
+
+>>>>>>> bump-vt
