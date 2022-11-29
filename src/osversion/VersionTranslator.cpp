@@ -7624,13 +7624,13 @@ namespace osversion {
       auto iddname = object.iddObject().name();
 
       if (iddname == "OS:UnitarySystemPerformance:Multispeed") {
-        
+
         // 1 Field has been added from 3.5.0 to 3.5.1:
         // ----------------------------------------------
         // * No Load Supply Air Flow Rate Ratio * 3
         auto iddObject = idd_3_5_1.getObject(iddname);
         IdfObject newObject(iddObject.get());
-        
+
         for (size_t i = 0; i < object.numFields(); ++i) {
           auto value = object.getString(i);
           if (value) {
@@ -7641,17 +7641,16 @@ namespace osversion {
             }
           }
         }
-        
+
         newObject.setDouble(3, 1.0);
-        
+
         m_refactored.push_back(RefactoredObjectData(object, newObject));
         ss << newObject;
-        
+
         // No-op
       } else {
         ss << object;
       }
-      
     }
 
     return ss.str();

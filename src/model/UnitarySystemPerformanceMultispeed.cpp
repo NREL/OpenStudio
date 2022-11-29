@@ -215,7 +215,7 @@ namespace model {
     : ModelObject(UnitarySystemPerformanceMultispeed::iddObjectType(), model) {
     OS_ASSERT(getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>());
 
-    bool ok = setNoLoadSupplyAirFlowRateRatio(1.0);
+    bool ok = setNoLoadSupplyAirflowRateRatio(1.0);
     OS_ASSERT(ok);
   }
 
@@ -235,12 +235,12 @@ namespace model {
     getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->resetSingleModeOperation();
   }
 
-  double UnitarySystemPerformanceMultispeed::noLoadSupplyAirFlowRateRatio() const {
-    return getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->noLoadSupplyAirFlowRateRatio();
+  double UnitarySystemPerformanceMultispeed::noLoadSupplyAirflowRateRatio() const {
+    return getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->noLoadSupplyAirflowRateRatio();
   }
 
-  bool UnitarySystemPerformanceMultispeed::setNoLoadSupplyAirFlowRateRatio(double noLoadSupplyAirFlowRateRatio) {
-    return getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->setNoLoadSupplyAirFlowRateRatio(noLoadSupplyAirFlowRateRatio);
+  bool UnitarySystemPerformanceMultispeed::setNoLoadSupplyAirflowRateRatio(double noLoadSupplyAirflowRateRatio) {
+    return getImpl<detail::UnitarySystemPerformanceMultispeed_Impl>()->setNoLoadSupplyAirflowRateRatio(noLoadSupplyAirflowRateRatio);
   }
 
   std::vector<SupplyAirflowRatioField> UnitarySystemPerformanceMultispeed::supplyAirflowRatioFields() const {
