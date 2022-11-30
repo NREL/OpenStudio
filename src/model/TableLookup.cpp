@@ -91,6 +91,17 @@ namespace model {
       return -9999.0;
     }
 
+    std::vector<ModelObject> TableLookup_Impl::children() const {
+      // #4754 - in the case where we clone an object that uses this TableLookup as a resource into another model,
+      // we need the ModelObjectList to be a child of this object, so that ResourceObject::getRecursiveResourceSubTrees finds it
+      // (and the variables it references in a recursive manner)
+      std::vector<ModelObject> result;
+      if (auto const varList_ = independentVariableList()) {
+        result.push_back(varList_.get());
+      }
+      return result;
+    }
+
     ModelObject TableLookup_Impl::clone(Model model) const {
 
       // Call the ModelObject_Impl instead of ParentObject_Impl because we deal with the ModelObjectList ourselves
