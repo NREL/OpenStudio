@@ -2186,7 +2186,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_SizingZone) {
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_SizingZone_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_SizingZone_updated.osm");
   model->save(outPath, true);
 
   std::vector<WorkspaceObject> szs = model->getObjectsByType("OS:Sizing:Zone");
@@ -2236,7 +2236,7 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_ZoneHVACPackaged) {
   boost::optional<model::Model> model = vt.loadModel(path);
   ASSERT_TRUE(model) << "Failed to load " << path;
 
-  openstudio::path outPath = resourcesPath() / toPath("osversion/3_3_0/test_vt_ZoneHVACPackaged_updated.osm");
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_ZoneHVACPackaged_updated.osm");
   model->save(outPath, true);
 
   EXPECT_EQ(2, model->getObjectsByType("OS:Fan:SystemModel").size());

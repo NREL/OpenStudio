@@ -16,7 +16,7 @@ if(CCACHE_PROGRAM)
 endif()
 
 # Project macro can only take digits in the version, it splits these out to specific variables
-project(OpenStudio VERSION 3.5.0)
+project(OpenStudio VERSION 3.5.1)
 
 include(CMake/compiler_flags.cmake)
 

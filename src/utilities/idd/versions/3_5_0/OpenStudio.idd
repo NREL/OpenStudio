@@ -1,4 +1,4 @@
-!IDD_Version 3.5.1
+!IDD_Version 3.5.0
 ! *****************************************************************************
 ! This file is the Input Data Dictionary (IDD) for OpenStudio Model.
 !
@@ -40,7 +40,7 @@ OS:Version,
        \required-field
   A2, \field Version Identifier
        \type alpha
-       \default 3.5.1
+       \default 3.5.0
   A3; \field Prerelease Identifier
        \type alpha
 
@@ -26437,161 +26437,6 @@ OS:ZoneHVAC:EquipmentList,
        \type object-list
        \object-list ScheduleNames
 
-OS:SpaceVentilation:DesignFlowRate,
-  A1, \field Handle
-       \type handle
-       \required-field
-  A2,  \field Name
-       \type alpha
-       \required-field
-       \reference SpaceVentilationNames
-       \reference SpaceItemNames
-       \reference SpaceLoadNames
-  A3,  \field Space or SpaceType Name
-       \type object-list
-       \object-list SpaceAndSpaceTypeNames
-  A3 , \field Schedule Name
-       \required-field
-       \type object-list
-       \object-list ScheduleNames
-  A4 , \field Design Flow Rate Calculation Method
-       \note The entered calculation method is used to create the maximum amount of ventilation
-       \note for this set of attributes
-       \note Choices: Flow/Space => Design Flow Rate -- simply enter Design Flow Rate
-       \note Flow/Area => Flow per Space Floor Area - Value * Floor Area (space) = Design Flow Rate
-       \note Flow/Person => Flow per Person - Value * #people = Design Flow Rate
-       \note AirChanges/Hour => Air Changes per Hour - Value * Floor Volume (space) adjusted for m3/s = Design Volume Flow Rate
-       \note  "Vdesign" in Equation is the result.
-       \type choice
-       \key Flow/Space
-       \key Flow/Area
-       \key Flow/Person
-       \key AirChanges/Hour
-       \required-field
-  N1 , \field Design Flow Rate
-       \units m3/s
-       \type real
-       \minimum 0
-       \required-field
-  N2 , \field Flow per Space Floor Area
-       \type real
-       \minimum 0
-       \units m3/s-m2
-       \required-field
-  N3 , \field Flow per Person
-       \type real
-       \minimum 0
-       \units m3/s-person
-       \required-field
-  N4 , \field Air Changes per Hour
-       \units 1/hr
-       \type real
-       \minimum 0
-       \required-field
-  A5 , \field Ventilation Type
-       \type choice
-       \key Natural
-       \key Intake
-       \key Exhaust
-       \key Balanced
-       \required-field
-  N5 , \field Fan Pressure Rise
-       \note pressure rise across the fan
-       \type real
-       \units Pa
-       \ip-units inH2O
-       \minimum 0
-       \required-field
-  N6 , \field Fan Total Efficiency
-       \type real
-       \minimum> 0
-       \required-field
-  N7 , \field Constant Term Coefficient
-       \note  "A" in Equation
-       \type real
-       \required-field
-  N8 , \field Temperature Term Coefficient
-       \note  "B" in Equation
-       \type real
-       \required-field
-  N9 , \field Velocity Term Coefficient
-       \note  "C" in Equation
-       \type real
-       \required-field
-  N10, \field Velocity Squared Term Coefficient
-       \note  "D" in Equation
-       \type real
-       \required-field
-  N11, \field Minimum Indoor Temperature
-       \note this is the indoor temperature below which ventilation is shutoff
-       \units C
-       \type real
-       \minimum -100
-       \maximum 100
-       \required-field
-  A6 , \field Minimum Indoor Temperature Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note This schedule contains the indoor temperature versus time below which
-       \note ventilation is shutoff.
-  N12, \field Maximum Indoor Temperature
-       \note this is the indoor temperature above which ventilation is shutoff
-       \units C
-       \type real
-       \minimum -100
-       \maximum 100
-       \required-field
-  A7 , \field Maximum Indoor Temperature Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note This schedule contains the indoor temperature versus time above which
-       \note ventilation is shutoff.
-  N13, \field Delta Temperature
-       \note This is the temperature differential between indoor and outdoor below which ventilation is shutoff.
-       \note If ((IndoorTemp - OutdoorTemp) < DeltaTemperature) then ventilation is not allowed.
-       \note For example, if delta temperature is 2C, ventilation is assumed to be available if the outside air temperature
-       \note is at least 2C cooler than the space air temperature. The values for this field can include negative numbers.
-       \note This allows ventilation to occur even if the outdoor temperature is above the indoor temperature.
-       \units deltaC
-       \type real
-       \minimum -100
-       \required-field
-  A8 , \field Delta Temperature Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note This schedule contains the temperature differential between indoor and outdoor
-       \note versus time below which ventilation is shutoff.
-  N14, \field Minimum Outdoor Temperature
-       \note this is the outdoor temperature below which ventilation is shutoff
-       \units C
-       \type real
-       \minimum -100
-       \maximum 100
-       \required-field
-  A9 , \field Minimum Outdoor Temperature Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note This schedule contains the outdoor temperature versus time below which
-       \note ventilation is shutoff.
-  N15, \field Maximum Outdoor Temperature
-       \note this is the outdoor temperature above which ventilation is shutoff
-       \units C
-       \type real
-       \minimum -100
-       \maximum 100
-       \required-field
-  A10, \field Maximum Outdoor Temperature Schedule Name
-       \type object-list
-       \object-list ScheduleNames
-       \note This schedule contains the outdoor temperature versus time above which
-       \note ventilation is shutoff.
-  N16; \field Maximum Wind Speed
-       \note this is the outdoor wind speed above which ventilation is shutoff
-       \units m/s
-       \type real
-       \minimum 0
-       \maximum 40
-       \required-field
 
 OS:ZoneVentilation:DesignFlowRate,
   A1, \field Handle
