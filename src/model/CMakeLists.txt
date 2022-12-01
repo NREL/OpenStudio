@@ -1489,6 +1489,9 @@ set(${target_name}_src
   SpaceInfiltrationFlowCoefficient.hpp
   SpaceInfiltrationFlowCoefficient_Impl.hpp
   SpaceInfiltrationFlowCoefficient.cpp
+  SpaceVentilationDesignFlowRate.hpp
+  SpaceVentilationDesignFlowRate_Impl.hpp
+  SpaceVentilationDesignFlowRate.cpp
   SpaceItem.hpp
   SpaceItem_Impl.hpp
   SpaceItem.cpp
@@ -2253,6 +2256,7 @@ set(${target_name}_test_src
   test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
   test/SpaceInfiltrationFlowCoefficient_GTest.cpp
+  test/SpaceVentilationDesignFlowRate_GTest.cpp
   test/SpaceType_GTest.cpp
   test/Space_GTest.cpp
   test/StandardGlazing_GTest.cpp
