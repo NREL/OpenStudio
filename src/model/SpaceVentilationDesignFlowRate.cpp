@@ -59,14 +59,14 @@ namespace model {
       OS_ASSERT(idfObject.iddObject().type() == SpaceVentilationDesignFlowRate::iddObjectType());
     }
 
-    SpaceVentilationDesignFlowRate_Impl::SpaceVentilationDesignFlowRate_Impl(const openstudio::detail::WorkspaceObject_Impl& other,
-                                                                               Model_Impl* model, bool keepHandle)
+    SpaceVentilationDesignFlowRate_Impl::SpaceVentilationDesignFlowRate_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                             bool keepHandle)
       : SpaceLoad_Impl(other, model, keepHandle) {
       OS_ASSERT(other.iddObject().type() == SpaceVentilationDesignFlowRate::iddObjectType());
     }
 
     SpaceVentilationDesignFlowRate_Impl::SpaceVentilationDesignFlowRate_Impl(const SpaceVentilationDesignFlowRate_Impl& other, Model_Impl* model,
-                                                                               bool keepHandle)
+                                                                             bool keepHandle)
       : SpaceLoad_Impl(other, model, keepHandle) {}
 
     const std::vector<std::string>& SpaceVentilationDesignFlowRate_Impl::outputVariableNames() const {
@@ -406,7 +406,7 @@ namespace model {
     }
 
     double SpaceVentilationDesignFlowRate_Impl::getDesignFlowRate(double floorArea, double exteriorSurfaceArea, double exteriorWallArea,
-                                                                   double airVolume) const {
+                                                                  double airVolume) const {
       std::string method = designFlowRateCalculationMethod();
 
       if (method == "Flow/Space") {
@@ -426,7 +426,7 @@ namespace model {
     }
 
     double SpaceVentilationDesignFlowRate_Impl::getFlowPerSpaceFloorArea(double floorArea, double exteriorSurfaceArea, double exteriorWallArea,
-                                                                          double airVolume) const {
+                                                                         double airVolume) const {
       std::string method = designFlowRateCalculationMethod();
 
       if (method == "Flow/Space") {
@@ -446,7 +446,7 @@ namespace model {
     }
 
     double SpaceVentilationDesignFlowRate_Impl::getFlowPerExteriorSurfaceArea(double floorArea, double exteriorSurfaceArea, double exteriorWallArea,
-                                                                               double airVolume) const {
+                                                                              double airVolume) const {
       std::string method = designFlowRateCalculationMethod();
 
       if (method == "Flow/Space") {
@@ -466,7 +466,7 @@ namespace model {
     }
 
     double SpaceVentilationDesignFlowRate_Impl::getFlowPerExteriorWallArea(double floorArea, double exteriorSurfaceArea, double exteriorWallArea,
-                                                                            double airVolume) const {
+                                                                           double airVolume) const {
       std::string method = designFlowRateCalculationMethod();
 
       if (method == "Flow/Space") {
@@ -486,7 +486,7 @@ namespace model {
     }
 
     double SpaceVentilationDesignFlowRate_Impl::getAirChangesPerHour(double floorArea, double exteriorSurfaceArea, double exteriorWallArea,
-                                                                      double airVolume) const {
+                                                                     double airVolume) const {
       std::string method = designFlowRateCalculationMethod();
 
       if (method == "Flow/Space") {
@@ -720,30 +720,30 @@ namespace model {
   }
 
   double SpaceVentilationDesignFlowRate::getDesignFlowRate(double floorArea, double exteriorSurfaceArea, double exteriorWallArea,
-                                                            double airVolume) const {
+                                                           double airVolume) const {
     return getImpl<detail::SpaceVentilationDesignFlowRate_Impl>()->getDesignFlowRate(floorArea, exteriorSurfaceArea, exteriorWallArea, airVolume);
   }
 
   double SpaceVentilationDesignFlowRate::getFlowPerSpaceFloorArea(double floorArea, double exteriorSurfaceArea, double exteriorWallArea,
-                                                                   double airVolume) const {
+                                                                  double airVolume) const {
     return getImpl<detail::SpaceVentilationDesignFlowRate_Impl>()->getFlowPerSpaceFloorArea(floorArea, exteriorSurfaceArea, exteriorWallArea,
-                                                                                             airVolume);
+                                                                                            airVolume);
   }
 
   double SpaceVentilationDesignFlowRate::getFlowPerExteriorSurfaceArea(double floorArea, double exteriorSurfaceArea, double exteriorWallArea,
-                                                                        double airVolume) const {
+                                                                       double airVolume) const {
     return getImpl<detail::SpaceVentilationDesignFlowRate_Impl>()->getFlowPerExteriorSurfaceArea(floorArea, exteriorSurfaceArea, exteriorWallArea,
-                                                                                                  airVolume);
+                                                                                                 airVolume);
   }
 
   double SpaceVentilationDesignFlowRate::getFlowPerExteriorWallArea(double floorArea, double exteriorSurfaceArea, double exteriorWallArea,
-                                                                     double airVolume) const {
+                                                                    double airVolume) const {
     return getImpl<detail::SpaceVentilationDesignFlowRate_Impl>()->getFlowPerExteriorWallArea(floorArea, exteriorSurfaceArea, exteriorWallArea,
-                                                                                               airVolume);
+                                                                                              airVolume);
   }
 
   double SpaceVentilationDesignFlowRate::getAirChangesPerHour(double floorArea, double exteriorSurfaceArea, double exteriorWallArea,
-                                                               double airVolume) const {
+                                                              double airVolume) const {
     return getImpl<detail::SpaceVentilationDesignFlowRate_Impl>()->getAirChangesPerHour(floorArea, exteriorSurfaceArea, exteriorWallArea, airVolume);
   }
 
