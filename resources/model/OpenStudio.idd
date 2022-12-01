@@ -26438,23 +26438,23 @@ OS:ZoneHVAC:EquipmentList,
        \object-list ScheduleNames
 
 OS:SpaceVentilation:DesignFlowRate,
-  A1, \field Handle
+  A1 , \field Handle
        \type handle
        \required-field
-  A2,  \field Name
+  A2 , \field Name
        \type alpha
        \required-field
        \reference SpaceVentilationNames
        \reference SpaceItemNames
        \reference SpaceLoadNames
-  A3,  \field Space or SpaceType Name
+  A3 , \field Space or SpaceType Name
        \type object-list
        \object-list SpaceAndSpaceTypeNames
-  A3 , \field Schedule Name
+  A4 , \field Schedule Name
        \required-field
        \type object-list
        \object-list ScheduleNames
-  A4 , \field Design Flow Rate Calculation Method
+  A5 , \field Design Flow Rate Calculation Method
        \note The entered calculation method is used to create the maximum amount of ventilation
        \note for this set of attributes
        \note Choices: Flow/Space => Design Flow Rate -- simply enter Design Flow Rate
@@ -26488,7 +26488,7 @@ OS:SpaceVentilation:DesignFlowRate,
        \type real
        \minimum 0
        \required-field
-  A5 , \field Ventilation Type
+  A6 , \field Ventilation Type
        \type choice
        \key Natural
        \key Intake
@@ -26529,7 +26529,7 @@ OS:SpaceVentilation:DesignFlowRate,
        \minimum -100
        \maximum 100
        \required-field
-  A6 , \field Minimum Indoor Temperature Schedule Name
+  A7 , \field Minimum Indoor Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note This schedule contains the indoor temperature versus time below which
@@ -26541,7 +26541,7 @@ OS:SpaceVentilation:DesignFlowRate,
        \minimum -100
        \maximum 100
        \required-field
-  A7 , \field Maximum Indoor Temperature Schedule Name
+  A8 , \field Maximum Indoor Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note This schedule contains the indoor temperature versus time above which
@@ -26556,7 +26556,7 @@ OS:SpaceVentilation:DesignFlowRate,
        \type real
        \minimum -100
        \required-field
-  A8 , \field Delta Temperature Schedule Name
+  A9 , \field Delta Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note This schedule contains the temperature differential between indoor and outdoor
@@ -26568,7 +26568,7 @@ OS:SpaceVentilation:DesignFlowRate,
        \minimum -100
        \maximum 100
        \required-field
-  A9 , \field Minimum Outdoor Temperature Schedule Name
+  A10, \field Minimum Outdoor Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note This schedule contains the outdoor temperature versus time below which
@@ -26580,7 +26580,7 @@ OS:SpaceVentilation:DesignFlowRate,
        \minimum -100
        \maximum 100
        \required-field
-  A10, \field Maximum Outdoor Temperature Schedule Name
+  A11, \field Maximum Outdoor Temperature Schedule Name
        \type object-list
        \object-list ScheduleNames
        \note This schedule contains the outdoor temperature versus time above which
