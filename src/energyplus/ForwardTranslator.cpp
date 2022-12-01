@@ -67,6 +67,8 @@
 #include "../model/SpaceInfiltrationEffectiveLeakageArea_Impl.hpp"
 #include "../model/SpaceInfiltrationFlowCoefficient.hpp"
 #include "../model/SpaceInfiltrationFlowCoefficient_Impl.hpp"
+#include "../model/SpaceVentilationDesignFlowRate.hpp"
+#include "../model/SpaceVentilationDesignFlowRate_Impl.hpp"
 #include "../model/ElectricEquipmentITEAirCooled.hpp"
 #include "../model/ElectricEquipmentITEAirCooled_Impl.hpp"
 #include "../model/OutputControlTableStyle.hpp"
@@ -2733,6 +2735,11 @@ namespace energyplus {
         retVal = translateSpaceInfiltrationFlowCoefficient(spaceInfiltrationFlowCoefficient);
         break;
       }
+      case openstudio::IddObjectType::OS_SpaceVentilation_DesignFlowRate: {
+        model::SpaceVentilationDesignFlowRate spaceVentilationDesignFlowRate = modelObject.cast<SpaceVentilationDesignFlowRate>();
+        retVal = translateSpaceVentilationDesignFlowRate(spaceVentilationDesignFlowRate);
+        break;
+      }
       case openstudio::IddObjectType::OS_SpaceType: {
         model::SpaceType spaceType = modelObject.cast<SpaceType>();
         retVal = translateSpaceType(spaceType);
@@ -3392,6 +3399,7 @@ namespace energyplus {
     result.push_back(IddObjectType::OS_SpaceInfiltration_DesignFlowRate);
     result.push_back(IddObjectType::OS_SpaceInfiltration_EffectiveLeakageArea);
     result.push_back(IddObjectType::OS_SpaceInfiltration_FlowCoefficient);
+    result.push_back(IddObjectType::OS_SpaceVentilation_DesignFlowRate);
     result.push_back(IddObjectType::OS_Exterior_Lights);
     result.push_back(IddObjectType::OS_Exterior_FuelEquipment);
     result.push_back(IddObjectType::OS_Exterior_WaterEquipment);

@@ -379,6 +379,7 @@ set(${target_name}_src
   ForwardTranslator/ForwardTranslateSpaceInfiltrationDesignFlowRate.cpp
   ForwardTranslator/ForwardTranslateSpaceInfiltrationEffectiveLeakageArea.cpp
   ForwardTranslator/ForwardTranslateSpaceInfiltrationFlowCoefficient.cpp
+  ForwardTranslator/ForwardTranslateSpaceVentilationDesignFlowRate.cpp
   ForwardTranslator/ForwardTranslateStandardGlazing.cpp
   ForwardTranslator/ForwardTranslateStandardOpaqueMaterial.cpp
   ForwardTranslator/ForwardTranslateSteamEquipment.cpp
@@ -772,6 +773,7 @@ set(${target_name}_test_src
   Test/SpaceInfiltrationDesignFlowRate_GTest.cpp
   Test/SpaceInfiltrationEffectiveLeakageArea_GTest.cpp
   Test/SpaceInfiltrationFlowCoefficient_GTest.cpp
+  Test/SpaceVentilationDesignFlowRate_GTest.cpp
   Test/StandardGlazing_GTest.cpp
   Test/SubSurface_GTest.cpp
   Test/Surface_GTest.cpp
