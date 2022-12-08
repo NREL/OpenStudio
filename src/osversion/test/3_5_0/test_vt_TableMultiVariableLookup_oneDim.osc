@@ -1,0 +1,61 @@
+
+OS:Version,
+  {7d636560-53fb-4a89-bde4-7b216efc6d56}, !- Handle
+  3.4.0;                                  !- Version Identifier
+
+OS:Table:MultiVariableLookup,
+  {fcce6cf6-e30f-43d2-90ec-ea1d8074dfa7}, !- Handle
+  CapModFuncOfWaterFlow,                  !- Name
+  EvaluateCurveToLimits,                  !- Interpolation Method
+  ,                                       !- Number of Interpolation Points
+  Quadratic,                              !- Curve Type
+  ,                                       !- Table Data Format
+  ,                                       !- External File Name
+  ,                                       !- X1 Sort Order
+  ,                                       !- X2 Sort Order
+  2.4,                                    !- Normalization Reference
+  0,                                      !- Minimum Value of X1
+  1.33,                                   !- Maximum Value of X1
+  ,                                       !- Minimum Value of X2
+  ,                                       !- Maximum Value of X2
+  ,                                       !- Minimum Value of X3
+  ,                                       !- Maximum Value of X3
+  ,                                       !- Minimum Value of X4
+  ,                                       !- Maximum Value of X4
+  ,                                       !- Minimum Value of X5
+  ,                                       !- Maximum Value of X5
+  0,                                      !- Minimum Table Output
+  2.496,                                  !- Maximum Table Output
+  Dimensionless,                          !- Input Unit Type for X1
+  ,                                       !- Input Unit Type for X2
+  ,                                       !- Input Unit Type for X3
+  ,                                       !- Input Unit Type for X4
+  ,                                       !- Input Unit Type for X5
+  Dimensionless,                          !- Output Unit Type
+  1,                                      !- Number of Independent Variables
+  0,                                      !- Data 1
+  0,                                      !- Data 2
+  0.05,                                   !- Data 3
+  0.0024,                                 !- Data 4
+  0.33333,                                !- Data 5
+  1.704,                                  !- Data 6
+  0.5,                                    !- Data 7
+  2.04,                                   !- Data 8
+  0.666667,                               !- Data 9
+  2.208,                                  !- Data 10
+  0.833333,                               !- Data 11
+  2.328,                                  !- Data 12
+  1,                                      !- Data 13
+  2.4,                                    !- Data 14
+  1.333333,                               !- Data 15
+  2.496;                                  !- Data 16
+
+OS:ComponentData,
+  {63374fa9-3d24-4d4f-b78b-2d8a6dc4dcee}, !- Handle
+  Component Data 1,                       !- Name
+  {7831bb8a-ee8f-4ec6-99fb-010624d3085e}, !- UUID
+  {efbeb962-433c-4766-b774-34f226b711f7}, !- Version UUID
+  1669819063,                             !- Creation Timestamp
+  1669819063,                             !- Version Timestamp
+  {fcce6cf6-e30f-43d2-90ec-ea1d8074dfa7}; !- Name of Object 1
+

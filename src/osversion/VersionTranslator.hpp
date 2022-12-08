@@ -202,6 +202,9 @@ namespace osversion {
 
     void update(const VersionString& startVersion);
 
+    /** Deletes handles from m_untranslated and m_deprecated, and adds handles from m_new */
+    void updateComponentData(IdfFile& idfFile);
+
     std::string defaultUpdate(const IdfFile& idf, const IddFileAndFactoryWrapper& targetIdd);
     std::string update_0_7_1_to_0_7_2(const IdfFile& idf_0_7_1, const IddFileAndFactoryWrapper& idd_0_7_2);
     std::string update_0_7_2_to_0_7_3(const IdfFile& idf_0_7_2, const IddFileAndFactoryWrapper& idd_0_7_3);

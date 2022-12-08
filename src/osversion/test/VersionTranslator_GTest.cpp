@@ -56,7 +56,6 @@
 #include <utilities/idd/OS_Fan_SystemModel_FieldEnums.hxx>
 #include <utilities/idd/OS_Connection_FieldEnums.hxx>
 #include <utilities/idd/OS_Version_FieldEnums.hxx>
-#include <utilities/idd/OS_UnitarySystemPerformance_Multispeed_FieldEnums.hxx>
 #include <utilities/idd/IddEnums.hxx>
 #include "../../utilities/core/Compare.hpp"
 
@@ -2318,6 +2317,79 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_ZoneHVACPackaged) {
     EXPECT_TRUE(fan.isEmpty(OS_Fan_SystemModelFields::MotorLossZoneName));
     EXPECT_EQ(0.0, fan.getDouble(OS_Fan_SystemModelFields::MotorLossRadiativeFraction).get());
     EXPECT_EQ("General", fan.getString(OS_Fan_SystemModelFields::EndUseSubcategory).get());
+  }
+}
+
+TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_TableMultiVariableLookup_oneDim_osc) {
+  openstudio::path p = resourcesPath() / toPath("osversion/3_5_0/test_vt_TableMultiVariableLookup_oneDim.osc");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Component> comp_ = vt.loadComponent(p);
+  ASSERT_TRUE(comp_) << "Failed to load Component " << p;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_0/test_vt_TableMultiVariableLookup_oneDim_updated.osc");
+  comp_->save(outPath, true);
+
+  // Ori OSC has ONE TableMultiVariableLookup object.
+  // We change that to 1 TableLookup, 1 ModelObjectList (=TableIndependentVariableList) and 1 TableIndependentVariable
+  auto compData = comp_->componentData();
+  EXPECT_EQ(3, compData.numComponentObjects());
+
+  Model model;
+  OptionalComponentData ocd = model.insertComponent(comp_.get());
+  ASSERT_TRUE(ocd);
+
+  std::vector<WorkspaceObject> tableLookUps = model.getObjectsByType("OS:Table:Lookup");
+  ASSERT_EQ(1u, tableLookUps.size());
+  ASSERT_EQ(1u, model.getObjectsByType("OS:Table:IndependentVariable").size());
+  ASSERT_EQ(1u, model.getObjectsByType("OS:ModelObjectList").size());
+
+  double norm_ref = 2.4;
+  std::vector<double> x1{0.0, 0.05, 0.33333, 0.5, 0.666667, 0.833333, 1.0, 1.333333};
+  std::vector<double> y{0.0, 0.0024, 1.704, 2.04, 2.208, 2.328, 2.4, 2.496};
+
+  auto& tableLookUp = tableLookUps.front();
+  EXPECT_EQ("CapModFuncOfWaterFlow", tableLookUp.nameString());
+
+  // We have a normalization reference originally, so it's DivisorOnly
+  EXPECT_EQ("DivisorOnly", tableLookUp.getString(3).get());    // Normalization Method
+  EXPECT_EQ(norm_ref, tableLookUp.getDouble(4).get());         // Normalization Divisor
+  EXPECT_EQ(0.0, tableLookUp.getDouble(5).get());              // Minimum Output
+  EXPECT_EQ(1.04 * norm_ref, tableLookUp.getDouble(6).get());  // Maximum Output
+  EXPECT_EQ("Dimensionless", tableLookUp.getString(7).get());  // Output Unit Type
+  EXPECT_TRUE(tableLookUp.isEmpty(8));                         // External File Name
+  EXPECT_TRUE(tableLookUp.isEmpty(9));                         // External File Column Number
+  EXPECT_TRUE(tableLookUp.isEmpty(10));                        // External File Starting Row Number
+  // Output Values
+  ASSERT_EQ(y.size(), tableLookUp.numExtensibleGroups());
+  for (size_t i = 0; auto& eg : tableLookUp.extensibleGroups()) {
+    EXPECT_EQ(y[i], eg.getDouble(0).get());
+    ++i;
+  }
+
+  auto varList_ = tableLookUp.getTarget(2);
+  ASSERT_TRUE(varList_);
+  EXPECT_EQ("CapModFuncOfWaterFlow_IndependentVariableList", varList_->nameString());
+  ASSERT_EQ(1, varList_->numExtensibleGroups());
+  auto var_ = varList_->extensibleGroups().front().cast<WorkspaceExtensibleGroup>().getTarget(0);
+  ASSERT_TRUE(var_);
+  EXPECT_EQ("CapModFuncOfWaterFlow_IndependentVariable_0", var_->nameString());
+
+  // Interpolation = EvaluateCurveToLimits maps to Cubic/Constant
+  EXPECT_EQ("Cubic", var_->getString(2).get());          // Interpolation Method
+  EXPECT_EQ("Constant", var_->getString(3).get());       // Extrapolation Method
+  EXPECT_EQ(0.0, var_->getDouble(4).get());              // Minimum Value
+  EXPECT_EQ(1.33, var_->getDouble(5).get());             // Maximum Value
+  EXPECT_TRUE(var_->isEmpty(6));                         // Normalization Reference Value
+  EXPECT_EQ("Dimensionless", var_->getString(7).get());  // Unit Type
+  EXPECT_TRUE(var_->isEmpty(8));                         // External File Name
+  EXPECT_TRUE(var_->isEmpty(9));                         // External File Column Number
+  EXPECT_TRUE(var_->isEmpty(10));                        // External File Starting Row Number
+
+  // Values
+  ASSERT_EQ(x1.size(), var_->numExtensibleGroups());
+  for (size_t i = 0; auto& eg : var_->extensibleGroups()) {
+    EXPECT_EQ(x1[i], eg.getDouble(0).get());
+    ++i;
   }
 }
 
