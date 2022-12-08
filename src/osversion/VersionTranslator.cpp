@@ -646,8 +646,47 @@ namespace osversion {
         return;
       }
       IdfFile idfFile = *oIdfFile;
+      if (m_isComponent) {
+        updateComponentData(idfFile);
+      }
       m_map[oIdfFile->version()] = idfFile;
       LOG(Debug, "Translation to " << lastVersion.str() << " model has " << oIdfFile->numObjects() << " objects.");
+    }
+  }
+
+  void VersionTranslator::updateComponentData(IdfFile& idfFile) {
+    if (OptionalIddObject oIddObject = idfFile.iddFile().getObject("OS:ComponentData")) {
+      auto compDatas = idfFile.getObjectsByType(*oIddObject);
+      if (compDatas.empty()) {
+        return;
+      }
+
+      std::set<std::string> newHandles;
+      std::transform(m_new.cbegin(), m_new.cend(), std::inserter(newHandles, newHandles.begin()), [](const auto& n) { return n.getString(0).get(); });
+
+      std::set<std::string> deletedHandles;
+      std::transform(m_untranslated.cbegin(), m_untranslated.cend(), std::inserter(deletedHandles, deletedHandles.begin()),
+                     [](const auto& n) { return n.getString(0).get(); });
+      std::transform(m_deprecated.cbegin(), m_deprecated.cend(), std::inserter(deletedHandles, deletedHandles.begin()),
+                     [](const auto& n) { return n.getString(0).get(); });
+
+      std::erase_if(newHandles, [&deletedHandles](auto& s) { return deletedHandles.contains(s); });
+
+      // There should really be only one ComponentData object anyways, it'll throw in the Component ctor later if not...
+      for (auto& compData : compDatas) {
+        std::set<std::string> currentHandles;
+        auto egs = compData.extensibleGroups();
+        std::transform(egs.cbegin(), egs.cend(), std::inserter(currentHandles, currentHandles.begin()),
+                       [](const auto& eg) { return eg.getString(0).get(); });
+
+        std::erase_if(currentHandles, [&deletedHandles](auto& s) { return deletedHandles.contains(s); });
+        currentHandles.insert(newHandles.begin(), newHandles.end());
+
+        compData.clearExtensibleGroups();
+        for (auto& handle : currentHandles) {
+          compData.pushExtensibleGroup({handle});
+        }
+      }
     }
   }
 
