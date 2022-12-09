@@ -5612,6 +5612,10 @@ boost::optional<model::ModelObject> ReverseTranslator::translateTrmlUnit(const p
 
     model::AirTerminalSingleDuctConstantVolumeNoReheat terminal(model,schedule);
 
+    if( availSch ) {
+      terminal.setAvailabilitySchedule(availSch.get());
+    }
+
     // PriAirFlow
     if( primaryAirFlow )
     {
