@@ -2406,9 +2406,10 @@ TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_UnitarySystemPerformanceMultispee
   ASSERT_EQ(1u, perfs.size());
   WorkspaceObject perf = perfs[0];
 
-  EXPECT_EQ("Unitary System Performance Multispeed 1", perf.getString(OS_UnitarySystemPerformance_MultispeedFields::Name).get());
-  EXPECT_EQ("No", perf.getString(OS_UnitarySystemPerformance_MultispeedFields::SingleModeOperation).get());
-  EXPECT_EQ(1.0, perf.getDouble(OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio).get());
+  EXPECT_EQ("Unitary System Performance Multispeed 1", perf.nameString());
+  EXPECT_EQ("No", perf.getString(2).get());  // OS_UnitarySystemPerformance_MultispeedFields::SingleModeOperation
+  EXPECT_EQ(1.0, perf.getDouble(3).get());   // OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio
+
   EXPECT_EQ(2u, perf.numExtensibleGroups());
   auto eg1 = perf.extensibleGroups()[0];
   EXPECT_EQ(1.0, eg1.getDouble(0, false).get());
