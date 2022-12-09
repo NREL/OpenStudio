@@ -7671,8 +7671,7 @@ namespace osversion {
         IdfObject newObject(iddObject.get());
 
         for (size_t i = 0; i < object.numFields(); ++i) {
-          auto value = object.getString(i);
-          if (value) {
+          if ((value = object.getString(i))) {
             if (i < 3) {
               newObject.setString(i, value.get());
             } else {
