@@ -2392,3 +2392,29 @@ TEST_F(OSVersionFixture, update_3_4_0_to_3_5_0_TableMultiVariableLookup_oneDim_o
     ++i;
   }
 }
+
+TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_UnitarySystemPerformanceMultispeed) {
+  openstudio::path path = resourcesPath() / toPath("osversion/3_5_1/test_vt_UnitarySystemPerformanceMultispeed.osm");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Model> model = vt.loadModel(path);
+  ASSERT_TRUE(model) << "Failed to load " << path;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_1/test_vt_UnitarySystemPerformanceMultispeed_updated.osm");
+  model->save(outPath, true);
+
+  std::vector<WorkspaceObject> perfs = model->getObjectsByType("OS:UnitarySystemPerformance:Multispeed");
+  ASSERT_EQ(1u, perfs.size());
+  WorkspaceObject perf = perfs[0];
+
+  EXPECT_EQ("Unitary System Performance Multispeed 1", perf.nameString());
+  EXPECT_EQ("No", perf.getString(2).get());  // OS_UnitarySystemPerformance_MultispeedFields::SingleModeOperation
+  EXPECT_EQ(1.0, perf.getDouble(3).get());   // OS_UnitarySystemPerformance_MultispeedFields::NoLoadSupplyAirFlowRateRatio
+
+  EXPECT_EQ(2u, perf.numExtensibleGroups());
+  auto eg1 = perf.extensibleGroups()[0];
+  EXPECT_EQ(1.0, eg1.getDouble(0, false).get());
+  EXPECT_EQ(2.0, eg1.getDouble(1, false).get());
+  auto eg2 = perf.extensibleGroups()[1];
+  EXPECT_EQ("autosize", eg2.getString(0, false).get());
+  EXPECT_EQ(3.0, eg2.getDouble(1, false).get());
+}

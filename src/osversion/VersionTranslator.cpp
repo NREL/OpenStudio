@@ -149,7 +149,8 @@ namespace osversion {
     m_updateMethods[VersionString("3.3.0")] = &VersionTranslator::update_3_2_1_to_3_3_0;
     m_updateMethods[VersionString("3.4.0")] = &VersionTranslator::update_3_3_0_to_3_4_0;
     m_updateMethods[VersionString("3.5.0")] = &VersionTranslator::update_3_4_0_to_3_5_0;
-    m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::defaultUpdate;
+    m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::update_3_5_0_to_3_5_1;
+    // m_updateMethods[VersionString("3.5.1")] = &VersionTranslator::defaultUpdate;
 
     // List of previous versions that may be updated to this one.
     //   - To increment the translator, add an entry for the version just released (branched for release).
@@ -7650,9 +7651,49 @@ namespace osversion {
 
   }  // end update_3_4_0_to_3_5_0
 
-  /*   std::string VersionTranslator::update_3_5_0_to_3_5_1(const IdfFile& idf_3_5_0, const IddFileAndFactoryWrapper& idd_3_5_1) {
+  std::string VersionTranslator::update_3_5_0_to_3_5_1(const IdfFile& idf_3_5_0, const IddFileAndFactoryWrapper& idd_3_5_1) {
+    std::stringstream ss;
+    boost::optional<std::string> value;
 
-  }  // end update_3_5_0_to_3_5_1 */
+    ss << idf_3_5_0.header() << '\n' << '\n';
+    IdfFile targetIdf(idd_3_5_1.iddFile());
+    ss << targetIdf.versionObject().get();
+
+    for (const IdfObject& object : idf_3_5_0.objects()) {
+      auto iddname = object.iddObject().name();
+
+      if (iddname == "OS:UnitarySystemPerformance:Multispeed") {
+
+        // 1 Field has been added from 3.5.0 to 3.5.1:
+        // ----------------------------------------------
+        // * No Load Supply Air Flow Rate Ratio * 3
+        auto iddObject = idd_3_5_1.getObject(iddname);
+        IdfObject newObject(iddObject.get());
+
+        for (size_t i = 0; i < object.numFields(); ++i) {
+          if ((value = object.getString(i))) {
+            if (i < 3) {
+              newObject.setString(i, value.get());
+            } else {
+              newObject.setString(i + 1, value.get());
+            }
+          }
+        }
+
+        newObject.setDouble(3, 1.0);
+
+        m_refactored.push_back(RefactoredObjectData(object, newObject));
+        ss << newObject;
+
+        // No-op
+      } else {
+        ss << object;
+      }
+    }
+
+    return ss.str();
+
+  }  // end update_3_5_0_to_3_5_1
 
 }  // namespace osversion
 }  // namespace openstudio
