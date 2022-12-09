@@ -5711,6 +5711,18 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateFlui
     sizingPlant.setLoopType("Condenser");
   }
 
+  auto maxTemp = lexicalCastToDouble(fluidSysElement.child("MaxTemp"));
+  if (maxTemp) {
+    maxTemp = unitToUnit(maxTemp.get(), "F", "C").get();
+    plantLoop.setMaximumLoopTemperature(maxTemp.get());
+  }
+
+  auto minTemp = lexicalCastToDouble(fluidSysElement.child("MinTemp"));
+  if (minTemp) {
+    minTemp = unitToUnit(minTemp.get(), "F", "C").get();
+    plantLoop.setMinimumLoopTemperature(minTemp.get());
+  }
+
   auto addBranchPump = [&](boost::optional<model::ModelObject> mo, pugi::xml_node baseElement){
     auto pumpElement = baseElement.child("Pump");
     if (pumpElement)
