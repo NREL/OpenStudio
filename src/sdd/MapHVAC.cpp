@@ -1026,8 +1026,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   model::Node supplyOutletNode = airLoopHVAC.supplyOutletNode();
   model::Node supplyInletNode = airLoopHVAC.supplyInletNode();
 
-  // TODO: this is unused!
-  [[maybe_unused]] pugi::xml_node airSystemClgCtrlElement = airSystemElement.child("ClgCtrl");
   pugi::xml_node airHndlrAvailSchElement = airSystemElement.child("AvailSchRef");
 
   // Availability Schedule
@@ -1956,8 +1954,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     }
   };
 
-  boost::optional<model::HVACComponent> deckSPM;
-
   if( istringEqual(clgCtrlElement.text().as_string(),"Fixed") )
   {
     model::ScheduleRuleset schedule(model);
@@ -1980,17 +1976,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     }
 
     model::SetpointManagerScheduled spm(model,schedule);
-
-    deckSPM = spm;
-
     spm.addToNode(supplyOutletNode);
   }
   else if(istringEqual(clgCtrlElement.text().as_string(),"NoSATControl"))
   {
     model::SetpointManagerSingleZoneReheat spm(model);
-
-    deckSPM = spm;
-
     spm.addToNode(supplyOutletNode);
 
     if( istringEqual("SZVAVAC",airSystemTypeElement.text().as_string()) ||
@@ -2004,7 +1994,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   {
     model::SetpointManagerWarmestTemperatureFlow spm(model);
     spm.setStrategy("FlowFirst");
-    deckSPM = spm;
     spm.addToNode(supplyOutletNode);
 
     pugi::xml_node clRstSupHiElement = airSystemElement.child("ClRstSupHi");
@@ -2031,7 +2020,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   {
     model::SetpointManagerWarmestTemperatureFlow spm(model);
     spm.setStrategy("TemperatureFirst");
-    deckSPM = spm;
     spm.addToNode(supplyOutletNode);
 
     pugi::xml_node clRstSupHiElement = airSystemElement.child("ClRstSupHi");
@@ -2057,7 +2045,6 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
   else if( istringEqual(clgCtrlElement.text().as_string(),"WarmestReset") )
   {
     model::SetpointManagerWarmest spm(model);
-    deckSPM = spm;
     spm.addToNode(supplyOutletNode);
 
     pugi::xml_node clRstSupHiElement = airSystemElement.child("ClRstSupHi");
@@ -2092,17 +2079,11 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
     }
 
     model::SetpointManagerScheduled spm(model,schedule.get());
-
-    deckSPM = spm;
-
     spm.addToNode(supplyOutletNode);
   }
   else if( istringEqual(clgCtrlElement.text().as_string(),"OutsideAirReset") )
   {
     model::SetpointManagerOutdoorAirReset spm(model);
-
-    deckSPM = spm;
-
     spm.addToNode(supplyOutletNode);
 
     boost::optional<double> rstSupHi;
@@ -2164,6 +2145,92 @@ boost::optional<openstudio::model::ModelObject> ReverseTranslator::translateAirS
       spm.setSetpointatOutdoorLowTemperature(22.0);
       spm.setOutdoorHighTemperature(24.0);
       spm.setSetpointatOutdoorHighTemperature(10.0);
+    }
+  }
+  else if( istringEqual(clgCtrlElement.text().as_string(),"OutsideAirResetDualSetpoint") )
+  {
+    // Add a default SingleZoneReheat to satisfy need to have SPM on the supplyOutletNode
+    model::SetpointManagerSingleZoneReheat singleZoneReheat(model);
+    singleZoneReheat.addToNode(supplyOutletNode);
+
+    const auto createSPMOutsideAirReset = [&](
+        const double& rstOutdrHi,
+        const double& rstSPHi,
+        const double& rstOutdrLow,
+        const double& rstSPLow
+    ) {
+      model::SetpointManagerOutdoorAirReset spm(model);
+
+      spm.setOutdoorHighTemperature(rstOutdrHi);
+      spm.setSetpointatOutdoorHighTemperature(rstSPHi);
+      spm.setOutdoorLowTemperature(rstOutdrLow);
+      spm.setSetpointatOutdoorLowTemperature(rstSPLow);
+
+      return spm;
+    };
+
+    auto clRstSupLow = lexicalCastToDouble(airSystemElement.child("ClRstSupLow"));
+    if( clRstSupLow ) {
+      clRstSupLow = unitToUnit(clRstSupLow.get(),"F","C").get();
+    }
+    auto clRstOutdrLow = lexicalCastToDouble(airSystemElement.child("ClRstOutdrLow"));
+    if( clRstOutdrLow ) {
+      clRstOutdrLow = unitToUnit(clRstOutdrLow.get(),"F","C").get();
+    }
+    auto clRstSupHi = lexicalCastToDouble(airSystemElement.child("ClRstSupHi"));
+    if( clRstSupHi ) {
+      clRstSupHi = unitToUnit(clRstSupHi.get(),"F","C").get();
+    }
+    auto clRstOutdrHi = lexicalCastToDouble(airSystemElement.child("ClRstOutdrHi"));
+    if( clRstOutdrHi ) {
+      clRstOutdrHi = unitToUnit(clRstOutdrHi.get(),"F","C").get();
+    }
+
+    if (clRstSupLow && clRstOutdrLow && clRstSupHi && clRstOutdrHi) {
+      for (const auto &comp : coolingComponents) {
+        auto spm = createSPMOutsideAirReset(clRstOutdrHi.get(), clRstSupHi.get(), clRstOutdrLow.get(), clRstSupLow.get());
+        auto straightComp = comp.optionalCast<model::StraightComponent>();
+        auto waterToAirComp = comp.optionalCast<model::WaterToAirComponent>();
+        if (straightComp) {
+          auto node = straightComp->outletModelObject()->cast<model::Node>();
+          spm.addToNode(node);
+        } else if (waterToAirComp) {
+          auto node = waterToAirComp->airOutletModelObject()->cast<model::Node>();
+          spm.addToNode(node);
+        }
+      }
+    }
+
+    auto htRstSupLow = lexicalCastToDouble(airSystemElement.child("HtRstSupLow"));
+    if( htRstSupLow ) {
+      htRstSupLow = unitToUnit(htRstSupLow.get(),"F","C").get();
+    }
+    auto htRstOutdrLow = lexicalCastToDouble(airSystemElement.child("HtRstOutdrLow"));
+    if( htRstOutdrLow ) {
+      htRstOutdrLow = unitToUnit(htRstOutdrLow.get(),"F","C").get();
+    }
+    auto htRstSupHi = lexicalCastToDouble(airSystemElement.child("HtRstSupHi"));
+    if( htRstSupHi ) {
+      htRstSupHi = unitToUnit(htRstSupHi.get(),"F","C").get();
+    }
+    auto htRstOutdrHi = lexicalCastToDouble(airSystemElement.child("HtRstOutdrHi"));
+    if( htRstOutdrHi ) {
+      htRstOutdrHi = unitToUnit(htRstOutdrHi.get(),"F","C").get();
+    }
+
+    if (htRstSupLow && htRstOutdrLow && htRstSupHi && htRstOutdrHi) {
+      for (const auto &comp : heatingComponents) {
+        auto spm = createSPMOutsideAirReset(htRstOutdrHi.get(), htRstSupHi.get(), htRstOutdrLow.get(), htRstSupLow.get());
+        auto straightComp = comp.optionalCast<model::StraightComponent>();
+        auto waterToAirComp = comp.optionalCast<model::WaterToAirComponent>();
+        if (straightComp) {
+          auto node = straightComp->outletModelObject()->cast<model::Node>();
+          spm.addToNode(node);
+        } else if (waterToAirComp) {
+          auto node = waterToAirComp->airOutletModelObject()->cast<model::Node>();
+          spm.addToNode(node);
+        }
+      }
     }
   }
   else if( istringEqual(clgCtrlElement.text().as_string(),"FixedDualSetpoint") )
