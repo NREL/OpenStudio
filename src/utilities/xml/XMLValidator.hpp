@@ -69,6 +69,10 @@ class UTILITIES_API XMLValidator
    * - `*.xslt` => Schematron that is already transformed to an XSLT stylesheet */
   explicit XMLValidator(const openstudio::path& schemaPath);
   ~XMLValidator();
+  XMLValidator(const XMLValidator& other) = default;
+  XMLValidator(XMLValidator&& other) noexcept = default;
+  XMLValidator& operator=(const XMLValidator& other) = default;
+  XMLValidator& operator=(XMLValidator&& other) noexcept = default;
 
   static XMLValidator gbxmlValidator();
 
