@@ -135,28 +135,37 @@ TEST_F(XMLValidatorFixture, XMLValidator_HPXMLvalidator_Schematron) {
   openstudio::path xmlPath = resourcesPath() / openstudio::toPath("utilities/xml/hpxml_with_error.xml");
   openstudio::path schematronPath = resourcesPath() / openstudio::toPath("utilities/xml/schema/HPXMLvalidator.xml");
 
-  XMLValidator xmlValidator(schematronPath);
-  EXPECT_FALSE(xmlValidator.xmlPath());
+  openstudio::path tmpDir;
+  {
+    XMLValidator xmlValidator(schematronPath);
+    EXPECT_FALSE(xmlValidator.xmlPath());
+    EXPECT_NE(schematronPath, xmlValidator.schemaPath());
+    tmpDir = xmlValidator.schemaPath().parent_path();
+    EXPECT_TRUE(openstudio::filesystem::exists(tmpDir));
+    EXPECT_TRUE(openstudio::filesystem::is_directory(tmpDir));
 
-  for (int i = 0; i < 2; ++i) {
-    EXPECT_FALSE(xmlValidator.validate(xmlPath)) << "Failed at iteration " << i + 1;
-    EXPECT_FALSE(xmlValidator.isValid());
+    for (int i = 0; i < 2; ++i) {
+      EXPECT_FALSE(xmlValidator.validate(xmlPath)) << "Failed at iteration " << i + 1;
+      EXPECT_FALSE(xmlValidator.isValid());
 
-    ASSERT_TRUE(xmlValidator.xmlPath());
-    EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
+      ASSERT_TRUE(xmlValidator.xmlPath());
+      EXPECT_EQ(xmlPath, xmlValidator.xmlPath().get());
 
-    ASSERT_TRUE(xmlValidator.fullValidationReport());
-    EXPECT_NE("", xmlValidator.fullValidationReport().get());
-    EXPECT_EQ(0, xmlValidator.warnings().size());
+      ASSERT_TRUE(xmlValidator.fullValidationReport());
+      EXPECT_NE("", xmlValidator.fullValidationReport().get());
+      EXPECT_EQ(0, xmlValidator.warnings().size());
 
-    auto errors = xmlValidator.errors();
-    ASSERT_EQ(1, errors.size()) << "Failed at iteration " << i + 1;
-    EXPECT_EQ(LogLevel::Error, errors[0].logLevel());
-    EXPECT_EQ("xsltValidate: Expected EventType to be 'audit' or 'proposed workscope' or 'approved workscope' or "
-              "'construction-period testing/daily test out' or 'job completion testing/final inspection' or "
-              "'quality assurance/monitoring' or 'preconstruction'",
-              errors[0].logMessage());
+      auto errors = xmlValidator.errors();
+      ASSERT_EQ(1, errors.size()) << "Failed at iteration " << i + 1;
+      EXPECT_EQ(LogLevel::Error, errors[0].logLevel());
+      EXPECT_EQ("xsltValidate: Expected EventType to be 'audit' or 'proposed workscope' or 'approved workscope' or "
+                "'construction-period testing/daily test out' or 'job completion testing/final inspection' or "
+                "'quality assurance/monitoring' or 'preconstruction'",
+                errors[0].logMessage());
+    }
   }
+  // #4761 - XMLValidator's dtor should clean up the tmpDir
+  EXPECT_FALSE(openstudio::filesystem::exists(tmpDir)) << "Expected tmpDir to be deleted: " << tmpDir;
 }
 
 TEST_F(XMLValidatorFixture, XMLValidator_schematronToXslt) {
