@@ -68,6 +68,7 @@ class UTILITIES_API XMLValidator
    * - `*.xml` or `*.sct` => Schematron (convert to XSLT then validate)
    * - `*.xslt` => Schematron that is already transformed to an XSLT stylesheet */
   explicit XMLValidator(const openstudio::path& schemaPath);
+  ~XMLValidator();
 
   static XMLValidator gbxmlValidator();
 
@@ -115,6 +116,8 @@ class UTILITIES_API XMLValidator
 
   openstudio::path m_schemaPath;
   boost::optional<openstudio::path> m_xmlPath;
+
+  boost::optional<openstudio::path> m_tempDir;
 
   XMLValidatorType m_validatorType;
 
