@@ -15,21 +15,21 @@ jobs:
         name: [Ubuntu, macOS, Windows64, Windows32]
         include:
         - name: Ubuntu
-          os: ubuntu-18.04
+          os: ubuntu-20.04
         - name: macOS
           os: macos-10.15
         - name: Windows64
-          os: windows-2019
+          os: windows-latest
         - name: Windows32
-          os: windows-2019
+          os: windows-latest
 
     steps:
       - name: "Checkout develop Branch"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ref: develop
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.8.x'
 
@@ -54,7 +54,7 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release \
                 -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF \
-                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF \
+                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_PYTHON_BINDINGS=OFF -DBUILD_CLI=OFF \
                 -DBUILD_PACKAGE=OFF \
                 ../
           
@@ -72,7 +72,7 @@ jobs:
           cd build
           cmake -DCMAKE_BUILD_TYPE=Release \
                 -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF \
-                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF \
+                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_PYTHON_BINDINGS=OFF -DBUILD_CLI=OFF \
                 -DBUILD_PACKAGE=OFF \
                 ../
 
@@ -80,29 +80,39 @@ jobs:
 
       - name: Compile Windows 64
         if: matrix.name == 'Windows64'
-        uses: lukka/run-cmake@v2
-        with:
-          cmakeGenerator: VS16Win64
-          cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
-          cmakeListsTxtPath: ${{ github.workspace }}/CMakeLists.txt
-          cmakeBuildType: Release
-          cmakeAppendedArgs: '-DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF'
-          buildWithCMakeArgs: "--config Release -j2"
-          buildDirectory: ${{ github.workspace }}/build
-          buildWithCMake: true
+        shell: cmd
+        run: |
+          mkdir build
+          cd build
+          cmake -G "Visual Studio 17 2022" -A x64 ^
+                -DCMAKE_BUILD_TYPE=Release ^
+                -DBUILD_CSHARP_BINDINGS=ON  -DBUILD_NUGET_PACKAGE=OFF ^
+                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_PYTHON_BINDINGS=OFF -DBUILD_CLI=OFF ^
+                -DBUILD_PACKAGE=OFF ^
+                ../
+          cmake --build . --verbose --config Release -j 2
+
+
+      - name: Install Dotnet x86
+        if: matrix.name == 'Windows32'
+        run: |
+          Invoke-WebRequest 'https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.1/dotnet-runtime-7.0.1-win-x86.exe' -OutFile './dotnet-runtime-7.0.1-win-x86.exe'
+          ./dotnet-runtime-7.0.1-win-x86.exe /install /quiet /norestart
+          dotnet --info
 
       - name: Compile Windows 32
         if: matrix.name == 'Windows32'
-        uses: lukka/run-cmake@v2
-        with:
-          cmakeGenerator: VS16Win32
-          cmakeListsOrSettingsJson: CMakeListsTxtAdvanced
-          cmakeListsTxtPath: ${{ github.workspace }}/CMakeLists.txt
-          cmakeBuildType: Release
-          cmakeAppendedArgs: '-A Win32 -DCMAKE_BUILD_TYPE=Release -DBUILD_CSHARP_BINDINGS=ON -DBUILD_NUGET_PACKAGE=OFF -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_CLI=OFF -DBUILD_PACKAGE=OFF'
-          buildWithCMakeArgs: "--config Release -j2"
-          buildDirectory: ${{ github.workspace }}/build
-          buildWithCMake: true
+        shell: cmd
+        run: |
+          mkdir build
+          cd build
+          cmake  -G "Visual Studio 17 2022" -A Win32 ^
+                -DCMAKE_BUILD_TYPE=Release ^
+                -DBUILD_CSHARP_BINDINGS=ON  -DBUILD_NUGET_PACKAGE=OFF ^
+                -DBUILD_TESTING=OFF -DBUILD_RUBY_BINDINGS=OFF -DBUILD_PYTHON_BINDINGS=OFF -DBUILD_CLI=OFF ^
+                -DBUILD_PACKAGE=OFF ^
+                ../
+          cmake --build . --verbose --config Release -j 2
 
 
       - name: build nuget for Windows
@@ -145,37 +155,7 @@ jobs:
           echo "Listing ./build/Products/=========================================="
           ls -R ./build/Products
 
-
-      - name: Tests on Windows for x64
-        if: matrix.name == 'Windows64'
-        run: |
-          cd csharp/examples/OpenStudio.Tests/
-          dotnet remove package OpenStudio 
-          dotnet restore OpenStudio.Tests.csproj
-          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
-          echo "Testing for both Net5 and Net45"
-          dotnet test OpenStudio.Tests.csproj /p:Platform=x64
-
-      - name: Tests on Windows for x32
-        if: matrix.name == 'Windows32'
-        run: |
-          cd csharp/examples/OpenStudio.Tests/
-          dotnet remove package OpenStudio 
-          dotnet restore OpenStudio.Tests.csproj
-          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
-          echo "Testing for both Net5 and Net45"
-          dotnet test OpenStudio.Tests.csproj /p:Platform=x86
-
-
-      - name: Tests dotnet 5 on Mac and Linux
-        if: runner.os != 'Windows'
-        run: |
-          cd csharp/examples/OpenStudio.Tests/
-          dotnet remove package OpenStudio 
-          dotnet restore OpenStudio.Tests.csproj
-          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../build/Products/csharp/Release"
-          dotnet test OpenStudio.Tests.csproj -f NET5 /p:Platform=x64
-
+  
       - name: Zip Build/Source Artifact
         if: runner.os != 'Windows'
         run: |
@@ -191,20 +171,20 @@ jobs:
           
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: CSharp_${{ matrix.name }}
           path: CSharp_${{ matrix.name }}.zip
 
       - name: Upload artifact generated_sources
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: CSharp_${{ matrix.name }}_Src
           path: CSharp_${{ matrix.name }}_Src.zip
 
       - name: Upload artifact (if failed)
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.name }}_Failed
           path: |
@@ -213,22 +193,23 @@ jobs:
 
 
   Test_Windows:
-    name: "Merge x86 and x64 nuget packages for windows"
+    name: "Test x86 and x64 nuget packages for windows"
     runs-on: windows-latest
     timeout-minutes: 20
     needs: build-csharp
 
     steps:
       - name: "Checkout Master Branch"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+
       
       - name: Download CSharp_Windows32
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: CSharp_Windows32
 
       - name: Download CSharp_Windows64
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: CSharp_Windows64
 
@@ -272,22 +253,35 @@ jobs:
           ls
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
-          name: nugetPackage
+          name: CSharp_Windows_x64x86
           path: x64x86\OpenStudio.nupkg
+
+      - name: Install Dotnet x86
+        run: |
+          Invoke-WebRequest 'https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.1/dotnet-runtime-7.0.1-win-x86.exe' -OutFile './dotnet-runtime-7.0.1-win-x86.exe'
+          ./dotnet-runtime-7.0.1-win-x86.exe /install /quiet /norestart
+          dotnet --info
 
       - name: Tests on Windows
         run: |
+          $VERSION = (Get-Item x64x86\build\netstandard2.0\x64\OpenStudio.dll).VersionInfo.FileVersion
+          echo $VERSION
+          cp *.nupkg csharp/examples/OpenStudio.Tests/
           cd csharp/examples/OpenStudio.Tests/
-          dotnet remove package OpenStudio 
+          ls
+          
+          dotnet remove OpenStudio.Tests.csproj package OpenStudio
+          dotnet remove OpenStudio.Tests.x86.csproj package OpenStudio  
           dotnet restore OpenStudio.Tests.csproj
-          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../"
+          dotnet restore OpenStudio.Tests.x86.csproj
+          dotnet add OpenStudio.Tests.csproj package OpenStudio -s "." -v $VERSION
+          dotnet add OpenStudio.Tests.x86.csproj package OpenStudio -s "." -v $VERSION
 
-
-          dotnet test OpenStudio.Tests.csproj /p:Platform=x64
-          dotnet clean
-          dotnet test OpenStudio.Tests.csproj /p:Platform=x86
+          dotnet test OpenStudio.Tests.csproj --arch x64
+          dotnet clean OpenStudio.Tests.csproj
+          dotnet test OpenStudio.Tests.x86.csproj --arch x86
 
   Test_Mac_ubuntu:
     name: "Test x64 nuget packages for macos and ubuntu"
@@ -299,18 +293,18 @@ jobs:
         name: [Ubuntu, macOS]
         include:
         - name: Ubuntu
-          os: ubuntu-18.04
+          os: ubuntu-latest
         - name: macOS
-          os: macos-10.15
+          os: macos-latest
     timeout-minutes: 20
     needs: build-csharp
 
     steps:
       - name: "Checkout Master Branch"
-        uses: actions/checkout@v2
-      
+        uses: actions/checkout@v3
+
       - name: Download nuget
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: CSharp_${{ matrix.name }}
 
@@ -323,12 +317,12 @@ jobs:
       - name: Tests
         run: |
           cd csharp/examples/OpenStudio.Tests/
-          dotnet remove package OpenStudio 
+          dotnet remove OpenStudio.Tests.csproj package OpenStudio 
           dotnet restore OpenStudio.Tests.csproj
           dotnet add OpenStudio.Tests.csproj package OpenStudio -s "./../../../nuget"
 
-          dotnet clean
-          dotnet test OpenStudio.Tests.csproj -f NET5 /p:Platform=x64
+          dotnet clean OpenStudio.Tests.csproj
+          dotnet test OpenStudio.Tests.csproj --arch x64
 
         
           
