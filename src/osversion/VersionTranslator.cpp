@@ -675,13 +675,18 @@ namespace osversion {
 
       // There should really be only one ComponentData object anyways, it'll throw in the Component ctor later if not...
       for (auto& compData : compDatas) {
-        std::set<std::string> currentHandles;
+        // We want to preserve the original order, so primary Object stays the same... so we don't use a set
+        std::vector<std::string> currentHandles;
         auto egs = compData.extensibleGroups();
-        std::transform(egs.cbegin(), egs.cend(), std::inserter(currentHandles, currentHandles.begin()),
-                       [](const auto& eg) { return eg.getString(0).get(); });
+        std::transform(egs.cbegin(), egs.cend(), std::back_inserter(currentHandles), [](const auto& eg) { return eg.getString(0).get(); });
 
         std::erase_if(currentHandles, [&deletedHandles](auto& s) { return deletedHandles.contains(s); });
-        currentHandles.insert(newHandles.begin(), newHandles.end());
+
+        currentHandles.reserve(currentHandles.size() + newHandles.size());
+        // m_new isn 't cleared between distinct version updates, so we can't bindly copy everything.
+        std::copy_if(
+          std::make_move_iterator(newHandles.begin()), std::make_move_iterator(newHandles.end()), std::back_inserter(currentHandles),
+          [&currentHandles](const auto& elem) { return std::find(currentHandles.begin(), currentHandles.end(), elem) == currentHandles.end(); });
 
         compData.clearExtensibleGroups();
         for (auto& handle : currentHandles) {
