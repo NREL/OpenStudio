@@ -2441,3 +2441,28 @@ TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_VRF_Terminal_v350_osc) {
   EXPECT_EQ(19, model.numObjects());
   EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", ocd->primaryComponentObject().iddObject().name());
 }
+
+TEST_F(OSVersionFixture, update_3_5_0_to_3_5_1_VRF_Terminal_v340_osc) {
+  // Here the starting version is 3.4.0, so it has only 12 objects to start with
+  openstudio::path p = resourcesPath() / toPath("osversion/3_5_1/test_VRF_Terminal_v340.osc");
+  osversion::VersionTranslator vt;
+  boost::optional<model::Component> comp_ = vt.loadComponent(p);
+  ASSERT_TRUE(comp_) << "Failed to load Component " << p;
+
+  openstudio::path outPath = resourcesPath() / toPath("osversion/3_5_1/test_VRF_Terminal_v340_updated.osc");
+  comp_->save(outPath, true);
+
+  // Ori OSC has ONE TableMultiVariableLookup object.
+  // We change that to 1 TableLookup, 1 ModelObjectList (=TableIndependentVariableList) and 1 TableIndependentVariable
+  auto compData = comp_->componentData();
+  EXPECT_EQ(18, compData.numComponentObjects());
+  EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", compData.primaryComponentObject().iddObject().name());
+
+  Model model;
+  OptionalComponentData ocd = model.insertComponent(comp_.get());
+  ASSERT_TRUE(ocd);
+  EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", compData.primaryComponentObject().iddObject().name());
+  EXPECT_EQ(18, ocd->numComponentObjects());
+  EXPECT_EQ(19, model.numObjects());
+  EXPECT_EQ("OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow", ocd->primaryComponentObject().iddObject().name());
+}
