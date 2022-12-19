@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>NET7</TargetFrameworks>
     <IsPackable>false</IsPackable>
-    <Platform>x64</Platform>
+    <Platform>x86</Platform>
   </PropertyGroup>
 
   <ItemGroup>
