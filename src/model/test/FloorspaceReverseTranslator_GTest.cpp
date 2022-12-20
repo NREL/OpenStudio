@@ -255,7 +255,9 @@ void CompareTwoModels(Model& model, Model& baseline) {
 
     // Check space surfaces and subsurfaces
     EXPECT_EQ(space.surfaces().size(), match->surfaces().size());
-
+    if (space.surfaces().size() != match->surfaces().size()) {
+      EXPECT_EQ(*space.name(), "Test");
+    }
     for (auto& surface1 : space.surfaces()) {
       std::string name1 = *surface1.name();
       bool matchedSurface = false;
@@ -1388,4 +1390,143 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_Site_ClimateZones_4
   ASSERT_TRUE(newModel_->getOptionalUniqueModelObject<Building>());
   EXPECT_EQ(-30.0, newModel_->getOptionalUniqueModelObject<Building>()->northAxis());
   EXPECT_FALSE(newModel_->getOptionalUniqueModelObject<Building>()->nominalFloortoFloorHeight());
+}
+
+void ShiftVertices(Model& model) {
+  BoundingBox bb;
+  auto spaces = model.getConcreteModelObjects<Space>();
+  for (const auto& space : spaces) {
+    for (const auto& surface : space.surfaces()) {
+      if (surface.surfaceType() == "Floor") {
+        bb.addPoints(surface.vertices());
+      }
+    }
+  }
+  double x = (*bb.minX() + *bb.maxX()) / 2.0;
+  double y = (*bb.minY() + *bb.maxY()) / 2.0;
+
+  auto surfaces = model.getConcreteModelObjects<Surface>();
+  for (auto& surface : surfaces) {
+    Point3dVector v;
+    for (auto& vertex : surface.vertices()) {
+      v.push_back(Point3d(vertex.x() - x, vertex.y() - y, vertex.z()));
+    }
+    surface.setVertices(v);
+  }
+
+  auto subSurfaces = model.getConcreteModelObjects<SubSurface>();
+  for (auto& subSurface : subSurfaces) {
+    Point3dVector v;
+    for (auto& vertex : subSurface.vertices()) {
+      v.push_back(Point3d(vertex.x() - x, vertex.y() - y, vertex.z()));
+    }
+    subSurface.setVertices(v);
+  }
+}
+
+TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4766) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan_mcve.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  ShiftVertices(*model);
+  model->save(resourcesPath() / toPath("utilities/Geometry/floorplan_mcve_threejs.osm"), true);
+
+  FloorspaceReverseTranslator frt;
+  boost::optional<Model> model1 = frt.modelFromFloorspace(toString(p));
+  ASSERT_TRUE(model1);
+
+  ShiftVertices(*model1);
+  model1->save(resourcesPath() / toPath("utilities/Geometry/floorplan_mcve_direct.osm"), true);
+
+  CompareTwoModels(*model1, *model);
+}
+
+// It was noticed that the ThreeJS import had a missing subsurface on the external wall of Space 1-10 and
+// also that the surface should have been split into an internal section and an external section which
+// it was not. The direct floorspace imporrt did not have these issues. This test verifies that issue
+// has been fixed (albeit inadvertently!)
+TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4222) {
+
+  ThreeJSReverseTranslator rt;
+
+  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/issue-4222.json");
+  ASSERT_TRUE(exists(p));
+
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  boost::optional<Model> model = rt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model);
+
+  ShiftVertices(*model);
+  model->save(resourcesPath() / toPath("utilities/Geometry/issue-4222_threejs.osm"), true);
+
+  FloorspaceReverseTranslator frt;
+  boost::optional<Model> model1 = frt.modelFromFloorspace(toString(p));
+  ASSERT_TRUE(model1);
+
+  ShiftVertices(*model1);
+  model1->save(resourcesPath() / toPath("utilities/Geometry/Issue-4222_direct.osm"), true);
+
+  auto space = model->getConcreteModelObjectByName<Space>("Space 1-10");
+  auto space1 = model1->getConcreteModelObjectByName<Space>("Space 1-10");
+  EXPECT_EQ(space->surfaces().size(), 12);
+  EXPECT_EQ(space1->surfaces().size(), 13);
+
+  int nRoofs = 0;
+  int nFloors = 0;
+  int nWalls = 0;
+  int nWindows = 0;
+  for (const auto& surface : space->surfaces()) {
+    if (surface.surfaceType() == "RoofCeiling") {
+      nRoofs++;
+    } else if (surface.surfaceType() == "Wall") {
+      nWalls++;
+      for (const auto& subSurface : surface.subSurfaces()) {
+        nWindows++;
+      }
+    } else if (surface.surfaceType() == "Floor") {
+      nFloors++;
+    }
+  }
+
+  EXPECT_EQ(nRoofs, 3);
+  EXPECT_EQ(nFloors, 1);
+  EXPECT_EQ(nWalls, 8);
+  EXPECT_EQ(nWindows, 3);
+
+  nRoofs = 0;
+  nFloors = 0;
+  nWalls = 0;
+  nWindows = 0;
+  for (const auto& surface : space1->surfaces()) {
+    if (surface.surfaceType() == "RoofCeiling") {
+      nRoofs++;
+    } else if (surface.surfaceType() == "Wall") {
+      nWalls++;
+      for (const auto& subSurface : surface.subSurfaces()) {
+        nWindows++;
+      }
+    } else if (surface.surfaceType() == "Floor") {
+      nFloors++;
+    }
+  }
+
+  EXPECT_EQ(nRoofs, 3);
+  EXPECT_EQ(nFloors, 1);
+  EXPECT_EQ(nWalls, 9);
+  EXPECT_EQ(nWindows, 4);
 }

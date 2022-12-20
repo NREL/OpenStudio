@@ -576,8 +576,6 @@ FSSpace::FSSpace(const Json::Value& root, const FSModel& model, FSStory& story)
   for (const auto& daylightingControl : root.get("daylighting_controls", Json::arrayValue)) {
     m_daylightingControls.emplace_back(daylightingControl, model, story);
   }
-
-  simplifyFace(story.geometry());
 }
 
 boost::optional<FSThermalZone> FSSpace::thermalZone() const {

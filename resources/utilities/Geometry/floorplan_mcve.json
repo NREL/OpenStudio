@@ -1,0 +1,1137 @@
+{
+    "application": {
+        "currentSelections": {
+            "story": null,
+            "story_id": "11",
+            "subselection_ids": {
+                "5": "7",
+                "11": "188"
+            },
+            "component_id": null,
+            "component_definition_id": "8473",
+            "component_instance_id": null,
+            "space_property_id": "793",
+            "tool": "Rectangle",
+            "mode": "spaces",
+            "snapMode": "grid-strict",
+            "modeTab": "floorplan",
+            "subselectionType": "spaces"
+        },
+        "modes": [
+            "spaces",
+            "shading",
+            "building_units",
+            "thermal_zones",
+            "pitched_roofs",
+            "space_types",
+            "images"
+        ],
+        "tools": [
+            "Pan",
+            "Drag",
+            "Rectangle",
+            "Polygon",
+            "Eraser",
+            "Select",
+            "Map",
+            "Fill",
+            "Place Component",
+            "Image",
+            "Apply Property"
+        ],
+        "scale": {
+            "x": {
+                "pixels": 1400,
+                "rwuRange": [
+                    -100,
+                    -200
+                ]
+            },
+            "y": {
+                "pixels": 803,
+                "rwuRange": [
+                    -100.0,
+                    200.0
+                ]
+            }
+        }
+    },
+    "project": {
+        "config": {
+            "language": "EN-US",
+            "units": "ip",
+            "unitsEditable": true
+        },
+        "north_axis": 0,
+        "ground": {
+            "azimuth_angle": 0,
+            "floor_offset": 0,
+            "tilt_slope": 0
+        },
+        "grid": {
+            "spacing": 2,
+            "visible": true
+        },
+        "view": {
+            "max_x": 200.0,
+            "max_y": 200.0,
+            "min_x": -100.0,
+            "min_y": 200.0
+        },
+        "map": {
+            "elevation": 0,
+            "enabled": true,
+            "initialized": true,
+            "latitude": 39.51849730000001,
+            "longitude": -104.7591812,
+            "rotation": 0,
+            "visible": true,
+            "zoom": 4.5
+        },
+        "previous_story": {
+            "visible": true
+        },
+        "show_import_export": true,
+        "footprintID": "92cb-9705-aa6b-8724"
+    },
+    "stories": [
+        {
+            "id": "11",
+            "handle": null,
+            "name": "Story 1",
+            "image_visible": true,
+            "below_floor_plenum_height": 0,
+            "floor_to_ceiling_height": 18,
+            "above_ceiling_plenum_height": 0,
+            "multiplier": 1,
+            "color": "#117733",
+            "geometry": {
+                "id": "12",
+                "vertices": [
+                    {
+                        "id": "132",
+                        "x": 96,
+                        "y": 186,
+                        "edge_ids": [
+                            "193",
+                            "847"
+                        ]
+                    },
+                    {
+                        "id": "179",
+                        "x": 22,
+                        "y": 120,
+                        "edge_ids": [
+                            "186",
+                            "395",
+                            "800"
+                        ]
+                    },
+                    {
+                        "id": "180",
+                        "x": 62,
+                        "y": 102,
+                        "edge_ids": [
+                            "186",
+                            "196",
+                            "806"
+                        ]
+                    },
+                    {
+                        "id": "189",
+                        "x": 118,
+                        "y": 176,
+                        "edge_ids": [
+                            "193",
+                            "194"
+                        ]
+                    },
+                    {
+                        "id": "190",
+                        "x": 154,
+                        "y": 154,
+                        "edge_ids": [
+                            "194",
+                            "195",
+                            "535"
+                        ]
+                    },
+                    {
+                        "id": "191",
+                        "x": 104,
+                        "y": 78,
+                        "edge_ids": [
+                            "195",
+                            "196",
+                            "400"
+                        ]
+                    },
+                    {
+                        "id": "300",
+                        "x": 132,
+                        "y": 56,
+                        "edge_ids": [
+                            "401",
+                            "404"
+                        ]
+                    },
+                    {
+                        "id": "383",
+                        "x": 146,
+                        "y": 44,
+                        "edge_ids": [
+                            "386",
+                            "404"
+                        ]
+                    },
+                    {
+                        "id": "384",
+                        "x": 104,
+                        "y": 0,
+                        "edge_ids": [
+                            "386",
+                            "393"
+                        ]
+                    },
+                    {
+                        "id": "390",
+                        "x": 82,
+                        "y": 20,
+                        "edge_ids": [
+                            "393",
+                            "394"
+                        ]
+                    },
+                    {
+                        "id": "391",
+                        "x": 0,
+                        "y": 64,
+                        "edge_ids": [
+                            "394",
+                            "395"
+                        ]
+                    },
+                    {
+                        "id": "398",
+                        "x": 131.86999999999898,
+                        "y": 56.13000000000011,
+                        "edge_ids": [
+                            "400",
+                            "401",
+                            "533"
+                        ]
+                    },
+                    {
+                        "id": "481",
+                        "x": 37.294117647059466,
+                        "y": 158.23529411764684,
+                        "edge_ids": [
+                            "811",
+                            "800"
+                        ]
+                    },
+                    {
+                        "id": "482",
+                        "x": 78,
+                        "y": 142,
+                        "edge_ids": [
+                            "804",
+                            "805"
+                        ]
+                    },
+                    {
+                        "id": "530",
+                        "x": 158,
+                        "y": 86,
+                        "edge_ids": [
+                            "533",
+                            "534"
+                        ]
+                    },
+                    {
+                        "id": "531",
+                        "x": 188,
+                        "y": 126,
+                        "edge_ids": [
+                            "534",
+                            "535"
+                        ]
+                    },
+                    {
+                        "id": "798",
+                        "x": 69.41247753207062,
+                        "y": 145.42508121553328,
+                        "edge_ids": [
+                            "803",
+                            "804"
+                        ]
+                    },
+                    {
+                        "id": "799",
+                        "x": 78.16214732562003,
+                        "y": 141.93001103976894,
+                        "edge_ids": [
+                            "805",
+                            "806",
+                            "834"
+                        ]
+                    },
+                    {
+                        "id": "808",
+                        "x": 48,
+                        "y": 154,
+                        "edge_ids": [
+                            "811",
+                            "812"
+                        ]
+                    },
+                    {
+                        "id": "809",
+                        "x": 61.13000000000102,
+                        "y": 148.72999999999956,
+                        "edge_ids": [
+                            "812",
+                            "803"
+                        ]
+                    },
+                    {
+                        "id": "830",
+                        "x": 86.6526961386844,
+                        "y": 162.90666104851243,
+                        "edge_ids": [
+                            "834",
+                            "847"
+                        ]
+                    }
+                ],
+                "edges": [
+                    {
+                        "id": "186",
+                        "vertex_ids": [
+                            "179",
+                            "180"
+                        ],
+                        "face_ids": [
+                            "403",
+                            "814"
+                        ]
+                    },
+                    {
+                        "id": "193",
+                        "vertex_ids": [
+                            "132",
+                            "189"
+                        ],
+                        "face_ids": [
+                            "197"
+                        ]
+                    },
+                    {
+                        "id": "194",
+                        "vertex_ids": [
+                            "189",
+                            "190"
+                        ],
+                        "face_ids": [
+                            "197"
+                        ]
+                    },
+                    {
+                        "id": "195",
+                        "vertex_ids": [
+                            "190",
+                            "191"
+                        ],
+                        "face_ids": [
+                            "197",
+                            "536"
+                        ]
+                    },
+                    {
+                        "id": "196",
+                        "vertex_ids": [
+                            "191",
+                            "180"
+                        ],
+                        "face_ids": [
+                            "197",
+                            "403"
+                        ]
+                    },
+                    {
+                        "id": "386",
+                        "vertex_ids": [
+                            "383",
+                            "384"
+                        ],
+                        "face_ids": [
+                            "403"
+                        ]
+                    },
+                    {
+                        "id": "400",
+                        "vertex_ids": [
+                            "191",
+                            "398"
+                        ],
+                        "face_ids": [
+                            "403",
+                            "536"
+                        ]
+                    },
+                    {
+                        "id": "401",
+                        "vertex_ids": [
+                            "398",
+                            "300"
+                        ],
+                        "face_ids": [
+                            "403"
+                        ]
+                    },
+                    {
+                        "id": "393",
+                        "vertex_ids": [
+                            "384",
+                            "390"
+                        ],
+                        "face_ids": [
+                            "403"
+                        ]
+                    },
+                    {
+                        "id": "394",
+                        "vertex_ids": [
+                            "390",
+                            "391"
+                        ],
+                        "face_ids": [
+                            "403"
+                        ]
+                    },
+                    {
+                        "id": "395",
+                        "vertex_ids": [
+                            "391",
+                            "179"
+                        ],
+                        "face_ids": [
+                            "403"
+                        ]
+                    },
+                    {
+                        "id": "404",
+                        "vertex_ids": [
+                            "300",
+                            "383"
+                        ],
+                        "face_ids": [
+                            "403"
+                        ]
+                    },
+                    {
+                        "id": "533",
+                        "vertex_ids": [
+                            "398",
+                            "530"
+                        ],
+                        "face_ids": [
+                            "536"
+                        ]
+                    },
+                    {
+                        "id": "534",
+                        "vertex_ids": [
+                            "530",
+                            "531"
+                        ],
+                        "face_ids": [
+                            "536"
+                        ]
+                    },
+                    {
+                        "id": "535",
+                        "vertex_ids": [
+                            "531",
+                            "190"
+                        ],
+                        "face_ids": [
+                            "536"
+                        ]
+                    },
+                    {
+                        "id": "811",
+                        "vertex_ids": [
+                            "481",
+                            "808"
+                        ],
+                        "face_ids": [
+                            "814"
+                        ]
+                    },
+                    {
+                        "id": "812",
+                        "vertex_ids": [
+                            "808",
+                            "809"
+                        ],
+                        "face_ids": [
+                            "814"
+                        ]
+                    },
+                    {
+                        "id": "800",
+                        "vertex_ids": [
+                            "179",
+                            "481"
+                        ],
+                        "face_ids": [
+                            "814"
+                        ]
+                    },
+                    {
+                        "id": "803",
+                        "vertex_ids": [
+                            "809",
+                            "798"
+                        ],
+                        "face_ids": [
+                            "814"
+                        ]
+                    },
+                    {
+                        "id": "804",
+                        "vertex_ids": [
+                            "798",
+                            "482"
+                        ],
+                        "face_ids": [
+                            "814"
+                        ]
+                    },
+                    {
+                        "id": "805",
+                        "vertex_ids": [
+                            "482",
+                            "799"
+                        ],
+                        "face_ids": [
+                            "814"
+                        ]
+                    },
+                    {
+                        "id": "806",
+                        "vertex_ids": [
+                            "799",
+                            "180"
+                        ],
+                        "face_ids": [
+                            "197",
+                            "814"
+                        ]
+                    },
+                    {
+                        "id": "834",
+                        "vertex_ids": [
+                            "830",
+                            "799"
+                        ],
+                        "face_ids": [
+                            "197"
+                        ]
+                    },
+                    {
+                        "id": "847",
+                        "vertex_ids": [
+                            "830",
+                            "132"
+                        ],
+                        "face_ids": [
+                            "197"
+                        ]
+                    }
+                ],
+                "faces": [
+                    {
+                        "id": "197",
+                        "edge_ids": [
+                            "806",
+                            "834",
+                            "847",
+                            "193",
+                            "194",
+                            "195",
+                            "196"
+                        ],
+                        "edge_order": [
+                            0,
+                            0,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "id": "403",
+                        "edge_ids": [
+                            "386",
+                            "393",
+                            "394",
+                            "395",
+                            "186",
+                            "196",
+                            "400",
+                            "401",
+                            "404"
+                        ],
+                        "edge_order": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            0,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "id": "536",
+                        "edge_ids": [
+                            "400",
+                            "533",
+                            "534",
+                            "535",
+                            "195"
+                        ],
+                        "edge_order": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "id": "814",
+                        "edge_ids": [
+                            "805",
+                            "804",
+                            "803",
+                            "812",
+                            "811",
+                            "800",
+                            "186",
+                            "806"
+                        ],
+                        "edge_order": [
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0
+                        ]
+                    }
+                ]
+            },
+            "images": [],
+            "spaces": [
+                {
+                    "id": "188",
+                    "handle": null,
+                    "name": "Space 1-1",
+                    "face_id": "197",
+                    "building_unit_id": null,
+                    "thermal_zone_id": null,
+                    "space_type_id": null,
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": null,
+                    "floor_to_ceiling_height": null,
+                    "above_ceiling_plenum_height": null,
+                    "floor_offset": null,
+                    "open_to_below": null,
+                    "area": 5238,
+                    "color": "#bbc3c7",
+                    "type": "space"
+                },
+                {
+                    "id": "389",
+                    "handle": null,
+                    "name": "Space 1-6",
+                    "face_id": "403",
+                    "building_unit_id": null,
+                    "thermal_zone_id": null,
+                    "space_type_id": null,
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": null,
+                    "floor_to_ceiling_height": null,
+                    "above_ceiling_plenum_height": null,
+                    "floor_offset": null,
+                    "open_to_below": null,
+                    "area": 8232.389999999956,
+                    "color": "#bbc3c7",
+                    "type": "space"
+                },
+                {
+                    "id": "528",
+                    "handle": null,
+                    "name": "Space 1-12",
+                    "face_id": "536",
+                    "building_unit_id": null,
+                    "thermal_zone_id": null,
+                    "space_type_id": null,
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": null,
+                    "floor_to_ceiling_height": null,
+                    "above_ceiling_plenum_height": null,
+                    "floor_offset": null,
+                    "open_to_below": null,
+                    "area": 3653.969999999972,
+                    "color": "#bbc3c7",
+                    "type": "space"
+                },
+                {
+                    "id": "795",
+                    "handle": null,
+                    "name": "Space 1-18",
+                    "face_id": "814",
+                    "building_unit_id": null,
+                    "thermal_zone_id": null,
+                    "space_type_id": null,
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": null,
+                    "floor_to_ceiling_height": null,
+                    "above_ceiling_plenum_height": null,
+                    "floor_offset": null,
+                    "open_to_below": null,
+                    "area": 1850.5852286721347,
+                    "color": "#bbc3c7",
+                    "type": "space"
+                }
+            ],
+            "shading": [],
+            "windows": [],
+            "doors": [],
+            "area": 93207.04805704096,
+            "construction_lines": [],
+            "image_id": "68"
+        },
+        {
+            "id": "580",
+            "handle": null,
+            "name": "Story 2",
+            "image_visible": true,
+            "below_floor_plenum_height": 0,
+            "floor_to_ceiling_height": 18,
+            "above_ceiling_plenum_height": 0,
+            "multiplier": 1,
+            "color": "#332288",
+            "geometry": {
+                "id": "581",
+                "vertices": [
+                    {
+                        "id": "719",
+                        "x": 146,
+                        "y": 44,
+                        "edge_ids": [
+                            "724",
+                            "740"
+                        ]
+                    },
+                    {
+                        "id": "720",
+                        "x": 104,
+                        "y": 0,
+                        "edge_ids": [
+                            "724",
+                            "734"
+                        ]
+                    },
+                    {
+                        "id": "728",
+                        "x": 82,
+                        "y": 20,
+                        "edge_ids": [
+                            "734",
+                            "735"
+                        ]
+                    },
+                    {
+                        "id": "729",
+                        "x": 60,
+                        "y": 32,
+                        "edge_ids": [
+                            "735",
+                            "736",
+                            "764"
+                        ]
+                    },
+                    {
+                        "id": "730",
+                        "x": 108,
+                        "y": 90,
+                        "edge_ids": [
+                            "736",
+                            "737",
+                            "759"
+                        ]
+                    },
+                    {
+                        "id": "731",
+                        "x": 128,
+                        "y": 76,
+                        "edge_ids": [
+                            "737",
+                            "738"
+                        ]
+                    },
+                    {
+                        "id": "732",
+                        "x": 140,
+                        "y": 66,
+                        "edge_ids": [
+                            "738",
+                            "739"
+                        ]
+                    },
+                    {
+                        "id": "733",
+                        "x": 131.86999999999898,
+                        "y": 56.13000000000011,
+                        "edge_ids": [
+                            "739",
+                            "740"
+                        ]
+                    },
+                    {
+                        "id": "754",
+                        "x": 80,
+                        "y": 106,
+                        "edge_ids": [
+                            "759",
+                            "760"
+                        ]
+                    },
+                    {
+                        "id": "755",
+                        "x": 54,
+                        "y": 120,
+                        "edge_ids": [
+                            "760",
+                            "761"
+                        ]
+                    },
+                    {
+                        "id": "756",
+                        "x": 28,
+                        "y": 130,
+                        "edge_ids": [
+                            "761",
+                            "762"
+                        ]
+                    },
+                    {
+                        "id": "757",
+                        "x": 26,
+                        "y": 130,
+                        "edge_ids": [
+                            "762",
+                            "789"
+                        ]
+                    },
+                    {
+                        "id": "758",
+                        "x": 0,
+                        "y": 64,
+                        "edge_ids": [
+                            "764",
+                            "787"
+                        ]
+                    },
+                    {
+                        "id": "776",
+                        "x": 22,
+                        "y": 120,
+                        "edge_ids": [
+                            "787",
+                            "789"
+                        ]
+                    }
+                ],
+                "edges": [
+                    {
+                        "id": "724",
+                        "vertex_ids": [
+                            "719",
+                            "720"
+                        ],
+                        "face_ids": [
+                            "741"
+                        ]
+                    },
+                    {
+                        "id": "734",
+                        "vertex_ids": [
+                            "720",
+                            "728"
+                        ],
+                        "face_ids": [
+                            "741"
+                        ]
+                    },
+                    {
+                        "id": "735",
+                        "vertex_ids": [
+                            "728",
+                            "729"
+                        ],
+                        "face_ids": [
+                            "741"
+                        ]
+                    },
+                    {
+                        "id": "736",
+                        "vertex_ids": [
+                            "729",
+                            "730"
+                        ],
+                        "face_ids": [
+                            "741",
+                            "765"
+                        ]
+                    },
+                    {
+                        "id": "737",
+                        "vertex_ids": [
+                            "730",
+                            "731"
+                        ],
+                        "face_ids": [
+                            "741"
+                        ]
+                    },
+                    {
+                        "id": "738",
+                        "vertex_ids": [
+                            "731",
+                            "732"
+                        ],
+                        "face_ids": [
+                            "741"
+                        ]
+                    },
+                    {
+                        "id": "739",
+                        "vertex_ids": [
+                            "732",
+                            "733"
+                        ],
+                        "face_ids": [
+                            "741"
+                        ]
+                    },
+                    {
+                        "id": "740",
+                        "vertex_ids": [
+                            "733",
+                            "719"
+                        ],
+                        "face_ids": [
+                            "741"
+                        ]
+                    },
+                    {
+                        "id": "759",
+                        "vertex_ids": [
+                            "730",
+                            "754"
+                        ],
+                        "face_ids": [
+                            "765"
+                        ]
+                    },
+                    {
+                        "id": "760",
+                        "vertex_ids": [
+                            "754",
+                            "755"
+                        ],
+                        "face_ids": [
+                            "765"
+                        ]
+                    },
+                    {
+                        "id": "761",
+                        "vertex_ids": [
+                            "755",
+                            "756"
+                        ],
+                        "face_ids": [
+                            "765"
+                        ]
+                    },
+                    {
+                        "id": "762",
+                        "vertex_ids": [
+                            "756",
+                            "757"
+                        ],
+                        "face_ids": [
+                            "765"
+                        ]
+                    },
+                    {
+                        "id": "764",
+                        "vertex_ids": [
+                            "758",
+                            "729"
+                        ],
+                        "face_ids": [
+                            "765"
+                        ]
+                    },
+                    {
+                        "id": "787",
+                        "vertex_ids": [
+                            "776",
+                            "758"
+                        ],
+                        "face_ids": [
+                            "765"
+                        ]
+                    },
+                    {
+                        "id": "789",
+                        "vertex_ids": [
+                            "757",
+                            "776"
+                        ],
+                        "face_ids": [
+                            "765"
+                        ]
+                    }
+                ],
+                "faces": [
+                    {
+                        "id": "741",
+                        "edge_ids": [
+                            "724",
+                            "734",
+                            "735",
+                            "736",
+                            "737",
+                            "738",
+                            "739",
+                            "740"
+                        ],
+                        "edge_order": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    },
+                    {
+                        "id": "765",
+                        "edge_ids": [
+                            "736",
+                            "759",
+                            "760",
+                            "761",
+                            "762",
+                            "789",
+                            "787",
+                            "764"
+                        ],
+                        "edge_order": [
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                            1
+                        ]
+                    }
+                ]
+            },
+            "images": [],
+            "spaces": [
+                {
+                    "id": "727",
+                    "handle": null,
+                    "name": "Space 2-5",
+                    "face_id": "741",
+                    "building_unit_id": null,
+                    "thermal_zone_id": null,
+                    "space_type_id": null,
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": null,
+                    "floor_to_ceiling_height": null,
+                    "above_ceiling_plenum_height": null,
+                    "floor_offset": null,
+                    "open_to_below": null,
+                    "area": 3934.9599999999627,
+                    "color": "#bbc3c7",
+                    "type": "space"
+                },
+                {
+                    "id": "753",
+                    "handle": null,
+                    "name": "Space 2-6",
+                    "face_id": "765",
+                    "building_unit_id": null,
+                    "thermal_zone_id": null,
+                    "space_type_id": null,
+                    "construction_set_id": null,
+                    "pitched_roof_id": null,
+                    "daylighting_controls": [],
+                    "below_floor_plenum_height": null,
+                    "floor_to_ceiling_height": null,
+                    "above_ceiling_plenum_height": null,
+                    "floor_offset": null,
+                    "open_to_below": null,
+                    "area": 5908,
+                    "color": "#bbc3c7",
+                    "type": "space"
+                }
+            ],
+            "shading": [],
+            "windows": [],
+            "doors": [],
+            "area": 39454.95999999996,
+            "construction_lines": [],
+            "image_id": null
+        }
+    ],
+    "building_units": [],
+    "thermal_zones": [],
+    "space_types": [],
+    "construction_sets": [],
+    "window_definitions": [],
+    "daylighting_control_definitions": [],
+    "pitched_roofs": [],
+    "door_definitions": [],
+    "version": "0.7.0"
+}
