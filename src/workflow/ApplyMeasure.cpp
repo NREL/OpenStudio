@@ -39,7 +39,7 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
   for (const auto& stepAndIndex : workflowJSON.getMeasureStepsWithIndex(measureType)) {
     auto stepIndex = stepAndIndex.first;
     auto step = stepAndIndex.second;
-    fmt::print("\n\nRunning step {}\n", stepIndex);
+    LOG(Debug, "Running step " << stepIndex);
 
     //  measure_run_dir = File.join(run_dir, "#{step_index.to_s.rjust(3,'0')}_#{measure_dir_name}")
     //  logger.debug "Creating run directory for measure in #{measure_run_dir}"
@@ -85,19 +85,19 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
 
     const auto scriptPath_ = bclMeasure.primaryScriptPath();
     if (!scriptPath_) {
-      fmt::print("Could not find primaryScriptPath '{}'\n", measureDirName);
+      LOG(Warn, "Could not find primaryScriptPath '" << measureDirName << "'");
       continue;
     }
-    fmt::print("Found {} at primaryScriptPath: '{}'\n", measureDirName, openstudio::toString(scriptPath_.get()));
+    LOG(Debug, fmt::format("Found {} at primaryScriptPath: '{}'", measureDirName, openstudio::toString(scriptPath_.get())));
     const std::string className = bclMeasure.className();
     const auto measureType = bclMeasure.measureType();
     const MeasureLanguage measureLanguage = bclMeasure.measureLanguage();
 
     // TODO: will add a Logger later
-    fmt::print("Class Name: {}\n", className);
-    fmt::print("Measure Script Path: {}\n", openstudio::toString(scriptPath_.get()));
-    fmt::print("Measure Type: {}\n", bclMeasure.measureType().valueName());
-    fmt::print("Measure Language: {}\n", measureLanguage.valueName());
+    LOG(Debug, "Class Name: " << className);
+    LOG(Debug, "Measure Script Path: " << scriptPath_.get());
+    LOG(Debug, "Measure Type: " << bclMeasure.measureType().valueName());
+    LOG(Debug, "Measure Language: " << measureLanguage.valueName());
 
     //openstudio::measure::ModelMeasure* modelMeasurePtr = nullptr;
     // TODO: probably want to do that ultimately, then static_cast appropriately
@@ -113,7 +113,7 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
       // Initialize arguments which may be model dependent, don't allow arguments method access to real model in case it changes something
       std::vector<measure::OSArgument> arguments;
 
-      fmt::print("measure->name()= '{}'\n", measurePtr->name());
+      LOG(Debug, "measure->name()= '" << measurePtr->name() << "'");
 
       if (measureType == MeasureType::ModelMeasure) {
         // For computing arguments
@@ -142,13 +142,13 @@ void OSWorkflow::applyMeasures(MeasureType measureType, bool energyplus_output_r
       measure::OSArgumentMap argumentMap;
       if (!arguments.empty()) {
         for (const auto& argument : arguments) {
-          fmt::print("Argument: {}\n", argument.name());
+          LOG(Debug, "Argument: " << argument.name());
           argumentMap[argument.name()] = argument.clone();
         }
 
         //  logger.debug "Iterating over arguments for workflow item '#{measure_dir_name}'"
         auto stepArgs = step.arguments();
-        fmt::print("Current step has {} arguments\n", stepArgs.size());
+        LOG(Debug, "Current step has " << stepArgs.size() << " arguments");
         // handle skip first
         if (!stepArgs.empty() && stepArgs.contains("__SKIP__")) {
           // TODO: handling of SKIP is incomplete here, will need to increment the runner and co, and not process the measure
@@ -275,7 +275,7 @@ spec.loader.exec_module(module)
 
     WorkflowStepResult result = runner.result();
     if (auto stepResult_ = result.stepResult()) {
-      fmt::print("Step Result: {}\n", stepResult_->valueName());
+      LOG(Debug, "Step Result: " << stepResult_->valueName());
     }
     // incrementStep must be called after run
     runner.incrementStep();
@@ -289,7 +289,7 @@ spec.loader.exec_module(module)
           // Probably a workflowJSON.findFile() call...
           // m_epwPath_ = p_;
         } else {
-          fmt::print("Weather file object found in model but no path is given\n");
+          LOG(Warn, "Weather file object found in model but no path is given");
         }
       }
     }

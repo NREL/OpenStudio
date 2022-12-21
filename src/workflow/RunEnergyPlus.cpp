@@ -85,9 +85,9 @@ struct PrepareRunDirResults
       throw std::runtime_error(fmt::format("Could not find ExpandObjects executable in {}\n", energyPlusDirectory.string()));
     }
 
-    for (const auto& filePath : copiedEnergyPlusFiles) {
-      fmt::print("{}\n", filePath.string());
-    }
+    // for (const auto& filePath : copiedEnergyPlusFiles) {
+    //   fmt::print("{}\n", filePath.string());
+    // }
 
     LOG(Info, "EnergyPlus executable path is " << energyPlusExe);
     LOG(Info, "ExpandObjects executable path is " << expandObjectsExe);

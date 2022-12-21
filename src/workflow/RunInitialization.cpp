@@ -24,26 +24,6 @@ void OSWorkflow::runInitialization() {
   LOG(Debug, "The root_dir for the datapoint is " << rootDir);
 
   detailedTimeBlock("Wiping directories", [this, &rootDir]() {
-    if (!workflowJSON.runOptions()->preserveRunDir()) {
-      // We don't have a run_dir argument anyways
-      auto runDir = workflowJSON.absoluteRunDir();
-      if (openstudio::filesystem::is_directory(runDir)) {
-        LOG(Debug, "Removing existing run directory: " << runDir);
-        openstudio::filesystem::remove_all(runDir);
-      }
-      openstudio::filesystem::create_directory(runDir);
-    }
-
-    // Communicate that the workflow has been started
-    LOG(Debug, "Registering that the workflow has started with the adapter");
-    {
-      // @output_adapter.communicate_started
-      openstudio::filesystem::ofstream file(workflowJSON.absoluteRunDir() / "started.job");
-      OS_ASSERT(file.is_open());
-      file << fmt::format("Started Workflow {}\n", std::chrono::system_clock::now());
-      file.close();
-    }
-
     {
       auto generatedFilesDir = rootDir / "generated_files";
       if (openstudio::filesystem::is_directory(generatedFilesDir)) {

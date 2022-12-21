@@ -13,6 +13,7 @@
 #include "../utilities/bcl/BCLMeasure.hpp"
 #include "../utilities/core/Assert.hpp"
 #include "../utilities/core/Filesystem.hpp"
+#include "../utilities/core/FileLogSink.hpp"
 #include "../utilities/core/Logger.hpp"
 #include "../utilities/data/Variant.hpp"
 #include "../utilities/filetypes/WorkflowStep.hpp"
@@ -74,10 +75,8 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
   }
 
   if (t_workflowRunOptions.runOptions.debug() || (workflowJSON.runOptions() && workflowJSON.runOptions()->debug())) {
-    fmt::print("Original workflowJSON={}\n", workflowJSON.string());
+    LOG(Debug, fmt::format("Original workflowJSON={}\n", workflowJSON.string()));
     t_workflowRunOptions.debug_print();
-    fmt::print("m_no_simulation={}, m_post_process_only={}, m_show_stdout={}, m_add_timings={}, m_style_stdout={}", m_no_simulation,
-               m_post_process_only, m_show_stdout, m_add_timings, m_style_stdout);
   }
   auto runOpt_ = workflowJSON.runOptions();
   if (!runOpt_) {
@@ -96,7 +95,7 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
 }
 
 void OSWorkflow::applyArguments(measure::OSArgumentMap& argumentMap, const std::string& argumentName, const openstudio::Variant& argumentValue) {
-  fmt::print("Info: Setting argument value '{}' to '{}'\n", argumentName, argumentValue);
+  LOG(Info, "Setting argument value '" << argumentName << "' to '" << argumentValue << "'");
 
   // if (!argumentValue.hasValue()) {
   //   fmt::print("Warn: Value for argument '{}' not set in argument list therefore will use default\n", argumentName);
@@ -155,8 +154,39 @@ void OSWorkflow::saveIDFToRootDirIfDebug() {
 }
 
 void OSWorkflow::run() {
-  if (workflowJSON.runOptions()->debug()) {
+
+  if (!m_show_stdout) {
+    openstudio::Logger::instance().standardOutLogger().disable();
+  } else if (workflowJSON.runOptions()->debug()) {
     openstudio::Logger::instance().standardOutLogger().setLogLevel(Debug);
+  }
+
+  // Need to recreate the runDir as fast as possible, so I can direct a file log sink there
+  bool hasDeletedRunDir = false;
+  auto runDirPath = workflowJSON.absoluteRunDir();
+  if (!workflowJSON.runOptions()->preserveRunDir()) {
+    // We don't have a run_dir argument anyways
+    if (openstudio::filesystem::is_directory(runDirPath)) {
+      hasDeletedRunDir = true;
+      openstudio::filesystem::remove_all(runDirPath);
+    }
+    openstudio::filesystem::create_directory(runDirPath);
+  }
+  FileLogSink logFile(runDirPath / "run.log");
+  logFile.setLogLevel(Debug);
+
+  if (hasDeletedRunDir) {
+    LOG(Debug, "Removing existing run directory: " << runDirPath);
+  }
+
+  // Communicate that the workflow has been started
+  LOG(Debug, "Registering that the workflow has started with the adapter");
+  {
+    // @output_adapter.communicate_started
+    openstudio::filesystem::ofstream file(runDirPath / "started.job");
+    OS_ASSERT(file.is_open());
+    file << fmt::format("Started Workflow {}\n", std::chrono::system_clock::now());
+    file.close();
   }
 
 #if USE_RUBY_ENGINE
@@ -291,7 +321,7 @@ void OSWorkflow::run() {
   }
 
   for (auto& [jobName, jobInfo] : jobMap) {
-    fmt::print("{} - selected = {}\n", jobName, jobInfo.selected);
+    LOG(Debug, fmt::format("{} - selected = {}\n", jobName, jobInfo.selected));
     if (jobInfo.selected) {
       timeJob(jobInfo.jobFun, std::string{jobName});
     } else {
@@ -303,7 +333,7 @@ void OSWorkflow::run() {
   if (m_add_timings) {
     m_timers->newTimer("Save IDF");
   }
-  workspace_->save(workflowJSON.absoluteRunDir() / "in.idf", true);  // TODO: Is this really necessary? Seems like it's done before already
+  workspace_->save(runDirPath / "in.idf", true);  // TODO: Is this really necessary? Seems like it's done before already
   if (m_add_timings) {
     m_timers->tockCurrentTimer();
   }
@@ -312,7 +342,7 @@ void OSWorkflow::run() {
     if (m_add_timings) {
       m_timers->newTimer("Zip datapoint");
     }
-    openstudio::workflow::util::zipResults(workflowJSON.absoluteRunDir());
+    openstudio::workflow::util::zipResults(runDirPath);
     if (m_add_timings) {
       m_timers->tockCurrentTimer();
     }
@@ -345,13 +375,13 @@ void OSWorkflow::run() {
 
   if (state == State::Errored) {
     // TODO: communicate_failure
-    openstudio::filesystem::ofstream file(workflowJSON.absoluteRunDir() / "failed.job");
+    openstudio::filesystem::ofstream file(runDirPath / "failed.job");
     OS_ASSERT(file.is_open());
     file << fmt::format("Failed Workflow {}\n", std::chrono::system_clock::now());
     file.close();
   } else {
     // TODO: communicate_complete
-    openstudio::filesystem::ofstream file(workflowJSON.absoluteRunDir() / "finished.job");
+    openstudio::filesystem::ofstream file(runDirPath / "finished.job");
     OS_ASSERT(file.is_open());
     file << fmt::format("Finished Workflow {}\n", std::chrono::system_clock::now());
     file.close();
