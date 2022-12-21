@@ -53,6 +53,8 @@ OSWorkflow::OSWorkflow(const WorkflowRunOptions& t_workflowRunOptions, ScriptEng
   if (t_workflowRunOptions.runOptions.debug() || (workflowJSON.runOptions() && workflowJSON.runOptions()->debug())) {
     fmt::print("Original workflowJSON={}\n", workflowJSON.string());
     t_workflowRunOptions.debug_print();
+    fmt::print("m_no_simulation={}, m_post_process_only={}, m_show_stdout={}, m_add_timings={}, m_style_stdout={}", m_no_simulation,
+               m_post_process_only, m_show_stdout, m_add_timings, m_style_stdout);
   }
   auto runOpt_ = workflowJSON.runOptions();
   if (!runOpt_) {
