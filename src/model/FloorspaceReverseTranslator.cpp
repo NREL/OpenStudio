@@ -613,8 +613,8 @@ namespace model {
     }
 
     // Creates one or more window subsurfaces along an edge
-    void FloorspaceReverseTranslator_Impl::createWindowSubsurface(const FSWindow& window, Surface& osSurface, const FSEdge& edge,
-                                                                  double minZ, double maxZ) {
+    void FloorspaceReverseTranslator_Impl::createWindowSubsurface(const FSWindow& window, Surface& osSurface, const FSEdge& edge, double minZ,
+                                                                  double maxZ) {
 
       auto windowDefinition = window.windowDefinition();
       if (!windowDefinition.has_value()) {
@@ -734,7 +734,7 @@ namespace model {
     // Creates a door subsurface along an edge
     void FloorspaceReverseTranslator_Impl::createDoorSubsurface(const FSDoor& door, Surface& osSurface, const FSEdge& edge, double minZ) {
 
-        const auto& vertex1 = edge.firstVertex();
+      const auto& vertex1 = edge.firstVertex();
       const auto& vertex2 = edge.secondVertex();
       Vector3d edgeVector = edge.edgeVector();
 

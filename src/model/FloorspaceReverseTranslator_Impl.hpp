@@ -175,8 +175,8 @@ namespace model {
       void createRoofSurface(Space& osSpace, std::vector<Point3d>& faceVertices, double maxZ);
 
       // Creates a "Wall" surface and sub-surfaces
-      void createWallSurface(Space& osSpace, const FSSpace& fsSpace, const Point3d& p1, const Point3d& p2, double minX,
-                             double maxZ, bool createSubsurfaces);
+      void createWallSurface(Space& osSpace, const FSSpace& fsSpace, const Point3d& p1, const Point3d& p2, double minX, double maxZ,
+                             bool createSubsurfaces);
       // Creates one or more window subsurfaces along an edge
       void createWindowSubsurface(const FSWindow& window, Surface& osSurface, const FSEdge& edge, double minZ, double maxZ);
 
