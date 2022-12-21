@@ -119,7 +119,7 @@ namespace model {
       }
 
       // check the interval
-/*       if (intervalTime->totalDays() > 1) {
+      /*       if (intervalTime->totalDays() > 1) {
         return false;
       } */
 
