@@ -51,6 +51,8 @@ class Transformation;
 namespace model {
 
   class AirConditionerVariableRefrigerantFlow;
+  class AirConditionerVariableRefrigerantFlowFluidTemperatureControl;
+  class AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR;
   class AirflowNetworkSimulationControl;
   class AirflowNetworkZone;
   class AirflowNetworkSurface;
@@ -605,6 +607,10 @@ namespace energyplus {
     boost::optional<IdfObject> translateAndMapModelObject(model::ModelObject& modelObject);
 
     boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlow(model::AirConditionerVariableRefrigerantFlow& modelObject);
+
+    boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl(model::AirConditionerVariableRefrigerantFlow& modelObject);
+
+    boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(model::AirConditionerVariableRefrigerantFlow& modelObject);
 
     boost::optional<IdfObject> translateAirflowNetworkSimulationControl(model::AirflowNetworkSimulationControl& modelObject);
 
