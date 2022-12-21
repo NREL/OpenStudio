@@ -504,7 +504,8 @@ namespace model {
     /// @cond
     typedef detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl ImplType;
 
-    explicit AirConditionerVariableRefrigerantFlowFluidTemperatureControl(std::shared_ptr<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl> impl);
+    explicit AirConditionerVariableRefrigerantFlowFluidTemperatureControl(
+      std::shared_ptr<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl> impl);
 
     friend class detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl;
     friend class Model;
@@ -517,10 +518,12 @@ namespace model {
   };
 
   /** \relates AirConditionerVariableRefrigerantFlowFluidTemperatureControl*/
-  typedef boost::optional<AirConditionerVariableRefrigerantFlowFluidTemperatureControl> OptionalAirConditionerVariableRefrigerantFlowFluidTemperatureControl;
+  typedef boost::optional<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>
+    OptionalAirConditionerVariableRefrigerantFlowFluidTemperatureControl;
 
   /** \relates AirConditionerVariableRefrigerantFlowFluidTemperatureControl*/
-  typedef std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControl> AirConditionerVariableRefrigerantFlowFluidTemperatureControlVector;
+  typedef std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>
+    AirConditionerVariableRefrigerantFlowFluidTemperatureControlVector;
 
 }  // namespace model
 }  // namespace openstudio

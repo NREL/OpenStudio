@@ -52,9 +52,11 @@ namespace model {
      public:
       AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(const IdfObject& idfObject, Model_Impl* model, bool keepHandle);
 
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model, bool keepHandle);
+      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(const openstudio::detail::WorkspaceObject_Impl& other, Model_Impl* model,
+                                                                          bool keepHandle);
 
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(const AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl& other, Model_Impl* model, bool keepHandle);
+      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl(
+        const AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl& other, Model_Impl* model, bool keepHandle);
 
       /** @name Virtual Methods */
       //@{

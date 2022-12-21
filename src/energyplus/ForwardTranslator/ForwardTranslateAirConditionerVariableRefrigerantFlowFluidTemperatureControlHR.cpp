@@ -59,7 +59,8 @@ namespace openstudio {
 
 namespace energyplus {
 
-  boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR& modelObject) {
+  boost::optional<IdfObject> ForwardTranslator::translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(
+    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR& modelObject) {
     boost::optional<std::string> s;
     boost::optional<double> value;
 

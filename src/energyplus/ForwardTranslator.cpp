@@ -610,14 +610,16 @@ namespace energyplus {
     }
 
     // get AirConditionerVariableRefrigerantFlowFluidTemperatureControl objects in sorted order
-    std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControl> vrfs = model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
+    std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControl> vrfs =
+      model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
     std::sort(vrfs.begin(), vrfs.end(), WorkspaceObjectNameLess());
     for (AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf : vrfs) {
       translateAndMapModelObject(vrf);
     }
 
     // get AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR objects in sorted order
-    std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR> vrfs = model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
+    std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR> vrfs =
+      model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
     std::sort(vrfs.begin(), vrfs.end(), WorkspaceObjectNameLess());
     for (AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrf : vrfs) {
       translateAndMapModelObject(vrf);
@@ -718,12 +720,14 @@ namespace energyplus {
         break;
       }
       case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl: {
-        model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf = modelObject.cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
+        model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf =
+          modelObject.cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
         retVal = translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl(vrf);
         break;
       }
       case openstudio::IddObjectType::OS_AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HR: {
-        model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrf = modelObject.cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
+        model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrf =
+          modelObject.cast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
         retVal = translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(vrf);
         break;
       }

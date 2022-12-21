@@ -74,7 +74,8 @@ TEST_F(ModelFixture, AirConditionerVariableRefrigerantFlowFluidTemperatureContro
 
   Model m2;
 
-  boost::optional<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR> vrfClone = vrf.clone(m2).optionalCast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
+  boost::optional<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR> vrfClone =
+    vrf.clone(m2).optionalCast<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
   ASSERT_TRUE(vrfClone);
 
   ASSERT_TRUE(vrfClone->coolingCapacityRatioModifierFunctionofLowTemperatureCurve());
