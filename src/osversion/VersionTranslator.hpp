@@ -202,6 +202,9 @@ namespace osversion {
 
     void update(const VersionString& startVersion);
 
+    /** Deletes handles from m_untranslated and m_deprecated, and adds handles from m_new */
+    void updateComponentData(IdfFile& idfFile);
+
     std::string defaultUpdate(const IdfFile& idf, const IddFileAndFactoryWrapper& targetIdd);
     std::string update_0_7_1_to_0_7_2(const IdfFile& idf_0_7_1, const IddFileAndFactoryWrapper& idd_0_7_2);
     std::string update_0_7_2_to_0_7_3(const IdfFile& idf_0_7_2, const IddFileAndFactoryWrapper& idd_0_7_3);
@@ -252,7 +255,7 @@ namespace osversion {
     std::string update_3_2_1_to_3_3_0(const IdfFile& idf_3_2_1, const IddFileAndFactoryWrapper& idd_3_3_0);
     std::string update_3_3_0_to_3_4_0(const IdfFile& idf_3_3_0, const IddFileAndFactoryWrapper& idd_3_4_0);
     std::string update_3_4_0_to_3_5_0(const IdfFile& idf_3_4_0, const IddFileAndFactoryWrapper& idd_3_5_0);
-    // std::string update_3_5_0_to_3_5_1(const IdfFile& idf_3_5_0, const IddFileAndFactoryWrapper& idd_3_5_1);
+    std::string update_3_5_0_to_3_5_1(const IdfFile& idf_3_5_0, const IddFileAndFactoryWrapper& idd_3_5_1);
 
     IdfObject updateUrlField_0_7_1_to_0_7_2(const IdfObject& object, unsigned index);
 
