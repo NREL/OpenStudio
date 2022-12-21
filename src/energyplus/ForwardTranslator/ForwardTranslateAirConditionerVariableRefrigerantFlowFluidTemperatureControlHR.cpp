@@ -79,11 +79,10 @@ namespace energyplus {
 
     if (boost::optional<model::Schedule> schedule = modelObject.availabilitySchedule()) {
       if (boost::optional<IdfObject> _schedule = translateAndMapModelObject(schedule.get())) {
-        idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilityScheduleName, _schedule->name().get());
+        idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::AvailabilityScheduleName,
+                            _schedule->name().get());
       }
     }
-
-
 
     // Terminal Unit List
 

@@ -83,8 +83,6 @@ namespace energyplus {
       }
     }
 
-
-
     // Terminal Unit List
 
     IdfObject _zoneTerminalUnitList(IddObjectType::ZoneTerminalUnitList);
