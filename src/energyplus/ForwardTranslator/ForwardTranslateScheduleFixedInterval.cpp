@@ -162,9 +162,17 @@ namespace energyplus {
       if (secondShift == 0) {
         start = 1;
         // JJR: interval lengths of at least one day shouldn't shift the start of the loop, right? why would we ever start with the second element of the values vector?
-        if (modelObject.intervalLength() == 1440) {  // do this for the one day interval; for interval more than one day, sorry you're on your own
-          start = 0;
-          lastDate -= dayDelta;
+        const double intervalLength = modelObject.intervalLength();
+        double integralPart = 0.0;
+        if (std::modf(intervalLength, &integralPart) == 0.0) {
+          // The intervalLength is actually an int, not a double
+          const int intervalLengthAsInt = static_cast<int>(integralPart);
+          // If this is an interval representing one or more days
+          if (intervalLengthAsInt % 1440 == 0) {
+            start = 0;
+            const int nDays = intervalLengthAsInt / 1440;
+            lastDate -= dayDelta * nDays;
+          }
         }
       } else {
         for (unsigned int i = 0; i < secondsFromFirst.size(); i++) {
