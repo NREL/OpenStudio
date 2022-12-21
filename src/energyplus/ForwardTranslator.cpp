@@ -610,19 +610,19 @@ namespace energyplus {
     }
 
     // get AirConditionerVariableRefrigerantFlowFluidTemperatureControl objects in sorted order
-    std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControl> vrfs =
+    std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControl> vrfftcs =
       model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControl>();
-    std::sort(vrfs.begin(), vrfs.end(), WorkspaceObjectNameLess());
-    for (AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrf : vrfs) {
-      translateAndMapModelObject(vrf);
+    std::sort(vrfftcs.begin(), vrfftcs.end(), WorkspaceObjectNameLess());
+    for (AirConditionerVariableRefrigerantFlowFluidTemperatureControl vrfftc : vrfftcs) {
+      translateAndMapModelObject(vrfftc);
     }
 
     // get AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR objects in sorted order
-    std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR> vrfs =
+    std::vector<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR> vrfftchrs =
       model.getConcreteModelObjects<AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR>();
-    std::sort(vrfs.begin(), vrfs.end(), WorkspaceObjectNameLess());
-    for (AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrf : vrfs) {
-      translateAndMapModelObject(vrf);
+    std::sort(vrfftchrs.begin(), vrfftchrs.end(), WorkspaceObjectNameLess());
+    for (AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR vrfftchr : vrfftchrs) {
+      translateAndMapModelObject(vrfftchr);
     }
 
     // get plant loops in sorted order

@@ -609,10 +609,10 @@ namespace energyplus {
     boost::optional<IdfObject> translateAirConditionerVariableRefrigerantFlow(model::AirConditionerVariableRefrigerantFlow& modelObject);
 
     boost::optional<IdfObject>
-      translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl(model::AirConditionerVariableRefrigerantFlow& modelObject);
+      translateAirConditionerVariableRefrigerantFlowFluidTemperatureControl(model::AirConditionerVariableRefrigerantFlowFluidTemperatureControl& modelObject);
 
     boost::optional<IdfObject>
-      translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(model::AirConditionerVariableRefrigerantFlow& modelObject);
+      translateAirConditionerVariableRefrigerantFlowFluidTemperatureControlHR(model::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR& modelObject);
 
     boost::optional<IdfObject> translateAirflowNetworkSimulationControl(model::AirflowNetworkSimulationControl& modelObject);
 
