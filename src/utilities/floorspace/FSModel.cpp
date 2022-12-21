@@ -931,7 +931,7 @@ std::vector<double> FSFiller::alphas() const {
   return m_alphas;
 }
 
-Point3d FSFiller::centerVertex(double alpha) {
+Point3d FSFiller::centerVertex(double alpha) const {
   return m_edge->vertex(alpha);
 }
 ///////////////////////////////////////////////////////////////////////////////////

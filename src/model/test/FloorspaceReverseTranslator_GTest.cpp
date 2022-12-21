@@ -1069,13 +1069,24 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_FloorplanJS_School) {
   openstudio::path p = resourcesPath() / toPath("utilities/Geometry/floorplan_school.json");
   ASSERT_TRUE(exists(p));
 
+  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
+  ASSERT_TRUE(floorPlan);
+
+  // not triangulated, for model transport/translation
+  ThreeScene scene = floorPlan->toThreeScene(true);
+  ThreeJSReverseTranslator trt;
+  boost::optional<Model> model1 = trt.modelFromThreeJS(scene);
+  ASSERT_TRUE(model1);
+  //openstudio::path outpath1 = resourcesPath() / toPath("model/floorplan_school-threejs.osm");
+  //model1->save(outpath1, true);
+
   FloorspaceReverseTranslator rt;
   boost::optional<Model> model = rt.modelFromFloorspace(toString(p));
 
   auto handleMapping = rt.handleMapping();
   EXPECT_EQ(46, handleMapping.size());
 
-  openstudio::path outpath = resourcesPath() / toPath("model/floorplan_school.osm");
+  openstudio::path outpath = resourcesPath() / toPath("model/floorplan_school-direct.osm");
   model->save(outpath, true);
 
   EXPECT_EQ(0, rt.errors().size());
@@ -1450,83 +1461,4 @@ TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4766) {
   model1->save(resourcesPath() / toPath("utilities/Geometry/floorplan_mcve_direct.osm"), true);
 
   CompareTwoModels(*model1, *model);
-}
-
-// It was noticed that the ThreeJS import had a missing subsurface on the external wall of Space 1-10 and
-// also that the surface should have been split into an internal section and an external section which
-// it was not. The direct floorspace imporrt did not have these issues. This test verifies that issue
-// has been fixed (albeit inadvertently!)
-TEST_F(ModelFixture, FloorspaceReverseTranslator_Issue_4222) {
-
-  ThreeJSReverseTranslator rt;
-
-  openstudio::path p = resourcesPath() / toPath("utilities/Geometry/issue-4222.json");
-  ASSERT_TRUE(exists(p));
-
-  boost::optional<FloorplanJS> floorPlan = FloorplanJS::load(toString(p));
-  ASSERT_TRUE(floorPlan);
-
-  // not triangulated, for model transport/translation
-  ThreeScene scene = floorPlan->toThreeScene(true);
-  boost::optional<Model> model = rt.modelFromThreeJS(scene);
-  ASSERT_TRUE(model);
-
-  ShiftVertices(*model);
-  model->save(resourcesPath() / toPath("utilities/Geometry/issue-4222_threejs.osm"), true);
-
-  FloorspaceReverseTranslator frt;
-  boost::optional<Model> model1 = frt.modelFromFloorspace(toString(p));
-  ASSERT_TRUE(model1);
-
-  ShiftVertices(*model1);
-  model1->save(resourcesPath() / toPath("utilities/Geometry/Issue-4222_direct.osm"), true);
-
-  auto space = model->getConcreteModelObjectByName<Space>("Space 1-10");
-  auto space1 = model1->getConcreteModelObjectByName<Space>("Space 1-10");
-  EXPECT_EQ(space->surfaces().size(), 12);
-  EXPECT_EQ(space1->surfaces().size(), 13);
-
-  int nRoofs = 0;
-  int nFloors = 0;
-  int nWalls = 0;
-  int nWindows = 0;
-  for (const auto& surface : space->surfaces()) {
-    if (surface.surfaceType() == "RoofCeiling") {
-      nRoofs++;
-    } else if (surface.surfaceType() == "Wall") {
-      nWalls++;
-      for (const auto& subSurface : surface.subSurfaces()) {
-        nWindows++;
-      }
-    } else if (surface.surfaceType() == "Floor") {
-      nFloors++;
-    }
-  }
-
-  EXPECT_EQ(nRoofs, 3);
-  EXPECT_EQ(nFloors, 1);
-  EXPECT_EQ(nWalls, 8);
-  EXPECT_EQ(nWindows, 3);
-
-  nRoofs = 0;
-  nFloors = 0;
-  nWalls = 0;
-  nWindows = 0;
-  for (const auto& surface : space1->surfaces()) {
-    if (surface.surfaceType() == "RoofCeiling") {
-      nRoofs++;
-    } else if (surface.surfaceType() == "Wall") {
-      nWalls++;
-      for (const auto& subSurface : surface.subSurfaces()) {
-        nWindows++;
-      }
-    } else if (surface.surfaceType() == "Floor") {
-      nFloors++;
-    }
-  }
-
-  EXPECT_EQ(nRoofs, 3);
-  EXPECT_EQ(nFloors, 1);
-  EXPECT_EQ(nWalls, 9);
-  EXPECT_EQ(nWindows, 4);
 }
