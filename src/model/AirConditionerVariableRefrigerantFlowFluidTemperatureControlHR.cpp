@@ -27,7 +27,7 @@
 *  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ***********************************************************************************************************************/
 
-#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
 #include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
 #include "ZoneHVACTerminalUnitVariableRefrigerantFlow.hpp"
 #include "ZoneHVACTerminalUnitVariableRefrigerantFlow_Impl.hpp"
@@ -1545,8 +1545,8 @@ namespace model {
       vrfModelObjectList().removeAllModelObjects();
     }
 
-    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::terminals() const {
-      return subsetCastVector<ZoneHVACTerminalUnitVariableRefrigerantFlow>(vrfModelObjectList().modelObjects());
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlowFluidTemperatureControlHR> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::terminals() const {
+      return subsetCastVector<ZoneHVACTerminalUnitVariableRefrigerantFlowFluidTemperatureControlHR>(vrfModelObjectList().modelObjects());
     }
 
     std::vector<ModelObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::children() const {
@@ -3351,7 +3351,7 @@ namespace model {
     getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->removeAllTerminals();
   }
 
-  std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::terminals() const {
+  std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlowFluidTemperatureControlHR> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::terminals() const {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->terminals();
   }
 

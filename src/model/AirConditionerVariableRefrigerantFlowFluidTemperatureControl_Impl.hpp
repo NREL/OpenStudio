@@ -494,7 +494,7 @@ namespace model {
 
       void removeAllTerminals();
 
-      std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals() const;
+      std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlowFluidTemperatureControl> terminals() const;
 
       boost::optional<double> autosizedGrossRatedTotalCoolingCapacity() const;
 
