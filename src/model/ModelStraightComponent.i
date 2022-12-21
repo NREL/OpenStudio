@@ -97,6 +97,8 @@ namespace openstudio {
 %template(GFunctionVector) std::vector<openstudio::model::GFunction>;
 
 MODELOBJECT_TEMPLATES(AirConditionerVariableRefrigerantFlow);
+MODELOBJECT_TEMPLATES(AirConditionerVariableRefrigerantFlowFluidTemperatureControl);
+MODELOBJECT_TEMPLATES(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR);
 MODELOBJECT_TEMPLATES(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass);
 MODELOBJECT_TEMPLATES(AirLoopHVACUnitaryHeatPumpAirToAir);
 MODELOBJECT_TEMPLATES(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed);
@@ -182,6 +184,8 @@ MODELOBJECT_TEMPLATES(ThermalStorageIceDetailed);
 MODELOBJECT_TEMPLATES(WaterUseConnections);
 
 SWIG_MODELOBJECT(AirConditionerVariableRefrigerantFlow,1);
+SWIG_MODELOBJECT(AirConditionerVariableRefrigerantFlowFluidTemperatureControl,1);
+SWIG_MODELOBJECT(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR,1);
 SWIG_MODELOBJECT(AirLoopHVACUnitaryHeatCoolVAVChangeoverBypass,1);
 SWIG_MODELOBJECT(AirLoopHVACUnitaryHeatPumpAirToAir,1);
 SWIG_MODELOBJECT(AirLoopHVACUnitaryHeatPumpAirToAirMultiSpeed,1);

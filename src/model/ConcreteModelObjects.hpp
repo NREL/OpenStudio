@@ -32,6 +32,8 @@
 
 #include "AdditionalProperties.hpp"
 #include "AirConditionerVariableRefrigerantFlow.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp"
 #include "AirflowNetworkConstantPressureDrop.hpp"
 #include "AirflowNetworkCrack.hpp"
 #include "AirflowNetworkDetailedOpening.hpp"
@@ -571,6 +573,8 @@
 // include all concrete ModelObject Impls too
 #include "AdditionalProperties_Impl.hpp"
 #include "AirConditionerVariableRefrigerantFlow_Impl.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp"
+#include "AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp"
 #include "AirflowNetworkConstantPressureDrop_Impl.hpp"
 #include "AirflowNetworkCrack_Impl.hpp"
 #include "AirflowNetworkDetailedOpening_Impl.hpp"

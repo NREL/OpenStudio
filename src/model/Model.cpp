@@ -3874,6 +3874,8 @@ namespace model {
 
     REGISTER_CONSTRUCTOR(AdditionalProperties);
     REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlow);
+    REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlowFluidTemperatureControl);
+    REGISTER_CONSTRUCTOR(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR);
     REGISTER_CONSTRUCTOR(AirflowNetworkConstantPressureDrop);
     REGISTER_CONSTRUCTOR(AirflowNetworkCrack);
     REGISTER_CONSTRUCTOR(AirflowNetworkDetailedOpening);
@@ -4433,6 +4435,8 @@ namespace model {
   };
     REGISTER_COPYCONSTRUCTORS(AdditionalProperties);
     REGISTER_COPYCONSTRUCTORS(AirConditionerVariableRefrigerantFlow);
+    REGISTER_COPYCONSTRUCTORS(AirConditionerVariableRefrigerantFlowFluidTemperatureControl);
+    REGISTER_COPYCONSTRUCTORS(AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkConstantPressureDrop);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkCrack);
     REGISTER_COPYCONSTRUCTORS(AirflowNetworkDetailedOpening);

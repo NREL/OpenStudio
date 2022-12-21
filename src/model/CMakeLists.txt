@@ -46,6 +46,12 @@ set(${target_name}_src
   AirConditionerVariableRefrigerantFlow.hpp
   AirConditionerVariableRefrigerantFlow_Impl.hpp
   AirConditionerVariableRefrigerantFlow.cpp
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControl.hpp
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControl_Impl.hpp
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControl.cpp
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.hpp
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl.hpp
+  AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR.cpp
   AirflowNetworkComponent.hpp
   AirflowNetworkComponent_Impl.hpp
   AirflowNetworkComponent.cpp
@@ -1845,6 +1851,8 @@ endif()
 set(${target_name}_test_src
   test/AdditionalProperties_GTest.cpp
   test/AirConditionerVariableRefrigerantFlow_GTest.cpp
+  test/AirConditionerVariableRefrigerantFlowFluidTemperatureControl_GTest.cpp
+  test/AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_GTest.cpp
   test/AirflowNetworkCrack_GTest.cpp
   test/AirflowNetworkDetailedOpening_GTest.cpp
   test/AirflowNetworkDistributionNode_GTest.cpp
