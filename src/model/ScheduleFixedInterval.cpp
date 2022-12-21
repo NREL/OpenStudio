@@ -119,9 +119,9 @@ namespace model {
       }
 
       // check the interval
-      if (intervalTime->totalDays() > 1) {
+/*       if (intervalTime->totalDays() > 1) {
         return false;
-      }
+      } */
 
       // check that first report is whole number of intervals from start date
       DateTime firstReportDateTime = timeSeries.firstReportDateTime();
