@@ -1545,9 +1545,8 @@ namespace model {
       vrfModelObjectList().removeAllModelObjects();
     }
 
-    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlowFluidTemperatureControlHR>
-      AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::terminals() const {
-      return subsetCastVector<ZoneHVACTerminalUnitVariableRefrigerantFlowFluidTemperatureControlHR>(vrfModelObjectList().modelObjects());
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::terminals() const {
+      return subsetCastVector<ZoneHVACTerminalUnitVariableRefrigerantFlow>(vrfModelObjectList().modelObjects());
     }
 
     std::vector<ModelObject> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl::children() const {
@@ -3352,8 +3351,7 @@ namespace model {
     getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->removeAllTerminals();
   }
 
-  std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlowFluidTemperatureControlHR>
-    AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::terminals() const {
+  std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR::terminals() const {
     return getImpl<detail::AirConditionerVariableRefrigerantFlowFluidTemperatureControlHR_Impl>()->terminals();
   }
 
