@@ -134,33 +134,33 @@ int main(int argc, char* argv[]) {
       pythonEngine->setupPythonPath(pythonPathDirs, pythonHomeDir);
     };
 
-    {
-      auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
-      openstudio::filesystem::path rubyScriptPath;
-      execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true);
-      std::vector<std::string> executeRubyScriptCommandArgs;
-      execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
-        ->required(false)
-        ->option_text("args");
-      execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &executeRubyScriptCommandArgs, &runSetupEmbeddedGems] {
-        runSetupEmbeddedGems();
-        openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, executeRubyScriptCommandArgs);
-      });
-    }
+    // {
+    auto* execute_ruby_scriptCommand = experimentalApp->add_subcommand("execute_ruby_script", "Executes a ruby file");
+    openstudio::filesystem::path rubyScriptPath;
+    execute_ruby_scriptCommand->add_option("path", rubyScriptPath, "Path to ruby file")->required(true);
+    std::vector<std::string> executeRubyScriptCommandArgs;
+    execute_ruby_scriptCommand->add_option("arguments", executeRubyScriptCommandArgs, "Arguments to pass to the ruby file")
+      ->required(false)
+      ->option_text("args");
+    execute_ruby_scriptCommand->callback([&rubyScriptPath, &rubyEngine, &executeRubyScriptCommandArgs, &runSetupEmbeddedGems] {
+      runSetupEmbeddedGems();
+      openstudio::cli::executeRubyScriptCommand(rubyScriptPath, rubyEngine, executeRubyScriptCommandArgs);
+    });
+    // }
 
-    {
-      auto* execute_python_scriptCommand = experimentalApp->add_subcommand("execute_python_script", "Executes a python file");
-      openstudio::filesystem::path pythonScriptPath;
-      execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to python file")->required(true);
-      std::vector<std::string> executePythonScriptCommandArgs;
-      execute_python_scriptCommand->add_option("arguments", executePythonScriptCommandArgs, "Arguments to pass to the python file")
-        ->required(false)
-        ->option_text("args");
-      execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &executePythonScriptCommandArgs, &runSetupPythonPath] {
-        runSetupPythonPath();
-        openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, executePythonScriptCommandArgs);
-      });
-    }
+    // {
+    auto* execute_python_scriptCommand = experimentalApp->add_subcommand("execute_python_script", "Executes a python file");
+    openstudio::filesystem::path pythonScriptPath;
+    execute_python_scriptCommand->add_option("path", pythonScriptPath, "Path to python file")->required(true);
+    std::vector<std::string> executePythonScriptCommandArgs;
+    execute_python_scriptCommand->add_option("arguments", executePythonScriptCommandArgs, "Arguments to pass to the python file")
+      ->required(false)
+      ->option_text("args");
+    execute_python_scriptCommand->callback([&pythonScriptPath, &pythonEngine, &executePythonScriptCommandArgs, &runSetupPythonPath] {
+      runSetupPythonPath();
+      openstudio::cli::executePythonScriptCommand(pythonScriptPath, pythonEngine, executePythonScriptCommandArgs);
+    });
+    // }
 
     [[maybe_unused]] auto* gem_listCommand =
       experimentalApp->add_subcommand("gem_list", "Lists the set gems available to openstudio")->callback([&rubyEngine, &runSetupEmbeddedGems]() {
