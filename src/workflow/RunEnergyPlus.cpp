@@ -187,6 +187,7 @@ void OSWorkflow::runEnergyPlus() {
 
     // boost::process allows redirecting stdout / stderr easily, but I can no longer debug in LLDB, which is annoying
     // Edit: actually std::system has the same issue... it captures a SIGVTALRM
+    // Disable with: `pro hand -p true -s false SIGVTALRM`
     int result = 0;
 
     if constexpr (useBoostProcess) {

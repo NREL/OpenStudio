@@ -77,12 +77,13 @@ void gatherReports(const openstudio::filesystem::path& runDirPath, const openstu
   static const boost::regex runDirNumbers(R"(^[0-9]+[0-9]+[0-9]+_(.*)$)");
   for (auto& fPath : fs::recursive_directory_files(runDirPath)) {
     auto fnamePath = fPath.filename();
-    auto fnamePathStr = fnamePath.string();
+    std::string fnamePathStr = fnamePath.string();
     if (fnamePathStr.substr(0, 6) == "report" && fnamePath.has_extension()) {
       // TODO: lots of workarounds happening in https://github.com/NREL/OpenStudio-workflow-gem/blob/cf99e6096f33b717df79a71c245a4d7aa4ccb7a6/lib/openstudio/workflow/util/post_process.rb#L188-L216
       // TODO: I don't like it one bit. Instead we should store a stepRunDir on the workflowJSON Steps and iterate on that or something
       boost::smatch matches;
-      if (boost::regex_search(fPath.parent_path().filename().string(), matches, runDirNumbers)) {
+      const std::string dirNameStr = fPath.parent_path().filename().string();
+      if (boost::regex_search(dirNameStr, matches, runDirNumbers)) {
         const std::string measure_dir_name(matches[1].first, matches[1].second);
         const fs::path measureXmlPath = rootDirPath / "measures" / measure_dir_name / "measure.xml";
         std::string measure_class_name;
@@ -94,8 +95,9 @@ void gatherReports(const openstudio::filesystem::path& runDirPath, const openstu
         measure_class_name = openstudio::toUnderscoreCase(measure_class_name);
         const fs::path outPath = reportsDirPath / fmt::format("{}_{}", measure_class_name, fnamePathStr);
 
-        LOG_FREE(Info, "openstudio.workflow.Util", "Saving report " << fnamePath << " to " << outPath);
-        fs::copy_file(fnamePath, outPath, fs::copy_options::overwrite_existing);
+        const fs::path oriPath = runDirPath / fPath;
+        LOG_FREE(Info, "openstudio.workflow.Util", "Saving report " << oriPath << " to " << outPath);
+        fs::copy_file(oriPath, outPath, fs::copy_options::overwrite_existing);
       }
     }
   }
