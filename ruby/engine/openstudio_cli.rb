@@ -298,6 +298,9 @@ def split_main_and_subcommand(argv, command_list)
   # We split the arguments into two: One set containing any flags before a word, and then the rest. The rest are what
   # get actually sent on to the command
   argv.each_index do |i|
+    # Handle args with single quotes due to running commands in Windows cmd.exe.
+    argv[i] = argv[i].gsub(/^'/, "")
+    argv[i] = argv[i].gsub(/'$/, "")
     if commands.index(argv[i])
       main_args   = argv[0, i]
       sub_command = argv[i]
