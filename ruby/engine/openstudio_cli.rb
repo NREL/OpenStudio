@@ -272,6 +272,15 @@ rescue OptionParser::InvalidOption, OptionParser::MissingArgument
   raise "Error: Invalid CLI option, #{opts.help.chomp}"
 end
 
+# Method to clean the args. Windows cmd.exe treats single quotes as regular chars so we strip them if found.
+def clean_argv(argv)
+  argv.each_index do |i|
+    argv[i] = argv[i].gsub(/^'/, "")
+    argv[i] = argv[i].gsub(/'$/, "")
+  end
+  return argv
+end
+
 # This method will split the argv given into three parts: the flags to this command, the command, and the flags to
 # the command. For example:
 #     -v status -h -v
@@ -287,6 +296,8 @@ end
 # @return [Array] The split command as [main arguments, sub command, sub command arguments]
 #
 def split_main_and_subcommand(argv, command_list)
+
+  argv = clean_argv(argv)
   # Initialize return variables
   main_args   = nil
   sub_command = nil
@@ -298,9 +309,7 @@ def split_main_and_subcommand(argv, command_list)
   # We split the arguments into two: One set containing any flags before a word, and then the rest. The rest are what
   # get actually sent on to the command
   argv.each_index do |i|
-    # Handle args with single quotes due to running commands in Windows cmd.exe.
-    argv[i] = argv[i].gsub(/^'/, "")
-    argv[i] = argv[i].gsub(/'$/, "")
+ 
     if commands.index(argv[i])
       main_args   = argv[0, i]
       sub_command = argv[i]
@@ -738,6 +747,7 @@ class CLI
   # @return [Object] An instance of the CLI class with initialized globals
   #
   def initialize(argv)
+
     $main_args, $sub_command, $sub_args = split_main_and_subcommand(argv, command_list)
 
     if $main_args.include? '--verbose'
