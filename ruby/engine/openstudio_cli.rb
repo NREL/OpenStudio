@@ -296,8 +296,6 @@ end
 # @return [Array] The split command as [main arguments, sub command, sub command arguments]
 #
 def split_main_and_subcommand(argv, command_list)
-
-  argv = clean_argv(argv)
   # Initialize return variables
   main_args   = nil
   sub_command = nil
@@ -309,7 +307,6 @@ def split_main_and_subcommand(argv, command_list)
   # We split the arguments into two: One set containing any flags before a word, and then the rest. The rest are what
   # get actually sent on to the command
   argv.each_index do |i|
- 
     if commands.index(argv[i])
       main_args   = argv[0, i]
       sub_command = argv[i]
@@ -747,7 +744,7 @@ class CLI
   # @return [Object] An instance of the CLI class with initialized globals
   #
   def initialize(argv)
-
+    argv = clean_argv(argv)
     $main_args, $sub_command, $sub_args = split_main_and_subcommand(argv, command_list)
 
     if $main_args.include? '--verbose'
