@@ -1,0 +1,916 @@
+
+OS:Version,
+  {ab40e3ba-5c8a-42cf-931b-49045b741f23}, !- Handle
+  3.4.0;                                  !- Version Identifier
+
+OS:ZoneHVAC:TerminalUnit:VariableRefrigerantFlow,
+  {4e15e1b4-659e-4025-9dfa-d9886f97eced}, !- Handle
+  VRF Terminal Unit,                      !- Name
+  {a62ea42d-ebe7-405e-a7fd-a4a18662a939}, !- Terminal Unit Availability schedule
+  ,                                       !- Terminal Unit Air Inlet Node
+  ,                                       !- Terminal Unit Air Outlet Node
+  0.2,                                    !- Supply Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- Supply Air Flow Rate When No Cooling is Needed {m3/s}
+  0.2,                                    !- Supply Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- Supply Air Flow Rate When No Heating is Needed {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Cooling Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate During Heating Operation {m3/s}
+  autosize,                               !- Outdoor Air Flow Rate When No Cooling or Heating is Needed {m3/s}
+  {a62ea42d-ebe7-405e-a7fd-a4a18662a939}, !- Supply Air Fan Operating Mode Schedule
+  DrawThrough,                            !- Supply Air Fan Placement
+  {2c002f23-1469-41f7-919f-735fb7091339}, !- Supply Air Fan
+  ,                                       !- Outside Air Mixer
+  {c25f7f69-6b16-4bbc-a394-dfe502fe30b7}, !- Cooling Coil
+  {68998874-fdb3-46f0-baf4-5aa2765f1978}, !- Heating Coil
+  30,                                     !- Zone Terminal Unit On Parasitic Electric Energy Use {W}
+  20,                                     !- Zone Terminal Unit Off Parasitic Electric Energy Use {W}
+  1,                                      !- Rated Total Heating Capacity Sizing Ratio {W/W}
+  ,                                       !- Availability Manager List Name
+  ,                                       !- Design Specification ZoneHVAC Sizing Object Name
+  ,                                       !- Supplemental Heating Coil Name
+  Autosize,                               !- Maximum Supply Air Temperature from Supplemental Heater {C}
+  21;                                     !- Maximum Outdoor Dry-Bulb Temperature for Supplemental Heater Operation {C}
+
+OS:Schedule:Constant,
+  {a62ea42d-ebe7-405e-a7fd-a4a18662a939}, !- Handle
+  Always On Discrete,                     !- Name
+  {22ea981d-97b2-4f59-959e-91f9deec6a1d}, !- Schedule Type Limits Name
+  1;                                      !- Value
+
+OS:ScheduleTypeLimits,
+  {22ea981d-97b2-4f59-959e-91f9deec6a1d}, !- Handle
+  Schedule Type Limits 1,                 !- Name
+  0,                                      !- Lower Limit Value
+  1,                                      !- Upper Limit Value
+  Discrete,                               !- Numeric Type
+  Availability;                           !- Unit Type
+
+OS:Fan:OnOff,
+  {2c002f23-1469-41f7-919f-735fb7091339}, !- Handle
+  Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Fan, !- Name
+  {a62ea42d-ebe7-405e-a7fd-a4a18662a939}, !- Availability Schedule Name
+  0.6,                                    !- Fan Total Efficiency
+  300,                                    !- Pressure Rise {Pa}
+  0.2,                                    !- Maximum Flow Rate {m3/s}
+  0.8,                                    !- Motor Efficiency
+  1,                                      !- Motor In Airstream Fraction
+  ,                                       !- Air Inlet Node Name
+  ,                                       !- Air Outlet Node Name
+  {fb331a3a-3a6e-47b0-932b-4c26ce439d61}, !- Fan Power Ratio Function of Speed Ratio Curve Name
+  {94f37550-e845-4e6b-80c4-4614189c79af}, !- Fan Efficiency Ratio Function of Speed Ratio Curve Name
+  ;                                       !- End-Use Subcategory
+
+OS:Curve:Exponent,
+  {fb331a3a-3a6e-47b0-932b-4c26ce439d61}, !- Handle
+  Fan On Off Power Curve,                 !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 Constant
+  0,                                      !- Coefficient3 Constant
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Curve:Cubic,
+  {94f37550-e845-4e6b-80c4-4614189c79af}, !- Handle
+  Fan On Off Efficiency Curve,            !- Name
+  1,                                      !- Coefficient1 Constant
+  0,                                      !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0,                                      !- Coefficient4 x**3
+  0,                                      !- Minimum Value of x
+  1;                                      !- Maximum Value of x
+
+OS:Coil:Cooling:DX:VariableRefrigerantFlow,
+  {c25f7f69-6b16-4bbc-a394-dfe502fe30b7}, !- Handle
+  Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Cooling Coil, !- Name
+  {a62ea42d-ebe7-405e-a7fd-a4a18662a939}, !- Availability Schedule
+  5600,                                   !- Rated Total Cooling Capacity {W}
+  0.72,                                   !- Rated Sensible Heat Ratio
+  0.2,                                    !- Rated Air Flow Rate {m3/s}
+  {82279363-6cbe-4614-a2fa-25d7b21f6116}, !- Cooling Capacity Ratio Modifier Function of Temperature Curve
+  {9331b7f7-cf09-4461-8852-d7357ac7d55e}; !- Cooling Capacity Modifier Curve Function of Flow Fraction
+
+OS:Table:MultiVariableLookup,
+  {82279363-6cbe-4614-a2fa-25d7b21f6116}, !- Handle
+  Table Multi Variable Lookup 2,          !- Name
+  LinearInterpolationOfTable,             !- Interpolation Method
+  ,                                       !- Number of Interpolation Points
+  BiQuadratic,                            !- Curve Type
+  ,                                       !- Table Data Format
+  ,                                       !- External File Name
+  ,                                       !- X1 Sort Order
+  ,                                       !- X2 Sort Order
+  1,                                      !- Normalization Reference
+  13.9,                                   !- Minimum Value of X1
+  24.4,                                   !- Maximum Value of X1
+  -5,                                     !- Minimum Value of X2
+  43.3,                                   !- Maximum Value of X2
+  ,                                       !- Minimum Value of X3
+  ,                                       !- Maximum Value of X3
+  ,                                       !- Minimum Value of X4
+  ,                                       !- Maximum Value of X4
+  ,                                       !- Minimum Value of X5
+  ,                                       !- Maximum Value of X5
+  0.638321428571429,                      !- Minimum Table Output
+  1.28710714285714,                       !- Maximum Table Output
+  Temperature,                            !- Input Unit Type for X1
+  Temperature,                            !- Input Unit Type for X2
+  ,                                       !- Input Unit Type for X3
+  ,                                       !- Input Unit Type for X4
+  ,                                       !- Input Unit Type for X5
+  Dimensionless,                          !- Output Unit Type
+  2,                                      !- Number of Independent Variables
+  13.9,                                   !- Data 1
+  -5,                                     !- Data 2
+  0.65925,                                !- Data 3
+  13.9,                                   !- Data 4
+  -3.9,                                   !- Data 5
+  0.65925,                                !- Data 6
+  13.9,                                   !- Data 7
+  -1.1,                                   !- Data 8
+  0.65925,                                !- Data 9
+  13.9,                                   !- Data 10
+  1.7,                                    !- Data 11
+  0.65925,                                !- Data 12
+  13.9,                                   !- Data 13
+  4.4,                                    !- Data 14
+  0.65925,                                !- Data 15
+  13.9,                                   !- Data 16
+  7.2,                                    !- Data 17
+  0.65925,                                !- Data 18
+  13.9,                                   !- Data 19
+  10,                                     !- Data 20
+  0.65925,                                !- Data 21
+  13.9,                                   !- Data 22
+  12.8,                                   !- Data 23
+  0.65925,                                !- Data 24
+  13.9,                                   !- Data 25
+  15.6,                                   !- Data 26
+  0.65925,                                !- Data 27
+  13.9,                                   !- Data 28
+  18.3,                                   !- Data 29
+  0.65925,                                !- Data 30
+  13.9,                                   !- Data 31
+  21.1,                                   !- Data 32
+  0.65925,                                !- Data 33
+  13.9,                                   !- Data 34
+  23.9,                                   !- Data 35
+  0.65925,                                !- Data 36
+  13.9,                                   !- Data 37
+  26.7,                                   !- Data 38
+  0.65925,                                !- Data 39
+  13.9,                                   !- Data 40
+  29.4,                                   !- Data 41
+  0.65925,                                !- Data 42
+  13.9,                                   !- Data 43
+  32.2,                                   !- Data 44
+  0.65925,                                !- Data 45
+  13.9,                                   !- Data 46
+  35,                                     !- Data 47
+  0.65925,                                !- Data 48
+  13.9,                                   !- Data 49
+  37.8,                                   !- Data 50
+  0.65925,                                !- Data 51
+  13.9,                                   !- Data 52
+  40.6,                                   !- Data 53
+  0.65925,                                !- Data 54
+  13.9,                                   !- Data 55
+  43.3,                                   !- Data 56
+  0.638321428571429,                      !- Data 57
+  16.1,                                   !- Data 58
+  -5,                                     !- Data 59
+  0.800517857142857,                      !- Data 60
+  16.1,                                   !- Data 61
+  -3.9,                                   !- Data 62
+  0.800517857142857,                      !- Data 63
+  16.1,                                   !- Data 64
+  -1.1,                                   !- Data 65
+  0.800517857142857,                      !- Data 66
+  16.1,                                   !- Data 67
+  1.7,                                    !- Data 68
+  0.800517857142857,                      !- Data 69
+  16.1,                                   !- Data 70
+  4.4,                                    !- Data 71
+  0.800517857142857,                      !- Data 72
+  16.1,                                   !- Data 73
+  7.2,                                    !- Data 74
+  0.800517857142857,                      !- Data 75
+  16.1,                                   !- Data 76
+  10,                                     !- Data 77
+  0.800517857142857,                      !- Data 78
+  16.1,                                   !- Data 79
+  12.8,                                   !- Data 80
+  0.800517857142857,                      !- Data 81
+  16.1,                                   !- Data 82
+  15.6,                                   !- Data 83
+  0.800517857142857,                      !- Data 84
+  16.1,                                   !- Data 85
+  18.3,                                   !- Data 86
+  0.800517857142857,                      !- Data 87
+  16.1,                                   !- Data 88
+  21.1,                                   !- Data 89
+  0.800517857142857,                      !- Data 90
+  16.1,                                   !- Data 91
+  23.9,                                   !- Data 92
+  0.800517857142857,                      !- Data 93
+  16.1,                                   !- Data 94
+  26.7,                                   !- Data 95
+  0.800517857142857,                      !- Data 96
+  16.1,                                   !- Data 97
+  29.4,                                   !- Data 98
+  0.800517857142857,                      !- Data 99
+  16.1,                                   !- Data 100
+  32.2,                                   !- Data 101
+  0.800517857142857,                      !- Data 102
+  16.1,                                   !- Data 103
+  35,                                     !- Data 104
+  0.800517857142857,                      !- Data 105
+  16.1,                                   !- Data 106
+  37.8,                                   !- Data 107
+  0.800517857142857,                      !- Data 108
+  16.1,                                   !- Data 109
+  40.6,                                   !- Data 110
+  0.758660714285714,                      !- Data 111
+  16.1,                                   !- Data 112
+  43.3,                                   !- Data 113
+  0.722035714285714,                      !- Data 114
+  17.8,                                   !- Data 115
+  -5,                                     !- Data 116
+  0.899928571428572,                      !- Data 117
+  17.8,                                   !- Data 118
+  -3.9,                                   !- Data 119
+  0.899928571428572,                      !- Data 120
+  17.8,                                   !- Data 121
+  -1.1,                                   !- Data 122
+  0.899928571428572,                      !- Data 123
+  17.8,                                   !- Data 124
+  1.7,                                    !- Data 125
+  0.899928571428572,                      !- Data 126
+  17.8,                                   !- Data 127
+  4.4,                                    !- Data 128
+  0.899928571428572,                      !- Data 129
+  17.8,                                   !- Data 130
+  7.2,                                    !- Data 131
+  0.899928571428572,                      !- Data 132
+  17.8,                                   !- Data 133
+  10,                                     !- Data 134
+  0.899928571428572,                      !- Data 135
+  17.8,                                   !- Data 136
+  12.8,                                   !- Data 137
+  0.899928571428572,                      !- Data 138
+  17.8,                                   !- Data 139
+  15.6,                                   !- Data 140
+  0.899928571428572,                      !- Data 141
+  17.8,                                   !- Data 142
+  18.3,                                   !- Data 143
+  0.899928571428572,                      !- Data 144
+  17.8,                                   !- Data 145
+  21.1,                                   !- Data 146
+  0.899928571428572,                      !- Data 147
+  17.8,                                   !- Data 148
+  23.9,                                   !- Data 149
+  0.899928571428572,                      !- Data 150
+  17.8,                                   !- Data 151
+  26.7,                                   !- Data 152
+  0.899928571428572,                      !- Data 153
+  17.8,                                   !- Data 154
+  29.4,                                   !- Data 155
+  0.899928571428572,                      !- Data 156
+  17.8,                                   !- Data 157
+  32.2,                                   !- Data 158
+  0.899928571428572,                      !- Data 159
+  17.8,                                   !- Data 160
+  35,                                     !- Data 161
+  0.899928571428572,                      !- Data 162
+  17.8,                                   !- Data 163
+  37.8,                                   !- Data 164
+  0.899928571428572,                      !- Data 165
+  17.8,                                   !- Data 166
+  40.6,                                   !- Data 167
+  0.858071428571428,                      !- Data 168
+  17.8,                                   !- Data 169
+  43.3,                                   !- Data 170
+  0.800517857142857,                      !- Data 171
+  19.4,                                   !- Data 172
+  -5,                                     !- Data 173
+  0.999339285714286,                      !- Data 174
+  19.4,                                   !- Data 175
+  -3.9,                                   !- Data 176
+  0.999339285714286,                      !- Data 177
+  19.4,                                   !- Data 178
+  -1.1,                                   !- Data 179
+  0.999339285714286,                      !- Data 180
+  19.4,                                   !- Data 181
+  1.7,                                    !- Data 182
+  0.999339285714286,                      !- Data 183
+  19.4,                                   !- Data 184
+  4.4,                                    !- Data 185
+  0.999339285714286,                      !- Data 186
+  19.4,                                   !- Data 187
+  7.2,                                    !- Data 188
+  0.999339285714286,                      !- Data 189
+  19.4,                                   !- Data 190
+  10,                                     !- Data 191
+  0.999339285714286,                      !- Data 192
+  19.4,                                   !- Data 193
+  12.8,                                   !- Data 194
+  0.999339285714286,                      !- Data 195
+  19.4,                                   !- Data 196
+  15.6,                                   !- Data 197
+  0.999339285714286,                      !- Data 198
+  19.4,                                   !- Data 199
+  18.3,                                   !- Data 200
+  0.999339285714286,                      !- Data 201
+  19.4,                                   !- Data 202
+  21.1,                                   !- Data 203
+  0.999339285714286,                      !- Data 204
+  19.4,                                   !- Data 205
+  23.9,                                   !- Data 206
+  0.999339285714286,                      !- Data 207
+  19.4,                                   !- Data 208
+  26.7,                                   !- Data 209
+  0.999339285714286,                      !- Data 210
+  19.4,                                   !- Data 211
+  29.4,                                   !- Data 212
+  0.999339285714286,                      !- Data 213
+  19.4,                                   !- Data 214
+  32.2,                                   !- Data 215
+  0.999339285714286,                      !- Data 216
+  19.4,                                   !- Data 217
+  35,                                     !- Data 218
+  0.999339285714286,                      !- Data 219
+  19.4,                                   !- Data 220
+  37.8,                                   !- Data 221
+  0.999339285714286,                      !- Data 222
+  19.4,                                   !- Data 223
+  40.6,                                   !- Data 224
+  0.957482142857143,                      !- Data 225
+  19.4,                                   !- Data 226
+  43.3,                                   !- Data 227
+  0.899928571428572,                      !- Data 228
+  21.1,                                   !- Data 229
+  -5,                                     !- Data 230
+  1.11967857142857,                       !- Data 231
+  21.1,                                   !- Data 232
+  -3.9,                                   !- Data 233
+  1.11967857142857,                       !- Data 234
+  21.1,                                   !- Data 235
+  -1.1,                                   !- Data 236
+  1.11967857142857,                       !- Data 237
+  21.1,                                   !- Data 238
+  1.7,                                    !- Data 239
+  1.11967857142857,                       !- Data 240
+  21.1,                                   !- Data 241
+  4.4,                                    !- Data 242
+  1.11967857142857,                       !- Data 243
+  21.1,                                   !- Data 244
+  7.2,                                    !- Data 245
+  1.11967857142857,                       !- Data 246
+  21.1,                                   !- Data 247
+  10,                                     !- Data 248
+  1.11967857142857,                       !- Data 249
+  21.1,                                   !- Data 250
+  12.8,                                   !- Data 251
+  1.11967857142857,                       !- Data 252
+  21.1,                                   !- Data 253
+  15.6,                                   !- Data 254
+  1.11967857142857,                       !- Data 255
+  21.1,                                   !- Data 256
+  18.3,                                   !- Data 257
+  1.11967857142857,                       !- Data 258
+  21.1,                                   !- Data 259
+  21.1,                                   !- Data 260
+  1.11967857142857,                       !- Data 261
+  21.1,                                   !- Data 262
+  23.9,                                   !- Data 263
+  1.11967857142857,                       !- Data 264
+  21.1,                                   !- Data 265
+  26.7,                                   !- Data 266
+  1.11967857142857,                       !- Data 267
+  21.1,                                   !- Data 268
+  29.4,                                   !- Data 269
+  1.10921428571429,                       !- Data 270
+  21.1,                                   !- Data 271
+  32.2,                                   !- Data 272
+  1.08828571428571,                       !- Data 273
+  21.1,                                   !- Data 274
+  35,                                     !- Data 275
+  1.06735714285714,                       !- Data 276
+  21.1,                                   !- Data 277
+  37.8,                                   !- Data 278
+  1.05166071428571,                       !- Data 279
+  21.1,                                   !- Data 280
+  40.6,                                   !- Data 281
+  0.978410714285714,                      !- Data 282
+  21.1,                                   !- Data 283
+  43.3,                                   !- Data 284
+  0.920857142857143,                      !- Data 285
+  22.8,                                   !- Data 286
+  -5,                                     !- Data 287
+  1.18769642857143,                       !- Data 288
+  22.8,                                   !- Data 289
+  -3.9,                                   !- Data 290
+  1.18769642857143,                       !- Data 291
+  22.8,                                   !- Data 292
+  -1.1,                                   !- Data 293
+  1.18769642857143,                       !- Data 294
+  22.8,                                   !- Data 295
+  1.7,                                    !- Data 296
+  1.18769642857143,                       !- Data 297
+  22.8,                                   !- Data 298
+  4.4,                                    !- Data 299
+  1.18769642857143,                       !- Data 300
+  22.8,                                   !- Data 301
+  7.2,                                    !- Data 302
+  1.18769642857143,                       !- Data 303
+  22.8,                                   !- Data 304
+  10,                                     !- Data 305
+  1.18769642857143,                       !- Data 306
+  22.8,                                   !- Data 307
+  12.8,                                   !- Data 308
+  1.18769642857143,                       !- Data 309
+  22.8,                                   !- Data 310
+  15.6,                                   !- Data 311
+  1.18769642857143,                       !- Data 312
+  22.8,                                   !- Data 313
+  18.3,                                   !- Data 314
+  1.18769642857143,                       !- Data 315
+  22.8,                                   !- Data 316
+  21.1,                                   !- Data 317
+  1.18769642857143,                       !- Data 318
+  22.8,                                   !- Data 319
+  23.9,                                   !- Data 320
+  1.18769642857143,                       !- Data 321
+  22.8,                                   !- Data 322
+  26.7,                                   !- Data 323
+  1.16153571428571,                       !- Data 324
+  22.8,                                   !- Data 325
+  29.4,                                   !- Data 326
+  1.11967857142857,                       !- Data 327
+  22.8,                                   !- Data 328
+  32.2,                                   !- Data 329
+  1.09875,                                !- Data 330
+  22.8,                                   !- Data 331
+  35,                                     !- Data 332
+  1.08828571428571,                       !- Data 333
+  22.8,                                   !- Data 334
+  37.8,                                   !- Data 335
+  1.06735714285714,                       !- Data 336
+  22.8,                                   !- Data 337
+  40.6,                                   !- Data 338
+  1.03073214285714,                       !- Data 339
+  22.8,                                   !- Data 340
+  43.3,                                   !- Data 341
+  0.978410714285714,                      !- Data 342
+  24.4,                                   !- Data 343
+  -5,                                     !- Data 344
+  1.28710714285714,                       !- Data 345
+  24.4,                                   !- Data 346
+  -3.9,                                   !- Data 347
+  1.28710714285714,                       !- Data 348
+  24.4,                                   !- Data 349
+  -1.1,                                   !- Data 350
+  1.28710714285714,                       !- Data 351
+  24.4,                                   !- Data 352
+  1.7,                                    !- Data 353
+  1.28710714285714,                       !- Data 354
+  24.4,                                   !- Data 355
+  4.4,                                    !- Data 356
+  1.28710714285714,                       !- Data 357
+  24.4,                                   !- Data 358
+  7.2,                                    !- Data 359
+  1.28710714285714,                       !- Data 360
+  24.4,                                   !- Data 361
+  10,                                     !- Data 362
+  1.28710714285714,                       !- Data 363
+  24.4,                                   !- Data 364
+  12.8,                                   !- Data 365
+  1.28710714285714,                       !- Data 366
+  24.4,                                   !- Data 367
+  15.6,                                   !- Data 368
+  1.27664285714286,                       !- Data 369
+  24.4,                                   !- Data 370
+  18.3,                                   !- Data 371
+  1.26094642857143,                       !- Data 372
+  24.4,                                   !- Data 373
+  21.1,                                   !- Data 374
+  1.24001785714286,                       !- Data 375
+  24.4,                                   !- Data 376
+  23.9,                                   !- Data 377
+  1.208625,                               !- Data 378
+  24.4,                                   !- Data 379
+  26.7,                                   !- Data 380
+  1.17723214285714,                       !- Data 381
+  24.4,                                   !- Data 382
+  29.4,                                   !- Data 383
+  1.14060714285714,                       !- Data 384
+  24.4,                                   !- Data 385
+  32.2,                                   !- Data 386
+  1.11967857142857,                       !- Data 387
+  24.4,                                   !- Data 388
+  35,                                     !- Data 389
+  1.10921428571429,                       !- Data 390
+  24.4,                                   !- Data 391
+  37.8,                                   !- Data 392
+  1.08828571428571,                       !- Data 393
+  24.4,                                   !- Data 394
+  40.6,                                   !- Data 395
+  1.05166071428571,                       !- Data 396
+  24.4,                                   !- Data 397
+  43.3,                                   !- Data 398
+  1.02026785714286;                       !- Data 399
+
+OS:Curve:Quadratic,
+  {9331b7f7-cf09-4461-8852-d7357ac7d55e}, !- Handle
+  VRFACCoolCapFFF,                        !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:Coil:Heating:DX:VariableRefrigerantFlow,
+  {68998874-fdb3-46f0-baf4-5aa2765f1978}, !- Handle
+  Zone HVAC Terminal Unit Variable Refrigerant Flow 1 Heating Coil, !- Name
+  {a62ea42d-ebe7-405e-a7fd-a4a18662a939}, !- Availability Schedule
+  6300,                                   !- Rated Total Heating Capacity {W}
+  0.2,                                    !- Rated Air Flow Rate {m3/s}
+  ,                                       !- Coil Air Inlet Node
+  ,                                       !- Coil Air Outlet Node
+  {ec593da2-0495-4905-8c20-0d4b2adbf480}, !- Heating Capacity Ratio Modifier Function of Temperature Curve
+  {c7b069bc-641c-4020-8af4-24898f33b548}; !- Heating Capacity Modifier Function of Flow Fraction Curve
+
+OS:Table:MultiVariableLookup,
+  {ec593da2-0495-4905-8c20-0d4b2adbf480}, !- Handle
+  Table Multi Variable Lookup 1,          !- Name
+  LinearInterpolationOfTable,             !- Interpolation Method
+  ,                                       !- Number of Interpolation Points
+  BiQuadratic,                            !- Curve Type
+  ,                                       !- Table Data Format
+  ,                                       !- External File Name
+  ,                                       !- X1 Sort Order
+  ,                                       !- X2 Sort Order
+  1,                                      !- Normalization Reference
+  15,                                     !- Minimum Value of X1
+  24.4,                                   !- Maximum Value of X1
+  -20.2,                                  !- Minimum Value of X2
+  13.3,                                   !- Maximum Value of X2
+  ,                                       !- Minimum Value of X3
+  ,                                       !- Maximum Value of X3
+  ,                                       !- Minimum Value of X4
+  ,                                       !- Maximum Value of X4
+  ,                                       !- Minimum Value of X5
+  ,                                       !- Maximum Value of X5
+  0.660412698412698,                      !- Minimum Table Output
+  1.22315873015873,                       !- Maximum Table Output
+  Temperature,                            !- Input Unit Type for X1
+  Temperature,                            !- Input Unit Type for X2
+  ,                                       !- Input Unit Type for X3
+  ,                                       !- Input Unit Type for X4
+  ,                                       !- Input Unit Type for X5
+  Dimensionless,                          !- Output Unit Type
+  2,                                      !- Number of Independent Variables
+  15,                                     !- Data 1
+  -20.2,                                  !- Data 2
+  0.669714285714286,                      !- Data 3
+  15,                                     !- Data 4
+  -18,                                    !- Data 5
+  0.68831746031746,                       !- Data 6
+  15,                                     !- Data 7
+  -15.3,                                  !- Data 8
+  0.781333333333333,                      !- Data 9
+  15,                                     !- Data 10
+  -12.8,                                  !- Data 11
+  0.809238095238095,                      !- Data 12
+  15,                                     !- Data 13
+  -10,                                    !- Data 14
+  0.860396825396825,                      !- Data 15
+  15,                                     !- Data 16
+  -7.2,                                   !- Data 17
+  0.911555555555556,                      !- Data 18
+  15,                                     !- Data 19
+  -5,                                     !- Data 20
+  0.948761904761905,                      !- Data 21
+  15,                                     !- Data 22
+  -2.2,                                   !- Data 23
+  0.972015873015873,                      !- Data 24
+  15,                                     !- Data 25
+  0,                                      !- Data 26
+  0.999920634920635,                      !- Data 27
+  15,                                     !- Data 28
+  2.2,                                    !- Data 29
+  1.04177777777778,                       !- Data 30
+  15,                                     !- Data 31
+  5,                                      !- Data 32
+  1.07898412698413,                       !- Data 33
+  15,                                     !- Data 34
+  6.1,                                    !- Data 35
+  1.12084126984127,                       !- Data 36
+  15,                                     !- Data 37
+  7.8,                                    !- Data 38
+  1.19990476190476,                       !- Data 39
+  15,                                     !- Data 40
+  10.6,                                   !- Data 41
+  1.22315873015873,                       !- Data 42
+  15,                                     !- Data 43
+  13.3,                                   !- Data 44
+  1.22315873015873,                       !- Data 45
+  16.1,                                   !- Data 46
+  -20.2,                                  !- Data 47
+  0.669714285714286,                      !- Data 48
+  16.1,                                   !- Data 49
+  -18,                                    !- Data 50
+  0.68831746031746,                       !- Data 51
+  16.1,                                   !- Data 52
+  -15.3,                                  !- Data 53
+  0.772031746031746,                      !- Data 54
+  16.1,                                   !- Data 55
+  -12.8,                                  !- Data 56
+  0.809238095238095,                      !- Data 57
+  16.1,                                   !- Data 58
+  -10,                                    !- Data 59
+  0.860396825396825,                      !- Data 60
+  16.1,                                   !- Data 61
+  -7.2,                                   !- Data 62
+  0.911555555555556,                      !- Data 63
+  16.1,                                   !- Data 64
+  -5,                                     !- Data 65
+  0.948761904761905,                      !- Data 66
+  16.1,                                   !- Data 67
+  -2.2,                                   !- Data 68
+  0.972015873015873,                      !- Data 69
+  16.1,                                   !- Data 70
+  0,                                      !- Data 71
+  0.999920634920635,                      !- Data 72
+  16.1,                                   !- Data 73
+  2.2,                                    !- Data 74
+  1.04177777777778,                       !- Data 75
+  16.1,                                   !- Data 76
+  5,                                      !- Data 77
+  1.07898412698413,                       !- Data 78
+  16.1,                                   !- Data 79
+  6.1,                                    !- Data 80
+  1.11153968253968,                       !- Data 81
+  16.1,                                   !- Data 82
+  7.8,                                    !- Data 83
+  1.14874603174603,                       !- Data 84
+  16.1,                                   !- Data 85
+  10.6,                                   !- Data 86
+  1.15804761904762,                       !- Data 87
+  16.1,                                   !- Data 88
+  13.3,                                   !- Data 89
+  1.15804761904762,                       !- Data 90
+  17.8,                                   !- Data 91
+  -20.2,                                  !- Data 92
+  0.669714285714286,                      !- Data 93
+  17.8,                                   !- Data 94
+  -18,                                    !- Data 95
+  0.68831746031746,                       !- Data 96
+  17.8,                                   !- Data 97
+  -15.3,                                  !- Data 98
+  0.758079365079365,                      !- Data 99
+  17.8,                                   !- Data 100
+  -12.8,                                  !- Data 101
+  0.809238095238095,                      !- Data 102
+  17.8,                                   !- Data 103
+  -10,                                    !- Data 104
+  0.860396825396825,                      !- Data 105
+  17.8,                                   !- Data 106
+  -7.2,                                   !- Data 107
+  0.911555555555556,                      !- Data 108
+  17.8,                                   !- Data 109
+  -5,                                     !- Data 110
+  0.948761904761905,                      !- Data 111
+  17.8,                                   !- Data 112
+  -2.2,                                   !- Data 113
+  0.972015873015873,                      !- Data 114
+  17.8,                                   !- Data 115
+  0,                                      !- Data 116
+  0.999920634920635,                      !- Data 117
+  17.8,                                   !- Data 118
+  2.2,                                    !- Data 119
+  1.04177777777778,                       !- Data 120
+  17.8,                                   !- Data 121
+  5,                                      !- Data 122
+  1.07898412698413,                       !- Data 123
+  17.8,                                   !- Data 124
+  6.1,                                    !- Data 125
+  1.1022380952381,                        !- Data 126
+  17.8,                                   !- Data 127
+  7.8,                                    !- Data 128
+  1.1022380952381,                        !- Data 129
+  17.8,                                   !- Data 130
+  10.6,                                   !- Data 131
+  1.1022380952381,                        !- Data 132
+  17.8,                                   !- Data 133
+  13.3,                                   !- Data 134
+  1.1022380952381,                        !- Data 135
+  19.4,                                   !- Data 136
+  -20.2,                                  !- Data 137
+  0.669714285714286,                      !- Data 138
+  19.4,                                   !- Data 139
+  -18,                                    !- Data 140
+  0.68831746031746,                       !- Data 141
+  19.4,                                   !- Data 142
+  -15.3,                                  !- Data 143
+  0.758079365079365,                      !- Data 144
+  19.4,                                   !- Data 145
+  -12.8,                                  !- Data 146
+  0.799936507936508,                      !- Data 147
+  19.4,                                   !- Data 148
+  -10,                                    !- Data 149
+  0.860396825396825,                      !- Data 150
+  19.4,                                   !- Data 151
+  -7.2,                                   !- Data 152
+  0.911555555555556,                      !- Data 153
+  19.4,                                   !- Data 154
+  -5,                                     !- Data 155
+  0.948761904761905,                      !- Data 156
+  19.4,                                   !- Data 157
+  -2.2,                                   !- Data 158
+  0.972015873015873,                      !- Data 159
+  19.4,                                   !- Data 160
+  0,                                      !- Data 161
+  0.999920634920635,                      !- Data 162
+  19.4,                                   !- Data 163
+  2.2,                                    !- Data 164
+  1.04177777777778,                       !- Data 165
+  19.4,                                   !- Data 166
+  5,                                      !- Data 167
+  1.05107936507937,                       !- Data 168
+  19.4,                                   !- Data 169
+  6.1,                                    !- Data 170
+  1.05107936507937,                       !- Data 171
+  19.4,                                   !- Data 172
+  7.8,                                    !- Data 173
+  1.05107936507937,                       !- Data 174
+  19.4,                                   !- Data 175
+  10.6,                                   !- Data 176
+  1.05107936507937,                       !- Data 177
+  19.4,                                   !- Data 178
+  13.3,                                   !- Data 179
+  1.05107936507937,                       !- Data 180
+  21.1,                                   !- Data 181
+  -20.2,                                  !- Data 182
+  0.660412698412698,                      !- Data 183
+  21.1,                                   !- Data 184
+  -18,                                    !- Data 185
+  0.68831746031746,                       !- Data 186
+  21.1,                                   !- Data 187
+  -15.3,                                  !- Data 188
+  0.758079365079365,                      !- Data 189
+  21.1,                                   !- Data 190
+  -12.8,                                  !- Data 191
+  0.799936507936508,                      !- Data 192
+  21.1,                                   !- Data 193
+  -10,                                    !- Data 194
+  0.860396825396825,                      !- Data 195
+  21.1,                                   !- Data 196
+  -7.2,                                   !- Data 197
+  0.888301587301587,                      !- Data 198
+  21.1,                                   !- Data 199
+  -5,                                     !- Data 200
+  0.948761904761905,                      !- Data 201
+  21.1,                                   !- Data 202
+  -2.2,                                   !- Data 203
+  0.972015873015873,                      !- Data 204
+  21.1,                                   !- Data 205
+  0,                                      !- Data 206
+  0.990619047619048,                      !- Data 207
+  21.1,                                   !- Data 208
+  2.2,                                    !- Data 209
+  0.999920634920635,                      !- Data 210
+  21.1,                                   !- Data 211
+  5,                                      !- Data 212
+  0.999920634920635,                      !- Data 213
+  21.1,                                   !- Data 214
+  6.1,                                    !- Data 215
+  0.999920634920635,                      !- Data 216
+  21.1,                                   !- Data 217
+  7.8,                                    !- Data 218
+  0.999920634920635,                      !- Data 219
+  21.1,                                   !- Data 220
+  10.6,                                   !- Data 221
+  0.999920634920635,                      !- Data 222
+  21.1,                                   !- Data 223
+  13.3,                                   !- Data 224
+  0.999920634920635,                      !- Data 225
+  22.8,                                   !- Data 226
+  -20.2,                                  !- Data 227
+  0.660412698412698,                      !- Data 228
+  22.8,                                   !- Data 229
+  -18,                                    !- Data 230
+  0.679015873015873,                      !- Data 231
+  22.8,                                   !- Data 232
+  -15.3,                                  !- Data 233
+  0.758079365079365,                      !- Data 234
+  22.8,                                   !- Data 235
+  -12.8,                                  !- Data 236
+  0.799936507936508,                      !- Data 237
+  22.8,                                   !- Data 238
+  -10,                                    !- Data 239
+  0.860396825396825,                      !- Data 240
+  22.8,                                   !- Data 241
+  -7.2,                                   !- Data 242
+  0.888301587301587,                      !- Data 243
+  22.8,                                   !- Data 244
+  -5,                                     !- Data 245
+  0.93015873015873,                       !- Data 246
+  22.8,                                   !- Data 247
+  -2.2,                                   !- Data 248
+  0.948761904761905,                      !- Data 249
+  22.8,                                   !- Data 250
+  0,                                      !- Data 251
+  0.972015873015873,                      !- Data 252
+  22.8,                                   !- Data 253
+  2.2,                                    !- Data 254
+  0.972015873015873,                      !- Data 255
+  22.8,                                   !- Data 256
+  5,                                      !- Data 257
+  0.972015873015873,                      !- Data 258
+  22.8,                                   !- Data 259
+  6.1,                                    !- Data 260
+  0.972015873015873,                      !- Data 261
+  22.8,                                   !- Data 262
+  7.8,                                    !- Data 263
+  0.972015873015873,                      !- Data 264
+  22.8,                                   !- Data 265
+  10.6,                                   !- Data 266
+  0.972015873015873,                      !- Data 267
+  22.8,                                   !- Data 268
+  13.3,                                   !- Data 269
+  0.972015873015873,                      !- Data 270
+  24.4,                                   !- Data 271
+  -20.2,                                  !- Data 272
+  0.660412698412698,                      !- Data 273
+  24.4,                                   !- Data 274
+  -18,                                    !- Data 275
+  0.679015873015873,                      !- Data 276
+  24.4,                                   !- Data 277
+  -15.3,                                  !- Data 278
+  0.758079365079365,                      !- Data 279
+  24.4,                                   !- Data 280
+  -12.8,                                  !- Data 281
+  0.799936507936508,                      !- Data 282
+  24.4,                                   !- Data 283
+  -10,                                    !- Data 284
+  0.851095238095238,                      !- Data 285
+  24.4,                                   !- Data 286
+  -7.2,                                   !- Data 287
+  0.874349206349206,                      !- Data 288
+  24.4,                                   !- Data 289
+  -5,                                     !- Data 290
+  0.920857142857143,                      !- Data 291
+  24.4,                                   !- Data 292
+  -2.2,                                   !- Data 293
+  0.920857142857143,                      !- Data 294
+  24.4,                                   !- Data 295
+  0,                                      !- Data 296
+  0.920857142857143,                      !- Data 297
+  24.4,                                   !- Data 298
+  2.2,                                    !- Data 299
+  0.920857142857143,                      !- Data 300
+  24.4,                                   !- Data 301
+  5,                                      !- Data 302
+  0.920857142857143,                      !- Data 303
+  24.4,                                   !- Data 304
+  6.1,                                    !- Data 305
+  0.920857142857143,                      !- Data 306
+  24.4,                                   !- Data 307
+  7.8,                                    !- Data 308
+  0.920857142857143,                      !- Data 309
+  24.4,                                   !- Data 310
+  10.6,                                   !- Data 311
+  0.920857142857143,                      !- Data 312
+  24.4,                                   !- Data 313
+  13.3,                                   !- Data 314
+  0.920857142857143;                      !- Data 315
+
+OS:Curve:Quadratic,
+  {c7b069bc-641c-4020-8af4-24898f33b548}, !- Handle
+  Coil Heating DX Variable Refrigerant Flow 1 VRFACCoolCapFFF, !- Name
+  0.8,                                    !- Coefficient1 Constant
+  0.2,                                    !- Coefficient2 x
+  0,                                      !- Coefficient3 x**2
+  0.5,                                    !- Minimum Value of x
+  1.5;                                    !- Maximum Value of x
+
+OS:ComponentData,
+  {0c54ab4f-df34-4262-9ba3-ef09b9933935}, !- Handle
+  Component Data 1,                       !- Name
+  {02a9e835-b589-45d2-913e-46a673789cfb}, !- UUID
+  {81128507-a8da-4d69-a887-f795a15d5001}, !- Version UUID
+  1426521403,                             !- Creation Timestamp
+  1426521403,                             !- Version Timestamp
+  {4e15e1b4-659e-4025-9dfa-d9886f97eced}, !- Name of Object 1
+  {a62ea42d-ebe7-405e-a7fd-a4a18662a939}, !- Name of Object 2
+  {22ea981d-97b2-4f59-959e-91f9deec6a1d}, !- Name of Object 3
+  {2c002f23-1469-41f7-919f-735fb7091339}, !- Name of Object 4
+  {fb331a3a-3a6e-47b0-932b-4c26ce439d61}, !- Name of Object 5
+  {94f37550-e845-4e6b-80c4-4614189c79af}, !- Name of Object 6
+  {c25f7f69-6b16-4bbc-a394-dfe502fe30b7}, !- Name of Object 7
+  {82279363-6cbe-4614-a2fa-25d7b21f6116}, !- Name of Object 8
+  {9331b7f7-cf09-4461-8852-d7357ac7d55e}, !- Name of Object 9
+  {68998874-fdb3-46f0-baf4-5aa2765f1978}, !- Name of Object 10
+  {ec593da2-0495-4905-8c20-0d4b2adbf480}, !- Name of Object 11
+  {c7b069bc-641c-4020-8af4-24898f33b548}; !- Name of Object 12
+
