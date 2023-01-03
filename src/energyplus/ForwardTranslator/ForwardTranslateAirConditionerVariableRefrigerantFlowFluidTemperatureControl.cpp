@@ -95,7 +95,7 @@ namespace energyplus {
 
     m_idfObjects.push_back(_zoneTerminalUnitList);
 
-    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlowFluidTemperatureControl> terminals = modelObject.terminals();
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = modelObject.terminals();
 
     for (auto& terminal : terminals) {
       boost::optional<IdfObject> _terminal = translateAndMapModelObject(terminal);

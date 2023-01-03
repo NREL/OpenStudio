@@ -72,7 +72,7 @@ namespace energyplus {
 
     s = modelObject.name();
     if (s) {
-      idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::HeatPumpName, *s);
+      idfObject.setString(AirConditioner_VariableRefrigerantFlow_FluidTemperatureControl_HRFields::Name, *s);
     }
 
     // AvailabilityScheduleName
@@ -96,7 +96,7 @@ namespace energyplus {
 
     m_idfObjects.push_back(_zoneTerminalUnitList);
 
-    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlowFluidTemperatureControlHR> terminals = modelObject.terminals();
+    std::vector<ZoneHVACTerminalUnitVariableRefrigerantFlow> terminals = modelObject.terminals();
 
     for (auto& terminal : terminals) {
       boost::optional<IdfObject> _terminal = translateAndMapModelObject(terminal);
