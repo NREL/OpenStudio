@@ -127,7 +127,7 @@ namespace cli {
       // Save the xml file with changes triggered by checkForUpdatesFiles() / checkForUpdatesXML() above
       measure_->save();
 
-      // Also need to mimic OSMeasureInfoGetter::getInfo which is actually implemented in ruby itself...
+      // TODO: also need to mimic OSMeasureInfoGetter::getInfo which is actually implemented in ruby itself...
       // basically we need to compute the arguments of the measures, inspect outputs... so that requires doing something similar to what we do in the
       // `run` method
     }

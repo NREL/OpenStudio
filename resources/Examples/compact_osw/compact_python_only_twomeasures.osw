@@ -9,9 +9,9 @@
 			}
 		},
 		{
-			"measure_dir_name": "PythonExampleEnergyPlusMeasure",
+			"measure_dir_name": "PythonEnergyplusMeasureDXF",
 			"arguments": {
-				"zone_name": "My New Zone"
+				"dxf_type": "DXF"
 			}
 		}
 	]
